@@ -26,27 +26,53 @@
 const {$} = window;
 
 export default class SubmittableInput {
-  constructor() {
+  constructor(callback) {
+    this.callback = callback;
     this.wrapperSelector = '.ps-submittable-input-wrapper';
     this.buttonSelector = '.check-button';
-    this.inputsSelector = `${this.wrapperSelector} .submittable-input`;
+    this.inputsSelector = '.submittable-input';
     this.eventEmitter = window.prestashop.instance.eventEmitter;
 
     this.init();
+
+    return {};
   }
 
+  /**
+   * @private
+   */
   init() {
-    $(document).on('mouseenter', this.inputsSelector, (e) => {
+    const inputs = `${this.wrapperSelector} ${this.inputsSelector}`;
+    const buttons = `${this.wrapperSelector} ${this.buttonSelector}`;
+
+    $(document).on('mouseenter', inputs, (e) => {
       this.showButton($(e.currentTarget));
     });
-    $(document).on('mouseleave', this.inputsSelector, (e) => {
+    $(document).on('mouseleave', inputs, (e) => {
       this.hideButton($(e.currentTarget));
     });
-    $(document).on('input', this.inputsSelector, (e) => {
+    $(document).on('input', inputs, (e) => {
       this.activateButton($(e.currentTarget));
+    });
+    $(document).on('click', inputs, (e) => {
+      this.activateButton($(e.currentTarget));
+    });
+    $(document).on('click', buttons, (e) => {
+      this.callback($(e.currentTarget).closest(this.wrapperSelector).find(this.inputsSelector)[0]);
+    });
+    $(document).on('keyup', this.inputsSelector, (e) => {
+      if (e.keyCode === 13) {
+        e.preventDefault();
+        $(e.currentTarget).closest(this.wrapperSelector).find(this.buttonSelector).click();
+      }
     });
   }
 
+  /**
+   * @param {Object} $input
+   *
+   * @private
+   */
   activateButton($input) {
     const $btn = $input.closest(this.wrapperSelector).find(this.buttonSelector);
 
@@ -55,11 +81,21 @@ export default class SubmittableInput {
     }
   }
 
+  /**
+   * @param {Object} $input
+   *
+   * @private
+   */
   showButton($input) {
     const $btn = $input.closest(this.wrapperSelector).find(this.buttonSelector);
     $btn.removeClass('d-none');
   }
 
+  /**
+   * @param {Object} $input
+   *
+   * @private
+   */
   hideButton($input) {
     const $btn = $input.closest(this.wrapperSelector).find(this.buttonSelector);
 
