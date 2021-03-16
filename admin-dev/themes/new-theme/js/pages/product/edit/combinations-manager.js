@@ -36,26 +36,41 @@ export default class CombinationsManager {
     this.$productForm = $(ProductMap.productForm);
     this.combinationIdInputsSelector = ProductMap.combinations.combinationIdInputsSelector;
     this.initialized = false;
+    this.combinationsService = new CombinationsService(this.getProductId());
+
     this.init();
 
     return {};
   }
 
   init() {
-    const productId = this.getProductId();
-    const combinationsService = new CombinationsService(productId);
-
     this.paginator = new DynamicPaginator(
       ProductMap.combinations.paginationContainer,
-      combinationsService,
+      this.combinationsService,
       new CombinationsGridRenderer(),
     );
-    new SubmittableInput((input) => {
-      //@todo:
-      console.log('todo. We have submitted input, but still need to identify the input & combination id');
-    });
+    this.initSubmittableInput();
     // Paginate to first page when tab is shown
     this.$productForm.find(ProductMap.combinations.navigationTab).on('shown.bs.tab', () => this.firstInit());
+  }
+
+  initSubmittableInput() {
+    new SubmittableInput('.combination-quantity', async (input) => {
+      const combinationId = $(input).closest('tr').find('.combination-id-input').val();
+
+      await this.combinationsService.updateListedCombination(
+        combinationId,
+        {combination_item_quantity_value: input.value},
+      );
+    });
+
+    new SubmittableInput('.combination-impact-on-price', async (input) => {
+      const combinationId = $(input).closest('tr').find('.combination-id-input').val();
+      await this.combinationsService.updateListedCombination(
+        combinationId,
+        {combination_item_impact_on_price_value: input.value},
+      );
+    });
   }
 
   firstInit() {

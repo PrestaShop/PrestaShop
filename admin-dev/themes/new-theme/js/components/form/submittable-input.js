@@ -26,12 +26,11 @@
 const {$} = window;
 
 export default class SubmittableInput {
-  constructor(callback) {
+  constructor(wrapperSelector, callback) {
+    this.inputSelector = '.submittable-input';
     this.callback = callback;
-    this.wrapperSelector = '.ps-submittable-input-wrapper';
+    this.wrapperSelector = wrapperSelector;
     this.buttonSelector = '.check-button';
-    this.inputsSelector = '.submittable-input';
-    this.eventEmitter = window.prestashop.instance.eventEmitter;
 
     this.init();
 
@@ -42,7 +41,7 @@ export default class SubmittableInput {
    * @private
    */
   init() {
-    const inputs = `${this.wrapperSelector} ${this.inputsSelector}`;
+    const inputs = `${this.wrapperSelector} ${this.inputSelector}`;
     const buttons = `${this.wrapperSelector} ${this.buttonSelector}`;
 
     $(document).on('mouseenter', inputs, (e) => {
@@ -58,9 +57,9 @@ export default class SubmittableInput {
       this.activateButton($(e.currentTarget));
     });
     $(document).on('click', buttons, (e) => {
-      this.callback($(e.currentTarget).closest(this.wrapperSelector).find(this.inputsSelector)[0]);
+      this.callback($(e.currentTarget).closest(this.wrapperSelector).find(this.inputSelector)[0]);
     });
-    $(document).on('keyup', this.inputsSelector, (e) => {
+    $(document).on('keyup', this.inputSelector, (e) => {
       if (e.keyCode === 13) {
         e.preventDefault();
         $(e.currentTarget).closest(this.wrapperSelector).find(this.buttonSelector).click();

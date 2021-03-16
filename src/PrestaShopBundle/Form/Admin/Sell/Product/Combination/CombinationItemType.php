@@ -27,8 +27,8 @@ declare(strict_types=1);
 
 namespace PrestaShopBundle\Form\Admin\Sell\Product\Combination;
 
-use PrestaShopBundle\Form\Admin\Type\SwitchType;
 use PrestaShopBundle\Form\Admin\Type\SubmittableInputType;
+use PrestaShopBundle\Form\Admin\Type\SwitchType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\ButtonType;
 use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
@@ -56,9 +56,16 @@ class CombinationItemType extends AbstractType
             ->add('name', HiddenType::class)
             ->add('impact_on_price', SubmittableInputType::class, [
                 'type' => MoneyType::class,
+                'attr' => [
+                    'class' => 'combination-impact-on-price',
+                ],
             ])
             ->add('final_price_te', HiddenType::class)
-            ->add('quantity', SubmittableInputType::class)
+            ->add('quantity', SubmittableInputType::class, [
+                'attr' => [
+                    'class' => 'combination-quantity',
+                ],
+            ])
             ->add('is_default', SwitchType::class)
             ->add('edit', ButtonType::class)
             ->add('delete', ButtonType::class)
