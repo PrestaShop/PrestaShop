@@ -29,6 +29,7 @@ declare(strict_types=1);
 namespace PrestaShop\PrestaShop\Core\Form\IdentifiableObject\DataProvider;
 
 use PrestaShop\PrestaShop\Core\CommandBus\CommandBusInterface;
+use PrestaShop\PrestaShop\Core\Domain\Manufacturer\ValueObject\NoManufacturerId;
 use PrestaShop\PrestaShop\Core\Domain\Product\Customization\Query\GetProductCustomizationFields;
 use PrestaShop\PrestaShop\Core\Domain\Product\Customization\QueryResult\CustomizationField;
 use PrestaShop\PrestaShop\Core\Domain\Product\FeatureValue\Query\GetProductFeatureValues;
@@ -89,6 +90,7 @@ final class ProductFormDataProvider implements FormDataProviderInterface
             'id' => $productId,
             'basic' => $this->extractBasicData($productForEditing),
             'features' => $this->extractFeatureValues((int) $id),
+            'manufacturer' => $this->extractManufacturerValues($productForEditing),
             'stock' => $this->extractStockData($productForEditing),
             'price' => $this->extractPriceData($productForEditing),
             'seo' => $this->extractSEOData($productForEditing),
@@ -110,6 +112,9 @@ final class ProductFormDataProvider implements FormDataProviderInterface
         return [
             'basic' => [
                 'type' => ProductType::TYPE_STANDARD,
+            ],
+            'manufacturer' => [
+                'manufacturer_id' => NoManufacturerId::NO_MANUFACTURER_ID,
             ],
             'price' => [
                 'price_tax_excluded' => 0,
@@ -195,6 +200,18 @@ final class ProductFormDataProvider implements FormDataProviderInterface
 
         return [
             'feature_values' => $productFeatureValues,
+        ];
+    }
+
+    /**
+     * @param ProductForEditing $productForEditing
+     *
+     * @return array
+     */
+    private function extractManufacturerValues(ProductForEditing $productForEditing): array
+    {
+        return [
+            'manufacturer_id' => $productForEditing->getOptions()->getManufacturerId(),
         ];
     }
 
