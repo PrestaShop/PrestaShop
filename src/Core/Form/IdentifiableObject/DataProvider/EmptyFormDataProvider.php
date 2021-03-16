@@ -1,3 +1,4 @@
+<?php
 /**
  * Copyright since 2007 PrestaShop SA and Contributors
  * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
@@ -22,47 +23,28 @@
  * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
+declare(strict_types=1);
 
-import Router from '@components/router';
+namespace PrestaShop\PrestaShop\Core\Form\IdentifiableObject\DataProvider;
 
-const {$} = window;
+/**
+ * For specific cases when form data is not needed
+ */
+class EmptyFormDataProvider implements FormDataProviderInterface
+{
+    /**
+     * {@inheritdoc}
+     */
+    public function getData($id)
+    {
+        return [];
+    }
 
-export default class CombinationsService {
-  /**
-   * @param {Number} productId
-   */
-  constructor(productId) {
-    this.productId = productId;
-    this.router = new Router();
-  }
-
-  /**
-   * @param {Number} offset
-   * @param {Number} limit
-   *
-   * @returns {Promise}
-   */
-  fetch(offset, limit) {
-    return $.get(this.router.generate('admin_products_combinations', {
-      productId: this.productId,
-      offset,
-      limit,
-    }));
-  }
-
-  /**
-   * @param {Number} combinationId
-   * @param {Object} data
-   *
-   * @returns {Promise}
-   */
-  updateListedCombination(combinationId, data) {
-    return $.ajax({
-      url: this.router.generate('admin_products_combinations_update_combination_from_listing', {
-        combinationId,
-        ...data,
-      }),
-      method: 'PATCH',
-    });
-  }
+    /**
+     * {@inheritdoc}
+     */
+    public function getDefaultData()
+    {
+        return [];
+    }
 }

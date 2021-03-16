@@ -60,7 +60,7 @@ export default class CombinationsManager {
 
       await this.combinationsService.updateListedCombination(
         combinationId,
-        {combination_item_quantity_value: input.value},
+        {'combination_item[quantity][value]': input.value},
       );
     });
 
@@ -68,7 +68,7 @@ export default class CombinationsManager {
       const combinationId = $(input).closest('tr').find('.combination-id-input').val();
       await this.combinationsService.updateListedCombination(
         combinationId,
-        {combination_item_impact_on_price_value: input.value},
+        {'combination_item[impact_on_price][value]': input.value},
       );
     });
   }

@@ -10,7 +10,7 @@ admin_products_combinations:
 
 admin_products_combinations_update_combination_from_listing:
     path: /combinations/{combinationId}/update-combination-from-listing
-    methods: [POST]
+    methods: [PATCH]
     options:
         expose: true
     defaults:
