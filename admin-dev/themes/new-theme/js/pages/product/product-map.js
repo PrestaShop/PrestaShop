@@ -80,9 +80,9 @@ export default {
     tableRow: {
       combinationIdInput: (rowIndex) => `#combination_list_combinations_${rowIndex}_combination_id`,
       combinationNameInput: (rowIndex) => `#combination_list_combinations_${rowIndex}_name`,
-      impactOnPriceInput: (rowIndex) => `#combination_list_combinations_${rowIndex}_impact_on_price`,
+      impactOnPriceInput: (rowIndex) => `#combination_list_combinations_${rowIndex}_impact_on_price_value`,
       finalPriceTeInput: (rowIndex) => `#combination_list_combinations_${rowIndex}_final_price_te`,
-      quantityInput: (rowIndex) => `#combination_list_combinations_${rowIndex}_quantity`,
+      quantityInput: (rowIndex) => `#combination_list_combinations_${rowIndex}_quantity_value`,
       isDefaultInput: (rowIndex) => `#combination_list_combinations_${rowIndex}_is_default`,
       editButton: (rowIndex) => `#combination_list_combinations_${rowIndex}_edit`,
       deleteButton: (rowIndex) => `#combination_list_combinations_${rowIndex}_delete`,

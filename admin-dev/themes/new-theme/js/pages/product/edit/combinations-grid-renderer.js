@@ -80,6 +80,9 @@ export default class CombinationsGridRenderer {
       // fill inputs
       const $combinationIdInput = $(ProductMap.combinations.tableRow.combinationIdInput(rowIndex));
       const $combinationNameInput = $(ProductMap.combinations.tableRow.combinationNameInput(rowIndex));
+      const $quantityInput = $(ProductMap.combinations.tableRow.quantityInput(rowIndex));
+      const $impactOnPriceInput = $(ProductMap.combinations.tableRow.impactOnPriceInput(rowIndex));
+      //@todo final price should be calculated based on price impact and product price, so it doesnt need to be in api response
       const $finalPriceInput = $(ProductMap.combinations.tableRow.finalPriceTeInput(rowIndex));
       $combinationIdInput.val(combination.id);
       $combinationNameInput.val(combination.name);
@@ -89,9 +92,10 @@ export default class CombinationsGridRenderer {
       $combinationIdInput.closest('td').append(combination.id);
       $combinationNameInput.closest('td').append(combination.name);
       $finalPriceInput.closest('td').append(combination.finalPriceTe);
-
-      $(ProductMap.combinations.tableRow.impactOnPriceInput(rowIndex)).val(combination.impactOnPrice);
-      $(ProductMap.combinations.tableRow.quantityInput(rowIndex)).val(combination.quantity);
+      $quantityInput.val(combination.quantity);
+      $quantityInput.data('initial-value', combination.quantity);
+      $impactOnPriceInput.val(combination.impactOnPrice);
+      $impactOnPriceInput.data('initial-value', combination.impactOnPrice);
       $(ProductMap.combinations.tableRow.isDefaultInput(rowIndex)).val(combination.isDefault);
       $(ProductMap.combinations.tableRow.editButton(rowIndex)).data('id', combination.id);
       $(ProductMap.combinations.tableRow.deleteButton(rowIndex)).data('id', combination.id);
