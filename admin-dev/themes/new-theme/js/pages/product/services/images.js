@@ -33,9 +33,7 @@ export const getProductImages = async (productId) => {
     productId,
   });
 
-  const images = await $.get(imagesUrl);
-
-  return images;
+  return await $.get(imagesUrl);
 };
 
 export default {
