@@ -64,10 +64,12 @@
     <div id="multishop-modal" class="multishop-modal multishop-modal-hidden js-multishop-modal" tabindex="-1" role="dialog" aria-labelledby="multishop-modal" aria-hidden="true">
       <div class="multishop-modal-dialog" role="document">
         <div class="multishop-modal-body">
+          {% if lockedToAllShopContext == false %}
           <div class="multishop-modal-search-container">
             <i class="material-icons">search</i>
             <input type="text" class="form-control multishop-modal-search js-multishop-modal-search" placeholder="Search shop name" data-no-results="{{ "No results found for"|trans({}, 'Admin.Global') }}" data-searching="{{ "Searching for"|trans({}, 'Admin.Global') }}">
           </div>
+          {% endif %}
 
           <ul class="multishop-modal-group-list js-multishop-scrollbar">
               <li class="multishop-modal-all multishop-modal-item">

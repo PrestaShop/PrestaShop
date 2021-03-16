@@ -53,9 +53,10 @@ class MultistoreController extends FrameworkBundleAdminController
     public $entityManager;
 
     /**
+     * @param bool $shopContextSwitchingBlocked
      * @return Response
      */
-    public function header(): Response
+    public function header(bool $lockedToAllShopContext): Response
     {
         if (!$this->multistoreFeature->isUsed()) {
             return $this->render('@PrestaShop/Admin/Multistore/header.html.twig', [
@@ -78,7 +79,11 @@ class MultistoreController extends FrameworkBundleAdminController
             $currentContext->setColor('');
         }
 
-        $groupList = $this->entityManager->getRepository(ShopGroup::class)->findBy(['active' => true]);
+        $groupList = [];
+        if (!$lockedToAllShopContext) {
+            $groupList = $this->entityManager->getRepository(ShopGroup::class)->findBy(['active' => true]);
+        }
+
         $colorBrightnessCalculator = $this->get('prestashop.core.util.color_brightness_calculator');
 
         return $this->render('@PrestaShop/Admin/Multistore/header.html.twig', [
@@ -90,6 +95,7 @@ class MultistoreController extends FrameworkBundleAdminController
             'isTitleDark' => empty($currentContext->getColor()) ? true : $colorBrightnessCalculator->isBright($currentContext->getColor()),
             'isAllShopContext' => $isAllShopContext,
             'isGroupContext' => $this->multistoreContext->isGroupShopContext(),
+            'lockedToAllShopContext' => $lockedToAllShopContext,
         ]);
     }
 }
