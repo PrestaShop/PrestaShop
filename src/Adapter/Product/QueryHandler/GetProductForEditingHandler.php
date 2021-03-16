@@ -51,8 +51,8 @@ use PrestaShop\PrestaShop\Core\Domain\Product\QueryResult\ProductPricesInformati
 use PrestaShop\PrestaShop\Core\Domain\Product\QueryResult\ProductSeoOptions;
 use PrestaShop\PrestaShop\Core\Domain\Product\QueryResult\ProductShippingInformation;
 use PrestaShop\PrestaShop\Core\Domain\Product\QueryResult\ProductStockInformation;
-use PrestaShop\PrestaShop\Core\Domain\Product\QueryResult\ProductType;
 use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductId;
+use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductType;
 use PrestaShop\PrestaShop\Core\Domain\Product\VirtualProductFile\Exception\VirtualProductFileNotFoundException;
 use PrestaShop\PrestaShop\Core\Domain\Product\VirtualProductFile\QueryResult\VirtualProductFileForEditing;
 use PrestaShop\PrestaShop\Core\Domain\TaxRulesGroup\ValueObject\TaxRulesGroupId;
@@ -205,7 +205,9 @@ final class GetProductForEditingHandler extends AbstractProductHandler implement
      */
     private function getProductType(Product $product): ProductType
     {
-        if ($product->is_virtual) {
+        if (!empty($product->product_type) && in_array($product->product_type, ProductType::AVAILABLE_TYPES)) {
+            $productTypeValue = $product->product_type;
+        } elseif ($product->is_virtual) {
             $productTypeValue = ProductType::TYPE_VIRTUAL;
         } elseif (Pack::isPack($product->id)) {
             $productTypeValue = ProductType::TYPE_PACK;

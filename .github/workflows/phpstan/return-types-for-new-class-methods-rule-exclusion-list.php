@@ -5234,7 +5234,7 @@ $baseline = [
 'PrestaShop\PrestaShop\Core\Domain\Product\Combination\Command\UpdateCombinationDetailsCommand::__construct',
 'PrestaShop\PrestaShop\Core\Domain\Product\QueryResult\ProductCustomizationField::__construct',
 'PrestaShop\PrestaShop\Core\Domain\Product\Image\ValueObject\ImageId::__construct',
-'PrestaShop\PrestaShop\Core\Domain\Product\QueryResult\ProductType::__construct',
+'PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductType::__construct',
 'PrestaShop\PrestaShop\Core\Domain\Product\Image\QueryResult\ProductImage::__construct',
 'PrestaShop\PrestaShop\Core\Domain\Product\VirtualProductFile\QueryResult\VirtualProductFileForEditing::__construct',
 'PrestaShop\PrestaShop\Core\Domain\Product\QueryResult\RelatedProduct::__construct',
