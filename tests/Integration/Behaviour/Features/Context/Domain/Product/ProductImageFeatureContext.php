@@ -94,6 +94,16 @@ class ProductImageFeatureContext extends AbstractProductFeatureContext
         ));
 
         $this->getSharedStorage()->set($imageReference, $imageId->getValue());
+
+        // Save uploaded file MD5 for future checks
+        if ($this->getSharedStorage()->exists($fileName)) {
+            return;
+        }
+
+        /** @var ProductImage $productImage */
+        $productImage = $this->getQueryBus()->handle(new GetProductImage($imageId->getValue()));
+        $imagePath = _PS_PROD_IMG_DIR_ . $productImage->getPath();
+        $this->getSharedStorage()->set($fileName, md5_file($imagePath));
     }
 
     /**
@@ -132,17 +142,19 @@ class ProductImageFeatureContext extends AbstractProductFeatureContext
      */
     public function assertImageFile(string $imageReference, string $fileName): void
     {
-        $dummyPathName = DummyFileUploader::getDummyFilesPath() . $fileName;
         $imageId = (int) $this->getSharedStorage()->get($imageReference);
 
         /** @var ProductImage $productImage */
         $productImage = $this->getQueryBus()->handle(new GetProductImage($imageId));
         $imagePath = _PS_PROD_IMG_DIR_ . $productImage->getPath();
 
-        if (md5_file($dummyPathName) !== md5_file($imagePath)) {
+        // This was previously saved during image upload
+        $generatedDummyMD5 = $this->getSharedStorage()->get($fileName);
+
+        if ($generatedDummyMD5 !== md5_file($imagePath)) {
             throw new RuntimeException(sprintf(
-                'Expected files %s and %s to be identical',
-                $dummyPathName,
+                'Expected files dummy %s and image %s to be identical',
+                $fileName,
                 $imagePath
             ));
         }

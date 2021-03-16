@@ -21,12 +21,12 @@ Feature: Add product image from Back Office (BO)
     And product "product1" type should be standard
     And product "product1" should have no images
     When I add new image "image1" named "app_icon.png" to product "product1"
-    Then image "image1" should have same file as "app_icon_generated.png"
+    Then image "image1" should have same file as "app_icon.png"
     And product "product1" should have following images:
       | image reference | is cover | legend[en-US] | position |
       | image1          | true     |               | 1        |
     When I add new image "image2" named "logo.jpg" to product "product1"
-    Then image "image2" should have same file as "logo_generated.jpg"
+    Then image "image2" should have same file as "logo.jpg"
     And product "product1" should have following images:
       | image reference | is cover | legend[en-US] | position |
       | image1          | true     |               | 1        |
