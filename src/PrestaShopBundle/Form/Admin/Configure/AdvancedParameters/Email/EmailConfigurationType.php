@@ -119,7 +119,7 @@ class EmailConfigurationType extends TranslatorAwareType
             ])
             ->add('dkim_key', TextareaType::class, [
                 'label' => $this->trans('DKIM private key', 'Admin.Advparameters.Feature'),
-                'help' => $this->trans('Enter your private key into this field. They key starts with -----BEGIN RSA PRIVATE KEY-----.', 'Admin.Advparameters.Help'),
+                'help' => $this->trans('The private key starts with -----BEGIN RSA PRIVATE KEY-----.', 'Admin.Advparameters.Help'),
                 'required' => false,
                 'attr' => [
                     'rows' => 10,
