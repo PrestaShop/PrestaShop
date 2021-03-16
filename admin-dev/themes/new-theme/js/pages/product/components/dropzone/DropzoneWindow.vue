@@ -26,10 +26,10 @@
   <div class="dropzone-window">
     <div class="dropzone-window-header row">
       <div class="dropzone-window-header-left">
-        <p class="dropzone-window-number">
-          <span>{{ selectedFiles.length }}</span>
-          {{ $t("window.selectedFiles") }}
-        </p>
+        <p
+          class="dropzone-window-number"
+          v-html="$t('window.selectedFiles', {'%filesNb%': selectedFiles.length})"
+        />
       </div>
       <div class="dropzone-window-header-right">
         <i

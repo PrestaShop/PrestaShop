@@ -198,13 +198,12 @@
             }
           });
 
-          this.dropzone.on('error', (fileWithError, message) => {
-            $.growl.error({message: message.error});
-            this.dropzone.removeFile(fileWithError);
-          });
-
-
           this.files.push(file);
+        });
+
+        this.dropzone.on('error', (fileWithError, message) => {
+          $.growl.error({message: message.error});
+          this.dropzone.removeFile(fileWithError);
         });
       },
       /**
