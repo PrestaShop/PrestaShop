@@ -44,6 +44,8 @@ class AdminLegacyLayoutControllerCore extends AdminController
     protected $helpLink;
     /** @var bool */
     protected $useRegularH1Structure;
+    /** @var bool */
+    protected $lockedToAllShopContext = false;
 
     /**
      * @param string $controllerName
@@ -75,10 +77,11 @@ class AdminLegacyLayoutControllerCore extends AdminController
         // Some controllers can only be used in "All shops" context.
         // This makes sure that user cannot switch shop contexts
         // when in one of pages (controller) below.
-        $controllers = ['AdminLanguages', 'AdminProfiles', 'AdminSpecificPriceRule'];
+        $controllers = ['AdminLanguages', 'AdminProfiles', 'AdminSpecificPriceRule', 'AdminPerformance'];
 
         if (in_array($controllerName, $controllers)) {
             $this->multishop_context = Shop::CONTEXT_ALL;
+            $this->lockedToAllShopContext = true;
         }
 
         parent::__construct($controllerName, 'new-theme');
