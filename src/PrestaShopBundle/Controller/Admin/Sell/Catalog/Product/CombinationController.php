@@ -75,6 +75,7 @@ class CombinationController extends FrameworkBundleAdminController
         $impactOnPrice = $request->request->get('impactOnPrice');
         $quantity = $request->request->getInt('quantity');
         $isDefault = $request->request->getBoolean('isDefault');
+        //@todo: form data handler instead.
 
         $command = new UpdateCombinationFromListingCommand($combinationId);
 

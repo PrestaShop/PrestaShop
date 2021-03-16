@@ -57,7 +57,8 @@ export default class CombinationsService {
    * @returns {Promise}
    */
   updateListedCombination(combinationId, data) {
-    return $.post(this.router.generate('admin_products_combinations_update_impact_on_price', {
+    return $.post(this.router.generate('admin_products_combinations_update_combination_from_listing', {
+      combinationId,
       data,
     }));
   }

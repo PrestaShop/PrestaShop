@@ -30,6 +30,8 @@ namespace PrestaShopBundle\Form\Admin\Type;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\NumberType;
 use Symfony\Component\Form\FormBuilderInterface;
+use Symfony\Component\Form\FormInterface;
+use Symfony\Component\Form\FormView;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
 /**
@@ -50,11 +52,14 @@ class SubmittableInputType extends AbstractType
     /**
      * {@inheritdoc}
      */
-    public function getBlockPrefix()
+    public function buildView(FormView $view, FormInterface $form, array $options)
     {
-        return 'updatable_input';
+        $view->vars['type_attr'] = $options['type_options']['attr'] ?? [];
     }
 
+    /**
+     * {@inheritdoc}
+     */
     public function configureOptions(OptionsResolver $resolver)
     {
         $resolver
@@ -63,5 +68,13 @@ class SubmittableInputType extends AbstractType
             ->setAllowedTypes('type', 'string')
             ->setAllowedTypes('type_options', 'array')
         ;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getBlockPrefix()
+    {
+        return 'updatable_input';
     }
 }
