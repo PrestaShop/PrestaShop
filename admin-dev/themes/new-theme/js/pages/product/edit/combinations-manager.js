@@ -49,12 +49,12 @@ export default class CombinationsManager {
       this.combinationsService,
       new CombinationsGridRenderer(),
     );
-    this.initSubmittableInput();
+    this.initSubmittableInputs();
     // Paginate to first page when tab is shown
     this.$productForm.find(ProductMap.combinations.navigationTab).on('shown.bs.tab', () => this.firstInit());
   }
 
-  initSubmittableInput() {
+  initSubmittableInputs() {
     const combinationToken = $(ProductMap.combinations.combinationsContainer).data('combinationToken');
 
     new SubmittableInput('.combination-quantity', async (input) => {
