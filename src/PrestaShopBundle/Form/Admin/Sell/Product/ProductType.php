@@ -72,6 +72,7 @@ class ProductType extends TranslatorAwareType
         $builder
             ->add('basic', BasicInformationType::class)
             ->add('features', FeaturesType::class)
+            ->add('manufacturer', ManufacturerType::class)
             ->add('stock', StockType::class)
             ->add('price', PriceType::class)
             ->add('shipping', ShippingType::class)
