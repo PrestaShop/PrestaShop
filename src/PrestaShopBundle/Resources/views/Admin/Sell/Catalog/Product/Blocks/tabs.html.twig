@@ -26,7 +26,10 @@
 {% set isPriceTabValid = productForm.price.vars.valid %}
 {% set isShippingTabValid = productForm.shipping.vars.valid %}
 {% set isSEOTabValid = productForm.seo.vars.valid and productForm.redirect_option.vars.valid %}
-{% set isOptionsTabValid = productForm.options.vars.valid  and productForm.suppliers.vars.valid %}
+
+{% set isSuppliersValid = productForm.suppliers is not defined or productForm.suppliers.vars.valid %}
+{% set isOptionsTabValid = productForm.options.vars.valid and isSuppliersValid %}
+
 {% set isStockTabValid = productForm.stock.vars.valid %}
 
 <div class="tabs js-tabs">
