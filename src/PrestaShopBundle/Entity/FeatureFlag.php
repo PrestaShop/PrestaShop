@@ -65,16 +65,30 @@ class FeatureFlag
     /**
      * @var string
      *
-     * @ORM\Column(name="description_wording", type="string", length=255, options={"default":""})
+     * @ORM\Column(name="label_wording", type="string", length=191, options={"default":""})
+     */
+    private $labelWording;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="label_domain", type="string", length=255, options={"default":""})
+     */
+    private $labelDomain;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="description_wording", type="string", length=191, options={"default":""})
      */
     private $descriptionWording;
 
     /**
      * @var string
      *
-     * @ORM\Column(name="description_wording_domain", type="string", length=255, options={"default":""})
+     * @ORM\Column(name="description_domain", type="string", length=255, options={"default":""})
      */
-    private $descriptionWordingDomain;
+    private $descriptionDomain;
 
     /**
      * @param string $name
@@ -87,7 +101,9 @@ class FeatureFlag
         $this->name = $name;
         $this->state = false;
         $this->descriptionWording = '';
-        $this->descriptionWordingDomain = '';
+        $this->descriptionDomain = '';
+        $this->labelWording = '';
+        $this->labelDomain = '';
     }
 
     /**
@@ -127,6 +143,38 @@ class FeatureFlag
     /**
      * @return string
      */
+    public function getLabelWording(): string
+    {
+        return $this->labelWording;
+    }
+
+    /**
+     * @param string $labelWording
+     */
+    public function setLabelWording(string $labelWording): void
+    {
+        $this->labelWording = $labelWording;
+    }
+
+    /**
+     * @return string
+     */
+    public function getLabelDomain(): string
+    {
+        return $this->labelDomain;
+    }
+
+    /**
+     * @param string $labelDomain
+     */
+    public function setLabelDomain(string $labelDomain): void
+    {
+        $this->labelDomain = $labelDomain;
+    }
+
+    /**
+     * @return string
+     */
     public function getDescriptionWording(): string
     {
         return $this->descriptionWording;
@@ -143,16 +191,16 @@ class FeatureFlag
     /**
      * @return string
      */
-    public function getDescriptionWordingDomain(): string
+    public function getDescriptionDomain(): string
     {
-        return $this->descriptionWordingDomain;
+        return $this->descriptionDomain;
     }
 
     /**
-     * @param string $descriptionWordingDomain
+     * @param string $descriptionDomain
      */
-    public function setDescriptionWordingDomain(string $descriptionWordingDomain): void
+    public function setDescriptionDomain(string $descriptionDomain): void
     {
-        $this->descriptionWordingDomain = $descriptionWordingDomain;
+        $this->descriptionDomain = $descriptionDomain;
     }
 }

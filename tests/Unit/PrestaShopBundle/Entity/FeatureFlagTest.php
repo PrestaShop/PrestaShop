@@ -54,12 +54,16 @@ class FeatureFlagTest extends TestCase
         $featureFlag = new FeatureFlag('prestashop_800');
 
         $featureFlag->setDescriptionWording('a_b_c');
-        $featureFlag->setDescriptionWordingDomain('A.B.C');
+        $featureFlag->setDescriptionDomain('A.B.C');
+        $featureFlag->setLabelWording('a b c d');
+        $featureFlag->setLabelDomain('A.B.L');
 
         $this->assertEquals('prestashop_800', $featureFlag->getName());
         $this->assertFalse($featureFlag->getState());
         $this->assertEquals('a_b_c', $featureFlag->getDescriptionWording());
-        $this->assertEquals('A.B.C', $featureFlag->getDescriptionWordingDomain());
+        $this->assertEquals('A.B.C', $featureFlag->getDescriptionDomain());
+        $this->assertEquals('a b c d', $featureFlag->getLabelWording());
+        $this->assertEquals('A.B.L', $featureFlag->getLabelDomain());
     }
 
     public function testToggleWorks()
