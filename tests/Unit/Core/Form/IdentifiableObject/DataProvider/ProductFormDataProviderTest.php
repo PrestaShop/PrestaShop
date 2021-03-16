@@ -34,6 +34,7 @@ use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 use PrestaShop\Decimal\DecimalNumber;
 use PrestaShop\PrestaShop\Core\CommandBus\CommandBusInterface;
+use PrestaShop\PrestaShop\Core\Domain\Manufacturer\ValueObject\NoManufacturerId;
 use PrestaShop\PrestaShop\Core\Domain\Product\Customization\Query\GetProductCustomizationFields;
 use PrestaShop\PrestaShop\Core\Domain\Product\Customization\QueryResult\CustomizationField;
 use PrestaShop\PrestaShop\Core\Domain\Product\Customization\ValueObject\CustomizationFieldType;
@@ -95,6 +96,9 @@ class ProductFormDataProviderTest extends TestCase
                 'weight' => 0,
             ],
             'activate' => false,
+            'manufacturer' => [
+                'manufacturer_id' => NoManufacturerId::NO_MANUFACTURER_ID,
+            ],
         ];
 
         $defaultData = $provider->getDefaultData();
@@ -120,6 +124,9 @@ class ProductFormDataProviderTest extends TestCase
                 'weight' => 0,
             ],
             'activate' => true,
+            'manufacturer' => [
+                'manufacturer_id' => NoManufacturerId::NO_MANUFACTURER_ID,
+            ],
         ];
 
         $defaultData = $provider->getDefaultData();
@@ -149,6 +156,7 @@ class ProductFormDataProviderTest extends TestCase
             $this->getDatasetsForRedirectOption(),
             $this->getDatasetsForProductSuppliers(),
             $this->getDataSetsForFeatures(),
+            $this->getDataSetsForManufacturer(),
             $this->getDatasetsForCustomizations(),
             $this->getDatasetsForPrices(),
             $this->getDatasetsForStock(),
@@ -414,6 +422,28 @@ class ProductFormDataProviderTest extends TestCase
                     ],
                 ],
             ],
+        ];
+
+        $datasets[] = [
+            $productData,
+            $expectedOutputData,
+        ];
+
+        return $datasets;
+    }
+
+    /**
+     * @return array
+     */
+    public function getDataSetsForManufacturer(): array
+    {
+        $datasets = [];
+
+        $expectedOutputData = $this->getDefaultOutputData();
+        $expectedOutputData['manufacturer']['manufacturer_id'] = 42;
+
+        $productData = [
+            'manufacturer_id' => 42,
         ];
 
         $datasets[] = [
@@ -742,7 +772,7 @@ class ProductFormDataProviderTest extends TestCase
             $product['show_price'] ?? true,
             $product['condition'] ?? ProductCondition::NEW,
             $product['show_condition'] ?? false,
-            $product['show_condition'] ?? 0
+            $product['manufacturer_id'] ?? 0
         );
     }
 
@@ -915,6 +945,9 @@ class ProductFormDataProviderTest extends TestCase
             ],
             'suppliers' => [],
             'features' => [],
+            'manufacturer' => [
+                'manufacturer_id' => NoManufacturerId::NO_MANUFACTURER_ID,
+            ],
             'customizations' => [],
             'shortcuts' => [
                 'price' => [
