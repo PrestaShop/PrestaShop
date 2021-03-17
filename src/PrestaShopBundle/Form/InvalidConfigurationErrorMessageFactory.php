@@ -126,7 +126,7 @@ class InvalidConfigurationErrorMessageFactory
                     $lang = $this->langRepository->findOneBy(['id' => $error->getLanguageId()]);
 
                     return $this->translator->trans(
-                        'Field "%s" in language "%s" is invalid. Field must not contain HTML tags.',
+                        'The "%s" field in "%s" is invalid. Field must not contain HTML tags.',
                         [
                             $label,
                             $lang->getName(),
@@ -134,6 +134,13 @@ class InvalidConfigurationErrorMessageFactory
                         'Admin.Orderscustomers.Notification'
                     );
                 }
+                return $this->translator->trans(
+                    'Field "%s" is invalid. HTML tags are not allowed.',
+                    [
+                        $label,
+                    ],
+                    'Admin.Orderscustomers.Notification'
+                );
             case InvalidConfigurationDataError::ERROR_NOT_NUMERIC_OR_LOWER_THAN_ZERO:
                 return $this->translator->trans(
                     '%s is invalid. Please enter an integer greater or equal to 0.',
@@ -159,7 +166,7 @@ class InvalidConfigurationErrorMessageFactory
                 );
         }
         return $this->translator->trans(
-            'Field "%s" is invalid. Field must not contain HTML tags.',
+            'Field "%s" is invalid.',
             [
                 $label,
             ],
