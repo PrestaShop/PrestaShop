@@ -8280,4 +8280,23 @@ class ProductCore extends ObjectModel
 
         return $formated ? $context->getCurrentLocale()->formatPrice($ecotax, $currency->iso_code) : $ecotax;
     }
+
+    /**
+     * @return string
+     */
+    public function getProductType(): string
+    {
+        // Default value is the one saved, but in case it is not set we use dynamic definition
+        if (!empty($this->product_type) && in_array($this->product_type, ProductType::AVAILABLE_TYPES)) {
+            return $this->product_type;
+        } elseif ($this->is_virtual) {
+            return ProductType::TYPE_VIRTUAL;
+        } elseif (Pack::isPack($this->id)) {
+            return ProductType::TYPE_PACK;
+        } elseif ($this->hasCombinations()) {
+            return ProductType::TYPE_COMBINATION;
+        }
+
+        return ProductType::TYPE_STANDARD;
+    }
 }
