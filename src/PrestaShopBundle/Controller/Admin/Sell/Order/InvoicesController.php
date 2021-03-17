@@ -26,24 +26,11 @@
 
 namespace PrestaShopBundle\Controller\Admin\Sell\Order;
 
-use FormInterface;
-use PrestaShop\PrestaShop\Core\Form\FormDataProviderInterface;
 use PrestaShop\PrestaShop\Core\Form\FormHandlerInterface;
 use PrestaShopBundle\Controller\Admin\FrameworkBundleAdminController;
-use PrestaShopBundle\Controller\Exception\FieldNotFoundException;
-use PrestaShopBundle\Form\Admin\Sell\Order\Invoices\GenerateByDateType;
-use PrestaShopBundle\Form\Admin\Sell\Order\Invoices\GenerateByStatusType;
-use PrestaShopBundle\Form\Admin\Sell\Order\Invoices\InvoiceByStatusFormHandler;
-use PrestaShopBundle\Form\Admin\Sell\Order\Invoices\InvoiceOptionsDataProvider;
-use PrestaShopBundle\Form\Admin\Sell\Order\Invoices\InvoiceOptionsType;
-use PrestaShopBundle\Form\Admin\Sell\Order\Invoices\InvoicesByDateDataProvider;
-use PrestaShopBundle\Form\Admin\Sell\Order\Invoices\InvoicesByStatusDataProvider;
 use PrestaShopBundle\Form\Exception\DataProviderException;
-use PrestaShopBundle\Form\Exception\InvalidConfigurationDataError;
-use PrestaShopBundle\Form\Exception\InvalidConfigurationDataErrorCollection;
 use PrestaShopBundle\Security\Annotation\AdminSecurity;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
-use Symfony\Component\Form\Form;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 
@@ -134,8 +121,6 @@ class InvoicesController extends FrameworkBundleAdminController
 
         return $this->redirectToRoute('admin_order_invoices');
     }
-
-
 
     /**
      * Processes the form in a generic way.
