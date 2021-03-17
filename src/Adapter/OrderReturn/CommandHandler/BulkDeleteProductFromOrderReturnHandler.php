@@ -69,7 +69,7 @@ class BulkDeleteProductFromOrderReturnHandler extends AbstractOrderReturnHandler
         /* If there would be no details left after delete then order return would invalid. */
         if (empty($details)) {
             throw new BulkDeleteOrderReturnProductException(
-                $errors,
+                [],
                 'Order return must have at least one product left',
                 BulkDeleteOrderReturnProductException::CANT_DELETE_ALL_PRODUCTS
             );
