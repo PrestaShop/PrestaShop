@@ -59,7 +59,7 @@ class SearchEngineType extends TranslatorAwareType
                     ]),
                 ],
             ])
-            ->add('getvar', TextType::class, [
+            ->add('query_key', TextType::class, [
                 'label' => $this->trans('$_GET variable', 'Admin.Shopparameters.Feature'),
                 'attr' => [
                     'size' => 40,

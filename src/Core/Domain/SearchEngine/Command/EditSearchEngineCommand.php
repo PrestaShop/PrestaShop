@@ -49,7 +49,7 @@ class EditSearchEngineCommand
     /**
      * @var string|null
      */
-    private $getVariable;
+    private $queryKey;
 
     /**
      * @param int $searchEngineId
@@ -92,19 +92,19 @@ class EditSearchEngineCommand
     /**
      * @return string|null
      */
-    public function getGetVariable(): ?string
+    public function getQueryKey(): ?string
     {
-        return $this->getVariable;
+        return $this->queryKey;
     }
 
     /**
-     * @param string|null $getVariable
+     * @param string|null $queryKey
      *
      * @return self
      */
-    public function setGetVariable(?string $getVariable): self
+    public function setQueryKey(?string $queryKey): self
     {
-        $this->getVariable = $getVariable;
+        $this->queryKey = $queryKey;
 
         return $this;
     }

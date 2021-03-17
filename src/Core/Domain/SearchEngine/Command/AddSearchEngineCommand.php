@@ -41,16 +41,16 @@ class AddSearchEngineCommand
     /**
      * @var string
      */
-    private $getVariable;
+    private $queryKey;
 
     /**
      * @param string $server
-     * @param string $getVariable
+     * @param string $queryKey
      */
-    public function __construct(string $server, string $getVariable)
+    public function __construct(string $server, string $queryKey)
     {
         $this->server = $server;
-        $this->getVariable = $getVariable;
+        $this->queryKey = $queryKey;
     }
 
     /**
@@ -64,8 +64,8 @@ class AddSearchEngineCommand
     /**
      * @return string
      */
-    public function getGetVariable(): string
+    public function getQueryKey(): string
     {
-        return $this->getVariable;
+        return $this->queryKey;
     }
 }

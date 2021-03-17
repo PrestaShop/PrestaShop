@@ -103,7 +103,7 @@ final class SearchEngineGridDefinitionFactory extends AbstractFilterableGridDefi
                     ])
             )
             ->add(
-                (new DataColumn('getvar'))
+                (new DataColumn('query_key'))
                     ->setName($this->trans('GET variable', [], 'Admin.Shopparameters.Feature'))
                     ->setOptions([
                         'field' => 'getvar',
@@ -142,11 +142,11 @@ final class SearchEngineGridDefinitionFactory extends AbstractFilterableGridDefi
                     ->setAssociatedColumn('server')
             )
             ->add(
-                (new Filter('getvar', TextType::class))
+                (new Filter('query_key', TextType::class))
                     ->setTypeOptions([
                         'required' => false,
                     ])
-                    ->setAssociatedColumn('getvar')
+                    ->setAssociatedColumn('query_key')
             )
             ->add(
                 (new Filter('actions', SearchAndResetType::class))
