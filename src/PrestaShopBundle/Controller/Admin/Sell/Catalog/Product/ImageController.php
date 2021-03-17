@@ -58,12 +58,7 @@ class ImageController extends FrameworkBundleAdminController
         /** @var ProductImage[] $images */
         $images = $this->getQueryBus()->handle(new GetProductImages($productId));
 
-        $data = [];
-        foreach ($images as $image) {
-            $data[] = $this->formatImage($image);
-        }
-
-        return new JsonResponse($data);
+        return new JsonResponse(array_map([$this, 'formatImage'], $images));
     }
 
     /**
