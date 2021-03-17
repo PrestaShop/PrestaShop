@@ -84,7 +84,7 @@ class Install extends CommonPage {
         break;
 
       case 'System compatibility':
-        selector = this.sustemCompatibilityStepPageTitle;
+        selector = this.systemCompatibilityStepPageTitle;
         break;
 
       case 'Store information':
