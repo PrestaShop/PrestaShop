@@ -58,3 +58,11 @@ services:
       - '@prestashop.adapter.country.country_required_fields_provider'
     tags:
       - { name: validator.constraint_validator }
+
+  prestashop.core.constraint_validator.clean_html_validator:
+      class: 'PrestaShop\PrestaShop\Core\ConstraintValidator\CleanHtmlValidator'
+      arguments:
+        - "@=service('prestashop.adapter.legacy.configuration').getBoolean('PS_ALLOW_HTML_IFRAME')"
+      tags:
+        - { name: validator.constraint_validator }
+

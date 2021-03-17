@@ -884,11 +884,11 @@ services:
 
     form.type.cms_page_category:
         class: 'PrestaShopBundle\Form\Admin\Improve\Design\Pages\CmsPageCategoryType'
+        parent: 'form.type.translatable.aware'
+        public: true
         arguments:
             - '@=service("prestashop.core.form.choice_provider.cms_categories").getChoices()'
             - '@=service("prestashop.adapter.multistore_feature").isUsed()'
-        calls:
-            - { method: setTranslator, arguments: ['@translator'] }
         tags:
             - { name: form.type }
 

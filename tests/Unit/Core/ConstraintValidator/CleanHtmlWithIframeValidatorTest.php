@@ -24,13 +24,15 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
 
+declare(strict_types=1);
+
 namespace Tests\Unit\Core\ConstraintValidator;
 
 use PrestaShop\PrestaShop\Core\ConstraintValidator\CleanHtmlValidator;
 use PrestaShop\PrestaShop\Core\ConstraintValidator\Constraints\CleanHtml;
 use Symfony\Component\Validator\Test\ConstraintValidatorTestCase;
 
-class CleanHtmlValidatorTest extends ConstraintValidatorTestCase
+class CleanHtmlWithIframeValidatorTest extends ConstraintValidatorTestCase
 {
     public function testItFailsWhenScriptTagsAreGiven()
     {
@@ -56,81 +58,49 @@ class CleanHtmlValidatorTest extends ConstraintValidatorTestCase
         ;
     }
 
-    public function testItFailsWhenIframeIsGiven()
+    public function testItSucceedsWhenIframeIsGiven()
     {
         $htmlTag = '<iframe src="catvideo.html" /></iframe>';
 
         $this->validator->validate($htmlTag, new CleanHtml());
 
-        $this->buildViolation((new CleanHtml())->message)
-            ->setParameter('%s', '"' . $htmlTag . '"')
-            ->assertRaised()
-        ;
+        $this->assertNoViolation();
+        $this->context->getViolations();
     }
 
-    public function testItFailsWhenIframeWithSpacesIsGiven()
-    {
-        $htmlTag = '< iframe >';
-
-        $this->validator->validate($htmlTag, new CleanHtml());
-
-        $this->buildViolation((new CleanHtml())->message)
-            ->setParameter('%s', '"' . $htmlTag . '"')
-            ->assertRaised()
-        ;
-    }
-
-    public function testItFailsWhenFormIsGiven()
+    public function testItSucceedsWhenFormIsGiven()
     {
         $htmlTag = '<form>';
 
         $this->validator->validate($htmlTag, new CleanHtml());
 
-        $this->buildViolation((new CleanHtml())->message)
-            ->setParameter('%s', '"' . $htmlTag . '"')
-            ->assertRaised()
-        ;
+        $this->assertNoViolation();
+        $this->context->getViolations();
     }
 
-    public function testItFailsWhenInputIsGiven()
+    public function testItSucceedsWhenInputIsGiven()
     {
         $htmlTag = '<input name="your-card-number">';
 
         $this->validator->validate($htmlTag, new CleanHtml());
 
-        $this->buildViolation((new CleanHtml())->message)
-            ->setParameter('%s', '"' . $htmlTag . '"')
-            ->assertRaised()
-        ;
+        $this->assertNoViolation();
+        $this->context->getViolations();
     }
 
-    public function testItFailsWhenEmbedIsGiven()
+    public function testItSucceedsWhenEmbedIsGiven()
     {
         $htmlTag = '<embed type="image/jpg" src="funny_cat.jpg" width="300" height="200">';
 
         $this->validator->validate($htmlTag, new CleanHtml());
 
-        $this->buildViolation((new CleanHtml())->message)
-            ->setParameter('%s', '"' . $htmlTag . '"')
-            ->assertRaised()
-        ;
+        $this->assertNoViolation();
+        $this->context->getViolations();
     }
 
-    public function testItFailsWhenObjectIsGiven()
+    public function testItSucceedsWhenObjectIsGiven()
     {
         $htmlTag = '<object data="funny_cat.jpg" width="300" height="200"></object> ';
-
-        $this->validator->validate($htmlTag, new CleanHtml());
-
-        $this->buildViolation((new CleanHtml())->message)
-            ->setParameter('%s', '"' . $htmlTag . '"')
-            ->assertRaised()
-        ;
-    }
-
-    public function testSucceedsWithPlainWords()
-    {
-        $htmlTag = '/form input > embed object iframe';
 
         $this->validator->validate($htmlTag, new CleanHtml());
 
@@ -140,6 +110,6 @@ class CleanHtmlValidatorTest extends ConstraintValidatorTestCase
 
     protected function createValidator()
     {
-        return new CleanHtmlValidator(false);
+        return new CleanHtmlValidator(true);
     }
 }
