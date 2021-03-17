@@ -75,33 +75,30 @@ export default class CombinationsManager {
   }
 
   onDefaultCombinationSelection() {
-    let previousUnchecked = false;
-    this.$combinationsContainer.on(
-      'change', ProductMap.combinations.isDefaultInputsSelector, async (e) => {
-        if (previousUnchecked) {
-          return;
+    this.$combinationsContainer.on('change', ProductMap.combinations.isDefaultInputsSelector, async (e) => {
+      const checkedInputs = this.$combinationsContainer.find(
+        `${ProductMap.combinations.isDefaultInputsSelector}:checked`,
+      );
+
+      // stop loop when only one input is checked
+      if (checkedInputs.length === 1) {
+        return;
+      }
+
+      await this.combinationsService.updateListedCombination(
+        this.findCombinationId(e.currentTarget),
+        {
+          'combination_item[is_default]': e.currentTarget.value,
+          'combination_item[_token]': this.getCombinationToken(),
+        },
+      );
+
+      $.each(checkedInputs, (index, input) => {
+        if (this.findCombinationId(input) !== this.findCombinationId(e.currentTarget)) {
+          $(input).prop('checked', false);
         }
-        await this.combinationsService.updateListedCombination(
-          this.findCombinationId(e.currentTarget),
-          {
-            'combination_item[is_default]': e.currentTarget.value,
-            'combination_item[_token]': this.getCombinationToken(),
-          },
-        );
-
-        const checkedInputs = this.$combinationsContainer.find(
-          `${ProductMap.combinations.isDefaultInputsSelector}[value=1]:checked`,
-        );
-
-        $.each(checkedInputs, (index, input) => {
-          if (this.findCombinationId(input) !== this.findCombinationId(e.currentTarget)) {
-            previousUnchecked = true;
-            $(input).prop('checked', false);
-            $(input).siblings(`${ProductMap.combinations.isDefaultInputsSelector}[value=0]`).prop('checked', true);
-            previousUnchecked = false;
-          }
-        });
       });
+    });
   }
 
   firstInit() {

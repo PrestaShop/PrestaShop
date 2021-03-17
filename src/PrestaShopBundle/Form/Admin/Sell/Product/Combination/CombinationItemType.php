@@ -28,12 +28,12 @@ declare(strict_types=1);
 namespace PrestaShopBundle\Form\Admin\Sell\Product\Combination;
 
 use PrestaShopBundle\Form\Admin\Type\SubmittableInputType;
-use PrestaShopBundle\Form\Admin\Type\SwitchType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\ButtonType;
 use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
 use Symfony\Component\Form\Extension\Core\Type\HiddenType;
 use Symfony\Component\Form\Extension\Core\Type\MoneyType;
+use Symfony\Component\Form\Extension\Core\Type\RadioType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
 
@@ -44,7 +44,6 @@ class CombinationItemType extends AbstractType
      */
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
-        // @todo: impact_on_price and quantity needs new type component similar as in Catalog->stocks page.
         $builder
             ->add('is_selected', CheckboxType::class, [
                 'label' => false,
@@ -68,7 +67,8 @@ class CombinationItemType extends AbstractType
                     'class' => 'combination-quantity',
                 ],
             ])
-            ->add('is_default', SwitchType::class, [
+            ->add('is_default', RadioType::class, [
+                'label' => false,
                 'attr' => [
                     'class' => 'combination-is-default-input',
                 ],
