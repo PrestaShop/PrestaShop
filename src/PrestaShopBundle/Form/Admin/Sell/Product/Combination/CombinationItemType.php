@@ -54,7 +54,12 @@ class CombinationItemType extends AbstractType
                 ],
             ])
             ->add('name', HiddenType::class)
-            ->add('reference', TextType::class)
+            ->add('reference', SubmittableInputType::class, [
+                'type' => TextType::class,
+                'attr' => [
+                    'class' => 'combination-reference',
+                ],
+            ])
             ->add('impact_on_price', SubmittableInputType::class, [
                 'type' => MoneyType::class,
                 'attr' => [
