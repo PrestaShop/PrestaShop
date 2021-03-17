@@ -82,7 +82,7 @@
       for="caption-textarea"
       class="control-label"
     >{{
-      $t("Caption")
+      $t("window.caption")
     }}</label>
     <textarea
       id="caption-textarea"

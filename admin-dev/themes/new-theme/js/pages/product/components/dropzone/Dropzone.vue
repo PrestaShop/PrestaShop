@@ -49,11 +49,11 @@
         ]"
       >
         <i class="material-icons">add_a_photo</i><br>
-        {{ $t('Drop images here') }}<br>
-        <a>{{ $t('or select files') }}</a><br>
+        {{ $t('window.dropImages') }}<br>
+        <a>{{ $t('window.selectFiles') }}</a><br>
         <small>
-          {{ $t('files recommandations') }}<br>
-          {{ $t('files recommandations2') }}
+          {{ $t('window.recommendedSize') }}<br>
+          {{ $t('window.recommendedFormats') }}
         </small>
       </div>
 
