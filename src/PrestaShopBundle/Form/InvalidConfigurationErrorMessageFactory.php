@@ -174,7 +174,7 @@ class InvalidConfigurationErrorMessageFactory
         );
     }
 
-    protected function getLabel(Form $form, string $fieldName)
+    protected function getLabel(FormInterface $form, string $fieldName)
     {
         $view = $form->createView();
         foreach ($view->children as $child) {
