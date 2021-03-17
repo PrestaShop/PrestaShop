@@ -48,6 +48,7 @@ $(() => {
 
   const $productForm = $(ProductMap.productForm);
   const productId = parseInt($productForm.data('productId'), 10);
+  const productType = $productForm.data('productType');
 
   // Combinations manager must be initialised before nav handler, or it won't trigger the pagination if the tab is
   // selected on load, but only when productId exists (edition mode)
@@ -85,7 +86,10 @@ $(() => {
   // From here we init component specific to edition
   const $productFormSubmitButton = $(ProductMap.productFormSubmitButton);
   new ProductPartialUpdater(window.prestashop.instance.eventEmitter, $productForm, $productFormSubmitButton).watch();
-  new ProductSuppliersManager();
   new FeatureValuesManager(window.prestashop.instance.eventEmitter);
   new CustomizationsManager();
+
+  if (productType !== 'combination') {
+    new ProductSuppliersManager();
+  }
 });
