@@ -166,11 +166,11 @@ class InvalidConfigurationErrorMessageFactory
                 );
         }
         return $this->translator->trans(
-            'Field "%s" is invalid.',
+            '%s is invalid.',
             [
                 $label,
             ],
-            'Admin.Orderscustomers.Notification'
+            'Admin.Notifications.Error'
         );
     }
 
