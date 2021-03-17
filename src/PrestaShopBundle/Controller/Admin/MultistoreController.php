@@ -54,6 +54,7 @@ class MultistoreController extends FrameworkBundleAdminController
 
     /**
      * @param bool $lockedToAllShopContext
+     *
      * @return Response
      */
     public function header(bool $lockedToAllShopContext): Response
