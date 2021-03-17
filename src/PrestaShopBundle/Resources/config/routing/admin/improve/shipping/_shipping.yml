@@ -1,0 +1,7 @@
+_preferences:
+    resource: "preferences.yml"
+    prefix: /preferences
+
+_carriers:
+    resource: "carriers.yml"
+    prefix: /carriers
