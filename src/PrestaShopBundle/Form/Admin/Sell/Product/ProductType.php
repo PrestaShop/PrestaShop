@@ -112,7 +112,7 @@ class ProductType extends TranslatorAwareType
             ;
         }
 
-        /**
+        /*
          * This listener adapts the content of the form based on the Product type, it can remove add or transforms some
          * of the internal fields @see ProductTypeListener
          */
