@@ -139,7 +139,7 @@ class InvalidConfigurationErrorMessageFactory
                     [
                         $label,
                     ],
-                    'Admin.Orderscustomers.Notification'
+                    'Admin.Notifications.Error'
                 );
             case InvalidConfigurationDataError::ERROR_NOT_NUMERIC_OR_LOWER_THAN_ZERO:
                 return $this->translator->trans(
