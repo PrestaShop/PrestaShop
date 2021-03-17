@@ -366,7 +366,7 @@ class ControllerTest extends TestCase
         $responseProphecy = $this->prophesize(Response::class);
 
         $responseProphecy->getContent()->willReturn('');
-        $multistoreControllerProphecy->header()->willReturn($responseProphecy->reveal());
+        $multistoreControllerProphecy->header(Argument::any())->willReturn($responseProphecy->reveal());
 
         return $multistoreControllerProphecy;
     }
