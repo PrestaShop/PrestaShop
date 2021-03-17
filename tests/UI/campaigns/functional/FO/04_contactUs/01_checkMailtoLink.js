@@ -14,7 +14,7 @@ const {DefaultEmployee} = require('@data/demo/employees');
 // Import test context
 const testContext = require('@utils/testContext');
 
-const baseContext = 'functional_FO_headerAndFooter_checkLinksInHeader';
+const baseContext = 'functional_FO_contactUs_checkMailtoLink';
 
 let browserContext;
 let page;
