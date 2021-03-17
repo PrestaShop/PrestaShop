@@ -58,6 +58,11 @@ class UpdateCombinationFromListingCommand
     private $default;
 
     /**
+     * @var string|null
+     */
+    private $reference;
+
+    /**
      * @param int $combinationId
      */
     public function __construct(int $combinationId)
@@ -131,5 +136,21 @@ class UpdateCombinationFromListingCommand
         $this->default = $default;
 
         return $this;
+    }
+
+    /**
+     * @return string|null
+     */
+    public function getReference(): ?string
+    {
+        return $this->reference;
+    }
+
+    /**
+     * @param string|null $reference
+     */
+    public function setReference(?string $reference): void
+    {
+        $this->reference = $reference;
     }
 }
