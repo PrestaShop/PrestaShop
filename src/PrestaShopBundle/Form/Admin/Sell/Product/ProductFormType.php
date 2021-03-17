@@ -29,7 +29,9 @@ declare(strict_types=1);
 namespace PrestaShopBundle\Form\Admin\Sell\Product;
 
 use PrestaShop\PrestaShop\Adapter\Shop\Url\ProductProvider;
+use PrestaShop\PrestaShop\Core\Domain\Product\QueryResult\ProductType;
 use PrestaShopBundle\Form\Admin\Type\TranslatorAwareType;
+use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Symfony\Component\Form\Extension\Core\Type\ButtonType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\Form\FormBuilderInterface;
@@ -41,7 +43,7 @@ use Symfony\Component\Translation\TranslatorInterface;
 /**
  * This is the parent product form type
  */
-class ProductType extends TranslatorAwareType
+class ProductFormType extends TranslatorAwareType
 {
     /**
      * @var ProductProvider
@@ -49,17 +51,25 @@ class ProductType extends TranslatorAwareType
     private $productUrlProvider;
 
     /**
+     * @var EventSubscriberInterface
+     */
+    private $productTypeListener;
+
+    /**
      * @param TranslatorInterface $translator
      * @param array $locales
      * @param ProductProvider $productUrlProvider
+     * @param EventSubscriberInterface $productTypeListener
      */
     public function __construct(
         TranslatorInterface $translator,
         array $locales,
-        ProductProvider $productUrlProvider
+        ProductProvider $productUrlProvider,
+        EventSubscriberInterface $productTypeListener
     ) {
         parent::__construct($translator, $locales);
         $this->productUrlProvider = $productUrlProvider;
+        $this->productTypeListener = $productTypeListener;
     }
 
     /**
@@ -102,6 +112,12 @@ class ProductType extends TranslatorAwareType
                 ])
             ;
         }
+
+        /*
+         * This listener adapts the content of the form based on the Product type, it can remove add or transforms some
+         * of the internal fields @see ProductTypeListener
+         */
+        $builder->addEventSubscriber($this->productTypeListener);
     }
 
     /**
@@ -109,13 +125,17 @@ class ProductType extends TranslatorAwareType
      */
     public function buildView(FormView $view, FormInterface $form, array $options)
     {
+        $productType = $options['data']['basic']['type'] ?? ProductType::TYPE_STANDARD;
+        $formVars = [
+            'attr' => [
+                'data-product-type' => $productType,
+            ],
+        ];
+
         if (!empty($options['product_id'])) {
-            $view->vars = array_replace($view->vars, [
-                'attr' => [
-                    'data-product-id' => $options['product_id'],
-                ],
-            ]);
+            $formVars['attr']['data-product-id'] = $options['product_id'];
         }
+        $view->vars = array_replace($view->vars, $formVars);
     }
 
     /**
@@ -127,7 +147,17 @@ class ProductType extends TranslatorAwareType
 
         $resolver->setDefaults([
             'product_id' => null,
+            'product_type' => null,
         ]);
         $resolver->setAllowedTypes('product_id', ['null', 'int']);
+        $resolver->setAllowedTypes('product_type', ['null', 'string']);
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function getBlockPrefix()
+    {
+        return 'product';
     }
 }

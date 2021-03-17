@@ -187,5 +187,5 @@ services:
       class: 'PrestaShop\PrestaShop\Core\Form\IdentifiableObject\Builder\FormBuilder'
       factory: 'prestashop.core.form.builder.form_builder_factory:create'
       arguments:
-          - 'PrestaShopBundle\Form\Admin\Sell\Product\ProductType'
+          - 'PrestaShopBundle\Form\Admin\Sell\Product\ProductFormType'
           - '@prestashop.core.form.identifiable_object.data_provider.product_form_data_provider'

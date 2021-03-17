@@ -1244,12 +1244,13 @@ services:
       tags:
         - { name: form.type }
 
-    form.type.sell.product.product_type:
-        class: 'PrestaShopBundle\Form\Admin\Sell\Product\ProductType'
+    form.type.sell.product.product_form_type:
+        class: 'PrestaShopBundle\Form\Admin\Sell\Product\ProductFormType'
         parent: 'form.type.translatable.aware'
         public: true
         arguments:
             - '@prestashop.adapter.shop.url.product_provider'
+            - '@form.type.sell.product.event_listener.product_type_listener'
         tags:
             - { name: form.type }
 
@@ -1407,6 +1408,10 @@ services:
         arguments:
             - '@prestashop.adapter.form.choice_provider.feature_values_choice_provider'
             - '@form.form_cloner'
+        public: true
+
+    form.type.sell.product.event_listener.product_type_listener:
+        class: 'PrestaShopBundle\Form\Admin\Sell\Product\EventListener\ProductTypeListener'
         public: true
 
     form.type.sell.product.combination_list_type:
