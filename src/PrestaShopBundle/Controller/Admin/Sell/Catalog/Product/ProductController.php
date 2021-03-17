@@ -189,7 +189,7 @@ class ProductController extends FrameworkBundleAdminController
             $this->getCommandBus()->handle(new DeleteProductCommand($productId));
             $this->addFlash(
                 'success',
-                $this->trans('Successful deletion.', 'Admin.Notifications.Success')
+                $this->trans('Successful deletion', 'Admin.Notifications.Success')
             );
         } catch (ProductException $e) {
             $this->addFlash('error', $this->getErrorMessageForException($e, $this->getErrorMessages($e)));
