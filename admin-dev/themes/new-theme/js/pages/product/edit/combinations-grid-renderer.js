@@ -98,7 +98,8 @@ export default class CombinationsGridRenderer {
       $(ProductMap.combinations.tableRow.deleteButton(rowIndex)).data('id', combination.id);
 
       if (combination.isDefault) {
-        $(ProductMap.combinations.tableRow.isDefaultTrueInput(rowIndex)).attr('checked', true);
+        const defaultTrueInput = $(ProductMap.combinations.tableRow.isDefaultTrueInput(rowIndex));
+        defaultTrueInput.attr('checked', true);
       } else {
         $(ProductMap.combinations.tableRow.isDefaultFalseInput(rowIndex)).attr('checked', true);
       }
