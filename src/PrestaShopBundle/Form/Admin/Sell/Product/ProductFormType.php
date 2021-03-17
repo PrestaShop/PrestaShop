@@ -29,6 +29,7 @@ declare(strict_types=1);
 namespace PrestaShopBundle\Form\Admin\Sell\Product;
 
 use PrestaShop\PrestaShop\Adapter\Shop\Url\ProductProvider;
+use PrestaShop\PrestaShop\Core\Domain\Product\QueryResult\ProductType;
 use PrestaShopBundle\Form\Admin\Type\TranslatorAwareType;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Symfony\Component\Form\Extension\Core\Type\ButtonType;
@@ -42,7 +43,7 @@ use Symfony\Component\Translation\TranslatorInterface;
 /**
  * This is the parent product form type
  */
-class ProductType extends TranslatorAwareType
+class ProductFormType extends TranslatorAwareType
 {
     /**
      * @var ProductProvider
@@ -124,13 +125,17 @@ class ProductType extends TranslatorAwareType
      */
     public function buildView(FormView $view, FormInterface $form, array $options)
     {
+        $productType = $options['data']['basic']['type'] ?? ProductType::TYPE_STANDARD;
+        $formVars = [
+            'attr' => [
+                'data-product-type' => $productType,
+            ],
+        ];
+
         if (!empty($options['product_id'])) {
-            $view->vars = array_replace($view->vars, [
-                'attr' => [
-                    'data-product-id' => $options['product_id'],
-                ],
-            ]);
+            $formVars['attr']['data-product-id'] = $options['product_id'];
         }
+        $view->vars = array_replace($view->vars, $formVars);
     }
 
     /**
@@ -142,7 +147,17 @@ class ProductType extends TranslatorAwareType
 
         $resolver->setDefaults([
             'product_id' => null,
+            'product_type' => null,
         ]);
         $resolver->setAllowedTypes('product_id', ['null', 'int']);
+        $resolver->setAllowedTypes('product_type', ['null', 'string']);
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function getBlockPrefix()
+    {
+        return 'product';
     }
 }

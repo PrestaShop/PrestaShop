@@ -1244,8 +1244,8 @@ services:
       tags:
         - { name: form.type }
 
-    form.type.sell.product.product_type:
-        class: 'PrestaShopBundle\Form\Admin\Sell\Product\ProductType'
+    form.type.sell.product.product_form_type:
+        class: 'PrestaShopBundle\Form\Admin\Sell\Product\ProductFormType'
         parent: 'form.type.translatable.aware'
         public: true
         arguments:
