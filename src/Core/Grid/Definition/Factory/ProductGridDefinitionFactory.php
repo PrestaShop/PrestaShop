@@ -270,7 +270,7 @@ final class ProductGridDefinitionFactory extends AbstractGridDefinitionFactory
                     ->setTypeOptions([
                         'required' => false,
                         'attr' => [
-                            'placeholder' => $this->trans('Search reference', [], 'Admin.Actions'),
+                            'placeholder' => $this->trans('Search reference', [], 'Admin.Catalog.Help'),
                         ],
                     ])
                     ->setAssociatedColumn('reference')
