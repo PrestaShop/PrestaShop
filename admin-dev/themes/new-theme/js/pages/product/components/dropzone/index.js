@@ -32,7 +32,9 @@ Vue.use(VueI18n);
 const i18n = new VueI18n({
   locale: 'en',
   formatter: new ReplaceFormatter(),
-  messages: {en: JSON.parse(document.querySelector('#product-images-container').dataset.translations)},
+  messages: {
+    en: JSON.parse(document.querySelector('#product-images-container').dataset.translations),
+  },
 });
 
 export default function initDropzone(productId) {

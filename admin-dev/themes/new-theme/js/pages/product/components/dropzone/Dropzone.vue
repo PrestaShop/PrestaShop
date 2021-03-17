@@ -73,6 +73,7 @@
       @unselectAll="unselectAll"
       @removeSelection="removeSelection"
       @selectAll="selectAll"
+      @openGallery="toggleGallery"
       :files="files"
     />
 
@@ -107,6 +108,12 @@
         </div>
       </div>
     </div>
+
+    <dropzone-photo-swipe
+      :files="files"
+      @closeGallery="toggleGallery"
+      v-if="files.length > 0 && galleryOpened"
+    />
   </div>
 </template>
 
@@ -114,6 +121,7 @@
   import Router from '@components/router';
   import {getProductImages} from '@pages/product/services/images';
   import DropzoneWindow from './DropzoneWindow';
+  import DropzonePhotoSwipe from './DropzonePhotoSwipe';
 
   const {$} = window;
 
@@ -135,6 +143,7 @@
         selectedFiles: [],
         translations: [],
         loading: true,
+        galleryOpened: false,
       };
     },
     props: {
@@ -145,6 +154,7 @@
     },
     components: {
       DropzoneWindow,
+      DropzonePhotoSwipe,
     },
     computed: {},
     mounted() {
@@ -255,6 +265,12 @@
         $('.tooltip.show').each((i, element) => {
           $(element).remove();
         });
+      },
+      /**
+       * Method used to open the photoswipe gallery
+       */
+      toggleGallery() {
+        this.galleryOpened = !this.galleryOpened;
       },
     },
   };
