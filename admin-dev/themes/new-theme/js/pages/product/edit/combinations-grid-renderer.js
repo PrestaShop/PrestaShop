@@ -63,8 +63,6 @@ export default class CombinationsGridRenderer {
   }
 
   /**
-   * @todo: handle on change of new inputs of price quantity and is_default when they are ready
-   * @todo: they should call related endpoints to update combination
    * @param {Array} combinations
    *
    * @private
@@ -96,9 +94,15 @@ export default class CombinationsGridRenderer {
       $quantityInput.data('initial-value', combination.quantity);
       $impactOnPriceInput.val(combination.impactOnPrice);
       $impactOnPriceInput.data('initial-value', combination.impactOnPrice);
-      $(ProductMap.combinations.tableRow.isDefaultInput(rowIndex)).val(combination.isDefault);
       $(ProductMap.combinations.tableRow.editButton(rowIndex)).data('id', combination.id);
       $(ProductMap.combinations.tableRow.deleteButton(rowIndex)).data('id', combination.id);
+
+      if (combination.isDefault) {
+        $(ProductMap.combinations.tableRow.isDefaultTrueInput(rowIndex)).attr('checked', true);
+      } else {
+        $(ProductMap.combinations.tableRow.isDefaultFalseInput(rowIndex)).attr('checked', true);
+      }
+
       rowIndex += 1;
     });
   }

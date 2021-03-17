@@ -34,6 +34,7 @@ const {$} = window;
 export default class CombinationsManager {
   constructor() {
     this.$productForm = $(ProductMap.productForm);
+    this.$combinationsContainer = $(ProductMap.combinations.combinationsContainer);
     this.combinationIdInputsSelector = ProductMap.combinations.combinationIdInputsSelector;
     this.initialized = false;
     this.combinationsService = new CombinationsService(this.getProductId());
@@ -72,6 +73,14 @@ export default class CombinationsManager {
       await this.combinationsService.updateListedCombination(
         combinationId,
         {'combination_item[impact_on_price][value]': input.value, 'combination_item[_token]': combinationToken},
+      );
+    });
+    this.$combinationsContainer.on('change', ProductMap.combinations.isDefaultInputsSelector, async (e) => {
+      const combinationId = $(e.currentTarget).closest('tr').find('.combination-id-input').val();
+
+      await this.combinationsService.updateListedCombination(
+        combinationId,
+        {'combination_item[is_default]': e.currentTarget.value, 'combination_item[_token]': combinationToken},
       );
     });
   }
