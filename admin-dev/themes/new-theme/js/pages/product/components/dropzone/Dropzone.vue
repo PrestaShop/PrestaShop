@@ -75,6 +75,7 @@
       @selectAll="selectAll"
       @saveSelectedFile="saveSelectedFile"
       @replacedFile="manageReplacedFile"
+      @openGallery="toggleGallery"
       :files="files"
       :locales="locales"
       :selected-locale="selectedLocale"
@@ -127,6 +128,12 @@
         </div>
       </div>
     </div>
+
+    <dropzone-photo-swipe
+      :files="files"
+      @closeGallery="toggleGallery"
+      v-if="files.length > 0 && galleryOpened"
+    />
   </div>
 </template>
 
@@ -143,6 +150,7 @@
   import ProductEventMap from '@pages/product/product-event-map';
   import Modal from '@vue/components/Modal';
   import DropzoneWindow from './DropzoneWindow';
+  import DropzonePhotoSwipe from './DropzonePhotoSwipe';
 
   const {$} = window;
 
@@ -167,6 +175,7 @@
         selectedLocale: null,
         buttonLoading: false,
         isModalShown: false,
+        galleryOpened: false,
       };
     },
     props: {
@@ -190,6 +199,7 @@
     components: {
       DropzoneWindow,
       Modal,
+      DropzonePhotoSwipe,
     },
     computed: {},
     mounted() {
@@ -502,6 +512,12 @@
       },
       hideModal() {
         this.isModalShown = false;
+      },
+      /**
+       * Method used to open the photoswipe gallery
+       */
+      toggleGallery() {
+        this.galleryOpened = !this.galleryOpened;
       },
     },
   };

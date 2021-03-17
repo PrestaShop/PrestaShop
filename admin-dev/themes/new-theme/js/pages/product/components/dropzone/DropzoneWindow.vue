@@ -38,6 +38,7 @@
           class="material-icons"
           data-toggle="pstooltip"
           :data-original-title="$t('window.zoom')"
+          @click="$emit('openGallery')"
         >search</i>
         <i
           class="material-icons"
