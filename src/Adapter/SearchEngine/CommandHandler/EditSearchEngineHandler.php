@@ -52,8 +52,8 @@ final class EditSearchEngineHandler extends AbstractSearchEngineHandler implemen
             $searchEngine->server = $command->getServer();
         }
 
-        if (null !== $command->getGetVariable()) {
-            $searchEngine->getvar = $command->getGetVariable();
+        if (null !== $command->getQueryKey()) {
+            $searchEngine->getvar = $command->getQueryKey();
         }
 
         try {

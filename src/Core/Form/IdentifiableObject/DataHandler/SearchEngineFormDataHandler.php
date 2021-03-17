@@ -58,7 +58,7 @@ final class SearchEngineFormDataHandler implements FormDataHandlerInterface
     {
         $command = new AddSearchEngineCommand(
             $data['server'],
-            $data['getvar']
+            $data['query_key']
         );
 
         /** @var SearchEngineId $searchEngineId */
@@ -74,7 +74,7 @@ final class SearchEngineFormDataHandler implements FormDataHandlerInterface
     {
         $command = (new EditSearchEngineCommand($id))
             ->setServer($data['server'])
-            ->setGetVariable($data['getvar']);
+            ->setQueryKey($data['query_key']);
 
         $this->commandBus->handle($command);
     }

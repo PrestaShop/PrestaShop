@@ -81,7 +81,7 @@ class SearchEngineFeatureContext extends AbstractDomainFeatureContext
         }
 
         if (isset($data['getvar'])) {
-            $command->setGetVariable($data['getvar']);
+            $command->setQueryKey($data['getvar']);
         }
 
         $this->getCommandBus()->handle($command);

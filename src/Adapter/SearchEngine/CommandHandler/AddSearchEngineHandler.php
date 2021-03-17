@@ -51,7 +51,7 @@ final class AddSearchEngineHandler extends AbstractSearchEngineHandler implement
         $searchEngine = new SearchEngine();
 
         $searchEngine->server = $command->getServer();
-        $searchEngine->getvar = $command->getGetVariable();
+        $searchEngine->getvar = $command->getQueryKey();
 
         try {
             if (false === $searchEngine->validateFields(false)) {

@@ -105,7 +105,7 @@ final class SearchEngineQueryBuilder extends AbstractDoctrineQueryBuilder
         $allowedFilters = [
             'id_search_engine' => 'se.id_search_engine',
             'server' => 'se.server',
-            'getvar' => 'se.getvar',
+            'query_key' => 'se.getvar',
         ];
 
         foreach ($filters as $filterName => $filterValue) {
