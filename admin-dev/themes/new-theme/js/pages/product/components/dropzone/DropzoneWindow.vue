@@ -28,7 +28,9 @@
       <div class="dropzone-window-header-left">
         <p
           class="dropzone-window-number"
-          v-html="$t('window.selectedFiles', {'%filesNb%': selectedFiles.length})"
+          v-html="
+            $t('window.selectedFiles', { '%filesNb%': selectedFiles.length })
+          "
         />
       </div>
       <div class="dropzone-window-header-right">
@@ -36,6 +38,7 @@
           class="material-icons"
           data-toggle="pstooltip"
           :data-original-title="$t('window.zoom')"
+          @click="$emit('openGallery')"
         >search</i>
         <i
           class="material-icons"
