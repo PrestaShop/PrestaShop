@@ -123,7 +123,7 @@ class ContactType extends TranslatorAwareType
                     'constraints' => [
                         new NoTags([
                             'message' => $this->trans(
-                                'Field %s is invalid. Field must not contain HTML tags.',
+                                'The field %s is invalid. HTML tags are not allowed.',
                                 'Admin.Notifications.Error'
                             ),
                         ]),
