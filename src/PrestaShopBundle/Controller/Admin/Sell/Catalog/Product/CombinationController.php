@@ -139,10 +139,9 @@ class CombinationController extends FrameworkBundleAdminController
                 'id' => $combination->getCombinationId(),
                 'isSelected' => false,
                 'name' => $combination->getCombinationName(),
+                'reference' => $combination->getReference(),
                 //@todo: don't forget image path when implemented in the query
                 'impactOnPrice' => (string) $combination->getImpactOnPrice(),
-                //@todo: calculate final price. Need a service to be used in formData provider and here
-                'finalPriceTe' => 0,
                 'quantity' => $combination->getQuantity(),
                 'isDefault' => $combination->isDefault(),
             ];

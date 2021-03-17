@@ -40,7 +40,6 @@ use PrestaShop\PrestaShop\Core\Domain\Product\Combination\QueryResult\Combinatio
 use PrestaShop\PrestaShop\Core\Domain\Product\Combination\QueryResult\EditableCombinationForListing;
 use PrestaShop\PrestaShop\Core\Domain\Product\Combination\ValueObject\CombinationId;
 use PrestaShop\PrestaShop\Core\Util\Number\NumberExtractor;
-use Product;
 
 /**
  * Handles @see GetEditableCombinationsList using legacy object model
@@ -91,7 +90,6 @@ final class GetEditableCombinationsListHandler extends AbstractProductHandler im
     public function handle(GetEditableCombinationsList $query): CombinationListForEditing
     {
         $productId = $query->getProductId();
-        $product = $this->productRepository->get($productId);
 
         $combinations = $this->combinationRepository->getProductCombinations(
             $productId,
@@ -109,7 +107,6 @@ final class GetEditableCombinationsListHandler extends AbstractProductHandler im
         );
 
         return $this->formatEditableCombinationsForListing(
-            $product,
             $combinations,
             $attributesInformation,
             $this->combinationRepository->getTotalCombinationsCount($productId)
@@ -117,7 +114,6 @@ final class GetEditableCombinationsListHandler extends AbstractProductHandler im
     }
 
     /**
-     * @param Product $product
      * @param array $combinations
      * @param array<int, array<int, mixed>> $attributesInformationByCombinationId
      * @param int $totalCombinationsCount
@@ -125,12 +121,10 @@ final class GetEditableCombinationsListHandler extends AbstractProductHandler im
      * @return CombinationListForEditing
      */
     private function formatEditableCombinationsForListing(
-        Product $product,
         array $combinations,
         array $attributesInformationByCombinationId,
         int $totalCombinationsCount
     ): CombinationListForEditing {
-        $productPrice = $this->numberExtractor->extract($product, 'price');
         $combinationsForEditing = [];
 
         foreach ($combinations as $combination) {
@@ -150,10 +144,10 @@ final class GetEditableCombinationsListHandler extends AbstractProductHandler im
             $combinationsForEditing[] = new EditableCombinationForListing(
                 $combinationId,
                 $this->buildCombinationName($combinationAttributesInformation),
+                $combination['reference'],
                 $combinationAttributesInformation,
                 (bool) $combination['default_on'],
                 $impactOnPrice,
-                $productPrice->plus($impactOnPrice),
                 (int) $this->stockAvailableRepository->getForCombination(new CombinationId($combinationId))->quantity
 // @todo:
 //      Missing combination image:
