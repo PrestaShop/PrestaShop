@@ -66,6 +66,9 @@ class CombinationListingFeatureContext extends AbstractCombinationFeatureContext
         if (isset($dataRows['is default'])) {
             $command->setDefault(PrimitiveUtils::castStringBooleanIntoBoolean($dataRows['is default']));
         }
+        if (isset($dataRows['combination reference'])) {
+            $command->setReference($dataRows['combination reference']);
+        }
     }
 
     /**
