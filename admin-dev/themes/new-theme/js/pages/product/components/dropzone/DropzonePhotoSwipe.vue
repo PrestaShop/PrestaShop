@@ -113,6 +113,14 @@ import PhotoSwipeUI_Default from "photoswipe/dist/photoswipe-ui-default";
 
       const options = {
         index: 0,
+        shareButtons: [
+          {
+            id: 'download',
+            label: 'Download image',
+            url: '{{raw_image_url}}',
+            download: true,
+          },
+        ],
       };
 
       const items = this.files.map((file) => {
@@ -122,7 +130,6 @@ import PhotoSwipeUI_Default from "photoswipe/dist/photoswipe-ui-default";
 
         return file;
       });
-      console.log(items);
 
       const gallery = new PhotoSwipe(
         pswpElement,
