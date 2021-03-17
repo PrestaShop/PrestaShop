@@ -158,8 +158,8 @@ $component-name: multishop-modal;
       align-items: center;
 
       > i {
-        font-size: 1.2rem;
         margin-right: 0.825rem;
+        font-size: 1.2rem;
       }
 
       @include media-breakpoint-down(sm) {
