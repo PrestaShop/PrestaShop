@@ -30,6 +30,19 @@ namespace PrestaShopBundle\Form\Exception;
 
 class InvalidConfigurationDataError
 {
+    public const ERROR_INVALID_DATE_FROM = 'invalid_date_from';
+    public const ERROR_INVALID_DATE_TO = 'invalid_date_to';
+    public const ERROR_NO_INVOICES_FOUND = 'no_invoices_found';
+    public const ERROR_NO_INVOICES_FOUND_FOR_STATUS = 'no_invoices_found_for_status';
+    public const ERROR_INCORRECT_INVOICE_NUMBER = 'incorrect_invoice_number';
+    public const ERROR_NO_ORDER_STATE_SELECTED = 'no_order_state_selected';
+
+    public const ERROR_NOT_NUMERIC_OR_LOWER_THAN_ZERO = 'error_not_numeric_or_lower_than_zero';
+    public const ERROR_COOKIE_LIFETIME_MAX_VALUE_EXCEEDED = 'error_cookie_lifetime_max_value_exceeded';
+    public const ERROR_COOKIE_SAMESITE_NONE = 'error_cookie_samesite_none';
+
+    public const ERROR_CONTAINS_HTML_TAGS = 'contains_html_tags';
+
     /**
      * @var string
      */

@@ -38,8 +38,6 @@ use PrestaShopBundle\Form\Exception\InvalidConfigurationDataErrorCollection;
  */
 final class InvoicesByStatusDataProvider implements FormDataProviderInterface
 {
-    public const ERROR_NO_ORDER_STATE_SELECTED = 'error_no_order_state_selected';
-
     /**
      * {@inheritdoc}
      */
@@ -77,7 +75,7 @@ final class InvoicesByStatusDataProvider implements FormDataProviderInterface
 
             $errorCollection->add(
                 new InvalidConfigurationDataError(
-                    static::ERROR_NO_ORDER_STATE_SELECTED,
+                    InvalidConfigurationDataError::ERROR_NO_ORDER_STATE_SELECTED,
                     GenerateByStatusType::FIELD_ORDER_STATES
                 )
             );

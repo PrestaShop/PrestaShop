@@ -4,3 +4,9 @@ services:
 
     form.form_cloner:
         class: PrestaShopBundle\Form\FormCloner
+
+    form.invalid_configuration_error_message_factory:
+        class: PrestaShopBundle\Form\InvalidConfigurationErrorMessageFactory
+        arguments:
+           - '@translator'
+           - '@prestashop.core.admin.lang.repository'
