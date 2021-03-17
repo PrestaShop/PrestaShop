@@ -471,7 +471,7 @@ final class GetCartForOrderCreationHandler extends AbstractCartHandler implement
 
         $customizations = Product::getAllCustomizedDatas(
             $cart->id,
-            $cart->id_lang,
+            $cart->getAssociatedLanguage()->getId(),
             true,
             null,
             $customizationId
