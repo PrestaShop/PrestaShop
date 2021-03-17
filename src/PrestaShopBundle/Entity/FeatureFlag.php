@@ -130,14 +130,24 @@ class FeatureFlag
         return $this->state;
     }
 
-    public function disable(): void
+    /**
+     * @return self
+     */
+    public function disable(): self
     {
         $this->state = false;
+        
+        return $this;
     }
 
-    public function enable(): void
+    /**
+     * @return self
+     */
+    public function enable(): self
     {
         $this->state = true;
+        
+        return $this;
     }
 
     /**
@@ -150,10 +160,13 @@ class FeatureFlag
 
     /**
      * @param string $labelWording
+     * @return self
      */
-    public function setLabelWording(string $labelWording): void
+    public function setLabelWording(string $labelWording): self
     {
         $this->labelWording = $labelWording;
+        
+        return $this;
     }
 
     /**
@@ -166,10 +179,13 @@ class FeatureFlag
 
     /**
      * @param string $labelDomain
+     * @return self
      */
-    public function setLabelDomain(string $labelDomain): void
+    public function setLabelDomain(string $labelDomain): self
     {
         $this->labelDomain = $labelDomain;
+        
+        return $this;
     }
 
     /**
@@ -182,10 +198,13 @@ class FeatureFlag
 
     /**
      * @param string $descriptionWording
+     * @return self
      */
-    public function setDescriptionWording(string $descriptionWording): void
+    public function setDescriptionWording(string $descriptionWording): self
     {
         $this->descriptionWording = $descriptionWording;
+        
+        return $this;
     }
 
     /**
@@ -198,9 +217,12 @@ class FeatureFlag
 
     /**
      * @param string $descriptionDomain
+     * @return self
      */
-    public function setDescriptionDomain(string $descriptionDomain): void
+    public function setDescriptionDomain(string $descriptionDomain): self
     {
         $this->descriptionDomain = $descriptionDomain;
+        
+        return $this;
     }
 }

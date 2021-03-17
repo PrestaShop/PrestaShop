@@ -97,15 +97,6 @@ class FeatureFlagFeatureContext extends AbstractPrestaShopFeatureContext
             throw new RuntimeException(sprintf('Feature flag %s is enabled although it was expected to be disabled', $name));
         }
     }
-
-    /**
-     * @Then the system should reject my latest feature flag creation
-     */
-    public function featureFlagExcetion()
-    {
-        throw new PendingException();
-    }
-
     /**
      * @return EntityManager
      */
@@ -128,7 +119,7 @@ class FeatureFlagFeatureContext extends AbstractPrestaShopFeatureContext
     {
         $doctrineEntityManager = $this->getDoctrineEntityManager();
 
-        /** @var FeatureFlag $featureFlag */
+        /** @var array<int, FeatureFlag> $allFlags */
         $allFlags = $doctrineEntityManager->getRepository('PrestaShopBundle:FeatureFlag')->findAll();
         foreach ($allFlags as $flag) {
             $doctrineEntityManager->remove($flag);

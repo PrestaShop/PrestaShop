@@ -7,12 +7,14 @@ Feature: Feature Flag
   @feature-flag
   Scenario: Enable a feature flag
     Given I register a disabled feature flag "Security_BO_Page_1"
+    Then the feature flag "Security_BO_Page_1" state is disabled
     When I enable feature flag "Security_BO_Page_1"
     Then the feature flag "Security_BO_Page_1" state is enabled
 
   @feature-flag
   Scenario: Disable a feature flag
     Given I register a enabled feature flag "Security_BO_Page_1"
+    Then the feature flag "Security_BO_Page_1" state is enabled
     When I disable feature flag "Security_BO_Page_1"
     Then the feature flag "Security_BO_Page_1" state is disabled
 
