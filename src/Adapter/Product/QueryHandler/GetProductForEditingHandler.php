@@ -144,7 +144,7 @@ final class GetProductForEditingHandler extends AbstractProductHandler implement
     private function getBasicInformation(Product $product): ProductBasicInformation
     {
         return new ProductBasicInformation(
-            $this->getProductType($product),
+            $product->getProductType(),
             $product->name,
             $product->description,
             $product->description_short,
@@ -194,30 +194,6 @@ final class GetProductForEditingHandler extends AbstractProductHandler implement
             (string) $product->unity,
             $this->numberExtractor->extract($product, 'unit_price_ratio')
         );
-    }
-
-    /**
-     * @param Product $product
-     *
-     * @return ProductType
-     *
-     * @throws ProductConstraintException
-     */
-    private function getProductType(Product $product): ProductType
-    {
-        if (!empty($product->product_type) && in_array($product->product_type, ProductType::AVAILABLE_TYPES)) {
-            $productTypeValue = $product->product_type;
-        } elseif ($product->is_virtual) {
-            $productTypeValue = ProductType::TYPE_VIRTUAL;
-        } elseif (Pack::isPack($product->id)) {
-            $productTypeValue = ProductType::TYPE_PACK;
-        } elseif ($product->hasCombinations()) {
-            $productTypeValue = ProductType::TYPE_COMBINATION;
-        } else {
-            $productTypeValue = ProductType::TYPE_STANDARD;
-        }
-
-        return new ProductType($productTypeValue);
     }
 
     /**
