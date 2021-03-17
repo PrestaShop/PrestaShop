@@ -97,6 +97,7 @@ class FeatureFlagFeatureContext extends AbstractPrestaShopFeatureContext
             throw new RuntimeException(sprintf('Feature flag %s is enabled although it was expected to be disabled', $name));
         }
     }
+
     /**
      * @return EntityManager
      */
