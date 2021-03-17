@@ -27,7 +27,7 @@ class Install extends CommonPage {
     this.termsConditionsCheckbox = '#set_license';
 
     // Selectors for step 3
-    this.sustemCompatibilityStepPageTitle = '#sheet_system h2';
+    this.systemCompatibilityStepPageTitle = '#sheet_system h2';
     this.thirdStepFinishedListItem = '#leftpannel #tabs li.finished:nth-child(3)';
 
     // Selectors for step 4
