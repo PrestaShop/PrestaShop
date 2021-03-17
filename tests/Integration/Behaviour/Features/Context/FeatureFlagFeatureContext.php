@@ -65,7 +65,7 @@ class FeatureFlagFeatureContext extends AbstractPrestaShopFeatureContext
     /**
      * @When /^I (disable|enable) feature flag "(.+)"$/
      */
-    public function enableFeatureFlag(string $state, string $name): void
+    public function modifyFeatureFlagState(string $state, string $name): void
     {
         $doctrineEntityManager = $this->getDoctrineEntityManager();
 
@@ -142,7 +142,7 @@ class FeatureFlagFeatureContext extends AbstractPrestaShopFeatureContext
     public function assertGotErrorMessage()
     {
         if (!$this->latestResult instanceof \Exception) {
-            throw new \Exception('Latest action did not return an error');
+            throw new Exception('Latest action did not return an error');
         }
 
         $this->latestResult = null;
