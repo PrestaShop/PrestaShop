@@ -62,7 +62,7 @@ export default class ProductModel {
   }
 
   /**
-   * @param modelKey (string)
+   * @param {String} modelKey
    *
    * @returns {*|{}}
    */
@@ -71,8 +71,8 @@ export default class ProductModel {
   }
 
   /**
-   * @param modelKey {string}
-   * @param value {*|{}}
+   * @param {String} modelKey
+   * @param {*|{}} value
    */
   set(modelKey, value) {
     this.mapper.set(modelKey, value);
@@ -80,7 +80,8 @@ export default class ProductModel {
 
   /**
    * Handles modifications that have happened in the product
-   * @param event {Object}
+   *
+   * @param {Object} event
    */
   productFieldUpdated(event) {
     this.updateProductPrices(event);
@@ -89,7 +90,7 @@ export default class ProductModel {
   /**
    * Specific handler for modifications related to the product price
    *
-   * @param event
+   * @param {Object} event
    */
   updateProductPrices(event) {
     const pricesFields = [
