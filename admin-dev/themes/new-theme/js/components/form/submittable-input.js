@@ -42,83 +42,125 @@ export default class SubmittableInput {
    */
   init() {
     const inputs = `${this.wrapperSelector} ${this.inputSelector}`;
-    const buttons = `${this.wrapperSelector} ${this.buttonSelector}`;
 
-    $(document).on('mouseenter', inputs, (e) => {
-      this.showButton($(e.currentTarget));
+    $(document).on('focus', inputs, (e) => {
+      this.refreshButtonState(e.currentTarget, true);
     });
-    $(document).on('mouseleave', inputs, (e) => {
-      this.hideButton($(e.currentTarget));
+    $(document).on('input mouseleave', inputs, (e) => {
+      this.refreshButtonState(e.currentTarget);
     });
-    $(document).on('input', inputs, (e) => {
-      this.activateButton($(e.currentTarget));
+    this.onButtonClick();
+    this.onEnterKey();
+  }
+
+  /**
+   * @private
+   */
+  onButtonClick() {
+    $(document).on('click', `${this.wrapperSelector} ${this.buttonSelector}`, (e) => {
+      const input = this.findInput(e.currentTarget);
+      this.callback(input);
+      $(input).data('initial-value', input.value);
+      this.toggleButtonVisibility(e.currentTarget, false);
     });
-    $(document).on('click', inputs, (e) => {
-      this.activateButton($(e.currentTarget));
-    });
-    $(document).on('click', buttons, (e) => {
-      this.callback($(e.currentTarget).closest(this.wrapperSelector).find(this.inputSelector)[0]);
-    });
+  }
+
+  /**
+   * @private
+   */
+  onEnterKey() {
     $(document).on('keyup', this.inputSelector, (e) => {
       if (e.keyCode === 13) {
         e.preventDefault();
-        $(e.currentTarget).closest(this.wrapperSelector).find(this.buttonSelector).click();
+        $(this.findButton(e.currentTarget)).click();
       }
     });
   }
 
   /**
-   * @param {Object} $input
-   *
-   * @private
+   * @param {HTMLElement} input
+   * @param {Boolean|null} visible
    */
-  activateButton($input) {
-    const $btn = $input.closest(this.wrapperSelector).find(this.buttonSelector);
+  refreshButtonState(input, visible = null) {
+    const button = this.findButton(input);
+    const valueWasChanged = this.inputValueChanged(input);
+    this.toggleButtonActivity(button, valueWasChanged);
 
-    if (!this.valuesAreEqual($input.data('initial-value'), $input.val())) {
-      $btn.addClass('active');
+    if (visible !== null) {
+      this.toggleButtonVisibility(button, visible);
+    } else {
+      this.toggleButtonVisibility(button, valueWasChanged);
     }
   }
 
   /**
-   * @param {Object} $input
+   * @param {HTMLElement} button
+   * @param {Boolean} active
    *
    * @private
    */
-  showButton($input) {
-    const $btn = $input.closest(this.wrapperSelector).find(this.buttonSelector);
-    $btn.removeClass('d-none');
-  }
-
-  /**
-   * @param {Object} $input
-   *
-   * @private
-   */
-  hideButton($input) {
-    const $btn = $input.closest(this.wrapperSelector).find(this.buttonSelector);
-
-    if (this.valuesAreEqual($input.data('initial-value'), $input.val())) {
-      $btn.addClass('d-none');
-      $btn.removeClass('active');
+  toggleButtonActivity(button, active) {
+    if (active) {
+      $(button).removeClass('d-none');
+      $(button).addClass('active');
+    } else {
+      $(button).removeClass('active');
     }
   }
 
   /**
-   * @param initialValue
-   * @param currentValue
+   * @param {HTMLElement} button
+   * @param {Boolean} visible
+   *
+   * @private
+   */
+  toggleButtonVisibility(button, visible) {
+    const $button = $(button);
+
+    if (visible) {
+      $(button).removeClass('d-none');
+    } else {
+      $button.addClass('d-none');
+    }
+  }
+
+  /**
+   * @param {HTMLElement} input
+   *
+   * @returns {HTMLElement}
+   *
+   * @private
+   */
+  findButton(input) {
+    return $(input).closest(this.wrapperSelector).find(this.buttonSelector)[0];
+  }
+
+  /**
+   * @param {HTMLElement} button
+   *
+   * @returns {HTMLElement}
+   *
+   * @private
+   */
+  findInput(button) {
+    return $(button).closest(this.wrapperSelector).find(this.inputSelector)[0];
+  }
+
+  /**
+   * @param {HTMLElement} input
    *
    * @returns {Boolean}
    *
    * @private
    */
-  valuesAreEqual(initialValue, currentValue) {
-    let typedValue = currentValue;
+  inputValueChanged(input) {
+    const initialValue = $(input).data('initial-value');
+    let newValue = $(input).val();
 
     if (typeof initialValue === 'number') {
-      typedValue = Number(currentValue);
+      newValue = Number(newValue);
     }
 
-    return initialValue === typedValue;
+    return initialValue !== newValue;
   }
 }
