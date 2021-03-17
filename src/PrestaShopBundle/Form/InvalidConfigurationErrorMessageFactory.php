@@ -135,7 +135,7 @@ class InvalidConfigurationErrorMessageFactory
                     );
                 }
                 return $this->translator->trans(
-                    'Field "%s" is invalid. HTML tags are not allowed.',
+                    'The field "%s" is invalid. HTML tags are not allowed.',
                     [
                         $label,
                     ],
