@@ -60,7 +60,7 @@ final class SearchEngineFormDataProvider implements FormDataProviderInterface
 
         return [
             'server' => $editableSearchEngine->getServer(),
-            'getvar' => $editableSearchEngine->getGetVariable(),
+            'query_key' => $editableSearchEngine->getGetVariable(),
         ];
     }
 
