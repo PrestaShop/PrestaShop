@@ -34,6 +34,7 @@ use Symfony\Component\Form\Extension\Core\Type\ButtonType;
 use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
 use Symfony\Component\Form\Extension\Core\Type\HiddenType;
 use Symfony\Component\Form\Extension\Core\Type\MoneyType;
+use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
 
 class CombinationItemType extends AbstractType
@@ -54,6 +55,7 @@ class CombinationItemType extends AbstractType
                 ],
             ])
             ->add('name', HiddenType::class)
+            ->add('reference', TextType::class)
             ->add('impact_on_price', SubmittableInputType::class, [
                 'type' => MoneyType::class,
                 'attr' => [

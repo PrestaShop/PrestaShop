@@ -81,6 +81,7 @@ export default {
     tableRow: {
       combinationIdInput: (rowIndex) => `#combination_list_combinations_${rowIndex}_combination_id`,
       combinationNameInput: (rowIndex) => `#combination_list_combinations_${rowIndex}_name`,
+      referenceInput: (rowIndex) => `#combination_list_combinations_${rowIndex}_reference`,
       impactOnPriceInput: (rowIndex) => `#combination_list_combinations_${rowIndex}_impact_on_price_value`,
       finalPriceTeInput: (rowIndex) => `#combination_list_combinations_${rowIndex}_final_price_te`,
       quantityInput: (rowIndex) => `#combination_list_combinations_${rowIndex}_quantity_value`,

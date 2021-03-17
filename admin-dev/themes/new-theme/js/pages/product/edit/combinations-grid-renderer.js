@@ -94,12 +94,14 @@ export default class CombinationsGridRenderer {
       $quantityInput.data('initial-value', combination.quantity);
       $impactOnPriceInput.val(combination.impactOnPrice);
       $impactOnPriceInput.data('initial-value', combination.impactOnPrice);
+      $(ProductMap.combinations.tableRow.referenceInput(rowIndex)).val(combination.reference);
       $(ProductMap.combinations.tableRow.editButton(rowIndex)).data('id', combination.id);
       $(ProductMap.combinations.tableRow.deleteButton(rowIndex)).data('id', combination.id);
 
       if (combination.isDefault) {
         const defaultTrueInput = $(ProductMap.combinations.tableRow.isDefaultTrueInput(rowIndex));
         defaultTrueInput.attr('checked', true);
+        //@todo: prevent user to switch YES -> NO ? (disabled input doesn't quite work as expected)
       } else {
         $(ProductMap.combinations.tableRow.isDefaultFalseInput(rowIndex)).attr('checked', true);
       }
