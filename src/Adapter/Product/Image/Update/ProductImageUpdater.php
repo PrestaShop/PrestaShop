@@ -49,6 +49,10 @@ class ProductImageUpdater
      */
     private $productImageRepository;
 
+    /**
+     * @param ProductImageRepository $productImageRepository
+     * @param ProductImageUploader $productImageUploader
+     */
     public function __construct(
         ProductImageRepository $productImageRepository,
         ProductImageUploader $productImageUploader

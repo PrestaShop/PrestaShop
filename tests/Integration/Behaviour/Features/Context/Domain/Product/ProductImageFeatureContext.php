@@ -218,12 +218,12 @@ class ProductImageFeatureContext extends AbstractProductFeatureContext
         foreach ($dataRows as $dataRow) {
             $imgPath = $this->parseGeneratedImagePath($imageId, $dataRow['name']);
             if (file_exists($imgPath)) {
-                throw new RuntimeException(sprintf('File "%s" should not not exist', $imgPath));
+                throw new RuntimeException(sprintf('File "%s" should not exist', $imgPath));
             }
         }
         $imageFolder = $this->getImageGenerationPath($imageId);
         if (file_exists($imageFolder)) {
-            throw new RuntimeException(sprintf('Folder "%s" should not not exist', $imageFolder));
+            throw new RuntimeException(sprintf('Folder "%s" should not exist', $imageFolder));
         }
     }
 

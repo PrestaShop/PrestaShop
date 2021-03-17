@@ -48,7 +48,7 @@ class UpdateProductImageCommand
     private $isCover;
 
     /**
-     * @var string[]|null
+     * @var array<int, string>|null
      */
     private $localizedLegends;
 
@@ -79,9 +79,9 @@ class UpdateProductImageCommand
     /**
      * @param string|null $filePath
      *
-     * @return UpdateProductImageCommand
+     * @return self
      */
-    public function setFilePath(?string $filePath): UpdateProductImageCommand
+    public function setFilePath(?string $filePath): self
     {
         $this->filePath = $filePath;
 
@@ -99,9 +99,9 @@ class UpdateProductImageCommand
     /**
      * @param bool|null $isCover
      *
-     * @return UpdateProductImageCommand
+     * @return self
      */
-    public function setIsCover(?bool $isCover): UpdateProductImageCommand
+    public function setIsCover(?bool $isCover): self
     {
         $this->isCover = $isCover;
 
@@ -109,7 +109,7 @@ class UpdateProductImageCommand
     }
 
     /**
-     * @return string[]|null
+     * @return array<int, string>|null
      */
     public function getLocalizedLegends(): ?array
     {
@@ -117,11 +117,11 @@ class UpdateProductImageCommand
     }
 
     /**
-     * @param string[]|null $localizedLegends
+     * @param array<int, string>|null $localizedLegends
      *
-     * @return UpdateProductImageCommand
+     * @return self
      */
-    public function setLocalizedLegends(?array $localizedLegends): UpdateProductImageCommand
+    public function setLocalizedLegends(?array $localizedLegends): self
     {
         $this->localizedLegends = $localizedLegends;
 
