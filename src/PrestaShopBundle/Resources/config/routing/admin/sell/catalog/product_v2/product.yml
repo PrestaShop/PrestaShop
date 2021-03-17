@@ -1,6 +1,8 @@
 _combinations:
     resource: 'combination.yml'
-    prefix: /products/
+
+_images:
+    resource: 'image.yml'
 
 admin_products_v2_create:
   path: /create
@@ -25,33 +27,3 @@ admin_products_v2_edit:
       id_product: productId
   requirements:
     productId: \d+
-
-admin_products_v2_get_images:
-    path: /{productId}/getImages
-    methods: [GET]
-    defaults:
-        _controller: PrestaShopBundle:Admin/Sell/Catalog/Product/Product:getImages
-        _legacy_controller: AdminProducts
-        _legacy_link:
-            - AdminProducts:getimages
-        _legacy_parameters:
-            id_product: productId
-    options:
-        expose: true
-    requirements:
-        productId: \d+
-
-admin_products_v2_add_image:
-    path: /{productId}/addImage
-    methods: [POST]
-    defaults:
-        _controller: PrestaShopBundle:Admin/Sell/Catalog/Product/Product:addImage
-        _legacy_controller: AdminProducts
-        _legacy_link:
-            - AdminProducts:addimage
-        _legacy_parameters:
-            id_product: productId
-    options:
-        expose: true
-    requirements:
-        productId: \d+

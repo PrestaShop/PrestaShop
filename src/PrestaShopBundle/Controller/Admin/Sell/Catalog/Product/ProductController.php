@@ -32,19 +32,13 @@ use Exception;
 use PrestaShop\PrestaShop\Core\Domain\Product\Exception\ProductConstraintException;
 use PrestaShop\PrestaShop\Core\Domain\Product\FeatureValue\Exception\DuplicateFeatureValueAssociationException;
 use PrestaShop\PrestaShop\Core\Domain\Product\FeatureValue\Exception\InvalidAssociatedFeatureException;
-use PrestaShop\PrestaShop\Core\Domain\Product\Image\Command\AddProductImageCommand;
-use PrestaShop\PrestaShop\Core\Domain\Product\Image\Query\GetProductImages;
-use PrestaShop\PrestaShop\Core\Domain\Product\Image\QueryResult\ProductImage;
-use PrestaShop\PrestaShop\Core\Domain\Product\Image\ValueObject\ImageId;
 use PrestaShop\PrestaShop\Core\Form\IdentifiableObject\Builder\FormBuilderInterface;
 use PrestaShop\PrestaShop\Core\Form\IdentifiableObject\Handler\FormHandlerInterface;
 use PrestaShopBundle\Controller\Admin\FrameworkBundleAdminController;
 use PrestaShopBundle\Form\Admin\Sell\Product\Combination\CombinationListType;
-use PrestaShopBundle\Form\Admin\Sell\Product\Image\AddImageType;
 use PrestaShopBundle\Security\Annotation\AdminSecurity;
 use PrestaShopBundle\Security\Voter\PageVoter;
 use Symfony\Component\Form\FormInterface;
-use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 
@@ -140,67 +134,6 @@ class ProductController extends FrameworkBundleAdminController
         }
 
         return $this->renderProductForm($productForm, $productId);
-    }
-
-    /**
-     * @AdminSecurity("is_granted(['read'], request.get('_legacy_controller'))", message="You do not have permission to update this.")
-     *
-     * @param int $productId
-     *
-     * @return JsonResponse
-     */
-    public function getImagesAction(int $productId): JsonResponse
-    {
-        /** @var ProductImage[] $images */
-        $images = $this->getQueryBus()->handle(new GetProductImages($productId));
-
-        $data = [];
-        foreach ($images as $image) {
-            $data[] = [
-                'image_id' => $image->getImageId(),
-                'is_cover' => $image->isCover(),
-                'position' => $image->getPosition(),
-                'path' => _THEME_PROD_DIR_ . $image->getPath(),
-                'legends' => $image->getLocalizedLegends(),
-            ];
-        }
-
-        return new JsonResponse($data);
-    }
-
-    /**
-     * @AdminSecurity("is_granted(['update'], request.get('_legacy_controller'))", message="You do not have permission to update this.")
-     *
-     * @param Request $request
-     * @param int $productId
-     *
-     * @return JsonResponse
-     */
-    public function addImageAction(Request $request, int $productId): JsonResponse
-    {
-        $imageForm = $this->createForm(AddImageType::class);
-        $imageForm->handleRequest($request);
-
-        if (!$imageForm->isSubmitted() || $imageForm->isValid()) {
-            return new JsonResponse([
-                'error' => 'Invalid data.',
-                'form_errors' => $this->getFormErrorsForJS($imageForm),
-            ], Response::HTTP_BAD_REQUEST);
-        }
-
-        $formData = $imageForm->getData();
-        $uploadedFile = $formData['file'];
-        try {
-            $command = new AddProductImageCommand($productId, $uploadedFile->getPathname());
-            /** @var ImageId $imageId */
-            $imageId = $this->getCommandBus()->handle($command);
-        } catch (Exception $e) {
-            return new JsonResponse([
-                'error' => $this->getErrorMessageForException($e, $this->getErrorMessages($e)),
-            ], Response::HTTP_BAD_REQUEST);
-        }
-
-        return new JsonResponse(['image_id' => $imageId->getValue()]);
     }
 
     /**
