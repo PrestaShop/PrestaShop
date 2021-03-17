@@ -32,6 +32,9 @@ use Behat\Gherkin\Node\TableNode;
 use PHPUnit\Framework\Assert;
 use PrestaShop\PrestaShop\Adapter\Product\Image\Repository\ProductImageRepository;
 use PrestaShop\PrestaShop\Core\Domain\Product\Image\Command\AddProductImageCommand;
+use PrestaShop\PrestaShop\Core\Domain\Product\Image\Command\DeleteProductImageCommand;
+use PrestaShop\PrestaShop\Core\Domain\Product\Image\Command\UpdateProductImageCommand;
+use PrestaShop\PrestaShop\Core\Domain\Product\Image\Query\GetProductImage;
 use PrestaShop\PrestaShop\Core\Domain\Product\Image\Query\GetProductImages;
 use PrestaShop\PrestaShop\Core\Domain\Product\Image\QueryResult\ProductImage;
 use RuntimeException;
@@ -91,6 +94,70 @@ class ProductImageFeatureContext extends AbstractProductFeatureContext
         ));
 
         $this->getSharedStorage()->set($imageReference, $imageId->getValue());
+
+        // Save uploaded file MD5 for future checks
+        if ($this->getSharedStorage()->exists($fileName)) {
+            return;
+        }
+
+        /** @var ProductImage $productImage */
+        $productImage = $this->getQueryBus()->handle(new GetProductImage($imageId->getValue()));
+        $imagePath = _PS_PROD_IMG_DIR_ . $productImage->getPath();
+        $this->getSharedStorage()->set($fileName, md5_file($imagePath));
+    }
+
+    /**
+     * @When I update image :imageReference with following information:
+     *
+     * @param string $imageReference
+     * @param TableNode $tableNode
+     */
+    public function updateImage(string $imageReference, TableNode $tableNode)
+    {
+        $dataRows = $this->localizeByRows($tableNode);
+        $imageId = (int) $this->getSharedStorage()->get($imageReference);
+
+        $command = new UpdateProductImageCommand($imageId);
+        if (isset($dataRows['file'])) {
+            $pathName = DummyFileUploader::upload($dataRows['file']);
+            $command->setFilePath($pathName);
+        }
+
+        if (isset($dataRows['cover'])) {
+            $command->setIsCover(PrimitiveUtils::castStringBooleanIntoBoolean($dataRows['cover']));
+        }
+
+        if (isset($dataRows['legend'])) {
+            $command->setLocalizedLegends($dataRows['legend']);
+        }
+
+        $this->getCommandBus()->handle($command);
+    }
+
+    /**
+     * @Then image :imageReference should have same file as :fileName
+     *
+     * @param string $imageReference
+     * @param string $fileName
+     */
+    public function assertImageFile(string $imageReference, string $fileName): void
+    {
+        $imageId = (int) $this->getSharedStorage()->get($imageReference);
+
+        /** @var ProductImage $productImage */
+        $productImage = $this->getQueryBus()->handle(new GetProductImage($imageId));
+        $imagePath = _PS_PROD_IMG_DIR_ . $productImage->getPath();
+
+        // This was previously saved during image upload
+        $generatedDummyMD5 = $this->getSharedStorage()->get($fileName);
+
+        if ($generatedDummyMD5 !== md5_file($imagePath)) {
+            throw new RuntimeException(sprintf(
+                'Expected files dummy %s and image %s to be identical',
+                $fileName,
+                $imagePath
+            ));
+        }
     }
 
     /**
@@ -127,6 +194,53 @@ class ProductImageFeatureContext extends AbstractProductFeatureContext
     }
 
     /**
+     * @When I delete product image :imageReference
+     *
+     * @param string $imageReference
+     */
+    public function deleteProductImage(string $imageReference): void
+    {
+        $imageId = (int) $this->getSharedStorage()->get($imageReference);
+
+        $this->getCommandBus()->handle(new DeleteProductImageCommand($imageId));
+    }
+
+    /**
+     * @Then following types for image :imageReference should be removed:
+     *
+     * @param string $imageReference
+     */
+    public function assertProductImageTypesRemoved(string $imageReference, TableNode $tableNode): void
+    {
+        $dataRows = $tableNode->getColumnsHash();
+
+        $imageId = $this->getSharedStorage()->get($imageReference);
+        foreach ($dataRows as $dataRow) {
+            $imgPath = $this->parseGeneratedImagePath($imageId, $dataRow['name']);
+            if (file_exists($imgPath)) {
+                throw new RuntimeException(sprintf('File "%s" should not exist', $imgPath));
+            }
+        }
+        $imageFolder = $this->getImageGenerationPath($imageId);
+        if (file_exists($imageFolder)) {
+            throw new RuntimeException(sprintf('Folder "%s" should not exist', $imageFolder));
+        }
+    }
+
+    /**
+     * @param int $imageId
+     *
+     * @return string
+     */
+    private function getImageGenerationPath(int $imageId): string
+    {
+        $directories = str_split((string) $imageId);
+        $path = implode('/', $directories);
+
+        return _PS_PROD_IMG_DIR_ . $path;
+    }
+
+    /**
      * @param int $imageId
      * @param string $imageTypeName
      *
@@ -134,10 +248,7 @@ class ProductImageFeatureContext extends AbstractProductFeatureContext
      */
     private function parseGeneratedImagePath(int $imageId, string $imageTypeName): string
     {
-        $directories = str_split((string) $imageId);
-        $path = implode('/', $directories);
-
-        return _PS_PROD_IMG_DIR_ . $path . '/' . $imageId . '-' . $imageTypeName . '.jpg';
+        return $this->getImageGenerationPath($imageId) . '/' . $imageId . '-' . $imageTypeName . '.jpg';
     }
 
     /**

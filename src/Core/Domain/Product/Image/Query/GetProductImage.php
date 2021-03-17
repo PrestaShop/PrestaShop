@@ -26,13 +26,27 @@
 
 declare(strict_types=1);
 
-namespace PrestaShop\PrestaShop\Core\Image\Exception;
+namespace PrestaShop\PrestaShop\Core\Domain\Product\Image\Query;
 
-use PrestaShop\PrestaShop\Core\File\Exception\CannotUnlinkFileException;
+use PrestaShop\PrestaShop\Core\Domain\Product\Image\ValueObject\ImageId;
 
-/**
- * Thrown when image file unlink fails
- */
-class CannotUnlinkImageException extends CannotUnlinkFileException
+class GetProductImage
 {
+    /**
+     * @var ImageId
+     */
+    private $imageId;
+
+    public function __construct(int $imageId)
+    {
+        $this->imageId = new ImageId($imageId);
+    }
+
+    /**
+     * @return ImageId
+     */
+    public function getImageId(): ImageId
+    {
+        return $this->imageId;
+    }
 }

@@ -28,7 +28,6 @@ declare(strict_types=1);
 
 namespace PrestaShop\PrestaShop\Adapter\Product\Image\Uploader;
 
-use ErrorException;
 use Image;
 use PrestaShop\PrestaShop\Adapter\Image\ImageGenerator;
 use PrestaShop\PrestaShop\Adapter\Image\Uploader\AbstractImageUploader;
@@ -139,6 +138,18 @@ class ProductImageUploader extends AbstractImageUploader
     /**
      * @param Image $image
      *
+     * @throws CannotUnlinkImageException
+     */
+    public function remove(Image $image): void
+    {
+        $destinationPath = $this->productImagePathFactory->getBasePath($image);
+        $this->deleteCachedImages($image);
+        $this->deleteGeneratedImages($destinationPath, $this->productImageRepository->getProductImageTypes());
+    }
+
+    /**
+     * @param Image $image
+     *
      * @throws ImageUploadException
      */
     private function createDestinationDirectory(Image $image): void
@@ -169,19 +180,51 @@ class ProductImageUploader extends AbstractImageUploader
         ];
 
         foreach ($cachedImages as $cachedImage) {
-            if (file_exists($cachedImage)) {
-                try {
-                    unlink($cachedImage);
-                } catch (ErrorException $e) {
-                    throw new CannotUnlinkImageException(
-                        sprintf(
-                            'Failed to remove cached image "%s"',
-                            $cachedImage
-                        ),
-                        0,
-                        $e
-                    );
-                }
+            if (!file_exists($cachedImage)) {
+                continue;
+            }
+
+            if (!@unlink($cachedImage)) {
+                throw new CannotUnlinkImageException(
+                    sprintf(
+                        'Failed to remove cached image "%s"',
+                        $cachedImage
+                    )
+                );
+            }
+        }
+    }
+
+    /**
+     * Note: we can't delete the whole folder here, or Image::delete will return an error
+     * because it expects the original image and the folder to be present in order to remove
+     * them correctly. So for now this service only handles removing generated image types.
+     * When Image ObjectModel is no longer used, it could also remove the remaining files.
+     *
+     * @param string $imagePath
+     * @param array $imageTypes
+     *
+     * @throws CannotUnlinkImageException
+     */
+    private function deleteGeneratedImages(string $imagePath, array $imageTypes): void
+    {
+        $fileExtension = pathinfo($imagePath, PATHINFO_EXTENSION);
+        $destinationExtension = '.jpg';
+        $imageBaseName = rtrim($imagePath, '.' . $fileExtension);
+
+        foreach ($imageTypes as $imageType) {
+            $generatedImagePath = sprintf('%s-%s%s', $imageBaseName, stripslashes($imageType->name), $destinationExtension);
+            if (!file_exists($generatedImagePath)) {
+                continue;
+            }
+
+            if (!@unlink($generatedImagePath)) {
+                throw new CannotUnlinkImageException(
+                    sprintf(
+                        'Failed to remove generated image "%s"',
+                        $generatedImagePath
+                    )
+                );
             }
         }
     }

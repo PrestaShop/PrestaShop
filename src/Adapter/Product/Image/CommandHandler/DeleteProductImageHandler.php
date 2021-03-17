@@ -26,13 +26,33 @@
 
 declare(strict_types=1);
 
-namespace PrestaShop\PrestaShop\Core\Image\Exception;
+namespace PrestaShop\PrestaShop\Adapter\Product\Image\CommandHandler;
 
-use PrestaShop\PrestaShop\Core\File\Exception\CannotUnlinkFileException;
+use PrestaShop\PrestaShop\Adapter\Product\Image\Update\ProductImageUpdater;
+use PrestaShop\PrestaShop\Core\Domain\Product\Image\Command\DeleteProductImageCommand;
+use PrestaShop\PrestaShop\Core\Domain\Product\Image\CommandHandler\DeleteProductImageHandlerInterface;
 
 /**
- * Thrown when image file unlink fails
+ * Handles @see DeleteProductImageCommand
  */
-class CannotUnlinkImageException extends CannotUnlinkFileException
+class DeleteProductImageHandler implements DeleteProductImageHandlerInterface
 {
+    /**
+     * @var ProductImageUpdater
+     */
+    private $productImageUpdater;
+
+    public function __construct(
+        ProductImageUpdater $productImageUpdater
+    ) {
+        $this->productImageUpdater = $productImageUpdater;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function handle(DeleteProductImageCommand $command): void
+    {
+        $this->productImageUpdater->deleteImage($command->getImageId());
+    }
 }

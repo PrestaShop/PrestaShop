@@ -24,15 +24,20 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
 
-declare(strict_types=1);
+namespace PrestaShop\PrestaShop\Core\Domain\Product\Image\QueryHandler;
 
-namespace PrestaShop\PrestaShop\Core\Image\Exception;
-
-use PrestaShop\PrestaShop\Core\File\Exception\CannotUnlinkFileException;
+use PrestaShop\PrestaShop\Core\Domain\Product\Image\Query\GetProductImage;
+use PrestaShop\PrestaShop\Core\Domain\Product\Image\QueryResult\ProductImage;
 
 /**
- * Thrown when image file unlink fails
+ * Handles @see GetProductImage query
  */
-class CannotUnlinkImageException extends CannotUnlinkFileException
+interface GetProductImageHandlerInterface
 {
+    /**
+     * @param GetProductImage $query
+     *
+     * @return ProductImage
+     */
+    public function handle(GetProductImage $query): ProductImage;
 }

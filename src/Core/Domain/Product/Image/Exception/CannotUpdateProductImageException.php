@@ -26,13 +26,17 @@
 
 declare(strict_types=1);
 
-namespace PrestaShop\PrestaShop\Core\Image\Exception;
+namespace PrestaShop\PrestaShop\Core\Domain\Product\Image\Exception;
 
-use PrestaShop\PrestaShop\Core\File\Exception\CannotUnlinkFileException;
-
-/**
- * Thrown when image file unlink fails
- */
-class CannotUnlinkImageException extends CannotUnlinkFileException
+class CannotUpdateProductImageException extends ProductImageException
 {
+    /**
+     * When fails to update cover
+     */
+    public const FAILED_UPDATE_COVER = 10;
+
+    /**
+     * When fails to update legends
+     */
+    public const FAILED_UPDATE_LEGENDS = 20;
 }

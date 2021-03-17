@@ -24,15 +24,17 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
 
-declare(strict_types=1);
+namespace PrestaShop\PrestaShop\Core\Domain\Product\Image\CommandHandler;
 
-namespace PrestaShop\PrestaShop\Core\Image\Exception;
-
-use PrestaShop\PrestaShop\Core\File\Exception\CannotUnlinkFileException;
+use PrestaShop\PrestaShop\Core\Domain\Product\Image\Command\UpdateProductImageCommand;
 
 /**
- * Thrown when image file unlink fails
+ * Defines contract to handle @see UpdateProductImageCommand
  */
-class CannotUnlinkImageException extends CannotUnlinkFileException
+interface UpdateProductImageHandlerInterface
 {
+    /**
+     * @param UpdateProductImageCommand $command
+     */
+    public function handle(UpdateProductImageCommand $command): void;
 }
