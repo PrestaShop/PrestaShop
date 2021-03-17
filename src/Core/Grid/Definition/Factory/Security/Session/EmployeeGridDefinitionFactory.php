@@ -127,7 +127,7 @@ final class EmployeeGridDefinitionFactory extends AbstractGridDefinitionFactory
             )
             ->add(
                 (new DataColumn('date_upd'))
-                    ->setName($this->trans('Updated at', [], 'Admin.Advparameters.Feature'))
+                    ->setName($this->trans('Updated on', [], 'Admin.Advparameters.Feature'))
                     ->setOptions([
                         'field' => 'date_upd',
                     ])
