@@ -59,30 +59,26 @@ export default class CombinationsManager {
     const combinationToken = $(ProductMap.combinations.combinationsContainer).data('combinationToken');
 
     new SubmittableInput('.combination-quantity', async (input) => {
-      const combinationId = $(input).closest('tr').find('.combination-id-input').val();
-
       await this.combinationsService.updateListedCombination(
-        combinationId,
+        this.findCombinationId(input),
         {'combination_item[quantity][value]': input.value, 'combination_item[_token]': combinationToken},
       );
     });
 
     new SubmittableInput('.combination-impact-on-price', async (input) => {
-      const combinationId = $(input).closest('tr').find('.combination-id-input').val();
-
       await this.combinationsService.updateListedCombination(
-        combinationId,
+        this.findCombinationId(input),
         {'combination_item[impact_on_price][value]': input.value, 'combination_item[_token]': combinationToken},
       );
     });
-    this.$combinationsContainer.on('change', ProductMap.combinations.isDefaultInputsSelector, async (e) => {
-      const combinationId = $(e.currentTarget).closest('tr').find('.combination-id-input').val();
-
-      await this.combinationsService.updateListedCombination(
-        combinationId,
-        {'combination_item[is_default]': e.currentTarget.value, 'combination_item[_token]': combinationToken},
-      );
-    });
+    this.$combinationsContainer.on(
+      'change', ProductMap.combinations.isDefaultInputsSelector, async (e) => {
+        await this.combinationsService.updateListedCombination(
+          this.findCombinationId(e.currentTarget),
+          {'combination_item[is_default]': e.currentTarget.value, 'combination_item[_token]': combinationToken},
+        );
+        await this.paginator.paginateToLastViewed();
+      });
   }
 
   firstInit() {
@@ -91,7 +87,7 @@ export default class CombinationsManager {
     }
 
     this.initialized = true;
-    this.paginator.paginate(1);
+    this.paginator.paginateToLastViewed();
   }
 
   /**
@@ -101,5 +97,16 @@ export default class CombinationsManager {
    */
   getProductId() {
     return Number(this.$productForm.data('productId'));
+  }
+
+  /**
+   * @param {Object} input of the same table row
+   *
+   * @returns {Number}
+   *
+   * @private
+   */
+  findCombinationId(input) {
+    return $(input).closest('tr').find('.combination-id-input').val();
   }
 }
