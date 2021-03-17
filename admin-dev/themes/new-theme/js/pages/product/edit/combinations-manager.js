@@ -51,12 +51,13 @@ export default class CombinationsManager {
       new CombinationsGridRenderer(),
     );
     this.initSubmittableInputs();
+    this.onDefaultCombinationSelection();
     // Paginate to first page when tab is shown
     this.$productForm.find(ProductMap.combinations.navigationTab).on('shown.bs.tab', () => this.firstInit());
   }
 
   initSubmittableInputs() {
-    const combinationToken = $(ProductMap.combinations.combinationsContainer).data('combinationToken');
+    const combinationToken = this.getCombinationToken();
 
     new SubmittableInput('.combination-quantity', async (input) => {
       await this.combinationsService.updateListedCombination(
@@ -71,13 +72,35 @@ export default class CombinationsManager {
         {'combination_item[impact_on_price][value]': input.value, 'combination_item[_token]': combinationToken},
       );
     });
+  }
+
+  onDefaultCombinationSelection() {
+    let previousUnchecked = false;
     this.$combinationsContainer.on(
       'change', ProductMap.combinations.isDefaultInputsSelector, async (e) => {
+        if (previousUnchecked) {
+          return;
+        }
         await this.combinationsService.updateListedCombination(
           this.findCombinationId(e.currentTarget),
-          {'combination_item[is_default]': e.currentTarget.value, 'combination_item[_token]': combinationToken},
+          {
+            'combination_item[is_default]': e.currentTarget.value,
+            'combination_item[_token]': this.getCombinationToken(),
+          },
         );
-        await this.paginator.paginateToLastViewed();
+
+        const checkedInputs = this.$combinationsContainer.find(
+          `${ProductMap.combinations.isDefaultInputsSelector}[value=1]:checked`,
+        );
+
+        $.each(checkedInputs, (index, input) => {
+          if (this.findCombinationId(input) !== this.findCombinationId(e.currentTarget)) {
+            previousUnchecked = true;
+            $(input).prop('checked', false);
+            $(input).siblings(`${ProductMap.combinations.isDefaultInputsSelector}[value=0]`).prop('checked', true);
+            previousUnchecked = false;
+          }
+        });
       });
   }
 
@@ -88,6 +111,13 @@ export default class CombinationsManager {
 
     this.initialized = true;
     this.paginator.paginateToLastViewed();
+  }
+
+  /**
+   * @returns {String}
+   */
+  getCombinationToken() {
+    return $(ProductMap.combinations.combinationsContainer).data('combinationToken');
   }
 
   /**
