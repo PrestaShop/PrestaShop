@@ -80,21 +80,21 @@ export default class CombinationsGridRenderer {
       const $combinationNameInput = $(ProductMap.combinations.tableRow.combinationNameInput(rowIndex));
       const $quantityInput = $(ProductMap.combinations.tableRow.quantityInput(rowIndex));
       const $impactOnPriceInput = $(ProductMap.combinations.tableRow.impactOnPriceInput(rowIndex));
+      const $referenceInput = $(ProductMap.combinations.tableRow.referenceInput(rowIndex));
       //@todo final price should be calculated based on price impact and product price, so it doesnt need to be in api response
       const $finalPriceInput = $(ProductMap.combinations.tableRow.finalPriceTeInput(rowIndex));
       $combinationIdInput.val(combination.id);
       $combinationNameInput.val(combination.name);
-      $finalPriceInput.val(combination.finalPriceTe);
-
       // This adds a text after the cell children (do not use text which replaces everything)
       $combinationIdInput.closest('td').append(combination.id);
       $combinationNameInput.closest('td').append(combination.name);
       $finalPriceInput.closest('td').append(combination.finalPriceTe);
+      $referenceInput.val(combination.reference);
+      $referenceInput.data('initial-value', combination.reference);
       $quantityInput.val(combination.quantity);
       $quantityInput.data('initial-value', combination.quantity);
       $impactOnPriceInput.val(combination.impactOnPrice);
       $impactOnPriceInput.data('initial-value', combination.impactOnPrice);
-      $(ProductMap.combinations.tableRow.referenceInput(rowIndex)).val(combination.reference);
       $(ProductMap.combinations.tableRow.editButton(rowIndex)).data('id', combination.id);
       $(ProductMap.combinations.tableRow.deleteButton(rowIndex)).data('id', combination.id);
       $(ProductMap.combinations.tableRow.isDefaultInput(rowIndex)).prop('checked', combination.isDefault);

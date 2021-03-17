@@ -72,6 +72,13 @@ export default class CombinationsManager {
         {'combination_item[impact_on_price][value]': input.value, 'combination_item[_token]': combinationToken},
       );
     });
+
+    new SubmittableInput('.combination-reference', async (input) => {
+      await this.combinationsService.updateListedCombination(
+        this.findCombinationId(input),
+        {'combination_item[reference][value]': input.value, 'combination_item[_token]': combinationToken},
+      );
+    });
   }
 
   onDefaultCombinationSelection() {

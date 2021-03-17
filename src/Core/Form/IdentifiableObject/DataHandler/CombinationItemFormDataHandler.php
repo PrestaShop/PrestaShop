@@ -71,8 +71,8 @@ class CombinationItemFormDataHandler implements FormDataHandlerInterface
         if (isset($data['is_default'])) {
             $command->setDefault((bool) $data['is_default']);
         }
-        if (isset($data['reference'])) {
-            $command->setReference($data['reference']);
+        if (isset($data['reference']['value'])) {
+            $command->setReference($data['reference']['value']);
         }
 
         $this->commandBus->handle($command);
