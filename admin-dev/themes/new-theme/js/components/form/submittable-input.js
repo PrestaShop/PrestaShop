@@ -25,7 +25,18 @@
 
 const {$} = window;
 
+/**
+ * Activates, deactivates, shows, hides submit button inside an input
+ * (depending if input was changed comparing to initial value)
+ * After button is clicked, component fires the callback function which was provided to constructor.
+ */
 export default class SubmittableInput {
+  /**
+   * @param {String} wrapperSelector
+   * @param {Function} callback
+   *
+   * @returns {{}}
+   */
   constructor(wrapperSelector, callback) {
     this.inputSelector = '.submittable-input';
     this.callback = callback;

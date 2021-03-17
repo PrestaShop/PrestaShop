@@ -134,7 +134,7 @@ export default class CombinationsManager {
   }
 
   /**
-   * @param {Object} input of the same table row
+   * @param {HTMLElement} input of the same table row
    *
    * @returns {Number}
    *
