@@ -28,14 +28,7 @@ namespace PrestaShopBundle\Controller\Admin\Configure\AdvancedParameters;
 
 use PrestaShop\PrestaShop\Core\Form\FormHandlerInterface;
 use PrestaShopBundle\Controller\Admin\FrameworkBundleAdminController;
-use PrestaShopBundle\Controller\Exception\FieldNotFoundException;
-use PrestaShopBundle\Form\Admin\Configure\AdvancedParameters\Administration\FormDataProvider;
-use PrestaShopBundle\Form\Admin\Configure\AdvancedParameters\Administration\GeneralDataProvider;
-use PrestaShopBundle\Form\Admin\Configure\AdvancedParameters\Administration\GeneralType;
-use PrestaShopBundle\Form\Admin\Configure\AdvancedParameters\Administration\UploadQuotaType;
 use PrestaShopBundle\Form\Exception\DataProviderException;
-use PrestaShopBundle\Form\Exception\InvalidConfigurationDataError;
-use PrestaShopBundle\Form\Exception\InvalidConfigurationDataErrorCollection;
 use PrestaShopBundle\Security\Annotation\AdminSecurity;
 use PrestaShopBundle\Security\Annotation\DemoRestricted;
 use Symfony\Component\HttpFoundation\RedirectResponse;
