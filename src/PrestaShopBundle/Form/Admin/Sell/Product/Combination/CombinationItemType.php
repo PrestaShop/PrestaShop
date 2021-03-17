@@ -66,7 +66,11 @@ class CombinationItemType extends AbstractType
                     'class' => 'combination-quantity',
                 ],
             ])
-            ->add('is_default', SwitchType::class)
+            ->add('is_default', SwitchType::class, [
+                'attr' => [
+                    'class' => 'combination-is-default-input',
+                ],
+            ])
             ->add('edit', ButtonType::class)
             ->add('delete', ButtonType::class)
         ;

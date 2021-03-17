@@ -70,11 +70,12 @@ export default {
     customizationFieldRow: '.customization-field-row',
   },
   combinations: {
-    combinationIdInputsSelector: '.combination-id-input',
     navigationTab: '#combinations-tab-nav',
     combinationsContainer: '#combination_list',
     combinationsTable: '#combination_list table',
     combinationsTableBody: '#combination_list table tbody',
+    combinationIdInputsSelector: '.combination-id-input',
+    isDefaultInputsSelector: '.combination-is-default-input',
     paginationContainer: '#combinations-pagination',
     loadingSpinner: '#productCombinationsLoading',
     tableRow: {
@@ -83,7 +84,8 @@ export default {
       impactOnPriceInput: (rowIndex) => `#combination_list_combinations_${rowIndex}_impact_on_price_value`,
       finalPriceTeInput: (rowIndex) => `#combination_list_combinations_${rowIndex}_final_price_te`,
       quantityInput: (rowIndex) => `#combination_list_combinations_${rowIndex}_quantity_value`,
-      isDefaultInput: (rowIndex) => `#combination_list_combinations_${rowIndex}_is_default`,
+      isDefaultTrueInput: (rowIndex) => `#combination_list_combinations_${rowIndex}_is_default_1`,
+      isDefaultFalseInput: (rowIndex) => `#combination_list_combinations_${rowIndex}_is_default_0`,
       editButton: (rowIndex) => `#combination_list_combinations_${rowIndex}_edit`,
       deleteButton: (rowIndex) => `#combination_list_combinations_${rowIndex}_delete`,
     },
