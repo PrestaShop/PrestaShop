@@ -36,6 +36,16 @@ export const getProductImages = async (productId) => {
   return $.get(imagesUrl);
 };
 
+export const setCoverImage = async (productId, checked) => {
+  const setCoverUrl = router.generate('admin_products_v2_get_images', {
+    productId,
+    checked,
+  });
+
+  return $.post(setCoverUrl);
+};
+
 export default {
   getProductImages,
+  setCoverImage,
 };

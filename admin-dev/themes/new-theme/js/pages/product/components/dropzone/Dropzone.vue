@@ -74,6 +74,7 @@
       @removeSelection="removeSelection"
       @selectAll="selectAll"
       :files="files"
+      @coverChanged="changeCover"
     />
 
     <div class="dz-template d-none">
@@ -105,6 +106,9 @@
             </label>
           </div>
         </div>
+        <div class="iscover">
+          {{ $t('window.cover') }}
+        </div>
       </div>
     </div>
   </div>
@@ -112,7 +116,7 @@
 
 <script>
   import Router from '@components/router';
-  import {getProductImages} from '@pages/product/services/images';
+  import {getProductImages, setCoverImage} from '@pages/product/services/images';
   import DropzoneWindow from './DropzoneWindow';
 
   const {$} = window;
@@ -196,6 +200,10 @@
               this.selectedFiles = this.selectedFiles.filter((e) => e !== file);
               file.previewElement.classList.toggle('selected');
             }
+
+            if (file.isCover) {
+              file.previewElement.classList.add('is-cover');
+            }
           });
 
           this.files.push(file);
@@ -256,6 +264,16 @@
           $(element).remove();
         });
       },
+      /**
+       * Manage cover checkbox changes
+       */
+      async changeCover(event) {
+        try {
+          await setCoverImage(this.productId, event.target.value);
+        } catch (error) {
+          $.growl.error({message: error.message});
+        }
+      },
     },
   };
 </script>
@@ -281,6 +299,16 @@
     .dz-preview {
       position: relative;
       cursor: pointer;
+
+      .iscover {
+        display: none;
+      }
+
+      &.is-cover {
+        .iscover {
+          display: block;
+        }
+      }
 
       &:not(.openfilemanager) {
         border: 3px solid transparent;

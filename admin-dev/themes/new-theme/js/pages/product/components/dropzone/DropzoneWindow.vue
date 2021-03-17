@@ -72,7 +72,11 @@
       v-if="selectedFiles.length === 1"
     >
       <label>
-        <input type="checkbox">
+        <input
+          type="checkbox"
+          v-model="isCover"
+          @change="$emit('coverChanged', $event)"
+        >
         <i class="md-checkbox-control" />
         {{ $t("window.useAsCover") }}
       </label>
@@ -110,6 +114,11 @@
         type: Array,
         default: () => [],
       },
+    },
+    data() {
+      return {
+        isCover: this.selectedFiles.length === 1 && this.selectedFiles[0].isCover,
+      };
     },
     mounted() {
       window.prestaShopUiKit.initToolTips();
