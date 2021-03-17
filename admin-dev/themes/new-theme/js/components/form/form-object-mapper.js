@@ -32,14 +32,42 @@ const {$} = window;
  * mapping. Each field from the model is mapped to a form input, or several, each input is watched
  * to keep the model consistent.
  *
- * When a model field has several inputs associated it keeps the in sync when either of them is updated.
+ * The model mapping used for this component is an object which uses the modelKey as a key (it represents
+ * the property path in the object, separated by a dot) and the input names as value (they follow Symfony
+ * convention naming using brackets). Here is an example of mapping:
+ *
+ * const modelMapping = {
+ *  'product.stock.quantity': 'product[stock][quantity]',
+ *  'product.price.priceTaxExcluded': [
+ *    'product[price][price_tax_excluded]',
+ *    'product[shortcuts][price][price_tax_excluded]',
+ *  ],
+ * };
+ *
+ * As you can see for priceTaxExcluded it is possible to assign multiple inputs to the same modelKey, thus
+ * any update in one of the inputs will update the model, and all these inputs are kept in sync.
+ *
+ * With the previous configuration this component would return an object that looks like this:
+ *
+ * {
+ *   product: {
+ *     stock: {
+ *       // Mapped to product[stock][quantity] input
+ *       quantity: 200,
+ *     },
+ *     price: {
+ *       // Mapped to two inputs product[price][price_tax_excluded] and product[shortcuts][price][price_tax_excluded]
+ *       priceTaxExcluded: 20.45,
+ *     }
+ *   }
+ * }
  */
 export default class FormObjectMapper {
   /**
-   * @param $form {jQuery}
-   * @param modelMapping {Object}
-   * @param eventEmitter {EventEmitter}
-   * @param config {Object}
+   * @param {jQuery} $form
+   * @param {Object} modelMapping
+   * @param {EventEmitter} eventEmitter
+   * @param {Object} config
    */
   constructor($form, modelMapping, eventEmitter, config) {
     this.$form = $form;
@@ -99,7 +127,7 @@ export default class FormObjectMapper {
    * mapper.get('product.price.taxIncluded') => 12.00
    * mapper.get('product.price') => {taxIncluded: 12.00, taxExcluded: 10.00}
    *
-   * @param modelKey (string)
+   * @param {String} modelKey
    *
    * @returns {*|{}|undefined} Returns any element from the model, undefined if not found
    */
@@ -113,7 +141,8 @@ export default class FormObjectMapper {
    * Returns the input associated to a model field (in case the field is mapped to
    * several inputs the default one, first configured, is always used).
    *
-   * @param modelKey {string}
+   * @param {String} modelKey
+   *
    * @returns {undefined|jQuery}
    */
   getInput(modelKey) {
@@ -129,8 +158,8 @@ export default class FormObjectMapper {
    * of course but the mapped inputs are also synced (all of them if multiple). Events are also
    * triggered to indicate the object has been updated (the general and the individual field ones).
    *
-   * @param modelKey {string}
-   * @param value {*|{}}
+   * @param {String} modelKey
+   * @param {*|{}} value
    */
   set(modelKey, value) {
     if (!Object.prototype.hasOwnProperty.call(this.modelMapping, modelKey) || value === this.get(modelKey)) {
@@ -160,7 +189,7 @@ export default class FormObjectMapper {
   /**
    * Triggered when a form input has been changed.
    *
-   * @param event {Object}
+   * @param {Object} event
    *
    * @private
    */
@@ -186,8 +215,8 @@ export default class FormObjectMapper {
   /**
    * Update all the inputs mapped to a model key
    *
-   * @param modelKey {string}
-   * @param value {*|{}}
+   * @param {String} modelKey
+   * @param {*|{}} value
    *
    * @private
    */
@@ -207,8 +236,8 @@ export default class FormObjectMapper {
   /**
    * Update individual input based on its name
    *
-   * @param inputName {string}
-   * @param value {*|{}}
+   * @param {String} inputName
+   * @param {*|{}} value
    *
    * @private
    */
@@ -255,8 +284,8 @@ export default class FormObjectMapper {
   /**
    * Update a specific field of the object.
    *
-   * @param modelKey {string}
-   * @param value
+   * @param {String} modelKey
+   * @param {*|{}} value
    *
    * @private
    */
@@ -305,8 +334,8 @@ export default class FormObjectMapper {
   }
 
   /**
-   * @param formName {string}
-   * @param modelMapping {string}
+   * @param {String} formName
+   * @param {String} modelMapping
    *
    * @private
    */
