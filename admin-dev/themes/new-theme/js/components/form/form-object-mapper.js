@@ -64,10 +64,14 @@ const {$} = window;
  */
 export default class FormObjectMapper {
   /**
-   * @param {jQuery} $form
-   * @param {Object} modelMapping
+   * @param {jQuery} $form - Form element to attach the mapper to
+   * @param {Object} modelMapping - Structure mapping a model to form names
    * @param {EventEmitter} eventEmitter
-   * @param {Object} config
+   * @param {Object} [config] - Event names
+   * @param {Object} [config.updateModel] - Name of the event to listen to trigger a refresh of the model update
+   * @param {Object} [config.modelUpdated] - Name of the event emitted each time the model is updated
+   * @param {Object} [config.modelFieldUpdated] - Name of the event emitted each time a field is updated
+   * @return {Object}
    */
   constructor($form, modelMapping, eventEmitter, config) {
     this.$form = $form;
@@ -86,90 +90,116 @@ export default class FormObjectMapper {
     // This event is emitted each time an object field is updated (from both input change and external event)
     this.modelFieldUpdatedEventName = inputConfig.modelFieldUpdated || 'modelFieldUpdated';
 
-    this.modelMapping = {};
-    this.formMapping = {};
-    this.object = {};
-
     this.initFormMapping();
-    this.watchUpdates();
     this.updateFullObject();
+    this.watchUpdates();
 
     return {
-      getObject: () => this.getObject(),
-      getInput: (modelKey) => this.getInput(modelKey),
-      get: (modelKey) => this.get(modelKey),
-      set: (modelKey, value) => this.set(modelKey, value),
+      /**
+       * Returns the model mapped to the form (current live state)
+       *
+       * @returns {*|{}}
+       */
+      getModel: () => this.model,
+
+      /**
+       * Returns the input associated to a model field (in case the field is mapped to
+       * several inputs the default one, first configured, is always used).
+       *
+       * @param {string} modelKey
+       *
+       * @returns {undefined|jQuery}
+       */
+      getInputFor: (modelKey) => {
+        if (!Object.prototype.hasOwnProperty.call(this.modelMapping, modelKey)) {
+          return undefined;
+        }
+
+        const $inputs = $(`[name="${this.modelMapping[modelKey]}"]`, this.$form);
+
+        if (!$inputs.length) {
+          return undefined;
+        }
+
+        return $inputs.first();
+      },
+
+      /**
+       * Returns all inputs associated to a model field.
+       *
+       * @param {string} modelKey
+       *
+       * @returns {undefined|jQuery}
+       */
+      getAllInputsFor: (modelKey) => {
+        if (!Object.prototype.hasOwnProperty.call(this.fullModelMapping, modelKey)) {
+          return undefined;
+        }
+
+        const inputNames = this.fullModelMapping[modelKey];
+        const namesSelector = inputNames.map((name) => `[name="${name}"]`).join(', ');
+
+        const $inputs = $(namesSelector, this.$form);
+
+        return $inputs.length ? $inputs : undefined;
+      },
+
+      /**
+       * Get a field from the object based on the model key, you can even get a sub part of the whole model.
+       * Example: for a model which looks like this:
+       * {
+       *   product: {
+       *     price: {
+       *       taxIncluded: 12.00,
+       *       taxExcluded: 10.00
+       *     }
+       *   }
+       * }
+       *
+       * You could call:
+       * mapper.get('product.price.taxIncluded') => 12.00
+       * mapper.get('product.price') => {taxIncluded: 12.00, taxExcluded: 10.00}
+       *
+       * @param {string} modelKey
+       *
+       * @returns {*|{}|undefined} Returns any element from the model, undefined if not found
+       */
+      get: (modelKey) => this.getValue(modelKey),
+
+      /**
+       * Set a value to a field of the object based on the model key, the object itself is updated
+       * of course but the mapped inputs are also synced (all of them if multiple). Events are also
+       * triggered to indicate the object has been updated (the general and the individual field ones).
+       *
+       * @param {string} modelKey
+       * @param {*|{}} value
+       */
+      set: (modelKey, value) => {
+        if (!Object.prototype.hasOwnProperty.call(this.modelMapping, modelKey) || value === this.getValue(modelKey)) {
+          return;
+        }
+
+        // First update the inputs then the model, so that the event is sent at last
+        this.updateInputValue(modelKey, value);
+        this.updateObjectByKey(modelKey, value);
+        this.eventEmitter.emit(this.modelUpdatedEventName, this.model);
+      },
     };
   }
 
   /**
-   * Returns the object mapped to the form (current live state)
+   * Get a field from the object based on the model key, you can even get a sub part of the whole model,
+   * this internal method is used by both get and set public methods.
    *
-   * @returns {*|{}}
-   */
-  getObject() {
-    return this.object;
-  }
-
-  /**
-   * Get a field from the object based on the model key, you can even get a sub part of the whole model.
-   * Example: for a model which looks like this:
-   * {
-   *   product: {
-   *     price: {
-   *       taxIncluded: 12.00,
-   *       taxExcluded: 10.00
-   *     }
-   *   }
-   * }
-   *
-   * You could call:
-   * mapper.get('product.price.taxIncluded') => 12.00
-   * mapper.get('product.price') => {taxIncluded: 12.00, taxExcluded: 10.00}
-   *
-   * @param {String} modelKey
+   * @param {string} modelKey
    *
    * @returns {*|{}|undefined} Returns any element from the model, undefined if not found
+   * @private
    */
-  get(modelKey) {
+  getValue(modelKey) {
     const modelKeys = modelKey.split('.');
 
-    return $.serializeJSON.deepGet(this.object, modelKeys);
-  }
-
-  /**
-   * Returns the input associated to a model field (in case the field is mapped to
-   * several inputs the default one, first configured, is always used).
-   *
-   * @param {String} modelKey
-   *
-   * @returns {undefined|jQuery}
-   */
-  getInput(modelKey) {
-    if (!Object.prototype.hasOwnProperty.call(this.modelMapping, modelKey)) {
-      return undefined;
-    }
-
-    return $(`[name="${this.modelMapping[modelKey]}"]`);
-  }
-
-  /**
-   * Set a value to a field of the object based on the model key, the object itself is updated
-   * of course but the mapped inputs are also synced (all of them if multiple). Events are also
-   * triggered to indicate the object has been updated (the general and the individual field ones).
-   *
-   * @param {String} modelKey
-   * @param {*|{}} value
-   */
-  set(modelKey, value) {
-    if (!Object.prototype.hasOwnProperty.call(this.modelMapping, modelKey) || value === this.get(modelKey)) {
-      return;
-    }
-
-    // First update the inputs then the model, so that the event is sent at last
-    this.updateInputValue(modelKey, value);
-    this.updateObjectByKey(modelKey, value);
-    this.eventEmitter.emit(this.modelUpdatedEventName, this.object);
+    return $.serializeJSON.deepGet(this.model, modelKeys);
   }
 
   /**
@@ -189,7 +219,7 @@ export default class FormObjectMapper {
   /**
    * Triggered when a form input has been changed.
    *
-   * @param {Object} event
+   * @param {jQuery.Event} event
    *
    * @private
    */
@@ -205,30 +235,35 @@ export default class FormObjectMapper {
     const updatedModelKey = this.formMapping[target.name];
 
     // Update the mapped input fields
-    this.updateInputValue(updatedModelKey, updatedValue);
+    this.updateInputValue(updatedModelKey, updatedValue, target.name);
 
     // Then update model and emit event
     this.updateObjectByKey(updatedModelKey, updatedValue);
-    this.eventEmitter.emit(this.modelUpdatedEventName, this.object);
+    this.eventEmitter.emit(this.modelUpdatedEventName, this.model);
   }
 
   /**
    * Update all the inputs mapped to a model key
    *
-   * @param {String} modelKey
+   * @param {string} modelKey
    * @param {*|{}} value
+   * @param {string|undefined} sourceInputName Source of the change (no need to update it)
    *
    * @private
    */
-  updateInputValue(modelKey, value) {
+  updateInputValue(modelKey, value, sourceInputName = undefined) {
     const modelInputs = this.fullModelMapping[modelKey];
 
     // Update linked inputs (when there is more than one input associated to the model field)
     if (Array.isArray(modelInputs)) {
       modelInputs.forEach((inputName) => {
+        if (sourceInputName === inputName) {
+          return;
+        }
+
         this.updateInputByName(inputName, value);
       });
-    } else {
+    } else if (sourceInputName !== modelInputs) {
       this.updateInputByName(modelInputs, value);
     }
   }
@@ -236,7 +271,7 @@ export default class FormObjectMapper {
   /**
    * Update individual input based on its name
    *
-   * @param {String} inputName
+   * @param {string} inputName
    * @param {*|{}} value
    *
    * @private
@@ -255,6 +290,9 @@ export default class FormObjectMapper {
     // eslint-disable-next-line eqeqeq
     if ($input.val() != value) {
       $input.val(value);
+
+      // This is required for some rich elements (like select2), only changing the val doesn't update the wrapping
+      // component
       $input.trigger('change');
     }
   }
@@ -269,7 +307,7 @@ export default class FormObjectMapper {
    */
   updateFullObject() {
     const serializedForm = this.$form.serializeJSON();
-    this.object = {};
+    this.model = {};
     Object.keys(this.modelMapping).forEach((modelKey) => {
       const formMapping = this.modelMapping[modelKey];
       const formKeys = $.serializeJSON.splitInputNameIntoKeysArray(formMapping);
@@ -278,35 +316,36 @@ export default class FormObjectMapper {
       this.updateObjectByKey(modelKey, formValue);
     });
 
-    this.eventEmitter.emit(this.modelUpdatedEventName, this.object);
+    this.eventEmitter.emit(this.modelUpdatedEventName, this.model);
   }
 
   /**
    * Update a specific field of the object.
    *
-   * @param {String} modelKey
+   * @param {string} modelKey
    * @param {*|{}} value
    *
    * @private
    */
   updateObjectByKey(modelKey, value) {
     const modelKeys = modelKey.split('.');
-    const currentValue = $.serializeJSON.deepGet(this.object, modelKeys);
+    const previousValue = $.serializeJSON.deepGet(this.model, modelKeys);
 
     // This check has two interests, there is no point in modifying a value or emit an event for a value that did not
     // change, and it avoids infinite loops when the object field are co-dependent and need to be updated dynamically
     // (ex: update price tax included when price tax excluded is updated and vice versa, without this check an infinite
     // loop would happen)
-    if (currentValue === value) {
+    if (previousValue === value) {
       return;
     }
 
-    $.serializeJSON.deepSet(this.object, modelKeys, value);
+    $.serializeJSON.deepSet(this.model, modelKeys, value);
 
     this.eventEmitter.emit(this.modelFieldUpdatedEventName, {
-      object: this.object,
+      object: this.model,
       modelKey,
       value,
+      previousValue,
     });
   }
 
@@ -317,8 +356,13 @@ export default class FormObjectMapper {
    * @private
    */
   initFormMapping() {
-    this.formMapping = {};
+    // modelMapping is a light version of the fullModelMapping, it only contains one input name which is considered
+    // as the default one (when full object is updated, only the default input is used)
     this.modelMapping = {};
+
+    // formMapping is the inverse of modelMapping for each input name it associated the model key, it is generated for
+    // performance and convenience, this allows to get mapping data faster in other functions
+    this.formMapping = {};
 
     Object.keys(this.fullModelMapping).forEach((modelKey) => {
       const formMapping = this.fullModelMapping[modelKey];
@@ -334,8 +378,8 @@ export default class FormObjectMapper {
   }
 
   /**
-   * @param {String} formName
-   * @param {String} modelMapping
+   * @param {string} formName
+   * @param {string} modelMapping
    *
    * @private
    */
@@ -347,8 +391,6 @@ export default class FormObjectMapper {
     }
 
     this.formMapping[formName] = modelMapping;
-    // modelMapping is a light version of the fullModelMapping, it only contains one input name which is considered
-    // as the default one (first in the list of full mapping)
     this.modelMapping[modelMapping] = formName;
   }
 }
