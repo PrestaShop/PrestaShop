@@ -27,7 +27,7 @@ declare(strict_types=1);
 
 namespace PrestaShop\PrestaShop\Core\Translation\Storage\Provider\Finder;
 
-use PrestaShopBundle\Translation\Loader\DatabaseTranslationLoader;
+use PrestaShop\PrestaShop\Core\Translation\Storage\Loader\DatabaseTranslationLoader;
 use Symfony\Component\Translation\MessageCatalogue;
 
 /**
@@ -85,7 +85,6 @@ class UserTranslatedCatalogueFinder extends AbstractCatalogueFinder
 
         foreach ($this->translationDomains as $translationDomain) {
             $domainCatalogue = $this->databaseTranslationReader->load(
-                null,
                 $locale,
                 $translationDomain,
                 $this->themeName

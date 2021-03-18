@@ -31,6 +31,9 @@ use PHPUnit\Framework\TestCase;
 use PrestaShop\PrestaShop\Core\Addon\Theme\Theme;
 use PrestaShop\PrestaShop\Core\Addon\Theme\ThemeRepository;
 use PrestaShop\PrestaShop\Core\Translation\Exception\UnexpectedTranslationTypeException;
+use PrestaShop\PrestaShop\Core\Translation\Storage\Extractor\LegacyModuleExtractorInterface;
+use PrestaShop\PrestaShop\Core\Translation\Storage\Extractor\ThemeExtractor;
+use PrestaShop\PrestaShop\Core\Translation\Storage\Loader\DatabaseTranslationLoader;
 use PrestaShop\PrestaShop\Core\Translation\Storage\Provider\CatalogueProviderFactory;
 use PrestaShop\PrestaShop\Core\Translation\Storage\Provider\CoreCatalogueLayersProvider;
 use PrestaShop\PrestaShop\Core\Translation\Storage\Provider\Definition\BackofficeProviderDefinition;
@@ -43,9 +46,6 @@ use PrestaShop\PrestaShop\Core\Translation\Storage\Provider\Definition\ProviderD
 use PrestaShop\PrestaShop\Core\Translation\Storage\Provider\Definition\ThemeProviderDefinition;
 use PrestaShop\PrestaShop\Core\Translation\Storage\Provider\ModuleCatalogueLayersProvider;
 use PrestaShop\PrestaShop\Core\Translation\Storage\Provider\ThemeCatalogueLayersProvider;
-use PrestaShopBundle\Translation\Extractor\LegacyModuleExtractorInterface;
-use PrestaShopBundle\Translation\Extractor\ThemeExtractor;
-use PrestaShopBundle\Translation\Loader\DatabaseTranslationLoader;
 use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\Translation\Loader\LoaderInterface;
 

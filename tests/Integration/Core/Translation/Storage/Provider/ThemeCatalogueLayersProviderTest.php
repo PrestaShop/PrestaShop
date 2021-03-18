@@ -27,16 +27,16 @@ declare(strict_types=1);
 
 namespace Tests\Integration\Core\Translation\Storage\Provider;
 
-use Doctrine\ORM\EntityManagerInterface;
 use PHPUnit\Framework\MockObject\MockObject;
 use PrestaShop\PrestaShop\Core\Addon\Theme\Theme;
 use PrestaShop\PrestaShop\Core\Addon\Theme\ThemeRepository;
+use PrestaShop\PrestaShop\Core\Language\LanguageRepositoryInterface;
+use PrestaShop\PrestaShop\Core\Translation\Storage\Extractor\ThemeExtractor;
 use PrestaShop\PrestaShop\Core\Translation\Storage\Provider\CoreCatalogueLayersProvider;
 use PrestaShop\PrestaShop\Core\Translation\Storage\Provider\Definition\FrontofficeProviderDefinition;
 use PrestaShop\PrestaShop\Core\Translation\Storage\Provider\Definition\ThemeProviderDefinition;
 use PrestaShop\PrestaShop\Core\Translation\Storage\Provider\ThemeCatalogueLayersProvider;
-use PrestaShopBundle\Translation\Extractor\LegacyModuleExtractorInterface;
-use PrestaShopBundle\Translation\Provider\ThemeProvider;
+use PrestaShop\PrestaShop\Core\Translation\TranslationRepositoryInterface;
 use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\Translation\Loader\LoaderInterface;
 use Symfony\Component\Translation\MessageCatalogue;
@@ -47,7 +47,7 @@ use Symfony\Component\Translation\MessageCatalogue;
 class ThemeCatalogueLayersProviderTest extends AbstractCatalogueLayersProviderTest
 {
     /**
-     * @var MockObject|LegacyModuleExtractorInterface
+     * @var MockObject|ThemeExtractor
      */
     private $themeExtractor;
 
@@ -71,7 +71,7 @@ class ThemeCatalogueLayersProviderTest extends AbstractCatalogueLayersProviderTe
         parent::setUp();
 
         $this->themesDir = self::$kernel->getContainer()->getParameter('translations_theme_dir');
-        $this->themeExtractor = self::$kernel->getContainer()->get('prestashop.translation.theme_extractor');
+        $this->themeExtractor = self::$kernel->getContainer()->get('prestashop.translation.extractor.theme');
 
         $this->themeRepository = $this->createMock(ThemeRepository::class);
         $this->themeRepository
@@ -127,22 +127,11 @@ class ThemeCatalogueLayersProviderTest extends AbstractCatalogueLayersProviderTe
      */
     public function testItExtractsDefaultCatalogueFromThemeFiles(): void
     {
-        $databaseTranslationLoader = new MockDatabaseTranslationLoader([], $this->createMock(EntityManagerInterface::class));
-
-        /**
-         * @TODO: In the next PR, break that silly dependency
-         */
-        $themeProvider = new ThemeProvider(
-            $databaseTranslationLoader,
-            $this->themesDir
+        $databaseTranslationLoader = new MockDatabaseTranslationLoader(
+            [],
+            $this->createMock(LanguageRepositoryInterface::class),
+            $this->createMock(TranslationRepositoryInterface::class)
         );
-        $themeProvider->themeResourcesDirectory = $this->themesDir;
-        $themeProvider->defaultTranslationDir = $this->translationsDir;
-        $themeProvider->filesystem = $this->filesystem;
-        $themeProvider->themeRepository = $this->themeRepository;
-        $themeProvider->themeExtractor = $this->themeExtractor;
-        $this->themeExtractor->setThemeProvider($themeProvider);
-        $this->themeExtractor->setOutputPath('/tmp/ThemeExtract');
 
         $providerDefinition = new ThemeProviderDefinition('fakeThemeForTranslations');
         $coreFrontProviderDefinition = new FrontofficeProviderDefinition();
@@ -278,7 +267,11 @@ class ThemeCatalogueLayersProviderTest extends AbstractCatalogueLayersProviderTe
      */
     protected function getProvider(array $databaseContent = []): ThemeCatalogueLayersProvider
     {
-        $databaseTranslationLoader = new MockDatabaseTranslationLoader($databaseContent, $this->createMock(EntityManagerInterface::class));
+        $databaseTranslationLoader = new MockDatabaseTranslationLoader(
+            $databaseContent,
+            $this->createMock(LanguageRepositoryInterface::class),
+            $this->createMock(TranslationRepositoryInterface::class)
+        );
         $providerDefinition = new ThemeProviderDefinition('fakeThemeForTranslations');
         $coreFrontProviderDefinition = new FrontofficeProviderDefinition();
         $coreFrontProvider = new CoreCatalogueLayersProvider(

@@ -27,9 +27,10 @@ declare(strict_types=1);
 
 namespace Tests\Integration\Core\Translation\Storage\Provider;
 
-use Doctrine\ORM\EntityManagerInterface;
+use PrestaShop\PrestaShop\Core\Language\LanguageRepositoryInterface;
 use PrestaShop\PrestaShop\Core\Translation\Storage\Provider\CoreCatalogueLayersProvider;
 use PrestaShop\PrestaShop\Core\Translation\Storage\Provider\Definition\MailsBodyProviderDefinition;
+use PrestaShop\PrestaShop\Core\Translation\TranslationRepositoryInterface;
 use Symfony\Component\Translation\MessageCatalogue;
 
 /**
@@ -173,7 +174,11 @@ class MailsBodyCatalogueLayersProviderTest extends AbstractCatalogueLayersProvid
         $providerDefinition = new MailsBodyProviderDefinition();
 
         return new CoreCatalogueLayersProvider(
-            new MockDatabaseTranslationLoader($databaseContent, $this->createMock(EntityManagerInterface::class)),
+            new MockDatabaseTranslationLoader(
+                $databaseContent,
+                $this->createMock(LanguageRepositoryInterface::class),
+                $this->createMock(TranslationRepositoryInterface::class)
+            ),
             $this->translationsDir,
             $providerDefinition->getFilenameFilters(),
             $providerDefinition->getTranslationDomains()

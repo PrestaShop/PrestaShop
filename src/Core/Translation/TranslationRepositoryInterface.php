@@ -24,42 +24,22 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
 
-namespace PrestaShop\PrestaShop\Core\Language;
+namespace PrestaShop\PrestaShop\Core\Translation;
 
+use Doctrine\ORM\QueryBuilder;
 use Doctrine\Persistence\ObjectRepository;
 
 /**
- * Interface LanguageRepositoryInterface allows to fetch a LanguageInterface
+ * Interface TranslationRepositoryInterface allows to fetch a TranslationInterface
  * via different methods.
  */
-interface LanguageRepositoryInterface extends ObjectRepository
+interface TranslationRepositoryInterface extends ObjectRepository
 {
     /**
-     * Returns a LanguageInterface whose locale matches the provided one.
+     * @param mixed $alias
+     * @param mixed|null $indexBy
      *
-     * @param string $locale
-     *
-     * @return LanguageInterface
+     * @return QueryBuilder
      */
-    public function getOneByLocale($locale);
-
-    /**
-     * Returns a LanguageInterface which isoCode matches the provided one.
-     *
-     * @param string $isoCode
-     *
-     * @return LanguageInterface
-     */
-    public function getOneByIsoCode($isoCode);
-
-    /**
-     * Returns a LanguageInterface whose locale matches the provided one,
-     * if no one is found try matching by isoCode (splitting the locale if
-     * necessary).
-     *
-     * @param string $locale
-     *
-     * @return LanguageInterface|null
-     */
-    public function getOneByLocaleOrIsoCode($locale);
+    public function createQueryBuilder($alias, $indexBy = null);
 }

@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Copyright since 2007 PrestaShop SA and Contributors
  * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
@@ -23,43 +24,34 @@
  * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
+declare(strict_types=1);
 
-namespace PrestaShop\PrestaShop\Core\Language;
+namespace PrestaShop\PrestaShop\Core\Translation\Storage\Normalizer;
 
-use Doctrine\Persistence\ObjectRepository;
+use RuntimeException;
 
 /**
- * Interface LanguageRepositoryInterface allows to fetch a LanguageInterface
- * via different methods.
+ * Normalizes domain names by removing dots
  */
-interface LanguageRepositoryInterface extends ObjectRepository
+class DomainNormalizer
 {
     /**
-     * Returns a LanguageInterface whose locale matches the provided one.
+     * @param string $domain Domain name
      *
-     * @param string $locale
+     * @return string
      *
-     * @return LanguageInterface
+     * @throws RuntimeException
      */
-    public function getOneByLocale($locale);
+    public function normalize(string $domain): string
+    {
+        // remove up to two dots from the domain name
+        // (because legacy domain translations CAN have dots in the third part)
+        $normalizedDomain = preg_replace('/\./', '', $domain, 2);
 
-    /**
-     * Returns a LanguageInterface which isoCode matches the provided one.
-     *
-     * @param string $isoCode
-     *
-     * @return LanguageInterface
-     */
-    public function getOneByIsoCode($isoCode);
+        if ($normalizedDomain === null) {
+            throw new RuntimeException(sprintf('An error occurred while normalizing domain "%s"', $domain));
+        }
 
-    /**
-     * Returns a LanguageInterface whose locale matches the provided one,
-     * if no one is found try matching by isoCode (splitting the locale if
-     * necessary).
-     *
-     * @param string $locale
-     *
-     * @return LanguageInterface|null
-     */
-    public function getOneByLocaleOrIsoCode($locale);
+        return $normalizedDomain;
+    }
 }

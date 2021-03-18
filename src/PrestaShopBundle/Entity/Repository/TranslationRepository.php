@@ -27,8 +27,9 @@
 namespace PrestaShopBundle\Entity\Repository;
 
 use Doctrine\ORM\EntityRepository;
+use PrestaShop\PrestaShop\Core\Translation\TranslationRepositoryInterface;
 
-class TranslationRepository extends EntityRepository
+class TranslationRepository extends EntityRepository implements TranslationRepositoryInterface
 {
     /**
      * @param string $language

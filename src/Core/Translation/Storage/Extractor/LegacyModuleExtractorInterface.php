@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Copyright since 2007 PrestaShop SA and Contributors
  * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
@@ -24,42 +25,24 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
 
-namespace PrestaShop\PrestaShop\Core\Language;
+namespace PrestaShop\PrestaShop\Core\Translation\Storage\Extractor;
 
-use Doctrine\Persistence\ObjectRepository;
+use Symfony\Component\Translation\MessageCatalogue;
 
 /**
- * Interface LanguageRepositoryInterface allows to fetch a LanguageInterface
- * via different methods.
+ * Parse code content of module, searching for l() calls and retrieve
+ * a Message Catalogue with all the keys and translations.
  */
-interface LanguageRepositoryInterface extends ObjectRepository
+interface LegacyModuleExtractorInterface
 {
     /**
-     * Returns a LanguageInterface whose locale matches the provided one.
+     * Extracts the wordings from source code and returns the translation messages.
+     * Note that domain names will contain separating dots.
      *
-     * @param string $locale
+     * @param string $moduleName
+     * @param string $locale The locale used for the message catalogue. Note that wordings won't be translated in this locale.
      *
-     * @return LanguageInterface
+     * @return MessageCatalogue
      */
-    public function getOneByLocale($locale);
-
-    /**
-     * Returns a LanguageInterface which isoCode matches the provided one.
-     *
-     * @param string $isoCode
-     *
-     * @return LanguageInterface
-     */
-    public function getOneByIsoCode($isoCode);
-
-    /**
-     * Returns a LanguageInterface whose locale matches the provided one,
-     * if no one is found try matching by isoCode (splitting the locale if
-     * necessary).
-     *
-     * @param string $locale
-     *
-     * @return LanguageInterface|null
-     */
-    public function getOneByLocaleOrIsoCode($locale);
+    public function extract(string $moduleName, string $locale): MessageCatalogue;
 }

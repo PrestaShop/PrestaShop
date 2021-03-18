@@ -27,14 +27,15 @@ declare(strict_types=1);
 
 namespace Tests\Integration\Core\Translation\Storage\Provider;
 
-use Doctrine\ORM\EntityManagerInterface;
 use PHPUnit\Framework\MockObject\MockObject;
+use PrestaShop\PrestaShop\Core\Language\LanguageRepositoryInterface;
+use PrestaShop\PrestaShop\Core\Translation\Storage\Extractor\LegacyModuleExtractor;
+use PrestaShop\PrestaShop\Core\Translation\Storage\Extractor\LegacyModuleExtractorInterface;
+use PrestaShop\PrestaShop\Core\Translation\Storage\Loader\LegacyFileLoader;
+use PrestaShop\PrestaShop\Core\Translation\Storage\Loader\LegacyFileReader;
 use PrestaShop\PrestaShop\Core\Translation\Storage\Provider\Definition\ModuleProviderDefinition;
 use PrestaShop\PrestaShop\Core\Translation\Storage\Provider\ModuleCatalogueLayersProvider;
-use PrestaShopBundle\Translation\Extractor\LegacyModuleExtractor;
-use PrestaShopBundle\Translation\Extractor\LegacyModuleExtractorInterface;
-use PrestaShopBundle\Translation\Loader\LegacyFileLoader;
-use PrestaShopBundle\Translation\Loader\LegacyFileReader;
+use PrestaShop\PrestaShop\Core\Translation\TranslationRepositoryInterface;
 use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
 use Symfony\Component\Translation\Loader\LoaderInterface;
 use Symfony\Component\Translation\MessageCatalogue;
@@ -134,7 +135,11 @@ class ModuleCatalogueLayersProviderTest extends KernelTestCase
 
         $providerDefinition = new ModuleProviderDefinition('translationtest');
         $provider = new ModuleCatalogueLayersProvider(
-            new MockDatabaseTranslationLoader([], $this->createMock(EntityManagerInterface::class)),
+            new MockDatabaseTranslationLoader(
+                [],
+                $this->createMock(LanguageRepositoryInterface::class),
+                $this->createMock(TranslationRepositoryInterface::class)
+            ),
             $legacyModuleExtractor,
             $legacyFileLoader,
             $this->modulesDir,
@@ -216,7 +221,11 @@ class ModuleCatalogueLayersProviderTest extends KernelTestCase
         );
         $providerDefinition = new ModuleProviderDefinition('translationtest');
         $provider = new ModuleCatalogueLayersProvider(
-            new MockDatabaseTranslationLoader([], $this->createMock(EntityManagerInterface::class)),
+            new MockDatabaseTranslationLoader(
+                [],
+                $this->createMock(LanguageRepositoryInterface::class),
+                $this->createMock(TranslationRepositoryInterface::class)
+            ),
             $legacyModuleExtractor,
             $this->legacyFileLoader,
             $this->modulesDir,
@@ -356,7 +365,11 @@ class ModuleCatalogueLayersProviderTest extends KernelTestCase
         $providerDefinition = new ModuleProviderDefinition($moduleName);
 
         return new ModuleCatalogueLayersProvider(
-            new MockDatabaseTranslationLoader($databaseContent, $this->createMock(EntityManagerInterface::class)),
+            new MockDatabaseTranslationLoader(
+                $databaseContent,
+                $this->createMock(LanguageRepositoryInterface::class),
+                $this->createMock(TranslationRepositoryInterface::class)
+            ),
             $this->legacyModuleExtractor,
             $this->legacyFileLoader,
             $this->modulesDir,

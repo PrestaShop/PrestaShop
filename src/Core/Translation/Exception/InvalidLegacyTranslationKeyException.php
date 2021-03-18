@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Copyright since 2007 PrestaShop SA and Contributors
  * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
@@ -23,43 +24,36 @@
  * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
+declare(strict_types=1);
 
-namespace PrestaShop\PrestaShop\Core\Language;
+namespace PrestaShop\PrestaShop\Core\Translation\Exception;
 
-use Doctrine\Persistence\ObjectRepository;
+use PrestaShop\PrestaShop\Core\Exception\CoreException;
+use Throwable;
 
 /**
- * Interface LanguageRepositoryInterface allows to fetch a LanguageInterface
- * via different methods.
+ * Thrown when an invalid key is found in a legacy translation file
  */
-interface LanguageRepositoryInterface extends ObjectRepository
+class InvalidLegacyTranslationKeyException extends CoreException
 {
     /**
-     * Returns a LanguageInterface whose locale matches the provided one.
-     *
-     * @param string $locale
-     *
-     * @return LanguageInterface
+     * @var string The invalid key
      */
-    public function getOneByLocale($locale);
+    private $key;
+
+    public function __construct(string $missingElement, string $key, $code = 0, Throwable $previous = null)
+    {
+        $message = sprintf('Invalid key in legacy translation file: "%s" (missing %s)', $key, $missingElement);
+        $this->key = $key;
+
+        parent::__construct($message, $code, $previous);
+    }
 
     /**
-     * Returns a LanguageInterface which isoCode matches the provided one.
-     *
-     * @param string $isoCode
-     *
-     * @return LanguageInterface
+     * @return string
      */
-    public function getOneByIsoCode($isoCode);
-
-    /**
-     * Returns a LanguageInterface whose locale matches the provided one,
-     * if no one is found try matching by isoCode (splitting the locale if
-     * necessary).
-     *
-     * @param string $locale
-     *
-     * @return LanguageInterface|null
-     */
-    public function getOneByLocaleOrIsoCode($locale);
+    public function getKey(): string
+    {
+        return $this->key;
+    }
 }

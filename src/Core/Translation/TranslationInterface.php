@@ -24,42 +24,38 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
 
-namespace PrestaShop\PrestaShop\Core\Language;
-
-use Doctrine\Persistence\ObjectRepository;
+namespace PrestaShop\PrestaShop\Core\Translation;
 
 /**
- * Interface LanguageRepositoryInterface allows to fetch a LanguageInterface
- * via different methods.
+ * Interface TranslationInterface defines a translation object (id, key, translation, domain)
  */
-interface LanguageRepositoryInterface extends ObjectRepository
+interface TranslationInterface
 {
     /**
-     * Returns a LanguageInterface whose locale matches the provided one.
+     * Database id
      *
-     * @param string $locale
-     *
-     * @return LanguageInterface
+     * @return int
      */
-    public function getOneByLocale($locale);
+    public function getId(): int;
 
     /**
-     * Returns a LanguageInterface which isoCode matches the provided one.
+     * The translation key (wording)
      *
-     * @param string $isoCode
-     *
-     * @return LanguageInterface
+     * @return string
      */
-    public function getOneByIsoCode($isoCode);
+    public function getKey(): string;
 
     /**
-     * Returns a LanguageInterface whose locale matches the provided one,
-     * if no one is found try matching by isoCode (splitting the locale if
-     * necessary).
+     * The translated string (message)
      *
-     * @param string $locale
-     *
-     * @return LanguageInterface|null
+     * @return string
      */
-    public function getOneByLocaleOrIsoCode($locale);
+    public function getTranslation(): string;
+
+    /**
+     * The translation domain name
+     *
+     * @return string
+     */
+    public function getDomain(): string;
 }

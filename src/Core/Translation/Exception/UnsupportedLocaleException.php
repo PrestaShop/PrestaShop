@@ -23,43 +23,47 @@
  * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
+declare(strict_types=1);
 
-namespace PrestaShop\PrestaShop\Core\Language;
+namespace PrestaShop\PrestaShop\Core\Translation\Exception;
 
-use Doctrine\Persistence\ObjectRepository;
+use Symfony\Component\Translation\Exception\NotFoundResourceException;
 
 /**
- * Interface LanguageRepositoryInterface allows to fetch a LanguageInterface
- * via different methods.
+ * Will be thrown if a locale is not supported in Legacy format
  */
-interface LanguageRepositoryInterface extends ObjectRepository
+final class UnsupportedLocaleException extends NotFoundResourceException
 {
     /**
-     * Returns a LanguageInterface whose locale matches the provided one.
+     * @param string $filePath the expected file path of the translations
+     * @param string $locale the translation locale
      *
-     * @param string $locale
-     *
-     * @return LanguageInterface
+     * @return self
      */
-    public function getOneByLocale($locale);
+    public static function fileNotFound(string $filePath, string $locale): self
+    {
+        $exceptionMessage = sprintf(
+            'The locale "%s" is not supported, because we can\'t find the related file in the module:
+            have you created the file "%s"?',
+            $locale,
+            $filePath
+        );
+
+        return new self($exceptionMessage);
+    }
 
     /**
-     * Returns a LanguageInterface which isoCode matches the provided one.
+     * @param string $locale the translation locale
      *
-     * @param string $isoCode
-     *
-     * @return LanguageInterface
+     * @return self
      */
-    public function getOneByIsoCode($isoCode);
+    public static function invalidLocale($locale)
+    {
+        $exceptionMessage = sprintf(
+            'The provided locale `%s` is invalid.',
+            $locale
+        );
 
-    /**
-     * Returns a LanguageInterface whose locale matches the provided one,
-     * if no one is found try matching by isoCode (splitting the locale if
-     * necessary).
-     *
-     * @param string $locale
-     *
-     * @return LanguageInterface|null
-     */
-    public function getOneByLocaleOrIsoCode($locale);
+        return new self($exceptionMessage);
+    }
 }
