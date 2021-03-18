@@ -49,11 +49,11 @@
         ]"
       >
         <i class="material-icons">add_a_photo</i><br>
-        {{ $t("window.dropImages") }}<br>
-        <a>{{ $t("window.selectFiles") }}</a><br>
+        {{ $t('window.dropImages') }}<br>
+        <a>{{ $t('window.selectFiles') }}</a><br>
         <small>
-          {{ $t("window.recommendedSize") }}<br>
-          {{ $t("window.recommendedFormats") }}
+          {{ $t('window.recommendedSize') }}<br>
+          {{ $t('window.recommendedFormats') }}
         </small>
       </div>
 
@@ -112,7 +112,7 @@
           </div>
         </div>
         <div class="iscover">
-          {{ $t("window.cover") }}
+          {{ $t('window.cover') }}
         </div>
       </div>
     </div>
