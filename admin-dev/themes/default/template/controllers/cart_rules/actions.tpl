@@ -142,7 +142,7 @@
 <div id="apply_discount_to_product_special" class="form-group">
  	<label class="control-label col-lg-3">
     <span class="label-tooltip" data-toggle="tooltip"
-        title="{l s='If enabled, the voucher will not apply to products already on sale.'}">
+        title="{l|escape s='If enabled, the voucher will not apply to products already on sale.'}">
     {l s='Exclude discounted products' d='Admin.Catalog.Feature'}
     </span>
   </label>
