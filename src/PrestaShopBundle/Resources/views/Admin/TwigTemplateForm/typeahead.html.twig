@@ -37,7 +37,7 @@
           {%- set attr = attr|merge({'class': (attr.class|default('') ~ ' form-control search typeahead ' ~ form.vars.id)|trim }) -%}
           {# We do not want the initial input name because the data is handled via a collection input with name="full_name[data][]" #}
           {%- set full_name = '' -%}
-          <input type="text" id="{{ form.vars.id }}" placeholder="{{ placeholder }}" autocomplete="off" {{ block('widget_attributes') }}>
+          <input type="text" placeholder="{{ placeholder }}" autocomplete="off" {{ block('widget_attributes') }}>
         </div>
         <small class="form-text text-muted text-right typeahead-hint">
         </small>
