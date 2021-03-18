@@ -31,6 +31,7 @@ namespace PrestaShopBundle\Form\Admin\Sell\Product;
 use PrestaShop\PrestaShop\Adapter\Shop\Url\ProductProvider;
 use PrestaShop\PrestaShop\Core\Domain\Product\QueryResult\ProductType;
 use PrestaShopBundle\Form\Admin\Sell\Product\Image\ImageDropzoneType;
+use PrestaShopBundle\Form\Admin\Sell\Product\Image\ProductImageType;
 use PrestaShopBundle\Form\Admin\Type\TranslatorAwareType;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Symfony\Component\Form\Extension\Core\Type\ButtonType;
@@ -108,6 +109,7 @@ class ProductFormType extends TranslatorAwareType
             $builder
                 ->add('images', ImageDropzoneType::class, [
                     'product_id' => $productId,
+                    'update_form_type' => ProductImageType::class,
                 ])
                 ->add('preview', ButtonType::class, [
                     'label' => $this->trans('Preview', 'Admin.Actions'),

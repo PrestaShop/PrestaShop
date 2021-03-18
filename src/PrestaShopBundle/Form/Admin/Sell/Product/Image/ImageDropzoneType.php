@@ -32,6 +32,7 @@ use PrestaShopBundle\Form\Admin\Type\TranslatorAwareType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\Form\FormInterface;
 use Symfony\Component\Form\FormView;
+use Symfony\Component\Form\Util\StringUtil;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
 /**
@@ -64,7 +65,7 @@ class ImageDropzoneType extends TranslatorAwareType
                 'window.selectedFiles' => $this->trans(
                     '[1]%filesNb%[/1] selected file(s)',
                     'Admin.Actions',
-                    ['[1]' => '<span>', '[/1]' => '</span>'],
+                    ['[1]' => '<span>', '[/1]' => '</span>']
                 ),
                 'window.useAsCover' => $this->trans('Use as cover image', 'Admin.Actions'),
                 'window.saveImage' => $this->trans('Save image settings', 'Admin.Actions'),
@@ -74,7 +75,7 @@ class ImageDropzoneType extends TranslatorAwareType
                 'window.fileisTooLarge' => $this->trans(
                     'The file is too large. Maximum size allowed is => [1] MB. The file you are trying to upload is [2] MB.',
                     'Admin.Notifications.Error',
-                    ['[1]' => '{{maxFilesize}}', '[2]' => '{{filesize}}'],
+                    ['[1]' => '{{maxFilesize}}', '[2]' => '{{filesize}}']
                 ),
                 'window.dropImages' => $this->trans('Drop images here', 'Admin.Catalog.Feature'),
                 'window.selectFiles' => $this->trans('or select files', 'Admin.Catalog.Feature'),
@@ -84,9 +85,11 @@ class ImageDropzoneType extends TranslatorAwareType
                 'window.caption' => $this->trans('Caption', 'Admin.Catalog.Feature'),
             ],
             'product_id' => null,
+            'update_form_type' => null,
         ]);
 
         $resolver->setAllowedTypes('product_id', ['int', 'null']);
+        $resolver->setAllowedTypes('update_form_type', ['string', 'null']);
         $resolver->setAllowedTypes('translations', ['array']);
     }
 
@@ -99,5 +102,6 @@ class ImageDropzoneType extends TranslatorAwareType
         $view->vars['locales'] = $this->locales;
         $view->vars['translations'] = $options['translations'];
         $view->vars['product_id'] = $options['product_id'];
+        $view->vars['update_form_name'] = StringUtil::fqcnToBlockPrefix($options['update_form_type']) ?: '';
     }
 }
