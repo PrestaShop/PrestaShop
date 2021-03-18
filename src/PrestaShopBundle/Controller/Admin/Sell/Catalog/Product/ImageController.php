@@ -32,9 +32,12 @@ use Exception;
 use PrestaShop\PrestaShop\Core\Domain\Product\Image\Command\AddProductImageCommand;
 use PrestaShop\PrestaShop\Core\Domain\Product\Image\Exception\CannotAddProductImageException;
 use PrestaShop\PrestaShop\Core\Domain\Product\Image\Exception\ProductImageNotFoundException;
+use PrestaShop\PrestaShop\Core\Domain\Product\Image\Query\GetProductImage;
 use PrestaShop\PrestaShop\Core\Domain\Product\Image\Query\GetProductImages;
 use PrestaShop\PrestaShop\Core\Domain\Product\Image\QueryResult\ProductImage;
 use PrestaShop\PrestaShop\Core\Domain\Product\Image\ValueObject\ImageId;
+use PrestaShop\PrestaShop\Core\Form\IdentifiableObject\Builder\FormBuilderInterface;
+use PrestaShop\PrestaShop\Core\Form\IdentifiableObject\Handler\FormHandlerInterface;
 use PrestaShop\PrestaShop\Core\Image\Uploader\Exception\MemoryLimitException;
 use PrestaShop\PrestaShop\Core\Image\Uploader\Exception\UploadedImageConstraintException;
 use PrestaShopBundle\Controller\Admin\FrameworkBundleAdminController;
@@ -93,10 +96,68 @@ class ImageController extends FrameworkBundleAdminController
             ], Response::HTTP_BAD_REQUEST);
         }
 
-        // @todo: the GetProductImage command is implemented in another PR, but it should be used here to return the
-        // full data of the created image (like in the getImages controller)
+        return $this->getProductImageJsonResponse($imageId->getValue());
+    }
 
-        return new JsonResponse(['image_id' => $imageId->getValue()]);
+    /**
+     * @AdminSecurity("is_granted(['update'], request.get('_legacy_controller'))", message="You do not have permission to update this.")
+     *
+     * @param Request $request
+     * @param int $productImageId
+     *
+     * @return JsonResponse
+     */
+    public function updateImageAction(Request $request, int $productImageId): JsonResponse
+    {
+        $imageForm = $this->getProductImageFormBuilder()->getFormFor($productImageId, [], [
+            'method' => Request::METHOD_PATCH,
+        ]);
+        $imageForm->handleRequest($request);
+
+        try {
+            $result = $this->getProductImageFormHandler()->handleFor($productImageId, $imageForm);
+
+            if (!$result->isSubmitted() || !$result->isValid()) {
+                return new JsonResponse([
+                    'error' => 'Invalid data.',
+                    'form_errors' => $this->getFormErrorsForJS($imageForm),
+                ], Response::HTTP_BAD_REQUEST);
+            }
+        } catch (Exception $e) {
+            return new JsonResponse([
+                'error' => $this->getErrorMessageForException($e, $this->getErrorMessages($e)),
+            ], Response::HTTP_BAD_REQUEST);
+        }
+
+        return $this->getProductImageJsonResponse($productImageId);
+    }
+
+    /**
+     * @return FormBuilderInterface
+     */
+    private function getProductImageFormBuilder(): FormBuilderInterface
+    {
+        return $this->get('prestashop.core.form.identifiable_object.builder.update_image_form_builder');
+    }
+
+    /**
+     * @return FormHandlerInterface
+     */
+    private function getProductImageFormHandler(): FormHandlerInterface
+    {
+        return $this->get('prestashop.core.form.identifiable_object.product_image_form_handler');
+    }
+
+    /**
+     * @param int $productImageId
+     *
+     * @return JsonResponse
+     */
+    private function getProductImageJsonResponse(int $productImageId): JsonResponse
+    {
+        $productImage = $this->getQueryBus()->handle(new GetProductImage($productImageId));
+
+        return new JsonResponse($this->formatImage($productImage));
     }
 
     /**
