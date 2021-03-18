@@ -117,7 +117,7 @@
     />
 
     <div class="dropzone-window-button-container">
-      <button type="button" class="btn btn-primary save-image-settings" @click="saveSelectedFile">
+      <button type="button" class="btn btn-primary save-image-settings" @click="$emit('saveSelectedFile')">
         {{ $t("window.saveImage") }}
       </button>
     </div>
@@ -168,11 +168,7 @@ export default {
   mounted() {
     window.prestaShopUiKit.initToolTips();
   },
-  methods: {
-    saveSelectedFile() {
-      console.log('save selected file', this.selectedFile);
-    }
-  },
+  methods: {},
 };
 </script>
 
