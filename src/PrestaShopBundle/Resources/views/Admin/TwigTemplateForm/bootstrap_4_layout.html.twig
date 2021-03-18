@@ -357,9 +357,9 @@
 
 {% block color_picker_widget %}
   {% spaceless %}
-    {%  set attr = attr|merge({'class': ((attr.class|default('') ~ ' colorpicker')|trim)}) %}
+    {%  set attr = attr|merge({'class': ((attr.class|default('') ~ ' form-control colorpicker')|trim)}) %}
     <div class="input-group colorpicker">
-      <input type="text" class="form-control" {{ block('widget_attributes') }} {% if value is not empty %}value="{{ value }}" {% endif %}/>
+      <input type="text" {{ block('widget_attributes') }} {% if value is not empty %}value="{{ value }}" {% endif %}/>
     </div>
   {% endspaceless %}
 {% endblock color_picker_widget %}
