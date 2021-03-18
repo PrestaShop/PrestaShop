@@ -335,10 +335,10 @@
 
 {% block date_picker_widget %}
   {% spaceless %}
-    {%  set attr = attr|merge({'class': ((attr.class|default('') ~ ' datepicker')|trim)}) %}
+    {%  set attr = attr|merge({'class': ((attr.class|default('') ~ ' datepicker form-control')|trim)}) %}
     {%- set attr = attr|merge({'aria-label': '%inputId% input'|trans({'%inputId%': form.vars.id}, 'Admin.Global')}) -%}
     <div class="input-group datepicker">
-      <input type="text" class="form-control" data-format="{{ date_format }}" {{ block('widget_attributes') }} {% if value is not empty %}value="{{ value }}" {% endif %}/>
+      <input type="text" data-format="{{ date_format }}" {{ block('widget_attributes') }} {% if value is not empty %}value="{{ value }}" {% endif %}/>
       <div class="input-group-append">
         <div class="input-group-text">
           <i class="material-icons">date_range</i>
