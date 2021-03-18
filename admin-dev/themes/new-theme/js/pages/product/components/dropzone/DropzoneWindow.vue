@@ -28,7 +28,9 @@
       <div class="dropzone-window-header-left">
         <p
           class="dropzone-window-number"
-          v-html="$t('window.selectedFiles', {'%filesNb%': selectedFiles.length})"
+          v-html="
+            $t('window.selectedFiles', { '%filesNb%': selectedFiles.length })
+          "
         />
       </div>
       <div class="dropzone-window-header-right">
@@ -36,19 +38,22 @@
           class="material-icons"
           data-toggle="pstooltip"
           :data-original-title="$t('window.zoom')"
-        >search</i>
+          >search</i
+        >
         <i
           class="material-icons"
           data-toggle="pstooltip"
           :data-original-title="$t('window.delete')"
           @click="$emit('removeSelection')"
-        >delete</i>
+          >delete</i
+        >
         <i
           class="material-icons"
           data-toggle="pstooltip"
           :data-original-title="$t('window.close')"
           @click="$emit('unselectAll')"
-        >close</i>
+          >close</i
+        >
       </div>
     </div>
 
@@ -72,18 +77,40 @@
       v-if="selectedFiles.length === 1"
     >
       <label>
-        <input type="checkbox">
+        <input type="checkbox" />
         <i class="md-checkbox-control" />
         {{ $t("window.useAsCover") }}
       </label>
     </div>
 
-    <label
-      for="caption-textarea"
-      class="control-label"
-    >{{
-      $t("window.caption")
-    }}</label>
+    <div class="dropzone-window-label">
+      <label for="caption-textarea" class="control-label">{{
+        $t("window.caption")
+      }}</label>
+      <div class="dropdown">
+        <button
+          class="btn btn-outline-secondary btn-sm dropdown-toggle js-locale-btn"
+          type="button"
+          data-toggle="dropdown"
+          aria-haspopup="true"
+          aria-expanded="false"
+          id="form_invoice_prefix"
+        >
+          en
+        </button>
+        <div
+          class="dropdown-menu locale-dropdown-menu"
+          aria-labelledby="form_invoice_prefix"
+        >
+          <span class="dropdown-item js-locale-item" data-locale="en"
+            >English (English)</span
+          >
+          <span class="dropdown-item js-locale-item" data-locale="fr"
+            >Français (French)</span
+          >
+        </div>
+      </div>
+    </div>
     <textarea
       id="caption-textarea"
       name="caption-textarea"
@@ -99,23 +126,23 @@
 </template>
 
 <script>
-  export default {
-    name: 'DropzoneWindow',
-    props: {
-      selectedFiles: {
-        type: Array,
-        default: () => [],
-      },
-      files: {
-        type: Array,
-        default: () => [],
-      },
+export default {
+  name: "DropzoneWindow",
+  props: {
+    selectedFiles: {
+      type: Array,
+      default: () => [],
     },
-    mounted() {
-      window.prestaShopUiKit.initToolTips();
+    files: {
+      type: Array,
+      default: () => [],
     },
-    methods: {},
-  };
+  },
+  mounted() {
+    window.prestaShopUiKit.initToolTips();
+  },
+  methods: {},
+};
 </script>
 
 <style lang="scss" type="text/scss">
@@ -127,6 +154,23 @@
     background-color: darken(#ffffff, 2%);
     align-self: stretch;
     padding: 1rem;
+
+    &-label {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 0.5rem;
+
+      label {
+        margin-bottom: 0;
+      }
+
+      .dropdown {
+        > button {
+          padding-right: 0.25rem;
+        }
+      }
+    }
 
     textarea {
       margin-bottom: 1rem;
