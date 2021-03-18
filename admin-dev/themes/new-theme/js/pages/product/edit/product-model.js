@@ -58,7 +58,7 @@ export default class ProductModel {
    * @returns {Object}
    */
   getProduct() {
-    return this.mapper.getObject().product;
+    return this.mapper.getModel().product;
   }
 
   /**
@@ -103,7 +103,8 @@ export default class ProductModel {
       return;
     }
 
-    const $taxRulesGroupIdInput = this.mapper.getInput('product.price.taxRulesGroupId');
+    const $taxRulesGroupIdInput = this.mapper.getInputFor('product.price.taxRulesGroupId');
+
     const $selectedTaxOption = $(':selected', $taxRulesGroupIdInput);
     let taxRate;
     try {
@@ -116,7 +117,7 @@ export default class ProductModel {
 
     switch (event.modelKey) {
       case 'product.price.priceTaxIncluded': {
-        const priceTaxIncluded = new BigNumber(this.mapper.get('product.price.priceTaxIncluded'));
+        const priceTaxIncluded = new BigNumber(this.getProduct().price.priceTaxIncluded);
         this.mapper.set(
           'product.price.priceTaxExcluded',
           priceTaxIncluded.dividedBy(taxRatio).toFixed(this.precision),
@@ -124,7 +125,7 @@ export default class ProductModel {
         break;
       }
       default: {
-        const priceTaxExcluded = new BigNumber(this.mapper.get('product.price.priceTaxExcluded'));
+        const priceTaxExcluded = new BigNumber(this.getProduct().price.priceTaxExcluded);
         this.mapper.set('product.price.priceTaxIncluded', priceTaxExcluded.times(taxRatio).toFixed(this.precision));
         break;
       }
