@@ -276,3 +276,9 @@ default:
             contexts:
                 - Tests\Integration\Behaviour\Features\Context\CommonFeatureContext
                 - Tests\Integration\Behaviour\Features\Context\ShopFeatureContext
+        feature_flag:
+            paths:
+                - %paths.base%/Features/Scenario/FeatureFlag
+            contexts:
+                - Tests\Integration\Behaviour\Features\Context\CommonFeatureContext
+                - Tests\Integration\Behaviour\Features\Context\FeatureFlagFeatureContext
