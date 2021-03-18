@@ -98,7 +98,7 @@
 <script>
   import PhotoSwipe from 'photoswipe';
   // eslint-disable-next-line
-import PhotoSwipeUI_Default from "photoswipe/dist/photoswipe-ui-default";
+  import PhotoSwipeUI_Default from "photoswipe/dist/photoswipe-ui-default";
 
   export default {
     name: 'DropzonePhotoSwipe',
@@ -116,13 +116,14 @@ import PhotoSwipeUI_Default from "photoswipe/dist/photoswipe-ui-default";
         shareButtons: [
           {
             id: 'download',
-            label: 'Download image',
+            label: this.$t('window.downloadImage'),
             url: '{{raw_image_url}}',
             download: true,
           },
         ],
       };
 
+      // This is needed to make our files compatible for photoswipe
       const items = this.files.map((file) => {
         file.src = file.dataURL;
         file.h = file.height;
@@ -142,12 +143,14 @@ import PhotoSwipeUI_Default from "photoswipe/dist/photoswipe-ui-default";
 
       const buttons = document.querySelectorAll('.pswp button');
 
+      // We need to disable button default behavior overwise it submit the product form
       buttons.forEach((button) => {
         button.addEventListener('click', (event) => {
           event.preventDefault();
         });
       });
 
+      // We must tell to the rich component that the gallery have been closed
       gallery.listen('destroy', () => {
         this.$emit('closeGallery');
       });
