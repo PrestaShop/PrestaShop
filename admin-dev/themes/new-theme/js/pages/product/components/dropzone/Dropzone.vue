@@ -165,10 +165,6 @@
     },
     computed: {},
     mounted() {
-      this.configuration.previewTemplate = document.querySelector(
-        '.dz-template',
-      ).innerHTML;
-
       this.watchLocaleChanges();
       this.initProductImages();
     },
@@ -211,6 +207,15 @@
        * we already have in database.
        */
       initDropZone() {
+        this.configuration.previewTemplate = document.querySelector(
+          '.dz-template',
+        ).innerHTML;
+        this.configuration.paramName = `${this.formName}[file]`;
+        this.configuration.method = 'POST';
+        this.configuration.params = {};
+        this.configuration.params[`${this.formName}[product_id]`] = this.productId;
+        this.configuration.params[`${this.formName}[_token]`] = this.token;
+
         this.dropzone = new window.Dropzone(
           '.dropzone-container',
           this.configuration,
@@ -238,6 +243,13 @@
         this.dropzone.on('error', (fileWithError, message) => {
           $.growl.error({message: message.error});
           this.dropzone.removeFile(fileWithError);
+        });
+
+        this.dropzone.on('success', (file, response) => {
+          // Append the data required for a product image
+          file.image_id = response.image_id;
+          file.is_cover = response.is_cover;
+          file.legends = response.legends;
         });
       },
       /**
