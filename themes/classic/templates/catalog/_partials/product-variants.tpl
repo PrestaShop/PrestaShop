@@ -35,6 +35,7 @@
         <select
           class="form-control form-control-select"
           id="group_{$id_attribute_group}"
+          aria-label="{$group.name}"
           data-product-attribute="{$id_attribute_group}"
           name="group[{$id_attribute_group}]">
           {foreach from=$group.attributes key=id_attribute item=group_attribute}

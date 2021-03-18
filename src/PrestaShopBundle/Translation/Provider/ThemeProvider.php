@@ -227,7 +227,7 @@ class ThemeProvider extends AbstractProvider
     {
         $path = $this->resourceDirectory . DIRECTORY_SEPARATOR . $this->themeName . DIRECTORY_SEPARATOR . 'translations';
 
-        return $this->getCatalogueFromPaths($path, $this->locale, current($this->getFilters()));
+        return $this->getCatalogueFromPaths([$path], $this->locale, current($this->getFilters()));
     }
 
     /**

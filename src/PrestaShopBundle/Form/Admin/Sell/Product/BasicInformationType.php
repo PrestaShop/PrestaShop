@@ -54,6 +54,7 @@ class BasicInformationType extends TranslatorAwareType
                     $this->trans('Standard product', 'Admin.Catalog.Feature') => ProductType::TYPE_STANDARD,
                     $this->trans('Pack of products', 'Admin.Catalog.Feature') => ProductType::TYPE_PACK,
                     $this->trans('Virtual product', 'Admin.Catalog.Feature') => ProductType::TYPE_VIRTUAL,
+                    $this->trans('Product with combinations', 'Admin.Catalog.Feature') => ProductType::TYPE_COMBINATION,
                 ],
                 'choice_translation_domain' => 'Admin.Catalog.Feature',
                 'attr' => [
@@ -76,17 +77,25 @@ class BasicInformationType extends TranslatorAwareType
                 ],
             ])
             ->add('description_short', TranslatableType::class, [
+                'required' => false,
                 'label' => $this->trans('Summary', 'Admin.Global'),
                 'type' => FormattedTextareaType::class,
                 'options' => [
                     'attr' => [
-                        'class' => 'serp-default-description',
+                        'class' => 'serp-default-description h2',
                     ],
+                ],
+                'label_attr' => [
+                    'title' => 'h2',
                 ],
             ])
             ->add('description', TranslatableType::class, [
+                'required' => false,
                 'label' => $this->trans('Description', 'Admin.Global'),
                 'type' => FormattedTextareaType::class,
+                'label_attr' => [
+                    'title' => 'h2',
+                ],
             ])
         ;
     }

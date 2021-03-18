@@ -659,7 +659,7 @@ class AdminControllerCore extends Controller
         ]);
 
         /* BEGIN - Backward compatibility < 1.6.0.3 */
-        $this->breadcrumbs[] = $tabs[0]['name'];
+        $this->breadcrumbs[] = $tabs[0]['name'] ?? '';
         $navigation_pipe = (Configuration::get('PS_NAVIGATION_PIPE') ? Configuration::get('PS_NAVIGATION_PIPE') : '>');
         $this->context->smarty->assign('navigationPipe', $navigation_pipe);
         /* END - Backward compatibility < 1.6.0.3 */
@@ -2054,8 +2054,6 @@ class AdminControllerCore extends Controller
     {
         $tips = [
             'order' => [
-                $this->trans('Did you check your conversion rate lately?', [], 'Admin.Navigation.Notification'),
-                $this->trans('How about some seasonal discounts?', [], 'Admin.Navigation.Notification'),
                 $this->trans(
                     'Have you checked your [1][2]abandoned carts[/2][/1]?[3]Your next order could be hiding there!',
                         [
@@ -2069,13 +2067,9 @@ class AdminControllerCore extends Controller
                 ),
             ],
             'customer' => [
-                $this->trans('Have you sent any acquisition email lately?', [], 'Admin.Navigation.Notification'),
                 $this->trans('Are you active on social media these days?', [], 'Admin.Navigation.Notification'),
-                $this->trans('Have you considered selling on marketplaces?', [], 'Admin.Navigation.Notification'),
             ],
             'customer_message' => [
-                $this->trans('That\'s more time for something else!', [], 'Admin.Navigation.Notification'),
-                $this->trans('No news is good news, isn\'t it?', [], 'Admin.Navigation.Notification'),
                 $this->trans('Seems like all your customers are happy :)', [], 'Admin.Navigation.Notification'),
             ],
         ];

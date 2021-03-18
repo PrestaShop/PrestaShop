@@ -88,7 +88,6 @@ class SuppliersType extends TranslatorAwareType
                 ],
             ])
             ->add('product_suppliers', CollectionType::class, [
-                'label' => false,
                 'entry_type' => ProductSupplierType::class,
                 'allow_add' => true,
                 'allow_delete' => true,

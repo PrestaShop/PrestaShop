@@ -28,6 +28,7 @@ declare(strict_types=1);
 
 namespace Tests\Unit\Core\Form\IdentifiableObject\DataProvider;
 
+use DateTime;
 use Generator;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
@@ -74,7 +75,7 @@ class ProductFormDataProviderTest extends TestCase
     public function testGetDefaultData()
     {
         $queryBusMock = $this->createMock(CommandBusInterface::class);
-        $provider = new ProductFormDataProvider($queryBusMock);
+        $provider = new ProductFormDataProvider($queryBusMock, false, 42);
 
         $expectedDefaultData = [
             'basic' => [
@@ -83,6 +84,7 @@ class ProductFormDataProviderTest extends TestCase
             'price' => [
                 'price_tax_excluded' => 0,
                 'price_tax_included' => 0,
+                'tax_rules_group_id' => 42,
                 'wholesale_price' => 0,
                 'unit_price' => 0,
             ],
@@ -92,6 +94,32 @@ class ProductFormDataProviderTest extends TestCase
                 'depth' => 0,
                 'weight' => 0,
             ],
+            'activate' => false,
+        ];
+
+        $defaultData = $provider->getDefaultData();
+        $this->assertEquals($expectedDefaultData, $defaultData);
+
+        $provider = new ProductFormDataProvider($queryBusMock, true, 42);
+
+        $expectedDefaultData = [
+            'basic' => [
+                'type' => ProductType::TYPE_STANDARD,
+            ],
+            'price' => [
+                'price_tax_excluded' => 0,
+                'price_tax_included' => 0,
+                'tax_rules_group_id' => 42,
+                'wholesale_price' => 0,
+                'unit_price' => 0,
+            ],
+            'shipping' => [
+                'width' => 0,
+                'height' => 0,
+                'depth' => 0,
+                'weight' => 0,
+            ],
+            'activate' => true,
         ];
 
         $defaultData = $provider->getDefaultData();
@@ -107,7 +135,7 @@ class ProductFormDataProviderTest extends TestCase
     public function testGetData(array $productData, array $expectedData)
     {
         $queryBusMock = $this->createQueryBusMock($productData);
-        $provider = new ProductFormDataProvider($queryBusMock);
+        $provider = new ProductFormDataProvider($queryBusMock, false, 42);
 
         $formData = $provider->getData(static::PRODUCT_ID);
         $this->assertEquals($expectedData, $formData);
@@ -122,6 +150,8 @@ class ProductFormDataProviderTest extends TestCase
             $this->getDatasetsForProductSuppliers(),
             $this->getDataSetsForFeatures(),
             $this->getDatasetsForCustomizations(),
+            $this->getDatasetsForPrices(),
+            $this->getDatasetsForStock(),
         ];
 
         foreach ($datasetsByType as $datasetByType) {
@@ -190,6 +220,110 @@ class ProductFormDataProviderTest extends TestCase
         $expectedOutputData['basic']['type'] = ProductType::TYPE_COMBINATION;
         $expectedOutputData['basic']['description'] = $localizedValues;
         $expectedOutputData['basic']['description_short'] = $localizedValues;
+
+        $datasets[] = [
+            $productData,
+            $expectedOutputData,
+        ];
+
+        return $datasets;
+    }
+
+    /**
+     * @return array
+     */
+    private function getDatasetsForPrices(): array
+    {
+        $datasets = [];
+
+        $expectedOutputData = $this->getDefaultOutputData();
+        $productData = [];
+
+        $datasets[] = [
+            $productData,
+            $expectedOutputData,
+        ];
+
+        $expectedOutputData = $this->getDefaultOutputData();
+        $productData = [
+            'price_tax_excluded' => new DecimalNumber('42.00'),
+            'price_tax_included' => new DecimalNumber('50.40'),
+            'ecotax' => new DecimalNumber('69.51'),
+            'tax_rules_group_id' => 49,
+            'on_sale' => true,
+            'wholesale_price' => new DecimalNumber('66.56'),
+            'unit_price' => new DecimalNumber('6.656'),
+            'unity' => 'candies',
+            'unit_price_ratio' => new DecimalNumber('5'),
+        ];
+        $expectedOutputData['price']['price_tax_excluded'] = 42.00;
+        $expectedOutputData['price']['price_tax_included'] = 50.40;
+        $expectedOutputData['price']['ecotax'] = 69.51;
+        $expectedOutputData['price']['tax_rules_group_id'] = 49;
+        $expectedOutputData['price']['on_sale'] = true;
+        $expectedOutputData['price']['wholesale_price'] = 66.56;
+        $expectedOutputData['price']['unit_price'] = 6.656;
+        $expectedOutputData['price']['unity'] = 'candies';
+
+        // Not handled yet
+        // $expectedOutputData['price']['unit_price_ratio'] = 5;
+
+        $expectedOutputData['shortcuts']['price']['price_tax_excluded'] = 42.00;
+        $expectedOutputData['shortcuts']['price']['price_tax_included'] = 50.40;
+        $expectedOutputData['shortcuts']['price']['tax_rules_group_id'] = 49;
+
+        $datasets[] = [
+            $productData,
+            $expectedOutputData,
+        ];
+
+        return $datasets;
+    }
+
+    /**
+     * @return array
+     */
+    private function getDatasetsForStock(): array
+    {
+        $datasets = [];
+
+        $expectedOutputData = $this->getDefaultOutputData();
+        $productData = [];
+
+        $datasets[] = [
+            $productData,
+            $expectedOutputData,
+        ];
+
+        $localizedValues = [
+            1 => 'english',
+            2 => 'french',
+        ];
+        $expectedOutputData = $this->getDefaultOutputData();
+        $productData = [
+            'pack_stock_type' => PackStockType::STOCK_TYPE_PACK_ONLY,
+            'out_of_stock' => OutOfStockType::OUT_OF_STOCK_AVAILABLE,
+            'quantity' => 42,
+            'minimal_quantity' => 7,
+            'low_stock_threshold' => 5,
+            'low_stock_alert' => true,
+            'available_now' => $localizedValues,
+            'available_later' => $localizedValues,
+            'location' => 'top shelf',
+            'available_date' => new DateTime('1969/07/20'),
+        ];
+        $expectedOutputData['stock']['pack_stock_type'] = PackStockType::STOCK_TYPE_PACK_ONLY;
+        $expectedOutputData['stock']['out_of_stock_type'] = OutOfStockType::OUT_OF_STOCK_AVAILABLE;
+        $expectedOutputData['stock']['quantity'] = 42;
+        $expectedOutputData['stock']['minimal_quantity'] = 7;
+        $expectedOutputData['stock']['low_stock_threshold'] = 5;
+        $expectedOutputData['stock']['low_stock_alert'] = true;
+        $expectedOutputData['stock']['available_now_label'] = $localizedValues;
+        $expectedOutputData['stock']['available_later_label'] = $localizedValues;
+        $expectedOutputData['stock']['stock_location'] = 'top shelf';
+        $expectedOutputData['stock']['available_date'] = '1969-07-20';
+
+        $expectedOutputData['shortcuts']['stock']['quantity'] = 42;
 
         $datasets[] = [
             $productData,
@@ -528,8 +662,6 @@ class ProductFormDataProviderTest extends TestCase
     private function createProductStockInformation(array $product): ProductStockInformation
     {
         return new ProductStockInformation(
-            $product['advanced_stock_management'] ?? false,
-            $product['depends_on_stock'] ?? false,
             $product['pack_stock_type'] ?? PackStockType::STOCK_TYPE_DEFAULT,
             $product['out_of_stock'] ?? OutOfStockType::OUT_OF_STOCK_DEFAULT,
             $product['quantity'] ?? static::DEFAULT_QUANTITY,
@@ -622,9 +754,10 @@ class ProductFormDataProviderTest extends TestCase
     private function createPricesInformation(array $product): ProductPricesInformation
     {
         return new ProductPricesInformation(
-            $product['price'] ?? new DecimalNumber('19.86'),
+            $product['price_tax_excluded'] ?? new DecimalNumber('19.86'),
+            $product['price_tax_included'] ?? new DecimalNumber('23.832'),
             $product['ecotax'] ?? new DecimalNumber('19.86'),
-            $product['id_tax_rules_group'] ?? 1,
+            $product['tax_rules_group_id'] ?? 1,
             $product['on_sale'] ?? false,
             $product['wholesale_price'] ?? new DecimalNumber('19.86'),
             $product['unit_price'] ?? new DecimalNumber('19.86'),
@@ -737,7 +870,7 @@ class ProductFormDataProviderTest extends TestCase
             ],
             'price' => [
                 'price_tax_excluded' => 19.86,
-                'price_tax_included' => 19.86,
+                'price_tax_included' => 23.832,
                 'ecotax' => 19.86,
                 'tax_rules_group_id' => 1,
                 'on_sale' => false,
@@ -783,6 +916,16 @@ class ProductFormDataProviderTest extends TestCase
             'suppliers' => [],
             'features' => [],
             'customizations' => [],
+            'shortcuts' => [
+                'price' => [
+                    'price_tax_excluded' => 19.86,
+                    'price_tax_included' => 23.832,
+                    'tax_rules_group_id' => 1,
+                ],
+                'stock' => [
+                    'quantity' => static::DEFAULT_QUANTITY,
+                ],
+            ],
         ];
     }
 }

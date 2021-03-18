@@ -23,7 +23,7 @@
  * @license   https://opensource.org/licenses/AFL-3.0 Academic Free License 3.0 (AFL-3.0)
  *}
 {block name='product_miniature_item'}
-<div itemprop="itemListElement" itemscope itemtype="https://schema.org/ListItem">
+<div itemprop="itemListElement" itemscope itemtype="https://schema.org/ListItem" class="product">
   {if isset($position)}<meta itemprop="position" content="{$position}" />{/if}
   <article class="product-miniature js-product-miniature" data-id-product="{$product.id_product}" data-id-product-attribute="{$product.id_product_attribute}" itemprop="item" itemscope itemtype="https://schema.org/Product">
     <div class="thumbnail-container">
@@ -35,11 +35,18 @@
               alt="{if !empty($product.cover.legend)}{$product.cover.legend}{else}{$product.name|truncate:30:'...'}{/if}"
               loading="lazy"
               data-full-size-image-url="{$product.cover.large.url}"
-              />
+              width="250"
+              height="250"
+            />
           </a>
         {else}
           <a href="{$product.url}" class="thumbnail product-thumbnail">
-            <img src="{$urls.no_picture_image.bySize.home_default.url}" loading="lazy" />
+            <img
+              src="{$urls.no_picture_image.bySize.home_default.url}"
+              loading="lazy"
+              width="250"
+              height="250"
+            />
           </a>
         {/if}
       {/block}

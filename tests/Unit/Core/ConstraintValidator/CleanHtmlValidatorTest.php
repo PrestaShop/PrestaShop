@@ -56,8 +56,90 @@ class CleanHtmlValidatorTest extends ConstraintValidatorTestCase
         ;
     }
 
+    public function testItFailsWhenIframeIsGiven()
+    {
+        $htmlTag = '<iframe src="catvideo.html" /></iframe>';
+
+        $this->validator->validate($htmlTag, new CleanHtml());
+
+        $this->buildViolation((new CleanHtml())->message)
+            ->setParameter('%s', '"' . $htmlTag . '"')
+            ->assertRaised()
+        ;
+    }
+
+    public function testItFailsWhenIframeWithSpacesIsGiven()
+    {
+        $htmlTag = '< iframe >';
+
+        $this->validator->validate($htmlTag, new CleanHtml());
+
+        $this->buildViolation((new CleanHtml())->message)
+            ->setParameter('%s', '"' . $htmlTag . '"')
+            ->assertRaised()
+        ;
+    }
+
+    public function testItFailsWhenFormIsGiven()
+    {
+        $htmlTag = '<form>';
+
+        $this->validator->validate($htmlTag, new CleanHtml());
+
+        $this->buildViolation((new CleanHtml())->message)
+            ->setParameter('%s', '"' . $htmlTag . '"')
+            ->assertRaised()
+        ;
+    }
+
+    public function testItFailsWhenInputIsGiven()
+    {
+        $htmlTag = '<input name="your-card-number">';
+
+        $this->validator->validate($htmlTag, new CleanHtml());
+
+        $this->buildViolation((new CleanHtml())->message)
+            ->setParameter('%s', '"' . $htmlTag . '"')
+            ->assertRaised()
+        ;
+    }
+
+    public function testItFailsWhenEmbedIsGiven()
+    {
+        $htmlTag = '<embed type="image/jpg" src="funny_cat.jpg" width="300" height="200">';
+
+        $this->validator->validate($htmlTag, new CleanHtml());
+
+        $this->buildViolation((new CleanHtml())->message)
+            ->setParameter('%s', '"' . $htmlTag . '"')
+            ->assertRaised()
+        ;
+    }
+
+    public function testItFailsWhenObjectIsGiven()
+    {
+        $htmlTag = '<object data="funny_cat.jpg" width="300" height="200"></object> ';
+
+        $this->validator->validate($htmlTag, new CleanHtml());
+
+        $this->buildViolation((new CleanHtml())->message)
+            ->setParameter('%s', '"' . $htmlTag . '"')
+            ->assertRaised()
+        ;
+    }
+
+    public function testSucceedsWithPlainWords()
+    {
+        $htmlTag = '/form input > embed object iframe';
+
+        $this->validator->validate($htmlTag, new CleanHtml());
+
+        $this->assertNoViolation();
+        $this->context->getViolations();
+    }
+
     protected function createValidator()
     {
-        return new CleanHtmlValidator();
+        return new CleanHtmlValidator(false);
     }
 }

@@ -80,9 +80,9 @@
             class="ps-switch ps-switch-sm ps-switch-nolabel ps-switch-center"
             onclick="unitProductAction(this, {% if product.active|default(0) == 0 %}'activate'{% else %}'deactivate'{% endif %});"
           >
-              <input type="radio" name="input-{{ product.id_product }}" id="input-false-{{ product.id_product }}" value="0" {% if product.active|default(0) == 0 %}checked{% endif %}>
+          <input type="radio" name="input-{{ product.id_product }}" id="input-false-{{ product.id_product }}" value="0" {% if product.active|default(0) == 0 %}checked{% endif %} aria-label="{{ "Disable %product_name% input"|trans({'%product_name%': product.name}, 'Admin.Global') }}">
               <label for="input-false-{{ product.id_product }}">Off</label>
-              <input type="radio" name="input-{{ product.id_product }}" id="input-true-{{ product.id_product }}" value="1" {% if product.active|default(0) != 0 %}checked{% endif %}>
+              <input type="radio" name="input-{{ product.id_product }}" id="input-true-{{ product.id_product }}" value="1" {% if product.active|default(0) != 0 %}checked{% endif %} aria-label="{{ "Enable %product_name% input"|trans({'%product_name%': product.name}, 'Admin.Global') }}">
               <label for="input-true-{{ product.id_product }}">On</label>
               <span class="slide-button"></span>
             </div>

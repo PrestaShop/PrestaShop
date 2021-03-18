@@ -131,7 +131,7 @@ class CombinationListingFeatureContext extends AbstractCombinationFeatureContext
      */
     private function countOffset(int $page, int $limit): int
     {
-        return (1 === $page) ? 0 : ($page - 1) * $limit;
+        return ($page - 1) * $limit;
     }
 
     /**

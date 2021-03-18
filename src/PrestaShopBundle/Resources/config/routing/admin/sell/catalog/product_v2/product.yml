@@ -1,3 +1,9 @@
+_combinations:
+    resource: 'combination.yml'
+
+_images:
+    resource: 'image.yml'
+
 admin_products_v2_create:
   path: /create
   methods: [GET, POST]

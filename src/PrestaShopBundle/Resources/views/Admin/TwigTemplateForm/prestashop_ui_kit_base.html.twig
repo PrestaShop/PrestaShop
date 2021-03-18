@@ -108,7 +108,6 @@
 {% block textarea_widget -%}
   {% set attr = attr|merge({class: (attr.class|default('') ~ ' form-control')|trim}) %}
   {{- parent() -}}
-
   {{ block('form_help') }}
 {%- endblock textarea_widget %}
 
@@ -153,6 +152,12 @@
     </div>
   {%- endif %}
 {%- endblock datetime_widget %}
+
+{%- block url_widget -%}
+  {%- set type = type|default('url') -%}
+  {{ block('form_widget_simple') }}
+  {{ block('form_help') }}
+{%- endblock url_widget -%}
 
 {% block date_widget -%}
   {% if widget == 'single_text' %}
@@ -571,6 +576,14 @@
 {# Errors #}
 
 {% block form_errors -%}
+  {% if attr['fieldError'] is defined and attr['fieldError'] == true %}
+    {{ block('form_errors_field') }}
+  {% else %}
+    {{ block('form_errors_other') }}
+  {% endif %}
+{%- endblock form_errors %}
+
+{% block form_errors_field %}
   {% if errors|length > 0 -%}
     {# If we got more then one error then we need to display popover instead of errors list #}
     {%- if errors|length > 1 -%}
@@ -635,7 +648,27 @@
       </div>
     {%- endif -%}
   {%- endif %}
-{%- endblock form_errors %}
+{% endblock %}
+
+{% block form_errors_other %}
+  {% if errors|length > 0 -%}
+    <div class="alert alert-danger d-print-none" role="alert">
+      <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+        <span aria-hidden="true"><i class="material-icons">close</i></span>
+      </button>
+      <div class="alert-text">
+        {% for error in errors %}
+            <p> {{
+              error.messagePluralization is null
+              ? error.messageTemplate|trans(error.messageParameters, 'form_error')
+              : error.messageTemplate|transchoice(error.messagePluralization, error.messageParameters, 'form_error')
+              }}
+            </p>
+        {%- endfor -%}
+      </div>
+    </div>
+  {% endif %}
+{% endblock %}
 
 {# Material design widgets #}
 
@@ -940,6 +973,7 @@
 {% endblock %}
 
 {% block text_widget %}
+  {%- set attr = attr|merge({'aria-label': '%inputId% input'|trans({'%inputId%': form.vars.id}, 'Admin.Global')}) -%}
   {% if data_list is not null %}
     {%- set attr = attr|merge({'list': id ~ '_datalist'}) -%}
   {% endif %}

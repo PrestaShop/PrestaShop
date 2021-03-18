@@ -791,7 +791,6 @@ var form = (function() {
       target.html(`<div class="alert alert-danger">${content}</div>`);
     }
   }
-
   return {
     'init': function() {
       /** prevent form submit on ENTER keypress */
@@ -838,6 +837,7 @@ var form = (function() {
       });
 
       elem.submit(function(event) {
+        replaceBadLocaleCharacters();
         event.preventDefault();
         send();
       });
@@ -854,6 +854,7 @@ var form = (function() {
       });
 
       $('.js-btn-save').on('click', function (event) {
+        replaceBadLocaleCharacters();
         event.preventDefault();
         $('.js-spinner').css('display', 'inline-block');
         send($(this).attr('href'));

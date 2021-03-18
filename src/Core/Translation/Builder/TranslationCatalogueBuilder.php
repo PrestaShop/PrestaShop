@@ -29,12 +29,20 @@ namespace PrestaShop\PrestaShop\Core\Translation\Builder;
 
 use Exception;
 use InvalidArgumentException;
-use PrestaShop\PrestaShop\Core\Exception\FileNotFoundException;
-use PrestaShop\PrestaShop\Core\Translation\DTO\DomainTranslation;
-use PrestaShop\PrestaShop\Core\Translation\DTO\MessageTranslation;
-use PrestaShop\PrestaShop\Core\Translation\DTO\Translations;
+use PrestaShop\PrestaShop\Core\Translation\Builder\Map\Catalogue;
+use PrestaShop\PrestaShop\Core\Translation\Builder\Map\Domain;
+use PrestaShop\PrestaShop\Core\Translation\Builder\Map\Message;
+use PrestaShop\PrestaShop\Core\Translation\Exception\TranslationFilesNotFoundException;
 use PrestaShop\PrestaShop\Core\Translation\Exception\UnexpectedTranslationTypeException;
-use PrestaShop\PrestaShop\Core\Translation\Provider\CatalogueProviderFactory;
+use PrestaShop\PrestaShop\Core\Translation\Storage\Provider\CatalogueProviderFactory;
+use PrestaShop\PrestaShop\Core\Translation\Storage\Provider\Definition\BackofficeProviderDefinition;
+use PrestaShop\PrestaShop\Core\Translation\Storage\Provider\Definition\FrontofficeProviderDefinition;
+use PrestaShop\PrestaShop\Core\Translation\Storage\Provider\Definition\MailsBodyProviderDefinition;
+use PrestaShop\PrestaShop\Core\Translation\Storage\Provider\Definition\MailsProviderDefinition;
+use PrestaShop\PrestaShop\Core\Translation\Storage\Provider\Definition\ModuleProviderDefinition;
+use PrestaShop\PrestaShop\Core\Translation\Storage\Provider\Definition\OthersProviderDefinition;
+use PrestaShop\PrestaShop\Core\Translation\Storage\Provider\Definition\ProviderDefinitionInterface;
+use PrestaShop\PrestaShop\Core\Translation\Storage\Provider\Definition\ThemeProviderDefinition;
 
 /**
  * This class provides the catalogue represented as an array.
@@ -45,23 +53,6 @@ use PrestaShop\PrestaShop\Core\Translation\Provider\CatalogueProviderFactory;
  */
 class TranslationCatalogueBuilder
 {
-    public const TYPE_BACK = 'back';
-    public const TYPE_FRONT = 'front';
-    public const TYPE_MAILS = 'mails';
-    public const TYPE_MAILS_BODY = 'mails_body';
-    public const TYPE_OTHERS = 'others';
-    public const TYPE_MODULES = 'modules';
-    public const TYPE_THEMES = 'themes';
-
-    public const ALLOWED_TYPES = [
-        self::TYPE_BACK,
-        self::TYPE_FRONT,
-        self::TYPE_MAILS,
-        self::TYPE_MAILS_BODY,
-        self::TYPE_OTHERS,
-        self::TYPE_MODULES,
-        self::TYPE_THEMES,
-    ];
     /**
      * @var CatalogueProviderFactory
      */
@@ -108,10 +99,10 @@ class TranslationCatalogueBuilder
             $theme,
             $module,
             $domain
-        )->getDomainTranslation($domain);
+        )->getDomain($domain);
 
         if (null === $domainTranslation) {
-            $domainTranslation = new DomainTranslation($domain);
+            $domainTranslation = new Domain($domain);
         }
 
         return [
@@ -173,10 +164,10 @@ class TranslationCatalogueBuilder
      * @param string|null $module
      * @param string|null $domain
      *
-     * @return Translations
+     * @return Catalogue
      *
      * @throws UnexpectedTranslationTypeException
-     * @throws FileNotFoundException
+     * @throws TranslationFilesNotFoundException
      */
     public function getRawCatalogue(
         string $type,
@@ -185,10 +176,35 @@ class TranslationCatalogueBuilder
         ?string $theme,
         ?string $module,
         ?string $domain = null
-    ): Translations {
+    ): Catalogue {
         $this->validateParameters($type, $locale, $search, $theme, $module);
 
-        $provider = $this->catalogueProviderFactory->getProvider($type);
+        $definition = null;
+        switch ($type) {
+            case ProviderDefinitionInterface::TYPE_BACK:
+                $definition = new BackofficeProviderDefinition();
+                break;
+            case ProviderDefinitionInterface::TYPE_FRONT:
+                $definition = new FrontofficeProviderDefinition();
+                break;
+            case ProviderDefinitionInterface::TYPE_MAILS_BODY:
+                $definition = new MailsBodyProviderDefinition();
+                break;
+            case ProviderDefinitionInterface::TYPE_MAILS:
+                $definition = new MailsProviderDefinition();
+                break;
+            case ProviderDefinitionInterface::TYPE_OTHERS:
+                $definition = new OthersProviderDefinition();
+                break;
+            case ProviderDefinitionInterface::TYPE_MODULES:
+                $definition = new ModuleProviderDefinition($module);
+                break;
+            case ProviderDefinitionInterface::TYPE_THEMES:
+                $definition = new ThemeProviderDefinition($theme);
+                break;
+        }
+
+        $provider = $this->catalogueProviderFactory->getProvider($definition);
 
         $defaultCatalogue = $provider->getDefaultCatalogue($locale);
         if (null === $domain) {
@@ -197,33 +213,33 @@ class TranslationCatalogueBuilder
             $defaultCatalogueMessages = [$domain => $defaultCatalogue->all($domain)];
         }
         if (empty($defaultCatalogueMessages)) {
-            return new Translations();
+            return new Catalogue();
         }
         $fileTranslatedCatalogue = $provider->getFileTranslatedCatalogue($locale);
         $userTranslatedCatalogue = $provider->getUserTranslatedCatalogue($locale);
 
-        $translations = new Translations();
+        $catalogue = new Catalogue();
         foreach ($defaultCatalogueMessages as $domainName => $messages) {
-            $domainTranslation = new DomainTranslation($domainName);
+            $domainTranslation = new Domain($domainName);
 
             foreach ($messages as $translationKey => $translationValue) {
-                $messageTranslation = new MessageTranslation($translationKey);
+                $message = new Message($translationKey);
                 if ($fileTranslatedCatalogue->defines($translationKey, $domainName)) {
-                    $messageTranslation->setFileTranslation($fileTranslatedCatalogue->get($translationKey, $domainName));
+                    $message->setFileTranslation($fileTranslatedCatalogue->get($translationKey, $domainName));
                 }
                 if ($userTranslatedCatalogue->defines($translationKey, $domainName)) {
-                    $messageTranslation->setUserTranslation($userTranslatedCatalogue->get($translationKey, $domainName));
+                    $message->setUserTranslation($userTranslatedCatalogue->get($translationKey, $domainName));
                 }
                 // if search is empty or is in catalog default|project|user
-                if (empty($search) || $messageTranslation->contains($search)) {
-                    $domainTranslation->addMessageTranslation($messageTranslation);
+                if (empty($search) || $message->contains($search)) {
+                    $domainTranslation->addMessage($message);
                 }
             }
 
-            $translations->addDomainTranslation($domainTranslation);
+            $catalogue->addDomain($domainTranslation);
         }
 
-        return $translations;
+        return $catalogue;
     }
 
     /**
@@ -244,13 +260,13 @@ class TranslationCatalogueBuilder
         ?string $module,
         ?string $domain = null
     ): void {
-        if (!in_array($type, self::ALLOWED_TYPES)) {
+        if (!in_array($type, ProviderDefinitionInterface::ALLOWED_TYPES)) {
             throw new UnexpectedTranslationTypeException('This \'type\' param is not valid.');
         }
-        if (self::TYPE_MODULES === $type && empty($module)) {
+        if (ProviderDefinitionInterface::TYPE_MODULES === $type && empty($module)) {
             throw new InvalidArgumentException('This \'selected\' param is not valid. Module must be given.');
         }
-        if (self::TYPE_THEMES === $type && empty($theme)) {
+        if (ProviderDefinitionInterface::TYPE_THEMES === $type && empty($theme)) {
             throw new InvalidArgumentException('This \'selected\' param is not valid. Theme must be given.');
         }
         if (null !== $domain && empty($domain)) {

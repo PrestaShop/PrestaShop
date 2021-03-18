@@ -28,6 +28,14 @@ namespace PrestaShopBundle\Controller\Admin\Configure\AdvancedParameters;
 
 use PrestaShop\PrestaShop\Core\Form\FormHandlerInterface;
 use PrestaShopBundle\Controller\Admin\FrameworkBundleAdminController;
+use PrestaShopBundle\Controller\Exception\FieldNotFoundException;
+use PrestaShopBundle\Form\Admin\Configure\AdvancedParameters\Administration\FormDataProvider;
+use PrestaShopBundle\Form\Admin\Configure\AdvancedParameters\Administration\GeneralDataProvider;
+use PrestaShopBundle\Form\Admin\Configure\AdvancedParameters\Administration\GeneralType;
+use PrestaShopBundle\Form\Admin\Configure\AdvancedParameters\Administration\UploadQuotaType;
+use PrestaShopBundle\Form\Exception\DataProviderException;
+use PrestaShopBundle\Form\Exception\InvalidConfigurationDataError;
+use PrestaShopBundle\Form\Exception\InvalidConfigurationDataErrorCollection;
 use PrestaShopBundle\Security\Annotation\AdminSecurity;
 use PrestaShopBundle\Security\Annotation\DemoRestricted;
 use Symfony\Component\HttpFoundation\RedirectResponse;
@@ -149,13 +157,15 @@ class AdministrationController extends FrameworkBundleAdminController
 
         if ($form->isSubmitted()) {
             $data = $form->getData();
-            $saveErrors = $formHandler->save($data);
+            try {
+                $formHandler->save($data);
+            } catch (DataProviderException $e) {
+                $this->flashErrors($this->getErrorMessages($e->getInvalidConfigurationDataErrors()));
 
-            if (0 === count($saveErrors)) {
-                $this->addFlash('success', $this->trans('Update successful', 'Admin.Notifications.Success'));
-            } else {
-                $this->flashErrors($saveErrors);
+                return $this->redirectToRoute('admin_administration');
             }
+
+            $this->addFlash('success', $this->trans('Update successful', 'Admin.Notifications.Success'));
         }
 
         return $this->redirectToRoute('admin_administration');
@@ -183,5 +193,110 @@ class AdministrationController extends FrameworkBundleAdminController
     protected function getNotificationsFormHandler(): FormHandlerInterface
     {
         return $this->get('prestashop.adapter.administration.notifications.form_handler');
+    }
+
+    /**
+     * @var InvalidConfigurationDataErrorCollection
+     */
+    private function getErrorMessages(InvalidConfigurationDataErrorCollection $errors): array
+    {
+        $messages = [];
+
+        foreach ($errors as $error) {
+            $messages[] = $this->getErrorMessage($error);
+        }
+
+        return $messages;
+    }
+
+    /**
+     * @param InvalidConfigurationDataError $error
+     *
+     * @return string
+     *
+     * @throws FieldNotFoundException
+     */
+    private function getErrorMessage(InvalidConfigurationDataError $error): string
+    {
+        switch ($error->getErrorCode()) {
+            case FormDataProvider::ERROR_NOT_NUMERIC_OR_LOWER_THAN_ZERO:
+                return $this->trans(
+                    '%s is invalid. Please enter an integer greater or equal to 0.',
+                    'Admin.Notifications.Error',
+                    [$this->getFieldLabel($error->getFieldName())]
+                );
+            case FormDataProvider::ERROR_COOKIE_LIFETIME_MAX_VALUE_EXCEEDED:
+                return $this->trans(
+                    '%s is invalid. Please enter an integer lower than %s.',
+                    'Admin.Notifications.Error',
+                    [
+                        $this->getFieldLabel($error->getFieldName()),
+                        GeneralDataProvider::MAX_COOKIE_VALUE,
+                    ]
+                );
+            case FormDataProvider::ERROR_COOKIE_SAMESITE_NONE:
+                return $this->trans(
+                    'The SameSite=None is only available in secure mode.',
+                    'Admin.Advparameters.Notification'
+                );
+        }
+
+        return $this->trans(
+            '%s is invalid.',
+            'Admin.Notifications.Error',
+            [
+                $this->getFieldLabel($error->getFieldName()),
+                GeneralDataProvider::MAX_COOKIE_VALUE,
+            ]
+        );
+    }
+
+    /**
+     * @param string $fieldName
+     *
+     * @return string
+     */
+    private function getFieldLabel(string $fieldName): string
+    {
+        /*
+         * Reusing same translated string as in UploadQuotaType, ideally I would take strings from there instead
+         * Because if somebody changes name in UploadQuotaType it won't be changed here. Not sure how to do that,
+         * building the whole form just to retrieve labels sound like an overhead.
+         * Maybe move labels to some other service and then retrieve them in both UploadQuotaType and here.
+         */
+        switch ($fieldName) {
+            case UploadQuotaType::FIELD_MAX_SIZE_ATTACHED_FILES:
+                return $this->trans(
+                    'Maximum size for attached files',
+                    'Admin.Advparameters.Feature'
+                );
+            case UploadQuotaType::FIELD_MAX_SIZE_DOWNLOADABLE_FILE:
+                return $this->trans(
+                    'Maximum size for a downloadable product',
+                    'Admin.Advparameters.Feature'
+                );
+            case UploadQuotaType::FIELD_MAX_SIZE_PRODUCT_IMAGE:
+                return $this->trans(
+                    'Maximum size for a product\'s image',
+                    'Admin.Advparameters.Feature'
+                );
+            case GeneralType::FIELD_FRONT_COOKIE_LIFETIME:
+                return $this->trans(
+                    'Lifetime of front office cookies',
+                    'Admin.Advparameters.Feature'
+                );
+            case GeneralType::FIELD_BACK_COOKIE_LIFETIME:
+                return $this->trans(
+                    'Lifetime of back office cookies',
+                    'Admin.Advparameters.Feature'
+                );
+        }
+
+        throw new FieldNotFoundException(
+            sprintf(
+                'Field name for field %s not found',
+                $fieldName
+            )
+        );
     }
 }

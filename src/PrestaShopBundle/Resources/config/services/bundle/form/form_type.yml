@@ -358,6 +358,8 @@ services:
     form.type.maintenance.general:
         class: 'PrestaShopBundle\Form\Admin\Configure\ShopParameters\General\MaintenanceType'
         parent: 'form.type.translatable.aware'
+        arguments:
+            - '@=service("request_stack").getCurrentRequest().getClientIp()'
         public: true
         tags:
             - { name: form.type }
@@ -819,10 +821,10 @@ services:
 
     form.type.design.theme.import_theme:
         class: 'PrestaShopBundle\Form\Admin\Improve\Design\Theme\ImportThemeType'
+        parent: 'form.type.translatable.aware'
+        public: true
         arguments:
             - '@=service("prestashop.core.form.choice_provider.theme_zip").getChoices()'
-        calls:
-            - { method: setTranslator, arguments: ['@translator'] }
         tags:
             - { name: form.type }
 
@@ -882,11 +884,11 @@ services:
 
     form.type.cms_page_category:
         class: 'PrestaShopBundle\Form\Admin\Improve\Design\Pages\CmsPageCategoryType'
+        parent: 'form.type.translatable.aware'
+        public: true
         arguments:
             - '@=service("prestashop.core.form.choice_provider.cms_categories").getChoices()'
             - '@=service("prestashop.adapter.multistore_feature").isUsed()'
-        calls:
-            - { method: setTranslator, arguments: ['@translator'] }
         tags:
             - { name: form.type }
 
@@ -1242,12 +1244,13 @@ services:
       tags:
         - { name: form.type }
 
-    form.type.sell.product.product_type:
-        class: 'PrestaShopBundle\Form\Admin\Sell\Product\ProductType'
+    form.type.sell.product.product_form_type:
+        class: 'PrestaShopBundle\Form\Admin\Sell\Product\ProductFormType'
         parent: 'form.type.translatable.aware'
         public: true
         arguments:
             - '@prestashop.adapter.shop.url.product_provider'
+            - '@form.type.sell.product.event_listener.product_type_listener'
         tags:
             - { name: form.type }
 
@@ -1268,6 +1271,31 @@ services:
       public: true
       tags:
           - { name: form.type }
+
+    form.type.sell.product.shortcuts_type:
+        class: 'PrestaShopBundle\Form\Admin\Sell\Product\ShortcutsType'
+        parent: 'form.type.translatable.aware'
+        public: true
+        tags:
+            - { name: form.type }
+
+    form.type.sell.product.shortcut.price_shortcut_type:
+        class: 'PrestaShopBundle\Form\Admin\Sell\Product\Shortcut\PriceShortcutType'
+        parent: 'form.type.translatable.aware'
+        public: true
+        arguments:
+            - '@=service("prestashop.core.form.choice_provider.tax_rule_group_choice_provider").getChoices()'
+            - '@=service("prestashop.core.form.choice_provider.tax_rule_group_choice_provider").getChoicesAttributes()'
+            - '@=service("prestashop.adapter.data_provider.currency").getDefaultCurrency()'
+        tags:
+            - { name: form.type }
+
+    form.type.sell.product.shortcut.stock_shortcut_type:
+        class: 'PrestaShopBundle\Form\Admin\Sell\Product\Shortcut\StockShortcutType'
+        parent: 'form.type.translatable.aware'
+        public: true
+        tags:
+            - { name: form.type }
 
     form.type.sell.product.shipping_type:
         class: 'PrestaShopBundle\Form\Admin\Sell\Product\ShippingType'
@@ -1381,6 +1409,23 @@ services:
             - '@prestashop.adapter.form.choice_provider.feature_values_choice_provider'
             - '@form.form_cloner'
         public: true
+
+    form.type.sell.product.event_listener.product_type_listener:
+        class: 'PrestaShopBundle\Form\Admin\Sell\Product\EventListener\ProductTypeListener'
+        public: true
+
+    form.type.sell.product.combination_list_type:
+        class: 'PrestaShopBundle\Form\Admin\Sell\Product\Combination\CombinationListType'
+        parent: 'form.type.translatable.aware'
+        public: true
+        tags:
+            - { name: form.type }
+
+    form.type.sell.product.combination_item_type:
+        class: 'PrestaShopBundle\Form\Admin\Sell\Product\Combination\CombinationItemType'
+        public: true
+        tags:
+            - { name: form.type }
 
     prestashop.bundle.form.admin.configure.shop_parameters.order_states.order_state:
       class: 'PrestaShopBundle\Form\Admin\Configure\ShopParameters\OrderStates\OrderStateType'

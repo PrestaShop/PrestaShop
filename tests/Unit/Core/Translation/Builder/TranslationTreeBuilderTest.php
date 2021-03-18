@@ -30,8 +30,9 @@ namespace Tests\Unit\Core\Translation\Builder;
 use PHPUnit\Framework\TestCase;
 use PrestaShop\PrestaShop\Core\Translation\Builder\TranslationCatalogueBuilder;
 use PrestaShop\PrestaShop\Core\Translation\Builder\TranslationsTreeBuilder;
-use PrestaShop\PrestaShop\Core\Translation\Provider\CatalogueLayersProviderInterface;
-use PrestaShop\PrestaShop\Core\Translation\Provider\CatalogueProviderFactory;
+use PrestaShop\PrestaShop\Core\Translation\Storage\Provider\CatalogueLayersProviderInterface;
+use PrestaShop\PrestaShop\Core\Translation\Storage\Provider\CatalogueProviderFactory;
+use PrestaShop\PrestaShop\Core\Translation\Storage\Provider\Definition\ProviderDefinitionInterface;
 use Symfony\Bundle\FrameworkBundle\Routing\Router;
 use Symfony\Component\Translation\MessageCatalogue;
 
@@ -111,7 +112,7 @@ class TranslationTreeBuilderTest extends TestCase
     public function testGetTreeStructure()
     {
         $tree = $this->treeBuilder->getTree(
-             TranslationCatalogueBuilder::TYPE_BACK,
+             ProviderDefinitionInterface::TYPE_BACK,
             self::LOCALE,
             [],
             'theme',
@@ -146,7 +147,7 @@ class TranslationTreeBuilderTest extends TestCase
     public function testGetTreeContent()
     {
         $tree = $this->treeBuilder->getTree(
-            TranslationCatalogueBuilder::TYPE_BACK,
+            ProviderDefinitionInterface::TYPE_BACK,
             self::LOCALE,
             [],
             'theme',

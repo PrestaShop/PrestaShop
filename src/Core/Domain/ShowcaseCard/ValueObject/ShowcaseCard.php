@@ -70,6 +70,11 @@ class ShowcaseCard
     public const MONITORING_CARD = 'monitoring_card';
 
     /**
+     * Card shown in Improve -> Shipping -> Carriers
+     */
+    const CARRIERS_CARD = 'carriers_card';
+
+    /**
      * List of supported card names
      */
     public const SUPPORTED_NAMES = [
@@ -80,6 +85,7 @@ class ShowcaseCard
         self::CMS_PAGES_CARD => true,
         self::ATTRIBUTES_CARD => true,
         self::MONITORING_CARD => true,
+        self::CARRIERS_CARD => true,
     ];
 
     /**

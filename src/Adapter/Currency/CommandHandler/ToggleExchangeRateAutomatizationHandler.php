@@ -181,7 +181,6 @@ final class ToggleExchangeRateAutomatizationHandler implements ToggleExchangeRat
     private function createCronJob($cronUrl)
     {
         $cronJobsModule = Module::getInstanceByName('cronjobs');
-        /** @var CronJobs $cronJobsModule */
         if (empty($cronJobsModule)) {
             return false;
         }

@@ -494,6 +494,20 @@ class ThemeController extends AbstractAdminController
                     '%theme_name%' => $e instanceof ImportedThemeAlreadyExistsException ? $e->getThemeName()->getValue() : '',
                 ]
             ),
+            ThemeConstraintException::class => [
+                ThemeConstraintException::RESTRICTED_ONLY_FOR_SINGLE_SHOP => $this->trans(
+                        'Themes can only be changed in single store context.', 'Admin.Notifications.Error'
+                ),
+                ThemeConstraintException::MISSING_CONFIGURATION_FILE => $this->trans(
+                        'Missing configuration file', 'Admin.Notifications.Error'
+                ),
+                ThemeConstraintException::INVALID_CONFIGURATION => $this->trans(
+                        'Invalid configuration', 'Admin.Notifications.Error'
+                ),
+                ThemeConstraintException::INVALID_DATA => $this->trans(
+                        'Invalid data', 'Admin.Notifications.Error'
+                ),
+            ],
         ];
     }
 

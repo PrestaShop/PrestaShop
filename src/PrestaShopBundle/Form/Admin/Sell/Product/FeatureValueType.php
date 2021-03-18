@@ -107,7 +107,6 @@ class FeatureValueType extends TranslatorAwareType
                 ],
             ])
             ->add('delete', IconButtonType::class, [
-                'label' => false,
                 'icon' => 'delete',
                 'attr' => [
                     'class' => 'tooltip-link delete-feature-value pl-0 pr-0',

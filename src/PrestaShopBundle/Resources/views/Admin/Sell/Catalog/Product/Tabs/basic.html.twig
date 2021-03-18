@@ -1,0 +1,64 @@
+{#**
+ * Copyright since 2007 PrestaShop SA and Contributors
+ * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
+ *
+ * NOTICE OF LICENSE
+ *
+ * This source file is subject to the Open Software License (OSL 3.0)
+ * that is bundled with this package in the file LICENSE.md.
+ * It is also available through the world-wide-web at this URL:
+ * https://opensource.org/licenses/OSL-3.0
+ * If you did not receive a copy of the license and are unable to
+ * obtain it through the world-wide-web, please send an email
+ * to license@prestashop.com so we can send you a copy immediately.
+ *
+ * DISCLAIMER
+ *
+ * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
+ * versions in the future. If you wish to customize PrestaShop for your
+ * needs please refer to https://devdocs.prestashop.com/ for more information.
+ *
+ * @author    PrestaShop SA and Contributors <contact@prestashop.com>
+ * @copyright Since 2007 PrestaShop SA and Contributors
+ * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
+ *#}
+
+{% form_theme productForm.shortcuts '@PrestaShop/Admin/Sell/Catalog/Product/Form/shortcuts_form_theme.html.twig' %}
+
+<div role="tabpanel" class="form-contenttab tab-pane container-fluid active" id="basic-tab">
+  <div class="row">
+    <div class="col-md-9 left-column">
+      <div 
+        id="product-images-container"
+        data-translations="{{
+          {
+            'window.selectAll': 'Select all'|trans({}, 'Admin.Actions'),
+            'window.unselectAll': 'Unselect all'|trans({}, 'Admin.Actions'),
+            'window.selectedFiles': '[1]%filesNb%[/1] selected file(s)'|trans({'[1]': '<span>', '[/1]': '</span>'}, 'Admin.Actions'),
+            'window.useAsCover': 'Use as cover image'|trans({}, 'Admin.Actions'),
+            'window.saveImage': 'Save image settings'|trans({}, 'Admin.Actions'),
+            "window.delete": "Delete selection"|trans({}, 'Admin.Actions'),
+            "window.close": "Close window"|trans({}, 'Admin.Actions'),
+            "window.zoom": "Zoom on selection"|trans({}, 'Admin.Actions'),
+            "window.fileisTooLarge": "The file is too large. Maximum size allowed is: [1] MB. The file you are trying to upload is [2] MB."|trans({}, 'Admin.Notifications.Error')|replace({ '[1]': '{{maxFilesize}}', '[2]': '{{filesize}}' }),
+            "window.dropImages": "Drop images here"|trans({}, 'Admin.Catalog.Feature'),
+            "window.selectFiles": "or select files"|trans({}, 'Admin.Catalog.Feature'),
+            "window.recommendedSize": "Recommended size 800 x 800px for default theme."|trans({}, 'Admin.Catalog.Feature'),
+            "window.recommendedFormats": "JPG, GIF or PNG format."|trans({}, 'Admin.Catalog.Feature'),
+            "window.cover": "Cover"|trans({}, 'Admin.Catalog.Feature'),
+            "window.caption": "Caption"|trans({}, 'Admin.Catalog.Feature'),
+          }|json_encode
+        }}" 
+      >
+      </div>
+      {{ form_widget(productForm.basic) }}
+
+      {{ include('@PrestaShop/Admin/Sell/Catalog/Product/Blocks/features.html.twig', {
+        'productForm': productForm,
+      }) }}
+    </div>
+    <div class="col-md-3 right-column">
+      {{ form_row(productForm.shortcuts) }}
+    </div>
+  </div>
+</div>

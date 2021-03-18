@@ -56,7 +56,7 @@ class SetProductSuppliersCommand
 
     /**
      * @param int $productId
-     * @param array<string, mixed> $productSuppliers
+     * @param array<int, array<string, mixed>> $productSuppliers
      * @param int $defaultSupplierId
      *
      * @see SetProductSuppliersCommand::setProductSuppliers() for $productSuppliers structure
@@ -94,7 +94,7 @@ class SetProductSuppliersCommand
     }
 
     /**
-     * @param array[] $productSuppliers
+     * @param array<int, array<string, mixed>> $productSuppliers
      */
     private function setProductSuppliers(array $productSuppliers): void
     {
@@ -112,7 +112,6 @@ class SetProductSuppliersCommand
                 $productSupplier['currency_id'],
                 $productSupplier['reference'],
                 $productSupplier['price_tax_excluded'],
-                $productSupplier['combination_id'],
                 $productSupplier['product_supplier_id'] ?? null
             );
         }
@@ -126,7 +125,7 @@ class SetProductSuppliersCommand
         $defaultSupplierId = $this->getDefaultSupplierId()->getValue();
 
         foreach ($this->productSuppliers as $productSupplier) {
-            if ($productSupplier->getSupplierId() === $defaultSupplierId) {
+            if ($productSupplier->getSupplierId()->getValue() === $defaultSupplierId) {
                 return;
             }
         }

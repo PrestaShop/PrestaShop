@@ -29,10 +29,12 @@ const productSupplierInputId = (supplierIndex, inputName) => `${productSuppliers
 export default {
   productForm: 'form[name=product]',
   productFormSubmitButton: 'button[name="product[save]"]',
+  navigationBar: '#form-nav',
   suppliers: {
     productSuppliersCollection: `${productSuppliersId}`,
     supplierIdsInput: '#product_suppliers_supplier_ids',
     defaultSupplierInput: '#product_suppliers_default_supplier_id',
+    // @todo: why its called productsTable and not productSuppliers|suppliers table? is it a mistake?
     productsTable: `${productSuppliersId} table`,
     productsTableBody: `${productSuppliersId} table tbody`,
     productSupplierRow: {
@@ -66,5 +68,22 @@ export default {
     addCustomizationBtn: '#product_customizations_add_customization_field',
     removeCustomizationBtn: '.remove-customization-btn',
     customizationFieldRow: '.customization-field-row',
+  },
+  combinations: {
+    navigationTab: '#combinations-tab-nav',
+    combinationsTable: '#combination_list table',
+    combinationsTableBody: '#combination_list table tbody',
+    paginationContainer: '#combinations-pagination',
+    loadingSpinner: '#productCombinationsLoading',
+    tableRow: {
+      combinationIdInput: (rowIndex) => `#combination_list_combinations_${rowIndex}_combination_id`,
+      combinationNameInput: (rowIndex) => `#combination_list_combinations_${rowIndex}_name`,
+      impactOnPriceInput: (rowIndex) => `#combination_list_combinations_${rowIndex}_impact_on_price`,
+      finalPriceTeInput: (rowIndex) => `#combination_list_combinations_${rowIndex}_final_price_te`,
+      quantityInput: (rowIndex) => `#combination_list_combinations_${rowIndex}_quantity`,
+      isDefaultInput: (rowIndex) => `#combination_list_combinations_${rowIndex}_is_default`,
+      editButton: (rowIndex) => `#combination_list_combinations_${rowIndex}_edit`,
+      deleteButton: (rowIndex) => `#combination_list_combinations_${rowIndex}_delete`,
+    },
   },
 };

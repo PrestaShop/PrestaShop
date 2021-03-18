@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xliff xmlns="urn:oasis:names:tc:xliff:document:1.2" version="1.2">
+  <file original="/home/isow/workspace/PrestaShop/tests/Resources/themes/fakeThemeForTranslations/templates/catalog/product.tpl" source-language="fr-FR" target-language="fr-FR" datatype="plaintext">
+    <body>
+      <trans-unit id="a38a66d53a6edc2d8e37bb36b45814ee">
+        <source>Show product</source>
+        <target>Show product</target>
+        <note>Line: 25</note>
+      </trans-unit>
+    </body>
+  </file>
+</xliff>

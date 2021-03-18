@@ -407,3 +407,33 @@ services:
         - '@prestashop.core.hook.dispatcher'
         - '@prestashop.core.grid.query.doctrine_query_parser'
         - 'order_return_states'
+
+    prestashop.core.grid.data.factory.outstanding:
+      class: '%prestashop.core.grid.data.factory.doctrine_grid_data_factory%'
+      arguments:
+        - '@prestashop.core.grid.query_builder.outstanding'
+        - '@prestashop.core.hook.dispatcher'
+        - '@prestashop.core.grid.query.doctrine_query_parser'
+        - 'outstanding'
+
+    prestashop.core.grid.data.factory.outstanding_decorator:
+      class: 'PrestaShop\PrestaShop\Core\Grid\Data\Factory\OutstandingGridDataFactory'
+      arguments:
+        - '@prestashop.core.grid.data.factory.outstanding'
+        - '@prestashop.core.localization.locale.repository'
+        - '@=service("prestashop.adapter.legacy.context").getContext().language.getLocale()'
+
+    prestashop.core.grid.data.factory.carrier:
+        class: '%prestashop.core.grid.data.factory.doctrine_grid_data_factory%'
+        arguments:
+            - '@prestashop.core.grid.query_builder.carrier'
+            - '@prestashop.core.hook.dispatcher'
+            - '@prestashop.core.grid.query.doctrine_query_parser'
+            - 'carrier'
+
+    prestashop.core.grid.data.factory.carrier_decorator:
+        class: 'PrestaShop\PrestaShop\Core\Grid\Data\Factory\CarrierGridDataFactory'
+        arguments:
+            - '@prestashop.core.grid.data.factory.carrier'
+            - '@prestashop.adapter.carrier.carrier_thumbnail_logo_provider'
+            - '@prestashop.adapter.legacy.configuration'

@@ -159,6 +159,28 @@
     @include transition-duration(0.2s);
     @include transition-timing-function(ease-out);
   }
+
+  .btn-group-action,
+  .btn-group {
+    a,
+    button {
+      @extend .btn-default;
+      // stylelint-disable-next-line
+      display: inline-flex !important;
+      align-items: center;
+
+      i {
+        // stylelint-disable-next-line
+        height: 17px !important;
+      }
+    }
+
+    a {
+      i {
+        margin-right: 3px;
+      }
+    }
+  }
 }
 
 tr.highlighted td {

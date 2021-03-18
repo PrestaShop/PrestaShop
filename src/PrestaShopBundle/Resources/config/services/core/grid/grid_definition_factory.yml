@@ -272,3 +272,16 @@ services:
       class: 'PrestaShop\PrestaShop\Core\Grid\Definition\Factory\OrderReturnStatesGridDefinitionFactory'
       parent: 'prestashop.core.grid.definition.factory.abstract_grid_definition'
       public: true
+
+    prestashop.core.grid.definition.factory.outstanding:
+        class: 'PrestaShop\PrestaShop\Core\Grid\Definition\Factory\OutstandingGridDefinitionFactory'
+        parent: 'prestashop.core.grid.definition.factory.abstract_grid_definition'
+        arguments:
+            - '@prestashop.adapter.legacy.configuration'
+            - "@=service('prestashop.adapter.legacy.context').getContext().language.id"
+        public: true
+
+    prestashop.core.grid.definition.factory.carrier:
+        class: 'PrestaShop\PrestaShop\Core\Grid\Definition\Factory\CarrierGridDefinitionFactory'
+        parent: 'prestashop.core.grid.definition.factory.abstract_grid_definition'
+        public: true

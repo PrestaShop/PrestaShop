@@ -1,19 +1,16 @@
 //form
 label.control-label {
-  font-size: 13px;
+  font-size: 14px;
   font-weight: 500;
-  color: #666;
+  color: $main-color;
 }
 
 label.control-label span.label-tooltip {
   padding: 0 5px;
-  font-size: 13px;
-  color: #3586ae;
+  font-size: 14px;
+  color: $main-color;
   text-decoration: none;
-  background-color: lighten(#d8edf7, 5%);
   border: none;
-  border-bottom: solid 1px #d8edf7;
-  @include border-radius(3px);
 }
 
 label.required::before {
@@ -28,6 +25,15 @@ label.required::before {
   font-family: $font-family-sans-serif;
   font-size: 12px;
   white-space: normal;
+
+  &-inner {
+    padding: 10px;
+    background-color: $main-color;
+  }
+
+  &.top .tooltip-arrow {
+    border-top-color: $main-color;
+  }
 }
 
 select.input-tiny,
@@ -277,6 +283,20 @@ input[type="color"]:hover,
       }
     }
   }
+
+  .input-group {
+    &-btn {
+      > .btn {
+        height: $input-height-base;
+      }
+    }
+  }
+
+  .translatable-field {
+    .btn.dropdown-toggle {
+      height: $input-height-base;
+    }
+  }
 }
 
 input[type="text"],
@@ -285,4 +305,21 @@ input[type="password"],
 input[type="email"],
 input[type="tel"] {
   font-family: $url-font-content-name, Helvetica, Arial, $icon-font-family, sans-serif !important;
+}
+
+
+@media (min-width: $screen-sm-min) {
+  .control-label {
+    padding-top: 7px;
+    padding-right: 25px;
+  }
+}
+
+.form-horizontal {
+  .form-wrapper {
+    flex: 0 0 83.33333%;
+    max-width: 83.33333%;
+    padding: 14px 0;
+    margin: auto;
+  }
 }

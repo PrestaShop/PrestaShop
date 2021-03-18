@@ -403,7 +403,6 @@ $header-text-color: #4e6167 !default;
       }
     }
 
-
     &.gamification-component {
       @include media-breakpoint-down("sm") {
         // stylelint-disable-next-line
@@ -876,12 +875,12 @@ $header-text-color: #4e6167 !default;
         &:hover,
         &:focus {
           // stylelint-disable-next-line
-          background-color: #f4fcfd !important;
+          background-color: $primary !important;
 
           &,
           i {
             // stylelint-disable-next-line
-            color: $primary !important;
+            color: #fff !important;
           }
         }
 
@@ -890,15 +889,27 @@ $header-text-color: #4e6167 !default;
         }
       }
 
-      .employee-link {
-        &#header_logout {
-          padding: 0.5rem 0;
-          margin: 0;
+      #header_logout {
+        padding: 0.5rem 0;
+        // stylelint-disable-next-line
+        margin: 10px -1.25rem !important;
+
+        &:hover,
+        &:active,
+        &:focus {
+          // stylelint-disable-next-line
+          background-color: $danger !important;
 
           &,
           i {
-            color: $danger;
+            // stylelint-disable-next-line
+            color: #fff !important;
           }
+        }
+
+        &,
+        i {
+          color: $danger;
         }
       }
     }

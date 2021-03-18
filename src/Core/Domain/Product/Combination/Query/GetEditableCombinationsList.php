@@ -59,8 +59,8 @@ class GetEditableCombinationsList
     /**
      * @param int $productId
      * @param int $languageId
-     * @param int $limit
-     * @param int $offset
+     * @param int|null $limit
+     * @param int|null $offset
      */
     public function __construct(
         int $productId,

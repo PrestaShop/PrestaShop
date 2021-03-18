@@ -86,7 +86,6 @@ class EmailConfigurationType extends TranslatorAwareType
                     'class' => 'js-email-method',
                     'data-smtp-mail-method' => MailOption::METHOD_SMTP,
                 ],
-                'label' => false,
                 'expanded' => true,
                 'multiple' => false,
                 'choices' => $this->mailMethodChoiceProvider->getChoices(),
@@ -94,7 +93,6 @@ class EmailConfigurationType extends TranslatorAwareType
             ->add('mail_type', ChoiceType::class, [
                 'expanded' => true,
                 'multiple' => false,
-                'label' => false,
                 'choices' => [
                     $this->trans('Send email in HTML format', 'Admin.Advparameters.Feature') => MailOption::TYPE_HTML,
                     $this->trans('Send email in text format', 'Admin.Advparameters.Feature') => MailOption::TYPE_TXT,
@@ -125,8 +123,6 @@ class EmailConfigurationType extends TranslatorAwareType
                     'rows' => 10,
                 ],
             ])
-            ->add('smtp_config', SmtpConfigurationType::class, [
-                'label' => false,
-            ]);
+            ->add('smtp_config', SmtpConfigurationType::class);
     }
 }

@@ -31,6 +31,7 @@ namespace PrestaShop\PrestaShop\Adapter\Product\Repository;
 use Doctrine\DBAL\Connection;
 use PrestaShop\PrestaShop\Adapter\AbstractObjectModelRepository;
 use PrestaShop\PrestaShop\Adapter\Product\Validate\ProductSupplierValidator;
+use PrestaShop\PrestaShop\Core\Domain\Product\Combination\ValueObject\CombinationId;
 use PrestaShop\PrestaShop\Core\Domain\Product\Supplier\Exception\CannotAddProductSupplierException;
 use PrestaShop\PrestaShop\Core\Domain\Product\Supplier\Exception\CannotBulkDeleteProductSupplierException;
 use PrestaShop\PrestaShop\Core\Domain\Product\Supplier\Exception\CannotDeleteProductSupplierException;
@@ -159,11 +160,11 @@ class ProductSupplierRepository extends AbstractObjectModelRepository
 
     /**
      * @param ProductId $productId
-     * @param bool $noCombination
+     * @param CombinationId|null $combinationId
      *
      * @return array
      */
-    public function getProductSuppliersInfo(ProductId $productId, bool $noCombination = true): array
+    public function getProductSuppliersInfo(ProductId $productId, ?CombinationId $combinationId = null): array
     {
         $qb = $this->connection->createQueryBuilder();
         $qb->select('*')
@@ -178,7 +179,11 @@ class ProductSupplierRepository extends AbstractObjectModelRepository
             ->setParameter('productId', $productId->getValue())
         ;
 
-        if ($noCombination) {
+        if ($combinationId) {
+            $qb->andWhere('ps.id_product_attribute = :combinationId')
+                ->setParameter('combinationId', $combinationId->getValue())
+            ;
+        } else {
             $qb->andWhere('ps.id_product_attribute = 0');
         }
 
