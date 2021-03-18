@@ -27,3 +27,18 @@ admin_products_v2_add_image:
         expose: true
     requirements:
         productId: \d+
+
+admin_products_v2_update_image:
+    path: /images/{productImageId}/update
+    methods: [PATCH]
+    defaults:
+        _controller: PrestaShopBundle:Admin/Sell/Catalog/Product/Image:updateImage
+        _legacy_controller: AdminProducts
+        _legacy_link:
+            - AdminProducts:editimage
+        _legacy_parameters:
+            id_product_image: productImageId
+    options:
+        expose: true
+    requirements:
+        productImageId: \d+
