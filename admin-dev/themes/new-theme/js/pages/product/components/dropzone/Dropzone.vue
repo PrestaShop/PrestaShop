@@ -73,6 +73,7 @@
       @unselectAll="unselectAll"
       @removeSelection="removeSelection"
       @selectAll="selectAll"
+      @saveSelectedFile="saveSelectedFile"
       :files="files"
       :locales="locales"
       :selected-locale="selectedLocale"
@@ -115,6 +116,7 @@
 <script>
   import Router from '@components/router';
   import {getProductImages} from '@pages/product/services/images';
+  import ProductMap from '@pages/product/product-map';
   import DropzoneWindow from './DropzoneWindow';
 
   const {$} = window;
@@ -148,7 +150,15 @@
       locales: {
         type: Array,
         required: true,
-      }
+      },
+      formName: {
+        type: String,
+        required: true,
+      },
+      token: {
+        type: String,
+        required: true,
+      },
     },
     components: {
       DropzoneWindow,
@@ -280,6 +290,31 @@
           $(element).remove();
         });
       },
+      /**
+       * Save selected file
+       */
+      saveSelectedFile() {
+        if (!this.selectedFiles.length) {
+          return;
+        }
+
+        const selectedFile = this.selectedFiles[0];
+        const saveUrl = router.generate('admin_products_v2_update_image', {
+          productImageId: selectedFile.image_id,
+        });
+
+        const data = {};
+        data[`${this.formName}[is_cover]`] = selectedFile.is_cover ? 1 : 0;
+        Object.keys(selectedFile.legends).forEach((langId) => {
+          data[`${this.formName}[legend][${langId}]`] = selectedFile.legends[langId];
+        });
+        data[`${this.formName}[_token]`] = this.token;
+
+        $.ajax(saveUrl, {
+          method: 'PATCH',
+          data: data
+        });
+      }
     },
   };
 </script>
