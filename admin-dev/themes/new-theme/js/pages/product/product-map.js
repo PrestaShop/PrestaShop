@@ -30,6 +30,7 @@ export default {
   productForm: 'form[name=product]',
   productFormSubmitButton: 'button[name="product[save]"]',
   navigationBar: '#form-nav',
+  dropzoneImagesContainer: '#product_images',
   suppliers: {
     productSuppliersCollection: `${productSuppliersId}`,
     supplierIdsInput: '#product_suppliers_supplier_ids',

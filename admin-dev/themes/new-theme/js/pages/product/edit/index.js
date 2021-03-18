@@ -82,7 +82,7 @@ $(() => {
     $('#product_preview').data('seo-url'),
   );
 
-  initDropzone(productId);
+  initDropzone(ProductMap.dropzoneImagesContainer);
 
   // From here we init component specific to edition
   const $productFormSubmitButton = $(ProductMap.productFormSubmitButton);
