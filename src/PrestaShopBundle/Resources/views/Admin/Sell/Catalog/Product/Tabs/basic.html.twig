@@ -28,29 +28,9 @@
 <div role="tabpanel" class="form-contenttab tab-pane container-fluid active" id="basic-tab">
   <div class="row">
     <div class="col-md-9 left-column">
-      <div
-        id="product-images-container"
-        data-translations="{{
-          {
-            'window.selectAll': 'Select all'|trans({}, 'Admin.Actions'),
-            'window.unselectAll': 'Unselect all'|trans({}, 'Admin.Actions'),
-            'window.selectedFiles': '[1]%filesNb%[/1] selected file(s)'|trans({'[1]': '<span>', '[/1]': '</span>'}, 'Admin.Actions'),
-            'window.useAsCover': 'Use as cover image'|trans({}, 'Admin.Actions'),
-            'window.saveImage': 'Save image settings'|trans({}, 'Admin.Actions'),
-            "window.delete": "Delete selection"|trans({}, 'Admin.Actions'),
-            "window.close": "Close window"|trans({}, 'Admin.Actions'),
-            "window.zoom": "Zoom on selection"|trans({}, 'Admin.Actions'),
-            "window.fileisTooLarge": "The file is too large. Maximum size allowed is: [1] MB. The file you are trying to upload is [2] MB."|trans({}, 'Admin.Notifications.Error')|replace({ '[1]': '{{maxFilesize}}', '[2]': '{{filesize}}' }),
-            "window.dropImages": "Drop images here"|trans({}, 'Admin.Catalog.Feature'),
-            "window.selectFiles": "or select files"|trans({}, 'Admin.Catalog.Feature'),
-            "window.recommendedSize": "Recommended size 800 x 800px for default theme."|trans({}, 'Admin.Catalog.Feature'),
-            "window.recommendedFormats": "JPG, GIF or PNG format."|trans({}, 'Admin.Catalog.Feature'),
-            "window.cover": "Cover"|trans({}, 'Admin.Catalog.Feature'),
-            "window.caption": "Caption"|trans({}, 'Admin.Catalog.Feature'),
-          }|json_encode
-        }}"
-      >
-      </div>
+      {% if productForm.images is defined %}
+        {{ form_widget(productForm.images) }}
+      {% endif %}
 
       {{ form_widget(productForm.basic) }}
 

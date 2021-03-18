@@ -1472,3 +1472,10 @@ services:
         class: 'PrestaShopBundle\Form\Admin\Type\SubmittableInputType'
         tags:
             - { name: form.type }
+
+    form.type.sell.product.image_dropzone_type:
+        class: 'PrestaShopBundle\Form\Admin\Sell\Product\Image\ImageDropzoneType'
+        parent: 'form.type.translatable.aware'
+        public: true
+        tags:
+            - { name: form.type }
