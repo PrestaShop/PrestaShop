@@ -29,17 +29,27 @@ import Dropzone from './Dropzone.vue';
 
 Vue.use(VueI18n);
 
-const i18n = new VueI18n({
-  locale: 'en',
-  formatter: new ReplaceFormatter(),
-  messages: {en: JSON.parse(document.querySelector('#product-images-container').dataset.translations)},
-});
+export default function initDropzone(imagesContainerSelector) {
+  const container = document.querySelector(imagesContainerSelector);
 
-export default function initDropzone(productId) {
+  const translations = JSON.parse(container.dataset.translations);
+  const i18n = new VueI18n({
+    locale: 'en',
+    formatter: new ReplaceFormatter(),
+    messages: {en: translations},
+  });
+
+  const productId = Number(container.dataset.productId);
+  const locales = JSON.parse(container.dataset.locales);
+
   return new Vue({
-    el: '#product-images-container',
-    template: `<dropzone product-id=${productId} />`,
+    el: imagesContainerSelector,
+    template: `<dropzone :productId=productId :locales=locales />`,
     components: {Dropzone},
     i18n,
+    data: {
+      locales: locales,
+      productId: productId
+    }
   });
 }
