@@ -125,6 +125,7 @@
     getProductImages,
     saveImageInformations,
     replaceImage,
+    setImagesSort,
   } from '@pages/product/services/images';
   import ProductMap from '@pages/product/product-map';
   import ProductEventMap from '@pages/product/product-event-map';
@@ -234,10 +235,53 @@
         ] = this.productId;
         this.configuration.params[`${this.formName}[_token]`] = this.token;
 
+        const dropzoneElement = $('#product-images-dropzone');
+        const that = this;
+
         this.dropzone = new window.Dropzone(
           '.dropzone-container',
           this.configuration,
         );
+
+        dropzoneElement.sortable({
+          items: 'div.dz-preview:not(.disabled)',
+          opacity: 0.9,
+          containment: 'parent',
+          distance: 32,
+          tolerance: 'pointer',
+          cursorAt: {
+            left: 64,
+            top: 64,
+          },
+          cancel: '.disabled',
+          stop() {
+            const sort = {};
+
+            $.each(dropzoneElement.find('.dz-preview:not(.disabled)'), (index, value) => {
+              const imageId = $(value).attr('data-id');
+
+              if (!imageId) {
+                return;
+              }
+
+              sort[imageId] = index + 1;
+            });
+
+            if (sort) {
+              (async () => {
+                try {
+                  await setImagesSort(that.productId, sort);
+                } catch (error) {
+                  $.growl.error({message: error.message});
+                }
+              })();
+            }
+          },
+          start(event, ui) {
+            dropzoneElement.find('.dz-preview').css('zIndex', 1);
+            ui.item.css('zIndex', 10);
+          },
+        });
 
         this.dropzone.on(DropzoneEvents.addedFile, (file) => {
           file.previewElement.dataset.id = file.image_id;

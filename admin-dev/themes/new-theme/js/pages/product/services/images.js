@@ -68,6 +68,20 @@ export const replaceImage = async (selectedFile, newFile, formName, token) => {
     data: formData,
     contentType: false,
     processData: false,
+};
+
+export const setImagesSort = async (productId, sort) => {
+  const sortUrl = router.generate('admin_products_v2_get_images', {
+    productId,
+    sort,
+  });
+
+  return $.ajax({
+    type: 'POST',
+    url: sortUrl,
+    data: {
+      json: JSON.stringify(sort),
+    },
   });
 };
 
@@ -75,4 +89,5 @@ export default {
   getProductImages,
   saveImageInformations,
   replaceImage,
+  setImagesSort,
 };
