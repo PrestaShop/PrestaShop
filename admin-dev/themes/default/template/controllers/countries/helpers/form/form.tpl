@@ -38,13 +38,13 @@
 			</div>
 			<div class="row">
 				<div class="col-lg-12">
-					<span title="" data-toggle="tooltip" class="label-tooltip" data-original-title="{l s='This will restore your last registered address format.' d='Admin.International.Help'}" data-html="true"><a id="useLastDefaultLayout" href="javascript:void(0)" onclick="resetLayout('{$input.encoding_address_layout}', 'lastDefault');" class="btn btn-default">
+					<span title="" data-toggle="tooltip" class="label-tooltip" data-original-title="{l|escape s='This will restore your last registered address format.' d='Admin.International.Help'}" data-html="true"><a id="useLastDefaultLayout" href="javascript:void(0)" onclick="resetLayout('{$input.encoding_address_layout}', 'lastDefault');" class="btn btn-default">
 						{l s='Use the last registered format' d='Admin.International.Feature'}</a></span>
-					<span title="" data-toggle="tooltip" class="label-tooltip" data-original-title="{l s='This will restore the default address format for this country.' d='Admin.International.Help'}" data-html="true"><a id="useDefaultLayoutSystem" href="javascript:void(0)" onclick="resetLayout('{$input.encoding_default_layout}', 'defaultSystem');" class="btn btn-default">
+					<span title="" data-toggle="tooltip" class="label-tooltip" data-original-title="{l|escape s='This will restore the default address format for this country.' d='Admin.International.Help'}" data-html="true"><a id="useDefaultLayoutSystem" href="javascript:void(0)" onclick="resetLayout('{$input.encoding_default_layout}', 'defaultSystem');" class="btn btn-default">
 						{l s='Use the default format' d='Admin.International.Feature'}</a></span>
-					<span title="" data-toggle="tooltip" class="label-tooltip" data-original-title="{l s='This will restore your current address format.' d='Admin.International.Help'}" data-html="true"><a id="useCurrentLastModifiedLayout" href="javascript:void(0)" onclick="resetLayout(lastLayoutModified, 'currentModified')" class="btn btn-default">
+					<span title="" data-toggle="tooltip" class="label-tooltip" data-original-title="{l|escape s='This will restore your current address format.' d='Admin.International.Help'}" data-html="true"><a id="useCurrentLastModifiedLayout" href="javascript:void(0)" onclick="resetLayout(lastLayoutModified, 'currentModified')" class="btn btn-default">
 						{l s='Use my current modified format' d='Admin.International.Feature'}</a></span>
-					<span title="" data-toggle="tooltip" class="label-tooltip" data-original-title="{l s='This will delete the current address format' d='Admin.International.Help'}" data-html="true"><a id="eraseCurrentLayout" href="javascript:void(0)" onclick="resetLayout('', 'erase');" class="btn btn-default">
+					<span title="" data-toggle="tooltip" class="label-tooltip" data-original-title="{l|escape s='This will delete the current address format' d='Admin.International.Help'}" data-html="true"><a id="eraseCurrentLayout" href="javascript:void(0)" onclick="resetLayout('', 'erase');" class="btn btn-default">
 						<i class="icon-eraser"></i> {l s='Clear format' d='Admin.International.Feature'}</a></span>
 				</div>
 			</div>
