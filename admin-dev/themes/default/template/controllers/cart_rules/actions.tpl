@@ -121,7 +121,7 @@
 		</p>
 		<p class="radio">
 			<label for="apply_discount_to_selection">
-				<input type="radio" name="apply_discount_to" id="apply_discount_to_selection" value="selection"{if $currentTab->getFieldValue($currentObject, 'reduction_product')|intval == -2} checked="checked"{/if}{if $product_rule_groups|@count == 0}disabled="disabled"{/if} />
+				<input type="radio" name="apply_discount_to" id="apply_discount_to_selection" value="selection"{if $currentTab->getFieldValue($currentObject, 'reduction_product')|intval == -2} checked="checked"{/if}{if $product_rule_groups|@count == 0} disabled="disabled"{/if} />
 				{l s='Selected product(s)' d='Admin.Catalog.Feature'}{if $product_rule_groups|@count == 0}&nbsp;<span id="apply_discount_to_selection_warning" class="text-muted clearfix"><i class="icon-warning-sign"></i> <a href="#" id="apply_discount_to_selection_shortcut">{l s='You must select some products before' d='Admin.Catalog.Notification'}</a></span>{/if}
 			</label>
 		</p>
