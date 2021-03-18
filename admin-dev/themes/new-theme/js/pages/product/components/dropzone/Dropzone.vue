@@ -129,9 +129,7 @@
       return {
         dropzone: null,
         configuration: {
-          url: router.generate('admin_products_v2_add_image', {
-            productId: this.productId,
-          }),
+          url: router.generate('admin_products_v2_add_image'),
           clickable: '.openfilemanager',
           previewTemplate: null,
         },

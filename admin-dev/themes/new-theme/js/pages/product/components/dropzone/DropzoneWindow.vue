@@ -150,7 +150,9 @@ export default {
     },
     selectedCaption: {
       get: function() {
-        if (null === this.selectedFile) {
+        if (null === this.selectedFile
+          || !this.selectedFile.hasOwnProperty('legends')
+          || !this.selectedFile.legends.hasOwnProperty(this.selectedLocale.id_lang)) {
           return '';
         }
 
