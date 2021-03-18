@@ -183,6 +183,7 @@
         );
 
         this.dropzone.on('addedfile', (file) => {
+          console.log(file)
           file.previewElement.addEventListener('click', () => {
             const input = file.previewElement.querySelector('.md-checkbox input');
             input.checked = !input.checked;
