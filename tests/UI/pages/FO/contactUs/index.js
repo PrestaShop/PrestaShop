@@ -8,7 +8,10 @@ class ContactUs extends FOBasePage {
     this.pageTitle = 'Contact us';
     this.validationMessage = 'Your message has been successfully sent to our team.';
 
-    // Selectors
+    // Left column selectors
+    this.emailUsLink = '#left-column a';
+
+    // Form selectors
     this.subjectSelect = '#content select[name=\'id_contact\']';
     this.emailAddressInput = '#content input[name=\'from\']';
     this.attachmentLabel = '#filestyle-0';
@@ -20,6 +23,15 @@ class ContactUs extends FOBasePage {
   /*
   Methods
    */
+  /**
+   * Get email us link href
+   * @param page
+   * @returns {Promise<string>}
+   */
+  getEmailUsLink(page) {
+    return this.getAttributeContent(page, this.emailUsLink, 'href');
+  }
+
   /**
    * Send message
    * @param page
