@@ -74,7 +74,7 @@
 
     <div
       class="md-checkbox dropzone-window-checkbox"
-      v-if="selectedFiles.length === 1"
+      v-if="selectedFile !== null"
     >
       <label>
         <input type="checkbox" />
@@ -96,18 +96,15 @@
           aria-expanded="false"
           id="form_invoice_prefix"
         >
-          en
+          {{ selectedLocale.iso_code }}
         </button>
         <div
           class="dropdown-menu locale-dropdown-menu"
           aria-labelledby="form_invoice_prefix"
         >
-          <span class="dropdown-item js-locale-item" data-locale="en"
-            >English (English)</span
-          >
-          <span class="dropdown-item js-locale-item" data-locale="fr"
-            >Français (French)</span
-          >
+          <span v-for="locale in locales" class="dropdown-item js-locale-item" :data-locale=locale.iso_code>
+            {{ locale.name }}
+          </span>
         </div>
       </div>
     </div>
@@ -115,10 +112,12 @@
       id="caption-textarea"
       name="caption-textarea"
       class="form-control"
+      v-if="selectedFile !== null"
+      v-model="selectedCaption"
     />
 
     <div class="dropzone-window-button-container">
-      <button class="btn btn-primary save-image-settings">
+      <button type="button" class="btn btn-primary save-image-settings" @click="saveSelectedFile">
         {{ $t("window.saveImage") }}
       </button>
     </div>
@@ -137,11 +136,43 @@ export default {
       type: Array,
       default: () => [],
     },
+    locales: {
+      type: Array,
+      required: true,
+    },
+    selectedLocale: {
+      type: Object,
+    }
+  },
+  computed: {
+    selectedFile() {
+      return this.selectedFiles.length === 1 ? this.selectedFiles[0] : null;
+    },
+    selectedCaption: {
+      get: function() {
+        if (null === this.selectedFile) {
+          return '';
+        }
+
+        return this.selectedFile.legends[this.selectedLocale.id_lang];
+      },
+      set: function(value) {
+        if (null === this.selectedFile) {
+          return;
+        }
+
+        this.selectedFile.legends[this.selectedLocale.id_lang] = value;
+      },
+    },
   },
   mounted() {
     window.prestaShopUiKit.initToolTips();
   },
-  methods: {},
+  methods: {
+    saveSelectedFile() {
+      console.log('save selected file', this.selectedFile);
+    }
+  },
 };
 </script>
 

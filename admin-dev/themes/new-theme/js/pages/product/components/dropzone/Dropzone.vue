@@ -74,6 +74,8 @@
       @removeSelection="removeSelection"
       @selectAll="selectAll"
       :files="files"
+      :locales="locales"
+      :selected-locale="selectedLocale"
     />
 
     <div class="dz-template d-none">
@@ -135,13 +137,18 @@
         selectedFiles: [],
         translations: [],
         loading: true,
+        selectedLocale: null,
       };
     },
     props: {
       productId: {
-        type: String,
+        type: Number,
         required: true,
       },
+      locales: {
+        type: Array,
+        required: true,
+      }
     },
     components: {
       DropzoneWindow,
@@ -152,9 +159,26 @@
         '.dz-template',
       ).innerHTML;
 
+      this.watchLocaleChanges();
       this.initProductImages();
     },
     methods: {
+      /**
+       * Watch locale changes to update the selected one
+       */
+      watchLocaleChanges() {
+        this.selectedLocale = this.locales[0];
+
+        window.prestashop.instance.eventEmitter.on('languageSelected', (event) => {
+          const {selectedLocale} = event;
+
+          this.locales.forEach((locale) => {
+            if (locale.iso_code === selectedLocale) {
+              this.selectedLocale = locale;
+            }
+          });
+        });
+      },
       /**
        * This methods is used to initialize product images we already have uploaded
        */
@@ -183,7 +207,6 @@
         );
 
         this.dropzone.on('addedfile', (file) => {
-          console.log(file)
           file.previewElement.addEventListener('click', () => {
             const input = file.previewElement.querySelector('.md-checkbox input');
             input.checked = !input.checked;
