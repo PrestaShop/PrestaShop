@@ -29,7 +29,9 @@ declare(strict_types=1);
 namespace PrestaShop\PrestaShop\Core\Form\IdentifiableObject\DataHandler;
 
 use PrestaShop\PrestaShop\Core\CommandBus\CommandBusInterface;
+use PrestaShop\PrestaShop\Core\Domain\Product\Image\Command\AddProductImageCommand;
 use PrestaShop\PrestaShop\Core\Domain\Product\Image\Command\UpdateProductImageCommand;
+use PrestaShop\PrestaShop\Core\Domain\Product\Image\ValueObject\ImageId;
 
 class ProductImageFormDataHandler implements FormDataHandlerInterface
 {
@@ -52,8 +54,16 @@ class ProductImageFormDataHandler implements FormDataHandlerInterface
      */
     public function create(array $data)
     {
-        // Shouldn't be used for creation
-        return 0;
+        $uploadedFile = $data['file'];
+        $command = new AddProductImageCommand(
+            (int) $data['product_id'],
+            $uploadedFile->getPathname()
+        );
+
+        /** @var ImageId $imageId */
+        $imageId = $this->bus->handle($command);
+
+        return $imageId->getValue();
     }
 
     /**
