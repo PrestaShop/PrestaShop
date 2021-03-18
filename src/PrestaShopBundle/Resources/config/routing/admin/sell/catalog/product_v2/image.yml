@@ -14,7 +14,7 @@ admin_products_v2_get_images:
         productId: \d+
 
 admin_products_v2_add_image:
-    path: /{productId}/images/add
+    path: /images/add
     methods: [POST]
     defaults:
         _controller: PrestaShopBundle:Admin/Sell/Catalog/Product/Image:addImage

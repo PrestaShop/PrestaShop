@@ -42,6 +42,9 @@ class ProductImageFormDataProvider implements FormDataProviderInterface
      */
     private $queryBus;
 
+    /**
+     * @param CommandBusInterface $queryBus
+     */
     public function __construct(CommandBusInterface $queryBus)
     {
         $this->queryBus = $queryBus;
@@ -66,7 +69,6 @@ class ProductImageFormDataProvider implements FormDataProviderInterface
      */
     public function getDefaultData()
     {
-        // It shouldn't be used for creation anyway
         return [];
     }
 }

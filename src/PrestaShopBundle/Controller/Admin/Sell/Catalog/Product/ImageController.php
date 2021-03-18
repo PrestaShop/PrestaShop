@@ -29,19 +29,16 @@ declare(strict_types=1);
 namespace PrestaShopBundle\Controller\Admin\Sell\Catalog\Product;
 
 use Exception;
-use PrestaShop\PrestaShop\Core\Domain\Product\Image\Command\AddProductImageCommand;
 use PrestaShop\PrestaShop\Core\Domain\Product\Image\Exception\CannotAddProductImageException;
 use PrestaShop\PrestaShop\Core\Domain\Product\Image\Exception\ProductImageNotFoundException;
 use PrestaShop\PrestaShop\Core\Domain\Product\Image\Query\GetProductImage;
 use PrestaShop\PrestaShop\Core\Domain\Product\Image\Query\GetProductImages;
 use PrestaShop\PrestaShop\Core\Domain\Product\Image\QueryResult\ProductImage;
-use PrestaShop\PrestaShop\Core\Domain\Product\Image\ValueObject\ImageId;
 use PrestaShop\PrestaShop\Core\Form\IdentifiableObject\Builder\FormBuilderInterface;
 use PrestaShop\PrestaShop\Core\Form\IdentifiableObject\Handler\FormHandlerInterface;
 use PrestaShop\PrestaShop\Core\Image\Uploader\Exception\MemoryLimitException;
 use PrestaShop\PrestaShop\Core\Image\Uploader\Exception\UploadedImageConstraintException;
 use PrestaShopBundle\Controller\Admin\FrameworkBundleAdminController;
-use PrestaShopBundle\Form\Admin\Sell\Product\Image\AddImageType;
 use PrestaShopBundle\Security\Annotation\AdminSecurity;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -68,35 +65,35 @@ class ImageController extends FrameworkBundleAdminController
      * @AdminSecurity("is_granted(['update'], request.get('_legacy_controller'))", message="You do not have permission to update this.")
      *
      * @param Request $request
-     * @param int $productId
      *
      * @return JsonResponse
      */
-    public function addImageAction(Request $request, int $productId): JsonResponse
+    public function addImageAction(Request $request): JsonResponse
     {
-        $imageForm = $this->createForm(AddImageType::class);
+        $imageForm = $this->getProductImageFormBuilder()->getForm();
         $imageForm->handleRequest($request);
 
-        if (!$imageForm->isSubmitted() || $imageForm->isValid()) {
-            return new JsonResponse([
-                'error' => 'Invalid data.',
-                'form_errors' => $this->getFormErrorsForJS($imageForm),
-            ], Response::HTTP_BAD_REQUEST);
-        }
-
-        $formData = $imageForm->getData();
-        $uploadedFile = $formData['file'];
         try {
-            $command = new AddProductImageCommand($productId, $uploadedFile->getPathname());
-            /** @var ImageId $imageId */
-            $imageId = $this->getCommandBus()->handle($command);
+            $result = $this->getProductImageFormHandler()->handle($imageForm);
+
+            if (!$result->isSubmitted() || !$result->isValid()) {
+                return new JsonResponse([
+                    'error' => 'Invalid form data.',
+                    'form_errors' => $this->getFormErrorsForJS($imageForm),
+                ], Response::HTTP_BAD_REQUEST);
+            }
+            if (null === $result->getIdentifiableObjectId()) {
+                return new JsonResponse([
+                    'error' => 'Could not create image.',
+                ], Response::HTTP_BAD_REQUEST);
+            }
         } catch (Exception $e) {
             return new JsonResponse([
                 'error' => $this->getErrorMessageForException($e, $this->getErrorMessages($e)),
             ], Response::HTTP_BAD_REQUEST);
         }
 
-        return $this->getProductImageJsonResponse($imageId->getValue());
+        return $this->getProductImageJsonResponse($result->getIdentifiableObjectId());
     }
 
     /**
@@ -119,7 +116,7 @@ class ImageController extends FrameworkBundleAdminController
 
             if (!$result->isSubmitted() || !$result->isValid()) {
                 return new JsonResponse([
-                    'error' => 'Invalid data.',
+                    'error' => 'Invalid form data.',
                     'form_errors' => $this->getFormErrorsForJS($imageForm),
                 ], Response::HTTP_BAD_REQUEST);
             }
@@ -137,7 +134,7 @@ class ImageController extends FrameworkBundleAdminController
      */
     private function getProductImageFormBuilder(): FormBuilderInterface
     {
-        return $this->get('prestashop.core.form.identifiable_object.builder.update_image_form_builder');
+        return $this->get('prestashop.core.form.identifiable_object.builder.product_image_form_builder');
     }
 
     /**
