@@ -42,6 +42,13 @@
         <i
           class="material-icons"
           data-toggle="pstooltip"
+          :data-original-title="$t('window.replaceSelection')"
+          @click="$emit('replaceSelection')"
+          v-if="selectedFile"
+        >find_replace</i>
+        <i
+          class="material-icons"
+          data-toggle="pstooltip"
           :data-original-title="$t('window.delete')"
           @click="$emit('removeSelection')"
         >delete</i>

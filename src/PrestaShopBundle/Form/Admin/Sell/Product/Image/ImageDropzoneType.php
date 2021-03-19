@@ -63,6 +63,7 @@ class ImageDropzoneType extends TranslatorAwareType
                 'window.selectAll' => $this->trans('Select all', 'Admin.Actions'),
                 'window.settingsUpdated' => $this->trans('Settings udpated', 'Admin.Actions'),
                 'window.unselectAll' => $this->trans('Unselect all', 'Admin.Actions'),
+                'window.replaceSelection' => $this->trans('Replace selection', 'Admin.Actions'),
                 'window.selectedFiles' => $this->trans(
                     '[1]%filesNb%[/1] selected file(s)',
                     'Admin.Actions',
