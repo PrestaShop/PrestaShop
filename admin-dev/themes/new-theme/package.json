@@ -36,7 +36,7 @@
     "moment": "^2.24.0",
     "perfect-scrollbar": "^1.5.0",
     "postcss-cssnext": "^2.10.0",
-    "prestakit": "^1.2.1",
+    "prestakit": "^1.2.2",
     "punycode": "^2.1.1",
     "sprintf-js": "^1.1.2",
     "tablednd": "^1.0.3",
