@@ -62,7 +62,7 @@ class WebserviceKeyFeatureContext extends AbstractDomainFeatureContext
     {
         $propertiesKey = sprintf('%s_properties', $reference);
 
-        $data = SharedStorage::getStorage()->get($propertiesKey);
+        $data = SharedStorage::getStorage()->exists($propertiesKey) ? SharedStorage::getStorage()->get($propertiesKey) : [];
 
         $permissionsMap = [
             'View' => 'GET',
@@ -90,7 +90,7 @@ class WebserviceKeyFeatureContext extends AbstractDomainFeatureContext
             $data['key'],
             $data['description'],
             $data['is_enabled'],
-            $data['permissions'],
+            $data['permissions'] ?? [],
             $data['shop_association']
         );
 
@@ -113,7 +113,11 @@ class WebserviceKeyFeatureContext extends AbstractDomainFeatureContext
     {
         $webserviceKey = SharedStorage::getStorage()->get($reference);
 
-        $data = $node->getRowsHash();
+        $propertiesKey = sprintf('%s_properties', $reference);
+        $data = SharedStorage::getStorage()->exists($propertiesKey)
+            ? SharedStorage::getStorage()->get($propertiesKey)
+            : [];
+        $data = array_merge($node->getRowsHash(), $data);
 
         $command = new EditWebserviceKeyCommand($webserviceKey->id);
         if (isset($data['key'])) {
@@ -124,6 +128,9 @@ class WebserviceKeyFeatureContext extends AbstractDomainFeatureContext
         }
         if (isset($data['is_enabled'])) {
             $command->setStatus((bool) $data['is_enabled']);
+        }
+        if (!empty($data['permissions'])) {
+            $command->setPermissions($data['permissions']);
         }
 
         try {
