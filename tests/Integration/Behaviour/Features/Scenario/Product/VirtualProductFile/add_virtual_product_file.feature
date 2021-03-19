@@ -9,7 +9,7 @@ Feature: Add virtual product file from BO (Back Office).
   Scenario: I add virtual product file without limiting access days, download times and without expiration date
     Given I add product "product1" with following information:
       | name[en-US] | puffin icon |
-      | is_virtual  | true        |
+      | type        | virtual     |
     And product "product1" should not have a file
     And product product1 type should be virtual
     When I add virtual product file "file1" to product "product1" with following details:
@@ -25,7 +25,7 @@ Feature: Add virtual product file from BO (Back Office).
   Scenario: I add virtual product file with limited access days, downloads and expiration date
     Given I add product "product2" with following information:
       | name[en-US] | puffin icon 2 |
-      | is_virtual  | true          |
+      | type        | virtual     |
     And product "product2" should not have a file
     And product product2 type should be virtual
     When I add virtual product file "file2" to product "product2" with following details:
@@ -43,7 +43,7 @@ Feature: Add virtual product file from BO (Back Office).
   Scenario: I add zip type virtual product file
     Given I add product "product3" with following information:
       | name[en-US] | puffin icon 3 |
-      | is_virtual  | true          |
+      | type        | virtual     |
     And product "product3" should not have a file
     And product product3 type should be virtual
     When I add virtual product file "file3" to product "product3" with following details:
@@ -62,7 +62,7 @@ Feature: Add virtual product file from BO (Back Office).
   Scenario: I should not be able to add file to a product which is not virtual
     Given I add product product4 with following information:
       | name[en-US] | puffin icon 4 |
-      | is_virtual  | false         |
+      | type        | standard      |
     And product product4 type should be standard
     And product "product4" should not have a file
     When I add virtual product file "file4" to product "product4" with following details:
@@ -74,7 +74,7 @@ Feature: Add virtual product file from BO (Back Office).
   Scenario: I should not be able to add file to a product which already has a file
     Given I add product product5 with following information:
       | name[en-US] | puffin icon 5 |
-      | is_virtual  | true          |
+      | type        | virtual       |
     And product product5 type should be virtual
     And product "product5" should not have a file
     When I add virtual product file "file5" to product "product5" with following details:
@@ -99,7 +99,7 @@ Feature: Add virtual product file from BO (Back Office).
   Scenario: I should not be able to add a file with invalid details
     Given I add product product6 with following information:
       | name[en-US] | puffin zip 6 |
-      | is_virtual  | true         |
+      | type        | virtual      |
     And product product6 type should be virtual
     And product "product6" should not have a file
     When I add virtual product file "file6" to product "product6" with following details:
