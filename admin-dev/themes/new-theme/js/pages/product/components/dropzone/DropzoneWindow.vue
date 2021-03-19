@@ -91,6 +91,12 @@
         </label>
       </div>
 
+      <input
+        type="file"
+        class="dropzone-window-filemanager"
+        @change="watchFiles"
+      >
+
       <div class="dropzone-window-label">
         <label
           for="caption-textarea"
@@ -124,6 +130,7 @@
           </div>
         </div>
       </div>
+
       <textarea
         id="caption-textarea"
         name="caption-textarea"
@@ -207,7 +214,11 @@
     updated() {
       window.prestaShopUiKit.initToolTips();
     },
-    methods: {},
+    methods: {
+      watchFiles(event) {
+        this.$emit('replacedFile', event);
+      },
+    },
   };
 </script>
 
@@ -221,6 +232,10 @@
     align-self: stretch;
     padding: 1rem;
     min-width: 20rem;
+
+    &-filemanager {
+      display: none;
+    }
 
     &-label {
       display: flex;
