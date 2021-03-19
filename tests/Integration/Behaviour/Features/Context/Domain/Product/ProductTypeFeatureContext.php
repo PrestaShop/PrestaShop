@@ -53,6 +53,9 @@ class ProductTypeFeatureContext extends AbstractProductFeatureContext
             case 'combinations':
                 $errorCode = InvalidProductTypeException::EXPECTED_COMBINATIONS_TYPE;
                 break;
+            case 'single':
+                $errorCode = InvalidProductTypeException::EXPECTED_NO_COMBINATIONS_TYPE;
+                break;
         }
         $this->assertLastErrorIs(InvalidProductTypeException::class, $errorCode);
     }
