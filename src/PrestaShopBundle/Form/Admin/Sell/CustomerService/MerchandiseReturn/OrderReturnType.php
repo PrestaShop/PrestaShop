@@ -71,7 +71,7 @@ class OrderReturnType extends AbstractType
             ->add('order_return_state', ChoiceType::class, [
                 'required' => true,
                 'choices' => $this->stateChoices,
-                'label' => $this->translator->trans('Status', [], 'Admin.Shopparameters.Feature'),
+                'label' => $this->translator->trans('Status', [], 'Admin.Global'),
             ])
         ;
     }
