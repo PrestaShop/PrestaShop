@@ -55,6 +55,6 @@ ALTER TABLE `PREFIX_product` MODIFY COLUMN `redirect_type` ENUM(
 ) NOT NULL DEFAULT '404';
 
 ALTER TABLE  `PREFIX_product` ADD `product_type` ENUM(
-    'standard', 'pack', 'virtual', 'combination'
+    'standard', 'pack', 'virtual', 'combinations'
 ) NOT NULL DEFAULT 'standard';
 /* php:ps_1780_update_product_type */
