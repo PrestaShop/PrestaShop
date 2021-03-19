@@ -1401,6 +1401,7 @@ class WebserviceRequestCore
             if (!$return) {
                 return false;
             } else {
+                $this->_outputEnabled = true;
                 $this->objects = $return;
             }
         }
