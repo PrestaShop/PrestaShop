@@ -33,6 +33,7 @@ use Language;
 use PHPUnit\Framework\Assert;
 use PrestaShop\PrestaShop\Core\Domain\Product\Exception\ProductConstraintException;
 use PrestaShop\PrestaShop\Core\Domain\Product\Exception\ProductNotFoundException;
+use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductType;
 use Product;
 use RuntimeException;
 use Tests\Integration\Behaviour\Features\Context\Util\CombinationDetails;
@@ -164,6 +165,13 @@ class CommonProductFeatureContext extends AbstractProductFeatureContext
                 $editableProduct->getType()
             )
         );
+        $productId = $this->getSharedStorage()->get($productReference);
+        $product = new Product($productId);
+        if ($productTypeName === ProductType::TYPE_VIRTUAL) {
+            Assert::assertTrue((bool) $product->is_virtual);
+        } else {
+            Assert::assertFalse((bool) $product->is_virtual);
+        }
     }
 
     /**
