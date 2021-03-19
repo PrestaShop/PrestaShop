@@ -77,7 +77,7 @@ final class BulkChangeOrderStatusHandler implements BulkChangeOrderStatusHandler
             $useExistingPayment = !$order->hasInvoice();
             $history->changeIdOrderState((int) $orderState->id, $order, $useExistingPayment);
 
-            $carrier = new Carrier($order->id_carrier, $order->id_lang);
+            $carrier = new Carrier($order->id_carrier, (int) $order->getAssociatedLanguage()->getId());
             $templateVars = [];
 
             if ($history->id_order_state == Configuration::get('PS_OS_SHIPPING') && $order->shipping_number) {

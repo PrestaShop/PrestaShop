@@ -230,7 +230,7 @@ final class GetOrderForViewingHandler extends AbstractOrderHandler implements Ge
         $genderName = '';
 
         if (Validate::isLoadedObject($gender)) {
-            $genderName = $gender->name[$order->id_lang];
+            $genderName = $gender->name[(int) $order->getAssociatedLanguage()->getId()];
         }
 
         $customerStats = $customer->getStats();
@@ -282,7 +282,7 @@ final class GetOrderForViewingHandler extends AbstractOrderHandler implements Ge
             $address->address2,
             $stateName,
             $address->city,
-            $country->name[$order->id_lang],
+            $country->name[(int) $order->getAssociatedLanguage()->getId()],
             $address->postcode,
             $address->phone,
             $address->phone_mobile,
@@ -319,7 +319,7 @@ final class GetOrderForViewingHandler extends AbstractOrderHandler implements Ge
             $address->address2,
             $stateName,
             $address->city,
-            $country->name[$order->id_lang],
+            $country->name[(int) $order->getAssociatedLanguage()->getId()],
             $address->postcode,
             $address->phone,
             $address->phone_mobile,

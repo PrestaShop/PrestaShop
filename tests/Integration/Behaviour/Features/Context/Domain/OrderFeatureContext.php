@@ -1413,6 +1413,40 @@ class OrderFeatureContext extends AbstractDomainFeatureContext
     }
 
     /**
+     * @Then order :orderReference preview shipping address should have the following details:
+     */
+    public function getOrderPreviewShippingAddress(string $orderReference, TableNode $table)
+    {
+        $orderId = $this->getSharedStorage()->get($orderReference);
+        $orderPreview = $this->getQueryBus()->handle(new GetOrderPreview($orderId));
+        $shippingAddress = $orderPreview->getShippingDetails();
+
+        $address = [
+            'firstName' => $shippingAddress->getFirstName(),
+            'lastName' => $shippingAddress->getLastName(),
+            'company' => $shippingAddress->getCompany(),
+            'vatNumber' => $shippingAddress->getVatNumber(),
+            'address1' => $shippingAddress->getAddress1(),
+            'address2' => $shippingAddress->getAddress2(),
+            'city' => $shippingAddress->getCity(),
+            'postalCode' => $shippingAddress->getPostalCode(),
+            'stateName' => $shippingAddress->getStateName(),
+            'country' => $shippingAddress->getCountry(),
+            'phone' => $shippingAddress->getPhone(),
+            'carrierName' => $shippingAddress->getCarrierName(),
+            'trackingNumber' => $shippingAddress->getTrackingNumber(),
+        ];
+
+        $expectedDetails = $table->getRowsHash();
+        foreach ($expectedDetails as $key => $value) {
+            Assert::assertEquals(
+                $value,
+                $address[$key]
+            );
+        }
+    }
+
+    /**
      * @param int $productId
      * @param int $combinationId
      * @param int $orderId

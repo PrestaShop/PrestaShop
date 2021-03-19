@@ -29,7 +29,6 @@ namespace PrestaShop\PrestaShop\Adapter\Cart\CommandHandler;
 use Carrier;
 use Currency;
 use Customer;
-use Language;
 use PrestaShop\PrestaShop\Adapter\Cart\AbstractCartHandler;
 use PrestaShop\PrestaShop\Adapter\ContextStateManager;
 use PrestaShop\PrestaShop\Core\Domain\Cart\Command\UpdateCartCarrierCommand;
@@ -67,7 +66,7 @@ final class UpdateCartCarrierHandler extends AbstractCartHandler implements Upda
         $this->contextStateManager
             ->setCart($cart)
             ->setCurrency(new Currency($cart->id_currency))
-            ->setLanguage(new Language($cart->id_lang))
+            ->setLanguage($cart->getAssociatedLanguage())
             ->setCustomer(new Customer($cart->id_customer))
             ->setShop(new Shop($cart->id_shop))
         ;

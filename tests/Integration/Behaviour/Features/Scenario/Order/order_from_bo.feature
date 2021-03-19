@@ -728,3 +728,25 @@ Feature: Order from Back Office (BO)
     And the first invoice from order "bo_order1" should have following shipping tax details:
       | total_tax_excl | rate | total_amount |
       | 7              | 6.00 | 0.42         |
+
+  Scenario: View order created on a currently deleted language
+    Given language "Spanish" with locale "es-ES" exists
+    And language with iso code "es" is the default one
+    When I create an empty cart "dummy_cart-ES" for customer "testCustomer"
+    And I select "US" address as delivery and invoice address for customer "testCustomer" in cart "dummy_cart-ES"
+    And I add 1 product "Mug The best is yet to come" to the cart "dummy_cart-ES"
+    And I add order "bo_order-ES" with the following details:
+      | cart                | dummy_cart-ES               |
+      | message             |                             |
+      | payment module name | dummy_payment               |
+      | status              | Awaiting bank wire payment  |
+    And I change order "bo_order-ES" shipping address to "test-address"
+    Then order "bo_order-ES" shipping address should be "test-address"
+    And order "bo_order-ES" preview shipping address should have the following details:
+      # country is not translated here but should be on the develop branch (https://github.com/PrestaShop/PrestaShop/pull/19818)
+      | country | United States |
+    When language with iso code "en" is the default one
+    And I delete language "Spanish"
+    Then order "bo_order-ES" shipping address should be "test-address"
+    And order "bo_order-ES" preview shipping address should have the following details:
+      | country | United States |

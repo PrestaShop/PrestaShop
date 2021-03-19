@@ -35,7 +35,6 @@ use Currency;
 use Customer;
 use Customization;
 use Db;
-use Language;
 use Order;
 use OrderDetail;
 use OrderInvoice;
@@ -112,7 +111,7 @@ class OrderProductQuantityUpdater
             ->setCart($cart)
             ->setCurrency(new Currency($cart->id_currency))
             ->setCustomer(new Customer($cart->id_customer))
-            ->setLanguage(new Language($cart->id_lang))
+            ->setLanguage($cart->getAssociatedLanguage())
             ->setCountry($cart->getTaxCountry())
             ->setShop(new Shop($cart->id_shop))
         ;
