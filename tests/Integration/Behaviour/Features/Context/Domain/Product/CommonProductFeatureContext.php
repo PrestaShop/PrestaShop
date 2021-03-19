@@ -157,11 +157,11 @@ class CommonProductFeatureContext extends AbstractProductFeatureContext
         $editableProduct = $this->getProductForEditing($productReference);
         Assert::assertEquals(
             $productTypeName,
-            $editableProduct->getBasicInformation()->getType(),
+            $editableProduct->getType(),
             sprintf(
                 'Product type is not as expected. Expected %s but got %s instead',
                 $productTypeName,
-                $editableProduct->getBasicInformation()->getType()
+                $editableProduct->getType()
             )
         );
     }

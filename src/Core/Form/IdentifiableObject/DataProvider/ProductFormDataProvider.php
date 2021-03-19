@@ -159,8 +159,8 @@ final class ProductFormDataProvider implements FormDataProviderInterface
     private function extractBasicData(ProductForEditing $productForEditing): array
     {
         return [
+            'type' => $productForEditing->getType(),
             'name' => $productForEditing->getBasicInformation()->getLocalizedNames(),
-            'type' => $productForEditing->getBasicInformation()->getType(),
             'description' => $productForEditing->getBasicInformation()->getLocalizedDescriptions(),
             'description_short' => $productForEditing->getBasicInformation()->getLocalizedShortDescriptions(),
         ];
