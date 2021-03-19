@@ -245,7 +245,6 @@ class FeatureFlagsModifierTest extends TestCase
             return [['name' => $featureFlag->getName()], $featureFlag];
         }, $fetchedFlags);
 
-
         $entityManagerMock
             ->method('getRepository')
             ->willReturn($repositoryMock);
