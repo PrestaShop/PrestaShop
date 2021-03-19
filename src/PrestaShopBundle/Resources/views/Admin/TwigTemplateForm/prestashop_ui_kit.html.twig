@@ -81,8 +81,8 @@
         {{ form_widget(form) }}
         {{ form_errors(form, {'attr': {'fieldError': true}}) }}
       </div>
-      {% if attribute(form.parent, multistoreCheckboxName) is defined and attribute(form.parent, multistoreCheckboxName).vars.multistore_dropdown != false %}
-        {{ attribute(form.parent, multistoreCheckboxName).vars.multistore_dropdown | raw }}
+      {% if attribute(form.parent, form.vars.name) is defined and attribute(form.parent, form.vars.name).vars.multistore_dropdown != false %}
+        {{ attribute(form.parent, form.vars.name).vars.multistore_dropdown | raw }}
       {% endif %}
     </div>
   {% endspaceless %}
