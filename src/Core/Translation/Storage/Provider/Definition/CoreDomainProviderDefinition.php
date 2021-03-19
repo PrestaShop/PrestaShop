@@ -23,49 +23,57 @@
  * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
+declare(strict_types=1);
 
 namespace PrestaShop\PrestaShop\Core\Translation\Storage\Provider\Definition;
 
-interface ProviderDefinitionInterface
+/**
+ * Properties container for core translation provider filtering by a single domain name.
+ */
+class CoreDomainProviderDefinition extends AbstractCoreProviderDefinition
 {
-    public const TYPE_BACK = 'back';
-    public const TYPE_FRONT = 'front';
-    public const TYPE_MAILS = 'mails';
-    public const TYPE_MAILS_BODY = 'mails_body';
-    public const TYPE_OTHERS = 'others';
-    public const TYPE_MODULES = 'modules';
-    public const TYPE_THEMES = 'themes';
-    public const TYPE_CORE_DOMAIN = 'core_domain';
+    /**
+     * @var string
+     */
+    private $domainName;
 
-    public const ALLOWED_TYPES = [
-        self::TYPE_BACK,
-        self::TYPE_FRONT,
-        self::TYPE_MAILS,
-        self::TYPE_MAILS_BODY,
-        self::TYPE_OTHERS,
-        self::TYPE_MODULES,
-        self::TYPE_THEMES,
-        self::TYPE_CORE_DOMAIN,
-    ];
+    /**
+     * @param string $domainName
+     */
+    public function __construct(string $domainName)
+    {
+        $this->domainName = $domainName;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getType(): string
+    {
+        return ProviderDefinitionInterface::TYPE_CORE_DOMAIN;
+    }
 
     /**
      * @return string
      */
-    public function getType(): string;
+    public function getDomainName(): string
+    {
+        return $this->domainName;
+    }
 
     /**
-     * Returns a list of patterns to filter catalogue files.
-     * Depends on the translation type.
-     *
-     * @return array<int, string>
+     * {@inheritdoc}
      */
-    public function getFilenameFilters(): array;
+    public function getFilenameFilters(): array
+    {
+        return ['#^' . preg_quote($this->domainName, '#') . '([A-Za-z]|\.|$)#'];
+    }
 
     /**
-     * Returns a list of patterns to filter translation domains.
-     * Depends on the translation type.
-     *
-     * @return array<int, string>
+     * {@inheritdoc}
      */
-    public function getTranslationDomains(): array;
+    public function getTranslationDomains(): array
+    {
+        return ['^' . preg_quote($this->domainName) . '([A-Za-z]|$)'];
+    }
 }
