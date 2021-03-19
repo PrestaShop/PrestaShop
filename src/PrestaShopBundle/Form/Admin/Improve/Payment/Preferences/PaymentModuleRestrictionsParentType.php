@@ -71,7 +71,7 @@ class PaymentModuleRestrictionsParentType extends TranslatorAwareType
             $sortingBy[$key] = $paymentModule->get('displayName');
         }
 
-        array_multisort($sortingBy, SORT_ASC, $paymentModules);
+        array_multisort($sortingBy, $paymentModules);
 
         return $paymentModules;
     }
