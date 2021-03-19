@@ -36,6 +36,18 @@ export const getProductImages = async (productId) => {
   return $.get(imagesUrl);
 };
 
+export const saveProductImage = async (selectedFile, data) => {
+  const saveUrl = router.generate('admin_products_v2_update_image', {
+    productImageId: selectedFile.image_id,
+  });
+
+  return $.ajax(saveUrl, {
+    method: 'PATCH',
+    data,
+  });
+};
+
 export default {
   getProductImages,
+  saveProductImage,
 };
