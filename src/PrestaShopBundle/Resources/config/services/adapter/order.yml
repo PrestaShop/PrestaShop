@@ -51,6 +51,8 @@ services:
     arguments:
         - '@prestashop.adapter.order.amount.updater'
         - '@prestashop.adapter.order.order_detail.updater'
+        - '@prestashop.adapter.context_state_manager'
+        - '@prestashop.adapter.order.product_quantity.updater'
     tags:
       - name: tactician.handler
         command: PrestaShop\PrestaShop\Core\Domain\Order\Command\ChangeOrderDeliveryAddressCommand
