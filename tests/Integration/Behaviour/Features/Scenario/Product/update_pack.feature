@@ -144,18 +144,19 @@ Feature: Add product to pack from Back Office (BO)
       | product3 | 3        |
     When I remove all products from pack productPack4
     Then product "productPack4" type should be pack
+    And pack "productPack4" should be empty
 
   Scenario: Add combination product to a pack
     Given I add product "productSkirt1" with following information:
       | name[en-US] | regular skirt |
-      | type        | standard      |
+      | type        | combinations  |
     And product "productSkirt1" has following combinations:
       | reference | quantity | attributes         |
       | whiteS    | 15       | Size:S;Color:White |
       | whiteM    | 15       | Size:M;Color:White |
       | blackM    | 13       | Size:M;Color:Black |
-    And product productSkirt1 type should be combination
-    And product "productPack4" type should be standard
+    And product productSkirt1 type should be combinations
+    And product "productPack4" type should be pack
     When I update pack productPack4 with following product quantities:
       | product       | combination | quantity |
       | productSkirt1 | whiteS      | 10       |
@@ -170,7 +171,7 @@ Feature: Add product to pack from Back Office (BO)
 
   Scenario: Add combination & standard product to a pack
     Given product "product2" type should be standard
-    And product productSkirt1 type should be combination
+    And product productSkirt1 type should be combinations
     And product "productSkirt1" has following combinations:
       | reference | quantity | attributes         |
       | whiteS    | 15       | Size:S;Color:White |
@@ -218,4 +219,5 @@ Feature: Add product to pack from Back Office (BO)
       | productSkirt1 | blackM      | 9        |
       | product2      |             | 2        |
     When I remove all products from pack productPack4
-    Then product "productPack4" type should be standard
+    Then product "productPack4" type should be pack
+    And pack "productPack4" should be empty
