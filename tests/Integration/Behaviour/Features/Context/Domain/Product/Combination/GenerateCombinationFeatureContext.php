@@ -31,6 +31,7 @@ namespace Tests\Integration\Behaviour\Features\Context\Domain\Product\Combinatio
 use Behat\Gherkin\Node\TableNode;
 use PHPUnit\Framework\Assert;
 use PrestaShop\PrestaShop\Core\Domain\Product\Combination\Command\GenerateProductCombinationsCommand;
+use PrestaShop\PrestaShop\Core\Domain\Product\Exception\InvalidProductTypeException;
 use Product;
 use Tests\Integration\Behaviour\Features\Context\Util\PrimitiveUtils;
 
@@ -47,10 +48,15 @@ class GenerateCombinationFeatureContext extends AbstractCombinationFeatureContex
         $tableData = $table->getRowsHash();
         $groupedAttributeIds = $this->parseGroupedAttributeIds($tableData);
 
-        $this->getCommandBus()->handle(new GenerateProductCombinationsCommand(
-            $this->getSharedStorage()->get($productReference),
-            $groupedAttributeIds
-        ));
+        $this->cleanLastException();
+        try {
+            $this->getCommandBus()->handle(new GenerateProductCombinationsCommand(
+                $this->getSharedStorage()->get($productReference),
+                $groupedAttributeIds
+            ));
+        } catch (InvalidProductTypeException $e) {
+            $this->setLastException($e);
+        }
     }
 
     /**
