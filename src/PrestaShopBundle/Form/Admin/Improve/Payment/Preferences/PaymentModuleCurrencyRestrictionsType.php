@@ -37,6 +37,8 @@ use Symfony\Component\Translation\TranslatorInterface;
  */
 class PaymentModuleCurrencyRestrictionsType extends PaymentModuleRestrictionsParentType
 {
+    public const CUSTOMER_CURRENCY = -1;
+    public const SHOP_DEFAULT_CURRENCY = -2;
     /**
      * @var array
      */
@@ -126,8 +128,8 @@ class PaymentModuleCurrencyRestrictionsType extends PaymentModuleRestrictionsPar
     private function getAdditionalCurrencyChoices(): array
     {
         return [
-            $this->trans('Customer currency', 'Admin.Payment.Feature') => -1,
-            $this->trans('Shop default currency', 'Admin.Payment.Feature') => -2,
+            $this->trans('Customer currency', 'Admin.Payment.Feature') => static::CUSTOMER_CURRENCY,
+            $this->trans('Shop default currency', 'Admin.Payment.Feature') => static::SHOP_DEFAULT_CURRENCY,
         ];
     }
 }
