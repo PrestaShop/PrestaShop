@@ -39,18 +39,18 @@ export default {
     productsTable: `${productSuppliersId} table`,
     productsTableBody: `${productSuppliersId} table tbody`,
     productSupplierRow: {
-      supplierNameCell: (supplierIndex) => `#product_supplier_row_${supplierIndex} .supplier_name`,
-      supplierIdInput: (supplierIndex) => productSupplierInputId(supplierIndex, 'supplier_id'),
-      supplierNameInput: (supplierIndex) => productSupplierInputId(supplierIndex, 'supplier_name'),
-      productSupplierIdInput: (supplierIndex) => productSupplierInputId(supplierIndex, 'product_supplier_id'),
-      referenceInput: (supplierIndex) => productSupplierInputId(supplierIndex, 'reference'),
-      priceInput: (supplierIndex) => productSupplierInputId(supplierIndex, 'price_tax_excluded'),
-      currencyIdInput: (supplierIndex) => productSupplierInputId(supplierIndex, 'currency_id'),
-    },
+      supplierNameCell: supplierIndex => `#product_supplier_row_${supplierIndex} .supplier_name`,
+      supplierIdInput: supplierIndex => productSupplierInputId(supplierIndex, 'supplier_id'),
+      supplierNameInput: supplierIndex => productSupplierInputId(supplierIndex, 'supplier_name'),
+      productSupplierIdInput: supplierIndex => productSupplierInputId(supplierIndex, 'product_supplier_id'),
+      referenceInput: supplierIndex => productSupplierInputId(supplierIndex, 'reference'),
+      priceInput: supplierIndex => productSupplierInputId(supplierIndex, 'price_tax_excluded'),
+      currencyIdInput: supplierIndex => productSupplierInputId(supplierIndex, 'currency_id')
+    }
   },
   redirectOption: {
     typeInput: '#product_redirect_option_type',
-    targetInput: '#product_redirect_option_target',
+    targetInput: '#product_redirect_option_target'
   },
   featureValues: {
     collectionContainer: '#product_features_feature_values',
@@ -61,14 +61,14 @@ export default {
     customValueInput: '.custom-values input',
     customFeatureIdInput: 'input.custom-value-id',
     deleteFeatureValue: 'button.delete-feature-value',
-    addFeatureValue: '#product_features_add_feature',
+    addFeatureValue: '#product_features_add_feature'
   },
   customizations: {
     customizationsContainer: '#product_customizations',
     customizationFieldsList: '#product_customizations ul',
     addCustomizationBtn: '#product_customizations_add_customization_field',
     removeCustomizationBtn: '.remove-customization-btn',
-    customizationFieldRow: '.customization-field-row',
+    customizationFieldRow: '.customization-field-row'
   },
   combinations: {
     navigationTab: '#combinations-tab-nav',
@@ -77,14 +77,25 @@ export default {
     paginationContainer: '#combinations-pagination',
     loadingSpinner: '#productCombinationsLoading',
     tableRow: {
-      combinationIdInput: (rowIndex) => `#combination_list_combinations_${rowIndex}_combination_id`,
-      combinationNameInput: (rowIndex) => `#combination_list_combinations_${rowIndex}_name`,
-      impactOnPriceInput: (rowIndex) => `#combination_list_combinations_${rowIndex}_impact_on_price`,
-      finalPriceTeInput: (rowIndex) => `#combination_list_combinations_${rowIndex}_final_price_te`,
-      quantityInput: (rowIndex) => `#combination_list_combinations_${rowIndex}_quantity`,
-      isDefaultInput: (rowIndex) => `#combination_list_combinations_${rowIndex}_is_default`,
-      editButton: (rowIndex) => `#combination_list_combinations_${rowIndex}_edit`,
-      deleteButton: (rowIndex) => `#combination_list_combinations_${rowIndex}_delete`,
-    },
+      combinationIdInput: rowIndex => `#combination_list_combinations_${rowIndex}_combination_id`,
+      combinationNameInput: rowIndex => `#combination_list_combinations_${rowIndex}_name`,
+      impactOnPriceInput: rowIndex => `#combination_list_combinations_${rowIndex}_impact_on_price`,
+      finalPriceTeInput: rowIndex => `#combination_list_combinations_${rowIndex}_final_price_te`,
+      quantityInput: rowIndex => `#combination_list_combinations_${rowIndex}_quantity`,
+      isDefaultInput: rowIndex => `#combination_list_combinations_${rowIndex}_is_default`,
+      editButton: rowIndex => `#combination_list_combinations_${rowIndex}_edit`,
+      deleteButton: rowIndex => `#combination_list_combinations_${rowIndex}_delete`
+    }
   },
+  dropzone: {
+    configuration: {
+      fileManager: '.openfilemanager'
+    },
+    events: {
+      addedFile: 'addedfile',
+      error: 'error',
+      success: 'success',
+      languageSelected: 'languageSelected'
+    }
+  }
 };

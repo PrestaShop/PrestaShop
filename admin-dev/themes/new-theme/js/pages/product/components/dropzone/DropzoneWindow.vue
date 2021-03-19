@@ -108,6 +108,7 @@
           >
             <span
               v-for="locale in locales"
+              :key="locale.name"
               class="dropdown-item js-locale-item"
               :data-locale="locale.iso_code"
             >
@@ -129,7 +130,16 @@
           class="btn btn-primary save-image-settings"
           @click="$emit('saveSelectedFile')"
         >
-          {{ $t("window.saveImage") }}
+          <span v-if="!loading">
+
+            {{ $t("window.saveImage") }}
+          </span>
+          <span
+            class="spinner-border spinner-border-sm"
+            v-if="loading"
+            role="status"
+            aria-hidden="true"
+          />
         </button>
       </div>
     </div>
@@ -154,6 +164,11 @@
       },
       selectedLocale: {
         type: Object,
+        default: () => {},
+      },
+      loading: {
+        type: Boolean,
+        default: false,
       },
     },
     computed: {
@@ -163,8 +178,8 @@
       selectedCaption: {
         get() {
           if (this.selectedFile === null
-            || !this.selectedFile.hasOwnProperty('legends')
-            || !this.selectedFile.legends.hasOwnProperty(this.selectedLocale.id_lang)) {
+            || !this.selectedFile.legends
+            || !this.selectedFile.legends[this.selectedLocale.id_lang]) {
             return '';
           }
 
@@ -195,6 +210,7 @@
     background-color: darken(#ffffff, 2%);
     align-self: stretch;
     padding: 1rem;
+    min-width: 20rem;
 
     &-label {
       display: flex;
@@ -209,6 +225,10 @@
       .dropdown {
         > button {
           padding-right: 0.25rem;
+        }
+
+        &-item {
+          cursor: pointer;
         }
       }
     }
