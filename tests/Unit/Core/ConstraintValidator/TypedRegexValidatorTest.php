@@ -566,7 +566,6 @@ class TypedRegexValidatorTest extends ConstraintValidatorTestCase
      */
     public function getInvalidCharactersForModuleName(): Generator
     {
-        yield ['~'];
         yield ['ˇ'];
         yield ['"'];
         yield ['@'];
