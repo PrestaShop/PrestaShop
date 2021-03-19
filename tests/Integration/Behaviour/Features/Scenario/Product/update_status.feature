@@ -30,13 +30,13 @@ Feature: Update product status from BO (Back Office)
   Scenario: I update combination product status
     And I add product "product3" with following information:
       | name[en-US] | T-Shirt with listed values |
-      | type        | standard                   |
+      | type        | combinations               |
     And product "product3" has following combinations:
       | reference | quantity | attributes         |
       | whiteS    | 100      | Size:S;Color:White |
       | whiteM    | 150      | Size:M;Color:White |
       | blackM    | 130      | Size:M;Color:Black |
-    And product product3 type should be combination
+    And product product3 type should be combinations
     And product "product3" should be disabled
     When I enable product "product3"
     And product "product3" should be enabled
