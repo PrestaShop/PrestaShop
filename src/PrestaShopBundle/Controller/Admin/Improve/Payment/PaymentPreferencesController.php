@@ -187,9 +187,9 @@ class PaymentPreferencesController extends FrameworkBundleAdminController
             $errors = $formHandler->save($data);
             if (empty($errors)) {
                 $this->addFlash('success', $this->trans('Update successful', 'Admin.Notifications.Success'));
+            } else {
+                $this->flashErrors($errors);
             }
-
-            $this->flashErrors($errors);
         }
 
         return $this->redirectToRoute('admin_payment_preferences');
