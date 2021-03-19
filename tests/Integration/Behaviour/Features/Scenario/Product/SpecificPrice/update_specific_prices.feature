@@ -9,7 +9,7 @@ Feature: Update product options from Back Office (BO)
   Scenario: I add a specific price with amount reduction to product
     Given I add product "product1" with following information:
       | name[en-US] | Presta camera |
-      | is_virtual  | false         |
+      | type        | standard      |
     Then product "product1" should have 0 specific prices
     When I add a specific price price1 to product product1 with following details:
       | reduction type        | amount |
@@ -33,7 +33,7 @@ Feature: Update product options from Back Office (BO)
   Scenario: I add a specific price with percent reduction to product
     Given I add product "product1" with following information:
       | name[en-US] | Presta camera |
-      | is_virtual  | false         |
+      | type        | standard      |
     Then product "product1" should have 0 specific prices
     When I add a specific price price1 to product product1 with following details:
       | reduction type        | percentage          |
@@ -57,7 +57,7 @@ Feature: Update product options from Back Office (BO)
   Scenario: I add a specific price with invalid fields I get errors
     Given I add product "product1" with following information:
       | name[en-US] | Presta camera |
-      | is_virtual  | false         |
+      | type        | standard      |
     Then product "product1" should have 0 specific prices
     When I add a specific price price1 to product product1 with following details:
       | reduction type        | invalid |
@@ -91,7 +91,7 @@ Feature: Update product options from Back Office (BO)
   Scenario: I add a specific price without relations
     Given I add product "product1" with following information:
       | name[en-US] | Presta camera |
-      | is_virtual  | false         |
+      | type        | standard      |
     Then product "product1" should have 0 specific prices
     When I add a specific price price1 to product product1 with following details:
       | reduction type        | amount |
@@ -127,7 +127,7 @@ Feature: Update product options from Back Office (BO)
   Scenario: I add a specific price with relations
     Given I add product "product1" with following information:
       | name[en-US] | Presta camera |
-      | is_virtual  | false         |
+      | type        | standard      |
     Then product "product1" should have 0 specific prices
     When I add a specific price price1 to product product1 with following details:
       | reduction type        | amount |
