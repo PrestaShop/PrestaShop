@@ -116,7 +116,7 @@
 
 <script>
   import Router from '@components/router';
-  import {getProductImages, saveProductImage} from '@pages/product/services/images';
+  import {getProductImages, saveImageInformations} from '@pages/product/services/images';
   import ProductMap from '@pages/product/product-map';
   import DropzoneWindow from './DropzoneWindow';
 
@@ -322,7 +322,7 @@
         data[`${this.formName}[_token]`] = this.token;
 
         try {
-          await saveProductImage(selectedFile, data);
+          await saveImageInformations(selectedFile, data);
           $.growl({message: this.$t('window.settingsUpdated')});
           this.buttonLoading = false;
         } catch (error) {
