@@ -151,8 +151,6 @@ final class GetCartForOrderCreationHandler extends AbstractCartHandler implement
                 $this->extractSummaryFromLegacySummary($legacySummary, $currency, $cart),
                 $addresses ? $this->extractShippingFromLegacySummary($cart, $legacySummary, $query->hideDiscounts()) : null
             );
-
-            $this->contextStateManager->restorePreviousContext();
         } finally {
             $this->contextStateManager->restorePreviousContext();
         }
