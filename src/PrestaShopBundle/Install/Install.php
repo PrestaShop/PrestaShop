@@ -891,6 +891,7 @@ class Install extends AbstractInstall
     public function getModulesList()
     {
         return [
+            'blockwishlist',
             'contactform',
             'dashactivity',
             'dashgoals',
@@ -925,7 +926,6 @@ class Install extends AbstractInstall
             'ps_socialfollow',
             'ps_themecusto',
             'ps_wirepayment',
-            'sekeywords',
             'statsbestcategories',
             'statsbestcustomers',
             'statsbestproducts',
@@ -935,18 +935,15 @@ class Install extends AbstractInstall
             'statscatalog',
             'statscheckup',
             'statsdata',
-            'statsequipment',
             'statsforecast',
             'statslive',
             'statsnewsletter',
-            'statsorigin',
             'statspersonalinfos',
             'statsproduct',
             'statsregistrations',
             'statssales',
             'statssearch',
             'statsstock',
-            'statsvisits',
             'welcome',
         ];
     }
@@ -991,7 +988,6 @@ class Install extends AbstractInstall
             'blocktopmenu',
             'blockuserinfo',
             'blockviewed',
-            'blockwishlist',
             'cheque',
             'crossselling',
             'homefeatured',
