@@ -31,7 +31,6 @@ namespace PrestaShop\PrestaShop\Core\Form\IdentifiableObject\DataHandler;
 use PrestaShop\PrestaShop\Core\CommandBus\CommandBusInterface;
 use PrestaShop\PrestaShop\Core\Domain\Product\Command\AddProductCommand;
 use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductId;
-use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductType;
 use PrestaShop\PrestaShop\Core\Form\IdentifiableObject\CommandBuilder\Product\ProductCommandsBuilder;
 
 /**
@@ -68,7 +67,7 @@ class ProductFormDataHandler implements FormDataHandlerInterface
     {
         $createCommand = new AddProductCommand(
             $data['basic']['name'],
-            $data['basic']['type'] === ProductType::TYPE_VIRTUAL
+            $data['basic']['type']
         );
         // These are already set on creation no need to update them
         unset($data['basic']['name']);
