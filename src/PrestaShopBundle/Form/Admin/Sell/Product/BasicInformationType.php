@@ -54,7 +54,7 @@ class BasicInformationType extends TranslatorAwareType
                     $this->trans('Standard product', 'Admin.Catalog.Feature') => ProductType::TYPE_STANDARD,
                     $this->trans('Pack of products', 'Admin.Catalog.Feature') => ProductType::TYPE_PACK,
                     $this->trans('Virtual product', 'Admin.Catalog.Feature') => ProductType::TYPE_VIRTUAL,
-                    $this->trans('Product with combinations', 'Admin.Catalog.Feature') => ProductType::TYPE_COMBINATION,
+                    $this->trans('Product with combinations', 'Admin.Catalog.Feature') => ProductType::TYPE_COMBINATIONS,
                 ],
                 'choice_translation_domain' => 'Admin.Catalog.Feature',
                 'attr' => [
