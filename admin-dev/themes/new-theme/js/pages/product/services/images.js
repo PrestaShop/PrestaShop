@@ -42,7 +42,7 @@ export const saveImageInformations = async (selectedFile, data) => {
   });
 
   return $.ajax(saveUrl, {
-    method: 'PATCH',
+    method: 'POST',
     data,
   });
 };
@@ -53,7 +53,7 @@ export const replaceImage = async (selectedFile) => {
   });
 
   return $.ajax(replaceUrl, {
-    method: 'PATCH',
+    method: 'POST',
   });
 };
 

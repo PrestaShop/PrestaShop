@@ -30,7 +30,7 @@ admin_products_v2_add_image:
 
 admin_products_v2_update_image:
     path: /images/{productImageId}/update
-    methods: [PATCH]
+    methods: [POST]
     defaults:
         _controller: PrestaShopBundle:Admin/Sell/Catalog/Product/Image:updateImage
         _legacy_controller: AdminProducts
