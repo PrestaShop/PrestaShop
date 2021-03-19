@@ -30,6 +30,7 @@ namespace Tests\Integration\Behaviour\Features\Context\Domain\Product;
 
 use Behat\Gherkin\Node\TableNode;
 use PHPUnit\Framework\Assert;
+use Pack;
 use PrestaShop\PrestaShop\Core\Domain\Product\Combination\ValueObject\CombinationId;
 use PrestaShop\PrestaShop\Core\Domain\Product\Exception\ProductException;
 use PrestaShop\PrestaShop\Core\Domain\Product\Pack\Command\RemoveAllProductsFromPackCommand;
@@ -82,6 +83,20 @@ class UpdatePackFeatureContext extends AbstractProductFeatureContext
         } catch (ProductException $e) {
             $this->setLastException($e);
         }
+    }
+
+    /**
+     * @When pack :packReference should be empty
+     *
+     * @param string $packReference
+     */
+    public function assertPackEmpty(string $packReference): void
+    {
+        $packId = $this->getSharedStorage()->get($packReference);
+
+        $packedProducts = $this->getQueryBus()->handle(new GetPackedProducts($packId));
+        Assert::assertEmpty($packedProducts);
+        Assert::assertFalse(Pack::isPack($packId));
     }
 
     /**
