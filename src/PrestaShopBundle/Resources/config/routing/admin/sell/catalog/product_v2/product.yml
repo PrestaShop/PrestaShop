@@ -6,34 +6,25 @@ _images:
 
 admin_products_v2_index:
   path: /
-  methods: [GET]
+  methods: GET
   defaults:
     _controller: PrestaShopBundle:Admin/Sell/Catalog/Product/Product:index
     _legacy_controller: AdminProducts
 
-admin_products_search:
+admin_cart_rules_search_grid:
     path: /
-    methods: [POST]
+    methods: POST
     defaults:
         _controller: PrestaShopBundle:Admin\Common:searchGrid
-        gridDefinitionFactoryServiceId: prestashop.core.grid.definition.factory.product
+        gridDefinitionFactoryServiceId: prestashop.core.grid.definition.factory.cart_rule
         redirectRoute: admin_products_v2_index
         _legacy_controller: AdminProducts
 
 admin_product_edit_price:
     path: /{productId}/edit-price
-    methods: [GET]
+    methods: GET
     defaults:
         _controller: PrestaShopBundle:Admin/Sell/Catalog/Product/Product:editPrice
-        _legacy_controller: AdminProducts
-    requirements:
-        productId: \d+
-
-admin_product_edit_quantity:
-    path: /{productId}/edit-quantity
-    methods: [GET]
-    defaults:
-        _controller: PrestaShopBundle:Admin/Sell/Catalog/Product/Product:editQuantity
         _legacy_controller: AdminProducts
     requirements:
         productId: \d+
@@ -61,16 +52,3 @@ admin_products_v2_edit:
       id_product: productId
   requirements:
     productId: \d+
-
-admin_products_v2_delete:
-    path: /{productId}/delete
-    methods: [POST, DELETE]
-    defaults:
-        _controller: PrestaShopBundle:Admin/Sell/Catalog/Product/Product:delete
-        _legacy_controller: AdminProducts
-        _legacy_link:
-            - AdminProducts:delete
-        _legacy_parameters:
-            id_product: productId
-    requirements:
-        productId: \d+
