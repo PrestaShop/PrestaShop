@@ -204,6 +204,9 @@
     mounted() {
       window.prestaShopUiKit.initToolTips();
     },
+    updated() {
+      window.prestaShopUiKit.initToolTips();
+    },
     methods: {},
   };
 </script>
