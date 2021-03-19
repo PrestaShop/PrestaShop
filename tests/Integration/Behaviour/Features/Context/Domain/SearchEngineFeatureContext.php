@@ -54,7 +54,7 @@ class SearchEngineFeatureContext extends AbstractDomainFeatureContext
     {
         $data = $table->getRowsHash();
 
-        $command = new AddSearchEngineCommand($data['server'], $data['getvar']);
+        $command = new AddSearchEngineCommand($data['server'], $data['queryKey']);
 
         /** @var SearchEngineId $searchEngineId */
         $searchEngineId = $this->getCommandBus()->handle($command);
@@ -80,8 +80,8 @@ class SearchEngineFeatureContext extends AbstractDomainFeatureContext
             $command->setServer($data['server']);
         }
 
-        if (isset($data['getvar'])) {
-            $command->setQueryKey($data['getvar']);
+        if (isset($data['queryKey'])) {
+            $command->setQueryKey($data['queryKey']);
         }
 
         $this->getCommandBus()->handle($command);
@@ -134,18 +134,18 @@ class SearchEngineFeatureContext extends AbstractDomainFeatureContext
     }
 
     /**
-     * @Then the search engine :searchEngineReference getvar value should be :getvar
+     * @Then the search engine :searchEngineReference query key value should be :queryKey
      *
      * @param string $searchEngineReference
-     * @param string $getvar
+     * @param string $queryKey
      */
-    public function assertSearchEngineGetVar(string $searchEngineReference, string $getvar): void
+    public function assertSearchEngineQueryKey(string $searchEngineReference, string $queryKey): void
     {
         /** @var SearchEngine $searchEngine */
         $searchEngine = SharedStorage::getStorage()->get($searchEngineReference);
 
-        if ($searchEngine->getvar !== $getvar) {
-            throw new RuntimeException(sprintf('Search engine "%s" has getvar field value "%s", but "%s" was expected.', $searchEngineReference, $searchEngine->getvar, $getvar));
+        if ($searchEngine->getvar !== $queryKey) {
+            throw new RuntimeException(sprintf('Search engine "%s" has query key field value "%s", but "%s" was expected.', $searchEngineReference, $searchEngine->getvar, $queryKey));
         }
     }
 
