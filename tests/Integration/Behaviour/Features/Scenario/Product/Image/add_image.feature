@@ -17,7 +17,7 @@ Feature: Add product image from Back Office (BO)
       | smallDefault  | small_default  | 98    | 98     |
     And I add product "product1" with following information:
       | name[en-US] | bottle of beer |
-      | is_virtual  | false          |
+      | type        | standard       |
     And product "product1" type should be standard
     And product "product1" should have no images
     When I add new image "image1" named "app_icon.png" to product "product1"
