@@ -35,6 +35,10 @@ use PrestaShopBundle\Entity\Shop;
 use PrestaShopBundle\Entity\ShopGroup;
 use Symfony\Component\HttpFoundation\Response;
 
+/**
+ * This class is responsible for preparing multistore elements that will be displayed in the BO
+ * For now there is only the multistore header.
+ */
 class MultistoreController extends FrameworkBundleAdminController
 {
     /**
@@ -53,6 +57,8 @@ class MultistoreController extends FrameworkBundleAdminController
     public $entityManager;
 
     /**
+     * This methods returns a Response object containing the multistore header displayed at the top of migrated pages
+     *
      * @param bool $lockedToAllShopContext
      *
      * @return Response
