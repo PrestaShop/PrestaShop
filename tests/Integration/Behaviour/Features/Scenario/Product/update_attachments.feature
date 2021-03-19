@@ -12,7 +12,7 @@ Feature: Update product attachments from Back Office (BO).
     And language "language2" with locale "fr-FR" exists
     When I add product "product1" with following information:
       | name[en-US] | mug with photo |
-      | is_virtual  | false          |
+      | type        | standard       |
     Then product "product1" should be disabled
     And product "product1" type should be standard
     Given I add new attachment "att1" with following properties:
