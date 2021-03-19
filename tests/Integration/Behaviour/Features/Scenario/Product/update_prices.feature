@@ -7,7 +7,7 @@ Feature: Update product price fields from Back Office (BO).
   Background:
     Given I add product "product1" with following information:
       | name[en-US] | magic staff |
-      | is_virtual  | false       |
+      | type        | standard    |
     And product product1 should have following prices information:
       | price              | 0     |
       | price_tax_included | 0     |
