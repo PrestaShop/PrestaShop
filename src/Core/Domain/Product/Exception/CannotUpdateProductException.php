@@ -105,4 +105,9 @@ class CannotUpdateProductException extends ProductException
      * When stock update fails
      */
     public const FAILED_UPDATE_STOCK = 150;
+
+    /**
+     * When type update fails
+     */
+    public const FAILED_UPDATE_TYPE = 160;
 }
