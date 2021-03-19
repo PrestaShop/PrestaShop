@@ -244,6 +244,11 @@ class WebserviceRequestCore
         return self::$_instance;
     }
 
+    public static function resetStaticCache(): void
+    {
+        static::$_instance = null;
+    }
+
     protected function getOutputObject($type)
     {
         // set header param in header or as get param
@@ -1409,6 +1414,7 @@ class WebserviceRequestCore
             if (!$return) {
                 return false;
             } else {
+                $this->_outputEnabled = true;
                 $this->objects = $return;
             }
         }

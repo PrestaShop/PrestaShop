@@ -96,11 +96,11 @@ class WebserviceKeyFeatureContext extends AbstractPrestaShopFeatureContext
 
         foreach ($resources as $resource) {
             if (!isset($permissions[$resource])) {
-                throw new RuntimeException(sprintf('Resource "%s" is not configured for "%s" key', $resources, $webserviceKey->key));
+                throw new RuntimeException(sprintf('Resource "%s" is not configured for "%s" key', $resource, $webserviceKey->key));
             }
 
             if (!in_array($method, $permissions[$resource], true)) {
-                throw new RuntimeException(sprintf('"%s" permission is not configured for resource "%s" for "%s" key', $permission, $resources, $webserviceKey->key));
+                throw new RuntimeException(sprintf('"%s" permission is not configured for resource "%s" for "%s" key', $permission, $resource, $webserviceKey->key));
             }
         }
     }
