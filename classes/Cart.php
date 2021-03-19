@@ -1919,7 +1919,7 @@ class CartCore extends ObjectModel
             $return = $this->update();
             // refresh cache of self::_products
             $this->_products = $this->getProducts(true);
-            if (!isset($preservedGifts[$giftKey])) {
+            if (!isset($preservedGifts[$giftKey]) || $preservedGifts[$giftKey] <= 0) {
                 CartRule::autoRemoveFromCart(null, $useOrderPrices);
                 CartRule::autoAddToCart(null, $useOrderPrices);
             }
