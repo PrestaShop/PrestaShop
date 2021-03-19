@@ -38,22 +38,19 @@
           class="material-icons"
           data-toggle="pstooltip"
           :data-original-title="$t('window.zoom')"
-          >search</i
-        >
+        >search</i>
         <i
           class="material-icons"
           data-toggle="pstooltip"
           :data-original-title="$t('window.delete')"
           @click="$emit('removeSelection')"
-          >delete</i
-        >
+        >delete</i>
         <i
           class="material-icons"
           data-toggle="pstooltip"
           :data-original-title="$t('window.close')"
           @click="$emit('unselectAll')"
-          >close</i
-        >
+        >close</i>
       </div>
     </div>
 
@@ -73,105 +70,120 @@
     </p>
 
     <div
-      class="md-checkbox dropzone-window-checkbox"
-      v-if="selectedFile !== null"
+      class="dropzone-window-bottom"
+      v-if="selectedFile"
     >
-      <label>
-        <input type="checkbox" />
-        <i class="md-checkbox-control" />
-        {{ $t("window.useAsCover") }}
-      </label>
-    </div>
+      <div
+        class="md-checkbox dropzone-window-checkbox"
+        v-if="selectedFile !== null"
+      >
+        <label>
+          <input type="checkbox">
+          <i class="md-checkbox-control" />
+          {{ $t("window.useAsCover") }}
+        </label>
+      </div>
 
-    <div class="dropzone-window-label">
-      <label for="caption-textarea" class="control-label">{{
-        $t("window.caption")
-      }}</label>
-      <div class="dropdown">
-        <button
-          class="btn btn-outline-secondary btn-sm dropdown-toggle js-locale-btn"
-          type="button"
-          data-toggle="dropdown"
-          aria-haspopup="true"
-          aria-expanded="false"
-          id="form_invoice_prefix"
-        >
-          {{ selectedLocale.iso_code }}
-        </button>
-        <div
-          class="dropdown-menu locale-dropdown-menu"
-          aria-labelledby="form_invoice_prefix"
-        >
-          <span v-for="locale in locales" class="dropdown-item js-locale-item" :data-locale=locale.iso_code>
-            {{ locale.name }}
-          </span>
+      <div class="dropzone-window-label">
+        <label
+          for="caption-textarea"
+          class="control-label"
+        >{{
+          $t("window.caption")
+        }}</label>
+        <div class="dropdown">
+          <button
+            class="btn btn-outline-secondary btn-sm dropdown-toggle js-locale-btn"
+            type="button"
+            data-toggle="dropdown"
+            aria-haspopup="true"
+            aria-expanded="false"
+            id="form_invoice_prefix"
+          >
+            {{ selectedLocale.iso_code }}
+          </button>
+          <div
+            class="dropdown-menu locale-dropdown-menu"
+            aria-labelledby="form_invoice_prefix"
+          >
+            <span
+              v-for="locale in locales"
+              class="dropdown-item js-locale-item"
+              :data-locale="locale.iso_code"
+            >
+              {{ locale.name }}
+            </span>
+          </div>
         </div>
       </div>
-    </div>
-    <textarea
-      id="caption-textarea"
-      name="caption-textarea"
-      class="form-control"
-      v-if="selectedFile !== null"
-      v-model="selectedCaption"
-    />
+      <textarea
+        id="caption-textarea"
+        name="caption-textarea"
+        class="form-control"
+        v-model="selectedCaption"
+      />
 
-    <div class="dropzone-window-button-container">
-      <button type="button" class="btn btn-primary save-image-settings" @click="$emit('saveSelectedFile')">
-        {{ $t("window.saveImage") }}
-      </button>
+      <div class="dropzone-window-button-container">
+        <button
+          type="button"
+          class="btn btn-primary save-image-settings"
+          @click="$emit('saveSelectedFile')"
+        >
+          {{ $t("window.saveImage") }}
+        </button>
+      </div>
     </div>
   </div>
 </template>
 
 <script>
-export default {
-  name: "DropzoneWindow",
-  props: {
-    selectedFiles: {
-      type: Array,
-      default: () => [],
-    },
-    files: {
-      type: Array,
-      default: () => [],
-    },
-    locales: {
-      type: Array,
-      required: true,
-    },
-    selectedLocale: {
-      type: Object,
-    }
-  },
-  computed: {
-    selectedFile() {
-      return this.selectedFiles.length === 1 ? this.selectedFiles[0] : null;
-    },
-    selectedCaption: {
-      get: function() {
-        if (null === this.selectedFile
-          || !this.selectedFile.hasOwnProperty('legends')
-          || !this.selectedFile.legends.hasOwnProperty(this.selectedLocale.id_lang)) {
-          return '';
-        }
-
-        return this.selectedFile.legends[this.selectedLocale.id_lang];
+  export default {
+    name: 'DropzoneWindow',
+    props: {
+      selectedFiles: {
+        type: Array,
+        default: () => [],
       },
-      set: function(value) {
-        if (null === this.selectedFile) {
-          return;
-        }
-
-        this.selectedFile.legends[this.selectedLocale.id_lang] = value;
+      files: {
+        type: Array,
+        default: () => [],
+      },
+      locales: {
+        type: Array,
+        required: true,
+      },
+      selectedLocale: {
+        type: Object,
       },
     },
-  },
-  mounted() {
-    window.prestaShopUiKit.initToolTips();
-  },
-  methods: {},
-};
+    computed: {
+      selectedFile() {
+        return this.selectedFiles.length === 1 ? this.selectedFiles[0] : null;
+      },
+      selectedCaption: {
+        get() {
+          if (this.selectedFile === null
+            || !this.selectedFile.hasOwnProperty('legends')
+            || !this.selectedFile.legends.hasOwnProperty(this.selectedLocale.id_lang)) {
+            return '';
+          }
+
+          return this.selectedFile.legends[this.selectedLocale.id_lang];
+        },
+        set(value) {
+          if (this.selectedFile === null) {
+            return;
+          }
+
+          this.selectedFile.legends[this.selectedLocale.id_lang] = value;
+        },
+      },
+    },
+    mounted() {
+      window.prestaShopUiKit.initToolTips();
+    },
+    methods: {},
+  };
 </script>
 
 <style lang="scss" type="text/scss">

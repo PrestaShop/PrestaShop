@@ -115,7 +115,7 @@
 
 <script>
   import Router from '@components/router';
-  import {getProductImages} from '@pages/product/services/images';
+  import {getProductImages, saveProductImage} from '@pages/product/services/images';
   import ProductMap from '@pages/product/product-map';
   import DropzoneWindow from './DropzoneWindow';
 
@@ -303,15 +303,12 @@
       /**
        * Save selected file
        */
-      saveSelectedFile() {
+      async saveSelectedFile() {
         if (!this.selectedFiles.length) {
           return;
         }
 
         const selectedFile = this.selectedFiles[0];
-        const saveUrl = router.generate('admin_products_v2_update_image', {
-          productImageId: selectedFile.image_id,
-        });
 
         const data = {};
         data[`${this.formName}[is_cover]`] = selectedFile.is_cover ? 1 : 0;
@@ -320,11 +317,13 @@
         });
         data[`${this.formName}[_token]`] = this.token;
 
-        $.ajax(saveUrl, {
-          method: 'PATCH',
-          data: data
-        });
-      }
+        try {
+          await saveProductImage(selectedFile, data);
+          $.growl({message: this.$t('window.settingsUpdated')});
+        } catch (error) {
+          $.growl.error({message: error.message});
+        }
+      },
     },
   };
 </script>

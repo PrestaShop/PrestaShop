@@ -61,6 +61,7 @@ class ImageDropzoneType extends TranslatorAwareType
         $resolver->setDefaults([
             'translations' => [
                 'window.selectAll' => $this->trans('Select all', 'Admin.Actions'),
+                'window.settingsUpdated' => $this->trans('Settings udpated', 'Admin.Actions'),
                 'window.unselectAll' => $this->trans('Unselect all', 'Admin.Actions'),
                 'window.selectedFiles' => $this->trans(
                     '[1]%filesNb%[/1] selected file(s)',

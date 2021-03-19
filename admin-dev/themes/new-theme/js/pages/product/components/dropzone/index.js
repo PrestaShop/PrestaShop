@@ -44,14 +44,14 @@ export default function initDropzone(imagesContainerSelector) {
 
   return new Vue({
     el: imagesContainerSelector,
-    template: `<dropzone :productId=productId :locales=locales :token=token :formName=formName />`,
+    template: '<dropzone :productId=productId :locales=locales :token=token :formName=formName />',
     components: {Dropzone},
     i18n,
     data: {
-      locales: locales,
-      productId: productId,
+      locales,
+      productId,
       token: container.dataset.token,
       formName: container.dataset.formName,
-    }
+    },
   });
 }
