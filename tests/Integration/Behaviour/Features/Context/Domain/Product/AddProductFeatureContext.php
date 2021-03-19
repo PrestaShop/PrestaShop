@@ -32,7 +32,6 @@ use Behat\Gherkin\Node\TableNode;
 use PrestaShop\PrestaShop\Core\Domain\Product\Command\AddProductCommand;
 use PrestaShop\PrestaShop\Core\Domain\Product\Exception\ProductException;
 use Product;
-use Tests\Integration\Behaviour\Features\Context\Util\PrimitiveUtils;
 
 class AddProductFeatureContext extends AbstractProductFeatureContext
 {
@@ -49,7 +48,7 @@ class AddProductFeatureContext extends AbstractProductFeatureContext
         try {
             $productId = $this->getCommandBus()->handle(new AddProductCommand(
                 $data['name'],
-                PrimitiveUtils::castStringBooleanIntoBoolean($data['is_virtual'])
+                $data['type']
             ));
 
             $this->getSharedStorage()->set($productReference, $productId->getValue());
