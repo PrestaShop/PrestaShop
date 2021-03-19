@@ -86,7 +86,7 @@ if (!class_exists($class_name)) {
 // fetch the request
 WebserviceRequest::$ws_current_classname = $class_name;
 $request = call_user_func(array($class_name, 'getInstance'));
-
+$request->errors = [];
 $result = $request->fetch($key, $method, $_GET['url'], $params, $bad_class_name, $input_xml);
 
 // display result
