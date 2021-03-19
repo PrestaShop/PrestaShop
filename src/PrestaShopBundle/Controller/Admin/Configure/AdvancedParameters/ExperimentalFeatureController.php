@@ -58,7 +58,7 @@ class ExperimentalFeatureController extends FrameworkBundleAdminController
                 $errors = $featureFlagsFormHandler->save($featureFlagsForm->getData());
 
                 if (empty($errors)) {
-                    $this->addFlash('success', $this->trans('Successful update.', 'Admin.Notifications.Success'));
+                    $this->addFlash('success', $this->trans('Update successful', 'Admin.Notifications.Success'));
                 }
             }
         }
