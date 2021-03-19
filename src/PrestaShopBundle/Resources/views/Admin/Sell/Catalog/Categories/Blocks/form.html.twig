@@ -56,6 +56,10 @@
       {% if categoryForm.id_parent is defined %}
       <div class="form-group row">
         <label class="form-control-label">
+          {% if categoryForm.vars.required %}
+            <span class="text-danger">*</span>
+          {% endif %}
+
           {{ 'Parent category'|trans({}, 'Admin.Catalog.Feature') }}
         </label>
         <div class="col-sm">
