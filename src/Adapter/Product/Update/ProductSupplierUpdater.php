@@ -100,7 +100,9 @@ class ProductSupplierUpdater
         $product = $this->productRepository->get($productId);
 
         if ($product->hasCombinations()) {
-            throw new InvalidProductTypeException(sprintf(
+            throw new InvalidProductTypeException(
+                InvalidProductTypeException::EXPECTED_NO_COMBINATIONS_TYPE,
+                sprintf(
                 'Product #%d has combinations. Use %s::%s to set product suppliers for specified combination',
                 $productId->getValue(),
                 self::class,
@@ -145,7 +147,9 @@ class ProductSupplierUpdater
         $product = $this->productRepository->get($productId);
 
         if ($product->hasCombinations()) {
-            throw new InvalidProductTypeException(sprintf(
+            throw new InvalidProductTypeException(
+                InvalidProductTypeException::EXPECTED_NO_COMBINATIONS_TYPE,
+                sprintf(
                 'Product #%d has combinations. Use %s::%s to remove product suppliers for specific combination',
                 $productId->getValue(),
                 self::class,

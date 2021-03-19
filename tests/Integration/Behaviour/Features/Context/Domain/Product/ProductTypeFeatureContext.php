@@ -23,48 +23,37 @@
  * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
+
 declare(strict_types=1);
 
-namespace PrestaShop\PrestaShop\Core\Domain\Product\Exception;
+namespace Tests\Integration\Behaviour\Features\Context\Domain\Product;
 
-use Throwable;
+use PrestaShop\PrestaShop\Core\Domain\Product\Exception\InvalidProductTypeException;
 
-/**
- * Is thrown when product type is not suitable for certain operation
- * e.g. if product with combination is expected but got standard or pack product
- */
-class InvalidProductTypeException extends ProductException
+class ProductTypeFeatureContext extends AbstractProductFeatureContext
 {
     /**
-     * Code used when expected type was standard
+     * @Then I should get error that this action is allowed for :productType product only
+     *
+     * @param string $productType
      */
-    public const EXPECTED_STANDARD_TYPE = 10;
-
-    /**
-     * Code used when expected type was pack
-     */
-    public const EXPECTED_PACK_TYPE = 20;
-
-    /**
-     * Code used when expected type was virtual
-     */
-    public const EXPECTED_VIRTUAL_TYPE = 30;
-
-    /**
-     * Code used when expected type was combinations
-     */
-    public const EXPECTED_COMBINATIONS_TYPE = 40;
-
-    /**
-     * Code used when expected type was standard
-     */
-    public const EXPECTED_NO_COMBINATIONS_TYPE = 50;
-
-    /**
-     * {@inheritDoc}
-     */
-    public function __construct($code, $message = '', Throwable $previous = null)
+    public function assertLastErrorInvalidProductType(string $productType): void
     {
-        parent::__construct($message, $code, $previous);
+        $errorCode = null;
+        switch ($productType) {
+            case 'standard':
+                $errorCode = InvalidProductTypeException::EXPECTED_STANDARD_TYPE;
+                break;
+            case 'pack':
+                $errorCode = InvalidProductTypeException::EXPECTED_PACK_TYPE;
+                break;
+            case 'virtual':
+                $errorCode = InvalidProductTypeException::EXPECTED_VIRTUAL_TYPE;
+                break;
+            case 'combinations':
+                $errorCode = InvalidProductTypeException::EXPECTED_COMBINATIONS_TYPE;
+                break;
+        }
+        $this->assertLastErrorIs(InvalidProductTypeException::class, $errorCode);
     }
 }
