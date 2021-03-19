@@ -9,7 +9,7 @@ Feature: Add virtual product file from BO (Back Office).
   Scenario: I update virtual product file
     Given I add product "product1" with following information:
       | name[en-US] | puffin icon |
-      | is_virtual  | true        |
+      | type        | virtual     |
     And product "product1" should not have a file
     And product product1 type should be virtual
     And I add virtual product file "file1" to product "product1" with following details:
