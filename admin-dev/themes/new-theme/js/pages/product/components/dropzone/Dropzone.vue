@@ -74,6 +74,8 @@
       @removeSelection="removeSelection"
       @selectAll="selectAll"
       @saveSelectedFile="saveSelectedFile"
+      @replaceSelection="replaceSelection"
+      @replacedFile="manageReplacedFile"
       :files="files"
       :locales="locales"
       :selected-locale="selectedLocale"
@@ -116,7 +118,7 @@
 
 <script>
   import Router from '@components/router';
-  import {getProductImages, saveImageInformations} from '@pages/product/services/images';
+  import {getProductImages, saveImageInformations, replaceImage} from '@pages/product/services/images';
   import ProductMap from '@pages/product/product-map';
   import DropzoneWindow from './DropzoneWindow';
 
@@ -324,6 +326,23 @@
         try {
           await saveImageInformations(selectedFile, data);
           $.growl({message: this.$t('window.settingsUpdated')});
+          this.buttonLoading = false;
+        } catch (error) {
+          $.growl.error({message: error.message});
+          this.buttonLoading = false;
+        }
+      },
+      replaceSelection() {
+        const fileInput = document.querySelector('.dropzone-window-filemanager');
+        fileInput.click();
+      },
+      async manageReplacedFile(event) {
+        const selectedFile = this.selectedFiles[0];
+        this.buttonLoading = true;
+
+        try {
+          await replaceImage(selectedFile, {newImage: event.target.files[0]});
+          $.growl({message: this.$t('window.imageReplaced')});
           this.buttonLoading = false;
         } catch (error) {
           $.growl.error({message: error.message});

@@ -47,7 +47,18 @@ export const saveImageInformations = async (selectedFile, data) => {
   });
 };
 
+export const replaceImage = async (selectedFile) => {
+  const replaceUrl = router.generate('admin_products_v2_update_image', {
+    productImageId: selectedFile.image_id,
+  });
+
+  return $.ajax(replaceUrl, {
+    method: 'PATCH',
+  });
+};
+
 export default {
   getProductImages,
   saveImageInformations,
+  replaceImage,
 };
