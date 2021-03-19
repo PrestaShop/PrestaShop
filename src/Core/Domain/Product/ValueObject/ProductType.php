@@ -54,7 +54,7 @@ class ProductType
     /**
      * Product containing combinations of different attributes
      */
-    public const TYPE_COMBINATION = 'combination';
+    public const TYPE_COMBINATIONS = 'combinations';
 
     /**
      * A list of available types
@@ -63,7 +63,7 @@ class ProductType
         self::TYPE_STANDARD,
         self::TYPE_PACK,
         self::TYPE_VIRTUAL,
-        self::TYPE_COMBINATION,
+        self::TYPE_COMBINATIONS,
     ];
 
     /**

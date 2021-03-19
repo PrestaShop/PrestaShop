@@ -58,7 +58,7 @@ class ProductTypeListener implements EventSubscriberInterface
         $form = $event->getForm();
         $data = $event->getData();
 
-        if (ProductType::TYPE_COMBINATION === $data['basic']['type']) {
+        if (ProductType::TYPE_COMBINATIONS === $data['basic']['type']) {
             $form->remove('suppliers');
         }
     }

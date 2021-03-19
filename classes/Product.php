@@ -8294,7 +8294,7 @@ class ProductCore extends ObjectModel
         } elseif (Pack::isPack($this->id)) {
             return ProductType::TYPE_PACK;
         } elseif ($this->hasCombinations()) {
-            return ProductType::TYPE_COMBINATION;
+            return ProductType::TYPE_COMBINATIONS;
         }
 
         return ProductType::TYPE_STANDARD;

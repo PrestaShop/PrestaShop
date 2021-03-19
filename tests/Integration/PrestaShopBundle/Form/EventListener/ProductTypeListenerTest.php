@@ -97,7 +97,7 @@ class ProductTypeListenerTest extends FormListenerTestCase
         ];
 
         yield [
-            ProductType::TYPE_COMBINATION,
+            ProductType::TYPE_COMBINATIONS,
             false,
         ];
     }

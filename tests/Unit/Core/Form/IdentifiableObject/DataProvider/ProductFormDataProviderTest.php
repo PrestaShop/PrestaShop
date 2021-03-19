@@ -212,12 +212,12 @@ class ProductFormDataProviderTest extends TestCase
         ];
         $productData = [
             'name' => $localizedValues,
-            'type' => ProductType::TYPE_COMBINATION,
+            'type' => ProductType::TYPE_COMBINATIONS,
             'description' => $localizedValues,
             'description_short' => $localizedValues,
         ];
         $expectedOutputData['basic']['name'] = $localizedValues;
-        $expectedOutputData['basic']['type'] = ProductType::TYPE_COMBINATION;
+        $expectedOutputData['basic']['type'] = ProductType::TYPE_COMBINATIONS;
         $expectedOutputData['basic']['description'] = $localizedValues;
         $expectedOutputData['basic']['description_short'] = $localizedValues;
 

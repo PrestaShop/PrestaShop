@@ -1670,7 +1670,7 @@ CREATE TABLE `PREFIX_product` (
   `pack_stock_type` int(11) unsigned DEFAULT '3' NOT NULL,
   `state` int(11) unsigned NOT NULL DEFAULT '1',
   `product_type` ENUM(
-    'standard', 'pack', 'virtual', 'combination'
+    'standard', 'pack', 'virtual', 'combinations'
   ) NOT NULL DEFAULT 'standard',
   PRIMARY KEY (`id_product`),
   INDEX reference_idx(`reference`),
