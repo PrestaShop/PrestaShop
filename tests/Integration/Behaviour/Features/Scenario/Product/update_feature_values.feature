@@ -47,7 +47,7 @@ Feature: Update product details from Back Office (BO)
     Scenario: I can associate predefined feature values to a product
       Given I add product "fireMagicBook" with following information:
         | name[en-US] | Fire Magic Book |
-        | is_virtual  | false           |
+        | type        | standard        |
       Then product "fireMagicBook" should have no feature values
       When I set to product "fireMagicBook" the following feature values:
         | feature | feature_value |
@@ -63,7 +63,7 @@ Feature: Update product details from Back Office (BO)
   Scenario: I can create and edit custom feature values to a product
     Given I add product "darkMagicBook" with following information:
       | name[en-US] | Dark Magic Book |
-      | is_virtual  | false           |
+      | type        | standard        |
     Then product "darkMagicBook" should have no feature values
     When I set to product "darkMagicBook" the following feature values:
       | feature | feature_value | custom_values                 | custom_reference |
@@ -90,7 +90,7 @@ Feature: Update product details from Back Office (BO)
   Scenario: I remove a custom feature from a value it is cleaned in the DB
     Given I add product "beginnerMagicBook" with following information:
       | name[en-US] | Beginner Magic Book |
-      | is_virtual  | false               |
+      | type        | standard            |
     Then product "beginnerMagicBook" should have no feature values
     # Expectations?
     When I set to product "beginnerMagicBook" the following feature values:
@@ -121,7 +121,7 @@ Feature: Update product details from Back Office (BO)
   Scenario: I can remove all feature values from a Product
     Given I add product "lightMagicBook" with following information:
       | name[en-US] | Light Magic Book |
-      | is_virtual  | false           |
+      | type        | standard         |
     Then product "lightMagicBook" should have no feature values
     When I set to product "lightMagicBook" the following feature values:
       | feature | feature_value | custom_values             | custom_reference |
@@ -138,7 +138,7 @@ Feature: Update product details from Back Office (BO)
   Scenario: I can not set the same feature twice
     Given I add product "lightMagicBook" with following information:
       | name[en-US] | Light Magic Book |
-      | is_virtual  | false           |
+      | type        | standard         |
     Then product "lightMagicBook" should have no feature values
     When I set to product "lightMagicBook" the following feature values:
       | feature | feature_value |
@@ -150,7 +150,7 @@ Feature: Update product details from Back Office (BO)
   Scenario: I can not set a value to another feature
     Given I add product "lightMagicBook" with following information:
       | name[en-US] | Light Magic Book |
-      | is_virtual  | false           |
+      | type        | standard         |
     Then product "lightMagicBook" should have no feature values
     When I set to product "lightMagicBook" the following feature values:
       | feature | feature_value |

@@ -8,7 +8,7 @@ Feature: Update product shipping options from Back Office (BO)
   Scenario: I update product shipping
     Given I add product "product1" with following information:
       | name[en-US] | Last samurai dvd |
-      | is_virtual  | false            |
+      | type        | standard         |
     And product product1 should have following shipping information:
       | width                                   | 0       |
       | height                                  | 0       |

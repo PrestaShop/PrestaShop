@@ -13,7 +13,7 @@ Feature: Update product customization fields in Back Office (BO)
   Scenario: I add customization fields to product
     When I add product "product1" with following information:
       | name[en-US] | nice customizable t-shirt |
-      | is_virtual  | false                     |
+      | type        | standard                  |
     And product "product1" type should be standard
     When I update product product1 with following customization fields:
       | reference    | type | name[en-US] | is required |

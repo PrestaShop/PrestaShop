@@ -49,7 +49,7 @@ Feature: Update product suppliers from Back Office (BO)
       | shops                   | [shop1]          |
     Given I add product "product1" with following information:
       | name[en-US] | magic staff |
-      | is_virtual  | false       |
+      | type        | standard    |
     And product product1 type should be standard
     And product product1 should not have any suppliers assigned
     When I set product product1 default supplier to supplier1 and following suppliers:
@@ -123,7 +123,7 @@ Feature: Update product suppliers from Back Office (BO)
   Scenario: Standard product wholesale price should depend on default supplier price
     Given I add product "product3" with following information:
       | name[en-US] | magic staff |
-      | is_virtual  | false       |
+      | type        | standard    |
     And product product3 type should be standard
     And product product3 should not have any suppliers assigned
     And product product3 should have following prices information:
