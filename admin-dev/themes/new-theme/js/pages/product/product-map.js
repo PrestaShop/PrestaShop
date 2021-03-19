@@ -100,4 +100,15 @@ export default {
       deleteButton: (rowIndex) => `#combination_list_combinations_${rowIndex}_delete`,
     },
   },
+  dropzone: {
+    configuration: {
+      fileManager: '.openfilemanager',
+    },
+    events: {
+      addedFile: 'addedfile',
+      error: 'error',
+      success: 'success',
+      languageSelected: 'languageSelected',
+    },
+  },
 };

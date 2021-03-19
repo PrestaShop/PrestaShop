@@ -77,6 +77,7 @@
       :files="files"
       :locales="locales"
       :selected-locale="selectedLocale"
+      :loading="buttonLoading"
     />
 
     <div class="dz-template d-none">
@@ -122,6 +123,7 @@
   const {$} = window;
 
   const router = new Router();
+  const DropzoneMap = ProductMap.dropzone;
 
   export default {
     name: 'Dropzone',
@@ -130,7 +132,7 @@
         dropzone: null,
         configuration: {
           url: router.generate('admin_products_v2_add_image'),
-          clickable: '.openfilemanager',
+          clickable: DropzoneMap.configuration.fileManager,
           previewTemplate: null,
         },
         files: [],
@@ -138,6 +140,7 @@
         translations: [],
         loading: true,
         selectedLocale: null,
+        buttonLoading: false,
       };
     },
     props: {
@@ -173,7 +176,7 @@
       watchLocaleChanges() {
         this.selectedLocale = this.locales[0];
 
-        window.prestashop.instance.eventEmitter.on('languageSelected', (event) => {
+        window.prestashop.instance.eventEmitter.on(DropzoneMap.events.languageSelected, (event) => {
           const {selectedLocale} = event;
 
           this.locales.forEach((locale) => {
@@ -219,7 +222,7 @@
           this.configuration,
         );
 
-        this.dropzone.on('addedfile', (file) => {
+        this.dropzone.on(DropzoneMap.events.addedFile, (file) => {
           file.previewElement.addEventListener('click', () => {
             const input = file.previewElement.querySelector('.md-checkbox input');
             input.checked = !input.checked;
@@ -238,12 +241,12 @@
           this.files.push(file);
         });
 
-        this.dropzone.on('error', (fileWithError, message) => {
+        this.dropzone.on(DropzoneMap.events.error, (fileWithError, message) => {
           $.growl.error({message: message.error});
           this.dropzone.removeFile(fileWithError);
         });
 
-        this.dropzone.on('success', (file, response) => {
+        this.dropzone.on(DropzoneMap.events.success, (file, response) => {
           // Append the data required for a product image
           file.image_id = response.image_id;
           file.is_cover = response.is_cover;
@@ -307,6 +310,7 @@
         if (!this.selectedFiles.length) {
           return;
         }
+        this.buttonLoading = true;
 
         const selectedFile = this.selectedFiles[0];
 
@@ -320,8 +324,10 @@
         try {
           await saveProductImage(selectedFile, data);
           $.growl({message: this.$t('window.settingsUpdated')});
+          this.buttonLoading = false;
         } catch (error) {
           $.growl.error({message: error.message});
+          this.buttonLoading = false;
         }
       },
     },
