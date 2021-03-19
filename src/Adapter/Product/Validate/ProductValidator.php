@@ -50,6 +50,7 @@ class ProductValidator extends AbstractObjectModelValidator
      */
     public function validateCreation(Product $product): void
     {
+        $this->validateProductType($product);
         $this->validateProductLocalizedProperty(
             $product,
             'name',
@@ -71,6 +72,7 @@ class ProductValidator extends AbstractObjectModelValidator
      */
     public function validate(Product $product): void
     {
+        $this->validateProductType($product);
         $this->validateCustomizability($product);
         $this->validateBasicInfo($product);
         $this->validateOptions($product);
@@ -79,6 +81,16 @@ class ProductValidator extends AbstractObjectModelValidator
         $this->validateStock($product);
         $this->validateSeo($product);
         $this->validatePrices($product);
+    }
+
+    /**
+     * @param Product $product
+     *
+     * @throws ProductConstraintException
+     */
+    private function validateProductType(Product $product): void
+    {
+        $this->validateProductProperty($product, 'product_type', ProductConstraintException::INVALID_PRODUCT_TYPE);
     }
 
     /**
