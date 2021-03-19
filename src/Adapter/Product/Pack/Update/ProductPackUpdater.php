@@ -32,10 +32,12 @@ use Pack;
 use PrestaShop\PrestaShop\Adapter\Product\Pack\Repository\ProductPackRepository;
 use PrestaShop\PrestaShop\Adapter\Product\Repository\ProductRepository;
 use PrestaShop\PrestaShop\Core\Domain\Product\Combination\ValueObject\CombinationId;
+use PrestaShop\PrestaShop\Core\Domain\Product\Exception\InvalidProductTypeException;
 use PrestaShop\PrestaShop\Core\Domain\Product\Pack\Exception\ProductPackConstraintException;
 use PrestaShop\PrestaShop\Core\Domain\Product\Pack\Exception\ProductPackException;
 use PrestaShop\PrestaShop\Core\Domain\Product\Pack\ValueObject\PackId;
 use PrestaShop\PrestaShop\Core\Domain\Product\QuantifiedProduct;
+use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductType;
 use PrestaShop\PrestaShop\Core\Exception\CoreException;
 use PrestaShopException;
 
@@ -77,6 +79,9 @@ class ProductPackUpdater
     public function setPackProducts(PackId $packId, array $productsForPacking): void
     {
         $pack = $this->productRepository->get($packId);
+        if ($pack->product_type !== ProductType::TYPE_PACK) {
+            throw new InvalidProductTypeException(InvalidProductTypeException::EXPECTED_PACK_TYPE);
+        }
 
         // validate if provided products are available for packing before emptying the pack
         foreach ($productsForPacking as $productForPacking) {

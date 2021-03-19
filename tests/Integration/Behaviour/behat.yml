@@ -225,6 +225,7 @@ default:
                 - Tests\Integration\Behaviour\Features\Context\CommonFeatureContext
                 - Tests\Integration\Behaviour\Features\Context\Configuration\CommonConfigurationFeatureContext
                 - Tests\Integration\Behaviour\Features\Context\Domain\Product\CommonProductFeatureContext
+                - Tests\Integration\Behaviour\Features\Context\Domain\Product\ProductTypeFeatureContext
                 - Tests\Integration\Behaviour\Features\Context\Domain\Product\AddProductFeatureContext
                 - Tests\Integration\Behaviour\Features\Context\Domain\Product\UpdateBasicInformationFeatureContext
                 - Tests\Integration\Behaviour\Features\Context\Domain\Product\UpdateCategoriesFeatureContext
