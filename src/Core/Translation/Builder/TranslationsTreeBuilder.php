@@ -27,8 +27,12 @@ declare(strict_types=1);
 
 namespace PrestaShop\PrestaShop\Core\Translation\Builder;
 
-use Exception;
 use PrestaShop\PrestaShop\Core\Translation\Builder\Map\Catalogue;
+use PrestaShop\PrestaShop\Core\Translation\Exception\TranslationFilesNotFoundException;
+use PrestaShop\PrestaShop\Core\Translation\Exception\UnexpectedTranslationTypeException;
+use PrestaShop\PrestaShop\Core\Translation\Storage\Provider\Definition\ModuleProviderDefinition;
+use PrestaShop\PrestaShop\Core\Translation\Storage\Provider\Definition\ProviderDefinitionInterface;
+use PrestaShop\PrestaShop\Core\Translation\Storage\Provider\Definition\ThemeProviderDefinition;
 use Symfony\Bundle\FrameworkBundle\Routing\Router;
 
 /**
@@ -79,37 +83,42 @@ class TranslationsTreeBuilder
     }
 
     /**
-     * @param string $type
+     * @param ProviderDefinitionInterface $providerDefinition
      * @param string $locale
      * @param array $search
-     * @param string|null $theme
-     * @param string|null $module
      *
      * @return array
      *
-     * @throws Exception
+     * @throws TranslationFilesNotFoundException
+     * @throws UnexpectedTranslationTypeException
      */
     public function getTree(
-        string $type,
+        ProviderDefinitionInterface $providerDefinition,
         string $locale,
-        array $search,
-        ?string $theme,
-        ?string $module
+        array $search
     ): array {
         $tree = $this->translationCatalogueBuilder->getRawCatalogue(
-            $type,
+            $providerDefinition,
             $locale,
-            $search,
-            $theme,
-            $module
+            $search
         )->buildTree();
 
-        return ['tree' => $this->recursivelyBuildApiTree($tree, null)];
+        $routeParams = [
+            'locale' => $locale,
+            'theme' => $providerDefinition instanceof ThemeProviderDefinition ? $providerDefinition->getThemeName() : null,
+            'module' => $providerDefinition instanceof ModuleProviderDefinition ? $providerDefinition->getModuleName() : null,
+        ];
+        if (!empty($search)) {
+            $routeParams['search'] = $search;
+        }
+
+        return ['tree' => $this->recursivelyBuildApiTree($routeParams, $tree, null, null)];
     }
 
     /**
      * Builds the API tree recursively by transforming the metadata subtree
      *
+     * @param array $routeParams
      * @param array $metadataSubtree A branch from the metadata tree
      * @param string|null $subtreeName Subtree name (eg. "Bar")
      * @param string|null $fullSubtreeName Full subtree name  (eg. "AdminFooBar")
@@ -117,6 +126,7 @@ class TranslationsTreeBuilder
      * @return array API subtree
      */
     private function recursivelyBuildApiTree(
+        array $routeParams,
         array $metadataSubtree,
         ?string $subtreeName = null,
         ?string $fullSubtreeName = null
@@ -127,7 +137,7 @@ class TranslationsTreeBuilder
         }
         if ($fullSubtreeName !== null) {
             $current['full_name'] = $fullSubtreeName;
-            $current['domain_catalog_link'] = $this->getRoute($fullSubtreeName);
+            $current['domain_catalog_link'] = $this->getRoute($fullSubtreeName, $routeParams);
         }
 
         foreach ($metadataSubtree as $name => $value) {
@@ -140,7 +150,7 @@ class TranslationsTreeBuilder
                 $current['children'] = [];
             }
 
-            $current['children'][] = $this->recursivelyBuildApiTree($value, $name, (string) $fullSubtreeName . $name);
+            $current['children'][] = $this->recursivelyBuildApiTree($routeParams, $value, $name, (string) $fullSubtreeName . $name);
         }
 
         return $current;
@@ -150,21 +160,13 @@ class TranslationsTreeBuilder
      * Returns the URL path to the translations from the given domain in the current context
      *
      * @param string $fullName Domain name
+     * @param array $routeParams
      *
      * @return string URL path
      */
-    private function getRoute(string $fullName): string
+    private function getRoute(string $fullName, array $routeParams): string
     {
-        $routeParams = [
-            'locale' => $this->locale,
-            'domain' => $fullName,
-            'theme' => $this->theme,
-            'module' => $this->module,
-        ];
-
-        if (!empty($this->search)) {
-            $routeParams['search'] = $this->search;
-        }
+        $routeParams['domain'] = $fullName;
 
         return $this->router->generate('api_translation_domain_catalog', $routeParams);
     }

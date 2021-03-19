@@ -27,6 +27,15 @@
 namespace PrestaShopBundle\Controller\Api;
 
 use Exception;
+use PrestaShop\PrestaShop\Core\Translation\Storage\Provider\Definition\BackofficeProviderDefinition;
+use PrestaShop\PrestaShop\Core\Translation\Storage\Provider\Definition\CoreDomainProviderDefinition;
+use PrestaShop\PrestaShop\Core\Translation\Storage\Provider\Definition\FrontofficeProviderDefinition;
+use PrestaShop\PrestaShop\Core\Translation\Storage\Provider\Definition\MailsBodyProviderDefinition;
+use PrestaShop\PrestaShop\Core\Translation\Storage\Provider\Definition\MailsProviderDefinition;
+use PrestaShop\PrestaShop\Core\Translation\Storage\Provider\Definition\ModuleProviderDefinition;
+use PrestaShop\PrestaShop\Core\Translation\Storage\Provider\Definition\OthersProviderDefinition;
+use PrestaShop\PrestaShop\Core\Translation\Storage\Provider\Definition\ProviderDefinitionInterface;
+use PrestaShop\PrestaShop\Core\Translation\Storage\Provider\Definition\ThemeProviderDefinition;
 use PrestaShopBundle\Api\QueryTranslationParamsCollection;
 use PrestaShopBundle\Exception\InvalidLanguageException;
 use PrestaShopBundle\Security\Annotation\AdminSecurity;
@@ -58,7 +67,7 @@ class TranslationController extends ApiController
      *
      * @return JsonResponse
      */
-    public function listDomainTranslationAction(Request $request)
+    public function listDomainTranslationAction(Request $request): JsonResponse
     {
         try {
             $queryParamsCollection = $this->queryParams->fromRequest($request);
@@ -80,27 +89,10 @@ class TranslationController extends ApiController
                 throw UnsupportedLocaleException::invalidLocale($locale);
             }
 
-            $catalog = $translationService->listDomainTranslation($locale, $domain, $theme, $search, $module);
+            $catalog = $translationService->listDomainTranslation($locale, $domain, $theme, $this->searchExpressionToArray($search), $module);
             $info = [
                 'Total-Pages' => ceil(count($catalog['data']) / $queryParams['page_size']),
             ];
-
-            $catalog['info'] = array_merge(
-                $catalog['info'],
-                [
-                    'locale' => $locale,
-                    'domain' => $domain,
-                    'theme' => $theme,
-                    'total_translations' => count($catalog['data']),
-                    'total_missing_translations' => 0,
-                ]
-            );
-
-            foreach ($catalog['data'] as $message) {
-                if (empty($message['xliff']) && empty($message['database'])) {
-                    ++$catalog['info']['total_missing_translations'];
-                }
-            }
 
             $catalog['data'] = array_slice(
                 $catalog['data'],
@@ -137,31 +129,22 @@ class TranslationController extends ApiController
 
             $search = $request->query->get('search');
 
-            if (in_array($type, ['modules', 'themes']) && empty($selected)) {
-                throw new Exception('This \'selected\' param is not valid.');
+            if (!in_array($type, ProviderDefinitionInterface::ALLOWED_TYPES)) {
+                throw new Exception(sprintf("The 'type' parameter '%s' is not valid", $type));
             }
 
-            switch ($type) {
-                case 'themes':
-                    $tree = $this->getNormalTree($lang, $type, $selected, $search);
-                    break;
-
-                case 'modules':
-                    $tree = $this->getModulesTree($lang, $selected, $search);
-                    break;
-
-                case 'mails':
-                    $tree = $this->getMailsSubjectTree($lang, $search);
-                    break;
-
-                case 'mails_body':
-                    $tree = $this->getMailsBodyTree($lang, $search);
-                    break;
-
-                default:
-                    $tree = $this->getNormalTree($lang, $type, null, $search);
-                    break;
+            if (ProviderDefinitionInterface::TYPE_THEMES === $type && '0' === $selected) {
+                $type = ProviderDefinitionInterface::TYPE_FRONT;
             }
+
+            if (
+                in_array($type, [ProviderDefinitionInterface::TYPE_MODULES, ProviderDefinitionInterface::TYPE_THEMES])
+                && empty($selected)
+            ) {
+                throw new Exception("The 'selected' parameter is empty.");
+            }
+
+            $tree = $this->getTree($lang, $type, $this->searchExpressionToArray($search), $selected);
 
             return $this->jsonResponse($tree, $request);
         } catch (Exception $exception) {
@@ -326,6 +309,61 @@ class TranslationController extends ApiController
     }
 
     /**
+     * Returns a translation domain tree
+     *
+     * @param string $lang
+     * @param string $type "themes", "modules", "mails", "mails_body", "back", "front" or "others"
+     * @param array $search Search strings
+     * @param string|null $selectedValue Depends on the type. It's a theme name if type = "themes" or a module name if type = "modules"
+     *
+     * @return array
+     *
+     * @throws Exception
+     */
+    private function getTree(string $lang, string $type, array $search, ?string $selectedValue = null)
+    {
+        $locale = $this->translationService->langToLocale($lang);
+
+        return $this->translationService->getTranslationsTree(
+            $this->buildProviderDefinitionByType($type, $selectedValue),
+            $locale,
+            $search
+        );
+    }
+
+    /**
+     * @param string $type
+     * @param string|null $selectedValue
+     *
+     * @return ProviderDefinitionInterface
+     */
+    private function buildProviderDefinitionByType(
+        string $type,
+        ?string $selectedValue = null
+    ): ProviderDefinitionInterface {
+        switch ($type) {
+            case ProviderDefinitionInterface::TYPE_MODULES:
+                return new ModuleProviderDefinition($selectedValue);
+            case ProviderDefinitionInterface::TYPE_THEMES:
+                return new ThemeProviderDefinition($selectedValue);
+            case ProviderDefinitionInterface::TYPE_CORE_DOMAIN:
+                return new CoreDomainProviderDefinition($selectedValue);
+            case ProviderDefinitionInterface::TYPE_BACK:
+                return new BackofficeProviderDefinition();
+            case ProviderDefinitionInterface::TYPE_FRONT:
+                return new FrontofficeProviderDefinition();
+            case ProviderDefinitionInterface::TYPE_MAILS:
+                return new MailsProviderDefinition();
+            case ProviderDefinitionInterface::TYPE_MAILS_BODY:
+                return new MailsBodyProviderDefinition();
+            case ProviderDefinitionInterface::TYPE_OTHERS:
+                return new OthersProviderDefinition();
+            default:
+                throw new \RuntimeException(sprintf('Unrecognized type: %s', $type));
+        }
+    }
+
+    /**
      * @param string $lang
      * @param string|null $type
      * @param string $theme Selected theme name
@@ -411,5 +449,19 @@ class TranslationController extends ApiController
         $translationsTree = $treeBuilder->cleanTreeToApi($translationsTree, $this->container->get('router'), $theme, $search, $module);
 
         return $translationsTree;
+    }
+
+    /**
+     * @param string|array $search
+     *
+     * @return array
+     */
+    private function searchExpressionToArray($search): array
+    {
+        if (is_array($search)) {
+            return $search;
+        }
+
+        return empty($search) ? [] : [$search];
     }
 }
