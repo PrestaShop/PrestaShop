@@ -619,20 +619,6 @@ class DispatcherCore
             $language_ids[] = (int) $context->language->id;
         }
 
-        // Set default routes
-        foreach ($this->default_routes as $id => $route) {
-            $route = $this->computeRoute(
-                $route['rule'],
-                $route['controller'],
-                $route['keywords'],
-                isset($route['params']) ? $route['params'] : []
-            );
-            foreach ($language_ids as $id_lang) {
-                // the default routes are the same, whatever the language
-                $this->routes[$id_shop][$id_lang][$id] = $route;
-            }
-        }
-
         // Load the custom routes prior the defaults to avoid infinite loops
         if ($this->use_routes) {
             // Load routes from meta table
@@ -683,6 +669,20 @@ class DispatcherCore
                         $this->routes[$id_shop][$id_lang][$route_id] = $route;
                     }
                 }
+            }
+        }
+
+        // Set default routes
+        foreach ($this->default_routes as $id => $route) {
+            $route = $this->computeRoute(
+                $route['rule'],
+                $route['controller'],
+                $route['keywords'],
+                isset($route['params']) ? $route['params'] : []
+            );
+            foreach ($language_ids as $id_lang) {
+                // the default routes are the same, whatever the language
+                $this->routes[$id_shop][$id_lang][$id] = $route;
             }
         }
     }
