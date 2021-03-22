@@ -41,10 +41,14 @@ class BulkToggleZoneStatusCommand
     private $expectedStatus;
 
     /**
-     * @var ZoneId[]
+     * @var array<int, ZoneId>
      */
     private $zoneIds;
 
+    /**
+     * @param bool $expectedStatus
+     * @param array<int, int> $zoneIds
+     */
     public function __construct(bool $expectedStatus, array $zoneIds)
     {
         $this->setZoneIds($zoneIds);
@@ -60,7 +64,7 @@ class BulkToggleZoneStatusCommand
     }
 
     /**
-     * @return ZoneId[]
+     * @return array<int, ZoneId>
      */
     public function getZoneIds(): array
     {
@@ -68,7 +72,7 @@ class BulkToggleZoneStatusCommand
     }
 
     /**
-     * @param int[] $zoneIds
+     * @param array<int, int> $zoneIds
      */
     private function setZoneIds(array $zoneIds): void
     {
