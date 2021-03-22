@@ -163,7 +163,7 @@ class CombinationCreator
         try {
             $this->combinationRepository->saveProductAttributeAssociation($combinationId, $generatedCombination);
         } catch (CoreException $e) {
-            $this->combinationRepository->delete($combination);
+            $this->combinationRepository->delete($combinationId);
             throw $e;
         }
 
