@@ -36,12 +36,12 @@ use PrestaShop\PrestaShop\Core\Domain\Zone\ValueObject\ZoneId;
 class BulkDeleteZoneCommand
 {
     /**
-     * @var ZoneId[]
+     * @var array<int, ZoneId>
      */
     private $zoneIds;
 
     /**
-     * @param int[] $zoneIds
+     * @param array<int, int> $zoneIds
      */
     public function __construct(array $zoneIds)
     {
@@ -49,7 +49,7 @@ class BulkDeleteZoneCommand
     }
 
     /**
-     * @return ZoneId[]
+     * @return array<int, ZoneId>
      */
     public function getZoneIds(): array
     {
@@ -57,7 +57,7 @@ class BulkDeleteZoneCommand
     }
 
     /**
-     * @param int[] $zoneIds
+     * @param array<int, int> $zoneIds
      */
     private function setZoneIds(array $zoneIds): void
     {
