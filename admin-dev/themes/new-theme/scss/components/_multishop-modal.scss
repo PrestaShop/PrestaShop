@@ -117,6 +117,12 @@ $component-name: multishop-modal;
     font-weight: 600;
   }
 
+  &-item {
+    .multishop-modal-color-check .material-icons {
+      margin-right: 0.7rem;
+    }
+  }
+
   &-group-item {
     &.#{$component-name}-item {
       justify-content: flex-start;
@@ -216,10 +222,7 @@ $component-name: multishop-modal;
 }
 
 .multistore-modal-color-container.multishop-modal-color-check a,
-.multistore-modal-color-container:not(.multishop-modal-color-check) i {
-  display: none;
-}
-
+.multistore-modal-color-container:not(.multishop-modal-color-check) i,
 .multistore-modal-color-container.multishop-modal-color-check:hover i {
   display: none;
 }
