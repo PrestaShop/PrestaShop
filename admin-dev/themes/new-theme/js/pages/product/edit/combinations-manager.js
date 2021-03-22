@@ -44,6 +44,9 @@ export default class CombinationsManager {
     return {};
   }
 
+  /**
+   * @private
+   */
   init() {
     this.paginator = new DynamicPaginator(
       ProductMap.combinations.paginationContainer,
@@ -51,11 +54,20 @@ export default class CombinationsManager {
       new CombinationsGridRenderer(),
     );
     this.initSubmittableInputs();
-    this.onDefaultCombinationSelection();
+    this.$combinationsContainer.on('change', ProductMap.combinations.isDefaultInputsSelector, (e) => {
+      if (!e.currentTarget.checked) {
+        return;
+      }
+      this.updateDefaultCombination(e.currentTarget);
+    });
+
     // Paginate to first page when tab is shown
     this.$productForm.find(ProductMap.combinations.navigationTab).on('shown.bs.tab', () => this.firstInit());
   }
 
+  /**
+   * @private
+   */
   initSubmittableInputs() {
     const combinationToken = this.getCombinationToken();
 
@@ -81,33 +93,35 @@ export default class CombinationsManager {
     });
   }
 
-  onDefaultCombinationSelection() {
-    this.$combinationsContainer.on('change', ProductMap.combinations.isDefaultInputsSelector, async (e) => {
-      const checkedInputs = this.$combinationsContainer.find(
-        `${ProductMap.combinations.isDefaultInputsSelector}:checked`,
-      );
+  /**
+   * @param {HTMLElement} checkedInput
+   *
+   * @private
+   */
+  async updateDefaultCombination(checkedInput) {
+    const checkedInputs = this.$combinationsContainer.find(
+      `${ProductMap.combinations.isDefaultInputsSelector}:checked`,
+    );
+    const checkedDefaultId = this.findCombinationId(checkedInput);
 
-      // stop loop when only one input is checked
-      if (checkedInputs.length === 1) {
-        return;
+    await this.combinationsService.updateListedCombination(
+      checkedDefaultId,
+      {
+        'combination_item[is_default]': checkedInput.value,
+        'combination_item[_token]': this.getCombinationToken(),
+      },
+    );
+
+    $.each(checkedInputs, (index, input) => {
+      if (this.findCombinationId(input) !== checkedDefaultId) {
+        $(input).prop('checked', false);
       }
-
-      await this.combinationsService.updateListedCombination(
-        this.findCombinationId(e.currentTarget),
-        {
-          'combination_item[is_default]': e.currentTarget.value,
-          'combination_item[_token]': this.getCombinationToken(),
-        },
-      );
-
-      $.each(checkedInputs, (index, input) => {
-        if (this.findCombinationId(input) !== this.findCombinationId(e.currentTarget)) {
-          $(input).prop('checked', false);
-        }
-      });
     });
   }
 
+  /**
+   * @private
+   */
   firstInit() {
     if (this.initialized) {
       return;
