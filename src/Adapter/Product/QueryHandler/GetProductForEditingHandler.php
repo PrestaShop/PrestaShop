@@ -355,14 +355,12 @@ final class GetProductForEditingHandler extends AbstractProductHandler implement
      * @param Product $product
      *
      * @return VirtualProductFileForEditing|null
-     *
-     * @throws VirtualProductFileNotFoundException
      */
     private function getVirtualProductFile(Product $product): ?VirtualProductFileForEditing
     {
-        $virtualProductFile = $this->virtualProductFileRepository->findByProductId(new ProductId($product->id));
-
-        if (!$virtualProductFile) {
+        try {
+            $virtualProductFile = $this->virtualProductFileRepository->findByProductId(new ProductId($product->id));
+        } catch (VirtualProductFileNotFoundException $e) {
             return null;
         }
 
