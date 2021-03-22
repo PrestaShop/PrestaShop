@@ -90,11 +90,13 @@ final class GetEditableCombinationsListHandler extends AbstractProductHandler im
     public function handle(GetEditableCombinationsList $query): CombinationListForEditing
     {
         $productId = $query->getProductId();
+        $filters = $query->getFilters();
 
         $combinations = $this->combinationRepository->getProductCombinations(
             $productId,
             $query->getLimit(),
-            $query->getOffset()
+            $query->getOffset(),
+            $filters
         );
 
         $combinationIds = array_map(function ($combination): int {
@@ -109,7 +111,7 @@ final class GetEditableCombinationsListHandler extends AbstractProductHandler im
         return $this->formatEditableCombinationsForListing(
             $combinations,
             $attributesInformation,
-            $this->combinationRepository->getTotalCombinationsCount($productId)
+            $this->combinationRepository->getTotalCombinationsCount($productId, $filters)
         );
     }
 
