@@ -319,7 +319,7 @@ class TypedRegexValidatorTest extends ConstraintValidatorTestCase
      */
     public function testItFailsForModuleNameTypeWhenInvalidCharactersGiven(string $invalidChar): void
     {
-        $this->assertViolationIsRaised(new TypedRegex(['type' => 'url']), $invalidChar);
+        $this->assertViolationIsRaised(new TypedRegex(['type' => 'module_name']), $invalidChar);
     }
 
     /**
@@ -566,6 +566,7 @@ class TypedRegexValidatorTest extends ConstraintValidatorTestCase
      */
     public function getInvalidCharactersForModuleName(): Generator
     {
+        yield ['~'];
         yield ['ˇ'];
         yield ['"'];
         yield ['@'];
