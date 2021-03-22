@@ -68,7 +68,7 @@ Feature: Add virtual product file from BO (Back Office).
     When I add virtual product file "file4" to product "product4" with following details:
       | file name    | dummy_zip.zip     |
       | display name | zipped files pack |
-    Then I should get error that only virtual product can have file
+    Then I should get error that this action is allowed for virtual product only
     And product "product4" should not have a file
 
   Scenario: I should not be able to add file to a product which already has a file

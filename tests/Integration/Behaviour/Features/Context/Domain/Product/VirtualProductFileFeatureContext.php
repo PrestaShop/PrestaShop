@@ -32,6 +32,7 @@ use Behat\Gherkin\Node\TableNode;
 use DateTime;
 use DateTimeImmutable;
 use PHPUnit\Framework\Assert;
+use PrestaShop\PrestaShop\Core\Domain\Product\Exception\InvalidProductTypeException;
 use PrestaShop\PrestaShop\Core\Domain\Product\VirtualProductFile\Command\AddVirtualProductFileCommand;
 use PrestaShop\PrestaShop\Core\Domain\Product\VirtualProductFile\Command\DeleteVirtualProductFileCommand;
 use PrestaShop\PrestaShop\Core\Domain\Product\VirtualProductFile\Command\UpdateVirtualProductFileCommand;
@@ -76,6 +77,7 @@ class VirtualProductFileFeatureContext extends AbstractProductFeatureContext
             isset($dataRows['expiration date']) ? new DateTime($dataRows['expiration date']) : null
         );
 
+        $this->cleanLastException();
         try {
             $virtualProductId = $this->getCommandBus()->handle($command);
             $this->getSharedStorage()->set($fileReference, $virtualProductId->getValue());
@@ -87,6 +89,8 @@ class VirtualProductFileFeatureContext extends AbstractProductFeatureContext
                 _PS_DOWNLOAD_DIR_ . $filename
             );
         } catch (VirtualProductFileException $e) {
+            $this->setLastException($e);
+        } catch (InvalidProductTypeException $e) {
             $this->setLastException($e);
         }
     }
@@ -200,17 +204,6 @@ class VirtualProductFileFeatureContext extends AbstractProductFeatureContext
         $this->assertLastErrorIs(
             VirtualProductFileConstraintException::class,
             $errorCodeByPropertyMap[$propertyName]
-        );
-    }
-
-    /**
-     * @Then I should get error that only virtual product can have file
-     */
-    public function assertInvalidProductTypeError(): void
-    {
-        $this->assertLastErrorIs(
-            VirtualProductFileConstraintException::class,
-            VirtualProductFileConstraintException::INVALID_PRODUCT_TYPE
         );
     }
 
