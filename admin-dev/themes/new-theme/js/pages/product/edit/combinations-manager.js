@@ -70,25 +70,29 @@ export default class CombinationsManager {
    */
   initSubmittableInputs() {
     const combinationToken = this.getCombinationToken();
+    const {quantityKey} = ProductMap.combinations.combinationItemForm;
+    const {impactOnPriceKey} = ProductMap.combinations.combinationItemForm;
+    const {referenceKey} = ProductMap.combinations.combinationItemForm;
+    const {tokenKey} = ProductMap.combinations.combinationItemForm;
 
-    new SubmittableInput('.combination-quantity', async (input) => {
+    new SubmittableInput(ProductMap.combinations.quantityInputWrapper, async (input) => {
       await this.combinationsService.updateListedCombination(
         this.findCombinationId(input),
-        {'combination_item[quantity][value]': input.value, 'combination_item[_token]': combinationToken},
+        {[quantityKey]: input.value, [tokenKey]: combinationToken},
       );
     });
 
-    new SubmittableInput('.combination-impact-on-price', async (input) => {
+    new SubmittableInput(ProductMap.combinations.impactOnPriceInputWrapper, async (input) => {
       await this.combinationsService.updateListedCombination(
         this.findCombinationId(input),
-        {'combination_item[impact_on_price][value]': input.value, 'combination_item[_token]': combinationToken},
+        {[impactOnPriceKey]: input.value, [tokenKey]: combinationToken},
       );
     });
 
-    new SubmittableInput('.combination-reference', async (input) => {
+    new SubmittableInput(ProductMap.combinations.referenceInputWrapper, async (input) => {
       await this.combinationsService.updateListedCombination(
         this.findCombinationId(input),
-        {'combination_item[reference][value]': input.value, 'combination_item[_token]': combinationToken},
+        {[referenceKey]: input.value, [tokenKey]: combinationToken},
       );
     });
   }

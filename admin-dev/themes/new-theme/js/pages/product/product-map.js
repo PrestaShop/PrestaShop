@@ -78,6 +78,15 @@ export default {
     isDefaultInputsSelector: '.combination-is-default-input',
     paginationContainer: '#combinations-pagination',
     loadingSpinner: '#productCombinationsLoading',
+    quantityInputWrapper: '.combination-quantity',
+    impactOnPriceInputWrapper: '.combination-impact-on-price',
+    referenceInputWrapper: '.combination-reference',
+    combinationItemForm: {
+      quantityKey: 'combination_item[quantity][value]',
+      impactOnPriceKey: 'combination_item[impact_on_price][value]',
+      referenceKey: 'combination_item[reference][value]',
+      tokenKey: 'combination_item[_token]',
+    },
     tableRow: {
       combinationIdInput: (rowIndex) => `#combination_list_combinations_${rowIndex}_combination_id`,
       combinationNameInput: (rowIndex) => `#combination_list_combinations_${rowIndex}_name`,
