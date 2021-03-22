@@ -410,7 +410,7 @@ class CombinationRepository extends AbstractObjectModelRepository
         if (isset($filters['attribute_ids'])) {
             $combinationIds = $this->getCombinationIdsByAttributeIds((array) $filters['attribute_ids']);
             $qb->andWhere($qb->expr()->in('pa.id_product_attribute', ':combinationIds'))
-                ->setParameter('attributeIds', $combinationIds, Connection::PARAM_INT_ARRAY)
+                ->setParameter('combinationIds', $combinationIds, Connection::PARAM_INT_ARRAY)
             ;
         }
 

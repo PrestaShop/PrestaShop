@@ -73,17 +73,26 @@ class CombinationListingFeatureContext extends AbstractCombinationFeatureContext
 
     /**
      * @Then I should see following combinations of product :productReference in page :page limited to maximum :limit per page:
+     * @Then I should see following combinations of product :productReference in page :page limited to maximum :limit per page and filtered by attributes :attributeFilterReferences:
      *
      * @param string $productReference
      * @param int $page
      * @param TableNode $dataTable
      * @param int $limit
+     * @param string|null $attributeFilterReferences
      */
-    public function assertCombinationsPage(string $productReference, int $page, TableNode $dataTable, int $limit): void
+    public function assertCombinationsPage(string $productReference, int $page, TableNode $dataTable, int $limit, ?string $attributeFilterReferences = null): void
     {
         $offset = $this->countOffset($page, $limit);
 
-        $this->assertPaginatedCombinationList($productReference, $dataTable->getColumnsHash(), $limit, $offset);
+        $filters = [];
+        if (!empty($attributeFilterReferences)) {
+            $filters['attribute_ids'] = array_map(function (string $reference): int {
+                return $this->getSharedStorage()->get($reference);
+            }, PrimitiveUtils::castStringArrayIntoArray($attributeFilterReferences));
+        }
+
+        $this->assertPaginatedCombinationList($productReference, $dataTable->getColumnsHash(), $limit, $offset, $filters);
     }
 
     /**
@@ -155,10 +164,11 @@ class CombinationListingFeatureContext extends AbstractCombinationFeatureContext
      * @param array $dataRows
      * @param int|null $limit
      * @param int|null $offset
+     * @param array<string, mixed> $filters
      */
-    private function assertPaginatedCombinationList(string $productReference, array $dataRows, ?int $limit = null, ?int $offset = null): void
+    private function assertPaginatedCombinationList(string $productReference, array $dataRows, ?int $limit = null, ?int $offset = null, array $filters = []): void
     {
-        $combinationsList = $this->getCombinationsList($productReference, $limit, $offset);
+        $combinationsList = $this->getCombinationsList($productReference, $limit, $offset, $filters);
 
         Assert::assertEquals(
             count($dataRows),
