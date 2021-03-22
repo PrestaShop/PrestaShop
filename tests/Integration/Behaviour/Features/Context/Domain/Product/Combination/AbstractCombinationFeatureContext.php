@@ -40,16 +40,18 @@ abstract class AbstractCombinationFeatureContext extends AbstractProductFeatureC
      * @param string $productReference
      * @param int|null $limit
      * @param int|null $offset
+     * @param array<string, mixed> $filters
      *
      * @return CombinationListForEditing
      */
-    protected function getCombinationsList(string $productReference, ?int $limit = null, ?int $offset = null): CombinationListForEditing
+    protected function getCombinationsList(string $productReference, ?int $limit = null, ?int $offset = null, array $filters = []): CombinationListForEditing
     {
         return $this->getQueryBus()->handle(new GetEditableCombinationsList(
             $this->getSharedStorage()->get($productReference),
             $this->getDefaultLangId(),
             $limit,
-            $offset
+            $offset,
+            $filters
         ));
     }
 
