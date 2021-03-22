@@ -69,12 +69,4 @@ class SubmittableInputType extends AbstractType
             ->setAllowedTypes('type_options', 'array')
         ;
     }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function getBlockPrefix()
-    {
-        return 'updatable_input';
-    }
 }
