@@ -2,9 +2,10 @@
  * Function for removing bad characters from localization formating.
  */
 function replaceBadLocaleCharacters() {
-    $.each($('input.attribute_wholesale_price, input.attribute_priceTE, input.attribute_priceTI, input.attribute_unity, input.attribute_weight'), function () {
-        $(this).val($(this).val().replace("−", "-")); // replace U+002D with U+2212
-    });
+  // eslint-disable-next-line
+  $.each($('input.attribute_wholesale_price, input.attribute_priceTE, input.attribute_priceTI, input.attribute_unity, input.attribute_weight'), function () {
+    $(this).val($(this).val().replace('−', '-')); // replace U+002D with U+2212
+  });
 }
 /**
  * Combination management
