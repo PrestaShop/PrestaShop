@@ -81,7 +81,8 @@ export default class CombinationsGridRenderer {
       const $quantityInput = $(ProductMap.combinations.tableRow.quantityInput(rowIndex));
       const $impactOnPriceInput = $(ProductMap.combinations.tableRow.impactOnPriceInput(rowIndex));
       const $referenceInput = $(ProductMap.combinations.tableRow.referenceInput(rowIndex));
-      //@todo final price should be calculated based on price impact and product price, so it doesnt need to be in api response
+      // @todo final price should be calculated based on price impact and product price,
+      //    so it doesnt need to be in api response
       const $finalPriceInput = $(ProductMap.combinations.tableRow.finalPriceTeInput(rowIndex));
       $combinationIdInput.val(combination.id);
       $combinationNameInput.val(combination.name);
@@ -97,7 +98,10 @@ export default class CombinationsGridRenderer {
       $impactOnPriceInput.data('initial-value', combination.impactOnPrice);
       $(ProductMap.combinations.tableRow.editButton(rowIndex)).data('id', combination.id);
       $(ProductMap.combinations.tableRow.deleteButton(rowIndex)).data('id', combination.id);
-      $(ProductMap.combinations.tableRow.isDefaultInput(rowIndex)).prop('checked', combination.isDefault);
+
+      if (combination.isDefault) {
+        $(ProductMap.combinations.tableRow.isDefaultInput(rowIndex)).prop('checked', true);
+      }
 
       rowIndex += 1;
     });
