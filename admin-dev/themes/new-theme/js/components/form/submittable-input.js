@@ -59,7 +59,7 @@ export default class SubmittableInput {
     $(document).on('focus', inputs, (e) => {
       this.refreshButtonState(e.currentTarget, true);
     });
-    $(document).on('input mouseleave', inputs, (e) => {
+    $(document).on('input blur', inputs, (e) => {
       this.refreshButtonState(e.currentTarget);
     });
     $(document).on('click', `${this.wrapperSelector} ${this.buttonSelector}`, (e) => {
