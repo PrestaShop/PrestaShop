@@ -60,7 +60,7 @@ final class ZoneFormDataHandler implements FormDataHandlerInterface
      */
     public function create(array $data): int
     {
-        if (!isset($data['shop_association']) || !$data['shop_association']) {
+        if (empty($data['shop_association'])) {
             $data['shop_association'] = [];
         }
 
