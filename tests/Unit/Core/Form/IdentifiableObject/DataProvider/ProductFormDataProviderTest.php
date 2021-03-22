@@ -536,6 +536,7 @@ class ProductFormDataProviderTest extends TestCase
     {
         return new ProductForEditing(
             static::PRODUCT_ID,
+            $product['type'] ?? ProductType::TYPE_STANDARD,
             ProductCustomizationOptions::createNotCustomizable(),
             $this->createBasic($product),
             $this->createCategories($product),
@@ -787,7 +788,6 @@ class ProductFormDataProviderTest extends TestCase
     private function createBasic(array $product): ProductBasicInformation
     {
         return new ProductBasicInformation(
-            new ProductType($product['type'] ?? ProductType::TYPE_STANDARD),
             $product['name'] ?? [],
             $product['description'] ?? [],
             $product['description_short'] ?? [],
