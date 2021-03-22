@@ -33,6 +33,7 @@ use PrestaShop\PrestaShop\Adapter\Product\Repository\ProductRepository;
 use PrestaShop\PrestaShop\Adapter\Product\VirtualProduct\Repository\VirtualProductFileRepository;
 use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductId;
 use PrestaShop\PrestaShop\Core\Domain\Product\VirtualProductFile\Exception\VirtualProductFileConstraintException;
+use PrestaShop\PrestaShop\Core\Domain\Product\VirtualProductFile\Exception\VirtualProductFileNotFoundException;
 use PrestaShop\PrestaShop\Core\Domain\Product\VirtualProductFile\ValueObject\VirtualProductFileId;
 use ProductDownload as VirtualProductFile;
 use Symfony\Component\Filesystem\Filesystem;
@@ -124,11 +125,14 @@ class VirtualProductUpdater
             );
         }
 
-        if ($this->virtualProductFileRepository->findByProductId($productId)) {
+        try {
+            $this->virtualProductFileRepository->findByProductId($productId);
             throw new VirtualProductFileConstraintException(
                 sprintf('File already exists for product #%d', $product->id),
                 VirtualProductFileConstraintException::ALREADY_HAS_A_FILE
             );
+        } catch (VirtualProductFileNotFoundException $e) {
+            // Expected behaviour, the product should have no virtual file yet
         }
 
         $uploadedFilePath = $this->virtualProductFileUploader->upload($filePath);
@@ -147,5 +151,20 @@ class VirtualProductUpdater
         $this->virtualProductFileUploader->remove($virtualProductFile->filename);
 
         $this->virtualProductFileRepository->delete($virtualProductFileId);
+    }
+
+    /**
+     * @param ProductId $productId
+     */
+    public function deleteFileForProduct(ProductId $productId): void
+    {
+        try {
+            $virtualProductFile = $this->virtualProductFileRepository->findByProductId($productId);
+        } catch (VirtualProductFileNotFoundException $e) {
+            return;
+        }
+
+        $this->virtualProductFileUploader->remove($virtualProductFile->filename);
+        $this->virtualProductFileRepository->delete(new VirtualProductFileId((int) $virtualProductFile->id));
     }
 }
