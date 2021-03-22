@@ -211,12 +211,12 @@ class ZoneController extends FrameworkBundleAdminController
     {
         try {
             $this->getCommandBus()->handle(new DeleteZoneCommand($zoneId));
+            $this->addFlash('success', $this->trans('Successful deletion.', 'Admin.Notifications.Success'));
         } catch (ZoneException $e) {
             $this->addFlash('error', $this->getErrorMessageForException($e, $this->getErrorMessages($e)));
 
             return $this->redirectToRoute('admin_zones_index');
         }
-        $this->addFlash('success', $this->trans('Successful deletion.', 'Admin.Notifications.Success'));
 
         return $this->redirectToRoute('admin_zones_index');
     }
