@@ -31,6 +31,8 @@ use BoOrderCore;
 use Cart;
 use Configuration;
 use Context;
+use Currency;
+use Customer;
 use Employee;
 use Exception;
 use Message;
@@ -79,14 +81,6 @@ final class AddOrderFromBackOfficeHandler extends AbstractOrderCommandHandler im
         $this->assertAddressesAreNotDisabled($cart);
 
         //Context country, language and currency is used in PaymentModule::validateOrder (it should rely on cart address country instead)
-        $this->contextStateManager
-            ->setCart($cart)
-            ->setCurrency(new Currency($cart->id_currency))
-            ->setCustomer(new Customer($cart->id_customer))
-            ->setLanguage($cart->getAssociatedLanguage())
-            ->setCountry($this->getTaxCountry($cart))
-            ->setShop(new Shop($cart->id_shop))
-        ;
         $this->setCartContext($this->contextStateManager, $cart);
 
         $translator = Context::getContext()->getTranslator();

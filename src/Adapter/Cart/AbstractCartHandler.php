@@ -29,7 +29,6 @@ namespace PrestaShop\PrestaShop\Adapter\Cart;
 use Cart;
 use Currency;
 use Customer;
-use Language;
 use PrestaShop\PrestaShop\Adapter\ContextStateManager;
 use PrestaShop\PrestaShop\Adapter\Validate;
 use PrestaShop\PrestaShop\Core\Domain\Cart\Exception\CartException;
@@ -78,7 +77,7 @@ abstract class AbstractCartHandler
             ->setCart($cart)
             ->setCustomer(new Customer($cart->id_customer))
             ->setCurrency(new Currency($cart->id_currency))
-            ->setLanguage(new Language($cart->id_lang))
+            ->setLanguage($cart->getAssociatedLanguage())
             ->setCountry($cart->getTaxCountry())
             ->setShop(new Shop($cart->id_shop))
         ;
