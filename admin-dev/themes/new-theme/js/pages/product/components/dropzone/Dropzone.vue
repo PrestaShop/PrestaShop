@@ -130,9 +130,9 @@
     </div>
 
     <dropzone-photo-swipe
-      :files="files"
+      :files="selectedFiles"
       @closeGallery="toggleGallery"
-      v-if="files.length > 0 && galleryOpened"
+      v-if="selectedFiles.length > 0 && galleryOpened"
     />
   </div>
 </template>

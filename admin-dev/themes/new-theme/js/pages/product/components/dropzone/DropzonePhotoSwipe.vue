@@ -44,22 +44,22 @@
 
           <button
             class="pswp__button pswp__button--close"
-            title="Close (Esc)"
+            :title="$t('window.closePhotoSwipe')"
           />
 
           <button
             class="pswp__button pswp__button--share"
-            title="Share"
+            :title="$t('window.download')"
           />
 
           <button
             class="pswp__button pswp__button--fs"
-            title="Toggle fullscreen"
+            :title="$t('window.toggleFullscreen')"
           />
 
           <button
             class="pswp__button pswp__button--zoom"
-            title="Zoom in/out"
+            :title="$t('window.zoomPhotoSwipe')"
           />
 
           <div class="pswp__preloader">
@@ -79,12 +79,12 @@
 
         <button
           class="pswp__button pswp__button--arrow--left"
-          title="Previous (arrow left)"
+          :title="$t('window.previousPhotoSwipe')"
         />
 
         <button
           class="pswp__button pswp__button--arrow--right"
-          title="Next (arrow right)"
+          :title="$t('window.nextPhotoSwipe')"
         />
 
         <div class="pswp__caption">
