@@ -60,37 +60,32 @@ export default class SubmittableInput {
     $(document).on('input mouseleave', inputs, (e) => {
       this.refreshButtonState(e.currentTarget);
     });
-    this.onButtonClick();
-    this.onEnterKey();
-  }
-
-  /**
-   * @private
-   */
-  onButtonClick() {
     $(document).on('click', `${this.wrapperSelector} ${this.buttonSelector}`, (e) => {
-      const input = this.findInput(e.currentTarget);
-      this.callback(input);
-      $(input).data('initial-value', input.value);
-      this.toggleButtonVisibility(e.currentTarget, false);
+      this.submitInput(e);
     });
-  }
-
-  /**
-   * @private
-   */
-  onEnterKey() {
     $(document).on('keyup', this.inputSelector, (e) => {
       if (e.keyCode === 13) {
         e.preventDefault();
-        $(this.findButton(e.currentTarget)).click();
+        this.submitInput(e);
       }
     });
   }
 
   /**
+   * @private
+   */
+  submitInput(e) {
+    const input = this.findInput(e.currentTarget);
+    this.callback(input);
+    $(input).data('initial-value', input.value);
+    this.toggleButtonVisibility(e.currentTarget, false);
+  }
+
+  /**
    * @param {HTMLElement} input
    * @param {Boolean|null} visible
+   *
+   * @private
    */
   refreshButtonState(input, visible = null) {
     const button = this.findButton(input);

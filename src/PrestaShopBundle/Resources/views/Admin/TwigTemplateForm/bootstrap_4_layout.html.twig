@@ -846,7 +846,7 @@
   {% endif %}
 {% endblock text_widget %}
 
-{% block updatable_input_widget %}
+{% block submittable_input_widget %}
   {%- set attr = attr|merge({'class': (attr.class|default('') ~ ' ps-submittable-input-wrapper')|trim}) -%}
   <div {{ block('widget_attributes') }}>
     {%- set typeAttr = form.vars.type_attr|merge({
@@ -860,4 +860,4 @@
       <i class="material-icons">check</i>
     </button>
   </div>
-{% endblock updatable_input_widget %}
+{% endblock submittable_input_widget %}
