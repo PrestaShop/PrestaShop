@@ -1,4 +1,5 @@
-$component-name: header-multishop !default;
+// stylelint-disable-next-line
+$component-name: header-multishop;
 
 .#{$component-name} {
   position: relative;
@@ -45,7 +46,7 @@ $component-name: header-multishop !default;
   &-dark {
     .#{$component-name}-title,
     .#{$component-name}-center,
-    .#{$component-name}-view-action, {
+    .#{$component-name}-view-action {
       color: $multishop-header-default-color;
 
       i {
