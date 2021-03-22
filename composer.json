@@ -108,7 +108,7 @@
         "sensio/distribution-bundle": "^5.0",
         "sensio/framework-extra-bundle": "^5.1",
         "shudrum/array-finder": "^1.1.0",
-        "smarty/smarty": "^3.1.31",
+        "smarty/smarty": "^3.1.39",
         "soundasleep/html2text": "^0.5.0",
         "swiftmailer/swiftmailer": "~6.2",
         "symfony/monolog-bundle": "^3.1.0",
