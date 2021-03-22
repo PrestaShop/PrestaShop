@@ -28,9 +28,13 @@ declare(strict_types=1);
 
 namespace PrestaShop\PrestaShop\Adapter\Product\Update;
 
+use PrestaShop\PrestaShop\Adapter\Product\Combination\Update\CombinationRemover;
+use PrestaShop\PrestaShop\Adapter\Product\Pack\Update\ProductPackUpdater;
 use PrestaShop\PrestaShop\Adapter\Product\Repository\ProductRepository;
+use PrestaShop\PrestaShop\Adapter\Product\VirtualProduct\Update\VirtualProductUpdater;
 use PrestaShop\PrestaShop\Core\Domain\Product\Exception\CannotUpdateProductException;
 use PrestaShop\PrestaShop\Core\Domain\Product\Exception\ProductConstraintException;
+use PrestaShop\PrestaShop\Core\Domain\Product\Pack\ValueObject\PackId;
 use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductId;
 use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductType;
 
@@ -42,12 +46,35 @@ class ProductTypeUpdater
     private $productRepository;
 
     /**
+     * @var ProductPackUpdater
+     */
+    private $productPackUpdater;
+
+    /**
+     * @var CombinationRemover
+     */
+    private $combinationRemover;
+
+    /**
+     * @var VirtualProductUpdater
+     */
+    private $virtualProductUpdater;
+
+    /**
      * @param ProductRepository $productRepository
+     * @param ProductPackUpdater $productPackUpdater
+     * @param CombinationRemover $combinationRemover
      */
     public function __construct(
-        ProductRepository $productRepository
+        ProductRepository $productRepository,
+        ProductPackUpdater $productPackUpdater,
+        CombinationRemover $combinationRemover,
+        VirtualProductUpdater $virtualProductUpdater
     ) {
         $this->productRepository = $productRepository;
+        $this->productPackUpdater = $productPackUpdater;
+        $this->combinationRemover = $combinationRemover;
+        $this->virtualProductUpdater = $virtualProductUpdater;
     }
 
     /**
@@ -60,9 +87,31 @@ class ProductTypeUpdater
     public function updateType(ProductId $productId, ProductType $productType): void
     {
         $product = $this->productRepository->get($productId);
+        $updatedProperties = [
+            'product_type',
+            'is_virtual',
+        ];
+
+        // First remove the associations before the type is updated (since these actions are only allowed for a certain type)
+        if ($product->product_type === ProductType::TYPE_PACK && $productType->getValue() !== ProductType::TYPE_PACK) {
+            $product->cache_is_pack = false;
+            $updatedProperties[] = 'cache_is_pack';
+            $this->productPackUpdater->setPackProducts(new PackId($productId->getValue()), []);
+        }
+
+        if ($product->product_type === ProductType::TYPE_COMBINATIONS && $productType->getValue() !== ProductType::TYPE_COMBINATIONS) {
+            $product->cache_default_attribute = 0;
+            $updatedProperties[] = 'cache_default_attribute';
+            $this->combinationRemover->removeAllProductCombinations($productId);
+        }
+
+        if ($product->product_type === ProductType::TYPE_VIRTUAL && $productType->getValue() !== ProductType::TYPE_VIRTUAL) {
+            $this->virtualProductUpdater->deleteFileForProduct($productId);
+        }
+
+        // Finally update product type
         $product->product_type = $productType->getValue();
         $product->is_virtual = ProductType::TYPE_VIRTUAL === $productType->getValue();
-
-        $this->productRepository->partialUpdate($product, ['product_type', 'is_virtual'], CannotUpdateProductException::FAILED_UPDATE_TYPE);
+        $this->productRepository->partialUpdate($product, $updatedProperties, CannotUpdateProductException::FAILED_UPDATE_TYPE);
     }
 }
