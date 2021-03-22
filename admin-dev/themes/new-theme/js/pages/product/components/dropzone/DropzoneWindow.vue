@@ -43,7 +43,7 @@
           class="material-icons"
           data-toggle="pstooltip"
           :data-original-title="$t('window.replaceSelection')"
-          @click="$emit('replaceSelection')"
+          @click="openFileManager"
           v-if="selectedFile"
         >find_replace</i>
         <i
@@ -72,6 +72,8 @@
       class="dropzone-window-unselect"
       v-if="selectedFiles.length === files.length"
       @click="$emit('unselectAll')"
+      data-toggle="pstooltip"
+      :data-original-title="$t('window.zoom')"
     >
       {{ $t("window.unselectAll") }}
     </p>
@@ -83,9 +85,16 @@
       <div
         class="md-checkbox dropzone-window-checkbox"
         v-if="selectedFile !== null"
+        :data-toggle="showCoverTooltip"
+        :data-original-title="$t('window.cantDisableCover')"
       >
         <label>
-          <input type="checkbox">
+          <input
+            type="checkbox"
+            :disabled="isCover"
+            :checked="isCover"
+            @change="$emit('coverChanged', $event)"
+          >
           <i class="md-checkbox-control" />
           {{ $t("window.useAsCover") }}
         </label>
@@ -145,7 +154,6 @@
           @click="$emit('saveSelectedFile')"
         >
           <span v-if="!loading">
-
             {{ $t("window.saveImage") }}
           </span>
           <span
@@ -189,11 +197,23 @@
       selectedFile() {
         return this.selectedFiles.length === 1 ? this.selectedFiles[0] : null;
       },
+      isCover() {
+        return !!(this.selectedFile && this.selectedFile.is_cover);
+      },
+      showCoverTooltip() {
+        if (this.isCover) {
+          return 'pstooltip';
+        }
+
+        return false;
+      },
       selectedCaption: {
         get() {
-          if (this.selectedFile === null
+          if (
+            this.selectedFile === null
             || !this.selectedFile.legends
-            || !this.selectedFile.legends[this.selectedLocale.id_lang]) {
+            || !this.selectedFile.legends[this.selectedLocale.id_lang]
+          ) {
             return '';
           }
 
@@ -215,8 +235,18 @@
       window.prestaShopUiKit.initToolTips();
     },
     methods: {
+      /**
+       * Watch file change and send an event to the smart component
+       */
       watchFiles(event) {
         this.$emit('replacedFile', event);
+      },
+      /**
+       * Used to open the native file manager
+       */
+      openFileManager() {
+        const fileInput = document.querySelector('.dropzone-window-filemanager');
+        fileInput.click();
       },
     },
   };

@@ -65,6 +65,7 @@ class ImageDropzoneType extends TranslatorAwareType
                 'window.imageReplaced' => $this->trans('Image replaced', 'Admin.Actions'),
                 'window.unselectAll' => $this->trans('Unselect all', 'Admin.Actions'),
                 'window.replaceSelection' => $this->trans('Replace selection', 'Admin.Actions'),
+                'window.cantDisableCover' => $this->trans('You cannot disable the cover image.', 'Admin.Actions'),
                 'window.selectedFiles' => $this->trans(
                     '[1]%filesNb%[/1] selected file(s)',
                     'Admin.Actions',
