@@ -85,7 +85,7 @@
 
             {% for group in groupList if group.shops is not empty %}
               <li class="multishop-modal-group-item multishop-modal-item">
-                <span class="multistore-modal-color-container{% if isGroupContext and currentContext.id == group.id %} multishop-modal-color-check{% endif %}">
+                <span class="multishop-modal-color-container{% if isGroupContext and currentContext.id == group.id %} multishop-modal-color-check{% endif %}">
                   <i class="material-icons">check</i>
                   <a class="multishop-modal-color"{% if group.color is not empty %} style="background-color: {{group.color}};"{% endif %} href="{{ getAdminLink('AdminShopGroup', true, {'id_shop_group' : group.id, 'updateshop_group' : true}) }}" data-toggle="popover" data-trigger="hover" data-placement="top" data-content="{{ "Edit color"|trans({}, 'Admin.Global') }}" data-original-title="" title=""></a>
                 </span>
@@ -95,7 +95,7 @@
               {% for shop in group.shops %}
                 <li class="multishop-modal-shop-item multishop-modal-item">
                   <div class="multishop-modal-item-left">
-                  <span class="multistore-modal-color-container{% if isShopContext and currentContext.id == shop.id %} multishop-modal-color-check{% endif %}">
+                  <span class="multishop-modal-color-container{% if isShopContext and currentContext.id == shop.id %} multishop-modal-color-check{% endif %}">
                     <i class="material-icons">check</i>
                     <a class="multishop-modal-color"{% if shop.color is not empty %} style="background-color: {{shop.color}};"{% endif %} href="{{ getAdminLink('AdminShop', true, {'shop_id' : shop.id, 'updateshop' : true}) }}" data-toggle="popover" data-trigger="hover" data-placement="top" data-content="{{ "Edit color"|trans({}, 'Admin.Global') }}" data-original-title="" title=""></a>
                   </span>
