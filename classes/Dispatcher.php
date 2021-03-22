@@ -686,7 +686,7 @@ class DispatcherCore
             }
         }
 
-        // Move 'index' route to the first position on every languaje route array.
+        // Move 'index' route to the first position on every language route array.
         // 'index' route must be the first checked, to avoid false matches within '/' url in the nexts routes regexp.
         foreach($this->routes as $id_shop => $lang_routes){
             foreach($lang_routes as $id_lang => $route){
