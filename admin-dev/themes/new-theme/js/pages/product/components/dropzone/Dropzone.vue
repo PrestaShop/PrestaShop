@@ -49,11 +49,11 @@
         ]"
       >
         <i class="material-icons">add_a_photo</i><br>
-        {{ $t('window.dropImages') }}<br>
-        <a>{{ $t('window.selectFiles') }}</a><br>
+        {{ $t("window.dropImages") }}<br>
+        <a>{{ $t("window.selectFiles") }}</a><br>
         <small>
-          {{ $t('window.recommendedSize') }}<br>
-          {{ $t('window.recommendedFormats') }}
+          {{ $t("window.recommendedSize") }}<br>
+          {{ $t("window.recommendedFormats") }}
         </small>
       </div>
 
@@ -74,8 +74,8 @@
       @removeSelection="removeSelection"
       @selectAll="selectAll"
       @saveSelectedFile="saveSelectedFile"
-      @replaceSelection="replaceSelection"
       @replacedFile="manageReplacedFile"
+      @coverChanged="changeCover"
       :files="files"
       :locales="locales"
       :selected-locale="selectedLocale"
@@ -111,6 +111,9 @@
             </label>
           </div>
         </div>
+        <div class="iscover">
+          {{ $t("window.cover") }}
+        </div>
       </div>
     </div>
   </div>
@@ -118,7 +121,11 @@
 
 <script>
   import Router from '@components/router';
-  import {getProductImages, saveImageInformations, replaceImage} from '@pages/product/services/images';
+  import {
+    getProductImages,
+    saveImageInformations,
+    replaceImage,
+  } from '@pages/product/services/images';
   import ProductMap from '@pages/product/product-map';
   import DropzoneWindow from './DropzoneWindow';
 
@@ -143,6 +150,7 @@
         loading: true,
         selectedLocale: null,
         buttonLoading: false,
+        coverData: {},
       };
     },
     props: {
@@ -178,15 +186,18 @@
       watchLocaleChanges() {
         this.selectedLocale = this.locales[0];
 
-        window.prestashop.instance.eventEmitter.on(DropzoneMap.events.languageSelected, (event) => {
-          const {selectedLocale} = event;
+        window.prestashop.instance.eventEmitter.on(
+          DropzoneMap.events.languageSelected,
+          (event) => {
+            const {selectedLocale} = event;
 
-          this.locales.forEach((locale) => {
-            if (locale.iso_code === selectedLocale) {
-              this.selectedLocale = locale;
-            }
-          });
-        });
+            this.locales.forEach((locale) => {
+              if (locale.iso_code === selectedLocale) {
+                this.selectedLocale = locale;
+              }
+            });
+          },
+        );
       },
       /**
        * This methods is used to initialize product images we already have uploaded
@@ -216,7 +227,9 @@
         this.configuration.paramName = `${this.formName}[file]`;
         this.configuration.method = 'POST';
         this.configuration.params = {};
-        this.configuration.params[`${this.formName}[product_id]`] = this.productId;
+        this.configuration.params[
+          `${this.formName}[product_id]`
+        ] = this.productId;
         this.configuration.params[`${this.formName}[_token]`] = this.token;
 
         this.dropzone = new window.Dropzone(
@@ -225,6 +238,12 @@
         );
 
         this.dropzone.on(DropzoneMap.events.addedFile, (file) => {
+          file.previewElement.dataset.id = file.image_id;
+
+          if (file.is_cover) {
+            file.previewElement.classList.add('is-cover');
+          }
+
           file.previewElement.addEventListener('click', () => {
             const input = file.previewElement.querySelector('.md-checkbox input');
             input.checked = !input.checked;
@@ -239,7 +258,6 @@
               file.previewElement.classList.toggle('selected');
             }
           });
-
           this.files.push(file);
         });
 
@@ -312,42 +330,88 @@
         if (!this.selectedFiles.length) {
           return;
         }
+
         this.buttonLoading = true;
 
         const selectedFile = this.selectedFiles[0];
 
-        const data = {};
-        data[`${this.formName}[is_cover]`] = selectedFile.is_cover ? 1 : 0;
-        Object.keys(selectedFile.legends).forEach((langId) => {
-          data[`${this.formName}[legend][${langId}]`] = selectedFile.legends[langId];
-        });
-        data[`${this.formName}[_token]`] = this.token;
+        if (
+          this.coverData.file
+          && this.selectedFiles.length === 1
+          && this.coverData.file.image_id === selectedFile.image_id
+        ) {
+          selectedFile.is_cover = this.coverData.value;
+        }
 
         try {
-          await saveImageInformations(selectedFile, data);
+          const savedImage = await saveImageInformations(
+            selectedFile,
+            this.token,
+            this.formName,
+          );
+
+          const savedImageElement = document.querySelector(
+            `.dz-preview[data-id="${savedImage.image_id}"]`,
+          );
+
+          /**
+           * If the image was saved as cover, we need to replace the DOM in order to display
+           * the correct one.
+           */
+          if (savedImage.is_cover) {
+            if (!savedImageElement.classList.contains('is-cover')) {
+              const coverElement = document.querySelector('.dz-preview.is-cover');
+              coverElement.classList.remove('is-cover');
+              savedImageElement.classList.add('is-cover');
+
+              this.files = this.files.map((file) => {
+                if (file.image_id !== savedImage.image_id && file.is_cover) {
+                  file.is_cover = false;
+                }
+
+                return file;
+              });
+            }
+          }
+
           $.growl({message: this.$t('window.settingsUpdated')});
           this.buttonLoading = false;
         } catch (error) {
-          $.growl.error({message: error.message});
+          $.growl.error({message: error.error});
           this.buttonLoading = false;
         }
       },
-      replaceSelection() {
-        const fileInput = document.querySelector('.dropzone-window-filemanager');
-        fileInput.click();
-      },
+      /**
+       * Used to save and manage some datas from a replaced file
+       */
       async manageReplacedFile(event) {
         const selectedFile = this.selectedFiles[0];
         this.buttonLoading = true;
 
         try {
-          await replaceImage(selectedFile, {newImage: event.target.files[0]});
+          const newImage = await replaceImage(
+            selectedFile,
+            event.target.files[0],
+            this.formName,
+            this.token,
+          );
+          const imageElement = document.querySelector(
+            `.dz-preview[data-id="${newImage.image_id}"] img`,
+          );
+          imageElement.src = newImage.path;
+
           $.growl({message: this.$t('window.imageReplaced')});
           this.buttonLoading = false;
         } catch (error) {
-          $.growl.error({message: error.message});
+          $.growl.error({message: error.responseJSON.error});
           this.buttonLoading = false;
         }
+      },
+      changeCover(event) {
+        this.coverData = {
+          file: this.selectedFiles[0],
+          value: event.target.value,
+        };
       },
     },
   };
@@ -374,6 +438,15 @@
     .dz-preview {
       position: relative;
       cursor: pointer;
+
+      .iscover {
+        display: none;
+      }
+      &.is-cover {
+        .iscover {
+          display: block;
+        }
+      }
 
       &:not(.openfilemanager) {
         border: 3px solid transparent;
