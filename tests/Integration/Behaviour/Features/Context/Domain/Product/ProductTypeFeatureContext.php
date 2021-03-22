@@ -28,10 +28,24 @@ declare(strict_types=1);
 
 namespace Tests\Integration\Behaviour\Features\Context\Domain\Product;
 
+use PrestaShop\PrestaShop\Core\Domain\Product\Command\UpdateProductTypeCommand;
 use PrestaShop\PrestaShop\Core\Domain\Product\Exception\InvalidProductTypeException;
 
 class ProductTypeFeatureContext extends AbstractProductFeatureContext
 {
+    /**
+     * @When I update product :productReference type to :productType
+     *
+     * @param string $productReference
+     * @param string $productType
+     */
+    public function updateProductType(string $productReference, string $productType): void
+    {
+        $productId = (int) $this->getSharedStorage()->get($productReference);
+
+        $this->getCommandBus()->handle(new UpdateProductTypeCommand($productId, $productType));
+    }
+
     /**
      * @Then I should get error that this action is allowed for :productType product only
      *
