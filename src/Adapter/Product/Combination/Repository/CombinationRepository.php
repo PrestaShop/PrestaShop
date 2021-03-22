@@ -37,6 +37,7 @@ use PrestaShop\PrestaShop\Adapter\Attribute\Repository\AttributeRepository;
 use PrestaShop\PrestaShop\Adapter\Product\Combination\Validate\CombinationValidator;
 use PrestaShop\PrestaShop\Core\Domain\Language\ValueObject\LanguageId;
 use PrestaShop\PrestaShop\Core\Domain\Product\Combination\Exception\CannotAddCombinationException;
+use PrestaShop\PrestaShop\Core\Domain\Product\Combination\Exception\CannotBulkDeleteCombinationException;
 use PrestaShop\PrestaShop\Core\Domain\Product\Combination\Exception\CannotDeleteCombinationException;
 use PrestaShop\PrestaShop\Core\Domain\Product\Combination\Exception\CombinationNotFoundException;
 use PrestaShop\PrestaShop\Core\Domain\Product\Combination\ValueObject\CombinationId;
@@ -143,14 +144,72 @@ class CombinationRepository extends AbstractObjectModelRepository
     }
 
     /**
-     * @param Combination $combination
+     * @param CombinationId $combinationId
      * @param int $errorCode
      *
      * @throws CoreException
      */
-    public function delete(Combination $combination, int $errorCode = 0): void
+    public function delete(CombinationId $combinationId, int $errorCode = 0): void
     {
-        $this->deleteObjectModel($combination, CannotDeleteCombinationException::class, $errorCode);
+        $this->deleteObjectModel($this->get($combinationId), CannotDeleteCombinationException::class, $errorCode);
+    }
+
+    /**
+     * @param ProductId $productId
+     *
+     * @throws CannotDeleteCombinationException
+     */
+    public function deleteByProductId(ProductId $productId): void
+    {
+        $combinationIds = $this->getCombinationIdsByProductId($productId);
+
+        $this->bulkDelete($combinationIds);
+    }
+
+    /**
+     * @param array $combinationIds
+     */
+    public function bulkDelete(array $combinationIds): void
+    {
+        $failedIds = [];
+        foreach ($combinationIds as $combinationId) {
+            try {
+                $this->delete($combinationId);
+            } catch (CannotDeleteCombinationException $e) {
+                $failedIds[] = $combinationId->getValue();
+            }
+        }
+
+        if (empty($failedIds)) {
+            return;
+        }
+
+        throw new CannotBulkDeleteCombinationException($failedIds, sprintf(
+            'Failed to delete following combinations: %s',
+            implode(', ', $failedIds)
+        ));
+    }
+
+    /**
+     * @param ProductId $productId
+     *
+     * @return CombinationId[]
+     */
+    private function getCombinationIdsByProductId(ProductId $productId): array
+    {
+        $qb = $this->connection->createQueryBuilder();
+        $qb
+            ->select('pa.id_product_attribute')
+            ->from($this->dbPrefix . 'product_attribute', 'pa')
+            ->andWhere('pa.id_product = :productId')
+            ->setParameter('productId', $productId->getValue())
+        ;
+        $combinationIds = $qb->execute()->fetchAll();
+
+        return array_map(
+            function (array $combination) { return new CombinationId((int) $combination['id_product_attribute']); },
+            $combinationIds
+        );
     }
 
     /**
