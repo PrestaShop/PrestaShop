@@ -23,6 +23,8 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
 
+import {showGrowl} from '@app/utils/growl';
+
 const {$} = window;
 
 /**
@@ -76,9 +78,13 @@ export default class SubmittableInput {
    */
   submitInput(e) {
     const input = this.findInput(e.currentTarget);
-    this.callback(input);
-    $(input).data('initial-value', input.value);
-    this.toggleButtonVisibility(e.currentTarget, false);
+
+    this.callback(input).then(() => {
+      $(input).data('initial-value', input.value);
+      this.toggleButtonVisibility(e.currentTarget, false);
+    }).catch((error) => {
+      showGrowl('error', error.responseJSON.message);
+    });
   }
 
   /**

@@ -1423,6 +1423,7 @@ services:
 
     form.type.sell.product.combination_item_type:
         class: 'PrestaShopBundle\Form\Admin\Sell\Product\Combination\CombinationItemType'
+        parent: 'form.type.translatable.aware'
         public: true
         tags:
             - { name: form.type }

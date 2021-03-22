@@ -27,8 +27,10 @@ declare(strict_types=1);
 
 namespace PrestaShopBundle\Form\Admin\Sell\Product\Combination;
 
+use PrestaShop\PrestaShop\Core\ConstraintValidator\Constraints\TypedRegex;
+use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\Reference;
 use PrestaShopBundle\Form\Admin\Type\SubmittableInputType;
-use Symfony\Component\Form\AbstractType;
+use PrestaShopBundle\Form\Admin\Type\TranslatorAwareType;
 use Symfony\Component\Form\Extension\Core\Type\ButtonType;
 use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
 use Symfony\Component\Form\Extension\Core\Type\HiddenType;
@@ -36,8 +38,9 @@ use Symfony\Component\Form\Extension\Core\Type\MoneyType;
 use Symfony\Component\Form\Extension\Core\Type\RadioType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
+use Symfony\Component\Validator\Constraints\Length;
 
-class CombinationItemType extends AbstractType
+class CombinationItemType extends TranslatorAwareType
 {
     /**
      * {@inheritdoc}
@@ -56,6 +59,19 @@ class CombinationItemType extends AbstractType
             ->add('name', HiddenType::class)
             ->add('reference', SubmittableInputType::class, [
                 'type' => TextType::class,
+                'type_options' => [
+                    'constraints' => [
+                        new Length([
+                            'max' => Reference::MAX_LENGTH,
+                            'maxMessage' => $this->trans(
+                                'The %1$s field is too long (%2$d chars max).',
+                                'Admin.Notifications.Error',
+                                ['%1$s' => 'reference', '%2$d' => Reference::MAX_LENGTH]
+                            ),
+                        ]),
+                        new TypedRegex(TypedRegex::TYPE_REFERENCE),
+                    ],
+                ],
                 'attr' => [
                     'class' => 'combination-reference',
                 ],

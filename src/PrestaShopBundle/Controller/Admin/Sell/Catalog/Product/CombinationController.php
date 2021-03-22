@@ -110,8 +110,7 @@ class CombinationController extends FrameworkBundleAdminController
             $result = $this->getCombinationItemFormHandler()->handleFor($combinationId, $form);
 
             if (!$result->isValid()) {
-                //@todo: handle errors
-                return $this->json(['errors' => $form->getErrors(true)], Response::HTTP_BAD_REQUEST);
+                return $this->json(['message' => (string) $form->getErrors(true)], Response::HTTP_BAD_REQUEST);
             }
         } catch (Exception $e) {
             return $this->json(
