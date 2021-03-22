@@ -59,3 +59,10 @@ Feature: Update product image from Back Office (BO)
       | image reference | is cover | legend[en-US] | position |
       | image1          | false    |               | 1        |
       | image2          | true     |               | 2        |
+    When I update image "image1" with following information:
+      | legend[en-US] | preston is alive |
+      | cover         | false            |
+    Then product "product1" should have following images:
+      | image reference | is cover | legend[en-US]    | position |
+      | image1          | false    | preston is alive | 1        |
+      | image2          | true     |                  | 2        |
