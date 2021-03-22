@@ -16,6 +16,14 @@ $component-name: header-multishop;
     background-color: $multishop-header-default-background;
   }
 
+  &-allshops .#{$component-name}-top-bar {
+    background-color: $primary;
+
+    .#{$component-name}-title {
+      color: #fff;
+    }
+  }
+
   &-title {
     margin: 0;
     font-size: 0.8rem;
@@ -146,13 +154,5 @@ $component-name: header-multishop;
         display: none;
       }
     }
-  }
-}
-
-.#{$component-name}-allshops .#{$component-name}-top-bar {
-  background-color: #25b9d7;
-
-  .#{$component-name}-title {
-    color: #fff;
   }
 }
