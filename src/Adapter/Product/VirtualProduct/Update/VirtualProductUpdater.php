@@ -31,7 +31,9 @@ namespace PrestaShop\PrestaShop\Adapter\Product\VirtualProduct\Update;
 use PrestaShop\PrestaShop\Adapter\File\Uploader\VirtualProductFileUploader;
 use PrestaShop\PrestaShop\Adapter\Product\Repository\ProductRepository;
 use PrestaShop\PrestaShop\Adapter\Product\VirtualProduct\Repository\VirtualProductFileRepository;
+use PrestaShop\PrestaShop\Core\Domain\Product\Exception\InvalidProductTypeException;
 use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductId;
+use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductType;
 use PrestaShop\PrestaShop\Core\Domain\Product\VirtualProductFile\Exception\VirtualProductFileConstraintException;
 use PrestaShop\PrestaShop\Core\Domain\Product\VirtualProductFile\Exception\VirtualProductFileNotFoundException;
 use PrestaShop\PrestaShop\Core\Domain\Product\VirtualProductFile\ValueObject\VirtualProductFileId;
@@ -113,16 +115,15 @@ class VirtualProductUpdater
      * @param VirtualProductFile $virtualProductFile
      *
      * @return VirtualProductFileId
+     *
+     * @throws InvalidProductTypeException
+     * @throws VirtualProductFileConstraintException
      */
     public function addFile(ProductId $productId, string $filePath, VirtualProductFile $virtualProductFile): VirtualProductFileId
     {
         $product = $this->productRepository->get($productId);
-
-        if (!$product->is_virtual) {
-            throw new VirtualProductFileConstraintException(
-                'Only virtual product can have file',
-                VirtualProductFileConstraintException::INVALID_PRODUCT_TYPE
-            );
+        if ($product->product_type !== ProductType::TYPE_VIRTUAL) {
+            throw new InvalidProductTypeException(InvalidProductTypeException::EXPECTED_VIRTUAL_TYPE);
         }
 
         try {
@@ -155,9 +156,16 @@ class VirtualProductUpdater
 
     /**
      * @param ProductId $productId
+     *
+     * @throws InvalidProductTypeException
      */
     public function deleteFileForProduct(ProductId $productId): void
     {
+        $product = $this->productRepository->get($productId);
+        if ($product->product_type !== ProductType::TYPE_VIRTUAL) {
+            throw new InvalidProductTypeException(InvalidProductTypeException::EXPECTED_VIRTUAL_TYPE);
+        }
+
         try {
             $virtualProductFile = $this->virtualProductFileRepository->findByProductId($productId);
         } catch (VirtualProductFileNotFoundException $e) {
