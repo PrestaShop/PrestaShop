@@ -155,9 +155,9 @@ class CombinationRepository extends AbstractObjectModelRepository
 
     /**
      * @param ProductId $productId
-     * @param int $limit
-     * @param int $offset
-     * @param array $filters
+     * @param int|null $limit
+     * @param int|null $offset
+     * @param array<string, mixed> $filters
      *
      * @return array<int, array<string, mixed>>
      */
@@ -174,7 +174,7 @@ class CombinationRepository extends AbstractObjectModelRepository
 
     /**
      * @param ProductId $productId
-     * @param array $filters
+     * @param array<string, array<int, int>> $filters
      *
      * @return int
      */
@@ -335,20 +335,53 @@ class CombinationRepository extends AbstractObjectModelRepository
 
     /**
      * @param ProductId $productId
-     * @param array $filters
+     * @param array<string, mixed> $filters
      *
      * @return QueryBuilder
      */
     private function getCombinationsQueryBuilder(ProductId $productId, array $filters): QueryBuilder
     {
-        //@todo: filters are not handled.
         $qb = $this->connection->createQueryBuilder();
         $qb->from($this->dbPrefix . 'product_attribute', 'pa')
             ->where('pa.id_product = :productId')
-            ->orderBy('id_product_attribute', 'asc')
             ->setParameter('productId', $productId->getValue())
         ;
 
+        // filter by attributes
+        if (isset($filters['attribute_ids'])) {
+            $combinationIds = $this->getCombinationIdsByAttributeIds((array) $filters['attribute_ids']);
+            $qb->andWhere($qb->expr()->in('pa.id_product_attribute', ':combinationIds'))
+                ->setParameter('attributeIds', $combinationIds, Connection::PARAM_INT_ARRAY)
+            ;
+        }
+
+        $qb->orderBy('id_product_attribute', 'asc');
+
         return $qb;
+    }
+
+    /**
+     * @param int[] $attributeIds
+     *
+     * @return int[]
+     */
+    private function getCombinationIdsByAttributeIds(array $attributeIds): array
+    {
+        $qb = $this->connection->createQueryBuilder();
+        $qb->select('pac.id_product_attribute')
+            ->from($this->dbPrefix . 'product_attribute_combination', 'pac')
+            ->where($qb->expr()->in('pac.id_attribute', ':attributeIds'))
+            ->setParameter('attributeIds', $attributeIds, Connection::PARAM_INT_ARRAY)
+        ;
+
+        $results = $qb->execute()->fetchAll();
+
+        if (!$results) {
+            return [];
+        }
+
+        return array_map(function (array $result): int {
+            return (int) $result['id_product_attribute'];
+        }, $results);
     }
 }
