@@ -57,21 +57,29 @@ class GetEditableCombinationsList
     private $offset;
 
     /**
+     * @var array<string, mixed>
+     */
+    private $filters;
+
+    /**
      * @param int $productId
      * @param int $languageId
      * @param int|null $limit
      * @param int|null $offset
+     * @param array<string, mixed>|null $filters
      */
     public function __construct(
         int $productId,
         int $languageId,
         ?int $limit = null,
-        ?int $offset = null
+        ?int $offset = null,
+        array $filters = []
     ) {
         $this->productId = new ProductId($productId);
         $this->languageId = new LanguageId($languageId);
         $this->limit = $limit;
         $this->offset = $offset;
+        $this->filters = $filters;
     }
 
     /**
@@ -104,5 +112,13 @@ class GetEditableCombinationsList
     public function getOffset(): ?int
     {
         return $this->offset;
+    }
+
+    /**
+     * @return array<string, mixed>
+     */
+    public function getFilters(): array
+    {
+        return $this->filters;
     }
 }
