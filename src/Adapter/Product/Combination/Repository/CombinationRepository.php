@@ -349,7 +349,7 @@ class CombinationRepository extends AbstractObjectModelRepository
 
         // filter by attributes
         if (isset($filters['attribute_ids'])) {
-            $combinationIds = $this->getCombinationIdsByAttributeIds((array) $filters['attribute_ids']);
+            $combinationIds = $this->getCombinationIdsByAttributeIds($productId, (array) $filters['attribute_ids']);
             $qb->andWhere($qb->expr()->in('pa.id_product_attribute', ':combinationIds'))
                 ->setParameter('combinationIds', $combinationIds, Connection::PARAM_INT_ARRAY)
             ;
@@ -361,17 +361,27 @@ class CombinationRepository extends AbstractObjectModelRepository
     }
 
     /**
+     * @param ProductId $productId
      * @param int[] $attributeIds
      *
      * @return int[]
      */
-    private function getCombinationIdsByAttributeIds(array $attributeIds): array
+    private function getCombinationIdsByAttributeIds(ProductId $productId, array $attributeIds): array
     {
         $qb = $this->connection->createQueryBuilder();
         $qb->select('pac.id_product_attribute')
             ->from($this->dbPrefix . 'product_attribute_combination', 'pac')
-            ->where($qb->expr()->in('pac.id_attribute', ':attributeIds'))
+            ->leftJoin(
+                'pac',
+                $this->dbPrefix . 'product_attribute',
+                'pa',
+                'pac.id_product_attribute = pa.id_product_attribute'
+            )
+            ->where('pa.id_product = :productId')
+            ->setParameter('productId', $productId->getValue())
+            ->andWhere($qb->expr()->in('pac.id_attribute', ':attributeIds'))
             ->setParameter('attributeIds', $attributeIds, Connection::PARAM_INT_ARRAY)
+            ->groupBy('pac.id_product_attribute')
         ;
 
         $results = $qb->execute()->fetchAll();
