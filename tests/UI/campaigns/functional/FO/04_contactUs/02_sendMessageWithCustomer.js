@@ -34,6 +34,7 @@ const contactUsData = new ContactUsFakerData(
     subject: 'Customer service',
     emailAddress: DefaultCustomer.email,
     reference: Orders.firstOrder.ref,
+    message: 'Quas amet magni excepturi accusantium test tests tests'
   },
 );
 
