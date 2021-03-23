@@ -132,7 +132,7 @@ export default class CombinationsManager {
     }
 
     this.initialized = true;
-    this.paginator.paginateToLastViewed();
+    this.paginator.paginate(1);
   }
 
   /**

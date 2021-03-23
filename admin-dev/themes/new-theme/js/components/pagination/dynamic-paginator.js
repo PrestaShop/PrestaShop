@@ -90,7 +90,6 @@ export default class DynamicPaginator {
     this.$paginationContainer = $(containerSelector);
     this.paginationService = paginationService;
     this.renderer = renderer;
-    this.lastViewedPage = 1;
     this.setSelectorsMap(selectorsMap);
     this.init();
     if (startingPage !== null) {
@@ -99,7 +98,6 @@ export default class DynamicPaginator {
 
     return {
       paginate: (page) => this.paginate(page),
-      paginateToLastViewed: () => this.paginate(this.lastViewedPage),
     };
   }
 
@@ -143,7 +141,6 @@ export default class DynamicPaginator {
 
     this.renderer.render(data);
     this.renderer.toggleLoading(false);
-    this.lastViewedPage = page;
   }
 
   /**
