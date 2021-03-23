@@ -29,6 +29,8 @@ declare(strict_types=1);
 namespace PrestaShopBundle\Controller\Admin\Sell\Catalog\Product;
 
 use Exception;
+use PrestaShop\PrestaShop\Core\Domain\Exception\FileUploadException;
+use PrestaShop\PrestaShop\Core\Domain\Product\Exception\ProductConstraintException;
 use PrestaShop\PrestaShop\Core\Domain\Product\Image\Exception\CannotAddProductImageException;
 use PrestaShop\PrestaShop\Core\Domain\Product\Image\Exception\ProductImageNotFoundException;
 use PrestaShop\PrestaShop\Core\Domain\Product\Image\Query\GetProductImage;
@@ -183,6 +185,12 @@ class ImageController extends FrameworkBundleAdminController
         $iniConfig = $this->get('prestashop.core.configuration.ini_configuration');
 
         return [
+            ProductConstraintException::class => [
+                ProductConstraintException::INVALID_ID => $this->trans(
+                    'Invalid ID.',
+                    'Admin.Notifications.Error'
+                ),
+            ],
             ProductImageNotFoundException::class => $this->trans(
                 'The object cannot be loaded (or found)',
                 'Admin.Notifications.Error'
@@ -206,6 +214,12 @@ class ImageController extends FrameworkBundleAdminController
                 'An error occurred while attempting to save.',
                 'Admin.Notifications.Error'
             ),
+            FileUploadException::class => [
+                UPLOAD_ERR_NO_FILE => $this->trans(
+                    'No file was uploaded.',
+                    'Admin.Notifications.Error'
+                ),
+            ],
         ];
     }
 }

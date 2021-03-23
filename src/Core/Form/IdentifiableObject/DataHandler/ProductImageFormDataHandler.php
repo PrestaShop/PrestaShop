@@ -29,9 +29,11 @@ declare(strict_types=1);
 namespace PrestaShop\PrestaShop\Core\Form\IdentifiableObject\DataHandler;
 
 use PrestaShop\PrestaShop\Core\CommandBus\CommandBusInterface;
+use PrestaShop\PrestaShop\Core\Domain\Exception\FileUploadException;
 use PrestaShop\PrestaShop\Core\Domain\Product\Image\Command\AddProductImageCommand;
 use PrestaShop\PrestaShop\Core\Domain\Product\Image\Command\UpdateProductImageCommand;
 use PrestaShop\PrestaShop\Core\Domain\Product\Image\ValueObject\ImageId;
+use Symfony\Component\HttpFoundation\File\UploadedFile;
 
 class ProductImageFormDataHandler implements FormDataHandlerInterface
 {
@@ -54,9 +56,13 @@ class ProductImageFormDataHandler implements FormDataHandlerInterface
      */
     public function create(array $data)
     {
-        $uploadedFile = $data['file'];
+        $uploadedFile = $data['file'] ?? null;
+        if (!($uploadedFile instanceof UploadedFile)) {
+            throw new FileUploadException('No file was uploaded', UPLOAD_ERR_NO_FILE);
+        }
+
         $command = new AddProductImageCommand(
-            (int) $data['product_id'],
+            (int) ($data['product_id'] ?? 0),
             $uploadedFile->getPathname()
         );
 

@@ -25,8 +25,6 @@ admin_products_v2_add_image:
             id_product: productId
     options:
         expose: true
-    requirements:
-        productId: \d+
 
 admin_products_v2_update_image:
     path: /images/{productImageId}/update
