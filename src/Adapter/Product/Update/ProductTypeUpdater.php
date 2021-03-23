@@ -87,24 +87,14 @@ class ProductTypeUpdater
     public function updateType(ProductId $productId, ProductType $productType): void
     {
         $product = $this->productRepository->get($productId);
-        $updatedProperties = [
-            'product_type',
-            'is_virtual',
-        ];
 
         // First remove the associations before the type is updated (since these actions are only allowed for a certain type)
         if ($product->product_type === ProductType::TYPE_PACK && $productType->getValue() !== ProductType::TYPE_PACK) {
-            $product->cache_is_pack = false;
-            $updatedProperties[] = 'cache_is_pack';
             $this->productPackUpdater->setPackProducts(new PackId($productId->getValue()), []);
         }
-
         if ($product->product_type === ProductType::TYPE_COMBINATIONS && $productType->getValue() !== ProductType::TYPE_COMBINATIONS) {
-            $product->cache_default_attribute = 0;
-            $updatedProperties[] = 'cache_default_attribute';
             $this->combinationRemover->removeAllProductCombinations($productId);
         }
-
         if ($product->product_type === ProductType::TYPE_VIRTUAL && $productType->getValue() !== ProductType::TYPE_VIRTUAL) {
             $this->virtualProductUpdater->deleteFileForProduct($productId);
         }
@@ -112,6 +102,17 @@ class ProductTypeUpdater
         // Finally update product type
         $product->product_type = $productType->getValue();
         $product->is_virtual = ProductType::TYPE_VIRTUAL === $productType->getValue();
+        $product->cache_is_pack = ProductType::TYPE_PACK === $productType->getValue();
+        if ($productType->getValue() !== ProductType::TYPE_COMBINATIONS) {
+            $product->cache_default_attribute = 0;
+            $updatedProperties[] = 'cache_default_attribute';
+        }
+
+        $updatedProperties = [
+            'product_type',
+            'is_virtual',
+            'cache_is_pack',
+        ];
         $this->productRepository->partialUpdate($product, $updatedProperties, CannotUpdateProductException::FAILED_UPDATE_TYPE);
     }
 }
