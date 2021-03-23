@@ -127,12 +127,14 @@
     replaceImage,
   } from '@pages/product/services/images';
   import ProductMap from '@pages/product/product-map';
+  import ProductEventMap from '@pages/product/product-event-map';
   import DropzoneWindow from './DropzoneWindow';
 
   const {$} = window;
 
   const router = new Router();
   const DropzoneMap = ProductMap.dropzone;
+  const DropzoneEvents = ProductEventMap.dropzone;
 
   export default {
     name: 'Dropzone',
@@ -187,7 +189,7 @@
         this.selectedLocale = this.locales[0];
 
         window.prestashop.instance.eventEmitter.on(
-          DropzoneMap.events.languageSelected,
+          DropzoneEvents.languageSelected,
           (event) => {
             const {selectedLocale} = event;
 
@@ -237,7 +239,7 @@
           this.configuration,
         );
 
-        this.dropzone.on(DropzoneMap.events.addedFile, (file) => {
+        this.dropzone.on(DropzoneEvents.addedFile, (file) => {
           file.previewElement.dataset.id = file.image_id;
 
           if (file.is_cover) {
@@ -261,12 +263,12 @@
           this.files.push(file);
         });
 
-        this.dropzone.on(DropzoneMap.events.error, (fileWithError, message) => {
+        this.dropzone.on(DropzoneEvents.error, (fileWithError, message) => {
           $.growl.error({message: message.error});
           this.dropzone.removeFile(fileWithError);
         });
 
-        this.dropzone.on(DropzoneMap.events.success, (file, response) => {
+        this.dropzone.on(DropzoneEvents.success, (file, response) => {
           // Append the data required for a product image
           file.image_id = response.image_id;
           file.is_cover = response.is_cover;

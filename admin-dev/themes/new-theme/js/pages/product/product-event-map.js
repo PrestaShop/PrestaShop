@@ -29,4 +29,10 @@ export default {
     rowRemoved: 'customizationRowRemoved',
     rowAdded: 'customizationRowAdded',
   },
+  dropzone: {
+    addedFile: 'addedfile',
+    error: 'error',
+    success: 'success',
+    languageSelected: 'languageSelected',
+  },
 };

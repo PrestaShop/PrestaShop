@@ -104,11 +104,5 @@ export default {
     configuration: {
       fileManager: '.openfilemanager',
     },
-    events: {
-      addedFile: 'addedfile',
-      error: 'error',
-      success: 'success',
-      languageSelected: 'languageSelected',
-    },
   },
 };
