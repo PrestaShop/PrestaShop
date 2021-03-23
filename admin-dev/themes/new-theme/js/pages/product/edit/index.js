@@ -90,7 +90,7 @@ $(() => {
   new FeatureValuesManager(window.prestashop.instance.eventEmitter);
   new CustomizationsManager();
 
-  if (productType !== 'combination') {
+  if (productType !== ProductMap.productType.COMBINATIONS) {
     new ProductSuppliersManager();
   }
 });
