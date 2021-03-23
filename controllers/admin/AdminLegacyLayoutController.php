@@ -173,6 +173,7 @@ class AdminLegacyLayoutControllerCore extends AdminController
             'js_router_metadata' => $this->jsRouterMetadata,
             /* allow complex <h1> structure. @since 1.7.7 */
             'use_regular_h1_structure' => $this->useRegularH1Structure,
+            'hideLegacyStoreContextSelector' => true
         ];
 
         if ($this->helpLink === false || !empty($this->helpLink)) {
