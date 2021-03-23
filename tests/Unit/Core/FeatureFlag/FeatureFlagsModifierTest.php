@@ -48,7 +48,7 @@ class FeatureFlagsModifierTest extends TestCase
         $this->assertTrue($modifier instanceof DataConfigurationInterface);
     }
 
-    public function testGetConfiguration()
+    public function testGetConfigurationReturnsExpectedStructure()
     {
         $featureFlags = [
             new FeatureFlag('product_page_v1'),
@@ -67,10 +67,10 @@ class FeatureFlagsModifierTest extends TestCase
             'product_page_v3' => false,
         ];
 
-        $this->assertEquals($expected, $modifier->getConfiguration());
+        $this->assertSame($expected, $modifier->getConfiguration());
     }
 
-    public function testGetEmptyConfiguration()
+    public function testGetConfigurationReturnsEmptyIfNoFeatureFlagsAvailable()
     {
         list($entityManagerMock, $repositoryMock) = $this->buildDoctrineServicesMocksForFetchAll([]);
         $translatorMock = $this->getMockBuilder(TranslatorInterface::class)->getMock();

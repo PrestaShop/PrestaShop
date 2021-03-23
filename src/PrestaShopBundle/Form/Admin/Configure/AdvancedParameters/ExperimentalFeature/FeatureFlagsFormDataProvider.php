@@ -32,8 +32,8 @@ use PrestaShop\PrestaShop\Core\Configuration\DataConfigurationInterface;
 use PrestaShop\PrestaShop\Core\Form\FormDataProviderInterface;
 
 /**
- * This class is a boilerplate class used to pass the data between the application layer
- * in charge of the feature flags form and the domain layer in charge of the feature flags model
+ * Passes data between the application layer in charge of the feature flags form 
+ * and the domain layer in charge of the feature flags model
  */
 class FeatureFlagsFormDataProvider implements FormDataProviderInterface
 {
