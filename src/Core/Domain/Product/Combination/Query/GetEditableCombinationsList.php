@@ -66,7 +66,7 @@ class GetEditableCombinationsList
      * @param int $languageId
      * @param int|null $limit
      * @param int|null $offset
-     * @param array<string, mixed>|null $filters
+     * @param array<string, mixed> $filters
      */
     public function __construct(
         int $productId,
