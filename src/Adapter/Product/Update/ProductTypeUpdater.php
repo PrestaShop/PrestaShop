@@ -100,6 +100,12 @@ class ProductTypeUpdater
         }
 
         // Finally update product type
+        $updatedProperties = [
+            'product_type',
+            'is_virtual',
+            'cache_is_pack',
+        ];
+
         $product->product_type = $productType->getValue();
         $product->is_virtual = ProductType::TYPE_VIRTUAL === $productType->getValue();
         $product->cache_is_pack = ProductType::TYPE_PACK === $productType->getValue();
@@ -108,11 +114,6 @@ class ProductTypeUpdater
             $updatedProperties[] = 'cache_default_attribute';
         }
 
-        $updatedProperties = [
-            'product_type',
-            'is_virtual',
-            'cache_is_pack',
-        ];
         $this->productRepository->partialUpdate($product, $updatedProperties, CannotUpdateProductException::FAILED_UPDATE_TYPE);
     }
 }

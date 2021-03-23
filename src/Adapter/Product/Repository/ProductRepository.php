@@ -278,6 +278,7 @@ class ProductRepository extends AbstractObjectModelRepository
         $product->id_category_default = $this->defaultCategoryId;
         $product->name = $localizedNames;
         $product->is_virtual = ProductType::TYPE_VIRTUAL === $productType;
+        $product->cache_is_pack = ProductType::TYPE_PACK === $productType;
         $product->product_type = $productType;
 
         $this->productValidator->validateCreation($product);

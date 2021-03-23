@@ -61,7 +61,9 @@ class InvalidProductTypeException extends ProductException
     public const EXPECTED_NO_COMBINATIONS_TYPE = 50;
 
     /**
-     * {@inheritDoc}
+     * @param int $code
+     * @param string $message
+     * @param Throwable|null $previous
      */
     public function __construct($code, $message = '', Throwable $previous = null)
     {

@@ -94,7 +94,7 @@ Feature: Update product combination suppliers in Back Office (BO)
     And combination "product1MBlack" should not have any suppliers assigned
     And combination "product1MBlue" should not have any suppliers assigned
 
-  Scenario: Remove all associated suppliers for standard product while it has combinations
+  Scenario: Set suppliers for standard product while it has combinations
     Given product product1 type should be combinations
     And product product1 should not have any suppliers assigned
     And combination "product1SWhite" should have following suppliers:

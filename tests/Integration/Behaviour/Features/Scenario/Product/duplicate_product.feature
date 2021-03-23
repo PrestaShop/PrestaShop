@@ -199,4 +199,4 @@ Feature: Duplicate product from Back Office (BO).
     And product copy_of_product1 should have 1 customizable text field
     And product copy_of_product1 should have 0 customizable file fields
 #@todo: assert stock info
-#@todo: add tests for ohter type of products Pack, Virtual, Combinations
+#@todo: add tests for other type of products Pack, Virtual, Combinations

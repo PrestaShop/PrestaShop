@@ -167,10 +167,10 @@ class CommonProductFeatureContext extends AbstractProductFeatureContext
         );
         $productId = $this->getSharedStorage()->get($productReference);
         $product = new Product($productId);
-        if ($productTypeName === ProductType::TYPE_VIRTUAL) {
-            Assert::assertTrue((bool) $product->is_virtual);
-        } else {
-            Assert::assertFalse((bool) $product->is_virtual);
+        Assert::assertEquals($productTypeName === ProductType::TYPE_VIRTUAL, (bool) $product->is_virtual);
+        Assert::assertEquals($productTypeName === ProductType::TYPE_PACK, (bool) $product->cache_is_pack);
+        if ($productTypeName !== ProductType::TYPE_COMBINATIONS) {
+            Assert::assertEquals(0, $product->cache_default_attribute);
         }
     }
 
