@@ -130,6 +130,7 @@
   } from '@pages/product/services/images';
   import ProductMap from '@pages/product/product-map';
   import ProductEventMap from '@pages/product/product-event-map';
+  import ConfirmModal from '@components/modal';
   import DropzoneWindow from './DropzoneWindow';
 
   const {$} = window;
@@ -325,15 +326,27 @@
        */
       removeSelection() {
         try {
-          this.selectedFiles.forEach(async (file) => {
-            await removeProductImage(this.productId);
-            this.dropzone.removeFile(file);
+          new ConfirmModal(
+            {
+              id: 'dropzone-confirm-modal',
+              confirmTitle: this.$t('modal.title', {'%filesNb%': this.selectedFiles.length}),
+              confirmMessage: this.$t('modal.message'),
+              closeButtonLabel: this.$t('modal.close'),
+              confirmButtonLabel: this.$t('modal.accept'),
+              confirmButtonClass: 'btn-primary',
+            },
+            () => {
+              this.selectedFiles.forEach(async (file) => {
+                await removeProductImage(this.productId);
+                this.dropzone.removeFile(file);
 
-            this.files = this.files.filter((e) => file !== e);
-          });
+                this.files = this.files.filter((e) => file !== e);
+              });
 
-          this.selectedFiles = [];
-          this.removeTooltips();
+              this.selectedFiles = [];
+              this.removeTooltips();
+            },
+          ).show();
         } catch (error) {
           $.growl.error({message: error.message});
         }
