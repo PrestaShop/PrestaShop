@@ -32,7 +32,7 @@ use PrestaShop\PrestaShop\Core\Configuration\DataConfigurationInterface;
 use PrestaShop\PrestaShop\Core\Form\FormDataProviderInterface;
 
 /**
- * Passes data between the application layer in charge of the feature flags form 
+ * Passes data between the application layer in charge of the feature flags form
  * and the domain layer in charge of the feature flags model
  */
 class FeatureFlagsFormDataProvider implements FormDataProviderInterface
