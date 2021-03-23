@@ -51,6 +51,9 @@ abstract class AbstractCombinationFeatureContext extends AbstractProductFeatureC
             $this->getDefaultLangId(),
             $limit,
             $offset,
+            //@todo: implement sorting in scenarios
+            null,
+            null,
             $filters
         ));
     }

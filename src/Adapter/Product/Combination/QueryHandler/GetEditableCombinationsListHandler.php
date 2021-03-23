@@ -106,8 +106,8 @@ final class GetEditableCombinationsListHandler extends AbstractProductHandler im
         $searchCriteria = new CombinationFilters([
             'limit' => $query->getLimit(),
             'offset' => $query->getOffset(),
-            //@todo: implement sort
-            'orderBy' => '',
+            'orderBy' => $query->getOrderBy(),
+            'sortOrder' => $query->getOrderWay(),
             'filters' => $filters,
         ]);
 

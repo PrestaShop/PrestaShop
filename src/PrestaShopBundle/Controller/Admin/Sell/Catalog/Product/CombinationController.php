@@ -83,6 +83,8 @@ class CombinationController extends FrameworkBundleAdminController
             $this->getContextLangId(),
             $combinationFilters->getLimit(),
             $combinationFilters->getOffset(),
+            $combinationFilters->getOrderBy(),
+            $combinationFilters->getOrderWay(),
             $combinationFilters->getFilters()
         ));
 
