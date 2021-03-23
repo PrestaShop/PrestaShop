@@ -83,7 +83,14 @@ export default class SubmittableInput {
       $(input).data('initial-value', input.value);
       this.toggleButtonVisibility(e.currentTarget, false);
     }).catch((error) => {
-      showGrowl('error', error.responseJSON.message);
+      if (typeof error.responseJSON.errors === 'undefined') {
+        return;
+      }
+
+      const messages = error.responseJSON.errors;
+      Object.keys(messages).forEach((key) => {
+        showGrowl('error', messages[key]);
+      });
     });
   }
 
