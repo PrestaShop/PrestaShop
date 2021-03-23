@@ -92,7 +92,7 @@ class Filters extends ParameterBag implements SearchCriteriaInterface
      */
     public function getOffset()
     {
-        return $this->getInt('offset', null);
+        return $this->getInt('offset') ?: null;
     }
 
     /**
@@ -100,7 +100,7 @@ class Filters extends ParameterBag implements SearchCriteriaInterface
      */
     public function getLimit()
     {
-        return $this->getInt('limit', null);
+        return $this->getInt('limit') ?: null;
     }
 
     /**
