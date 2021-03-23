@@ -37,7 +37,7 @@ use Symfony\Component\HttpFoundation\JsonResponse;
 class CombinationController extends FrameworkBundleAdminController
 {
     /**
-     * @AdminSecurity("is_granted('update', request.get('_legacy_controller'))")
+     * @AdminSecurity("is_granted('read', request.get('_legacy_controller'))")
      *
      * @param int $productId
      * @param CombinationFilters $combinationFilters
