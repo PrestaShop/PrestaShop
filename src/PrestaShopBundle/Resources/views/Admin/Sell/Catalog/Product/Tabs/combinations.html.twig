@@ -24,9 +24,7 @@
  *#}
 
 <div role="tabpanel" class="form-contenttab tab-pane container-fluid" id="combinations-tab">
-  {{ include('@PrestaShop/Admin/Sell/Catalog/Product/Blocks/combinations.html.twig', {
-    'combinationsForm': combinationsForm,
-    'combinationsLimit': combinationsLimit,
-    'combinationsLimitChoices': combinationLimitChoices,
-  }) }}
+  {{ render(controller('PrestaShopBundle:Admin\\Sell\\Catalog\\Product\\Combination:listForm', {
+    'productId': productId,
+  })) }}
 </div>

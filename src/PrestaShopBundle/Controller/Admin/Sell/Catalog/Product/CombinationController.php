@@ -27,15 +27,47 @@ declare(strict_types=1);
 
 namespace PrestaShopBundle\Controller\Admin\Sell\Catalog\Product;
 
+use Exception;
 use PrestaShop\PrestaShop\Core\Domain\Product\Combination\Query\GetEditableCombinationsList;
 use PrestaShop\PrestaShop\Core\Domain\Product\Combination\QueryResult\CombinationListForEditing;
+use PrestaShop\PrestaShop\Core\Form\IdentifiableObject\Builder\FormBuilderInterface;
+use PrestaShop\PrestaShop\Core\Form\IdentifiableObject\Handler\FormHandlerInterface;
 use PrestaShopBundle\Controller\Admin\FrameworkBundleAdminController;
+use PrestaShopBundle\Form\Admin\Sell\Product\Combination\CombinationListType;
 use PrestaShopBundle\Security\Annotation\AdminSecurity;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
 
 class CombinationController extends FrameworkBundleAdminController
 {
+    /**
+     * Default number of combinations per page
+     */
+    private const DEFAULT_COMBINATIONS_NUMBER = 10;
+
+    /**
+     * Options used for the number of combinations per page
+     */
+    private const COMBINATIONS_PAGINATION_OPTIONS = [10, 20, 50, 100];
+
+    /**
+     * Renders combinations list prototype (which contains form inputs submittable by ajax)
+     * It can only be embedded into another view (does not have a route)
+     *
+     * @return Response
+     */
+    public function listFormAction(): Response
+    {
+        return $this->render('@PrestaShop/Admin/Sell/Catalog/Product/Blocks/combinations.html.twig', [
+            //@todo: hardcoded. Make configurable?
+            'combinationLimitChoices' => self::COMBINATIONS_PAGINATION_OPTIONS,
+            'combinationsLimit' => self::DEFAULT_COMBINATIONS_NUMBER,
+            'combinationsForm' => $this->createForm(CombinationListType::class)->createView(),
+            'combinationItemForm' => $this->getCombinationItemFormBuilder()->getForm()->createView(),
+        ]);
+    }
+
     /**
      * @AdminSecurity("is_granted('update', request.get('_legacy_controller'))")
      *
@@ -56,7 +88,38 @@ class CombinationController extends FrameworkBundleAdminController
             $offset ?? null
         ));
 
-        return $this->json($this->formatResponse($combinationsList));
+        return $this->json($this->formatListResponse($combinationsList));
+    }
+
+    /**
+     * @AdminSecurity("is_granted('update', request.get('_legacy_controller'))")
+     *
+     * @param int $combinationId
+     * @param Request $request
+     *
+     * @return JsonResponse
+     */
+    public function updateCombinationFromListingAction(int $combinationId, Request $request): JsonResponse
+    {
+        $form = $this->getCombinationItemFormBuilder()->getFormFor($combinationId, [], [
+            'method' => Request::METHOD_PATCH,
+        ]);
+        $form->handleRequest($request);
+
+        try {
+            $result = $this->getCombinationItemFormHandler()->handleFor($combinationId, $form);
+
+            if (!$result->isValid()) {
+                return $this->json(['errors' => $this->getFormErrorsForJS($form)], Response::HTTP_BAD_REQUEST);
+            }
+        } catch (Exception $e) {
+            return $this->json(
+                ['errors' => [$this->getFallbackErrorMessage(get_class($e), $e->getCode(), $e->getMessage())]],
+                Response::HTTP_INTERNAL_SERVER_ERROR
+            );
+        }
+
+        return $this->json([]);
     }
 
     /**
@@ -64,7 +127,7 @@ class CombinationController extends FrameworkBundleAdminController
      *
      * @return array<string, array<int, array<string,bool|int|string>>|int>
      */
-    private function formatResponse(CombinationListForEditing $combinationListForEditing): array
+    private function formatListResponse(CombinationListForEditing $combinationListForEditing): array
     {
         $data = [
             'combinations' => [],
@@ -75,15 +138,30 @@ class CombinationController extends FrameworkBundleAdminController
                 'id' => $combination->getCombinationId(),
                 'isSelected' => false,
                 'name' => $combination->getCombinationName(),
+                'reference' => $combination->getReference(),
                 //@todo: don't forget image path when implemented in the query
                 'impactOnPrice' => (string) $combination->getImpactOnPrice(),
-                //@todo: calculate final price. Need a service to be used in formData provider and here
-                'finalPriceTe' => 0,
                 'quantity' => $combination->getQuantity(),
                 'isDefault' => $combination->isDefault(),
             ];
         }
 
         return $data;
+    }
+
+    /**
+     * @return FormHandlerInterface
+     */
+    private function getCombinationItemFormHandler(): FormHandlerInterface
+    {
+        return $this->get('prestashop.core.form.identifiable_object.combination_item_form_handler');
+    }
+
+    /**
+     * @return FormBuilderInterface
+     */
+    private function getCombinationItemFormBuilder(): FormBuilderInterface
+    {
+        return $this->get('prestashop.core.form.identifiable_object.builder.combination_item_form_builder');
     }
 }

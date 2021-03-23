@@ -49,4 +49,20 @@ export default class CombinationsService {
       limit,
     }));
   }
+
+  /**
+   * @param {Number} combinationId
+   * @param {Object} data
+   *
+   * @returns {Promise}
+   */
+  updateListedCombination(combinationId, data) {
+    return $.ajax({
+      url: this.router.generate('admin_products_combinations_update_combination_from_listing', {
+        combinationId,
+      }),
+      data,
+      type: 'PATCH',
+    });
+  }
 }

@@ -58,6 +58,11 @@ class UpdateCombinationFromListingCommand
     private $default;
 
     /**
+     * @var string|null
+     */
+    private $reference;
+
+    /**
      * @param int $combinationId
      */
     public function __construct(int $combinationId)
@@ -84,9 +89,9 @@ class UpdateCombinationFromListingCommand
     /**
      * @param string $impactOnPrice
      *
-     * @return UpdateCombinationFromListingCommand
+     * @return self
      */
-    public function setImpactOnPrice(string $impactOnPrice): UpdateCombinationFromListingCommand
+    public function setImpactOnPrice(string $impactOnPrice): self
     {
         $this->impactOnPrice = new DecimalNumber($impactOnPrice);
 
@@ -104,9 +109,9 @@ class UpdateCombinationFromListingCommand
     /**
      * @param int $quantity
      *
-     * @return UpdateCombinationFromListingCommand
+     * @return self
      */
-    public function setQuantity(int $quantity): UpdateCombinationFromListingCommand
+    public function setQuantity(int $quantity): self
     {
         $this->quantity = $quantity;
 
@@ -124,11 +129,31 @@ class UpdateCombinationFromListingCommand
     /**
      * @param bool $default
      *
-     * @return UpdateCombinationFromListingCommand
+     * @return self
      */
-    public function setDefault(bool $default): UpdateCombinationFromListingCommand
+    public function setDefault(bool $default): self
     {
         $this->default = $default;
+
+        return $this;
+    }
+
+    /**
+     * @return string|null
+     */
+    public function getReference(): ?string
+    {
+        return $this->reference;
+    }
+
+    /**
+     * @param string|null $reference
+     *
+     * @return self
+     */
+    public function setReference(?string $reference): self
+    {
+        $this->reference = $reference;
 
         return $this;
     }

@@ -27,33 +27,73 @@ declare(strict_types=1);
 
 namespace PrestaShopBundle\Form\Admin\Sell\Product\Combination;
 
-use PrestaShopBundle\Form\Admin\Type\SwitchType;
-use Symfony\Component\Form\AbstractType;
+use PrestaShop\PrestaShop\Core\ConstraintValidator\Constraints\TypedRegex;
+use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\Reference;
+use PrestaShopBundle\Form\Admin\Type\SubmittableInputType;
+use PrestaShopBundle\Form\Admin\Type\TranslatorAwareType;
 use Symfony\Component\Form\Extension\Core\Type\ButtonType;
 use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
 use Symfony\Component\Form\Extension\Core\Type\HiddenType;
 use Symfony\Component\Form\Extension\Core\Type\MoneyType;
-use Symfony\Component\Form\Extension\Core\Type\NumberType;
+use Symfony\Component\Form\Extension\Core\Type\RadioType;
+use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
+use Symfony\Component\Validator\Constraints\Length;
 
-class CombinationItemType extends AbstractType
+class CombinationItemType extends TranslatorAwareType
 {
     /**
      * {@inheritdoc}
      */
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
-        // @todo: impact_on_price and quantity needs new type component similar as in Catalog->stocks page.
         $builder
             ->add('is_selected', CheckboxType::class, [
                 'label' => false,
             ])
-            ->add('combination_id', HiddenType::class)
+            ->add('combination_id', HiddenType::class, [
+                'attr' => [
+                    'class' => 'combination-id-input',
+                ],
+            ])
             ->add('name', HiddenType::class)
-            ->add('impact_on_price', MoneyType::class)
+            ->add('reference', SubmittableInputType::class, [
+                'type' => TextType::class,
+                'type_options' => [
+                    'constraints' => [
+                        new Length([
+                            'max' => Reference::MAX_LENGTH,
+                            'maxMessage' => $this->trans(
+                                'The %1$s field is too long (%2$d chars max).',
+                                'Admin.Notifications.Error',
+                                ['%1$s' => 'reference', '%2$d' => Reference::MAX_LENGTH]
+                            ),
+                        ]),
+                        new TypedRegex(TypedRegex::TYPE_REFERENCE),
+                    ],
+                ],
+                'attr' => [
+                    'class' => 'combination-reference',
+                ],
+            ])
+            ->add('impact_on_price', SubmittableInputType::class, [
+                'type' => MoneyType::class,
+                'attr' => [
+                    'class' => 'combination-impact-on-price',
+                ],
+            ])
             ->add('final_price_te', HiddenType::class)
-            ->add('quantity', NumberType::class)
-            ->add('is_default', SwitchType::class)
+            ->add('quantity', SubmittableInputType::class, [
+                'attr' => [
+                    'class' => 'combination-quantity',
+                ],
+            ])
+            ->add('is_default', RadioType::class, [
+                'label' => false,
+                'attr' => [
+                    'class' => 'combination-is-default-input',
+                ],
+            ])
             ->add('edit', ButtonType::class)
             ->add('delete', ButtonType::class)
         ;

@@ -27,30 +27,105 @@ import ProductMap from '@pages/product/product-map';
 import CombinationsGridRenderer from '@pages/product/edit/combinations-grid-renderer';
 import CombinationsService from '@pages/product/services/combinations-service';
 import DynamicPaginator from '@components/pagination/dynamic-paginator';
+import SubmittableInput from '@components/form/submittable-input';
 
 const {$} = window;
 
 export default class CombinationsManager {
   constructor() {
     this.$productForm = $(ProductMap.productForm);
+    this.$combinationsContainer = $(ProductMap.combinations.combinationsContainer);
+    this.combinationIdInputsSelector = ProductMap.combinations.combinationIdInputsSelector;
     this.initialized = false;
+    this.combinationsService = new CombinationsService(this.getProductId());
+
     this.init();
 
     return {};
   }
 
+  /**
+   * @private
+   */
   init() {
-    const productId = this.getProductId();
     this.paginator = new DynamicPaginator(
       ProductMap.combinations.paginationContainer,
-      new CombinationsService(productId),
+      this.combinationsService,
       new CombinationsGridRenderer(),
     );
+    this.initSubmittableInputs();
+    this.$combinationsContainer.on('change', ProductMap.combinations.isDefaultInputsSelector, (e) => {
+      if (!e.currentTarget.checked) {
+        return;
+      }
+      this.updateDefaultCombination(e.currentTarget);
+    });
 
     // Paginate to first page when tab is shown
     this.$productForm.find(ProductMap.combinations.navigationTab).on('shown.bs.tab', () => this.firstInit());
   }
 
+  /**
+   * @private
+   */
+  initSubmittableInputs() {
+    const combinationToken = this.getCombinationToken();
+    const {quantityKey} = ProductMap.combinations.combinationItemForm;
+    const {impactOnPriceKey} = ProductMap.combinations.combinationItemForm;
+    const {referenceKey} = ProductMap.combinations.combinationItemForm;
+    const {tokenKey} = ProductMap.combinations.combinationItemForm;
+
+    new SubmittableInput(ProductMap.combinations.quantityInputWrapper, async (input) => {
+      await this.combinationsService.updateListedCombination(
+        this.findCombinationId(input),
+        {[quantityKey]: input.value, [tokenKey]: combinationToken},
+      );
+    });
+
+    new SubmittableInput(ProductMap.combinations.impactOnPriceInputWrapper, async (input) => {
+      await this.combinationsService.updateListedCombination(
+        this.findCombinationId(input),
+        {[impactOnPriceKey]: input.value, [tokenKey]: combinationToken},
+      );
+    });
+
+    new SubmittableInput(ProductMap.combinations.referenceInputWrapper, async (input) => {
+      await this.combinationsService.updateListedCombination(
+        this.findCombinationId(input),
+        {[referenceKey]: input.value, [tokenKey]: combinationToken},
+      );
+    });
+  }
+
+  /**
+   * @param {HTMLElement} checkedInput
+   *
+   * @private
+   */
+  async updateDefaultCombination(checkedInput) {
+    const checkedInputs = this.$combinationsContainer.find(
+      `${ProductMap.combinations.isDefaultInputsSelector}:checked`,
+    );
+    const checkedDefaultId = this.findCombinationId(checkedInput);
+
+    await this.combinationsService.updateListedCombination(
+      checkedDefaultId,
+      {
+        'combination_item[is_default]': checkedInput.value,
+        'combination_item[_token]': this.getCombinationToken(),
+      },
+    );
+
+    $.each(checkedInputs, (index, input) => {
+      if (this.findCombinationId(input) !== checkedDefaultId) {
+        $(input).prop('checked', false);
+      }
+    });
+  }
+
+  /**
+   * @private
+   */
   firstInit() {
     if (this.initialized) {
       return;
@@ -61,11 +136,29 @@ export default class CombinationsManager {
   }
 
   /**
+   * @returns {String}
+   */
+  getCombinationToken() {
+    return $(ProductMap.combinations.combinationsContainer).data('combinationToken');
+  }
+
+  /**
    * @returns {Number}
    *
    * @private
    */
   getProductId() {
     return Number(this.$productForm.data('productId'));
+  }
+
+  /**
+   * @param {HTMLElement} input of the same table row
+   *
+   * @returns {Number}
+   *
+   * @private
+   */
+  findCombinationId(input) {
+    return $(input).closest('tr').find('.combination-id-input').val();
   }
 }

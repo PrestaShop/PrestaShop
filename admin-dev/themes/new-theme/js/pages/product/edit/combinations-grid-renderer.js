@@ -63,8 +63,6 @@ export default class CombinationsGridRenderer {
   }
 
   /**
-   * @todo: handle on change of new inputs of price quantity and is_default when they are ready
-   * @todo: they should call related endpoints to update combination
    * @param {Array} combinations
    *
    * @private
@@ -74,27 +72,38 @@ export default class CombinationsGridRenderer {
 
     let rowIndex = 0;
     combinations.forEach((combination) => {
-      const row = this.getPrototypeRow(rowIndex);
-      this.$combinationsTableBody.append(row);
+      const $row = $(this.getPrototypeRow(rowIndex));
 
       // fill inputs
-      const $combinationIdInput = $(ProductMap.combinations.tableRow.combinationIdInput(rowIndex));
-      const $combinationNameInput = $(ProductMap.combinations.tableRow.combinationNameInput(rowIndex));
-      const $finalPriceInput = $(ProductMap.combinations.tableRow.finalPriceTeInput(rowIndex));
+      const $combinationIdInput = $(ProductMap.combinations.tableRow.combinationIdInput(rowIndex), $row);
+      const $combinationNameInput = $(ProductMap.combinations.tableRow.combinationNameInput(rowIndex), $row);
+      const $quantityInput = $(ProductMap.combinations.tableRow.quantityInput(rowIndex), $row);
+      const $impactOnPriceInput = $(ProductMap.combinations.tableRow.impactOnPriceInput(rowIndex), $row);
+      const $referenceInput = $(ProductMap.combinations.tableRow.referenceInput(rowIndex), $row);
+      // @todo final price should be calculated based on price impact and product price,
+      //    so it doesnt need to be in api response
+      const $finalPriceInput = $(ProductMap.combinations.tableRow.finalPriceTeInput(rowIndex), $row);
       $combinationIdInput.val(combination.id);
       $combinationNameInput.val(combination.name);
-      $finalPriceInput.val(combination.finalPriceTe);
-
       // This adds a text after the cell children (do not use text which replaces everything)
       $combinationIdInput.closest('td').append(combination.id);
       $combinationNameInput.closest('td').append(combination.name);
       $finalPriceInput.closest('td').append(combination.finalPriceTe);
+      $referenceInput.val(combination.reference);
+      $referenceInput.data('initial-value', combination.reference);
+      $quantityInput.val(combination.quantity);
+      $quantityInput.data('initial-value', combination.quantity);
+      $impactOnPriceInput.val(combination.impactOnPrice);
+      $impactOnPriceInput.data('initial-value', combination.impactOnPrice);
+      $(ProductMap.combinations.tableRow.editButton(rowIndex), $row).data('id', combination.id);
+      $(ProductMap.combinations.tableRow.deleteButton(rowIndex), $row).data('id', combination.id);
 
-      $(ProductMap.combinations.tableRow.impactOnPriceInput(rowIndex)).val(combination.impactOnPrice);
-      $(ProductMap.combinations.tableRow.quantityInput(rowIndex)).val(combination.quantity);
-      $(ProductMap.combinations.tableRow.isDefaultInput(rowIndex)).val(combination.isDefault);
-      $(ProductMap.combinations.tableRow.editButton(rowIndex)).data('id', combination.id);
-      $(ProductMap.combinations.tableRow.deleteButton(rowIndex)).data('id', combination.id);
+      if (combination.isDefault) {
+        $(ProductMap.combinations.tableRow.isDefaultInput(rowIndex), $row).prop('checked', true);
+      }
+
+      this.$combinationsTableBody.append($row);
+
       rowIndex += 1;
     });
   }

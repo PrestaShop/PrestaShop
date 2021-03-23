@@ -1,4 +1,5 @@
-{#**
+<?php
+/**
  * Copyright since 2007 PrestaShop SA and Contributors
  * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
  *
@@ -21,23 +22,29 @@
  * @author    PrestaShop SA and Contributors <contact@prestashop.com>
  * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
- *#}
-{% form_theme combinationsForm '@PrestaShop/Admin/Sell/Catalog/Product/Form/combinations_form_theme.html.twig' %}
+ */
+declare(strict_types=1);
 
-{% block form_product_combinations %}
-  <div class="row justify-content-center" id="combinations-list">
-    <div class="spinner-product-combinations-container" id="productCombinationsLoading">
-      <div class="spinner spinner-primary"></div>
-    </div>
+namespace PrestaShop\PrestaShop\Core\Form\IdentifiableObject\DataProvider;
 
-    {# Integrate the token that will be required in the combination update request #}
-    {{ form_row(combinationsForm, {'attr': {'data-combination-token': csrf_token(combinationItemForm.vars.name) }}) }}
-  </div>
+/**
+ * For specific cases when form data is not needed
+ */
+class EmptyFormDataProvider implements FormDataProviderInterface
+{
+    /**
+     * {@inheritdoc}
+     */
+    public function getData($id)
+    {
+        return [];
+    }
 
-  <div class="row justify-content-center" id="combinations-pagination">
-    {{ include('@PrestaShop/Admin/Common/javascript_pagination.html.twig', {
-      'limit': combinationsLimit,
-      'limitChoices': combinationLimitChoices,
-    }) }}
-  </div>
-{% endblock form_product_combinations %}
+    /**
+     * {@inheritdoc}
+     */
+    public function getDefaultData()
+    {
+        return [];
+    }
+}

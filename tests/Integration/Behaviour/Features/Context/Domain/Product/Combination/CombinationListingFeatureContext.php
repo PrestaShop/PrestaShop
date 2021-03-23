@@ -66,6 +66,9 @@ class CombinationListingFeatureContext extends AbstractCombinationFeatureContext
         if (isset($dataRows['is default'])) {
             $command->setDefault(PrimitiveUtils::castStringBooleanIntoBoolean($dataRows['is default']));
         }
+        if (isset($dataRows['combination reference'])) {
+            $command->setReference($dataRows['combination reference']);
+        }
     }
 
     /**
@@ -168,7 +171,12 @@ class CombinationListingFeatureContext extends AbstractCombinationFeatureContext
             Assert::assertSame(
                 $expectedCombination['combination name'],
                 $editableCombinationForListing->getCombinationName(),
-                'Unexpected combination'
+                'Unexpected combination name'
+            );
+            Assert::assertSame(
+                $expectedCombination['combination reference'],
+                $editableCombinationForListing->getReference(),
+                'Unexpected combination reference'
             );
             Assert::assertSame(
                 PrimitiveUtils::castStringBooleanIntoBoolean($expectedCombination['is default']),
@@ -179,11 +187,6 @@ class CombinationListingFeatureContext extends AbstractCombinationFeatureContext
                 $expectedCombination['impact on price'],
                 (string) $editableCombinationForListing->getImpactOnPrice(),
                 'Unexpected combination impact on price'
-            );
-            Assert::assertEquals(
-                $expectedCombination['final price'],
-                (string) $editableCombinationForListing->getFinalPrice(),
-                'Unexpected combination final price'
             );
             Assert::assertSame(
                 (int) $expectedCombination['quantity'],

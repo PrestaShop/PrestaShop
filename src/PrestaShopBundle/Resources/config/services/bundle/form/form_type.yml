@@ -1431,6 +1431,7 @@ services:
 
     form.type.sell.product.combination_item_type:
         class: 'PrestaShopBundle\Form\Admin\Sell\Product\Combination\CombinationItemType'
+        parent: 'form.type.translatable.aware'
         public: true
         tags:
             - { name: form.type }
@@ -1464,5 +1465,10 @@ services:
         class: 'PrestaShopBundle\Form\Admin\Configure\AdvancedParameters\Logs\LogsByEmailType'
         parent: 'form.type.translatable.aware'
         public: true
+        tags:
+            - { name: form.type }
+
+    form.type.submittable_input:
+        class: 'PrestaShopBundle\Form\Admin\Type\SubmittableInputType'
         tags:
             - { name: form.type }
