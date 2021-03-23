@@ -169,6 +169,7 @@ class VirtualProductUpdater
         try {
             $virtualProductFile = $this->virtualProductFileRepository->findByProductId($productId);
         } catch (VirtualProductFileNotFoundException $e) {
+            // No virtual file found, nothing to remove
             return;
         }
 

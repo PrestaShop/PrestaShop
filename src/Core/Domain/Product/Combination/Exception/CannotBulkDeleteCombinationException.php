@@ -41,7 +41,7 @@ class CannotBulkDeleteCombinationException extends CombinationException
     private $combinationIds;
 
     /**
-     * @param int[] $combinationIds ids of product supplier which cannot be deleted
+     * @param int[] $combinationIds ids of combinations which cannot be deleted
      * @param string $message
      * @param int $code
      * @param Throwable|null $previous
