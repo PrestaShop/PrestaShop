@@ -42,6 +42,7 @@ class CombinationFilters extends Filters
     public static function getDefaults()
     {
         return [
+            // @todo: reuse default limit in Combination controller when #23581 is merged
             'limit' => 10,
             'offset' => 0,
             'orderBy' => 'name',
