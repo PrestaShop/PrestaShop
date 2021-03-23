@@ -31,7 +31,6 @@ namespace PrestaShop\PrestaShop\Adapter\Product\Combination\Repository;
 use Combination;
 use Db;
 use Doctrine\DBAL\Connection;
-use Doctrine\DBAL\Query\QueryBuilder;
 use PrestaShop\PrestaShop\Adapter\AbstractObjectModelRepository;
 use PrestaShop\PrestaShop\Adapter\Attribute\Repository\AttributeRepository;
 use PrestaShop\PrestaShop\Adapter\Product\Combination\Validate\CombinationValidator;
@@ -213,40 +212,6 @@ class CombinationRepository extends AbstractObjectModelRepository
     }
 
     /**
-     * @param ProductId $productId
-     * @param int|null $limit
-     * @param int|null $offset
-     * @param array<string, mixed> $filters
-     *
-     * @return array<int, array<string, mixed>>
-     */
-    public function getProductCombinations(ProductId $productId, ?int $limit = null, ?int $offset = null, array $filters = []): array
-    {
-        $qb = $this->getCombinationsQueryBuilder($productId, $filters)
-            ->select('pa.*')
-            ->setFirstResult($offset)
-            ->setMaxResults($limit)
-        ;
-
-        return $qb->execute()->fetchAll();
-    }
-
-    /**
-     * @param ProductId $productId
-     * @param array<string, array<int, int>> $filters
-     *
-     * @return int
-     */
-    public function getTotalCombinationsCount(ProductId $productId, array $filters = []): int
-    {
-        $qb = $this->getCombinationsQueryBuilder($productId, $filters)
-            ->select('COUNT(pa.id_product_attribute) AS total_combinations')
-        ;
-
-        return (int) $qb->execute()->fetch()['total_combinations'];
-    }
-
-    /**
      * @param int[] $combinationIds
      * @param LanguageId $langId
      *
@@ -390,67 +355,5 @@ class CombinationRepository extends AbstractObjectModelRepository
         }
 
         return $attributesInfoByAttributeId;
-    }
-
-    /**
-     * @param ProductId $productId
-     * @param array<string, mixed> $filters
-     *
-     * @return QueryBuilder
-     */
-    private function getCombinationsQueryBuilder(ProductId $productId, array $filters): QueryBuilder
-    {
-        $qb = $this->connection->createQueryBuilder();
-        $qb->from($this->dbPrefix . 'product_attribute', 'pa')
-            ->where('pa.id_product = :productId')
-            ->setParameter('productId', $productId->getValue())
-        ;
-
-        // filter by attributes
-        if (isset($filters['attribute_ids'])) {
-            $combinationIds = $this->getCombinationIdsByAttributeIds($productId, (array) $filters['attribute_ids']);
-            $qb->andWhere($qb->expr()->in('pa.id_product_attribute', ':combinationIds'))
-                ->setParameter('combinationIds', $combinationIds, Connection::PARAM_INT_ARRAY)
-            ;
-        }
-
-        $qb->orderBy('id_product_attribute', 'asc');
-
-        return $qb;
-    }
-
-    /**
-     * @param ProductId $productId
-     * @param int[] $attributeIds
-     *
-     * @return int[]
-     */
-    private function getCombinationIdsByAttributeIds(ProductId $productId, array $attributeIds): array
-    {
-        $qb = $this->connection->createQueryBuilder();
-        $qb->select('pac.id_product_attribute')
-            ->from($this->dbPrefix . 'product_attribute_combination', 'pac')
-            ->leftJoin(
-                'pac',
-                $this->dbPrefix . 'product_attribute',
-                'pa',
-                'pac.id_product_attribute = pa.id_product_attribute'
-            )
-            ->where('pa.id_product = :productId')
-            ->setParameter('productId', $productId->getValue())
-            ->andWhere($qb->expr()->in('pac.id_attribute', ':attributeIds'))
-            ->setParameter('attributeIds', $attributeIds, Connection::PARAM_INT_ARRAY)
-            ->groupBy('pac.id_product_attribute')
-        ;
-
-        $results = $qb->execute()->fetchAll();
-
-        if (!$results) {
-            return [];
-        }
-
-        return array_map(function (array $result): int {
-            return (int) $result['id_product_attribute'];
-        }, $results);
     }
 }
