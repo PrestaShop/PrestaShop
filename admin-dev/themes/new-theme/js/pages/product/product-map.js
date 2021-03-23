@@ -27,13 +27,14 @@ const productSuppliersId = '#product_suppliers_product_suppliers';
 const productSupplierInputId = (supplierIndex, inputName) => `${productSuppliersId}_${supplierIndex}_${inputName}`;
 
 export default {
+  productForm: 'form[name=product]',
+  productTypeSelector: '#product_basic_type',
   productType: {
     STANDARD: 'standard',
     PACK: 'pack',
     VIRTUAL: 'virtual',
     COMBINATIONS: 'combinations',
   },
-  productForm: 'form[name=product]',
   productFormSubmitButton: 'button[name="product[save]"]',
   navigationBar: '#form-nav',
   dropzoneImagesContainer: '#product_images',
