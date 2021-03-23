@@ -127,7 +127,7 @@ final class CustomerGridDefinitionFactory extends AbstractGridDefinitionFactory
             )
             ->add(
                 (new DataColumn('date_upd'))
-                    ->setName($this->trans('Updated at', [], 'Admin.Advparameters.Feature'))
+                    ->setName($this->trans('Last update', [], 'Admin.Advparameters.Feature'))
                     ->setOptions([
                         'field' => 'date_upd',
                     ])
