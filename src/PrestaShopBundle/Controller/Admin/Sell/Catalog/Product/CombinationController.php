@@ -29,10 +29,10 @@ namespace PrestaShopBundle\Controller\Admin\Sell\Catalog\Product;
 
 use PrestaShop\PrestaShop\Core\Domain\Product\Combination\Query\GetEditableCombinationsList;
 use PrestaShop\PrestaShop\Core\Domain\Product\Combination\QueryResult\CombinationListForEditing;
+use PrestaShop\PrestaShop\Core\Search\Filters\CombinationFilters;
 use PrestaShopBundle\Controller\Admin\FrameworkBundleAdminController;
 use PrestaShopBundle\Security\Annotation\AdminSecurity;
 use Symfony\Component\HttpFoundation\JsonResponse;
-use Symfony\Component\HttpFoundation\Request;
 
 class CombinationController extends FrameworkBundleAdminController
 {
@@ -40,22 +40,18 @@ class CombinationController extends FrameworkBundleAdminController
      * @AdminSecurity("is_granted('update', request.get('_legacy_controller'))")
      *
      * @param int $productId
-     * @param Request $request
+     * @param CombinationFilters $combinationFilters
      *
      * @return JsonResponse
      */
-    public function getListAction(int $productId, Request $request): JsonResponse
+    public function getListAction(int $productId, CombinationFilters $combinationFilters): JsonResponse
     {
-        $limit = (int) $request->query->get('limit');
-        $offset = (int) $request->query->get('offset');
-        $filters = $request->query->get('filters', []);
-
         $combinationsList = $this->getQueryBus()->handle(new GetEditableCombinationsList(
             $productId,
             $this->getContextLangId(),
-            $limit ?? null,
-            $offset ?? null,
-            $filters
+            $combinationFilters->getLimit(),
+            $combinationFilters->getOffset(),
+            $combinationFilters->getFilters()
         ));
 
         return $this->json($this->formatResponse($combinationsList));

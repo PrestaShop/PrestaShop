@@ -25,31 +25,28 @@
  */
 declare(strict_types=1);
 
-namespace PrestaShopBundle\Form\Admin\Sell\Product\Combination;
+namespace PrestaShop\PrestaShop\Core\Search\Filters;
 
-use PrestaShopBundle\Form\Admin\Type\TranslatorAwareType;
-use Symfony\Component\Form\Extension\Core\Type\CollectionType;
-use Symfony\Component\Form\Extension\Core\Type\HiddenType;
-use Symfony\Component\Form\FormBuilderInterface;
+use PrestaShop\PrestaShop\Core\Search\Filters;
 
 /**
- * Form uses collection of combination items and so it can be rendered as a grid consisting of submittable inputs.
+ * Filters of product combination list.
+ *
+ * Combination list is handled by javascript so it doesn't need grid id
  */
-class CombinationListType extends TranslatorAwareType
+class CombinationFilters extends Filters
 {
     /**
      * {@inheritdoc}
      */
-    public function buildForm(FormBuilderInterface $builder, array $options): void
+    public static function getDefaults()
     {
-        $builder
-            ->add('combinations', CollectionType::class, [
-                'entry_type' => CombinationItemType::class,
-                'allow_add' => true,
-                'allow_delete' => true,
-                'prototype_name' => '__COMBINATION_INDEX__',
-            ])
-            ->add('total_combinations_count', HiddenType::class)
-        ;
+        return [
+            'limit' => 10,
+            'offset' => 0,
+            'orderBy' => 'name',
+            'sortOrder' => 'asc',
+            'filters' => [],
+        ];
     }
 }
