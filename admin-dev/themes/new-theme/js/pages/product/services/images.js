@@ -28,9 +28,9 @@ import Router from '@components/router';
 const router = new Router();
 const {$} = window;
 
-export const getProductImages = async productId => {
+export const getProductImages = async (productId) => {
   const imagesUrl = router.generate('admin_products_v2_get_images', {
-    productId
+    productId,
   });
 
   return $.get(imagesUrl);
@@ -38,25 +38,25 @@ export const getProductImages = async productId => {
 
 export const saveImageInformations = async (selectedFile, token, formName) => {
   const saveUrl = router.generate('admin_products_v2_update_image', {
-    productImageId: selectedFile.image_id
+    productImageId: selectedFile.image_id,
   });
 
   const data = {};
   data[`${formName}[is_cover]`] = selectedFile.is_cover ? 1 : 0;
-  Object.keys(selectedFile.legends).forEach(langId => {
+  Object.keys(selectedFile.legends).forEach((langId) => {
     data[`${formName}[legend][${langId}]`] = selectedFile.legends[langId];
   });
   data[`${formName}[_token]`] = token;
 
   return $.ajax(saveUrl, {
     method: 'PATCH',
-    data
+    data,
   });
 };
 
 export const replaceImage = async (selectedFile, newFile, formName, token) => {
   const replaceUrl = router.generate('admin_products_v2_update_image', {
-    productImageId: selectedFile.image_id
+    productImageId: selectedFile.image_id,
   });
 
   const formData = new FormData();
@@ -68,13 +68,13 @@ export const replaceImage = async (selectedFile, newFile, formName, token) => {
     method: 'POST',
     data: formData,
     processData: false,
-    contentType: false
+    contentType: false,
   });
 };
 
 export const saveImagePosition = async (productImageId, newPosition, formName, token) => {
   const sortUrl = router.generate('admin_products_v2_update_image', {
-    productImageId
+    productImageId,
   });
 
   const data = {};
@@ -85,13 +85,13 @@ export const saveImagePosition = async (productImageId, newPosition, formName, t
     method: 'PATCH',
     data,
     contentType: false,
-    processData: false
+    processData: false,
   });
 };
 
-export const removeProductImage = async productId => {
+export const removeProductImage = async (productId) => {
   const imagesUrl = router.generate('admin_products_v2_remove_images', {
-    productId
+    productId,
   });
 
   return $.post(imagesUrl);
@@ -102,5 +102,5 @@ export default {
   saveImageInformations,
   replaceImage,
   saveImagePosition,
-  removeProductImage
+  removeProductImage,
 };
