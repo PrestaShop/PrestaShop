@@ -64,9 +64,11 @@ class CustomerFeatureContext extends AbstractPrestaShopFeatureContext
     public function customerExists($reference, $customerEmail)
     {
         $data = Customer::getCustomersByEmail($customerEmail);
-        $customer = new Customer($data[0]['id_customer']);
+        if (isset($data[0]['id_customer'])) {
+            $customer = new Customer($data[0]['id_customer']);
+        }
 
-        if (!Validate::isLoadedObject($customer)) {
+        if (empty($customer) || !Validate::isLoadedObject($customer)) {
             throw new Exception(sprintf('Customer with email "%s" does not exist.', $customerEmail));
         }
 
