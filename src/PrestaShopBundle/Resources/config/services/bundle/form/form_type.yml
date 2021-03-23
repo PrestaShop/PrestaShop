@@ -1469,9 +1469,9 @@ services:
         - { name: form.type }
 
     form.type.submittable_input:
-        class: 'PrestaShopBundle\Form\Admin\Type\SubmittableInputType'
-        tags:
-            - { name: form.type }
+      class: 'PrestaShopBundle\Form\Admin\Type\SubmittableInputType'
+      tags:
+        - { name: form.type }
 
     form.type.admin.security.general:
       class: 'PrestaShopBundle\Form\Admin\Configure\AdvancedParameters\Security\GeneralType'
