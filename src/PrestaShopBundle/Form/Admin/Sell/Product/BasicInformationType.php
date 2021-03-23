@@ -59,6 +59,13 @@ class BasicInformationType extends TranslatorAwareType
                 'choice_translation_domain' => 'Admin.Catalog.Feature',
                 'attr' => [
                     'class' => 'custom-select',
+                    'data-modal-title' => $this->trans('Changing product type', 'Admin.Catalog.Notification'),
+                    'data-modal-apply' => $this->trans('Validate product type change', 'Admin.Catalog.Notification'),
+                    'data-modal-cancel' => $this->trans('Cancel', 'Admin.Global'),
+                    'data-confirm-message' => $this->trans('To change the product type you must immediately save this product. Do you wish to proceed?', 'Admin.Catalog.Notification'),
+                    'data-combinations-warning' => $this->trans('This will delete all the combinations.', 'Admin.Catalog.Notification'),
+                    'data-pack-warning' => $this->trans('This will delete the list of products in this pack.', 'Admin.Catalog.Notification'),
+                    'data-virtual-warning' => $this->trans('This will delete the associated virtual file.', 'Admin.Catalog.Notification'),
                 ],
                 'label' => $this->trans('Type', 'Admin.Catalog.Feature'),
                 'help' => $this->trans('Is the product a pack (a combination of at least two existing products), a virtual product (downloadable file, service, etc.), or simply a standard, physical product?', 'Admin.Catalog.Help'),
