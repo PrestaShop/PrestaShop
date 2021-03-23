@@ -315,16 +315,15 @@ const formCategory = (function () {
       },
       success(response) {
         // inject new category into category tree
-        let html = `${'<li>'
-          + '<div class="checkbox js-checkbox">'
-            + '<label>'
-            // eslint-disable-next-line
-              + '<input type="checkbox" name="form[step1][categories][tree][]" checked value="'}${response.category.id}"> ${
-          response.category.name[1]
-        }<input type="radio" value="${response.category.id}" name="ignore" class="default-category">`
-            + '</label>'
-          + '</div>'
-          + '</li>';
+        let html = `<li>
+          <div class="checkbox js-checkbox">
+            <label>
+              <input type="checkbox" name="form[step1][categories][tree][]" checked value="${response.category.id}">
+              ${response.category.name[1]}
+              <input type="radio" value="${response.category.id}" name="ignore" class="default-category">
+            </label>
+          </div>
+          </li>`;
 
         const parentElement = $(`#form_step1_categories input[value=${response.category.id_parent}]`).parent().parent();
 
@@ -669,9 +668,9 @@ window.form = (function () {
     if (target === '_blank' && redirect) {
       openBlank = window.open('about:blank', target, '');
       openBlank.document.write(
-        `${'<p style="text-align: center;">'
-        + '<img src="'}${document.location.origin}${baseAdminDir}/themes/default/img/spinner.gif">`
-        + '</p>',
+        `<p style="text-align: center;">
+          <img src="${document.location.origin}${baseAdminDir}/themes/default/img/spinner.gif">
+         </p>`,
       );
     }
 

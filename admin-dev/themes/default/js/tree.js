@@ -92,11 +92,8 @@ Tree.prototype = {
               .val();
             const inputType = $(this).parent().children('ul.tree input').first()
               .attr('type');
-            let useCheckBox = 0;
 
-            if (inputType === 'checkbox') {
-              useCheckBox = 1;
-            }
+            const useCheckBox = inputType === 'checkbox' ? 1 : 0;
 
             const thatOne = $(this);
             $.get(
@@ -201,11 +198,8 @@ Tree.prototype = {
       );
       const name = $(`#${idTree}`).find('ul.tree input').first().attr('name');
       const inputType = $(`#${idTree}`).find('ul.tree input').first().attr('type');
-      let useCheckBox = 0;
 
-      if (inputType === 'checkbox') {
-        useCheckBox = 1;
-      }
+      const useCheckBox = inputType === 'checkbox' ? 1 : 0;
 
       $.get(
         'ajax-tab.php',
