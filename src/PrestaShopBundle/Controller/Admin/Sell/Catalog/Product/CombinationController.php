@@ -80,12 +80,14 @@ class CombinationController extends FrameworkBundleAdminController
     {
         $limit = (int) $request->query->get('limit');
         $offset = (int) $request->query->get('offset');
+        $filters = $request->query->get('filters', []);
 
         $combinationsList = $this->getQueryBus()->handle(new GetEditableCombinationsList(
             $productId,
             $this->getContextLangId(),
             $limit ?? null,
-            $offset ?? null
+            $offset ?? null,
+            $filters
         ));
 
         return $this->json($this->formatListResponse($combinationsList));
