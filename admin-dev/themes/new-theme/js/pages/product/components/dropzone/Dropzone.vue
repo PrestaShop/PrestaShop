@@ -273,6 +273,8 @@
           file.image_id = response.image_id;
           file.is_cover = response.is_cover;
           file.legends = response.legends;
+          // Update dataset so that it can be selected later
+          file.previewElement.dataset.id = file.image_id;
         });
       },
       /**
@@ -375,7 +377,6 @@
               });
             }
           }
-
           $.growl({message: this.$t('window.settingsUpdated')});
           this.buttonLoading = false;
         } catch (error) {
