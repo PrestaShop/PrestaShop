@@ -71,7 +71,7 @@ class FeatureFlagsModifier implements DataConfigurationInterface
     }
 
     /**
-     * @return array<int, FeatureFlag> $allFlags
+     * @return FeatureFlag[] $allFlags
      */
     public function getAllFeatureFlags(): array
     {

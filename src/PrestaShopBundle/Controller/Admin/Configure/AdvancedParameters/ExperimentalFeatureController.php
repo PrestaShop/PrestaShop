@@ -34,7 +34,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 
 /**
- * Class ExperimentalFeaturesController is responsible for handling "Configure > Advanced Parameters > Experimental Features" page.
+ * Manages the "Configure > Advanced Parameters > Experimental Features" page.
  */
 class ExperimentalFeatureController extends FrameworkBundleAdminController
 {
@@ -65,7 +65,7 @@ class ExperimentalFeatureController extends FrameworkBundleAdminController
         return $this->render('@PrestaShop/Admin/Configure/AdvancedParameters/ExperimentalFeature/index.html.twig', [
             'enableSidebar' => true,
             'layoutHeaderToolbarBtn' => [],
-            'layoutTitle' => $this->get('translator')->trans('Experimental Features', [], 'Admin.Navigation.Menu'),
+            'layoutTitle' => $this->trans('Experimental Features', 'Admin.Navigation.Menu'),
             'requireBulkActions' => false,
             'showContentHeader' => true,
             'featureFlagsForm' => $featureFlagsForm->createView(),
