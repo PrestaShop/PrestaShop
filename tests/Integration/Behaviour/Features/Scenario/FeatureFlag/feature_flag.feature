@@ -12,6 +12,15 @@ Feature: Feature Flag
     Then the feature flag "Security_BO_Page_1" state is enabled
 
   @feature-flag
+  Scenario: Create feature flags with exotic names
+    Given I register a disabled feature flag "(-(-_è a weird name<>@#./'"
+    Then the feature flag "(-(-_è a weird name<>@#./'" state is disabled
+    Given I register a disabled feature flag " "
+    Then the feature flag " " state is disabled
+    Given I register a disabled feature flag "😅"
+    Then the feature flag "😅" state is disabled
+
+  @feature-flag
   Scenario: Disable a feature flag
     Given I register a enabled feature flag "Security_BO_Page_1"
     Then the feature flag "Security_BO_Page_1" state is enabled
