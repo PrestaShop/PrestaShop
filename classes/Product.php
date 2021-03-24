@@ -479,7 +479,7 @@ class ProductCore extends ObjectModel
             ],
             'product_type' => [
                 'type' => self::TYPE_STRING,
-                'validate' => 'IsGenericName',
+                'validate' => 'isGenericName',
                 'values' => ProductType::AVAILABLE_TYPES,
                 'default' => ProductType::TYPE_STANDARD,
             ],
