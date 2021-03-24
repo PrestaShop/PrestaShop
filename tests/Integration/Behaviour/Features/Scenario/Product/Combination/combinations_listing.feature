@@ -200,3 +200,48 @@ Feature: Generate attribute combinations for product in Back Office (BO)
       | product1MWhite | Size - M, Color - White |                       | [Size:M,Color:White] | 0               | 0           | 0        | false      |
       | product1MBlack | Size - M, Color - Black |                       | [Size:M,Color:Black] | 0               | 0           | 0        | false      |
       | product1MBlue  | Size - M, Color - Blue  |                       | [Size:M,Color:Blue]  | 0               | 0           | 0        | false      |
+
+  Scenario: I can filter combinations by reference
+    Given product "product1" combinations list search criteria is reset to defaults
+    And I should see following combinations list of product "product1":
+      | reference      | combination name        | combination reference | attributes           | impact on price | final price | quantity | is default |
+      | product1SWhite | Size - S, Color - White | AAA                   | [Size:S,Color:White] | -1              | 0           | 10       | true       |
+      | product1SBlack | Size - S, Color - Black | CCC                   | [Size:S,Color:Black] | 10              | 0           | 50       | false      |
+      | product1SBlue  | Size - S, Color - Blue  | BBB                   | [Size:S,Color:Blue]  | 1               | 0           | 100      | false      |
+      | product1MWhite | Size - M, Color - White |                       | [Size:M,Color:White] | 0               | 0           | 0        | false      |
+      | product1MBlack | Size - M, Color - Black |                       | [Size:M,Color:Black] | 0               | 0           | 0        | false      |
+      | product1MBlue  | Size - M, Color - Blue  |                       | [Size:M,Color:Blue]  | 0               | 0           | 0        | false      |
+    And I update combination "product1SWhite" from list with following values:
+      | combination reference | ABC |
+    And I update combination "product1SBlue" from list with following values:
+      | combination reference | BBB |
+    And I update combination "product1SBlack" from list with following values:
+      | combination reference | CCCD |
+    And I should see following combinations list of product "product1":
+      | reference      | combination name        | combination reference | attributes           | impact on price | final price | quantity | is default |
+      | product1SWhite | Size - S, Color - White | ABC                   | [Size:S,Color:White] | -1              | 0           | 10       | true       |
+      | product1SBlack | Size - S, Color - Black | CCCD                  | [Size:S,Color:Black] | 10              | 0           | 50       | false      |
+      | product1SBlue  | Size - S, Color - Blue  | BBB                   | [Size:S,Color:Blue]  | 1               | 0           | 100      | false      |
+      | product1MWhite | Size - M, Color - White |                       | [Size:M,Color:White] | 0               | 0           | 0        | false      |
+      | product1MBlack | Size - M, Color - Black |                       | [Size:M,Color:Black] | 0               | 0           | 0        | false      |
+      | product1MBlue  | Size - M, Color - Blue  |                       | [Size:M,Color:Blue]  | 0               | 0           | 0        | false      |
+    When I search product "product1" combinations list by following search criteria:
+      | criteria              | value |
+      | combination reference | C     |
+    Then I should see following combinations list of product "product1":
+      | reference      | combination name        | combination reference | attributes           | impact on price | final price | quantity | is default |
+      | product1SWhite | Size - S, Color - White | ABC                   | [Size:S,Color:White] | -1              | 0           | 10       | true       |
+      | product1SBlack | Size - S, Color - Black | CCCD                  | [Size:S,Color:Black] | 10              | 0           | 50       | false      |
+    When I search product "product1" combinations list by following search criteria:
+      | criteria              | value |
+      | combination reference | b     |
+    Then I should see following combinations list of product "product1":
+      | reference      | combination name        | combination reference | attributes           | impact on price | final price | quantity | is default |
+      | product1SWhite | Size - S, Color - White | ABC                   | [Size:S,Color:White] | -1              | 0           | 10       | true       |
+      | product1SBlue  | Size - S, Color - Blue  | BBB                   | [Size:S,Color:Blue]  | 1               | 0           | 100      | false      |
+    When I search product "product1" combinations list by following search criteria:
+      | criteria              | value |
+      | combination reference | cD    |
+    Then I should see following combinations list of product "product1":
+      | reference      | combination name        | combination reference | attributes           | impact on price | final price | quantity | is default |
+      | product1SBlack | Size - S, Color - Black | CCCD                  | [Size:S,Color:Black] | 10              | 0           | 50       | false      |
