@@ -30,7 +30,7 @@
     "url" : "{$urls.pages.index}",
     "logo": {
       "@type": "ImageObject",
-      "url":"{$urls.shop_domain_url}{$shop.logo}"
+      "url":"{$shop.logo}"
     }
   }
 </script>
