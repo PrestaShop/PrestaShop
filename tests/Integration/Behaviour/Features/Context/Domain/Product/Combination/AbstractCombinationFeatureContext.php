@@ -32,29 +32,29 @@ use PrestaShop\PrestaShop\Core\Domain\Product\Combination\Query\GetCombinationFo
 use PrestaShop\PrestaShop\Core\Domain\Product\Combination\Query\GetEditableCombinationsList;
 use PrestaShop\PrestaShop\Core\Domain\Product\Combination\QueryResult\CombinationForEditing;
 use PrestaShop\PrestaShop\Core\Domain\Product\Combination\QueryResult\CombinationListForEditing;
+use PrestaShop\PrestaShop\Core\Search\Filters\CombinationFilters;
 use Tests\Integration\Behaviour\Features\Context\Domain\Product\AbstractProductFeatureContext;
 
 abstract class AbstractCombinationFeatureContext extends AbstractProductFeatureContext
 {
     /**
      * @param string $productReference
-     * @param int|null $limit
-     * @param int|null $offset
-     * @param array<string, mixed> $filters
+     * @param CombinationFilters|null $combinationFilters
      *
      * @return CombinationListForEditing
      */
-    protected function getCombinationsList(string $productReference, ?int $limit = null, ?int $offset = null, array $filters = []): CombinationListForEditing
+    protected function getCombinationsList(string $productReference, CombinationFilters $combinationFilters): CombinationListForEditing
     {
+        $combinationFilters->addFilter(['product_id' => $this->getSharedStorage()->get($productReference)]);
+
         return $this->getQueryBus()->handle(new GetEditableCombinationsList(
             $this->getSharedStorage()->get($productReference),
             $this->getDefaultLangId(),
-            $limit,
-            $offset,
-            //@todo: implement sorting in scenarios
-            null,
-            null,
-            $filters
+            $combinationFilters->getLimit(),
+            $combinationFilters->getOffset(),
+            $combinationFilters->getOrderBy(),
+            $combinationFilters->getOrderWay(),
+            $combinationFilters->getFilters()
         ));
     }
 

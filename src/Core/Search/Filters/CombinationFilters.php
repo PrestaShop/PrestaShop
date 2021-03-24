@@ -43,7 +43,7 @@ class CombinationFilters extends Filters
     {
         return [
             // @todo: reuse default limit in Combination controller when #23581 is merged
-            'limit' => 10,
+            'limit' => self::LIST_LIMIT,
             'offset' => 0,
             'orderBy' => 'id_product_attribute',
             'sortOrder' => 'asc',
