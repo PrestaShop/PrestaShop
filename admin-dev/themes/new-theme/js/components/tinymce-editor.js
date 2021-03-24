@@ -95,7 +95,10 @@ class TinyMCEEditor {
       skin: 'prestashop',
       mobile: {
         theme: 'mobile',
-        plugins: ['lists', 'align', 'link', 'filemanager', 'table', 'media', 'placeholder', 'advlist', 'code'],
+        plugins: ['lists', 'align', 'link', 'table', 'placeholder', 'advlist', 'code'],
+        toolbar:
+          /* eslint-disable-next-line max-len */
+          'code colorpicker bold italic underline strikethrough blockquote link align bullist numlist table formatselect',
       },
       menubar: false,
       statusbar: false,
