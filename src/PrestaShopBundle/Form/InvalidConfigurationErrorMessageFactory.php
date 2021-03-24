@@ -30,11 +30,9 @@ namespace PrestaShopBundle\Form;
 
 use PrestaShopBundle\Controller\Exception\FieldNotFoundException;
 use PrestaShopBundle\Entity\Repository\LangRepository;
-use PrestaShopBundle\Form\Admin\Configure\AdvancedParameters\Administration\FormDataProvider;
 use PrestaShopBundle\Form\Admin\Configure\AdvancedParameters\Administration\GeneralDataProvider;
 use PrestaShopBundle\Form\Exception\InvalidConfigurationDataError;
 use PrestaShopBundle\Form\Exception\InvalidConfigurationDataErrorCollection;
-use Symfony\Component\Form\Form;
 use Symfony\Component\Form\FormInterface;
 use Symfony\Component\Translation\TranslatorInterface;
 
@@ -79,11 +77,9 @@ class InvalidConfigurationErrorMessageFactory
 
     /**
      * @param InvalidConfigurationDataError $error
-     *
      * @param string $label
      *
      * @return string
-     *
      */
     protected function getErrorMessageForConfigurationError(InvalidConfigurationDataError $error, string $label): string
     {
@@ -95,7 +91,7 @@ class InvalidConfigurationErrorMessageFactory
                     [
                         $label,
                     ],
-                    'Admin.Orderscustomers.Notification',
+                    'Admin.Orderscustomers.Notification'
                 );
             case InvalidConfigurationDataError::ERROR_NO_INVOICES_FOUND:
                 return $this->translator->trans(
@@ -134,6 +130,7 @@ class InvalidConfigurationErrorMessageFactory
                         'Admin.Orderscustomers.Notification'
                     );
                 }
+
                 return $this->translator->trans(
                     'The "%s" field is invalid. HTML tags are not allowed.',
                     [
@@ -145,9 +142,9 @@ class InvalidConfigurationErrorMessageFactory
                 return $this->translator->trans(
                     '%s is invalid. Please enter an integer greater than or equal to 0.',
                     [
-                        $label
+                        $label,
                     ],
-                    'Admin.Notifications.Error',
+                    'Admin.Notifications.Error'
                 );
             case InvalidConfigurationDataError::ERROR_COOKIE_LIFETIME_MAX_VALUE_EXCEEDED:
                 return $this->translator->trans(
@@ -165,6 +162,7 @@ class InvalidConfigurationErrorMessageFactory
                     'Admin.Advparameters.Notification'
                 );
         }
+
         return $this->translator->trans(
             '%s is invalid.',
             [
@@ -187,6 +185,7 @@ class InvalidConfigurationErrorMessageFactory
                         )
                     );
                 }
+
                 return $child->vars['label'];
             }
         }
