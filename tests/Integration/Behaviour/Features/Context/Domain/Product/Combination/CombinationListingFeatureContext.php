@@ -146,6 +146,17 @@ class CombinationListingFeatureContext extends AbstractCombinationFeatureContext
     }
 
     /**
+     * @When I search product ":productReference" combinations list by following search criteria:
+     *
+     * @param string $productReference
+     * @param CombinationFilters $combinationFilters
+     */
+    public function storeSearchCriteria(string $productReference, CombinationFilters $combinationFilters): void
+    {
+        $this->getSharedStorage()->set($this->getSearchCriteriaKey($productReference), $combinationFilters);
+    }
+
+    /**
      * @param string $field
      *
      * @return string
@@ -163,17 +174,6 @@ class CombinationListingFeatureContext extends AbstractCombinationFeatureContext
         }
 
         return $field;
-    }
-
-    /**
-     * @When I search product ":productReference" combinations list by following search criteria:
-     *
-     * @param string $productReference
-     * @param CombinationFilters $combinationFilters
-     */
-    public function storeSearchCriteria(string $productReference, CombinationFilters $combinationFilters): void
-    {
-        $this->getSharedStorage()->set($this->getSearchCriteriaKey($productReference), $combinationFilters);
     }
 
     /**
@@ -203,39 +203,6 @@ class CombinationListingFeatureContext extends AbstractCombinationFeatureContext
         foreach ($idsByReference as $reference => $id) {
             $this->getSharedStorage()->set($reference, $id);
         }
-    }
-
-    /**
-     * Asserts expected product combinations and sets combination references in shared storage
-     *
-     * @param string $productReference
-     * @param TableNode $table
-     */
-    private function assertWholeCombinationsList(string $productReference, TableNode $table): void
-    {
-        /** @var CombinationFilters $combinationFilters */
-        $combinationFilters = CombinationFilters::buildDefaults();
-        $combinationsList = $this->getCombinationsList($productReference, $combinationFilters);
-        $dataRows = $table->getColumnsHash();
-
-        Assert::assertEquals(
-            count($dataRows),
-            $combinationsList->getTotalCombinationsCount(),
-            'Unexpected combinations count'
-        );
-    }
-
-    /**
-     * @Then product :productReference should have no combinations
-     *
-     * @param string $productReference
-     */
-    public function assertNoCombinations(string $productReference): void
-    {
-        $combinationsList = $this->getCombinationsList($productReference);
-
-        Assert::assertEmpty($combinationsList->getCombinations());
-        Assert::assertEquals(0, $combinationsList->getTotalCombinationsCount());
     }
 
     /**
