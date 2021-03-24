@@ -119,6 +119,33 @@ Feature: Generate attribute combinations for product in Back Office (BO)
       | product1MBlack | Size - M, Color - Black |                       | [Size:M,Color:Black] | 0               | 0           | 0        | false      |
       | product1MBlue  | Size - M, Color - Blue  |                       | [Size:M,Color:Blue]  | 0               | 0           | 0        | false      |
 
+  Scenario: I can filter combinations by default combination
+    Given product "product1" combinations list search criteria is reset to defaults
+    And I should see following combinations list of product "product1":
+      | reference      | combination name        | combination reference | attributes           | impact on price | final price | quantity | is default |
+      | product1SWhite | Size - S, Color - White |                       | [Size:S,Color:White] | 0               | 0           | 0        | true       |
+      | product1SBlack | Size - S, Color - Black |                       | [Size:S,Color:Black] | 0               | 0           | 0        | false      |
+      | product1SBlue  | Size - S, Color - Blue  |                       | [Size:S,Color:Blue]  | 0               | 0           | 0        | false      |
+      | product1MWhite | Size - M, Color - White |                       | [Size:M,Color:White] | 0               | 0           | 0        | false      |
+      | product1MBlack | Size - M, Color - Black |                       | [Size:M,Color:Black] | 0               | 0           | 0        | false      |
+      | product1MBlue  | Size - M, Color - Blue  |                       | [Size:M,Color:Blue]  | 0               | 0           | 0        | false      |
+    When I search product "product1" combinations list by following search criteria:
+      | criteria   | value |
+      | is default | true  |
+    Then I should see following combinations list of product "product1":
+      | reference      | combination name        | combination reference | attributes           | impact on price | final price | quantity | is default |
+      | product1SWhite | Size - S, Color - White |                       | [Size:S,Color:White] | 0               | 0           | 0        | true       |
+    When I search product "product1" combinations list by following search criteria:
+      | criteria   | value |
+      | is default | false |
+    Then I should see following combinations list of product "product1":
+      | reference      | combination name        | combination reference | attributes           | impact on price | final price | quantity | is default |
+      | product1SBlack | Size - S, Color - Black |                       | [Size:S,Color:Black] | 0               | 0           | 0        | false      |
+      | product1SBlue  | Size - S, Color - Blue  |                       | [Size:S,Color:Blue]  | 0               | 0           | 0        | false      |
+      | product1MWhite | Size - M, Color - White |                       | [Size:M,Color:White] | 0               | 0           | 0        | false      |
+      | product1MBlack | Size - M, Color - Black |                       | [Size:M,Color:Black] | 0               | 0           | 0        | false      |
+      | product1MBlue  | Size - M, Color - Blue  |                       | [Size:M,Color:Blue]  | 0               | 0           | 0        | false      |
+
   Scenario: I can sort combinations by reference, quantity, impact on price
     Given product "product1" combinations list search criteria is reset to defaults
     And I should see following combinations list of product "product1":

@@ -112,6 +112,14 @@ final class CombinationQueryBuilder extends AbstractDoctrineQueryBuilder
             ;
         }
 
+        if (isset($filters['default_on'])) {
+            if ((bool) $filters['default_on']) {
+                $qb->andWhere('pa.default_on = 1');
+            } else {
+                $qb->andWhere('pa.default_on IS NULL OR pa.default_on = 0');
+            }
+        }
+
         return $qb;
     }
 
