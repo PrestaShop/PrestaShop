@@ -6,7 +6,7 @@ class Product extends FOBasePage {
     super();
 
     // Selectors for product page
-    this.productName = '#main h1[itemprop="name"]';
+    this.productName = '#main h1';
     this.productCoverImg = '#content .product-cover img';
     this.productQuantity = '#quantity_wanted';
     this.productDescription = '#description';
@@ -27,7 +27,7 @@ class Product extends FOBasePage {
     this.discountAmountSpan = `${this.productPricesBlock} .discount.discount-amount`;
     this.discountPercentageSpan = `${this.productPricesBlock} .discount.discount-percentage`;
     this.regularPrice = `${this.productPricesBlock} .regular-price`;
-    this.productPrice = `${this.productPricesBlock} span[itemprop='price']`;
+    this.productPrice = `${this.productPricesBlock} .current-price span`;
     this.taxShippingDeliveryBlock = `${this.productPricesBlock} div.tax-shipping-delivery-label`;
     this.deliveryInformationSpan = `${this.taxShippingDeliveryBlock} span.delivery-information`;
     // Volume discounts table

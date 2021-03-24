@@ -22,8 +22,18 @@
  * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/AFL-3.0 Academic Free License 3.0 (AFL-3.0)
  *}
-<div class="products{if !empty($cssClass)} {$cssClass}{/if}">
-    {foreach from=$products item="product" key="position"}
-        {include file="catalog/_partials/miniatures/product.tpl" product=$product position=$position}
-    {/foreach}
-</div>
+<script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "ItemList",
+    "itemListElement": [
+        {foreach from=$listing.products item=item key="position" name=productsForJsonLd}
+          {
+            "@type": "ListItem",
+            "position": {$position},
+            "name": "{$item.name}",
+            "url": "{$item.url}"
+            }{if !$smarty.foreach.productsForJsonLd.last},{/if}
+          {/foreach}]
+        }
+</script>

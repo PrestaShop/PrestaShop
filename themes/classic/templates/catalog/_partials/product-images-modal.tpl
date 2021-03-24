@@ -39,7 +39,6 @@
               {else}
                 alt="{$product.name}"
               {/if}
-              itemprop="image"
               height="{$product.default_image.bySize.large_default.height}"
             >
           {else}
@@ -47,7 +46,7 @@
           {/if}
           <figcaption class="image-caption">
           {block name='product_description_short'}
-            <div id="product-description-short" itemprop="description">{$product.description_short nofilter}</div>
+            <div id="product-description-short">{$product.description_short nofilter}</div>
           {/block}
         </figcaption>
         </figure>
@@ -68,7 +67,6 @@
                         alt="{$product.name}"
                       {/if}
                       width="{$image.medium.width}"
-                      itemprop="image"
                       height="148"
                     >
                   </li>
