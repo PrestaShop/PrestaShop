@@ -106,6 +106,12 @@ final class CombinationQueryBuilder extends AbstractDoctrineQueryBuilder
             ;
         }
 
+        if (isset($filters['reference'])) {
+            $qb->andWhere('pa.reference LIKE :reference')
+                ->setParameter('reference', '%' . $filters['reference'] . '%')
+            ;
+        }
+
         return $qb;
     }
 
