@@ -292,7 +292,7 @@ class PackCore extends Product
             $items = array_values(Pack::getItems($idProduct, Configuration::get('PS_LANG_DEFAULT')));
 
             foreach ($items as $index => $item) {
-                $itemQuantity = Product::getQuantity($item->id, $item->id_pack_product_attribute, null, $cart, $idCustomization);
+                $itemQuantity = Product::getQuantity($item->id, $item->id_pack_product_attribute ?: null, null, $cart, $idCustomization);
                 $nbPackAvailableForItem = (int) floor($itemQuantity / $item->pack_quantity);
 
                 // Initialize packQuantity with the first product quantity
