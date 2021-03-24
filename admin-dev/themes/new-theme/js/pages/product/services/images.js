@@ -89,12 +89,12 @@ export const saveImagePosition = async (productImageId, newPosition, formName, t
   });
 };
 
-export const removeProductImage = async (productId) => {
-  const imagesUrl = router.generate('admin_products_v2_remove_images', {
-    productId,
+export const removeProductImage = async (productImageId) => {
+  const deleteUrl = router.generate('admin_products_v2_delete_image', {
+    productImageId,
   });
 
-  return $.post(imagesUrl);
+  return $.post(deleteUrl);
 };
 
 export default {
