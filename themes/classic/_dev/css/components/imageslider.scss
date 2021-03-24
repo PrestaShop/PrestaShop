@@ -23,12 +23,12 @@
       bottom: 28px;
       left: 90px;
       max-width: 340px;
-      color: #fff;
+      color: $white;
 
       .caption-description {
         p {
           font-size: 1rem;
-          color: #fff;
+          color: $white;
         }
 
         h3 {
@@ -60,7 +60,7 @@
 
       i {
         font-size: 3.125rem;
-        color: #fff;
+        color: $white;
       }
 
       &:hover {
