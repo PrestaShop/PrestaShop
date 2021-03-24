@@ -127,6 +127,10 @@ class CombinationListingFeatureContext extends AbstractCombinationFeatureContext
             $filters[$this->getDbField('combination reference')] = $dataRows['combination reference'];
         }
 
+        if (isset($dataRows['is default'])) {
+            $filters[$this->getDbField('is default')] = PrimitiveUtils::castStringBooleanIntoBoolean($dataRows['is default']);
+        }
+
         $limit = isset($dataRows['limit']) ? (int) $dataRows['limit'] : $defaults['limit'];
         $offset = isset($dataRows['page']) ? $this->countOffset((int) $dataRows['page'], $limit) : $defaults['offset'];
         $orderBy = isset($dataRows['order by']) ? $this->getDbField($dataRows['order by']) : $defaults['orderBy'];
