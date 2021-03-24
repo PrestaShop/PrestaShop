@@ -67,7 +67,7 @@ class PaymentModuleCurrencyRestrictionsType extends PaymentModuleRestrictionsPar
             ->add('currency_restrictions', MaterialMultipleChoiceTableType::class, [
                 'label' => $this->trans('Currency restrictions', 'Admin.Payment.Feature'),
                 'help' => $this->trans(
-                    'Please select available payment modules for every currency.',
+                    'Please select available payment modules for each currency.',
                     'Admin.Payment.Help'
                 ),
                 'required' => false,
