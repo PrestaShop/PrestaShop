@@ -198,7 +198,7 @@
       bottom: $grid-gutter-width / 2;
     }
 
-    background-color: #fff;
+    background-color: $white;
   }
 
   + :nth-child(even) {
@@ -382,13 +382,13 @@
 
 .module-search-bar {
   height: 50px !important;
-  background-color: #fff !important;
+  background-color: $white !important;
   border: 0 !important;
 }
 
 .module-search-block {
   width: 100%;
-  background: #fff;
+  background: $white;
 
   .search-button {
     position: absolute;
@@ -472,7 +472,7 @@
     border-bottom: 1px solid #e7e8e8;
 
     &:hover {
-      color: #fff !important;
+      color: $white !important;
       text-align: center;
       background-color: #2eacce !important;
       border-bottom: 1px solid #e7e8e8;
@@ -551,7 +551,7 @@
   text-align: center;
   vertical-align: middle;
   user-select: none;
-  background: #fff;
+  background: $white;
   box-shadow: 0 1px 0 #c7d6db;
   -webkit-touch-callout: none;
 }
@@ -693,7 +693,7 @@ form#importDropzone {
       margin-top: -7px;
       margin-left: -4px;
       font-size: 1.6em;
-      color: #fff;
+      color: $white;
       opacity: 0;
     }
   }
@@ -728,7 +728,7 @@ form#importDropzone {
       padding: 0 4px;
       font-size: 1.4em;
       color: $brand-primary;
-      background-color: #fff;
+      background-color: $white;
       @include border-radius(3px);
     }
 
@@ -783,7 +783,7 @@ form#importDropzone {
       margin-top: -7px;
       margin-left: -4px;
       font-size: 1.6em;
-      color: #fff;
+      color: $white;
       opacity: 0;
     }
   }
@@ -820,7 +820,7 @@ form#importDropzone {
   .module-item {
     width: 100%;
     padding: 5px 0;
-    background: #fff;
+    background: $white;
     border-bottom: solid 1px $gray-light;
 
     &:hover {
@@ -844,27 +844,27 @@ form#importDropzone {
       .module-name,
       .module-description,
       .module-column-position {
-        color: #fff;
+        color: $white;
 
         .text-muted {
-          color: #fff !important;
+          color: $white !important;
         }
       }
 
       .module-column-actions {
         .dropdown-toggle.dropdown-toggle-dots::after,
         i {
-          color: #fff;
+          color: $white;
         }
       }
 
       .drag_indicator {
-        color: #fff;
+        color: $white;
         opacity: 1;
       }
 
       .selectbox {
-        border-color: #fff;
+        border-color: $white;
       }
     }
 
@@ -979,7 +979,7 @@ form#importDropzone {
     border-color: #aeaeae;
 
     &:hover {
-      color: #fff;
+      color: $white;
       background-color: #aeaeae;
     }
   }
