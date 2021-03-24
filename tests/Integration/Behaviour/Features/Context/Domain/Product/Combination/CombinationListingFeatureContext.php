@@ -80,27 +80,17 @@ class CombinationListingFeatureContext extends AbstractCombinationFeatureContext
      */
     public function assertCombinationsList(string $productReference, TableNode $tableNode): void
     {
-        $searchCriteriaKey = $this->getSearchCriteriaKey($productReference);
-        if ($this->getSharedStorage()->exists($searchCriteriaKey)) {
-            $searchCriteria = $this->getSharedStorage()->get($searchCriteriaKey);
-        }
-
-        $this->assertCombinations(
-            $productReference,
-            $tableNode->getColumnsHash(),
-            isset($searchCriteria) ? $searchCriteria : CombinationFilters::buildDefaults()
-        );
+        $this->assertCombinations($productReference, $tableNode->getColumnsHash());
     }
 
     /**
-     * @Then there should be no combinations of :productReference in page :page when limited to maximum :limit per page
+     * @Then combinations list of product ":productReference" should be empty
      *
      * @param string $productReference
-     * @param CombinationFilters $combinationFilters
      */
-    public function assertNoCombinationsInPage(string $productReference, CombinationFilters $combinationFilters): void
+    public function assertNoCombinationsInPage(string $productReference): void
     {
-        $this->assertCombinations($productReference, [], $combinationFilters);
+        $this->assertCombinations($productReference, []);
     }
 
     /**
@@ -162,11 +152,18 @@ class CombinationListingFeatureContext extends AbstractCombinationFeatureContext
     /**
      * @param string $productReference
      * @param array $dataRows
-     * @param CombinationFilters $combinationFilters
      */
-    private function assertCombinations(string $productReference, array $dataRows, CombinationFilters $combinationFilters): void
+    private function assertCombinations(string $productReference, array $dataRows): void
     {
-        $combinationsList = $this->getCombinationsList($productReference, $combinationFilters);
+        $searchCriteriaKey = $this->getSearchCriteriaKey($productReference);
+        if ($this->getSharedStorage()->exists($searchCriteriaKey)) {
+            $combinationFilters = $this->getSharedStorage()->get($searchCriteriaKey);
+        }
+
+        $combinationsList = $this->getCombinationsList(
+            $productReference,
+            isset($combinationFilters) ? $combinationFilters : CombinationFilters::buildDefaults()
+        );
 
         Assert::assertEquals(
             count($dataRows),
