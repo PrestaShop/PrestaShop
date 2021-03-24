@@ -325,31 +325,35 @@
        * Method to remove every selected files from the dropzone
        */
       removeSelection() {
-        try {
-          new ConfirmModal(
-            {
-              id: 'dropzone-confirm-modal',
-              confirmTitle: this.$t('modal.title', {'%filesNb%': this.selectedFiles.length}),
-              confirmMessage: this.$t('modal.message'),
-              closeButtonLabel: this.$t('modal.close'),
-              confirmButtonLabel: this.$t('modal.accept'),
-              confirmButtonClass: 'btn-primary',
-            },
-            () => {
-              this.selectedFiles.forEach(async (file) => {
-                await removeProductImage(this.productId);
+        new ConfirmModal(
+          {
+            id: 'dropzone-confirm-modal',
+            confirmTitle: this.$t('modal.title', {'%filesNb%': this.selectedFiles.length}),
+            confirmMessage: this.$t('modal.message'),
+            closeButtonLabel: this.$t('modal.close'),
+            confirmButtonLabel: this.$t('modal.accept'),
+            confirmButtonClass: 'btn-primary',
+          },
+          async () => {
+            let errorMessage = false;
+            await Promise.all(this.selectedFiles.map(async (file) => {
+              try {
+                await removeProductImage(file.image_id);
                 this.dropzone.removeFile(file);
 
                 this.files = this.files.filter((e) => file !== e);
-              });
+                this.selectedFiles = this.selectedFiles.filter((e) => file !== e);
+              } catch (error) {
+                errorMessage = error.responseJSON.error;
+              }
+            }));
 
-              this.selectedFiles = [];
-              this.removeTooltips();
-            },
-          ).show();
-        } catch (error) {
-          $.growl.error({message: error.message});
-        }
+            this.removeTooltips();
+            if (errorMessage) {
+              $.growl.error({message: errorMessage});
+            }
+          },
+        ).show();
       },
       /**
        * Method to manage checkboxes of files mainly used on selectAll and unselectAll
