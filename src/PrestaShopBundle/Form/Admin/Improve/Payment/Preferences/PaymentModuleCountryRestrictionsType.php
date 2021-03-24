@@ -76,7 +76,7 @@ class PaymentModuleCountryRestrictionsType extends PaymentModuleRestrictionsPare
             ->add('country_restrictions', MaterialMultipleChoiceTableType::class, [
                 'label' => $this->trans('Country restrictions', 'Admin.Payment.Feature'),
                 'help' => $this->trans(
-                    'Please select available payment modules for every country.',
+                    'Please select available payment modules for each country.',
                     'Admin.Payment.Help'
                 ),
                 'required' => false,
