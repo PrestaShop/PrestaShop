@@ -31,6 +31,7 @@ namespace PrestaShopBundle\Controller\Admin\Sell\Catalog\Product;
 use Exception;
 use PrestaShop\PrestaShop\Core\Domain\Exception\FileUploadException;
 use PrestaShop\PrestaShop\Core\Domain\Product\Exception\ProductConstraintException;
+use PrestaShop\PrestaShop\Core\Domain\Product\Image\Command\DeleteProductImageCommand;
 use PrestaShop\PrestaShop\Core\Domain\Product\Image\Exception\CannotAddProductImageException;
 use PrestaShop\PrestaShop\Core\Domain\Product\Image\Exception\ProductImageNotFoundException;
 use PrestaShop\PrestaShop\Core\Domain\Product\Image\Query\GetProductImage;
@@ -38,6 +39,7 @@ use PrestaShop\PrestaShop\Core\Domain\Product\Image\Query\GetProductImages;
 use PrestaShop\PrestaShop\Core\Domain\Product\Image\QueryResult\ProductImage;
 use PrestaShop\PrestaShop\Core\Form\IdentifiableObject\Builder\FormBuilderInterface;
 use PrestaShop\PrestaShop\Core\Form\IdentifiableObject\Handler\FormHandlerInterface;
+use PrestaShop\PrestaShop\Core\Image\Exception\CannotUnlinkImageException;
 use PrestaShop\PrestaShop\Core\Image\Uploader\Exception\MemoryLimitException;
 use PrestaShop\PrestaShop\Core\Image\Uploader\Exception\UploadedImageConstraintException;
 use PrestaShopBundle\Controller\Admin\FrameworkBundleAdminController;
@@ -132,6 +134,26 @@ class ImageController extends FrameworkBundleAdminController
     }
 
     /**
+     * @AdminSecurity("is_granted(['delete'], request.get('_legacy_controller'))", message="You do not have permission to update this.")
+     *
+     * @param int $productImageId
+     *
+     * @return JsonResponse
+     */
+    public function deleteImageAction(int $productImageId): JsonResponse
+    {
+        try {
+            $this->getCommandBus()->handle(new DeleteProductImageCommand($productImageId));
+        } catch (Exception $e) {
+            return new JsonResponse([
+                'error' => $this->getErrorMessageForException($e, $this->getErrorMessages($e)),
+            ], Response::HTTP_BAD_REQUEST);
+        }
+
+        return new JsonResponse(null, Response::HTTP_NO_CONTENT);
+    }
+
+    /**
      * @return FormBuilderInterface
      */
     private function getProductImageFormBuilder(): FormBuilderInterface
@@ -222,6 +244,10 @@ class ImageController extends FrameworkBundleAdminController
                     'Admin.Notifications.Error'
                 ),
             ],
+            CannotUnlinkImageException::class => $this->trans(
+                'Cannot delete file',
+                'Admin.Notifications.Error'
+            ),
         ];
     }
 }
