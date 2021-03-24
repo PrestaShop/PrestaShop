@@ -134,7 +134,7 @@ class ContactType extends TranslatorAwareType
                     'constraints' => [
                         new NoTags([
                             'message' => $this->trans(
-                                'The field %s is invalid. HTML tags are not allowed.',
+                                'The "%s" field is invalid. HTML tags are not allowed.',
                                 'Admin.Notifications.Error'
                             ),
                         ]),
