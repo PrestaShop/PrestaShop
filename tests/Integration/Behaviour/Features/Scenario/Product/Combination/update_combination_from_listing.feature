@@ -1,7 +1,7 @@
 # ./vendor/bin/behat -c tests/Integration/Behaviour/behat.yml -s product --tags update-combination-from-listing
 @reset-database-before-feature
 @clear-cache-before-feature
-@update-combination
+@product-combination
 @update-combination-from-listing
 Feature: Update product combination from listing in Back Office (BO)
   As an employee
@@ -25,6 +25,7 @@ Feature: Update product combination from listing in Back Office (BO)
       | type        | combinations      |
     And product product1 type should be combinations
     And product product1 does not have a default combination
+    Given product "product1" combinations list search criteria is set to defaults
     And I generate combinations for product product1 using following attributes:
       | Size  | [S,M]              |
       | Color | [White,Black,Blue] |
@@ -32,7 +33,7 @@ Feature: Update product combination from listing in Back Office (BO)
       | price | 0 |
     And I update product "product1" prices with following information:
       | price | 100.99 |
-    Then product product1 should have following list of combinations:
+    Then I should see following combinations list of product "product1":
       | reference      | combination reference | combination name        | attributes           | impact on price | final price | quantity | is default |
       | product1SWhite |                       | Size - S, Color - White | [Size:S,Color:White] | 0               | 100.99      | 0        | true       |
       | product1SBlack |                       | Size - S, Color - Black | [Size:S,Color:Black] | 0               | 100.99      | 0        | false      |
@@ -53,7 +54,7 @@ Feature: Update product combination from listing in Back Office (BO)
       | combination reference | test 2 |
     And I update combination "product1MBlack" from list with following values:
       | quantity | 50 |
-    Then product product1 should have following list of combinations:
+    Then I should see following combinations list of product "product1":
       | reference      | combination name        | combination reference | attributes           | impact on price | final price | quantity | is default |
       | product1SWhite | Size - S, Color - White |                       | [Size:S,Color:White] | 0               | 100.99      | 0        | false      |
       | product1SBlack | Size - S, Color - Black |                       | [Size:S,Color:Black] | 0               | 100.99      | 0        | false      |

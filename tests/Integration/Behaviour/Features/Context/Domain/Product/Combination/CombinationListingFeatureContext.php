@@ -94,7 +94,7 @@ class CombinationListingFeatureContext extends AbstractCombinationFeatureContext
     }
 
     /**
-     * @Given product ":productReference" combinations list search criteria is reset to defaults
+     * @Given product ":productReference" combinations list search criteria is set to defaults
      *
      * @param string $productReference
      */
