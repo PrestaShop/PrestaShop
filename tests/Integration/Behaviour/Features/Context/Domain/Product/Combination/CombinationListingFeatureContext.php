@@ -122,20 +122,43 @@ class CombinationListingFeatureContext extends AbstractCombinationFeatureContext
                 $filters['attribute_ids'][] = $this->getSharedStorage()->get($attributeRef);
             }
         }
+
         if (isset($dataRows['combination reference'])) {
-            $filters['reference'] = $dataRows['combination reference'];
+            $filters[$this->getDbField('combination reference')] = $dataRows['combination reference'];
         }
 
         $limit = isset($dataRows['limit']) ? (int) $dataRows['limit'] : $defaults['limit'];
         $offset = isset($dataRows['page']) ? $this->countOffset((int) $dataRows['page'], $limit) : $defaults['offset'];
+        $orderBy = isset($dataRows['order by']) ? $this->getDbField($dataRows['order by']) : $defaults['orderBy'];
+        $orderWay = isset($dataRows['order way']) ? $this->getDbField($dataRows['order way']) : $defaults['sortOrder'];
 
         return new CombinationFilters([
             'limit' => $limit,
             'offset' => $offset,
-            'orderBy' => $dataRows['order by'] ?? $defaults['orderBy'],
-            'sortOrder' => $dataRows['order way'] ?? $defaults['sortOrder'],
+            'orderBy' => $orderBy,
+            'sortOrder' => $orderWay,
             'filters' => $filters,
         ]);
+    }
+
+    /**
+     * @param string $field
+     *
+     * @return string
+     */
+    private function getDbField(string $field): string
+    {
+        $fieldMap = [
+            'combination reference' => 'reference',
+            'impact on price' => 'price',
+            'is default' => 'default_on',
+        ];
+
+        if (isset($fieldMap[$field])) {
+            return $fieldMap[$field];
+        }
+
+        return $field;
     }
 
     /**
