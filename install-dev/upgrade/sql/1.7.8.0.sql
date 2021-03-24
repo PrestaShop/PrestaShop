@@ -57,4 +57,9 @@ ALTER TABLE `PREFIX_product` MODIFY COLUMN `redirect_type` ENUM(
 ALTER TABLE  `PREFIX_product` ADD `product_type` ENUM(
     'standard', 'pack', 'virtual', 'combinations'
 ) NOT NULL DEFAULT 'standard';
-/* php:ps_1780_update_product_type */
+
+/* First set all products to standard type, then update them based on cached columns that identify the type */
+UPDATE `PREFIX_product` SET `product_type` = "standard";
+UPDATE `PREFIX_product` SET `product_type` = "combinations" WHERE `cache_default_attribute` != 0;
+UPDATE `PREFIX_product` SET `product_type` = "pack" WHERE `cache_is_pack` = 1;
+UPDATE `PREFIX_product` SET `product_type` = "virtual" WHERE `is_virtual` = 1;
