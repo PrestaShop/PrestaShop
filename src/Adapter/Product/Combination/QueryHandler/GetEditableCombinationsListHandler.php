@@ -55,11 +55,6 @@ final class GetEditableCombinationsListHandler extends AbstractProductHandler im
     private $combinationRepository;
 
     /**
-     * @var ProductRepository
-     */
-    private $productRepository;
-
-    /**
      * @var NumberExtractor
      */
     private $numberExtractor;
@@ -76,20 +71,17 @@ final class GetEditableCombinationsListHandler extends AbstractProductHandler im
 
     /**
      * @param CombinationRepository $combinationRepository
-     * @param ProductRepository $productRepository
      * @param NumberExtractor $numberExtractor
      * @param StockAvailableRepository $stockAvailableRepository
      * @param DoctrineQueryBuilderInterface $combinationQueryBuilder
      */
     public function __construct(
         CombinationRepository $combinationRepository,
-        ProductRepository $productRepository,
         NumberExtractor $numberExtractor,
         StockAvailableRepository $stockAvailableRepository,
         DoctrineQueryBuilderInterface $combinationQueryBuilder
     ) {
         $this->combinationRepository = $combinationRepository;
-        $this->productRepository = $productRepository;
         $this->numberExtractor = $numberExtractor;
         $this->stockAvailableRepository = $stockAvailableRepository;
         $this->combinationQueryBuilder = $combinationQueryBuilder;
@@ -100,7 +92,6 @@ final class GetEditableCombinationsListHandler extends AbstractProductHandler im
      */
     public function handle(GetEditableCombinationsList $query): CombinationListForEditing
     {
-        $productId = $query->getProductId();
         $filters = $query->getFilters();
         $filters['product_id'] = $query->getProductId()->getValue();
         $searchCriteria = new CombinationFilters([
