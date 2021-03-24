@@ -82,16 +82,14 @@ class CombinationListingFeatureContext extends AbstractCombinationFeatureContext
     {
         $searchCriteriaKey = $this->getSearchCriteriaKey($productReference);
         if ($this->getSharedStorage()->exists($searchCriteriaKey)) {
-            $this->assertPaginatedCombinationList(
-                $productReference,
-                $tableNode->getColumnsHash(),
-                $this->getSharedStorage()->get($searchCriteriaKey)
-            );
-
-            return;
+            $searchCriteria = $this->getSharedStorage()->get($searchCriteriaKey);
         }
 
-        $this->assertWholeCombinationsList($productReference, $tableNode);
+        $this->assertCombinations(
+            $productReference,
+            $tableNode->getColumnsHash(),
+            isset($searchCriteria) ? $searchCriteria : CombinationFilters::buildDefaults()
+        );
     }
 
     /**
@@ -102,11 +100,11 @@ class CombinationListingFeatureContext extends AbstractCombinationFeatureContext
      */
     public function assertNoCombinationsInPage(string $productReference, CombinationFilters $combinationFilters): void
     {
-        $this->assertPaginatedCombinationList($productReference, [], $combinationFilters);
+        $this->assertCombinations($productReference, [], $combinationFilters);
     }
 
     /**
-     * @Given there are no search criteria applied to combination list of product ":productReference"
+     * @Given product ":productReference" combinations list search criteria is reset to defaults
      *
      * @param string $productReference
      */
@@ -125,8 +123,9 @@ class CombinationListingFeatureContext extends AbstractCombinationFeatureContext
     public function transformCombinationSearchCriteria(TableNode $tableNode): CombinationFilters
     {
         $dataRows = $tableNode->getRowsHash();
+        $defaults = CombinationFilters::getDefaults();
 
-        $filters = [];
+        $filters = $defaults['filters'];
         if (isset($dataRows['attributes'])) {
             $attributes = PrimitiveUtils::castStringArrayIntoArray($dataRows['attributes']);
             foreach ($attributes as $attributeRef) {
@@ -137,13 +136,14 @@ class CombinationListingFeatureContext extends AbstractCombinationFeatureContext
             $filters['reference'] = $dataRows['combination reference'];
         }
 
-        $limit = (int) $dataRows['limit'];
+        $limit = isset($dataRows['limit']) ? (int) $dataRows['limit'] : $defaults['limit'];
+        $offset = isset($dataRows['page']) ? $this->countOffset((int) $dataRows['page'], $limit) : $defaults['offset'];
 
         return new CombinationFilters([
             'limit' => $limit,
-            'offset' => $this->countOffset((int) $dataRows['page'], $limit),
-            'orderBy' => $dataRows['order by'],
-            'sortOrder' => $dataRows['order way'],
+            'offset' => $offset,
+            'orderBy' => $dataRows['order by'] ?? $defaults['orderBy'],
+            'sortOrder' => $dataRows['order way'] ?? $defaults['sortOrder'],
             'filters' => $filters,
         ]);
     }
@@ -164,7 +164,7 @@ class CombinationListingFeatureContext extends AbstractCombinationFeatureContext
      * @param array $dataRows
      * @param CombinationFilters $combinationFilters
      */
-    private function assertPaginatedCombinationList(string $productReference, array $dataRows, CombinationFilters $combinationFilters): void
+    private function assertCombinations(string $productReference, array $dataRows, CombinationFilters $combinationFilters): void
     {
         $combinationsList = $this->getCombinationsList($productReference, $combinationFilters);
 
@@ -174,7 +174,11 @@ class CombinationListingFeatureContext extends AbstractCombinationFeatureContext
             'Unexpected combinations count'
         );
 
-        $this->assertListedCombinationsProperties($dataRows, $combinationsList->getCombinations());
+        $idsByReference = $this->assertListedCombinationsProperties($dataRows, $combinationsList->getCombinations());
+
+        foreach ($idsByReference as $reference => $id) {
+            $this->getSharedStorage()->set($reference, $id);
+        }
     }
 
     /**
@@ -195,12 +199,6 @@ class CombinationListingFeatureContext extends AbstractCombinationFeatureContext
             $combinationsList->getTotalCombinationsCount(),
             'Unexpected combinations count'
         );
-
-        $idsByReference = $this->assertListedCombinationsProperties($dataRows, $combinationsList->getCombinations());
-
-        foreach ($idsByReference as $reference => $id) {
-            $this->getSharedStorage()->set($reference, $id);
-        }
     }
 
     /**
