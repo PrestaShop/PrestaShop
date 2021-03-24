@@ -14,7 +14,7 @@ admin_products_v2_get_images:
         productId: \d+
 
 admin_products_v2_add_image:
-    path: /{productId}/images/add
+    path: /images/add
     methods: [POST]
     defaults:
         _controller: PrestaShopBundle:Admin/Sell/Catalog/Product/Image:addImage
@@ -25,5 +25,18 @@ admin_products_v2_add_image:
             id_product: productId
     options:
         expose: true
+
+admin_products_v2_update_image:
+    path: /images/{productImageId}/update
+    methods: [POST]
+    defaults:
+        _controller: PrestaShopBundle:Admin/Sell/Catalog/Product/Image:updateImage
+        _legacy_controller: AdminProducts
+        _legacy_link:
+            - AdminProducts:editimage
+        _legacy_parameters:
+            id_product_image: productImageId
+    options:
+        expose: true
     requirements:
-        productId: \d+
+        productImageId: \d+

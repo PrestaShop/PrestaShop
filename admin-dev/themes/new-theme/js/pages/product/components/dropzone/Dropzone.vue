@@ -49,11 +49,11 @@
         ]"
       >
         <i class="material-icons">add_a_photo</i><br>
-        {{ $t('window.dropImages') }}<br>
-        <a>{{ $t('window.selectFiles') }}</a><br>
+        {{ $t("window.dropImages") }}<br>
+        <a>{{ $t("window.selectFiles") }}</a><br>
         <small>
-          {{ $t('window.recommendedSize') }}<br>
-          {{ $t('window.recommendedFormats') }}
+          {{ $t("window.recommendedSize") }}<br>
+          {{ $t("window.recommendedFormats") }}
         </small>
       </div>
 
@@ -73,7 +73,13 @@
       @unselectAll="unselectAll"
       @removeSelection="removeSelection"
       @selectAll="selectAll"
+      @saveSelectedFile="saveSelectedFile"
+      @replacedFile="manageReplacedFile"
+      @coverChanged="changeCover"
       :files="files"
+      :locales="locales"
+      :selected-locale="selectedLocale"
+      :loading="buttonLoading"
     />
 
     <div class="dz-template d-none">
@@ -105,6 +111,9 @@
             </label>
           </div>
         </div>
+        <div class="iscover">
+          {{ $t("window.cover") }}
+        </div>
       </div>
     </div>
   </div>
@@ -112,12 +121,20 @@
 
 <script>
   import Router from '@components/router';
-  import {getProductImages} from '@pages/product/services/images';
+  import {
+    getProductImages,
+    saveImageInformations,
+    replaceImage,
+  } from '@pages/product/services/images';
+  import ProductMap from '@pages/product/product-map';
+  import ProductEventMap from '@pages/product/product-event-map';
   import DropzoneWindow from './DropzoneWindow';
 
   const {$} = window;
 
   const router = new Router();
+  const DropzoneMap = ProductMap.dropzone;
+  const DropzoneEvents = ProductEventMap.dropzone;
 
   export default {
     name: 'Dropzone',
@@ -125,20 +142,33 @@
       return {
         dropzone: null,
         configuration: {
-          url: router.generate('admin_products_v2_add_image', {
-            productId: this.productId,
-          }),
-          clickable: '.openfilemanager',
+          url: router.generate('admin_products_v2_add_image'),
+          clickable: DropzoneMap.configuration.fileManager,
           previewTemplate: null,
         },
         files: [],
         selectedFiles: [],
         translations: [],
         loading: true,
+        selectedLocale: null,
+        buttonLoading: false,
+        coverData: {},
       };
     },
     props: {
       productId: {
+        type: Number,
+        required: true,
+      },
+      locales: {
+        type: Array,
+        required: true,
+      },
+      formName: {
+        type: String,
+        required: true,
+      },
+      token: {
         type: String,
         required: true,
       },
@@ -148,13 +178,29 @@
     },
     computed: {},
     mounted() {
-      this.configuration.previewTemplate = document.querySelector(
-        '.dz-template',
-      ).innerHTML;
-
+      this.watchLocaleChanges();
       this.initProductImages();
     },
     methods: {
+      /**
+       * Watch locale changes to update the selected one
+       */
+      watchLocaleChanges() {
+        this.selectedLocale = this.locales[0];
+
+        window.prestashop.instance.eventEmitter.on(
+          DropzoneEvents.languageSelected,
+          (event) => {
+            const {selectedLocale} = event;
+
+            this.locales.forEach((locale) => {
+              if (locale.iso_code === selectedLocale) {
+                this.selectedLocale = locale;
+              }
+            });
+          },
+        );
+      },
       /**
        * This methods is used to initialize product images we already have uploaded
        */
@@ -177,12 +223,29 @@
        * we already have in database.
        */
       initDropZone() {
+        this.configuration.previewTemplate = document.querySelector(
+          '.dz-template',
+        ).innerHTML;
+        this.configuration.paramName = `${this.formName}[file]`;
+        this.configuration.method = 'POST';
+        this.configuration.params = {};
+        this.configuration.params[
+          `${this.formName}[product_id]`
+        ] = this.productId;
+        this.configuration.params[`${this.formName}[_token]`] = this.token;
+
         this.dropzone = new window.Dropzone(
           '.dropzone-container',
           this.configuration,
         );
 
-        this.dropzone.on('addedfile', (file) => {
+        this.dropzone.on(DropzoneEvents.addedFile, (file) => {
+          file.previewElement.dataset.id = file.image_id;
+
+          if (file.is_cover) {
+            file.previewElement.classList.add('is-cover');
+          }
+
           file.previewElement.addEventListener('click', () => {
             const input = file.previewElement.querySelector('.md-checkbox input');
             input.checked = !input.checked;
@@ -197,13 +260,21 @@
               file.previewElement.classList.toggle('selected');
             }
           });
-
           this.files.push(file);
         });
 
-        this.dropzone.on('error', (fileWithError, message) => {
+        this.dropzone.on(DropzoneEvents.error, (fileWithError, message) => {
           $.growl.error({message: message.error});
           this.dropzone.removeFile(fileWithError);
+        });
+
+        this.dropzone.on(DropzoneEvents.success, (file, response) => {
+          // Append the data required for a product image
+          file.image_id = response.image_id;
+          file.is_cover = response.is_cover;
+          file.legends = response.legends;
+          // Update dataset so that it can be selected later
+          file.previewElement.dataset.id = file.image_id;
         });
       },
       /**
@@ -256,6 +327,95 @@
           $(element).remove();
         });
       },
+      /**
+       * Save selected file
+       */
+      async saveSelectedFile() {
+        if (!this.selectedFiles.length) {
+          return;
+        }
+
+        this.buttonLoading = true;
+
+        const selectedFile = this.selectedFiles[0];
+
+        if (
+          this.coverData.file
+          && this.selectedFiles.length === 1
+          && this.coverData.file.image_id === selectedFile.image_id
+        ) {
+          selectedFile.is_cover = this.coverData.value;
+        }
+
+        try {
+          const savedImage = await saveImageInformations(
+            selectedFile,
+            this.token,
+            this.formName,
+          );
+
+          const savedImageElement = document.querySelector(
+            `.dz-preview[data-id="${savedImage.image_id}"]`,
+          );
+
+          /**
+           * If the image was saved as cover, we need to replace the DOM in order to display
+           * the correct one.
+           */
+          if (savedImage.is_cover) {
+            if (!savedImageElement.classList.contains('is-cover')) {
+              const coverElement = document.querySelector('.dz-preview.is-cover');
+              coverElement.classList.remove('is-cover');
+              savedImageElement.classList.add('is-cover');
+
+              this.files = this.files.map((file) => {
+                if (file.image_id !== savedImage.image_id && file.is_cover) {
+                  file.is_cover = false;
+                }
+
+                return file;
+              });
+            }
+          }
+          $.growl({message: this.$t('window.settingsUpdated')});
+          this.buttonLoading = false;
+        } catch (error) {
+          $.growl.error({message: error.error});
+          this.buttonLoading = false;
+        }
+      },
+      /**
+       * Used to save and manage some datas from a replaced file
+       */
+      async manageReplacedFile(event) {
+        const selectedFile = this.selectedFiles[0];
+        this.buttonLoading = true;
+
+        try {
+          const newImage = await replaceImage(
+            selectedFile,
+            event.target.files[0],
+            this.formName,
+            this.token,
+          );
+          const imageElement = document.querySelector(
+            `.dz-preview[data-id="${newImage.image_id}"] img`,
+          );
+          imageElement.src = newImage.path;
+
+          $.growl({message: this.$t('window.imageReplaced')});
+          this.buttonLoading = false;
+        } catch (error) {
+          $.growl.error({message: error.responseJSON.error});
+          this.buttonLoading = false;
+        }
+      },
+      changeCover(event) {
+        this.coverData = {
+          file: this.selectedFiles[0],
+          value: event.target.value,
+        };
+      },
     },
   };
 </script>
@@ -281,6 +441,15 @@
     .dz-preview {
       position: relative;
       cursor: pointer;
+
+      .iscover {
+        display: none;
+      }
+      &.is-cover {
+        .iscover {
+          display: block;
+        }
+      }
 
       &:not(.openfilemanager) {
         border: 3px solid transparent;

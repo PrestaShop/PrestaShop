@@ -97,7 +97,7 @@ class UpdateProductImageHandler implements UpdateProductImageHandlerInterface
             );
         }
 
-        if (null !== $command->isCover()) {
+        if ($command->isCover()) {
             $this->productImageUpdater->updateProductCover($command->getImageId());
         }
 

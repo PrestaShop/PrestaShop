@@ -156,3 +156,17 @@
     {% endif %}
   </div>
 {% endblock text_with_length_counter_widget %}
+
+{% block image_dropzone_widget %}
+  {% set attr = attr|merge({
+    'class': (attr.class|default('') ~ ' image-dropzone')|trim,
+    'data-translations': translations|json_encode,
+    'data-locales': locales|json_encode,
+    'data-product-id': product_id,
+    'data-form-name': update_form_name,
+    'data-token': csrf_token(update_form_name)
+  }) %}
+
+  <div {{ block('widget_attributes') }}>
+  </div>
+{% endblock %}

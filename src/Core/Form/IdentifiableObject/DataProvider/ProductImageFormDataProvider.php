@@ -26,30 +26,49 @@
 
 declare(strict_types=1);
 
-namespace PrestaShopBundle\Form\Admin\Sell\Product\Image;
+namespace PrestaShop\PrestaShop\Core\Form\IdentifiableObject\DataProvider;
 
-use PrestaShopBundle\Form\Admin\Type\CommonAbstractType;
-use Symfony\Component\Form\Extension\Core\Type\FileType;
-use Symfony\Component\Form\FormBuilderInterface;
+use PrestaShop\PrestaShop\Core\CommandBus\CommandBusInterface;
+use PrestaShop\PrestaShop\Core\Domain\Product\Image\Query\GetProductImage;
+use PrestaShop\PrestaShop\Core\Domain\Product\Image\QueryResult\ProductImage;
 
-class AddImageType extends CommonAbstractType
+/**
+ * Provides the data that is used to prefill the Product image form
+ */
+class ProductImageFormDataProvider implements FormDataProviderInterface
 {
     /**
-     * @param FormBuilderInterface $builder
-     * @param array $options
+     * @var CommandBusInterface
      */
-    public function buildForm(FormBuilderInterface $builder, array $options)
+    private $queryBus;
+
+    /**
+     * @param CommandBusInterface $queryBus
+     */
+    public function __construct(CommandBusInterface $queryBus)
     {
-        $builder
-            ->add('file', FileType::class)
-        ;
+        $this->queryBus = $queryBus;
     }
 
     /**
      * {@inheritDoc}
      */
-    public function getBlockPrefix()
+    public function getData($id)
     {
-        return '';
+        /** @var ProductImage $productImage */
+        $productImage = $this->queryBus->handle(new GetProductImage((int) $id));
+
+        return [
+            'legend' => $productImage->getLocalizedLegends(),
+            'is_cover' => $productImage->isCover(),
+        ];
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function getDefaultData()
+    {
+        return [];
     }
 }

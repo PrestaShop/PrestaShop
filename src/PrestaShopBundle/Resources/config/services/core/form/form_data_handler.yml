@@ -188,3 +188,8 @@ services:
       class: 'PrestaShop\PrestaShop\Core\Form\IdentifiableObject\DataHandler\CombinationItemFormDataHandler'
       arguments:
           - '@prestashop.core.command_bus'
+
+  prestashop.core.form.identifiable_object.data_handler.product_image_form_data_handler:
+      class: 'PrestaShop\PrestaShop\Core\Form\IdentifiableObject\DataHandler\ProductImageFormDataHandler'
+      arguments:
+          - '@prestashop.core.command_bus'

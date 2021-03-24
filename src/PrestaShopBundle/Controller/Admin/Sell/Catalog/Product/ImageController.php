@@ -29,16 +29,18 @@ declare(strict_types=1);
 namespace PrestaShopBundle\Controller\Admin\Sell\Catalog\Product;
 
 use Exception;
-use PrestaShop\PrestaShop\Core\Domain\Product\Image\Command\AddProductImageCommand;
+use PrestaShop\PrestaShop\Core\Domain\Exception\FileUploadException;
+use PrestaShop\PrestaShop\Core\Domain\Product\Exception\ProductConstraintException;
 use PrestaShop\PrestaShop\Core\Domain\Product\Image\Exception\CannotAddProductImageException;
 use PrestaShop\PrestaShop\Core\Domain\Product\Image\Exception\ProductImageNotFoundException;
+use PrestaShop\PrestaShop\Core\Domain\Product\Image\Query\GetProductImage;
 use PrestaShop\PrestaShop\Core\Domain\Product\Image\Query\GetProductImages;
 use PrestaShop\PrestaShop\Core\Domain\Product\Image\QueryResult\ProductImage;
-use PrestaShop\PrestaShop\Core\Domain\Product\Image\ValueObject\ImageId;
+use PrestaShop\PrestaShop\Core\Form\IdentifiableObject\Builder\FormBuilderInterface;
+use PrestaShop\PrestaShop\Core\Form\IdentifiableObject\Handler\FormHandlerInterface;
 use PrestaShop\PrestaShop\Core\Image\Uploader\Exception\MemoryLimitException;
 use PrestaShop\PrestaShop\Core\Image\Uploader\Exception\UploadedImageConstraintException;
 use PrestaShopBundle\Controller\Admin\FrameworkBundleAdminController;
-use PrestaShopBundle\Form\Admin\Sell\Product\Image\AddImageType;
 use PrestaShopBundle\Security\Annotation\AdminSecurity;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -65,38 +67,94 @@ class ImageController extends FrameworkBundleAdminController
      * @AdminSecurity("is_granted(['update'], request.get('_legacy_controller'))", message="You do not have permission to update this.")
      *
      * @param Request $request
-     * @param int $productId
      *
      * @return JsonResponse
      */
-    public function addImageAction(Request $request, int $productId): JsonResponse
+    public function addImageAction(Request $request): JsonResponse
     {
-        $imageForm = $this->createForm(AddImageType::class);
+        $imageForm = $this->getProductImageFormBuilder()->getForm();
         $imageForm->handleRequest($request);
 
-        if (!$imageForm->isSubmitted() || $imageForm->isValid()) {
-            return new JsonResponse([
-                'error' => 'Invalid data.',
-                'form_errors' => $this->getFormErrorsForJS($imageForm),
-            ], Response::HTTP_BAD_REQUEST);
-        }
-
-        $formData = $imageForm->getData();
-        $uploadedFile = $formData['file'];
         try {
-            $command = new AddProductImageCommand($productId, $uploadedFile->getPathname());
-            /** @var ImageId $imageId */
-            $imageId = $this->getCommandBus()->handle($command);
+            $result = $this->getProductImageFormHandler()->handle($imageForm);
+
+            if (!$result->isSubmitted() || !$result->isValid()) {
+                return new JsonResponse([
+                    'error' => 'Invalid form data.',
+                    'form_errors' => $this->getFormErrorsForJS($imageForm),
+                ], Response::HTTP_BAD_REQUEST);
+            }
+            if (null === $result->getIdentifiableObjectId()) {
+                return new JsonResponse([
+                    'error' => 'Could not create image.',
+                ], Response::HTTP_BAD_REQUEST);
+            }
         } catch (Exception $e) {
             return new JsonResponse([
                 'error' => $this->getErrorMessageForException($e, $this->getErrorMessages($e)),
             ], Response::HTTP_BAD_REQUEST);
         }
 
-        // @todo: the GetProductImage command is implemented in another PR, but it should be used here to return the
-        // full data of the created image (like in the getImages controller)
+        return $this->getProductImageJsonResponse($result->getIdentifiableObjectId());
+    }
 
-        return new JsonResponse(['image_id' => $imageId->getValue()]);
+    /**
+     * @AdminSecurity("is_granted(['update'], request.get('_legacy_controller'))", message="You do not have permission to update this.")
+     *
+     * @param Request $request
+     * @param int $productImageId
+     *
+     * @return JsonResponse
+     */
+    public function updateImageAction(Request $request, int $productImageId): JsonResponse
+    {
+        $imageForm = $this->getProductImageFormBuilder()->getFormFor($productImageId);
+        $imageForm->handleRequest($request);
+
+        try {
+            $result = $this->getProductImageFormHandler()->handleFor($productImageId, $imageForm);
+
+            if (!$result->isSubmitted() || !$result->isValid()) {
+                return new JsonResponse([
+                    'error' => 'Invalid form data.',
+                    'form_errors' => $this->getFormErrorsForJS($imageForm),
+                ], Response::HTTP_BAD_REQUEST);
+            }
+        } catch (Exception $e) {
+            return new JsonResponse([
+                'error' => $this->getErrorMessageForException($e, $this->getErrorMessages($e)),
+            ], Response::HTTP_BAD_REQUEST);
+        }
+
+        return $this->getProductImageJsonResponse($productImageId);
+    }
+
+    /**
+     * @return FormBuilderInterface
+     */
+    private function getProductImageFormBuilder(): FormBuilderInterface
+    {
+        return $this->get('prestashop.core.form.identifiable_object.builder.product_image_form_builder');
+    }
+
+    /**
+     * @return FormHandlerInterface
+     */
+    private function getProductImageFormHandler(): FormHandlerInterface
+    {
+        return $this->get('prestashop.core.form.identifiable_object.product_image_form_handler');
+    }
+
+    /**
+     * @param int $productImageId
+     *
+     * @return JsonResponse
+     */
+    private function getProductImageJsonResponse(int $productImageId): JsonResponse
+    {
+        $productImage = $this->getQueryBus()->handle(new GetProductImage($productImageId));
+
+        return new JsonResponse($this->formatImage($productImage));
     }
 
     /**
@@ -127,6 +185,12 @@ class ImageController extends FrameworkBundleAdminController
         $iniConfig = $this->get('prestashop.core.configuration.ini_configuration');
 
         return [
+            ProductConstraintException::class => [
+                ProductConstraintException::INVALID_ID => $this->trans(
+                    'Invalid ID.',
+                    'Admin.Notifications.Error'
+                ),
+            ],
             ProductImageNotFoundException::class => $this->trans(
                 'The object cannot be loaded (or found)',
                 'Admin.Notifications.Error'
@@ -150,6 +214,12 @@ class ImageController extends FrameworkBundleAdminController
                 'An error occurred while attempting to save.',
                 'Admin.Notifications.Error'
             ),
+            FileUploadException::class => [
+                UPLOAD_ERR_NO_FILE => $this->trans(
+                    'No file was uploaded.',
+                    'Admin.Notifications.Error'
+                ),
+            ],
         ];
     }
 }

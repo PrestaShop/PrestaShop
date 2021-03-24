@@ -24,50 +24,33 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
 
-namespace PrestaShop\PrestaShop\Core\Domain\Product\ValueObject;
+declare(strict_types=1);
 
-use PrestaShop\PrestaShop\Core\Domain\Product\Exception\ProductConstraintException;
+namespace PrestaShopBundle\Form\Admin\Sell\Product\Image;
 
-/**
- * Product identity.
- */
-class ProductId
+use PrestaShopBundle\Form\Admin\Type\CommonAbstractType;
+use PrestaShopBundle\Form\Admin\Type\SwitchType;
+use PrestaShopBundle\Form\Admin\Type\TranslatableType;
+use Symfony\Component\Form\Extension\Core\Type\FileType;
+use Symfony\Component\Form\Extension\Core\Type\HiddenType;
+use Symfony\Component\Form\Extension\Core\Type\TextType;
+use Symfony\Component\Form\FormBuilderInterface;
+
+class ProductImageType extends CommonAbstractType
 {
     /**
-     * @var int
+     * {@inheritDoc}
      */
-    private $productId;
-
-    /**
-     * @param int $productId
-     *
-     * @throws ProductConstraintException
-     */
-    public function __construct($productId)
+    public function buildForm(FormBuilderInterface $builder, array $options)
     {
-        $this->assertIntegerIsGreaterThanZero($productId);
-
-        $this->productId = $productId;
-    }
-
-    /**
-     * @return int
-     */
-    public function getValue()
-    {
-        return $this->productId;
-    }
-
-    /**
-     * @param int $productId
-     */
-    private function assertIntegerIsGreaterThanZero($productId)
-    {
-        if (!is_int($productId) || 0 > $productId) {
-            throw new ProductConstraintException(
-                sprintf('Product id %s is invalid. Product id must be number that is greater than zero.', var_export($productId, true)),
-                ProductConstraintException::INVALID_ID
-            );
-        }
+        parent::buildForm($builder, $options);
+        $builder
+            ->add('product_id', HiddenType::class)
+            ->add('file', FileType::class)
+            ->add('legend', TranslatableType::class, [
+                'type' => TextType::class,
+            ])
+            ->add('is_cover', SwitchType::class)
+        ;
     }
 }

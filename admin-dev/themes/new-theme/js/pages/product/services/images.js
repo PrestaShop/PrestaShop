@@ -36,6 +36,43 @@ export const getProductImages = async (productId) => {
   return $.get(imagesUrl);
 };
 
+export const saveImageInformations = async (selectedFile, token, formName) => {
+  const saveUrl = router.generate('admin_products_v2_update_image', {
+    productImageId: selectedFile.image_id,
+  });
+
+  const data = {};
+  data[`${formName}[is_cover]`] = selectedFile.is_cover ? 1 : 0;
+  Object.keys(selectedFile.legends).forEach((langId) => {
+    data[`${formName}[legend][${langId}]`] = selectedFile.legends[langId];
+  });
+  data[`${formName}[_token]`] = token;
+
+  return $.ajax(saveUrl, {
+    method: 'POST',
+    data,
+  });
+};
+
+export const replaceImage = async (selectedFile, newFile, formName, token) => {
+  const replaceUrl = router.generate('admin_products_v2_update_image', {
+    productImageId: selectedFile.image_id,
+  });
+
+  const formData = new FormData();
+  formData.append(`${formName}[file]`, newFile);
+  formData.append(`${formName}[_token]`, token);
+
+  return $.ajax(replaceUrl, {
+    method: 'POST',
+    data: formData,
+    contentType: false,
+    processData: false,
+  });
+};
+
 export default {
   getProductImages,
+  saveImageInformations,
+  replaceImage,
 };

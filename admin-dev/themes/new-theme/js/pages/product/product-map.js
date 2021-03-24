@@ -30,6 +30,7 @@ export default {
   productForm: 'form[name=product]',
   productFormSubmitButton: 'button[name="product[save]"]',
   navigationBar: '#form-nav',
+  dropzoneImagesContainer: '#product_images',
   suppliers: {
     productSuppliersCollection: `${productSuppliersId}`,
     supplierIdsInput: '#product_suppliers_supplier_ids',
@@ -97,6 +98,11 @@ export default {
       isDefaultInput: (rowIndex) => `#combination_list_combinations_${rowIndex}_is_default`,
       editButton: (rowIndex) => `#combination_list_combinations_${rowIndex}_edit`,
       deleteButton: (rowIndex) => `#combination_list_combinations_${rowIndex}_delete`,
+    },
+  },
+  dropzone: {
+    configuration: {
+      fileManager: '.openfilemanager',
     },
   },
 };

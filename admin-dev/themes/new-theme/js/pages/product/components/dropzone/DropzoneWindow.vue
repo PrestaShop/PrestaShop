@@ -28,7 +28,9 @@
       <div class="dropzone-window-header-left">
         <p
           class="dropzone-window-number"
-          v-html="$t('window.selectedFiles', {'%filesNb%': selectedFiles.length})"
+          v-html="
+            $t('window.selectedFiles', { '%filesNb%': selectedFiles.length })
+          "
         />
       </div>
       <div class="dropzone-window-header-right">
@@ -37,6 +39,13 @@
           data-toggle="pstooltip"
           :data-original-title="$t('window.zoom')"
         >search</i>
+        <i
+          class="material-icons"
+          data-toggle="pstooltip"
+          :data-original-title="$t('window.replaceSelection')"
+          @click="openFileManager"
+          v-if="selectedFile"
+        >find_replace</i>
         <i
           class="material-icons"
           data-toggle="pstooltip"
@@ -63,37 +72,98 @@
       class="dropzone-window-unselect"
       v-if="selectedFiles.length === files.length"
       @click="$emit('unselectAll')"
+      data-toggle="pstooltip"
+      :data-original-title="$t('window.zoom')"
     >
       {{ $t("window.unselectAll") }}
     </p>
 
     <div
-      class="md-checkbox dropzone-window-checkbox"
-      v-if="selectedFiles.length === 1"
+      class="dropzone-window-bottom"
+      v-if="selectedFile"
     >
-      <label>
-        <input type="checkbox">
-        <i class="md-checkbox-control" />
-        {{ $t("window.useAsCover") }}
-      </label>
-    </div>
+      <div
+        class="md-checkbox dropzone-window-checkbox"
+        v-if="selectedFile !== null"
+        :data-toggle="showCoverTooltip"
+        :data-original-title="$t('window.cantDisableCover')"
+      >
+        <label>
+          <input
+            type="checkbox"
+            :disabled="isCover"
+            :checked="isCover"
+            @change="$emit('coverChanged', $event)"
+          >
+          <i class="md-checkbox-control" />
+          {{ $t("window.useAsCover") }}
+        </label>
+      </div>
 
-    <label
-      for="caption-textarea"
-      class="control-label"
-    >{{
-      $t("window.caption")
-    }}</label>
-    <textarea
-      id="caption-textarea"
-      name="caption-textarea"
-      class="form-control"
-    />
+      <input
+        type="file"
+        class="dropzone-window-filemanager"
+        @change="watchFiles"
+      >
 
-    <div class="dropzone-window-button-container">
-      <button class="btn btn-primary save-image-settings">
-        {{ $t("window.saveImage") }}
-      </button>
+      <div class="dropzone-window-label">
+        <label
+          for="caption-textarea"
+          class="control-label"
+        >{{
+          $t("window.caption")
+        }}</label>
+        <div class="dropdown">
+          <button
+            class="btn btn-outline-secondary btn-sm dropdown-toggle js-locale-btn"
+            type="button"
+            data-toggle="dropdown"
+            aria-haspopup="true"
+            aria-expanded="false"
+            id="form_invoice_prefix"
+          >
+            {{ selectedLocale.iso_code }}
+          </button>
+          <div
+            class="dropdown-menu locale-dropdown-menu"
+            aria-labelledby="form_invoice_prefix"
+          >
+            <span
+              v-for="locale in locales"
+              :key="locale.name"
+              class="dropdown-item js-locale-item"
+              :data-locale="locale.iso_code"
+            >
+              {{ locale.name }}
+            </span>
+          </div>
+        </div>
+      </div>
+
+      <textarea
+        id="caption-textarea"
+        name="caption-textarea"
+        class="form-control"
+        v-model="selectedCaption"
+      />
+
+      <div class="dropzone-window-button-container">
+        <button
+          type="button"
+          class="btn btn-primary save-image-settings"
+          @click="$emit('saveSelectedFile')"
+        >
+          <span v-if="!loading">
+            {{ $t("window.saveImage") }}
+          </span>
+          <span
+            class="spinner-border spinner-border-sm"
+            v-if="loading"
+            role="status"
+            aria-hidden="true"
+          />
+        </button>
+      </div>
     </div>
   </div>
 </template>
@@ -110,11 +180,75 @@
         type: Array,
         default: () => [],
       },
+      locales: {
+        type: Array,
+        required: true,
+      },
+      selectedLocale: {
+        type: Object,
+        default: () => {},
+      },
+      loading: {
+        type: Boolean,
+        default: false,
+      },
+    },
+    computed: {
+      selectedFile() {
+        return this.selectedFiles.length === 1 ? this.selectedFiles[0] : null;
+      },
+      isCover() {
+        return !!(this.selectedFile && this.selectedFile.is_cover);
+      },
+      showCoverTooltip() {
+        if (this.isCover) {
+          return 'pstooltip';
+        }
+
+        return false;
+      },
+      selectedCaption: {
+        get() {
+          if (
+            this.selectedFile === null
+            || !this.selectedFile.legends
+            || !this.selectedFile.legends[this.selectedLocale.id_lang]
+          ) {
+            return '';
+          }
+
+          return this.selectedFile.legends[this.selectedLocale.id_lang];
+        },
+        set(value) {
+          if (this.selectedFile === null) {
+            return;
+          }
+
+          this.selectedFile.legends[this.selectedLocale.id_lang] = value;
+        },
+      },
     },
     mounted() {
       window.prestaShopUiKit.initToolTips();
     },
-    methods: {},
+    updated() {
+      window.prestaShopUiKit.initToolTips();
+    },
+    methods: {
+      /**
+       * Watch file change and send an event to the smart component
+       */
+      watchFiles(event) {
+        this.$emit('replacedFile', event);
+      },
+      /**
+       * Used to open the native file manager
+       */
+      openFileManager() {
+        const fileInput = document.querySelector('.dropzone-window-filemanager');
+        fileInput.click();
+      },
+    },
   };
 </script>
 
@@ -127,6 +261,32 @@
     background-color: darken(#ffffff, 2%);
     align-self: stretch;
     padding: 1rem;
+    min-width: 20rem;
+
+    &-filemanager {
+      display: none;
+    }
+
+    &-label {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 0.5rem;
+
+      label {
+        margin-bottom: 0;
+      }
+
+      .dropdown {
+        > button {
+          padding-right: 0.25rem;
+        }
+
+        &-item {
+          cursor: pointer;
+        }
+      }
+    }
 
     textarea {
       margin-bottom: 1rem;
