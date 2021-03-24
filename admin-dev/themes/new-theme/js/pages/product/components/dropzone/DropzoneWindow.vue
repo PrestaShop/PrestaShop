@@ -66,7 +66,7 @@
       @click="$emit('selectAll')"
       v-if="files.length > 0 && selectedFiles.length !== files.length"
     >
-      {{ $t("window.selectAll") }}
+      {{ $t('window.selectAll') }}
     </p>
     <p
       class="dropzone-window-unselect"
@@ -75,7 +75,7 @@
       data-toggle="pstooltip"
       :data-original-title="$t('window.zoom')"
     >
-      {{ $t("window.unselectAll") }}
+      {{ $t('window.unselectAll') }}
     </p>
 
     <div
@@ -96,7 +96,7 @@
             @change="$emit('coverChanged', $event)"
           >
           <i class="md-checkbox-control" />
-          {{ $t("window.useAsCover") }}
+          {{ $t('window.useAsCover') }}
         </label>
       </div>
 
@@ -111,7 +111,7 @@
           for="caption-textarea"
           class="control-label"
         >{{
-          $t("window.caption")
+          $t('window.caption')
         }}</label>
         <div class="dropdown">
           <button
@@ -154,7 +154,7 @@
           @click="$emit('saveSelectedFile')"
         >
           <span v-if="!loading">
-            {{ $t("window.saveImage") }}
+            {{ $t('window.saveImage') }}
           </span>
           <span
             class="spinner-border spinner-border-sm"
