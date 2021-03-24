@@ -52,7 +52,6 @@ use PrestaShop\PrestaShop\Core\Domain\Product\QueryResult\ProductPricesInformati
 use PrestaShop\PrestaShop\Core\Domain\Product\QueryResult\ProductSeoOptions;
 use PrestaShop\PrestaShop\Core\Domain\Product\QueryResult\ProductShippingInformation;
 use PrestaShop\PrestaShop\Core\Domain\Product\QueryResult\ProductStockInformation;
-use PrestaShop\PrestaShop\Core\Domain\Product\QueryResult\ProductType;
 use PrestaShop\PrestaShop\Core\Domain\Product\Stock\ValueObject\OutOfStockType;
 use PrestaShop\PrestaShop\Core\Domain\Product\Supplier\Query\GetProductSupplierOptions;
 use PrestaShop\PrestaShop\Core\Domain\Product\Supplier\QueryResult\ProductSupplierForEditing;
@@ -60,6 +59,7 @@ use PrestaShop\PrestaShop\Core\Domain\Product\Supplier\QueryResult\ProductSuppli
 use PrestaShop\PrestaShop\Core\Domain\Product\Supplier\QueryResult\ProductSupplierOptions;
 use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\DeliveryTimeNoteType;
 use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductCondition;
+use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductType;
 use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductVisibility;
 use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\RedirectType;
 use PrestaShop\PrestaShop\Core\Domain\Product\VirtualProductFile\QueryResult\VirtualProductFileForEditing;
@@ -220,12 +220,12 @@ class ProductFormDataProviderTest extends TestCase
         ];
         $productData = [
             'name' => $localizedValues,
-            'type' => ProductType::TYPE_COMBINATION,
+            'type' => ProductType::TYPE_COMBINATIONS,
             'description' => $localizedValues,
             'description_short' => $localizedValues,
         ];
         $expectedOutputData['basic']['name'] = $localizedValues;
-        $expectedOutputData['basic']['type'] = ProductType::TYPE_COMBINATION;
+        $expectedOutputData['basic']['type'] = ProductType::TYPE_COMBINATIONS;
         $expectedOutputData['basic']['description'] = $localizedValues;
         $expectedOutputData['basic']['description_short'] = $localizedValues;
 
@@ -566,6 +566,7 @@ class ProductFormDataProviderTest extends TestCase
     {
         return new ProductForEditing(
             static::PRODUCT_ID,
+            $product['type'] ?? ProductType::TYPE_STANDARD,
             ProductCustomizationOptions::createNotCustomizable(),
             $this->createBasic($product),
             $this->createCategories($product),
@@ -817,7 +818,6 @@ class ProductFormDataProviderTest extends TestCase
     private function createBasic(array $product): ProductBasicInformation
     {
         return new ProductBasicInformation(
-            new ProductType($product['type'] ?? ProductType::TYPE_STANDARD),
             $product['name'] ?? [],
             $product['description'] ?? [],
             $product['description_short'] ?? [],

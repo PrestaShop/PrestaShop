@@ -26,50 +26,25 @@
 
 declare(strict_types=1);
 
-namespace PrestaShop\PrestaShop\Core\Domain\Product\Command;
+namespace PrestaShop\PrestaShop\Core\Form\IdentifiableObject\CommandBuilder\Product;
 
-use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductType;
+use PrestaShop\PrestaShop\Core\Domain\Product\Command\UpdateProductTypeCommand;
+use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductId;
 
 /**
- * Command for creating product with basic information
+ * Builder used to build UpdateTypeCommand
  */
-class AddProductCommand
+class TypeCommandBuilder implements ProductCommandBuilderInterface
 {
-    /**
-     * @var string[]
-     */
-    private $localizedNames;
-
-    /**
-     * @var ProductType
-     */
-    private $productType;
-
-    /**
-     * @param array $localizedNames
-     * @param string $productType
-     */
-    public function __construct(
-        array $localizedNames,
-        string $productType
-    ) {
-        $this->localizedNames = $localizedNames;
-        $this->productType = new ProductType($productType);
-    }
-
-    /**
-     * @return string[]
-     */
-    public function getLocalizedNames(): array
+    public function buildCommand(ProductId $productId, array $formData): array
     {
-        return $this->localizedNames;
-    }
+        if (!isset($formData['basic']['type'])) {
+            return [];
+        }
 
-    /**
-     * @return ProductType
-     */
-    public function getProductType(): ProductType
-    {
-        return $this->productType;
+        return [new UpdateProductTypeCommand(
+            $productId->getValue(),
+            $formData['basic']['type']
+        )];
     }
 }

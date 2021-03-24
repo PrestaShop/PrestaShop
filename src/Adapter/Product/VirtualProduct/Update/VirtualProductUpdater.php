@@ -31,8 +31,11 @@ namespace PrestaShop\PrestaShop\Adapter\Product\VirtualProduct\Update;
 use PrestaShop\PrestaShop\Adapter\File\Uploader\VirtualProductFileUploader;
 use PrestaShop\PrestaShop\Adapter\Product\Repository\ProductRepository;
 use PrestaShop\PrestaShop\Adapter\Product\VirtualProduct\Repository\VirtualProductFileRepository;
+use PrestaShop\PrestaShop\Core\Domain\Product\Exception\InvalidProductTypeException;
 use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductId;
+use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductType;
 use PrestaShop\PrestaShop\Core\Domain\Product\VirtualProductFile\Exception\VirtualProductFileConstraintException;
+use PrestaShop\PrestaShop\Core\Domain\Product\VirtualProductFile\Exception\VirtualProductFileNotFoundException;
 use PrestaShop\PrestaShop\Core\Domain\Product\VirtualProductFile\ValueObject\VirtualProductFileId;
 use ProductDownload as VirtualProductFile;
 use Symfony\Component\Filesystem\Filesystem;
@@ -112,23 +115,25 @@ class VirtualProductUpdater
      * @param VirtualProductFile $virtualProductFile
      *
      * @return VirtualProductFileId
+     *
+     * @throws InvalidProductTypeException
+     * @throws VirtualProductFileConstraintException
      */
     public function addFile(ProductId $productId, string $filePath, VirtualProductFile $virtualProductFile): VirtualProductFileId
     {
         $product = $this->productRepository->get($productId);
-
-        if (!$product->is_virtual) {
-            throw new VirtualProductFileConstraintException(
-                'Only virtual product can have file',
-                VirtualProductFileConstraintException::INVALID_PRODUCT_TYPE
-            );
+        if ($product->product_type !== ProductType::TYPE_VIRTUAL) {
+            throw new InvalidProductTypeException(InvalidProductTypeException::EXPECTED_VIRTUAL_TYPE);
         }
 
-        if ($this->virtualProductFileRepository->findByProductId($productId)) {
+        try {
+            $this->virtualProductFileRepository->findByProductId($productId);
             throw new VirtualProductFileConstraintException(
                 sprintf('File already exists for product #%d', $product->id),
                 VirtualProductFileConstraintException::ALREADY_HAS_A_FILE
             );
+        } catch (VirtualProductFileNotFoundException $e) {
+            // Expected behaviour, the product should have no virtual file yet
         }
 
         $uploadedFilePath = $this->virtualProductFileUploader->upload($filePath);
@@ -147,5 +152,28 @@ class VirtualProductUpdater
         $this->virtualProductFileUploader->remove($virtualProductFile->filename);
 
         $this->virtualProductFileRepository->delete($virtualProductFileId);
+    }
+
+    /**
+     * @param ProductId $productId
+     *
+     * @throws InvalidProductTypeException
+     */
+    public function deleteFileForProduct(ProductId $productId): void
+    {
+        $product = $this->productRepository->get($productId);
+        if ($product->product_type !== ProductType::TYPE_VIRTUAL) {
+            throw new InvalidProductTypeException(InvalidProductTypeException::EXPECTED_VIRTUAL_TYPE);
+        }
+
+        try {
+            $virtualProductFile = $this->virtualProductFileRepository->findByProductId($productId);
+        } catch (VirtualProductFileNotFoundException $e) {
+            // No virtual file found, nothing to remove
+            return;
+        }
+
+        $this->virtualProductFileUploader->remove($virtualProductFile->filename);
+        $this->virtualProductFileRepository->delete(new VirtualProductFileId((int) $virtualProductFile->id));
     }
 }

@@ -28,7 +28,7 @@ declare(strict_types=1);
 
 namespace PrestaShopBundle\Form\Admin\Sell\Product\EventListener;
 
-use PrestaShop\PrestaShop\Core\Domain\Product\QueryResult\ProductType;
+use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductType;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Symfony\Component\Form\FormEvent;
 use Symfony\Component\Form\FormEvents;
@@ -58,7 +58,7 @@ class ProductTypeListener implements EventSubscriberInterface
         $form = $event->getForm();
         $data = $event->getData();
 
-        if (ProductType::TYPE_COMBINATION === $data['basic']['type']) {
+        if (ProductType::TYPE_COMBINATIONS === $data['basic']['type']) {
             $form->remove('suppliers');
         }
     }

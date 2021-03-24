@@ -26,50 +26,36 @@
 
 declare(strict_types=1);
 
-namespace PrestaShop\PrestaShop\Core\Domain\Product\Command;
+namespace PrestaShop\PrestaShop\Adapter\Product\CommandHandler;
 
-use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductType;
+use PrestaShop\PrestaShop\Adapter\Product\Update\ProductTypeUpdater;
+use PrestaShop\PrestaShop\Core\Domain\Product\Command\UpdateProductTypeCommand;
+use PrestaShop\PrestaShop\Core\Domain\Product\CommandHandler\UpdateProductTypeHandlerInterface;
 
 /**
- * Command for creating product with basic information
+ * Handle @see UpdateProductTypeCommand
  */
-class AddProductCommand
+class UpdateProductTypeHandler implements UpdateProductTypeHandlerInterface
 {
     /**
-     * @var string[]
+     * @var ProductTypeUpdater
      */
-    private $localizedNames;
+    private $productTypeUpdater;
 
     /**
-     * @var ProductType
-     */
-    private $productType;
-
-    /**
-     * @param array $localizedNames
-     * @param string $productType
+     * @param ProductTypeUpdater $productTypeUpdater
      */
     public function __construct(
-        array $localizedNames,
-        string $productType
+        ProductTypeUpdater $productTypeUpdater
     ) {
-        $this->localizedNames = $localizedNames;
-        $this->productType = new ProductType($productType);
+        $this->productTypeUpdater = $productTypeUpdater;
     }
 
     /**
-     * @return string[]
+     * {@inheritDoc}
      */
-    public function getLocalizedNames(): array
+    public function handle(UpdateProductTypeCommand $command): void
     {
-        return $this->localizedNames;
-    }
-
-    /**
-     * @return ProductType
-     */
-    public function getProductType(): ProductType
-    {
-        return $this->productType;
+        $this->productTypeUpdater->updateType($command->getProductId(), $command->getProductType());
     }
 }

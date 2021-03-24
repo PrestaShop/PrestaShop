@@ -54,3 +54,12 @@ ALTER TABLE `PREFIX_product` MODIFY COLUMN `redirect_type` ENUM(
     '404', '301-product', '302-product', '301-category', '302-category'
 ) NOT NULL DEFAULT '404';
 
+ALTER TABLE  `PREFIX_product` ADD `product_type` ENUM(
+    'standard', 'pack', 'virtual', 'combinations'
+) NOT NULL DEFAULT 'standard';
+
+/* First set all products to standard type, then update them based on cached columns that identify the type */
+UPDATE `PREFIX_product` SET `product_type` = "standard";
+UPDATE `PREFIX_product` SET `product_type` = "combinations" WHERE `cache_default_attribute` != 0;
+UPDATE `PREFIX_product` SET `product_type` = "pack" WHERE `cache_is_pack` = 1;
+UPDATE `PREFIX_product` SET `product_type` = "virtual" WHERE `is_virtual` = 1;

@@ -32,6 +32,7 @@ import ProductMap from '@pages/product/product-map';
 import ProductPartialUpdater from '@pages/product/edit/product-partial-updater';
 import NavbarHandler from '@components/navbar-handler';
 import CombinationsManager from '@pages/product/edit/combinations-manager';
+import ProductTypeManager from '@pages/product/edit/product-type-manager';
 import initDropzone from '@pages/product/components/dropzone';
 
 const {$} = window;
@@ -49,9 +50,9 @@ $(() => {
   const productId = parseInt($productForm.data('productId'), 10);
   const productType = $productForm.data('productType');
 
-  // Combinations manager must be initialised before nav handler, or it won't trigger the pagination if the tab is
-  // selected on load, but only when productId exists (edition mode)
   if (productId) {
+    // Combinations manager must be initialised before nav handler, or it won't trigger the pagination if the tab is
+    // selected on load, but only when productId exists (edition mode)
     new CombinationsManager();
   }
   new NavbarHandler(ProductMap.navigationBar);
@@ -65,6 +66,11 @@ $(() => {
   if (!productId) {
     return;
   }
+
+  // On creation product type can be modified as you wish, but once it is created it has strong impacts, so we must
+  // force submit because it influences the available features in the form, and it also perform cleaning on non relevant
+  // associations
+  new ProductTypeManager($(ProductMap.productTypeSelector), $productForm);
 
   // Init Serp component to preview Search engine display
   const translatorInput = window.prestashop.instance.translatableInput;
@@ -90,7 +96,7 @@ $(() => {
   new FeatureValuesManager(window.prestashop.instance.eventEmitter);
   new CustomizationsManager();
 
-  if (productType !== 'combination') {
+  if (productType !== ProductMap.productType.COMBINATIONS) {
     new ProductSuppliersManager();
   }
 });

@@ -6,14 +6,59 @@ Feature: Add product to pack from Back Office (BO)
   As a BO user
   I need to be able to add product to pack from BO
 
+  Scenario: I cannot perform pack update on a standard product
+    Given I add product "product1" with following information:
+      | name[en-US] | weird sunglasses box |
+      | type        | standard             |
+    And product "product1" type should be standard
+    And I add product "standardProduct" with following information:
+      | name[en-US] | shady sunglasses |
+      | type        | standard         |
+    And product "standardProduct" type should be standard
+    When I update pack "standardProduct" with following product quantities:
+      | product  | quantity |
+      | product1 | 5        |
+    Then I should get error that this action is allowed for pack product only
+    Then product "standardProduct" type should be standard
+
+  Scenario: I cannot perform pack update on a virtual product
+    Given I add product "product1" with following information:
+      | name[en-US] | weird sunglasses box |
+      | type        | standard             |
+    And product "product1" type should be standard
+    And I add product "virtualProduct" with following information:
+      | name[en-US] | shady sunglasses |
+      | type        | virtual          |
+    And product "virtualProduct" type should be virtual
+    When I update pack "virtualProduct" with following product quantities:
+      | product  | quantity |
+      | product1 | 5        |
+    Then I should get error that this action is allowed for pack product only
+    Then product "virtualProduct" type should be virtual
+
+  Scenario: I cannot perform pack update on a combinations product
+    Given I add product "product1" with following information:
+      | name[en-US] | weird sunglasses box |
+      | type        | standard             |
+    And product "product1" type should be standard
+    And I add product "combinationsProduct" with following information:
+      | name[en-US] | shady sunglasses |
+      | type        | combinations     |
+    And product "combinationsProduct" type should be combinations
+    When I update pack "combinationsProduct" with following product quantities:
+      | product  | quantity |
+      | product1 | 5        |
+    Then I should get error that this action is allowed for pack product only
+    Then product "combinationsProduct" type should be combinations
+
   Scenario: I add standard product to a pack
     Given I add product "productPack1" with following information:
       | name[en-US] | weird sunglasses box |
-      | is_virtual  | false                |
-    And product "productPack1" type should be standard
+      | type        | pack                 |
+    And product "productPack1" type should be pack
     And I add product "product2" with following information:
       | name[en-US] | shady sunglasses |
-      | is_virtual  | false            |
+      | type        | standard         |
     And product "product2" type should be standard
     When I update pack "productPack1" with following product quantities:
       | product  | quantity |
@@ -26,15 +71,16 @@ Feature: Add product to pack from Back Office (BO)
   Scenario: I add virtual products to a pack
     Given I add product "productPack2" with following information:
       | name[en-US] | street photos |
-      | is_virtual  | false         |
-    And product "productPack2" type should be standard
+      | type        | pack          |
+    And product "productPack2" type should be pack
     And I add product "product3" with following information:
       | name[en-US] | summerstreet |
-      | is_virtual  | true         |
+      | type        | virtual      |
     And I add product "product4" with following information:
       | name[en-US] | winterstreet |
-      | is_virtual  | true         |
+      | type        | virtual      |
     And product "product3" type should be virtual
+    And product "product4" type should be virtual
     When I update pack "productPack2" with following product quantities:
       | product  | quantity |
       | product3 | 3        |
@@ -68,7 +114,7 @@ Feature: Add product to pack from Back Office (BO)
   Scenario: I add virtual and standard product to the same pack
     Given I add product productPack4 with following information:
       | name[en-US] | mixed pack |
-      | is_virtual  | false      |
+      | type        | pack       |
     Given product "product2" type should be standard
     And product "product3" type should be virtual
     When I update pack productPack4 with following product quantities:
@@ -97,19 +143,20 @@ Feature: Add product to pack from Back Office (BO)
       | product2 | 2        |
       | product3 | 3        |
     When I remove all products from pack productPack4
-    Then product "productPack4" type should be standard
+    Then product "productPack4" type should be pack
+    And pack "productPack4" should be empty
 
   Scenario: Add combination product to a pack
     Given I add product "productSkirt1" with following information:
       | name[en-US] | regular skirt |
-      | is_virtual  | false         |
+      | type        | combinations  |
     And product "productSkirt1" has following combinations:
       | reference | quantity | attributes         |
       | whiteS    | 15       | Size:S;Color:White |
       | whiteM    | 15       | Size:M;Color:White |
       | blackM    | 13       | Size:M;Color:Black |
-    And product productSkirt1 type should be combination
-    And product "productPack4" type should be standard
+    And product productSkirt1 type should be combinations
+    And product "productPack4" type should be pack
     When I update pack productPack4 with following product quantities:
       | product       | combination | quantity |
       | productSkirt1 | whiteS      | 10       |
@@ -124,7 +171,7 @@ Feature: Add product to pack from Back Office (BO)
 
   Scenario: Add combination & standard product to a pack
     Given product "product2" type should be standard
-    And product productSkirt1 type should be combination
+    And product productSkirt1 type should be combinations
     And product "productSkirt1" has following combinations:
       | reference | quantity | attributes         |
       | whiteS    | 15       | Size:S;Color:White |
@@ -172,4 +219,5 @@ Feature: Add product to pack from Back Office (BO)
       | productSkirt1 | blackM      | 9        |
       | product2      |             | 2        |
     When I remove all products from pack productPack4
-    Then product "productPack4" type should be standard
+    Then product "productPack4" type should be pack
+    And pack "productPack4" should be empty

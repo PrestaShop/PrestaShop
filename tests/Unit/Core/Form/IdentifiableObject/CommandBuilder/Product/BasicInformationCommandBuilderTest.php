@@ -29,7 +29,6 @@ declare(strict_types=1);
 namespace Tests\Unit\Core\Form\IdentifiableObject\CommandBuilder\Product;
 
 use PrestaShop\PrestaShop\Core\Domain\Product\Command\UpdateProductBasicInformationCommand;
-use PrestaShop\PrestaShop\Core\Domain\Product\QueryResult\ProductType;
 use PrestaShop\PrestaShop\Core\Form\IdentifiableObject\CommandBuilder\Product\BasicInformationCommandBuilder;
 
 class BasicInformationCommandBuilderTest extends AbstractProductCommandBuilderTest
@@ -67,27 +66,14 @@ class BasicInformationCommandBuilderTest extends AbstractProductCommandBuilderTe
         ];
 
         $command = new UpdateProductBasicInformationCommand($this->getProductId()->getValue());
-        $command->setVirtual(true);
-        yield [
-            [
-                'basic' => [
-                    'type' => ProductType::TYPE_VIRTUAL,
-                ],
-            ],
-            [$command],
-        ];
-
-        $command = new UpdateProductBasicInformationCommand($this->getProductId()->getValue());
         $localizedNames = [
             1 => 'Nom français',
             2 => 'French name',
         ];
-        $command->setVirtual(false);
         $command->setLocalizedNames($localizedNames);
         yield [
             [
                 'basic' => [
-                    'type' => ProductType::TYPE_STANDARD,
                     'name' => $localizedNames,
                 ],
             ],

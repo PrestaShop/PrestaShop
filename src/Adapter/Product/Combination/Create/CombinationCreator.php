@@ -32,7 +32,9 @@ use PrestaShop\PrestaShop\Adapter\Product\Combination\Repository\CombinationRepo
 use PrestaShop\PrestaShop\Adapter\Product\Repository\ProductRepository;
 use PrestaShop\PrestaShop\Core\Domain\Product\Combination\ValueObject\CombinationId;
 use PrestaShop\PrestaShop\Core\Domain\Product\Combination\ValueObject\GroupedAttributeIds;
+use PrestaShop\PrestaShop\Core\Domain\Product\Exception\InvalidProductTypeException;
 use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductId;
+use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductType;
 use PrestaShop\PrestaShop\Core\Exception\CoreException;
 use PrestaShop\PrestaShop\Core\Product\Combination\Generator\CombinationGeneratorInterface;
 use PrestaShopException;
@@ -86,6 +88,10 @@ class CombinationCreator
     public function createCombinations(ProductId $productId, array $groupedAttributeIdsList): array
     {
         $product = $this->productRepository->get($productId);
+        if ($product->product_type !== ProductType::TYPE_COMBINATIONS) {
+            throw new InvalidProductTypeException(InvalidProductTypeException::EXPECTED_COMBINATIONS_TYPE);
+        }
+
         $generatedCombinations = $this->combinationGenerator->generate($this->formatScalarValues($groupedAttributeIdsList));
 
         // avoid applying specificPrice on each combination.
@@ -157,7 +163,7 @@ class CombinationCreator
         try {
             $this->combinationRepository->saveProductAttributeAssociation($combinationId, $generatedCombination);
         } catch (CoreException $e) {
-            $this->combinationRepository->delete($combination);
+            $this->combinationRepository->delete($combinationId);
             throw $e;
         }
 

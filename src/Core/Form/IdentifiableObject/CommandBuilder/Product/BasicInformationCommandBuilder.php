@@ -29,7 +29,6 @@ declare(strict_types=1);
 namespace PrestaShop\PrestaShop\Core\Form\IdentifiableObject\CommandBuilder\Product;
 
 use PrestaShop\PrestaShop\Core\Domain\Product\Command\UpdateProductBasicInformationCommand;
-use PrestaShop\PrestaShop\Core\Domain\Product\QueryResult\ProductType;
 use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductId;
 
 /**
@@ -51,9 +50,6 @@ class BasicInformationCommandBuilder implements ProductCommandBuilderInterface
 
         if (isset($basicData['name'])) {
             $command->setLocalizedNames($basicData['name']);
-        }
-        if (isset($basicData['type'])) {
-            $command->setVirtual($basicData['type'] === ProductType::TYPE_VIRTUAL);
         }
         if (isset($basicData['description'])) {
             $command->setLocalizedDescriptions($basicData['description']);

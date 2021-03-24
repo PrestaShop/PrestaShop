@@ -22,8 +22,8 @@ Feature: Update product combination from listing in Back Office (BO)
   Scenario: I update combination from listing:
     Given I add product "product1" with following information:
       | name[en-US] | universal T-shirt |
-      | is_virtual  | false             |
-    And product product1 type should be standard
+      | type        | combinations      |
+    And product product1 type should be combinations
     And product product1 does not have a default combination
     And I generate combinations for product product1 using following attributes:
       | Size  | [S,M]              |

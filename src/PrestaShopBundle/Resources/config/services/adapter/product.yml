@@ -101,7 +101,7 @@ services:
         class: PrestaShop\PrestaShop\Adapter\Product\CommandHandler\UpdateProductPricesHandler
         arguments:
             - '@prestashop.adapter.product.repository.product_repository'
-            - '@prestashop.adapter.product.product_price_properties_filler'
+            - '@prestashop.adapter.product.update.product_price_properties_filler'
         tags:
             - name: tactician.handler
               command: PrestaShop\PrestaShop\Core\Domain\Product\Command\UpdateProductPricesCommand
@@ -228,10 +228,18 @@ services:
             - '@prestashop.adapter.tax_rules_group.repository.tax_rules_group_repository'
             - '@prestashop.adapter.manufacturer.repository.manufacturer_repository'
 
-    prestashop.adapter.product.product_price_properties_filler:
+    prestashop.adapter.product.update.product_price_properties_filler:
         class: PrestaShop\PrestaShop\Adapter\Product\Update\ProductPricePropertiesFiller
         arguments:
             - '@prestashop.core.util.number.number_extractor'
+
+    prestashop.adapter.product.update.product_type_updater:
+        class: PrestaShop\PrestaShop\Adapter\Product\Update\ProductTypeUpdater
+        arguments:
+            - '@prestashop.adapter.product.repository.product_repository'
+            - '@prestashop.adapter.product.pack.update.product_pack_updater'
+            - '@prestashop.adapter.product.combination.update.combination_remover'
+            - '@prestashop.adapter.product.virtual_product.update.virtual_product_updater'
 
     prestashop.adapter.product.command_handler.delete_product_handler:
         class: PrestaShop\PrestaShop\Adapter\Product\CommandHandler\DeleteProductHandler
@@ -354,3 +362,11 @@ services:
             - '@prestashop.adapter.shop.context'
             - '@translator'
             - '@prestashop.core.util.string.string_modifier'
+
+    prestashop.adapter.product.command_handler.update_product_type_handler:
+        class: PrestaShop\PrestaShop\Adapter\Product\CommandHandler\UpdateProductTypeHandler
+        arguments:
+            - '@prestashop.adapter.product.update.product_type_updater'
+        tags:
+            - name: tactician.handler
+              command: PrestaShop\PrestaShop\Core\Domain\Product\Command\UpdateProductTypeCommand

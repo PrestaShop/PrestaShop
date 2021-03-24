@@ -26,50 +26,37 @@
 
 declare(strict_types=1);
 
-namespace PrestaShop\PrestaShop\Core\Domain\Product\Command;
+namespace PrestaShop\PrestaShop\Core\Domain\Product\Combination\Exception;
 
-use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductType;
+use Throwable;
 
 /**
- * Command for creating product with basic information
+ * Thrown when bulk deleting combination fails
  */
-class AddProductCommand
+class CannotBulkDeleteCombinationException extends CombinationException
 {
     /**
-     * @var string[]
+     * @var int[]
      */
-    private $localizedNames;
+    private $combinationIds;
 
     /**
-     * @var ProductType
+     * @param int[] $combinationIds ids of combinations which cannot be deleted
+     * @param string $message
+     * @param int $code
+     * @param Throwable|null $previous
      */
-    private $productType;
-
-    /**
-     * @param array $localizedNames
-     * @param string $productType
-     */
-    public function __construct(
-        array $localizedNames,
-        string $productType
-    ) {
-        $this->localizedNames = $localizedNames;
-        $this->productType = new ProductType($productType);
+    public function __construct(array $combinationIds, $message = '', $code = 0, Throwable $previous = null)
+    {
+        parent::__construct($message, $code, $previous);
+        $this->combinationIds = $combinationIds;
     }
 
     /**
-     * @return string[]
+     * @return int[]
      */
-    public function getLocalizedNames(): array
+    public function getCombinationIds(): array
     {
-        return $this->localizedNames;
-    }
-
-    /**
-     * @return ProductType
-     */
-    public function getProductType(): ProductType
-    {
-        return $this->productType;
+        return $this->combinationIds;
     }
 }

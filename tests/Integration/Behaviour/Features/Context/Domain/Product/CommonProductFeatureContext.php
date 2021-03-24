@@ -33,6 +33,7 @@ use Language;
 use PHPUnit\Framework\Assert;
 use PrestaShop\PrestaShop\Core\Domain\Product\Exception\ProductConstraintException;
 use PrestaShop\PrestaShop\Core\Domain\Product\Exception\ProductNotFoundException;
+use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductType;
 use Product;
 use RuntimeException;
 use Tests\Integration\Behaviour\Features\Context\Util\CombinationDetails;
@@ -157,13 +158,21 @@ class CommonProductFeatureContext extends AbstractProductFeatureContext
         $editableProduct = $this->getProductForEditing($productReference);
         Assert::assertEquals(
             $productTypeName,
-            $editableProduct->getBasicInformation()->getType()->getValue(),
+            $editableProduct->getType(),
             sprintf(
                 'Product type is not as expected. Expected %s but got %s instead',
                 $productTypeName,
-                $editableProduct->getBasicInformation()->getType()->getValue()
+                $editableProduct->getType()
             )
         );
+        $productId = $this->getSharedStorage()->get($productReference);
+        $product = new Product($productId);
+        Assert::assertEquals($productTypeName === ProductType::TYPE_VIRTUAL, (bool) $product->is_virtual);
+        // cache_is_pack is automatically updated by legacy code when removing all pack items so it's not worth testing it for now
+        // Assert::assertEquals($productTypeName === ProductType::TYPE_PACK, (bool) $product->cache_is_pack);
+        if ($productTypeName !== ProductType::TYPE_COMBINATIONS) {
+            Assert::assertEquals(0, $product->cache_default_attribute);
+        }
     }
 
     /**

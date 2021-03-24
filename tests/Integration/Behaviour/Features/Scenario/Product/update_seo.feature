@@ -13,7 +13,7 @@ Feature: Update product SEO options from Back Office (BO)
     And category "clothes" in default language named "Clothes" exists
     Given I add product "product1" with following information:
       | name[en-US] | just boots |
-      | is_virtual  | false      |
+      | type        | standard   |
     And product product1 should have following seo options:
       | redirect_type | 404 |
     And product product1 should not have a redirect target
@@ -28,7 +28,7 @@ Feature: Update product SEO options from Back Office (BO)
       | en-US  |       |
     And I add product "product2" with following information:
       | name[en-US] | magical boots |
-      | is_virtual  | true          |
+      | type        | virtual       |
     And product product2 should have following seo options:
       | redirect_type | 404 |
     And product product2 should not have a redirect target

@@ -26,17 +26,17 @@
 
 declare(strict_types=1);
 
-namespace PrestaShop\PrestaShop\Adapter\Product\CommandHandler;
+namespace PrestaShop\PrestaShop\Adapter\Product\Combination\Update;
 
+use PrestaShop\PrestaShop\Adapter\Product\Combination\Repository\CombinationRepository;
 use PrestaShop\PrestaShop\Adapter\Product\Repository\ProductRepository;
-use PrestaShop\PrestaShop\Core\Domain\Product\Command\AddProductCommand;
-use PrestaShop\PrestaShop\Core\Domain\Product\CommandHandler\AddProductHandlerInterface;
+use PrestaShop\PrestaShop\Core\Domain\Product\Combination\Exception\CannotDeleteCombinationException;
+use PrestaShop\PrestaShop\Core\Domain\Product\Exception\InvalidProductTypeException;
 use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductId;
+use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductType;
+use PrestaShop\PrestaShop\Core\Exception\CoreException;
 
-/**
- * Handles @see AddProductCommand using legacy object model
- */
-final class AddProductHandler implements AddProductHandlerInterface
+class CombinationRemover
 {
     /**
      * @var ProductRepository
@@ -44,21 +44,36 @@ final class AddProductHandler implements AddProductHandlerInterface
     private $productRepository;
 
     /**
+     * @var CombinationRepository
+     */
+    private $combinationRepository;
+
+    /**
      * @param ProductRepository $productRepository
+     * @param CombinationRepository $combinationRepository
      */
     public function __construct(
-        ProductRepository $productRepository
+        ProductRepository $productRepository,
+        CombinationRepository $combinationRepository
     ) {
         $this->productRepository = $productRepository;
+        $this->combinationRepository = $combinationRepository;
     }
 
     /**
-     * {@inheritdoc}
+     * @param ProductId $productId
+     *
+     * @throws InvalidProductTypeException
+     * @throws CannotDeleteCombinationException
+     * @throws CoreException
      */
-    public function handle(AddProductCommand $command): ProductId
+    public function removeAllProductCombinations(ProductId $productId): void
     {
-        $product = $this->productRepository->create($command->getLocalizedNames(), $command->getProductType()->getValue());
+        $product = $this->productRepository->get($productId);
+        if ($product->product_type !== ProductType::TYPE_COMBINATIONS) {
+            throw new InvalidProductTypeException(InvalidProductTypeException::EXPECTED_COMBINATIONS_TYPE);
+        }
 
-        return new ProductId((int) $product->id);
+        $this->combinationRepository->deleteByProductId($productId);
     }
 }

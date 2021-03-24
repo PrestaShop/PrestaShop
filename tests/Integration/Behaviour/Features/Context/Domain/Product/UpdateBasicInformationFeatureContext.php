@@ -31,7 +31,6 @@ namespace Tests\Integration\Behaviour\Features\Context\Domain\Product;
 use Behat\Gherkin\Node\TableNode;
 use PrestaShop\PrestaShop\Core\Domain\Product\Command\UpdateProductBasicInformationCommand;
 use PrestaShop\PrestaShop\Core\Domain\Product\Exception\ProductException;
-use Tests\Integration\Behaviour\Features\Context\Util\PrimitiveUtils;
 
 class UpdateBasicInformationFeatureContext extends AbstractProductFeatureContext
 {
@@ -49,10 +48,6 @@ class UpdateBasicInformationFeatureContext extends AbstractProductFeatureContext
 
         if (isset($data['name'])) {
             $command->setLocalizedNames($data['name']);
-        }
-
-        if (isset($data['is_virtual'])) {
-            $command->setVirtual(PrimitiveUtils::castStringBooleanIntoBoolean($data['is_virtual']));
         }
 
         if (isset($data['description'])) {

@@ -29,7 +29,7 @@ declare(strict_types=1);
 namespace Tests\Integration\PrestaShopBundle\Form\EventListener;
 
 use Generator;
-use PrestaShop\PrestaShop\Core\Domain\Product\QueryResult\ProductType;
+use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductType;
 use PrestaShopBundle\Form\Admin\Sell\Product\EventListener\ProductTypeListener;
 use PrestaShopBundle\Form\Admin\Type\CommonAbstractType;
 use Symfony\Component\Form\Exception\OutOfBoundsException;
@@ -97,7 +97,7 @@ class ProductTypeListenerTest extends FormListenerTestCase
         ];
 
         yield [
-            ProductType::TYPE_COMBINATION,
+            ProductType::TYPE_COMBINATIONS,
             false,
         ];
     }

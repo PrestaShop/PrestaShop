@@ -36,6 +36,7 @@ use PrestaShop\PrestaShop\Core\Domain\Product\ProductSettings;
 use PrestaShop\PrestaShop\Core\Domain\Product\Stock\ValueObject\OutOfStockType;
 use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\Ean13;
 use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\Isbn;
+use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductType;
 use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\RedirectType;
 use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\Reference;
 use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\Upc;
@@ -375,6 +376,11 @@ class ProductCore extends ObjectModel
     public $delivery_out_stock;
 
     /**
+     * @var string
+     */
+    public $product_type = ProductType::TYPE_STANDARD;
+
+    /**
      * @var int|null
      */
     public static $_taxCalculationMethod = null;
@@ -470,6 +476,12 @@ class ProductCore extends ObjectModel
                 'lang' => true,
                 'validate' => 'isGenericName',
                 'size' => 255,
+            ],
+            'product_type' => [
+                'type' => self::TYPE_STRING,
+                'validate' => 'isGenericName',
+                'values' => ProductType::AVAILABLE_TYPES,
+                'default' => ProductType::TYPE_STANDARD,
             ],
 
             /* Shop fields */
@@ -8267,5 +8279,24 @@ class ProductCore extends ObjectModel
         );
 
         return $formated ? $context->getCurrentLocale()->formatPrice($ecotax, $currency->iso_code) : $ecotax;
+    }
+
+    /**
+     * @return string
+     */
+    public function getProductType(): string
+    {
+        // Default value is the one saved, but in case it is not set we use dynamic definition
+        if (!empty($this->product_type) && in_array($this->product_type, ProductType::AVAILABLE_TYPES)) {
+            return $this->product_type;
+        } elseif ($this->is_virtual) {
+            return ProductType::TYPE_VIRTUAL;
+        } elseif (Pack::isPack($this->id)) {
+            return ProductType::TYPE_PACK;
+        } elseif ($this->hasCombinations()) {
+            return ProductType::TYPE_COMBINATIONS;
+        }
+
+        return ProductType::TYPE_STANDARD;
     }
 }

@@ -26,50 +26,47 @@
 
 declare(strict_types=1);
 
-namespace PrestaShop\PrestaShop\Core\Domain\Product\Command;
+namespace Tests\Unit\Core\Form\IdentifiableObject\CommandBuilder\Product;
 
+use PrestaShop\PrestaShop\Core\Domain\Product\Command\UpdateProductTypeCommand;
 use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductType;
+use PrestaShop\PrestaShop\Core\Form\IdentifiableObject\CommandBuilder\Product\TypeCommandBuilder;
 
-/**
- * Command for creating product with basic information
- */
-class AddProductCommand
+class TypeCommandBuilderTest extends AbstractProductCommandBuilderTest
 {
     /**
-     * @var string[]
+     * @dataProvider getExpectedCommands
+     *
+     * @param array $formData
+     * @param array $expectedCommands
      */
-    private $localizedNames;
-
-    /**
-     * @var ProductType
-     */
-    private $productType;
-
-    /**
-     * @param array $localizedNames
-     * @param string $productType
-     */
-    public function __construct(
-        array $localizedNames,
-        string $productType
-    ) {
-        $this->localizedNames = $localizedNames;
-        $this->productType = new ProductType($productType);
+    public function testBuildCommand(array $formData, array $expectedCommands)
+    {
+        $builder = new TypeCommandBuilder();
+        $builtCommands = $builder->buildCommand($this->getProductId(), $formData);
+        $this->assertEquals($expectedCommands, $builtCommands);
     }
 
-    /**
-     * @return string[]
-     */
-    public function getLocalizedNames(): array
+    public function getExpectedCommands()
     {
-        return $this->localizedNames;
-    }
+        yield [
+            [
+                'no_type_data' => ['useless value'],
+            ],
+            [],
+        ];
 
-    /**
-     * @return ProductType
-     */
-    public function getProductType(): ProductType
-    {
-        return $this->productType;
+        $command = new UpdateProductTypeCommand(
+            $this->getProductId()->getValue(),
+            ProductType::TYPE_STANDARD
+        );
+        yield [
+            [
+                'basic' => [
+                    'type' => ProductType::TYPE_STANDARD,
+                ],
+            ],
+            [$command],
+        ];
     }
 }

@@ -82,11 +82,6 @@ final class UpdateProductBasicInformationHandler implements UpdateProductBasicIn
     ): array {
         $updatableProperties = [];
 
-        if (null !== $command->isVirtual()) {
-            $product->is_virtual = $command->isVirtual();
-            $updatableProperties[] = 'is_virtual';
-        }
-
         $localizedNames = $command->getLocalizedNames();
         if (null !== $localizedNames) {
             $product->name = $localizedNames;

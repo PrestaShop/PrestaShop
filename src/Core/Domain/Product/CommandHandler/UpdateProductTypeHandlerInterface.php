@@ -24,52 +24,17 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
 
-declare(strict_types=1);
+namespace PrestaShop\PrestaShop\Core\Domain\Product\CommandHandler;
 
-namespace PrestaShop\PrestaShop\Core\Domain\Product\Command;
-
-use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductType;
+use PrestaShop\PrestaShop\Core\Domain\Product\Command\UpdateProductTypeCommand;
 
 /**
- * Command for creating product with basic information
+ * Defines contract to handle @see UpdateProductTypeCommand
  */
-class AddProductCommand
+interface UpdateProductTypeHandlerInterface
 {
     /**
-     * @var string[]
+     * @param UpdateProductTypeCommand $command
      */
-    private $localizedNames;
-
-    /**
-     * @var ProductType
-     */
-    private $productType;
-
-    /**
-     * @param array $localizedNames
-     * @param string $productType
-     */
-    public function __construct(
-        array $localizedNames,
-        string $productType
-    ) {
-        $this->localizedNames = $localizedNames;
-        $this->productType = new ProductType($productType);
-    }
-
-    /**
-     * @return string[]
-     */
-    public function getLocalizedNames(): array
-    {
-        return $this->localizedNames;
-    }
-
-    /**
-     * @return ProductType
-     */
-    public function getProductType(): ProductType
-    {
-        return $this->productType;
-    }
+    public function handle(UpdateProductTypeCommand $command): void;
 }
