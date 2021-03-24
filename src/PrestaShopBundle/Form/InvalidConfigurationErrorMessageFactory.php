@@ -126,7 +126,7 @@ class InvalidConfigurationErrorMessageFactory
                     $lang = $this->langRepository->findOneBy(['id' => $error->getLanguageId()]);
 
                     return $this->translator->trans(
-                        'The "%s" field in "%s" is invalid. Field must not contain HTML tags.',
+                        'The "%s" field in %s is invalid. HTML tags are not allowed',
                         [
                             $label,
                             $lang->getName(),
