@@ -25,7 +25,7 @@ Feature: Generate attribute combinations for product in Back Office (BO)
       | is_virtual  | false             |
     And product product1 type should be standard
     And product product1 does not have a default combination
-    And product "product1" combinations list search criteria is reset to defaults
+    And product "product1" combinations list search criteria is set to defaults
     When I generate combinations for product product1 using following attributes:
       | Size  | [S,M]              |
       | Color | [White,Black,Blue] |
@@ -40,7 +40,7 @@ Feature: Generate attribute combinations for product in Back Office (BO)
     And product product1 default combination should be "product1SWhite"
 
   Scenario: I can paginate combinations and limit combinations per page
-    Given product "product1" combinations list search criteria is reset to defaults
+    Given product "product1" combinations list search criteria is set to defaults
     And I should see following combinations list of product "product1":
       | reference      | combination name        | combination reference | attributes           | impact on price | final price | quantity | is default |
       | product1SWhite | Size - S, Color - White |                       | [Size:S,Color:White] | 0               | 0           | 0        | true       |
@@ -74,7 +74,7 @@ Feature: Generate attribute combinations for product in Back Office (BO)
     Then combinations list of product "product1" should be empty
 
   Scenario: I can filter combinations by attributes
-    Given product "product1" combinations list search criteria is reset to defaults
+    Given product "product1" combinations list search criteria is set to defaults
     And I should see following combinations list of product "product1":
       | reference      | combination name        | combination reference | attributes           | impact on price | final price | quantity | is default |
       | product1SWhite | Size - S, Color - White |                       | [Size:S,Color:White] | 0               | 0           | 0        | true       |
@@ -120,7 +120,7 @@ Feature: Generate attribute combinations for product in Back Office (BO)
       | product1MBlue  | Size - M, Color - Blue  |                       | [Size:M,Color:Blue]  | 0               | 0           | 0        | false      |
 
   Scenario: I can filter combinations by default combination
-    Given product "product1" combinations list search criteria is reset to defaults
+    Given product "product1" combinations list search criteria is set to defaults
     And I should see following combinations list of product "product1":
       | reference      | combination name        | combination reference | attributes           | impact on price | final price | quantity | is default |
       | product1SWhite | Size - S, Color - White |                       | [Size:S,Color:White] | 0               | 0           | 0        | true       |
@@ -147,7 +147,7 @@ Feature: Generate attribute combinations for product in Back Office (BO)
       | product1MBlue  | Size - M, Color - Blue  |                       | [Size:M,Color:Blue]  | 0               | 0           | 0        | false      |
 
   Scenario: I can sort combinations by reference, quantity, impact on price
-    Given product "product1" combinations list search criteria is reset to defaults
+    Given product "product1" combinations list search criteria is set to defaults
     And I should see following combinations list of product "product1":
       | reference      | combination name        | combination reference | attributes           | impact on price | final price | quantity | is default |
       | product1SWhite | Size - S, Color - White |                       | [Size:S,Color:White] | 0               | 0           | 0        | true       |
@@ -229,7 +229,7 @@ Feature: Generate attribute combinations for product in Back Office (BO)
       | product1MBlue  | Size - M, Color - Blue  |                       | [Size:M,Color:Blue]  | 0               | 0           | 0        | false      |
 
   Scenario: I can filter combinations by reference
-    Given product "product1" combinations list search criteria is reset to defaults
+    Given product "product1" combinations list search criteria is set to defaults
     And I should see following combinations list of product "product1":
       | reference      | combination name        | combination reference | attributes           | impact on price | final price | quantity | is default |
       | product1SWhite | Size - S, Color - White | AAA                   | [Size:S,Color:White] | -1              | 0           | 10       | true       |

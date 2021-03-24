@@ -24,10 +24,12 @@ Feature: Update product combination stock information in Back Office (BO)
       | name[en-US] | universal T-shirt |
       | type        | combinations      |
     And product product1 type should be combinations
+    And product product1 type should be standard
+    And product "product1" combinations list search criteria is set to defaults
     And I generate combinations for product product1 using following attributes:
       | Size  | [S,M]              |
       | Color | [White,Black,Blue] |
-    Then product product1 should have following list of combinations:
+    Then I should see following combinations list of product "product1":
       | reference      | combination name        | combination reference | attributes           | impact on price | final price | quantity | is default |
       | product1SWhite | Size - S, Color - White |                       | [Size:S,Color:White] | 0               | 0           | 0        | true       |
       | product1SBlack | Size - S, Color - Black |                       | [Size:S,Color:Black] | 0               | 0           | 0        | false      |
