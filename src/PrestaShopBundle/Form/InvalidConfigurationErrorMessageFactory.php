@@ -143,7 +143,7 @@ class InvalidConfigurationErrorMessageFactory
                 );
             case InvalidConfigurationDataError::ERROR_NOT_NUMERIC_OR_LOWER_THAN_ZERO:
                 return $this->translator->trans(
-                    '%s is invalid. Please enter an integer greater or equal to 0.',
+                    '%s is invalid. Please enter an integer greater than or equal to 0.',
                     [
                         $label
                     ],
