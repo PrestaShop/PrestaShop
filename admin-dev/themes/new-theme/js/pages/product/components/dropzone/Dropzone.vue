@@ -49,11 +49,11 @@
         ]"
       >
         <i class="material-icons">add_a_photo</i><br>
-        {{ $t('window.dropImages') }}<br>
-        <a>{{ $t('window.selectFiles') }}</a><br>
+        {{ $t("window.dropImages") }}<br>
+        <a>{{ $t("window.selectFiles") }}</a><br>
         <small>
-          {{ $t('window.recommendedSize') }}<br>
-          {{ $t('window.recommendedFormats') }}
+          {{ $t("window.recommendedSize") }}<br>
+          {{ $t("window.recommendedFormats") }}
         </small>
       </div>
 
@@ -112,7 +112,7 @@
           </div>
         </div>
         <div class="iscover">
-          {{ $t('window.cover') }}
+          {{ $t("window.cover") }}
         </div>
       </div>
     </div>
@@ -124,8 +124,8 @@
   import {
     getProductImages,
     saveImageInformations,
-    replaceImage,
     saveImagePosition,
+    replaceImage,
     removeProductImage,
   } from '@pages/product/services/images';
   import ProductMap from '@pages/product/product-map';
@@ -201,25 +201,7 @@
                 this.selectedLocale = locale;
               }
             });
-          },
-        );
-      },
-      /**
-       * This methods is used to initialize product images we already have uploaded
-       */
-      async initProductImages() {
-        try {
-          const images = await getProductImages(this.productId);
-
-          this.loading = false;
-          this.initDropZone();
-
-          images.forEach((image) => {
-            this.dropzone.displayExistingFile(image, image.path);
           });
-        } catch (error) {
-          window.$.growl.error({message: error});
-        }
       },
       /**
        * Method to initialize the dropzone, using the configuration's state and adding files
@@ -304,6 +286,23 @@
         });
       },
       /**
+       * This methods is used to initialize product images we already have uploaded
+       */
+      async initProductImages() {
+        try {
+          const images = await getProductImages(this.productId);
+
+          this.loading = false;
+          this.initDropZone();
+
+          images.forEach((image) => {
+            this.dropzone.displayExistingFile(image, image.path);
+          });
+        } catch (error) {
+          window.$.growl.error({message: error});
+        }
+      },
+      /**
        * Method to select every files by checking checkboxes and add files to the files state
        */
       selectAll() {
@@ -328,7 +327,9 @@
         new ConfirmModal(
           {
             id: 'dropzone-confirm-modal',
-            confirmTitle: this.$t('modal.title', {'%filesNb%': this.selectedFiles.length}),
+            confirmTitle: this.$t('modal.title', {
+              '%filesNb%': this.selectedFiles.length,
+            }),
             confirmMessage: this.$t('modal.message'),
             closeButtonLabel: this.$t('modal.close'),
             confirmButtonLabel: this.$t('modal.accept'),
@@ -336,22 +337,35 @@
           },
           async () => {
             let errorMessage = false;
-            await Promise.all(this.selectedFiles.map(async (file) => {
-              try {
-                await removeProductImage(file.image_id);
-                this.dropzone.removeFile(file);
 
-                this.files = this.files.filter((e) => file !== e);
-                this.selectedFiles = this.selectedFiles.filter((e) => file !== e);
-              } catch (error) {
-                errorMessage = error.responseJSON.error;
-              }
-            }));
+            await Promise.all(
+              this.selectedFiles.map(async (file) => {
+                try {
+                  const nbFiles = this.selectedFiles.length;
+                  await removeProductImage(file.image_id);
+                  this.dropzone.removeFile(file);
+
+                  this.files = this.files.filter((e) => file !== e);
+                  this.selectedFiles = this.selectedFiles.filter(
+                    (e) => file !== e,
+                  );
+                  $.growl({
+                    message: this.$t('delete.success', {
+                      '%filesNb%': nbFiles,
+                    }),
+                  });
+                } catch (error) {
+                  errorMessage = error.responseJSON ? error.responseJSON.error : error;
+                }
+              }),
+            );
 
             this.removeTooltips();
             if (errorMessage) {
               $.growl.error({message: errorMessage});
             }
+
+            this.resetDropzone();
           },
         ).show();
       },
@@ -471,6 +485,18 @@
           $.growl.error({message: error.responseJSON.error});
         }
       },
+    },
+    changeCover(event) {
+      this.coverData = {
+        file: this.selectedFiles[0],
+        value: event.target.value,
+      };
+    },
+    resetDropzone() {
+      console.log(this.dropzone);
+      this.dropzone.destroy();
+      this.dropzone = null;
+      this.initProductImages();
     },
   };
 </script>
