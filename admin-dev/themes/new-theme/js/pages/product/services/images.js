@@ -67,7 +67,6 @@ export const replaceImage = async (selectedFile, newFile, formName, token) => {
   return $.ajax(replaceUrl, {
     method: 'POST',
     data: formData,
-    cache: false,
     processData: false,
     contentType: false,
   });
