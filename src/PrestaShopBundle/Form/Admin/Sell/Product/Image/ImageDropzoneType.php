@@ -80,6 +80,7 @@ class ImageDropzoneType extends TranslatorAwareType
                 'modal.accept' => $this->trans('Accept', 'Admin.Actions'),
                 'modal.message' => $this->trans('Test of message', 'Admin.Actions'),
                 'modal.title' => $this->trans('Are you sure about deleting %filesNb% file(s)?', 'Admin.Actions'),
+                'delete.success' => $this->trans('You\'ve successfully removed %filesNb% file(s).', 'Admin.Actions'),
                 'window.fileisTooLarge' => $this->trans(
                     'The file is too large. Maximum size allowed is => [1] MB. The file you are trying to upload is [2] MB.',
                     'Admin.Notifications.Error',
