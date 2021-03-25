@@ -1,0 +1,7 @@
+admin_experimental_feature_index:
+    path: /
+    methods: [GET, POST]
+    defaults:
+        _controller: 'PrestaShopBundle:Admin\Configure\AdvancedParameters\ExperimentalFeature:index'
+        _legacy_controller: AdminExperimentalFeature
+        _legacy_link: AdminExperimentalFeature
