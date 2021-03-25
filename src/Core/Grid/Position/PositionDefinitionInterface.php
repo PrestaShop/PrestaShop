@@ -61,4 +61,11 @@ interface PositionDefinitionInterface
      * @return string|null
      */
     public function getParentIdField();
+
+    /**
+     * Which value should be used for the first position (can be 0, 1 or anything else)
+     *
+     * @return int
+     */
+    public function getFirstPosition(): int;
 }

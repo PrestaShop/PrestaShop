@@ -49,7 +49,7 @@ export const saveImageInformations = async (selectedFile, token, formName) => {
   data[`${formName}[_token]`] = token;
 
   return $.ajax(saveUrl, {
-    method: 'POST',
+    method: 'PATCH',
     data,
   });
 };
@@ -62,12 +62,28 @@ export const replaceImage = async (selectedFile, newFile, formName, token) => {
   const formData = new FormData();
   formData.append(`${formName}[file]`, newFile);
   formData.append(`${formName}[_token]`, token);
+  formData.append('_method', 'PATCH');
 
   return $.ajax(replaceUrl, {
     method: 'POST',
     data: formData,
-    contentType: false,
     processData: false,
+    contentType: false,
+  });
+};
+
+export const saveImagePosition = async (productImageId, newPosition, formName, token) => {
+  const sortUrl = router.generate('admin_products_v2_update_image', {
+    productImageId,
+  });
+
+  const data = {};
+  data[`${formName}[position]`] = newPosition;
+  data[`${formName}[_token]`] = token;
+
+  return $.ajax(sortUrl, {
+    method: 'PATCH',
+    data,
   });
 };
 
@@ -75,4 +91,5 @@ export default {
   getProductImages,
   saveImageInformations,
   replaceImage,
+  saveImagePosition,
 };

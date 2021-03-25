@@ -108,7 +108,9 @@ class ImageController extends FrameworkBundleAdminController
      */
     public function updateImageAction(Request $request, int $productImageId): JsonResponse
     {
-        $imageForm = $this->getProductImageFormBuilder()->getFormFor($productImageId);
+        $imageForm = $this->getProductImageFormBuilder()->getFormFor($productImageId, [], [
+            'method' => $request->getMethod(),
+        ]);
         $imageForm->handleRequest($request);
 
         try {

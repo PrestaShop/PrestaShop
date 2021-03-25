@@ -21,17 +21,20 @@ Feature: Update product image from Back Office (BO)
     And product "product1" type should be standard
     And product "product1" should have no images
     When I add new image "image1" named "app_icon.png" to product "product1"
-    Then image "image1" should have same file as "app_icon.png"
-    And product "product1" should have following images:
-      | image reference | is cover | legend[en-US] | position |
-      | image1          | true     |               | 1        |
     When I add new image "image2" named "logo.jpg" to product "product1"
-    Then image "image2" should have same file as "logo.jpg"
+    When I add new image "image3" named "app_icon.png" to product "product1"
+    When I add new image "image4" named "logo.jpg" to product "product1"
+    When I add new image "image5" named "app_icon.png" to product "product1"
+    When I add new image "image6" named "logo.jpg" to product "product1"
     And product "product1" should have following images:
       | image reference | is cover | legend[en-US] | position |
       | image1          | true     |               | 1        |
       | image2          | false    |               | 2        |
-    And images "[image1, image2]" should have following types generated:
+      | image3          | false    |               | 3        |
+      | image4          | false    |               | 4        |
+      | image5          | false    |               | 5        |
+      | image6          | false    |               | 6        |
+    And images "[image1, image2, image3, image4, image5, image6]" should have following types generated:
       | name           | width | height |
       | cart_default   | 125   | 125    |
       | home_default   | 250   | 250    |
@@ -51,6 +54,10 @@ Feature: Update product image from Back Office (BO)
       | image reference | is cover | legend[en-US]    | position |
       | image1          | true     | preston is alive | 1        |
       | image2          | false    |                  | 2        |
+      | image3          | false    |                  | 3        |
+      | image4          | false    |                  | 4        |
+      | image5          | false    |                  | 5        |
+      | image6          | false    |                  | 6        |
 
   Scenario: I update image cover
     When I update image "image2" with following information:
@@ -59,6 +66,11 @@ Feature: Update product image from Back Office (BO)
       | image reference | is cover | legend[en-US] | position |
       | image1          | false    |               | 1        |
       | image2          | true     |               | 2        |
+      | image3          | false    |               | 3        |
+      | image4          | false    |               | 4        |
+      | image5          | false    |               | 5        |
+      | image6          | false    |               | 6        |
+    # Set cover false just to check it does not force the cover (it happened ^^)
     When I update image "image1" with following information:
       | legend[en-US] | preston is alive |
       | cover         | false            |
@@ -66,3 +78,60 @@ Feature: Update product image from Back Office (BO)
       | image reference | is cover | legend[en-US]    | position |
       | image1          | false    | preston is alive | 1        |
       | image2          | true     |                  | 2        |
+      | image3          | false    |                  | 3        |
+      | image4          | false    |                  | 4        |
+      | image5          | false    |                  | 5        |
+      | image6          | false    |                  | 6        |
+
+  @product-image-position
+  Scenario: I update image positions
+    When I update image "image2" with following information:
+      | position | 5 |
+    Then product "product1" should have following images:
+      | image reference | is cover | legend[en-US] | position |
+      | image1          | true     |               | 1        |
+      | image3          | false    |               | 2        |
+      | image4          | false    |               | 3        |
+      | image5          | false    |               | 4        |
+      | image2          | false    |               | 5        |
+      | image6          | false    |               | 6        |
+    When I update image "image6" with following information:
+      | position | 2 |
+    Then product "product1" should have following images:
+      | image reference | is cover | legend[en-US] | position |
+      | image1          | true     |               | 1        |
+      | image6          | false    |               | 2        |
+      | image3          | false    |               | 3        |
+      | image4          | false    |               | 4        |
+      | image5          | false    |               | 5        |
+      | image2          | false    |               | 6        |
+    When I update image "image1" with following information:
+      | position | 2 |
+    Then product "product1" should have following images:
+      | image reference | is cover | legend[en-US] | position |
+      | image6          | false    |               | 1        |
+      | image1          | true     |               | 2        |
+      | image3          | false    |               | 3        |
+      | image4          | false    |               | 4        |
+      | image5          | false    |               | 5        |
+      | image2          | false    |               | 6        |
+    When I update image "image1" with following information:
+      | position | 42 |
+    Then product "product1" should have following images:
+      | image reference | is cover | legend[en-US] | position |
+      | image6          | false    |               | 1        |
+      | image3          | false    |               | 2        |
+      | image4          | false    |               | 3        |
+      | image5          | false    |               | 4        |
+      | image2          | false    |               | 5        |
+      | image1          | true     |               | 6        |
+    When I update image "image3" with following information:
+      | position | -8000 |
+    Then product "product1" should have following images:
+      | image reference | is cover | legend[en-US] | position |
+      | image3          | false    |               | 1        |
+      | image6          | false    |               | 2        |
+      | image4          | false    |               | 3        |
+      | image5          | false    |               | 4        |
+      | image2          | false    |               | 5        |
+      | image1          | true     |               | 6        |

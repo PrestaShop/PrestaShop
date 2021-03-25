@@ -125,6 +125,7 @@
     getProductImages,
     saveImageInformations,
     replaceImage,
+    saveImagePosition,
   } from '@pages/product/services/images';
   import ProductMap from '@pages/product/product-map';
   import ProductEventMap from '@pages/product/product-event-map';
@@ -234,10 +235,33 @@
         ] = this.productId;
         this.configuration.params[`${this.formName}[_token]`] = this.token;
 
+        this.sortableContainer = $('#product-images-dropzone');
         this.dropzone = new window.Dropzone(
           '.dropzone-container',
           this.configuration,
         );
+
+        this.sortableContainer.sortable({
+          items: 'div.dz-preview:not(.disabled)',
+          opacity: 0.9,
+          containment: 'parent',
+          distance: 32,
+          tolerance: 'pointer',
+          cursorAt: {
+            left: 64,
+            top: 64,
+          },
+          cancel: '.disabled',
+          stop: (event, ui) => {
+            // Get new position (-1 because the open file manager is always first)
+            const movedPosition = ui.item.index() - 1;
+            this.updateImagePosition(ui.item.data('id'), movedPosition);
+          },
+          start: (event, ui) => {
+            this.sortableContainer.find('.dz-preview').css('zIndex', 1);
+            ui.item.css('zIndex', 10);
+          },
+        });
 
         this.dropzone.on(DropzoneEvents.addedFile, (file) => {
           file.previewElement.dataset.id = file.image_id;
@@ -415,6 +439,14 @@
           file: this.selectedFiles[0],
           value: event.target.value,
         };
+      },
+      async updateImagePosition(productImageId, newPosition) {
+        try {
+          await saveImagePosition(productImageId, newPosition, this.formName, this.token);
+        } catch (error) {
+          this.sortableContainer.sortable('cancel');
+          $.growl.error({message: error.responseJSON.error});
+        }
       },
     },
   };
