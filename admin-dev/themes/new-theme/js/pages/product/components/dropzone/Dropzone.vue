@@ -328,7 +328,7 @@
             confirmTitle: this.$t('modal.title', {
               '%filesNb%': this.selectedFiles.length,
             }),
-            confirmMessage: this.$t('modal.message'),
+            confirmMessage: '',
             closeButtonLabel: this.$t('modal.close'),
             confirmButtonLabel: this.$t('modal.accept'),
             confirmButtonClass: 'btn-primary',
