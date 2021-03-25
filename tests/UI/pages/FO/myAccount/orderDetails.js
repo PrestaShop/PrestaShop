@@ -29,6 +29,12 @@ class OrderHistory extends FOBasePage {
     return this.elementVisible(page, this.orderReturnForm, 1000);
   }
 
+  /**
+   *
+   * @param page
+   * @param messageOption
+   * @returns {Promise<*>}
+   */
   async addAMessage(page, messageOption) {
     await this.selectByVisibleText(page, this.productIdSelect, messageOption);
     await this.setValue(page, this.messageTextarea, this.messageSend);

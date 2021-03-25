@@ -8,9 +8,10 @@ const {Statuses} = require('@data/demo/orderStatuses');
 // Import data
 const {PaymentMethods} = require('@data/demo/paymentMethods');
 const {DefaultCustomer} = require('@data/demo/customer');
+const {Products} = require('@data/demo/products');
 
 // Importing pages
-
+// FO
 const foHomePage = require('@pages/FO/home');
 const foLoginPage = require('@pages/FO/login');
 const foMyAccountPage = require('@pages/FO/myAccount');
@@ -20,6 +21,8 @@ const cartPage = require('@pages/FO/cart');
 const checkoutPage = require('@pages/FO/checkout');
 const orderConfirmationPage = require('@pages/FO/checkout/orderConfirmation');
 const orderDetails = require('@pages/FO/myAccount/orderDetails');
+
+// BO
 const dashboardPage = require('@pages/BO/dashboard');
 const ordersPage = require('@pages/BO/orders/index');
 const customerServicePage = require('@pages/BO/customerService/customerService');
@@ -28,7 +31,8 @@ const customerServicePage = require('@pages/BO/customerService/customerService')
 const testContext = require('@utils/testContext');
 
 const baseContext = 'functional_FO_userAccount_orderHistory_orderDetails_sendMessage';
-const messageOption = 'Hummingbird printed t-shirt - Size : S- Color : White';
+const messageOption = `${Products.demo_1.name} - Size : ${Products.demo_1.combination.size[0]}`
+  + `- Color : ${Products.demo_1.combination.color[0]}`;
 
 let browserContext;
 let page;
@@ -120,6 +124,7 @@ describe('Send a message with an ordered product', async () => {
       await expect(isCustomerConnected, 'Customer is connected').to.be.false;
     });
   });
+
   describe('Check invoice file in BO', async () => {
     it('should login in BO', async function () {
       await loginCommon.loginBO(this, page);
@@ -147,10 +152,12 @@ describe('Send a message with an ordered product', async () => {
       const orderStatus = await ordersPage.getTextColumn(page, 'osname', 1);
       await expect(orderStatus, 'Order status was not updated').to.equal(Statuses.paymentAccepted.status);
     });
+
     it('disconnect from BO', async function () {
       await loginCommon.logoutBO(this, page);
     });
   });
+
   describe('Send a message on order history', async () => {
     it('should go to FO home page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'goToFoToCreateAccount', baseContext);
@@ -194,6 +201,7 @@ describe('Send a message with an ordered product', async () => {
       await expect(successMessageText).to.equal(orderDetails.successMessageText);
     });
   });
+
   describe('Check message in BO', async () => {
     it('should login in BO', async function () {
       await loginCommon.loginBO(this, page);
@@ -211,6 +219,7 @@ describe('Send a message with an ordered product', async () => {
       const pageTitle = await customerServicePage.getPageTitle(page);
       await expect(pageTitle).to.contains(customerServicePage.pageTitle);
     });
+
     it('should check customer name', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'checkCustomerName', baseContext);
 
