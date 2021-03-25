@@ -33,6 +33,7 @@ use PrestaShopBundle\Form\Admin\Type\SwitchType;
 use PrestaShopBundle\Form\Admin\Type\TranslatableType;
 use Symfony\Component\Form\Extension\Core\Type\FileType;
 use Symfony\Component\Form\Extension\Core\Type\HiddenType;
+use Symfony\Component\Form\Extension\Core\Type\IntegerType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
 
@@ -47,6 +48,7 @@ class ProductImageType extends CommonAbstractType
         $builder
             ->add('product_id', HiddenType::class)
             ->add('file', FileType::class)
+            ->add('position', IntegerType::class)
             ->add('legend', TranslatableType::class, [
                 'type' => TextType::class,
             ])

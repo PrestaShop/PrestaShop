@@ -92,6 +92,10 @@ class ProductImageFormDataHandler implements FormDataHandlerInterface
             $command->setFilePath($uploadedFile->getPathname());
         }
 
+        if (isset($data['position'])) {
+            $command->setPosition((int) $data['position']);
+        }
+
         $this->bus->handle($command);
     }
 }

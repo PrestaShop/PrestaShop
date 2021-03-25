@@ -61,6 +61,7 @@ class ProductImageFormDataProvider implements FormDataProviderInterface
         return [
             'legend' => $productImage->getLocalizedLegends(),
             'is_cover' => $productImage->isCover(),
+            'position' => $productImage->getPosition(),
         ];
     }
 
