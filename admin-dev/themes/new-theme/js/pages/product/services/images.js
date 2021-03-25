@@ -84,8 +84,6 @@ export const saveImagePosition = async (productImageId, newPosition, formName, t
   return $.ajax(sortUrl, {
     method: 'PATCH',
     data,
-    contentType: false,
-    processData: false,
   });
 };
 
