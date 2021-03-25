@@ -98,11 +98,15 @@ class UpdateProductImageHandler implements UpdateProductImageHandlerInterface
         }
 
         if ($command->isCover()) {
-            $this->productImageUpdater->updateProductCover($command->getImageId());
+            $this->productImageUpdater->updateProductCover($image);
         }
 
         if (null !== $command->getFilePath()) {
             $this->productImageUploader->upload($image, $command->getFilePath());
+        }
+
+        if (null !== $command->getPosition()) {
+            $this->productImageUpdater->updatePosition($image, $command->getPosition());
         }
     }
 }

@@ -53,6 +53,11 @@ class UpdateProductImageCommand
     private $localizedLegends;
 
     /**
+     * @var int|null
+     */
+    private $position;
+
+    /**
      * @param int $imageId
      */
     public function __construct(int $imageId)
@@ -124,6 +129,26 @@ class UpdateProductImageCommand
     public function setLocalizedLegends(?array $localizedLegends): self
     {
         $this->localizedLegends = $localizedLegends;
+
+        return $this;
+    }
+
+    /**
+     * @return int|null
+     */
+    public function getPosition(): ?int
+    {
+        return $this->position;
+    }
+
+    /**
+     * @param int|null $position
+     *
+     * @return self
+     */
+    public function setPosition(?int $position): self
+    {
+        $this->position = $position;
 
         return $this;
     }
