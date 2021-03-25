@@ -141,8 +141,8 @@ class CustomerSessionRepository extends AbstractObjectModelRepository
 
             $qb = $this->connection->createQueryBuilder();
             $qb->delete($this->dbPrefix . 'customer_session')
-                ->where('date_upd < :dateUpd')
-                ->setParameter('dateUpd', $date->format('Y-m-d H:i:s'));
+                ->where('date_upd < :dateUpdated')
+                ->setParameter('dateUpdated', $date->format('Y-m-d H:i:s'));
 
             $qb->execute();
         } catch (CoreException $e) {

@@ -145,8 +145,8 @@ class EmployeeSessionRepository extends AbstractObjectModelRepository
 
             $qb = $this->connection->createQueryBuilder();
             $qb->delete($this->dbPrefix . 'employee_session')
-                ->where('date_upd < :dateUpd')
-                ->setParameter('dateUpd', $date->format('Y-m-d'));
+                ->where('date_upd < :dateUpdated')
+                ->setParameter('dateUpdated', $date->format('Y-m-d'));
 
             $qb->execute();
         } catch (CoreException $e) {
