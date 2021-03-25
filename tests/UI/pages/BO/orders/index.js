@@ -79,7 +79,7 @@ class Order extends BOBasePage {
     const [download] = await Promise.all([
       page.waitForEvent('download'),
       page.click(this.gridActionExportLink),
-      page.waitForSelector(`${this.gridActionDropDownMenu}.show`, {state: 'hidden'}),
+      this.waitForHiddenSelector(page, `${this.gridActionDropDownMenu}.show`),
     ]);
     return download.path();
   }

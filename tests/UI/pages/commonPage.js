@@ -28,6 +28,18 @@ module.exports = class CommonPage {
   }
 
   /**
+   * Wait for selector to have a state
+   * @param page
+   * @param selector
+   * @param state
+   * @param timeout
+   * @returns {Promise<void>}
+   */
+  async waitForSelector(page, selector, state, timeout = 10000) {
+    await page.waitForSelector(selector, {state, timeout});
+  }
+
+  /**
    * Wait for selector to be visible
    * @param page
    * @param selector
@@ -35,7 +47,40 @@ module.exports = class CommonPage {
    * @return {Promise<void>}
    */
   async waitForVisibleSelector(page, selector, timeout = 10000) {
-    await page.waitForSelector(selector, {state: 'visible', timeout});
+    await this.waitForSelector(page, selector, 'visible', timeout);
+  }
+
+  /**
+   * Wait for selector to be visible
+   * @param page
+   * @param selector
+   * @param timeout
+   * @return {Promise<void>}
+   */
+  async waitForHiddenSelector(page, selector, timeout = 10000) {
+    await this.waitForSelector(page, selector, 'hidden', timeout);
+  }
+
+  /**
+   * Wait for selector to be attached
+   * @param page
+   * @param selector
+   * @param timeout
+   * @return {Promise<void>}
+   */
+  async waitForAttachedSelector(page, selector, timeout = 10000) {
+    await this.waitForSelector(page, selector, 'attached', timeout);
+  }
+
+  /**
+   * Wait for selector to be detached
+   * @param page
+   * @param selector
+   * @param timeout
+   * @return {Promise<void>}
+   */
+  async waitForDetachedSelector(page, selector, timeout = 10000) {
+    await this.waitForSelector(page, selector, 'detached', timeout);
   }
 
   /**
@@ -115,7 +160,7 @@ module.exports = class CommonPage {
    */
   async elementNotVisible(page, selector, timeout = 10) {
     try {
-      await page.waitForSelector(selector, {state: 'hidden', timeout});
+      await this.waitForHiddenSelector(page, selector, timeout);
       return true;
     } catch (error) {
       return false;
@@ -137,7 +182,7 @@ module.exports = class CommonPage {
 
     await newPage.waitForLoadState('networkidle');
 
-    await newPage.waitForSelector(newPageSelector, {state: 'visible'});
+    await this.waitForVisibleSelector(newPage, newPageSelector);
     return newPage;
   }
 

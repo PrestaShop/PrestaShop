@@ -316,7 +316,8 @@ class ShopURLSettings extends BOBasePage {
     await this.waitForVisibleSelector(page, this.tableColumn(row, column), 2000);
     if (await this.getStatus(page, row, column) !== valueWanted) {
       page.click(this.tableColumn(row, column));
-      await this.waitForVisibleSelector(page,
+      await this.waitForVisibleSelector(
+        page,
         (valueWanted ? this.columnValidIcon : this.columnNotValidIcon)(row, column),
       );
       return true;
@@ -336,7 +337,7 @@ class ShopURLSettings extends BOBasePage {
 
     await Promise.all([
       page.click(this.selectAllLink),
-      page.waitForSelector(this.selectAllLink, {state: 'hidden'}),
+      this.waitForHiddenSelector(page, this.selectAllLink),
     ]);
   }
 

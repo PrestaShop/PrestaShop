@@ -78,10 +78,10 @@ class SearchResults extends FOBasePage {
   async selectThumbImage(page, id) {
     if (id === 1) {
       await this.waitForSelectorAndClick(page, this.quickViewThumbFirstImage);
-      await page.waitForSelector(`${this.quickViewThumbFirstImage}.selected`, {state: 'visible'});
+      await this.waitForVisibleSelector(page, `${this.quickViewThumbFirstImage}.selected`);
     } else {
       await this.waitForSelectorAndClick(page, this.quickViewThumb2ndImage);
-      await page.waitForSelector(`${this.quickViewThumb2ndImage}.selected`, {state: 'visible'});
+      await this.waitForVisibleSelector(page, `${this.quickViewThumb2ndImage}.selected`);
     }
     return this.getAttributeContent(page, this.quickViewCoverImage, 'src');
   }
