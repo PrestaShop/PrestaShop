@@ -285,8 +285,17 @@ class ProductImageFeatureContext extends AbstractProductFeatureContext
             'Expected and actual images count does not match'
         );
 
-        foreach ($dataRows as $key => $dataRow) {
-            $actualImage = $images[$key];
+        $imagesById = [];
+        foreach ($images as $image) {
+            $imagesById[$image->getImageId()] = $image;
+        }
+
+        foreach ($dataRows as $dataRow) {
+            $rowImageId = (int) $this->getSharedStorage()->get($dataRow['image reference']);
+            if (!isset($imagesById[$rowImageId])) {
+                throw new RuntimeException(sprintf('Cannot find image %s in product images.', $dataRow['image reference']));
+            }
+            $actualImage = $imagesById[$rowImageId];
 
             Assert::assertEquals(
                 PrimitiveUtils::castStringBooleanIntoBoolean($dataRow['is cover']),

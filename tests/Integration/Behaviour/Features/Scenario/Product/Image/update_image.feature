@@ -83,6 +83,7 @@ Feature: Update product image from Back Office (BO)
       | image5          | false    |                  | 5        |
       | image6          | false    |                  | 6        |
 
+  @product-image-position
   Scenario: I update image positions
     When I update image "image2" with following information:
       | position | 5 |
@@ -100,6 +101,16 @@ Feature: Update product image from Back Office (BO)
       | image reference | is cover | legend[en-US] | position |
       | image1          | true     |               | 1        |
       | image6          | false    |               | 2        |
+      | image3          | false    |               | 3        |
+      | image4          | false    |               | 4        |
+      | image5          | false    |               | 5        |
+      | image2          | false    |               | 6        |
+    When I update image "image1" with following information:
+      | position | 2 |
+    Then product "product1" should have following images:
+      | image reference | is cover | legend[en-US] | position |
+      | image6          | false    |               | 1        |
+      | image1          | true     |               | 2        |
       | image3          | false    |               | 3        |
       | image4          | false    |               | 4        |
       | image5          | false    |               | 5        |
