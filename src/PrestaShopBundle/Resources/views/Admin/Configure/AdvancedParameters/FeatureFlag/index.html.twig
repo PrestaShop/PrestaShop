@@ -27,8 +27,8 @@
 
 {% block content %}
   <div class="row justify-content-center">
-    {{ form_start(featureFlagsForm, {attr : {class: 'form col', id:'feature-flag-form'}, action: path('admin_experimental_feature_index') }) }}
-    {% block experimental_feature_form %}
+    {{ form_start(featureFlagsForm, {attr : {class: 'form col', id:'feature-flag-form'}, action: path('admin_feature_flags_index') }) }}
+    {% block feature_flag_form %}
       <div class="card" id="configuration_fieldset_general">
         <h3 class="card-header">
           <i class="material-icons">settings</i> {{ 'Experimental features'|trans }}
@@ -67,5 +67,5 @@
 {% block javascripts %}
   {{ parent() }}
 
-  <script src="{{ asset('themes/new-theme/public/experimental_feature.bundle.js') }}"></script>
+  <script src="{{ asset('themes/new-theme/public/feature_flag.bundle.js') }}"></script>
 {% endblock %}

@@ -477,9 +477,9 @@
     <access id="access_1_486" id_profile="SuperAdmin" id_authorization_role="TAB_DEFAULT_READ"/>
     <access id="access_1_487" id_profile="SuperAdmin" id_authorization_role="TAB_DEFAULT_UPDATE"/>
     <access id="access_1_488" id_profile="SuperAdmin" id_authorization_role="TAB_DEFAULT_DELETE"/>
-    <access id="access_1_489" id_profile="SuperAdmin" id_authorization_role="TAB_ADMINEXPERIMENTALFEATURE_CREATE"/>
-    <access id="access_1_490" id_profile="SuperAdmin" id_authorization_role="TAB_ADMINEXPERIMENTALFEATURE_READ"/>
-    <access id="access_1_491" id_profile="SuperAdmin" id_authorization_role="TAB_ADMINEXPERIMENTALFEATURE_UPDATE"/>
-    <access id="access_1_492" id_profile="SuperAdmin" id_authorization_role="TAB_ADMINEXPERIMENTALFEATURE_DELETE"/>
+    <access id="access_1_489" id_profile="SuperAdmin" id_authorization_role="TAB_ADMINFEATUREFLAG_CREATE"/>
+    <access id="access_1_490" id_profile="SuperAdmin" id_authorization_role="TAB_ADMINFEATUREFLAG_READ"/>
+    <access id="access_1_491" id_profile="SuperAdmin" id_authorization_role="TAB_ADMINFEATUREFLAG_UPDATE"/>
+    <access id="access_1_492" id_profile="SuperAdmin" id_authorization_role="TAB_ADMINFEATUREFLAG_DELETE"/>
   </entities>
 </entity_access>

@@ -26,7 +26,7 @@
 
 declare(strict_types=1);
 
-namespace PrestaShopBundle\Form\Admin\Configure\AdvancedParameters\ExperimentalFeature;
+namespace PrestaShopBundle\Form\Admin\Configure\AdvancedParameters\FeatureFlag;
 
 use PrestaShop\PrestaShop\Core\FeatureFlag\FeatureFlagsModifier;
 use PrestaShopBundle\Entity\FeatureFlag;
