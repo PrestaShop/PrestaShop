@@ -17,6 +17,7 @@ services:
       $idField: 'id_cms'
       $positionField: 'position'
       $parentIdField: 'id_cms_category'
+      $shopId: '@=service("prestashop.adapter.shop.context").getContextShopID()'
 
   prestashop.core.grid.attribute.position_definition:
     class: 'PrestaShop\PrestaShop\Core\Grid\Position\PositionDefinition'

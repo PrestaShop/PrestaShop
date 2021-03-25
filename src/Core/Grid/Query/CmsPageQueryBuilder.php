@@ -78,7 +78,7 @@ final class CmsPageQueryBuilder extends AbstractDoctrineQueryBuilder
         $qb = $this->getQueryBuilder($searchCriteria->getFilters());
 
         $qb
-            ->select('c.`id_cms`, cl.`link_rewrite`, c.`active`, c.`position`, cl.`meta_title`, cl.`head_seo_title`')
+            ->select('c.`id_cms`, cl.`link_rewrite`, c.`active`, cs.`position`, cl.`meta_title`, cl.`head_seo_title`')
             ->addSelect('c.`id_cms_category`')
             ->groupBy('c.`id_cms`')
         ;
@@ -167,7 +167,7 @@ final class CmsPageQueryBuilder extends AbstractDoctrineQueryBuilder
 
             if ('position' === $filterName) {
                 $modifiedPositionFilter = $this->getModifiedPositionFilter($value);
-                $qb->andWhere('c.`' . $filterName . '` = :' . $filterName);
+                $qb->andWhere('cs.`' . $filterName . '` = :' . $filterName);
                 $qb->setParameter($filterName, $modifiedPositionFilter);
                 continue;
             }

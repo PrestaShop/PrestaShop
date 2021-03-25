@@ -2336,6 +2336,7 @@ CREATE TABLE `PREFIX_address_format` (
 CREATE TABLE `PREFIX_cms_shop` (
   `id_cms` INT(11) UNSIGNED NOT NULL,
   `id_shop` INT(11) UNSIGNED NOT NULL,
+  `position` int(10) unsigned NOT NULL DEFAULT '0',
   PRIMARY KEY (`id_cms`, `id_shop`),
   KEY `id_shop` (`id_shop`)
 ) ENGINE=ENGINE_TYPE DEFAULT CHARSET=utf8mb4 COLLATION;
