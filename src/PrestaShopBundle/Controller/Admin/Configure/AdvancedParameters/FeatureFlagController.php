@@ -36,9 +36,9 @@ use Symfony\Component\HttpFoundation\Response;
 /**
  * Manages the "Configure > Advanced Parameters > Experimental Features" page.
  */
-class ExperimentalFeatureController extends FrameworkBundleAdminController
+class FeatureFlagController extends FrameworkBundleAdminController
 {
-    public const CONTROLLER_NAME = 'AdminAdvancedParametersExperimentalFeatures';
+    public const CONTROLLER_NAME = 'AdminAdvancedParametersFeatureFlags';
 
     /**
      * @AdminSecurity("is_granted('read', request.get('_legacy_controller'))", message="Access denied.")
@@ -62,11 +62,11 @@ class ExperimentalFeatureController extends FrameworkBundleAdminController
                     $this->flashErrors($errors);
                 }
 
-                return $this->redirectToRoute('admin_experimental_feature_index');
+                return $this->redirectToRoute('admin_feature_flags_index');
             }
         }
 
-        return $this->render('@PrestaShop/Admin/Configure/AdvancedParameters/ExperimentalFeature/index.html.twig', [
+        return $this->render('@PrestaShop/Admin/Configure/AdvancedParameters/FeatureFlag/index.html.twig', [
             'enableSidebar' => true,
             'layoutHeaderToolbarBtn' => [],
             'layoutTitle' => $this->trans('Experimental Features', 'Admin.Navigation.Menu'),

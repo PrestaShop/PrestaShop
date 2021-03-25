@@ -1481,7 +1481,7 @@ services:
             - { name: form.type }
 
     prestashop.bundle.form.admin.configure.advanced_parameters.experimental_feature:
-        class: 'PrestaShopBundle\Form\Admin\Configure\AdvancedParameters\ExperimentalFeature\FeatureFlagsType'
+        class: 'PrestaShopBundle\Form\Admin\Configure\AdvancedParameters\FeatureFlag\FeatureFlagsType'
         parent: 'form.type.translatable.aware'
         public: true
         arguments:

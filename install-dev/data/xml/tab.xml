@@ -439,8 +439,8 @@
                 <tab id="Multistore" id_parent="Advanced_Parameters" active="0" enabled="1" hide_host_mode="0" icon="">
                     <class_name>AdminShopUrl</class_name>
                 </tab>
-                <tab id="ExperimentalFeature" id_parent="Advanced_Parameters" active="1" enabled="1" hide_host_mode="0" icon="">
-                  <class_name>AdminExperimentalFeature</class_name>
+                <tab id="FeatureFlag" id_parent="Advanced_Parameters" active="1" enabled="1" hide_host_mode="0" icon="">
+                  <class_name>AdminFeatureFlag</class_name>
                 </tab>
 
       <!--QUICK ACCESS-->

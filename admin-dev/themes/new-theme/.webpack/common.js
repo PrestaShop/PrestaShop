@@ -63,7 +63,7 @@ module.exports = {
     employee: './js/pages/employee/index',
     employee_form: './js/pages/employee/form',
     error: './js/pages/error',
-    experimental_feature: './js/pages/experimental-feature/index',
+    feature_flag: './js/pages/feature-flag/index',
     feature_form: './js/pages/feature/form',
     form_popover_error: './js/components/form/form-popover-error',
     geolocation: './js/pages/geolocation',
