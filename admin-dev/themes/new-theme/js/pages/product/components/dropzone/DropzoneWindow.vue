@@ -89,7 +89,7 @@
           type="checkbox"
           :disabled="isCover"
           :checked="isCover"
-          @change="$emit('coverChanged', $event)"
+          @change="coverChanged"
         >
         <i class="md-checkbox-control" />
         {{ $t('window.useAsCover') }}
@@ -150,7 +150,7 @@
       <button
         type="button"
         class="btn btn-primary save-image-settings"
-        @click="$emit('saveSelectedFile', captionValue)"
+        @click="$emit('saveSelectedFile', captionValue, coverData)"
       >
         <span v-if="!loading">
           {{ $t('window.saveImage') }}
@@ -194,6 +194,7 @@
     data() {
       return {
         captionValue: '',
+        coverData: {},
       };
     },
     watch: {
@@ -249,6 +250,15 @@
       openFileManager() {
         const fileInput = document.querySelector('.dropzone-window-filemanager');
         fileInput.click();
+      },
+      /**
+       * Cache cover data
+       */
+      coverChanged(event) {
+        this.coverData = {
+          file: this.selectedFiles[0],
+          value: event.target.value,
+        };
       },
     },
   };
