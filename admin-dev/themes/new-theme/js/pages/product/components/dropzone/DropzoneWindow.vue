@@ -143,6 +143,7 @@
       id="caption-textarea"
       name="caption-textarea"
       class="form-control"
+      v-if="selectedFile !== null"
       v-model="captionValue[selectedLocale.id_lang]"
     />
 
