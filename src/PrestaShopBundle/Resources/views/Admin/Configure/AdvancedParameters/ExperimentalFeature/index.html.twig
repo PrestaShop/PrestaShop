@@ -27,7 +27,7 @@
 
 {% block content %}
   <div class="row justify-content-center">
-    {{ form_start(featureFlagsForm, {attr : {class: 'form col', id:'feature-flag-form'}, action: path('admin_experimental_feature_save') }) }}
+    {{ form_start(featureFlagsForm, {attr : {class: 'form col', id:'feature-flag-form'}, action: path('admin_experimental_feature_index') }) }}
     {% block experimental_feature_form %}
       <div class="card" id="configuration_fieldset_general">
         <h3 class="card-header">

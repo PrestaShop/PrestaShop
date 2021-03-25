@@ -54,8 +54,8 @@ class FeatureFlagsType extends TranslatorAwareType
     public function __construct(
         TranslatorInterface $translator,
         array $locales,
-        FeatureFlagsModifier $featureFlagsModifier)
-    {
+        FeatureFlagsModifier $featureFlagsModifier
+    ) {
         parent::__construct($translator, $locales);
 
         $this->featureFlagsModifier = $featureFlagsModifier;
