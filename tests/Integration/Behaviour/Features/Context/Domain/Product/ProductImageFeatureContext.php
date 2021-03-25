@@ -131,6 +131,10 @@ class ProductImageFeatureContext extends AbstractProductFeatureContext
             $command->setLocalizedLegends($dataRows['legend']);
         }
 
+        if (isset($dataRows['position'])) {
+            $command->setPosition((int) $dataRows['position']);
+        }
+
         $this->getCommandBus()->handle($command);
     }
 
