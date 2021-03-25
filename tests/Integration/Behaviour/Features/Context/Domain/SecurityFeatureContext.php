@@ -43,7 +43,7 @@ use Tests\Integration\Behaviour\Features\Context\SharedStorage;
 
 class SecurityFeatureContext extends AbstractDomainFeatureContext
 {
-    const SECURITY_FORM_KEY = 'security-form';
+    private const SECURITY_FORM_KEY = 'security-form';
 
     /**
      * @Given I specify following properties for security form
@@ -58,7 +58,7 @@ class SecurityFeatureContext extends AbstractDomainFeatureContext
     /**
      * @When I submit the security form
      */
-    public function submitTheSecurityForm()
+    public function submitTheSecurityForm(): void
     {
         $data = SharedStorage::getStorage()->get(static::SECURITY_FORM_KEY);
 
@@ -86,7 +86,7 @@ class SecurityFeatureContext extends AbstractDomainFeatureContext
     /**
      * @Then the security form is valid
      */
-    public function securityFormIsValid()
+    public function securityFormIsValid(): void
     {
         $this->assertLastErrorIsNull();
     }
@@ -94,7 +94,7 @@ class SecurityFeatureContext extends AbstractDomainFeatureContext
     /**
      * @When /^I clear outdated (customer|employee) sessions$/
      */
-    public function clearOutdatedSessions(string $type)
+    public function clearOutdatedSessions(string $type): void
     {
         if ($type === 'customer') {
             $clearSessionCommand = new Command\ClearCustomerSessionCommand();
