@@ -193,7 +193,7 @@
     },
     data() {
       return {
-        captionValue: '',
+        captionValue: {},
         coverData: {},
       };
     },
