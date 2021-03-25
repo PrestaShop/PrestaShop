@@ -75,7 +75,6 @@
       @selectAll="selectAll"
       @saveSelectedFile="saveSelectedFile"
       @replacedFile="manageReplacedFile"
-      @coverChanged="changeCover"
       :files="files"
       :locales="locales"
       :selected-locale="selectedLocale"
@@ -155,7 +154,6 @@
         loading: true,
         selectedLocale: null,
         buttonLoading: false,
-        coverData: {},
       };
     },
     props: {
@@ -400,7 +398,7 @@
       /**
        * Save selected file
        */
-      async saveSelectedFile(captionValue) {
+      async saveSelectedFile(captionValue, coverData) {
         if (!this.selectedFiles.length) {
           return;
         }
@@ -410,11 +408,11 @@
         const selectedFile = this.selectedFiles[0];
 
         if (
-          this.coverData.file
+          coverData.file
           && this.selectedFiles.length === 1
-          && this.coverData.file.image_id === selectedFile.image_id
+          && coverData.file.image_id === selectedFile.image_id
         ) {
-          selectedFile.is_cover = this.coverData.value;
+          selectedFile.is_cover = coverData.value;
         }
 
         selectedFile.legends = captionValue;
@@ -481,15 +479,6 @@
           $.growl.error({message: error.responseJSON.error});
           this.buttonLoading = false;
         }
-      },
-      /**
-       * Temporary cover data to wait on save
-       */
-      changeCover(event) {
-        this.coverData = {
-          file: this.selectedFiles[0],
-          value: event.target.value,
-        };
       },
       async updateImagePosition(productImageId, newPosition) {
         try {
