@@ -137,15 +137,15 @@ describe('Send message from contact us page with customer logged in', async () =
   it('should check message type', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'checkMessageType', baseContext);
 
-    const email = await customerServicePage.getTextColumn(page, 1, 'cl!id_contact');
-    await expect(email).to.contain(contactUsData.subject);
+    const subject = await customerServicePage.getTextColumn(page, 1, 'cl!id_contact');
+    await expect(subject).to.contain(contactUsData.subject);
   });
 
   it('should check message', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'checkMessage', baseContext);
 
-    const email = await customerServicePage.getTextColumn(page, 1, 'message');
-    await expect(email).to.contain(contactUsData.message);
+    const message = await customerServicePage.getTextColumn(page, 1, 'message');
+    await expect(message).to.contain(contactUsData.message);
   });
 
   it('should delete the message', async function () {
