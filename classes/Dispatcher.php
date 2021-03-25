@@ -688,11 +688,11 @@ class DispatcherCore
 
         // Move 'index' route to the first position on every language route array.
         // 'index' route must be the first checked, to avoid false matches within '/' url in the nexts routes regexp.
-        foreach($this->routes as $id_shop => $lang_routes){
-            foreach($lang_routes as $id_lang => $route){
+        foreach($this->routes as $id_shop => $lang_routes) {
+            foreach($lang_routes as $id_lang => $route) {
                 $index_route = $route['index'];
                 unset($this->routes[$id_shop][$id_lang]['index']);
-                $this->routes[$id_shop][$id_lang] = array_merge (array('index' => $index_route), $this->routes[$id_shop][$id_lang]);
+                $this->routes[$id_shop][$id_lang] = array_merge (['index' => $index_route], $this->routes[$id_shop][$id_lang]);
             }
         }
     }
