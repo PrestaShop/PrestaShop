@@ -125,7 +125,7 @@
     getProductImages,
     saveImageInformations,
     replaceImage,
-    setImagesSort,
+    saveImagePosition,
   } from '@pages/product/services/images';
   import ProductMap from '@pages/product/product-map';
   import ProductEventMap from '@pages/product/product-event-map';
@@ -235,15 +235,13 @@
         ] = this.productId;
         this.configuration.params[`${this.formName}[_token]`] = this.token;
 
-        const dropzoneElement = $('#product-images-dropzone');
-        const that = this;
-
+        this.sortableContainer = $('#product-images-dropzone');
         this.dropzone = new window.Dropzone(
           '.dropzone-container',
           this.configuration,
         );
 
-        dropzoneElement.sortable({
+        this.sortableContainer.sortable({
           items: 'div.dz-preview:not(.disabled)',
           opacity: 0.9,
           containment: 'parent',
@@ -254,31 +252,13 @@
             top: 64,
           },
           cancel: '.disabled',
-          stop() {
-            const sort = {};
-
-            $.each(dropzoneElement.find('.dz-preview:not(.disabled)'), (index, value) => {
-              const imageId = $(value).attr('data-id');
-
-              if (!imageId) {
-                return;
-              }
-
-              sort[imageId] = index + 1;
-            });
-
-            if (sort) {
-              (async () => {
-                try {
-                  await setImagesSort(that.productId, sort);
-                } catch (error) {
-                  $.growl.error({message: error.message});
-                }
-              })();
-            }
+          stop: (event, ui) => {
+            // Get new position (-1 because the open file manager is always first)
+            const movedPosition = ui.item.index() - 1;
+            this.updateImagePosition(ui.item.data('id'), movedPosition);
           },
-          start(event, ui) {
-            dropzoneElement.find('.dz-preview').css('zIndex', 1);
+          start: (event, ui) => {
+            this.sortableContainer.find('.dz-preview').css('zIndex', 1);
             ui.item.css('zIndex', 10);
           },
         });
@@ -459,6 +439,14 @@
           file: this.selectedFiles[0],
           value: event.target.value,
         };
+      },
+      async updateImagePosition(productImageId, newPosition) {
+        try {
+          await saveImagePosition(productImageId, newPosition, this.formName, this.token);
+        } catch (error) {
+          this.sortableContainer.sortable('cancel');
+          $.growl.error({message: error.responseJSON.error});
+        }
       },
     },
   };
