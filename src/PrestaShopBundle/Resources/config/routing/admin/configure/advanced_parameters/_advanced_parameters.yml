@@ -46,6 +46,6 @@ _profiles:
     resource: "profiles.yml"
     prefix: /profiles
 
-_experimental_feature:
-    resource: "experimental_feature.yml"
-    prefix: /experimental-feature
+_experimental_features:
+    resource: "experimental_features.yml"
+    prefix: /experimental-features

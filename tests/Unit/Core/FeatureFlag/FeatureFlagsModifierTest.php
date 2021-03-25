@@ -45,7 +45,7 @@ class FeatureFlagsModifierTest extends TestCase
         $translatorMock = $this->getMockBuilder(TranslatorInterface::class)->getMock();
         $modifier = new FeatureFlagsModifier($entityManagerMock, $translatorMock);
 
-        $this->assertTrue($modifier instanceof DataConfigurationInterface);
+        $this->assertInstanceOf(DataConfigurationInterface::class, $modifier);
     }
 
     public function testGetConfigurationReturnsExpectedStructure()
@@ -80,7 +80,7 @@ class FeatureFlagsModifierTest extends TestCase
         $this->assertEquals([], $modifier->getConfiguration());
     }
 
-    public function testUpdateConfiguration()
+    public function testUpdateConfigurationIsSuccessfullWithValidPayload()
     {
         $featureFlags = [
             new FeatureFlag('product_page_v1'),
