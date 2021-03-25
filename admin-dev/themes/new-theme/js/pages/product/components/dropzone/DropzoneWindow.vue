@@ -79,91 +79,89 @@
     </p>
 
     <div
-      class="dropzone-window-bottom"
-      v-if="selectedFile"
+      class="md-checkbox dropzone-window-checkbox"
+      v-if="selectedFile !== null"
+      :data-toggle="showCoverTooltip"
+      :data-original-title="$t('window.cantDisableCover')"
     >
+      <label>
+        <input
+          type="checkbox"
+          :disabled="isCover"
+          :checked="isCover"
+          @change="$emit('coverChanged', $event)"
+        >
+        <i class="md-checkbox-control" />
+        {{ $t('window.useAsCover') }}
+      </label>
+    </div>
+
+    <input
+      type="file"
+      class="dropzone-window-filemanager"
+      @change="watchFiles"
+    >
+
+    <div class="dropzone-window-label">
+      <label
+        for="caption-textarea"
+        class="control-label"
+      >{{
+        $t('window.caption')
+      }}</label>
       <div
-        class="md-checkbox dropzone-window-checkbox"
-        v-if="selectedFile !== null"
-        :data-toggle="showCoverTooltip"
-        :data-original-title="$t('window.cantDisableCover')"
+        class="dropdown"
+        v-if="locales.length > 1"
       >
-        <label>
-          <input
-            type="checkbox"
-            :disabled="isCover"
-            :checked="isCover"
-            @change="$emit('coverChanged', $event)"
+        <button
+          class="btn btn-outline-secondary btn-sm dropdown-toggle js-locale-btn"
+          type="button"
+          data-toggle="dropdown"
+          aria-haspopup="true"
+          aria-expanded="false"
+          id="form_invoice_prefix"
+        >
+          {{ selectedLocale.iso_code }}
+        </button>
+        <div
+          class="dropdown-menu locale-dropdown-menu"
+          aria-labelledby="form_invoice_prefix"
+        >
+          <span
+            v-for="locale in locales"
+            :key="locale.name"
+            class="dropdown-item js-locale-item"
+            :data-locale="locale.iso_code"
           >
-          <i class="md-checkbox-control" />
-          {{ $t('window.useAsCover') }}
-        </label>
-      </div>
-
-      <input
-        type="file"
-        class="dropzone-window-filemanager"
-        @change="watchFiles"
-      >
-
-      <div class="dropzone-window-label">
-        <label
-          for="caption-textarea"
-          class="control-label"
-        >{{
-          $t('window.caption')
-        }}</label>
-        <div class="dropdown">
-          <button
-            class="btn btn-outline-secondary btn-sm dropdown-toggle js-locale-btn"
-            type="button"
-            data-toggle="dropdown"
-            aria-haspopup="true"
-            aria-expanded="false"
-            id="form_invoice_prefix"
-          >
-            {{ selectedLocale.iso_code }}
-          </button>
-          <div
-            class="dropdown-menu locale-dropdown-menu"
-            aria-labelledby="form_invoice_prefix"
-          >
-            <span
-              v-for="locale in locales"
-              :key="locale.name"
-              class="dropdown-item js-locale-item"
-              :data-locale="locale.iso_code"
-            >
-              {{ locale.name }}
-            </span>
-          </div>
+            {{ locale.name }}
+          </span>
         </div>
       </div>
+    </div>
 
-      <textarea
-        id="caption-textarea"
-        name="caption-textarea"
-        class="form-control"
-        v-model="selectedCaption"
-      />
+    <textarea
+      id="caption-textarea"
+      name="caption-textarea"
+      class="form-control"
+      v-model="captionValue[selectedLocale.id_lang]"
+    />
 
-      <div class="dropzone-window-button-container">
-        <button
-          type="button"
-          class="btn btn-primary save-image-settings"
-          @click="$emit('saveSelectedFile')"
-        >
-          <span v-if="!loading">
-            {{ $t('window.saveImage') }}
-          </span>
-          <span
-            class="spinner-border spinner-border-sm"
-            v-if="loading"
-            role="status"
-            aria-hidden="true"
-          />
-        </button>
-      </div>
+    <div class="dropzone-window-button-container">
+      <button
+        type="button"
+        class="btn btn-primary save-image-settings"
+        @click="$emit('saveSelectedFile', captionValue)"
+      >
+        <span v-if="!loading">
+          {{ $t('window.saveImage') }}
+        </span>
+        <span
+          class="spinner-border spinner-border-sm"
+          v-if="loading"
+          role="status"
+          aria-hidden="true"
+        />
+      </button>
     </div>
   </div>
 </template>
@@ -193,6 +191,28 @@
         default: false,
       },
     },
+    data() {
+      return {
+        captionValue: '',
+      };
+    },
+    watch: {
+      /**
+       * We need to watch selected files to manage multilang
+       * of only one file or multiple files  then the value is sent
+       * on save.
+      */
+      selectedFiles(value) {
+        if (value.length > 1) {
+          this.captionValue = {};
+          this.locales.forEach((locale) => {
+            this.captionValue[locale] = '';
+          });
+        } else {
+          this.captionValue = this.selectedFile.legends;
+        }
+      },
+    },
     computed: {
       selectedFile() {
         return this.selectedFiles.length === 1 ? this.selectedFiles[0] : null;
@@ -207,29 +227,11 @@
 
         return false;
       },
-      selectedCaption: {
-        get() {
-          if (
-            this.selectedFile === null
-            || !this.selectedFile.legends
-            || !this.selectedFile.legends[this.selectedLocale.id_lang]
-          ) {
-            return '';
-          }
-
-          return this.selectedFile.legends[this.selectedLocale.id_lang];
-        },
-        set(value) {
-          if (this.selectedFile === null) {
-            return;
-          }
-
-          this.selectedFile.legends[this.selectedLocale.id_lang] = value;
-        },
-      },
     },
     mounted() {
       window.prestaShopUiKit.initToolTips();
+      // We set the intial value of the first item in order to use the computed
+      this.captionValue = this.selectedFile.legends;
     },
     updated() {
       window.prestaShopUiKit.initToolTips();
