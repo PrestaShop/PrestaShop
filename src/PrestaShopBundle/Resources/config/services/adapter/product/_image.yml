@@ -63,6 +63,9 @@ services:
         arguments:
             - '@prestashop.adapter.product.image.repository.product_image_repository'
             - '@prestashop.adapter.product.image.uploader.product_image_uploader'
+            - '@prestashop.core.grid.position.position_update_factory'
+            - '@prestashop.core.grid.image.position_definition'
+            - '@prestashop.core.grid.position.doctrine_grid_position_updater'
 
     prestashop.adapter.product.image.product_image_path_factory:
         class: PrestaShop\PrestaShop\Adapter\Product\Image\ProductImagePathFactory

@@ -35,6 +35,11 @@ use PrestaShop\PrestaShop\Core\Domain\Product\Image\Exception\CannotDeleteProduc
 use PrestaShop\PrestaShop\Core\Domain\Product\Image\Exception\CannotUpdateProductImageException;
 use PrestaShop\PrestaShop\Core\Domain\Product\Image\ValueObject\ImageId;
 use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductId;
+use PrestaShop\PrestaShop\Core\Grid\Position\Exception\PositionDataException;
+use PrestaShop\PrestaShop\Core\Grid\Position\Exception\PositionUpdateException;
+use PrestaShop\PrestaShop\Core\Grid\Position\GridPositionUpdaterInterface;
+use PrestaShop\PrestaShop\Core\Grid\Position\PositionDefinition;
+use PrestaShop\PrestaShop\Core\Grid\Position\PositionUpdateFactory;
 use PrestaShop\PrestaShop\Core\Image\Exception\CannotUnlinkImageException;
 
 class ProductImageUpdater
@@ -50,15 +55,39 @@ class ProductImageUpdater
     private $productImageRepository;
 
     /**
+     * @var PositionUpdateFactory
+     */
+    private $positionUpdateFactory;
+
+    /**
+     * @var PositionDefinition
+     */
+    private $positionDefinition;
+
+    /**
+     * @var GridPositionUpdaterInterface
+     */
+    private $positionUpdater;
+
+    /**
      * @param ProductImageRepository $productImageRepository
      * @param ProductImageUploader $productImageUploader
+     * @param PositionUpdateFactory $positionUpdateFactory
+     * @param PositionDefinition $positionDefinition
+     * @param GridPositionUpdaterInterface $positionUpdater
      */
     public function __construct(
         ProductImageRepository $productImageRepository,
-        ProductImageUploader $productImageUploader
+        ProductImageUploader $productImageUploader,
+        PositionUpdateFactory $positionUpdateFactory,
+        PositionDefinition $positionDefinition,
+        GridPositionUpdaterInterface $positionUpdater
     ) {
         $this->productImageRepository = $productImageRepository;
         $this->productImageUploader = $productImageUploader;
+        $this->positionUpdateFactory = $positionUpdateFactory;
+        $this->positionDefinition = $positionDefinition;
+        $this->positionUpdater = $positionUpdater;
     }
 
     /**
@@ -84,13 +113,12 @@ class ProductImageUpdater
     }
 
     /**
-     * @param ImageId $imageId
+     * @param Image $newCover
      *
      * @throws CannotUpdateProductImageException
      */
-    public function updateProductCover(ImageId $imageId): void
+    public function updateProductCover(Image $newCover): void
     {
-        $newCover = $this->productImageRepository->get($imageId);
         $productId = new ProductId((int) $newCover->id_product);
         $currentCover = $this->productImageRepository->findCover($productId);
 
@@ -99,6 +127,37 @@ class ProductImageUpdater
         }
 
         $this->updateCover($newCover, true);
+    }
+
+    /**
+     * @param Image $image
+     * @param int $newPosition
+     *
+     * @throws CannotUpdateProductImageException
+     */
+    public function updatePosition(Image $image, int $newPosition): void
+    {
+        $positionsData = [
+            'positions' => [
+                [
+                    'rowId' => (int) $image->id_image,
+                    'oldPosition' => (int) $image->position,
+                    'newPosition' => $newPosition,
+                ],
+            ],
+            'parentId' => (int) $image->id_product,
+        ];
+
+        try {
+            $positionUpdate = $this->positionUpdateFactory->buildPositionUpdate($positionsData, $this->positionDefinition);
+            $this->positionUpdater->update($positionUpdate);
+        } catch (PositionDataException | PositionUpdateException $e) {
+            throw new CannotUpdateProductImageException(
+                'Cannot update image position',
+                CannotUpdateProductImageException::FAILED_UPDATE_POSITION,
+                $e
+            );
+        }
     }
 
     /**

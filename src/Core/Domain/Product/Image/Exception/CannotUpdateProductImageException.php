@@ -39,4 +39,9 @@ class CannotUpdateProductImageException extends ProductImageException
      * When fails to update legends
      */
     public const FAILED_UPDATE_LEGENDS = 20;
+
+    /**
+     * When fails to update position
+     */
+    public const FAILED_UPDATE_POSITION = 30;
 }
