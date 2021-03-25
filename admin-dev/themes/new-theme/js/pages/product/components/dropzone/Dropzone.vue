@@ -400,7 +400,7 @@
       /**
        * Save selected file
        */
-      async saveSelectedFile() {
+      async saveSelectedFile(captionValue) {
         if (!this.selectedFiles.length) {
           return;
         }
@@ -416,6 +416,8 @@
         ) {
           selectedFile.is_cover = this.coverData.value;
         }
+
+        selectedFile.legends = captionValue;
 
         try {
           const savedImage = await saveImageInformations(
@@ -497,19 +499,19 @@
           $.growl.error({message: error.responseJSON.error});
         }
       },
-    },
-    /**
-     * Mainly used when we wants to reset the whole list
-     * to reset cover image for example on remove
-     */
-    resetDropzone() {
-      this.loading = true;
-      this.files.forEach((file) => {
-        this.dropzone.removeFile(file);
-      });
-      this.dropzone.destroy();
-      this.dropzone = null;
-      this.initProductImages();
+      /**
+       * Mainly used when we wants to reset the whole list
+       * to reset cover image for example on remove
+       */
+      resetDropzone() {
+        this.loading = true;
+        this.files.forEach((file) => {
+          this.dropzone.removeFile(file);
+        });
+        this.dropzone.destroy();
+        this.dropzone = null;
+        this.initProductImages();
+      },
     },
   };
 </script>
