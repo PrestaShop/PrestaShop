@@ -137,11 +137,21 @@ class ProductImageUpdater
      */
     public function updatePosition(Image $image, int $newPosition): void
     {
+        $oldPosition = (int) $image->position;
+        // The images are sorted by their position values, but since only one of them as un updated value there will be
+        // two images with the same position, so we need to add an offset to the new position depending on the way it
+        // is being modified
+        if ($oldPosition < $newPosition) {
+            ++$newPosition;
+        } elseif ($oldPosition > $newPosition) {
+            --$newPosition;
+        }
+
         $positionsData = [
             'positions' => [
                 [
                     'rowId' => (int) $image->id_image,
-                    'oldPosition' => (int) $image->position,
+                    'oldPosition' => $oldPosition,
                     'newPosition' => $newPosition,
                 ],
             ],
