@@ -32,20 +32,22 @@ use Cookie;
 use Employee;
 use Language;
 use Link;
+use PHPUnit\Framework\TestCase;
 use PrestaShop\PrestaShop\Adapter\EntityMapper;
+use PrestaShop\PrestaShop\Adapter\ServiceLocator;
 use PrestaShop\PrestaShop\Core\Foundation\IoC\Container as LegacyContainer;
 use PrestaShop\PrestaShop\Core\Localization\CLDR\LocaleRepository;
 use PrestaShop\PrestaShop\Core\Localization\Locale;
-use PHPUnit\Framework\TestCase;
+use PrestaShopBundle\Controller\Admin\MultistoreController;
+use Prophecy\Argument;
 use Prophecy\Prophecy\ObjectProphecy;
 use Shop;
 use Smarty;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\HttpFoundation\ParameterBag as HttpParameterBag;
 use Symfony\Component\HttpFoundation\Request as HttpRequest;
+use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Translation\Translator;
-use PrestaShop\PrestaShop\Adapter\ServiceLocator;
-use Prophecy\Argument;
 use Tools;
 
 /**
@@ -89,8 +91,8 @@ class ControllerTest extends TestCase
          */
         $testedController = new $controllerClass();
         $refController = new \ReflectionObject($testedController);
-        $refProperty = $refController->getProperty('container' );
-        $refProperty->setAccessible(true );
+        $refProperty = $refController->getProperty('container');
+        $refProperty->setAccessible(true);
         $refProperty->setValue($testedController, $this->prophesizeSfContainer()->reveal());
 
         if (!defined('_PS_BASE_URL_')) {
@@ -109,39 +111,39 @@ class ControllerTest extends TestCase
 
     /**
      * @return array list of all legacy controllers (Back Office)
-     * If you have migrated a page on Symfony, please remove the related test.
+     *               If you have migrated a page on Symfony, please remove the related test
      */
     public function getControllersClasses()
     {
-        return array(
-            array('AdminCarriersController'),
-            array('AdminStatusesController'),
-            array('AdminZonesController'),
-            array('AdminLoginController'),
-            array('AdminQuickAccessesController'),
-            array('AdminCustomerThreadsController'),
-            array('AdminReferrersController'),
-            array('AdminReturnController'),
-            array('AdminStoresController'),
-            array('AdminSuppliersController'),
-            array('AdminAttributesGroupsController'),
-            array('AdminNotFoundController'),
-            array('AdminFeaturesController'),
-            array('AdminSearchEnginesController'),
-            array('AdminGendersController'),
-            array('AdminTagsController'),
-            array('AdminShopController'),
-            array('AdminCartRulesController'),
-            array('AdminGroupsController'),
-            array('AdminShopGroupController'),
-            array('AdminTaxRulesGroupController'),
-            array('AdminCartsController'),
-            array('AdminImagesController'),
-            array('AdminShopUrlController'),
-            array('AdminStatesController'),
-            array('AdminStatsController'),
-            array('AdminLegacyLayoutController'),
-        );
+        return [
+            ['AdminCarriersController'],
+            ['AdminStatusesController'],
+            ['AdminZonesController'],
+            ['AdminLoginController'],
+            ['AdminQuickAccessesController'],
+            ['AdminCustomerThreadsController'],
+            ['AdminReferrersController'],
+            ['AdminReturnController'],
+            ['AdminStoresController'],
+            ['AdminSuppliersController'],
+            ['AdminAttributesGroupsController'],
+            ['AdminNotFoundController'],
+            ['AdminFeaturesController'],
+            ['AdminSearchEnginesController'],
+            ['AdminGendersController'],
+            ['AdminTagsController'],
+            ['AdminShopController'],
+            ['AdminCartRulesController'],
+            ['AdminGroupsController'],
+            ['AdminShopGroupController'],
+            ['AdminTaxRulesGroupController'],
+            ['AdminCartsController'],
+            ['AdminImagesController'],
+            ['AdminShopUrlController'],
+            ['AdminStatesController'],
+            ['AdminStatsController'],
+            ['AdminLegacyLayoutController'],
+        ];
     }
 
     protected function declareRequiredConstants()
@@ -258,10 +260,12 @@ class ControllerTest extends TestCase
      */
     protected function prophesizeSfContainer()
     {
-        $containerProphecy        = $this->prophesize(ContainerBuilder::class);
+        $containerProphecy = $this->prophesize(ContainerBuilder::class);
         $localeRepositoryProphecy = $this->prophesizeLocaleRepository();
         $containerProphecy->get(Argument::exact(Controller::SERVICE_LOCALE_REPOSITORY))
             ->willReturn($localeRepositoryProphecy->reveal());
+        $containerProphecy->get('prestashop.core.admin.multistore')
+            ->willReturn($this->prophesizeMultistoreController()->reveal());
 
         return $containerProphecy;
     }
@@ -325,7 +329,7 @@ class ControllerTest extends TestCase
         $queryParameterBagProphecy = $this->prophesize(HttpParameterBag::class);
         $queryParameterBagProphecy->get(Argument::any(), Argument::cetera())->willReturn('');
 
-        $requestProphecy          = $this->prophesize(HttpRequest::class);
+        $requestProphecy = $this->prophesize(HttpRequest::class);
         $requestProphecy->request = $requestParameterBagProphecy->reveal();
         $requestProphecy->query = $queryParameterBagProphecy->reveal();
 
@@ -351,5 +355,19 @@ class ControllerTest extends TestCase
             ->willReturn($localeProphecy->reveal());
 
         return $localeRepositoryProphecy;
+    }
+
+    /**
+     * @return ObjectProphecy
+     */
+    protected function prophesizeMultistoreController(): ObjectProphecy
+    {
+        $multistoreControllerProphecy = $this->prophesize(MultistoreController::class);
+        $responseProphecy = $this->prophesize(Response::class);
+
+        $responseProphecy->getContent()->willReturn('');
+        $multistoreControllerProphecy->header(Argument::any())->willReturn($responseProphecy->reveal());
+
+        return $multistoreControllerProphecy;
     }
 }

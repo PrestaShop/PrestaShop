@@ -1,6 +1,7 @@
 {* TODO: 1.7.0.0: RENAME THIS FILE AT THE NEXT RETROCOMPATIBILITY BREAK *}
 
 <div class="header-toolbar d-print-none">
+  {$multistore_header}
   <div class="container-fluid">
 
     {block name=pageBreadcrumb}
@@ -166,6 +167,6 @@
         {/if}
       </div>
     </div>
-  </div> 
+  </div>
   {hook h='displayDashboardTop'}
 </div>
