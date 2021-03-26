@@ -73,7 +73,8 @@ class CombinationListingFeatureContext extends AbstractCombinationFeatureContext
     }
 
     /**
-     * @Then I should see following combinations list of product ":productReference":
+     * @Then I should see following combinations in paginated list of product ":productReference":
+     * @Then I should see following combinations in filtered list of product ":productReference":
      *
      * @param string $productReference
      * @param TableNode $tableNode
@@ -81,6 +82,17 @@ class CombinationListingFeatureContext extends AbstractCombinationFeatureContext
     public function assertCombinationsList(string $productReference, TableNode $tableNode): void
     {
         $this->assertCombinations($productReference, $tableNode->getColumnsHash());
+    }
+
+    /**
+     * @Then product ":productReference" should have following combinations:
+     *
+     * @param string $productReference
+     * @param TableNode $tableNode
+     */
+    public function assertWholeList(string $productReference, TableNode $tableNode): void
+    {
+        $this->assertCombinations($productReference, $tableNode->getColumnsHash(), true);
     }
 
     /**
@@ -179,18 +191,26 @@ class CombinationListingFeatureContext extends AbstractCombinationFeatureContext
     /**
      * @param string $productReference
      * @param array $dataRows
+     * @param bool $wholeList if true then search criteria wont be applied
      */
-    private function assertCombinations(string $productReference, array $dataRows): void
+    private function assertCombinations(string $productReference, array $dataRows, bool $wholeList = false): void
     {
         $searchCriteriaKey = $this->getSearchCriteriaKey($productReference);
-        if ($this->getSharedStorage()->exists($searchCriteriaKey)) {
+        if ($wholeList) {
+            $combinationFilters = new CombinationFilters([
+                'limit' => null,
+                'offset' => null,
+                'orderBy' => null,
+                'sortOrder' => null,
+                'filters' => [],
+            ]);
+        } elseif ($this->getSharedStorage()->exists($searchCriteriaKey)) {
             $combinationFilters = $this->getSharedStorage()->get($searchCriteriaKey);
+        } else {
+            $combinationFilters = CombinationFilters::buildDefaults();
         }
 
-        $combinationsList = $this->getCombinationsList(
-            $productReference,
-            isset($combinationFilters) ? $combinationFilters : CombinationFilters::buildDefaults()
-        );
+        $combinationsList = $this->getCombinationsList($productReference, $combinationFilters);
 
         Assert::assertEquals(
             count($dataRows),
