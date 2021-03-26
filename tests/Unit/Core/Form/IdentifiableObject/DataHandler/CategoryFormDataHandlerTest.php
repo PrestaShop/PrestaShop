@@ -51,8 +51,6 @@ class CategoryFormDataHandlerTest extends TestCase
     {
         $commandBusMock = $this->createMock(CommandBusInterface::class);
         $imageUploaderMock = $this->createMock(ImageUploaderInterface::class);
-        define('_PS_CAT_IMG_DIR_', '');
-
         $categoryFormDataHandler = new CategoryFormDataHandler(
             $commandBusMock,
             $imageUploaderMock,
