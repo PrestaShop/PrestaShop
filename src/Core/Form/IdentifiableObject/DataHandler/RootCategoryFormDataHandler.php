@@ -28,10 +28,11 @@ namespace PrestaShop\PrestaShop\Core\Form\IdentifiableObject\DataHandler;
 
 use PrestaShop\PrestaShop\Core\Domain\Category\Command\AddRootCategoryCommand;
 use PrestaShop\PrestaShop\Core\Domain\Category\Command\EditRootCategoryCommand;
+
 /**
  * Creates/updates root category from data submited in category form
  */
-final class RootCategoryFormDataHandler extends CategoryFormDataHandler
+final class RootCategoryFormDataHandler extends AbstractCategoryFormDataHandler
 {
     /**
      * Creates command with form data for adding new root category
