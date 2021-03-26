@@ -99,7 +99,7 @@
                     <i class="material-icons">check</i>
                     <a class="multishop-modal-color"{% if shop.color is not empty %} style="background-color: {{shop.color}};"{% endif %} href="{{ getAdminLink('AdminShop', true, {'shop_id' : shop.id, 'updateshop' : true}) }}" data-toggle="popover" data-trigger="hover" data-placement="top" data-content="{{ "Edit color"|trans({}, 'Admin.Global') }}" data-original-title="" title=""></a>
                   </span>
-                    <a class="multishop-modal-shop-name" href="{{ app.request.requestURI ~ '&setShopContext=s-' ~ shop.id }}">{{ shop.name }}</a>
+                    <a class="multishop-modal-shop-name{% if shop.hasMainUrl() == false %} multishop-modal-no-url">{{ shop.name }}</a>{% else %}" href="{{ app.request.requestURI ~ '&setShopContext=s-' ~ shop.id }}">{{ shop.name }}</a>{% endif %}
                   </div>
                   {% if shop.hasMainUrl() %}
                     <a class="multishop-modal-shop-view" href="{{ link.getBaseLink(shop.id) }}" target="_blank" rel="noreferrer">{{ "View my shop"|trans({}, 'Admin.Navigation.Header') }} <i class="material-icons">visibility</i></a>
