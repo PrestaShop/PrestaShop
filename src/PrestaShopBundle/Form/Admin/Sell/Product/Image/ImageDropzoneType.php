@@ -44,6 +44,8 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
  */
 class ImageDropzoneType extends TranslatorAwareType
 {
+    use PrestaShopTranslatorTrait;
+
     /**
      * {@inheritDoc}
      */
