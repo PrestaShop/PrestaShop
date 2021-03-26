@@ -30,9 +30,13 @@ namespace Tests\Integration\Behaviour\Features\Context\Domain\Product\Combinatio
 
 use Behat\Gherkin\Node\TableNode;
 use PHPUnit\Framework\Assert;
+use PrestaShop\PrestaShop\Core\Domain\Product\AttributeGroup\Attribute\QueryResult\Attribute;
+use PrestaShop\PrestaShop\Core\Domain\Product\AttributeGroup\Query\GetProductAttributeGroups;
+use PrestaShop\PrestaShop\Core\Domain\Product\AttributeGroup\QueryResult\AttributeGroup;
 use PrestaShop\PrestaShop\Core\Domain\Product\Combination\Command\GenerateProductCombinationsCommand;
 use PrestaShop\PrestaShop\Core\Domain\Product\Exception\InvalidProductTypeException;
 use Product;
+use RuntimeException;
 use Tests\Integration\Behaviour\Features\Context\Util\PrimitiveUtils;
 
 class GenerateCombinationFeatureContext extends AbstractCombinationFeatureContext
@@ -117,5 +121,68 @@ class GenerateCombinationFeatureContext extends AbstractCombinationFeatureContex
         }
 
         return $groupedAttributeIds;
+    }
+
+    /**
+     * @Then product :productReference should have following attribute groups:
+     *
+     * @param string $productReference
+     * @param TableNode $table
+     */
+    public function assertProductAttributes(string $productReference, TableNode $table): void
+    {
+        $groupedReferences = $table->getRowsHash();
+        foreach ($groupedReferences as $attributeGroupReference => $attributeReferences) {
+            $groupedReferences[$attributeGroupReference] = PrimitiveUtils::castStringArrayIntoArray($attributeReferences);
+        }
+
+        $attributeGroups = $this->getQueryBus()->handle(new GetProductAttributeGroups(
+            (int) $this->getSharedStorage()->get($productReference),
+            $this->getDefaultLangId()
+        ));
+
+        Assert::assertEquals(count($groupedReferences), count($attributeGroups));
+        /** @var AttributeGroup $attributeGroup */
+        foreach ($attributeGroups as $attributeGroup) {
+            if (!isset($groupedReferences[$attributeGroup->getName()])) {
+                throw new RuntimeException(sprintf(
+                    'Did not expect attribute group %s',
+                    $attributeGroup->getName()
+                ));
+            }
+
+            $groupId = $this->getSharedStorage()->get($attributeGroup->getName());
+            Assert::assertEquals($groupId, $attributeGroup->getAttributeGroupId());
+            $attributeReferences = $groupedReferences[$attributeGroup->getName()];
+
+            Assert::assertEquals(count($attributeReferences), count($attributeGroup->getAttributes()));
+            /** @var Attribute $attribute */
+            foreach ($attributeGroup->getAttributes() as $attribute) {
+                if (!in_array($attribute->getName(), $attributeReferences)) {
+                    throw new RuntimeException(sprintf(
+                        'Did not expect attribute %s',
+                        $attribute->getName()
+                    ));
+                }
+
+                $attributeId = $this->getSharedStorage()->get($attribute->getName());
+                Assert::assertEquals($attributeId, $attribute->getAttributeId());
+            }
+        }
+    }
+
+    /**
+     * @Then product :productReference should have no attribute groups
+     *
+     * @param string $productReference
+     */
+    public function assertNoProductAttributes(string $productReference): void
+    {
+        $attributeGroups = $this->getQueryBus()->handle(new GetProductAttributeGroups(
+            (int) $this->getSharedStorage()->get($productReference),
+            $this->getDefaultLangId()
+        ));
+
+        Assert::assertEmpty($attributeGroups);
     }
 }
