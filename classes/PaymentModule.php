@@ -730,7 +730,9 @@ abstract class PaymentModuleCore extends Module
             if (self::DEBUG_MODE) {
                 PrestaShopLogger::addLog('PaymentModule::validateOrder - End of validateOrder', 1, null, 'Cart', (int) $id_cart, true);
             }
-
+            Hook::exec('actionValidateOrderAfter', [
+                'order' => $order,
+            ]);
             return true;
         } else {
             $error = $this->trans('Cart cannot be loaded or an order has already been placed using this cart', [], 'Admin.Payment.Notification');
