@@ -7,7 +7,6 @@ class OrderHistory extends FOBasePage {
 
     this.pageTitle = 'Order details';
     this.successMessageText = 'Message successfully sent';
-    this.messageSend = 'Test';
 
     // Selectors
     this.orderReturnForm = '#order-return-form';
@@ -30,14 +29,15 @@ class OrderHistory extends FOBasePage {
   }
 
   /**
-   *
+   * Add a message to order history
    * @param page
    * @param messageOption
-   * @returns {Promise<*>}
+   * @param messageText
+   * @returns {Promise<string>}
    */
-  async addAMessage(page, messageOption) {
+  async addAMessage(page, messageOption, messageText) {
     await this.selectByVisibleText(page, this.productIdSelect, messageOption);
-    await this.setValue(page, this.messageTextarea, this.messageSend);
+    await this.setValue(page, this.messageTextarea, messageText);
     await this.clickAndWaitForNavigation(page, this.submitMessageButton);
     return this.getTextContent(page, this.alertSuccessBlock);
   }

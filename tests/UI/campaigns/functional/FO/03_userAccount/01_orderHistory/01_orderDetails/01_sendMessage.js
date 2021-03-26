@@ -4,11 +4,14 @@ const {expect} = require('chai');
 const helper = require('@utils/helpers');
 const loginCommon = require('@commonTests/loginBO');
 const {Statuses} = require('@data/demo/orderStatuses');
+const faker = require('faker');
 
 // Import data
 const {PaymentMethods} = require('@data/demo/paymentMethods');
 const {DefaultCustomer} = require('@data/demo/customer');
 const {Products} = require('@data/demo/products');
+
+const messageSend = faker.lorem.sentence().substring(0, 35).trim();
 
 // Importing pages
 // FO
@@ -197,7 +200,7 @@ describe('Send a message with an ordered product', async () => {
 
       await foOrderHistoryPage.goToDetailsPage(page);
 
-      const successMessageText = await orderDetails.addAMessage(page, messageOption);
+      const successMessageText = await orderDetails.addAMessage(page, messageOption, messageSend);
       await expect(successMessageText).to.equal(orderDetails.successMessageText);
     });
   });
@@ -245,7 +248,7 @@ describe('Send a message with an ordered product', async () => {
       await testContext.addContextItem(this, 'testIdentifier', 'checkMessage', baseContext);
 
       const email = await customerServicePage.getTextColumn(page, 1, 'message');
-      await expect(email).to.contain(orderDetails.messageSend);
+      await expect(email).to.contain(messageSend);
     });
 
     it('should delete the message', async function () {
