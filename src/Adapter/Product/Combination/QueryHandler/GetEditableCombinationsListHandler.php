@@ -29,6 +29,7 @@ declare(strict_types=1);
 namespace PrestaShop\PrestaShop\Adapter\Product\Combination\QueryHandler;
 
 use PrestaShop\Decimal\DecimalNumber;
+use PrestaShop\PrestaShop\Adapter\Attribute\Repository\AttributeRepository;
 use PrestaShop\PrestaShop\Adapter\Product\AbstractProductHandler;
 use PrestaShop\PrestaShop\Adapter\Product\Combination\Repository\CombinationRepository;
 use PrestaShop\PrestaShop\Adapter\Product\Repository\ProductRepository;
@@ -67,21 +68,29 @@ final class GetEditableCombinationsListHandler extends AbstractProductHandler im
     private $stockAvailableRepository;
 
     /**
+     * @var AttributeRepository
+     */
+    private $attributeRepository;
+
+    /**
      * @param CombinationRepository $combinationRepository
      * @param ProductRepository $productRepository
      * @param NumberExtractor $numberExtractor
      * @param StockAvailableRepository $stockAvailableRepository
+     * @param AttributeRepository $attributeRepository
      */
     public function __construct(
         CombinationRepository $combinationRepository,
         ProductRepository $productRepository,
         NumberExtractor $numberExtractor,
-        StockAvailableRepository $stockAvailableRepository
+        StockAvailableRepository $stockAvailableRepository,
+        AttributeRepository $attributeRepository
     ) {
         $this->combinationRepository = $combinationRepository;
         $this->productRepository = $productRepository;
         $this->numberExtractor = $numberExtractor;
         $this->stockAvailableRepository = $stockAvailableRepository;
+        $this->attributeRepository = $attributeRepository;
     }
 
     /**
@@ -101,7 +110,7 @@ final class GetEditableCombinationsListHandler extends AbstractProductHandler im
             return (int) $combination['id_product_attribute'];
         }, $combinations);
 
-        $attributesInformation = $this->combinationRepository->getAttributesInfoByCombinationIds(
+        $attributesInformation = $this->attributeRepository->getAttributesInfoByCombinationIds(
             $combinationIds,
             $query->getLanguageId()
         );
