@@ -378,6 +378,8 @@ class ValidateCoreTest extends TestCase
     {
         return array(
             array(false, 'This is not an array'),
+            array(false, 42),
+            array(false, '42'),
             array(true, [666]),
             array(true, [4, 5, 9, 14]),
             array(true, ['2', 5, 4]),
