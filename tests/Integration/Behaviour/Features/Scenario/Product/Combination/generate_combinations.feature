@@ -37,6 +37,9 @@ Feature: Generate attribute combinations for product in Back Office (BO)
       | product1MBlack | Size - M, Color - Black |                       | [Size:M,Color:Black] | 0               | 0           | 0        | false      |
       | product1MBlue  | Size - M, Color - Blue  |                       | [Size:M,Color:Blue]  | 0               | 0           | 0        | false      |
     And product product1 default combination should be "product1SWhite"
+    And product product1 should have following attribute groups:
+      | Size  | [S,M]              |
+      | Color | [White,Black,Blue] |
 
   Scenario: Product combinations pagination returns correct results
     Given product product1 should have following list of combinations:
