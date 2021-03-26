@@ -65,13 +65,13 @@ Feature: Update product combination suppliers in Back Office (BO)
       | Size  | [S,M]              |
       | Color | [White,Black,Blue] |
     And product "product1" should have following combinations:
-      | reference      | combination name        | combination reference | attributes           | impact on price | final price | quantity | is default |
-      | product1SBlack | Size - S, Color - Black |                       | [Size:S,Color:Black] | 0               | 0           | 0        | false      |
-      | product1Blue   | Size - S, Color - Blue  |                       | [Size:S,Color:Blue]  | 0               | 0           | 0        | false      |
-      | product1MWhite | Size - M, Color - White |                       | [Size:M,Color:White] | 0               | 0           | 0        | false      |
-      | product1MBlack | Size - M, Color - Black |                       | [Size:M,Color:Black] | 0               | 0           | 0        | false      |
-      | product1MBlue  | Size - M, Color - Blue  |                       | [Size:M,Color:Blue]  | 0               | 0           | 0        | false      |
-      | product1SWhite | Size - S, Color - White |                       | [Size:S,Color:White] | 0               | 0           | 0        | true       |
+      | id reference      | combination name        | reference | attributes           | impact on price | final price | quantity | is default |
+      | product1SBlack | Size - S, Color - Black |           | [Size:S,Color:Black] | 0               | 0           | 0        | false      |
+      | product1Blue   | Size - S, Color - Blue  |           | [Size:S,Color:Blue]  | 0               | 0           | 0        | false      |
+      | product1MWhite | Size - M, Color - White |           | [Size:M,Color:White] | 0               | 0           | 0        | false      |
+      | product1MBlack | Size - M, Color - Black |           | [Size:M,Color:Black] | 0               | 0           | 0        | false      |
+      | product1MBlue  | Size - M, Color - Blue  |           | [Size:M,Color:Blue]  | 0               | 0           | 0        | false      |
+      | product1SWhite | Size - S, Color - White |           | [Size:S,Color:White] | 0               | 0           | 0        | true       |
     And combination "product1SWhite" should not have any suppliers assigned
     And combination "product1SBlack" should not have any suppliers assigned
     And combination "product1Blue" should not have any suppliers assigned
