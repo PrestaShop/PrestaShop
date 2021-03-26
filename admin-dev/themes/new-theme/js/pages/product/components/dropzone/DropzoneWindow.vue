@@ -102,7 +102,10 @@
       @change="watchFiles"
     >
 
-    <div class="dropzone-window-label">
+    <div
+      class="dropzone-window-label"
+      v-if="selectedFile !== null"
+    >
       <label
         for="caption-textarea"
         class="control-label"
