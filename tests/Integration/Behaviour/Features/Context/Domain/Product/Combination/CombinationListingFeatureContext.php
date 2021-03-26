@@ -196,13 +196,7 @@ class CombinationListingFeatureContext extends AbstractCombinationFeatureContext
     {
         $searchCriteriaKey = $this->getSearchCriteriaKey($productReference);
         if ($wholeList) {
-            $combinationFilters = new CombinationFilters([
-                'limit' => null,
-                'offset' => null,
-                'orderBy' => null,
-                'sortOrder' => null,
-                'filters' => [],
-            ]);
+            $combinationFilters = null;
         } elseif ($this->getSharedStorage()->exists($searchCriteriaKey)) {
             $combinationFilters = $this->getSharedStorage()->get($searchCriteriaKey);
         } else {
