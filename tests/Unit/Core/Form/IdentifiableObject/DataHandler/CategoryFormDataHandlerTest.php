@@ -32,7 +32,7 @@ function scandir($directory, $sorting_order = null, $context = null)
 {
     return [
         '1-0_thumb.jpg',
-        '1-1_thumb.jpg'
+        '1-1_thumb.jpg',
     ];
 }
 
@@ -40,6 +40,7 @@ namespace Tests\Unit\Core\Form\IdentifiableObject\DataHandler;
 
 use PHPUnit\Framework\TestCase;
 use PrestaShop\PrestaShop\Core\CommandBus\CommandBusInterface;
+use PrestaShop\PrestaShop\Core\Form\IdentifiableObject\DataHandler\AbstractCategoryFormDataHandler;
 use PrestaShop\PrestaShop\Core\Form\IdentifiableObject\DataHandler\CategoryFormDataHandler;
 use PrestaShop\PrestaShop\Core\Image\Uploader\ImageUploaderInterface;
 
@@ -58,14 +59,14 @@ class CategoryFormDataHandlerTest extends TestCase
             $imageUploaderMock
         );
 
-        $reflectionClass = new \ReflectionClass(CategoryFormDataHandler::class);
+        $reflectionClass = new \ReflectionClass(AbstractCategoryFormDataHandler::class);
 
         $reflectionMethod = $reflectionClass->getMethod('getAvailableKeys');
         $reflectionMethod->setAccessible(true);
         $result = $reflectionMethod->invoke($categoryFormDataHandler, 1);
         self::assertEquals(
             [
-                2 => 2
+                2 => 2,
             ],
             $result
         );

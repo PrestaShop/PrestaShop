@@ -58,6 +58,7 @@ final class RootCategoryFormDataHandler extends AbstractCategoryFormDataHandler
         if (isset($data['shop_association'])) {
             $command->setAssociatedShopIds($data['shop_association']);
         }
+
         return $command;
     }
 
