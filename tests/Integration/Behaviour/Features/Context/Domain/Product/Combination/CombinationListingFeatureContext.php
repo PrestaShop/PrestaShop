@@ -67,8 +67,8 @@ class CombinationListingFeatureContext extends AbstractCombinationFeatureContext
         if (isset($dataRows['is default'])) {
             $command->setDefault(PrimitiveUtils::castStringBooleanIntoBoolean($dataRows['is default']));
         }
-        if (isset($dataRows['combination reference'])) {
-            $command->setReference($dataRows['combination reference']);
+        if (isset($dataRows['reference'])) {
+            $command->setReference($dataRows['reference']);
         }
     }
 
@@ -135,8 +135,8 @@ class CombinationListingFeatureContext extends AbstractCombinationFeatureContext
             }
         }
 
-        if (isset($dataRows['combination reference'])) {
-            $filters[$this->getDbField('combination reference')] = $dataRows['combination reference'];
+        if (isset($dataRows['reference'])) {
+            $filters[$this->getDbField('reference')] = $dataRows['reference'];
         }
 
         if (isset($dataRows['is default'])) {
@@ -176,7 +176,6 @@ class CombinationListingFeatureContext extends AbstractCombinationFeatureContext
     private function getDbField(string $field): string
     {
         $fieldMap = [
-            'combination reference' => 'reference',
             'impact on price' => 'price',
             'is default' => 'default_on',
         ];
@@ -218,9 +217,9 @@ class CombinationListingFeatureContext extends AbstractCombinationFeatureContext
             'Unexpected combinations count'
         );
 
-        $idsByReference = $this->assertListedCombinationsProperties($dataRows, $combinationsList->getCombinations());
+        $idsByIdReferences = $this->assertListedCombinationsProperties($dataRows, $combinationsList->getCombinations());
 
-        foreach ($idsByReference as $reference => $id) {
+        foreach ($idsByIdReferences as $reference => $id) {
             $this->getSharedStorage()->set($reference, $id);
         }
     }
@@ -250,11 +249,11 @@ class CombinationListingFeatureContext extends AbstractCombinationFeatureContext
      * @param array $expectedDataRows
      * @param EditableCombinationForListing[] $listCombinations
      *
-     * @return array<string, int> combinations [reference => id] list
+     * @return array<string, int> combinations [id reference => id] list
      */
     private function assertListedCombinationsProperties(array $expectedDataRows, array $listCombinations): array
     {
-        $idsByReference = [];
+        $idsByIdReferences = [];
         foreach ($listCombinations as $key => $editableCombinationForListing) {
             $expectedCombination = $expectedDataRows[$key];
 
@@ -264,7 +263,7 @@ class CombinationListingFeatureContext extends AbstractCombinationFeatureContext
                 'Unexpected combination name'
             );
             Assert::assertSame(
-                $expectedCombination['combination reference'],
+                $expectedCombination['reference'],
                 $editableCombinationForListing->getReference(),
                 'Unexpected combination reference'
             );
@@ -293,10 +292,10 @@ class CombinationListingFeatureContext extends AbstractCombinationFeatureContext
 
             $this->assertAttributesInfo($expectedAttributesInfo, $editableCombinationForListing->getAttributesInformation());
 
-            $idsByReference[$expectedCombination['reference']] = $editableCombinationForListing->getCombinationId();
+            $idsByIdReferences[$expectedCombination['id reference']] = $editableCombinationForListing->getCombinationId();
         }
 
-        return $idsByReference;
+        return $idsByIdReferences;
     }
 
     /**
