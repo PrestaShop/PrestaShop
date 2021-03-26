@@ -561,6 +561,18 @@ class ProductController extends FrameworkBundleAdminController
 
                     $adminProductController->processWarehouses();
 
+                    //Will be deprecated when all controls will be done in $form->isValid()
+                    if (count($adminProductController->errors)) {
+                        $taberror = [];
+                        foreach ($adminProductController->errors as $error) {
+                            $taberror['error'][] = $error;
+                        }
+
+                        return $this->returnErrorJsonResponse(
+                            $taberror,
+                            Response::HTTP_BAD_REQUEST
+                        );
+                    }
                     $response = new JsonResponse();
                     $response->setData([
                         'product' => $product,
