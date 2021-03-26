@@ -399,7 +399,7 @@
       /**
        * Save selected file
        */
-      async saveSelectedFile(captionValue, coverData) {
+      async saveSelectedFile(captionValue, isCover) {
         if (!this.selectedFiles.length) {
           return;
         }
@@ -409,11 +409,9 @@
         const selectedFile = this.selectedFiles[0];
 
         if (
-          coverData.file
-          && this.selectedFiles.length === 1
-          && coverData.file.image_id === selectedFile.image_id
+          this.selectedFiles.length === 1
         ) {
-          selectedFile.is_cover = coverData.value;
+          selectedFile.is_cover = isCover;
         }
 
         selectedFile.legends = captionValue;

@@ -198,7 +198,7 @@
     data() {
       return {
         captionValue: {},
-        coverData: {},
+        coverData: false,
       };
     },
     watch: {
@@ -215,6 +215,7 @@
           });
         } else {
           this.captionValue = this.selectedFile.legends;
+          this.coverData = this.selectedFile.is_cover;
         }
       },
     },
@@ -259,10 +260,7 @@
        * Cache cover data
        */
       coverChanged(event) {
-        this.coverData = {
-          file: this.selectedFiles[0],
-          value: event.target.value,
-        };
+        this.coverData = event.target.value;
       },
     },
   };
