@@ -20,7 +20,6 @@ Feature: Generate attribute combinations for product in Back Office (BO)
     And attribute "Red" named "Red" in en language exists
 
   Scenario: Generate product combinations
-    Given product "product1" combinations list search criteria is set to defaults
     When I add product "product1" with following information:
       | name[en-US] | universal T-shirt |
       | type        | combinations      |
@@ -29,12 +28,12 @@ Feature: Generate attribute combinations for product in Back Office (BO)
     When I generate combinations for product product1 using following attributes:
       | Size  | [S,M]              |
       | Color | [White,Black,Blue] |
-    Then I should see following combinations list of product "product1":
+    Then product "product1" should have following combinations:
       | reference      | combination name        | combination reference | attributes           | impact on price | final price | quantity | is default |
-      | product1SWhite | Size - S, Color - White |                       | [Size:S,Color:White] | 0               | 0           | 0        | true       |
       | product1SBlack | Size - S, Color - Black |                       | [Size:S,Color:Black] | 0               | 0           | 0        | false      |
       | product1Blue   | Size - S, Color - Blue  |                       | [Size:S,Color:Blue]  | 0               | 0           | 0        | false      |
       | product1MWhite | Size - M, Color - White |                       | [Size:M,Color:White] | 0               | 0           | 0        | false      |
       | product1MBlack | Size - M, Color - Black |                       | [Size:M,Color:Black] | 0               | 0           | 0        | false      |
       | product1MBlue  | Size - M, Color - Blue  |                       | [Size:M,Color:Blue]  | 0               | 0           | 0        | false      |
+      | product1SWhite | Size - S, Color - White |                       | [Size:S,Color:White] | 0               | 0           | 0        | true       |
     And product product1 default combination should be "product1SWhite"
