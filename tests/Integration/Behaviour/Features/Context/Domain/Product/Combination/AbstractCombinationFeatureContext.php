@@ -43,18 +43,22 @@ abstract class AbstractCombinationFeatureContext extends AbstractProductFeatureC
      *
      * @return CombinationListForEditing
      */
-    protected function getCombinationsList(string $productReference, CombinationFilters $combinationFilters): CombinationListForEditing
+    protected function getCombinationsList(string $productReference, ?CombinationFilters $combinationFilters = null): CombinationListForEditing
     {
-        $combinationFilters->addFilter(['product_id' => $this->getSharedStorage()->get($productReference)]);
+        $productIdFilter = ['product_id' => $this->getSharedStorage()->get($productReference)];
+
+        if ($combinationFilters) {
+            $combinationFilters->addFilter($productIdFilter);
+        }
 
         return $this->getQueryBus()->handle(new GetEditableCombinationsList(
             $this->getSharedStorage()->get($productReference),
             $this->getDefaultLangId(),
-            $combinationFilters->getLimit(),
-            $combinationFilters->getOffset(),
-            $combinationFilters->getOrderBy(),
-            $combinationFilters->getOrderWay(),
-            $combinationFilters->getFilters()
+            $combinationFilters ? $combinationFilters->getLimit() : null,
+            $combinationFilters ? $combinationFilters->getOffset() : null,
+            $combinationFilters ? $combinationFilters->getOrderBy() : null,
+            $combinationFilters ? $combinationFilters->getOrderWay() : null,
+            $combinationFilters ? $combinationFilters->getFilters() : $productIdFilter
         ));
     }
 
