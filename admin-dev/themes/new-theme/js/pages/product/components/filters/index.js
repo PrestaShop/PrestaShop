@@ -1,4 +1,4 @@
-{#**
+/**
  * Copyright since 2007 PrestaShop SA and Contributors
  * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
  *
@@ -21,16 +21,33 @@
  * @author    PrestaShop SA and Contributors <contact@prestashop.com>
  * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
- *#}
+ */
+import Vue from 'vue';
+import VueI18n from 'vue-i18n';
+import ReplaceFormatter from '@vue/plugins/vue-i18n/replace-formatter';
+import Filters from './Filters.vue';
 
-<div role="tabpanel" class="form-contenttab tab-pane container-fluid" id="combinations-tab">
-  <div id="combinations_filters" data-product-id="{{ productId }}"></div>
+Vue.use(VueI18n);
 
-  {{ render(controller('PrestaShopBundle:Admin\\Sell\\Catalog\\Product\\Combination:listForm', {
-    'productId': productId,
-  })) }}
+export default function initCombinationsFilters(combinationsFiltersSelector) {
+  const container = document.querySelector(combinationsFiltersSelector);
 
-  <div id="combinations-stock-availability">
-    {#    @todo: render stock availability preferences here when extracted to a reusable component. check StockType.php#}
-  </div>
-</div>
+  const translations = {};
+  const i18n = new VueI18n({
+    locale: 'en',
+    formatter: new ReplaceFormatter(),
+    messages: {en: translations},
+  });
+
+  const productId = Number(container.dataset.productId);
+
+  return new Vue({
+    el: combinationsFiltersSelector,
+    template: '<filters :productId=productId />',
+    components: {Filters},
+    i18n,
+    data: {
+      productId,
+    },
+  });
+}

@@ -1,0 +1,174 @@
+<!--**
+ * Copyright since 2007 PrestaShop SA and Contributors
+ * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
+ *
+ * NOTICE OF LICENSE
+ *
+ * This source file is subject to the Open Software License (OSL 3.0)
+ * that is bundled with this package in the file LICENSE.md.
+ * It is also available through the world-wide-web at this URL:
+ * https://opensource.org/licenses/OSL-3.0
+ * If you did not receive a copy of the license and are unable to
+ * obtain it through the world-wide-web, please send an email
+ * to license@prestashop.com so we can send you a copy immediately.
+ *
+ * DISCLAIMER
+ *
+ * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
+ * versions in the future. If you wish to customize PrestaShop for your
+ * needs please refer to https://devdocs.prestashop.com/ for more information.
+ *
+ * @author    PrestaShop SA and Contributors <contact@prestashop.com>
+ * @copyright Since 2007 PrestaShop SA and Contributors
+ * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
+ *-->
+<template>
+  <div class="combinations-filters">
+    <label
+      for="caption-textarea"
+      class="control-label"
+    >Filter by:</label>
+
+    <div class="combinations-filters-line">
+      <filter-dropdown
+        :key="filter.id"
+        v-for="filter in filters"
+        :childrens="filter.childrens"
+        :label="filter.name"
+        @addFilter="addFilter"
+        @removeFilter="removeFilter"
+      />
+      <button
+        v-if="selectedFilters.length > 0"
+        class="btn btn-outline-secondary combinations-filters-clear"
+        @click="clearAll"
+      >
+        <i class="material-icons">close</i> Clear {{ selectedFilters.length }} filters
+      </button>
+    </div>
+  </div>
+</template>
+
+<script>
+  import {
+    getFilters,
+  } from '@pages/product/services/filters';
+  import FilterDropdown from '@pages/product/components/filters/FilterDropdown';
+
+  export default {
+    name: 'Filters',
+    data() {
+      return {
+        filters: [
+          {
+            id: 1,
+            name: 'Size',
+            childrens: [
+              {
+                id: 1,
+                name: 'Plain',
+              },
+              {
+                id: 2,
+                name: 'Lined',
+              },
+              {
+                id: 3,
+                name: 'Squared',
+              },
+              {
+                id: 4,
+                name: 'Blank',
+              },
+            ],
+          },
+          {
+            id: 2,
+            name: 'Color',
+            childrens: [
+              {
+                id: 5,
+                name: 'Plain',
+              },
+              {
+                id: 6,
+                name: 'Lined',
+              },
+              {
+                id: 7,
+                name: 'Squared',
+              },
+              {
+                id: 8,
+                name: 'Blank',
+              },
+            ],
+          },
+        ],
+        selectedFilters: [],
+      };
+    },
+    props: {
+      productId: {
+        type: Number,
+        required: true,
+      },
+    },
+    components: {
+      FilterDropdown,
+    },
+    computed: {},
+    updated() {
+      const clearButton = document.querySelector('.combinations-filters-clear');
+
+      if (clearButton) {
+        clearButton.addEventListener('click', (e) => {
+          e.preventDefault();
+        });
+      }
+      // this.initFilters();
+    },
+    methods: {
+      /**
+       * This methods is used to initialize product filters
+       */
+      async initFilters() {
+        try {
+          const filters = await getFilters(this.productId);
+          this.filters = filters;
+        } catch (error) {
+          window.$.growl.error({message: error});
+        }
+      },
+      addFilter(filter) {
+        this.selectedFilters.push(filter);
+      },
+      removeFilter(filter) {
+        this.selectedFilters = this.selectedFilters.filter((e) => filter.id !== e.id);
+      },
+      clearAll() {
+        this.selectedFilters = [];
+        this.$emit('clearAll');
+      },
+    },
+  };
+</script>
+
+<style lang="scss" type="text/scss">
+@import "~@scss/config/_settings.scss";
+
+  .combinations-filters {
+    .control-label {
+      font-weight: 600;
+      color: #000;
+      margin-botton: 1rem;
+    }
+
+    &-line {
+      display: flex;
+      align-items: flex-start;
+      flex-wrap: wrap;
+      margin: 0 -.35rem;
+    }
+  }
+</style>
