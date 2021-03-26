@@ -159,7 +159,7 @@ abstract class AbstractCategoryFormDataHandler implements FormDataHandlerInterfa
     /**
      * @param int $categoryId
      *
-     * @return array
+     * @return array<int, int>
      */
     protected function getAvailableKeys(int $categoryId): array
     {
