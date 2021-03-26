@@ -1192,7 +1192,7 @@ class ValidateCore
     public static function isArrayWithIds($ids)
     {
         if (count($ids) < 1) {
-            return false
+            return false;
         }
 
         foreach ($ids as $id) {
