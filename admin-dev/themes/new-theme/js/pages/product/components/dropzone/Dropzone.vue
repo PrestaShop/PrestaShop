@@ -71,7 +71,7 @@
       :selected-files="selectedFiles"
       :dropzone="dropzone"
       @unselectAll="unselectAll"
-      @removeSelection="removeSelection"
+      @removeSelection="toggleModal"
       @selectAll="selectAll"
       @saveSelectedFile="saveSelectedFile"
       @replacedFile="manageReplacedFile"
@@ -79,6 +79,17 @@
       :locales="locales"
       :selected-locale="selectedLocale"
       :loading="buttonLoading"
+    />
+
+    <modal
+      v-if="showModal"
+      :confirmation="true"
+      :modal-title="$t('modal.title', {
+        '%filesNb%': this.selectedFiles.length,
+      })"
+      :confirm-label="$t('modal.accept')"
+      :cancel-label="$t('modal.close')"
+      @confirm="removeSelection"
     />
 
     <div class="dz-template d-none">
@@ -129,7 +140,7 @@
   } from '@pages/product/services/images';
   import ProductMap from '@pages/product/product-map';
   import ProductEventMap from '@pages/product/product-event-map';
-  import ConfirmModal from '@components/modal';
+  import Modal from '@vue/components/Modal';
   import DropzoneWindow from './DropzoneWindow';
 
   const {$} = window;
@@ -154,6 +165,7 @@
         loading: true,
         selectedLocale: null,
         buttonLoading: false,
+        showModal: false,
       };
     },
     props: {
@@ -176,6 +188,7 @@
     },
     components: {
       DropzoneWindow,
+      Modal,
     },
     computed: {},
     mounted() {
@@ -321,60 +334,48 @@
       /**
        * Method to remove every selected files from the dropzone
        */
-      removeSelection() {
-        new ConfirmModal(
-          {
-            id: 'dropzone-confirm-modal',
-            confirmTitle: this.$t('modal.title', {
-              '%filesNb%': this.selectedFiles.length,
+      async removeSelection() {
+        let errorMessage = false;
+        let isCoverImageRemoved = false;
+        const nbFiles = this.selectedFiles.length;
+
+        await Promise.all(
+          this.selectedFiles.map(async (file) => {
+            try {
+              await removeProductImage(file.image_id);
+              this.dropzone.removeFile(file);
+
+              this.files = this.files.filter((e) => file !== e);
+              this.selectedFiles = this.selectedFiles.filter(
+                (e) => file !== e,
+              );
+
+              if (file.is_cover) {
+                isCoverImageRemoved = true;
+              }
+            } catch (error) {
+              errorMessage = error.responseJSON ? error.responseJSON.error : error;
+            }
+          }),
+        );
+
+        this.removeTooltips();
+
+        if (errorMessage) {
+          $.growl.error({message: errorMessage});
+        } else {
+          $.growl({
+            message: this.$t('delete.success', {
+              '%filesNb%': nbFiles,
             }),
-            confirmMessage: '',
-            closeButtonLabel: this.$t('modal.close'),
-            confirmButtonLabel: this.$t('modal.accept'),
-            confirmButtonClass: 'btn-primary',
-          },
-          async () => {
-            let errorMessage = false;
-            let isCoverImageRemoved = false;
-            const nbFiles = this.selectedFiles.length;
+          });
+        }
 
-            await Promise.all(
-              this.selectedFiles.map(async (file) => {
-                try {
-                  await removeProductImage(file.image_id);
-                  this.dropzone.removeFile(file);
+        if (isCoverImageRemoved) {
+          this.resetDropzone();
+        }
 
-                  this.files = this.files.filter((e) => file !== e);
-                  this.selectedFiles = this.selectedFiles.filter(
-                    (e) => file !== e,
-                  );
-
-                  if (file.is_cover) {
-                    isCoverImageRemoved = true;
-                  }
-                } catch (error) {
-                  errorMessage = error.responseJSON ? error.responseJSON.error : error;
-                }
-              }),
-            );
-
-            this.removeTooltips();
-
-            if (errorMessage) {
-              $.growl.error({message: errorMessage});
-            } else {
-              $.growl({
-                message: this.$t('delete.success', {
-                  '%filesNb%': nbFiles,
-                }),
-              });
-            }
-
-            if (isCoverImageRemoved) {
-              this.resetDropzone();
-            }
-          },
-        ).show();
+        this.toggleModal();
       },
       /**
        * Method to manage checkboxes of files mainly used on selectAll and unselectAll
@@ -500,6 +501,9 @@
         this.dropzone.destroy();
         this.dropzone = null;
         this.initProductImages();
+      },
+      toggleModal() {
+        this.showModal = !this.showModal;
       },
     },
   };
