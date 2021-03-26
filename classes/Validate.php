@@ -1187,15 +1187,17 @@ class ValidateCore
     /**
      * @param array $ids
      *
-     * @return bool return true if the array contain only unsigned int value
+     * @return bool return true if the array contain only unsigned int value and not empty
      */
     public static function isArrayWithIds($ids)
     {
-        if (count($ids)) {
-            foreach ($ids as $id) {
-                if ($id == 0 || !Validate::isUnsignedInt($id)) {
-                    return false;
-                }
+        if (count($ids) < 1) {
+            return false
+        }
+
+        foreach ($ids as $id) {
+            if ($id == 0 || !Validate::isUnsignedInt($id)) {
+                return false;
             }
         }
 
