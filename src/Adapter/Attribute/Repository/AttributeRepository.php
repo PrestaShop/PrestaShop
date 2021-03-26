@@ -32,6 +32,7 @@ use Doctrine\DBAL\Connection;
 use PrestaShop\PrestaShop\Adapter\AbstractObjectModelRepository;
 use PrestaShop\PrestaShop\Core\Domain\Language\ValueObject\LanguageId;
 use PrestaShop\PrestaShop\Core\Domain\Product\AttributeGroup\Attribute\Exception\AttributeNotFoundException;
+use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductId;
 use RuntimeException;
 
 /**
@@ -85,6 +86,22 @@ class AttributeRepository extends AbstractObjectModelRepository
     }
 
     /**
+     * @param ProductId $productId
+     * @param LanguageId $langId
+     *
+     * @return array[]
+     */
+    public function getAttributesInfoByProductId(ProductId $productId, LanguageId $langId): array
+    {
+        $associatedProductAttributes = $this->getProductAttributes($productId->getValue());
+        $attributeIds = array_unique(array_map(function (array $attributeByCombination): int {
+            return (int) $attributeByCombination['id_attribute'];
+        }, $associatedProductAttributes));
+
+        return $this->getAttributesInformation($attributeIds, $langId->getValue());
+    }
+
+    /**
      * @param int[] $combinationIds
      * @param LanguageId $langId
      *
@@ -129,6 +146,25 @@ class AttributeRepository extends AbstractObjectModelRepository
     }
 
     /**
+     * @param int $productId
+     *
+     * @return array<int, array<string, mixed>>
+     */
+    private function getProductAttributes(int $productId): array
+    {
+        $qb = $this->connection->createQueryBuilder();
+        $qb
+            ->select('pac.id_attribute')
+            ->from($this->dbPrefix . 'product_attribute_combination', 'pac')
+            ->innerJoin('pac', $this->dbPrefix . 'product_attribute', 'pa', 'pac.id_product_attribute = pa.id_product_attribute')
+            ->where('pa.id_product = :productId')
+            ->setParameter('productId', $productId)
+        ;
+
+        return $qb->execute()->fetchAll();
+    }
+
+    /**
      * @param int[] $attributeIds
      * @param int $langId
      *
@@ -137,10 +173,11 @@ class AttributeRepository extends AbstractObjectModelRepository
     private function getAttributesInformation(array $attributeIds, int $langId): array
     {
         $qb = $this->connection->createQueryBuilder();
-        $qb->select('a.id_attribute')
+        $qb->select('a.id_attribute, a.position, a.color')
             ->addSelect('ag.id_attribute_group')
             ->addSelect('al.name AS attribute_name')
             ->addSelect('agl.name AS attribute_group_name')
+            ->addSelect('agl.public_name AS attribute_group_public_name')
             ->from($this->dbPrefix . 'attribute', 'a')
             ->leftJoin(
                 'a',
