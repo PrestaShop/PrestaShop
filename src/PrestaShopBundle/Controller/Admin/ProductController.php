@@ -561,6 +561,16 @@ class ProductController extends FrameworkBundleAdminController
 
                     $adminProductController->processWarehouses();
 
+                    if (count($adminProductController->errors)) {
+                        $taberror = [];
+                        foreach($adminProductController->errors as $error) {
+                            $taberror['error'][] = $error;
+                        }
+                        return $this->returnErrorJsonResponse(
+                            $taberror,
+                            Response::HTTP_BAD_REQUEST
+                        );
+                    }
                     $response = new JsonResponse();
                     $response->setData([
                         'product' => $product,
