@@ -31,7 +31,7 @@ use PrestaShop\PrestaShop\Adapter\Product\PriceFormatter;
 use PrestaShop\PrestaShop\Adapter\Product\ProductColorsRetriever;
 use PrestaShop\PrestaShop\Core\Addon\Module\ModuleManagerBuilder;
 use PrestaShop\PrestaShop\Core\Product\ProductExtraContentFinder;
-use PrestaShop\PrestaShop\Core\Product\ProductInterface;
+use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\RedirectType;
 
 class ProductControllerCore extends ProductPresentingFrontControllerCore
 {
@@ -145,43 +145,43 @@ class ProductControllerCore extends ProductPresentingFrontControllerCore
                     ];
                 } else {
                     if (!$this->product->id_type_redirected) {
-                        if (in_array($this->product->redirect_type, [ProductInterface::REDIRECT_TYPE_CATEGORY_MOVED_PERMANENTLY, ProductInterface::REDIRECT_TYPE_CATEGORY_FOUND])) {
+                        if (in_array($this->product->redirect_type, [RedirectType::TYPE_CATEGORY_PERMANENT, RedirectType::TYPE_CATEGORY_TEMPORARY])) {
                             $this->product->id_type_redirected = $this->product->id_category_default;
                         } else {
-                            $this->product->redirect_type = ProductInterface::REDIRECT_TYPE_NOT_FOUND;
+                            $this->product->redirect_type = RedirectType::TYPE_NOT_FOUND;
                         }
-                    } elseif (in_array($this->product->redirect_type, [ProductInterface::REDIRECT_TYPE_PRODUCT_MOVED_PERMANENTLY, ProductInterface::REDIRECT_TYPE_PRODUCT_FOUND]) && $this->product->id_type_redirected == $this->product->id) {
-                        $this->product->redirect_type = ProductInterface::REDIRECT_TYPE_NOT_FOUND;
+                    } elseif (in_array($this->product->redirect_type, [RedirectType::TYPE_PRODUCT_PERMANENT, RedirectType::TYPE_PRODUCT_TEMPORARY]) && $this->product->id_type_redirected == $this->product->id) {
+                        $this->product->redirect_type = RedirectType::TYPE_NOT_FOUND;
                     }
 
                     switch ($this->product->redirect_type) {
-                        case ProductInterface::REDIRECT_TYPE_PRODUCT_MOVED_PERMANENTLY:
+                        case RedirectType::TYPE_PRODUCT_PERMANENT:
                             header('HTTP/1.1 301 Moved Permanently');
                             header('Location: ' . $this->context->link->getProductLink($this->product->id_type_redirected));
                             exit;
 
                         break;
-                        case ProductInterface::REDIRECT_TYPE_PRODUCT_FOUND:
+                        case RedirectType::TYPE_PRODUCT_TEMPORARY:
                             header('HTTP/1.1 302 Moved Temporarily');
                             header('Cache-Control: no-cache');
                             header('Location: ' . $this->context->link->getProductLink($this->product->id_type_redirected));
                             exit;
 
                         break;
-                        case ProductInterface::REDIRECT_TYPE_CATEGORY_MOVED_PERMANENTLY:
+                        case RedirectType::TYPE_CATEGORY_PERMANENT:
                             header('HTTP/1.1 301 Moved Permanently');
                             header('Location: ' . $this->context->link->getCategoryLink($this->product->id_type_redirected));
                             exit;
 
                             break;
-                        case ProductInterface::REDIRECT_TYPE_CATEGORY_FOUND:
+                        case RedirectType::TYPE_CATEGORY_TEMPORARY:
                             header('HTTP/1.1 302 Moved Temporarily');
                             header('Cache-Control: no-cache');
                             header('Location: ' . $this->context->link->getCategoryLink($this->product->id_type_redirected));
                             exit;
 
                             break;
-                        case ProductInterface::REDIRECT_TYPE_NOT_FOUND:
+                        case RedirectType::TYPE_NOT_FOUND:
                         default:
                             header('HTTP/1.1 404 Not Found');
                             header('Status: 404 Not Found');
