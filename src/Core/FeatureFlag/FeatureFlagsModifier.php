@@ -123,7 +123,7 @@ class FeatureFlagsModifier implements DataConfigurationInterface
      *
      * @return FeatureFlag|null return null if feature flag cannot be found
      */
-    public function getOneFeatureFlagByName(string $featureFlagName)
+    public function getOneFeatureFlagByName(string $featureFlagName): ?FeatureFlag
     {
         return $this->doctrineEntityManager->getRepository('PrestaShopBundle:FeatureFlag')->findOneBy(['name' => $featureFlagName]);
     }
