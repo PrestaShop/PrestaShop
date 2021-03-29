@@ -44,8 +44,6 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
  */
 class ImageDropzoneType extends TranslatorAwareType
 {
-    use PrestaShopTranslatorTrait;
-
     /**
      * {@inheritDoc}
      */
@@ -80,7 +78,7 @@ class ImageDropzoneType extends TranslatorAwareType
                 'window.zoom' => $this->trans('Zoom on selection', 'Admin.Actions'),
                 'modal.close' => $this->trans('Cancel', 'Admin.Actions'),
                 'modal.accept' => $this->trans('Delete', 'Admin.Actions'),
-                'modal.title' => str_replace('|', ' | ', $this->transChoice('Are you sure you want to delete the selected image?|Are you sure you want to delete the %filesNb% selected images?', 'Admin.Catalog.Notification')),
+                'modal.title' => $this->trans('Are you sure you want to delete the selected image?|Are you sure you want to delete the %filesNb% selected images?', 'Admin.Catalog.Notification'),
                 'delete.success' => $this->trans('The selection has been successfully deleted.', 'Admin.Notifications.Success'),
                 'window.fileisTooLarge' => $this->trans(
                     'The file is too large. Maximum size allowed is => [1] MB. The file you are trying to upload is [2] MB.',

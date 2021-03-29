@@ -84,7 +84,7 @@
     <modal
       v-if="isModalShown"
       :confirmation="true"
-      :modal-title="$tc('modal.title', filesNb, {
+      :modal-title="$tc('modal.title', this.selectedFiles.length, {
         '%filesNb%': this.selectedFiles.length,
       })"
       :confirm-label="$t('modal.accept')"
