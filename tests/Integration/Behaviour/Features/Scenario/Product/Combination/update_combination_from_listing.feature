@@ -34,12 +34,12 @@ Feature: Update product combination from listing in Back Office (BO)
       | price | 100.99 |
     And product "product1" should have following combinations:
       | id reference   | combination name        | reference | attributes           | impact on price | final price | quantity | is default |
+      | product1SWhite | Size - S, Color - White |           | [Size:S,Color:White] | 0               | 100.99      | 0        | true       |
       | product1SBlack | Size - S, Color - Black |           | [Size:S,Color:Black] | 0               | 100.99      | 0        | false      |
       | product1SBlue  | Size - S, Color - Blue  |           | [Size:S,Color:Blue]  | 0               | 100.99      | 0        | false      |
       | product1MWhite | Size - M, Color - White |           | [Size:M,Color:White] | 0               | 100.99      | 0        | false      |
       | product1MBlack | Size - M, Color - Black |           | [Size:M,Color:Black] | 0               | 100.99      | 0        | false      |
       | product1MBlue  | Size - M, Color - Blue  |           | [Size:M,Color:Blue]  | 0               | 100.99      | 0        | false      |
-      | product1SWhite | Size - S, Color - White |           | [Size:S,Color:White] | 0               | 100.99      | 0        | true       |
     And product product1 default combination should be "product1SWhite"
     When I update combination "product1SBlue" from list with following values:
       | impact on price | 5      |
@@ -57,8 +57,8 @@ Feature: Update product combination from listing in Back Office (BO)
       | id reference   | combination name        | reference | attributes           | impact on price | final price | quantity | is default |
       | product1SWhite | Size - S, Color - White |           | [Size:S,Color:White] | 0               | 100.99      | 0        | false      |
       | product1SBlack | Size - S, Color - Black |           | [Size:S,Color:Black] | 0               | 100.99      | 0        | false      |
+      | product1SBlue  | Size - S, Color - Blue  | test_1    | [Size:S,Color:Blue]  | 5               | 100.99      | 10       | true       |
       | product1MWhite | Size - M, Color - White | test 2    | [Size:M,Color:White] | -4.99           | 100.99      | 9        | false      |
       | product1MBlack | Size - M, Color - Black |           | [Size:M,Color:Black] | 0               | 100.99      | 50       | false      |
       | product1MBlue  | Size - M, Color - Blue  |           | [Size:M,Color:Blue]  | 0               | 100.99      | 0        | false      |
-      | product1SBlue  | Size - S, Color - Blue  | test_1    | [Size:S,Color:Blue]  | 5               | 100.99      | 10       | true       |
     And product product1 default combination should be "product1SBlue"
