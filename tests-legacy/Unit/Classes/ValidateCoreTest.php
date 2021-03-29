@@ -379,23 +379,23 @@ class ValidateCoreTest extends TestCase
 
     public function isArrayWithIdsDataProvider(): array
     {
-        return array(
-            array(false, 'This is not an array'),
-            array(false, 42),
-            array(false, '42'),
-            array(true, [666]),
-            array(true, [4, 5, 9, 14]),
-            array(true, ['2', 5, 4]),
-            array(true, ['7', '8', '12']),
-            array(false, []),
-            array(false, [69, 1, [], 5]),
-            array(false, [12, 2.5, 14]),
-            array(false, [-1, 6, 12]),
-            array(false, ['A', 1, 9]),
-            array(false, ['+', 666, '+']),
-            array(false, [0, 2, 253]),
-            array(false, [0, 0, 0]),
-            array(false, [45, true, 9]),
-        );
+        return [
+            [false, 'This is not an array'],
+            [false, 42],
+            [false, '42'],
+            [true, [666]],
+            [true, [4, 5, 9, 14]],
+            [true, ['2', 5, 4]],
+            [true, ['7', '8', '12']],
+            [false, []],
+            [false, [69, 1, [], 5]],
+            [false, [12, 2.5, 14]],
+            [false, [-1, 6, 12]],
+            [false, ['A', 1, 9]],
+            [false, ['+', 666, '+']],
+            [false, [0, 2, 253]],
+            [false, [0, 0, 0]],
+            [false, [45, true, 9]],
+        ];
     }
 }
