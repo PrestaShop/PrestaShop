@@ -30,12 +30,12 @@ Feature: Generate attribute combinations for product in Back Office (BO)
       | Color | [White,Black,Blue] |
     Then product "product1" should have following combinations:
       | id reference   | combination name        | reference | attributes           | impact on price | final price | quantity | is default |
+      | product1SWhite | Size - S, Color - White |           | [Size:S,Color:White] | 0               | 0           | 0        | true       |
       | product1SBlack | Size - S, Color - Black |           | [Size:S,Color:Black] | 0               | 0           | 0        | false      |
       | product1SBlue  | Size - S, Color - Blue  |           | [Size:S,Color:Blue]  | 0               | 0           | 0        | false      |
       | product1MWhite | Size - M, Color - White |           | [Size:M,Color:White] | 0               | 0           | 0        | false      |
       | product1MBlack | Size - M, Color - Black |           | [Size:M,Color:Black] | 0               | 0           | 0        | false      |
       | product1MBlue  | Size - M, Color - Blue  |           | [Size:M,Color:Blue]  | 0               | 0           | 0        | false      |
-      | product1SWhite | Size - S, Color - White |           | [Size:S,Color:White] | 0               | 0           | 0        | true       |
     And product product1 default combination should be "product1SWhite"
 
   Scenario: I can paginate combinations and limit combinations per page
@@ -205,12 +205,12 @@ Feature: Generate attribute combinations for product in Back Office (BO)
       | reference | CCCD |
     And product "product1" should have following combinations:
       | id reference   | combination name        | reference | attributes           | impact on price | final price | quantity | is default |
+      | product1SWhite | Size - S, Color - White | ABC       | [Size:S,Color:White] | -1              | 0           | 10       | true       |
       | product1SBlack | Size - S, Color - Black | CCCD      | [Size:S,Color:Black] | 10              | 0           | 50       | false      |
       | product1SBlue  | Size - S, Color - Blue  | BBB       | [Size:S,Color:Blue]  | 1               | 0           | 100      | false      |
       | product1MWhite | Size - M, Color - White |           | [Size:M,Color:White] | 0               | 0           | 0        | false      |
       | product1MBlack | Size - M, Color - Black |           | [Size:M,Color:Black] | 0               | 0           | 0        | false      |
       | product1MBlue  | Size - M, Color - Blue  |           | [Size:M,Color:Blue]  | 0               | 0           | 0        | false      |
-      | product1SWhite | Size - S, Color - White | ABC       | [Size:S,Color:White] | -1              | 0           | 10       | true       |
     When I search product "product1" combinations list by following search criteria:
       | criteria  | value |
       | reference | C     |
