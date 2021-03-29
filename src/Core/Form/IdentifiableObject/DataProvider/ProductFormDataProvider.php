@@ -41,6 +41,7 @@ use PrestaShop\PrestaShop\Core\Domain\Product\Supplier\Query\GetProductSupplierO
 use PrestaShop\PrestaShop\Core\Domain\Product\Supplier\QueryResult\ProductSupplierOptions;
 use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductType;
 use PrestaShop\PrestaShop\Core\Util\DateTime\DateTime;
+use Symfony\Component\HttpFoundation\File\File;
 
 /**
  * Provides the data that is used to prefill the Product form
@@ -63,18 +64,26 @@ final class ProductFormDataProvider implements FormDataProviderInterface
     private $mostUsedTaxRulesGroupId;
 
     /**
+     * @var
+     */
+    private $virtualProductFileDir;
+
+    /**
      * @param CommandBusInterface $queryBus
      * @param bool $defaultProductActivation
      * @param int $mostUsedTaxRulesGroupId
+     * @param string $virtualProductFileDir
      */
     public function __construct(
         CommandBusInterface $queryBus,
         bool $defaultProductActivation,
-        int $mostUsedTaxRulesGroupId
+        int $mostUsedTaxRulesGroupId,
+        string $virtualProductFileDir
     ) {
         $this->queryBus = $queryBus;
         $this->defaultProductActivation = $defaultProductActivation;
         $this->mostUsedTaxRulesGroupId = $mostUsedTaxRulesGroupId;
+        $this->virtualProductFileDir = $virtualProductFileDir;
     }
 
     /**
@@ -99,6 +108,7 @@ final class ProductFormDataProvider implements FormDataProviderInterface
             'options' => $this->extractOptionsData($productForEditing),
             'suppliers' => $this->extractSuppliersData($productForEditing),
             'customizations' => $this->extractCustomizationsData($productForEditing),
+            'virtual_product_file' => $this->extractVirtualProductFileData($productForEditing),
         ];
 
         return $this->addShortcutData($productData);
@@ -154,6 +164,33 @@ final class ProductFormDataProvider implements FormDataProviderInterface
         ];
 
         return $productData;
+    }
+
+    /**
+     * @param ProductForEditing $productForEditing
+     *
+     * @return array<string, int|string>
+     */
+    private function extractVirtualProductFileData(ProductForEditing $productForEditing): array
+    {
+        $data = [];
+        $virtualProductFile = $productForEditing->getVirtualProductFile();
+
+        if (null !== $virtualProductFile) {
+            $filePath = $this->virtualProductFileDir . $virtualProductFile->getFileName();
+
+            $data = [
+                'file' => new File($filePath),
+                'name' => $virtualProductFile->getDisplayName(),
+                'download_times_limit' => $virtualProductFile->getDownloadTimesLimit(),
+                'access_days_limit' => $virtualProductFile->getAccessDays(),
+                'expiration_date' => $virtualProductFile->getExpirationDate() ?
+                    $virtualProductFile->getExpirationDate()->format(DateTime::DEFAULT_DATE_FORMAT) :
+                    null,
+            ];
+        }
+
+        return $data;
     }
 
     /**
