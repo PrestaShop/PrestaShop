@@ -33,7 +33,7 @@ use PHPUnit\Framework\Assert;
 use PrestaShop\PrestaShop\Core\Domain\Product\Combination\Command\UpdateCombinationFromListingCommand;
 use PrestaShop\PrestaShop\Core\Domain\Product\Combination\QueryResult\CombinationAttributeInformation;
 use PrestaShop\PrestaShop\Core\Domain\Product\Combination\QueryResult\EditableCombinationForListing;
-use PrestaShop\PrestaShop\Core\Search\Filters\CombinationFilters;
+use PrestaShop\PrestaShop\Core\Search\Filters\ProductCombinationFilters;
 use Tests\Integration\Behaviour\Features\Context\Util\PrimitiveUtils;
 
 class CombinationListingFeatureContext extends AbstractCombinationFeatureContext
@@ -126,18 +126,19 @@ class CombinationListingFeatureContext extends AbstractCombinationFeatureContext
     }
 
     /**
-     * @Transform table:criteria,value
-     *
+     * @param int $productId
      * @param TableNode $tableNode
      *
-     * @return CombinationFilters
+     * @return ProductCombinationFilters
      */
-    public function transformCombinationSearchCriteria(TableNode $tableNode): CombinationFilters
+    private function buildProductCombinationFilters(int $productId, TableNode $tableNode): ProductCombinationFilters
     {
         $dataRows = $tableNode->getRowsHash();
-        $defaults = CombinationFilters::getDefaults();
+        $defaults = ProductCombinationFilters::getDefaults();
 
         $filters = $defaults['filters'];
+        $filters['product_id'] = $productId;
+
         if (isset($dataRows['attributes'])) {
             $attributes = PrimitiveUtils::castStringArrayIntoArray($dataRows['attributes']);
             foreach ($attributes as $attributeRef) {
@@ -158,7 +159,7 @@ class CombinationListingFeatureContext extends AbstractCombinationFeatureContext
         $orderBy = isset($dataRows['order by']) ? $this->getDbField($dataRows['order by']) : $defaults['orderBy'];
         $orderWay = isset($dataRows['order way']) ? $this->getDbField($dataRows['order way']) : $defaults['sortOrder'];
 
-        return new CombinationFilters([
+        return new ProductCombinationFilters([
             'limit' => $limit,
             'offset' => $offset,
             'orderBy' => $orderBy,
@@ -171,10 +172,11 @@ class CombinationListingFeatureContext extends AbstractCombinationFeatureContext
      * @When I search product ":productReference" combinations list by following search criteria:
      *
      * @param string $productReference
-     * @param CombinationFilters $combinationFilters
+     * @param TableNode $tableNode
      */
-    public function storeSearchCriteria(string $productReference, CombinationFilters $combinationFilters): void
+    public function storeSearchCriteria(string $productReference, TableNode $tableNode): void
     {
+        $combinationFilters = $this->buildProductCombinationFilters((int) $this->getSharedStorage()->get($productReference), $tableNode);
         $this->getSharedStorage()->set($this->getSearchCriteriaKey($productReference), $combinationFilters);
     }
 
@@ -210,7 +212,7 @@ class CombinationListingFeatureContext extends AbstractCombinationFeatureContext
         } elseif ($this->getSharedStorage()->exists($searchCriteriaKey)) {
             $combinationFilters = $this->getSharedStorage()->get($searchCriteriaKey);
         } else {
-            $combinationFilters = CombinationFilters::buildDefaults();
+            $combinationFilters = ProductCombinationFilters::buildDefaults();
         }
 
         $combinationsList = $this->getCombinationsList($productReference, $combinationFilters);

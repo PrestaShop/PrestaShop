@@ -32,25 +32,19 @@ use PrestaShop\PrestaShop\Core\Domain\Product\Combination\Query\GetCombinationFo
 use PrestaShop\PrestaShop\Core\Domain\Product\Combination\Query\GetEditableCombinationsList;
 use PrestaShop\PrestaShop\Core\Domain\Product\Combination\QueryResult\CombinationForEditing;
 use PrestaShop\PrestaShop\Core\Domain\Product\Combination\QueryResult\CombinationListForEditing;
-use PrestaShop\PrestaShop\Core\Search\Filters\CombinationFilters;
+use PrestaShop\PrestaShop\Core\Search\Filters\ProductCombinationFilters;
 use Tests\Integration\Behaviour\Features\Context\Domain\Product\AbstractProductFeatureContext;
 
 abstract class AbstractCombinationFeatureContext extends AbstractProductFeatureContext
 {
     /**
      * @param string $productReference
-     * @param CombinationFilters|null $combinationFilters
+     * @param ProductCombinationFilters|null $combinationFilters
      *
      * @return CombinationListForEditing
      */
-    protected function getCombinationsList(string $productReference, ?CombinationFilters $combinationFilters = null): CombinationListForEditing
+    protected function getCombinationsList(string $productReference, ?ProductCombinationFilters $combinationFilters = null): CombinationListForEditing
     {
-        $productIdFilter = ['product_id' => $this->getSharedStorage()->get($productReference)];
-
-        if ($combinationFilters) {
-            $combinationFilters->addFilter($productIdFilter);
-        }
-
         return $this->getQueryBus()->handle(new GetEditableCombinationsList(
             $this->getSharedStorage()->get($productReference),
             $this->getDefaultLangId(),
@@ -58,7 +52,7 @@ abstract class AbstractCombinationFeatureContext extends AbstractProductFeatureC
             $combinationFilters ? $combinationFilters->getOffset() : null,
             $combinationFilters ? $combinationFilters->getOrderBy() : null,
             $combinationFilters ? $combinationFilters->getOrderWay() : null,
-            $combinationFilters ? $combinationFilters->getFilters() : $productIdFilter
+            $combinationFilters ? $combinationFilters->getFilters() : []
         ));
     }
 
