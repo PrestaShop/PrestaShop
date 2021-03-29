@@ -106,6 +106,16 @@ class CombinationListingFeatureContext extends AbstractCombinationFeatureContext
     }
 
     /**
+     * @Then product ":productReference" should have no combinations
+     *
+     * @param string $productReference
+     */
+    public function assertProductHasNoCombinations(string $productReference): void
+    {
+        $this->assertCombinations($productReference, [], true);
+    }
+
+    /**
      * @Given product ":productReference" combinations list search criteria is set to defaults
      *
      * @param string $productReference
