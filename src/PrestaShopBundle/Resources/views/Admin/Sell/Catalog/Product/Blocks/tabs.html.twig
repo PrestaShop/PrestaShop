@@ -47,7 +47,6 @@
         {{ 'Basic settings'|trans({}, 'Admin.Catalog.Feature') }}
       </a>
     </li>
-    {% set productType = productForEditing ? productForEditing.type : 'standard' %}
     {% if productType == 'virtual' %}
       <li id="virtual-product-tab-nav" class="nav-item">
         <a href="#virtual-product-tab" role="tab" data-toggle="tab" class="nav-link">

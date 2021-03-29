@@ -136,6 +136,7 @@ class ProductFormType extends TranslatorAwareType
     {
         $productType = $options['data']['basic']['type'] ?? ProductType::TYPE_STANDARD;
         $formVars = [
+            'productType' => $productType,
             'attr' => [
                 'data-product-type' => $productType,
             ],
