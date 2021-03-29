@@ -374,7 +374,7 @@ class ValidateCoreTest extends TestCase
         );
     }
 
-    public function isArrayWithIdsDataProvider()
+    public function isArrayWithIdsDataProvider(): array
     {
         return array(
             array(false, 'This is not an array'),
