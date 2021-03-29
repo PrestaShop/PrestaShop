@@ -43,14 +43,9 @@ use Symfony\Component\HttpFoundation\Response;
 class CombinationController extends FrameworkBundleAdminController
 {
     /**
-     * Default number of combinations per page
-     */
-    private const DEFAULT_COMBINATIONS_NUMBER = 10;
-
-    /**
      * Options used for the number of combinations per page
      */
-    private const COMBINATIONS_PAGINATION_OPTIONS = [10, 20, 50, 100];
+    private const COMBINATIONS_PAGINATION_OPTIONS = [ProductCombinationFilters::LIST_LIMIT, 20, 50, 100];
 
     /**
      * Renders combinations list prototype (which contains form inputs submittable by ajax)
@@ -62,7 +57,7 @@ class CombinationController extends FrameworkBundleAdminController
     {
         return $this->render('@PrestaShop/Admin/Sell/Catalog/Product/Blocks/combinations.html.twig', [
             'combinationLimitChoices' => self::COMBINATIONS_PAGINATION_OPTIONS,
-            'combinationsLimit' => self::DEFAULT_COMBINATIONS_NUMBER,
+            'combinationsLimit' => ProductCombinationFilters::LIST_LIMIT,
             'combinationsForm' => $this->createForm(CombinationListType::class)->createView(),
             'combinationItemForm' => $this->getCombinationItemFormBuilder()->getForm()->createView(),
         ]);
