@@ -204,7 +204,7 @@
     watch: {
       /**
        * We need to watch selected files to manage multilang
-       * of only one file or multiple files  then the value is sent
+       * of only one file or multiple files then the value is sent
        * on save.
       */
       selectedFiles(value) {
