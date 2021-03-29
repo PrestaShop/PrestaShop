@@ -34,7 +34,7 @@
 {% set isPriceTabValid = productForm.price.vars.valid %}
 {% set isShippingTabValid = productForm.shipping.vars.valid %}
 {% set isSEOTabValid = productForm.seo.vars.valid and productForm.redirect_option.vars.valid %}
-{% set isStockTabValid = productForm.stock.vars.valid %}
+{% set isStockTabValid = productForm.stock is not defined or productForm.stock.vars.valid %}
 
 <div class="tabs js-tabs">
   <div class="arrow d-xl-none js-arrow left-arrow float-left">
@@ -54,7 +54,7 @@
           {{ 'Virtual product'|trans({}, 'Admin.Catalog.Feature') }}
         </a>
       </li>
-    {% elseif productType == 'combination' %}
+    {% elseif productType == 'combinations' %}
       <li id="combinations-tab-nav" class="nav-item">
         <a href="#combinations-tab" role="tab" data-toggle="tab" class="nav-link">
           {{ 'Combinations'|trans({}, 'Admin.Catalog.Feature') }}
