@@ -3776,7 +3776,7 @@ class ProductCore extends ObjectModel
         }
 
         if (!isset(self::$_pricesLevel2[$cache_id_2][(int) $id_product_attribute])) {
-            return;
+            return 0;
         }
 
         $result = self::$_pricesLevel2[$cache_id_2][(int) $id_product_attribute];
