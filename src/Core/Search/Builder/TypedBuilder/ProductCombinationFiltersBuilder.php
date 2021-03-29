@@ -38,7 +38,7 @@ use Symfony\Component\HttpFoundation\Request;
  * that must be applied. This builder is able to fetch it from Request attribute so that it can be used in
  * the ProductCombinationFilters constructor as expected.
  */
-class ProductCombinationBuilder extends AbstractFiltersBuilder implements TypedFiltersBuilderInterface
+class ProductCombinationFiltersBuilder extends AbstractFiltersBuilder implements TypedFiltersBuilderInterface
 {
     /** @var Request */
     private $request;
@@ -48,7 +48,7 @@ class ProductCombinationBuilder extends AbstractFiltersBuilder implements TypedF
      */
     public function setConfig(array $config)
     {
-        $this->request = isset($config['request']) ? $config['request'] : null;
+        $this->request = $config['request'] ?? null;
 
         return parent::setConfig($config);
     }

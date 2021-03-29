@@ -30,7 +30,7 @@ namespace Tests\Unit\Core\Search\Builder\TypedBuilder;
 
 use Generator;
 use PHPUnit\Framework\TestCase;
-use PrestaShop\PrestaShop\Core\Search\Builder\TypedBuilder\ProductCombinationBuilder;
+use PrestaShop\PrestaShop\Core\Search\Builder\TypedBuilder\ProductCombinationFiltersBuilder;
 use PrestaShop\PrestaShop\Core\Search\Filters;
 use PrestaShop\PrestaShop\Core\Search\Filters\ProductCombinationFilters;
 use Symfony\Component\DependencyInjection\ParameterBag\ParameterBag;
@@ -46,7 +46,7 @@ class ProductCombinationBuilderTest extends TestCase
      */
     public function testSupports(string $filtersClass, bool $expectedSupport)
     {
-        $builder = new ProductCombinationBuilder();
+        $builder = new ProductCombinationFiltersBuilder();
         $isSupported = $builder->supports($filtersClass);
         $this->assertEquals($expectedSupport, $isSupported);
     }
@@ -54,7 +54,7 @@ class ProductCombinationBuilderTest extends TestCase
     public function testBuildFilters()
     {
         $productId = 42;
-        $builder = new ProductCombinationBuilder();
+        $builder = new ProductCombinationFiltersBuilder();
         $builder->setConfig(['request' => $this->buildRequestMock($productId)]);
 
         $builtFilters = $builder->buildFilters();
@@ -66,7 +66,7 @@ class ProductCombinationBuilderTest extends TestCase
     public function testBuildFiltersWithInitialValues()
     {
         $productId = 42;
-        $builder = new ProductCombinationBuilder();
+        $builder = new ProductCombinationFiltersBuilder();
         $builder->setConfig(['request' => $this->buildRequestMock($productId)]);
 
         $initialFilters = new Filters([
