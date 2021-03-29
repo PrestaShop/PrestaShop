@@ -35,15 +35,30 @@ use Symfony\Component\Form\Extension\Core\Type\FileType;
 use Symfony\Component\Form\Extension\Core\Type\NumberType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
+use Symfony\Component\Validator\Constraints\File;
 use Symfony\Component\Validator\Constraints\Length;
 
 class VirtualProductFileType extends TranslatorAwareType
 {
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
+        $maxUploadSize = $this->getConfiguration()->get('PS_ATTACHMENT_MAXIMUM_SIZE') . 'M';
+
         $builder
-            ->add('file', FileType::class)
+            ->add('file', FileType::class, [
+                'label' => $this->trans('File', 'Admin.Global'),
+                'help' => $this->trans(
+                    'Upload a file from your computer (%maxUploadSize% max.)',
+                    'Admin.Catalog.Help',
+                    ['%maxUploadSize%' => $maxUploadSize]
+                ),
+                'constraints' => [
+                    new File(['maxSize' => $maxUploadSize]),
+                ],
+            ])
             ->add('name', TextType::class, [
+                'label' => $this->trans('Filename', 'Admin.Global'),
+                'help' => $this->trans('The full filename with its extension (e.g. Book.pdf)', 'Admin.Catalog.Help'),
                 'constraints' => [
                     new TypedRegex(TypedRegex::TYPE_GENERIC_NAME),
                     new Length([
@@ -52,6 +67,12 @@ class VirtualProductFileType extends TranslatorAwareType
                 ],
             ])
             ->add('download_times_limit', NumberType::class, [
+                'label' => $this->trans('Number of allowed downloads', 'Admin.Catalog.Feature'),
+                'help' => $this->trans(
+                    'Number of downloads allowed per customer. Set to 0 for unlimited downloads.',
+                    'Admin.Catalog.Help'
+                ),
+                'required' => false,
                 'constraints' => [
                     new Length([
                         'max' => VirtualProductFileSettings::MAX_DOWNLOAD_TIMES_LIMIT_LENGTH,
@@ -59,13 +80,27 @@ class VirtualProductFileType extends TranslatorAwareType
                 ],
             ])
             ->add('access_days_limit', NumberType::class, [
+                'label' => $this->trans('Number of days', 'Admin.Catalog.Feature'),
+                'help' => $this->trans(
+                    'Number of days this file can be accessed by customers. Set to zero for unlimited access.',
+                    'Admin.Catalog.Help'
+                ),
+                'required' => false,
                 'constraints' => [
                     new Length([
                         'max' => VirtualProductFileSettings::MAX_ACCESSIBLE_DAYS_LIMIT_LENGTH,
                     ]),
                 ],
             ])
-            ->add('expiration_date', DatePickerType::class)
+            ->add('expiration_date', DatePickerType::class, [
+                'label' => $this->trans('Expiration date', 'Admin.Catalog.Feature'),
+                'help' => $this->trans(
+                    'If set, the file will not be downloadable after this date. Leave blank if you do not wish to attach an expiration date.',
+                    'Admin.Catalog.Help'
+                ),
+                'attr' => ['placeholder' => 'YYYY-MM-DD'],
+                'required' => false,
+            ])
         ;
     }
 }

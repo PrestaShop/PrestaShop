@@ -65,7 +65,7 @@
           {{ form_widget(productForm.virtual_product_file) }}
           {{ form_widget(productForm.stock) }}
         </div>
-      {% elseif productType == 'combination' %}
+      {% elseif productType == 'combinations' %}
         {% block product_tab_combinations %}
           {{ include('@PrestaShop/Admin/Sell/Catalog/Product/Tabs/combinations.html.twig') }}
         {% endblock %}
