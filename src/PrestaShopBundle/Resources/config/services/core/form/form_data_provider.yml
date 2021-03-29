@@ -155,6 +155,7 @@ services:
           - '@prestashop.core.query_bus'
           - '@=service("prestashop.adapter.legacy.configuration").getBoolean("PS_PRODUCT_ACTIVATION_DEFAULT")'
           - '@=service("prestashop.adapter.data_provider.tax").getIdTaxRulesGroupMostUsed()'
+          - !php/const _PS_DOWNLOAD_DIR_
 
   prestashop.core.form.identifiable_object.data_provider.empty_form_data_provider:
     class: 'PrestaShop\PrestaShop\Core\Form\IdentifiableObject\DataProvider\EmptyFormDataProvider'
