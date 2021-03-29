@@ -33,6 +33,7 @@ use PrestaShopBundle\Entity\FeatureFlag;
 use PrestaShopBundle\Form\Admin\Type\SwitchType;
 use PrestaShopBundle\Form\Admin\Type\TranslatorAwareType;
 use Symfony\Component\Form\FormBuilderInterface;
+use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Translation\TranslatorInterface;
 
 /**
@@ -84,5 +85,15 @@ class FeatureFlagsType extends TranslatorAwareType
                     ],
                 ]);
         }
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function configureOptions(OptionsResolver $resolver)
+    {
+        $resolver->setDefaults([
+            'method' => 'POST',
+        ]);
     }
 }
