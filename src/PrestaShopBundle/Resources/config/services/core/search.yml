@@ -64,6 +64,6 @@ services:
             - '@prestashop.core.search.builder.persist'
 
     # Typed builders (they will be automatically added to ClassFiltersBuilder thanks to their tag)
-    prestashop.core.search.builder.typed_builder.product_combination_builder:
-        class: 'PrestaShop\PrestaShop\Core\Search\Builder\TypedBuilder\ProductCombinationBuilder'
+    prestashop.core.search.builder.typed_builder.product_combination_filters_builder:
+        class: 'PrestaShop\PrestaShop\Core\Search\Builder\TypedBuilder\ProductCombinationFiltersBuilder'
         tags: ['core.typed_filters_builder']
