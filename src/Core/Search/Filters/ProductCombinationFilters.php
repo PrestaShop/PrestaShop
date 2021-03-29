@@ -37,6 +37,8 @@ use PrestaShop\PrestaShop\Core\Search\Filters;
  */
 class ProductCombinationFilters extends Filters
 {
+    public const LIST_LIMIT = 10;
+
     private const FILTER_PREFIX = 'product_combinations_';
 
     /**
@@ -68,7 +70,6 @@ class ProductCombinationFilters extends Filters
     public static function getDefaults()
     {
         return [
-            // @todo: reuse default limit in Combination controller when #23581 is merged
             'limit' => self::LIST_LIMIT,
             'offset' => 0,
             'orderBy' => 'id_product_attribute',
