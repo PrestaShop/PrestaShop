@@ -1246,7 +1246,7 @@
 				<label class="control-label col-lg-3" for="qty">{l s='Quantity' d='Admin.Global'}</label>
 				<div class="col-lg-9">
 					<input type="text" name="qty" id="qty" class="form-control fixed-width-sm" value="1" />
-					<p class="help-block">{l s='In stock' d='Admin.Orderscustomers.Feature'} <span id="qty_in_stock"></span></p>
+					{if $PS_STOCK_MANAGEMENT}<p class="help-block">{l s='In stock' d='Admin.Orderscustomers.Feature'} <span id="qty_in_stock"></span></p>{/if}
 				</div>
 			</div>
 
