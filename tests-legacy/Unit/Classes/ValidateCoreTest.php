@@ -134,8 +134,11 @@ class ValidateCoreTest extends TestCase
 
     /**
      * @dataProvider isArrayWithIdsDataProvider
+     *
+     * @param bool $expected
+     * @param string|int|array<string|int|bool|array> $input
      */
-    public function testIsArrayWithIds($expected, $input)
+    public function testIsArrayWithIds(bool $expected, $input)
     {
         $this->assertSame($expected, Validate::isArrayWithIds($input));
     }
