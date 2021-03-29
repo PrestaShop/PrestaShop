@@ -120,6 +120,10 @@ final class CombinationQueryBuilder extends AbstractDoctrineQueryBuilder
             }
         }
 
+        if (null === $searchCriteria->getOrderBy()) {
+            $qb->addOrderBy('id_product_attribute', 'asc');
+        }
+
         return $qb;
     }
 
