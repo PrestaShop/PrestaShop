@@ -32,6 +32,7 @@ use PrestaShop\PrestaShop\Core\Domain\Product\VirtualProductFile\VirtualProductF
 use PrestaShopBundle\Form\Admin\Type\DatePickerType;
 use PrestaShopBundle\Form\Admin\Type\TranslatorAwareType;
 use Symfony\Component\Form\Extension\Core\Type\FileType;
+use Symfony\Component\Form\Extension\Core\Type\HiddenType;
 use Symfony\Component\Form\Extension\Core\Type\NumberType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
@@ -45,6 +46,7 @@ class VirtualProductFileType extends TranslatorAwareType
         $maxUploadSize = $this->getConfiguration()->get('PS_ATTACHMENT_MAXIMUM_SIZE') . 'M';
 
         $builder
+            ->add('virtual_product_file_id', HiddenType::class)
             ->add('file', FileType::class, [
                 'label' => $this->trans('File', 'Admin.Global'),
                 'help' => $this->trans(
