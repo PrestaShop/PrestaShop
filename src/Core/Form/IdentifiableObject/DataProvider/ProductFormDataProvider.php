@@ -180,6 +180,7 @@ final class ProductFormDataProvider implements FormDataProviderInterface
             $filePath = $this->virtualProductFileDir . $virtualProductFile->getFileName();
 
             $data = [
+                'virtual_product_file_id' => $virtualProductFile->getId(),
                 'file' => new File($filePath),
                 'name' => $virtualProductFile->getDisplayName(),
                 'download_times_limit' => $virtualProductFile->getDownloadTimesLimit(),
