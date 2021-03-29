@@ -40,7 +40,7 @@ use PrestaShop\PrestaShop\Core\Domain\Product\Combination\QueryResult\Combinatio
 use PrestaShop\PrestaShop\Core\Domain\Product\Combination\QueryResult\EditableCombinationForListing;
 use PrestaShop\PrestaShop\Core\Domain\Product\Combination\ValueObject\CombinationId;
 use PrestaShop\PrestaShop\Core\Grid\Query\DoctrineQueryBuilderInterface;
-use PrestaShop\PrestaShop\Core\Search\Filters\CombinationFilters;
+use PrestaShop\PrestaShop\Core\Search\Filters\ProductCombinationFilters;
 use PrestaShop\PrestaShop\Core\Util\Number\NumberExtractor;
 
 /**
@@ -93,7 +93,7 @@ final class GetEditableCombinationsListHandler extends AbstractProductHandler im
     {
         $filters = $query->getFilters();
         $filters['product_id'] = $query->getProductId()->getValue();
-        $searchCriteria = new CombinationFilters([
+        $searchCriteria = new ProductCombinationFilters([
             'limit' => $query->getLimit(),
             'offset' => $query->getOffset(),
             'orderBy' => $query->getOrderBy(),

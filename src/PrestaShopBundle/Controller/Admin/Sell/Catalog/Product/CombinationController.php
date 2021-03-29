@@ -32,7 +32,7 @@ use PrestaShop\PrestaShop\Core\Domain\Product\Combination\Query\GetEditableCombi
 use PrestaShop\PrestaShop\Core\Domain\Product\Combination\QueryResult\CombinationListForEditing;
 use PrestaShop\PrestaShop\Core\Form\IdentifiableObject\Builder\FormBuilderInterface;
 use PrestaShop\PrestaShop\Core\Form\IdentifiableObject\Handler\FormHandlerInterface;
-use PrestaShop\PrestaShop\Core\Search\Filters\CombinationFilters;
+use PrestaShop\PrestaShop\Core\Search\Filters\ProductCombinationFilters;
 use PrestaShopBundle\Controller\Admin\FrameworkBundleAdminController;
 use PrestaShopBundle\Form\Admin\Sell\Product\Combination\CombinationListType;
 use PrestaShopBundle\Security\Annotation\AdminSecurity;
@@ -72,11 +72,11 @@ class CombinationController extends FrameworkBundleAdminController
      * @AdminSecurity("is_granted('read', request.get('_legacy_controller'))")
      *
      * @param int $productId
-     * @param CombinationFilters $combinationFilters
+     * @param ProductCombinationFilters $combinationFilters
      *
      * @return JsonResponse
      */
-    public function getListAction(int $productId, CombinationFilters $combinationFilters): JsonResponse
+    public function getListAction(int $productId, ProductCombinationFilters $combinationFilters): JsonResponse
     {
         $combinationsList = $this->getQueryBus()->handle(new GetEditableCombinationsList(
             $productId,

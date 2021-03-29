@@ -27,6 +27,7 @@ declare(strict_types=1);
 
 namespace PrestaShop\PrestaShop\Core\Search\Filters;
 
+use PrestaShop\PrestaShop\Core\Exception\InvalidArgumentException;
 use PrestaShop\PrestaShop\Core\Search\Filters;
 
 /**
@@ -34,8 +35,33 @@ use PrestaShop\PrestaShop\Core\Search\Filters;
  *
  * Combination list is handled by javascript so it doesn't need grid id
  */
-class CombinationFilters extends Filters
+class ProductCombinationFilters extends Filters
 {
+    private const FILTER_PREFIX = 'product_combinations_';
+
+    /**
+     * @var int
+     */
+    private $productId;
+
+    /**
+     * {@inheritDoc}
+     */
+    public function __construct(array $filters = [], $filterId = '')
+    {
+        parent::__construct($filters, $filterId);
+        if (!isset($filters['filters']['product_id'])) {
+            throw new InvalidArgumentException(sprintf('%s filters expect a product_id filter', static::class));
+        }
+
+        $this->productId = (int) $filters['filters']['product_id'];
+
+        // Since each combination lists depends on its associated product, the filterId must depends on it so that each
+        // has an independent filter saved in database (@see PersistFiltersBuilder and @see RepositoryFiltersBuilder)
+        // It will also need to be used as parameter prefix in the request to be correctly fetched by RequestFiltersBuilder
+        $this->filterId = static::generateFilterId($this->productId);
+    }
+
     /**
      * {@inheritdoc}
      */
@@ -49,5 +75,15 @@ class CombinationFilters extends Filters
             'sortOrder' => 'asc',
             'filters' => [],
         ];
+    }
+
+    /**
+     * @param int $productId
+     *
+     * @return string
+     */
+    public static function generateFilterId(int $productId): string
+    {
+        return static::FILTER_PREFIX . $productId;
     }
 }
