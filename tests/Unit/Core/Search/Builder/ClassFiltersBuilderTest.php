@@ -27,7 +27,9 @@
 namespace Tests\Unit\Core\Search\Builder;
 
 use PHPUnit\Framework\TestCase;
+use PrestaShop\PrestaShop\Core\Search\Builder\AbstractFiltersBuilder;
 use PrestaShop\PrestaShop\Core\Search\Builder\ClassFiltersBuilder;
+use PrestaShop\PrestaShop\Core\Search\Builder\TypedBuilder\TypedFiltersBuilderInterface;
 use PrestaShop\PrestaShop\Core\Search\Filters;
 
 class ClassFiltersBuilderTest extends TestCase
@@ -42,7 +44,7 @@ class ClassFiltersBuilderTest extends TestCase
     public function testOverrideWithoutClass()
     {
         $builder = new ClassFiltersBuilder();
-        $filters = new Filters(['limit' => 10]);
+        $filters = new Filters(['limit' => 51]);
         $builtFilters = $builder->buildFilters($filters);
         $this->assertNotNull($builtFilters);
         $this->assertEquals($filters->all(), $builtFilters->all());
@@ -82,6 +84,23 @@ class ClassFiltersBuilderTest extends TestCase
         $this->assertEmpty($builtFilters->getFilterId());
         $this->assertInstanceOf(SampleFilters::class, $builtFilters);
     }
+
+    public function testTypedBuilders()
+    {
+        $builder = new ClassFiltersBuilder();
+        $builder->setConfig(['filters_class' => SampleFilters::class]);
+        $filters = new Filters(['limit' => 10]);
+
+        $builtFilters = $builder->buildFilters($filters);
+        $this->assertEmpty($builtFilters->getFilterId());
+        $this->assertEquals('id_sample', $builtFilters->getOrderBy());
+
+        $builder->addTypedBuilder(new SampleFiltersBuilder());
+
+        $builtFilters = $builder->buildFilters($filters);
+        $this->assertEquals(SampleFiltersBuilder::FILTER_ID, $builtFilters->getFilterId());
+        $this->assertEquals(SampleFiltersBuilder::ORDER_BY, $builtFilters->getOrderBy());
+    }
 }
 
 class SampleFilters extends Filters
@@ -98,5 +117,27 @@ class SampleFilters extends Filters
             'sortOrder' => 'desc',
             'filters' => [],
         ];
+    }
+}
+
+class SampleFiltersBuilder extends AbstractFiltersBuilder implements TypedFiltersBuilderInterface
+{
+    public const FILTER_ID = 'specialId';
+    public const ORDER_BY = 'id_special';
+
+    /**
+     * {@inheritDoc}
+     */
+    public function buildFilters(Filters $filters = null)
+    {
+        return new SampleFilters(['orderBy' => self::ORDER_BY], self::FILTER_ID);
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function supports(string $filterClassName): bool
+    {
+        return SampleFilters::class === $filterClassName;
     }
 }

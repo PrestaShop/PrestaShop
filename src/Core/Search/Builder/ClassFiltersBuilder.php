@@ -26,6 +26,7 @@
 
 namespace PrestaShop\PrestaShop\Core\Search\Builder;
 
+use PrestaShop\PrestaShop\Core\Search\Builder\TypedBuilder\TypedFiltersBuilderInterface;
 use PrestaShop\PrestaShop\Core\Search\Filters;
 
 /**
@@ -38,12 +39,40 @@ final class ClassFiltersBuilder extends AbstractFiltersBuilder
     private $filtersClass;
 
     /**
+     * @var TypedFiltersBuilderInterface[]
+     */
+    private $typedBuilders;
+
+    /**
+     * @param array|null $typedBuilders
+     */
+    public function __construct(?array $typedBuilders = null)
+    {
+        $this->typedBuilders = $typedBuilders ?? [];
+    }
+
+    /**
+     * @param TypedFiltersBuilderInterface $typedFiltersBuilder
+     *
+     * @return self
+     */
+    public function addTypedBuilder(TypedFiltersBuilderInterface $typedFiltersBuilder): self
+    {
+        $this->typedBuilders[] = $typedFiltersBuilder;
+
+        return $this;
+    }
+
+    /**
      * {@inheritdoc}
      */
     public function setConfig(array $config)
     {
         if (isset($config['filters_class'])) {
             $this->filtersClass = $config['filters_class'];
+        }
+        foreach ($this->typedBuilders as $typedBuilder) {
+            $typedBuilder->setConfig($config);
         }
 
         return parent::setConfig($config);
@@ -62,6 +91,23 @@ final class ClassFiltersBuilder extends AbstractFiltersBuilder
             return $filters;
         }
 
+        $typedBuilder = $this->getTypedBuilder();
+        if (null !== $typedBuilder) {
+            $typedFilters = $typedBuilder->buildFilters($filters);
+        } else {
+            $typedFilters = $this->buildTypedFilters($filters);
+        }
+
+        return $typedFilters;
+    }
+
+    /**
+     * @param Filters|null $filters
+     *
+     * @return Filters
+     */
+    private function buildTypedFilters(?Filters $filters): Filters
+    {
         /** @var array $defaultParameters */
         $defaultParameters = call_user_func([$this->filtersClass, 'getDefaults']);
         if (null !== $filters) {
@@ -73,5 +119,19 @@ final class ClassFiltersBuilder extends AbstractFiltersBuilder
         }
 
         return $typedFilters;
+    }
+
+    /**
+     * @return TypedFiltersBuilderInterface|null
+     */
+    private function getTypedBuilder(): ?TypedFiltersBuilderInterface
+    {
+        foreach ($this->typedBuilders as $typedBuilder) {
+            if ($typedBuilder->supports($this->filtersClass)) {
+                return $typedBuilder;
+            }
+        }
+
+        return null;
     }
 }
