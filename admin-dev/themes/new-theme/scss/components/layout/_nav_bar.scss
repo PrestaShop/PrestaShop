@@ -276,7 +276,7 @@
 
         .material-icons {
           &:first-child {
-            color: #25b9d7;
+            color: $primary;
           }
         }
       }
@@ -284,7 +284,7 @@
 
     &:not(#subtab-AdminParentModulesSf) {
       i.material-icons.mi-extension {
-        color: #6c868e;
+        color: $gray-500;
       }
     }
 
@@ -312,7 +312,7 @@
       .sub-tabs-arrow {
         margin-left: auto;
         line-height: inherit;
-        color: #6c868e;
+        color: $gray-500;
         vertical-align: middle;
         visibility: hidden;
       }

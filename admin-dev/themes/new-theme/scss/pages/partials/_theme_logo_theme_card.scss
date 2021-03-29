@@ -31,7 +31,7 @@
   font-style: normal;
   font-stretch: normal;
   line-height: normal;
-  color: #363a41;
+  color: $gray-700;
   text-align: center;
   letter-spacing: -0.01875rem;
 }
@@ -76,12 +76,12 @@
       font-weight: 400;
       font-stretch: normal;
       line-height: normal;
-      color: #363a41;
+      color: $gray-700;
       text-align: center;
       letter-spacing: -0.0125rem;
 
       .icon-current-theme {
-        color: #25b9d7;
+        color: $primary;
       }
     }
 
