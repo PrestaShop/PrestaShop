@@ -50,20 +50,18 @@ class FeatureFlagController extends FrameworkBundleAdminController
         $featureFlagsFormHandler = $this->get('prestashop.admin.feature_flags.form_handler');
         $featureFlagsForm = $featureFlagsFormHandler->getForm();
 
-        if ($request->isMethod(Request::METHOD_POST)) {
-            $featureFlagsForm->handleRequest($request);
+        $featureFlagsForm->handleRequest($request);
 
-            if ($featureFlagsForm->isSubmitted() && $featureFlagsForm->isValid()) {
-                $errors = $featureFlagsFormHandler->save($featureFlagsForm->getData());
+        if ($featureFlagsForm->isSubmitted() && $featureFlagsForm->isValid()) {
+            $errors = $featureFlagsFormHandler->save($featureFlagsForm->getData());
 
-                if (empty($errors)) {
-                    $this->addFlash('success', $this->trans('Update successful', 'Admin.Notifications.Success'));
-                } else {
-                    $this->flashErrors($errors);
-                }
-
-                return $this->redirectToRoute('admin_feature_flags_index');
+            if (empty($errors)) {
+                $this->addFlash('success', $this->trans('Update successful', 'Admin.Notifications.Success'));
+            } else {
+                $this->flashErrors($errors);
             }
+
+            return $this->redirectToRoute('admin_feature_flags_index');
         }
 
         return $this->render('@PrestaShop/Admin/Configure/AdvancedParameters/FeatureFlag/index.html.twig', [
