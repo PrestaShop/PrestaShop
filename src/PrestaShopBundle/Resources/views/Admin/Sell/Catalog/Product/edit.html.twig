@@ -45,10 +45,12 @@
   {% endblock %}
 
   <div class="col-xxl-10">
+    {% set productType = productForm.vars.productType %}
+
     {% block product_tabs_container %}
       {{ include('@PrestaShop/Admin/Sell/Catalog/Product/Blocks/tabs.html.twig', {
         'productForm': productForm,
-        'productForEditing': productForEditing
+        'productType': productType
       }) }}
     {% endblock %}
 
@@ -58,7 +60,6 @@
           'productForm': productForm,
         }) }}
       {% endblock %}
-      {% set productType = productForEditing ? productForEditing.type : 'standard' %}
 
       {% if productType == 'virtual' %}
         <div role="tabpanel" class="form-contenttab tab-pane" id="virtual-product-tab">
@@ -109,7 +110,7 @@
   {{ include('@PrestaShop/Admin/Sell/Catalog/Product/Blocks/footer.html.twig', {
     'productForm': productForm,
     'editable': editable,
-    'productId': productForEditing ? productForEditing.productId : null,
+    'productId': productId,
   }) }}
 
   {{ form_end(productForm) }}
