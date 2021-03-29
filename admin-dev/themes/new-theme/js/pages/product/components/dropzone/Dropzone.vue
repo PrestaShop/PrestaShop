@@ -409,11 +409,7 @@
 
         const selectedFile = this.selectedFiles[0];
 
-        if (
-          this.selectedFiles.length === 1
-        ) {
-          selectedFile.is_cover = isCover;
-        }
+        selectedFile.is_cover = isCover;
 
         selectedFile.legends = captionValue;
 
