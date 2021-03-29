@@ -50,7 +50,7 @@
           class="material-icons"
           data-toggle="pstooltip"
           :data-original-title="$t('window.delete')"
-          @click="$emit('removeSelection')"
+          @click.stop="$emit('removeSelection')"
         >delete</i>
         <i
           class="material-icons"

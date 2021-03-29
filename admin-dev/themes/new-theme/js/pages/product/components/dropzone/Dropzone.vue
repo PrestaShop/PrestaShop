@@ -71,7 +71,7 @@
       :selected-files="selectedFiles"
       :dropzone="dropzone"
       @unselectAll="unselectAll"
-      @removeSelection="toggleModal"
+      @removeSelection="showModal"
       @selectAll="selectAll"
       @saveSelectedFile="saveSelectedFile"
       @replacedFile="manageReplacedFile"
@@ -82,7 +82,7 @@
     />
 
     <modal
-      v-if="showModal"
+      v-if="isModalShown"
       :confirmation="true"
       :modal-title="$t('modal.title', {
         '%filesNb%': this.selectedFiles.length,
@@ -90,6 +90,7 @@
       :confirm-label="$t('modal.accept')"
       :cancel-label="$t('modal.close')"
       @confirm="removeSelection"
+      @close="hideModal"
     />
 
     <div class="dz-template d-none">
@@ -165,7 +166,7 @@
         loading: true,
         selectedLocale: null,
         buttonLoading: false,
-        showModal: false,
+        isModalShown: false,
       };
     },
     props: {
@@ -375,7 +376,7 @@
           this.resetDropzone();
         }
 
-        this.toggleModal();
+        this.hideModal();
       },
       /**
        * Method to manage checkboxes of files mainly used on selectAll and unselectAll
@@ -500,8 +501,11 @@
         this.dropzone = null;
         this.initProductImages();
       },
-      toggleModal() {
-        this.showModal = !this.showModal;
+      showModal() {
+        this.isModalShown = true;
+      },
+      hideModal() {
+        this.isModalShown = false;
       },
     },
   };
