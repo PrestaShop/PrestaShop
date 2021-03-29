@@ -44,11 +44,16 @@ final class ClassFiltersBuilder extends AbstractFiltersBuilder
     private $typedBuilders;
 
     /**
-     * @param array|null $typedBuilders
+     * @param iterable|null $typedBuilders
      */
-    public function __construct(?array $typedBuilders = null)
+    public function __construct(?iterable $typedBuilders = null)
     {
-        $this->typedBuilders = $typedBuilders ?? [];
+        $this->typedBuilders = [];
+        if (!empty($typedBuilders)) {
+            foreach ($typedBuilders as $typedBuilder) {
+                $this->addTypedBuilder($typedBuilder);
+            }
+        }
     }
 
     /**
