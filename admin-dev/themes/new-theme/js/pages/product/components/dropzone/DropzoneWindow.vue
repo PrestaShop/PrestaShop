@@ -122,7 +122,7 @@
           data-toggle="dropdown"
           aria-haspopup="true"
           aria-expanded="false"
-          id="form_invoice_prefix"
+          id="product_dropzone_lang"
         >
           {{ selectedLocale.iso_code }}
         </button>
