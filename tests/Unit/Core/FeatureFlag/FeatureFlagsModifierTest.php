@@ -30,24 +30,14 @@ namespace Tests\Unit\Core\FeatureFlag;
 
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\Persistence\ObjectRepository;
+use InvalidArgumentException;
 use PHPUnit\Framework\TestCase;
-use PrestaShop\PrestaShop\Core\Configuration\DataConfigurationInterface;
 use PrestaShop\PrestaShop\Core\FeatureFlag\FeatureFlagsModifier;
 use PrestaShopBundle\Entity\FeatureFlag;
 use Symfony\Component\Translation\TranslatorInterface;
-use TypeError;
 
 class FeatureFlagsModifierTest extends TestCase
 {
-    public function testImplementsDataConfigurationInterface()
-    {
-        $entityManagerMock = $this->getMockBuilder(EntityManagerInterface::class)->getMock();
-        $translatorMock = $this->getMockBuilder(TranslatorInterface::class)->getMock();
-        $modifier = new FeatureFlagsModifier($entityManagerMock, $translatorMock);
-
-        $this->assertInstanceOf(DataConfigurationInterface::class, $modifier);
-    }
-
     public function testGetConfigurationReturnsExpectedStructure()
     {
         $featureFlags = [
@@ -141,7 +131,7 @@ class FeatureFlagsModifierTest extends TestCase
             1 => 'a',
         ];
 
-        $this->expectException(TypeError::class);
+        $this->expectException(InvalidArgumentException::class);
 
         $modifier->updateConfiguration($payload);
     }
@@ -205,9 +195,7 @@ class FeatureFlagsModifierTest extends TestCase
             1 => 'a',
         ];
 
-        $this->expectException(TypeError::class);
-
-        $modifier->validateConfiguration($payload);
+        $this->assertFalse($modifier->validateConfiguration($payload));
     }
 
     /**
