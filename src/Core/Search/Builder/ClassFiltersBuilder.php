@@ -44,6 +44,11 @@ final class ClassFiltersBuilder extends AbstractFiltersBuilder
     private $typedBuilders;
 
     /**
+     * @var array|null
+     */
+    private $savedConfig = null;
+
+    /**
      * @param iterable|null $typedBuilders
      */
     public function __construct(?iterable $typedBuilders = null)
@@ -64,6 +69,9 @@ final class ClassFiltersBuilder extends AbstractFiltersBuilder
     public function addTypedBuilder(TypedFiltersBuilderInterface $typedFiltersBuilder): self
     {
         $this->typedBuilders[] = $typedFiltersBuilder;
+        if (null !== $this->savedConfig) {
+            $typedFiltersBuilder->setConfig($this->savedConfig);
+        }
 
         return $this;
     }
@@ -73,6 +81,7 @@ final class ClassFiltersBuilder extends AbstractFiltersBuilder
      */
     public function setConfig(array $config)
     {
+        $this->savedConfig = $config;
         if (isset($config['filters_class'])) {
             $this->filtersClass = $config['filters_class'];
         }
@@ -97,6 +106,8 @@ final class ClassFiltersBuilder extends AbstractFiltersBuilder
         }
 
         $typedBuilder = $this->getTypedBuilder();
+        // When a typed builder matches it MUST be used in priority, do not try to manually a filters class that might
+        // need some special inputs
         if (null !== $typedBuilder) {
             $typedFilters = $typedBuilder->buildFilters($filters);
         } else {

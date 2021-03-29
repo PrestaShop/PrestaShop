@@ -31,6 +31,7 @@ use PrestaShop\PrestaShop\Core\Search\Builder\AbstractFiltersBuilder;
 use PrestaShop\PrestaShop\Core\Search\Builder\ClassFiltersBuilder;
 use PrestaShop\PrestaShop\Core\Search\Builder\TypedBuilder\TypedFiltersBuilderInterface;
 use PrestaShop\PrestaShop\Core\Search\Filters;
+use RuntimeException;
 
 class ClassFiltersBuilderTest extends TestCase
 {
@@ -101,10 +102,69 @@ class ClassFiltersBuilderTest extends TestCase
         $this->assertEquals(SampleFiltersBuilder::FILTER_ID, $builtFilters->getFilterId());
         $this->assertEquals(SampleFiltersBuilder::ORDER_BY, $builtFilters->getOrderBy());
     }
+
+    /**
+     * Since SampleWithConstraintFilters does not allow empty filterId if ClassFiltersBuilders
+     * tries to construct it an error will be thrown.
+     */
+    public function testConstraintFilters()
+    {
+        $builder = new ClassFiltersBuilder();
+        $builder->setConfig(['filters_class' => SampleWithConstraintFilters::class]);
+
+        $this->expectExceptionMessage('Cannot be constructed without filterId');
+        $this->expectException(RuntimeException::class);
+        $builder->buildFilters();
+    }
+
+    /**
+     * Since SampleWithConstraintFilters does not allow empty filterId if ClassFiltersBuilders
+     * tries to construct it an error will be thrown. With our associated builder we ensure it
+     * is correctly built, and only built once.
+     */
+    public function testOnlyBuilderCreatesFilters()
+    {
+        $builder = new ClassFiltersBuilder();
+        $builder->setConfig(['filters_class' => SampleWithConstraintFilters::class]);
+
+        $builder->addTypedBuilder(new SampleFiltersBuilder());
+
+        $builtFilters = $builder->buildFilters();
+        $this->assertEquals(SampleFiltersBuilder::FILTER_ID, $builtFilters->getFilterId());
+        $this->assertEquals(SampleFiltersBuilder::ORDER_BY, $builtFilters->getOrderBy());
+    }
 }
 
 class SampleFilters extends Filters
 {
+    /**
+     * {@inheritdoc}
+     */
+    public static function getDefaults()
+    {
+        return [
+            'limit' => 42,
+            'offset' => 0,
+            'orderBy' => 'id_sample',
+            'sortOrder' => 'desc',
+            'filters' => [],
+        ];
+    }
+}
+
+class SampleWithConstraintFilters extends Filters
+{
+    /**
+     * {@inheritDoc}
+     */
+    public function __construct(array $filters = [], $filterId = '')
+    {
+        if (empty($filterId)) {
+            throw new RuntimeException('Cannot be constructed without filterId');
+        }
+        parent::__construct($filters, $filterId);
+    }
+
     /**
      * {@inheritdoc}
      */
@@ -126,11 +186,26 @@ class SampleFiltersBuilder extends AbstractFiltersBuilder implements TypedFilter
     public const ORDER_BY = 'id_special';
 
     /**
+     * @var string
+     */
+    private $filtersClass;
+
+    /**
+     * {@inheritDoc}
+     */
+    public function setConfig(array $config)
+    {
+        $this->filtersClass = $config['filters_class'];
+
+        return parent::setConfig($config);
+    }
+
+    /**
      * {@inheritDoc}
      */
     public function buildFilters(Filters $filters = null)
     {
-        return new SampleFilters(['orderBy' => self::ORDER_BY], self::FILTER_ID);
+        return new $this->filtersClass(['orderBy' => self::ORDER_BY], self::FILTER_ID);
     }
 
     /**
@@ -138,6 +213,9 @@ class SampleFiltersBuilder extends AbstractFiltersBuilder implements TypedFilter
      */
     public function supports(string $filterClassName): bool
     {
-        return SampleFilters::class === $filterClassName;
+        return
+            SampleWithConstraintFilters::class === $filterClassName
+            || SampleFilters::class === $filterClassName
+        ;
     }
 }
