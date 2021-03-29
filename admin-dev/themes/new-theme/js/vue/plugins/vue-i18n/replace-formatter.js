@@ -44,12 +44,14 @@ export default class ReplaceFormatter {
 
     let msg = message;
     Object.keys(values).forEach((param) => {
+      let placeholder = param;
+
       // If the param doesn't use PrestaShop formatting (with %) nor Symfony usual one (with {})
       // then we fallback to VueI18n usual one which uses `{param}`
-      if (param.indexOf('%') === -1 && param.indexOf('{') === -1) {
-        param = `{${param}}`;
+      if (placeholder.indexOf('%') === -1 && placeholder.indexOf('{') === -1) {
+        placeholder = `{${placeholder}}`;
       }
-      msg = msg.replace(param, values[param]);
+      msg = msg.replace(placeholder, values[param]);
     });
 
     return [msg];
