@@ -27,14 +27,19 @@
   <div class="combinations-filters-dropdown">
     <div class="dropdown">
       <button
-        :class="['btn', 'dropdown-toggle', selectedFilters.length > 0 ? 'btn-primary' : 'btn-outline-secondary', 'btn']"
+        :class="[
+          'btn',
+          'dropdown-toggle',
+          selectedFilters.length > 0 ? 'btn-primary' : 'btn-outline-secondary',
+          'btn',
+        ]"
         type="button"
         data-toggle="dropdown"
         aria-haspopup="true"
         aria-expanded="false"
         id="form_invoice_prefix"
       >
-        {{ label }} {{ selectedFilters.length > 0 ? `(${selectedFilters.length})` : null }}
+        {{ label }} {{ nbFiles }}
       </button>
       <div
         class="dropdown-menu"
@@ -63,7 +68,6 @@
   </div>
 </template>
 
-
 <script>
   export default {
     name: 'FilterDropdown',
@@ -85,6 +89,13 @@
     mounted() {
       this.$parent.$on('clearAll', this.clear);
     },
+    computed: {
+      nbFiles() {
+        return this.selectedFilters.length > 0
+          ? `(${this.selectedFilters.length})`
+          : null;
+      },
+    },
     methods: {
       isChecked(filter) {
         return this.selectedFilters.includes(filter);
@@ -92,7 +103,9 @@
       toggleFilter(filter) {
         if (this.selectedFilters.includes(filter)) {
           this.$emit('removeFilter', filter);
-          this.selectedFilters = this.selectedFilters.filter((item) => item.id !== filter.id);
+          this.selectedFilters = this.selectedFilters.filter(
+            (item) => item.id !== filter.id,
+          );
         } else {
           this.$emit('addFilter', filter);
           this.selectedFilters.push(filter);
@@ -111,10 +124,10 @@
 <style lang="scss" type="text/scss">
 @import "~@scss/config/_settings.scss";
 
-  .combinations-filters-dropdown {
-    margin: 0 .35rem;
+.combinations-filters-dropdown {
+  margin: 0 0.35rem;
 
-    .dropdown-item {
+  .dropdown-item {
     padding: 0.438rem 0.938rem;
     padding-right: 1rem;
     line-height: normal;
@@ -125,6 +138,6 @@
       position: relative;
       padding-left: 28px;
     }
-    }
   }
+}
 </style>

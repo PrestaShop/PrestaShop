@@ -43,68 +43,23 @@
         class="btn btn-outline-secondary combinations-filters-clear"
         @click="clearAll"
       >
-        <i class="material-icons">close</i> Clear {{ selectedFilters.length }} filters
+        <i class="material-icons">close</i> Clear
+        {{ selectedFilters.length }} filters
       </button>
     </div>
   </div>
 </template>
 
 <script>
-  import {
-    getFilters,
-  } from '@pages/product/services/filters';
+  import {getFilters} from '@pages/product/services/filters';
   import FilterDropdown from '@pages/product/components/filters/FilterDropdown';
+  import {EventEmitter} from '@components/event-emitter';
 
   export default {
     name: 'Filters',
     data() {
       return {
-        filters: [
-          {
-            id: 1,
-            name: 'Size',
-            childrens: [
-              {
-                id: 1,
-                name: 'Plain',
-              },
-              {
-                id: 2,
-                name: 'Lined',
-              },
-              {
-                id: 3,
-                name: 'Squared',
-              },
-              {
-                id: 4,
-                name: 'Blank',
-              },
-            ],
-          },
-          {
-            id: 2,
-            name: 'Color',
-            childrens: [
-              {
-                id: 5,
-                name: 'Plain',
-              },
-              {
-                id: 6,
-                name: 'Lined',
-              },
-              {
-                id: 7,
-                name: 'Squared',
-              },
-              {
-                id: 8,
-                name: 'Blank',
-              },
-            ],
-          },
-        ],
+        filters: [],
         selectedFilters: [],
       };
     },
@@ -126,7 +81,9 @@
           e.preventDefault();
         });
       }
-      // this.initFilters();
+    },
+    mounted() {
+      this.initFilters();
     },
     methods: {
       /**
@@ -142,13 +99,21 @@
       },
       addFilter(filter) {
         this.selectedFilters.push(filter);
+        this.updateFilters();
       },
       removeFilter(filter) {
-        this.selectedFilters = this.selectedFilters.filter((e) => filter.id !== e.id);
+        this.selectedFilters = this.selectedFilters.filter(
+          (e) => filter.id !== e.id,
+        );
+        this.updateFilters();
       },
       clearAll() {
         this.selectedFilters = [];
         this.$emit('clearAll');
+        EventEmitter.emit('updateFilters', this.selectedFilters);
+      },
+      updateFilters() {
+        EventEmitter.emit('updateFilters', this.selectedFilters);
       },
     },
   };
@@ -157,18 +122,18 @@
 <style lang="scss" type="text/scss">
 @import "~@scss/config/_settings.scss";
 
-  .combinations-filters {
-    .control-label {
-      font-weight: 600;
-      color: #000;
-      margin-botton: 1rem;
-    }
-
-    &-line {
-      display: flex;
-      align-items: flex-start;
-      flex-wrap: wrap;
-      margin: 0 -.35rem;
-    }
+.combinations-filters {
+  .control-label {
+    font-weight: 600;
+    color: #000;
+    margin-botton: 1rem;
   }
+
+  &-line {
+    display: flex;
+    align-items: flex-start;
+    flex-wrap: wrap;
+    margin: 0 -0.35rem;
+  }
+}
 </style>
