@@ -29,6 +29,7 @@ declare(strict_types=1);
 namespace PrestaShop\PrestaShop\Core\FeatureFlag;
 
 use Doctrine\ORM\EntityManagerInterface;
+use InvalidArgumentException;
 use PrestaShop\PrestaShop\Core\Configuration\DataConfigurationInterface;
 use PrestaShopBundle\Entity\FeatureFlag;
 use Symfony\Component\Translation\TranslatorInterface;
@@ -83,10 +84,12 @@ class FeatureFlagsModifier implements DataConfigurationInterface
      */
     public function updateConfiguration(array $configuration): array
     {
+        if (!$this->validateConfiguration($configuration)) {
+            throw new InvalidArgumentException('Invalid feature flag configuration submitted');
+        }
+
         /** @var array<string, boolean> $configuration */
         foreach ($configuration as $flagName => $flagState) {
-            $this->validateConfigurationRowType($flagName, $flagState);
-
             $featureFlag = $this->getOneFeatureFlagByName($flagName);
 
             if ($flagState) {
@@ -108,7 +111,13 @@ class FeatureFlagsModifier implements DataConfigurationInterface
     {
         /** @var array<string, boolean> $configuration */
         foreach ($configuration as $flagName => $flagState) {
-            $this->validateConfigurationRowType($flagName, $flagState);
+            if (!is_string($flagName)) {
+                return false;
+            }
+
+            if (!is_bool($flagState)) {
+                return false;
+            }
 
             if (null === $this->getOneFeatureFlagByName($flagName)) {
                 return false;
@@ -126,14 +135,5 @@ class FeatureFlagsModifier implements DataConfigurationInterface
     public function getOneFeatureFlagByName(string $featureFlagName): ?FeatureFlag
     {
         return $this->doctrineEntityManager->getRepository('PrestaShopBundle:FeatureFlag')->findOneBy(['name' => $featureFlagName]);
-    }
-
-    /**
-     * @param string $featureFlagName
-     * @param bool $flagState
-     */
-    private function validateConfigurationRowType(string $featureFlagName, bool $flagState): void
-    {
-        // nothing to do, php type validation will reject not valid values
     }
 }
