@@ -15,6 +15,7 @@ services:
                 - '@prestashop.core.form.command_builder.product.stock_command_builder'
                 - '@prestashop.core.form.command_builder.product.feature_values_command_builder'
                 - '@prestashop.core.form.command_builder.product.customization_fields_command_builder'
+                - '@prestashop.core.form.command_builder.product.virtual_product_file_command_builder'
                 # VERY IMPORTANT this builder must be the last one, it will avoid conflicts with previous commands
                 # that may not be compatible with the updated type, ideally we would need the ability to define
                 # priorities for each builder
@@ -49,3 +50,6 @@ services:
 
     prestashop.core.form.command_builder.product.customization_fields_command_builder:
         class: PrestaShop\PrestaShop\Core\Form\IdentifiableObject\CommandBuilder\Product\CustomizationFieldsCommandBuilder
+
+    prestashop.core.form.command_builder.product.virtual_product_file_command_builder:
+        class: PrestaShop\PrestaShop\Core\Form\IdentifiableObject\CommandBuilder\Product\VirtualProductFileCommandBuilder
