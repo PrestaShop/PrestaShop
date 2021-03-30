@@ -31,7 +31,7 @@ namespace Tests\Unit\Core\Form\IdentifiableObject\CommandBuilder\Product\Combina
 use DateTime;
 use Generator;
 use PrestaShop\PrestaShop\Core\Domain\Product\Combination\Command\UpdateCombinationStockCommand;
-use PrestaShop\PrestaShop\Core\Form\IdentifiableObject\CommandBuilder\Product\Combination\CombinationStockCommandBuilder;
+use PrestaShop\PrestaShop\Core\Form\IdentifiableObject\CommandBuilder\Product\Combination\CombinationStockCommandsBuilder;
 
 class CombinationStockCommandBuilderTest extends AbstractCombinationCommandBuilderTest
 {
@@ -43,7 +43,7 @@ class CombinationStockCommandBuilderTest extends AbstractCombinationCommandBuild
      */
     public function testBuildCommand(array $formData, array $expectedCommands): void
     {
-        $builder = new CombinationStockCommandBuilder();
+        $builder = new CombinationStockCommandsBuilder();
         $builtCommands = $builder->buildCommands($this->getCombinationId(), $formData);
         $this->assertEquals($expectedCommands, $builtCommands);
     }
