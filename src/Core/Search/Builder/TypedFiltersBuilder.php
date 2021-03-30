@@ -32,13 +32,13 @@ use PrestaShop\PrestaShop\Core\Search\Builder\TypedBuilder\TypedFiltersBuilderIn
 use PrestaShop\PrestaShop\Core\Search\Filters;
 
 /**
- * Class TypeFiltersBuilder is an orchestrator which decided which builder is going to built the strongly
+ * Class TypedFiltersBuilder is an orchestrator which decided which builder is going to built the strongly
  * typed Filter based on the defined filter class. It loops through a list of typed builders checking if
  * they support the request class and uses the first it finds when a compatibility is found.
  *
  * If no specific type builder is found then the default builder is used.
  */
-class TypeFiltersBuilder extends AbstractFiltersBuilder
+class TypedFiltersBuilder extends AbstractFiltersBuilder
 {
     /**
      * @var FiltersBuilderInterface
@@ -48,7 +48,7 @@ class TypeFiltersBuilder extends AbstractFiltersBuilder
     /**
      * @var TypedFiltersBuilderInterface[]
      */
-    private $typedBuilders;
+    private $typedBuilders = [];
 
     /** @var string */
     private $filtersClass;
@@ -56,7 +56,7 @@ class TypeFiltersBuilder extends AbstractFiltersBuilder
     /**
      * @var array|null
      */
-    private $savedConfig = null;
+    private $config = null;
 
     /**
      * @param FiltersBuilderInterface $defaultBuilder
@@ -67,7 +67,7 @@ class TypeFiltersBuilder extends AbstractFiltersBuilder
         ?iterable $typedBuilders = null
     ) {
         $this->defaultBuilder = $defaultBuilder;
-        $this->typedBuilders = [];
+
         if (!empty($typedBuilders)) {
             foreach ($typedBuilders as $typedBuilder) {
                 $this->addTypedBuilder($typedBuilder);
@@ -83,8 +83,8 @@ class TypeFiltersBuilder extends AbstractFiltersBuilder
     public function addTypedBuilder(TypedFiltersBuilderInterface $typedFiltersBuilder): self
     {
         $this->typedBuilders[] = $typedFiltersBuilder;
-        if (null !== $this->savedConfig) {
-            $typedFiltersBuilder->setConfig($this->savedConfig);
+        if (null !== $this->config) {
+            $typedFiltersBuilder->setConfig($this->config);
         }
 
         return $this;
@@ -95,7 +95,7 @@ class TypeFiltersBuilder extends AbstractFiltersBuilder
      */
     public function setConfig(array $config)
     {
-        $this->savedConfig = $config;
+        $this->config = $config;
 
         if (isset($config['filters_class'])) {
             $this->filtersClass = $config['filters_class'];

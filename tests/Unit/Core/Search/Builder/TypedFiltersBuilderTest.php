@@ -33,11 +33,11 @@ use PHPUnit\Framework\TestCase;
 use PrestaShop\PrestaShop\Core\Search\Builder\AbstractFiltersBuilder;
 use PrestaShop\PrestaShop\Core\Search\Builder\FiltersBuilderInterface;
 use PrestaShop\PrestaShop\Core\Search\Builder\TypedBuilder\TypedFiltersBuilderInterface;
-use PrestaShop\PrestaShop\Core\Search\Builder\TypeFiltersBuilder;
+use PrestaShop\PrestaShop\Core\Search\Builder\TypedFiltersBuilder;
 use PrestaShop\PrestaShop\Core\Search\Filters;
 use RuntimeException;
 
-class TypeFiltersBuilderTest extends TestCase
+class TypedFiltersBuilderTest extends TestCase
 {
     /**
      * Ensure that provided typed builders a re indeed used by checking their support function
@@ -54,7 +54,7 @@ class TypeFiltersBuilderTest extends TestCase
             $mock2,
         ];
         $filters = new Filters(['limit' => 10]);
-        $builder = new TypeFiltersBuilder($this->createBuilderMock($filters), $typedBuilders);
+        $builder = new TypedFiltersBuilder($this->createBuilderMock($filters), $typedBuilders);
         $builder->setConfig($config);
 
         $builtFilters = $builder->buildFilters($filters);
@@ -67,7 +67,7 @@ class TypeFiltersBuilderTest extends TestCase
         $config = ['filters_class' => SampleWithoutConstraintFilters::class];
 
         $filters = new Filters(['limit' => 10]);
-        $builder = new TypeFiltersBuilder($this->createBuilderMock($filters));
+        $builder = new TypedFiltersBuilder($this->createBuilderMock($filters));
         $builder->setConfig($config);
 
         $mock1 = $this->createTypeBuilderMock($config);
@@ -98,7 +98,7 @@ class TypeFiltersBuilderTest extends TestCase
             $mock2,
         ];
         $filters = new Filters(['limit' => 10]);
-        $builder = new TypeFiltersBuilder($this->createBuilderMock($filters), $typedBuilders);
+        $builder = new TypedFiltersBuilder($this->createBuilderMock($filters), $typedBuilders);
 
         $builtFilters = $builder->buildFilters($filters);
         $this->assertEmpty($builtFilters->getFilterId());
@@ -108,7 +108,7 @@ class TypeFiltersBuilderTest extends TestCase
     public function testBuildFilters()
     {
         $filters = new Filters(['limit' => 10]);
-        $builder = new TypeFiltersBuilder($this->createBuilderMock($filters));
+        $builder = new TypedFiltersBuilder($this->createBuilderMock($filters));
         $builder->setConfig(['filters_class' => SampleWithoutConstraintFilters::class]);
 
         $builtFilters = $builder->buildFilters($filters);
@@ -128,7 +128,7 @@ class TypeFiltersBuilderTest extends TestCase
      */
     public function testOnlyMatchingBuilderCreatesFilters()
     {
-        $builder = new TypeFiltersBuilder($this->createBuilderMock(null));
+        $builder = new TypedFiltersBuilder($this->createBuilderMock(null));
         $builder->setConfig(['filters_class' => SampleWithConstraintFilters::class]);
 
         $builder->addTypedBuilder(new SampleFiltersBuilder());

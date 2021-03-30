@@ -29,13 +29,13 @@ Feature: Generate attribute combinations for product in Back Office (BO)
       | Size  | [S,M]              |
       | Color | [White,Black,Blue] |
     Then product "product1" should have following combinations:
-      | id reference   | combination name        | reference | attributes           | impact on price | final price | quantity | is default |
-      | product1SWhite | Size - S, Color - White |           | [Size:S,Color:White] | 0               | 0           | 0        | true       |
-      | product1SBlack | Size - S, Color - Black |           | [Size:S,Color:Black] | 0               | 0           | 0        | false      |
-      | product1SBlue  | Size - S, Color - Blue  |           | [Size:S,Color:Blue]  | 0               | 0           | 0        | false      |
-      | product1MWhite | Size - M, Color - White |           | [Size:M,Color:White] | 0               | 0           | 0        | false      |
-      | product1MBlack | Size - M, Color - Black |           | [Size:M,Color:Black] | 0               | 0           | 0        | false      |
-      | product1MBlue  | Size - M, Color - Blue  |           | [Size:M,Color:Blue]  | 0               | 0           | 0        | false      |
+      | id reference   | combination name        | reference | attributes           | impact on price | quantity | is default |
+      | product1SWhite | Size - S, Color - White |           | [Size:S,Color:White] | 0               | 0        | true       |
+      | product1SBlack | Size - S, Color - Black |           | [Size:S,Color:Black] | 0               | 0        | false      |
+      | product1SBlue  | Size - S, Color - Blue  |           | [Size:S,Color:Blue]  | 0               | 0        | false      |
+      | product1MWhite | Size - M, Color - White |           | [Size:M,Color:White] | 0               | 0        | false      |
+      | product1MBlack | Size - M, Color - Black |           | [Size:M,Color:Black] | 0               | 0        | false      |
+      | product1MBlue  | Size - M, Color - Blue  |           | [Size:M,Color:Blue]  | 0               | 0        | false      |
     And product product1 default combination should be "product1SWhite"
 
   Scenario: I can paginate combinations and limit combinations per page
@@ -45,19 +45,19 @@ Feature: Generate attribute combinations for product in Back Office (BO)
       | page     | 1     |
       | limit    | 5     |
     Then I should see following combinations in paginated list of product "product1":
-      | id reference   | combination name        | reference | attributes           | impact on price | final price | quantity | is default |
-      | product1SWhite | Size - S, Color - White |           | [Size:S,Color:White] | 0               | 0           | 0        | true       |
-      | product1SBlack | Size - S, Color - Black |           | [Size:S,Color:Black] | 0               | 0           | 0        | false      |
-      | product1SBlue  | Size - S, Color - Blue  |           | [Size:S,Color:Blue]  | 0               | 0           | 0        | false      |
-      | product1MWhite | Size - M, Color - White |           | [Size:M,Color:White] | 0               | 0           | 0        | false      |
-      | product1MBlack | Size - M, Color - Black |           | [Size:M,Color:Black] | 0               | 0           | 0        | false      |
+      | id reference   | combination name        | reference | attributes           | impact on price | quantity | is default |
+      | product1SWhite | Size - S, Color - White |           | [Size:S,Color:White] | 0               | 0        | true       |
+      | product1SBlack | Size - S, Color - Black |           | [Size:S,Color:Black] | 0               | 0        | false      |
+      | product1SBlue  | Size - S, Color - Blue  |           | [Size:S,Color:Blue]  | 0               | 0        | false      |
+      | product1MWhite | Size - M, Color - White |           | [Size:M,Color:White] | 0               | 0        | false      |
+      | product1MBlack | Size - M, Color - Black |           | [Size:M,Color:Black] | 0               | 0        | false      |
     When I search product "product1" combinations list by following search criteria:
       | criteria | value |
       | page     | 2     |
       | limit    | 5     |
     Then I should see following combinations in paginated list of product "product1":
-      | id reference  | combination name       | reference | attributes          | impact on price | final price | quantity | is default |
-      | product1MBlue | Size - M, Color - Blue |           | [Size:M,Color:Blue] | 0               | 0           | 0        | false      |
+      | id reference  | combination name       | reference | attributes          | impact on price | quantity | is default |
+      | product1MBlue | Size - M, Color - Blue |           | [Size:M,Color:Blue] | 0               | 0        | false      |
     When I search product "product1" combinations list by following search criteria:
       | criteria | value |
       | page     | 3     |
@@ -70,37 +70,37 @@ Feature: Generate attribute combinations for product in Back Office (BO)
       | criteria   | value |
       | attributes | [S,M] |
     Then I should see following combinations in filtered list of product "product1":
-      | id reference   | combination name        | reference | attributes           | impact on price | final price | quantity | is default |
-      | product1SWhite | Size - S, Color - White |           | [Size:S,Color:White] | 0               | 0           | 0        | true       |
-      | product1SBlack | Size - S, Color - Black |           | [Size:S,Color:Black] | 0               | 0           | 0        | false      |
-      | product1SBlue  | Size - S, Color - Blue  |           | [Size:S,Color:Blue]  | 0               | 0           | 0        | false      |
-      | product1MWhite | Size - M, Color - White |           | [Size:M,Color:White] | 0               | 0           | 0        | false      |
-      | product1MBlack | Size - M, Color - Black |           | [Size:M,Color:Black] | 0               | 0           | 0        | false      |
-      | product1MBlue  | Size - M, Color - Blue  |           | [Size:M,Color:Blue]  | 0               | 0           | 0        | false      |
+      | id reference   | combination name        | reference | attributes           | impact on price | quantity | is default |
+      | product1SWhite | Size - S, Color - White |           | [Size:S,Color:White] | 0               | 0        | true       |
+      | product1SBlack | Size - S, Color - Black |           | [Size:S,Color:Black] | 0               | 0        | false      |
+      | product1SBlue  | Size - S, Color - Blue  |           | [Size:S,Color:Blue]  | 0               | 0        | false      |
+      | product1MWhite | Size - M, Color - White |           | [Size:M,Color:White] | 0               | 0        | false      |
+      | product1MBlack | Size - M, Color - Black |           | [Size:M,Color:Black] | 0               | 0        | false      |
+      | product1MBlue  | Size - M, Color - Blue  |           | [Size:M,Color:Blue]  | 0               | 0        | false      |
     When I search product "product1" combinations list by following search criteria:
       | criteria   | value |
       | attributes | [S]   |
     Then I should see following combinations in filtered list of product "product1":
-      | id reference   | combination name        | reference | attributes           | impact on price | final price | quantity | is default |
-      | product1SWhite | Size - S, Color - White |           | [Size:S,Color:White] | 0               | 0           | 0        | true       |
-      | product1SBlack | Size - S, Color - Black |           | [Size:S,Color:Black] | 0               | 0           | 0        | false      |
-      | product1SBlue  | Size - S, Color - Blue  |           | [Size:S,Color:Blue]  | 0               | 0           | 0        | false      |
+      | id reference   | combination name        | reference | attributes           | impact on price | quantity | is default |
+      | product1SWhite | Size - S, Color - White |           | [Size:S,Color:White] | 0               | 0        | true       |
+      | product1SBlack | Size - S, Color - Black |           | [Size:S,Color:Black] | 0               | 0        | false      |
+      | product1SBlue  | Size - S, Color - Blue  |           | [Size:S,Color:Blue]  | 0               | 0        | false      |
     When I search product "product1" combinations list by following search criteria:
       | criteria   | value  |
       | attributes | [Blue] |
     Then I should see following combinations in filtered list of product "product1":
-      | id reference  | combination name       | reference | attributes          | impact on price | final price | quantity | is default |
-      | product1SBlue | Size - S, Color - Blue |           | [Size:S,Color:Blue] | 0               | 0           | 0        | false      |
-      | product1MBlue | Size - M, Color - Blue |           | [Size:M,Color:Blue] | 0               | 0           | 0        | false      |
+      | id reference  | combination name       | reference | attributes          | impact on price | quantity | is default |
+      | product1SBlue | Size - S, Color - Blue |           | [Size:S,Color:Blue] | 0               | 0        | false      |
+      | product1MBlue | Size - M, Color - Blue |           | [Size:M,Color:Blue] | 0               | 0        | false      |
     When I search product "product1" combinations list by following search criteria:
       | criteria   | value    |
       | attributes | [M,Blue] |
     Then I should see following combinations in filtered list of product "product1":
-      | id reference   | combination name        | reference | attributes           | impact on price | final price | quantity | is default |
-      | product1SBlue  | Size - S, Color - Blue  |           | [Size:S,Color:Blue]  | 0               | 0           | 0        | false      |
-      | product1MWhite | Size - M, Color - White |           | [Size:M,Color:White] | 0               | 0           | 0        | false      |
-      | product1MBlack | Size - M, Color - Black |           | [Size:M,Color:Black] | 0               | 0           | 0        | false      |
-      | product1MBlue  | Size - M, Color - Blue  |           | [Size:M,Color:Blue]  | 0               | 0           | 0        | false      |
+      | id reference   | combination name        | reference | attributes           | impact on price | quantity | is default |
+      | product1SBlue  | Size - S, Color - Blue  |           | [Size:S,Color:Blue]  | 0               | 0        | false      |
+      | product1MWhite | Size - M, Color - White |           | [Size:M,Color:White] | 0               | 0        | false      |
+      | product1MBlack | Size - M, Color - Black |           | [Size:M,Color:Black] | 0               | 0        | false      |
+      | product1MBlue  | Size - M, Color - Blue  |           | [Size:M,Color:Blue]  | 0               | 0        | false      |
 
   Scenario: I can filter combinations by default combination
     Given product "product1" combinations list search criteria is set to defaults
@@ -108,18 +108,18 @@ Feature: Generate attribute combinations for product in Back Office (BO)
       | criteria   | value |
       | is default | true  |
     Then I should see following combinations in filtered list of product "product1":
-      | id reference   | combination name        | reference | attributes           | impact on price | final price | quantity | is default |
-      | product1SWhite | Size - S, Color - White |           | [Size:S,Color:White] | 0               | 0           | 0        | true       |
+      | id reference   | combination name        | reference | attributes           | impact on price | quantity | is default |
+      | product1SWhite | Size - S, Color - White |           | [Size:S,Color:White] | 0               | 0        | true       |
     When I search product "product1" combinations list by following search criteria:
       | criteria   | value |
       | is default | false |
     Then I should see following combinations in filtered list of product "product1":
-      | id reference   | combination name        | reference | attributes           | impact on price | final price | quantity | is default |
-      | product1SBlack | Size - S, Color - Black |           | [Size:S,Color:Black] | 0               | 0           | 0        | false      |
-      | product1SBlue  | Size - S, Color - Blue  |           | [Size:S,Color:Blue]  | 0               | 0           | 0        | false      |
-      | product1MWhite | Size - M, Color - White |           | [Size:M,Color:White] | 0               | 0           | 0        | false      |
-      | product1MBlack | Size - M, Color - Black |           | [Size:M,Color:Black] | 0               | 0           | 0        | false      |
-      | product1MBlue  | Size - M, Color - Blue  |           | [Size:M,Color:Blue]  | 0               | 0           | 0        | false      |
+      | id reference   | combination name        | reference | attributes           | impact on price | quantity | is default |
+      | product1SBlack | Size - S, Color - Black |           | [Size:S,Color:Black] | 0               | 0        | false      |
+      | product1SBlue  | Size - S, Color - Blue  |           | [Size:S,Color:Blue]  | 0               | 0        | false      |
+      | product1MWhite | Size - M, Color - White |           | [Size:M,Color:White] | 0               | 0        | false      |
+      | product1MBlack | Size - M, Color - Black |           | [Size:M,Color:Black] | 0               | 0        | false      |
+      | product1MBlue  | Size - M, Color - Blue  |           | [Size:M,Color:Blue]  | 0               | 0        | false      |
 
   Scenario: I can sort combinations by reference, quantity, impact on price
     Given product "product1" combinations list search criteria is set to defaults
@@ -140,25 +140,25 @@ Feature: Generate attribute combinations for product in Back Office (BO)
       | order by  | impact on price |
       | order way | asc             |
     Then I should see following combinations in paginated list of product "product1":
-      | id reference   | combination name        | reference | attributes           | impact on price | final price | quantity | is default |
-      | product1SWhite | Size - S, Color - White | AAA       | [Size:S,Color:White] | -1              | 0           | 10       | true       |
-      | product1MWhite | Size - M, Color - White |           | [Size:M,Color:White] | 0               | 0           | 0        | false      |
-      | product1MBlack | Size - M, Color - Black |           | [Size:M,Color:Black] | 0               | 0           | 0        | false      |
-      | product1MBlue  | Size - M, Color - Blue  |           | [Size:M,Color:Blue]  | 0               | 0           | 0        | false      |
-      | product1SBlue  | Size - S, Color - Blue  | BBB       | [Size:S,Color:Blue]  | 1               | 0           | 100      | false      |
-      | product1SBlack | Size - S, Color - Black | CCC       | [Size:S,Color:Black] | 10              | 0           | 50       | false      |
+      | id reference   | combination name        | reference | attributes           | impact on price | quantity | is default |
+      | product1SWhite | Size - S, Color - White | AAA       | [Size:S,Color:White] | -1              | 10       | true       |
+      | product1MWhite | Size - M, Color - White |           | [Size:M,Color:White] | 0               | 0        | false      |
+      | product1MBlack | Size - M, Color - Black |           | [Size:M,Color:Black] | 0               | 0        | false      |
+      | product1MBlue  | Size - M, Color - Blue  |           | [Size:M,Color:Blue]  | 0               | 0        | false      |
+      | product1SBlue  | Size - S, Color - Blue  | BBB       | [Size:S,Color:Blue]  | 1               | 100      | false      |
+      | product1SBlack | Size - S, Color - Black | CCC       | [Size:S,Color:Black] | 10              | 50       | false      |
     When I search product "product1" combinations list by following search criteria:
       | criteria  | value     |
       | order by  | reference |
       | order way | asc       |
     Then I should see following combinations in paginated list of product "product1":
-      | id reference   | combination name        | reference | attributes           | impact on price | final price | quantity | is default |
-      | product1MWhite | Size - M, Color - White |           | [Size:M,Color:White] | 0               | 0           | 0        | false      |
-      | product1MBlack | Size - M, Color - Black |           | [Size:M,Color:Black] | 0               | 0           | 0        | false      |
-      | product1MBlue  | Size - M, Color - Blue  |           | [Size:M,Color:Blue]  | 0               | 0           | 0        | false      |
-      | product1SWhite | Size - S, Color - White | AAA       | [Size:S,Color:White] | -1              | 0           | 10       | true       |
-      | product1SBlue  | Size - S, Color - Blue  | BBB       | [Size:S,Color:Blue]  | 1               | 0           | 100      | false      |
-      | product1SBlack | Size - S, Color - Black | CCC       | [Size:S,Color:Black] | 10              | 0           | 50       | false      |
+      | id reference   | combination name        | reference | attributes           | impact on price | quantity | is default |
+      | product1MWhite | Size - M, Color - White |           | [Size:M,Color:White] | 0               | 0        | false      |
+      | product1MBlack | Size - M, Color - Black |           | [Size:M,Color:Black] | 0               | 0        | false      |
+      | product1MBlue  | Size - M, Color - Blue  |           | [Size:M,Color:Blue]  | 0               | 0        | false      |
+      | product1SWhite | Size - S, Color - White | AAA       | [Size:S,Color:White] | -1              | 10       | true       |
+      | product1SBlue  | Size - S, Color - Blue  | BBB       | [Size:S,Color:Blue]  | 1               | 100      | false      |
+      | product1SBlack | Size - S, Color - Black | CCC       | [Size:S,Color:Black] | 10              | 50       | false      |
     When I search product "product1" combinations list by following search criteria:
       | criteria  | value     |
       | order by  | reference |
@@ -166,34 +166,34 @@ Feature: Generate attribute combinations for product in Back Office (BO)
       | page      | 1         |
       | limit     | 3         |
     Then I should see following combinations in paginated list of product "product1":
-      | id reference   | combination name        | reference | attributes           | impact on price | final price | quantity | is default |
-      | product1SBlack | Size - S, Color - Black | CCC       | [Size:S,Color:Black] | 10              | 0           | 50       | false      |
-      | product1SBlue  | Size - S, Color - Blue  | BBB       | [Size:S,Color:Blue]  | 1               | 0           | 100      | false      |
-      | product1SWhite | Size - S, Color - White | AAA       | [Size:S,Color:White] | -1              | 0           | 10       | true       |
+      | id reference   | combination name        | reference | attributes           | impact on price | quantity | is default |
+      | product1SBlack | Size - S, Color - Black | CCC       | [Size:S,Color:Black] | 10              | 50       | false      |
+      | product1SBlue  | Size - S, Color - Blue  | BBB       | [Size:S,Color:Blue]  | 1               | 100      | false      |
+      | product1SWhite | Size - S, Color - White | AAA       | [Size:S,Color:White] | -1              | 10       | true       |
     When I search product "product1" combinations list by following search criteria:
       | criteria  | value    |
       | order by  | quantity |
       | order way | asc      |
     Then I should see following combinations in paginated list of product "product1":
-      | id reference   | combination name        | reference | attributes           | impact on price | final price | quantity | is default |
-      | product1MWhite | Size - M, Color - White |           | [Size:M,Color:White] | 0               | 0           | 0        | false      |
-      | product1MBlack | Size - M, Color - Black |           | [Size:M,Color:Black] | 0               | 0           | 0        | false      |
-      | product1MBlue  | Size - M, Color - Blue  |           | [Size:M,Color:Blue]  | 0               | 0           | 0        | false      |
-      | product1SWhite | Size - S, Color - White | AAA       | [Size:S,Color:White] | -1              | 0           | 10       | true       |
-      | product1SBlack | Size - S, Color - Black | CCC       | [Size:S,Color:Black] | 10              | 0           | 50       | false      |
-      | product1SBlue  | Size - S, Color - Blue  | BBB       | [Size:S,Color:Blue]  | 1               | 0           | 100      | false      |
+      | id reference   | combination name        | reference | attributes           | impact on price | quantity | is default |
+      | product1MWhite | Size - M, Color - White |           | [Size:M,Color:White] | 0               | 0        | false      |
+      | product1MBlack | Size - M, Color - Black |           | [Size:M,Color:Black] | 0               | 0        | false      |
+      | product1MBlue  | Size - M, Color - Blue  |           | [Size:M,Color:Blue]  | 0               | 0        | false      |
+      | product1SWhite | Size - S, Color - White | AAA       | [Size:S,Color:White] | -1              | 10       | true       |
+      | product1SBlack | Size - S, Color - Black | CCC       | [Size:S,Color:Black] | 10              | 50       | false      |
+      | product1SBlue  | Size - S, Color - Blue  | BBB       | [Size:S,Color:Blue]  | 1               | 100      | false      |
     When I search product "product1" combinations list by following search criteria:
       | criteria  | value    |
       | order by  | quantity |
       | order way | desc     |
     Then I should see following combinations in paginated list of product "product1":
-      | id reference   | combination name        | reference | attributes           | impact on price | final price | quantity | is default |
-      | product1SBlue  | Size - S, Color - Blue  | BBB       | [Size:S,Color:Blue]  | 1               | 0           | 100      | false      |
-      | product1SBlack | Size - S, Color - Black | CCC       | [Size:S,Color:Black] | 10              | 0           | 50       | false      |
-      | product1SWhite | Size - S, Color - White | AAA       | [Size:S,Color:White] | -1              | 0           | 10       | true       |
-      | product1MWhite | Size - M, Color - White |           | [Size:M,Color:White] | 0               | 0           | 0        | false      |
-      | product1MBlack | Size - M, Color - Black |           | [Size:M,Color:Black] | 0               | 0           | 0        | false      |
-      | product1MBlue  | Size - M, Color - Blue  |           | [Size:M,Color:Blue]  | 0               | 0           | 0        | false      |
+      | id reference   | combination name        | reference | attributes           | impact on price | quantity | is default |
+      | product1SBlue  | Size - S, Color - Blue  | BBB       | [Size:S,Color:Blue]  | 1               | 100      | false      |
+      | product1SBlack | Size - S, Color - Black | CCC       | [Size:S,Color:Black] | 10              | 50       | false      |
+      | product1SWhite | Size - S, Color - White | AAA       | [Size:S,Color:White] | -1              | 10       | true       |
+      | product1MWhite | Size - M, Color - White |           | [Size:M,Color:White] | 0               | 0        | false      |
+      | product1MBlack | Size - M, Color - Black |           | [Size:M,Color:Black] | 0               | 0        | false      |
+      | product1MBlue  | Size - M, Color - Blue  |           | [Size:M,Color:Blue]  | 0               | 0        | false      |
 
   Scenario: I can filter combinations by reference
     Given product "product1" combinations list search criteria is set to defaults
@@ -204,30 +204,30 @@ Feature: Generate attribute combinations for product in Back Office (BO)
     And I update combination "product1SBlack" from list with following values:
       | reference | CCCD |
     And product "product1" should have following combinations:
-      | id reference   | combination name        | reference | attributes           | impact on price | final price | quantity | is default |
-      | product1SWhite | Size - S, Color - White | ABC       | [Size:S,Color:White] | -1              | 0           | 10       | true       |
-      | product1SBlack | Size - S, Color - Black | CCCD      | [Size:S,Color:Black] | 10              | 0           | 50       | false      |
-      | product1SBlue  | Size - S, Color - Blue  | BBB       | [Size:S,Color:Blue]  | 1               | 0           | 100      | false      |
-      | product1MWhite | Size - M, Color - White |           | [Size:M,Color:White] | 0               | 0           | 0        | false      |
-      | product1MBlack | Size - M, Color - Black |           | [Size:M,Color:Black] | 0               | 0           | 0        | false      |
-      | product1MBlue  | Size - M, Color - Blue  |           | [Size:M,Color:Blue]  | 0               | 0           | 0        | false      |
+      | id reference   | combination name        | reference | attributes           | impact on price | quantity | is default |
+      | product1SWhite | Size - S, Color - White | ABC       | [Size:S,Color:White] | -1              | 10       | true       |
+      | product1SBlack | Size - S, Color - Black | CCCD      | [Size:S,Color:Black] | 10              | 50       | false      |
+      | product1SBlue  | Size - S, Color - Blue  | BBB       | [Size:S,Color:Blue]  | 1               | 100      | false      |
+      | product1MWhite | Size - M, Color - White |           | [Size:M,Color:White] | 0               | 0        | false      |
+      | product1MBlack | Size - M, Color - Black |           | [Size:M,Color:Black] | 0               | 0        | false      |
+      | product1MBlue  | Size - M, Color - Blue  |           | [Size:M,Color:Blue]  | 0               | 0        | false      |
     When I search product "product1" combinations list by following search criteria:
       | criteria  | value |
       | reference | C     |
     Then I should see following combinations in filtered list of product "product1":
-      | id reference   | combination name        | reference | attributes           | impact on price | final price | quantity | is default |
-      | product1SWhite | Size - S, Color - White | ABC       | [Size:S,Color:White] | -1              | 0           | 10       | true       |
-      | product1SBlack | Size - S, Color - Black | CCCD      | [Size:S,Color:Black] | 10              | 0           | 50       | false      |
+      | id reference   | combination name        | reference | attributes           | impact on price | quantity | is default |
+      | product1SWhite | Size - S, Color - White | ABC       | [Size:S,Color:White] | -1              | 10       | true       |
+      | product1SBlack | Size - S, Color - Black | CCCD      | [Size:S,Color:Black] | 10              | 50       | false      |
     When I search product "product1" combinations list by following search criteria:
       | criteria  | value |
       | reference | b     |
     Then I should see following combinations in filtered list of product "product1":
-      | id reference   | combination name        | reference | attributes           | impact on price | final price | quantity | is default |
-      | product1SWhite | Size - S, Color - White | ABC       | [Size:S,Color:White] | -1              | 0           | 10       | true       |
-      | product1SBlue  | Size - S, Color - Blue  | BBB       | [Size:S,Color:Blue]  | 1               | 0           | 100      | false      |
+      | id reference   | combination name        | reference | attributes           | impact on price | quantity | is default |
+      | product1SWhite | Size - S, Color - White | ABC       | [Size:S,Color:White] | -1              | 10       | true       |
+      | product1SBlue  | Size - S, Color - Blue  | BBB       | [Size:S,Color:Blue]  | 1               | 100      | false      |
     When I search product "product1" combinations list by following search criteria:
       | criteria  | value |
       | reference | cD    |
     Then I should see following combinations in filtered list of product "product1":
-      | id reference   | combination name        | reference | attributes           | impact on price | final price | quantity | is default |
-      | product1SBlack | Size - S, Color - Black | CCCD      | [Size:S,Color:Black] | 10              | 0           | 50       | false      |
+      | id reference   | combination name        | reference | attributes           | impact on price | quantity | is default |
+      | product1SBlack | Size - S, Color - Black | CCCD      | [Size:S,Color:Black] | 10              | 50       | false      |

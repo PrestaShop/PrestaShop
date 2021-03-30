@@ -100,13 +100,13 @@ Feature: Add basic product from Back Office (BO)
       | Size  | [S,M]              |
       | Color | [White,Black,Blue] |
     Then product "product1" should have following combinations:
-      | id reference   | combination name        | reference | attributes           | impact on price | final price | quantity | is default | combination reference |
-      | product1SWhite | Size - S, Color - White |           | [Size:S,Color:White] | 0               | 0           | 0        | true       |                       |
-      | product1SBlack | Size - S, Color - Black |           | [Size:S,Color:Black] | 0               | 0           | 0        | false      |                       |
-      | product1Blue   | Size - S, Color - Blue  |           | [Size:S,Color:Blue]  | 0               | 0           | 0        | false      |                       |
-      | product1MWhite | Size - M, Color - White |           | [Size:M,Color:White] | 0               | 0           | 0        | false      |                       |
-      | product1MBlack | Size - M, Color - Black |           | [Size:M,Color:Black] | 0               | 0           | 0        | false      |                       |
-      | product1MBlue  | Size - M, Color - Blue  |           | [Size:M,Color:Blue]  | 0               | 0           | 0        | false      |                       |
+      | id reference   | combination name        | reference | attributes           | impact on price | quantity | is default | combination reference |
+      | product1SWhite | Size - S, Color - White |           | [Size:S,Color:White] | 0               | 0        | true       |                       |
+      | product1SBlack | Size - S, Color - Black |           | [Size:S,Color:Black] | 0               | 0        | false      |                       |
+      | product1Blue   | Size - S, Color - Blue  |           | [Size:S,Color:Blue]  | 0               | 0        | false      |                       |
+      | product1MWhite | Size - M, Color - White |           | [Size:M,Color:White] | 0               | 0        | false      |                       |
+      | product1MBlack | Size - M, Color - Black |           | [Size:M,Color:Black] | 0               | 0        | false      |                       |
+      | product1MBlue  | Size - M, Color - Blue  |           | [Size:M,Color:Blue]  | 0               | 0        | false      |                       |
     When I update product "product1" type to standard
     Then product "product1" type should be standard
     And product "product1" should have no combinations

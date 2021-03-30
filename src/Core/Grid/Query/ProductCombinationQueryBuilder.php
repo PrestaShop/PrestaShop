@@ -85,11 +85,6 @@ final class ProductCombinationQueryBuilder extends AbstractDoctrineQueryBuilder
     private function getCombinationsQueryBuilder(SearchCriteriaInterface $searchCriteria): QueryBuilder
     {
         $filters = $searchCriteria->getFilters();
-        if (!isset($filters['product_id'])) {
-            //@todo: better exception? or require filter in another layer - like builder for filters? (categories has same issue)
-            throw new \RuntimeException('Product id is required for combinations grid');
-        }
-
         $productId = (int) $filters['product_id'];
 
         $qb = $this->connection->createQueryBuilder();
@@ -116,7 +111,7 @@ final class ProductCombinationQueryBuilder extends AbstractDoctrineQueryBuilder
             if ((bool) $filters['default_on']) {
                 $qb->andWhere('pa.default_on = 1');
             } else {
-                $qb->andWhere('pa.default_on IS NULL OR pa.default_on = 0');
+                $qb->andWhere('pa.default_on != 1');
             }
         }
 
