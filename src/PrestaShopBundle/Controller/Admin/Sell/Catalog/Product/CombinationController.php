@@ -59,7 +59,25 @@ class CombinationController extends FrameworkBundleAdminController
      */
     public function editAction(Request $request, int $combinationId): Response
     {
+        $liteDisplaying = $request->query->has('liteDisplaying');
         $combinationForm = $this->getCombinationFormBuilder()->getFormFor($combinationId);
+
+        try {
+            $combinationForm->handleRequest($request);
+
+            $result = $this->getCombinationFormHandler()->handleFor($combinationId, $combinationForm);
+
+            if ($result->isSubmitted() && $result->isValid()) {
+                $this->addFlash('success', $this->trans('Successful update.', 'Admin.Notifications.Success'));
+
+                return $this->redirectToRoute('admin_products_combinations_edit_combination', [
+                    'combinationId' => $combinationId,
+                    'liteDisplaying' => $liteDisplaying,
+                ]);
+            }
+        } catch (Exception $e) {
+            $this->addFlash('error', $this->getErrorMessageForException($e, $this->getErrorMessages($e)));
+        }
 
         return $this->render('@PrestaShop/Admin/Sell/Catalog/Product/Combination/edit.html.twig', [
             'combinationForm' => $combinationForm->createView(),
@@ -193,6 +211,14 @@ class CombinationController extends FrameworkBundleAdminController
     }
 
     /**
+     * @return FormHandlerInterface
+     */
+    private function getCombinationFormHandler(): FormHandlerInterface
+    {
+        return $this->get('prestashop.core.form.identifiable_object.combination_form_handler');
+    }
+
+    /**
      * @return FormBuilderInterface
      */
     private function getCombinationFormBuilder(): FormBuilderInterface
@@ -206,5 +232,18 @@ class CombinationController extends FrameworkBundleAdminController
     private function getCombinationItemFormBuilder(): FormBuilderInterface
     {
         return $this->get('prestashop.core.form.identifiable_object.builder.combination_item_form_builder');
+    }
+
+    /**
+     * Gets an error by exception class and its code.
+     *
+     * @param Exception $e
+     *
+     * @return array
+     */
+    private function getErrorMessages(Exception $e): array
+    {
+        return [
+        ];
     }
 }
