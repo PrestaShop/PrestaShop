@@ -49,3 +49,13 @@ services:
 
     prestashop.core.form.command_builder.product.customization_fields_command_builder:
         class: PrestaShop\PrestaShop\Core\Form\IdentifiableObject\CommandBuilder\Product\CustomizationFieldsCommandBuilder
+
+    # Combination builders
+    prestashop.core.form.command_builder.combination.combination_commands_builder:
+        class: PrestaShop\PrestaShop\Core\Form\IdentifiableObject\CommandBuilder\Product\Combination\CombinationCommandsBuilder
+        arguments:
+            -
+                - '@prestashop.core.form.command_builder.product.combination.stock_command_builder'
+
+    prestashop.core.form.command_builder.product.combination.stock_command_builder:
+        class: PrestaShop\PrestaShop\Core\Form\IdentifiableObject\CommandBuilder\Product\Combination\CombinationStockCommandBuilder
