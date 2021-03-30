@@ -28,13 +28,13 @@ declare(strict_types=1);
 
 namespace Tests\Unit\PrestaShopBundle\Form;
 
+use PHPUnit\Framework\TestCase;
 use PrestaShopBundle\Entity\Lang;
 use PrestaShopBundle\Entity\Repository\LangRepository;
 use PrestaShopBundle\Form\Exception\InvalidConfigurationDataError;
-use Symfony\Component\Translation\Translator;
-use PHPUnit\Framework\TestCase;
 use PrestaShopBundle\Form\InvalidConfigurationErrorMessageFactory;
 use ReflectionClass;
+use Symfony\Component\Translation\Translator;
 
 class InvalidConfigurationErrorMessageFactoryTest extends TestCase
 {
@@ -55,7 +55,7 @@ class InvalidConfigurationErrorMessageFactoryTest extends TestCase
                     ],
                     'Admin.Orderscustomers.Notification',
                     null,
-                    'The "field" field in English is invalid. HTML tags are not allowed.'
+                    'The "field" field in English is invalid. HTML tags are not allowed.',
                 ],
                 [
                     'The "%s" field is invalid. HTML tags are not allowed.',
@@ -64,7 +64,7 @@ class InvalidConfigurationErrorMessageFactoryTest extends TestCase
                     ],
                     'Admin.Notifications.Error',
                     null,
-                    'The "field" field is invalid. HTML tags are not allowed.'
+                    'The "field" field is invalid. HTML tags are not allowed.',
                 ],
             ]
         );
