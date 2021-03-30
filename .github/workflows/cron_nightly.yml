@@ -8,13 +8,9 @@ jobs:
   nightly:
     runs-on: ubuntu-latest
     name: Nightly
-    strategy:
-      matrix:
-        php: [ '7.3' ]
     env:
       GC_INSTANCE_KEY: ${{ secrets.GC_INSTANCE_KEY }}
       GC_INSTANCE_NAME: ${{ secrets.GC_INSTANCE_NAME }}
-      #GC_INSTANCE_PUB: ${{ secrets.GC_INSTANCE_PUB }}
       GC_PROJECT_ID: ${{ secrets.GC_PROJECT_ID }}
       GC_SERVICE_KEY: ${{ secrets.GC_SERVICE_KEY }}
       GC_ZONE: ${{ secrets.GC_ZONE }}
@@ -24,6 +20,12 @@ jobs:
       -   uses: actions/checkout@v2
           with:
             fetch-depth: 0
+
+      -   name: Setup PHP
+          uses: shivammathur/setup-php@v1
+          with:
+            php-version: '7.3'
+            extensions: mbstring, intl, gd, xml, dom, json, fileinfo, curl, zip, iconv
 
       -   name: Initialize GCloud Service Key
           run: echo ${{ secrets.GC_SERVICE_KEY }} | base64 --decode -i > $HOME/gcloud-service-key.json
