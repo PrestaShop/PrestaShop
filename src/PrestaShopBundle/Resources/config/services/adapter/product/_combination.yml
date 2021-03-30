@@ -49,7 +49,7 @@ services:
             - '@prestashop.adapter.product.combination.repository.combination_repository'
             - '@prestashop.core.util.number.number_extractor'
             - '@prestashop.adapter.product.stock.repository.stock_available_repository'
-            - '@prestashop.core.grid.query_builder.combination'
+            - '@prestashop.core.grid.query_builder.product_combination'
         tags:
             - name: tactician.handler
               command: PrestaShop\PrestaShop\Core\Domain\Product\Combination\Query\GetEditableCombinationsList
