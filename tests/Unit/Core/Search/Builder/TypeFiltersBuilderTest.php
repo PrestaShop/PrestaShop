@@ -85,6 +85,10 @@ class TypeFiltersBuilderTest extends TestCase
         $this->assertEquals('id_sample', $builtFilters->getOrderBy());
     }
 
+    /**
+     * When no config is set, it can't be set to sub builders and there is no use checking
+     * compatibility of a non defined class.
+     */
     public function testWithoutConfig()
     {
         $mock1 = $this->createTypeBuilderMock(null);
@@ -164,6 +168,8 @@ class TypeFiltersBuilderTest extends TestCase
     }
 
     /**
+     * @param array|null $expectedConfig
+     *
      * @return MockObject|TypedFiltersBuilderInterface
      */
     private function createTypeBuilderMock(?array $expectedConfig)
@@ -175,14 +181,14 @@ class TypeFiltersBuilderTest extends TestCase
         ;
 
         $builderMock
-            ->expects($this->once())
+            ->expects(null === $expectedConfig ? $this->never() : $this->once())
             ->method('supports')
             ->with($this->equalTo(SampleWithoutConstraintFilters::class))
             ->willReturn(false)
         ;
 
         $builderMock
-            ->expects($this->once())
+            ->expects(null === $expectedConfig ? $this->never() : $this->once())
             ->method('setConfig')
             ->withConsecutive(
                 [$this->equalTo($expectedConfig)]

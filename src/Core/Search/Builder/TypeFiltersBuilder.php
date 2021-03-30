@@ -131,6 +131,10 @@ class TypeFiltersBuilder extends AbstractFiltersBuilder
      */
     private function findTypedBuilder(): ?TypedFiltersBuilderInterface
     {
+        if (empty($this->filtersClass)) {
+            return null;
+        }
+
         foreach ($this->typedBuilders as $typedBuilder) {
             if ($typedBuilder->supports($this->filtersClass)) {
                 return $typedBuilder;
