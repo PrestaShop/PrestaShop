@@ -30,15 +30,15 @@ namespace PrestaShop\PrestaShop\Core\Form\IdentifiableObject\CommandBuilder\Prod
 
 use PrestaShop\PrestaShop\Core\Domain\Product\Combination\ValueObject\CombinationId;
 
-class CombinationCommandsBuilder implements CombinationCommandBuilderInterface
+class CombinationCommandsBuilder implements CombinationCommandsBuilderInterface
 {
     /**
-     * @var CombinationCommandBuilderInterface[]
+     * @var CombinationCommandsBuilderInterface[]
      */
     private $commandBuilders;
 
     /**
-     * @param CombinationCommandBuilderInterface[] $commandBuilders
+     * @param CombinationCommandsBuilderInterface[] $commandBuilders
      */
     public function __construct(array $commandBuilders)
     {
