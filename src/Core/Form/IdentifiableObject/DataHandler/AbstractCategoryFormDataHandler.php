@@ -176,4 +176,8 @@ abstract class AbstractCategoryFormDataHandler implements FormDataHandlerInterfa
 
         return array_diff(MenuThumbnailId::ALLOWED_ID_VALUES, $usedKeys);
     }
+
+    abstract protected function createAddCategoryCommand(array $data);
+
+    abstract protected function createEditCategoryCommand(array $data);
 }
