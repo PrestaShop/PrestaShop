@@ -97,6 +97,7 @@ export default {
       referenceKey: 'combination_item[reference][value]',
       tokenKey: 'combination_item[_token]',
     },
+    editionForm: 'form[name="combination_form"]',
     editCombinationButtons: '.edit-combination-item',
     tableRow: {
       combinationIdInput: (rowIndex) => `${combinationListId}_combinations_${rowIndex}_combination_id`,
