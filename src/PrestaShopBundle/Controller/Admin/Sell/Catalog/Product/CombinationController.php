@@ -28,8 +28,10 @@ declare(strict_types=1);
 namespace PrestaShopBundle\Controller\Admin\Sell\Catalog\Product;
 
 use Exception;
+use PrestaShop\PrestaShop\Adapter\Product\Combination\Repository\CombinationRepository;
 use PrestaShop\PrestaShop\Core\Domain\Product\Combination\Query\GetEditableCombinationsList;
 use PrestaShop\PrestaShop\Core\Domain\Product\Combination\QueryResult\CombinationListForEditing;
+use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductId;
 use PrestaShop\PrestaShop\Core\Form\IdentifiableObject\Builder\FormBuilderInterface;
 use PrestaShop\PrestaShop\Core\Form\IdentifiableObject\Handler\FormHandlerInterface;
 use PrestaShop\PrestaShop\Core\Search\Filters\ProductCombinationFilters;
@@ -46,6 +48,23 @@ class CombinationController extends FrameworkBundleAdminController
      * Options used for the number of combinations per page
      */
     private const COMBINATIONS_PAGINATION_OPTIONS = [ProductCombinationFilters::LIST_LIMIT, 20, 50, 100];
+
+    /**
+     * @AdminSecurity("is_granted('update', request.get('_legacy_controller'))")
+     *
+     * @param Request $request
+     * @param int $combinationId
+     *
+     * @return Response
+     */
+    public function editAction(Request $request, int $combinationId): Response
+    {
+        $combinationForm = $this->getCombinationFormBuilder()->getFormFor($combinationId);
+
+        return $this->render('@PrestaShop/Admin/Sell/Catalog/Product/Combination/edit.html.twig', [
+            'combinationForm' => $combinationForm->createView(),
+        ]);
+    }
 
     /**
      * Renders combinations list prototype (which contains form inputs submittable by ajax)
@@ -84,6 +103,27 @@ class CombinationController extends FrameworkBundleAdminController
         ));
 
         return $this->json($this->formatListResponse($combinationsList));
+    }
+
+    /**
+     * @AdminSecurity("is_granted('update', request.get('_legacy_controller'))")
+     *
+     * @param int $productId
+     *
+     * @return JsonResponse
+     */
+    public function getListIdsAction(int $productId): JsonResponse
+    {
+        /** @var CombinationRepository $repository */
+        $repository = $this->get('prestashop.adapter.product.combination.repository.combination_repository');
+
+        $combinationIds = $repository->getCombinationIdsByProductId(new ProductId($productId));
+        $data = [];
+        foreach ($combinationIds as $combinationId) {
+            $data[] = $combinationId->getValue();
+        }
+
+        return $this->json($data);
     }
 
     /**
@@ -150,6 +190,14 @@ class CombinationController extends FrameworkBundleAdminController
     private function getCombinationItemFormHandler(): FormHandlerInterface
     {
         return $this->get('prestashop.core.form.identifiable_object.combination_item_form_handler');
+    }
+
+    /**
+     * @return FormBuilderInterface
+     */
+    private function getCombinationFormBuilder(): FormBuilderInterface
+    {
+        return $this->get('prestashop.core.form.identifiable_object.builder.combination_form_builder');
     }
 
     /**

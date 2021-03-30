@@ -25,6 +25,14 @@
 {% form_theme combinationsForm '@PrestaShop/Admin/Sell/Catalog/Product/Form/combinations_form_theme.html.twig' %}
 
 {% block form_product_combinations %}
+  <div id="combination-edit-modal"
+  data-translations="{{ {
+    'modal.save': 'Save'|trans({}, 'Admin.Actions'),
+    'modal.close': 'Close'|trans({}, 'Admin.Actions'),
+    'modal.previous': 'Previous combination'|trans({}, 'Admin.Catalog.Feature'),
+    'modal.next': 'Next combination'|trans({}, 'Admin.Catalog.Feature'),
+  }|json_encode }}"
+  ></div>
   <div class="row justify-content-center" id="combinations-list">
     <div class="spinner-product-combinations-container" id="productCombinationsLoading">
       <div class="spinner spinner-primary"></div>
