@@ -35,6 +35,7 @@ use Link;
 use PHPUnit\Framework\TestCase;
 use PrestaShop\PrestaShop\Adapter\EntityMapper;
 use PrestaShop\PrestaShop\Adapter\ServiceLocator;
+use PrestaShop\PrestaShop\Core\Feature\FeatureInterface;
 use PrestaShop\PrestaShop\Core\Foundation\IoC\Container as LegacyContainer;
 use PrestaShop\PrestaShop\Core\Localization\CLDR\LocaleRepository;
 use PrestaShop\PrestaShop\Core\Localization\Locale;
@@ -266,6 +267,8 @@ class ControllerTest extends TestCase
             ->willReturn($localeRepositoryProphecy->reveal());
         $containerProphecy->get('prestashop.core.admin.multistore')
             ->willReturn($this->prophesizeMultistoreController()->reveal());
+        $containerProphecy->get('prestashop.adapter.multistore_feature')
+            ->willReturn($this->prophesizeMultistoreFeature()->reveal());
 
         return $containerProphecy;
     }
@@ -369,5 +372,16 @@ class ControllerTest extends TestCase
         $multistoreControllerProphecy->header(Argument::any())->willReturn($responseProphecy->reveal());
 
         return $multistoreControllerProphecy;
+    }
+
+    /**
+     * @return ObjectProphecy
+     */
+    protected function prophesizeMultistoreFeature(): ObjectProphecy
+    {
+        $multistoreFeatureProphecy = $this->prophesize(FeatureInterface::class);
+        $multistoreFeatureProphecy->isUsed()->willReturn(false);
+
+        return $multistoreFeatureProphecy;
     }
 }
