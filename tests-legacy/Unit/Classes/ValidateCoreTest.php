@@ -132,6 +132,17 @@ class ValidateCoreTest extends TestCase
         $this->assertSame($expected, Validate::isOptFloat($input));
     }
 
+    /**
+     * @dataProvider isArrayWithIdsDataProvider
+     *
+     * @param bool $expected
+     * @param string|int|array<string|int|bool|array> $input
+     */
+    public function testIsArrayWithIds(bool $expected, $input)
+    {
+        $this->assertSame($expected, Validate::isArrayWithIds($input));
+    }
+
     // --- providers ---
 
     public function isIp2LongDataProvider()
@@ -364,5 +375,27 @@ class ValidateCoreTest extends TestCase
                 array(false, null),
             )
         );
+    }
+
+    public function isArrayWithIdsDataProvider(): array
+    {
+        return [
+            [false, 'This is not an array'],
+            [false, 42],
+            [false, '42'],
+            [true, [666]],
+            [true, [4, 5, 9, 14]],
+            [true, ['2', 5, 4]],
+            [true, ['7', '8', '12']],
+            [false, []],
+            [false, [69, 1, [], 5]],
+            [false, [12, 2.5, 14]],
+            [false, [-1, 6, 12]],
+            [false, ['A', 1, 9]],
+            [false, ['+', 666, '+']],
+            [false, [0, 2, 253]],
+            [false, [0, 0, 0]],
+            [false, [45, true, 9]],
+        ];
     }
 }
