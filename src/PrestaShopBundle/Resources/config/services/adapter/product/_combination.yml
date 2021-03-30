@@ -39,6 +39,7 @@ services:
         arguments:
             - '@prestashop.adapter.product.combination.repository.combination_repository'
             - '@prestashop.adapter.product.stock.repository.stock_available_repository'
+            - "@=service('prestashop.adapter.legacy.context').getContext().language.id"
         tags:
             - name: tactician.handler
               command: PrestaShop\PrestaShop\Core\Domain\Product\Combination\Query\GetCombinationForEditing
