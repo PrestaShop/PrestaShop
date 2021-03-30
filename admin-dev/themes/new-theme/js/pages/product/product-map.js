@@ -26,6 +26,8 @@
 const productSuppliersId = '#product_suppliers_product_suppliers';
 const productSupplierInputId = (supplierIndex, inputName) => `${productSuppliersId}_${supplierIndex}_${inputName}`;
 
+const combinationListId = '#combination_list';
+
 export default {
   productForm: 'form[name=product]',
   productTypeSelector: '#product_basic_type',
@@ -79,9 +81,9 @@ export default {
   },
   combinations: {
     navigationTab: '#combinations-tab-nav',
-    combinationsContainer: '#combination_list',
-    combinationsTable: '#combination_list table',
-    combinationsTableBody: '#combination_list table tbody',
+    combinationsContainer: `${combinationListId}`,
+    combinationsTable: `${combinationListId} table`,
+    combinationsTableBody: `${combinationListId} table tbody`,
     combinationIdInputsSelector: '.combination-id-input',
     isDefaultInputsSelector: '.combination-is-default-input',
     paginationContainer: '#combinations-pagination',
@@ -95,17 +97,19 @@ export default {
       referenceKey: 'combination_item[reference][value]',
       tokenKey: 'combination_item[_token]',
     },
+    editCombinationButtons: '.edit-combination-item',
     tableRow: {
-      combinationIdInput: (rowIndex) => `#combination_list_combinations_${rowIndex}_combination_id`,
-      combinationNameInput: (rowIndex) => `#combination_list_combinations_${rowIndex}_name`,
-      referenceInput: (rowIndex) => `#combination_list_combinations_${rowIndex}_reference_value`,
-      impactOnPriceInput: (rowIndex) => `#combination_list_combinations_${rowIndex}_impact_on_price_value`,
-      finalPriceTeInput: (rowIndex) => `#combination_list_combinations_${rowIndex}_final_price_te`,
-      quantityInput: (rowIndex) => `#combination_list_combinations_${rowIndex}_quantity_value`,
-      isDefaultInput: (rowIndex) => `#combination_list_combinations_${rowIndex}_is_default`,
-      editButton: (rowIndex) => `#combination_list_combinations_${rowIndex}_edit`,
-      deleteButton: (rowIndex) => `#combination_list_combinations_${rowIndex}_delete`,
+      combinationIdInput: (rowIndex) => `${combinationListId}_combinations_${rowIndex}_combination_id`,
+      combinationNameInput: (rowIndex) => `${combinationListId}_combinations_${rowIndex}_name`,
+      referenceInput: (rowIndex) => `${combinationListId}_combinations_${rowIndex}_reference_value`,
+      impactOnPriceInput: (rowIndex) => `${combinationListId}_combinations_${rowIndex}_impact_on_price_value`,
+      finalPriceTeInput: (rowIndex) => `${combinationListId}_combinations_${rowIndex}_final_price_te`,
+      quantityInput: (rowIndex) => `${combinationListId}_combinations_${rowIndex}_quantity_value`,
+      isDefaultInput: (rowIndex) => `${combinationListId}_combinations_${rowIndex}_is_default`,
+      editButton: (rowIndex) => `${combinationListId}_combinations_${rowIndex}_edit`,
+      deleteButton: (rowIndex) => `${combinationListId}_combinations_${rowIndex}_delete`,
     },
+    editModal: '#combination-edit-modal',
   },
   dropzone: {
     configuration: {

@@ -34,6 +34,7 @@ import NavbarHandler from '@components/navbar-handler';
 import CombinationsManager from '@pages/product/edit/combinations-manager';
 import ProductTypeManager from '@pages/product/edit/product-type-manager';
 import initDropzone from '@pages/product/components/dropzone';
+import initCombinationModal from '@pages/product/components/combination-modal';
 
 const {$} = window;
 
@@ -96,7 +97,9 @@ $(() => {
   new FeatureValuesManager(window.prestashop.instance.eventEmitter);
   new CustomizationsManager();
 
-  if (productType !== ProductMap.productType.COMBINATIONS) {
+  if (productType === ProductMap.productType.COMBINATIONS) {
+    initCombinationModal(ProductMap.combinations.editModal, productId);
+  } else {
     new ProductSuppliersManager();
   }
 });
