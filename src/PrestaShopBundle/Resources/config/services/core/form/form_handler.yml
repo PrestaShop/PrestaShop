@@ -207,3 +207,9 @@ services:
       factory: 'prestashop.core.form.identifiable_object.handler.form_handler_factory:create'
       arguments:
           - '@prestashop.core.form.identifiable_object.data_handler.product_image_form_data_handler'
+
+  prestashop.core.form.identifiable_object.handler.zone_form_handler:
+    class: 'PrestaShop\PrestaShop\Core\Form\IdentifiableObject\Handler\FormHandler'
+    factory: 'prestashop.core.form.identifiable_object.handler.form_handler_factory:create'
+    arguments:
+      - '@prestashop.core.form.identifiable_object.data_handler.zone_form_data_handler'
