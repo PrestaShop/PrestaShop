@@ -41,7 +41,7 @@ class TinyMCEEditor {
         opts.baseAdminUrl = window.baseAdminDir;
       } else {
         const pathParts = window.location.pathname.split('/');
-        pathParts.every((pathPart) => {
+        pathParts.every(pathPart => {
           if (pathPart !== '') {
             opts.baseAdminUrl = `/${pathPart}/`;
 
@@ -89,7 +89,7 @@ class TinyMCEEditor {
       external_filemanager_path: `${config.baseAdminUrl}filemanager/`,
       filemanager_title: 'File manager',
       external_plugins: {
-        filemanager: `${config.baseAdminUrl}filemanager/plugin.min.js`,
+        filemanager: `${config.baseAdminUrl}filemanager/plugin.min.js`
       },
       content_style: config.langIsRtl ? 'body {direction:rtl;}' : '',
       skin: 'prestashop',
@@ -98,7 +98,7 @@ class TinyMCEEditor {
         plugins: ['lists', 'align', 'link', 'table', 'placeholder', 'advlist', 'code'],
         toolbar:
           /* eslint-disable-next-line max-len */
-          'code colorpicker bold italic underline strikethrough blockquote link align bullist numlist table formatselect',
+          'undo code colorpicker bold italic underline strikethrough blockquote link align bullist numlist table formatselect styleselect'
       },
       menubar: false,
       statusbar: false,
@@ -113,10 +113,10 @@ class TinyMCEEditor {
       init_instance_callback: () => {
         this.changeToMaterial();
       },
-      setup: (editor) => {
+      setup: editor => {
         this.setupEditor(editor);
       },
-      ...config,
+      ...config
     };
 
     if (typeof cfg.editor_selector !== 'undefined') {
@@ -138,10 +138,10 @@ class TinyMCEEditor {
    * @param editor
    */
   setupEditor(editor) {
-    editor.on('loadContent', (event) => {
+    editor.on('loadContent', event => {
       this.handleCounterTiny(event.target.id);
     });
-    editor.on('change', (event) => {
+    editor.on('change', event => {
       window.tinyMCE.triggerSave();
       this.handleCounterTiny(event.target.id);
     });
@@ -149,7 +149,7 @@ class TinyMCEEditor {
       window.tinyMCE.triggerSave();
     });
     EventEmitter.emit('tinymceEditorSetup', {
-      editor,
+      editor
     });
   }
 
@@ -180,13 +180,13 @@ class TinyMCEEditor {
 
           EventEmitter.emit('languageSelected', {
             selectedLocale: textareaLocale,
-            form,
+            form
           });
         });
       }
     });
 
-    EventEmitter.on('languageSelected', (data) => {
+    EventEmitter.on('languageSelected', data => {
       const textareaLinkSelector = `.nav-item a[data-locale="${data.selectedLocale}"]`;
 
       $(textareaLinkSelector).click();
@@ -238,7 +238,7 @@ class TinyMCEEditor {
       'mce-i-table': '<i class="material-icons">grid_on</i>',
       'mce-i-media': '<i class="material-icons">video_library</i>',
       'mce-i-browse': '<i class="material-icons">attachment</i>',
-      'mce-i-checkbox': '<i class="mce-ico mce-i-checkbox"></i>',
+      'mce-i-checkbox': '<i class="mce-ico mce-i-checkbox"></i>'
     };
 
     $.each(materialIconAssoc, (index, value) => {

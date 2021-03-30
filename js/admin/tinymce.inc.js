@@ -64,7 +64,7 @@ function tinySetup(config) {
       theme: 'mobile',
       plugins: ['lists', 'align', 'link', 'table', 'placeholder', 'advlist', 'code'],
       toolbar:
-        'code colorpicker bold italic underline strikethrough blockquote link align bullist numlist table formatselect',
+        'undo code colorpicker bold italic underline strikethrough blockquote link align bullist numlist table formatselect styleselect',
     },
     menubar: false,
     statusbar: false,
