@@ -1,0 +1,164 @@
+<!--**
+ * Copyright since 2007 PrestaShop SA and Contributors
+ * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
+ *
+ * NOTICE OF LICENSE
+ *
+ * This source file is subject to the Open Software License (OSL 3.0)
+ * that is bundled with this package in the file LICENSE.md.
+ * It is also available through the world-wide-web at this URL:
+ * https://opensource.org/licenses/OSL-3.0
+ * If you did not receive a copy of the license and are unable to
+ * obtain it through the world-wide-web, please send an email
+ * to license@prestashop.com so we can send you a copy immediately.
+ *
+ * DISCLAIMER
+ *
+ * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
+ * versions in the future. If you wish to customize PrestaShop for your
+ * needs please refer to https://devdocs.prestashop.com/ for more information.
+ *
+ * @author    PrestaShop SA and Contributors <contact@prestashop.com>
+ * @copyright Since 2007 PrestaShop SA and Contributors
+ * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
+ *-->
+<template>
+  <div id="combination-edit-modal">
+    <modal
+      v-if="selectedCombinationId !== null"
+      @close="closeModal"
+    >
+      <template slot="body">
+        <div
+          class="combination-loading"
+          v-if="loadingCombinationForm"
+        >
+          <div class="spinner" />
+        </div>
+        <iframe
+          ref="iframe"
+          class="combination-iframe"
+          :src="editCombinationUrl"
+          @loadstart="frameLoading"
+          @load="onFrameLoaded"
+          vspace="0"
+          hspace="0"
+          scrolling="auto"
+        />
+      </template>
+    </modal>
+  </div>
+</template>
+
+<script>
+  import CombinationsService from '@pages/product/services/combinations-service';
+  import ProductMap from '@pages/product/product-map';
+  import Modal from '@vue/components/Modal';
+  import Router from '@components/router';
+
+  const {$} = window;
+
+  const router = new Router();
+
+  export default {
+    name: 'CombinationModal',
+    components: {Modal},
+    data() {
+      return {
+        combinationsService: null,
+        combinationIds: [],
+        selectedCombinationId: null,
+        editCombinationUrl: '',
+        loadingCombinationForm: false,
+        combinationList: null,
+      };
+    },
+    props: {
+      productId: {
+        type: Number,
+        required: true,
+      },
+    },
+    mounted() {
+      this.combinationList = $(ProductMap.combinations.combinationsContainer);
+      this.combinationsService = new CombinationsService(this.productId);
+      this.initCombinationIds();
+      this.watchEditButtons();
+    },
+    methods: {
+      watchEditButtons() {
+        this.combinationList.on('click', ProductMap.combinations.editCombinationButtons, (event) => {
+          event.stopImmediatePropagation();
+          const $row = $(event.target).closest('tr');
+          this.selectedCombinationId = $row.find('.combination-id-input').val();
+        });
+      },
+      async initCombinationIds() {
+        this.combinationIds = await this.combinationsService.getCombinationIds();
+      },
+      frameLoading() {
+        this.$refs.iframe.contentDocument.body.style.overflowX = 'hidden';
+      },
+      onFrameLoaded() {
+        this.loadingCombinationForm = false;
+        this.$refs.iframe.contentDocument.body.style.overflowX = 'hidden';
+      },
+      closeModal() {
+        this.selectedCombinationId = null;
+      },
+    },
+    watch: {
+      selectedCombinationId(combinationId) {
+        this.loadingCombinationForm = true;
+        this.editCombinationUrl = router.generate('admin_products_combinations_edit_combination', {
+          combinationId,
+          liteDisplaying: 1,
+        });
+      },
+    },
+  };
+</script>
+
+<style lang="scss" type="text/scss">
+@import "~@scss/config/_settings.scss";
+
+#combination-edit-modal {
+  .modal-dialog {
+    max-width: 1200px;
+    width: 90%;
+    height: 95%;
+    margin: 0 auto;
+
+    .modal-content {
+      height: 100%;
+
+      .modal-body {
+        padding: 0;
+        margin: 0.25rem;
+
+        .combination-loading {
+          position: absolute;
+          width: 100%;
+          height: 100%;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          z-index: 1;
+          background: rgba(255, 255, 255, 0.8);
+        }
+
+        .combination-iframe {
+          padding: 0;
+          margin: 0;
+          border: 0;
+          outline: none;
+          vertical-align: top;
+          width: 100%;
+          height: 100%;
+          display: block;
+        }
+      }
+    }
+  }
+}
+</style>
