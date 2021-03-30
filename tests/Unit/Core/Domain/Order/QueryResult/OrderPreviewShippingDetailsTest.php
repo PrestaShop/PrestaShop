@@ -48,6 +48,7 @@ class OrderPreviewShippingDetailsTest extends TestCase
         $this->assertEquals('l', $instance->getCarrierName());
         $this->assertEquals('m', $instance->getTrackingNumber());
         $this->assertNull($instance->getDNI());
+        $this->assertNull($instance->getTrackingUrl());
     }
 
     public function testConstructWithDNI(): void
@@ -67,5 +68,26 @@ class OrderPreviewShippingDetailsTest extends TestCase
         $this->assertEquals('l', $instance->getCarrierName());
         $this->assertEquals('m', $instance->getTrackingNumber());
         $this->assertEquals('n', $instance->getDni());
+        $this->assertNull($instance->getTrackingUrl());
+    }
+
+    public function testConstructWithTrackingUrl(): void
+    {
+        $instance = new OrderPreviewShippingDetails('a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o');
+        $this->assertEquals('a', $instance->getFirstName());
+        $this->assertEquals('b', $instance->getLastName());
+        $this->assertEquals('c', $instance->getCompany());
+        $this->assertEquals('d', $instance->getVatNumber());
+        $this->assertEquals('e', $instance->getAddress1());
+        $this->assertEquals('f', $instance->getAddress2());
+        $this->assertEquals('g', $instance->getCity());
+        $this->assertEquals('h', $instance->getPostalCode());
+        $this->assertEquals('i', $instance->getStateName());
+        $this->assertEquals('j', $instance->getCountry());
+        $this->assertEquals('k', $instance->getPhone());
+        $this->assertEquals('l', $instance->getCarrierName());
+        $this->assertEquals('m', $instance->getTrackingNumber());
+        $this->assertEquals('n', $instance->getDni());
+        $this->assertEquals('o', $instance->getTrackingUrl());
     }
 }
