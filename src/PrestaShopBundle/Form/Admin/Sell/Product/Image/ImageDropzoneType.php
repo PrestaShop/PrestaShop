@@ -75,7 +75,7 @@ class ImageDropzoneType extends TranslatorAwareType
                 'window.saveImage' => $this->trans('Save image settings', 'Admin.Actions'),
                 'window.delete' => $this->trans('Delete selection', 'Admin.Actions'),
                 'window.close' => $this->trans('Close window', 'Admin.Actions'),
-                'window.closePhotoSwipe' => $this->trans('Close (Esc)', 'Admin.Actions'),
+                'window.closePhotoSwipe' => $this->trans('Close (esc)', 'Admin.Actions'),
                 'window.download' => $this->trans('Download', 'Admin.Actions'),
                 'window.toggleFullscreen' => $this->trans('Toggle Fullscreen', 'Admin.Actions'),
                 'window.zoomPhotoSwipe' => $this->trans('Zoom in/out', 'Admin.Actions'),
