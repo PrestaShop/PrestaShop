@@ -722,6 +722,8 @@
     }
   </style>
   <div class="custom-file">
+    TEST
+
     {% set attr = attr|merge({
       class: (attr.class|default('') ~ ' custom-file-input')|trim,
       'data-multiple-files-text': '%count% file(s)'|trans({}, 'Admin.Global'),
@@ -740,6 +742,7 @@
       {% set attributes = form.vars.attr %}
       {{ attributes.placeholder is defined ?  attributes.placeholder : 'Choose file(s)'|trans({}, 'Admin.Actions') }}
     </label>
+    {{- block('custom_file_after') -}}
   </div>
 {% endblock file_widget %}
 
@@ -861,3 +864,15 @@
     </button>
   </div>
 {% endblock submittable_input_widget %}
+
+{% block downloadable_file_widget %}
+    <div id="downloadable-file">
+      {{ form_widget(form.file) }}
+        {% block custom_file_after %}
+          {% if form.download_file_url is defined and form.download_file_url.vars.value is not empty %}
+            <a href="{{ form.download_file_url.vars.value }}">{{ 'Download file'|trans({}, 'Admin.Catalog.Feature') }}</a>
+            {{ form_widget(form.download_file_url) }}
+          {% endif %}
+        {% endblock custom_file_after %}
+    </div>
+{% endblock downloadable_file_widget %}
