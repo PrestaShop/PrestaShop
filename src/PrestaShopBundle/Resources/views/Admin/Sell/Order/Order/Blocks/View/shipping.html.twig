@@ -59,7 +59,7 @@
           <td>
             {% if carrier.trackingNumber %}
               {% if carrier.trackingUrl %}
-                <a href="{{ carrier.trackingUrl }}">{{ carrier.trackingNumber }}</a>
+                <a href="{{ carrier.trackingUrl }}" target="_blank">{{ carrier.trackingNumber }}</a>
               {% else %}
                 {{ carrier.trackingNumber }}
               {% endif %}
