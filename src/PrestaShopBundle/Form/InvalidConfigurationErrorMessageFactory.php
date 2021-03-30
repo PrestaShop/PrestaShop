@@ -28,6 +28,7 @@ declare(strict_types=1);
 
 namespace PrestaShopBundle\Form;
 
+use PrestaShop\PrestaShop\Core\Language\LanguageRepositoryInterface;
 use PrestaShopBundle\Controller\Exception\FieldNotFoundException;
 use PrestaShopBundle\Entity\Repository\LangRepository;
 use PrestaShopBundle\Form\Admin\Configure\AdvancedParameters\Administration\GeneralDataProvider;
@@ -50,7 +51,7 @@ class InvalidConfigurationErrorMessageFactory
 
     public function __construct(
         TranslatorInterface $translator,
-        LangRepository $langRepository
+        LanguageRepositoryInterface $langRepository
     ) {
         $this->translator = $translator;
         $this->langRepository = $langRepository;
@@ -122,7 +123,7 @@ class InvalidConfigurationErrorMessageFactory
                     $lang = $this->langRepository->findOneBy(['id' => $error->getLanguageId()]);
 
                     return $this->translator->trans(
-                        'The "%s" field in %s is invalid. HTML tags are not allowed',
+                        'The "%s" field in %s is invalid. HTML tags are not allowed.',
                         [
                             $label,
                             $lang->getName(),
