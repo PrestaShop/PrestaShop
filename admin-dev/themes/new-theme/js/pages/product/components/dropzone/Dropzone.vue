@@ -49,11 +49,11 @@
         ]"
       >
         <i class="material-icons">add_a_photo</i><br>
-        {{ $t("window.dropImages") }}<br>
-        <a>{{ $t("window.selectFiles") }}</a><br>
+        {{ $t('window.dropImages') }}<br>
+        <a>{{ $t('window.selectFiles') }}</a><br>
         <small>
-          {{ $t("window.recommendedSize") }}<br>
-          {{ $t("window.recommendedFormats") }}
+          {{ $t('window.recommendedSize') }}<br>
+          {{ $t('window.recommendedFormats') }}
         </small>
       </div>
 
@@ -71,15 +71,26 @@
       :selected-files="selectedFiles"
       :dropzone="dropzone"
       @unselectAll="unselectAll"
-      @removeSelection="removeSelection"
+      @removeSelection="showModal"
       @selectAll="selectAll"
       @saveSelectedFile="saveSelectedFile"
       @replacedFile="manageReplacedFile"
-      @coverChanged="changeCover"
       :files="files"
       :locales="locales"
       :selected-locale="selectedLocale"
       :loading="buttonLoading"
+    />
+
+    <modal
+      v-if="isModalShown"
+      :confirmation="true"
+      :modal-title="$tc('modal.title', this.selectedFiles.length, {
+        '%filesNb%': this.selectedFiles.length,
+      })"
+      :confirm-label="$t('modal.accept')"
+      :cancel-label="$t('modal.close')"
+      @confirm="removeSelection"
+      @close="hideModal"
     />
 
     <div class="dz-template d-none">
@@ -112,7 +123,7 @@
           </div>
         </div>
         <div class="iscover">
-          {{ $t("window.cover") }}
+          {{ $t('window.cover') }}
         </div>
       </div>
     </div>
@@ -124,11 +135,13 @@
   import {
     getProductImages,
     saveImageInformations,
-    replaceImage,
     saveImagePosition,
+    replaceImage,
+    removeProductImage,
   } from '@pages/product/services/images';
   import ProductMap from '@pages/product/product-map';
   import ProductEventMap from '@pages/product/product-event-map';
+  import Modal from '@vue/components/Modal';
   import DropzoneWindow from './DropzoneWindow';
 
   const {$} = window;
@@ -153,7 +166,7 @@
         loading: true,
         selectedLocale: null,
         buttonLoading: false,
-        coverData: {},
+        isModalShown: false,
       };
     },
     props: {
@@ -176,6 +189,7 @@
     },
     components: {
       DropzoneWindow,
+      Modal,
     },
     computed: {},
     mounted() {
@@ -199,8 +213,7 @@
                 this.selectedLocale = locale;
               }
             });
-          },
-        );
+          });
       },
       /**
        * This methods is used to initialize product images we already have uploaded
@@ -236,6 +249,7 @@
         this.configuration.params[`${this.formName}[_token]`] = this.token;
 
         this.sortableContainer = $('#product-images-dropzone');
+
         this.dropzone = new window.Dropzone(
           '.dropzone-container',
           this.configuration,
@@ -269,7 +283,6 @@
           if (file.is_cover) {
             file.previewElement.classList.add('is-cover');
           }
-
           file.previewElement.addEventListener('click', () => {
             const input = file.previewElement.querySelector('.md-checkbox input');
             input.checked = !input.checked;
@@ -322,15 +335,48 @@
       /**
        * Method to remove every selected files from the dropzone
        */
-      removeSelection() {
-        this.selectedFiles.forEach((file) => {
-          this.dropzone.removeFile(file);
+      async removeSelection() {
+        let errorMessage = false;
+        let isCoverImageRemoved = false;
+        const nbFiles = this.selectedFiles.length;
 
-          this.files = this.files.filter((e) => file !== e);
-        });
+        await Promise.all(
+          this.selectedFiles.map(async (file) => {
+            try {
+              await removeProductImage(file.image_id);
+              this.dropzone.removeFile(file);
 
-        this.selectedFiles = [];
+              this.files = this.files.filter((e) => file !== e);
+              this.selectedFiles = this.selectedFiles.filter(
+                (e) => file !== e,
+              );
+
+              if (file.is_cover) {
+                isCoverImageRemoved = true;
+              }
+            } catch (error) {
+              errorMessage = error.responseJSON ? error.responseJSON.error : error;
+            }
+          }),
+        );
+
         this.removeTooltips();
+
+        if (errorMessage) {
+          $.growl.error({message: errorMessage});
+        } else {
+          $.growl({
+            message: this.$t('delete.success', {
+              '%filesNb%': nbFiles,
+            }),
+          });
+        }
+
+        if (isCoverImageRemoved) {
+          this.resetDropzone();
+        }
+
+        this.hideModal();
       },
       /**
        * Method to manage checkboxes of files mainly used on selectAll and unselectAll
@@ -354,7 +400,7 @@
       /**
        * Save selected file
        */
-      async saveSelectedFile() {
+      async saveSelectedFile(captionValue, isCover) {
         if (!this.selectedFiles.length) {
           return;
         }
@@ -363,13 +409,9 @@
 
         const selectedFile = this.selectedFiles[0];
 
-        if (
-          this.coverData.file
-          && this.selectedFiles.length === 1
-          && this.coverData.file.image_id === selectedFile.image_id
-        ) {
-          selectedFile.is_cover = this.coverData.value;
-        }
+        selectedFile.is_cover = isCover;
+
+        selectedFile.legends = captionValue;
 
         try {
           const savedImage = await saveImageInformations(
@@ -434,12 +476,6 @@
           this.buttonLoading = false;
         }
       },
-      changeCover(event) {
-        this.coverData = {
-          file: this.selectedFiles[0],
-          value: event.target.value,
-        };
-      },
       async updateImagePosition(productImageId, newPosition) {
         try {
           await saveImagePosition(productImageId, newPosition, this.formName, this.token);
@@ -447,6 +483,25 @@
           this.sortableContainer.sortable('cancel');
           $.growl.error({message: error.responseJSON.error});
         }
+      },
+      /**
+       * Mainly used when we wants to reset the whole list
+       * to reset cover image for example on remove
+       */
+      resetDropzone() {
+        this.loading = true;
+        this.files.forEach((file) => {
+          this.dropzone.removeFile(file);
+        });
+        this.dropzone.destroy();
+        this.dropzone = null;
+        this.initProductImages();
+      },
+      showModal() {
+        this.isModalShown = true;
+      },
+      hideModal() {
+        this.isModalShown = false;
       },
     },
   };
