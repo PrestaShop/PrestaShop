@@ -59,7 +59,7 @@
         </div>
       {/if}
 
-      {if !isset($hideLegacyStoreContextSelector)}
+      {if !$hideLegacyStoreContextSelector || !isset($hideLegacyStoreContextSelector)}
         <div class="component" id="header-shop-list-container">
           {include file="components/layout/shop_list.tpl"}
         </div>
