@@ -28,6 +28,7 @@ declare(strict_types=1);
 namespace PrestaShop\PrestaShop\Core\Form\IdentifiableObject\CommandBuilder\Product;
 
 use DateTime;
+use DateTimeImmutable;
 use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductId;
 use PrestaShop\PrestaShop\Core\Domain\Product\VirtualProductFile\Command\AddVirtualProductFileCommand;
 use PrestaShop\PrestaShop\Core\Domain\Product\VirtualProductFile\Command\UpdateVirtualProductFileCommand;
@@ -68,7 +69,7 @@ final class VirtualProductFileCommandBuilder implements ProductCommandBuilderInt
      */
     public function buildAddCommand(ProductId $productId, array $virtualProductFileData): ?AddVirtualProductFileCommand
     {
-        if (isset($formData['virtual_product_file_id'])) {
+        if (isset($virtualProductFileData['virtual_product_file_id'])) {
             return null;
         }
 
@@ -98,37 +99,35 @@ final class VirtualProductFileCommandBuilder implements ProductCommandBuilderInt
     {
         $update = false;
 
-        if (isset($formData['virtual_product_file_id'])) {
-            $command = new UpdateVirtualProductFileCommand((int) $virtualProductFileData['virtual_product_file_id']);
-
-            if (isset($virtualProductFileData['file'])) {
-                $update = true;
-                /** @var UploadedFile $newFile */
-                $newFile = $virtualProductFileData['file'];
-                $command->setFilePath($newFile->getPathname());
-            }
-            if (isset($virtualProductFileData['name'])) {
-                $update = true;
-                $command->setDisplayName($virtualProductFileData['name']);
-            }
-            if ($virtualProductFileData['access_days_limit']) {
-                $update = true;
-                $command->setAccessDays((int) $virtualProductFileData['access_days_limit']);
-            }
-            if (isset($virtualProductFileData['download_times_limit'])) {
-                $update = true;
-                $command->setDownloadTimesLimit((int) $virtualProductFileData['download_times_limit']);
-            }
-            if (isset($virtualProductFileData['expiration_date'])) {
-                $update = true;
-                $command->setExpirationDate($virtualProductFileData['expiration_date']);
-            }
-
-            if ($update) {
-                return $command;
-            }
+        if (!isset($virtualProductFileData['virtual_product_file_id'])) {
+            return null;
         }
 
-        return null;
+        $command = new UpdateVirtualProductFileCommand((int) $virtualProductFileData['virtual_product_file_id']);
+
+        if (isset($virtualProductFileData['file'])) {
+            $update = true;
+            /** @var UploadedFile $newFile */
+            $newFile = $virtualProductFileData['file'];
+            $command->setFilePath($newFile->getPathname());
+        }
+        if (isset($virtualProductFileData['name'])) {
+            $update = true;
+            $command->setDisplayName($virtualProductFileData['name']);
+        }
+        if (isset($virtualProductFileData['access_days_limit'])) {
+            $update = true;
+            $command->setAccessDays((int) $virtualProductFileData['access_days_limit']);
+        }
+        if (isset($virtualProductFileData['download_times_limit'])) {
+            $update = true;
+            $command->setDownloadTimesLimit((int) $virtualProductFileData['download_times_limit']);
+        }
+        if (isset($virtualProductFileData['expiration_date'])) {
+            $update = true;
+            $command->setExpirationDate(new DateTimeImmutable($virtualProductFileData['expiration_date']));
+        }
+
+        return $update ? $command : null;
     }
 }

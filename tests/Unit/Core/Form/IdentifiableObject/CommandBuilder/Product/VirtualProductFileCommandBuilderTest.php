@@ -30,6 +30,7 @@ namespace Tests\Unit\Core\Form\IdentifiableObject\CommandBuilder\Product;
 use DateTimeImmutable;
 use Generator;
 use PrestaShop\PrestaShop\Core\Domain\Product\VirtualProductFile\Command\AddVirtualProductFileCommand;
+use PrestaShop\PrestaShop\Core\Domain\Product\VirtualProductFile\Command\UpdateVirtualProductFileCommand;
 use PrestaShop\PrestaShop\Core\Form\IdentifiableObject\CommandBuilder\Product\VirtualProductFileCommandBuilder;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
 use Tests\Resources\DummyFileUploader;
@@ -42,7 +43,7 @@ class VirtualProductFileCommandBuilderTest extends AbstractProductCommandBuilder
      * @param array $formData
      * @param array $expectedCommands
      */
-    public function testBuildCommand(array $formData, array $expectedCommands): void
+    public function testBuildCommands(array $formData, array $expectedCommands): void
     {
         $builder = new VirtualProductFileCommandBuilder();
         $builtCommands = $builder->buildCommand($this->getProductId(), $formData);
@@ -92,6 +93,7 @@ class VirtualProductFileCommandBuilderTest extends AbstractProductCommandBuilder
         yield [
             [
                 'virtual_product_file' => [
+                    'virtual_product_file_id' => null,
                     'file' => $dummyFile,
                     'name' => 'The file',
                     'access_days_limit' => 1,
@@ -102,6 +104,34 @@ class VirtualProductFileCommandBuilderTest extends AbstractProductCommandBuilder
             [$command],
         ];
 
-        //@todo: add tests for update when related command is merged https://github.com/PrestaShop/PrestaShop/pull/23386
+        $command = new UpdateVirtualProductFileCommand(5);
+        $command->setFilePath($dummyFile->getPathname());
+        yield [
+            [
+                'virtual_product_file' => [
+                    'virtual_product_file_id' => 5,
+                    'file' => $dummyFile,
+                ],
+            ],
+            [$command],
+        ];
+
+        $command = new UpdateVirtualProductFileCommand(6);
+        $command->setDisplayName('new display name');
+        $command->setAccessDays(10);
+        $command->setDownloadTimesLimit(50);
+        $command->setExpirationDate(new DateTimeImmutable('2020-10-21'));
+        yield [
+            [
+                'virtual_product_file' => [
+                    'virtual_product_file_id' => '6',
+                    'name' => 'new display name',
+                    'access_days_limit' => 10,
+                    'download_times_limit' => '50',
+                    'expiration_date' => '2020-10-21',
+                ],
+            ],
+            [$command],
+        ];
     }
 }
