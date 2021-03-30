@@ -28,7 +28,7 @@
       v-if="selectedCombinationId !== null"
       @close="closeModal"
     >
-      <template slot="body">
+      <template #body>
         <div
           class="combination-loading"
           v-if="loadingCombinationForm"
@@ -45,6 +45,46 @@
           hspace="0"
           scrolling="auto"
         />
+      </template>
+
+      <template #footer>
+        <button
+          type="button"
+          class="btn btn-secondary btn-close"
+          @click.prevent.stop="closeModal"
+          aria-label="Close modal"
+        >
+          {{ $t('modal.close') }}
+        </button>
+
+        <button
+          type="button"
+          class="btn btn-outline-secondary"
+          @click.prevent.stop="showPrevious"
+          aria-label="Close modal"
+          :disabled="previousCombinationId === null"
+        >
+          <i class="material-icons">keyboard_arrow_left</i>
+          {{ $t('modal.previous') }}
+        </button>
+        <button
+          type="button"
+          class="btn btn-outline-secondary"
+          @click.prevent.stop="showNext"
+          aria-label="Close modal"
+          :disabled="nextCombinationId === null"
+        >
+          {{ $t('modal.next') }}
+          <i class="material-icons">keyboard_arrow_right</i>
+        </button>
+        <button
+          type="button"
+          class="btn btn-primary"
+          @click.prevent.stop="submitForm"
+          aria-label="Close modal"
+        >
+          {{ $t('modal.save') }}
+        </button>
       </template>
     </modal>
   </div>
@@ -68,6 +108,8 @@
         combinationsService: null,
         combinationIds: [],
         selectedCombinationId: null,
+        previousCombinationId: null,
+        nextCombinationId: null,
         editCombinationUrl: '',
         loadingCombinationForm: false,
         combinationList: null,
@@ -90,7 +132,7 @@
         this.combinationList.on('click', ProductMap.combinations.editCombinationButtons, (event) => {
           event.stopImmediatePropagation();
           const $row = $(event.target).closest('tr');
-          this.selectedCombinationId = $row.find('.combination-id-input').val();
+          this.selectedCombinationId = Number($row.find('.combination-id-input').val());
         });
       },
       async initCombinationIds() {
@@ -106,14 +148,48 @@
       closeModal() {
         this.selectedCombinationId = null;
       },
+      showPrevious() {
+        if (this.previousCombinationId !== null) {
+          this.selectedCombinationId = this.previousCombinationId;
+        }
+      },
+      showNext() {
+        if (this.nextCombinationId !== null) {
+          this.selectedCombinationId = this.nextCombinationId;
+        }
+      },
+      submitForm() {
+
+      },
     },
     watch: {
       selectedCombinationId(combinationId) {
+        if (combinationId === null) {
+          this.previousCombinationId = null;
+          this.nextCombinationId = null;
+          this.editCombinationUrl = null;
+
+          return;
+        }
+
         this.loadingCombinationForm = true;
         this.editCombinationUrl = router.generate('admin_products_combinations_edit_combination', {
           combinationId,
           liteDisplaying: 1,
         });
+
+        const selectedIndex = this.combinationIds.indexOf(combinationId);
+
+        if (selectedIndex === -1) {
+          this.previousCombinationId = null;
+          this.nextCombinationId = null;
+        } else {
+          this.previousCombinationId = selectedIndex === 0 ? null : this.combinationIds[selectedIndex - 1];
+          this.nextCombinationId = selectedIndex === this.combinationIds.length - 1
+            ? null
+            : this.combinationIds[selectedIndex + 1];
+        }
+        console.log('prev', this.previousCombinationId, 'next', this.nextCombinationId);
       },
     },
   };
@@ -129,12 +205,18 @@
     height: 95%;
     margin: 0 auto;
 
+    .modal-header {
+      display: none;
+    }
+
     .modal-content {
       height: 100%;
+      padding: 0;
+      margin: 0;
 
       .modal-body {
         padding: 0;
-        margin: 0.25rem;
+        margin: 0;
 
         .combination-loading {
           position: absolute;
@@ -156,6 +238,22 @@
           width: 100%;
           height: 100%;
           display: block;
+
+          .card {
+            margin-bottom: 0;
+          }
+        }
+      }
+
+      .modal-footer {
+        margin: 0;
+        padding: 0.6rem 1rem;
+        display: flex;
+        flex-direction: row;
+        justify-content: flex-end;
+
+        .btn-close {
+          margin-right: auto;
         }
       }
     }
