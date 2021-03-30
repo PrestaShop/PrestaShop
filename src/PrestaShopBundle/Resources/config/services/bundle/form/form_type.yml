@@ -1451,6 +1451,20 @@ services:
         tags:
             - { name: form.type }
 
+    form.type.sell.product.combination.combination_form_type:
+        class: 'PrestaShopBundle\Form\Admin\Sell\Product\Combination\CombinationFormType'
+        parent: 'form.type.translatable.aware'
+        public: true
+        tags:
+            - { name: form.type }
+
+    form.type.sell.product.combination.combination_stock_type:
+        class: 'PrestaShopBundle\Form\Admin\Sell\Product\Combination\CombinationStockType'
+        parent: 'form.type.translatable.aware'
+        public: true
+        tags:
+            - { name: form.type }
+
     prestashop.bundle.form.admin.configure.shop_parameters.order_states.order_state:
       class: 'PrestaShopBundle\Form\Admin\Configure\ShopParameters\OrderStates\OrderStateType'
       parent: 'form.type.translatable.aware'
