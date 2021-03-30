@@ -32,7 +32,7 @@ use PrestaShop\PrestaShop\Core\Domain\Product\Combination\ValueObject\Combinatio
  * This interface is used by CombinationCommandsBuilder each object which implements must build
  * a combination command based on the input form data.
  */
-interface CombinationCommandBuilderInterface
+interface CombinationCommandsBuilderInterface
 {
     /**
      * @param CombinationId $combinationId

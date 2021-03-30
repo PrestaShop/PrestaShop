@@ -34,7 +34,7 @@ use PrestaShop\PrestaShop\Core\Domain\Product\Combination\ValueObject\Combinatio
 /**
  * Builds commands from command stock form type
  */
-final class CombinationStockCommandBuilder implements CombinationCommandBuilderInterface
+final class CombinationStockCommandsBuilder implements CombinationCommandsBuilderInterface
 {
     /**
      * {@inheritdoc}

@@ -29,7 +29,7 @@ declare(strict_types=1);
 namespace Tests\Unit\Core\Form\IdentifiableObject\CommandBuilder\Product\Combination;
 
 use PrestaShop\PrestaShop\Core\Domain\Product\Combination\ValueObject\CombinationId;
-use PrestaShop\PrestaShop\Core\Form\IdentifiableObject\CommandBuilder\Product\Combination\CombinationCommandBuilderInterface;
+use PrestaShop\PrestaShop\Core\Form\IdentifiableObject\CommandBuilder\Product\Combination\CombinationCommandsBuilderInterface;
 use PrestaShop\PrestaShop\Core\Form\IdentifiableObject\CommandBuilder\Product\Combination\CombinationCommandsBuilder;
 
 class CombinationCommandsBuilderTest extends AbstractCombinationCommandBuilderTest
@@ -133,7 +133,7 @@ class FakeCombinationCommand
     }
 }
 
-class ConditionBuilder implements CombinationCommandBuilderInterface
+class ConditionBuilder implements CombinationCommandsBuilderInterface
 {
     /**
      * @var array
@@ -170,7 +170,7 @@ class ConditionBuilder implements CombinationCommandBuilderInterface
     }
 }
 
-class AlwaysEmptyBuilder implements CombinationCommandBuilderInterface
+class AlwaysEmptyBuilder implements CombinationCommandsBuilderInterface
 {
     /**
      * {@inheritdoc}
@@ -181,10 +181,10 @@ class AlwaysEmptyBuilder implements CombinationCommandBuilderInterface
     }
 }
 
-class MultiCommandsBuilder implements CombinationCommandBuilderInterface
+class MultiCommandsBuilder implements CombinationCommandsBuilderInterface
 {
     /**
-     * @var CombinationCommandBuilderInterface[]
+     * @var CombinationCommandsBuilderInterface[]
      */
     private $builders;
 
