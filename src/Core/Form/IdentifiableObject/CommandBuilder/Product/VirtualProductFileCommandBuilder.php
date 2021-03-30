@@ -32,6 +32,7 @@ use DateTimeImmutable;
 use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductId;
 use PrestaShop\PrestaShop\Core\Domain\Product\VirtualProductFile\Command\AddVirtualProductFileCommand;
 use PrestaShop\PrestaShop\Core\Domain\Product\VirtualProductFile\Command\UpdateVirtualProductFileCommand;
+use PrestaShop\PrestaShop\Core\Util\DateTime\NullDateTime;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
 
 final class VirtualProductFileCommandBuilder implements ProductCommandBuilderInterface
@@ -125,7 +126,11 @@ final class VirtualProductFileCommandBuilder implements ProductCommandBuilderInt
         }
         if (isset($virtualProductFileData['expiration_date'])) {
             $update = true;
-            $command->setExpirationDate(new DateTimeImmutable($virtualProductFileData['expiration_date']));
+            $command->setExpirationDate(
+            empty($virtualProductFileData['expiration_date']) ?
+                new NullDateTime() :
+                new DateTimeImmutable($virtualProductFileData['expiration_date'])
+            );
         }
 
         return $update ? $command : null;

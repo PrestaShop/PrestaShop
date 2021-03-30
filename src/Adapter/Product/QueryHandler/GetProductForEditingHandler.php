@@ -370,7 +370,7 @@ final class GetProductForEditingHandler extends AbstractProductHandler implement
             $virtualProductFile->display_filename,
             (int) $virtualProductFile->nb_days_accessible,
             (int) $virtualProductFile->nb_downloadable,
-            $virtualProductFile->date_expiration === DateTimeUtil::NULL_VALUE ? null : new DateTime($virtualProductFile->date_expiration)
+            $virtualProductFile->date_expiration === DateTimeUtil::NULL_DATETIME ? null : new DateTime($virtualProductFile->date_expiration)
         );
     }
 }
