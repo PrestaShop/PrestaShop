@@ -7,7 +7,9 @@ class Zones extends BOBasePage {
 
     this.pageTitle = 'Zones •';
     this.successfulUpdateStatusMessage = 'The status has been successfully updated.';
+    this.successfulCreationMessage = 'Successful creation';
     this.successfulUpdateMessage = 'Update successful';
+    this.successfulDeleteMessage = 'Successful deletion';
 
     // Selectors
     // SubTab
