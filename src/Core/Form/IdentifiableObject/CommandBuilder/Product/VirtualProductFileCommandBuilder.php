@@ -73,12 +73,12 @@ final class VirtualProductFileCommandBuilder implements ProductCommandBuilderInt
             return null;
         }
 
-        if (!isset($virtualProductFileData['file'])) {
+        if (!isset($virtualProductFileData['file']['file'])) {
             return null;
         }
 
         /** @var UploadedFile $uploadedFile */
-        $uploadedFile = $virtualProductFileData['file'];
+        $uploadedFile = $virtualProductFileData['file']['file'];
 
         return new AddVirtualProductFileCommand(
             $productId->getValue(),
@@ -105,7 +105,7 @@ final class VirtualProductFileCommandBuilder implements ProductCommandBuilderInt
 
         $command = new UpdateVirtualProductFileCommand((int) $virtualProductFileData['virtual_product_file_id']);
 
-        if (isset($virtualProductFileData['file'])) {
+        if (isset($virtualProductFileData['file']['file'])) {
             $update = true;
             /** @var UploadedFile $newFile */
             $newFile = $virtualProductFileData['file'];
