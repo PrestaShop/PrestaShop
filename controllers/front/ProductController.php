@@ -1222,6 +1222,13 @@ class ProductControllerCore extends ProductPresentingFrontControllerCore
                 ];
             }
         }
+        
+        if ($categoryDefault->id_parent != 0 && !$categoryDefault->is_root_category && $categoryDefault->active ) {
+            $breadcrumb['links'][] =  [
+                'title' => $categoryDefault->name,
+                'url' => $this->context->link->getCategoryLink($categoryDefault),
+            ];
+        }
 
         $breadcrumb['links'][] = [
             'title' => $this->product->name,
