@@ -70,7 +70,7 @@ class SlipOptionsType extends TranslatorAwareType
                 [
                     'label' => $this->trans('Enable product image', 'Admin.Orderscustomers.Feature'),
                     'help' => $this->trans(
-                        'Add an image before product name on delivery slip.',
+                        'Add an image before the product name on delivery slips.',
                         'Admin.Orderscustomers.Help'
                     ),
                 ]
