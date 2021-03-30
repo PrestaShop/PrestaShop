@@ -34,6 +34,11 @@ namespace PrestaShop\PrestaShop\Core\Domain\Product\Combination\QueryResult;
 class CombinationForEditing
 {
     /**
+     * @var string
+     */
+    private $name;
+
+    /**
      * @var CombinationDetails
      */
     private $details;
@@ -49,18 +54,29 @@ class CombinationForEditing
     private $stock;
 
     /**
+     * @param string $name
      * @param CombinationDetails $options
      * @param CombinationPrices $prices
      * @param CombinationStock $stock
      */
     public function __construct(
+        string $name,
         CombinationDetails $options,
         CombinationPrices $prices,
         CombinationStock $stock
     ) {
+        $this->name = $name;
         $this->details = $options;
         $this->stock = $stock;
         $this->prices = $prices;
+    }
+
+    /**
+     * @return string
+     */
+    public function getName(): string
+    {
+        return $this->name;
     }
 
     /**
