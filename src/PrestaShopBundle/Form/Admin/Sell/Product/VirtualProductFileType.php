@@ -104,6 +104,7 @@ class VirtualProductFileType extends TranslatorAwareType
                 ),
                 'attr' => ['placeholder' => 'YYYY-MM-DD'],
                 'required' => false,
+                'empty_data' => '',
             ])
         ;
     }
