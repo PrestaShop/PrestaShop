@@ -42,6 +42,7 @@ use PrestaShop\PrestaShop\Core\Domain\Product\Supplier\QueryResult\ProductSuppli
 use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductType;
 use PrestaShop\PrestaShop\Core\Util\DateTime\DateTime;
 use Symfony\Component\HttpFoundation\File\File;
+use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 
 /**
  * Provides the data that is used to prefill the Product form
@@ -64,26 +65,34 @@ final class ProductFormDataProvider implements FormDataProviderInterface
     private $mostUsedTaxRulesGroupId;
 
     /**
-     * @var
+     * @var string
      */
     private $virtualProductFileDir;
+
+    /**
+     * @var UrlGeneratorInterface
+     */
+    private $urlGenerator;
 
     /**
      * @param CommandBusInterface $queryBus
      * @param bool $defaultProductActivation
      * @param int $mostUsedTaxRulesGroupId
      * @param string $virtualProductFileDir
+     * @param UrlGeneratorInterface $urlGenerator
      */
     public function __construct(
         CommandBusInterface $queryBus,
         bool $defaultProductActivation,
         int $mostUsedTaxRulesGroupId,
-        string $virtualProductFileDir
+        string $virtualProductFileDir,
+        UrlGeneratorInterface $urlGenerator
     ) {
         $this->queryBus = $queryBus;
         $this->defaultProductActivation = $defaultProductActivation;
         $this->mostUsedTaxRulesGroupId = $mostUsedTaxRulesGroupId;
         $this->virtualProductFileDir = $virtualProductFileDir;
+        $this->urlGenerator = $urlGenerator;
     }
 
     /**
@@ -177,11 +186,19 @@ final class ProductFormDataProvider implements FormDataProviderInterface
         $virtualProductFile = $productForEditing->getVirtualProductFile();
 
         if (null !== $virtualProductFile) {
+            // @todo: some service to generate file path instead of doing it manually?
             $filePath = $this->virtualProductFileDir . $virtualProductFile->getFileName();
 
             $data = [
                 'virtual_product_file_id' => $virtualProductFile->getId(),
-                'file' => new File($filePath),
+                'file' => [
+                    'file' => new File($filePath),
+                    'download_file_url' => $this->urlGenerator->generate(
+                        // @todo: implement new action instead of old one?
+                        'admin_product_virtual_download_file_action',
+                        ['idProduct' => $productForEditing->getProductId()]
+                    ),
+                ],
                 'name' => $virtualProductFile->getDisplayName(),
                 'download_times_limit' => $virtualProductFile->getDownloadTimesLimit(),
                 'access_days_limit' => $virtualProductFile->getAccessDays(),
