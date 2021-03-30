@@ -23,11 +23,10 @@
  * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
+declare(strict_types=1);
 
 namespace PrestaShop\PrestaShop\Core\Util\DateTime;
 
-use DateInterval;
-use DateTime;
 use DateTimeImmutable;
 use DateTimeInterface;
 use DateTimeZone;
@@ -46,8 +45,22 @@ class NullDateTime extends DateTimeImmutable
 
     /**
      * {@inheritdoc}
+     *
+     * Outputs string representing null date time
      */
-    public function add(DateInterval $interval)
+    public function format($format)
+    {
+        if ($format === DateTimeUtil::DEFAULT_DATE_FORMAT) {
+            return DateTimeUtil::NULL_DATE;
+        }
+
+        return DateTimeUtil::NULL_DATETIME;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function add($interval)
     {
         throw new RuntimeException(
             sprintf(
@@ -73,7 +86,7 @@ class NullDateTime extends DateTimeImmutable
     /**
      * {@inheritdoc}
      */
-    public static function createFromMutable(DateTime $object)
+    public static function createFromMutable($object)
     {
         throw new RuntimeException(
             sprintf(
@@ -104,19 +117,6 @@ class NullDateTime extends DateTimeImmutable
         throw new RuntimeException(
             sprintf(
                 'This method should not be used in %s class, it might produce unexpected results',
-                static::class
-            )
-        );
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public static function __set_state(array $array)
-    {
-        throw new RuntimeException(
-            sprintf(
-                'This method should not be used in %s, it might produce unexpected results',
                 static::class
             )
         );
@@ -177,7 +177,7 @@ class NullDateTime extends DateTimeImmutable
     /**
      * {@inheritdoc}
      */
-    public function setTimezone(DateTimeZone $timezone)
+    public function setTimezone($timezone)
     {
         throw new RuntimeException(
             sprintf(
@@ -190,7 +190,7 @@ class NullDateTime extends DateTimeImmutable
     /**
      * {@inheritdoc}
      */
-    public function sub(DateInterval $interval)
+    public function sub($interval)
     {
         throw new RuntimeException(
             sprintf(
@@ -204,19 +204,6 @@ class NullDateTime extends DateTimeImmutable
      * {@inheritdoc}
      */
     public function diff($targetObject, $absolute = false)
-    {
-        throw new RuntimeException(
-            sprintf(
-                'This method should not be used in %s class, it might produce unexpected results',
-                static::class
-            )
-        );
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function format($format)
     {
         throw new RuntimeException(
             sprintf(
