@@ -50,6 +50,10 @@ services:
         class: PrestaShop\PrestaShop\Core\Form\IdentifiableObject\CommandBuilder\Product\CustomizationFieldsCommandsBuilder
         tags: ['core.product_command_builder']
 
+    prestashop.core.form.command_builder.product.virtual_product_file_command_builder:
+        class: PrestaShop\PrestaShop\Core\Form\IdentifiableObject\CommandBuilder\Product\VirtualProductFileCommandBuilder
+        tags: ['core.product_command_builder']
+
     # Combination builders
     prestashop.core.form.command_builder.combination.combination_commands_builder:
         class: PrestaShop\PrestaShop\Core\Form\IdentifiableObject\CommandBuilder\Product\Combination\CombinationCommandsBuilder
