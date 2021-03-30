@@ -53,6 +53,7 @@
           class="btn btn-secondary btn-close"
           @click.prevent.stop="closeModal"
           aria-label="Close modal"
+          :disabled="submittingCombinationForm"
         >
           {{ $t('modal.close') }}
         </button>
@@ -62,7 +63,7 @@
           class="btn btn-outline-secondary"
           @click.prevent.stop="showPrevious"
           aria-label="Close modal"
-          :disabled="previousCombinationId === null"
+          :disabled="previousCombinationId === null || submittingCombinationForm"
         >
           <i class="material-icons">keyboard_arrow_left</i>
           {{ $t('modal.previous') }}
@@ -72,7 +73,7 @@
           class="btn btn-outline-secondary"
           @click.prevent.stop="showNext"
           aria-label="Close modal"
-          :disabled="nextCombinationId === null"
+          :disabled="nextCombinationId === null || submittingCombinationForm"
         >
           {{ $t('modal.next') }}
           <i class="material-icons">keyboard_arrow_right</i>
@@ -82,8 +83,17 @@
           class="btn btn-primary"
           @click.prevent.stop="submitForm"
           aria-label="Close modal"
+          :disabled="submittingCombinationForm"
         >
-          {{ $t('modal.save') }}
+          <span v-if="!submittingCombinationForm">
+            {{ $t('modal.save') }}
+          </span>
+          <span
+            class="spinner-border spinner-border-sm"
+            v-if="submittingCombinationForm"
+            role="status"
+            aria-hidden="true"
+          />
         </button>
       </template>
     </modal>
@@ -112,6 +122,7 @@
         nextCombinationId: null,
         editCombinationUrl: '',
         loadingCombinationForm: false,
+        submittingCombinationForm: false,
         combinationList: null,
       };
     },
@@ -139,13 +150,20 @@
         this.combinationIds = await this.combinationsService.getCombinationIds();
       },
       frameLoading() {
-        this.$refs.iframe.contentDocument.body.style.overflowX = 'hidden';
+        this.applyIframeStyling();
       },
       onFrameLoaded() {
         this.loadingCombinationForm = false;
+        this.submittingCombinationForm = false;
+        this.applyIframeStyling();
+      },
+      applyIframeStyling() {
         this.$refs.iframe.contentDocument.body.style.overflowX = 'hidden';
       },
       closeModal() {
+        if (this.submittingCombinationForm) {
+          return;
+        }
         this.selectedCombinationId = null;
       },
       showPrevious() {
@@ -159,7 +177,10 @@
         }
       },
       submitForm() {
-
+        this.submittingCombinationForm = true;
+        const iframeBody = this.$refs.iframe.contentDocument.body;
+        const editionForm = iframeBody.querySelector(ProductMap.combinations.editionForm);
+        editionForm.submit();
       },
     },
     watch: {
@@ -189,7 +210,6 @@
             ? null
             : this.combinationIds[selectedIndex + 1];
         }
-        console.log('prev', this.previousCombinationId, 'next', this.nextCombinationId);
       },
     },
   };

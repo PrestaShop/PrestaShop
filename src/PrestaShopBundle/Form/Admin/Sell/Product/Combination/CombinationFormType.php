@@ -30,7 +30,6 @@ namespace PrestaShopBundle\Form\Admin\Sell\Product\Combination;
 
 use PrestaShopBundle\Form\Admin\Type\TranslatorAwareType;
 use Symfony\Component\Form\Extension\Core\Type\HiddenType;
-use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\Form\FormBuilderInterface;
 
 /**
@@ -51,9 +50,6 @@ class CombinationFormType extends TranslatorAwareType
                 'label_attr' => [
                     'title' => 'h2',
                 ],
-            ])
-            ->add('save', SubmitType::class, [
-                'label' => $this->trans('Save', 'Admin.Actions'),
             ])
         ;
     }
