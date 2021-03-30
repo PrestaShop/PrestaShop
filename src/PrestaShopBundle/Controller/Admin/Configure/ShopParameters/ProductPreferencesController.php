@@ -213,7 +213,7 @@ class ProductPreferencesController extends FrameworkBundleAdminController
         switch ($error->getErrorCode()) {
             case GeneralFormDataProvider::ERROR_MUST_BE_NUMERIC_EQUAL_TO_ZERO_OR_HIGHER:
                 return $this->trans(
-                    '%s is invalid. Please enter an integer greater or equal to 0.',
+                    '%s is invalid. Please enter an integer greater than or equal to 0.',
                     'Admin.Notifications.Error',
                     [$this->getFieldLabel($error->getFieldName())]
                 );
