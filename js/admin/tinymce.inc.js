@@ -60,6 +60,12 @@ function tinySetup(config) {
     language: iso_user,
     content_style: lang_is_rtl === '1' ? 'body {direction:rtl;}' : '',
     skin: 'prestashop',
+    mobile: {
+      theme: 'mobile',
+      plugins: ['lists', 'align', 'link', 'table', 'placeholder', 'advlist', 'code'],
+      toolbar:
+        'undo code colorpicker bold italic underline strikethrough blockquote link align bullist numlist table formatselect styleselect',
+    },
     menubar: false,
     statusbar: false,
     relative_urls: false,
