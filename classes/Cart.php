@@ -500,6 +500,9 @@ class CartCore extends ObjectModel
                     AND crl.id_lang = ' . (int) $this->id_lang . '
                 )
                 WHERE `id_cart` = ' . (int) $this->id . '
+                AND NOW() BETWEEN cr.date_from AND cr.date_to
+				AND cr.`active` = 1
+				AND cr.`quantity` > 0
                 ' . ($filter == CartRule::FILTER_ACTION_SHIPPING ? 'AND free_shipping = 1' : '') . '
                 ' . ($filter == CartRule::FILTER_ACTION_GIFT ? 'AND gift_product != 0' : '') . '
                 ' . ($filter == CartRule::FILTER_ACTION_REDUCTION ? 'AND (reduction_percent != 0 OR reduction_amount != 0)' : '')
