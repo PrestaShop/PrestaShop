@@ -29,7 +29,9 @@ namespace PrestaShop\PrestaShop\Core\Grid\Query;
 
 use Doctrine\DBAL\Connection;
 use Doctrine\DBAL\Query\QueryBuilder;
+use InvalidArgumentException;
 use PrestaShop\PrestaShop\Core\Grid\Search\SearchCriteriaInterface;
+use PrestaShop\PrestaShop\Core\Search\Filters\ProductCombinationFilters;
 
 final class ProductCombinationQueryBuilder extends AbstractDoctrineQueryBuilder
 {
@@ -57,6 +59,15 @@ final class ProductCombinationQueryBuilder extends AbstractDoctrineQueryBuilder
      */
     public function getSearchQueryBuilder(SearchCriteriaInterface $searchCriteria)
     {
+        if (!$searchCriteria instanceof ProductCombinationFilters) {
+            throw new InvalidArgumentException(
+                sprintf(
+                    'Expected %s, but got %s',
+                    ProductCombinationFilters::class, get_class($searchCriteria)
+                )
+            );
+        }
+
         $qb = $this->getCombinationsQueryBuilder($searchCriteria)->select('pa.*');
 
         $this->searchCriteriaApplicator
@@ -72,20 +83,29 @@ final class ProductCombinationQueryBuilder extends AbstractDoctrineQueryBuilder
      */
     public function getCountQueryBuilder(SearchCriteriaInterface $searchCriteria)
     {
+        if (!$searchCriteria instanceof ProductCombinationFilters) {
+            throw new InvalidArgumentException(
+                sprintf(
+                    'Expected %s, but got %s',
+                    ProductCombinationFilters::class, get_class($searchCriteria)
+                )
+            );
+        }
+
         return $this->getCombinationsQueryBuilder($searchCriteria)
             ->select('COUNT(pa.id_product_attribute)')
         ;
     }
 
     /**
-     * @param SearchCriteriaInterface $searchCriteria
+     * @param ProductCombinationFilters $productCombinationFilters
      *
      * @return QueryBuilder
      */
-    private function getCombinationsQueryBuilder(SearchCriteriaInterface $searchCriteria): QueryBuilder
+    private function getCombinationsQueryBuilder(ProductCombinationFilters $productCombinationFilters): QueryBuilder
     {
-        $filters = $searchCriteria->getFilters();
-        $productId = (int) $filters['product_id'];
+        $filters = $productCombinationFilters->getFilters();
+        $productId = $productCombinationFilters->getProductId();
 
         $qb = $this->connection->createQueryBuilder();
         $qb->from($this->dbPrefix . 'product_attribute', 'pa')
@@ -115,7 +135,7 @@ final class ProductCombinationQueryBuilder extends AbstractDoctrineQueryBuilder
             }
         }
 
-        if (null === $searchCriteria->getOrderBy()) {
+        if (null === $productCombinationFilters->getOrderBy()) {
             $qb->addOrderBy('id_product_attribute', 'asc');
         }
 

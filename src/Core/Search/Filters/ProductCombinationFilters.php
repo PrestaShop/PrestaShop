@@ -65,6 +65,14 @@ class ProductCombinationFilters extends Filters
     }
 
     /**
+     * @return int
+     */
+    public function getProductId(): int
+    {
+        return $this->productId;
+    }
+
+    /**
      * {@inheritdoc}
      */
     public static function getDefaults()
