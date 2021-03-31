@@ -117,13 +117,7 @@ class TypedFiltersBuilder extends AbstractFiltersBuilder
         $typedBuilder = $this->findTypedBuilder();
         // When a typed builder matches it MUST be used in priority, do not try to manually a filters class that might
         // need some special inputs
-        if (null !== $typedBuilder) {
-            $typedFilters = $typedBuilder->buildFilters($filters);
-        } else {
-            $typedFilters = $this->defaultBuilder->buildFilters($filters);
-        }
-
-        return $typedFilters;
+        return $typedBuilder ? $typedBuilder->buildFilters($filters) : $this->defaultBuilder->buildFilters($filters);
     }
 
     /**
