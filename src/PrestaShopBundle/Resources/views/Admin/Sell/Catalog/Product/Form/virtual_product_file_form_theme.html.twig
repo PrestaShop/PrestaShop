@@ -24,7 +24,9 @@
  *#}
 
 {%- block virtual_product_file_widget -%}
-  {{ form_row(form.has_file) }}
+  <div id="virtualProductFileSwitch">
+    {{ form_row(form.has_file) }}
+  </div>
   <div id="virtualProductFileContent">
     {{ form_widget(form) }}
   </div>

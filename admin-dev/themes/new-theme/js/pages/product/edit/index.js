@@ -34,6 +34,7 @@ import NavbarHandler from '@components/navbar-handler';
 import CombinationsManager from '@pages/product/edit/combinations-manager';
 import ProductTypeManager from '@pages/product/edit/product-type-manager';
 import initDropzone from '@pages/product/components/dropzone';
+import VirtualProductManager from "@pages/product/edit/virtual-product-manager";
 
 const {$} = window;
 
@@ -98,5 +99,8 @@ $(() => {
 
   if (productType !== ProductMap.productType.COMBINATIONS) {
     new ProductSuppliersManager();
+  }
+  if (productType === ProductMap.productType.VIRTUAL) {
+    new VirtualProductManager();
   }
 });

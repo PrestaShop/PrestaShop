@@ -107,8 +107,12 @@ export default {
       deleteButton: (rowIndex) => `#combination_list_combinations_${rowIndex}_delete`,
     },
   },
-  virtual: {
-
+  virtualProduct: {
+    container: '#virtual-product-tab',
+    fileSwitchContainer: '#virtualProductFileSwitch',
+    fileContentContainer: '#virtualProductFileContent',
+    fileSwitchOnInputSelector: '#product_virtual_product_file_has_file_1',
+    fileSwitchOffInputSelector: '#product_virtual_product_file_has_file_0',
   },
   dropzone: {
     configuration: {
