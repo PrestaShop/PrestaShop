@@ -31,7 +31,11 @@ use PrestaShop\PrestaShop\Core\ConstraintValidator\Constraints\TypedRegex;
 use PrestaShop\PrestaShop\Core\Domain\Product\VirtualProductFile\VirtualProductFileSettings;
 use PrestaShopBundle\Form\Admin\Type\DatePickerType;
 use PrestaShopBundle\Form\Admin\Type\DownloadableFileType;
+use PrestaShopBundle\Form\Admin\Type\SwitchType;
 use PrestaShopBundle\Form\Admin\Type\TranslatorAwareType;
+use PrestaShopBundle\Form\Admin\Type\YesAndNoChoiceType;
+use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
+use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\HiddenType;
 use Symfony\Component\Form\Extension\Core\Type\NumberType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
@@ -46,6 +50,9 @@ class VirtualProductFileType extends TranslatorAwareType
         $maxUploadSize = $this->getConfiguration()->get('PS_ATTACHMENT_MAXIMUM_SIZE') . 'M';
 
         $builder
+            ->add('has_file', SwitchType::class, [
+                'label' => $this->trans('Does this product have an associated file?', 'Admin.Catalog.Feature'),
+            ])
             ->add('virtual_product_file_id', HiddenType::class)
             ->add('file', DownloadableFileType::class, [
                 'label' => $this->trans('File', 'Admin.Global'),

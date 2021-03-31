@@ -107,6 +107,9 @@ export default {
       deleteButton: (rowIndex) => `#combination_list_combinations_${rowIndex}_delete`,
     },
   },
+  virtual: {
+
+  },
   dropzone: {
     configuration: {
       fileManager: '.openfilemanager',
