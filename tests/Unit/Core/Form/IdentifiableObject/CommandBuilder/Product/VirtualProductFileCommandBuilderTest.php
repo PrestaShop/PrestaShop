@@ -30,6 +30,7 @@ namespace Tests\Unit\Core\Form\IdentifiableObject\CommandBuilder\Product;
 use DateTimeImmutable;
 use Generator;
 use PrestaShop\PrestaShop\Core\Domain\Product\VirtualProductFile\Command\AddVirtualProductFileCommand;
+use PrestaShop\PrestaShop\Core\Domain\Product\VirtualProductFile\Command\DeleteVirtualProductFileCommand;
 use PrestaShop\PrestaShop\Core\Domain\Product\VirtualProductFile\Command\UpdateVirtualProductFileCommand;
 use PrestaShop\PrestaShop\Core\Form\IdentifiableObject\CommandBuilder\Product\VirtualProductFileCommandBuilder;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
@@ -75,7 +76,11 @@ class VirtualProductFileCommandBuilderTest extends AbstractProductCommandBuilder
         yield [
             [
                 'virtual_product_file' => [
-                    'file' => $dummyFile,
+                    'has_file' => true,
+                    'virtual_product_file_id' => '0',
+                    'file' => [
+                        'file' => $dummyFile,
+                    ],
                     'name' => 'The file',
                 ],
             ],
@@ -93,8 +98,11 @@ class VirtualProductFileCommandBuilderTest extends AbstractProductCommandBuilder
         yield [
             [
                 'virtual_product_file' => [
+                    'has_file' => true,
                     'virtual_product_file_id' => null,
-                    'file' => $dummyFile,
+                    'file' => [
+                        'file' => $dummyFile,
+                    ],
                     'name' => 'The file',
                     'access_days_limit' => 1,
                     'download_times_limit' => 5,
@@ -109,8 +117,11 @@ class VirtualProductFileCommandBuilderTest extends AbstractProductCommandBuilder
         yield [
             [
                 'virtual_product_file' => [
+                    'has_file' => true,
                     'virtual_product_file_id' => 5,
-                    'file' => $dummyFile,
+                    'file' => [
+                        'file' => $dummyFile,
+                    ],
                 ],
             ],
             [$command],
@@ -124,6 +135,7 @@ class VirtualProductFileCommandBuilderTest extends AbstractProductCommandBuilder
         yield [
             [
                 'virtual_product_file' => [
+                    'has_file' => true,
                     'virtual_product_file_id' => '6',
                     'name' => 'new display name',
                     'access_days_limit' => 10,
@@ -132,6 +144,27 @@ class VirtualProductFileCommandBuilderTest extends AbstractProductCommandBuilder
                 ],
             ],
             [$command],
+        ];
+
+        $command = new DeleteVirtualProductFileCommand(17);
+        yield [
+            [
+                'virtual_product_file' => [
+                    'has_file' => 0,
+                    'virtual_product_file_id' => 17,
+                ],
+            ],
+            [$command],
+        ];
+
+        yield [
+            [
+                'virtual_product_file' => [
+                    'has_file' => 0,
+                    'virtual_product_file_id' => 0,
+                ],
+            ],
+            [],
         ];
     }
 }
