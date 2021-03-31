@@ -130,7 +130,7 @@ class InvoicesController extends FrameworkBundleAdminController
      *
      * @return bool false if an error occurred, true otherwise
      */
-    private function processForm(FormHandlerInterface $formHandler, Request $request)
+    private function processForm(FormHandlerInterface $formHandler, Request $request): void
     {
         $form = $formHandler->getForm();
         $form->submit($request->request->get($form->getName()));
@@ -141,8 +141,6 @@ class InvoicesController extends FrameworkBundleAdminController
             } catch (DataProviderException $e) {
                 $errorMessageFactory = $this->get('form.invalid_configuration_error_message_factory');
                 $this->flashErrors($errorMessageFactory->getErrorMessages($e->getInvalidConfigurationDataErrors(), $form));
-
-                return false;
             }
         }
     }
