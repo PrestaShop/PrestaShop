@@ -37,6 +37,7 @@ use PrestaShop\PrestaShop\Core\Domain\Shop\QueryResult\FoundShopGroup;
 use RuntimeException;
 use Shop;
 use ShopGroup;
+use ShopUrl;
 use Tests\Integration\Behaviour\Features\Context\Domain\AbstractDomainFeatureContext;
 
 class ShopFeatureContext extends AbstractDomainFeatureContext
@@ -129,6 +130,30 @@ class ShopFeatureContext extends AbstractDomainFeatureContext
         $shop->setTheme();
 
         SharedStorage::getStorage()->set($reference, $shop);
+    }
+
+    /**
+     * @Given I add a shop url :reference to shop :shopReference
+     *
+     * @param string $reference
+     * @param string $shopReference
+     */
+    public function addShopUrl(string $reference, string $shopReference)
+    {
+        $shop = SharedStorage::getStorage()->get($shopReference);
+        $shopUrl = new ShopUrl();
+        $shopUrl->id_shop = $shop->id;
+        $shopUrl->active = true;
+        $shopUrl->main = true;
+        $shopUrl->domain = 'localhost';
+        $shopUrl->domain_ssl = 'localhost';
+        $shopUrl->physical_uri = '/prestatest/';
+        $shopUrl->virtual_uri = '/prestatest/';
+        if (!$shopUrl->add()) {
+            throw new RuntimeException(sprintf('Could not create shop url: %s', Db::getInstance()->getMsgError()));
+        }
+
+        SharedStorage::getStorage()->set($reference, $shopUrl);
     }
 
     /**
