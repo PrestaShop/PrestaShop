@@ -311,14 +311,14 @@ services:
     class: 'PrestaShop\PrestaShop\Core\Grid\Definition\Factory\Security\Session\EmployeeGridDefinitionFactory'
     parent: 'prestashop.core.grid.definition.factory.abstract_grid_definition'
     arguments:
-      - "@=service('router').generate('admin_common_reset_search', {'controller': 'security', 'action': 'employeesSessions'})"
-      - "@=service('router').generate('admin_security_sessions_employees_search')"
+      - "@=service('router').generate('admin_common_reset_search', {'controller': 'security', 'action': 'employeeSession'})"
+      - "@=service('router').generate('admin_security_sessions_employee_search')"
     public: true
 
   prestashop.core.grid.definition.factory.security.session.customer:
     class: 'PrestaShop\PrestaShop\Core\Grid\Definition\Factory\Security\Session\CustomerGridDefinitionFactory'
     parent: 'prestashop.core.grid.definition.factory.abstract_grid_definition'
     arguments:
-      - "@=service('router').generate('admin_common_reset_search', {'controller': 'security', 'action': 'customersSessions'})"
-      - "@=service('router').generate('admin_security_sessions_customers_search')"
+      - "@=service('router').generate('admin_common_reset_search', {'controller': 'security', 'action': 'customerSession'})"
+      - "@=service('router').generate('admin_security_sessions_customer_search')"
     public: true
