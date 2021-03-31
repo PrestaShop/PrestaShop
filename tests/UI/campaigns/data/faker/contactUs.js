@@ -12,6 +12,6 @@ module.exports = class ContactUs {
 
     this.reference = messageToCreate.reference;
     this.fileName = faker.lorem.word();
-    this.message = faker.lorem.sentence().substring(0, 35);
+    this.message = faker.lorem.sentence().substring(0, 35).trim();
   }
 };
