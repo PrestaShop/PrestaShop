@@ -98,6 +98,53 @@ class AttributeGroupFeatureContext extends AbstractDomainFeatureContext
                 Assert::assertTrue(isset($attributeGroupPublicNames[$langId]));
                 Assert::assertEquals($publicName, $attributeGroupPublicNames[$langId]);
             }
+            Assert::assertNull($attributeGroup->getAttributes());
+
+            $expectedId = $this->getSharedStorage()->get($attributeGroupsDatum['reference']);
+            Assert::assertEquals($expectedId, $attributeGroup->getAttributeGroupId());
+        }
+    }
+
+    /**
+     * @When I list all attribute groups, the group :attributeGroupReference should have the following attributes:
+     *
+     * @param TableNode $tableNode
+     * @param string $attributeGroupReference
+     */
+    public function assertAttributeInGroups(TableNode $tableNode, string $attributeGroupReference)
+    {
+        $attributesData = $this->localizeByColumns($tableNode);
+        $attributeGroups = $this->getQueryBus()->handle(new GetAttributeGroupList(true));
+
+        $attributeGroupId = $this->getSharedStorage()->get($attributeGroupReference);
+        $checkAttributeGroup = null;
+        /** @var AttributeGroup $attributeGroup */
+        foreach ($attributeGroups as $attributeGroup) {
+            if ($attributeGroup->getAttributeGroupId() === $attributeGroupId) {
+                $checkAttributeGroup = $attributeGroup;
+                break;
+            }
+        }
+
+        if (null === $checkAttributeGroup) {
+            throw new RuntimeException(sprintf('Could no find attribute group %s', $attributeGroupReference));
+        }
+
+        Assert::assertEquals(count($attributesData), count($checkAttributeGroup->getAttributes()));
+        $attributes = $checkAttributeGroup->getAttributes();
+        foreach ($attributesData as $index => $attributesDatum) {
+            $attribute = $attributes[$index];
+            Assert::assertEquals($attributesDatum['color'], $attribute->getColor());
+            Assert::assertEquals($attributesDatum['position'], $attribute->getPosition());
+
+            $attributeNames = $attribute->getLocalizedNames();
+            foreach ($attributesDatum['name'] as $langId => $name) {
+                Assert::assertTrue(isset($attributeNames[$langId]));
+                Assert::assertEquals($name, $attributeNames[$langId]);
+            }
+
+            $expectedId = $this->getSharedStorage()->get($attributesDatum['reference']);
+            Assert::assertEquals($expectedId, $attribute->getAttributeId());
         }
     }
 }

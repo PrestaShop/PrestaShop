@@ -44,6 +44,16 @@ class AttributeGroupRepository extends \Doctrine\ORM\EntityRepository
             ->addOrderBy('ag.position', 'ASC')
         ;
 
+        if ($withAttributes) {
+            $qb
+                ->leftJoin('ag.attributes', 'a')
+                ->leftJoin('a.attributeLangs', 'al')
+                ->addSelect('a')
+                ->addSelect('al')
+                ->addOrderBy('a.position', 'ASC')
+            ;
+        }
+
         return $qb->getQuery()->getResult();
     }
 }
