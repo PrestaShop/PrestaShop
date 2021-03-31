@@ -5,9 +5,21 @@ module.exports = {
       name: 'Hummingbird printed t-shirt',
       reference: 'demo_1',
       category: 'Men',
+      shortDescription: 'Regular fit, round neckline, short sleeves. Made of extra long staple pima cotton.',
+      description: 'Symbol of lightness and delicacy, the hummingbird evokes curiosity and joy. Studio Design\' '
+        + 'PolyFaune collection features classic products with colorful patterns, inspired by the traditional japanese '
+        + 'origamis. To wear with a chino or jeans. The sublimation textile printing process provides an exceptional '
+        + 'color rendering and a color, guaranteed overtime.',
+      regularPrice: 28.68,
       price: 23.90,
       finalPrice: 22.94,
+      discount: '20%',
       quantity: 2400,
+      coverImage: 'hummingbird-printed-t-shirt.jpg',
+      combination: {
+        size: 'S M L XL',
+        color: 'White Black',
+      },
       status: true,
     },
     demo_3: {

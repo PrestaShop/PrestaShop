@@ -33,7 +33,6 @@ use Context;
 use Country;
 use Currency;
 use Customer;
-use Language;
 use Order;
 use OrderDetail;
 use Pack;
@@ -189,7 +188,7 @@ abstract class AbstractOrderCommandHandler extends AbstractOrderHandler
             ->setCart($cart)
             ->setCustomer(new Customer($cart->id_customer))
             ->setCurrency(new Currency($cart->id_currency))
-            ->setLanguage(new Language($cart->id_lang))
+            ->setLanguage($cart->getAssociatedLanguage())
             ->setCountry($this->getCartTaxCountry($cart))
             ->setShop(new Shop($cart->id_shop))
         ;

@@ -7,9 +7,12 @@ class Product extends FOBasePage {
 
     // Selectors for product page
     this.productName = '#main h1[itemprop="name"]';
+    this.productCoverImg = '#content .product-cover img';
+    this.thumbFirstImg = '#content li:nth-child(1) img.js-thumb';
+    this.thumbSecondImg = '#content li:nth-child(2) img.js-thumb';
     this.productQuantity = '#quantity_wanted';
+    this.shortDescription = '#product-description-short';
     this.productDescription = '#description';
-    this.colorInput = color => `#group_2 li input[title=${color}]`;
     this.addToCartButton = '#add-to-cart-or-refresh button[data-button-action="add-to-cart"]';
     this.blockCartModal = '#blockcart-modal';
     this.proceedToCheckoutButton = `${this.blockCartModal} div.cart-content-btn a`;
@@ -18,9 +21,15 @@ class Product extends FOBasePage {
     this.continueShoppingButton = `${this.blockCartModal} div.cart-content-btn button`;
     this.productAvailabilityIcon = '#product-availability i';
     this.productAvailability = '#product-availability';
-    this.productSizeOption = size => `#group_1 option[title=${size}]`;
-    this.productColorInput = color => `#group_2 input[title=${color}]`;
+    this.productSizeSelect = '#group_1';
+    this.productSizeOption = size => `${this.productSizeSelect} option[title=${size}]`;
+    this.productColorUl = '#group_2';
+    this.productColorInput = color => `${this.productColorUl} input[title=${color}]`;
+    this.productColors = 'div.product-variants div:nth-child(2)';
     this.metaLink = '#main > meta';
+    this.facebookSocialSharing = '.social-sharing .facebook a';
+    this.twitterSocialSharing = '.social-sharing .twitter a';
+    this.pinterestSocialSharing = '.social-sharing .pinterest a';
     // Product prices block
     this.productPricesBlock = 'div.product-prices';
     this.discountAmountSpan = `${this.productPricesBlock} .discount.discount-amount`;
@@ -36,6 +45,17 @@ class Product extends FOBasePage {
     this.unitDiscountValue = `${this.discountTable} td:nth-child(2)`;
   }
 
+  // Methods
+
+  /**
+   * Get product page URL
+   * @param page
+   * @returns {Promise<string>}
+   */
+  getProductPageURL(page) {
+    return this.getAttributeContent(page, this.metaLink, 'content');
+  }
+
   /**
    * Get Product information (Product name, price, description)
    * @param page
@@ -44,33 +64,168 @@ class Product extends FOBasePage {
   async getProductInformation(page) {
     return {
       name: await this.getTextContent(page, this.productName),
-      price: parseFloat(await this.getAttributeContent(page, this.productPrice, 'content')),
+      price: await this.getPriceFromText(page, this.productPrice, 'content'),
+      shortDescription: await this.getTextContent(page, this.shortDescription, false),
       description: await this.getTextContent(page, this.productDescription),
     };
+  }
+
+  /**
+   * get regular price
+   * @param page
+   * @returns {Promise<number>}
+   */
+  getRegularPrice(page) {
+    return this.getPriceFromText(page, this.regularPrice);
+  }
+
+  /**
+   * Get product attributes
+   * @param page
+   * @returns {Promise<{size: *, color: *}>}
+   */
+  async getProductAttributes(page) {
+    return {
+      size: await this.getTextContent(page, this.productSizeSelect),
+      color: await this.getTextContent(page, this.productColors),
+    };
+  }
+
+  /**
+   * Get selected product attributes
+   * @param page
+   * @returns {Promise<{size: *, color: *}>}
+   */
+  async getSelectedProductAttributes(page) {
+    return {
+      size: await this.getTextContent(page, `${this.productSizeSelect} option[selected]`, false),
+      color: await this.getAttributeContent(page, `${this.productColors} input[checked]`, 'title'),
+    };
+  }
+
+  /**
+   * Get product image urls
+   * @param page
+   * @returns {Promise<{thumbImage: string, coverImage: string}>}
+   */
+  async getProductImageUrls(page) {
+    return {
+      coverImage: await this.getAttributeContent(page, this.productCoverImg, 'src'),
+      thumbImage: await this.getAttributeContent(page, this.thumbFirstImg, 'src'),
+    };
+  }
+
+  /**
+   * Get discount column title
+   * @param page
+   * @returns {Promise<string>}
+   */
+  getDiscountColumnTitle(page) {
+    return this.getTextContent(page, this.unitDiscountColumn);
+  }
+
+  /**
+   * Get quantity discount value from volume discounts table
+   * @param page
+   * @returns {Promise<number>}
+   */
+  getQuantityDiscountValue(page) {
+    return this.getNumberFromText(page, this.quantityDiscountValue);
+  }
+
+  /**
+   * Get discount value from volume discounts table
+   * @param page
+   * @returns {Promise<string>}
+   */
+  getDiscountValue(page) {
+    return this.getTextContent(page, this.unitDiscountValue);
+  }
+
+  /**
+   * Get discount amount
+   * @param page
+   * @returns {Promise<string>}
+   */
+  getDiscountAmount(page) {
+    return this.getTextContent(page, this.discountAmountSpan);
+  }
+
+  /**
+   * Get discount percentage
+   * @param page
+   * @returns {Promise<string>}
+   */
+  getDiscountPercentage(page) {
+    return this.getTextContent(page, this.discountPercentageSpan);
+  }
+
+  getProductAvailabilityLabel(page) {
+    return this.getTextContent(page, this.productAvailability, false);
+  }
+
+  /**
+   * Get delivery information text
+   * @param page
+   * @return {Promise<string>}
+   */
+  getDeliveryInformationText(page) {
+    return this.getTextContent(page, this.deliveryInformationSpan);
+  }
+
+  /**
+   * Select thumb image
+   * @param page
+   * @param id
+   * @returns {Promise<string>}
+   */
+  async selectThumbImage(page, id) {
+    if (id === 1) {
+      await this.waitForSelectorAndClick(page, this.thumbFirstImg);
+      await page.waitForSelector(`${this.thumbFirstImg}.selected`, {state: 'visible'});
+    } else {
+      await this.waitForSelectorAndClick(page, this.thumbSecondImg);
+      await page.waitForSelector(`${this.thumbSecondImg}.selected`, {state: 'visible'});
+    }
+    return this.getAttributeContent(page, this.productCoverImg, 'src');
+  }
+
+  /**
+   * Select product combination
+   * @param page
+   * @param quantity
+   * @param combination
+   * @returns {Promise<void>}
+   */
+  async selectCombination(page, quantity, combination) {
+    if (combination.color !== null) {
+      await Promise.all([
+        this.waitForVisibleSelector(page, `${this.productColorInput(combination.color)}[checked]`),
+        page.click(this.productColorInput(combination.color)),
+      ]);
+    }
+
+    if (combination.size !== null) {
+      await Promise.all([
+        page.waitForSelector(`${this.productSizeOption(combination.size)}[selected]`, {state: 'attached'}),
+        this.selectByVisibleText(page, this.productSizeSelect, combination.size),
+      ]);
+    }
   }
 
   /**
    * Click on Add to cart button then on Proceed to checkout button in the modal
    * @param page
    * @param quantity
-   * @param attributeToChoose
+   * @param combination
    * @param proceedToCheckout
    * @returns {Promise<void>}
    */
-  async addProductToTheCart(page, quantity = 1, attributeToChoose = '', proceedToCheckout = true) {
-    await page.waitForTimeout(1000);
-    if (attributeToChoose.color) {
-      await Promise.all([
-        this.waitForVisibleSelector(page, this.colorInput(attributeToChoose.color)),
-        page.click(this.colorInput(attributeToChoose.color)),
-      ]);
+  async addProductToTheCart(page, quantity = 1, combination = {color: null, size: null}, proceedToCheckout = true) {
+    await this.selectCombination(page, quantity, combination);
+    if (quantity !== 1) {
+      await this.setValue(page, this.productQuantity, quantity);
     }
-    if (quantity !== 1 && attributeToChoose !== '') {
-      await this.setValue(page, this.productQuantity, attributeToChoose.quantity.toString());
-    } else if (quantity !== 1) {
-      await this.setValue(page, this.productQuantity, quantity.toString());
-    }
-
     await this.waitForSelectorAndClick(page, this.addToCartButton);
     await this.waitForVisibleSelector(page, `${this.blockCartModal}[style*='display: block;']`);
 
@@ -81,6 +236,34 @@ class Product extends FOBasePage {
       await this.waitForSelectorAndClick(page, this.continueShoppingButton);
       await page.waitForSelector(this.continueShoppingButton, {hidden: true});
     }
+  }
+
+  /**
+   * Go to social sharing link
+   * @param page
+   * @param socialSharing
+   * @returns {Promise<void>}
+   */
+  async goToSocialSharingLink(page, socialSharing) {
+    let selector;
+    switch (socialSharing) {
+      case 'Facebook':
+        selector = this.facebookSocialSharing;
+        break;
+
+      case 'Twitter':
+        selector = this.twitterSocialSharing;
+        break;
+
+      case 'Pinterest':
+        selector = this.pinterestSocialSharing;
+        break;
+
+      default:
+        throw new Error(`${socialSharing} was not found`);
+    }
+
+    return this.openLinkWithTargetBlank(page, selector, 'body');
   }
 
   /**
@@ -153,75 +336,12 @@ class Product extends FOBasePage {
   }
 
   /**
-   * Get product page URL
-   * @param page
-   * @returns {Promise<string>}
-   */
-  getProductPageURL(page) {
-    return this.getAttributeContent(page, this.metaLink, 'content');
-  }
-
-  /**
-   * Get discount column title
-   * @param page
-   * @returns {Promise<string>}
-   */
-  getDiscountColumnTitle(page) {
-    return this.getTextContent(page, this.unitDiscountColumn);
-  }
-
-  /**
-   * Get quantity discount value from volume discounts table
-   * @param page
-   * @returns {Promise<number>}
-   */
-  getQuantityDiscountValue(page) {
-    return this.getNumberFromText(page, this.quantityDiscountValue);
-  }
-
-  /**
-   * Get discount value from volume discounts table
-   * @param page
-   * @returns {Promise<string>}
-   */
-  getDiscountValue(page) {
-    return this.getTextContent(page, this.unitDiscountValue);
-  }
-
-  /**
-   * Get discount amount
-   * @param page
-   * @returns {Promise<string>}
-   */
-  getDiscountAmount(page) {
-    return this.getTextContent(page, this.discountAmountSpan);
-  }
-
-  /**
-   * Get discount percentage
-   * @param page
-   * @returns {Promise<string>}
-   */
-  getDiscountPercentage(page) {
-    return this.getTextContent(page, this.discountPercentageSpan);
-  }
-
-  /**
    * Is add to cart button enabled
    * @param page
    * @returns {boolean}
    */
   isAddToCartButtonEnabled(page) {
     return this.elementNotVisible(page, `${this.addToCartButton}:disabled`, 1000);
-  }
-
-  /**
-   * Get product availability label
-   * @param page
-   * @returns {Promise<string>}
-   */
-  getProductAvailabilityLabel(page) {
-    return this.getTextContent(page, this.productAvailability, false);
   }
 
   /**
@@ -234,13 +354,10 @@ class Product extends FOBasePage {
   }
 
   /**
-   * Get delivery information text
+   * Get product availability label
    * @param page
-   * @return {Promise<string>}
+   * @returns {Promise<string>}
    */
-  getDeliveryInformationText(page) {
-    return this.getTextContent(page, this.deliveryInformationSpan);
-  }
 }
 
 module.exports = new Product();

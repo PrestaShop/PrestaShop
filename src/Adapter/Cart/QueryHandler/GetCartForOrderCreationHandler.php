@@ -33,7 +33,6 @@ use Cart;
 use CartRule;
 use Currency;
 use Customer;
-use Language;
 use Link;
 use Message;
 use PrestaShop\Decimal\Number;
@@ -121,7 +120,7 @@ final class GetCartForOrderCreationHandler extends AbstractCartHandler implement
     {
         $cart = $this->getCart($query->getCartId());
         $currency = new Currency($cart->id_currency);
-        $language = new Language($cart->id_lang);
+        $language = $cart->getAssociatedLanguage();
 
         $this->contextStateManager
             ->setCart($cart)
@@ -135,10 +134,10 @@ final class GetCartForOrderCreationHandler extends AbstractCartHandler implement
             $addresses = $this->getAddresses($cart);
 
             if ($query->hideDiscounts()) {
-                $legacySummary = $cart->getSummaryDetails($cart->id_lang, true);
+                $legacySummary = $cart->getSummaryDetails($cart->getAssociatedLanguage()->getId(), true);
                 $products = $this->extractProductsWithGiftSplitFromLegacySummary($cart, $legacySummary, $currency);
             } else {
-                $legacySummary = $cart->getRawSummaryDetails($cart->id_lang, true);
+                $legacySummary = $cart->getRawSummaryDetails($cart->getAssociatedLanguage()->getId(), true);
                 $products = $this->extractProductsFromLegacySummary($cart, $legacySummary, $currency);
             }
 
@@ -171,7 +170,7 @@ final class GetCartForOrderCreationHandler extends AbstractCartHandler implement
         $customer = new Customer($cart->id_customer);
         $cartAddresses = [];
 
-        foreach ($customer->getAddresses($cart->id_lang) as $data) {
+        foreach ($customer->getAddresses($cart->getAssociatedLanguage()->getId()) as $data) {
             $addressId = (int) $data['id_address'];
             $cartAddresses[$addressId] = $this->buildCartAddress($addressId, $cart);
         }
@@ -443,7 +442,7 @@ final class GetCartForOrderCreationHandler extends AbstractCartHandler implement
             $this->contextLink->getPageLink(
                 'order',
                 false,
-                (int) $cart->id_lang,
+                (int) $cart->getAssociatedLanguage()->getId(),
                 http_build_query([
                     'step' => 3,
                     'recover_cart' => $cartId,
@@ -471,7 +470,7 @@ final class GetCartForOrderCreationHandler extends AbstractCartHandler implement
 
         $customizations = Product::getAllCustomizedDatas(
             $cart->id,
-            $cart->id_lang,
+            $cart->getAssociatedLanguage()->getId(),
             true,
             null,
             $customizationId
@@ -553,6 +552,11 @@ final class GetCartForOrderCreationHandler extends AbstractCartHandler implement
             \Tools::ps_round($product['total'], $currency->precision),
             $this->contextLink->getImageLink($product['link_rewrite'], $product['id_image'], 'small_default'),
             $this->getProductCustomizedData($cart, $product),
+            Product::getQuantity(
+                (int) $product['id_product'],
+                isset($product['id_product_attribute']) ? (int) $product['id_product_attribute'] : null
+            ),
+            Product::isAvailableWhenOutOfStock((int) $product['out_of_stock']) !== 0,
             !empty($product['is_gift'])
         );
     }

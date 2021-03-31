@@ -85,8 +85,9 @@ class OrderCarrierCore extends ObjectModel
      */
     public function sendInTransitEmail($order)
     {
+        $orderLanguageId = (int) $order->getAssociatedLanguage()->getId();
         $customer = new Customer((int) $order->id_customer);
-        $carrier = new Carrier((int) $order->id_carrier, $order->id_lang);
+        $carrier = new Carrier((int) $order->id_carrier, $orderLanguageId);
         $address = new Address((int) $order->id_address_delivery);
 
         if (!Validate::isLoadedObject($customer)) {
@@ -107,8 +108,8 @@ class OrderCarrierCore extends ObjectModel
             $prod_obj = new Product((int) $product['product_id']);
 
             //try to get the first image for the purchased combination
-            $img = $prod_obj->getCombinationImages($order->id_lang);
-            $link_rewrite = $prod_obj->link_rewrite[$order->id_lang];
+            $img = $prod_obj->getCombinationImages($orderLanguageId);
+            $link_rewrite = $prod_obj->link_rewrite[$orderLanguageId];
             $combination_img = $img[$product['product_attribute_id']][0]['id_image'];
             if ($combination_img != null) {
                 $img_url = $link->getImageLink($link_rewrite, $combination_img, 'large_default');
@@ -126,7 +127,7 @@ class OrderCarrierCore extends ObjectModel
             $metadata .= "\n" . '</div>';
         }
 
-        $orderLanguage = new Language((int) $order->id_lang);
+        $orderLanguage = new Language((int) $orderLanguageId);
         $templateVars = [
             '{followup}' => str_replace('@', $this->tracking_number, $carrier->url),
             '{firstname}' => $customer->firstname,
@@ -143,7 +144,7 @@ class OrderCarrierCore extends ObjectModel
         ];
 
         if (@Mail::Send(
-            (int) $order->id_lang,
+            $orderLanguageId,
             'in_transit',
             $this->trans(
                 'Package in transit',

@@ -34,7 +34,6 @@ use Country;
 use Currency;
 use Customer;
 use Db;
-use Language;
 use Order;
 use OrderDetail;
 use PrestaShop\Decimal\Number;
@@ -227,7 +226,7 @@ class OrderDetailUpdater
             ->saveCurrentContext()
             ->setCart(new Cart($order->id_cart))
             ->setCustomer(new Customer($order->id_customer))
-            ->setLanguage(new Language($order->id_lang))
+            ->setLanguage($order->getAssociatedLanguage())
             ->setCurrency($currency)
             ->setCountry($country)
             ->setShop($shop)

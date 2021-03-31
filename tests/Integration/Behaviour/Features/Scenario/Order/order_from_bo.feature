@@ -79,6 +79,17 @@ Feature: Order from Back Office (BO)
     Then I should get error that payment amount is negative
     And order "bo_order1" has 0 payments
 
+  Scenario: pay order with invalid payment method and see it is not valid
+    When order "bo_order1" has 0 payments
+    And I pay order "bo_order1" with the invalid following details:
+      | date           | 2019-11-26 13:56:22 |
+      | payment_method | Paym>>ents by check |
+      | transaction_id | test!@#$%%^^&* OR 1 |
+      | currency       | USD                 |
+      | amount         | 1.548               |
+    Then I should get error that payment method is invalid
+    And order "bo_order1" has 0 payments
+
   Scenario: pay for order
     When I pay order "bo_order1" with the following details:
       | date           | 2019-11-26 13:56:23 |
@@ -349,6 +360,25 @@ Feature: Order from Back Office (BO)
       | total_paid_real          | 0.0    |
       | total_shipping_tax_excl  | 7.0    |
       | total_shipping_tax_incl  | 7.42   |
+
+  Scenario: Update quantity of customized product
+    When I create an empty cart "dummy_cart3" for customer "testCustomer"
+    And I add 1 customized products with reference "demo_14" with all its customizations to the cart "dummy_cart3"
+    And I select "US" address as delivery and invoice address for customer "testCustomer" in cart "dummy_cart3"
+    And I add order "bo_order_custo" with the following details:
+      | cart                | dummy_cart3         |
+      | message             | test                |
+      | payment module name | dummy_payment       |
+      | status              | Payment accepted    |
+    Then order "bo_order_custo" should have 1 products in total
+    When I edit product "Customizable Mug" to order "bo_order_custo" with following products details:
+      | amount        | 3                       |
+      | price         | 10                      |
+    Then order "bo_order_custo" should have 3 products in total
+    When I edit product "Customizable Mug" to order "bo_order_custo" with following products details:
+      | amount        | 4                       |
+      | price         | 10                      |
+    Then order "bo_order_custo" should have 4 products in total
 
   Scenario: Update product in order with zero quantity is forbidden
     When I edit product "Mug The best is yet to come" to order "bo_order1" with following products details:
@@ -698,3 +728,25 @@ Feature: Order from Back Office (BO)
     And the first invoice from order "bo_order1" should have following shipping tax details:
       | total_tax_excl | rate | total_amount |
       | 7              | 6.00 | 0.42         |
+
+  Scenario: View order created on a currently deleted language
+    Given language "Spanish" with locale "es-ES" exists
+    And language with iso code "es" is the default one
+    When I create an empty cart "dummy_cart-ES" for customer "testCustomer"
+    And I select "US" address as delivery and invoice address for customer "testCustomer" in cart "dummy_cart-ES"
+    And I add 1 product "Mug The best is yet to come" to the cart "dummy_cart-ES"
+    And I add order "bo_order-ES" with the following details:
+      | cart                | dummy_cart-ES               |
+      | message             |                             |
+      | payment module name | dummy_payment               |
+      | status              | Awaiting bank wire payment  |
+    And I change order "bo_order-ES" shipping address to "test-address"
+    Then order "bo_order-ES" shipping address should be "test-address"
+    And order "bo_order-ES" preview shipping address should have the following details:
+      # country is not translated here but should be on the develop branch (https://github.com/PrestaShop/PrestaShop/pull/19818)
+      | country | United States |
+    When language with iso code "en" is the default one
+    And I delete language "Spanish"
+    Then order "bo_order-ES" shipping address should be "test-address"
+    And order "bo_order-ES" preview shipping address should have the following details:
+      | country | United States |
