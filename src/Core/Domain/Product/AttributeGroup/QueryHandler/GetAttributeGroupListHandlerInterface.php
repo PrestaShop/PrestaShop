@@ -33,5 +33,10 @@ use PrestaShop\PrestaShop\Core\Domain\Product\AttributeGroup\Query\GetAttributeG
  */
 interface GetAttributeGroupListHandlerInterface
 {
+    /**
+     * @param GetAttributeGroupList $query
+     *
+     * @return array
+     */
     public function handle(GetAttributeGroupList $query): array;
 }

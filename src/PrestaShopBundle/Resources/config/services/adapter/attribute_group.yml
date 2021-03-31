@@ -19,3 +19,11 @@ services:
         tags:
             - name: 'tactician.handler'
               command: 'PrestaShop\PrestaShop\Core\Domain\Product\AttributeGroup\Command\BulkDeleteAttributeGroupCommand'
+
+    prestashop.adapter.product.attribute_group.query_handler.get_attribute_group_list_handler:
+        class: 'PrestaShop\PrestaShop\Adapter\Product\AttributeGroup\QueryHandler\GetAttributeGroupListHandler'
+        arguments:
+            - '@prestashop.core.admin.attribute_group.repository'
+        tags:
+            - name: 'tactician.handler'
+              command: 'PrestaShop\PrestaShop\Core\Domain\Product\AttributeGroup\Query\GetAttributeGroupList'

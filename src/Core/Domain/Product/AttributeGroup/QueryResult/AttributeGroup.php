@@ -135,6 +135,14 @@ class AttributeGroup
     }
 
     /**
+     * @return int
+     */
+    public function getPosition(): int
+    {
+        return $this->position;
+    }
+
+    /**
      * Returns list of attributes since it's optional returns null when attributes were
      * not queried. Empty array however means that the group contains no attributes.
      *
