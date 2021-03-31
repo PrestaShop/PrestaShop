@@ -17,9 +17,9 @@ Feature: Search shops given a search term (BO)
     And I add a shop "shop2" with name "test_second_shop" and color "red" for the group "test_second_shop_group"
     And I add a shop "shop3" with name "test_third_shop" and color "blue" for the group "test_second_shop_group"
     And I add a shop "shop4" with name "test_shop_without_url" and color "blue" for the group "test_second_shop_group"
-    And I add a shop url "shop_url1" to shop "shop1"
-    And I add a shop url "shop_url2" to shop "shop2"
-    And I add a shop url "shop_url3" to shop "shop3"
+    And I add a shop url to shop "shop1"
+    And I add a shop url to shop "shop2"
+    And I add a shop url to shop "shop3"
     When I search for the term "test" I should get the following results:
       | name             | group_name             | color | group_color | is_shop_group |
       | test_shop        | Default                |       |             | false         |

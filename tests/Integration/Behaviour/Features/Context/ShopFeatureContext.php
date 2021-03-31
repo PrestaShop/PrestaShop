@@ -133,12 +133,11 @@ class ShopFeatureContext extends AbstractDomainFeatureContext
     }
 
     /**
-     * @Given I add a shop url :reference to shop :shopReference
+     * @Given I add a shop url to shop :shopReference
      *
-     * @param string $reference
      * @param string $shopReference
      */
-    public function addShopUrl(string $reference, string $shopReference): void
+    public function addShopUrl(string $shopReference): void
     {
         $shop = SharedStorage::getStorage()->get($shopReference);
         $shopUrl = new ShopUrl();
@@ -152,8 +151,6 @@ class ShopFeatureContext extends AbstractDomainFeatureContext
         if (!$shopUrl->add()) {
             throw new RuntimeException(sprintf('Could not create shop url: %s', Db::getInstance()->getMsgError()));
         }
-
-        SharedStorage::getStorage()->set($reference, $shopUrl);
     }
 
     /**
