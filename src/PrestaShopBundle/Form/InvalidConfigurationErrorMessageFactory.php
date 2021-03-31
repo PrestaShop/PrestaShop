@@ -51,7 +51,7 @@ class InvalidConfigurationErrorMessageFactory
 
     public function __construct(
         TranslatorInterface $translator,
-        LanguageRepositoryInterface $langRepository
+        LangRepository $langRepository
     ) {
         $this->translator = $translator;
         $this->langRepository = $langRepository;
