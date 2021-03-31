@@ -1594,21 +1594,18 @@ class ProductCore extends ObjectModel
      */
     public function isNew()
     {
-        $result = Db::getInstance()->executeS('
-            SELECT p.id_product
+        $nbDaysNewProduct = Configuration::get('PS_NB_DAYS_NEW_PRODUCT');
+        if (!Validate::isUnsignedInt($nbDaysNewProduct)) {
+            $nbDaysNewProduct = 20;
+        }
+
+        $query = 'SELECT COUNT(p.id_product)
             FROM `' . _DB_PREFIX_ . 'product` p
             ' . Shop::addSqlAssociation('product', 'p') . '
             WHERE p.id_product = ' . (int) $this->id . '
-            AND DATEDIFF(
-                product_shop.`date_add`,
-                DATE_SUB(
-                    "' . date('Y-m-d') . ' 00:00:00",
-                    INTERVAL ' . (Validate::isUnsignedInt(Configuration::get('PS_NB_DAYS_NEW_PRODUCT')) ? Configuration::get('PS_NB_DAYS_NEW_PRODUCT') : 20) . ' DAY
-                )
-            ) > 0
-        ', true, false);
+            AND DATEDIFF("' . date('Y-m-d') . ' 00:00:00", product_shop.`date_add`) < ' . $nbDaysNewProduct;
 
-        return count($result) > 0;
+        return (bool) Db::getInstance()->getValue($query, false);
     }
 
     /**
