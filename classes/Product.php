@@ -4443,10 +4443,11 @@ class ProductCore extends ObjectModel
      * Get all available attribute groups.
      *
      * @param int $id_lang Language identifier
+     * @param int $id_product_attribute Combination id to get the groups for
      *
      * @return array Attribute groups
      */
-    public function getAttributesGroups($id_lang)
+    public function getAttributesGroups($id_lang, $id_product_attribute = null)
     {
         if (!Combination::isFeatureActive()) {
             return [];
@@ -4468,7 +4469,13 @@ class ProductCore extends ObjectModel
                 WHERE pa.`id_product` = ' . (int) $this->id . '
                     AND al.`id_lang` = ' . (int) $id_lang . '
                     AND agl.`id_lang` = ' . (int) $id_lang . '
-                GROUP BY id_attribute_group, id_product_attribute
+                ';
+
+        if ($id_product_attribute !== null) {
+            $sql .= ' AND product_attribute_shop.`id_product_attribute` = ' . (int) $id_product_attribute . ' ';
+        }
+
+        $sql .= 'GROUP BY id_attribute_group, id_product_attribute
                 ORDER BY ag.`position` ASC, a.`position` ASC, agl.`name` ASC';
 
         return Db::getInstance()->executeS($sql);
