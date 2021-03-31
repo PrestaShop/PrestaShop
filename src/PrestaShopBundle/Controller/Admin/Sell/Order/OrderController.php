@@ -163,11 +163,22 @@ class OrderController extends FrameworkBundleAdminController
     {
         $toolbarButtons = [];
 
+        $isSingleShopContext = $this->get('prestashop.adapter.shop.context')->isSingleShopContext();
+
         $toolbarButtons['add'] = [
             'href' => $this->generateUrl('admin_orders_create'),
             'desc' => $this->trans('Add new order', 'Admin.Orderscustomers.Feature'),
             'icon' => 'add_circle_outline',
+            'disabled' => !$isSingleShopContext,
         ];
+
+        if (!$isSingleShopContext) {
+            $toolbarButtons['add']['help'] = $this->trans(
+                'You can use this feature in a single shop context only. Switch context to enable it.',
+                'Admin.Orderscustomers.Feature'
+            );
+            $toolbarButtons['add']['href'] = '#';
+        }
 
         return $toolbarButtons;
     }
@@ -486,10 +497,10 @@ class OrderController extends FrameworkBundleAdminController
         try {
             $this->dispatchHook(
                 'actionGetAdminOrderButtons', [
-                    'controller' => $this,
-                    'id_order' => $orderId,
-                    'actions_bar_buttons_collection' => $backOfficeOrderButtons,
-                ]);
+                'controller' => $this,
+                'id_order' => $orderId,
+                'actions_bar_buttons_collection' => $backOfficeOrderButtons,
+            ]);
 
             $cancelProductForm = $formBuilder->getFormFor($orderId);
         } catch (Exception $e) {
@@ -2043,19 +2054,19 @@ class OrderController extends FrameworkBundleAdminController
                 ) : '',
             CustomerMessageConstraintException::class => [
                 CustomerMessageConstraintException::MISSING_MESSAGE => $this->trans(
-                        'The %s field is not valid',
-                        'Admin.Notifications.Error',
-                        [
-                            sprintf('"%s"', $this->trans('Message', 'Admin.Global')),
-                        ]
-                    ),
+                    'The %s field is not valid',
+                    'Admin.Notifications.Error',
+                    [
+                        sprintf('"%s"', $this->trans('Message', 'Admin.Global')),
+                    ]
+                ),
                 CustomerMessageConstraintException::INVALID_MESSAGE => $this->trans(
-                        'The %s field is not valid',
-                        'Admin.Notifications.Error',
-                        [
-                            sprintf('"%s"', $this->trans('Message', 'Admin.Global')),
-                        ]
-                    ),
+                    'The %s field is not valid',
+                    'Admin.Notifications.Error',
+                    [
+                        sprintf('"%s"', $this->trans('Message', 'Admin.Global')),
+                    ]
+                ),
             ],
         ];
     }
