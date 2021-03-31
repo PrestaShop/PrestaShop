@@ -7,23 +7,30 @@
     "scss-lint": "stylelint \"**/*.scss\" --formatter verbose",
     "scss-fix": "stylelint \"**/*.scss\" --fix",
     "build": "webpack --bail --progress --mode production",
-    "watch": "webpack --bail --progress --watch --mode development"
+    "watch": "webpack --bail --progress --watch --mode development",
+    "lint": "eslint -c .eslintrc.js --ext .js,.vue .",
+    "lint-fix": "eslint -c .eslintrc.js --ext .js,.vue . --fix"
   },
   "author": "PrestaShop",
   "license": "OSL-3.0",
   "devDependencies": {
     "@babel/core": "^7.0.0-rc.1",
     "@babel/preset-env": "^7.0.0-rc.1",
-    "@openfonts/ubuntu-condensed_latin": "^1.44.2",
+    "babel-eslint": "^10.0.3",
     "babel-loader": "^8.0.2",
     "bourbon": "^4.3.4",
     "clean-webpack-plugin": "^2.0.2",
     "css-loader": "^1.0.0",
+    "eslint": "^6.8.0",
+    "eslint-config-airbnb-base": "^14.0.0",
+    "eslint-config-prestashop": "0.1.0",
+    "eslint-import-resolver-webpack": "^0.12.1",
+    "eslint-plugin-html": "^6.0.0",
+    "eslint-plugin-import": "^2.20.0",
     "file-loader": "^1.1.11",
     "material-design-icons": "^2",
     "mini-css-extract-plugin": "^0.8.0",
     "node-sass": "^4.13.1",
-    "open-sans-fonts": "^1.6.2",
     "optimize-css-assets-webpack-plugin": "^5.0.0",
     "path": "^0.12.7",
     "postcss-cssnext": "^3.1.0",
@@ -38,6 +45,8 @@
     "webpack-cli": "^3.3.10"
   },
   "dependencies": {
-    "perfect-scrollbar": "^1.4.0"
+    "perfect-scrollbar": "^1.4.0",
+    "@openfonts/ubuntu-condensed_latin": "^1.44.2",
+    "open-sans-fonts": "^1.6.2"
   }
 }

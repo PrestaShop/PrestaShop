@@ -31,6 +31,7 @@ import PerfectScrollBar from 'perfect-scrollbar';
 
 $(document).ready(() => {
   const $navBarOverflow = $('.nav-bar-overflow');
+
   if ($navBarOverflow.length > 0) {
     new PerfectScrollBar('.nav-bar-overflow');
   }

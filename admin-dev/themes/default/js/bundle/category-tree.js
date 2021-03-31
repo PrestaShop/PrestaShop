@@ -24,11 +24,10 @@
  */
 
 (function ($) {
-
   $.fn.categorytree = function (settings) {
+    const isMethodCall = (typeof settings === 'string'); // is this a method call like $().categorytree("unselect")
+    const returnValue = this;
 
-    var isMethodCall = (typeof settings === 'string'), // is this a method call like $().categorytree("unselect")
-      returnValue = this;
     // if a method call execute the method on all selected instances
     if (isMethodCall) {
       switch (settings) {
@@ -45,34 +44,39 @@
           this.find('li').has('ul').removeClass('less').addClass('more');
           break;
         default:
+          // eslint-disable-next-line
           throw 'Unknown method';
       }
+
+    // eslint-disable-next-line
     }
+
     // initialize tree
     else {
-        var clickHandler = function (event) {
-          var $ui = $(event.target);
-          if ($ui.attr('type') === 'radio' || $ui.attr('type') === 'checkbox') {
-            return;
-          } else {
-            event.stopPropagation();
-          }
+      const clickHandler = function (event) {
+        let $ui = $(event.target);
 
-          if ($ui.next('ul').length === 0) {
-            $ui = $ui.parent();
-          }
+        if ($ui.attr('type') === 'radio' || $ui.attr('type') === 'checkbox') {
+          return;
+        }
+        event.stopPropagation();
 
-          $ui.next('ul').toggle();
-          if ($ui.next('ul').is(':visible')) {
-            $ui.parent('li').removeClass('more').addClass('less');
-          } else {
-            $ui.parent('li').removeClass('less').addClass('more');
-          }
+        if ($ui.next('ul').length === 0) {
+          $ui = $ui.parent();
+        }
 
-          return false;
-    };
-      this.find('li > ul').each(function (i, item) {
-        var $inputWrapper = $(item).prev('div');
+        $ui.next('ul').toggle();
+        if ($ui.next('ul').is(':visible')) {
+          $ui.parent('li').removeClass('more').addClass('less');
+        } else {
+          $ui.parent('li').removeClass('less').addClass('more');
+        }
+
+        // eslint-disable-next-line
+        return false;
+      };
+      this.find('li > ul').each((i, item) => {
+        const $inputWrapper = $(item).prev('div');
         $inputWrapper.on('click', clickHandler);
         $inputWrapper.find('label').on('click', clickHandler);
 
@@ -86,4 +90,4 @@
     // return the jquery selection (or if it was a method call that returned a value - the returned value)
     return returnValue;
   };
-})(jQuery);
+}(jQuery));
