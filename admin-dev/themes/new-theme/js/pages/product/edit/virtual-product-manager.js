@@ -23,8 +23,56 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
 
+import ProductMap from '@pages/product/product-map';
+
 const {$} = window;
 
 export default class VirtualProductManager {
-//@todo:
+  constructor() {
+    this.$virtualProductContainer = $(ProductMap.virtualProduct.container);
+    this.$fileSwitchContainer = $(ProductMap.virtualProduct.fileSwitchContainer);
+    this.$fileContentContainer = $(ProductMap.virtualProduct.fileContentContainer);
+
+    this.init();
+
+    return {};
+  }
+
+  /**
+   * @private
+   */
+  init() {
+    this.$virtualProductContainer.on(
+      'change',
+      `${ProductMap.virtualProduct.fileSwitchOnInputSelector}, ${ProductMap.virtualProduct.fileSwitchOffInputSelector}`,
+      (e) => this.handleFileSwitch(e.currentTarget),
+    );
+  }
+
+  /**
+   * @param {HTMLElement} input
+   */
+  handleFileSwitch(input) {
+    const isOn = input.checked && Number(input.value) === 1;
+
+    if (isOn) {
+      this.showContent();
+    } else {
+      this.hideContent();
+    }
+  }
+
+  /**
+   * @private
+   */
+  hideContent() {
+    this.$fileContentContainer.addClass('d-none');
+  }
+
+  /**
+   * @private
+   */
+  showContent() {
+    this.$fileContentContainer.removeClass('d-none');
+  }
 }
