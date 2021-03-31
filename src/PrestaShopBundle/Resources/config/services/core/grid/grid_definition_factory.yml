@@ -300,7 +300,7 @@ services:
         parent: 'prestashop.core.grid.definition.factory.abstract_grid_definition'
         arguments:
             - "@=service('router').generate('admin_common_reset_search', {'controller': 'security', 'action': 'customersSessions'})"
-            - "@=service('router').generate('admin_security_sessions_customers_search')"
+            - "@=service('router').generate('admin_security_sessions_customer_search')"
         public: true
 
     prestashop.core.grid.definition.factory.zone:
