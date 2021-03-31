@@ -28,10 +28,14 @@ declare(strict_types=1);
 
 namespace Tests\Integration\Behaviour\Features\Context\Domain;
 
-use AttributeGroup;
+use AttributeGroup as LegacyAttributeGroup;
+use Behat\Gherkin\Node\TableNode;
 use Language;
 use PHPUnit\Framework\Assert;
+use PrestaShop\PrestaShop\Core\Domain\Product\AttributeGroup\Query\GetAttributeGroupList;
+use PrestaShop\PrestaShop\Core\Domain\Product\AttributeGroup\QueryResult\AttributeGroup;
 use RuntimeException;
+use Tests\Integration\Behaviour\Features\Context\Util\PrimitiveUtils;
 
 class AttributeGroupFeatureContext extends AbstractDomainFeatureContext
 {
@@ -50,7 +54,7 @@ class AttributeGroupFeatureContext extends AbstractDomainFeatureContext
             throw new RuntimeException(sprintf('Language by iso code "%s" was not found', $langIso));
         }
 
-        $attributeGroups = AttributeGroup::getAttributesGroups($langId);
+        $attributeGroups = LegacyAttributeGroup::getAttributesGroups($langId);
         $foundGroupId = null;
 
         foreach ($attributeGroups as $attributeGroup) {
@@ -63,5 +67,37 @@ class AttributeGroupFeatureContext extends AbstractDomainFeatureContext
 
         Assert::assertNotNull($foundGroupId, sprintf('Attribute group named "%s" was not found', $name));
         $this->getSharedStorage()->set($attributeGroupReference, $foundGroupId);
+    }
+
+    /**
+     * @When I list all attribute groups I should get following results:
+     *
+     * @param TableNode $tableNode
+     */
+    public function assertAttributeGroups(TableNode $tableNode)
+    {
+        $attributeGroupsData = $this->localizeByColumns($tableNode);
+        $attributeGroups = $this->getQueryBus()->handle(new GetAttributeGroupList(false));
+
+        Assert::assertEquals(count($attributeGroupsData), count($attributeGroups));
+        foreach ($attributeGroupsData as $index => $attributeGroupsDatum) {
+            /** @var AttributeGroup $attributeGroup */
+            $attributeGroup = $attributeGroups[$index];
+            Assert::assertEquals(PrimitiveUtils::castStringBooleanIntoBoolean($attributeGroupsDatum['is_color_group']), $attributeGroup->isColorGroup());
+            Assert::assertEquals($attributeGroupsDatum['group_type'], $attributeGroup->getGroupType());
+            Assert::assertEquals($attributeGroupsDatum['position'], $attributeGroup->getPosition());
+
+            $attributeGroupNames = $attributeGroup->getLocalizedNames();
+            foreach ($attributeGroupsDatum['name'] as $langId => $name) {
+                Assert::assertTrue(isset($attributeGroupNames[$langId]));
+                Assert::assertEquals($name, $attributeGroupNames[$langId]);
+            }
+
+            $attributeGroupPublicNames = $attributeGroup->getLocalizedPublicNames();
+            foreach ($attributeGroupsDatum['public_name'] as $langId => $publicName) {
+                Assert::assertTrue(isset($attributeGroupPublicNames[$langId]));
+                Assert::assertEquals($publicName, $attributeGroupPublicNames[$langId]);
+            }
+        }
     }
 }
