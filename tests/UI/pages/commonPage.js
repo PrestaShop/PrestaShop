@@ -67,30 +67,6 @@ module.exports = class CommonPage {
   }
 
   /**
-   * Is checkBox have checked status
-   * @param page
-   * @param selector, checkbox to check
-   * @returns {Promise<boolean>}
-   */
-  async elementChecked(page, selector) {
-    return page.$eval(selector, el => el.checked);
-  }
-
-  /**
-   * Update checkbox value
-   * @param page
-   * @param selector
-   * @param expectedValue
-   * @return {Promise<void>}
-   */
-  async updateCheckboxValue(page, selector, expectedValue) {
-    const actualValue = await this.elementChecked(page, selector);
-    if (actualValue !== expectedValue) {
-      await page.click(selector);
-    }
-  }
-
-  /**
    * Is element visible
    * @param page
    * @param selector, element to check
