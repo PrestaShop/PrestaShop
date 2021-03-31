@@ -138,7 +138,7 @@ class ShopFeatureContext extends AbstractDomainFeatureContext
      * @param string $reference
      * @param string $shopReference
      */
-    public function addShopUrl(string $reference, string $shopReference)
+    public function addShopUrl(string $reference, string $shopReference): void
     {
         $shop = SharedStorage::getStorage()->get($shopReference);
         $shopUrl = new ShopUrl();
