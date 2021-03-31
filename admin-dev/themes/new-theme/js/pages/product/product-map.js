@@ -115,6 +115,9 @@ export default {
     },
     editModal: '#combination-edit-modal',
   },
+  virtual: {
+
+  },
   dropzone: {
     configuration: {
       fileManager: '.openfilemanager',

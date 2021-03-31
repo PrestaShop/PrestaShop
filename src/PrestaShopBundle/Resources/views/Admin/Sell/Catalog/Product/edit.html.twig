@@ -62,10 +62,9 @@
       {% endblock %}
 
       {% if productType == 'virtual' %}
-        <div role="tabpanel" class="form-contenttab tab-pane" id="virtual-product-tab">
-          {{ form_widget(productForm.virtual_product_file) }}
-          {{ form_widget(productForm.stock) }}
-        </div>
+        {% block product_tab_virtual %}
+          {{ include('@PrestaShop/Admin/Sell/Catalog/Product/Tabs/virtual.html.twig') }}
+        {% endblock %}
       {% elseif productType == 'combinations' %}
         {% block product_tab_combinations %}
           {{ include('@PrestaShop/Admin/Sell/Catalog/Product/Tabs/combinations.html.twig') }}
