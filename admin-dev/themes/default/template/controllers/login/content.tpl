@@ -164,7 +164,7 @@
 		</div>
 		{/if}
 	</div>
-    <p class='text-center'><i class="icon-caret-left"></i> {l s='Back to' d='Admin.Global.Action'} <a href='{$homeUrl}'>{$shop_name}</a></p>
+    <p class='text-center'><i class="icon-caret-left"></i> {l s='Back to' d='Admin.Actions'} <a href='{$homeUrl}'>{$shop_name}</a></p>
 	{hook h="displayAdminLogin"}
 	<div id="login-footer">
 		<p class="text-center text-muted">
