@@ -34,7 +34,7 @@ import NavbarHandler from '@components/navbar-handler';
 import CombinationsManager from '@pages/product/edit/combinations-manager';
 import ProductTypeManager from '@pages/product/edit/product-type-manager';
 import initDropzone from '@pages/product/components/dropzone';
-import VirtualProductManager from "@pages/product/edit/virtual-product-manager";
+import VirtualProductManager from '@pages/product/edit/virtual-product-manager';
 
 const {$} = window;
 
