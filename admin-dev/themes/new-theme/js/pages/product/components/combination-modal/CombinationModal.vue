@@ -52,7 +52,7 @@
           type="button"
           class="btn btn-secondary btn-close"
           @click.prevent.stop="closeModal"
-          aria-label="Close modal"
+          aria-label="{{ $t('modal.close') }}"
           :disabled="submittingCombinationForm"
         >
           {{ $t('modal.close') }}
@@ -62,7 +62,7 @@
           type="button"
           class="btn btn-outline-secondary"
           @click.prevent.stop="showPrevious"
-          aria-label="Close modal"
+          aria-label="{{ $t('modal.previous') }}"
           :disabled="previousCombinationId === null || submittingCombinationForm"
         >
           <i class="material-icons">keyboard_arrow_left</i>
@@ -72,7 +72,7 @@
           type="button"
           class="btn btn-outline-secondary"
           @click.prevent.stop="showNext"
-          aria-label="Close modal"
+          aria-label="{{ $t('modal.next') }}"
           :disabled="nextCombinationId === null || submittingCombinationForm"
         >
           {{ $t('modal.next') }}
@@ -82,7 +82,7 @@
           type="button"
           class="btn btn-primary"
           @click.prevent.stop="submitForm"
-          aria-label="Close modal"
+          aria-label="{{ $t('modal.save') }}"
           :disabled="submittingCombinationForm"
         >
           <span v-if="!submittingCombinationForm">

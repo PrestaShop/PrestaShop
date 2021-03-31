@@ -31,6 +31,8 @@ use Exception;
 use PrestaShop\PrestaShop\Adapter\Product\Combination\Repository\CombinationRepository;
 use PrestaShop\PrestaShop\Core\Domain\Product\Combination\Query\GetEditableCombinationsList;
 use PrestaShop\PrestaShop\Core\Domain\Product\Combination\QueryResult\CombinationListForEditing;
+use PrestaShop\PrestaShop\Core\Domain\Product\Exception\ProductConstraintException;
+use PrestaShop\PrestaShop\Core\Domain\Product\Stock\Exception\ProductStockConstraintException;
 use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductId;
 use PrestaShop\PrestaShop\Core\Form\IdentifiableObject\Builder\FormBuilderInterface;
 use PrestaShop\PrestaShop\Core\Form\IdentifiableObject\Handler\FormHandlerInterface;
@@ -244,6 +246,40 @@ class CombinationController extends FrameworkBundleAdminController
     private function getErrorMessages(Exception $e): array
     {
         return [
+            ProductConstraintException::class => [
+                ProductConstraintException::INVALID_LOW_STOCK_THRESHOLD => $this->trans(
+                    'The %s field is invalid.',
+                    'Admin.Notifications.Error',
+                    [sprintf('"%s"', $this->trans('Low stock level', 'Admin.Catalog.Feature'))]
+                ),
+                ProductConstraintException::INVALID_LOW_STOCK_ALERT => $this->trans(
+                    'The %s field is invalid.',
+                    'Admin.Notifications.Error',
+                    [sprintf('"%s"', $this->trans('Low stock alert', 'Admin.Catalog.Feature'))]
+                ),
+                ProductConstraintException::INVALID_AVAILABLE_DATE => $this->trans(
+                    'The %s field is invalid.',
+                    'Admin.Notifications.Error',
+                    [sprintf('"%s"', $this->trans('Availability date', 'Admin.Catalog.Feature'))]
+                ),
+                ProductConstraintException::INVALID_MINIMAL_QUANTITY => $this->trans(
+                    'The %s field is invalid.',
+                    'Admin.Notifications.Error',
+                    [sprintf('"%s"', $this->trans('Minimum quantity for sale', 'Admin.Catalog.Feature'))]
+                ),
+            ],
+            ProductStockConstraintException::class => [
+                ProductStockConstraintException::INVALID_QUANTITY => $this->trans(
+                    'The %s field is invalid.',
+                    'Admin.Notifications.Error',
+                    [sprintf('"%s"', $this->trans('Quantity', 'Admin.Catalog.Feature'))]
+                ),
+                ProductStockConstraintException::INVALID_LOCATION => $this->trans(
+                    'The %s field is invalid.',
+                    'Admin.Notifications.Error',
+                    [sprintf('"%s"', $this->trans('Stock location', 'Admin.Catalog.Feature'))]
+                ),
+            ],
         ];
     }
 }
