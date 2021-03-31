@@ -44,6 +44,9 @@ use Tab;
  */
 class LegacyContext
 {
+    /** @var Context */
+    protected static $instance = null;
+
     /** @var Currency */
     private $employeeCurrency;
 
@@ -75,9 +78,7 @@ class LegacyContext
      */
     public function getContext()
     {
-        static $legacyContext = null;
-
-        if (null === $legacyContext) {
+        if (null === static::$instance) {
             $legacyContext = Context::getContext();
 
             if ($legacyContext && !empty($legacyContext->shop) && !isset($legacyContext->controller) && isset($legacyContext->employee)) {
@@ -85,9 +86,10 @@ class LegacyContext
                 $adminController = new AdminController();
                 $adminController->initShopContext();
             }
+            static::$instance = $legacyContext;
         }
 
-        return $legacyContext;
+        return static::$instance;
     }
 
     /**
@@ -342,5 +344,14 @@ class LegacyContext
     public function getAvailableLanguages()
     {
         return $this->getLanguages(false);
+    }
+
+    /**
+     * @param Context $testInstance
+     *                              Unit testing purpose only
+     */
+    public static function setInstanceForTesting(Context $testInstance)
+    {
+        static::$instance = $testInstance;
     }
 }
