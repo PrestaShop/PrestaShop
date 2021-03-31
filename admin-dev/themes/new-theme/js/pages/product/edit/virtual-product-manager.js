@@ -42,18 +42,18 @@ export default class VirtualProductManager {
    * @private
    */
   init() {
+    this.toggleContentVisibility();
     this.$virtualProductContainer.on(
       'change',
       `${ProductMap.virtualProduct.fileSwitchOnInputSelector}, ${ProductMap.virtualProduct.fileSwitchOffInputSelector}`,
-      (e) => this.handleFileSwitch(e.currentTarget),
+      () => this.toggleContentVisibility(),
     );
   }
 
-  /**
-   * @param {HTMLElement} input
-   */
-  handleFileSwitch(input) {
-    const isOn = input.checked && Number(input.value) === 1;
+  toggleContentVisibility() {
+    const isOn = this.$virtualProductContainer
+      .find(`${ProductMap.virtualProduct.fileSwitchOnInputSelector}:checked`)
+      .length !== 0;
 
     if (isOn) {
       this.showContent();
