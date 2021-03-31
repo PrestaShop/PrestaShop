@@ -31,6 +31,7 @@ use DateTime;
 use DateTimeImmutable;
 use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductId;
 use PrestaShop\PrestaShop\Core\Domain\Product\VirtualProductFile\Command\AddVirtualProductFileCommand;
+use PrestaShop\PrestaShop\Core\Domain\Product\VirtualProductFile\Command\DeleteVirtualProductFileCommand;
 use PrestaShop\PrestaShop\Core\Domain\Product\VirtualProductFile\Command\UpdateVirtualProductFileCommand;
 use PrestaShop\PrestaShop\Core\Util\DateTime\NullDateTime;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
@@ -48,15 +49,16 @@ final class VirtualProductFileCommandBuilder implements ProductCommandBuilderInt
 
         $virtualProductFileData = $formData['virtual_product_file'];
 
-        $addCommand = $this->buildAddCommand($productId, $virtualProductFileData);
-        $updateCommand = $this->buildUpdateCommand($virtualProductFileData);
-
-        if ($addCommand) {
+        if ($addCommand = $this->buildAddCommand($productId, $virtualProductFileData)) {
             return [$addCommand];
         }
 
-        if ($updateCommand) {
+        if ($updateCommand = $this->buildUpdateCommand($virtualProductFileData)) {
             return [$updateCommand];
+        }
+
+        if ($deleteCommand = $this->buildDeleteCommand($virtualProductFileData)) {
+            return [$deleteCommand];
         }
 
         return [];
@@ -70,7 +72,7 @@ final class VirtualProductFileCommandBuilder implements ProductCommandBuilderInt
      */
     public function buildAddCommand(ProductId $productId, array $virtualProductFileData): ?AddVirtualProductFileCommand
     {
-        if (isset($virtualProductFileData['virtual_product_file_id'])) {
+        if (!$virtualProductFileData['has_file']) {
             return null;
         }
 
@@ -100,7 +102,7 @@ final class VirtualProductFileCommandBuilder implements ProductCommandBuilderInt
     {
         $update = false;
 
-        if (!isset($virtualProductFileData['virtual_product_file_id'])) {
+        if (!$virtualProductFileData['has_file'] || !isset($virtualProductFileData['virtual_product_file_id'])) {
             return null;
         }
 
@@ -134,5 +136,19 @@ final class VirtualProductFileCommandBuilder implements ProductCommandBuilderInt
         }
 
         return $update ? $command : null;
+    }
+
+    /**
+     * @param array<string, mixed> $virtualProductFileData
+     *
+     * @return DeleteVirtualProductFileCommand|null
+     */
+    private function buildDeleteCommand(array $virtualProductFileData): ?DeleteVirtualProductFileCommand
+    {
+        if ($virtualProductFileData['has_file'] || !$virtualProductFileData['virtual_product_file_id']) {
+            return null;
+        }
+
+        return new DeleteVirtualProductFileCommand((int) $virtualProductFileData['virtual_product_file_id']);
     }
 }
