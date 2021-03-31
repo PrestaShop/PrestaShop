@@ -86,7 +86,7 @@ final class SearchShopsHandler implements SearchShopsHandlerInterface
             if (!$shop->hasMainUrl()) {
                 continue;
             }
-            
+
             $result[] = new FoundShop(
                 $shop->getId(),
                 $shop->getColor() ?? '',
