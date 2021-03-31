@@ -49,8 +49,8 @@ const refreshNotifications = function () {
         if(notifications_total) {
           $('#notifications-total').removeClass('hide').html(notifications_total);
         }
-        else {
-          $('#notifications-total').remove();
+        else if(!$('#notifications-total').hasClass('hide')) {
+          $('#notifications-total').addClass('hide');
         }
       }
       timer = setTimeout(refreshNotifications, 120000);
