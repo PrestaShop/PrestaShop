@@ -182,7 +182,9 @@ final class ProductFormDataProvider implements FormDataProviderInterface
      */
     private function extractVirtualProductFileData(ProductForEditing $productForEditing): array
     {
-        $data = [];
+        $data = [
+            'has_file' => false,
+        ];
         $virtualProductFile = $productForEditing->getVirtualProductFile();
 
         if (null !== $virtualProductFile) {
@@ -190,6 +192,7 @@ final class ProductFormDataProvider implements FormDataProviderInterface
             $filePath = $this->virtualProductFileDir . $virtualProductFile->getFileName();
 
             $data = [
+                'has_file' => true,
                 'virtual_product_file_id' => $virtualProductFile->getId(),
                 'file' => [
                     'file' => new File($filePath),
