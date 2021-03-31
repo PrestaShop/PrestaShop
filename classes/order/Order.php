@@ -194,7 +194,6 @@ class OrderCore extends ObjectModel
             'id_lang' => ['type' => self::TYPE_INT, 'validate' => 'isUnsignedId', 'required' => true],
             'id_customer' => ['type' => self::TYPE_INT, 'validate' => 'isUnsignedId', 'required' => true],
             'id_carrier' => ['type' => self::TYPE_INT, 'validate' => 'isUnsignedId', 'required' => true],
-            'current_state' => ['type' => self::TYPE_INT, 'validate' => 'isUnsignedId'],
             'secure_key' => ['type' => self::TYPE_STRING, 'validate' => 'isMd5'],
             'payment' => ['type' => self::TYPE_STRING, 'validate' => 'isGenericName', 'required' => true],
             'module' => ['type' => self::TYPE_STRING, 'validate' => 'isModuleName', 'required' => true],
@@ -221,6 +220,7 @@ class OrderCore extends ObjectModel
             'round_mode' => ['type' => self::TYPE_INT, 'validate' => 'isUnsignedId'],
             'round_type' => ['type' => self::TYPE_INT, 'validate' => 'isUnsignedId'],
             'shipping_number' => ['type' => self::TYPE_STRING, 'validate' => 'isTrackingNumber'],
+            'current_state' => ['type' => self::TYPE_INT, 'validate' => 'isUnsignedId'],
             'conversion_rate' => ['type' => self::TYPE_FLOAT, 'validate' => 'isFloat', 'required' => true],
             'invoice_number' => ['type' => self::TYPE_INT],
             'delivery_number' => ['type' => self::TYPE_INT],
@@ -246,10 +246,6 @@ class OrderCore extends ObjectModel
             'id_lang' => ['xlink_resource' => 'languages'],
             'id_customer' => ['xlink_resource' => 'customers'],
             'id_carrier' => ['xlink_resource' => 'carriers'],
-            'current_state' => [
-                'xlink_resource' => 'order_states',
-                'setter' => 'setWsCurrentState',
-            ],
             'module' => ['required' => true],
             'invoice_number' => [],
             'invoice_date' => [],
@@ -261,6 +257,10 @@ class OrderCore extends ObjectModel
             'shipping_number' => [
                 'getter' => 'getWsShippingNumber',
                 'setter' => 'setWsShippingNumber',
+            ],
+            'current_state' => [
+                'xlink_resource' => 'order_states',
+                'setter' => 'setWsCurrentState',
             ],
             'note' => [],
         ],
