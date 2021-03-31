@@ -39,6 +39,7 @@ use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\Validator\Constraints\File;
 use Symfony\Component\Validator\Constraints\Length;
+use Symfony\Component\Validator\Constraints\NotBlank;
 
 class VirtualProductFileType extends TranslatorAwareType
 {
@@ -68,6 +69,7 @@ class VirtualProductFileType extends TranslatorAwareType
                 'label' => $this->trans('Filename', 'Admin.Global'),
                 'help' => $this->trans('The full filename with its extension (e.g. Book.pdf)', 'Admin.Catalog.Help'),
                 'constraints' => [
+                    new NotBlank(),
                     new TypedRegex(TypedRegex::TYPE_GENERIC_NAME),
                     new Length([
                         'max' => VirtualProductFileSettings::MAX_DISPLAY_FILENAME_LENGTH,
