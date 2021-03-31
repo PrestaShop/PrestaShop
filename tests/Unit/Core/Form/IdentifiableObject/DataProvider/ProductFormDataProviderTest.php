@@ -65,7 +65,9 @@ use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\RedirectType;
 use PrestaShop\PrestaShop\Core\Domain\Product\VirtualProductFile\QueryResult\VirtualProductFileForEditing;
 use PrestaShop\PrestaShop\Core\Form\IdentifiableObject\DataProvider\ProductFormDataProvider;
 use RuntimeException;
+use Symfony\Component\HttpFoundation\File\File;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
+use Tests\Resources\DummyFileUploader;
 
 // @todo: ProductFormDataProvider needs to be split to multiple classes to allow easier testing
 class ProductFormDataProviderTest extends TestCase
@@ -163,6 +165,7 @@ class ProductFormDataProviderTest extends TestCase
             $this->getDatasetsForCustomizations(),
             $this->getDatasetsForPrices(),
             $this->getDatasetsForStock(),
+            $this->getDatasetsForVirtualProductFile(),
         ];
 
         foreach ($datasetsByType as $datasetByType) {
@@ -170,6 +173,45 @@ class ProductFormDataProviderTest extends TestCase
                 yield $dataset;
             }
         }
+    }
+
+    /**
+     * @return array
+     */
+    private function getDatasetsForVirtualProductFile(): array
+    {
+        $datasets = [];
+
+        $expectedOutputData = $this->getDefaultOutputData();
+        $expectedOutputData['virtual_product_file'] = [
+            'has_file' => true,
+            'virtual_product_file_id' => self::DEFAULT_VIRTUAL_PRODUCT_FILE_ID,
+            'file' => [
+                'file' => new File(DummyFileUploader::getDummyFilesPath() . 'logo.jpg'),
+                'download_file_url' => 'admin_product_virtual_download_file_action',
+            ],
+            'name' => 'heh logo.jpg',
+            'download_times_limit' => 0,
+            'access_days_limit' => 0,
+            'expiration_date' => null,
+        ];
+
+        $productData = [
+            'virtual_product_file' => [
+                'filename' => 'logo.jpg',
+                'display_filename' => 'heh logo.jpg',
+                'nb_days_accessible' => 0,
+                'nb_downloadable' => 0,
+                'date_expiration' => null,
+            ],
+        ];
+
+        $datasets[] = [
+            $productData,
+            $expectedOutputData,
+        ];
+
+        return $datasets;
     }
 
     /**
@@ -679,7 +721,7 @@ class ProductFormDataProviderTest extends TestCase
         }
 
         return new VirtualProductFileForEditing(
-            self::DEFAULT_VIRTUAL_PRODUCT_FILE_ID,
+            $product['virtual_product_file']['virtual_product_file_id'] ?? self::DEFAULT_VIRTUAL_PRODUCT_FILE_ID,
             $product['virtual_product_file']['filename'] ?? 'filename',
             $product['virtual_product_file']['display_filename'] ?? 'display_filename',
             $product['virtual_product_file']['nb_days_accessible'] ?? 0,
@@ -976,14 +1018,15 @@ class ProductFormDataProviderTest extends TestCase
      */
     private function buildProvider(CommandBusInterface $queryBusMock, $activation): ProductFormDataProvider
     {
+        $urlGeneratorMock = $this->getMockBuilder(UrlGeneratorInterface::class)->getMock();
+        $urlGeneratorMock->method('generate')->willReturnArgument(0);
+
         return new ProductFormDataProvider(
             $queryBusMock,
             $activation,
             42,
-            // @todo: virtualProductFileDir used just for tests to pass.
-            //   Needs to mock filesystem and add test for virtual product file in another PR when we simplify this Unit.
-            'test',
-            $this->createMock(UrlGeneratorInterface::class)
+            DummyFileUploader::getDummyFilesPath(),
+            $urlGeneratorMock
         );
     }
 }
