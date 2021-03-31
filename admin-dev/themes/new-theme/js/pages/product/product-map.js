@@ -115,8 +115,12 @@ export default {
     },
     editModal: '#combination-edit-modal',
   },
-  virtual: {
-
+  virtualProduct: {
+    container: '#virtual-product-tab',
+    fileSwitchContainer: '#virtualProductFileSwitch',
+    fileContentContainer: '#virtualProductFileContent',
+    fileSwitchOnInputSelector: '#product_virtual_product_file_has_file_1',
+    fileSwitchOffInputSelector: '#product_virtual_product_file_has_file_0',
   },
   dropzone: {
     configuration: {
