@@ -65,7 +65,9 @@ use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\RedirectType;
 use PrestaShop\PrestaShop\Core\Domain\Product\VirtualProductFile\QueryResult\VirtualProductFileForEditing;
 use PrestaShop\PrestaShop\Core\Form\IdentifiableObject\DataProvider\ProductFormDataProvider;
 use RuntimeException;
+use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 
+// @todo: ProductFormDataProvider needs to be split to multiple classes to allow easier testing
 class ProductFormDataProviderTest extends TestCase
 {
     private const PRODUCT_ID = 42;
@@ -76,7 +78,8 @@ class ProductFormDataProviderTest extends TestCase
     public function testGetDefaultData()
     {
         $queryBusMock = $this->createMock(CommandBusInterface::class);
-        $provider = new ProductFormDataProvider($queryBusMock, false, 42);
+
+        $provider = $this->buildProvider($queryBusMock, false);
 
         $expectedDefaultData = [
             'basic' => [
@@ -104,7 +107,7 @@ class ProductFormDataProviderTest extends TestCase
         $defaultData = $provider->getDefaultData();
         $this->assertEquals($expectedDefaultData, $defaultData);
 
-        $provider = new ProductFormDataProvider($queryBusMock, true, 42);
+        $provider = $this->buildProvider($queryBusMock, true);
 
         $expectedDefaultData = [
             'basic' => [
@@ -142,7 +145,7 @@ class ProductFormDataProviderTest extends TestCase
     public function testGetData(array $productData, array $expectedData)
     {
         $queryBusMock = $this->createQueryBusMock($productData);
-        $provider = new ProductFormDataProvider($queryBusMock, false, 42);
+        $provider = $this->buildProvider($queryBusMock, false);
 
         $formData = $provider->getData(static::PRODUCT_ID);
         $this->assertEquals($expectedData, $formData);
@@ -435,7 +438,7 @@ class ProductFormDataProviderTest extends TestCase
     /**
      * @return array
      */
-    public function getDataSetsForManufacturer(): array
+    private function getDataSetsForManufacturer(): array
     {
         $datasets = [];
 
@@ -457,7 +460,7 @@ class ProductFormDataProviderTest extends TestCase
     /**
      * @return array
      */
-    public function getDataSetsForFeatures(): array
+    private function getDataSetsForFeatures(): array
     {
         $datasets = [];
 
@@ -959,6 +962,28 @@ class ProductFormDataProviderTest extends TestCase
                     'quantity' => static::DEFAULT_QUANTITY,
                 ],
             ],
+            'virtual_product_file' => [
+                'has_file' => false,
+            ],
         ];
+    }
+
+    /**
+     * @param CommandBusInterface $queryBusMock
+     * @param $activation
+     *
+     * @return ProductFormDataProvider
+     */
+    private function buildProvider(CommandBusInterface $queryBusMock, $activation): ProductFormDataProvider
+    {
+        return new ProductFormDataProvider(
+            $queryBusMock,
+            $activation,
+            42,
+            // @todo: virtualProductFileDir used just for tests to pass.
+            //   Needs to mock filesystem and add test for virtual product file in another PR when we simplify this Unit.
+            'test',
+            $this->createMock(UrlGeneratorInterface::class)
+        );
     }
 }
