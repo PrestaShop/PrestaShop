@@ -34,4 +34,16 @@ namespace PrestaShopBundle\Entity\Repository;
  */
 class AttributeGroupRepository extends \Doctrine\ORM\EntityRepository
 {
+    public function listOrderedAttributeGroups(bool $withAttributes)
+    {
+        $qb = $this
+            ->createQueryBuilder('ag')
+            ->addSelect('ag')
+            ->addSelect('agl')
+            ->leftJoin('ag.attributeGroupLangs', 'agl')
+            ->addOrderBy('ag.position', 'ASC')
+        ;
+
+        return $qb->getQuery()->getResult();
+    }
 }
