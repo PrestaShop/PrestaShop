@@ -111,7 +111,7 @@ final class ProductCombinationQueryBuilder extends AbstractDoctrineQueryBuilder
             if ((bool) $filters['default_on']) {
                 $qb->andWhere('pa.default_on = 1');
             } else {
-                $qb->andWhere('pa.default_on != 1');
+                $qb->andWhere('pa.default_on IS NULL OR pa.default_on = 0');
             }
         }
 
