@@ -65,7 +65,7 @@ const rightSidebar = (function () {
  *  BO Events Handler
  */
 // eslint-disable-next-line
-const BOEvent = {
+window.BOEvent = {
   on(eventName, callback, context) {
     document.addEventListener(eventName, (event) => {
       if (typeof context !== 'undefined') {
