@@ -178,7 +178,7 @@ final class ProductFormDataProvider implements FormDataProviderInterface
     /**
      * @param ProductForEditing $productForEditing
      *
-     * @return array<string, int|string>
+     * @return array<string, mixed>
      */
     private function extractVirtualProductFileData(ProductForEditing $productForEditing): array
     {
