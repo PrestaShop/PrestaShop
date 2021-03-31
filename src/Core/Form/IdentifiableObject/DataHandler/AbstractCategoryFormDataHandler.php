@@ -179,5 +179,5 @@ abstract class AbstractCategoryFormDataHandler implements FormDataHandlerInterfa
 
     abstract protected function createAddCategoryCommand(array $data);
 
-    abstract protected function createEditCategoryCommand(array $data);
+    abstract protected function createEditCategoryCommand($categoryId, array $data);
 }
