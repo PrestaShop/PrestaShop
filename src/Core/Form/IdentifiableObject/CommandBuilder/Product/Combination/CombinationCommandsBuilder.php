@@ -40,7 +40,7 @@ class CombinationCommandsBuilder implements CombinationCommandsBuilderInterface
     /**
      * @param CombinationCommandsBuilderInterface[] $commandBuilders
      */
-    public function __construct(array $commandBuilders)
+    public function __construct(iterable $commandBuilders)
     {
         $this->commandBuilders = $commandBuilders;
     }

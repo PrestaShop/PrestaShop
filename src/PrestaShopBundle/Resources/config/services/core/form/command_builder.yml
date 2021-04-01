@@ -54,8 +54,8 @@ services:
     prestashop.core.form.command_builder.combination.combination_commands_builder:
         class: PrestaShop\PrestaShop\Core\Form\IdentifiableObject\CommandBuilder\Product\Combination\CombinationCommandsBuilder
         arguments:
-            -
-                - '@prestashop.core.form.command_builder.product.combination.stock_command_builder'
+            - !tagged core.combination_command_builder
 
     prestashop.core.form.command_builder.product.combination.stock_command_builder:
-        class: PrestaShop\PrestaShop\Core\Form\IdentifiableObject\CommandBuilder\Product\Combination\CombinationStockCommandBuilder
+        class: PrestaShop\PrestaShop\Core\Form\IdentifiableObject\CommandBuilder\Product\Combination\CombinationStockCommandsBuilder
+        tags: ['core.combination_command_builder']
