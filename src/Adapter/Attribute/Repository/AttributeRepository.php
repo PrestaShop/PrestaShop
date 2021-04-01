@@ -29,6 +29,7 @@ declare(strict_types=1);
 namespace PrestaShop\PrestaShop\Adapter\Attribute\Repository;
 
 use Doctrine\DBAL\Connection;
+use Doctrine\DBAL\FetchMode;
 use PrestaShop\PrestaShop\Adapter\AbstractObjectModelRepository;
 use PrestaShop\PrestaShop\Core\Domain\Language\ValueObject\LanguageId;
 use PrestaShop\PrestaShop\Core\Domain\Product\AttributeGroup\Attribute\Exception\AttributeNotFoundException;
@@ -87,18 +88,22 @@ class AttributeRepository extends AbstractObjectModelRepository
 
     /**
      * @param ProductId $productId
-     * @param LanguageId $langId
      *
-     * @return array[]
+     * @return array<int>
      */
-    public function getAttributesInfoByProductId(ProductId $productId, LanguageId $langId): array
+    public function getProductAttributesIds(ProductId $productId): array
     {
-        $associatedProductAttributes = $this->getProductAttributes($productId->getValue());
-        $attributeIds = array_unique(array_map(function (array $attributeByCombination): int {
-            return (int) $attributeByCombination['id_attribute'];
-        }, $associatedProductAttributes));
+        $qb = $this->connection->createQueryBuilder();
+        $qb
+            ->select('pac.id_attribute')
+            ->from($this->dbPrefix . 'product_attribute_combination', 'pac')
+            ->innerJoin('pac', $this->dbPrefix . 'product_attribute', 'pa', 'pac.id_product_attribute = pa.id_product_attribute')
+            ->where('pa.id_product = :productId')
+            ->groupBy('pac.id_attribute')
+            ->setParameter('productId', $productId->getValue())
+        ;
 
-        return $this->getAttributesInformation($attributeIds, $langId->getValue());
+        return $qb->execute()->fetchAll(FetchMode::COLUMN);
     }
 
     /**
@@ -146,25 +151,6 @@ class AttributeRepository extends AbstractObjectModelRepository
     }
 
     /**
-     * @param int $productId
-     *
-     * @return array<int, array<string, mixed>>
-     */
-    private function getProductAttributes(int $productId): array
-    {
-        $qb = $this->connection->createQueryBuilder();
-        $qb
-            ->select('pac.id_attribute')
-            ->from($this->dbPrefix . 'product_attribute_combination', 'pac')
-            ->innerJoin('pac', $this->dbPrefix . 'product_attribute', 'pa', 'pac.id_product_attribute = pa.id_product_attribute')
-            ->where('pa.id_product = :productId')
-            ->setParameter('productId', $productId)
-        ;
-
-        return $qb->execute()->fetchAll();
-    }
-
-    /**
      * @param int[] $attributeIds
      * @param int $langId
      *
@@ -195,6 +181,8 @@ class AttributeRepository extends AbstractObjectModelRepository
                 'agl',
                 'agl.id_attribute_group = ag.id_attribute_group AND agl.id_lang = :langId'
             )->where($qb->expr()->in('a.id_attribute', ':attributeIds'))
+            ->addOrderBy('ag.position', 'ASC')
+            ->addOrderBy('a.position', 'ASC')
             ->setParameter('attributeIds', $attributeIds, Connection::PARAM_INT_ARRAY)
             ->setParameter('langId', $langId)
         ;
