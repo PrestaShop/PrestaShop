@@ -64,7 +64,7 @@ class CombinationFormDataProvider implements FormDataProviderInterface
         return [
             'id' => $combinationId,
             'name' => $combinationForEditing->getName(),
-            'stock' => $this->extractSockData($combinationForEditing),
+            'stock' => $this->extractStockData($combinationForEditing),
         ];
     }
 
@@ -73,7 +73,7 @@ class CombinationFormDataProvider implements FormDataProviderInterface
      *
      * @return array
      */
-    private function extractSockData(CombinationForEditing $combinationForEditing): array
+    private function extractStockData(CombinationForEditing $combinationForEditing): array
     {
         $stockInformation = $combinationForEditing->getStock();
         $availableDate = $stockInformation->getAvailableDate();
