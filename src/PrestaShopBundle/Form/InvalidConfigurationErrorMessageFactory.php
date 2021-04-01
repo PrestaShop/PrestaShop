@@ -28,7 +28,6 @@ declare(strict_types=1);
 
 namespace PrestaShopBundle\Form;
 
-use PrestaShop\PrestaShop\Core\Language\LanguageRepositoryInterface;
 use PrestaShopBundle\Controller\Exception\FieldNotFoundException;
 use PrestaShopBundle\Entity\Repository\LangRepository;
 use PrestaShopBundle\Form\Admin\Configure\AdvancedParameters\Administration\GeneralDataProvider;
