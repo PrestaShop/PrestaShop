@@ -750,3 +750,19 @@ Feature: Order from Back Office (BO)
     Then order "bo_order-ES" shipping address should be "test-address"
     And order "bo_order-ES" preview shipping address should have the following details:
       | country | United States |
+
+  Scenario: Add same customizable product to an order with new invoice
+    When I create an empty cart "dummy_cart_custo" for customer "testCustomer"
+    And I add 1 customized products with reference "demo_14" with all its customizations to the cart "dummy_cart_custo"
+    And I select "US" address as delivery and invoice address for customer "testCustomer" in cart "dummy_cart_custo"
+    And I add order "bo_order_custo" with the following details:
+      | cart                | dummy_cart_custo         |
+      | message             | test                |
+      | payment module name | dummy_payment       |
+      | status              | Payment accepted    |
+    Then order "bo_order_custo" should have 1 products in total
+    When I add products to order "bo_order_custo" with new invoice and the following products details:
+      | name          | Customizable Mug        |
+      | amount        | 1                       |
+      | price         | 10                      |
+    Then order "bo_order_custo" should have 2 products in total
