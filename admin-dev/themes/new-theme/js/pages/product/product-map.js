@@ -41,6 +41,7 @@ export default {
   price: {
     priceTaxExcludedInput: '#product_price_price_tax_excluded',
   },
+  combinationsGeneratorContainer: '#product_combinations_generator',
   redirectOption: {
     typeInput: '#product_redirect_option_type',
     targetInput: '#product_redirect_option_target',
