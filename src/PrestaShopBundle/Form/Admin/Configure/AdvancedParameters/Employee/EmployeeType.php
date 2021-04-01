@@ -264,7 +264,7 @@ final class EmployeeType extends TranslatorAwareType
                 'help' => $this->trans('This page will be displayed just after login.', 'Admin.Advparameters.Help'),
                 'attr' => [
                     'data-minimumResultsForSearch' => '7',
-                    'data-toggle' => '2',
+                    'data-toggle' => 'select2',
                 ],
             ])
         ;
