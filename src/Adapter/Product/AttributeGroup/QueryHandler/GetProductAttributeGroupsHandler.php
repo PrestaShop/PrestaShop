@@ -29,24 +29,29 @@ declare(strict_types=1);
 namespace PrestaShop\PrestaShop\Adapter\Product\AttributeGroup\QueryHandler;
 
 use PrestaShop\PrestaShop\Adapter\Attribute\Repository\AttributeRepository;
-use PrestaShop\PrestaShop\Core\Domain\Product\AttributeGroup\Attribute\QueryResult\Attribute;
 use PrestaShop\PrestaShop\Core\Domain\Product\AttributeGroup\Query\GetProductAttributeGroups;
 use PrestaShop\PrestaShop\Core\Domain\Product\AttributeGroup\QueryHandler\GetProductAttributeGroupsHandlerInterface;
-use PrestaShop\PrestaShop\Core\Domain\Product\AttributeGroup\QueryResult\AttributeGroup;
+use PrestaShopBundle\Entity\Repository\AttributeGroupRepository;
 
 /**
  * Handles the query GetProductAttributeGroups using adapter repository
  */
-class GetProductAttributeGroupsHandler implements GetProductAttributeGroupsHandlerInterface
+class GetProductAttributeGroupsHandler extends AbstractAttributeGroupQueryHandler implements GetProductAttributeGroupsHandlerInterface
 {
     /**
      * @var AttributeRepository
      */
-    private $attributeRepository;
+    protected $attributeRepository;
 
+    /**
+     * @param AttributeGroupRepository $attributeGroupRepository
+     * @param AttributeRepository $attributeRepository
+     */
     public function __construct(
+        AttributeGroupRepository $attributeGroupRepository,
         AttributeRepository $attributeRepository
     ) {
+        parent::__construct($attributeGroupRepository);
         $this->attributeRepository = $attributeRepository;
     }
 
@@ -55,44 +60,9 @@ class GetProductAttributeGroupsHandler implements GetProductAttributeGroupsHandl
      */
     public function handle(GetProductAttributeGroups $query): array
     {
-        $attributeInfos = $this->attributeRepository->getAttributesInfoByProductId($query->getProductId(), $query->getLanguageId());
+        $attributeIds = $this->attributeRepository->getProductAttributesIds($query->getProductId());
+        $attributeGroupEntities = $this->attributeGroupRepository->listOrderedAttributeGroups($query->withAttributes(), $attributeIds);
 
-        return $this->formatGroups($attributeInfos);
-    }
-
-    /**
-     * @param array $attributeInfos
-     *
-     * @return AttributeGroup[]
-     */
-    private function formatGroups(array $attributeInfos): array
-    {
-        $groupsData = [];
-        foreach ($attributeInfos as $attributeInfo) {
-            $groupId = (int) $attributeInfo['id_attribute_group'];
-            if (!isset($groupsData[$groupId])) {
-                $groupsData[$groupId] = [
-                    'name' => $attributeInfo['attribute_group_name'],
-                    'public_name' => $attributeInfo['attribute_group_public_name'],
-                    'attributes' => [],
-                ];
-            }
-
-            $groupsData[$groupId]['attributes'][] = new Attribute(
-                (int) $attributeInfo['id_attribute'],
-                (int) $attributeInfo['position'],
-                $attributeInfo['color'],
-                $attributeInfo['attribute_name']
-            );
-        }
-
-        return array_map(function (array $groupData, int $groupId) {
-            return new AttributeGroup(
-                $groupId,
-                $groupData['name'],
-                $groupData['public_name'],
-                $groupData['attributes']
-            );
-        }, $groupsData, array_keys($groupsData));
+        return $this->formatAttributeGroups($attributeGroupEntities, $query->withAttributes());
     }
 }

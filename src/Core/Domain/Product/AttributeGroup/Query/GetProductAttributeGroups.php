@@ -28,8 +28,6 @@ declare(strict_types=1);
 
 namespace PrestaShop\PrestaShop\Core\Domain\Product\AttributeGroup\Query;
 
-use PrestaShop\PrestaShop\Core\Domain\Language\Exception\LanguageException;
-use PrestaShop\PrestaShop\Core\Domain\Language\ValueObject\LanguageId;
 use PrestaShop\PrestaShop\Core\Domain\Product\Exception\ProductConstraintException;
 use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductId;
 
@@ -44,21 +42,20 @@ class GetProductAttributeGroups
     private $productId;
 
     /**
-     * @var LanguageId
+     * @var bool
      */
-    private $languageId;
+    private $withAttributes;
 
     /**
      * @param int $productId
-     * @param int $languageId
+     * @param bool $withAttributes
      *
      * @throws ProductConstraintException
-     * @throws LanguageException
      */
-    public function __construct(int $productId, int $languageId)
+    public function __construct(int $productId, bool $withAttributes)
     {
         $this->productId = new ProductId($productId);
-        $this->languageId = new LanguageId($languageId);
+        $this->withAttributes = $withAttributes;
     }
 
     /**
@@ -70,10 +67,10 @@ class GetProductAttributeGroups
     }
 
     /**
-     * @return LanguageId
+     * @return bool
      */
-    public function getLanguageId(): LanguageId
+    public function withAttributes(): bool
     {
-        return $this->languageId;
+        return $this->withAttributes;
     }
 }
