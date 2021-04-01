@@ -23,6 +23,7 @@
  * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
+
 declare(strict_types=1);
 
 namespace PrestaShop\PrestaShop\Core\Form\IdentifiableObject\DataHandler;
@@ -113,7 +114,7 @@ abstract class AbstractCategoryFormDataHandler implements FormDataHandlerInterfa
         if (!isset($data['menu_thumbnail_images']) || count($data['menu_thumbnail_images']) > count($availableKeys)) {
             throw new MenuThumbnailsLimitException(sprintf('Maximum number of menu thumbnails was reached for category "%d"', $categoryId));
         }
-        $command = $this->createEditCategoryCommand($categoryId, $data);
+        $command = $this->createEditCategoryCommand((int) $categoryId, $data);
 
         $this->commandBus->handle($command);
         $categoryId = new CategoryId((int) $categoryId);
@@ -181,5 +182,5 @@ abstract class AbstractCategoryFormDataHandler implements FormDataHandlerInterfa
 
     abstract protected function createAddCategoryCommand(array $data): AbstractAddCategoryCommand;
 
-    abstract protected function createEditCategoryCommand($categoryId, array $data): AbstractEditCategoryCommand;
+    abstract protected function createEditCategoryCommand(int $categoryId, array $data): AbstractEditCategoryCommand;
 }
