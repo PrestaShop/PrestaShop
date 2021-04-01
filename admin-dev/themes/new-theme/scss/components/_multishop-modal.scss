@@ -112,6 +112,14 @@ $component-name: multishop-modal;
     }
   }
 
+  &-shop-name.#{$component-name}-no-url {
+    cursor: not-allowed;
+  }
+
+  &-shop-name.#{$component-name}-no-url:hover {
+    color: #4a4a4a;
+  }
+
   &-all-name,
   &-group-name {
     font-weight: 600;

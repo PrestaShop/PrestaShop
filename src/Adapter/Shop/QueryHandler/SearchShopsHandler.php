@@ -83,6 +83,10 @@ final class SearchShopsHandler implements SearchShopsHandlerInterface
         }
 
         foreach ($shopList as $shop) {
+            if (!$shop->hasMainUrl()) {
+                continue;
+            }
+
             $result[] = new FoundShop(
                 $shop->getId(),
                 $shop->getColor() ?? '',
