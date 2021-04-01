@@ -23,33 +23,28 @@
  * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
-declare(strict_types=1);
 
-namespace PrestaShopBundle\Form\Admin\Sell\Product\Combination;
+namespace PrestaShop\PrestaShop\Core\Search\Builder\TypedBuilder;
 
-use PrestaShopBundle\Form\Admin\Type\TranslatorAwareType;
-use Symfony\Component\Form\Extension\Core\Type\CollectionType;
-use Symfony\Component\Form\Extension\Core\Type\HiddenType;
-use Symfony\Component\Form\FormBuilderInterface;
+use PrestaShop\PrestaShop\Core\Search\Builder\ClassFiltersBuilder;
+use PrestaShop\PrestaShop\Core\Search\Builder\FiltersBuilderInterface;
 
 /**
- * Form uses collection of combination items and so it can be rendered as a grid consisting of submittable inputs.
+ * The filters build process is based on multi layers among which we have one that adapts
+ * generic filters to specific classes, which allows overriding default values and filterId
+ * easily.
+ *
+ * But some Filters classes may need some specific way of being built so you can define a specific
+ * builder service that is handled by @see ClassFiltersBuilder which contains various specified
+ * builders, if the built type is identified by TypedFiltersBuilderInterface::supports method then
+ * this builder will be used instead of the generic construction.
  */
-class CombinationListType extends TranslatorAwareType
+interface TypedFiltersBuilderInterface extends FiltersBuilderInterface
 {
     /**
-     * {@inheritdoc}
+     * @param string $filterClassName
+     *
+     * @return bool
      */
-    public function buildForm(FormBuilderInterface $builder, array $options): void
-    {
-        $builder
-            ->add('combinations', CollectionType::class, [
-                'entry_type' => CombinationItemType::class,
-                'allow_add' => true,
-                'allow_delete' => true,
-                'prototype_name' => '__COMBINATION_INDEX__',
-            ])
-            ->add('total_combinations_count', HiddenType::class)
-        ;
-    }
+    public function supports(string $filterClassName): bool;
 }

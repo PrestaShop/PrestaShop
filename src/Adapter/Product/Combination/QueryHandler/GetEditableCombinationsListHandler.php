@@ -28,10 +28,10 @@ declare(strict_types=1);
 
 namespace PrestaShop\PrestaShop\Adapter\Product\Combination\QueryHandler;
 
+use PDO;
 use PrestaShop\Decimal\DecimalNumber;
 use PrestaShop\PrestaShop\Adapter\Product\AbstractProductHandler;
 use PrestaShop\PrestaShop\Adapter\Product\Combination\Repository\CombinationRepository;
-use PrestaShop\PrestaShop\Adapter\Product\Repository\ProductRepository;
 use PrestaShop\PrestaShop\Adapter\Product\Stock\Repository\StockAvailableRepository;
 use PrestaShop\PrestaShop\Core\Domain\Product\Combination\Query\GetEditableCombinationsList;
 use PrestaShop\PrestaShop\Core\Domain\Product\Combination\QueryHandler\GetEditableCombinationsListHandlerInterface;
@@ -39,6 +39,8 @@ use PrestaShop\PrestaShop\Core\Domain\Product\Combination\QueryResult\Combinatio
 use PrestaShop\PrestaShop\Core\Domain\Product\Combination\QueryResult\CombinationListForEditing;
 use PrestaShop\PrestaShop\Core\Domain\Product\Combination\QueryResult\EditableCombinationForListing;
 use PrestaShop\PrestaShop\Core\Domain\Product\Combination\ValueObject\CombinationId;
+use PrestaShop\PrestaShop\Core\Grid\Query\DoctrineQueryBuilderInterface;
+use PrestaShop\PrestaShop\Core\Search\Filters\ProductCombinationFilters;
 use PrestaShop\PrestaShop\Core\Util\Number\NumberExtractor;
 
 /**
@@ -52,11 +54,6 @@ final class GetEditableCombinationsListHandler extends AbstractProductHandler im
     private $combinationRepository;
 
     /**
-     * @var ProductRepository
-     */
-    private $productRepository;
-
-    /**
      * @var NumberExtractor
      */
     private $numberExtractor;
@@ -67,21 +64,26 @@ final class GetEditableCombinationsListHandler extends AbstractProductHandler im
     private $stockAvailableRepository;
 
     /**
+     * @var DoctrineQueryBuilderInterface
+     */
+    private $combinationQueryBuilder;
+
+    /**
      * @param CombinationRepository $combinationRepository
-     * @param ProductRepository $productRepository
      * @param NumberExtractor $numberExtractor
      * @param StockAvailableRepository $stockAvailableRepository
+     * @param DoctrineQueryBuilderInterface $combinationQueryBuilder
      */
     public function __construct(
         CombinationRepository $combinationRepository,
-        ProductRepository $productRepository,
         NumberExtractor $numberExtractor,
-        StockAvailableRepository $stockAvailableRepository
+        StockAvailableRepository $stockAvailableRepository,
+        DoctrineQueryBuilderInterface $combinationQueryBuilder
     ) {
         $this->combinationRepository = $combinationRepository;
-        $this->productRepository = $productRepository;
         $this->numberExtractor = $numberExtractor;
         $this->stockAvailableRepository = $stockAvailableRepository;
+        $this->combinationQueryBuilder = $combinationQueryBuilder;
     }
 
     /**
@@ -89,13 +91,18 @@ final class GetEditableCombinationsListHandler extends AbstractProductHandler im
      */
     public function handle(GetEditableCombinationsList $query): CombinationListForEditing
     {
-        $productId = $query->getProductId();
+        $filters = $query->getFilters();
+        $filters['product_id'] = $query->getProductId()->getValue();
+        $searchCriteria = new ProductCombinationFilters([
+            'limit' => $query->getLimit(),
+            'offset' => $query->getOffset(),
+            'orderBy' => $query->getOrderBy(),
+            'sortOrder' => $query->getOrderWay(),
+            'filters' => $filters,
+        ]);
 
-        $combinations = $this->combinationRepository->getProductCombinations(
-            $productId,
-            $query->getLimit(),
-            $query->getOffset()
-        );
+        $combinations = $this->combinationQueryBuilder->getSearchQueryBuilder($searchCriteria)->execute()->fetchAll();
+        $total = (int) $this->combinationQueryBuilder->getCountQueryBuilder($searchCriteria)->execute()->fetch(PDO::FETCH_COLUMN);
 
         $combinationIds = array_map(function ($combination): int {
             return (int) $combination['id_product_attribute'];
@@ -109,7 +116,7 @@ final class GetEditableCombinationsListHandler extends AbstractProductHandler im
         return $this->formatEditableCombinationsForListing(
             $combinations,
             $attributesInformation,
-            $this->combinationRepository->getTotalCombinationsCount($productId)
+            $total
         );
     }
 

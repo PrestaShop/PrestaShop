@@ -57,21 +57,45 @@ class GetEditableCombinationsList
     private $offset;
 
     /**
+     * @var array<string, mixed>
+     */
+    private $filters;
+
+    /**
+     * @var string|null
+     */
+    private $orderBy;
+
+    /**
+     * @var string|null
+     */
+    private $orderWay;
+
+    /**
      * @param int $productId
      * @param int $languageId
      * @param int|null $limit
      * @param int|null $offset
+     * @param string|null $orderBy
+     * @param string|null $orderWay
+     * @param array<string, mixed> $filters
      */
     public function __construct(
         int $productId,
         int $languageId,
         ?int $limit = null,
-        ?int $offset = null
+        ?int $offset = null,
+        ?string $orderBy = null,
+        ?string $orderWay = null,
+        array $filters = []
     ) {
         $this->productId = new ProductId($productId);
         $this->languageId = new LanguageId($languageId);
         $this->limit = $limit;
         $this->offset = $offset;
+        $this->filters = $filters;
+        $this->orderBy = $orderBy;
+        $this->orderWay = $orderWay;
     }
 
     /**
@@ -91,6 +115,22 @@ class GetEditableCombinationsList
     }
 
     /**
+     * @return string|null
+     */
+    public function getOrderBy(): ?string
+    {
+        return $this->orderBy;
+    }
+
+    /**
+     * @return string|null
+     */
+    public function getOrderWay(): ?string
+    {
+        return $this->orderWay;
+    }
+
+    /**
      * @return int|null
      */
     public function getLimit(): ?int
@@ -104,5 +144,13 @@ class GetEditableCombinationsList
     public function getOffset(): ?int
     {
         return $this->offset;
+    }
+
+    /**
+     * @return array<string, mixed>
+     */
+    public function getFilters(): array
+    {
+        return $this->filters;
     }
 }

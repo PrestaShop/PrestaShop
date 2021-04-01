@@ -33,6 +33,7 @@ use PHPUnit\Framework\Assert;
 use PrestaShop\PrestaShop\Core\Domain\Product\Combination\Command\UpdateCombinationFromListingCommand;
 use PrestaShop\PrestaShop\Core\Domain\Product\Combination\QueryResult\CombinationAttributeInformation;
 use PrestaShop\PrestaShop\Core\Domain\Product\Combination\QueryResult\EditableCombinationForListing;
+use PrestaShop\PrestaShop\Core\Search\Filters\ProductCombinationFilters;
 use Tests\Integration\Behaviour\Features\Context\Util\PrimitiveUtils;
 
 class CombinationListingFeatureContext extends AbstractCombinationFeatureContext
@@ -66,77 +67,177 @@ class CombinationListingFeatureContext extends AbstractCombinationFeatureContext
         if (isset($dataRows['is default'])) {
             $command->setDefault(PrimitiveUtils::castStringBooleanIntoBoolean($dataRows['is default']));
         }
-        if (isset($dataRows['combination reference'])) {
-            $command->setReference($dataRows['combination reference']);
+        if (isset($dataRows['reference'])) {
+            $command->setReference($dataRows['reference']);
         }
     }
 
     /**
-     * @Then I should see following combinations of product :productReference in page :page limited to maximum :limit per page:
+     * @Then I should see following combinations in paginated list of product ":productReference":
+     * @Then I should see following combinations in filtered list of product ":productReference":
      *
      * @param string $productReference
-     * @param int $page
-     * @param TableNode $dataTable
-     * @param int $limit
+     * @param TableNode $tableNode
      */
-    public function assertCombinationsPage(string $productReference, int $page, TableNode $dataTable, int $limit): void
+    public function assertCombinationsList(string $productReference, TableNode $tableNode): void
     {
-        $offset = $this->countOffset($page, $limit);
-
-        $this->assertPaginatedCombinationList($productReference, $dataTable->getColumnsHash(), $limit, $offset);
+        $this->assertCombinations($productReference, $tableNode->getColumnsHash());
     }
 
     /**
-     * @Then there should be no combinations of :productReference in page :page when limited to maximum :limit per page
+     * @Then product ":productReference" should have following combinations:
      *
      * @param string $productReference
-     * @param int $page
-     * @param int $limit
+     * @param TableNode $tableNode
      */
-    public function assertNoCombinationsInPage(string $productReference, int $page, int $limit): void
+    public function assertWholeList(string $productReference, TableNode $tableNode): void
     {
-        $offset = $this->countOffset($page, $limit);
-
-        $this->assertPaginatedCombinationList($productReference, [], $limit, $offset);
+        $this->assertCombinations($productReference, $tableNode->getColumnsHash(), true);
     }
 
     /**
-     * Asserts expected product combinations and sets combination references in shared storage
-     *
-     * @Then product :productReference should have following list of combinations:
+     * @Then combinations list of product ":productReference" should be empty
      *
      * @param string $productReference
-     * @param TableNode $table
      */
-    public function assertWholeCombinationsList(string $productReference, TableNode $table): void
+    public function assertNoCombinationsInPage(string $productReference): void
     {
-        $combinationsList = $this->getCombinationsList($productReference);
-        $dataRows = $table->getColumnsHash();
+        $this->assertCombinations($productReference, []);
+    }
+
+    /**
+     * @Then product ":productReference" should have no combinations
+     *
+     * @param string $productReference
+     */
+    public function assertProductHasNoCombinations(string $productReference): void
+    {
+        $this->assertCombinations($productReference, [], true);
+    }
+
+    /**
+     * @Given product ":productReference" combinations list search criteria is set to defaults
+     *
+     * @param string $productReference
+     */
+    public function cleanSearchCriteria(string $productReference): void
+    {
+        $this->getSharedStorage()->clear($this->getSearchCriteriaKey($productReference));
+    }
+
+    /**
+     * @param int $productId
+     * @param TableNode $tableNode
+     *
+     * @return ProductCombinationFilters
+     */
+    private function buildProductCombinationFilters(int $productId, TableNode $tableNode): ProductCombinationFilters
+    {
+        $dataRows = $tableNode->getRowsHash();
+        $defaults = ProductCombinationFilters::getDefaults();
+
+        $filters = $defaults['filters'];
+        $filters['product_id'] = $productId;
+
+        if (isset($dataRows['attributes'])) {
+            $attributes = PrimitiveUtils::castStringArrayIntoArray($dataRows['attributes']);
+            foreach ($attributes as $attributeRef) {
+                $filters['attribute_ids'][] = $this->getSharedStorage()->get($attributeRef);
+            }
+        }
+
+        if (isset($dataRows['reference'])) {
+            $filters[$this->getDbField('reference')] = $dataRows['reference'];
+        }
+
+        if (isset($dataRows['is default'])) {
+            $filters[$this->getDbField('is default')] = PrimitiveUtils::castStringBooleanIntoBoolean($dataRows['is default']);
+        }
+
+        $limit = isset($dataRows['limit']) ? (int) $dataRows['limit'] : $defaults['limit'];
+        $offset = isset($dataRows['page']) ? $this->countOffset((int) $dataRows['page'], $limit) : $defaults['offset'];
+        $orderBy = isset($dataRows['order by']) ? $this->getDbField($dataRows['order by']) : $defaults['orderBy'];
+        $orderWay = isset($dataRows['order way']) ? $this->getDbField($dataRows['order way']) : $defaults['sortOrder'];
+
+        return new ProductCombinationFilters([
+            'limit' => $limit,
+            'offset' => $offset,
+            'orderBy' => $orderBy,
+            'sortOrder' => $orderWay,
+            'filters' => $filters,
+        ]);
+    }
+
+    /**
+     * @When I search product ":productReference" combinations list by following search criteria:
+     *
+     * @param string $productReference
+     * @param TableNode $tableNode
+     */
+    public function storeSearchCriteria(string $productReference, TableNode $tableNode): void
+    {
+        $combinationFilters = $this->buildProductCombinationFilters((int) $this->getSharedStorage()->get($productReference), $tableNode);
+        $this->getSharedStorage()->set($this->getSearchCriteriaKey($productReference), $combinationFilters);
+    }
+
+    /**
+     * @param string $field
+     *
+     * @return string
+     */
+    private function getDbField(string $field): string
+    {
+        $fieldMap = [
+            'impact on price' => 'price',
+            'is default' => 'default_on',
+        ];
+
+        if (isset($fieldMap[$field])) {
+            return $fieldMap[$field];
+        }
+
+        return $field;
+    }
+
+    /**
+     * @param string $productReference
+     * @param array $dataRows
+     * @param bool $wholeList if true then search criteria wont be applied
+     */
+    private function assertCombinations(string $productReference, array $dataRows, bool $wholeList = false): void
+    {
+        $searchCriteriaKey = $this->getSearchCriteriaKey($productReference);
+        if ($wholeList) {
+            $combinationFilters = null;
+        } elseif ($this->getSharedStorage()->exists($searchCriteriaKey)) {
+            $combinationFilters = $this->getSharedStorage()->get($searchCriteriaKey);
+        } else {
+            $combinationFilters = ProductCombinationFilters::buildDefaults();
+        }
+
+        $combinationsList = $this->getCombinationsList($productReference, $combinationFilters);
 
         Assert::assertEquals(
             count($dataRows),
-            $combinationsList->getTotalCombinationsCount(),
+            count($combinationsList->getCombinations()),
             'Unexpected combinations count'
         );
 
-        $idsByReference = $this->assertListedCombinationsProperties($dataRows, $combinationsList->getCombinations());
+        $idsByIdReferences = $this->assertListedCombinationsProperties($dataRows, $combinationsList->getCombinations());
 
-        foreach ($idsByReference as $reference => $id) {
+        foreach ($idsByIdReferences as $reference => $id) {
             $this->getSharedStorage()->set($reference, $id);
         }
     }
 
     /**
-     * @Then product :productReference should have no combinations
-     *
      * @param string $productReference
+     *
+     * @return string
      */
-    public function assertNoCombinations(string $productReference): void
+    private function getSearchCriteriaKey(string $productReference): string
     {
-        $combinationsList = $this->getCombinationsList($productReference);
-
-        Assert::assertEmpty($combinationsList->getCombinations());
-        Assert::assertEquals(0, $combinationsList->getTotalCombinationsCount());
+        return sprintf('combination_search_criteria_%s', $productReference);
     }
 
     /**
@@ -151,33 +252,14 @@ class CombinationListingFeatureContext extends AbstractCombinationFeatureContext
     }
 
     /**
-     * @param string $productReference
-     * @param array $dataRows
-     * @param int|null $limit
-     * @param int|null $offset
-     */
-    private function assertPaginatedCombinationList(string $productReference, array $dataRows, ?int $limit = null, ?int $offset = null): void
-    {
-        $combinationsList = $this->getCombinationsList($productReference, $limit, $offset);
-
-        Assert::assertEquals(
-            count($dataRows),
-            count($combinationsList->getCombinations()),
-            'Unexpected combinations count'
-        );
-
-        $this->assertListedCombinationsProperties($dataRows, $combinationsList->getCombinations());
-    }
-
-    /**
      * @param array $expectedDataRows
      * @param EditableCombinationForListing[] $listCombinations
      *
-     * @return array<string, int> combinations [reference => id] list
+     * @return array<string, int> combinations [id reference => id] list
      */
     private function assertListedCombinationsProperties(array $expectedDataRows, array $listCombinations): array
     {
-        $idsByReference = [];
+        $idsByIdReferences = [];
         foreach ($listCombinations as $key => $editableCombinationForListing) {
             $expectedCombination = $expectedDataRows[$key];
 
@@ -187,7 +269,7 @@ class CombinationListingFeatureContext extends AbstractCombinationFeatureContext
                 'Unexpected combination name'
             );
             Assert::assertSame(
-                $expectedCombination['combination reference'],
+                $expectedCombination['reference'],
                 $editableCombinationForListing->getReference(),
                 'Unexpected combination reference'
             );
@@ -216,10 +298,10 @@ class CombinationListingFeatureContext extends AbstractCombinationFeatureContext
 
             $this->assertAttributesInfo($expectedAttributesInfo, $editableCombinationForListing->getAttributesInformation());
 
-            $idsByReference[$expectedCombination['reference']] = $editableCombinationForListing->getCombinationId();
+            $idsByIdReferences[$expectedCombination['id reference']] = $editableCombinationForListing->getCombinationId();
         }
 
-        return $idsByReference;
+        return $idsByIdReferences;
     }
 
     /**

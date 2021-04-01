@@ -42,7 +42,7 @@ class ClassFiltersBuilderTest extends TestCase
     public function testOverrideWithoutClass()
     {
         $builder = new ClassFiltersBuilder();
-        $filters = new Filters(['limit' => 10]);
+        $filters = new Filters(['limit' => 51]);
         $builtFilters = $builder->buildFilters($filters);
         $this->assertNotNull($builtFilters);
         $this->assertEquals($filters->all(), $builtFilters->all());

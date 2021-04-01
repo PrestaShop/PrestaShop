@@ -32,6 +32,7 @@ use PrestaShop\PrestaShop\Core\Domain\Product\Combination\Query\GetEditableCombi
 use PrestaShop\PrestaShop\Core\Domain\Product\Combination\QueryResult\CombinationListForEditing;
 use PrestaShop\PrestaShop\Core\Form\IdentifiableObject\Builder\FormBuilderInterface;
 use PrestaShop\PrestaShop\Core\Form\IdentifiableObject\Handler\FormHandlerInterface;
+use PrestaShop\PrestaShop\Core\Search\Filters\ProductCombinationFilters;
 use PrestaShopBundle\Controller\Admin\FrameworkBundleAdminController;
 use PrestaShopBundle\Form\Admin\Sell\Product\Combination\CombinationListType;
 use PrestaShopBundle\Security\Annotation\AdminSecurity;
@@ -42,14 +43,9 @@ use Symfony\Component\HttpFoundation\Response;
 class CombinationController extends FrameworkBundleAdminController
 {
     /**
-     * Default number of combinations per page
-     */
-    private const DEFAULT_COMBINATIONS_NUMBER = 10;
-
-    /**
      * Options used for the number of combinations per page
      */
-    private const COMBINATIONS_PAGINATION_OPTIONS = [10, 20, 50, 100];
+    private const COMBINATIONS_PAGINATION_OPTIONS = [ProductCombinationFilters::LIST_LIMIT, 20, 50, 100];
 
     /**
      * Renders combinations list prototype (which contains form inputs submittable by ajax)
@@ -60,32 +56,31 @@ class CombinationController extends FrameworkBundleAdminController
     public function listFormAction(): Response
     {
         return $this->render('@PrestaShop/Admin/Sell/Catalog/Product/Blocks/combinations.html.twig', [
-            //@todo: hardcoded. Make configurable?
             'combinationLimitChoices' => self::COMBINATIONS_PAGINATION_OPTIONS,
-            'combinationsLimit' => self::DEFAULT_COMBINATIONS_NUMBER,
+            'combinationsLimit' => ProductCombinationFilters::LIST_LIMIT,
             'combinationsForm' => $this->createForm(CombinationListType::class)->createView(),
             'combinationItemForm' => $this->getCombinationItemFormBuilder()->getForm()->createView(),
         ]);
     }
 
     /**
-     * @AdminSecurity("is_granted('update', request.get('_legacy_controller'))")
+     * @AdminSecurity("is_granted('read', request.get('_legacy_controller'))")
      *
      * @param int $productId
-     * @param Request $request
+     * @param ProductCombinationFilters $combinationFilters
      *
      * @return JsonResponse
      */
-    public function getListAction(int $productId, Request $request): JsonResponse
+    public function getListAction(int $productId, ProductCombinationFilters $combinationFilters): JsonResponse
     {
-        $limit = (int) $request->query->get('limit');
-        $offset = (int) $request->query->get('offset');
-
         $combinationsList = $this->getQueryBus()->handle(new GetEditableCombinationsList(
             $productId,
             $this->getContextLangId(),
-            $limit ?? null,
-            $offset ?? null
+            $combinationFilters->getLimit(),
+            $combinationFilters->getOffset(),
+            $combinationFilters->getOrderBy(),
+            $combinationFilters->getOrderWay(),
+            $combinationFilters->getFilters()
         ));
 
         return $this->json($this->formatListResponse($combinationsList));

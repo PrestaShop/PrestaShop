@@ -351,19 +351,25 @@ services:
         public: true
 
     prestashop.core.grid.query_builder.outstanding:
-      class: 'PrestaShop\PrestaShop\Core\Grid\Query\OutstandingQueryBuilder'
-      parent: 'prestashop.core.grid.abstract_query_builder'
-      arguments:
-        - '@prestashop.core.query.doctrine_search_criteria_applicator'
-        - '@=service("prestashop.adapter.legacy.context").getContext().language.id'
-        - '@=service("prestashop.adapter.shop.context").getContextListShopID()'
-      public: true
+        class: 'PrestaShop\PrestaShop\Core\Grid\Query\OutstandingQueryBuilder'
+        parent: 'prestashop.core.grid.abstract_query_builder'
+        public: true
+        arguments:
+            - '@prestashop.core.query.doctrine_search_criteria_applicator'
+            - '@=service("prestashop.adapter.legacy.context").getContext().language.id'
+            - '@=service("prestashop.adapter.shop.context").getContextListShopID()'
 
     prestashop.core.grid.query_builder.zone:
+        class: 'PrestaShop\PrestaShop\Core\Grid\Query\ZoneQueryBuilder'
+        parent: 'prestashop.core.grid.abstract_query_builder'
+        public: true
+        arguments:
+            - '@prestashop.core.query.doctrine_search_criteria_applicator'
+            - '@=service("prestashop.adapter.shop.context").getContextListShopId()'
 
-      class: 'PrestaShop\PrestaShop\Core\Grid\Query\ZoneQueryBuilder'
-      parent: 'prestashop.core.grid.abstract_query_builder'
-      public: true
-      arguments:
-        - '@prestashop.core.query.doctrine_search_criteria_applicator'
-        - '@=service("prestashop.adapter.shop.context").getContextListShopId()'
+    prestashop.core.grid.query_builder.product_combination:
+        class: 'PrestaShop\PrestaShop\Core\Grid\Query\ProductCombinationQueryBuilder'
+        parent: 'prestashop.core.grid.abstract_query_builder'
+        public: true
+        arguments:
+            - '@prestashop.core.query.doctrine_search_criteria_applicator'

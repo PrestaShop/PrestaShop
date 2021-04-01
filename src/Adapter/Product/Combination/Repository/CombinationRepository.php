@@ -31,7 +31,6 @@ namespace PrestaShop\PrestaShop\Adapter\Product\Combination\Repository;
 use Combination;
 use Db;
 use Doctrine\DBAL\Connection;
-use Doctrine\DBAL\Query\QueryBuilder;
 use PrestaShop\PrestaShop\Adapter\AbstractObjectModelRepository;
 use PrestaShop\PrestaShop\Adapter\Attribute\Repository\AttributeRepository;
 use PrestaShop\PrestaShop\Adapter\Product\Combination\Validate\CombinationValidator;
@@ -213,40 +212,6 @@ class CombinationRepository extends AbstractObjectModelRepository
     }
 
     /**
-     * @param ProductId $productId
-     * @param int $limit
-     * @param int $offset
-     * @param array $filters
-     *
-     * @return array<int, array<string, mixed>>
-     */
-    public function getProductCombinations(ProductId $productId, ?int $limit = null, ?int $offset = null, array $filters = []): array
-    {
-        $qb = $this->getCombinationsQueryBuilder($productId, $filters)
-            ->select('pa.*')
-            ->setFirstResult($offset)
-            ->setMaxResults($limit)
-        ;
-
-        return $qb->execute()->fetchAll();
-    }
-
-    /**
-     * @param ProductId $productId
-     * @param array $filters
-     *
-     * @return int
-     */
-    public function getTotalCombinationsCount(ProductId $productId, array $filters = []): int
-    {
-        $qb = $this->getCombinationsQueryBuilder($productId, $filters)
-            ->select('COUNT(pa.id_product_attribute) AS total_combinations')
-        ;
-
-        return (int) $qb->execute()->fetch()['total_combinations'];
-    }
-
-    /**
      * @param int[] $combinationIds
      * @param LanguageId $langId
      *
@@ -390,24 +355,5 @@ class CombinationRepository extends AbstractObjectModelRepository
         }
 
         return $attributesInfoByAttributeId;
-    }
-
-    /**
-     * @param ProductId $productId
-     * @param array $filters
-     *
-     * @return QueryBuilder
-     */
-    private function getCombinationsQueryBuilder(ProductId $productId, array $filters): QueryBuilder
-    {
-        //@todo: filters are not handled.
-        $qb = $this->connection->createQueryBuilder();
-        $qb->from($this->dbPrefix . 'product_attribute', 'pa')
-            ->where('pa.id_product = :productId')
-            ->orderBy('id_product_attribute', 'asc')
-            ->setParameter('productId', $productId->getValue())
-        ;
-
-        return $qb;
     }
 }
