@@ -35,7 +35,6 @@ export default class CombinationsGridRenderer {
    * @returns {{render: (function(*=): void)}}
    */
   constructor() {
-    this.eventEmitter = window.prestashop.instance.eventEmitter;
     this.$combinationsTable = $(ProductMap.combinations.combinationsTable);
     this.$combinationsTableBody = $(ProductMap.combinations.combinationsTableBody);
     this.$loadingSpinner = $(ProductMap.combinations.loadingSpinner);

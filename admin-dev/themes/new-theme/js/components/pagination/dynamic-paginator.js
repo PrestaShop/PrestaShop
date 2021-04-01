@@ -92,12 +92,14 @@ export default class DynamicPaginator {
     this.renderer = renderer;
     this.setSelectorsMap(selectorsMap);
     this.init();
+    this.currentPage = 1;
     if (startingPage !== null) {
       this.paginate(startingPage);
     }
 
     return {
       paginate: (page) => this.paginate(page),
+      getCurrentPage: () => this.currentPage,
     };
   }
 
@@ -126,6 +128,7 @@ export default class DynamicPaginator {
    * @param {Number} page
    */
   async paginate(page) {
+    this.currentPage = page;
     this.renderer.toggleLoading(true);
     const limit = this.getLimit();
     const data = await this.paginationService.fetch(this.calculateOffset(page, limit), limit);

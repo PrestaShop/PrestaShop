@@ -34,7 +34,6 @@ import NavbarHandler from '@components/navbar-handler';
 import CombinationsManager from '@pages/product/edit/combinations-manager';
 import ProductTypeManager from '@pages/product/edit/product-type-manager';
 import initDropzone from '@pages/product/components/dropzone';
-import initCombinationModal from '@pages/product/components/combination-modal';
 
 const {$} = window;
 
@@ -51,10 +50,10 @@ $(() => {
   const productId = parseInt($productForm.data('productId'), 10);
   const productType = $productForm.data('productType');
 
-  if (productId) {
+  if (productId && productType === ProductMap.productType.COMBINATIONS) {
     // Combinations manager must be initialised before nav handler, or it won't trigger the pagination if the tab is
     // selected on load, but only when productId exists (edition mode)
-    new CombinationsManager();
+    new CombinationsManager(productId);
   }
   new NavbarHandler(ProductMap.navigationBar);
 
@@ -97,9 +96,7 @@ $(() => {
   new FeatureValuesManager(window.prestashop.instance.eventEmitter);
   new CustomizationsManager();
 
-  if (productType === ProductMap.productType.COMBINATIONS) {
-    initCombinationModal(ProductMap.combinations.editModal, productId);
-  } else {
+  if (productType !== ProductMap.productType.COMBINATIONS) {
     new ProductSuppliersManager();
   }
 });

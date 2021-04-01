@@ -35,4 +35,7 @@ export default {
     success: 'success',
     languageSelected: 'languageSelected',
   },
+  combinations: {
+    refreshList: 'refreshCombinationList',
+  },
 };

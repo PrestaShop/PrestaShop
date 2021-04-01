@@ -52,7 +52,7 @@
           type="button"
           class="btn btn-secondary btn-close"
           @click.prevent.stop="closeModal"
-          aria-label="{{ $t('modal.close') }}"
+          :aria-label="$t('modal.close')"
           :disabled="submittingCombinationForm"
         >
           {{ $t('modal.close') }}
@@ -62,7 +62,7 @@
           type="button"
           class="btn btn-outline-secondary"
           @click.prevent.stop="showPrevious"
-          aria-label="{{ $t('modal.previous') }}"
+          :aria-label="$t('modal.previous')"
           :disabled="previousCombinationId === null || submittingCombinationForm"
         >
           <i class="material-icons">keyboard_arrow_left</i>
@@ -72,7 +72,7 @@
           type="button"
           class="btn btn-outline-secondary"
           @click.prevent.stop="showNext"
-          aria-label="{{ $t('modal.next') }}"
+          :aria-label="$t('modal.next')"
           :disabled="nextCombinationId === null || submittingCombinationForm"
         >
           {{ $t('modal.next') }}
@@ -82,7 +82,7 @@
           type="button"
           class="btn btn-primary"
           @click.prevent.stop="submitForm"
-          aria-label="{{ $t('modal.save') }}"
+          :aria-label="$t('modal.save')"
           :disabled="submittingCombinationForm"
         >
           <span v-if="!submittingCombinationForm">
@@ -103,6 +103,7 @@
 <script>
   import CombinationsService from '@pages/product/services/combinations-service';
   import ProductMap from '@pages/product/product-map';
+  import ProductEventMap from '@pages/product/product-event-map';
   import Modal from '@vue/components/Modal';
   import Router from '@components/router';
 
@@ -124,6 +125,7 @@
         loadingCombinationForm: false,
         submittingCombinationForm: false,
         combinationList: null,
+        hasSubmittedCombinations: false,
       };
     },
     props: {
@@ -144,6 +146,7 @@
           event.stopImmediatePropagation();
           const $row = $(event.target).closest('tr');
           this.selectedCombinationId = Number($row.find('.combination-id-input').val());
+          this.hasSubmittedCombinations = false;
         });
       },
       async initCombinationIds() {
@@ -164,6 +167,14 @@
         if (this.submittingCombinationForm) {
           return;
         }
+
+        // If modifications have been made refresh the combination list
+        if (this.hasSubmittedCombinations) {
+          window.prestashop.instance.eventEmitter.emit(ProductEventMap.combinations.refreshList);
+        }
+        this.hasSubmittedCombinations = false;
+
+        // This closes the modal which is conditioned to the presence of this value
         this.selectedCombinationId = null;
       },
       showPrevious() {
@@ -181,6 +192,7 @@
         const iframeBody = this.$refs.iframe.contentDocument.body;
         const editionForm = iframeBody.querySelector(ProductMap.combinations.editionForm);
         editionForm.submit();
+        this.hasSubmittedCombinations = true;
       },
     },
     watch: {
