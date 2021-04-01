@@ -193,7 +193,7 @@ class CombinationRepository extends AbstractObjectModelRepository
      *
      * @return CombinationId[]
      */
-    public function getCombinationIdsByProductId(ProductId $productId): array
+    private function getCombinationIdsByProductId(ProductId $productId): array
     {
         $qb = $this->connection->createQueryBuilder();
         $qb
