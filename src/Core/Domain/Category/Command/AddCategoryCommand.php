@@ -33,7 +33,6 @@ use PrestaShop\PrestaShop\Core\Domain\Category\Exception\CategoryConstraintExcep
  */
 class AddCategoryCommand extends AbstractAddCategoryCommand
 {
-
     /**
      * @var int
      */
