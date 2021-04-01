@@ -39,7 +39,7 @@ Feature: Generate attribute combinations for product in Back Office (BO)
     And product product1 default combination should be "product1SWhite"
     And combination product1SWhite should be named "Size - S, Color - White"
     And combination product1SBlack should be named "Size - S, Color - Black"
-    And combination product1Blue should be named "Size - S, Color - Blue"
+    And combination product1SBlue should be named "Size - S, Color - Blue"
     And combination product1MWhite should be named "Size - M, Color - White"
     And combination product1MBlack should be named "Size - M, Color - Black"
     And combination product1MBlue should be named "Size - M, Color - Blue"
