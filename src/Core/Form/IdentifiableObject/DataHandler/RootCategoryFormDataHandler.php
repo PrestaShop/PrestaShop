@@ -70,7 +70,7 @@ final class RootCategoryFormDataHandler extends AbstractCategoryFormDataHandler
      *
      * @return EditRootCategoryCommand
      */
-    protected function createEditCategoryCommand($rootCategoryId, array $data): AbstractEditCategoryCommand
+    protected function createEditCategoryCommand(int $rootCategoryId, array $data): AbstractEditCategoryCommand
     {
         $command = new EditRootCategoryCommand($rootCategoryId);
         $command->setIsActive($data['active']);

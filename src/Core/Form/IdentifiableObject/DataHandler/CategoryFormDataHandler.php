@@ -74,7 +74,7 @@ class CategoryFormDataHandler extends AbstractCategoryFormDataHandler
      *
      * @return EditCategoryCommand
      */
-    protected function createEditCategoryCommand($categoryId, array $data): AbstractEditCategoryCommand
+    protected function createEditCategoryCommand(int $categoryId, array $data): AbstractEditCategoryCommand
     {
         $command = new EditCategoryCommand($categoryId);
         $command->setIsActive($data['active']);
