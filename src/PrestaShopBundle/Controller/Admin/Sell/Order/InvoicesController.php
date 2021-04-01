@@ -140,6 +140,7 @@ class InvoicesController extends FrameworkBundleAdminController
             } catch (DataProviderException $e) {
                 $errorMessageFactory = $this->get('form.invalid_configuration_error_message_factory');
                 $this->flashErrors($errorMessageFactory->getErrorMessages($e->getInvalidConfigurationDataErrors(), $form));
+
                 return false;
             }
         }
