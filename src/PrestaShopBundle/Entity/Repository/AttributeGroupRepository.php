@@ -34,7 +34,12 @@ namespace PrestaShopBundle\Entity\Repository;
  */
 class AttributeGroupRepository extends \Doctrine\ORM\EntityRepository
 {
-    public function listOrderedAttributeGroups(bool $withAttributes)
+    /**
+     * @param bool $withAttributes
+     *
+     * @return array
+     */
+    public function listOrderedAttributeGroups(bool $withAttributes): array
     {
         $qb = $this
             ->createQueryBuilder('ag')

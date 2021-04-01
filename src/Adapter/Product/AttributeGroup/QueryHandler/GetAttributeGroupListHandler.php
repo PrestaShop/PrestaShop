@@ -66,8 +66,7 @@ class GetAttributeGroupListHandler implements GetAttributeGroupListHandlerInterf
 
         /** @var AttributeGroupEntity $attributeGroupEntity */
         foreach ($attributeGroupEntities as $attributeGroupEntity) {
-            $localizedNames = [];
-            $localizedPublicNames = [];
+            $localizedNames = $localizedPublicNames = [];
             /** @var AttributeGroupLang $attributeGroupLang */
             foreach ($attributeGroupEntity->getAttributeGroupLangs() as $attributeGroupLang) {
                 $localizedNames[$attributeGroupLang->getLang()->getId()] = $attributeGroupLang->getName();

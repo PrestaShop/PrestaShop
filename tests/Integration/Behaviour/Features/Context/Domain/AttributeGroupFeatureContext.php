@@ -74,7 +74,7 @@ class AttributeGroupFeatureContext extends AbstractDomainFeatureContext
      *
      * @param TableNode $tableNode
      */
-    public function assertAttributeGroups(TableNode $tableNode)
+    public function assertAttributeGroups(TableNode $tableNode): void
     {
         $attributeGroupsData = $this->localizeByColumns($tableNode);
         $attributeGroups = $this->getQueryBus()->handle(new GetAttributeGroupList(false));
@@ -111,7 +111,7 @@ class AttributeGroupFeatureContext extends AbstractDomainFeatureContext
      * @param TableNode $tableNode
      * @param string $attributeGroupReference
      */
-    public function assertAttributeInGroups(TableNode $tableNode, string $attributeGroupReference)
+    public function assertAttributeInGroups(TableNode $tableNode, string $attributeGroupReference): void
     {
         $attributesData = $this->localizeByColumns($tableNode);
         $attributeGroups = $this->getQueryBus()->handle(new GetAttributeGroupList(true));
