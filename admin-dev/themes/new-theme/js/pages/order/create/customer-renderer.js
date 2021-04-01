@@ -59,6 +59,7 @@ export default class CustomerRenderer {
         lastName: customerResult.lastname,
         email: customerResult.email,
         birthday: customerResult.birthday !== '0000-00-00' ? customerResult.birthday : ' ',
+        company: customerResult.company
       };
 
       this.renderFoundCustomer(customer);
@@ -312,6 +313,7 @@ export default class CustomerRenderer {
     $template.find(createOrderMap.customerSearchResultEmail).text(customer.email);
     $template.find(createOrderMap.customerSearchResultId).text(customer.id);
     $template.find(createOrderMap.customerSearchResultBirthday).text(customer.birthday);
+    $template.find(createOrderMap.customerSearchResultCompany).text(customer.company);
     $template.find(createOrderMap.chooseCustomerBtn).data('customer-id', customer.id);
     $template.find(createOrderMap.customerDetailsBtn).prop(
       'href',

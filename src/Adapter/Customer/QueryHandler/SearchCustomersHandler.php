@@ -27,6 +27,7 @@
 namespace PrestaShop\PrestaShop\Adapter\Customer\QueryHandler;
 
 use Customer;
+use PrestaShop\PrestaShop\Adapter\Configuration;
 use PrestaShop\PrestaShop\Core\Domain\Customer\Query\SearchCustomers;
 use PrestaShop\PrestaShop\Core\Domain\Customer\QueryHandler\SearchCustomersHandlerInterface;
 
@@ -37,6 +38,20 @@ use PrestaShop\PrestaShop\Core\Domain\Customer\QueryHandler\SearchCustomersHandl
  */
 final class SearchCustomersHandler implements SearchCustomersHandlerInterface
 {
+    /**
+     * @var Configuration
+     */
+    private $configuration;
+
+    /**
+     * @param Configuration $configuration
+     */
+    public function __construct(
+        Configuration $configuration
+    ) {
+        $this->configuration = $configuration;
+    }
+
     /**
      * {@inheritdoc}
      */
@@ -76,6 +91,15 @@ final class SearchCustomersHandler implements SearchCustomersHandlerInterface
                     $customerArray['reset_password_token'],
                     $customerArray['reset_password_validity']
                 );
+
+                $isB2BEnabled = $this->configuration->getBoolean('PS_B2B_ENABLE');
+
+                if(!$isB2BEnabled) {
+                    unset(
+                        $customerArray['company']
+                    );
+                }
+
                 $customers[$customerArray['id_customer']] = $customerArray;
             }
         }
