@@ -141,7 +141,7 @@ final class AddProductToOrderHandler extends AbstractOrderHandler implements Add
             throw new OrderException('Cart linked to the order cannot be found.');
         }
 
-        $product = $this->getProduct($command->getProductId(), (int) $order->id_lang);
+        $product = $this->getProduct($command->getProductId(), (int) $order->getAssociatedLanguage()->getId());
         $combination = null !== $command->getCombinationId() ? $this->getCombination($command->getCombinationId()->getValue()) : null;
         $combinationId = null !== $combination ? (int) $combination->id : 0;
 

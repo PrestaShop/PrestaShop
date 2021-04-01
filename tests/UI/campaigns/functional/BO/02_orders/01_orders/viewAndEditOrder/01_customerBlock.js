@@ -22,7 +22,7 @@ const viewCustomerPage = require('@pages/BO/customers/view');
 const CustomerFaker = require('@data/faker/customer');
 const AddressFaker = require('@data/faker/address');
 const {PaymentMethods} = require('@data/demo/paymentMethods');
-const {DefaultAccount} = require('@data/demo/customer');
+const {DefaultCustomer} = require('@data/demo/customer');
 
 // Import test context
 const testContext = require('@utils/testContext');
@@ -299,13 +299,13 @@ describe('Check customer block in view order page', async () => {
       await expect(pageTitle).to.contains(ordersPage.pageTitle);
     });
 
-    it(`should filter the Orders table by 'Customer: ${DefaultAccount.lastName}'`, async function () {
+    it(`should filter the Orders table by 'Customer: ${DefaultCustomer.lastName}'`, async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'filterOrderTable2', baseContext);
 
-      await ordersPage.filterOrders(page, 'input', 'customer', DefaultAccount.lastName);
+      await ordersPage.filterOrders(page, 'input', 'customer', DefaultCustomer.lastName);
 
       const textColumn = await ordersPage.getTextColumn(page, 'customer', 1);
-      await expect(textColumn).to.contains(DefaultAccount.lastName);
+      await expect(textColumn).to.contains(DefaultCustomer.lastName);
     });
 
     it('should view the 1st order for the same customer', async function () {
@@ -386,13 +386,13 @@ describe('Check customer block in view order page', async () => {
       await expect(pageTitle).to.contains(ordersPage.pageTitle);
     });
 
-    it(`should filter the Orders table by 'Customer: ${DefaultAccount.lastName}'`, async function () {
+    it(`should filter the Orders table by 'Customer: ${DefaultCustomer.lastName}'`, async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'filterOrderTable4', baseContext);
 
-      await ordersPage.filterOrders(page, 'input', 'customer', DefaultAccount.lastName);
+      await ordersPage.filterOrders(page, 'input', 'customer', DefaultCustomer.lastName);
 
       const textColumn = await ordersPage.getTextColumn(page, 'customer', 1);
-      await expect(textColumn).to.contains(DefaultAccount.lastName);
+      await expect(textColumn).to.contains(DefaultCustomer.lastName);
     });
 
     it('should view the 2nd order for the customer', async function () {

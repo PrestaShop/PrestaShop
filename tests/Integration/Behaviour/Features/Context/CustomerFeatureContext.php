@@ -54,8 +54,10 @@ class CustomerFeatureContext extends AbstractPrestaShopFeatureContext
         $customer->lastname = 'fake';
         $customer->passwd = 'fakefake';
         $customer->email = $customerEmail;
+        $customer->id_shop = Context::getContext()->shop->id;
         $customer->add();
         $this->customers[$customerName] = $customer;
+        SharedStorage::getStorage()->set($customerName, $customer->id);
     }
 
     /**
@@ -90,6 +92,26 @@ class CustomerFeatureContext extends AbstractPrestaShopFeatureContext
         }
 
         throw new RuntimeException(sprintf('Customer does not have address in "%s" country', $isoCode));
+    }
+
+    /**
+     * @Given /^the customer "(.+)" has SIRET "(.+)"$/
+     */
+    public function customerHasSIRET(string $reference, string $siret): void
+    {
+        $customer = $this->getCustomerByReference($reference);
+        $customer->siret = $siret;
+        $customer->save();
+    }
+
+    /**
+     * @Given /^the customer "(.+)" has APE "(.+)"$/
+     */
+    public function customerHasAPE(string $reference, string $ape): void
+    {
+        $customer = $this->getCustomerByReference($reference);
+        $customer->ape = $ape;
+        $customer->save();
     }
 
     /**

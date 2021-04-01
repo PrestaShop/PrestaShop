@@ -22,7 +22,7 @@ const searchResultsPage = require('@pages/FO/searchResults');
 // Import data
 const ProductFaker = require('@data/faker/product');
 const {PaymentMethods} = require('@data/demo/paymentMethods');
-const {DefaultAccount} = require('@data/demo/customer');
+const {DefaultCustomer} = require('@data/demo/customer');
 
 // Import test context
 const testContext = require('@utils/testContext');
@@ -159,7 +159,7 @@ describe('Default pack stock management', async () => {
         it('should sign in with default customer', async function () {
           await testContext.addContextItem(this, 'testIdentifier', `sighInFO${index}`, baseContext);
 
-          await foLoginPage.customerLogin(page, DefaultAccount);
+          await foLoginPage.customerLogin(page, DefaultCustomer);
           const isCustomerConnected = await foLoginPage.isCustomerConnected(page);
           await expect(isCustomerConnected, 'Customer is not connected').to.be.true;
         });
@@ -286,6 +286,13 @@ describe('Default pack stock management', async () => {
         await productsPage.filterProducts(page, 'name', test.args.productToCreate.name);
         const deleteTextResult = await productsPage.deleteProduct(page, test.args.productToCreate);
         await expect(deleteTextResult).to.equal(productsPage.productDeletedSuccessfulMessage);
+      });
+
+      it('should reset all filters', async function () {
+        await testContext.addContextItem(this, 'testIdentifier', `resetFilters${index}`, baseContext);
+
+        const numberOfProducts = await productsPage.resetAndGetNumberOfLines(page);
+        await expect(numberOfProducts).to.be.above(0);
       });
     });
   });

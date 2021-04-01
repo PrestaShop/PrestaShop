@@ -7,7 +7,7 @@ const helper = require('@utils/helpers');
 const loginCommon = require('@commonTests/loginBO');
 
 // Import data
-const {DefaultAccount} = require('@data/demo/customer');
+const {DefaultCustomer} = require('@data/demo/customer');
 
 // Import pages
 const dashboardPage = require('@pages/BO/dashboard');
@@ -68,7 +68,7 @@ describe('Filter And Quick Edit Customers', async () => {
             testIdentifier: 'filterId',
             filterType: 'input',
             filterBy: 'id_customer',
-            filterValue: DefaultAccount.id,
+            filterValue: DefaultCustomer.id,
           },
       },
       {
@@ -77,7 +77,7 @@ describe('Filter And Quick Edit Customers', async () => {
             testIdentifier: 'filterSocialTitle',
             filterType: 'select',
             filterBy: 'social_title',
-            filterValue: DefaultAccount.socialTitle,
+            filterValue: DefaultCustomer.socialTitle,
           },
       },
       {
@@ -86,7 +86,7 @@ describe('Filter And Quick Edit Customers', async () => {
             testIdentifier: 'filterFirstName',
             filterType: 'input',
             filterBy: 'firstname',
-            filterValue: DefaultAccount.firstName,
+            filterValue: DefaultCustomer.firstName,
           },
       },
       {
@@ -95,7 +95,7 @@ describe('Filter And Quick Edit Customers', async () => {
             testIdentifier: 'filterLastName',
             filterType: 'input',
             filterBy: 'lastname',
-            filterValue: DefaultAccount.lastName,
+            filterValue: DefaultCustomer.lastName,
           },
       },
       {
@@ -104,7 +104,7 @@ describe('Filter And Quick Edit Customers', async () => {
             testIdentifier: 'filterEmail',
             filterType: 'input',
             filterBy: 'email',
-            filterValue: DefaultAccount.email,
+            filterValue: DefaultCustomer.email,
           },
       },
       {
@@ -113,7 +113,7 @@ describe('Filter And Quick Edit Customers', async () => {
             testIdentifier: 'filterActive',
             filterType: 'select',
             filterBy: 'active',
-            filterValue: DefaultAccount.enabled,
+            filterValue: DefaultCustomer.enabled,
           },
       },
       {
@@ -122,7 +122,7 @@ describe('Filter And Quick Edit Customers', async () => {
             testIdentifier: 'filterNewsletter',
             filterType: 'select',
             filterBy: 'newsletter',
-            filterValue: DefaultAccount.newsletter,
+            filterValue: DefaultCustomer.newsletter,
           },
       },
       {
@@ -210,7 +210,7 @@ describe('Filter And Quick Edit Customers', async () => {
         page,
         'input',
         'email',
-        DefaultAccount.email,
+        DefaultCustomer.email,
       );
 
       const numberOfCustomersAfterFilter = await customersPage.getNumberOfElementInGrid(page);

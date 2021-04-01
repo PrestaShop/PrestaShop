@@ -78,6 +78,20 @@
           </p>
           <p>{{ orderForViewing.customer.accountRegistrationDate|date_format_full }}</p>
         {% endif %}
+
+        {%  if orderForViewing.customer.siret is not empty %}
+          <p class="mb-1">
+            <strong>{{ 'SIRET'|trans({}, 'Admin.Orderscustomers.Feature') }}</strong>
+          </p>
+          <p>{{ orderForViewing.customer.siret }}</p>
+        {% endif %}
+
+        {%  if orderForViewing.customer.ape is not empty %}
+          <p class="mb-1 d-block d-md-none">
+            <strong>{{ 'APE'|trans({}, 'Admin.Orderscustomers.Feature') }}</strong>
+          </p>
+          <p class="d-block d-md-none">{{ orderForViewing.customer.ape }}</p>
+        {% endif %}
       </div>
       <div id="validatedOrders" class="col-xxl-6">
         <p class="mb-1">
@@ -94,6 +108,13 @@
           <p>
             <span class="badge rounded badge-dark">{{ orderForViewing.customer.totalSpentSinceRegistration }}</span>
           </p>
+        {% endif %}
+
+        {%  if orderForViewing.customer.ape is not empty %}
+          <p class="mb-1 d-none d-md-block">
+            <strong>{{ 'APE'|trans({}, 'Admin.Orderscustomers.Feature') }}</strong>
+          </p>
+          <p class="d-none d-md-block">{{ orderForViewing.customer.ape }}</p>
         {% endif %}
       </div>
     </div>
@@ -147,6 +168,9 @@
             {{ orderForViewing.shippingAddress.postCode }}
           </p>
           <p class="mb-0">{{ orderForViewing.shippingAddress.countryName }}</p>
+          {% if orderForViewing.shippingAddress.dni is not empty %}
+            <p class="mb-0">{{ orderForViewing.shippingAddress.dni }}</p>
+          {% endif %}
           <p>
             {{ orderForViewing.shippingAddress.phoneNumber }}
             {{ orderForViewing.shippingAddress.mobilePhoneNumber }}
@@ -200,6 +224,9 @@
             {{ orderForViewing.invoiceAddress.postCode }}
           </p>
           <p class="mb-0">{{ orderForViewing.invoiceAddress.countryName }}</p>
+          {% if orderForViewing.invoiceAddress.dni is not empty %}
+            <p class="mb-0">{{ orderForViewing.invoiceAddress.dni }}</p>
+          {% endif %}
           <p>
             {{ orderForViewing.invoiceAddress.phoneNumber }}
             {{ orderForViewing.invoiceAddress.mobilePhoneNumber }}

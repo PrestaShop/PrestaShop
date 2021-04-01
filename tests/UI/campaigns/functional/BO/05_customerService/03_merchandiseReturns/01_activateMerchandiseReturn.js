@@ -22,7 +22,7 @@ const orderHistoryPage = require('@pages/FO/myAccount/orderHistory');
 const orderDetailsPage = require('@pages/FO/myAccount/orderDetails');
 
 // Import data
-const {DefaultAccount} = require('@data/demo/customer');
+const {DefaultCustomer} = require('@data/demo/customer');
 const {Statuses} = require('@data/demo/orderStatuses');
 const {PaymentMethods} = require('@data/demo/paymentMethods');
 
@@ -76,7 +76,7 @@ describe('Activate/Deactivate merchandise return', async () => {
   it('should sign in with default customer', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'sighInFO', baseContext);
 
-    await foLoginPage.customerLogin(page, DefaultAccount);
+    await foLoginPage.customerLogin(page, DefaultCustomer);
     const isCustomerConnected = await foLoginPage.isCustomerConnected(page);
     await expect(isCustomerConnected, 'Customer is not connected').to.be.true;
   });
@@ -171,10 +171,10 @@ describe('Activate/Deactivate merchandise return', async () => {
     it('should filter the Orders table by the default customer and check the result', async function () {
       await testContext.addContextItem(this, 'testIdentifier', `filterOrder${index}`, baseContext);
 
-      await ordersPage.filterOrders(page, 'input', 'customer', DefaultAccount.lastName);
+      await ordersPage.filterOrders(page, 'input', 'customer', DefaultCustomer.lastName);
 
       const textColumn = await ordersPage.getTextColumn(page, 'customer', 1);
-      await expect(textColumn).to.contains(DefaultAccount.lastName);
+      await expect(textColumn).to.contains(DefaultCustomer.lastName);
     });
 
     it('should go to the first order page', async function () {
@@ -220,7 +220,7 @@ describe('Activate/Deactivate merchandise return', async () => {
         await testContext.addContextItem(this, 'testIdentifier', `goToAccountPage${index}`, baseContext);
 
         await homePage.goToLoginPage(page);
-        await foLoginPage.customerLogin(page, DefaultAccount);
+        await foLoginPage.customerLogin(page, DefaultCustomer);
 
         const isCustomerConnected = await foLoginPage.isCustomerConnected(page);
         await expect(isCustomerConnected).to.be.true;
@@ -232,7 +232,7 @@ describe('Activate/Deactivate merchandise return', async () => {
       it('should go to account page', async function () {
         await testContext.addContextItem(this, 'testIdentifier', `goToAccountPage${index}`, baseContext);
 
-        await homePage.goToYourAccountPage(page);
+        await homePage.goToMyAccountPage(page);
 
         const pageTitle = await myAccountPage.getPageTitle(page);
         await expect(pageTitle).to.contains(myAccountPage.pageTitle);

@@ -275,6 +275,7 @@ class CookieCore
      */
     public function mylogout()
     {
+        $this->deleteSession();
         unset(
             $this->_content['id_customer'],
             $this->_content['id_guest'],
@@ -556,7 +557,7 @@ class CookieCore
      */
     public function isSessionAlive()
     {
-        if (!isset($this->session_id, $this->session_token)) {
+        if (!isset($this->session_id) || !isset($this->session_token)) {
             return false;
         }
 

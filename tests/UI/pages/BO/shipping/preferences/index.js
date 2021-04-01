@@ -17,6 +17,7 @@ class Preferences extends BOBasePage {
     this.carrierOptionForm = '#carrier-options';
     this.defaultCarrierSelect = '#carrier-options_default_carrier';
     this.sortBySelect = '#carrier-options_carrier_default_order_by';
+    this.orderBySelect = '#carrier-options_carrier_default_order_way';
     this.saveCarrierOptionsButton = `${this.carrierOptionForm} button`;
   }
 
@@ -53,13 +54,15 @@ class Preferences extends BOBasePage {
   }
 
   /**
-   * Set carriers sort By 'Price' or 'Position' in carrier option form
+   * Set carriers sort By 'Price' or 'Position' / order by 'Ascending' or 'descending' in carrier options form
    * @param page
    * @param sortBy
+   * @param orderBy
    * @returns {Promise<string>}
    */
-  async setCarrierSortBy(page, sortBy) {
+  async setCarrierSortOrderBy(page, sortBy, orderBy = 'Ascending') {
     await this.selectByVisibleText(page, this.sortBySelect, sortBy);
+    await this.selectByVisibleText(page, this.orderBySelect, orderBy);
 
     // Save configuration and return successful message
     await this.clickAndWaitForNavigation(page, this.saveCarrierOptionsButton);

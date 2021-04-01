@@ -35,7 +35,6 @@ use Currency;
 use Customer;
 use Customization;
 use Db;
-use Language;
 use Order;
 use OrderDetail;
 use OrderInvoice;
@@ -112,7 +111,7 @@ class OrderProductQuantityUpdater
             ->setCart($cart)
             ->setCurrency(new Currency($cart->id_currency))
             ->setCustomer(new Customer($cart->id_customer))
-            ->setLanguage(new Language($cart->id_lang))
+            ->setLanguage($cart->getAssociatedLanguage())
             ->setCountry($cart->getTaxCountry())
             ->setShop(new Shop($cart->id_shop))
         ;
@@ -169,16 +168,14 @@ class OrderProductQuantityUpdater
             $orderDetail->reduction_percent = 0;
             $orderDetail->update();
 
-            if ($orderDetail->id_customization > 0) {
-                $customization = new Customization($orderDetail->id_customization);
-                $customization->quantity = $newQuantity;
-                $customization->save();
-            }
-
             // Update quantity on the cart and stock
             if ($updateCart) {
                 $updatedProducts = $this->updateProductQuantity($cart, $orderDetail, $oldQuantity, $newQuantity);
                 $this->applyOtherProductUpdates($order, $cart, $orderInvoice, $updatedProducts);
+            } elseif ($orderDetail->id_customization > 0) {
+                $customization = new Customization($orderDetail->id_customization);
+                $customization->quantity = $newQuantity;
+                $customization->save();
             }
         }
 
@@ -274,7 +271,7 @@ class OrderProductQuantityUpdater
             abs($deltaQuantity),
             $orderDetail->product_id,
             $orderDetail->product_attribute_id,
-            false,
+            $orderDetail->id_customization,
             $deltaQuantity < 0 ? 'down' : 'up',
             0,
             new Shop($cart->id_shop),

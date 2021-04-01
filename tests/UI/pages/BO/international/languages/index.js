@@ -44,6 +44,12 @@ class Languages extends LocalizationBasePage {
     this.tableHead = `${this.gridTable} thead`;
     this.sortColumnDiv = column => `${this.tableHead} div.ps-sortable-column[data-sort-col-name='${column}']`;
     this.sortColumnSpanButton = column => `${this.sortColumnDiv(column)} span.ps-sort`;
+
+    // Pagination selectors
+    this.paginationLimitSelect = '#paginator_select_page_limit';
+    this.paginationLabel = `${this.gridPanel} .col-form-label`;
+    this.paginationNextLink = `${this.gridPanel} #pagination_next_url`;
+    this.paginationPreviousLink = `${this.gridPanel} [aria-label='Previous']`;
   }
 
   /* Header methods */
@@ -287,6 +293,55 @@ class Languages extends LocalizationBasePage {
     }
 
     await this.waitForVisibleSelector(page, sortColumnDiv, 20000);
+  }
+
+  /* Pagination methods */
+  /**
+   * Get pagination label
+   * @param page
+   * @return {Promise<string>}
+   */
+  getPaginationLabel(page) {
+    return this.getTextContent(page, this.paginationLabel);
+  }
+
+  /**
+   * Select pagination limit
+   * @param page
+   * @param number
+   * @returns {Promise<string>}
+   */
+  async selectPaginationLimit(page, number) {
+    await Promise.all([
+      this.selectByVisibleText(page, this.paginationLimitSelect, number),
+      page.waitForNavigation({waitUntil: 'networkidle'}),
+    ]);
+
+    return this.getPaginationLabel(page);
+  }
+
+  /**
+   * Click on next
+   * @param page
+   * @returns {Promise<string>}
+   */
+  async paginationNext(page) {
+    await this.scrollTo(page, this.paginationNextLink);
+    await this.clickAndWaitForNavigation(page, this.paginationNextLink);
+
+    return this.getPaginationLabel(page);
+  }
+
+  /**
+   * Click on previous
+   * @param page
+   * @returns {Promise<string>}
+   */
+  async paginationPrevious(page) {
+    await this.scrollTo(page, this.paginationPreviousLink);
+    await this.clickAndWaitForNavigation(page, this.paginationPreviousLink);
+
+    return this.getPaginationLabel(page);
   }
 }
 
