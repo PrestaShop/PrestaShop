@@ -259,9 +259,9 @@ class CarrierFeatureContext extends AbstractPrestaShopFeatureContext
     }
 
     /**
-     * @Given /^carrier "(.+)" uses "(.+)" as tracking url$/
+     * @Given /^the carrier "(.+)" uses "(.+)" as tracking url$/
      */
-    public function setCarrierTrackingUrl($carrierName, $url)
+    public function setCarrierTrackingUrl(string $carrierName, string $url): void
     {
         $this->checkCarrierWithNameExists($carrierName);
         $carrier = $this->carriers[$carrierName];
