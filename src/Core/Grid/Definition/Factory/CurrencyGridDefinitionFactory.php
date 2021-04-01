@@ -94,11 +94,11 @@ final class CurrencyGridDefinitionFactory extends AbstractGridDefinitionFactory
                     ])
             )
             ->add((new NameColumn('currency'))
-                ->setName($this->trans('Currency', [], 'Admin.Global'))
-                ->setOptions([
-                    'field' => 'currency',
-                    'sortable' => false,
-                ])
+            ->setName($this->trans('Currency', [], 'Admin.Global'))
+            ->setOptions([
+                'field' => 'currency',
+                'sortable' => false,
+            ])
             )
             ->add((new DataColumn('symbol'))
             ->setName($this->trans('Symbol', [], 'Admin.International.Feature'))
