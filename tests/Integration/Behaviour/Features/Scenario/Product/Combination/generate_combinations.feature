@@ -37,6 +37,16 @@ Feature: Generate attribute combinations for product in Back Office (BO)
       | product1MBlack | Size - M, Color - Black |           | [Size:M,Color:Black] | 0               | 0        | false      |
       | product1MBlue  | Size - M, Color - Blue  |           | [Size:M,Color:Blue]  | 0               | 0        | false      |
     And product product1 default combination should be "product1SWhite"
-    And product product1 should have following attribute groups:
-      | Size  | [S,M]              |
-      | Color | [White,Black,Blue] |
+    When I list attribute groups for product product1 I should get following results:
+      | name[en-US] | public_name[en-US] | is_color_group | group_type | position | reference  |
+      | Size        | Size               | false          | select     | 0        | Size       |
+      | Color       | Color              | true           | color      | 1        | Color      |
+    When I list attribute groups for product "product1", the group "Size" should have the following attributes:
+      | name[en-US] | color | position | reference |
+      | S           |       | 0        | S         |
+      | M           |       | 1        | M         |
+    When I list attribute groups for product "product1", the group "Color" should have the following attributes:
+      | name[en-US] | color   | position | reference |
+      | White       | #ffffff | 3        | White     |
+      | Black       | #434A54 | 6        | Black     |
+      | Blue        | #5D9CEC | 9        | Blue      |

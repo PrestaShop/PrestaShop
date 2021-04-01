@@ -33,6 +33,7 @@ use Behat\Gherkin\Node\TableNode;
 use Language;
 use PHPUnit\Framework\Assert;
 use PrestaShop\PrestaShop\Core\Domain\Product\AttributeGroup\Query\GetAttributeGroupList;
+use PrestaShop\PrestaShop\Core\Domain\Product\AttributeGroup\Query\GetProductAttributeGroups;
 use PrestaShop\PrestaShop\Core\Domain\Product\AttributeGroup\QueryResult\AttributeGroup;
 use RuntimeException;
 use Tests\Integration\Behaviour\Features\Context\Util\PrimitiveUtils;
@@ -74,11 +75,34 @@ class AttributeGroupFeatureContext extends AbstractDomainFeatureContext
      *
      * @param TableNode $tableNode
      */
-    public function assertAttributeGroups(TableNode $tableNode): void
+    public function assertAllAttributeGroups(TableNode $tableNode): void
     {
         $attributeGroupsData = $this->localizeByColumns($tableNode);
         $attributeGroups = $this->getQueryBus()->handle(new GetAttributeGroupList(false));
 
+        $this->assertAttributeGroups($attributeGroupsData, $attributeGroups);
+    }
+
+    /**
+     * @When I list attribute groups for product :productReference I should get following results:
+     *
+     * @param TableNode $tableNode
+     */
+    public function assertProductAttributeGroups(string $productReference, TableNode $tableNode): void
+    {
+        $attributeGroupsData = $this->localizeByColumns($tableNode);
+        $productId = (int) $this->getSharedStorage()->get($productReference);
+        $attributeGroups = $this->getQueryBus()->handle(new GetProductAttributeGroups($productId, false));
+
+        $this->assertAttributeGroups($attributeGroupsData, $attributeGroups);
+    }
+
+    /**
+     * @param array $attributeGroupsData
+     * @param array $attributeGroups
+     */
+    private function assertAttributeGroups(array $attributeGroupsData, array $attributeGroups): void
+    {
         Assert::assertEquals(count($attributeGroupsData), count($attributeGroups));
         foreach ($attributeGroupsData as $index => $attributeGroupsDatum) {
             /** @var AttributeGroup $attributeGroup */
@@ -106,16 +130,59 @@ class AttributeGroupFeatureContext extends AbstractDomainFeatureContext
     }
 
     /**
+     * @Then product :productReference should have no attribute groups
+     *
+     * @param string $productReference
+     */
+    public function assertNoProductAttributes(string $productReference): void
+    {
+        $attributeGroups = $this->getQueryBus()->handle(new GetProductAttributeGroups(
+            (int) $this->getSharedStorage()->get($productReference),
+            false
+        ));
+
+        Assert::assertEmpty($attributeGroups);
+    }
+
+    /**
      * @When I list all attribute groups, the group :attributeGroupReference should have the following attributes:
      *
      * @param TableNode $tableNode
      * @param string $attributeGroupReference
      */
-    public function assertAttributeInGroups(TableNode $tableNode, string $attributeGroupReference): void
+    public function assertAttributeInAllGroups(TableNode $tableNode, string $attributeGroupReference): void
     {
         $attributesData = $this->localizeByColumns($tableNode);
         $attributeGroups = $this->getQueryBus()->handle(new GetAttributeGroupList(true));
 
+        $this->assertAttributesInGroup($attributesData, $attributeGroups, $attributeGroupReference);
+    }
+
+    /**
+     * @When I list attribute groups for product :productReference, the group :attributeGroupReference should have the following attributes:
+     *
+     * @param TableNode $tableNode
+     * @param string $productReference
+     * @param string $attributeGroupReference
+     */
+    public function assertAttributeInProductGroups(TableNode $tableNode, string $productReference, string $attributeGroupReference): void
+    {
+        $attributesData = $this->localizeByColumns($tableNode);
+        $attributeGroups = $this->getQueryBus()->handle(new GetProductAttributeGroups(
+            (int) $this->getSharedStorage()->get($productReference),
+            true
+        ));
+
+        $this->assertAttributesInGroup($attributesData, $attributeGroups, $attributeGroupReference);
+    }
+
+    /**
+     * @param array $attributesData
+     * @param array $attributeGroups
+     * @param string $attributeGroupReference
+     */
+    private function assertAttributesInGroup(array $attributesData, array $attributeGroups, string $attributeGroupReference): void
+    {
         $attributeGroupId = $this->getSharedStorage()->get($attributeGroupReference);
         $checkAttributeGroup = null;
         /** @var AttributeGroup $attributeGroup */
