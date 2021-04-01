@@ -28,82 +28,21 @@ declare(strict_types=1);
 
 namespace PrestaShop\PrestaShop\Adapter\Product\AttributeGroup\QueryHandler;
 
-use PrestaShop\PrestaShop\Core\Domain\Product\AttributeGroup\Attribute\QueryResult\Attribute;
 use PrestaShop\PrestaShop\Core\Domain\Product\AttributeGroup\Query\GetAttributeGroupList;
 use PrestaShop\PrestaShop\Core\Domain\Product\AttributeGroup\QueryHandler\GetAttributeGroupListHandlerInterface;
-use PrestaShop\PrestaShop\Core\Domain\Product\AttributeGroup\QueryResult\AttributeGroup;
-use PrestaShopBundle\Entity\Attribute as AttributeEntity;
-use PrestaShopBundle\Entity\AttributeGroup as AttributeGroupEntity;
-use PrestaShopBundle\Entity\AttributeGroupLang;
-use PrestaShopBundle\Entity\AttributeLang;
-use PrestaShopBundle\Entity\Repository\AttributeGroupRepository;
 
 /**
  * Handles the query GetAttributeGroupList using Doctrine repository
  */
-class GetAttributeGroupListHandler implements GetAttributeGroupListHandlerInterface
+class GetAttributeGroupListHandler extends AbstractAttributeGroupQueryHandler implements GetAttributeGroupListHandlerInterface
 {
-    /**
-     * @var AttributeGroupRepository
-     */
-    private $attributeGroupRepository;
-
-    /**
-     * @param AttributeGroupRepository $attributeGroupRepository
-     */
-    public function __construct(AttributeGroupRepository $attributeGroupRepository)
-    {
-        $this->attributeGroupRepository = $attributeGroupRepository;
-    }
-
     /**
      * {@inheritDoc}
      */
     public function handle(GetAttributeGroupList $query): array
     {
-        $attributeGroups = [];
         $attributeGroupEntities = $this->attributeGroupRepository->listOrderedAttributeGroups($query->withAttributes());
 
-        /** @var AttributeGroupEntity $attributeGroupEntity */
-        foreach ($attributeGroupEntities as $attributeGroupEntity) {
-            $localizedNames = $localizedPublicNames = [];
-            /** @var AttributeGroupLang $attributeGroupLang */
-            foreach ($attributeGroupEntity->getAttributeGroupLangs() as $attributeGroupLang) {
-                $localizedNames[$attributeGroupLang->getLang()->getId()] = $attributeGroupLang->getName();
-                $localizedPublicNames[$attributeGroupLang->getLang()->getId()] = $attributeGroupLang->getPublicName();
-            }
-
-            $attributes = null;
-            if ($query->withAttributes()) {
-                $attributes = [];
-                /** @var AttributeEntity $attributeEntity */
-                foreach ($attributeGroupEntity->getAttributes() as $attributeEntity) {
-                    $localizedAttributeNames = [];
-                    /** @var AttributeLang $attributeLang */
-                    foreach ($attributeEntity->getAttributeLangs() as $attributeLang) {
-                        $localizedAttributeNames[$attributeLang->getLang()->getId()] = $attributeLang->getName();
-                    }
-
-                    $attributes[] = new Attribute(
-                        $attributeEntity->getId(),
-                        $attributeEntity->getPosition(),
-                        $attributeEntity->getColor(),
-                        $localizedAttributeNames
-                    );
-                }
-            }
-
-            $attributeGroups[] = new AttributeGroup(
-                $attributeGroupEntity->getId(),
-                $localizedNames,
-                $localizedPublicNames,
-                $attributeGroupEntity->getGroupType(),
-                $attributeGroupEntity->getIsColorGroup(),
-                $attributeGroupEntity->getPosition(),
-                $attributes
-            );
-        }
-
-        return $attributeGroups;
+        return $this->formatAttributeGroups($attributeGroupEntities, $query->withAttributes());
     }
 }
