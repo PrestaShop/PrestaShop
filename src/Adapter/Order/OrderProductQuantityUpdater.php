@@ -249,6 +249,7 @@ class OrderProductQuantityUpdater
             new CartProductUpdate(
                 (int) $orderDetail->product_id,
                 (int) $orderDetail->product_attribute_id,
+                (int) $orderDetail->id_customization,
                 $deltaQuantity,
                 false
             ),

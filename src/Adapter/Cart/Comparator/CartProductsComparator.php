@@ -120,6 +120,7 @@ class CartProductsComparator
                 $additionalProducts[] = new CartProductUpdate(
                     (int) $newProduct['id_product'],
                     (int) $newProduct['id_product_attribute'],
+                    (int) $newProduct['id_customization'],
                     (int) $newProduct['cart_quantity'],
                     true
                 );
@@ -152,6 +153,7 @@ class CartProductsComparator
                 $updatedProducts[] = new CartProductUpdate(
                     (int) $oldProduct['id_product'],
                     (int) $oldProduct['id_product_attribute'],
+                    (int) $oldProduct['id_customization'],
                     $deltaQuantity,
                     false
                 );
@@ -203,8 +205,9 @@ class CartProductsComparator
 
             $productMatch = $item['id_product'] == $searchedProduct['id_product'];
             $combinationMatch = $item['id_product_attribute'] == $searchedProduct['id_product_attribute'];
+            $customizationMatch = $item['id_customization'] == $searchedProduct['id_customization'];
 
-            return $productMatch && $combinationMatch ? $item : null;
+            return $productMatch && $combinationMatch && $customizationMatch ? $item : null;
         });
     }
 }
