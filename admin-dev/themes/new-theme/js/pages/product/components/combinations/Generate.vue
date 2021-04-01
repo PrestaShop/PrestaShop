@@ -53,7 +53,7 @@
           <input
             type="text"
             placeholder="Search some attributes..."
-            class="form-control input"
+            class="form-control input attributes-search"
           >
         </div>
 
@@ -142,6 +142,8 @@
   import ProductEventMap from '@pages/product/product-event-map';
   import Modal from '@vue/components/Modal';
   import PerfectScrollbar from 'perfect-scrollbar';
+  import Bloodhound from 'typeahead.js';
+  import AutoCompleteSearch from '@components/auto-complete-search';
 
   const {$} = window;
 
@@ -188,8 +190,60 @@
       },
       showModal() {
         this.isModalShown = true;
+        const that = this;
+
         setTimeout(() => {
           this.scrollbar = new PerfectScrollbar('.attributes-list-overflow');
+          const searchItems = [];
+
+          this.combinations.forEach((combination) => {
+            combination.childs.forEach((attribute) => {
+              attribute.group_name = combination.name;
+              searchItems.push(attribute);
+            });
+          });
+
+          const $searchInput = $('#product-combinations-generate .attributes-search');
+          const source = new Bloodhound({
+            datumTokenizer: Bloodhound.tokenizers.obj.whitespace('name', 'value', 'color', 'group_name'),
+            queryTokenizer: Bloodhound.tokenizers.whitespace,
+            local: searchItems,
+          });
+
+          const dataSetConfig = {
+            source,
+            display: 'name',
+            value: 'name',
+            onSelect(selectedItem) {
+              const groupName = {
+                name: selectedItem.group_name,
+              };
+
+              delete selectedItem.color;
+
+              that.changeSelected(selectedItem, groupName);
+            },
+            onClose() {
+              $searchInput.val('');
+              return true;
+            },
+          };
+
+          dataSetConfig.templates = {
+            suggestion: (item) => {
+              let displaySuggestion = item;
+
+              if (typeof dataSetConfig.display === 'function') {
+                dataSetConfig.display(item);
+              } else if (Object.prototype.hasOwnProperty.call(item, dataSetConfig.display)) {
+                displaySuggestion = item[dataSetConfig.display];
+              }
+
+              return `<div class="px-2">${item.group_name}: ${displaySuggestion}</div>`;
+            },
+          };
+
+          new AutoCompleteSearch($searchInput, dataSetConfig);
         }, 0);
       },
       closeModal() {
@@ -234,6 +288,10 @@
         border-bottom: 1px solid $gray-300;
         margin-bottom: .1rem;
        }
+     }
+
+     .attributes {
+      height: auto;
      }
     }
 
