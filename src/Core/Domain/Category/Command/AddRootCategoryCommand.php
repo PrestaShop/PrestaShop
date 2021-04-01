@@ -30,4 +30,5 @@ namespace PrestaShop\PrestaShop\Core\Domain\Category\Command;
  * Class AddRootCategoryCommand adds new root category.
  */
 class AddRootCategoryCommand extends AbstractAddCategoryCommand
-{}
+{
+}
