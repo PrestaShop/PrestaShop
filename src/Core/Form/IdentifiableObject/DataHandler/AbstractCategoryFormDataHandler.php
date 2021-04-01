@@ -109,15 +109,16 @@ abstract class AbstractCategoryFormDataHandler implements FormDataHandlerInterfa
      */
     public function update($categoryId, array $data)
     {
-        $availableKeys = $this->getAvailableKeys((int) $categoryId);
+        $categoryId = (int) $categoryId;
+        $availableKeys = $this->getAvailableKeys($categoryId);
 
         if (!isset($data['menu_thumbnail_images']) || count($data['menu_thumbnail_images']) > count($availableKeys)) {
             throw new MenuThumbnailsLimitException(sprintf('Maximum number of menu thumbnails was reached for category "%d"', $categoryId));
         }
-        $command = $this->createEditCategoryCommand((int) $categoryId, $data);
+        $command = $this->createEditCategoryCommand($categoryId, $data);
 
         $this->commandBus->handle($command);
-        $categoryId = new CategoryId((int) $categoryId);
+        $categoryId = new CategoryId($categoryId);
 
         /**
          * In some cases in form menu_thumbnail_images can be disabled so value won't get here.
