@@ -61,6 +61,10 @@ class GetProductAttributeGroupsHandler extends AbstractAttributeGroupQueryHandle
     public function handle(GetProductAttributeGroups $query): array
     {
         $attributeIds = $this->attributeRepository->getProductAttributesIds($query->getProductId());
+        if (empty($attributeIds)) {
+            return [];
+        }
+
         $attributeGroupEntities = $this->attributeGroupRepository->listOrderedAttributeGroups($query->withAttributes(), $attributeIds);
 
         return $this->formatAttributeGroups($attributeGroupEntities, $query->withAttributes());
