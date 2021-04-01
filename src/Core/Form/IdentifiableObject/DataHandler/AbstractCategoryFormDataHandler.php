@@ -28,6 +28,8 @@ declare(strict_types=1);
 namespace PrestaShop\PrestaShop\Core\Form\IdentifiableObject\DataHandler;
 
 use PrestaShop\PrestaShop\Core\CommandBus\CommandBusInterface;
+use PrestaShop\PrestaShop\Core\Domain\Category\Command\AbstractAddCategoryCommand;
+use PrestaShop\PrestaShop\Core\Domain\Category\Command\AbstractEditCategoryCommand;
 use PrestaShop\PrestaShop\Core\Domain\Category\Exception\MenuThumbnailsLimitException;
 use PrestaShop\PrestaShop\Core\Domain\Category\ValueObject\CategoryId;
 use PrestaShop\PrestaShop\Core\Domain\Category\ValueObject\MenuThumbnailId;
@@ -177,7 +179,7 @@ abstract class AbstractCategoryFormDataHandler implements FormDataHandlerInterfa
         return array_diff(MenuThumbnailId::ALLOWED_ID_VALUES, $usedKeys);
     }
 
-    abstract protected function createAddCategoryCommand(array $data);
+    abstract protected function createAddCategoryCommand(array $data): AbstractAddCategoryCommand;
 
-    abstract protected function createEditCategoryCommand($categoryId, array $data);
+    abstract protected function createEditCategoryCommand($categoryId, array $data): AbstractEditCategoryCommand;
 }
