@@ -611,3 +611,7 @@ input[type="number"] {
   }
   /* stylelint-enable */
 }
+
+.ui-autocomplete.ui-front {
+  z-index: 999;
+}
