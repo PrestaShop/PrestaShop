@@ -59,12 +59,12 @@ class CombinationFormDataProviderTest extends TestCase
     /**
      * @dataProvider getExpectedData
      *
-     * @param array $productData
+     * @param array $combinationData
      * @param array $expectedData
      */
-    public function testGetData(array $productData, array $expectedData)
+    public function testGetData(array $combinationData, array $expectedData)
     {
-        $queryBusMock = $this->createQueryBusMock($productData);
+        $queryBusMock = $this->createQueryBusMock($combinationData);
         $provider = new CombinationFormDataProvider($queryBusMock);
 
         $formData = $provider->getData(static::COMBINATION_ID);
@@ -92,15 +92,15 @@ class CombinationFormDataProviderTest extends TestCase
         $datasets = [];
 
         $expectedOutputData = $this->getDefaultOutputData();
-        $productData = [];
+        $combinationData = [];
 
         $datasets[] = [
-            $productData,
+            $combinationData,
             $expectedOutputData,
         ];
 
         $expectedOutputData = $this->getDefaultOutputData();
-        $productData = [
+        $combinationData = [
             'quantity' => 42,
             'minimal_quantity' => 7,
             'low_stock_threshold' => 5,
@@ -116,7 +116,7 @@ class CombinationFormDataProviderTest extends TestCase
         $expectedOutputData['stock']['available_date'] = '1969-07-20';
 
         $datasets[] = [
-            $productData,
+            $combinationData,
             $expectedOutputData,
         ];
 
@@ -124,21 +124,21 @@ class CombinationFormDataProviderTest extends TestCase
     }
 
     /**
-     * @param array $productData
+     * @param array $combinationData
      *
      * @return MockObject|CommandBusInterface
      */
-    private function createQueryBusMock(array $productData)
+    private function createQueryBusMock(array $combinationData)
     {
         $queryBusMock = $this->createMock(CommandBusInterface::class);
 
         $queryBusMock
             ->method('handle')
             ->with($this->logicalOr(
-                $this->isInstanceOf(GetCombinationForEditing::class),
+                $this->isInstanceOf(GetCombinationForEditing::class)
             ))
-            ->willReturnCallback(function ($query) use ($productData) {
-                return $this->createResultBasedOnQuery($query, $productData);
+            ->willReturnCallback(function ($query) use ($combinationData) {
+                return $this->createResultBasedOnQuery($query, $combinationData);
             })
         ;
 
