@@ -27,6 +27,7 @@ declare(strict_types=1);
 
 namespace PrestaShop\PrestaShop\Core\Translation\Builder;
 
+use Doctrine\Common\Inflector\Inflector;
 use InvalidArgumentException;
 use PrestaShop\PrestaShop\Core\Translation\Builder\Map\Catalogue;
 use PrestaShop\PrestaShop\Core\Translation\Builder\Map\Domain;
@@ -82,15 +83,23 @@ class TranslationCatalogueBuilder
     ): array {
         $this->validateParameters($providerDefinition, $locale, $search, $domain);
 
+        // When building tree, we keep 3 leaves of Domain i.e OneTwoThreeFour will become OneTwoThree_four
+        // see PrestaShop\PrestaShop\Core\Translation\Builder\Map\Domain::mergeTree
+        // When getting messages for a domain, we have to do the reverse operation to match the catalogue domain
+        $catalogueDomain = $domain;
+        if ($catalogueDomain !== 'messages') {
+            $catalogueDomain = ucfirst(Inflector::camelize($catalogueDomain));
+        }
+
         $domainTranslation = $this->getRawCatalogue(
             $providerDefinition,
             $locale,
             $search,
-            $domain
-        )->getDomain($domain);
+            $catalogueDomain
+        )->getDomain($catalogueDomain);
 
         if (null === $domainTranslation) {
-            $domainTranslation = new Domain($domain);
+            $domainTranslation = new Domain($catalogueDomain);
         }
 
         return [
