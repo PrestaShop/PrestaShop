@@ -53,10 +53,9 @@ const refreshNotifications = function () {
         setNotificationsNumber('_nb_new_orders_', nbOrders);
         setNotificationsNumber('_nb_new_customers_', nbCustomers);
         setNotificationsNumber('_nb_new_messages_', nbCustomerMessages);
-        if(notifications_total) {
-          $('#notifications-total').removeClass('hide').html(notifications_total);
-        }
-        else if(!$('#notifications-total').hasClass('hide')) {
+        if (notificationsTotal) {
+          $('#notifications-total').removeClass('hide').html(notificationsTotal);
+        } else if (!$('#notifications-total').hasClass('hide')) {
           $('#notifications-total').addClass('hide');
         }
       }
