@@ -34,6 +34,8 @@ namespace PrestaShop\PrestaShop\Core\ImageType;
 interface ImageGeneratorInterface
 {
     /**
+     * Delete resized image then regenerate new one with updated settings.
+     *
      * @param string $dir
      * @param array $type
      * @param bool $product
@@ -41,6 +43,8 @@ interface ImageGeneratorInterface
     public function deleteOldImages(string $dir, array $type, bool $product = false): void;
 
     /**
+     * Regenerate images.
+     *
      * @param string $dir
      * @param array $type
      * @param bool $productsImages
@@ -50,6 +54,8 @@ interface ImageGeneratorInterface
     public function regenerateNewImages(string $dir, array $type, bool $productsImages = false);
 
     /**
+     * Regenerate no-pictures images.
+     *
      * @param string $dir
      * @param array $type
      * @param array $languages
@@ -59,6 +65,8 @@ interface ImageGeneratorInterface
     public function regenerateNoPictureImages(string $dir, array $type, array $languages): bool;
 
     /**
+     * Calls module hook that modules can use to add watermark.
+     *
      * @param string $dir
      * @param array|null $type
      *
@@ -67,6 +75,8 @@ interface ImageGeneratorInterface
     public function regenerateWatermark(string $dir, ?array $type = null): ?string;
 
     /**
+     * Main function for regeneration. Iterates over image categories and regenerate them.
+     *
      * @param array $data
      *
      * @return array
