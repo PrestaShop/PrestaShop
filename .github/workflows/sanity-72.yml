@@ -1,4 +1,4 @@
-name: UI tests - PHP 7.1
+name: UI tests - PHP 7.2
 
 on:
   pull_request:
@@ -8,11 +8,10 @@ jobs:
 
   sanity:
     runs-on: ubuntu-18.04
-    name: Sanity - PHP 7.1
+    name: Sanity - PHP 7.2
     strategy:
       matrix:
-        # We should have only one workflow but sanity tests and addons are too unstable so for now they are split
-        php: [ '7.1' ]
+        php: [ '7.2' ]
       fail-fast: false
 
     steps:
