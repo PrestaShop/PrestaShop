@@ -16,10 +16,20 @@ Feature: Attribute Group
     And attribute "m" named "M" in en language exists
     And attribute "l" named "L" in en language exists
     And attribute "xl" named "XL" in en language exists
-    And attribute "ruled" named "Ruled" in en language exists
-    And attribute "plain" named "Plain" in en language exists
-    And attribute "squarred" named "Squarred" in en language exists
-    And attribute "doted" named "Doted" in en language exists
+    And attribute "grey" named "Grey" in en language exists
+    And attribute "taupe" named "Taupe" in en language exists
+    And attribute "beige" named "Beige" in en language exists
+    And attribute "white" named "White" in en language exists
+    And attribute "off_white" named "Off White" in en language exists
+    And attribute "red" named "Red" in en language exists
+    And attribute "black" named "Black" in en language exists
+    And attribute "camel" named "Camel" in en language exists
+    And attribute "orange" named "Orange" in en language exists
+    And attribute "blue" named "Blue" in en language exists
+    And attribute "green" named "Green" in en language exists
+    And attribute "yellow" named "Yellow" in en language exists
+    And attribute "brown" named "Brown" in en language exists
+    And attribute "pink" named "Pink" in en language exists
 
   # NOTE: we don't initialize specific data since we already have the core features
   Scenario: List attribute groups
@@ -39,9 +49,19 @@ Feature: Attribute Group
       | XL          |       | 3        | xl        |
 
   Scenario: List attribute groups with attributes
-    When I list all attribute groups, the group "paper_type" should have the following attributes:
-      | name[en-US] | color | position | reference |
-      | Ruled       |       | 0        | ruled     |
-      | Plain       |       | 1        | plain     |
-      | Squarred    |       | 2        | squarred  |
-      | Doted       |       | 3        | doted     |
+    When I list all attribute groups, the group "color" should have the following attributes:
+      | name[en-US] | color   | position | reference   |
+      | Grey        | #AAB2BD | 0         | grey       |
+      | Taupe       | #CFC4A6 | 1         | taupe      |
+      | Beige       | #f5f5dc | 2         | beige      |
+      | White       | #ffffff | 3         | white      |
+      | Off White   | #faebd7 | 4         | off_white  |
+      | Red         | #E84C3D | 5         | red        |
+      | Black       | #434A54 | 6         | black      |
+      | Camel       | #C19A6B | 7         | camel      |
+      | Orange      | #F39C11 | 8         | orange     |
+      | Blue        | #5D9CEC | 9         | blue       |
+      | Green       | #A0D468 | 10        | green      |
+      | Yellow      | #F1C40F | 11        | yellow     |
+      | Brown       | #964B00 | 12        | brown      |
+      | Pink        | #FCCACD | 13        | pink       |
