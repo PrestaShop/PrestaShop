@@ -315,6 +315,7 @@ export default class OrderViewPage {
         .done((response) => {
           // Delete previous product lines
           $(OrderViewPageMap.productsTable).find(OrderViewPageMap.productsTableRows).remove();
+          $(OrderViewPageMap.productsTableCustomizationRows).remove();
 
           $(OrderViewPageMap.productsTable + ' tbody').prepend(response);
 
