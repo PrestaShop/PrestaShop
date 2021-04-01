@@ -57,10 +57,6 @@ final class EmailDataConfigurator implements DataConfigurationInterface
             'mail_method' => (int) $this->configuration->get('PS_MAIL_METHOD'),
             'mail_type' => (int) $this->configuration->get('PS_MAIL_TYPE'),
             'log_emails' => (bool) $this->configuration->get('PS_LOG_EMAILS'),
-            'dkim_enable' => (bool) $this->configuration->get('PS_MAIL_DKIM_ENABLE'),
-            'dkim_domain' => (string) $this->configuration->get('PS_MAIL_DKIM_DOMAIN'),
-            'dkim_selector' => (string) $this->configuration->get('PS_MAIL_DKIM_SELECTOR'),
-            'dkim_key' => (string) $this->configuration->get('PS_MAIL_DKIM_KEY'),
             'smtp_config' => [
                 'domain' => $this->configuration->get('PS_MAIL_DOMAIN'),
                 'server' => $this->configuration->get('PS_MAIL_SERVER'),
@@ -68,6 +64,12 @@ final class EmailDataConfigurator implements DataConfigurationInterface
                 'password' => $this->configuration->get('PS_MAIL_PASSWD'),
                 'encryption' => $this->configuration->get('PS_MAIL_SMTP_ENCRYPTION'),
                 'port' => $this->configuration->get('PS_MAIL_SMTP_PORT'),
+            ],
+            'dkim_enable' => (bool) $this->configuration->get('PS_MAIL_DKIM_ENABLE'),
+            'dkim_config' => [
+                'domain' => (string) $this->configuration->get('PS_MAIL_DKIM_DOMAIN'),
+                'selector' => (string) $this->configuration->get('PS_MAIL_DKIM_SELECTOR'),
+                'key' => (string) $this->configuration->get('PS_MAIL_DKIM_KEY'),
             ],
         ];
     }
@@ -83,9 +85,9 @@ final class EmailDataConfigurator implements DataConfigurationInterface
             $this->configuration->set('PS_MAIL_TYPE', $config['mail_type']);
             $this->configuration->set('PS_LOG_EMAILS', $config['log_emails']);
             $this->configuration->set('PS_MAIL_DKIM_ENABLE', $config['dkim_enable']);
-            $this->configuration->set('PS_MAIL_DKIM_DOMAIN', $config['dkim_domain']);
-            $this->configuration->set('PS_MAIL_DKIM_SELECTOR', $config['dkim_selector']);
-            $this->configuration->set('PS_MAIL_DKIM_KEY', $config['dkim_key']);
+            $this->configuration->set('PS_MAIL_DKIM_DOMAIN', $config['dkim_config']['domain']);
+            $this->configuration->set('PS_MAIL_DKIM_SELECTOR', $config['dkim_config']['selector']);
+            $this->configuration->set('PS_MAIL_DKIM_KEY', $config['dkim_config']['key']);
             $this->configuration->set('PS_MAIL_DOMAIN', $config['smtp_config']['domain']);
             $this->configuration->set('PS_MAIL_SERVER', $config['smtp_config']['server']);
             $this->configuration->set('PS_MAIL_USER', $config['smtp_config']['username']);
@@ -112,9 +114,9 @@ final class EmailDataConfigurator implements DataConfigurationInterface
             $config['mail_type'],
             $config['log_emails'],
             $config['dkim_enable'],
-            $config['dkim_domain'],
-            $config['dkim_selector'],
-            $config['dkim_key'],
+            $config['dkim_config']['domain'],
+            $config['dkim_config']['selector'],
+            $config['dkim_config']['key'],
             $config['smtp_config']['domain'],
             $config['smtp_config']['server'],
             $config['smtp_config']['username'],

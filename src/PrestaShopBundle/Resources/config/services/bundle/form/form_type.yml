@@ -553,6 +553,13 @@ services:
         tags:
             - { name: form.type }
 
+    form.type.email.dkim_configuration:
+        class: 'PrestaShopBundle\Form\Admin\Configure\AdvancedParameters\Email\DkimConfigurationType'
+        parent: 'form.type.translatable.aware'
+        public: true
+        tags:
+            - { name: form.type }
+
     form.type.email.test_email_sending:
         class: 'PrestaShopBundle\Form\Admin\Configure\AdvancedParameters\Email\TestEmailSendingType'
         parent: 'form.type.translatable.aware'

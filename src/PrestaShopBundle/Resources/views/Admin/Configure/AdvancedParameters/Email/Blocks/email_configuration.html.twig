@@ -51,6 +51,10 @@
               {{ 'Also, make sure that your server is registered as an authorized sender in your SPF record. '|trans({}, 'Admin.Advparameters.Help') }}
             </p>
           </div>
+          {{ form_row(emailConfigurationForm.dkim_enable) }}
+          <div class="js-dkim-configuration{% if emailConfigurationForm.dkim_enable.vars.value == 0 %} d-none{% endif %}">
+            {{ form_widget(emailConfigurationForm.dkim_config) }}
+          </div>
           {{ form_rest(emailConfigurationForm) }}
         </div>
       </div>
