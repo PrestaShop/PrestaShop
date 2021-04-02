@@ -208,8 +208,7 @@ final class AddProductToOrderHandler extends AbstractOrderHandler implements Add
                 $command->getProductId()->getValue(),
                 null !== $command->getCombinationId() ? $command->getCombinationId()->getValue() : 0,
                 $command->getProductPriceTaxExcluded(),
-                $command->getProductPriceTaxIncluded(),
-                new Number($product->ecotax)
+                $command->getProductPriceTaxIncluded()
             );
             StockAvailable::synchronize($product->id);
 

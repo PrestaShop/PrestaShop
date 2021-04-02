@@ -36,7 +36,6 @@ use OrderDetail;
 use OrderInvoice;
 use PrestaShop\Decimal\Number;
 use PrestaShop\PrestaShop\Adapter\ContextStateManager;
-use PrestaShop\PrestaShop\Adapter\Order\AbstractOrderHandler;
 use PrestaShop\PrestaShop\Adapter\Order\OrderDetailUpdater;
 use PrestaShop\PrestaShop\Adapter\Order\OrderProductQuantityUpdater;
 use PrestaShop\PrestaShop\Core\Domain\Order\Exception\CannotEditDeliveredOrderProductException;
@@ -122,8 +121,7 @@ final class UpdateProductInOrderHandler extends AbstractOrderCommandHandler impl
                 (int) $orderDetail->product_id,
                 (int) $orderDetail->product_attribute_id,
                 $command->getPriceTaxExcluded(),
-                $command->getPriceTaxIncluded(),
-                new Number($orderDetail->ecotax)
+                $command->getPriceTaxIncluded()
             );
 
             // Update invoice, quantity and amounts
