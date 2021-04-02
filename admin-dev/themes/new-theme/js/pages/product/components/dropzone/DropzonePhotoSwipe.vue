@@ -43,21 +43,25 @@
           <div class="pswp__counter" />
 
           <button
+            type="button"
             class="pswp__button pswp__button--close"
             :title="$t('window.closePhotoSwipe')"
           />
 
           <button
+            type="button"
             class="pswp__button pswp__button--share"
             :title="$t('window.download')"
           />
 
           <button
+            type="button"
             class="pswp__button pswp__button--fs"
             :title="$t('window.toggleFullscreen')"
           />
 
           <button
+            type="button"
             class="pswp__button pswp__button--zoom"
             :title="$t('window.zoomPhotoSwipe')"
           />
@@ -78,11 +82,13 @@
         </div>
 
         <button
+          type="button"
           class="pswp__button pswp__button--arrow--left"
           :title="$t('window.previousPhotoSwipe')"
         />
 
         <button
+          type="button"
           class="pswp__button pswp__button--arrow--right"
           :title="$t('window.nextPhotoSwipe')"
         />
@@ -98,7 +104,12 @@
 <script>
   import PhotoSwipe from 'photoswipe';
   // eslint-disable-next-line
-  import PhotoSwipeUI_Default from "photoswipe/dist/photoswipe-ui-default";
+import PhotoSwipeUI_Default from "photoswipe/dist/photoswipe-ui-default";
+  import ProductMap from '@pages/product/product-map';
+  import ProductEventMap from '@pages/product/product-event-map';
+
+  const PhotoSwipeMap = ProductMap.dropzone.photoswipe;
+  const PhotoSwipeEventMap = ProductEventMap.dropzone.photoswipe;
 
   export default {
     name: 'DropzonePhotoSwipe',
@@ -109,7 +120,7 @@
       },
     },
     mounted() {
-      const pswpElement = document.querySelectorAll('.pswp')[0];
+      const pswpElement = document.querySelectorAll(PhotoSwipeMap.element)[0];
 
       const options = {
         index: 0,
@@ -141,18 +152,9 @@
 
       gallery.init();
 
-      const buttons = document.querySelectorAll('.pswp button');
-
-      // We need to disable button default behavior overwise it submit the product form
-      buttons.forEach((button) => {
-        button.addEventListener('click', (event) => {
-          event.preventDefault();
-        });
-      });
-
       // We must tell to the rich component that the gallery have been closed
-      gallery.listen('destroy', () => {
-        this.$emit('closeGallery');
+      gallery.listen(PhotoSwipeEventMap.destroy, () => {
+        this.$emit(PhotoSwipeEventMap.closeGallery);
       });
     },
     methods: {},

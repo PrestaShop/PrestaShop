@@ -116,5 +116,19 @@ export default {
     configuration: {
       fileManager: '.openfilemanager',
     },
+    photoswipe: {
+      element: '.pswp',
+    },
+    dzTemplate: '.dz-template',
+    dzPreview: '.dz-preview',
+    sortableContainer: '#product-images-dropzone',
+    sortableItems: 'div.dz-preview:not(.disabled)',
+    dropzoneContainer: '.dropzone-container',
+    checkbox: '.md-checkbox input',
+    shownTooltips: '.tooltip.show',
+    savedImage: (imageId) => `.dz-preview[data-id="${imageId}"]`,
+    savedImageElement: (imageId) => `.dz-preview[data-id="${imageId}"] img`,
+    coveredPreview: '.dz-preview.is-cover',
+    windowFileManager: '.dropzone-window-filemanager',
   },
 };

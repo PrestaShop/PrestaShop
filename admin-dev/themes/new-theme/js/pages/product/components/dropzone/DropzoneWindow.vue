@@ -173,6 +173,10 @@
 </template>
 
 <script>
+  import ProductMap from '@pages/product/product-map';
+
+  const DropzoneMap = ProductMap.dropzone;
+
   export default {
     name: 'DropzoneWindow',
     props: {
@@ -255,7 +259,7 @@
        * Used to open the native file manager
        */
       openFileManager() {
-        const fileInput = document.querySelector('.dropzone-window-filemanager');
+        const fileInput = document.querySelector(DropzoneMap.windowFileManager);
         fileInput.click();
       },
       /**

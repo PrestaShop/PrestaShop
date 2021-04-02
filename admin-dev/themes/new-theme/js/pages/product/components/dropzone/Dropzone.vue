@@ -49,11 +49,11 @@
         ]"
       >
         <i class="material-icons">add_a_photo</i><br>
-        {{ $t('window.dropImages') }}<br>
-        <a>{{ $t('window.selectFiles') }}</a><br>
+        {{ $t("window.dropImages") }}<br>
+        <a>{{ $t("window.selectFiles") }}</a><br>
         <small>
-          {{ $t('window.recommendedSize') }}<br>
-          {{ $t('window.recommendedFormats') }}
+          {{ $t("window.recommendedSize") }}<br>
+          {{ $t("window.recommendedFormats") }}
         </small>
       </div>
 
@@ -85,9 +85,11 @@
     <modal
       v-if="isModalShown"
       :confirmation="true"
-      :modal-title="$tc('modal.title', this.selectedFiles.length, {
-        '%filesNb%': this.selectedFiles.length,
-      })"
+      :modal-title="
+        $tc('modal.title', this.selectedFiles.length, {
+          '%filesNb%': this.selectedFiles.length,
+        })
+      "
       :confirm-label="$t('modal.accept')"
       :cancel-label="$t('modal.close')"
       @confirm="removeSelection"
@@ -124,7 +126,7 @@
           </div>
         </div>
         <div class="iscover">
-          {{ $t('window.cover') }}
+          {{ $t("window.cover") }}
         </div>
       </div>
     </div>
@@ -223,7 +225,8 @@
                 this.selectedLocale = locale;
               }
             });
-          });
+          },
+        );
       },
       /**
        * This methods is used to initialize product images we already have uploaded
@@ -248,7 +251,7 @@
        */
       initDropZone() {
         this.configuration.previewTemplate = document.querySelector(
-          '.dz-template',
+          DropzoneMap.dzTemplate,
         ).innerHTML;
         this.configuration.paramName = `${this.formName}[file]`;
         this.configuration.method = 'POST';
@@ -261,12 +264,12 @@
         this.sortableContainer = $('#product-images-dropzone');
 
         this.dropzone = new window.Dropzone(
-          '.dropzone-container',
+          DropzoneMap.dropzoneContainer,
           this.configuration,
         );
 
         this.sortableContainer.sortable({
-          items: 'div.dz-preview:not(.disabled)',
+          items: DropzoneMap.sortableItems,
           opacity: 0.9,
           containment: 'parent',
           distance: 32,
@@ -282,7 +285,7 @@
             this.updateImagePosition(ui.item.data('id'), movedPosition);
           },
           start: (event, ui) => {
-            this.sortableContainer.find('.dz-preview').css('zIndex', 1);
+            this.sortableContainer.find(DropzoneMap.dzPreview).css('zIndex', 1);
             ui.item.css('zIndex', 10);
           },
         });
@@ -294,7 +297,7 @@
             file.previewElement.classList.add('is-cover');
           }
           file.previewElement.addEventListener('click', () => {
-            const input = file.previewElement.querySelector('.md-checkbox input');
+            const input = file.previewElement.querySelector(DropzoneMap.checkbox);
             input.checked = !input.checked;
 
             if (input.checked) {
@@ -357,15 +360,15 @@
               this.dropzone.removeFile(file);
 
               this.files = this.files.filter((e) => file !== e);
-              this.selectedFiles = this.selectedFiles.filter(
-                (e) => file !== e,
-              );
+              this.selectedFiles = this.selectedFiles.filter((e) => file !== e);
 
               if (file.is_cover) {
                 isCoverImageRemoved = true;
               }
             } catch (error) {
-              errorMessage = error.responseJSON ? error.responseJSON.error : error;
+              errorMessage = error.responseJSON
+                ? error.responseJSON.error
+                : error;
             }
           }),
         );
@@ -393,7 +396,7 @@
        */
       editCheckboxes(checked) {
         this.selectedFiles.forEach((file) => {
-          const input = file.previewElement.querySelector('.md-checkbox input');
+          const input = file.previewElement.querySelector(DropzoneMap.checkbox);
           input.checked = typeof checked !== 'undefined' ? checked : !input.checked;
 
           file.previewElement.classList.toggle('selected', checked);
@@ -403,7 +406,7 @@
        * We sometime need to remove tooltip because Vue kick the markup of the component
        */
       removeTooltips() {
-        $('.tooltip.show').each((i, element) => {
+        $(DropzoneMap.shownTooltips).each((i, element) => {
           $(element).remove();
         });
       },
@@ -431,7 +434,7 @@
           );
 
           const savedImageElement = document.querySelector(
-            `.dz-preview[data-id="${savedImage.image_id}"]`,
+            DropzoneMap.savedImage(savedImage.image_id),
           );
 
           /**
@@ -440,7 +443,9 @@
            */
           if (savedImage.is_cover) {
             if (!savedImageElement.classList.contains('is-cover')) {
-              const coverElement = document.querySelector('.dz-preview.is-cover');
+              const coverElement = document.querySelector(
+                DropzoneMap.coveredPreview,
+              );
               coverElement.classList.remove('is-cover');
               savedImageElement.classList.add('is-cover');
 
@@ -475,7 +480,7 @@
             this.token,
           );
           const imageElement = document.querySelector(
-            `.dz-preview[data-id="${newImage.image_id}"] img`,
+            DropzoneMap.savedImageElement(newImage.image_id),
           );
           imageElement.src = newImage.path;
 
@@ -488,7 +493,12 @@
       },
       async updateImagePosition(productImageId, newPosition) {
         try {
-          await saveImagePosition(productImageId, newPosition, this.formName, this.token);
+          await saveImagePosition(
+            productImageId,
+            newPosition,
+            this.formName,
+            this.token,
+          );
         } catch (error) {
           this.sortableContainer.sortable('cancel');
           $.growl.error({message: error.responseJSON.error});
