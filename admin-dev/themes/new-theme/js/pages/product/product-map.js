@@ -106,6 +106,8 @@ export default {
       checkboxContainer: '.form-check',
       checkbox: 'input[type=checkbox]',
     },
+    scrollBar: '.attributes-list-overflow',
+    searchInput: '#product-combinations-generate .attributes-search',
   },
   virtualProduct: {
     container: '#virtual-product-file',

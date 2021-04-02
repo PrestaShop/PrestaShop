@@ -79,7 +79,7 @@
                 >
                   <label
                     v-for="item of combination.childs"
-                    :class="['combination-item', selectedAttributes[combination.name] && selectedAttributes[combination.name].includes(item) ? 'selected' : 'unselected']"
+                    :class="['combination-item', isSelected(combination, item)]"
                     :for="`combination_${item.id_combination}`"
                     :key="item.id"
                   >
@@ -136,10 +136,8 @@
 </template>
 
 <script>
-  import Router from '@components/router';
   import CombinationsService from '@pages/product/services/combinations-service';
   import ProductMap from '@pages/product/product-map';
-  import ProductEventMap from '@pages/product/product-event-map';
   import Modal from '@vue/components/Modal';
   import PerfectScrollbar from 'perfect-scrollbar';
   import Bloodhound from 'typeahead.js';
@@ -147,9 +145,7 @@
 
   const {$} = window;
 
-  const router = new Router();
   const CombinationsMap = ProductMap.combinations;
-  const CombinationsEvent = ProductEventMap.combinations;
 
   export default {
     name: 'Generate',
@@ -178,7 +174,7 @@
     },
     methods: {
       /**
-       * This methods is used to initialize product images we already have uploaded
+       * This methods is used to initialize combinations definitions
        */
       async initCombinations() {
         try {
@@ -188,12 +184,18 @@
           window.$.growl.error({message: error});
         }
       },
+      /**
+       * Show the modal, and execute PerfectScrollBar and Typehead
+       */
       showModal() {
         this.isModalShown = true;
         const that = this;
 
+        // We need to use a setTimeout to add it at the end
+        // of the callstack so the modal is already displayed
+        // when this is getting executed
         setTimeout(() => {
-          this.scrollbar = new PerfectScrollbar('.attributes-list-overflow');
+          this.scrollbar = new PerfectScrollbar(CombinationsMap.scrollBar);
           const searchItems = [];
 
           this.combinations.forEach((combination) => {
@@ -203,7 +205,7 @@
             });
           });
 
-          const $searchInput = $('#product-combinations-generate .attributes-search');
+          const $searchInput = $(CombinationsMap.searchInput);
           const source = new Bloodhound({
             datumTokenizer: Bloodhound.tokenizers.obj.whitespace('name', 'value', 'color', 'group_name'),
             queryTokenizer: Bloodhound.tokenizers.whitespace,
@@ -246,17 +248,30 @@
           new AutoCompleteSearch($searchInput, dataSetConfig);
         }, 0);
       },
+      /**
+       * Handle modal closing
+       */
       closeModal() {
         this.isModalShown = false;
       },
+      /**
+       * Used when the user clicks on the Generate button of the modal
+       */
       async generateCombinations() {
         this.loading = true;
         this.loading = false;
       },
+      /**
+       * Remove the attribute if it's selected or add it
+       *
+       * @param {Object} Combination
+       * @param {{name: string}} Combination
+       */
       changeSelected(combination, group) {
         if (!this.selectedAttributes[group.name] || !this.selectedAttributes[group.name].includes(combination)) {
           if (!this.selectedAttributes[group.name]) {
             const newAttributeGroup = {};
+
             newAttributeGroup[group.name] = [];
             newAttributeGroup[group.name].push(combination);
             this.selectedAttributes = {...this.selectedAttributes, ...newAttributeGroup};
@@ -264,8 +279,15 @@
             this.selectedAttributes[group.name].push(combination);
           }
         } else {
+          // eslint-disable-next-line
           this.selectedAttributes[group.name] = this.selectedAttributes[group.name].filter((e) => e.id_combination !== combination.id_combination);
         }
+      },
+      isSelected(combination, attribut) {
+        return this.selectedAttributes[combination.name]
+          && this.selectedAttributes[combination.name].includes(attribut)
+          ? 'selected'
+          : 'unselected';
       },
     },
   };
