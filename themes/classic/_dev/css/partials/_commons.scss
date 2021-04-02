@@ -34,7 +34,8 @@ p {
   background: none;
 }
 
-.color,
+label .color,
+.variant-links .color,
 .custom-checkbox input[type="checkbox"] + span.color {
   display: inline-block;
   width: 1.125rem;

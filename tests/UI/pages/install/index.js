@@ -19,19 +19,19 @@ class Install extends CommonPage {
     this.nextStepButton = '#btNext';
 
     // Selectors for step 1
-    this.firstStepPageTitle = 'h2';
+    this.chooseLanguageStepPageTitle = 'h2';
     this.languageSelect = '#langList';
 
     // Selectors for step 2
-    this.secondStepPageTitle = 'h2#licenses-agreement';
+    this.licenseAgreementsStepPageTitle = 'h2#licenses-agreement';
     this.termsConditionsCheckbox = '#set_license';
 
     // Selectors for step 3
-    this.thirdStepPageTitle = '#sheet_system h2';
+    this.systemCompatibilityStepPageTitle = '#sheet_system h2';
     this.thirdStepFinishedListItem = '#leftpannel #tabs li.finished:nth-child(3)';
 
     // Selectors for step 4
-    this.fourthStepPageTitle = '#infosShopBlock h2';
+    this.storeInformationStepPageTitle = '#infosShopBlock h2';
     this.shopNameInput = '#infosShop';
     this.countrySelect = '#infosCountry';
     this.firstNameInput = '#infosFirstname';
@@ -41,7 +41,7 @@ class Install extends CommonPage {
     this.repeatPasswordInput = '#infosPasswordRepeat';
 
     // Selectors for step 5
-    this.fifthStepPageTitle = '#dbPart h2';
+    this.systemConfigurationStepPageTitle = '#dbPart h2';
     this.dbServerInput = '#dbServer';
     this.dbLoginInput = '#dbLogin';
     this.dbNameInput = '#dbName';
@@ -61,25 +61,49 @@ class Install extends CommonPage {
     this.installModulesAddons = '#process_step_installModulesAddons';
     this.installThemeStep = '#process_step_installTheme';
     this.installFixturesStep = '#process_step_installFixtures';
-    this.finalStepPageTitle = '#install_process_success h2';
+    this.installationFinishedStepPageTitle = '#install_process_success h2';
     this.discoverFoButton = '#foBlock';
   }
 
   /**
-   * To check each step title
+   * Get step title
    * @param page
-   * @param selector, where to get actual title
-   * @param pageTitle, expected title
-   * @return {Promise<*>}
+   * @param step
+   * @returns {Promise<string>}
    */
-  async checkStepTitle(page, selector, pageTitle) {
-    await this.waitForVisibleSelector(page, selector);
-    const title = await this.getTextContent(page, selector);
+  async getStepTitle(page, step) {
+    let selector;
 
-    if (Array.isArray(pageTitle)) {
-      return pageTitle.some(arrVal => title.includes(arrVal));
+    switch (step) {
+      case 'Choose your language':
+        selector = this.chooseLanguageStepPageTitle;
+        break;
+
+      case 'License agreements':
+        selector = this.licenseAgreementsStepPageTitle;
+        break;
+
+      case 'System compatibility':
+        selector = this.systemCompatibilityStepPageTitle;
+        break;
+
+      case 'Store information':
+        selector = this.storeInformationStepPageTitle;
+        break;
+
+      case 'System configuration':
+        selector = this.systemConfigurationStepPageTitle;
+        break;
+
+      case 'Installation finished':
+        selector = this.installationFinishedStepPageTitle;
+        break;
+
+      default:
+        throw new Error(`'${step}' was not found on the installation process`);
     }
-    return title.includes(pageTitle);
+
+    return this.getTextContent(page, selector);
   }
 
   /**
@@ -107,11 +131,7 @@ class Install extends CommonPage {
    * @return {Promise<void>}
    */
   async agreeToTermsAndConditions(page) {
-    const isChecked = await this.elementChecked(page, this.termsConditionsCheckbox);
-
-    if (!isChecked) {
-      await page.click(this.termsConditionsCheckbox);
-    }
+    await this.changeCheckboxValue(page, this.termsConditionsCheckbox);
   }
 
   /**
@@ -149,10 +169,12 @@ class Install extends CommonPage {
    */
   async isDatabaseConnected(page) {
     await page.click(this.testDbConnectionButton);
+
     // Create database 'prestashop' if not exist
     if (await this.elementVisible(page, this.createDbButton, 3000)) {
       await page.click(this.createDbButton);
     }
+
     return this.elementVisible(page, this.dbResultCheckOkBlock, 3000);
   }
 
@@ -173,9 +195,10 @@ class Install extends CommonPage {
       this.waitForVisibleSelector(page, this.installModulesAddons, 360000),
       this.waitForVisibleSelector(page, this.installThemeStep, 360000),
       this.waitForVisibleSelector(page, this.installFixturesStep, 360000),
-      this.waitForVisibleSelector(page, this.finalStepPageTitle, 360000),
+      this.waitForVisibleSelector(page, this.installationFinishedStepPageTitle, 360000),
     ]);
-    return this.checkStepTitle(page, this.finalStepPageTitle, this.finalStepEnTitle);
+
+    return true;
   }
 
   /**

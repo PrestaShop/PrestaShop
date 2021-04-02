@@ -35,7 +35,6 @@ use Cart;
 use CartRule;
 use Currency;
 use Customer;
-use Language;
 use Order;
 use OrderCarrier;
 use OrderCartRule;
@@ -117,7 +116,7 @@ class OrderAmountUpdater
             ->setCart($cart)
             ->setCurrency(new Currency($cart->id_currency))
             ->setCustomer(new Customer($cart->id_customer))
-            ->setLanguage(new Language($cart->id_lang))
+            ->setLanguage($cart->getAssociatedLanguage())
             ->setCountry($cart->getTaxCountry())
             ->setShop(new Shop($cart->id_shop))
         ;

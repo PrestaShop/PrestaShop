@@ -1,5 +1,6 @@
 # ./vendor/bin/behat -c tests/Integration/Behaviour/behat.yml -s order --tags order-multi-shop
 @reset-database-before-feature
+@mock-context-on-scenario
 @clear-cache-before-feature
 @order-multi-shop
 Feature: Order from Back Office (BO)
@@ -286,3 +287,57 @@ Feature: Order from Back Office (BO)
       | total_paid_real          | 6.00   |
       | total_shipping_tax_excl  | 7.0    |
       | total_shipping_tax_incl  | 7.42   |
+
+  Scenario: In All Shop Context, Update product in order
+    # Create Shop Group & Shops
+    When I add a shop group "shopGroup1" with name "Shop Group 1"
+    And I add a shop "shop2" with name "Shop 2" for the group "Shop Group 1"
+    Then I should have 2 shop groups
+    And I should have 1 shop in group "Default"
+    And I should have 1 shop in group "Shop Group 1"
+    # Create Products
+    When shop context "test_shop" is loaded
+    And there is a product in the catalog named "Product A" with a price of 12.3 and 0 items in stock
+    And product "Product A" cannot be ordered out of stock
+    Then the available stock for product "Product A" should be 0
+    When shop context "Shop 2" is loaded
+    And there is a product in the catalog named "Product B in Shop 2" with a price of 45.6 and 100 items in stock
+    And product "Product B in Shop 2" cannot be ordered out of stock
+    Then the available stock for product "Product B in Shop 2" should be 100
+    # Create Customer
+    # Context : Shop 2
+    When there is a customer named "testCustomerShop2" whose email is "pubshop2@prestashop.com"
+    And I add new address to customer "testCustomerShop2" with following details:
+      | Address alias    | test-customer-address              |
+      | First name       | testFirstName                      |
+      | Last name        | testLastName                       |
+      | Address          | Work address st. 1234567890        |
+      | City             | Birmingham                         |
+      | Country          | United States                      |
+      | State            | Alabama                            |
+      | Postal code      | 12345                              |
+    Then customer "testCustomerShop2" has address in "US" country
+    # Create Order
+    # Context : Shop 2
+    When I create an empty cart "cart_product_B" for customer "testCustomerShop2"
+    And I select "US" address as delivery and invoice address for customer "testCustomerShop2" in cart "cart_product_B"
+    And I add 2 products "Product B in Shop 2" to the cart "cart_product_B"
+    Then the available stock for product "Product B in Shop 2" should be 100
+    When I add order "order_product_B" with the following details:
+      | cart                | cart_product_B             |
+      | message             | test                       |
+      | payment module name | dummy_payment              |
+      | status              | Awaiting bank wire payment |
+    Then the available stock for product "Product B in Shop 2" should be 98
+    And order "order_product_B" should contain 2 products "Product B in Shop 2"
+    # Check Stock
+    When shop context "Shop 2" is loaded
+    Then the available stock for product "Product B in Shop 2" should be 98
+    When shop context "test_shop" is loaded
+    Then the available stock for product "Product A" should be 0
+    # Change Context
+    When multiple shop context is loaded
+    And I edit product "Product B in Shop 2" to order "order_product_B" with following products details:
+      | amount        | 30                      |
+      | price         | 78.90                   |
+    Then I should get no error

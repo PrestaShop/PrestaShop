@@ -265,7 +265,9 @@ final class GetOrderProductsForViewingHandler extends AbstractOrderHandler imple
                 (string) $product['displayed_max_refundable'],
                 $product['location'],
                 !empty($product['id_order_invoice']) ? $product['id_order_invoice'] : null,
-                !empty($product['id_order_invoice']) ? $orderInvoice->getInvoiceNumberFormatted($order->id_lang) : '',
+                !empty($product['id_order_invoice'])
+                    ? $orderInvoice->getInvoiceNumberFormatted((int) $order->getAssociatedLanguage()->getId())
+                    : '',
                 $productType,
                 (bool) Product::isAvailableWhenOutOfStock(StockAvailable::outOfStock($product['product_id'])),
                 $packItems,

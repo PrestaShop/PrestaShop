@@ -37,9 +37,11 @@ use Currency;
 use Customer;
 use Language;
 use Link;
+use Module;
 use ObjectModel;
 use Pack;
 use Phake;
+use PrestaShop\PrestaShop\Adapter\LegacyContext;
 use PrestaShop\PrestaShop\Adapter\SymfonyContainer;
 use Product;
 use Shop;
@@ -100,9 +102,13 @@ class ContextMocker
         ObjectModel::resetStaticCache();
         Tools::resetStaticCache();
 
+        Cache::clean('*');
+
         $this->contextBackup = Context::getContext();
         $context             = clone $this->contextBackup;
         Context::setInstanceForTesting($context);
+        LegacyContext::setInstanceForTesting($context);
+        Module::setContextInstanceForTesting($context);
         $context->shop = new Shop((int) Configuration::get('PS_SHOP_DEFAULT'));
         Shop::setContext(Shop::CONTEXT_SHOP, (int) Context::getContext()->shop->id);
         $context->customer = Phake::mock('Customer');
@@ -117,6 +123,7 @@ class ContextMocker
             ? 'https://' : 'http://';
         $context->link     = new Link($protocol_link, $protocol_content);
         $context->currency = new Currency(1, 1, 1);
+        $context->cart     = new Cart();
         $context->smarty   = $smarty;
 
         return $this;
@@ -128,5 +135,8 @@ class ContextMocker
     public function resetContext()
     {
         Context::setInstanceForTesting($this->contextBackup);
+        LegacyContext::setInstanceForTesting($this->contextBackup);
+        Shop::setContext(Shop::CONTEXT_SHOP, (int) Context::getContext()->shop->id);
+        Module::setContextInstanceForTesting($this->contextBackup);
     }
 }

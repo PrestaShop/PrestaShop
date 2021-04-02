@@ -55,8 +55,8 @@ const refreshNotifications = function () {
         setNotificationsNumber('_nb_new_messages_', nbCustomerMessages);
         if (notificationsTotal) {
           $('#notifications-total').removeClass('hide').html(notificationsTotal);
-        } else {
-          $('#notifications-total').remove();
+        } else if (!$('#notifications-total').hasClass('hide')) {
+          $('#notifications-total').addClass('hide');
         }
       }
       timer = setTimeout(refreshNotifications, 120000);

@@ -8,7 +8,8 @@ class Dashboard extends BOBasePage {
     this.pageTitle = 'Dashboard • ';
 
     // Selectors
-    this.switchDemoModeButton = toggle => `#page-header-desc-configuration-switch_demo i.process-icon-toggle-${toggle}`;
+    this.demoModeToggleLink = '#page-header-desc-configuration-switch_demo';
+    this.demoModeToggleIcon = toggle => `${this.demoModeToggleLink} i.process-icon-toggle-${toggle}`;
 
     // Activity overview selectors
     this.onlineVisitorsNumberSpan = '#online_visitor';
@@ -35,11 +36,17 @@ class Dashboard extends BOBasePage {
   /**
    * Enable/Disable demo mode
    * @param page
-   * @param toEnable
+   * @param wantedValue
    * @returns {Promise<void>}
    */
-  async setDemoMode(page, toEnable = true) {
-    await this.waitForSelectorAndClick(page, this.switchDemoModeButton(toEnable ? 'off' : 'on'));
+  async setDemoModeStatus(page, wantedValue = true) {
+    const actualValue = await this.elementVisible(page, this.demoModeToggleIcon('on'), 2000);
+
+    if (wantedValue !== actualValue) {
+      await page.click(this.demoModeToggleLink);
+    }
+
+    await this.waitForVisibleSelector(page, this.demoModeToggleIcon(wantedValue ? 'on' : 'off'), 3000);
   }
 
   /**
@@ -117,15 +124,14 @@ class Dashboard extends BOBasePage {
   /**
    * Get all values
    * @param page
-   * @param activity
+   * @param activities
    * @returns {Promise<[]>}
    */
-  async getAllTrafficValues(page, activity) {
-    await page.waitForTimeout(2000);
+  async getAllTrafficValues(page, activities) {
     const allRowsContentTable = [];
 
-    for (let i = 0; i <= 13; i++) {
-      const rowContent = await this.getTrafficNumber(page, activity[i]);
+    for (let i = 0; i < activities.length; i++) {
+      const rowContent = await this.getTrafficNumber(page, activities[i]);
       await allRowsContentTable.push(rowContent);
     }
 

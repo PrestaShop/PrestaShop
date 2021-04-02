@@ -37,12 +37,12 @@ describe('Enable/Disable demo mode', async () => {
   it('should enable demo mode and check fake stats', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'checkFakeStats', baseContext);
 
-    await dashboardPage.setDemoMode(page, true);
-    const TableOfTrafficValues = await dashboardPage.getAllTrafficValues(page, trafficActivity);
+    await dashboardPage.setDemoModeStatus(page, true);
+    const demoModeEnabledTrafficValues = await dashboardPage.getAllTrafficValues(page, trafficActivity);
 
-    await dashboardPage.setDemoMode(page, false);
-    const TableOfTrafficFakerValues = await dashboardPage.getAllTrafficValues(page, trafficActivity);
+    await dashboardPage.setDemoModeStatus(page, false);
+    const demoModeDisabledTrafficValues = await dashboardPage.getAllTrafficValues(page, trafficActivity);
 
-    await expect(TableOfTrafficValues).to.not.deep.equal(TableOfTrafficFakerValues);
+    await expect(demoModeEnabledTrafficValues).to.not.deep.equal(demoModeDisabledTrafficValues);
   });
 });

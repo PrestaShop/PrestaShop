@@ -34,7 +34,7 @@ use Hook;
 use Order;
 use OrderDetail;
 use OrderInvoice;
-use PrestaShop\PrestaShop\Adapter\Order\AbstractOrderHandler;
+use PrestaShop\PrestaShop\Adapter\ContextStateManager;
 use PrestaShop\PrestaShop\Adapter\Order\OrderDetailUpdater;
 use PrestaShop\PrestaShop\Adapter\Order\OrderProductQuantityUpdater;
 use PrestaShop\PrestaShop\Core\Domain\Order\Exception\CannotEditDeliveredOrderProductException;
@@ -51,8 +51,13 @@ use Validate;
 /**
  * @internal
  */
-final class UpdateProductInOrderHandler extends AbstractOrderHandler implements UpdateProductInOrderHandlerInterface
+final class UpdateProductInOrderHandler extends AbstractOrderCommandHandler implements UpdateProductInOrderHandlerInterface
 {
+    /**
+     * @var ContextStateManager
+     */
+    private $contextStateManager;
+
     /**
      * @var OrderProductQuantityUpdater
      */
@@ -68,13 +73,16 @@ final class UpdateProductInOrderHandler extends AbstractOrderHandler implements 
      *
      * @param OrderProductQuantityUpdater $orderProductQuantityUpdater
      * @param OrderDetailUpdater $orderDetailUpdater
+     * @param ContextStateManager $contextStateManager
      */
     public function __construct(
         OrderProductQuantityUpdater $orderProductQuantityUpdater,
-        OrderDetailUpdater $orderDetailUpdater
+        OrderDetailUpdater $orderDetailUpdater,
+        ContextStateManager $contextStateManager
     ) {
         $this->orderProductQuantityUpdater = $orderProductQuantityUpdater;
         $this->orderDetailUpdater = $orderDetailUpdater;
+        $this->contextStateManager = $contextStateManager;
     }
 
     /**
@@ -84,6 +92,8 @@ final class UpdateProductInOrderHandler extends AbstractOrderHandler implements 
     {
         try {
             $order = $this->getOrder($command->getOrderId());
+
+            $this->setOrderContext($this->contextStateManager, $order);
 
             $orderDetail = new OrderDetail($command->getOrderDetailId());
             $orderInvoice = null;
@@ -118,6 +128,8 @@ final class UpdateProductInOrderHandler extends AbstractOrderHandler implements 
             Hook::exec('actionOrderEdited', ['order' => $order]);
         } catch (Exception $e) {
             throw $e;
+        } finally {
+            $this->contextStateManager->restorePreviousContext();
         }
     }
 
