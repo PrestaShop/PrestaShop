@@ -29,9 +29,8 @@ declare(strict_types=1);
 namespace Tests\Unit\Core\Form\IdentifiableObject\CommandBuilder\Product;
 
 use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductId;
-use PrestaShop\PrestaShop\Core\Form\IdentifiableObject\CommandBuilder\Product\ProductCommandsBuilderInterface;
-use PrestaShop\PrestaShop\Core\Form\IdentifiableObject\CommandBuilder\Product\ProductCommandCollection;
 use PrestaShop\PrestaShop\Core\Form\IdentifiableObject\CommandBuilder\Product\ProductCommandsBuilder;
+use PrestaShop\PrestaShop\Core\Form\IdentifiableObject\CommandBuilder\Product\ProductCommandsBuilderInterface;
 
 class ProductCommandsBuilderTest extends AbstractProductCommandBuilderTest
 {
@@ -40,9 +39,9 @@ class ProductCommandsBuilderTest extends AbstractProductCommandBuilderTest
      *
      * @param array $formData
      * @param array $commandBuilders
-     * @param ProductCommandCollection $expectedCommands
+     * @param array $expectedCommands
      */
-    public function testBuildCommands(array $formData, array $commandBuilders, ProductCommandCollection $expectedCommands)
+    public function testBuildCommands(array $formData, array $commandBuilders, array $expectedCommands)
     {
         $builder = new ProductCommandsBuilder($commandBuilders);
         $builtCommands = $builder->buildCommands($this->getProductId(), $formData);
@@ -51,7 +50,7 @@ class ProductCommandsBuilderTest extends AbstractProductCommandBuilderTest
 
     public function getExpectedCommands()
     {
-        $collection = new ProductCommandCollection();
+        $collection = [];
         yield [
             [],
             [],
@@ -74,39 +73,39 @@ class ProductCommandsBuilderTest extends AbstractProductCommandBuilderTest
         yield [
             ['field_a' => 'c', 'field_b' => 'b'],
             [$alwaysEmptyBuilder, $builderA, $builderB],
-            new ProductCommandCollection([$commandB]),
+            [$commandB],
         ];
 
         yield [
             ['field_a' => 'a'],
             [$alwaysEmptyBuilder, $builderA, $builderB],
-            new ProductCommandCollection([$commandA]),
+            [$commandA],
         ];
 
         yield [
             ['field_a' => 'a', 'field_b' => 'b'],
             [$builderA, $alwaysEmptyBuilder, $builderB],
-            new ProductCommandCollection([$commandA, $commandB]),
+            [$commandA, $commandB],
         ];
 
         yield [
             ['field_a' => 'a', 'field_b' => 'b'],
             [$builderB, $builderA, $alwaysEmptyBuilder],
-            new ProductCommandCollection([$commandB, $commandA]),
+            [$commandB, $commandA],
         ];
 
         $multiBuilder = new MultiCommandsBuilder([$builderA, $builderB]);
         yield [
             ['field_a' => 'a', 'field_b' => 'b'],
             [$multiBuilder, $alwaysEmptyBuilder],
-            new ProductCommandCollection([$commandA, $commandB]),
+            [$commandA, $commandB],
         ];
 
         $multiBuilder = new MultiCommandsBuilder([$builderB, $builderA]);
         yield [
             ['field_a' => 'a', 'field_b' => 'b'],
             [$multiBuilder, $alwaysEmptyBuilder],
-            new ProductCommandCollection([$commandB, $commandA]),
+            [$commandB, $commandA],
         ];
     }
 }
