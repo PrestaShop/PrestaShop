@@ -98,7 +98,7 @@ class CombinationStockType extends TranslatorAwareType
                 ),
                 'help' => $this->trans(
                     'The email will be sent to all the users who have the right to run the stock page. To modify the permissions, go to [1]Advanced Parameters > Team[/1]',
-                    'Admin.Catalog.Feature',
+                    'Admin.Catalog.Help',
                     [
                         '[1]' => sprintf(
                             '<a target="_blank" href="%s">',
