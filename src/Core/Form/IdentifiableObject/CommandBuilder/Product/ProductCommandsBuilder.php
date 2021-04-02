@@ -43,7 +43,7 @@ class ProductCommandsBuilder implements ProductCommandsBuilderInterface
     /**
      * @param ProductCommandsBuilderInterface[] $commandBuilders
      */
-    public function __construct(array $commandBuilders)
+    public function __construct(iterable $commandBuilders)
     {
         $this->commandBuilders = $commandBuilders;
     }
