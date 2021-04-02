@@ -33,6 +33,7 @@ import ProductPartialUpdater from '@pages/product/edit/product-partial-updater';
 import NavbarHandler from '@components/navbar-handler';
 import CombinationsManager from '@pages/product/edit/combinations-manager';
 import ProductTypeManager from '@pages/product/edit/product-type-manager';
+import CategoriesManager from '@pages/product/components/categories';
 import initDropzone from '@pages/product/components/dropzone';
 
 const {$} = window;
@@ -43,7 +44,7 @@ $(() => {
     'TinyMCEEditor',
     'TranslatableInput',
     'EventEmitter',
-    'TextWithLengthCounter',
+    'TextWithLengthCounter'
   ]);
 
   const $productForm = $(ProductMap.productForm);
@@ -83,9 +84,9 @@ $(() => {
       watchedDescription: '.serp-watched-description',
       watchedMetaUrl: '.serp-watched-url:input',
       multiLanguageInput: `${translatorInput.localeInputSelector}:not(.d-none)`,
-      multiLanguageItem: translatorInput.localeItemSelector,
+      multiLanguageItem: translatorInput.localeItemSelector
     },
-    $('#product_preview').data('seo-url'),
+    $('#product_preview').data('seo-url')
   );
 
   initDropzone(ProductMap.dropzoneImagesContainer);
@@ -95,6 +96,7 @@ $(() => {
   new ProductPartialUpdater(window.prestashop.instance.eventEmitter, $productForm, $productFormSubmitButton).watch();
   new FeatureValuesManager(window.prestashop.instance.eventEmitter);
   new CustomizationsManager();
+  new CategoriesManager();
 
   if (productType !== ProductMap.productType.COMBINATIONS) {
     new ProductSuppliersManager();
