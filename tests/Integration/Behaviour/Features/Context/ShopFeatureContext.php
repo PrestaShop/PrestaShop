@@ -75,7 +75,7 @@ class ShopFeatureContext extends AbstractDomainFeatureContext
     }
 
     /**
-     * @Given /^I add a shop group (.+) with name (.+)(?: and color (.+))?$/
+     * @Given /^I add a shop group "(.+)" with name "(.+?)"(?: and color "(.+)")?$/
      *
      * @param string $reference
      * @param string $groupName
@@ -313,12 +313,20 @@ class ShopFeatureContext extends AbstractDomainFeatureContext
                     continue;
                 }
             }
+
             if (!$wasCurrentExpectedShopFound) {
-                throw new RuntimeException(sprintf(
-                    'Expected shop with name %s in shop group %s was not found',
-                    $currentExpectedShop->getName(),
-                    $currentExpectedShop->getGroupName()
-                ));
+                if ($currentExpectedShop instanceof FoundShop) {
+                    throw new RuntimeException(sprintf(
+                        'Expected shop with name %s in shop group %s was not found',
+                        $currentExpectedShop->getName(),
+                        $currentExpectedShop->getGroupName()
+                    ));
+                } else {
+                    throw new RuntimeException(sprintf(
+                        'Expected shop group with name %s',
+                        $currentExpectedShop->getName()
+                    ));
+                }
             }
         }
     }
