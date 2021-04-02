@@ -212,7 +212,6 @@ class ShopFeatureContext extends AbstractDomainFeatureContext
         Cache::clean('StockAvailable::*');
     }
 
-
     /**
      * @Given I add a shop :reference with name :shopName and color :color for the group :shopGroupName
      *
