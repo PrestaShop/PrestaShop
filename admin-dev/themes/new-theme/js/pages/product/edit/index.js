@@ -26,6 +26,7 @@
 import NavbarHandler from '@components/navbar-handler';
 import ProductMap from '@pages/product/product-map';
 
+import CategoriesManager from '@pages/product/components/categories';
 import CombinationsManager from '@pages/product/edit/combinations-manager';
 import CustomizationsManager from '@pages/product/edit/customizations-manager';
 import FeatureValuesManager from '@pages/product/edit/feature-values-manager';
@@ -91,6 +92,7 @@ $(() => {
 
   new FeatureValuesManager(window.prestashop.instance.eventEmitter);
   new CustomizationsManager();
+  new CategoriesManager();
 
   if (productType !== ProductMap.productType.COMBINATIONS) {
     new ProductSuppliersManager(ProductMap.suppliers.productSuppliers, true);

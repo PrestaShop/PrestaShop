@@ -1,4 +1,4 @@
-{#**
+/**
  * Copyright since 2007 PrestaShop SA and Contributors
  * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
  *
@@ -21,18 +21,36 @@
  * @author    PrestaShop SA and Contributors <contact@prestashop.com>
  * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
- *#}
+ */
 
-<div role="tabpanel" class="form-contenttab tab-pane container-fluid active" id="basic-tab">
-  <div class="row">
-    <div class="col-md-9 left-column">
-      {% form_theme productForm.basic.features '@PrestaShop/Admin/Sell/Catalog/Product/Form/features_form_theme.html.twig' %}
-      {{ form_row(productForm.basic) }}
-    </div>
-    <div class="col-md-3 right-column">
-      {{ form_row(productForm.shortcuts) }}
+import ProductMap from '@pages/product/product-map';
+import Router from '@components/router';
+import ProductEventMap from '@pages/product/product-event-map';
+import {getCategories} from '@pages/product/services/categories';
 
-      {{ include('@PrestaShop/Admin/Sell/Catalog/Product/Blocks/categories.html.twig') }}
-    </div>
-  </div>
-</div>
+const {$} = window;
+
+export default class CategoriesManager {
+  /**
+   * @param eventEmitter {EventEmitter}
+   */
+  constructor() {
+    this.router = new Router();
+    this.initCategories();
+    this.categoriesElement = document.querySelector('.js-categories-tree');
+    this.datas = [];
+
+    return {};
+  }
+
+  async initCategories() {
+    this.datas = await getCategories(1);
+
+    this.initTree();
+  }
+
+  initTree() {
+    this.categoriesElement.querySelector('fieldset').classList.remove('hide');
+    this.categoriesElement.querySelector('.categories-tree-loader').classList.add('hide');
+  }
+}
