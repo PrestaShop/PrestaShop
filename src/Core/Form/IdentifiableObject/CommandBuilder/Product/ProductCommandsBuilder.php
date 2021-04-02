@@ -36,12 +36,12 @@ use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductId;
 class ProductCommandsBuilder
 {
     /**
-     * @var ProductCommandBuilderInterface[]
+     * @var ProductCommandsBuilderInterface[]
      */
     private $commandBuilders;
 
     /**
-     * @param ProductCommandBuilderInterface[] $commandBuilders
+     * @param ProductCommandsBuilderInterface[] $commandBuilders
      */
     public function __construct(array $commandBuilders)
     {
@@ -58,7 +58,7 @@ class ProductCommandsBuilder
     {
         $commandCollection = new ProductCommandCollection();
         foreach ($this->commandBuilders as $commandBuilder) {
-            $commands = $commandBuilder->buildCommand($productId, $formData);
+            $commands = $commandBuilder->buildCommands($productId, $formData);
             if (!empty($commands)) {
                 $commandCollection->merge($commands);
             }

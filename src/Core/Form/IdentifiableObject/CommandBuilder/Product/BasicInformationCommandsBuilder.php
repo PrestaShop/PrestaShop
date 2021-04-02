@@ -24,21 +24,40 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
 
+declare(strict_types=1);
+
 namespace PrestaShop\PrestaShop\Core\Form\IdentifiableObject\CommandBuilder\Product;
 
+use PrestaShop\PrestaShop\Core\Domain\Product\Command\UpdateProductBasicInformationCommand;
 use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductId;
 
 /**
- * This interface is used by ProductCommandsBuilder each object which implements must build
- * a product command based on the input form data.
+ * Builder used to build UpdateProductBasicInformationCommand
  */
-interface ProductCommandBuilderInterface
+class BasicInformationCommandsBuilder implements ProductCommandsBuilderInterface
 {
     /**
-     * @param ProductId $productId
-     * @param array $formData
-     *
-     * @return array Returns empty array if the required data for the command is absent
+     * {@inheritdoc}
      */
-    public function buildCommand(ProductId $productId, array $formData): array;
+    public function buildCommands(ProductId $productId, array $formData): array
+    {
+        if (!isset($formData['basic'])) {
+            return [];
+        }
+
+        $basicData = $formData['basic'];
+        $command = new UpdateProductBasicInformationCommand($productId->getValue());
+
+        if (isset($basicData['name'])) {
+            $command->setLocalizedNames($basicData['name']);
+        }
+        if (isset($basicData['description'])) {
+            $command->setLocalizedDescriptions($basicData['description']);
+        }
+        if (isset($basicData['description_short'])) {
+            $command->setLocalizedShortDescriptions($basicData['description_short']);
+        }
+
+        return [$command];
+    }
 }

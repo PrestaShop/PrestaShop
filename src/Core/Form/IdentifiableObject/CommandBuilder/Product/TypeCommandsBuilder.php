@@ -28,39 +28,23 @@ declare(strict_types=1);
 
 namespace PrestaShop\PrestaShop\Core\Form\IdentifiableObject\CommandBuilder\Product;
 
-use PrestaShop\PrestaShop\Core\Domain\Product\Command\UpdateProductSeoCommand;
+use PrestaShop\PrestaShop\Core\Domain\Product\Command\UpdateProductTypeCommand;
 use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductId;
 
 /**
- * Builder used to build UpdateSEO
+ * Builder used to build UpdateTypeCommand
  */
-class SEOCommandBuilder implements ProductCommandBuilderInterface
+class TypeCommandsBuilder implements ProductCommandsBuilderInterface
 {
-    public function buildCommand(ProductId $productId, array $formData): array
+    public function buildCommands(ProductId $productId, array $formData): array
     {
-        if (!isset($formData['seo']) && !isset($formData['redirect_option'])) {
+        if (!isset($formData['basic']['type'])) {
             return [];
         }
 
-        $seoData = $formData['seo'] ?? [];
-        $redirectionData = $formData['redirect_option'] ?? [];
-        $command = new UpdateProductSeoCommand($productId->getValue());
-
-        if (isset($seoData['meta_title'])) {
-            $command->setLocalizedMetaTitles($seoData['meta_title']);
-        }
-        if (isset($seoData['meta_description'])) {
-            $command->setLocalizedMetaDescriptions($seoData['meta_description']);
-        }
-        if (isset($seoData['link_rewrite'])) {
-            $command->setLocalizedLinkRewrites($seoData['link_rewrite']);
-        }
-
-        if (isset($redirectionData['type'])) {
-            $targetId = (int) ($redirectionData['target'] ?? 0);
-            $command->setRedirectOption($redirectionData['type'], $targetId);
-        }
-
-        return [$command];
+        return [new UpdateProductTypeCommand(
+            $productId->getValue(),
+            $formData['basic']['type']
+        )];
     }
 }

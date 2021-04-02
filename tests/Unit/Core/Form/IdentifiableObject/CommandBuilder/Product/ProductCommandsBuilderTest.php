@@ -29,7 +29,7 @@ declare(strict_types=1);
 namespace Tests\Unit\Core\Form\IdentifiableObject\CommandBuilder\Product;
 
 use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductId;
-use PrestaShop\PrestaShop\Core\Form\IdentifiableObject\CommandBuilder\Product\ProductCommandBuilderInterface;
+use PrestaShop\PrestaShop\Core\Form\IdentifiableObject\CommandBuilder\Product\ProductCommandsBuilderInterface;
 use PrestaShop\PrestaShop\Core\Form\IdentifiableObject\CommandBuilder\Product\ProductCommandCollection;
 use PrestaShop\PrestaShop\Core\Form\IdentifiableObject\CommandBuilder\Product\ProductCommandsBuilder;
 
@@ -134,7 +134,7 @@ class FakeProductCommand
     }
 }
 
-class ConditionBuilder implements ProductCommandBuilderInterface
+class ConditionBuilder implements ProductCommandsBuilderInterface
 {
     /**
      * @var array
@@ -159,7 +159,7 @@ class ConditionBuilder implements ProductCommandBuilderInterface
     /**
      * {@inheritdoc}
      */
-    public function buildCommand(ProductId $productId, array $formData): array
+    public function buildCommands(ProductId $productId, array $formData): array
     {
         foreach ($this->formCondition as $key => $value) {
             if (!isset($formData[$key]) || $formData[$key] !== $value) {
@@ -171,21 +171,21 @@ class ConditionBuilder implements ProductCommandBuilderInterface
     }
 }
 
-class AlwaysEmptyBuilder implements ProductCommandBuilderInterface
+class AlwaysEmptyBuilder implements ProductCommandsBuilderInterface
 {
     /**
      * {@inheritdoc}
      */
-    public function buildCommand(ProductId $productId, array $formData): array
+    public function buildCommands(ProductId $productId, array $formData): array
     {
         return [];
     }
 }
 
-class MultiCommandsBuilder implements ProductCommandBuilderInterface
+class MultiCommandsBuilder implements ProductCommandsBuilderInterface
 {
     /**
-     * @var ProductCommandBuilderInterface[]
+     * @var ProductCommandsBuilderInterface[]
      */
     private $builders;
 
@@ -202,11 +202,11 @@ class MultiCommandsBuilder implements ProductCommandBuilderInterface
     /**
      * {@inheritdoc}
      */
-    public function buildCommand(ProductId $productId, array $formData): array
+    public function buildCommands(ProductId $productId, array $formData): array
     {
         $commands = [];
         foreach ($this->builders as $builder) {
-            $commands = array_merge($commands, $builder->buildCommand($productId, $formData));
+            $commands = array_merge($commands, $builder->buildCommands($productId, $formData));
         }
 
         return $commands;

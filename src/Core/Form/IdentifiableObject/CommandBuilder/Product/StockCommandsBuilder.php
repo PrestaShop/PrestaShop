@@ -34,12 +34,12 @@ use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductId;
 /**
  * Builds commands from product stock form type
  */
-final class StockCommandBuilder implements ProductCommandBuilderInterface
+final class StockCommandsBuilder implements ProductCommandsBuilderInterface
 {
     /**
      * {@inheritdoc}
      */
-    public function buildCommand(ProductId $productId, array $formData): array
+    public function buildCommands(ProductId $productId, array $formData): array
     {
         if (!isset($formData['stock'])) {
             return [];
