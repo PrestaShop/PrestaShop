@@ -120,7 +120,6 @@ class OrderDetailUpdater
      * @param int $combinationId
      * @param Number $priceTaxExcluded
      * @param Number $priceTaxIncluded
-     * @param Number $ecotax
      *
      * @throws OrderException
      */
@@ -129,8 +128,7 @@ class OrderDetailUpdater
         int $productId,
         int $combinationId,
         Number $priceTaxExcluded,
-        Number $priceTaxIncluded,
-        Number $ecotax
+        Number $priceTaxIncluded
     ): void {
         list($roundType, $computingPrecision, $taxAddress) = $this->prepareOrderContext($order);
 
@@ -143,8 +141,7 @@ class OrderDetailUpdater
                 $priceTaxIncluded,
                 $roundType,
                 $computingPrecision,
-                $taxAddress,
-                $ecotax
+                $taxAddress
             );
         } finally {
             $this->contextStateManager->restorePreviousContext();
@@ -314,8 +311,7 @@ class OrderDetailUpdater
         Number $priceTaxIncluded,
         int $roundType,
         int $computingPrecision,
-        Address $taxAddress,
-        Number $ecotax
+        Address $taxAddress
     ): void {
         $identicalOrderDetails = $this->getOrderDetailsForProduct($order, $productId, $combinationId);
         if (empty($identicalOrderDetails)) {
@@ -324,8 +320,15 @@ class OrderDetailUpdater
 
         // Get precise prices thanks to first OrderDetail (they all have the same price anyway)
         $orderDetail = $identicalOrderDetails[0];
+        $ecotax = new Number($orderDetail->ecotax);
+
+        $ecotaxTaxCalculator = $this->getTaxCalculatorForEcotax($taxAddress);
+        $ecotaxTaxFactor = new Number((string) (1 + ($ecotaxTaxCalculator->getTotalRate() / 100)));
+        $ecotax = $ecotax->times($ecotaxTaxFactor);
+
         $priceTaxExcluded = $priceTaxExcluded->minus($ecotax);
         $priceTaxIncluded = $priceTaxIncluded->minus($ecotax);
+
         $precisePriceTaxExcluded = $this->getPrecisePriceTaxExcluded($priceTaxIncluded, $priceTaxExcluded, $order, $orderDetail, $taxAddress);
         $precisePriceTaxIncluded = $this->getPrecisePriceTaxIncluded($priceTaxIncluded, $priceTaxExcluded, $order, $orderDetail, $taxAddress);
 
@@ -481,6 +484,20 @@ class OrderDetailUpdater
     private function getTaxCalculatorByAddress(Address $address, OrderDetail $orderDetail): TaxCalculator
     {
         $tax_manager = TaxManagerFactory::getManager($address, $orderDetail->getTaxRulesGroupId());
+
+        return $tax_manager->getTaxCalculator();
+    }
+
+    /**
+     * Get a TaxCalculator adapted for Ecotax
+     *
+     * @param Address $address
+     *
+     * @return TaxCalculator
+     */
+    private function getTaxCalculatorForEcotax(Address $address): TaxCalculator
+    {
+        $tax_manager = TaxManagerFactory::getManager($address, (int) \Configuration::get('PS_ECOTAX_TAX_RULES_GROUP_ID'));
 
         return $tax_manager->getTaxCalculator();
     }
