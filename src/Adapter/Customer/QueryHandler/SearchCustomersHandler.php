@@ -94,7 +94,7 @@ final class SearchCustomersHandler implements SearchCustomersHandlerInterface
 
                 $isB2BEnabled = $this->configuration->getBoolean('PS_B2B_ENABLE');
 
-                if(!$isB2BEnabled) {
+                if (!$isB2BEnabled) {
                     unset(
                         $customerArray['company']
                     );
