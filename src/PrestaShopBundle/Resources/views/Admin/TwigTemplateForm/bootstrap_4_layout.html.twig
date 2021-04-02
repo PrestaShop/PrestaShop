@@ -722,8 +722,6 @@
     }
   </style>
   <div class="custom-file">
-    TEST
-
     {% set attr = attr|merge({
       class: (attr.class|default('') ~ ' custom-file-input')|trim,
       'data-multiple-files-text': '%count% file(s)'|trans({}, 'Admin.Global'),
