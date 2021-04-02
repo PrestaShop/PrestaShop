@@ -95,13 +95,13 @@ class ShopFeatureContext extends AbstractDomainFeatureContext
     }
 
     /**
-     * @Given /I add a shop "(.+)" with name "(.+)" for the group "(.+)"$/
+     * @Given I add a shop :reference with name :shopName and color :color for the group :shopGroupName
      *
      * @param string $reference
      * @param string $shopName
      * @param string $shopGroupName
      */
-    public function addShop(string $reference, string $shopName, string $shopGroupName): void
+    public function addShop(string $reference, string $shopName, string $color, string $shopGroupName): void
     {
         $shop = new Shop();
         $shop->active = true;
@@ -110,17 +110,11 @@ class ShopFeatureContext extends AbstractDomainFeatureContext
         $shop->id_category = 2;
         $shop->theme_name = _THEME_NAME_;
         $shop->name = $shopName;
+        $shop->color = $color;
         if (!$shop->add()) {
             throw new RuntimeException(sprintf('Could not create shop: %s', Db::getInstance()->getMsgError()));
         }
         $shop->setTheme();
-
-        // Link Country to new Shop
-        Db::getInstance()->execute(
-            'INSERT INTO `' . _DB_PREFIX_ . 'country_shop` (`id_country`, `id_shop`) ' .
-            'SELECT id_country, ' . $shop->id . ' ' .
-            'FROM `' . _DB_PREFIX_ . 'country` '
-        );
 
         SharedStorage::getStorage()->set($reference, $shop);
     }
@@ -210,30 +204,6 @@ class ShopFeatureContext extends AbstractDomainFeatureContext
         // Clean cache
         Cache::clean('Shop::getCompleteListOfShopsID');
         Cache::clean('StockAvailable::*');
-    }
-
-    /**
-     * @Given I add a shop :reference with name :shopName and color :color for the group :shopGroupName
-     *
-     * @param string $reference
-     * @param string $shopName
-     * @param string $shopGroupName
-     */
-    public function addShop(string $reference, string $shopName, string $color, string $shopGroupName): void
-    {
-        $shop = new Shop();
-        $shop->active = true;
-        $shop->id_shop_group = ShopGroup::getIdByName($shopGroupName);
-        $shop->id_category = 2;
-        $shop->theme_name = _THEME_NAME_;
-        $shop->name = $shopName;
-        $shop->color = $color;
-        if (!$shop->add()) {
-            throw new RuntimeException(sprintf('Could not create shop: %s', Db::getInstance()->getMsgError()));
-        }
-        $shop->setTheme();
-
-        SharedStorage::getStorage()->set($reference, $shop);
     }
 
     /**
