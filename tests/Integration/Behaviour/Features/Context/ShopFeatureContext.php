@@ -75,15 +75,17 @@ class ShopFeatureContext extends AbstractDomainFeatureContext
     }
 
     /**
-     * @Given /I add a shop group "(.+)" with name "(.+)"$/
+     * @Given /^I add a shop group (.+) with name (.+)(?: and color (.+))?$/
      *
      * @param string $reference
      * @param string $groupName
+     * @param string $color
      */
-    public function addShopGroup(string $reference, string $groupName): void
+    public function addShopGroup(string $reference, string $groupName, ?string $color): void
     {
         $shopGroup = new ShopGroup();
         $shopGroup->name = $groupName;
+        $shopGroup->color = $color;
         $shopGroup->active = true;
         if (!$shopGroup->add()) {
             throw new RuntimeException(sprintf('Could not create shop group: %s', Db::getInstance()->getMsgError()));
@@ -210,25 +212,6 @@ class ShopFeatureContext extends AbstractDomainFeatureContext
         Cache::clean('StockAvailable::*');
     }
 
-    /**
-     * @Given I add a shop group :reference with name :groupName and color :color
-     *
-     * @param string $reference
-     * @param string $groupName
-     * @param string $color
-     */
-    public function addShopGroup(string $reference, string $groupName, string $color): void
-    {
-        $shopGroup = new ShopGroup();
-        $shopGroup->name = $groupName;
-        $shopGroup->color = $color;
-        $shopGroup->active = true;
-        if (!$shopGroup->add()) {
-            throw new RuntimeException(sprintf('Could not create shop group: %s', Db::getInstance()->getMsgError()));
-        }
-
-        SharedStorage::getStorage()->set($reference, $shopGroup);
-    }
 
     /**
      * @Given I add a shop :reference with name :shopName and color :color for the group :shopGroupName
