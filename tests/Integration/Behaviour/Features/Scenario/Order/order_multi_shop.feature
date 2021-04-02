@@ -291,7 +291,7 @@ Feature: Order from Back Office (BO)
   Scenario: In All Shop Context, Update product in order
     # Create Shop Group & Shops
     When I add a shop group "shopGroup1" with name "Shop Group 1"
-    And I add a shop "shop2" with name "Shop 2" for the group "Shop Group 1"
+    And I add a shop "shop2" with name "Shop 2" and color "blue" for the group "Shop Group 1"
     Then I should have 2 shop groups
     And I should have 1 shop in group "Default"
     And I should have 1 shop in group "Shop Group 1"
