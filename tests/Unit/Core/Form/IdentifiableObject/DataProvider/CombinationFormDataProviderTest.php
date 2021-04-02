@@ -68,7 +68,8 @@ class CombinationFormDataProviderTest extends TestCase
         $provider = new CombinationFormDataProvider($queryBusMock);
 
         $formData = $provider->getData(static::COMBINATION_ID);
-        $this->assertEquals($expectedData, $formData);
+        // assertSame is very important here We can't assume null and 0 are the same thing
+        $this->assertSame($expectedData, $formData);
     }
 
     public function getExpectedData(): Generator
@@ -241,7 +242,7 @@ class CombinationFormDataProviderTest extends TestCase
                 'quantity' => static::DEFAULT_QUANTITY,
                 'minimal_quantity' => 0,
                 'stock_location' => 'location',
-                'low_stock_threshold' => 0,
+                'low_stock_threshold' => null,
                 'low_stock_alert' => false,
                 'available_date' => '',
             ],
