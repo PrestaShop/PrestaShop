@@ -81,12 +81,16 @@ class ShopFeatureContext extends AbstractDomainFeatureContext
      * @param string $groupName
      * @param string $color
      */
-    public function addShopGroup(string $reference, string $groupName, ?string $color): void
+    public function addShopGroup(string $reference, string $groupName, string $color = null): void
     {
         $shopGroup = new ShopGroup();
         $shopGroup->name = $groupName;
-        $shopGroup->color = $color;
         $shopGroup->active = true;
+
+        if ($color !== null) {
+            $shopGroup->color = $color;
+        }
+
         if (!$shopGroup->add()) {
             throw new RuntimeException(sprintf('Could not create shop group: %s', Db::getInstance()->getMsgError()));
         }
