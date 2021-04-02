@@ -1462,6 +1462,8 @@ services:
         class: 'PrestaShopBundle\Form\Admin\Sell\Product\Combination\CombinationStockType'
         parent: 'form.type.translatable.aware'
         public: true
+        arguments:
+            - '@router'
         tags:
             - { name: form.type }
 

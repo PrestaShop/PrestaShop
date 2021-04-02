@@ -31,14 +31,36 @@ namespace PrestaShopBundle\Form\Admin\Sell\Product\Combination;
 use PrestaShopBundle\Form\Admin\Type\DatePickerType;
 use PrestaShopBundle\Form\Admin\Type\SwitchType;
 use PrestaShopBundle\Form\Admin\Type\TranslatorAwareType;
+use PrestaShopBundle\Form\DataTransformer\DefaultEmptyDataTransformer;
 use Symfony\Component\Form\Extension\Core\Type\NumberType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
+use Symfony\Component\Routing\RouterInterface;
+use Symfony\Component\Translation\TranslatorInterface;
 use Symfony\Component\Validator\Constraints\NotBlank;
 use Symfony\Component\Validator\Constraints\Type;
 
 class CombinationStockType extends TranslatorAwareType
 {
+    /**
+     * @var RouterInterface
+     */
+    private $router;
+
+    /**
+     * @param TranslatorInterface $translator
+     * @param array $locales
+     * @param RouterInterface $router
+     */
+    public function __construct(
+        TranslatorInterface $translator,
+        array $locales,
+        RouterInterface $router
+    ) {
+        parent::__construct($translator, $locales);
+        $this->router = $router;
+    }
+
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
@@ -63,6 +85,7 @@ class CombinationStockType extends TranslatorAwareType
             ])
             ->add('low_stock_threshold', NumberType::class, [
                 'label' => $this->trans('Low stock level', 'Admin.Catalog.Feature'),
+                'help' => $this->trans('Leave empty to disable', 'Admin.Catalog.Help'),
                 'constraints' => [
                     new Type(['type' => 'numeric']),
                 ],
@@ -73,11 +96,25 @@ class CombinationStockType extends TranslatorAwareType
                     'Send me an email when the quantity is below or equals this level',
                     'Admin.Catalog.Feature'
                 ),
+                'help' => $this->trans(
+                    'The email will be sent to all the users who have the right to run the stock page. To modify the permissions, go to [1]Advanced Parameters > Team[/1]',
+                    'Admin.Catalog.Feature',
+                    [
+                        '[1]' => sprintf(
+                            '<a target="_blank" href="%s">',
+                            $this->router->generate('admin_employees_index')
+                        ),
+                        '[/1]' => '</a>',
+                    ]
+                ),
             ])
             ->add('available_date', DatePickerType::class, [
                 'label' => $this->trans('Availability date', 'Admin.Catalog.Feature'),
                 'required' => false,
             ])
         ;
+
+        // @todo This model transformer association could be simplified with a FormExtension that would allow default_empty_data option
+        $builder->get('low_stock_threshold')->addModelTransformer(new DefaultEmptyDataTransformer(0, null));
     }
 }
