@@ -82,7 +82,7 @@ class CombinationFormDataProvider implements FormDataProviderInterface
             'quantity' => $stockInformation->getQuantity(),
             'minimal_quantity' => $stockInformation->getMinimalQuantity(),
             'stock_location' => $stockInformation->getLocation(),
-            'low_stock_threshold' => $stockInformation->getLowStockThreshold(),
+            'low_stock_threshold' => $stockInformation->getLowStockThreshold() ?: null,
             'low_stock_alert' => $stockInformation->isLowStockAlertEnabled(),
             'available_date' => $availableDate ? $availableDate->format(DateTime::DEFAULT_DATE_FORMAT) : '',
         ];
