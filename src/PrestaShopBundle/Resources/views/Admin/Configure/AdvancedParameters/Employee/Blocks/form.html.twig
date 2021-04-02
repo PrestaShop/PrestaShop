@@ -64,7 +64,6 @@
 
         {{ form_row(employeeForm.has_enabled_gravatar) }}
         {{ form_row(employeeForm.email) }}
-        {% set passwordMinLength = constant('PrestaShop\\PrestaShop\\Core\\Domain\\Employee\\ValueObject\\Password::MIN_LENGTH') %}
         {% set passwordHelpMessage = 'Password should be at least %num% characters long.'|trans({ '%num%': passwordMinLength }, 'Admin.Advparameters.Help') %}
 
         {% if isRestrictedAccess %}
