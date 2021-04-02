@@ -70,7 +70,7 @@ class CombinationController extends FrameworkBundleAdminController
             $result = $this->getCombinationFormHandler()->handleFor($combinationId, $combinationForm);
 
             if ($result->isSubmitted() && $result->isValid()) {
-                $this->addFlash('success', $this->trans('Successful update.', 'Admin.Notifications.Success'));
+                $this->addFlash('success', $this->trans('Update successful', 'Admin.Notifications.Success'));
 
                 return $this->redirectToRoute('admin_products_combinations_edit_combination', [
                     'combinationId' => $combinationId,
