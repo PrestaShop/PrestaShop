@@ -1,4 +1,4 @@
-{#**
+/**
  * Copyright since 2007 PrestaShop SA and Contributors
  * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
  *
@@ -21,29 +21,20 @@
  * @author    PrestaShop SA and Contributors <contact@prestashop.com>
  * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
- *#}
+ */
 
-{% form_theme productForm.shortcuts '@PrestaShop/Admin/Sell/Catalog/Product/Form/shortcuts_form_theme.html.twig' %}
+import Router from '@components/router';
 
-<div role="tabpanel" class="form-contenttab tab-pane container-fluid active" id="basic-tab">
-  <div class="row">
-    <div class="col-md-9 left-column">
-      {% if productForm.images is defined %}
-        {{ form_widget(productForm.images) }}
-      {% endif %}
+const router = new Router();
+const {$} = window;
 
-      {{ form_widget(productForm.basic) }}
+export const getCategories = async productId =>
+  /* const categoriesUrl = router.generate('admin_products_v2_delete_image', {
+    productId
+    }); */
 
-      {{ include('@PrestaShop/Admin/Sell/Catalog/Product/Blocks/features.html.twig', {
-        'productForm': productForm,
-      }) }}
-
-      {{ form_widget(productForm.manufacturer) }}
-    </div>
-    <div class="col-md-3 right-column">
-      {{ form_row(productForm.shortcuts) }}
-
-      {{ include('@PrestaShop/Admin/Sell/Catalog/Product/Blocks/categories.html.twig') }}
-    </div>
-  </div>
-</div>
+  // return $.get(categoriesUrl);
+  JSON.parse(document.querySelector('#ps_categoryTree').innerHTML);
+export default {
+  getCategories
+};
