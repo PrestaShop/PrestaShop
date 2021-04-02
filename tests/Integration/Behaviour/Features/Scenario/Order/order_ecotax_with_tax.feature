@@ -3,6 +3,7 @@
 @reboot-kernel-before-feature
 @clear-cache-before-feature
 @order-ecotax
+@order-ecotax-with-tax
 Feature: Ecotax for Order in Back Office (BO)
 
   Background:
@@ -18,6 +19,14 @@ Feature: Ecotax for Order in Back Office (BO)
     And I add the tax rule group "fr-tax-6-group" for the tax "fr-tax-6" with the following conditions:
       | name         | FR Tax (6%)   |
       | country      | FR            |
+    And I add new tax "fr-tax-42" with following properties:
+      | name         | FR Tax (42%)  |
+      | rate         | 42            |
+      | is_enabled   | true          |
+    And I add the tax rule group "fr-tax-42-group" for the tax "fr-tax-42" with the following conditions:
+      | name         | FR Tax (42%)  |
+      | country      | FR            |
+    And shop configuration for "PS_ECOTAX_TAX_RULES_GROUP_ID" is set to fr-tax-42-group
     ## Create Product
     And there is a product in the catalog named "Free Product" with a price of 0.0 and 100 items in stock
     Then the available stock for product "Free Product" should be 100
@@ -74,6 +83,7 @@ Feature: Ecotax for Order in Back Office (BO)
     When I remove product "Test Ecotax Product" from order "bo_order1"
     Then order "bo_order1" should have 1 products in total
 
+  @order-ecotax-with-tax
   Scenario: Add product (with ecotax) to an Order
     ## Set EcoTax
     When the product "Test Ecotax Product" ecotax is 5.12
@@ -92,6 +102,7 @@ Feature: Ecotax for Order in Back Office (BO)
     And product "Test Ecotax Product" in order "bo_order1" has following details:
       | product_quantity            | 2     |
       | ecotax                      | 5.12  |
+      | ecotax_tax_rate             | 42.00 |
       | product_price               | 20.12 |
       # 20.12 = 15 + 5.12
       | original_product_price      | 20.12 |
@@ -129,6 +140,7 @@ Feature: Ecotax for Order in Back Office (BO)
     And product "Test Ecotax Product" in order "bo_order1" has following details:
       | product_quantity            | 3         |
       | ecotax                      | 5.12      |
+      | ecotax_tax_rate             | 42.00     |
       | product_price               | 20.83     |
       # 20.83 = 15.71 + 5.12
       | original_product_price      | 20.12     |
@@ -139,7 +151,7 @@ Feature: Ecotax for Order in Back Office (BO)
       # 21.7726 = (15.71 + 6%) + 5.12
       | total_price_tax_excl        | 62.49     |
       # 62.49 = 20.83 * 3
-      | total_price_tax_incl        | 65.32   |
+      | total_price_tax_incl        | 65.32     |
       # 65.3178 = 21.7726 * 3
     # Reset
     When the product "Test Ecotax Product" ecotax is 0.00
@@ -178,6 +190,7 @@ Feature: Ecotax for Order in Back Office (BO)
     And product "Test Ecotax Product" in order "bo_order1" has following details:
       | product_quantity            | 3         |
       | ecotax                      | 5.12      |
+      | ecotax_tax_rate             | 42.00     |
       | product_price               | 24.99     |
       # 24.99 = 19.87 + 5.12
       | original_product_price      | 20.12     |
@@ -227,6 +240,7 @@ Feature: Ecotax for Order in Back Office (BO)
     And product "Test Ecotax Product" in order "bo_order1" has following details:
       | product_quantity            | 17         |
       | ecotax                      | 5.12       |
+      | ecotax_tax_rate             | 42.00      |
       | product_price               | 20.12      |
       # 20.12 = 15 + 5.12
       | original_product_price      | 20.12      |
