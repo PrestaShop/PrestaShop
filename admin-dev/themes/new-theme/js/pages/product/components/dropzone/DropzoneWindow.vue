@@ -67,7 +67,7 @@
       @click="$emit('selectAll')"
       v-if="files.length > 0 && selectedFiles.length !== files.length"
     >
-      {{ $t('window.selectAll') }}
+      {{ $t("window.selectAll") }}
     </p>
     <p
       class="dropzone-window-unselect"
@@ -76,7 +76,7 @@
       data-toggle="pstooltip"
       :data-original-title="$t('window.zoom')"
     >
-      {{ $t('window.unselectAll') }}
+      {{ $t("window.unselectAll") }}
     </p>
 
     <div
@@ -93,7 +93,7 @@
           @change="coverChanged"
         >
         <i class="md-checkbox-control" />
-        {{ $t('window.useAsCover') }}
+        {{ $t("window.useAsCover") }}
       </label>
     </div>
 
@@ -111,7 +111,7 @@
         for="caption-textarea"
         class="control-label"
       >{{
-        $t('window.caption')
+        $t("window.caption")
       }}</label>
       <div
         class="dropdown"
@@ -158,7 +158,7 @@
         @click="$emit('saveSelectedFile', captionValue, coverData)"
       >
         <span v-if="!loading">
-          {{ $t('window.saveImage') }}
+          {{ $t("window.saveImage") }}
         </span>
         <span
           class="spinner-border spinner-border-sm"
@@ -172,6 +172,10 @@
 </template>
 
 <script>
+  import ProductMap from '@pages/product/product-map';
+
+  const DropzoneMap = ProductMap.dropzone;
+
   export default {
     name: 'DropzoneWindow',
     props: {
@@ -207,7 +211,7 @@
        * We need to watch selected files to manage multilang
        * of only one file or multiple files then the value is sent
        * on save.
-      */
+       */
       selectedFiles(value) {
         if (value.length > 1) {
           this.captionValue = {};
@@ -254,7 +258,7 @@
        * Used to open the native file manager
        */
       openFileManager() {
-        const fileInput = document.querySelector('.dropzone-window-filemanager');
+        const fileInput = document.querySelector(DropzoneMap.windowFileManager);
         fileInput.click();
       },
       /**
