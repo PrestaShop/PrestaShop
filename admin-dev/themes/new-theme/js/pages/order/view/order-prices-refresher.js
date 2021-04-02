@@ -50,6 +50,7 @@ export default class OrderPricesRefresher {
       productPricesList.forEach((productPrices) => {
         const orderProductTrId = OrderViewPageMap.productsTableRow(productPrices.orderDetailId);
         let $quantity = $(productPrices.quantity);
+
         if (productPrices.quantity > 1) {
           $quantity = $quantity.wrap('<span class="badge badge-secondary rounded-circle"></span>');
         }

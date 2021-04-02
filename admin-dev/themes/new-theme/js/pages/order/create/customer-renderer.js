@@ -158,7 +158,6 @@ export default class CustomerRenderer {
       $cartsTable.find('tbody').append($cartsTableRow);
     });
 
-
     // Show cart details in fancy box
     $(createOrderMap.cartDetailsBtn).fancybox({
       type: 'iframe',
