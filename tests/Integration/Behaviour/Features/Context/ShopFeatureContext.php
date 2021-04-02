@@ -41,6 +41,7 @@ use Shop;
 use ShopGroup;
 use ShopUrl;
 use Tests\Integration\Behaviour\Features\Context\Domain\AbstractDomainFeatureContext;
+use Tests\Integration\Behaviour\Features\Context\Util\PrimitiveUtils;
 
 class ShopFeatureContext extends AbstractDomainFeatureContext
 {
@@ -244,7 +245,8 @@ class ShopFeatureContext extends AbstractDomainFeatureContext
         $foundElements = [];
 
         foreach ($dataRows as $row) {
-            if (!$row['is_shop_group']) {
+            $isShopGroup = PrimitiveUtils::castStringBooleanIntoBoolean($row['is_shop_group']);
+            if (!$isShopGroup) {
                 $foundElements[] = new FoundShop(
                     4, // id not relevant for the test
                     $row['color'],
