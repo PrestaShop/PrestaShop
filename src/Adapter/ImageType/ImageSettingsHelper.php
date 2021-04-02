@@ -107,16 +107,15 @@ class ImageSettingsHelper implements ImageSettingsHelperInterface
      */
     public function showMovingForm(): bool
     {
-        $dir = _PS_PROD_IMG_DIR_;
         $displayMove = false;
 
-        if (!is_dir($dir)) {
+        if (!is_dir($this->productImagesDir)) {
             return false;
         }
 
-        if ($dh = opendir($dir)) {
+        if ($dh = opendir($this->productImagesDir)) {
             while (($file = readdir($dh)) !== false && $displayMove === false) {
-                if (!is_dir($dir . DIRECTORY_SEPARATOR . $file) && $file[0] != '.' && is_numeric($file[0])) {
+                if (!is_dir($this->productImagesDir . DIRECTORY_SEPARATOR . $file) && $file[0] != '.' && is_numeric($file[0])) {
                     $displayMove = true;
                 }
             }
