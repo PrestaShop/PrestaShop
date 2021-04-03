@@ -424,7 +424,7 @@ class HelperListCore extends Helper
      *       ],
      *     fields_display: // attribute $fields_list of the admin controller
      *   }
-     * or somethins like this:
+     * or somethings like this:
      *   {
      *     use_parent_structure: false // If false, data need to be an html
      *     data:

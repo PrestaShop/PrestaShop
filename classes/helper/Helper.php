@@ -117,7 +117,7 @@ class HelperCore
     /**
      * @deprecated 1.5.0
      */
-    public static function renderAdminCategorieTree(
+    public static function renderAdminCategoriesTree(
         $translations,
         $selected_cat = array(),
         $input_name = 'categoryBox',
