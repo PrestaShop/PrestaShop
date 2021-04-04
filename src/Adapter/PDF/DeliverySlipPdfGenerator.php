@@ -75,6 +75,7 @@ final class DeliverySlipPdfGenerator implements PDFGeneratorInterface
         Hook::exec('actionPDFDeliverySlipGenerator', ['order' => $order]);
 
         $order_invoice_collection = $order->getInvoicesCollection();
+
         $pdf = new PDF($order_invoice_collection, PDF::TEMPLATE_DELIVERY_SLIP, Context::getContext()->smarty);
         $pdf->render();
     }
