@@ -72,7 +72,8 @@ final class DeliverySlipPdfGenerator implements PDFGeneratorInterface
             throw new RuntimeException($this->translator->trans('The order cannot be found within your database.', [], 'Admin.Orderscustomers.Notification'));
         }
         
-        Hook::exec('actionPDFDeliverySlipGenerator', ['order' => $order]);
+        // if the hook returned something, ignore de default delivery slip flow.
+        if (Hook::exec('actionPDFDeliverySlipGenerator', ['order' => $order])) return;
 
         $order_invoice_collection = $order->getInvoicesCollection();
 
