@@ -27,9 +27,9 @@
 namespace PrestaShop\PrestaShop\Adapter\PDF;
 
 use Context;
+use Hook;
 use Order;
 use PDF;
-use Hook;
 use PrestaShop\PrestaShop\Core\Exception\CoreException;
 use PrestaShop\PrestaShop\Core\PDF\PDFGeneratorInterface;
 use RuntimeException;
