@@ -29,6 +29,7 @@ namespace PrestaShop\PrestaShop\Adapter\PDF;
 use Context;
 use Order;
 use PDF;
+use Hook;
 use PrestaShop\PrestaShop\Core\Exception\CoreException;
 use PrestaShop\PrestaShop\Core\PDF\PDFGeneratorInterface;
 use RuntimeException;
@@ -72,6 +73,8 @@ final class DeliverySlipPdfGenerator implements PDFGeneratorInterface
         }
 
         $order_invoice_collection = $order->getInvoicesCollection();
+
+        Hook::exec('actionPDFDeliverySlipGenerator', ['order_invoice_list' => $order_invoice_list]);
 
         $pdf = new PDF($order_invoice_collection, PDF::TEMPLATE_DELIVERY_SLIP, Context::getContext()->smarty);
         $pdf->render();
