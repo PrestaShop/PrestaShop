@@ -116,7 +116,7 @@ class ProductControllerTest extends GridControllerTestCase
      *
      * @return TestEntityDTO
      */
-    protected function getEntity(Crawler$tr, int $i): TestEntityDTO
+    protected function getEntity(Crawler $tr, int $i): TestEntityDTO
     {
         return new TestEntityDTO(
             (int) trim($tr->filter('.column-id_product')->text()),
