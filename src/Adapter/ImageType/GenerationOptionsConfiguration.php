@@ -62,7 +62,7 @@ class GenerationOptionsConfiguration implements DataConfigurationInterface
             'product_picture_max_size' => $this->configuration->getInt('PS_PRODUCT_PICTURE_MAX_SIZE'),
             'product_picture_width' => $this->configuration->getInt('PS_PRODUCT_PICTURE_WIDTH'),
             'product_picture_height' => $this->configuration->getInt('PS_PRODUCT_PICTURE_HEIGHT'),
-            'high_dpi' => $this->configuration->getBoolean('PS_HIGHT_DPI'),
+            'hight_dpi' => $this->configuration->getBoolean('PS_HIGHT_DPI'),
         ];
     }
 
