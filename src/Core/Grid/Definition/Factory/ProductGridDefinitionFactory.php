@@ -203,25 +203,6 @@ final class ProductGridDefinitionFactory extends AbstractGridDefinitionFactory
                         ),
                     ])
                     ),
-                //    @todo Implement remaining actions
-                //    ->add((new PreviewProductRowAction('preview_product'))
-                //        ->setName($this->trans('Preview', [], 'Admin.Actions'))
-                //        ->setIcon('remove_red_eye')
-                //        ->setOptions([
-                //            'route' => 'admin_products_preview',
-                //            'route_param_name' => 'productId',
-                //            'route_param_field' => 'id_product',
-                //        ])
-                //    )
-                //    ->add((new SubmitRowAction('duplicate'))
-                //        ->setName($this->trans('Duplicate', [], 'Admin.Actions'))
-                //        ->setIcon('content_copy')
-                //        ->setOptions([
-                //            'route' => 'admin_products_duplicate',
-                //            'route_param_name' => 'productId',
-                //            'route_param_field' => 'id_product',
-                //        ])
-                //    )
             ])
             );
         if ($this->configuration->get('PS_STOCK_MANAGEMENT')) {
