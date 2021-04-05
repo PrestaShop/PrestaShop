@@ -30,6 +30,7 @@ namespace Tests\Integration\PrestaShopBundle\Controller\Sell\Customer\Address;
 
 use Country;
 use PrestaShop\PrestaShop\Core\Exception\TypeException;
+use Symfony\Component\DomCrawler\Crawler;
 use Tests\Integration\PrestaShopBundle\Controller\GridControllerTestCase;
 use Tests\Integration\PrestaShopBundle\Controller\TestEntityDTO;
 
@@ -118,7 +119,7 @@ class AddressControllerTest extends GridControllerTestCase
      *
      * @return TestEntityDTO
      */
-    protected function getEntity($tr, $i): TestEntityDTO
+    protected function getEntity(Crawler $tr, int $i): TestEntityDTO
     {
         return new TestEntityDTO(
             (int) trim($tr->filter('.column-id_address')->text()),
