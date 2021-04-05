@@ -285,5 +285,5 @@ abstract class GridControllerTestCase extends WebTestCase
 
     abstract protected function getCreateEntityFormModifications(): array;
 
-    abstract protected function getEntity($tr, $i): TestEntityDTO;
+    abstract protected function getEntity(Crawler $tr, int $i): TestEntityDTO;
 }
