@@ -33,6 +33,7 @@ use PrestaShopBundle\Form\Admin\Type\TextWithUnitType;
 use PrestaShopBundle\Form\Admin\Type\TranslatorAwareType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
+use Symfony\Component\Validator\Constraints\Length;
 use Symfony\Component\Validator\Constraints\NotBlank;
 use Symfony\Component\Validator\Constraints\Regex;
 use Symfony\Component\Validator\Constraints\Type;
@@ -87,6 +88,9 @@ class ImageTypeType extends TranslatorAwareType
                             'Admin.Notifications.Error'
                         ),
                     ]),
+                    new Regex([
+                        'pattern' => '/^[0-9]{1,4}$/',
+                    ]),
                 ],
             ])
             ->add('height', TextWithUnitType::class, [
@@ -109,6 +113,9 @@ class ImageTypeType extends TranslatorAwareType
                             'This field is invalid, it must contain numeric values',
                             'Admin.Notifications.Error'
                         ),
+                    ]),
+                    new Regex([
+                        'pattern' => '/^[0-9]{1,4}$/',
                     ]),
                 ],
             ])
