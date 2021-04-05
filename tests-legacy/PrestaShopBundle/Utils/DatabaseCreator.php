@@ -52,12 +52,17 @@ class DatabaseCreator
         \DbPDOCore::createDatabase(_DB_SERVER_, _DB_USER_, _DB_PASSWD_, _DB_NAME_, false);
         $install->clearDatabase(false);
         if (!$install->installDatabase(true)) {
-            // Something went wrong during installation
+            echo __CLASS__ . ': Something went wrong during installation' . "\n";
             exit(1);
         }
 
         $process = new Process(PHP_BINARY . ' bin/console prestashop:schema:update-without-foreign --env=test');
-        $process->run();
+        $exitCode = $process->run();
+        if ($exitCode !== 0) {
+            echo __CLASS__ . ': Process ended with non-zero code (' . $exitCode . '):' . "\n" . $process->getOutput() . "\n";
+            exit(1);
+        }
+
         $install->initializeTestContext();
         $install->installDefaultData('test_shop', false, false, false);
         $install->populateDatabase();
