@@ -101,6 +101,7 @@ class ThumbnailRegenerationType extends TranslatorAwareType
         $builder->add('erase_previous_images', SwitchType::class, [
             'label' => $this->trans('Erase previous images', 'Admin.Design.Feature'),
             'help' => $this->trans('Select "No" only if your server timed out and you need to resume the regeneration.', 'Admin.Design.Help'),
+            'data' => true,
         ]);
     }
 }
