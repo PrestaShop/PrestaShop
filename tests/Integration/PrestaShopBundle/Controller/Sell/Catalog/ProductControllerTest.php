@@ -30,6 +30,7 @@ namespace Tests\Integration\PrestaShopBundle\Controller\Sell\Catalog;
 
 use PrestaShop\PrestaShop\Core\Exception\TypeException;
 use Symfony\Bundle\FrameworkBundle\Routing\Router;
+use Symfony\Component\DomCrawler\Crawler;
 use Tests\Integration\PrestaShopBundle\Controller\GridControllerTestCase;
 use Tests\Integration\PrestaShopBundle\Controller\TestEntityDTO;
 
@@ -115,7 +116,7 @@ class ProductControllerTest extends GridControllerTestCase
      *
      * @return TestEntityDTO
      */
-    protected function getEntity($tr, $i): TestEntityDTO
+    protected function getEntity(Crawler$tr, int $i): TestEntityDTO
     {
         return new TestEntityDTO(
             (int) trim($tr->filter('.column-id_product')->text()),
