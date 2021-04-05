@@ -34,10 +34,12 @@ use PrestaShop\PrestaShop\Core\Domain\Product\FeatureValue\Exception\DuplicateFe
 use PrestaShop\PrestaShop\Core\Domain\Product\FeatureValue\Exception\InvalidAssociatedFeatureException;
 use PrestaShop\PrestaShop\Core\Form\IdentifiableObject\Builder\FormBuilderInterface;
 use PrestaShop\PrestaShop\Core\Form\IdentifiableObject\Handler\FormHandlerInterface;
+use PrestaShop\PrestaShop\Core\Search\Filters\ProductFilters;
 use PrestaShopBundle\Controller\Admin\FrameworkBundleAdminController;
 use PrestaShopBundle\Security\Annotation\AdminSecurity;
 use PrestaShopBundle\Security\Voter\PageVoter;
 use Symfony\Component\Form\FormInterface;
+use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 
@@ -62,6 +64,52 @@ class ProductController extends FrameworkBundleAdminController
      * Used to validate connected user authorizations.
      */
     private const PRODUCT_CONTROLLER_PERMISSION = 'ADMINPRODUCTS_';
+
+    /**
+     * Shows products listing.
+     *
+     * @AdminSecurity("is_granted(['read'], request.get('_legacy_controller'))")
+     *
+     * @param Request $request
+     * @param ProductFilters $filters
+     *
+     * @return Response
+     */
+    public function indexAction(Request $request, ProductFilters $filters): Response
+    {
+        $productGridFactory = $this->get('prestashop.core.grid.factory.product');
+        $productGrid = $productGridFactory->getGrid($filters);
+
+        return $this->render('@PrestaShop/Admin/Sell/Catalog/Product/index.html.twig', [
+            'productGrid' => $this->presentGrid($productGrid),
+            'enableSidebar' => true,
+            'help_link' => $this->generateSidebarLink('AdminProducts'),
+        ]);
+    }
+
+    /**
+     * Redirects to step where product price can be edited.
+     *
+     * @AdminSecurity(
+     *     "is_granted(['update'], request.get('_legacy_controller'))",
+     *     redirectRoute="admin_products_index",
+     *     message="You do not have permission to edit this."
+     * )
+     *
+     * @param int $productId
+     *
+     * @return RedirectResponse
+     */
+    public function editPriceAction(int $productId): RedirectResponse
+    {
+        $response = $this->redirectToRoute('admin_product_form', [
+            'id' => $productId,
+        ]);
+
+        return $response->setTargetUrl(
+            $response->getTargetUrl() . '#tab-step2'
+        );
+    }
 
     /**
      * @AdminSecurity("is_granted(['create'], request.get('_legacy_controller'))", message="You do not have permission to create this.")

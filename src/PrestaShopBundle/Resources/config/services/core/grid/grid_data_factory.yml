@@ -392,6 +392,20 @@ services:
         - '@prestashop.core.grid.data.factory.credit_slip'
         - '@translator'
 
+    prestashop.core.grid.data.factory.product:
+        class: '%prestashop.core.grid.data.factory.doctrine_grid_data_factory%'
+        arguments:
+            - '@prestashop.core.grid.query_builder.product'
+            - '@prestashop.core.hook.dispatcher'
+            - '@prestashop.core.grid.query.doctrine_query_parser'
+            - 'product'
+
+    prestashop.core.grid.data.factory.product_decorator:
+        class: 'PrestaShop\PrestaShop\Core\Grid\Data\Factory\ProductGridDataFactoryDecorator'
+        arguments:
+            - '@prestashop.adapter.product.grid.data.factory.product_price_grid_data_factory_decorator'
+            - '@prestashop.adapter.product.image_thumbnail_provider'
+
     prestashop.core.grid.data_provider.order_states:
       class: '%prestashop.core.grid.data.factory.doctrine_grid_data_factory%'
       arguments:

@@ -290,3 +290,10 @@ services:
       class: 'PrestaShop\PrestaShop\Core\Grid\Definition\Factory\ZoneGridDefinitionFactory'
       parent: 'prestashop.core.grid.definition.factory.abstract_grid_definition'
       public: true
+
+    prestashop.core.grid.definition.product:
+        class: 'PrestaShop\PrestaShop\Core\Grid\Definition\Factory\ProductGridDefinitionFactory'
+        parent: 'prestashop.core.grid.definition.factory.abstract_grid_definition'
+        arguments:
+            - '@prestashop.adapter.legacy.configuration'
+        public: true
