@@ -29,6 +29,7 @@ declare(strict_types=1);
 namespace Tests\Unit\Core\Form\IdentifiableObject\DataProvider;
 
 use DateTime;
+use DateTimeImmutable;
 use Generator;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
@@ -64,6 +65,7 @@ use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductVisibility;
 use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\RedirectType;
 use PrestaShop\PrestaShop\Core\Domain\Product\VirtualProductFile\QueryResult\VirtualProductFileForEditing;
 use PrestaShop\PrestaShop\Core\Form\IdentifiableObject\DataProvider\ProductFormDataProvider;
+use PrestaShop\PrestaShop\Core\Util\DateTime\NullDateTime;
 use RuntimeException;
 use Symfony\Component\HttpFoundation\File\File;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
@@ -208,6 +210,36 @@ class ProductFormDataProviderTest extends TestCase
 
         $datasets[] = [
             $productData,
+            $expectedOutputData,
+        ];
+
+        // test case providing expiration date
+        $expirationDate = new DateTimeImmutable();
+        $expectedOutputData['virtual_product_file']['expiration_date'] = $expirationDate->format('Y-m-d');
+        $productData['virtual_product_file']['date_expiration'] = $expirationDate;
+
+        $datasets[] = [
+            $productData,
+            $expectedOutputData,
+        ];
+
+        // test case providing NullDateTime expiration date
+        $expirationDate = new NullDateTime();
+        $expectedOutputData['virtual_product_file']['expiration_date'] = $expirationDate->format('Y-m-d');
+        $productData['virtual_product_file']['date_expiration'] = $expirationDate;
+
+        $datasets[] = [
+            $productData,
+            $expectedOutputData,
+        ];
+
+        // test case has no virtual product file
+        $expectedOutputData['virtual_product_file'] = [
+            'has_file' => false,
+        ];
+
+        $datasets[] = [
+            [],
             $expectedOutputData,
         ];
 
