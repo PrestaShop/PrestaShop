@@ -37,15 +37,35 @@ use Symfony\Component\Form\Extension\Core\Type\HiddenType;
 use Symfony\Component\Form\Extension\Core\Type\NumberType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
+use Symfony\Component\Translation\TranslatorInterface;
 use Symfony\Component\Validator\Constraints\File;
 use Symfony\Component\Validator\Constraints\Length;
 use Symfony\Component\Validator\Constraints\NotBlank;
 
 class VirtualProductFileType extends TranslatorAwareType
 {
+    /**
+     * @var int
+     */
+    private $maxFileSizeInMegabytes;
+
+    /**
+     * @param TranslatorInterface $translator
+     * @param array $locales
+     * @param int $maxFileSizeInMegabytes
+     */
+    public function __construct(
+        TranslatorInterface $translator,
+        array $locales,
+        int $maxFileSizeInMegabytes
+    ) {
+        parent::__construct($translator, $locales);
+        $this->maxFileSizeInMegabytes = $maxFileSizeInMegabytes;
+    }
+
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
-        $maxUploadSize = $this->getConfiguration()->get('PS_ATTACHMENT_MAXIMUM_SIZE') . 'M';
+        $maxUploadSize = $this->maxFileSizeInMegabytes . 'M';
 
         $builder
             ->add('has_file', SwitchType::class, [
