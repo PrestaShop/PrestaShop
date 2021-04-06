@@ -188,7 +188,7 @@ final class ProductFormDataProvider implements FormDataProviderInterface
         $virtualProductFile = $productForEditing->getVirtualProductFile();
 
         if (null !== $virtualProductFile) {
-            // @todo: some service to generate file path instead of doing it manually?
+            // @todo: some service to generate file path instead of doing it manually
             $filePath = $this->virtualProductFileDir . $virtualProductFile->getFileName();
 
             $data = [
@@ -197,7 +197,7 @@ final class ProductFormDataProvider implements FormDataProviderInterface
                 'file' => [
                     'file' => new File($filePath),
                     'download_file_url' => $this->urlGenerator->generate(
-                        // @todo: implement new action instead of old one?
+                        // @todo: implement new action instead of old one
                         'admin_product_virtual_download_file_action',
                         ['idProduct' => $productForEditing->getProductId()]
                     ),
