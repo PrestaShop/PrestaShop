@@ -104,7 +104,7 @@
 <script>
   import PhotoSwipe from 'photoswipe';
   // eslint-disable-next-line
-import PhotoSwipeUI_Default from "photoswipe/dist/photoswipe-ui-default";
+  import PhotoSwipeUI_Default from "photoswipe/dist/photoswipe-ui-default";
   import ProductMap from '@pages/product/product-map';
   import ProductEventMap from '@pages/product/product-event-map';
 
