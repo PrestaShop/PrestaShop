@@ -27,18 +27,20 @@ import Bloodhound from 'typeahead.js';
 import Router from '@components/router';
 import AutoCompleteSearch from '@components/auto-complete-search';
 import PerfectScrollbar from 'perfect-scrollbar';
+import ComponentsMap from '@components/components-map';
 import 'perfect-scrollbar/css/perfect-scrollbar.css';
 
 const {$} = window;
 
 const initMultistoreDropdown = () => {
-  const $searchInput = $('.js-multistore-dropdown-search');
+  const MultistoreDropdownMap = ComponentsMap.multistoreDropdown;
+  const $searchInput = $(MultistoreDropdownMap.searchInput);
   const router = new Router();
   const route = router.generate('admin_shops_search', {
     searchTerm: '__QUERY__',
   });
 
-  new PerfectScrollbar('.js-multistore-scrollbar');
+  new PerfectScrollbar(MultistoreDropdownMap.scrollbar);
 
   const source = new Bloodhound({
     datumTokenizer: Bloodhound.tokenizers.obj.whitespace,
