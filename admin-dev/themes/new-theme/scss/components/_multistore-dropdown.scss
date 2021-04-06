@@ -129,4 +129,12 @@ $component-name: multistore-dropdown;
       }
     }
   }
+
+  &-no-url {
+    cursor: not-allowed;
+  }
+
+  &-no-url:hover {
+    color: #4a4a4a;
+  }
 }
