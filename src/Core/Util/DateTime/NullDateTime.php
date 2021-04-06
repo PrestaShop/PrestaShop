@@ -29,7 +29,6 @@ namespace PrestaShop\PrestaShop\Core\Util\DateTime;
 
 use DateTimeImmutable;
 use DateTimeInterface;
-use DateTimeZone;
 use PrestaShop\PrestaShop\Core\Util\DateTime\DateTime as DateTimeUtil;
 use RuntimeException;
 
