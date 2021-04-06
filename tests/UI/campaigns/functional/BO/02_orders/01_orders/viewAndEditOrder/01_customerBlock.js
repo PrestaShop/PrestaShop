@@ -9,6 +9,11 @@ const loginCommon = require('@commonTests/loginBO');
 // Import pages
 const dashboardPage = require('@pages/BO/dashboard');
 const foHomePage = require('@pages/FO/home');
+const foLoginPage = require('@pages/FO/login');
+const foCreateAccountPage = require('@pages/FO/myAccount/add');
+const foMyAccountPage = require('@pages/FO/myAccount');
+const foAddressesPage = require('@pages/FO/myAccount/addresses');
+const foAddAddressesPage = require('@pages/FO/myAccount/addAddress');
 const foProductPage = require('@pages/FO/product');
 const foCartPage = require('@pages/FO/cart');
 const foCheckoutPage = require('@pages/FO/checkout');
@@ -35,13 +40,15 @@ const {expect} = require('chai');
 let browserContext;
 let page;
 
-const customerData = new CustomerFaker({password: ''});
-const addressData = new AddressFaker({country: 'France'});
+const customerData = new CustomerFaker();
+const firstAddressData = new AddressFaker({country: 'France'});
+const secondAddressData = new AddressFaker({country: 'France'});
 const privateNote = 'Test private note';
 let customerID = 0;
 
 /*
-Create order by guest in FO
+Pre-Conditions (Create customer, create 2 addresses for the customer in FO)
+Create order by new customer in FO
 Go to orders page BO and view the created order page
 Check customer block content
 - Customer’s title, name, last name, customer reference
@@ -51,7 +58,7 @@ Check customer block content
 Check that private note is closed by default
 Check that the other customer doesn't have the private note
 */
-describe('Check customer block in view order page', async () => {
+describe('Check and edit customer block in view order page', async () => {
   // before and after functions
   before(async function () {
     browserContext = await helper.createBrowserContext(this.browser);
@@ -72,15 +79,82 @@ describe('Check customer block in view order page', async () => {
     await expect(isHomePage, 'Fail to open FO home page').to.be.true;
   });
 
+  // Pre-Condition - create customer
+  describe('Create new customer', async () => {
+    it('should go to create account page', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'goToCreateAccountPage', baseContext);
+
+      await foHomePage.goToLoginPage(page);
+      await foLoginPage.goToCreateAccountPage(page);
+
+      const pageHeaderTitle = await foCreateAccountPage.getHeaderTitle(page);
+      await expect(pageHeaderTitle).to.equal(foCreateAccountPage.formTitle);
+    });
+
+    it('should create new account', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'createAccount', baseContext);
+
+      await foCreateAccountPage.createAccount(page, customerData);
+
+      const isCustomerConnected = await foHomePage.isCustomerConnected(page);
+      await expect(isCustomerConnected).to.be.true;
+    });
+  });
+
+  // Pre-Condition - Create 2 addresses for the customer
+  describe('Create address', async () => {
+    it('should go to my account page', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'goToAccountPage', baseContext);
+
+      await foHomePage.goToMyAccountPage(page);
+
+      const pageTitle = await foMyAccountPage.getPageTitle(page);
+      await expect(pageTitle).to.equal(foMyAccountPage.pageTitle);
+    });
+
+    it('should go to addresses page', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'goToFOAddressesPage', baseContext);
+
+      await foMyAccountPage.goToAddFirstAddressPage(page);
+
+      const pageHeaderTitle = await foAddressesPage.getPageTitle(page);
+      await expect(pageHeaderTitle).to.equal(foAddressesPage.addressPageTitle);
+    });
+
+    it('should create new address', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'createAddress', baseContext);
+
+      const textResult = await foAddAddressesPage.setAddress(page, firstAddressData);
+      await expect(textResult).to.equal(foAddressesPage.addAddressSuccessfulMessage);
+    });
+
+    it('should go to create address page', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'goToNewAddressPage2', baseContext);
+
+      await foAddressesPage.openNewAddressForm(page);
+
+      const pageHeaderTitle = await foAddAddressesPage.getHeaderTitle(page);
+      await expect(pageHeaderTitle).to.equal(foAddAddressesPage.creationFormTitle);
+    });
+
+    it('should create the second address', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'createAddress2', baseContext);
+
+      const textResult = await foAddAddressesPage.setAddress(page, secondAddressData);
+      await expect(textResult).to.equal(foAddressesPage.addAddressSuccessfulMessage);
+    });
+  });
+
   // 1 - create order
   describe(`Create order by '${customerData.firstName} ${customerData.lastName}' in FO`, async () => {
-    it('should add product to cart and go to checkout page', async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'addProductToCart', baseContext);
+    it('should create an order', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'createOrder', baseContext);
 
-      await foHomePage.goToHomePage(page);
+      // Go to home page
+      await foLoginPage.goToHomePage(page);
 
-      // Go to the fourth product page
-      await foHomePage.goToProductPage(page, 4);
+      // Go to the first product page
+      await foHomePage.goToProductPage(page, 1);
 
       // Add the created product to the cart
       await foProductPage.addProductToTheCart(page);
@@ -88,27 +162,9 @@ describe('Check customer block in view order page', async () => {
       // Proceed to checkout the shopping cart
       await foCartPage.clickOnProceedToCheckout(page);
 
-      // Go to checkout page
-      const isCheckoutPage = await foCheckoutPage.isCheckoutPage(page);
-      await expect(isCheckoutPage).to.be.true;
-    });
-
-    it('should fill guest personal information', async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'setPersonalInformation', baseContext);
-
-      const isStepPersonalInfoCompleted = await foCheckoutPage.setGuestPersonalInformation(page, customerData);
-      await expect(isStepPersonalInfoCompleted, 'Step personal information is not completed').to.be.true;
-    });
-
-    it('should fill address form and go to delivery step', async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'setAddressStep', baseContext);
-
-      const isStepAddressComplete = await foCheckoutPage.setAddress(page, addressData);
+      // Address step - Go to delivery step
+      const isStepAddressComplete = await foCheckoutPage.goToDeliveryStep(page);
       await expect(isStepAddressComplete, 'Step Address is not complete').to.be.true;
-    });
-
-    it('should validate the order', async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'validateOrder', baseContext);
 
       // Delivery step - Go to payment step
       const isStepDeliveryComplete = await foCheckoutPage.goToPaymentStep(page);
