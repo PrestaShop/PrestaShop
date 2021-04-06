@@ -136,15 +136,10 @@ class ProductFormType extends TranslatorAwareType
     {
         $productType = $options['data']['basic']['type'] ?? ProductType::TYPE_STANDARD;
         $formVars = [
-            'productType' => $productType,
-            'attr' => [
-                'data-product-type' => $productType,
-            ],
+            'product_type' => $productType,
+            'product_id' => isset($options['product_id']) ? (int) $options['product_id'] : null,
         ];
 
-        if (!empty($options['product_id'])) {
-            $formVars['attr']['data-product-id'] = $options['product_id'];
-        }
         $view->vars = array_replace($view->vars, $formVars);
     }
 
