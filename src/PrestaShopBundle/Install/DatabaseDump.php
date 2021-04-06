@@ -27,7 +27,6 @@
 
 namespace PrestaShopBundle\Install;
 
-use Exception;
 use Ifsnop\Mysqldump\Mysqldump;
 use PDO;
 
@@ -98,79 +97,18 @@ class DatabaseDump
     }
 
     /**
-     * Wrapper to easily build mysql commands: sets password, port, user.
-     *
-     * @param string $executable
-     * @param array $arguments
-     *
-     * @return string
-     */
-    private function buildMySQLCommand($executable, array $arguments = [])
-    {
-        $parts = [
-            escapeshellarg($executable),
-            '-u', escapeshellarg($this->user),
-            '-P', escapeshellarg($this->port),
-            '-h', escapeshellarg($this->host),
-        ];
-
-        if ($this->password) {
-            $parts[] = '-p' . escapeshellarg($this->password);
-        }
-
-        $parts = array_merge($parts, array_map('escapeshellarg', $arguments));
-
-        return implode(' ', $parts);
-    }
-
-    /**
-     * Like exec, but will raise an exception if the command failed.
-     *
-     * @param string $command
-     *
-     * @return array
-     *
-     * @throws Exception
-     */
-    private function exec($command)
-    {
-        $output = [];
-        $ret = 1;
-        exec($command, $output, $ret);
-
-        if ($ret !== 0) {
-            throw new Exception(sprintf('Unable to exec command: `%s`, missing a binary?', $command));
-        }
-
-        return $output;
-    }
-
-    /**
      * The actual dump function.
      */
-    private function dump()
+    private function dump(): void
     {
-        $dumpCommand = $this->buildMySQLCommand('mysqldump', [$this->databaseName]);
-        $dumpCommand .= ' > ' . escapeshellarg($this->dumpFile) . ' 2> /dev/null';
-        $this->exec($dumpCommand);
-
-        echo "\n" . '>>>mysqldump' . str_repeat('-', 80) . "\n"
-            . file_get_contents($this->dumpFile)
-            . "\n" . '<<<' . str_repeat('-', 80) . "\n";
-        unlink($this->dumpFile);
-
         $dumper = $this->createMysqldumper();
         $dumper->start($this->dumpFile);
-
-        echo "\n" . '>>>native' . str_repeat('-', 80) . "\n"
-            . file_get_contents($this->dumpFile)
-            . "\n" . '<<<' . str_repeat('-', 80) . "\n";
     }
 
     /**
      * Restore the dump to the actual database.
      */
-    public function restore()
+    public function restore(): void
     {
         $pdo = $this->createPdo();
         $pdo->exec(file_get_contents($this->dumpFile));
@@ -179,7 +117,7 @@ class DatabaseDump
     /**
      * Make a database dump.
      */
-    public static function create()
+    public static function create(): void
     {
         $dump = new static();
 
@@ -189,7 +127,7 @@ class DatabaseDump
     /**
      * Restore a database dump.
      */
-    public static function restoreDb()
+    public static function restoreDb(): void
     {
         $dump = new static();
 
