@@ -28,6 +28,8 @@
 namespace PrestaShopBundle\Install;
 
 use Exception;
+use Ifsnop\Mysqldump\Mysqldump;
+use PDO;
 
 class DatabaseDump
 {
@@ -39,8 +41,7 @@ class DatabaseDump
     private $dumpFile;
 
     /**
-     * Constructor extracts database connection info from PrestaShop's configuration,
-     * but we use mysqldump and mysql for dump / restore.
+     * Constructor extracts database connection info from PrestaShop's configuration.
      *
      * @param string $dumpFile dump file name
      */
@@ -64,6 +65,36 @@ class DatabaseDump
         $this->databaseName = _DB_NAME_;
         $this->user = _DB_USER_;
         $this->password = _DB_PASSWD_;
+    }
+
+    private function getPdoDsn(): string
+    {
+        return 'mysql:host=' . $this->host . ';port=' . $this->port . ';dbname=' . $this->databaseName . ';charset=utf8';
+    }
+
+    private function createPdo(): PDO
+    {
+        return new PDO(
+            $this->getPdoDsn(),
+            $this->user,
+            $this->password,
+            [
+                PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION,
+            ]
+        );
+    }
+
+    private function createMysqldumper(): Mysqldump
+    {
+        return new Mysqldump(
+            $this->getPdoDsn(),
+            $this->user,
+            $this->password,
+            [
+                'add-drop-table' => true,
+                'no-autocommit' => false,
+            ]
+        );
     }
 
     /**
@@ -122,6 +153,18 @@ class DatabaseDump
         $dumpCommand = $this->buildMySQLCommand('mysqldump', [$this->databaseName]);
         $dumpCommand .= ' > ' . escapeshellarg($this->dumpFile) . ' 2> /dev/null';
         $this->exec($dumpCommand);
+
+        echo "\n" . '>>>mysqldump' . str_repeat('-', 80) . "\n"
+            . file_get_contents($this->dumpFile)
+            . "\n" . '<<<' . str_repeat('-', 80) . "\n";
+        unlink($this->dumpFile);
+
+        $dumper = $this->createMysqldumper();
+        $dumper->start($this->dumpFile);
+
+        echo "\n" . '>>>native' . str_repeat('-', 80) . "\n"
+            . file_get_contents($this->dumpFile)
+            . "\n" . '<<<' . str_repeat('-', 80) . "\n";
     }
 
     /**
@@ -129,9 +172,8 @@ class DatabaseDump
      */
     public function restore()
     {
-        $restoreCommand = $this->buildMySQLCommand('mysql', [$this->databaseName]);
-        $restoreCommand .= ' < ' . escapeshellarg($this->dumpFile) . ' 2> /dev/null';
-        $this->exec($restoreCommand);
+        $pdo = $this->createPdo();
+        $pdo->exec(file_get_contents($this->dumpFile));
     }
 
     /**

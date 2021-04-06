@@ -136,12 +136,13 @@
   "require-dev": {
     "behat/behat": "^3.5",
     "friendsofphp/php-cs-fixer": "^2.16.1",
+    "ifsnop/mysqldump-php": "^2.9",
     "johnkary/phpunit-speedtrap": "^3",
     "mikey179/vfsstream": "^1.6",
     "phake/phake": "@stable",
     "phpstan/phpstan": "^0.12.48",
-    "prestashop/phpstan-prestashop": "^1.0",
     "phpunit/phpunit": "~7.5.18",
+    "prestashop/phpstan-prestashop": "^1.0",
     "symfony/phpunit-bridge": "^3.4"
   },
   "autoload-dev": {
