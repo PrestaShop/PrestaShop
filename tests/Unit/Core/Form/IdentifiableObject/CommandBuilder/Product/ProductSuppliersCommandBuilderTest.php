@@ -29,7 +29,7 @@ namespace Tests\Unit\Core\Form\IdentifiableObject\CommandBuilder\Product;
 
 use PrestaShop\PrestaShop\Core\Domain\Product\Supplier\Command\RemoveAllAssociatedProductSuppliersCommand;
 use PrestaShop\PrestaShop\Core\Domain\Product\Supplier\Command\SetProductSuppliersCommand;
-use PrestaShop\PrestaShop\Core\Form\IdentifiableObject\CommandBuilder\Product\ProductSuppliersCommandBuilder;
+use PrestaShop\PrestaShop\Core\Form\IdentifiableObject\CommandBuilder\Product\ProductSuppliersCommandsBuilder;
 
 class ProductSuppliersCommandBuilderTest extends AbstractProductCommandBuilderTest
 {
@@ -41,8 +41,8 @@ class ProductSuppliersCommandBuilderTest extends AbstractProductCommandBuilderTe
      */
     public function testBuildCommand(array $formData, array $expectedCommands)
     {
-        $builder = new ProductSuppliersCommandBuilder();
-        $builtCommands = $builder->buildCommand($this->getProductId(), $formData);
+        $builder = new ProductSuppliersCommandsBuilder();
+        $builtCommands = $builder->buildCommands($this->getProductId(), $formData);
         $this->assertEquals($expectedCommands, $builtCommands);
     }
 

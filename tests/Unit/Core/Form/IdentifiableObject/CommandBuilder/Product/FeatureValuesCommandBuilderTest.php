@@ -32,7 +32,7 @@ use Generator;
 use PrestaShop\PrestaShop\Core\Domain\Product\FeatureValue\Command\RemoveAllFeatureValuesFromProductCommand;
 use PrestaShop\PrestaShop\Core\Domain\Product\FeatureValue\Command\SetProductFeatureValuesCommand;
 use PrestaShop\PrestaShop\Core\Domain\Product\FeatureValue\Exception\InvalidProductFeatureValuesFormatException;
-use PrestaShop\PrestaShop\Core\Form\IdentifiableObject\CommandBuilder\Product\FeatureValuesCommandBuilder;
+use PrestaShop\PrestaShop\Core\Form\IdentifiableObject\CommandBuilder\Product\FeatureValuesCommandsBuilder;
 
 class FeatureValuesCommandBuilderTest extends AbstractProductCommandBuilderTest
 {
@@ -44,8 +44,8 @@ class FeatureValuesCommandBuilderTest extends AbstractProductCommandBuilderTest
      */
     public function testBuildCommand(array $formData, array $expectedCommands): void
     {
-        $builder = new FeatureValuesCommandBuilder();
-        $builtCommands = $builder->buildCommand($this->getProductId(), $formData);
+        $builder = new FeatureValuesCommandsBuilder();
+        $builtCommands = $builder->buildCommands($this->getProductId(), $formData);
         $this->assertEquals($expectedCommands, $builtCommands);
     }
 
@@ -239,8 +239,8 @@ class FeatureValuesCommandBuilderTest extends AbstractProductCommandBuilderTest
     public function testInvalidBuildCommand(array $formData, string $exceptionClass): void
     {
         $this->expectException($exceptionClass);
-        $builder = new FeatureValuesCommandBuilder();
-        $builder->buildCommand($this->getProductId(), $formData);
+        $builder = new FeatureValuesCommandsBuilder();
+        $builder->buildCommands($this->getProductId(), $formData);
     }
 
     public function getInvalidCommands(): Generator

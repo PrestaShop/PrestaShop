@@ -28,22 +28,23 @@ declare(strict_types=1);
 
 namespace PrestaShop\PrestaShop\Core\Form\IdentifiableObject\CommandBuilder\Product;
 
-use Doctrine\Common\Collections\ArrayCollection;
+use PrestaShop\PrestaShop\Core\Domain\Product\Command\UpdateProductTypeCommand;
+use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductId;
 
 /**
- * List of product command
+ * Builder used to build UpdateTypeCommand
  */
-class ProductCommandCollection extends ArrayCollection
+class TypeCommandsBuilder implements ProductCommandsBuilderInterface
 {
-    /**
-     * Merge array of commands into the collection
-     *
-     * @param array $commands
-     */
-    public function merge(array $commands): void
+    public function buildCommands(ProductId $productId, array $formData): array
     {
-        foreach ($commands as $command) {
-            $this->add($command);
+        if (!isset($formData['basic']['type'])) {
+            return [];
         }
+
+        return [new UpdateProductTypeCommand(
+            $productId->getValue(),
+            $formData['basic']['type']
+        )];
     }
 }

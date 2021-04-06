@@ -31,12 +31,12 @@ namespace PrestaShop\PrestaShop\Core\Form\IdentifiableObject\CommandBuilder\Prod
 use PrestaShop\PrestaShop\Core\Domain\Product\Command\UpdateProductOptionsCommand;
 use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductId;
 
-final class OptionsCommandBuilder implements ProductCommandBuilderInterface
+final class OptionsCommandsBuilder implements ProductCommandsBuilderInterface
 {
     /**
      * {@inheritdoc}
      */
-    public function buildCommand(ProductId $productId, array $formData): array
+    public function buildCommands(ProductId $productId, array $formData): array
     {
         if (!isset($formData['options']) && !isset($formData['manufacturer']['manufacturer_id'])) {
             return [];

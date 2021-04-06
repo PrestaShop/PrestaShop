@@ -1684,59 +1684,11 @@ abstract class ModuleCore implements ModuleInterface
      */
     public static function getNonNativeModuleList()
     {
-        $db = Db::getInstance();
-        $module_list_xml = _PS_ROOT_DIR_ . static::CACHE_FILE_MODULES_LIST;
-        $native_modules = @simplexml_load_file($module_list_xml);
-        if ($native_modules) {
-            $native_modules = $native_modules->modules;
-        }
-
-        $arr_native_modules = [];
-        if (is_object($native_modules)) {
-            foreach ($native_modules as $native_modules_type) {
-                if (in_array($native_modules_type['type'], ['native', 'partner'])) {
-                    $arr_native_modules[] = '""';
-                    foreach ($native_modules_type->module as $module) {
-                        $arr_native_modules[] = '"' . pSQL($module['name']) . '"';
-                    }
-                }
-            }
-        }
-
-        if ($arr_native_modules) {
-            return $db->executeS('SELECT * FROM `' . _DB_PREFIX_ . 'module` m WHERE `name` NOT IN (' . implode(',', $arr_native_modules) . ') ');
-        }
-
         return false;
     }
 
     public static function getNativeModuleList()
     {
-        $module_list_xml = _PS_ROOT_DIR_ . static::CACHE_FILE_MODULES_LIST;
-        if (!file_exists($module_list_xml)) {
-            return false;
-        }
-
-        $native_modules = @simplexml_load_file($module_list_xml);
-
-        if ($native_modules) {
-            $native_modules = $native_modules->modules;
-        }
-
-        $modules = [];
-        if (is_object($native_modules)) {
-            foreach ($native_modules as $native_modules_type) {
-                if (in_array($native_modules_type['type'], ['native', 'partner'])) {
-                    foreach ($native_modules_type->module as $module) {
-                        $modules[] = $module['name'];
-                    }
-                }
-            }
-        }
-        if ($modules) {
-            return $modules;
-        }
-
         return false;
     }
 
@@ -1770,7 +1722,6 @@ abstract class ModuleCore implements ModuleInterface
     final public static function isModuleTrusted($module_name)
     {
         static $trusted_modules_list_content = null;
-        static $modules_list_content = null;
         static $default_country_modules_list_content = null;
         static $untrusted_modules_list_content = null;
 
@@ -1794,11 +1745,6 @@ abstract class ModuleCore implements ModuleInterface
             }
         }
 
-        $modulesListCacheFilepath = _PS_ROOT_DIR_ . static::CACHE_FILE_MODULES_LIST;
-        if ($modules_list_content === null && is_readable($modulesListCacheFilepath)) {
-            $modules_list_content = Tools::file_get_contents($modulesListCacheFilepath);
-        }
-
         if ($default_country_modules_list_content === null) {
             $default_country_modules_list_content = Tools::file_get_contents(_PS_ROOT_DIR_ . static::CACHE_FILE_DEFAULT_COUNTRY_MODULES_LIST);
         }
@@ -1811,9 +1757,7 @@ abstract class ModuleCore implements ModuleInterface
 
         if (stripos($trusted_modules_list_content, $module_name) !== false) {
             // If the module is not a partner, then return 1 (which means the module is "trusted")
-            if (stripos($modules_list_content, '<module name="' . $module_name . '"/>') == false) {
-                return 1;
-            } elseif (stripos($default_country_modules_list_content, '<name><![CDATA[' . $module_name . ']]></name>') !== false) {
+            if (stripos($default_country_modules_list_content, '<name><![CDATA[' . $module_name . ']]></name>') !== false) {
                 // The module is a parter. If the module is in the file that contains module for this country then return 1 (which means the module is "trusted")
                 return 1;
             }

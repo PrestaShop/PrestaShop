@@ -34,12 +34,12 @@ use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductId;
 /**
  * Builds commands from product customizations form
  */
-final class CustomizationFieldsCommandBuilder implements ProductCommandBuilderInterface
+final class CustomizationFieldsCommandsBuilder implements ProductCommandsBuilderInterface
 {
     /**
      * {@inheritdoc}
      */
-    public function buildCommand(ProductId $productId, array $formData): array
+    public function buildCommands(ProductId $productId, array $formData): array
     {
         if (!isset($formData['customizations'])) {
             return [];

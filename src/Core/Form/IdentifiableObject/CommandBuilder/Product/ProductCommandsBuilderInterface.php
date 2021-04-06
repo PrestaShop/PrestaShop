@@ -24,27 +24,21 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
 
-declare(strict_types=1);
-
 namespace PrestaShop\PrestaShop\Core\Form\IdentifiableObject\CommandBuilder\Product;
 
-use PrestaShop\PrestaShop\Core\Domain\Product\Command\UpdateProductTypeCommand;
 use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductId;
 
 /**
- * Builder used to build UpdateTypeCommand
+ * This interface is used by ProductCommandsBuilder each object which implements must build
+ * a product command based on the input form data.
  */
-class TypeCommandBuilder implements ProductCommandBuilderInterface
+interface ProductCommandsBuilderInterface
 {
-    public function buildCommand(ProductId $productId, array $formData): array
-    {
-        if (!isset($formData['basic']['type'])) {
-            return [];
-        }
-
-        return [new UpdateProductTypeCommand(
-            $productId->getValue(),
-            $formData['basic']['type']
-        )];
-    }
+    /**
+     * @param ProductId $productId
+     * @param array $formData
+     *
+     * @return array Returns empty array if the required data for the command is absent
+     */
+    public function buildCommands(ProductId $productId, array $formData): array;
 }

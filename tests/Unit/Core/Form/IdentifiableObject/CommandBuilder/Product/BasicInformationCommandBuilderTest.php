@@ -29,7 +29,7 @@ declare(strict_types=1);
 namespace Tests\Unit\Core\Form\IdentifiableObject\CommandBuilder\Product;
 
 use PrestaShop\PrestaShop\Core\Domain\Product\Command\UpdateProductBasicInformationCommand;
-use PrestaShop\PrestaShop\Core\Form\IdentifiableObject\CommandBuilder\Product\BasicInformationCommandBuilder;
+use PrestaShop\PrestaShop\Core\Form\IdentifiableObject\CommandBuilder\Product\BasicInformationCommandsBuilder;
 
 class BasicInformationCommandBuilderTest extends AbstractProductCommandBuilderTest
 {
@@ -41,8 +41,8 @@ class BasicInformationCommandBuilderTest extends AbstractProductCommandBuilderTe
      */
     public function testBuildCommand(array $formData, array $expectedCommands)
     {
-        $builder = new BasicInformationCommandBuilder();
-        $builtCommands = $builder->buildCommand($this->getProductId(), $formData);
+        $builder = new BasicInformationCommandsBuilder();
+        $builtCommands = $builder->buildCommands($this->getProductId(), $formData);
         $this->assertEquals($expectedCommands, $builtCommands);
     }
 
