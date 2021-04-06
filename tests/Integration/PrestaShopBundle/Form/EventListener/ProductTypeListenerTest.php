@@ -31,11 +31,13 @@ namespace Tests\Integration\PrestaShopBundle\Form\EventListener;
 use Generator;
 use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductType;
 use PrestaShopBundle\Form\Admin\Sell\Product\EventListener\ProductTypeListener;
+use PrestaShopBundle\Form\Admin\Sell\Product\StockType;
 use PrestaShopBundle\Form\Admin\Type\CommonAbstractType;
 use Symfony\Component\Form\Exception\OutOfBoundsException;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\Form\FormEvents;
+use Symfony\Component\Form\FormInterface;
 
 class ProductTypeListenerTest extends FormListenerTestCase
 {
@@ -51,17 +53,40 @@ class ProductTypeListenerTest extends FormListenerTestCase
     }
 
     /**
-     * @dataProvider getTestValues
+     * @dataProvider getFormTypeExpectationsBasedOnProductType
      *
      * @param string $productType
-     * @param bool $expectedSuppliers
+     * @param string $formTypeName
+     * @param bool $shouldExist
      */
-    public function testAdaptProductForm(string $productType, bool $expectedSuppliers): void
+    public function testFormTypeExistsInFormDependingOnProductType(string $productType, string $formTypeName, bool $shouldExist): void
+    {
+        $form = $this->createForm(SimpleProductFormTest::class);
+        $this->assertFormTypeExistsInForm($form, $formTypeName, true);
+        $this->adaptProductFormBasedOnProductType($form, $productType);
+        $this->assertFormTypeExistsInForm($form, $formTypeName, $shouldExist);
+    }
+
+    public function getFormTypeExpectationsBasedOnProductType(): Generator
+    {
+        yield [ProductType::TYPE_STANDARD, 'suppliers', true];
+        yield [ProductType::TYPE_PACK, 'suppliers', true];
+        yield [ProductType::TYPE_VIRTUAL, 'suppliers', true];
+        yield [ProductType::TYPE_COMBINATIONS, 'suppliers', false];
+
+        yield [ProductType::TYPE_STANDARD, 'stock', true];
+        yield [ProductType::TYPE_PACK, 'stock', true];
+        yield [ProductType::TYPE_VIRTUAL, 'stock', true];
+        yield [ProductType::TYPE_COMBINATIONS, 'stock', false];
+    }
+
+    /**
+     * @param FormInterface $form
+     * @param string $productType
+     */
+    private function adaptProductFormBasedOnProductType(FormInterface $form, string $productType): void
     {
         $listener = new ProductTypeListener();
-
-        $form = $this->createForm(SimpleProductFormTest::class);
-        $this->assertNotNull($form->get('suppliers'));
 
         $formData = [
             'basic' => [
@@ -70,36 +95,21 @@ class ProductTypeListenerTest extends FormListenerTestCase
         ];
         $eventMock = $this->createEventMock($formData, $form);
         $listener->adaptProductForm($eventMock);
-
-        if ($expectedSuppliers) {
-            $this->assertNotNull($form->get('suppliers'));
-        } else {
-            $this->expectException(OutOfBoundsException::class);
-            $form->get('suppliers');
-        }
     }
 
-    public function getTestValues(): Generator
+    /**
+     * @param FormInterface $form
+     * @param string $typeName
+     * @param bool $shouldExist
+     */
+    private function assertFormTypeExistsInForm(FormInterface $form, string $typeName, bool $shouldExist): void
     {
-        yield [
-            ProductType::TYPE_STANDARD,
-            true,
-        ];
-
-        yield [
-            ProductType::TYPE_PACK,
-            true,
-        ];
-
-        yield [
-            ProductType::TYPE_VIRTUAL,
-            true,
-        ];
-
-        yield [
-            ProductType::TYPE_COMBINATIONS,
-            false,
-        ];
+        if ($shouldExist) {
+            $this->assertNotNull($form->get($typeName));
+        } else {
+            $this->expectException(OutOfBoundsException::class);
+            $form->get($typeName);
+        }
     }
 }
 
@@ -109,6 +119,7 @@ class SimpleProductFormTest extends CommonAbstractType
     {
         $builder
             ->add('suppliers', ChoiceType::class)
+            ->add('stock', StockType::class)
         ;
     }
 }
