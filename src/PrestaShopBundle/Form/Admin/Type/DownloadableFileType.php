@@ -30,9 +30,6 @@ namespace PrestaShopBundle\Form\Admin\Type;
 use Symfony\Component\Form\Extension\Core\Type\FileType;
 use Symfony\Component\Form\Extension\Core\Type\HiddenType;
 use Symfony\Component\Form\FormBuilderInterface;
-use Symfony\Component\Form\FormEvent;
-use Symfony\Component\Form\FormEvents;
-use Symfony\Component\HttpFoundation\File\File;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
 class DownloadableFileType extends CommonAbstractType
@@ -46,10 +43,6 @@ class DownloadableFileType extends CommonAbstractType
             ->add('file', FileType::class, $options['file_options'])
             ->add('download_file_url', HiddenType::class)
         ;
-
-        $builder->addEventListener(FormEvents::PRE_SET_DATA, function (FormEvent $formEvent) {
-            $this->handleDownloadFileVisibility($formEvent);
-        });
     }
 
     /**
@@ -67,17 +60,5 @@ class DownloadableFileType extends CommonAbstractType
     public function getBlockPrefix()
     {
         return 'downloadable_file';
-    }
-
-    /**
-     * @param FormEvent $formEvent
-     */
-    private function handleDownloadFileVisibility(FormEvent $formEvent): void
-    {
-        $data = $formEvent->getData();
-
-        if (!$data || !$data['file'] instanceof File) {
-            $formEvent->getForm()->remove('download_file');
-        }
     }
 }
