@@ -124,7 +124,7 @@ class MultistoreController extends FrameworkBundleAdminController
                     $shop->getShopGroup()->getId(),
                     true
                 );
-                $shop->isOveridden = $configuration->has($configurationKey, $shopConstraint);
+                $shop->isOverridden = $configuration->has($configurationKey, $shopConstraint);
             }
         }
 
