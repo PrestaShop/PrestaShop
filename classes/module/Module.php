@@ -271,6 +271,9 @@ abstract class ModuleCore implements ModuleInterface
      */
     public function __construct($name = null, Context $context = null)
     {
+        if (is_null($this->ps_versions_compliancy))
+            $this->ps_versions_compliancy = [];
+
         if (isset($this->ps_versions_compliancy) && !isset($this->ps_versions_compliancy['min'])) {
             $this->ps_versions_compliancy['min'] = '1.4.0.0';
         }
