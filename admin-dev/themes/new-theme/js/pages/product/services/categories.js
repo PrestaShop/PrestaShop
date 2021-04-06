@@ -28,8 +28,8 @@ import Router from '@components/router';
 const router = new Router();
 const {$} = window;
 
-export const getCategories = async productId =>
-  /* const categoriesUrl = router.generate('admin_products_v2_delete_image', {
+export const getCategories = async (productId) =>
+/* const categoriesUrl = router.generate('admin_products_v2_delete_image', {
     productId
     }); */
 
@@ -37,5 +37,5 @@ export const getCategories = async productId =>
   JSON.parse(document.querySelector('#ps_categoryTree').innerHTML);
 
 export default {
-  getCategories
+  getCategories,
 };
