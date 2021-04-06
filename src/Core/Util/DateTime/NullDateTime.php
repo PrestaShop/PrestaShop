@@ -82,7 +82,7 @@ class NullDateTime extends DateTimeImmutable
     /**
      * {@inheritdoc}
      */
-    public static function createFromFormat($format, $datetime, DateTimeZone $timezone = null)
+    public static function createFromFormat($format, $datetime, $timezone = null)
     {
         throw static::buildUnusableMethodException('createFromFormat');
     }
