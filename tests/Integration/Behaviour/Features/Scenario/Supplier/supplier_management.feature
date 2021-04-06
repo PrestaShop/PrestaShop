@@ -8,9 +8,10 @@ Feature: Supplier management
     Given shop "shop1" with name "test_shop" exists
     And language "language1" with locale "fr-FR" exists
     And language with iso code "en" is the default one
+    And single shop context is loaded
 
   Scenario: Adding new supplier
-    When I add new supplier supplier_without_complicated_reference with following properties:
+    When I add new supplier supplier1 with following properties:
       | name                    | my supplier 1      |
       | address                 | Donelaicio st. 1   |
       | city                    | Kaunas             |
@@ -22,7 +23,7 @@ Feature: Supplier management
       | meta description[en-US] |                    |
       | meta keywords[en-US]    | sup,1              |
       | shops                   | [shop1]            |
-    Then supplier supplier_without_complicated_reference should have following properties:
+    Then supplier supplier1 should have following properties:
       | name                    | my supplier 1      |
       | address                 | Donelaicio st. 1   |
       | city                    | Kaunas             |
