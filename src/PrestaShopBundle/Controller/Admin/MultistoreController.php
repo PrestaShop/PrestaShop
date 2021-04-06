@@ -39,6 +39,7 @@ use Symfony\Component\HttpFoundation\Response;
 
 /**
  * This class is responsible for preparing multistore elements that will be displayed in the BO
+ * It does not control or render a BO page, the items being output are used inside other BO pages.
  */
 class MultistoreController extends FrameworkBundleAdminController
 {
