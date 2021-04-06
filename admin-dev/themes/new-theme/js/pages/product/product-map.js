@@ -136,4 +136,17 @@ export default {
     productSuppliers: '#product_suppliers',
     combinationSuppliers: '#combination_form_suppliers',
   },
+  categories: {
+    categoryTree: '.js-categories-tree',
+    overflow: '.js-category-tree-overflow',
+    actions: '.js-categories-tree-actions',
+    searchInput: '#ps-select-product-category',
+    fieldset: 'fieldset',
+    loader: '.categories-tree-loader',
+    currentAction: '.form-control-label:not(.hide)',
+    nextAction: '.hide',
+    childList: '.child-list',
+    everyItems: '.less, .more',
+    itemCheckbox: (id) => `.category[value="${id}"]`,
+  },
 };
