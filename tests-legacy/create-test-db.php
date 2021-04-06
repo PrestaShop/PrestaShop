@@ -3,4 +3,9 @@
 
 require_once __DIR__ . '/PrestaShopBundle/Utils/DatabaseCreator.php';
 
-\LegacyTests\PrestaShopBundle\Utils\DatabaseCreator::createTestDB();
+try {
+    \LegacyTests\PrestaShopBundle\Utils\DatabaseCreator::createTestDB();
+} catch (Throwable $e) {
+    echo (string) $e;
+    exit(1);
+}
