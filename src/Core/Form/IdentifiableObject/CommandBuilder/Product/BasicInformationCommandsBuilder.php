@@ -34,12 +34,12 @@ use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductId;
 /**
  * Builder used to build UpdateProductBasicInformationCommand
  */
-class BasicInformationCommandBuilder implements ProductCommandBuilderInterface
+class BasicInformationCommandsBuilder implements ProductCommandsBuilderInterface
 {
     /**
      * {@inheritdoc}
      */
-    public function buildCommand(ProductId $productId, array $formData): array
+    public function buildCommands(ProductId $productId, array $formData): array
     {
         if (!isset($formData['basic'])) {
             return [];

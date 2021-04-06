@@ -32,7 +32,7 @@ use Generator;
 use PrestaShop\PrestaShop\Core\Domain\Product\Pack\ValueObject\PackStockType;
 use PrestaShop\PrestaShop\Core\Domain\Product\Stock\Command\UpdateProductStockInformationCommand;
 use PrestaShop\PrestaShop\Core\Domain\Product\Stock\ValueObject\OutOfStockType;
-use PrestaShop\PrestaShop\Core\Form\IdentifiableObject\CommandBuilder\Product\StockCommandBuilder;
+use PrestaShop\PrestaShop\Core\Form\IdentifiableObject\CommandBuilder\Product\StockCommandsBuilder;
 
 class StockCommandBuilderTest extends AbstractProductCommandBuilderTest
 {
@@ -44,8 +44,8 @@ class StockCommandBuilderTest extends AbstractProductCommandBuilderTest
      */
     public function testBuildCommand(array $formData, array $expectedCommands): void
     {
-        $builder = new StockCommandBuilder();
-        $builtCommands = $builder->buildCommand($this->getProductId(), $formData);
+        $builder = new StockCommandsBuilder();
+        $builtCommands = $builder->buildCommands($this->getProductId(), $formData);
         $this->assertEquals($expectedCommands, $builtCommands);
     }
 

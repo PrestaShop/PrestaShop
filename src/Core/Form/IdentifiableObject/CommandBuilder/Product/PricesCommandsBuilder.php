@@ -28,37 +28,46 @@ declare(strict_types=1);
 
 namespace PrestaShop\PrestaShop\Core\Form\IdentifiableObject\CommandBuilder\Product;
 
-use PrestaShop\PrestaShop\Core\Domain\Product\Command\UpdateProductSeoCommand;
+use PrestaShop\PrestaShop\Core\Domain\Product\Command\UpdateProductPricesCommand;
 use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductId;
 
 /**
- * Builder used to build UpdateSEO
+ * Builder used to build UpdateProductPricesCommand
  */
-class SEOCommandBuilder implements ProductCommandBuilderInterface
+class PricesCommandsBuilder implements ProductCommandsBuilderInterface
 {
-    public function buildCommand(ProductId $productId, array $formData): array
+    /**
+     * {@inheritdoc}
+     */
+    public function buildCommands(ProductId $productId, array $formData): array
     {
-        if (!isset($formData['seo']) && !isset($formData['redirect_option'])) {
+        if (!isset($formData['price'])) {
             return [];
         }
 
-        $seoData = $formData['seo'] ?? [];
-        $redirectionData = $formData['redirect_option'] ?? [];
-        $command = new UpdateProductSeoCommand($productId->getValue());
+        $priceData = $formData['price'];
+        $command = new UpdateProductPricesCommand($productId->getValue());
 
-        if (isset($seoData['meta_title'])) {
-            $command->setLocalizedMetaTitles($seoData['meta_title']);
+        if (isset($priceData['price_tax_excluded'])) {
+            $command->setPrice((string) $priceData['price_tax_excluded']);
         }
-        if (isset($seoData['meta_description'])) {
-            $command->setLocalizedMetaDescriptions($seoData['meta_description']);
+        if (isset($priceData['ecotax'])) {
+            $command->setEcotax((string) $priceData['ecotax']);
         }
-        if (isset($seoData['link_rewrite'])) {
-            $command->setLocalizedLinkRewrites($seoData['link_rewrite']);
+        if (isset($priceData['tax_rules_group_id'])) {
+            $command->setTaxRulesGroupId((int) $priceData['tax_rules_group_id']);
         }
-
-        if (isset($redirectionData['type'])) {
-            $targetId = (int) ($redirectionData['target'] ?? 0);
-            $command->setRedirectOption($redirectionData['type'], $targetId);
+        if (isset($priceData['on_sale'])) {
+            $command->setOnSale((bool) $priceData['on_sale']);
+        }
+        if (isset($priceData['wholesale_price'])) {
+            $command->setWholesalePrice((string) $priceData['wholesale_price']);
+        }
+        if (isset($priceData['unit_price'])) {
+            $command->setUnitPrice((string) $priceData['unit_price']);
+        }
+        if (isset($priceData['unity'])) {
+            $command->setUnity((string) $priceData['unity']);
         }
 
         return [$command];

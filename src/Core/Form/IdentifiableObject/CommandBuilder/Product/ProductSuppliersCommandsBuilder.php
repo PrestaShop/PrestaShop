@@ -32,12 +32,12 @@ use PrestaShop\PrestaShop\Core\Domain\Product\Supplier\Command\RemoveAllAssociat
 use PrestaShop\PrestaShop\Core\Domain\Product\Supplier\Command\SetProductSuppliersCommand;
 use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductId;
 
-final class ProductSuppliersCommandBuilder implements ProductCommandBuilderInterface
+final class ProductSuppliersCommandsBuilder implements ProductCommandsBuilderInterface
 {
     /**
      * {@inheritDoc}
      */
-    public function buildCommand(ProductId $productId, array $formData): array
+    public function buildCommands(ProductId $productId, array $formData): array
     {
         if (!isset($formData['suppliers']['product_suppliers']) && !isset($formData['suppliers']['default_supplier_id'])) {
             return [];

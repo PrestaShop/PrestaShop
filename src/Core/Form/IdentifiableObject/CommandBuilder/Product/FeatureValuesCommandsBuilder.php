@@ -32,12 +32,12 @@ use PrestaShop\PrestaShop\Core\Domain\Product\FeatureValue\Command\RemoveAllFeat
 use PrestaShop\PrestaShop\Core\Domain\Product\FeatureValue\Command\SetProductFeatureValuesCommand;
 use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductId;
 
-final class FeatureValuesCommandBuilder implements ProductCommandBuilderInterface
+final class FeatureValuesCommandsBuilder implements ProductCommandsBuilderInterface
 {
     /**
      * {@inheritDoc}
      */
-    public function buildCommand(ProductId $productId, array $formData): array
+    public function buildCommands(ProductId $productId, array $formData): array
     {
         if (!isset($formData['features']['feature_values'])) {
             return [];
