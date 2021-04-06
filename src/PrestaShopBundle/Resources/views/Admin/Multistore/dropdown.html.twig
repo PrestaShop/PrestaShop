@@ -18,7 +18,7 @@
             {% for shop in group.shops %}
               <li class="multistore-dropdown-shop">
                 <a class="multistore-dropdown-shop-name" href="{{ app.request.requestURI ~ '&setShopContext=s-' ~ shop.id }}">{{ shop.name }}</a>
-                {% if shop.isOveridden == true %}
+                {% if shop.isOverridden == true %}
                   <p class="multistore-dropdown-shop-status multistore-dropdown-shop-status-locked">
                     <i class="material-icons">https</i>
                     {{ "Customized"|trans({}, 'Admin.Shop') }}
