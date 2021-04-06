@@ -38,7 +38,11 @@ export default class CategoriesManager {
     this.router = new Router();
     this.initCategories();
     this.categoriesElement = document.querySelector('.js-categories-tree');
+    this.treeContainer = document.querySelector('.js-category-tree-overflow');
     this.datas = [];
+    this.categoryTree = null;
+    this.actionButton = document.querySelector('.js-categories-tree-actions');
+    this.expanded = false;
 
     return {};
   }
@@ -50,7 +54,109 @@ export default class CategoriesManager {
   }
 
   initTree() {
+    this.categoryTree = document.createElement('ul');
+    this.categoryTree.classList.add('category-tree');
+
+    this.datas.forEach((category) => {
+      const item = this.createItem(category);
+      this.categoryTree.append(item);
+    });
+
+    this.treeContainer.append(this.categoryTree);
+
+    this.actionButton.addEventListener('click', () => {
+      this.toggleExpand();
+    });
+
     this.categoriesElement.querySelector('fieldset').classList.remove('hide');
     this.categoriesElement.querySelector('.categories-tree-loader').classList.add('hide');
+  }
+
+  createItem(category) {
+    const listItem = document.createElement('li');
+    const hasChilds = category.childs && category.childs.length > 0;
+
+    const checkboxContainer = document.createElement('div');
+    checkboxContainer.classList.add('checkbox');
+
+    if (hasChilds) {
+      listItem.classList.add('more');
+    }
+
+    const labelElement = document.createElement('label');
+
+    const inputElement = document.createElement('input');
+    inputElement.setAttribute('type', 'checkbox');
+    inputElement.setAttribute('name', 'form[step1][categories][tree][]');
+    inputElement.setAttribute('value', category.id);
+    inputElement.classList.add('category');
+
+    const radioElement = document.createElement('input');
+    radioElement.setAttribute('type', 'radio');
+    radioElement.setAttribute('name', 'ignore');
+    radioElement.setAttribute('value', category.id);
+    radioElement.classList.add('default-category');
+
+    labelElement.append(inputElement, ` ${category.name}`, radioElement);
+    checkboxContainer.append(labelElement);
+    listItem.append(checkboxContainer);
+
+    if (hasChilds) {
+      const childList = document.createElement('ul');
+      childList.classList.add('hide', 'child-list');
+
+      checkboxContainer.addEventListener('click', (event) => {
+        if (!event.target.classList.contains('default-category')) {
+          childList.classList.toggle('hide');
+        }
+
+        if (childList.classList.contains('hide')) {
+          checkboxContainer.parentElement.classList.remove('less');
+          checkboxContainer.parentElement.classList.add('more');
+        } else {
+          checkboxContainer.parentElement.classList.remove('more');
+          checkboxContainer.parentElement.classList.add('less');
+        }
+      });
+
+      category.childs.forEach((element) => {
+        const child = this.createItem(element);
+
+        childList.append(child);
+      });
+
+      listItem.append(childList);
+    }
+
+    return listItem;
+  }
+
+  toggleExpand(force) {
+    const currentAction = this.actionButton.querySelector('.form-control-label:not(.hide)');
+    const nextAction = this.actionButton.querySelector('.hide');
+    nextAction.classList.remove('hide');
+    nextAction.style.display = 'block';
+    currentAction.classList.add('hide');
+    currentAction.style.display = 'none';
+
+    this.categoriesElement.querySelectorAll('.child-list').forEach((e) => {
+      if (this.expanded && !force) {
+        e.classList.add('hide');
+      } else {
+        e.classList.remove('hide');
+      }
+    });
+
+    this.categoriesElement.querySelectorAll('.less, .more').forEach((e) => {
+      if (this.expanded && !force) {
+        e.classList.add('more');
+        e.classList.remove('less');
+      } else {
+        e.classList.add('less');
+        e.classList.remove('more');
+      }
+    });
+
+    this.expanded = !this.expanded;
   }
 }
