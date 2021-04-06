@@ -108,6 +108,7 @@ class StockType extends TranslatorAwareType
                 'choices' => $this->packStockTypeChoiceProvider->getChoices(),
             ])
             // @todo: will need to reuse some fields bellow combinations tab as shared "Availability preferences"
+            // @todo: also available_now/later_labels could be hidden depending on out_of_stock_type. (remove ux noise)
             ->add('out_of_stock_type', ChoiceType::class, [
                 'choices' => $this->outOfStockTypeChoiceProvider->getChoices(),
             ])

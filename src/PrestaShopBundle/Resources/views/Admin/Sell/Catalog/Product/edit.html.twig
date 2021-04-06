@@ -32,7 +32,14 @@
 
 {# @todo: starter for product page. Feel free to move/modify while appending more fields to form #}
 {% block content %}
-  {{ form_start(productForm, {'attr': {'class': 'form-horizontal product-page row justify-content-md-center', 'novalidate': 'novalidate'}}) }}
+  {% set productType = productForm.vars.product_type %}
+  {% set productId = productForm.vars.product_id %}
+
+  {{ form_start(productForm, {'attr': {
+    'class': 'form-horizontal product-page row justify-content-md-center', 'novalidate': 'novalidate',
+    'data-product-id': productId,
+    'data-product-type': productType
+  }}) }}
 
   {% block product_header %}
     {{ include('@PrestaShop/Admin/Sell/Catalog/Product/Blocks/header.html.twig', {
@@ -45,7 +52,6 @@
   {% endblock %}
 
   <div class="col-xxl-10">
-    {% set productType = productForm.vars.productType %}
 
     {% block product_tabs_container %}
       {{ include('@PrestaShop/Admin/Sell/Catalog/Product/Blocks/tabs.html.twig', {
