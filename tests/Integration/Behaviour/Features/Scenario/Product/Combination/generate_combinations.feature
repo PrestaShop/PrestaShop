@@ -20,10 +20,10 @@ Feature: Generate attribute combinations for product in Back Office (BO)
     And attribute "Red" named "Red" in en language exists
 
   Scenario: Generate product combinations
-    When I add product "product1" with following information:
+    Given I add product "product1" with following information:
       | name[en-US] | universal T-shirt |
       | type        | combinations      |
-    Then product product1 type should be combinations
+    And product product1 type should be combinations
     And product product1 does not have a default combination
     When I generate combinations for product product1 using following attributes:
       | Size  | [S,M]              |
@@ -37,15 +37,15 @@ Feature: Generate attribute combinations for product in Back Office (BO)
       | product1MBlack | Size - M, Color - Black |           | [Size:M,Color:Black] | 0               | 0        | false      |
       | product1MBlue  | Size - M, Color - Blue  |           | [Size:M,Color:Blue]  | 0               | 0        | false      |
     And product product1 default combination should be "product1SWhite"
-    When I list attribute groups for product product1 I should get following results:
+    And product "product1" should have the following list of attribute groups:
       | name[en-US] | public_name[en-US] | is_color_group | group_type | position | reference  |
       | Size        | Size               | false          | select     | 0        | Size       |
       | Color       | Color              | true           | color      | 1        | Color      |
-    When I list attribute groups for product "product1", the group "Size" should have the following attributes:
+    And product "product1" should have the following list of attributes in attribute group "Size":
       | name[en-US] | color | position | reference |
       | S           |       | 0        | S         |
       | M           |       | 1        | M         |
-    When I list attribute groups for product "product1", the group "Color" should have the following attributes:
+    And product "product1" should have the following list of attributes in attribute group "Color":
       | name[en-US] | color   | position | reference |
       | White       | #ffffff | 3        | White     |
       | Black       | #434A54 | 6        | Black     |

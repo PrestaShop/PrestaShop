@@ -71,7 +71,7 @@ class AttributeGroupFeatureContext extends AbstractDomainFeatureContext
     }
 
     /**
-     * @When I list all attribute groups I should get following results:
+     * @Given there is a list of following attribute groups:
      *
      * @param TableNode $tableNode
      */
@@ -84,7 +84,7 @@ class AttributeGroupFeatureContext extends AbstractDomainFeatureContext
     }
 
     /**
-     * @When I list attribute groups for product :productReference I should get following results:
+     * @Then product ":productReference" should have the following list of attribute groups:
      *
      * @param TableNode $tableNode
      */
@@ -145,7 +145,7 @@ class AttributeGroupFeatureContext extends AbstractDomainFeatureContext
     }
 
     /**
-     * @When I list all attribute groups, the group :attributeGroupReference should have the following attributes:
+     * @Given the attribute group :attributeGroupReference should have the following attributes:
      *
      * @param TableNode $tableNode
      * @param string $attributeGroupReference
@@ -159,7 +159,7 @@ class AttributeGroupFeatureContext extends AbstractDomainFeatureContext
     }
 
     /**
-     * @When I list attribute groups for product :productReference, the group :attributeGroupReference should have the following attributes:
+     * @Then product ":productReference" should have the following list of attributes in attribute group ":attributeGroupReference":
      *
      * @param TableNode $tableNode
      * @param string $productReference
