@@ -119,7 +119,7 @@
     "symfony/symfony": ">=3.4.37",
     "tecnickcom/tcpdf": "^6.2.12",
     "tijsverkoyen/css-to-inline-styles": "^2.2",
-    "twig/twig": "^1.38"
+    "twig/twig": "^1.44.3"
   },
   "repositories": [
     {
