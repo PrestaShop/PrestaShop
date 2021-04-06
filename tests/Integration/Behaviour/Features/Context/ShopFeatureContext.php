@@ -100,6 +100,19 @@ class ShopFeatureContext extends AbstractDomainFeatureContext
     }
 
     /**
+     * @Given /^I copy "(.+)" shop data from "(.+)" to "(.+)"$/
+     *
+     * @param string $what
+     * @param string $from
+     * @param string $to
+     */
+    public function copyShopData(string $what, string $from, string $to): void
+    {
+        $shopTo = new Shop((int) Shop::getIdByName($to));
+        $shopTo->copyShopData((int) Shop::getIdByName($from), [$what => true]);
+    }
+
+    /**
      * @Given I add a shop :reference with name :shopName and color :color for the group :shopGroupName
      *
      * @param string $reference
