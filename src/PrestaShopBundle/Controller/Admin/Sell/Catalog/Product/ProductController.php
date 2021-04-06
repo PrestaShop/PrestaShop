@@ -133,20 +133,13 @@ class ProductController extends FrameworkBundleAdminController
      */
     private function renderProductForm(FormInterface $productForm, ?int $productId = null): Response
     {
-        $statsLink = null;
-
-        if ($productId) {
-            $statsLink = $this->getAdminLink('AdminStats', ['module' => 'statsproduct', 'id_product' => $productId]);
-        }
-
         $shopContext = $this->get('prestashop.adapter.shop.context');
         $isMultiShopContext = count($shopContext->getContextListShopID()) > 1;
 
         return $this->render('@PrestaShop/Admin/Sell/Catalog/Product/edit.html.twig', [
             'showContentHeader' => false,
             'productForm' => $productForm->createView(),
-            'productId' => $productId ?? null,
-            'statsLink' => $statsLink,
+            'statsLink' => $productId ? $this->getAdminLink('AdminStats', ['module' => 'statsproduct', 'id_product' => $productId]) : null,
             'helpLink' => $this->generateSidebarLink('AdminProducts'),
             'isMultiShopContext' => $isMultiShopContext,
             'editable' => $this->isGranted(PageVoter::UPDATE, self::PRODUCT_CONTROLLER_PERMISSION),
