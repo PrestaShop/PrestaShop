@@ -1445,7 +1445,7 @@ class OrderFeatureContext extends AbstractDomainFeatureContext
     /**
      * @Then order :orderReference preview shipping address should have the following details:
      */
-    public function getOrderPreviewShippingAddress(string $orderReference, TableNode $table)
+    public function getOrderPreviewShippingAddress(string $orderReference, TableNode $table): void
     {
         $orderId = $this->getSharedStorage()->get($orderReference);
         $orderPreview = $this->getQueryBus()->handle(new GetOrderPreview($orderId));

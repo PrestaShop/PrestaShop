@@ -77,7 +77,7 @@ class LanguageFeatureContext extends AbstractPrestaShopFeatureContext
     /**
      * @When I delete language :reference
      */
-    public function deleteLanguage($reference)
+    public function deleteLanguage($reference): void
     {
         $language = SharedStorage::getStorage()->get($reference);
         $language->delete();

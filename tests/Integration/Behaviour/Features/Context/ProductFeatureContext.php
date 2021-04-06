@@ -92,7 +92,7 @@ class ProductFeatureContext extends AbstractPrestaShopFeatureContext
      *
      * @return Product
      */
-    public function getProductWithName(string $productName)
+    public function getProductWithName(string $productName): Product
     {
         $idShop = (int) Context::getContext()->shop->id !== (int) Configuration::get('PS_SHOP_DEFAULT') ?
             (string) Context::getContext()->shop->id : '';
@@ -342,7 +342,7 @@ class ProductFeatureContext extends AbstractPrestaShopFeatureContext
      *
      * @param string $productName
      */
-    public function productWithNameCanBeOrderedOutOfStock($productName)
+    public function productWithNameCanBeOrderedOutOfStock(string $productName): void
     {
         $this->checkProductWithNameExists($productName);
         StockAvailable::setProductOutOfStock($this->getProductWithName($productName)->id, 1);
@@ -353,7 +353,7 @@ class ProductFeatureContext extends AbstractPrestaShopFeatureContext
      *
      * @param string $productName
      */
-    public function productWithNameCannotBeOrderedOutOfStock($productName)
+    public function productWithNameCannotBeOrderedOutOfStock(string $productName): void
     {
         if (!$this->hasProduct($productName)) {
             throw new Exception('Product named "' . $productName . '" doesn\'t exist');
@@ -364,7 +364,7 @@ class ProductFeatureContext extends AbstractPrestaShopFeatureContext
     /**
      * @param $productName
      */
-    public function checkProductWithNameExists($productName)
+    public function checkProductWithNameExists(string $productName): void
     {
         $this->checkFixtureExists($this->products, 'Product', $productName);
     }

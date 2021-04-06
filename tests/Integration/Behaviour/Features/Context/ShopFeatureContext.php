@@ -80,7 +80,7 @@ class ShopFeatureContext extends AbstractDomainFeatureContext
      *
      * @param string $reference
      * @param string $groupName
-     * @param string $color
+     * @param string|null $color
      */
     public function addShopGroup(string $reference, string $groupName, string $color = null): void
     {
@@ -178,7 +178,7 @@ class ShopFeatureContext extends AbstractDomainFeatureContext
      *
      * @param int $expectedCount
      */
-    public function checkShopGroupCount(int $expectedCount)
+    public function checkShopGroupCount(int $expectedCount): void
     {
         $countShopGroup = ShopGroup::getTotalShopGroup();
 
@@ -199,7 +199,7 @@ class ShopFeatureContext extends AbstractDomainFeatureContext
      *
      * @param int $expectedCount
      */
-    public function checkShopCount(int $expectedCount, string $shopGroupName)
+    public function checkShopCount(int $expectedCount, string $shopGroupName): void
     {
         $shopGroupId = ShopGroup::getIdByName($shopGroupName);
         if (false === $shopGroupId) {
