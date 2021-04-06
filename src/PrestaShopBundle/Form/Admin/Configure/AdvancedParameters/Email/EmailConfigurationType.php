@@ -102,8 +102,12 @@ class EmailConfigurationType extends TranslatorAwareType
             ])
             ->add('dkim_enable', SwitchType::class, [
                 'attr' => ['class' => 'js-dkim-enable'],
-                'label' => $this->trans('Enable DKIM', 'Admin.Advparameters.Feature'),
-                'help' => $this->trans('Before enabling DKIM, fill the data below and properly test it afterwards. If no email is sent, check logs.', 'Admin.Advparameters.Help'),
+                'choices' => [
+                    'Disabled' => false,
+                    'Enabled' => true,
+                ],
+                'label' => $this->trans('DKIM signing', 'Admin.Advparameters.Feature'),
+                'help' => $this->trans('When enabling DKIM, fill the data below and properly test it afterwards. If no email is sent, check logs.', 'Admin.Advparameters.Help'),
             ])
             ->add('smtp_config', SmtpConfigurationType::class)
             ->add('dkim_config', DkimConfigurationType::class);
