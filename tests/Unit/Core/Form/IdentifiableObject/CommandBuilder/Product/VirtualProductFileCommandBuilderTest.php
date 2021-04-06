@@ -32,7 +32,7 @@ use Generator;
 use PrestaShop\PrestaShop\Core\Domain\Product\VirtualProductFile\Command\AddVirtualProductFileCommand;
 use PrestaShop\PrestaShop\Core\Domain\Product\VirtualProductFile\Command\DeleteVirtualProductFileCommand;
 use PrestaShop\PrestaShop\Core\Domain\Product\VirtualProductFile\Command\UpdateVirtualProductFileCommand;
-use PrestaShop\PrestaShop\Core\Form\IdentifiableObject\CommandBuilder\Product\VirtualProductFileCommandBuilder;
+use PrestaShop\PrestaShop\Core\Form\IdentifiableObject\CommandBuilder\Product\VirtualProductFileCommandsBuilder;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
 use Tests\Resources\DummyFileUploader;
 
@@ -46,7 +46,7 @@ class VirtualProductFileCommandBuilderTest extends AbstractProductCommandBuilder
      */
     public function testBuildCommands(array $formData, array $expectedCommands): void
     {
-        $builder = new VirtualProductFileCommandBuilder();
+        $builder = new VirtualProductFileCommandsBuilder();
         $builtCommands = $builder->buildCommand($this->getProductId(), $formData);
         $this->assertEquals($expectedCommands, $builtCommands);
     }
