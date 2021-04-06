@@ -36,12 +36,12 @@ use PrestaShop\PrestaShop\Core\Domain\Product\VirtualProductFile\Command\UpdateV
 use PrestaShop\PrestaShop\Core\Util\DateTime\NullDateTime;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
 
-final class VirtualProductFileCommandBuilder implements ProductCommandBuilderInterface
+final class VirtualProductFileCommandsBuilder implements ProductCommandsBuilderInterface
 {
     /**
      * {@inheritdoc}
      */
-    public function buildCommand(ProductId $productId, array $formData): array
+    public function buildCommands(ProductId $productId, array $formData): array
     {
         if (!isset($formData['virtual_product_file'])) {
             return [];

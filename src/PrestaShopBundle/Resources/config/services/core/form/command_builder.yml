@@ -30,26 +30,26 @@ services:
         class: PrestaShop\PrestaShop\Core\Form\IdentifiableObject\CommandBuilder\Product\ShippingCommandsBuilder
         tags: ['core.product_command_builder']
 
-    prestashop.core.form.command_builder.product.options_command_builder:
+    prestashop.core.form.command_builder.product.options_commands_builder:
         class: PrestaShop\PrestaShop\Core\Form\IdentifiableObject\CommandBuilder\Product\OptionsCommandsBuilder
         tags: ['core.product_command_builder']
 
-    prestashop.core.form.command_builder.product.stock_command_builder:
+    prestashop.core.form.command_builder.product.stock_commands_builder:
         class: PrestaShop\PrestaShop\Core\Form\IdentifiableObject\CommandBuilder\Product\StockCommandsBuilder
         tags: ['core.product_command_builder']
 
-    prestashop.core.form.command_builder.product.product_suppliers_command_builder:
+    prestashop.core.form.command_builder.product.product_suppliers_commands_builder:
         class: PrestaShop\PrestaShop\Core\Form\IdentifiableObject\CommandBuilder\Product\ProductSuppliersCommandsBuilder
         tags: ['core.product_command_builder']
 
-    prestashop.core.form.command_builder.product.feature_values_command_builder:
+    prestashop.core.form.command_builder.product.feature_values_commands_builder:
         class: PrestaShop\PrestaShop\Core\Form\IdentifiableObject\CommandBuilder\Product\FeatureValuesCommandsBuilder
         tags: ['core.product_command_builder']
 
-    prestashop.core.form.command_builder.product.customization_fields_command_builder:
+    prestashop.core.form.command_builder.product.customization_fields_commands_builder:
         class: PrestaShop\PrestaShop\Core\Form\IdentifiableObject\CommandBuilder\Product\CustomizationFieldsCommandsBuilder
         tags: ['core.product_command_builder']
 
-    prestashop.core.form.command_builder.product.virtual_product_file_command_builder:
-        class: PrestaShop\PrestaShop\Core\Form\IdentifiableObject\CommandBuilder\Product\VirtualProductFileCommandBuilder
+    prestashop.core.form.command_builder.product.virtual_product_file_commands_builder:
+        class: PrestaShop\PrestaShop\Core\Form\IdentifiableObject\CommandBuilder\Product\VirtualProductFileCommandsBuilder
         tags: ['core.product_command_builder']
