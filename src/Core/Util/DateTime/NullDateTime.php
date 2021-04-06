@@ -44,17 +44,31 @@ class NullDateTime extends DateTimeImmutable
     }
 
     /**
+     * @return array<string, string>
+     */
+    public static function getSupportedFormats(): array
+    {
+        return [
+            DateTime::DEFAULT_DATE_FORMAT => DateTime::NULL_DATE,
+            DateTime::DEFAULT_DATETIME_FORMAT => DateTime::NULL_DATETIME,
+        ];
+    }
+
+    /**
      * {@inheritdoc}
      *
      * Outputs string representing null date time
      */
     public function format($format)
     {
-        if ($format === DateTimeUtil::DEFAULT_DATE_FORMAT) {
-            return DateTimeUtil::NULL_DATE;
+        $supportedFormats = $this::getSupportedFormats();
+        if (isset($supportedFormats[$format])) {
+            return $supportedFormats[$format];
         }
 
-        return DateTimeUtil::NULL_DATETIME;
+        throw new RuntimeException(
+            sprintf('Format "%s" is not supported by %s', $format, get_class($this))
+        );
     }
 
     /**
@@ -62,12 +76,7 @@ class NullDateTime extends DateTimeImmutable
      */
     public function add($interval)
     {
-        throw new RuntimeException(
-            sprintf(
-                'This method should not be used in %s class, it might produce unexpected results',
-                static::class
-            )
-        );
+        throw $this::buildUnusableMethodException('add');
     }
 
     /**
@@ -75,12 +84,7 @@ class NullDateTime extends DateTimeImmutable
      */
     public static function createFromFormat($format, $datetime, DateTimeZone $timezone = null)
     {
-        throw new RuntimeException(
-            sprintf(
-                'This method should not be used in %s, it might produce unexpected results',
-                static::class
-            )
-        );
+        throw static::buildUnusableMethodException('createFromFormat');
     }
 
     /**
@@ -88,12 +92,7 @@ class NullDateTime extends DateTimeImmutable
      */
     public static function createFromMutable($object)
     {
-        throw new RuntimeException(
-            sprintf(
-                'This method should not be used in %s, it might produce unexpected results',
-                static::class
-            )
-        );
+        throw static::buildUnusableMethodException('createFromMutable');
     }
 
     /**
@@ -101,12 +100,7 @@ class NullDateTime extends DateTimeImmutable
      */
     public static function getLastErrors()
     {
-        throw new RuntimeException(
-            sprintf(
-                'This method should not be used in %s, it might produce unexpected results',
-                static::class
-            )
-        );
+        throw static::buildUnusableMethodException('getLastErrors');
     }
 
     /**
@@ -114,12 +108,7 @@ class NullDateTime extends DateTimeImmutable
      */
     public function modify($modifier)
     {
-        throw new RuntimeException(
-            sprintf(
-                'This method should not be used in %s class, it might produce unexpected results',
-                static::class
-            )
-        );
+        throw $this::buildUnusableMethodException('modify');
     }
 
     /**
@@ -127,12 +116,7 @@ class NullDateTime extends DateTimeImmutable
      */
     public function setDate($year, $month, $day)
     {
-        throw new RuntimeException(
-            sprintf(
-                'This method should not be used in %s class, it might produce unexpected results',
-                static::class
-            )
-        );
+        throw $this::buildUnusableMethodException('setDate');
     }
 
     /**
@@ -140,12 +124,7 @@ class NullDateTime extends DateTimeImmutable
      */
     public function setISODate($year, $week, $dayOfWeek = 1)
     {
-        throw new RuntimeException(
-            sprintf(
-                'This method should not be used in %s class, it might produce unexpected results',
-                static::class
-            )
-        );
+        throw $this::buildUnusableMethodException('setISODate');
     }
 
     /**
@@ -153,12 +132,7 @@ class NullDateTime extends DateTimeImmutable
      */
     public function setTime($hour, $minute, $second = 0, $microsecond = 0)
     {
-        throw new RuntimeException(
-            sprintf(
-                'This method should not be used in %s class, it might produce unexpected results',
-                static::class
-            )
-        );
+        throw $this::buildUnusableMethodException('setTime');
     }
 
     /**
@@ -166,12 +140,7 @@ class NullDateTime extends DateTimeImmutable
      */
     public function setTimestamp($timestamp)
     {
-        throw new RuntimeException(
-            sprintf(
-                'This method should not be used in %s class, it might produce unexpected results',
-                static::class
-            )
-        );
+        throw $this::buildUnusableMethodException('setTimestamp');
     }
 
     /**
@@ -179,12 +148,7 @@ class NullDateTime extends DateTimeImmutable
      */
     public function setTimezone($timezone)
     {
-        throw new RuntimeException(
-            sprintf(
-                'This method should not be used in %s class, it might produce unexpected results',
-                static::class
-            )
-        );
+        throw $this::buildUnusableMethodException('setTimezone');
     }
 
     /**
@@ -192,12 +156,7 @@ class NullDateTime extends DateTimeImmutable
      */
     public function sub($interval)
     {
-        throw new RuntimeException(
-            sprintf(
-                'This method should not be used in %s class, it might produce unexpected results',
-                static::class
-            )
-        );
+        throw $this::buildUnusableMethodException('sub');
     }
 
     /**
@@ -205,12 +164,7 @@ class NullDateTime extends DateTimeImmutable
      */
     public function diff($targetObject, $absolute = false)
     {
-        throw new RuntimeException(
-            sprintf(
-                'This method should not be used in %s class, it might produce unexpected results',
-                static::class
-            )
-        );
+        throw $this::buildUnusableMethodException('diff');
     }
 
     /**
@@ -218,12 +172,7 @@ class NullDateTime extends DateTimeImmutable
      */
     public function getOffset()
     {
-        throw new RuntimeException(
-            sprintf(
-                'This method should not be used in %s class, it might produce unexpected results',
-                static::class
-            )
-        );
+        throw $this::buildUnusableMethodException('getOffset');
     }
 
     /**
@@ -231,12 +180,7 @@ class NullDateTime extends DateTimeImmutable
      */
     public function getTimestamp()
     {
-        throw new RuntimeException(
-            sprintf(
-                'This method should not be used in %s class, it might produce unexpected results',
-                static::class
-            )
-        );
+        throw $this::buildUnusableMethodException('getTimestamp');
     }
 
     /**
@@ -244,12 +188,7 @@ class NullDateTime extends DateTimeImmutable
      */
     public function getTimezone()
     {
-        throw new RuntimeException(
-            sprintf(
-                'This method should not be used in %s class, it might produce unexpected results',
-                static::class
-            )
-        );
+        throw $this::buildUnusableMethodException('getTimezone');
     }
 
     /**
@@ -257,12 +196,7 @@ class NullDateTime extends DateTimeImmutable
      */
     public function __wakeup()
     {
-        throw new RuntimeException(
-            sprintf(
-                'This method should not be used in %s class, it might produce unexpected results',
-                static::class
-            )
-        );
+        throw $this::buildUnusableMethodException('__wakeup');
     }
 
     /**
@@ -270,10 +204,20 @@ class NullDateTime extends DateTimeImmutable
      */
     public static function createFromInterface(DateTimeInterface $object)
     {
-        throw new RuntimeException(sprintf(
-                'This method should not be used in %s, it might produce unexpected results',
-                static::class
-            )
-        );
+        throw static::buildUnusableMethodException('createFromInterface');
+    }
+
+    /**
+     * @param string $method
+     *
+     * @return RuntimeException
+     */
+    private static function buildUnusableMethodException(string $method): RuntimeException
+    {
+        return new RuntimeException(sprintf(
+            '%s::%s should not be used, it might produce unexpected results',
+            static::class,
+            $method
+        ));
     }
 }
