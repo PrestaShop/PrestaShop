@@ -134,7 +134,6 @@ class ProductController extends FrameworkBundleAdminController
     private function renderProductForm(FormInterface $productForm, ?int $productId = null): Response
     {
         $statsLink = null;
-        $productForEditing = null;
 
         if ($productId) {
             $statsLink = $this->getAdminLink('AdminStats', ['module' => 'statsproduct', 'id_product' => $productId]);
