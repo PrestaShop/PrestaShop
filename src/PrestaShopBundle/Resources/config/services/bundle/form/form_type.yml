@@ -1421,6 +1421,8 @@ services:
         class: 'PrestaShopBundle\Form\Admin\Sell\Product\VirtualProductFileType'
         parent: 'form.type.translatable.aware'
         public: true
+        arguments:
+            - "@=service('prestashop.adapter.legacy.configuration').getInt('PS_ATTACHMENT_MAXIMUM_SIZE')"
         tags:
             - { name: form.type }
 
