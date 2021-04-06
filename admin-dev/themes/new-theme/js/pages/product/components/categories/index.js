@@ -38,10 +38,12 @@ export default class CategoriesManager {
    */
   constructor() {
     this.initCategories();
-    this.categoriesElement = document.querySelector(ProductCategoryMap.categoryTree);
+    this.categoriesElement = document.querySelector(
+      ProductCategoryMap.categoryTree,
+    );
     this.treeContainer = document.querySelector(ProductCategoryMap.overflow);
     this.datas = [];
-    this.typeheadDatas = [];
+    this.typeaheadDatas = [];
     this.categoryTree = null;
     this.actionButton = document.querySelector(ProductCategoryMap.actions);
     this.searchInput = $(ProductCategoryMap.searchInput);
@@ -53,8 +55,8 @@ export default class CategoriesManager {
   async initCategories() {
     this.datas = await getCategories(1);
 
-    this.initTypeheadDatas(this.datas);
-    this.initTypehead();
+    this.initTypeaheadDatas(this.datas);
+    this.initTypeahead();
     this.initTree();
   }
 
@@ -65,7 +67,7 @@ export default class CategoriesManager {
     this.categoryTree = document.createElement('ul');
     this.categoryTree.classList.add('category-tree');
 
-    this.datas.forEach(category => {
+    this.datas.forEach((category) => {
       const item = this.createItem(category);
       this.categoryTree.append(item);
     });
@@ -76,8 +78,12 @@ export default class CategoriesManager {
       this.toggleExpand();
     });
 
-    this.categoriesElement.querySelector(ProductCategoryMap.fieldset).classList.remove('hide');
-    this.categoriesElement.querySelector(ProductCategoryMap.loader).classList.add('hide');
+    this.categoriesElement
+      .querySelector(ProductCategoryMap.fieldset)
+      .classList.remove('hide');
+    this.categoriesElement
+      .querySelector(ProductCategoryMap.loader)
+      .classList.add('hide');
   }
 
   /**
@@ -118,8 +124,11 @@ export default class CategoriesManager {
       const childList = document.createElement('ul');
       childList.classList.add('hide', 'child-list');
 
-      checkboxContainer.addEventListener('click', event => {
-        if (!event.target.classList.contains('default-category') && !event.target.classList.contains('category')) {
+      checkboxContainer.addEventListener('click', (event) => {
+        if (
+          !event.target.classList.contains('default-category')
+          && !event.target.classList.contains('category')
+        ) {
           childList.classList.toggle('hide');
 
           if (childList.classList.contains('hide')) {
@@ -132,7 +141,7 @@ export default class CategoriesManager {
         }
       });
 
-      category.childs.forEach(element => {
+      category.childs.forEach((element) => {
         const child = this.createItem(element);
 
         childList.append(child);
@@ -150,54 +159,67 @@ export default class CategoriesManager {
    * Expand the category tree
    */
   toggleExpand(force) {
-    const currentAction = this.actionButton.querySelector(ProductCategoryMap.currentAction);
-    const nextAction = this.actionButton.querySelector(ProductCategoryMap.nextAction);
+    const currentAction = this.actionButton.querySelector(
+      ProductCategoryMap.currentAction,
+    );
+    const nextAction = this.actionButton.querySelector(
+      ProductCategoryMap.nextAction,
+    );
     nextAction.classList.remove('hide');
     nextAction.style.display = 'block';
     currentAction.classList.add('hide');
     currentAction.style.display = 'none';
 
-    this.categoriesElement.querySelectorAll(ProductCategoryMap.childList).forEach(e => {
-      if (this.expanded && !force) {
-        e.classList.add('hide');
-      } else {
-        e.classList.remove('hide');
-      }
-    });
+    this.categoriesElement
+      .querySelectorAll(ProductCategoryMap.childList)
+      .forEach((e) => {
+        if (this.expanded && !force) {
+          e.classList.add('hide');
+        } else {
+          e.classList.remove('hide');
+        }
+      });
 
-    this.categoriesElement.querySelectorAll(ProductCategoryMap.everyItems).forEach(e => {
-      if (this.expanded && !force) {
-        e.classList.add('more');
-        e.classList.remove('less');
-      } else {
-        e.classList.add('less');
-        e.classList.remove('more');
-      }
-    });
+    this.categoriesElement
+      .querySelectorAll(ProductCategoryMap.everyItems)
+      .forEach((e) => {
+        if (this.expanded && !force) {
+          e.classList.add('more');
+          e.classList.remove('less');
+        } else {
+          e.classList.add('less');
+          e.classList.remove('more');
+        }
+      });
 
     this.expanded = !this.expanded;
   }
 
   /**
-   * Typehead datas require to have only one array level
+   * Typeahead datas require to have only one array level
    */
-  initTypeheadDatas(datas) {
-    datas.forEach(item => {
-      this.typeheadDatas.push(item);
+  initTypeaheadDatas(datas) {
+    datas.forEach((item) => {
+      this.typeaheadDatas.push(item);
 
       if (item.childs) {
-        this.initTypeheadDatas(item.childs);
+        this.initTypeaheadDatas(item.childs);
       }
     });
   }
 
-  initTypehead() {
+  initTypeahead() {
     const that = this;
 
     const source = new Bloodhound({
-      datumTokenizer: Bloodhound.tokenizers.obj.whitespace('name', 'value', 'color', 'group_name'),
+      datumTokenizer: Bloodhound.tokenizers.obj.whitespace(
+        'name',
+        'value',
+        'color',
+        'group_name',
+      ),
       queryTokenizer: Bloodhound.tokenizers.whitespace,
-      local: this.typeheadDatas
+      local: this.typeaheadDatas,
     });
 
     const dataSetConfig = {
@@ -205,28 +227,32 @@ export default class CategoriesManager {
       display: 'breadcrumb',
       value: 'id',
       onSelect(selectedItem) {
-        const checkbox = document.querySelector(ProductCategoryMap.itemCheckbox(selectedItem.id));
+        const checkbox = document.querySelector(
+          ProductCategoryMap.itemCheckbox(selectedItem.id),
+        );
         checkbox.checked = true;
         that.toggleExpand(true);
       },
       onClose() {
         that.searchInput.val('');
         return true;
-      }
+      },
     };
 
     dataSetConfig.templates = {
-      suggestion: item => {
+      suggestion: (item) => {
         let displaySuggestion = item;
 
         if (typeof dataSetConfig.display === 'function') {
           dataSetConfig.display(item);
-        } else if (Object.prototype.hasOwnProperty.call(item, dataSetConfig.display)) {
+        } else if (
+          Object.prototype.hasOwnProperty.call(item, dataSetConfig.display)
+        ) {
           displaySuggestion = item[dataSetConfig.display];
         }
 
         return `<div class="px-2">${displaySuggestion}</div>`;
-      }
+      },
     };
 
     new AutoCompleteSearch(this.searchInput, dataSetConfig);
