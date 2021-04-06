@@ -40,13 +40,25 @@
         </div>
 
         <div id="ps_categoryTree" class="hide">
-          [{"id":"1","name":"Root","breadcrumb":"Root"},{"id":"2","name":"Home","breadcrumb":"Root &gt; Home"},{"id":"3","name":"Clothes","breadcrumb":"Root &gt; Home &gt; Clothes"},{"id":"4","name":"Men","breadcrumb":"Root &gt; Home &gt; Clothes &gt; Men"},{"id":"5","name":"Women","breadcrumb":"Root &gt; Home &gt; Clothes &gt; Women"},{"id":"6","name":"Accessories","breadcrumb":"Root &gt; Home &gt; Accessories"},{"id":"7","name":"Stationery","breadcrumb":"Root &gt; Home &gt; Accessories &gt; Stationery"},{"id":"8","name":"Home Accessories","breadcrumb":"Root &gt; Home &gt; Accessories &gt; Home Accessories"},{"id":"9","name":"Art","breadcrumb":"Root &gt; Home &gt; Art"},{"id":"10","name":"Root","breadcrumb":"Root &gt; Root"},{"id":"11","name":"test","breadcrumb":"Root &gt; Home &gt; test"}]
+          [{"id":"1","name":"Root","breadcrumb":"Root", "childs": [
+            {"id":"2","name":"Home","breadcrumb":"Root &gt; Home", "childs": [
+              {"id":"6","name":"Accessories","breadcrumb":"Root &gt; Home &gt; Accessories", "childs": [
+              {"id":"7","name":"Stationery","breadcrumb":"Root &gt; Home &gt; Accessories &gt; Stationery"}
+              ]
+              },
+              {"id":"3","name":"Clothes","breadcrumb":"Root &gt; Home &gt; Clothes", "childs": [
+                {"id":"4","name":"Men","breadcrumb":"Root &gt; Home &gt; Clothes &gt; Men"},{"id":"5","name":"Women","breadcrumb":"Root &gt; Home &gt; Clothes &gt; Women"}
+              ]}
+            ]
+            }]}]
         </div>
 
         <div class="categories-tree-actions js-categories-tree-actions">
           <span class="form-control-label" id="categories-tree-expand" style=""><i class="material-icons">expand_more</i>Expand</span>
-          <span class="form-control-label" id="categories-tree-reduce" style="display: none;"><i class="material-icons">expand_less</i>Collapse</span>
+          <span class="form-control-label hide" id="categories-tree-reduce"><i class="material-icons">expand_less</i>Collapse</span>
         </div>
+
+        <div id="form_step1_categories" class="category-tree-overflow js-category-tree-overflow"></div>
       </div>
     </fieldset>
 
