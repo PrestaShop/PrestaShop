@@ -135,28 +135,28 @@ final class AddressGridDefinitionFactory extends AbstractFilterableGridDefinitio
             )
             ->add(
                 (new ActionColumn('actions'))
-            ->setName($this->trans('Actions', [], 'Admin.Global'))
-            ->setOptions([
-                'actions' => (new RowActionCollection())
-                    ->add(
-                        (new LinkRowAction('edit'))
-                            ->setName($this->trans('Edit', [], 'Admin.Actions'))
-                            ->setIcon('edit')
-                            ->setOptions([
-                                'route' => 'admin_addresses_edit',
-                                'route_param_name' => 'addressId',
-                                'route_param_field' => 'id_address',
-                            ])
-                    )
-                    ->add(
-                        $this->buildDeleteAction(
-                            'admin_addresses_delete',
-                            'addressId',
-                            'id_address',
-                            Request::METHOD_DELETE
-                        )
-                    ),
-            ])
+                    ->setName($this->trans('Actions', [], 'Admin.Global'))
+                    ->setOptions([
+                        'actions' => (new RowActionCollection())
+                            ->add(
+                                (new LinkRowAction('edit'))
+                                    ->setName($this->trans('Edit', [], 'Admin.Actions'))
+                                    ->setIcon('edit')
+                                    ->setOptions([
+                                        'route' => 'admin_addresses_edit',
+                                        'route_param_name' => 'addressId',
+                                        'route_param_field' => 'id_address',
+                                    ])
+                            )
+                            ->add(
+                                $this->buildDeleteAction(
+                                    'admin_addresses_delete',
+                                    'addressId',
+                                    'id_address',
+                                    Request::METHOD_DELETE
+                                )
+                            ),
+                    ])
             )
         ;
 

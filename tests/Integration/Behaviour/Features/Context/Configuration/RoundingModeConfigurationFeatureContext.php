@@ -63,7 +63,6 @@ class RoundingModeConfigurationFeatureContext extends AbstractConfigurationFeatu
                 break;
             default:
                 throw new \Exception('Unknown config value for specific shop configuration for "rounding mode": ' . $value);
-
                 break;
         }
     }

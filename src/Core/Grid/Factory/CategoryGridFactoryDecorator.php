@@ -145,8 +145,7 @@ final class CategoryGridFactoryDecorator implements GridFactoryInterface
     private function rebuildFilterForm(
         SearchCriteriaInterface $searchCriteria,
         GridInterface $categoryGrid
-    )
-    {
+    ) {
         $filterForm = $this->filterFormFactory->create($categoryGrid->getDefinition());
         $filterForm->setData($searchCriteria->getFilters());
 

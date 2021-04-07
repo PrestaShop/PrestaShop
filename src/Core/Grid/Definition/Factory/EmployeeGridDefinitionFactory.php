@@ -159,14 +159,14 @@ final class EmployeeGridDefinitionFactory extends AbstractGridDefinitionFactory
                         'actions' => (new RowActionCollection())
                             ->add(
                                 (new LinkRowAction('edit'))
-                            ->setName($this->trans('Edit', [], 'Admin.Actions'))
-                            ->setIcon('edit')
-                            ->setOptions([
-                                'route' => 'admin_employees_edit',
-                                'route_param_name' => 'employeeId',
-                                'route_param_field' => 'id_employee',
-                                'clickable_row' => true,
-                            ])
+                                    ->setName($this->trans('Edit', [], 'Admin.Actions'))
+                                    ->setIcon('edit')
+                                    ->setOptions([
+                                        'route' => 'admin_employees_edit',
+                                        'route_param_name' => 'employeeId',
+                                        'route_param_field' => 'id_employee',
+                                        'clickable_row' => true,
+                                    ])
                             )
                             ->add(
                                 $this->buildDeleteAction(
@@ -234,7 +234,7 @@ final class EmployeeGridDefinitionFactory extends AbstractGridDefinitionFactory
             )
             ->add(
                 (new Filter('active', YesAndNoChoiceType::class))
-            ->setAssociatedColumn('active')
+                    ->setAssociatedColumn('active')
             )
             ->add(
                 (new Filter('actions', SearchAndResetType::class))

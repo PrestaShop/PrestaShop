@@ -295,8 +295,7 @@ final class SearchProductsHandler extends AbstractOrderHandler implements Search
         bool $withTaxes,
         int $computingPrecision,
         ?Order $order
-    )
-    {
+    ) {
         if (null === $order) {
             return Product::getPriceStatic($productId, $withTaxes, $productAttributeId, $computingPrecision);
         }

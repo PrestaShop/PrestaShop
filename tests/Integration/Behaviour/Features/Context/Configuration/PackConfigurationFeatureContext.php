@@ -52,7 +52,6 @@ class PackConfigurationFeatureContext extends AbstractConfigurationFeatureContex
                 break;
             default:
                 throw new \Exception('Unknown config value for specific shop configuration for "pack stock type": ' . $value);
-
                 break;
         }
     }

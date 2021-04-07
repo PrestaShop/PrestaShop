@@ -81,11 +81,11 @@ final class OrderStatesGridDefinitionFactory extends AbstractGridDefinitionFacto
             )
             ->add(
                 (new ColorColumn('name'))
-            ->setName($this->trans('Status', [], 'Admin.Global'))
-            ->setOptions([
-                'field' => 'name',
-                'color_field' => 'color',
-            ])
+                    ->setName($this->trans('Status', [], 'Admin.Global'))
+                    ->setOptions([
+                        'field' => 'name',
+                        'color_field' => 'color',
+                    ])
             )
             ->add(
                 (new ToggleColumn('send_email'))
@@ -126,21 +126,21 @@ final class OrderStatesGridDefinitionFactory extends AbstractGridDefinitionFacto
             )
             ->add(
                 (new ActionColumn('actions'))
-            ->setName($this->trans('Actions', [], 'Admin.Global'))
-            ->setOptions([
-                'actions' => (new RowActionCollection())
-                    ->add(
-                        (new LinkRowAction('edit'))
-                            ->setName($this->trans('Edit', [], 'Admin.Actions'))
-                            ->setIcon('edit')
-                            ->setOptions([
-                                'route' => 'admin_order_states_edit',
-                                'route_param_name' => 'orderStateId',
-                                'route_param_field' => 'id_order_state',
-                                'clickable_row' => true,
-                            ])
-                    ),
-            ])
+                    ->setName($this->trans('Actions', [], 'Admin.Global'))
+                    ->setOptions([
+                        'actions' => (new RowActionCollection())
+                            ->add(
+                                (new LinkRowAction('edit'))
+                                    ->setName($this->trans('Edit', [], 'Admin.Actions'))
+                                    ->setIcon('edit')
+                                    ->setOptions([
+                                        'route' => 'admin_order_states_edit',
+                                        'route_param_name' => 'orderStateId',
+                                        'route_param_field' => 'id_order_state',
+                                        'clickable_row' => true,
+                                    ])
+                            ),
+                    ])
             );
 
         return $columns;

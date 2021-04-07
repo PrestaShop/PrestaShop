@@ -104,13 +104,13 @@ final class TaxGridDefinitionFactory extends AbstractGridDefinitionFactory
             )
             ->add(
                 (new ToggleColumn('active'))
-            ->setName($this->trans('Enabled', [], 'Admin.Global'))
-            ->setOptions([
-                'field' => 'active',
-                'primary_field' => 'id_tax',
-                'route' => 'admin_taxes_toggle_status',
-                'route_param_name' => 'taxId',
-            ])
+                    ->setName($this->trans('Enabled', [], 'Admin.Global'))
+                    ->setOptions([
+                        'field' => 'active',
+                        'primary_field' => 'id_tax',
+                        'route' => 'admin_taxes_toggle_status',
+                        'route_param_name' => 'taxId',
+                    ])
             )
             ->add(
                 (new ActionColumn('actions'))
@@ -178,11 +178,11 @@ final class TaxGridDefinitionFactory extends AbstractGridDefinitionFactory
             )
             ->add(
                 (new Filter('active', YesAndNoChoiceType::class))
-            ->setTypeOptions([
-                'required' => false,
-                'choice_translation_domain' => false,
-            ])
-            ->setAssociatedColumn('active')
+                    ->setTypeOptions([
+                        'required' => false,
+                        'choice_translation_domain' => false,
+                    ])
+                    ->setAssociatedColumn('active')
             )
             ->add(
                 (new Filter('actions', SearchAndResetType::class))

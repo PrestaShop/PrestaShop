@@ -45,8 +45,7 @@ class DataTransfer
         $object,
         $throwException = false,
         $blackList = []
-    )
-    {
+    ) {
         $reflectionObject = new \ReflectionObject($subObject);
         $reflectionMethods = $reflectionObject->getMethods(\ReflectionMethod::IS_PUBLIC);
 

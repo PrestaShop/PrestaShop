@@ -349,8 +349,7 @@ class ManufacturerFeatureContext extends AbstractDomainFeatureContext
         string $manufacturerReference,
         int $countOfAddresses,
         int $countOfProducts
-    )
-    {
+    ) {
         /** @var Manufacturer $manufacturer */
         $manufacturer = SharedStorage::getStorage()->get($manufacturerReference);
         /** @var ViewableManufacturer $viewableMaufacturer */

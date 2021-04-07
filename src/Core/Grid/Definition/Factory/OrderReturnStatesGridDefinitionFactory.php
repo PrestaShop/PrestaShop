@@ -79,29 +79,29 @@ final class OrderReturnStatesGridDefinitionFactory extends AbstractGridDefinitio
             )
             ->add(
                 (new ColorColumn('name'))
-            ->setName($this->trans('Status', [], 'Admin.Global'))
-            ->setOptions([
-                'field' => 'name',
-                'color_field' => 'color',
-            ])
+                    ->setName($this->trans('Status', [], 'Admin.Global'))
+                    ->setOptions([
+                        'field' => 'name',
+                        'color_field' => 'color',
+                    ])
             )
             ->add(
                 (new ActionColumn('actions'))
-            ->setName($this->trans('Actions', [], 'Admin.Global'))
-            ->setOptions([
-                'actions' => (new RowActionCollection())
-                    ->add(
-                        (new LinkRowAction('edit'))
-                            ->setName($this->trans('Edit', [], 'Admin.Actions'))
-                            ->setIcon('edit')
-                            ->setOptions([
-                                'route' => 'admin_order_return_states_edit',
-                                'route_param_name' => 'orderReturnStateId',
-                                'route_param_field' => 'id_order_return_state',
-                                'clickable_row' => true,
-                            ])
-                    ),
-            ])
+                    ->setName($this->trans('Actions', [], 'Admin.Global'))
+                    ->setOptions([
+                        'actions' => (new RowActionCollection())
+                            ->add(
+                                (new LinkRowAction('edit'))
+                                    ->setName($this->trans('Edit', [], 'Admin.Actions'))
+                                    ->setIcon('edit')
+                                    ->setOptions([
+                                        'route' => 'admin_order_return_states_edit',
+                                        'route_param_name' => 'orderReturnStateId',
+                                        'route_param_field' => 'id_order_return_state',
+                                        'clickable_row' => true,
+                                    ])
+                            ),
+                    ])
             );
 
         return $columns;

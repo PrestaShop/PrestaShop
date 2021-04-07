@@ -98,7 +98,6 @@ class PrimitiveUtils
             case self::TYPE_RESOURCE:
             case self::TYPE_UNKNOWN:
                 throw new Exception("Cannot cast element into type ${type}");
-
                 break;
             default:
                 throw new RuntimeException("Unexpected cast type ${type}, function gettype is not supposed to return it");
@@ -169,7 +168,6 @@ class PrimitiveUtils
                 break;
             case self::TYPE_UNKNOWN:
                 throw new Exception("Cannot compare elements of type ${type}");
-
                 break;
             default:
                 throw new RuntimeException("Unexpected type ${type}, function gettype is not supposed to return it");

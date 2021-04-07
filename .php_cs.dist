@@ -18,80 +18,32 @@ $finder = PhpCsFixer\Finder::create()->in([
 return PhpCsFixer\Config::create()
     ->setRiskyAllowed(true)
     ->setRules([
-        '@PhpCsFixer' => true,
-
-        // required by PSR-12
+        '@Symfony' => true,
+        'array_indentation' => true,
+        'cast_spaces' => [
+            'space' => 'single',
+        ],
+        'combine_consecutive_issets' => true,
         'concat_space' => [
             'spacing' => 'one',
         ],
-
-        // disable some too strict rules
-        'phpdoc_types_order' => [
-            'null_adjustment' => 'always_last',
-            'sort_algorithm' => 'none',
-        ],
-        'single_line_throw' => false,
-        'yoda_style' => [
-            'equal' => false,
-            'identical' => false,
-        ],
-        'native_function_invocation' => false,
-        'void_return' => false,
-        'blank_line_before_statement' => [
-            'statements' => ['break', 'continue', 'declare', 'return', 'throw', 'exit'],
-        ],
-        'combine_consecutive_unsets' => false,
-        'multiline_whitespace_before_semicolons' => false,
-        'no_superfluous_elseif' => false,
-        'ordered_class_elements' => false,
-        'php_unit_internal_class' => false,
-        'php_unit_test_class_requires_covers' => false,
-        'phpdoc_add_missing_param_annotation' => false,
-        'return_assignment' => false,
-        'comment_to_phpdoc' => false,
-        'list_syntax' => ['syntax' => 'short'],
-        'general_phpdoc_annotation_remove' => [
-            'annotations' => [/*'author', 'copyright', 'throws'*/],
-        ],
-        'nullable_type_declaration_for_default_null_value' => [
-            'use_nullable_type_declaration' => false,
-        ],
-
-        // disable too destructive formating for now
-        'escape_implicit_backslashes' => false,
-        'heredoc_to_nowdoc' => false,
-        'no_useless_else' => false,
-        'no_useless_return' => false,
-        'phpdoc_no_empty_return' => false,
-        'phpdoc_order' => false,
-        'phpdoc_var_annotation_correct_order' => false,
-        'protected_to_private' => false,
-        'simple_to_complex_string_variable' => false,
-        'single_line_comment_style' => false,
-
-        // enable some safe rules from @PHP71Migration:risky
-        'pow_to_exponentiation' => true,
-        'is_null' => true,
-        'modernize_types_casting' => true,
-        'dir_constant' => true,
-        'combine_nested_dirname' => true,
-        'non_printable_character' => [
-            'use_escape_sequences_in_strings' => true,
-        ],
-
-        // some customization before PR #23918
         'error_suppression' => [
             'mute_deprecation_error' => false,
             'noise_remaining_usages' => false,
             'noise_remaining_usages_exclude' => [],
         ],
         'function_to_constant' => false,
+        'method_chaining_indentation' => true,
         'no_alias_functions' => false,
         'no_superfluous_phpdoc_tags' => false,
+        'non_printable_character' => [
+            'use_escape_sequences_in_strings' => true,
+        ],
         'phpdoc_align' => [
             'align' => 'left',
         ],
         'phpdoc_summary' => false,
+        'protected_to_private' => false,
         'psr4' => false,
         'self_accessor' => false,
         'yoda_style' => null,

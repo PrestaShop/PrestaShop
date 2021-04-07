@@ -405,8 +405,7 @@ class AddressFeatureContext extends AbstractDomainFeatureContext
         string $customerReference,
         string $addressReference,
         TableNode $table
-    )
-    {
+    ) {
         $testCaseData = $table->getRowsHash();
         $customerId = SharedStorage::getStorage()->get($customerReference);
         $customerAddressId = SharedStorage::getStorage()->get($addressReference);
