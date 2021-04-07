@@ -35,7 +35,7 @@
               {if $k != 'back' && $k != 'modules-list'}
                 {* TODO: REFACTOR ALL THIS THINGS *}
                 <a
-                  class="btn btn-primary {if isset($btn.target) && $btn.target} _blank{/if} {if isset($btn.disabled) && $btn.disabled} disabled auto-pointer-events{/if} pointer"{if isset($btn.href)}
+                  class="btn btn-primary{if isset($btn.target) && $btn.target} _blank{/if}{if isset($btn.disabled) && $btn.disabled} disabled auto-pointer-events{/if} pointer"{if isset($btn.href)}
                   id="page-header-desc-{$table}-{if isset($btn.imgclass)}{$btn.imgclass|escape}{else}{$k}{/if}"
                   href="{$btn.href|escape}"{/if}
                   title="{if isset($btn.help)}{$btn.help}{else}{$btn.desc|escape}{/if}"{if isset($btn.js) && $btn.js}
