@@ -32,7 +32,6 @@ use Doctrine\ORM\EntityManager;
 use PrestaShop\PrestaShop\Adapter\Feature\MultistoreFeature;
 use PrestaShop\PrestaShop\Adapter\Shop\Context;
 use PrestaShop\PrestaShop\Core\Domain\Configuration\ShopConfigurationInterface;
-use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\ShopConstraint;
 use PrestaShopBundle\Entity\Shop;
 use PrestaShopBundle\Entity\ShopGroup;
 use Symfony\Component\HttpFoundation\Response;
@@ -118,19 +117,10 @@ class MultistoreController extends FrameworkBundleAdminController
     {
         $groupList = $this->entityManager->getRepository(ShopGroup::class)->findBy(['active' => true]);
 
-        foreach ($groupList as $group) {
-            foreach ($group->getShops() as $shop) {
-                $shopConstraint = new ShopConstraint(
-                    $shop->getId(),
-                    $shop->getShopGroup()->getId(),
-                    true
-                );
-                $shop->isOverridden = $configuration->has($configurationKey, $shopConstraint);
-            }
-        }
-
         return $this->render('@PrestaShop/Admin/Multistore/dropdown.html.twig', [
             'groupList' => $groupList,
+            'shopConfiguration' => $configuration,
+            'configurationKey' => $configurationKey,
         ]);
     }
 }
