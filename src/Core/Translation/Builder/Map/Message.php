@@ -94,18 +94,17 @@ class Message
      */
     public function contains(array $search): bool
     {
+        if (empty($search)) {
+            return false;
+        }
+
         foreach ($search as $s) {
-            $s = strtolower($s);
-            if (
-                false !== strpos(strtolower($this->defaultTranslation), $s)
-                || (null !== $this->fileTranslation && false !== strpos(strtolower($this->fileTranslation), $s))
-                || (null !== $this->userTranslation && false !== strpos(strtolower($this->userTranslation), $s))
-            ) {
-                return true;
+            if (!$this->containsWord($s)) {
+                return false;
             }
         }
 
-        return false;
+        return true;
     }
 
     /**
@@ -118,5 +117,19 @@ class Message
             'project' => $this->fileTranslation,
             'user' => $this->userTranslation,
         ];
+    }
+
+    private function containsWord(string $s): bool
+    {
+        $s = strtolower($s);
+        if (
+            false !== strpos(strtolower($this->defaultTranslation), $s)
+            || (null !== $this->fileTranslation && false !== strpos(strtolower($this->fileTranslation), $s))
+            || (null !== $this->userTranslation && false !== strpos(strtolower($this->userTranslation), $s))
+        ) {
+            return true;
+        }
+
+        return false;
     }
 }
