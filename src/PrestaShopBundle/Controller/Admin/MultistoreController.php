@@ -116,6 +116,20 @@ class MultistoreController extends FrameworkBundleAdminController
     public function configurationDropdown(ShopConfigurationInterface $configuration, string $configurationKey): Response
     {
         $groupList = $this->entityManager->getRepository(ShopGroup::class)->findBy(['active' => true]);
+        $shouldDisplayDropdown = false;
+        foreach ($groupList as $group) {
+            foreach ($group->getShops() as $shop) {
+                if ($shop->isConfigurationKeyOverridden($configuration, $configurationKey)) {
+                    $shouldDisplayDropdown = true;
+                    break 2;
+                }
+            }
+        }
+
+        if (!$shouldDisplayDropdown) {
+            // no dropdown is displayed if no shop overrides this configuration value, so we return an empty response.
+            return new Response();
+        }
 
         return $this->render('@PrestaShop/Admin/Multistore/dropdown.html.twig', [
             'groupList' => $groupList,
