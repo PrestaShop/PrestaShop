@@ -103,14 +103,14 @@ class ModuleOverrideInstallUninstallTest extends IntegrationTestCase
          * This tests first checks that the overrides installed in the previous step
          * resulted in the expected merged files.
          */
-        $ressource_path = realpath(__DIR__ . '/../../../resources/ModulesOverrideInstallUninstallTest/');
+        $resource_path = realpath(__DIR__ . '/../../../resources/ModulesOverrideInstallUninstallTest/');
         $override_path_cart = _PS_ROOT_DIR_ . '/' . PrestaShopAutoload::getInstance()->getClassPath('Cart');
         $override_path_admin_product_controller = _PS_ROOT_DIR_ . '/' . PrestaShopAutoload::getInstance()->getClassPath('AdminProductsController');
 
         $actual_override_cart = file_get_contents($override_path_cart);
         $actual_override_admin_product = file_get_contents($override_path_admin_product_controller);
-        $expected_override_cart = file_get_contents($ressource_path . '/Cart.php');
-        $expected_override_admin_product = file_get_contents($ressource_path . '/AdminProductsController.php');
+        $expected_override_cart = file_get_contents($resource_path . '/Cart.php');
+        $expected_override_admin_product = file_get_contents($resource_path . '/AdminProductsController.php');
 
         $this->assertEquals(
             $this->cleanup($expected_override_cart),
