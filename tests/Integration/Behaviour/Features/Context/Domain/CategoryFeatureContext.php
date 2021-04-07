@@ -91,17 +91,18 @@ class CategoryFeatureContext extends AbstractDomainFeatureContext
     }
 
     /**
-     * @Then I should see following root categories for product ":productReference" in ":langIso" language:
-     * @Then I should see following categories in ":parentReference" category for product ":productReference" in ":langIso" language:
+     * @Then I should see following root categories in ":langIso" language:
+     * @Then I should see following categories in ":parentReference" category in ":langIso" language:
      *
      * @param TableNode $tableNode
      * @param string $langIso
      * @param string|null $parentReference
-     * @param string|null $productReference
      */
-    public function assertCategoriesTree(TableNode $tableNode, string $langIso, ?string $parentReference = null, ?string $productReference = null): void
+    public function assertCategoriesTree(TableNode $tableNode, string $langIso, ?string $parentReference = null): void
     {
-        $categoriesTree = $this->fetchCategoriesTree($langIso, $productReference);
+        $langId = Language::getIdByIso($langIso);
+        $categoriesTree = $this->getQueryBus()->handle(new GetCategoriesTree($langId));
+
         Assert::assertNotEmpty($categoriesTree, 'Categories tree is empty');
 
         if (!$parentReference) {
@@ -111,21 +112,7 @@ class CategoryFeatureContext extends AbstractDomainFeatureContext
             $actualCategories = $this->extractCategoriesByParent($categoriesTree, $parentCategoryId);
         }
 
-        $this->assertCategoriesInTree($actualCategories, $tableNode);
-    }
-
-    /**
-     * @param string $langIso
-     * @param string|null $productReference
-     *
-     * @return CategoryForTree[]
-     */
-    private function fetchCategoriesTree(string $langIso, ?string $productReference): array
-    {
-        $langId = Language::getIdByIso($langIso);
-        $productId = isset($productReference) ? $this->getSharedStorage()->get($productReference) : null;
-
-        return $this->getQueryBus()->handle(new GetCategoriesTree($langId, $productId));
+        $this->assertCategoriesInTree($actualCategories, $tableNode->getColumnsHash(), $langId);
     }
 
     /**
@@ -521,12 +508,11 @@ class CategoryFeatureContext extends AbstractDomainFeatureContext
 
     /**
      * @param CategoryForTree[] $actualCategories
-     * @param TableNode $expectedCategoriesTable
+     * @param array<int, array<string, string>> $expectedCategories
+     * @param int $langId
      */
-    private function assertCategoriesInTree(array $actualCategories, TableNode $expectedCategoriesTable)
+    private function assertCategoriesInTree(array $actualCategories, array $expectedCategories, int $langId)
     {
-        $expectedCategories = $expectedCategoriesTable->getColumnsHash();
-
         Assert::assertEquals(
             count($actualCategories),
             count($expectedCategories),
@@ -548,7 +534,7 @@ class CategoryFeatureContext extends AbstractDomainFeatureContext
             );
 
             Assert::assertEquals($expectedId, $category->getCategoryId(), 'Unexpected category id');
-            Assert::assertEquals($expectedCategory['category name'], $category->getCategoryName(), 'Unexpected category name');
+            Assert::assertEquals([$langId => $expectedCategory['category name']], $category->getLocalizedNames(), 'Unexpected category name');
 
             foreach ($actualChildCategories as $index => $childCategory) {
                 Assert::assertEquals($expectedChildCategoryIds[$index], $childCategory->getCategoryId());

@@ -35,23 +35,23 @@ use PrestaShop\PrestaShop\Core\Domain\Language\ValueObject\LanguageId;
 final class GetCategoriesTree
 {
     /**
-     * @var LanguageId
+     * @var LanguageId|null
      */
     private $languageId;
 
     /**
-     * @param int $languageId
+     * @param int|null $languageId
      */
     public function __construct(
-        int $languageId
+        ?int $languageId = null
     ) {
-        $this->languageId = new LanguageId($languageId);
+        $this->languageId = $languageId ? new LanguageId($languageId) : null;
     }
 
     /**
-     * @return LanguageId
+     * @return LanguageId|null
      */
-    public function getLanguageId(): LanguageId
+    public function getLanguageId(): ?LanguageId
     {
         return $this->languageId;
     }

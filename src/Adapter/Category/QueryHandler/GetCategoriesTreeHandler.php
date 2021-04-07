@@ -38,21 +38,37 @@ use PrestaShop\PrestaShop\Core\Domain\Category\QueryResult\CategoryForTree;
 final class GetCategoriesTreeHandler implements GetCategoriesTreeHandlerInterface
 {
     /**
+     * @var string
+     */
+    private $contextLangId;
+
+    /**
+     * @param string $contextLangId
+     */
+    public function __construct(
+        string $contextLangId
+    ) {
+        $this->contextLangId = $contextLangId;
+    }
+
+    /**
      * {@inheritdoc}
      */
     public function handle(GetCategoriesTree $query): array
     {
-        $nestedCategories = Category::getNestedCategories(null, $query->getLanguageId()->getValue());
+        $langId = $query->getLanguageId() ? $query->getLanguageId()->getValue() : (int) $this->contextLangId;
+        $nestedCategories = Category::getNestedCategories(null, $langId);
 
-        return $this->buildCategoriesTree($nestedCategories);
+        return $this->buildCategoriesTree($nestedCategories, $langId);
     }
 
     /**
      * @param array<string, array<string, mixed>> $categories
+     * @param int $langId
      *
      * @return CategoryForTree[]
      */
-    private function buildCategoriesTree(array $categories): array
+    private function buildCategoriesTree(array $categories, int $langId): array
     {
         $categoriesTree = [];
         foreach ($categories as $category) {
@@ -60,12 +76,14 @@ final class GetCategoriesTreeHandler implements GetCategoriesTreeHandlerInterfac
             $childCategories = [];
 
             if (!empty($category['children'])) {
-                $childCategories = $this->buildCategoriesTree($category['children']);
+                $childCategories = $this->buildCategoriesTree($category['children'], $langId);
             }
 
             $categoriesTree[] = new CategoryForTree(
                 $categoryId,
-                $category['name'],
+                // @todo: it is always only one language now,
+                //   but this way it doesn't require changing the contract when we want to allow retrieving multiple languages
+                [$langId => $category['name']],
                 $childCategories ?? []
             );
         }

@@ -25,24 +25,19 @@ Feature: Show category tree in product page (BO)
     And category "art" parent is category "home"
 
   Scenario: I can see categories tree with product associations
-    Given I add product "product1" with following information:
-      | name[en-US] | unisex sneakers |
-      | type        | standard        |
-    And product "product1" type should be standard
-    And product "product1" should be assigned to default category
-    Then I should see following root categories for product "product1" in "en" language:
+    Given I should see following root categories in "en" language:
       | id reference | category name | direct child categories   |
       | home         | Home          | [clothes,accessories,art] |
-    And I should see following categories in "home" category for product "product1" in "en" language:
+    And I should see following categories in "home" category in "en" language:
       | id reference | category name | direct child categories       |
       | clothes      | Clothes       | [men,women]                   |
       | accessories  | Accessories   | [stationery,home_accessories] |
       | art          | Art           |                               |
-    And I should see following categories in "clothes" category for product "product1" in "en" language:
+    And I should see following categories in "clothes" category in "en" language:
       | id reference | category name | direct child categories |
       | men          | Men           |                         |
       | women        | Women         |                         |
-    And I should see following categories in "accessories" category for product "product1" in "en" language:
+    And I should see following categories in "accessories" category in "en" language:
       | id reference     | category name    | direct child categories |
       | stationery       | Stationery       |                         |
       | home_accessories | Home Accessories |                         |
