@@ -29,7 +29,7 @@ $product-description-height: 70px;
     height: auto;
     margin-bottom: 1.563rem;
     overflow: hidden;
-    background: #fff;
+    background: $white;
 
     &:hover,
     &:focus {
@@ -104,7 +104,7 @@ $product-description-height: 70px;
     min-height: 2.5rem;
     padding-top: 0.1875rem;
     text-align: center;
-    background: #fff;
+    background: $white;
   }
 
   .highlighted-informations {
@@ -116,7 +116,7 @@ $product-description-height: 70px;
     height: auto;
     padding-top: 0.625rem;
     text-align: center;
-    background: #fff;
+    background: $white;
     transition: top 0.3s, bottom 0.3s;
 
     .quick-view {
@@ -137,7 +137,7 @@ $product-description-height: 70px;
     height: auto;
     padding-bottom: 0.7rem;
     overflow: hidden;
-    background: #fff;
+    background: $white;
   }
 
   .product {

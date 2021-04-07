@@ -145,7 +145,7 @@ small.value {
 
   &:focus {
     color: $gray-darker;
-    background-color: #fff;
+    background-color: $white;
     outline: 0.1875rem solid $brand-primary;
   }
 }
@@ -167,7 +167,7 @@ small.value {
       margin-left: 0;
       font-size: 0.6875rem;
       font-weight: 500;
-      color: #fff;
+      color: $white;
       text-transform: uppercase;
       border: 0;
       box-shadow: none;
@@ -244,7 +244,7 @@ textarea {
 
 .form-control-submit {
   &.disabled {
-    color: #fff;
+    color: $white;
     background: $brand-info;
   }
 }
@@ -270,7 +270,7 @@ textarea {
   .btn-default {
     padding: 0.5rem 1rem;
     font-size: 0.875rem;
-    color: #fff;
+    color: $white;
     text-transform: uppercase;
     background: $brand-primary;
     border-radius: 0;
@@ -294,7 +294,7 @@ textarea {
       height: $input-height;
       padding: 0.175rem 0.5rem;
       color: $gray-darker;
-      background-color: #fff;
+      background-color: $white;
       border: $input-btn-border-width solid $input-border-color;
     }
   }
@@ -302,7 +302,7 @@ textarea {
   .btn-touchspin {
     @extend .btn-default;
     height: $input-height / 2 + 0.0625rem;
-    background-color: #fff;
+    background-color: $white;
     border: $input-btn-border-width solid $input-border-color;
 
     &:hover {
@@ -386,7 +386,7 @@ form {
   margin-right: 0.5rem;
   vertical-align: middle;
   cursor: pointer;
-  background: #fff;
+  background: $white;
   border: $radio-border-color 1px solid;
   border-radius: 50%;
 
@@ -541,7 +541,7 @@ form {
   }
 
   ul li:last-child .alert-link {
-    color: #fff;
+    color: $white;
   }
 
   .warning-buttons {

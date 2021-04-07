@@ -1,6 +1,6 @@
 /* stylelint-disable  */
 $color-error: #c05c67;
-$color-active: #25b9d7;
+$color-active: $primary;
 /* stylelint-enable  */
 
 .search-translation,
@@ -33,7 +33,7 @@ $color-active: #25b9d7;
 
   .summary {
     font-size: 0.875rem;
-    color: #363a41;
+    color: $gray-700;
   }
 
   .search {
@@ -121,7 +121,7 @@ $color-active: #25b9d7;
     font-style: normal;
     font-weight: 400;
     font-stretch: normal;
-    color: #363a41;
+    color: $gray-700;
     text-align: left;
     object-fit: contain;
 
@@ -214,7 +214,7 @@ $color-active: #25b9d7;
 .translation-domains {
   float: left;
   min-height: 50rem;
-  background-color: #fff;
+  background-color: $white;
 
   h1 {
     width: auto;
@@ -224,7 +224,7 @@ $color-active: #25b9d7;
     font-style: normal;
     font-weight: 600;
     font-stretch: normal;
-    color: #363a41;
+    color: $gray-700;
     text-align: left;
     object-fit: contain;
   }

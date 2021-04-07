@@ -2,7 +2,7 @@
   position: relative;
   z-index: 999;
   color: $gray;
-  background: #fff;
+  background: $white;
   box-shadow: 0 2px 5px 0 rgba(0, 0, 0, 0.11);
 
   .logo {
@@ -82,7 +82,7 @@
 
         a,
         i {
-          color: #fff;
+          color: $white;
         }
       }
 
@@ -114,7 +114,7 @@
 
       &.active {
         a:hover {
-          color: #fff;
+          color: $white;
         }
       }
 

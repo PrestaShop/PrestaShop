@@ -18,7 +18,7 @@
         width: 18px;
         height: 18px;
         content: "";
-        background: #fff;
+        background: $white;
         border: 2px solid $gray-medium;
         @include border-radius(100%);
       }

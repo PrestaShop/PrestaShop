@@ -3,8 +3,8 @@
   height: 40px;
   margin: 50px auto;
   font-size: 0;
-  color: #fff;
-  background-color: #fff;
+  color: $white;
+  background-color: $white;
   border: 3px solid $gray-light;
   border-left-color: $primary;
   @include border-radius(40px);
