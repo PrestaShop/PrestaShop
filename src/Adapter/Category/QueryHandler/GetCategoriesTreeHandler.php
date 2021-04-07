@@ -33,6 +33,9 @@ use PrestaShop\PrestaShop\Core\Domain\Category\QueryHandler\GetCategoriesTreeHan
 use PrestaShop\PrestaShop\Core\Domain\Category\QueryResult\CategoryForTree;
 use Product;
 
+/**
+ * Handles @see GetCategoriesTree using legacy object model
+ */
 final class GetCategoriesTreeHandler implements GetCategoriesTreeHandlerInterface
 {
     /**
@@ -42,17 +45,33 @@ final class GetCategoriesTreeHandler implements GetCategoriesTreeHandlerInterfac
     {
         $nestedCategories = Category::getNestedCategories(null, $query->getLanguageId()->getValue());
 
-        if ($query->getAssociatedProductId()) {
-            $productCategoryIds = Product::getProductCategories();
+        if ($productId = $query->getAssociatedProductId()) {
+            $productCategoryIds = array_map('intval', Product::getProductCategories($productId->getValue()));
         }
 
-        //@todo: finish up
+        return $this->buildCategoriesTree($nestedCategories, $productCategoryIds ?? []);
+    }
+
+    /**
+     * @param array<string, array<string, mixed>> $categories
+     * @param int[] $productCategoryIds
+     *
+     * @return CategoryForTree[]
+     */
+    private function buildCategoriesTree(array $categories, array $productCategoryIds): array
+    {
         $categoriesTree = [];
-        foreach ($nestedCategories as $nestedCategory) {
+        foreach ($categories as $category) {
+            $categoryId = (int) $category['id_category'];
+            if (!empty($category['children'])) {
+                $childCategories = $this->buildCategoriesTree($category['children'], $productCategoryIds);
+            }
+
             $categoriesTree[] = new CategoryForTree(
-                (int) $nestedCategory['id_category'],
-                $nestedCategory['name'],
-                false
+                $categoryId,
+                $category['name'],
+                $childCategories ?? [],
+                in_array($categoryId, $productCategoryIds, true)
             );
         }
 

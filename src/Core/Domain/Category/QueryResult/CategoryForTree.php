@@ -40,6 +40,11 @@ class CategoryForTree
     private $categoryName;
 
     /**
+     * @var CategoryForTree[]
+     */
+    private $childCategories;
+
+    /**
      * @var bool
      */
     private $associatedWithProduct;
@@ -47,16 +52,19 @@ class CategoryForTree
     /**
      * @param int $categoryId
      * @param string $categoryName
-     * @param bool $associatedWithProduct
+     * @param array $childCategories
+     * @param bool $associatedWithProduct tells if category is associated with product specified in query
      */
     public function __construct(
         int $categoryId,
         string $categoryName,
+        array $childCategories,
         bool $associatedWithProduct
     ) {
         $this->categoryId = $categoryId;
         $this->categoryName = $categoryName;
         $this->associatedWithProduct = $associatedWithProduct;
+        $this->childCategories = $childCategories;
     }
 
     /**
@@ -73,6 +81,14 @@ class CategoryForTree
     public function getCategoryName(): string
     {
         return $this->categoryName;
+    }
+
+    /**
+     * @return CategoryForTree[]
+     */
+    public function getChildCategories(): array
+    {
+        return $this->childCategories;
     }
 
     /**

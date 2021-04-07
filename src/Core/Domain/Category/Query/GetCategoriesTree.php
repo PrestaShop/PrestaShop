@@ -31,6 +31,9 @@ use PrestaShop\PrestaShop\Core\Domain\Language\ValueObject\LanguageId;
 use PrestaShop\PrestaShop\Core\Domain\Product\Exception\ProductConstraintException;
 use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductId;
 
+/**
+ * Provides Category tree list where each category holds its child categories
+ */
 final class GetCategoriesTree
 {
     /**
