@@ -38,3 +38,12 @@ admin_products_combinations_edit_combination:
         _legacy_controller: AdminProducts
     requirements:
         combinationId: \d+
+
+admin_products_attribute_groups:
+    path: /{productId}/attribute-groups
+    methods: [GET]
+    options:
+        expose: true
+    defaults:
+        _controller: PrestaShopBundle:Admin/Sell/Catalog/Product/Combination:getAttributeGroups
+        _legacy_controller: AdminProducts
