@@ -179,26 +179,76 @@ class Install extends CommonPage {
   }
 
   /**
+   * Check if progress bar is visible
+   * @param page
+   * @returns {Promise<boolean>}
+   */
+  isInstallationInProgress(page) {
+    return this.elementVisible(page, this.installationProgressBar, 30000);
+  }
+
+  /**
+   * Check if step installation is finished
+   * @param page
+   * @param step
+   * @param timeout
+   * @returns {Promise<boolean>}
+   * @constructor
+   */
+  async IsInstallationStepFinished(page, step, timeout = 30000) {
+    let selector;
+
+    switch (step) {
+      case 'Generate Setting file':
+        selector = this.generateSettingsFileStep;
+        break;
+
+      case 'Install database':
+        selector = this.installDatabaseStep;
+        break;
+
+      case 'Default data':
+        selector = this.installDefaultDataStep;
+        break;
+
+      case 'Populate database':
+        selector = this.populateDatabaseStep;
+        break;
+
+      case 'Shop configuration':
+        selector = this.configureShopStep;
+        break;
+
+      case 'Install modules':
+        selector = this.installModulesStep;
+        break;
+
+      case 'Install addons modules':
+        selector = this.installModulesAddons;
+        break;
+
+      case 'Install theme':
+        selector = this.installThemeStep;
+        break;
+
+      case 'Install fixtures':
+        selector = this.installFixturesStep;
+        break;
+
+      default:
+        throw new Error(`${step} was not found as an option`);
+    }
+
+    return this.elementVisible(page, `${selector}.success`, timeout);
+  }
+
+  /**
    * Check if prestashop is installed properly
    * @param page
    * @return {Promise<*>}
    */
-  async isInstallationSuccessful(page) {
-    await Promise.all([
-      this.waitForVisibleSelector(page, this.installationProgressBar, 30000),
-      this.waitForVisibleSelector(page, this.generateSettingsFileStep, 30000),
-      this.waitForVisibleSelector(page, this.installDatabaseStep, 60000),
-      this.waitForVisibleSelector(page, this.installDefaultDataStep, 120000),
-      this.waitForVisibleSelector(page, this.populateDatabaseStep, 180000),
-      this.waitForVisibleSelector(page, this.configureShopStep, 240000),
-      this.waitForVisibleSelector(page, this.installModulesStep, 360000),
-      this.waitForVisibleSelector(page, this.installModulesAddons, 360000),
-      this.waitForVisibleSelector(page, this.installThemeStep, 360000),
-      this.waitForVisibleSelector(page, this.installFixturesStep, 360000),
-      this.waitForVisibleSelector(page, this.installationFinishedStepPageTitle, 360000),
-    ]);
-
-    return true;
+  isInstallationSuccessful(page) {
+    return this.checkStepTitle(page, this.finalStepPageTitle, this.finalStepEnTitle);
   }
 
   /**

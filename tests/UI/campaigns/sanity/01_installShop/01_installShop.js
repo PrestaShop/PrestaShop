@@ -99,6 +99,112 @@ describe('Install Prestashop', async () => {
     await expect(result).to.be.true;
   });
 
+  it('should start the installation process', async function () {
+    await testContext.addContextItem(this, 'testIdentifier', 'startInstallation', baseContext);
+    await installPage.nextStep(page);
+    const result = await installPage.isInstallationInProgress(page);
+    await expect(result).to.be.true;
+  });
+
+  const tests = [
+    {
+      args:
+        {
+          step: {
+            name: 'Generate Setting file',
+            timeout: 10000,
+          },
+        },
+    },
+    {
+      args:
+        {
+          step: {
+            name: 'Install database',
+            timeout: 30000,
+          },
+        },
+    },
+    {
+      args:
+        {
+          step: {
+            name: 'Default data',
+            timeout: 30000,
+          },
+        },
+    },
+    {
+      args:
+        {
+          step: {
+            name: 'Populate database',
+            timeout: 30000,
+          },
+        },
+    },
+    {
+      args:
+        {
+          step: {
+            name: 'Shop configuration',
+            timeout: 30000,
+          },
+        },
+    },
+    {
+      args:
+        {
+          step: {
+            name: 'Install modules',
+            timeout: 30000,
+          },
+        },
+    },
+    {
+      args:
+        {
+          step: {
+            name: 'Install addons modules',
+            timeout: 60000,
+          },
+        },
+    },
+    {
+      args:
+        {
+          step: {
+            name: 'Install theme',
+            timeout: 60000,
+          },
+        },
+    },
+    {
+      args:
+        {
+          step: {
+            name: 'Install fixtures',
+            timeout: 30000,
+          },
+        },
+    },
+
+  ];
+
+  tests.forEach((test, index) => {
+    it(`should installation step '${test.args.step.name}' be finished`, async function () {
+      await testContext.addContextItem(this, 'testIdentifier', `CheckStep${index}`, baseContext);
+
+      const stepFinished = await installPage.IsInstallationStepFinished(
+        page,
+        test.args.step.name,
+        test.args.step.timeout,
+      );
+
+      await expect(stepFinished, `Fail to finish the step ${test.args.step.name}`).to.be.true;
+    });
+  });
+
   it('should finish installation and check that installation is successful', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'checkInstallationSuccessful', baseContext);
 
