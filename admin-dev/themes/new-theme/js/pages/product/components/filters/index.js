@@ -29,7 +29,7 @@ import Filters from './Filters.vue';
 
 Vue.use(VueI18n);
 
-export default function initCombinationsFilters(combinationsFiltersSelector) {
+export default function initCombinationsFilters(combinationsFiltersSelector, eventEmitter) {
   const container = document.querySelector(combinationsFiltersSelector);
 
   const translations = {};
@@ -43,11 +43,12 @@ export default function initCombinationsFilters(combinationsFiltersSelector) {
 
   return new Vue({
     el: combinationsFiltersSelector,
-    template: '<filters :productId=productId />',
+    template: '<filters :productId=productId :eventEmitter=eventEmitter />',
     components: {Filters},
     i18n,
     data: {
       productId,
+      eventEmitter,
     },
   });
 }

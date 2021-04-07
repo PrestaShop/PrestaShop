@@ -71,6 +71,10 @@ export default class CombinationsManager {
       this.updateDefaultCombination(e.currentTarget);
     });
 
+    this.eventEmitter.on('updateFilters', (filters) => {
+      this.paginator.loadFilters(filters);
+    });
+
     // Paginate to first page when tab is shown
     this.$productForm.find(ProductMap.combinations.navigationTab).on('shown.bs.tab', () => this.firstInit());
 
@@ -98,24 +102,24 @@ export default class CombinationsManager {
     const {tokenKey} = ProductMap.combinations.combinationItemForm;
 
     new SubmittableInput(ProductMap.combinations.quantityInputWrapper, async (input) => {
-      await this.combinationsService.updateListedCombination(
-        this.findCombinationId(input),
-        {[quantityKey]: input.value, [tokenKey]: combinationToken},
-      );
+      await this.combinationsService.updateListedCombination(this.findCombinationId(input), {
+        [quantityKey]: input.value,
+        [tokenKey]: combinationToken,
+      });
     });
 
     new SubmittableInput(ProductMap.combinations.impactOnPriceInputWrapper, async (input) => {
-      await this.combinationsService.updateListedCombination(
-        this.findCombinationId(input),
-        {[impactOnPriceKey]: input.value, [tokenKey]: combinationToken},
-      );
+      await this.combinationsService.updateListedCombination(this.findCombinationId(input), {
+        [impactOnPriceKey]: input.value,
+        [tokenKey]: combinationToken,
+      });
     });
 
     new SubmittableInput(ProductMap.combinations.referenceInputWrapper, async (input) => {
-      await this.combinationsService.updateListedCombination(
-        this.findCombinationId(input),
-        {[referenceKey]: input.value, [tokenKey]: combinationToken},
-      );
+      await this.combinationsService.updateListedCombination(this.findCombinationId(input), {
+        [referenceKey]: input.value,
+        [tokenKey]: combinationToken,
+      });
     });
   }
 
@@ -130,13 +134,10 @@ export default class CombinationsManager {
     );
     const checkedDefaultId = this.findCombinationId(checkedInput);
 
-    await this.combinationsService.updateListedCombination(
-      checkedDefaultId,
-      {
-        'combination_item[is_default]': checkedInput.value,
-        'combination_item[_token]': this.getCombinationToken(),
-      },
-    );
+    await this.combinationsService.updateListedCombination(checkedDefaultId, {
+      'combination_item[is_default]': checkedInput.value,
+      'combination_item[_token]': this.getCombinationToken(),
+    });
 
     $.each(checkedInputs, (index, input) => {
       if (this.findCombinationId(input) !== checkedDefaultId) {
@@ -181,6 +182,9 @@ export default class CombinationsManager {
    * @private
    */
   findCombinationId(input) {
-    return $(input).closest('tr').find('.combination-id-input').val();
+    return $(input)
+      .closest('tr')
+      .find('.combination-id-input')
+      .val();
   }
 }
