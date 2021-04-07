@@ -117,11 +117,14 @@ class MultistoreController extends FrameworkBundleAdminController
     {
         $groupList = $this->entityManager->getRepository(ShopGroup::class)->findBy(['active' => true]);
         $shouldDisplayDropdown = false;
-        foreach ($groupList as $group) {
+        foreach ($groupList as $key => $group) {
+            if (count($group->getShops()) === 0) {
+                unset($groupList[$key]);
+            }
             foreach ($group->getShops() as $shop) {
                 if ($shop->isConfigurationKeyOverridden($configuration, $configurationKey)) {
                     $shouldDisplayDropdown = true;
-                    break 2;
+                    break;
                 }
             }
         }
