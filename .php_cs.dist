@@ -3,11 +3,16 @@
 ini_set('memory_limit','256M');
 
 $finder = PhpCsFixer\Finder::create()->in([
-    __DIR__.'/src',
-    __DIR__.'/classes',
-    __DIR__.'/controllers',
-    __DIR__.'/tests',
-    __DIR__.'/tools/profiling',
+    __DIR__ . '/src',
+    __DIR__ . '/classes',
+    __DIR__ . '/controllers',
+    __DIR__ . '/admin-dev',
+    __DIR__ . '/install-dev',
+    __DIR__ . '/webservice',
+    __DIR__ . '/tests',
+    __DIR__ . '/tests-legacy',
+    __DIR__ . '/config',
+    __DIR__ . '/tools/profiling',
 ]);
 
 return PhpCsFixer\Config::create()
