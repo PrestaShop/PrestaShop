@@ -549,11 +549,6 @@ class CategoryFeatureContext extends AbstractDomainFeatureContext
 
             Assert::assertEquals($expectedId, $category->getCategoryId(), 'Unexpected category id');
             Assert::assertEquals($expectedCategory['category name'], $category->getCategoryName(), 'Unexpected category name');
-            Assert::assertEquals(
-                PrimitiveUtils::castStringBooleanIntoBoolean($expectedCategory['is associated with product']),
-                $category->isAssociatedWithProduct(),
-                'Unexpected category association with product'
-            );
 
             foreach ($actualChildCategories as $index => $childCategory) {
                 Assert::assertEquals($expectedChildCategoryIds[$index], $childCategory->getCategoryId());

@@ -31,18 +31,18 @@ Feature: Show category tree in product page (BO)
     And product "product1" type should be standard
     And product "product1" should be assigned to default category
     Then I should see following root categories for product "product1" in "en" language:
-      | id reference | category name | direct child categories   | is associated with product |
-      | home         | Home          | [clothes,accessories,art] | true                       |
+      | id reference | category name | direct child categories   |
+      | home         | Home          | [clothes,accessories,art] |
     And I should see following categories in "home" category for product "product1" in "en" language:
-      | id reference | category name | direct child categories       | is associated with product |
-      | clothes      | Clothes       | [men,women]                   | false                      |
-      | accessories  | Accessories   | [stationery,home_accessories] | false                      |
-      | art          | Art           |                               | false                      |
+      | id reference | category name | direct child categories       |
+      | clothes      | Clothes       | [men,women]                   |
+      | accessories  | Accessories   | [stationery,home_accessories] |
+      | art          | Art           |                               |
     And I should see following categories in "clothes" category for product "product1" in "en" language:
-      | id reference | category name | direct child categories | is associated with product |
-      | men          | Men           |                         | false                      |
-      | women        | Women         |                         | false                      |
+      | id reference | category name | direct child categories |
+      | men          | Men           |                         |
+      | women        | Women         |                         |
     And I should see following categories in "accessories" category for product "product1" in "en" language:
-      | id reference     | category name    | direct child categories | is associated with product |
-      | stationery       | Stationery       |                         | false                      |
-      | home_accessories | Home Accessories |                         | false                      |
+      | id reference     | category name    | direct child categories |
+      | stationery       | Stationery       |                         |
+      | home_accessories | Home Accessories |                         |

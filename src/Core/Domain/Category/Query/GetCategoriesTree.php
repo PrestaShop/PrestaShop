@@ -28,8 +28,6 @@ declare(strict_types=1);
 namespace PrestaShop\PrestaShop\Core\Domain\Category\Query;
 
 use PrestaShop\PrestaShop\Core\Domain\Language\ValueObject\LanguageId;
-use PrestaShop\PrestaShop\Core\Domain\Product\Exception\ProductConstraintException;
-use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductId;
 
 /**
  * Provides Category tree list where each category holds its child categories
@@ -42,22 +40,12 @@ final class GetCategoriesTree
     private $languageId;
 
     /**
-     * @var ProductId|null
-     */
-    private $associatedProductId;
-
-    /**
      * @param int $languageId
-     * @param int|null $associatedProductId provide this to mark categories that are associated with specified product
-     *
-     * @throws ProductConstraintException
      */
     public function __construct(
-        int $languageId,
-        ?int $associatedProductId
+        int $languageId
     ) {
         $this->languageId = new LanguageId($languageId);
-        $this->associatedProductId = $associatedProductId ? new ProductId($associatedProductId) : null;
     }
 
     /**
@@ -66,13 +54,5 @@ final class GetCategoriesTree
     public function getLanguageId(): LanguageId
     {
         return $this->languageId;
-    }
-
-    /**
-     * @return ProductId|null
-     */
-    public function getAssociatedProductId(): ?ProductId
-    {
-        return $this->associatedProductId;
     }
 }
