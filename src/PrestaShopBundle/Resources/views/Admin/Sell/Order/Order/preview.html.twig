@@ -48,7 +48,7 @@
                 <strong>{{ 'Tracking number'|trans({}, 'Admin.Shipping.Feature') }}:</strong>
                 {% if not orderPreview.isVirtual and orderPreview.shippingDetails.trackingNumber is not empty %}
                   {% if orderPreview.shippingDetails.trackingUrl %}
-                    <a href="{{ orderPreview.shippingDetails.trackingUrl }}" target="_blank">{{ orderPreview.shippingDetails.trackingNumber }}</a>
+                    <a href="{{ orderPreview.shippingDetails.trackingUrl }}" target="_blank" rel="noopener noreferrer nofollow">{{ orderPreview.shippingDetails.trackingNumber }}</a>
                   {% else %}
                     {{ orderPreview.shippingDetails.trackingNumber }}
                   {% endif %}
@@ -200,4 +200,3 @@
   </div>
   {{ renderhook('displayOrderPreview', {'order_id': orderId}) }}
 {% endblock %}
-
