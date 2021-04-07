@@ -37,7 +37,7 @@ class AddAddress extends BOBasePage {
    * @param addressData
    * @returns {Promise<string>}
    */
-  async createEditAddress(page, addressData) {
+  async createEditAddress(page, addressData, save = true) {
     if (await this.elementVisible(page, this.customerEmailInput, 2000)) {
       await this.setValue(page, this.customerEmailInput, addressData.email);
     }
@@ -55,6 +55,17 @@ class AddAddress extends BOBasePage {
     await this.setValue(page, this.customerAddressPhoneInput, addressData.phone);
     await this.setValue(page, this.customerAddressOtherInput, addressData.other);
     // Save address
+    if (save) {
+      await this.saveAddress(page);
+    }
+  }
+
+  /**
+   * Save address
+   * @param page
+   * @returns {Promise<string>}
+   */
+  async saveAddress(page) {
     await this.clickAndWaitForNavigation(page, this.saveAddressButton);
     return this.getAlertSuccessBlockParagraphContent(page);
   }

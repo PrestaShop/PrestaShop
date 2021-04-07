@@ -22,6 +22,7 @@ const ordersPage = require('@pages/BO/orders');
 const viewOrderPage = require('@pages/BO/orders/view');
 const customersPage = require('@pages/BO/customers');
 const viewCustomerPage = require('@pages/BO/customers/view');
+const addAddressPage = require('@pages/BO/customers/addresses/add');
 
 // Import data
 const CustomerFaker = require('@data/faker/customer');
@@ -43,6 +44,8 @@ let page;
 const customerData = new CustomerFaker();
 const firstAddressData = new AddressFaker({country: 'France'});
 const secondAddressData = new AddressFaker({country: 'France'});
+const editAddressData = new AddressFaker({country: 'France'});
+
 const privateNote = 'Test private note';
 let customerID = 0;
 
@@ -299,6 +302,19 @@ describe('Check and edit customer block in view order page', async () => {
       await expect(customerEmail).to.equal(0);
     });
 
+    it('should edit existing shipping address and check it', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'editShippingAddress', baseContext);
+
+      const shippingAddress = await viewOrderPage.editExistingAddress(page, editAddressData);
+      await expect(shippingAddress)
+        .to.contain(editAddressData.firstName)
+        .and.to.contain(editAddressData.lastName)
+        .and.to.contain(editAddressData.address)
+        .and.to.contain(editAddressData.postalCode)
+        .and.to.contain(editAddressData.city)
+        .and.to.contain(editAddressData.country);
+    });
+
     /*it('should check order shipping', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'checkShippingAddress', baseContext);
 
@@ -478,7 +494,7 @@ describe('Check and edit customer block in view order page', async () => {
   });
 
   // 4 - Delete the created customer
-  describe(`Delete the customer ${customerData.lastName}`, async () => {
+  /*describe(`Delete the created customer ${customerData.lastName}`, async () => {
     it('should go customers page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'goToCustomersPage', baseContext);
 
@@ -516,5 +532,5 @@ describe('Check and edit customer block in view order page', async () => {
       const numberOfCustomersAfterReset = await customersPage.resetAndGetNumberOfLines(page);
       await expect(numberOfCustomersAfterReset).to.be.above(0);
     });
-  });
+  });*/
 });

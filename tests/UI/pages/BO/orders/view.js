@@ -1,6 +1,9 @@
 require('module-alias/register');
 const BOBasePage = require('@pages/BO/BObasePage');
 
+// Needed to create customer in orders page
+const addAddressPage = require('@pages/BO/customers/addresses/add');
+
 class Order extends BOBasePage {
   constructor() {
     super();
@@ -18,6 +21,9 @@ class Order extends BOBasePage {
     this.customerEmailLink = '#customerEmail a';
     this.validatedOrders = '#validatedOrders span.badge';
     this.shippingAddressBlock = '#addressShipping';
+    this.shippingAddressToolTipLink = `${this.shippingAddressBlock} .tooltip-link`;
+    this.editExistingAddressButton = '#js-delivery-address-edit-btn';
+    this.editAddressIframe = 'iframe.fancybox-iframe';
     this.invoiceAddressBlock = '#addressInvoice';
     this.privateNoteDiv = '#privateNote';
     this.privateNoteTextarea = '#private_note_note';
@@ -380,6 +386,29 @@ class Order extends BOBasePage {
    */
   getValidatedOrdersNumber(page) {
     return this.getNumberFromText(page, `${this.validatedOrders}.badge-dark`);
+  }
+
+  /**
+   * Edit existing address
+   * @param page
+   * @returns {Promise<void>}
+   */
+  async editExistingAddress(page, addressData) {
+    await this.waitForSelectorAndClick(page, this.shippingAddressToolTipLink);
+    await this.waitForSelectorAndClick(page, this.editExistingAddressButton);
+
+    await this.waitForVisibleSelector(page, this.editAddressIframe);
+
+    const addressFrame = await page.frame({url: new RegExp('sell/addresses/order', 'gmi')});
+
+    await addAddressPage.createEditAddress(addressFrame, addressData, false);
+
+    await Promise.all([
+      addressFrame.click(addAddressPage.saveAddressButton),
+      page.waitForSelector(this.editAddressIframe, {state: 'hidden'}),
+    ]);
+
+    return this.getShippingAddress(page);
   }
 
   /**
