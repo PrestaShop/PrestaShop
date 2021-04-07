@@ -29,6 +29,7 @@ namespace Tests\Integration\Behaviour\Features\Context\Domain;
 use Behat\Gherkin\Node\TableNode;
 use Category;
 use Configuration;
+use Language;
 use PHPUnit\Framework\Assert as Assert;
 use PrestaShop\PrestaShop\Adapter\Form\ChoiceProvider\CategoryTreeChoiceProvider;
 use PrestaShop\PrestaShop\Adapter\Form\ChoiceProvider\GroupByIdChoiceProvider;
@@ -44,6 +45,7 @@ use PrestaShop\PrestaShop\Core\Domain\Category\Command\EditRootCategoryCommand;
 use PrestaShop\PrestaShop\Core\Domain\Category\Command\SetCategoryIsEnabledCommand;
 use PrestaShop\PrestaShop\Core\Domain\Category\Command\UpdateCategoryPositionCommand;
 use PrestaShop\PrestaShop\Core\Domain\Category\Exception\CategoryNotFoundException;
+use PrestaShop\PrestaShop\Core\Domain\Category\Query\GetCategoriesTree;
 use PrestaShop\PrestaShop\Core\Domain\Category\Query\GetCategoryForEditing;
 use PrestaShop\PrestaShop\Core\Domain\Category\Query\GetCategoryIsEnabled;
 use PrestaShop\PrestaShop\Core\Domain\Category\QueryResult\EditableCategory;
@@ -85,6 +87,32 @@ class CategoryFeatureContext extends AbstractDomainFeatureContext
         $this->container = $this->getContainer();
         $this->defaultLanguageId = Configuration::get('PS_LANG_DEFAULT');
         $this->psCatImgDir = _PS_CAT_IMG_DIR_;
+    }
+
+    /**
+     * @Then I should see following categories tree for product ":productReference" in ":langIso" language:
+     *
+     * @param TableNode $tableNode
+     * @param string $langIso
+     * @param string|null $productReference
+     */
+    public function assertCategoriesTreeInDefaultLang(TableNode $tableNode, string $langIso, ?string $productReference): void
+    {
+        $langId = Language::getIdByIso($langIso);
+        $productId = isset($productReference) ? $this->getSharedStorage()->get($productReference) : null;
+
+        $categoriesTree = $this->getQueryBus()->handle(new GetCategoriesTree($langId, $productId));
+
+        $expectedCategories = $tableNode->getColumnsHash();
+        Assert::assertEquals(
+            count($categoriesTree),
+            count($expectedCategories),
+            'Expected and actual categories count does not match'
+        );
+
+        foreach ($expectedCategories as $expectedCategory) {
+            //@todo: assert
+        }
     }
 
     /**
