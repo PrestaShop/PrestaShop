@@ -84,7 +84,6 @@ export default class DynamicPaginator {
     this.$paginationContainer = $(containerSelector);
     this.paginationService = paginationService;
     this.renderer = renderer;
-    this.filters = [];
     this.setSelectorsMap(selectorsMap);
     this.init();
     this.currentPage = 1;
@@ -95,7 +94,7 @@ export default class DynamicPaginator {
     return {
       paginate: (page) => this.paginate(page),
       getCurrentPage: () => this.currentPage,
-      loadFilters: (filters) => this.loadFilters(filters),
+      setService: service => this.setService(service),
     };
   }
 
@@ -127,7 +126,7 @@ export default class DynamicPaginator {
     this.currentPage = page;
     this.renderer.toggleLoading(true);
     const limit = this.getLimit();
-    const data = await this.paginationService.fetch(this.calculateOffset(page, limit), limit, this.filters);
+    const data = await this.paginationService.fetch(this.calculateOffset(page, limit), limit);
     $(this.selectorsMap.jumpToPageInput).val(page);
     this.countPages(data.total);
     this.refreshButtonsData(page);
@@ -264,11 +263,7 @@ export default class DynamicPaginator {
     };
   }
 
-  /**
-   * @param {Object} filters
-   */
-  loadFilters(filters) {
-    this.filters = filters;
-    this.paginate(1);
+  setService(service) {
+    this.paginationService = service;
   }
 }
