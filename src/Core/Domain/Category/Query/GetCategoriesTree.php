@@ -39,7 +39,7 @@ final class GetCategoriesTree
     private $languageId;
 
     /**
-     * @var int|null
+     * @var ProductId|null
      */
     private $associatedProductId;
 
@@ -66,9 +66,9 @@ final class GetCategoriesTree
     }
 
     /**
-     * @return int|null
+     * @return ProductId|null
      */
-    public function getAssociatedProductId(): ?int
+    public function getAssociatedProductId(): ?ProductId
     {
         return $this->associatedProductId;
     }

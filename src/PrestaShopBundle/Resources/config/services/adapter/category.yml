@@ -119,4 +119,4 @@ services:
     class: PrestaShop\PrestaShop\Adapter\Category\QueryHandler\GetCategoriesTreeHandler
     tags:
       - name: tactician.handler
-        command: PrestaShop\PrestaShop\Core\Domain\Category\Query\GetCategoriesTree }
+        command: PrestaShop\PrestaShop\Core\Domain\Category\Query\GetCategoriesTree
