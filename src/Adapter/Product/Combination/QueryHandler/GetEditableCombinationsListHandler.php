@@ -30,6 +30,7 @@ namespace PrestaShop\PrestaShop\Adapter\Product\Combination\QueryHandler;
 
 use PDO;
 use PrestaShop\Decimal\DecimalNumber;
+use PrestaShop\PrestaShop\Adapter\Attribute\Repository\AttributeRepository;
 use PrestaShop\PrestaShop\Adapter\Product\AbstractProductHandler;
 use PrestaShop\PrestaShop\Adapter\Product\Combination\Repository\CombinationRepository;
 use PrestaShop\PrestaShop\Adapter\Product\Stock\Repository\StockAvailableRepository;
@@ -69,21 +70,29 @@ final class GetEditableCombinationsListHandler extends AbstractProductHandler im
     private $combinationQueryBuilder;
 
     /**
+     * @var AttributeRepository
+     */
+    private $attributeRepository;
+
+    /**
      * @param CombinationRepository $combinationRepository
      * @param NumberExtractor $numberExtractor
      * @param StockAvailableRepository $stockAvailableRepository
      * @param DoctrineQueryBuilderInterface $combinationQueryBuilder
+     * @param AttributeRepository $attributeRepository
      */
     public function __construct(
         CombinationRepository $combinationRepository,
         NumberExtractor $numberExtractor,
         StockAvailableRepository $stockAvailableRepository,
-        DoctrineQueryBuilderInterface $combinationQueryBuilder
+        DoctrineQueryBuilderInterface $combinationQueryBuilder,
+        AttributeRepository $attributeRepository
     ) {
         $this->combinationRepository = $combinationRepository;
         $this->numberExtractor = $numberExtractor;
         $this->stockAvailableRepository = $stockAvailableRepository;
         $this->combinationQueryBuilder = $combinationQueryBuilder;
+        $this->attributeRepository = $attributeRepository;
     }
 
     /**
@@ -108,7 +117,7 @@ final class GetEditableCombinationsListHandler extends AbstractProductHandler im
             return (int) $combination['id_product_attribute'];
         }, $combinations);
 
-        $attributesInformation = $this->combinationRepository->getAttributesInfoByCombinationIds(
+        $attributesInformation = $this->attributeRepository->getAttributesInfoByCombinationIds(
             $combinationIds,
             $query->getLanguageId()
         );
