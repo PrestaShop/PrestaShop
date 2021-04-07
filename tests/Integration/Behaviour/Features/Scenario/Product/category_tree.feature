@@ -30,14 +30,19 @@ Feature: Show category tree in product page (BO)
       | type        | standard        |
     And product "product1" type should be standard
     And product "product1" should be assigned to default category
-    Then I should see following categories tree for product "product1" in "en" language:
-#     @todo: how to assert parent-child category tree?
-      | id reference     | category name    | is associated with product |
-      | home             | Home             | true                       |
-      | clothes          | Clothes          | false                      |
-      | men              | Men              | false                      |
-      | women            | Women            | false                      |
-      | accessories      | Accessories      | false                      |
-      | stationery       | Stationery       | false                      |
-      | home_accessories | Home Accessories | false                      |
-      | art              | Art              | false                      |
+    Then I should see following root categories for product "product1" in "en" language:
+      | id reference | category name | direct child categories   | is associated with product |
+      | home         | Home          | [clothes,accessories,art] | true                       |
+    And I should see following categories in "home" category for product "product1" in "en" language:
+      | id reference | category name | direct child categories       | is associated with product |
+      | clothes      | Clothes       | [men,women]                   | false                      |
+      | accessories  | Accessories   | [stationery,home_accessories] | false                      |
+      | art          | Art           |                               | false                      |
+    And I should see following categories in "clothes" category for product "product1" in "en" language:
+      | id reference | category name | direct child categories | is associated with product |
+      | men          | Men           |                         | false                      |
+      | women        | Women         |                         | false                      |
+    And I should see following categories in "accessories" category for product "product1" in "en" language:
+      | id reference     | category name    | direct child categories | is associated with product |
+      | stationery       | Stationery       |                         | false                      |
+      | home_accessories | Home Accessories |                         | false                      |

@@ -63,6 +63,8 @@ final class GetCategoriesTreeHandler implements GetCategoriesTreeHandlerInterfac
         $categoriesTree = [];
         foreach ($categories as $category) {
             $categoryId = (int) $category['id_category'];
+            $childCategories = [];
+
             if (!empty($category['children'])) {
                 $childCategories = $this->buildCategoriesTree($category['children'], $productCategoryIds);
             }

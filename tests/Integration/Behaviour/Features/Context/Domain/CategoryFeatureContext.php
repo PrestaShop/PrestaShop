@@ -48,6 +48,7 @@ use PrestaShop\PrestaShop\Core\Domain\Category\Exception\CategoryNotFoundExcepti
 use PrestaShop\PrestaShop\Core\Domain\Category\Query\GetCategoriesTree;
 use PrestaShop\PrestaShop\Core\Domain\Category\Query\GetCategoryForEditing;
 use PrestaShop\PrestaShop\Core\Domain\Category\Query\GetCategoryIsEnabled;
+use PrestaShop\PrestaShop\Core\Domain\Category\QueryResult\CategoryForTree;
 use PrestaShop\PrestaShop\Core\Domain\Category\QueryResult\EditableCategory;
 use PrestaShop\PrestaShop\Core\Domain\Category\ValueObject\CategoryId;
 use RuntimeException;
@@ -90,29 +91,41 @@ class CategoryFeatureContext extends AbstractDomainFeatureContext
     }
 
     /**
-     * @Then I should see following categories tree for product ":productReference" in ":langIso" language:
+     * @Then I should see following root categories for product ":productReference" in ":langIso" language:
+     * @Then I should see following categories in ":parentReference" category for product ":productReference" in ":langIso" language:
      *
      * @param TableNode $tableNode
      * @param string $langIso
+     * @param string|null $parentReference
      * @param string|null $productReference
      */
-    public function assertCategoriesTreeInDefaultLang(TableNode $tableNode, string $langIso, ?string $productReference): void
+    public function assertCategoriesTree(TableNode $tableNode, string $langIso, ?string $parentReference = null, ?string $productReference = null): void
+    {
+        $categoriesTree = $this->fetchCategoriesTree($langIso, $productReference);
+        Assert::assertNotEmpty($categoriesTree, 'Categories tree is empty');
+
+        if (!$parentReference) {
+            $actualCategories = $categoriesTree;
+        } else {
+            $parentCategoryId = $this->getSharedStorage()->get($parentReference);
+            $actualCategories = $this->extractCategoriesByParent($categoriesTree, $parentCategoryId);
+        }
+
+        $this->assertCategoriesInTree($actualCategories, $tableNode);
+    }
+
+    /**
+     * @param string $langIso
+     * @param string|null $productReference
+     *
+     * @return CategoryForTree[]
+     */
+    private function fetchCategoriesTree(string $langIso, ?string $productReference): array
     {
         $langId = Language::getIdByIso($langIso);
         $productId = isset($productReference) ? $this->getSharedStorage()->get($productReference) : null;
 
-        $categoriesTree = $this->getQueryBus()->handle(new GetCategoriesTree($langId, $productId));
-
-        $expectedCategories = $tableNode->getColumnsHash();
-        Assert::assertEquals(
-            count($categoriesTree),
-            count($expectedCategories),
-            'Expected and actual categories count does not match'
-        );
-
-        foreach ($expectedCategories as $expectedCategory) {
-            //@todo: assert
-        }
+        return $this->getQueryBus()->handle(new GetCategoriesTree($langId, $productId));
     }
 
     /**
@@ -507,12 +520,54 @@ class CategoryFeatureContext extends AbstractDomainFeatureContext
     }
 
     /**
+     * @param CategoryForTree[] $actualCategories
+     * @param TableNode $expectedCategoriesTable
+     */
+    private function assertCategoriesInTree(array $actualCategories, TableNode $expectedCategoriesTable)
+    {
+        $expectedCategories = $expectedCategoriesTable->getColumnsHash();
+
+        Assert::assertEquals(
+            count($actualCategories),
+            count($expectedCategories),
+            'Unexpected categories count'
+        );
+
+        foreach ($actualCategories as $key => $category) {
+            $expectedCategory = $expectedCategories[$key];
+            $expectedId = $this->getSharedStorage()->get($expectedCategory['id reference']);
+            $expectedChildCategoryIds = array_map(function (string $childCategoryReference): int {
+                return $this->getSharedStorage()->get($childCategoryReference);
+            }, PrimitiveUtils::castStringArrayIntoArray($expectedCategory['direct child categories']));
+
+            $actualChildCategories = $category->getChildCategories();
+            Assert::assertEquals(
+                count($actualChildCategories),
+                count($expectedChildCategoryIds),
+                'Unexpected child categories count'
+            );
+
+            Assert::assertEquals($expectedId, $category->getCategoryId(), 'Unexpected category id');
+            Assert::assertEquals($expectedCategory['category name'], $category->getCategoryName(), 'Unexpected category name');
+            Assert::assertEquals(
+                PrimitiveUtils::castStringBooleanIntoBoolean($expectedCategory['is associated with product']),
+                $category->isAssociatedWithProduct(),
+                'Unexpected category association with product'
+            );
+
+            foreach ($actualChildCategories as $index => $childCategory) {
+                Assert::assertEquals($expectedChildCategoryIds[$index], $childCategory->getCategoryId());
+            }
+        }
+    }
+
+    /**
      * @Given category ":categoryReference" parent is category ":expectedParentReference"
      *
      * @param string $categoryReference
      * @param string $expectedParentReference
      */
-    public function assertCategoryParent(string $categoryReference, string $expectedParentReference)
+    public function assertCategoryParent(string $categoryReference, string $expectedParentReference): void
     {
         $editableCategory = $this->getEditableCategory($categoryReference);
         $parentId = $this->getSharedStorage()->get($expectedParentReference);
@@ -522,6 +577,31 @@ class CategoryFeatureContext extends AbstractDomainFeatureContext
             $parentId,
             'Unexpected parent category'
         );
+    }
+
+    /**
+     * @param CategoryForTree[] $categoriesTree
+     * @param int $parentCategoryId
+     *
+     * @return CategoryForTree[]
+     */
+    private function extractCategoriesByParent(array $categoriesTree, int $parentCategoryId): array
+    {
+        foreach ($categoriesTree as $category) {
+            if ($category->getCategoryId() === $parentCategoryId) {
+                return $category->getChildCategories();
+            }
+
+            $inChildCategories = $this->extractCategoriesByParent($category->getChildCategories(), $parentCategoryId);
+
+            if (empty($inChildCategories)) {
+                continue;
+            }
+
+            return $inChildCategories;
+        }
+
+        return [];
     }
 
     /**
