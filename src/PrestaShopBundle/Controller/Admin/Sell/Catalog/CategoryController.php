@@ -45,8 +45,10 @@ use PrestaShop\PrestaShop\Core\Domain\Category\Exception\CategoryConstraintExcep
 use PrestaShop\PrestaShop\Core\Domain\Category\Exception\CategoryException;
 use PrestaShop\PrestaShop\Core\Domain\Category\Exception\CategoryNotFoundException;
 use PrestaShop\PrestaShop\Core\Domain\Category\Exception\MenuThumbnailsLimitException;
+use PrestaShop\PrestaShop\Core\Domain\Category\Query\GetCategoriesTree;
 use PrestaShop\PrestaShop\Core\Domain\Category\Query\GetCategoryForEditing;
 use PrestaShop\PrestaShop\Core\Domain\Category\Query\GetCategoryIsEnabled;
+use PrestaShop\PrestaShop\Core\Domain\Category\QueryResult\CategoryForTree;
 use PrestaShop\PrestaShop\Core\Domain\Category\QueryResult\EditableCategory;
 use PrestaShop\PrestaShop\Core\Domain\Category\ValueObject\MenuThumbnailId;
 use PrestaShop\PrestaShop\Core\Domain\ShowcaseCard\Query\GetShowcaseCardIsClosed;
@@ -54,7 +56,6 @@ use PrestaShop\PrestaShop\Core\Domain\ShowcaseCard\ValueObject\ShowcaseCard;
 use PrestaShop\PrestaShop\Core\Grid\Definition\Factory\CategoryGridDefinitionFactory;
 use PrestaShop\PrestaShop\Core\Search\Filters\CategoryFilters;
 use PrestaShopBundle\Component\CsvResponse;
-use PrestaShopBundle\Controller\Admin\CommonController;
 use PrestaShopBundle\Controller\Admin\FrameworkBundleAdminController;
 use PrestaShopBundle\Form\Admin\Sell\Category\DeleteCategoriesType;
 use PrestaShopBundle\Security\Annotation\AdminSecurity;
@@ -755,6 +756,45 @@ class CategoryController extends FrameworkBundleAdminController
             'success' => true,
             'message' => $this->trans('Successful update.', 'Admin.Notifications.Success'),
         ]);
+    }
+
+    /**
+     * @AdminSecurity("is_granted('read', request.get('_legacy_controller')) || is_granted('create', 'AdminProducts')")
+     *
+     * @param Request $request
+     *
+     * @return JsonResponse
+     */
+    public function getCategoriesTreeAction(Request $request): JsonResponse
+    {
+        $langId = $request->query->getInt('langId') ?: (int) $this->getContextLangId();
+        $categoriesTree = $this->getQueryBus()->handle(new GetCategoriesTree($langId));
+
+        return $this->json($this->formatCategoriesTreeForPresentation($categoriesTree, $langId));
+    }
+
+    /**
+     * @param CategoryForTree[] $categoriesTree
+     * @param int $langId
+     *
+     * @return array
+     */
+    private function formatCategoriesTreeForPresentation(array $categoriesTree, int $langId): array
+    {
+        $formattedCategories = [];
+        foreach ($categoriesTree as $categoryForTree) {
+            if (!empty($categoryForTree->getChildCategories())) {
+                $childCategories = $this->formatCategoriesTreeForPresentation($categoryForTree->getChildCategories(), $langId);
+            }
+
+            $formattedCategories[] = [
+                'id' => $categoryForTree->getCategoryId(),
+                'name' => $categoryForTree->getLocalizedNames()[$langId] ?? $categoryForTree->getLocalizedNames()[0],
+                'childCategories' => $childCategories ?? [],
+            ];
+        }
+
+        return $formattedCategories;
     }
 
     /**
