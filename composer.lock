@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "6ad7294cf53c22e177f9bc74a1126476",
+    "content-hash": "d6f2d1010926ac49e0778328972d8cb5",
     "packages": [
         {
             "name": "beberlei/doctrineextensions",
@@ -8736,23 +8736,23 @@
         },
         {
             "name": "ifsnop/mysqldump-php",
-            "version": "v2.9",
+            "version": "v2.3.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/ifsnop/mysqldump-php.git",
-                "reference": "fc9c119fe5d70af9a685cad6a8ac612fd7589e25"
+                "reference": "1806317c2ce897cb38fbae5283f17d1451308244"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/ifsnop/mysqldump-php/zipball/fc9c119fe5d70af9a685cad6a8ac612fd7589e25",
-                "reference": "fc9c119fe5d70af9a685cad6a8ac612fd7589e25",
+                "url": "https://api.github.com/repos/ifsnop/mysqldump-php/zipball/1806317c2ce897cb38fbae5283f17d1451308244",
+                "reference": "1806317c2ce897cb38fbae5283f17d1451308244",
                 "shasum": ""
             },
             "require": {
                 "php": ">=5.3.0"
             },
             "require-dev": {
-                "phpunit/phpunit": "4.8.36",
+                "phpunit/phpunit": "3.7.*",
                 "squizlabs/php_codesniffer": "1.*"
             },
             "type": "library",
@@ -8763,7 +8763,7 @@
             },
             "notification-url": "https://packagist.org/downloads/",
             "license": [
-                "GPL-3.0-or-later"
+                "MIT"
             ],
             "authors": [
                 {
@@ -8772,26 +8772,23 @@
                     "role": "Developer"
                 }
             ],
-            "description": "PHP version of mysqldump cli that comes with MySQL",
+            "description": "This is a php version of linux's mysqldump in terminal \"$ mysqldump -u username -p...\"",
             "homepage": "https://github.com/ifsnop/mysqldump-php",
             "keywords": [
-                "PHP7",
+                "backup",
                 "database",
-                "hhvm",
-                "mariadb",
+                "dump",
+                "export",
                 "mysql",
-                "mysql-backup",
                 "mysqldump",
                 "pdo",
-                "php",
-                "php5",
-                "sql"
+                "sqlite"
             ],
             "support": {
                 "issues": "https://github.com/ifsnop/mysqldump-php/issues",
                 "source": "https://github.com/ifsnop/mysqldump-php/tree/master"
             },
-            "time": "2020-04-03T14:40:40+00:00"
+            "time": "2017-05-07T22:27:29+00:00"
         },
         {
             "name": "johnkary/phpunit-speedtrap",
