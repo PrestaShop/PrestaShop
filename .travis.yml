@@ -40,10 +40,8 @@ jobs:
   include:
     - stage: deploy
       php: 7.3
-      before_install: skip
-      before_script: skip
-      install: skip
       script:
+        - php -v
         - mkdir -p /tmp/ps-release
         - php tools/build/CreateRelease.php --destination-dir=/tmp/ps-release
         - cd /tmp/ps-release
@@ -58,17 +56,6 @@ jobs:
         local_dir: "/tmp/ps-release"
         on:
           all_branches: true
-
-before_install: skip
-
-install: skip
-
-script:
-  - php -v
-
-after_script: skip
-
-after_failure: skip
 
 before_deploy:
   - |
