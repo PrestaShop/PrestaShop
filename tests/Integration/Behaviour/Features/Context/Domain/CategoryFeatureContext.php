@@ -479,6 +479,24 @@ class CategoryFeatureContext extends AbstractDomainFeatureContext
     }
 
     /**
+     * @Given category ":categoryReference" parent is category ":expectedParentReference"
+     *
+     * @param string $categoryReference
+     * @param string $expectedParentReference
+     */
+    public function assertCategoryParent(string $categoryReference, string $expectedParentReference)
+    {
+        $editableCategory = $this->getEditableCategory($categoryReference);
+        $parentId = $this->getSharedStorage()->get($expectedParentReference);
+
+        Assert::assertEquals(
+            $editableCategory->getParentId(),
+            $parentId,
+            'Unexpected parent category'
+        );
+    }
+
+    /**
      * @param array $testCaseData
      * @param int $categoryId
      * @param array|null $coverImage
