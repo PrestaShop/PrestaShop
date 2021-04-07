@@ -339,6 +339,9 @@ class AdminModelAdapter extends \PrestaShopBundle\Model\AdminModelAdapter
             $form_data['combinations'][$k]['attribute_unity'] = abs(
                 $this->floatParser->fromString($combination['attribute_unity'])
             );
+            $form_data['combinations'][$k]['attribute_wholesale_price'] = abs(
+                $this->floatParser->fromString($combination['attribute_wholesale_price'])
+            );
         }
 
         //map suppliers
