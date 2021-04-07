@@ -211,13 +211,13 @@ class CombinationController extends FrameworkBundleAdminController
             foreach ($attributeGroup->getAttributes() as $attribute) {
                 $attributes[] = [
                     'id' => $attribute->getAttributeId(),
-                    'name' => $attribute->getLocalizedNames()[$contextLangId],
+                    'name' => $attribute->getLocalizedNames()[$contextLangId] ?? $attribute->getLocalizedNames()[0],
                 ];
             }
             $formattedGroups[] = [
                 'id' => $attributeGroup->getAttributeGroupId(),
-                'name' => $attributeGroup->getLocalizedNames()[$contextLangId],
-                'publicName' => $attributeGroup->getLocalizedPublicNames()[$contextLangId],
+                'name' => $attributeGroup->getLocalizedNames()[$contextLangId] ?? $attributeGroup->getLocalizedNames()[0],
+                'publicName' => $attributeGroup->getLocalizedPublicNames()[$contextLangId] ?? $attributeGroup->getLocalizedPublicNames()[0],
                 'attributes' => $attributes,
             ];
         }
