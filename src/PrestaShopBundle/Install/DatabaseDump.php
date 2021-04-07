@@ -99,7 +99,7 @@ class DatabaseDump
     /**
      * The actual dump function.
      */
-    private function dump(): void
+    public function dump(): void
     {
         $dumper = $this->createMysqldumper();
         $dumper->start($this->dumpFile);
