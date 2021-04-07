@@ -31,6 +31,7 @@ namespace PrestaShop\PrestaShop\Adapter\Product\Combination\QueryHandler;
 use Combination;
 use DateTime;
 use PrestaShop\Decimal\DecimalNumber;
+use PrestaShop\PrestaShop\Adapter\Attribute\Repository\AttributeRepository;
 use PrestaShop\PrestaShop\Adapter\Product\Combination\Repository\CombinationRepository;
 use PrestaShop\PrestaShop\Adapter\Product\Stock\Repository\StockAvailableRepository;
 use PrestaShop\PrestaShop\Core\Domain\Language\ValueObject\LanguageId;
@@ -59,6 +60,11 @@ final class GetCombinationForEditingHandler implements GetCombinationForEditingH
     private $stockAvailableRepository;
 
     /**
+     * @var AttributeRepository
+     */
+    private $attributeRepository;
+
+    /**
      * @var int
      */
     private $contextLanguageId;
@@ -66,15 +72,18 @@ final class GetCombinationForEditingHandler implements GetCombinationForEditingH
     /**
      * @param CombinationRepository $combinationRepository
      * @param StockAvailableRepository $stockAvailableRepository
+     * @param AttributeRepository $attributeRepository
      * @param int $contextLanguageId
      */
     public function __construct(
         CombinationRepository $combinationRepository,
         StockAvailableRepository $stockAvailableRepository,
+        AttributeRepository $attributeRepository,
         int $contextLanguageId
     ) {
         $this->combinationRepository = $combinationRepository;
         $this->stockAvailableRepository = $stockAvailableRepository;
+        $this->attributeRepository = $attributeRepository;
         $this->contextLanguageId = $contextLanguageId;
     }
 
@@ -100,7 +109,7 @@ final class GetCombinationForEditingHandler implements GetCombinationForEditingH
      */
     private function getCombinationName(CombinationId $combinationId): string
     {
-        $attributesInformation = $this->combinationRepository->getAttributesInfoByCombinationIds(
+        $attributesInformation = $this->attributeRepository->getAttributesInfoByCombinationIds(
             [$combinationId->getValue()],
             new LanguageId($this->contextLanguageId)
         );
