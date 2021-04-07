@@ -1231,7 +1231,7 @@ namespace PrestaShopBundle\Install {
                 $settings_content .= '//@deprecated 1.7';
 
                 file_put_contents($root_dir . '/' . self::SETTINGS_FILE, $settings_content);
-                file_put_contents($root_dir . '/app/config/parameters.yml', 'parameters:');
+                unlink($root_dir . '/app/config/parameters.yml');
             }
 
             if ($event !== null) {

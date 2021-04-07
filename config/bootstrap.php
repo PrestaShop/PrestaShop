@@ -63,7 +63,7 @@ $exportPhpConfigFile = function ($config, $destination) use ($filesystem) {
 if (!file_exists($phpParametersFilepath) && file_exists($yamlParametersFilepath)) {
     $parameters = Yaml::parseFile($yamlParametersFilepath);
     if ($exportPhpConfigFile($parameters, $phpParametersFilepath)) {
-        $filesystem->dumpFile($yamlParametersFilepath, 'parameters:' . "\n");
+        $filesystem->remove($yamlParametersFilepath);
     }
 }
 
