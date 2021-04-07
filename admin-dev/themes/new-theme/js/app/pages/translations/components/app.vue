@@ -28,7 +28,6 @@
     id="app"
     class="translations-app"
   >
-    <TranslationsHeader />
     <div class="container-fluid">
       <div class="row justify-content-between align-items-center">
         <Search @search="onSearch" />
@@ -162,11 +161,6 @@
 <style lang="scss" type="text/scss">
   @import '~@scss/config/_settings.scss';
 
-  // hide the layout header
-  #main-div > .header-toolbar {
-    height: 0;
-    display: none;
-  }
   .flex {
     display: flex;
     align-items: center;
