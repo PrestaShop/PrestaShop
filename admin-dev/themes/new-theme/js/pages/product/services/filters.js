@@ -28,9 +28,9 @@ import Router from '@components/router';
 const router = new Router();
 const {$} = window;
 
-export const getFilters = async productId => {
+export const getFilters = async (productId) => {
   const getFiltersUrl = router.generate('admin_products_v2_get_images', {
-    productId
+    productId,
   });
 
   // return $.get(getFiltersUrl);
@@ -41,21 +41,21 @@ export const getFilters = async productId => {
       childrens: [
         {
           id: 1,
-          name: 'Plain'
+          name: 'Plain',
         },
         {
           id: 2,
-          name: 'Lined'
+          name: 'Lined',
         },
         {
           id: 3,
-          name: 'Squared'
+          name: 'Squared',
         },
         {
           id: 4,
-          name: 'Blank'
-        }
-      ]
+          name: 'Blank',
+        },
+      ],
     },
     {
       id: 2,
@@ -63,27 +63,27 @@ export const getFilters = async productId => {
       childrens: [
         {
           id: 5,
-          name: 'Plain'
+          name: 'Plain',
         },
         {
           id: 6,
-          name: 'Lined'
+          name: 'Lined',
         },
         {
           id: 7,
-          name: 'Squared'
+          name: 'Squared',
         },
         {
           id: 8,
-          name: 'Blank'
-        }
-      ]
-    }
+          name: 'Blank',
+        },
+      ],
+    },
   ];
 
   return dummyDatas();
 };
 
 export default {
-  getFilters
+  getFilters,
 };

@@ -94,7 +94,7 @@ $(() => {
   );
 
   initDropzone(ProductMap.dropzoneImagesContainer);
-  initFilters(ProductMap.combinationsFiltersContainer);
+  initFilters(ProductMap.combinationsFiltersContainer, window.prestashop.instance.eventEmitter);
 
   // From here we init component specific to edition
   const $productFormSubmitButton = $(ProductMap.productFormSubmitButton);

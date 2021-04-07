@@ -53,7 +53,6 @@
 <script>
   import {getFilters} from '@pages/product/services/filters';
   import FilterDropdown from '@pages/product/components/filters/FilterDropdown';
-  import {EventEmitter} from '@components/event-emitter';
 
   export default {
     name: 'Filters',
@@ -66,6 +65,10 @@
     props: {
       productId: {
         type: Number,
+        required: true,
+      },
+      eventEmitter: {
+        type: Object,
         required: true,
       },
     },
@@ -110,10 +113,10 @@
       clearAll() {
         this.selectedFilters = [];
         this.$emit('clearAll');
-        EventEmitter.emit('updateFilters', this.selectedFilters);
+        this.eventEmitter.emit('updateFilters', this.selectedFilters);
       },
       updateFilters() {
-        EventEmitter.emit('updateFilters', this.selectedFilters);
+        this.eventEmitter.emit('updateFilters', this.selectedFilters);
       },
     },
   };

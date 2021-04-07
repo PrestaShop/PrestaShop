@@ -42,12 +42,15 @@ export default class CombinationsService {
    *
    * @returns {Promise}
    */
-  fetch(offset, limit) {
-    return $.get(this.router.generate('admin_products_combinations', {
-      productId: this.productId,
-      offset,
-      limit,
-    }));
+  fetch(offset, limit, filters) {
+    return $.get(
+      this.router.generate('admin_products_combinations', {
+        productId: this.productId,
+        offset,
+        limit,
+        filters,
+      }),
+    );
   }
 
   /**
