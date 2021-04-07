@@ -211,7 +211,7 @@ final class LogQueryBuilder extends AbstractDoctrineQueryBuilder
             if ('employee' === $filterName) {
                 $alias = $this->getEmployeeField(true);
 
-                $qb->andWhere("$alias LIKE :$filterName");
+                $qb->andWhere("${alias} LIKE :${filterName}");
                 $qb->setParameter($filterName, '%' . $filterValue . '%');
 
                 continue;

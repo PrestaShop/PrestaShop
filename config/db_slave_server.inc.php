@@ -31,4 +31,4 @@ return array(
     );
 */
 
-return array();
+return [];

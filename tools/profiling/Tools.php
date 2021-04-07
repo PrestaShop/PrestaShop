@@ -105,6 +105,7 @@ class Tools extends ToolsCore
                 $controller->setRedirectAfter($url);
                 $controller->run();
                 Context::getContext()->controller = $controller;
+
                 die();
             } catch (PrestaShopException $e) {
                 $e->displayMessage();

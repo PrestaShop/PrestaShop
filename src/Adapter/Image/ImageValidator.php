@@ -49,7 +49,7 @@ class ImageValidator
     /**
      * @param int|null $maxUploadSize
      */
-    public function __construct(?int $maxUploadSize = null)
+    public function __construct(int $maxUploadSize = null)
     {
         $this->maxUploadSize = $maxUploadSize ?: Tools::getMaxUploadSize();
     }

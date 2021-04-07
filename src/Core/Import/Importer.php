@@ -121,6 +121,7 @@ final class Importer implements ImporterInterface
             // Skip rows until the correct row is reached.
             if ($rowIndex < $skipRows) {
                 ++$rowIndex;
+
                 continue;
             }
 
@@ -130,6 +131,7 @@ final class Importer implements ImporterInterface
                 if ($isFirstIteration) {
                     continue;
                 }
+
                 break;
             }
 
@@ -175,9 +177,9 @@ final class Importer implements ImporterInterface
         ImportRuntimeConfigInterface $runtimeConfig
     ) {
         return
-            $importConfig->truncate() &&
-            !$runtimeConfig->shouldValidateData() &&
-            $this->isFirstIteration($runtimeConfig)
+            $importConfig->truncate()
+            && !$runtimeConfig->shouldValidateData()
+            && $this->isFirstIteration($runtimeConfig)
         ;
     }
 

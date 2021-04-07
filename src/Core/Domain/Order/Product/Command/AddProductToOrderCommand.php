@@ -104,7 +104,7 @@ class AddProductToOrderCommand
         string $productPriceTaxIncluded,
         string $productPriceTaxExcluded,
         int $productQuantity,
-        ?bool $hasFreeShipping = null
+        bool $hasFreeShipping = null
     ) {
         $command = new self(
             $orderId,

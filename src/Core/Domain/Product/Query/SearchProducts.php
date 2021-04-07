@@ -70,7 +70,7 @@ class SearchProducts
         string $phrase,
         int $resultsLimit,
         string $isoCode,
-        ?int $orderId = null
+        int $orderId = null
     ) {
         $this->assertIsNotEmptyString($phrase);
         $this->phrase = $phrase;

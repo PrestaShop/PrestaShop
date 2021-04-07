@@ -37,6 +37,6 @@ class PriceFormatter extends BasePricePresenter
 
     public function format($price, $currency = null)
     {
-        return "#$price";
+        return "#${price}";
     }
 }

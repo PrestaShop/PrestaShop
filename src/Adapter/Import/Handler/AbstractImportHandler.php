@@ -297,6 +297,7 @@ abstract class AbstractImportHandler implements ImportHandlerInterface
                     'Admin.Advparameters.Notification'
                 )
             );
+
             throw new EmptyDataRowException();
         }
 
@@ -434,8 +435,8 @@ abstract class AbstractImportHandler implements ImportHandlerInterface
 
         foreach ($this->defaultValues as $field => $defaultValue) {
             $fieldExists = array_key_exists($field, $members);
-            if (!$fieldExists || $entity->$field === null) {
-                $entity->$field = $defaultValue;
+            if (!$fieldExists || $entity->{$field} === null) {
+                $entity->{$field} = $defaultValue;
             }
         }
     }

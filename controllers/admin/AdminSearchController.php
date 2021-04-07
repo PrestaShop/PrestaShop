@@ -498,9 +498,9 @@ class AdminSearchControllerCore extends AdminController
      */
     protected function isCountableAndNotEmpty(array $array, $key)
     {
-        return isset($array[$key]) &&
-            is_countable($array[$key]) &&
-            count($array[$key]);
+        return isset($array[$key])
+            && is_countable($array[$key])
+            && count($array[$key]);
     }
 
     /**

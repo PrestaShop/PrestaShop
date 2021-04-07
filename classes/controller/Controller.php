@@ -123,7 +123,7 @@ abstract class ControllerCore
      *
      * @var string|null
      */
-    protected $redirect_after = null;
+    protected $redirect_after;
 
     /**
      * Controller type. Possible values: 'front', 'modulefront', 'admin', 'moduleadmin'.
@@ -250,10 +250,10 @@ abstract class ControllerCore
         $this->ajax = $this->isAjax();
 
         if (
-            !headers_sent() &&
-            isset($_SERVER['HTTP_USER_AGENT']) &&
-            (strpos($_SERVER['HTTP_USER_AGENT'], 'MSIE') !== false ||
-            strpos($_SERVER['HTTP_USER_AGENT'], 'Trident') !== false)
+            !headers_sent()
+            && isset($_SERVER['HTTP_USER_AGENT'])
+            && (strpos($_SERVER['HTTP_USER_AGENT'], 'MSIE') !== false
+            || strpos($_SERVER['HTTP_USER_AGENT'], 'Trident') !== false)
         ) {
             header('X-UA-Compatible: IE=edge,chrome=1');
         }
@@ -735,6 +735,7 @@ abstract class ControllerCore
     protected function ajaxDie($value = null, $controller = null, $method = null)
     {
         $this->ajaxRender($value, $controller, $method);
+
         exit;
     }
 

@@ -94,7 +94,7 @@ class CustomerDataProvider
      *
      * @param int $customerId
      */
-    public function getCustomerMessages(int $customerId, ?int $orderId = null, ?int $limit = null)
+    public function getCustomerMessages(int $customerId, int $orderId = null, int $limit = null)
     {
         $mainSql = 'SELECT cm.*, c.`firstname` AS cfirstname, c.`lastname` AS clastname,
             e.`firstname` AS efirstname, e.`lastname` AS elastname
@@ -114,10 +114,10 @@ class CustomerDataProvider
         $mainSql .= ' GROUP BY cm.id_customer_message
             ORDER BY cm.date_add DESC';
 
-        $count = Db::getInstance()->executeS("SELECT COUNT(*) AS total FROM ($mainSql) AS messages");
+        $count = Db::getInstance()->executeS("SELECT COUNT(*) AS total FROM (${mainSql}) AS messages");
 
         if ($limit) {
-            $mainSql .= " LIMIT $limit";
+            $mainSql .= " LIMIT ${limit}";
         }
 
         return [

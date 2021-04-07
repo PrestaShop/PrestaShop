@@ -44,16 +44,20 @@ class PhpErrorsCounter
             switch ($errorType) {
                 case E_WARNING:
                     $this->warnings++;
+
                 break;
                 case E_DEPRECATED:
                 case E_USER_DEPRECATED:
                     $this->deprecations++;
+
                 break;
                 case E_ERROR:
                     $this->errors++;
+
                 break;
                 case E_NOTICE:
                     $this->notices++;
+
                 break;
                 default:
                     // nothing to do.

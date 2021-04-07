@@ -138,7 +138,9 @@ class OrderStateController extends FrameworkBundleAdminController
                     return [
                         'id' => $language['iso_code'],
                         'value' => sprintf('%s - %s', $language['iso_code'], $language['name']), ];
-                }, $this->get('prestashop.adapter.legacy.context')->getLanguages()),
+                },
+                $this->get('prestashop.adapter.legacy.context')->getLanguages()
+            ),
         ]);
     }
 
@@ -183,7 +185,9 @@ class OrderStateController extends FrameworkBundleAdminController
                     return [
                         'id' => $language['iso_code'],
                         'value' => sprintf('%s - %s', $language['iso_code'], $language['name']), ];
-                }, $this->get('prestashop.adapter.legacy.context')->getLanguages()),
+                },
+                $this->get('prestashop.adapter.legacy.context')->getLanguages()
+            ),
         ]);
     }
 

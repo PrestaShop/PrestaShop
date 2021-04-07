@@ -118,18 +118,18 @@ class TreeBuilder
         if (is_string($search)) {
             $search = strtolower($search);
 
-            return false !== strpos(strtolower($data['default']), $search) ||
-                false !== strpos(strtolower($data['xlf']), $search) ||
-                false !== strpos(strtolower($data['db']), $search);
+            return false !== strpos(strtolower($data['default']), $search)
+                || false !== strpos(strtolower($data['xlf']), $search)
+                || false !== strpos(strtolower($data['db']), $search);
         }
 
         if (is_array($search)) {
             $contains = true;
             foreach ($search as $s) {
                 $s = strtolower($s);
-                $contains &= false !== strpos(strtolower($data['default']), $s) ||
-                    false !== strpos(strtolower($data['xlf']), $s) ||
-                    false !== strpos(strtolower($data['db']), $s);
+                $contains &= false !== strpos(strtolower($data['default']), $s)
+                    || false !== strpos(strtolower($data['xlf']), $s)
+                    || false !== strpos(strtolower($data['db']), $s);
             }
 
             return $contains;
@@ -165,7 +165,7 @@ class TreeBuilder
             $subtree['__messages'] = [$domain => $messages];
             if (isset($messages['__metadata'])) {
                 $subtree['__fixed_length_id'] = '_' . sha1($domain);
-                list($subtree['__domain']) = explode('.', $domain);
+                [$subtree['__domain']] = explode('.', $domain);
                 $subtree['__metadata'] = $messages['__metadata'];
                 $subtree['__metadata']['domain'] = $subtree['__domain'];
                 unset($messages['__metadata']);

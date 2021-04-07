@@ -102,21 +102,23 @@ final class SecurityAnnotationLinterCommand extends ContainerAwareCommand
         $actionToPerform = $input->getArgument('action');
 
         if (!in_array($actionToPerform, self::getAvailableActions())) {
-            throw new \InvalidArgumentException(sprintf(
-                    'Action must be one of: %s',
-                    implode(', ', self::getAvailableActions())
-                )
+            throw new \InvalidArgumentException(
+                sprintf(
+                'Action must be one of: %s',
+                implode(', ', self::getAvailableActions())
+            )
             );
         }
 
         switch ($actionToPerform) {
             case self::ACTION_LIST_ALL:
                 $this->listAllRoutesAndRelatedPermissions($input, $output);
+
                 break;
             case self::ACTION_FIND_MISSING:
                 $this->findRoutesWithMissingSecurityAnnotations($input, $output);
-                break;
 
+                break;
             default:
                 throw new \RuntimeException(sprintf('Unknown action %s', $actionToPerform));
         }

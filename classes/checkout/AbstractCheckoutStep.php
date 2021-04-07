@@ -191,6 +191,7 @@ abstract class AbstractCheckoutStepCore implements CheckoutStepInterface
         foreach ($steps as $step) {
             if ($next === true) {
                 $step->step_is_current = true;
+
                 break;
             }
 

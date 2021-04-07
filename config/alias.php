@@ -40,6 +40,7 @@ if (!function_exists('dump')) {
  *
  * @param string $string SQL data which will be injected into SQL query
  * @param bool $htmlOK Does data contain HTML code ? (optional)
+ *
  * @return string Sanitized data
  */
 function pSQL($string, $htmlOK = false)
@@ -58,7 +59,7 @@ function displayFatalError()
     if (function_exists('error_get_last')) {
         $error = error_get_last();
     }
-    if ($error !== null && in_array($error['type'], array(E_ERROR, E_PARSE, E_COMPILE_ERROR))) {
-        echo '[PrestaShop] Fatal error in module file: '.$error['file'].':'.$error['line'].'<br />'.$error['message'];
+    if ($error !== null && in_array($error['type'], [E_ERROR, E_PARSE, E_COMPILE_ERROR])) {
+        echo '[PrestaShop] Fatal error in module file: ' . $error['file'] . ':' . $error['line'] . '<br />' . $error['message'];
     }
 }

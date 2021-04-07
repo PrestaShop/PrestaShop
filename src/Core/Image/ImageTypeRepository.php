@@ -90,7 +90,7 @@ class ImageTypeRepository
         $escaped_name = $this->db->escape($name);
 
         $id_image_type = $this->db->getValue(
-            "SELECT id_image_type FROM {$this->db_prefix}image_type WHERE name = '$escaped_name'"
+            "SELECT id_image_type FROM {$this->db_prefix}image_type WHERE name = '${escaped_name}'"
         );
 
         return (int) $id_image_type;

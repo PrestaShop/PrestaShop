@@ -39,7 +39,7 @@ define('lang_Swipe_help', 'Swipe the name of file/folder to show options');
 define('lang_Upload_base', 'آپلودر اصلی');
 define('lang_Upload_java', 'آپلودر جاوا (فایلهای حجیم)');
 define('lang_Upload_java_help', "If the Java Applet doesn't load, 1. make sure you have Java installed, otherwise <a href='http://java.com/en/download/'>[download link]</a>   2. make sure nothing is blocked by your firewall");
-define('lang_Upload_base_help', "فایلها را از سیستم خود بکشید و اینجا رها کنید یا اینجا کلیک کنید و فایل انتخاب کنید و هنگامی که آپلود تمام شد، روی کلید \"برگشت به لیست فایلها\" کلیک کنید.");
+define('lang_Upload_base_help', 'فایلها را از سیستم خود بکشید و اینجا رها کنید یا اینجا کلیک کنید و فایل انتخاب کنید و هنگامی که آپلود تمام شد، روی کلید "برگشت به لیست فایلها" کلیک کنید.');
 define('lang_Type_dir', 'مسیر');
 define('lang_Type', 'نوع');
 define('lang_Dimension', 'بعد');

@@ -161,7 +161,7 @@ class CategoriesProvider
      *
      * @return stdClass
      */
-    private function createMenuObject(string $menu, string $name, array $moduleIds = [], ?string $tab = null): stdClass
+    private function createMenuObject(string $menu, string $name, array $moduleIds = [], string $tab = null): stdClass
     {
         return (object) [
             'tab' => $tab,

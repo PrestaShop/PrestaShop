@@ -70,12 +70,12 @@ class CombinationStockProperties
      * @param DateTimeInterface|null $availableDate
      */
     public function __construct(
-        ?int $quantity = null,
-        ?int $minimalQuantity = null,
-        ?string $location = null,
-        ?int $lowStockThreshold = null,
-        ?bool $lowStockAlertEnabled = null,
-        ?DateTimeInterface $availableDate = null
+        int $quantity = null,
+        int $minimalQuantity = null,
+        string $location = null,
+        int $lowStockThreshold = null,
+        bool $lowStockAlertEnabled = null,
+        DateTimeInterface $availableDate = null
     ) {
         $this->quantity = $quantity;
         $this->minimalQuantity = $minimalQuantity;

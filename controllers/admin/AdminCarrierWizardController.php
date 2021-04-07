@@ -745,6 +745,7 @@ class AdminCarrierWizardControllerCore extends AdminController
                 die('<return result="error" message="Impossible to resize the image into ' . Tools::safeOutput(_PS_TMP_IMG_DIR_) . '" />');
             }
             @unlink($file);
+
             die('<return result="success" message="' . Tools::safeOutput(_PS_TMP_IMG_ . $tmp_name) . '" />');
         } else {
             die('<return result="error" message="Cannot upload file" />');
@@ -854,6 +855,7 @@ class AdminCarrierWizardControllerCore extends AdminController
                 $return['id_carrier'] = $carrier->id;
             }
         }
+
         die(json_encode($return));
     }
 

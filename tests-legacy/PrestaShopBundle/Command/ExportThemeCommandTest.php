@@ -26,8 +26,8 @@
 
 namespace LegacyTests\PrestaShopBundle\Command;
 
-use PHPUnit\Framework\TestCase;
 use PHPUnit\Framework\MockObject\MockObject;
+use PHPUnit\Framework\TestCase;
 use PrestaShopBundle\Command\ExportThemeCommand;
 use Symfony\Component\Console\Tester\CommandTester;
 
@@ -47,7 +47,7 @@ class ExportThemeCommandTest extends TestCase
         $helperSetMock = $this->mockHelperSet();
         $command->setHelperSet($helperSetMock);
 
-        $this->assertEquals(0, $commandTester->execute(array('theme'  => 'classic')));
+        $this->assertEquals(0, $commandTester->execute(['theme' => 'classic']));
     }
 
     /**
@@ -112,11 +112,11 @@ class ExportThemeCommandTest extends TestCase
                 $translatorMock,
                 $themeExporterMock
             ) {
-                $services = array(
+                $services = [
                     'prestashop.core.addon.theme.repository' => $themeRepositoryMock,
                     'translator' => $translatorMock,
                     'prestashop.core.addon.theme.exporter' => $themeExporterMock,
-                );
+                ];
 
                 return $services[$serviceId];
             }));

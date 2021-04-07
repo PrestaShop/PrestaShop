@@ -115,6 +115,7 @@ class UpdateProductFeatureValuesFeatureContext extends AbstractProductFeatureCon
                 $localizedValues = $this->localizeByCell($featureValueDatum['custom_values']);
                 if ($featureValue->value === $localizedValues) {
                     $this->getSharedStorage()->set($featureValueDatum['custom_reference'], $featureValueId->getValue());
+
                     continue 2;
                 }
             }

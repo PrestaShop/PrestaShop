@@ -211,7 +211,7 @@ class OrderProductForViewing implements JsonSerializable
         string $type,
         bool $availableOutOfStock,
         array $packItems = [],
-        ?OrderProductCustomizationsForViewing $customizations = null
+        OrderProductCustomizationsForViewing $customizations = null
     ) {
         $this->id = $id;
         $this->combinationId = $combinationId;

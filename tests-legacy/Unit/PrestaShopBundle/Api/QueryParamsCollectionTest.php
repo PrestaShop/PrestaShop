@@ -68,7 +68,7 @@ class QueryParamsCollectionTest extends TestCase
                 'product',
                 $pageIndex,
                 $pageSize,
-                array()
+                []
             );
             $this->fail('Invalid pagination params should raise an exception');
         } catch (Exception $exception) {
@@ -86,16 +86,16 @@ class QueryParamsCollectionTest extends TestCase
      */
     public function getInvalidPaginationParams()
     {
-        return array(
-            array(
+        return [
+            [
                 $pageIndex = 0,
                 $pageSize = 100,
-            ),
-            array(
+            ],
+            [
                 $pageIndex = 1,
                 $pageSize = 100 + 1,
-            ),
-        );
+            ],
+        ];
     }
 
     /**
@@ -112,26 +112,25 @@ class QueryParamsCollectionTest extends TestCase
         $pageIndex,
         $pageSize,
         $expectedSqlClauses
-    )
-    {
+    ) {
         $requestMock = $this->mockRequest(
-            array(
+            [
                 'order' => $order,
                 'page_index' => $pageIndex,
                 'page_size' => $pageSize,
-                '_attributes' => $this->mockAttributes(array())->reveal(),
-            )
+                '_attributes' => $this->mockAttributes([])->reveal(),
+            ]
         );
 
         $this->queryParams = $this->queryParams->fromRequest($requestMock->reveal());
 
-        $sqlParts = array(
+        $sqlParts = [
             $this->queryParams->getSqlOrder(),
             $this->queryParams->getSqlParams(),
             $this->queryParams->getSqlFilters(),
-        );
+        ];
 
-        $expectedSqlClauses[2] = array(QueryParamsCollection::SQL_CLAUSE_WHERE => '');
+        $expectedSqlClauses[2] = [QueryParamsCollection::SQL_CLAUSE_WHERE => ''];
 
         $this->assertInternalType('array', $sqlParts);
 
@@ -152,27 +151,26 @@ class QueryParamsCollectionTest extends TestCase
         $pageIndex,
         $pageSize,
         $expectedSqlClauses
-    )
-    {
+    ) {
         $requestMock = $this->mockRequest(
-            array(
+            [
                 'order' => $order,
                 'page_index' => $pageIndex,
                 'page_size' => $pageSize,
-                '_attributes' => $this->mockAttributes(array('productId' => 1))->reveal(),
-            )
+                '_attributes' => $this->mockAttributes(['productId' => 1])->reveal(),
+            ]
         );
 
         $this->queryParams = $this->queryParams->fromRequest($requestMock->reveal());
 
-        $sqlParts = array(
+        $sqlParts = [
             $this->queryParams->getSqlOrder(),
             $this->queryParams->getSqlParams(),
             $this->queryParams->getSqlFilters(),
-        );
+        ];
 
         $expectedSqlClauses[1]['product_id'] = 1;
-        $expectedSqlClauses[2] = array(QueryParamsCollection::SQL_CLAUSE_WHERE => 'AND {product_id} = :product_id');
+        $expectedSqlClauses[2] = [QueryParamsCollection::SQL_CLAUSE_WHERE => 'AND {product_id} = :product_id'];
 
         $this->assertInternalType('array', $sqlParts);
 
@@ -184,50 +182,50 @@ class QueryParamsCollectionTest extends TestCase
      */
     public function getQueryParams()
     {
-        return array(
-            array('product', null, '1', array(
+        return [
+            ['product', null, '1', [
                 'ORDER BY {product} ',
-                array(
+                [
                     'max_results' => 1,
                     'first_result' => 0,
-                ),
-            )),
-            array('reference DESC', '3', null, array(
+                ],
+            ]],
+            ['reference DESC', '3', null, [
                 'ORDER BY {reference} DESC ',
-                array(
+                [
                     'max_results' => 100,
                     'first_result' => 200,
-                ),
-            )),
-            array('supplier desc', null, null, array(
+                ],
+            ]],
+            ['supplier desc', null, null, [
                 'ORDER BY {supplier} DESC ',
-                array(
+                [
                     'max_results' => 100,
                     'first_result' => 0,
-                ),
-            )),
-            array('available_quantity DESC', null, null, array(
+                ],
+            ]],
+            ['available_quantity DESC', null, null, [
                 'ORDER BY {available_quantity} DESC ',
-                array(
+                [
                     'max_results' => 100,
                     'first_result' => 0,
-                ),
-            )),
-            array('available_quantity DESC', '2', '4', array(
+                ],
+            ]],
+            ['available_quantity DESC', '2', '4', [
                 'ORDER BY {available_quantity} DESC ',
-                array(
+                [
                     'max_results' => 4,
                     'first_result' => 4,
-                ),
-            )),
-            array('physical_quantity', '3', '3', array(
+                ],
+            ]],
+            ['physical_quantity', '3', '3', [
                 'ORDER BY {physical_quantity} ',
-                array(
+                [
                     'max_results' => 3,
                     'first_result' => 6,
-                ),
-            )),
-        );
+                ],
+            ]],
+        ];
     }
 
     /**
@@ -242,11 +240,10 @@ class QueryParamsCollectionTest extends TestCase
         $params,
         $expectedSql,
         $message
-    )
-    {
+    ) {
         $requestMock = $this->mockRequest(array_merge(
             $params,
-            array('_attributes' => $this->mockAttributes(array())->reveal())
+            ['_attributes' => $this->mockAttributes([])->reveal()]
         ));
         $this->queryParams = $this->queryParams->fromRequest($requestMock->reveal());
         $this->assertEquals(
@@ -268,32 +265,32 @@ class QueryParamsCollectionTest extends TestCase
         $attributesFilterMessage = 'It should provide with SQL conditions clauses on product attributes';
         $featuresFilterMessage = 'It should provide with SQL conditions clauses on product features';
 
-        return array(
-            array(
-                array('supplier_id' => 1),
-                array(QueryParamsCollection::SQL_CLAUSE_WHERE => 'AND {supplier_id} = :supplier_id'),
+        return [
+            [
+                ['supplier_id' => 1],
+                [QueryParamsCollection::SQL_CLAUSE_WHERE => 'AND {supplier_id} = :supplier_id'],
                 $supplierFilterMessage,
-            ),
-            array(
-                array('supplier_id' => array(1, 2)),
-                array(QueryParamsCollection::SQL_CLAUSE_WHERE => 'AND {supplier_id} IN (:supplier_id_0,:supplier_id_1)'),
+            ],
+            [
+                ['supplier_id' => [1, 2]],
+                [QueryParamsCollection::SQL_CLAUSE_WHERE => 'AND {supplier_id} IN (:supplier_id_0,:supplier_id_1)'],
                 $supplierFilterMessage,
-            ),
-            array(
-                array('category_id' => 1),
-                array(QueryParamsCollection::SQL_CLAUSE_WHERE => 'AND EXISTS(SELECT 1 FROM {table_prefix}category_product cp
-        WHERE cp.id_product=p.id_product AND FIND_IN_SET(cp.id_category, :categories_ids))'),
+            ],
+            [
+                ['category_id' => 1],
+                [QueryParamsCollection::SQL_CLAUSE_WHERE => 'AND EXISTS(SELECT 1 FROM {table_prefix}category_product cp
+        WHERE cp.id_product=p.id_product AND FIND_IN_SET(cp.id_category, :categories_ids))'],
                 $categoryFilterMessage,
-            ),
-            array(
-                array('category_id' => array(1, 2)),
-                array(QueryParamsCollection::SQL_CLAUSE_WHERE => 'AND EXISTS(SELECT 1 FROM {table_prefix}category_product cp
-        WHERE cp.id_product=p.id_product AND FIND_IN_SET(cp.id_category, :categories_ids))'),
+            ],
+            [
+                ['category_id' => [1, 2]],
+                [QueryParamsCollection::SQL_CLAUSE_WHERE => 'AND EXISTS(SELECT 1 FROM {table_prefix}category_product cp
+        WHERE cp.id_product=p.id_product AND FIND_IN_SET(cp.id_category, :categories_ids))'],
                 $categoryFilterMessage,
-            ),
-            array(
-                array('keywords' => 'Fashion'),
-                array(
+            ],
+            [
+                ['keywords' => 'Fashion'],
+                [
                     QueryParamsCollection::SQL_CLAUSE_WHERE => '',
                     QueryParamsCollection::SQL_CLAUSE_HAVING => 'AND (' .
                         '{supplier_name} LIKE :keyword_0 OR ' .
@@ -301,12 +298,12 @@ class QueryParamsCollectionTest extends TestCase
                         '{product_name} LIKE :keyword_0 OR ' .
                         '{combination_name} LIKE :keyword_0' .
                         ')',
-                ),
+                ],
                 $keywordsFilterMessage,
-            ),
-            array(
-                array('keywords' => 'Chiffon'),
-                array(
+            ],
+            [
+                ['keywords' => 'Chiffon'],
+                [
                     QueryParamsCollection::SQL_CLAUSE_WHERE => '',
                     QueryParamsCollection::SQL_CLAUSE_HAVING => 'AND (' .
                         '{supplier_name} LIKE :keyword_0 OR ' .
@@ -314,12 +311,12 @@ class QueryParamsCollectionTest extends TestCase
                         '{product_name} LIKE :keyword_0 OR ' .
                         '{combination_name} LIKE :keyword_0' .
                         ')',
-                ),
+                ],
                 $keywordsFilterMessage,
-            ),
-            array(
-                array('keywords' => array('Chiffon', 'demo_7', 'Size - S')),
-                array(
+            ],
+            [
+                ['keywords' => ['Chiffon', 'demo_7', 'Size - S']],
+                [
                     QueryParamsCollection::SQL_CLAUSE_WHERE => '',
                     QueryParamsCollection::SQL_CLAUSE_HAVING => 'AND (' .
                         '{supplier_name} LIKE :keyword_0 OR ' .
@@ -339,12 +336,12 @@ class QueryParamsCollectionTest extends TestCase
                         '{product_name} LIKE :keyword_2 OR ' .
                         '{combination_name} LIKE :keyword_2' .
                         ')',
-                ),
+                ],
                 $keywordsFilterMessage,
-            ),
-            array(
-                array('attributes' => '1:2'),
-                array(
+            ],
+            [
+                ['attributes' => '1:2'],
+                [
                     QueryParamsCollection::SQL_CLAUSE_WHERE => 'AND EXISTS(SELECT 1
                     FROM {table_prefix}product_attribute_combination pac
                         LEFT JOIN {table_prefix}attribute a ON (
@@ -353,12 +350,12 @@ class QueryParamsCollectionTest extends TestCase
                     WHERE pac.id_product_attribute=pa.id_product_attribute
                     AND a.id_attribute=:attribute_id_0
                     AND a.id_attribute_group=:attribute_group_id_0)',
-                ),
+                ],
                 $attributesFilterMessage,
-            ),
-            array(
-                array('attributes' => array('1:2', '3:14')),
-                array(
+            ],
+            [
+                ['attributes' => ['1:2', '3:14']],
+                [
                     QueryParamsCollection::SQL_CLAUSE_WHERE => 'AND EXISTS(SELECT 1
                     FROM {table_prefix}product_attribute_combination pac
                         LEFT JOIN {table_prefix}attribute a ON (
@@ -375,12 +372,12 @@ AND EXISTS(SELECT 1
                     WHERE pac.id_product_attribute=pa.id_product_attribute
                     AND a.id_attribute=:attribute_id_1
                     AND a.id_attribute_group=:attribute_group_id_1)',
-                ),
+                ],
                 $attributesFilterMessage,
-            ),
-            array(
-                array('features' => '5:1'),
-                array(
+            ],
+            [
+                ['features' => '5:1'],
+                [
                     QueryParamsCollection::SQL_CLAUSE_WHERE => 'AND EXISTS(SELECT 1
                     FROM {table_prefix}feature_product fp
                         LEFT JOIN  {table_prefix}feature f ON (
@@ -397,12 +394,12 @@ AND EXISTS(SELECT 1
                     WHERE fv.custom = 0 AND fp.id_product=p.id_product
                     AND fp.id_feature=:feature_id_0
                     AND fp.id_feature_value=:feature_value_id_0)',
-                ),
+                ],
                 $featuresFilterMessage,
-            ),
-            array(
-                array('features' => array('5:1', '6:11')),
-                array(
+            ],
+            [
+                ['features' => ['5:1', '6:11']],
+                [
                     QueryParamsCollection::SQL_CLAUSE_WHERE => 'AND EXISTS(SELECT 1
                     FROM {table_prefix}feature_product fp
                         LEFT JOIN  {table_prefix}feature f ON (
@@ -435,20 +432,21 @@ AND EXISTS(SELECT 1
                     WHERE fv.custom = 0 AND fp.id_product=p.id_product
                     AND fp.id_feature=:feature_id_1
                     AND fp.id_feature_value=:feature_value_id_1)',
-                ),
+                ],
                 $featuresFilterMessage,
-            ),
-        );
+            ],
+        ];
     }
 
     /**
      * @param array $testedParams
+     *
      * @return \Prophecy\Prophecy\ObjectProphecy|\Symfony\Component\HttpFoundation\ParameterBag
      */
     private function mockQuery(array $testedParams)
     {
-        $params = array();
-        $validQueryParams = array(
+        $params = [];
+        $validQueryParams = [
             'order',
             'page_index',
             'page_size',
@@ -457,7 +455,7 @@ AND EXISTS(SELECT 1
             'keywords',
             'attributes',
             'features',
-        );
+        ];
 
         array_walk($validQueryParams, function ($name) use ($testedParams, &$params) {
             if (array_key_exists($name, $testedParams) && null !== $testedParams[$name]) {
@@ -469,12 +467,13 @@ AND EXISTS(SELECT 1
         $queryMock = $this->prophet->prophesize('\Symfony\Component\HttpFoundation\ParameterBag');
         $queryMock->all()->willReturn($params);
 
-        /** @var \Prophecy\Prophecy\ObjectProphecy $queryMock */
+        /* @var \Prophecy\Prophecy\ObjectProphecy $queryMock */
         return $queryMock;
     }
 
     /**
      * @param array $attributes
+     *
      * @return \Prophecy\Prophecy\ObjectProphecy
      */
     private function mockAttributes(array $attributes)
@@ -487,6 +486,7 @@ AND EXISTS(SELECT 1
 
     /**
      * @param array $params
+     *
      * @return \Prophecy\Prophecy\ObjectProphecy
      */
     private function mockRequest(array $params)

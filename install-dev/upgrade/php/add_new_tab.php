@@ -28,48 +28,50 @@ use PrestaShopBundle\Security\Voter\PageVoter;
 
 /**
  * Common method to handle the tab registration
+ *
  * @internal
  */
 function register_tab($className, $name, $id_parent, $returnId = false, $parentTab = null, $module = '')
 {
     if (null !== $parentTab && !empty($parentTab) && strtolower(trim($parentTab)) !== 'null') {
-        $id_parent = (int)Db::getInstance()->getValue('SELECT `id_tab` FROM `'._DB_PREFIX_.'tab` WHERE `class_name` = \''.pSQL($parentTab).'\'');
+        $id_parent = (int) Db::getInstance()->getValue('SELECT `id_tab` FROM `' . _DB_PREFIX_ . 'tab` WHERE `class_name` = \'' . pSQL($parentTab) . '\'');
     }
 
-    $array = array();
+    $array = [];
     foreach (explode('|', $name) as $item) {
         $temp = explode(':', $item);
         $array[$temp[0]] = $temp[1];
     }
 
-    if (!(int)Db::getInstance()->getValue('SELECT count(id_tab) FROM `'._DB_PREFIX_.'tab` WHERE `class_name` = \''.pSQL($className).'\' ')) {
-        Db::getInstance()->execute('INSERT INTO `'._DB_PREFIX_.'tab` (`id_parent`, `class_name`, `module`, `position`) VALUES ('.(int)$id_parent.', \''.pSQL($className).'\', \''.pSQL($module).'\',
-									(SELECT IFNULL(MAX(t.position),0)+ 1 FROM `'._DB_PREFIX_.'tab` t WHERE t.id_parent = '.(int)$id_parent.'))');
+    if (!(int) Db::getInstance()->getValue('SELECT count(id_tab) FROM `' . _DB_PREFIX_ . 'tab` WHERE `class_name` = \'' . pSQL($className) . '\' ')) {
+        Db::getInstance()->execute('INSERT INTO `' . _DB_PREFIX_ . 'tab` (`id_parent`, `class_name`, `module`, `position`) VALUES (' . (int) $id_parent . ', \'' . pSQL($className) . '\', \'' . pSQL($module) . '\',
+									(SELECT IFNULL(MAX(t.position),0)+ 1 FROM `' . _DB_PREFIX_ . 'tab` t WHERE t.id_parent = ' . (int) $id_parent . '))');
     }
 
-    $languages = Db::getInstance()->executeS('SELECT id_lang, iso_code FROM `'._DB_PREFIX_.'lang`');
+    $languages = Db::getInstance()->executeS('SELECT id_lang, iso_code FROM `' . _DB_PREFIX_ . 'lang`');
     foreach ($languages as $lang) {
         Db::getInstance()->execute('
-		INSERT IGNORE INTO `'._DB_PREFIX_.'tab_lang` (`id_lang`, `id_tab`, `name`)
-		VALUES ('.(int)$lang['id_lang'].', (
+		INSERT IGNORE INTO `' . _DB_PREFIX_ . 'tab_lang` (`id_lang`, `id_tab`, `name`)
+		VALUES (' . (int) $lang['id_lang'] . ', (
 				SELECT `id_tab`
-				FROM `'._DB_PREFIX_.'tab`
-				WHERE `class_name` = \''.pSQL($className).'\' LIMIT 0,1
-			), \''.pSQL(isset($array[$lang['iso_code']]) ? $array[$lang['iso_code']] : $array['en']).'\')
+				FROM `' . _DB_PREFIX_ . 'tab`
+				WHERE `class_name` = \'' . pSQL($className) . '\' LIMIT 0,1
+			), \'' . pSQL(isset($array[$lang['iso_code']]) ? $array[$lang['iso_code']] : $array['en']) . '\')
 		');
     }
 }
 
 /**
  * Common method for getting the new tab ID
+ *
  * @internal
  */
 function get_new_tab_id($className, $returnId = false)
 {
     if ($returnId && strtolower(trim($returnId)) !== 'false') {
-        return (int)Db::getInstance()->getValue('SELECT `id_tab`
-								FROM `'._DB_PREFIX_.'tab`
-								WHERE `class_name` = \''.pSQL($className).'\'');
+        return (int) Db::getInstance()->getValue('SELECT `id_tab`
+								FROM `' . _DB_PREFIX_ . 'tab`
+								WHERE `class_name` = \'' . pSQL($className) . '\'');
     }
 }
 
@@ -89,12 +91,12 @@ function add_new_tab($className, $name, $id_parent, $returnId = false, $parentTa
 {
     register_tab($className, $name, $id_parent, $returnId, $parentTab, $module);
 
-    Db::getInstance()->execute('INSERT IGNORE INTO `'._DB_PREFIX_.'access` (`id_profile`, `id_tab`, `view`, `add`, `edit`, `delete`)
+    Db::getInstance()->execute('INSERT IGNORE INTO `' . _DB_PREFIX_ . 'access` (`id_profile`, `id_tab`, `view`, `add`, `edit`, `delete`)
                             (SELECT `id_profile`, (
                             SELECT `id_tab`
-                            FROM `'._DB_PREFIX_.'tab`
-                            WHERE `class_name` = \''.pSQL($className).'\' LIMIT 0,1
-                            ), 1, 1, 1, 1 FROM `'._DB_PREFIX_.'profile` )');
+                            FROM `' . _DB_PREFIX_ . 'tab`
+                            WHERE `class_name` = \'' . pSQL($className) . '\' LIMIT 0,1
+                            ), 1, 1, 1, 1 FROM `' . _DB_PREFIX_ . 'profile` )');
 
     return get_new_tab_id($className, $returnId);
 }
@@ -120,35 +122,35 @@ function add_new_tab_17($className, $name, $id_parent, $returnId = false, $paren
     if ($id_parent) {
         $parentClassName = Db::getInstance()->getValue('
             SELECT `class_name`
-            FROM `'._DB_PREFIX_.'tab`
-            WHERE `id_tab` = "'.(int) $id_parent.'"
+            FROM `' . _DB_PREFIX_ . 'tab`
+            WHERE `id_tab` = "' . (int) $id_parent . '"
         ');
     } elseif (!empty($parentTab)) {
         $parentClassName = $parentTab;
     }
 
-    foreach (array(PageVoter::CREATE, PageVoter::READ, PageVoter::UPDATE, PageVoter::DELETE) as $role) {
+    foreach ([PageVoter::CREATE, PageVoter::READ, PageVoter::UPDATE, PageVoter::DELETE] as $role) {
         // 1- Add role
-        $roleToAdd = strtoupper('ROLE_MOD_TAB_'.$className.'_'.$role);
-        Db::getInstance()->execute('INSERT IGNORE INTO `'._DB_PREFIX_.'authorization_role` (`slug`)
-            VALUES ("'.pSQL($roleToAdd).'")');
+        $roleToAdd = strtoupper('ROLE_MOD_TAB_' . $className . '_' . $role);
+        Db::getInstance()->execute('INSERT IGNORE INTO `' . _DB_PREFIX_ . 'authorization_role` (`slug`)
+            VALUES ("' . pSQL($roleToAdd) . '")');
         $newID = Db::getInstance()->Insert_ID();
         if (!$newID) {
             $newID = Db::getInstance()->getValue('
                 SELECT `id_authorization_role`
-                FROM `'._DB_PREFIX_.'authorization_role`
-                WHERE `slug` = "'.pSQL($roleToAdd).'"
+                FROM `' . _DB_PREFIX_ . 'authorization_role`
+                WHERE `slug` = "' . pSQL($roleToAdd) . '"
             ');
         }
 
         // 2- Copy access from the parent
         if (!empty($parentClassName) && !empty($newID)) {
-            $parentRole = strtoupper('ROLE_MOD_TAB_'.pSQL($parentClassName).'_'.$role);
+            $parentRole = strtoupper('ROLE_MOD_TAB_' . pSQL($parentClassName) . '_' . $role);
             Db::getInstance()->execute(
-                'INSERT IGNORE INTO `'._DB_PREFIX_.'access` (`id_profile`, `id_authorization_role`)
-                SELECT a.`id_profile`, '. (int)$newID .' as `id_authorization_role`
-                FROM `'._DB_PREFIX_.'access` a join `'._DB_PREFIX_.'authorization_role` ar on a.`id_authorization_role` = ar.`id_authorization_role`
-                WHERE ar.`slug` = "'.pSQL($parentRole).'"'
+                'INSERT IGNORE INTO `' . _DB_PREFIX_ . 'access` (`id_profile`, `id_authorization_role`)
+                SELECT a.`id_profile`, ' . (int) $newID . ' as `id_authorization_role`
+                FROM `' . _DB_PREFIX_ . 'access` a join `' . _DB_PREFIX_ . 'authorization_role` ar on a.`id_authorization_role` = ar.`id_authorization_role`
+                WHERE ar.`slug` = "' . pSQL($parentRole) . '"'
             );
         }
     }

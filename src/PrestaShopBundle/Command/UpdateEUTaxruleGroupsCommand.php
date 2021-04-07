@@ -115,7 +115,7 @@ class UpdateEUTaxruleGroupsCommand extends ContainerAwareCommand
                             'iso_code_country' => basename($entry, '.xml'),
                         ];
                     } else {
-                        $output->writeln("<error>Too many taxes with eu-tax-group=\"virtual\" found in `$localizationPackFile`.");
+                        $output->writeln("<error>Too many taxes with eu-tax-group=\"virtual\" found in `${localizationPackFile}`.");
 
                         return 1;
                     }
@@ -185,7 +185,7 @@ class UpdateEUTaxruleGroupsCommand extends ContainerAwareCommand
 
         $nUpdated = count($euLocalizationFiles);
 
-        $output->writeln("<info>Updated the virtual tax groups for $nUpdated localization files</info>");
+        $output->writeln("<info>Updated the virtual tax groups for ${nUpdated} localization files</info>");
 
         return 0;
     }

@@ -56,7 +56,7 @@ class EditableProfile
     public function __construct(
         ProfileId $profileId,
         array $localizedNames,
-        ?string $avatarUrl = null
+        string $avatarUrl = null
     ) {
         $this->profileId = $profileId;
         $this->localizedNames = $localizedNames;

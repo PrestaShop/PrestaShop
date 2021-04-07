@@ -54,7 +54,7 @@ class HookRepository
         $escaped_hook_name = $this->db->escape($hook_name);
 
         $id_hook = $this->db->getValue(
-            "SELECT id_hook FROM {$this->db_prefix}hook WHERE name = '$escaped_hook_name'"
+            "SELECT id_hook FROM {$this->db_prefix}hook WHERE name = '${escaped_hook_name}'"
         );
 
         return (int) $id_hook;
@@ -77,7 +77,7 @@ class HookRepository
         $escaped_module_name = $this->db->escape($module_name);
 
         $id_module = $this->db->getValue(
-            "SELECT id_module FROM {$this->db_prefix}module WHERE name = '$escaped_module_name'"
+            "SELECT id_module FROM {$this->db_prefix}module WHERE name = '${escaped_module_name}'"
         );
 
         return (int) $id_module;
@@ -89,11 +89,11 @@ class HookRepository
         $id_shop = (int) $this->shop->id;
 
         $this->db->execute("DELETE FROM {$this->db_prefix}hook_module
-             WHERE id_hook = $id_hook AND id_shop = $id_shop
+             WHERE id_hook = ${id_hook} AND id_shop = ${id_shop}
         ");
 
         $this->db->execute("DELETE FROM {$this->db_prefix}hook_module_exceptions
-            WHERE id_hook = $id_hook AND id_shop = $id_shop
+            WHERE id_hook = ${id_hook} AND id_shop = ${id_shop}
         ");
 
         return $this;
@@ -176,9 +176,9 @@ class HookRepository
         $id_hook = (int) $id_hook;
 
         $this->db->execute("DELETE FROM {$this->db_prefix}hook_module_exceptions
-            WHERE id_shop = $id_shop
-            AND id_module = $id_module
-            AND id_hook = $id_hook
+            WHERE id_shop = ${id_shop}
+            AND id_module = ${id_module}
+            AND id_hook = ${id_hook}
         ");
 
         foreach ($pages as $page) {
@@ -201,9 +201,9 @@ class HookRepository
 
         $rows = $this->db->executeS("SELECT file_name
             FROM {$this->db_prefix}hook_module_exceptions
-            WHERE id_shop = $id_shop
-            AND id_module = $id_module
-            AND id_hook = $id_hook
+            WHERE id_shop = ${id_shop}
+            AND id_module = ${id_module}
+            AND id_hook = ${id_hook}
             ORDER BY file_name ASC
         ");
 
@@ -222,7 +222,7 @@ class HookRepository
                 ON h.id_hook = hm.id_hook
             INNER JOIN {$this->db_prefix}module m
                 ON m.id_module = hm.id_module
-            WHERE hm.id_shop = $id_shop
+            WHERE hm.id_shop = ${id_shop}
             ORDER BY h.name ASC, hm.position ASC
         ";
 

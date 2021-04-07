@@ -105,6 +105,7 @@ abstract class AbstractLegacyRouteProvider implements LegacyRouteProviderInterfa
         foreach ($controllerActions as $controllerAction => $actionRoute) {
             if (strtolower($controllerAction) == strtolower($action)) {
                 $routeName = $actionRoute;
+
                 break;
             }
         }
@@ -141,6 +142,7 @@ abstract class AbstractLegacyRouteProvider implements LegacyRouteProviderInterfa
         foreach ($this->controllersActions as $listController => $actions) {
             if (strtolower($listController) == strtolower($controller)) {
                 $controllerActions = $actions;
+
                 break;
             }
         }

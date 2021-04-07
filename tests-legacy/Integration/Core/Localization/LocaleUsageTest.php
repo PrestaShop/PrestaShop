@@ -28,7 +28,6 @@
 namespace LegacyTests\Integration\Core\Localization;
 
 use Currency;
-use Language;
 use PrestaShop\PrestaShop\Adapter\Entity\LocalizationPack;
 use PrestaShop\PrestaShop\Core\Localization\Exception\LocalizationException;
 use PrestaShop\PrestaShop\Core\Localization\Locale\Repository as LocaleRepository;
@@ -126,7 +125,7 @@ class LocaleUsageTest extends SymfonyIntegrationTestCase
             'France' => [
                 'localeCode' => 'fr-FR',
                 'rawNumber' => 1234568.12345,
-                'formattedNumber' => '1 234 568,123',
+                'formattedNumber' => "1\u{202f}234\u{202f}568,123",
             ],
             'India (Hindi)' => [
                 'localeCode' => 'hi-IN',
@@ -151,7 +150,7 @@ class LocaleUsageTest extends SymfonyIntegrationTestCase
             'Canada (French)' => [
                 'localeCode' => 'fr-CA',
                 'rawNumber' => 1234568.12345,
-                'formattedNumber' => '1 234 568,123',
+                'formattedNumber' => "1\u{a0}234\u{a0}568,123",
             ],
             'Canada (English)' => [
                 'localeCode' => 'en-CA',
@@ -181,7 +180,7 @@ class LocaleUsageTest extends SymfonyIntegrationTestCase
             'Russia' => [
                 'localeCode' => 'ru-RU',
                 'rawNumber' => 1234568.12345,
-                'formattedNumber' => '1 234 568,123',
+                'formattedNumber' => "1\u{a0}234\u{a0}568,123",
             ],
             'Italy' => [
                 'localeCode' => 'it-IT',
@@ -191,12 +190,12 @@ class LocaleUsageTest extends SymfonyIntegrationTestCase
             'Poland' => [
                 'localeCode' => 'pl-PL',
                 'rawNumber' => 1234568.12345,
-                'formattedNumber' => '1 234 568,123',
+                'formattedNumber' => "1\u{a0}234\u{a0}568,123",
             ],
             'Bulgaria' => [
                 'localeCode' => 'bg-BG',
                 'rawNumber' => 1234568.12345,
-                'formattedPrice' => '1 234 568,123',
+                'formattedPrice' => "1\u{a0}234\u{a0}568,123",
             ],
             'Azerbaijani' => [
                 'localeCode' => 'az-AZ',
@@ -293,19 +292,19 @@ class LocaleUsageTest extends SymfonyIntegrationTestCase
                 'localeCode' => 'de-DE',
                 'rawNumber' => 1234568.12345,
                 'currencyCode' => 'EUR',
-                'formattedPrice' => '1.234.568,12 €',
+                'formattedPrice' => "1.234.568,12\u{a0}€",
             ],
             'France' => [
                 'localeCode' => 'fr-FR',
                 'rawNumber' => 1234568.12345,
                 'currencyCode' => 'EUR',
-                'formattedPrice' => '1 234 568,12 €',
+                'formattedPrice' => "1\u{202f}234\u{202f}568,12\u{a0}€",
             ],
             'India' => [
                 'localeCode' => 'ta-IN',
                 'rawNumber' => 1234568.12345,
                 'currencyCode' => 'INR',
-                'formattedPrice' => '₹ 12,34,568.12',
+                'formattedPrice' => "₹\u{a0}12,34,568.12",
             ],
             'India (English)' => [
                 'localeCode' => 'en-US',
@@ -317,13 +316,13 @@ class LocaleUsageTest extends SymfonyIntegrationTestCase
                 'localeCode' => 'es-ES',
                 'rawNumber' => 1234568.12345,
                 'currencyCode' => 'EUR',
-                'formattedPrice' => '1.234.568,12 €',
+                'formattedPrice' => "1.234.568,12\u{a0}€",
             ],
             'Canada (French)' => [
                 'localeCode' => 'fr-CA',
                 'rawNumber' => 1234568.12345,
                 'currencyCode' => 'CAD',
-                'formattedPrice' => '1 234 568,12 $',
+                'formattedPrice' => "1\u{a0}234\u{a0}568,12\u{a0}\$",
             ],
             'China' => [
                 'localeCode' => 'zh-CN',
@@ -342,7 +341,7 @@ class LocaleUsageTest extends SymfonyIntegrationTestCase
                 'localeCode' => 'pt-BR',
                 'rawNumber' => 1234568.12345,
                 'currencyCode' => 'BRL',
-                'formattedPrice' => 'R$ 1.234.568,12',
+                'formattedPrice' => "R\$\u{a0}1.234.568,12",
             ],
             'Mexico' => [
                 'localeCode' => 'es-MX',
@@ -354,25 +353,25 @@ class LocaleUsageTest extends SymfonyIntegrationTestCase
                 'localeCode' => 'ru-RU',
                 'rawNumber' => 1234568.12345,
                 'currencyCode' => 'RUB',
-                'formattedPrice' => '1 234 568,12 ₽',
+                'formattedPrice' => "1\u{a0}234\u{a0}568,12\u{a0}₽",
             ],
             'Italy' => [
                 'localeCode' => 'it-IT',
                 'rawNumber' => 1234568.12345,
                 'currencyCode' => 'EUR',
-                'formattedPrice' => '1.234.568,12 €',
+                'formattedPrice' => "1.234.568,12\u{a0}€",
             ],
             'Poland' => [
                 'localeCode' => 'pl-PL',
                 'rawNumber' => 1234568.12345,
                 'currencyCode' => 'PLN',
-                'formattedPrice' => '1 234 568,12 zł',
+                'formattedPrice' => "1\u{a0}234\u{a0}568,12\u{a0}zł",
             ],
             'Bulgaria' => [
                 'localeCode' => 'bg-BG',
                 'rawNumber' => 1234568.12345,
                 'currencyCode' => 'BGN',
-                'formattedPrice' => '1234568,12 лв.',
+                'formattedPrice' => "1234568,12\u{a0}лв.",
             ],
             // BGN does not have a symbol in en-US
             'United States BGN' => [
@@ -385,7 +384,7 @@ class LocaleUsageTest extends SymfonyIntegrationTestCase
                 'localeCode' => 'az-AZ',
                 'rawNumber' => 1234568.12345,
                 'currencyCode' => 'AZN',
-                'formattedPrice' => '1.234.568,12 ₼',
+                'formattedPrice' => "1.234.568,12\u{a0}₼",
             ],
             // BGN does not have a symbol in en-US
             'United States AZN' => [

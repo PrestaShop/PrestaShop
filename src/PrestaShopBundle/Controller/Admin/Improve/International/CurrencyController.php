@@ -395,10 +395,11 @@ class CurrencyController extends FrameworkBundleAdminController
     public function updateLiveExchangeRatesAction(Request $request)
     {
         if ($this->isDemoModeEnabled()) {
-            return $this->json([
-                'status' => false,
-                'message' => $this->getDemoModeErrorMessage(),
-            ],
+            return $this->json(
+                [
+                    'status' => false,
+                    'message' => $this->getDemoModeErrorMessage(),
+                ],
                 Response::HTTP_UNAUTHORIZED
             );
         }
@@ -406,13 +407,14 @@ class CurrencyController extends FrameworkBundleAdminController
         $authLevel = $this->authorizationLevel($request->attributes->get('_legacy_controller'));
 
         if (!in_array($authLevel, [PageVoter::LEVEL_UPDATE, PageVoter::LEVEL_DELETE])) {
-            return $this->json([
-                'status' => false,
-                'message' => $this->trans(
-                    'You need permission to edit this.',
-                    'Admin.Notifications.Error'
-                ),
-            ],
+            return $this->json(
+                [
+                    'status' => false,
+                    'message' => $this->trans(
+                        'You need permission to edit this.',
+                        'Admin.Notifications.Error'
+                    ),
+                ],
                 Response::HTTP_UNAUTHORIZED
             );
         }
@@ -562,12 +564,12 @@ class CurrencyController extends FrameworkBundleAdminController
                     ]
                 ),
                 CurrencyConstraintException::INVALID_EXCHANGE_RATE => $this->trans(
-                        'The %s field is not valid',
-                        'Admin.Notifications.Error',
-                        [
-                            sprintf('"%s"', $this->trans('Exchange rate', 'Admin.International.Feature')),
-                        ]
-                    ),
+                    'The %s field is not valid',
+                    'Admin.Notifications.Error',
+                    [
+                        sprintf('"%s"', $this->trans('Exchange rate', 'Admin.International.Feature')),
+                    ]
+                ),
                 CurrencyConstraintException::INVALID_NAME => $this->trans(
                     'The %s field is not valid',
                     'Admin.Notifications.Error',
@@ -599,13 +601,13 @@ class CurrencyController extends FrameworkBundleAdminController
             ],
             DefaultCurrencyInMultiShopException::class => [
                 DefaultCurrencyInMultiShopException::CANNOT_REMOVE_CURRENCY => $this->trans(
-                        '%currency% is the default currency for shop %shop_name%, and therefore cannot be removed from shop association',
-                        'Admin.International.Notification',
-                        [
-                            '%currency%' => $e instanceof DefaultCurrencyInMultiShopException ? $e->getCurrencyName() : '',
-                            '%shop_name%' => $e instanceof DefaultCurrencyInMultiShopException ? $e->getShopName() : '',
-                        ]
-                    ),
+                    '%currency% is the default currency for shop %shop_name%, and therefore cannot be removed from shop association',
+                    'Admin.International.Notification',
+                    [
+                        '%currency%' => $e instanceof DefaultCurrencyInMultiShopException ? $e->getCurrencyName() : '',
+                        '%shop_name%' => $e instanceof DefaultCurrencyInMultiShopException ? $e->getShopName() : '',
+                    ]
+                ),
                 DefaultCurrencyInMultiShopException::CANNOT_DISABLE_CURRENCY => $this->trans(
                     '%currency% is the default currency for shop %shop_name%, and therefore cannot be disabled',
                     'Admin.International.Notification',

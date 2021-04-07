@@ -94,7 +94,7 @@ class ProductCore extends ObjectModel
     public $minimal_quantity = 1;
 
     /** @var int|null Low stock for mail alert */
-    public $low_stock_threshold = null;
+    public $low_stock_threshold;
 
     /** @var bool Low stock mail alert activated */
     public $low_stock_alert = false;
@@ -124,7 +124,7 @@ class ProductCore extends ObjectModel
     public $online_only = false;
 
     /** @var string unity */
-    public $unity = null;
+    public $unity;
 
     /** @var float price for product's unity */
     public $unit_price = 0;
@@ -202,7 +202,7 @@ class ProductCore extends ObjectModel
     public $customizable;
 
     /** @var bool|null Product is new */
-    public $new = null;
+    public $new;
 
     /** @var int Number of uploadable files (concerning customizable products) */
     public $uploadable_files;
@@ -1212,24 +1212,24 @@ class ProductCore extends ObjectModel
         }
 
         Hook::exec('actionProductDelete', ['id_product' => (int) $this->id, 'product' => $this]);
-        if (!$result ||
-            !GroupReduction::deleteProductReduction($this->id) ||
-            !$this->deleteCategories(true) ||
-            !$this->deleteProductFeatures() ||
-            !$this->deleteTags() ||
-            !$this->deleteCartProducts() ||
-            !$this->deleteAttributesImpacts() ||
-            !$this->deleteAttachments(false) ||
-            !$this->deleteCustomization() ||
-            !SpecificPrice::deleteByProductId((int) $this->id) ||
-            !$this->deletePack() ||
-            !$this->deleteProductSale() ||
-            !$this->deleteSearchIndexes() ||
-            !$this->deleteAccessories() ||
-            !$this->deleteFromAccessories() ||
-            !$this->deleteFromSupplier() ||
-            !$this->deleteDownload() ||
-            !$this->deleteFromCartRules()) {
+        if (!$result
+            || !GroupReduction::deleteProductReduction($this->id)
+            || !$this->deleteCategories(true)
+            || !$this->deleteProductFeatures()
+            || !$this->deleteTags()
+            || !$this->deleteCartProducts()
+            || !$this->deleteAttributesImpacts()
+            || !$this->deleteAttachments(false)
+            || !$this->deleteCustomization()
+            || !SpecificPrice::deleteByProductId((int) $this->id)
+            || !$this->deletePack()
+            || !$this->deleteProductSale()
+            || !$this->deleteSearchIndexes()
+            || !$this->deleteAccessories()
+            || !$this->deleteFromAccessories()
+            || !$this->deleteFromSupplier()
+            || !$this->deleteDownload()
+            || !$this->deleteFromCartRules()) {
             return false;
         }
 
@@ -1773,7 +1773,7 @@ class ProductCore extends ObjectModel
             }
 
             foreach ($combination as $field => $value) {
-                $obj->$field = $value;
+                $obj->{$field} = $value;
             }
 
             $obj->default_on = 0;
@@ -1909,7 +1909,7 @@ class ProductCore extends ObjectModel
         foreach ($attributes as $attribute) {
             $obj = new Combination();
             foreach ($attribute as $key => $value) {
-                $obj->$key = $value;
+                $obj->{$key} = $value;
             }
 
             if ($set_default) {
@@ -2417,10 +2417,10 @@ class ProductCore extends ObjectModel
                                 WHERE id_product=' . (int) $id_product);
 
         return Db::getInstance()->update(
-                        'product',
-                        ['cache_has_attachments' => (int) $value],
-                        'id_product = ' . (int) $id_product
-                    );
+            'product',
+            ['cache_has_attachments' => (int) $value],
+            'id_product = ' . (int) $id_product
+        );
     }
 
     /**
@@ -2457,8 +2457,7 @@ class ProductCore extends ObjectModel
                 'DELETE FROM `' . _DB_PREFIX_ . 'customization_field`
                 WHERE `id_product` = ' . (int) $this->id
             )
-            &&
-            Db::getInstance()->execute(
+            && Db::getInstance()->execute(
                 'DELETE `' . _DB_PREFIX_ . 'customization_field_lang` FROM `' . _DB_PREFIX_ . 'customization_field_lang` LEFT JOIN `' . _DB_PREFIX_ . 'customization_field`
                 ON (' . _DB_PREFIX_ . 'customization_field.id_customization_field = ' . _DB_PREFIX_ . 'customization_field_lang.id_customization_field)
                 WHERE ' . _DB_PREFIX_ . 'customization_field.id_customization_field IS NULL'
@@ -2503,8 +2502,8 @@ class ProductCore extends ObjectModel
             Db::getInstance()->execute(
                 'DELETE FROM `' . _DB_PREFIX_ . 'search_index`
                 WHERE `id_product` = ' . (int) $this->id
-            ) &&
-            Db::getInstance()->execute(
+            )
+            && Db::getInstance()->execute(
                 'DELETE sw FROM `' . _DB_PREFIX_ . 'search_word` sw
                 LEFT JOIN `' . _DB_PREFIX_ . 'search_index` si ON (sw.id_word=si.id_word)
                 WHERE si.id_word IS NULL;'
@@ -3785,11 +3784,11 @@ class ProductCore extends ObjectModel
         }
         // convert only if the specific price is in the default currency (id_currency = 0)
         if (
-            !$specific_price ||
-            !(
-                $specific_price['price'] >= 0 &&
-                $specific_price['id_currency'] &&
-                $id_currency !== $specific_price['id_currency']
+            !$specific_price
+            || !(
+                $specific_price['price'] >= 0
+                && $specific_price['id_currency']
+                && $id_currency !== $specific_price['id_currency']
             )
         ) {
             $price = Tools::convertPrice($price, $id_currency);
@@ -4180,7 +4179,7 @@ class ProductCore extends ObjectModel
         $currency = $params['currency'];
         $currency = is_object($currency) ? $currency->iso_code : Currency::getIsoCodeById((int) $currency);
 
-        return !is_null($params['price']) ? Tools::getContextLocale(Context::getContext())->formatPrice($params['price'], $currency) : null;
+        return null !== $params['price'] ? Tools::getContextLocale(Context::getContext())->formatPrice($params['price'], $currency) : null;
     }
 
     /**
@@ -4415,7 +4414,7 @@ class ProductCore extends ObjectModel
             GROUP BY pa.`id_product`, a.`id_attribute`, `group_by`
             ' . ($check_stock ? 'HAVING qty > 0' : '') . '
             ORDER BY a.`position` ASC;'
-            )
+        )
         ) {
             return false;
         }
@@ -4894,7 +4893,7 @@ class ProductCore extends ObjectModel
 
             $combination = new Combination($id_combination, null, $id_shop);
             foreach ($row as $k => $v) {
-                $combination->$k = $v;
+                $combination->{$k} = $v;
             }
             $return &= $combination->save();
 
@@ -5390,7 +5389,8 @@ class ProductCore extends ObjectModel
     public static function duplicateCarriers(int $oldProductId, int $newProductId): bool
     {
         //@todo: this will copy carriers from all shops. todo - Handle multishop according context & specifications.
-        $oldProductCarriers = Db::getInstance()->executeS('
+        $oldProductCarriers = Db::getInstance()->executeS(
+            '
             SELECT *
             FROM `' . _DB_PREFIX_ . 'product_carrier`
             WHERE `id_product` = ' . (int) $oldProductId
@@ -5416,7 +5416,8 @@ class ProductCore extends ObjectModel
      */
     public static function duplicateAttachmentAssociation(int $oldProductId, int $newProductId): bool
     {
-        $oldProductAttachments = Db::getInstance()->executeS('
+        $oldProductAttachments = Db::getInstance()->executeS(
+            '
             SELECT *
             FROM `' . _DB_PREFIX_ . 'product_attachment`
             WHERE `id_product` = ' . (int) $oldProductId
@@ -5870,7 +5871,8 @@ class ProductCore extends ObjectModel
      */
     public function getAssociatedAttachmentIds(): array
     {
-        $results = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS('
+        $results = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS(
+            '
             SELECT id_attachment
             FROM ' . _DB_PREFIX_ . 'product_attachment
             WHERE id_product = ' . (int) $this->id
@@ -6091,7 +6093,7 @@ class ProductCore extends ObjectModel
         /* Get customization field ids */
         if ((
             $result = Db::getInstance()->executeS(
-            'SELECT `id_customization_field`, `type`
+                'SELECT `id_customization_field`, `type`
             FROM `' . _DB_PREFIX_ . 'customization_field`
             WHERE `id_product` = ' . (int) $this->id . '
             ORDER BY `id_customization_field`'
@@ -6117,8 +6119,8 @@ class ProductCore extends ObjectModel
         $extra_text = count($customization_fields[Product::CUSTOMIZE_TEXTFIELD]) - $max[Product::CUSTOMIZE_TEXTFIELD];
 
         /* If too much inside the database, deletion */
-        if ($extra_file > 0 && count($customization_fields[Product::CUSTOMIZE_FILE]) - $extra_file >= 0 &&
-        (!Db::getInstance()->execute(
+        if ($extra_file > 0 && count($customization_fields[Product::CUSTOMIZE_FILE]) - $extra_file >= 0
+        && (!Db::getInstance()->execute(
             'DELETE `' . _DB_PREFIX_ . 'customization_field`,`' . _DB_PREFIX_ . 'customization_field_lang`
             FROM `' . _DB_PREFIX_ . 'customization_field` JOIN `' . _DB_PREFIX_ . 'customization_field_lang`
             WHERE `' . _DB_PREFIX_ . 'customization_field`.`id_product` = ' . (int) $this->id . '
@@ -6129,8 +6131,8 @@ class ProductCore extends ObjectModel
             return false;
         }
 
-        if ($extra_text > 0 && count($customization_fields[Product::CUSTOMIZE_TEXTFIELD]) - $extra_text >= 0 &&
-        (!Db::getInstance()->execute(
+        if ($extra_text > 0 && count($customization_fields[Product::CUSTOMIZE_TEXTFIELD]) - $extra_text >= 0
+        && (!Db::getInstance()->execute(
             'DELETE `' . _DB_PREFIX_ . 'customization_field`,`' . _DB_PREFIX_ . 'customization_field_lang`
             FROM `' . _DB_PREFIX_ . 'customization_field` JOIN `' . _DB_PREFIX_ . 'customization_field_lang`
             WHERE `' . _DB_PREFIX_ . 'customization_field`.`id_product` = ' . (int) $this->id . '
@@ -6158,8 +6160,8 @@ class ProductCore extends ObjectModel
         // Label insertion
         if (!Db::getInstance()->execute('
             INSERT INTO `' . _DB_PREFIX_ . 'customization_field` (`id_product`, `type`, `required`)
-            VALUES (' . (int) $this->id . ', ' . (int) $type . ', 0)') ||
-            !$id_customization_field = (int) Db::getInstance()->Insert_ID()) {
+            VALUES (' . (int) $this->id . ', ' . (int) $type . ', 0)')
+            || !$id_customization_field = (int) Db::getInstance()->Insert_ID()) {
             return false;
         }
 
@@ -6358,7 +6360,8 @@ class ProductCore extends ObjectModel
             return [];
         }
 
-        $results = Db::getInstance()->executeS('
+        $results = Db::getInstance()->executeS(
+            '
             SELECT `id_customization_field`
             FROM `' . _DB_PREFIX_ . 'customization_field`
             WHERE `is_deleted` = 0
@@ -6377,7 +6380,7 @@ class ProductCore extends ObjectModel
      *
      * @throws PrestaShopDatabaseException
      */
-    public function countCustomizationFields(?int $fieldType = null): int
+    public function countCustomizationFields(int $fieldType = null): int
     {
         $query = '
             SELECT COUNT(`id_customization_field`) as customizations_count
@@ -6821,13 +6824,13 @@ class ProductCore extends ObjectModel
         $ids = array_unique($ids);
 
         $positions = Db::getInstance()->executeS(
-                'SELECT `id_category`, `position`
+            'SELECT `id_category`, `position`
                 FROM `' . _DB_PREFIX_ . 'category_product`
                 WHERE `id_product` = ' . (int) $this->id
         );
 
         $max_positions = Db::getInstance()->executeS(
-                'SELECT `id_category`, max(`position`) as maximum
+            'SELECT `id_category`, max(`position`) as maximum
                 FROM `' . _DB_PREFIX_ . 'category_product`
                 GROUP BY id_category'
         );
@@ -7018,7 +7021,8 @@ class ProductCore extends ObjectModel
             'SELECT `position`
             FROM `' . _DB_PREFIX_ . 'category_product`
             WHERE `id_category` = ' . (int) $this->id_category_default . '
-            AND `id_product` = ' . (int) $this->id);
+            AND `id_product` = ' . (int) $this->id
+        );
         if (count($result) > 0) {
             return $result[0]['position'];
         }
@@ -7617,8 +7621,8 @@ class ProductCore extends ObjectModel
             $manager = StockManagerFactory::getManager();
         }
 
-        if (Configuration::get('PS_ADVANCED_STOCK_MANAGEMENT') && Product::usesAdvancedStockManagement($id_product) &&
-            StockAvailable::dependsOnStock($id_product, $id_shop)) {
+        if (Configuration::get('PS_ADVANCED_STOCK_MANAGEMENT') && Product::usesAdvancedStockManagement($id_product)
+            && StockAvailable::dependsOnStock($id_product, $id_shop)) {
             return $manager->getProductRealQuantities($id_product, $id_product_attribute, $id_warehouse, true);
         } else {
             return StockAvailable::getQuantityAvailableByProduct($id_product, $id_product_attribute, $id_shop);
@@ -7713,7 +7717,7 @@ class ProductCore extends ObjectModel
                     SELECT `advanced_stock_management`
                     FROM ' . _DB_PREFIX_ . 'product_shop
                     WHERE id_product=' . (int) $this->id . Shop::addSqlRestriction()
-                );
+        );
     }
 
     /**
@@ -7874,7 +7878,7 @@ class ProductCore extends ObjectModel
                         ORDER BY n DESC
                         LIMIT 1
                     ) most_used'
-                );
+        );
     }
 
     /**
@@ -8144,7 +8148,6 @@ class ProductCore extends ObjectModel
                 return 'category';
 
                 break;
-
             case ProductInterface::REDIRECT_TYPE_PRODUCT_MOVED_PERMANENTLY:
             case ProductInterface::REDIRECT_TYPE_PRODUCT_FOUND:
                 return 'product';

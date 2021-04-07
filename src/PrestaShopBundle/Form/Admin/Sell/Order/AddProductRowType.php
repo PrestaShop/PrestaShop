@@ -98,14 +98,16 @@ class AddProductRowType extends TranslatorAwareType
             ])
             ->add('price_tax_excluded', TextWithUnitType::class, [
                 'label' => false,
-                'unit' => sprintf('%s %s',
+                'unit' => sprintf(
+                    '%s %s',
                     $options['symbol'],
-                        $this->trans('tax excl.', 'Admin.Global')
+                    $this->trans('tax excl.', 'Admin.Global')
                 ),
             ])
             ->add('price_tax_included', TextWithUnitType::class, [
                 'label' => false,
-                'unit' => sprintf('%s %s',
+                'unit' => sprintf(
+                    '%s %s',
                     $options['symbol'],
                     $this->trans('tax incl.', 'Admin.Global')
                 ),
@@ -128,7 +130,9 @@ class AddProductRowType extends TranslatorAwareType
                     ],
                 ],
             ])
-            ->add('free_shipping', CheckboxType::class,
+            ->add(
+                'free_shipping',
+                CheckboxType::class,
                 [
                     'required' => false,
                     'label' => $this->trans('Free shipping', 'Admin.Orderscustomers.Feature', []),

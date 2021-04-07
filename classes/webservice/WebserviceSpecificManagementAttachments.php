@@ -204,6 +204,7 @@ class WebserviceSpecificManagementAttachmentsCore implements WebserviceSpecificM
                 case 'GET':
                 case 'HEAD':
                     $this->displayFile = $this->executeFileGetAndHead();
+
                     break;
                 case 'POST':
                 case 'PUT':
@@ -214,10 +215,12 @@ class WebserviceSpecificManagementAttachmentsCore implements WebserviceSpecificM
                     $this->getWsObject()->urlSegment[1] = $this->attachmentId;
                     $this->getWsObject()->urlSegment[2] = '';
                     $this->getWsObject()->executeEntityGetAndHead();
+
                     break;
                 case 'DELETE':
                     $attachment = new Attachment((int) $this->getWsObject()->urlSegment[1]);
                     $attachment->delete();
+
                     break;
             }
         } else {
@@ -226,12 +229,15 @@ class WebserviceSpecificManagementAttachmentsCore implements WebserviceSpecificM
                 case 'GET':
                 case 'HEAD':
                     $this->getWsObject()->executeEntityGetAndHead();
+
                     break;
                 case 'PUT':
                     $this->getWsObject()->executeEntityPut();
+
                     break;
                 case 'DELETE':
                     $this->getWsObject()->executeEntityDelete();
+
                     break;
             }
         }

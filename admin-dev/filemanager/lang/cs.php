@@ -39,7 +39,7 @@ define('lang_Swipe_help', 'Pro zobrazení možností klikněte na jméno souboru
 define('lang_Upload_base', 'Základní nahrávání');
 define('lang_Upload_java', 'JAVA upload (pro velké soubory)');
 define('lang_Upload_java_help', "Pokud se Java Applet nechce načíst: 1. ujistěte se, že Java je nainstalována ve vašem počítači <a href='http://java.com/en/download/'>[odkaz pro stažení]</a> 2. ujistěte se, že nic není blokováno firewallem");
-define('lang_Upload_base_help', "Přetáhněte soubor(y) do prostoru výše nebo do něj klikněte myší (pro novější prohlížeče) v krajním případě vyberte soubory a klikněte na tlačítko. Po dokončení nahrávání klikněte na tlačítko zpět umístěné v horní části okna.");
+define('lang_Upload_base_help', 'Přetáhněte soubor(y) do prostoru výše nebo do něj klikněte myší (pro novější prohlížeče) v krajním případě vyberte soubory a klikněte na tlačítko. Po dokončení nahrávání klikněte na tlačítko zpět umístěné v horní části okna.');
 define('lang_Type_dir', 'adresář');
 define('lang_Type', 'Typ');
 define('lang_Dimension', 'Rozměr');

@@ -23,7 +23,6 @@
  * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
-
 ob_start();
 $timerStart = microtime(true);
 
@@ -37,18 +36,18 @@ try {
     }
 
     if (!isset($context->employee) || !$context->employee->isLoggedBack()) {
-        Tools::redirectAdmin('index.php?controller=AdminLogin&redirect='.$_SERVER['REQUEST_URI']);
+        Tools::redirectAdmin('index.php?controller=AdminLogin&redirect=' . $_SERVER['REQUEST_URI']);
     }
 
     $iso = $context->language->iso_code;
-    if (file_exists(_PS_TRANSLATIONS_DIR_.$iso.'/errors.php')) {
-        include _PS_TRANSLATIONS_DIR_.$iso.'/errors.php';
+    if (file_exists(_PS_TRANSLATIONS_DIR_ . $iso . '/errors.php')) {
+        include _PS_TRANSLATIONS_DIR_ . $iso . '/errors.php';
     }
-    if (file_exists(_PS_TRANSLATIONS_DIR_.$iso.'/fields.php')) {
-        include _PS_TRANSLATIONS_DIR_.$iso.'/fields.php';
+    if (file_exists(_PS_TRANSLATIONS_DIR_ . $iso . '/fields.php')) {
+        include _PS_TRANSLATIONS_DIR_ . $iso . '/fields.php';
     }
-    if (file_exists(_PS_TRANSLATIONS_DIR_.$iso.'/admin.php')) {
-        include _PS_TRANSLATIONS_DIR_.$iso.'/admin.php';
+    if (file_exists(_PS_TRANSLATIONS_DIR_ . $iso . '/admin.php')) {
+        include _PS_TRANSLATIONS_DIR_ . $iso . '/admin.php';
     }
 
     /* Server Params */
@@ -63,19 +62,19 @@ try {
         define('_PS_BASE_URL_SSL_', Tools::getShopDomainSsl(true));
     }
 
-    $path = dirname(__FILE__).'/themes/';
+    $path = __DIR__ . '/themes/';
     // if the current employee theme is not valid (check layout.tpl presence),
     // reset to default theme
-    if (empty($context->employee->bo_theme) ||
-        !file_exists($path.$context->employee->bo_theme.'/template/layout.tpl')) {
+    if (empty($context->employee->bo_theme)
+        || !file_exists($path . $context->employee->bo_theme . '/template/layout.tpl')) {
         // default admin theme is "default".
         $context->employee->bo_theme = '';
-        if (file_exists($path.'default/template/layout.tpl')) {
+        if (file_exists($path . 'default/template/layout.tpl')) {
             $context->employee->bo_theme = 'default';
         } else {
             // if default theme doesn't exists, try to find one, otherwise throw exception
             foreach (scandir($path, SCANDIR_SORT_NONE) as $theme) {
-                if ($theme[0] != '.' && file_exists($path.$theme.'/template/layout.tpl')) {
+                if ($theme[0] != '.' && file_exists($path . $theme . '/template/layout.tpl')) {
                     $context->employee->bo_theme = $theme;
 
                     break;

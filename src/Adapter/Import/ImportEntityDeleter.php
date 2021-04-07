@@ -86,48 +86,40 @@ final class ImportEntityDeleter implements ImportEntityDeleterInterface
                 $this->deleteCategories();
 
                 break;
-
             case Entity::TYPE_PRODUCTS:
                 $this->deleteProducts();
 
                 break;
-
             case Entity::TYPE_COMBINATIONS:
                 $this->deleteCombinations();
 
                 break;
-
             case Entity::TYPE_CUSTOMERS:
                 $this->truncateTables([
                     'customer',
                 ]);
 
                 break;
-
             case Entity::TYPE_ADDRESSES:
                 $this->truncateTables([
                     'address',
                 ]);
 
                 break;
-
             case Entity::TYPE_MANUFACTURERS:
                 $this->deleteManufacturers();
 
                 break;
-
             case Entity::TYPE_SUPPLIERS:
                 $this->deleteSuppliers();
 
                 break;
-
             case Entity::TYPE_ALIAS:
                 $this->truncateTables([
                     'alias',
                 ]);
 
                 break;
-
             default:
                 throw new NotSupportedImportEntityException("Import entity \"{$importEntity}\" is not supported");
         }

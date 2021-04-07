@@ -35,10 +35,10 @@ class TemplateFinderTest extends TestCase
 
     protected function setUp()
     {
-        $root = realpath(_PS_ROOT_DIR_).'/tests-legacy/resources/template-hierarchy/templates/';
+        $root = realpath(_PS_ROOT_DIR_) . '/tests-legacy/resources/template-hierarchy/templates/';
 
         /* @var TemplateFinderCore */
-        $this->templateFinder = new TemplateFinder(array($root), '.tpl');
+        $this->templateFinder = new TemplateFinder([$root], '.tpl');
     }
 
     protected function tearDown()

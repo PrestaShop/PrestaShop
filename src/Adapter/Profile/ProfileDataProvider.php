@@ -71,6 +71,7 @@ class ProfileDataProvider
             foreach ($profiles as $key => $profile) {
                 if ($profile['id_profile'] == $this->superAdminProfileId) {
                     unset($profiles[$key]);
+
                     break;
                 }
             }

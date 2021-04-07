@@ -87,8 +87,8 @@ class TokenizedUrlsListener
          * every route prefixed by '_' won't be secured
          */
         if (
-            0 === strpos($route, '_') ||
-            0 === strpos($route, 'api_')
+            0 === strpos($route, '_')
+            || 0 === strpos($route, 'api_')
         ) {
             return;
         }

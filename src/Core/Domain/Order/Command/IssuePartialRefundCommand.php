@@ -74,7 +74,7 @@ class IssuePartialRefundCommand extends AbstractRefundCommand
         bool $generateCreditSlip,
         bool $generateVoucher,
         int $voucherRefundType,
-        ?string $voucherRefundAmount = null
+        string $voucherRefundAmount = null
     ) {
         parent::__construct(
             $orderId,

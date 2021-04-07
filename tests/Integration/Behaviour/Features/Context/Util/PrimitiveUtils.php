@@ -53,26 +53,26 @@ class PrimitiveUtils
         switch ($type) {
             case self::TYPE_BOOLEAN:
                 return self::castStringBooleanIntoBoolean($element);
-                break;
 
+                break;
             case self::TYPE_INTEGER:
-                return intval($element);
-                break;
+                return (int) $element;
 
+                break;
             case self::TYPE_DOUBLE:
-                return floatval($element);
-                break;
+                return (float) $element;
 
+                break;
             case self::TYPE_STRING:
                 return $element;
-                break;
 
+                break;
             case self::TYPE_DATETIME:
                 $dateTime = new \DateTime($element);
 
                 return $dateTime;
-                break;
 
+                break;
             case self::TYPE_ARRAY:
                 if ('empty' === $element) {
                     return [];
@@ -84,8 +84,8 @@ class PrimitiveUtils
                 $exploded = explode('; ', $element);
 
                 return $exploded;
-                break;
 
+                break;
             case self::TYPE_NULL:
                 if (('null' === $element) || ('Null' === $element) || ('NULL' === $element)) {
                     return;
@@ -97,11 +97,11 @@ class PrimitiveUtils
             case self::TYPE_OBJECT:
             case self::TYPE_RESOURCE:
             case self::TYPE_UNKNOWN:
-                throw new Exception("Cannot cast element into type $type");
-                break;
+                throw new Exception("Cannot cast element into type ${type}");
 
+                break;
             default:
-                throw new RuntimeException("Unexpected cast type $type, function gettype is not supposed to return it");
+                throw new RuntimeException("Unexpected cast type ${type}, function gettype is not supposed to return it");
         }
     }
 
@@ -127,25 +127,26 @@ class PrimitiveUtils
             case self::TYPE_BOOLEAN:
             case self::TYPE_INTEGER:
                 return $element1 === $element2;
+
                 break;
             case self::TYPE_DOUBLE:
                 // see http://php.net/manual/en/language.types.float.php#language.types.float.comparison
                 $epsilon = 0.00001;
 
                 return abs($element1 - $element2) < $epsilon;
-                break;
 
+                break;
             case self::TYPE_DATETIME:
                 return $element1->format('YmdHis') === $element2->format('YmdHis');
-                break;
 
+                break;
             case self::TYPE_STRING:
                 $cleanedString1 = trim($element1);
                 $cleanedString2 = trim($element2);
 
                 return $cleanedString1 === $cleanedString2;
-                break;
 
+                break;
             case self::TYPE_ARRAY:
                 $castedArray1 = self::castArrayElementsIntoString($element1);
                 $castedArray2 = self::castArrayElementsIntoString($element2);
@@ -154,8 +155,8 @@ class PrimitiveUtils
                 sort($castedArray2);
 
                 return $castedArray1 === $castedArray2;
-                break;
 
+                break;
             case self::TYPE_OBJECT:
             case self::TYPE_RESOURCE:
             case self::TYPE_NULL:
@@ -164,14 +165,14 @@ class PrimitiveUtils
                 } else {
                     return false;
                 }
-                break;
 
+                break;
             case self::TYPE_UNKNOWN:
-                throw new Exception("Cannot compare elements of type $type");
-                break;
+                throw new Exception("Cannot compare elements of type ${type}");
 
+                break;
             default:
-                throw new RuntimeException("Unexpected type $type, function gettype is not supposed to return it");
+                throw new RuntimeException("Unexpected type ${type}, function gettype is not supposed to return it");
         }
     }
 
@@ -186,7 +187,7 @@ class PrimitiveUtils
             return false;
         }
 
-        return boolval($element);
+        return (bool) $element;
     }
 
     /**
@@ -233,31 +234,26 @@ class PrimitiveUtils
      */
     public static function castStringIntegerIntoInteger($element)
     {
-        if (intval($element) !== 0) {
-            return intval($element);
+        if ((int) $element !== 0) {
+            return (int) $element;
         }
 
         switch ($element) {
             case 'first':
             case 'one':
                 return 1;
-
             case 'second':
             case 'two':
                 return 2;
-
             case 'third':
             case 'three':
                 return 3;
-
             case 'four':
                 return 4;
-
             case 'five':
                 return 5;
-
             default:
-                throw new RuntimeException("Unknown string integer: $element");
+                throw new RuntimeException("Unknown string integer: ${element}");
         }
     }
 

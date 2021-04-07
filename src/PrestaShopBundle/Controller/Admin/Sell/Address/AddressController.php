@@ -416,10 +416,12 @@ class AddressController extends FrameworkBundleAdminController
             case 'delivery':
                 $addressType = OrderAddressType::DELIVERY_ADDRESS_TYPE;
                 $addressId = $order->id_address_delivery;
+
                 break;
             case 'invoice':
                 $addressType = OrderAddressType::INVOICE_ADDRESS_TYPE;
                 $addressId = $order->id_address_invoice;
+
                 break;
         }
 
@@ -517,10 +519,12 @@ class AddressController extends FrameworkBundleAdminController
             case 'delivery':
                 $addressType = CartAddressType::DELIVERY_ADDRESS_TYPE;
                 $addressId = $cart->id_address_delivery;
+
                 break;
             case 'invoice':
                 $addressType = CartAddressType::INVOICE_ADDRESS_TYPE;
                 $addressId = $cart->id_address_invoice;
+
                 break;
         }
 

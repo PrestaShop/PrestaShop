@@ -99,7 +99,8 @@ class CategoryFeatureContext extends AbstractDomainFeatureContext
 
         /** @var CategoryTreeChoiceProvider $categoryTreeChoiceProvider */
         $categoryTreeChoiceProvider = $this->container->get(
-            'prestashop.adapter.form.choice_provider.category_tree_choice_provider');
+            'prestashop.adapter.form.choice_provider.category_tree_choice_provider'
+        );
         $categoryTreeIterator = new CategoryTreeIterator($categoryTreeChoiceProvider);
         $parentCategoryId = $categoryTreeIterator->getCategoryId($testCaseData['Parent category']);
 
@@ -206,6 +207,7 @@ class CategoryFeatureContext extends AbstractDomainFeatureContext
         } catch (CategoryNotFoundException $e) {
             return;
         }
+
         throw new RuntimeException(sprintf('Category %s still exists', $categoryReference));
     }
 
@@ -250,7 +252,8 @@ class CategoryFeatureContext extends AbstractDomainFeatureContext
     {
         /** @var CategoryTreeChoiceProvider $categoryTreeChoiceProvider */
         $categoryTreeChoiceProvider = $this->container->get(
-            'prestashop.adapter.form.choice_provider.category_tree_choice_provider');
+            'prestashop.adapter.form.choice_provider.category_tree_choice_provider'
+        );
         $categoryTreeIterator = new CategoryTreeIterator($categoryTreeChoiceProvider);
         $categoryId = $categoryTreeIterator->getCategoryId($rootCategory);
 
@@ -396,9 +399,11 @@ class CategoryFeatureContext extends AbstractDomainFeatureContext
     public function enableCategory(string $categoryReference)
     {
         $editableCategory = $this->getEditableCategory($categoryReference);
-        $this->getCommandBus()->handle(new SetCategoryIsEnabledCommand(
+        $this->getCommandBus()->handle(
+            new SetCategoryIsEnabledCommand(
             $editableCategory->getId()->getValue(),
-            true)
+            true
+        )
         );
     }
 
@@ -410,9 +415,11 @@ class CategoryFeatureContext extends AbstractDomainFeatureContext
     public function disableCategory(string $categoryReference)
     {
         $editableCategory = $this->getEditableCategory($categoryReference);
-        $this->getCommandBus()->handle(new SetCategoryIsEnabledCommand(
-                $editableCategory->getId()->getValue(),
-                false)
+        $this->getCommandBus()->handle(
+            new SetCategoryIsEnabledCommand(
+            $editableCategory->getId()->getValue(),
+            false
+        )
         );
     }
 
@@ -567,7 +574,8 @@ class CategoryFeatureContext extends AbstractDomainFeatureContext
         if (isset($testCaseData['Parent category'])) {
             /** @var CategoryTreeChoiceProvider $categoryTreeChoiceProvider */
             $categoryTreeChoiceProvider = $this->container->get(
-                'prestashop.adapter.form.choice_provider.category_tree_choice_provider');
+                'prestashop.adapter.form.choice_provider.category_tree_choice_provider'
+            );
             $categoryTreeIterator = new CategoryTreeIterator($categoryTreeChoiceProvider);
             $parentCategoryId = $categoryTreeIterator->getCategoryId($testCaseData['Parent category']);
         }

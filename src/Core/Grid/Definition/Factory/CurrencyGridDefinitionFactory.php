@@ -93,33 +93,38 @@ final class CurrencyGridDefinitionFactory extends AbstractGridDefinitionFactory
                         'field' => 'id_currency',
                     ])
             )
-            ->add((new NameColumn('name'))
+            ->add(
+                (new NameColumn('name'))
             ->setName($this->trans('Currency', [], 'Admin.Global'))
             ->setOptions([
                 'field' => 'name',
                 'sortable' => false,
             ])
             )
-            ->add((new DataColumn('symbol'))
+            ->add(
+                (new DataColumn('symbol'))
             ->setName($this->trans('Symbol', [], 'Admin.International.Feature'))
             ->setOptions([
                 'field' => 'symbol',
                 'sortable' => false,
             ])
             )
-            ->add((new DataColumn('iso_code'))
+            ->add(
+                (new DataColumn('iso_code'))
             ->setName($this->trans('ISO code', [], 'Admin.International.Feature'))
             ->setOptions([
                 'field' => 'iso_code',
             ])
             )
-            ->add((new DataColumn('conversion_rate'))
+            ->add(
+                (new DataColumn('conversion_rate'))
             ->setName($this->trans('Exchange rate', [], 'Admin.International.Feature'))
             ->setOptions([
                 'field' => 'conversion_rate',
             ])
             )
-            ->add((new ToggleColumn('active'))
+            ->add(
+                (new ToggleColumn('active'))
             ->setName($this->trans('Enabled', [], 'Admin.Global'))
             ->setOptions([
                 'field' => 'active',
@@ -128,11 +133,13 @@ final class CurrencyGridDefinitionFactory extends AbstractGridDefinitionFactory
                 'route_param_name' => 'currencyId',
             ])
             )
-            ->add((new ActionColumn('actions'))
+            ->add(
+                (new ActionColumn('actions'))
             ->setName($this->trans('Actions', [], 'Admin.Global'))
             ->setOptions([
                 'actions' => (new RowActionCollection())
-                    ->add((new LinkRowAction('edit'))
+                    ->add(
+                        (new LinkRowAction('edit'))
                     ->setIcon('edit')
                     ->setOptions([
                         'route' => 'admin_currencies_edit',
@@ -141,7 +148,8 @@ final class CurrencyGridDefinitionFactory extends AbstractGridDefinitionFactory
                         'clickable_row' => true,
                     ])
                     )
-                    ->add((new SubmitRowAction('delete'))
+                    ->add(
+                        (new SubmitRowAction('delete'))
                     ->setName($this->trans('Delete', [], 'Admin.Actions'))
                     ->setIcon('delete')
                     ->setOptions([
@@ -176,7 +184,7 @@ final class CurrencyGridDefinitionFactory extends AbstractGridDefinitionFactory
     {
         return (new FilterCollection())
             ->add(
-                 (new Filter('id_currency', NumberType::class))
+                (new Filter('id_currency', NumberType::class))
                      ->setTypeOptions([
                          'required' => false,
                          'attr' => [
@@ -184,9 +192,9 @@ final class CurrencyGridDefinitionFactory extends AbstractGridDefinitionFactory
                          ],
                      ])
                      ->setAssociatedColumn('id_currency')
-             )
+            )
             ->add(
-                 (new Filter('name', TextType::class))
+                (new Filter('name', TextType::class))
                      ->setTypeOptions([
                          'required' => false,
                          'attr' => [
@@ -194,9 +202,9 @@ final class CurrencyGridDefinitionFactory extends AbstractGridDefinitionFactory
                          ],
                      ])
                      ->setAssociatedColumn('name')
-             )
+            )
             ->add(
-                 (new Filter('symbol', TextType::class))
+                (new Filter('symbol', TextType::class))
                      ->setTypeOptions([
                          'required' => false,
                          'attr' => [
@@ -204,8 +212,9 @@ final class CurrencyGridDefinitionFactory extends AbstractGridDefinitionFactory
                          ],
                      ])
                      ->setAssociatedColumn('symbol')
-             )
-            ->add((new Filter('iso_code', TextType::class))
+            )
+            ->add(
+                (new Filter('iso_code', TextType::class))
             ->setTypeOptions([
                 'required' => false,
                 'attr' => [
@@ -214,14 +223,16 @@ final class CurrencyGridDefinitionFactory extends AbstractGridDefinitionFactory
             ])
             ->setAssociatedColumn('iso_code')
             )
-            ->add((new Filter('active', YesAndNoChoiceType::class))
+            ->add(
+                (new Filter('active', YesAndNoChoiceType::class))
             ->setTypeOptions([
                 'required' => false,
                 'choice_translation_domain' => false,
             ])
             ->setAssociatedColumn('active')
             )
-            ->add((new Filter('actions', SearchAndResetType::class))
+            ->add(
+                (new Filter('actions', SearchAndResetType::class))
             ->setTypeOptions([
                 'reset_route' => 'admin_common_reset_search_by_filter_id',
                 'reset_route_params' => [

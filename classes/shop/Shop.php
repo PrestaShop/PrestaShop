@@ -373,6 +373,7 @@ class ShopCore extends ObjectModel
                         header('HTTP/1.0 ' . $redirect_code . ' ' . $redirect_header);
                         header('Cache-Control: no-cache');
                         header('Location: ' . Tools::getShopProtocol() . $url);
+
                         exit;
                     }
                 }
@@ -445,6 +446,7 @@ class ShopCore extends ObjectModel
                 $redirect_header = ($redirect_type == 1 ? 'Found' : 'Moved Permanently');
                 header('HTTP/1.0 ' . $redirect_code . ' ' . $redirect_header);
                 header('Location: ' . Tools::getShopProtocol() . $url);
+
                 exit;
             } elseif (defined('_PS_ADMIN_DIR_') && empty($shop->physical_uri)) {
                 $shop_default = new Shop((int) Configuration::get('PS_SHOP_DEFAULT'));
@@ -1107,7 +1109,7 @@ class ShopCore extends ObjectModel
     {
         $table_alias = $table . '_shop';
         if (strpos($table, '.') !== false) {
-            list($table_alias, $table) = explode('.', $table);
+            [$table_alias, $table] = explode('.', $table);
         }
 
         $asso_table = Shop::getAssoTable($table);

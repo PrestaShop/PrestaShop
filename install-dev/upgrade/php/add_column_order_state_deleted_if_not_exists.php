@@ -23,18 +23,17 @@
  * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
-
 function add_column_order_state_deleted_if_not_exists()
 {
-    $res  = true;
-    $column = Db::getInstance()->executeS('SHOW FIELDS FROM `'._DB_PREFIX_.'order_state` LIKE "deleted"');
+    $res = true;
+    $column = Db::getInstance()->executeS('SHOW FIELDS FROM `' . _DB_PREFIX_ . 'order_state` LIKE "deleted"');
 
     if (empty($column)) {
-        $res = Db::getInstance()->execute('ALTER TABLE `'._DB_PREFIX_.'order_state`
+        $res = Db::getInstance()->execute('ALTER TABLE `' . _DB_PREFIX_ . 'order_state`
 			ADD COLUMN `deleted` tinyint(1) UNSIGNED NOT NULL default "0" AFTER `paid`');
     }
     if (!$res) {
-        return array('error' => Db::getInstance()->getNumberError(), 'msg' => Db::getInstance()->getMsgError());
+        return ['error' => Db::getInstance()->getNumberError(), 'msg' => Db::getInstance()->getMsgError()];
     }
 
     return true;

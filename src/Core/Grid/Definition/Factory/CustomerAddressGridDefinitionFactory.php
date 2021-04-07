@@ -120,7 +120,8 @@ final class CustomerAddressGridDefinitionFactory extends AbstractGridDefinitionF
                         'field' => 'phone_number',
                     ])
             )
-            ->add((new ActionColumn('actions'))
+            ->add(
+                (new ActionColumn('actions'))
             ->setName($this->trans('Actions', [], 'Admin.Global'))
             ->setOptions([
                 'actions' => (new RowActionCollection())

@@ -89,7 +89,7 @@ class Calculator
      * @param int|null $computePrecision
      * @param int|null $orderId
      */
-    public function __construct(Cart $cart, $carrierId, ?int $computePrecision = null, ?int $orderId = null)
+    public function __construct(Cart $cart, $carrierId, int $computePrecision = null, int $orderId = null)
     {
         $this->setCart($cart);
         $this->setCarrierId($carrierId);

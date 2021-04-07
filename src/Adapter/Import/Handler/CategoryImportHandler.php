@@ -221,6 +221,7 @@ final class CategoryImportHandler extends AbstractImportHandler
                     'Admin.Advparameters.Notification'
                 )
             );
+
             throw new InvalidDataRowException();
         }
     }
@@ -248,7 +249,7 @@ final class CategoryImportHandler extends AbstractImportHandler
             // Validation for parenting itself
             if ($isValidation && $category->parent == $category->id) {
                 $this->error($this->translator->trans(
-                'The category ID must be unique. It can\'t be the same as the one for the parent category (ID: %1$s).',
+                    'The category ID must be unique. It can\'t be the same as the one for the parent category (ID: %1$s).',
                     $categoryId ?: null,
                     'Admin.Advparameters.Notification'
                 ));
@@ -419,7 +420,7 @@ final class CategoryImportHandler extends AbstractImportHandler
                 $this->error(
                     sprintf(
                         $this->translator->trans(
-                'A category cannot be its own parent. The parent category ID is either missing or unknown (ID: %1$s).',
+                            'A category cannot be its own parent. The parent category ID is either missing or unknown (ID: %1$s).',
                             [],
                             'Admin.Advparameters.Notification'
                         ),
@@ -434,10 +435,10 @@ final class CategoryImportHandler extends AbstractImportHandler
             $category->doNotRegenerateNTree = true;
 
             // If id category AND id category already in base, trying to update
-            if ($category->id &&
-                $category->categoryExists($category->id) &&
-                !in_array($category->id, $this->coreCategories) &&
-                !$runtimeConfig->shouldValidateData()
+            if ($category->id
+                && $category->categoryExists($category->id)
+                && !in_array($category->id, $this->coreCategories)
+                && !$runtimeConfig->shouldValidateData()
             ) {
                 $result = $category->update();
             }

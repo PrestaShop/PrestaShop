@@ -186,6 +186,7 @@ class SearchProvider extends AbstractProvider implements UseDefaultCatalogueInte
             foreach ($filters as $filter) {
                 if (preg_match($filter, $domain)) {
                     $allowedDomains[$domain] = $messages;
+
                     break;
                 }
             }

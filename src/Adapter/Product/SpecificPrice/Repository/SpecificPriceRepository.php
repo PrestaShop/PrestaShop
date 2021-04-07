@@ -119,7 +119,7 @@ class SpecificPriceRepository extends AbstractObjectModelRepository
      *
      * @return array<int, array<string, mixed>>
      */
-    public function getProductSpecificPrices(ProductId $productId, ?int $limit = null, ?int $offset = null, ?array $filters = []): array
+    public function getProductSpecificPrices(ProductId $productId, int $limit = null, int $offset = null, ?array $filters = []): array
     {
         $qb = $this->getSpecificPricesQueryBuilder($productId, $filters)
             ->select('sp.*')

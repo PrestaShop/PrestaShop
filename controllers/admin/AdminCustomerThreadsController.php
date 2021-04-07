@@ -555,6 +555,7 @@ class AdminCustomerThreadsControllerCore extends AdminController
         header('Content-Type: ' . $extension);
         header('Content-Disposition:attachment;filename="' . $filename . '"');
         readfile(_PS_UPLOAD_DIR_ . $filename);
+
         die;
     }
 
@@ -844,7 +845,7 @@ class AdminCustomerThreadsControllerCore extends AdminController
             '<a href="\1">\1</a>\2',
             html_entity_decode(
                 $message['message'],
-            ENT_QUOTES,
+                ENT_QUOTES,
                 'UTF-8'
             )
         );

@@ -232,6 +232,7 @@ class ShopFeatureContext extends AbstractDomainFeatureContext
                             $currentFoundShop->getColor()
                         )
                     );
+
                     continue;
                 }
             }

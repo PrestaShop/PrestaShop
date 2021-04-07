@@ -39,7 +39,7 @@ class PrestaShopBackupCore
     public static $backupDir = '/backups/';
 
     /** @var string custom backup directory. */
-    public $customBackupDir = null;
+    public $customBackupDir;
 
     public $psBackupAll = true;
     public $psBackupDropTable = true;
@@ -165,18 +165,18 @@ class PrestaShopBackupCore
     {
         // Additionnal parameters (action, filename, ajax) are kept for backward compatibility, in case we disable the new controller
         return Context::getContext()->link->getAdminLink(
-                'AdminBackup',
-                true,
-                [
-                    'route' => 'admin_backup_download',
-                    'downloadFileName' => basename($this->id),
-                ],
-                [
-                    'action' => 'backupContent',
-                    'ajax' => 1,
-                    'filename' => basename($this->id),
-                ]
-            );
+            'AdminBackup',
+            true,
+            [
+                'route' => 'admin_backup_download',
+                'downloadFileName' => basename($this->id),
+            ],
+            [
+                'action' => 'backupContent',
+                'ajax' => 1,
+                'filename' => basename($this->id),
+            ]
+        );
     }
 
     /**
@@ -224,7 +224,7 @@ class PrestaShopBackupCore
     {
         if (!$this->psBackupAll) {
             $ignoreInsertTable = [_DB_PREFIX_ . 'connections', _DB_PREFIX_ . 'connections_page', _DB_PREFIX_
-                . 'connections_source', _DB_PREFIX_ . 'guest', _DB_PREFIX_ . 'statssearch',
+            . 'connections_source', _DB_PREFIX_ . 'guest', _DB_PREFIX_ . 'statssearch',
             ];
         } else {
             $ignoreInsertTable = [];

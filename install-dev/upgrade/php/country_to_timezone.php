@@ -23,8 +23,7 @@
  * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
-
-$timezones = array(
+$timezones = [
     'AD' => 'Europe/Andorra',
     'AE' => 'Asia/Dubai',
     'AF' => 'Asia/Kabul',
@@ -269,9 +268,10 @@ $timezones = array(
     'ZA' => 'Africa/Johannesburg',
     'ZM' => 'Africa/Lusaka',
     'ZW' => 'Africa/Harare',
-);
+];
 
 if (isset($timezones[$_GET['country']]) && $timezones[$_GET['country']]) {
     die($timezones[$_GET['country']]);
 }
+
 die('');

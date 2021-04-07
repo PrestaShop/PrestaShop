@@ -23,12 +23,11 @@
  * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
-
 function ps1700_stores()
 {
     $stores = Db::getInstance()->executeS('
         SELECT `id_store`, `hours`
-        FROM `'._DB_PREFIX_.'store`
+        FROM `' . _DB_PREFIX_ . 'store`
     ');
 
     $result = true;
@@ -39,15 +38,15 @@ function ps1700_stores()
                 $hours[$key] = [$h];
             }
         } else {
-            $hours = array();
+            $hours = [];
         }
         $hours = json_encode($hours);
 
         $result &= Db::getInstance()->execute(
             '
-            UPDATE `'._DB_PREFIX_.'store`
-            SET `hours` = \''.$hours.'\'
-            WHERE `id_store` = '.$store['id_store']
+            UPDATE `' . _DB_PREFIX_ . 'store`
+            SET `hours` = \'' . $hours . '\'
+            WHERE `id_store` = ' . $store['id_store']
         );
     }
 

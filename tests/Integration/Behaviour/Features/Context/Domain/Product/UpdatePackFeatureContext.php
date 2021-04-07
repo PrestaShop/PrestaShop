@@ -141,6 +141,7 @@ class UpdatePackFeatureContext extends AbstractProductFeatureContext
 
                     //unset asserted product to check if there was any excessive actual products after loops
                     unset($packedProducts[$key]);
+
                     break;
                 }
             }

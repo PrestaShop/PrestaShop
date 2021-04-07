@@ -23,12 +23,11 @@
  * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
-
 function ps1605_change_index()
 {
-    $index = Db::getInstance()->executeS('SHOW INDEX FROM `'._DB_PREFIX_.'order_detail_tax` WHERE Key_name = "id_tax"');
+    $index = Db::getInstance()->executeS('SHOW INDEX FROM `' . _DB_PREFIX_ . 'order_detail_tax` WHERE Key_name = "id_tax"');
     if (is_array($index) && count($index)) {
-        Db::getInstance()->execute('ALTER IGNORE TABLE `'._DB_PREFIX_.'order_detail_tax` DROP INDEX `id_tax`');
+        Db::getInstance()->execute('ALTER IGNORE TABLE `' . _DB_PREFIX_ . 'order_detail_tax` DROP INDEX `id_tax`');
     }
-    Db::getInstance()->execute('ALTER IGNORE TABLE `'._DB_PREFIX_.'order_detail_tax` ADD INDEX (`id_tax`)');
+    Db::getInstance()->execute('ALTER IGNORE TABLE `' . _DB_PREFIX_ . 'order_detail_tax` ADD INDEX (`id_tax`)');
 }

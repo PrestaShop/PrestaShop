@@ -58,7 +58,7 @@ class WebserviceSpecificManagementImagesCore implements WebserviceSpecificManage
     /**
      * @var string The image type (product, category, general,...)
      */
-    protected $imageType = null;
+    protected $imageType;
 
     /**
      * @var int The maximum size supported when uploading images, in bytes
@@ -73,7 +73,7 @@ class WebserviceSpecificManagementImagesCore implements WebserviceSpecificManage
     /**
      * @var string The product image declination id
      */
-    protected $productImageDeclinationId = null;
+    protected $productImageDeclinationId;
 
     /**
      * @var bool If the current image management has to manage a "default" image (i.e. "No product available")
@@ -83,8 +83,8 @@ class WebserviceSpecificManagementImagesCore implements WebserviceSpecificManage
     /**
      * @var string The file path of the image to display. If not null, the image will be displayed, even if the XML output was not empty
      */
-    public $imgToDisplay = null;
-    public $imageResource = null;
+    public $imgToDisplay;
+    public $imageResource;
 
     /* ------------------------------------------------
      * GETTERS & SETTERS
@@ -319,7 +319,6 @@ class WebserviceSpecificManagementImagesCore implements WebserviceSpecificManage
                 return $this->manageDeclinatedImages($directory);
 
                 break;
-
             // product image management : many image for one entity (product)
             case 'products':
                 return $this->manageProductImages();
@@ -373,7 +372,6 @@ class WebserviceSpecificManagementImagesCore implements WebserviceSpecificManage
                 }
 
                 break;
-
             // Set the image path on display in relation to the mail image
             case 'mail':
                 if (in_array($this->wsObject->method, ['GET', 'HEAD', 'PUT'])) {
@@ -384,7 +382,6 @@ class WebserviceSpecificManagementImagesCore implements WebserviceSpecificManage
                 }
 
                 break;
-
             // Set the image path on display in relation to the invoice image
             case 'invoice':
                 if (in_array($this->wsObject->method, ['GET', 'HEAD', 'PUT'])) {
@@ -395,7 +392,6 @@ class WebserviceSpecificManagementImagesCore implements WebserviceSpecificManage
                 }
 
                 break;
-
             // Set the image path on display in relation to the icon store image
             case 'store_icon':
                 if (in_array($this->wsObject->method, ['GET', 'HEAD', 'PUT'])) {
@@ -406,7 +402,6 @@ class WebserviceSpecificManagementImagesCore implements WebserviceSpecificManage
                 }
 
                 break;
-
             // List the general image types
             case '':
                 $this->output .= $this->objOutput->getObjectRender()->renderNodeHeader('general_image_types', []);
@@ -423,7 +418,6 @@ class WebserviceSpecificManagementImagesCore implements WebserviceSpecificManage
                 return true;
 
                 break;
-
             // If the image type does not exist...
             default:
                 $exception = new WebserviceException(sprintf('General image of type "%s" does not exist', $this->wsObject->urlSegment[2]), [53, 400]);
@@ -443,7 +437,7 @@ class WebserviceSpecificManagementImagesCore implements WebserviceSpecificManage
                 if ($this->writePostedImageOnDisk($path, null, null)) {
                     if ($this->wsObject->urlSegment[2] == 'header') {
                         $logo_name = Configuration::get('PS_LOGO') ? Configuration::get('PS_LOGO') : 'logo.jpg';
-                        list($width, $height, $type, $attr) = getimagesize(_PS_IMG_DIR_ . $logo_name);
+                        [$width, $height, $type, $attr] = getimagesize(_PS_IMG_DIR_ . $logo_name);
                         Configuration::updateValue('SHOP_LOGO_WIDTH', (int) round($width));
                         Configuration::updateValue('SHOP_LOGO_HEIGHT', (int) round($height));
                     }
@@ -936,7 +930,7 @@ class WebserviceSpecificManagementImagesCore implements WebserviceSpecificManage
      */
     protected function writeImageOnDisk($base_path, $new_path, $dest_width = null, $dest_height = null, $image_types = null, $parent_path = null)
     {
-        list($source_width, $source_height, $type, $attr) = getimagesize($base_path);
+        [$source_width, $source_height, $type, $attr] = getimagesize($base_path);
         if (!$source_width) {
             throw new WebserviceException('Image width was null', [68, 400]);
         }
@@ -985,11 +979,11 @@ class WebserviceSpecificManagementImagesCore implements WebserviceSpecificManage
 
         // Build the image
         if (
-            !($dest_image = imagecreatetruecolor($dest_width, $dest_height)) ||
-            !($white = imagecolorallocate($dest_image, 255, 255, 255)) ||
-            !imagefill($dest_image, 0, 0, $white) ||
-            !imagecopyresampled($dest_image, $source_image, $border_width, $border_height, 0, 0, $next_width, $next_height, $source_width, $source_height) ||
-            !imagecolortransparent($dest_image, $white)
+            !($dest_image = imagecreatetruecolor($dest_width, $dest_height))
+            || !($white = imagecolorallocate($dest_image, 255, 255, 255))
+            || !imagefill($dest_image, 0, 0, $white)
+            || !imagecopyresampled($dest_image, $source_image, $border_width, $border_height, 0, 0, $next_width, $next_height, $source_width, $source_height)
+            || !imagecolortransparent($dest_image, $white)
         ) {
             throw new WebserviceException(sprintf('Unable to build the image "%s".', str_replace(_PS_ROOT_DIR_, '[SHOP_ROOT_DIR]', $new_path)), [69, 500]);
         }

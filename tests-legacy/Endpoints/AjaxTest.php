@@ -183,7 +183,7 @@ class AjaxTest extends AbstractEndpointAdminTest
     public function testAjaxEndpointForMarkingNotificationAsRead()
     {
         $_POST['updateElementEmployee'] = 1;
-        $_POST['updateElementEmployeeType'] = 'order';'incompatibleValue';
+        $_POST['updateElementEmployeeType'] = 'order';
 
         ob_start();
         require _PS_ROOT_DIR_ . '/admin-dev/ajax.php';

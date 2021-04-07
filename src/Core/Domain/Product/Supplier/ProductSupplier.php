@@ -74,7 +74,7 @@ class ProductSupplier
         int $currencyId,
         string $reference,
         string $priceTaxExcluded,
-        ?int $productSupplierId = null
+        int $productSupplierId = null
     ) {
         $this->supplierId = new SupplierId($supplierId);
         $this->currencyId = new CurrencyId($currencyId);

@@ -75,16 +75,17 @@ class FilterTest extends TestCase
         $this->assertSame(0, $this->filter->getMagnitude());
         $this->assertTrue($this->filter->isDisplayed());
         $this->assertFalse($this->filter->isActive());
-        $this->assertSame([
-            'label' => '',
-            'type' => '',
-            'active' => false,
-            'displayed' => true,
-            'properties' => [],
-            'magnitude' => 0,
-            'value' => null,
-            'nextEncodedFacets' => [],
-        ],
+        $this->assertSame(
+            [
+                'label' => '',
+                'type' => '',
+                'active' => false,
+                'displayed' => true,
+                'properties' => [],
+                'magnitude' => 0,
+                'value' => null,
+                'nextEncodedFacets' => [],
+            ],
             $this->filter->toArray()
         );
     }

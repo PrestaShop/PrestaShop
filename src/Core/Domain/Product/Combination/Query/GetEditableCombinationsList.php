@@ -83,10 +83,10 @@ class GetEditableCombinationsList
     public function __construct(
         int $productId,
         int $languageId,
-        ?int $limit = null,
-        ?int $offset = null,
-        ?string $orderBy = null,
-        ?string $orderWay = null,
+        int $limit = null,
+        int $offset = null,
+        string $orderBy = null,
+        string $orderWay = null,
         array $filters = []
     ) {
         $this->productId = new ProductId($productId);

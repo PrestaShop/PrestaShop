@@ -119,13 +119,13 @@ final class ProfileQueryBuilder extends AbstractDoctrineQueryBuilder
             }
 
             if ('id_profile' === $name) {
-                $qb->andWhere("p.id_profile = :$name");
+                $qb->andWhere("p.id_profile = :${name}");
                 $qb->setParameter($name, $value);
 
                 continue;
             }
 
-            $qb->andWhere("$name LIKE :$name");
+            $qb->andWhere("${name} LIKE :${name}");
             $qb->setParameter($name, '%' . $value . '%');
         }
 

@@ -27,10 +27,10 @@
 namespace LegacyTests\Unit\Core\Localization\Specification;
 
 use PHPUnit\Framework\TestCase;
-use PrestaShop\PrestaShop\Core\Localization\Currency;
 use PrestaShop\PrestaShop\Core\Localization\CLDR\Locale;
 use PrestaShop\PrestaShop\Core\Localization\CLDR\LocaleData;
 use PrestaShop\PrestaShop\Core\Localization\CLDR\NumberSymbolsData;
+use PrestaShop\PrestaShop\Core\Localization\Currency;
 use PrestaShop\PrestaShop\Core\Localization\Specification\Factory as FactorySpecification;
 
 class FactoryTest extends TestCase

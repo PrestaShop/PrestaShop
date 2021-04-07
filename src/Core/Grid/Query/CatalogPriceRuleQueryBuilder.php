@@ -210,11 +210,12 @@ final class CatalogPriceRuleQueryBuilder extends AbstractDoctrineQueryBuilder
                 // searching for "10.1" will only return 10.1
                 $qb->andWhere('TRUNCATE(' . $allowedFiltersAliasMap[$filterName] . ',' . $numberOfDecimals . ') = :' . $filterName);
                 $qb->setParameter($filterName, $value);
+
                 continue;
             }
 
             $qb->andWhere($allowedFiltersAliasMap[$filterName] . ' LIKE :' . $filterName);
-            $qb->setParameter($filterName, "%$value%");
+            $qb->setParameter($filterName, "%${value}%");
         }
     }
 

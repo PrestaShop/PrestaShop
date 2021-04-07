@@ -333,11 +333,11 @@ class FrameworkBundleAdminController extends Controller
         return (
                 $action === 'delete' . $suffix && $this->isGranted(PageVoter::DELETE, $object)
             ) || (
-                ($action === 'activate' . $suffix || $action === 'deactivate' . $suffix) &&
-                $this->isGranted(PageVoter::UPDATE, $object)
+                ($action === 'activate' . $suffix || $action === 'deactivate' . $suffix)
+                && $this->isGranted(PageVoter::UPDATE, $object)
             ) || (
-                ($action === 'duplicate' . $suffix) &&
-                ($this->isGranted(PageVoter::UPDATE, $object) || $this->isGranted(PageVoter::CREATE, $object))
+                ($action === 'duplicate' . $suffix)
+                && ($this->isGranted(PageVoter::UPDATE, $object) || $this->isGranted(PageVoter::CREATE, $object))
             );
     }
 

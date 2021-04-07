@@ -53,9 +53,9 @@ class TranslateCore
         $str = str_replace('"', '&quot;', $str);
 
         if (
-            $sprintf !== null &&
-            (!is_array($sprintf) || !empty($sprintf)) &&
-            !(count($sprintf) === 1 && isset($sprintf['legacy']))
+            $sprintf !== null
+            && (!is_array($sprintf) || !empty($sprintf))
+            && !(count($sprintf) === 1 && isset($sprintf['legacy']))
         ) {
             $str = Translate::checkAndReplaceArgs($str, $sprintf);
         }
@@ -116,9 +116,9 @@ class TranslateCore
         $str = str_replace('"', '&quot;', $str);
 
         if (
-            $sprintf !== null &&
-            (!is_array($sprintf) || !empty($sprintf)) &&
-            !(count($sprintf) === 1 && isset($sprintf['legacy']))
+            $sprintf !== null
+            && (!is_array($sprintf) || !empty($sprintf))
+            && !(count($sprintf) === 1 && isset($sprintf['legacy']))
         ) {
             $str = Translate::checkAndReplaceArgs($str, $sprintf);
         }
@@ -248,9 +248,9 @@ class TranslateCore
             }
 
             if (
-                $sprintf !== null &&
-                (!is_array($sprintf) || !empty($sprintf)) &&
-                !(count($sprintf) === 1 && isset($sprintf['legacy']))
+                $sprintf !== null
+                && (!is_array($sprintf) || !empty($sprintf))
+                && !(count($sprintf) === 1 && isset($sprintf['legacy']))
             ) {
                 $ret = Translate::checkAndReplaceArgs($ret, $sprintf);
             }
@@ -316,9 +316,9 @@ class TranslateCore
         $str = (array_key_exists('PDF' . $key, $_LANGPDF) ? $_LANGPDF['PDF' . $key] : $string);
 
         if (
-            $sprintf !== null &&
-            (!is_array($sprintf) || !empty($sprintf)) &&
-            !(count($sprintf) === 1 && isset($sprintf['legacy']))
+            $sprintf !== null
+            && (!is_array($sprintf) || !empty($sprintf))
+            && !(count($sprintf) === 1 && isset($sprintf['legacy']))
         ) {
             $str = Translate::checkAndReplaceArgs($str, $sprintf);
         }

@@ -127,16 +127,19 @@ class LocalizationConfigurationType extends TranslatorAwareType
                     'data-toggle' => 'select2',
                 ],
             ])
-            ->add('detect_country_from_browser', SwitchType::class, [
-                'label' => $this->trans(
-                    'Set default country from browser language',
-                    'Admin.International.Feature'
-                ),
-                'help' => $this->trans(
-                    'Set country corresponding to browser language.',
-                    'Admin.International.Help'
-                ),
-            ]
+            ->add(
+                'detect_country_from_browser',
+                SwitchType::class,
+                [
+                    'label' => $this->trans(
+                        'Set default country from browser language',
+                        'Admin.International.Feature'
+                    ),
+                    'help' => $this->trans(
+                        'Set country corresponding to browser language.',
+                        'Admin.International.Help'
+                    ),
+                ]
             )
             ->add('default_currency', ChoiceType::class, [
                 'choices' => $this->currencyChoices,

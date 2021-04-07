@@ -214,8 +214,8 @@ final class EmployeeFormDataHandler implements FormDataHandlerInterface
         }
 
         return
-            null !== $formData['change_password']['old_password'] &&
-            null !== $formData['change_password']['new_password']
+            null !== $formData['change_password']['old_password']
+            && null !== $formData['change_password']['new_password']
         ;
     }
 }

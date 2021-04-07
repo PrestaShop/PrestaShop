@@ -122,7 +122,8 @@ class TaxOptionsType extends TranslatorAwareType
                 'required' => false,
                 'help' => $this->trans(
                     'If you disable the ecotax, the ecotax for all your products will be set to 0.',
-                    'Admin.International.Help'),
+                    'Admin.International.Help'
+                ),
             ])
         ;
 
@@ -130,10 +131,12 @@ class TaxOptionsType extends TranslatorAwareType
             $builder->add('eco_tax_rule_group', ChoiceType::class, [
                 'label' => $this->trans(
                     'Ecotax',
-                    'Admin.International.Feature'),
+                    'Admin.International.Feature'
+                ),
                 'help' => $this->trans(
                     'Define the ecotax (e.g. French ecotax: 20%).',
-                    'Admin.International.Help'),
+                    'Admin.International.Help'
+                ),
                 'choices' => $this->taxRuleGroupChoiceProvider->getChoices(),
             ]);
         }

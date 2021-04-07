@@ -88,7 +88,6 @@ class NotificationCore
 					LIMIT 5';
 
                 break;
-
             case 'customer_message':
                 $sql = '
 					SELECT SQL_CALC_FOUND_ROWS c.`id_customer_message`, ct.`id_customer`, ct.`id_customer_thread`, ct.`email`, ct.`status`, c.`date_add`, cu.`firstname`, cu.`lastname`

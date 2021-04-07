@@ -127,8 +127,8 @@ class OrderInvoiceAddressForViewing
         string $postCode,
         string $phone,
         string $phoneMobile,
-        ?string $vatNumber = null,
-        ?string $dni = null
+        string $vatNumber = null,
+        string $dni = null
     ) {
         $this->addressId = $addressId;
         $this->firstName = $firstName;

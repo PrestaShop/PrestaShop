@@ -73,7 +73,7 @@ class LogRepository implements RepositoryInterface, DoctrineQueryBuilderInterfac
      */
     public function findAll()
     {
-        $statement = $this->connection->query("SELECT l.* FROM $this->logTable l");
+        $statement = $this->connection->query("SELECT l.* FROM {$this->logTable} l");
 
         return $statement->fetchAll();
     }
@@ -93,7 +93,7 @@ class LogRepository implements RepositoryInterface, DoctrineQueryBuilderInterfac
         $parameters = $queryBuilder->getParameters();
 
         foreach ($parameters as $pattern => $value) {
-            $query = str_replace(":$pattern", $value, $query);
+            $query = str_replace(":${pattern}", $value, $query);
         }
 
         return $query;
@@ -142,7 +142,7 @@ class LogRepository implements RepositoryInterface, DoctrineQueryBuilderInterfac
 
         if (!empty($scalarFilters)) {
             foreach ($scalarFilters as $column => $value) {
-                $qb->andWhere("$column LIKE :$column");
+                $qb->andWhere("${column} LIKE :${column}");
                 $qb->setParameter($column, '%' . $value . '%');
             }
         }
@@ -277,8 +277,8 @@ class LogRepository implements RepositoryInterface, DoctrineQueryBuilderInterfac
             }
 
             if ('date_add' == $filterName) {
-                if (!empty($filterValue['from']) &&
-                    !empty($filterValue['to'])
+                if (!empty($filterValue['from'])
+                    && !empty($filterValue['to'])
                 ) {
                     $qb->andWhere('l.date_add >= :date_from AND l.date_add <= :date_to');
                     $qb->setParameter('date_from', sprintf('%s 0:0:0', $filterValue['from']));
@@ -288,7 +288,7 @@ class LogRepository implements RepositoryInterface, DoctrineQueryBuilderInterfac
                 continue;
             }
 
-            $qb->andWhere("$filterName LIKE :$filterName");
+            $qb->andWhere("${filterName} LIKE :${filterName}");
             $qb->setParameter($filterName, '%' . $filterValue . '%');
         }
 

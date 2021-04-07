@@ -153,7 +153,7 @@ class AddCustomerAddressCommand
         string $address2 = null,
         int $id_state = 0,
         string $phone = null,
-        ?string $phone_mobile = null,
+        string $phone_mobile = null,
         string $other = null
     ) {
         $this->customerId = new CustomerId($customerId);

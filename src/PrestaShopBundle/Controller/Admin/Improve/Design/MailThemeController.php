@@ -487,9 +487,11 @@ class MailThemeController extends FrameworkBundleAdminController
         switch ($type) {
             case MailTemplateInterface::HTML_TYPE:
                 $renderedLayout = $renderer->renderHtml($layout, $language);
+
                 break;
             case MailTemplateInterface::TXT_TYPE:
                 $renderedLayout = $renderer->renderTxt($layout, $language);
+
                 break;
             default:
                 throw new NotFoundHttpException(sprintf('Requested type %s is not managed, please use one of these: %s', $type, implode(',', [MailTemplateInterface::HTML_TYPE, MailTemplateInterface::TXT_TYPE])));
@@ -523,6 +525,7 @@ class MailThemeController extends FrameworkBundleAdminController
                 && $layoutInterface->getModuleName() == $module
             ) {
                 $layout = $layoutInterface;
+
                 break;
             }
         }

@@ -98,18 +98,23 @@ final class ImageCopier
             case 'products':
                 $image_obj = new Image($imageId);
                 $path = $image_obj->getPathForCreation();
+
                 break;
             case 'categories':
                 $path = $this->configuration->get('_PS_CAT_IMG_DIR_') . (int) $entityId;
+
                 break;
             case 'manufacturers':
                 $path = $this->configuration->get('_PS_MANU_IMG_DIR_') . (int) $entityId;
+
                 break;
             case 'suppliers':
                 $path = $this->configuration->get('_PS_SUPP_IMG_DIR_') . (int) $entityId;
+
                 break;
             case 'stores':
                 $path = $this->configuration->get('_PS_STORE_IMG_DIR_') . (int) $entityId;
+
                 break;
         }
 
@@ -239,7 +244,7 @@ final class ImageCopier
         $pathInfos = array_reverse($pathInfos);
         $path = '';
         foreach ($pathInfos as $pathInfo) {
-            list($width, $height, $path) = $pathInfo;
+            [$width, $height, $path] = $pathInfo;
             if ($width >= $targetWidth && $height >= $targetHeight) {
                 return $path;
             }

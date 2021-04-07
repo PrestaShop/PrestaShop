@@ -30,20 +30,20 @@
 class AddressCore extends ObjectModel
 {
     /** @var int Customer ID which address belongs to */
-    public $id_customer = null;
+    public $id_customer;
 
     /** @var int Manufacturer ID which address belongs to */
-    public $id_manufacturer = null;
+    public $id_manufacturer;
 
     /** @var int Supplier ID which address belongs to */
-    public $id_supplier = null;
+    public $id_supplier;
 
     /**
      * @since 1.5.0
      *
      * @var int Warehouse ID which address belongs to
      */
-    public $id_warehouse = null;
+    public $id_warehouse;
 
     /** @var int Country ID */
     public $id_country;

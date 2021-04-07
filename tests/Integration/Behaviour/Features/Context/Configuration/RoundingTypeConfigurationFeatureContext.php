@@ -40,15 +40,19 @@ class RoundingTypeConfigurationFeatureContext extends AbstractConfigurationFeatu
         switch ($value) {
             case 'each article':
                 $this->setConfiguration('PS_ROUND_TYPE', Order::ROUND_ITEM);
+
                 break;
             case 'each line':
                 $this->setConfiguration('PS_ROUND_TYPE', Order::ROUND_LINE);
+
                 break;
             case 'cart total':
                 $this->setConfiguration('PS_ROUND_TYPE', Order::ROUND_TOTAL);
+
                 break;
             default:
                 throw new \Exception('Unknown config value for specific shop configuration for "rounding type": ' . $value);
+
                 break;
         }
     }

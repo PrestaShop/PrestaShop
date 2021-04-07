@@ -131,7 +131,7 @@ class ProductController extends FrameworkBundleAdminController
      *
      * @return Response
      */
-    private function renderProductForm(FormInterface $productForm, ?int $productId = null): Response
+    private function renderProductForm(FormInterface $productForm, int $productId = null): Response
     {
         $shopContext = $this->get('prestashop.adapter.shop.context');
         $isMultiShopContext = count($shopContext->getContextListShopID()) > 1;

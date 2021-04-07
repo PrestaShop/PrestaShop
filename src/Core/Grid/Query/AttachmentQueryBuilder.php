@@ -120,10 +120,12 @@ final class AttachmentQueryBuilder extends AbstractDoctrineQueryBuilder
             ->select('pa.`id_attachment`, COUNT(*) as product_count')
             ->groupBy('id_attachment');
 
-        $qb->leftJoin('a',
+        $qb->leftJoin(
+            'a',
             '(' . $productCountQb->getSQL() . ')',
             'virtual_product_attachment',
-            'a.`id_attachment` = virtual_product_attachment.`id_attachment`');
+            'a.`id_attachment` = virtual_product_attachment.`id_attachment`'
+        );
 
         $qb->andWhere('al.`id_lang` = :employee_id_lang');
         $qb->setParameter('employee_id_lang', $this->employeeIdLang);

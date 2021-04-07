@@ -70,7 +70,8 @@ class OrderReturnPresenter implements PresenterInterface
 
         $orderReturnLazyArray = new OrderReturnLazyArray($this->prefix, $this->link, $orderReturn);
 
-        Hook::exec('actionPresentOrderReturn',
+        Hook::exec(
+            'actionPresentOrderReturn',
             ['presentedOrderReturn' => &$orderReturnLazyArray]
         );
 

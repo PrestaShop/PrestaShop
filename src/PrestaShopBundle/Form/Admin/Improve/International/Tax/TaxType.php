@@ -98,7 +98,8 @@ class TaxType extends TranslatorAwareType
                             'Admin.Notifications.Error',
                             [
                                 sprintf('"%s"', $this->trans(
-                                    'Rate', 'Admin.International.Feature'
+                                    'Rate',
+                                    'Admin.International.Feature'
                                 )),
                             ]
                         ),

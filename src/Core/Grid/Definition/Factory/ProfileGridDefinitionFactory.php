@@ -105,28 +105,33 @@ final class ProfileGridDefinitionFactory extends AbstractGridDefinitionFactory
     protected function getColumns()
     {
         return (new ColumnCollection())
-            ->add((new BulkActionColumn('bulk'))
+            ->add(
+                (new BulkActionColumn('bulk'))
             ->setOptions([
                 'bulk_field' => 'id_profile',
             ])
             )
-            ->add((new DataColumn('id_profile'))
+            ->add(
+                (new DataColumn('id_profile'))
             ->setName($this->trans('ID', [], 'Admin.Global'))
             ->setOptions([
                 'field' => 'id_profile',
             ])
             )
-            ->add((new DataColumn('name'))
+            ->add(
+                (new DataColumn('name'))
             ->setName($this->trans('Name', [], 'Admin.Global'))
             ->setOptions([
                 'field' => 'name',
             ])
             )
-            ->add((new ActionColumn('actions'))
+            ->add(
+                (new ActionColumn('actions'))
             ->setName($this->trans('Actions', [], 'Admin.Global'))
             ->setOptions([
                 'actions' => (new RowActionCollection())
-                    ->add((new LinkRowAction('edit'))
+                    ->add(
+                        (new LinkRowAction('edit'))
                     ->setIcon('edit')
                     ->setName($this->trans('Edit', [], 'Admin.Actions'))
                     ->setOptions([
@@ -154,15 +159,18 @@ final class ProfileGridDefinitionFactory extends AbstractGridDefinitionFactory
     protected function getGridActions()
     {
         return (new GridActionCollection())
-            ->add((new SimpleGridAction('common_refresh_list'))
+            ->add(
+                (new SimpleGridAction('common_refresh_list'))
             ->setName($this->trans('Refresh list', [], 'Admin.Advparameters.Feature'))
             ->setIcon('refresh')
             )
-            ->add((new SimpleGridAction('common_show_query'))
+            ->add(
+                (new SimpleGridAction('common_show_query'))
             ->setName($this->trans('Show SQL query', [], 'Admin.Actions'))
             ->setIcon('code')
             )
-            ->add((new SimpleGridAction('common_export_sql_manager'))
+            ->add(
+                (new SimpleGridAction('common_export_sql_manager'))
             ->setName($this->trans('Export to SQL Manager', [], 'Admin.Actions'))
             ->setIcon('storage')
             )
@@ -175,7 +183,8 @@ final class ProfileGridDefinitionFactory extends AbstractGridDefinitionFactory
     protected function getFilters()
     {
         return (new FilterCollection())
-            ->add((new Filter('id_profile', TextType::class))
+            ->add(
+                (new Filter('id_profile', TextType::class))
             ->setTypeOptions([
                 'required' => false,
                 'size' => 'small',
@@ -185,7 +194,8 @@ final class ProfileGridDefinitionFactory extends AbstractGridDefinitionFactory
             ])
             ->setAssociatedColumn('id_profile')
             )
-            ->add((new Filter('name', TextType::class))
+            ->add(
+                (new Filter('name', TextType::class))
             ->setTypeOptions([
                 'required' => false,
                 'attr' => [
@@ -194,7 +204,8 @@ final class ProfileGridDefinitionFactory extends AbstractGridDefinitionFactory
             ])
             ->setAssociatedColumn('name')
             )
-            ->add((new Filter('actions', SearchAndResetType::class))
+            ->add(
+                (new Filter('actions', SearchAndResetType::class))
             ->setTypeOptions([
                 'attr' => [
                     'data-url' => $this->resetActionUrl,

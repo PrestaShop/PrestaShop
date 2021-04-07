@@ -134,13 +134,13 @@ class AdminTranslationsControllerCore extends AdminController
         // Create a title for each translation page
         $title = $this->trans(
             '%1$s (Language: %2$s, Theme: %3$s)',
-                [
-                    '%1$s' => (empty($this->translations_informations[$this->type_selected]['name']) ? false : $this->translations_informations[$this->type_selected]['name']),
-                    '%2$s' => $this->lang_selected->name,
-                    '%3$s' => $this->theme_selected ? $this->theme_selected : $this->trans('None', [], 'Admin.Global'),
-                ],
-                'Admin.International.Feature'
-            );
+            [
+                '%1$s' => (empty($this->translations_informations[$this->type_selected]['name']) ? false : $this->translations_informations[$this->type_selected]['name']),
+                '%2$s' => $this->lang_selected->name,
+                '%3$s' => $this->theme_selected ? $this->theme_selected : $this->trans('None', [], 'Admin.Global'),
+            ],
+            'Admin.International.Feature'
+        );
 
         // Set vars for all forms
         $this->tpl_view_vars = [
@@ -541,6 +541,7 @@ class AdminTranslationsControllerCore extends AdminController
                 ob_end_flush();
                 readfile($file_name);
                 @unlink($file_name);
+
                 exit;
             }
             $this->errors[] = $this->trans('An error occurred while creating archive.', [], 'Admin.International.Notification');
@@ -1130,7 +1131,6 @@ class AdminTranslationsControllerCore extends AdminController
                 }
 
                 break;
-
             case 'back':
                 $directories = [
                     'php' => [
@@ -1156,7 +1156,6 @@ class AdminTranslationsControllerCore extends AdminController
                 }
 
                 break;
-
             case 'errors':
                 $directories['php'] = [
                     _PS_ROOT_DIR_ => scandir(_PS_ROOT_DIR_, SCANDIR_SORT_NONE),
@@ -1172,12 +1171,10 @@ class AdminTranslationsControllerCore extends AdminController
                 $directories['php'] = array_merge($directories['php'], $this->listFiles(_PS_OVERRIDE_DIR_ . 'classes/', [], 'php'));
 
                 break;
-
             case 'fields':
                 $directories['php'] = $this->listFiles(_PS_CLASS_DIR_, [], 'php');
 
                 break;
-
             case 'pdf':
                 $tpl_theme = Tools::file_exists_cache(_PS_THEME_SELECTED_DIR_ . 'pdf/') ? scandir(_PS_THEME_SELECTED_DIR_ . 'pdf/', SCANDIR_SORT_NONE) : [];
                 $directories = [
@@ -1194,7 +1191,6 @@ class AdminTranslationsControllerCore extends AdminController
                 $directories['php'] = array_merge($directories['php'], $this->getModulesHasPDF(true));
 
                 break;
-
             case 'mails':
                 $directories['php'] = [
                     _PS_FRONT_CONTROLLER_DIR_ => scandir(_PS_FRONT_CONTROLLER_DIR_, SCANDIR_SORT_NONE),
@@ -1237,7 +1233,6 @@ class AdminTranslationsControllerCore extends AdminController
                 }
 
                 break;
-
             case 'back':
                 // Parsing file in Back office
                 if ($type_file == 'php') {
@@ -1249,13 +1244,11 @@ class AdminTranslationsControllerCore extends AdminController
                 }
 
                 break;
-
             case 'errors':
                 // Parsing file for all errors syntax
                 $regex = '/Tools::displayError\((\')' . _PS_TRANS_PATTERN_ . '\'(,\s*(.+))?\)/U';
 
                 break;
-
             case 'modules':
                 // Parsing modules file
                 if ($type_file == 'php') {
@@ -1266,7 +1259,6 @@ class AdminTranslationsControllerCore extends AdminController
                 }
 
                 break;
-
             case 'pdf':
                 // Parsing PDF file
                 if ($type_file == 'php') {
@@ -1723,7 +1715,7 @@ class AdminTranslationsControllerCore extends AdminController
         $dir = $this->translations_informations[$this->type_selected]['dir'];
         $file = $this->translations_informations[$this->type_selected]['file'];
 
-        $$var = [];
+        ${$var} = [];
         if (!Tools::file_exists_cache($dir)) {
             if (!mkdir($dir, 0700)) {
                 throw new PrestaShopException('Directory ' . $dir . ' cannot be created.');
@@ -1739,7 +1731,7 @@ class AdminTranslationsControllerCore extends AdminController
         }
         include $dir . DIRECTORY_SEPARATOR . $file;
 
-        return $$var;
+        return ${$var};
     }
 
     public function displayToggleButton($closed = false)

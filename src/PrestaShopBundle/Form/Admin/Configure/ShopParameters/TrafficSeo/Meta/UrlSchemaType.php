@@ -142,11 +142,11 @@ class UrlSchemaType extends TranslatorAwareType
         }
 
         return $this->trans(
-                'Keywords: %keywords%',
-                'Admin.Shopparameters.Feature',
-                [
-                    '%keywords%' => implode(', ', $formattedKeyWords),
-                ]
+            'Keywords: %keywords%',
+            'Admin.Shopparameters.Feature',
+            [
+                '%keywords%' => implode(', ', $formattedKeyWords),
+            ]
         );
     }
 }

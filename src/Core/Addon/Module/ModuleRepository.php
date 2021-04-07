@@ -91,7 +91,7 @@ class ModuleRepository implements ModuleRepositoryInterface
     /**
      * @var PrestaTrustChecker|null
      */
-    private $prestaTrustChecker = null;
+    private $prestaTrustChecker;
 
     /**
      * Key of the cache content.
@@ -138,7 +138,7 @@ class ModuleRepository implements ModuleRepositoryInterface
         $this->finder = new Finder();
         $this->modulePath = $modulePath;
 
-        list($isoLang) = explode('-', $translator->getLocale());
+        [$isoLang] = explode('-', $translator->getLocale());
 
         // Cache related variables
         $this->cacheFilePath = $isoLang . '_local_modules';
@@ -264,15 +264,15 @@ class ModuleRepository implements ModuleRepositoryInterface
 
             // Part Three : Remove addons not related to the proper source (ex Addons)
             if ($filter->origin != AddonListFilterOrigin::ALL) {
-                if (!$module->attributes->has('origin_filter_value') &&
-                    !$filter->hasOrigin(AddonListFilterOrigin::DISK)
+                if (!$module->attributes->has('origin_filter_value')
+                    && !$filter->hasOrigin(AddonListFilterOrigin::DISK)
                 ) {
                     unset($modules[$key]);
 
                     continue;
                 }
-                if ($module->attributes->has('origin_filter_value') &&
-                    !$filter->hasOrigin($module->attributes->get('origin_filter_value'))
+                if ($module->attributes->has('origin_filter_value')
+                    && !$filter->hasOrigin($module->attributes->get('origin_filter_value'))
                 ) {
                     unset($modules[$key]);
 
@@ -454,8 +454,8 @@ class ModuleRepository implements ModuleRepositoryInterface
         }
 
         // Now, we check that cache is up to date
-        if (isset($this->cache[$name]['disk']['filemtime']) &&
-            $this->cache[$name]['disk']['filemtime'] === $current_filemtime
+        if (isset($this->cache[$name]['disk']['filemtime'])
+            && $this->cache[$name]['disk']['filemtime'] === $current_filemtime
         ) {
             // OK, cache can be loaded and used directly
             $attributes = array_merge($attributes, $this->cache[$name]['attributes']);

@@ -96,16 +96,16 @@ class ProductStockProperties
      * @param DateTimeInterface|null $availableDate
      */
     public function __construct(
-        ?PackStockType $packStockType = null,
-        ?int $quantity = null,
-        ?OutOfStockType $outOfStockType = null,
-        ?int $minimalQuantity = null,
-        ?string $location = null,
-        ?int $lowStockThreshold = null,
-        ?bool $lowStockAlertEnabled = null,
-        ?array $localizedAvailableNowLabels = null,
-        ?array $localizedAvailableLaterLabels = null,
-        ?DateTimeInterface $availableDate = null
+        PackStockType $packStockType = null,
+        int $quantity = null,
+        OutOfStockType $outOfStockType = null,
+        int $minimalQuantity = null,
+        string $location = null,
+        int $lowStockThreshold = null,
+        bool $lowStockAlertEnabled = null,
+        array $localizedAvailableNowLabels = null,
+        array $localizedAvailableLaterLabels = null,
+        DateTimeInterface $availableDate = null
     ) {
         $this->packStockType = $packStockType;
         $this->quantity = $quantity;

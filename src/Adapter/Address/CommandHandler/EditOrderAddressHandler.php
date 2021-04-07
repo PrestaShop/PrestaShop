@@ -98,13 +98,17 @@ class EditOrderAddressHandler implements EditOrderAddressHandlerInterface
             switch ($command->getAddressType()) {
                 case OrderAddressType::DELIVERY_ADDRESS_TYPE:
                     $this->deliveryAddressHandler->handle(new ChangeOrderDeliveryAddressCommand(
-                        $command->getOrderId()->getValue(), $addressId->getValue()
+                        $command->getOrderId()->getValue(),
+                        $addressId->getValue()
                     ));
+
                     break;
                 case OrderAddressType::INVOICE_ADDRESS_TYPE:
                     $this->invoiceAddressHandler->handle(new ChangeOrderInvoiceAddressCommand(
-                        $command->getOrderId()->getValue(), $addressId->getValue()
+                        $command->getOrderId()->getValue(),
+                        $addressId->getValue()
                     ));
+
                     break;
             }
         } catch (PrestaShopException $e) {
@@ -131,9 +135,11 @@ class EditOrderAddressHandler implements EditOrderAddressHandlerInterface
         switch ($orderCommand->getAddressType()) {
             case OrderAddressType::DELIVERY_ADDRESS_TYPE:
                 $addressId = (int) $order->id_address_delivery;
+
                 break;
             case OrderAddressType::INVOICE_ADDRESS_TYPE:
                 $addressId = (int) $order->id_address_invoice;
+
                 break;
         }
         $addressCommand = new EditCustomerAddressCommand($addressId);

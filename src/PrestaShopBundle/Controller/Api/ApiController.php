@@ -148,9 +148,9 @@ abstract class ApiController
             $info['previous_url'] = $router->generate($request->attributes->get('_route'), $previousParams);
         }
 
-        if (array_key_exists('Total-Pages', $headers) &&
-            array_key_exists('page_index', $allParams) &&
-            $headers['Total-Pages'] > $allParams['page_index']) {
+        if (array_key_exists('Total-Pages', $headers)
+            && array_key_exists('page_index', $allParams)
+            && $headers['Total-Pages'] > $allParams['page_index']) {
             $nextParams = $allParams;
             if (array_key_exists('page_index', $nextParams)) {
                 ++$nextParams['page_index'];

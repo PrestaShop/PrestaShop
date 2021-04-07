@@ -108,7 +108,7 @@ class OrderAmountUpdater
     public function update(
         Order $order,
         Cart $cart,
-        ?int $orderInvoiceId = null
+        int $orderInvoiceId = null
     ): void {
         $this->cleanCaches();
 
@@ -350,6 +350,7 @@ class OrderAmountUpdater
                     $orderCartRule->value = Tools::ps_round($cartRuleData->getDiscountApplied()->getTaxIncluded(), $computingPrecision);
                     $orderCartRule->value_tax_excl = Tools::ps_round($cartRuleData->getDiscountApplied()->getTaxExcluded(), $computingPrecision);
                     $orderCartRule->save();
+
                     continue 2;
                 }
             }

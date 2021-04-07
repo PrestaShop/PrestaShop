@@ -160,7 +160,7 @@ final class CategoryQueryBuilder extends AbstractDoctrineQueryBuilder
 
         foreach ($filters as $filterName => $filterValue) {
             if ('id_category' === $filterName) {
-                $qb->andWhere("c.id_category = :$filterName");
+                $qb->andWhere("c.id_category = :${filterName}");
                 $qb->setParameter($filterName, $filterValue);
 
                 continue;
@@ -173,14 +173,14 @@ final class CategoryQueryBuilder extends AbstractDoctrineQueryBuilder
             }
 
             if ('name' === $filterName) {
-                $qb->andWhere("cl.name LIKE :$filterName");
+                $qb->andWhere("cl.name LIKE :${filterName}");
                 $qb->setParameter($filterName, '%' . $filterValue . '%');
 
                 continue;
             }
 
             if ('description' === $filterName) {
-                $qb->andWhere("cl.description LIKE :$filterName");
+                $qb->andWhere("cl.description LIKE :${filterName}");
                 $qb->setParameter($filterName, '%' . $filterValue . '%');
 
                 continue;
@@ -197,14 +197,14 @@ final class CategoryQueryBuilder extends AbstractDoctrineQueryBuilder
                     $filterValue = null;
                 }
 
-                $qb->andWhere("cs.position = :$filterName");
+                $qb->andWhere("cs.position = :${filterName}");
                 $qb->setParameter($filterName, $filterValue);
 
                 continue;
             }
 
             if ('active' === $filterName) {
-                $qb->andWhere("c.active = :$filterName");
+                $qb->andWhere("c.active = :${filterName}");
                 $qb->setParameter($filterName, $filterValue);
 
                 continue;
@@ -215,7 +215,7 @@ final class CategoryQueryBuilder extends AbstractDoctrineQueryBuilder
                     continue;
                 }
 
-                $qb->andWhere("c.id_parent = :$filterName");
+                $qb->andWhere("c.id_parent = :${filterName}");
                 $qb->setParameter($filterName, $filterValue);
 
                 continue;

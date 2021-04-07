@@ -221,6 +221,7 @@ abstract class AbstractDomainFeatureContext implements Context
 
             if (!$localeMatch) {
                 $parsedRow[$key] = $value;
+
                 continue;
             }
 

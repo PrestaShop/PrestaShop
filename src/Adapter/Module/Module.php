@@ -51,7 +51,7 @@ class Module implements ModuleInterface
     /**
      * @var LegacyModule Module The instance of the legacy module
      */
-    public $instance = null;
+    public $instance;
 
     /**
      * Module attributes (name, displayName etc.).

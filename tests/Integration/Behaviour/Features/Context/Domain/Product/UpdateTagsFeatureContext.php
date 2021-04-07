@@ -92,10 +92,12 @@ class UpdateTagsFeatureContext extends AbstractProductFeatureContext
                 // if tags string is empty, then we should not have any actual value in this language
                 foreach ($actualLocalizedTagsList as $actualLocalizedTags) {
                     if ($actualLocalizedTags->getLanguageId() === $langId) {
-                        throw new RuntimeException(sprintf(
-                                'Expected no tags in %s language, but got "%s"',
-                                $langIso,
-                                var_export($actualLocalizedTags->getTags(), true))
+                        throw new RuntimeException(
+                            sprintf(
+                            'Expected no tags in %s language, but got "%s"',
+                            $langIso,
+                            var_export($actualLocalizedTags->getTags(), true)
+                        )
                         );
                     }
                 }

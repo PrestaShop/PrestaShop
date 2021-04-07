@@ -31,8 +31,8 @@ use Doctrine\DBAL\DBALException;
 use PrestaShopBundle\Install\DatabaseDump;
 use PrestaShopBundle\Install\Install;
 use Symfony\Component\Process\Process;
-use Tests\Resources\ResourceResetter;
 use Tab;
+use Tests\Resources\ResourceResetter;
 
 class DatabaseCreator
 {
@@ -62,13 +62,13 @@ class DatabaseCreator
         $install->installDefaultData('test_shop', false, false, false);
         $install->populateDatabase();
 
-        $install->configureShop(array(
+        $install->configureShop([
             'admin_firstname' => 'puff',
             'admin_lastname' => 'daddy',
             'admin_password' => 'test',
             'admin_email' => 'test@prestashop.com',
             'configuration_agrement' => true,
-        ));
+        ]);
         $install->installFixtures();
         Tab::resetStaticCache();
         $install->installTheme();

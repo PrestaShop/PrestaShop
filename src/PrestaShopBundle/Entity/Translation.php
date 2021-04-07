@@ -83,7 +83,7 @@ class Translation
      *
      * @ORM\Column(name="theme", type="string", length=32, nullable=true)
      */
-    private $theme = null;
+    private $theme;
 
     /**
      * Get id.

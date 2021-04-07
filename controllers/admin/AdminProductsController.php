@@ -33,8 +33,8 @@ class AdminProductsControllerCore extends AdminController
     /** @var int Max image size for upload
      * As of 1.5 it is recommended to not set a limit to max image size
      */
-    protected $max_file_size = null;
-    protected $max_image_size = null;
+    protected $max_file_size;
+    protected $max_image_size;
 
     protected $_category;
     /**
@@ -273,12 +273,12 @@ class AdminProductsControllerCore extends AdminController
                 $default_product = new Product((int) $this->object->id, false, null, (int) $this->object->id_shop_default);
                 $def = ObjectModel::getDefinition($this->object);
                 foreach ($def['fields'] as $field_name => $row) {
-                    if (is_array($default_product->$field_name)) {
-                        foreach ($default_product->$field_name as $key => $value) {
+                    if (is_array($default_product->{$field_name})) {
+                        foreach ($default_product->{$field_name} as $key => $value) {
                             $this->object->{$field_name}[$key] = $value;
                         }
                     } else {
-                        $this->object->$field_name = $default_product->$field_name;
+                        $this->object->{$field_name} = $default_product->{$field_name};
                     }
                 }
             }
@@ -659,9 +659,9 @@ class AdminProductsControllerCore extends AdminController
             if (is_array($this->boxes) && !empty($this->boxes)) {
                 $object = new $this->className();
 
-                if (isset($object->noZeroObject) &&
+                if (isset($object->noZeroObject)
                     // Check if all object will be deleted
-                    (count(call_user_func([$this->className, $object->noZeroObject])) <= 1 || count($_POST[$this->table . 'Box']) == count(call_user_func([$this->className, $object->noZeroObject])))) {
+                    && (count(call_user_func([$this->className, $object->noZeroObject])) <= 1 || count($_POST[$this->table . 'Box']) == count(call_user_func([$this->className, $object->noZeroObject])))) {
                     $this->errors[] = $this->trans('You need at least one object.', [], 'Admin.Notifications.Error') . ' <b>' . $this->table . '</b><br />' . $this->trans('You cannot delete all of the items.', [], 'Admin.Notifications.Error');
                 } else {
                     $success = 1;
@@ -1893,7 +1893,7 @@ class AdminProductsControllerCore extends AdminController
 
                             $def = ObjectModel::getDefinition($default_combination);
                             foreach ($def['fields'] as $field_name => $row) {
-                                $combination->$field_name = ObjectModel::formatValue($default_combination->$field_name, $def['fields'][$field_name]['type']);
+                                $combination->{$field_name} = ObjectModel::formatValue($default_combination->{$field_name}, $def['fields'][$field_name]['type']);
                             }
 
                             $combination->save();
@@ -2504,9 +2504,9 @@ class AdminProductsControllerCore extends AdminController
             foreach ($attributes as $attribute) {
                 foreach ($associated_suppliers as $supplier) {
                     /** @var ProductSupplier $supplier */
-                    if (Tools::isSubmit('supplier_reference_' . $product->id . '_' . $attribute['id_product_attribute'] . '_' . $supplier->id_supplier) ||
-                        (Tools::isSubmit('product_price_' . $product->id . '_' . $attribute['id_product_attribute'] . '_' . $supplier->id_supplier) &&
-                         Tools::isSubmit('product_price_currency_' . $product->id . '_' . $attribute['id_product_attribute'] . '_' . $supplier->id_supplier))) {
+                    if (Tools::isSubmit('supplier_reference_' . $product->id . '_' . $attribute['id_product_attribute'] . '_' . $supplier->id_supplier)
+                        || (Tools::isSubmit('product_price_' . $product->id . '_' . $attribute['id_product_attribute'] . '_' . $supplier->id_supplier)
+                         && Tools::isSubmit('product_price_currency_' . $product->id . '_' . $attribute['id_product_attribute'] . '_' . $supplier->id_supplier))) {
                         $reference = pSQL(
                             Tools::getValue(
                                 'supplier_reference_' . $product->id . '_' . $attribute['id_product_attribute'] . '_' . $supplier->id_supplier,
@@ -2684,7 +2684,7 @@ class AdminProductsControllerCore extends AdminController
                 $length = count($ids);
                 for ($i = 0; $i < $length; ++$i) {
                     if (!empty($ids[$i]) && !empty($names[$i])) {
-                        list($pack_items[$i]['pack_quantity'], $pack_items[$i]['id']) = explode('x', $ids[$i]);
+                        [$pack_items[$i]['pack_quantity'], $pack_items[$i]['id']] = explode('x', $ids[$i]);
                         $exploded_name = explode('x', $names[$i]);
                         $pack_items[$i]['name'] = $exploded_name[1];
                     }
@@ -2850,17 +2850,14 @@ class AdminProductsControllerCore extends AdminController
                             $file['error'] = $this->trans('An error occurred while copying image, the file does not exist anymore.', [], 'Admin.Catalog.Notification');
 
                             break;
-
                         case ImageManager::ERROR_FILE_WIDTH:
                             $file['error'] = $this->trans('An error occurred while copying image, the file width is 0px.', [], 'Admin.Catalog.Notification');
 
                             break;
-
                         case ImageManager::ERROR_MEMORY_LIMIT:
                             $file['error'] = $this->trans('An error occurred while copying image, check your memory limit.', [], 'Admin.Catalog.Notification');
 
                             break;
-
                         default:
                             $file['error'] = $this->trans('An error occurred while copying the image.', [], 'Admin.Catalog.Notification');
 
@@ -2974,7 +2971,6 @@ class AdminProductsControllerCore extends AdminController
                 StockAvailable::setProductDependsOnStock($product->id, (int) Tools::getValue('value'));
 
                 break;
-
             case 'pack_stock_type':
                 $value = Tools::getValue('value');
                 if ($value === false) {
@@ -3004,7 +3000,6 @@ class AdminProductsControllerCore extends AdminController
                 Product::setPackStockType($product->id, $value);
 
                 break;
-
             case 'out_of_stock':
                 if (Tools::getValue('value') === false) {
                     die(json_encode(['error' => 'Undefined value']));
@@ -3016,7 +3011,6 @@ class AdminProductsControllerCore extends AdminController
                 StockAvailable::setProductOutOfStock($product->id, (int) Tools::getValue('value'));
 
                 break;
-
             case 'set_qty':
                 if (Tools::getValue('value') === false || (!is_numeric(trim(Tools::getValue('value'))))) {
                     die(json_encode(['error' => 'Undefined value']));
@@ -3033,6 +3027,7 @@ class AdminProductsControllerCore extends AdminController
                 $error = ob_get_contents();
                 if (!empty($error)) {
                     ob_end_clean();
+
                     die(json_encode(['error' => $error]));
                 }
 
@@ -3055,6 +3050,7 @@ class AdminProductsControllerCore extends AdminController
 
                 break;
         }
+
         die(json_encode(['error' => false]));
     }
 
@@ -3139,7 +3135,7 @@ class AdminProductsControllerCore extends AdminController
                 foreach ($lines as $line) {
                     if (!empty($line)) {
                         $item_id_attribute = 0;
-                        count($array = explode('x', $line)) == 3 ? list($qty, $item_id, $item_id_attribute) = $array : list($qty, $item_id) = $array;
+                        count($array = explode('x', $line)) == 3 ? [$qty, $item_id, $item_id_attribute] = $array : [$qty, $item_id] = $array;
                         if ($qty > 0 && isset($item_id)) {
                             if (Pack::isPack((int) $item_id)) {
                                 $this->errors[] = $this->trans('You can\'t add product packs into a pack', [], 'Admin.Catalog.Notification');
@@ -3172,6 +3168,7 @@ class AdminProductsControllerCore extends AdminController
 					GROUP BY pl.`id_product`
 					LIMIT ' . (int) $limit);
             }
+
             die(json_encode($result));
         }
     }

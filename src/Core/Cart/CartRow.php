@@ -425,7 +425,6 @@ class CartRow
                 );
 
                 break;
-
             case self::ROUND_MODE_ITEM:
             default:
                 // round each item
@@ -437,6 +436,7 @@ class CartRow
                     $this->initialUnitPrice->getTaxIncluded() * $quantity,
                     $this->initialUnitPrice->getTaxExcluded() * $quantity
                 );
+
                 break;
         }
     }

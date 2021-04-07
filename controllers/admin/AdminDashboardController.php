@@ -145,9 +145,9 @@ class AdminDashboardControllerCore extends AdminController
                         'title' => $module->displayName,
                         'desc' => $this->trans(
                             'Choose a variable fee for each order placed with a foreign currency with %module%. It will be applied on the total paid with taxes.',
-                             ['%module%' => $module->displayName],
-                             'Admin.Dashboard.Help'
-                            ),
+                            ['%module%' => $module->displayName],
+                            'Admin.Dashboard.Help'
+                        ),
                         'validation' => 'isPercentage',
                         'cast' => 'floatval',
                         'type' => 'text',
@@ -432,6 +432,7 @@ class AdminDashboardControllerCore extends AdminController
     public function ajaxProcessSetSimulationMode()
     {
         Configuration::updateValue('PS_DASHBOARD_SIMULATION', (int) Tools::getValue('PS_DASHBOARD_SIMULATION'));
+
         die('k' . Configuration::get('PS_DASHBOARD_SIMULATION') . 'k');
     }
 
@@ -472,7 +473,7 @@ class AdminDashboardControllerCore extends AdminController
         }
 
         if (Validate::isHookName($hook) && method_exists($module_obj, $hook)) {
-            $return['widget_html'] = $module_obj->$hook($params);
+            $return['widget_html'] = $module_obj->{$hook}($params);
         }
 
         die(json_encode($return));

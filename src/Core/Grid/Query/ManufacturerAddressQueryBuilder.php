@@ -112,7 +112,8 @@ final class ManufacturerAddressQueryBuilder extends AbstractDoctrineQueryBuilder
             ->leftJoin(
                 'a',
                 $this->dbPrefix . 'manufacturer',
-                'm', 'm.id_manufacturer = a.id_manufacturer'
+                'm',
+                'm.id_manufacturer = a.id_manufacturer'
             )
             ->andWhere('a.id_customer = 0')
             ->andWhere('a.id_supplier = 0')
@@ -151,13 +152,13 @@ final class ManufacturerAddressQueryBuilder extends AbstractDoctrineQueryBuilder
                     continue;
                 }
 
-                $qb->andWhere($allowedFiltersMap[$filterName] . " = :$filterName")
+                $qb->andWhere($allowedFiltersMap[$filterName] . " = :${filterName}")
                     ->setParameter($filterName, $value);
 
                 continue;
             }
 
-            $qb->andWhere($allowedFiltersMap[$filterName] . " LIKE :$filterName")
+            $qb->andWhere($allowedFiltersMap[$filterName] . " LIKE :${filterName}")
                 ->setParameter($filterName, '%' . $value . '%');
         }
     }

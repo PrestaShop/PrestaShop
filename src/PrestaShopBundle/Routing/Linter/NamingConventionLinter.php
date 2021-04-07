@@ -88,7 +88,7 @@ final class NamingConventionLinter implements RouteLinterInterface
             $controller = $this->controllerNameParser->parse($controller);
         }
 
-        list($controller, $method) = explode('::', $controller, 2);
+        [$controller, $method] = explode('::', $controller, 2);
 
         $controllerParts = explode('\\', $controller);
         $controller = preg_replace('/Controller$/', '', end($controllerParts));

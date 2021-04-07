@@ -26,7 +26,7 @@
 use PrestaShop\PrestaShop\Adapter\CoreException;
 use PrestaShop\PrestaShop\Adapter\ServiceLocator;
 
-/***
+/*
  * Class CustomerCore
  */
 class CustomerCore extends ObjectModel
@@ -62,7 +62,7 @@ class CustomerCore extends ObjectModel
     public $firstname;
 
     /** @var string Birthday (yyyy-mm-dd) */
-    public $birthday = null;
+    public $birthday;
 
     /** @var string e-mail */
     public $email;
@@ -287,7 +287,7 @@ class CustomerCore extends ObjectModel
                 500,
                 $this->trans(
                     'The email is already used, please choose another one',
-                     [],
+                    [],
                     'Admin.Notifications.Error'
                 ),
                 140

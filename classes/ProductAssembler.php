@@ -74,22 +74,22 @@ class ProductAssemblerCore
                     (DATEDIFF(
                         p.`date_add`,
                         DATE_SUB(
-                            '$now',
-                            INTERVAL $nbDaysNewProduct DAY
+                            '${now}',
+                            INTERVAL ${nbDaysNewProduct} DAY
                         )
                     ) > 0) as new
                 FROM {$prefix}product p
                 LEFT JOIN {$prefix}product_lang pl
                     ON pl.id_product = p.id_product
-                    AND pl.id_shop = $idShop
-                    AND pl.id_lang = $idLang
+                    AND pl.id_shop = ${idShop}
+                    AND pl.id_lang = ${idLang}
                 LEFT JOIN {$prefix}stock_available sa
 			        ON sa.id_product = p.id_product
-			        AND sa.id_shop = $idShop
+			        AND sa.id_shop = ${idShop}
                 LEFT JOIN {$prefix}product_shop ps
 			        ON ps.id_product = p.id_product
-			        AND ps.id_shop = $idShop
-			    WHERE p.id_product = $idProduct
+			        AND ps.id_shop = ${idShop}
+			    WHERE p.id_product = ${idProduct}
 			    LIMIT 1";
 
         $rows = Db::getInstance()->executeS($sql);

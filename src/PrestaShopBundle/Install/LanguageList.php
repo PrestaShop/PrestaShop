@@ -162,7 +162,7 @@ class LanguageList
      *
      * @return array
      */
-    public function getCountriesByLanguage(?string $iso = null): array
+    public function getCountriesByLanguage(string $iso = null): array
     {
         $countryList = [];
         $langCountries = $this->getLanguage($iso)->getCountries();

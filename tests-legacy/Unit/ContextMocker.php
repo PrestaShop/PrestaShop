@@ -101,23 +101,23 @@ class ContextMocker
         Tools::resetStaticCache();
 
         $this->contextBackup = Context::getContext();
-        $context             = clone $this->contextBackup;
+        $context = clone $this->contextBackup;
         Context::setInstanceForTesting($context);
         $context->shop = new Shop((int) Configuration::get('PS_SHOP_DEFAULT'));
         Shop::setContext(Shop::CONTEXT_SHOP, (int) Context::getContext()->shop->id);
         $context->customer = Phake::mock('Customer');
-        Phake::when($context->customer)->getGroups()->thenReturn(array());
-        $context->cookie   = Phake::mock('Cookie');
-        $context->country  = Phake::mock('Country');
+        Phake::when($context->customer)->getGroups()->thenReturn([]);
+        $context->cookie = Phake::mock('Cookie');
+        $context->country = Phake::mock('Country');
         $context->language = new Language((int) Configuration::get('PS_LANG_DEFAULT'));
         $context->currency = new Currency((int) Configuration::get('PS_CURRENCY_DEFAULT'));
-        $protocol_link     = (Tools::usingSecureMode() && Configuration::get('PS_SSL_ENABLED'))
+        $protocol_link = (Tools::usingSecureMode() && Configuration::get('PS_SSL_ENABLED'))
             ? 'https://' : 'http://';
-        $protocol_content  = (Tools::usingSecureMode() && Configuration::get('PS_SSL_ENABLED'))
+        $protocol_content = (Tools::usingSecureMode() && Configuration::get('PS_SSL_ENABLED'))
             ? 'https://' : 'http://';
-        $context->link     = new Link($protocol_link, $protocol_content);
+        $context->link = new Link($protocol_link, $protocol_content);
         $context->currency = new Currency(1, 1, 1);
-        $context->smarty   = $smarty;
+        $context->smarty = $smarty;
 
         return $this;
     }

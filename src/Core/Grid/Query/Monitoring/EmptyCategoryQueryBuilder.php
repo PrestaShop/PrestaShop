@@ -184,13 +184,13 @@ final class EmptyCategoryQueryBuilder extends AbstractDoctrineQueryBuilder
             }
 
             if ('active' === $filterName || 'id_category' === $filterName) {
-                $qb->andWhere($allowedFiltersAliasMap[$filterName] . " = :$filterName");
+                $qb->andWhere($allowedFiltersAliasMap[$filterName] . " = :${filterName}");
                 $qb->setParameter($filterName, $filterValue);
 
                 continue;
             }
 
-            $qb->andWhere($allowedFiltersAliasMap[$filterName] . " LIKE :$filterName");
+            $qb->andWhere($allowedFiltersAliasMap[$filterName] . " LIKE :${filterName}");
             $qb->setParameter($filterName, '%' . $filterValue . '%');
         }
 

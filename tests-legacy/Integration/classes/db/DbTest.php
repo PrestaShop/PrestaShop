@@ -42,7 +42,7 @@ class DbTest extends IntegrationTestCase
     {
         Db::$_slave_servers_loaded = false;
         Db::$_servers = null;
-        Db::$instance = array();
+        Db::$instance = [];
     }
 
     public function testGetInstanceShouldLoadSlavesCorrectlyEvenWhenMasterIsCalled()
@@ -81,9 +81,9 @@ class DbTest extends IntegrationTestCase
     public function loadSlaves($nb_servers = 0)
     {
         Db::$_slave_servers_loaded = true;
-        Db::$_servers = array();
-        for ($i = 0; $i <= $nb_servers; $i++) {
-            Db::$_servers[] = array('server' => _DB_SERVER_, 'user' => _DB_USER_, 'password' => _DB_PASSWD_, 'database' => _DB_NAME_);
+        Db::$_servers = [];
+        for ($i = 0; $i <= $nb_servers; ++$i) {
+            Db::$_servers[] = ['server' => _DB_SERVER_, 'user' => _DB_USER_, 'password' => _DB_PASSWD_, 'database' => _DB_NAME_];
         }
     }
 }

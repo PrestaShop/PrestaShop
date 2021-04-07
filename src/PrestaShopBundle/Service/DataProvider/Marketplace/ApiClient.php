@@ -52,7 +52,7 @@ class ApiClient
         $this->addonsApiClient = $addonsApiClient;
         $this->toolsAdapter = $toolsAdapter;
 
-        list($isoLang) = explode('-', $locale);
+        [$isoLang] = explode('-', $locale);
 
         $this->setIsoLang($isoLang)
             ->setIsoCode($isoCode)

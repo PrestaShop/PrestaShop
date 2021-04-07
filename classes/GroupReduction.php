@@ -112,7 +112,7 @@ class GroupReductionCore extends ObjectModel
 			SELECT cp.`id_product`
 			FROM `' . _DB_PREFIX_ . 'category_product` cp
 			WHERE cp.`id_category` = ' . (int) $this->id_category,
-        false
+            false
         );
 
         $ids = [];

@@ -40,7 +40,7 @@ use Symfony\Component\DependencyInjection\Exception\ServiceNotFoundException;
 abstract class ModuleCore implements ModuleInterface
 {
     /** @var int Module ID */
-    public $id = null;
+    public $id;
 
     /** @var string Version */
     public $version;
@@ -103,7 +103,7 @@ abstract class ModuleCore implements ModuleInterface
     public $need_instance = 1;
 
     /** @var string Admin tab corresponding to the module */
-    public $tab = null;
+    public $tab;
 
     /** @var bool Status */
     public $active = false;
@@ -129,13 +129,13 @@ abstract class ModuleCore implements ModuleInterface
     protected $_lang = [];
 
     /** @var string Module web path (eg. '/shop/modules/modulename/') */
-    protected $_path = null;
+    protected $_path;
     /**
      * @since 1.5.0.1
      *
      * @var string Module local path (eg. '/home/prestashop/modules/modulename/')
      */
-    protected $local_path = null;
+    protected $local_path;
 
     /** @var array Array filled with module errors */
     protected $_errors = [];
@@ -174,7 +174,7 @@ abstract class ModuleCore implements ModuleInterface
     protected $smarty;
 
     /** @var Smarty_Internal_Template|null */
-    protected $current_subtemplate = null;
+    protected $current_subtemplate;
 
     protected static $update_translations_after_install = true;
 
@@ -643,9 +643,9 @@ abstract class ModuleCore implements ModuleInterface
 
                     $file_version = basename($tab[1], '.php');
                     // Compare version, if minor than actual, we need to upgrade the module
-                    if (count($tab) == 2 &&
-                         (Tools::version_compare($file_version, $module_version, '<=') &&
-                            Tools::version_compare($file_version, $registered_version, '>'))) {
+                    if (count($tab) == 2
+                         && (Tools::version_compare($file_version, $module_version, '<=')
+                            && Tools::version_compare($file_version, $registered_version, '>'))) {
                         $list[] = [
                             'file' => $upgrade_path . $file,
                             'version' => $file_version,
@@ -682,8 +682,8 @@ abstract class ModuleCore implements ModuleInterface
      */
     public static function getUpgradeStatus($module_name)
     {
-        return isset(self::$modules_cache[$module_name]) &&
-            self::$modules_cache[$module_name]['upgrade']['success'];
+        return isset(self::$modules_cache[$module_name])
+            && self::$modules_cache[$module_name]['upgrade']['success'];
     }
 
     /**
@@ -1100,8 +1100,8 @@ abstract class ModuleCore implements ModuleInterface
             $realpath_module_dir = realpath(_PS_MODULE_DIR_);
             if (substr(realpath($file_path), 0, strlen($realpath_module_dir)) == $realpath_module_dir) {
                 // For controllers in module/controllers path
-                if (basename(dirname(dirname($file_path))) == 'controllers') {
-                    self::$classInModule[$current_class] = basename(dirname(dirname(dirname($file_path))));
+                if (basename(dirname($file_path, 2)) == 'controllers') {
+                    self::$classInModule[$current_class] = basename(dirname($file_path, 3));
                 } else {
                     // For old AdminTab controllers
                     self::$classInModule[$current_class] = substr(dirname($file_path), strlen($realpath_module_dir) + 1);
@@ -1348,7 +1348,7 @@ abstract class ModuleCore implements ModuleInterface
                     $item->warning = '';
 
                     foreach ($xml_module as $k => $v) {
-                        $item->$k = (string) $v;
+                        $item->{$k} = (string) $v;
                     }
 
                     $item->displayName = stripslashes(Translate::getModuleTranslation((string) $xml_module->name, Module::configXmlStringFormat($xml_module->displayName), (string) $xml_module->name));
@@ -1726,7 +1726,7 @@ abstract class ModuleCore implements ModuleInterface
             file_exists(_PS_ROOT_DIR_ . self::CACHE_FILE_TRUSTED_MODULES_LIST)
             && filesize(_PS_ROOT_DIR_ . self::CACHE_FILE_TRUSTED_MODULES_LIST) > 0
             && ((time() - filemtime(_PS_ROOT_DIR_ . self::CACHE_FILE_TRUSTED_MODULES_LIST)) < 86400)
-            )) {
+        )) {
             self::generateTrustedXml();
         }
 
@@ -2472,9 +2472,9 @@ abstract class ModuleCore implements ModuleInterface
     protected function getCurrentSubTemplate($template, $cache_id = null, $compile_id = null)
     {
         if (!isset($this->current_subtemplate[$template . '_' . $cache_id . '_' . $compile_id])) {
-            if (false === strpos($template, 'module:') &&
-                !file_exists(_PS_ROOT_DIR_ . '/' . $template) &&
-                !file_exists($template)
+            if (false === strpos($template, 'module:')
+                && !file_exists(_PS_ROOT_DIR_ . '/' . $template)
+                && !file_exists($template)
             ) {
                 $template = $this->getTemplatePath($template);
             }

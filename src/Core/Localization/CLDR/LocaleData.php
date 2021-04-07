@@ -170,6 +170,7 @@ class LocaleData
             foreach ($localeData->getCurrencies() as $code => $currencyData) {
                 if (!isset($this->currencies[$code])) {
                     $this->currencies[$code] = $currencyData;
+
                     continue;
                 }
                 $this->currencies[$code]->overrideWith($currencyData);

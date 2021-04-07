@@ -187,8 +187,8 @@ class ManufacturerFeatureContext extends AbstractDomainFeatureContext
         /** @var Manufacturer $manufacturer */
         $manufacturer = SharedStorage::getStorage()->get($reference);
 
-        if ($manufacturer->$field[$this->defaultLangId] !== $value) {
-            throw new RuntimeException(sprintf('Manufacturer "%s" has "%s" %s, but "%s" was expected.', $reference, $manufacturer->$field[$this->defaultLangId], $field, $value));
+        if ($manufacturer->{$field}[$this->defaultLangId] !== $value) {
+            throw new RuntimeException(sprintf('Manufacturer "%s" has "%s" %s, but "%s" was expected.', $reference, $manufacturer->{$field}[$this->defaultLangId], $field, $value));
         }
     }
 
@@ -199,8 +199,8 @@ class ManufacturerFeatureContext extends AbstractDomainFeatureContext
     {
         $manufacturer = SharedStorage::getStorage()->get($reference);
 
-        if ($manufacturer->$field[$this->defaultLangId] !== '') {
-            throw new RuntimeException(sprintf('Manufacturer "%s" has "%s" %s, but it was expected to be empty', $reference, $manufacturer->$field[$this->defaultLangId], $field));
+        if ($manufacturer->{$field}[$this->defaultLangId] !== '') {
+            throw new RuntimeException(sprintf('Manufacturer "%s" has "%s" %s, but it was expected to be empty', $reference, $manufacturer->{$field}[$this->defaultLangId], $field));
         }
     }
 
@@ -348,7 +348,8 @@ class ManufacturerFeatureContext extends AbstractDomainFeatureContext
     public function manufacturerShouldHaveAddedAddresses(
         string $manufacturerReference,
         int $countOfAddresses,
-        int $countOfProducts)
+        int $countOfProducts
+    )
     {
         /** @var Manufacturer $manufacturer */
         $manufacturer = SharedStorage::getStorage()->get($manufacturerReference);

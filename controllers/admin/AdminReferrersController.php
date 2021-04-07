@@ -377,13 +377,15 @@ class AdminReferrersControllerCore extends AdminController
                 (int) Tools::getValue('id_referrer'),
                 (int) Tools::getValue('id_product'),
                 new Employee((int) Tools::getValue('id_employee'))
-        ));
+            )
+        );
     }
 
     public function displayAjaxFillProducts()
     {
         $json_array = [];
-        $result = Db::getInstance()->executeS('
+        $result = Db::getInstance()->executeS(
+            '
             SELECT p.id_product, pl.name
             FROM ' . _DB_PREFIX_ . 'product p
             LEFT JOIN ' . _DB_PREFIX_ . 'product_lang pl

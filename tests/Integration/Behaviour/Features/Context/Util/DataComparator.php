@@ -41,7 +41,8 @@ class DataComparator
         foreach ($expectedData as $key => $expectedElement) {
             if (false === array_key_exists($key, $realData)) {
                 $availableKeys = array_keys($realData);
-                throw new Exception("Expected data $key but no such data in real data ; available data is " . implode(',', $availableKeys));
+
+                throw new Exception("Expected data ${key} but no such data in real data ; available data is " . implode(',', $availableKeys));
             }
 
             $realElement = $realData[$key];
@@ -64,7 +65,7 @@ class DataComparator
                     $realAsString = ($realElement) ? 'true' : 'false';
                     $expectedAsString = ($castedExpectedElement) ? 'true' : 'false';
 
-                    throw new Exception("Real $key is " . $realAsString . ' / expected ' . $expectedAsString);
+                    throw new Exception("Real ${key} is " . $realAsString . ' / expected ' . $expectedAsString);
                 } elseif ($realElementType === 'array') {
                     sort($realElement);
                     sort($castedExpectedElement);
@@ -80,14 +81,14 @@ class DataComparator
                         $expectedAsString = 'empty';
                     }
 
-                    throw new Exception("Real $key is $realAsString / expected $expectedAsString");
+                    throw new Exception("Real ${key} is ${realAsString} / expected ${expectedAsString}");
                 } elseif ($realElementType === 'datetime') {
                     $realAsString = $realElement->format('Y/m/d H:i:s');
                     $expectedAsString = $castedExpectedElement->format('Y/m/d H:i:s');
 
-                    throw new Exception("Real $key is $realAsString / expected $expectedAsString");
+                    throw new Exception("Real ${key} is ${realAsString} / expected ${expectedAsString}");
                 } else {
-                    throw new Exception("Real $key is " . $realElement . ' / expected ' . $castedExpectedElement);
+                    throw new Exception("Real ${key} is " . $realElement . ' / expected ' . $castedExpectedElement);
                 }
             }
         }

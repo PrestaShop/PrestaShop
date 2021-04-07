@@ -230,7 +230,7 @@ class SpecificPriceCore extends ObjectModel
         $priority = SpecificPrice::getPriority($id_product);
         foreach (array_reverse($priority) as $k => $field) {
             if (!empty($field)) {
-                $select .= ' IF (`' . bqSQL($field) . '` = ' . (int) $$field . ', ' . 2 ** ($k + 1) . ', 0) + ';
+                $select .= ' IF (`' . bqSQL($field) . '` = ' . (int) ${$field} . ', ' . 2 ** ($k + 1) . ', 0) + ';
             }
         }
 
@@ -366,7 +366,7 @@ class SpecificPriceCore extends ObjectModel
                 $to_specific_count = Db::getInstance(_PS_USE_SQL_SLAVE_)->getValue($query_to_count);
                 self::$_filterOutCache[$key] = [$from_specific_count, $to_specific_count];
             } else {
-                list($from_specific_count, $to_specific_count) = self::$_filterOutCache[$key];
+                [$from_specific_count, $to_specific_count] = self::$_filterOutCache[$key];
             }
         } else {
             $from_specific_count = $to_specific_count = 1;

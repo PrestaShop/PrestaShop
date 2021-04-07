@@ -415,13 +415,15 @@ class OrderController extends FrameworkBundleAdminController
         $formFactory = $this->get('form.factory');
         $updateOrderStatusForm = $formFactory->createNamed(
             'update_order_status',
-            UpdateOrderStatusType::class, [
+            UpdateOrderStatusType::class,
+            [
                 'new_order_status_id' => $orderForViewing->getHistory()->getCurrentOrderStatusId(),
             ]
         );
         $updateOrderStatusActionBarForm = $formFactory->createNamed(
             'update_order_status_action_bar',
-            UpdateOrderStatusType::class, [
+            UpdateOrderStatusType::class,
+            [
                 'new_order_status_id' => $orderForViewing->getHistory()->getCurrentOrderStatusId(),
             ]
         );
@@ -485,11 +487,13 @@ class OrderController extends FrameworkBundleAdminController
 
         try {
             $this->dispatchHook(
-                'actionGetAdminOrderButtons', [
+                'actionGetAdminOrderButtons',
+                [
                     'controller' => $this,
                     'id_order' => $orderId,
                     'actions_bar_buttons_collection' => $backOfficeOrderButtons,
-                ]);
+                ]
+            );
 
             $cancelProductForm = $formBuilder->getFormFor($orderId);
         } catch (Exception $e) {
@@ -1280,9 +1284,9 @@ class OrderController extends FrameworkBundleAdminController
 
         $routesCollection = $this->get('router')->getRouteCollection();
 
-        if (null !== $routesCollection &&
-            !$orderMessageForm->isValid() &&
-            $viewRoute = $routesCollection->get('admin_orders_view')
+        if (null !== $routesCollection
+            && !$orderMessageForm->isValid()
+            && $viewRoute = $routesCollection->get('admin_orders_view')
         ) {
             $attributes = $viewRoute->getDefaults();
             $attributes['orderId'] = $orderId;
@@ -2043,19 +2047,19 @@ class OrderController extends FrameworkBundleAdminController
                 ) : '',
             CustomerMessageConstraintException::class => [
                 CustomerMessageConstraintException::MISSING_MESSAGE => $this->trans(
-                        'The %s field is not valid',
-                        'Admin.Notifications.Error',
-                        [
-                            sprintf('"%s"', $this->trans('Message', 'Admin.Global')),
-                        ]
-                    ),
+                    'The %s field is not valid',
+                    'Admin.Notifications.Error',
+                    [
+                        sprintf('"%s"', $this->trans('Message', 'Admin.Global')),
+                    ]
+                ),
                 CustomerMessageConstraintException::INVALID_MESSAGE => $this->trans(
-                        'The %s field is not valid',
-                        'Admin.Notifications.Error',
-                        [
-                            sprintf('"%s"', $this->trans('Message', 'Admin.Global')),
-                        ]
-                    ),
+                    'The %s field is not valid',
+                    'Admin.Notifications.Error',
+                    [
+                        sprintf('"%s"', $this->trans('Message', 'Admin.Global')),
+                    ]
+                ),
             ],
         ];
     }

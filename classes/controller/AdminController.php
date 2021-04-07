@@ -128,10 +128,10 @@ class AdminControllerCore extends Controller
     public $tpl_required_fields_vars = [];
 
     /** @var string|null */
-    public $base_tpl_view = null;
+    public $base_tpl_view;
 
     /** @var string|null */
-    public $base_tpl_form = null;
+    public $base_tpl_form;
 
     /** @var bool If you want more fieldsets in the form */
     public $multiple_fieldsets = false;
@@ -149,7 +149,7 @@ class AdminControllerCore extends Controller
     protected $fields_list;
 
     /** @var array Modules list filters */
-    protected $filter_modules_list = null;
+    protected $filter_modules_list;
 
     /** @var array Modules list filters */
     protected $modules_list = [];
@@ -182,7 +182,7 @@ class AdminControllerCore extends Controller
     protected $toolbar_title;
 
     /** @var array List of toolbar buttons */
-    protected $toolbar_btn = null;
+    protected $toolbar_btn;
 
     /** @var bool Scrolling toolbar */
     protected $toolbar_scroll = true;
@@ -323,7 +323,7 @@ class AdminControllerCore extends Controller
     protected $noLink;
 
     /** @var bool|null */
-    protected $specificConfirmDelete = null;
+    protected $specificConfirmDelete;
 
     /** @var bool */
     protected $colorOnBackground;
@@ -696,13 +696,11 @@ class AdminControllerCore extends Controller
                 $this->addMetaTitle($this->trans('Edit'));
 
                 break;
-
             case 'add':
                 $this->toolbar_title[] = $this->trans('Add new');
                 $this->addMetaTitle($this->trans('Add new'));
 
                 break;
-
             case 'view':
                 $this->toolbar_title[] = $this->trans('View');
                 $this->addMetaTitle($this->trans('View'));
@@ -832,7 +830,7 @@ class AdminControllerCore extends Controller
         $whitelist = ['date_add', 'id_lang', 'id_employee', 'email', 'profile', 'passwd', 'remote_addr', 'shopContext', 'collapse_menu', 'checksum'];
         foreach ($cookie->getAll() as $key => $value) {
             if (!in_array($key, $whitelist)) {
-                unset($cookie->$key);
+                unset($cookie->{$key});
             }
         }
 
@@ -868,7 +866,7 @@ class AdminControllerCore extends Controller
                 } elseif (stripos($key, $this->list_id . 'Filter_') === 0) {
                     $this->context->cookie->{$prefix . $key} = !is_array($value) ? $value : json_encode($value);
                 } elseif (stripos($key, 'submitFilter') === 0) {
-                    $this->context->cookie->$key = !is_array($value) ? $value : json_encode($value);
+                    $this->context->cookie->{$key} = !is_array($value) ? $value : json_encode($value);
                 }
             }
 
@@ -876,7 +874,7 @@ class AdminControllerCore extends Controller
                 if (stripos($key, $this->list_id . 'Filter_') === 0) {
                     $this->context->cookie->{$prefix . $key} = !is_array($value) ? $value : json_encode($value);
                 } elseif (stripos($key, 'submitFilter') === 0) {
-                    $this->context->cookie->$key = !is_array($value) ? $value : json_encode($value);
+                    $this->context->cookie->{$key} = !is_array($value) ? $value : json_encode($value);
                 }
                 if (stripos($key, $this->list_id . 'Orderby') === 0 && Validate::isOrderBy($value)) {
                     if ($value === '' || $value == $this->_defaultOrderBy) {
@@ -1110,6 +1108,7 @@ class AdminControllerCore extends Controller
             fputcsv($fd, $content, ';', $text_delimiter);
         }
         @fclose($fd);
+
         die;
     }
 
@@ -1442,9 +1441,9 @@ class AdminControllerCore extends Controller
             if (strncmp($cookie_key, $prefix . $list_id . 'Filter_', 7 + Tools::strlen($prefix . $list_id)) == 0) {
                 $key = substr($cookie_key, 7 + Tools::strlen($prefix . $list_id));
                 if (is_array($this->fields_list) && array_key_exists($key, $this->fields_list)) {
-                    $this->context->cookie->$cookie_key = null;
+                    $this->context->cookie->{$cookie_key} = null;
                 }
-                unset($this->context->cookie->$cookie_key);
+                unset($this->context->cookie->{$cookie_key});
             }
         }
 
@@ -1557,7 +1556,7 @@ class AdminControllerCore extends Controller
                     // check if a method updateOptionFieldName is available
                     $method_name = 'updateOption' . Tools::toCamelCase($key, true);
                     if (method_exists($this, $method_name)) {
-                        $this->$method_name(Tools::getValue($key));
+                        $this->{$method_name}(Tools::getValue($key));
                     } elseif (isset($options['type']) && in_array($options['type'], ['textLang', 'textareaLang'])) {
                         $list = [];
                         foreach ($languages as $language) {
@@ -1635,7 +1634,8 @@ class AdminControllerCore extends Controller
                     $this->toolbar_title[] = $this->trans(
                         'Edit: %s',
                         [
-                            (is_array($obj->{$this->identifier_name})
+                            (
+                                is_array($obj->{$this->identifier_name})
                                 && isset($obj->{$this->identifier_name}[$this->context->employee->id_lang])
                             )
                                 ? $obj->{$this->identifier_name}[$this->context->employee->id_lang]
@@ -1906,10 +1906,10 @@ class AdminControllerCore extends Controller
         }
 
         foreach (['errors', 'warnings', 'informations', 'confirmations'] as $type) {
-            if (!is_array($this->$type)) {
-                $this->$type = (array) $this->$type;
+            if (!is_array($this->{$type})) {
+                $this->{$type} = (array) $this->{$type};
             }
-            $this->context->smarty->assign($type, $this->json ? json_encode(array_unique($this->$type)) : array_unique($this->$type));
+            $this->context->smarty->assign($type, $this->json ? json_encode(array_unique($this->{$type})) : array_unique($this->{$type}));
         }
 
         if ($this->show_page_header_toolbar && !$this->lite_display) {
@@ -2074,14 +2074,14 @@ class AdminControllerCore extends Controller
             'order' => [
                 $this->trans(
                     'Have you checked your [1][2]abandoned carts[/2][/1]?[3]Your next order could be hiding there!',
-                        [
-                            '[1]' => '<strong>',
-                            '[/1]' => '</strong>',
-                            '[2]' => '<a href="' . $this->context->link->getAdminLink('AdminCarts', true, [], ['action' => 'filterOnlyAbandonedCarts']) . '">',
-                            '[/2]' => '</a>',
-                            '[3]' => '<br>',
-                        ],
-                        'Admin.Navigation.Notification'
+                    [
+                        '[1]' => '<strong>',
+                        '[/1]' => '</strong>',
+                        '[2]' => '<a href="' . $this->context->link->getAdminLink('AdminCarts', true, [], ['action' => 'filterOnlyAbandonedCarts']) . '">',
+                        '[/2]' => '</a>',
+                        '[3]' => '<br>',
+                    ],
+                    'Admin.Navigation.Notification'
                 ),
             ],
             'customer' => [
@@ -2439,7 +2439,7 @@ class AdminControllerCore extends Controller
 
         // For compatibility reasons, we have to check standard actions in class attributes
         foreach ($this->actions_available as $action) {
-            if (!in_array($action, $this->actions) && isset($this->$action) && $this->$action) {
+            if (!in_array($action, $this->actions) && isset($this->{$action}) && $this->{$action}) {
                 $this->actions[] = $action;
             }
         }
@@ -3513,8 +3513,8 @@ class AdminControllerCore extends Controller
     {
         if (empty($limit)) {
             if (
-                isset($this->context->cookie->{$this->list_id . '_pagination'}) &&
-                $this->context->cookie->{$this->list_id . '_pagination'}
+                isset($this->context->cookie->{$this->list_id . '_pagination'})
+                && $this->context->cookie->{$this->list_id . '_pagination'}
             ) {
                 $limit = $this->context->cookie->{$this->list_id . '_pagination'};
             } else {
@@ -4149,6 +4149,7 @@ class AdminControllerCore extends Controller
             </head>
             <body><div id='help-container' class='help-popup'></div></body>
         </html>";
+
         die($popup_content);
     }
 
@@ -4701,6 +4702,7 @@ class AdminControllerCore extends Controller
         // Fetch the translations in the right place - they are not defined by our current controller!
         Context::getContext()->override_controller_name_for_translations = 'AdminModules';
         $this->smartyOutputContent('controllers/modules/quickview.tpl');
+
         die(1);
     }
 

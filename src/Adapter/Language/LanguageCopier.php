@@ -184,8 +184,8 @@ final class LanguageCopier implements LanguageCopierInterface
                 'parameters' => [],
             ];
         } elseif (
-            $themeFrom === $themeTo &&
-            $languageFrom === $languageTo
+            $themeFrom === $themeTo
+            && $languageFrom === $languageTo
         ) {
             $errors[] = [
                 'key' => 'There is nothing to copy (same language and theme).',

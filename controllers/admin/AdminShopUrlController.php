@@ -498,7 +498,7 @@ class AdminShopUrlControllerCore extends AdminController
     {
         $this->redirect_shop_url = false;
         $current_url = parse_url($_SERVER['REQUEST_URI']);
-        if (trim(dirname(dirname($current_url['path'])), '/') == trim($this->object->getBaseURI(), '/')) {
+        if (trim(dirname($current_url['path'], 2), '/') == trim($this->object->getBaseURI(), '/')) {
             $this->redirect_shop_url = true;
         }
 

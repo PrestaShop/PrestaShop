@@ -284,19 +284,16 @@ class AdminFeaturesControllerCore extends AdminController
                 $this->addMetaTitle($bread_extended[count($bread_extended) - 1]);
 
                 break;
-
             case 'add':
                 $bread_extended[] = $this->trans('Add New Feature', [], 'Admin.Catalog.Feature');
                 $this->addMetaTitle($bread_extended[count($bread_extended) - 1]);
 
                 break;
-
             case 'view':
                 $bread_extended[] = $this->feature_name[$this->context->employee->id_lang] ?? null;
                 $this->addMetaTitle($bread_extended[count($bread_extended) - 1]);
 
                 break;
-
             case 'editFeatureValue':
                 if (Tools::getValue('id_feature_value')) {
                     if (($id = (int) Tools::getValue('id_feature'))) {

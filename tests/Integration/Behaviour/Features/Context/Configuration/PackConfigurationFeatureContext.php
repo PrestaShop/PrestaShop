@@ -40,15 +40,19 @@ class PackConfigurationFeatureContext extends AbstractConfigurationFeatureContex
         switch ($value) {
             case 'packs only':
                 $this->setConfiguration('PS_PACK_STOCK_TYPE', Pack::STOCK_TYPE_PACK_ONLY);
+
                 break;
             case 'products only':
                 $this->setConfiguration('PS_PACK_STOCK_TYPE', Pack::STOCK_TYPE_PRODUCTS_ONLY);
+
                 break;
             case 'both packs and products':
                 $this->setConfiguration('PS_PACK_STOCK_TYPE', Pack::STOCK_TYPE_PACK_BOTH);
+
                 break;
             default:
                 throw new \Exception('Unknown config value for specific shop configuration for "pack stock type": ' . $value);
+
                 break;
         }
     }

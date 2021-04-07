@@ -119,6 +119,7 @@ final class DeleteCurrencyHandler implements DeleteCurrencyHandlerInterface
             }
 
             $shop = new Shop($shopId);
+
             throw new DefaultCurrencyInMultiShopException($currency->name, $shop->name, sprintf('Currency with id %s cannot be removed from shop with id %s because its the default currency.', $currency->id, $shopId), DefaultCurrencyInMultiShopException::CANNOT_REMOVE_CURRENCY);
         }
     }

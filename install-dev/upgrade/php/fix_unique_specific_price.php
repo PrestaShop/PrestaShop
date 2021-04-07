@@ -23,12 +23,11 @@
  * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
-
 function fix_unique_specific_price()
 {
     $result = Db::getInstance()->executeS('
 	SELECT MIN(id_specific_price) id_specific_price
-	FROM '._DB_PREFIX_.'specific_price
+	FROM ' . _DB_PREFIX_ . 'specific_price
 	GROUP BY `id_product`, `id_shop`, `id_currency`, `id_country`, `id_group`, `from_quantity`, `from`, `to`');
     if (!$result || !count($result)) {
         return true;
@@ -36,11 +35,11 @@ function fix_unique_specific_price()
 
     $sql = '';
     foreach ($result as $row) {
-        $sql .= (int)$row['id_specific_price'].',';
+        $sql .= (int) $row['id_specific_price'] . ',';
     }
     $sql = rtrim($sql, ',');
 
     return Db::getInstance()->execute('
-	DELETE FROM '._DB_PREFIX_.'specific_price
-	WHERE id_specific_price NOT IN ('.$sql.')');
+	DELETE FROM ' . _DB_PREFIX_ . 'specific_price
+	WHERE id_specific_price NOT IN (' . $sql . ')');
 }

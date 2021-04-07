@@ -70,7 +70,7 @@ class CustomizationField
         array $localizedNames,
         bool $required,
         bool $addedByModule = false,
-        ?int $customizationFieldId = null
+        int $customizationFieldId = null
     ) {
         $this->type = $type;
         $this->localizedNames = $localizedNames;

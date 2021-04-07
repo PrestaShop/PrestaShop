@@ -98,7 +98,7 @@ namespace PrestaShopBundle\Install {
         private $inAutoUpgrade = false;
         private $translator;
         private $installDir;
-        private $adminDir = null;
+        private $adminDir;
         private $oldVersion;
         private $db;
         private $idEmployee = 0;
@@ -526,7 +526,7 @@ namespace PrestaShopBundle\Install {
             /** @var \PrestaShop\PrestaShop\Adapter\Module\Module $installedProduct */
             foreach ($installedProducts as $installedProduct) {
                 if (!(
-                        $installedProduct->attributes->has('origin_filter_value')
+                    $installedProduct->attributes->has('origin_filter_value')
                         && in_array(
                             $installedProduct->attributes->get('origin_filter_value'),
                             [
@@ -535,7 +535,7 @@ namespace PrestaShopBundle\Install {
                             ]
                         )
                         && 'PrestaShop' === $installedProduct->attributes->get('author')
-                    )
+                )
                     && 'autoupgrade' !== $installedProduct->attributes->get('name')) {
                     $moduleName = $installedProduct->attributes->get('name');
                     $this->logInfo('Disabling custom module ' . $moduleName);
@@ -562,7 +562,7 @@ namespace PrestaShopBundle\Install {
             /** @var \PrestaShop\PrestaShop\Adapter\Module\Module $module */
             foreach ($list as $moduleName => $module) {
                 if (in_array($moduleName, self::$incompatibleModules)) {
-                    $this->logInfo("Uninstalling module $moduleName, not supported in this PrestaShop version.");
+                    $this->logInfo("Uninstalling module ${moduleName}, not supported in this PrestaShop version.");
                     $module->onUninstall();
                     $fs->remove(_PS_MODULE_DIR_ . $moduleName);
                 } else {
@@ -570,7 +570,7 @@ namespace PrestaShopBundle\Install {
                     if ($attributes->get('compatibility')) {
                         $maxVersion = $attributes->get('compatibility')->to;
                         if (version_compare($maxVersion, _PS_INSTALL_VERSION_) == -1 && Module::isEnabled($moduleName)) {
-                            $this->logInfo("Disabling module $moduleName. Max supported version : " . $maxVersion);
+                            $this->logInfo("Disabling module ${moduleName}. Max supported version : " . $maxVersion);
                             Module::disableAllByName($moduleName);
                         }
                     }

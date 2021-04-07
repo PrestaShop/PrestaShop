@@ -85,6 +85,6 @@ class AddonsStoreController extends FrameworkBundleAdminController
         $activity = (int) $this->get('prestashop.adapter.legacy.configuration')->get('PS_SHOP_ACTIVITY');
 
         // GET parameters are concatenated this way in order to ensure they are not encoded
-        return "https://addons.prestashop.com/iframe/search-1.7.php?psVersion=$psVersion&isoLang=$languageCode&isoCurrency=$currencyCode&isoCountry=$countryCode&activity=$activity&parentUrl=$parent_domain";
+        return "https://addons.prestashop.com/iframe/search-1.7.php?psVersion=${psVersion}&isoLang=${languageCode}&isoCurrency=${currencyCode}&isoCountry=${countryCode}&activity=${activity}&parentUrl=${parent_domain}";
     }
 }

@@ -133,7 +133,7 @@ class OrderPreviewShippingDetails
         string $phone,
         ?string $carrierName,
         ?string $trackingNumber,
-        ?string $dni = null
+        string $dni = null
     ) {
         $this->firstName = $firstName;
         $this->lastName = $lastName;

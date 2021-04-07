@@ -239,7 +239,7 @@ class TranslationsExtension extends Twig_Extension
      */
     protected function renderEditTranslationForm($properties)
     {
-        list($domain, $locale) = explode('.', $properties['camelized_domain']);
+        [$domain, $locale] = explode('.', $properties['camelized_domain']);
         $translationValue = $this->getTranslationValue($properties['translation']);
         $defaultTranslationValue = $this->getDefaultTranslationValue(
             $properties['translation_key'],
@@ -425,9 +425,9 @@ class TranslationsExtension extends Twig_Extension
             $totalTranslations = count(array_values($subtree['__messages'])[0]);
             $totalTranslationsAttribute = ' data-total-translations="' . $this->translator->trans(
                 '%nb_translations% expressions',
-                    ['%nb_translations%' => $totalTranslations],
-                    'Admin.International.Feature'
-                ) . '"';
+                ['%nb_translations%' => $totalTranslations],
+                'Admin.International.Feature'
+            ) . '"';
         }
 
         $missingTranslationsAttribute = '';
@@ -519,8 +519,8 @@ class TranslationsExtension extends Twig_Extension
      */
     protected function parseDomain($subtree)
     {
-        list($camelizedDomain) = $subtree['__messages'];
-        list($domain) = explode('.', $camelizedDomain);
+        [$camelizedDomain] = $subtree['__messages'];
+        [$domain] = explode('.', $camelizedDomain);
 
         return $domain;
     }

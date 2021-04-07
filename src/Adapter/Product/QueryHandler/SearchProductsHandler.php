@@ -181,8 +181,8 @@ final class SearchProductsHandler extends AbstractOrderHandler implements Search
         Product $product,
         string $isoCodeCurrency,
         int $computingPrecision,
-        ?Order $order = null,
-        ?Address $address = null
+        Order $order = null,
+        Address $address = null
     ): FoundProduct {
         // It's important to use null (not 0) as attribute ID so that Product::priceCalculation can fallback to default combination
         $priceTaxExcluded = $this->getProductPriceForOrder((int) $product->id, null, false, $computingPrecision, $order);
@@ -244,7 +244,7 @@ final class SearchProductsHandler extends AbstractOrderHandler implements Search
         Product $product,
         string $currencyIsoCode,
         int $computingPrecision,
-        ?Order $order = null
+        Order $order = null
     ): array {
         $productCombinations = [];
         $combinations = $product->getAttributeCombinations();
@@ -294,7 +294,8 @@ final class SearchProductsHandler extends AbstractOrderHandler implements Search
         ?int $productAttributeId,
         bool $withTaxes,
         int $computingPrecision,
-        ?Order $order)
+        ?Order $order
+    )
     {
         if (null === $order) {
             return Product::getPriceStatic($productId, $withTaxes, $productAttributeId, $computingPrecision);

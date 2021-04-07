@@ -185,7 +185,7 @@ class ImageManagerCore
             return !($error = self::ERROR_FILE_NOT_EXIST);
         }
 
-        list($tmpWidth, $tmpHeight, $type) = getimagesize($sourceFile);
+        [$tmpWidth, $tmpHeight, $type] = getimagesize($sourceFile);
         $rotate = 0;
         if (function_exists('exif_read_data') && function_exists('mb_strtolower')) {
             $exif = @exif_read_data($sourceFile);
@@ -198,21 +198,18 @@ class ImageManagerCore
                         $rotate = 180;
 
                         break;
-
                     case 6:
                         $sourceWidth = $tmpHeight;
                         $sourceHeight = $tmpWidth;
                         $rotate = -90;
 
                         break;
-
                     case 8:
                         $sourceWidth = $tmpHeight;
                         $sourceHeight = $tmpWidth;
                         $rotate = 90;
 
                         break;
-
                     default:
                         $sourceWidth = $tmpWidth;
                         $sourceHeight = $tmpHeight;
@@ -566,12 +563,10 @@ class ImageManagerCore
                 return imagecreatefromgif($filename);
 
                 break;
-
             case IMAGETYPE_PNG:
                 return imagecreatefrompng($filename);
 
                 break;
-
             case IMAGETYPE_JPEG:
             default:
                 return imagecreatefromjpeg($filename);
@@ -624,13 +619,11 @@ class ImageManagerCore
                 $success = imagegif($resource, $filename);
 
                 break;
-
             case 'png':
                 $quality = ($psPngQuality === false ? 7 : $psPngQuality);
                 $success = imagepng($resource, $filename, (int) $quality);
 
                 break;
-
             case 'jpg':
             case 'jpeg':
             default:

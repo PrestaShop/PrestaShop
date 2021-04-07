@@ -81,7 +81,7 @@ class AdminSearchConfControllerCore extends AdminController
             $params
         );
 
-        list($total, $indexed) = Db::getInstance()->getRow('SELECT COUNT(*) as "0", SUM(product_shop.indexed) as "1" FROM ' . _DB_PREFIX_ . 'product p ' . Shop::addSqlAssociation('product', 'p') . ' WHERE product_shop.`visibility` IN ("both", "search") AND product_shop.`active` = 1');
+        [$total, $indexed] = Db::getInstance()->getRow('SELECT COUNT(*) as "0", SUM(product_shop.indexed) as "1" FROM ' . _DB_PREFIX_ . 'product p ' . Shop::addSqlAssociation('product', 'p') . ' WHERE product_shop.`visibility` IN ("both", "search") AND product_shop.`active` = 1');
 
         $this->fields_options = [
             'indexation' => [
@@ -125,9 +125,11 @@ class AdminSearchConfControllerCore extends AdminController
                 'title' => $this->trans('Search', [], 'Admin.Shopparameters.Feature'),
                 'icon' => 'icon-search',
                 'info' => '<div class="alert alert-info">' .
-                    $this->trans('We are thrilled to introduce you to the fuzzy search, one of the new features from 1.7.7! Please note that it is still in beta version, so feel free to share improvement ideas on GitHub to have it enhanced.',
+                    $this->trans(
+                        'We are thrilled to introduce you to the fuzzy search, one of the new features from 1.7.7! Please note that it is still in beta version, so feel free to share improvement ideas on GitHub to have it enhanced.',
                         [],
-                        'Admin.Shopparameters.Notification') .
+                        'Admin.Shopparameters.Notification'
+                    ) .
                     '</div>' . '<p><a href="https://github.com/PrestaShop/PrestaShop/issues/new?template=bug_report.md" target="_blank" class="btn-link"><i class="icon-external-link-sign"></i> Signaler un problème sur GitHub</a><br>'
                     . '<a href="https://github.com/PrestaShop/PrestaShop/issues/new?template=feature_request.md" target="_blank"><i class="icon-external-link-sign"></i> Proposer une idée d\'amélioration sur GitHub</a>',
                 'fields' => [
@@ -137,10 +139,10 @@ class AdminSearchConfControllerCore extends AdminController
                         'cast' => 'intval',
                         'type' => 'bool',
                         'desc' => $this->trans(
-                                'By default, to search for “blouse”, you have to enter “blous”, “blo”, etc (beginning of the word) – but not “lous” (within the word).',
-                                [],
-                                'Admin.Shopparameters.Help'
-                            ) . '<br/>' .
+                            'By default, to search for “blouse”, you have to enter “blous”, “blo”, etc (beginning of the word) – but not “lous” (within the word).',
+                            [],
+                            'Admin.Shopparameters.Help'
+                        ) . '<br/>' .
                             $this->trans(
                                 'With this option enabled, it also gives the good result if you search for “lous”, “ouse”, or anything contained in the word.',
                                 [],
@@ -165,10 +167,10 @@ class AdminSearchConfControllerCore extends AdminController
                         'cast' => 'intval',
                         'type' => 'bool',
                         'desc' => $this->trans(
-                                'By default, if you search "book", you will have "book", "bookcase" and "bookend".',
-                                [],
-                                'Admin.Shopparameters.Help'
-                            ) . '<br/>' .
+                            'By default, if you search "book", you will have "book", "bookcase" and "bookend".',
+                            [],
+                            'Admin.Shopparameters.Help'
+                        ) . '<br/>' .
                             $this->trans(
                                 'With this option enabled, it only gives one result “book”, as exact end of the indexed word is matching.',
                                 [],
@@ -193,10 +195,10 @@ class AdminSearchConfControllerCore extends AdminController
                         'cast' => 'intval',
                         'type' => 'bool',
                         'desc' => $this->trans(
-                                'By default, the fuzzy search is enabled. It means spelling errors are allowed, e.g. you can search for "bird" with words like "burd", "bard" or "beerd".',
-                                [],
-                                'Admin.Shopparameters.Help'
-                            ) . '<br/>' .
+                            'By default, the fuzzy search is enabled. It means spelling errors are allowed, e.g. you can search for "bird" with words like "burd", "bard" or "beerd".',
+                            [],
+                            'Admin.Shopparameters.Help'
+                        ) . '<br/>' .
                             $this->trans(
                                 'Disabling this option will require exact spelling for the search to match results.',
                                 [],
@@ -278,10 +280,10 @@ class AdminSearchConfControllerCore extends AdminController
                 'title' => $this->trans('Weight', [], 'Admin.Shopparameters.Feature'),
                 'icon' => 'icon-cogs',
                 'info' => $this->trans(
-                        'The "weight" represents its importance and relevance for the ranking of the products when completing a new search.',
-                        [],
-                        'Admin.Shopparameters.Feature'
-                    ) . '<br />
+                    'The "weight" represents its importance and relevance for the ranking of the products when completing a new search.',
+                    [],
+                    'Admin.Shopparameters.Feature'
+                ) . '<br />
 						' . $this->trans(
                         'A word with a weight of eight will have four times more value than a word with a weight of two.',
                         [],

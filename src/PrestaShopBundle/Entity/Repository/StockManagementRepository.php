@@ -193,10 +193,10 @@ abstract class StockManagementRepository
     public function getData(QueryParamsCollection $queryParams)
     {
         $query = $this->selectSql(
-                $this->andWhere($queryParams),
-                $this->having($queryParams),
-                $this->orderBy($queryParams)
-            ) . $this->paginate();
+            $this->andWhere($queryParams),
+            $this->having($queryParams),
+            $this->orderBy($queryParams)
+        ) . $this->paginate();
 
         $statement = $this->connection->prepare($query);
         $this->bindStockManagementValues($statement, $queryParams);

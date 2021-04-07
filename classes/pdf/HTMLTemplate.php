@@ -142,7 +142,7 @@ abstract class HTMLTemplateCore
         $width = 0;
         $height = 0;
         if (!empty($logo)) {
-            list($width, $height) = getimagesize(_PS_IMG_DIR_ . $logo);
+            [$width, $height] = getimagesize(_PS_IMG_DIR_ . $logo);
         }
 
         // Limit the height of the logo for the PDF render

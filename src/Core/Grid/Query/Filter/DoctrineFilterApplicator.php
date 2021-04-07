@@ -51,17 +51,17 @@ final class DoctrineFilterApplicator implements DoctrineFilterApplicatorInterfac
 
             switch ($filter['comparison']) {
                 case SqlFilters::WHERE_STRICT:
-                    $qb->andWhere("$sqlField = :$filterName");
+                    $qb->andWhere("${sqlField} = :${filterName}");
                     $qb->setParameter($filterName, $value);
 
                     break;
                 case SqlFilters::WHERE_LIKE:
-                    $qb->andWhere("$sqlField LIKE :$filterName");
+                    $qb->andWhere("${sqlField} LIKE :${filterName}");
                     $qb->setParameter($filterName, '%' . $value . '%');
 
                     break;
                 case SqlFilters::HAVING_LIKE:
-                    $qb->andHaving("$sqlField LIKE :$filterName");
+                    $qb->andHaving("${sqlField} LIKE :${filterName}");
                     $qb->setParameter($filterName, '%' . $value . '%');
 
                     break;
@@ -69,14 +69,14 @@ final class DoctrineFilterApplicator implements DoctrineFilterApplicatorInterfac
                     if (isset($value['from'])) {
                         $name = sprintf('%s_from', $filterName);
 
-                        $qb->andWhere("$sqlField >= :$name");
+                        $qb->andWhere("${sqlField} >= :${name}");
                         $qb->setParameter($name, sprintf('%s %s', $value['from'], '0:0:0'));
                     }
 
                     if (isset($value['to'])) {
                         $name = sprintf('%s_to', $filterName);
 
-                        $qb->andWhere("$sqlField <= :$name");
+                        $qb->andWhere("${sqlField} <= :${name}");
                         $qb->setParameter($name, sprintf('%s %s', $value['to'], '23:59:59'));
                     }
 

@@ -74,7 +74,7 @@ class AddProductToCartCommand
         int $cartId,
         int $productId,
         int $quantity,
-        ?int $combinationId = null,
+        int $combinationId = null,
         array $customizationsByFieldIds = []
     ) {
         $this->assertQtyIsPositive($quantity);

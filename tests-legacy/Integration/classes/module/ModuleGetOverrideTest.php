@@ -27,14 +27,13 @@
 namespace LegacyTests\Integration\classes\module;
 
 use LegacyTests\TestCase\IntegrationTestCase;
-
 use LegacyTests\TestCase\Module as HelperModule;
 use Module;
 
 class ModuleGetOverrideTest extends IntegrationTestCase
 {
     /**
-     * @return array a list of modules to control override features.
+     * @return array a list of modules to control override features
      */
     public function listModulesOnDisk()
     {
@@ -51,7 +50,8 @@ class ModuleGetOverrideTest extends IntegrationTestCase
     /**
      * @dataProvider listModulesOnDisk
      * Note: improves module list fixtures in order to cancel any override.
-     * @param string $moduleName the module name.
+     *
+     * @param string $moduleName the module name
      */
     public function testDummyGetOverride($moduleName)
     {

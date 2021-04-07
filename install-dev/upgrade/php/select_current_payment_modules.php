@@ -32,21 +32,21 @@ function select_current_payment_modules()
     $shops = Db::getInstance()->executeS(
         '
 			SELECT `id_shop`
-			FROM `'._DB_PREFIX_.'shop`'
+			FROM `' . _DB_PREFIX_ . 'shop`'
     );
     $carriers = Db::getInstance()->executeS(
         '
 			SELECT DISTINCT `id_reference`
-			FROM `'._DB_PREFIX_.'carrier`
+			FROM `' . _DB_PREFIX_ . 'carrier`
 			WHERE `active` = 1
 			AND `deleted` = 0'
     );
     $modules = Db::getInstance()->executeS(
         '
 			SELECT m.`id_module`
-			FROM `'._DB_PREFIX_.'module` m
-			LEFT JOIN `'._DB_PREFIX_.'hook_module` hm ON hm.`id_module` = m.`id_module`
-			LEFT JOIN `'._DB_PREFIX_.'hook` h ON hm.`id_hook` = h.`id_hook`
+			FROM `' . _DB_PREFIX_ . 'module` m
+			LEFT JOIN `' . _DB_PREFIX_ . 'hook_module` hm ON hm.`id_module` = m.`id_module`
+			LEFT JOIN `' . _DB_PREFIX_ . 'hook` h ON hm.`id_hook` = h.`id_hook`
 			WHERE h.`name` = \'displayPayment\' OR h.`name` = \'displayPaymentEU\' OR h.`name` = \'paymentOptions\''
     );
 
@@ -55,11 +55,11 @@ function select_current_payment_modules()
             foreach ($modules as $module) {
                 Db::getInstance()->insert(
                     'module_carrier',
-                    array(
-                        'id_reference' => (int)$carrier['id_reference'],
-                        'id_module' => (int)$module['id_module'],
-                        'id_shop' => (int)$shop['id_shop'],
-                    ),
+                    [
+                        'id_reference' => (int) $carrier['id_reference'],
+                        'id_module' => (int) $module['id_module'],
+                        'id_shop' => (int) $shop['id_shop'],
+                    ],
                     false,
                     false,
                     Db::INSERT_IGNORE

@@ -115,18 +115,21 @@ final class CmsPageCategoryDefinitionFactory extends AbstractFilterableGridDefin
     protected function getColumns()
     {
         $columnCollection = (new ColumnCollection())
-            ->add((new BulkActionColumn('bulk'))
+            ->add(
+                (new BulkActionColumn('bulk'))
             ->setOptions([
                 'bulk_field' => 'id_cms_category',
             ])
             )
-            ->add((new DataColumn('id_cms_category'))
+            ->add(
+                (new DataColumn('id_cms_category'))
             ->setName($this->trans('ID', [], 'Admin.Global'))
             ->setOptions([
                 'field' => 'id_cms_category',
             ])
             )
-            ->add((new LinkColumn('name'))
+            ->add(
+                (new LinkColumn('name'))
             ->setName($this->trans('Name', [], 'Admin.Global'))
             ->setOptions([
                 'field' => 'name',
@@ -135,13 +138,15 @@ final class CmsPageCategoryDefinitionFactory extends AbstractFilterableGridDefin
                 'route_param_field' => 'id_cms_category',
             ])
             )
-            ->add((new DataColumn('description'))
+            ->add(
+                (new DataColumn('description'))
             ->setName($this->trans('Description', [], 'Admin.Global'))
             ->setOptions([
                 'field' => 'description',
             ])
             )
-            ->add((new ToggleColumn('active'))
+            ->add(
+                (new ToggleColumn('active'))
             ->setName($this->trans('Displayed', [], 'Admin.Global'))
             ->setOptions([
                 'field' => 'active',
@@ -150,11 +155,13 @@ final class CmsPageCategoryDefinitionFactory extends AbstractFilterableGridDefin
                 'route_param_name' => 'cmsCategoryId',
             ])
             )
-            ->add((new ActionColumn('actions'))
+            ->add(
+                (new ActionColumn('actions'))
             ->setName($this->trans('Actions', [], 'Admin.Global'))
             ->setOptions([
                 'actions' => (new RowActionCollection())
-                    ->add((new LinkRowAction('view'))
+                    ->add(
+                        (new LinkRowAction('view'))
                     ->setName($this->trans('View', [], 'Admin.Actions'))
                     ->setIcon('zoom_in')
                     ->setOptions([
@@ -164,7 +171,8 @@ final class CmsPageCategoryDefinitionFactory extends AbstractFilterableGridDefin
                         'clickable_row' => true,
                     ])
                     )
-                    ->add((new LinkRowAction('edit'))
+                    ->add(
+                        (new LinkRowAction('edit'))
                     ->setName($this->trans('Edit', [], 'Admin.Actions'))
                     ->setIcon('edit')
                     ->setOptions([
@@ -228,7 +236,8 @@ final class CmsPageCategoryDefinitionFactory extends AbstractFilterableGridDefin
         }
 
         $filterCollection = (new FilterCollection())
-            ->add((new Filter('id_cms_category', TextType::class))
+            ->add(
+                (new Filter('id_cms_category', TextType::class))
             ->setTypeOptions([
                 'required' => false,
                 'attr' => [
@@ -237,7 +246,8 @@ final class CmsPageCategoryDefinitionFactory extends AbstractFilterableGridDefin
             ])
             ->setAssociatedColumn('id_cms_category')
             )
-            ->add((new Filter('name', TextType::class))
+            ->add(
+                (new Filter('name', TextType::class))
             ->setTypeOptions([
                 'required' => false,
                 'attr' => [
@@ -246,7 +256,8 @@ final class CmsPageCategoryDefinitionFactory extends AbstractFilterableGridDefin
             ])
             ->setAssociatedColumn('name')
             )
-            ->add((new Filter('description', TextType::class))
+            ->add(
+                (new Filter('description', TextType::class))
             ->setTypeOptions([
                 'required' => false,
                 'attr' => [
@@ -255,10 +266,12 @@ final class CmsPageCategoryDefinitionFactory extends AbstractFilterableGridDefin
             ])
             ->setAssociatedColumn('description')
             )
-            ->add((new Filter('active', YesAndNoChoiceType::class))
+            ->add(
+                (new Filter('active', YesAndNoChoiceType::class))
             ->setAssociatedColumn('active')
             )
-            ->add((new Filter('actions', SearchAndResetType::class))
+            ->add(
+                (new Filter('actions', SearchAndResetType::class))
             ->setTypeOptions($actionsTypeOptions)
             ->setAssociatedColumn('actions')
             )
@@ -266,7 +279,8 @@ final class CmsPageCategoryDefinitionFactory extends AbstractFilterableGridDefin
 
         if ($this->isAllShopContextOrShopFeatureIsNotUsed()) {
             $filterCollection
-                ->add((new Filter('position', TextType::class))
+                ->add(
+                    (new Filter('position', TextType::class))
                 ->setTypeOptions([
                     'required' => false,
                     'attr' => [
@@ -287,13 +301,15 @@ final class CmsPageCategoryDefinitionFactory extends AbstractFilterableGridDefin
     protected function getBulkActions()
     {
         return (new BulkActionCollection())
-            ->add((new SubmitBulkAction('enable_selection'))
+            ->add(
+                (new SubmitBulkAction('enable_selection'))
             ->setName($this->trans('Enable selection', [], 'Admin.Actions'))
             ->setOptions([
                 'submit_route' => 'admin_cms_pages_category_bulk_status_enable',
             ])
             )
-            ->add((new SubmitBulkAction('disable_selection'))
+            ->add(
+                (new SubmitBulkAction('disable_selection'))
             ->setName($this->trans('Disable selection', [], 'Admin.Actions'))
             ->setOptions([
                 'submit_route' => 'admin_cms_pages_category_bulk_status_disable',
@@ -311,15 +327,18 @@ final class CmsPageCategoryDefinitionFactory extends AbstractFilterableGridDefin
     protected function getGridActions()
     {
         return (new GridActionCollection())
-            ->add((new SimpleGridAction('common_refresh_list'))
+            ->add(
+                (new SimpleGridAction('common_refresh_list'))
             ->setName($this->trans('Refresh list', [], 'Admin.Advparameters.Feature'))
             ->setIcon('refresh')
             )
-            ->add((new SimpleGridAction('common_show_query'))
+            ->add(
+                (new SimpleGridAction('common_show_query'))
             ->setName($this->trans('Show SQL query', [], 'Admin.Actions'))
             ->setIcon('code')
             )
-            ->add((new SimpleGridAction('common_export_sql_manager'))
+            ->add(
+                (new SimpleGridAction('common_export_sql_manager'))
             ->setName($this->trans('Export to SQL Manager', [], 'Admin.Actions'))
             ->setIcon('storage')
             )

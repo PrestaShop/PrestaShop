@@ -78,7 +78,8 @@ final class CommandDefinitionParser
         /**
          * Removes comment symbols, annotations, and line breaks.
          */
-        $commandName = preg_replace("/\/+\*\*|\*+\/|\*|@(\w+)\b(.*)|\n/",
+        $commandName = preg_replace(
+            "/\/+\*\*|\*+\/|\*|@(\w+)\b(.*)|\n/",
             '',
             (new ReflectionClass($commandName))->getDocComment()
         );

@@ -52,7 +52,7 @@ class UrlGeneratorTest extends UnitTestCase
         $generator = new UrlGenerator($this->legacyContext, $router);
 
         // the following route contains a "_legacy" equivalent
-        list($controller, $parameters) = $generator->getLegacyOptions('admin_product_catalog');
+        [$controller, $parameters] = $generator->getLegacyOptions('admin_product_catalog');
         $this->assertEquals('AdminProducts', $controller);
         $this->assertCount(0, $parameters);
     }

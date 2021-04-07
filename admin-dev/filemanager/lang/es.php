@@ -39,7 +39,7 @@ define('lang_Swipe_help', 'Deslize el nombre del archivo/carpeta para mostrar la
 define('lang_Upload_base', 'Subida de archivos SIMPLE');
 define('lang_Upload_java', 'Subida de archivos JAVA (para archivos pesados)');
 define('lang_Upload_java_help', "Si el applet no carga: 1. Asegúrate de tener Java instalado; sino descárgalo e instálalo <a href='http://java.com/en/download/'>desde aquí</a> 2. Asegúrate que tu firewall no esté bloqueando nada.");
-define('lang_Upload_base_help', "Arrastra y suelta los archivos dentro de esta área o haga clic en ella (para navegadores modernos) de lo contrario, seleccione el archivo y haga clic en el botón. Cuando finalice la subida, haga clic en el botón superior para regresar.");
+define('lang_Upload_base_help', 'Arrastra y suelta los archivos dentro de esta área o haga clic en ella (para navegadores modernos) de lo contrario, seleccione el archivo y haga clic en el botón. Cuando finalice la subida, haga clic en el botón superior para regresar.');
 define('lang_Type_dir', 'Carpeta');
 define('lang_Type', 'Tipo');
 define('lang_Dimension', 'Dimensiones');

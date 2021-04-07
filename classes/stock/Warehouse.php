@@ -566,11 +566,11 @@ class WarehouseCore extends ObjectModel
         }
     }
 
-    /*********************************\
+    /*\
      *
      * Webservices Specific Methods
      *
-     *********************************/
+     */
 
     /**
      * Webservice : gets the value of the warehouse.

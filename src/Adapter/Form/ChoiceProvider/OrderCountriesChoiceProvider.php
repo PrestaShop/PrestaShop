@@ -46,7 +46,8 @@ final class OrderCountriesChoiceProvider implements FormChoiceProviderInterface
             return [];
         }
 
-        $result = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS('
+        $result = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS(
+            '
 			SELECT DISTINCT c.id_country, cl.`name`
 			FROM `' . _DB_PREFIX_ . 'orders` o
 			' . Shop::addSqlAssociation('orders', 'o') . '

@@ -60,7 +60,7 @@ class LegacyFileReader
 
         $shopLocale = $this->localeConverter->toLegacyLocale($locale);
 
-        $filePath = $path . "$shopLocale.php";
+        $filePath = $path . "${shopLocale}.php";
 
         if (!file_exists($filePath)) {
             throw UnsupportedLocaleException::fileNotFound($filePath, $locale);

@@ -88,12 +88,12 @@ class IdentifiableObjectFormTypesCollectorPass implements CompilerPassInterface
     private function isIdentifiableObjectFormBuilderService($serviceId, $serviceClass)
     {
         $isServiceKeyBelongsToIdentifiableObject =
-            strpos($serviceId, self::IDENTIFIABLE_OBJECT_SERVICE_NAME_START_WITH) === 0 ||
-            strpos($serviceId, self::ALTERNATIVE_IDENTIFIABLE_OBJECT_SERVICE_STARTS_WITH) === 0
+            strpos($serviceId, self::IDENTIFIABLE_OBJECT_SERVICE_NAME_START_WITH) === 0
+            || strpos($serviceId, self::ALTERNATIVE_IDENTIFIABLE_OBJECT_SERVICE_STARTS_WITH) === 0
         ;
 
-        return $isServiceKeyBelongsToIdentifiableObject &&
-            is_subclass_of($serviceClass, FormBuilderInterface::class)
+        return $isServiceKeyBelongsToIdentifiableObject
+            && is_subclass_of($serviceClass, FormBuilderInterface::class)
         ;
     }
 }

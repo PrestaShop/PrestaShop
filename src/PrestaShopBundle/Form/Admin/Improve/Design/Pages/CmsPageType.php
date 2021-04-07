@@ -146,7 +146,8 @@ class CmsPageType extends TranslatorAwareType
             ])
             ->add('meta_title', TranslatableType::class, [
                 'label' => $this->trans('Meta title', 'Admin.Global'),
-                'help' => sprintf('%s %s',
+                'help' => sprintf(
+                    '%s %s',
                     $this->trans('Used to override the title tag value. If left blank, the default title value is used.', 'Admin.Design.Help'),
                     $invalidCharsText
                 ),

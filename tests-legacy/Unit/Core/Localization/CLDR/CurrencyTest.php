@@ -44,7 +44,7 @@ class CurrencyTest extends TestCase
     protected $cldrCurrency;
 
     /**
-     * @inheritDoc
+     * {@inheritDoc}
      */
     protected function setUp()
     {

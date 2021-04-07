@@ -301,12 +301,12 @@ class TreeCore
         }
 
         if ($this->getContext()->controller instanceof ModuleAdminController && isset($controller_name) && file_exists($this->_normalizeDirectory(
-                $this->getContext()->controller->getTemplatePath()
+            $this->getContext()->controller->getTemplatePath()
         ) . $controller_name . DIRECTORY_SEPARATOR . $this->getTemplateDirectory() . $template)) {
             return $this->_normalizeDirectory($this->getContext()->controller->getTemplatePath()) .
                 $controller_name . DIRECTORY_SEPARATOR . $this->getTemplateDirectory() . $template;
         } elseif ($this->getContext()->controller instanceof ModuleAdminController && file_exists($this->_normalizeDirectory(
-                $this->getContext()->controller->getTemplatePath()
+            $this->getContext()->controller->getTemplatePath()
         ) . $this->getTemplateDirectory() . $template)) {
             return $this->_normalizeDirectory($this->getContext()->controller->getTemplatePath())
                 . $this->getTemplateDirectory() . $template;
@@ -438,7 +438,7 @@ class TreeCore
                         'title' => $this->getTitle(),
                         'toolbar' => $this->useToolbar() ? $this->renderToolbar() : null,
                     ]
-            );
+                );
             $template->assign('header', $headerTemplate->fetch());
         }
 

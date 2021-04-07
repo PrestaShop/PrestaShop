@@ -36,7 +36,6 @@ use PrestaShop\PrestaShop\Adapter\LegacyContext;
 use PrestaShop\PrestaShop\Core\Addon\Theme\Theme;
 use PrestaShop\PrestaShop\Core\Kpi\Row\KpiRowPresenterInterface;
 use Psr\Log\NullLogger;
-
 use Shop;
 use Symfony\Bundle\FrameworkBundle\Client;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase as TestCase;
@@ -79,7 +78,7 @@ class LightWebTestCase extends TestCase
         $employeeMock->id_lang = 1;
 
         $contextMock = $this->getMockBuilder(Context::class)
-            ->setMethods(array('getTranslator', 'getContext'))
+            ->setMethods(['getTranslator', 'getContext'])
             ->disableOriginalConstructor()
             ->getMock();
 
@@ -92,7 +91,7 @@ class LightWebTestCase extends TestCase
         $contextMock->employee = $employeeMock;
 
         $shopMock = $this->getMockBuilder(Shop::class)
-            ->setMethods(array('getBaseURL'))
+            ->setMethods(['getBaseURL'])
             ->disableOriginalConstructor()
             ->getMock();
 
@@ -104,7 +103,7 @@ class LightWebTestCase extends TestCase
 
         $contextMock->shop->theme = new Theme([
             'name' => 'classic',
-            'directory' => _PS_ROOT_DIR_.'/themes/',
+            'directory' => _PS_ROOT_DIR_ . '/themes/',
         ]);
 
         $countryMock = $this->getMockBuilder(Country::class)
@@ -244,10 +243,10 @@ class LightWebTestCase extends TestCase
             ->disableAutoload()
             ->getMock();
 
-        $values = array(
-            array('_PS_MODE_DEMO_', null, null, true),
-            array('_PS_MODULE_DIR_', null, null, __DIR__ . '/../../../resources/modules/'),
-        );
+        $values = [
+            ['_PS_MODE_DEMO_', null, null, true],
+            ['_PS_MODULE_DIR_', null, null, __DIR__ . '/../../../resources/modules/'],
+        ];
 
         $configurationMock->method('get')
             ->will($this->returnValueMap($values));

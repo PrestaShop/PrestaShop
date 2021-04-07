@@ -661,15 +661,15 @@ class AdminCartsControllerCore extends AdminController
     public function ajaxProcessUpdateAddresses()
     {
         if ($this->access('edit')) {
-            if (($id_address_delivery = (int) Tools::getValue('id_address_delivery')) &&
-                ($address_delivery = new Address((int) $id_address_delivery)) &&
-                $address_delivery->id_customer == $this->context->cart->id_customer) {
+            if (($id_address_delivery = (int) Tools::getValue('id_address_delivery'))
+                && ($address_delivery = new Address((int) $id_address_delivery))
+                && $address_delivery->id_customer == $this->context->cart->id_customer) {
                 $this->context->cart->id_address_delivery = (int) $address_delivery->id;
             }
 
-            if (($id_address_invoice = (int) Tools::getValue('id_address_invoice')) &&
-                ($address_invoice = new Address((int) $id_address_invoice)) &&
-                $address_invoice->id_customer = $this->context->cart->id_customer) {
+            if (($id_address_invoice = (int) Tools::getValue('id_address_invoice'))
+                && ($address_invoice = new Address((int) $id_address_invoice))
+                && $address_invoice->id_customer = $this->context->cart->id_customer) {
                 $this->context->cart->id_address_invoice = (int) $address_invoice->id;
             }
             $this->context->cart->save();
@@ -947,7 +947,7 @@ class AdminCartsControllerCore extends AdminController
 
         // For compatibility reasons, we have to check standard actions in class attributes
         foreach ($this->actions_available as $action) {
-            if (!in_array($action, $this->actions) && isset($this->$action) && $this->$action) {
+            if (!in_array($action, $this->actions) && isset($this->{$action}) && $this->{$action}) {
                 $this->actions[] = $action;
             }
         }

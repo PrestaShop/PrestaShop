@@ -99,8 +99,8 @@ class SearchParametersResolver implements ArgumentValueResolverInterface
      */
     public function supports(Request $request, ArgumentMetadata $argument)
     {
-        return is_subclass_of($argument->getType(), Filters::class) &&
-            $this->employee instanceof Employee;
+        return is_subclass_of($argument->getType(), Filters::class)
+            && $this->employee instanceof Employee;
     }
 
     /**
@@ -111,7 +111,7 @@ class SearchParametersResolver implements ArgumentValueResolverInterface
      */
     public function resolve(Request $request, ArgumentMetadata $argument)
     {
-        list($controller, $action) = ControllerAction::fromString($request->get('_controller'));
+        [$controller, $action] = ControllerAction::fromString($request->get('_controller'));
         $filtersClass = $argument->getType();
         /** @var Filters $filters */
         $filters = $this->buildDefaultFilters($filtersClass);

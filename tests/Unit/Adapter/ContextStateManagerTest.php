@@ -457,7 +457,7 @@ namespace Tests\Unit\Adapter {
                 ->getMock();
 
             foreach ($contextFields as $fieldName => $contextValue) {
-                $contextMock->$fieldName = $contextValue;
+                $contextMock->{$fieldName} = $contextValue;
             }
 
             return $contextMock;

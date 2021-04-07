@@ -194,6 +194,7 @@ final class CancelOrderProductHandler extends AbstractOrderCommandHandler implem
                 if ($cancellableQuantity < $cancelQuantity) {
                     throw new InvalidCancelProductException(InvalidCancelProductException::QUANTITY_TOO_HIGH, $cancellableQuantity);
                 }
+
                 continue;
             }
             // get list of customizations

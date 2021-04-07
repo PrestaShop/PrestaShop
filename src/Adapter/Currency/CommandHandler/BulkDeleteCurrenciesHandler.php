@@ -69,6 +69,7 @@ final class BulkDeleteCurrenciesHandler extends AbstractCurrencyHandler implemen
 
             if (0 >= $entity->id) {
                 $faileds[] = $currencyId->getValue();
+
                 continue;
             }
 
@@ -77,6 +78,7 @@ final class BulkDeleteCurrenciesHandler extends AbstractCurrencyHandler implemen
                 $this->assertDefaultCurrencyIsNotBeingRemovedOrDisabledFromAnyShop($entity);
             } catch (CurrencyException $e) {
                 $faileds[] = $currencyId->getValue();
+
                 continue;
             }
 

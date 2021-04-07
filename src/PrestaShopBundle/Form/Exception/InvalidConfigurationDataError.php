@@ -52,7 +52,7 @@ class InvalidConfigurationDataError
      * @param string $fieldName
      * @param int|null $languageId
      */
-    public function __construct(int $errorCode, string $fieldName, ?int $languageId = null)
+    public function __construct(int $errorCode, string $fieldName, int $languageId = null)
     {
         $this->errorCode = $errorCode;
         $this->fieldName = $fieldName;

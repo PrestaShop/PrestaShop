@@ -765,7 +765,7 @@ class CategoryCore extends ObjectModel
         }
 
         $cacheId = 'Category::getNestedCategories_' . md5(
-                (int) $idRootCategory .
+            (int) $idRootCategory .
                 (int) $idLang .
                 (int) $active .
                 (int) $useShopRestriction .
@@ -773,7 +773,7 @@ class CategoryCore extends ObjectModel
                 (isset($sqlFilter) ? $sqlFilter : '') .
                 (isset($orderBy) ? $orderBy : '') .
                 (isset($limit) ? $limit : '')
-            );
+        );
 
         if (!Cache::isStored($cacheId)) {
             $result = Db::getInstance()->executeS(
@@ -1825,7 +1825,8 @@ class CategoryCore extends ObjectModel
             ($way
                 ? '> ' . (int) $movedCategory['position'] . ' AND category_shop.`position` <= ' . (int) $position
                 : '< ' . (int) $movedCategory['position'] . ' AND category_shop.`position` >= ' . (int) $position) . ' ' .
-            'AND c.`id_parent`=' . (int) $movedCategory['id_parent'])
+            'AND c.`id_parent`=' . (int) $movedCategory['id_parent']
+        )
         && Db::getInstance()->execute('
             UPDATE `' . _DB_PREFIX_ . 'category` c ' . Shop::addSqlAssociation('category', 'c') . '
             SET c.`position` = ' . (int) $position . ',

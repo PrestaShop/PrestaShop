@@ -41,7 +41,7 @@ class UpgraderCore
 
     public $version_name;
     public $version_num;
-    public $version_is_modified = null;
+    public $version_is_modified;
     /**
      * @var string contains hte url where to download the file
      */

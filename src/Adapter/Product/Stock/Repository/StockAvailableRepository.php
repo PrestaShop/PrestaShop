@@ -98,10 +98,11 @@ class StockAvailableRepository extends AbstractObjectModelRepository
     {
         $stockAvailableId = StockAvailable::getStockAvailableIdByProductId($productId->getValue());
         if ($stockAvailableId <= 0) {
-            throw new StockAvailableNotFoundException(sprintf(
-                    'Cannot find StockAvailable for product #%d',
-                    $productId->getValue()
-                )
+            throw new StockAvailableNotFoundException(
+                sprintf(
+                'Cannot find StockAvailable for product #%d',
+                $productId->getValue()
+            )
             );
         }
 
@@ -129,10 +130,11 @@ class StockAvailableRepository extends AbstractObjectModelRepository
         $result = $qb->execute()->fetch();
 
         if (!$result) {
-            throw new StockAvailableNotFoundException(sprintf(
-                    'Cannot find StockAvailable for combination #%d',
-                    $combinationId->getValue()
-                )
+            throw new StockAvailableNotFoundException(
+                sprintf(
+                'Cannot find StockAvailable for combination #%d',
+                $combinationId->getValue()
+            )
             );
         }
 

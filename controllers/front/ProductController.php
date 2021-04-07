@@ -158,6 +158,7 @@ class ProductControllerCore extends ProductPresentingFrontControllerCore
                         case ProductInterface::REDIRECT_TYPE_PRODUCT_MOVED_PERMANENTLY:
                             header('HTTP/1.1 301 Moved Permanently');
                             header('Location: ' . $this->context->link->getProductLink($this->product->id_type_redirected));
+
                             exit;
 
                         break;
@@ -165,12 +166,14 @@ class ProductControllerCore extends ProductPresentingFrontControllerCore
                             header('HTTP/1.1 302 Moved Temporarily');
                             header('Cache-Control: no-cache');
                             header('Location: ' . $this->context->link->getProductLink($this->product->id_type_redirected));
+
                             exit;
 
                         break;
                         case ProductInterface::REDIRECT_TYPE_CATEGORY_MOVED_PERMANENTLY:
                             header('HTTP/1.1 301 Moved Permanently');
                             header('Location: ' . $this->context->link->getCategoryLink($this->product->id_type_redirected));
+
                             exit;
 
                             break;
@@ -178,6 +181,7 @@ class ProductControllerCore extends ProductPresentingFrontControllerCore
                             header('HTTP/1.1 302 Moved Temporarily');
                             header('Cache-Control: no-cache');
                             header('Location: ' . $this->context->link->getCategoryLink($this->product->id_type_redirected));
+
                             exit;
 
                             break;

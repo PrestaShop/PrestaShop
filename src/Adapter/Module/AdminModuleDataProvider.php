@@ -85,7 +85,7 @@ class AdminModuleDataProvider implements ModuleInterface
     /**
      * @var Router|null
      */
-    private $router = null;
+    private $router;
 
     /**
      * @var AddonsInterface
@@ -136,7 +136,7 @@ class AdminModuleDataProvider implements ModuleInterface
         CacheProvider $cacheProvider = null,
         Employee $employee = null
     ) {
-        list($this->languageISO) = explode('-', $translator->getLocale());
+        [$this->languageISO] = explode('-', $translator->getLocale());
 
         $this->logger = $logger;
         $this->addonsDataProvider = $addonsDataProvider;
@@ -201,7 +201,7 @@ class AdminModuleDataProvider implements ModuleInterface
         }
 
         return $this->applyModuleFilters(
-                $this->catalog_modules,
+            $this->catalog_modules,
             $filters
         );
     }
@@ -325,9 +325,9 @@ class AdminModuleDataProvider implements ModuleInterface
                     );
                 }
             } elseif (
-                !$addon->attributes->has('origin') ||
-                $addon->disk->getBoolean('is_present') ||
-                in_array($addon->attributes->get('origin'), ['native', 'native_all', 'partner', 'customer'], true)
+                !$addon->attributes->has('origin')
+                || $addon->disk->getBoolean('is_present')
+                || in_array($addon->attributes->get('origin'), ['native', 'native_all', 'partner', 'customer'], true)
             ) {
                 $url_active = 'install';
                 unset(

@@ -93,12 +93,10 @@ class Database extends AbstractInstall
                     }
 
                     break;
-
                 case 1:
                     $errors[] = $this->translator->trans('Database Server is not found. Please verify the login, password and server fields', [], 'Install') . $dbtype;
 
                     break;
-
                 case 2:
                     $error = $this->translator->trans('Connection to MySQL server succeeded, but database "%database%" not found', ['%database%' => $database], 'Install') . $dbtype;
                     if ($this->createDatabase($server, $database, $login, $password, true)) {

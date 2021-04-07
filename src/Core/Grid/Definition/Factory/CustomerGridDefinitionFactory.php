@@ -206,7 +206,8 @@ final class CustomerGridDefinitionFactory extends AbstractGridDefinitionFactory
                         'field' => 'connect',
                     ])
             )
-            ->add((new ActionColumn('actions'))
+            ->add(
+                (new ActionColumn('actions'))
             ->setName($this->trans('Actions', [], 'Admin.Global'))
             ->setOptions([
                 'actions' => (new RowActionCollection())
@@ -231,7 +232,8 @@ final class CustomerGridDefinitionFactory extends AbstractGridDefinitionFactory
                                 'clickable_row' => true,
                             ])
                     )
-                    ->add((new DeleteCustomerRowAction('delete'))
+                    ->add(
+                        (new DeleteCustomerRowAction('delete'))
                     ->setName($this->trans('Delete', [], 'Admin.Actions'))
                     ->setIcon('delete')
                     ->setOptions([
@@ -434,7 +436,8 @@ final class CustomerGridDefinitionFactory extends AbstractGridDefinitionFactory
                         'submit_route' => 'admin_customers_disable_bulk',
                     ])
             )
-            ->add((new DeleteCustomersBulkAction('delete_selection'))
+            ->add(
+                (new DeleteCustomersBulkAction('delete_selection'))
             ->setName($this->trans('Delete selected', [], 'Admin.Actions'))
             ->setOptions([
                 'customers_bulk_delete_route' => 'admin_customers_delete_bulk',

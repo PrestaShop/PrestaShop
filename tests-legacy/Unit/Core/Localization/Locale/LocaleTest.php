@@ -28,13 +28,13 @@ namespace LegacyTests\Unit\Core\Localization\Locale;
 
 use PHPUnit\Framework\TestCase;
 use PrestaShop\Decimal\Operation\Rounding;
+use PrestaShop\PrestaShop\Core\Localization\Exception\LocalizationException;
 use PrestaShop\PrestaShop\Core\Localization\Locale;
 use PrestaShop\PrestaShop\Core\Localization\Number\Formatter;
 use PrestaShop\PrestaShop\Core\Localization\Specification\Number as NumberSpecification;
 use PrestaShop\PrestaShop\Core\Localization\Specification\NumberCollection;
 use PrestaShop\PrestaShop\Core\Localization\Specification\NumberSymbolList;
 use PrestaShop\PrestaShop\Core\Localization\Specification\Price as PriceSpecification;
-use PrestaShop\PrestaShop\Core\Localization\Exception\LocalizationException;
 
 class LocaleTest extends TestCase
 {
@@ -84,7 +84,6 @@ class LocaleTest extends TestCase
                 )
             );
         /** @noinspection end */
-
         $formatter = new Formatter(
             Rounding::ROUND_HALF_UP,
             'latn'
@@ -105,10 +104,9 @@ class LocaleTest extends TestCase
      * Then the expected formatted number should be retrieved
      *
      * @param int|float $number
-     *  The number to be formatted
-     *
+     *                          The number to be formatted
      * @param string $expected
-     *  The formatted number
+     *                         The formatted number
      *
      * @dataProvider provideValidNumbers
      *
@@ -139,10 +137,10 @@ class LocaleTest extends TestCase
      * Provide valid numbers data (number + expected formatting result)
      *
      * @return array
-     * [
-     *     [<raw number>, <expected formatted number>],
-     *     [...],
-     * ]
+     *               [
+     *               [<raw number>, <expected formatted number>],
+     *               [...],
+     *               ]
      */
     public function provideValidNumbers()
     {
@@ -163,13 +161,11 @@ class LocaleTest extends TestCase
      * For more formatting cases, @see \Tests\Unit\Core\Localization\Number\FormatterTest
      *
      * @param int|float|string $number
-     *  The number to be formatted
-     *
+     *                                 The number to be formatted
      * @param string $currencyCode
-     *  The currency code
-     *
+     *                             The currency code
      * @param string $expected
-     *  The formatted number
+     *                         The formatted number
      *
      * @dataProvider provideValidPriceData
      *
@@ -186,10 +182,10 @@ class LocaleTest extends TestCase
      * Provide valid price data (number + currency code + expected formatted price)
      *
      * @return array
-     * [
-     *     [<raw number>, <currency code>, <expected formatted price>],
-     *     [...],
-     * ]
+     *               [
+     *               [<raw number>, <currency code>, <expected formatted price>],
+     *               [...],
+     *               ]
      */
     public function provideValidPriceData()
     {
@@ -205,10 +201,9 @@ class LocaleTest extends TestCase
      * Then an exception should be raised
      *
      * @param mixed $number
-     *  Potentially invalid number
-     *
+     *                      Potentially invalid number
      * @param mixed $currency
-     *  Potentially invalid currency
+     *                        Potentially invalid currency
      *
      * @dataProvider provideInvalidPriceData
      */
@@ -222,7 +217,7 @@ class LocaleTest extends TestCase
     public function provideInvalidPriceData()
     {
         return [
-            'Invalid number'   => ['foobar', 'EUR'],
+            'Invalid number' => ['foobar', 'EUR'],
             'Unknown currency' => [123456.789, 'USD'],
             'Invalid currency' => [123456.789, 123],
         ];

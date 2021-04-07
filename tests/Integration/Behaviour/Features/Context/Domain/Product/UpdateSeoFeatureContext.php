@@ -111,16 +111,19 @@ class UpdateSeoFeatureContext extends AbstractProductFeatureContext
                     $command->setLocalizedMetaTitles([
                         $this->getDefaultLangId() => PrimitiveUtils::generateRandomString($length),
                     ]);
+
                     break;
                 case 'meta_description':
                     $command->setLocalizedMetaDescriptions([
                         $this->getDefaultLangId() => PrimitiveUtils::generateRandomString($length),
                     ]);
+
                     break;
                 case 'link_rewrite':
                     $command->setLocalizedLinkRewrites([
                         $this->getDefaultLangId() => PrimitiveUtils::generateRandomString($length),
                     ]);
+
                     break;
                 default:
                     throw new RuntimeException(sprintf('Invalid field "%s" provided to scenario', $field));

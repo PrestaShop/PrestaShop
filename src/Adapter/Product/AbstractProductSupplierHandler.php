@@ -60,7 +60,7 @@ abstract class AbstractProductSupplierHandler
      *
      * @return array<int, ProductSupplierInfo>
      */
-    protected function getProductSuppliersInfo(ProductId $productId, ?CombinationId $combinationId = null): array
+    protected function getProductSuppliersInfo(ProductId $productId, CombinationId $combinationId = null): array
     {
         $productSuppliersInfo = $this->productSupplierRepository->getProductSuppliersInfo($productId, $combinationId);
 
@@ -95,7 +95,7 @@ abstract class AbstractProductSupplierHandler
      *
      * @return ProductSupplier
      */
-    protected function loadEntityFromDTO(ProductId $productId, ProductSupplierDTO $productSupplierDTO, ?CombinationId $combinationId = null): ProductSupplier
+    protected function loadEntityFromDTO(ProductId $productId, ProductSupplierDTO $productSupplierDTO, CombinationId $combinationId = null): ProductSupplier
     {
         if ($productSupplierDTO->getProductSupplierId()) {
             $productSupplier = $this->productSupplierRepository->get($productSupplierDTO->getProductSupplierId());

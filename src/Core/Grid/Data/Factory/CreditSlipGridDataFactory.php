@@ -85,7 +85,9 @@ final class CreditSlipGridDataFactory implements GridDataFactoryInterface
     {
         foreach ($creditSlips as $i => $creditSlip) {
             $creditSlips[$i]['link_value'] = $this->translator->trans(
-                'Download credit slip', [], 'Admin.Orderscustomers.Feature'
+                'Download credit slip',
+                [],
+                'Admin.Orderscustomers.Feature'
             );
         }
 

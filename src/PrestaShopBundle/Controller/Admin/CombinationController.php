@@ -53,7 +53,7 @@ class CombinationController extends FrameworkBundleAdminController
         $forms = [];
         foreach ($combinations as $combinationId => $combination) {
             $forms[] = $formFactory->createNamed(
-                "combination_$combinationId",
+                "combination_${combinationId}",
                 ProductCombination::class,
                 $combination
             )->createView();

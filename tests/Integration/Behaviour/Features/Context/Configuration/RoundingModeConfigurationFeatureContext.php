@@ -39,24 +39,31 @@ class RoundingModeConfigurationFeatureContext extends AbstractConfigurationFeatu
         switch ($value) {
             case 'up':
                 $this->setConfiguration('PS_PRICE_ROUND_MODE', PS_ROUND_UP);
+
                 break;
             case 'down':
                 $this->setConfiguration('PS_PRICE_ROUND_MODE', PS_ROUND_DOWN);
+
                 break;
             case 'half up':
                 $this->setConfiguration('PS_PRICE_ROUND_MODE', PS_ROUND_HALF_UP);
+
                 break;
             case 'half down':
                 $this->setConfiguration('PS_PRICE_ROUND_MODE', PS_ROUND_HALF_DOWN);
+
                 break;
             case 'half even':
                 $this->setConfiguration('PS_PRICE_ROUND_MODE', PS_ROUND_HALF_EVEN);
+
                 break;
             case 'half odd':
                 $this->setConfiguration('PS_PRICE_ROUND_MODE', PS_ROUND_HALF_ODD);
+
                 break;
             default:
                 throw new \Exception('Unknown config value for specific shop configuration for "rounding mode": ' . $value);
+
                 break;
         }
     }

@@ -106,7 +106,6 @@ class AttributeGroupController extends FrameworkBundleAdminController
      *     "is_granted(['read'], request.get('_legacy_controller'))",
      *     message="You do not have permission to export this."
      * )
-
      *
      * @param int $attributeGroupId
      *
@@ -193,8 +192,10 @@ class AttributeGroupController extends FrameworkBundleAdminController
     public function bulkDeleteAction(Request $request)
     {
         try {
-            $this->getCommandBus()->handle(new BulkDeleteAttributeGroupCommand(
-                    $this->getAttributeGroupIdsFromRequest($request))
+            $this->getCommandBus()->handle(
+                new BulkDeleteAttributeGroupCommand(
+                $this->getAttributeGroupIdsFromRequest($request)
+            )
             );
             $this->addFlash(
                 'success',

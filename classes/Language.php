@@ -728,7 +728,8 @@ class LanguageCore extends ObjectModel implements LanguageInterface
      */
     public static function getLocaleById(int $langId): ?string
     {
-        $locale = Db::getInstance()->getValue('
+        $locale = Db::getInstance()->getValue(
+            '
             SELECT `locale` FROM `' . _DB_PREFIX_ . 'lang` WHERE `id_lang` = ' . $langId
         );
 
@@ -1066,7 +1067,7 @@ class LanguageCore extends ObjectModel implements LanguageInterface
         if ($lang_pack) {
             foreach ($lang_pack as $key => $value) {
                 if ($key != 'iso_code' && isset(Language::$definition['fields'][$key])) {
-                    $lang->$key = $value;
+                    $lang->{$key} = $value;
                 }
             }
         }
@@ -1075,7 +1076,7 @@ class LanguageCore extends ObjectModel implements LanguageInterface
         if ($params_lang !== null && is_array($params_lang)) {
             foreach ($params_lang as $key => $value) {
                 if ($key != 'iso_code' && isset(Language::$definition['fields'][$key])) {
-                    $lang->$key = $value;
+                    $lang->{$key} = $value;
                 }
             }
         }

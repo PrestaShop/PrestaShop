@@ -33,6 +33,7 @@ class ControllerActionTest extends TestCase
 {
     /**
      * @dataProvider getControllers
+     *
      * @param string $fqcn
      * @param array $result
      */
@@ -42,7 +43,7 @@ class ControllerActionTest extends TestCase
     }
 
     /**
-     * @return array the list of controller names and expected results.
+     * @return array the list of controller names and expected results
      */
     public function getControllers()
     {

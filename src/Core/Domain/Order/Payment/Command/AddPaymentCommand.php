@@ -98,8 +98,8 @@ class AddPaymentCommand
         string $paymentMethod,
         string $paymentAmount,
         int $paymentCurrencyId,
-        ?int $orderInvoiceId = null,
-        ?string $transactionId = null
+        int $orderInvoiceId = null,
+        string $transactionId = null
     ) {
         $amount = new DecimalNumber($paymentAmount);
         $this->assertAmountIsPositive($amount);

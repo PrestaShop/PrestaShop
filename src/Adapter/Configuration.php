@@ -333,7 +333,7 @@ class Configuration extends ParameterBag implements ShopConfigurationInterface
      *
      * @return array Array of langId => localizedConfiguration
      */
-    private function getLocalized($key, ?int $shopId = null, ?int $shopGroupId = null)
+    private function getLocalized($key, int $shopId = null, int $shopGroupId = null)
     {
         $configuration = [];
 

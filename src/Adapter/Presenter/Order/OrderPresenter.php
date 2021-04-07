@@ -48,7 +48,8 @@ class OrderPresenter implements PresenterInterface
 
         $orderLazyArray = new OrderLazyArray($order);
 
-        Hook::exec('actionPresentOrder',
+        Hook::exec(
+            'actionPresentOrder',
             ['presentedOrder' => &$orderLazyArray]
         );
 

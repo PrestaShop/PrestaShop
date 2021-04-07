@@ -23,19 +23,18 @@
  * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
-
 function outstanding_allow_amount1530()
 {
-    $column_exist = Db::getInstance()->executeS('SHOW FIELDS FROM `'._DB_PREFIX_.'address`');
-    $column_formated = array();
+    $column_exist = Db::getInstance()->executeS('SHOW FIELDS FROM `' . _DB_PREFIX_ . 'address`');
+    $column_formated = [];
     $res = true;
     if ($column_exist) {
         foreach ($column_exist as $c) {
-            $column_formated[] = $c['Field'] ;
+            $column_formated[] = $c['Field'];
         }
 
         if (in_array('outstanding_allow_amount', $column_formated)) {
-            Db::getInstance()->execute('ALTER TABLE `'._DB_PREFIX_.'address` CHANGE  `outstanding_allow_amount` `outstanding_allow_amount` DECIMAL(20, 6) NOT NULL DEFAULT 0.000000');
+            Db::getInstance()->execute('ALTER TABLE `' . _DB_PREFIX_ . 'address` CHANGE  `outstanding_allow_amount` `outstanding_allow_amount` DECIMAL(20, 6) NOT NULL DEFAULT 0.000000');
         }
     }
 

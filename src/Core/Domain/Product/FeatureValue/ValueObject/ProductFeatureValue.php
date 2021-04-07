@@ -56,7 +56,7 @@ class ProductFeatureValue
      * @param int|null $featureValueId
      * @param array|null $localizedCustomValues
      */
-    public function __construct(int $featureId, ?int $featureValueId = null, ?array $localizedCustomValues = null)
+    public function __construct(int $featureId, int $featureValueId = null, array $localizedCustomValues = null)
     {
         $this->featureId = new FeatureId($featureId);
         $this->featureValueId = null !== $featureValueId ? new FeatureValueId($featureValueId) : null;

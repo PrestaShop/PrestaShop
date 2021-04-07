@@ -40,7 +40,7 @@ final class HookRegistry
     /**
      * @var array the current selected hook during the request
      */
-    private $currentHook = null;
+    private $currentHook;
 
     /**
      * @var array the list of hooks data
@@ -66,7 +66,7 @@ final class HookRegistry
         $this->currentHook = [
             'name' => $hookName,
             'args' => $hookArguments,
-            'location' => "$file:$line",
+            'location' => "${file}:${line}",
             'status' => self::HOOK_NOT_CALLED,
             'modules' => [],
         ];

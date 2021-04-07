@@ -69,7 +69,7 @@ class ModuleZipManager
         Filesystem $filesystem,
         TranslatorInterface $translator,
         EventDispatcherInterface $eventDispatcher
-        ) {
+    ) {
         $this->filesystem = $filesystem;
         $this->translator = $translator;
         $this->eventDispatcher = $eventDispatcher;

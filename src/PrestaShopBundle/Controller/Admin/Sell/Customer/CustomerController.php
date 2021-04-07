@@ -483,9 +483,10 @@ class CustomerController extends AbstractAdminController
                 $code = Response::HTTP_NOT_FOUND;
             }
 
-            return $this->json([
-                'message' => $this->getErrorMessageForException($e, $this->getErrorMessages($e)),
-            ],
+            return $this->json(
+                [
+                    'message' => $this->getErrorMessageForException($e, $this->getErrorMessages($e)),
+                ],
                 $code
             );
         }

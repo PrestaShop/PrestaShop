@@ -139,6 +139,7 @@ class TypedRegexValidator extends ConstraintValidator
                 return Reference::VALID_PATTERN;
             default:
                 $definedTypes = implode(', ', array_values((new ReflectionClass(TypedRegex::class))->getConstants()));
+
                 throw new InvalidArgumentException(sprintf('Type "%s" is not defined. Defined types are: %s', $type, $definedTypes));
         }
     }

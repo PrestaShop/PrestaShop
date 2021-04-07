@@ -263,7 +263,7 @@ class CustomizationCore extends ObjectModel
 
         if (!empty($inValues)) {
             $results = Db::getInstance()->executeS(
-                            'SELECT `id_customization`, `id_product`, `quantity`, `quantity_refunded`, `quantity_returned`
+                'SELECT `id_customization`, `id_product`, `quantity`, `quantity_refunded`, `quantity_returned`
 							 FROM `' . _DB_PREFIX_ . 'customization`
 							 WHERE `id_customization` IN (' . $inValues . ')'
             );

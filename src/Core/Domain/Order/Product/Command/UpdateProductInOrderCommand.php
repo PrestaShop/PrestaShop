@@ -81,7 +81,7 @@ class UpdateProductInOrderCommand
         string $priceTaxIncluded,
         string $priceTaxExcluded,
         int $quantity,
-        ?int $orderInvoiceId = null
+        int $orderInvoiceId = null
     ) {
         $this->orderId = new OrderId($orderId);
         $this->orderDetailId = $orderDetailId;

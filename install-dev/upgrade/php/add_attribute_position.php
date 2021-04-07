@@ -23,26 +23,25 @@
  * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
-
 function add_attribute_position()
 {
     $groups = Db::getInstance()->executeS('
 	SELECT DISTINCT `id_attribute_group`
-	FROM `'._DB_PREFIX_.'attribute`');
+	FROM `' . _DB_PREFIX_ . 'attribute`');
     if (is_array($groups) && count($groups)) {
         foreach ($groups as $group) {
             $attributes = Db::getInstance()->executeS('
 			SELECT *
-			FROM `'._DB_PREFIX_.'attribute`
-			WHERE `id_attribute_group` = '. (int)($group['id_attribute_group']));
+			FROM `' . _DB_PREFIX_ . 'attribute`
+			WHERE `id_attribute_group` = ' . (int) ($group['id_attribute_group']));
             $i = 0;
             if (is_array($attributes) && count($attributes)) {
                 foreach ($attributes as $attribute) {
                     Db::getInstance()->execute('
-					UPDATE `'._DB_PREFIX_.'attribute`
-					SET `position` = '.$i++.'
-					WHERE `id_attribute` = '.(int)$attribute['id_attribute'].'
-					AND `id_attribute_group` = '.(int)$attribute['id_attribute_group']);
+					UPDATE `' . _DB_PREFIX_ . 'attribute`
+					SET `position` = ' . $i++ . '
+					WHERE `id_attribute` = ' . (int) $attribute['id_attribute'] . '
+					AND `id_attribute_group` = ' . (int) $attribute['id_attribute_group']);
                 }
             }
         }

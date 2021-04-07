@@ -110,7 +110,8 @@ final class MerchandiseReturnGridDefinitionFactory extends AbstractFilterableGri
     protected function getFilters()
     {
         return (new FilterCollection())
-            ->add((new Filter('id_order_return', TextType::class))
+            ->add(
+                (new Filter('id_order_return', TextType::class))
             ->setTypeOptions([
                 'required' => false,
                 'attr' => [
@@ -119,7 +120,8 @@ final class MerchandiseReturnGridDefinitionFactory extends AbstractFilterableGri
             ])
             ->setAssociatedColumn('id_order_return')
             )
-            ->add((new Filter('id_order', TextType::class))
+            ->add(
+                (new Filter('id_order', TextType::class))
             ->setTypeOptions([
                 'required' => false,
                 'attr' => [
@@ -128,20 +130,23 @@ final class MerchandiseReturnGridDefinitionFactory extends AbstractFilterableGri
             ])
             ->setAssociatedColumn('id_order')
             )
-            ->add((new Filter('status', TextType::class))
+            ->add(
+                (new Filter('status', TextType::class))
             ->setTypeOptions([
                 'required' => false,
             ])
             ->setAssociatedColumn('status')
             )
-            ->add((new Filter('date_add', DateRangeType::class))
+            ->add(
+                (new Filter('date_add', DateRangeType::class))
             ->setTypeOptions([
                 'required' => false,
                 'date_format' => 'YYYY-MM-DD',
             ])
             ->setAssociatedColumn('date_add')
             )
-            ->add((new Filter('actions', SearchAndResetType::class))
+            ->add(
+                (new Filter('actions', SearchAndResetType::class))
             ->setTypeOptions([
                 'reset_route' => 'admin_common_reset_search_by_filter_id',
                 'reset_route_params' => [

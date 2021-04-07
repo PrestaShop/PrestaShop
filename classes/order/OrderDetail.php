@@ -257,19 +257,19 @@ class OrderDetailCore extends ObjectModel
     protected $outOfStock = false;
 
     /** @var TaxCalculator object */
-    protected $tax_calculator = null;
+    protected $tax_calculator;
 
     /** @var Address object */
-    protected $vat_address = null;
+    protected $vat_address;
 
     /** @var Address object */
-    protected $specificPrice = null;
+    protected $specificPrice;
 
     /** @var Customer object */
-    protected $customer = null;
+    protected $customer;
 
     /** @var Context object */
-    protected $context = null;
+    protected $context;
 
     public function __construct($id = null, $id_lang = null, $context = null)
     {
@@ -594,7 +594,6 @@ class OrderDetailCore extends ObjectModel
                     $this->reduction_percent = (float) $this->specificPrice['reduction'] * 100;
 
                     break;
-
                 case 'amount':
                     $price = Tools::convertPrice($this->specificPrice['reduction'], $order->id_currency);
                     $this->reduction_amount = !$this->specificPrice['id_currency'] ? (float) $price : (float) $this->specificPrice['reduction'];
@@ -906,8 +905,8 @@ class OrderDetailCore extends ObjectModel
             if (!empty($data['required']) || !empty($data['lang'])) {
                 continue;
             }
-            if ($this->validateField($field, $this->$field) !== true) {
-                $this->$field = '';
+            if ($this->validateField($field, $this->{$field}) !== true) {
+                $this->{$field} = '';
             }
         }
 

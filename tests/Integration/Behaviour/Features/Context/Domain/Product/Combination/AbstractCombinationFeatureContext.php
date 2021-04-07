@@ -43,7 +43,7 @@ abstract class AbstractCombinationFeatureContext extends AbstractProductFeatureC
      *
      * @return CombinationListForEditing
      */
-    protected function getCombinationsList(string $productReference, ?ProductCombinationFilters $combinationFilters = null): CombinationListForEditing
+    protected function getCombinationsList(string $productReference, ProductCombinationFilters $combinationFilters = null): CombinationListForEditing
     {
         return $this->getQueryBus()->handle(new GetEditableCombinationsList(
             $this->getSharedStorage()->get($productReference),

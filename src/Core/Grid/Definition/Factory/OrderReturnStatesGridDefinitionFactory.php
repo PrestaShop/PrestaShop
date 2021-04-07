@@ -77,14 +77,16 @@ final class OrderReturnStatesGridDefinitionFactory extends AbstractGridDefinitio
                         'field' => 'id_order_return_state',
                     ])
             )
-            ->add((new ColorColumn('name'))
+            ->add(
+                (new ColorColumn('name'))
             ->setName($this->trans('Status', [], 'Admin.Global'))
             ->setOptions([
                 'field' => 'name',
                 'color_field' => 'color',
             ])
             )
-            ->add((new ActionColumn('actions'))
+            ->add(
+                (new ActionColumn('actions'))
             ->setName($this->trans('Actions', [], 'Admin.Global'))
             ->setOptions([
                 'actions' => (new RowActionCollection())

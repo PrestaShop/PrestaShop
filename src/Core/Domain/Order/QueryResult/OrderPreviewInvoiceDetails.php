@@ -126,7 +126,7 @@ class OrderPreviewInvoiceDetails
         string $country,
         ?string $email,
         string $phone,
-        ?string $dni = null
+        string $dni = null
     ) {
         $this->firstName = $firstName;
         $this->lastName = $lastName;

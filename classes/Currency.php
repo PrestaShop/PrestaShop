@@ -225,14 +225,14 @@ class CurrencyCore extends ObjectModel
      *
      * @var string
      */
-    public $prefix = null;
+    public $prefix;
 
     /**
      * contains the sign to display after price, according to its format.
      *
      * @var string
      */
-    public $suffix = null;
+    public $suffix;
 
     /**
      * CurrencyCore constructor.
@@ -1173,6 +1173,7 @@ class CurrencyCore extends ObjectModel
                 $namesByLang[$language->id] = !empty($originalNames[$language->id]) ? $originalNames[$language->id] : $this->iso_code;
                 $symbolsByLang[$language->id] = !empty($originalSymbols[$language->id]) ? $originalSymbols[$language->id] : $this->iso_code;
                 $this->modified = true;
+
                 continue;
             }
 

@@ -259,7 +259,6 @@ abstract class AbstractLazyArray implements Iterator, ArrayAccess, Countable, Js
                     $result = $this->methodCacheResults[$index];
 
                     break;
-
                 case 'closure':
                     $isResultAvailableInCache = (isset($this->methodCacheResults[$index]));
 
@@ -270,9 +269,9 @@ abstract class AbstractLazyArray implements Iterator, ArrayAccess, Countable, Js
                     $result = $this->methodCacheResults[$index];
 
                     break;
-
                 default:
                     $result = $this->arrayAccessList[$index]['value'];
+
                     break;
             }
 

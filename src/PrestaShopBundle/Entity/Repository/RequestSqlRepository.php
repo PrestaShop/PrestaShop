@@ -65,7 +65,7 @@ class RequestSqlRepository implements RepositoryInterface, DoctrineQueryBuilderI
      */
     public function findAll()
     {
-        $statement = $this->connection->query("SELECT rs.* FROM $this->requestSqlTable rs");
+        $statement = $this->connection->query("SELECT rs.* FROM {$this->requestSqlTable} rs");
 
         return $statement->fetchAll();
     }
@@ -77,7 +77,7 @@ class RequestSqlRepository implements RepositoryInterface, DoctrineQueryBuilderI
      */
     public function getCount()
     {
-        $statement = $this->connection->query("SELECT COUNT(rs.id_request_sql) AS c FROM $this->requestSqlTable rs");
+        $statement = $this->connection->query("SELECT COUNT(rs.id_request_sql) AS c FROM {$this->requestSqlTable} rs");
         $row = $statement->fetch();
 
         return (int) $row['c'];
@@ -176,7 +176,7 @@ class RequestSqlRepository implements RepositoryInterface, DoctrineQueryBuilderI
                 continue;
             }
 
-            $qb->andWhere("`$filterName` LIKE :$filterName");
+            $qb->andWhere("`${filterName}` LIKE :${filterName}");
             $qb->setParameter($filterName, '%' . $value . '%');
         }
 

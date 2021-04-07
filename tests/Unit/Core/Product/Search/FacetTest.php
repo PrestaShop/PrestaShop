@@ -76,15 +76,16 @@ class FacetTest extends TestCase
         $this->assertSame('radio', $this->facet->getWidgetType());
         $this->assertTrue($this->facet->isDisplayed());
         $this->assertTrue($this->facet->isMultipleSelectionAllowed());
-        $this->assertSame([
-            'label' => '',
-            'displayed' => true,
-            'type' => '',
-            'properties' => [],
-            'filters' => [],
-            'multipleSelectionAllowed' => true,
-            'widgetType' => 'radio',
-        ],
+        $this->assertSame(
+            [
+                'label' => '',
+                'displayed' => true,
+                'type' => '',
+                'properties' => [],
+                'filters' => [],
+                'multipleSelectionAllowed' => true,
+                'widgetType' => 'radio',
+            ],
             $this->facet->toArray()
         );
     }

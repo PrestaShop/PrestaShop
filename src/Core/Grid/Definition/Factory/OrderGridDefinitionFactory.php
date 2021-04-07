@@ -177,7 +177,8 @@ final class OrderGridDefinitionFactory extends AbstractFilterableGridDefinitionF
                         'bulk_field' => 'id_order',
                     ])
             )
-            ->add((new IdentifierColumn('id_order'))
+            ->add(
+                (new IdentifierColumn('id_order'))
             ->setName($this->trans('ID', [], 'Admin.Global'))
             ->setOptions([
                 'identifier_field' => 'id_order',
@@ -185,13 +186,15 @@ final class OrderGridDefinitionFactory extends AbstractFilterableGridDefinitionF
                 'clickable' => false,
             ])
             )
-            ->add((new DataColumn('reference'))
+            ->add(
+                (new DataColumn('reference'))
             ->setName($this->trans('Reference', [], 'Admin.Global'))
             ->setOptions([
                 'field' => 'reference',
             ])
             )
-            ->add((new BooleanColumn('new'))
+            ->add(
+                (new BooleanColumn('new'))
             ->setName($this->trans('New client', [], 'Admin.Orderscustomers.Feature'))
             ->setOptions([
                 'field' => 'new',
@@ -200,7 +203,8 @@ final class OrderGridDefinitionFactory extends AbstractFilterableGridDefinitionF
                 'clickable' => true,
             ])
             )
-            ->add((new DisableableLinkColumn('customer'))
+            ->add(
+                (new DisableableLinkColumn('customer'))
             ->setName($this->trans('Customer', [], 'Admin.Global'))
             ->setOptions([
                 'field' => 'customer',
@@ -211,7 +215,8 @@ final class OrderGridDefinitionFactory extends AbstractFilterableGridDefinitionF
                 'target' => '_blank',
             ])
             )
-            ->add((new OrderPriceColumn('total_paid_tax_incl'))
+            ->add(
+                (new OrderPriceColumn('total_paid_tax_incl'))
             ->setName($this->trans('Total', [], 'Admin.Global'))
             ->setOptions([
                 'field' => 'total_paid_tax_incl',
@@ -219,13 +224,15 @@ final class OrderGridDefinitionFactory extends AbstractFilterableGridDefinitionF
                 'clickable' => true,
             ])
             )
-            ->add((new DataColumn('payment'))
+            ->add(
+                (new DataColumn('payment'))
             ->setName($this->trans('Payment', [], 'Admin.Global'))
             ->setOptions([
                 'field' => 'payment',
             ])
             )
-            ->add((new ChoiceColumn('osname'))
+            ->add(
+                (new ChoiceColumn('osname'))
             ->setName($this->trans('Status', [], 'Admin.Global'))
             ->setOptions([
                 'field' => 'current_state',
@@ -237,7 +244,8 @@ final class OrderGridDefinitionFactory extends AbstractFilterableGridDefinitionF
                 ],
             ])
             )
-            ->add((new DateTimeColumn('date_add'))
+            ->add(
+                (new DateTimeColumn('date_add'))
             ->setName($this->trans('Date', [], 'Admin.Global'))
             ->setOptions([
                 'field' => 'date_add',
@@ -245,7 +253,8 @@ final class OrderGridDefinitionFactory extends AbstractFilterableGridDefinitionF
                 'clickable' => true,
             ])
             )
-            ->add((new ActionColumn('actions'))
+            ->add(
+                (new ActionColumn('actions'))
             ->setName($this->trans('Actions', [], 'Admin.Global'))
             ->setOptions([
                 'actions' => $this->getRowActions(),
@@ -254,7 +263,9 @@ final class OrderGridDefinitionFactory extends AbstractFilterableGridDefinitionF
         ;
 
         if ($this->orderCountriesChoiceProvider->getChoices()) {
-            $columns->addAfter('new', (new DataColumn('country_name'))
+            $columns->addAfter(
+                'new',
+                (new DataColumn('country_name'))
                 ->setName($this->trans('Delivery', [], 'Admin.Global'))
                 ->setOptions([
                     'field' => 'country_name',
@@ -263,7 +274,9 @@ final class OrderGridDefinitionFactory extends AbstractFilterableGridDefinitionF
         }
 
         if ($this->configuration->get('PS_B2B_ENABLE')) {
-            $columns->addAfter('customer', (new DataColumn('company'))
+            $columns->addAfter(
+                'customer',
+                (new DataColumn('company'))
                 ->setName($this->trans('Company', [], 'Admin.Global'))
                 ->setOptions([
                     'field' => 'company',
@@ -272,7 +285,9 @@ final class OrderGridDefinitionFactory extends AbstractFilterableGridDefinitionF
         }
 
         if ($this->multistoreFeature->isUsed()) {
-            $columns->addBefore('actions', (new DataColumn('shop_name'))
+            $columns->addBefore(
+                'actions',
+                (new DataColumn('shop_name'))
                 ->setName($this->trans('Shop', [], 'Admin.Global'))
                 ->setOptions([
                     'field' => 'shop_name',
@@ -292,7 +307,8 @@ final class OrderGridDefinitionFactory extends AbstractFilterableGridDefinitionF
         $filters = new FilterCollection();
 
         $filters
-            ->add((new Filter('id_order', TextType::class))
+            ->add(
+                (new Filter('id_order', TextType::class))
             ->setTypeOptions([
                 'required' => false,
                 'attr' => [
@@ -301,7 +317,8 @@ final class OrderGridDefinitionFactory extends AbstractFilterableGridDefinitionF
             ])
             ->setAssociatedColumn('id_order')
             )
-            ->add((new Filter('reference', TextType::class))
+            ->add(
+                (new Filter('reference', TextType::class))
             ->setTypeOptions([
                 'required' => false,
                 'attr' => [
@@ -310,13 +327,15 @@ final class OrderGridDefinitionFactory extends AbstractFilterableGridDefinitionF
             ])
             ->setAssociatedColumn('reference')
             )
-            ->add((new Filter('new', YesAndNoChoiceType::class))
+            ->add(
+                (new Filter('new', YesAndNoChoiceType::class))
             ->setTypeOptions([
                 'required' => false,
             ])
             ->setAssociatedColumn('new')
             )
-            ->add((new Filter('customer', TextType::class))
+            ->add(
+                (new Filter('customer', TextType::class))
             ->setTypeOptions([
                 'required' => false,
                 'attr' => [
@@ -325,7 +344,8 @@ final class OrderGridDefinitionFactory extends AbstractFilterableGridDefinitionF
             ])
             ->setAssociatedColumn('customer')
             )
-            ->add((new Filter('total_paid_tax_incl', TextType::class))
+            ->add(
+                (new Filter('total_paid_tax_incl', TextType::class))
             ->setTypeOptions([
                 'required' => false,
                 'attr' => [
@@ -334,7 +354,8 @@ final class OrderGridDefinitionFactory extends AbstractFilterableGridDefinitionF
             ])
             ->setAssociatedColumn('total_paid_tax_incl')
             )
-            ->add((new Filter('payment', TextType::class))
+            ->add(
+                (new Filter('payment', TextType::class))
             ->setTypeOptions([
                 'required' => false,
                 'attr' => [
@@ -343,7 +364,8 @@ final class OrderGridDefinitionFactory extends AbstractFilterableGridDefinitionF
             ])
             ->setAssociatedColumn('payment')
             )
-            ->add((new Filter('osname', ChoiceType::class))
+            ->add(
+                (new Filter('osname', ChoiceType::class))
             ->setTypeOptions([
                 'required' => false,
                 'choices' => $this->orderStatusesChoiceProvider->getChoices(),
@@ -351,13 +373,15 @@ final class OrderGridDefinitionFactory extends AbstractFilterableGridDefinitionF
             ])
             ->setAssociatedColumn('osname')
             )
-            ->add((new Filter('date_add', DateRangeType::class))
+            ->add(
+                (new Filter('date_add', DateRangeType::class))
             ->setTypeOptions([
                 'required' => false,
             ])
             ->setAssociatedColumn('date_add')
             )
-            ->add((new Filter('actions', SearchAndResetType::class))
+            ->add(
+                (new Filter('actions', SearchAndResetType::class))
             ->setTypeOptions([
                 'reset_route' => 'admin_common_reset_search_by_filter_id',
                 'reset_route_params' => [
@@ -372,7 +396,8 @@ final class OrderGridDefinitionFactory extends AbstractFilterableGridDefinitionF
         $orderCountriesChoices = $this->orderCountriesChoiceProvider->getChoices();
 
         if (!empty($orderCountriesChoices)) {
-            $filters->add((new Filter('country_name', ChoiceType::class))
+            $filters->add(
+                (new Filter('country_name', ChoiceType::class))
                 ->setTypeOptions([
                     'required' => false,
                     'choices' => $orderCountriesChoices,
@@ -382,7 +407,8 @@ final class OrderGridDefinitionFactory extends AbstractFilterableGridDefinitionF
         }
 
         if ($this->configuration->get('PS_B2B_ENABLE')) {
-            $filters->add((new Filter('company', TextType::class))
+            $filters->add(
+                (new Filter('company', TextType::class))
                 ->setTypeOptions([
                     'required' => false,
                     'attr' => [
@@ -433,14 +459,16 @@ final class OrderGridDefinitionFactory extends AbstractFilterableGridDefinitionF
     protected function getBulkActions()
     {
         return (new BulkActionCollection())
-            ->add((new ModalFormSubmitBulkAction('change_order_status'))
+            ->add(
+                (new ModalFormSubmitBulkAction('change_order_status'))
             ->setName($this->trans('Change Order Status', [], 'Admin.Orderscustomers.Feature'))
             ->setOptions([
                 'submit_route' => 'admin_orders_change_orders_status',
                 'modal_id' => 'changeOrdersStatusModal',
             ])
             )
-            ->add((new ButtonBulkAction('open_tabs'))
+            ->add(
+                (new ButtonBulkAction('open_tabs'))
             ->setName($this->trans('Open in new tabs', [], 'Admin.Orderscustomers.Feature'))
             ->setOptions([
                 'class' => 'open_tabs',
@@ -465,7 +493,7 @@ final class OrderGridDefinitionFactory extends AbstractFilterableGridDefinitionF
     {
         $rowActionCollection = new RowActionCollection();
         $rowActionCollection->add(
-                (new LinkRowAction('print_invoice'))
+            (new LinkRowAction('print_invoice'))
                     ->setName($this->trans('View invoice', [], 'Admin.Orderscustomers.Feature'))
                     ->setIcon('receipt')
                     ->setOptions([
@@ -475,7 +503,7 @@ final class OrderGridDefinitionFactory extends AbstractFilterableGridDefinitionF
                         'route_param_field' => 'id_order',
                         'use_inline_display' => true,
                     ])
-            )
+        )
             ->add(
                 (new LinkRowAction('print_delivery_slip'))
                     ->setName($this->trans('View delivery slip', [], 'Admin.Orderscustomers.Feature'))

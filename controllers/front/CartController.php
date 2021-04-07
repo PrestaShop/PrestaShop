@@ -540,10 +540,10 @@ class CartControllerCore extends FrontController
     public function productInCartMatchesCriteria($productInCart)
     {
         return (
-            !isset($this->id_product_attribute) ||
-            (
-                $productInCart['id_product_attribute'] == $this->id_product_attribute &&
-                $productInCart['id_customization'] == $this->customization_id
+            !isset($this->id_product_attribute)
+            || (
+                $productInCart['id_product_attribute'] == $this->id_product_attribute
+                && $productInCart['id_customization'] == $this->customization_id
             )
         ) && isset($this->id_product) && $productInCart['id_product'] == $this->id_product;
     }
@@ -621,7 +621,7 @@ class CartControllerCore extends FrontController
 
             if ($currentProduct->hasAttributes() && $product['id_product_attribute'] === '0') {
                 return $this->trans(
-                   'The item %product% in your cart is now a product with attributes. Please delete it and choose one of its combinations to proceed with your order.',
+                    'The item %product% in your cart is now a product with attributes. Please delete it and choose one of its combinations to proceed with your order.',
                     ['%product%' => $product['name']],
                     'Shop.Notifications.Error'
                 );

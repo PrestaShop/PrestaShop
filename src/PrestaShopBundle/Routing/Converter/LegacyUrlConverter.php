@@ -241,6 +241,7 @@ final class LegacyUrlConverter
             $urlPath = parse_url($url, PHP_URL_PATH);
             if (!empty($urlPath)) {
                 $this->router->match($urlPath);
+
                 throw new AlreadyConvertedException(sprintf('%s is already a converted url', $url));
             }
         } catch (ExceptionInterface $e) {

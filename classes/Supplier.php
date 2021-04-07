@@ -165,7 +165,7 @@ class SupplierCore extends ObjectModel
 						WHERE cg.`id_group` ' . $sqlGroups . '
 					)') . '
 					GROUP BY ps.`id_supplier`'
-                );
+            );
 
             $counts = [];
             foreach ($results as $result) {

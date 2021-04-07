@@ -26,8 +26,8 @@
 
 namespace LegacyTests\Unit\Core\Grid\Position;
 
-use PHPUnit\Framework\TestCase;
 use PHPUnit\Framework\MockObject\MockObject;
+use PHPUnit\Framework\TestCase;
 use PrestaShop\PrestaShop\Core\Grid\Position\Exception\PositionException;
 use PrestaShop\PrestaShop\Core\Grid\Position\Exception\PositionUpdateException;
 use PrestaShop\PrestaShop\Core\Grid\Position\GridPositionUpdater;
@@ -154,7 +154,6 @@ class GridPositionUpdaterTest extends TestCase
             ));
 
         return $updaterMock;
-
     }
 
     /**

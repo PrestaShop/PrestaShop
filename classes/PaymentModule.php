@@ -249,6 +249,7 @@ abstract class PaymentModuleCore extends Module
 
         if (!$this->active) {
             PrestaShopLogger::addLog('PaymentModule::validateOrder - Module is not active', 3, null, 'Cart', (int) $id_cart, true);
+
             die(Tools::displayError());
         }
 
@@ -256,6 +257,7 @@ abstract class PaymentModuleCore extends Module
         if (Validate::isLoadedObject($this->context->cart) && $this->context->cart->OrderExists() == false) {
             if ($secure_key !== false && $secure_key != $this->context->cart->secure_key) {
                 PrestaShopLogger::addLog('PaymentModule::validateOrder - Secure key does not match', 3, null, 'Cart', (int) $id_cart, true);
+
                 die(Tools::displayError());
             }
 
@@ -565,9 +567,9 @@ abstract class PaymentModuleCore extends Module
                     $new_history->addWithemail(true, $extra_vars);
 
                     // Switch to back order if needed
-                    if (Configuration::get('PS_STOCK_MANAGEMENT') &&
-                            ($order_detail->getStockState() ||
-                            $order_detail->product_quantity_in_stock < 0)) {
+                    if (Configuration::get('PS_STOCK_MANAGEMENT')
+                            && ($order_detail->getStockState()
+                            || $order_detail->product_quantity_in_stock < 0)) {
                         $history = new OrderHistory();
                         $history->id_order = (int) $order->id;
                         $history->changeIdOrderState(Configuration::get($order->hasBeenPaid() ? 'PS_OS_OUTOFSTOCK_PAID' : 'PS_OS_OUTOFSTOCK_UNPAID'), $order, true);
@@ -718,6 +720,7 @@ abstract class PaymentModuleCore extends Module
                 } else {
                     $error = $this->trans('Order creation failed', [], 'Admin.Payment.Notification');
                     PrestaShopLogger::addLog($error, 4, '0000002', 'Cart', (int) ($order->id_cart));
+
                     die(Tools::displayError($error));
                 }
             } // End foreach $order_detail_list
@@ -735,6 +738,7 @@ abstract class PaymentModuleCore extends Module
         } else {
             $error = $this->trans('Cart cannot be loaded or an order has already been placed using this cart', [], 'Admin.Payment.Notification');
             PrestaShopLogger::addLog($error, 4, '0000001', 'Cart', (int) ($this->context->cart->id));
+
             die(Tools::displayError($error));
         }
     }
@@ -1063,6 +1067,7 @@ abstract class PaymentModuleCore extends Module
 
         if (!$result) {
             PrestaShopLogger::addLog('PaymentModule::validateOrder - Order cannot be created', 3, null, 'Cart', (int) $cart->id, true);
+
             throw new PrestaShopException('Can\'t save Order');
         }
 
@@ -1163,7 +1168,7 @@ abstract class PaymentModuleCore extends Module
                 // Set a new voucher code
                 $voucher->code = empty($voucher->code) ? substr(md5($order->id . '-' . $order->id_customer . '-' . $cartRule->id), 0, 16) : $voucher->code . '-2';
                 if (preg_match('/\-([0-9]{1,2})\-([0-9]{1,2})$/', $voucher->code, $matches) && $matches[1] == $matches[2]) {
-                    $voucher->code = preg_replace('/' . $matches[0] . '$/', '-' . (intval($matches[1]) + 1), $voucher->code);
+                    $voucher->code = preg_replace('/' . $matches[0] . '$/', '-' . ((int) ($matches[1]) + 1), $voucher->code);
                 }
 
                 // Set the new voucher value
@@ -1217,7 +1222,13 @@ abstract class PaymentModuleCore extends Module
                         $params,
                         $this->context->customer->email,
                         $this->context->customer->firstname . ' ' . $this->context->customer->lastname,
-                        null, null, null, null, _PS_MAIL_DIR_, false, (int) $order->id_shop
+                        null,
+                        null,
+                        null,
+                        null,
+                        _PS_MAIL_DIR_,
+                        false,
+                        (int) $order->id_shop
                     );
                 }
 

@@ -125,8 +125,8 @@ class CartRuleCalculator
                 foreach ($this->cartRows as $cartRow) {
                     $product = $cartRow->getRowData();
                     if (
-                        array_key_exists('product_quantity', $product) &&
-                        0 === (int) $product['product_quantity']
+                        array_key_exists('product_quantity', $product)
+                        && 0 === (int) $product['product_quantity']
                     ) {
                         $cartRuleData->addDiscountApplied(new AmountImmutable(0.0, 0.0));
                     } elseif ((($cartRule->reduction_exclude_special && !$product['reduction_applies'])

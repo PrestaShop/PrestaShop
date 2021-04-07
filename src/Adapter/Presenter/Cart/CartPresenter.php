@@ -486,7 +486,8 @@ class CartPresenter implements PresenterInterface
                 '',
         ];
 
-        Hook::exec('actionPresentCart',
+        Hook::exec(
+            'actionPresentCart',
             ['presentedCart' => &$result]
         );
 
@@ -530,6 +531,7 @@ class CartPresenter implements PresenterInterface
                     foreach ($option as $currentCarrier) {
                         if (isset($currentCarrier['is_free']) && $currentCarrier['is_free'] > 0) {
                             $shippingDisplayValue = $this->translator->trans('Free', [], 'Shop.Theme.Checkout');
+
                             break 2;
                         }
                     }
@@ -575,6 +577,7 @@ class CartPresenter implements PresenterInterface
                 $freeShippingOnly = true;
                 if ($freeShippingAlreadySet) {
                     unset($vouchers[$cartVoucher['id_cart_rule']]);
+
                     continue;
                 } else {
                     $freeShippingAlreadySet = true;
@@ -672,7 +675,7 @@ class CartPresenter implements PresenterInterface
         }
 
         foreach ($matches['attribute'] as $attribute) {
-            list($key, $value) = explode(':', $attribute);
+            [$key, $value] = explode(':', $attribute);
             $attributesArray[trim($key)] = ltrim($value);
         }
 

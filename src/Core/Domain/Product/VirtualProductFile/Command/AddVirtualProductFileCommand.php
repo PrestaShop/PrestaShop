@@ -78,9 +78,9 @@ class AddVirtualProductFileCommand
         int $productId,
         string $filePath,
         string $displayName,
-        ?int $accessDays = null,
-        ?int $downloadTimesLimit = null,
-        ?DateTimeInterface $expirationDate = null
+        int $accessDays = null,
+        int $downloadTimesLimit = null,
+        DateTimeInterface $expirationDate = null
     ) {
         $this->productId = new ProductId($productId);
         $this->filePath = $filePath;

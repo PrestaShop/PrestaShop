@@ -215,12 +215,12 @@ class StockAvailableCore extends ObjectModel
 
                     Hook::exec(
                         'actionUpdateQuantity',
-                                    [
-                                        'id_product' => $id_product,
-                                        'id_product_attribute' => 0,
-                                        'quantity' => $product_quantity,
-                                        'id_shop' => $id_shop,
-                                    ]
+                        [
+                            'id_product' => $id_product,
+                            'id_product_attribute' => 0,
+                            'quantity' => $product_quantity,
+                            'id_shop' => $id_shop,
+                        ]
                     );
                 } else {
                     // else this product has attributes, hence loops on $ids_product_attribute
@@ -270,12 +270,12 @@ class StockAvailableCore extends ObjectModel
 
                         Hook::exec(
                             'actionUpdateQuantity',
-                                    [
-                                        'id_product' => $id_product,
-                                        'id_product_attribute' => $id_product_attribute,
-                                        'quantity' => $quantity,
-                                        'id_shop' => $id_shop,
-                                    ]
+                            [
+                                'id_product' => $id_product,
+                                'id_product_attribute' => $id_product_attribute,
+                                'quantity' => $quantity,
+                                'id_shop' => $id_shop,
+                            ]
                         );
                     }
                 }

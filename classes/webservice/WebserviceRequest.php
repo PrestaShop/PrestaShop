@@ -29,7 +29,7 @@ class WebserviceRequestCore
     const HTTP_POST = 2;
     const HTTP_PUT = 4;
 
-    protected $_available_languages = null;
+    protected $_available_languages;
     /**
      * Errors triggered at execution.
      *
@@ -1104,10 +1104,10 @@ class WebserviceRequestCore
         // filtered i18n fields which can use filters
         $i18n_available_filters = [];
         foreach ($this->resourceConfiguration['fields'] as $fieldName => $field) {
-            if ((!isset($this->resourceConfiguration['hidden_fields']) ||
-                (isset($this->resourceConfiguration['hidden_fields']) && !in_array($fieldName, $this->resourceConfiguration['hidden_fields'])))) {
-                if ((!isset($field['i18n']) ||
-                (isset($field['i18n']) && !$field['i18n']))) {
+            if ((!isset($this->resourceConfiguration['hidden_fields'])
+                || (isset($this->resourceConfiguration['hidden_fields']) && !in_array($fieldName, $this->resourceConfiguration['hidden_fields'])))) {
+                if ((!isset($field['i18n'])
+                || (isset($field['i18n']) && !$field['i18n']))) {
                     $available_filters[] = $fieldName;
                 } else {
                     $i18n_available_filters[] = $fieldName;
@@ -1571,7 +1571,7 @@ class WebserviceRequestCore
                 if ($fieldName == 'id') {
                     $sqlId = $fieldName;
                 }
-                if (isset($attributes->$fieldName, $fieldProperties['sqlId']) && (!isset($fieldProperties['i18n']) || !$fieldProperties['i18n'])) {
+                if (isset($attributes->{$fieldName}, $fieldProperties['sqlId']) && (!isset($fieldProperties['i18n']) || !$fieldProperties['i18n'])) {
                     if (isset($fieldProperties['setter'])) {
                         // if we have to use a specific setter
                         if (!$fieldProperties['setter']) {
@@ -1580,10 +1580,10 @@ class WebserviceRequestCore
 
                             return false;
                         } else {
-                            $object->{$fieldProperties['setter']}((string) $attributes->$fieldName);
+                            $object->{$fieldProperties['setter']}((string) $attributes->{$fieldName});
                         }
                     } elseif (property_exists($object, $sqlId)) {
-                        $object->$sqlId = (string) $attributes->$fieldName;
+                        $object->{$sqlId} = (string) $attributes->{$fieldName};
                     } else {
                         $this->setError(400, 'Parameter "' . $fieldName . '" can\'t be set to the object "' . $this->resourceConfiguration['retrieveData']['className'] . '"', 123);
                     }
@@ -1592,17 +1592,17 @@ class WebserviceRequestCore
 
                     return false;
                 } elseif ((!isset($fieldProperties['required']) || !$fieldProperties['required']) && property_exists($object, $sqlId)) {
-                    $object->$sqlId = null;
+                    $object->{$sqlId} = null;
                 }
                 if (isset($fieldProperties['i18n']) && $fieldProperties['i18n']) {
                     $i18n = true;
-                    if (isset($attributes->$fieldName, $attributes->$fieldName->language)) {
-                        foreach ($attributes->$fieldName->language as $lang) {
+                    if (isset($attributes->{$fieldName}, $attributes->{$fieldName}->language)) {
+                        foreach ($attributes->{$fieldName}->language as $lang) {
                             /* @var SimpleXMLElement $lang */
                             $object->{$fieldName}[(int) $lang->attributes()->id] = (string) $lang;
                         }
                     } else {
-                        $object->{$fieldName} = (string) $attributes->$fieldName;
+                        $object->{$fieldName} = (string) $attributes->{$fieldName};
                     }
                 }
             }
@@ -1648,7 +1648,7 @@ class WebserviceRequestCore
                                         $values[] = $entry;
                                     }
                                     $setter = $this->resourceConfiguration['associations'][$association->getName()]['setter'];
-                                    if (null !== $setter && $setter && method_exists($object, $setter) && !$object->$setter($values)) {
+                                    if (null !== $setter && $setter && method_exists($object, $setter) && !$object->{$setter}($values)) {
                                         $this->setError(500, 'Error occurred while setting the ' . $association->getName() . ' value', 85);
 
                                         return false;

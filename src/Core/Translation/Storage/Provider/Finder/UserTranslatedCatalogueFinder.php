@@ -61,7 +61,7 @@ class UserTranslatedCatalogueFinder extends AbstractCatalogueFinder
     public function __construct(
         DatabaseTranslationLoader $databaseTranslationReader,
         array $translationDomains,
-        ?string $themeName = null
+        string $themeName = null
     ) {
         if (!$this->assertIsArrayOfString($translationDomains)) {
             throw new \InvalidArgumentException('Given translation domains are invalid. An array of strings was expected.');

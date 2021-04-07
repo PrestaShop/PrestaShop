@@ -121,7 +121,6 @@ class TranslationRouteFinder
                 }
 
                 break;
-
             case self::MODULES:
                 $moduleName = $propertyAccessor->getValue($routeProperties, '[module]');
 
@@ -171,7 +170,6 @@ class TranslationRouteFinder
                 $parameters['selected'] = $propertyAccessor->getValue($routeProperties, '[theme]');
 
                 break;
-
             case self::MAILS:
                 $emailContentType = $propertyAccessor->getValue($routeProperties, '[email_content_type]');
 
@@ -180,7 +178,6 @@ class TranslationRouteFinder
                 }
 
                 break;
-
             case self::MODULES:
                 $moduleName = $propertyAccessor->getValue($routeProperties, '[module]');
                 $parameters['selected'] = $moduleName;

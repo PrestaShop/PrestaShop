@@ -123,7 +123,8 @@ final class AttachmentGridDefinitionFactory extends AbstractFilterableGridDefini
                         'field' => 'products',
                     ])
             )
-            ->add((new ActionColumn('actions'))
+            ->add(
+                (new ActionColumn('actions'))
             ->setName($this->trans('Actions', [], 'Admin.Global'))
             ->setOptions([
                 'actions' => (new RowActionCollection())

@@ -249,7 +249,7 @@ class CountryCore extends ObjectModel
 							FROM `' . _DB_PREFIX_ . 'country_lang`
 							WHERE `id_lang` = ' . (int) $idLang . '
 							AND `id_country` = ' . (int) $idCountry
-                        );
+            );
             Cache::store($key, $result);
 
             return $result;

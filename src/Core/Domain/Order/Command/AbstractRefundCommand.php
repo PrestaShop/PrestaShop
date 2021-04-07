@@ -92,7 +92,7 @@ abstract class AbstractRefundCommand
         bool $generateCreditSlip,
         bool $generateVoucher,
         int $voucherRefundType,
-        ?string $voucherRefundAmount = null
+        string $voucherRefundAmount = null
     ) {
         $this->orderId = new OrderId($orderId);
         $this->restockRefundedProducts = $restockRefundedProducts;

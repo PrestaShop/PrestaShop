@@ -266,6 +266,7 @@ class ExternalModuleLegacySystemProvider extends AbstractProvider implements Use
                         $catalogue->all($domain),
                         $newDomain
                     );
+
                     break;
                 }
             }

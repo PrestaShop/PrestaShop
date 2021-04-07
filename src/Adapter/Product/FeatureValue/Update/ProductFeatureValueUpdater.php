@@ -185,8 +185,10 @@ class ProductFeatureValueUpdater
         $qb->from($this->dbPrefix . 'feature_value', 'fv')
             ->select('fv.*, fp.id_product')
             ->leftJoin('fv', $this->dbPrefix . 'feature_product', 'fp', 'fp.id_feature_value = fv.id_feature_value')
-            ->where($qb->expr()->andX(
-                $qb->expr()->isNull('fp.id_product')),
+            ->where(
+                $qb->expr()->andX(
+                $qb->expr()->isNull('fp.id_product')
+            ),
                 $qb->expr()->neq('fv.custom', 0)
             )
         ;

@@ -197,11 +197,11 @@ class ProductRepository extends AbstractObjectModelRepository
 
         if (!$results || (int) $results['product_count'] !== count($ids)) {
             throw new ProductNotFoundException(
-                    sprintf(
+                sprintf(
                         'Some of these products do not exist: %s',
                         implode(',', $ids)
                     )
-                );
+            );
         }
     }
 

@@ -23,14 +23,14 @@
  * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
-@trigger_error('Using '.__FILE__.' to make an ajax call is deprecated since 1.7.6.0 and will be removed in the next major version. Use a controller instead.', E_USER_DEPRECATED);
+@trigger_error('Using ' . __FILE__ . ' to make an ajax call is deprecated since 1.7.6.0 and will be removed in the next major version. Use a controller instead.', E_USER_DEPRECATED);
 
 if (!defined('_PS_ADMIN_DIR_')) {
     define('_PS_ADMIN_DIR_', __DIR__);
 }
-include _PS_ADMIN_DIR_.'/../config/config.inc.php';
+include _PS_ADMIN_DIR_ . '/../config/config.inc.php';
 
-/**
+/*
  * @deprecated 1.5.0
  * This file is deprecated, please use AdminPdfController instead
  */
@@ -40,7 +40,7 @@ if (!Context::getContext()->employee->id) {
     Tools::redirectAdmin('index.php?controller=AdminLogin');
 }
 
-$function_array = array(
+$function_array = [
     'pdf' => 'generateInvoicePDF',
     'id_order_slip' => 'generateOrderSlipPDF',
     'id_delivery' => 'generateDeliverySlipPDF',
@@ -50,12 +50,13 @@ $function_array = array(
     'slips' => 'generateOrderSlipsPDF',
     'deliveryslips' => 'generateDeliverySlipsPDF',
     'id_supply_order' => 'generateSupplyOrderFormPDF',
-);
+];
 
 $pdf_controller = new AdminPdfController();
 foreach ($function_array as $var => $function) {
     if (isset($_GET[$var])) {
-        $pdf_controller->{'process'.$function}();
+        $pdf_controller->{'process' . $function}();
+
         exit;
     }
 }

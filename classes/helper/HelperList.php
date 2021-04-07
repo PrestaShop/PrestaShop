@@ -78,7 +78,7 @@ class HelperListCore extends Helper
     public $table_id;
 
     /** @var string */
-    public $title_icon = null;
+    public $title_icon;
 
     /**
      * @var array Customize list display
@@ -112,14 +112,14 @@ class HelperListCore extends Helper
 
     public $bulk_actions = false;
     public $force_show_bulk_actions = false;
-    public $specificConfirmDelete = null;
+    public $specificConfirmDelete;
     public $colorOnBackground;
 
     /** @var bool If true, activates color on hover */
     public $row_hover = true;
 
     /** @var string|null If not null, a title will be added on that list */
-    public $title = null;
+    public $title;
 
     /** @var bool ask for simple header : no filters, no paginations and no sorting */
     public $simple_header = false;
@@ -269,11 +269,11 @@ class HelperListCore extends Helper
                     $method_name = 'display' . ucfirst($action) . 'Link';
 
                     if (method_exists($this->context->controller, $method_name)) {
-                        $this->_list[$index][$action] = $this->context->controller->$method_name($this->token, $id, $name);
+                        $this->_list[$index][$action] = $this->context->controller->{$method_name}($this->token, $id, $name);
                     } elseif ($this->module instanceof Module && method_exists($this->module, $method_name)) {
-                        $this->_list[$index][$action] = $this->module->$method_name($this->token, $id, $name);
+                        $this->_list[$index][$action] = $this->module->{$method_name}($this->token, $id, $name);
                     } elseif (method_exists($this, $method_name)) {
-                        $this->_list[$index][$action] = $this->$method_name($this->token, $id, $name);
+                        $this->_list[$index][$action] = $this->{$method_name}($this->token, $id, $name);
                     }
                 }
 
@@ -696,7 +696,6 @@ class HelperListCore extends Helper
                     }
 
                     break;
-
                 case 'date':
                 case 'datetime':
                     if (is_string($value)) {
@@ -716,7 +715,6 @@ class HelperListCore extends Helper
                     $this->context->controller->addJqueryUI('ui.datepicker');
 
                     break;
-
                 case 'select':
                     foreach ($params['list'] as $option_value => $option_display) {
                         if (isset(Context::getContext()->cookie->{$prefix . $this->list_id . 'Filter_' . $params['filter_key']})
@@ -727,7 +725,6 @@ class HelperListCore extends Helper
                     }
 
                     break;
-
                 case 'text':
                     if (!Validate::isCleanHtml($value)) {
                         $value = '';

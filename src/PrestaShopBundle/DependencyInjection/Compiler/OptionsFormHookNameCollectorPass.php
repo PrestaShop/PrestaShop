@@ -110,8 +110,8 @@ final class OptionsFormHookNameCollectorPass implements CompilerPassInterface
      */
     private function isOptionsFormService($serviceId, $serviceClass)
     {
-        return $this->stringEndsWith($serviceId, self::OPTIONS_FORM_SERVICE_SUFFIX) &&
-            is_subclass_of($serviceClass, FormHandlerInterface::class)
+        return $this->stringEndsWith($serviceId, self::OPTIONS_FORM_SERVICE_SUFFIX)
+            && is_subclass_of($serviceClass, FormHandlerInterface::class)
         ;
     }
 

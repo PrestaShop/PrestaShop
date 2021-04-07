@@ -112,7 +112,7 @@ final class RequestSqlQueryBuilder extends AbstractDoctrineQueryBuilder
                 continue;
             }
 
-            $qb->andWhere("`$filterName` LIKE :$filterName");
+            $qb->andWhere("`${filterName}` LIKE :${filterName}");
             $qb->setParameter($filterName, '%' . $value . '%');
         }
 

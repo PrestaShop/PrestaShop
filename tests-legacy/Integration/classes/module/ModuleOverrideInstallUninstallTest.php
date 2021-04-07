@@ -55,7 +55,7 @@ class ModuleOverrideInstallUninstallTest extends IntegrationTestCase
         $this->moduleManagerBuilder = ModuleManagerBuilder::getInstance();
         $this->moduleManager = $this->moduleManagerBuilder->build();
 
-        $this->moduleNames= [
+        $this->moduleNames = [
             'pscsx32412',
             'pscsx3241',
         ];
@@ -69,18 +69,18 @@ class ModuleOverrideInstallUninstallTest extends IntegrationTestCase
         TestingModule::removeModule('pscsx3241');
         TestingModule::removeModule('pscsx32412');
 
-        @unlink(_PS_ROOT_DIR_.'/override/controllers/admin/AdminProductsController.php');
-        @unlink(_PS_ROOT_DIR_.'/override/classes/Cart.php');
+        @unlink(_PS_ROOT_DIR_ . '/override/controllers/admin/AdminProductsController.php');
+        @unlink(_PS_ROOT_DIR_ . '/override/classes/Cart.php');
     }
 
     public function testInstall()
     {
-        /**
+        /*
          * Both modules install overrides in the same files.
          * This test only checks that modules are installed properly.
          */
         foreach ($this->moduleNames as $name) {
-            $this->assertTrue((bool)$this->moduleManager->install($name), "Could not install $name");
+            $this->assertTrue((bool) $this->moduleManager->install($name), "Could not install ${name}");
         }
     }
 
@@ -91,8 +91,8 @@ class ModuleOverrideInstallUninstallTest extends IntegrationTestCase
      */
     private function cleanup($str)
     {
-        $withoutDate        = preg_replace('#\* date: .*?\n#m', '', $str);
-        $withoutBlankLines  = preg_replace('#\n?^(?:\s*)$#m', "", $withoutDate);
+        $withoutDate = preg_replace('#\* date: .*?\n#m', '', $str);
+        $withoutBlankLines = preg_replace('#\n?^(?:\s*)$#m', '', $withoutDate);
 
         return $withoutBlankLines;
     }
@@ -103,15 +103,14 @@ class ModuleOverrideInstallUninstallTest extends IntegrationTestCase
          * This tests first checks that the overrides installed in the previous step
          * resulted in the expected merged files.
          */
-
-        $ressource_path = realpath(dirname(__FILE__).'/../../../resources/ModulesOverrideInstallUninstallTest/');
-        $override_path_cart = _PS_ROOT_DIR_.'/'.PrestaShopAutoload::getInstance()->getClassPath('Cart');
-        $override_path_admin_product_controller = _PS_ROOT_DIR_.'/'.PrestaShopAutoload::getInstance()->getClassPath('AdminProductsController');
+        $ressource_path = realpath(__DIR__ . '/../../../resources/ModulesOverrideInstallUninstallTest/');
+        $override_path_cart = _PS_ROOT_DIR_ . '/' . PrestaShopAutoload::getInstance()->getClassPath('Cart');
+        $override_path_admin_product_controller = _PS_ROOT_DIR_ . '/' . PrestaShopAutoload::getInstance()->getClassPath('AdminProductsController');
 
         $actual_override_cart = file_get_contents($override_path_cart);
         $actual_override_admin_product = file_get_contents($override_path_admin_product_controller);
-        $expected_override_cart = file_get_contents($ressource_path.'/Cart.php');
-        $expected_override_admin_product = file_get_contents($ressource_path.'/AdminProductsController.php');
+        $expected_override_cart = file_get_contents($ressource_path . '/Cart.php');
+        $expected_override_admin_product = file_get_contents($ressource_path . '/AdminProductsController.php');
 
         $this->assertEquals(
             $this->cleanup($expected_override_cart),
@@ -125,11 +124,11 @@ class ModuleOverrideInstallUninstallTest extends IntegrationTestCase
             'AdminProductsController.php file different'
         );
 
-        /** Then it checks that the overrides are removed once the modules are
+        /* Then it checks that the overrides are removed once the modules are
          *  uninstalled.
          */
         foreach ($this->moduleNames as $name) {
-            $this->assertTrue((bool)$this->moduleManager->uninstall($name), "Could not uninstall $name");
+            $this->assertTrue((bool) $this->moduleManager->uninstall($name), "Could not uninstall ${name}");
         }
 
         $this->assertFileNotExists($override_path_cart);

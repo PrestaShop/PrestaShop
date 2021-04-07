@@ -118,8 +118,8 @@ class TranslationsTreeBuilder
      */
     private function recursivelyBuildApiTree(
         array $metadataSubtree,
-        ?string $subtreeName = null,
-        ?string $fullSubtreeName = null
+        string $subtreeName = null,
+        string $fullSubtreeName = null
     ): array {
         $current = [];
         if ($subtreeName !== null) {
@@ -134,6 +134,7 @@ class TranslationsTreeBuilder
             if ($name === Catalogue::METADATA_KEY_NAME) {
                 $current['total_translations'] = $value['count'];
                 $current['total_missing_translations'] = $value['missing_translations'];
+
                 continue;
             }
             if (!isset($current['children'])) {

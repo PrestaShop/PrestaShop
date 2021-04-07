@@ -226,10 +226,10 @@ final class ContextStateManager
         // NOTE: array_key_exists important here, isset cannot be used because it would not detect if null is stored
         if (!array_key_exists($fieldName, $this->contextFieldsStack[$currentStashIndex])) {
             if ('shop' === $fieldName) {
-                $this->contextFieldsStack[$currentStashIndex]['shop'] = $this->context->$fieldName;
+                $this->contextFieldsStack[$currentStashIndex]['shop'] = $this->context->{$fieldName};
                 $this->contextFieldsStack[$currentStashIndex]['shopContext'] = Shop::getContext();
             } else {
-                $this->contextFieldsStack[$currentStashIndex][$fieldName] = $this->context->$fieldName;
+                $this->contextFieldsStack[$currentStashIndex][$fieldName] = $this->context->{$fieldName};
             }
         }
     }
@@ -247,7 +247,7 @@ final class ContextStateManager
             if ('shop' === $fieldName) {
                 $this->restoreShopContext($currentStashIndex);
             }
-            $this->context->$fieldName = $this->contextFieldsStack[$currentStashIndex][$fieldName];
+            $this->context->{$fieldName} = $this->contextFieldsStack[$currentStashIndex][$fieldName];
             unset($this->contextFieldsStack[$currentStashIndex][$fieldName]);
         }
     }

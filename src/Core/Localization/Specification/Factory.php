@@ -95,7 +95,7 @@ class Factory
         Currency $currency,
         $numberGroupingUsed,
         $currencyDisplayType,
-        ?int $maxFractionDigits = null
+        int $maxFractionDigits = null
     ) {
         $currencyPattern = $currency->getPattern($localeCode) ?: $cldrLocale->getCurrencyPattern();
         $numbersSymbols = $cldrLocale->getAllNumberSymbols();

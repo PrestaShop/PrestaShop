@@ -28,7 +28,6 @@ namespace LegacyTests\Integration\classes\module;
 
 use Cache;
 use LegacyTests\TestCase\IntegrationTestCase;
-
 use Module;
 use PrestaShop\PrestaShop\Core\Addon\Module\ModuleManagerBuilder;
 

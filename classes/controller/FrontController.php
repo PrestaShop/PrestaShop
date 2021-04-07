@@ -422,8 +422,8 @@ class FrontControllerCore extends Controller
                 $cart->update();
             }
             /* Select an address if not set */
-            if (isset($cart) && (!isset($cart->id_address_delivery) || $cart->id_address_delivery == 0 ||
-                    !isset($cart->id_address_invoice) || $cart->id_address_invoice == 0) && $this->context->cookie->id_customer) {
+            if (isset($cart) && (!isset($cart->id_address_delivery) || $cart->id_address_delivery == 0
+                    || !isset($cart->id_address_invoice) || $cart->id_address_invoice == 0) && $this->context->cookie->id_customer) {
                 $to_update = false;
                 if ($this->automaticallyAllocateDeliveryAddress && (!isset($cart->id_address_delivery) || $cart->id_address_delivery == 0)) {
                     $to_update = true;
@@ -815,6 +815,7 @@ class FrontControllerCore extends Controller
             } else {
                 header('Location: ' . Tools::getShopDomain(true) . $_SERVER['REQUEST_URI']);
             }
+
             exit();
         }
     }
@@ -1787,7 +1788,7 @@ class FrontControllerCore extends Controller
 
         $queryString = str_replace('%2F', '/', http_build_query($params, '', '&'));
 
-        return $url . ($queryString ? "?$queryString" : '');
+        return $url . ($queryString ? "?${queryString}" : '');
     }
 
     protected function getCurrentURL()

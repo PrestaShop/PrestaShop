@@ -206,6 +206,7 @@ class AdminModulesControllerCore extends AdminController
             $this->context->cookie->is_contributor = (int) $xml->is_contributor;
             $this->context->cookie->write();
         }
+
         die($result);
     }
 
@@ -215,6 +216,7 @@ class AdminModulesControllerCore extends AdminController
         $this->context->cookie->password_addons = '';
         $this->context->cookie->is_contributor = 0;
         $this->context->cookie->write();
+
         die('OK');
     }
 
@@ -229,6 +231,7 @@ class AdminModulesControllerCore extends AdminController
 
         $this->initContent();
         $this->smartyOutputContent('controllers/modules/list.tpl');
+
         exit;
     }
 
@@ -281,12 +284,14 @@ class AdminModulesControllerCore extends AdminController
         }
 
         $this->smartyOutputContent('controllers/modules/tab_modules_list.tpl');
+
         exit;
     }
 
     public function ajaxProcessSetFilter()
     {
         $this->setFilterModules(Tools::getValue('module_type'), Tools::getValue('country_module_value'), Tools::getValue('module_install'), Tools::getValue('module_status'));
+
         die('OK');
     }
 
@@ -314,6 +319,7 @@ class AdminModulesControllerCore extends AdminController
             }
             Db::getInstance()->insert('module_preference', $insert, true);
         }
+
         die('OK');
     }
 
@@ -331,6 +337,7 @@ class AdminModulesControllerCore extends AdminController
                 }
             }
         }
+
         die('OK');
     }
 
@@ -1116,7 +1123,7 @@ class AdminModulesControllerCore extends AdminController
             if (Tools::isSubmit($ppm)) {
                 $ppm = 'postProcess' . ucfirst($ppm);
                 if (method_exists($this, $ppm)) {
-                    $ppm_return = $this->$ppm();
+                    $ppm_return = $this->{$ppm}();
                 }
             }
         }

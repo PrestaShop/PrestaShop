@@ -965,7 +965,8 @@ class ProductController extends FrameworkBundleAdminController
                     );
                     $logger->info(
                         'Products sorted: (' . implode(',', $productIdList) .
-                        ') with positions (' . implode(',', $productPositionList) . ').', $this->getLogDataContext()
+                        ') with positions (' . implode(',', $productPositionList) . ').',
+                        $this->getLogDataContext()
                     );
                     $hookEventParameters = [
                         'product_list_id' => $productIdList,

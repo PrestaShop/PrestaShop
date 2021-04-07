@@ -59,7 +59,7 @@ class ThemeExtractor
      *
      * @throws Exception
      */
-    public function extract(Theme $theme, ?string $locale = null): MessageCatalogue
+    public function extract(Theme $theme, string $locale = null): MessageCatalogue
     {
         if (null === $locale) {
             $locale = CatalogueLayersProviderInterface::DEFAULT_LOCALE;

@@ -80,7 +80,7 @@ class LanguageImageManager
      * @param int $langId Language id
      * @param string|null $flagCode If provided, use this flag code. By default, auto-detect using locale code.
      */
-    public function setupLanguageFlag(string $localeCode, int $langId, ?string $flagCode = null): void
+    public function setupLanguageFlag(string $localeCode, int $langId, string $flagCode = null): void
     {
         $flagCode = $flagCode ?? $this->getFlagCountryCodeFromLocale($localeCode);
 

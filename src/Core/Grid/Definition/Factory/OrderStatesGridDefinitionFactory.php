@@ -79,7 +79,8 @@ final class OrderStatesGridDefinitionFactory extends AbstractGridDefinitionFacto
                         'field' => 'id_order_state',
                     ])
             )
-            ->add((new ColorColumn('name'))
+            ->add(
+                (new ColorColumn('name'))
             ->setName($this->trans('Status', [], 'Admin.Global'))
             ->setOptions([
                 'field' => 'name',
@@ -123,7 +124,8 @@ final class OrderStatesGridDefinitionFactory extends AbstractGridDefinitionFacto
                         'field' => 'template',
                     ])
             )
-            ->add((new ActionColumn('actions'))
+            ->add(
+                (new ActionColumn('actions'))
             ->setName($this->trans('Actions', [], 'Admin.Global'))
             ->setOptions([
                 'actions' => (new RowActionCollection())

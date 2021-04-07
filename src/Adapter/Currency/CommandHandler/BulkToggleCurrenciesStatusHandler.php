@@ -73,6 +73,7 @@ final class BulkToggleCurrenciesStatusHandler extends AbstractCurrencyHandler im
 
             if (0 >= $entity->id) {
                 $faileds[] = $currency->getValue();
+
                 continue;
             }
 
@@ -82,6 +83,7 @@ final class BulkToggleCurrenciesStatusHandler extends AbstractCurrencyHandler im
                     $this->assertDefaultCurrencyIsNotBeingRemovedOrDisabledFromAnyShop($entity);
                 } catch (CurrencyException $e) {
                     $faileds[] = $currency->getValue();
+
                     continue;
                 }
             }

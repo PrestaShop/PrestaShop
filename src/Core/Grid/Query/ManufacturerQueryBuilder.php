@@ -139,6 +139,7 @@ final class ManufacturerQueryBuilder extends AbstractDoctrineQueryBuilder
             if ('name' === $filterName) {
                 $qb->andWhere('m.`name` LIKE :' . $filterName)
                     ->setParameter($filterName, '%' . $value . '%');
+
                 continue;
             }
             $qb->andWhere('m.`' . $filterName . '` = :' . $filterName)

@@ -39,18 +39,18 @@ class Core_Payment_PaymentOptionTest extends UnitTestCase
             ->setLogo('http://example.com/logo.png')
             ->setAction('http://example.com/submit')
             ->setForm(null)
-            ->setInputs(array('key' => 42));
+            ->setInputs(['key' => 42]);
 
-        $legacyOption = array(
-            'cta_text'  => 'Pay by bankwire',
-            'logo'      => 'http://example.com/logo.png',
-            'action'    => 'http://example.com/submit',
-            'form'      => null,
-            'inputs'    => array('key' => 42),
-        );
+        $legacyOption = [
+            'cta_text' => 'Pay by bankwire',
+            'logo' => 'http://example.com/logo.png',
+            'action' => 'http://example.com/submit',
+            'form' => null,
+            'inputs' => ['key' => 42],
+        ];
 
         $this->assertEquals(
-            array($newOption),
+            [$newOption],
             PaymentOption::convertLegacyOption($legacyOption)
         );
     }
@@ -63,20 +63,20 @@ class Core_Payment_PaymentOptionTest extends UnitTestCase
             ->setLogo('http://example.com/logo.png')
             ->setAction('http://example.com/submit')
             ->setForm(null)
-            ->setInputs(array('key' => 42));
+            ->setInputs(['key' => 42]);
 
-        $singleLegacyOption = array(
-            'cta_text'  => 'Pay by bankwire',
-            'logo'      => 'http://example.com/logo.png',
-            'action'    => 'http://example.com/submit',
-            'form'      => null,
-            'inputs'    => array('key' => 42),
-        );
+        $singleLegacyOption = [
+            'cta_text' => 'Pay by bankwire',
+            'logo' => 'http://example.com/logo.png',
+            'action' => 'http://example.com/submit',
+            'form' => null,
+            'inputs' => ['key' => 42],
+        ];
 
-        $legacyOption = array($singleLegacyOption, $singleLegacyOption);
+        $legacyOption = [$singleLegacyOption, $singleLegacyOption];
 
         $this->assertEquals(
-            array($newOption, $newOption),
+            [$newOption, $newOption],
             PaymentOption::convertLegacyOption($legacyOption)
         );
     }

@@ -110,7 +110,7 @@ class InstallControllerHttpDatabase extends InstallControllerHttp implements Htt
 
         $this->ajaxJsonAnswer(
             (count($errors)) ? false : true,
-            (count($errors)) ? implode('<br />', $errors) : $this->translator->trans('Database is connected', array(), 'Install')
+            (count($errors)) ? implode('<br />', $errors) : $this->translator->trans('Database is connected', [], 'Install')
         );
     }
 
@@ -128,7 +128,7 @@ class InstallControllerHttpDatabase extends InstallControllerHttp implements Htt
 
         $this->ajaxJsonAnswer(
             $success,
-            $success ?  $this->translator->trans('Database is created', array(), 'Install') : $this->translator->trans('Cannot create the database automatically', array(), 'Install')
+            $success ? $this->translator->trans('Database is created', [], 'Install') : $this->translator->trans('Cannot create the database automatically', [], 'Install')
         );
     }
 
@@ -138,15 +138,15 @@ class InstallControllerHttpDatabase extends InstallControllerHttp implements Htt
     public function display()
     {
         if (!$this->session->database_server) {
-            if (file_exists(_PS_ROOT_DIR_.'/app/config/parameters.php')) {
-                $parameters = require _PS_ROOT_DIR_.'/app/config/parameters.php';
+            if (file_exists(_PS_ROOT_DIR_ . '/app/config/parameters.php')) {
+                $parameters = require _PS_ROOT_DIR_ . '/app/config/parameters.php';
             } else {
-                $parameters = Yaml::parse(file_get_contents(_PS_ROOT_DIR_.'/app/config/parameters.yml.dist'));
+                $parameters = Yaml::parse(file_get_contents(_PS_ROOT_DIR_ . '/app/config/parameters.yml.dist'));
             }
 
             $this->database_server = $parameters['parameters']['database_host'];
             if (!empty($parameters['parameters']['database_port'])) {
-                $this->database_server .= ':'.$parameters['parameters']['database_port'];
+                $this->database_server .= ':' . $parameters['parameters']['database_port'];
             }
             $this->database_name = $parameters['parameters']['database_name'];
             $this->database_login = $parameters['parameters']['database_user'];

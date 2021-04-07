@@ -78,6 +78,7 @@ final class ExecutedCommandRegistry
                     'command_handler' => $handlerClass,
                     'trace' => $trace,
                 ];
+
                 break;
             case 'Query':
                 $this->registry['queries'][] = [
@@ -85,6 +86,7 @@ final class ExecutedCommandRegistry
                     'query_handler' => $handlerClass,
                     'trace' => $trace,
                 ];
+
                 break;
         }
     }

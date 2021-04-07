@@ -23,12 +23,11 @@
  * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
-
 function module_blockwishlist_multishop()
 {
-    $id_module = Db::getInstance()->getValue('SELECT id_module FROM '._DB_PREFIX_.'module where name="blockwishlist"');
+    $id_module = Db::getInstance()->getValue('SELECT id_module FROM ' . _DB_PREFIX_ . 'module where name="blockwishlist"');
     if ($id_module) {
-        $res = Db::getInstance()->execute('ALTER TABLE `'._DB_PREFIX_.'wishlist`
+        $res = Db::getInstance()->execute('ALTER TABLE `' . _DB_PREFIX_ . 'wishlist`
 		ADD `id_shop` INTEGER NOT NULL default \'1\' AFTER `counter`,
 		ADD `id_group_shop` INTEGER NOT NULL default \'1\' AFTER `id_shop`');
 

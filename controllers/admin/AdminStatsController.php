@@ -597,21 +597,21 @@ class AdminStatsControllerCore extends AdminStatsTabController
                 $order['id_currency'] == Configuration::get('PS_CURRENCY_DEFAULT')
                     ? Configuration::get('CONF_' . strtoupper($order['module']) . '_FIXED')
                     : Configuration::get('CONF_' . strtoupper($order['module']) . '_FIXED_FOREIGN')
-                );
+            );
 
             // Add variable fees for this order
             $var_fees = $order['total_paid_tax_incl'] * (
                 $order['id_currency'] == Configuration::get('PS_CURRENCY_DEFAULT')
                     ? Configuration::get('CONF_' . strtoupper($order['module']) . '_VAR')
                     : Configuration::get('CONF_' . strtoupper($order['module']) . '_VAR_FOREIGN')
-                ) / 100;
+            ) / 100;
 
             // Add shipping fees for this order
             $shipping_fees = $order['total_shipping_tax_excl'] * (
                 $order['id_country'] == Configuration::get('PS_COUNTRY_DEFAULT')
                     ? Configuration::get('CONF_' . strtoupper($order['carrier_reference']) . '_SHIP')
                     : Configuration::get('CONF_' . strtoupper($order['carrier_reference']) . '_SHIP_OVERSEAS')
-                ) / 100;
+            ) / 100;
 
             // Tally up these fees
             if ($granularity == 'day') {
@@ -677,7 +677,6 @@ class AdminStatsControllerCore extends AdminStatsTabController
                 );
 
                 break;
-
             case 'abandoned_cart':
                 $value = AdminStatsController::getAbandonedCarts(
                     date('Y-m-d H:i:s', strtotime('-2 day')),
@@ -687,35 +686,30 @@ class AdminStatsControllerCore extends AdminStatsTabController
                 ConfigurationKPI::updateValue('ABANDONED_CARTS_EXPIRE', strtotime('+1 hour'));
 
                 break;
-
             case 'installed_modules':
                 $value = AdminStatsController::getInstalledModules();
                 ConfigurationKPI::updateValue('INSTALLED_MODULES', $value);
                 ConfigurationKPI::updateValue('INSTALLED_MODULES_EXPIRE', strtotime('+2 min'));
 
                 break;
-
             case 'disabled_modules':
                 $value = AdminStatsController::getDisabledModules();
                 ConfigurationKPI::updateValue('DISABLED_MODULES', $value);
                 ConfigurationKPI::updateValue('DISABLED_MODULES_EXPIRE', strtotime('+2 min'));
 
                 break;
-
             case 'update_modules':
                 $value = AdminStatsController::getModulesToUpdate();
                 ConfigurationKPI::updateValue('UPDATE_MODULES', $value);
                 ConfigurationKPI::updateValue('UPDATE_MODULES_EXPIRE', strtotime('+2 min'));
 
                 break;
-
             case 'percent_product_stock':
                 $value = AdminStatsController::getPercentProductStock();
                 ConfigurationKPI::updateValue('PERCENT_PRODUCT_STOCK', $value);
                 ConfigurationKPI::updateValue('PERCENT_PRODUCT_STOCK_EXPIRE', strtotime('+4 hour'));
 
                 break;
-
             case 'percent_product_out_of_stock':
                 $value = AdminStatsController::getPercentProductOutOfStock();
                 $tooltip = $this->trans(
@@ -727,7 +721,6 @@ class AdminStatsControllerCore extends AdminStatsTabController
                 ConfigurationKPI::updateValue('PERCENT_PRODUCT_OUT_OF_STOCK_EXPIRE', strtotime('+4 hour'));
 
                 break;
-
             case 'product_avg_gross_margin':
                 $value = AdminStatsController::getProductAverageGrossMargin();
                 $tooltip = $this->trans(
@@ -739,19 +732,17 @@ class AdminStatsControllerCore extends AdminStatsTabController
                 ConfigurationKPI::updateValue('PRODUCT_AVG_GROSS_MARGIN_EXPIRE', strtotime('+6 hour'));
 
                 break;
-
             case 'disabled_categories':
                 $value = AdminStatsController::getDisabledCategories();
                 ConfigurationKPI::updateValue('DISABLED_CATEGORIES', $value);
                 ConfigurationKPI::updateValue('DISABLED_CATEGORIES_EXPIRE', strtotime('+2 hour'));
 
                 break;
-
             case 'disabled_products':
                 $value = round(
-                        100 * AdminStatsController::getDisabledProducts() / AdminStatsController::getTotalProducts(),
-                        2
-                    ) . '%';
+                    100 * AdminStatsController::getDisabledProducts() / AdminStatsController::getTotalProducts(),
+                    2
+                ) . '%';
                 $tooltip = $this->trans(
                     '%value% of your products are disabled and not visible to your customers',
                     ['%value%' => $value],
@@ -761,7 +752,6 @@ class AdminStatsControllerCore extends AdminStatsTabController
                 ConfigurationKPI::updateValue('DISABLED_PRODUCTS_EXPIRE', strtotime('+2 hour'));
 
                 break;
-
             case '8020_sales_catalog':
                 $value = AdminStatsController::get8020SalesCatalog(date('Y-m-d', strtotime('-30 days')), date('Y-m-d'));
                 $tooltip = $this->trans(
@@ -774,14 +764,12 @@ class AdminStatsControllerCore extends AdminStatsTabController
                 ConfigurationKPI::updateValue('8020_SALES_CATALOG_EXPIRE', strtotime('+12 hour'));
 
                 break;
-
             case 'empty_categories':
                 $value = AdminStatsController::getEmptyCategories();
                 ConfigurationKPI::updateValue('EMPTY_CATEGORIES', $value);
                 ConfigurationKPI::updateValue('EMPTY_CATEGORIES_EXPIRE', strtotime('+2 hour'));
 
                 break;
-
             case 'customer_main_gender':
                 $value = AdminStatsController::getCustomerMainGender();
 
@@ -802,7 +790,6 @@ class AdminStatsControllerCore extends AdminStatsTabController
                 );
 
                 break;
-
             case 'avg_customer_age':
                 $value = $this->trans('%value% years', ['%value%' => AdminStatsController::getAverageCustomerAge()], 'Admin.Stats.Feature');
                 ConfigurationKPI::updateValue('AVG_CUSTOMER_AGE', [$this->context->language->id => $value]);
@@ -812,14 +799,12 @@ class AdminStatsControllerCore extends AdminStatsTabController
                 );
 
                 break;
-
             case 'pending_messages':
                 $value = (int) AdminStatsController::getPendingMessages();
                 ConfigurationKPI::updateValue('PENDING_MESSAGES', $value);
                 ConfigurationKPI::updateValue('PENDING_MESSAGES_EXPIRE', strtotime('+5 min'));
 
                 break;
-
             case 'avg_msg_response_time':
                 $value = $this->trans('%average% hours', ['%average%' => AdminStatsController::getAverageMessageResponseTime(
                     date('Y-m-d', strtotime('-31 day')),
@@ -829,7 +814,6 @@ class AdminStatsControllerCore extends AdminStatsTabController
                 ConfigurationKPI::updateValue('AVG_MSG_RESPONSE_TIME_EXPIRE', strtotime('+4 hour'));
 
                 break;
-
             case 'messages_per_thread':
                 $value = round(
                     AdminStatsController::getMessagesPerThread(
@@ -842,7 +826,6 @@ class AdminStatsControllerCore extends AdminStatsTabController
                 ConfigurationKPI::updateValue('MESSAGES_PER_THREAD_EXPIRE', strtotime('+12 hour'));
 
                 break;
-
             case 'newsletter_registrations':
                 $moduleManagerBuilder = ModuleManagerBuilder::getInstance();
                 $moduleManager = $moduleManagerBuilder->build();
@@ -868,14 +851,12 @@ class AdminStatsControllerCore extends AdminStatsTabController
                 ConfigurationKPI::updateValue('NEWSLETTER_REGISTRATIONS_EXPIRE', strtotime('+6 hour'));
 
                 break;
-
             case 'enabled_languages':
                 $value = Language::countActiveLanguages();
                 ConfigurationKPI::updateValue('ENABLED_LANGUAGES', $value);
                 ConfigurationKPI::updateValue('ENABLED_LANGUAGES_EXPIRE', strtotime('+1 min'));
 
                 break;
-
             case 'frontoffice_translations':
                 $themes = (new ThemeManagerBuilder($this->context, Db::getInstance()))
                     ->buildRepository()
@@ -899,7 +880,6 @@ class AdminStatsControllerCore extends AdminStatsTabController
                 ConfigurationKPI::updateValue('FRONTOFFICE_TRANSLATIONS_EXPIRE', strtotime('+2 min'));
 
                 break;
-
             case 'main_country':
                 if (!($row = AdminStatsController::getMainCountry(
                     date('Y-m-d', strtotime('-30 day')),
@@ -923,7 +903,6 @@ class AdminStatsControllerCore extends AdminStatsTabController
                 );
 
                 break;
-
             case 'orders_per_customer':
                 $value = Db::getInstance(_PS_USE_SQL_SLAVE_)->getValue(
                     '
@@ -947,7 +926,6 @@ class AdminStatsControllerCore extends AdminStatsTabController
                 ConfigurationKPI::updateValue('ORDERS_PER_CUSTOMER_EXPIRE', strtotime('+1 day'));
 
                 break;
-
             case 'average_order_value':
                 $row = Db::getInstance(_PS_USE_SQL_SLAVE_)->getRow(
                     '
@@ -971,7 +949,6 @@ class AdminStatsControllerCore extends AdminStatsTabController
                 );
 
                 break;
-
             case 'netprofit_visit':
                 $date_from = date('Y-m-d', strtotime('-31 day'));
                 $date_to = date('Y-m-d', strtotime('-1 day'));
@@ -996,7 +973,6 @@ class AdminStatsControllerCore extends AdminStatsTabController
                 );
 
                 break;
-
             case 'products_per_category':
                 $products = AdminStatsController::getTotalProducts();
                 $categories = AdminStatsController::getTotalCategories();
@@ -1005,7 +981,6 @@ class AdminStatsControllerCore extends AdminStatsTabController
                 ConfigurationKPI::updateValue('PRODUCTS_PER_CATEGORY_EXPIRE', strtotime('+1 hour'));
 
                 break;
-
             case 'top_category':
                 if (!($id_category = AdminStatsController::getBestCategory(
                     date('Y-m-d', strtotime('-1 month')),
@@ -1024,7 +999,6 @@ class AdminStatsControllerCore extends AdminStatsTabController
                 );
 
                 break;
-
             case 'shopping_cart_total':
                 $cartId = Tools::getValue('cartId');
                 $cart = new Cart((int) $cartId);
@@ -1034,8 +1008,8 @@ class AdminStatsControllerCore extends AdminStatsTabController
                         Currency::getIsoCodeById((int) $cart->id_currency)
                     );
                 }
-                break;
 
+                break;
             default:
                 $value = false;
         }
@@ -1044,8 +1018,10 @@ class AdminStatsControllerCore extends AdminStatsTabController
             if (isset($data)) {
                 $array['data'] = $data;
             }
+
             die(json_encode($array));
         }
+
         die(json_encode(['has_errors' => true]));
     }
 

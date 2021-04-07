@@ -545,14 +545,14 @@ class CartRuleCore extends ObjectModel
         Cart $cart
     ) {
         return static::getCustomerCartRules(
-           $languageId,
-           $customerId,
-           $active = true,
-           $includeGeneric = true,
-           $inStock = true,
-           $cart,
-           $freeShippingOnly = false,
-           $highlightOnly = true
+            $languageId,
+            $customerId,
+            $active = true,
+            $includeGeneric = true,
+            $inStock = true,
+            $cart,
+            $freeShippingOnly = false,
+            $highlightOnly = true
         );
     }
 
@@ -1320,6 +1320,7 @@ class CartRuleCore extends ObjectModel
                                 $max_reduction_amount = (int) $product['cart_quantity'] * (float) $product['price'];
                             }
                             $reduction_amount = min($reduction_amount, $max_reduction_amount);
+
                             break;
                         }
                     }

@@ -94,8 +94,10 @@ class UpdateCombinationSuppliersFeatureContext extends AbstractCombinationFeatur
     public function removeAssociatedCombinationSuppliers(string $combinationReference): void
     {
         try {
-            $this->getCommandBus()->handle(new RemoveAllAssociatedCombinationSuppliersCommand(
-                $this->getSharedStorage()->get($combinationReference))
+            $this->getCommandBus()->handle(
+                new RemoveAllAssociatedCombinationSuppliersCommand(
+                $this->getSharedStorage()->get($combinationReference)
+            )
             );
         } catch (ProductException $e) {
             $this->setLastException($e);

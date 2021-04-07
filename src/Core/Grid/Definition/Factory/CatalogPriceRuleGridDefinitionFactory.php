@@ -81,84 +81,98 @@ final class CatalogPriceRuleGridDefinitionFactory extends AbstractGridDefinition
     protected function getColumns()
     {
         return (new ColumnCollection())
-            ->add((new BulkActionColumn('bulk'))
+            ->add(
+                (new BulkActionColumn('bulk'))
             ->setOptions([
                 'bulk_field' => 'id_specific_price_rule',
             ])
             )
-            ->add((new DataColumn('id_specific_price_rule'))
+            ->add(
+                (new DataColumn('id_specific_price_rule'))
             ->setName($this->trans('ID', [], 'Admin.Global'))
             ->setOptions([
                 'field' => 'id_specific_price_rule',
             ])
             )
-            ->add((new DataColumn('name'))
+            ->add(
+                (new DataColumn('name'))
             ->setName($this->trans('Name', [], 'Admin.Global'))
             ->setOptions([
                 'field' => 'name',
             ])
             )
-            ->add((new DataColumn('shop'))
+            ->add(
+                (new DataColumn('shop'))
             ->setName($this->trans('Shop', [], 'Admin.Global'))
             ->setOptions([
                 'field' => 'shop',
             ])
             )
-            ->add((new DataColumn('currency'))
+            ->add(
+                (new DataColumn('currency'))
             ->setName($this->trans('Currency', [], 'Admin.Global'))
             ->setOptions([
                 'field' => 'currency',
             ])
             )
-            ->add((new DataColumn('country'))
+            ->add(
+                (new DataColumn('country'))
             ->setName($this->trans('Country', [], 'Admin.Global'))
             ->setOptions([
                 'field' => 'country',
             ])
             )
-            ->add((new DataColumn('group_name'))
+            ->add(
+                (new DataColumn('group_name'))
             ->setName($this->trans('Group', [], 'Admin.Global'))
             ->setOptions([
                 'field' => 'group_name',
             ])
             )
-            ->add((new DataColumn('from_quantity'))
+            ->add(
+                (new DataColumn('from_quantity'))
             ->setName($this->trans('From quantity', [], 'Admin.Catalog.Feature'))
             ->setOptions([
                 'field' => 'from_quantity',
             ])
             )
-            ->add((new DataColumn('reduction_type'))
+            ->add(
+                (new DataColumn('reduction_type'))
             ->setName($this->trans('Reduction type', [], 'Admin.Catalog.Feature'))
             ->setOptions([
                 'field' => 'reduction_type',
             ])
             )
-            ->add((new DataColumn('reduction'))
+            ->add(
+                (new DataColumn('reduction'))
             ->setName($this->trans('Reduction', [], 'Admin.Catalog.Feature'))
             ->setOptions([
                 'field' => 'reduction',
             ])
             )
-            ->add((new DateTimeColumn('date_from'))
+            ->add(
+                (new DateTimeColumn('date_from'))
             ->setName($this->trans('Beginning', [], 'Admin.Catalog.Feature'))
             ->setOptions([
                 'format' => 'Y-m-d H:i',
                 'field' => 'date_from',
             ])
             )
-            ->add((new DateTimeColumn('date_to'))
+            ->add(
+                (new DateTimeColumn('date_to'))
             ->setName($this->trans('End', [], 'Admin.Catalog.Feature'))
             ->setOptions([
                 'format' => 'Y-m-d H:i',
                 'field' => 'date_to',
             ])
             )
-            ->add((new ActionColumn('actions'))
+            ->add(
+                (new ActionColumn('actions'))
             ->setName($this->trans('Actions', [], 'Admin.Global'))
             ->setOptions([
                 'actions' => (new RowActionCollection())
-                    ->add((new LinkRowAction('edit'))
+                    ->add(
+                        (new LinkRowAction('edit'))
                     ->setName($this->trans('Edit', [], 'Admin.Actions'))
                     ->setIcon('edit')
                     ->setOptions([
@@ -167,7 +181,8 @@ final class CatalogPriceRuleGridDefinitionFactory extends AbstractGridDefinition
                         'route_param_field' => 'id_specific_price_rule',
                     ])
                     )
-                    ->add((new SubmitRowAction('delete'))
+                    ->add(
+                        (new SubmitRowAction('delete'))
                     ->setName($this->trans('Delete', [], 'Admin.Actions'))
                     ->setIcon('delete')
                     ->setOptions([
@@ -193,7 +208,8 @@ final class CatalogPriceRuleGridDefinitionFactory extends AbstractGridDefinition
     protected function getFilters()
     {
         return (new FilterCollection())
-            ->add((new Filter('id_specific_price_rule', TextType::class))
+            ->add(
+                (new Filter('id_specific_price_rule', TextType::class))
             ->setTypeOptions([
                 'required' => false,
                 'attr' => [
@@ -202,7 +218,8 @@ final class CatalogPriceRuleGridDefinitionFactory extends AbstractGridDefinition
             ])
             ->setAssociatedColumn('id_specific_price_rule')
             )
-            ->add((new Filter('name', TextType::class))
+            ->add(
+                (new Filter('name', TextType::class))
             ->setTypeOptions([
                 'required' => false,
                 'attr' => [
@@ -211,7 +228,8 @@ final class CatalogPriceRuleGridDefinitionFactory extends AbstractGridDefinition
             ])
             ->setAssociatedColumn('name')
             )
-            ->add((new Filter('shop', TextType::class))
+            ->add(
+                (new Filter('shop', TextType::class))
             ->setTypeOptions([
                 'required' => false,
                 'attr' => [
@@ -220,7 +238,8 @@ final class CatalogPriceRuleGridDefinitionFactory extends AbstractGridDefinition
             ])
             ->setAssociatedColumn('shop')
             )
-            ->add((new Filter('currency', TextType::class))
+            ->add(
+                (new Filter('currency', TextType::class))
             ->setTypeOptions([
                 'required' => false,
                 'attr' => [
@@ -229,7 +248,8 @@ final class CatalogPriceRuleGridDefinitionFactory extends AbstractGridDefinition
             ])
             ->setAssociatedColumn('currency')
             )
-            ->add((new Filter('country', TextType::class))
+            ->add(
+                (new Filter('country', TextType::class))
             ->setTypeOptions([
                 'required' => false,
                 'attr' => [
@@ -238,7 +258,8 @@ final class CatalogPriceRuleGridDefinitionFactory extends AbstractGridDefinition
             ])
             ->setAssociatedColumn('country')
             )
-            ->add((new Filter('group_name', TextType::class))
+            ->add(
+                (new Filter('group_name', TextType::class))
             ->setTypeOptions([
                 'required' => false,
                 'attr' => [
@@ -247,7 +268,8 @@ final class CatalogPriceRuleGridDefinitionFactory extends AbstractGridDefinition
             ])
             ->setAssociatedColumn('group_name')
             )
-            ->add((new Filter('from_quantity', TextType::class))
+            ->add(
+                (new Filter('from_quantity', TextType::class))
             ->setTypeOptions([
                 'required' => false,
                 'attr' => [
@@ -256,7 +278,8 @@ final class CatalogPriceRuleGridDefinitionFactory extends AbstractGridDefinition
             ])
             ->setAssociatedColumn('from_quantity')
             )
-            ->add((new Filter('reduction_type', ChoiceType::class))
+            ->add(
+                (new Filter('reduction_type', ChoiceType::class))
             ->setTypeOptions([
                 'required' => false,
                 'choices' => [
@@ -266,7 +289,8 @@ final class CatalogPriceRuleGridDefinitionFactory extends AbstractGridDefinition
             ])
             ->setAssociatedColumn('reduction_type')
             )
-            ->add((new Filter('reduction', TextType::class))
+            ->add(
+                (new Filter('reduction', TextType::class))
             ->setTypeOptions([
                 'required' => false,
                 'attr' => [
@@ -275,7 +299,8 @@ final class CatalogPriceRuleGridDefinitionFactory extends AbstractGridDefinition
             ])
             ->setAssociatedColumn('reduction')
             )
-            ->add((new Filter('date_from', DateRangeType::class))
+            ->add(
+                (new Filter('date_from', DateRangeType::class))
             ->setTypeOptions([
                 'required' => false,
                 'attr' => [
@@ -285,7 +310,8 @@ final class CatalogPriceRuleGridDefinitionFactory extends AbstractGridDefinition
             ])
             ->setAssociatedColumn('date_from')
             )
-            ->add((new Filter('date_to', DateRangeType::class))
+            ->add(
+                (new Filter('date_to', DateRangeType::class))
             ->setTypeOptions([
                 'required' => false,
                 'attr' => [
@@ -295,7 +321,8 @@ final class CatalogPriceRuleGridDefinitionFactory extends AbstractGridDefinition
             ])
             ->setAssociatedColumn('date_to')
             )
-            ->add((new Filter('actions', SearchAndResetType::class))
+            ->add(
+                (new Filter('actions', SearchAndResetType::class))
             ->setAssociatedColumn('actions')
             ->setTypeOptions([
                 'reset_route' => 'admin_common_reset_search_by_filter_id',
@@ -315,15 +342,18 @@ final class CatalogPriceRuleGridDefinitionFactory extends AbstractGridDefinition
     protected function getGridActions()
     {
         return (new GridActionCollection())
-            ->add((new SimpleGridAction('common_refresh_list'))
+            ->add(
+                (new SimpleGridAction('common_refresh_list'))
             ->setName($this->trans('Refresh list', [], 'Admin.Advparameters.Feature'))
             ->setIcon('refresh')
             )
-            ->add((new SimpleGridAction('common_show_query'))
+            ->add(
+                (new SimpleGridAction('common_show_query'))
             ->setName($this->trans('Show SQL query', [], 'Admin.Actions'))
             ->setIcon('code')
             )
-            ->add((new SimpleGridAction('common_export_sql_manager'))
+            ->add(
+                (new SimpleGridAction('common_export_sql_manager'))
             ->setName($this->trans('Export to SQL Manager', [], 'Admin.Actions'))
             ->setIcon('storage')
             )
@@ -336,7 +366,8 @@ final class CatalogPriceRuleGridDefinitionFactory extends AbstractGridDefinition
     protected function getBulkActions()
     {
         return (new BulkActionCollection())
-            ->add((new SubmitBulkAction('delete_selection'))
+            ->add(
+                (new SubmitBulkAction('delete_selection'))
             ->setName($this->trans('Delete selected', [], 'Admin.Actions'))
             ->setOptions([
                 'submit_route' => 'admin_catalog_price_rules_bulk_delete',

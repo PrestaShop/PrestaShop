@@ -175,7 +175,7 @@ class TranslationCatalogueBuilder
         array $search,
         ?string $theme,
         ?string $module,
-        ?string $domain = null
+        string $domain = null
     ): Catalogue {
         $this->validateParameters($type, $locale, $search, $theme, $module);
 
@@ -183,24 +183,31 @@ class TranslationCatalogueBuilder
         switch ($type) {
             case ProviderDefinitionInterface::TYPE_BACK:
                 $definition = new BackofficeProviderDefinition();
+
                 break;
             case ProviderDefinitionInterface::TYPE_FRONT:
                 $definition = new FrontofficeProviderDefinition();
+
                 break;
             case ProviderDefinitionInterface::TYPE_MAILS_BODY:
                 $definition = new MailsBodyProviderDefinition();
+
                 break;
             case ProviderDefinitionInterface::TYPE_MAILS:
                 $definition = new MailsProviderDefinition();
+
                 break;
             case ProviderDefinitionInterface::TYPE_OTHERS:
                 $definition = new OthersProviderDefinition();
+
                 break;
             case ProviderDefinitionInterface::TYPE_MODULES:
                 $definition = new ModuleProviderDefinition($module);
+
                 break;
             case ProviderDefinitionInterface::TYPE_THEMES:
                 $definition = new ThemeProviderDefinition($theme);
+
                 break;
         }
 
@@ -258,7 +265,7 @@ class TranslationCatalogueBuilder
         array $search,
         ?string $theme,
         ?string $module,
-        ?string $domain = null
+        string $domain = null
     ): void {
         if (!in_array($type, ProviderDefinitionInterface::ALLOWED_TYPES)) {
             throw new UnexpectedTranslationTypeException('This \'type\' param is not valid.');

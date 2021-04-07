@@ -139,7 +139,6 @@ class StockManagerCore implements StockManagerInterface
                 }
 
                 break;
-
             // case FIFO / LIFO mode
             case 'FIFO':
             case 'LIFO':
@@ -167,7 +166,6 @@ class StockManagerCore implements StockManagerInterface
                 }
 
                 break;
-
             default:
                 return false;
 
@@ -353,7 +351,6 @@ class StockManagerCore implements StockManagerInterface
                     $return[$stock->id]['price_te'] = $stock->price_te;
 
                     break;
-
                 case 'LIFO':
                 case 'FIFO':
                     // for each stock, parse its mvts history to calculate the quantities left for each positive mvt,
@@ -513,11 +510,11 @@ class StockManagerCore implements StockManagerInterface
         if ($is_usable) {
             Hook::exec(
                 'actionProductCoverage',
-                    [
-                        'id_product' => $id_product,
-                        'id_product_attribute' => $id_product_attribute,
-                        'warehouse' => $warehouse,
-                    ]
+                [
+                    'id_product' => $id_product,
+                    'id_product_attribute' => $id_product_attribute,
+                    'warehouse' => $warehouse,
+                ]
             );
         }
 
@@ -583,8 +580,8 @@ class StockManagerCore implements StockManagerInterface
 			AND id_product_attribute_item = ' . ($id_product_attribute ? (int) $id_product_attribute : '0')
         )) {
             foreach ($in_pack as $value) {
-                if (Validate::isLoadedObject($product = new Product((int) $value['id_product_pack'])) &&
-                    ($product->pack_stock_type == Pack::STOCK_TYPE_PRODUCTS_ONLY || $product->pack_stock_type == Pack::STOCK_TYPE_PACK_BOTH || ($product->pack_stock_type == Pack::STOCK_TYPE_DEFAULT && Configuration::get('PS_PACK_STOCK_TYPE') > 0))) {
+                if (Validate::isLoadedObject($product = new Product((int) $value['id_product_pack']))
+                    && ($product->pack_stock_type == Pack::STOCK_TYPE_PRODUCTS_ONLY || $product->pack_stock_type == Pack::STOCK_TYPE_PACK_BOTH || ($product->pack_stock_type == Pack::STOCK_TYPE_DEFAULT && Configuration::get('PS_PACK_STOCK_TYPE') > 0))) {
                     $query = new DbQuery();
                     $query->select('od.product_quantity, od.product_quantity_refunded, pk.quantity');
                     $query->from('order_detail', 'od');
@@ -612,8 +609,8 @@ class StockManagerCore implements StockManagerInterface
 
         // skip if product is a pack without
         if (!Pack::isPack($id_product) || (Pack::isPack($id_product) && Validate::isLoadedObject($product = new Product((int) $id_product))
-            && $product->pack_stock_type == Pack::STOCK_TYPE_PACK_ONLY || $product->pack_stock_type == Pack::STOCK_TYPE_PACK_BOTH ||
-                    ($product->pack_stock_type == Pack::STOCK_TYPE_DEFAULT && (Configuration::get('PS_PACK_STOCK_TYPE') == Pack::STOCK_TYPE_PACK_ONLY || Configuration::get('PS_PACK_STOCK_TYPE') == Pack::STOCK_TYPE_PACK_BOTH)))) {
+            && $product->pack_stock_type == Pack::STOCK_TYPE_PACK_ONLY || $product->pack_stock_type == Pack::STOCK_TYPE_PACK_BOTH
+                    || ($product->pack_stock_type == Pack::STOCK_TYPE_DEFAULT && (Configuration::get('PS_PACK_STOCK_TYPE') == Pack::STOCK_TYPE_PACK_ONLY || Configuration::get('PS_PACK_STOCK_TYPE') == Pack::STOCK_TYPE_PACK_BOTH)))) {
             // Gets client_orders_qty
             $query = new DbQuery();
             $query->select('od.product_quantity, od.product_quantity_refunded');
@@ -692,19 +689,19 @@ class StockManagerCore implements StockManagerInterface
         // Checks if the given warehouses are available
         $warehouse_from = new Warehouse($id_warehouse_from);
         $warehouse_to = new Warehouse($id_warehouse_to);
-        if (!Validate::isLoadedObject($warehouse_from) ||
-            !Validate::isLoadedObject($warehouse_to)) {
+        if (!Validate::isLoadedObject($warehouse_from)
+            || !Validate::isLoadedObject($warehouse_to)) {
             return false;
         }
 
         // Removes from warehouse_from
         $stocks = $this->removeProduct(
             $id_product,
-                                       $id_product_attribute,
-                                       $warehouse_from,
-                                       $quantity,
-                                       Configuration::get('PS_STOCK_MVT_TRANSFER_FROM'),
-                                       $usable_from
+            $id_product_attribute,
+            $warehouse_from,
+            $quantity,
+            Configuration::get('PS_STOCK_MVT_TRANSFER_FROM'),
+            $usable_from
         );
         if (!count($stocks)) {
             return false;
@@ -725,12 +722,12 @@ class StockManagerCore implements StockManagerInterface
 
             if (!$this->addProduct(
                 $id_product,
-                                   $id_product_attribute,
-                                   $warehouse_to,
-                                   $stock['quantity'],
-                                   Configuration::get('PS_STOCK_MVT_TRANSFER_TO'),
-                                   $price,
-                                   $usable_to
+                $id_product_attribute,
+                $warehouse_to,
+                $stock['quantity'],
+                Configuration::get('PS_STOCK_MVT_TRANSFER_TO'),
+                $price,
+                $usable_to
             )) {
                 return false;
             }
@@ -783,9 +780,9 @@ class StockManagerCore implements StockManagerInterface
         $quantity_per_day = Tools::ps_round($quantity_out / $coverage);
         $physical_quantity = $this->getProductPhysicalQuantities(
             $id_product,
-                                                                 $id_product_attribute,
-                                                                 ($id_warehouse ? [$id_warehouse] : null),
-                                                                 true
+            $id_product_attribute,
+            ($id_warehouse ? [$id_warehouse] : null),
+            true
         );
         $time_left = ($quantity_per_day == 0) ? (-1) : Tools::ps_round($physical_quantity / $quantity_per_day);
 

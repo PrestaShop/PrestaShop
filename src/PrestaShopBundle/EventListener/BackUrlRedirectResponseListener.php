@@ -54,7 +54,7 @@ final class BackUrlRedirectResponseListener
     public function __construct(
         BackUrlProvider $backUrlProvider,
         LegacyContext $legacyContext
-   ) {
+    ) {
         $this->backUrlProvider = $backUrlProvider;
         $context = $legacyContext->getContext();
         if (null !== $context && $context->employee instanceof Employee) {

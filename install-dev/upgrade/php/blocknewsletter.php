@@ -23,9 +23,8 @@
  * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
-
 function blocknewsletter()
 {
     // No one will know if the table does not exist :]
-    Db::getInstance()->execute('ALTER TABLE '._DB_PREFIX_.'newsletter ADD `http_referer` VARCHAR(255) NULL');
+    Db::getInstance()->execute('ALTER TABLE ' . _DB_PREFIX_ . 'newsletter ADD `http_referer` VARCHAR(255) NULL');
 }

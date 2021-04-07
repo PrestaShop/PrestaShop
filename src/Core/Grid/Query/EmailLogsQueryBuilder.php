@@ -97,7 +97,7 @@ final class EmailLogsQueryBuilder extends AbstractDoctrineQueryBuilder
 
         foreach ($filters as $name => $value) {
             if ('id_lang' === $name) {
-                $qb->andWhere("l.id_lang = :$name");
+                $qb->andWhere("l.id_lang = :${name}");
                 $qb->setParameter($name, $value);
 
                 continue;
@@ -117,7 +117,7 @@ final class EmailLogsQueryBuilder extends AbstractDoctrineQueryBuilder
                 continue;
             }
 
-            $qb->andWhere("$name LIKE :$name");
+            $qb->andWhere("${name} LIKE :${name}");
             $qb->setParameter($name, '%' . $value . '%');
         }
 

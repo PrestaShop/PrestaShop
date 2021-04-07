@@ -578,7 +578,7 @@ class WebserviceOutputBuilderCore
         } elseif (isset($field['getter']) && $object != null && method_exists($object, $field['getter'])) {
             $field['value'] = $object->{$field['getter']}();
         } elseif (!isset($field['value'])) {
-            $field['value'] = $object->$field_name;
+            $field['value'] = $object->{$field_name};
         }
 
         // this apply specific function for a particular field on a choosen entity
@@ -643,7 +643,7 @@ class WebserviceOutputBuilderCore
                     }
                 } else {
                     if (method_exists($object, $getter) && null === $this->schemaToDisplay) {
-                        $association_resources = $object->$getter();
+                        $association_resources = $object->{$getter}();
                         if (is_array($association_resources) && !empty($association_resources)) {
                             foreach ($association_resources as $association_resource) {
                                 $objects_assoc[] = $association_resource;

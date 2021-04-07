@@ -1,7 +1,7 @@
 <?php
 
 global $_MODULE;
-$_MODULE = array();
+$_MODULE = [];
 $_MODULE['<{cronjobs}prestashop>cronjobs_682ee2e41e510efdbced967430173c66'] = 'Éditeur de tâches cron';
 $_MODULE['<{cronjobs}prestashop>cronjobs_c75e110ddb05aea61563c50d7baf0ae0'] = 'Gérez toutes vos tâches web automatisées depuis une interface unique.';
 $_MODULE['<{cronjobs}prestashop>cronjobs_4093808c9781fb6ca2ed5ade71deff4d'] = 'Pour pouvoir utiliser ce module, veuillez activer cURL (extension PHP).';

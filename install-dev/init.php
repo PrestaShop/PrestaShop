@@ -77,27 +77,27 @@ if (!defined('__PS_BASE_URI__')) {
 }
 
 if (!defined('_PS_CORE_DIR_')) {
-    define('_PS_CORE_DIR_', realpath(dirname(__FILE__).'/..'));
+    define('_PS_CORE_DIR_', realpath(__DIR__ . '/..'));
 }
 
 /* in dev mode - check if composer was executed */
-if ((!is_dir(_PS_CORE_DIR_.DIRECTORY_SEPARATOR.'vendor') ||
-    !file_exists(_PS_CORE_DIR_.DIRECTORY_SEPARATOR.'vendor'.DIRECTORY_SEPARATOR.'autoload.php'))) {
+if ((!is_dir(_PS_CORE_DIR_ . DIRECTORY_SEPARATOR . 'vendor')
+    || !file_exists(_PS_CORE_DIR_ . DIRECTORY_SEPARATOR . 'vendor' . DIRECTORY_SEPARATOR . 'autoload.php'))) {
     die('Error : please install <a href="https://getcomposer.org/">composer</a>. Then run "php composer.phar install"');
 }
 
-require_once _PS_CORE_DIR_.'/config/defines.inc.php';
-require_once _PS_CORE_DIR_.'/config/autoload.php';
+require_once _PS_CORE_DIR_ . '/config/defines.inc.php';
+require_once _PS_CORE_DIR_ . '/config/autoload.php';
 
-if (file_exists(_PS_CORE_DIR_.'/app/config/parameters.php')) {
-    require_once _PS_CORE_DIR_.'/config/bootstrap.php';
+if (file_exists(_PS_CORE_DIR_ . '/app/config/parameters.php')) {
+    require_once _PS_CORE_DIR_ . '/config/bootstrap.php';
 
     global $kernel;
     try {
         $kernel = new AppKernel(_PS_ENV_, _PS_MODE_DEV_);
         $kernel->boot();
     } catch (DBALException $e) {
-        /**
+        /*
          * Doctrine couldn't be loaded because database settings point to a
          * non existence database
          */
@@ -116,7 +116,7 @@ if (!defined('_THEME_NAME_')) {
          * @deprecated since 1.7.5.x to be removed in 1.8.x
          * Rely on "PS_THEME_NAME" environment variable value
          */
-        $dirThemes = dirname(__DIR__).'/themes/';
+        $dirThemes = dirname(__DIR__) . '/themes/';
         $fileConfig = '/config/theme.yml';
         $defaultTheme = 'classic';
         // Choose classic theme as default
@@ -133,23 +133,23 @@ if (!defined('_THEME_NAME_')) {
     }
 }
 
-require_once _PS_CORE_DIR_.'/config/defines_uri.inc.php';
+require_once _PS_CORE_DIR_ . '/config/defines_uri.inc.php';
 
 // Generate common constants
 define('PS_INSTALLATION_IN_PROGRESS', true);
-define('_PS_INSTALL_PATH_', dirname(__FILE__).'/');
-define('_PS_INSTALL_DATA_PATH_', _PS_INSTALL_PATH_.'data/');
-define('_PS_INSTALL_CONTROLLERS_PATH_', _PS_INSTALL_PATH_.'controllers/');
-define('_PS_INSTALL_MODELS_PATH_', _PS_INSTALL_PATH_.'models/');
-define('_PS_INSTALL_LANGS_PATH_', _PS_INSTALL_PATH_.'langs/');
-define('_PS_INSTALL_FIXTURES_PATH_', _PS_INSTALL_PATH_.'fixtures/');
+define('_PS_INSTALL_PATH_', __DIR__ . '/');
+define('_PS_INSTALL_DATA_PATH_', _PS_INSTALL_PATH_ . 'data/');
+define('_PS_INSTALL_CONTROLLERS_PATH_', _PS_INSTALL_PATH_ . 'controllers/');
+define('_PS_INSTALL_MODELS_PATH_', _PS_INSTALL_PATH_ . 'models/');
+define('_PS_INSTALL_LANGS_PATH_', _PS_INSTALL_PATH_ . 'langs/');
+define('_PS_INSTALL_FIXTURES_PATH_', _PS_INSTALL_PATH_ . 'fixtures/');
 
 // PrestaShop autoload is used to load some helpful classes like Tools.
 // Add classes used by installer bellow.
 
-require_once _PS_CORE_DIR_.'/config/alias.php';
-require_once _PS_INSTALL_PATH_.'classes/exception.php';
-require_once _PS_INSTALL_PATH_.'classes/session.php';
+require_once _PS_CORE_DIR_ . '/config/alias.php';
+require_once _PS_INSTALL_PATH_ . 'classes/exception.php';
+require_once _PS_INSTALL_PATH_ . 'classes/session.php';
 
 @set_time_limit(0);
 // Work around lack of validation for timezone
@@ -158,7 +158,6 @@ if (!in_array(@ini_get('date.timezone'), timezone_identifiers_list())) {
     @date_default_timezone_set('UTC');
     ini_set('date.timezone', 'UTC');
 }
-
 
 function psinstall_get_octets($option)
 {

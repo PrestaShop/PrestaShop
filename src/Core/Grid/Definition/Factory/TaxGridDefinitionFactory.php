@@ -102,7 +102,8 @@ final class TaxGridDefinitionFactory extends AbstractGridDefinitionFactory
                         'field' => 'rate',
                     ])
             )
-            ->add((new ToggleColumn('active'))
+            ->add(
+                (new ToggleColumn('active'))
             ->setName($this->trans('Enabled', [], 'Admin.Global'))
             ->setOptions([
                 'field' => 'active',
@@ -175,7 +176,8 @@ final class TaxGridDefinitionFactory extends AbstractGridDefinitionFactory
                     ])
                     ->setAssociatedColumn('rate')
             )
-            ->add((new Filter('active', YesAndNoChoiceType::class))
+            ->add(
+                (new Filter('active', YesAndNoChoiceType::class))
             ->setTypeOptions([
                 'required' => false,
                 'choice_translation_domain' => false,

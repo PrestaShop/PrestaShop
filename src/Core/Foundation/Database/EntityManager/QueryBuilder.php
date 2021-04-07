@@ -70,6 +70,6 @@ class QueryBuilder
             }
         }
 
-        return implode(" $operator ", $parts);
+        return implode(" ${operator} ", $parts);
     }
 }

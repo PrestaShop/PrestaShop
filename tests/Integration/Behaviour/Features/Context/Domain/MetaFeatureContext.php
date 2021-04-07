@@ -257,7 +257,8 @@ class MetaFeatureContext extends AbstractDomainFeatureContext
 
         $pageNames = array_map(
             static function (LayoutCustomizationPage $item) { return $item->getPage(); },
-            $layoutCustomizationPages)
+            $layoutCustomizationPages
+        )
         ;
 
         if (!in_array($pageName, $pageNames, true)) {

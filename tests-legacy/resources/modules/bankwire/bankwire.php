@@ -23,7 +23,6 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
-
 if (!defined('_PS_VERSION_')) {
     exit;
 }
@@ -31,7 +30,7 @@ if (!defined('_PS_VERSION_')) {
 class bankwire extends PaymentModule
 {
     protected $_html = '';
-    protected $_postErrors = array();
+    protected $_postErrors = [];
 
     public $details;
     public $owner;
@@ -43,9 +42,9 @@ class bankwire extends PaymentModule
         $this->name = 'bankwire';
         $this->tab = 'payments_gateways';
         $this->version = '2.0.0';
-        $this->ps_versions_compliancy = array('min' => '1.7', 'max' => _PS_VERSION_);
+        $this->ps_versions_compliancy = ['min' => '1.7', 'max' => _PS_VERSION_];
         $this->author = 'PrestaShop';
-        $this->controllers = array('payment', 'validation');
+        $this->controllers = ['payment', 'validation'];
         $this->is_eu_compatible = 1;
 
         $this->currencies = true;
@@ -86,11 +85,11 @@ class bankwire extends PaymentModule
     /**
      * tests for ModuleGetPossibleHooks
      */
-    public function hookPaymentReturn() {
-
+    public function hookPaymentReturn()
+    {
     }
 
-    public function hookPaymentOptions() {
-
+    public function hookPaymentOptions()
+    {
     }
 }

@@ -23,7 +23,6 @@
  * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
-
 class ToolsInstall
 {
     /**
@@ -49,33 +48,35 @@ class ToolsInstall
      * $array['parent']['child'][1] = 'b';
      * ...And so on.
      * _____________________________________
+     *
      * @param simpleXMLElement $xml the XML to convert
-     * @param bool $flattenValues    Choose wether to flatten values
-     *                                    or to set them under a particular index.
-     *                                    defaults to true;
+     * @param bool $flattenValues Choose wether to flatten values
+     *                            or to set them under a particular index.
+     *                            defaults to true;
      * @param bool $flattenAttributes Choose wether to flatten attributes
-     *                                    or to set them under a particular index.
-     *                                    Defaults to true;
-     * @param bool $flattenChildren    Choose wether to flatten children
-     *                                    or to set them under a particular index.
-     *                                    Defaults to true;
-     * @param string $valueKey            index for values, in case $flattenValues was set to
-     *                            false. Defaults to "@value"
-     * @param string $attributesKey        index for attributes, in case $flattenAttributes was set to
-     *                            false. Defaults to "@attributes"
-     * @param string $childrenKey        index for children, in case $flattenChildren was set to
+     *                                or to set them under a particular index.
+     *                                Defaults to true;
+     * @param bool $flattenChildren Choose wether to flatten children
+     *                              or to set them under a particular index.
+     *                              Defaults to true;
+     * @param string $valueKey index for values, in case $flattenValues was set to
+     *                         false. Defaults to "@value"
+     * @param string $attributesKey index for attributes, in case $flattenAttributes was set to
+     *                              false. Defaults to "@attributes"
+     * @param string $childrenKey index for children, in case $flattenChildren was set to
      *                            false. Defaults to "@children"
-     * @return array the resulting array.
+     *
+     * @return array the resulting array
      */
     public static function simpleXMLToArray($xml, $flattenValues = true, $flattenAttributes = true, $flattenChildren = true, $valueKey = '@value', $attributesKey = '@attributes', $childrenKey = '@children')
     {
-        $return = array();
+        $return = [];
         if (!($xml instanceof SimpleXMLElement)) {
             return $return;
         }
 
         $name = $xml->getName();
-        $_value = trim((string)$xml);
+        $_value = trim((string) $xml);
         if (strlen($_value) == 0) {
             $_value = null;
         }
@@ -88,7 +89,7 @@ class ToolsInstall
             }
         }
 
-        $children = array();
+        $children = [];
         $first = true;
         foreach ($xml->children() as $elementName => $child) {
             $value = static::simpleXMLToArray($child, $flattenValues, $flattenAttributes, $flattenChildren, $valueKey, $attributesKey, $childrenKey);
@@ -97,7 +98,7 @@ class ToolsInstall
                     $temp = $children[$elementName];
                     unset($children[$elementName]);
                     $children[$elementName][] = $temp;
-                    $first=false;
+                    $first = false;
                 }
                 $children[$elementName][] = $value;
             } else {
@@ -113,7 +114,7 @@ class ToolsInstall
             }
         }
 
-        $attributes = array();
+        $attributes = [];
         foreach ($xml->attributes() as $name => $value) {
             $attributes[$name] = trim($value);
         }

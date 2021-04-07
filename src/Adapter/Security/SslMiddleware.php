@@ -68,7 +68,8 @@ class SslMiddleware
         $event->stopPropagation();
         $redirect = 'https://' . $_SERVER['HTTP_HOST'] . $_SERVER['REQUEST_URI'];
         header('HTTP/1.1 302 Found');
-        header("Location: $redirect");
+        header("Location: ${redirect}");
+
         exit();
     }
 }

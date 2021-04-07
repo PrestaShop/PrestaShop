@@ -301,7 +301,10 @@ class CommonController extends FrameworkBundleAdminController
         // for compatibility when $controller and $action are used
         if (!empty($controller) && !empty($action)) {
             $adminFilter = $adminFiltersRepository->findByEmployeeAndRouteParams(
-                $employeeId, $shopId, $controller, $action
+                $employeeId,
+                $shopId,
+                $controller,
+                $action
             );
         }
 

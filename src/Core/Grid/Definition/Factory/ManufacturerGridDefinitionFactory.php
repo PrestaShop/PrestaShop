@@ -78,42 +78,49 @@ final class ManufacturerGridDefinitionFactory extends AbstractGridDefinitionFact
     protected function getColumns()
     {
         return (new ColumnCollection())
-            ->add((new BulkActionColumn('bulk'))
+            ->add(
+                (new BulkActionColumn('bulk'))
             ->setOptions([
                 'bulk_field' => 'id_manufacturer',
             ])
             )
-            ->add((new DataColumn('id_manufacturer'))
+            ->add(
+                (new DataColumn('id_manufacturer'))
             ->setName($this->trans('ID', [], 'Admin.Global'))
             ->setOptions([
                 'field' => 'id_manufacturer',
             ])
             )
-            ->add((new ImageColumn('logo'))
+            ->add(
+                (new ImageColumn('logo'))
             ->setName($this->trans('Logo', [], 'Admin.Global'))
             ->setOptions([
                 'src_field' => 'logo',
             ])
             )
-            ->add((new DataColumn('name'))
+            ->add(
+                (new DataColumn('name'))
             ->setName($this->trans('Name', [], 'Admin.Global'))
             ->setOptions([
                 'field' => 'name',
             ])
             )
-            ->add((new DataColumn('addresses_count'))
+            ->add(
+                (new DataColumn('addresses_count'))
             ->setName($this->trans('Addresses', [], 'Admin.Catalog.Feature'))
             ->setOptions([
                 'field' => 'addresses_count',
             ])
             )
-            ->add((new DataColumn('products_count'))
+            ->add(
+                (new DataColumn('products_count'))
             ->setName($this->trans('Products', [], 'Admin.Catalog.Feature'))
             ->setOptions([
                 'field' => 'products_count',
             ])
             )
-            ->add((new ToggleColumn('active'))
+            ->add(
+                (new ToggleColumn('active'))
             ->setName($this->trans('Enabled', [], 'Admin.Global'))
             ->setOptions([
                 'field' => 'active',
@@ -122,11 +129,13 @@ final class ManufacturerGridDefinitionFactory extends AbstractGridDefinitionFact
                 'route_param_name' => 'manufacturerId',
             ])
             )
-            ->add((new ActionColumn('actions'))
+            ->add(
+                (new ActionColumn('actions'))
             ->setName($this->trans('Actions', [], 'Admin.Global'))
             ->setOptions([
                 'actions' => (new RowActionCollection())
-                    ->add((new LinkRowAction('view'))
+                    ->add(
+                        (new LinkRowAction('view'))
                     ->setName($this->trans('View', [], 'Admin.Actions'))
                     ->setIcon('zoom_in')
                     ->setOptions([
@@ -136,7 +145,8 @@ final class ManufacturerGridDefinitionFactory extends AbstractGridDefinitionFact
                         'clickable_row' => true,
                     ])
                     )
-                    ->add((new LinkRowAction('edit'))
+                    ->add(
+                        (new LinkRowAction('edit'))
                     ->setName($this->trans('Edit', [], 'Admin.Actions'))
                     ->setIcon('edit')
                     ->setOptions([
@@ -163,7 +173,8 @@ final class ManufacturerGridDefinitionFactory extends AbstractGridDefinitionFact
     protected function getGridActions()
     {
         return (new GridActionCollection())
-            ->add((new LinkGridAction('import'))
+            ->add(
+                (new LinkGridAction('import'))
             ->setName($this->trans('Import', [], 'Admin.Actions'))
             ->setIcon('cloud_upload')
             ->setOptions([
@@ -173,22 +184,26 @@ final class ManufacturerGridDefinitionFactory extends AbstractGridDefinitionFact
                 ],
             ])
             )
-            ->add((new LinkGridAction('export'))
+            ->add(
+                (new LinkGridAction('export'))
             ->setName($this->trans('Export', [], 'Admin.Actions'))
             ->setIcon('cloud_download')
             ->setOptions([
                 'route' => 'admin_manufacturers_export',
             ])
             )
-            ->add((new SimpleGridAction('common_refresh_list'))
+            ->add(
+                (new SimpleGridAction('common_refresh_list'))
             ->setName($this->trans('Refresh list', [], 'Admin.Advparameters.Feature'))
             ->setIcon('refresh')
             )
-            ->add((new SimpleGridAction('common_show_query'))
+            ->add(
+                (new SimpleGridAction('common_show_query'))
             ->setName($this->trans('Show SQL query', [], 'Admin.Actions'))
             ->setIcon('code')
             )
-            ->add((new SimpleGridAction('common_export_sql_manager'))
+            ->add(
+                (new SimpleGridAction('common_export_sql_manager'))
             ->setName($this->trans('Export to SQL Manager', [], 'Admin.Actions'))
             ->setIcon('storage')
             );
@@ -200,7 +215,8 @@ final class ManufacturerGridDefinitionFactory extends AbstractGridDefinitionFact
     protected function getFilters()
     {
         return (new FilterCollection())
-            ->add((new Filter('id_manufacturer', TextType::class))
+            ->add(
+                (new Filter('id_manufacturer', TextType::class))
             ->setTypeOptions([
                 'required' => false,
                 'attr' => [
@@ -209,7 +225,8 @@ final class ManufacturerGridDefinitionFactory extends AbstractGridDefinitionFact
             ])
             ->setAssociatedColumn('id_manufacturer')
             )
-            ->add((new Filter('name', TextType::class))
+            ->add(
+                (new Filter('name', TextType::class))
             ->setTypeOptions([
                 'required' => false,
                 'attr' => [
@@ -218,10 +235,12 @@ final class ManufacturerGridDefinitionFactory extends AbstractGridDefinitionFact
             ])
             ->setAssociatedColumn('name')
             )
-            ->add((new Filter('active', YesAndNoChoiceType::class))
+            ->add(
+                (new Filter('active', YesAndNoChoiceType::class))
             ->setAssociatedColumn('active')
             )
-            ->add((new Filter('actions', SearchAndResetType::class))
+            ->add(
+                (new Filter('actions', SearchAndResetType::class))
             ->setAssociatedColumn('actions')
             ->setTypeOptions([
                 'reset_route' => 'admin_common_reset_search_by_filter_id',
@@ -240,13 +259,15 @@ final class ManufacturerGridDefinitionFactory extends AbstractGridDefinitionFact
     protected function getBulkActions()
     {
         return (new BulkActionCollection())
-            ->add((new SubmitBulkAction('enable_selection'))
+            ->add(
+                (new SubmitBulkAction('enable_selection'))
             ->setName($this->trans('Enable selection', [], 'Admin.Actions'))
             ->setOptions([
                 'submit_route' => 'admin_manufacturers_bulk_enable_status',
             ])
             )
-            ->add((new SubmitBulkAction('disable_selection'))
+            ->add(
+                (new SubmitBulkAction('disable_selection'))
             ->setName($this->trans('Disable selection', [], 'Admin.Actions'))
             ->setOptions([
                 'submit_route' => 'admin_manufacturers_bulk_disable_status',

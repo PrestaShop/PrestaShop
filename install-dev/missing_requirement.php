@@ -95,34 +95,34 @@
   <h2>We can't start installation :(</h2>
 
   <ol>
-    <?php if (!extension_loaded('SimpleXML')): ?>
+    <?php if (!extension_loaded('SimpleXML')) { ?>
     <li>
         PrestaShop installation requires the <b>SimpleXML PHP extension</b> to be enabled.
     </li>
-    <?php endif; ?>
-    <?php if (!extension_loaded('zip')): ?>
+    <?php } ?>
+    <?php if (!extension_loaded('zip')) { ?>
       <li>
           PrestaShop installation requires the <b>Zip PHP extension</b> to be enabled.
       </li>
-    <?php endif; ?>
-    <?php if (!defined('PHP_VERSION_ID') || PHP_VERSION_ID < _PS_INSTALL_MINIMUM_PHP_VERSION_ID_): ?>
+    <?php } ?>
+    <?php if (!defined('PHP_VERSION_ID') || PHP_VERSION_ID < _PS_INSTALL_MINIMUM_PHP_VERSION_ID_) { ?>
       <li>
-          Your server is running PHP <?php echo PHP_VERSION ?>, but PrestaShop requires PHP <?php echo _PS_INSTALL_MINIMUM_PHP_VERSION_ ?> or newer.
-          <i>To install PrestaShop <?php echo _PS_INSTALL_VERSION_ ?> you need to update your server's PHP version.</i>
+          Your server is running PHP <?php echo PHP_VERSION; ?>, but PrestaShop requires PHP <?php echo _PS_INSTALL_MINIMUM_PHP_VERSION_; ?> or newer.
+          <i>To install PrestaShop <?php echo _PS_INSTALL_VERSION_; ?> you need to update your server's PHP version.</i>
       </li>
-    <?php endif; ?>
-    <?php if (PHP_VERSION_ID > _PS_INSTALL_MAXIMUM_PHP_VERSION_ID_): ?>
+    <?php } ?>
+    <?php if (PHP_VERSION_ID > _PS_INSTALL_MAXIMUM_PHP_VERSION_ID_) { ?>
       <li>
-          Your server is running PHP <?php echo PHP_VERSION ?>, but PrestaShop requires PHP <?php echo _PS_INSTALL_MAXIMUM_PHP_VERSION_ ?> or lower.
-          <i>To install PrestaShop <?php echo _PS_INSTALL_VERSION_ ?> you need to downgrade your server's PHP version.</i>
+          Your server is running PHP <?php echo PHP_VERSION; ?>, but PrestaShop requires PHP <?php echo _PS_INSTALL_MAXIMUM_PHP_VERSION_; ?> or lower.
+          <i>To install PrestaShop <?php echo _PS_INSTALL_VERSION_; ?> you need to downgrade your server's PHP version.</i>
       </li>
-    <?php endif; ?>
-        <?php if (!is_writable(__DIR__.DIRECTORY_SEPARATOR.'..'.DIRECTORY_SEPARATOR.'var'.DIRECTORY_SEPARATOR.'cache')): ?>
+    <?php } ?>
+        <?php if (!is_writable(__DIR__ . DIRECTORY_SEPARATOR . '..' . DIRECTORY_SEPARATOR . 'var' . DIRECTORY_SEPARATOR . 'cache')) { ?>
       <li>
           PrestaShop installation needs to write critical files in the folder var/cache.
           <i>Please review the permissions on your server.</i>
       </li>
-    <?php endif; ?>
+    <?php } ?>
   </ol>
 
   <p>You can contact your web host provider to fix the above requirements.</p>

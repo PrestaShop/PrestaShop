@@ -84,7 +84,7 @@ class FeatureRepository extends AbstractObjectModelRepository
      *
      * @return array<int, array<string, mixed>>
      */
-    public function getFeatures(?int $limit = null, ?int $offset = null, ?array $filters = []): array
+    public function getFeatures(int $limit = null, int $offset = null, ?array $filters = []): array
     {
         $qb = $this->getFeaturesQueryBuilder($filters)
             ->select('f.*, fl.*')

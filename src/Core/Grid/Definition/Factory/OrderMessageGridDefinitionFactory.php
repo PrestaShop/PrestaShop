@@ -78,25 +78,29 @@ final class OrderMessageGridDefinitionFactory extends AbstractFilterableGridDefi
                         'bulk_field' => 'id_order_message',
                     ])
             )
-            ->add((new DataColumn('id_order_message'))
+            ->add(
+                (new DataColumn('id_order_message'))
             ->setName($this->trans('ID', [], 'Admin.Global'))
             ->setOptions([
                 'field' => 'id_order_message',
             ])
             )
-            ->add((new DataColumn('name'))
+            ->add(
+                (new DataColumn('name'))
             ->setName($this->trans('Name', [], 'Admin.Global'))
             ->setOptions([
                 'field' => 'name',
             ])
             )
-            ->add((new DataColumn('message'))
+            ->add(
+                (new DataColumn('message'))
             ->setName($this->trans('Message', [], 'Admin.Global'))
             ->setOptions([
                 'field' => 'message',
             ])
             )
-            ->add((new ActionColumn('actions'))
+            ->add(
+                (new ActionColumn('actions'))
             ->setName($this->trans('Actions', [], 'Admin.Global'))
             ->setOptions([
                 'actions' => (new RowActionCollection())
@@ -128,7 +132,8 @@ final class OrderMessageGridDefinitionFactory extends AbstractFilterableGridDefi
     protected function getFilters()
     {
         return (new FilterCollection())
-            ->add((new Filter('id_order_message', TextType::class))
+            ->add(
+                (new Filter('id_order_message', TextType::class))
             ->setTypeOptions([
                 'attr' => [
                     'placeholder' => $this->trans('Search ID', [], 'Admin.Actions'),
@@ -137,7 +142,8 @@ final class OrderMessageGridDefinitionFactory extends AbstractFilterableGridDefi
             ])
             ->setAssociatedColumn('id_order_message')
             )
-            ->add((new Filter('name', TextType::class))
+            ->add(
+                (new Filter('name', TextType::class))
             ->setTypeOptions([
                 'attr' => [
                     'placeholder' => $this->trans('Search name', [], 'Admin.Actions'),
@@ -146,7 +152,8 @@ final class OrderMessageGridDefinitionFactory extends AbstractFilterableGridDefi
             ])
             ->setAssociatedColumn('name')
             )
-            ->add((new Filter('message', TextType::class))
+            ->add(
+                (new Filter('message', TextType::class))
             ->setTypeOptions([
                 'attr' => [
                     'placeholder' => $this->trans('Search message', [], 'Admin.Actions'),

@@ -28,9 +28,9 @@ declare(strict_types=1);
 
 namespace LegacyTests\Integration\classes;
 
+use Language;
 use LegacyTests\PrestaShopBundle\Utils\DatabaseCreator as Database;
 use LegacyTests\TestCase\IntegrationTestCase;
-use Language;
 
 class LanguageTest extends IntegrationTestCase
 {
@@ -49,6 +49,7 @@ class LanguageTest extends IntegrationTestCase
         $this->assertNotEquals(0, $idByIso);
         $this->assertIsInt($idByIso);
     }
+
     public function testGetIdByIsoWithoutCache()
     {
         $this->assertNull(Language::getIdByIso('zz', true));

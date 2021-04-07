@@ -228,8 +228,8 @@ abstract class QueryParamsCollection
         $queryParams['page_index'] = (int) $queryParams['page_index'];
 
         if (
-            $queryParams['page_size'] > $this->getDefaultPageSize() ||
-            $queryParams['page_size'] < 1
+            $queryParams['page_size'] > $this->getDefaultPageSize()
+            || $queryParams['page_size'] < 1
         ) {
             throw new InvalidPaginationParamsException(sprintf('A page size should be an integer greater than 1 and fewer than %s', $this->getDefaultPageSize()));
         }
@@ -648,7 +648,7 @@ abstract class QueryParamsCollection
         }
 
         array_map(function ($index, $value) use (&$sqlParams) {
-            list($idAttributeGroup, $idAttribute) = explode(':', $value);
+            [$idAttributeGroup, $idAttribute] = explode(':', $value);
             $sqlParams['attribute_id_' . $index] = (string) $idAttribute;
             $sqlParams['attribute_group_id_' . $index] = (string) $idAttributeGroup;
         }, range(0, count($value) - 1), $value);
@@ -704,7 +704,7 @@ abstract class QueryParamsCollection
         }
 
         array_map(function ($index, $value) use (&$sqlParams) {
-            list($idFeature, $idFeatureValue) = explode(':', $value);
+            [$idFeature, $idFeatureValue] = explode(':', $value);
             $sqlParams['feature_id_' . $index] = (string) $idFeature;
             $sqlParams['feature_value_id_' . $index] = (string) $idFeatureValue;
         }, range(0, count($value) - 1), $value);

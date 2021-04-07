@@ -27,25 +27,25 @@
 /* Convert product prices from the PS < 1.3 wrong rounding system to the new 1.3 one */
 function convert_product_price()
 {
-    $taxes = Db::getInstance()->executeS('SELECT * FROM '._DB_PREFIX_.'tax');
-    $taxRates = array();
+    $taxes = Db::getInstance()->executeS('SELECT * FROM ' . _DB_PREFIX_ . 'tax');
+    $taxRates = [];
     foreach ($taxes as $data) {
-        $taxRates[$data['id_tax']] = (float)($data['rate']) / 100;
+        $taxRates[$data['id_tax']] = (float) ($data['rate']) / 100;
     }
     $resource = Db::getInstance()->executeS('SELECT `id_product`, `price`, `id_tax`
-		FROM `'._DB_PREFIX_.'product`', false);
+		FROM `' . _DB_PREFIX_ . 'product`', false);
     if (!$resource) {
-        return array('error' => 1, 'msg' => Db::getInstance()->getMsgError());
+        return ['error' => 1, 'msg' => Db::getInstance()->getMsgError()];
     } // was previously die(mysql_error())
 
     while ($row = Db::getInstance()->nextRow($resource)) {
         if ($row['id_tax']) {
             $price = $row['price'] * (1 + $taxRates[$row['id_tax']]);
-            $decimalPart = $price - (int)$price;
+            $decimalPart = $price - (int) $price;
             if ($decimalPart < 0.000001) {
-                $newPrice = (float)(number_format($price, 6, '.', ''));
+                $newPrice = (float) (number_format($price, 6, '.', ''));
                 $newPrice = Tools::floorf($newPrice / (1 + $taxRates[$row['id_tax']]), 6);
-                Db::getInstance()->execute('UPDATE `'._DB_PREFIX_.'product` SET `price` = '.$newPrice.' WHERE `id_product` = '.(int)$row['id_product']);
+                Db::getInstance()->execute('UPDATE `' . _DB_PREFIX_ . 'product` SET `price` = ' . $newPrice . ' WHERE `id_product` = ' . (int) $row['id_product']);
             }
         }
     }

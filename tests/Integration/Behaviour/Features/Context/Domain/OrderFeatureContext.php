@@ -241,6 +241,7 @@ class OrderFeatureContext extends AbstractDomainFeatureContext
         foreach ($products as $product) {
             if ($product->getId() == $productId) {
                 $orderDetailId = $product->getOrderDetailId();
+
                 break;
             }
         }
@@ -442,6 +443,7 @@ class OrderFeatureContext extends AbstractDomainFeatureContext
         if (count($orderDiscounts) == $expectedCount) {
             return;
         }
+
         throw new RuntimeException(
             sprintf(
                 'Invalid number of cart rules for order %s, expected %s but got %s instead',
@@ -735,7 +737,8 @@ class OrderFeatureContext extends AbstractDomainFeatureContext
 
         $this->getCommandBus()->handle(
             new BulkChangeOrderStatusCommand(
-                $ordersIds, $statusId
+                $ordersIds,
+                $statusId
             )
         );
     }
@@ -944,7 +947,7 @@ class OrderFeatureContext extends AbstractDomainFeatureContext
      * @param string $productName
      * @param string|null $combinationName
      */
-    public function orderContainsProductWithReference(string $orderReference, int $quantity, string $productName, ?string $combinationName = null)
+    public function orderContainsProductWithReference(string $orderReference, int $quantity, string $productName, string $combinationName = null)
     {
         $this->assertProductCounts($orderReference, $quantity, $productName, $combinationName);
     }
@@ -959,7 +962,7 @@ class OrderFeatureContext extends AbstractDomainFeatureContext
      * @param string $productName
      * @param string|null $combinationName
      */
-    public function orderInvoiceContainsProductWithReference(string $invoicePosition, string $orderReference, int $quantity, string $productName, ?string $combinationName = null)
+    public function orderInvoiceContainsProductWithReference(string $invoicePosition, string $orderReference, int $quantity, string $productName, string $combinationName = null)
     {
         $this->assertProductCounts($orderReference, $quantity, $productName, $combinationName, $invoicePosition);
     }
@@ -971,7 +974,7 @@ class OrderFeatureContext extends AbstractDomainFeatureContext
      * @param string|null $combinationName
      * @param string|null $invoicePosition
      */
-    private function assertProductCounts(string $orderReference, int $quantity, string $productName, ?string $combinationName = null, ?string $invoicePosition = null)
+    private function assertProductCounts(string $orderReference, int $quantity, string $productName, string $combinationName = null, string $invoicePosition = null)
     {
         $orderId = SharedStorage::getStorage()->get($orderReference);
 
@@ -1002,6 +1005,7 @@ class OrderFeatureContext extends AbstractDomainFeatureContext
         if ($productQuantity == $quantity) {
             return;
         }
+
         throw new RuntimeException(
             sprintf(
                 'Order was expected to have "%d" products "%s" in it. Instead got "%d"',
@@ -1020,7 +1024,7 @@ class OrderFeatureContext extends AbstractDomainFeatureContext
      * @param string $productName
      * @param string|null $combinationName
      */
-    public function cartOrderContainsProductWithReference(string $orderReference, int $quantity, string $productName, ?string $combinationName = null)
+    public function cartOrderContainsProductWithReference(string $orderReference, int $quantity, string $productName, string $combinationName = null)
     {
         $orderId = SharedStorage::getStorage()->get($orderReference);
         $order = new Order($orderId);
@@ -1035,6 +1039,7 @@ class OrderFeatureContext extends AbstractDomainFeatureContext
         if ($productQuantity === $quantity) {
             return;
         }
+
         throw new RuntimeException(
             sprintf(
                 'Cart of order was expected to have "%d" products "%s" in it. Instead got "%d"',
@@ -1072,7 +1077,7 @@ class OrderFeatureContext extends AbstractDomainFeatureContext
      * @param TableNode $table
      * @param string|null $productReference saves product reference to shared storage if provided
      */
-    public function checkProductDetailsWithReference(string $orderReference, string $productName, TableNode $table, ?string $productReference = null)
+    public function checkProductDetailsWithReference(string $orderReference, string $productName, TableNode $table, string $productReference = null)
     {
         $productOrderDetail = $this->getOrderDetailFromOrder($productName, $orderReference);
         $expectedDetails = $table->getRowsHash();
@@ -1526,13 +1531,13 @@ class OrderFeatureContext extends AbstractDomainFeatureContext
     private function assertOrderPropertiesEquals(Order $order, array $data): void
     {
         foreach (array_keys($data) as $property) {
-            if (!property_exists($order, $property) || $data[$property] !== $order->$property) {
+            if (!property_exists($order, $property) || $data[$property] !== $order->{$property}) {
                 throw new RuntimeException(
                     sprintf(
                         'Expected %s value to be equal to %s, got %s instead',
                         $property,
                         $data[$property],
-                        $order->$property
+                        $order->{$property}
                     )
                 );
             }
@@ -1593,8 +1598,8 @@ class OrderFeatureContext extends AbstractDomainFeatureContext
     private function getOrderDetailFromOrder(
         string $productName,
         string $orderReference,
-        ?string $combinationName = null,
-        ?int $orderInvoiceId = null
+        string $combinationName = null,
+        int $orderInvoiceId = null
     ): array {
         $product = $this->getProductByName($productName);
         $productId = $product->getProductId();
@@ -1607,6 +1612,7 @@ class OrderFeatureContext extends AbstractDomainFeatureContext
                 && (null === $combinationId || (int) $orderDetail['product_attribute_id'] === $combinationId)
                 && (null === $orderInvoiceId || (int) $orderDetail['id_order_invoice'] === $orderInvoiceId)) {
                 $productOrderDetail = $orderDetail;
+
                 break;
             }
         }
@@ -1630,6 +1636,7 @@ class OrderFeatureContext extends AbstractDomainFeatureContext
         foreach ($product->getCombinations() as $productCombination) {
             if ($productCombination->getReference() == $combinationName) {
                 $combinationId = $productCombination->getAttributeCombinationId();
+
                 break;
             }
         }
@@ -1724,6 +1731,7 @@ class OrderFeatureContext extends AbstractDomainFeatureContext
         foreach ($orderDetailList as $orderDetail) {
             if ($orderDetail['product_name'] === $productReference) {
                 $productOrderDetail = $orderDetail;
+
                 break;
             }
         }
@@ -1823,10 +1831,12 @@ class OrderFeatureContext extends AbstractDomainFeatureContext
             case 'shipping':
                 /** @var OrderShippingAddressForViewing $address */
                 $address = $orderForViewing->getShippingAddress();
+
                 break;
             case 'invoice':
                 /** @var OrderInvoiceAddressForViewing $address */
                 $address = $orderForViewing->getInvoiceAddress();
+
                 break;
             default:
                 throw new RuntimeException('Adress Type is invalid');
@@ -1876,10 +1886,12 @@ class OrderFeatureContext extends AbstractDomainFeatureContext
             case 'shipping':
                 /** @var OrderPreviewShippingDetails $address */
                 $address = $orderPreview->getShippingDetails();
+
                 break;
             case 'invoice':
                 /** @var OrderPreviewInvoiceDetails $address */
                 $address = $orderPreview->getInvoiceDetails();
+
                 break;
             default:
                 throw new RuntimeException('Adress Type is invalid');

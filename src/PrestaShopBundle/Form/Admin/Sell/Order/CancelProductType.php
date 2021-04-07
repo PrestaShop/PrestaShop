@@ -46,7 +46,9 @@ class CancelProductType extends TranslatorAwareType
 
         foreach ($products as $product) {
             $builder
-                ->add('selected_' . $product->getOrderDetailId(), CheckboxType::class,
+                ->add(
+                    'selected_' . $product->getOrderDetailId(),
+                    CheckboxType::class,
                     [
                         'required' => false,
                         'label' => false,
@@ -76,7 +78,9 @@ class CancelProductType extends TranslatorAwareType
                 ]);
         }
         $builder
-            ->add('shipping_amount', TextType::class,
+            ->add(
+                'shipping_amount',
+                TextType::class,
                 [
                     'label' => $this->trans('Shipping', 'Admin.Catalog.Feature', []),
                     'invalid_message' => $this->trans('The "shipping" field must be a valid number', 'Admin.Orderscustomers.Feature', []),
@@ -84,7 +88,9 @@ class CancelProductType extends TranslatorAwareType
                     'data' => (new DecimalNumber('0'))->toPrecision($precision),
                 ]
             )
-            ->add('shipping', CheckboxType::class,
+            ->add(
+                'shipping',
+                CheckboxType::class,
                 [
                     'label' => $this->trans('Shipping', 'Admin.Catalog.Feature', []),
                     'required' => false,
@@ -93,7 +99,9 @@ class CancelProductType extends TranslatorAwareType
                     ],
                 ]
             )
-            ->add('restock', CheckboxType::class,
+            ->add(
+                'restock',
+                CheckboxType::class,
                 [
                     'required' => false,
                     'label' => $this->trans('Re-stock products', 'Admin.Orderscustomers.Feature', []),
@@ -102,7 +110,9 @@ class CancelProductType extends TranslatorAwareType
                     ],
                 ]
             )
-            ->add('credit_slip', CheckboxType::class,
+            ->add(
+                'credit_slip',
+                CheckboxType::class,
                 [
                     'required' => false,
                     'label' => $this->trans('Generate a credit slip', 'Admin.Orderscustomers.Feature', []),
@@ -112,7 +122,9 @@ class CancelProductType extends TranslatorAwareType
                     'data' => true,
                 ]
             )
-            ->add('voucher', CheckboxType::class,
+            ->add(
+                'voucher',
+                CheckboxType::class,
                 [
                     'required' => false,
                     'label' => $this->trans('Generate a voucher', 'Admin.Orderscustomers.Feature', []),
@@ -121,7 +133,9 @@ class CancelProductType extends TranslatorAwareType
                     ],
                 ]
             )
-            ->add('voucher_refund_type', ChoiceType::class,
+            ->add(
+                'voucher_refund_type',
+                ChoiceType::class,
                 [
                     'required' => true,
                     'multiple' => false,

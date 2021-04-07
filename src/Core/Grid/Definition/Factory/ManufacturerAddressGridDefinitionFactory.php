@@ -75,58 +75,68 @@ final class ManufacturerAddressGridDefinitionFactory extends AbstractGridDefinit
     protected function getColumns()
     {
         return (new ColumnCollection())
-            ->add((new BulkActionColumn('bulk'))
+            ->add(
+                (new BulkActionColumn('bulk'))
             ->setOptions([
                 'bulk_field' => 'id_address',
             ])
             )
-            ->add((new DataColumn('id_address'))
+            ->add(
+                (new DataColumn('id_address'))
             ->setName($this->trans('ID', [], 'Admin.Global'))
             ->setOptions([
                 'field' => 'id_address',
             ])
             )
-            ->add((new DataColumn('name'))
+            ->add(
+                (new DataColumn('name'))
             ->setName($this->trans('Brand', [], 'Admin.Global'))
             ->setOptions([
                 'field' => 'name',
             ])
             )
-            ->add((new DataColumn('firstname'))
+            ->add(
+                (new DataColumn('firstname'))
             ->setName($this->trans('First name', [], 'Admin.Global'))
             ->setOptions([
                 'field' => 'firstname',
             ])
             )
-            ->add((new DataColumn('lastname'))
+            ->add(
+                (new DataColumn('lastname'))
             ->setName($this->trans('Last name', [], 'Admin.Global'))
             ->setOptions([
                 'field' => 'lastname',
             ])
             )
-            ->add((new DataColumn('postcode'))
+            ->add(
+                (new DataColumn('postcode'))
             ->setName($this->trans('Zip/Postal code', [], 'Admin.Global'))
             ->setOptions([
                 'field' => 'postcode',
             ])
             )
-            ->add((new DataColumn('city'))
+            ->add(
+                (new DataColumn('city'))
             ->setName($this->trans('City', [], 'Admin.Global'))
             ->setOptions([
                 'field' => 'city',
             ])
             )
-            ->add((new DataColumn('country'))
+            ->add(
+                (new DataColumn('country'))
             ->setName($this->trans('Country', [], 'Admin.Global'))
             ->setOptions([
                 'field' => 'country',
             ])
             )
-            ->add((new ActionColumn('actions'))
+            ->add(
+                (new ActionColumn('actions'))
             ->setName($this->trans('Actions', [], 'Admin.Global'))
             ->setOptions([
                 'actions' => (new RowActionCollection())
-                    ->add((new LinkRowAction('edit'))
+                    ->add(
+                        (new LinkRowAction('edit'))
                     ->setName($this->trans('Edit', [], 'Admin.Actions'))
                     ->setIcon('edit')
                     ->setOptions([
@@ -155,7 +165,8 @@ final class ManufacturerAddressGridDefinitionFactory extends AbstractGridDefinit
     protected function getFilters()
     {
         return (new FilterCollection())
-            ->add((new Filter('id_address', TextType::class))
+            ->add(
+                (new Filter('id_address', TextType::class))
             ->setTypeOptions([
                 'required' => false,
                 'attr' => [
@@ -164,7 +175,8 @@ final class ManufacturerAddressGridDefinitionFactory extends AbstractGridDefinit
             ])
             ->setAssociatedColumn('id_address')
             )
-            ->add((new Filter('name', TextType::class))
+            ->add(
+                (new Filter('name', TextType::class))
             ->setTypeOptions([
                 'required' => false,
                 'attr' => [
@@ -173,7 +185,8 @@ final class ManufacturerAddressGridDefinitionFactory extends AbstractGridDefinit
             ])
             ->setAssociatedColumn('name')
             )
-            ->add((new Filter('firstname', TextType::class))
+            ->add(
+                (new Filter('firstname', TextType::class))
             ->setTypeOptions([
                 'required' => false,
                 'attr' => [
@@ -182,7 +195,8 @@ final class ManufacturerAddressGridDefinitionFactory extends AbstractGridDefinit
             ])
             ->setAssociatedColumn('firstname')
             )
-            ->add((new Filter('lastname', TextType::class))
+            ->add(
+                (new Filter('lastname', TextType::class))
             ->setTypeOptions([
                 'required' => false,
                 'attr' => [
@@ -191,7 +205,8 @@ final class ManufacturerAddressGridDefinitionFactory extends AbstractGridDefinit
             ])
             ->setAssociatedColumn('lastname')
             )
-            ->add((new Filter('postcode', TextType::class))
+            ->add(
+                (new Filter('postcode', TextType::class))
             ->setTypeOptions([
                 'required' => false,
                 'attr' => [
@@ -200,7 +215,8 @@ final class ManufacturerAddressGridDefinitionFactory extends AbstractGridDefinit
             ])
             ->setAssociatedColumn('postcode')
             )
-            ->add((new Filter('city', TextType::class))
+            ->add(
+                (new Filter('city', TextType::class))
             ->setTypeOptions([
                 'required' => false,
                 'attr' => [
@@ -209,14 +225,16 @@ final class ManufacturerAddressGridDefinitionFactory extends AbstractGridDefinit
             ])
             ->setAssociatedColumn('city')
             )
-            ->add((new Filter('country', CountryChoiceType::class))
+            ->add(
+                (new Filter('country', CountryChoiceType::class))
             ->setTypeOptions([
                 'required' => false,
                 'choice_translation_domain' => false,
             ])
             ->setAssociatedColumn('country')
             )
-            ->add((new Filter('actions', SearchAndResetType::class))
+            ->add(
+                (new Filter('actions', SearchAndResetType::class))
             ->setAssociatedColumn('actions')
             ->setTypeOptions([
                 'reset_route' => 'admin_common_reset_search_by_filter_id',
@@ -247,7 +265,8 @@ final class ManufacturerAddressGridDefinitionFactory extends AbstractGridDefinit
     protected function getGridActions()
     {
         return (new GridActionCollection())
-            ->add((new LinkGridAction('import'))
+            ->add(
+                (new LinkGridAction('import'))
             ->setName($this->trans('Import', [], 'Admin.Actions'))
             ->setIcon('cloud_upload')
             ->setOptions([
@@ -257,22 +276,26 @@ final class ManufacturerAddressGridDefinitionFactory extends AbstractGridDefinit
                 ],
             ])
             )
-            ->add((new LinkGridAction('export'))
+            ->add(
+                (new LinkGridAction('export'))
             ->setName($this->trans('Export', [], 'Admin.Actions'))
             ->setIcon('cloud_download')
             ->setOptions([
                 'route' => 'admin_manufacturer_addresses_export',
             ])
             )
-            ->add((new SimpleGridAction('common_refresh_list'))
+            ->add(
+                (new SimpleGridAction('common_refresh_list'))
             ->setName($this->trans('Refresh list', [], 'Admin.Advparameters.Feature'))
             ->setIcon('refresh')
             )
-            ->add((new SimpleGridAction('common_show_query'))
+            ->add(
+                (new SimpleGridAction('common_show_query'))
             ->setName($this->trans('Show SQL query', [], 'Admin.Actions'))
             ->setIcon('code')
             )
-            ->add((new SimpleGridAction('common_export_sql_manager'))
+            ->add(
+                (new SimpleGridAction('common_export_sql_manager'))
             ->setName($this->trans('Export to SQL Manager', [], 'Admin.Actions'))
             ->setIcon('storage')
             )

@@ -128,6 +128,7 @@ class VirtualProductUpdater
 
         try {
             $this->virtualProductFileRepository->findByProductId($productId);
+
             throw new VirtualProductFileConstraintException(
                 sprintf('File already exists for product #%d', $product->id),
                 VirtualProductFileConstraintException::ALREADY_HAS_A_FILE

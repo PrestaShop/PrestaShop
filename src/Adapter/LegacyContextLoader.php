@@ -63,11 +63,11 @@ class LegacyContextLoader
      * @return self
      */
     public function loadGenericContext(
-        ?string $controllerClassName = null,
-        ?int $currencyId = null,
-        ?int $employeeId = null,
-        ?int $shopId = null,
-        ?int $shopGroupId = null
+        string $controllerClassName = null,
+        int $currencyId = null,
+        int $employeeId = null,
+        int $shopId = null,
+        int $shopGroupId = null
     ): self {
         $this->loadCurrencyContext($currencyId);
         $this->loadControllerContext($controllerClassName);
@@ -88,7 +88,7 @@ class LegacyContextLoader
      *
      * @return self
      */
-    public function loadControllerContext(?string $controllerClassName = null): self
+    public function loadControllerContext(string $controllerClassName = null): self
     {
         if (null === $controllerClassName) {
             $this->context->controller = new DummyAdminController();
@@ -115,7 +115,7 @@ class LegacyContextLoader
      *
      * @return self
      */
-    public function loadCurrencyContext(?int $currencyId = null): self
+    public function loadCurrencyContext(int $currencyId = null): self
     {
         $currency = new Currency($currencyId);
         if (null === $currencyId) {
@@ -132,7 +132,7 @@ class LegacyContextLoader
      *
      * @return self
      */
-    public function loadEmployeeContext(?int $employeeId = null): self
+    public function loadEmployeeContext(int $employeeId = null): self
     {
         $this->context->employee = new Employee($employeeId);
 

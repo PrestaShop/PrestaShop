@@ -39,7 +39,7 @@ define('lang_Swipe_help', 'Sveip filnavnet/mappenavnet for å vise alternativer'
 define('lang_Upload_base', 'Vanlig opplasting');
 define('lang_Upload_java', 'Java-opplasting (store filer)');
 define('lang_Upload_java_help', "Hvis java-appleten ikke lastes: 1. Sjekk om Java er installert, hvis ikke <a href='http://java.com/en/download/'>last ned Java</a> 2. Sjekk brannmur-innstillingene.");
-define('lang_Upload_base_help', "Dra og slipp filen(e) i området over eller klikk (virker for moderne nettlesere). Ved bruk av gammel nettleser: Velg filen og klikk på knappen. Når opplastingen er ferdig, klikk på tilbake-knappen øverst.");
+define('lang_Upload_base_help', 'Dra og slipp filen(e) i området over eller klikk (virker for moderne nettlesere). Ved bruk av gammel nettleser: Velg filen og klikk på knappen. Når opplastingen er ferdig, klikk på tilbake-knappen øverst.');
 define('lang_Type_dir', 'Mappe');
 define('lang_Type', 'Type');
 define('lang_Dimension', 'Dimensjoner');

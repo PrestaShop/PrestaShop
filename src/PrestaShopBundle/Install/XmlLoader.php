@@ -284,7 +284,7 @@ class XmlLoader
 
         // Load all row for current entity and prepare data to be populated
         $i = 0;
-        foreach ($xml->entities->$entity as $node) {
+        foreach ($xml->entities->{$entity} as $node) {
             $data = [];
             $identifier = (string) $node['id'];
 
@@ -317,8 +317,8 @@ class XmlLoader
                                 $value = (string) $node_lang[$column];
                             }
 
-                            if ($node_lang->$column) {
-                                $value = (string) $node_lang->$column;
+                            if ($node_lang->{$column}) {
+                                $value = (string) $node_lang->{$column};
                             }
                             $data_lang[$column][$id_lang] = $value;
                         }
@@ -330,7 +330,7 @@ class XmlLoader
             if (method_exists($this, 'createEntity' . Tools::toCamelCase($entity))) {
                 // Create entity with custom method in current class
                 $method = 'createEntity' . Tools::toCamelCase($entity);
-                $this->$method($identifier, $data, $data_lang);
+                $this->{$method}($identifier, $data, $data_lang);
             } else {
                 $this->createEntity($entity, $identifier, (string) $xml->fields['class'], $data, $data_lang);
             }
@@ -396,6 +396,7 @@ class XmlLoader
                 foreach ($node->attributes() as $k => $v) {
                     if ($k == 'id') {
                         $identifier = (string) $v;
+
                         continue;
                     }
                     $data[$k] = (string) $v;

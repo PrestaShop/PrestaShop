@@ -601,9 +601,12 @@ class CartController extends FrameworkBundleAdminController
             ),
             FileUploadException::class => [
                 UPLOAD_ERR_INI_SIZE => $this->trans(
-                    'Max file size allowed is "%s" bytes.', 'Admin.Notifications.Error', [
+                    'Max file size allowed is "%s" bytes.',
+                    'Admin.Notifications.Error',
+                    [
                         $iniConfig->getUploadMaxSizeInBytes(),
-                    ]),
+                    ]
+                ),
                 UPLOAD_ERR_EXTENSION => $this->trans(
                     'Image format not recognized, allowed formats are: .gif, .jpg, .png',
                     'Admin.Notifications.Error'
@@ -659,8 +662,8 @@ class CartController extends FrameworkBundleAdminController
         $giftedQuantity = 0;
         foreach ($giftCartRules as $giftCartRule) {
             if (
-                $productId == $giftCartRule['gift_product'] &&
-                (null === $attributeId || $attributeId == $giftCartRule['gift_product_attribute'])
+                $productId == $giftCartRule['gift_product']
+                && (null === $attributeId || $attributeId == $giftCartRule['gift_product_attribute'])
             ) {
                 ++$giftedQuantity;
             }

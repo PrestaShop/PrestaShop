@@ -609,12 +609,10 @@ class AdminAttributesGroupsControllerCore extends AdminController
                 $bread_extended[] = $this->trans('Edit New Attribute', [], 'Admin.Catalog.Feature');
 
                 break;
-
             case 'add':
                 $bread_extended[] = $this->trans('Add New Attribute', [], 'Admin.Catalog.Feature');
 
                 break;
-
             case 'view':
                 if (Tools::getIsset('viewattribute_group')) {
                     if (($id = (int) Tools::getValue('id_attribute_group'))) {
@@ -627,7 +625,6 @@ class AdminAttributesGroupsControllerCore extends AdminController
                 }
 
                 break;
-
             case 'editAttributes':
                 if ($this->id_attribute) {
                     if (($id = (int) Tools::getValue('id_attribute_group'))) {

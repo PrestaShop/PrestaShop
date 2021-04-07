@@ -63,9 +63,9 @@ class GetEditableSpecificPricesList
      */
     public function __construct(
         int $productId,
-        ?int $limit = null,
-        ?int $offset = null,
-        ?array $filters = null
+        int $limit = null,
+        int $offset = null,
+        array $filters = null
     ) {
         $this->productId = new ProductId($productId);
         $this->limit = $limit;

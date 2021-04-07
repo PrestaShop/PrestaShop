@@ -98,7 +98,8 @@ class SetAssociatedProductCategoriesCommand
         $this->categoryIds = array_map(
             function ($id) {
                 return new CategoryId($id);
-            }, $categoryIds
+            },
+            $categoryIds
         );
     }
 

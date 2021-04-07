@@ -219,9 +219,9 @@ class OrderHistoryCore extends ObjectModel
                     if ($new_os->logable && !$old_os->logable) {
                         ProductSale::addProductSale($product['product_id'], $product['product_quantity']);
                         // @since 1.5.0 - Stock Management
-                        if (!Pack::isPack($product['product_id']) &&
-                            in_array($old_os->id, $error_or_canceled_statuses) &&
-                            !StockAvailable::dependsOnStock($product['id_product'], (int) $order->id_shop)) {
+                        if (!Pack::isPack($product['product_id'])
+                            && in_array($old_os->id, $error_or_canceled_statuses)
+                            && !StockAvailable::dependsOnStock($product['id_product'], (int) $order->id_shop)) {
                             StockAvailable::updateQuantity($product['product_id'], $product['product_attribute_id'], -(int) $product['product_quantity'], $order->id_shop);
                         }
                     } elseif (!$new_os->logable && $old_os->logable) {
@@ -229,15 +229,15 @@ class OrderHistoryCore extends ObjectModel
                         ProductSale::removeProductSale($product['product_id'], $product['product_quantity']);
 
                         // @since 1.5.0 - Stock Management
-                        if (!Pack::isPack($product['product_id']) &&
-                            in_array($new_os->id, $error_or_canceled_statuses) &&
-                            !StockAvailable::dependsOnStock($product['id_product'])) {
+                        if (!Pack::isPack($product['product_id'])
+                            && in_array($new_os->id, $error_or_canceled_statuses)
+                            && !StockAvailable::dependsOnStock($product['id_product'])) {
                             StockAvailable::updateQuantity($product['product_id'], $product['product_attribute_id'], (int) $product['product_quantity'], $order->id_shop);
                         }
-                    } elseif (!$new_os->logable && !$old_os->logable &&
-                        in_array($new_os->id, $error_or_canceled_statuses) &&
-                        !in_array($old_os->id, $error_or_canceled_statuses) &&
-                        !StockAvailable::dependsOnStock($product['id_product'])
+                    } elseif (!$new_os->logable && !$old_os->logable
+                        && in_array($new_os->id, $error_or_canceled_statuses)
+                        && !in_array($old_os->id, $error_or_canceled_statuses)
+                        && !StockAvailable::dependsOnStock($product['id_product'])
                     ) {
                         // if waiting for payment => payment error/canceled
                         StockAvailable::updateQuantity($product['product_id'], $product['product_attribute_id'], (int) $product['product_quantity'], $order->id_shop);
@@ -248,11 +248,11 @@ class OrderHistoryCore extends ObjectModel
 
                 // @since 1.5.0 : if the order is being shipped and this products uses the advanced stock management :
                 // decrements the physical stock using $id_warehouse
-                if ($new_os->shipped == 1 && (!Validate::isLoadedObject($old_os) || $old_os->shipped == 0) &&
-                    Configuration::get('PS_ADVANCED_STOCK_MANAGEMENT') &&
-                    Warehouse::exists($product['id_warehouse']) &&
-                    $manager != null &&
-                    (int) $product['advanced_stock_management'] == 1) {
+                if ($new_os->shipped == 1 && (!Validate::isLoadedObject($old_os) || $old_os->shipped == 0)
+                    && Configuration::get('PS_ADVANCED_STOCK_MANAGEMENT')
+                    && Warehouse::exists($product['id_warehouse'])
+                    && $manager != null
+                    && (int) $product['advanced_stock_management'] == 1) {
                     // gets the warehouse
                     $warehouse = new Warehouse($product['id_warehouse']);
 
@@ -268,11 +268,11 @@ class OrderHistoryCore extends ObjectModel
                         0,
                         $employee
                     );
-                } elseif ($new_os->shipped == 0 && Validate::isLoadedObject($old_os) && $old_os->shipped == 1 &&
-                    Configuration::get('PS_ADVANCED_STOCK_MANAGEMENT') &&
-                    Warehouse::exists($product['id_warehouse']) &&
-                    $manager != null &&
-                    (int) $product['advanced_stock_management'] == 1
+                } elseif ($new_os->shipped == 0 && Validate::isLoadedObject($old_os) && $old_os->shipped == 1
+                    && Configuration::get('PS_ADVANCED_STOCK_MANAGEMENT')
+                    && Warehouse::exists($product['id_warehouse'])
+                    && $manager != null
+                    && (int) $product['advanced_stock_management'] == 1
                 ) {
                     // @since.1.5.0 : if the order was shipped, and is not anymore, we need to restock products
 

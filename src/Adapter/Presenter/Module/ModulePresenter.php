@@ -72,7 +72,8 @@ class ModulePresenter implements PresenterInterface
             'database' => $module->database->all(),
         ];
 
-        Hook::exec('actionPresentModule',
+        Hook::exec(
+            'actionPresentModule',
             ['presentedModule' => &$result]
         );
 

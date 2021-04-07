@@ -449,8 +449,8 @@ class ThemeController extends AbstractAdminController
      */
     protected function canCustomizePageLayouts(Request $request)
     {
-        return !$this->isDemoModeEnabled() &&
-            $this->isGranted(PageVoter::UPDATE, $request->attributes->get('_legacy_controller'));
+        return !$this->isDemoModeEnabled()
+            && $this->isGranted(PageVoter::UPDATE, $request->attributes->get('_legacy_controller'));
     }
 
     /**
@@ -496,16 +496,20 @@ class ThemeController extends AbstractAdminController
             ),
             ThemeConstraintException::class => [
                 ThemeConstraintException::RESTRICTED_ONLY_FOR_SINGLE_SHOP => $this->trans(
-                        'Themes can only be changed in single store context.', 'Admin.Notifications.Error'
+                    'Themes can only be changed in single store context.',
+                    'Admin.Notifications.Error'
                 ),
                 ThemeConstraintException::MISSING_CONFIGURATION_FILE => $this->trans(
-                        'Missing configuration file', 'Admin.Notifications.Error'
+                    'Missing configuration file',
+                    'Admin.Notifications.Error'
                 ),
                 ThemeConstraintException::INVALID_CONFIGURATION => $this->trans(
-                        'Invalid configuration', 'Admin.Notifications.Error'
+                    'Invalid configuration',
+                    'Admin.Notifications.Error'
                 ),
                 ThemeConstraintException::INVALID_DATA => $this->trans(
-                        'Invalid data', 'Admin.Notifications.Error'
+                    'Invalid data',
+                    'Admin.Notifications.Error'
                 ),
             ],
         ];
@@ -522,19 +526,19 @@ class ThemeController extends AbstractAdminController
             CannotEnableThemeException::class => $e->getMessage(),
             ThemeConstraintException::class => [
                 ThemeConstraintException::RESTRICTED_ONLY_FOR_SINGLE_SHOP => $this->trans(
-                        'You must select a shop from the above list if you wish to choose a theme.',
-                        'Admin.Design.Help'
-                    ),
+                    'You must select a shop from the above list if you wish to choose a theme.',
+                    'Admin.Design.Help'
+                ),
             ],
             FailedToEnableThemeModuleException::class => $this->trans(
-                    'Cannot %action% module %module%. %error_details%',
-                    'Admin.Modules.Notification',
-                    [
-                        '%action%' => strtolower($this->trans('Install', 'Admin.Actions')),
-                        '%module%' => ($e instanceof FailedToEnableThemeModuleException) ? $e->getModuleName() : '',
-                        '%error_details%' => $e->getMessage(),
-                    ]
-                ),
+                'Cannot %action% module %module%. %error_details%',
+                'Admin.Modules.Notification',
+                [
+                    '%action%' => strtolower($this->trans('Install', 'Admin.Actions')),
+                    '%module%' => ($e instanceof FailedToEnableThemeModuleException) ? $e->getModuleName() : '',
+                    '%error_details%' => $e->getMessage(),
+                ]
+            ),
         ];
     }
 

@@ -139,7 +139,7 @@ class NewsDataProviderTest extends TestCase
             ->getMock()
             ;
 
-        if (!is_null($locale) && !is_null($returnData)) {
+        if (null !== $locale && null !== $returnData) {
             $circuitBreakerMock
                 ->expects($this->once())
                 ->method('call')
@@ -202,7 +202,7 @@ class NewsDataProviderTest extends TestCase
             ->disableOriginalConstructor()
             ->getMock();
 
-        if (!is_null($isCleanHtml)) {
+        if (null !== $isCleanHtml) {
             $validateMock
                 ->method('isCleanHtml')
                 ->willReturn($isCleanHtml)

@@ -540,6 +540,7 @@ class AdminModulesPositionsControllerCore extends AdminController
                 }
             }
             $hookableList['hasError'] = false;
+
             die(json_encode($hookableList));
         }
     }
@@ -570,6 +571,7 @@ class AdminModulesPositionsControllerCore extends AdminController
                     }
                 }
             }
+
             die(json_encode($hookableModulesList));
         }
     }
@@ -623,6 +625,7 @@ class AdminModulesPositionsControllerCore extends AdminController
             } else {
                 $hasError = false;
             }
+
             die('{"hasError" : false, "errors" : ""}');
         }
     }
@@ -638,6 +641,7 @@ class AdminModulesPositionsControllerCore extends AdminController
         }
 
         $module_instance = Module::getInstanceById($module_id);
+
         die(json_encode($module_instance->getPossibleHooksList()));
     }
 }

@@ -57,18 +57,23 @@ class ProductTypeFeatureContext extends AbstractProductFeatureContext
         switch ($productType) {
             case 'standard':
                 $errorCode = InvalidProductTypeException::EXPECTED_STANDARD_TYPE;
+
                 break;
             case 'pack':
                 $errorCode = InvalidProductTypeException::EXPECTED_PACK_TYPE;
+
                 break;
             case 'virtual':
                 $errorCode = InvalidProductTypeException::EXPECTED_VIRTUAL_TYPE;
+
                 break;
             case 'combinations':
                 $errorCode = InvalidProductTypeException::EXPECTED_COMBINATIONS_TYPE;
+
                 break;
             case 'single':
                 $errorCode = InvalidProductTypeException::EXPECTED_NO_COMBINATIONS_TYPE;
+
                 break;
         }
         $this->assertLastErrorIs(InvalidProductTypeException::class, $errorCode);

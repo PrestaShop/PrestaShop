@@ -88,7 +88,6 @@ class TypeaheadProductCollectionType extends CommonAbstractType
                         ];
 
                         break;
-
                     default:
                         $product = $this->productAdapter->getProduct($id);
                         $collection[] = [

@@ -56,7 +56,7 @@ class TypedFiltersBuilder extends AbstractFiltersBuilder
     /**
      * @var array|null
      */
-    private $config = null;
+    private $config;
 
     /**
      * @param FiltersBuilderInterface $defaultBuilder
@@ -64,7 +64,7 @@ class TypedFiltersBuilder extends AbstractFiltersBuilder
      */
     public function __construct(
         FiltersBuilderInterface $defaultBuilder,
-        ?iterable $typedBuilders = null
+        iterable $typedBuilders = null
     ) {
         $this->defaultBuilder = $defaultBuilder;
 

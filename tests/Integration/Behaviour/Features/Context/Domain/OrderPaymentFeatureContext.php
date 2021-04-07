@@ -124,7 +124,8 @@ class OrderPaymentFeatureContext extends AbstractDomainFeatureContext
 
         $dataArray = $table->getRowsHash();
         $expectedOrderPaymentForViewing = $this->mapToOrderPaymentForViewing(
-            $orderPaymentForViewing->getPaymentId(), $dataArray
+            $orderPaymentForViewing->getPaymentId(),
+            $dataArray
         );
 
         Assert::assertEquals($expectedOrderPaymentForViewing, $orderPaymentForViewing);

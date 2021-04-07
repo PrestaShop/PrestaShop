@@ -23,7 +23,6 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
-
 if (!defined('_PS_VERSION_')) {
     exit;
 }
@@ -35,31 +34,31 @@ class Ps_Emailsubscription extends Module
         $this->name = 'ps_emailsubscription';
         $this->need_instance = 0;
 
-        $this->controllers = array('verification');
+        $this->controllers = ['verification'];
 
         $this->bootstrap = true;
 
         $this->displayName = 'E-mail subscription form';
         $this->description = 'Adds a form for newsletter subscription.';
         $this->confirmUninstall = 'Are you sure that you want to delete all of your contacts?';
-        $this->ps_versions_compliancy = array('min' => '1.7', 'max' => _PS_VERSION_);
+        $this->ps_versions_compliancy = ['min' => '1.7', 'max' => _PS_VERSION_];
 
         $this->version = '1.0.0';
         $this->author = 'PrestaShop';
         $this->error = false;
         $this->valid = false;
-        $this->_files = array(
-            'name' => array('newsletter_conf', 'newsletter_voucher'),
-            'ext' => array(
+        $this->_files = [
+            'name' => ['newsletter_conf', 'newsletter_voucher'],
+            'ext' => [
                 0 => 'html',
                 1 => 'txt',
-            ),
-        );
+            ],
+        ];
     }
 
     public function install()
     {
-        if (!parent::install() || !Configuration::updateValue('PS_NEWSLETTER_RAND', mt_rand(0, mt_getrandmax()).mt_rand(0, mt_getrandmax())) || !$this->registerHook(array('displayFooterBefore', 'actionCustomerAccountAdd'))) {
+        if (!parent::install() || !Configuration::updateValue('PS_NEWSLETTER_RAND', mt_rand(0, mt_getrandmax()) . mt_rand(0, mt_getrandmax())) || !$this->registerHook(['displayFooterBefore', 'actionCustomerAccountAdd'])) {
             return false;
         }
 

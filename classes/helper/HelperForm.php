@@ -41,15 +41,15 @@ class HelperFormCore extends Helper
     public $name_controller = '';
 
     /** @var string if not null, a title will be added on that list */
-    public $title = null;
+    public $title;
 
     /** @var string Used to override default 'submitAdd' parameter in form action attribute */
     public $submit_action;
 
     public $token;
-    public $languages = null;
-    public $default_form_language = null;
-    public $allow_employee_form_lang = null;
+    public $languages;
+    public $default_form_language;
+    public $allow_employee_form_lang;
     public $show_cancel_button = false;
     public $back_url = '#';
 
@@ -125,8 +125,8 @@ class HelperFormCore extends Helper
                             } else {
                                 $this->fields_form[$fieldset_key]['form']['input'][$key]['values'] = $default_switch_values;
                             }
-                            break;
 
+                            break;
                         case 'select':
                             $field_name = (string) $params['name'];
                             // If multiple select check that 'name' field is suffixed with '[]'
@@ -135,7 +135,6 @@ class HelperFormCore extends Helper
                             }
 
                             break;
-
                         case 'categories':
                             if ($categories) {
                                 if (!isset($params['tree']['id'])) {
@@ -177,7 +176,6 @@ class HelperFormCore extends Helper
                             }
 
                             break;
-
                         case 'file':
                             $uploader = new HelperUploader();
                             $uploader->setId(isset($params['id']) ? $params['id'] : null);
@@ -224,7 +222,6 @@ class HelperFormCore extends Helper
                             $params['file'] = $uploader->render();
 
                             break;
-
                         case 'color':
                             if ($color) {
                                 // Added JS file
@@ -234,7 +231,6 @@ class HelperFormCore extends Helper
                             }
 
                             break;
-
                         case 'date':
                             if ($date) {
                                 $this->context->controller->addJqueryUI('ui.datepicker');
@@ -242,7 +238,6 @@ class HelperFormCore extends Helper
                             }
 
                             break;
-
                         case 'textarea':
                             if ($tinymce) {
                                 $iso = $this->context->language->iso_code;
@@ -262,7 +257,6 @@ class HelperFormCore extends Helper
                             }
 
                             break;
-
                         case 'shop':
                             $disable_shops = isset($params['disable_shared']) ? $params['disable_shared'] : false;
                             $params['html'] = $this->renderAssoShop($disable_shops);
@@ -358,14 +352,12 @@ class HelperFormCore extends Helper
                         $assos[Shop::getContextShopID()] = Shop::getContextShopID();
 
                     break;
-
                 case Shop::CONTEXT_GROUP:
                     foreach (Shop::getShops(false, Shop::getContextShopGroupID(), true) as $id_shop) {
                         $assos[$id_shop] = $id_shop;
                     }
 
                     break;
-
                 default:
                     foreach (Shop::getShops(false, null, true) as $id_shop) {
                         $assos[$id_shop] = $id_shop;

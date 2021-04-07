@@ -131,6 +131,7 @@ final class ZoneQueryBuilder extends AbstractDoctrineQueryBuilder
             if (in_array($filterName, ['id_zone', 'active'])) {
                 $builder->andWhere('z.' . $filterName . ' = :' . $filterName);
                 $builder->setParameter($filterName, $filterValue);
+
                 continue;
             }
 

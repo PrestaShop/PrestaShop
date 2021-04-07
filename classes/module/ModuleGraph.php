@@ -249,6 +249,7 @@ abstract class ModuleGraphCore extends Module
         header('Content-Type: application/octet-stream');
         header('Content-Disposition: attachment; filename="' . $this->displayName . ' - ' . time() . '.csv"');
         echo $this->_csv;
+
         exit;
     }
 

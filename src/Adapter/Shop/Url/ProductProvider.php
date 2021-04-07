@@ -57,7 +57,7 @@ class ProductProvider implements UrlProviderInterface
      *
      * @return string
      */
-    public function getUrl(?int $productId = null, ?string $rewrite = null): string
+    public function getUrl(int $productId = null, string $rewrite = null): string
     {
         return $this->link->getProductLink((int) $productId, $rewrite);
     }

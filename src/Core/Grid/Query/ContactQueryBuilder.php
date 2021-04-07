@@ -137,7 +137,7 @@ final class ContactQueryBuilder extends AbstractDoctrineQueryBuilder
                 continue;
             }
 
-            $qb->andWhere("$name LIKE :$name");
+            $qb->andWhere("${name} LIKE :${name}");
             $qb->setParameter($name, '%' . $value . '%');
         }
 

@@ -71,7 +71,7 @@ class StockMvtWSCore extends ObjectModelCore
     /**
      * @var int Used when the movement is due to a customer order
      */
-    public $id_order = null;
+    public $id_order;
 
     /**
      * @var int detrmine if the movement is a positive or negative operation
@@ -81,17 +81,17 @@ class StockMvtWSCore extends ObjectModelCore
     /**
      * @var int Used when the movement is due to a supplier order
      */
-    public $id_supply_order = null;
+    public $id_supply_order;
 
     /**
      * @var float Last value of the weighted-average method
      */
-    public $last_wa = null;
+    public $last_wa;
 
     /**
      * @var float Current value of the weighted-average method
      */
-    public $current_wa = null;
+    public $current_wa;
 
     /**
      * @var float The unit price without tax of the product associated to the movement

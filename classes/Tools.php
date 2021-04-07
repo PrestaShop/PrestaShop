@@ -220,6 +220,7 @@ class ToolsCore
         }
 
         header('Location: ' . $url);
+
         exit;
     }
 
@@ -246,6 +247,7 @@ class ToolsCore
             }
         }
         header('Location: ' . $url);
+
         exit;
     }
 
@@ -259,6 +261,7 @@ class ToolsCore
     public static function redirectAdmin($url)
     {
         header('Location: ' . $url);
+
         exit;
     }
 
@@ -639,9 +642,9 @@ class ToolsCore
         }
 
         if (
-            ($iso = Tools::getValue('isolang')) &&
-            Validate::isLanguageIsoCode($iso) &&
-            ($id_lang = (int) Language::getIdByIso($iso))
+            ($iso = Tools::getValue('isolang'))
+            && Validate::isLanguageIsoCode($iso)
+            && ($id_lang = (int) Language::getIdByIso($iso))
         ) {
             $_GET['id_lang'] = $id_lang;
         }
@@ -650,9 +653,9 @@ class ToolsCore
         $newLanguageId = (int) Tools::getValue('id_lang');
 
         if (
-            Validate::isUnsignedId($newLanguageId) &&
-            $newLanguageId !== 0 &&
-            $context->cookie->id_lang !== $newLanguageId
+            Validate::isUnsignedId($newLanguageId)
+            && $newLanguageId !== 0
+            && $context->cookie->id_lang !== $newLanguageId
         ) {
             $context->cookie->id_lang = $newLanguageId;
             $language = new Language($newLanguageId);
@@ -2030,17 +2033,17 @@ class ToolsCore
         if ($value >= 0.0) {
             $tmp_value = floor($value + 0.5);
 
-            if (($mode == PS_ROUND_HALF_DOWN && $value == (-0.5 + $tmp_value)) ||
-                ($mode == PS_ROUND_HALF_EVEN && $value == (0.5 + 2 * floor($tmp_value / 2.0))) ||
-                ($mode == PS_ROUND_HALF_ODD && $value == (0.5 + 2 * floor($tmp_value / 2.0) - 1.0))) {
+            if (($mode == PS_ROUND_HALF_DOWN && $value == (-0.5 + $tmp_value))
+                || ($mode == PS_ROUND_HALF_EVEN && $value == (0.5 + 2 * floor($tmp_value / 2.0)))
+                || ($mode == PS_ROUND_HALF_ODD && $value == (0.5 + 2 * floor($tmp_value / 2.0) - 1.0))) {
                 $tmp_value = $tmp_value - 1.0;
             }
         } else {
             $tmp_value = ceil($value - 0.5);
 
-            if (($mode == PS_ROUND_HALF_DOWN && $value == (0.5 + $tmp_value)) ||
-                ($mode == PS_ROUND_HALF_EVEN && $value == (-0.5 + 2 * ceil($tmp_value / 2.0))) ||
-                ($mode == PS_ROUND_HALF_ODD && $value == (-0.5 + 2 * ceil($tmp_value / 2.0) + 1.0))) {
+            if (($mode == PS_ROUND_HALF_DOWN && $value == (0.5 + $tmp_value))
+                || ($mode == PS_ROUND_HALF_EVEN && $value == (-0.5 + 2 * ceil($tmp_value / 2.0)))
+                || ($mode == PS_ROUND_HALF_ODD && $value == (-0.5 + 2 * ceil($tmp_value / 2.0) + 1.0))) {
                 $tmp_value = $tmp_value + 1.0;
             }
         }
@@ -2147,8 +2150,8 @@ class ToolsCore
             }
 
             if (
-                preg_match('/(.*-----BEGIN CERTIFICATE-----.*-----END CERTIFICATE-----){50}$/Uims', $ca_cert_content) &&
-                substr(rtrim($ca_cert_content), -1) == '-'
+                preg_match('/(.*-----BEGIN CERTIFICATE-----.*-----END CERTIFICATE-----){50}$/Uims', $ca_cert_content)
+                && substr(rtrim($ca_cert_content), -1) == '-'
             ) {
                 file_put_contents(_PS_CACHE_CA_CERT_FILE_, $ca_cert_content);
             }
@@ -2197,7 +2200,8 @@ class ToolsCore
             $content = curl_exec($curl);
 
             if (false === $content && _PS_MODE_DEV_) {
-                $errorMessage = sprintf('file_get_contents_curl failed to download %s : (error code %d) %s',
+                $errorMessage = sprintf(
+                    'file_get_contents_curl failed to download %s : (error code %d) %s',
                     $url,
                     curl_errno($curl),
                     curl_error($curl)
@@ -3374,7 +3378,6 @@ exit;
                 return $order_by_prefix . $value;
 
             break;
-
             case 'way':
                 $value = (null === $value || $value === false || $value === '') ? (int) Configuration::get('PS_PRODUCTS_ORDER_WAY') : $value;
                 $list = [0 => 'asc', 1 => 'desc'];
@@ -3427,6 +3430,7 @@ exit;
         header('HTTP/1.1 404 Not Found');
         header('Status: 404 Not Found');
         include __DIR__ . '/../404.php';
+
         die;
     }
 
@@ -3457,6 +3461,7 @@ exit;
     {
         if ($die || (defined('_PS_MODE_DEV_') && _PS_MODE_DEV_)) {
             header('HTTP/1.1 500 Internal Server Error', true, 500);
+
             die($msg);
         }
 
@@ -4447,6 +4452,7 @@ exit;
         } else {
             die('Error: "install" directory is missing');
         }
+
         exit;
     }
 

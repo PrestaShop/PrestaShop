@@ -84,9 +84,11 @@ class EditCartAddressHandler implements EditCartAddressHandlerInterface
             switch ($command->getAddressType()) {
                 case CartAddressType::DELIVERY_ADDRESS_TYPE:
                     $cart->id_address_delivery = $addressId->getValue();
+
                     break;
                 case CartAddressType::INVOICE_ADDRESS_TYPE:
                     $cart->id_address_invoice = $addressId->getValue();
+
                     break;
             }
             if (!$cart->update()) {
@@ -115,9 +117,11 @@ class EditCartAddressHandler implements EditCartAddressHandlerInterface
         switch ($cartCommand->getAddressType()) {
             case CartAddressType::DELIVERY_ADDRESS_TYPE:
                 $addressId = (int) $cart->id_address_delivery;
+
                 break;
             case CartAddressType::INVOICE_ADDRESS_TYPE:
                 $addressId = (int) $cart->id_address_invoice;
+
                 break;
         }
         $addressCommand = new EditCustomerAddressCommand($addressId);

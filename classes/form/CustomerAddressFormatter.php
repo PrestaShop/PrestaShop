@@ -98,7 +98,7 @@ class CustomerAddressFormatterCore implements FormFormatterInterface
                     }
                 }
             } elseif (count($fieldParts) === 2) {
-                list($entity, $entityField) = $fieldParts;
+                [$entity, $entityField] = $fieldParts;
 
                 // Fields specified using the Entity:field
                 // notation are actually references to other
@@ -162,7 +162,7 @@ class CustomerAddressFormatterCore implements FormFormatterInterface
         }
 
         return $this->addConstraints(
-                $this->addMaxLength(
+            $this->addMaxLength(
                     $format
                 )
         );

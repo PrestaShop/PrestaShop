@@ -242,7 +242,7 @@ class Reader implements ReaderInterface
     {
         $path = realpath(_PS_ROOT_DIR_ . '/' . self::CLDR_MAIN . ($filename ? $filename : ''));
         if (false === $path) {
-            throw new LocalizationFileNotFoundException("The file $filename does not exist");
+            throw new LocalizationFileNotFoundException("The file ${filename} does not exist");
         }
 
         return $path;
@@ -406,10 +406,10 @@ class Reader implements ReaderInterface
                 // If alias is set, we just copy data from another numbering system:
                 $alias = $format->alias;
                 if (isset($alias['path']) && preg_match(
-                        "#^\.\.\/decimalFormats\[@numberSystem='([^)]+)'\]$#",
-                        (string) $alias['path'],
-                        $matches
-                    )
+                    "#^\.\.\/decimalFormats\[@numberSystem='([^)]+)'\]$#",
+                    (string) $alias['path'],
+                    $matches
+                )
                 ) {
                     $aliasNumSys = $matches[1];
                     $decimalPatterns[$numberSystem] = $decimalPatterns[$aliasNumSys];
@@ -438,10 +438,10 @@ class Reader implements ReaderInterface
                 // If alias is set, we just copy data from another numbering system:
                 $alias = $format->alias;
                 if (isset($alias['path']) && preg_match(
-                        "#^\.\.\/percentFormats\[@numberSystem='([^)]+)'\]$#",
-                        (string) $alias['path'],
-                        $matches
-                    )
+                    "#^\.\.\/percentFormats\[@numberSystem='([^)]+)'\]$#",
+                    (string) $alias['path'],
+                    $matches
+                )
                 ) {
                     $aliasNumSys = $matches[1];
                     $percentPatterns[$numberSystem] = $percentPatterns[$aliasNumSys];
@@ -473,10 +473,10 @@ class Reader implements ReaderInterface
                 // If alias is set, we just copy data from another numbering system:
                 $alias = $format->alias;
                 if (isset($alias['path']) && preg_match(
-                        "#^\.\.\/currencyFormats\[@numberSystem='([^)]+)'\]$#",
-                        (string) $alias['path'],
-                        $matches
-                    )
+                    "#^\.\.\/currencyFormats\[@numberSystem='([^)]+)'\]$#",
+                    (string) $alias['path'],
+                    $matches
+                )
                 ) {
                     $aliasNumSys = $matches[1];
                     $currencyPatterns[$numberSystem] = $currencyPatterns[$aliasNumSys];

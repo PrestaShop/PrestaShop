@@ -39,7 +39,7 @@ define('lang_Swipe_help', 'Swipe over de naam van een bestand of map om opties t
 define('lang_Upload_base', 'Standaard uploader');
 define('lang_Upload_java', 'JAVA upload (voor grote bestanden)');
 define('lang_Upload_java_help', "Als de Java Applet niet laadt: 1. Heeft u JAVA geinstalleerd? Zo niet, download het hier: <a href='http://java.com/en/download/'>java.com/en/download/</a> 2. Wees er zeker van dat de firewall deze actie accepteert");
-define('lang_Upload_base_help', "Klik en sleep (meerdere) bestanden vanaf uw computer naar het \"Drop files\" vlak hierboven om bestanden toe te voegen.<br/> Ook is het mogelijk om in een dialoogvenster (meerdere) bestanden te selecteren, klik hiervoor op \"Drop files\"<br/><br/><i>Als alle uploads voltooid zijn kunt u terugkeren met de knop \"Terug naar bestanden\"</i>");
+define('lang_Upload_base_help', 'Klik en sleep (meerdere) bestanden vanaf uw computer naar het "Drop files" vlak hierboven om bestanden toe te voegen.<br/> Ook is het mogelijk om in een dialoogvenster (meerdere) bestanden te selecteren, klik hiervoor op "Drop files"<br/><br/><i>Als alle uploads voltooid zijn kunt u terugkeren met de knop "Terug naar bestanden"</i>');
 define('lang_Type_dir', 'map');
 define('lang_Type', 'Type');
 define('lang_Dimension', 'Afmetingen');

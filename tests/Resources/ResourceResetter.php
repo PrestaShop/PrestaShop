@@ -56,8 +56,8 @@ class ResourceResetter
      * @param string|null $backupRootDir
      */
     public function __construct(
-        ?Filesystem $filesystem = null,
-        ?string $backupRootDir = null
+        Filesystem $filesystem = null,
+        string $backupRootDir = null
     ) {
         $this->filesystem = $filesystem ?: new Filesystem();
         $this->backupRootDir = $backupRootDir ?: sys_get_temp_dir();

@@ -324,7 +324,7 @@ class OrderInvoiceCore extends ObjectModel
     		AND od.`tax_computation_method` = ' . (int) TaxCalculator::ONE_AFTER_ANOTHER_METHOD)
             || Configuration::get(
                 'PS_INVOICE_TAXES_BREAKDOWN'
-        );
+            );
     }
 
     public function displayTaxBasesInProductTaxesBreakdown()

@@ -439,7 +439,7 @@ abstract class DbCore
             foreach ($row_data as $key => $value) {
                 if (!$first_loop) {
                     // Check if row array mapping are the same
-                    if (!in_array("`$key`", $keys)) {
+                    if (!in_array("`${key}`", $keys)) {
                         throw new PrestaShopDatabaseException('Keys form $data subarray don\'t match');
                     }
 

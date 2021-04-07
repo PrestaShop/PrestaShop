@@ -157,7 +157,8 @@ final class EmployeeGridDefinitionFactory extends AbstractGridDefinitionFactory
                     ->setName($this->trans('Actions', [], 'Admin.Global'))
                     ->setOptions([
                         'actions' => (new RowActionCollection())
-                            ->add((new LinkRowAction('edit'))
+                            ->add(
+                                (new LinkRowAction('edit'))
                             ->setName($this->trans('Edit', [], 'Admin.Actions'))
                             ->setIcon('edit')
                             ->setOptions([
@@ -231,7 +232,8 @@ final class EmployeeGridDefinitionFactory extends AbstractGridDefinitionFactory
                     ])
                     ->setAssociatedColumn('profile')
             )
-            ->add((new Filter('active', YesAndNoChoiceType::class))
+            ->add(
+                (new Filter('active', YesAndNoChoiceType::class))
             ->setAssociatedColumn('active')
             )
             ->add(

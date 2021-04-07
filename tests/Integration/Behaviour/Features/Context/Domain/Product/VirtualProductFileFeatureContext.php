@@ -251,7 +251,8 @@ class VirtualProductFileFeatureContext extends AbstractProductFeatureContext
 
         Assert::assertEquals(
             (int) $dataRows['download times limit'],
-            $actualFile->getDownloadTimesLimit(), 'Unexpected file download times limit'
+            $actualFile->getDownloadTimesLimit(),
+            'Unexpected file download times limit'
         );
         unset($dataRows['download times limit']);
 

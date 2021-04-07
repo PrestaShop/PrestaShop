@@ -119,7 +119,8 @@ class SupplierType extends TranslatorAwareType
             $this->trans(
                 'To add tags, click in the field, write something, and then press the "Enter" key.',
                 'Admin.Shopparameters.Help'
-            ));
+            )
+        );
 
         $builder
             ->add('name', TextType::class, [
@@ -129,7 +130,8 @@ class SupplierType extends TranslatorAwareType
                 'constraints' => [
                     new NotBlank([
                         'message' => $this->trans(
-                            'This field cannot be empty', 'Admin.Notifications.Error'
+                            'This field cannot be empty',
+                            'Admin.Notifications.Error'
                         ),
                     ]),
                     new Length([
@@ -202,7 +204,8 @@ class SupplierType extends TranslatorAwareType
                 'constraints' => [
                     new NotBlank([
                         'message' => $this->trans(
-                            'This field cannot be empty', 'Admin.Notifications.Error'
+                            'This field cannot be empty',
+                            'Admin.Notifications.Error'
                         ),
                     ]),
                     new TypedRegex([
@@ -225,7 +228,8 @@ class SupplierType extends TranslatorAwareType
                 'constraints' => [
                     new NotBlank([
                         'message' => $this->trans(
-                            'This field cannot be empty', 'Admin.Notifications.Error'
+                            'This field cannot be empty',
+                            'Admin.Notifications.Error'
                         ),
                     ]),
                 ],
@@ -351,7 +355,8 @@ class SupplierType extends TranslatorAwareType
                 'constraints' => [
                     new NotBlank([
                         'message' => $this->trans(
-                            'This field cannot be empty', 'Admin.Notifications.Error'
+                            'This field cannot be empty',
+                            'Admin.Notifications.Error'
                         ),
                     ]),
                 ],

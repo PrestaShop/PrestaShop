@@ -72,7 +72,8 @@ class OrderSummary
      * @param string $totalPaid
      */
     public function __construct(
-        int $orderId, string $orderPlacedDate,
+        int $orderId,
+        string $orderPlacedDate,
         string $paymentMethodName,
         string $orderStatus,
         int $orderProductsCount,

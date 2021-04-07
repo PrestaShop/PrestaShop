@@ -135,7 +135,8 @@ class CustomerType extends TranslatorAwareType
                         ),
                     ]),
                     new CustomerName([
-                        'message' => $this->trans('The %s field is invalid.',
+                        'message' => $this->trans(
+                            'The %s field is invalid.',
                             'Admin.Notifications.Error',
                             [sprintf('"%s"', $this->trans('First name', 'Admin.Global'))]
                         ),

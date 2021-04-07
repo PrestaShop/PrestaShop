@@ -107,7 +107,7 @@ class CustomerFormCore extends AbstractForm
         foreach ($this->formFields as $field) {
             $customerField = $field->getName();
             if (property_exists($customer, $customerField)) {
-                $customer->$customerField = $field->getValue();
+                $customer->{$customerField} = $field->getValue();
             }
         }
 
@@ -129,9 +129,9 @@ class CustomerFormCore extends AbstractForm
 
         // check birthdayField against null case is mandatory.
         $birthdayField = $this->getField('birthday');
-        if (!empty($birthdayField) &&
-            !empty($birthdayField->getValue()) &&
-            Validate::isBirthDate($birthdayField->getValue(), $this->context->language->date_format_lite)
+        if (!empty($birthdayField)
+            && !empty($birthdayField->getValue())
+            && Validate::isBirthDate($birthdayField->getValue(), $this->context->language->date_format_lite)
         ) {
             $dateBuilt = DateTime::createFromFormat(
                 $this->context->language->date_format_lite,

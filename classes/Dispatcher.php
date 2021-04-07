@@ -383,20 +383,19 @@ class DispatcherCore
                 ];
 
                 break;
-
             // Dispatch module controller for front office
             case self::FC_MODULE:
                 $module_name = Validate::isModuleName(Tools::getValue('module')) ? Tools::getValue('module') : '';
                 $module = Module::getInstanceByName($module_name);
                 $controller_class = 'PageNotFoundController';
                 if (Validate::isLoadedObject($module) && $module->active) {
-                    $controllers = Dispatcher::getControllers(_PS_MODULE_DIR_ . "$module_name/controllers/front/");
+                    $controllers = Dispatcher::getControllers(_PS_MODULE_DIR_ . "${module_name}/controllers/front/");
                     if (isset($controllers[strtolower($this->controller)])) {
-                        include_once _PS_MODULE_DIR_ . "$module_name/controllers/front/{$this->controller}.php";
+                        include_once _PS_MODULE_DIR_ . "${module_name}/controllers/front/{$this->controller}.php";
                         if (file_exists(
-                            _PS_OVERRIDE_DIR_ . "modules/$module_name/controllers/front/{$this->controller}.php"
+                            _PS_OVERRIDE_DIR_ . "modules/${module_name}/controllers/front/{$this->controller}.php"
                         )) {
-                            include_once _PS_OVERRIDE_DIR_ . "modules/$module_name/controllers/front/{$this->controller}.php";
+                            include_once _PS_OVERRIDE_DIR_ . "modules/${module_name}/controllers/front/{$this->controller}.php";
                             $controller_class = $module_name . $this->controller . 'ModuleFrontControllerOverride';
                         } else {
                             $controller_class = $module_name . $this->controller . 'ModuleFrontController';
@@ -410,7 +409,6 @@ class DispatcherCore
                 ];
 
                 break;
-
             // Dispatch back office controller + module back office controller
             case self::FC_ADMIN:
                 if ($this->use_default_controller
@@ -437,11 +435,11 @@ class DispatcherCore
                         } else {
                             $controller_name = $controllers[strtolower($this->controller)];
                             // Controllers in modules can be named AdminXXX.php or AdminXXXController.php
-                            include_once _PS_MODULE_DIR_ . "{$tab->module}/controllers/admin/$controller_name.php";
+                            include_once _PS_MODULE_DIR_ . "{$tab->module}/controllers/admin/${controller_name}.php";
                             if (file_exists(
-                                _PS_OVERRIDE_DIR_ . "modules/{$tab->module}/controllers/admin/$controller_name.php"
+                                _PS_OVERRIDE_DIR_ . "modules/{$tab->module}/controllers/admin/${controller_name}.php"
                             )) {
-                                include_once _PS_OVERRIDE_DIR_ . "modules/{$tab->module}/controllers/admin/$controller_name.php";
+                                include_once _PS_OVERRIDE_DIR_ . "modules/{$tab->module}/controllers/admin/${controller_name}.php";
                                 $controller_class = $controller_name . (
                                     strpos($controller_name, 'Controller') ? 'Override' : 'ControllerOverride'
                                 );
@@ -499,7 +497,6 @@ class DispatcherCore
                 }
 
                 break;
-
             default:
                 throw new PrestaShopException('Bad front controller chosen');
         }
@@ -568,9 +565,9 @@ class DispatcherCore
 
         // If there are several languages, set $_GET['isolang'] and remove the language part from the request URI
         if (
-            $this->use_routes &&
-            $isMultiLanguageActivated &&
-            preg_match('#^/([a-z]{2})(?:/.*)?$#', $requestUri, $matches)
+            $this->use_routes
+            && $isMultiLanguageActivated
+            && preg_match('#^/([a-z]{2})(?:/.*)?$#', $requestUri, $matches)
         ) {
             $_GET['isolang'] = $matches[1];
             $requestUri = substr($requestUri, 3);
@@ -1048,7 +1045,7 @@ class DispatcherCore
                     );
                 }
 
-                list($uri) = explode('?', $this->request_uri);
+                [$uri] = explode('?', $this->request_uri);
 
                 if (isset($this->routes[$id_shop][Context::getContext()->language->id])) {
                     foreach ($this->routes[$id_shop][Context::getContext()->language->id] as $route) {

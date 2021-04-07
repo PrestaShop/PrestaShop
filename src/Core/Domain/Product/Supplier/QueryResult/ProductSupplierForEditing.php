@@ -84,7 +84,7 @@ class ProductSupplierForEditing
         string $reference,
         string $priceTaxExcluded,
         int $currencyId,
-        ?int $combinationId = null
+        int $combinationId = null
     ) {
         $this->productSupplierId = $productSupplierId;
         $this->productId = $productId;

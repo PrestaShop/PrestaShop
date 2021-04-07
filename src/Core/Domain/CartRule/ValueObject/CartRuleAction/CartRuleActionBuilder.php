@@ -133,10 +133,10 @@ final class CartRuleActionBuilder implements CartRuleActionBuilderInterface
             throw new CartRuleConstraintException('Cart rule cannot have both percentage and amount discount actions.', CartRuleConstraintException::INCOMPATIBLE_CART_RULE_ACTIONS);
         }
 
-        if (null === $this->percentageDiscount &&
-            null === $this->amountDiscount &&
-            null === $this->giftProduct &&
-            false === $this->isFreeShipping
+        if (null === $this->percentageDiscount
+            && null === $this->amountDiscount
+            && null === $this->giftProduct
+            && false === $this->isFreeShipping
         ) {
             throw new CartRuleConstraintException('Cart rule must have at least one action', CartRuleConstraintException::MISSING_ACTION);
         }

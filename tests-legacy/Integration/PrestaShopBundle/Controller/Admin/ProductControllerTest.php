@@ -46,22 +46,22 @@ class ProductControllerTest extends WebTestCase
      */
     public function testUnitAction($action)
     {
-        $actionUrl = $this->router->generate('admin_product_unit_action', array(
+        $actionUrl = $this->router->generate('admin_product_unit_action', [
             'action' => $action,
             'id' => 1,
-        ));
+        ]);
         $this->client->request('POST', $actionUrl);
         $this->assertSessionFlagBagContainsFailureMessage();
     }
 
     public function getUnitActions()
     {
-        return array(
+        return [
             ['delete'],
             ['duplicate'],
             ['activate'],
             ['deactivate'],
-        );
+        ];
     }
 
     /**
@@ -71,21 +71,21 @@ class ProductControllerTest extends WebTestCase
      */
     public function testBulkAction($action)
     {
-        $actionUrl = $this->router->generate('admin_product_bulk_action', array(
+        $actionUrl = $this->router->generate('admin_product_bulk_action', [
             'action' => $action,
-        ));
+        ]);
         $this->client->request('POST', $actionUrl);
         $this->assertSessionFlagBagContainsFailureMessage();
     }
 
     public function getBulkActions()
     {
-        return array(
+        return [
             ['activate_all'],
             ['deactivate_all'],
             ['duplicate_all'],
             ['delete_all'],
-        );
+        ];
     }
 
     protected function assertSessionFlagBagContainsFailureMessage()

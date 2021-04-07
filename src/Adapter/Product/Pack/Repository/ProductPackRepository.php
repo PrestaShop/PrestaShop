@@ -115,7 +115,7 @@ class ProductPackRepository
         }
 
         return sprintf(
-            "$messageBody. [packId #%d; productId #%d;%s]",
+            "${messageBody}. [packId #%d; productId #%d;%s]",
             $packId,
             $product->getProductId()->getValue(),
             isset($combinationId) ? $combinationId : ''

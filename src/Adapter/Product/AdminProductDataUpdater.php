@@ -240,6 +240,7 @@ class AdminProductDataUpdater implements ProductInterface
             if ($product->id !== null) {
                 $product->delete();
             }
+
             throw new \Exception('An error occurred while creating an object.', 5009);
         }
     }

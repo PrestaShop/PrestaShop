@@ -168,6 +168,7 @@ final class AddProductToOrderHandler extends AbstractOrderHandler implements Add
                 // Real creation is naturally a creation update
                 if ($cartProductUpdate->isCreated()) {
                     $creationModifications[] = $cartProductUpdate;
+
                     continue;
                 }
 
@@ -281,6 +282,7 @@ final class AddProductToOrderHandler extends AbstractOrderHandler implements Add
                 if ((int) $orderDetailData['product_id'] === $updatedProduct->getProductId()->getValue()
                     && (int) $orderDetailData['product_attribute_id'] === $updatedCombinationId) {
                     $affectedOrderDetail = new OrderDetail($orderDetailData['id_order_detail']);
+
                     break;
                 }
             }
@@ -602,6 +604,7 @@ final class AddProductToOrderHandler extends AbstractOrderHandler implements Add
         if (!empty($command->getOrderInvoiceId()) && in_array((int) $command->getOrderInvoiceId(), $invoicesContainingProduct)) {
             $orderInvoice = new OrderInvoice($command->getOrderInvoiceId());
             $invoiceNumber = $orderInvoice->getInvoiceNumberFormatted((int) Configuration::get('PS_LANG_DEFAULT'), $order->id_shop);
+
             throw new DuplicateProductInOrderInvoiceException($invoiceNumber, 'You cannot add this product in this invoice as it is already present');
         }
     }

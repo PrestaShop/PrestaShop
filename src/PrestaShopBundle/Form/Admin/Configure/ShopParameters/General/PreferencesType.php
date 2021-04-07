@@ -124,9 +124,9 @@ class PreferencesType extends TranslatorAwareType
             ])
             ->add('allow_html_iframes', SwitchType::class, [
                 'label' => $this->trans(
-                        'Allow iframes on HTML fields',
-                        'Admin.Shopparameters.Feature'
-                    ),
+                    'Allow iframes on HTML fields',
+                    'Admin.Shopparameters.Feature'
+                ),
                 'help' => $this->trans(
                     'Allow iframes on text fields like product description. We recommend that you leave this option disabled.',
                     'Admin.Shopparameters.Help'
@@ -134,16 +134,18 @@ class PreferencesType extends TranslatorAwareType
             ])
             ->add('use_htmlpurifier', SwitchType::class, [
                 'label' => $this->trans(
-                        'Use HTMLPurifier Library',
-                        'Admin.Shopparameters.Feature'
-                    ),
+                    'Use HTMLPurifier Library',
+                    'Admin.Shopparameters.Feature'
+                ),
                 'help' => $this->trans(
                     'Clean the HTML content on text fields. We recommend that you leave this option enabled.',
                     'Admin.Shopparameters.Help'
                 ),
             ])
             ->add(
-                'price_round_mode', ChoiceType::class, [
+                'price_round_mode',
+                ChoiceType::class,
+                [
                     'placeholder' => false,
                     'choices_as_values' => true,
                     'choices' => [
@@ -159,7 +161,8 @@ class PreferencesType extends TranslatorAwareType
                         'You can choose among 6 different ways of rounding prices. "Round up away from zero ..." is the recommended behavior.',
                         'Admin.Shopparameters.Help'
                     ),
-                ])
+                ]
+            )
             ->add('price_round_type', ChoiceType::class, [
                 'placeholder' => false,
                 'choices_as_values' => true,
@@ -175,29 +178,38 @@ class PreferencesType extends TranslatorAwareType
                 ),
             ])
             ->add(
-                'display_suppliers', SwitchType::class, [
+                'display_suppliers',
+                SwitchType::class,
+                [
                     'label' => $this->trans('Display suppliers', 'Admin.Shopparameters.Feature'),
                     'help' => $this->trans(
                         'Enable suppliers page on your front office even when its module is disabled.',
                         'Admin.Shopparameters.Help'
                     ),
-                ])
+                ]
+            )
             ->add(
-                'display_manufacturers', SwitchType::class, [
+                'display_manufacturers',
+                SwitchType::class,
+                [
                     'label' => $this->trans('Display brands', 'Admin.Shopparameters.Feature'),
                     'help' => $this->trans(
                         'Enable brands page on your front office even when its module is disabled.',
                         'Admin.Shopparameters.Help'
                     ),
-                ])
+                ]
+            )
             ->add(
-                'display_best_sellers', SwitchType::class, [
+                'display_best_sellers',
+                SwitchType::class,
+                [
                     'label' => $this->trans('Display best sellers', 'Admin.Shopparameters.Feature'),
                     'help' => $this->trans(
                         'Enable best sellers page on your front office even when its respective module is disabled.',
                         'Admin.Shopparameters.Help'
                     ),
-                ])
+                ]
+            )
             ->add('multishop_feature_active', SwitchType::class, [
                 'disabled' => !$this->isContextDependantOptionEnabled(),
                 'label' => $this->trans('Enable Multistore', 'Admin.Shopparameters.Feature'),

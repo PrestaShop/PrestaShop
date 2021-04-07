@@ -83,7 +83,8 @@ class EditProductRowType extends TranslatorAwareType
         $builder
             ->add('price_tax_excluded', TextWithUnitType::class, [
                 'label' => false,
-                'unit' => sprintf('%s %s',
+                'unit' => sprintf(
+                    '%s %s',
                     $options['symbol'],
                     $this->trans('tax excl.', 'Admin.Global')
                 ),
@@ -93,7 +94,8 @@ class EditProductRowType extends TranslatorAwareType
             ])
             ->add('price_tax_included', TextWithUnitType::class, [
                 'label' => false,
-                'unit' => sprintf('%s %s',
+                'unit' => sprintf(
+                    '%s %s',
                     $options['symbol'],
                     $this->trans('tax incl.', 'Admin.Global')
                 ),

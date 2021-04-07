@@ -113,7 +113,8 @@ class UpdateCombinationStockFeatureContext extends AbstractCombinationFeatureCon
             Assert::assertSame(
                 $expectedStock->getAvailableDate(),
                 $actualStock->getAvailableDate(),
-                sprintf('Unexpected combination "%s" availability date. Expected NULL, got "%s"',
+                sprintf(
+                    'Unexpected combination "%s" availability date. Expected NULL, got "%s"',
                     $combinationReference,
                     var_export($actualStock->getAvailableDate(), true)
                 )

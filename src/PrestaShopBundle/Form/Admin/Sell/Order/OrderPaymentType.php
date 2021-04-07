@@ -112,7 +112,9 @@ class OrderPaymentType extends AbstractType
                     new GreaterThan([
                         'value' => 0,
                         'message' => $this->translator->trans(
-                            'Invalid value: the payment must be a positive amount.', [], 'Admin.Notifications.Error'
+                            'Invalid value: the payment must be a positive amount.',
+                            [],
+                            'Admin.Notifications.Error'
                         ),
                     ]),
                 ],

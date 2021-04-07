@@ -27,7 +27,6 @@
 namespace LegacyTests\Unit\Classes;
 
 use Hook;
-
 use LegacyTests\TestCase\UnitTestCase;
 
 class HookTest extends UnitTestCase

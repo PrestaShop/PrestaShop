@@ -43,7 +43,7 @@ if (!file_exists(_PS_CACHE_DIR_)) {
     $warmer->warmUp(_PS_CACHE_DIR_);
 }
 
-$configDirectory = __DIR__. '/../app/config';
+$configDirectory = __DIR__ . '/../app/config';
 $phpParametersFilepath = $configDirectory . '/parameters.php';
 $yamlParametersFilepath = $configDirectory . '/parameters.yml';
 
@@ -51,7 +51,7 @@ $filesystem = new Filesystem();
 
 $exportPhpConfigFile = function ($config, $destination) use ($filesystem) {
     try {
-        $filesystem->dumpFile($destination, '<?php return '.var_export($config, true).';'."\n");
+        $filesystem->dumpFile($destination, '<?php return ' . var_export($config, true) . ';' . "\n");
     } catch (IOException $e) {
         return false;
     }
@@ -67,12 +67,12 @@ if (!file_exists($phpParametersFilepath) && file_exists($yamlParametersFilepath)
     }
 }
 
-$lastParametersModificationTime = (int)@filemtime($phpParametersFilepath);
+$lastParametersModificationTime = (int) @filemtime($phpParametersFilepath);
 
 if ($lastParametersModificationTime) {
-    $cachedParameters = _PS_CACHE_DIR_. 'appParameters.php';
+    $cachedParameters = _PS_CACHE_DIR_ . 'appParameters.php';
 
-    $lastParametersCacheModificationTime = (int)@filemtime($cachedParameters);
+    $lastParametersCacheModificationTime = (int) @filemtime($cachedParameters);
     if (!$lastParametersCacheModificationTime || $lastParametersCacheModificationTime < $lastParametersModificationTime) {
         // When parameters file is available, update its cache if it is stale.
         if (file_exists($phpParametersFilepath)) {
@@ -92,21 +92,21 @@ if ($lastParametersModificationTime) {
     $database_host = $config['parameters']['database_host'];
 
     if (!empty($config['parameters']['database_port'])) {
-        $database_host .= ':'. $config['parameters']['database_port'];
+        $database_host .= ':' . $config['parameters']['database_port'];
     }
 
     define('_DB_SERVER_', $database_host);
     if (defined('_PS_IN_TEST_')) {
-        define('_DB_NAME_', 'test_'.$config['parameters']['database_name']);
+        define('_DB_NAME_', 'test_' . $config['parameters']['database_name']);
     } else {
         define('_DB_NAME_', $config['parameters']['database_name']);
     }
 
     define('_DB_USER_', $config['parameters']['database_user']);
     define('_DB_PASSWD_', $config['parameters']['database_password']);
-    define('_DB_PREFIX_',  $config['parameters']['database_prefix']);
-    define('_MYSQL_ENGINE_',  $config['parameters']['database_engine']);
-    define('_PS_CACHING_SYSTEM_',  $config['parameters']['ps_caching']);
+    define('_DB_PREFIX_', $config['parameters']['database_prefix']);
+    define('_MYSQL_ENGINE_', $config['parameters']['database_engine']);
+    define('_PS_CACHING_SYSTEM_', $config['parameters']['ps_caching']);
 
     if (!defined('PS_IN_UPGRADE') && !defined('_PS_IN_TEST_')) {
         define('_PS_CACHE_ENABLED_', $config['parameters']['ps_cache_enable']);
@@ -145,6 +145,6 @@ if ($lastParametersModificationTime) {
         define('_RIJNDAEL_KEY_', $config['parameters']['_rijndael_key']);
         define('_RIJNDAEL_IV_', $config['parameters']['_rijndael_iv']);
     }
-} elseif (file_exists(_PS_ROOT_DIR_.'/config/settings.inc.php')) {
-    require_once _PS_ROOT_DIR_.'/config/settings.inc.php';
+} elseif (file_exists(_PS_ROOT_DIR_ . '/config/settings.inc.php')) {
+    require_once _PS_ROOT_DIR_ . '/config/settings.inc.php';
 }

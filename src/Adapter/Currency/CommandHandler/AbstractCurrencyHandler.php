@@ -320,6 +320,7 @@ abstract class AbstractCurrencyHandler extends AbstractObjectModelHandler
             }
 
             $shop = new Shop($shopId);
+
             throw new DefaultCurrencyInMultiShopException($currency->name, $shop->name, sprintf('Currency with id %s cannot be removed or disabled from shop with id %s because its the default currency.', $currency->id, $shopId), DefaultCurrencyInMultiShopException::CANNOT_REMOVE_CURRENCY);
         }
     }

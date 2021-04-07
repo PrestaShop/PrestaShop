@@ -31,8 +31,8 @@ class File
     /**
      * Recursivly copy a directory
      *
-     * @var $src the source path (eg. /home/dir/to/copy)
-     * @var $dst the destination path (eg. /home/)
+     * @var the source path (eg. /home/dir/to/copy)
+     * @var the destination path (eg. /home/)
      */
     public static function recurseCopy($src, $dst)
     {
@@ -41,10 +41,10 @@ class File
         $file = readdir($dirp);
         while ($file !== false) {
             if ($file != '.' && $file != '..') {
-                if (is_dir($src.'/'.$file)) {
-                    static::recurseCopy($src.'/'.$file, $dst.'/'.$file);
+                if (is_dir($src . '/' . $file)) {
+                    static::recurseCopy($src . '/' . $file, $dst . '/' . $file);
                 } else {
-                    copy($src.'/'.$file, $dst.'/'.$file);
+                    copy($src . '/' . $file, $dst . '/' . $file);
                 }
             }
             $file = readdir($dirp);
@@ -55,7 +55,7 @@ class File
     /**
      * Recursivly delete a directory
      *
-     * @var $dir the directory to delete path (eg. /home/dir/to/delete)
+     * @var the directory to delete path (eg. /home/dir/to/delete)
      */
     public static function recurseDelete($dir)
     {
@@ -63,10 +63,10 @@ class File
         $file = readdir($dirp);
         while ($file !== false) {
             if ($file != '.' && $file != '..') {
-                if (is_dir($dir.'/'.$file)) {
-                    static::recurseDelete($dir.'/'.$file);
+                if (is_dir($dir . '/' . $file)) {
+                    static::recurseDelete($dir . '/' . $file);
                 } else {
-                    unlink($dir.'/'.$file);
+                    unlink($dir . '/' . $file);
                 }
             }
             $file = readdir($dirp);

@@ -554,11 +554,13 @@ class AdminCartRulesControllerCore extends AdminController
 			' . Shop::addSqlRestriction(Shop::SHARE_CUSTOMER) . '
 			ORDER BY `firstname`, `lastname` ASC
 			LIMIT 50');
+
             die(json_encode($customers));
         }
         // Both product filter (free product and product discount) search for products
         if (Tools::isSubmit('giftProductFilter') || Tools::isSubmit('reductionProductFilter')) {
             $products = Product::searchByName(Context::getContext()->language->id, trim(Tools::getValue('q')));
+
             die(json_encode($products));
         }
     }
@@ -624,23 +626,23 @@ class AdminCartRulesControllerCore extends AdminController
 
         // All the filter are prefilled with the correct information
         $customer_filter = '';
-        if (Validate::isUnsignedId($current_object->id_customer) &&
-            ($customer = new Customer($current_object->id_customer)) &&
-            Validate::isLoadedObject($customer)) {
+        if (Validate::isUnsignedId($current_object->id_customer)
+            && ($customer = new Customer($current_object->id_customer))
+            && Validate::isLoadedObject($customer)) {
             $customer_filter = $customer->firstname . ' ' . $customer->lastname . ' (' . $customer->email . ')';
         }
 
         $gift_product_filter = '';
-        if (Validate::isUnsignedId($current_object->gift_product) &&
-            ($product = new Product($current_object->gift_product, false, $this->context->language->id)) &&
-            Validate::isLoadedObject($product)) {
+        if (Validate::isUnsignedId($current_object->gift_product)
+            && ($product = new Product($current_object->gift_product, false, $this->context->language->id))
+            && Validate::isLoadedObject($product)) {
             $gift_product_filter = (!empty($product->reference) ? $product->reference : $product->name);
         }
 
         $reduction_product_filter = '';
-        if (Validate::isUnsignedId($current_object->reduction_product) &&
-            ($product = new Product($current_object->reduction_product, false, $this->context->language->id)) &&
-            Validate::isLoadedObject($product)) {
+        if (Validate::isUnsignedId($current_object->reduction_product)
+            && ($product = new Product($current_object->reduction_product, false, $this->context->language->id))
+            && Validate::isLoadedObject($product)) {
             $reduction_product_filter = (!empty($product->reference) ? $product->reference : $product->name);
         }
 

@@ -139,7 +139,7 @@ final class CreditSlipQueryBuilder extends AbstractDoctrineQueryBuilder
             }
 
             if ('id_credit_slip' === $filterName || 'id_order' === $filterName) {
-                $qb->andWhere($availableFiltersMap[$filterName] . "= :$filterName");
+                $qb->andWhere($availableFiltersMap[$filterName] . "= :${filterName}");
                 $qb->setParameter($filterName, $value);
 
                 continue;
@@ -154,6 +154,7 @@ final class CreditSlipQueryBuilder extends AbstractDoctrineQueryBuilder
                     $qb->andWhere($availableFiltersMap[$filterName] . ' <= :date_to');
                     $qb->setParameter('date_to', sprintf('%s 23:59:59', $value['to']));
                 }
+
                 continue;
             }
         }

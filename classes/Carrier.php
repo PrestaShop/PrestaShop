@@ -92,7 +92,7 @@ class CarrierCore extends ObjectModel
     public $shipping_external = 0;
 
     /** @var string Name of external module responsible for this Carrier */
-    public $external_module_name = null;
+    public $external_module_name;
 
     /**
      * @var bool True if module needs core range-based shipping cost to calculate final cost
@@ -267,9 +267,9 @@ class CarrierCore extends ObjectModel
         }
         Carrier::cleanPositions();
 
-        return Db::getInstance()->delete('cart_rule_carrier', 'id_carrier = ' . (int) $this->id) &&
-                Db::getInstance()->delete('module_carrier', 'id_reference = ' . (int) $this->id_reference) &&
-                $this->deleteTaxRulesGroup(Shop::getShops(true, null, true));
+        return Db::getInstance()->delete('cart_rule_carrier', 'id_carrier = ' . (int) $this->id)
+                && Db::getInstance()->delete('module_carrier', 'id_reference = ' . (int) $this->id_reference)
+                && $this->deleteTaxRulesGroup(Shop::getShops(true, null, true));
     }
 
     /**
@@ -1564,7 +1564,7 @@ class CarrierCore extends ObjectModel
             $carriers = Carrier::getCarriersForOrder($id_zone, $customer->getGroups(), $cart, $carrier_error);
             Cache::store($cache_id, [$carriers, $carrier_error]);
         } else {
-            list($carriers, $carrier_error) = Cache::retrieve($cache_id);
+            [$carriers, $carrier_error] = Cache::retrieve($cache_id);
         }
 
         $error = array_merge($error, $carrier_error);

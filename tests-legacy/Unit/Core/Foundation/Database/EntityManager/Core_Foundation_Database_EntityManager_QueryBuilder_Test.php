@@ -58,23 +58,23 @@ class Core_Foundation_Database_EntityManager_QueryBuilder_Test extends UnitTestC
 
     public function testBuildWhereConditionsANDJustOneCondition()
     {
-        $this->assertEquals("name = 'escaped'", $this->queryBuilder->buildWhereConditions('AND', array(
+        $this->assertEquals("name = 'escaped'", $this->queryBuilder->buildWhereConditions('AND', [
             'name' => 'some string',
-        )));
+        ]));
     }
 
     public function testBuildWhereConditionsANDTwoConditions()
     {
-        $this->assertEquals("name = 'escaped' AND num = escaped", $this->queryBuilder->buildWhereConditions('AND', array(
+        $this->assertEquals("name = 'escaped' AND num = escaped", $this->queryBuilder->buildWhereConditions('AND', [
             'name' => 'some string',
             'num' => 123456,
-        )));
+        ]));
     }
 
     public function testBuildWhereConditionsArrayValue()
     {
-        $this->assertEquals("stuff IN ('escaped', escaped, escaped)", $this->queryBuilder->buildWhereConditions('AND', array(
-            'stuff' => array('a string', 123, 456452),
-        )));
+        $this->assertEquals("stuff IN ('escaped', escaped, escaped)", $this->queryBuilder->buildWhereConditions('AND', [
+            'stuff' => ['a string', 123, 456452],
+        ]));
     }
 }

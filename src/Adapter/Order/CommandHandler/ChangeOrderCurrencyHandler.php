@@ -226,7 +226,7 @@ final class ChangeOrderCurrencyHandler extends AbstractOrderHandler implements C
         Currency $newCurrency
     ) {
         foreach ($fields as $field) {
-            if (isset($object->$field)) {
+            if (isset($object->{$field})) {
                 $object->{$field} = Tools::convertPriceFull($object->{$field}, $oldCurrency, $newCurrency);
             }
         }

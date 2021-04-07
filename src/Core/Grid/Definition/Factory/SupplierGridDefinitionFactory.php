@@ -82,24 +82,28 @@ final class SupplierGridDefinitionFactory extends AbstractFilterableGridDefiniti
     protected function getColumns()
     {
         return (new ColumnCollection())
-            ->add((new BulkActionColumn('bulk'))
+            ->add(
+                (new BulkActionColumn('bulk'))
             ->setOptions([
                 'bulk_field' => 'id_supplier',
             ])
             )
-            ->add((new DataColumn('id_supplier'))
+            ->add(
+                (new DataColumn('id_supplier'))
             ->setName($this->trans('ID', [], 'Admin.Global'))
             ->setOptions([
                 'field' => 'id_supplier',
             ])
             )
-            ->add((new ImageColumn('logo'))
+            ->add(
+                (new ImageColumn('logo'))
             ->setName($this->trans('Logo', [], 'Admin.Global'))
             ->setOptions([
                 'src_field' => 'logo',
             ])
             )
-            ->add((new LinkColumn('name'))
+            ->add(
+                (new LinkColumn('name'))
             ->setName($this->trans('Name', [], 'Admin.Global'))
             ->setOptions([
                 'field' => 'name',
@@ -108,13 +112,15 @@ final class SupplierGridDefinitionFactory extends AbstractFilterableGridDefiniti
                 'route_param_field' => 'id_supplier',
             ])
             )
-            ->add((new DataColumn('products_count'))
+            ->add(
+                (new DataColumn('products_count'))
             ->setName($this->trans('Number of products', [], 'Admin.Catalog.Feature'))
             ->setOptions([
                 'field' => 'products_count',
             ])
             )
-            ->add((new ToggleColumn('active'))
+            ->add(
+                (new ToggleColumn('active'))
             ->setName($this->trans('Enabled', [], 'Admin.Global'))
             ->setOptions([
                 'field' => 'active',
@@ -123,11 +129,13 @@ final class SupplierGridDefinitionFactory extends AbstractFilterableGridDefiniti
                 'route_param_name' => 'supplierId',
             ])
             )
-            ->add((new ActionColumn('actions'))
+            ->add(
+                (new ActionColumn('actions'))
             ->setName($this->trans('Actions', [], 'Admin.Global'))
             ->setOptions([
                 'actions' => (new RowActionCollection())
-                    ->add((new LinkRowAction('view'))
+                    ->add(
+                        (new LinkRowAction('view'))
                     ->setName($this->trans('View', [], 'Admin.Actions'))
                     ->setIcon('zoom_in')
                     ->setOptions([
@@ -137,7 +145,8 @@ final class SupplierGridDefinitionFactory extends AbstractFilterableGridDefiniti
                         'clickable_row' => true,
                     ])
                     )
-                    ->add((new LinkRowAction('edit'))
+                    ->add(
+                        (new LinkRowAction('edit'))
                     ->setName($this->trans('Edit', [], 'Admin.Actions'))
                     ->setIcon('edit')
                     ->setOptions([
@@ -165,7 +174,8 @@ final class SupplierGridDefinitionFactory extends AbstractFilterableGridDefiniti
     protected function getFilters()
     {
         return (new FilterCollection())
-            ->add((new Filter('id_supplier', TextType::class))
+            ->add(
+                (new Filter('id_supplier', TextType::class))
             ->setAssociatedColumn('id_supplier')
             ->setTypeOptions([
                 'attr' => [
@@ -174,7 +184,8 @@ final class SupplierGridDefinitionFactory extends AbstractFilterableGridDefiniti
                 'required' => false,
             ])
             )
-            ->add((new Filter('name', TextType::class))
+            ->add(
+                (new Filter('name', TextType::class))
             ->setAssociatedColumn('name')
             ->setTypeOptions([
                 'attr' => [
@@ -183,7 +194,8 @@ final class SupplierGridDefinitionFactory extends AbstractFilterableGridDefiniti
                 'required' => false,
             ])
             )
-            ->add((new Filter('products_count', TextType::class))
+            ->add(
+                (new Filter('products_count', TextType::class))
             ->setAssociatedColumn('products_count')
             ->setTypeOptions([
                 'attr' => [
@@ -192,13 +204,15 @@ final class SupplierGridDefinitionFactory extends AbstractFilterableGridDefiniti
                 'required' => false,
             ])
             )
-            ->add((new Filter('active', YesAndNoChoiceType::class))
+            ->add(
+                (new Filter('active', YesAndNoChoiceType::class))
             ->setAssociatedColumn('active')
             ->setTypeOptions([
                 'required' => false,
             ])
             )
-            ->add((new Filter('actions', SearchAndResetType::class))
+            ->add(
+                (new Filter('actions', SearchAndResetType::class))
             ->setAssociatedColumn('actions')
             ->setTypeOptions([
                 'reset_route' => 'admin_common_reset_search_by_filter_id',
@@ -217,13 +231,15 @@ final class SupplierGridDefinitionFactory extends AbstractFilterableGridDefiniti
     protected function getBulkActions()
     {
         return (new BulkActionCollection())
-            ->add((new SubmitBulkAction('suppliers_enable_selection'))
+            ->add(
+                (new SubmitBulkAction('suppliers_enable_selection'))
             ->setName($this->trans('Enable selection', [], 'Admin.Actions'))
             ->setOptions([
                 'submit_route' => 'admin_suppliers_bulk_enable',
             ])
             )
-            ->add((new SubmitBulkAction('suppliers_disable_selection'))
+            ->add(
+                (new SubmitBulkAction('suppliers_disable_selection'))
             ->setName($this->trans('Disable selection', [], 'Admin.Actions'))
             ->setOptions([
                 'submit_route' => 'admin_suppliers_bulk_disable',
@@ -241,7 +257,8 @@ final class SupplierGridDefinitionFactory extends AbstractFilterableGridDefiniti
     protected function getGridActions()
     {
         return (new GridActionCollection())
-            ->add((new LinkGridAction('import'))
+            ->add(
+                (new LinkGridAction('import'))
             ->setName($this->trans('Import', [], 'Admin.Actions'))
             ->setIcon('cloud_upload')
             ->setOptions([
@@ -251,22 +268,26 @@ final class SupplierGridDefinitionFactory extends AbstractFilterableGridDefiniti
                 ],
             ])
             )
-            ->add((new LinkGridAction('export'))
+            ->add(
+                (new LinkGridAction('export'))
             ->setName($this->trans('Export', [], 'Admin.Actions'))
             ->setIcon('cloud_download')
             ->setOptions([
                 'route' => 'admin_suppliers_export',
             ])
             )
-            ->add((new SimpleGridAction('common_refresh_list'))
+            ->add(
+                (new SimpleGridAction('common_refresh_list'))
             ->setName($this->trans('Refresh list', [], 'Admin.Advparameters.Feature'))
             ->setIcon('refresh')
             )
-            ->add((new SimpleGridAction('common_show_query'))
+            ->add(
+                (new SimpleGridAction('common_show_query'))
             ->setName($this->trans('Show SQL query', [], 'Admin.Actions'))
             ->setIcon('code')
             )
-            ->add((new SimpleGridAction('common_export_sql_manager'))
+            ->add(
+                (new SimpleGridAction('common_export_sql_manager'))
             ->setName($this->trans('Export to SQL Manager', [], 'Admin.Actions'))
             ->setIcon('storage')
             )

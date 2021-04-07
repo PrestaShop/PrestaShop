@@ -115,7 +115,7 @@ class Formatter
         $isNegative = $decimalNumber->isNegative();
         $decimalNumber = $decimalNumber->toPositive();
 
-        list($majorDigits, $minorDigits) = $this->extractMajorMinorDigits($decimalNumber);
+        [$majorDigits, $minorDigits] = $this->extractMajorMinorDigits($decimalNumber);
         $majorDigits = $this->splitMajorGroups($majorDigits);
         $minorDigits = $this->adjustMinorDigitsZeroes($minorDigits);
 

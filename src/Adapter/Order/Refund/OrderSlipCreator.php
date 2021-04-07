@@ -266,14 +266,17 @@ class OrderSlipCreator
                         $product_tax_incl = Tools::ps_round($tax_calculator->removeTaxes($price), $precision) * $quantity;
                     }
                     $total_products[$id_tax_rules_group] += $product_tax_incl;
+
                     break;
                 case Order::ROUND_LINE:
                     $product_tax_incl = $product_tax_incl_line;
                     $total_products[$id_tax_rules_group] += $product_tax_incl;
+
                     break;
                 case Order::ROUND_TOTAL:
                     $product_tax_incl = $product_tax_incl_line;
                     $total_products[$id_tax_rules_group . '_' . $id_address] += $price * $quantity;
+
                     break;
                 default:
                     $product_tax_incl = 0;

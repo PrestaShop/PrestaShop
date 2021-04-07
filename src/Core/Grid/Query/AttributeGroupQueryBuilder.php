@@ -187,6 +187,7 @@ final class AttributeGroupQueryBuilder extends AbstractDoctrineQueryBuilder
             if ('name' === $filterName) {
                 $qb->andWhere($allowedFiltersMap[$filterName] . ' LIKE :' . $filterName)
                     ->setParameter($filterName, '%' . $value . '%');
+
                 continue;
             }
 

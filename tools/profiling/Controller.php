@@ -25,7 +25,7 @@
  */
 abstract class Controller extends ControllerCore
 {
-    protected $profiler = null;
+    protected $profiler;
 
     public function __construct()
     {

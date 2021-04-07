@@ -127,7 +127,7 @@ class SortOrder
             throw new CoreException('Invalid argument');
         }
 
-        list($entity, $field, $direction) = $sortParams;
+        [$entity, $field, $direction] = $sortParams;
 
         return new static($entity, $field, $direction);
     }

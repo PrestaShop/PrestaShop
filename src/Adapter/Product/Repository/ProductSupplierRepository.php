@@ -164,7 +164,7 @@ class ProductSupplierRepository extends AbstractObjectModelRepository
      *
      * @return array
      */
-    public function getProductSuppliersInfo(ProductId $productId, ?CombinationId $combinationId = null): array
+    public function getProductSuppliersInfo(ProductId $productId, CombinationId $combinationId = null): array
     {
         $qb = $this->connection->createQueryBuilder();
         $qb->select('*')

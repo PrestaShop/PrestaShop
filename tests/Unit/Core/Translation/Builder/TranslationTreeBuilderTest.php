@@ -112,7 +112,7 @@ class TranslationTreeBuilderTest extends TestCase
     public function testGetTreeStructure()
     {
         $tree = $this->treeBuilder->getTree(
-             ProviderDefinitionInterface::TYPE_BACK,
+            ProviderDefinitionInterface::TYPE_BACK,
             self::LOCALE,
             [],
             'theme',

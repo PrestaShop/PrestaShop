@@ -28,8 +28,8 @@ namespace LegacyTests\Unit\Core\Localization\DataLayer;
 
 use PHPUnit\Framework\TestCase;
 use PrestaShop\PrestaShop\Core\Localization\Currency\CurrencyData as CurrencyData;
-use PrestaShop\PrestaShop\Core\Localization\Currency\LocalizedCurrencyId;
 use PrestaShop\PrestaShop\Core\Localization\Currency\DataLayer\CurrencyCache as CurrencyCacheDataLayer;
+use PrestaShop\PrestaShop\Core\Localization\Currency\LocalizedCurrencyId;
 use Symfony\Component\Cache\Adapter\AdapterInterface as CacheAdapterInterface;
 use Symfony\Component\Cache\Adapter\ArrayAdapter;
 
@@ -47,7 +47,7 @@ class CurrencyCacheTest extends TestCase
         // Let's use a real cache adapter (easier to setup, and a php array is always available in any environment)
         $cacheAdapter = new ArrayAdapter();
 
-        /** @var CacheAdapterInterface $cacheAdapter */
+        /* @var CacheAdapterInterface $cacheAdapter */
         $this->layer = new CurrencyCacheDataLayer($cacheAdapter);
     }
 
@@ -58,17 +58,17 @@ class CurrencyCacheTest extends TestCase
      */
     public function testReadWrite()
     {
-        $data      = new CurrencyData();
+        $data = new CurrencyData();
         $data->foo = ['bar', 'baz'];
 
-        /** @noinspection PhpUnhandledExceptionInspection */
+        /* @noinspection PhpUnhandledExceptionInspection */
         $this->layer->write(new LocalizedCurrencyId('foo', 'bar'), $data);
         /** @noinspection end */
 
         // Get value back from cache
         /** @noinspection PhpUnhandledExceptionInspection */
         $cachedData = $this->layer->read(new LocalizedCurrencyId('foo', 'bar'));
-        /** @noinspection end */
+        /* @noinspection end */
 
         $this->assertInstanceOf(
             CurrencyData::class,
@@ -83,7 +83,7 @@ class CurrencyCacheTest extends TestCase
         // Same test with unknown cache key
         /** @noinspection PhpUnhandledExceptionInspection */
         $cachedData = $this->layer->read(new LocalizedCurrencyId('unknown', 'unknown'));
-        /** @noinspection end */
+        /* @noinspection end */
 
         $this->assertNull($cachedData);
     }

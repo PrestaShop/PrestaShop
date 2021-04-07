@@ -33,8 +33,8 @@ use PrestaShopBundle\Event\Dispatcher\NullDispatcher;
 
 class ModuleManagerTest extends TestCase
 {
-    const UNINSTALLED_MODULE = "uninstalled-module";
-    const INSTALLED_MODULE = "installed-module";
+    const UNINSTALLED_MODULE = 'uninstalled-module';
+    const INSTALLED_MODULE = 'installed-module';
 
     private $moduleManager;
     private $adminModuleProviderS;
@@ -241,7 +241,7 @@ class ModuleManagerTest extends TestCase
     private function mockModuleRepository()
     {
         $moduleS = $this->getMockBuilder('PrestaShop\PrestaShop\Adapter\Module\Module')
-            ->setConstructorArgs(array(array(), array(), array()))
+            ->setConstructorArgs([[], [], []])
             ->getMock();
         $moduleS
             ->method('onInstall')

@@ -83,18 +83,21 @@ class OrderMessageType extends AbstractType
                 'constraints' => [
                     new NotBlank([
                         'message' => $this->trans(
-                            'This field cannot be empty', [], 'Admin.Notifications.Error'
-                        ),
-                    ]),
-                    new CleanHtml([
-                        'message' => $this->trans(
-                            'The %s field is not valid',
-                            [
-                                sprintf('"%s"', $this->trans('Message', [], 'Admin.Global')),
-                            ],
+                            'This field cannot be empty',
+                            [],
                             'Admin.Notifications.Error'
                         ),
-                    ]
+                    ]),
+                    new CleanHtml(
+                        [
+                            'message' => $this->trans(
+                                'The %s field is not valid',
+                                [
+                                    sprintf('"%s"', $this->trans('Message', [], 'Admin.Global')),
+                                ],
+                                'Admin.Notifications.Error'
+                            ),
+                        ]
                     ),
                     new Length([
                         'max' => OrderMessageConstraint::MAX_MESSAGE_LENGTH,

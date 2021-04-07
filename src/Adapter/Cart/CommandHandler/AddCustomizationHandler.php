@@ -141,8 +141,8 @@ final class AddCustomizationHandler extends AbstractCartHandler implements AddCu
             throw new FileUploadException('An error occurred during the image upload process.');
         }
         $fileName = md5(uniqid('', true));
-        $resized = ImageManager::resize($tmpName, _PS_UPLOAD_DIR_ . $fileName) &&
-            ImageManager::resize(
+        $resized = ImageManager::resize($tmpName, _PS_UPLOAD_DIR_ . $fileName)
+            && ImageManager::resize(
                 $tmpName,
                 _PS_UPLOAD_DIR_ . $fileName . '_small',
                 (int) Configuration::get('PS_PRODUCT_PICTURE_WIDTH'),

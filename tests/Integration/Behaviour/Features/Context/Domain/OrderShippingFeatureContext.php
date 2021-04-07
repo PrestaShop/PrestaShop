@@ -48,7 +48,9 @@ class OrderShippingFeatureContext extends AbstractDomainFeatureContext
      * @param string $carrierReference
      */
     public function updateOrderTrackingNumberToAndCarrierTo(
-        string $orderReference, string $trackingNumber, string $carrierReference
+        string $orderReference,
+        string $trackingNumber,
+        string $carrierReference
     ) {
         $orderId = SharedStorage::getStorage()->get($orderReference);
         $order = new Order($orderId);
@@ -85,6 +87,7 @@ class OrderShippingFeatureContext extends AbstractDomainFeatureContext
         if ($carrierId !== $carrierIdFromDb) {
             $msg = 'Order [' . $orderId . '] carrier id is not equal to [' . $carrierId . '] ';
             $msg .= 'Received [' . $carrierIdFromDb . '] ';
+
             throw new RuntimeException($msg);
         }
     }
@@ -106,6 +109,7 @@ class OrderShippingFeatureContext extends AbstractDomainFeatureContext
         if (isset($availableCarriers[$carrier])) {
             return (int) $availableCarriers[$carrier];
         }
+
         throw new RuntimeException('Invalid carrier [' . $carrier . ']');
     }
 
@@ -125,6 +129,7 @@ class OrderShippingFeatureContext extends AbstractDomainFeatureContext
 
         if (count($orderCarriersForViewing) == 0) {
             $msg = 'Order [' . $orderId . '] has no carriers';
+
             throw new RuntimeException($msg);
         }
 
@@ -149,6 +154,7 @@ class OrderShippingFeatureContext extends AbstractDomainFeatureContext
         if ($trackingNumber !== $orderTrackingNumberFromDb) {
             $msg = 'Order [' . $orderId . '] tracking number is not equal to [' . $trackingNumber . '] ';
             $msg .= 'Received [' . $orderTrackingNumberFromDb . '] ';
+
             throw new RuntimeException($msg);
         }
     }

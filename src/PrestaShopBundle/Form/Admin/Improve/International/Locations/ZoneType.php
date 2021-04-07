@@ -75,7 +75,9 @@ class ZoneType extends AbstractType
                 'constraints' => [
                     new NotBlank([
                         'message' => $this->translator->trans(
-                            'This field cannot be empty.', [], 'Admin.Notifications.Error'
+                            'This field cannot be empty.',
+                            [],
+                            'Admin.Notifications.Error'
                         ),
                     ]),
                     new Length([
@@ -103,7 +105,9 @@ class ZoneType extends AbstractType
                 'constraints' => [
                     new NotBlank([
                         'message' => $this->translator->trans(
-                            'This field cannot be empty.', [], 'Admin.Notifications.Error'
+                            'This field cannot be empty.',
+                            [],
+                            'Admin.Notifications.Error'
                         ),
                     ]),
                 ],

@@ -84,19 +84,22 @@ final class CreditSlipGridDefinitionFactory extends AbstractGridDefinitionFactor
     protected function getColumns()
     {
         return (new ColumnCollection())
-            ->add((new DataColumn('id_order_slip'))
+            ->add(
+                (new DataColumn('id_order_slip'))
             ->setName($this->trans('ID', [], 'Admin.Global'))
             ->setOptions([
                 'field' => 'id_order_slip',
             ])
             )
-            ->add((new DataColumn('id_order'))
+            ->add(
+                (new DataColumn('id_order'))
             ->setName($this->trans('Order ID', [], 'Admin.Orderscustomers.Feature'))
             ->setOptions([
                 'field' => 'id_order',
             ])
             )
-            ->add((new DateTimeColumn('date_add'))
+            ->add(
+                (new DateTimeColumn('date_add'))
             ->setName($this->trans('Date issued', [], 'Admin.Orderscustomers.Feature'))
             ->setOptions([
                 'field' => 'date_add',
@@ -126,7 +129,8 @@ final class CreditSlipGridDefinitionFactory extends AbstractGridDefinitionFactor
     protected function getFilters()
     {
         return (new FilterCollection())
-            ->add((new Filter('id_credit_slip', TextType::class))
+            ->add(
+                (new Filter('id_credit_slip', TextType::class))
             ->setTypeOptions([
                 'required' => false,
                 'attr' => [
@@ -135,7 +139,8 @@ final class CreditSlipGridDefinitionFactory extends AbstractGridDefinitionFactor
             ])
             ->setAssociatedColumn('id_order_slip')
             )
-            ->add((new Filter('id_order', TextType::class))
+            ->add(
+                (new Filter('id_order', TextType::class))
             ->setTypeOptions([
                 'required' => false,
                 'attr' => [
@@ -144,13 +149,15 @@ final class CreditSlipGridDefinitionFactory extends AbstractGridDefinitionFactor
             ])
             ->setAssociatedColumn('id_order')
             )
-            ->add((new Filter('date_issued', DateRangeType::class))
+            ->add(
+                (new Filter('date_issued', DateRangeType::class))
             ->setTypeOptions([
                 'required' => false,
             ])
             ->setAssociatedColumn('date_add')
             )
-            ->add((new Filter('actions', SearchAndResetType::class))
+            ->add(
+                (new Filter('actions', SearchAndResetType::class))
             ->setTypeOptions([
                 'reset_route' => 'admin_common_reset_search_by_filter_id',
                 'reset_route_params' => [

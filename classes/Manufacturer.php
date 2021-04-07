@@ -231,7 +231,7 @@ class ManufacturerCore extends ObjectModel
 						WHERE p.`id_product` = cp.`id_product` AND cg.`id_group` ' . $sqlGroups . '
 					)') . '
 					GROUP BY p.`id_manufacturer`'
-                );
+            );
 
             $counts = [];
             foreach ($results as $result) {

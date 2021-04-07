@@ -72,7 +72,7 @@ class Fees
     /**
      * @param int|null $orderId
      */
-    public function __construct(?int $orderId = null)
+    public function __construct(int $orderId = null)
     {
         $this->shippingFees = new AmountImmutable();
         $this->orderId = $orderId;

@@ -44,7 +44,8 @@ class DataTransfer
         $subObject,
         $object,
         $throwException = false,
-        $blackList = [])
+        $blackList = []
+    )
     {
         $reflectionObject = new \ReflectionObject($subObject);
         $reflectionMethods = $reflectionObject->getMethods(\ReflectionMethod::IS_PUBLIC);
@@ -71,9 +72,9 @@ class DataTransfer
             }
 
             if (method_exists($object, $setter)) {
-                $object->$setter($value);
+                $object->{$setter}($value);
             } elseif ($throwException) {
-                throw new \Exception("No such setter : $setter");
+                throw new \Exception("No such setter : ${setter}");
             }
         }
 
@@ -93,9 +94,9 @@ class DataTransfer
             $setter = 'set' . $attribute;
 
             if (method_exists($object, $setter)) {
-                $object->$setter($value);
+                $object->{$setter}($value);
             } elseif ($throwException) {
-                throw new \Exception("No such setter : $setter");
+                throw new \Exception("No such setter : ${setter}");
             }
         }
 
@@ -108,9 +109,9 @@ class DataTransfer
     private static function isGetMethod(\ReflectionMethod $method)
     {
         return
-            0 === strpos($method->name, 'get') &&
-            3 < strlen($method->name) &&
-            0 === $method->getNumberOfRequiredParameters()
+            0 === strpos($method->name, 'get')
+            && 3 < strlen($method->name)
+            && 0 === $method->getNumberOfRequiredParameters()
         ;
     }
 }

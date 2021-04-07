@@ -29,7 +29,8 @@ use PrestaShop\PrestaShop\Core\Domain\Order\Status\OrderStatusColor;
 /**
  * Updates order status colors according to new color schema
  */
-function ps_1770_update_order_status_colors() {
+function ps_1770_update_order_status_colors()
+{
     $statusColorMap = [
         OrderStatusColor::AWAITING_PAYMENT => Configuration::getMultiple([
             'PS_OS_CHEQUE',
@@ -59,7 +60,7 @@ function ps_1770_update_order_status_colors() {
     foreach ($statusColorMap as $color => $statuses) {
         foreach ($statuses as $statusId) {
             Db::getInstance()->execute(
-                'UPDATE `'._DB_PREFIX_.'order_state` SET `color` = "' . pSQL($color) . '" WHERE `id_order_state` = ' . (int) $statusId
+                'UPDATE `' . _DB_PREFIX_ . 'order_state` SET `color` = "' . pSQL($color) . '" WHERE `id_order_state` = ' . (int) $statusId
             );
         }
     }
@@ -76,7 +77,7 @@ function ps_1770_update_order_status_colors() {
             $whereCondition .= ' AND `' . $field . '` = "' . pSQL($expectedValue) . '"';
         }
         Db::getInstance()->execute(
-            'UPDATE `'._DB_PREFIX_.'order_state` SET `color` = "' . pSQL($color) . '"' . $whereCondition
+            'UPDATE `' . _DB_PREFIX_ . 'order_state` SET `color` = "' . pSQL($color) . '"' . $whereCondition
         );
     }
 }

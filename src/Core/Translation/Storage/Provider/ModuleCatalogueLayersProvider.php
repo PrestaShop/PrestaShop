@@ -361,6 +361,7 @@ class ModuleCatalogueLayersProvider implements CatalogueLayersProviderInterface
                         $catalogue->all($domain),
                         $newDomain
                     );
+
                     break;
                 }
             }

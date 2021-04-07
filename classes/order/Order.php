@@ -1121,7 +1121,7 @@ class OrderCore extends ObjectModel
     /**
      * used to cache order customer.
      */
-    protected $cacheCustomer = null;
+    protected $cacheCustomer;
 
     /**
      * Get order customer.

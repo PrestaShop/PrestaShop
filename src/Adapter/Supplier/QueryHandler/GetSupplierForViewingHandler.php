@@ -62,7 +62,7 @@ final class GetSupplierForViewingHandler implements GetSupplierForViewingHandler
      */
     public function __construct(
         Locale $locale,
-        ?string $defaultCurrencyIsoCode = null
+        string $defaultCurrencyIsoCode = null
     ) {
         $this->locale = $locale;
         $this->defaultCurrencyIsoCode = $defaultCurrencyIsoCode ?? Context::getContext()->currency->iso_code;

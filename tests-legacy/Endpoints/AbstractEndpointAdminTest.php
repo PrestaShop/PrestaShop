@@ -26,16 +26,16 @@
 
 namespace LegacyTests\Endpoints;
 
-use Tools;
 use AppKernel;
 use Cache;
 use Context;
 use Employee;
 use EmployeeSession;
-use Shop;
 use PhpEncryption;
 use PrestaShop\PrestaShop\Adapter\SymfonyContainer;
 use ReflectionClass;
+use Shop;
+use Tools;
 
 abstract class AbstractEndpointAdminTest extends AbstractEndpointTest
 {

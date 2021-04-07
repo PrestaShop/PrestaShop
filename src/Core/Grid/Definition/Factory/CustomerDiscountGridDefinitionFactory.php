@@ -102,7 +102,8 @@ final class CustomerDiscountGridDefinitionFactory extends AbstractGridDefinition
                         'field' => 'quantity',
                     ])
             )
-            ->add((new ActionColumn('actions'))
+            ->add(
+                (new ActionColumn('actions'))
             ->setName($this->trans('Actions', [], 'Admin.Global'))
             ->setOptions([
                 'actions' => (new RowActionCollection())

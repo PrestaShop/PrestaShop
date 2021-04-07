@@ -103,11 +103,12 @@ class ProductSupplierUpdater
             throw new InvalidProductTypeException(
                 InvalidProductTypeException::EXPECTED_NO_COMBINATIONS_TYPE,
                 sprintf(
-                'Product #%d has combinations. Use %s::%s to set product suppliers for specified combination',
-                $productId->getValue(),
-                self::class,
-                'setCombinationSuppliers()'
-            ));
+                    'Product #%d has combinations. Use %s::%s to set product suppliers for specified combination',
+                    $productId->getValue(),
+                    self::class,
+                    'setCombinationSuppliers()'
+                )
+            );
         }
 
         $this->persistProductSuppliers($productId, $productSuppliers);
@@ -150,11 +151,12 @@ class ProductSupplierUpdater
             throw new InvalidProductTypeException(
                 InvalidProductTypeException::EXPECTED_NO_COMBINATIONS_TYPE,
                 sprintf(
-                'Product #%d has combinations. Use %s::%s to remove product suppliers for specific combination',
-                $productId->getValue(),
-                self::class,
-                'removeAllForCombination()'
-            ));
+                    'Product #%d has combinations. Use %s::%s to remove product suppliers for specific combination',
+                    $productId->getValue(),
+                    self::class,
+                    'removeAllForCombination()'
+                )
+            );
         }
 
         $productSupplierIds = $this->getProductSupplierIds($productId);
@@ -217,7 +219,9 @@ class ProductSupplierUpdater
 
         if (!$productSupplierId) {
             throw new ProductSupplierNotFoundException(sprintf(
-                'Supplier #%d is not associated with product #%d', $supplierIdValue, $productIdValue
+                'Supplier #%d is not associated with product #%d',
+                $supplierIdValue,
+                $productIdValue
             ));
         }
 
@@ -237,7 +241,7 @@ class ProductSupplierUpdater
      * @param array<int, ProductSupplier> $productSuppliers
      * @param CombinationId|null $combinationId
      */
-    private function persistProductSuppliers(ProductId $productId, array $productSuppliers, ?CombinationId $combinationId = null): void
+    private function persistProductSuppliers(ProductId $productId, array $productSuppliers, CombinationId $combinationId = null): void
     {
         $deletableProductSupplierIds = $this->getDeletableProductSupplierIds($productId, $productSuppliers, $combinationId);
 
@@ -288,7 +292,7 @@ class ProductSupplierUpdater
      *
      * @return array<int, ProductSupplierId>
      */
-    private function getProductSupplierIds(ProductId $productId, ?CombinationId $combinationId = null): array
+    private function getProductSupplierIds(ProductId $productId, CombinationId $combinationId = null): array
     {
         return array_map(function (array $currentSupplier): ProductSupplierId {
             return new ProductSupplierId((int) $currentSupplier['id_product_supplier']);

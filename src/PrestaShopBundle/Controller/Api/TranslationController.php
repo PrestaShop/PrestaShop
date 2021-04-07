@@ -144,22 +144,23 @@ class TranslationController extends ApiController
             switch ($type) {
                 case 'themes':
                     $tree = $this->getNormalTree($lang, $type, $selected, $search);
-                    break;
 
+                    break;
                 case 'modules':
                     $tree = $this->getModulesTree($lang, $selected, $search);
-                    break;
 
+                    break;
                 case 'mails':
                     $tree = $this->getMailsSubjectTree($lang, $search);
-                    break;
 
+                    break;
                 case 'mails_body':
                     $tree = $this->getMailsBodyTree($lang, $search);
-                    break;
 
+                    break;
                 default:
                     $tree = $this->getNormalTree($lang, $type, null, $search);
+
                     break;
             }
 
@@ -274,9 +275,9 @@ class TranslationController extends ApiController
 
         $decodedContent = $this->guardAgainstInvalidJsonBody($content);
 
-        if (empty($decodedContent) ||
-            !array_key_exists('translations', $decodedContent) ||
-            !is_array($decodedContent['translations'])
+        if (empty($decodedContent)
+            || !array_key_exists('translations', $decodedContent)
+            || !is_array($decodedContent['translations'])
         ) {
             $message = 'The request body should contain a JSON-encoded array of translations';
 
@@ -296,10 +297,10 @@ class TranslationController extends ApiController
             'The item of index #%d is invalid.';
 
         array_walk($content, function ($item, $index) use ($message) {
-            if (!array_key_exists('locale', $item) ||
-                !array_key_exists('domain', $item) ||
-                !array_key_exists('default', $item) ||
-                !array_key_exists('edited', $item)
+            if (!array_key_exists('locale', $item)
+                || !array_key_exists('domain', $item)
+                || !array_key_exists('default', $item)
+                || !array_key_exists('edited', $item)
             ) {
                 throw new BadRequestHttpException(sprintf($message, $index));
             }
@@ -316,9 +317,9 @@ class TranslationController extends ApiController
             'The item of index #%d is invalid.';
 
         array_walk($content, function ($item, $index) use ($message) {
-            if (!array_key_exists('locale', $item) ||
-                !array_key_exists('domain', $item) ||
-                !array_key_exists('default', $item)
+            if (!array_key_exists('locale', $item)
+                || !array_key_exists('domain', $item)
+                || !array_key_exists('default', $item)
             ) {
                 throw new BadRequestHttpException(sprintf($message, $index));
             }

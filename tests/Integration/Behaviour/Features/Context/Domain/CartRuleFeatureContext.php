@@ -613,6 +613,7 @@ class CartRuleFeatureContext extends AbstractDomainFeatureContext
 
         try {
             $this->getQueryBus()->handle(new GetCartRuleForEditing($cartRuleId));
+
             throw new NoExceptionAlthoughExpectedException(sprintf('Cart rule "%s" was found, but it was expected to be deleted', $cartRuleReference));
         } catch (CartRuleNotFoundException $e) {
             SharedStorage::getStorage()->clear($cartRuleReference);
@@ -674,22 +675,18 @@ class CartRuleFeatureContext extends AbstractDomainFeatureContext
                 $hasError = LegacyDiscountApplicationType::ORDER_WITHOUT_SHIPPING !== $reductionType;
 
                 break;
-
             case DiscountApplicationType::SELECTED_PRODUCTS:
                 $hasError = LegacyDiscountApplicationType::SELECTED_PRODUCTS !== $reductionType;
 
                 break;
-
             case DiscountApplicationType::CHEAPEST_PRODUCT:
                 $hasError = LegacyDiscountApplicationType::CHEAPEST_PRODUCT !== $reductionType;
 
                 break;
-
             case DiscountApplicationType::SPECIFIC_PRODUCT:
                 $hasError = 0 >= $reductionType;
 
                 break;
-
             default:
                 throw new RuntimeException(sprintf('Invalid cart rule discount application type "%s"', $discountApplicationType));
         }

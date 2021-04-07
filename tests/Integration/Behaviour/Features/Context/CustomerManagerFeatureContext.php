@@ -123,6 +123,7 @@ class CustomerManagerFeatureContext extends AbstractPrestaShopFeatureContext
     {
         try {
             $this->createACustomerUsingCommand($customerReference, $table);
+
             throw new NoExceptionAlthoughExpectedException();
         } catch (\Exception $e) {
             if ($e instanceof NoExceptionAlthoughExpectedException) {

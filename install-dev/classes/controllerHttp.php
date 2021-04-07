@@ -41,7 +41,7 @@ class InstallControllerHttp
     /**
      * @var array
      */
-    protected static $instances = array();
+    protected static $instances = [];
 
     /**
      * @var string Current step
@@ -51,7 +51,7 @@ class InstallControllerHttp
     /**
      * @var array List of errors
      */
-    public $errors = array();
+    public $errors = [];
 
     public $controller;
 
@@ -88,42 +88,42 @@ class InstallControllerHttp
     /**
      * @var array Magic vars
      */
-    protected $__vars = array();
+    protected $__vars = [];
 
     private function initSteps()
     {
-        $stepConfig = array(
-            array(
+        $stepConfig = [
+            [
                 'name' => 'welcome',
-                'displayName' => $this->translator->trans('Choose your language', array(), 'Install'),
+                'displayName' => $this->translator->trans('Choose your language', [], 'Install'),
                 'controllerClass' => 'InstallControllerHttpWelcome',
-            ),
-            array(
+            ],
+            [
                 'name' => 'license',
-                'displayName' => $this->translator->trans('License agreements', array(), 'Install'),
+                'displayName' => $this->translator->trans('License agreements', [], 'Install'),
                 'controllerClass' => 'InstallControllerHttpLicense',
-            ),
-            array(
+            ],
+            [
                 'name' => 'system',
-                'displayName' => $this->translator->trans('System compatibility', array(), 'Install'),
+                'displayName' => $this->translator->trans('System compatibility', [], 'Install'),
                 'controllerClass' => 'InstallControllerHttpSystem',
-            ),
-            array(
+            ],
+            [
                 'name' => 'configure',
-                'displayName' => $this->translator->trans('Store information', array(), 'Install'),
+                'displayName' => $this->translator->trans('Store information', [], 'Install'),
                 'controllerClass' => 'InstallControllerHttpConfigure',
-            ),
-            array(
+            ],
+            [
                 'name' => 'database',
-                'displayName' => $this->translator->trans('System configuration', array(), 'Install'),
+                'displayName' => $this->translator->trans('System configuration', [], 'Install'),
                 'controllerClass' => 'InstallControllerHttpDatabase',
-            ),
-            array(
+            ],
+            [
                 'name' => 'process',
-                'displayName' => $this->translator->trans('Store installation', array(), 'Install'),
+                'displayName' => $this->translator->trans('Store installation', [], 'Install'),
                 'controllerClass' => 'InstallControllerHttpProcess',
-            ),
-        );
+            ],
+        ];
         self::$steps = new StepList($stepConfig);
     }
 
@@ -175,7 +175,8 @@ class InstallControllerHttp
         $self = new self();
 
         if (Tools::getValue('compile_templates')) {
-            require_once _PS_INSTALL_CONTROLLERS_PATH_.'http/smarty_compile.php';
+            require_once _PS_INSTALL_CONTROLLERS_PATH_ . 'http/smarty_compile.php';
+
             exit;
         }
 
@@ -237,7 +238,6 @@ class InstallControllerHttp
 
         // Submit form to go to next step
         if (Tools::getValue('submitNext')) {
-
             self::$steps->current()->getControllerInstance()->processNextStep();
 
             // If current step is validated, let's go to next step
@@ -269,7 +269,6 @@ class InstallControllerHttp
 
     public function init()
     {
-
     }
 
     public function process()
@@ -295,6 +294,7 @@ class InstallControllerHttp
      * Find offset of a step by name
      *
      * @param string $step Step name
+     *
      * @return int
      */
     public static function getStepOffset($step)
@@ -309,7 +309,8 @@ class InstallControllerHttp
      */
     public function redirect($step)
     {
-        header('location: index.php?step='.$step);
+        header('location: index.php?step=' . $step);
+
         exit;
     }
 
@@ -337,6 +338,7 @@ class InstallControllerHttp
      * Check is given step is already finished
      *
      * @param string $step
+     *
      * @return bool
      */
     public function isStepFinished($step)
@@ -356,7 +358,7 @@ class InstallControllerHttp
         }
         if ($this->phone === null) {
             $this->phone = '';
-            if ($iframe = Tools::file_get_contents('http://api.prestashop.com/iframe/install.php?lang='.$this->language->getLanguageIso(), false, null, 3)) {
+            if ($iframe = Tools::file_get_contents('http://api.prestashop.com/iframe/install.php?lang=' . $this->language->getLanguageIso(), false, null, 3)) {
                 if (preg_match('/<img.+alt="([^"]+)".*>/Ui', $iframe, $matches) && isset($matches[1])) {
                     $this->phone = $matches[1];
                 }
@@ -428,11 +430,12 @@ class InstallControllerHttp
         if (!$success && empty($message)) {
             $message = print_r(@error_get_last(), true);
         }
-        die(json_encode(array(
-            'success' => (bool)$success,
+
+        die(json_encode([
+            'success' => (bool) $success,
             'message' => $message,
             // 'memory' => round(memory_get_peak_usage()/1024/1024, 2).' Mo',
-        )));
+        ]));
     }
 
     /**
@@ -440,15 +443,16 @@ class InstallControllerHttp
      *
      * @param string $template Template name
      * @param bool $get_output Is true, return template html
+     *
      * @return string
      */
     public function displayTemplate($template, $get_output = false, $path = null)
     {
         if (!$path) {
-            $path = _PS_INSTALL_PATH_.'theme/views/';
+            $path = _PS_INSTALL_PATH_ . 'theme/views/';
         }
 
-        if (!file_exists($path.$template.'.php')) {
+        if (!file_exists($path . $template . '.php')) {
             throw new PrestashopInstallerException("Template '{$template}.php' not found");
         }
 
@@ -456,7 +460,7 @@ class InstallControllerHttp
             ob_start();
         }
 
-        include $path.$template.'.php';
+        include $path . $template . '.php';
 
         if ($get_output) {
             $content = ob_get_contents();

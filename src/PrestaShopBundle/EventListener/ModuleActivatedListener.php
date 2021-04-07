@@ -110,7 +110,7 @@ class ModuleActivatedListener
             return;
         }
 
-        list($controllerObject, $methodName) = $controller;
+        [$controllerObject, $methodName] = $controller;
         $moduleActivated = $this->getAnnotation($controllerObject, $methodName);
 
         if (null === $moduleActivated) {

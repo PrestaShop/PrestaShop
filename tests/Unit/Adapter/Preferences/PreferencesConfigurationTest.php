@@ -135,7 +135,6 @@ class PreferencesConfigurationTest extends TestCase
                     'parameters' => [],
                 ],
             ],
-
             $this->object->updateConfiguration(
                 [
                     'enable_ssl' => false,
@@ -191,7 +190,6 @@ class PreferencesConfigurationTest extends TestCase
                     'parameters' => [],
                 ],
             ],
-
             $this->object->updateConfiguration(
                 [
                     'enable_ssl' => false,

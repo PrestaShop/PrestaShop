@@ -150,28 +150,28 @@ abstract class AbstractProductQueryBuilder extends AbstractDoctrineQueryBuilder
             }
 
             if ('id_product' === $filterName) {
-                $qb->andWhere("p.id_product = :$filterName");
+                $qb->andWhere("p.id_product = :${filterName}");
                 $qb->setParameter($filterName, $filterValue);
 
                 continue;
             }
 
             if ('reference' === $filterName) {
-                $qb->andWhere("p.reference LIKE :$filterName");
+                $qb->andWhere("p.reference LIKE :${filterName}");
                 $qb->setParameter($filterName, '%' . $filterValue . '%');
 
                 continue;
             }
 
             if ('name' === $filterName) {
-                $qb->andWhere("pl.name LIKE :$filterName");
+                $qb->andWhere("pl.name LIKE :${filterName}");
                 $qb->setParameter($filterName, '%' . $filterValue . '%');
 
                 continue;
             }
 
             if ('active' === $filterName) {
-                $qb->andWhere("p.active = :$filterName");
+                $qb->andWhere("p.active = :${filterName}");
                 $qb->setParameter($filterName, $filterValue);
             }
         }

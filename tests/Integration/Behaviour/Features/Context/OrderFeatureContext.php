@@ -54,6 +54,7 @@ class OrderFeatureContext extends AbstractPrestaShopFeatureContext
         switch ($paymentModuleName) {
             case 'fake':
                 $paymentModule = new PaymentModuleFake();
+
                 break;
             default:
                 throw new Exception(sprintf('Invalid payment module: %s' . $paymentModuleName));

@@ -73,11 +73,11 @@ class ModuleCoreTest extends TestCase
     public function testDisplayErrorShouldReturnMultipleErrors()
     {
         // given
-        $errors = array(
+        $errors = [
             'Error 1',
             'Error 2',
             'Error 3',
-        );
+        ];
 
         $module = new FakeModule();
 

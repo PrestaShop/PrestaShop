@@ -151,7 +151,7 @@ class FeatureValueRepository extends AbstractObjectModelRepository
      *
      * @return array<int, array<string, mixed>>
      */
-    public function getProductFeatureValues(ProductId $productId, ?int $limit = null, ?int $offset = null, ?array $filters = []): array
+    public function getProductFeatureValues(ProductId $productId, int $limit = null, int $offset = null, ?array $filters = []): array
     {
         return $this->getFeatureValues($limit, $offset, array_merge($filters, ['id_product' => $productId->getValue()]));
     }
@@ -163,7 +163,7 @@ class FeatureValueRepository extends AbstractObjectModelRepository
      *
      * @return array
      */
-    public function getFeatureValues(?int $limit = null, ?int $offset = null, ?array $filters = []): array
+    public function getFeatureValues(int $limit = null, int $offset = null, ?array $filters = []): array
     {
         $qb = $this->getFeatureValuesQueryBuilder($filters)
             ->select('fv.*')
@@ -257,12 +257,14 @@ class FeatureValueRepository extends AbstractObjectModelRepository
                         ->andWhere('fp.id_product = :productId')
                         ->setParameter('productId', (int) $value)
                     ;
+
                 break;
                 default:
                     $qb
                         ->andWhere(sprintf('fv.%s = :%s', $key, $key))
                         ->setParameter($key, $value)
                     ;
+
                 break;
             }
         }

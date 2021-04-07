@@ -91,7 +91,7 @@ class SqlLoader
     public function parseFile($filename, $stop_when_fail = true)
     {
         if (!file_exists($filename)) {
-            throw new PrestashopInstallerException("File $filename not found");
+            throw new PrestashopInstallerException("File ${filename} not found");
         }
 
         return $this->parse(file_get_contents($filename), $stop_when_fail);

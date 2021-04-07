@@ -159,7 +159,7 @@ final class OutstandingQueryBuilder implements DoctrineQueryBuilderInterface
             if (isset($strictComparisonFilters[$filterName])) {
                 $alias = $strictComparisonFilters[$filterName];
 
-                $qb->andWhere("$alias = :$filterName");
+                $qb->andWhere("${alias} = :${filterName}");
                 $qb->setParameter($filterName, $filterValue);
 
                 continue;
@@ -168,7 +168,7 @@ final class OutstandingQueryBuilder implements DoctrineQueryBuilderInterface
             if (isset($likeComparisonFilters[$filterName])) {
                 $alias = $likeComparisonFilters[$filterName];
 
-                $qb->andWhere("$alias LIKE :$filterName");
+                $qb->andWhere("${alias} LIKE :${filterName}");
                 $qb->setParameter($filterName, '%' . $filterValue . '%');
 
                 continue;
@@ -180,14 +180,14 @@ final class OutstandingQueryBuilder implements DoctrineQueryBuilderInterface
                 if (isset($filterValue['from'])) {
                     $name = sprintf('%s_from', $filterName);
 
-                    $qb->andWhere("$alias >= :$name");
+                    $qb->andWhere("${alias} >= :${name}");
                     $qb->setParameter($name, sprintf('%s %s', $filterValue['from'], '0:0:0'));
                 }
 
                 if (isset($filterValue['to'])) {
                     $name = sprintf('%s_to', $filterName);
 
-                    $qb->andWhere("$alias <= :$name");
+                    $qb->andWhere("${alias} <= :${name}");
                     $qb->setParameter($name, sprintf('%s %s', $filterValue['to'], '23:59:59'));
                 }
 

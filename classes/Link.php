@@ -45,7 +45,7 @@ class LinkCore
     public $protocol_content;
 
     protected $ssl_enable;
-    protected $urlShopId = null;
+    protected $urlShopId;
 
     protected static $category_disable_rewrite = null;
 
@@ -604,9 +604,9 @@ class LinkCore
 
         $dispatcher = Dispatcher::getInstance();
         if (!is_object($supplier)) {
-            if ($alias !== null &&
-                !$dispatcher->hasKeyword('supplier_rule', $idLang, 'meta_keywords', $idShop) &&
-                !$dispatcher->hasKeyword('supplier_rule', $idLang, 'meta_title', $idShop)
+            if ($alias !== null
+                && !$dispatcher->hasKeyword('supplier_rule', $idLang, 'meta_keywords', $idShop)
+                && !$dispatcher->hasKeyword('supplier_rule', $idLang, 'meta_title', $idShop)
             ) {
                 return $url . $dispatcher->createUrl(
                     'supplier_rule',
@@ -802,7 +802,6 @@ class LinkCore
                 }
 
                 break;
-
             case 'AdminTranslations':
                 // In case of email body translations we want to get a link to legacy controller,
                 // in other cases - it's the migrated controller
@@ -821,7 +820,6 @@ class LinkCore
                 }
 
                 break;
-
             case 'AdminEmployees':
                 if (!isset($params['action'])) {
                     break;
@@ -1006,9 +1004,9 @@ class LinkCore
         }
 
         // Check if module is installed, enabled, customer is logged in and watermark logged option is on
-        if (!empty($type) && $watermarkLogged &&
-            ($moduleManager->isInstalled('watermark') && $moduleManager->isEnabled('watermark')) &&
-            isset(Context::getContext()->customer->id)
+        if (!empty($type) && $watermarkLogged
+            && ($moduleManager->isInstalled('watermark') && $moduleManager->isEnabled('watermark'))
+            && isset(Context::getContext()->customer->id)
         ) {
             $type .= '-' . $watermarkHash;
         }

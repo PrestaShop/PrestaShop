@@ -144,7 +144,7 @@ class Version
 
         return new self(
             $version,
-            "1.$major",
+            "1.${major}",
             $major,
             $minor,
             $patch,

@@ -151,7 +151,8 @@ final class AttributeQueryBuilder extends AbstractDoctrineQueryBuilder
             'a',
             $this->dbPrefix . 'attribute_group',
             'ag',
-            'a.id_attribute_group = ag.id_attribute_group');
+            'a.id_attribute_group = ag.id_attribute_group'
+        );
 
         $qb->leftJoin(
             'a',
@@ -186,6 +187,7 @@ final class AttributeQueryBuilder extends AbstractDoctrineQueryBuilder
             if ('value' === $filterName || 'color' === $filterName) {
                 $qb->andWhere($allowedFiltersMap[$filterName] . ' LIKE :' . $filterName)
                     ->setParameter($filterName, '%' . $value . '%');
+
                 continue;
             }
 

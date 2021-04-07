@@ -178,6 +178,7 @@ class OrderRefundFeatureContext extends AbstractDomainFeatureContext
         $orderSlips = $order->getOrderSlipsCollection();
         if ($creditSlipNumber !== $orderSlips->count()) {
             $errorMessage = sprintf('Invalid number of credit slips on order %s, expected %s but got %s', $orderReference, $creditSlipNumber, $orderSlips->count());
+
             throw new RuntimeException($errorMessage);
         }
     }
@@ -340,7 +341,7 @@ class OrderRefundFeatureContext extends AbstractDomainFeatureContext
         bool $generateCreditSlip,
         bool $generateVoucher,
         int $voucherRefundType = VoucherRefundType::PRODUCT_PRICES_EXCLUDING_VOUCHER_REFUND,
-        ?float $voucherRefundAmount = null
+        float $voucherRefundAmount = null
     ): IssuePartialRefundCommand {
         /** @var OrderForViewing $orderForViewing */
         $orderForViewing = $this->getQueryBus()->handle(new GetOrderForViewing((int) $orderId));
@@ -350,6 +351,7 @@ class OrderRefundFeatureContext extends AbstractDomainFeatureContext
         foreach ($refunds as $refund) {
             if ('shipping_refund' === $refund['product_name']) {
                 $shippingCostRefund = $refund['amount'];
+
                 continue;
             }
             $products = $orderForViewing->getProducts()->getProducts();
@@ -358,6 +360,7 @@ class OrderRefundFeatureContext extends AbstractDomainFeatureContext
                 if ($product->getName() === $refund['product_name']) {
                     $orderDetailsRefunds[$product->getOrderDetailId()]['quantity'] = $refund['quantity'];
                     $orderDetailsRefunds[$product->getOrderDetailId()]['amount'] = $refund['amount'];
+
                     continue 2;
                 }
             }
@@ -404,6 +407,7 @@ class OrderRefundFeatureContext extends AbstractDomainFeatureContext
         foreach ($refunds as $refund) {
             if ('shipping_refund' === $refund['product_name']) {
                 $refundShippingCost = (int) $refund['quantity'] > 0;
+
                 continue;
             }
             $products = $orderForViewing->getProducts()->getProducts();
@@ -411,6 +415,7 @@ class OrderRefundFeatureContext extends AbstractDomainFeatureContext
             foreach ($products as $product) {
                 if ($product->getName() === $refund['product_name']) {
                     $orderDetailsRefunds[$product->getOrderDetailId()]['quantity'] = $refund['quantity'];
+
                     continue 2;
                 }
             }
@@ -457,6 +462,7 @@ class OrderRefundFeatureContext extends AbstractDomainFeatureContext
         foreach ($refunds as $refund) {
             if ('shipping_refund' === $refund['product_name']) {
                 $refundShippingCost = (int) $refund['quantity'] > 0;
+
                 continue;
             }
             $products = $orderForViewing->getProducts()->getProducts();
@@ -464,6 +470,7 @@ class OrderRefundFeatureContext extends AbstractDomainFeatureContext
             foreach ($products as $product) {
                 if ($product->getName() === $refund['product_name']) {
                     $orderDetailsRefunds[$product->getOrderDetailId()]['quantity'] = $refund['quantity'];
+
                     continue 2;
                 }
             }

@@ -45,7 +45,7 @@ class FileSizeConverter
         $pow = min($pow, count($units) - 1);
 
         if ($bytes >= 1024) {
-            $bytes /= pow(1024, $pow);
+            $bytes /= 1024 ** $pow;
             $bytes = number_format(round($bytes, $precision), 2, '.', '');
         }
 

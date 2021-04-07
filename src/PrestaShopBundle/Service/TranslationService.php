@@ -222,18 +222,18 @@ class TranslationService
         if (is_string($search)) {
             $search = strtolower($search);
 
-            return false !== strpos(strtolower($data['default']), $search) ||
-                false !== strpos(strtolower($data['xliff']), $search) ||
-                false !== strpos(strtolower($data['database']), $search);
+            return false !== strpos(strtolower($data['default']), $search)
+                || false !== strpos(strtolower($data['xliff']), $search)
+                || false !== strpos(strtolower($data['database']), $search);
         }
 
         if (is_array($search)) {
             $contains = true;
             foreach ($search as $s) {
                 $s = strtolower($s);
-                $contains &= false !== strpos(strtolower($data['default']), $s) ||
-                    false !== strpos(strtolower($data['xliff']), $s) ||
-                    false !== strpos(strtolower($data['database']), $s);
+                $contains &= false !== strpos(strtolower($data['default']), $s)
+                    || false !== strpos(strtolower($data['xliff']), $s)
+                    || false !== strpos(strtolower($data['database']), $s);
             }
 
             return $contains;

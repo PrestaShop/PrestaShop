@@ -61,8 +61,8 @@ class RepositoryTest extends TestCase
                             $data->setSymbols(['fr-FR' => '€', 'en-US' => '€']);
                             $data->setPrecision(2);
                             $data->setNames(['fr-FR' => 'euro', 'en-US' => 'euro']);
-                            break;
 
+                            break;
                         case 'PCE':
                             $data->setIsActive(true);
                             $data->setConversionRate(1);
@@ -71,8 +71,8 @@ class RepositoryTest extends TestCase
                             $data->setSymbols(['fr-FR' => '☮', 'en-US' => '☮']);
                             $data->setPrecision(2);
                             $data->setNames(['fr-FR' => 'paix', 'en-US' => 'peace']);
-                            break;
 
+                            break;
                         default:
                             throw new LocalizationException('Unknown currency code : ' . $localizedCurrencyId);
                     }
@@ -81,7 +81,7 @@ class RepositoryTest extends TestCase
                 }
             );
 
-        /** @var $dataSource CurrencyDataSourceInterface */
+        /* @var $dataSource CurrencyDataSourceInterface */
         $this->currencyRepository = new CurrencyRepository($dataSource);
     }
 
@@ -91,13 +91,11 @@ class RepositoryTest extends TestCase
      * Then the expected Currency instance should be returned
      *
      * @param string $currencyCode
-     *  Alphabetic ISO 4217 currency code passed to retreive the wanted Currency instance
-     *
+     *                             Alphabetic ISO 4217 currency code passed to retreive the wanted Currency instance
      * @param array $expectedNames
-     *  Expected currency names, indexed by locale code
-     *
+     *                             Expected currency names, indexed by locale code
      * @param array $expectedSymbols
-     *  Expected currency symbols, indexed by locale code
+     *                               Expected currency symbols, indexed by locale code
      *
      * @throws \PrestaShop\PrestaShop\Core\Localization\Exception\LocalizationException
      * @dataProvider provideValidCurrencyCodes

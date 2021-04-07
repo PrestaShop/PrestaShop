@@ -237,6 +237,7 @@ class CmsPageFeatureContext extends AbstractDomainFeatureContext
 
         try {
             $this->getQueryBus()->handle(new GetCmsPageForEditing($cmsPageId));
+
             throw new NoExceptionAlthoughExpectedException(sprintf('CMS page "%s" was found, but it was expected to be deleted', $cmsPageReference));
         } catch (CmsPageNotFoundException $e) {
             SharedStorage::getStorage()->clear($cmsPageReference);
@@ -286,8 +287,8 @@ class CmsPageFeatureContext extends AbstractDomainFeatureContext
     {
         /** @var CMS $cmsPage */
         $cmsPage = SharedStorage::getStorage()->get($cmsPageReference);
-        if ($cmsPage->$field[$this->defaultLangId] !== $value) {
-            throw new RuntimeException(sprintf('Cms page "%s" has "%s" %s, but "%s" was expected.', $cmsPageReference, $cmsPage->$field[$this->defaultLangId], $field, $value));
+        if ($cmsPage->{$field}[$this->defaultLangId] !== $value) {
+            throw new RuntimeException(sprintf('Cms page "%s" has "%s" %s, but "%s" was expected.', $cmsPageReference, $cmsPage->{$field}[$this->defaultLangId], $field, $value));
         }
     }
 
@@ -298,8 +299,8 @@ class CmsPageFeatureContext extends AbstractDomainFeatureContext
     {
         /** @var CMS $cmsPage */
         $cmsPage = SharedStorage::getStorage()->get($cmsPageReference);
-        if ($cmsPage->$field[$this->defaultLangId] !== '') {
-            throw new RuntimeException(sprintf('Cms page "%s" has "%s" %s, but it was expected to be empty', $cmsPageReference, $cmsPage->$field[$this->defaultLangId], $field));
+        if ($cmsPage->{$field}[$this->defaultLangId] !== '') {
+            throw new RuntimeException(sprintf('Cms page "%s" has "%s" %s, but it was expected to be empty', $cmsPageReference, $cmsPage->{$field}[$this->defaultLangId], $field));
         }
     }
 

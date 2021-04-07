@@ -53,12 +53,12 @@ class MockDatabaseTranslationLoader extends DatabaseTranslationLoader
     /**
      * {@inheritdoc}
      */
-    public function load(string $locale, string $domainSearch = 'messages', ?string $theme = null): MessageCatalogue
+    public function load(string $locale, string $domainSearch = 'messages', string $theme = null): MessageCatalogue
     {
         $catalogue = new MessageCatalogue($locale);
 
         foreach ($this->databaseContent as $item) {
-            $domainMatches = ('*' === $domainSearch) ?: (bool) preg_match("/$domainSearch/", $item['domain']);
+            $domainMatches = ('*' === $domainSearch) ?: (bool) preg_match("/${domainSearch}/", $item['domain']);
 
             if (
                 $item['lang'] === $locale

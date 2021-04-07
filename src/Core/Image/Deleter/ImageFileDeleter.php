@@ -63,6 +63,7 @@ final class ImageFileDeleter implements ImageFileDeleterInterface
             foreach (scandir($path, SCANDIR_SORT_NONE) as $file) {
                 if (($file != '.' && $file != '..' && $file != 'index.php')) {
                     $removeFolder = false;
+
                     break;
                 }
             }

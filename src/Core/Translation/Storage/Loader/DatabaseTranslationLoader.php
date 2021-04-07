@@ -69,7 +69,7 @@ class DatabaseTranslationLoader
      *
      * @return MessageCatalogue A MessageCatalogue instance
      */
-    public function load(string $locale, string $domain = 'messages', ?string $theme = null): MessageCatalogue
+    public function load(string $locale, string $domain = 'messages', string $theme = null): MessageCatalogue
     {
         static $languages = [];
         $catalogue = new MessageCatalogue($locale);
@@ -117,7 +117,7 @@ class DatabaseTranslationLoader
      * @param QueryBuilder $queryBuilder
      * @param string|null $theme
      */
-    private function addThemeConstraint(QueryBuilder $queryBuilder, ?string $theme = null): void
+    private function addThemeConstraint(QueryBuilder $queryBuilder, string $theme = null): void
     {
         if (null === $theme) {
             $queryBuilder->andWhere('t.theme IS NULL');

@@ -321,10 +321,12 @@ class AddressFeatureContext extends AbstractDomainFeatureContext
             case 'invoice':
                 $orderAddressId = (int) $order->id_address_invoice;
                 $cartAddressId = (int) $cart->id_address_invoice;
+
                 break;
             case 'delivery':
                 $orderAddressId = (int) $order->id_address_delivery;
                 $cartAddressId = (int) $cart->id_address_delivery;
+
                 break;
         }
         $expectedAddressId = (int) SharedStorage::getStorage()->get($addressReference);
@@ -376,9 +378,11 @@ class AddressFeatureContext extends AbstractDomainFeatureContext
         switch ($addressType) {
             case 'invoice':
                 $cartAddressId = (int) $cart->id_address_invoice;
+
                 break;
             case 'delivery':
                 $cartAddressId = (int) $cart->id_address_delivery;
+
                 break;
         }
         $expectedAddressId = (int) SharedStorage::getStorage()->get($addressReference);
@@ -400,7 +404,8 @@ class AddressFeatureContext extends AbstractDomainFeatureContext
     public function customerShouldHaveAddressWithFollowingDetails(
         string $customerReference,
         string $addressReference,
-        TableNode $table)
+        TableNode $table
+    )
     {
         $testCaseData = $table->getRowsHash();
         $customerId = SharedStorage::getStorage()->get($customerReference);
@@ -546,6 +551,7 @@ class AddressFeatureContext extends AbstractDomainFeatureContext
         try {
             /* @var EditableManufacturerAddress $editableManufacturerAddress */
             $this->getQueryBus()->handle(new GetManufacturerAddressForEditing($addressId));
+
             throw new \RuntimeException(sprintf('Manufacturer address "%s" should not be found', $addressReference));
         } catch (AddressNotFoundException $exception) {
         }

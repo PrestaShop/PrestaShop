@@ -40,11 +40,11 @@ class ModuleCacheTest extends IntegrationTestCase
     {
         Module::deleteTrustedXmlCache();
         Module::getModulesOnDisk();
-        $trustedFileCreationTime = filemtime(_PS_ROOT_DIR_.'/config/xml/trusted_modules_list.xml');
+        $trustedFileCreationTime = filemtime(_PS_ROOT_DIR_ . '/config/xml/trusted_modules_list.xml');
         sleep(1);
         clearstatcache();
         Module::getModulesOnDisk();
-        $newTrustedFileCreationTime = filemtime(_PS_ROOT_DIR_.'/config/xml/trusted_modules_list.xml');
+        $newTrustedFileCreationTime = filemtime(_PS_ROOT_DIR_ . '/config/xml/trusted_modules_list.xml');
 
         // make sure the cache files are not regenerated
         // (same timestamp on the cache file between two subsequent call to getModulesOnDisk)

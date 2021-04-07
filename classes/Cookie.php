@@ -480,7 +480,7 @@ class CookieCore
     {
         $family = $this->getFamily($origin);
         foreach (array_keys($family) as $member) {
-            unset($this->$member);
+            unset($this->{$member});
         }
     }
 

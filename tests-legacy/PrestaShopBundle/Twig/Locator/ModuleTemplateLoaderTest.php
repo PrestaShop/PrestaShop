@@ -50,9 +50,9 @@ class ModuleTemplateLoaderTest extends TestCase
         ];
 
         $paths = [
-            __DIR__.'/../Fixtures/module1',
-            __DIR__.'/../Fixtures/module2',
-            __DIR__.'/../Fixtures/module3',
+            __DIR__ . '/../Fixtures/module1',
+            __DIR__ . '/../Fixtures/module2',
+            __DIR__ . '/../Fixtures/module3',
         ];
 
         $this->loader = new ModuleTemplateLoader($namespaces, $paths);
@@ -83,9 +83,10 @@ class ModuleTemplateLoaderTest extends TestCase
 
     /**
      * @dataProvider getSourceContextsProvider
-     * @param string $sourceContent The template file content.
-     * @param string $twigPathAsked The Twig path asked during Twig template rendering.
-     * @param string $successMessage In case of failure, describe what is expected.
+     *
+     * @param string $sourceContent the template file content
+     * @param string $twigPathAsked the Twig path asked during Twig template rendering
+     * @param string $successMessage in case of failure, describe what is expected
      */
     public function testGetSourceContext($sourceContent, $twigPathAsked, $successMessage)
     {
@@ -113,7 +114,7 @@ class ModuleTemplateLoaderTest extends TestCase
     {
         $loader = new ModuleTemplateLoader([]);
 
-        $this->assertEquals(array(), $loader->getPaths());
+        $this->assertEquals([], $loader->getPaths());
     }
 
     /**

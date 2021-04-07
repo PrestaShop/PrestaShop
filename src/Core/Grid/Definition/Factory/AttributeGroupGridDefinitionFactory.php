@@ -75,31 +75,36 @@ final class AttributeGroupGridDefinitionFactory extends AbstractFilterableGridDe
     protected function getColumns()
     {
         return (new ColumnCollection())
-            ->add((new BulkActionColumn('bulk'))
+            ->add(
+                (new BulkActionColumn('bulk'))
             ->setOptions([
                 'bulk_field' => 'id_attribute_group',
             ])
             )
-            ->add((new DataColumn('id_attribute_group'))
+            ->add(
+                (new DataColumn('id_attribute_group'))
             ->setName($this->trans('ID', [], 'Admin.Global'))
             ->setOptions([
                 'field' => 'id_attribute_group',
             ])
             )
-            ->add((new DataColumn('name'))
+            ->add(
+                (new DataColumn('name'))
             ->setName($this->trans('Name', [], 'Admin.Global'))
             ->setOptions([
                 'field' => 'name',
             ])
             )
-            ->add((new DataColumn('values'))
+            ->add(
+                (new DataColumn('values'))
             ->setName($this->trans('Values', [], 'Admin.Global'))
             ->setOptions([
                 'field' => 'values',
                 'sortable' => false,
             ])
             )
-            ->add((new PositionColumn('position'))
+            ->add(
+                (new PositionColumn('position'))
             ->setName($this->trans('Position', [], 'Admin.Global'))
             ->setOptions([
                 'id_field' => 'id_attribute_group',
@@ -108,11 +113,13 @@ final class AttributeGroupGridDefinitionFactory extends AbstractFilterableGridDe
                 'update_route' => 'admin_attribute_groups_update_position',
             ])
             )
-            ->add((new ActionColumn('actions'))
+            ->add(
+                (new ActionColumn('actions'))
             ->setName($this->trans('Actions', [], 'Admin.Global'))
             ->setOptions([
                 'actions' => (new RowActionCollection())
-                    ->add((new LinkRowAction('view'))
+                    ->add(
+                        (new LinkRowAction('view'))
                     ->setName($this->trans('View', [], 'Admin.Actions'))
                     ->setIcon('zoom_in')
                     ->setOptions([
@@ -121,7 +128,8 @@ final class AttributeGroupGridDefinitionFactory extends AbstractFilterableGridDe
                         'route_param_field' => 'id_attribute_group',
                     ])
                     )
-                    ->add((new LinkRowAction('edit'))
+                    ->add(
+                        (new LinkRowAction('edit'))
                     ->setName($this->trans('Edit', [], 'Admin.Actions'))
                     ->setIcon('edit')
                     ->setOptions([
@@ -148,7 +156,8 @@ final class AttributeGroupGridDefinitionFactory extends AbstractFilterableGridDe
     protected function getGridActions()
     {
         return (new GridActionCollection())
-            ->add((new LinkGridAction('import'))
+            ->add(
+                (new LinkGridAction('import'))
             ->setName($this->trans('Import', [], 'Admin.Actions'))
             ->setIcon('cloud_upload')
             ->setOptions([
@@ -158,15 +167,18 @@ final class AttributeGroupGridDefinitionFactory extends AbstractFilterableGridDe
                 ],
             ])
             )
-            ->add((new SimpleGridAction('common_refresh_list'))
+            ->add(
+                (new SimpleGridAction('common_refresh_list'))
             ->setName($this->trans('Refresh list', [], 'Admin.Advparameters.Feature'))
             ->setIcon('refresh')
             )
-            ->add((new SimpleGridAction('common_show_query'))
+            ->add(
+                (new SimpleGridAction('common_show_query'))
             ->setName($this->trans('Show SQL query', [], 'Admin.Actions'))
             ->setIcon('code')
             )
-            ->add((new SimpleGridAction('common_export_sql_manager'))
+            ->add(
+                (new SimpleGridAction('common_export_sql_manager'))
             ->setName($this->trans('Export to SQL Manager', [], 'Admin.Actions'))
             ->setIcon('storage')
             )
@@ -179,7 +191,8 @@ final class AttributeGroupGridDefinitionFactory extends AbstractFilterableGridDe
     protected function getFilters()
     {
         return (new FilterCollection())
-            ->add((new Filter('id_attribute_group', TextType::class))
+            ->add(
+                (new Filter('id_attribute_group', TextType::class))
             ->setTypeOptions([
                 'required' => false,
                 'attr' => [
@@ -188,7 +201,8 @@ final class AttributeGroupGridDefinitionFactory extends AbstractFilterableGridDe
             ])
             ->setAssociatedColumn('id_attribute_group')
             )
-            ->add((new Filter('name', TextType::class))
+            ->add(
+                (new Filter('name', TextType::class))
             ->setTypeOptions([
                 'required' => false,
                 'attr' => [
@@ -197,7 +211,8 @@ final class AttributeGroupGridDefinitionFactory extends AbstractFilterableGridDe
             ])
             ->setAssociatedColumn('name')
             )
-            ->add((new Filter('position', TextType::class))
+            ->add(
+                (new Filter('position', TextType::class))
             ->setTypeOptions([
                 'required' => false,
                 'attr' => [
@@ -206,7 +221,8 @@ final class AttributeGroupGridDefinitionFactory extends AbstractFilterableGridDe
             ])
             ->setAssociatedColumn('position')
             )
-            ->add((new Filter('actions', SearchAndResetType::class))
+            ->add(
+                (new Filter('actions', SearchAndResetType::class))
             ->setAssociatedColumn('actions')
             ->setTypeOptions([
                 'reset_route' => 'admin_common_reset_search_by_filter_id',
@@ -227,6 +243,6 @@ final class AttributeGroupGridDefinitionFactory extends AbstractFilterableGridDe
         return (new BulkActionCollection())
             ->add(
                 $this->buildBulkDeleteAction('admin_attribute_groups_bulk_delete')
-              );
+            );
     }
 }

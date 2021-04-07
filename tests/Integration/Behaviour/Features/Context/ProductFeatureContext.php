@@ -395,7 +395,7 @@ class ProductFeatureContext extends AbstractPrestaShopFeatureContext
         $expectedSpecificPriceData = $table->getRowsHash();
 
         foreach ($expectedSpecificPriceData as $fieldName => $expectedValue) {
-            $databaseValue = $databaseSpecificPrice->$fieldName;
+            $databaseValue = $databaseSpecificPrice->{$fieldName};
             if ($databaseValue != $expectedValue) {
                 throw new RuntimeException(sprintf(
                     'Specific price field %s has value %s but expected %s',
@@ -736,12 +736,15 @@ class ProductFeatureContext extends AbstractPrestaShopFeatureContext
         switch ($enoughStock) {
             case 'enough stock':
                 $expected = true;
+
                 break;
             case 'not enough stock':
                 $expected = false;
+
                 break;
             default:
                 throw new \Exception('Unknown stock status: ' . $enoughStock);
+
                 break;
         }
         if ($result !== $expected) {

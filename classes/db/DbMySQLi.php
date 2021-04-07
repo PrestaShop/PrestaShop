@@ -51,7 +51,7 @@ class DbMySQLiCore extends Db
         $socket = false;
         $port = false;
         if (Tools::strpos($this->server, ':') !== false) {
-            list($server, $port) = explode(':', $this->server);
+            [$server, $port] = explode(':', $this->server);
             if (is_numeric($port) === false) {
                 $socket = $port;
                 $port = false;
@@ -97,7 +97,7 @@ class DbMySQLiCore extends Db
     public static function createDatabase($host, $user = null, $password = null, $database = null, $dropit = false)
     {
         if (strpos($host, ':') !== false) {
-            list($host, $port) = explode(':', $host);
+            [$host, $port] = explode(':', $host);
             $link = @new mysqli($host, $user, $password, null, $port);
         } else {
             $link = @new mysqli($host, $user, $password);

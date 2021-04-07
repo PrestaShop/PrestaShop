@@ -53,8 +53,10 @@ class UpdateProductSuppliersFeatureContext extends AbstractProductFeatureContext
     public function removeAssociatedProductSuppliers(string $productReference): void
     {
         try {
-            $this->getCommandBus()->handle(new RemoveAllAssociatedProductSuppliersCommand(
-                $this->getSharedStorage()->get($productReference))
+            $this->getCommandBus()->handle(
+                new RemoveAllAssociatedProductSuppliersCommand(
+                $this->getSharedStorage()->get($productReference)
+            )
             );
         } catch (ProductException $e) {
             $this->setLastException($e);

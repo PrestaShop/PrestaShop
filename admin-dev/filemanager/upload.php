@@ -7,8 +7,8 @@ if ($_SESSION['verify'] != 'RESPONSIVEfilemanager') {
 }
 include 'include/utils.php';
 
-$_POST['path'] = $current_path.str_replace("\0", '', $_POST['path']);
-$_POST['path_thumb'] = $thumbs_base_path.str_replace("\0", '', $_POST['path_thumb']);
+$_POST['path'] = $current_path . str_replace("\0", '', $_POST['path']);
+$_POST['path_thumb'] = $thumbs_base_path . str_replace("\0", '', $_POST['path_thumb']);
 
 $storeFolder = $_POST['path'];
 $storeFolderThumb = $_POST['path_thumb'];
@@ -27,15 +27,15 @@ $cycle = true;
 $max_cycles = 50;
 $i = 0;
 while ($cycle && $i < $max_cycles) {
-    $i++;
+    ++$i;
     if ($path == $current_path) {
         $cycle = false;
     }
-    if (file_exists($path.'config.php')) {
-        require_once $path.'config.php';
+    if (file_exists($path . 'config.php')) {
+        require_once $path . 'config.php';
         $cycle = false;
     }
-    $path = fix_dirname($path).'/';
+    $path = fix_dirname($path) . '/';
 }
 
 if (!empty($_FILES) && isset($_FILES['file']) && $_FILES['file']['size']) {
@@ -52,18 +52,18 @@ if (!empty($_FILES) && isset($_FILES['file']) && $_FILES['file']['size']) {
 
         $file_name_splitted = explode('.', $_FILES['file']['name']);
         array_pop($file_name_splitted);
-        $_FILES['file']['name'] = implode('-', $file_name_splitted).'.'.$info['extension'];
+        $_FILES['file']['name'] = implode('-', $file_name_splitted) . '.' . $info['extension'];
 
-        if (file_exists($targetPath.$_FILES['file']['name'])) {
+        if (file_exists($targetPath . $_FILES['file']['name'])) {
             $i = 1;
             $info = pathinfo($_FILES['file']['name']);
-            while (file_exists($targetPath.$info['filename'].'_'.$i.'.'.$info['extension'])) {
-                $i++;
+            while (file_exists($targetPath . $info['filename'] . '_' . $i . '.' . $info['extension'])) {
+                ++$i;
             }
-            $_FILES['file']['name'] = $info['filename'].'_'.$i.'.'.$info['extension'];
+            $_FILES['file']['name'] = $info['filename'] . '_' . $i . '.' . $info['extension'];
         }
-        $targetFile = $targetPath.$_FILES['file']['name'];
-        $targetFileThumb = $targetPathThumb.$_FILES['file']['name'];
+        $targetFile = $targetPath . $_FILES['file']['name'];
+        $targetFileThumb = $targetPathThumb . $_FILES['file']['name'];
 
         if (in_array(fix_strtolower($info['extension']), $ext_img) && @getimagesize($tempFile) != false) {
             $is_img = true;
@@ -122,6 +122,7 @@ if (!empty($_FILES) && isset($_FILES['file']) && $_FILES['file']['size']) {
                 //error
                 unlink($targetFile);
                 header('HTTP/1.1 406 Not enought Memory', true, 406);
+
                 exit();
             }
         } else {
@@ -130,21 +131,23 @@ if (!empty($_FILES) && isset($_FILES['file']) && $_FILES['file']['size']) {
         }
     } else {
         header('HTTP/1.1 406 file not permitted', true, 406);
+
         exit();
     }
 } else {
     header('HTTP/1.1 405 Bad Request', true, 405);
+
     exit();
 }
 if (isset($_POST['submit'])) {
     $query = http_build_query(
-        array(
+        [
             'type' => $_POST['type'],
             'lang' => $_POST['lang'],
             'popup' => $_POST['popup'],
             'field_id' => $_POST['field_id'],
             'fldr' => $_POST['fldr'],
-        )
+        ]
     );
-    header('location: dialog.php?'.$query);
+    header('location: dialog.php?' . $query);
 }

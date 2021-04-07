@@ -112,8 +112,8 @@ final class CategoryGridFactoryDecorator implements GridFactoryInterface
         SearchCriteriaInterface $searchCriteria,
         $categoryGrid
     ) {
-        if ('position' !== $searchCriteria->getOrderBy() ||
-            'asc' !== $searchCriteria->getOrderWay()) {
+        if ('position' !== $searchCriteria->getOrderBy()
+            || 'asc' !== $searchCriteria->getOrderWay()) {
             $categoryGrid->getDefinition()
                 ->getColumns()
                 ->remove('position_drag');
@@ -144,7 +144,8 @@ final class CategoryGridFactoryDecorator implements GridFactoryInterface
      */
     private function rebuildFilterForm(
         SearchCriteriaInterface $searchCriteria,
-        GridInterface $categoryGrid)
+        GridInterface $categoryGrid
+    )
     {
         $filterForm = $this->filterFormFactory->create($categoryGrid->getDefinition());
         $filterForm->setData($searchCriteria->getFilters());

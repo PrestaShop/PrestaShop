@@ -66,7 +66,7 @@ class CombinationCore extends ObjectModel
     public $minimal_quantity = 1;
 
     /** @var int|null Low stock for mail alert */
-    public $low_stock_threshold = null;
+    public $low_stock_threshold;
 
     /** @var bool Low stock mail alert activated */
     public $low_stock_alert = false;
@@ -134,7 +134,7 @@ class CombinationCore extends ObjectModel
      * @param int|null $id_shop
      * @param Translator|null $translator
      */
-    public function __construct(?int $id = null, ?int $id_lang = null, ?int $id_shop = null, ?Translator $translator = null)
+    public function __construct(int $id = null, int $id_lang = null, int $id_shop = null, Translator $translator = null)
     {
         parent::__construct($id, $id_lang, $id_shop, $translator);
         $this->loadStockData();

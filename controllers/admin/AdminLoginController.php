@@ -458,6 +458,7 @@ class AdminLoginControllerCore extends AdminController
                             'employee' => $employee,
                         ]
                     );
+
                     die(Tools::jsonEncode([
                         'hasErrors' => false,
                         'confirm' => $this->trans('The password has been changed successfully.', [], 'Admin.Login.Notification'),

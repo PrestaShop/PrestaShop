@@ -73,7 +73,7 @@ class Install extends AbstractInstall
      *
      * @var string
      */
-    protected $bootstrapFile = null;
+    protected $bootstrapFile;
 
     /**
      * @var array
@@ -85,12 +85,12 @@ class Install extends AbstractInstall
      *
      * @var string
      */
-    protected $settingsFile = null;
+    protected $settingsFile;
 
     /**
      * @var bool
      */
-    protected $isDebug = null;
+    protected $isDebug;
 
     public function __construct($settingsFile = null, $bootstrapFile = null)
     {
@@ -156,10 +156,10 @@ class Install extends AbstractInstall
         ) {
             $this->setError(
                 $this->translator->trans(
-                '%folder% folder is not writable (check permissions)',
-                ['%folder%' => dirname($this->settingsFile)],
-                'Install'
-            )
+                    '%folder% folder is not writable (check permissions)',
+                    ['%folder%' => dirname($this->settingsFile)],
+                    'Install'
+                )
             );
 
             return false;
@@ -815,7 +815,7 @@ class Install extends AbstractInstall
 
         // Set logo configuration
         if (file_exists(_PS_IMG_DIR_ . 'logo.png')) {
-            list($width, $height) = getimagesize(_PS_IMG_DIR_ . 'logo.png');
+            [$width, $height] = getimagesize(_PS_IMG_DIR_ . 'logo.png');
             Configuration::updateGlobalValue('SHOP_LOGO_WIDTH', round($width));
             Configuration::updateGlobalValue('SHOP_LOGO_HEIGHT', round($height));
         }

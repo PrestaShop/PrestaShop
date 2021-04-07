@@ -327,8 +327,8 @@ class ImageCore extends ObjectModel
 			UPDATE `' . _DB_PREFIX_ . 'image`
 			SET `cover` = NULL
 			WHERE `id_product` = ' . (int) $idProduct
-        ) &&
-        Db::getInstance()->execute(
+        )
+        && Db::getInstance()->execute(
             '
 			UPDATE `' . _DB_PREFIX_ . 'image_shop` image_shop
 			SET image_shop.`cover` = NULL
@@ -395,7 +395,7 @@ class ImageCore extends ObjectModel
                         }
                         copy(
                             _PS_PROD_IMG_DIR_ . $imageOld->getExistingImgPath() . '-' . $imageType['name'] . '.jpg',
-                        $newPath . '-' . $imageType['name'] . '.jpg'
+                            $newPath . '-' . $imageType['name'] . '.jpg'
                         );
                         if (Configuration::get('WATERMARK_HASH')) {
                             $oldImagePath = _PS_PROD_IMG_DIR_ . $imageOld->getExistingImgPath() . '-' . $imageType['name'] . '-' . Configuration::get('WATERMARK_HASH') . '.jpg';

@@ -451,7 +451,7 @@ class AdminTaxRulesGroupControllerCore extends AdminController
                 $tr->id_tax_rules_group = (int) $tax_rules_group->id;
                 $tr->id_country = (int) $id_country;
                 $tr->id_state = (int) $id_state;
-                list($tr->zipcode_from, $tr->zipcode_to) = $tr->breakDownZipCode($zip_code);
+                [$tr->zipcode_from, $tr->zipcode_to] = $tr->breakDownZipCode($zip_code);
 
                 // Construct Object Country
                 $country = new Country((int) $id_country, (int) $this->context->language->id);
@@ -556,6 +556,7 @@ class AdminTaxRulesGroupControllerCore extends AdminController
             foreach ($tax_rules as $key => $result) {
                 $output[$key] = $result;
             }
+
             die(json_encode($output));
         }
     }

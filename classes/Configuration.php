@@ -154,8 +154,8 @@ class ConfigurationCore extends ObjectModel
         $sql = 'SELECT c.`name`, cl.`id_lang`, IF(cl.`id_lang` IS NULL, c.`value`, cl.`value`) AS value, c.id_shop_group, c.id_shop
                FROM `' . _DB_PREFIX_ . bqSQL(self::$definition['table']) . '` c
                LEFT JOIN `' . _DB_PREFIX_ . bqSQL(self::$definition['table']) . '_lang` cl ON (c.`' . bqSQL(
-               self::$definition['primary']
-            ) . '` = cl.`' . bqSQL(self::$definition['primary']) . '`)';
+            self::$definition['primary']
+        ) . '` = cl.`' . bqSQL(self::$definition['primary']) . '`)';
         $db = Db::getInstance();
         $results = $db->executeS($sql);
         if ($results) {
@@ -688,13 +688,13 @@ class ConfigurationCore extends ObjectModel
     {
         if (is_a(Context::getContext()->controller, 'FrontController')) {
             $isCatalogMode =
-                Configuration::get('PS_CATALOG_MODE') ||
-                !Configuration::showPrices() ||
-                (Context::getContext()->controller->getRestrictedCountry() == Country::GEOLOC_CATALOG_MODE);
+                Configuration::get('PS_CATALOG_MODE')
+                || !Configuration::showPrices()
+                || (Context::getContext()->controller->getRestrictedCountry() == Country::GEOLOC_CATALOG_MODE);
         } else {
             $isCatalogMode =
-                Configuration::get('PS_CATALOG_MODE') ||
-                !Configuration::showPrices();
+                Configuration::get('PS_CATALOG_MODE')
+                || !Configuration::showPrices();
         }
 
         return $isCatalogMode;

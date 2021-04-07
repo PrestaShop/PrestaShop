@@ -30,10 +30,10 @@
 class AccessCore extends ObjectModel
 {
     /** @var int Profile id which address belongs to */
-    public $id_profile = null;
+    public $id_profile;
 
     /** @var int AuthorizationRole id which address belongs to */
-    public $id_authorization_role = null;
+    public $id_authorization_role;
 
     /**
      * @see ObjectModel::$definition

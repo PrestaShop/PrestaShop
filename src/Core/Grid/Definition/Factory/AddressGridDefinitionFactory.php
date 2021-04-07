@@ -133,7 +133,8 @@ final class AddressGridDefinitionFactory extends AbstractFilterableGridDefinitio
                         'field' => 'country_name',
                     ])
             )
-            ->add((new ActionColumn('actions'))
+            ->add(
+                (new ActionColumn('actions'))
             ->setName($this->trans('Actions', [], 'Admin.Global'))
             ->setOptions([
                 'actions' => (new RowActionCollection())

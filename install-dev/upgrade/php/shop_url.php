@@ -23,27 +23,26 @@
  * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
-
 function shop_url()
 {
-    $host = Db::getInstance()->getValue('SELECT value FROM `'._DB_PREFIX_.'configuration` WHERE name="CANONICAL_URL"');
+    $host = Db::getInstance()->getValue('SELECT value FROM `' . _DB_PREFIX_ . 'configuration` WHERE name="CANONICAL_URL"');
     if (!$host) {
         $host = (isset($_SERVER['HTTP_X_FORWARDED_HOST']) ? $_SERVER['HTTP_X_FORWARDED_HOST'] : $_SERVER['HTTP_HOST']);
     }
 
     $res = true;
-    $exist = Db::getInstance()->getValue('SELECT `id_configuration` FROM `'._DB_PREFIX_.'configuration` WHERE `name` = \'PS_SHOP_DOMAIN\'');
+    $exist = Db::getInstance()->getValue('SELECT `id_configuration` FROM `' . _DB_PREFIX_ . 'configuration` WHERE `name` = \'PS_SHOP_DOMAIN\'');
     if ($exist) {
-        $res &= Db::getInstance()->execute('UPDATE `'._DB_PREFIX_.'configuration` SET value = "'.pSQL($host).'" WHERE `name` = \'PS_SHOP_DOMAIN\'');
+        $res &= Db::getInstance()->execute('UPDATE `' . _DB_PREFIX_ . 'configuration` SET value = "' . pSQL($host) . '" WHERE `name` = \'PS_SHOP_DOMAIN\'');
     } else {
-        $res &= Db::getInstance()->getValue('INSERT INTO `'._DB_PREFIX_.'configuration` (name, value) VALUES ("PS_SHOP_DOMAIN", "'.pSQL($host).'")');
+        $res &= Db::getInstance()->getValue('INSERT INTO `' . _DB_PREFIX_ . 'configuration` (name, value) VALUES ("PS_SHOP_DOMAIN", "' . pSQL($host) . '")');
     }
 
-    $exist = Db::getInstance()->getValue('SELECT `id_configuration` FROM `'._DB_PREFIX_.'configuration` WHERE `name` = \'PS_SHOP_DOMAIN_SSL\'');
+    $exist = Db::getInstance()->getValue('SELECT `id_configuration` FROM `' . _DB_PREFIX_ . 'configuration` WHERE `name` = \'PS_SHOP_DOMAIN_SSL\'');
     if ($exist) {
-        $res &= Db::getInstance()->execute('UPDATE `'._DB_PREFIX_.'configuration` SET value = "'.pSQL($host).'" WHERE `name` = \'PS_SHOP_DOMAIN_SSL\'');
+        $res &= Db::getInstance()->execute('UPDATE `' . _DB_PREFIX_ . 'configuration` SET value = "' . pSQL($host) . '" WHERE `name` = \'PS_SHOP_DOMAIN_SSL\'');
     } else {
-        $res &= Db::getInstance()->getValue('INSERT INTO `'._DB_PREFIX_.'configuration` (name, value) VALUES ("PS_SHOP_DOMAIN_SSL", "'.pSQL($host).'")');
+        $res &= Db::getInstance()->getValue('INSERT INTO `' . _DB_PREFIX_ . 'configuration` (name, value) VALUES ("PS_SHOP_DOMAIN_SSL", "' . pSQL($host) . '")');
     }
 
     return $res;

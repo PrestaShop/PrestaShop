@@ -51,15 +51,15 @@ class CartGetOrderTotalTest extends IntegrationTestCase
 {
     private static $dump;
     private static $id_address;
-    protected $previousConfig = array(
+    protected $previousConfig = [
         'PS_CART_RULE_FEATURE_ACTIVE' => null,
-        'PS_GROUP_FEATURE_ACTIVE'     => null,
-        'PS_ATCP_SHIPWRAP'            => null,
-        'PS_PRICE_ROUND_MODE'         => null,
-        'PS_ROUND_TYPE'               => null,
-        'PS_PRICE_DISPLAY_PRECISION'  => null,
-        'PS_TAX'                      => null,
-    );
+        'PS_GROUP_FEATURE_ACTIVE' => null,
+        'PS_ATCP_SHIPWRAP' => null,
+        'PS_PRICE_ROUND_MODE' => null,
+        'PS_ROUND_TYPE' => null,
+        'PS_PRICE_DISPLAY_PRECISION' => null,
+        'PS_TAX' => null,
+    ];
 
     public static function setUpBeforeClass()
     {
@@ -92,12 +92,12 @@ class CartGetOrderTotalTest extends IntegrationTestCase
      */
     private static function deactivateCurrentCartRules()
     {
-        Db::getInstance()->execute('UPDATE '._DB_PREFIX_.'cart_rule SET active = 0');
+        Db::getInstance()->execute('UPDATE ' . _DB_PREFIX_ . 'cart_rule SET active = 0');
     }
 
     private static function getLanguageId()
     {
-        return (int)Context::getContext()->language->id;
+        return (int) Context::getContext()->language->id;
     }
 
     private static function getDefaultLanguageId()
@@ -192,16 +192,16 @@ class CartGetOrderTotalTest extends IntegrationTestCase
      */
     private static function getIdTax($rate)
     {
-        static $taxes = array();
+        static $taxes = [];
 
-        $name = $rate.'% TAX';
+        $name = $rate . '% TAX';
 
         if (!array_key_exists($name, $taxes)) {
             $tax = new Tax(null, self::getDefaultLanguageId());
             $tax->name = $name;
             $tax->rate = $rate;
             $tax->active = true;
-            Assert::assertTrue((bool)$tax->save()); // casting because actually returns 1, but not the point here.
+            Assert::assertTrue((bool) $tax->save()); // casting because actually returns 1, but not the point here.
             $taxes[$name] = $tax->id;
         }
 
@@ -213,15 +213,15 @@ class CartGetOrderTotalTest extends IntegrationTestCase
      */
     private static function getIdTaxRulesGroup($rate)
     {
-        static $groups = array();
+        static $groups = [];
 
-        $name = $rate.'% TRG';
+        $name = $rate . '% TRG';
 
         if (!array_key_exists($name, $groups)) {
             $taxRulesGroup = new TaxRulesGroup(null, self::getDefaultLanguageId());
             $taxRulesGroup->name = $name;
             $taxRulesGroup->active = true;
-            Assert::assertTrue((bool)$taxRulesGroup->save());
+            Assert::assertTrue((bool) $taxRulesGroup->save());
 
             $taxRule = new TaxRule(null, self::getDefaultLanguageId());
             $taxRule->id_tax = self::getIdTax($rate);
@@ -258,7 +258,7 @@ class CartGetOrderTotalTest extends IntegrationTestCase
         $address->firstname = 'Unit';
         $address->lastname = 'Tester';
         $address->address1 = '55 rue Raspail';
-        $address->alias = microtime().getmypid();
+        $address->alias = microtime() . getmypid();
         $address->city = 'Levallois';
         Assert::assertTrue($address->save());
 
@@ -282,7 +282,7 @@ class CartGetOrderTotalTest extends IntegrationTestCase
      */
     private static function getIdCarrier($name, $shippingCost = null, $id_tax_rules_group = null)
     {
-        static $carriers = array();
+        static $carriers = [];
 
         if (!array_key_exists($name, $carriers)) {
             $carrier = new Carrier(null, self::getDefaultLanguageId());
@@ -307,8 +307,8 @@ class CartGetOrderTotalTest extends IntegrationTestCase
 
             if (null !== $shippingCost) {
                 // Populate one range
-                Db::getInstance()->execute('INSERT INTO '._DB_PREFIX_.'range_price (id_carrier, delimiter1, delimiter2) VALUES (
-                    '.(int)$carrier->id.',
+                Db::getInstance()->execute('INSERT INTO ' . _DB_PREFIX_ . 'range_price (id_carrier, delimiter1, delimiter2) VALUES (
+                    ' . (int) $carrier->id . ',
                     0,1
                 )');
 
@@ -317,15 +317,15 @@ class CartGetOrderTotalTest extends IntegrationTestCase
 
                 // apply our shippingCost to all zones
                 Db::getInstance()->execute(
-                    'INSERT INTO '._DB_PREFIX_.'delivery (id_carrier, id_range_price, id_range_weight, id_zone, price)
-                     SELECT '.(int)$carrier->id.', '.(int)$id_range_price.', 0, id_zone, '.(float)$shippingCost.'
-                     FROM '._DB_PREFIX_.'zone'
+                    'INSERT INTO ' . _DB_PREFIX_ . 'delivery (id_carrier, id_range_price, id_range_weight, id_zone, price)
+                     SELECT ' . (int) $carrier->id . ', ' . (int) $id_range_price . ', 0, id_zone, ' . (float) $shippingCost . '
+                     FROM ' . _DB_PREFIX_ . 'zone'
                 );
 
                 // enable all zones
                 Db::getInstance()->execute(
-                    'INSERT INTO '._DB_PREFIX_.'carrier_zone (id_carrier, id_zone)
-                     SELECT '.(int)$carrier->id.', id_zone FROM '._DB_PREFIX_.'zone'
+                    'INSERT INTO ' . _DB_PREFIX_ . 'carrier_zone (id_carrier, id_zone)
+                     SELECT ' . (int) $carrier->id . ', id_zone FROM ' . _DB_PREFIX_ . 'zone'
                 );
             }
 
@@ -339,7 +339,7 @@ class CartGetOrderTotalTest extends IntegrationTestCase
     {
         $cartRule = new CartRule(null, self::getDefaultLanguageId());
 
-        $cartRule->name = $amount.' '.$type.' Cart Rule';
+        $cartRule->name = $amount . ' ' . $type . ' Cart Rule';
 
         $date_from = new \DateTime();
         $date_to = new \DateTime();
@@ -362,7 +362,7 @@ class CartGetOrderTotalTest extends IntegrationTestCase
         } elseif ($type === '%') {
             $cartRule->reduction_percent = $amount;
         } else {
-            throw new Exception(sprintf("Invalid CartRule type `%s`.", $type));
+            throw new Exception(sprintf('Invalid CartRule type `%s`.', $type));
         }
 
         Assert::assertTrue($cartRule->save());

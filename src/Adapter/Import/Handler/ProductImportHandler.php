@@ -240,9 +240,9 @@ final class ProductImportHandler extends AbstractImportHandler
         $this->fixFloatValues($product);
 
         $productExistsById = $this->entityExists($product, 'product');
-        $productExistsByReference = $importConfig->matchReferences() &&
-            $product->reference &&
-            $product->existsRefInDatabase($product->reference)
+        $productExistsByReference = $importConfig->matchReferences()
+            && $product->reference
+            && $product->existsRefInDatabase($product->reference)
         ;
 
         if ($productExistsByReference || $productExistsById) {
@@ -1032,6 +1032,7 @@ final class ProductImportHandler extends AbstractImportHandler
                         $product->id,
                         $this->translator->trans('Tags list is invalid', [], 'Admin.Advparameters.Notification')
                     );
+
                     break;
                 }
             }
@@ -1058,6 +1059,7 @@ final class ProductImportHandler extends AbstractImportHandler
                             'Admin.Notifications.Error'
                         )
                     );
+
                     break;
                 }
             }
@@ -1326,7 +1328,7 @@ final class ProductImportHandler extends AbstractImportHandler
                     if ($price == 0) {
                         $price = 0.000001;
                     }
-                    $price = round(floatval($price), 6);
+                    $price = round((float) $price, 6);
                     $warehouse = new Warehouse($product->warehouse);
                     $productAdded = $stockManager->addProduct(
                         (int) $product->id,
@@ -1369,9 +1371,9 @@ final class ProductImportHandler extends AbstractImportHandler
         }
 
         $hasAccessories =
-            isset($product->accessories) &&
-            is_array($product->accessories) &&
-            count($product->accessories)
+            isset($product->accessories)
+            && is_array($product->accessories)
+            && count($product->accessories)
         ;
 
         if ($hasAccessories) {

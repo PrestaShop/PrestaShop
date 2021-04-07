@@ -192,7 +192,7 @@ final class UpdateProductInOrderHandler extends AbstractOrderHandler implements 
      *
      * @throws DuplicateProductInOrderInvoiceException
      */
-    private function assertProductNotDuplicate(Order $order, OrderDetail $orderDetail, ?OrderInvoice $orderInvoice = null): void
+    private function assertProductNotDuplicate(Order $order, OrderDetail $orderDetail, OrderInvoice $orderInvoice = null): void
     {
         // If the OrderDetail's invoice is not changed no reason to check
         if (null === $orderInvoice || (int) $orderInvoice->id === (int) $orderDetail->id_order_invoice) {
@@ -226,6 +226,7 @@ final class UpdateProductInOrderHandler extends AbstractOrderHandler implements 
         // The newly assigned invoice already contains this product, this it not possible
         if (in_array((int) $orderInvoice->id, $invoicesContainingProduct)) {
             $invoiceNumber = $orderInvoice->getInvoiceNumberFormatted((int) Configuration::get('PS_LANG_DEFAULT'), $order->id_shop);
+
             throw new DuplicateProductInOrderInvoiceException($invoiceNumber, 'You cannot add this product in this invoice as it is already present');
         }
     }

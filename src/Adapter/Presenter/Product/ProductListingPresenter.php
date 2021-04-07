@@ -57,7 +57,8 @@ class ProductListingPresenter extends ProductPresenter
             $this->translator
         );
 
-        Hook::exec('actionPresentProductListing',
+        Hook::exec(
+            'actionPresentProductListing',
             ['presentedProduct' => &$productListingLazyArray]
         );
 

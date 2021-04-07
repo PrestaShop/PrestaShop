@@ -32,14 +32,17 @@ use PrestaShop\PrestaShop\Adapter\EntityMapper;
 
 class FakeEntityMapper extends EntityMapper
 {
-    private $fake_db = array();
+    private $fake_db = [];
 
-    private $entity_being_built = null;
+    private $entity_being_built;
 
     /**
      * Stores the given entity in the fake database, so load call with the same id will fill the entity with it.
+     *
      * @param ObjectModel $entity
+     *
      * @return $this
+     *
      * @throws Exception
      */
     public function willReturn(ObjectModel $entity)
@@ -57,6 +60,7 @@ class FakeEntityMapper extends EntityMapper
      * @param $id
      * @param null $id_lang
      * @param null $id_shop
+     *
      * @throws Exception
      */
     public function forId($id, $id_lang = null, $id_shop = null)
@@ -73,6 +77,7 @@ class FakeEntityMapper extends EntityMapper
 
     /**
      * Fills the given entity with fields from the entity stored in the fake database if it exists.
+     *
      * @param $id
      * @param $id_lang
      * @param $entity
@@ -89,13 +94,13 @@ class FakeEntityMapper extends EntityMapper
 
         if (isset($this->fake_db[$cache_id])) {
             foreach ($this->fake_db[$cache_id] as $key => $value) {
-                $entity->$key = $value;
+                $entity->{$key} = $value;
             }
         }
     }
 
     private function buildCacheId($id, $class_name, $id_lang, $id_shop)
     {
-        return 'objectmodel_' . $class_name . '_' . (int)$id . '_' . (int)$id_shop . '_' . (int)$id_lang;
+        return 'objectmodel_' . $class_name . '_' . (int) $id . '_' . (int) $id_shop . '_' . (int) $id_lang;
     }
 }

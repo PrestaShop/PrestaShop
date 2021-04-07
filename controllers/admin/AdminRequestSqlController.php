@@ -210,6 +210,7 @@ class AdminRequestSqlControllerCore extends AdminController
                     $attributes[$key]['Extra']
                 );
             }
+
             die(json_encode($attributes));
         }
     }
@@ -371,6 +372,7 @@ class AdminRequestSqlControllerCore extends AdminController
                         header('Content-Disposition: attachment; filename="' . $file . '"');
                         header('Content-Length: ' . $filesize);
                         readfile($export_dir . $file);
+
                         die();
                     } else {
                         $this->errors[] = $this->trans('The file is too large and cannot be downloaded. Please use the LIMIT clause in this query.', [], 'Admin.Advparameters.Notification');
@@ -400,19 +402,18 @@ class AdminRequestSqlControllerCore extends AdminController
                         );
                     } elseif (isset($e[$key]['attribut'])) {
                         $this->errors[] = $this->trans(
-                                'The "%attribute%" attribute does not exist in the "%table%" table.',
-                                [
-                                    '%attribute%' => $e[$key]['attribut'][0],
-                                    '%table%' => $e[$key]['attribut'][1],
-                                ],
-                                'Admin.Advparameters.Notification'
-                            );
+                            'The "%attribute%" attribute does not exist in the "%table%" table.',
+                            [
+                                '%attribute%' => $e[$key]['attribut'][0],
+                                '%table%' => $e[$key]['attribut'][1],
+                            ],
+                            'Admin.Advparameters.Notification'
+                        );
                     } else {
                         $this->errors[] = $this->trans('Undefined "%s" error', ['checkedForm'], 'Admin.Advparameters.Notification');
                     }
 
                     break;
-
                 case 'checkedSelect':
                     if (isset($e[$key]['table'])) {
                         $this->errors[] = $this->trans(
@@ -438,7 +439,6 @@ class AdminRequestSqlControllerCore extends AdminController
                     }
 
                     break;
-
                 case 'checkedWhere':
                     if (isset($e[$key]['operator'])) {
                         $this->errors[] = $this->trans(
@@ -462,7 +462,6 @@ class AdminRequestSqlControllerCore extends AdminController
                     }
 
                     break;
-
                 case 'checkedHaving':
                     if (isset($e[$key]['operator'])) {
                         $this->errors[] = $this->trans(
@@ -486,7 +485,6 @@ class AdminRequestSqlControllerCore extends AdminController
                     }
 
                     break;
-
                 case 'checkedOrder':
                     if (isset($e[$key]['attribut'])) {
                         $this->errors[] = $this->trans(
@@ -502,7 +500,6 @@ class AdminRequestSqlControllerCore extends AdminController
                     }
 
                     break;
-
                 case 'checkedGroupBy':
                     if (isset($e[$key]['attribut'])) {
                         $this->errors[] = $this->trans(
@@ -518,12 +515,10 @@ class AdminRequestSqlControllerCore extends AdminController
                     }
 
                     break;
-
                 case 'checkedLimit':
                     $this->errors[] = $this->trans('The LIMIT clause must contain numeric arguments.', [], 'Admin.Advparameters.Notification');
 
                     break;
-
                 case 'returnNameTable':
                     if (isset($e[$key]['reference'])) {
                         $this->errors[] = $this->trans(
@@ -539,12 +534,10 @@ class AdminRequestSqlControllerCore extends AdminController
                     }
 
                     break;
-
                 case 'testedRequired':
                     $this->errors[] = $this->trans('"%key%" does not exist.', ['%key%' => $e[$key]], 'Admin.Notifications.Error');
 
                     break;
-
                 case 'testedUnauthorized':
                     $this->errors[] = $this->trans('"%key%" is an unauthorized keyword.', ['%key%' => $e[$key]], 'Admin.Advparameters.Notification');
 

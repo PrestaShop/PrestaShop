@@ -59,7 +59,7 @@ class QuantifiedProduct
     public function __construct(
         int $productId,
         int $quantity,
-        ?int $combinationId = null
+        int $combinationId = null
     ) {
         $this->productId = new ProductId($productId);
         $this->quantity = $quantity;
