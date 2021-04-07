@@ -111,9 +111,9 @@ class OrderProductRemover
             new CartProductUpdate(
                 (int) $orderDetail->product_id,
                 (int) $orderDetail->product_attribute_id,
-                (int) $orderDetail->id_customization,
                 -$orderDetail->product_quantity,
-                false
+                false,
+                (int) $orderDetail->id_customization
             ),
         ];
 

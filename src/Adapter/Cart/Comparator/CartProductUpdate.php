@@ -62,11 +62,11 @@ class CartProductUpdate
     /**
      * @param int $productId
      * @param int $combinationId
-     * @param int $customizationId
      * @param int $deltaQuantity
      * @param bool $created
+     * @param int $customizationId
      */
-    public function __construct(int $productId, int $combinationId, int $customizationId, int $deltaQuantity, bool $created)
+    public function __construct(int $productId, int $combinationId, int $deltaQuantity, bool $created, int $customizationId = 0)
     {
         $this->productId = new ProductId($productId);
         $this->combinationId = $combinationId > 0 ? new CombinationId($combinationId) : null;

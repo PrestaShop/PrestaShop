@@ -74,7 +74,7 @@ class CartProductsComparatorTest extends TestCase
             ],
             // Expected updates
             [
-                new CartProductUpdate(2, 0, 0, -1, false),
+                new CartProductUpdate(2, 0, -1, false),
             ],
         ];
 
@@ -113,31 +113,8 @@ class CartProductsComparatorTest extends TestCase
             ],
             // Expected updates
             [
-                new CartProductUpdate(1, 0, 0, -2, false),
-                new CartProductUpdate(2, 0, 0, 1, false),
-            ],
-        ];
-
-        yield [
-            // Previous products
-            [
-                ['id_product' => 1, 'id_product_attribute' => 0, 'id_customization' => 0, 'cart_quantity' => 3],
-                ['id_product' => 2, 'id_product_attribute' => 0, 'id_customization' => 0, 'cart_quantity' => 1],
-            ],
-            // New products
-            [
-                ['id_product' => 1, 'id_product_attribute' => 0, 'id_customization' => 0, 'cart_quantity' => 1],
-                ['id_product' => 2, 'id_product_attribute' => 0, 'id_customization' => 0, 'cart_quantity' => 2],
-                ['id_product' => 3, 'id_product_attribute' => 0, 'id_customization' => 0, 'cart_quantity' => 2],
-            ],
-            // Known updates
-            [
-            ],
-            // Expected updates
-            [
-                new CartProductUpdate(1, 0, 0, -2, false),
-                new CartProductUpdate(2, 0, 0, 1, false),
-                new CartProductUpdate(3, 0, 0, 2, true),
+                new CartProductUpdate(1, 0, -2, false),
+                new CartProductUpdate(2, 0, 1, false),
             ],
         ];
 
@@ -155,12 +132,35 @@ class CartProductsComparatorTest extends TestCase
             ],
             // Known updates
             [
-                new CartProductUpdate(1, 0, 0, -2, false),
             ],
             // Expected updates
             [
-                new CartProductUpdate(2, 0, 0, 1, false),
-                new CartProductUpdate(3, 0, 0, 2, true),
+                new CartProductUpdate(1, 0, -2, false),
+                new CartProductUpdate(2, 0, 1, false),
+                new CartProductUpdate(3, 0, 2, true),
+            ],
+        ];
+
+        yield [
+            // Previous products
+            [
+                ['id_product' => 1, 'id_product_attribute' => 0, 'id_customization' => 0, 'cart_quantity' => 3],
+                ['id_product' => 2, 'id_product_attribute' => 0, 'id_customization' => 0, 'cart_quantity' => 1],
+            ],
+            // New products
+            [
+                ['id_product' => 1, 'id_product_attribute' => 0, 'id_customization' => 0, 'cart_quantity' => 1],
+                ['id_product' => 2, 'id_product_attribute' => 0, 'id_customization' => 0, 'cart_quantity' => 2],
+                ['id_product' => 3, 'id_product_attribute' => 0, 'id_customization' => 0, 'cart_quantity' => 2],
+            ],
+            // Known updates
+            [
+                new CartProductUpdate(1, 0, -2, false),
+            ],
+            // Expected updates
+            [
+                new CartProductUpdate(2, 0, 1, false),
+                new CartProductUpdate(3, 0, 2, true),
             ],
         ];
 
@@ -177,7 +177,7 @@ class CartProductsComparatorTest extends TestCase
             ],
             // Known updates
             [
-                new CartProductUpdate(2, 0, 0, -1, false),
+                new CartProductUpdate(2, 0, -1, false),
             ],
             // Expected updates
             [
@@ -197,11 +197,11 @@ class CartProductsComparatorTest extends TestCase
             ],
             // Known updates
             [
-                new CartProductUpdate(2, 0, 0, -1, false),
+                new CartProductUpdate(2, 0, -1, false),
             ],
             // Expected updates
             [
-                new CartProductUpdate(2, 0, 0, 2, false),
+                new CartProductUpdate(2, 0, 2, false),
             ],
         ];
 
@@ -219,7 +219,7 @@ class CartProductsComparatorTest extends TestCase
             ],
             // Known updates
             [
-                new CartProductUpdate(3, 0, 0, 1, true),
+                new CartProductUpdate(3, 0, 1, true),
             ],
             // Expected updates
             [
@@ -240,11 +240,11 @@ class CartProductsComparatorTest extends TestCase
             ],
             // Known updates
             [
-                new CartProductUpdate(3, 0, 0, 1, true),
+                new CartProductUpdate(3, 0, 1, true),
             ],
             // Expected updates
             [
-                new CartProductUpdate(3, 0, 0, 1, true),
+                new CartProductUpdate(3, 0, 1, true),
             ],
         ];
     }

@@ -120,9 +120,9 @@ class CartProductsComparator
                 $additionalProducts[] = new CartProductUpdate(
                     (int) $newProduct['id_product'],
                     (int) $newProduct['id_product_attribute'],
-                    (int) $newProduct['id_customization'],
                     (int) $newProduct['cart_quantity'],
-                    true
+                    true,
+                    (int) $newProduct['id_customization']
                 );
             }
         }
@@ -153,9 +153,9 @@ class CartProductsComparator
                 $updatedProducts[] = new CartProductUpdate(
                     (int) $oldProduct['id_product'],
                     (int) $oldProduct['id_product_attribute'],
-                    (int) $oldProduct['id_customization'],
                     $deltaQuantity,
-                    false
+                    false,
+                    (int) $oldProduct['id_customization']
                 );
             }
         }
