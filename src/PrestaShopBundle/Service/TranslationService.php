@@ -29,6 +29,7 @@ namespace PrestaShopBundle\Service;
 use Exception;
 use PrestaShop\PrestaShop\Core\Translation\Storage\Provider\Definition\CoreDomainProviderDefinition;
 use PrestaShop\PrestaShop\Core\Translation\Storage\Provider\Definition\ModuleProviderDefinition;
+use PrestaShop\PrestaShop\Core\Translation\Storage\Provider\Definition\OthersProviderDefinition;
 use PrestaShop\PrestaShop\Core\Translation\Storage\Provider\Definition\ProviderDefinitionInterface;
 use PrestaShop\PrestaShop\Core\Translation\Storage\Provider\Definition\ThemeProviderDefinition;
 use PrestaShopBundle\Entity\Lang;
@@ -177,6 +178,8 @@ class TranslationService
      * @param string|null $module
      *
      * @return array
+     *
+     * @throws Exception
      */
     public function listDomainTranslation(
         string $locale,
@@ -185,8 +188,8 @@ class TranslationService
         ?array $search = null,
         ?string $module = null
     ): array {
-        if ('Messages' === $domain) {
-            $domain = 'messages';
+        if (ucfirst(OthersProviderDefinition::OTHERS_DOMAIN_NAME) === $domain) {
+            $domain = OthersProviderDefinition::OTHERS_DOMAIN_NAME;
         }
 
         $translationCatalogueBuilder = $this->container->get('prestashop.translation.builder.translation_catalogue');
@@ -217,39 +220,6 @@ class TranslationService
         ]);
 
         return $domainCatalogue;
-    }
-
-    /**
-     * Check if data contains search word.
-     *
-     * @param string|array|null $search
-     * @param array $data
-     *
-     * @return bool
-     */
-    private function dataContainsSearchWord($search, $data)
-    {
-        if (is_string($search)) {
-            $search = strtolower($search);
-
-            return false !== strpos(strtolower($data['default']), $search) ||
-                false !== strpos(strtolower($data['xliff']), $search) ||
-                false !== strpos(strtolower($data['database']), $search);
-        }
-
-        if (is_array($search)) {
-            $contains = true;
-            foreach ($search as $s) {
-                $s = strtolower($s);
-                $contains &= false !== strpos(strtolower($data['default']), $s) ||
-                    false !== strpos(strtolower($data['xliff']), $s) ||
-                    false !== strpos(strtolower($data['database']), $s);
-            }
-
-            return $contains;
-        }
-
-        return false;
     }
 
     /**

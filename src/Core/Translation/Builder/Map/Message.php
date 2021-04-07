@@ -122,14 +122,11 @@ class Message
     private function containsWord(string $s): bool
     {
         $s = strtolower($s);
-        if (
+
+        return
             false !== strpos(strtolower($this->defaultTranslation), $s)
             || (null !== $this->fileTranslation && false !== strpos(strtolower($this->fileTranslation), $s))
             || (null !== $this->userTranslation && false !== strpos(strtolower($this->userTranslation), $s))
-        ) {
-            return true;
-        }
-
-        return false;
+        ;
     }
 }

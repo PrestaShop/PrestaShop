@@ -29,6 +29,9 @@ services:
     ps.theme_translations_factory:
         alias: "prestashop.translation.theme_translations_factory"
 
+    prestashop.translation.factory.provider_definition:
+        class: PrestaShop\PrestaShop\Core\Translation\Storage\Provider\Definition\ProviderDefinitionFactory
+
     #TRANSLATIONS PROVIDERS
     prestashop.translation.provider.catalogue_provider_factory:
         class: PrestaShop\PrestaShop\Core\Translation\Storage\Provider\CatalogueProviderFactory

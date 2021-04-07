@@ -35,6 +35,7 @@ use PrestaShop\PrestaShop\Core\Translation\Builder\Map\Message;
 use PrestaShop\PrestaShop\Core\Translation\Exception\TranslationFilesNotFoundException;
 use PrestaShop\PrestaShop\Core\Translation\Exception\UnexpectedTranslationTypeException;
 use PrestaShop\PrestaShop\Core\Translation\Storage\Provider\CatalogueProviderFactory;
+use PrestaShop\PrestaShop\Core\Translation\Storage\Provider\Definition\OthersProviderDefinition;
 use PrestaShop\PrestaShop\Core\Translation\Storage\Provider\Definition\ProviderDefinitionInterface;
 use PrestaShop\PrestaShop\Core\Translation\Storage\Provider\Definition\ThemeProviderDefinition;
 
@@ -65,7 +66,7 @@ class TranslationCatalogueBuilder
      * Each domain will have counters (number of items and missing translations) as metadata.
      * 'Normalization' will add extra data.
      *
-     * @param ProviderDefinitionInterface $providerDefinition
+     * @param ProviderDefinitionInterface $providerDefinition Translation storage provider configuration
      * @param string $locale
      * @param string $domain
      * @param array $search
@@ -87,7 +88,7 @@ class TranslationCatalogueBuilder
         // see PrestaShop\PrestaShop\Core\Translation\Builder\Map\Domain::mergeTree
         // When getting messages for a domain, we have to do the reverse operation to match the catalogue domain
         $catalogueDomain = $domain;
-        if ($catalogueDomain !== 'messages') {
+        if ($catalogueDomain !== OthersProviderDefinition::OTHERS_DOMAIN_NAME) {
             $catalogueDomain = ucfirst(Inflector::camelize($catalogueDomain));
         }
 
@@ -121,7 +122,7 @@ class TranslationCatalogueBuilder
      * User-translated will override file-translated, which will override default catalogue.
      * Each domain will have counters (number of items and missing translations) as metadata.
      *
-     * @param ProviderDefinitionInterface $providerDefinition
+     * @param ProviderDefinitionInterface $providerDefinition Translation storage provider configuration
      * @param string $locale
      * @param array $search
      *
@@ -149,7 +150,7 @@ class TranslationCatalogueBuilder
      * User-translated will override file-translated, which will override default catalogue.
      * Each domain will have counters (number of items and missing translations) as metadata.
      *
-     * @param ProviderDefinitionInterface $providerDefinition
+     * @param ProviderDefinitionInterface $providerDefinition Translation storage provider configuration
      * @param string $locale
      * @param array $search
      * @param string|null $domain
@@ -208,7 +209,7 @@ class TranslationCatalogueBuilder
     }
 
     /**
-     * @param ProviderDefinitionInterface $providerDefinition
+     * @param ProviderDefinitionInterface $providerDefinition Translation storage provider configuration
      * @param string $locale
      * @param array $search
      * @param string|null $domain
