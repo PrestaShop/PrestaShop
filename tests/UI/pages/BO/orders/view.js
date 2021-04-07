@@ -15,7 +15,7 @@ class Order extends BOBasePage {
     // Customer card
     this.customerInfoBlock = '#customerInfo';
     this.ViewAllDetailsLink = '#viewFullDetails a';
-    this.customerEmailLink = '#customerEmail';
+    this.customerEmailLink = '#customerEmail a';
     this.validatedOrders = '#validatedOrders span.badge';
     this.shippingAddressBlock = '#addressShipping';
     this.invoiceAddressBlock = '#addressInvoice';
@@ -370,7 +370,7 @@ class Order extends BOBasePage {
    * @returns {Promise<string>}
    */
   getCustomerEmail(page) {
-    return this.getTextContent(page, this.customerEmailLink);
+    return this.getAttributeContent(page, this.customerEmailLink, 'href');
   }
 
   /**

@@ -283,14 +283,13 @@ describe('Check and edit customer block in view order page', async () => {
       await expect(customerInfo).to.contains(customerData.firstName);
       await expect(customerInfo).to.contains(customerData.lastName);
       await expect(customerInfo).to.contains(customerID.toString());
-      await expect(customerInfo).to.contains('Guest');
     });
 
     it('should check customer email', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'checkCustomerEmail', baseContext);
 
       const customerEmail = await viewOrderPage.getCustomerEmail(page);
-      await expect(customerEmail).to.contains(customerData.email);
+      await expect(customerEmail).to.contains(`mailto:${customerData.email}`);
     });
 
     it('should check validated orders number', async function () {
@@ -300,7 +299,7 @@ describe('Check and edit customer block in view order page', async () => {
       await expect(customerEmail).to.equal(0);
     });
 
-    it('should check order shipping', async function () {
+    /*it('should check order shipping', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'checkShippingAddress', baseContext);
 
       const shippingAddress = await viewOrderPage.getShippingAddress(page);
@@ -475,7 +474,7 @@ describe('Check and edit customer block in view order page', async () => {
 
       const result = await viewOrderPage.setPrivateNote(page, '');
       await expect(result).to.contains(viewOrderPage.successfulUpdateMessage);
-    });
+    });*/
   });
 
   // 4 - Delete the created customer
