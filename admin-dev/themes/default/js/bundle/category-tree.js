@@ -62,7 +62,7 @@
         event.stopPropagation();
 
         if ($ui.next('ul').length === 0) {
-          $ui = $ui.parent();
+          $ui = $ui.closest('div');
         }
 
         $ui.next('ul').toggle();
