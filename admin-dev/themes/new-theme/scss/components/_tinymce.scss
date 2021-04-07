@@ -126,7 +126,7 @@
   padding: 0;
   margin: 0;
   overflow: hidden;
-  background: #fff;
+  background: $white;
   border: 0;
 }
 
@@ -149,7 +149,7 @@ div.mce-edit-area {
   max-height: 400px;
   padding: 1px;
   overflow: auto;
-  background: #fff;
+  background: $white;
   filter: none;
 }
 
@@ -329,7 +329,7 @@ div.mce-tinymce-inline {
     top: 0;
 
     left: 0;
-    background: #fff;
+    background: $white;
     border: 1px solid rgba(0, 0, 0, 0.25);
     @include border-radius(6px);
 
@@ -349,7 +349,7 @@ div.mce-tinymce-inline {
           top: 1px;
           margin-left: -10px;
           border-top-width: 0;
-          border-bottom-color: #fff;
+          border-bottom-color: $white;
         }
       }
 
@@ -399,7 +399,7 @@ div.mce-tinymce-inline {
   position: fixed;
   top: 0;
   left: 0;
-  background: #fff;
+  background: $white;
 
   iframe {
     width: 100%;
@@ -460,7 +460,7 @@ div.mce-tinymce-inline {
 
 .mce-foot {
   display: block;
-  background-color: #fff;
+  background-color: $white;
   border-top: 1px solid #c5c5c5;
   @include border-radius(0 0 6px 6px);
 }
@@ -502,7 +502,7 @@ body .mce-abs-layout-item {
   max-width: 200px;
   padding: 5px 8px 4px;
   font-size: 12px;
-  color: #fff;
+  color: $white;
   text-align: center;
   white-space: normal;
   background-color: #000;
@@ -617,7 +617,7 @@ body .mce-abs-layout-item {
   display: inline-block;
   *display: inline;
   *zoom: 1;
-  background-color: #fff;
+  background-color: $white;
 
   &:hover,
   &:focus {
@@ -665,7 +665,7 @@ body .mce-abs-layout-item {
 
 .mce-primary {
   min-width: 50px;
-  color: #fff;
+  color: $white;
   background-color: #006dcc;
   border: 1px solid #b1b1b1;
   border-color:
@@ -700,10 +700,10 @@ body .mce-abs-layout-item {
   }
 
   button {
-    color: #fff;
+    color: $white;
 
     i {
-      color: #fff;
+      color: $white;
     }
   }
 }
@@ -943,7 +943,7 @@ i.mce-i-checkbox {
   }
 
   &:focus {
-    color: #fff;
+    color: $white;
     background: #666;
   }
 }
@@ -1124,7 +1124,7 @@ i.mce-i-checkbox {
   &:hover,
   &.mce-selected,
   &:focus {
-    color: #fff;
+    color: $white;
     text-decoration: none;
     background-color: #3ed2f0;
   }
@@ -1132,7 +1132,7 @@ i.mce-i-checkbox {
   &:hover .mce-menu-shortcut,
   &.mce-selected .mce-menu-shortcut,
   &:focus .mce-menu-shortcut {
-    color: #fff;
+    color: $white;
   }
 
   .mce-caret {
@@ -1147,7 +1147,7 @@ i.mce-i-checkbox {
   &.mce-selected .mce-caret,
   &:focus .mce-caret,
   &:hover .mce-caret {
-    border-left-color: #fff;
+    border-left-color: $white;
   }
 
   .mce-ico,
@@ -1171,7 +1171,7 @@ i.mce-i-checkbox {
   .mce-ico
   &:focus
   .mce-ico {
-    color: #fff;
+    color: $white;
   }
 
   &.mce-disabled:hover {
@@ -1212,7 +1212,7 @@ i.mce-i-checkbox {
   &:hover {
     .mce-text,
     .mce-ico {
-      color: #fff;
+      color: $white;
     }
   }
 }
@@ -1231,7 +1231,7 @@ div.mce-menu .mce-menu-item-sep,
   background: #cbcbcb;
   filter: none;
   border: 0;
-  border-bottom: 1px solid #fff;
+  border-bottom: 1px solid $white;
 }
 
 .mce-menu {
@@ -1245,7 +1245,7 @@ div.mce-menu .mce-menu-item-sep,
   margin: 2px 0 0;
   overflow: auto;
   overflow-x: hidden;
-  background: #fff;
+  background: $white;
   border: 1px solid #989898;
   @include border-radius(6px);
   box-shadow: 0 5px 10px rgba(0, 0, 0, 0.2);
@@ -1363,7 +1363,7 @@ i.mce-i-resize {
   white-space: pre-wrap;
   *white-space: pre;
   resize: none;
-  background: #fff;
+  background: $white;
   border: 1px solid #c5c5c5;
   @include border-radius(3px);
   @include transition(border linear 0.2s, box-shadow linear 0.2s);
@@ -1393,7 +1393,7 @@ i.mce-i-resize {
   width: 100%;
   height: 100%;
   zoom: 1;
-  background: #fff no-repeat center center;
+  background: $white no-repeat center center;
   filter: alpha(opacity = 60);
   opacity: 0.6;
 }

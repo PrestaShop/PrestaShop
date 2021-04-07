@@ -20,7 +20,7 @@ $component-name: header-multishop;
     background-color: $primary;
 
     .#{$component-name}-title {
-      color: #fff;
+      color: $white;
     }
   }
 
@@ -29,7 +29,7 @@ $component-name: header-multishop;
     font-size: 0.8rem;
     font-weight: 600;
     line-height: 18px;
-    color: #fff;
+    color: $white;
     text-align: center;
   }
 
@@ -63,7 +63,7 @@ $component-name: header-multishop;
     }
 
     .#{$component-name}-button {
-      background: #fff;
+      background: $white;
     }
 
     .#{$component-name}-center {
@@ -85,18 +85,18 @@ $component-name: header-multishop;
     justify-content: center;
     font-size: 0.8rem;
     line-height: 18px;
-    color: #fff;
+    color: $white;
     @include transition(0.25s ease-out);
 
     i {
       margin-top: 0.1rem;
       margin-left: 0.5rem;
       font-size: 1.25rem;
-      color: #fff;
+      color: $white;
     }
 
     &:hover {
-      color: #fff;
+      color: $white;
       text-decoration: none;
       opacity: 0.7;
     }
@@ -109,7 +109,7 @@ $component-name: header-multishop;
     width: 20px;
     height: 20px;
     margin-left: 1rem;
-    color: #fff;
+    color: $white;
     background-color: rgba(255, 255, 255, 0.2);
     border: none;
     @include border-radius(3px);

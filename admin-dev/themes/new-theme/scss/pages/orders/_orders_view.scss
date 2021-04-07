@@ -70,8 +70,8 @@
   .select-status {
     position: relative;
     max-width: 280px;
-    color: #fff;
-    background: #fff;
+    color: $white;
+    background: $white;
     border: none;
     @include border-radius(4px);
     box-shadow: 0 0 10px 0 rgba(0, 0, 0, 0.1);
@@ -79,7 +79,7 @@
 
     .select-status-colored {
       padding: 0.375rem 2.2rem 0.375rem 0.4375rem;
-      color: #fff;
+      color: $white;
       background: none;
       border: none;
 
@@ -95,7 +95,7 @@
       right: 10px;
       font-family: "Material Icons", Arial, sans-serif;
       font-size: 1.25rem;
-      color: #fff;
+      color: $white;
       pointer-events: none;
       cursor: pointer;
       content: "keyboard_arrow_down";
@@ -260,13 +260,13 @@
     .badge-dark,
     .badge-secondary {
       color: #000;
-      background-color: #fff;
+      background-color: $white;
     }
 
     .badge-print-light {
       font-weight: 500;
       color: #000 !important; // stylelint-disable-line
-      background-color: #fff !important; // stylelint-disable-line
+      background-color: $white !important; // stylelint-disable-line
     }
   }
 }

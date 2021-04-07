@@ -6,8 +6,8 @@
   padding: 0 0.1875rem;
   font-size: 0.625rem;
   line-height: 0.75rem;
-  color: #fff;
+  color: $white;
   background: #f1b746;
-  border: 0.125rem solid #fff;
+  border: 0.125rem solid $white;
   @include border-radius(1rem);
 }

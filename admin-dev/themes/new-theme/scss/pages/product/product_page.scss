@@ -121,7 +121,7 @@
     padding-bottom: 1.25rem;
     margin-top: -$grid-gutter-width / 2;
     margin-bottom: $grid-gutter-width / 2;
-    background: #fff;
+    background: $white;
 
     .edit {
       background-size: 4%;
@@ -171,7 +171,7 @@
     z-index: 10;
     display: flex;
     align-items: center;
-    background: #fff;
+    background: $white;
     box-shadow: $gray-dark 0 0 10px;
     padding: {
       top: $grid-gutter-width / 2;
@@ -265,7 +265,7 @@
     margin: 0 0.625rem 0 0;
     border: 1px solid $gray-light;
     @include border-radius(0.1875rem);
-    outline: solid 4px #fff;
+    outline: solid 4px $white;
   }
 
   .product-combination-image.img-highlight {
@@ -307,7 +307,7 @@
     }
 
     .panel {
-      background: #fff;
+      background: $white;
     }
   }
 
@@ -424,7 +424,7 @@
           width: 100%;
           padding: 5px;
           font-size: 12px;
-          color: #fff;
+          color: $white;
           text-align: center;
           background: $gray-medium;
         }
@@ -555,7 +555,7 @@
       max-height: 19.5rem;
       padding: 0.3125rem 0;
       overflow: auto;
-      background: #fff;
+      background: $white;
       border: 1px solid $gray-medium;
     }
 
@@ -566,7 +566,7 @@
 
       &:hover,
       &.tt-cursor {
-        color: #fff;
+        color: $white;
         background-color: $primary-hover;
       }
     }
@@ -615,7 +615,7 @@
     }
 
     .delete {
-      background: #fff;
+      background: $white;
       border: none;
 
       .material-icons {
@@ -938,7 +938,7 @@
   margin-top: 2px;
   list-style: none;
   cursor: default;
-  background-color: #fff;
+  background-color: $white;
   border: 1px solid #ccc;
   @include border-radius(5px);
   box-shadow: 0 5px 10px rgba(0, 0, 0, 0.2);
@@ -951,7 +951,7 @@
       background: $primary-hover;
 
       a {
-        color: #fff;
+        color: $white;
         text-decoration: none;
       }
     }
@@ -1027,7 +1027,7 @@
               &.not-color::before {
                 display: block;
                 line-height: 1rem;
-                color: #fff;
+                color: $white;
                 text-align: center;
               }
             }
@@ -1159,9 +1159,9 @@
         z-index: 2;
         height: 3rem;
         padding: 0.9375rem 0.3125rem;
-        color: #fff;
+        color: $white;
         cursor: pointer;
-        background: #fff;
+        background: $white;
         background: $brand-primary;
 
         &.visible {
