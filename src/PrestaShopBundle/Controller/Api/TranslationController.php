@@ -27,21 +27,12 @@
 namespace PrestaShopBundle\Controller\Api;
 
 use Exception;
-use PrestaShop\PrestaShop\Core\Translation\Storage\Provider\Definition\BackofficeProviderDefinition;
-use PrestaShop\PrestaShop\Core\Translation\Storage\Provider\Definition\CoreDomainProviderDefinition;
-use PrestaShop\PrestaShop\Core\Translation\Storage\Provider\Definition\FrontofficeProviderDefinition;
-use PrestaShop\PrestaShop\Core\Translation\Storage\Provider\Definition\MailsBodyProviderDefinition;
-use PrestaShop\PrestaShop\Core\Translation\Storage\Provider\Definition\MailsProviderDefinition;
-use PrestaShop\PrestaShop\Core\Translation\Storage\Provider\Definition\ModuleProviderDefinition;
-use PrestaShop\PrestaShop\Core\Translation\Storage\Provider\Definition\OthersProviderDefinition;
 use PrestaShop\PrestaShop\Core\Translation\Storage\Provider\Definition\ProviderDefinitionInterface;
-use PrestaShop\PrestaShop\Core\Translation\Storage\Provider\Definition\ThemeProviderDefinition;
 use PrestaShopBundle\Api\QueryTranslationParamsCollection;
 use PrestaShopBundle\Exception\InvalidLanguageException;
 use PrestaShopBundle\Security\Annotation\AdminSecurity;
 use PrestaShopBundle\Service\TranslationService;
 use PrestaShopBundle\Translation\Exception\UnsupportedLocaleException;
-use PrestaShopBundle\Translation\View\TreeBuilder;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
@@ -323,132 +314,13 @@ class TranslationController extends ApiController
     private function getTree(string $lang, string $type, array $search, ?string $selectedValue = null)
     {
         $locale = $this->translationService->langToLocale($lang);
+        $providerDefinitionFactory = $this->container->get('prestashop.translation.factory.provider_definition');
 
         return $this->translationService->getTranslationsTree(
-            $this->buildProviderDefinitionByType($type, $selectedValue),
+            $providerDefinitionFactory->build($type, $selectedValue),
             $locale,
             $search
         );
-    }
-
-    /**
-     * @param string $type
-     * @param string|null $selectedValue
-     *
-     * @return ProviderDefinitionInterface
-     */
-    private function buildProviderDefinitionByType(
-        string $type,
-        ?string $selectedValue = null
-    ): ProviderDefinitionInterface {
-        switch ($type) {
-            case ProviderDefinitionInterface::TYPE_MODULES:
-                return new ModuleProviderDefinition($selectedValue);
-            case ProviderDefinitionInterface::TYPE_THEMES:
-                return new ThemeProviderDefinition($selectedValue);
-            case ProviderDefinitionInterface::TYPE_CORE_DOMAIN:
-                return new CoreDomainProviderDefinition($selectedValue);
-            case ProviderDefinitionInterface::TYPE_BACK:
-                return new BackofficeProviderDefinition();
-            case ProviderDefinitionInterface::TYPE_FRONT:
-                return new FrontofficeProviderDefinition();
-            case ProviderDefinitionInterface::TYPE_MAILS:
-                return new MailsProviderDefinition();
-            case ProviderDefinitionInterface::TYPE_MAILS_BODY:
-                return new MailsBodyProviderDefinition();
-            case ProviderDefinitionInterface::TYPE_OTHERS:
-                return new OthersProviderDefinition();
-            default:
-                throw new \RuntimeException(sprintf('Unrecognized type: %s', $type));
-        }
-    }
-
-    /**
-     * @param string $lang
-     * @param string|null $type
-     * @param string $theme Selected theme name
-     * @param null $search
-     *
-     * @return array
-     */
-    private function getNormalTree($lang, $type, $theme, $search = null)
-    {
-        $treeBuilder = new TreeBuilder($this->translationService->langToLocale($lang), $theme);
-        $catalogue = $this->translationService->getTranslationsCatalogue($lang, $type, $theme, $search);
-
-        return $this->getCleanTree($treeBuilder, $catalogue, $theme, $search);
-    }
-
-    /**
-     * @param string $lang Two-letter iso code
-     * @param string $selectedModuleName Selected module name
-     * @param string|null $search
-     *
-     * @return array
-     */
-    private function getModulesTree($lang, $selectedModuleName, $search = null)
-    {
-        $theme = null;
-        $locale = $this->translationService->langToLocale($lang);
-
-        $moduleProvider = $this->container->get('prestashop.translation.external_module_provider');
-        $moduleProvider->setModuleName($selectedModuleName);
-
-        $treeBuilder = new TreeBuilder($locale, $theme);
-        $catalogue = $treeBuilder->makeTranslationArray($moduleProvider, $search);
-
-        return $this->getCleanTree($treeBuilder, $catalogue, $theme, $search, $selectedModuleName);
-    }
-
-    /**
-     * @param string $lang Two-letter iso code
-     * @param null $search
-     *
-     * @return array
-     */
-    private function getMailsSubjectTree($lang, $search = null)
-    {
-        $theme = null;
-
-        $treeBuilder = new TreeBuilder($this->translationService->langToLocale($lang), $theme);
-        $catalogue = $this->translationService->getTranslationsCatalogue($lang, 'mails', $theme, $search);
-
-        return $this->getCleanTree($treeBuilder, $catalogue, $theme, $search);
-    }
-
-    /**
-     * @param string $lang Two-letter iso code
-     * @param null $search
-     *
-     * @return array
-     */
-    private function getMailsBodyTree($lang, $search = null)
-    {
-        $theme = null;
-
-        $treeBuilder = new TreeBuilder($this->translationService->langToLocale($lang), $theme);
-        $catalogue = $this->translationService->getTranslationsCatalogue($lang, 'mails_body', $theme, $search);
-
-        return $this->getCleanTree($treeBuilder, $catalogue, $theme, $search);
-    }
-
-    /**
-     * Make final tree.
-     *
-     * @param TreeBuilder $treeBuilder
-     * @param array $catalogue
-     * @param string|null $theme
-     * @param string|null $search
-     * @param string|null $module
-     *
-     * @return array
-     */
-    private function getCleanTree(TreeBuilder $treeBuilder, $catalogue, $theme, $search = null, $module = null)
-    {
-        $translationsTree = $treeBuilder->makeTranslationsTree($catalogue);
-        $translationsTree = $treeBuilder->cleanTreeToApi($translationsTree, $this->container->get('router'), $theme, $search, $module);
-
-        return $translationsTree;
     }
 
     /**

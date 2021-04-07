@@ -265,8 +265,7 @@
         this.modifiedTranslations = [];
         const targetTheme = (window.data.type === 'modules') ? '' : window.data.selected;
 
-        Object.keys(this.$store.state.modifiedTranslations).forEach((key) => {
-          const translation = this.$store.state.modifiedTranslations[key];
+        Object.values(this.$store.state.modifiedTranslations).forEach((translation) => {
           this.modifiedTranslations.push({
             default: translation.default,
             edited: translation.edited,
