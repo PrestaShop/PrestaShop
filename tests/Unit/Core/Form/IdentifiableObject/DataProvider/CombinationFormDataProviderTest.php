@@ -190,9 +190,9 @@ class CombinationFormDataProviderTest extends TestCase
     {
         return new CombinationPrices(
             $combination['eco_tax'] ?? new DecimalNumber('42.00'),
-            $combination['price_impact'] ?? new DecimalNumber('42.00'),
-            $combination['unit_price_impact'] ?? new DecimalNumber('42.00'),
-            $combination['wholesale_price'] ?? new DecimalNumber('42.00')
+            $combination['price_impact'] ?? new DecimalNumber('51.00'),
+            $combination['unit_price_impact'] ?? new DecimalNumber('69.00'),
+            $combination['wholesale_price'] ?? new DecimalNumber('99.00')
         );
     }
 
@@ -245,6 +245,14 @@ class CombinationFormDataProviderTest extends TestCase
                 'low_stock_threshold' => null,
                 'low_stock_alert' => false,
                 'available_date' => '',
+            ],
+            'price_impact' => [
+                'wholesale_price' => 99.00,
+                'price_tax_excluded' => 51.00,
+                'price_tax_included' => 51.00,
+                'ecotax' => 42.00,
+                'unit_price' => 69.00,
+                'weight' => 42.00,
             ],
         ];
     }

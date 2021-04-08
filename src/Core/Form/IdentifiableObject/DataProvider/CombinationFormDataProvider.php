@@ -65,6 +65,7 @@ class CombinationFormDataProvider implements FormDataProviderInterface
             'id' => $combinationId,
             'name' => $combinationForEditing->getName(),
             'stock' => $this->extractStockData($combinationForEditing),
+            'price_impact' => $this->extractPriceImpactData($combinationForEditing),
         ];
     }
 
@@ -85,6 +86,25 @@ class CombinationFormDataProvider implements FormDataProviderInterface
             'low_stock_threshold' => $stockInformation->getLowStockThreshold() ?: null,
             'low_stock_alert' => $stockInformation->isLowStockAlertEnabled(),
             'available_date' => $availableDate ? $availableDate->format(DateTime::DEFAULT_DATE_FORMAT) : '',
+        ];
+    }
+
+    /**
+     * @param CombinationForEditing $combinationForEditing
+     *
+     * @return array
+     */
+    private function extractPriceImpactData(CombinationForEditing $combinationForEditing): array
+    {
+        $priceImpactInformation = $combinationForEditing->getPrices();
+
+        return [
+            'wholesale_price' => (float) (string) $priceImpactInformation->getWholesalePrice(),
+            'price_tax_excluded' => (float) (string) $priceImpactInformation->getImpactOnPrice(),
+            'price_tax_included' => (float) (string) $priceImpactInformation->getImpactOnPrice(),
+            'ecotax' => (float) (string) $priceImpactInformation->getEcoTax(),
+            'unit_price' => (float) (string) $priceImpactInformation->getImpactOnUnitPrice(),
+            'weight' => (float) (string) $combinationForEditing->getDetails()->getImpactOnWeight(),
         ];
     }
 
