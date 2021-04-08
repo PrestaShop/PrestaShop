@@ -106,20 +106,10 @@ tests-legacy/resources/modules/ps_sharebuttons
 # Installed with test data maybe via API push
 tests-legacy/resources/modules/ps_reminder
 
-tests/Resources/img/l/*
-!tests/Resources/img/l/.gitkeep
-tests/Resources/img/p/*
-!tests/Resources/img/p/.gitkeep
-tests/Resources/img/os/*
-!tests/Resources/img/os/.gitkeep
-tests/Resources/img/genders/*
-!tests/Resources/img/genders/.gitkeep
-tests/Resources/img/c/*
-!tests/Resources/img/c/.gitkeep
-tests/Resources/img/tmp/*
-tests/Resources/img/tmp/.gitkeep
-!tests/Resources/download/.gitkeep
+tests/Resources/img/*/*
+!tests/Resources/img/*/.gitkeep
 tests/Resources/download/*
+!tests/Resources/download/.gitkeep
 
 /admin-dev/autoupgrade/*
 !/admin-dev/autoupgrade/index.php
