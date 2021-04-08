@@ -25,7 +25,7 @@ table.grid-ordering-column tr {
 }
 
 table.grid-ordering-column tr.position-row-while-drag {
-  color: #fff;
+  color: $white;
   background: none;
   box-shadow: 3px 3px 8px 0 rgba(0, 0, 0, 0.2);
   transform: translate(5px, 10px);
@@ -47,7 +47,7 @@ table.grid-ordering-column tr.position-row-while-drag {
   .btn,
   .btn::after,
   .btn .material-icons {
-    color: #fff;
+    color: $white;
   }
 }
 
@@ -147,7 +147,7 @@ table .column-filters td:last-child .grid-reset-button {
           background: #fafbfc;
 
           td {
-            color: #fff;
+            color: $white;
             background: #67868e;
             transform: translate(5px, 10px);
 
@@ -157,7 +157,7 @@ table .column-filters td:last-child .grid-reset-button {
             i.material-icons,
             a,
             a::after {
-              color: #fff;
+              color: $white;
             }
           }
         }

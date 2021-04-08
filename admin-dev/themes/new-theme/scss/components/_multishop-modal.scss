@@ -31,7 +31,7 @@ $component-name: multishop-modal;
     max-width: 39.375rem;
     padding: 1.875rem 3.125rem;
     padding-right: 2.125rem;
-    background: #fff;
+    background: $white;
     border: 1px solid #b7ced3;
     // stylelint-disable
     border-bottom-right-radius: 4px;
@@ -79,7 +79,7 @@ $component-name: multishop-modal;
       .tt-menu {
         width: 100%;
         overflow: hidden;
-        background-color: #fff;
+        background-color: $white;
         box-shadow: 0 8px 16px 0 rgba(0, 0, 0, 0.1);
         @include border-bottom-radius(4px);
 

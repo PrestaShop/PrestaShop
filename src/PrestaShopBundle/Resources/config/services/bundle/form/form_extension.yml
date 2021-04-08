@@ -39,9 +39,15 @@ services:
         tags:
             - { name: form.type_extension, extended_type: PrestaShopBundle\Form\Admin\Type\MultistoreConfigurationType }
 
+    form.extension.multistore_dropdown:
+        class: 'PrestaShopBundle\Form\Admin\Extension\MultistoreDropdownExtension'
+        tags:
+            - { name: form.type_extension, extended_type: Symfony\Component\Form\Extension\Core\Type\FormType }
+
     prestashop.multistore_checkbox_enabler:
         class: PrestaShopBundle\Service\Form\MultistoreCheckboxEnabler
         arguments:
             - '@prestashop.adapter.feature.multistore'
             - '@prestashop.adapter.legacy.configuration'
             - '@prestashop.adapter.shop.context'
+            - '@prestashop.core.admin.multistore'

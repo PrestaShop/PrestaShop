@@ -8,7 +8,7 @@
   float: right;
   padding: 0 3em 0 0;
   overflow: auto;
-  background: #fff;
+  background: $white;
 
   &.sidebar-open {
     box-shadow: 0 0 12px rgba(0, 0, 0, 0.8);
@@ -33,7 +33,7 @@
 
       a {
         font-size: 2rem;
-        color: #fff;
+        color: $white;
       }
     }
   }
@@ -100,12 +100,12 @@
   .quicknav-header {
     height: 50px;
     padding: 1.2em;
-    color: #fff;
+    color: $white;
     background: #363a41;
 
     h2{
       margin-bottom: 0;
-      color: #fff;
+      color: $white;
     }
   }
 

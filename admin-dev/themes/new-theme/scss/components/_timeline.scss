@@ -68,7 +68,7 @@
         margin-bottom: 20px;
         margin-left: 42px;
         text-align: left;
-        background-color: #fff;
+        background-color: $white;
         border: 1px solid #ddd;
         @include border-radius(5px);
 
@@ -81,7 +81,7 @@
           line-height: 40px;
           text-align: center;
           background-color: #666;
-          border: 2px solid #fff;
+          border: 2px solid $white;
           @include border-radius(40px);
         }
 

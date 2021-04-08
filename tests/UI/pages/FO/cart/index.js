@@ -41,12 +41,12 @@ class Cart extends FOBasePage {
   async getProductDetail(page, row) {
     return {
       name: await this.getTextContent(page, this.productName(row)),
-      regularPrice: parseFloat((await this.getTextContent(page, this.productRegularPrice(row))).replace('€', '')),
-      price: parseFloat((await this.getTextContent(page, this.productPrice(row))).replace('€', '')),
+      regularPrice: await this.getPriceFromText(page, this.productRegularPrice(row)),
+      price: await this.getPriceFromText(page, this.productPrice(row)),
       discountPercentage: await this.getTextContent(page, this.productDiscountPercentage(row)),
       image: await this.getAttributeContent(page, this.productImage(row), 'src'),
       quantity: parseFloat(await this.getAttributeContent(page, this.productQuantity(row), 'value')),
-      totalPrice: parseFloat((await this.getTextContent(page, this.productTotalPrice(row))).replace('€', '')),
+      totalPrice: await this.getPriceFromText(page, this.productTotalPrice(row)),
     };
   }
 
@@ -105,6 +105,11 @@ class Cart extends FOBasePage {
     return this.getPriceFromText(page, this.cartTotalATI, 2000);
   }
 
+  /**
+   * Get subtotal discount value
+   * @param page
+   * @returns {Promise<number>}
+   */
   getSubtotalDiscountValue(page) {
     return this.getPriceFromText(page, this.subtotalDiscountValueSpan, 2000);
   }

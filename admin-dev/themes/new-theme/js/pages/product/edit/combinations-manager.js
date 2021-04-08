@@ -28,26 +28,36 @@ import CombinationsGridRenderer from '@pages/product/edit/combinations-grid-rend
 import CombinationsService from '@pages/product/services/combinations-service';
 import DynamicPaginator from '@components/pagination/dynamic-paginator';
 import SubmittableInput from '@components/form/submittable-input';
+import ProductEventMap from '@pages/product/product-event-map';
+import initCombinationModal from '@pages/product/components/combination-modal';
 
 const {$} = window;
+const CombinationEvents = ProductEventMap.combinations;
 
 export default class CombinationsManager {
-  constructor() {
+  /**
+   * @param {int} productId
+   * @returns {{}}
+   */
+  constructor(productId) {
+    this.eventEmitter = window.prestashop.instance.eventEmitter;
     this.$productForm = $(ProductMap.productForm);
     this.$combinationsContainer = $(ProductMap.combinations.combinationsContainer);
     this.combinationIdInputsSelector = ProductMap.combinations.combinationIdInputsSelector;
     this.initialized = false;
     this.combinationsService = new CombinationsService(this.getProductId());
 
-    this.init();
+    this.init(productId);
 
     return {};
   }
 
   /**
+   * @param {int} productId
+   *
    * @private
    */
-  init() {
+  init(productId) {
     this.paginator = new DynamicPaginator(
       ProductMap.combinations.paginationContainer,
       this.combinationsService,
@@ -63,6 +73,18 @@ export default class CombinationsManager {
 
     // Paginate to first page when tab is shown
     this.$productForm.find(ProductMap.combinations.navigationTab).on('shown.bs.tab', () => this.firstInit());
+
+    // Init combination edition modal
+    initCombinationModal(ProductMap.combinations.editModal, productId);
+
+    this.watchEvents();
+  }
+
+  /**
+   * @private
+   */
+  watchEvents() {
+    this.eventEmitter.on(CombinationEvents.refreshList, () => this.paginator.paginate(this.paginator.getCurrentPage()));
   }
 
   /**

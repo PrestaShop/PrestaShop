@@ -9,7 +9,7 @@ $header-text-color: #4e6167 !default;
   height: $size-header-height;
   font-size: 0.8125rem;
   color: $header-text-color;
-  background: #fff;
+  background: $white;
 
   .material-icons {
     position: relative;
@@ -291,11 +291,11 @@ $header-text-color: #4e6167 !default;
         border-bottom: 0;
 
         &:hover {
-          color: #fff;
+          color: $white;
           background-color: $primary;
 
           .material-icons {
-            color: #fff;
+            color: $white;
           }
         }
       }
@@ -775,7 +775,7 @@ $header-text-color: #4e6167 !default;
       display: inline-block;
       content: "";
       border-right: 6px solid transparent;
-      border-bottom: 6px solid #fff;
+      border-bottom: 6px solid $white;
       border-left: 6px solid transparent;
     }
 
@@ -880,7 +880,7 @@ $header-text-color: #4e6167 !default;
           &,
           i {
             // stylelint-disable-next-line
-            color: #fff !important;
+            color: $white !important;
           }
         }
 
@@ -903,7 +903,7 @@ $header-text-color: #4e6167 !default;
           &,
           i {
             // stylelint-disable-next-line
-            color: #fff !important;
+            color: $white !important;
           }
         }
 

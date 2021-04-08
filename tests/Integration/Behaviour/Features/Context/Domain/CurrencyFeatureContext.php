@@ -285,12 +285,4 @@ class CurrencyFeatureContext extends AbstractDomainFeatureContext
     {
         $this->assertLastErrorIs(CurrencyNotFoundException::class);
     }
-
-    /**
-     * @Then I should get no currency error
-     */
-    public function assertNoCurrencyError()
-    {
-        $this->assertLastErrorIsNull();
-    }
 }

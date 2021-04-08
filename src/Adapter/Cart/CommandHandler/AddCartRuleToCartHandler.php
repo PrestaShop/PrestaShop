@@ -32,7 +32,6 @@ use CartRule;
 use Context;
 use Currency;
 use Customer;
-use Language;
 use PrestaShop\PrestaShop\Adapter\Cart\AbstractCartHandler;
 use PrestaShop\PrestaShop\Adapter\ContextStateManager;
 use PrestaShop\PrestaShop\Core\Domain\Cart\Command\AddCartRuleToCartCommand;
@@ -80,7 +79,7 @@ final class AddCartRuleToCartHandler extends AbstractCartHandler implements AddC
         $this->contextStateManager
             ->setCart($cart)
             ->setCurrency(new Currency($cart->id_currency))
-            ->setLanguage(new Language($cart->id_lang))
+            ->setLanguage($cart->getAssociatedLanguage())
             ->setCustomer(new Customer($cart->id_customer))
             ->setShop(new Shop($cart->id_shop))
         ;

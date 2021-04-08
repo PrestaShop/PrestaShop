@@ -29,9 +29,9 @@ namespace PrestaShopBundle\Form\Admin\Sell\Product\Combination;
 
 use PrestaShop\PrestaShop\Core\ConstraintValidator\Constraints\TypedRegex;
 use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\Reference;
+use PrestaShopBundle\Form\Admin\Type\IconButtonType;
 use PrestaShopBundle\Form\Admin\Type\SubmittableInputType;
 use PrestaShopBundle\Form\Admin\Type\TranslatorAwareType;
-use Symfony\Component\Form\Extension\Core\Type\ButtonType;
 use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
 use Symfony\Component\Form\Extension\Core\Type\HiddenType;
 use Symfony\Component\Form\Extension\Core\Type\MoneyType;
@@ -94,8 +94,18 @@ class CombinationItemType extends TranslatorAwareType
                     'class' => 'combination-is-default-input',
                 ],
             ])
-            ->add('edit', ButtonType::class)
-            ->add('delete', ButtonType::class)
+            ->add('edit', IconButtonType::class, [
+                'icon' => 'mode_edit',
+                'attr' => [
+                    'class' => 'edit-combination-item tooltip-link',
+                ],
+            ])
+            ->add('delete', IconButtonType::class, [
+                'icon' => 'delete',
+                'attr' => [
+                    'class' => 'edit-combination-item tooltip-link',
+                ],
+            ])
         ;
     }
 }

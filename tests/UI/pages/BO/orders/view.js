@@ -1,6 +1,9 @@
 require('module-alias/register');
 const BOBasePage = require('@pages/BO/BObasePage');
 
+// Needed to create customer in orders page
+const addAddressPage = require('@pages/BO/customers/addresses/add');
+
 class Order extends BOBasePage {
   constructor() {
     super();
@@ -15,10 +18,19 @@ class Order extends BOBasePage {
     // Customer card
     this.customerInfoBlock = '#customerInfo';
     this.ViewAllDetailsLink = '#viewFullDetails a';
-    this.customerEmailLink = '#customerEmail';
+    this.customerEmailLink = '#customerEmail a';
     this.validatedOrders = '#validatedOrders span.badge';
     this.shippingAddressBlock = '#addressShipping';
+    this.shippingAddressToolTipLink = `${this.shippingAddressBlock} .tooltip-link`;
+    this.editShippingAddressButton = '#js-delivery-address-edit-btn';
+    this.selectAnotherShippingAddressButton = `${this.shippingAddressBlock} .js-update-customer-address-modal-btn`;
+    this.changeOrderAddressSelect = '#change_order_address_new_address_id';
+    this.submitAnotherAddressButton = 'form[name="change_order_address"] .modal-footer button[type="submit"]';
+    this.editAddressIframe = 'iframe.fancybox-iframe';
     this.invoiceAddressBlock = '#addressInvoice';
+    this.invoiceAddressToolTipLink = `${this.invoiceAddressBlock} .tooltip-link`;
+    this.editInvoiceAddressButton = '#js-invoice-address-edit-btn';
+    this.selectAnotherInvoiceAddressButton = `${this.invoiceAddressBlock} .js-update-customer-address-modal-btn`;
     this.privateNoteDiv = '#privateNote';
     this.privateNoteTextarea = '#private_note_note';
     this.addNewPrivateNoteLink = '#privateNote a.js-private-note-toggle-btn';
@@ -370,7 +382,7 @@ class Order extends BOBasePage {
    * @returns {Promise<string>}
    */
   getCustomerEmail(page) {
-    return this.getTextContent(page, this.customerEmailLink);
+    return this.getAttributeContent(page, this.customerEmailLink, 'href');
   }
 
   /**
@@ -380,6 +392,84 @@ class Order extends BOBasePage {
    */
   getValidatedOrdersNumber(page) {
     return this.getNumberFromText(page, `${this.validatedOrders}.badge-dark`);
+  }
+
+  /**
+   * Edit existing shipping address
+   * @param page
+   * @returns {Promise<void>}
+   */
+  async editExistingShippingAddress(page, addressData) {
+    await this.waitForSelectorAndClick(page, this.shippingAddressToolTipLink);
+    await this.waitForSelectorAndClick(page, this.editShippingAddressButton);
+
+    await this.waitForVisibleSelector(page, this.editAddressIframe);
+
+    const addressFrame = await page.frame({url: new RegExp('sell/addresses/order', 'gmi')});
+
+    await addAddressPage.createEditAddress(addressFrame, addressData, false);
+
+    await Promise.all([
+      addressFrame.click(addAddressPage.saveAddressButton),
+      page.waitForSelector(this.editAddressIframe, {state: 'hidden'}),
+    ]);
+
+    return this.getShippingAddress(page);
+  }
+
+  /**
+   * Select another shipping address
+   * @param page
+   * @param address
+   * @returns {Promise<string>}
+   */
+  async selectAnotherShippingAddress(page, address) {
+    await this.waitForSelectorAndClick(page, this.shippingAddressToolTipLink);
+    await this.waitForSelectorAndClick(page, this.selectAnotherShippingAddressButton);
+
+    await this.selectByVisibleText(page, this.changeOrderAddressSelect, address);
+    await this.waitForSelectorAndClick(page, this.submitAnotherAddressButton);
+
+    return this.getAlertSuccessBlockParagraphContent(page);
+  }
+
+  /**
+   * Edit existing shipping address
+   * @param page
+   * @returns {Promise<void>}
+   */
+  async editExistingInvoiceAddress(page, addressData) {
+    await this.waitForSelectorAndClick(page, this.invoiceAddressToolTipLink);
+    await this.waitForSelectorAndClick(page, this.editInvoiceAddressButton);
+
+    await this.waitForVisibleSelector(page, this.editAddressIframe);
+
+    const addressFrame = await page.frame({url: new RegExp('sell/addresses/order', 'gmi')});
+
+    await addAddressPage.createEditAddress(addressFrame, addressData, false);
+
+    await Promise.all([
+      addressFrame.click(addAddressPage.saveAddressButton),
+      page.waitForSelector(this.editAddressIframe, {state: 'hidden'}),
+    ]);
+
+    return this.getInvoiceAddress(page);
+  }
+
+  /**
+   * Select another shipping address
+   * @param page
+   * @param address
+   * @returns {Promise<string>}
+   */
+  async selectAnotherInvoiceAddress(page, address) {
+    await this.waitForSelectorAndClick(page, this.invoiceAddressToolTipLink);
+    await this.waitForSelectorAndClick(page, this.selectAnotherInvoiceAddressButton);
+
+    await this.selectByVisibleText(page, this.changeOrderAddressSelect, address);
+    await this.waitForSelectorAndClick(page, this.submitAnotherAddressButton);
+
+    return this.getAlertSuccessBlockParagraphContent(page);
   }
 
   /**

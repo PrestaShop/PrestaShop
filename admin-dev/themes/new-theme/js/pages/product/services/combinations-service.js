@@ -65,4 +65,13 @@ export default class CombinationsService {
       type: 'PATCH',
     });
   }
+
+  /**
+   * @returns {Promise}
+   */
+  getCombinationIds() {
+    return $.get(this.router.generate('admin_products_combinations_ids', {
+      productId: this.productId,
+    }));
+  }
 }

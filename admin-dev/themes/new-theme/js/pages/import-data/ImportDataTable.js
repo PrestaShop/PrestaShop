@@ -118,7 +118,6 @@ export default class ImportDataTable {
     }
   }
 
-
   /**
    * Gets the number of currently visible columns in the import data table.
    *

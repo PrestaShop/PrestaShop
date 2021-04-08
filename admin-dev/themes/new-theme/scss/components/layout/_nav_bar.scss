@@ -33,7 +33,7 @@
   .material-icons {
     font-size: 1.188rem;
     line-height: inherit;
-    color: #fff;
+    color: $white;
   }
 
   &.mobile-nav {
@@ -48,7 +48,7 @@
       display: block;
       font-family: "Material Icons", sans-serif;
       font-size: 1.5rem;
-      color: #fff;
+      color: $white;
       pointer-events: none;
       content: "\e5cd";
 
@@ -100,7 +100,7 @@
       span {
         display: block;
         margin-bottom: 0.625rem;
-        color: #fff;
+        color: $white;
 
         @include media-breakpoint-down(md) {
           font-size: 1.09375rem;
@@ -163,7 +163,7 @@
       }
 
       li {
-        background-color: #fff;
+        background-color: $white;
         border-bottom: $gray-light 1px solid;
 
         &.group a {
@@ -322,7 +322,7 @@
     &.link-active,
     &.link-hover {
       & > .link {
-        color: #fff;
+        color: $white;
         background: #202226;
         @include transition(background 300ms ease);
 
@@ -397,7 +397,7 @@
     &.link-active {
       > .link {
         padding-left: 0;
-        color: #fff;
+        color: $white;
         border-left: none;
       }
     }
@@ -436,7 +436,7 @@
   }
 
   & > .title {
-    color: #fff;
+    color: $white;
     background: $gray-dark;
 
     @at-root .sidebar-closed & {

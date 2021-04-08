@@ -58,6 +58,7 @@
 @import "components/timeline";
 @import "components/submittable_input";
 @import "components/multishop-modal";
+@import "components/multistore-dropdown";
 
 // Pages specifics SCSS files
 @import "pages/invoices";
@@ -104,7 +105,7 @@ body {
 
   > .nav-item > .nav-link {
     &.active {
-      border-bottom: 1px solid #fff;
+      border-bottom: 1px solid $white;
     }
   }
 }

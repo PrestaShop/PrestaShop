@@ -4,7 +4,7 @@
   right: 0;
   left: $size-navbar-width;
   z-index: 990; // popup menus' z-index is 1000, so it has to be just below that
-  background: #fff;
+  background: $white;
   border-bottom: 0.0625rem solid $color-separator;
   @include transition(
     left 0.5s ease
@@ -114,7 +114,7 @@
 }
 
 .page-head-tabs {
-  background: #fff;
+  background: $white;
 
   > ul {
     border-bottom: 0;
