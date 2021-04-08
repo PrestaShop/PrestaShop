@@ -48,7 +48,7 @@ Feature: Legacy products have consistent product type through dynamic checking (
     And product "virtual_product" dynamic type should be standard
     Given product "Virtual Product" is virtual
     Then product "virtual_product" type should be virtual
-    And product "virtual_product" persisted type should be undefined
+    And product "virtual_product" persisted type should be virtual
     And product "virtual_product" dynamic type should be virtual
 
   Scenario: I create a pack product, its product type should be pack

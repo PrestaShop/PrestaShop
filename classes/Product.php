@@ -772,6 +772,10 @@ class ProductCore extends ObjectModel
      */
     public function add($autodate = true, $null_values = false)
     {
+        if ($this->is_virtual) {
+            $this->product_type = ProductType::TYPE_VIRTUAL;
+        }
+
         if (!parent::add($autodate, $null_values)) {
             return false;
         }
@@ -802,6 +806,10 @@ class ProductCore extends ObjectModel
      */
     public function update($null_values = false)
     {
+        if ($this->is_virtual) {
+            $this->product_type = ProductType::TYPE_VIRTUAL;
+        }
+
         $return = parent::update($null_values);
         $this->setGroupReduction();
 
@@ -1139,8 +1147,12 @@ class ProductCore extends ObjectModel
      */
     public static function updateIsVirtual($id_product, $is_virtual = true)
     {
+        // We cannot be sure of the target type, so we set it to undefined this way dynamic type will be used
+        $productType = $is_virtual ? ProductType::TYPE_VIRTUAL : ProductType::TYPE_UNDEFINED;
+
         Db::getInstance()->update('product', [
             'is_virtual' => (bool) $is_virtual,
+            'product_type' => $productType,
         ], 'id_product = ' . (int) $id_product);
     }
 
@@ -1963,7 +1975,7 @@ class ProductCore extends ObjectModel
      */
     public function setDefaultAttribute($id_product_attribute)
     {
-        // We cannot be sure of the target type, so we set it to empty this way dynamic type will be used
+        // We cannot be sure of the target type, so we set it to undefined this way dynamic type will be used
         $productType = !empty($id_product_attribute) ? ProductType::TYPE_COMBINATIONS : ProductType::TYPE_UNDEFINED;
 
         $result = ObjectModel::updateMultishopTable('Combination', [
@@ -1989,7 +2001,7 @@ class ProductCore extends ObjectModel
     {
         $id_default_attribute = (int) Product::getDefaultAttribute($id_product, 0, true);
 
-        // We cannot be sure of the target type, so we set it to empty this way dynamic type will be used
+        // We cannot be sure of the target type, so we set it to undefined this way dynamic type will be used
         $productType = !empty($id_default_attribute) ? ProductType::TYPE_COMBINATIONS : ProductType::TYPE_UNDEFINED;
 
         $result = Db::getInstance()->update('product_shop', [
