@@ -34,6 +34,10 @@ use PrestaShop\TranslationToolsBundle\Translation\Helper\DomainHelper;
  */
 class ModuleProviderDefinition extends AbstractCoreProviderDefinition
 {
+    private const FILENAME_FILTERS_REGEX = ['#^%s([A-Z]|\.|$)#'];
+
+    private const TRANSLATION_DOMAINS_REGEX = ['^%s([A-Z]|$)'];
+
     /**
      * @var string
      */
@@ -65,7 +69,9 @@ class ModuleProviderDefinition extends AbstractCoreProviderDefinition
      */
     public function getFilenameFilters(): array
     {
-        return ['#^' . preg_quote(DomainHelper::buildModuleBaseDomain($this->moduleName)) . '([A-Z]|\.|$)#'];
+        return array_map(function (string $filenameFilter) {
+            return sprintf($filenameFilter, preg_quote(DomainHelper::buildModuleBaseDomain($this->moduleName)));
+        }, self::FILENAME_FILTERS_REGEX);
     }
 
     /**
@@ -73,6 +79,8 @@ class ModuleProviderDefinition extends AbstractCoreProviderDefinition
      */
     public function getTranslationDomains(): array
     {
-        return ['^' . preg_quote(DomainHelper::buildModuleBaseDomain($this->moduleName)) . '([A-Z]|$)'];
+        return array_map(function (string $translationDomain) {
+            return sprintf($translationDomain, preg_quote(DomainHelper::buildModuleBaseDomain($this->moduleName)));
+        }, self::TRANSLATION_DOMAINS_REGEX);
     }
 }

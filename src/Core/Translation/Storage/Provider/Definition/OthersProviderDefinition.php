@@ -34,6 +34,10 @@ class OthersProviderDefinition extends AbstractCoreProviderDefinition
 {
     public const OTHERS_DOMAIN_NAME = 'messages';
 
+    private const FILENAME_FILTERS_REGEX = ['#^' . self::OTHERS_DOMAIN_NAME . '*#'];
+
+    private const TRANSLATION_DOMAINS_REGEX = ['^' . self::OTHERS_DOMAIN_NAME . '*'];
+
     /**
      * {@inheritdoc}
      */
@@ -47,7 +51,7 @@ class OthersProviderDefinition extends AbstractCoreProviderDefinition
      */
     public function getFilenameFilters(): array
     {
-        return ['#^' . self::OTHERS_DOMAIN_NAME . '*#'];
+        return self::FILENAME_FILTERS_REGEX;
     }
 
     /**
@@ -55,6 +59,6 @@ class OthersProviderDefinition extends AbstractCoreProviderDefinition
      */
     public function getTranslationDomains(): array
     {
-        return ['^' . self::OTHERS_DOMAIN_NAME . '*'];
+        return self::TRANSLATION_DOMAINS_REGEX;
     }
 }

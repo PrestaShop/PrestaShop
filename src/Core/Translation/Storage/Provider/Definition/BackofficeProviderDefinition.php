@@ -32,6 +32,14 @@ namespace PrestaShop\PrestaShop\Core\Translation\Storage\Provider\Definition;
  */
 class BackofficeProviderDefinition extends AbstractCoreProviderDefinition
 {
+    private const FILENAME_FILTERS_REGEX = [
+        '#^Admin[A-Z]#',
+    ];
+
+    private const TRANSLATION_DOMAINS_REGEX = [
+        '^Admin[A-Z]',
+    ];
+
     /**
      * {@inheritdoc}
      */
@@ -45,9 +53,7 @@ class BackofficeProviderDefinition extends AbstractCoreProviderDefinition
      */
     public function getFilenameFilters(): array
     {
-        return [
-            '#^Admin[A-Z]#',
-        ];
+        return self::FILENAME_FILTERS_REGEX;
     }
 
     /**
@@ -55,8 +61,6 @@ class BackofficeProviderDefinition extends AbstractCoreProviderDefinition
      */
     public function getTranslationDomains(): array
     {
-        return [
-            '^Admin[A-Z]',
-        ];
+        return self::TRANSLATION_DOMAINS_REGEX;
     }
 }
