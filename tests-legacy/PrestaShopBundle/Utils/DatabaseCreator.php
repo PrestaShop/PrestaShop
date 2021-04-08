@@ -62,9 +62,6 @@ class DatabaseCreator
         $install->clearDatabase(false);
         $install->installDatabase(true);
 
-        $process = new Process('phpw "' . _PS_ROOT_DIR_ . '"' . ' bin/console prestashop:schema:update-without-foreign --env=test');
-        $exitCode = $process->run();
-
         $install->initializeTestContext();
         $install->installDefaultData('test_shop', false, false, false);
         $install->populateDatabase();

@@ -325,9 +325,6 @@ class Install extends AbstractInstall
      */
     public function generateSf2ProductionEnv()
     {
-        if (defined('_PS_IN_TEST_')) {
-            return true;
-        }
         $schemaUpgrade = new UpgradeDatabase();
         $schemaUpgrade->addDoctrineSchemaUpdate();
         $output = $schemaUpgrade->execute();
