@@ -339,8 +339,8 @@ Feature: Order from Back Office (BO)
     Then the available stock for product "Product A" should be 0
     # Change Context
     # Broken on develop branch
-    # When multiple shop context is loaded
-    # And I edit product "Product B in Shop 2" to order "order_product_B" with following products details:
-    #   | amount        | 30                      |
-    #   | price         | 78.90                   |
-    # Then I should get no error
+    When multiple shop context is loaded
+    And I edit product "Product B in Shop 2" to order "order_product_B" with following products details:
+      | amount        | 30                      |
+      | price         | 78.90                   |
+    Then I should get no error
