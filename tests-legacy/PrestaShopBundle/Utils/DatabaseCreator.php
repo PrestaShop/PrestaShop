@@ -62,7 +62,7 @@ class DatabaseCreator
         $install->clearDatabase(false);
         $install->installDatabase(true);
 
-        $process = new Process('phpw "' . _PS_ROOT_DIR_ . '"' . ' bin/console prestashop:schema:update-without-foreign --env=test');
+        $process = new Process(PHP_BINARY . ' bin/console prestashop:schema:update-without-foreign --env=test');
         $exitCode = $process->run();
         if ($exitCode !== 0) {
             $install->setError('Update process ended with non-zero code (' . $exitCode . '):' . "\n" . $process->getOutput());
