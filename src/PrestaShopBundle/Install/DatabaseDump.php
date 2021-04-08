@@ -28,8 +28,6 @@
 namespace PrestaShopBundle\Install;
 
 use Exception;
-use Ifsnop\Mysqldump\Mysqldump;
-use PDO;
 
 class DatabaseDump
 {
@@ -41,7 +39,8 @@ class DatabaseDump
     private $dumpFile;
 
     /**
-     * Constructor extracts database connection info from PrestaShop's configuration.
+     * Constructor extracts database connection info from PrestaShop's configuration,
+     * but we use mysqldump and mysql for dump / restore.
      *
      * @param string $dumpFile dump file name
      */
@@ -65,37 +64,6 @@ class DatabaseDump
         $this->databaseName = _DB_NAME_;
         $this->user = _DB_USER_;
         $this->password = _DB_PASSWD_;
-    }
-
-    private function getPdoDsn(): string
-    {
-        return 'mysql:host=' . $this->host . ';port=' . $this->port . ';dbname=' . $this->databaseName . ';charset=utf8';
-    }
-
-    private function createPdo(): PDO
-    {
-        return new PDO(
-            $this->getPdoDsn(),
-            $this->user,
-            $this->password,
-            [
-                PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION,
-            ]
-        );
-    }
-
-    private function createMysqldumper(): object
-    {
-        // @phpstan-ignore-next-line
-        return new Mysqldump(
-            $this->getPdoDsn(),
-            $this->user,
-            $this->password,
-            [
-                'add-drop-table' => true,
-                'no-autocommit' => false,
-            ]
-        );
     }
 
     /**
@@ -149,34 +117,27 @@ class DatabaseDump
     /**
      * The actual dump function.
      */
-    public function dump(): void
+    private function dump()
     {
-        // Dump using "ifsnop/mysqldump-php:^2.9" package if available. This package
-        // is however GNU GPL v3 licensed thus must be installed by developer manually.
-        // Otherwise dump using system "mysqldump" binary.
-        if (class_exists(Mysqldump::class)) {
-            $dumper = $this->createMysqldumper();
-            $dumper->start($this->dumpFile);
-        } else { // requires exec function enabled
-            $dumpCommand = $this->buildMySQLCommand('mysqldump', [$this->databaseName]);
-            $dumpCommand .= ' > ' . escapeshellarg($this->dumpFile) . ' 2> /dev/null';
-            $this->exec($dumpCommand);
-        }
+        $dumpCommand = $this->buildMySQLCommand('mysqldump', [$this->databaseName]);
+        $dumpCommand .= ' > ' . escapeshellarg($this->dumpFile) . ' 2> /dev/null';
+        $this->exec($dumpCommand);
     }
 
     /**
      * Restore the dump to the actual database.
      */
-    public function restore(): void
+    public function restore()
     {
-        $pdo = $this->createPdo();
-        $pdo->exec(file_get_contents($this->dumpFile));
+        $restoreCommand = $this->buildMySQLCommand('mysql', [$this->databaseName]);
+        $restoreCommand .= ' < ' . escapeshellarg($this->dumpFile) . ' 2> /dev/null';
+        $this->exec($restoreCommand);
     }
 
     /**
      * Make a database dump.
      */
-    public static function create(): void
+    public static function create()
     {
         $dump = new static();
 
@@ -186,7 +147,7 @@ class DatabaseDump
     /**
      * Restore a database dump.
      */
-    public static function restoreDb(): void
+    public static function restoreDb()
     {
         $dump = new static();
 
