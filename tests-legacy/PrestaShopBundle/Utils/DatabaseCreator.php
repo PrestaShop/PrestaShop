@@ -47,20 +47,25 @@ class DatabaseCreator
         define('_PS_MODULE_DIR_', _PS_ROOT_DIR_ . '/tests-legacy/resources/modules/');
         require_once __DIR__ . '/../../../install-dev/init.php';
 
-        $install = new Install();
+        $install = new class() extends Install {
+            public function setError($errors)
+            {
+                parent::setError($errors);
+
+                $msg = is_array($errors) ? implode("\n", $errors) : $errors;
+                echo (string) (new \Exception('Something went wrong during installation:' . "\n" . $msg . "\n"));
+                exit(1);
+            }
+        };
         $install->setTranslator(Context::getContext()->getTranslatorFromLocale('en'));
         \DbPDOCore::createDatabase(_DB_SERVER_, _DB_USER_, _DB_PASSWD_, _DB_NAME_, false);
         $install->clearDatabase(false);
-        if (!$install->installDatabase(true)) {
-            echo __CLASS__ . ': Something went wrong during installation' . "\n";
-            exit(1);
-        }
+        $install->installDatabase(true);
 
         $process = new Process(PHP_BINARY . ' bin/console prestashop:schema:update-without-foreign --env=test');
         $exitCode = $process->run();
         if ($exitCode !== 0) {
-            echo __CLASS__ . ': Process ended with non-zero code (' . $exitCode . '):' . "\n" . $process->getOutput() . "\n";
-            exit(1);
+            $install->setError('Update process ended with non-zero code (' . $exitCode . '):' . "\n" . $process->getOutput());
         }
 
         $install->initializeTestContext();
