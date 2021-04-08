@@ -92,25 +92,36 @@ class CategoryFeatureContext extends AbstractDomainFeatureContext
 
     /**
      * @Then I should see following root categories in ":langIso" language:
-     * @Then I should see following categories in ":parentReference" category in ":langIso" language:
      *
      * @param TableNode $tableNode
      * @param string $langIso
-     * @param string|null $parentReference
      */
-    public function assertCategoriesTree(TableNode $tableNode, string $langIso, ?string $parentReference = null): void
+    public function assertRootCategoriesTree(TableNode $tableNode, string $langIso): void
     {
         $langId = Language::getIdByIso($langIso);
         $categoriesTree = $this->getQueryBus()->handle(new GetCategoriesTree($langId));
 
         Assert::assertNotEmpty($categoriesTree, 'Categories tree is empty');
 
-        if (!$parentReference) {
-            $actualCategories = $categoriesTree;
-        } else {
-            $parentCategoryId = $this->getSharedStorage()->get($parentReference);
-            $actualCategories = $this->extractCategoriesByParent($categoriesTree, $parentCategoryId);
-        }
+        $this->assertCategoriesInTree($categoriesTree, $tableNode->getColumnsHash(), $langId);
+    }
+
+    /**
+     * @Then I should see following categories in ":parentReference" category in ":langIso" language:
+     *
+     * @param TableNode $tableNode
+     * @param string $langIso
+     * @param string $parentReference
+     */
+    public function assertCategoriesTree(TableNode $tableNode, string $langIso, string $parentReference): void
+    {
+        $langId = Language::getIdByIso($langIso);
+        $categoriesTree = $this->getQueryBus()->handle(new GetCategoriesTree($langId));
+
+        Assert::assertNotEmpty($categoriesTree, 'Categories tree is empty');
+
+        $parentCategoryId = $this->getSharedStorage()->get($parentReference);
+        $actualCategories = $this->extractCategoriesByParent($categoriesTree, $parentCategoryId);
 
         $this->assertCategoriesInTree($actualCategories, $tableNode->getColumnsHash(), $langId);
     }
