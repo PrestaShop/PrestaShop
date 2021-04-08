@@ -23,9 +23,9 @@
  * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
-@trigger_error('Using '.__FILE__.' to make an ajax call is deprecated since 1.7.6.0 and will be removed in the next major version. Use a controller instead.', E_USER_DEPRECATED);
+@trigger_error('Using ' . __FILE__ . ' to make an ajax call is deprecated since 1.7.6.0 and will be removed in the next major version. Use a controller instead.', E_USER_DEPRECATED);
 
-/**
+/*
  * @deprecated
  * This file could not be moved in a legacy controller, because it uses a front controller.
  *
@@ -34,5 +34,5 @@
 if (!defined('_PS_ADMIN_DIR_')) {
     define('_PS_ADMIN_DIR_', __DIR__);
 }
-require _PS_ADMIN_DIR_.'/../config/config.inc.php';
+require _PS_ADMIN_DIR_ . '/../config/config.inc.php';
 Controller::getController('GetFileController')->run();

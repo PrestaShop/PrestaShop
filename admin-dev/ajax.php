@@ -24,7 +24,7 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
 
-/**
+/*
  * This file seems to be existing since a long time. Although ajax requests can be handled by our controller,
  * some methods were forgotten here.
  *
@@ -34,11 +34,11 @@
 
 use ToolsCore as Tools;
 
-@trigger_error('Using '.__FILE__.' to make an ajax call is deprecated since 1.7.6.0 and will be removed in the next major version. Use a controller instead.', E_USER_DEPRECATED);
+@trigger_error('Using ' . __FILE__ . ' to make an ajax call is deprecated since 1.7.6.0 and will be removed in the next major version. Use a controller instead.', E_USER_DEPRECATED);
 
 require_once dirname(__FILE__) . '/../classes/Tools.php';
 
-/**
+/*
  * Ajax calls to the controller AdminReferrers
  * -> Moved to legacy
  */
@@ -53,7 +53,7 @@ if (Tools::isSubmit('ajaxReferrers')) {
     }
 }
 
-/**
+/*
  * Return the list of a pack of products
  * Not found
  *
@@ -65,7 +65,7 @@ elseif (Tools::isSubmit('ajaxProductPackItems')) {
     $_GET['action'] = 'productPackItems';
 }
 
-/**
+/*
  * Get all zones stored on the shop
  * Json content with an html attribute in it.
  *
@@ -75,9 +75,7 @@ elseif (Tools::isSubmit('getZones')) {
     $_GET['ajax'] = 1;
     $_GET['controller'] = 'AdminZones';
     $_GET['action'] = 'zones';
-}
-
-elseif (Tools::isSubmit('getEmailHTML') && Tools::isSubmit('email')) {
+} elseif (Tools::isSubmit('getEmailHTML') && Tools::isSubmit('email')) {
     $_GET['ajax'] = 1;
     $_GET['controller'] = 'AdminTranslations';
     $_GET['action'] = 'emailHTML';
@@ -85,18 +83,18 @@ elseif (Tools::isSubmit('getEmailHTML') && Tools::isSubmit('email')) {
 
 if (1 === Tools::getValue('ajax')) {
     require_once __DIR__ . '/index.php';
+
     return;
 }
 
 /**
  * From this line, the code could not be moved outside this file. It still requires the core to work.
  */
-
 require_once __DIR__ . '/bootstrap.php';
 
 $context = Context::getContext();
 
-/**
+/*
  * Import controller: Fields available for a given entity
  * -> Duplicated in Symfony
  */
@@ -109,7 +107,7 @@ if (Tools::isSubmit('getAvailableFields') && Tools::isSubmit('entity')) {
     echo json_encode($fields);
 }
 
-/**
+/*
  * List notifications for an employee
  * i.e: recent orders, new customers...
  *
@@ -120,7 +118,7 @@ elseif (Tools::isSubmit('getNotifications')) {
     echo json_encode($notification->getLastElements());
 }
 
-/**
+/*
  * Updates the last time a notification has been seen
  *
  * -> Duplicated in Symfony
@@ -130,7 +128,7 @@ elseif (Tools::isSubmit('updateElementEmployee') && Tools::getValue('updateEleme
     echo $notification->updateEmployeeLastElement(Tools::getValue('updateElementEmployeeType'));
 }
 
-/**
+/*
  * Search for a category
  *
  * -> TODO in Symfony stack
@@ -139,22 +137,22 @@ elseif (Tools::isSubmit('searchCategory')) {
     $q = Tools::getValue('q');
     $limit = Tools::getValue('limit');
     $results = Db::getInstance()->executeS('SELECT c.`id_category`, cl.`name`
-		FROM `'._DB_PREFIX_.'category` c
-		LEFT JOIN `'._DB_PREFIX_.'category_lang` cl ON (c.`id_category` = cl.`id_category`'.Shop::addSqlRestrictionOnLang('cl').')
-		WHERE cl.`id_lang` = '.(int)$context->language->id.' AND c.`level_depth` <> 0
-		AND cl.`name` LIKE \'%'.pSQL($q).'%\'
+		FROM `' . _DB_PREFIX_ . 'category` c
+		LEFT JOIN `' . _DB_PREFIX_ . 'category_lang` cl ON (c.`id_category` = cl.`id_category`' . Shop::addSqlRestrictionOnLang('cl') . ')
+		WHERE cl.`id_lang` = ' . (int) $context->language->id . ' AND c.`level_depth` <> 0
+		AND cl.`name` LIKE \'%' . pSQL($q) . '%\'
 		GROUP BY c.id_category
 		ORDER BY c.`position`
-		LIMIT '.(int)$limit
+		LIMIT ' . (int) $limit
     );
     if ($results) {
         foreach ($results as $result) {
-            echo trim($result['name']).'|'.(int)$result['id_category']."\n";
+            echo trim($result['name']) . '|' . (int) $result['id_category'] . "\n";
         }
     }
 }
 
-/**
+/*
  * Used to display children of a given category, but flagged as deprecated since 1.6.0.4
  * Not moved / Not duplicated
  */
@@ -163,15 +161,15 @@ elseif (Tools::isSubmit('getChildrenCategories') && Tools::isSubmit('id_category
     echo json_encode($children_categories);
 }
 
-/**
+/*
  * Get all parents of a given category
  *
  * -> TODO in Symfony stack
  */
 elseif (Tools::isSubmit('getParentCategoriesId') && $id_category = Tools::getValue('id_category')) {
-    $category = new Category((int)$id_category);
-    $results = Db::getInstance()->executeS('SELECT `id_category` FROM `'._DB_PREFIX_.'category` c WHERE c.`nleft` < '.(int)$category->nleft.' AND c.`nright` > '.(int)$category->nright.'');
-    $output = array();
+    $category = new Category((int) $id_category);
+    $results = Db::getInstance()->executeS('SELECT `id_category` FROM `' . _DB_PREFIX_ . 'category` c WHERE c.`nleft` < ' . (int) $category->nleft . ' AND c.`nright` > ' . (int) $category->nright . '');
+    $output = [];
     foreach ($results as $result) {
         $output[] = $result;
     }

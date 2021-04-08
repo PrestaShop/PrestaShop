@@ -23,10 +23,9 @@
  * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
-
-@trigger_error('Using '.__FILE__.' to make an ajax call is deprecated since 1.7.6.0 and will be removed in the nex major version. Use a controller instead.', E_USER_DEPRECATED);
+@trigger_error('Using ' . __FILE__ . ' to make an ajax call is deprecated since 1.7.6.0 and will be removed in the nex major version. Use a controller instead.', E_USER_DEPRECATED);
 
 // Retrocompatibility with 1.4
 $_REQUEST['ajaxMode'] = $_POST['ajaxMode'] = $_GET['ajaxMode'] = $_REQUEST['ajax'] = $_POST['ajax'] = $_GET['ajax'] = 1;
 
-require_once dirname(__FILE__).'/index.php';
+require_once dirname(__FILE__) . '/index.php';

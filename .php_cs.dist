@@ -7,11 +7,15 @@ $finder = PhpCsFixer\Finder::create()
         __DIR__ . '/src',
         __DIR__ . '/classes',
         __DIR__ . '/controllers',
+        __DIR__ . '/admin-dev',
         __DIR__ . '/install-dev',
         __DIR__ . '/tests',
         __DIR__ . '/config',
         __DIR__ . '/webservice',
         __DIR__ . '/tools/profiling',
+    ])
+    ->exclude([
+        'filemanager',
     ]);
 
 return PhpCsFixer\Config::create()
