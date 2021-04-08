@@ -101,7 +101,7 @@ class CombinationFormDataProvider implements FormDataProviderInterface
         return [
             'wholesale_price' => (float) (string) $priceImpactInformation->getWholesalePrice(),
             'price_tax_excluded' => (float) (string) $priceImpactInformation->getImpactOnPrice(),
-            'price_tax_included' => (float) (string) $priceImpactInformation->getImpactOnPrice(),
+            'price_tax_included' => (float) (string) $priceImpactInformation->getImpactOnPriceTaxIncluded(),
             'ecotax' => (float) (string) $priceImpactInformation->getEcoTax(),
             'unit_price' => (float) (string) $priceImpactInformation->getImpactOnUnitPrice(),
             'weight' => (float) (string) $combinationForEditing->getDetails()->getImpactOnWeight(),

@@ -48,6 +48,11 @@ class CombinationPrices
     /**
      * @var DecimalNumber
      */
+    private $impactOnPriceTaxIncluded;
+
+    /**
+     * @var DecimalNumber
+     */
     private $impactOnUnitPrice;
 
     /**
@@ -58,17 +63,20 @@ class CombinationPrices
     /**
      * @param DecimalNumber $ecoTax
      * @param DecimalNumber $impactOnPrice
+     * @param DecimalNumber $impactOnPriceTaxIncluded
      * @param DecimalNumber $impactOnUnitPrice
      * @param DecimalNumber $wholesalePrice
      */
     public function __construct(
         DecimalNumber $ecoTax,
         DecimalNumber $impactOnPrice,
+        DecimalNumber $impactOnPriceTaxIncluded,
         DecimalNumber $impactOnUnitPrice,
         DecimalNumber $wholesalePrice
     ) {
         $this->ecoTax = $ecoTax;
         $this->impactOnPrice = $impactOnPrice;
+        $this->impactOnPriceTaxIncluded = $impactOnPriceTaxIncluded;
         $this->impactOnUnitPrice = $impactOnUnitPrice;
         $this->wholesalePrice = $wholesalePrice;
     }
@@ -87,6 +95,14 @@ class CombinationPrices
     public function getImpactOnPrice(): DecimalNumber
     {
         return $this->impactOnPrice;
+    }
+
+    /**
+     * @return DecimalNumber
+     */
+    public function getImpactOnPriceTaxIncluded(): DecimalNumber
+    {
+        return $this->impactOnPriceTaxIncluded;
     }
 
     /**
