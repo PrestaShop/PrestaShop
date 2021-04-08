@@ -2,7 +2,7 @@ name: PHP
 on: [push, pull_request]
 jobs:
   php-cs-fixer:
-    name: PHP Coding Standards Fixer
+    name: PHP CS Fixer
     runs-on: ubuntu-latest
     steps:
       - name: Setup PHP
@@ -62,46 +62,7 @@ jobs:
             run: ./vendor/bin/phpstan analyse -c phpstan.neon.dist
 
   phpunit:
-    name: PHPUnit Tests
-    runs-on: ubuntu-latest
-    strategy:
-        matrix:
-            php: ['7.1', '7.2', '7.3', '7.4']
-        fail-fast: false
-    steps:
-        -   name: Setup PHP
-            uses: shivammathur/setup-php@v2
-            with:
-                php-version: ${{ matrix.php }}
-                extensions: mbstring, intl, gd, xml, dom, json, fileinfo, curl, zip, iconv, simplexml
-        -   uses: actions/checkout@v2
-
-        -   name: PrestaShop Configuration
-            run: cp .github/workflows/phpunit/parameters.yml app/config/parameters.yml
-
-        -   name: Get Composer Cache Directory
-            id: composer-cache
-            run: |
-                echo "::set-output name=dir::$(composer config cache-files-dir)"
-
-        -   name: Cache Composer Directory
-            uses: actions/cache@v2
-            with:
-                path: ${{ steps.composer-cache.outputs.dir }}
-                key: ${{ runner.os }}-composer-${{ hashFiles('**/composer.lock') }}
-                restore-keys: |
-                    ${{ runner.os }}-composer-
-
-        -   name: Composer Install
-            run: composer install --ansi --prefer-dist --no-interaction --no-progress
-
-        -   name: Run phpunit
-            run: ./vendor/bin/phpunit -c tests/Unit/phpunit.xml
-            env:
-                SYMFONY_DEPRECATIONS_HELPER: disabled
-
-  phpunit_with_db:
-      name: PHPUnit Tests (With DB)
+      name: PHPUnit
       runs-on: ubuntu-18.04
       strategy:
           matrix:
@@ -113,12 +74,6 @@ jobs:
             with:
                 php-version: ${{ matrix.php }}
                 extensions: mbstring, intl, gd, xml, dom, json, fileinfo, curl, zip, iconv, simplexml
-        -   name: Setup MySQL
-            uses: mirromutth/mysql-action@v1.1
-            with:
-                mysql version: '5.7'
-                mysql database: 'prestashop'
-                mysql root password: 'password'
 
         -   uses: actions/checkout@v2
 
@@ -140,6 +95,18 @@ jobs:
 
         -   name: Composer Install
             run: composer install --ansi --prefer-dist --no-interaction --no-progress
+
+        -   name: Run phpunit (without DB)
+            run: ./vendor/bin/phpunit -c tests/Unit/phpunit.xml
+            env:
+                SYMFONY_DEPRECATIONS_HELPER: disabled
+
+        -   name: Setup MySQL
+            uses: mirromutth/mysql-action@v1.1
+            with:
+                mysql version: '5.7'
+                mysql database: 'prestashop'
+                mysql root password: 'password'
 
         -   name: Install PrestaShop
             run: php install-dev/index_cli.php --language=en --country=fr --domain=localhost --db_server=127.0.0.1 --db_password=password --db_name=prestashop --db_create=1 --name=prestashop.unit.test --email=demo@prestashop.com --password=prestashop_demo
