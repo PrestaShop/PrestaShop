@@ -491,8 +491,8 @@ class ProductCore extends ObjectModel
                     ProductType::TYPE_COMBINATIONS,
                     ProductType::TYPE_UNDEFINED,
                 ],
-                // This default value should be enabled in 179 when the v2 page is fully migrated
-                // 'default' => ProductType::TYPE_STANDARD,
+                // This default value should be replaced with ProductType::TYPE_STANDARD in 179 when the v2 page is fully migrated
+                'default' => ProductType::TYPE_UNDEFINED,
             ],
 
             /* Shop fields */
