@@ -37,5 +37,6 @@ export default {
   },
   combinations: {
     refreshList: 'refreshCombinationList',
+    selectCombination: 'selectCombination',
   },
 };

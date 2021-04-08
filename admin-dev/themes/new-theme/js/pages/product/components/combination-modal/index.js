@@ -32,6 +32,7 @@ Vue.use(VueI18n);
 
 export default function initCombinationModal(combinationModalSelector, productId) {
   const container = document.querySelector(combinationModalSelector);
+  const {emptyImage} = container.dataset;
 
   if (!container) {
     return null;
@@ -46,11 +47,12 @@ export default function initCombinationModal(combinationModalSelector, productId
 
   return new Vue({
     el: combinationModalSelector,
-    template: '<combination-modal :productId=productId />',
+    template: '<combination-modal :productId=productId :emptyImage="emptyImage" />',
     components: {CombinationModal},
     i18n,
     data: {
       productId,
+      emptyImage,
     },
   });
 }

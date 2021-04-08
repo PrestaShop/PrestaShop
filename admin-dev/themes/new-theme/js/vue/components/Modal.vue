@@ -35,6 +35,7 @@
             aria-labelledby="modalTitle"
             aria-describedby="modalDescription"
             v-click-outside="close"
+            @click.prevent.stop="preventClose"
           >
             <header
               class="modal-header"
@@ -98,6 +99,7 @@
             </footer>
           </div>
         </div>
+        <slot name="outside" />
       </div>
     </transition>
     <div
@@ -153,6 +155,9 @@
       },
       confirm() {
         this.$emit('confirm');
+      },
+      preventClose() {
+        event.stopPropagation();
       },
     },
   };
