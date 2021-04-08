@@ -376,9 +376,12 @@ class ProductCore extends ObjectModel
     public $delivery_out_stock;
 
     /**
+     * For now default value remains empty, to keep compatibility with page v1 and former products.
+     * But once the v2 is merged the default value should be ProductType::TYPE_STANDARD
+     *
      * @var string
      */
-    public $product_type = ProductType::TYPE_STANDARD;
+    public $product_type = '';
 
     /**
      * @var int|null
@@ -480,8 +483,16 @@ class ProductCore extends ObjectModel
             'product_type' => [
                 'type' => self::TYPE_STRING,
                 'validate' => 'isGenericName',
-                'values' => ProductType::AVAILABLE_TYPES,
-                'default' => ProductType::TYPE_STANDARD,
+                // For now empty value is still allowed, in 179 we should use ProductType::AVAILABLE_TYPES here
+                'values' => [
+                    ProductType::TYPE_STANDARD,
+                    ProductType::TYPE_PACK,
+                    ProductType::TYPE_VIRTUAL,
+                    ProductType::TYPE_COMBINATIONS,
+                    '',
+                ],
+                // This default value should be enabled in 179 when the v2 page is fully migrated
+                // 'default' => ProductType::TYPE_STANDARD,
             ],
 
             /* Shop fields */
