@@ -342,7 +342,7 @@ describe('Check and edit customer block in view order page', async () => {
     });
 
     it('should select another shipping address and check it', async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'selectAnotherAddress', baseContext);
+      await testContext.addContextItem(this, 'testIdentifier', 'selectAnotherShippingAddress', baseContext);
 
       const addressToSelect = `${addressID}- ${secondAddressData.address} ${secondAddressData.secondAddress} `
         + `${secondAddressData.postalCode} ${secondAddressData.city}`;
@@ -374,7 +374,7 @@ describe('Check and edit customer block in view order page', async () => {
     });
 
     it('should select another invoice address and check it', async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'selectAnotherAddress', baseContext);
+      await testContext.addContextItem(this, 'testIdentifier', 'selectAnotherInvoiceAddress', baseContext);
 
       const addressToSelect = `${addressID}- ${secondAddressData.address} ${secondAddressData.secondAddress} `
         + `${secondAddressData.postalCode} ${secondAddressData.city}`;
