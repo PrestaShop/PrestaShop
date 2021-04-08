@@ -176,6 +176,22 @@ class CommonProductFeatureContext extends AbstractProductFeatureContext
     }
 
     /**
+     * @Then product :productReference persisted type should be :productType
+     *
+     * @param string $productReference
+     * @param string $productTypeName
+     */
+    public function assertPersistedProductType(string $productReference, string $productTypeName): void
+    {
+        if ('empty' === $productTypeName) {
+            $productTypeName = '';
+        }
+        $productId = $this->getSharedStorage()->get($productReference);
+        $product = new Product($productId);
+        Assert::assertEquals($productTypeName, $product->product_type);
+    }
+
+    /**
      * @Then I should get error that product :fieldName is invalid
      *
      * @param string $fieldName

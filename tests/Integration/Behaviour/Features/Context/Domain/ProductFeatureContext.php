@@ -106,6 +106,18 @@ class ProductFeatureContext extends AbstractDomainFeatureContext
     }
 
     /**
+     * @Then there is a product :productReference with name :productName
+     *
+     * @param string $productReference
+     * @param string $productName
+     */
+    public function storeProductReferenceByName(string $productReference, string $productName): void
+    {
+        $productId = $this->getProductIdByName($productName);
+        $this->getSharedStorage()->set($productReference, $productId);
+    }
+
+    /**
      * @param string $productName
      *
      * @return int

@@ -219,11 +219,13 @@ default:
         product:
             paths:
                 - %paths.base%/Features/Scenario/Product
-                - %paths.base%/Features/Scenario/Product/Combination
-                - %paths.base%/Features/Scenario/Product/SpecificPrice
             contexts:
                 - Tests\Integration\Behaviour\Features\Context\CommonFeatureContext
                 - Tests\Integration\Behaviour\Features\Context\Configuration\CommonConfigurationFeatureContext
+                - Tests\Integration\Behaviour\Features\Context\ProductFeatureContext
+                - Tests\Integration\Behaviour\Features\Context\CategoryFeatureContext
+                - Tests\Integration\Behaviour\Features\Context\Domain\CartFeatureContext
+                - Tests\Integration\Behaviour\Features\Context\Domain\ProductFeatureContext
                 - Tests\Integration\Behaviour\Features\Context\Domain\Product\CommonProductFeatureContext
                 - Tests\Integration\Behaviour\Features\Context\Domain\Product\ProductTypeFeatureContext
                 - Tests\Integration\Behaviour\Features\Context\Domain\Product\AddProductFeatureContext

@@ -724,6 +724,7 @@ class ProductFeatureContext extends AbstractPrestaShopFeatureContext
             $this->products[$containedProductName]->id,
             $containedQuantity
         );
+        Pack::resetStaticCache();
     }
 
     /**
