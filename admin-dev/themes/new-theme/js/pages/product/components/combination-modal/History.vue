@@ -34,15 +34,12 @@
     <div class="card-block">
       <ul
         class="history-list"
-        v-if="paginatedDatas.length > 0"
+        v-if="areCombinationsNotEmpty"
       >
         <li
           :class="[
             'history-item',
-            selectedCombination == combination.id ||
-              combinationsList.length == 1
-              ? 'selected'
-              : null,
+            isSelected(combination.id),
           ]"
           v-for="(combination, key) of paginatedDatas[currentPage - 1]"
           :key="key"
@@ -66,7 +63,7 @@
     </div>
     <div
       class="card-footer"
-      v-if="combinationsList.length > 0"
+      v-if="areCombinationsNotEmpty"
     >
       <pagination
         :pagination-length="14"
@@ -108,6 +105,11 @@
         required: true,
       },
     },
+    computed: {
+      areCombinationsNotEmpty() {
+        return this.combinationsList.length > 0;
+      },
+    },
     mounted() {
       this.$parent.$on(CombinationsEventMap.selectCombination, (id) => {
         this.selectedCombination = {id};
@@ -124,6 +126,12 @@
       constructDatas(datas) {
         this.paginatedDatas = datas.paginatedDatas;
         this.currentPage = datas.currentPage;
+      },
+      isSelected(idCombination) {
+        return this.selectedCombination === idCombination
+          || this.combinationsList.length === 1
+          ? 'selected'
+          : null;
       },
     },
   };

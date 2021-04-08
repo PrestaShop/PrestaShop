@@ -32,7 +32,7 @@
         <i class="material-icons">chevron_left</i>
       </li>
       <li
-        :class="['pagination-item', currentPage === key + 1 ? 'active' : null]"
+        :class="['pagination-item', isActive(key)]"
         v-for="(page, key) of paginatedDatas"
         :key="key"
         @click="goToPage(key + 1)"
@@ -83,6 +83,9 @@
         }
 
         this.$emit('paginated', {paginatedDatas: this.paginatedDatas, currentPage: this.currentPage});
+      },
+      isActive(key) {
+        return this.currentPage === key + 1 ? 'active' : null;
       },
     },
     mounted() {
