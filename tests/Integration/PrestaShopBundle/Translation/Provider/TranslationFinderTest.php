@@ -24,6 +24,8 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
 
+declare(strict_types=1);
+
 namespace Tests\Integration\PrestaShopBundle\Translation\Provider;
 
 use PrestaShopBundle\Translation\Provider\TranslationFinder;
@@ -43,7 +45,7 @@ class TranslationFinderTest extends KernelTestCase
      */
     private $resourcesDir;
 
-    protected function setUp()
+    protected function setUp(): void
     {
         self::bootKernel();
         $this->resourcesDir = self::$kernel->getContainer()->getParameter('test_translations_dir');
@@ -51,7 +53,7 @@ class TranslationFinderTest extends KernelTestCase
         $this->finder = new TranslationFinder();
     }
 
-    public function testGetCatalogueFromPathsReturnsAllDomainsIfNoPatternGiven()
+    public function testGetCatalogueFromPathsReturnsAllDomainsIfNoPatternGiven(): void
     {
         $catalogue = $this->finder->getCatalogueFromPaths([$this->resourcesDir], 'fr-FR');
 
@@ -71,7 +73,7 @@ class TranslationFinderTest extends KernelTestCase
         ], $domains);
     }
 
-    public function testGetCatalogueFromPathsFiltersDomainsIfPatternIsGiven()
+    public function testGetCatalogueFromPathsFiltersDomainsIfPatternIsGiven(): void
     {
         $catalogue = $this->finder->getCatalogueFromPaths([$this->resourcesDir], 'fr-FR', '#^Admin[A-Z]#');
 
