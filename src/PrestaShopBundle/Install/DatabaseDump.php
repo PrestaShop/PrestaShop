@@ -28,6 +28,7 @@
 namespace PrestaShopBundle\Install;
 
 use Exception;
+use PDO;
 
 class DatabaseDump
 {
@@ -39,8 +40,7 @@ class DatabaseDump
     private $dumpFile;
 
     /**
-     * Constructor extracts database connection info from PrestaShop's configuration,
-     * but we use mysqldump and mysql for dump / restore.
+     * Constructor extracts database connection info from PrestaShop's configuration.
      *
      * @param string $dumpFile dump file name
      */
@@ -64,6 +64,23 @@ class DatabaseDump
         $this->databaseName = _DB_NAME_;
         $this->user = _DB_USER_;
         $this->password = _DB_PASSWD_;
+    }
+
+    private function getPdoDsn(): string
+    {
+        return 'mysql:host=' . $this->host . ';port=' . $this->port . ';dbname=' . $this->databaseName . ';charset=utf8';
+    }
+
+    private function createPdo(): PDO
+    {
+        return new PDO(
+            $this->getPdoDsn(),
+            $this->user,
+            $this->password,
+            [
+                PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION,
+            ]
+        );
     }
 
     /**
@@ -117,7 +134,7 @@ class DatabaseDump
     /**
      * The actual dump function.
      */
-    private function dump()
+    public function dump(): void
     {
         $dumpCommand = $this->buildMySQLCommand('mysqldump', [$this->databaseName]);
         $dumpCommand .= ' > ' . escapeshellarg($this->dumpFile) . ' 2> /dev/null';
@@ -127,17 +144,16 @@ class DatabaseDump
     /**
      * Restore the dump to the actual database.
      */
-    public function restore()
+    public function restore(): void
     {
-        $restoreCommand = $this->buildMySQLCommand('mysql', [$this->databaseName]);
-        $restoreCommand .= ' < ' . escapeshellarg($this->dumpFile) . ' 2> /dev/null';
-        $this->exec($restoreCommand);
+        $pdo = $this->createPdo();
+        $pdo->exec(file_get_contents($this->dumpFile));
     }
 
     /**
      * Make a database dump.
      */
-    public static function create()
+    public static function create(): void
     {
         $dump = new static();
 
@@ -147,7 +163,7 @@ class DatabaseDump
     /**
      * Restore a database dump.
      */
-    public static function restoreDb()
+    public static function restoreDb(): void
     {
         $dump = new static();
 
