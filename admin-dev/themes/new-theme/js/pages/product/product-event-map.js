@@ -30,7 +30,7 @@ export default {
   updateSubmitButtonState: 'updateSubmitButtonState',
   customizations: {
     rowRemoved: 'customizationRowRemoved',
-    rowAdded: 'customizationRowAdded',
+    rowAdded: 'customizationRowAdded'
   },
   dropzone: {
     addedFile: 'addedfile',
@@ -39,11 +39,12 @@ export default {
     languageSelected: 'languageSelected',
     photoswipe: {
       destroy: 'destroy',
-      closeGallery: 'closeGallery',
-    },
+      closeGallery: 'closeGallery'
+    }
   },
   combinations: {
     refreshList: 'refreshCombinationList',
     updateAttributeGroups: 'updateAttributeGroups',
-  },
+    selectCombination: 'selectCombination'
+  }
 };

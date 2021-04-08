@@ -25,6 +25,7 @@
 <template>
   <div id="combination-edit-modal">
     <modal
+      class="combination-modal"
       v-if="selectedCombinationId !== null"
       @close="closeModal"
     >
@@ -96,7 +97,31 @@
           />
         </button>
       </template>
+
+      <template #outside>
+        <history
+          :combinations-list="combinationsHistory"
+          @selectCombination="selectCombination"
+          :selected-combination="selectedCombinationId"
+          :empty-image="emptyImage"
+        />
+      </template>
     </modal>
+    <div
+      class="modal-prevent-close"
+      @click.prevent.stop="preventClose"
+    >
+      <modal
+        :modal-title="'You sure bro?'"
+        :cancel-label="'Cancel'"
+        :confirm-label="'Confirm'"
+        :close-label="'Close'"
+        :confirmation="true"
+        v-if="showConfirm"
+        @close="hideConfirmModal"
+        @confirm="confirmSelection"
+      />
+    </div>
   </div>
 </template>
 
@@ -106,6 +131,7 @@
   import ProductEventMap from '@pages/product/product-event-map';
   import Modal from '@vue/components/Modal';
   import Router from '@components/router';
+  import History from './History';
 
   const {$} = window;
 
@@ -113,7 +139,7 @@
 
   export default {
     name: 'CombinationModal',
-    components: {Modal},
+    components: {Modal, History},
     data() {
       return {
         combinationsService: null,
@@ -126,11 +152,18 @@
         submittingCombinationForm: false,
         combinationList: null,
         hasSubmittedCombinations: false,
+        combinationsHistory: [],
+        showConfirm: false,
+        temporarySelection: null,
       };
     },
     props: {
       productId: {
         type: Number,
+        required: true,
+      },
+      emptyImage: {
+        type: String,
         required: true,
       },
     },
@@ -187,12 +220,40 @@
           this.selectedCombinationId = this.nextCombinationId;
         }
       },
+      selectCombination(combination) {
+        this.temporarySelection = combination.id;
+        this.showConfirmModal();
+      },
+      confirmSelection() {
+        this.selectedCombinationId = this.temporarySelection;
+        this.hideConfirmModal();
+      },
       submitForm() {
         this.submittingCombinationForm = true;
         const iframeBody = this.$refs.iframe.contentDocument.body;
         const editionForm = iframeBody.querySelector(ProductMap.combinations.editionForm);
         editionForm.submit();
         this.hasSubmittedCombinations = true;
+        const selectedCombination = {
+          id: this.selectedCombinationId,
+          title: iframeBody.querySelector('.card-header span').innerHTML,
+        };
+
+        if ((this.combinationsHistory[0] && this.combinationsHistory[0].id !== selectedCombination.id)
+          || !this.combinationsHistory.length
+        ) {
+          this.combinationsHistory.unshift(selectedCombination);
+        }
+      },
+      showConfirmModal() {
+        this.showConfirm = true;
+      },
+      hideConfirmModal() {
+        this.showConfirm = false;
+      },
+      preventClose(event) {
+        event.stopPropagation();
+        event.preventDefault();
       },
     },
     watch: {
@@ -230,12 +291,18 @@
 <style lang="scss" type="text/scss">
 @import "~@scss/config/_settings.scss";
 
-#combination-edit-modal {
+#combination-edit-modal .combination-modal {
+  .modal {
+    display: flex;
+    align-items: flex-start;
+    justify-content: center;
+  }
+
   .modal-dialog {
-    max-width: 1200px;
+    max-width: 990px;
     width: 90%;
     height: 95%;
-    margin: 0 auto;
+    margin: 0;
 
     .modal-header {
       display: none;
@@ -244,11 +311,12 @@
     .modal-content {
       height: 100%;
       padding: 0;
-      margin: 0;
+      margin: 0 1rem;
 
       .modal-body {
-        padding: 0;
+        padding: .5rem;
         margin: 0;
+        background: #eaebec;
 
         .combination-loading {
           position: absolute;
@@ -289,6 +357,16 @@
         }
       }
     }
+  }
+
+  .history {
+    max-width: 400px;
+    width: 100%;
+    min-height: calc(100% - 3.5rem);
+    top: 50%;
+    transform: translateY(-50%);
+    height: 95%;
+    margin-right: 1rem;
   }
 }
 </style>
