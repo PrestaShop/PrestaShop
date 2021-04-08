@@ -209,15 +209,19 @@ class CombinationController extends FrameworkBundleAdminController
         foreach ($attributeGroups as $attributeGroup) {
             $attributes = [];
             foreach ($attributeGroup->getAttributes() as $attribute) {
+                $attributeNames = $attribute->getLocalizedNames();
                 $attributes[] = [
                     'id' => $attribute->getAttributeId(),
-                    'name' => $attribute->getLocalizedNames()[$contextLangId] ?? $attribute->getLocalizedNames()[0],
+                    'name' => $attributeNames[$contextLangId] ?? reset($attributeNames),
                 ];
             }
+
+            $publicNames = $attributeGroup->getLocalizedPublicNames();
+            $names = $attributeGroup->getLocalizedNames();
             $formattedGroups[] = [
                 'id' => $attributeGroup->getAttributeGroupId(),
-                'name' => $attributeGroup->getLocalizedNames()[$contextLangId] ?? $attributeGroup->getLocalizedNames()[0],
-                'publicName' => $attributeGroup->getLocalizedPublicNames()[$contextLangId] ?? $attributeGroup->getLocalizedPublicNames()[0],
+                'name' => $names[$contextLangId] ?? reset($names),
+                'publicName' => $publicNames[$contextLangId] ?? reset($publicNames),
                 'attributes' => $attributes,
             ];
         }
