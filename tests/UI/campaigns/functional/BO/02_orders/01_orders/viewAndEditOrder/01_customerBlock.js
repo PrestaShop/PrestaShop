@@ -42,9 +42,10 @@ let browserContext;
 let page;
 
 const customerData = new CustomerFaker();
-const firstAddressData = new AddressFaker({country: 'France'});
-const secondAddressData = new AddressFaker({country: 'France'});
-const editAddressData = new AddressFaker({country: 'France'});
+const firstAddressData = new AddressFaker({firstName: 'first', country: 'France'});
+const secondAddressData = new AddressFaker({firstName: 'second', country: 'France'});
+const editShippingAddressData = new AddressFaker({country: 'France'});
+const editInvoiceAddressData = new AddressFaker({country: 'France'});
 
 const privateNote = 'Test private note';
 let customerID = 0;
@@ -330,20 +331,20 @@ describe('Check and edit customer block in view order page', async () => {
     it('should edit existing shipping address and check it', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'editShippingAddress', baseContext);
 
-      const shippingAddress = await viewOrderPage.editExistingAddress(page, editAddressData);
+      const shippingAddress = await viewOrderPage.editExistingShippingAddress(page, editShippingAddressData);
       await expect(shippingAddress)
-        .to.contain(editAddressData.firstName)
-        .and.to.contain(editAddressData.lastName)
-        .and.to.contain(editAddressData.address)
-        .and.to.contain(editAddressData.postalCode)
-        .and.to.contain(editAddressData.city)
-        .and.to.contain(editAddressData.country);
+        .to.contain(editShippingAddressData.firstName)
+        .and.to.contain(editShippingAddressData.lastName)
+        .and.to.contain(editShippingAddressData.address)
+        .and.to.contain(editShippingAddressData.postalCode)
+        .and.to.contain(editShippingAddressData.city)
+        .and.to.contain(editShippingAddressData.country);
     });
 
-    it('should select another address and check it', async function () {
+    it('should select another shipping address and check it', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'selectAnotherAddress', baseContext);
 
-      const addressToSelect = `${addressID}- ${secondAddressData.address} ${secondAddressData.secondAddress}  `
+      const addressToSelect = `${addressID}- ${secondAddressData.address} ${secondAddressData.secondAddress} `
         + `${secondAddressData.postalCode} ${secondAddressData.city}`;
 
       const alertMessage = await viewOrderPage.selectAnotherShippingAddress(page, addressToSelect);
@@ -359,17 +360,36 @@ describe('Check and edit customer block in view order page', async () => {
         .and.to.contain(secondAddressData.country);
     });
 
-    it('should check order invoice', async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'checkInvoiceAddress', baseContext);
+    it('should edit existing invoice address and check it', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'editInvoiceAddress', baseContext);
 
-      const invoiceAddress = await viewOrderPage.getInvoiceAddress(page);
+      const invoiceAddress = await viewOrderPage.editExistingInvoiceAddress(page, editInvoiceAddressData);
       await expect(invoiceAddress)
-        .to.contain(customerData.firstName)
-        .and.to.contain(customerData.lastName)
-        .and.to.contain(addressData.address)
-        .and.to.contain(addressData.postalCode)
-        .and.to.contain(addressData.city)
-        .and.to.contain(addressData.country);
+        .to.contain(editInvoiceAddressData.firstName)
+        .and.to.contain(editInvoiceAddressData.lastName)
+        .and.to.contain(editInvoiceAddressData.address)
+        .and.to.contain(editInvoiceAddressData.postalCode)
+        .and.to.contain(editInvoiceAddressData.city)
+        .and.to.contain(editInvoiceAddressData.country);
+    });
+
+    it('should select another invoice address and check it', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'selectAnotherAddress', baseContext);
+
+      const addressToSelect = `${addressID}- ${secondAddressData.address} ${secondAddressData.secondAddress} `
+        + `${secondAddressData.postalCode} ${secondAddressData.city}`;
+
+      const alertMessage = await viewOrderPage.selectAnotherInvoiceAddress(page, addressToSelect);
+      expect(alertMessage).to.contains(viewOrderPage.successfulUpdateMessage);
+
+      const shippingAddress = await viewOrderPage.getInvoiceAddress(page);
+      await expect(shippingAddress)
+        .to.contain(secondAddressData.firstName)
+        .and.to.contain(secondAddressData.lastName)
+        .and.to.contain(secondAddressData.address)
+        .and.to.contain(secondAddressData.postalCode)
+        .and.to.contain(secondAddressData.city)
+        .and.to.contain(secondAddressData.country);
     });
 
     it('should check that private note textarea is not visible', async function () {
@@ -525,7 +545,7 @@ describe('Check and edit customer block in view order page', async () => {
   });
 
   // 4 - Delete the created customer
-  describe(`Delete the created customer ${customerData.lastName}`, async () => {
+  describe(`Delete the created customer '${customerData.firstName} ${customerData.lastName}'`, async () => {
     it('should go customers page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'goToCustomersPage', baseContext);
 
@@ -550,7 +570,7 @@ describe('Check and edit customer block in view order page', async () => {
       await expect(textResult).to.contains(customerData.email);
     });
 
-    it('should delete customer and check Result', async function () {
+    it('should delete customer and check result', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'deleteCustomer', baseContext);
 
       const deleteTextResult = await customersPage.deleteCustomer(page, 1);
