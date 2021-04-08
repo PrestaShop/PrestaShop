@@ -29,7 +29,7 @@ doctrine:
     dbal:
         connections:
             default:
-                dbname: "%database_name%"
+                dbname: "test_%database_name%"
     orm:
         metadata_cache_driver: "array"
         query_cache_driver: "array"
