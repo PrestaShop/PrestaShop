@@ -26,6 +26,7 @@
 
 namespace PrestaShopBundle\Form\Admin\Improve\International\Translations;
 
+use PrestaShop\PrestaShop\Core\Translation\Storage\Provider\Definition\ThemeProviderDefinition;
 use PrestaShopBundle\Form\Admin\Type\TranslatorAwareType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\FormBuilderInterface;
@@ -112,7 +113,7 @@ class ModifyTranslationsType extends TranslatorAwareType
                 'row_attr' => [
                     'class' => 'js-theme-form-group d-none',
                 ],
-                'choices' => [$noTheme => 0] + $this->themeChoices,
+                'choices' => [$noTheme => 0] + $this->excludeDefaultThemeFromChoices($this->themeChoices),
                 'choice_attr' => [
                     $noTheme => [
                         'class' => 'js-no-theme',
@@ -139,5 +140,17 @@ class ModifyTranslationsType extends TranslatorAwareType
                 'choices' => $this->getLocaleChoices(),
                 'choice_translation_domain' => false,
             ]);
+    }
+
+    /**
+     * @param array $themeChoices
+     *
+     * @return array
+     */
+    private function excludeDefaultThemeFromChoices(array $themeChoices): array
+    {
+        unset($themeChoices[ThemeProviderDefinition::DEFAULT_THEME_NAME]);
+
+        return $themeChoices;
     }
 }
