@@ -23,7 +23,6 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
 
-
 /**
  * Checks if correct addresses are selected.
  * There is a case when options list cannot contain cart addresses 'selected' values

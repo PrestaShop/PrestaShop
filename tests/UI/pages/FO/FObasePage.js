@@ -25,6 +25,7 @@ module.exports = class FOBasePage extends CommonPage {
     this.defaultCurrencySpan = `${this.currencySelectorDiv} button span`;
     this.currencySelect = 'select[aria-labelledby=\'currency-selector-label\']';
     this.searchInput = '#search_widget input.ui-autocomplete-input';
+    this.autocompleteSearchResult = '.ui-autocomplete';
 
     // Footer links
     // Products links selectors
@@ -257,6 +258,18 @@ module.exports = class FOBasePage extends CommonPage {
    */
   async goToCartPage(page) {
     await this.clickAndWaitForNavigation(page, this.cartLink);
+  }
+
+  /**
+   * Get autocomplete search result
+   * @param page
+   * @param productName
+   * @returns {Promise<*>}
+   */
+  async getAutocompleteSearchResult(page, productName) {
+    await this.setValue(page, this.searchInput, productName);
+    await page.waitForTimeout(2000);
+    return this.getTextContent(page, this.autocompleteSearchResult);
   }
 
   /**

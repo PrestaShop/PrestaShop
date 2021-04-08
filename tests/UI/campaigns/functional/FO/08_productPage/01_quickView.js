@@ -268,7 +268,7 @@ describe('Product quick view', async () => {
       let pageTitle = await productPage.getPageTitle(page);
       await expect(pageTitle.toUpperCase()).to.contains(firstProductData.name);
 
-      const imageFirstColor = await productPage.getProductInformation(page);
+      const imageFirstColor = await productPage.getProductImageUrls(page);
 
       await productPage.goToHomePage(page);
 
@@ -277,7 +277,7 @@ describe('Product quick view', async () => {
       pageTitle = await productPage.getPageTitle(page);
       await expect(pageTitle.toUpperCase()).to.contains(firstProductData.name);
 
-      const imageSecondColor = await productPage.getProductInformation(page);
+      const imageSecondColor = await productPage.getProductImageUrls(page);
 
       await expect(imageFirstColor.coverImage).to.not.equal(imageSecondColor.coverImage);
     });

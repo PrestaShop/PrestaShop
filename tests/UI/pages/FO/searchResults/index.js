@@ -7,6 +7,8 @@ class SearchResults extends FOBasePage {
     this.pageTitle = 'Search';
 
     // Selectors for search Results page
+    this.productListTopDiv = '#js-product-list-top';
+    this.totalProduct = `${this.productListTopDiv} .total-products`;
     this.productArticle = number => `#js-product-list .products div:nth-child(${number}) article`;
     this.productImg = number => `${this.productArticle(number)} img`;
     this.productDescriptionDiv = number => `${this.productArticle(number)} div.product-description`;
@@ -17,6 +19,16 @@ class SearchResults extends FOBasePage {
     this.quickViewCoverImage = `${this.quickViewModalDiv} img.js-qv-product-cover`;
     this.quickViewThumbFirstImage = `${this.quickViewModalDiv} li:nth-child(1) img.js-thumb`;
     this.quickViewThumb2ndImage = `${this.quickViewModalDiv} li:nth-child(2) img.js-thumb`;
+  }
+
+  // Methods
+  /**
+   * Get search product results number
+   * @param page
+   * @returns {Promise<number>}
+   */
+  getSearchResultsNumber(page) {
+    return this.getNumberFromText(page, this.totalProduct);
   }
 
   /**
@@ -66,10 +78,10 @@ class SearchResults extends FOBasePage {
   async selectThumbImage(page, id) {
     if (id === 1) {
       await this.waitForSelectorAndClick(page, this.quickViewThumbFirstImage);
-      await page.waitForSelector(`${this.quickViewThumbFirstImage}.selected`, {state: 'visible'});
+      await this.waitForVisibleSelector(page, `${this.quickViewThumbFirstImage}.selected`);
     } else {
       await this.waitForSelectorAndClick(page, this.quickViewThumb2ndImage);
-      await page.waitForSelector(`${this.quickViewThumb2ndImage}.selected`, {state: 'visible'});
+      await this.waitForVisibleSelector(page, `${this.quickViewThumb2ndImage}.selected`);
     }
     return this.getAttributeContent(page, this.quickViewCoverImage, 'src');
   }

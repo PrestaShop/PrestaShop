@@ -8,6 +8,7 @@ Feature: Supplier management
     Given shop "shop1" with name "test_shop" exists
     And language "language1" with locale "fr-FR" exists
     And language with iso code "en" is the default one
+    And single shop context is loaded
 
   Scenario: Adding new supplier
     When I add new supplier supplier1 with following properties:

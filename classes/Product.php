@@ -698,8 +698,8 @@ class ProductCore extends ObjectModel
     {
         parent::__construct($id_product, $id_lang, $id_shop);
 
-        $unitPriceRatio = new DecimalNumber((string) $this->unit_price_ratio);
-        $price = new DecimalNumber((string) $this->price);
+        $unitPriceRatio = new DecimalNumber((string) ($this->unit_price_ratio ?? 0));
+        $price = new DecimalNumber((string) ($this->price ?? 0));
 
         if ($unitPriceRatio->isGreaterThanZero()) {
             $this->unit_price = (float) (string) $price->dividedBy($unitPriceRatio);

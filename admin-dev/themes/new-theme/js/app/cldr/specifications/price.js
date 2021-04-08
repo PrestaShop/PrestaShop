@@ -30,7 +30,6 @@ import NumberSpecification from '@app/cldr/specifications/number';
  */
 const CURRENCY_DISPLAY_SYMBOL = 'symbol';
 
-
 class PriceSpecification extends NumberSpecification {
   /**
    * Price specification constructor.

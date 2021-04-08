@@ -127,7 +127,10 @@ abstract class AbstractDomainFeatureContext implements Context
         return CommonFeatureContext::getContainer();
     }
 
-    protected function assertLastErrorIsNull()
+    /**
+     * @throws RuntimeException
+     */
+    protected function assertLastErrorIsNull(): void
     {
         $e = $this->getLastException();
 

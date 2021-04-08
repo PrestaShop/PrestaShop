@@ -234,7 +234,6 @@ class NumberFormatter {
       .join('');
   }
 
-
   /**
    * Add missing placeholders to the number using the passed CLDR pattern.
    *

@@ -147,7 +147,6 @@ $(() => {
     });
   }
 
-
   function initAddCartRuleFormHandler() {
     const $modal = $(OrderViewPageMap.addCartRuleModal);
     const $form = $modal.find('form');
