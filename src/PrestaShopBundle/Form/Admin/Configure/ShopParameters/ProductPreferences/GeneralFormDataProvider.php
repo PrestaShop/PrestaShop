@@ -28,7 +28,11 @@ declare(strict_types=1);
 namespace PrestaShopBundle\Form\Admin\Configure\ShopParameters\ProductPreferences;
 
 use PrestaShop\PrestaShop\Adapter\Product\GeneralConfiguration;
+use PrestaShop\PrestaShop\Core\Exception\TypeException;
 use PrestaShop\PrestaShop\Core\Form\FormDataProviderInterface;
+use PrestaShopBundle\Form\Exception\DataProviderException;
+use PrestaShopBundle\Form\Exception\InvalidConfigurationDataError;
+use PrestaShopBundle\Form\Exception\InvalidConfigurationDataErrorCollection;
 use Symfony\Component\Translation\TranslatorInterface;
 
 /**
@@ -37,6 +41,10 @@ use Symfony\Component\Translation\TranslatorInterface;
  */
 class GeneralFormDataProvider implements FormDataProviderInterface
 {
+    /** @todo change error to string once invoices PR merged  */
+    public const ERROR_MUST_BE_NUMERIC_HIGHER_THEN_ZERO = 1;
+    public const ERROR_MUST_BE_NUMERIC_EQUAL_TO_ZERO_OR_HIGHER = 2;
+
     /**
      * @var GeneralConfiguration
      */
@@ -68,9 +76,7 @@ class GeneralFormDataProvider implements FormDataProviderInterface
      */
     public function setData(array $data)
     {
-        if ($errors = $this->validate($data)) {
-            return $errors;
-        }
+        $this->validate($data);
 
         return $this->configuration->updateConfiguration($data);
     }
@@ -80,39 +86,41 @@ class GeneralFormDataProvider implements FormDataProviderInterface
      *
      * @param array $data
      *
-     * @return array Returns array of errors
+     * @return void
+     *
+     * @throws DataProviderException
+     * @throws TypeException
      */
-    protected function validate(array $data)
+    protected function validate(array $data): void
     {
-        $invalidFields = [];
+        $errorCollection = new InvalidConfigurationDataErrorCollection();
 
-        $newDaysNumber = $data['new_days_number'];
-        if (!is_numeric($newDaysNumber) || 0 > $newDaysNumber) {
-            $invalidFields[] = $this->translator->trans(
-                'Number of days for which the product is considered \'new\'',
-                [],
-                'Admin.Shopparameters.Feature'
-            );
+        if (isset($data[GeneralType::FIELD_NEW_DAYS_NUMBER])) {
+            $newDaysNumber = $data[GeneralType::FIELD_NEW_DAYS_NUMBER];
+            if (!is_numeric($newDaysNumber) || 0 > $newDaysNumber) {
+                $errorCollection->add(
+                    new InvalidConfigurationDataError(
+                        static::ERROR_MUST_BE_NUMERIC_HIGHER_THEN_ZERO,
+                        GeneralType::FIELD_NEW_DAYS_NUMBER
+                    )
+                );
+            }
         }
 
-        $shortDescriptionLimit = $data['short_description_limit'];
-        if (!is_numeric($shortDescriptionLimit) || 0 >= $shortDescriptionLimit) {
-            $invalidFields[] = $this->translator->trans(
-                'Max size of product summary',
-                [],
-                'Admin.Shopparameters.Feature'
-            );
+        if (isset($data[GeneralType::FIELD_SHORT_DESCRIPTION_LIMIT])) {
+            $shortDescriptionLimit = $data[GeneralType::FIELD_SHORT_DESCRIPTION_LIMIT];
+            if (!is_numeric($shortDescriptionLimit) || 0 >= $shortDescriptionLimit) {
+                $errorCollection->add(
+                    new InvalidConfigurationDataError(
+                        static::ERROR_MUST_BE_NUMERIC_EQUAL_TO_ZERO_OR_HIGHER,
+                        GeneralType::FIELD_SHORT_DESCRIPTION_LIMIT
+                    )
+                );
+            }
         }
 
-        $errors = [];
-        foreach ($invalidFields as $field) {
-            $errors[] = [
-                'key' => 'The %s field is invalid.',
-                'domain' => 'Admin.Notifications.Error',
-                'parameters' => [$field],
-            ];
+        if (!$errorCollection->isEmpty()) {
+            throw new DataProviderException('Invalid product preferences general form', 0, null, $errorCollection);
         }
-
-        return $errors;
     }
 }
