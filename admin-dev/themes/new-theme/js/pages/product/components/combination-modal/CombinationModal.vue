@@ -25,6 +25,7 @@
 <template>
   <div id="combination-edit-modal">
     <modal
+      class="combination-modal"
       v-if="selectedCombinationId !== null"
       @close="closeModal"
     >
@@ -63,7 +64,9 @@
           class="btn btn-outline-secondary"
           @click.prevent.stop="showPrevious"
           :aria-label="$t('modal.previous')"
-          :disabled="previousCombinationId === null || submittingCombinationForm"
+          :disabled="
+            previousCombinationId === null || submittingCombinationForm
+          "
         >
           <i class="material-icons">keyboard_arrow_left</i>
           {{ $t('modal.previous') }}
@@ -96,7 +99,31 @@
           />
         </button>
       </template>
+
+      <template #outside>
+        <history
+          :combinations-list="combinationsHistory"
+          @selectCombination="selectCombination"
+          :selected-combination="selectedCombinationId"
+          :empty-image="emptyImage"
+        />
+      </template>
     </modal>
+    <div
+      class="modal-prevent-close"
+      @click.prevent.stop="preventClose"
+    >
+      <modal
+        :modal-title="'You sure bro?'"
+        :cancel-label="'Cancel'"
+        :confirm-label="'Confirm'"
+        :close-label="'Close'"
+        :confirmation="true"
+        v-if="showConfirm"
+        @close="hideConfirmModal"
+        @confirm="confirmSelection"
+      />
+    </div>
   </div>
 </template>
 
@@ -106,6 +133,7 @@
   import ProductEventMap from '@pages/product/product-event-map';
   import Modal from '@vue/components/Modal';
   import Router from '@components/router';
+  import History from './History';
 
   const {$} = window;
   const CombinationEvents = ProductEventMap.combinations;
@@ -114,7 +142,7 @@
 
   export default {
     name: 'CombinationModal',
-    components: {Modal},
+    components: {Modal, History},
     data() {
       return {
         combinationsService: null,
@@ -127,6 +155,9 @@
         submittingCombinationForm: false,
         combinationList: null,
         hasSubmittedCombinations: false,
+        combinationsHistory: [],
+        showConfirm: false,
+        temporarySelection: null,
       };
     },
     props: {
@@ -138,22 +169,33 @@
         type: Object,
         required: true,
       },
+      emptyImage: {
+        type: String,
+        required: true,
+      },
     },
     mounted() {
       this.combinationList = $(ProductMap.combinations.combinationsContainer);
       this.combinationsService = new CombinationsService(this.productId);
       this.initCombinationIds();
       this.watchEditButtons();
-      this.eventEmitter.on(CombinationEvents.refreshCombinationList, () => this.initCombinationIds());
+      this.eventEmitter.on(CombinationEvents.refreshCombinationList, () => this.initCombinationIds(),
+      );
     },
     methods: {
       watchEditButtons() {
-        this.combinationList.on('click', ProductMap.combinations.editCombinationButtons, (event) => {
-          event.stopImmediatePropagation();
-          const $row = $(event.target).closest('tr');
-          this.selectedCombinationId = Number($row.find(ProductMap.combinations.combinationIdInputsSelector).val());
-          this.hasSubmittedCombinations = false;
-        });
+        this.combinationList.on(
+          'click',
+          ProductMap.combinations.editCombinationButtons,
+          (event) => {
+            event.stopImmediatePropagation();
+            const $row = $(event.target).closest('tr');
+            this.selectedCombinationId = Number(
+              $row.find(ProductMap.combinations.combinationIdInputsSelector).val(),
+            );
+            this.hasSubmittedCombinations = false;
+          },
+        );
       },
       async initCombinationIds() {
         this.combinationIds = await this.combinationsService.getCombinationIds();
@@ -193,12 +235,44 @@
           this.selectedCombinationId = this.nextCombinationId;
         }
       },
+      selectCombination(combination) {
+        this.temporarySelection = combination.id;
+        this.showConfirmModal();
+      },
+      confirmSelection() {
+        this.selectedCombinationId = this.temporarySelection;
+        this.hideConfirmModal();
+      },
       submitForm() {
         this.submittingCombinationForm = true;
         const iframeBody = this.$refs.iframe.contentDocument.body;
-        const editionForm = iframeBody.querySelector(ProductMap.combinations.editionForm);
+        const editionForm = iframeBody.querySelector(
+          ProductMap.combinations.editionForm,
+        );
         editionForm.submit();
         this.hasSubmittedCombinations = true;
+        const selectedCombination = {
+          id: this.selectedCombinationId,
+          title: iframeBody.querySelector('.card-header span').innerHTML,
+        };
+
+        if (
+          (this.combinationsHistory[0]
+            && this.combinationsHistory[0].id !== selectedCombination.id)
+          || !this.combinationsHistory.length
+        ) {
+          this.combinationsHistory.unshift(selectedCombination);
+        }
+      },
+      showConfirmModal() {
+        this.showConfirm = true;
+      },
+      hideConfirmModal() {
+        this.showConfirm = false;
+      },
+      preventClose(event) {
+        event.stopPropagation();
+        event.preventDefault();
       },
     },
     watch: {
@@ -212,10 +286,13 @@
         }
 
         this.loadingCombinationForm = true;
-        this.editCombinationUrl = router.generate('admin_products_combinations_edit_combination', {
-          combinationId,
-          liteDisplaying: 1,
-        });
+        this.editCombinationUrl = router.generate(
+          'admin_products_combinations_edit_combination',
+          {
+            combinationId,
+            liteDisplaying: 1,
+          },
+        );
 
         const selectedIndex = this.combinationIds.indexOf(combinationId);
 
@@ -234,14 +311,20 @@
 </script>
 
 <style lang="scss" type="text/scss">
-@import "~@scss/config/_settings.scss";
+@import '~@scss/config/_settings.scss';
 
-#combination-edit-modal {
+#combination-edit-modal .combination-modal {
+  .modal {
+    display: flex;
+    align-items: flex-start;
+    justify-content: center;
+  }
+
   .modal-dialog {
-    max-width: 1200px;
+    max-width: 990px;
     width: 90%;
     height: 95%;
-    margin: 0 auto;
+    margin: 0;
 
     .modal-header {
       display: none;
@@ -250,11 +333,12 @@
     .modal-content {
       height: 100%;
       padding: 0;
-      margin: 0;
+      margin: 0 1rem;
 
       .modal-body {
-        padding: 0;
+        padding: 0.5rem;
         margin: 0;
+        background: #eaebec;
 
         .combination-loading {
           position: absolute;
@@ -295,6 +379,16 @@
         }
       }
     }
+  }
+
+  .history {
+    max-width: 400px;
+    width: 100%;
+    min-height: calc(100% - 3.5rem);
+    top: 50%;
+    transform: translateY(-50%);
+    height: 95%;
+    margin-right: 1rem;
   }
 }
 </style>

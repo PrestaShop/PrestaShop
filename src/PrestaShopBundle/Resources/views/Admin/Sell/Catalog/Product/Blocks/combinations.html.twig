@@ -1,0 +1,52 @@
+{#**
+ * Copyright since 2007 PrestaShop SA and Contributors
+ * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
+ *
+ * NOTICE OF LICENSE
+ *
+ * This source file is subject to the Open Software License (OSL 3.0)
+ * that is bundled with this package in the file LICENSE.md.
+ * It is also available through the world-wide-web at this URL:
+ * https://opensource.org/licenses/OSL-3.0
+ * If you did not receive a copy of the license and are unable to
+ * obtain it through the world-wide-web, please send an email
+ * to license@prestashop.com so we can send you a copy immediately.
+ *
+ * DISCLAIMER
+ *
+ * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
+ * versions in the future. If you wish to customize PrestaShop for your
+ * needs please refer to https://devdocs.prestashop.com/ for more information.
+ *
+ * @author    PrestaShop SA and Contributors <contact@prestashop.com>
+ * @copyright Since 2007 PrestaShop SA and Contributors
+ * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
+ *#}
+{% form_theme combinationsForm '@PrestaShop/Admin/Sell/Catalog/Product/Form/combination_listing_form_theme.html.twig' %}
+
+{% block form_product_combinations %}
+  <div id="combination-edit-modal"
+    data-empty-image="{{ asset('themes/new-theme/img/empty_state/credit_slip.png') }}"
+    data-translations="{{ {
+      'modal.save': 'Save'|trans({}, 'Admin.Actions'),
+      'modal.close': 'Close'|trans({}, 'Admin.Actions'),
+      'modal.previous': 'Previous combination'|trans({}, 'Admin.Catalog.Feature'),
+      'modal.next': 'Next combination'|trans({}, 'Admin.Catalog.Feature'),
+    }|json_encode }}"
+  ></div>
+  <div class="row justify-content-center" id="combinations-list">
+    <div class="spinner-product-combinations-container" id="productCombinationsLoading">
+      <div class="spinner spinner-primary"></div>
+    </div>
+
+    {# Integrate the token that will be required in the combination update request #}
+    {{ form_row(combinationsForm, {'attr': {'data-combination-token': csrf_token(combinationItemForm.vars.name) }}) }}
+  </div>
+
+  <div class="row justify-content-center" id="combinations-pagination">
+    {{ include('@PrestaShop/Admin/Common/javascript_pagination.html.twig', {
+      'limit': combinationsLimit,
+      'limitChoices': combinationLimitChoices,
+    }) }}
+  </div>
+{% endblock form_product_combinations %}
