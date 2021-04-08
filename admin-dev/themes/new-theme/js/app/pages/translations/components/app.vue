@@ -59,7 +59,6 @@
 </template>
 
 <script>
-  import TranslationsHeader from '@app/pages/translations/components/header/translations-header';
   import Search from '@app/pages/translations/components/header/search';
   import Sidebar from '@app/pages/translations/components/sidebar';
   import Principal from '@app/pages/translations/components/principal';
@@ -149,7 +148,6 @@
       leave: false,
     }),
     components: {
-      TranslationsHeader,
       Search,
       Sidebar,
       Principal,
