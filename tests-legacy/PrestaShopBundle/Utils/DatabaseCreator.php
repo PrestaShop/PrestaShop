@@ -47,27 +47,17 @@ class DatabaseCreator
         define('_PS_MODULE_DIR_', _PS_ROOT_DIR_ . '/modules/');
         require_once __DIR__ . '/../../../install-dev/init.php';
 
-        $install = new class() extends Install {
-            public function setError($errors)
-            {
-                parent::setError($errors);
-
-                $msg = is_array($errors) ? implode("\n", $errors) : $errors;
-                echo (string) (new \Exception('Something went wrong during installation:' . "\n" . $msg . "\n"));
-                exit(1);
-            }
-        };
+        $install = new Install();
         $install->setTranslator(Context::getContext()->getTranslatorFromLocale('en'));
         \DbPDOCore::createDatabase(_DB_SERVER_, _DB_USER_, _DB_PASSWD_, _DB_NAME_, false);
         $install->clearDatabase(false);
-        $install->installDatabase(true);
-
-        $process = new Process(PHP_BINARY . ' bin/console prestashop:schema:update-without-foreign --env=test');
-        $exitCode = $process->run();
-        if ($exitCode !== 0) {
-            $install->setError('Update process ended with non-zero code (' . $exitCode . '):' . "\n" . $process->getOutput());
+        if (!$install->installDatabase(true)) {
+            // Something went wrong during installation
+            exit(1);
         }
 
+        $process = new Process(PHP_BINARY . ' bin/console prestashop:schema:update-without-foreign --env=test');
+        $process->run();
         $install->initializeTestContext();
         $install->installDefaultData('test_shop', false, false, false);
         $install->populateDatabase();
