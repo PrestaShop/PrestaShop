@@ -25,26 +25,26 @@
  */
 global $smarty;
 
-$template_dirs = array(_PS_THEME_DIR_.'templates');
-$plugin_dirs = array(_PS_THEME_DIR_.'plugins');
+$template_dirs = [_PS_THEME_DIR_ . 'templates'];
+$plugin_dirs = [_PS_THEME_DIR_ . 'plugins'];
 if (_PS_PARENT_THEME_DIR_) {
-    $template_dirs[] = _PS_PARENT_THEME_DIR_.'templates';
-    $plugin_dirs[] = _PS_PARENT_THEME_DIR_.'plugins';
+    $template_dirs[] = _PS_PARENT_THEME_DIR_ . 'templates';
+    $plugin_dirs[] = _PS_PARENT_THEME_DIR_ . 'plugins';
 }
 
 $smarty->setTemplateDir($template_dirs);
 $smarty->addPluginsDir($plugin_dirs);
 
-$module_resources = array('theme' => _PS_THEME_DIR_.'modules/');
+$module_resources = ['theme' => _PS_THEME_DIR_ . 'modules/'];
 if (_PS_PARENT_THEME_DIR_) {
-    $module_resources['parent'] = _PS_PARENT_THEME_DIR_.'modules/';
+    $module_resources['parent'] = _PS_PARENT_THEME_DIR_ . 'modules/';
 }
 $module_resources['modules'] = _PS_MODULE_DIR_;
 $smarty->registerResource('module', new SmartyResourceModule($module_resources));
 
-$parent_resources = array();
+$parent_resources = [];
 if (_PS_PARENT_THEME_DIR_) {
-    $parent_resources['parent'] = _PS_PARENT_THEME_DIR_.'templates/';
+    $parent_resources['parent'] = _PS_PARENT_THEME_DIR_ . 'templates/';
 }
 $smarty->registerResource('parent', new SmartyResourceParent($parent_resources));
 
@@ -119,7 +119,7 @@ function smartyFormField($params, $smarty)
 
 function smartyWidgetBlock($params, $content, $smarty)
 {
-    static $backedUpVariablesStack = array();
+    static $backedUpVariablesStack = [];
 
     if (null === $content) {
         // Function is called twice: at the opening of the block
@@ -129,7 +129,7 @@ function smartyWidgetBlock($params, $content, $smarty)
             // Assign widget variables and backup all the variables they override
             $currentVariables = $smarty->getTemplateVars();
             $scopedVariables = $widget->getWidgetVariables(isset($params['hook']) ? $params['hook'] : null, $params);
-            $backedUpVariables = array();
+            $backedUpVariables = [];
             foreach ($scopedVariables as $key => $value) {
                 if (array_key_exists($key, $currentVariables)) {
                     $backedUpVariables[$key] = $currentVariables[$key];
@@ -169,7 +169,7 @@ function smartyTranslate($params, $smarty)
         $params['mod'] = false;
     }
     if (!isset($params['sprintf'])) {
-        $params['sprintf'] = array();
+        $params['sprintf'] = [];
     }
     if (!isset($params['d'])) {
         $params['d'] = null;
@@ -222,10 +222,10 @@ function smartyTranslate($params, $smarty)
     }
 
     $basename = basename($filename, '.tpl');
-    $key = $basename.'_'.md5($string);
+    $key = $basename . '_' . md5($string);
 
-    if (isset($smarty->source) && (strpos($smarty->source->filepath, DIRECTORY_SEPARATOR.'override'.DIRECTORY_SEPARATOR) !== false)) {
-        $key = 'override_'.$key;
+    if (isset($smarty->source) && (strpos($smarty->source->filepath, DIRECTORY_SEPARATOR . 'override' . DIRECTORY_SEPARATOR) !== false)) {
+        $key = 'override_' . $key;
     }
 
     if ($params['mod']) {

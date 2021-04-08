@@ -138,14 +138,14 @@ define('__PS_BASE_URI__', $context->shop->getBaseURI());
 require_once $currentDir . '/defines_uri.inc.php';
 
 global $_MODULES;
-$_MODULES = array();
+$_MODULES = [];
 
-/**
+/*
  * @deprecated since 1.7.7
  */
 define('_PS_PRICE_DISPLAY_PRECISION_', 2);
 
-/**
+/*
  * @deprecated since 1.7.7
  */
 define('_PS_PRICE_COMPUTE_PRECISION_', 2);
@@ -183,7 +183,7 @@ if (defined('_PS_ADMIN_DIR_')) {
         $cookie = new Cookie('ps-sg' . $context->shop->getGroup()->id, '', $cookie_lifetime, $context->shop->getUrlsSharedCart(), false, $force_ssl);
     } else {
         if ($context->shop->domain != $context->shop->domain_ssl) {
-            $domains = array($context->shop->domain_ssl, $context->shop->domain);
+            $domains = [$context->shop->domain_ssl, $context->shop->domain];
         }
 
         $cookie = new Cookie('ps-s' . $context->shop->id, '', $cookie_lifetime, $domains, false, $force_ssl);

@@ -33,19 +33,19 @@ $smarty->force_compile = (Configuration::get('PS_SMARTY_FORCE_COMPILE') == _PS_S
 $smarty->compile_check = true;
 
 smartyRegisterFunction($smarty, 'function', 'toolsConvertPrice', 'toolsConvertPrice');
-smartyRegisterFunction($smarty, 'function', 'convertPrice', array('Product', 'convertPrice'));
-smartyRegisterFunction($smarty, 'function', 'convertPriceWithCurrency', array('Product', 'convertPriceWithCurrency'));
-smartyRegisterFunction($smarty, 'function', 'displayWtPrice', array('Product', 'displayWtPrice'));
-smartyRegisterFunction($smarty, 'function', 'displayWtPriceWithCurrency', array('Product', 'displayWtPriceWithCurrency'));
-smartyRegisterFunction($smarty, 'function', 'displayPrice', array('Tools', 'displayPriceSmarty'));
-smartyRegisterFunction($smarty, 'modifier', 'convertAndFormatPrice', array('Product', 'convertAndFormatPrice')); // used twice
-smartyRegisterFunction($smarty, 'function', 'getAdminToken', array('Tools', 'getAdminTokenLiteSmarty'));
-smartyRegisterFunction($smarty, 'function', 'displayAddressDetail', array('AddressFormat', 'generateAddressSmarty'));
-smartyRegisterFunction($smarty, 'function', 'getWidthSize', array('Image', 'getWidth'));
-smartyRegisterFunction($smarty, 'function', 'getHeightSize', array('Image', 'getHeight'));
-smartyRegisterFunction($smarty, 'function', 'addJsDef', array('Media', 'addJsDef'));
-smartyRegisterFunction($smarty, 'block', 'addJsDefL', array('Media', 'addJsDefL'));
-smartyRegisterFunction($smarty, 'modifier', 'secureReferrer', array('Tools', 'secureReferrer'));
+smartyRegisterFunction($smarty, 'function', 'convertPrice', ['Product', 'convertPrice']);
+smartyRegisterFunction($smarty, 'function', 'convertPriceWithCurrency', ['Product', 'convertPriceWithCurrency']);
+smartyRegisterFunction($smarty, 'function', 'displayWtPrice', ['Product', 'displayWtPrice']);
+smartyRegisterFunction($smarty, 'function', 'displayWtPriceWithCurrency', ['Product', 'displayWtPriceWithCurrency']);
+smartyRegisterFunction($smarty, 'function', 'displayPrice', ['Tools', 'displayPriceSmarty']);
+smartyRegisterFunction($smarty, 'modifier', 'convertAndFormatPrice', ['Product', 'convertAndFormatPrice']); // used twice
+smartyRegisterFunction($smarty, 'function', 'getAdminToken', ['Tools', 'getAdminTokenLiteSmarty']);
+smartyRegisterFunction($smarty, 'function', 'displayAddressDetail', ['AddressFormat', 'generateAddressSmarty']);
+smartyRegisterFunction($smarty, 'function', 'getWidthSize', ['Image', 'getWidth']);
+smartyRegisterFunction($smarty, 'function', 'getHeightSize', ['Image', 'getHeight']);
+smartyRegisterFunction($smarty, 'function', 'addJsDef', ['Media', 'addJsDef']);
+smartyRegisterFunction($smarty, 'block', 'addJsDefL', ['Media', 'addJsDefL']);
+smartyRegisterFunction($smarty, 'modifier', 'secureReferrer', ['Tools', 'secureReferrer']);
 
 $module_resources['modules'] = _PS_MODULE_DIR_;
 $smarty->registerResource('module', new SmartyResourceModule($module_resources, $isAdmin = true));
@@ -63,16 +63,16 @@ function smartyTranslate($params, $smarty)
     $addSlashes = (isset($params['slashes']) || isset($params['js']));
     $isInPDF = isset($params['pdf']);
     $isInModule = !empty($params['mod']);
-    $sprintf = array();
+    $sprintf = [];
 
     if (isset($params['sprintf']) && !is_array($params['sprintf'])) {
-        $sprintf = array($params['sprintf']);
+        $sprintf = [$params['sprintf']];
     } elseif (isset($params['sprintf'])) {
         $sprintf = $params['sprintf'];
     }
 
     if (($htmlEntities || $addSlashes)) {
-        $sprintf['legacy'] = $htmlEntities ? 'htmlspecialchars': 'addslashes';
+        $sprintf['legacy'] = $htmlEntities ? 'htmlspecialchars' : 'addslashes';
     }
 
     if (!empty($params['d'])) {
