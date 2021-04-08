@@ -159,7 +159,7 @@ class ControllerTest extends TestCase
             define('_PS_TAB_MODULE_LIST_URL_', '');
         }
         if (!defined('_DB_SERVER_')) {
-            define('_DB_SERVER_', 'localhost');
+            define('_DB_SERVER_', $configuration['parameters']['database_host']);
         }
         if (!defined('_DB_USER_')) {
             define('_DB_USER_', $configuration['parameters']['database_user']);

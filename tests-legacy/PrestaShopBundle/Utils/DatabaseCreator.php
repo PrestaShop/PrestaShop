@@ -56,8 +56,6 @@ class DatabaseCreator
             exit(1);
         }
 
-        $process = new Process(PHP_BINARY . ' bin/console prestashop:schema:update-without-foreign --env=test');
-        $process->run();
         $install->initializeTestContext();
         $install->installDefaultData('test_shop', false, false, false);
         $install->populateDatabase();

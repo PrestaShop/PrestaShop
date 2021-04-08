@@ -325,9 +325,6 @@ class Install extends AbstractInstall
      */
     public function generateSf2ProductionEnv()
     {
-        if (defined('_PS_IN_TEST_')) {
-            return true;
-        }
         $schemaUpgrade = new UpgradeDatabase();
         $schemaUpgrade->addDoctrineSchemaUpdate();
         $output = $schemaUpgrade->execute();
@@ -351,8 +348,8 @@ class Install extends AbstractInstall
         $instance = Db::getInstance();
         $instance->execute('SET FOREIGN_KEY_CHECKS=0');
         foreach ($instance->executeS('SHOW TABLES') as $row) {
-            $table = current($row);
-            if (empty(_DB_PREFIX_) || preg_match('#^' . _DB_PREFIX_ . '#i', $table)) {
+            $table = reset($row);
+            if (preg_match('#^' . _DB_PREFIX_ . '#i', $table)) {
                 $instance->execute(($truncate ? 'TRUNCATE TABLE ' : 'DROP TABLE ') . '`' . $table . '`');
             }
         }
