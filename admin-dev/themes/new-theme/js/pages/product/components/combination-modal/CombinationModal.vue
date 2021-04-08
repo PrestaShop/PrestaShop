@@ -114,10 +114,10 @@
       @click.prevent.stop="preventClose"
     >
       <modal
-        :modal-title="'You sure bro?'"
-        :cancel-label="'Cancel'"
-        :confirm-label="'Confirm'"
-        :close-label="'Close'"
+        :modal-title="$t('modal.history.confirmTitle')"
+        :cancel-label="$t('modal.cancel')"
+        :confirm-label="$t('modal.confirm')"
+        :close-label="$t('modal.close')"
         :confirmation="true"
         v-if="showConfirm"
         @close="hideConfirmModal"
