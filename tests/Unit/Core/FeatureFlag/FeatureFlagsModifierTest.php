@@ -158,28 +158,6 @@ class FeatureFlagsModifierTest extends TestCase
         $this->assertTrue($modifier->validateConfiguration($payload));
     }
 
-    public function testValidateConfigurationWhenPayloadIsNotValid()
-    {
-        $featureFlags = [
-            new FeatureFlag('product_page_v1'),
-            new FeatureFlag('product_page_v2'),
-            (new FeatureFlag('product_page_v3'))->enable(),
-        ];
-
-        list($entityManagerMock, $repositoryMock) = $this->buildDoctrineServicesMocksForFetchByName($featureFlags);
-        $translatorMock = $this->getMockBuilder(TranslatorInterface::class)->getMock();
-
-        $modifier = new FeatureFlagsModifier($entityManagerMock, $translatorMock);
-
-        $payload = [
-            'product_page_v1' => false,
-            'product_page_v2' => true,
-            'product_page_v4' => false,
-        ];
-
-        $this->assertFalse($modifier->validateConfiguration($payload));
-    }
-
     public function testValidateConfigurationWithBadlyTypedData()
     {
         $featureFlags = [

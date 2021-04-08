@@ -60,6 +60,7 @@ class FeatureFlagTest extends TestCase
 
         $this->assertEquals('prestashop_800', $featureFlag->getName());
         $this->assertFalse($featureFlag->getState());
+        $this->assertFalse($featureFlag->isEnabled());
         $this->assertEquals('a_b_c', $featureFlag->getDescriptionWording());
         $this->assertEquals('A.B.C', $featureFlag->getDescriptionDomain());
         $this->assertEquals('a b c d', $featureFlag->getLabelWording());
@@ -70,10 +71,10 @@ class FeatureFlagTest extends TestCase
     {
         $featureFlag = new FeatureFlag('prestashop_800');
 
-        $this->assertFalse($featureFlag->getState());
+        $this->assertFalse($featureFlag->isEnabled());
         $featureFlag->enable();
-        $this->assertTrue($featureFlag->getState());
+        $this->assertTrue($featureFlag->isEnabled());
         $featureFlag->disable();
-        $this->assertFalse($featureFlag->getState());
+        $this->assertFalse($featureFlag->isEnabled());
     }
 }

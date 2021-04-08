@@ -1509,6 +1509,6 @@ services:
         parent: 'form.type.translatable.aware'
         public: true
         arguments:
-            - '@prestashop.core.feature_flags.configuration'
+            - '@prestashop.core.feature_flags.modifier'
         tags:
             - { name: form.type }

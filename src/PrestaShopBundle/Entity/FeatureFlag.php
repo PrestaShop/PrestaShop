@@ -131,6 +131,14 @@ class FeatureFlag
     }
 
     /**
+     * @return bool
+     */
+    public function isEnabled(): bool
+    {
+        return $this->state;
+    }
+
+    /**
      * @return self
      */
     public function disable(): self

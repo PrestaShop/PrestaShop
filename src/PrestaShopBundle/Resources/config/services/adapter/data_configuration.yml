@@ -262,7 +262,7 @@ services:
       arguments:
         - '@prestashop.adapter.legacy.configuration'
 
-    prestashop.core.feature_flags.configuration:
+    prestashop.core.feature_flags.modifier:
       class: 'PrestaShop\PrestaShop\Core\FeatureFlag\FeatureFlagsModifier'
       arguments:
         - '@doctrine.orm.entity_manager'
