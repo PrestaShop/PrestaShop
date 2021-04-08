@@ -2665,6 +2665,11 @@ class AdminControllerCore extends Controller
         if ($isNewTheme) {
             $this->addCSS(__PS_BASE_URI__ . $this->admin_webpath . '/themes/new-theme/public/theme.css', 'all', 1);
             $this->addJS(__PS_BASE_URI__ . $this->admin_webpath . '/themes/new-theme/public/main.bundle.js');
+
+            // the multistore dropdown should be called only once, and only if multistore is used
+            if ($this->container->get('prestashop.adapter.multistore_feature')->isUsed()) {
+                $this->addJs(__PS_BASE_URI__ . $this->admin_webpath . '/themes/new-theme/public/multistore_dropdown.bundle.js');
+            }
             $this->addJqueryPlugin(['chosen', 'fancybox']);
         } else {
             //Bootstrap

@@ -108,6 +108,7 @@ module.exports = {
     webservice: './js/pages/webservice',
     zone: './js/pages/zone',
     multistore_header: './js/components/multistore-header.js',
+    multistore_dropdown: './js/components/multistore-dropdown',
     theme: './scss/theme.scss',
     orders: './scss/pages/orders/orders.scss',
     product: './scss/pages/product/product_page.scss',

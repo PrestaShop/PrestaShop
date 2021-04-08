@@ -30,11 +30,14 @@ use PHPUnit\Framework\MockObject\MockObject;
 use PrestaShop\PrestaShop\Adapter\Configuration as ShopConfiguration;
 use PrestaShop\PrestaShop\Adapter\Shop\Context as ShopContext;
 use PrestaShop\PrestaShop\Core\Feature\FeatureInterface;
+use PrestaShopBundle\Controller\Admin\MultistoreController;
+use PrestaShopBundle\Form\Admin\Extension\MultistoreDropdownExtension;
 use PrestaShopBundle\Form\Admin\Type\SwitchType;
 use PrestaShopBundle\Service\Form\MultistoreCheckboxEnabler;
 use Symfony\Component\Form\FormInterface;
 use Symfony\Component\Form\Forms;
 use Symfony\Component\Form\Test\TypeTestCase;
+use Symfony\Component\HttpFoundation\Response;
 
 class MultistoreCheckboxEnablerTest extends TypeTestCase
 {
@@ -47,48 +50,50 @@ class MultistoreCheckboxEnablerTest extends TypeTestCase
     }
 
     /**
-     * @dataProvider provideShouldAddCheckboxes
+     * @dataProvider provideShouldAddMultistoreElements
      *
      * @param bool $isMultistoreUsed
      * @param bool $isAllShopContext
      */
-    public function testShouldAddCheckboxes(bool $isMultistoreUsed, bool $isAllShopContext, bool $expectedValue): void
+    public function testShouldAddMultistoreElements(bool $isMultistoreUsed, bool $isAllShopContext, bool $expectedValue): void
     {
         $checkboxEnabler = new MultistoreCheckboxEnabler(
             $this->createMultistoreFeatureMock($isMultistoreUsed),
             $this->mockedShopConfiguration,
-            $this->createMultistoreContextMock($isAllShopContext)
+            $this->createMultistoreContextMock($isAllShopContext),
+            $this->createMultistoreControllerMock()
         );
 
-        $this->assertEquals($expectedValue, $checkboxEnabler->shouldAddCheckboxes());
+        $this->assertEquals($expectedValue, $checkboxEnabler->shouldAddMultistoreElements());
     }
 
     /**
      * @return array
      */
-    public function provideShouldAddCheckboxes(): array
+    public function provideShouldAddMultistoreElements(): array
     {
         return [
             [true, false, true],
-            [false, false, false],
-            [true, true, false],
+            [true, true, true],
             [false, true, false],
+            [false, false, false],
         ];
     }
 
     /**
      * @throws \PrestaShop\PrestaShop\Core\Domain\Shop\Exception\ShopException
      */
-    public function testAddCheckboxes(): void
+    public function testAddMultistoreElements(): void
     {
         $form = $this->getFormToTest();
         $checkboxEnabler = new MultistoreCheckboxEnabler(
             $this->createMultistoreFeatureMock(),
             $this->mockedShopConfiguration,
-            $this->createMultistoreContextMock()
+            $this->createMultistoreContextMock(),
+            $this->createMultistoreControllerMock()
         );
 
-        $checkboxEnabler->addCheckboxes($form);
+        $checkboxEnabler->addMultistoreElements($form);
         $this->assertTrue($form->has(MultistoreCheckboxEnabler::MULTISTORE_FIELD_PREFIX . 'first_field'));
         $this->assertTrue($form->has('first_field'));
         $this->assertTrue($form->has('second_field'));
@@ -104,9 +109,13 @@ class MultistoreCheckboxEnablerTest extends TypeTestCase
      */
     private function getFormToTest(): FormInterface
     {
-        $formFactory = Forms::createFormFactoryBuilder()->getFormFactory();
+        $formFactory = Forms::createFormFactoryBuilder()
+            ->addTypeExtension(new MultistoreDropdownExtension())
+            ->getFormFactory();
 
-        $formBuilder = $formFactory->createBuilder()
+        $formBuilder = $formFactory->createBuilder();
+
+        $formBuilder
             // first field will have a multistore checkbox (it has the `multistore_configuration_key` attribute)
             ->add(
                 'first_field',
@@ -167,7 +176,21 @@ class MultistoreCheckboxEnablerTest extends TypeTestCase
     {
         $stub = $this->createMock(ShopConfiguration::class);
         $stub->method('get')->willReturn(true);
+        $stub->method('has')->willReturn(true);
 
         return $stub;
+    }
+
+    /**
+     * @return MockObject
+     */
+    private function createMultistoreControllerMock(): MockObject
+    {
+        $multistoreStub = $this->createMock(MultistoreController::class);
+        $responseStub = $this->createMock(Response::class);
+        $responseStub->method('getContent')->willReturn('some-string');
+        $multistoreStub->method('configurationDropdown')->willReturn($responseStub);
+
+        return $multistoreStub;
     }
 }
