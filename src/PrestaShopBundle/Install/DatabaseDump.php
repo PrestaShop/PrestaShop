@@ -28,6 +28,7 @@
 namespace PrestaShopBundle\Install;
 
 use Exception;
+use Ifsnop\Mysqldump\Mysqldump;
 use PDO;
 
 class DatabaseDump
@@ -79,6 +80,20 @@ class DatabaseDump
             $this->password,
             [
                 PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION,
+            ]
+        );
+    }
+
+    private function createMysqldumper(): object
+    {
+        // @phpstan-ignore-next-line
+        return new Mysqldump(
+            $this->getPdoDsn(),
+            $this->user,
+            $this->password,
+            [
+                'add-drop-table' => true,
+                'no-autocommit' => false,
             ]
         );
     }
@@ -136,9 +151,17 @@ class DatabaseDump
      */
     public function dump(): void
     {
-        $dumpCommand = $this->buildMySQLCommand('mysqldump', [$this->databaseName]);
-        $dumpCommand .= ' > ' . escapeshellarg($this->dumpFile) . ' 2> /dev/null';
-        $this->exec($dumpCommand);
+        // Dump using "ifsnop/mysqldump-php:^2.9" package if available. This package
+        // is however GNU GPL v3 licensed thus must be installed by developer manually.
+        // Otherwise dump using system "mysqldump" binary.
+        if (class_exists(Mysqldump::class)) {
+            $dumper = $this->createMysqldumper();
+            $dumper->start($this->dumpFile);
+        } else { // requires exec function enabled
+            $dumpCommand = $this->buildMySQLCommand('mysqldump', [$this->databaseName]);
+            $dumpCommand .= ' > ' . escapeshellarg($this->dumpFile) . ' 2> /dev/null';
+            $this->exec($dumpCommand);
+        }
     }
 
     /**
