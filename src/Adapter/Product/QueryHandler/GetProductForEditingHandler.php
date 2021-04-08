@@ -30,11 +30,11 @@ namespace PrestaShop\PrestaShop\Adapter\Product\QueryHandler;
 
 use Customization;
 use DateTime;
-use PrestaShop\Decimal\DecimalNumber;
 use PrestaShop\PrestaShop\Adapter\Product\AbstractProductHandler;
 use PrestaShop\PrestaShop\Adapter\Product\Stock\Repository\StockAvailableRepository;
 use PrestaShop\PrestaShop\Adapter\Product\VirtualProduct\Repository\VirtualProductFileRepository;
-use PrestaShop\PrestaShop\Adapter\TaxRulesGroup\Repository\TaxRulesGroupRepository;
+use PrestaShop\PrestaShop\Adapter\Tax\TaxComputer;
+use PrestaShop\PrestaShop\Core\Domain\Country\ValueObject\CountryId;
 use PrestaShop\PrestaShop\Core\Domain\Product\ProductCustomizabilitySettings;
 use PrestaShop\PrestaShop\Core\Domain\Product\Query\GetProductForEditing;
 use PrestaShop\PrestaShop\Core\Domain\Product\QueryHandler\GetProductForEditingHandlerInterface;
@@ -80,9 +80,9 @@ final class GetProductForEditingHandler extends AbstractProductHandler implement
     private $virtualProductFileRepository;
 
     /**
-     * @var TaxRulesGroupRepository
+     * @var TaxComputer
      */
-    private $taxRulesGroupRepository;
+    private $taxComputer;
 
     /**
      * @var int
@@ -93,20 +93,20 @@ final class GetProductForEditingHandler extends AbstractProductHandler implement
      * @param NumberExtractor $numberExtractor
      * @param StockAvailableRepository $stockAvailableRepository
      * @param VirtualProductFileRepository $virtualProductFileRepository
-     * @param TaxRulesGroupRepository $taxRulesGroupRepository
+     * @param TaxComputer $taxComputer
      * @param int $countryId
      */
     public function __construct(
         NumberExtractor $numberExtractor,
         StockAvailableRepository $stockAvailableRepository,
         VirtualProductFileRepository $virtualProductFileRepository,
-        TaxRulesGroupRepository $taxRulesGroupRepository,
+        TaxComputer $taxComputer,
         int $countryId
     ) {
         $this->numberExtractor = $numberExtractor;
         $this->stockAvailableRepository = $stockAvailableRepository;
         $this->virtualProductFileRepository = $virtualProductFileRepository;
-        $this->taxRulesGroupRepository = $taxRulesGroupRepository;
+        $this->taxComputer = $taxComputer;
         $this->countryId = $countryId;
     }
 
@@ -170,15 +170,11 @@ final class GetProductForEditingHandler extends AbstractProductHandler implement
     private function getPricesInformation(Product $product): ProductPricesInformation
     {
         $priceTaxExcluded = $this->numberExtractor->extract($product, 'price');
-        $taxRulesGroup = $this->taxRulesGroupRepository->getTaxRulesGroupDetails(new TaxRulesGroupId((int) $product->id_tax_rules_group));
-        if (!empty($taxRulesGroup['rates'])) {
-            // Use the tax rate associated to context country, or the first one as fallback
-            $countryTaxRate = $taxRulesGroup['rates'][$this->countryId] ?? reset($taxRulesGroup['rates']);
-        } else {
-            $countryTaxRate = 0;
-        }
-        $taxRatio = new DecimalNumber((string) (1 + ($countryTaxRate / 100)));
-        $priceTaxIncluded = $priceTaxExcluded->times($taxRatio);
+        $priceTaxIncluded = $this->taxComputer->computePriceWithTaxes(
+            $priceTaxExcluded,
+            new TaxRulesGroupId((int) $product->id_tax_rules_group),
+            new CountryId($this->countryId)
+        );
 
         return new ProductPricesInformation(
             $priceTaxExcluded,
