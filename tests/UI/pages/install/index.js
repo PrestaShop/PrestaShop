@@ -193,7 +193,6 @@ class Install extends CommonPage {
    * @param step
    * @param timeout
    * @returns {Promise<boolean>}
-   * @constructor
    */
   async IsInstallationStepFinished(page, step, timeout = 30000) {
     let selector;
@@ -245,10 +244,10 @@ class Install extends CommonPage {
   /**
    * Check if prestashop is installed properly
    * @param page
-   * @return {Promise<*>}
+   * @return {Promise<boolean>}
    */
   isInstallationSuccessful(page) {
-    return this.checkStepTitle(page, this.finalStepPageTitle, this.finalStepEnTitle);
+    return this.elementVisible(page, this.installationFinishedStepPageTitle, 30000);
   }
 
   /**

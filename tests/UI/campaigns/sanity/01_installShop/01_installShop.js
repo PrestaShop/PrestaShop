@@ -101,6 +101,7 @@ describe('Install Prestashop', async () => {
 
   it('should start the installation process', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'startInstallation', baseContext);
+
     await installPage.nextStep(page);
     const result = await installPage.isInstallationInProgress(page);
     await expect(result).to.be.true;
@@ -205,10 +206,9 @@ describe('Install Prestashop', async () => {
     });
   });
 
-  it('should finish installation and check that installation is successful', async function () {
+  it('should installation be successful', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'checkInstallationSuccessful', baseContext);
 
-    await installPage.nextStep(page);
     const result = await installPage.isInstallationSuccessful(page);
     await expect(result).to.be.true;
 
