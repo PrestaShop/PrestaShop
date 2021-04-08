@@ -13,6 +13,9 @@
 @import "~bootstrap/scss/mixins/transition";
 @import "~bootstrap/scss/mixins/border-radius";
 
+@import "~photoswipe/dist/photoswipe.css";
+@import "~photoswipe/dist/default-skin/default-skin.css";
+
 .product-page {
   padding-bottom: 80px;
 
