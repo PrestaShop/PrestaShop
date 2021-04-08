@@ -55,7 +55,7 @@ class CombinationFormDataProvider implements FormDataProviderInterface
     /**
      * {@inheritDoc}
      */
-    public function getData($id)
+    public function getData($id): array
     {
         $combinationId = (int) $id;
         /** @var CombinationForEditing $combinationForEditing */
@@ -91,7 +91,7 @@ class CombinationFormDataProvider implements FormDataProviderInterface
     /**
      * {@inheritDoc}
      */
-    public function getDefaultData()
+    public function getDefaultData(): array
     {
         // Not supposed to happen, Combinations are created vie Generator
 
