@@ -29,7 +29,7 @@ import ProductFormMapping from '@pages/product/edit/product-form-mapping';
 import ProductEventMap from '@pages/product/product-event-map';
 import ProductMap from '@pages/product/product-map';
 
-export default class ProductModel {
+export default class ProductFormModel {
   constructor($form, eventEmitter) {
     this.eventEmitter = eventEmitter;
 
@@ -52,6 +52,10 @@ export default class ProductModel {
     // Listens to event for product modification (registered after the model is constructed, because events are
     // triggered during the initial parsing but don't need them at first).
     this.eventEmitter.on(ProductEventMap.updatedProductField, (event) => this.productFieldUpdated(event));
+
+    return {
+      getProduct: () => this.getProduct(),
+    }
   }
 
   /**
@@ -62,26 +66,10 @@ export default class ProductModel {
   }
 
   /**
-   * @param {String} modelKey
-   *
-   * @returns {*|{}}
-   */
-  get(modelKey) {
-    return this.mapper.get(modelKey);
-  }
-
-  /**
-   * @param {String} modelKey
-   * @param {*|{}} value
-   */
-  set(modelKey, value) {
-    this.mapper.set(modelKey, value);
-  }
-
-  /**
    * Handles modifications that have happened in the product
    *
    * @param {Object} event
+   * @private
    */
   productFieldUpdated(event) {
     this.updateProductPrices(event);
@@ -91,6 +79,7 @@ export default class ProductModel {
    * Specific handler for modifications related to the product price
    *
    * @param {Object} event
+   * @private
    */
   updateProductPrices(event) {
     const pricesFields = [
@@ -103,13 +92,16 @@ export default class ProductModel {
       return;
     }
 
-    const $taxRulesGroupIdInput = this.mapper.getInputFor('product.price.taxRulesGroupId');
-
+    const $taxRulesGroupIdInput = this.mapper.getInputsFor('product.price.taxRulesGroupId');
     const $selectedTaxOption = $(':selected', $taxRulesGroupIdInput);
+
     let taxRate;
     try {
       taxRate = new BigNumber($selectedTaxOption.data('taxRate'));
     } catch (error) {
+      taxRate = BigNumber.NaN;
+    }
+    if (taxRate.isNaN()) {
       taxRate = new BigNumber(0);
     }
 

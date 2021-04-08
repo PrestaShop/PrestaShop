@@ -103,68 +103,34 @@ export default class FormObjectMapper {
       getModel: () => this.model,
 
       /**
-       * Returns the input associated to a model field (in case the field is mapped to
-       * several inputs the default one, first configured, is always used).
-       *
-       * @param {string} modelKey
-       *
-       * @returns {undefined|jQuery}
-       */
-      getInputFor: (modelKey) => {
-        if (!Object.prototype.hasOwnProperty.call(this.modelMapping, modelKey)) {
-          return undefined;
-        }
-
-        const $inputs = $(`[name="${this.modelMapping[modelKey]}"]`, this.$form);
-
-        if (!$inputs.length) {
-          return undefined;
-        }
-
-        return $inputs.first();
-      },
-
-      /**
        * Returns all inputs associated to a model field.
        *
        * @param {string} modelKey
        *
        * @returns {undefined|jQuery}
        */
-      getAllInputsFor: (modelKey) => {
+      getInputsFor: (modelKey) => {
         if (!Object.prototype.hasOwnProperty.call(this.fullModelMapping, modelKey)) {
           return undefined;
         }
 
         const inputNames = this.fullModelMapping[modelKey];
-        const namesSelector = inputNames.map((name) => `[name="${name}"]`).join(', ');
 
-        const $inputs = $(namesSelector, this.$form);
+        // We must loop manually to keep the order in configuration, if we use jQuery multiple selectors the collection
+        // will be filled respecting the order in the DOM
+        const inputs = [];
+        const domForm = this.$form.get(0);
+        inputNames.forEach((inputName) => {
+          const inputsByName = domForm.querySelectorAll(`[name="${inputName}"]`);
+          if (inputsByName.length) {
+            inputsByName.forEach((input) => {
+              inputs.push(input);
+            })
+          }
+        });
 
-        return $inputs.length ? $inputs : undefined;
+        return inputs.length ? $(inputs) : undefined;
       },
-
-      /**
-       * Get a field from the object based on the model key, you can even get a sub part of the whole model.
-       * Example: for a model which looks like this:
-       * {
-       *   product: {
-       *     price: {
-       *       taxIncluded: 12.00,
-       *       taxExcluded: 10.00
-       *     }
-       *   }
-       * }
-       *
-       * You could call:
-       * mapper.get('product.price.taxIncluded') => 12.00
-       * mapper.get('product.price') => {taxIncluded: 12.00, taxExcluded: 10.00}
-       *
-       * @param {string} modelKey
-       *
-       * @returns {*|{}|undefined} Returns any element from the model, undefined if not found
-       */
-      get: (modelKey) => this.getValue(modelKey),
 
       /**
        * Set a value to a field of the object based on the model key, the object itself is updated
@@ -291,9 +257,10 @@ export default class FormObjectMapper {
     if ($input.val() != value) {
       $input.val(value);
 
-      // This is required for some rich elements (like select2), only changing the val doesn't update the wrapping
-      // component
-      $input.trigger('change');
+      if ($input.data('toggle') === 'select2') {
+        // This is required for select2, because only changing the val doesn't update the wrapping component
+        $input.trigger('change');
+      }
     }
   }
 
