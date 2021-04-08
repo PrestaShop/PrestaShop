@@ -376,12 +376,12 @@ class ProductCore extends ObjectModel
     public $delivery_out_stock;
 
     /**
-     * For now default value remains empty, to keep compatibility with page v1 and former products.
+     * For now default value remains undefined, to keep compatibility with page v1 and former products.
      * But once the v2 is merged the default value should be ProductType::TYPE_STANDARD
      *
      * @var string
      */
-    public $product_type = '';
+    public $product_type = ProductType::TYPE_UNDEFINED;
 
     /**
      * @var int|null
@@ -483,7 +483,7 @@ class ProductCore extends ObjectModel
             'product_type' => [
                 'type' => self::TYPE_STRING,
                 'validate' => 'isGenericName',
-                // For now empty value is still allowed, in 179 we should use ProductType::AVAILABLE_TYPES here
+                // For now undefined value is still allowed, in 179 we should use ProductType::AVAILABLE_TYPES here
                 'values' => [
                     ProductType::TYPE_STANDARD,
                     ProductType::TYPE_PACK,
@@ -1147,13 +1147,17 @@ class ProductCore extends ObjectModel
      */
     public static function updateIsVirtual($id_product, $is_virtual = true)
     {
-        // We cannot be sure of the target type, so we set it to undefined this way dynamic type will be used
-        $productType = $is_virtual ? ProductType::TYPE_VIRTUAL : ProductType::TYPE_UNDEFINED;
+        $isVirtual = (bool) $is_virtual;
+        $updateData = [
+            'is_virtual' => $isVirtual,
+        ];
 
-        Db::getInstance()->update('product', [
-            'is_virtual' => (bool) $is_virtual,
-            'product_type' => $productType,
-        ], 'id_product = ' . (int) $id_product);
+        // We only update the type if we are sure it is virtual
+        if ($isVirtual) {
+            $updateData['product_type'] = ProductType::TYPE_VIRTUAL;
+        }
+
+        Db::getInstance()->update('product', $updateData, 'id_product = ' . (int) $id_product);
     }
 
     /**

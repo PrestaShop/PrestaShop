@@ -29,7 +29,6 @@ namespace PrestaShop\PrestaShop\Adapter\Attribute;
 use AdminAttributeGeneratorController;
 use Combination;
 use Context;
-use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductType;
 use Product;
 use SpecificPriceRule;
 use Stock;
@@ -105,7 +104,6 @@ class AdminAttributeGeneratorControllerWrapper
                 Tools::clearColorListCache((int) $product->id);
                 if (!$product->hasAttributes()) {
                     $product->cache_default_attribute = 0;
-                    $product->product_type = ProductType::TYPE_UNDEFINED;
                     $product->update();
                 } else {
                     Product::updateDefaultAttribute($idProduct);
