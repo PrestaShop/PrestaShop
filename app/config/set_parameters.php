@@ -41,13 +41,17 @@ if (!array_key_exists('parameters', $parameters)) {
     throw new \Exception('Missing "parameters" key in "parameters.php" configuration file');
 }
 
-if (!defined('_PS_IN_TEST_') && isset($_SERVER['argv'])) {
+if (!defined('_PS_IN_TEST_') && php_sapi_name() === 'cli') {
     $input = new \Symfony\Component\Console\Input\ArgvInput();
     $env = $input->getParameterOption(['--env', '-e'], getenv('SYMFONY_ENV') ?: 'dev');
-
     if ($env === 'test') {
         define('_PS_IN_TEST_', 1);
     }
+}
+
+if (defined('_PS_IN_TEST_') && _PS_IN_TEST_) {
+    $parameters['parameters']['database_name'] = 'test_' . $parameters['parameters']['database_name'];
+    $parameters['parameters']['database_prefix'] = 'test_' . $parameters['parameters']['database_prefix'];
 }
 
 if ($container instanceof \Symfony\Component\DependencyInjection\Container) {
