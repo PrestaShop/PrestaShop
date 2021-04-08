@@ -61,6 +61,9 @@ class CombinationStockType extends TranslatorAwareType
         $this->router = $router;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
@@ -111,6 +114,9 @@ class CombinationStockType extends TranslatorAwareType
             ->add('available_date', DatePickerType::class, [
                 'label' => $this->trans('Availability date', 'Admin.Catalog.Feature'),
                 'required' => false,
+                'attr' => [
+                    'placeholder' => 'YYYY-MM-DD',
+                ],
             ])
         ;
 
