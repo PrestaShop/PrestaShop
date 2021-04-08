@@ -32,6 +32,13 @@ namespace PrestaShop\PrestaShop\Core\Translation\Storage\Provider\Definition;
  */
 class CoreDomainProviderDefinition extends AbstractCoreProviderDefinition
 {
+    private const FILENAME_FILTERS_REGEX = [
+        '#^%s([A-Za-z]|\.|$)#',
+    ];
+    private const TRANSLATION_DOMAINS_REGEX = [
+        '^%s([A-Za-z]|$)',
+    ];
+
     /**
      * @var string
      */
@@ -66,7 +73,9 @@ class CoreDomainProviderDefinition extends AbstractCoreProviderDefinition
      */
     public function getFilenameFilters(): array
     {
-        return ['#^' . preg_quote($this->domainName, '#') . '([A-Za-z]|\.|$)#'];
+        return array_map(function (string $filenameFilter) {
+            return sprintf($filenameFilter, preg_quote($this->domainName, '#'));
+        }, self::FILENAME_FILTERS_REGEX);
     }
 
     /**
@@ -74,6 +83,8 @@ class CoreDomainProviderDefinition extends AbstractCoreProviderDefinition
      */
     public function getTranslationDomains(): array
     {
-        return ['^' . preg_quote($this->domainName) . '([A-Za-z]|$)'];
+        return array_map(function (string $translationDomain) {
+            return sprintf($translationDomain, preg_quote($this->domainName, '#'));
+        }, self::TRANSLATION_DOMAINS_REGEX);
     }
 }

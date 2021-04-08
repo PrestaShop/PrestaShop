@@ -32,6 +32,16 @@ namespace PrestaShop\PrestaShop\Core\Translation\Storage\Provider\Definition;
  */
 class FrontofficeProviderDefinition extends AbstractCoreProviderDefinition
 {
+    private const FILENAME_FILTERS_REGEX = [
+        '#^Shop*#',
+        '#^Modules(.*)Shop#',
+    ];
+
+    private const TRANSLATION_DOMAINS_REGEX = [
+        '^Shop*',
+        '^Modules(.*)Shop',
+    ];
+
     /**
      * {@inheritdoc}
      */
@@ -45,10 +55,7 @@ class FrontofficeProviderDefinition extends AbstractCoreProviderDefinition
      */
     public function getFilenameFilters(): array
     {
-        return [
-            '#^Shop*#',
-            '#^Modules(.*)Shop#',
-        ];
+        return self::FILENAME_FILTERS_REGEX;
     }
 
     /**
@@ -56,9 +63,6 @@ class FrontofficeProviderDefinition extends AbstractCoreProviderDefinition
      */
     public function getTranslationDomains(): array
     {
-        return [
-            '^Shop*',
-            '^Modules(.*)Shop',
-        ];
+        return self::TRANSLATION_DOMAINS_REGEX;
     }
 }
