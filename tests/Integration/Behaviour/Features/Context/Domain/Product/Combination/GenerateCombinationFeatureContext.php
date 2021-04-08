@@ -60,6 +60,27 @@ class GenerateCombinationFeatureContext extends AbstractCombinationFeatureContex
     }
 
     /**
+     * @Then combination :combinationReference should be named :combinationName
+     *
+     * @param string $combinationReference
+     * @param string $combinationName
+     */
+    public function assertCombinationName(string $combinationReference, string $combinationName): void
+    {
+        $combinationForEditing = $this->getCombinationForEditing($combinationReference);
+
+        Assert::assertSame(
+            $combinationName,
+            $combinationForEditing->getName(),
+            sprintf(
+                'Unexpected name %s, expected %s',
+                $combinationForEditing->getName(),
+                $combinationName
+            )
+        );
+    }
+
+    /**
      * @Then product :productReference default combination should be :combinationReference
      *
      * @param string $productReference

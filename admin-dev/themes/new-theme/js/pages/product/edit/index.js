@@ -50,10 +50,10 @@ $(() => {
   const productId = parseInt($productForm.data('productId'), 10);
   const productType = $productForm.data('productType');
 
-  if (productId) {
+  if (productId && productType === ProductMap.productType.COMBINATIONS) {
     // Combinations manager must be initialised before nav handler, or it won't trigger the pagination if the tab is
     // selected on load, but only when productId exists (edition mode)
-    new CombinationsManager();
+    new CombinationsManager(productId);
   }
   new NavbarHandler(ProductMap.navigationBar);
 

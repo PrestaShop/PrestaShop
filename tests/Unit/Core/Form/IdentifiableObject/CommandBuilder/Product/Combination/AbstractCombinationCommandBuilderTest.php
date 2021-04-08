@@ -1,3 +1,4 @@
+<?php
 /**
  * Copyright since 2007 PrestaShop SA and Contributors
  * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
@@ -23,55 +24,40 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
 
-import Router from '@components/router';
+declare(strict_types=1);
 
-const {$} = window;
+namespace Tests\Unit\Core\Form\IdentifiableObject\CommandBuilder\Product\Combination;
 
-export default class CombinationsService {
-  /**
-   * @param {Number} productId
-   */
-  constructor(productId) {
-    this.productId = productId;
-    this.router = new Router();
-  }
+use PHPUnit\Framework\TestCase;
+use PrestaShop\PrestaShop\Core\Domain\Product\Combination\ValueObject\CombinationId;
+use SebastianBergmann\Comparator\Factory as ComparatorFactory;
 
-  /**
-   * @param {Number} offset
-   * @param {Number} limit
-   *
-   * @returns {Promise}
-   */
-  fetch(offset, limit) {
-    return $.get(this.router.generate('admin_products_combinations', {
-      productId: this.productId,
-      offset,
-      limit,
-    }));
-  }
+/**
+ * Base class to test a combination command builder
+ */
+abstract class AbstractCombinationCommandBuilderTest extends TestCase
+{
+    /**
+     * @var CombinationId
+     */
+    private $combinationId;
 
-  /**
-   * @param {Number} combinationId
-   * @param {Object} data
-   *
-   * @returns {Promise}
-   */
-  updateListedCombination(combinationId, data) {
-    return $.ajax({
-      url: this.router.generate('admin_products_combinations_update_combination_from_listing', {
-        combinationId,
-      }),
-      data,
-      type: 'PATCH',
-    });
-  }
+    protected function setUp()
+    {
+        parent::setUp();
+        $factory = ComparatorFactory::getInstance();
+        $factory->register(new CombinationCommandComparator());
+    }
 
-  /**
-   * @returns {Promise}
-   */
-  getCombinationIds() {
-    return $.get(this.router.generate('admin_products_combinations_ids', {
-      productId: this.productId,
-    }));
-  }
+    /**
+     * @return CombinationId
+     */
+    protected function getCombinationId(): CombinationId
+    {
+        if (null === $this->combinationId) {
+            $this->combinationId = new CombinationId(42);
+        }
+
+        return $this->combinationId;
+    }
 }

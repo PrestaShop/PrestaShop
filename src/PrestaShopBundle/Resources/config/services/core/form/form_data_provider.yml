@@ -156,6 +156,11 @@ services:
           - '@=service("prestashop.adapter.legacy.configuration").getBoolean("PS_PRODUCT_ACTIVATION_DEFAULT")'
           - '@=service("prestashop.adapter.data_provider.tax").getIdTaxRulesGroupMostUsed()'
 
+  prestashop.core.form.identifiable_object.data_provider.combination_form_data_provider:
+      class: 'PrestaShop\PrestaShop\Core\Form\IdentifiableObject\DataProvider\CombinationFormDataProvider'
+      arguments:
+          - '@prestashop.core.query_bus'
+
   prestashop.core.form.identifiable_object.data_provider.empty_form_data_provider:
     class: 'PrestaShop\PrestaShop\Core\Form\IdentifiableObject\DataProvider\EmptyFormDataProvider'
 

@@ -1,3 +1,4 @@
+<?php
 /**
  * Copyright since 2007 PrestaShop SA and Contributors
  * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
@@ -23,55 +24,33 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
 
-import Router from '@components/router';
+declare(strict_types=1);
 
-const {$} = window;
+namespace PrestaShopBundle\Form\Admin\Sell\Product\Combination;
 
-export default class CombinationsService {
-  /**
-   * @param {Number} productId
-   */
-  constructor(productId) {
-    this.productId = productId;
-    this.router = new Router();
-  }
+use PrestaShopBundle\Form\Admin\Type\TranslatorAwareType;
+use Symfony\Component\Form\Extension\Core\Type\HiddenType;
+use Symfony\Component\Form\FormBuilderInterface;
 
-  /**
-   * @param {Number} offset
-   * @param {Number} limit
-   *
-   * @returns {Promise}
-   */
-  fetch(offset, limit) {
-    return $.get(this.router.generate('admin_products_combinations', {
-      productId: this.productId,
-      offset,
-      limit,
-    }));
-  }
-
-  /**
-   * @param {Number} combinationId
-   * @param {Object} data
-   *
-   * @returns {Promise}
-   */
-  updateListedCombination(combinationId, data) {
-    return $.ajax({
-      url: this.router.generate('admin_products_combinations_update_combination_from_listing', {
-        combinationId,
-      }),
-      data,
-      type: 'PATCH',
-    });
-  }
-
-  /**
-   * @returns {Promise}
-   */
-  getCombinationIds() {
-    return $.get(this.router.generate('admin_products_combinations_ids', {
-      productId: this.productId,
-    }));
-  }
+/**
+ * Form to edit Combination details.
+ */
+class CombinationFormType extends TranslatorAwareType
+{
+    /**
+     * @param FormBuilderInterface $builder
+     * @param array $options
+     */
+    public function buildForm(FormBuilderInterface $builder, array $options)
+    {
+        $builder
+            ->add('name', HiddenType::class)
+            ->add('stock', CombinationStockType::class, [
+                'label' => $this->trans('Stock', 'Admin.Catalog.Feature'),
+                'label_attr' => [
+                    'title' => 'h2',
+                ],
+            ])
+        ;
+    }
 }

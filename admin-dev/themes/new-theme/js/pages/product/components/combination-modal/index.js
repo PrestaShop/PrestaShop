@@ -23,55 +23,34 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
 
-import Router from '@components/router';
+import Vue from 'vue';
+import VueI18n from 'vue-i18n';
+import ReplaceFormatter from '@vue/plugins/vue-i18n/replace-formatter';
+import CombinationModal from '@pages/product/components/combination-modal/CombinationModal.vue';
 
-const {$} = window;
+Vue.use(VueI18n);
 
-export default class CombinationsService {
-  /**
-   * @param {Number} productId
-   */
-  constructor(productId) {
-    this.productId = productId;
-    this.router = new Router();
+export default function initCombinationModal(combinationModalSelector, productId) {
+  const container = document.querySelector(combinationModalSelector);
+
+  if (!container) {
+    return null;
   }
 
-  /**
-   * @param {Number} offset
-   * @param {Number} limit
-   *
-   * @returns {Promise}
-   */
-  fetch(offset, limit) {
-    return $.get(this.router.generate('admin_products_combinations', {
-      productId: this.productId,
-      offset,
-      limit,
-    }));
-  }
+  const translations = JSON.parse(container.dataset.translations);
+  const i18n = new VueI18n({
+    locale: 'en',
+    formatter: new ReplaceFormatter(),
+    messages: {en: translations},
+  });
 
-  /**
-   * @param {Number} combinationId
-   * @param {Object} data
-   *
-   * @returns {Promise}
-   */
-  updateListedCombination(combinationId, data) {
-    return $.ajax({
-      url: this.router.generate('admin_products_combinations_update_combination_from_listing', {
-        combinationId,
-      }),
-      data,
-      type: 'PATCH',
-    });
-  }
-
-  /**
-   * @returns {Promise}
-   */
-  getCombinationIds() {
-    return $.get(this.router.generate('admin_products_combinations_ids', {
-      productId: this.productId,
-    }));
-  }
+  return new Vue({
+    el: combinationModalSelector,
+    template: '<combination-modal :productId=productId />',
+    components: {CombinationModal},
+    i18n,
+    data: {
+      productId,
+    },
+  });
 }

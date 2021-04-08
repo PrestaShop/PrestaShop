@@ -1,3 +1,4 @@
+<?php
 /**
  * Copyright since 2007 PrestaShop SA and Contributors
  * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
@@ -23,55 +24,21 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
 
-import Router from '@components/router';
+namespace PrestaShop\PrestaShop\Core\Form\IdentifiableObject\CommandBuilder\Product\Combination;
 
-const {$} = window;
+use PrestaShop\PrestaShop\Core\Domain\Product\Combination\ValueObject\CombinationId;
 
-export default class CombinationsService {
-  /**
-   * @param {Number} productId
-   */
-  constructor(productId) {
-    this.productId = productId;
-    this.router = new Router();
-  }
-
-  /**
-   * @param {Number} offset
-   * @param {Number} limit
-   *
-   * @returns {Promise}
-   */
-  fetch(offset, limit) {
-    return $.get(this.router.generate('admin_products_combinations', {
-      productId: this.productId,
-      offset,
-      limit,
-    }));
-  }
-
-  /**
-   * @param {Number} combinationId
-   * @param {Object} data
-   *
-   * @returns {Promise}
-   */
-  updateListedCombination(combinationId, data) {
-    return $.ajax({
-      url: this.router.generate('admin_products_combinations_update_combination_from_listing', {
-        combinationId,
-      }),
-      data,
-      type: 'PATCH',
-    });
-  }
-
-  /**
-   * @returns {Promise}
-   */
-  getCombinationIds() {
-    return $.get(this.router.generate('admin_products_combinations_ids', {
-      productId: this.productId,
-    }));
-  }
+/**
+ * This interface is used by CombinationCommandsBuilder each object which implements must build
+ * a combination command based on the input form data.
+ */
+interface CombinationCommandsBuilderInterface
+{
+    /**
+     * @param CombinationId $combinationId
+     * @param array $formData
+     *
+     * @return array Returns empty array if the required data for the command is absent
+     */
+    public function buildCommands(CombinationId $combinationId, array $formData): array;
 }

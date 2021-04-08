@@ -1,4 +1,4 @@
-/**
+{#**
  * Copyright since 2007 PrestaShop SA and Contributors
  * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
  *
@@ -21,57 +21,25 @@
  * @author    PrestaShop SA and Contributors <contact@prestashop.com>
  * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
- */
+ *#}
+{% extends '@PrestaShop/Admin/layout.html.twig' %}
 
-import Router from '@components/router';
+{% form_theme combinationForm 'PrestaShopBundle:Admin/TwigTemplateForm:prestashop_ui_kit.html.twig' %}
 
-const {$} = window;
-
-export default class CombinationsService {
-  /**
-   * @param {Number} productId
-   */
-  constructor(productId) {
-    this.productId = productId;
-    this.router = new Router();
-  }
-
-  /**
-   * @param {Number} offset
-   * @param {Number} limit
-   *
-   * @returns {Promise}
-   */
-  fetch(offset, limit) {
-    return $.get(this.router.generate('admin_products_combinations', {
-      productId: this.productId,
-      offset,
-      limit,
-    }));
-  }
-
-  /**
-   * @param {Number} combinationId
-   * @param {Object} data
-   *
-   * @returns {Promise}
-   */
-  updateListedCombination(combinationId, data) {
-    return $.ajax({
-      url: this.router.generate('admin_products_combinations_update_combination_from_listing', {
-        combinationId,
-      }),
-      data,
-      type: 'PATCH',
-    });
-  }
-
-  /**
-   * @returns {Promise}
-   */
-  getCombinationIds() {
-    return $.get(this.router.generate('admin_products_combinations_ids', {
-      productId: this.productId,
-    }));
-  }
-}
+{% block content %}
+<div class="row justify-content-center">
+  <div class="col-sm-12">
+    {{ form_start(combinationForm, {'attr': {'class': 'form-horizontal combination-page', 'novalidate': 'novalidate'}}) }}
+    <div class="card">
+      <div class="card-header">
+        {{ 'Combination details'|trans({}, 'Admin.Catalog.Feature') }} -
+        {{ combinationForm.vars.value.name }}
+      </div>
+      <div class="card-block row">
+        {{ form_widget(combinationForm) }}
+      </div>
+    </div>
+    {{ form_end(combinationForm) }}
+  </div>
+</div>
+{% endblock %}

@@ -26,80 +26,57 @@
 
 declare(strict_types=1);
 
-namespace PrestaShop\PrestaShop\Core\Domain\Product\Combination\QueryResult;
+namespace PrestaShop\PrestaShop\Core\Form\IdentifiableObject\DataHandler;
+
+use PrestaShop\PrestaShop\Core\CommandBus\CommandBusInterface;
+use PrestaShop\PrestaShop\Core\Domain\Product\Combination\ValueObject\CombinationId;
+use PrestaShop\PrestaShop\Core\Form\IdentifiableObject\CommandBuilder\Product\Combination\CombinationCommandsBuilder;
 
 /**
- * Transfers combination data for editing
+ * Handles data posted from combination form
  */
-class CombinationForEditing
+class CombinationFormDataHandler implements FormDataHandlerInterface
 {
     /**
-     * @var string
+     * @var CommandBusInterface
      */
-    private $name;
+    private $bus;
 
     /**
-     * @var CombinationDetails
+     * @var CombinationCommandsBuilder
      */
-    private $details;
+    private $commandsBuilder;
 
     /**
-     * @var CombinationPrices
-     */
-    private $prices;
-
-    /**
-     * @var CombinationStock
-     */
-    private $stock;
-
-    /**
-     * @param string $name
-     * @param CombinationDetails $options
-     * @param CombinationPrices $prices
-     * @param CombinationStock $stock
+     * @param CommandBusInterface $bus
+     * @param CombinationCommandsBuilder $commandsBuilder
      */
     public function __construct(
-        string $name,
-        CombinationDetails $options,
-        CombinationPrices $prices,
-        CombinationStock $stock
+        CommandBusInterface $bus,
+        CombinationCommandsBuilder $commandsBuilder
     ) {
-        $this->name = $name;
-        $this->details = $options;
-        $this->stock = $stock;
-        $this->prices = $prices;
+        $this->bus = $bus;
+        $this->commandsBuilder = $commandsBuilder;
     }
 
     /**
-     * @return string
+     * {@inheritdoc}
      */
-    public function getName(): string
+    public function create(array $data)
     {
-        return $this->name;
+        // Not used for creation
+        return null;
     }
 
     /**
-     * @return CombinationDetails
+     * {@inheritdoc}
      */
-    public function getDetails(): CombinationDetails
+    public function update($id, array $data)
     {
-        return $this->details;
-    }
+        $commands = $this->commandsBuilder->buildCommands(new CombinationId($id), $data);
 
-    /**
-     * @return CombinationPrices
-     */
-    public function getPrices(): CombinationPrices
-    {
-        return $this->prices;
-    }
-
-    /**
-     * @return CombinationStock
-     */
-    public function getStock(): CombinationStock
-    {
-        return $this->stock;
+        foreach ($commands as $command) {
+            $this->bus->handle($command);
+        }
     }
 }

@@ -82,6 +82,9 @@ class ProductFormDataProviderTest extends TestCase
             'basic' => [
                 'type' => ProductType::TYPE_STANDARD,
             ],
+            'manufacturer' => [
+                'manufacturer_id' => NoManufacturerId::NO_MANUFACTURER_ID,
+            ],
             'price' => [
                 'price_tax_excluded' => 0,
                 'price_tax_included' => 0,
@@ -96,19 +99,20 @@ class ProductFormDataProviderTest extends TestCase
                 'weight' => 0,
             ],
             'activate' => false,
-            'manufacturer' => [
-                'manufacturer_id' => NoManufacturerId::NO_MANUFACTURER_ID,
-            ],
         ];
 
         $defaultData = $provider->getDefaultData();
-        $this->assertEquals($expectedDefaultData, $defaultData);
+        // assertSame is very important here We can't assume null and 0 are the same thing
+        $this->assertSame($expectedDefaultData, $defaultData);
 
         $provider = new ProductFormDataProvider($queryBusMock, true, 42);
 
         $expectedDefaultData = [
             'basic' => [
                 'type' => ProductType::TYPE_STANDARD,
+            ],
+            'manufacturer' => [
+                'manufacturer_id' => NoManufacturerId::NO_MANUFACTURER_ID,
             ],
             'price' => [
                 'price_tax_excluded' => 0,
@@ -124,13 +128,11 @@ class ProductFormDataProviderTest extends TestCase
                 'weight' => 0,
             ],
             'activate' => true,
-            'manufacturer' => [
-                'manufacturer_id' => NoManufacturerId::NO_MANUFACTURER_ID,
-            ],
         ];
 
         $defaultData = $provider->getDefaultData();
-        $this->assertEquals($expectedDefaultData, $defaultData);
+        // assertSame is very important here We can't assume null and 0 are the same thing
+        $this->assertSame($expectedDefaultData, $defaultData);
     }
 
     /**
@@ -145,7 +147,8 @@ class ProductFormDataProviderTest extends TestCase
         $provider = new ProductFormDataProvider($queryBusMock, false, 42);
 
         $formData = $provider->getData(static::PRODUCT_ID);
-        $this->assertEquals($expectedData, $formData);
+        // assertSame is very important here We can't assume null and 0 are the same thing
+        $this->assertSame($expectedData, $formData);
     }
 
     public function getExpectedData(): Generator
@@ -219,8 +222,8 @@ class ProductFormDataProviderTest extends TestCase
             2 => 'french',
         ];
         $productData = [
-            'name' => $localizedValues,
             'type' => ProductType::TYPE_COMBINATIONS,
+            'name' => $localizedValues,
             'description' => $localizedValues,
             'description_short' => $localizedValues,
         ];
@@ -309,26 +312,26 @@ class ProductFormDataProviderTest extends TestCase
         ];
         $expectedOutputData = $this->getDefaultOutputData();
         $productData = [
-            'pack_stock_type' => PackStockType::STOCK_TYPE_PACK_ONLY,
-            'out_of_stock' => OutOfStockType::OUT_OF_STOCK_AVAILABLE,
             'quantity' => 42,
             'minimal_quantity' => 7,
+            'location' => 'top shelf',
             'low_stock_threshold' => 5,
             'low_stock_alert' => true,
+            'pack_stock_type' => PackStockType::STOCK_TYPE_PACK_ONLY,
+            'out_of_stock' => OutOfStockType::OUT_OF_STOCK_AVAILABLE,
             'available_now' => $localizedValues,
             'available_later' => $localizedValues,
-            'location' => 'top shelf',
             'available_date' => new DateTime('1969/07/20'),
         ];
-        $expectedOutputData['stock']['pack_stock_type'] = PackStockType::STOCK_TYPE_PACK_ONLY;
-        $expectedOutputData['stock']['out_of_stock_type'] = OutOfStockType::OUT_OF_STOCK_AVAILABLE;
         $expectedOutputData['stock']['quantity'] = 42;
         $expectedOutputData['stock']['minimal_quantity'] = 7;
+        $expectedOutputData['stock']['stock_location'] = 'top shelf';
         $expectedOutputData['stock']['low_stock_threshold'] = 5;
         $expectedOutputData['stock']['low_stock_alert'] = true;
+        $expectedOutputData['stock']['pack_stock_type'] = PackStockType::STOCK_TYPE_PACK_ONLY;
+        $expectedOutputData['stock']['out_of_stock_type'] = OutOfStockType::OUT_OF_STOCK_AVAILABLE;
         $expectedOutputData['stock']['available_now_label'] = $localizedValues;
         $expectedOutputData['stock']['available_later_label'] = $localizedValues;
-        $expectedOutputData['stock']['stock_location'] = 'top shelf';
         $expectedOutputData['stock']['available_date'] = '1969-07-20';
 
         $expectedOutputData['shortcuts']['stock']['quantity'] = 42;
@@ -475,8 +478,8 @@ class ProductFormDataProviderTest extends TestCase
         $expectedOutputData['features']['feature_values'][] = [
             'feature_id' => 42,
             'feature_value_id' => 69,
-            'custom_value_id' => 69,
             'custom_value' => $localizedValues,
+            'custom_value_id' => 69,
         ];
 
         $productData = [
@@ -881,10 +884,14 @@ class ProductFormDataProviderTest extends TestCase
         return [
             'id' => static::PRODUCT_ID,
             'basic' => [
-                'name' => [],
                 'type' => ProductType::TYPE_STANDARD,
+                'name' => [],
                 'description' => [],
                 'description_short' => [],
+            ],
+            'features' => [],
+            'manufacturer' => [
+                'manufacturer_id' => NoManufacturerId::NO_MANUFACTURER_ID,
             ],
             'stock' => [
                 'quantity' => static::DEFAULT_QUANTITY,
@@ -944,10 +951,6 @@ class ProductFormDataProviderTest extends TestCase
                 'reference' => 'reference',
             ],
             'suppliers' => [],
-            'features' => [],
-            'manufacturer' => [
-                'manufacturer_id' => NoManufacturerId::NO_MANUFACTURER_ID,
-            ],
             'customizations' => [],
             'shortcuts' => [
                 'price' => [
