@@ -135,7 +135,7 @@
                     </tab>
                 <tab id="Stock" id_parent="Catalog" active="1" enabled="1" hide_host_mode="0" icon="">
                     <class_name>AdminStockManagement</class_name>
-                    <wording>Stocks</wording>
+                    <wording>Stock</wording>
                     <wording_domain>Admin.Navigation.Menu</wording_domain>
                 </tab>
 
