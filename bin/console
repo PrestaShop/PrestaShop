@@ -19,7 +19,8 @@ $env = $input->getParameterOption(['--env', '-e'], getenv('SYMFONY_ENV') ?: 'dev
 $debug = getenv('SYMFONY_DEBUG') !== '0' && !$input->hasParameterOption(['--no-debug', '']) && $env !== 'prod';
 
 if ($debug) {
-  Debug::enable();
+    define('_PS_IN_TEST_', true);
+    Debug::enable();
 }
 
 $kernel = new AppKernel($env, $debug);
