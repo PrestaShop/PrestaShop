@@ -1468,6 +1468,16 @@ services:
         tags:
             - { name: form.type }
 
+    form.type.sell.product.combination.combination_price_type:
+        class: 'PrestaShopBundle\Form\Admin\Sell\Product\Combination\CombinationPriceType'
+        parent: 'form.type.translatable.aware'
+        public: true
+        arguments:
+            - '@=service("prestashop.adapter.data_provider.currency").getDefaultCurrency()'
+            - "@=service('prestashop.adapter.legacy.configuration').get('PS_WEIGHT_UNIT')"
+        tags:
+            - { name: form.type }
+
     prestashop.bundle.form.admin.configure.shop_parameters.order_states.order_state:
       class: 'PrestaShopBundle\Form\Admin\Configure\ShopParameters\OrderStates\OrderStateType'
       parent: 'form.type.translatable.aware'
