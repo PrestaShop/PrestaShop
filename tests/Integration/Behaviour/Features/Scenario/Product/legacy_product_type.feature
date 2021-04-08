@@ -37,7 +37,7 @@ Feature: Legacy products have consistent product type through dynamic checking (
       | whiteM    | 150      | Size:M;Color:White |
       | whiteL    | 150      | Size:L;Color:White |
     Then product "product_with_combinations" type should be combinations
-    And product "product_with_combinations" persisted type should be empty
+    And product "product_with_combinations" persisted type should be combinations
     And product "product_with_combinations" dynamic type should be combinations
 
   Scenario: I create a virtual product, its product type should be virtual

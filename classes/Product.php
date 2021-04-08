@@ -1963,14 +1963,19 @@ class ProductCore extends ObjectModel
      */
     public function setDefaultAttribute($id_product_attribute)
     {
+        // We cannot be sure of the target type, so we set it to empty this way dynamic type will be used
+        $productType = !empty($id_product_attribute) ? ProductType::TYPE_COMBINATIONS : '';
+
         $result = ObjectModel::updateMultishopTable('Combination', [
             'default_on' => 1,
         ], 'a.`id_product` = ' . (int) $this->id . ' AND a.`id_product_attribute` = ' . (int) $id_product_attribute);
 
         $result &= ObjectModel::updateMultishopTable('product', [
             'cache_default_attribute' => (int) $id_product_attribute,
+            'product_type' => $productType,
         ], 'a.`id_product` = ' . (int) $this->id);
         $this->cache_default_attribute = (int) $id_product_attribute;
+        $this->product_type = $productType;
 
         return $result;
     }
@@ -1984,12 +1989,16 @@ class ProductCore extends ObjectModel
     {
         $id_default_attribute = (int) Product::getDefaultAttribute($id_product, 0, true);
 
+        // We cannot be sure of the target type, so we set it to empty this way dynamic type will be used
+        $productType = !empty($id_default_attribute) ? ProductType::TYPE_COMBINATIONS : '';
+
         $result = Db::getInstance()->update('product_shop', [
             'cache_default_attribute' => $id_default_attribute,
         ], 'id_product = ' . (int) $id_product . Shop::addSqlRestriction());
 
         $result &= Db::getInstance()->update('product', [
             'cache_default_attribute' => $id_default_attribute,
+            'product_type' => $productType,
         ], 'id_product = ' . (int) $id_product);
 
         if ($result && $id_default_attribute) {
@@ -2330,6 +2339,7 @@ class ProductCore extends ObjectModel
                 $this->setAvailableDate();
             }
         }
+        $this->product_type = ProductType::TYPE_COMBINATIONS;
 
         if (!empty($id_images)) {
             $combination->setImages($id_images);
