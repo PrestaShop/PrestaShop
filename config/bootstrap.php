@@ -51,17 +51,7 @@ $filesystem = new Filesystem();
 
 $exportPhpConfigFile = function ($config, $destination) use ($filesystem) {
     try {
-        $filesystem->dumpFile(
-            $destination,
-            '<?php return (function () {' . "\n"
-                . '$data = ' . var_export($config, true) . ';' . "\n"
-                . 'if (php_sapi_name() === \'cli\' && defined(\'_PS_IN_TEST_\') && _PS_IN_TEST_) {' . "\n"
-                . '    $data[\'parameters\'][\'database_name\'] = \'test_\' . $data[\'parameters\'][\'database_name\'];' . "\n"
-                . '    $data[\'parameters\'][\'database_prefix\'] = \'test_\' . $data[\'parameters\'][\'database_prefix\'];' . "\n"
-                . '}' . "\n"
-                . 'return $data;' . "\n"
-                . '})();' . "\n"
-        );
+        $filesystem->dumpFile($destination, '<?php return '.var_export($config, true).';'."\n");
     } catch (IOException $e) {
         return false;
     }
