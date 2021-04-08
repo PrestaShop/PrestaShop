@@ -25,6 +25,7 @@ Feature: Legacy products have consistent product type through dynamic checking (
     Then there is a product "standard_product" with name "Standard Product"
     And product "standard_product" type should be standard
     And product "standard_product" persisted type should be empty
+    And product "standard_product" dynamic type should be standard
 
   Scenario: I create a product and add combinations using legacy methods, its product type should be combinations
     Given there is a product in the catalog named "Product With Combinations" with a price of 15.0 and 100 items in stock
@@ -37,15 +38,18 @@ Feature: Legacy products have consistent product type through dynamic checking (
       | whiteL    | 150      | Size:L;Color:White |
     Then product "product_with_combinations" type should be combinations
     And product "product_with_combinations" persisted type should be empty
+    And product "product_with_combinations" dynamic type should be combinations
 
   Scenario: I create a virtual product, its product type should be virtual
     Given there is a product in the catalog named "Virtual Product" with a price of 15.0 and 100 items in stock
     Then there is a product "virtual_product" with name "Virtual Product"
     And product "virtual_product" type should be standard
     And product "virtual_product" persisted type should be empty
+    And product "virtual_product" dynamic type should be standard
     Given product "Virtual Product" is virtual
     Then product "virtual_product" type should be virtual
     And product "virtual_product" persisted type should be empty
+    And product "virtual_product" dynamic type should be virtual
 
   Scenario: I create a pack product, its product type should be pack
     Given there is a product in the catalog named "Pack Product" with a price of 15.0 and 100 items in stock
@@ -53,7 +57,9 @@ Feature: Legacy products have consistent product type through dynamic checking (
     Then there is a product "pack_product" with name "Pack Product"
     And product "pack_product" type should be standard
     And product "pack_product" persisted type should be empty
+    And product "pack_product" dynamic type should be standard
     Given product "Pack Product" is a pack containing 10 items of product "Product in pack"
     Then product "Pack Product" is considered as a pack
     And product "pack_product" type should be pack
     And product "pack_product" persisted type should be empty
+    And product "pack_product" dynamic type should be pack

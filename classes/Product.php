@@ -8304,7 +8304,20 @@ class ProductCore extends ObjectModel
         // Default value is the one saved, but in case it is not set we use dynamic definition
         if (!empty($this->product_type) && in_array($this->product_type, ProductType::AVAILABLE_TYPES)) {
             return $this->product_type;
-        } elseif ($this->is_virtual) {
+        }
+
+        return $this->getDynamicProductType();
+    }
+
+    /**
+     * Returns product type based on existing associations without taking the saved value
+     * in database into account.
+     *
+     * @return string
+     */
+    public function getDynamicProductType(): string
+    {
+        if ($this->is_virtual) {
             return ProductType::TYPE_VIRTUAL;
         } elseif (Pack::isPack($this->id)) {
             return ProductType::TYPE_PACK;
