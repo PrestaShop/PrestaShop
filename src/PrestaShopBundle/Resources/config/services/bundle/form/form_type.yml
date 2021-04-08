@@ -1470,8 +1470,8 @@ services:
         tags:
             - { name: form.type }
 
-    form.type.sell.product.combination.combination_price_type:
-        class: 'PrestaShopBundle\Form\Admin\Sell\Product\Combination\CombinationPriceType'
+    form.type.sell.product.combination.combination_price_impact_type:
+        class: 'PrestaShopBundle\Form\Admin\Sell\Product\Combination\CombinationPriceImpactType'
         parent: 'form.type.translatable.aware'
         public: true
         arguments:

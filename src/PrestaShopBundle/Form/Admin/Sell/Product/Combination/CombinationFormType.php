@@ -51,7 +51,7 @@ class CombinationFormType extends TranslatorAwareType
                     'title' => 'h2',
                 ],
             ])
-            ->add('price', CombinationPriceType::class, [
+            ->add('price_impact', CombinationPriceImpactType::class, [
                 'label' => $this->trans('Price and impact', 'Admin.Catalog.Feature'),
                 'label_attr' => [
                     'title' => 'h2',

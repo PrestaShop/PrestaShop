@@ -38,7 +38,7 @@ use Symfony\Component\Translation\TranslatorInterface;
 use Symfony\Component\Validator\Constraints\NotBlank;
 use Symfony\Component\Validator\Constraints\Type;
 
-class CombinationPriceType extends TranslatorAwareType
+class CombinationPriceImpactType extends TranslatorAwareType
 {
     /**
      * @var Currency
@@ -79,7 +79,7 @@ class CombinationPriceType extends TranslatorAwareType
                 'attr' => ['data-display-price-precision' => self::PRESTASHOP_DECIMALS],
                 'currency' => $this->defaultCurrency->iso_code,
             ])
-            ->add('impact_on_price_tax_excluded', MoneyType::class, [
+            ->add('price_tax_excluded', MoneyType::class, [
                 'required' => false,
                 'label' => $this->trans('Impact on price (tax excl.)', 'Admin.Catalog.Feature'),
                 'help' => $this->trans('Does this combination have a different price? Is it cheaper or more expensive than the default retail price?', 'Admin.Catalog.Help'),
@@ -90,7 +90,7 @@ class CombinationPriceType extends TranslatorAwareType
                     new Type(['type' => 'float']),
                 ],
             ])
-            ->add('impact_on_price_tax_included', MoneyType::class, [
+            ->add('price_tax_included', MoneyType::class, [
                 'required' => false,
                 'label' => $this->trans('Impact on price (tax incl.)', 'Admin.Catalog.Feature'),
                 'attr' => ['data-display-price-precision' => self::PRESTASHOP_DECIMALS],
@@ -100,14 +100,14 @@ class CombinationPriceType extends TranslatorAwareType
                     new Type(['type' => 'float']),
                 ],
             ])
-            ->add('impact_on_unit_price', MoneyType::class, [
+            ->add('unit_price', MoneyType::class, [
                 'required' => false,
                 'label' => $this->trans('Impact on price per unit (tax excl.)', 'Admin.Catalog.Feature'),
                 'help' => $this->trans('Does this combination have a different price per unit?', 'Admin.Catalog.Feature'),
                 'attr' => ['data-display-price-precision' => self::PRESTASHOP_DECIMALS],
                 'currency' => $this->defaultCurrency->iso_code,
             ])
-            ->add('impact_on_weight', TextWithUnitType::class, [
+            ->add('weight', TextWithUnitType::class, [
                 'required' => false,
                 'label' => $this->trans('Impact on weight', 'Admin.Catalog.Feature'),
                 'unit' => $this->weightUnit,
