@@ -23,6 +23,9 @@ class Order extends BOBasePage {
     this.shippingAddressBlock = '#addressShipping';
     this.shippingAddressToolTipLink = `${this.shippingAddressBlock} .tooltip-link`;
     this.editExistingAddressButton = '#js-delivery-address-edit-btn';
+    this.selectAnotherAddressButton = '.js-update-customer-address-modal-btn';
+    this.changeOrderAddressSelect = '#change_order_address_new_address_id';
+    this.selectAnotherShippingAddressButton = 'form[name="change_order_address"] .modal-footer button[type="submit"]';
     this.editAddressIframe = 'iframe.fancybox-iframe';
     this.invoiceAddressBlock = '#addressInvoice';
     this.privateNoteDiv = '#privateNote';
@@ -409,6 +412,22 @@ class Order extends BOBasePage {
     ]);
 
     return this.getShippingAddress(page);
+  }
+
+  /**
+   * Select another shipping address
+   * @param page
+   * @param address
+   * @returns {Promise<string>}
+   */
+  async selectAnotherShippingAddress(page, address) {
+    await this.waitForSelectorAndClick(page, this.shippingAddressToolTipLink);
+    await this.waitForSelectorAndClick(page, this.selectAnotherAddressButton);
+
+    await this.selectByVisibleText(page, this.changeOrderAddressSelect, address);
+    await this.waitForSelectorAndClick(page, this.selectAnotherShippingAddressButton);
+
+    return this.getAlertSuccessBlockParagraphContent(page);
   }
 
   /**
