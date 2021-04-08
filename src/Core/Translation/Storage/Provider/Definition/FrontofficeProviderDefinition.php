@@ -32,15 +32,9 @@ namespace PrestaShop\PrestaShop\Core\Translation\Storage\Provider\Definition;
  */
 class FrontofficeProviderDefinition extends AbstractCoreProviderDefinition
 {
-    private const FILENAME_FILTERS_REGEX = [
-        '#^Shop*#',
-        '#^Modules(.*)Shop#',
-    ];
+    private const FILENAME_FILTERS_REGEX = ['#^Shop*#'];
 
-    private const TRANSLATION_DOMAINS_REGEX = [
-        '^Shop*',
-        '^Modules(.*)Shop',
-    ];
+    private const TRANSLATION_DOMAINS_REGEX = ['^Shop*'];
 
     /**
      * {@inheritdoc}
