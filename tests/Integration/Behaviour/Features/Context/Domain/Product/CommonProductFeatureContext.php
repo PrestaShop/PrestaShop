@@ -183,8 +183,8 @@ class CommonProductFeatureContext extends AbstractProductFeatureContext
      */
     public function assertPersistedProductType(string $productReference, string $productTypeName): void
     {
-        if ('empty' === $productTypeName) {
-            $productTypeName = '';
+        if ('undefined' === $productTypeName) {
+            $productTypeName = ProductType::TYPE_UNDEFINED;
         }
         $productId = $this->getSharedStorage()->get($productReference);
         $product = new Product($productId);

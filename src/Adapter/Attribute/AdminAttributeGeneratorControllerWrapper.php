@@ -105,7 +105,7 @@ class AdminAttributeGeneratorControllerWrapper
                 Tools::clearColorListCache((int) $product->id);
                 if (!$product->hasAttributes()) {
                     $product->cache_default_attribute = 0;
-                    $product->product_type = '';
+                    $product->product_type = ProductType::TYPE_UNDEFINED;
                     $product->update();
                 } else {
                     Product::updateDefaultAttribute($idProduct);

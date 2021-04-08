@@ -489,7 +489,7 @@ class ProductCore extends ObjectModel
                     ProductType::TYPE_PACK,
                     ProductType::TYPE_VIRTUAL,
                     ProductType::TYPE_COMBINATIONS,
-                    '',
+                    ProductType::TYPE_UNDEFINED,
                 ],
                 // This default value should be enabled in 179 when the v2 page is fully migrated
                 // 'default' => ProductType::TYPE_STANDARD,
@@ -1964,7 +1964,7 @@ class ProductCore extends ObjectModel
     public function setDefaultAttribute($id_product_attribute)
     {
         // We cannot be sure of the target type, so we set it to empty this way dynamic type will be used
-        $productType = !empty($id_product_attribute) ? ProductType::TYPE_COMBINATIONS : '';
+        $productType = !empty($id_product_attribute) ? ProductType::TYPE_COMBINATIONS : ProductType::TYPE_UNDEFINED;
 
         $result = ObjectModel::updateMultishopTable('Combination', [
             'default_on' => 1,
@@ -1990,7 +1990,7 @@ class ProductCore extends ObjectModel
         $id_default_attribute = (int) Product::getDefaultAttribute($id_product, 0, true);
 
         // We cannot be sure of the target type, so we set it to empty this way dynamic type will be used
-        $productType = !empty($id_default_attribute) ? ProductType::TYPE_COMBINATIONS : '';
+        $productType = !empty($id_default_attribute) ? ProductType::TYPE_COMBINATIONS : ProductType::TYPE_UNDEFINED;
 
         $result = Db::getInstance()->update('product_shop', [
             'cache_default_attribute' => $id_default_attribute,
@@ -8017,6 +8017,7 @@ class ProductCore extends ObjectModel
 
         $this->cache_is_pack = ($type == Product::PTYPE_PACK);
         $this->is_virtual = ($type == Product::PTYPE_VIRTUAL);
+        $this->product_type = $this->getDynamicProductType();
 
         return true;
     }

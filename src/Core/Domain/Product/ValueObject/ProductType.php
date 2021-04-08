@@ -57,6 +57,15 @@ class ProductType
     public const TYPE_COMBINATIONS = 'combinations';
 
     /**
+     * Product created before 178 or via the legacy page may have empty product type, so it is
+     * undefined. To know the product type you can use Product::getDynamicProductType() which
+     * computes it based on the existing associations.
+     *
+     * WARNING: this is not accepted as a valid type for this ValueObject
+     */
+    public const TYPE_UNDEFINED = '';
+
+    /**
      * A list of available types
      */
     public const AVAILABLE_TYPES = [
