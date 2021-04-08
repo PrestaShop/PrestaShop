@@ -1975,8 +1975,10 @@ class ProductCore extends ObjectModel
      */
     public function setDefaultAttribute($id_product_attribute)
     {
-        // We cannot be sure of the target type, so we set it to undefined this way dynamic type will be used
-        $productType = !empty($id_product_attribute) ? ProductType::TYPE_COMBINATIONS : ProductType::TYPE_UNDEFINED;
+        // We only update the type when we know it has combinations
+        if (!empty($id_product_attribute)) {
+            $this->product_type = ProductType::TYPE_COMBINATIONS;
+        }
 
         $result = ObjectModel::updateMultishopTable('Combination', [
             'default_on' => 1,
@@ -1984,10 +1986,9 @@ class ProductCore extends ObjectModel
 
         $result &= ObjectModel::updateMultishopTable('product', [
             'cache_default_attribute' => (int) $id_product_attribute,
-            'product_type' => $productType,
+            'product_type' => $this->product_type,
         ], 'a.`id_product` = ' . (int) $this->id);
         $this->cache_default_attribute = (int) $id_product_attribute;
-        $this->product_type = $productType;
 
         return $result;
     }
@@ -2001,17 +2002,18 @@ class ProductCore extends ObjectModel
     {
         $id_default_attribute = (int) Product::getDefaultAttribute($id_product, 0, true);
 
-        // We cannot be sure of the target type, so we set it to undefined this way dynamic type will be used
-        $productType = !empty($id_default_attribute) ? ProductType::TYPE_COMBINATIONS : ProductType::TYPE_UNDEFINED;
-
         $result = Db::getInstance()->update('product_shop', [
             'cache_default_attribute' => $id_default_attribute,
         ], 'id_product = ' . (int) $id_product . Shop::addSqlRestriction());
 
-        $result &= Db::getInstance()->update('product', [
+        // We only update the type when we know it has combinations
+        $updateData = [
             'cache_default_attribute' => $id_default_attribute,
-            'product_type' => $productType,
-        ], 'id_product = ' . (int) $id_product);
+        ];
+        if (!empty($id_default_attribute)) {
+            $updateData['product_type'] = ProductType::TYPE_COMBINATIONS;
+        }
+        $result &= Db::getInstance()->update('product', $updateData, 'id_product = ' . (int) $id_product);
 
         if ($result && $id_default_attribute) {
             return $id_default_attribute;

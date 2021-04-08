@@ -448,7 +448,7 @@ class PackCore extends Product
 
     public static function deleteItems($id_product)
     {
-        return Db::getInstance()->update('product', ['cache_is_pack' => 0, 'product_type' => ProductType::TYPE_UNDEFINED], 'id_product = ' . (int) $id_product) &&
+        return Db::getInstance()->update('product', ['cache_is_pack' => 0], 'id_product = ' . (int) $id_product) &&
             Db::getInstance()->execute('DELETE FROM `' . _DB_PREFIX_ . 'pack` WHERE `id_product_pack` = ' . (int) $id_product) &&
             Configuration::updateGlobalValue('PS_PACK_FEATURE_ACTIVE', Pack::isCurrentlyUsed());
     }
