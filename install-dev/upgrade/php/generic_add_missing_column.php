@@ -23,20 +23,19 @@
  * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
-
 function generic_add_missing_column($table, $column_to_add)
 {
-    $column_exist = Db::getInstance()->executeS('SHOW FIELDS FROM `'._DB_PREFIX_.$table.'`');
-    $column_formated = array();
+    $column_exist = Db::getInstance()->executeS('SHOW FIELDS FROM `' . _DB_PREFIX_ . $table . '`');
+    $column_formated = [];
     $res = true;
     if ($column_exist) {
         foreach ($column_exist as $c) {
-            $column_formated[] = $c['Field'] ;
+            $column_formated[] = $c['Field'];
         }
 
         foreach ($column_to_add as $name => $details) {
             if (!in_array($name, $column_formated)) {
-                $res &= Db::getInstance()->execute('ALTER TABLE `'._DB_PREFIX_.$table.'` ADD COLUMN `'.$name.'` '.$details);
+                $res &= Db::getInstance()->execute('ALTER TABLE `' . _DB_PREFIX_ . $table . '` ADD COLUMN `' . $name . '` ' . $details);
             }
         }
     }

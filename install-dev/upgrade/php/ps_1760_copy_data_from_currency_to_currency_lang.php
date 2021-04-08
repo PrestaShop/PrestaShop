@@ -35,12 +35,12 @@ function ps_1760_copy_data_from_currency_to_currency_lang()
     $languages = Language::getLanguages();
     foreach ($languages as $language) {
         Db::getInstance()->execute(
-            "INSERT INTO `" . _DB_PREFIX_ . "currency_lang` (`id_currency`, `id_lang`, `name`)
-            SELECT `id_currency`, " . (int) $language['id_lang'] . " as id_lang , `name`
-            FROM `" . _DB_PREFIX_ . "currency`
+            'INSERT INTO `' . _DB_PREFIX_ . 'currency_lang` (`id_currency`, `id_lang`, `name`)
+            SELECT `id_currency`, ' . (int) $language['id_lang'] . ' as id_lang , `name`
+            FROM `' . _DB_PREFIX_ . 'currency`
             ON DUPLICATE KEY UPDATE
-            `name` = `" . _DB_PREFIX_ . "currency`.`name`
-            "
+            `name` = `' . _DB_PREFIX_ . 'currency`.`name`
+            '
         );
     }
     /** @var Currency[] $currencies */
@@ -92,7 +92,7 @@ function refreshLocalizedCurrencyData(Currency $currency, array $languages, Loca
 
         $fields = [
             'name' => $cldrCurrency->getDisplayName(),
-            'symbol' => (string) $cldrCurrency->getSymbol() ?: $currency->iso_code
+            'symbol' => (string) $cldrCurrency->getSymbol() ?: $currency->iso_code,
         ];
 
         $where = 'id_currency = ' . (int) $currency->id

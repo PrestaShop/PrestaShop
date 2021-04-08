@@ -23,20 +23,19 @@
  * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
-
 function add_carrier_position()
 {
     $carriers = Db::getInstance()->executeS('
 	SELECT `id_carrier`
-	FROM `'._DB_PREFIX_.'carrier`
+	FROM `' . _DB_PREFIX_ . 'carrier`
 	WHERE `deleted` = 0');
     if (is_array($carriers) && count($carriers)) {
         $i = 0;
         foreach ($carriers as $carrier) {
             Db::getInstance()->execute('
-			UPDATE `'._DB_PREFIX_.'carrier`
-			SET `position` = '.$i++.'
-			WHERE `id_carrier` = '.(int)$carrier['id_carrier']);
+			UPDATE `' . _DB_PREFIX_ . 'carrier`
+			SET `position` = ' . $i++ . '
+			WHERE `id_carrier` = ' . (int) $carrier['id_carrier']);
         }
     }
 }

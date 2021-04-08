@@ -23,11 +23,10 @@
  * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
-
 function p1607_drop_primary_key_if_exists()
 {
-    if (Db::getInstance()->executeS('SHOW INDEX FROM `'._DB_PREFIX_.'order_detail_tax` WHERE Key_name = "PRIMARY"')) {
-        Db::getInstance()->execute('ALTER TABLE `'._DB_PREFIX_.'order_detail_tax` DROP PRIMARY KEY');
+    if (Db::getInstance()->executeS('SHOW INDEX FROM `' . _DB_PREFIX_ . 'order_detail_tax` WHERE Key_name = "PRIMARY"')) {
+        Db::getInstance()->execute('ALTER TABLE `' . _DB_PREFIX_ . 'order_detail_tax` DROP PRIMARY KEY');
     }
 
     return true;

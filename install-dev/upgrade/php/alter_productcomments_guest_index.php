@@ -23,17 +23,16 @@
  * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
-
 function alter_productcomments_guest_index()
 {
     $id_productcomments = Db::getInstance()->getValue('SELECT id_module
-		FROM  `'._DB_PREFIX_.'module` WHERE name = "productcomments"');
+		FROM  `' . _DB_PREFIX_ . 'module` WHERE name = "productcomments"');
 
     if (!$id_productcomments) {
         return;
     }
 
     Db::getInstance()->execute('
-	ALTER TABLE `'._DB_PREFIX_.'product_comment`
+	ALTER TABLE `' . _DB_PREFIX_ . 'product_comment`
 	DROP INDEX `id_guest`, ADD INDEX `id_guest` (`id_guest`);');
 }

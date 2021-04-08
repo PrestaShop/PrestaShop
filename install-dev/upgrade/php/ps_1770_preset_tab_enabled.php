@@ -27,15 +27,16 @@
 /**
  * Preset enabled new column in tabs to true for all (except for disabled modules)
  */
-function ps_1770_preset_tab_enabled() {
+function ps_1770_preset_tab_enabled()
+{
     //First set all tabs enabled
     $result = Db::getInstance()->execute(
-        'UPDATE `'._DB_PREFIX_.'tab` SET `enabled` = 1'
+        'UPDATE `' . _DB_PREFIX_ . 'tab` SET `enabled` = 1'
     );
 
     //Then search for inactive modules and disable their tabs
     $inactiveModules = Db::getInstance()->executeS(
-        'SELECT `name` FROM `'._DB_PREFIX_.'module` WHERE `active` != 1'
+        'SELECT `name` FROM `' . _DB_PREFIX_ . 'module` WHERE `active` != 1'
     );
     $moduleNames = [];
     foreach ($inactiveModules as $inactiveModule) {
@@ -43,7 +44,7 @@ function ps_1770_preset_tab_enabled() {
     }
     if (count($moduleNames) > 0) {
         $result &= Db::getInstance()->execute(
-            'UPDATE `'._DB_PREFIX_.'tab` SET `enabled` = 0 WHERE `module` IN (' . implode(',', $moduleNames) . ')'
+            'UPDATE `' . _DB_PREFIX_ . 'tab` SET `enabled` = 0 WHERE `module` IN (' . implode(',', $moduleNames) . ')'
         );
     }
 

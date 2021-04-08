@@ -23,15 +23,13 @@
  * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
-
 function image_shop1510()
 {
+    include_once _PS_INSTALL_PATH_ . 'upgrade/php/generic_add_missing_column.php';
 
-    include_once _PS_INSTALL_PATH_.'upgrade/php/generic_add_missing_column.php';
-
-    $column_to_add = array(
+    $column_to_add = [
         'cover' => 'TINYINT(1) UNSIGNED NOT NULL AFTER `id_shop`',
-    );
+    ];
 
     return generic_add_missing_column('image_shop', $column_to_add);
 }

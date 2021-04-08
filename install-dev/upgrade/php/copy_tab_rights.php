@@ -31,7 +31,7 @@ function copy_tab_rights($fromTabName, $toTabName)
     if (empty($fromTabName) || empty($toTabName)) {
         return;
     }
-    foreach (array(PageVoter::CREATE, PageVoter::READ, PageVoter::UPDATE, PageVoter::DELETE) as $role) {
+    foreach ([PageVoter::CREATE, PageVoter::READ, PageVoter::UPDATE, PageVoter::DELETE] as $role) {
         // 1- Add role
         $roleToAdd = strtoupper('ROLE_MOD_TAB_' . $toTabName . '_' . $role);
         Db::getInstance()->execute('INSERT IGNORE INTO `' . _DB_PREFIX_ . 'authorization_role` (`slug`)

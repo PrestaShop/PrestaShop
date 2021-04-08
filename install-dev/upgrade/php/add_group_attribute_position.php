@@ -23,19 +23,18 @@
  * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
-
 function add_group_attribute_position()
 {
     $groups = Db::getInstance()->executeS('
 	SELECT *
-	FROM `'._DB_PREFIX_.'attribute_group`');
+	FROM `' . _DB_PREFIX_ . 'attribute_group`');
     $i = 0;
     if (is_array($groups) && count($groups)) {
         foreach ($groups as $group) {
             Db::getInstance()->execute('
-				UPDATE `'._DB_PREFIX_.'attribute_group`
-				SET `position` = '.$i++.'
-				WHERE `id_attribute_group` = '.(int)$group['id_attribute_group']);
+				UPDATE `' . _DB_PREFIX_ . 'attribute_group`
+				SET `position` = ' . $i++ . '
+				WHERE `id_attribute_group` = ' . (int) $group['id_attribute_group']);
         }
     }
 }

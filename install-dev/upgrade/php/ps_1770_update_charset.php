@@ -23,7 +23,6 @@
  * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
-
 function ps_1770_update_charset()
 {
     $adminFilterTableExists = $adminFilterFilterIdExists = $moduleHistoryTableExists = $translationTableExists = false;
@@ -38,7 +37,6 @@ function ps_1770_update_charset()
             );
         }
     } catch (Exception $e) {
-
     }
 
     try {
@@ -46,16 +44,13 @@ function ps_1770_update_charset()
             'SELECT count(*) FROM ' . _DB_PREFIX_ . 'module_history'
         );
     } catch (Exception $e) {
-
     }
 
     try {
         $translationTableExists = (bool) Db::getInstance()->executeS(
             'SELECT count(*) FROM ' . _DB_PREFIX_ . 'translation'
         );
-
     } catch (Exception $e) {
-
     }
 
     $result = true;
@@ -79,7 +74,6 @@ function ps_1770_update_charset()
             'ALTER TABLE `PREFIX_module_history` CONVERT TO CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci'
         );
     }
-
 
     if ($translationTableExists) {
         $result &= Db::getInstance()->execute(

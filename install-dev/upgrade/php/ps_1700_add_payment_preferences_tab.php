@@ -23,7 +23,6 @@
  * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
-
 function ps_1700_add_payment_preferences_tab()
 {
     include_once 'add_new_tab.php';

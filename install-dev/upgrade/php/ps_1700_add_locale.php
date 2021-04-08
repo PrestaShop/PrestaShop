@@ -23,18 +23,17 @@
  * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
-
 function ps_1700_add_locale()
 {
-    $locale = file_get_contents(__DIR__.'/../../../app/Resources/legacy-to-standard-locales.json');
+    $locale = file_get_contents(__DIR__ . '/../../../app/Resources/legacy-to-standard-locales.json');
     $locale_mapping = json_decode($locale, true);
-    $results = Db::getInstance()->executeS('SELECT id_lang, iso_code FROM '._DB_PREFIX_.'lang');
-    foreach($results as $result) {
+    $results = Db::getInstance()->executeS('SELECT id_lang, iso_code FROM ' . _DB_PREFIX_ . 'lang');
+    foreach ($results as $result) {
         $id_lang = $result['id_lang'];
         $iso_code = $result['iso_code'];
         if (array_key_exists($iso_code, $locale_mapping)) {
             $locale = $locale_mapping[$iso_code];
-            Db::getInstance()->execute('UPDATE '._DB_PREFIX_.'lang SET locale="'.$locale.'" WHERE id_lang="'.$id_lang.'"');
+            Db::getInstance()->execute('UPDATE ' . _DB_PREFIX_ . 'lang SET locale="' . $locale . '" WHERE id_lang="' . $id_lang . '"');
         }
     }
 

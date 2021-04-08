@@ -23,11 +23,10 @@
  * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
-
 function cms_block()
 {
-    if (!Db::getInstance()->execute('SELECT `display_store` FROM `'._DB_PREFIX_.'cms_block` LIMIT 1')) {
-        return Db::getInstance()->execute('ALTER TABLE `'._DB_PREFIX_.'cms_block` ADD `display_store` TINYINT NOT NULL DEFAULT \'1\'');
+    if (!Db::getInstance()->execute('SELECT `display_store` FROM `' . _DB_PREFIX_ . 'cms_block` LIMIT 1')) {
+        return Db::getInstance()->execute('ALTER TABLE `' . _DB_PREFIX_ . 'cms_block` ADD `display_store` TINYINT NOT NULL DEFAULT \'1\'');
     }
 
     return true;

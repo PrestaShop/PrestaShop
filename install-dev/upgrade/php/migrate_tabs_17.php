@@ -33,26 +33,26 @@ use PrestaShopBundle\Install\XmlLoader;
  */
 function migrate_tabs_17()
 {
-    include_once _PS_INSTALL_PATH_.'upgrade/php/add_new_tab.php';
+    include_once _PS_INSTALL_PATH_ . 'upgrade/php/add_new_tab.php';
 
     /* first make some room for new tabs */
     $moduleTabs = Db::getInstance()->executeS(
-        'SELECT id_parent FROM '._DB_PREFIX_.'tab WHERE module IS NOT NULL AND module != "" ORDER BY id_tab ASC'
+        'SELECT id_parent FROM ' . _DB_PREFIX_ . 'tab WHERE module IS NOT NULL AND module != "" ORDER BY id_tab ASC'
     );
 
-    $moduleParents = array();
+    $moduleParents = [];
 
     foreach ($moduleTabs as $tab) {
         $idParent = $tab['id_parent'];
-        $moduleParents[$idParent] = Db::getInstance()->getValue('SELECT class_name FROM '._DB_PREFIX_.'tab WHERE id_tab='.$idParent);
+        $moduleParents[$idParent] = Db::getInstance()->getValue('SELECT class_name FROM ' . _DB_PREFIX_ . 'tab WHERE id_tab=' . $idParent);
     }
 
     /* delete the old structure */
     Db::getInstance()->execute(
-        'DELETE t, tl FROM '._DB_PREFIX_.'tab t JOIN '._DB_PREFIX_.'tab_lang tl ON (t.id_tab=tl.id_tab) WHERE module IS NULL OR module = ""'
+        'DELETE t, tl FROM ' . _DB_PREFIX_ . 'tab t JOIN ' . _DB_PREFIX_ . 'tab_lang tl ON (t.id_tab=tl.id_tab) WHERE module IS NULL OR module = ""'
     );
 
-    $defaultLanguage = new Language((int)Configuration::get('PS_LANG_DEFAULT'));
+    $defaultLanguage = new Language((int) Configuration::get('PS_LANG_DEFAULT'));
 
     $languageList = LanguageList::getInstance();
     $languageList->setLanguage($defaultLanguage->iso_code);
@@ -65,10 +65,10 @@ function migrate_tabs_17()
     }
 
     /* update remaining idParent */
-    foreach($moduleParents as $idParent => $className) {
+    foreach ($moduleParents as $idParent => $className) {
         if (!empty($className)) {
-            $idTab = Db::getInstance()->getValue('SELECT id_tab FROM '._DB_PREFIX_.'tab WHERE class_name="'.pSQL($className).'"');
-            Db::getInstance()->execute('UPDATE '._DB_PREFIX_.'tab SET id_parent='.(int)$idTab.' WHERE id_parent='.(int)$idParent);
+            $idTab = Db::getInstance()->getValue('SELECT id_tab FROM ' . _DB_PREFIX_ . 'tab WHERE class_name="' . pSQL($className) . '"');
+            Db::getInstance()->execute('UPDATE ' . _DB_PREFIX_ . 'tab SET id_parent=' . (int) $idTab . ' WHERE id_parent=' . (int) $idParent);
         }
     }
 

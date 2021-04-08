@@ -24,9 +24,8 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
 
-use PrestaShopBundle\Install\Upgrade;
 use PrestaShop\PrestaShop\Core\Foundation\Filesystem\FileSystem;
-
+use PrestaShopBundle\Install\Upgrade;
 
 // Although no arguments execute the script, you can get some help if requested.
 if (isset($argv) && is_array($argv) && in_array('--help', $argv)) {
@@ -39,7 +38,7 @@ $engineType = 'ENGINE_TYPE';
 define('PS_IN_UPGRADE', 1);
 
 // remove old unsupported classes
-@unlink(__DIR__.'/../../classes/db/MySQL.php');
+@unlink(__DIR__ . '/../../classes/db/MySQL.php');
 
 if (isset($_GET['adminDir']) && $_GET['adminDir'] && !defined('_PS_ADMIN_DIR_')) {
     define('_PS_ADMIN_DIR_', base64_decode($_GET['adminDir']));
@@ -50,13 +49,13 @@ require_once __DIR__ . '/../../config/defines.inc.php';
 require_once __DIR__ . '/../../config/autoload.php';
 Upgrade::migrateSettingsFile();
 require_once __DIR__ . '/../classes/datas.php';
-require_once dirname(__FILE__).'/../init.php';
-require_once _PS_CONFIG_DIR_.'bootstrap.php';
+require_once dirname(__FILE__) . '/../init.php';
+require_once _PS_CONFIG_DIR_ . 'bootstrap.php';
 
-$logDir = _PS_ROOT_DIR_.'/var/logs/' . _PS_ENV_ . '/';
+$logDir = _PS_ROOT_DIR_ . '/var/logs/' . _PS_ENV_ . '/';
 @mkdir($logDir, FileSystem::DEFAULT_MODE_FOLDER, true);
 
-$upgrade = new Upgrade($logDir, dirname(dirname(__FILE__)).'/');
+$upgrade = new Upgrade($logDir, dirname(dirname(__FILE__)) . '/');
 if (isset($_GET['autoupgrade']) && $_GET['autoupgrade'] == 1) {
     $upgrade->setInAutoUpgrade(true);
 }
@@ -86,8 +85,8 @@ if (function_exists('date_default_timezone_set')) {
     date_default_timezone_set('Europe/Paris');
 }
 
-if (isset($_GET['action']) && method_exists($upgrade, 'do'.$_GET['action'])) {
-    $action = 'do'.$_GET['action'];
+if (isset($_GET['action']) && method_exists($upgrade, 'do' . $_GET['action'])) {
+    $action = 'do' . $_GET['action'];
     $upgrade->$action();
 } else {
     $upgrade->run();
@@ -101,29 +100,29 @@ if (!$upgrade->hasFailure()) {
         Configuration::updateValue('PS_VERSION_DB', _PS_INSTALL_VERSION_);
     }
 
-    $result .= '<action result="ok" id="">'."\n";
+    $result .= '<action result="ok" id="">' . "\n";
     foreach ($upgrade->getInfoList() as $info) {
-        $result .= $info."\n";
+        $result .= $info . "\n";
     }
 
     foreach ($upgrade->getWarningList() as $warning) {
-        $result .= $warning."\n";
+        $result .= $warning . "\n";
     }
 } else {
     foreach ($upgrade->getFailureList() as $failure) {
-        $result .= $failure."\n";
+        $result .= $failure . "\n";
     }
 }
 
 if ($upgrade->getInAutoUpgrade()) {
     header('Content-Type: application/json');
-    echo json_encode(array(
+    echo json_encode([
         'nextQuickInfo' => $upgrade->getNextQuickInfo(),
         'nextErrors' => $upgrade->getNextErrors(),
         'next' => $upgrade->getNext(),
         'nextDesc' => $upgrade->getNextDesc(),
         'warningExists' => $upgrade->hasWarning(),
-    ));
+    ]);
 } else {
     header('Content-Type: text/xml');
     echo $result;

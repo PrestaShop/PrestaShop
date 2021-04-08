@@ -23,27 +23,26 @@
  * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
-
 function customization_field_multishop_lang()
 {
     $shops = Db::getInstance()->executeS('
 		SELECT `id_shop`
-		FROM `'._DB_PREFIX_.'shop`
+		FROM `' . _DB_PREFIX_ . 'shop`
 		WHERE `id_shop` != 1
 		');
 
     $customization_field_lang = Db::getInstance()->executeS('
 		SELECT *
-		FROM `'._DB_PREFIX_.'customization_field_lang`
+		FROM `' . _DB_PREFIX_ . 'customization_field_lang`
 		');
 
     foreach ($customization_field_lang as $value) {
-        $data = array();
-        $customization_lang = array(
+        $data = [];
+        $customization_lang = [
             'id_customization_field' => $value['id_customization_field'],
             'id_lang' => $value['id_lang'],
             'name' => pSQL($value['name']),
-        );
+        ];
         foreach ($shops as $shop) {
             $customization_lang['id_shop'] = $shop['id_shop'];
             $data[] = $customization_lang;

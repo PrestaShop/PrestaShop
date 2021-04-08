@@ -23,17 +23,17 @@
  * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
-
  function drop_index_if_exists($indexName, $table)
  {
-    $keyExists = Db::getInstance()->executeS('SHOW INDEX
+     $keyExists = Db::getInstance()->executeS('SHOW INDEX
       FROM `' . $table . '`
       WHERE Key_name = \'' . $indexName . '\'');
 
-    if ($keyExists) {
-      return Db::getInstance()->execute('ALTER TABLE
+     if ($keyExists) {
+         return Db::getInstance()->execute('ALTER TABLE
         `' . $table . '`
         DROP KEY `' . $indexName . '`');
-    }
-    return true;
+     }
+
+     return true;
  }

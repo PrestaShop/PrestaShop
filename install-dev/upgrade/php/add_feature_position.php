@@ -23,19 +23,18 @@
  * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
-
 function add_feature_position()
 {
     $features = Db::getInstance()->executeS('
 	SELECT `id_feature`
-	FROM `'._DB_PREFIX_.'feature`');
+	FROM `' . _DB_PREFIX_ . 'feature`');
     $i = 0;
     if (is_array($features) && count($features)) {
         foreach ($features as $feature) {
             Db::getInstance()->execute('
-			UPDATE `'._DB_PREFIX_.'feature`
-			SET `position` = '.$i++.'
-			WHERE `id_feature` = '.(int)$feature['id_feature']);
+			UPDATE `' . _DB_PREFIX_ . 'feature`
+			SET `position` = ' . $i++ . '
+			WHERE `id_feature` = ' . (int) $feature['id_feature']);
         }
     }
 }

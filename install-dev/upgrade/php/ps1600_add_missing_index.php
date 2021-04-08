@@ -23,15 +23,14 @@
  * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
-
 function ps1600_add_missing_index()
 {
     $key_exists = Db::getInstance()->executeS('
 	SHOW INDEX
-	FROM `'._DB_PREFIX_.'connections`
+	FROM `' . _DB_PREFIX_ . 'connections`
 	WHERE Key_name = "id_guest"');
     if (!$key_exists) {
-        Db::getInstance()->execute('ALTER TABLE `'._DB_PREFIX_.'connections` ADD INDEX (`id_guest`)');
+        Db::getInstance()->execute('ALTER TABLE `' . _DB_PREFIX_ . 'connections` ADD INDEX (`id_guest`)');
     }
 
     return true;

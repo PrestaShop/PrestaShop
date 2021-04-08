@@ -23,21 +23,20 @@
  * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
-
 function ps_1730_move_some_aeuc_configuration_to_core()
 {
     $translator = Context::getContext()->getTranslator();
 
-    $labelInStock = array();
-    $labelOOSProductsBOA = array();
-    $labelOOSProductsBOD = array();
-    $deliveryTimeAvailable = array();
-    $deliveryTimeOutOfStockBackorderAllowed = array();
+    $labelInStock = [];
+    $labelOOSProductsBOA = [];
+    $labelOOSProductsBOD = [];
+    $deliveryTimeAvailable = [];
+    $deliveryTimeOutOfStockBackorderAllowed = [];
 
     foreach (Language::getLanguages() as $language) {
-        $labelInStock[$language['id_lang']] = $translator->trans('In Stock', array(), 'Admin.Shopparameters.Feature', $language['locale']);
-        $labelOOSProductsBOA[$language['id_lang']] = $translator->trans('Product available for orders', array(), 'Admin.Shopparameters.Feature', $language['locale']);
-        $labelOOSProductsBOD[$language['id_lang']] = $translator->trans('Out-of-Stock', array(), 'Admin.Shopparameters.Feature', $language['locale']);
+        $labelInStock[$language['id_lang']] = $translator->trans('In Stock', [], 'Admin.Shopparameters.Feature', $language['locale']);
+        $labelOOSProductsBOA[$language['id_lang']] = $translator->trans('Product available for orders', [], 'Admin.Shopparameters.Feature', $language['locale']);
+        $labelOOSProductsBOD[$language['id_lang']] = $translator->trans('Out-of-Stock', [], 'Admin.Shopparameters.Feature', $language['locale']);
 
         if ($value = Configuration::get('AEUC_LABEL_DELIVERY_TIME_AVAILABLE', $language['id_lang'])) {
             $deliveryTimeAvailable[$language['id_lang']] = $value;
