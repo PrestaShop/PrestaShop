@@ -69,12 +69,22 @@
       },
     },
     methods: {
+      /**
+       * Used to switch page state of the pagination
+       *
+       * @param {int} pageNumber
+       */
       goToPage(pageNumber) {
         if (this.paginatedDatas[pageNumber - 1]) {
           this.currentPage = pageNumber;
           this.$emit('paginated', {paginatedDatas: this.paginatedDatas, currentPage: this.currentPage});
         }
       },
+      /**
+       * Split items into chunks based on paginationLength
+       *
+       * @param {array} newDatas
+       */
       constructDatas(newDatas) {
         this.paginatedDatas = [];
 
@@ -84,14 +94,27 @@
 
         this.$emit('paginated', {paginatedDatas: this.paginatedDatas, currentPage: this.currentPage});
       },
+      /**
+       * Avoid too much logics in the template
+       *
+       * @param {int} key
+       */
       isActive(key) {
         return this.currentPage === key + 1 ? 'active' : null;
       },
     },
+    /**
+     * On mount, split datas into chunks
+     */
     mounted() {
       this.constructDatas(this.datas);
     },
     watch: {
+      /**
+       * On datas change, split into chunks again.
+       *
+       * @param {array} newDatas
+       */
       datas(newDatas) {
         this.constructDatas(newDatas);
       },

@@ -116,17 +116,34 @@
       });
     },
     methods: {
+      /**
+       * Used to select combination in CombinationModal parent component
+       *
+       * @param {object} combination
+       */
       selectCombination(combination) {
         this.$emit(CombinationsEventMap.selectCombination, combination);
       },
+      /**
+       * This events comes from the pagination component as
+       */
       preventClose(event) {
         event.stopPropagation();
         event.preventDefault();
       },
+      /**
+       * This events comes from the pagination component as
+       * he's the one managing cutting datas into chunks
+       *
+       * @param {array} datas
+       */
       constructDatas(datas) {
         this.paginatedDatas = datas.paginatedDatas;
         this.currentPage = datas.currentPage;
       },
+      /**
+       * Used to avoid having too much logic in the markup
+       */
       isSelected(idCombination) {
         return this.selectedCombination === idCombination
           || this.combinationsList.length === 1
