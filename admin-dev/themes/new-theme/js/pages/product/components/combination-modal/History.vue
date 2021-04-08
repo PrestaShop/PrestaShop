@@ -28,7 +28,7 @@
     @click="preventClose"
   >
     <div class="card-header">
-      Edited combination ({{ combinationsList.length }})
+      {{ $t('modal.history.editedCombination', {'%editedNb%': combinationsList.length}) }}
     </div>
 
     <div class="card-block">
@@ -60,8 +60,7 @@
           :src="emptyImage"
         >
         <p class="history-empty-tip">
-          You will find here the list of the combinations you edited (the list
-          resets when you leave edit mode).
+          {{ $t('modal.history.empty') }}
         </p>
       </div>
     </div>
