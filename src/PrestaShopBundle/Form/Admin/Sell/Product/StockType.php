@@ -32,10 +32,12 @@ use PrestaShopBundle\Form\Admin\Type\DatePickerType;
 use PrestaShopBundle\Form\Admin\Type\SwitchType;
 use PrestaShopBundle\Form\Admin\Type\TranslatableType;
 use PrestaShopBundle\Form\Admin\Type\TranslatorAwareType;
+use PrestaShopBundle\Form\DataTransformer\DefaultEmptyDataTransformer;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\NumberType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
+use Symfony\Component\Routing\RouterInterface;
 use Symfony\Component\Translation\TranslatorInterface;
 use Symfony\Component\Validator\Constraints\NotBlank;
 use Symfony\Component\Validator\Constraints\Type;
@@ -53,22 +55,33 @@ class StockType extends TranslatorAwareType
     private $packStockTypeChoiceProvider;
 
     /**
+     * @var RouterInterface
+     */
+    private $router;
+
+    /**
      * @param TranslatorInterface $translator
      * @param array $locales
      * @param FormChoiceProviderInterface $outOfStockTypeChoiceProvider
      * @param FormChoiceProviderInterface $packStockTypeChoiceProvider
+     * @param RouterInterface $router
      */
     public function __construct(
         TranslatorInterface $translator,
         array $locales,
         FormChoiceProviderInterface $outOfStockTypeChoiceProvider,
-        FormChoiceProviderInterface $packStockTypeChoiceProvider
+        FormChoiceProviderInterface $packStockTypeChoiceProvider,
+        RouterInterface $router
     ) {
         parent::__construct($translator, $locales);
         $this->outOfStockTypeChoiceProvider = $outOfStockTypeChoiceProvider;
         $this->packStockTypeChoiceProvider = $packStockTypeChoiceProvider;
+        $this->router = $router;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
@@ -93,15 +106,28 @@ class StockType extends TranslatorAwareType
             ])
             ->add('low_stock_threshold', NumberType::class, [
                 'label' => $this->trans('Low stock level', 'Admin.Catalog.Feature'),
+                'help' => $this->trans('Leave empty to disable', 'Admin.Catalog.Help'),
                 'constraints' => [
                     new Type(['type' => 'numeric']),
                 ],
                 'required' => false,
             ])
             ->add('low_stock_alert', SwitchType::class, [
+                'required' => false,
                 'label' => $this->trans(
                     'Send me an email when the quantity is below or equals this level',
                     'Admin.Catalog.Feature'
+                ),
+                'help' => $this->trans(
+                    'The email will be sent to all the users who have the right to run the stock page. To modify the permissions, go to [1]Advanced Parameters > Team[/1]',
+                    'Admin.Catalog.Help',
+                    [
+                        '[1]' => sprintf(
+                            '<a target="_blank" href="%s">',
+                            $this->router->generate('admin_employees_index')
+                        ),
+                        '[/1]' => '</a>',
+                    ]
                 ),
             ])
             ->add('pack_stock_type', ChoiceType::class, [
@@ -126,7 +152,12 @@ class StockType extends TranslatorAwareType
             ->add('available_date', DatePickerType::class, [
                 'label' => $this->trans('Availability date', 'Admin.Catalog.Feature'),
                 'required' => false,
+                'attr' => [
+                    'placeholder' => 'YYYY-MM-DD',
+                ],
             ])
         ;
+
+        $builder->get('low_stock_threshold')->addModelTransformer(new DefaultEmptyDataTransformer(0, null));
     }
 }

@@ -1378,6 +1378,7 @@ services:
         arguments:
             - '@prestashop.core.form.choice_provider.out_of_stock_type_choice_provider'
             - '@prestashop.core.form.choice_provider.pack_stock_type_choice_provider'
+            - '@router'
         tags:
             - { name: form.type }
 
