@@ -149,7 +149,7 @@ admin_categories_update_position:
         _legacy_link: AdminCategories:updatePositions
 
 admin_categories_get_categories_tree:
-    path: /categories-tree
+    path: /tree
     methods: [GET]
     defaults:
         _controller: PrestaShopBundle:Admin\Sell\Catalog\Category:getCategoriesTree

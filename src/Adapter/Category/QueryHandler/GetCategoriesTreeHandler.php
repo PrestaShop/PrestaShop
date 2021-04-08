@@ -73,10 +73,10 @@ final class GetCategoriesTreeHandler implements GetCategoriesTreeHandlerInterfac
         $categoriesTree = [];
         foreach ($categories as $category) {
             $categoryId = (int) $category['id_category'];
-            $childCategories = [];
+            $categoryChildren = [];
 
             if (!empty($category['children'])) {
-                $childCategories = $this->buildCategoriesTree($category['children'], $langId);
+                $categoryChildren = $this->buildCategoriesTree($category['children'], $langId);
             }
 
             $categoriesTree[] = new CategoryForTree(
@@ -84,7 +84,7 @@ final class GetCategoriesTreeHandler implements GetCategoriesTreeHandlerInterfac
                 // @todo: it is always only one language now,
                 //   but this way it doesn't require changing the contract when we want to allow retrieving multiple languages
                 [$langId => $category['name']],
-                $childCategories ?? []
+                $categoryChildren
             );
         }
 

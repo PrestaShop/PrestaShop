@@ -511,7 +511,7 @@ class CategoryFeatureContext extends AbstractDomainFeatureContext
      * @param array<int, array<string, string>> $expectedCategories
      * @param int $langId
      */
-    private function assertCategoriesInTree(array $actualCategories, array $expectedCategories, int $langId)
+    private function assertCategoriesInTree(array $actualCategories, array $expectedCategories, int $langId): void
     {
         Assert::assertEquals(
             count($actualCategories),
@@ -522,22 +522,22 @@ class CategoryFeatureContext extends AbstractDomainFeatureContext
         foreach ($actualCategories as $key => $category) {
             $expectedCategory = $expectedCategories[$key];
             $expectedId = $this->getSharedStorage()->get($expectedCategory['id reference']);
-            $expectedChildCategoryIds = array_map(function (string $childCategoryReference): int {
+            $expectedChildrenCategoryIds = array_map(function (string $childCategoryReference): int {
                 return $this->getSharedStorage()->get($childCategoryReference);
             }, PrimitiveUtils::castStringArrayIntoArray($expectedCategory['direct child categories']));
 
-            $actualChildCategories = $category->getChildCategories();
+            $actualCategoryChildren = $category->getChildren();
             Assert::assertEquals(
-                count($actualChildCategories),
-                count($expectedChildCategoryIds),
-                'Unexpected child categories count'
+                count($actualCategoryChildren),
+                count($expectedChildrenCategoryIds),
+                'Unexpected children categories count'
             );
 
             Assert::assertEquals($expectedId, $category->getCategoryId(), 'Unexpected category id');
             Assert::assertEquals([$langId => $expectedCategory['category name']], $category->getLocalizedNames(), 'Unexpected category name');
 
-            foreach ($actualChildCategories as $index => $childCategory) {
-                Assert::assertEquals($expectedChildCategoryIds[$index], $childCategory->getCategoryId());
+            foreach ($actualCategoryChildren as $index => $childCategory) {
+                Assert::assertEquals($expectedChildrenCategoryIds[$index], $childCategory->getCategoryId());
             }
         }
     }
@@ -570,16 +570,16 @@ class CategoryFeatureContext extends AbstractDomainFeatureContext
     {
         foreach ($categoriesTree as $category) {
             if ($category->getCategoryId() === $parentCategoryId) {
-                return $category->getChildCategories();
+                return $category->getChildren();
             }
 
-            $inChildCategories = $this->extractCategoriesByParent($category->getChildCategories(), $parentCategoryId);
+            $extractedChildren = $this->extractCategoriesByParent($category->getChildren(), $parentCategoryId);
 
-            if (empty($inChildCategories)) {
+            if (empty($extractedChildren)) {
                 continue;
             }
 
-            return $inChildCategories;
+            return $extractedChildren;
         }
 
         return [];

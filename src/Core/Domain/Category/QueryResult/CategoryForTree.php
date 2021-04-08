@@ -42,21 +42,21 @@ class CategoryForTree
     /**
      * @var CategoryForTree[]
      */
-    private $childCategories;
+    private $children;
 
     /**
      * @param int $categoryId
      * @param array<int, string> $localizedNames
-     * @param array $childCategories
+     * @param array $children
      */
     public function __construct(
         int $categoryId,
         array $localizedNames,
-        array $childCategories
+        array $children
     ) {
         $this->categoryId = $categoryId;
         $this->localizedNames = $localizedNames;
-        $this->childCategories = $childCategories;
+        $this->children = $children;
     }
 
     /**
@@ -78,8 +78,8 @@ class CategoryForTree
     /**
      * @return CategoryForTree[]
      */
-    public function getChildCategories(): array
+    public function getChildren(): array
     {
-        return $this->childCategories;
+        return $this->children;
     }
 }

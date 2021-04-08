@@ -781,16 +781,19 @@ class CategoryController extends FrameworkBundleAdminController
      */
     private function formatCategoriesTreeForPresentation(array $categoriesTree, int $langId): array
     {
+        if (empty($categoriesTree)) {
+            return [];
+        }
+
         $formattedCategories = [];
         foreach ($categoriesTree as $categoryForTree) {
-            if (!empty($categoryForTree->getChildCategories())) {
-                $childCategories = $this->formatCategoriesTreeForPresentation($categoryForTree->getChildCategories(), $langId);
-            }
+            $children = $this->formatCategoriesTreeForPresentation($categoryForTree->getChildren(), $langId);
 
+            $names = $categoryForTree->getLocalizedNames();
             $formattedCategories[] = [
                 'id' => $categoryForTree->getCategoryId(),
-                'name' => $categoryForTree->getLocalizedNames()[$langId] ?? $categoryForTree->getLocalizedNames()[0],
-                'childCategories' => $childCategories ?? [],
+                'name' => $names[$langId] ?? reset($names),
+                'children' => $children,
             ];
         }
 
