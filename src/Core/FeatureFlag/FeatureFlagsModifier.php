@@ -65,7 +65,7 @@ class FeatureFlagsModifier implements DataConfigurationInterface
         $configuration = [];
 
         foreach ($this->getAllFeatureFlags() as $id => $featureFlag) {
-            $configuration[$featureFlag->getName()] = $featureFlag->getState();
+            $configuration[$featureFlag->getName()] = $featureFlag->isEnabled();
         }
 
         return $configuration;
@@ -116,10 +116,6 @@ class FeatureFlagsModifier implements DataConfigurationInterface
             }
 
             if (!is_bool($flagState)) {
-                return false;
-            }
-
-            if (null === $this->getOneFeatureFlagByName($flagName)) {
                 return false;
             }
         }
