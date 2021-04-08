@@ -145,7 +145,7 @@
         this.combinationList.on('click', ProductMap.combinations.editCombinationButtons, (event) => {
           event.stopImmediatePropagation();
           const $row = $(event.target).closest('tr');
-          this.selectedCombinationId = Number($row.find('.combination-id-input').val());
+          this.selectedCombinationId = Number($row.find(ProductMap.combinations.combinationIdInputsSelector).val());
           this.hasSubmittedCombinations = false;
         });
       },

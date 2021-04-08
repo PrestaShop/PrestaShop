@@ -48,7 +48,7 @@ class CombinationFormDataProviderTest extends TestCase
     private const COMBINATION_ID = 42;
     private const DEFAULT_QUANTITY = 51;
 
-    public function testGetDefaultData()
+    public function testGetDefaultData(): void
     {
         $queryBusMock = $this->createMock(CommandBusInterface::class);
         $provider = new CombinationFormDataProvider($queryBusMock);
@@ -62,7 +62,7 @@ class CombinationFormDataProviderTest extends TestCase
      * @param array $combinationData
      * @param array $expectedData
      */
-    public function testGetData(array $combinationData, array $expectedData)
+    public function testGetData(array $combinationData, array $expectedData): void
     {
         $queryBusMock = $this->createQueryBusMock($combinationData);
         $provider = new CombinationFormDataProvider($queryBusMock);
@@ -147,7 +147,7 @@ class CombinationFormDataProviderTest extends TestCase
     }
 
     /**
-     * @param $query
+     * @param GetCombinationForEditing $query
      * @param array $combinationData
      *
      * @return CombinationForEditing
