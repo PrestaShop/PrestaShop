@@ -26,8 +26,8 @@
 
 namespace LegacyTests\Unit\Core\Hook;
 
-use PHPUnit\Framework\TestCase;
 use PHPUnit\Framework\MockObject\MockObject;
+use PHPUnit\Framework\TestCase;
 use PrestaShop\PrestaShop\Adapter\Hook\HookDispatcher as HookDispatcherAdapter;
 use PrestaShop\PrestaShop\Core\Hook\Hook;
 use PrestaShop\PrestaShop\Core\Hook\HookDispatcher;
@@ -138,7 +138,9 @@ class HookDispatcherTest extends TestCase
 
     /**
      * The event dispatcher puts every parameter dispatched in an array.
+     *
      * @param array $parameters
+     *
      * @return MockObject|RenderingHookEvent
      */
     private function createRenderingHookEvent($parameters = [])

@@ -49,7 +49,6 @@ class RepositoryTest extends TestCase
         /**
          * Mock the LocaleRepository dependencies :
          */
-
         $symbolsDataStub = new NumberSymbolsData();
         $symbolsDataStub->setDecimal(',');
         $symbolsDataStub->setGroup(' ');
@@ -95,8 +94,8 @@ class RepositoryTest extends TestCase
         $currencyRepository->method('getAvailableCurrencies')
             ->willReturn([$currency]);
 
-        /** @var CldrLocaleRepository $cldrLocaleRepository */
-        /** @var CurrencyRepository $currencyRepository */
+        /* @var CldrLocaleRepository $cldrLocaleRepository */
+        /* @var CurrencyRepository $currencyRepository */
         $this->localeRepository = new LocaleRepository($cldrLocaleRepository, $currencyRepository, 'fr-FR');
     }
 
@@ -117,7 +116,6 @@ class RepositoryTest extends TestCase
      * Given an invalid locale code
      * When asking the repository for the corresponding locale
      * Then an exception should be raised
-     *
      */
     public function testGetLocaleWithInvalidLocaleCode()
     {

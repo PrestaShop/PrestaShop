@@ -24,12 +24,12 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
 define('_PS_ROOT_DIR_', __DIR__ . '/..');
-define('_PS_MODULE_DIR_', _PS_ROOT_DIR_.'/tests-legacy/resources/modules/');
-require_once dirname(__FILE__).'/../admin-dev/bootstrap.php';
-require_once _PS_CONFIG_DIR_.'autoload.php';
-require_once dirname(__FILE__).'/../config/bootstrap.php';
+define('_PS_MODULE_DIR_', _PS_ROOT_DIR_ . '/tests-legacy/resources/modules/');
+require_once dirname(__FILE__) . '/../admin-dev/bootstrap.php';
+require_once _PS_CONFIG_DIR_ . 'autoload.php';
+require_once dirname(__FILE__) . '/../config/bootstrap.php';
 
-/**
+/*
  * Following code makes tests run under phpstorm
  * Else we get error : Class 'PHPUnit_Util_Configuration' not found
  * @see https://stackoverflow.com/questions/33299149/phpstorm-8-and-phpunit-problems-with-runinseparateprocess

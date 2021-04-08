@@ -30,8 +30,8 @@ use Currency;
 use PHPUnit\Framework\TestCase;
 use PrestaShop\PrestaShop\Adapter\Currency\CurrencyDataProvider;
 use PrestaShop\PrestaShop\Core\Localization\Currency\CurrencyData;
-use PrestaShop\PrestaShop\Core\Localization\Currency\LocalizedCurrencyId;
 use PrestaShop\PrestaShop\Core\Localization\Currency\DataLayer\CurrencyDatabase as CurrencyDatabaseDataLayer;
+use PrestaShop\PrestaShop\Core\Localization\Currency\LocalizedCurrencyId;
 use PrestaShop\PrestaShop\Core\Localization\Exception\LocalizationException;
 
 class CurrencyDatabaseTest extends TestCase
@@ -57,12 +57,12 @@ class CurrencyDatabaseTest extends TestCase
 
     protected function setUp()
     {
-        $this->fakeFrEuro                   = $this->createMock(Currency::class);
-        $this->fakeFrEuro->iso_code         = 'EUR';
+        $this->fakeFrEuro = $this->createMock(Currency::class);
+        $this->fakeFrEuro->iso_code = 'EUR';
         $this->fakeFrEuro->numeric_iso_code = '978';
-        $this->fakeFrEuro->symbol           = '€';
-        $this->fakeFrEuro->name             = 'euro';
-        $this->fakeFrEuro->precision        = 2;
+        $this->fakeFrEuro->symbol = '€';
+        $this->fakeFrEuro->name = 'euro';
+        $this->fakeFrEuro->precision = 2;
 
         $this->fakeDataProvider = $this->createMock(CurrencyDataProvider::class);
         $this->fakeDataProvider->method('getCurrencyByIsoCodeAndLocale')
@@ -87,7 +87,7 @@ class CurrencyDatabaseTest extends TestCase
         /** @var CurrencyData $currencyData */
         /** @noinspection PhpUnhandledExceptionInspection */
         $currencyData = $this->layer->read(new LocalizedCurrencyId('EUR', 'fr-FR'));
-        /** @noinspection end */
+        /* @noinspection end */
 
         $this->assertSame(
             $this->fakeFrEuro->iso_code,
@@ -105,9 +105,9 @@ class CurrencyDatabaseTest extends TestCase
         );
 
         // FOO is unknown
-        /** @noinspection PhpUnhandledExceptionInspection */
+        /* @noinspection PhpUnhandledExceptionInspection */
         $this->assertNull($this->layer->read(new LocalizedCurrencyId('FOO', 'fr-FR')));
-        /** @noinspection end */
+        /* @noinspection end */
     }
 
     /**

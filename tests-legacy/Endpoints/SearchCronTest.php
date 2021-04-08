@@ -49,6 +49,5 @@ class SearchCronTest extends AbstractEndpointAdminTest
 
         // Nothing is returned by this call
         $this->assertNull($output);
-
     }
 }

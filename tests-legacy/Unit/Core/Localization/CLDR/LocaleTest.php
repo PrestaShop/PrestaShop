@@ -61,17 +61,17 @@ class LocaleTest extends TestCase
     protected $stubCurrencyData;
 
     /**
-     * @inheritDoc
+     * {@inheritDoc}
      */
     protected function setUp()
     {
-        $localeData                         = new LocaleData();
+        $localeData = new LocaleData();
         $localeData->setLocaleCode('fr-FR');
         $localeData->setNumberingSystems(['latn']);
         $localeData->setDefaultNumberingSystem('latn');
         $localeData->setMinimumGroupingDigits(1);
 
-        $this->stubSymbolsData                         = new NumberSymbolsData();
+        $this->stubSymbolsData = new NumberSymbolsData();
         $this->stubSymbolsData->setDecimal(',');
         $this->stubSymbolsData->setGroup(' ');
         $this->stubSymbolsData->setList(';');
@@ -90,14 +90,14 @@ class LocaleTest extends TestCase
         $localeData->setPercentPatterns(['latn' => '#,##0.### %']);
         $localeData->setCurrencyPatterns(['latn' => '#,##0.00# ¤']);
 
-        $this->stubCurrencyData                 = new CurrencyData();
+        $this->stubCurrencyData = new CurrencyData();
         $this->stubCurrencyData->setIsoCode('PCE');
         $this->stubCurrencyData->setNumericIsoCode(333);
         $this->stubCurrencyData->setDecimalDigits(2);
         $this->stubCurrencyData->setDisplayNames([
             'default' => 'PrestaShop Peace',
-            'one'     => 'peace',
-            'other'   => 'peaces',
+            'one' => 'peace',
+            'other' => 'peaces',
         ]);
         $this->stubCurrencyData->setSymbols([CurrencyInterface::SYMBOL_TYPE_DEFAULT => 'PS☮', CurrencyInterface::SYMBOL_TYPE_NARROW => '☮']);
         $localeData->setCurrencies(['PCE' => $this->stubCurrencyData]);

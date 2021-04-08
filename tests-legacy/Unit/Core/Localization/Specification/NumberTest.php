@@ -54,7 +54,7 @@ class NumberTest extends TestCase
             ->disableOriginalConstructor()
             ->getMock();
 
-        $this->arabSymbolList  = $this->getMockBuilder(NumberSymbolList::class)
+        $this->arabSymbolList = $this->getMockBuilder(NumberSymbolList::class)
             ->disableOriginalConstructor()
             ->getMock();
 
@@ -82,7 +82,7 @@ class NumberTest extends TestCase
         $this->assertSame(
             [
                 'latin' => $this->latinSymbolList,
-                'arab'  => $this->arabSymbolList,
+                'arab' => $this->arabSymbolList,
             ],
             $this->latinNumberSpec->getAllSymbols()
         );
@@ -95,19 +95,18 @@ class NumberTest extends TestCase
      */
     public function testGetSymbolsByNumberingSystem()
     {
-        /** @noinspection PhpUnhandledExceptionInspection */
+        /* @noinspection PhpUnhandledExceptionInspection */
         $this->assertSame(
             $this->latinSymbolList,
             $this->latinNumberSpec->getSymbolsByNumberingSystem('latin')
         );
-        /** @noinspection end */
+        /* @noinspection end */
     }
 
     /**
      * Given a valid Number specification
      * When asking it a symbols list for a given INVALID numbering system
      * Then an exception souhd be raised
-     *
      */
     public function testGetSymbolsByNumberingSystemWithInvalidParameter()
     {

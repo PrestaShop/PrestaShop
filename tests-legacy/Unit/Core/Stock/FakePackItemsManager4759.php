@@ -28,26 +28,25 @@ namespace LegacyTests\Unit\Core\Stock;
 
 class FakePackItemsManager4759
 {
-    private $packs = array();
-    private $items = array();
-    private $stockAvailables = array();
+    private $packs = [];
+    private $items = [];
+    private $stockAvailables = [];
 
     public function addProduct(FakeProduct4759 $pack, FakeProduct4759 $product, $product_attribute_id, $quantity)
     {
-        $entry = array(
+        $entry = [
             'productObj' => $product,
             'id' => $product->id,
             'id_pack_product_attribute' => $product_attribute_id,
             'pack_quantity' => $quantity,
-        );
+        ];
         $this->packs[$pack->id][] = (object) $entry;
-        $entry = array(
+        $entry = [
             'packObj' => $pack,
             'id' => $pack->id,
             'pack_item_quantity' => $quantity,
             'pack_stock_type' => $pack->pack_stock_type,
-
-        );
+        ];
         $this->items[$product->id][$product_attribute_id][$pack->id] = (object) $entry;
         $this->stockAvailables[$pack->id][0] = $pack->stock_available;
         $this->stockAvailables[$product->id][$product_attribute_id] = $product->stock_available;
@@ -65,7 +64,7 @@ class FakePackItemsManager4759
 
     public function getStockAvailableByProduct($product, $id_product_attribute = null, $id_shop = null)
     {
-        $id_product_attribute = $id_product_attribute?$id_product_attribute:0;
+        $id_product_attribute = $id_product_attribute ? $id_product_attribute : 0;
 
         return $this->stockAvailables[$product->id][$id_product_attribute];
     }

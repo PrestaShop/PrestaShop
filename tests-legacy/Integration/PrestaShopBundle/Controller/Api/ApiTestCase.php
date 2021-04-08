@@ -28,12 +28,12 @@ namespace LegacyTests\Integration\PrestaShopBundle\Controller\Api;
 
 use Context;
 use Language;
+use PHPUnit\Framework\MockObject\MockObject;
 use PrestaShop\PrestaShop\Adapter\LegacyContext;
-use Shop;
 use PrestaShop\PrestaShop\Core\Addon\Theme\Theme;
+use Shop;
 use Symfony\Bundle\FrameworkBundle\Client;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
-use PHPUnit\Framework\MockObject\MockObject;
 
 // bin/phpunit -c tests/phpunit-admin.xml --group api --stop-on-error --stop-on-failure --verbose --debug
 abstract class ApiTestCase extends WebTestCase
@@ -70,7 +70,7 @@ abstract class ApiTestCase extends WebTestCase
         self::$container->set('prestashop.adapter.legacy.context', $legacyContextMock);
 
         $client = self::$kernel->getContainer()->get('test.client');
-        $client->setServerParameters(array());
+        $client->setServerParameters([]);
 
         self::$client = $client;
     }
@@ -91,13 +91,13 @@ abstract class ApiTestCase extends WebTestCase
     protected function mockContextAdapter()
     {
         $legacyContextMock = $this->getMockBuilder(LegacyContext::class)
-            ->setMethods(array(
+            ->setMethods([
                 'getContext',
                 'getEmployeeLanguageIso',
                 'getEmployeeCurrency',
                 'getRootUrl',
                 'getLanguage',
-            ))
+            ])
             ->getMock();
 
         $contextMock = $this->mockContext();
@@ -133,7 +133,7 @@ abstract class ApiTestCase extends WebTestCase
         $controllerMock = $this->mockController();
         $contextMock->controller = $controllerMock;
 
-        $contextMock->currency = (object) array('sign' => '$');
+        $contextMock->currency = (object) ['sign' => '$'];
 
         Context::setInstanceForTesting($contextMock);
 
@@ -178,12 +178,12 @@ abstract class ApiTestCase extends WebTestCase
     private function mockShop()
     {
         $shopMock = $this->getMockBuilder('\Shop')
-            ->setMethods(array(
+            ->setMethods([
                 'getContextualShopId',
                 'getCategory',
                 'getContextType',
                 'getGroup',
-            ))
+            ])
             ->getMock();
 
         $shopMock->method('getContextualShopId')->willReturn(1);
@@ -252,6 +252,7 @@ abstract class ApiTestCase extends WebTestCase
 
     /**
      * @param $expectedStatusCode
+     *
      * @return mixed
      */
     protected function assertResponseBodyValidJson($expectedStatusCode)

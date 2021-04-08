@@ -70,75 +70,75 @@ class CartPresenterTest extends UnitTestCase
             $this->invokeMethod(
                 $this->cartPresenter,
                 'getAttributesArrayFromString',
-                array($asString)
+                [$asString]
             )
         );
     }
 
     public function productAttributesProvider()
     {
-        return array(
-            array(
+        return [
+            [
                 'Taille : S- Couleur : Noir',
-                array(
+                [
                     'Taille' => 'S',
                     'Couleur' => 'Noir',
-                ),
-            ),
-            array(
-                'Taille : L- Couleur : Noir', array(
+                ],
+            ],
+            [
+                'Taille : L- Couleur : Noir', [
                     'Taille' => 'L',
                     'Couleur' => 'Noir',
-                ),
-            ),
-            array(
-                'Taille : M- Couleur : Noir', array(
+                ],
+            ],
+            [
+                'Taille : M- Couleur : Noir', [
                     'Taille' => 'M',
                     'Couleur' => 'Noir',
-                ),
-            ),
-            array(
-                'Taille : S- Couleur : Blanc', array(
+                ],
+            ],
+            [
+                'Taille : S- Couleur : Blanc', [
                     'Taille' => 'S',
                     'Couleur' => 'Blanc',
-                ),
-            ),
-            array(
-                'Taille : L- Couleur : Bleu', array(
+                ],
+            ],
+            [
+                'Taille : L- Couleur : Bleu', [
                     'Taille' => 'L',
                     'Couleur' => 'Bleu',
-                ),
-            ),
-            array(
-                'Taille : M- Couleur : Taupe - Gris marrone', array(
+                ],
+            ],
+            [
+                'Taille : M- Couleur : Taupe - Gris marrone', [
                     'Taille' => 'M',
                     'Couleur' => 'Taupe - Gris marrone',
-                ),
-            ),
-            array(
-                'Taille : M- Couleur : Taupe - Gri43s marrone', array(
+                ],
+            ],
+            [
+                'Taille : M- Couleur : Taupe - Gri43s marrone', [
                     'Taille' => 'M',
                     'Couleur' => 'Taupe - Gri43s marrone',
-                ),
-            ),
-            array(
-                'Taille : M- Couleur : Taupe - Gris marroné', array(
+                ],
+            ],
+            [
+                'Taille : M- Couleur : Taupe - Gris marroné', [
                     'Taille' => 'M',
                     'Couleur' => 'Taupe - Gris marroné',
-                ),
-            ),
-            array(
-                'Taille : M- Couleur : Taupe - Gris marronù', array(
+                ],
+            ],
+            [
+                'Taille : M- Couleur : Taupe - Gris marronù', [
                     'Taille' => 'M',
                     'Couleur' => 'Taupe - Gris marronù',
-                ),
-            ),
-            array(
-                'Taille : M-L- Couleur : Taupe', array(
+                ],
+            ],
+            [
+                'Taille : M-L- Couleur : Taupe', [
                     'Taille' => 'M-L',
                     'Couleur' => 'Taupe',
-                ),
-            ),
-        );
+                ],
+            ],
+        ];
     }
 }

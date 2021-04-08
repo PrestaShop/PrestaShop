@@ -105,9 +105,9 @@ class SortOrderTest extends TestCase
     public function serialization_examples()
     {
         return [
-            [['entity'    => 'product',
-                'field'      => 'name',
-                'direction'  => 'asc', ]],
+            [['entity' => 'product',
+                'field' => 'name',
+                'direction' => 'asc', ]],
         ];
     }
 
@@ -124,8 +124,8 @@ class SortOrderTest extends TestCase
         $unserialized = SortOrder::newFromString($encoded);
 
         $arr = $unserialized->toArray();
-        $this->assertEquals($data['entity'],    $arr['entity']);
-        $this->assertEquals($data['field'],     $arr['field']);
+        $this->assertEquals($data['entity'], $arr['entity']);
+        $this->assertEquals($data['field'], $arr['field']);
         $this->assertEquals($data['direction'], $arr['direction']);
     }
 }

@@ -29,11 +29,11 @@ namespace LegacyTests\Unit\Core\Localization\DataLayer;
 use PHPUnit\Framework\TestCase;
 use PrestaShop\PrestaShop\Core\Localization\CLDR\Currency as CldrCurrency;
 use PrestaShop\PrestaShop\Core\Localization\CLDR\CurrencyData as CldrCurrencyData;
+use PrestaShop\PrestaShop\Core\Localization\CLDR\LocaleInterface as CldrLocaleInterface;
 use PrestaShop\PrestaShop\Core\Localization\CLDR\LocaleRepository as CldrLocaleRepository;
 use PrestaShop\PrestaShop\Core\Localization\Currency\CurrencyData;
-use PrestaShop\PrestaShop\Core\Localization\Currency\LocalizedCurrencyId;
 use PrestaShop\PrestaShop\Core\Localization\Currency\DataLayer\CurrencyReference as CurrencyReferenceDataLayer;
-use PrestaShop\PrestaShop\Core\Localization\CLDR\LocaleInterface as CldrLocaleInterface;
+use PrestaShop\PrestaShop\Core\Localization\Currency\LocalizedCurrencyId;
 
 class CurrencyReferenceTest extends TestCase
 {
@@ -46,9 +46,9 @@ class CurrencyReferenceTest extends TestCase
 
     protected function setUp()
     {
-        $stubCurrencyData          = new CldrCurrencyData();
+        $stubCurrencyData = new CldrCurrencyData();
         $stubCurrencyData->setIsoCode('PCE');
-        $stubCldrCurrency          = new CldrCurrency($stubCurrencyData);
+        $stubCldrCurrency = new CldrCurrency($stubCurrencyData);
 
         $stubLocale = $this->createMock(CldrLocaleInterface::class);
         $stubLocale
@@ -67,7 +67,7 @@ class CurrencyReferenceTest extends TestCase
                 ['fr-FR', $stubLocale],
             ]);
 
-        /** @var CldrLocaleRepository $cldrLocaleRepo */
+        /* @var CldrLocaleRepository $cldrLocaleRepo */
         $this->currencyReference = new CurrencyReferenceDataLayer($cldrLocaleRepo);
     }
 

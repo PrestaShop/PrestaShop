@@ -30,9 +30,9 @@ use PHPUnit\Framework\TestCase;
 use PrestaShop\PrestaShop\Core\Localization\CLDR\CurrencyData;
 use PrestaShop\PrestaShop\Core\Localization\CLDR\CurrencyInterface;
 use PrestaShop\PrestaShop\Core\Localization\CLDR\LocaleData;
+use PrestaShop\PrestaShop\Core\Localization\CLDR\LocaleDataLayerInterface as CldrLocaleDataLayerInterface;
 use PrestaShop\PrestaShop\Core\Localization\CLDR\LocaleDataSource;
 use PrestaShop\PrestaShop\Core\Localization\CLDR\NumberSymbolsData;
-use PrestaShop\PrestaShop\Core\Localization\CLDR\LocaleDataLayerInterface as CldrLocaleDataLayerInterface;
 
 class LocaleDataSourceTest extends TestCase
 {
@@ -60,7 +60,7 @@ class LocaleDataSourceTest extends TestCase
     protected $enStubLocaleData;
 
     /**
-     * @inheritDoc
+     * {@inheritDoc}
      */
     protected function setUp()
     {
@@ -92,7 +92,7 @@ class LocaleDataSourceTest extends TestCase
     protected function getStubLocaleData($localeCode)
     {
         // Common data
-        $localeData                         = new LocaleData();
+        $localeData = new LocaleData();
         $localeData->setNumberingSystems(['latn']);
         $localeData->setDefaultNumberingSystem('latn');
         $localeData->setMinimumGroupingDigits(1);
@@ -127,8 +127,8 @@ class LocaleDataSourceTest extends TestCase
 
                 $stubCurrencyData->setDisplayNames([
                     'default' => 'Paix PrestaShop',
-                    'one'     => 'paix',
-                    'other'   => 'paix',
+                    'one' => 'paix',
+                    'other' => 'paix',
                 ]);
                 $stubCurrencyData->setSymbols([
                     CurrencyInterface::SYMBOL_TYPE_DEFAULT => '☮PS',
@@ -145,8 +145,8 @@ class LocaleDataSourceTest extends TestCase
 
                 $stubCurrencyData->setDisplayNames([
                     'default' => 'PrestaShop Peace',
-                    'one'     => 'peace',
-                    'other'   => 'peaces',
+                    'one' => 'peace',
+                    'other' => 'peaces',
                 ]);
                 $stubCurrencyData->setSymbols([
                     CurrencyInterface::SYMBOL_TYPE_DEFAULT => 'PS☮',

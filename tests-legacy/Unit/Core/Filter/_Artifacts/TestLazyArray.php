@@ -31,7 +31,6 @@ use PrestaShop\PrestaShop\Adapter\Presenter\AbstractLazyArray;
 
 class TestLazyArray extends AbstractLazyArray
 {
-
     /**
      * @arrayAccess
      */
@@ -47,5 +46,4 @@ class TestLazyArray extends AbstractLazyArray
     {
         return 'some_other_property';
     }
-
 }

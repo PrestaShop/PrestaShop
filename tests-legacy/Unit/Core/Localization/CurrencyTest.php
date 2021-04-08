@@ -39,7 +39,7 @@ class CurrencyTest extends TestCase
     protected $currency;
 
     /**
-     * @inheritDoc
+     * {@inheritDoc}
      */
     protected function setUp()
     {
@@ -116,20 +116,19 @@ class CurrencyTest extends TestCase
      */
     public function testGetSymbol()
     {
-        /** @noinspection PhpUnhandledExceptionInspection */
+        /* @noinspection PhpUnhandledExceptionInspection */
         $this->assertSame(
             '€',
             $this->currency->getSymbol('fr-FR'),
             'Wrong result for getSymbol()'
         );
-        /** @noinspection end */
+        /* @noinspection end */
     }
 
     /**
      * Given a valid Currency instance and un unknown or invalid locale code
      * When requesting the currency symbol for the said locale code
      * Then an exception should be raised
-     *
      */
     public function testGetSymbolWithUnknownLocaleCode()
     {
@@ -159,20 +158,19 @@ class CurrencyTest extends TestCase
      */
     public function testGetName()
     {
-        /** @noinspection PhpUnhandledExceptionInspection */
+        /* @noinspection PhpUnhandledExceptionInspection */
         $this->assertSame(
             'euro',
             $this->currency->getName('fr-FR'),
             'Wrong result for getName()'
         );
-        /** @noinspection end */
+        /* @noinspection end */
     }
 
     /**
      * Given a valid Currency instance and an invalid or unknown locale code
      * When requesting the currency name for the said locale code
      * Then an exception should be raised
-     *
      */
     public function testGetNameWithUnknownLocaleCode()
     {

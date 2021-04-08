@@ -34,7 +34,6 @@ use Symfony\Component\EventDispatcher\Event;
 /**
  * @group sf
  * Tests about admin CommonController and its actions.
- *
  */
 class HookDispatcherTest extends KernelTestCase
 {
@@ -61,7 +60,7 @@ class HookDispatcherTest extends KernelTestCase
         $kernel->boot();
         $hookDisptacher = $kernel->getContainer()->get('prestashop.hook.dispatcher');
 
-        $hookDisptacher->addListener('test_test', array($this, 'listenerCallback'));
+        $hookDisptacher->addListener('test_test', [$this, 'listenerCallback']);
         $hookDisptacher->dispatch('unknown_hook_name');
         $this->assertFalse($this->testedListenerCallbackCalled);
         $hookDisptacher->dispatch('test_test');
@@ -85,14 +84,14 @@ class HookDispatcherTest extends KernelTestCase
         $kernel->boot();
         $hookDispatcher = $kernel->getContainer()->get('prestashop.hook.dispatcher');
 
-        $hookDispatcher->addListener('test_test_2', array($this, 'listenerCallback2'));
-        $hookDispatcher->addListener('test_test_2', array($this, 'listenerCallback2b'));
+        $hookDispatcher->addListener('test_test_2', [$this, 'listenerCallback2']);
+        $hookDispatcher->addListener('test_test_2', [$this, 'listenerCallback2b']);
         $event = $hookDispatcher->dispatch('test_test_2', new RenderingHookEvent());
 
-        $this->assertArraySubset(array(
+        $this->assertArraySubset([
             'listenerCallback2' => ['result_test_2'],
             'overriden_listener_name' => ['result_test_2b'],
-        ), $event->getContent());
+        ], $event->getContent());
     }
 
     public function listenerCallback2(RenderingHookEvent $event, $eventName)

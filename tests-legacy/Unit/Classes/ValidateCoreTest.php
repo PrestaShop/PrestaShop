@@ -147,193 +147,192 @@ class ValidateCoreTest extends TestCase
 
     public function isIp2LongDataProvider()
     {
-        return array(
-            array(false, 'toto'),
-            array(true, '123'),
-        );
+        return [
+            [false, 'toto'],
+            [true, '123'],
+        ];
     }
 
     public function isMd5DataProvider()
     {
-        return array(
-            array(1, md5('SomeRandomString')),
-            array(0, ''),
-            array(0, sha1('AnotherRandomString')),
-            array(0, substr(md5('AnotherRandomString'), 0, 31)),
-            array(0, 123),
-            array(0, false),
-        );
+        return [
+            [1, md5('SomeRandomString')],
+            [0, ''],
+            [0, sha1('AnotherRandomString')],
+            [0, substr(md5('AnotherRandomString'), 0, 31)],
+            [0, 123],
+            [0, false],
+        ];
     }
 
     public function isSha1DataProvider()
     {
-        return array(
-            array(1, sha1('SomeRandomString')),
-            array(0, ''),
-            array(0, md5('AnotherRandomString')),
-            array(0, substr(sha1('AnotherRandomString'), 0, 39)),
-            array(0, 123),
-            array(0, false),
-        );
+        return [
+            [1, sha1('SomeRandomString')],
+            [0, ''],
+            [0, md5('AnotherRandomString')],
+            [0, substr(sha1('AnotherRandomString'), 0, 39)],
+            [0, 123],
+            [0, false],
+        ];
     }
-
 
     public function isNameDataProvider()
     {
-        return array(
-            array(1, 'Mathieu'),
-            array(1, 'Dupont'),
-            array(1, 'Jaçinthé'),
-            array(1, 'Jaçinthø'),
-            array(1, 'John D.'),
-            array(1, 'John D.John'),
-            array(1, 'John D. John'),
-            array(1, 'John D. John D.'),
-            array(1, 'Mario Bros.'),
-            array(1, 'ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â'),
-            array(0, 'https://www.website.com'),
-            array(1, 'www.website.com'),
-            array(1, 'www\.website\.com'),
-            array(1, 'www\\.website\\.com'),
-            array(1, 'www.website.com.'),
-            array(1, 'website。com'),
-            array(1, 'John D. www.some.site'),
-            array(1, 'www.website.com is cool'),
-            array(1, 'website。com。'),
-            array(1, 'website。com'),
-            array(0, 'website%2Ecom'),
-            array(1, 'website/./com'),
-            array(1, '.rn'),
-            array(1, 'websitecom/a'),
-            array(0, 'websitecom%20a'),
-            array(1, '`hello'),
-            array(1, 'hello[my friend]'),
-        );
+        return [
+            [1, 'Mathieu'],
+            [1, 'Dupont'],
+            [1, 'Jaçinthé'],
+            [1, 'Jaçinthø'],
+            [1, 'John D.'],
+            [1, 'John D.John'],
+            [1, 'John D. John'],
+            [1, 'John D. John D.'],
+            [1, 'Mario Bros.'],
+            [1, 'ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â'],
+            [0, 'https://www.website.com'],
+            [1, 'www.website.com'],
+            [1, 'www\.website\.com'],
+            [1, 'www\\.website\\.com'],
+            [1, 'www.website.com.'],
+            [1, 'website。com'],
+            [1, 'John D. www.some.site'],
+            [1, 'www.website.com is cool'],
+            [1, 'website。com。'],
+            [1, 'website。com'],
+            [0, 'website%2Ecom'],
+            [1, 'website/./com'],
+            [1, '.rn'],
+            [1, 'websitecom/a'],
+            [0, 'websitecom%20a'],
+            [1, '`hello'],
+            [1, 'hello[my friend]'],
+        ];
     }
 
     public function isCustomerNameDataProvider()
     {
-        return array(
-            array(1, 'Mathieu'),
-            array(1, 'Dupont'),
-            array(1, 'Jaçinthé'),
-            array(1, 'Jaçinthø'),
-            array(1, 'John D.'),
-            array(1, 'John D. John'),
-            array(1, 'John D. John D.'),
-            array(1, 'Mario Bros.'),
-            array(1, 'ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â'),
-            array(0, 'https://www.website.com'),
-            array(0, 'www.website.com'),
-            array(0, 'www\.website\.com'),
-            array(0, 'www\\.website\\.com'),
-            array(0, 'www.website.com.'),
-            array(0, 'website。com'),
-            array(0, 'John D.John'),
-            array(0, 'John D. www.some.site'),
-            array(0, 'www.website.com is cool'),
-            array(0, 'website。com。'),
-            array(0, 'website。com'),
-            array(0, 'website%2Ecom'),
-            array(0, 'website/./com'),
-            array(0, '.rn'),
-            array(0, 'websitecom/a'),
-            array(0, 'websitecom%20a'),
-            array(0, '`hello'),
-            array(0, 'hello[my friend]'),
-        );
+        return [
+            [1, 'Mathieu'],
+            [1, 'Dupont'],
+            [1, 'Jaçinthé'],
+            [1, 'Jaçinthø'],
+            [1, 'John D.'],
+            [1, 'John D. John'],
+            [1, 'John D. John D.'],
+            [1, 'Mario Bros.'],
+            [1, 'ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â'],
+            [0, 'https://www.website.com'],
+            [0, 'www.website.com'],
+            [0, 'www\.website\.com'],
+            [0, 'www\\.website\\.com'],
+            [0, 'www.website.com.'],
+            [0, 'website。com'],
+            [0, 'John D.John'],
+            [0, 'John D. www.some.site'],
+            [0, 'www.website.com is cool'],
+            [0, 'website。com。'],
+            [0, 'website。com'],
+            [0, 'website%2Ecom'],
+            [0, 'website/./com'],
+            [0, '.rn'],
+            [0, 'websitecom/a'],
+            [0, 'websitecom%20a'],
+            [0, '`hello'],
+            [0, 'hello[my friend]'],
+        ];
     }
 
     public function isEmailDataProvider()
     {
-        return array(
-            array(true, 'john.doe@prestashop.com'),
-            array(true, 'john.doe+alias@prestshop.com'),
-            array(true, 'john.doe+alias@pr.e.sta.shop.com'),
-            array(true, 'j@p.com'),
-            array(true, 'john#doe@prestashop.com'),
-            array(false, ''),
-            array(false, 'john.doe@prestashop,com'),
-            array(true, 'john.doe@prestashop'),
-            array(true, 'john.doe@сайт.рф'),
-            array(true, 'john.doe@xn--80aswg.xn--p1ai'),
-            array(false, 'иван@prestashop.com'), // rfc6531 valid but not swift mailer compatible
-            array(true, 'xn--80adrw@prestashop.com'),
-            array(true, 'xn--80adrw@xn--80aswg.xn--p1ai'),
-            array(false, 123456789),
-            array(false, false),
-        );
+        return [
+            [true, 'john.doe@prestashop.com'],
+            [true, 'john.doe+alias@prestshop.com'],
+            [true, 'john.doe+alias@pr.e.sta.shop.com'],
+            [true, 'j@p.com'],
+            [true, 'john#doe@prestashop.com'],
+            [false, ''],
+            [false, 'john.doe@prestashop,com'],
+            [true, 'john.doe@prestashop'],
+            [true, 'john.doe@сайт.рф'],
+            [true, 'john.doe@xn--80aswg.xn--p1ai'],
+            [false, 'иван@prestashop.com'], // rfc6531 valid but not swift mailer compatible
+            [true, 'xn--80adrw@prestashop.com'],
+            [true, 'xn--80adrw@xn--80aswg.xn--p1ai'],
+            [false, 123456789],
+            [false, false],
+        ];
     }
 
     public function isBirthDateProvider()
     {
-        return array(
-            array(true, '1991-04-19'),
-            array(true, '2015-03-22'),
-            array(true, '1945-07-25'),
-            array(false, '3000-03-19'),
-            array(false, '1991-03-33'),
-            array(false, '1991-15-19'),
-            array(false, '1801-01-01'),
-            array(false, '0085-02-25'),
-            array(true, date('Y-m-d', strtotime('now'))),
-            array(true, date('Y-m-d', strtotime('-1 day'))),
-            array(false, date('Y-m-d', strtotime('+1 day'))),
-            array(true, date('Y-m-d', strtotime('-1 month'))),
-            array(true, date('Y-m-d', strtotime('-1 month -1 day'))),
-            array(true, date('Y-m-d', strtotime('-1 month +1 day'))),
-            array(false, date('Y-m-d', strtotime('+1 month'))),
-            array(false, date('Y-m-d', strtotime('+1 month -1 day'))),
-            array(false, date('Y-m-d', strtotime('+1 month +1 day'))),
-            array(true, date('Y-m-d', strtotime('-1 year'))),
-            array(true, date('Y-m-d', strtotime('-1 year -1 day'))),
-            array(true, date('Y-m-d', strtotime('-1 year +1 day'))),
-            array(true, date('Y-m-d', strtotime('-1 year -1 month'))),
-            array(true, date('Y-m-d', strtotime('-1 year -1 month -1 day'))),
-            array(true, date('Y-m-d', strtotime('-1 year -1 month +1 day'))),
-            array(true, date('Y-m-d', strtotime('-1 year +1 month'))),
-            array(true, date('Y-m-d', strtotime('-1 year +1 month -1 day'))),
-            array(true, date('Y-m-d', strtotime('-1 year +1 month +1 day'))),
-            array(false, date('Y-m-d', strtotime('+1 year'))),
-            array(false, date('Y-m-d', strtotime('+1 year -1 day'))),
-            array(false, date('Y-m-d', strtotime('+1 year +1 day'))),
-            array(false, date('Y-m-d', strtotime('+1 year -1 month'))),
-            array(false, date('Y-m-d', strtotime('+1 year -1 month -1 day'))),
-            array(false, date('Y-m-d', strtotime('+1 year -1 month +1 day'))),
-            array(false, date('Y-m-d', strtotime('+1 year +1 month'))),
-            array(false, date('Y-m-d', strtotime('+1 year +1 month -1 day'))),
-            array(false, date('Y-m-d', strtotime('+1 year +1 month +1 day'))),
-            array(false, date('Y-m-d', strtotime('-201 year'))),
-        );
+        return [
+            [true, '1991-04-19'],
+            [true, '2015-03-22'],
+            [true, '1945-07-25'],
+            [false, '3000-03-19'],
+            [false, '1991-03-33'],
+            [false, '1991-15-19'],
+            [false, '1801-01-01'],
+            [false, '0085-02-25'],
+            [true, date('Y-m-d', strtotime('now'))],
+            [true, date('Y-m-d', strtotime('-1 day'))],
+            [false, date('Y-m-d', strtotime('+1 day'))],
+            [true, date('Y-m-d', strtotime('-1 month'))],
+            [true, date('Y-m-d', strtotime('-1 month -1 day'))],
+            [true, date('Y-m-d', strtotime('-1 month +1 day'))],
+            [false, date('Y-m-d', strtotime('+1 month'))],
+            [false, date('Y-m-d', strtotime('+1 month -1 day'))],
+            [false, date('Y-m-d', strtotime('+1 month +1 day'))],
+            [true, date('Y-m-d', strtotime('-1 year'))],
+            [true, date('Y-m-d', strtotime('-1 year -1 day'))],
+            [true, date('Y-m-d', strtotime('-1 year +1 day'))],
+            [true, date('Y-m-d', strtotime('-1 year -1 month'))],
+            [true, date('Y-m-d', strtotime('-1 year -1 month -1 day'))],
+            [true, date('Y-m-d', strtotime('-1 year -1 month +1 day'))],
+            [true, date('Y-m-d', strtotime('-1 year +1 month'))],
+            [true, date('Y-m-d', strtotime('-1 year +1 month -1 day'))],
+            [true, date('Y-m-d', strtotime('-1 year +1 month +1 day'))],
+            [false, date('Y-m-d', strtotime('+1 year'))],
+            [false, date('Y-m-d', strtotime('+1 year -1 day'))],
+            [false, date('Y-m-d', strtotime('+1 year +1 day'))],
+            [false, date('Y-m-d', strtotime('+1 year -1 month'))],
+            [false, date('Y-m-d', strtotime('+1 year -1 month -1 day'))],
+            [false, date('Y-m-d', strtotime('+1 year -1 month +1 day'))],
+            [false, date('Y-m-d', strtotime('+1 year +1 month'))],
+            [false, date('Y-m-d', strtotime('+1 year +1 month -1 day'))],
+            [false, date('Y-m-d', strtotime('+1 year +1 month +1 day'))],
+            [false, date('Y-m-d', strtotime('-201 year'))],
+        ];
     }
 
     public function isDateOrNullProvider()
     {
-        return array(
-            array(true, '1991-04-19'),
-            array(true, '2015-03-22'),
-            array(true, '1945-07-25'),
-            array(true, '2020-03-19'),
-            array(true, '2020-03-19 10:23:00'),
-            array(true, '2020-03-19 45:99:99'), // Only the date is actually checked
-            array(false, '1991-03-33'),
-            array(false, '1991-03-33 00:50:00'),
-            array(false, '1991-15-19'),
-            array(true, null),
-            array(true, '0000-00-00 00:00:00'),
-            array(true, '0000-00-00'),
-        );
+        return [
+            [true, '1991-04-19'],
+            [true, '2015-03-22'],
+            [true, '1945-07-25'],
+            [true, '2020-03-19'],
+            [true, '2020-03-19 10:23:00'],
+            [true, '2020-03-19 45:99:99'], // Only the date is actually checked
+            [false, '1991-03-33'],
+            [false, '1991-03-33 00:50:00'],
+            [false, '1991-15-19'],
+            [true, null],
+            [true, '0000-00-00 00:00:00'],
+            [true, '0000-00-00'],
+        ];
     }
 
     public function isOptFloatDataProvider()
     {
         return array_merge(
             $this->trueFloatDataProvider(),
-            array(
-                array(true, -12.2151),
-                array(true, null),
-                array(true, ''),
-            )
+            [
+                [true, -12.2151],
+                [true, null],
+                [true, ''],
+            ]
         );
     }
 
@@ -341,39 +340,39 @@ class ValidateCoreTest extends TestCase
     {
         return array_merge(
             $this->trueFloatDataProvider(),
-            array(
-                array(false, -12.2151),
-                array(false, -12, 2151),
-                array(false, '-12.2151'),
-                array(false, ''),
-                array(false, 'A'),
-                array(false, null),
-            )
+            [
+                [false, -12.2151],
+                [false, -12, 2151],
+                [false, '-12.2151'],
+                [false, ''],
+                [false, 'A'],
+                [false, null],
+            ]
         );
     }
 
     public function trueFloatDataProvider()
     {
-        return array(
-            array(true, 12),
-            array(true, 12.2151),
-            array(true, 12, 2151),
-            array(true, '12.2151'),
-        );
+        return [
+            [true, 12],
+            [true, 12.2151],
+            [true, 12, 2151],
+            [true, '12.2151'],
+        ];
     }
 
     public function isFloatDataProvider()
     {
         return array_merge(
             $this->trueFloatDataProvider(),
-            array(
-                array(true, -12.2151),
-                array(true, -12, 2151),
-                array(true, '-12.2151'),
-                array(false, ''),
-                array(false, 'A'),
-                array(false, null),
-            )
+            [
+                [true, -12.2151],
+                [true, -12, 2151],
+                [true, '-12.2151'],
+                [false, ''],
+                [false, 'A'],
+                [false, null],
+            ]
         );
     }
 

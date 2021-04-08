@@ -59,14 +59,14 @@ class I18nControllerTest extends ApiTestCase
      */
     public function getBadListTranslations()
     {
-        return array(
-            array(
-                array('page' => 'internationnal'), // syntax error wanted
-            ),
-            array(
-                array('page' => 'stockk'), // syntax error wanted
-            ),
-        );
+        return [
+            [
+                ['page' => 'internationnal'], // syntax error wanted
+            ],
+            [
+                ['page' => 'stockk'], // syntax error wanted
+            ],
+        ];
     }
 
     /**
@@ -74,13 +74,13 @@ class I18nControllerTest extends ApiTestCase
      */
     public function getGoodListTranslations()
     {
-        return array(
-            array(
-                array('page' => 'international'),
-            ),
-            array(
-                array('page' => 'stock'),
-            ),
-        );
+        return [
+            [
+                ['page' => 'international'],
+            ],
+            [
+                ['page' => 'stock'],
+            ],
+        ];
     }
 }

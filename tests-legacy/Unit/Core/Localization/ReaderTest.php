@@ -40,7 +40,7 @@ class ReaderTest extends TestCase
     protected $reader;
 
     /**
-     * @inheritDoc
+     * {@inheritDoc}
      */
     protected function setUp()
     {
@@ -94,53 +94,53 @@ class ReaderTest extends TestCase
     {
         return [
             'root' => [
-                'localeCode'   => 'root',
+                'localeCode' => 'root',
                 'expectedData' => [
                     'defaultNumberingSystem' => 'latn',
-                    'digitsGroupSeparator'   => ',',
-                    'decimalSeparator'       => '.',
-                    'decimalPattern'         => '#,##0.###',
-                    'currencyPattern'        => '¤ #,##0.00',
+                    'digitsGroupSeparator' => ',',
+                    'decimalSeparator' => '.',
+                    'decimalPattern' => '#,##0.###',
+                    'currencyPattern' => "¤\u{a0}#,##0.00",
                 ],
             ],
             'fr' => [
-                'localeCode'   => 'fr',
+                'localeCode' => 'fr',
                 'expectedData' => [
                     'defaultNumberingSystem' => 'latn',
-                    'digitsGroupSeparator'   => hex2bin('e280af'),
-                    'decimalSeparator'       => ',',
-                    'decimalPattern'         => '#,##0.###',
-                    'currencyPattern'        => '#,##0.00 ¤',
+                    'digitsGroupSeparator' => hex2bin('e280af'),
+                    'decimalSeparator' => ',',
+                    'decimalPattern' => '#,##0.###',
+                    'currencyPattern' => "#,##0.00\u{a0}¤",
                 ],
             ],
             'fr-FR' => [
-                'localeCode'   => 'fr-FR',
+                'localeCode' => 'fr-FR',
                 'expectedData' => [
                     'defaultNumberingSystem' => 'latn',
-                    'digitsGroupSeparator'   => hex2bin('e280af'),
-                    'decimalSeparator'       => ',',
-                    'decimalPattern'         => '#,##0.###',
-                    'currencyPattern'        => '#,##0.00 ¤',
+                    'digitsGroupSeparator' => hex2bin('e280af'),
+                    'decimalSeparator' => ',',
+                    'decimalPattern' => '#,##0.###',
+                    'currencyPattern' => "#,##0.00\u{a0}¤",
                 ],
             ],
             'fr-CH' => [
-                'localeCode'   => 'fr-CH',
+                'localeCode' => 'fr-CH',
                 'expectedData' => [
                     'defaultNumberingSystem' => 'latn',
-                    'digitsGroupSeparator'   => hex2bin('e280af'),
-                    'decimalSeparator'       => ',',
-                    'decimalPattern'         => '#,##0.###',
-                    'currencyPattern'        => '#,##0.00 ¤',
+                    'digitsGroupSeparator' => hex2bin('e280af'),
+                    'decimalSeparator' => ',',
+                    'decimalPattern' => '#,##0.###',
+                    'currencyPattern' => "#,##0.00\u{a0}¤",
                 ],
             ],
             'en-GB' => [
-                'localeCode'   => 'en-GB',
+                'localeCode' => 'en-GB',
                 'expectedData' => [
                     'defaultNumberingSystem' => 'latn',
-                    'digitsGroupSeparator'   => ',',
-                    'decimalSeparator'       => '.',
-                    'decimalPattern'         => '#,##0.###',
-                    'currencyPattern'        => '¤#,##0.00',
+                    'digitsGroupSeparator' => ',',
+                    'decimalSeparator' => '.',
+                    'decimalPattern' => '#,##0.###',
+                    'currencyPattern' => '¤#,##0.00',
                 ],
             ],
         ];

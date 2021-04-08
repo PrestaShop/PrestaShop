@@ -51,33 +51,33 @@ class Advice extends ObjectModel
     /**
      * @see ObjectModel::$definition
      */
-    public static $definition = array(
+    public static $definition = [
         'table' => 'advice',
         'primary' => 'id_advice',
         'multilang' => true,
-        'fields' => array(
-            'id_ps_advice' =>    array('type' => self::TYPE_INT, 'validate' => 'isInt'),
-            'id_tab' =>            array('type' => self::TYPE_INT, 'validate' => 'isInt'),
-            'selector' =>        array('type' => self::TYPE_STRING),
-            'location' =>        array('type' => self::TYPE_STRING),
-            'validated' =>        array('type' => self::TYPE_BOOL, 'validate' => 'isBool'),
-            'start_day' =>        array('type' => self::TYPE_INT, 'validate' => 'isInt'),
-            'stop_day' =>        array('type' => self::TYPE_INT, 'validate' => 'isInt'),
-            'weight' =>            array('type' => self::TYPE_INT, 'validate' => 'isInt'),
+        'fields' => [
+            'id_ps_advice' => ['type' => self::TYPE_INT, 'validate' => 'isInt'],
+            'id_tab' => ['type' => self::TYPE_INT, 'validate' => 'isInt'],
+            'selector' => ['type' => self::TYPE_STRING],
+            'location' => ['type' => self::TYPE_STRING],
+            'validated' => ['type' => self::TYPE_BOOL, 'validate' => 'isBool'],
+            'start_day' => ['type' => self::TYPE_INT, 'validate' => 'isInt'],
+            'stop_day' => ['type' => self::TYPE_INT, 'validate' => 'isInt'],
+            'weight' => ['type' => self::TYPE_INT, 'validate' => 'isInt'],
 
             // Lang fields
-            'html' =>            array('type' => self::TYPE_HTML, 'lang' => true, 'required' => true, 'validate' => 'isString'),
-        ),
-    );
+            'html' => ['type' => self::TYPE_HTML, 'lang' => true, 'required' => true, 'validate' => 'isString'],
+        ],
+    ];
 
     public static function getIdByIdPs($id_ps_advice)
     {
         $query = new DbQuery();
         $query->select('id_advice');
         $query->from('advice', 'b');
-        $query->where('`id_ps_advice` = '.(int)$id_ps_advice);
+        $query->where('`id_ps_advice` = ' . (int) $id_ps_advice);
 
-        return (int)Db::getInstance()->getValue($query);
+        return (int) Db::getInstance()->getValue($query);
     }
 
     public static function getValidatedByIdTab($id_tab, $premium = false, $addons = false)
@@ -86,27 +86,27 @@ class Advice extends ObjectModel
         $query->select('a.`id_ps_advice`, a.`selector`, a.`location`, al.`html`, a.`weight`');
         $query->from('advice', 'a');
         $query->join('
-			LEFT JOIN `'._DB_PREFIX_.'advice_lang` al ON al.`id_advice` = a.`id_advice`
-			LEFT JOIN `'._DB_PREFIX_.'tab_advice` at ON at.`id_advice` = a.`id_advice` ');
+			LEFT JOIN `' . _DB_PREFIX_ . 'advice_lang` al ON al.`id_advice` = a.`id_advice`
+			LEFT JOIN `' . _DB_PREFIX_ . 'tab_advice` at ON at.`id_advice` = a.`id_advice` ');
 
         $query->where('
 			a.`validated` = 1 AND 
 			a.`hide` = 0 AND 
-			al.`id_lang` = '.(int)Context::getContext()->language->id.' AND 
-			at.`id_tab` = '.(int)$id_tab.' AND 
-			((a.`start_day` = 0 AND a.`stop_day` = 0) OR ('.date('d').' >= a.`start_day` AND '.date('d').' <= a.`stop_day`))');
+			al.`id_lang` = ' . (int) Context::getContext()->language->id . ' AND 
+			at.`id_tab` = ' . (int) $id_tab . ' AND 
+			((a.`start_day` = 0 AND a.`stop_day` = 0) OR (' . date('d') . ' >= a.`start_day` AND ' . date('d') . ' <= a.`stop_day`))');
 
         $result = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS($query);
-        $advices = array();
+        $advices = [];
         if (is_array($result)) {
             foreach ($result as $res) {
-                $advices[] = array(
+                $advices[] = [
                     'selector' => $res['selector'],
                     'location' => $res['location'],
                     'html' => $res['html'],
                     'id_ps_advice' => $res['id_ps_advice'],
                     'weight' => $res['weight'],
-                );
+                ];
             }
         }
         if (!$premium) {
@@ -154,13 +154,13 @@ class Advice extends ObjectModel
 
     public static function getIdsAdviceToValidate()
     {
-        $ids = array();
+        $ids = [];
         $query = new DbQuery();
         $query->select('a.`id_advice`');
         $query->from('advice', 'a');
         $query->join('
-			LEFT JOIN `'._DB_PREFIX_.'condition_advice` ca ON ca.`id_advice` = a.`id_advice` AND ca.`display` = 1 
-			LEFT JOIN `'._DB_PREFIX_.'condition` c ON c.`id_condition` = ca.`id_condition` AND c.`validated` = 1');
+			LEFT JOIN `' . _DB_PREFIX_ . 'condition_advice` ca ON ca.`id_advice` = a.`id_advice` AND ca.`display` = 1 
+			LEFT JOIN `' . _DB_PREFIX_ . 'condition` c ON c.`id_condition` = ca.`id_condition` AND c.`validated` = 1');
         $query->where('a.`validated` = 0');
         $query->groupBy('a.`id_advice`');
         $query->having('count(*) = SUM(c.`validated`)');
@@ -178,13 +178,13 @@ class Advice extends ObjectModel
 
     public static function getIdsAdviceToUnvalidate()
     {
-        $ids = array();
+        $ids = [];
         $query = new DbQuery();
         $query->select('a.`id_advice`');
         $query->from('advice', 'a');
         $query->join('
-			LEFT JOIN `'._DB_PREFIX_.'condition_advice` ca ON ca.`id_advice` = a.`id_advice` AND ca.`display` = 0 
-			LEFT JOIN `'._DB_PREFIX_.'condition` c ON c.`id_condition` = ca.`id_condition` AND c.`validated` = 1');
+			LEFT JOIN `' . _DB_PREFIX_ . 'condition_advice` ca ON ca.`id_advice` = a.`id_advice` AND ca.`display` = 0 
+			LEFT JOIN `' . _DB_PREFIX_ . 'condition` c ON c.`id_condition` = ca.`id_condition` AND c.`validated` = 1');
         $query->where('a.`validated` = 1');
         $query->groupBy('a.`id_advice`');
         $query->having('count(*) = SUM(c.`validated`)');

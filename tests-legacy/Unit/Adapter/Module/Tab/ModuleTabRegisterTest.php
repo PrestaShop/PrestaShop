@@ -36,107 +36,107 @@ use Symfony\Component\Routing\RouteCollection;
 
 class ModuleTabRegisterTest extends UnitTestCase
 {
-    protected $tabsToTest = array(
-        'gamification' => array(
+    protected $tabsToTest = [
+        'gamification' => [
             // Test given in PR
-            array(
+            [
                 'name' => 'Merchant Expertise',
                 'class_name' => 'AdminGamification',
                 'parent_class' => 'AdminAdmin',
-            ),
-        ),
-        'doge' => array(
+            ],
+        ],
+        'doge' => [
             // minimum data, must work
-            array(
+            [
                 'class_name' => 'AdminMy',
-            ),
+            ],
             // Non-existing class file, must throw an exception
-            array(
+            [
                 'class_name' => 'AdminMissing',
                 'exception' => 'Class "AdminMissingController" not found in controllers/admin nor routing file',
-            ),
-        ),
-        'symfony' => array(
+            ],
+        ],
+        'symfony' => [
             // modules with routes are added regardless of the controller existing or not
-            array(
+            [
                 'class_name' => 'UnknownLegacyController',
                 'route_name' => 'some_fancy_symfony_route',
-            ),
-        ),
+            ],
+        ],
         // No tabs by default, the undeclared one comes from the routing parsing
-        'undeclared_symfony' => array(
-            array(
+        'undeclared_symfony' => [
+            [
                 'class_name' => 'UndeclaredLegacyController',
-            ),
-        ),
-    );
+            ],
+        ],
+    ];
 
-    protected $moduleAdminControllers = array(
-        array('gamification', array('AdminGamificationController.php')),
-        array('doge', array('WololoController.php', 'AdminMyController.php')),
-    );
+    protected $moduleAdminControllers = [
+        ['gamification', ['AdminGamificationController.php']],
+        ['doge', ['WololoController.php', 'AdminMyController.php']],
+    ];
 
-    protected $expectedTabsToAdd = array(
-        'gamification' => array('AdminGamification'),
-        'doge' => array('Wololo', 'AdminMissing', 'AdminMy'),
-        'symfony' => array('UnknownLegacyController'),
-        'undeclared_symfony' => array('UndeclaredLegacyController'),
-    );
+    protected $expectedTabsToAdd = [
+        'gamification' => ['AdminGamification'],
+        'doge' => ['Wololo', 'AdminMissing', 'AdminMy'],
+        'symfony' => ['UnknownLegacyController'],
+        'undeclared_symfony' => ['UndeclaredLegacyController'],
+    ];
 
-    protected $languages = array(
-        array(
-            "id_lang" => 1,
-            "name" => "Français (French)",
-            "active" => "1",
-            "iso_code" => "fr",
-            "language_code" => "fr",
-            "locale" => "fr-FR",
-            "date_format_lite" => "d/m/Y",
-            "date_format_full" => "d/m/Y H:i:s",
-            "is_rtl" => "0",
-            "id_shop" => "1",
-            "shops" => array(),
-        ),
-        array(
-            "id_lang" => 2,
-            "name" => "English (English)",
-            "active" => "1",
-            "iso_code" => "en",
-            "language_code" => "en-us",
-            "locale" => "en-US",
-            "date_format_lite" => "m/d/Y",
-            "date_format_full" => "m/d/Y H:i:s",
-            "is_rtl" => "0",
-            "id_shop" => "1",
-            "shops" => array(),
-        ),
-        array(
-            "id_lang" => 3,
-            "name" => "English (English)",
-            "active" => "1",
-            "iso_code" => "en",
-            "language_code" => "en-us",
-            "locale" => "en-US",
-            "date_format_lite" => "m/d/Y",
-            "date_format_full" => "m/d/Y H:i:s",
-            "is_rtl" => "0",
-            "id_shop" => "1",
-            "shops" => array(),
-        ),
-        array (
-            "id_lang" => 3,
-            "name" => "Català (Catalan)",
-            "active" => "1",
-            "iso_code" => "ca",
-            "language_code" => "ca-es",
-            "locale" => "ca-ES",
-            "date_format_lite" => "d/m/Y",
-            "date_format_full" => "Y-m-d H:i:s",
-            "is_rtl" => "0",
-            "id_shop" => "1",
-            "shops" => array(),
-        ),
-    );
+    protected $languages = [
+        [
+            'id_lang' => 1,
+            'name' => 'Français (French)',
+            'active' => '1',
+            'iso_code' => 'fr',
+            'language_code' => 'fr',
+            'locale' => 'fr-FR',
+            'date_format_lite' => 'd/m/Y',
+            'date_format_full' => 'd/m/Y H:i:s',
+            'is_rtl' => '0',
+            'id_shop' => '1',
+            'shops' => [],
+        ],
+        [
+            'id_lang' => 2,
+            'name' => 'English (English)',
+            'active' => '1',
+            'iso_code' => 'en',
+            'language_code' => 'en-us',
+            'locale' => 'en-US',
+            'date_format_lite' => 'm/d/Y',
+            'date_format_full' => 'm/d/Y H:i:s',
+            'is_rtl' => '0',
+            'id_shop' => '1',
+            'shops' => [],
+        ],
+        [
+            'id_lang' => 3,
+            'name' => 'English (English)',
+            'active' => '1',
+            'iso_code' => 'en',
+            'language_code' => 'en-us',
+            'locale' => 'en-US',
+            'date_format_lite' => 'm/d/Y',
+            'date_format_full' => 'm/d/Y H:i:s',
+            'is_rtl' => '0',
+            'id_shop' => '1',
+            'shops' => [],
+        ],
+        [
+            'id_lang' => 3,
+            'name' => 'Català (Catalan)',
+            'active' => '1',
+            'iso_code' => 'ca',
+            'language_code' => 'ca-es',
+            'locale' => 'ca-ES',
+            'date_format_lite' => 'd/m/Y',
+            'date_format_full' => 'Y-m-d H:i:s',
+            'is_rtl' => '0',
+            'id_shop' => '1',
+            'shops' => [],
+        ],
+    ];
 
     /**
      * @var ModuleTabRegister
@@ -150,8 +150,8 @@ class ModuleTabRegisterTest extends UnitTestCase
         $this->setupSfKernel();
 
         $this->tabRegister = $this->getMockBuilder('PrestaShop\\PrestaShop\\Adapter\\Module\\Tab\\ModuleTabRegister')
-            ->setMethods(array('getModuleAdminControllersFilename'))
-            ->setConstructorArgs(array(
+            ->setMethods(['getModuleAdminControllersFilename'])
+            ->setConstructorArgs([
                 $this->sfKernel->getContainer()->get('prestashop.core.admin.tab.repository'),
                 $this->sfKernel->getContainer()->get('prestashop.core.admin.lang.repository'),
                 $this->sfKernel->getContainer()->get('logger'),
@@ -159,7 +159,7 @@ class ModuleTabRegisterTest extends UnitTestCase
                 $this->buildFilesystemMock(),
                 $this->languages,
                 $this->buildRoutingConfigLoaderMock(),
-            ))
+            ])
             ->getMock();
         $this->tabRegister
             ->method('getModuleAdminControllersFilename')
@@ -179,7 +179,7 @@ class ModuleTabRegisterTest extends UnitTestCase
         $service = $this->sfKernel->getContainer()->get('filesystem');
         $filesystemMock
             ->method('exists')
-            ->willReturnCallback(function($filePath) use($service) {
+            ->willReturnCallback(function ($filePath) use ($service) {
                 if (false !== strpos($filePath, 'undeclared_symfony/config/routes.yml')) {
                     return true;
                 }
@@ -203,7 +203,7 @@ class ModuleTabRegisterTest extends UnitTestCase
         // option that will add an undeclared controller
         $moduleRoutingLoader
             ->method('import')
-            ->willReturnCallback(function($routingFile, $type) {
+            ->willReturnCallback(function ($routingFile, $type) {
                 $routeCollection = new RouteCollection();
                 $simpleRoute = new Route('/nowhere', [
                     '_controller' => 'PrestaShop\\Module\\Test\\SymfonyController::someAction',
@@ -233,7 +233,7 @@ class ModuleTabRegisterTest extends UnitTestCase
                     continue;
                 }
                 $data = new ParameterBag($tab);
-                $this->assertTrue($this->invokeMethod($this->tabRegister, 'checkIsValid', array($moduleName, $data)));
+                $this->assertTrue($this->invokeMethod($this->tabRegister, 'checkIsValid', [$moduleName, $data]));
             }
         }
     }
@@ -249,13 +249,13 @@ class ModuleTabRegisterTest extends UnitTestCase
                 $data = new ParameterBag($tab);
 
                 try {
-                    $this->invokeMethod($this->tabRegister, 'checkIsValid', array($moduleName, $data));
+                    $this->invokeMethod($this->tabRegister, 'checkIsValid', [$moduleName, $data]);
                 } catch (\Exception $e) {
                     $this->assertEquals($e->getMessage(), $tab['exception']);
 
                     continue;
                 }
-                $this->fail('Expected Exception "'.$tab['exception'].'" has not been raised.');
+                $this->fail('Expected Exception "' . $tab['exception'] . '" has not been raised.');
             }
         }
     }
@@ -263,14 +263,14 @@ class ModuleTabRegisterTest extends UnitTestCase
     public function testTabsListToRegister()
     {
         foreach ($this->tabsToTest as $moduleName => $data) {
-            $tabs = $this->invokeMethod($this->tabRegister, 'addUndeclaredTabs', array($moduleName, $data));
+            $tabs = $this->invokeMethod($this->tabRegister, 'addUndeclaredTabs', [$moduleName, $data]);
 
             // We test there is no unexpected tab to register
             // Be aware, it also include which can throw an exception later when being validated
-            foreach($tabs as $tab) {
+            foreach ($tabs as $tab) {
                 $this->assertTrue(
                         in_array($tab['class_name'], $this->expectedTabsToAdd[$moduleName]),
-                        'Module '.$moduleName.' should not register '.$tab['class_name']
+                        'Module ' . $moduleName . ' should not register ' . $tab['class_name']
                 );
             }
 
@@ -281,7 +281,7 @@ class ModuleTabRegisterTest extends UnitTestCase
                         continue 2;
                     }
                 }
-                $this->fail('ModuleAdminController '.$moduleAdminController.' is expected but not found in the list to register!');
+                $this->fail('ModuleAdminController ' . $moduleAdminController . ' is expected but not found in the list to register!');
             }
         }
     }
@@ -289,18 +289,18 @@ class ModuleTabRegisterTest extends UnitTestCase
     public function testTabNameWithOnlyClassName()
     {
         $names = 'doge';
-        $expectedResult = array(1 => $names, 2 => $names, 3 => $names);
-        $this->assertEquals($expectedResult, $this->invokeMethod($this->tabRegister, 'getTabNames', array($names)));
+        $expectedResult = [1 => $names, 2 => $names, 3 => $names];
+        $this->assertEquals($expectedResult, $this->invokeMethod($this->tabRegister, 'getTabNames', [$names]));
     }
 
     public function testTabNames()
     {
-        $names = array(
+        $names = [
             'en' => 'random name',
             'fr' => 'nom généré',
             'de' => 'eine Name',
-        );
-        $expectedResult = array(1 => $names['fr'], 2 => $names['en'], 3 => $names['en']);
-        $this->assertEquals($expectedResult, $this->invokeMethod($this->tabRegister, 'getTabNames', array($names)));
+        ];
+        $expectedResult = [1 => $names['fr'], 2 => $names['en'], 3 => $names['en']];
+        $this->assertEquals($expectedResult, $this->invokeMethod($this->tabRegister, 'getTabNames', [$names]));
     }
 }

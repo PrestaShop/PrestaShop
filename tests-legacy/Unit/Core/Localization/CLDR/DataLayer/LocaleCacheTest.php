@@ -42,14 +42,14 @@ class LocaleCacheTest extends TestCase
     protected $layer;
 
     /**
-     * @inheritDoc
+     * {@inheritDoc}
      */
     protected function setUp()
     {
         // Let's use a real cache adapter (easier to setup, and a php array is always available in any environment)
         $cacheAdapter = new ArrayAdapter();
 
-        /** @var CacheAdapterInterface $cacheAdapter */
+        /* @var CacheAdapterInterface $cacheAdapter */
         $this->layer = new CldrLocaleCacheDataLayer($cacheAdapter);
     }
 
@@ -60,17 +60,17 @@ class LocaleCacheTest extends TestCase
      */
     public function testReadWrite()
     {
-        $data      = new CldrLocaleData();
+        $data = new CldrLocaleData();
         $data->foo = ['bar', 'baz'];
 
-        /** @noinspection PhpUnhandledExceptionInspection */
+        /* @noinspection PhpUnhandledExceptionInspection */
         $this->layer->write('fooBar', $data);
         /** @noinspection end */
 
         // Get value back from cache
         /** @noinspection PhpUnhandledExceptionInspection */
         $cachedData = $this->layer->read('fooBar');
-        /** @noinspection end */
+        /* @noinspection end */
 
         $this->assertInstanceOf(
             CldrLocaleData::class,
@@ -85,7 +85,7 @@ class LocaleCacheTest extends TestCase
         // Same test with unknown cache key
         /** @noinspection PhpUnhandledExceptionInspection */
         $cachedData = $this->layer->read('unknown');
-        /** @noinspection end */
+        /* @noinspection end */
 
         $this->assertNull($cachedData);
     }

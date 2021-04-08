@@ -52,8 +52,6 @@ class Core_Foundation_IoC_Container_Test extends TestCase
         $this->assertEquals('FOO', $this->container->make('foo'));
     }
 
-    /**
-     */
     public function testCannotBindTheSameServiceTwice()
     {
         $this->expectException(\PrestaShop\PrestaShop\Core\Foundation\IoC\Exception::class);
@@ -111,8 +109,6 @@ class Core_Foundation_IoC_Container_Test extends TestCase
         ));
     }
 
-    /**
-     */
     public function testAnAliasCannotBeChanged()
     {
         $this->expectException(\PrestaShop\PrestaShop\Core\Foundation\IoC\Exception::class);
@@ -135,8 +131,6 @@ class Core_Foundation_IoC_Container_Test extends TestCase
         ));
     }
 
-    /**
-     */
     public function testUnbuildableNotBuilt()
     {
         $this->expectException(\PrestaShop\PrestaShop\Core\Foundation\IoC\Exception::class);
@@ -144,8 +138,6 @@ class Core_Foundation_IoC_Container_Test extends TestCase
         $this->container->make('LegacyTests\Unit\Core\Foundation\IoC\Fixtures\UnBuildable');
     }
 
-    /**
-     */
     public function testNonExistingClassNotBuilt()
     {
         $this->expectException(\PrestaShop\PrestaShop\Core\Foundation\IoC\Exception::class);
@@ -153,13 +145,11 @@ class Core_Foundation_IoC_Container_Test extends TestCase
         $this->container->make('LegacyTests\Unit\Core\Foundation\IoC\Fixtures\AClassThatDoesntExistAtAll');
     }
 
-    /**
-     */
     public function testDependencyLoopDoesntCrashContainer()
     {
         $this->expectException(\PrestaShop\PrestaShop\Core\Foundation\IoC\Exception::class);
 
-        /**
+        /*
          * CycleA depends on CycleB,
          * CycleB depends on CycleA
          */
@@ -186,11 +176,11 @@ class Core_Foundation_IoC_Container_Test extends TestCase
      */
     public function valuesToBind()
     {
-        return array(
-            array(new Dummy()),
-            array(42),
-            array(array(1, 2, 3)),
-        );
+        return [
+            [new Dummy()],
+            [42],
+            [[1, 2, 3]],
+        ];
     }
 
     /**
@@ -202,8 +192,6 @@ class Core_Foundation_IoC_Container_Test extends TestCase
         $this->assertSame($value, $this->container->make('value'));
     }
 
-    /**
-     */
     public function testContainerDoesntBindStringsAsLiteralValues()
     {
         $this->expectException(\Exception::class);

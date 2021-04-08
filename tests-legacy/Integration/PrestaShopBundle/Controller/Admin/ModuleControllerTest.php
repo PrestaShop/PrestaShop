@@ -44,10 +44,10 @@ class ModuleControllerTest extends WebTestCase
     {
         $moduleName = 'test-module';
 
-        $installModuleRoute = $this->router->generate('admin_module_manage_action', array(
+        $installModuleRoute = $this->router->generate('admin_module_manage_action', [
             'action' => 'install',
             'module_name' => $moduleName,
-        ));
+        ]);
         $this->client->request('POST', $installModuleRoute);
 
         $response = $this->client->getResponse();
@@ -83,9 +83,9 @@ class ModuleControllerTest extends WebTestCase
     {
         $oldContext = Context::getContext();
         Context::setInstanceForTesting(self::$kernel->getContainer()->get('prestashop.adapter.legacy.context')->getContext());
-        $recommendedModuleRoute = $this->router->generate('admin_module_catalog_post', array(
+        $recommendedModuleRoute = $this->router->generate('admin_module_catalog_post', [
             'tab_modules_list' => 'fianetsceau,trustedshops,trustedshopsintegration,ebadgeletitbuy,protectedshops,ebadgeletitbuy,emailverify,allinone_rewards,allexport,apiway,zendesk',
-        ));
+        ]);
         $this->client->request('GET', $recommendedModuleRoute);
 
         $response = $this->client->getResponse();
@@ -100,7 +100,7 @@ class ModuleControllerTest extends WebTestCase
     {
         return $this->translator->trans(
             'This functionality has been disabled.',
-            array(),
+            [],
             'Admin.Notifications.Error'
         );
     }

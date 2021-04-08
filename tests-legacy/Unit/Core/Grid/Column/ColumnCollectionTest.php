@@ -26,8 +26,8 @@
 
 namespace LegacyTests\Unit\Core\Grid\Column;
 
-use PHPUnit\Framework\TestCase;
 use PHPUnit\Framework\MockObject\MockObject;
+use PHPUnit\Framework\TestCase;
 use PrestaShop\PrestaShop\Core\Grid\Column\ColumnCollection;
 use PrestaShop\PrestaShop\Core\Grid\Column\ColumnInterface;
 use PrestaShop\PrestaShop\Core\Grid\Exception\ColumnNotFoundException;
@@ -253,7 +253,7 @@ class ColumnCollectionTest extends TestCase
      */
     private function getColumnPositions(ColumnCollection $columns)
     {
-        $positions= [];
+        $positions = [];
 
         foreach ($columns as $column) {
             $positions[] = $column->getId();

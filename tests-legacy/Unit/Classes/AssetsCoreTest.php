@@ -46,11 +46,11 @@ class AssetsCoreTest extends TestCase
         $this->testsPath = '/tests-legacy/resources/assets/';
 
         $this->stylesheetManager = new \StylesheetManager(
-            array($this->testsPath, 'css'),
+            [$this->testsPath, 'css'],
             new Configuration()
         );
         $this->javascriptManager = new \JavascriptManager(
-            array($this->testsPath, 'css'),
+            [$this->testsPath, 'css'],
             new Configuration()
         );
 
@@ -102,32 +102,31 @@ class AssetsCoreTest extends TestCase
         $this->assertSame($toBeFound, $found);
 
         if ($toBeFound) {
-            $this->assertSame($expectedAsset['path'], $this->testsPath.$expectedPath);
+            $this->assertSame($expectedAsset['path'], $this->testsPath . $expectedPath);
         }
-
     }
 
     // --- providers ---
     public function isAssetsDataProvider()
     {
-        return array(
-            array('theme-ok-1', true, 'theme.css', 'css'),
-            array('theme-fail-1', false, false, 'css'),
-            array('theme-ok-2', true, 'theme.css', 'css'),
-            array('theme-fail-2', false, false, 'css'),
-            array('theme-ok-3', true, 'css/custom.css', 'css'),
-            array('theme-fail-3', false, false, 'css'),
-            array('theme-ok-4', true, 'css/custom.css', 'css'),
-            array('theme-fail-4', false, false, 'css'),
+        return [
+            ['theme-ok-1', true, 'theme.css', 'css'],
+            ['theme-fail-1', false, false, 'css'],
+            ['theme-ok-2', true, 'theme.css', 'css'],
+            ['theme-fail-2', false, false, 'css'],
+            ['theme-ok-3', true, 'css/custom.css', 'css'],
+            ['theme-fail-3', false, false, 'css'],
+            ['theme-ok-4', true, 'css/custom.css', 'css'],
+            ['theme-fail-4', false, false, 'css'],
 
-            array('corejs-ok-1', true, 'core.js', 'js'),
-            array('corejs-fail-1', false, false, 'js'),
-            array('corejs-ok-2', true, 'core.js', 'js'),
-            array('corejs-fail-2', false, false, 'js'),
-            array('corejs-ok-3', true, 'js/core.js', 'js'),
-            array('corejs-fail-3', false, false, 'js'),
-            array('corejs-ok-4', true, 'js/core.js', 'js'),
-            array('corejs-fail-4', false, false, 'js'),
-        );
+            ['corejs-ok-1', true, 'core.js', 'js'],
+            ['corejs-fail-1', false, false, 'js'],
+            ['corejs-ok-2', true, 'core.js', 'js'],
+            ['corejs-fail-2', false, false, 'js'],
+            ['corejs-ok-3', true, 'js/core.js', 'js'],
+            ['corejs-fail-3', false, false, 'js'],
+            ['corejs-ok-4', true, 'js/core.js', 'js'],
+            ['corejs-fail-4', false, false, 'js'],
+        ];
     }
 }

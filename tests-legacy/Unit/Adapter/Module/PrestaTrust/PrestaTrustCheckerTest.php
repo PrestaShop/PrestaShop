@@ -41,7 +41,6 @@ use PrestaShop\PrestaShop\Adapter\Module\PrestaTrust\PrestaTrustChecker;
 class PrestaTrustCheckerTest extends UnitTestCase
 {
     /**
-     *
      * @var PrestaTrustChecker
      */
     protected $prestatrustChecker;
@@ -69,34 +68,34 @@ class PrestaTrustCheckerTest extends UnitTestCase
 
         $this->setupSfKernel();
 
-        $this->modules = array(
+        $this->modules = [
             // Module under dev, not concerned by PrestaTrust checks
-            'module-under-dev' => new Module(array(
+            'module-under-dev' => new Module([
                 'name' => 'module-under-dev',
-            )),
+            ]),
             // Module with Pico from Addons
-            'module-verified-from-addons-api' => new Module(array(
+            'module-verified-from-addons-api' => new Module([
                 'name' => 'module-verified-from-addons-api',
-                'prestatrust' => (object)array(
+                'prestatrust' => (object) [
                     'pico' => 'https://www.addons.prestashop.com/random-url.jpg',
-                ),
-            )),
+                ],
+            ]),
             // Module with PrestaTrust content
-            'module-prestatrust-checked' => new Module(array(
+            'module-prestatrust-checked' => new Module([
                 'name' => 'module-verified-from-addons-api',
                 'author_address' => '0x809A29F600000000000000000000000000000911',
-                'prestatrust' => (object)array(
+                'prestatrust' => (object) [
                     'pico' => 'https://www.addons.prestashop.com/random-url.jpg',
-                ),
-            ), array(
-                'path' => __DIR__.'/../../../../resources/modules/ganalytics/',
-            )),
-        );
+                ],
+            ], [
+                'path' => __DIR__ . '/../../../../resources/modules/ganalytics/',
+            ]),
+        ];
 
-        $this->prestatrustApiResults = (object)array(
+        $this->prestatrustApiResults = (object) [
             'hash_trusted' => true,
             'property_trusted' => true,
-        );
+        ];
 
         $this->apiClientS = $this->getMockBuilder('PrestaShopBundle\Service\DataProvider\Marketplace\ApiClient')
             ->disableOriginalConstructor()
@@ -118,7 +117,7 @@ class PrestaTrustCheckerTest extends UnitTestCase
             ->will($this->returnArgument(0));
 
         $cache = new ArrayCache();
-        $cache->save('module-verified-from-addons-api', (object)array('hash' => '366d25acf8172ef93c7086c3ee78f9a2f3e7870356df498d34bda30fb294ae3b'));
+        $cache->save('module-verified-from-addons-api', (object) ['hash' => '366d25acf8172ef93c7086c3ee78f9a2f3e7870356df498d34bda30fb294ae3b']);
 
         $this->prestatrustChecker = new PrestaTrustChecker(
             $cache,
@@ -198,16 +197,16 @@ class PrestaTrustCheckerTest extends UnitTestCase
         $presentedModule = $this->modulePresenter->present($testedModule);
 
         $this->assertEquals(
-            (object)array(
+            (object) [
                 'hash' => '366d25acf8172ef93c7086c3ee78f9a2f3e7870356df498d34bda30fb294ae3b',
-                'check_list' => array(
+                'check_list' => [
                     'integrity' => true,
                     'property' => true,
-                ),
+                ],
                 'status' => true,
                 'message' => 'Module is authenticated.',
                 'pico' => 'https://www.addons.prestashop.com/random-url.jpg',
-            ),
+            ],
             $presentedModule['attributes']['prestatrust']
         );
     }

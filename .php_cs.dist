@@ -10,6 +10,7 @@ $finder = PhpCsFixer\Finder::create()
         __DIR__ . '/admin-dev',
         __DIR__ . '/install-dev',
         __DIR__ . '/tests',
+        __DIR__ . '/tests-legacy',
         __DIR__ . '/config',
         __DIR__ . '/webservice',
         __DIR__ . '/tools/profiling',

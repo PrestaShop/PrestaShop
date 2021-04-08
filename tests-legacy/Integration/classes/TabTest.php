@@ -26,15 +26,15 @@
 
 namespace LegacyTests\Integration\classes;
 
-use LegacyTests\TestCase\IntegrationTestCase;
 use Db;
 use Language;
+use LegacyTests\TestCase\IntegrationTestCase;
 use Tab;
 
 class TabTest extends IntegrationTestCase
 {
     /**
-     * @inheritDoc
+     * {@inheritDoc}
      */
     public static function setUpBeforeClass()
     {
@@ -43,7 +43,7 @@ class TabTest extends IntegrationTestCase
     }
 
     /**
-     * @inheritDoc
+     * {@inheritDoc}
      */
     public static function tearDownAfterClass()
     {
@@ -73,7 +73,7 @@ class TabTest extends IntegrationTestCase
         $classNameTab = new Tab();
         $classNameTab->active = 1;
         $classNameTab->class_name = 'AdminClassNameTest';
-        $classNameTab->name = array();
+        $classNameTab->name = [];
         foreach (Language::getLanguages(true) as $lang) {
             $classNameTab->name[$lang['id_lang']] = 'Class name tab';
         }
@@ -116,11 +116,11 @@ class TabTest extends IntegrationTestCase
         ];
         $this->checkUnexpectedRoles($unexpectedRoles);
 
-        for ($i = 0; $i < 3; $i++) {
+        for ($i = 0; $i < 3; ++$i) {
             $classNameTab = new Tab();
             $classNameTab->active = 1;
             $classNameTab->class_name = 'AdminClassNameTest';
-            $classNameTab->name = array();
+            $classNameTab->name = [];
             foreach (Language::getLanguages(true) as $lang) {
                 $classNameTab->name[$lang['id_lang']] = 'Class name tab';
             }
@@ -153,7 +153,7 @@ class TabTest extends IntegrationTestCase
         $routeNameTab->active = 1;
         $routeNameTab->class_name = 'AdminClassNameTest';
         $routeNameTab->route_name = 'admin_route_name_test';
-        $routeNameTab->name = array();
+        $routeNameTab->name = [];
         foreach (Language::getLanguages(true) as $lang) {
             $routeNameTab->name[$lang['id_lang']] = 'Route name tab';
         }
@@ -200,12 +200,12 @@ class TabTest extends IntegrationTestCase
 
     public function testAddMultipleTabsWithRouteName()
     {
-        for ($i = 0; $i < 3; $i++) {
+        for ($i = 0; $i < 3; ++$i) {
             $routeNameTab = new Tab();
             $routeNameTab->active = 1;
             $routeNameTab->class_name = 'AdminClassNameTest';
             $routeNameTab->route_name = 'admin_route_name_test';
-            $routeNameTab->name = array();
+            $routeNameTab->name = [];
             foreach (Language::getLanguages(true) as $lang) {
                 $routeNameTab->name[$lang['id_lang']] = 'Route name tab';
             }
@@ -225,13 +225,14 @@ class TabTest extends IntegrationTestCase
 
     /**
      * @param array $expectedRoles
+     *
      * @throws \PrestaShopDatabaseException
      */
     private function checkExpectedRoles(array $expectedRoles)
     {
         foreach ($expectedRoles as $expectedRole) {
             $roles = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS(
-                'SELECT id_authorization_role, slug FROM `' . _DB_PREFIX_ . 'authorization_role` WHERE `slug` = "' . $expectedRole .'"',
+                'SELECT id_authorization_role, slug FROM `' . _DB_PREFIX_ . 'authorization_role` WHERE `slug` = "' . $expectedRole . '"',
                 true,
                 false
             );
@@ -254,13 +255,14 @@ class TabTest extends IntegrationTestCase
 
     /**
      * @param array $unexpectedRoles
+     *
      * @throws \PrestaShopDatabaseException
      */
     private function checkUnexpectedRoles(array $unexpectedRoles)
     {
         foreach ($unexpectedRoles as $unexpectedRole) {
             $roles = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS(
-                'SELECT id_authorization_role, slug FROM `' . _DB_PREFIX_ . 'authorization_role` WHERE `slug` = "' . $unexpectedRole .'"',
+                'SELECT id_authorization_role, slug FROM `' . _DB_PREFIX_ . 'authorization_role` WHERE `slug` = "' . $unexpectedRole . '"',
                 true,
                 false
             );

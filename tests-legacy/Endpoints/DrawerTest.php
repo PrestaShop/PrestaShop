@@ -57,6 +57,5 @@ class DrawerTest extends AbstractEndpointAdminTest
         $output = json_decode(ob_get_clean());
 
         $this->assertNotNull($output);
-
     }
 }

@@ -86,6 +86,7 @@ class UnitTestCase extends \PHPUnit\Framework\TestCase
 
     /**
      * @param null $mock
+     *
      * @return Db|mixed
      */
     public function setupDatabaseMock($mock = null)
@@ -140,9 +141,9 @@ class UnitTestCase extends \PHPUnit\Framework\TestCase
 
     protected function setupContextualTemplateEngineMock()
     {
-       $this->context->smarty = Phake::mock('Smarty');
+        $this->context->smarty = Phake::mock('Smarty');
 
-       return $this->context->smarty;
+        return $this->context->smarty;
     }
 
     protected function setupContextualCurrencyMock()
@@ -173,7 +174,8 @@ class UnitTestCase extends \PHPUnit\Framework\TestCase
         return $this->context->link;
     }
 
-    protected function setupContextualCookieMock() {
+    protected function setupContextualCookieMock()
+    {
         $this->context->cookie = Phake::mock('Cookie');
 
         return $this->context->cookie;
@@ -198,8 +200,8 @@ class UnitTestCase extends \PHPUnit\Framework\TestCase
 
     public function setupSfKernel()
     {
-        require_once __DIR__.'/../../vendor/autoload.php';
-        require_once __DIR__.'/../../app/AppKernel.php';
+        require_once __DIR__ . '/../../vendor/autoload.php';
+        require_once __DIR__ . '/../../app/AppKernel.php';
         $this->sfKernel = new \AppKernel('test', true);
         $this->sfKernel->boot();
 
@@ -211,7 +213,7 @@ class UnitTestCase extends \PHPUnit\Framework\TestCase
         Cache::deleteTestingInstance();
         Db::deleteTestingInstance();
         Context::deleteTestingInstance();
-        /**
+        /*
          * @todo proxy static calls inside Configuration to a mockable instance
          * so that Configuration can be (indirectly) mocked.
          * This way we'll avoid doing obscure teardown stuff like below.
@@ -227,14 +229,15 @@ class UnitTestCase extends \PHPUnit\Framework\TestCase
     /**
      * Call protected/private method of a class.
      *
-     * @param object &$object    Instantiated object that we will run method on.
+     * @param object &$object Instantiated object that we will run method on
      * @param string $methodName Method name to call
-     * @param array  $parameters Array of parameters to pass into method.
+     * @param array $parameters array of parameters to pass into method
      *
-     * @return mixed Method return.
-     * @link https://jtreminio.com/2013/03/unit-testing-tutorial-part-3-testing-protected-private-methods-coverage-reports-and-crap/
+     * @return mixed method return
+     *
+     * @see https://jtreminio.com/2013/03/unit-testing-tutorial-part-3-testing-protected-private-methods-coverage-reports-and-crap/
      */
-    protected function invokeMethod(&$object, $methodName, array $parameters = array())
+    protected function invokeMethod(&$object, $methodName, array $parameters = [])
     {
         $reflection = new \ReflectionClass(get_class($object));
         $method = $reflection->getMethod($methodName);

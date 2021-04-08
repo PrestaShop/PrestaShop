@@ -71,7 +71,7 @@ class AdminModuleDataProviderTest extends UnitTestCase
             ->getMock();
 
         /* The module catalog will contains only 5 modules for theses tests */
-        $fakeModules = array(
+        $fakeModules = [
             $this->fakeModule(
                 1,
                 'pm_advancedpack',
@@ -107,11 +107,11 @@ class AdminModuleDataProviderTest extends UnitTestCase
                 'PHPUnit Fakes',
                 ''
             ),
-        );
+        ];
 
         $this->cacheProviderS = Phake::partialMock('Doctrine\Common\Cache\CacheProvider');
-        Phake::when($this->cacheProviderS)->contains($this->languageISOCode.'_addons_modules')->thenReturn(true);
-        Phake::when($this->cacheProviderS)->fetch($this->languageISOCode.'_addons_modules')->thenReturn($fakeModules);
+        Phake::when($this->cacheProviderS)->contains($this->languageISOCode . '_addons_modules')->thenReturn(true);
+        Phake::when($this->cacheProviderS)->fetch($this->languageISOCode . '_addons_modules')->thenReturn($fakeModules);
 
         $this->adminModuleDataProvider = new AdminModuleDataProvider(
             $this->translator,
@@ -132,7 +132,7 @@ class AdminModuleDataProviderTest extends UnitTestCase
 
     public function testSearchCanResultNoResultsOk()
     {
-        $filters = array('search' => 'doge');
+        $filters = ['search' => 'doge'];
         $modules = $this->adminModuleDataProvider->getCatalogModules($filters);
 
         $this->assertCount(0, $modules, sprintf('%s expected 0 modules, received %s.', self::NOTICE, count($modules)));
@@ -140,7 +140,7 @@ class AdminModuleDataProviderTest extends UnitTestCase
 
     public function testSearchWithUnknownFilterCriteriaReturnAllOk()
     {
-        $filters = array('random_filter' => 'doge');
+        $filters = ['random_filter' => 'doge'];
         $modulesWithFilter = $this->adminModuleDataProvider->getCatalogModules($filters);
 
         $modules = $this->adminModuleDataProvider->getCatalogModules();
@@ -150,7 +150,7 @@ class AdminModuleDataProviderTest extends UnitTestCase
 
     public function testSearchForASpecificModuleOk()
     {
-        $filters = array('search' => 'advancedpack');
+        $filters = ['search' => 'advancedpack'];
         $modules = $this->adminModuleDataProvider->getCatalogModules($filters);
 
         $this->assertCount(1, $modules);
@@ -158,7 +158,7 @@ class AdminModuleDataProviderTest extends UnitTestCase
 
     public function testSearchForASpecificModuleHaveMultipleResultsOk()
     {
-        $filters = array('search' => 'payment advanced');
+        $filters = ['search' => 'payment advanced'];
         $modules = $this->adminModuleDataProvider->getCatalogModules($filters);
 
         $this->assertCount(3, $modules);
@@ -167,15 +167,15 @@ class AdminModuleDataProviderTest extends UnitTestCase
     public function testCallToAddonsShouldReturnSameResultOk()
     {
         $mock = $this->getMockBuilder('PrestaShop\PrestaShop\Adapter\Module\AdminModuleDataProvider')
-            ->setConstructorArgs(array(
+            ->setConstructorArgs([
                 'languageISO' => $this->translator,
                 'logger' => $this->logger,
                 'addonsDataProvider' => $this->addonsDataProviderS,
                 'categoriesProvider' => $this->categoriesProviderS,
                 'moduleDataProvider' => $this->moduleDataProviderS,
                 'cacheProvider' => $this->cacheProviderS,
-            ))
-            ->setMethods(array('convertJsonForNewCatalog'))
+            ])
+            ->setMethods(['convertJsonForNewCatalog'])
             ->getMock();
 
         $mock->clearCatalogCache();

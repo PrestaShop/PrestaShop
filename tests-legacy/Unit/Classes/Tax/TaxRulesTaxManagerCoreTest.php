@@ -35,18 +35,18 @@ use TaxRulesTaxManager;
 
 class TaxRulesTaxManagerCoreTest extends UnitTestCase
 {
-    private $tax_rows = array(
-        array(
+    private $tax_rows = [
+        [
             'id_tax' => 1,
             'behavior' => TaxCalculator::COMBINE_METHOD,
             'rate' => 20.6,
-        ),
-        array(
+        ],
+        [
             'id_tax' => 2,
             'behavior' => TaxCalculator::ONE_AFTER_ANOTHER_METHOD,
             'rate' => 5.5,
-        ),
-    );
+        ],
+    ];
 
     public function testGetTaxCalculatorShouldUseFirstComputationMethodFromTaxes()
     {
@@ -60,9 +60,9 @@ class TaxRulesTaxManagerCoreTest extends UnitTestCase
             $this->entity_mapper->willReturn($tax)->forId($tax->id);
         }
 
-        $fake_configuration = $this->setConfiguration(array(
+        $fake_configuration = $this->setConfiguration([
             'PS_TAX' => 1,
-        ));
+        ]);
 
         $tax_rules_tax_manager = new TaxRulesTaxManager(new Address(), null, $fake_configuration);
 

@@ -26,10 +26,10 @@
 
 namespace LegacyTests\Integration\classes;
 
-use LegacyTests\TestCase\IntegrationTestCase;
 use Access;
 use Db;
 use Language;
+use LegacyTests\TestCase\IntegrationTestCase;
 use Tab;
 
 class AccessTest extends IntegrationTestCase
@@ -47,7 +47,7 @@ class AccessTest extends IntegrationTestCase
     private $routeNameTabChild;
 
     /**
-     * @inheritDoc
+     * {@inheritDoc}
      */
     protected function setUp()
     {
@@ -56,7 +56,7 @@ class AccessTest extends IntegrationTestCase
     }
 
     /**
-     * @inheritDoc
+     * {@inheritDoc}
      */
     protected function tearDown()
     {
@@ -112,7 +112,7 @@ class AccessTest extends IntegrationTestCase
         $this->classNameTab = new Tab();
         $this->classNameTab->active = 1;
         $this->classNameTab->class_name = 'AdminClassNameTest';
-        $this->classNameTab->name = array();
+        $this->classNameTab->name = [];
         foreach (Language::getLanguages(true) as $lang) {
             $this->classNameTab->name[$lang['id_lang']] = 'Class name tab';
         }
@@ -124,7 +124,7 @@ class AccessTest extends IntegrationTestCase
         $this->routeNameTab->active = 1;
         $this->routeNameTab->class_name = 'AdminClassNameTest';
         $this->routeNameTab->route_name = 'admin_route_name_test';
-        $this->routeNameTab->name = array();
+        $this->routeNameTab->name = [];
         foreach (Language::getLanguages(true) as $lang) {
             $this->routeNameTab->name[$lang['id_lang']] = 'Route name tab';
         }
@@ -138,7 +138,7 @@ class AccessTest extends IntegrationTestCase
         $this->classNameTabChild = new Tab();
         $this->classNameTabChild->active = 1;
         $this->classNameTabChild->class_name = 'AdminClassNameTestChild';
-        $this->classNameTabChild->name = array();
+        $this->classNameTabChild->name = [];
         foreach (Language::getLanguages(true) as $lang) {
             $this->classNameTabChild->name[$lang['id_lang']] = 'Class name tab child';
         }
@@ -150,7 +150,7 @@ class AccessTest extends IntegrationTestCase
         $this->routeNameTabChild->active = 1;
         $this->routeNameTabChild->class_name = 'AdminClassNameTestChild';
         $this->routeNameTabChild->route_name = 'admin_route_name_test_child';
-        $this->routeNameTabChild->name = array();
+        $this->routeNameTabChild->name = [];
         foreach (Language::getLanguages(true) as $lang) {
             $this->routeNameTabChild->name[$lang['id_lang']] = 'Route name tab child';
         }

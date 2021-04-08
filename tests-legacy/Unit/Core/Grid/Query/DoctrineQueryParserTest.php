@@ -120,7 +120,7 @@ class DoctrineQueryParserTest extends TestCase
             'motivation' => null,
         ];
 
-        $expectedQuery = "SELECT tests FROM pierre_rambaud WHERE motivation IS NULL";
+        $expectedQuery = 'SELECT tests FROM pierre_rambaud WHERE motivation IS NULL';
 
         $this->assertSame($expectedQuery, $this->queryParser->parse($preparedQuery, $queryParameters));
     }
@@ -132,7 +132,7 @@ class DoctrineQueryParserTest extends TestCase
             'motivation' => false,
         ];
 
-        $expectedQuery = "SELECT tests FROM pierre_rambaud WHERE motivation = FALSE";
+        $expectedQuery = 'SELECT tests FROM pierre_rambaud WHERE motivation = FALSE';
 
         $this->assertSame($expectedQuery, $this->queryParser->parse($preparedQuery, $queryParameters));
 
@@ -141,7 +141,7 @@ class DoctrineQueryParserTest extends TestCase
             'energy' => true,
         ];
 
-        $expectedQuery2 = "SELECT tests FROM pierre_rambaud WHERE energy = TRUE";
+        $expectedQuery2 = 'SELECT tests FROM pierre_rambaud WHERE energy = TRUE';
 
         $this->assertSame($expectedQuery2, $this->queryParser->parse($preparedQuery2, $queryParameters2));
     }
@@ -166,7 +166,7 @@ class DoctrineQueryParserTest extends TestCase
             'id_product' => 2,
         ];
 
-        $expectedQuery = "SELECT * FROM product WHERE id_product = 2";
+        $expectedQuery = 'SELECT * FROM product WHERE id_product = 2';
 
         $this->assertSame($expectedQuery, $this->queryParser->parse($preparedQuery, $queryParameters));
 
@@ -175,7 +175,7 @@ class DoctrineQueryParserTest extends TestCase
             'price' => 3.99,
         ];
 
-        $expectedQuery = "SELECT * FROM product WHERE price = 3.99";
+        $expectedQuery = 'SELECT * FROM product WHERE price = 3.99';
 
         $this->assertSame($expectedQuery, $this->queryParser->parse($preparedQuery, $queryParameters));
     }

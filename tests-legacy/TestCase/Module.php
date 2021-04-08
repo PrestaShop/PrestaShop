@@ -26,7 +26,7 @@
 
 namespace LegacyTests\TestCase;
 
-define('_RESSOURCE_MODULE_DIR_', realpath(dirname(__FILE__).'/../resources/module/'));
+define('_RESSOURCE_MODULE_DIR_', realpath(dirname(__FILE__) . '/../resources/module/'));
 
 class Module
 {
@@ -37,8 +37,8 @@ class Module
      */
     public static function addModule($module_dir_name)
     {
-        if (is_dir(_RESSOURCE_MODULE_DIR_.'/'.$module_dir_name)) {
-            File::recurseCopy(_RESSOURCE_MODULE_DIR_.'/'.$module_dir_name, _PS_MODULE_DIR_.'/'.$module_dir_name);
+        if (is_dir(_RESSOURCE_MODULE_DIR_ . '/' . $module_dir_name)) {
+            File::recurseCopy(_RESSOURCE_MODULE_DIR_ . '/' . $module_dir_name, _PS_MODULE_DIR_ . '/' . $module_dir_name);
 
             return true;
         }
@@ -53,8 +53,8 @@ class Module
      */
     public static function removeModule($module_dir_name)
     {
-        if (is_dir(_PS_MODULE_DIR_.'/'.$module_dir_name)) {
-            File::recurseDelete(_PS_MODULE_DIR_.'/'.$module_dir_name);
+        if (is_dir(_PS_MODULE_DIR_ . '/' . $module_dir_name)) {
+            File::recurseDelete(_PS_MODULE_DIR_ . '/' . $module_dir_name);
 
             return true;
         }

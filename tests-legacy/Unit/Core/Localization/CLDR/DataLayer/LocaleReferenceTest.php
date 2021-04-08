@@ -27,9 +27,9 @@
 namespace LegacyTests\Unit\Core\Localization\CLDR\DataLayer;
 
 use PHPUnit\Framework\TestCase;
+use PrestaShop\PrestaShop\Core\Localization\CLDR\DataLayer\LocaleReference as CldrLocaleReferenceDataLayer;
 use PrestaShop\PrestaShop\Core\Localization\CLDR\LocaleData as CldrLocaleData;
 use PrestaShop\PrestaShop\Core\Localization\CLDR\ReaderInterface;
-use PrestaShop\PrestaShop\Core\Localization\CLDR\DataLayer\LocaleReference as CldrLocaleReferenceDataLayer;
 
 class LocaleReferenceTest extends TestCase
 {
@@ -44,7 +44,7 @@ class LocaleReferenceTest extends TestCase
 
     protected function setUp()
     {
-        $this->stubLocaleData      = new CldrLocaleData();
+        $this->stubLocaleData = new CldrLocaleData();
         $this->stubLocaleData->foo = ['bar', 'baz'];
 
         $fakeReader = $this->getMockBuilder(ReaderInterface::class)
@@ -56,7 +56,7 @@ class LocaleReferenceTest extends TestCase
                 ['un-KNOWN', null], // Simulates an unknown locale
             ]);
 
-        /** @var ReaderInterface $fakeReader */
+        /* @var ReaderInterface $fakeReader */
         $this->layer = new CldrLocaleReferenceDataLayer($fakeReader);
     }
 
@@ -69,7 +69,7 @@ class LocaleReferenceTest extends TestCase
     {
         /** @noinspection PhpUnhandledExceptionInspection */
         $cldrLocaleData = $this->layer->read('fr-FR');
-        /** @noinspection end */
+        /* @noinspection end */
 
         $this->assertInstanceOf(
             CldrLocaleData::class,
@@ -83,7 +83,7 @@ class LocaleReferenceTest extends TestCase
 
         /** @noinspection PhpUnhandledExceptionInspection */
         $cldrLocaleData = $this->layer->read('un-KNOWN');
-        /** @noinspection end */
+        /* @noinspection end */
 
         $this->assertNull($cldrLocaleData);
     }
