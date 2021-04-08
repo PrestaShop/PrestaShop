@@ -1379,6 +1379,7 @@ services:
             - '@prestashop.core.form.choice_provider.out_of_stock_type_choice_provider'
             - '@prestashop.core.form.choice_provider.pack_stock_type_choice_provider'
             - '@router'
+            - "@=service('prestashop.adapter.legacy.configuration').getBoolean('PS_STOCK_MANAGEMENT')"
         tags:
             - { name: form.type }
 
@@ -1465,6 +1466,7 @@ services:
         public: true
         arguments:
             - '@router'
+            - "@=service('prestashop.adapter.legacy.configuration').getBoolean('PS_STOCK_MANAGEMENT')"
         tags:
             - { name: form.type }
 

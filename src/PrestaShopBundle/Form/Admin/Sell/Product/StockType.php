@@ -60,23 +60,31 @@ class StockType extends TranslatorAwareType
     private $router;
 
     /**
+     * @var bool
+     */
+    private $stockManagementEnabled;
+
+    /**
      * @param TranslatorInterface $translator
      * @param array $locales
      * @param FormChoiceProviderInterface $outOfStockTypeChoiceProvider
      * @param FormChoiceProviderInterface $packStockTypeChoiceProvider
      * @param RouterInterface $router
+     * @param bool $stockManagementEnabled
      */
     public function __construct(
         TranslatorInterface $translator,
         array $locales,
         FormChoiceProviderInterface $outOfStockTypeChoiceProvider,
         FormChoiceProviderInterface $packStockTypeChoiceProvider,
-        RouterInterface $router
+        RouterInterface $router,
+        bool $stockManagementEnabled
     ) {
         parent::__construct($translator, $locales);
         $this->outOfStockTypeChoiceProvider = $outOfStockTypeChoiceProvider;
         $this->packStockTypeChoiceProvider = $packStockTypeChoiceProvider;
         $this->router = $router;
+        $this->stockManagementEnabled = $stockManagementEnabled;
     }
 
     /**
@@ -84,15 +92,20 @@ class StockType extends TranslatorAwareType
      */
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
+        if ($this->stockManagementEnabled) {
+            $builder
+                ->add('quantity', NumberType::class, [
+                    'required' => false,
+                    'label' => $this->trans('Quantity', 'Admin.Catalog.Feature'),
+                    'constraints' => [
+                        new NotBlank(),
+                        new Type(['type' => 'numeric']),
+                    ],
+                ])
+            ;
+        }
+
         $builder
-            ->add('quantity', NumberType::class, [
-                'required' => false,
-                'label' => $this->trans('Quantity', 'Admin.Catalog.Feature'),
-                'constraints' => [
-                    new NotBlank(),
-                    new Type(['type' => 'numeric']),
-                ],
-            ])
             ->add('minimal_quantity', NumberType::class, [
                 'label' => $this->trans('Minimum quantity for sale', 'Admin.Catalog.Feature'),
                 'constraints' => [
