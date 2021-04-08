@@ -159,7 +159,7 @@ class ControllerTest extends TestCase
             define('_PS_TAB_MODULE_LIST_URL_', '');
         }
         if (!defined('_DB_SERVER_')) {
-            define('_DB_SERVER_', 'localhost');
+            define('_DB_SERVER_', $configuration['parameters']['database_host']);
         }
         if (!defined('_DB_USER_')) {
             define('_DB_USER_', $configuration['parameters']['database_user']);
@@ -171,7 +171,7 @@ class ControllerTest extends TestCase
             define('_DB_NAME_', 'test_' . $configuration['parameters']['database_name']);
         }
         if (!defined('_DB_PREFIX_')) {
-            define('_DB_PREFIX_', $configuration['parameters']['database_prefix']);
+            define('_DB_PREFIX_', 'test_' .$configuration['parameters']['database_prefix']);
         }
         if (!defined('_COOKIE_KEY_')) {
             define('_COOKIE_KEY_', Tools::passwdGen(64));
