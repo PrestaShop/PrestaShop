@@ -26,7 +26,7 @@
 <div role="tabpanel" class="form-contenttab tab-pane container-fluid" id="combinations-tab">
   <div id="combinations_filters" data-product-id="{{ productId }}"></div>
 
-  {{ render(controller('PrestaShopBundle:Admin\\Sell\\Catalog\\Product\\Combination:listForm', {
+  {{ render(controller('PrestaShopBundle:Admin\\Sell\\Catalog\\Product\\Combination:paginatedList', {
     'productId': productId,
   })) }}
 
