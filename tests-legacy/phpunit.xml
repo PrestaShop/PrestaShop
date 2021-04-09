@@ -1,5 +1,4 @@
 <phpunit bootstrap="bootstrap.php"
-         stopOnFailure="true"
          convertErrorsToExceptions="true"
          convertNoticesToExceptions="true"
          convertWarningsToExceptions="true"
