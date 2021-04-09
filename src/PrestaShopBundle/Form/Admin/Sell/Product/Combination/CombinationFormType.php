@@ -57,6 +57,12 @@ class CombinationFormType extends TranslatorAwareType
                     'title' => 'h2',
                 ],
             ])
+            ->add('details', CombinationDetailsType::class, [
+                'label' => $this->trans('Specific references', 'Admin.Catalog.Feature'),
+                'label_attr' => [
+                    'title' => 'h2',
+                ],
+            ])
         ;
     }
 }
