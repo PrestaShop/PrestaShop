@@ -28,6 +28,7 @@ namespace PrestaShopBundle\Kernel;
 
 use Doctrine\DBAL\DriverManager;
 use PrestaShop\PrestaShop\Adapter\Environment;
+use PrestaShop\PrestaShop\Adapter\LegacyContext;
 
 /**
  * Class ModuleRepositoryFactory is used to build the ModuleRepository in context where symfony container is not
@@ -98,7 +99,8 @@ class ModuleRepositoryFactory
             $databasePrefix = $parameters['database_prefix'];
             $this->moduleRepository = new ModuleRepository(
                 $this->getConnection($parameters),
-                $databasePrefix
+                $databasePrefix,
+                new LegacyContext()
             );
         }
 
