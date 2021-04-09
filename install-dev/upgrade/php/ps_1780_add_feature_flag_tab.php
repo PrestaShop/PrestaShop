@@ -35,6 +35,9 @@ function ps_1780_add_feature_flag_tab()
     if (empty($result)) {
         return;
     }
+    if (empty($result[0]['id_tab'])) {
+        return;
+    }
     $advancedParametersTabId = (int) $result[0]['id_tab'];
 
     include_once _PS_INSTALL_PATH_.'upgrade/php/add_new_tab.php';
