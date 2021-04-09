@@ -24,21 +24,20 @@
  */
 
 export default {
-  productModelUpdated: 'productModelUpdated',
-  updatedProductModel: 'updatedProductModel',
-  updatedProductField: 'updatedProductField',
-  updateSubmitButtonState: 'updateSubmitButtonState',
-  customizations: {
-    rowRemoved: 'customizationRowRemoved',
-    rowAdded: 'customizationRowAdded',
-  },
-  dropzone: {
-    addedFile: 'addedfile',
-    error: 'error',
-    success: 'success',
-    languageSelected: 'languageSelected',
-  },
-  combinations: {
-    refreshList: 'refreshCombinationList',
-  },
+  'product.stock.quantity': [
+    'product[stock][quantity]',
+    'product[shortcuts][stock][quantity]',
+  ],
+  'product.price.priceTaxExcluded': [
+    'product[price][price_tax_excluded]',
+    'product[shortcuts][price][price_tax_excluded]',
+  ],
+  'product.price.priceTaxIncluded': [
+    'product[price][price_tax_included]',
+    'product[shortcuts][price][price_tax_included]',
+  ],
+  'product.price.taxRulesGroupId': [
+    'product[price][tax_rules_group_id]',
+    'product[shortcuts][price][tax_rules_group_id]',
+  ],
 };

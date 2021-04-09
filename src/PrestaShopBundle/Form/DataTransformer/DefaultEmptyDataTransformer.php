@@ -49,7 +49,7 @@ use Symfony\Component\Form\DataTransformerInterface;
  * on model instead:
  *
  * $builder->add('price', MoneyType::class);
- * $builder->get('price')->addViewTransformer(new EmptyDataTransformer(0));
+ * $builder->get('price')->addModelTransformer(new EmptyDataTransformer(0));
  *
  * This way the input will display 0.00000 in your form (depending on the `scale` you set).
  *
