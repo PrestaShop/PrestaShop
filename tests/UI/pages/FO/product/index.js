@@ -254,7 +254,7 @@ class Product extends FOBasePage {
    * @param socialSharing
    * @returns {Promise<void>}
    */
-  async goToSocialSharingLink(page, socialSharing) {
+  async getSocialSharingLink(page, socialSharing) {
     let selector;
     switch (socialSharing) {
       case 'Facebook':
@@ -273,7 +273,7 @@ class Product extends FOBasePage {
         throw new Error(`${socialSharing} was not found`);
     }
 
-    return this.openLinkWithTargetBlank(page, selector, 'body');
+    return this.getAttributeContent(page, selector, 'href');
   }
 
   /**

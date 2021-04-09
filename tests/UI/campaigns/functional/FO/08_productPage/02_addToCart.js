@@ -294,16 +294,45 @@ describe('Add product to cart', async () => {
 
   // 4 - Check share links from product page
   describe('Check share links from product page', async () => {
-    ['Facebook', 'Twitter', 'Pinterest'].forEach((test) => {
-      it(`should check share link of '${test}'`, async function () {
+    const tests = [
+      {
+        args:
+          {
+            name: 'Facebook',
+          },
+        result:
+          {
+            url: 'https://www.facebook.com/',
+          },
+      },
+      {
+        args:
+          {
+            name: 'Twitter',
+          },
+        result:
+          {
+            url: 'https://twitter.com/',
+          },
+      },
+      {
+        args:
+          {
+            name: 'Pinterest',
+          },
+        result:
+          {
+            url: 'https://www.pinterest.com/',
+          },
+      },
+    ];
+
+    tests.forEach((test) => {
+      it(`should check share link of '${test.args.name}'`, async function () {
         await testContext.addContextItem(this, 'testIdentifier', `checkShareLink${test}`, baseContext);
 
-        page = await productPage.goToSocialSharingLink(page, test);
-
-        const url = await productPage.getCurrentURL(page);
-        await expect(url).to.contains(test.toLowerCase());
-
-        page = await productPage.closePage(browserContext, page, 0);
+        const url = await productPage.getSocialSharingLink(page, test.args.name);
+        await expect(url).to.contain(test.result.url);
       });
     });
   });
