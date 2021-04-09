@@ -27,6 +27,7 @@
 namespace PrestaShopBundle\Kernel;
 
 use Doctrine\DBAL\Connection;
+use PrestaShop\PrestaShop\Adapter\LegacyContext;
 use Symfony\Component\Finder\Finder;
 
 /**
@@ -55,8 +56,14 @@ final class ModuleRepository
      */
     private $activeModulesPaths;
 
-    public function __construct(Connection $connection, $databasePrefix)
+    /**
+     * @var Context
+     */
+    private $context;
+
+    public function __construct(Connection $connection, $databasePrefix, LegacyContext $context)
     {
+        $this->context = $context->getContext();
         $this->connection = $connection;
         $this->tableName = $databasePrefix . 'module';
     }
@@ -67,7 +74,12 @@ final class ModuleRepository
     public function getActiveModules()
     {
         if (null === $this->activeModules) {
-            $sth = $this->connection->query('SELECT name FROM ' . $this->tableName . ' WHERE active = 1');
+            $id_shops = $this->context->shop->getContextListShopID();
+
+            $sth = $this->connection->query('SELECT m.`name`
+                    FROM `' . $this->tableName . '` m
+                    LEFT JOIN `' . $this->tableName . '_shop` ms ON m.`id_module` = ms.`id_module`
+                    WHERE ms.`id_shop` IN (' . implode(',', array_map('intval', $id_shops)) . ')');
 
             $this->activeModules = $sth->fetchAll(\PDO::FETCH_COLUMN);
         }
