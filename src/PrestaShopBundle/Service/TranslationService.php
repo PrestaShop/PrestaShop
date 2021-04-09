@@ -197,7 +197,7 @@ class TranslationService
             $providerDefinition = new ModuleProviderDefinition($module);
         } elseif (
             !empty($theme)
-            // Default theme is not considered like other themes because his translations are within the Core
+            // Default theme is not considered like other themes because its translations belong to the Core
             && ThemeProviderDefinition::DEFAULT_THEME_NAME !== $theme
         ) {
             $providerDefinition = new ThemeProviderDefinition($theme);

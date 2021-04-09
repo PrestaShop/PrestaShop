@@ -38,6 +38,7 @@ use Symfony\Component\Translation\TranslatorInterface;
  */
 class ModifyTranslationsType extends TranslatorAwareType
 {
+    public const CORE_TRANSLATIONS_CHOICE_INDEX = '0';
     /**
      * @var array
      */
@@ -125,7 +126,7 @@ class ModifyTranslationsType extends TranslatorAwareType
                 'row_attr' => [
                     'class' => 'js-theme-form-group d-none',
                 ],
-                'choices' => [$noTheme => 0] + $this->themeChoices,
+                'choices' => [$noTheme => self::CORE_TRANSLATIONS_CHOICE_INDEX] + $this->themeChoices,
                 'choice_attr' => $themeChoiceAttributes,
                 'choice_translation_domain' => false,
             ])
