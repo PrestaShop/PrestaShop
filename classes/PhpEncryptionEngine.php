@@ -139,15 +139,6 @@ class PhpEncryptionEngineCore
             return $buf;
         }
 
-        $buf = @mcrypt_create_iv($bytes, MCRYPT_DEV_URANDOM);
-        if (
-            $buf !== false
-            &&
-            RandomCompat_strlen($buf) === $bytes
-        ) {
-            return $buf;
-        }
-
         throw new Exception('Could not gather sufficient random data');
     }
 

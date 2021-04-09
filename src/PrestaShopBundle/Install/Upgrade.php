@@ -36,13 +36,6 @@ namespace {
         }
     }
 
-    if (!class_exists('PhpEncryptionLegacyEngine')) {
-        require_once $root_dir . '/classes/PhpEncryptionLegacyEngine.php';
-        class PhpEncryptionLegacyEngine extends \PhpEncryptionLegacyEngineCore
-        {
-        }
-    }
-
     if (!class_exists('PhpEncryption')) {
         require_once $root_dir . '/classes/PhpEncryption.php';
         class PhpEncryption extends \PhpEncryptionCore
