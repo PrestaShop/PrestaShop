@@ -196,7 +196,7 @@ describe('Install Prestashop', async () => {
     it(`should installation step '${test.args.step.name}' be finished`, async function () {
       await testContext.addContextItem(this, 'testIdentifier', `CheckStep${index}`, baseContext);
 
-      const stepFinished = await installPage.IsInstallationStepFinished(
+      const stepFinished = await installPage.isInstallationStepFinished(
         page,
         test.args.step.name,
         test.args.step.timeout,

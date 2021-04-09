@@ -194,7 +194,7 @@ class Install extends CommonPage {
    * @param timeout
    * @returns {Promise<boolean>}
    */
-  async IsInstallationStepFinished(page, step, timeout = 30000) {
+  async isInstallationStepFinished(page, step, timeout = 30000) {
     let selector;
 
     switch (step) {
