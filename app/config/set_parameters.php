@@ -51,6 +51,7 @@ if (!defined('_PS_IN_TEST_') && \Tools::isPHPCLI()) {
 
 if (defined('_PS_IN_TEST_') && _PS_IN_TEST_) {
     $parameters['parameters']['database_name'] = 'test_' . $parameters['parameters']['database_name'];
+    $parameters['parameters']['database_prefix'] = 't_' . $parameters['parameters']['database_prefix'];
 }
 
 if (isset($container) && $container instanceof \Symfony\Component\DependencyInjection\Container) {
