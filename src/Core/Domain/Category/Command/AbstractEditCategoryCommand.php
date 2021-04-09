@@ -24,6 +24,8 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
 
+declare(strict_types=1);
+
 namespace PrestaShop\PrestaShop\Core\Domain\Category\Command;
 
 use PrestaShop\PrestaShop\Core\Domain\Category\Exception\CategoryConstraintException;
@@ -87,7 +89,7 @@ class AbstractEditCategoryCommand
     /**
      * @param int $categoryId
      */
-    public function __construct($categoryId)
+    public function __construct(int $categoryId)
     {
         $this->categoryId = new CategoryId($categoryId);
     }
@@ -95,7 +97,7 @@ class AbstractEditCategoryCommand
     /**
      * @return CategoryId
      */
-    public function getCategoryId()
+    public function getCategoryId(): CategoryId
     {
         return $this->categoryId;
     }
@@ -103,7 +105,7 @@ class AbstractEditCategoryCommand
     /**
      * @return string[]
      */
-    public function getLocalizedNames()
+    public function getLocalizedNames(): array
     {
         return $this->localizedNames;
     }
@@ -115,7 +117,7 @@ class AbstractEditCategoryCommand
      *
      * @throws CategoryConstraintException
      */
-    public function setLocalizedNames(array $localizedNames)
+    public function setLocalizedNames(array $localizedNames): self
     {
         if (empty($localizedNames)) {
             throw new CategoryConstraintException('Category name cannot be empty', CategoryConstraintException::EMPTY_NAME);
@@ -129,7 +131,7 @@ class AbstractEditCategoryCommand
     /**
      * @return string[]
      */
-    public function getLocalizedLinkRewrites()
+    public function getLocalizedLinkRewrites(): array
     {
         return $this->localizedLinkRewrites;
     }
@@ -141,7 +143,7 @@ class AbstractEditCategoryCommand
      *
      * @throws CategoryConstraintException
      */
-    public function setLocalizedLinkRewrites(array $localizedLinkRewrites)
+    public function setLocalizedLinkRewrites(array $localizedLinkRewrites): self
     {
         if (empty($localizedLinkRewrites)) {
             throw new CategoryConstraintException('Category link rewrite cannot be empty', CategoryConstraintException::EMPTY_LINK_REWRITE);
@@ -155,7 +157,7 @@ class AbstractEditCategoryCommand
     /**
      * @return string[]
      */
-    public function getLocalizedDescriptions()
+    public function getLocalizedDescriptions(): array
     {
         return $this->localizedDescriptions;
     }
@@ -165,7 +167,7 @@ class AbstractEditCategoryCommand
      *
      * @return $this
      */
-    public function setLocalizedDescriptions(array $localizedDescriptions)
+    public function setLocalizedDescriptions(array $localizedDescriptions): self
     {
         $this->localizedDescriptions = $localizedDescriptions;
 
@@ -175,7 +177,7 @@ class AbstractEditCategoryCommand
     /**
      * @return bool
      */
-    public function isActive()
+    public function isActive(): bool
     {
         return $this->isActive;
     }
@@ -187,7 +189,7 @@ class AbstractEditCategoryCommand
      *
      * @throws CategoryConstraintException
      */
-    public function setIsActive($isActive)
+    public function setIsActive(bool $isActive): self
     {
         if (!is_bool($isActive)) {
             throw new CategoryConstraintException('Invalid Category status supplied', CategoryConstraintException::INVALID_STATUS);
@@ -201,7 +203,7 @@ class AbstractEditCategoryCommand
     /**
      * @return string[]
      */
-    public function getLocalizedMetaTitles()
+    public function getLocalizedMetaTitles(): array
     {
         return $this->localizedMetaTitles;
     }
@@ -211,7 +213,7 @@ class AbstractEditCategoryCommand
      *
      * @return $this
      */
-    public function setLocalizedMetaTitles(array $localizedMetaTitles)
+    public function setLocalizedMetaTitles(array $localizedMetaTitles): self
     {
         $this->localizedMetaTitles = $localizedMetaTitles;
 
@@ -221,7 +223,7 @@ class AbstractEditCategoryCommand
     /**
      * @return string[]
      */
-    public function getLocalizedMetaDescriptions()
+    public function getLocalizedMetaDescriptions(): array
     {
         return $this->localizedMetaDescriptions;
     }
@@ -231,7 +233,7 @@ class AbstractEditCategoryCommand
      *
      * @return $this
      */
-    public function setLocalizedMetaDescriptions(array $localizedMetaDescriptions)
+    public function setLocalizedMetaDescriptions(array $localizedMetaDescriptions): self
     {
         $this->localizedMetaDescriptions = $localizedMetaDescriptions;
 
@@ -241,7 +243,7 @@ class AbstractEditCategoryCommand
     /**
      * @return string[]
      */
-    public function getLocalizedMetaKeywords()
+    public function getLocalizedMetaKeywords(): array
     {
         return $this->localizedMetaKeywords;
     }
@@ -251,7 +253,7 @@ class AbstractEditCategoryCommand
      *
      * @return $this
      */
-    public function setLocalizedMetaKeywords(array $localizedMetaKeywords)
+    public function setLocalizedMetaKeywords(array $localizedMetaKeywords): self
     {
         $this->localizedMetaKeywords = $localizedMetaKeywords;
 
@@ -261,7 +263,7 @@ class AbstractEditCategoryCommand
     /**
      * @return int[]
      */
-    public function getAssociatedGroupIds()
+    public function getAssociatedGroupIds(): array
     {
         return $this->associatedGroupIds;
     }
@@ -271,7 +273,7 @@ class AbstractEditCategoryCommand
      *
      * @return $this
      */
-    public function setAssociatedGroupIds(array $associatedGroupIds)
+    public function setAssociatedGroupIds(array $associatedGroupIds): self
     {
         $this->associatedGroupIds = $associatedGroupIds;
 
@@ -281,7 +283,7 @@ class AbstractEditCategoryCommand
     /**
      * @return int[]
      */
-    public function getAssociatedShopIds()
+    public function getAssociatedShopIds(): array
     {
         return $this->associatedShopIds;
     }
@@ -291,7 +293,7 @@ class AbstractEditCategoryCommand
      *
      * @return $this
      */
-    public function setAssociatedShopIds(array $associatedShopIds)
+    public function setAssociatedShopIds(array $associatedShopIds): self
     {
         $this->associatedShopIds = $associatedShopIds;
 

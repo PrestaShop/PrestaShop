@@ -96,7 +96,7 @@ class AbstractAddCategoryCommand
     /**
      * @return string[]
      */
-    public function getLocalizedNames()
+    public function getLocalizedNames(): array
     {
         return $this->localizedNames;
     }
@@ -108,7 +108,7 @@ class AbstractAddCategoryCommand
      *
      * @throws CategoryConstraintException
      */
-    public function setLocalizedNames(array $localizedNames)
+    public function setLocalizedNames(array $localizedNames): self
     {
         if (empty($localizedNames)) {
             throw new CategoryConstraintException('Category name cannot be empty', CategoryConstraintException::EMPTY_NAME);
@@ -122,7 +122,7 @@ class AbstractAddCategoryCommand
     /**
      * @return string[]
      */
-    public function getLocalizedLinkRewrites()
+    public function getLocalizedLinkRewrites(): array
     {
         return $this->localizedLinkRewrites;
     }
@@ -134,7 +134,7 @@ class AbstractAddCategoryCommand
      *
      * @throws CategoryConstraintException
      */
-    public function setLocalizedLinkRewrites(array $localizedLinkRewrites)
+    public function setLocalizedLinkRewrites(array $localizedLinkRewrites): self
     {
         if (empty($localizedLinkRewrites)) {
             throw new CategoryConstraintException('Category link rewrite cannot be empty', CategoryConstraintException::EMPTY_LINK_REWRITE);
@@ -148,7 +148,7 @@ class AbstractAddCategoryCommand
     /**
      * @return string[]
      */
-    public function getLocalizedDescriptions()
+    public function getLocalizedDescriptions(): array
     {
         return $this->localizedDescriptions;
     }
@@ -158,7 +158,7 @@ class AbstractAddCategoryCommand
      *
      * @return $this
      */
-    public function setLocalizedDescriptions(array $localizedDescriptions)
+    public function setLocalizedDescriptions(array $localizedDescriptions): self
     {
         $this->localizedDescriptions = $localizedDescriptions;
 
@@ -168,7 +168,7 @@ class AbstractAddCategoryCommand
     /**
      * @return bool
      */
-    public function isActive()
+    public function isActive(): bool
     {
         return $this->isActive;
     }
@@ -180,7 +180,7 @@ class AbstractAddCategoryCommand
      *
      * @throws CategoryConstraintException
      */
-    public function setIsActive($isActive)
+    public function setIsActive(bool $isActive): self
     {
         if (!is_bool($isActive)) {
             throw new CategoryConstraintException('Invalid Category status supplied', CategoryConstraintException::INVALID_STATUS);
@@ -194,7 +194,7 @@ class AbstractAddCategoryCommand
     /**
      * @return string[]
      */
-    public function getLocalizedMetaTitles()
+    public function getLocalizedMetaTitles(): array
     {
         return $this->localizedMetaTitles;
     }
@@ -204,7 +204,7 @@ class AbstractAddCategoryCommand
      *
      * @return $this
      */
-    public function setLocalizedMetaTitles(array $localizedMetaTitles)
+    public function setLocalizedMetaTitles(array $localizedMetaTitles): self
     {
         $this->localizedMetaTitles = $localizedMetaTitles;
 
@@ -214,7 +214,7 @@ class AbstractAddCategoryCommand
     /**
      * @return string[]
      */
-    public function getLocalizedMetaDescriptions()
+    public function getLocalizedMetaDescriptions(): array
     {
         return $this->localizedMetaDescriptions;
     }
@@ -224,7 +224,7 @@ class AbstractAddCategoryCommand
      *
      * @return $this
      */
-    public function setLocalizedMetaDescriptions(array $localizedMetaDescriptions)
+    public function setLocalizedMetaDescriptions(array $localizedMetaDescriptions): self
     {
         $this->localizedMetaDescriptions = $localizedMetaDescriptions;
 
@@ -234,7 +234,7 @@ class AbstractAddCategoryCommand
     /**
      * @return string[]
      */
-    public function getLocalizedMetaKeywords()
+    public function getLocalizedMetaKeywords(): array
     {
         return $this->localizedMetaKeywords;
     }
@@ -244,7 +244,7 @@ class AbstractAddCategoryCommand
      *
      * @return $this
      */
-    public function setLocalizedMetaKeywords(array $localizedMetaKeywords)
+    public function setLocalizedMetaKeywords(array $localizedMetaKeywords): self
     {
         $this->localizedMetaKeywords = $localizedMetaKeywords;
 
@@ -254,7 +254,7 @@ class AbstractAddCategoryCommand
     /**
      * @return int[]
      */
-    public function getAssociatedGroupIds()
+    public function getAssociatedGroupIds(): array
     {
         return $this->associatedGroupIds;
     }
@@ -264,7 +264,7 @@ class AbstractAddCategoryCommand
      *
      * @return $this
      */
-    public function setAssociatedGroupIds(array $associatedGroupIds)
+    public function setAssociatedGroupIds(array $associatedGroupIds): self
     {
         $this->associatedGroupIds = $associatedGroupIds;
 
@@ -274,7 +274,7 @@ class AbstractAddCategoryCommand
     /**
      * @return int[]
      */
-    public function getAssociatedShopIds()
+    public function getAssociatedShopIds(): array
     {
         return $this->associatedShopIds;
     }
@@ -284,7 +284,7 @@ class AbstractAddCategoryCommand
      *
      * @return $this
      */
-    public function setAssociatedShopIds(array $associatedShopIds)
+    public function setAssociatedShopIds(array $associatedShopIds): self
     {
         $this->associatedShopIds = $associatedShopIds;
 
