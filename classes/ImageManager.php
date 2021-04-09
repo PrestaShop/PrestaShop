@@ -44,15 +44,8 @@ class ImageManagerCore
         'image/png',
         'image/x-png',
         'image/webp',
-    ];
-
-    public const EXTENSIONS_SUPPORTED = [
-        'gif',
-        'jpg',
-        'jpeg',
-        'jpe',
-        'png',
-        'webp',
+        'image/svg+xml',
+        'image/svg',
     ];
 
     /**

@@ -29,6 +29,7 @@ namespace PrestaShop\PrestaShop\Core\Shop;
 use Configuration;
 use Context;
 use ImageManager;
+use PrestaShop\PrestaShop\Core\Domain\Shop\DTO\ShopLogoSettings;
 use PrestaShopException;
 use Shop;
 use Tools;
@@ -101,7 +102,7 @@ class LogoUploader
         $files = empty($files) ? $_FILES : $files;
 
         if (isset($files[$fieldName]['tmp_name'], $files[$fieldName]['tmp_name'], $files[$fieldName]['size'])) {
-            if ($error = ImageManager::validateUpload($files[$fieldName], Tools::getMaxUploadSize())) {
+            if ($error = ImageManager::validateUpload($files[$fieldName], Tools::getMaxUploadSize(), ShopLogoSettings::AVAILABLE_LOGO_IMAGE_EXTENSIONS)) {
                 throw new PrestaShopException($error);
             }
             $tmpName = tempnam(_PS_TMP_IMG_DIR_, 'PS');
@@ -111,6 +112,9 @@ class LogoUploader
             }
 
             $fileExtension = ($fieldName == 'PS_STORES_ICON') ? '.gif' : '.jpg';
+            if (in_array($files[$fieldName]['type'], ['image/svg+xml', 'image/svg'])) {
+                $fileExtension = '.svg';
+            }
             $logoName = $this->getLogoName($logoPrefix, $fileExtension);
 
             if ($fieldName == 'PS_STORES_ICON') {
@@ -118,7 +122,11 @@ class LogoUploader
                     throw new PrestaShopException(sprintf('An error occurred while attempting to copy shop icon %s.', $logoName));
                 }
             } else {
-                if (!@ImageManager::resize($tmpName, _PS_IMG_DIR_ . $logoName)) {
+                if (in_array($files[$fieldName]['type'], ['image/svg+xml', 'image/svg'])) {
+                    if (!copy($tmpName, _PS_IMG_DIR_ . $logoName)) {
+                        throw new PrestaShopException(sprintf('An error occurred while attempting to copy shop logo %s.', $logoName));
+                    }
+                } elseif (!@ImageManager::resize($tmpName, _PS_IMG_DIR_ . $logoName)) {
                     throw new PrestaShopException(sprintf('An error occurred while attempting to copy shop logo %s.', $logoName));
                 }
             }

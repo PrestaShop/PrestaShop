@@ -42,7 +42,7 @@ class ShopLogoSettings
     /**
      * @var array<int, string> List of available image mime types
      */
-    public const AVAILABLE_LOGO_IMAGE_EXTENSIONS = ['gif', 'jpg', 'jpeg', 'jpe', 'png', 'webp'];
+    public const AVAILABLE_LOGO_IMAGE_EXTENSIONS = ['gif', 'jpg', 'jpeg', 'jpe', 'png', 'webp', 'svg'];
 
     /**
      * @var string - a type used for icon images for shop logo
