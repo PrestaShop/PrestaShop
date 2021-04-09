@@ -89,14 +89,19 @@ class CombinationController extends FrameworkBundleAdminController
     }
 
     /**
-     * @AdminSecurity("is_granted('read', request.get('_legacy_controller'))")
+     * @AdminSecurity("is_granted('read', 'AdminProducts')")
+     *
+     * Note: role must be hard coded because there is no route associated to this action therefore not
+     * _legacy_controller request parameter.
      *
      * Renders combinations list prototype (which contains form inputs submittable by ajax)
-     * It can only be embedded into another view (does not have a route)
+     * It can only be embedded into another view (does not have a route), it is included in this template:
+     *
+     * src/PrestaShopBundle/Resources/views/Admin/Sell/Catalog/Product/Tabs/combinations.html.twig
      *
      * @return Response
      */
-    public function listFormAction(): Response
+    public function paginatedListAction(): Response
     {
         return $this->render('@PrestaShop/Admin/Sell/Catalog/Product/Blocks/combinations.html.twig', [
             'combinationLimitChoices' => self::COMBINATIONS_PAGINATION_OPTIONS,
