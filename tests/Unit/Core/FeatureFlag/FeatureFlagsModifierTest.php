@@ -91,9 +91,9 @@ class FeatureFlagsModifierTest extends TestCase
 
         $modifier->updateConfiguration($payload);
 
-        $this->assertFalse($featureFlags[0]->getState());
-        $this->assertTrue($featureFlags[1]->getState());
-        $this->assertFalse($featureFlags[2]->getState());
+        $this->assertFalse($featureFlags[0]->isEnabled());
+        $this->assertTrue($featureFlags[1]->isEnabled());
+        $this->assertFalse($featureFlags[2]->isEnabled());
     }
 
     public function testUpdateConfigurationWithEmptyPayload()
@@ -111,9 +111,9 @@ class FeatureFlagsModifierTest extends TestCase
 
         $modifier->updateConfiguration([]);
 
-        $this->assertFalse($featureFlags[0]->getState());
-        $this->assertFalse($featureFlags[1]->getState());
-        $this->assertTrue($featureFlags[2]->getState());
+        $this->assertFalse($featureFlags[0]->isEnabled());
+        $this->assertFalse($featureFlags[1]->isEnabled());
+        $this->assertTrue($featureFlags[2]->isEnabled());
     }
 
     public function testUpdateConfigurationWithBadlyTypedData()
