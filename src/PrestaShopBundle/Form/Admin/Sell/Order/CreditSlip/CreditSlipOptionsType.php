@@ -30,6 +30,7 @@ use PrestaShop\PrestaShop\Core\ConstraintValidator\Constraints\TypedRegex;
 use PrestaShopBundle\Form\Admin\Type\TranslatableType;
 use PrestaShopBundle\Form\Admin\Type\TranslatorAwareType;
 use Symfony\Component\Form\FormBuilderInterface;
+use PrestaShopBundle\Form\Admin\Type\SwitchType;
 
 /**
  * Backwards compatibility break introduced in 1.7.8.0 due to extension of TranslationAwareType instead of using translator as dependency.
@@ -63,7 +64,7 @@ final class CreditSlipOptionsType extends TranslatorAwareType
             ])
             ->add('slip_reset', SwitchType::class, [
                 'label' => $this->trans('Reset sequential invoice number at the beginning of the year', 'Admin.Orderscustomers.Feature'),
-                'help' => $this->trans('.', 'Admin.Orderscustomers.Help'),
+                'help' => $this->trans('Invoice number', 'Admin.Orderscustomers.Help'),
                 'required' => false,
             ]);
     }
