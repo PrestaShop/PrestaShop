@@ -55,7 +55,7 @@ export default class ProductFormModel {
 
     return {
       getProduct: () => this.getProduct(),
-    }
+    };
   }
 
   /**
