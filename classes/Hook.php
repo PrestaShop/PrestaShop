@@ -1136,6 +1136,7 @@ class HookCore extends ObjectModel
                             FROM `' . _DB_PREFIX_ . 'module_currency` mcr
                             WHERE mcr.`id_module` = m.`id_module`
                             AND `id_currency` IN (' . (int) $context->currency->id . ', -1, -2)
+                            AND `id_shop` = ' . (int) $shop->id . '
                             LIMIT 1
                         ) IN (' . (int) $context->currency->id . ', -1, -2))'
                 );
