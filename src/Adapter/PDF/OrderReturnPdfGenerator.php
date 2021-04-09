@@ -75,6 +75,6 @@ final class OrderReturnPdfGenerator implements PDFGeneratorInterface
         }
 
         $pdf = new PDF($orderReturn, PDF::TEMPLATE_ORDER_RETURN, Context::getContext()->smarty);
-        $pdf->render();
+        return $pdf->render(false);
     }
 }
