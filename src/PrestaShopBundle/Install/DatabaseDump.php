@@ -28,7 +28,6 @@
 namespace PrestaShopBundle\Install;
 
 use Exception;
-use Ifsnop\Mysqldump\Mysqldump;
 use PDO;
 
 class DatabaseDump
@@ -80,25 +79,6 @@ class DatabaseDump
             $this->password,
             [
                 PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION,
-            ]
-        );
-    }
-
-    private function createMysqldumper(): object
-    {
-        if (!class_exists(Mysqldump::class)) {
-            // "ifsnop/mysqldump-php" package is GNU GPL v3 licensed and thus
-            // must never be bundled. Install manually if required.
-            throw new Exception('"ifsnop/mysqldump-php" package not available');
-        }
-
-        return new Mysqldump(
-            $this->getPdoDsn(),
-            $this->user,
-            $this->password,
-            [
-                'add-drop-table' => true,
-                'no-autocommit' => false,
             ]
         );
     }
@@ -156,14 +136,10 @@ class DatabaseDump
      */
     public function dump(): void
     {
-        if (class_exists(Mysqldump::class)) {
-            $dumper = $this->createMysqldumper();
-            $dumper->start($this->dumpFile);
-        } else { // requires exec function enabled and system "mysqldump" binary available
-            $dumpCommand = $this->buildMySQLCommand('mysqldump', [$this->databaseName]);
-            $dumpCommand .= ' > ' . escapeshellarg($this->dumpFile) . ' 2> /dev/null';
-            $this->exec($dumpCommand);
-        }
+        // requires "exec" php function enabled and system "mysqldump" binary available
+        $dumpCommand = $this->buildMySQLCommand('mysqldump', [$this->databaseName]);
+        $dumpCommand .= ' > ' . escapeshellarg($this->dumpFile) . ' 2> /dev/null';
+        $this->exec($dumpCommand);
     }
 
     /**
