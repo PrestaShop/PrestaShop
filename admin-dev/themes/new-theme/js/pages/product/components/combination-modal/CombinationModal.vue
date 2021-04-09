@@ -253,7 +253,8 @@
         this.hasSubmittedCombinations = true;
         const selectedCombination = {
           id: this.selectedCombinationId,
-          title: iframeBody.querySelector('.card-header span').innerHTML,
+          title: iframeBody.querySelector(ProductMap.combinations.combinationName)
+            .innerHTML,
         };
 
         if (
