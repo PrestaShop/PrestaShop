@@ -88,6 +88,18 @@ class ModifyTranslationsType extends TranslatorAwareType
     {
         $noTheme = $this->trans('Core (no theme selected)', 'Admin.International.Feature');
 
+        $themeChoiceAttributes = [
+            $noTheme => [
+                'class' => 'js-no-theme',
+            ],
+        ];
+
+        if (isset($this->themeChoices[ThemeProviderDefinition::DEFAULT_THEME_NAME])) {
+            $themeChoiceAttributes[ThemeProviderDefinition::DEFAULT_THEME_NAME] = [
+                'class' => 'js-default-theme',
+            ];
+        }
+
         $builder
             ->add('translation_type', ChoiceType::class, [
                 'label' => $this->trans('Type of translation', 'Admin.International.Feature'),
@@ -113,12 +125,8 @@ class ModifyTranslationsType extends TranslatorAwareType
                 'row_attr' => [
                     'class' => 'js-theme-form-group d-none',
                 ],
-                'choices' => [$noTheme => 0] + $this->excludeDefaultThemeFromChoices($this->themeChoices),
-                'choice_attr' => [
-                    $noTheme => [
-                        'class' => 'js-no-theme',
-                    ],
-                ],
+                'choices' => [$noTheme => 0] + $this->themeChoices,
+                'choice_attr' => $themeChoiceAttributes,
                 'choice_translation_domain' => false,
             ])
             ->add('module', ChoiceType::class, [
@@ -140,17 +148,5 @@ class ModifyTranslationsType extends TranslatorAwareType
                 'choices' => $this->getLocaleChoices(),
                 'choice_translation_domain' => false,
             ]);
-    }
-
-    /**
-     * @param array $themeChoices
-     *
-     * @return array
-     */
-    private function excludeDefaultThemeFromChoices(array $themeChoices): array
-    {
-        unset($themeChoices[ThemeProviderDefinition::DEFAULT_THEME_NAME]);
-
-        return $themeChoices;
     }
 }

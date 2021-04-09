@@ -78,6 +78,7 @@ export default class FormFieldToggle {
     const $modulesFormGroup = $('.js-module-form-group');
     const $emailFormGroup = $('.js-email-form-group');
     const $themesFormGroup = $('.js-theme-form-group');
+    const $defaultThemeOption = $themesFormGroup.find('.js-default-theme');
 
     switch (selectedOption) {
       case back:
@@ -86,8 +87,8 @@ export default class FormFieldToggle {
         break;
 
       case themes:
-        this.hide($modulesFormGroup, $emailFormGroup);
         this.show($themesFormGroup);
+        this.hide($modulesFormGroup, $emailFormGroup, $defaultThemeOption);
         break;
 
       case modules:
@@ -118,12 +119,13 @@ export default class FormFieldToggle {
     const selectedEmailContentType = $('.js-email-form-group').find('select').val();
     const $themesFormGroup = $('.js-theme-form-group');
     const $noThemeOption = $themesFormGroup.find('.js-no-theme');
+    const $defaultThemeOption = $themesFormGroup.find('.js-default-theme');
 
     if (selectedEmailContentType === emailContentBody) {
       $noThemeOption.prop('selected', true);
-      this.show($noThemeOption, $themesFormGroup);
+      this.show($noThemeOption, $themesFormGroup, $defaultThemeOption);
     } else {
-      this.hide($noThemeOption, $themesFormGroup);
+      this.hide($noThemeOption, $themesFormGroup, $defaultThemeOption);
     }
   }
 
