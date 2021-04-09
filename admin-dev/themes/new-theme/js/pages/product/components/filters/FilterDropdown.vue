@@ -48,7 +48,7 @@
       >
         <div
           class="md-checkbox"
-          v-for="filter in childrens"
+          v-for="filter in children"
           :key="filter.id"
         >
           <label class="dropdown-item">
@@ -77,7 +77,7 @@
       };
     },
     props: {
-      childrens: {
+      children: {
         type: Array,
         required: true,
       },

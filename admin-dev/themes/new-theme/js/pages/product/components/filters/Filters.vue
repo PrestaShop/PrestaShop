@@ -33,7 +33,7 @@
       <filter-dropdown
         :key="filter.id"
         v-for="filter in filters"
-        :childrens="filter.childrens"
+        :children="filter.attributes"
         :label="filter.name"
         @addFilter="addFilter"
         @removeFilter="removeFilter"
@@ -51,8 +51,11 @@
 </template>
 
 <script>
-  import {getFilters} from '@pages/product/services/filters';
+  import {getProductAttributeGroups} from '@pages/product/services/attribute-groups';
   import FilterDropdown from '@pages/product/components/filters/FilterDropdown';
+  import ProductEventMap from '@pages/product/product-event-map';
+
+  const CombinationEvents = ProductEventMap.combinations;
 
   export default {
     name: 'Filters',
@@ -94,8 +97,7 @@
        */
       async initFilters() {
         try {
-          const filters = await getFilters(this.productId);
-          this.filters = filters;
+          this.filters = await getProductAttributeGroups(this.productId);
         } catch (error) {
           window.$.growl.error({message: error});
         }
@@ -113,10 +115,10 @@
       clearAll() {
         this.selectedFilters = [];
         this.$emit('clearAll');
-        this.eventEmitter.emit('updateFilters', this.selectedFilters);
+        this.eventEmitter.emit(CombinationEvents.updateAttributes, this.selectedFilters);
       },
       updateFilters() {
-        this.eventEmitter.emit('updateFilters', this.selectedFilters);
+        this.eventEmitter.emit(CombinationEvents.updateAttributes, this.selectedFilters);
       },
     },
   };

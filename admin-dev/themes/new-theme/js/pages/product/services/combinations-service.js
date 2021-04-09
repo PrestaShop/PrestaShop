@@ -34,7 +34,7 @@ export default class CombinationsService {
   constructor(productId) {
     this.productId = productId;
     this.router = new Router();
-    this.filters = [];
+    this.filters = {};
   }
 
   /**
@@ -44,15 +44,19 @@ export default class CombinationsService {
    * @returns {Promise}
    */
   fetch(offset, limit) {
-    const {filters} = this;
+    const filterId = `product_combinations_${this.productId}`;
+    const requestParams = {};
+    // Required for route generation
+    requestParams.productId = this.productId;
+
+    // These are the query parameters
+    requestParams[filterId] = {};
+    requestParams[filterId].offset = offset;
+    requestParams[filterId].limit = limit;
+    requestParams[filterId].filters = this.filters;
 
     return $.get(
-      this.router.generate('admin_products_combinations', {
-        productId: this.productId,
-        offset,
-        limit,
-        filters
-      })
+      this.router.generate('admin_products_combinations', requestParams),
     );
   }
 
@@ -65,10 +69,10 @@ export default class CombinationsService {
   updateListedCombination(combinationId, data) {
     return $.ajax({
       url: this.router.generate('admin_products_combinations_update_combination_from_listing', {
-        combinationId
+        combinationId,
       }),
       data,
-      type: 'PATCH'
+      type: 'PATCH',
     });
   }
 
@@ -81,6 +85,16 @@ export default class CombinationsService {
     }));
   }
 
+  /**
+   * @returns {Object}
+   */
+  getFilters() {
+    return this.filters;
+  }
+
+  /**
+   * @param {Object} filters
+   */
   setFilters(filters) {
     this.filters = filters;
   }
