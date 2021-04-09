@@ -53,7 +53,7 @@ jobs:
                  ${{ runner.os }}-composer-
 
       - name: Install Composer dependencies
-        run: composer install --prefer-dist
+        run: composer install --ansi --prefer-dist --no-interaction --no-progress --classmap-authoritative
 
       - name: Build assets
         run: make assets
