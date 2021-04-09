@@ -136,6 +136,27 @@ class FeatureFlagsModifierTest extends TestCase
         $modifier->updateConfiguration($payload);
     }
 
+    public function testUpdateConfigurationWithFeatureFlagsThatDoNotExist()
+    {
+        $featureFlags = [
+            new FeatureFlag('product_page_v999'),
+        ];
+
+        list($entityManagerMock, $repositoryMock) = $this->buildDoctrineServicesMocksForFetchByName($featureFlags);
+        $translatorMock = $this->getMockBuilder(TranslatorInterface::class)->getMock();
+
+        $modifier = new FeatureFlagsModifier($entityManagerMock, $translatorMock);
+
+        $payload = [
+            'product_page_v1' => false,
+        ];
+
+        $this->expectException(InvalidArgumentException::class);
+        $this->expectExceptionMessage('Invalid feature flag configuration submitted, flag product_page_v1 does not exist');
+
+        $modifier->updateConfiguration($payload);
+    }
+
     public function testValidateConfigurationWhenPayloadIsValid()
     {
         $featureFlags = [

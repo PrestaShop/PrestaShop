@@ -92,6 +92,10 @@ class FeatureFlagsModifier implements DataConfigurationInterface
         foreach ($configuration as $flagName => $flagState) {
             $featureFlag = $this->getOneFeatureFlagByName($flagName);
 
+            if (null === $featureFlag) {
+                throw new InvalidArgumentException(sprintf('Invalid feature flag configuration submitted, flag %s does not exist', $flagName));
+            }
+
             if ($flagState) {
                 $featureFlag->enable();
             } else {
