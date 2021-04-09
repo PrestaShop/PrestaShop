@@ -86,7 +86,12 @@ class DatabaseDump
 
     private function createMysqldumper(): object
     {
-        // @phpstan-ignore-next-line
+        if (!class_exists(Mysqldump::class)) {
+            // "ifsnop/mysqldump-php" package is GNU GPL v3 licensed and thus
+            // must never be bundled. Install manually if required.
+            throw new Exception('"ifsnop/mysqldump-php" package not available');
+        }
+
         return new Mysqldump(
             $this->getPdoDsn(),
             $this->user,
@@ -151,13 +156,10 @@ class DatabaseDump
      */
     public function dump(): void
     {
-        // Dump using "ifsnop/mysqldump-php:^2.9" package if available. This package
-        // is however GNU GPL v3 licensed thus must be installed by developer manually.
-        // Otherwise dump using system "mysqldump" binary.
         if (class_exists(Mysqldump::class)) {
             $dumper = $this->createMysqldumper();
             $dumper->start($this->dumpFile);
-        } else { // requires exec function enabled
+        } else { // requires exec function enabled and system "mysqldump" binary available
             $dumpCommand = $this->buildMySQLCommand('mysqldump', [$this->databaseName]);
             $dumpCommand .= ' > ' . escapeshellarg($this->dumpFile) . ' 2> /dev/null';
             $this->exec($dumpCommand);
