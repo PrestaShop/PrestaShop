@@ -3058,6 +3058,9 @@ exit;
     public static function getDirectoriesWithGlob($path)
     {
         $directoryList = glob($path . '/*', GLOB_ONLYDIR | GLOB_NOSORT);
+        if ($directoryList === false) { // false is returned when path is outside open_basedir
+            return [];
+        }
         array_walk(
             $directoryList,
             function (&$absolutePath, $key) {
