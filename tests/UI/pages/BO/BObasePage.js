@@ -147,7 +147,7 @@ module.exports = class BOBasePage extends CommonPage {
 
     // Growls
     this.growlDefaultDiv = '#growls-default';
-    this.growlMessageBlock = `${this.growlDefaultDiv} .growl-message:last-of-type`;
+    this.growlMessageBlock = `${this.growlDefaultDiv} .growl-message`;
     this.growlCloseButton = `${this.growlDefaultDiv} .growl-close`;
 
     // Alert Text
@@ -319,8 +319,8 @@ module.exports = class BOBasePage extends CommonPage {
    * @param page
    * @return {Promise<string>}
    */
-  getGrowlMessageContent(page) {
-    return this.getTextContent(page, this.growlMessageBlock);
+  getGrowlMessageContent(page, timeout = 10000) {
+    return page.textContent(this.growlMessageBlock, {timeout});
   }
 
   /**
@@ -329,13 +329,18 @@ module.exports = class BOBasePage extends CommonPage {
    * @return {Promise<void>}
    */
   async closeGrowlMessage(page) {
-    // Close growl message if exist
-    try {
-      await page.click(this.growlCloseButton);
-      await this.waitForHiddenSelector(page, this.growlMessageBlock);
-    } catch (e) {
-      // If element does not exist it's already not visible
+    let growlNotVisible = await this.elementNotVisible(page, this.growlMessageBlock, 10000);
+
+    while (!growlNotVisible) {
+      try {
+        await page.click(this.growlCloseButton);
+        growlNotVisible = await this.elementNotVisible(page, this.growlMessageBlock, 2000);
+      } catch (e) {
+        // If element does not exist it's already not visible
+      }
     }
+
+    await this.waitForHiddenSelector(page, this.growlMessageBlock);
   }
 
   /**

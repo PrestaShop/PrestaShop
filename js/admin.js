@@ -669,15 +669,15 @@ function doAdminAjax(data, success_func, error_func)
 
 //display a success/error/notice message
 function showSuccessMessage(msg) {
-  $.growl.notice({ title: "", message:msg, duration: 10000});
+  $.growl.notice({ title: "", message:msg});
 }
 
 function showErrorMessage(msg) {
-  $.growl.error({ title: "", message:msg, duration: 10000});
+  $.growl.error({ title: "", message:msg});
 }
 
 function showNoticeMessage(msg) {
-  $.growl.notice({ title: "", message:msg, duration: 10000});
+  $.growl.notice({ title: "", message:msg});
 }
 
 $(document).ready(function()
