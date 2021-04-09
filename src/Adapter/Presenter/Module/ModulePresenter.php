@@ -66,6 +66,11 @@ class ModulePresenter implements PresenterInterface
         $attributes['price'] = $this->getModulePrice($attributes['price']);
         $attributes['starsRate'] = str_replace('.', '', round($attributes['avgRate'] * 2) / 2); // Round to the nearest 0.5
 
+        $moduleInstance = $module->getInstance();
+        if ($moduleInstance !== null && $moduleInstance->multistoreCompatibility !== null) {
+            $attributes['multistoreCompatibility'] = $moduleInstance->multistoreCompatibility;
+        }
+
         $result = [
             'attributes' => $attributes,
             'disk' => $module->disk->all(),
