@@ -35,7 +35,6 @@ import CombinationsManager from '@pages/product/edit/combinations-manager';
 import ProductTypeManager from '@pages/product/edit/product-type-manager';
 import initDropzone from '@pages/product/components/dropzone';
 import ProductFormModel from '@pages/product/edit/product-form-model';
-import initFilters from '@pages/product/components/filters';
 
 const {$} = window;
 
@@ -94,7 +93,6 @@ $(() => {
   );
 
   initDropzone(ProductMap.dropzoneImagesContainer);
-  initFilters(ProductMap.combinationsFiltersContainer, window.prestashop.instance.eventEmitter);
 
   // From here we init component specific to edition
   const $productFormSubmitButton = $(ProductMap.productFormSubmitButton);

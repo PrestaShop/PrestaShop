@@ -94,7 +94,6 @@ export default class DynamicPaginator {
     return {
       paginate: (page) => this.paginate(page),
       getCurrentPage: () => this.currentPage,
-      setService: service => this.setService(service),
     };
   }
 
@@ -261,9 +260,5 @@ export default class DynamicPaginator {
       limitSelect: '#paginator-limit',
       paginationInfoLabel: '#pagination-info',
     };
-  }
-
-  setService(service) {
-    this.paginationService = service;
   }
 }

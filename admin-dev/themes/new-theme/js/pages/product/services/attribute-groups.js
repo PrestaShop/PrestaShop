@@ -28,62 +28,10 @@ import Router from '@components/router';
 const router = new Router();
 const {$} = window;
 
-export const getFilters = async (productId) => {
-  const getFiltersUrl = router.generate('admin_products_v2_get_images', {
-    productId,
-  });
-
-  // return $.get(getFiltersUrl);
-  const dummyDatas = async () => [
-    {
-      id: 1,
-      name: 'Size',
-      childrens: [
-        {
-          id: 1,
-          name: 'Plain',
-        },
-        {
-          id: 2,
-          name: 'Lined',
-        },
-        {
-          id: 3,
-          name: 'Squared',
-        },
-        {
-          id: 4,
-          name: 'Blank',
-        },
-      ],
-    },
-    {
-      id: 2,
-      name: 'Color',
-      childrens: [
-        {
-          id: 5,
-          name: 'Plain',
-        },
-        {
-          id: 6,
-          name: 'Lined',
-        },
-        {
-          id: 7,
-          name: 'Squared',
-        },
-        {
-          id: 8,
-          name: 'Blank',
-        },
-      ],
-    },
-  ];
-
-  return dummyDatas();
-};
+export const getProductAttributeGroups = async (productId) => $.get(router.generate('admin_products_attribute_groups', {
+  productId,
+}));
 
 export default {
-  getFilters,
+  getProductAttributeGroups,
 };
