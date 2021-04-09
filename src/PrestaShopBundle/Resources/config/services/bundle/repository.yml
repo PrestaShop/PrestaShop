@@ -4,7 +4,7 @@ services:
 
     prestashop.module_kernel.repository:
         class: 'PrestaShopBundle\Kernel\ModuleRepository'
-        arguments: ['@doctrine.dbal.default_connection', '%database_prefix%']
+        arguments: ['@doctrine.dbal.default_connection', '%database_prefix%', "@=service('prestashop.adapter.legacy.context')"]
 
     prestashop.core.admin.tab.repository:
         class: PrestaShopBundle\Entity\Repository\TabRepository
