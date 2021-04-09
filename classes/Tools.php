@@ -3035,11 +3035,9 @@ exit;
     /**
      * Return the directory list from the given $path.
      *
-     * @param string $path
-     *
-     * @return array
+     * @return array<string>
      */
-    public static function getDirectories($path)
+    public static function getDirectories(string $path): array
     {
         if (function_exists('glob')) {
             return self::getDirectoriesWithGlob($path);
@@ -3051,11 +3049,9 @@ exit;
     /**
      * Return the directory list from the given $path using php glob function.
      *
-     * @param string $path
-     *
-     * @return array
+     * @return array<string>
      */
-    public static function getDirectoriesWithGlob($path)
+    public static function getDirectoriesWithGlob(string $path): array
     {
         $directoryList = glob($path . '/*', GLOB_ONLYDIR | GLOB_NOSORT);
         if ($directoryList === false) { // false is returned when path is outside open_basedir
@@ -3074,11 +3070,9 @@ exit;
     /**
      * Return the directory list from the given $path using php readdir function.
      *
-     * @param string $path
-     *
-     * @return array
+     * @return array<string>
      */
-    public static function getDirectoriesWithReaddir($path)
+    public static function getDirectoriesWithReaddir(string $path): array
     {
         $directoryList = [];
         $dh = @opendir($path);
