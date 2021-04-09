@@ -32,6 +32,7 @@ use PrestaShop\PrestaShop\Core\Translation\Storage\Provider\Definition\ProviderD
 use PrestaShopBundle\Api\QueryTranslationParamsCollection;
 use PrestaShopBundle\Entity\Lang;
 use PrestaShopBundle\Exception\InvalidLanguageException;
+use PrestaShopBundle\Form\Admin\Improve\International\Translations\ModifyTranslationsType;
 use PrestaShopBundle\Security\Annotation\AdminSecurity;
 use PrestaShopBundle\Service\TranslationService;
 use PrestaShopBundle\Translation\Exception\UnsupportedLocaleException;
@@ -126,7 +127,10 @@ class TranslationController extends ApiController
                 throw new Exception(sprintf("The 'type' parameter '%s' is not valid", $type));
             }
 
-            if (ProviderDefinitionInterface::TYPE_THEMES === $type && '0' === $selected) {
+            if (
+                ProviderDefinitionInterface::TYPE_THEMES === $type
+                && ModifyTranslationsType::CORE_TRANSLATIONS_CHOICE_INDEX === $selected
+            ) {
                 $type = ProviderDefinitionInterface::TYPE_FRONT;
             }
 
