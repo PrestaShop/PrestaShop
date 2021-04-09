@@ -3054,15 +3054,13 @@ exit;
     public static function getDirectoriesWithGlob(string $path): array
     {
         $directoryList = glob($path . '/*', GLOB_ONLYDIR | GLOB_NOSORT);
-        if ($directoryList === false) { // false is returned when path is outside open_basedir
-            return [];
+        if ($directoryList === false) {
+            $directoryList = [];
         }
-        array_walk(
-            $directoryList,
-            function (&$absolutePath, $key) {
-                $absolutePath = substr($absolutePath, strrpos($absolutePath, '/') + 1);
-            }
-        );
+
+        $directoryList = array_map(function ($path) {
+            return substr($path, strrpos($path, '/') + 1);
+        }, $directoryList);
 
         return $directoryList;
     }
