@@ -218,10 +218,16 @@ module.exports = class BOBasePage extends CommonPage {
    * @returns {Promise<void>}
    */
   async closeOnboardingModal(page, timeout = 1000) {
-    if (!(await this.elementNotVisible(page, this.onboardingCloseButton, timeout))) {
+    if (await this.elementVisible(page, this.onboardingCloseButton, timeout)) {
+      // Close popup
       await page.click(this.onboardingCloseButton);
-      await this.waitForVisibleSelector(page, this.onboardingStopButton);
-      await page.click(this.onboardingStopButton);
+      await this.waitForHiddenSelector(page, this.onboardingCloseButton);
+
+      // Close menu block
+      if (await this.elementVisible(page, this.onboardingStopButton, timeout)) {
+        await page.click(this.onboardingStopButton);
+        await this.waitForHiddenSelector(page, this.onboardingStopButton);
+      }
     }
   }
 
