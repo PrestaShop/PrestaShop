@@ -54,6 +54,7 @@ abstract class AbstractAttributeGroupQueryHandler
 
     /**
      * @param array $attributeGroupEntities
+     * @param bool $withAttributes
      *
      * @return AttributeGroup[]
      */

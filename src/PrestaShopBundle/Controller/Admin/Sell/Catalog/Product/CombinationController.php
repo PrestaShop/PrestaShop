@@ -29,6 +29,8 @@ namespace PrestaShopBundle\Controller\Admin\Sell\Catalog\Product;
 
 use Exception;
 use PrestaShop\PrestaShop\Adapter\Product\Combination\Repository\CombinationRepository;
+use PrestaShop\PrestaShop\Core\Domain\Product\AttributeGroup\Query\GetProductAttributeGroups;
+use PrestaShop\PrestaShop\Core\Domain\Product\AttributeGroup\QueryResult\AttributeGroup;
 use PrestaShop\PrestaShop\Core\Domain\Product\Combination\Query\GetEditableCombinationsList;
 use PrestaShop\PrestaShop\Core\Domain\Product\Combination\QueryResult\CombinationListForEditing;
 use PrestaShop\PrestaShop\Core\Domain\Product\Exception\ProductConstraintException;
@@ -87,6 +89,8 @@ class CombinationController extends FrameworkBundleAdminController
     }
 
     /**
+     * @AdminSecurity("is_granted('read', request.get('_legacy_controller'))")
+     *
      * Renders combinations list prototype (which contains form inputs submittable by ajax)
      * It can only be embedded into another view (does not have a route)
      *
@@ -100,6 +104,21 @@ class CombinationController extends FrameworkBundleAdminController
             'combinationsForm' => $this->createForm(CombinationListType::class)->createView(),
             'combinationItemForm' => $this->getCombinationItemFormBuilder()->getForm()->createView(),
         ]);
+    }
+
+    /**
+     * @AdminSecurity("is_granted('read', request.get('_legacy_controller'))")
+     *
+     * @param int $productId
+     *
+     * @return JsonResponse
+     */
+    public function getAttributeGroupsAction(int $productId): JsonResponse
+    {
+        /** @var AttributeGroup[] $attributeGroups */
+        $attributeGroups = $this->getQueryBus()->handle(new GetProductAttributeGroups($productId, true));
+
+        return $this->json($this->formatAttributeGroupsForPresentation($attributeGroups));
     }
 
     /**
@@ -122,7 +141,7 @@ class CombinationController extends FrameworkBundleAdminController
             $combinationFilters->getFilters()
         ));
 
-        return $this->json($this->formatListResponse($combinationsList));
+        return $this->json($this->formatListForPresentation($combinationsList));
     }
 
     /**
@@ -178,11 +197,44 @@ class CombinationController extends FrameworkBundleAdminController
     }
 
     /**
+     * @param AttributeGroup[] $attributeGroups
+     *
+     * @return array<int, array<string, mixed>>
+     */
+    private function formatAttributeGroupsForPresentation(array $attributeGroups): array
+    {
+        $contextLangId = $this->getContextLangId();
+
+        $formattedGroups = [];
+        foreach ($attributeGroups as $attributeGroup) {
+            $attributes = [];
+            foreach ($attributeGroup->getAttributes() as $attribute) {
+                $attributeNames = $attribute->getLocalizedNames();
+                $attributes[] = [
+                    'id' => $attribute->getAttributeId(),
+                    'name' => $attributeNames[$contextLangId] ?? reset($attributeNames),
+                ];
+            }
+
+            $publicNames = $attributeGroup->getLocalizedPublicNames();
+            $names = $attributeGroup->getLocalizedNames();
+            $formattedGroups[] = [
+                'id' => $attributeGroup->getAttributeGroupId(),
+                'name' => $names[$contextLangId] ?? reset($names),
+                'publicName' => $publicNames[$contextLangId] ?? reset($publicNames),
+                'attributes' => $attributes,
+            ];
+        }
+
+        return $formattedGroups;
+    }
+
+    /**
      * @param CombinationListForEditing $combinationListForEditing
      *
      * @return array<string, array<int, array<string,bool|int|string>>|int>
      */
-    private function formatListResponse(CombinationListForEditing $combinationListForEditing): array
+    private function formatListForPresentation(CombinationListForEditing $combinationListForEditing): array
     {
         $data = [
             'combinations' => [],
