@@ -43,22 +43,28 @@ final class CreditSlipOptionsType extends TranslatorAwareType
      */
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
-        $builder->add('slip_prefix', TranslatableType::class, [
-            'label' => $this->trans('Credit slip prefix', 'Admin.Orderscustomers.Feature'),
-            'help' => $this->trans('Prefix used for credit slips.', 'Admin.Orderscustomers.Help'),
-            'required' => false,
-            'error_bubbling' => true,
-            'options' => [
-                'constraints' => [
-                    new TypedRegex([
-                        'type' => 'file_name',
-                        'message' => $this->trans(
-                            '%s is invalid.',
-                            'Admin.Notifications.Error'
-                        ),
-                    ]),
+        $builder
+            ->add('slip_prefix', TranslatableType::class, [
+                'label' => $this->trans('Credit slip prefix', 'Admin.Orderscustomers.Feature'),
+                'help' => $this->trans('Prefix used for credit slips.', 'Admin.Orderscustomers.Help'),
+                'required' => false,
+                'error_bubbling' => true,
+                'options' => [
+                    'constraints' => [
+                        new TypedRegex([
+                            'type' => 'file_name',
+                            'message' => $this->trans(
+                                '%s is invalid.',
+                                'Admin.Notifications.Error'
+                            ),
+                        ]),
+                    ],
                 ],
-            ],
-        ]);
+            ])
+            ->add('slip_reset', SwitchType::class, [
+                'label' => $this->trans('Reset sequential invoice number at the beginning of the year', 'Admin.Orderscustomers.Feature'),
+                'help' => $this->trans('.', 'Admin.Orderscustomers.Help'),
+                'required' => false,
+            ]);
     }
 }
