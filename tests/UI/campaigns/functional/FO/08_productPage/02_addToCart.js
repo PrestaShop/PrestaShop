@@ -99,7 +99,7 @@ describe('Add product to cart', async () => {
       result = await productPage.getProductAttributes(page);
       await Promise.all([
         await expect(result.size).to.equal(Products.demo_1.combination.size.join(' ')),
-        await expect(result.color).to.equal(`Color ${Products.demo_1.combination.color.join(' ')}`),
+        await expect(result.color).to.equal(`${Products.demo_1.combination.color.join(' ')}`),
       ]);
 
       result = await productPage.getProductImageUrls(page);

@@ -65,7 +65,7 @@ class Search extends BOBasePage {
 
     // Search form
     this.aliasForm = '#alias_fieldset_search';
-    this.fuzzySearchLabel = toggle => `label[for='PS_SEARCH_FUZZY_${toggle}']`;
+    this.fuzzySearchLabel = status => `#PS_SEARCH_FUZZY_${status}`;
     this.saveFormButton = `${this.aliasForm} button[name='submitOptionsalias']`;
   }
 
@@ -308,7 +308,7 @@ class Search extends BOBasePage {
    * @returns {Promise<string>}
    */
   async setFuzzySearch(page, toEnable = true) {
-    await this.waitForSelectorAndClick(page, this.fuzzySearchLabel(toEnable ? 'on' : 'off'));
+    await page.check(this.fuzzySearchLabel(toEnable ? 'on' : 'off'));
     await this.clickAndWaitForNavigation(page, this.saveFormButton);
     return this.getAlertSuccessBlockContent(page);
   }

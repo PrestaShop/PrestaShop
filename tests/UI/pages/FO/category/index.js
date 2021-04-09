@@ -10,7 +10,7 @@ class Category extends FOBasePage {
     this.mainSection = '#main';
     this.productsSection = '#products';
     this.productListDiv = '#js-product-list';
-    this.productItemListDiv = `${this.productListDiv} .products div[itemprop='itemListElement']`;
+    this.productItemListDiv = `${this.productListDiv} .products div.product`;
     this.sortByDiv = `${this.productsSection} div.sort-by-row`;
     this.sortByButton = `${this.sortByDiv} button.select-title`;
   }
