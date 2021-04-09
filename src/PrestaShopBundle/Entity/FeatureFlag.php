@@ -125,14 +125,6 @@ class FeatureFlag
     /**
      * @return bool
      */
-    public function getState(): bool
-    {
-        return $this->state;
-    }
-
-    /**
-     * @return bool
-     */
     public function isEnabled(): bool
     {
         return $this->state;

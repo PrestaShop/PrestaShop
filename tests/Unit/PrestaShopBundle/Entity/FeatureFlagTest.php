@@ -59,7 +59,6 @@ class FeatureFlagTest extends TestCase
         $featureFlag->setLabelDomain('A.B.L');
 
         $this->assertEquals('prestashop_800', $featureFlag->getName());
-        $this->assertFalse($featureFlag->getState());
         $this->assertFalse($featureFlag->isEnabled());
         $this->assertEquals('a_b_c', $featureFlag->getDescriptionWording());
         $this->assertEquals('A.B.C', $featureFlag->getDescriptionDomain());
