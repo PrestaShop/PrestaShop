@@ -376,9 +376,12 @@ class ProductCore extends ObjectModel
     public $delivery_out_stock;
 
     /**
+     * For now default value remains undefined, to keep compatibility with page v1 and former products.
+     * But once the v2 is merged the default value should be ProductType::TYPE_STANDARD
+     *
      * @var string
      */
-    public $product_type = ProductType::TYPE_STANDARD;
+    public $product_type = ProductType::TYPE_UNDEFINED;
 
     /**
      * @var int|null
@@ -480,8 +483,16 @@ class ProductCore extends ObjectModel
             'product_type' => [
                 'type' => self::TYPE_STRING,
                 'validate' => 'isGenericName',
-                'values' => ProductType::AVAILABLE_TYPES,
-                'default' => ProductType::TYPE_STANDARD,
+                // For now undefined value is still allowed, in 179 we should use ProductType::AVAILABLE_TYPES here
+                'values' => [
+                    ProductType::TYPE_STANDARD,
+                    ProductType::TYPE_PACK,
+                    ProductType::TYPE_VIRTUAL,
+                    ProductType::TYPE_COMBINATIONS,
+                    ProductType::TYPE_UNDEFINED,
+                ],
+                // This default value should be replaced with ProductType::TYPE_STANDARD in 179 when the v2 page is fully migrated
+                'default' => ProductType::TYPE_UNDEFINED,
             ],
 
             /* Shop fields */
@@ -761,6 +772,10 @@ class ProductCore extends ObjectModel
      */
     public function add($autodate = true, $null_values = false)
     {
+        if ($this->is_virtual) {
+            $this->product_type = ProductType::TYPE_VIRTUAL;
+        }
+
         if (!parent::add($autodate, $null_values)) {
             return false;
         }
@@ -791,6 +806,10 @@ class ProductCore extends ObjectModel
      */
     public function update($null_values = false)
     {
+        if ($this->is_virtual) {
+            $this->product_type = ProductType::TYPE_VIRTUAL;
+        }
+
         $return = parent::update($null_values);
         $this->setGroupReduction();
 
@@ -1128,9 +1147,17 @@ class ProductCore extends ObjectModel
      */
     public static function updateIsVirtual($id_product, $is_virtual = true)
     {
-        Db::getInstance()->update('product', [
-            'is_virtual' => (bool) $is_virtual,
-        ], 'id_product = ' . (int) $id_product);
+        $isVirtual = (bool) $is_virtual;
+        $updateData = [
+            'is_virtual' => $isVirtual,
+        ];
+
+        // We only update the type if we are sure it is virtual
+        if ($isVirtual) {
+            $updateData['product_type'] = ProductType::TYPE_VIRTUAL;
+        }
+
+        Db::getInstance()->update('product', $updateData, 'id_product = ' . (int) $id_product);
     }
 
     /**
@@ -1952,12 +1979,18 @@ class ProductCore extends ObjectModel
      */
     public function setDefaultAttribute($id_product_attribute)
     {
+        // We only update the type when we know it has combinations
+        if (!empty($id_product_attribute)) {
+            $this->product_type = ProductType::TYPE_COMBINATIONS;
+        }
+
         $result = ObjectModel::updateMultishopTable('Combination', [
             'default_on' => 1,
         ], 'a.`id_product` = ' . (int) $this->id . ' AND a.`id_product_attribute` = ' . (int) $id_product_attribute);
 
         $result &= ObjectModel::updateMultishopTable('product', [
             'cache_default_attribute' => (int) $id_product_attribute,
+            'product_type' => $this->product_type,
         ], 'a.`id_product` = ' . (int) $this->id);
         $this->cache_default_attribute = (int) $id_product_attribute;
 
@@ -1977,9 +2010,14 @@ class ProductCore extends ObjectModel
             'cache_default_attribute' => $id_default_attribute,
         ], 'id_product = ' . (int) $id_product . Shop::addSqlRestriction());
 
-        $result &= Db::getInstance()->update('product', [
+        // We only update the type when we know it has combinations
+        $updateData = [
             'cache_default_attribute' => $id_default_attribute,
-        ], 'id_product = ' . (int) $id_product);
+        ];
+        if (!empty($id_default_attribute)) {
+            $updateData['product_type'] = ProductType::TYPE_COMBINATIONS;
+        }
+        $result &= Db::getInstance()->update('product', $updateData, 'id_product = ' . (int) $id_product);
 
         if ($result && $id_default_attribute) {
             return $id_default_attribute;
@@ -2319,6 +2357,7 @@ class ProductCore extends ObjectModel
                 $this->setAvailableDate();
             }
         }
+        $this->product_type = ProductType::TYPE_COMBINATIONS;
 
         if (!empty($id_images)) {
             $combination->setImages($id_images);
@@ -7996,6 +8035,7 @@ class ProductCore extends ObjectModel
 
         $this->cache_is_pack = ($type == Product::PTYPE_PACK);
         $this->is_virtual = ($type == Product::PTYPE_VIRTUAL);
+        $this->product_type = $this->getDynamicProductType();
 
         return true;
     }
@@ -8293,7 +8333,20 @@ class ProductCore extends ObjectModel
         // Default value is the one saved, but in case it is not set we use dynamic definition
         if (!empty($this->product_type) && in_array($this->product_type, ProductType::AVAILABLE_TYPES)) {
             return $this->product_type;
-        } elseif ($this->is_virtual) {
+        }
+
+        return $this->getDynamicProductType();
+    }
+
+    /**
+     * Returns product type based on existing associations without taking the saved value
+     * in database into account.
+     *
+     * @return string
+     */
+    public function getDynamicProductType(): string
+    {
+        if ($this->is_virtual) {
             return ProductType::TYPE_VIRTUAL;
         } elseif (Pack::isPack($this->id)) {
             return ProductType::TYPE_PACK;
