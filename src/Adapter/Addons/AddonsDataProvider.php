@@ -81,11 +81,25 @@ class AddonsDataProvider implements AddonsInterface
      */
     public $cacheDir;
 
-    public function __construct(ApiClient $apiClient, ModuleZipManager $zipManager)
-    {
+    /**
+     * @var string
+     */
+    private $moduleChannel;
+
+    /**
+     * @param ApiClient $apiClient
+     * @param ModuleZipManager $zipManager
+     * @param string|null $moduleChannel
+     */
+    public function __construct(
+        ApiClient $apiClient,
+        ModuleZipManager $zipManager,
+        ?string $moduleChannel = null
+    ) {
         $this->marketplaceClient = $apiClient;
         $this->zipManager = $zipManager;
         $this->encryption = new PhpEncryption(_NEW_COOKIE_KEY_);
+        $this->moduleChannel = $moduleChannel ?? self::ADDONS_API_MODULE_CHANNEL_STABLE;
     }
 
     /**
@@ -187,10 +201,10 @@ class AddonsDataProvider implements AddonsInterface
                         return $this->marketplaceClient
                             ->setUserMail($params['username_addons'])
                             ->setPassword($params['password_addons'])
-                            ->getModuleZip($params['id_module']);
+                            ->getModuleZip($params['id_module'], $this->moduleChannel);
                     }
 
-                    return $this->marketplaceClient->getModuleZip($params['id_module']);
+                    return $this->marketplaceClient->getModuleZip($params['id_module'], $this->moduleChannel);
                 case 'module':
                     return $this->marketplaceClient->getModule($params['id_module']);
                 case 'install-modules':
