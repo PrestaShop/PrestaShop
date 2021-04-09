@@ -43,6 +43,8 @@ class ImageManagerCore
         'image/pjpeg',
         'image/png',
         'image/x-png',
+        'image/svg+xml',
+        'image/svg',
     ];
 
     /**
