@@ -66,6 +66,7 @@ class CombinationFormDataProvider implements FormDataProviderInterface
             'name' => $combinationForEditing->getName(),
             'stock' => $this->extractStockData($combinationForEditing),
             'price_impact' => $this->extractPriceImpactData($combinationForEditing),
+            'details' => $this->extractDetailsData($combinationForEditing),
         ];
     }
 
@@ -105,6 +106,24 @@ class CombinationFormDataProvider implements FormDataProviderInterface
             'ecotax' => (float) (string) $priceImpactInformation->getEcoTax(),
             'unit_price' => (float) (string) $priceImpactInformation->getImpactOnUnitPrice(),
             'weight' => (float) (string) $combinationForEditing->getDetails()->getImpactOnWeight(),
+        ];
+    }
+
+    /**
+     * @param CombinationForEditing $combinationForEditing
+     *
+     * @return array
+     */
+    private function extractDetailsData(CombinationForEditing $combinationForEditing): array
+    {
+        $details = $combinationForEditing->getDetails();
+
+        return [
+            'reference' => $details->getReference(),
+            'isbn' => $details->getIsbn(),
+            'ean_13' => $details->getEan13(),
+            'upc' => $details->getUpc(),
+            'mpn' => $details->getMpn(),
         ];
     }
 

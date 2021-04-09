@@ -76,6 +76,8 @@ class CombinationFormDataProviderTest extends TestCase
     {
         $datasetsByType = [
             $this->getDatasetsForStock(),
+            $this->getDatasetsForPriceImpact(),
+            $this->getDatasetsForDetails(),
         ];
 
         foreach ($datasetsByType as $datasetByType) {
@@ -115,6 +117,82 @@ class CombinationFormDataProviderTest extends TestCase
         $expectedOutputData['stock']['low_stock_alert'] = true;
         $expectedOutputData['stock']['stock_location'] = 'top shelf';
         $expectedOutputData['stock']['available_date'] = '1969-07-20';
+
+        $datasets[] = [
+            $combinationData,
+            $expectedOutputData,
+        ];
+
+        return $datasets;
+    }
+
+    /**
+     * @return array
+     */
+    private function getDatasetsForPriceImpact(): array
+    {
+        $datasets = [];
+
+        $expectedOutputData = $this->getDefaultOutputData();
+        $combinationData = [];
+
+        $datasets[] = [
+            $combinationData,
+            $expectedOutputData,
+        ];
+
+        $expectedOutputData = $this->getDefaultOutputData();
+        $combinationData = [
+            'wholesale_price' => new DecimalNumber('69.00'),
+            'price_impact_tax_excluded' => new DecimalNumber('47.00'),
+            'price_impact_tax_included' => new DecimalNumber('56.40'),
+            'eco_tax' => new DecimalNumber('11.00'),
+            'unit_price_impact' => new DecimalNumber('0.50'),
+            'combination_weight' => new DecimalNumber('1.45'),
+        ];
+        $expectedOutputData['price_impact']['wholesale_price'] = 69.00;
+        $expectedOutputData['price_impact']['price_tax_excluded'] = 47.00;
+        $expectedOutputData['price_impact']['price_tax_included'] = 56.40;
+        $expectedOutputData['price_impact']['ecotax'] = 11.00;
+        $expectedOutputData['price_impact']['unit_price'] = 0.50;
+        $expectedOutputData['price_impact']['weight'] = 1.45;
+
+        $datasets[] = [
+            $combinationData,
+            $expectedOutputData,
+        ];
+
+        return $datasets;
+    }
+
+    /**
+     * @return array
+     */
+    private function getDatasetsForDetails(): array
+    {
+        $datasets = [];
+
+        $expectedOutputData = $this->getDefaultOutputData();
+        $combinationData = [];
+
+        $datasets[] = [
+            $combinationData,
+            $expectedOutputData,
+        ];
+
+        $expectedOutputData = $this->getDefaultOutputData();
+        $combinationData = [
+            'reference' => 'reference_bis',
+            'isbn' => 'isbn_bis',
+            'ean13' => 'ean13_bis',
+            'upc' => 'upc_bis',
+            'mpn' => 'mpn_bis',
+        ];
+        $expectedOutputData['details']['reference'] = 'reference_bis';
+        $expectedOutputData['details']['isbn'] = 'isbn_bis';
+        $expectedOutputData['details']['ean_13'] = 'ean13_bis';
+        $expectedOutputData['details']['upc'] = 'upc_bis';
+        $expectedOutputData['details']['mpn'] = 'mpn_bis';
 
         $datasets[] = [
             $combinationData,
@@ -190,7 +268,7 @@ class CombinationFormDataProviderTest extends TestCase
     {
         return new CombinationPrices(
             $combination['eco_tax'] ?? new DecimalNumber('42.00'),
-            $combination['price_impact'] ?? new DecimalNumber('51.00'),
+            $combination['price_impact_tax_excluded'] ?? new DecimalNumber('51.00'),
             $combination['price_impact_tax_included'] ?? new DecimalNumber('61.20'),
             $combination['unit_price_impact'] ?? new DecimalNumber('69.00'),
             $combination['wholesale_price'] ?? new DecimalNumber('99.00')
@@ -227,7 +305,7 @@ class CombinationFormDataProviderTest extends TestCase
             $combination['mpn'] ?? 'mpn',
             $combination['reference'] ?? 'reference',
             $combination['upc'] ?? 'upc',
-            $combination['weight_impact'] ?? new DecimalNumber('42.00')
+            $combination['combination_weight'] ?? new DecimalNumber('42.00')
         );
     }
 
@@ -254,6 +332,13 @@ class CombinationFormDataProviderTest extends TestCase
                 'ecotax' => 42.00,
                 'unit_price' => 69.00,
                 'weight' => 42.00,
+            ],
+            'details' => [
+                'reference' => 'reference',
+                'isbn' => 'isbn',
+                'ean_13' => 'ean13',
+                'upc' => 'upc',
+                'mpn' => 'mpn',
             ],
         ];
     }
