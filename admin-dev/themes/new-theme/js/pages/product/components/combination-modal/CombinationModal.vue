@@ -56,7 +56,7 @@
           :aria-label="$t('modal.close')"
           :disabled="submittingCombinationForm"
         >
-          {{ $t('modal.close') }}
+          {{ $t("modal.close") }}
         </button>
 
         <button
@@ -64,10 +64,12 @@
           class="btn btn-outline-secondary"
           @click.prevent.stop="showPrevious"
           :aria-label="$t('modal.previous')"
-          :disabled="previousCombinationId === null || submittingCombinationForm"
+          :disabled="
+            previousCombinationId === null || submittingCombinationForm
+          "
         >
           <i class="material-icons">keyboard_arrow_left</i>
-          {{ $t('modal.previous') }}
+          {{ $t("modal.previous") }}
         </button>
         <button
           type="button"
@@ -76,7 +78,7 @@
           :aria-label="$t('modal.next')"
           :disabled="nextCombinationId === null || submittingCombinationForm"
         >
-          {{ $t('modal.next') }}
+          {{ $t("modal.next") }}
           <i class="material-icons">keyboard_arrow_right</i>
         </button>
         <button
@@ -87,7 +89,7 @@
           :disabled="submittingCombinationForm"
         >
           <span v-if="!submittingCombinationForm">
-            {{ $t('modal.save') }}
+            {{ $t("modal.save") }}
           </span>
           <span
             class="spinner-border spinner-border-sm"
@@ -175,12 +177,18 @@
     },
     methods: {
       watchEditButtons() {
-        this.combinationList.on('click', ProductMap.combinations.editCombinationButtons, (event) => {
-          event.stopImmediatePropagation();
-          const $row = $(event.target).closest('tr');
-          this.selectedCombinationId = Number($row.find(ProductMap.combinations.combinationIdInputsSelector).val());
-          this.hasSubmittedCombinations = false;
-        });
+        this.combinationList.on(
+          'click',
+          ProductMap.combinations.editCombinationButtons,
+          (event) => {
+            event.stopImmediatePropagation();
+            const $row = $(event.target).closest('tr');
+            this.selectedCombinationId = Number(
+              $row.find(ProductMap.combinations.combinationIdInputsSelector).val(),
+            );
+            this.hasSubmittedCombinations = false;
+          },
+        );
       },
       async initCombinationIds() {
         this.combinationIds = await this.combinationsService.getCombinationIds();
@@ -203,7 +211,9 @@
 
         // If modifications have been made refresh the combination list
         if (this.hasSubmittedCombinations) {
-          window.prestashop.instance.eventEmitter.emit(ProductEventMap.combinations.refreshList);
+          window.prestashop.instance.eventEmitter.emit(
+            ProductEventMap.combinations.refreshList,
+          );
         }
         this.hasSubmittedCombinations = false;
 
@@ -231,15 +241,20 @@
       submitForm() {
         this.submittingCombinationForm = true;
         const iframeBody = this.$refs.iframe.contentDocument.body;
-        const editionForm = iframeBody.querySelector(ProductMap.combinations.editionForm);
+        const editionForm = iframeBody.querySelector(
+          ProductMap.combinations.editionForm,
+        );
         editionForm.submit();
         this.hasSubmittedCombinations = true;
         const selectedCombination = {
           id: this.selectedCombinationId,
-          title: iframeBody.querySelector('.card-header span').innerHTML,
+          title: iframeBody.querySelector(ProductMap.combinations.combinationName)
+            .innerHTML,
         };
 
-        if ((this.combinationsHistory[0] && this.combinationsHistory[0].id !== selectedCombination.id)
+        if (
+          (this.combinationsHistory[0]
+            && this.combinationsHistory[0].id !== selectedCombination.id)
           || !this.combinationsHistory.length
         ) {
           this.combinationsHistory.unshift(selectedCombination);
@@ -267,10 +282,13 @@
         }
 
         this.loadingCombinationForm = true;
-        this.editCombinationUrl = router.generate('admin_products_combinations_edit_combination', {
-          combinationId,
-          liteDisplaying: 1,
-        });
+        this.editCombinationUrl = router.generate(
+          'admin_products_combinations_edit_combination',
+          {
+            combinationId,
+            liteDisplaying: 1,
+          },
+        );
 
         const selectedIndex = this.combinationIds.indexOf(combinationId);
 
@@ -314,7 +332,7 @@
       margin: 0 1rem;
 
       .modal-body {
-        padding: .5rem;
+        padding: 0.5rem;
         margin: 0;
         background: #eaebec;
 

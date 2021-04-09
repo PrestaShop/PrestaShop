@@ -111,6 +111,7 @@ export default {
       deleteButton: (rowIndex) => `${combinationListId}_combinations_${rowIndex}_delete`,
     },
     editModal: '#combination-edit-modal',
+    combinationName: '.card-header span',
   },
   dropzone: {
     configuration: {
