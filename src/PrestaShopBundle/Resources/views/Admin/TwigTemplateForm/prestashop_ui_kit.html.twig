@@ -113,7 +113,7 @@
 {% block form_row_attr -%}
   {% set classes = 'form-group row' %}
   {% if (not compound or force_error|default(false)) and not valid %}
-  {% set classes = classes ~ ' has-error' %}
+    {% set classes = classes ~ ' has-error' %}
   {% endif %}
 
   {% if row_attr.class is defined %}
