@@ -67,6 +67,9 @@ jobs:
       -   name: Composer Install
           run: composer install --ansi --prefer-dist --no-interaction --no-progress --quiet
 
+      -   name: PrestaShop Configuration
+          run: cp .github/workflows/phpunit/parameters.yml app/config/parameters.yml
+
       -   name: Run Lint Yaml on `src`
           run: php bin/console lint:yaml src
 
@@ -105,6 +108,9 @@ jobs:
 
       -   name: Composer Install
           run: composer install --ansi --prefer-dist --no-interaction --no-progress --quiet
+
+      -   name: PrestaShop Configuration
+          run: cp .github/workflows/phpunit/parameters.yml app/config/parameters.yml
 
       -   name: Run Lint Twig
           run: php bin/console lint:twig src/PrestaShopBundle/Resources/views/
