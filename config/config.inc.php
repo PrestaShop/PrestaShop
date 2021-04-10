@@ -122,11 +122,7 @@ if (!isset($_SERVER['HTTP_HOST']) || empty($_SERVER['HTTP_HOST'])) {
 $context = Context::getContext();
 
 /* Initialize the current Shop */
-try {
-    $context->shop = Shop::initialize();
-} catch (PrestaShopException $e) {
-    $e->displayMessage();
-}
+$context->shop = Shop::initialize();
 define('_THEME_NAME_', $context->shop->theme->getName());
 define('_PARENT_THEME_NAME_', $context->shop->theme->get('parent') ?: '');
 
