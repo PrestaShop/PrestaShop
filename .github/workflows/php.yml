@@ -77,6 +77,9 @@ jobs:
             with:
                 php-version: ${{ matrix.php }}
                 extensions: mbstring, intl, gd, xml, dom, json, fileinfo, curl, zip, iconv, simplexml
+            env:
+                COMPOSER_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
         -   uses: actions/checkout@v2
 
         -   name: PrestaShop Configuration
