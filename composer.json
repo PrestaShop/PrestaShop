@@ -216,7 +216,7 @@
     "integration-behaviour-tests": [
       "@php -d date.timezone=UTC ./vendor/bin/behat -c tests/Integration/Behaviour/behat.yml  --format progress --no-snippets --strict"
     ],
-    "build-assets": "@sh tools/assets/build.sh",
+    "build-assets": "sh tools/assets/build.sh",
     "create-release": "@php tools/build/CreateRelease.php",
     "git-hook-install": "@php .github/contrib/install.php",
     "git-hook-uninstall": "@php .github/contrib/uninstall.php"
