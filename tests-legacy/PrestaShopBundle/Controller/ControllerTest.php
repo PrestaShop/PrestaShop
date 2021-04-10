@@ -148,7 +148,7 @@ class ControllerTest extends TestCase
 
     protected function declareRequiredConstants()
     {
-        $configuration = require_once _PS_CACHE_DIR_ . 'appParameters.php';
+        $parameters = (require _PS_ROOT_DIR_ . '/app/config/set_parameters.php')['parameters'];
 
         if (defined('_PS_BO_ALL_THEMES_DIR_')) {
             return;
@@ -159,19 +159,19 @@ class ControllerTest extends TestCase
             define('_PS_TAB_MODULE_LIST_URL_', '');
         }
         if (!defined('_DB_SERVER_')) {
-            define('_DB_SERVER_', $configuration['parameters']['database_host']);
+            define('_DB_SERVER_', $parameters['database_host']);
         }
         if (!defined('_DB_USER_')) {
-            define('_DB_USER_', $configuration['parameters']['database_user']);
+            define('_DB_USER_', $parameters['database_user']);
         }
         if (!defined('_DB_PASSWD_')) {
-            define('_DB_PASSWD_', $configuration['parameters']['database_password']);
+            define('_DB_PASSWD_', $parameters['database_password']);
         }
         if (!defined('_DB_NAME_')) {
-            define('_DB_NAME_', 'test_' . $configuration['parameters']['database_name']);
+            define('_DB_NAME_', $parameters['database_name']);
         }
         if (!defined('_DB_PREFIX_')) {
-            define('_DB_PREFIX_', $configuration['parameters']['database_prefix']);
+            define('_DB_PREFIX_', $parameters['database_prefix']);
         }
         if (!defined('_COOKIE_KEY_')) {
             define('_COOKIE_KEY_', Tools::passwdGen(64));
