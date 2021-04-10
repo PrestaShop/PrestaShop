@@ -56,7 +56,7 @@ jobs:
         run: composer install --prefer-dist
 
       - name: Build assets
-        run: make assets
+        run: composer build-assets
 
       - name: Install PrestaShop
         run: php install-dev/index_cli.php --language=en --country=fr --domain=localhost --db_server=127.0.0.1 --db_password=password --db_name=prestashop --db_create=1 --name=prestashop.unit.test --email=demo@prestashop.com --password=prestashop_demo

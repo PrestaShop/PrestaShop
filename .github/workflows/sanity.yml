@@ -63,8 +63,11 @@ jobs:
           restore-keys: |
             ${{ runner.os }}-composer-
 
-      - name: Composer install and build assets
-        run: make
+      - name: Composer Install
+        run: composer install --ansi --prefer-dist --no-interaction --no-progress --quiet
+
+      - name: Build assets
+        run: composer build-assets
 
       - run: |
           sudo chown www-data:www-data -R ${{ github.workspace }} && \
