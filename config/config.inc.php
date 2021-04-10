@@ -46,13 +46,16 @@ define('_PS_SSL_PORT_', 443);
 ini_set('default_charset', 'utf-8');
 
 /* in dev mode - check if composer was executed */
-if (is_dir(_PS_ROOT_DIR_ . DIRECTORY_SEPARATOR . 'admin-dev') && (!is_dir(_PS_ROOT_DIR_ . DIRECTORY_SEPARATOR . 'vendor') ||
-        !file_exists(_PS_ROOT_DIR_ . DIRECTORY_SEPARATOR . 'vendor' . DIRECTORY_SEPARATOR . 'autoload.php'))) {
-    die('Error : please install <a href="https://getcomposer.org/">composer</a>. Then run "php composer.phar install"');
+if (is_dir(_PS_ROOT_DIR_ . DIRECTORY_SEPARATOR . 'admin-dev') && (!is_dir(_PS_ROOT_DIR_ . DIRECTORY_SEPARATOR . 'vendor')
+    ||!file_exists(_PS_ROOT_DIR_ . DIRECTORY_SEPARATOR . 'vendor' . DIRECTORY_SEPARATOR . 'autoload.php'))) {
+    throw new PrestaShopException('Missing vendor data, run "composer install" first');
 }
 
 /* No settings file? goto installer... */
 if (!file_exists(_PS_ROOT_DIR_ . '/app/config/parameters.yml') && !file_exists(_PS_ROOT_DIR_ . '/app/config/parameters.php')) {
+    if (Tools::isPHPCLI()) {
+        throw new PrestaShopException('Missing "/app/config/parameters.yml" configuration');
+    }
     Tools::redirectToInstall();
 }
 
@@ -67,12 +70,7 @@ if ('WIN' === strtoupper(substr(PHP_OS, 0, 3))) {
     Windows::improveFilesytemPerformances();
 }
 
-if (defined('_PS_CREATION_DATE_')) {
-    $creationDate = _PS_CREATION_DATE_;
-    if (empty($creationDate)) {
-        Tools::redirectToInstall();
-    }
-} else {
+if (!defined('_PS_CREATION_DATE_') || empty($creationDate)) {
     Tools::redirectToInstall();
 }
 
