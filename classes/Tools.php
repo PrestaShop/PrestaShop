@@ -3632,7 +3632,7 @@ exit;
      */
     public static function isPHPCLI()
     {
-        return defined('STDIN') || (Tools::strtolower(PHP_SAPI) == 'cli' && (!isset($_SERVER['REMOTE_ADDR']) || empty($_SERVER['REMOTE_ADDR'])));
+        return php_sapi_name() === 'cli';
     }
 
     public static function argvToGET($argc, $argv)

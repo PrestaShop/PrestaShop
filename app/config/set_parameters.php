@@ -41,7 +41,7 @@ if (!array_key_exists('parameters', $parameters)) {
     throw new \Exception('Missing "parameters" key in "parameters.php" configuration file');
 }
 
-if (!defined('_PS_IN_TEST_') && php_sapi_name() === 'cli') {
+if (!defined('_PS_IN_TEST_') && \Tools::isPHPCLI()) {
     $input = new \Symfony\Component\Console\Input\ArgvInput();
     $env = $input->getParameterOption(['--env', '-e'], getenv('SYMFONY_ENV') ?: 'dev');
     if ($env === 'test') {
@@ -49,11 +49,11 @@ if (!defined('_PS_IN_TEST_') && php_sapi_name() === 'cli') {
     }
 }
 
-if (defined('_PS_IN_TEST_')) {
+if (defined('_PS_IN_TEST_') && _PS_IN_TEST_) {
     $parameters['parameters']['database_name'] = 'test_' . $parameters['parameters']['database_name'];
 }
 
-if ($container instanceof \Symfony\Component\DependencyInjection\Container) {
+if (isset($container) && $container instanceof \Symfony\Component\DependencyInjection\Container) {
     foreach ($parameters['parameters'] as $key => $value) {
         $container->setParameter($key, $value);
     }
@@ -87,4 +87,6 @@ if ($container instanceof \Symfony\Component\DependencyInjection\Container) {
     if (!isset($parameters['parameters']['use_debug_toolbar']) || false !== $envParameter) {
         $container->setParameter('use_debug_toolbar', !$envParameter);
     }
+} else {
+    return $parameters;
 }

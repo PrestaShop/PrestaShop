@@ -70,80 +70,60 @@ if (!file_exists($phpParametersFilepath) && file_exists($yamlParametersFilepath)
 $lastParametersModificationTime = (int)@filemtime($phpParametersFilepath);
 
 if ($lastParametersModificationTime) {
-    $cachedParameters = _PS_CACHE_DIR_. 'appParameters.php';
-
-    $lastParametersCacheModificationTime = (int)@filemtime($cachedParameters);
-    if (!$lastParametersCacheModificationTime || $lastParametersCacheModificationTime < $lastParametersModificationTime) {
-        // When parameters file is available, update its cache if it is stale.
-        if (file_exists($phpParametersFilepath)) {
-            $config = require $phpParametersFilepath;
-            $exportPhpConfigFile($config, $cachedParameters);
-        } elseif (file_exists($yamlParametersFilepath)) {
-            $config = Yaml::parseFile($yamlParametersFilepath);
-            $exportPhpConfigFile($config, $cachedParameters);
-        }
-    }
-
-    $config = require_once _PS_CACHE_DIR_ . 'appParameters.php';
-    array_walk($config['parameters'], function (&$param) {
+    $parameters = (require_once _PS_ROOT_DIR_ . '/app/config/set_parameters.php')['parameters'];
+    array_walk($parameters, function (&$param) {
         $param = str_replace('%%', '%', $param);
     });
 
-    $database_host = $config['parameters']['database_host'];
-
-    if (!empty($config['parameters']['database_port'])) {
-        $database_host .= ':'. $config['parameters']['database_port'];
+    $database_host = $parameters['database_host'];
+    if (!empty($parameters['database_port'])) {
+        $database_host .= ':'. $parameters['database_port'];
     }
 
     define('_DB_SERVER_', $database_host);
-    if (defined('_PS_IN_TEST_')) {
-        define('_DB_NAME_', 'test_'.$config['parameters']['database_name']);
-    } else {
-        define('_DB_NAME_', $config['parameters']['database_name']);
-    }
-
-    define('_DB_USER_', $config['parameters']['database_user']);
-    define('_DB_PASSWD_', $config['parameters']['database_password']);
-    define('_DB_PREFIX_', $config['parameters']['database_prefix']);
-    define('_MYSQL_ENGINE_',  $config['parameters']['database_engine']);
-    define('_PS_CACHING_SYSTEM_',  $config['parameters']['ps_caching']);
+    define('_DB_NAME_', $parameters['database_name']);
+    define('_DB_USER_', $parameters['database_user']);
+    define('_DB_PASSWD_', $parameters['database_password']);
+    define('_DB_PREFIX_', $parameters['database_prefix']);
+    define('_MYSQL_ENGINE_', $parameters['database_engine']);
+    define('_PS_CACHING_SYSTEM_', $parameters['ps_caching']);
 
     if (!defined('PS_IN_UPGRADE') && !defined('_PS_IN_TEST_')) {
-        define('_PS_CACHE_ENABLED_', $config['parameters']['ps_cache_enable']);
+        define('_PS_CACHE_ENABLED_', $parameters['ps_cache_enable']);
     } else {
         define('_PS_CACHE_ENABLED_', 0);
-        $config['parameters']['ps_cache_enable'] = 0;
+        $parameters['ps_cache_enable'] = 0;
     }
 
     // Legacy cookie
-    if (array_key_exists('cookie_key', $config['parameters'])) {
-        define('_COOKIE_KEY_', $config['parameters']['cookie_key']);
+    if (array_key_exists('cookie_key', $parameters)) {
+        define('_COOKIE_KEY_', $parameters['cookie_key']);
     } else {
         // Define cookie key if missing to prevent failure in composer post-install script
         define('_COOKIE_KEY_', Tools::passwdGen(56));
     }
 
-    if (array_key_exists('cookie_iv', $config['parameters'])) {
-        define('_COOKIE_IV_', $config['parameters']['cookie_iv']);
+    if (array_key_exists('cookie_iv', $parameters)) {
+        define('_COOKIE_IV_', $parameters['cookie_iv']);
     } else {
         // Define cookie IV if missing to prevent failure in composer post-install script
         define('_COOKIE_IV_', Tools::passwdGen(32));
     }
 
     // New cookie
-    if (array_key_exists('new_cookie_key', $config['parameters'])) {
-        define('_NEW_COOKIE_KEY_', $config['parameters']['new_cookie_key']);
+    if (array_key_exists('new_cookie_key', $parameters)) {
+        define('_NEW_COOKIE_KEY_', $parameters['new_cookie_key']);
     } else {
         // Define cookie key if missing to prevent failure in composer post-install script
         $key = PhpEncryption::createNewRandomKey();
         define('_NEW_COOKIE_KEY_', $key);
     }
 
-    define('_PS_CREATION_DATE_', $config['parameters']['ps_creation_date']);
+    define('_PS_CREATION_DATE_', $parameters['ps_creation_date']);
 
-    if (isset($config['parameters']['_rijndael_key'], $config['parameters']['_rijndael_iv'])) {
-        define('_RIJNDAEL_KEY_', $config['parameters']['_rijndael_key']);
-        define('_RIJNDAEL_IV_', $config['parameters']['_rijndael_iv']);
+    if (isset($parameters['_rijndael_key'], $parameters['_rijndael_iv'])) {
+        define('_RIJNDAEL_KEY_', $parameters['_rijndael_key']);
+        define('_RIJNDAEL_IV_', $parameters['_rijndael_iv']);
     }
 } elseif (file_exists(_PS_ROOT_DIR_.'/config/settings.inc.php')) {
     require_once _PS_ROOT_DIR_.'/config/settings.inc.php';
