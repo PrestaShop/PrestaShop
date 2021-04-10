@@ -3637,7 +3637,7 @@ exit;
      */
     public static function isPHPCLI()
     {
-        return php_sapi_name() === 'cli';
+        return \PHP_SAPI === 'cli';
     }
 
     public static function argvToGET($argc, $argv)
