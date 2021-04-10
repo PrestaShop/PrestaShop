@@ -103,6 +103,14 @@ jobs:
             env:
                 SYMFONY_DEPRECATIONS_HELPER: disabled
 
+        -   name: Lowest - Composer Install
+            run: composer update --prefer-lowest --ansi --prefer-dist --no-interaction --no-progress
+
+        -   name: Lowest - Run phpunit
+            run: ./vendor/bin/phpunit -c tests/Unit/phpunit.xml
+            env:
+                SYMFONY_DEPRECATIONS_HELPER: disabled
+
   phpunit_with_db:
       name: PHPUnit Tests (With DB)
       runs-on: ubuntu-18.04
