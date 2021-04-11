@@ -16,7 +16,7 @@
     "ext-zip": "*",
     "beberlei/doctrineextensions": "^1.0",
     "composer/ca-bundle": "^1.0",
-    "composer/installers": "^1.0.21",
+    "composer/installers": "^1.9",
     "csa/guzzle-bundle": "dev-compat-php",
     "cssjanus/cssjanus": "dev-patch-1",
     "curl/curl": "^1.2.1",

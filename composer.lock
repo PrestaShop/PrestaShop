@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "477f1ea6fd547334cda06a79d476cca7",
+    "content-hash": "fbc4610b721e8a6332d5def9183ffda8",
     "packages": [
         {
             "name": "beberlei/doctrineextensions",
