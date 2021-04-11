@@ -43,7 +43,7 @@
     "nikic/php-parser": "^4.0",
     "paragonie/random_compat": "^2.0",
     "pear/archive_tar": "^1.4.12",
-    "pelago/emogrifier": "^2.1",
+    "pelago/emogrifier": "^2.2",
     "phpoffice/phpspreadsheet": "~1.5",
     "prestashop/blockreassurance": "^5",
     "prestashop/circuit-breaker": "^3.0",
