@@ -22,7 +22,7 @@
     "curl/curl": "^1.2.1",
     "defuse/php-encryption": "~2.0.1",
     "doctrine/cache": "^1.8",
-    "doctrine/doctrine-bundle": "^1.6",
+    "doctrine/doctrine-bundle": "^1.12.10",
     "doctrine/orm": "^2.7.3",
     "egulias/email-validator": "^2.1.19",
     "ezyang/htmlpurifier": "^4.10",
