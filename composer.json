@@ -23,7 +23,7 @@
     "defuse/php-encryption": "~2.0.1",
     "doctrine/cache": "^1.8",
     "doctrine/doctrine-bundle": "^1.6",
-    "doctrine/orm": "^2.7",
+    "doctrine/orm": "^2.7.3",
     "egulias/email-validator": "^2.1",
     "ezyang/htmlpurifier": "^4.10",
     "friendsofsymfony/jsrouting-bundle": "^2.4",
