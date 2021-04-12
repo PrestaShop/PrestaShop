@@ -45,7 +45,7 @@ describe('Login in BO', async () => {
   });
 
   it('should enter an invalid credentials', async function () {
-    await testContext.addContextItem(this, 'testIdentifier', 'entreInvalidCredentials', baseContext);
+    await testContext.addContextItem(this, 'testIdentifier', 'enterInvalidCredentials', baseContext);
 
     await loginPage.login(page, employeeData.email, employeeData.password, false);
 
@@ -54,7 +54,7 @@ describe('Login in BO', async () => {
   });
 
   it('should enter an invalid email', async function () {
-    await testContext.addContextItem(this, 'testIdentifier', 'entreInvalidEmail', baseContext);
+    await testContext.addContextItem(this, 'testIdentifier', 'enterInvalidEmail', baseContext);
 
     await loginPage.login(page, employeeData.email, DefaultEmployee.password, false);
 
@@ -63,7 +63,7 @@ describe('Login in BO', async () => {
   });
 
   it('should enter an invalid password', async function () {
-    await testContext.addContextItem(this, 'testIdentifier', 'entreInvalidPassword', baseContext);
+    await testContext.addContextItem(this, 'testIdentifier', 'enterInvalidPassword', baseContext);
 
     await loginPage.login(page, DefaultEmployee.email, employeeData.password, false);
 
