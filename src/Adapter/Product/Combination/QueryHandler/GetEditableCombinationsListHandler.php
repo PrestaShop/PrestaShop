@@ -28,12 +28,15 @@ declare(strict_types=1);
 
 namespace PrestaShop\PrestaShop\Adapter\Product\Combination\QueryHandler;
 
+use Image;
 use PDO;
 use PrestaShop\Decimal\DecimalNumber;
 use PrestaShop\PrestaShop\Adapter\Attribute\Repository\AttributeRepository;
+use PrestaShop\PrestaShop\Adapter\Entity\Product;
 use PrestaShop\PrestaShop\Adapter\Product\AbstractProductHandler;
 use PrestaShop\PrestaShop\Adapter\Product\Combination\Repository\CombinationRepository;
 use PrestaShop\PrestaShop\Adapter\Product\Stock\Repository\StockAvailableRepository;
+use PrestaShop\PrestaShop\Core\Domain\Language\ValueObject\LanguageId;
 use PrestaShop\PrestaShop\Core\Domain\Product\Combination\Query\GetEditableCombinationsList;
 use PrestaShop\PrestaShop\Core\Domain\Product\Combination\QueryHandler\GetEditableCombinationsListHandlerInterface;
 use PrestaShop\PrestaShop\Core\Domain\Product\Combination\QueryResult\CombinationAttributeInformation;
@@ -125,7 +128,8 @@ final class GetEditableCombinationsListHandler extends AbstractProductHandler im
         return $this->formatEditableCombinationsForListing(
             $combinations,
             $attributesInformation,
-            $total
+            $total,
+            $query->getLanguageId()
         );
     }
 
@@ -133,13 +137,18 @@ final class GetEditableCombinationsListHandler extends AbstractProductHandler im
      * @param array $combinations
      * @param array<int, array<int, mixed>> $attributesInformationByCombinationId
      * @param int $totalCombinationsCount
+     * @param LanguageId $langId
      *
      * @return CombinationListForEditing
+     *
+     * @throws \PrestaShop\PrestaShop\Core\Domain\Product\Stock\Exception\StockAvailableNotFoundException
+     * @throws \PrestaShop\PrestaShop\Core\Exception\CoreException
      */
     private function formatEditableCombinationsForListing(
         array $combinations,
         array $attributesInformationByCombinationId,
-        int $totalCombinationsCount
+        int $totalCombinationsCount,
+        LanguageId $langId
     ): CombinationListForEditing {
         $combinationsForEditing = [];
 
@@ -156,6 +165,9 @@ final class GetEditableCombinationsListHandler extends AbstractProductHandler im
                 );
             }
 
+            $imageData = Product::getCombinationImageById($combinationId, $langId->getValue());
+            $image = new Image($imageData['id_image']);
+
             $impactOnPrice = new DecimalNumber($combination['price']);
             $combinationsForEditing[] = new EditableCombinationForListing(
                 $combinationId,
@@ -164,7 +176,8 @@ final class GetEditableCombinationsListHandler extends AbstractProductHandler im
                 $combinationAttributesInformation,
                 (bool) $combination['default_on'],
                 $impactOnPrice,
-                (int) $this->stockAvailableRepository->getForCombination(new CombinationId($combinationId))->quantity
+                (int) $this->stockAvailableRepository->getForCombination(new CombinationId($combinationId))->quantity,
+                !empty($image->getImgPath()) ? _THEME_PROD_DIR_ . $image->getImgPath() : null
 // @todo:
 //      Missing combination image:
 //      Old page retrieves it through src/PrestaShopBundle/Controller/Admin/AttributeController::getFormImagesAction.
