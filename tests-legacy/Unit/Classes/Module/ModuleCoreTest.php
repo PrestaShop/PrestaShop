@@ -96,7 +96,7 @@ class ModuleCoreTest extends TestCase
      *
      * @dataProvider setMultistoreCompatibilityProvider
      */
-    public function testSetAndGetMultistoreCompatibility(int $multistoreCompatibility, bool $throwsException)
+    public function testSetAndGetMultistoreCompatibility(int $multistoreCompatibility, bool $throwsException): void
     {
         $module = new FakeModule();
         if ($throwsException) {
