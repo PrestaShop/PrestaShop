@@ -31,10 +31,10 @@ namespace Tests\Integration\PrestaShopBundle\Form\EventListener;
 use Generator;
 use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductType;
 use PrestaShopBundle\Form\Admin\Sell\Product\EventListener\ProductTypeListener;
-use PrestaShopBundle\Form\Admin\Sell\Product\StockType;
 use PrestaShopBundle\Form\Admin\Type\CommonAbstractType;
 use Symfony\Component\Form\Exception\OutOfBoundsException;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
+use Symfony\Component\Form\Extension\Core\Type\FormType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\Form\FormEvents;
 use Symfony\Component\Form\FormInterface;
@@ -78,6 +78,11 @@ class ProductTypeListenerTest extends FormListenerTestCase
         yield [ProductType::TYPE_PACK, 'stock', true];
         yield [ProductType::TYPE_VIRTUAL, 'stock', true];
         yield [ProductType::TYPE_COMBINATIONS, 'stock', false];
+
+        yield [ProductType::TYPE_STANDARD, 'shortcuts.stock', true];
+        yield [ProductType::TYPE_PACK, 'shortcuts.stock', true];
+        yield [ProductType::TYPE_VIRTUAL, 'shortcuts.stock', true];
+        yield [ProductType::TYPE_COMBINATIONS, 'shortcuts.stock', false];
     }
 
     /**
@@ -105,11 +110,28 @@ class ProductTypeListenerTest extends FormListenerTestCase
     private function assertFormTypeExistsInForm(FormInterface $form, string $typeName, bool $shouldExist): void
     {
         if ($shouldExist) {
-            $this->assertNotNull($form->get($typeName));
+            $this->assertNotNull($this->getFormChild($form, $typeName));
         } else {
             $this->expectException(OutOfBoundsException::class);
-            $form->get($typeName);
+            $this->getFormChild($form, $typeName);
         }
+    }
+
+    /**
+     * @param FormInterface $form
+     * @param string $typeName
+     *
+     * @return FormInterface
+     */
+    private function getFormChild(FormInterface $form, string $typeName): FormInterface
+    {
+        $typeNames = explode('.', $typeName);
+        $child = $form;
+        foreach ($typeNames as $typeName) {
+            $child = $form->get($typeName);
+        }
+
+        return $child;
     }
 }
 
@@ -119,7 +141,9 @@ class SimpleProductFormTest extends CommonAbstractType
     {
         $builder
             ->add('suppliers', ChoiceType::class)
-            ->add('stock', StockType::class)
+            ->add('stock', FormType::class)
+            ->add('shortcuts', FormType::class)
         ;
+        $builder->get('shortcuts')->add('stock', FormType::class);
     }
 }
