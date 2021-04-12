@@ -41,7 +41,6 @@ use PrestaShop\PrestaShop\Core\Domain\Product\Supplier\Query\GetProductSupplierO
 use PrestaShop\PrestaShop\Core\Domain\Product\Supplier\QueryResult\ProductSupplierOptions;
 use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductType;
 use PrestaShop\PrestaShop\Core\Util\DateTime\DateTime;
-use Symfony\Component\HttpFoundation\File\File;
 
 /**
  * Provides the data that is used to prefill the Product form
@@ -64,26 +63,18 @@ final class ProductFormDataProvider implements FormDataProviderInterface
     private $mostUsedTaxRulesGroupId;
 
     /**
-     * @var string
-     */
-    private $virtualProductFileDir;
-
-    /**
      * @param CommandBusInterface $queryBus
      * @param bool $defaultProductActivation
      * @param int $mostUsedTaxRulesGroupId
-     * @param string $virtualProductFileDir
      */
     public function __construct(
         CommandBusInterface $queryBus,
         bool $defaultProductActivation,
-        int $mostUsedTaxRulesGroupId,
-        string $virtualProductFileDir
+        int $mostUsedTaxRulesGroupId
     ) {
         $this->queryBus = $queryBus;
         $this->defaultProductActivation = $defaultProductActivation;
         $this->mostUsedTaxRulesGroupId = $mostUsedTaxRulesGroupId;
-        $this->virtualProductFileDir = $virtualProductFileDir;
     }
 
     /**
@@ -179,13 +170,9 @@ final class ProductFormDataProvider implements FormDataProviderInterface
         $virtualProductFile = $productForEditing->getVirtualProductFile();
 
         if (null !== $virtualProductFile) {
-            // @todo: some service to generate file path instead of doing it manually
-            $filePath = $this->virtualProductFileDir . $virtualProductFile->getFileName();
-
             $data = [
                 'has_file' => true,
                 'virtual_product_file_id' => $virtualProductFile->getId(),
-                'file' => new File($filePath),
                 'name' => $virtualProductFile->getDisplayName(),
                 'download_times_limit' => $virtualProductFile->getDownloadTimesLimit(),
                 'access_days_limit' => $virtualProductFile->getAccessDays(),

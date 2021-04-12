@@ -70,7 +70,6 @@ use PrestaShop\PrestaShop\Core\Util\DateTime\NullDateTime;
 use RuntimeException;
 use Symfony\Component\HttpFoundation\File\File;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
-use Tests\Resources\DummyFileUploader;
 
 // @todo: ProductFormDataProvider needs to be split to multiple classes to allow easier testing
 class ProductFormDataProviderTest extends TestCase
@@ -155,7 +154,7 @@ class ProductFormDataProviderTest extends TestCase
         $provider = $this->buildProvider($queryBusMock, false);
 
         $formData = $provider->getData(static::PRODUCT_ID);
-        $this->performAssertion($expectedData, $formData);
+        Assert::assertSame($expectedData, $formData);
     }
 
     public function getExpectedData(): Generator
@@ -181,28 +180,6 @@ class ProductFormDataProviderTest extends TestCase
     }
 
     /**
-     * @param array $expected
-     * @param array $actual
-     */
-    private function performAssertion(array $expected, array $actual): void
-    {
-        Assert::assertEquals(count($expected), count($actual), 'Actual and expected data count differs');
-
-        foreach ($expected as $key => $expectedValue) {
-            $actualValue = $actual[$key];
-
-            if ($key === 'virtual_product_file' && isset($expectedValue['file'], $actualValue['file'])) {
-                // New Symfony/File is created each time - these objects must be equal, but cannot be the same
-                Assert::assertEquals($expectedValue['file'], $actualValue['file']);
-
-                continue;
-            }
-
-            Assert::assertSame($expectedValue, $actualValue);
-        }
-    }
-
-    /**
      * @return array
      */
     private function getDatasetsForVirtualProductFile(): array
@@ -213,7 +190,6 @@ class ProductFormDataProviderTest extends TestCase
         $expectedOutputData['virtual_product_file'] = [
             'has_file' => true,
             'virtual_product_file_id' => self::DEFAULT_VIRTUAL_PRODUCT_FILE_ID,
-            'file' => new File(DummyFileUploader::getDummyFilesPath() . 'logo.jpg'),
             'name' => 'heh logo.jpg',
             'download_times_limit' => 0,
             'access_days_limit' => 0,
@@ -1078,9 +1054,7 @@ class ProductFormDataProviderTest extends TestCase
         return new ProductFormDataProvider(
             $queryBusMock,
             $activation,
-            42,
-            DummyFileUploader::getDummyFilesPath(),
-            $urlGeneratorMock
+            42
         );
     }
 }
