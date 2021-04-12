@@ -255,6 +255,7 @@ class CombinationController extends FrameworkBundleAdminController
                 'impactOnPrice' => (string) $combination->getImpactOnPrice(),
                 'quantity' => $combination->getQuantity(),
                 'isDefault' => $combination->isDefault(),
+                'imagePath' => $combination->getImagePath() ? $combination->getImagePath() . '-small_default.jpg' : null,
             ];
         }
 
