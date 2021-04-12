@@ -47,13 +47,8 @@
         {{ 'Basic settings'|trans({}, 'Admin.Catalog.Feature') }}
       </a>
     </li>
-    {% if productType == 'virtual' %}
-      <li id="virtual-product-tab-nav" class="nav-item">
-        <a href="#virtual-product-tab" role="tab" data-toggle="tab" class="nav-link">
-          {{ 'Virtual product'|trans({}, 'Admin.Catalog.Feature') }}
-        </a>
-      </li>
-    {% elseif productType == 'combinations' %}
+
+    {% if productType == 'combinations' %}
       <li id="combinations-tab-nav" class="nav-item">
         <a href="#combinations-tab" role="tab" data-toggle="tab" class="nav-link">
           {{ 'Combinations'|trans({}, 'Admin.Catalog.Feature') }}
@@ -62,7 +57,11 @@
     {% else %}
       <li id="stock-tab-nav" class="nav-item{% if not isStockTabValid %} has-error{% endif %}">
         <a href="#stock-tab" role="tab" data-toggle="tab" class="nav-link">
-          {{ 'Quantities'|trans({}, 'Admin.Catalog.Feature') }}
+          {% if productType == 'virtual' %}
+            {{ 'Virtual product'|trans({}, 'Admin.Catalog.Feature') }}
+          {% else %}
+            {{ 'Quantities'|trans({}, 'Admin.Catalog.Feature') }}
+          {% endif %}
         </a>
       </li>
     {% endif %}
