@@ -96,13 +96,13 @@ export default class CombinationsGridRenderer {
       $impactOnPriceInput.data('initial-value', combination.impactOnPrice);
       $(ProductMap.combinations.tableRow.editButton(rowIndex), $row).data('id', combination.id);
       $(ProductMap.combinations.tableRow.deleteButton(rowIndex), $row).data('id', combination.id);
+      $(ProductMap.combinations.tableRow.combinationImg, $row).attr('src', combination.imageUrl);
 
       if (combination.isDefault) {
         $(ProductMap.combinations.tableRow.isDefaultInput(rowIndex), $row).prop('checked', true);
       }
 
       this.$combinationsTableBody.append($row);
-
       rowIndex += 1;
     });
   }

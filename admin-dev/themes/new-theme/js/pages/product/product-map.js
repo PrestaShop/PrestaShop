@@ -103,6 +103,7 @@ export default {
     editionForm: 'form[name="combination_form"]',
     editCombinationButtons: '.edit-combination-item',
     tableRow: {
+      combinationImg: '.combination-image',
       combinationIdInput: (rowIndex) => `${combinationListId}_combinations_${rowIndex}_combination_id`,
       combinationNameInput: (rowIndex) => `${combinationListId}_combinations_${rowIndex}_name`,
       referenceInput: (rowIndex) => `${combinationListId}_combinations_${rowIndex}_reference_value`,
