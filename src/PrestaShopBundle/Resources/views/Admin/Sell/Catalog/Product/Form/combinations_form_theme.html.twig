@@ -73,7 +73,7 @@
     <thead class="thead-default">
     <tr class="column-headers">
       <th scope="col">
-        {{ ps.sortable_column_header('ID'|trans({}, 'Admin.Global'), 'combination_id') }}
+        {{ ps.sortable_column_header('ID'|trans({}, 'Admin.Global'), 'id_product_attribute') }}
       </th>
       <th scope="col">
         {{ 'Combination'|trans({}, 'Admin.Global') }}
@@ -82,16 +82,16 @@
         {{ ps.sortable_column_header('Reference'|trans({}, 'Admin.Global'), 'reference') }}
       </th>
       <th scope="col">
-        {{ ps.sortable_column_header('Impact on price (tax excl.)'|trans({}, 'Admin.Catalog.Feature'), 'reference') }}
+        {{ ps.sortable_column_header('Impact on price (tax excl.)'|trans({}, 'Admin.Catalog.Feature'), 'price') }}
       </th>
       <th scope="col">
         {{ 'Final price (tax excl.)'|trans({}, 'Admin.Catalog.Feature') }}
       </th>
       <th scope="col">
-        {{ ps.sortable_column_header('Quantity'|trans({}, 'Admin.Global'), 'reference') }}
+        {{ ps.sortable_column_header('Quantity'|trans({}, 'Admin.Global'), 'stock_quantity') }}
       </th>
       <th scope="col">
-        {{ ps.sortable_column_header('Default combination'|trans({}, 'Admin.Catalog.Feature'), 'reference') }}
+        {{ ps.sortable_column_header('Default combination'|trans({}, 'Admin.Catalog.Feature'), 'default_on') }}
       </th>
       <th scope="col">
         {{ 'Actions'|trans({}, 'Admin.Global') }}
