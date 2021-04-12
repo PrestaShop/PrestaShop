@@ -53,7 +53,11 @@ class LogoUploader
 
     public function updateHeader()
     {
-        $this->update('PS_LOGO', 'logo');
+        if ($this->update('PS_LOGO', 'logo')) {
+            list($width, $height) = getimagesize(_PS_IMG_DIR_ . Configuration::get('PS_LOGO'));
+            Configuration::updateValue('SHOP_LOGO_HEIGHT', (int) round($height));
+            Configuration::updateValue('SHOP_LOGO_WIDTH', (int) round($width));
+        }
     }
 
     public function updateMail()
