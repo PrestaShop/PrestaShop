@@ -116,9 +116,9 @@ export default {
     editModal: '#combination-edit-modal',
   },
   virtualProduct: {
-    container: '#virtual-product-tab',
-    fileSwitchContainer: '#virtualProductFileSwitch',
-    fileContentContainer: '#virtualProductFileContent',
+    container: '#virtual-product-file',
+    fileSwitchContainer: '#virtual-product-file-switch',
+    fileContentContainer: '#virtual-product-file-content',
     fileSwitchOnInputSelector: '#product_virtual_product_file_has_file_1',
     fileSwitchOffInputSelector: '#product_virtual_product_file_has_file_0',
   },
