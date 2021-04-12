@@ -127,8 +127,6 @@ jobs:
             with:
                 php-version: ${{ matrix.php }}
                 extensions: mbstring, intl, gd, xml, dom, json, fileinfo, curl, zip, iconv, simplexml
-            env:
-                COMPOSER_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         -   name: Setup MySQL
             uses: mirromutth/mysql-action@v1.1
             with:
@@ -156,10 +154,6 @@ jobs:
 
         -   name: Composer Install
             run: composer install --ansi --prefer-dist --no-interaction --no-progress
-
-        -   name: Lowest - Composer Install
-            # IMPORTANT: do not run update scripts after configuration is copied, otherwise install-dev/index_cli.php will not complete!
-            run: composer update --prefer-lowest --no-install --no-scripts --ansi --prefer-dist --no-interaction --no-progress && composer install --ansi --prefer-dist --no-interaction --no-progress
 
         -   name: Install PrestaShop
             run: php install-dev/index_cli.php --language=en --country=fr --domain=localhost --db_server=127.0.0.1 --db_password=password --db_name=prestashop --db_create=1 --name=prestashop.unit.test --email=demo@prestashop.com --password=prestashop_demo
