@@ -192,8 +192,6 @@ class TranslationService
             $domain = OthersProviderDefinition::OTHERS_DOMAIN_NAME;
         }
 
-        $translationCatalogueBuilder = $this->container->get('prestashop.translation.builder.translation_catalogue');
-
         if (!empty($module)) {
             $providerDefinition = new ModuleProviderDefinition($module);
         } elseif (
@@ -206,7 +204,7 @@ class TranslationService
             $providerDefinition = new CoreDomainProviderDefinition($domain);
         }
 
-        $domainCatalogue = $translationCatalogueBuilder->getDomainCatalogue(
+        $domainCatalogue = $this->container->get('prestashop.translation.builder.translation_catalogue')->getDomainCatalogue(
             $providerDefinition,
             $locale,
             $domain,

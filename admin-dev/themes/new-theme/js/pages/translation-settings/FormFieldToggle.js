@@ -23,6 +23,9 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
 
+
+import TranslationSettingsMap from './TranslationSettingsMap';
+
 const {$} = window;
 
 /**
@@ -64,8 +67,8 @@ const emailContentBody = 'body';
 
 export default class FormFieldToggle {
   constructor() {
-    $('.js-translation-type').on('change', this.toggleFields.bind(this));
-    $('.js-email-content-type').on('change', this.toggleEmailFields.bind(this));
+    $(TranslationSettingsMap.translationType).on('change', this.toggleFields.bind(this));
+    $(TranslationSettingsMap.emailContentType).on('change', this.toggleEmailFields.bind(this));
 
     this.toggleFields();
   }
@@ -74,11 +77,11 @@ export default class FormFieldToggle {
    * Toggle dependant translations fields, based on selected translation type
    */
   toggleFields() {
-    const selectedOption = $('.js-translation-type').val();
-    const $modulesFormGroup = $('.js-module-form-group');
-    const $emailFormGroup = $('.js-email-form-group');
-    const $themesFormGroup = $('.js-theme-form-group');
-    const $defaultThemeOption = $themesFormGroup.find('.js-default-theme');
+    const selectedOption = $(TranslationSettingsMap.translationType).val();
+    const $modulesFormGroup = $(TranslationSettingsMap.modulesFormGroup);
+    const $emailFormGroup = $(TranslationSettingsMap.emailFormGroup);
+    const $themesFormGroup = $(TranslationSettingsMap.themesFormGroup);
+    const $defaultThemeOption = $themesFormGroup.find(TranslationSettingsMap.defaultThemeOption);
 
     switch (selectedOption) {
       case back:
@@ -112,14 +115,14 @@ export default class FormFieldToggle {
    * Toggles fields, which are related to email translations
    */
   toggleEmailFields() {
-    if ($('.js-translation-type').val() !== mails) {
+    if ($(TranslationSettingsMap.translationType).val() !== mails) {
       return;
     }
 
-    const selectedEmailContentType = $('.js-email-form-group').find('select').val();
-    const $themesFormGroup = $('.js-theme-form-group');
-    const $noThemeOption = $themesFormGroup.find('.js-no-theme');
-    const $defaultThemeOption = $themesFormGroup.find('.js-default-theme');
+    const selectedEmailContentType = $(TranslationSettingsMap.emailFormGroup).find('select').val();
+    const $themesFormGroup = $(TranslationSettingsMap.themesFormGroup);
+    const $noThemeOption = $themesFormGroup.find(TranslationSettingsMap.noThemeOption);
+    const $defaultThemeOption = $themesFormGroup.find(TranslationSettingsMap.defaultThemeOption);
 
     if (selectedEmailContentType === emailContentBody) {
       $noThemeOption.prop('selected', true);
