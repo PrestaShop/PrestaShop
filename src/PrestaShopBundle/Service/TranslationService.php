@@ -27,11 +27,7 @@
 namespace PrestaShopBundle\Service;
 
 use Exception;
-use PrestaShop\PrestaShop\Core\Translation\Storage\Provider\Definition\CoreDomainProviderDefinition;
-use PrestaShop\PrestaShop\Core\Translation\Storage\Provider\Definition\ModuleProviderDefinition;
-use PrestaShop\PrestaShop\Core\Translation\Storage\Provider\Definition\OthersProviderDefinition;
 use PrestaShop\PrestaShop\Core\Translation\Storage\Provider\Definition\ProviderDefinitionInterface;
-use PrestaShop\PrestaShop\Core\Translation\Storage\Provider\Definition\ThemeProviderDefinition;
 use PrestaShopBundle\Entity\Lang;
 use PrestaShopBundle\Entity\Translation;
 use PrestaShopBundle\Exception\InvalidLanguageException;
@@ -116,8 +112,6 @@ class TranslationService
      */
     public function getTranslationsCatalogue($lang, $type, $theme, $search = null)
     {
-        $translationCatalogueBuilder = $this->container->get('prestashop.translation.builder.translation_catalogue');
-
         $factory = $this->container->get('ps.translations_factory');
 
         if ($this->requiresThemeTranslationsFactory($theme, $type)) {
@@ -135,6 +129,24 @@ class TranslationService
     }
 
     /**
+     * Returns the translation domains tree and counters with total of wording and total of missing translations
+     * The tree should look like
+     *  tree => [
+     *      total_translations => int
+     *      total_missing_translations => int
+     *      children => [
+     *          [
+     *              name => string
+     *              full_name => string
+     *              domain_catalog_link => string
+     *              total_translations => int
+     *              total_missing_translations => int
+     *              children => [
+     *                  ...
+     *              ]
+     *          ]
+     *   ]
+     *
      * @param ProviderDefinitionInterface $providerDefinition
      * @param string $locale
      * @param array $search
@@ -167,42 +179,23 @@ class TranslationService
     /**
      * List translations for a specific domain.
      *
-     * @todo: we need module information here
-     * @todo: we need to improve the Vuejs application to send the information
-     *
+     * @param ProviderDefinitionInterface $providerDefinition
      * @param string $locale
      * @param string $domain
-     * @param string|null $theme
      * @param array|null $search
-     * @param string|null $module
      *
      * @return array
      *
      * @throws Exception
+     * @todo: we need module information here
+     * @todo: we need to improve the Vuejs application to send the information
      */
     public function listDomainTranslation(
+        ProviderDefinitionInterface $providerDefinition,
         string $locale,
         string $domain,
-        ?string $theme = null,
-        ?array $search = null,
-        ?string $module = null
+        ?array $search = null
     ): array {
-        if (ucfirst(OthersProviderDefinition::OTHERS_DOMAIN_NAME) === $domain) {
-            $domain = OthersProviderDefinition::OTHERS_DOMAIN_NAME;
-        }
-
-        if (!empty($module)) {
-            $providerDefinition = new ModuleProviderDefinition($module);
-        } elseif (
-            !empty($theme)
-            // Default theme is not considered like other themes because its translations belong to the Core
-            && ThemeProviderDefinition::DEFAULT_THEME_NAME !== $theme
-        ) {
-            $providerDefinition = new ThemeProviderDefinition($theme);
-        } else {
-            $providerDefinition = new CoreDomainProviderDefinition($domain);
-        }
-
         $domainCatalogue = $this->container->get('prestashop.translation.builder.translation_catalogue')->getDomainCatalogue(
             $providerDefinition,
             $locale,

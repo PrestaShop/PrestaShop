@@ -24,11 +24,11 @@
  */
 
 export default {
-    translationType: '.js-translation-type',
-    emailContentType: '.js-email-content-type',
-    emailFormGroup: '.js-email-form-group',
-    modulesFormGroup: '.js-module-form-group',
-    themesFormGroup: '.js-theme-form-group',
-    defaultThemeOption: '.js-default-theme',
-    noThemeOption: '.js-no-theme',
+  translationType: '.js-translation-type',
+  emailContentType: '.js-email-content-type',
+  emailFormGroup: '.js-email-form-group',
+  modulesFormGroup: '.js-module-form-group',
+  themesFormGroup: '.js-theme-form-group',
+  defaultThemeOption: '.js-default-theme',
+  noThemeOption: '.js-no-theme',
 };
