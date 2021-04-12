@@ -50,7 +50,9 @@
           <button
             class="pswp__button pswp__button--share"
             :title="$t('window.download')"
-          />
+          >
+            <i class="material-icons">file_download</i>
+          </button>
 
           <button
             class="pswp__button pswp__button--fs"
