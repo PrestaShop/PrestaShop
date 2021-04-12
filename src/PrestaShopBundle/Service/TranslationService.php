@@ -57,7 +57,7 @@ class TranslationService
     /**
      * @param string $locale
      *
-     * @return mixed
+     * @return Lang
      *
      * @throws InvalidLanguageException
      */
@@ -65,9 +65,10 @@ class TranslationService
     {
         $doctrine = $this->container->get('doctrine');
 
+        /** @var Lang|null $lang */
         $lang = $doctrine->getManager()->getRepository('PrestaShopBundle:Lang')->findOneByLocale($locale);
 
-        if (!$lang) {
+        if (!$lang instanceof Lang) {
             throw InvalidLanguageException::localeNotFound($locale);
         }
 

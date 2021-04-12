@@ -27,7 +27,9 @@
 namespace PrestaShopBundle\Controller\Api;
 
 use Exception;
+use PrestaShop\PrestaShop\Adapter\EntityTranslation\EntityTranslatorFactory;
 use PrestaShopBundle\Api\QueryTranslationParamsCollection;
+use PrestaShopBundle\Entity\Lang;
 use PrestaShopBundle\Exception\InvalidLanguageException;
 use PrestaShopBundle\Security\Annotation\AdminSecurity;
 use PrestaShopBundle\Service\TranslationService;
@@ -188,27 +190,38 @@ class TranslationController extends ApiController
 
             $translationService = $this->container->get('prestashop.service.translation');
             $response = [];
-            foreach ($translations as $translation) {
-                if (empty($translation['theme'])) {
-                    $translation['theme'] = null;
+            $modifiedDomains = [];
+            if (!empty($translations)) {
+                $lang = null;
+                foreach ($translations as $translation) {
+                    if (empty($translation['theme'])) {
+                        $translation['theme'] = null;
+                    }
+
+                    try {
+                        if ($lang === null) {
+                            $lang = $translationService->findLanguageByLocale($translation['locale']);
+                        }
+                    } catch (Exception $exception) {
+                        throw new BadRequestHttpException($exception->getMessage());
+                    }
+
+                    $response[$translation['default']] = $translationService->saveTranslationMessage(
+                        $lang,
+                        $translation['domain'],
+                        $translation['default'],
+                        $translation['edited'],
+                        $translation['theme']
+                    );
+
+                    $modifiedDomains[$translation['domain']] = true;
                 }
 
-                try {
-                    $lang = $translationService->findLanguageByLocale($translation['locale']);
-                } catch (Exception $exception) {
-                    throw new BadRequestHttpException($exception->getMessage());
-                }
+                // this has to be done *before* retranslating
+                $this->clearCache();
 
-                $response[$translation['default']] = $translationService->saveTranslationMessage(
-                    $lang,
-                    $translation['domain'],
-                    $translation['default'],
-                    $translation['edited'],
-                    $translation['theme']
-                );
+                $this->translateMultilingualContent(array_keys($modifiedDomains), $lang);
             }
-
-            $this->clearCache();
 
             return new JsonResponse($response, 200);
         } catch (BadRequestHttpException $exception) {
@@ -411,5 +424,29 @@ class TranslationController extends ApiController
         $translationsTree = $treeBuilder->cleanTreeToApi($translationsTree, $this->container->get('router'), $theme, $search, $module);
 
         return $translationsTree;
+    }
+
+    /**
+     * Trigger translation of multilingual content in database according to which domains have been modified
+     *
+     * @param string[] $modifiedDomains List of modified domains
+     * @param Lang $lang
+     *
+     * @throws \PrestaShopDatabaseException
+     * @throws \PrestaShopException
+     */
+    private function translateMultilingualContent(array $modifiedDomains, Lang $lang)
+    {
+        if (in_array('AdminNavigationMenu', $modifiedDomains)) {
+            $translator = $this->container->get('translator');
+
+            // reset translator
+            $translator->clearLanguage($lang->getLocale());
+
+            // update menu items (tabs)
+            (new EntityTranslatorFactory($translator))
+                ->buildFromTableName('tab', $lang->getLocale())
+                ->translate($lang->getId(), \Context::getContext()->shop->id);
+        }
     }
 }
