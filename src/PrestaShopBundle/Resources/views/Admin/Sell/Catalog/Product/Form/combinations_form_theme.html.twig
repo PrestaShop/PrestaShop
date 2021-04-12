@@ -31,10 +31,13 @@
 {%- endblock -%}
 
 {%- block combination_item_row -%}
-  <tr>
+  <tr id="combination-list-row-{{ form.vars.name }}">
     <td>
       {{ form_widget(form.is_selected) }}
       {{ form_widget(form.combination_id) }}
+    </td>
+    <td>
+      <img class="combination-image" src="" alt="">
     </td>
     <td>
       {{ form_widget(form.name) }}

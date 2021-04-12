@@ -255,11 +255,22 @@ class CombinationController extends FrameworkBundleAdminController
                 'impactOnPrice' => (string) $combination->getImpactOnPrice(),
                 'quantity' => $combination->getQuantity(),
                 'isDefault' => $combination->isDefault(),
-                'imagePath' => $combination->getImagePath() ? $combination->getImagePath() . '-small_default.jpg' : null,
+                // @todo; no image thumbnail instead of null
+                'imageUrl' => $combination->getImagePath() ? $this->formatImageUrl($combination->getImagePath()) : null,
             ];
         }
 
         return $data;
+    }
+
+    /**
+     * @param string $imgPath
+     *
+     * @return string
+     */
+    private function formatImageUrl(string $imgPath): string
+    {
+        return $this->getContext()->link->getAdminBaseLink() . ltrim($imgPath, '/') . '-small_default.jpg';
     }
 
     /**
