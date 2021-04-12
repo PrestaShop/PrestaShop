@@ -78,9 +78,7 @@ class VirtualProductFileCommandsBuilderTest extends AbstractProductCommandBuilde
                 'virtual_product_file' => [
                     'has_file' => true,
                     'virtual_product_file_id' => '0',
-                    'file' => [
-                        'file' => $dummyFile,
-                    ],
+                    'file' => $dummyFile,
                     'name' => 'The file',
                 ],
             ],
@@ -100,9 +98,7 @@ class VirtualProductFileCommandsBuilderTest extends AbstractProductCommandBuilde
                 'virtual_product_file' => [
                     'has_file' => true,
                     'virtual_product_file_id' => null,
-                    'file' => [
-                        'file' => $dummyFile,
-                    ],
+                    'file' => $dummyFile,
                     'name' => 'The file',
                     'access_days_limit' => 1,
                     'download_times_limit' => 5,
@@ -119,9 +115,7 @@ class VirtualProductFileCommandsBuilderTest extends AbstractProductCommandBuilde
                 'virtual_product_file' => [
                     'has_file' => true,
                     'virtual_product_file_id' => 5,
-                    'file' => [
-                        'file' => $dummyFile,
-                    ],
+                    'file' => $dummyFile,
                 ],
             ],
             [$command],
