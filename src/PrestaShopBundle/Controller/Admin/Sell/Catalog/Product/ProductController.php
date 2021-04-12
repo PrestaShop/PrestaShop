@@ -38,8 +38,10 @@ use PrestaShopBundle\Controller\Admin\FrameworkBundleAdminController;
 use PrestaShopBundle\Security\Annotation\AdminSecurity;
 use PrestaShopBundle\Security\Voter\PageVoter;
 use Symfony\Component\Form\FormInterface;
+use Symfony\Component\HttpFoundation\BinaryFileResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpFoundation\ResponseHeaderBag;
 
 /**
  * Admin controller for the Product pages using the Symfony architecture:
@@ -144,6 +146,34 @@ class ProductController extends FrameworkBundleAdminController
             'isMultiShopContext' => $isMultiShopContext,
             'editable' => $this->isGranted(PageVoter::UPDATE, self::PRODUCT_CONTROLLER_PERMISSION),
         ]);
+    }
+
+    /**
+     * Download the content of the virtual product.
+     *
+     * @param int $virtualProductFileId
+     *
+     * @return BinaryFileResponse
+     */
+    public function downloadVirtualFileAction($virtualProductFileId)
+    {
+        $configuration = $this->get('prestashop.adapter.legacy.configuration');
+        $download = $this->getDoctrine()
+            ->getRepository('PrestaShopBundle:ProductDownload')
+            ->findOneBy([
+                'id' => $virtualProductFileId,
+            ]);
+
+        $response = new BinaryFileResponse(
+            $configuration->get('_PS_DOWNLOAD_DIR_') . $download->getFilename()
+        );
+
+        $response->setContentDisposition(
+            ResponseHeaderBag::DISPOSITION_ATTACHMENT,
+            $download->getDisplayFilename()
+        );
+
+        return $response;
     }
 
     /**
