@@ -77,6 +77,10 @@
       };
     },
     props: {
+      parentId: {
+        type: Number,
+        required: true,
+      },
       children: {
         type: Array,
         required: true,
@@ -102,12 +106,12 @@
       },
       toggleFilter(filter) {
         if (this.selectedFilters.includes(filter)) {
-          this.$emit('removeFilter', filter);
+          this.$emit('removeFilter', filter, this.parentId);
           this.selectedFilters = this.selectedFilters.filter(
             (item) => item.id !== filter.id,
           );
         } else {
-          this.$emit('addFilter', filter);
+          this.$emit('addFilter', filter, this.parentId);
           this.selectedFilters.push(filter);
         }
       },

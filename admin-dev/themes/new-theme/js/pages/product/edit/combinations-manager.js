@@ -101,11 +101,15 @@ export default class CombinationsManager {
    */
   watchEvents() {
     this.eventEmitter.on(CombinationEvents.refreshList, () => this.paginator.paginate(this.paginator.getCurrentPage()));
-    this.eventEmitter.on(CombinationEvents.updateAttributes, (attributes) => {
+    this.eventEmitter.on(CombinationEvents.updateAttributeGroups, (attributeGroups) => {
       const currentFilters = this.combinationsService.getFilters();
-      currentFilters.attribute_ids = [];
-      attributes.forEach((attribute) => {
-        currentFilters.attribute_ids.push(attribute.id);
+      currentFilters.attributes = {};
+      Object.keys(attributeGroups).forEach((attributeGroupId) => {
+        currentFilters.attributes[attributeGroupId] = [];
+        const attributes = attributeGroups[attributeGroupId];
+        attributes.forEach((attribute) => {
+          currentFilters.attributes[attributeGroupId].push(attribute.id);
+        });
       });
 
       this.combinationsService.setFilters(currentFilters);
