@@ -169,6 +169,9 @@
           url: router.generate('admin_products_v2_add_image'),
           clickable: DropzoneMap.configuration.fileManager,
           previewTemplate: null,
+          thumbnailWidth: 130,
+          thumbnailHeight: 130,
+          thumbnailMethod: 'crop',
         },
         files: [],
         selectedFiles: [],
@@ -557,6 +560,10 @@
 
       .iscover {
         display: none;
+        left: -2px;
+        bottom: -3px;
+        width: calc(100% + 4px);
+        padding: 9px;
       }
       &.is-cover {
         .iscover {
@@ -619,10 +626,10 @@
 
     .dz-hover {
       position: absolute;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
+      top: -3px;
+      left: -3px;
+      width: calc(100% + 6px);
+      height: calc(100% + 6px);
       background-color: rgba(0, 0, 0, 0);
       transition: 0.25s ease-out;
       pointer-events: none;

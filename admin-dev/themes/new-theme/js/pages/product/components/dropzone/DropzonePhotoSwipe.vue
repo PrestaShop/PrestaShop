@@ -46,25 +46,33 @@
             type="button"
             class="pswp__button pswp__button--close"
             :title="$t('window.closePhotoSwipe')"
-          />
+          >
+            <i class="material-icons">close</i>
+          </button>
 
           <button
             type="button"
             class="pswp__button pswp__button--share"
             :title="$t('window.download')"
-          />
+          >
+            <i class="material-icons">file_download</i>
+          </button>
 
           <button
             type="button"
             class="pswp__button pswp__button--fs"
             :title="$t('window.toggleFullscreen')"
-          />
+          >
+            <i class="material-icons">fullscreen</i>
+          </button>
 
           <button
             type="button"
             class="pswp__button pswp__button--zoom"
             :title="$t('window.zoomPhotoSwipe')"
-          />
+          >
+            <i class="material-icons">zoom_in</i>
+          </button>
 
           <div class="pswp__preloader">
             <div class="pswp__preloader__icn">
@@ -85,13 +93,17 @@
           type="button"
           class="pswp__button pswp__button--arrow--left"
           :title="$t('window.previousPhotoSwipe')"
-        />
+        >
+          <i class="material-icons">arrow_back</i>
+        </button>
 
         <button
           type="button"
           class="pswp__button pswp__button--arrow--right"
           :title="$t('window.nextPhotoSwipe')"
-        />
+        >
+          <i class="material-icons">arrow_forward</i>
+        </button>
 
         <div class="pswp__caption">
           <div class="pswp__caption__center" />
@@ -104,7 +116,7 @@
 <script>
   import PhotoSwipe from 'photoswipe';
   // eslint-disable-next-line
-  import PhotoSwipeUI_Default from "photoswipe/dist/photoswipe-ui-default";
+import PhotoSwipeUI_Default from "photoswipe/dist/photoswipe-ui-default";
   import ProductMap from '@pages/product/product-map';
   import ProductEventMap from '@pages/product/product-event-map';
 
@@ -160,3 +172,22 @@
     methods: {},
   };
 </script>
+
+<style lang="scss" type="text/scss">
+@import "~@scss/config/_settings.scss";
+
+.product-page #product-images-container {
+  .pswp__button {
+    background: none;
+    color: white;
+
+    &::before {
+      content: none;
+    }
+
+    i {
+      pointer-events: none;
+    }
+  }
+}
+</style>
