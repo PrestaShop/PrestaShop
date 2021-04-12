@@ -50,16 +50,16 @@ class GeneralType extends TranslatorAwareType
     /**
      * @param TranslatorInterface $translator
      * @param array $locales
-     * @param bool $isDebug
+     * @param bool|null $isDebug
      */
     public function __construct(
         TranslatorInterface $translator,
         array $locales,
-        bool $isDebug
+        bool $isDebug = null
     ) {
         parent::__construct($translator, $locales);
 
-        $this->isDebug = $isDebug;
+        $this->isDebug = $isDebug === null ? (defined(_PS_MODE_DEV_) ? _PS_MODE_DEV_ : true) : $isDebug;
     }
 
     /**

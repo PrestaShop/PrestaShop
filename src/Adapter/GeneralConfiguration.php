@@ -50,11 +50,16 @@ class GeneralConfiguration implements DataConfigurationInterface
      */
     private $isDebug;
 
-    public function __construct(Configuration $configuration, Cookie $cookie, bool $isDebug)
+    /**
+     * @param Configuration $configuration
+     * @param Cookie $cookie
+     * @param bool|null $isDebug
+     */
+    public function __construct(Configuration $configuration, Cookie $cookie, bool $isDebug = null)
     {
         $this->configuration = $configuration;
         $this->cookie = $cookie;
-        $this->isDebug = $isDebug;
+        $this->isDebug = $isDebug === null ? (defined(_PS_MODE_DEV_) ? _PS_MODE_DEV_ : true) : $isDebug;
     }
 
     /**
