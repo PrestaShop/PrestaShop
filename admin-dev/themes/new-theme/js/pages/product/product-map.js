@@ -95,6 +95,7 @@ export default {
     quantityInputWrapper: '.combination-quantity',
     impactOnPriceInputWrapper: '.combination-impact-on-price',
     referenceInputWrapper: '.combination-reference',
+    sortableColumns: '.ps-sortable-column',
     combinationItemForm: {
       quantityKey: 'combination_item[quantity][value]',
       impactOnPriceKey: 'combination_item[impact_on_price][value]',
