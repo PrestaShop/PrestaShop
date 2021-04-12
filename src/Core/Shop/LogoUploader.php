@@ -49,6 +49,11 @@ class LogoUploader
      */
     private $errors = [];
 
+    /**
+     * @var array - a list of svg mime types
+     */
+    protected const SVG_MIMETYPES = ['image/svg+xml', 'image/svg'];
+
     public function __construct(Shop $shop)
     {
         $this->shop = $shop;
@@ -112,7 +117,7 @@ class LogoUploader
             }
 
             $fileExtension = ($fieldName == 'PS_STORES_ICON') ? '.gif' : '.jpg';
-            if (in_array($files[$fieldName]['type'], ['image/svg+xml', 'image/svg'])) {
+            if ($this->isSvgMimeType($files[$fieldName]['type'])) {
                 $fileExtension = '.svg';
             }
             $logoName = $this->getLogoName($logoPrefix, $fileExtension);
@@ -122,7 +127,7 @@ class LogoUploader
                     throw new PrestaShopException(sprintf('An error occurred while attempting to copy shop icon %s.', $logoName));
                 }
             } else {
-                if (in_array($files[$fieldName]['type'], ['image/svg+xml', 'image/svg'])) {
+                if ($this->isSvgMimeType($files[$fieldName]['type'])) {
                     if (!copy($tmpName, _PS_IMG_DIR_ . $logoName)) {
                         throw new PrestaShopException(sprintf('An error occurred while attempting to copy shop logo %s.', $logoName));
                     }
@@ -149,6 +154,11 @@ class LogoUploader
         }
 
         return false;
+    }
+
+    public function isSvgMimeType(string $mimeType): bool
+    {
+        return (bool) in_array($mimeType, self::SVG_MIMETYPES);
     }
 
     private function updateInMultiShopContext(&$idShop, &$idShopGroup, $fieldName)
