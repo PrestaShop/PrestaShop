@@ -683,6 +683,8 @@
                 </tab>
                 <tab id="FeatureFlag" id_parent="Advanced_Parameters" active="1" enabled="1" hide_host_mode="0" icon="">
                   <class_name>AdminFeatureFlag</class_name>
+                  <wording>Experimental Features</wording>
+                  <wording_domain>Admin.Navigation.Menu</wording_domain>
                 </tab>
 
       <!--QUICK ACCESS-->
