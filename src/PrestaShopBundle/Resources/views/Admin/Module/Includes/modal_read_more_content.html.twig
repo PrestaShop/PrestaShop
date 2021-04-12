@@ -118,7 +118,7 @@
                 {{ 'No description found for this module :('|trans({}, 'Admin.Modules.Notification') }}
               {% endif %}
             </p>
-            {% if module.attributes.multistoreCompatibility is defined %}
+            {% if module.attributes.multistoreCompatibility is not null %}
               <div class="module-readmore-multistore-content">
                 <h3>{{ 'Multistore compatibility:'|trans({}, 'Admin.Modules.Notification') }}</h3>
                 {% if module.attributes.multistoreCompatibility === constant('\\Module::MULTISTORE_COMPATIBILITY_YES') %}
