@@ -1540,8 +1540,3 @@ services:
             - '@prestashop.core.feature_flags.modifier'
         tags:
             - { name: form.type }
-
-    form.type.downloadable_file_type:
-        class: PrestaShopBundle\Form\Admin\Type\DownloadableFileType
-        tags:
-            - { name: form.type }
