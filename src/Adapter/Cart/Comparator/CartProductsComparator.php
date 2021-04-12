@@ -62,10 +62,14 @@ class CartProductsComparator
 
     /**
      * @param array $knownUpdates
+     *
+     * @return CartProductsComparator
      */
-    public function setKnownUpdates(array $knownUpdates): void
+    public function setKnownUpdates(array $knownUpdates): self
     {
         $this->knownUpdates = $knownUpdates;
+
+        return $this;
     }
 
     /**
