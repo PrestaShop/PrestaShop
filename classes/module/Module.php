@@ -206,7 +206,7 @@ abstract class ModuleCore implements ModuleInterface
     protected static $cachedModuleNames = null;
 
     /** @var int|null Define the multistore compatibility level of the module */
-    public $multistoreCompatibility;
+    private $multistoreCompatibility;
 
     const CACHE_FILE_MODULES_LIST = '/config/xml/modules_list.xml';
 
@@ -3504,6 +3504,38 @@ abstract class ModuleCore implements ModuleInterface
     public function saveDashConfig(array $config)
     {
         return false;
+    }
+
+    /**
+     * @param int $compatibility
+     *
+     * @return $this
+     */
+    public function setMultistoreCompatibility(int $compatibility): self
+    {
+        if (!in_array(
+            $compatibility,
+            [
+                self::MULTISTORE_COMPATIBILITY_NO,
+                self::MULTISTORE_COMPATIBILITY_NOT_CONCERNED,
+                self::MULTISTORE_COMPATIBILITY_PARTIAL,
+                self::MULTISTORE_COMPATIBILITY_YES,
+            ]
+        )) {
+            throw new PrestaShopException(sprintf('Value %s is not a valid module compatibility value', $compatibility));
+        }
+
+        $this->multistoreCompatibility = $compatibility;
+
+        return $this;
+    }
+
+    /**
+     * @return int|null
+     */
+    public function getMultistoreCompatibility(): ?int
+    {
+        return $this->multistoreCompatibility;
     }
 }
 
