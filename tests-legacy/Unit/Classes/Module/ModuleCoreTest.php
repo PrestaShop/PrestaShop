@@ -121,7 +121,6 @@ class ModuleCoreTest extends TestCase
             [FakeModule::MULTISTORE_COMPATIBILITY_PARTIAL, false],
             [FakeModule::MULTISTORE_COMPATIBILITY_YES, false],
             [7, true],
-            [15, true],
         ];
     }
 }
