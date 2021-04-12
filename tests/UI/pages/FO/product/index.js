@@ -80,14 +80,24 @@ class Product extends FOBasePage {
   }
 
   /**
+   * Get product attributes from a Ul selector
+   * @param page
+   * @param ulSelector
+   * @returns {Promise<[]>}
+   */
+  getProductsAttributesFromUl(page, ulSelector) {
+    return page.$$eval(`${ulSelector} li .attribute-name`, all => all.map(el => el.textContent));
+  }
+
+  /**
    * Get product attributes
    * @param page
-   * @returns {Promise<{size: *, color: *}>}
+   * @returns {Promise<{size: string, color: string}>}
    */
   async getProductAttributes(page) {
     return {
       size: await this.getTextContent(page, this.productSizeSelect),
-      color: await this.getTextContent(page, this.productColors),
+      color: (await this.getProductsAttributesFromUl(page, this.productColorUl)).join(' '),
     };
   }
 
@@ -244,7 +254,7 @@ class Product extends FOBasePage {
    * @param socialSharing
    * @returns {Promise<void>}
    */
-  async goToSocialSharingLink(page, socialSharing) {
+  async getSocialSharingLink(page, socialSharing) {
     let selector;
     switch (socialSharing) {
       case 'Facebook':
@@ -263,7 +273,7 @@ class Product extends FOBasePage {
         throw new Error(`${socialSharing} was not found`);
     }
 
-    return this.openLinkWithTargetBlank(page, selector, 'body');
+    return this.getAttributeContent(page, selector, 'href');
   }
 
   /**

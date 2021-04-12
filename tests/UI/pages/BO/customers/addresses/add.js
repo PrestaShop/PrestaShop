@@ -54,10 +54,13 @@ class AddAddress extends BOBasePage {
     await this.selectByVisibleText(page, this.customerAddressCountrySelect, addressData.country);
     await this.setValue(page, this.customerAddressPhoneInput, addressData.phone);
     await this.setValue(page, this.customerAddressOtherInput, addressData.other);
+
     // Save address
     if (save) {
-      await this.saveAddress(page);
+      return this.saveAddress(page);
     }
+
+    return null;
   }
 
   /**

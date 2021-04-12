@@ -52,9 +52,9 @@
                   {if $group_attribute.texture}
                     class="color texture" style="background-image: url({$group_attribute.texture})"
                   {elseif $group_attribute.html_color_code}
-                    class="color" style="background-color: {$group_attribute.html_color_code}" 
+                    class="color" style="background-color: {$group_attribute.html_color_code}"
                   {/if}
-                ><span class="sr-only">{$group_attribute.name}</span></span>
+                ><span class="attribute-name sr-only">{$group_attribute.name}</span></span>
               </label>
             </li>
           {/foreach}

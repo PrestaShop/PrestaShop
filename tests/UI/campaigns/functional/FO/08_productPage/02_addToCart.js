@@ -99,7 +99,7 @@ describe('Add product to cart', async () => {
       result = await productPage.getProductAttributes(page);
       await Promise.all([
         await expect(result.size).to.equal(Products.demo_1.combination.size.join(' ')),
-        await expect(result.color).to.equal(`Color ${Products.demo_1.combination.color.join(' ')}`),
+        await expect(result.color).to.equal(`${Products.demo_1.combination.color.join(' ')}`),
       ]);
 
       result = await productPage.getProductImageUrls(page);
@@ -294,16 +294,45 @@ describe('Add product to cart', async () => {
 
   // 4 - Check share links from product page
   describe('Check share links from product page', async () => {
-    ['Facebook', 'Twitter', 'Pinterest'].forEach((test) => {
-      it(`should check share link of '${test}'`, async function () {
-        await testContext.addContextItem(this, 'testIdentifier', `checkShareLink${test}`, baseContext);
+    const tests = [
+      {
+        args:
+          {
+            name: 'Facebook',
+          },
+        result:
+          {
+            url: 'https://www.facebook.com/',
+          },
+      },
+      {
+        args:
+          {
+            name: 'Twitter',
+          },
+        result:
+          {
+            url: 'https://twitter.com/',
+          },
+      },
+      {
+        args:
+          {
+            name: 'Pinterest',
+          },
+        result:
+          {
+            url: 'https://www.pinterest.com/',
+          },
+      },
+    ];
 
-        page = await productPage.goToSocialSharingLink(page, test);
+    tests.forEach((test, index) => {
+      it(`should check share link of '${test.args.name}'`, async function () {
+        await testContext.addContextItem(this, 'testIdentifier', `checkShareLink${index}`, baseContext);
 
-        const url = await productPage.getCurrentURL(page);
-        await expect(url).to.contains(test.toLowerCase());
-
-        page = await productPage.closePage(browserContext, page, 0);
+        const url = await productPage.getSocialSharingLink(page, test.args.name);
+        await expect(url).to.contain(test.result.url);
       });
     });
   });

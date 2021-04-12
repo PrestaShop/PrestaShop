@@ -170,18 +170,49 @@ describe('Product quick view', async () => {
 
   // 3 - Share links from quick view
   describe('Share links from quick view', async () => {
-    ['Facebook', 'Twitter', 'Pinterest'].forEach((test) => {
-      it(`should check share link of '${test}' from quick view modal`, async function () {
-        await testContext.addContextItem(this, 'testIdentifier', `checkShareLink${test}`, baseContext);
+    const tests = [
+      {
+        args:
+          {
+            name: 'Facebook',
+          },
+        result:
+          {
+            url: 'https://www.facebook.com/',
+          },
+      },
+      {
+        args:
+          {
+            name: 'Twitter',
+          },
+        result:
+          {
+            url: 'https://twitter.com/',
+          },
+      },
+      {
+        args:
+          {
+            name: 'Pinterest',
+          },
+        result:
+          {
+            url: 'https://www.pinterest.com/',
+          },
+      },
+    ];
 
-        if (test === 'Facebook') await homePage.quickViewProduct(page, 1);
+    tests.forEach((test, index) => {
+      it(`should check share link of '${test.args.name}' from quick view modal`, async function () {
+        await testContext.addContextItem(this, 'testIdentifier', `checkShareLink${index}`, baseContext);
 
-        page = await homePage.goToSocialSharingLink(page, test);
+        if (index === 0) {
+          await homePage.quickViewProduct(page, 1);
+        }
 
-        const url = await homePage.getCurrentURL(page);
-        await expect(url).to.contains(test.toLowerCase());
-
-        page = await homePage.closePage(browserContext, page, 0);
+        const url = await homePage.getSocialSharingLink(page, test.args.name);
+        await expect(url).to.contain(test.result.url);
       });
     });
   });

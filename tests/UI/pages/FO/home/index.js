@@ -25,7 +25,7 @@ class Home extends FOBasePage {
     this.quickViewCloseButton = `${this.quickViewModalDiv} button.close`;
     this.quickViewProductName = `${this.quickViewModalDiv} h1`;
     this.quickViewRegularPrice = `${this.quickViewModalDiv} span.regular-price`;
-    this.quickViewProductPrice = `${this.quickViewModalDiv} div.current-price span[itemprop="price"]`;
+    this.quickViewProductPrice = `${this.quickViewModalDiv} div.current-price span.current-price-value`;
     this.quickViewDiscountPercentage = `${this.quickViewModalDiv} div.current-price span.discount-percentage`;
     this.quickViewTaxShippingDeliveryLabel = `${this.quickViewModalDiv} div.tax-shipping-delivery-label`;
     this.quickViewShortDescription = `${this.quickViewModalDiv} div#product-description-short`;
@@ -299,7 +299,7 @@ class Home extends FOBasePage {
    * @param socialSharing
    * @returns {Promise<void>}
    */
-  async goToSocialSharingLink(page, socialSharing) {
+  async getSocialSharingLink(page, socialSharing) {
     let selector;
     switch (socialSharing) {
       case 'Facebook':
@@ -318,7 +318,7 @@ class Home extends FOBasePage {
         throw new Error(`${socialSharing} was not found`);
     }
 
-    return this.openLinkWithTargetBlank(page, selector, 'body');
+    return this.getAttributeContent(page, selector, 'href');
   }
 }
 
