@@ -257,6 +257,9 @@
             && this.combinationsHistory[0].id !== selectedCombination.id)
           || !this.combinationsHistory.length
         ) {
+          // eslint-disable-next-line
+          this.combinationsHistory = this.combinationsHistory.filter((combination) => combination.id !== selectedCombination.id);
+
           this.combinationsHistory.unshift(selectedCombination);
         }
       },
@@ -330,6 +333,7 @@
       height: 100%;
       padding: 0;
       margin: 0 1rem;
+      overflow: hidden;
 
       .modal-body {
         padding: 0.5rem;
