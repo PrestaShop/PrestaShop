@@ -34,18 +34,19 @@
         :key="filter.id"
         v-for="filter in filters"
         :children="filter.attributes"
+        :parent-id="filter.id"
         :label="filter.name"
         @addFilter="addFilter"
         @removeFilter="removeFilter"
       />
       <button
         type="button"
-        v-if="selectedFilters.length > 0"
+        v-if="selectedFiltersNumber > 0"
         class="btn btn-outline-secondary combinations-filters-clear"
         @click="clearAll"
       >
         <i class="material-icons">close</i> Clear
-        {{ selectedFilters.length }} filters
+        {{ selectedFiltersNumber }} filters
       </button>
     </div>
   </div>
@@ -63,7 +64,7 @@
     data() {
       return {
         filters: [],
-        selectedFilters: [],
+        selectedFilters: {},
       };
     },
     props: {
@@ -79,7 +80,15 @@
     components: {
       FilterDropdown,
     },
-    computed: {},
+    computed: {
+      selectedFiltersNumber() {
+        if (!this.selectedFilters) {
+          return 0;
+        }
+
+        return Object.values(this.selectedFilters).reduce((total, attributes) => total + attributes.length, 0);
+      },
+    },
     mounted() {
       this.initFilters();
     },
@@ -94,12 +103,21 @@
           window.$.growl.error({message: error});
         }
       },
-      addFilter(filter) {
-        this.selectedFilters.push(filter);
+      addFilter(filter, parentId) {
+        // If absent set new field with set method so that it's reactive
+        if (!this.selectedFilters[parentId]) {
+          this.$set(this.selectedFilters, parentId, []);
+        }
+
+        this.selectedFilters[parentId].push(filter);
         this.updateFilters();
       },
-      removeFilter(filter) {
-        this.selectedFilters = this.selectedFilters.filter(
+      removeFilter(filter, parentId) {
+        if (!this.selectedFilters[parentId]) {
+          return;
+        }
+
+        this.selectedFilters[parentId] = this.selectedFilters[parentId].filter(
           (e) => filter.id !== e.id,
         );
         this.updateFilters();
@@ -107,10 +125,10 @@
       clearAll() {
         this.selectedFilters = [];
         this.$emit('clearAll');
-        this.eventEmitter.emit(CombinationEvents.updateAttributes, this.selectedFilters);
+        this.eventEmitter.emit(CombinationEvents.updateAttributeGroups, this.selectedFilters);
       },
       updateFilters() {
-        this.eventEmitter.emit(CombinationEvents.updateAttributes, this.selectedFilters);
+        this.eventEmitter.emit(CombinationEvents.updateAttributeGroups, this.selectedFilters);
       },
     },
   };

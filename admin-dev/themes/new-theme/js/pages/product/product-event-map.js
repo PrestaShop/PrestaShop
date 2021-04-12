@@ -40,6 +40,6 @@ export default {
   },
   combinations: {
     refreshList: 'refreshCombinationList',
-    updateAttributes: 'updateAttributes',
+    updateAttributeGroups: 'updateAttributeGroups',
   },
 };
