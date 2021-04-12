@@ -59,18 +59,7 @@ export default class CombinationsManager {
    * @private
    */
   init(productId) {
-    this.paginator = new DynamicPaginator(
-      ProductMap.combinations.paginationContainer,
-      this.combinationsService,
-      new CombinationsGridRenderer(),
-    );
-    this.initSubmittableInputs();
-    this.$combinationsContainer.on('change', ProductMap.combinations.isDefaultInputsSelector, (e) => {
-      if (!e.currentTarget.checked) {
-        return;
-      }
-      this.updateDefaultCombination(e.currentTarget);
-    });
+    this.initPaginatedList();
 
     // Paginate to first page when tab is shown
     this.$productForm.find(ProductMap.combinations.navigationTab).on('shown.bs.tab', () => this.firstInit());
@@ -83,6 +72,28 @@ export default class CombinationsManager {
 
     // Finally watch events related to combination listing
     this.watchEvents();
+  }
+
+  /**
+   * @private
+   */
+  initPaginatedList() {
+    this.paginator = new DynamicPaginator(
+      ProductMap.combinations.paginationContainer,
+      this.combinationsService,
+      new CombinationsGridRenderer(),
+    );
+
+    this.initSubmittableInputs();
+
+    this.$combinationsContainer.on('change', ProductMap.combinations.isDefaultInputsSelector, (e) => {
+      if (!e.currentTarget.checked) {
+        return;
+      }
+      this.updateDefaultCombination(e.currentTarget);
+    });
+
+    this.initSortingColumns();
   }
 
   /**
@@ -131,6 +142,44 @@ export default class CombinationsManager {
         [referenceKey]: input.value,
         [tokenKey]: combinationToken,
       });
+    });
+  }
+
+  /**
+   * @private
+   */
+  initSortingColumns() {
+    this.$combinationsContainer.on('click', ProductMap.combinations.sortableColumns, (event) => {
+      const $sortableColumn = $(event.currentTarget);
+      const columnName = $sortableColumn.data('sortColName');
+
+      if (!columnName) {
+        return;
+      }
+
+      let direction = $sortableColumn.data('sortDirection');
+
+      if (!direction || direction === 'desc') {
+        direction = 'asc';
+      } else {
+        direction = 'desc';
+      }
+
+      // Reset all columns, we need to force the attributes for CSS matching
+      $(ProductMap.combinations.sortableColumns, this.$combinationsContainer).removeData('sortIsCurrent', undefined);
+      $(ProductMap.combinations.sortableColumns, this.$combinationsContainer).removeData('sortDirection', undefined);
+      $(ProductMap.combinations.sortableColumns, this.$combinationsContainer).removeAttr('data-sort-is-current', '');
+      $(ProductMap.combinations.sortableColumns, this.$combinationsContainer).removeAttr('data-sort-direction', '');
+
+      // Set correct data in current column, we need to force the attributes for CSS matching
+      $sortableColumn.data('sortIsCurrent', 'true');
+      $sortableColumn.data('sortDirection', direction);
+      $sortableColumn.attr('data-sort-is-current', 'true');
+      $sortableColumn.attr('data-sort-direction', direction);
+
+      // Finally update list
+      this.combinationsService.setOrderBy(columnName, direction);
+      this.paginator.paginate(1);
     });
   }
 

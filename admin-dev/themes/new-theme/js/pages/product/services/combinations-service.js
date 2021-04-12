@@ -35,6 +35,8 @@ export default class CombinationsService {
     this.productId = productId;
     this.router = new Router();
     this.filters = {};
+    this.orderBy = null;
+    this.orderWay = null;
   }
 
   /**
@@ -54,6 +56,12 @@ export default class CombinationsService {
     requestParams[filterId].offset = offset;
     requestParams[filterId].limit = limit;
     requestParams[filterId].filters = this.filters;
+    if (this.orderBy !== null) {
+      requestParams[filterId].orderBy = this.orderBy;
+    }
+    if (this.orderWay !== null) {
+      requestParams[filterId].sortOrder = this.orderWay;
+    }
 
     return $.get(
       this.router.generate('admin_products_combinations', requestParams),
@@ -83,6 +91,15 @@ export default class CombinationsService {
     return $.get(this.router.generate('admin_products_combinations_ids', {
       productId: this.productId,
     }));
+  }
+
+  /**
+   * @param {string} orderBy
+   * @param {string} orderWay
+   */
+  setOrderBy(orderBy, orderWay) {
+    this.orderBy = orderBy;
+    this.orderWay = orderWay.toLowerCase() === 'desc' ? 'DESC' : 'ASC';
   }
 
   /**
