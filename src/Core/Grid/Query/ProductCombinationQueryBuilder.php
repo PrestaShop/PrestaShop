@@ -68,7 +68,7 @@ final class ProductCombinationQueryBuilder extends AbstractDoctrineQueryBuilder
             );
         }
 
-        $qb = $this->getCombinationsQueryBuilder($searchCriteria)->select('pa.*');
+        $qb = $this->getCombinationsQueryBuilder($searchCriteria)->addSelect('pa.*');
 
         $this->searchCriteriaApplicator
             ->applyPagination($searchCriteria, $qb)
@@ -137,6 +137,16 @@ final class ProductCombinationQueryBuilder extends AbstractDoctrineQueryBuilder
 
         if (null === $productCombinationFilters->getOrderBy()) {
             $qb->addOrderBy('id_product_attribute', 'asc');
+        } elseif ('stock_quantity' === $productCombinationFilters->getOrderBy()) {
+            $qb
+                ->addSelect('pa.quantity AS stock_quantity')
+                ->leftJoin(
+                'pa',
+                $this->dbPrefix . 'stock_available',
+                'sa',
+                'pa.id_product_attribute = sa.id_product_attribute'
+                )
+            ;
         }
 
         return $qb;
