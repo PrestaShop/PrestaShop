@@ -39,6 +39,7 @@
         @removeFilter="removeFilter"
       />
       <button
+        type="button"
         v-if="selectedFilters.length > 0"
         class="btn btn-outline-secondary combinations-filters-clear"
         @click="clearAll"
@@ -79,15 +80,6 @@
       FilterDropdown,
     },
     computed: {},
-    updated() {
-      const clearButton = document.querySelector('.combinations-filters-clear');
-
-      if (clearButton) {
-        clearButton.addEventListener('click', (e) => {
-          e.preventDefault();
-        });
-      }
-    },
     mounted() {
       this.initFilters();
     },
