@@ -93,7 +93,7 @@ final class CurrencyGridDefinitionFactory extends AbstractGridDefinitionFactory
                         'field' => 'id_currency',
                     ])
             )
-            ->add((new NameColumn('currency'))
+            ->add((new NameColumn('name'))
             ->setName($this->trans('Currency', [], 'Admin.Global'))
             ->setOptions([
                 'field' => 'name',
