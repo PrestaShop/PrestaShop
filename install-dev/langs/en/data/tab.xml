@@ -133,4 +133,5 @@
     <tab id="Zones" name="Zones" />
     <tab id="Marketing_tools" name="Module Selections" />
     <tab id="Tabs" name="Menu" />
+    <tab id="FeatureFlag" name="Experimental Features" />
 </entity_tab>
