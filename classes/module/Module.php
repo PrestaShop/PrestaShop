@@ -205,7 +205,7 @@ abstract class ModuleCore implements ModuleInterface
     /** @var array|null used to cache module ids */
     protected static $cachedModuleNames = null;
 
-    /** @var int Define the multistore compatibility level of the module */
+    /** @var int|null Define the multistore compatibility level of the module */
     public $multistoreCompatibility;
 
     const CACHE_FILE_MODULES_LIST = '/config/xml/modules_list.xml';
@@ -222,10 +222,10 @@ abstract class ModuleCore implements ModuleInterface
     const CACHE_FILE_TRUSTED_MODULES_LIST = '/config/xml/trusted_modules_list.xml';
     const CACHE_FILE_UNTRUSTED_MODULES_LIST = '/config/xml/untrusted_modules_list.xml';
 
-    const MULTISTORE_COMPATIBILITY_NO = 0;
-    const MULTISTORE_COMPATIBILITY_NOT_CONCERNED = 1;
-    const MULTISTORE_COMPATIBILITY_PARTIAL = 2;
-    const MULTISTORE_COMPATIBILITY_YES = 3;
+    public const MULTISTORE_COMPATIBILITY_NO = 0;
+    public const MULTISTORE_COMPATIBILITY_NOT_CONCERNED = 1;
+    public const MULTISTORE_COMPATIBILITY_PARTIAL = 2;
+    public const MULTISTORE_COMPATIBILITY_YES = 3;
 
     public static $hosted_modules_blacklist = ['autoupgrade'];
 
