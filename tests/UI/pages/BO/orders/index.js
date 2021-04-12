@@ -109,6 +109,20 @@ class Order extends BOBasePage {
   }
 
   /**
+   * Filter orders by date from and date to
+   * @param page
+   * @param dateFrom
+   * @param dateTo
+   * @returns {Promise<void>}
+   */
+  async filterOrdersByDate(page, dateFrom, dateTo) {
+    await page.type(this.filterColumn('date_add_from'), dateFrom);
+    await page.type(this.filterColumn('date_add_to'), dateTo);
+    // click on search
+    await this.clickAndWaitForNavigation(page, this.filterSearchButton);
+  }
+
+  /**
    * Reset filter in orders
    * @param page
    * @return {Promise<void>}
