@@ -154,13 +154,13 @@ class VirtualProductFileType extends TranslatorAwareType
             ])
         ;
 
-        // Preset the input attributes correctly depending on the data
+        // Preset the download url option if a virtual file is present
         $builder->addEventListener(FormEvents::PRE_SET_DATA, function (FormEvent $event) {
             $data = $event->getData();
-
             if (empty($data['virtual_product_file_id'])) {
                 return;
             }
+
             $virtualProductFileId = (int) $data['virtual_product_file_id'];
             $virtualProductFileDownloadUrl = $this->router->generate('admin_products_v2_download_virtual_product_file', [
                 'virtualProductFileId' => $virtualProductFileId,
