@@ -168,9 +168,9 @@ class ProductFormDataProviderTest extends TestCase
             $this->getDataSetsForFeatures(),
             $this->getDataSetsForManufacturer(),
             $this->getDatasetsForCustomizations(),
+            $this->getDatasetsForVirtualProductFile(),
             $this->getDatasetsForPrices(),
             $this->getDatasetsForStock(),
-            $this->getDatasetsForVirtualProductFile(),
         ];
 
         foreach ($datasetsByType as $datasetByType) {
@@ -1029,6 +1029,9 @@ class ProductFormDataProviderTest extends TestCase
             ],
             'suppliers' => [],
             'customizations' => [],
+            'virtual_product_file' => [
+                'has_file' => false,
+            ],
             'shortcuts' => [
                 'price' => [
                     'price_tax_excluded' => 19.86,
@@ -1038,9 +1041,6 @@ class ProductFormDataProviderTest extends TestCase
                 'stock' => [
                     'quantity' => static::DEFAULT_QUANTITY,
                 ],
-            ],
-            'virtual_product_file' => [
-                'has_file' => false,
             ],
         ];
     }
