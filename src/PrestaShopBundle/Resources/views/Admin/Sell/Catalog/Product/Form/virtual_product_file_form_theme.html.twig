@@ -23,11 +23,21 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  *#}
 
+{% use '@PrestaShop/Admin/TwigTemplateForm/prestashop_ui_kit.html.twig' %}
+
+{% block file_widget %}
+  {{ parent() }}
+  {% if form.parent.vars.data.has_file %}
+{#    @todo: productId is not visible here. Is this approach valid at all?#}
+{#    <a href="{{ path('admin_product_virtual_download_file_action', {idProduct: productId}) }}">{{ 'Download file'|trans({}, 'Admin.Catalog.Feature') }}</a>#}
+  {% endif %}
+{% endblock file_widget %}
+
 {%- block virtual_product_file_widget -%}
   <div id="virtual-product-file-switch">
     {{ form_row(form.has_file) }}
   </div>
   <div id="virtual-product-file-content">
-    {{ form_widget(form) }}
+    {{ form_rest(form) }}
   </div>
 {%- endblock virtual_product_file_widget -%}

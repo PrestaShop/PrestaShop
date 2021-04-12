@@ -33,6 +33,7 @@ use PrestaShopBundle\Form\Admin\Type\DatePickerType;
 use PrestaShopBundle\Form\Admin\Type\DownloadableFileType;
 use PrestaShopBundle\Form\Admin\Type\SwitchType;
 use PrestaShopBundle\Form\Admin\Type\TranslatorAwareType;
+use Symfony\Component\Form\Extension\Core\Type\FileType;
 use Symfony\Component\Form\Extension\Core\Type\HiddenType;
 use Symfony\Component\Form\Extension\Core\Type\NumberType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
@@ -73,17 +74,15 @@ class VirtualProductFileType extends TranslatorAwareType
                 'label' => $this->trans('Does this product have an associated file?', 'Admin.Catalog.Feature'),
             ])
             ->add('virtual_product_file_id', HiddenType::class)
-            ->add('file', DownloadableFileType::class, [
+            ->add('file', FileType::class, [
                 'label' => $this->trans('File', 'Admin.Global'),
-                'file_options' => [
-                    'help' => $this->trans(
-                        'Upload a file from your computer (%maxUploadSize% max.)',
-                        'Admin.Catalog.Help',
-                        ['%maxUploadSize%' => $maxUploadSize]
-                    ),
-                    'constraints' => [
-                        new File(['maxSize' => $maxUploadSize]),
-                    ],
+                'help' => $this->trans(
+                    'Upload a file from your computer (%maxUploadSize% max.)',
+                    'Admin.Catalog.Help',
+                    ['%maxUploadSize%' => $maxUploadSize]
+                ),
+                'constraints' => [
+                    new File(['maxSize' => $maxUploadSize]),
                 ],
             ])
             ->add('name', TextType::class, [
