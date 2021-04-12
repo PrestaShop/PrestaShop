@@ -75,7 +75,7 @@
         {% block product_tab_stock %}
           <div role="tabpanel" class="form-contenttab tab-pane" id="stock-tab">
             {% if productType == 'virtual' %}
-              {{ include('@PrestaShop/Admin/Sell/Catalog/Product/Tabs/virtual.html.twig') }}
+              {{ include('@PrestaShop/Admin/Sell/Catalog/Product/Blocks/virtual.html.twig') }}
             {% endif %}
             {{ form_widget(productForm.stock) }}
           </div>
