@@ -101,6 +101,8 @@ $(document).ready(() => {
       min: 1,
       max: 1000000,
     });
+
+    $('.js-touchspin').off('touchstart.touchspin');
   };
 
   const move = (direction) => {

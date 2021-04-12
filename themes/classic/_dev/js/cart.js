@@ -26,6 +26,8 @@ function createSpin() {
     });
   });
 
+  $('.js-touchspin').off('touchstart.touchspin');
+
   CheckUpdateQuantityOperations.switchErrorStat();
 }
 
