@@ -31,6 +31,7 @@ namespace Tests\Unit\Core\Form\IdentifiableObject\DataProvider;
 use DateTime;
 use DateTimeImmutable;
 use Generator;
+use PHPUnit\Framework\Assert;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 use PrestaShop\Decimal\DecimalNumber;
@@ -154,8 +155,7 @@ class ProductFormDataProviderTest extends TestCase
         $provider = $this->buildProvider($queryBusMock, false);
 
         $formData = $provider->getData(static::PRODUCT_ID);
-        // assertSame is very important here We can't assume null and 0 are the same thing
-        $this->assertSame($expectedData, $formData);
+        $this->performAssertion($expectedData, $formData);
     }
 
     public function getExpectedData(): Generator
@@ -177,6 +177,28 @@ class ProductFormDataProviderTest extends TestCase
             foreach ($datasetByType as $dataset) {
                 yield $dataset;
             }
+        }
+    }
+
+    /**
+     * @param array $expected
+     * @param array $actual
+     */
+    private function performAssertion(array $expected, array $actual): void
+    {
+        Assert::assertEquals(count($expected), count($actual), 'Actual and expected data count differs');
+
+        foreach ($expected as $key => $expectedValue) {
+            $actualValue = $actual[$key];
+
+            if ($key === 'virtual_product_file' && isset($expectedValue['file']['file'], $actualValue['file']['file'])) {
+                // New Symfony/File is created each time - these objects must be equal, but cannot be the same
+                Assert::assertEquals($expectedValue['file']['file'], $actualValue['file']['file']);
+
+                continue;
+            }
+
+            Assert::assertSame($expectedValue, $actualValue);
         }
     }
 
