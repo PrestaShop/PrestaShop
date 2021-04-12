@@ -3514,7 +3514,7 @@ abstract class ModuleCore implements ModuleInterface
                 self::MULTISTORE_COMPATIBILITY_YES,
             ]
         )) {
-            throw new PrestaShopException(sprintf('Value %s is not a valid module compatibility value', $compatibility));
+            throw new PrestaShopException(sprintf('Value %s is not a valid multistore compatibility value', $compatibility));
         }
 
         $this->multistoreCompatibility = $compatibility;
