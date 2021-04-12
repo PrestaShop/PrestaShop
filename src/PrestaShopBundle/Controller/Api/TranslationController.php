@@ -28,7 +28,11 @@ namespace PrestaShopBundle\Controller\Api;
 
 use Exception;
 use PrestaShop\PrestaShop\Adapter\EntityTranslation\EntityTranslatorFactory;
+use PrestaShop\PrestaShop\Core\Translation\Storage\Provider\Definition\CoreDomainProviderDefinition;
+use PrestaShop\PrestaShop\Core\Translation\Storage\Provider\Definition\ModuleProviderDefinition;
+use PrestaShop\PrestaShop\Core\Translation\Storage\Provider\Definition\OthersProviderDefinition;
 use PrestaShop\PrestaShop\Core\Translation\Storage\Provider\Definition\ProviderDefinitionInterface;
+use PrestaShop\PrestaShop\Core\Translation\Storage\Provider\Definition\ThemeProviderDefinition;
 use PrestaShopBundle\Api\QueryTranslationParamsCollection;
 use PrestaShopBundle\Entity\Lang;
 use PrestaShopBundle\Exception\InvalidLanguageException;
@@ -83,7 +87,23 @@ class TranslationController extends ApiController
                 throw UnsupportedLocaleException::invalidLocale($locale);
             }
 
-            $catalog = $translationService->listDomainTranslation($locale, $domain, $theme, $this->searchExpressionToArray($search), $module);
+            if (ucfirst(OthersProviderDefinition::OTHERS_DOMAIN_NAME) === $domain) {
+                $domain = OthersProviderDefinition::OTHERS_DOMAIN_NAME;
+            }
+
+            if (!empty($module)) {
+                $providerDefinition = new ModuleProviderDefinition($module);
+            } elseif (
+                !empty($theme)
+                // Default theme is not considered like other themes because its translations belong to the Core
+                && ThemeProviderDefinition::DEFAULT_THEME_NAME !== $theme
+            ) {
+                $providerDefinition = new ThemeProviderDefinition($theme);
+            } else {
+                $providerDefinition = new CoreDomainProviderDefinition($domain);
+            }
+
+            $catalog = $translationService->listDomainTranslation($providerDefinition, $locale, $domain, $this->searchExpressionToArray($search));
             $info = [
                 'Total-Pages' => ceil(count($catalog['data']) / $queryParams['page_size']),
             ];
@@ -352,7 +372,7 @@ class TranslationController extends ApiController
      *
      * @throws Exception
      */
-    private function getTree(string $lang, string $type, array $search, ?string $selectedValue = null)
+    private function getTree(string $lang, string $type, array $search, ?string $selectedValue = null): array
     {
         $locale = $this->translationService->langToLocale($lang);
         $providerDefinitionFactory = $this->container->get('prestashop.translation.factory.provider_definition');
