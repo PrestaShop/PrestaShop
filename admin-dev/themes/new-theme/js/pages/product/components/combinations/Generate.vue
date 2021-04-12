@@ -44,9 +44,12 @@
                 class="tag"
                 :key="selectedAttribute.id_combination"
                 v-for="selectedAttribute in group"
-              >{{ groupName }}: {{ selectedAttribute.name }}<i
+              >{{ groupName }}: {{ selectedAttribute.name
+              }}<i
                 class="material-icons"
-                @click.prevent.stop="changeSelected(selectedAttribute, {name: groupName})"
+                @click.prevent.stop="
+                  changeSelected(selectedAttribute, { name: groupName })
+                "
               >close</i></span>
             </template>
           </div>
@@ -188,6 +191,7 @@
        * Show the modal, and execute PerfectScrollBar and Typehead
        */
       showModal() {
+        document.querySelector('body').classList.add('overflow-hidden');
         this.isModalShown = true;
         const that = this;
 
@@ -207,7 +211,12 @@
 
           const $searchInput = $(CombinationsMap.searchInput);
           const source = new Bloodhound({
-            datumTokenizer: Bloodhound.tokenizers.obj.whitespace('name', 'value', 'color', 'group_name'),
+            datumTokenizer: Bloodhound.tokenizers.obj.whitespace(
+              'name',
+              'value',
+              'color',
+              'group_name',
+            ),
             queryTokenizer: Bloodhound.tokenizers.whitespace,
             local: searchItems,
           });
@@ -216,6 +225,7 @@
             source,
             display: 'name',
             value: 'name',
+            minLength: 1,
             onSelect(selectedItem) {
               const groupName = {
                 name: selectedItem.group_name,
@@ -237,7 +247,9 @@
 
               if (typeof dataSetConfig.display === 'function') {
                 dataSetConfig.display(item);
-              } else if (Object.prototype.hasOwnProperty.call(item, dataSetConfig.display)) {
+              } else if (
+                Object.prototype.hasOwnProperty.call(item, dataSetConfig.display)
+              ) {
                 displaySuggestion = item[dataSetConfig.display];
               }
 
@@ -253,6 +265,7 @@
        */
       closeModal() {
         this.isModalShown = false;
+        document.querySelector('body').classList.remove('overflow-hidden');
       },
       /**
        * Used when the user clicks on the Generate button of the modal
@@ -268,19 +281,27 @@
        * @param {{name: string}} Combination
        */
       changeSelected(combination, group) {
-        if (!this.selectedAttributes[group.name] || !this.selectedAttributes[group.name].includes(combination)) {
+        if (
+          !this.selectedAttributes[group.name]
+          || !this.selectedAttributes[group.name].includes(combination)
+        ) {
           if (!this.selectedAttributes[group.name]) {
             const newAttributeGroup = {};
 
             newAttributeGroup[group.name] = [];
             newAttributeGroup[group.name].push(combination);
-            this.selectedAttributes = {...this.selectedAttributes, ...newAttributeGroup};
+            this.selectedAttributes = {
+              ...this.selectedAttributes,
+              ...newAttributeGroup,
+            };
           } else {
             this.selectedAttributes[group.name].push(combination);
           }
         } else {
           // eslint-disable-next-line
-          this.selectedAttributes[group.name] = this.selectedAttributes[group.name].filter((e) => e.id_combination !== combination.id_combination);
+        this.selectedAttributes[group.name] = this.selectedAttributes[
+            group.name
+          ].filter((e) => e.id_combination !== combination.id_combination);
         }
       },
       isSelected(combination, attribut) {
@@ -303,40 +324,55 @@
     }
 
     #attributes-list {
-     max-height: 50vh;
+      max-height: 50vh;
 
-     .combination {
-       &:last-of-type {
-        border-bottom: 1px solid $gray-300;
-        margin-bottom: .1rem;
-       }
-     }
+      .combination {
+        &:last-of-type {
+          border-bottom: 1px solid $gray-300;
+          margin-bottom: 0.1rem;
+        }
+      }
 
-     .attributes {
-      height: auto;
-     }
+      .attributes {
+        height: auto;
+      }
     }
 
     .product-combinations-modal-content {
       position: relative;
-      padding-bottom: .5rem;
+      padding-bottom: 0.5rem;
     }
   }
 
   .combination {
+    &:last-of-type {
+      border-bottom-left-radius: 4px;
+      border-bottom-right-radius: 4px;
+    }
+
+    &:first-of-type {
+      border-top-left-radius: 4px;
+      border-top-right-radius: 4px;
+    }
+
+    &-content {
+      border-top: 1px solid $gray-300;
+    }
+
     &-item {
       cursor: pointer;
       border-radius: 3px;
-      margin-right: .5rem;
+      margin: 0.25rem 0;
+      margin-right: 0.5rem;
 
       &-content {
         display: flex;
         align-items: center;
-        padding: .5rem;
+        padding: 0.5rem;
       }
 
       &-color {
-        margin-right: .5rem;
+        margin-right: 0.5rem;
       }
 
       &.selected {
