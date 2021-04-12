@@ -28,6 +28,7 @@ namespace LegacyTests\Unit\Classes\Module;
 
 use Module;
 use PHPUnit\Framework\TestCase;
+use PrestaShopExceptionCore;
 use Symfony\Component\DomCrawler\Crawler;
 
 class FakeModule extends Module
@@ -73,11 +74,11 @@ class ModuleCoreTest extends TestCase
     public function testDisplayErrorShouldReturnMultipleErrors()
     {
         // given
-        $errors = array(
+        $errors = [
             'Error 1',
             'Error 2',
             'Error 3',
-        );
+        ];
 
         $module = new FakeModule();
 
@@ -87,5 +88,40 @@ class ModuleCoreTest extends TestCase
         // then
         $crawler = new Crawler($htmlOutput);
         $this->assertCount(3, $crawler->filter('.module_error li'));
+    }
+
+    /**
+     * @param int $multistoreCompatibility
+     * @param bool $throwsException
+     *
+     * @dataProvider setMultistoreCompatibilityProvider
+     */
+    public function testSetAndGetMultistoreCompatibility(int $multistoreCompatibility, bool $throwsException)
+    {
+        $module = new FakeModule();
+        if ($throwsException) {
+            $this->expectException(PrestaShopExceptionCore::class);
+        }
+
+        $module->setMultistoreCompatibility($multistoreCompatibility);
+
+        if (!$throwsException) {
+            $this->assertEquals($multistoreCompatibility, $module->getMultistoreCompatibility());
+        }
+    }
+
+    /**
+     * @return array[]
+     */
+    public function setMultistoreCompatibilityProvider()
+    {
+        return [
+            [FakeModule::MULTISTORE_COMPATIBILITY_NO, false],
+            [FakeModule::MULTISTORE_COMPATIBILITY_NOT_CONCERNED, false],
+            [FakeModule::MULTISTORE_COMPATIBILITY_PARTIAL, false],
+            [FakeModule::MULTISTORE_COMPATIBILITY_YES, false],
+            [7, true],
+            [15, true],
+        ];
     }
 }
