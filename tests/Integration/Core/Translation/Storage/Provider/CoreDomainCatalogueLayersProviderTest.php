@@ -27,6 +27,7 @@ declare(strict_types=1);
 
 namespace Tests\Integration\Core\Translation\Storage\Provider;
 
+use Generator;
 use PrestaShop\PrestaShop\Core\Language\LanguageRepositoryInterface;
 use PrestaShop\PrestaShop\Core\Translation\Storage\Provider\CoreCatalogueLayersProvider;
 use PrestaShop\PrestaShop\Core\Translation\Storage\Provider\Definition\CoreDomainProviderDefinition;
@@ -52,81 +53,102 @@ class CoreDomainCatalogueLayersProviderTest extends KernelTestCase
 
     /**
      * Test it loads a XLIFF catalogue from the locale's `translations` directory
+     *
+     * @dataProvider getValuesForLoadCatalogueFromXliff
      */
-    public function testItLoadsCatalogueFromXliffFilesInLocaleDirectory(): void
+    public function testItLoadsCatalogueFromXliffFilesInLocaleDirectory(string $domain, array $expectedCatalogue): void
     {
         // load catalogue from translations/fr-FR
-        $catalogue = $this->getFileTranslatedCatalogue('AdminActions', 'fr-FR');
+        $catalogue = $this->getFileTranslatedCatalogue($domain, 'fr-FR');
 
-        $expected = [
-            'AdminActions' => [
-                'count' => 90,
-                'translations' => [
-                    'Save and stay' => 'Enregistrer et rester',
-                    'Uninstall' => 'Désinstaller',
+        // verify all catalogues are loaded
+        $this->assertResultIsAsExpected($expectedCatalogue, $catalogue);
+    }
+
+    public function getValuesForLoadCatalogueFromXliff(): Generator
+    {
+        yield [
+            // domain
+            'AdminActions',
+            // expectedCatalogue
+            [
+                'AdminActions' => [
+                    'count' => 90,
+                    'translations' => [
+                        'Save and stay' => 'Enregistrer et rester',
+                        'Uninstall' => 'Désinstaller',
+                    ],
                 ],
             ],
         ];
 
-        // verify all catalogues are loaded
-        $this->assertResultIsAsExpected($expected, $catalogue);
-
-        // load catalogue from translations/fr-FR
-        $catalogue = $this->getFileTranslatedCatalogue('ModulesCheckpaymentAdmin', 'fr-FR');
-
-        $expected = [
-            'ModulesCheckpaymentAdmin' => [
-                'count' => 15,
-                'translations' => [
-                    'The "Payee" and "Address" fields must be configured before using this module.' => 'Les champs "Nom du bénéficiaire" et "Adresse" doivent être configurés avant d\'utiliser ce module.',
-                    'No currency has been set for this module.' => 'Aucune devise disponible pour ce module',
+        yield [
+            // domain
+            'ModulesCheckpaymentAdmin',
+            // expectedCatalogue
+            [
+                'ModulesCheckpaymentAdmin' => [
+                    'count' => 15,
+                    'translations' => [
+                        'The "Payee" and "Address" fields must be configured before using this module.' => 'Les champs "Nom du bénéficiaire" et "Adresse" doivent être configurés avant d\'utiliser ce module.',
+                        'No currency has been set for this module.' => 'Aucune devise disponible pour ce module',
+                    ],
                 ],
             ],
         ];
-
-        // verify all catalogues are loaded
-        $this->assertResultIsAsExpected($expected, $catalogue);
     }
 
     /**
      * Test it loads a default catalogue from the `translations` default directory
+     *
+     * @dataProvider getValuesForExtractDefaultCatalogue
      */
-    public function testItExtractsDefaultCatalogueFromTranslationsDefaultFiles(): void
+    public function testItExtractsDefaultCatalogueFromTranslationsDefaultFiles(string $domain, array $expectedCatalogue): void
     {
         // load catalogue from translations/default
-        $catalogue = $this->getDefaultCatalogue('AdminActions', 'fr-FR');
-
-        $expected = [
-            'AdminActions' => [
-                'count' => 91,
-                'translations' => [
-                    'Save and stay' => '',
-                    'Uninstall' => '',
-                ],
-            ],
-        ];
+        $catalogue = $this->getDefaultCatalogue($domain, 'fr-FR');
 
         // verify all catalogues are loaded
-        $this->assertResultIsAsExpected($expected, $catalogue);
-
-        // load catalogue from translations/default
-        $catalogue = $this->getDefaultCatalogue('ModulesCheckpaymentAdmin', 'fr-FR');
-
-        $expected = [
-            'ModulesCheckpaymentAdmin' => [
-                'count' => 15,
-                'translations' => [
-                    'The "Payee" and "Address" fields must be configured before using this module.' => '',
-                    'No currency has been set for this module.' => '',
-                ],
-            ],
-        ];
-
-        // verify all catalogues are loaded
-        $this->assertResultIsAsExpected($expected, $catalogue);
+        $this->assertResultIsAsExpected($expectedCatalogue, $catalogue);
     }
 
-    public function testItLoadsCustomizedTranslationsFromDatabase(): void
+    public function getValuesForExtractDefaultCatalogue(): Generator
+    {
+        yield [
+            // domain
+            'AdminActions',
+            // expectedCatalogue
+            [
+                'AdminActions' => [
+                    'count' => 91,
+                    'translations' => [
+                        'Save and stay' => '',
+                        'Uninstall' => '',
+                    ],
+                ],
+            ],
+        ];
+
+        yield [
+            // domain
+            'ModulesCheckpaymentAdmin',
+            // expectedCatalogue
+            [
+                'ModulesCheckpaymentAdmin' => [
+                    'count' => 15,
+                    'translations' => [
+                        'The "Payee" and "Address" fields must be configured before using this module.' => '',
+                        'No currency has been set for this module.' => '',
+                    ],
+                ],
+            ],
+        ];
+    }
+
+    /**
+     * @dataProvider getValuesForLoadCatalogueFromDatabase
+     */
+    public function testItLoadsCustomizedTranslationsFromDatabase(string $domain, array $expectedCatalogue): void
     {
         $databaseContent = [
             [
@@ -146,36 +168,43 @@ class CoreDomainCatalogueLayersProviderTest extends KernelTestCase
         ];
 
         // load catalogue from database translations
-        $catalogue = $this->getUserTranslatedCatalogue('AdminActions', 'fr-FR', $databaseContent);
+        $catalogue = $this->getUserTranslatedCatalogue($domain, 'fr-FR', $databaseContent);
 
-        $expected = [
-            'AdminActions' => [
-                'count' => 1,
-                'translations' => [
-                    'Save and stay' => 'Save and stay',
-                    'Uninstall' => 'Traduction customisée',
+        // verify all catalogues are loaded
+        $this->assertResultIsAsExpected($expectedCatalogue, $catalogue);
+    }
+
+    public function getValuesForLoadCatalogueFromDatabase(): Generator
+    {
+        yield [
+            // domain
+            'AdminActions',
+            // expectedCatalogue
+            [
+                'AdminActions' => [
+                    'count' => 1,
+                    'translations' => [
+                        'Save and stay' => 'Save and stay',
+                        'Uninstall' => 'Traduction customisée',
+                    ],
                 ],
             ],
         ];
 
-        // verify all catalogues are loaded
-        $this->assertResultIsAsExpected($expected, $catalogue);
-
-        // load catalogue from database translations
-        $catalogue = $this->getUserTranslatedCatalogue('ShopActions', 'fr-FR', $databaseContent);
-
-        $expected = [
-            'ShopActions' => [
-                'count' => 1,
-                'translations' => [
-                    'Some made up text' => 'Un texte inventé',
-                    'Uninstall' => 'Uninstall',
+        yield [
+            // domain
+            'ShopActions',
+            // expectedCatalogue
+            [
+                'ShopActions' => [
+                    'count' => 1,
+                    'translations' => [
+                        'Some made up text' => 'Un texte inventé',
+                        'Uninstall' => 'Uninstall',
+                    ],
                 ],
             ],
         ];
-
-        // verify all catalogues are loaded
-        $this->assertResultIsAsExpected($expected, $catalogue);
     }
 
     private function getDefaultCatalogue(string $domain, string $locale): MessageCatalogue
