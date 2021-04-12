@@ -327,9 +327,9 @@ describe('Add product to cart', async () => {
       },
     ];
 
-    tests.forEach((test) => {
+    tests.forEach((test, index) => {
       it(`should check share link of '${test.args.name}'`, async function () {
-        await testContext.addContextItem(this, 'testIdentifier', `checkShareLink${test}`, baseContext);
+        await testContext.addContextItem(this, 'testIdentifier', `checkShareLink${index}`, baseContext);
 
         const url = await productPage.getSocialSharingLink(page, test.args.name);
         await expect(url).to.contain(test.result.url);

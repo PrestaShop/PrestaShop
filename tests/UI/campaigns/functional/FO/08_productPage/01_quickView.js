@@ -205,7 +205,7 @@ describe('Product quick view', async () => {
 
     tests.forEach((test, index) => {
       it(`should check share link of '${test.args.name}' from quick view modal`, async function () {
-        await testContext.addContextItem(this, 'testIdentifier', `checkShareLink${test}`, baseContext);
+        await testContext.addContextItem(this, 'testIdentifier', `checkShareLink${index}`, baseContext);
 
         if (index === 0) {
           await homePage.quickViewProduct(page, 1);
