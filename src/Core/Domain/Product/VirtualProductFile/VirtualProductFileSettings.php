@@ -34,8 +34,8 @@ class VirtualProductFileSettings
      */
     public const MAX_DISPLAY_FILENAME_LENGTH = 255;
     public const MAX_FILENAME_LENGTH = 255;
-    public const MAX_ACCESSIBLE_DAYS_LIMIT_LENGTH = 10;
-    public const MAX_DOWNLOAD_TIMES_LIMIT_LENGTH = 10;
+    public const MAX_ACCESSIBLE_DAYS_LIMIT = 9999999999;
+    public const MAX_DOWNLOAD_TIMES_LIMIT = 9999999999;
 
     /**
      * Class not supposed to be initialized, it only serves as static storage
