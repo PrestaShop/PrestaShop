@@ -22,7 +22,7 @@ const baseContext = 'functional_BO_login_login';
 let browserContext;
 let page;
 
-const employeeData = new EmployeeFaker();
+const employeeData = new EmployeeFaker({password: '123456789'});
 
 describe('Login in BO', async () => {
   // before and after functions
@@ -48,6 +48,24 @@ describe('Login in BO', async () => {
     await testContext.addContextItem(this, 'testIdentifier', 'entreInvalidCredentials', baseContext);
 
     await loginPage.login(page, employeeData.email, employeeData.password, false);
+
+    const loginError = await loginPage.getLoginError(page);
+    await expect(loginError).to.contains(loginPage.loginErrorText);
+  });
+
+  it('should enter an invalid email', async function () {
+    await testContext.addContextItem(this, 'testIdentifier', 'entreInvalidEmail', baseContext);
+
+    await loginPage.login(page, employeeData.email, DefaultEmployee.password, false);
+
+    const loginError = await loginPage.getLoginError(page);
+    await expect(loginError).to.contains(loginPage.loginErrorText);
+  });
+
+  it('should enter an invalid password', async function () {
+    await testContext.addContextItem(this, 'testIdentifier', 'entreInvalidPassword', baseContext);
+
+    await loginPage.login(page, DefaultEmployee.email, employeeData.password, false);
 
     const loginError = await loginPage.getLoginError(page);
     await expect(loginError).to.contains(loginPage.loginErrorText);
