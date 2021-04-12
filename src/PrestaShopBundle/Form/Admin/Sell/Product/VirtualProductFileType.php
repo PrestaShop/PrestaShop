@@ -30,14 +30,17 @@ namespace PrestaShopBundle\Form\Admin\Sell\Product;
 use PrestaShop\PrestaShop\Core\ConstraintValidator\Constraints\TypedRegex;
 use PrestaShop\PrestaShop\Core\Domain\Product\VirtualProductFile\VirtualProductFileSettings;
 use PrestaShopBundle\Form\Admin\Type\DatePickerType;
-use PrestaShopBundle\Form\Admin\Type\DownloadableFileType;
 use PrestaShopBundle\Form\Admin\Type\SwitchType;
 use PrestaShopBundle\Form\Admin\Type\TranslatorAwareType;
+use PrestaShopBundle\Form\FormCloner;
 use Symfony\Component\Form\Extension\Core\Type\FileType;
 use Symfony\Component\Form\Extension\Core\Type\HiddenType;
 use Symfony\Component\Form\Extension\Core\Type\NumberType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
+use Symfony\Component\Form\FormEvent;
+use Symfony\Component\Form\FormEvents;
+use Symfony\Component\Routing\RouterInterface;
 use Symfony\Component\Translation\TranslatorInterface;
 use Symfony\Component\Validator\Constraints\File;
 use Symfony\Component\Validator\Constraints\Length;
@@ -52,6 +55,11 @@ class VirtualProductFileType extends TranslatorAwareType
     private $maxFileSizeInMegabytes;
 
     /**
+     * @var RouterInterface
+     */
+    private $router;
+
+    /**
      * @param TranslatorInterface $translator
      * @param array $locales
      * @param int $maxFileSizeInMegabytes
@@ -59,10 +67,12 @@ class VirtualProductFileType extends TranslatorAwareType
     public function __construct(
         TranslatorInterface $translator,
         array $locales,
-        int $maxFileSizeInMegabytes
+        int $maxFileSizeInMegabytes,
+        RouterInterface $router
     ) {
         parent::__construct($translator, $locales);
         $this->maxFileSizeInMegabytes = $maxFileSizeInMegabytes;
+        $this->router = $router;
     }
 
     public function buildForm(FormBuilderInterface $builder, array $options)
@@ -143,5 +153,28 @@ class VirtualProductFileType extends TranslatorAwareType
                 'empty_data' => '',
             ])
         ;
+
+        // Preset the input attributes correctly depending on the data
+        $builder->addEventListener(FormEvents::PRE_SET_DATA, function (FormEvent $event) {
+            $data = $event->getData();
+
+            if (empty($data['virtual_product_file_id'])) {
+                return;
+            }
+            $virtualProductFileId = (int) $data['virtual_product_file_id'];
+            $virtualProductFileDownloadUrl = $this->router->generate('admin_products_v2_download_virtual_product_file', [
+                'virtualProductFileId' => $virtualProductFileId,
+            ]);
+
+            $form = $event->getForm();
+            $fileField = $form->get('file');
+            $fileOptions = $fileField->getConfig()->getOptions();
+            $fileOptions['download_url'] = $virtualProductFileDownloadUrl;
+
+            // Replace existing field with new one with adapted options
+            $cloner = new FormCloner();
+            $clonedForm = $cloner->cloneForm($fileField, $fileOptions);
+            $form->add($clonedForm);
+        });
     }
 }
