@@ -141,10 +141,10 @@ final class ProductCombinationQueryBuilder extends AbstractDoctrineQueryBuilder
             $qb
                 ->addSelect('pa.quantity AS stock_quantity')
                 ->leftJoin(
-                'pa',
-                $this->dbPrefix . 'stock_available',
-                'sa',
-                'pa.id_product_attribute = sa.id_product_attribute'
+                    'pa',
+                    $this->dbPrefix . 'stock_available',
+                    'sa',
+                    'pa.id_product_attribute = sa.id_product_attribute'
                 )
             ;
         }
