@@ -194,14 +194,12 @@ final class ProductFormDataProvider implements FormDataProviderInterface
             $data = [
                 'has_file' => true,
                 'virtual_product_file_id' => $virtualProductFile->getId(),
-                'file' => [
-                    'file' => new File($filePath),
-                    'download_file_url' => $this->urlGenerator->generate(
-                        // @todo: implement new action instead of old one
-                        'admin_product_virtual_download_file_action',
-                        ['idProduct' => $productForEditing->getProductId()]
-                    ),
-                ],
+                'file' => new File($filePath),
+                'download_file_url' => $this->urlGenerator->generate(
+                // @todo: implement new action instead of old one
+                    'admin_product_virtual_download_file_action',
+                    ['idProduct' => $productForEditing->getProductId()]
+                ),
                 'name' => $virtualProductFile->getDisplayName(),
                 'download_times_limit' => $virtualProductFile->getDownloadTimesLimit(),
                 'access_days_limit' => $virtualProductFile->getAccessDays(),
