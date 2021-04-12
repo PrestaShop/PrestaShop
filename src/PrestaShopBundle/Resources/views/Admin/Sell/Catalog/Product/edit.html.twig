@@ -67,17 +67,16 @@
         }) }}
       {% endblock %}
 
-      {% if productType == 'virtual' %}
-        {% block product_tab_virtual %}
-          {{ include('@PrestaShop/Admin/Sell/Catalog/Product/Tabs/virtual.html.twig') }}
-        {% endblock %}
-      {% elseif productType == 'combinations' %}
+      {% if productType == 'combinations' %}
         {% block product_tab_combinations %}
           {{ include('@PrestaShop/Admin/Sell/Catalog/Product/Tabs/combinations.html.twig') }}
         {% endblock %}
       {% else %}
         {% block product_tab_stock %}
           <div role="tabpanel" class="form-contenttab tab-pane" id="stock-tab">
+            {% if productType == 'virtual' %}
+              {{ include('@PrestaShop/Admin/Sell/Catalog/Product/Tabs/virtual.html.twig') }}
+            {% endif %}
             {{ form_widget(productForm.stock) }}
           </div>
         {% endblock %}
