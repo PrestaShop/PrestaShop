@@ -113,7 +113,7 @@ class ModuleCoreTest extends TestCase
     /**
      * @return array[]
      */
-    public function setMultistoreCompatibilityProvider()
+    public function setMultistoreCompatibilityProvider(): array
     {
         return [
             [FakeModule::MULTISTORE_COMPATIBILITY_NO, false],
