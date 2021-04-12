@@ -26,20 +26,20 @@
 const combinationListId = '#combination_list';
 
 export default {
-  productForm: 'form[name=product]',
-  productTypeSelector: '#product_basic_type',
+  productForm: "form[name=product]",
+  productTypeSelector: "#product_basic_type",
   productType: {
-    STANDARD: 'standard',
-    PACK: 'pack',
-    VIRTUAL: 'virtual',
-    COMBINATIONS: 'combinations',
+    STANDARD: "standard",
+    PACK: "pack",
+    VIRTUAL: "virtual",
+    COMBINATIONS: "combinations",
   },
   invalidField: '.is-invalid',
   productFormSubmitButton: 'button[name="product[save]"]',
-  navigationBar: '#form-nav',
-  dropzoneImagesContainer: '#product_images',
+  navigationBar: "#form-nav",
+  dropzoneImagesContainer: "#product_images",
   price: {
-    priceTaxExcludedInput: '#product_price_price_tax_excluded',
+    priceTaxExcludedInput: "#product_price_price_tax_excluded",
   },
   combinationsGeneratorContainer: '#product_combinations_generator',
   redirectOption: {
