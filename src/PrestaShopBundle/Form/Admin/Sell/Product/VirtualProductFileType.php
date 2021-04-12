@@ -40,6 +40,7 @@ use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\Translation\TranslatorInterface;
 use Symfony\Component\Validator\Constraints\File;
 use Symfony\Component\Validator\Constraints\Length;
+use Symfony\Component\Validator\Constraints\LessThanOrEqual;
 use Symfony\Component\Validator\Constraints\NotBlank;
 
 class VirtualProductFileType extends TranslatorAwareType
@@ -104,8 +105,13 @@ class VirtualProductFileType extends TranslatorAwareType
                 ),
                 'required' => false,
                 'constraints' => [
-                    new Length([
-                        'max' => VirtualProductFileSettings::MAX_DOWNLOAD_TIMES_LIMIT_LENGTH,
+                    new LessThanOrEqual([
+                        'value' => VirtualProductFileSettings::MAX_DOWNLOAD_TIMES_LIMIT,
+                        'message' => $this->trans(
+                            'This value should be less than or equal to %value%.',
+                            'Admin.Notifications.Error',
+                            ['%value%' => VirtualProductFileSettings::MAX_DOWNLOAD_TIMES_LIMIT]
+                        ),
                     ]),
                 ],
             ])
@@ -117,8 +123,13 @@ class VirtualProductFileType extends TranslatorAwareType
                 ),
                 'required' => false,
                 'constraints' => [
-                    new Length([
-                        'max' => VirtualProductFileSettings::MAX_ACCESSIBLE_DAYS_LIMIT_LENGTH,
+                    new LessThanOrEqual([
+                        'value' => VirtualProductFileSettings::MAX_ACCESSIBLE_DAYS_LIMIT,
+                        'message' => $this->trans(
+                            'This value should be less than or equal to %value%.',
+                            'Admin.Notifications.Error',
+                            ['%value%' => VirtualProductFileSettings::MAX_ACCESSIBLE_DAYS_LIMIT]
+                        ),
                     ]),
                 ],
             ])
