@@ -191,9 +191,9 @@ class ProductFormDataProviderTest extends TestCase
         foreach ($expected as $key => $expectedValue) {
             $actualValue = $actual[$key];
 
-            if ($key === 'virtual_product_file' && isset($expectedValue['file']['file'], $actualValue['file']['file'])) {
+            if ($key === 'virtual_product_file' && isset($expectedValue['file'], $actualValue['file'])) {
                 // New Symfony/File is created each time - these objects must be equal, but cannot be the same
-                Assert::assertEquals($expectedValue['file']['file'], $actualValue['file']['file']);
+                Assert::assertEquals($expectedValue['file'], $actualValue['file']);
 
                 continue;
             }
@@ -213,10 +213,7 @@ class ProductFormDataProviderTest extends TestCase
         $expectedOutputData['virtual_product_file'] = [
             'has_file' => true,
             'virtual_product_file_id' => self::DEFAULT_VIRTUAL_PRODUCT_FILE_ID,
-            'file' => [
-                'file' => new File(DummyFileUploader::getDummyFilesPath() . 'logo.jpg'),
-                'download_file_url' => 'admin_product_virtual_download_file_action',
-            ],
+            'file' => new File(DummyFileUploader::getDummyFilesPath() . 'logo.jpg'),
             'name' => 'heh logo.jpg',
             'download_times_limit' => 0,
             'access_days_limit' => 0,
