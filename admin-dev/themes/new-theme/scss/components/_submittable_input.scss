@@ -4,7 +4,7 @@
   .check-button {
     position: absolute;
     top: 0;
-    right: 1px;
+    right: 0;
     z-index: 3;
     width: 33px;
     height: 100%;
@@ -13,8 +13,11 @@
     background: #bbcdd2;
     border: none;
     outline: none;
+    @include border-top-right-radius(4px);
+    @include border-bottom-right-radius(4px);
 
-    .material-icons {
+    .material-icons,
+    .spinner-border {
       color: $white;
     }
   }
