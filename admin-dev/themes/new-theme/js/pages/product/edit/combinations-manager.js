@@ -78,12 +78,12 @@ export default class CombinationsManager {
     this.paginator = new DynamicPaginator(
       ProductMap.combinations.paginationContainer,
       this.combinationsService,
-      new CombinationsGridRenderer(),
+      new CombinationsGridRenderer()
     );
 
     this.initSubmittableInputs();
 
-    this.$combinationsContainer.on('change', ProductMap.combinations.isDefaultInputsSelector, (e) => {
+    this.$combinationsContainer.on('change', ProductMap.combinations.isDefaultInputsSelector, e => {
       if (!e.currentTarget.checked) {
         return;
       }
@@ -98,13 +98,13 @@ export default class CombinationsManager {
    */
   watchEvents() {
     this.eventEmitter.on(CombinationEvents.refreshList, () => this.paginator.paginate(this.paginator.getCurrentPage()));
-    this.eventEmitter.on(CombinationEvents.updateAttributeGroups, (attributeGroups) => {
+    this.eventEmitter.on(CombinationEvents.updateAttributeGroups, attributeGroups => {
       const currentFilters = this.combinationsService.getFilters();
       currentFilters.attributes = {};
-      Object.keys(attributeGroups).forEach((attributeGroupId) => {
+      Object.keys(attributeGroups).forEach(attributeGroupId => {
         currentFilters.attributes[attributeGroupId] = [];
         const attributes = attributeGroups[attributeGroupId];
-        attributes.forEach((attribute) => {
+        attributes.forEach(attribute => {
           currentFilters.attributes[attributeGroupId].push(attribute.id);
         });
       });
@@ -124,33 +124,36 @@ export default class CombinationsManager {
     const {referenceKey} = ProductMap.combinations.combinationItemForm;
     const {tokenKey} = ProductMap.combinations.combinationItemForm;
 
-    new SubmittableInput(ProductMap.combinations.quantityInputWrapper, async (input) => {
-      await this.combinationsService.updateListedCombination(this.findCombinationId(input), {
+    // eslint-disable-next-line
+    new SubmittableInput(ProductMap.combinations.quantityInputWrapper, input =>
+      this.combinationsService.updateListedCombination(this.findCombinationId(input), {
         [quantityKey]: input.value,
-        [tokenKey]: combinationToken,
-      });
-    });
+        [tokenKey]: combinationToken
+      })
+    );
 
-    new SubmittableInput(ProductMap.combinations.impactOnPriceInputWrapper, async (input) => {
-      await this.combinationsService.updateListedCombination(this.findCombinationId(input), {
+    // eslint-disable-next-line
+    new SubmittableInput(ProductMap.combinations.impactOnPriceInputWrapper, input =>
+      this.combinationsService.updateListedCombination(this.findCombinationId(input), {
         [impactOnPriceKey]: input.value,
-        [tokenKey]: combinationToken,
-      });
-    });
+        [tokenKey]: combinationToken
+      })
+    );
 
-    new SubmittableInput(ProductMap.combinations.referenceInputWrapper, async (input) => {
-      await this.combinationsService.updateListedCombination(this.findCombinationId(input), {
+    // eslint-disable-next-line
+    new SubmittableInput(ProductMap.combinations.referenceInputWrapper, input =>
+      this.combinationsService.updateListedCombination(this.findCombinationId(input), {
         [referenceKey]: input.value,
-        [tokenKey]: combinationToken,
-      });
-    });
+        [tokenKey]: combinationToken
+      })
+    );
   }
 
   /**
    * @private
    */
   initSortingColumns() {
-    this.$combinationsContainer.on('click', ProductMap.combinations.sortableColumns, (event) => {
+    this.$combinationsContainer.on('click', ProductMap.combinations.sortableColumns, event => {
       const $sortableColumn = $(event.currentTarget);
       const columnName = $sortableColumn.data('sortColName');
 
@@ -191,13 +194,13 @@ export default class CombinationsManager {
    */
   async updateDefaultCombination(checkedInput) {
     const checkedInputs = this.$combinationsContainer.find(
-      `${ProductMap.combinations.isDefaultInputsSelector}:checked`,
+      `${ProductMap.combinations.isDefaultInputsSelector}:checked`
     );
     const checkedDefaultId = this.findCombinationId(checkedInput);
 
     await this.combinationsService.updateListedCombination(checkedDefaultId, {
       'combination_item[is_default]': checkedInput.value,
-      'combination_item[_token]': this.getCombinationToken(),
+      'combination_item[_token]': this.getCombinationToken()
     });
 
     $.each(checkedInputs, (index, input) => {
