@@ -40,7 +40,7 @@ class Filters extends ParameterBag implements SearchCriteriaInterface
     protected $filterId = '';
 
     /** @var bool */
-    protected $isPersisted = true;
+    protected $needsToBePersisted = true;
 
     /**
      * @param array $filters
@@ -146,19 +146,19 @@ class Filters extends ParameterBag implements SearchCriteriaInterface
     /**
      * @return bool
      */
-    public function isPersisted(): bool
+    public function needsToBePersisted(): bool
     {
-        return $this->isPersisted;
+        return $this->needsToBePersisted;
     }
 
     /**
-     * @param bool $isPersisted
+     * @param bool $needsToBePersisted
      *
-     * @return self
+     * @return static
      */
-    public function setIsPersisted(bool $isPersisted): self
+    public function setNeedsToBePersisted(bool $needsToBePersisted): self
     {
-        $this->isPersisted = $isPersisted;
+        $this->needsToBePersisted = $needsToBePersisted;
 
         return $this;
     }

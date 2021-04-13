@@ -44,7 +44,7 @@ final class RepositoryFiltersBuilder extends AbstractRepositoryFiltersBuilder
             return $filters;
         }
 
-        if (null !== $filters && !$filters->isPersisted()) {
+        if (null !== $filters && !$filters->needsToBePersisted()) {
             return $filters;
         }
 
