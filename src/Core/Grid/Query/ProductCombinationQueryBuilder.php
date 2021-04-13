@@ -154,7 +154,7 @@ final class ProductCombinationQueryBuilder extends AbstractDoctrineQueryBuilder
 
     /**
      * @param int $productId
-     * @param array<int, array<int>> $attributeGroups
+     * @param array<int, int[]> $attributeGroups
      *
      * @return int[]
      */
