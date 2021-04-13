@@ -89,16 +89,30 @@ class ModifyTranslationsType extends TranslatorAwareType
 
         $builder
             ->add('translation_type', ChoiceType::class, [
+                'label' => $this->trans('Type of translation', 'Admin.International.Feature'),
+                'attr' => [
+                    'class' => 'js-translation-type',
+                ],
                 'choices' => $this->translationTypeChoices,
                 'choice_translation_domain' => false,
             ])
             ->add('email_content_type', ChoiceType::class, [
+                'label' => $this->trans('Select the type of email content', 'Admin.International.Feature'),
+                'row_attr' => [
+                    'class' => 'js-email-form-group d-none',
+                ],
+                'attr' => [
+                    'class' => 'js-email-content-type',
+                ],
                 'choices' => $this->emailContentTypeChoices,
                 'choice_translation_domain' => false,
             ])
             ->add('theme', ChoiceType::class, [
-                'choices' => [$noTheme => 0] +
-                $this->themeChoices,
+                'label' => $this->trans('Select your theme', 'Admin.International.Feature'),
+                'row_attr' => [
+                    'class' => 'js-theme-form-group d-none',
+                ],
+                'choices' => [$noTheme => 0] + $this->themeChoices,
                 'choice_attr' => [
                     $noTheme => [
                         'class' => 'js-no-theme',
@@ -107,11 +121,20 @@ class ModifyTranslationsType extends TranslatorAwareType
                 'choice_translation_domain' => false,
             ])
             ->add('module', ChoiceType::class, [
+                'label' => $this->trans('Select your module', 'Admin.International.Feature'),
+                'row_attr' => [
+                    'class' => 'js-module-form-group d-none',
+                ],
                 'placeholder' => '---',
+                'attr' => [
+                    'data-minimumResultsForSearch' => '7',
+                    'data-toggle' => 'select2',
+                ],
                 'choices' => $this->moduleChoices,
                 'choice_translation_domain' => false,
             ])
             ->add('language', ChoiceType::class, [
+                'label' => $this->trans('Select your language', 'Admin.International.Feature'),
                 'placeholder' => $this->trans('Language', 'Admin.Global'),
                 'choices' => $this->getLocaleChoices(),
                 'choice_translation_domain' => false,

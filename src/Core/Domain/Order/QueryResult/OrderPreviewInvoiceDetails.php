@@ -92,6 +92,11 @@ class OrderPreviewInvoiceDetails
     private $stateName;
 
     /**
+     * @var string|null
+     */
+    private $dni;
+
+    /**
      * InvoiceDetails constructor.
      *
      * @param string $firstName
@@ -106,6 +111,7 @@ class OrderPreviewInvoiceDetails
      * @param string $country
      * @param string|null $email
      * @param string $phone
+     * @param string|null $dni
      */
     public function __construct(
         string $firstName,
@@ -119,7 +125,8 @@ class OrderPreviewInvoiceDetails
         ?string $stateName,
         string $country,
         ?string $email,
-        string $phone
+        string $phone,
+        ?string $dni = null
     ) {
         $this->firstName = $firstName;
         $this->lastName = $lastName;
@@ -133,6 +140,7 @@ class OrderPreviewInvoiceDetails
         $this->vatNumber = $vatNumber;
         $this->postalCode = $postalCode;
         $this->stateName = $stateName;
+        $this->dni = $dni;
     }
 
     /**
@@ -229,5 +237,13 @@ class OrderPreviewInvoiceDetails
     public function getStateName(): ?string
     {
         return $this->stateName;
+    }
+
+    /**
+     * @return string|null
+     */
+    public function getDNI(): ?string
+    {
+        return $this->dni;
     }
 }

@@ -2441,4 +2441,15 @@ class CategoryCore extends ObjectModel
 		WHERE `id_category` = ' . (int) $this->id . '
 		AND `id_shop` = ' . (int) $idShop, false);
     }
+
+    /**
+     * Indicates whether a category is ROOT for the shop.
+     * The root category is the one with no parent. It's a virtual category.
+     *
+     * @return bool
+     */
+    public function isRootCategory(): bool
+    {
+        return 0 === (int) $this->id_parent;
+    }
 }

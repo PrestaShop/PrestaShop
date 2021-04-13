@@ -35,7 +35,7 @@ use Symfony\Component\Translation\MessageCatalogueInterface;
 
 abstract class AbstractProvider implements ProviderInterface, XliffCatalogueInterface, DatabaseCatalogueInterface
 {
-    const DEFAULT_LOCALE = 'en-US';
+    public const DEFAULT_LOCALE = 'en-US';
 
     /**
      * @var LoaderInterface the loader interface

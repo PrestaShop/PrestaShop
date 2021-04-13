@@ -293,7 +293,7 @@ export default class OrderProductRenderer {
     $(OrderViewPageMap.productsTablePaginationNext).before($linkPaginationTemplate);
 
     // Add appropriate pages
-    for (let i = 1; i < numPages; i += 1) {
+    for (let i = 1; i <= numPages; i += 1) {
       const $linkPagination = $linkPaginationTemplate.clone();
       $linkPagination.find('span').attr('data-page', i);
       $linkPagination.find('span').html(i);

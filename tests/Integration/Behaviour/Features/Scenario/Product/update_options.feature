@@ -13,7 +13,7 @@ Feature: Update product options from Back Office (BO)
   Scenario: I update product options
     Given I add product "product1" with following information:
       | name[en-US] | Presta camera |
-      | is_virtual  | false         |
+      | type        | standard      |
     And product "product1" should have following options:
       | product option      | value |
       | active              | false |
@@ -107,7 +107,7 @@ Feature: Update product options from Back Office (BO)
   Scenario: I update product options providing invalid values
     Given I add product "product2" with following information:
       | name[en-US] | 'The truth is out there' wallpaper |
-      | is_virtual  | true                               |
+      | type        | virtual                            |
     And product "product2" should have following options:
       | product option      | value |
       | active              | false |

@@ -30,7 +30,7 @@ namespace Tests\Unit\Adapter\File\Validator;
 
 use Generator;
 use PHPUnit\Framework\TestCase;
-use PrestaShop\PrestaShop\Adapter\Product\VirtualProductFile\Validator\VirtualProductFileValidator;
+use PrestaShop\PrestaShop\Adapter\File\Validator\VirtualProductFileValidator;
 use PrestaShop\PrestaShop\Core\File\Exception\FileNotFoundException;
 use PrestaShop\PrestaShop\Core\File\Exception\InvalidFileException;
 use Tests\Resources\DummyFileUploader;

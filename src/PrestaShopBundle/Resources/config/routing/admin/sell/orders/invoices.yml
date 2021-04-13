@@ -33,3 +33,12 @@ admin_order_invoices_generate_by_status:
         _controller: 'PrestaShopBundle:Admin\Sell\Order\Invoices:generatePdfByStatus'
         _legacy_controller: AdminInvoices
         _legacy_link: AdminInvoices:submitAddinvoice_status
+
+admin_order_invoices_generate_by_id:
+    path: /{invoiceId}/generate
+    methods: [GET]
+    defaults:
+        _controller: 'PrestaShopBundle:Admin\Sell\Order\Invoices:generatePdfById'
+        _legacy_controller: AdminInvoices
+    requirements:
+        invoiceId: \d+

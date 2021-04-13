@@ -64,7 +64,7 @@ final class UpdateCombinationDetailsHandler implements UpdateCombinationDetailsH
         $this->combinationRepository->partialUpdate(
             $combination,
             $updatableProperties,
-            CannotUpdateCombinationException::FAILED_UPDATE_OPTIONS
+            CannotUpdateCombinationException::FAILED_UPDATE_DETAILS
         );
     }
 

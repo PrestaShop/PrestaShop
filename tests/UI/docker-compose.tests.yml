@@ -1,5 +1,11 @@
 version: '3'
 
+networks:
+  default:
+    ipam:
+      config:
+        - subnet: 172.20.0.0/24
+
 services:
   tests:
     build:
@@ -22,4 +28,5 @@ services:
       - ./mochawesome-report:/tests/mochawesome-report
       - /dev/shm:/dev/shm
     networks:
-      - default
+      default:
+        ipv4_address: 172.20.0.4

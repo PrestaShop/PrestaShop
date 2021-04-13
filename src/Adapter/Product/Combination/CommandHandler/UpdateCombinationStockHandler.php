@@ -28,12 +28,10 @@ declare(strict_types=1);
 
 namespace PrestaShop\PrestaShop\Adapter\Product\Combination\CommandHandler;
 
-use Combination;
-use PrestaShop\PrestaShop\Adapter\Product\Combination\Repository\CombinationRepository;
+use PrestaShop\PrestaShop\Adapter\Product\Combination\Update\CombinationStockProperties;
 use PrestaShop\PrestaShop\Adapter\Product\Combination\Update\CombinationStockUpdater;
 use PrestaShop\PrestaShop\Core\Domain\Product\Combination\Command\UpdateCombinationStockCommand;
 use PrestaShop\PrestaShop\Core\Domain\Product\Combination\CommandHandler\UpdateCombinationStockHandlerInterface;
-use PrestaShop\PrestaShop\Core\Util\DateTime\DateTime;
 
 /**
  * Handles @see UpdateCombinationStockCommand using legacy object model
@@ -41,24 +39,16 @@ use PrestaShop\PrestaShop\Core\Util\DateTime\DateTime;
 final class UpdateCombinationStockHandler implements UpdateCombinationStockHandlerInterface
 {
     /**
-     * @var CombinationRepository
-     */
-    private $combinationRepository;
-
-    /**
      * @var CombinationStockUpdater
      */
     private $combinationStockUpdater;
 
     /**
-     * @param CombinationRepository $combinationRepository
      * @param CombinationStockUpdater $combinationStockUpdater
      */
     public function __construct(
-        CombinationRepository $combinationRepository,
         CombinationStockUpdater $combinationStockUpdater
     ) {
-        $this->combinationRepository = $combinationRepository;
         $this->combinationStockUpdater = $combinationStockUpdater;
     }
 
@@ -67,52 +57,15 @@ final class UpdateCombinationStockHandler implements UpdateCombinationStockHandl
      */
     public function handle(UpdateCombinationStockCommand $command): void
     {
-        $combination = $this->combinationRepository->get($command->getCombinationId());
-        $updatableProperties = $this->fillUpdatableProperties($combination, $command);
+        $properties = new CombinationStockProperties(
+            $command->getQuantity(),
+            $command->getMinimalQuantity(),
+            $command->getLocation(),
+            $command->getLowStockThreshold(),
+            $command->getLowStockAlertEnabled(),
+            $command->getAvailableDate()
+        );
 
-        $this->combinationStockUpdater->update($combination, $updatableProperties);
-    }
-
-    /**
-     * @param Combination $combination
-     * @param UpdateCombinationStockCommand $command
-     *
-     * @return string[]
-     */
-    private function fillUpdatableProperties(Combination $combination, UpdateCombinationStockCommand $command): array
-    {
-        $updatableProperties = [];
-
-        if (null !== $command->getQuantity()) {
-            $combination->quantity = $command->getQuantity();
-            $updatableProperties[] = 'quantity';
-        }
-
-        if (null !== $command->getAvailableDate()) {
-            $combination->available_date = $command->getAvailableDate()->format(DateTime::DEFAULT_DATE_FORMAT);
-            $updatableProperties[] = 'available_date';
-        }
-
-        if (null !== $command->getLocation()) {
-            $combination->location = $command->getLocation();
-            $updatableProperties[] = 'location';
-        }
-
-        if (null !== $command->getLowStockThreshold()) {
-            $combination->low_stock_threshold = $command->getLowStockThreshold();
-            $updatableProperties[] = 'low_stock_threshold';
-        }
-
-        if (null !== $command->getMinimalQuantity()) {
-            $combination->minimal_quantity = $command->getMinimalQuantity();
-            $updatableProperties[] = 'minimal_quantity';
-        }
-
-        if (null !== $command->isLowStockAlertEnabled()) {
-            $combination->low_stock_alert = $command->isLowStockAlertEnabled();
-            $updatableProperties[] = 'low_stock_alert';
-        }
-
-        return $updatableProperties;
+        $this->combinationStockUpdater->update($command->getCombinationId(), $properties);
     }
 }

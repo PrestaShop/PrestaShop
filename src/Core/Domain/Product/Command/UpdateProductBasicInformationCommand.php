@@ -46,11 +46,6 @@ class UpdateProductBasicInformationCommand
     private $localizedNames;
 
     /**
-     * @var bool|null
-     */
-    private $virtual;
-
-    /**
      * @var string[]|null key value pairs where key is the id of language
      */
     private $localizedDescriptions;
@@ -92,26 +87,6 @@ class UpdateProductBasicInformationCommand
     public function setLocalizedNames(array $localizedNames): self
     {
         $this->localizedNames = $localizedNames;
-
-        return $this;
-    }
-
-    /**
-     * @return bool|null
-     */
-    public function isVirtual(): ?bool
-    {
-        return $this->virtual;
-    }
-
-    /**
-     * @param bool $virtual
-     *
-     * @return UpdateProductBasicInformationCommand
-     */
-    public function setVirtual(bool $virtual): self
-    {
-        $this->virtual = $virtual;
 
         return $this;
     }

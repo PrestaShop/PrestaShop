@@ -45,7 +45,7 @@ class LogsController extends FrameworkBundleAdminController
     /**
      * @var string the controller name for routing
      */
-    const CONTROLLER_NAME = 'AdminLogs';
+    public const CONTROLLER_NAME = 'AdminLogs';
 
     /**
      * @AdminSecurity("is_granted('read', request.get('_legacy_controller'))", message="Access denied.")

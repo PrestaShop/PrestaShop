@@ -18,7 +18,7 @@ const orderConfirmationPage = require('@pages/FO/checkout/orderConfirmation');
 
 // Importing data
 const {PaymentMethods} = require('@data/demo/paymentMethods');
-const {DefaultAccount} = require('@data/demo/customer');
+const {DefaultCustomer} = require('@data/demo/customer');
 const {Statuses} = require('@data/demo/orderStatuses');
 
 // Importing test context
@@ -116,7 +116,7 @@ describe('Test enable/disable product image in delivery slips', async () => {
 
           // Personal information step - Login
           await checkoutPage.clickOnSignIn(page);
-          await checkoutPage.customerLogin(page, DefaultAccount);
+          await checkoutPage.customerLogin(page, DefaultCustomer);
 
           // Address step - Go to delivery step
           const isStepAddressComplete = await checkoutPage.goToDeliveryStep(page);

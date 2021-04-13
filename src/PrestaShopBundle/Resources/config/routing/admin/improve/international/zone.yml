@@ -1,0 +1,77 @@
+admin_zones_index:
+  path: /
+  methods: GET
+  defaults:
+    _controller: 'PrestaShopBundle:Admin\Improve\International\Zone:index'
+    _legacy_controller: AdminZones
+    _legacy_link: AdminZones
+
+admin_zones_search:
+  path: /
+  methods: POST
+  defaults:
+    _controller: 'PrestaShopBundle:Admin\Improve\International\Zone:search'
+    _legacy_controller: AdminZones
+    _legacy_link: AdminZones:submitFilterzone
+
+admin_zones_create:
+  path: /new
+  methods: [GET, POST]
+  defaults:
+    _controller: 'PrestaShopBundle:Admin\Improve\International\Zone:create'
+    _legacy_controller: AdminZones
+    _legacy_link: AdminZones:addzone
+
+admin_zones_edit:
+  path: /{zoneId}/edit
+  methods: [GET, POST]
+  defaults:
+    _controller: 'PrestaShopBundle:Admin\Improve\International\Zone:edit'
+    _legacy_controller: AdminZones
+    _legacy_link: AdminZones:updatezone
+    _legacy_parameters:
+      id_zone: zoneId
+  requirements:
+    zoneId: \d+
+
+admin_zones_delete:
+  path: /{zoneId}/delete
+  methods: [POST, DELETE]
+  defaults:
+    _controller: 'PrestaShopBundle:Admin\Improve\International\Zone:delete'
+    _legacy_controller: AdminZones
+    _legacy_link: AdminZones:deletezone
+    _legacy_parameters:
+      id_zone: zoneId
+  requirements:
+    zoneId: \d+
+
+admin_zones_toggle_status:
+  path: /{zoneId}/toggle-status
+  methods: POST
+  defaults:
+    _controller: 'PrestaShopBundle:Admin\Improve\International\Zone:toggleStatus'
+    _legacy_controller: AdminZones
+    _legacy_link: AdminZones:enableSelection
+    _legacy_parameters:
+      id_zone: zoneId
+  requirements:
+    zoneId: \d+
+
+admin_zones_bulk_delete:
+  path: /bulk-delete
+  methods: [POST, DELETE]
+  defaults:
+    _controller: 'PrestaShopBundle:Admin\Improve\International\Zone:bulkDelete'
+    _legacy_controller: AdminZones
+    _legacy_link: AdminZones:submitBulkdeletezone
+
+admin_zones_bulk_toggle_status:
+  path: /bulk-toggle-status/{status}
+  methods: POST
+  defaults:
+    _controller: 'PrestaShopBundle\Controller\Admin\Improve\International\ZoneController::bulkToggleStatus'
+    _legacy_controller: AdminZones
+    _legacy_link: AdminZones:submitBulkupdatezone
+  requirements:
+    status: enable|disable

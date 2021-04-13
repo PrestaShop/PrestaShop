@@ -32,10 +32,10 @@ use Behat\Gherkin\Node\TableNode;
 use DateTime;
 use Pack;
 use PHPUnit\Framework\Assert;
-use PrestaShop\PrestaShop\Core\Domain\Product\Command\UpdateProductStockInformationCommand;
 use PrestaShop\PrestaShop\Core\Domain\Product\Exception\ProductException;
 use PrestaShop\PrestaShop\Core\Domain\Product\Pack\Exception\ProductPackConstraintException;
 use PrestaShop\PrestaShop\Core\Domain\Product\Pack\ValueObject\PackStockType;
+use PrestaShop\PrestaShop\Core\Domain\Product\Stock\Command\UpdateProductStockInformationCommand;
 use PrestaShop\PrestaShop\Core\Domain\Product\Stock\Exception\ProductStockConstraintException;
 use PrestaShop\PrestaShop\Core\Domain\Product\Stock\ValueObject\OutOfStockType;
 use PrestaShopBundle\Api\QueryStockMovementParamsCollection;
@@ -118,8 +118,6 @@ class UpdateStockFeatureContext extends AbstractProductFeatureContext
             $data['pack_stock_type'] = $this->convertPackStockTypeToInt($data['pack_stock_type']);
         }
 
-        $this->assertBoolProperty($productForEditing, $data, 'use_advanced_stock_management');
-        $this->assertBoolProperty($productForEditing, $data, 'depends_on_stock');
         $this->assertStringProperty($productForEditing, $data, 'pack_stock_type');
         $this->assertIntegerProperty($productForEditing, $data, 'out_of_stock_type');
         $this->assertIntegerProperty($productForEditing, $data, 'quantity');
@@ -202,39 +200,6 @@ class UpdateStockFeatureContext extends AbstractProductFeatureContext
     }
 
     /**
-     * @Then I should get error that stock management is disabled
-     */
-    public function assertStockManagementDisabledError(): void
-    {
-        $this->assertLastErrorIs(
-            ProductStockConstraintException::class,
-            ProductStockConstraintException::ADVANCED_STOCK_MANAGEMENT_CONFIGURATION_DISABLED
-        );
-    }
-
-    /**
-     * @Then I should get error that stock management is disabled on product
-     */
-    public function assertStockManagementDisabledOnProductError(): void
-    {
-        $this->assertLastErrorIs(
-            ProductStockConstraintException::class,
-            ProductStockConstraintException::ADVANCED_STOCK_MANAGEMENT_PRODUCT_DISABLED
-        );
-    }
-
-    /**
-     * @Then I should get error that pack stock type is incompatible
-     */
-    public function assertIncompatiblePackStockTypeError(): void
-    {
-        $this->assertLastErrorIs(
-            ProductPackConstraintException::class,
-            ProductPackConstraintException::INCOMPATIBLE_STOCK_TYPE
-        );
-    }
-
-    /**
      * @Then I should get error that pack stock type is invalid
      */
     public function assertInvalidPackStockType(): void
@@ -262,16 +227,6 @@ class UpdateStockFeatureContext extends AbstractProductFeatureContext
      */
     private function setUpdateStockCommandData(array $data, UpdateProductStockInformationCommand $command): array
     {
-        if (isset($data['use_advanced_stock_management'])) {
-            $command->setUseAdvancedStockManagement(PrimitiveUtils::castStringBooleanIntoBoolean($data['use_advanced_stock_management']));
-            unset($data['use_advanced_stock_management']);
-        }
-
-        if (isset($data['depends_on_stock'])) {
-            $command->setDependsOnStock(PrimitiveUtils::castStringBooleanIntoBoolean($data['depends_on_stock']));
-            unset($data['depends_on_stock']);
-        }
-
         if (isset($data['pack_stock_type'])) {
             // If pack is involved we clear the cache because its products settings might have changed
             Pack::resetStaticCache();

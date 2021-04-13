@@ -255,7 +255,7 @@ EOF;
     }
 
     /**
-     * KISS function to get an embeded iframe from Youtube.
+     * KISS function to get an embedded iframe from Youtube.
      */
     public function getYoutubeLink($watchUrl)
     {

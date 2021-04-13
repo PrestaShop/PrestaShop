@@ -34,7 +34,7 @@ use Symfony\Component\HttpFoundation\ParameterBag;
  */
 class Filters extends ParameterBag implements SearchCriteriaInterface
 {
-    const LIST_LIMIT = 10;
+    public const LIST_LIMIT = 10;
 
     /** @var string */
     protected $filterId = '';
@@ -92,7 +92,7 @@ class Filters extends ParameterBag implements SearchCriteriaInterface
      */
     public function getOffset()
     {
-        return $this->get('offset');
+        return $this->getInt('offset') ?: null;
     }
 
     /**
@@ -100,7 +100,7 @@ class Filters extends ParameterBag implements SearchCriteriaInterface
      */
     public function getLimit()
     {
-        return $this->get('limit');
+        return $this->getInt('limit') ?: null;
     }
 
     /**

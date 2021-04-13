@@ -97,6 +97,11 @@ class OrderPreviewShippingDetails
     private $vatNumber;
 
     /**
+     * @var string|null
+     */
+    private $dni;
+
+    /**
      * InvoiceDetails constructor.
      *
      * @param string $firstName
@@ -112,6 +117,7 @@ class OrderPreviewShippingDetails
      * @param string $phone
      * @param string|null $carrierName
      * @param string|null $trackingNumber
+     * @param string|null $dni
      */
     public function __construct(
         string $firstName,
@@ -126,7 +132,8 @@ class OrderPreviewShippingDetails
         string $country,
         string $phone,
         ?string $carrierName,
-        ?string $trackingNumber
+        ?string $trackingNumber,
+        ?string $dni = null
     ) {
         $this->firstName = $firstName;
         $this->lastName = $lastName;
@@ -141,6 +148,7 @@ class OrderPreviewShippingDetails
         $this->stateName = $stateName;
         $this->company = $company;
         $this->vatNumber = $vatNumber;
+        $this->dni = $dni;
     }
 
     /**
@@ -245,5 +253,13 @@ class OrderPreviewShippingDetails
     public function getTrackingNumber(): ?string
     {
         return $this->trackingNumber;
+    }
+
+    /**
+     * @return string|null
+     */
+    public function getDNI(): ?string
+    {
+        return $this->dni;
     }
 }

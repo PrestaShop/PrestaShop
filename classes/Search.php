@@ -182,15 +182,31 @@ class SearchCore
             $words = explode(' ', $string);
             $processed_words = [];
             // search for aliases for each word of the query
-            foreach ($words as $word) {
-                $alias = new Alias(null, $word);
-                if (Validate::isLoadedObject($alias)) {
-                    $processed_words[] = $alias->search;
-                } else {
-                    $processed_words[] = $word;
-                }
+            $query = '
+				SELECT a.alias, a.search
+				FROM `' . _DB_PREFIX_ . 'alias` a
+				WHERE \'' . pSQL($string) . '\' %s AND `active` = 1
+            ';
+
+            // check if we can we use '\b' (faster)
+            $useICU = (bool) Db::getInstance((bool) _PS_USE_SQL_SLAVE_)->getValue(
+                'SELECT 1 FROM DUAL WHERE \'icu regex\' REGEXP \'\\\\bregex\''
+            );
+            $aliases = Db::getInstance((bool) _PS_USE_SQL_SLAVE_)->executeS(
+                sprintf(
+                    $query,
+                    $useICU
+                        ? 'REGEXP CONCAT(\'\\\\b\', alias, \'\\\\b\')'
+                        : 'REGEXP CONCAT(\'(^|[[:space:]]|[[:<:]])\', alias, \'([[:space:]]|[[:>:]]|$)\')'
+                )
+            );
+
+            foreach ($aliases  as $alias) {
+                $processed_words = array_merge($processed_words, explode(' ', $alias['search']));
+                // delete words that are being replaced with aliases
+                $words = array_diff($words, explode(' ', $alias['alias']));
             }
-            $string = implode(' ', $processed_words);
+            $string = implode(' ', array_unique(array_merge($processed_words, $words)));
             $string = str_replace(['.', '_'], '', $string);
             if (!$keepHyphens) {
                 $string = ltrim(preg_replace('/([^ ])-/', '$1 ', ' ' . $string));

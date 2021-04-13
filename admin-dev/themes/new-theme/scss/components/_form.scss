@@ -65,6 +65,16 @@
     &.type-hidden {
       display: none;
     }
+
+    .form-control-label.disabled {
+      cursor: not-allowed;
+      opacity: 0.4;
+    }
+  }
+
+  .col-sm.disabled {
+    cursor: not-allowed;
+    opacity: 0.4;
   }
 
   // make ps-switch align with label

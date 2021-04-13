@@ -272,6 +272,23 @@ class TypedRegexValidatorTest extends ConstraintValidatorTestCase
     }
 
     /**
+     * @dataProvider getInvalidCharactersForReference
+     *
+     * @param string $invalidChar
+     */
+    public function testItFailsForReferenceTypeWhenInvalidCharacterGiven(string $invalidChar): void
+    {
+        $this->assertViolationIsRaised(new TypedRegex('reference'), $invalidChar);
+    }
+
+    public function testItSucceedsForReferenceTypeWhenValidCharactersGiven(): void
+    {
+        $this->validator->validate('product1', new TypedRegex('reference'));
+
+        $this->assertNoViolation();
+    }
+
+    /**
      * @return string[][]
      */
     public function getInvalidCharactersForNameType(): array
@@ -477,6 +494,19 @@ class TypedRegexValidatorTest extends ConstraintValidatorTestCase
         yield [':'];
         yield ['.'];
         yield [','];
+    }
+
+    /**
+     * @return Generator
+     */
+    public function getInvalidCharactersForReference(): Generator
+    {
+        yield ['='];
+        yield ['{'];
+        yield ['}'];
+        yield ['<'];
+        yield ['>'];
+        yield [';'];
     }
 
     /**

@@ -29,7 +29,7 @@ declare(strict_types=1);
 namespace PrestaShopBundle\Form\Admin\Sell\Product;
 
 use PrestaShop\PrestaShop\Core\ConstraintValidator\Constraints\DefaultLanguage;
-use PrestaShop\PrestaShop\Core\Domain\Product\QueryResult\ProductType;
+use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductType;
 use PrestaShopBundle\Form\Admin\Type\FormattedTextareaType;
 use PrestaShopBundle\Form\Admin\Type\TranslatableType;
 use PrestaShopBundle\Form\Admin\Type\TranslatorAwareType;
@@ -54,10 +54,18 @@ class BasicInformationType extends TranslatorAwareType
                     $this->trans('Standard product', 'Admin.Catalog.Feature') => ProductType::TYPE_STANDARD,
                     $this->trans('Pack of products', 'Admin.Catalog.Feature') => ProductType::TYPE_PACK,
                     $this->trans('Virtual product', 'Admin.Catalog.Feature') => ProductType::TYPE_VIRTUAL,
+                    $this->trans('Product with combinations', 'Admin.Catalog.Feature') => ProductType::TYPE_COMBINATIONS,
                 ],
                 'choice_translation_domain' => 'Admin.Catalog.Feature',
                 'attr' => [
                     'class' => 'custom-select',
+                    'data-modal-title' => $this->trans('Changing product type', 'Admin.Catalog.Notification'),
+                    'data-modal-apply' => $this->trans('Validate product type change', 'Admin.Catalog.Notification'),
+                    'data-modal-cancel' => $this->trans('Cancel', 'Admin.Global'),
+                    'data-confirm-message' => $this->trans('To change the product type you must immediately save this product. Do you wish to proceed?', 'Admin.Catalog.Notification'),
+                    'data-combinations-warning' => $this->trans('This will delete all the combinations.', 'Admin.Catalog.Notification'),
+                    'data-pack-warning' => $this->trans('This will delete the list of products in this pack.', 'Admin.Catalog.Notification'),
+                    'data-virtual-warning' => $this->trans('This will delete the associated virtual file.', 'Admin.Catalog.Notification'),
                 ],
                 'label' => $this->trans('Type', 'Admin.Catalog.Feature'),
                 'help' => $this->trans('Is the product a pack (a combination of at least two existing products), a virtual product (downloadable file, service, etc.), or simply a standard, physical product?', 'Admin.Catalog.Help'),
@@ -76,17 +84,25 @@ class BasicInformationType extends TranslatorAwareType
                 ],
             ])
             ->add('description_short', TranslatableType::class, [
+                'required' => false,
                 'label' => $this->trans('Summary', 'Admin.Global'),
                 'type' => FormattedTextareaType::class,
                 'options' => [
                     'attr' => [
-                        'class' => 'serp-default-description',
+                        'class' => 'serp-default-description h2',
                     ],
+                ],
+                'label_attr' => [
+                    'title' => 'h2',
                 ],
             ])
             ->add('description', TranslatableType::class, [
+                'required' => false,
                 'label' => $this->trans('Description', 'Admin.Global'),
                 'type' => FormattedTextareaType::class,
+                'label_attr' => [
+                    'title' => 'h2',
+                ],
             ])
         ;
     }

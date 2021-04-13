@@ -15,11 +15,11 @@ class AddImageType extends BOBasePage {
     this.nameInput = '#name';
     this.widthInput = '#width';
     this.heightInput = '#height';
-    this.productsToggle = toggle => `${this.imageTypeForm} label[for='products_${toggle}']`;
-    this.categoriesToggle = toggle => `${this.imageTypeForm} label[for='categories_${toggle}']`;
-    this.manufacturersToggle = toggle => `${this.imageTypeForm} label[for='manufacturers_${toggle}']`;
-    this.suppliersToggle = toggle => `${this.imageTypeForm} label[for='suppliers_${toggle}']`;
-    this.storesToggle = toggle => `${this.imageTypeForm} label[for='stores_${toggle}']`;
+    this.productsToggle = toggle => `${this.imageTypeForm} #products_${toggle}`;
+    this.categoriesToggle = toggle => `${this.imageTypeForm} #categories_${toggle}`;
+    this.manufacturersToggle = toggle => `${this.imageTypeForm} #manufacturers_${toggle}`;
+    this.suppliersToggle = toggle => `${this.imageTypeForm} #suppliers_${toggle}`;
+    this.storesToggle = toggle => `${this.imageTypeForm} #stores_${toggle}`;
     this.saveButton = '#image_type_form_submit_btn';
   }
 
@@ -37,11 +37,11 @@ class AddImageType extends BOBasePage {
     await this.setValue(page, this.heightInput, imageTypeData.height.toString());
 
     // Set status for image type
-    await page.click(this.productsToggle(imageTypeData.productsStatus ? 'on' : 'off'));
-    await page.click(this.categoriesToggle(imageTypeData.categoriesStatus ? 'on' : 'off'));
-    await page.click(this.manufacturersToggle(imageTypeData.manufacturersStatus ? 'on' : 'off'));
-    await page.click(this.suppliersToggle(imageTypeData.suppliersStatus ? 'on' : 'off'));
-    await page.click(this.storesToggle(imageTypeData.storesStatus ? 'on' : 'off'));
+    await page.check(this.productsToggle(imageTypeData.productsStatus ? 'on' : 'off'));
+    await page.check(this.categoriesToggle(imageTypeData.categoriesStatus ? 'on' : 'off'));
+    await page.check(this.manufacturersToggle(imageTypeData.manufacturersStatus ? 'on' : 'off'));
+    await page.check(this.suppliersToggle(imageTypeData.suppliersStatus ? 'on' : 'off'));
+    await page.check(this.storesToggle(imageTypeData.storesStatus ? 'on' : 'off'));
 
     // Save image type
     await this.clickAndWaitForNavigation(page, this.saveButton);

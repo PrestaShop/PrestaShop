@@ -55,28 +55,20 @@ class OptionsType extends TranslatorAwareType
     private $productConditionChoiceProvider;
 
     /**
-     * @var FormChoiceProviderInterface
-     */
-    private $manufacturerNameByIdChoiceProvider;
-
-    /**
      * @param TranslatorInterface $translator
      * @param array $locales
      * @param FormChoiceProviderInterface $productVisibilityChoiceProvider
      * @param FormChoiceProviderInterface $productConditionChoiceProvider
-     * @param FormChoiceProviderInterface $manufacturerNameByIdChoiceProvider
      */
     public function __construct(
         TranslatorInterface $translator,
         array $locales,
         FormChoiceProviderInterface $productVisibilityChoiceProvider,
-        FormChoiceProviderInterface $productConditionChoiceProvider,
-        FormChoiceProviderInterface $manufacturerNameByIdChoiceProvider
+        FormChoiceProviderInterface $productConditionChoiceProvider
     ) {
         parent::__construct($translator, $locales);
         $this->productVisibilityChoiceProvider = $productVisibilityChoiceProvider;
         $this->productConditionChoiceProvider = $productConditionChoiceProvider;
-        $this->manufacturerNameByIdChoiceProvider = $manufacturerNameByIdChoiceProvider;
     }
 
     /**
@@ -170,9 +162,6 @@ class OptionsType extends TranslatorAwareType
                 'required' => true,
                 'label' => $this->trans('Condition', 'Admin.Catalog.Feature'),
             ])
-            ->add('manufacturer_id', ChoiceType::class, [
-                'choices' => $this->manufacturerNameByIdChoiceProvider->getChoices(),
-                'label' => $this->trans('Brand', 'Admin.Catalog.Feature'),
-            ]);
+        ;
     }
 }

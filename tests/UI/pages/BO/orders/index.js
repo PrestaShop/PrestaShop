@@ -79,7 +79,7 @@ class Order extends BOBasePage {
     const [download] = await Promise.all([
       page.waitForEvent('download'),
       page.click(this.gridActionExportLink),
-      page.waitForSelector(`${this.gridActionDropDownMenu}.show`, {state: 'hidden'}),
+      this.waitForHiddenSelector(page, `${this.gridActionDropDownMenu}.show`),
     ]);
 
     return download.path();
@@ -104,6 +104,20 @@ class Order extends BOBasePage {
       default:
       // Do nothing
     }
+    // click on search
+    await this.clickAndWaitForNavigation(page, this.filterSearchButton);
+  }
+
+  /**
+   * Filter orders by date from and date to
+   * @param page
+   * @param dateFrom
+   * @param dateTo
+   * @returns {Promise<void>}
+   */
+  async filterOrdersByDate(page, dateFrom, dateTo) {
+    await page.type(this.filterColumn('date_add_from'), dateFrom);
+    await page.type(this.filterColumn('date_add_to'), dateTo);
     // click on search
     await this.clickAndWaitForNavigation(page, this.filterSearchButton);
   }

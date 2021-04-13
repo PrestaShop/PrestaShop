@@ -108,7 +108,6 @@
 {% block textarea_widget -%}
   {% set attr = attr|merge({class: (attr.class|default('') ~ ' form-control')|trim}) %}
   {{- parent() -}}
-
   {{ block('form_help') }}
 {%- endblock textarea_widget %}
 
@@ -154,6 +153,12 @@
   {%- endif %}
 {%- endblock datetime_widget %}
 
+{%- block url_widget -%}
+  {%- set type = type|default('url') -%}
+  {{ block('form_widget_simple') }}
+  {{ block('form_help') }}
+{%- endblock url_widget -%}
+
 {% block date_widget -%}
   {% if widget == 'single_text' %}
     {{- block('form_widget_simple') -}}
@@ -188,9 +193,33 @@
   {% endif %}
 {%- endblock time_widget %}
 
+{%- block email_widget -%}
+  {%- set type = type|default('email') -%}
+  {{ block('form_widget_simple') }}
+  {{ block('form_help') }}
+{%- endblock email_widget -%}
+
 {% block button_widget -%}
   {% set attr = attr|merge({class: (attr.class|default('btn-default') ~ ' btn')|trim}) %}
   {{- parent() -}}
+{%- endblock %}
+
+{% block icon_button_widget -%}
+  {% set attr = attr|merge({class: (attr.class|default('btn-default') ~ ' btn')|trim}) %}
+  {%- if label is empty and label != false -%}
+    {%- if label_format is not empty -%}
+      {% set label = label_format|replace({
+        '%name%': name,
+        '%id%': id,
+      }) %}
+    {%- else -%}
+      {% set label = name|humanize %}
+    {%- endif -%}
+  {%- endif -%}
+  <button type="{{ type|default('button') }}" {{ block('button_attributes') }}>
+    <i class="material-icons">{{ icon }}</i>
+    {{ label }}
+  </button>
 {%- endblock %}
 
 {# {% block checkbox_widget -%}
@@ -553,6 +582,14 @@
 {# Errors #}
 
 {% block form_errors -%}
+  {% if attr['fieldError'] is defined and attr['fieldError'] == true %}
+    {{ block('form_errors_field') }}
+  {% else %}
+    {{ block('form_errors_other') }}
+  {% endif %}
+{%- endblock form_errors %}
+
+{% block form_errors_field %}
   {% if errors|length > 0 -%}
     {# If we got more then one error then we need to display popover instead of errors list #}
     {%- if errors|length > 1 -%}
@@ -617,7 +654,27 @@
       </div>
     {%- endif -%}
   {%- endif %}
-{%- endblock form_errors %}
+{% endblock %}
+
+{% block form_errors_other %}
+  {% if errors|length > 0 -%}
+    <div class="alert alert-danger d-print-none" role="alert">
+      <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+        <span aria-hidden="true"><i class="material-icons">close</i></span>
+      </button>
+      <div class="alert-text">
+        {% for error in errors %}
+            <p> {{
+              error.messagePluralization is null
+              ? error.messageTemplate|trans(error.messageParameters, 'form_error')
+              : error.messageTemplate|transchoice(error.messagePluralization, error.messageParameters, 'form_error')
+              }}
+            </p>
+        {%- endfor -%}
+      </div>
+    </div>
+  {% endif %}
+{% endblock %}
 
 {# Material design widgets #}
 
@@ -731,7 +788,8 @@
 {% endblock %}
 
 {% block translatable_default -%}
-    <div class="input-group locale-input-group js-locale-input-group d-flex">
+    {% set formClass = (form.vars.attr.class|default('') ~ ' input-group locale-input-group js-locale-input-group d-flex')|trim %}
+    <div class="{{ formClass }}">
       {% for translateField in form %}
         {% set classes = translateField.vars.attr.class|default('') ~ ' js-locale-input'%}
         {% set classes = classes ~ ' js-locale-' ~ translateField.vars.label %}
@@ -921,6 +979,7 @@
 {% endblock %}
 
 {% block text_widget %}
+  {%- set attr = attr|merge({'aria-label': '%inputId% input'|trans({'%inputId%': form.vars.id}, 'Admin.Global')}) -%}
   {% if data_list is not null %}
     {%- set attr = attr|merge({'list': id ~ '_datalist'}) -%}
   {% endif %}

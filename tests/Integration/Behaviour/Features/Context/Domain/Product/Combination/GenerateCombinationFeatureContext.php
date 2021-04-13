@@ -29,7 +29,10 @@ declare(strict_types=1);
 namespace Tests\Integration\Behaviour\Features\Context\Domain\Product\Combination;
 
 use Behat\Gherkin\Node\TableNode;
+use PHPUnit\Framework\Assert;
 use PrestaShop\PrestaShop\Core\Domain\Product\Combination\Command\GenerateProductCombinationsCommand;
+use PrestaShop\PrestaShop\Core\Domain\Product\Exception\InvalidProductTypeException;
+use Product;
 use Tests\Integration\Behaviour\Features\Context\Util\PrimitiveUtils;
 
 class GenerateCombinationFeatureContext extends AbstractCombinationFeatureContext
@@ -45,10 +48,76 @@ class GenerateCombinationFeatureContext extends AbstractCombinationFeatureContex
         $tableData = $table->getRowsHash();
         $groupedAttributeIds = $this->parseGroupedAttributeIds($tableData);
 
-        $this->getCommandBus()->handle(new GenerateProductCombinationsCommand(
-            $this->getSharedStorage()->get($productReference),
-            $groupedAttributeIds
-        ));
+        $this->cleanLastException();
+        try {
+            $this->getCommandBus()->handle(new GenerateProductCombinationsCommand(
+                $this->getSharedStorage()->get($productReference),
+                $groupedAttributeIds
+            ));
+        } catch (InvalidProductTypeException $e) {
+            $this->setLastException($e);
+        }
+    }
+
+    /**
+     * @Then combination :combinationReference should be named :combinationName
+     *
+     * @param string $combinationReference
+     * @param string $combinationName
+     */
+    public function assertCombinationName(string $combinationReference, string $combinationName): void
+    {
+        $combinationForEditing = $this->getCombinationForEditing($combinationReference);
+
+        Assert::assertSame(
+            $combinationName,
+            $combinationForEditing->getName(),
+            sprintf(
+                'Unexpected name %s, expected %s',
+                $combinationForEditing->getName(),
+                $combinationName
+            )
+        );
+    }
+
+    /**
+     * @Then product :productReference default combination should be :combinationReference
+     *
+     * @param string $productReference
+     * @param string $combinationReference
+     */
+    public function assertCachedDefaultCombination(string $productReference, string $combinationReference): void
+    {
+        $this->assertCachedDefaultCombinationId(
+            $productReference,
+            $this->getSharedStorage()->get($combinationReference)
+        );
+    }
+
+    /**
+     * @Given product :productReference should not have a default combination
+     * @Given product :productReference does not have a default combination
+     *
+     * @param string $productReference
+     */
+    public function assertProductHasNoCachedDefaultCombination(string $productReference): void
+    {
+        $this->assertCachedDefaultCombinationId($productReference, 0);
+    }
+
+    /**
+     * @param string $productReference
+     * @param int $combinationId
+     */
+    private function assertCachedDefaultCombinationId(string $productReference, int $combinationId): void
+    {
+        $product = new Product($this->getSharedStorage()->get($productReference));
+
+        Assert::assertEquals(
+            (int) $product->cache_default_attribute,
+            $combinationId,
+            'Unexpected cached product default combination'
+        );
     }
 
     /**

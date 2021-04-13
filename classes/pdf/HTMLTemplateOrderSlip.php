@@ -63,6 +63,7 @@ class HTMLTemplateOrderSlipCore extends HTMLTemplateInvoice
 
         $this->order->products = $products;
         $this->smarty = $smarty;
+        $this->smarty->assign('isTaxEnabled', (bool) Configuration::get('PS_TAX'));
 
         // header informations
         $this->date = Tools::displayDate($this->order_slip->date_add);

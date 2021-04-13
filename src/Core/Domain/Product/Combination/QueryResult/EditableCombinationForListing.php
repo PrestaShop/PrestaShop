@@ -51,6 +51,11 @@ class EditableCombinationForListing
     private $combinationName;
 
     /**
+     * @var string
+     */
+    private $reference;
+
+    /**
      * @var bool
      */
     private $default;
@@ -61,11 +66,6 @@ class EditableCombinationForListing
     private $impactOnPrice;
 
     /**
-     * @var DecimalNumber
-     */
-    private $finalPrice;
-
-    /**
      * @var int
      */
     private $quantity;
@@ -73,28 +73,27 @@ class EditableCombinationForListing
     /**
      * @param int $combinationId
      * @param string $combinationName
+     * @param string $reference
      * @param CombinationAttributeInformation[] $attributesInformation
      * @param bool $default
      * @param DecimalNumber $impactOnPrice
-     * @param DecimalNumber $finalPrice
      * @param int $quantity
-     * @todo: add additional properties when needed (for update command)
      */
     public function __construct(
         int $combinationId,
         string $combinationName,
+        string $reference,
         array $attributesInformation,
         bool $default,
         DecimalNumber $impactOnPrice,
-        DecimalNumber $finalPrice,
         int $quantity
     ) {
         $this->combinationId = $combinationId;
         $this->attributesInformation = $attributesInformation;
         $this->combinationName = $combinationName;
+        $this->reference = $reference;
         $this->default = $default;
         $this->impactOnPrice = $impactOnPrice;
-        $this->finalPrice = $finalPrice;
         $this->quantity = $quantity;
     }
 
@@ -123,6 +122,14 @@ class EditableCombinationForListing
     }
 
     /**
+     * @return string
+     */
+    public function getReference(): string
+    {
+        return $this->reference;
+    }
+
+    /**
      * @return bool
      */
     public function isDefault(): bool
@@ -136,14 +143,6 @@ class EditableCombinationForListing
     public function getImpactOnPrice(): DecimalNumber
     {
         return $this->impactOnPrice;
-    }
-
-    /**
-     * @return DecimalNumber
-     */
-    public function getFinalPrice(): DecimalNumber
-    {
-        return $this->finalPrice;
     }
 
     /**

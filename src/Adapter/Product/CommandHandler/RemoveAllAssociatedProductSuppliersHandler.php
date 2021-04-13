@@ -28,13 +28,9 @@ declare(strict_types=1);
 
 namespace PrestaShop\PrestaShop\Adapter\Product\CommandHandler;
 
-use PrestaShop\PrestaShop\Adapter\Product\Repository\ProductRepository;
-use PrestaShop\PrestaShop\Adapter\Product\Repository\ProductSupplierRepository;
 use PrestaShop\PrestaShop\Adapter\Product\Update\ProductSupplierUpdater;
 use PrestaShop\PrestaShop\Core\Domain\Product\Supplier\Command\RemoveAllAssociatedProductSuppliersCommand;
 use PrestaShop\PrestaShop\Core\Domain\Product\Supplier\CommandHandler\RemoveAllAssociatedProductSuppliersHandlerInterface;
-use PrestaShop\PrestaShop\Core\Domain\Product\Supplier\ValueObject\ProductSupplierId;
-use ProductSupplier;
 
 /**
  * Handles @see RemoveAllAssociatedProductSuppliersCommand using legacy object model
@@ -42,33 +38,17 @@ use ProductSupplier;
 final class RemoveAllAssociatedProductSuppliersHandler implements RemoveAllAssociatedProductSuppliersHandlerInterface
 {
     /**
-     * @var ProductSupplierRepository
-     */
-    private $productSupplierRepository;
-
-    /**
      * @var ProductSupplierUpdater
      */
     private $productSupplierUpdater;
 
     /**
-     * @var ProductRepository
-     */
-    private $productRepository;
-
-    /**
-     * @param ProductSupplierRepository $productSupplierRepository
      * @param ProductSupplierUpdater $productSupplierUpdater
-     * @param ProductRepository $productRepository
      */
     public function __construct(
-        ProductSupplierRepository $productSupplierRepository,
-        ProductSupplierUpdater $productSupplierUpdater,
-        ProductRepository $productRepository
+        ProductSupplierUpdater $productSupplierUpdater
     ) {
-        $this->productSupplierRepository = $productSupplierRepository;
         $this->productSupplierUpdater = $productSupplierUpdater;
-        $this->productRepository = $productRepository;
     }
 
     /**
@@ -76,14 +56,6 @@ final class RemoveAllAssociatedProductSuppliersHandler implements RemoveAllAssoc
      */
     public function handle(RemoveAllAssociatedProductSuppliersCommand $command): void
     {
-        $product = $this->productRepository->get($command->getProductId());
-
-        $productSupplierIds = [];
-        foreach (ProductSupplier::getSupplierCollection($product->id, false) as $productSupplier) {
-            $productSupplierIds[] = new ProductSupplierId((int) $productSupplier->id);
-        }
-
-        $this->productSupplierRepository->bulkDelete($productSupplierIds);
-        $this->productSupplierUpdater->resetDefaultSupplier($product);
+        $this->productSupplierUpdater->removeAllForProduct($command->getProductId());
     }
 }

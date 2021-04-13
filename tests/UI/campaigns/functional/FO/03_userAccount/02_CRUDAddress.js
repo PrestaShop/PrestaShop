@@ -7,7 +7,7 @@ const helper = require('@utils/helpers');
 const loginCommon = require('@commonTests/loginBO');
 
 // Import data
-const {DefaultAccount} = require('@data/demo/customer');
+const {DefaultCustomer} = require('@data/demo/customer');
 const FakerAddress = require('@data/faker/address');
 
 const createAddressData = new FakerAddress({country: 'France'});
@@ -69,7 +69,7 @@ describe('CRUD address in FO', async () => {
   it('Should sign in FO', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'signInFo', baseContext);
 
-    await foLoginPage.customerLogin(page, DefaultAccount);
+    await foLoginPage.customerLogin(page, DefaultCustomer);
     const isCustomerConnected = await foMyAccountPage.isCustomerConnected(page);
     await expect(isCustomerConnected, 'Customer is not connected').to.be.true;
   });

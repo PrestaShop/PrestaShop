@@ -59,10 +59,11 @@
         </div>
       {/if}
 
-      <div class="component" id="header-shop-list-container">
-        {include file="components/layout/shop_list.tpl"}
-      </div>
-
+      {if !isset($hideLegacyStoreContextSelector) || !$hideLegacyStoreContextSelector}
+        <div class="component" id="header-shop-list-container">
+          {include file="components/layout/shop_list.tpl"}
+        </div>
+      {/if}
       {if $show_new_orders || $show_new_customers || $show_new_messages}
         <div class="component header-right-component" id="header-notifications-container">
           {include file="components/layout/notifications_center.tpl"}

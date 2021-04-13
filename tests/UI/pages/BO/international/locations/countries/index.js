@@ -66,8 +66,8 @@ class Countries extends BOBasePage {
 
     // Country options selectors
     this.countryForm = '#country_form';
-    this.enableRestrictCountriesToggleLabel = toggle => `${this.countryForm}
-     label[for='PS_RESTRICT_DELIVERED_COUNTRIES_${toggle}']`;
+    this.enableRestrictCountriesToggleLabel = toggle => `${this.countryForm} `
+      + `#PS_RESTRICT_DELIVERED_COUNTRIES_${toggle}`;
     this.saveButton = `${this.countryForm} button[name='submitOptionscountry']`;
   }
 
@@ -254,7 +254,7 @@ class Countries extends BOBasePage {
 
     await Promise.all([
       page.click(this.selectAllLink),
-      page.waitForSelector(this.selectAllLink, {state: 'hidden'}),
+      this.waitForHiddenSelector(page, this.selectAllLink),
     ]);
   }
 

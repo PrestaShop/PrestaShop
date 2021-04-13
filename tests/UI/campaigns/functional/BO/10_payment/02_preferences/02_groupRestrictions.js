@@ -18,7 +18,7 @@ const cartPage = require('@pages/FO/cart');
 const checkoutPage = require('@pages/FO/checkout');
 
 // Importing data
-const {DefaultAccount} = require('@data/demo/customer');
+const {DefaultCustomer} = require('@data/demo/customer');
 const AddressData = require('@data/faker/address');
 const CustomerFaker = require('@data/faker/customer');
 
@@ -117,7 +117,7 @@ describe('Configure group restrictions', async () => {
     const groups = [
       {args: {groupName: 'Visitor', id: 0, customer: visitorData}},
       {args: {groupName: 'Guest', id: 1, customer: guestData}},
-      {args: {groupName: 'Customer', id: 2, customer: DefaultAccount}},
+      {args: {groupName: 'Customer', id: 2, customer: DefaultCustomer}},
     ];
 
 

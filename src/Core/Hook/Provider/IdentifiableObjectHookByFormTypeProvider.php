@@ -39,16 +39,16 @@ use Throwable;
  */
 final class IdentifiableObjectHookByFormTypeProvider implements HookByFormTypeProviderInterface
 {
-    const FORM_TYPE_POSITION_IN_CONSTRUCTOR_OF_FORM_BUILDER = 0;
+    public const FORM_TYPE_POSITION_IN_CONSTRUCTOR_OF_FORM_BUILDER = 0;
 
-    const FORM_BUILDER_HOOK_PREFIX = 'action';
-    const FORM_BUILDER_HOOK_SUFFIX = 'FormBuilderModifier';
+    public const FORM_BUILDER_HOOK_PREFIX = 'action';
+    public const FORM_BUILDER_HOOK_SUFFIX = 'FormBuilderModifier';
 
-    const FORM_HANDLER_UPDATE_BEFORE_PREFIX = 'actionBeforeUpdate';
-    const FORM_HANDLER_UPDATE_AFTER_PREFIX = 'actionAfterUpdate';
-    const FORM_HANDLER_CREATE_BEFORE_PREFIX = 'actionBeforeCreate';
-    const FORM_HANDLER_CREATE_AFTER_PREFIX = 'actionAfterCreate';
-    const FORM_HANDLER_SUFFIX = 'FormHandler';
+    public const FORM_HANDLER_UPDATE_BEFORE_PREFIX = 'actionBeforeUpdate';
+    public const FORM_HANDLER_UPDATE_AFTER_PREFIX = 'actionAfterUpdate';
+    public const FORM_HANDLER_CREATE_BEFORE_PREFIX = 'actionBeforeCreate';
+    public const FORM_HANDLER_CREATE_AFTER_PREFIX = 'actionAfterCreate';
+    public const FORM_HANDLER_SUFFIX = 'FormHandler';
 
     /**
      * @var FormFactoryInterface

@@ -19,8 +19,8 @@ class AddCarrier extends BOBasePage {
     this.trackingURLInput = '#url';
 
     // Shipping locations and costs
-    this.addHandlingCostsToggle = toggle => `${this.carrierForm} label[for='shipping_handling_${toggle}']`;
-    this.freeShippingToggle = toggle => `${this.carrierForm} label[for='is_free_${toggle}']`;
+    this.addHandlingCostsToggle = toggle => `${this.carrierForm} #shipping_handling_${toggle}`;
+    this.freeShippingToggle = toggle => `${this.carrierForm} #is_free_${toggle}`;
     this.billingPriceRadioButton = '#billing_price';
     this.billingWeightButton = '#billing_weight';
     this.taxRuleSelect = '#id_tax_rules_group';
@@ -38,7 +38,7 @@ class AddCarrier extends BOBasePage {
     this.maxWeightInput = '#max_weight';
 
     // Summary
-    this.enableToggle = toggle => `${this.carrierForm} label[for='active_${toggle}']`;
+    this.enableToggle = toggle => `${this.carrierForm} #active_${toggle}`;
 
     this.nextButton = `${this.carrierForm} .buttonNext`;
     this.finishButton = `${this.carrierForm} .buttonFinish`;
@@ -62,8 +62,8 @@ class AddCarrier extends BOBasePage {
     await page.click(this.nextButton);
 
     // Set shipping locations and costs
-    await page.click(this.addHandlingCostsToggle(carrierData.handlingCosts ? 'on' : 'off'));
-    await page.click(this.freeShippingToggle(carrierData.freeShipping ? 'on' : 'off'));
+    await page.check(this.addHandlingCostsToggle(carrierData.handlingCosts ? 'on' : 'off'));
+    await page.check(this.freeShippingToggle(carrierData.freeShipping ? 'on' : 'off'));
 
     if (carrierData.billing === 'According to total price') {
       await page.click(this.billingPriceRadioButton);
@@ -94,7 +94,7 @@ class AddCarrier extends BOBasePage {
     await page.click(this.nextButton);
 
     // Summary
-    await page.click(this.enableToggle(carrierData.enable ? 'on' : 'off'));
+    await page.check(this.enableToggle(carrierData.enable ? 'on' : 'off'));
     await page.click(this.finishButton);
 
     // Return successful message
@@ -109,7 +109,7 @@ class AddCarrier extends BOBasePage {
    */
   async setHandlingCosts(page, toEnable = true) {
     await page.click(this.nextButton);
-    await page.click(this.addHandlingCostsToggle(toEnable ? 'on' : 'off'));
+    await page.check(this.addHandlingCostsToggle(toEnable ? 'on' : 'off'));
 
     await page.click(this.finishButton);
 

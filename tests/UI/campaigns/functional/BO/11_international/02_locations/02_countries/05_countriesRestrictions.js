@@ -33,7 +33,7 @@ let page;
 let numberOfCountries = 0;
 
 // Import data
-const {DefaultAccount} = require('@data/demo/customer');
+const {DefaultCustomer} = require('@data/demo/customer');
 
 /*
 Enable the country 'Afghanistan'
@@ -138,7 +138,7 @@ describe('Enable/Disable Restrict country selections in front office', async () 
       await testContext.addContextItem(this, 'testIdentifier', `login${index}`, baseContext);
 
       await homePage.goToLoginPage(page);
-      await foLoginPage.customerLogin(page, DefaultAccount);
+      await foLoginPage.customerLogin(page, DefaultCustomer);
 
       const isCustomerConnected = await foLoginPage.isCustomerConnected(page);
       await expect(isCustomerConnected).to.be.true;

@@ -11,7 +11,7 @@ class MerchandiseReturns extends BOBasePage {
     // Selectors
     // Options
     this.generalForm = '#order_return_fieldset_general';
-    this.enableOrderReturnLabel = toggle => `${this.generalForm} label[for='PS_ORDER_RETURN_${toggle}']`;
+    this.enableOrderReturnLabel = toggle => `${this.generalForm} #PS_ORDER_RETURN_${toggle}`;
     this.saveButton = `${this.generalForm} button[name='submitOptionsorder_return']`;
   }
 
@@ -26,7 +26,7 @@ class MerchandiseReturns extends BOBasePage {
    * @returns {Promise<string>}
    */
   async setOrderReturnStatus(page, toEnable = true) {
-    await this.waitForSelectorAndClick(page, this.enableOrderReturnLabel(toEnable ? 'on' : 'off'));
+    await page.check(this.enableOrderReturnLabel(toEnable ? 'on' : 'off'));
     await this.clickAndWaitForNavigation(page, this.saveButton);
     return this.getTextContent(page, this.alertSuccessBlock);
   }

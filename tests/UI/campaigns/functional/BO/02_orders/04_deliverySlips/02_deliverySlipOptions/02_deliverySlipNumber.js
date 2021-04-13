@@ -17,7 +17,7 @@ const orderConfirmationPage = require('@pages/FO/checkout/orderConfirmation');
 
 // Importing data
 const {PaymentMethods} = require('@data/demo/paymentMethods');
-const {DefaultAccount} = require('@data/demo/customer');
+const {DefaultCustomer} = require('@data/demo/customer');
 const {Statuses} = require('@data/demo/orderStatuses');
 const DeliverySlipOptionsFaker = require('@data/faker/deliverySlipOptions');
 
@@ -102,7 +102,7 @@ describe('Edit \'Delivery slip number\' and check the generated file name', asyn
 
       // Personal information step - Login
       await checkoutPage.clickOnSignIn(page);
-      await checkoutPage.customerLogin(page, DefaultAccount);
+      await checkoutPage.customerLogin(page, DefaultCustomer);
 
       // Address step - Go to delivery step
       const isStepAddressComplete = await checkoutPage.goToDeliveryStep(page);

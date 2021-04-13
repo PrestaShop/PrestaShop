@@ -57,7 +57,7 @@ class TranslationService
     /**
      * @param string $locale
      *
-     * @return mixed
+     * @return Lang
      *
      * @throws InvalidLanguageException
      */
@@ -65,9 +65,10 @@ class TranslationService
     {
         $doctrine = $this->container->get('doctrine');
 
+        /** @var Lang|null $lang */
         $lang = $doctrine->getManager()->getRepository('PrestaShopBundle:Lang')->findOneByLocale($locale);
 
-        if (!$lang) {
+        if (!$lang instanceof Lang) {
             throw InvalidLanguageException::localeNotFound($locale);
         }
 
@@ -258,18 +259,26 @@ class TranslationService
         $doctrine = $this->container->get('doctrine');
         $entityManager = $doctrine->getManager();
         $logger = $this->container->get('logger');
+        $log_context = ['object_type' => 'Translation'];
 
         if (empty($theme)) {
             $theme = null;
         }
 
-        $translation = $entityManager->getRepository('PrestaShopBundle:Translation')
-            ->findOneBy([
-                'lang' => $lang,
-                'domain' => $domain,
-                'key' => $key,
-                'theme' => $theme,
-            ]);
+        $translation = null;
+
+        try {
+            $translation = $entityManager->getRepository('PrestaShopBundle:Translation')
+                ->createQueryBuilder('t')
+                ->where('t.lang = :lang')->setParameter('lang', $lang)
+                ->andWhere('t.domain = :domain')->setParameter('domain', $domain)
+                ->andWhere('t.key LIKE :key')->setParameter('key', $key)
+                ->andWhere('t.theme = :theme OR t.theme is NULL')->setParameter('theme', $theme)
+                ->getQuery()
+                ->getSingleResult();
+        } catch (Exception $exception) {
+            $logger->error($exception->getMessage(), $log_context);
+        }
 
         if (null === $translation) {
             $translation = new Translation();
@@ -289,7 +298,6 @@ class TranslationService
 
         $validator = Validation::createValidator();
         $violations = $validator->validate($translation, new PassVsprintf());
-        $log_context = ['object_type' => 'Translation'];
         if (0 !== count($violations)) {
             foreach ($violations as $violation) {
                 $logger->error($violation->getMessage(), $log_context);

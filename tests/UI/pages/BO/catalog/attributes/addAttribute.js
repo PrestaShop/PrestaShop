@@ -15,7 +15,7 @@ class AddAttribute extends BOBasePage {
     this.publicNameInput = '#public_name_1';
     this.urlInput = 'input[name=\'url_name_1\']';
     this.metaTitleInput = 'input[name=\'meta_title_1\']';
-    this.indexableToggle = toggle => `label[for='indexable_${toggle}']`;
+    this.indexableToggle = toggle => `#indexable_${toggle}`;
     this.attributeTypeSelect = '#group_type';
     this.saveButton = '#attribute_group_form_submit_btn';
   }
@@ -36,7 +36,7 @@ class AddAttribute extends BOBasePage {
     await this.setValue(page, this.metaTitleInput, attributeData.metaTitle);
 
     // Set indexable toggle
-    await page.click(this.indexableToggle(attributeData.indexable ? 'on' : 'off'));
+    await page.check(this.indexableToggle(attributeData.indexable ? 'on' : 'off'));
 
     // Set attribute type
     await this.selectByVisibleText(page, this.attributeTypeSelect, attributeData.attributeType);

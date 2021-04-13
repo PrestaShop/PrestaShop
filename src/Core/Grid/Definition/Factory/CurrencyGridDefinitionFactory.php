@@ -56,7 +56,7 @@ final class CurrencyGridDefinitionFactory extends AbstractGridDefinitionFactory
     use BulkDeleteActionTrait;
     use DeleteActionTrait;
 
-    const GRID_ID = 'currency';
+    public const GRID_ID = 'currency';
 
     /**
      * {@inheritdoc}

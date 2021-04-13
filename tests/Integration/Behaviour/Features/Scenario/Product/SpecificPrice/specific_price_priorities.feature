@@ -9,7 +9,7 @@ Feature: Set Specific Price priorities from Back Office (BO).
   Scenario: I set specific price priorities to single product
     Given I add product "product1" with following information:
       | name[en-US] | pocket watch |
-      | is_virtual  | false        |
+      | type        | standard     |
     And product "product1" should have following specific price priorities:
       | id_shop | id_currency | id_country | id_group |
     When I set following specific price priorities for product "product1":
@@ -24,10 +24,10 @@ Feature: Set Specific Price priorities from Back Office (BO).
   Scenario: I set specific price priorities to all products
     Given I add product "product2" with following information:
       | name[en-US] | golden wrist watch |
-      | is_virtual  | false              |
+      | type        | standard           |
     And I add product "product3" with following information:
       | name[en-US] | silver wrist watch |
-      | is_virtual  | false              |
+      | type        | standard           |
     And product "product2" should have following specific price priorities:
       | id_shop | id_currency | id_country | id_group |
     And product "product3" should have following specific price priorities:

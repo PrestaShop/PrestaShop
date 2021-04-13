@@ -119,12 +119,12 @@ class OrderController extends FrameworkBundleAdminController
     /**
      * Default number of products per page (in case invalid value is used)
      */
-    const DEFAULT_PRODUCTS_NUMBER = 8;
+    public const DEFAULT_PRODUCTS_NUMBER = 8;
 
     /**
      * Options used for the number of products per page
      */
-    const PRODUCTS_PAGINATION_OPTIONS = [8, 20, 50, 100];
+    public const PRODUCTS_PAGINATION_OPTIONS = [8, 20, 50, 100];
 
     /**
      * Shows list of orders
@@ -163,11 +163,22 @@ class OrderController extends FrameworkBundleAdminController
     {
         $toolbarButtons = [];
 
+        $isSingleShopContext = $this->get('prestashop.adapter.shop.context')->isSingleShopContext();
+
         $toolbarButtons['add'] = [
             'href' => $this->generateUrl('admin_orders_create'),
             'desc' => $this->trans('Add new order', 'Admin.Orderscustomers.Feature'),
             'icon' => 'add_circle_outline',
+            'disabled' => !$isSingleShopContext,
         ];
+
+        if (!$isSingleShopContext) {
+            $toolbarButtons['add']['help'] = $this->trans(
+                'You can use this feature in a single shop context only. Switch context to enable it.',
+                'Admin.Orderscustomers.Feature'
+            );
+            $toolbarButtons['add']['href'] = '#';
+        }
 
         return $toolbarButtons;
     }
@@ -251,6 +262,7 @@ class OrderController extends FrameworkBundleAdminController
             'enableSidebar' => true,
             'recycledPackagingEnabled' => (bool) $configuration->get('PS_RECYCLABLE_PACK'),
             'giftSettingsEnabled' => (bool) $configuration->get('PS_GIFT_WRAPPING'),
+            'stockManagementEnabled' => (bool) $configuration->get('PS_STOCK_MANAGEMENT'),
         ]);
     }
 
@@ -484,11 +496,13 @@ class OrderController extends FrameworkBundleAdminController
 
         try {
             $this->dispatchHook(
-                'actionGetAdminOrderButtons', [
+                'actionGetAdminOrderButtons',
+                [
                     'controller' => $this,
                     'id_order' => $orderId,
                     'actions_bar_buttons_collection' => $backOfficeOrderButtons,
-                ]);
+                ]
+            );
 
             $cancelProductForm = $formBuilder->getFormFor($orderId);
         } catch (Exception $e) {
@@ -1980,6 +1994,20 @@ class OrderController extends FrameworkBundleAdminController
                 'Only numbers and decimal points (".") are allowed in the amount fields of the payment block, e.g. 10.50 or 1050.',
                 'Admin.Orderscustomers.Notification'
             ),
+            OrderConstraintException::class => [
+                OrderConstraintException::INVALID_PAYMENT_METHOD => sprintf(
+                    '%s %s %s',
+                    $this->trans(
+                        'The selected payment method is invalid.',
+                        'Admin.Orderscustomers.Notification'
+                    ),
+                    $this->trans(
+                        'Invalid characters:',
+                        'Admin.Notifications.Info'
+                    ),
+                    AddPaymentCommand::INVALID_CHARACTERS_NAME
+                ),
+            ],
         ]);
     }
 
@@ -2028,19 +2056,19 @@ class OrderController extends FrameworkBundleAdminController
                 ) : '',
             CustomerMessageConstraintException::class => [
                 CustomerMessageConstraintException::MISSING_MESSAGE => $this->trans(
-                        'The %s field is not valid',
-                        'Admin.Notifications.Error',
-                        [
-                            sprintf('"%s"', $this->trans('Message', 'Admin.Global')),
-                        ]
-                    ),
+                    'The %s field is not valid',
+                    'Admin.Notifications.Error',
+                    [
+                        sprintf('"%s"', $this->trans('Message', 'Admin.Global')),
+                    ]
+                ),
                 CustomerMessageConstraintException::INVALID_MESSAGE => $this->trans(
-                        'The %s field is not valid',
-                        'Admin.Notifications.Error',
-                        [
-                            sprintf('"%s"', $this->trans('Message', 'Admin.Global')),
-                        ]
-                    ),
+                    'The %s field is not valid',
+                    'Admin.Notifications.Error',
+                    [
+                        sprintf('"%s"', $this->trans('Message', 'Admin.Global')),
+                    ]
+                ),
             ],
         ];
     }

@@ -39,14 +39,14 @@ use Symfony\Component\HttpFoundation\ParameterBag;
  */
 class Module implements ModuleInterface
 {
-    const ACTION_INSTALL = 'install';
-    const ACTION_UNINSTALL = 'uninstall';
-    const ACTION_ENABLE = 'enable';
-    const ACTION_DISABLE = 'disable';
-    const ACTION_ENABLE_MOBILE = 'enable_mobile';
-    const ACTION_DISABLE_MOBILE = 'disable_mobile';
-    const ACTION_RESET = 'reset';
-    const ACTION_UPGRADE = 'upgrade';
+    public const ACTION_INSTALL = 'install';
+    public const ACTION_UNINSTALL = 'uninstall';
+    public const ACTION_ENABLE = 'enable';
+    public const ACTION_DISABLE = 'disable';
+    public const ACTION_ENABLE_MOBILE = 'enable_mobile';
+    public const ACTION_DISABLE_MOBILE = 'disable_mobile';
+    public const ACTION_RESET = 'reset';
+    public const ACTION_UPGRADE = 'upgrade';
 
     /**
      * @var LegacyModule Module The instance of the legacy module

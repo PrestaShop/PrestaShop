@@ -41,6 +41,11 @@ class ProductForEditing
     private $productId;
 
     /**
+     * @var string
+     */
+    private $type;
+
+    /**
      * @var ProductBasicInformation
      */
     private $basicInformation;
@@ -97,6 +102,7 @@ class ProductForEditing
 
     /**
      * @param int $productId
+     * @param string $type
      * @param ProductCustomizationOptions $customizationOptions
      * @param ProductBasicInformation $basicInformation
      * @param ProductCategoriesInformation $categoriesInformation
@@ -111,6 +117,7 @@ class ProductForEditing
      */
     public function __construct(
         int $productId,
+        string $type,
         ProductCustomizationOptions $customizationOptions,
         ProductBasicInformation $basicInformation,
         ProductCategoriesInformation $categoriesInformation,
@@ -124,6 +131,7 @@ class ProductForEditing
         ?VirtualProductFileForEditing $virtualProductFile
     ) {
         $this->productId = $productId;
+        $this->type = $type;
         $this->customizationOptions = $customizationOptions;
         $this->basicInformation = $basicInformation;
         $this->categoriesInformation = $categoriesInformation;
@@ -143,6 +151,14 @@ class ProductForEditing
     public function getProductId(): int
     {
         return $this->productId;
+    }
+
+    /**
+     * @return string
+     */
+    public function getType(): string
+    {
+        return $this->type;
     }
 
     /**

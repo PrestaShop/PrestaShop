@@ -17,7 +17,7 @@ const foCheckoutPage = require('@pages/FO/checkout');
 
 // Import data
 const {Carriers} = require('@data/demo/carriers');
-const {DefaultAccount} = require('@data/demo/customer');
+const {DefaultCustomer} = require('@data/demo/customer');
 
 // Import test context
 const testContext = require('@utils/testContext');
@@ -37,14 +37,14 @@ let numberOfCarriers = 0;
 Go to shipping > Carriers page
 Activate the 2 carriers 'My cheap carrier' and 'My light carrier'
 Go to shipping > preferences page
-Choose sort by 'Price'
+Choose sort by 'Price' and orderBy 'Ascending/Descending'
 Go to FO and check the carriers sort
-Go back to BO and choose sort by 'Position'
+Go back to BO and choose sort by 'Position' and orderBy 'Ascending/Descending'
 Go to FO and check the carriers sort
 Go back to BO > shipping > Carriers
 Disable the 2 carriers 'My cheap carrier' and 'My light carrier'
  */
-describe('Update \'sort carriers by\' and check it in FO', async () => {
+describe('Update \'sort carriers by\' and \'Order carriers by\' then check it in FO', async () => {
   // before and after functions
   before(async function () {
     browserContext = await helper.createBrowserContext(this.browser);
@@ -144,12 +144,16 @@ describe('Update \'sort carriers by\' and check it in FO', async () => {
       Carriers.cheapCarrier.name,
       Carriers.lightCarrier.name,
     ];
-
-    ['Position', 'Price'].forEach((sortBy, index) => {
-      it(`should set sort by '${sortBy}' in BO`, async function () {
+    [
+      {args: {sortBy: 'Position', orderBy: 'Ascending'}},
+      {args: {sortBy: 'Position', orderBy: 'Descending'}},
+      {args: {sortBy: 'Price', orderBy: 'Descending'}},
+      {args: {sortBy: 'Price', orderBy: 'Ascending'}},
+    ].forEach((test, index) => {
+      it(`should set sort by '${test.args.sortBy}' and order by '${test.args.orderBy}' in BO`, async function () {
         await testContext.addContextItem(this, 'testIdentifier', `setDefaultCarrier${index}`, baseContext);
 
-        const textResult = await preferencesPage.setCarrierSortBy(page, sortBy);
+        const textResult = await preferencesPage.setCarrierSortOrderBy(page, test.args.sortBy, test.args.orderBy);
         await expect(textResult).to.contain(preferencesPage.successfulUpdateMessage);
       });
 
@@ -182,7 +186,7 @@ describe('Update \'sort carriers by\' and check it in FO', async () => {
         if (index === 0) {
           // Personal information step - Login
           await foCheckoutPage.clickOnSignIn(page);
-          await foCheckoutPage.customerLogin(page, DefaultAccount);
+          await foCheckoutPage.customerLogin(page, DefaultCustomer);
         }
 
         // Address step - Go to delivery step
@@ -190,16 +194,24 @@ describe('Update \'sort carriers by\' and check it in FO', async () => {
         await expect(isStepAddressComplete, 'Step Address is not complete').to.be.true;
       });
 
-      it(`should verify the sort of carriers by '${sortBy}'`, async function () {
-        await testContext.addContextItem(this, 'testIdentifier', `checkDefaultCarrier${index}`, baseContext);
+      it('should verify the sort of carriers', async function () {
+        await testContext.addContextItem(this, 'testIdentifier', `checkSort${index}`, baseContext);
 
-        if (sortBy === 'Price') {
+        if (test.args.sortBy === 'Price') {
           const sortedCarriers = await foCheckoutPage.getAllCarriersPrices(page);
           const expectedResult = await foCheckoutPage.sortArray(sortedCarriers, true);
-          await expect(sortedCarriers).to.deep.equal(expectedResult);
-        } else {
+          if (test.args.orderBy === 'Ascending') {
+            await expect(sortedCarriers).to.deep.equal(expectedResult);
+          } else {
+            await expect(sortedCarriers).to.deep.equal(expectedResult.reverse());
+          }
+        } else if (test.args.sortBy === 'Position') {
           const sortedCarriers = await foCheckoutPage.getAllCarriersNames(page);
-          await expect(sortedCarriers).to.deep.equal(sortByPosition);
+          if (test.args.orderBy === 'Ascending') {
+            await expect(sortedCarriers).to.deep.equal(sortByPosition);
+          } else {
+            await expect(sortedCarriers).to.deep.equal(sortByPosition.reverse());
+          }
         }
       });
 

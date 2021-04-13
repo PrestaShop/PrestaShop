@@ -34,62 +34,62 @@ final class AddressConstraint
     /**
      * Maximum length for address alias (value is constrained by database)
      */
-    const MAX_ALIAS_LENGTH = 32;
+    public const MAX_ALIAS_LENGTH = 32;
 
     /**
      * Maximum length for company name (value is constrained by database)
      */
-    const MAX_COMPANY_LENGTH = 255;
+    public const MAX_COMPANY_LENGTH = 255;
 
     /**
      * Maximum length for last name (value is constrained by database)
      */
-    const MAX_LAST_NAME_LENGTH = 255;
+    public const MAX_LAST_NAME_LENGTH = 255;
 
     /**
      * Maximum length for first name (value is constrained by database)
      */
-    const MAX_FIRST_NAME_LENGTH = 255;
+    public const MAX_FIRST_NAME_LENGTH = 255;
 
     /**
      * Maximum length for address (value is constrained by database)
      */
-    const MAX_ADDRESS_LENGTH = 255;
+    public const MAX_ADDRESS_LENGTH = 255;
 
     /**
      * Maximum length for post code (value is constrained by database)
      */
-    const MAX_POSTCODE_LENGTH = 12;
+    public const MAX_POSTCODE_LENGTH = 12;
 
     /**
      * Maximum length for city name (value is constrained by database)
      */
-    const MAX_CITY_LENGTH = 64;
+    public const MAX_CITY_LENGTH = 64;
 
     /**
      * Maximum length for other information
      */
-    const MAX_OTHER_LENGTH = 300;
+    public const MAX_OTHER_LENGTH = 300;
 
     /**
      * Maximum length for phone number (value is constrained by database)
      */
-    const MAX_PHONE_LENGTH = 32;
+    public const MAX_PHONE_LENGTH = 32;
 
     /**
      * Maximum length for VAT number (value is constrained by database)
      */
-    const MAX_VAT_LENGTH = 32;
+    public const MAX_VAT_LENGTH = 32;
 
     /**
      * Maximum length for identification number (value is constrained by database)
      */
-    const MAX_DNI_LENGTH = 16;
+    public const MAX_DNI_LENGTH = 16;
 
     /**
      * DNI field value regexp validation pattern
      */
-    const DNI_LITE_PATTERN = '/^[0-9A-Za-z-.]{1,16}$/U';
+    public const DNI_LITE_PATTERN = '/^[0-9A-Za-z-.]{1,16}$/U';
 
     /**
      * Prevents class to be instantiated

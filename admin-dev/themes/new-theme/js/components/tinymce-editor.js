@@ -79,7 +79,7 @@ class TinyMCEEditor {
   initTinyMCE(config) {
     const cfg = {
       selector: '.rte',
-      plugins: 'align colorpicker link image filemanager table media placeholder advlist code table autoresize',
+      plugins: 'align colorpicker link image filemanager table media placeholder lists advlist code table autoresize',
       browser_spellcheck: true,
       toolbar1:
         /* eslint-disable-next-line max-len */
@@ -93,6 +93,13 @@ class TinyMCEEditor {
       },
       content_style: config.langIsRtl ? 'body {direction:rtl;}' : '',
       skin: 'prestashop',
+      mobile: {
+        theme: 'mobile',
+        plugins: ['lists', 'align', 'link', 'table', 'placeholder', 'advlist', 'code'],
+        toolbar:
+          /* eslint-disable-next-line max-len */
+          'undo code colorpicker bold italic underline strikethrough blockquote link align bullist numlist table formatselect styleselect',
+      },
       menubar: false,
       statusbar: false,
       relative_urls: false,
@@ -111,6 +118,10 @@ class TinyMCEEditor {
       },
       ...config,
     };
+
+    if (typeof window.defaultTinyMceConfig !== 'undefined') {
+      Object.assign(cfg, window.defaultTinyMceConfig);
+    }
 
     if (typeof cfg.editor_selector !== 'undefined') {
       cfg.selector = `.${cfg.editor_selector}`;

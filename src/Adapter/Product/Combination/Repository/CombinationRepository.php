@@ -31,18 +31,18 @@ namespace PrestaShop\PrestaShop\Adapter\Product\Combination\Repository;
 use Combination;
 use Db;
 use Doctrine\DBAL\Connection;
-use Doctrine\DBAL\Query\QueryBuilder;
 use PrestaShop\PrestaShop\Adapter\AbstractObjectModelRepository;
 use PrestaShop\PrestaShop\Adapter\Attribute\Repository\AttributeRepository;
 use PrestaShop\PrestaShop\Adapter\Product\Combination\Validate\CombinationValidator;
-use PrestaShop\PrestaShop\Core\Domain\Language\ValueObject\LanguageId;
 use PrestaShop\PrestaShop\Core\Domain\Product\Combination\Exception\CannotAddCombinationException;
+use PrestaShop\PrestaShop\Core\Domain\Product\Combination\Exception\CannotBulkDeleteCombinationException;
 use PrestaShop\PrestaShop\Core\Domain\Product\Combination\Exception\CannotDeleteCombinationException;
 use PrestaShop\PrestaShop\Core\Domain\Product\Combination\Exception\CombinationNotFoundException;
 use PrestaShop\PrestaShop\Core\Domain\Product\Combination\ValueObject\CombinationId;
 use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductId;
 use PrestaShop\PrestaShop\Core\Exception\CoreException;
 use PrestaShopException;
+use Product;
 
 /**
  * Provides access to Combination data source
@@ -142,74 +142,72 @@ class CombinationRepository extends AbstractObjectModelRepository
     }
 
     /**
-     * @param Combination $combination
+     * @param CombinationId $combinationId
      * @param int $errorCode
      *
      * @throws CoreException
      */
-    public function delete(Combination $combination, int $errorCode = 0): void
+    public function delete(CombinationId $combinationId, int $errorCode = 0): void
     {
-        $this->deleteObjectModel($combination, CannotDeleteCombinationException::class, $errorCode);
+        $this->deleteObjectModel($this->get($combinationId), CannotDeleteCombinationException::class, $errorCode);
     }
 
     /**
      * @param ProductId $productId
-     * @param int $limit
-     * @param int $offset
-     * @param array $filters
      *
-     * @return array<int, array<string, mixed>>
+     * @throws CannotDeleteCombinationException
      */
-    public function getProductCombinations(ProductId $productId, ?int $limit = null, ?int $offset = null, array $filters = []): array
+    public function deleteByProductId(ProductId $productId): void
     {
-        $qb = $this->getCombinationsQueryBuilder($productId, $filters)
-            ->select('pa.*')
-            ->setFirstResult($offset)
-            ->setMaxResults($limit)
-        ;
+        $combinationIds = $this->getCombinationIdsByProductId($productId);
 
-        return $qb->execute()->fetchAll();
+        $this->bulkDelete($combinationIds);
     }
 
     /**
-     * @param ProductId $productId
-     * @param array $filters
-     *
-     * @return int
+     * @param array $combinationIds
      */
-    public function getTotalCombinationsCount(ProductId $productId, array $filters = []): int
+    public function bulkDelete(array $combinationIds): void
     {
-        $qb = $this->getCombinationsQueryBuilder($productId, $filters)
-            ->select('COUNT(pa.id_product_attribute) AS total_combinations')
-        ;
-
-        return (int) $qb->execute()->fetch()['total_combinations'];
-    }
-
-    /**
-     * @param int[] $combinationIds
-     * @param LanguageId $langId
-     *
-     * @return array<int, array<int, mixed>>
-     */
-    public function getAttributesInfoByCombinationIds(array $combinationIds, LanguageId $langId): array
-    {
-        $attributeCombinationAssociations = $this->getAttributeCombinationAssociations($combinationIds);
-
-        $attributeIds = array_unique(array_map(function (array $attributeByCombination): int {
-            return (int) $attributeByCombination['id_attribute'];
-        }, $attributeCombinationAssociations));
-
-        $attributesInfoByAttributeId = $this->getAttributesInformation($attributeIds, $langId->getValue());
-
-        $attributesInfoByCombinationId = [];
-        foreach ($attributeCombinationAssociations as $attributeCombinationAssociation) {
-            $combinationId = (int) $attributeCombinationAssociation['id_product_attribute'];
-            $attributeId = (int) $attributeCombinationAssociation['id_attribute'];
-            $attributesInfoByCombinationId[$combinationId][] = $attributesInfoByAttributeId[$attributeId];
+        $failedIds = [];
+        foreach ($combinationIds as $combinationId) {
+            try {
+                $this->delete($combinationId);
+            } catch (CannotDeleteCombinationException $e) {
+                $failedIds[] = $combinationId->getValue();
+            }
         }
 
-        return $attributesInfoByCombinationId;
+        if (empty($failedIds)) {
+            return;
+        }
+
+        throw new CannotBulkDeleteCombinationException($failedIds, sprintf(
+            'Failed to delete following combinations: %s',
+            implode(', ', $failedIds)
+        ));
+    }
+
+    /**
+     * @param ProductId $productId
+     *
+     * @return CombinationId[]
+     */
+    public function getCombinationIdsByProductId(ProductId $productId): array
+    {
+        $qb = $this->connection->createQueryBuilder();
+        $qb
+            ->select('pa.id_product_attribute')
+            ->from($this->dbPrefix . 'product_attribute', 'pa')
+            ->andWhere('pa.id_product = :productId')
+            ->setParameter('productId', $productId->getValue())
+        ;
+        $combinationIds = $qb->execute()->fetchAll();
+
+        return array_map(
+            function (array $combination) { return new CombinationId((int) $combination['id_product_attribute']); },
+            $combinationIds
+        );
     }
 
     /**
@@ -253,83 +251,20 @@ class CombinationRepository extends AbstractObjectModelRepository
     }
 
     /**
-     * @param int[] $combinationIds
+     * @param ProductId $productId
      *
-     * @return array<int, array<string, mixed>>
-     */
-    private function getAttributeCombinationAssociations(array $combinationIds): array
-    {
-        $qb = $this->connection->createQueryBuilder();
-        $qb->select('pac.id_attribute')
-            ->addSelect('pac.id_product_attribute')
-            ->from($this->dbPrefix . 'product_attribute_combination', 'pac')
-            ->where($qb->expr()->in('pac.id_product_attribute', ':combinationIds'))
-            ->setParameter('combinationIds', $combinationIds, Connection::PARAM_INT_ARRAY)
-        ;
-
-        return $qb->execute()->fetchAll();
-    }
-
-    /**
-     * @param int[] $attributeIds
-     * @param int $langId
+     * @return Combination|null
      *
-     * @return array<int, array<int, mixed>>
+     * @throws CoreException
      */
-    private function getAttributesInformation(array $attributeIds, int $langId): array
+    public function findDefaultCombination(ProductId $productId): ?Combination
     {
-        $qb = $this->connection->createQueryBuilder();
-        $qb->select('a.id_attribute')
-            ->addSelect('ag.id_attribute_group')
-            ->addSelect('al.name AS attribute_name')
-            ->addSelect('agl.name AS attribute_group_name')
-            ->from($this->dbPrefix . 'attribute', 'a')
-            ->leftJoin(
-                'a',
-                $this->dbPrefix . 'attribute_lang',
-                'al',
-                'a.id_attribute = al.id_attribute AND al.id_lang = :langId'
-            )->leftJoin(
-                'a',
-                $this->dbPrefix . 'attribute_group',
-                'ag',
-                'a.id_attribute_group = ag.id_attribute_group'
-            )->leftJoin(
-                'ag',
-                $this->dbPrefix . 'attribute_group_lang',
-                'agl',
-                'agl.id_attribute_group = ag.id_attribute_group AND agl.id_lang = :langId'
-            )->where($qb->expr()->in('a.id_attribute', ':attributeIds'))
-            ->setParameter('attributeIds', $attributeIds, Connection::PARAM_INT_ARRAY)
-            ->setParameter('langId', $langId)
-        ;
-
-        $attributesInfo = $qb->execute()->fetchAll();
-
-        $attributesInfoByAttributeId = [];
-        foreach ($attributesInfo as $attributeInfo) {
-            $attributesInfoByAttributeId[(int) $attributeInfo['id_attribute']][] = $attributeInfo;
+        try {
+            $id = (int) Product::getDefaultAttribute($productId->getValue(), 0, true);
+        } catch (PrestaShopException $e) {
+            throw new CoreException('Error occurred while trying to get product default combination', 0, $e);
         }
 
-        return $attributesInfoByAttributeId;
-    }
-
-    /**
-     * @param ProductId $productId
-     * @param array $filters
-     *
-     * @return QueryBuilder
-     */
-    private function getCombinationsQueryBuilder(ProductId $productId, array $filters): QueryBuilder
-    {
-        //@todo: filters are not handled.
-        $qb = $this->connection->createQueryBuilder();
-        $qb->from($this->dbPrefix . 'product_attribute', 'pa')
-            ->where('pa.id_product = :productId')
-            ->orderBy('id_product_attribute', 'asc')
-            ->setParameter('productId', $productId->getValue())
-        ;
-
-        return $qb;
+        return $id ? $this->get(new CombinationId($id)) : null;
     }
 }

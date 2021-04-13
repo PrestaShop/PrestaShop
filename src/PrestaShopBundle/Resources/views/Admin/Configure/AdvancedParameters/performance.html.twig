@@ -36,7 +36,7 @@
   {{ form_start(smartyForm, {attr : {class: 'form'}, action: path('admin_performance_smarty_save') }) }}
     <div class="row justify-content-center">
       {% block perfs_form_smarty_cache %}
-        <div class="col-xl-10">
+        <div class="col">
           <div class="card">
             <h3 class="card-header">
               <i class="material-icons">business_center</i> {{ 'Smarty'|trans }}
@@ -62,7 +62,7 @@
   {{ form_start(debugModeForm, {attr : {class: 'form'}, action: path('admin_performance_debug_mode_save') }) }}
     <div class="row justify-content-center">
       {% block perfs_form_debug_mode %}
-        <div class="col-xl-10">
+        <div class="col">
           <div class="card">
             <h3 class="card-header">
               <i class="material-icons">bug_report</i> {{ 'Debug mode'|trans }}
@@ -88,7 +88,7 @@
   {{ form_start(optionalFeaturesForm, {attr : {class: 'form'}, action: path('admin_performance_optional_features_save') }) }}
     <div class="row justify-content-center">
       {% block perfs_form_optional_features %}
-        <div class="col-xl-10">
+        <div class="col">
           <div class="card" id="optional_features">
             <h3 class="card-header">
               <i class="material-icons">extension</i> {{ 'Optional features'|trans }}
@@ -125,7 +125,7 @@
   {{ form_start(combineCompressCacheForm, {attr : {class: 'form'}, action: path('admin_performance_combine_compress_cache_save') }) }}
     <div class="row justify-content-center">
       {% block perfs_form_ccc %}
-        <div class="col-xl-10">
+        <div class="col">
           <div class="card">
             <h3 class="card-header">
               <i class="material-icons">zoom_out_map</i> {{ 'CCC (Combine, Compress and Cache)'|trans }}
@@ -163,7 +163,7 @@
   {{ form_start(mediaServersForm, {attr : {class: 'form'}, action: path('admin_performance_media_servers_save') }) }}
     <div class="row justify-content-center">
       {% block perfs_form_media_servers %}
-        <div class="col-xl-10">
+        <div class="col">
           <div class="card">
             <h3 class="card-header">
               <i class="material-icons">link</i> {{ 'Media servers (use only with CCC)'|trans }}
@@ -200,7 +200,7 @@
   {{ form_start(cachingForm, {attr : {class: 'form'}, action: path('admin_performance_caching_save') }) }}
     <div class="row justify-content-center">
       {% block perfs_form_caching %}
-        <div class="col-xl-10">
+        <div class="col">
           <div class="card">
             <h3 class="card-header">
               <i class="material-icons">link</i> {{ 'Caching'|trans }}

@@ -25,7 +25,7 @@
 {% block product_footer %}
   <div class="product-footer justify-content-md-center">
     <div class="col-lg-4">
-      {% if null != productId %}
+    {% if null != productId %}
       <a
         href="{{ path('admin_product_unit_action', {action: 'delete', id: productId}) }}"
         class="tooltip-link btn btn-lg delete"
@@ -38,7 +38,10 @@
         <i class="material-icons">delete</i>
       </a>
       {{ form_widget(productForm.preview) }}
-      {% endif %}
+      <a class="btn btn-outline-secondary ml-1" href="{{ path('admin_product_form', {'id': productId}) }}">
+        {{ 'Edit product V1'|trans({}, 'Admin.Catalog.Feature')|raw }}
+      </a>
+    {% endif %}
     </div>
     <div class="col-sm-5 col-lg-8 text-right">
       {{ form_widget(productForm.save) }}

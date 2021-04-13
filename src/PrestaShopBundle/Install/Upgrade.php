@@ -108,9 +108,9 @@ namespace PrestaShopBundle\Install {
         // used for translations
         public static $l_cache;
 
-        const FILE_PREFIX = 'PREFIX_';
-        const ENGINE_TYPE = 'ENGINE_TYPE';
-        const DB_NAME = 'DB_NAME';
+        public const FILE_PREFIX = 'PREFIX_';
+        public const ENGINE_TYPE = 'ENGINE_TYPE';
+        public const DB_NAME = 'DB_NAME';
 
         private static $classes14 = ['Cache', 'CacheFS', 'CarrierModule', 'Db', 'FrontController', 'Helper', 'ImportModule',
             'MCached', 'Module', 'ModuleGraph', 'ModuleGraphEngine', 'ModuleGrid', 'ModuleGridEngine',
@@ -280,8 +280,8 @@ namespace PrestaShopBundle\Install {
             if (!defined('_PS_TRANSLATIONS_DIR_')) {
                 define('_PS_TRANSLATIONS_DIR_', _PS_ROOT_DIR_ . '/translations/');
             }
-            if (!defined('_PS_MODULES_DIR_')) {
-                define('_PS_MODULES_DIR_', _PS_ROOT_DIR_ . '/modules/');
+            if (!defined('_PS_MODULE_DIR_')) {
+                define('_PS_MODULE_DIR_', _PS_ROOT_DIR_ . '/modules/');
             }
             if (!defined('_PS_MAILS_DIR_')) {
                 define('_PS_MAILS_DIR_', _PS_ROOT_DIR_ . '/mails/');
@@ -1090,7 +1090,7 @@ namespace PrestaShopBundle\Install {
             return !empty($this->failureList);
         }
 
-        const SETTINGS_FILE = 'config/settings.inc.php';
+        public const SETTINGS_FILE = 'config/settings.inc.php';
 
         /* @phpstan-ignore-next-line */
         public static function migrateSettingsFile(Event $event = null)

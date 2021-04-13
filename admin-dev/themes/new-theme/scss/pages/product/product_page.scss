@@ -13,8 +13,18 @@
 @import "~bootstrap/scss/mixins/transition";
 @import "~bootstrap/scss/mixins/border-radius";
 
+@import "~photoswipe/dist/photoswipe.css";
+@import "~photoswipe/dist/default-skin/default-skin.css";
+
 .product-page {
   padding-bottom: 80px;
+
+  > #field-disabled {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    width: 100%;
+  }
 
   .widget-radio-inline {
     margin-bottom: 10px;
@@ -114,7 +124,7 @@
     padding-bottom: 1.25rem;
     margin-top: -$grid-gutter-width / 2;
     margin-bottom: $grid-gutter-width / 2;
-    background: #fff;
+    background: $white;
 
     .edit {
       background-size: 4%;
@@ -164,7 +174,7 @@
     z-index: 10;
     display: flex;
     align-items: center;
-    background: #fff;
+    background: $white;
     box-shadow: $gray-dark 0 0 10px;
     padding: {
       top: $grid-gutter-width / 2;
@@ -230,6 +240,16 @@
   .product-feature {
     align-items: flex-end;
     margin-bottom: 1rem;
+
+    @media screen and (max-width: 1300px) {
+      &::after {
+        display: inline-block;
+        width: 100%;
+        margin: 0.5rem 0.9375rem;
+        content: "";
+        border-top: 1px solid $primary;
+      }
+    }
   }
 
   // Combination details form
@@ -248,7 +268,7 @@
     margin: 0 0.625rem 0 0;
     border: 1px solid $gray-light;
     @include border-radius(0.1875rem);
-    outline: solid 4px #fff;
+    outline: solid 4px $white;
   }
 
   .product-combination-image.img-highlight {
@@ -290,7 +310,32 @@
     }
 
     .panel {
-      background: #fff;
+      background: $white;
+    }
+  }
+
+  #combinations-list {
+    position: relative;
+    min-height: 3.5rem;
+
+    .spinner-product-combinations-container {
+      position: absolute;
+      top: 0;
+      left: 0;
+      z-index: 9;
+      display: none;
+      width: 100%;
+      height: 100%;
+      background-color: rgba(255, 255, 255, 0.8);
+
+      .spinner {
+        position: relative;
+        top: 50%;
+        display: block;
+        margin-top: -1.25rem;
+        margin-right: auto;
+        margin-left: auto;
+      }
     }
   }
 
@@ -382,7 +427,7 @@
           width: 100%;
           padding: 5px;
           font-size: 12px;
-          color: #fff;
+          color: $white;
           text-align: center;
           background: $gray-medium;
         }
@@ -513,7 +558,7 @@
       max-height: 19.5rem;
       padding: 0.3125rem 0;
       overflow: auto;
-      background: #fff;
+      background: $white;
       border: 1px solid $gray-medium;
     }
 
@@ -524,7 +569,7 @@
 
       &:hover,
       &.tt-cursor {
-        color: #fff;
+        color: $white;
         background-color: $primary-hover;
       }
     }
@@ -573,7 +618,7 @@
     }
 
     .delete {
-      background: #fff;
+      background: $white;
       border: none;
 
       .material-icons {
@@ -673,7 +718,7 @@
         vertical-align: middle;
       }
 
-      #categories-tree-expand {
+      #categories-tree-reduce {
         display: none;
       }
 
@@ -896,7 +941,7 @@
   margin-top: 2px;
   list-style: none;
   cursor: default;
-  background-color: #fff;
+  background-color: $white;
   border: 1px solid #ccc;
   @include border-radius(5px);
   box-shadow: 0 5px 10px rgba(0, 0, 0, 0.2);
@@ -909,7 +954,7 @@
       background: $primary-hover;
 
       a {
-        color: #fff;
+        color: $white;
         text-decoration: none;
       }
     }
@@ -985,7 +1030,7 @@
               &.not-color::before {
                 display: block;
                 line-height: 1rem;
-                color: #fff;
+                color: $white;
                 text-align: center;
               }
             }
@@ -1029,7 +1074,8 @@
 }
 
 #related-product,
-#id-product-redirected {
+#id-product-redirected,
+#product_redirect_option {
   // list of added related products
   .typeahead-list {
     li {
@@ -1059,6 +1105,14 @@
           color: $medium-gray;
           cursor: pointer;
         }
+      }
+    }
+  }
+
+  .autocomplete-search {
+    .search-suggestion {
+      img {
+        width: 50px;
       }
     }
   }
@@ -1108,9 +1162,9 @@
         z-index: 2;
         height: 3rem;
         padding: 0.9375rem 0.3125rem;
-        color: #fff;
+        color: $white;
         cursor: pointer;
-        background: #fff;
+        background: $white;
         background: $brand-primary;
 
         &.visible {

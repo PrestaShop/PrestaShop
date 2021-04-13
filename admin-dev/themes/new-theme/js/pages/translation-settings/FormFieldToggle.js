@@ -134,7 +134,6 @@ export default class FormFieldToggle {
     }
   }
 
-
   /**
    * Make all given selectors hidden
    *

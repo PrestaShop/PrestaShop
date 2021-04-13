@@ -34,7 +34,7 @@ use Symfony\Component\HttpFoundation\Request;
  */
 final class FilterCategoriesRequestPurifier
 {
-    const CATEGORY = 'filter_category';
+    public const CATEGORY = 'filter_category';
 
     /**
      * Changes the filter category values in case it is not numeric or signed.

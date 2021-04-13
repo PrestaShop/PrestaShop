@@ -46,12 +46,12 @@ use Symfony\Component\DependencyInjection\Definition;
  */
 final class OptionsFormHookNameCollectorPass implements CompilerPassInterface
 {
-    const OPTIONS_FORM_SERVICE_SUFFIX = 'form_handler';
+    public const OPTIONS_FORM_SERVICE_SUFFIX = 'form_handler';
 
-    const HOOK_NAME_POSITION_IN_CONSTRUCTOR = 4;
-    const HOOK_NAME_PREFIX = 'action';
-    const HOOK_NAME_OF_FORM_BUILDER_SUFFIX = 'Form';
-    const HOOK_NAME_OF_FORM_SAVE_SUFFIX = 'Save';
+    public const HOOK_NAME_POSITION_IN_CONSTRUCTOR = 4;
+    public const HOOK_NAME_PREFIX = 'action';
+    public const HOOK_NAME_OF_FORM_BUILDER_SUFFIX = 'Form';
+    public const HOOK_NAME_OF_FORM_SAVE_SUFFIX = 'Save';
 
     /**
      * {@inheritdoc}

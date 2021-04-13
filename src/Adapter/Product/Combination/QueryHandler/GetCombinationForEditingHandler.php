@@ -31,8 +31,10 @@ namespace PrestaShop\PrestaShop\Adapter\Product\Combination\QueryHandler;
 use Combination;
 use DateTime;
 use PrestaShop\Decimal\DecimalNumber;
+use PrestaShop\PrestaShop\Adapter\Attribute\Repository\AttributeRepository;
 use PrestaShop\PrestaShop\Adapter\Product\Combination\Repository\CombinationRepository;
 use PrestaShop\PrestaShop\Adapter\Product\Stock\Repository\StockAvailableRepository;
+use PrestaShop\PrestaShop\Core\Domain\Language\ValueObject\LanguageId;
 use PrestaShop\PrestaShop\Core\Domain\Product\Combination\Query\GetCombinationForEditing;
 use PrestaShop\PrestaShop\Core\Domain\Product\Combination\QueryHandler\GetCombinationForEditingHandlerInterface;
 use PrestaShop\PrestaShop\Core\Domain\Product\Combination\QueryResult\CombinationDetails;
@@ -58,15 +60,31 @@ final class GetCombinationForEditingHandler implements GetCombinationForEditingH
     private $stockAvailableRepository;
 
     /**
+     * @var AttributeRepository
+     */
+    private $attributeRepository;
+
+    /**
+     * @var int
+     */
+    private $contextLanguageId;
+
+    /**
      * @param CombinationRepository $combinationRepository
      * @param StockAvailableRepository $stockAvailableRepository
+     * @param AttributeRepository $attributeRepository
+     * @param int $contextLanguageId
      */
     public function __construct(
         CombinationRepository $combinationRepository,
-        StockAvailableRepository $stockAvailableRepository
+        StockAvailableRepository $stockAvailableRepository,
+        AttributeRepository $attributeRepository,
+        int $contextLanguageId
     ) {
         $this->combinationRepository = $combinationRepository;
         $this->stockAvailableRepository = $stockAvailableRepository;
+        $this->attributeRepository = $attributeRepository;
+        $this->contextLanguageId = $contextLanguageId;
     }
 
     /**
@@ -77,10 +95,33 @@ final class GetCombinationForEditingHandler implements GetCombinationForEditingH
         $combination = $this->combinationRepository->get($query->getCombinationId());
 
         return new CombinationForEditing(
+            $this->getCombinationName($query->getCombinationId()),
             $this->getDetails($combination),
             $this->getPrices($combination),
             $this->getStock($combination)
         );
+    }
+
+    /**
+     * @param CombinationId $combinationId
+     *
+     * @return string
+     */
+    private function getCombinationName(CombinationId $combinationId): string
+    {
+        $attributesInformation = $this->attributeRepository->getAttributesInfoByCombinationIds(
+            [$combinationId->getValue()],
+            new LanguageId($this->contextLanguageId)
+        );
+        $attributes = $attributesInformation[$combinationId->getValue()];
+
+        return implode(', ', array_map(function ($attribute) {
+            return sprintf(
+                '%s - %s',
+                $attribute['attribute_group_name'],
+                $attribute['attribute_name']
+            );
+        }, $attributes));
     }
 
     /**

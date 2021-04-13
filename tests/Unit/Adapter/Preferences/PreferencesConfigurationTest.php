@@ -26,7 +26,7 @@
 
 declare(strict_types=1);
 
-namespace Tests\Unit\Adapter;
+namespace Tests\Unit\Adapter\Preferences;
 
 use Cookie;
 use PHPUnit\Framework\TestCase;

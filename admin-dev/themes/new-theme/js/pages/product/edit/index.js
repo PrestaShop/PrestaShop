@@ -24,23 +24,57 @@
  */
 
 import Serp from '@app/utils/serp';
-import ProductMap from '../product-map';
-import ProductPartialUpdater from './product-partial-updater';
+import RedirectOptionManager from '@pages/product/edit/redirect-option-manager';
+import ProductSuppliersManager from '@pages/product/edit/product-suppliers-manager';
+import FeatureValuesManager from '@pages/product/edit/feature-values-manager';
+import CustomizationsManager from '@pages/product/edit/customizations-manager';
+import ProductMap from '@pages/product/product-map';
+import ProductPartialUpdater from '@pages/product/edit/product-partial-updater';
+import NavbarHandler from '@components/navbar-handler';
+import CombinationsManager from '@pages/product/edit/combinations-manager';
+import ProductTypeManager from '@pages/product/edit/product-type-manager';
+import initDropzone from '@pages/product/components/dropzone';
+import ProductFormModel from '@pages/product/edit/product-form-model';
 
 const {$} = window;
 
 $(() => {
-  window.prestashop.component.initComponents(
-    [
-      'TranslatableField',
-      'TinyMCEEditor',
-      'TranslatableInput',
-      'EventEmitter',
-      'TextWithLengthCounter',
-    ],
-  );
+  window.prestashop.component.initComponents([
+    'TranslatableField',
+    'TinyMCEEditor',
+    'TranslatableInput',
+    'EventEmitter',
+    'TextWithLengthCounter',
+  ]);
 
   const $productForm = $(ProductMap.productForm);
+  const productId = parseInt($productForm.data('productId'), 10);
+  const productType = $productForm.data('productType');
+
+  // Init product model along with input watching and syncing
+  new ProductFormModel($productForm, window.prestashop.instance.eventEmitter);
+
+  if (productId && productType === ProductMap.productType.COMBINATIONS) {
+    // Combinations manager must be initialised before nav handler, or it won't trigger the pagination if the tab is
+    // selected on load, but only when productId exists (edition mode)
+    new CombinationsManager(productId);
+  }
+  new NavbarHandler(ProductMap.navigationBar);
+
+  // Init the product/category search field for redirection target
+  const $redirectTypeInput = $(ProductMap.redirectOption.typeInput);
+  const $redirectTargetInput = $(ProductMap.redirectOption.targetInput);
+  new RedirectOptionManager($redirectTypeInput, $redirectTargetInput);
+
+  // Form has no productId data means that we are in creation mode
+  if (!productId) {
+    return;
+  }
+
+  // On creation product type can be modified as you wish, but once it is created it has strong impacts, so we must
+  // force submit because it influences the available features in the form, and it also perform cleaning on non relevant
+  // associations
+  new ProductTypeManager($(ProductMap.productTypeSelector), $productForm);
 
   // Init Serp component to preview Search engine display
   const translatorInput = window.prestashop.instance.translatableInput;
@@ -58,12 +92,15 @@ $(() => {
     $('#product_preview').data('seo-url'),
   );
 
-  // Form has no productId data means that we are in creation mode
-  if (!$productForm.data('productId')) {
-    return;
-  }
+  initDropzone(ProductMap.dropzoneImagesContainer);
 
   // From here we init component specific to edition
   const $productFormSubmitButton = $(ProductMap.productFormSubmitButton);
   new ProductPartialUpdater(window.prestashop.instance.eventEmitter, $productForm, $productFormSubmitButton).watch();
+  new FeatureValuesManager(window.prestashop.instance.eventEmitter);
+  new CustomizationsManager();
+
+  if (productType !== ProductMap.productType.COMBINATIONS) {
+    new ProductSuppliersManager();
+  }
 });

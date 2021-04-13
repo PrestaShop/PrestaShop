@@ -23,13 +23,8 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
 
-import PreviewOpener from '@components/form/preview-opener';
 import ChoiceTree from '@components/form/choice-tree';
-import TaggableField from '@components/taggable-field';
-import TranslatableInput from '@components/translatable-input';
 import textToLinkRewriteCopier from '@components/text-to-link-rewrite-copier';
-import TranslatableField from '@components/translatable-field';
-import TinyMCEEditor from '@components/tinymce-editor';
 import Serp from '@app/utils/serp/index';
 
 const {$} = window;
@@ -37,7 +32,15 @@ const {$} = window;
 $(() => {
   new ChoiceTree('#cms_page_page_category_id');
 
-  const translatorInput = new TranslatableInput();
+  window.prestashop.component.initComponents(
+    [
+      'TranslatableInput',
+      'TranslatableField',
+      'TinyMCEEditor',
+    ],
+  );
+
+  const translatorInput = window.prestashop.instance.translatableInput;
 
   new Serp(
     {
@@ -53,17 +56,14 @@ $(() => {
     $('#serp-app').data('cms-url'),
   );
 
-  new TranslatableField();
-  new TinyMCEEditor();
-
-  new TaggableField({
+  new window.prestashop.component.TaggableField({
     tokenFieldSelector: 'input.js-taggable-field',
     options: {
       createTokensOnBlur: true,
     },
   });
 
-  new PreviewOpener('.js-preview-url');
+  new window.prestashop.component.PreviewOpener('.js-preview-url');
 
   textToLinkRewriteCopier({
     sourceElementSelector: 'input.js-copier-source-title',

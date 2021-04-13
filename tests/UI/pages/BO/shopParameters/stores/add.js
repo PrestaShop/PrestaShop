@@ -22,7 +22,7 @@ class AddStore extends BOBasePage {
     this.faxInput = '#fax';
     this.emailInput = '#email';
     this.noteTextarea = '#note_1';
-    this.statusToggle = toggle => `${this.storeForm} label[for='active_${toggle}']`;
+    this.statusToggle = toggle => `${this.storeForm} #active_${toggle}`;
     this.hoursInput = pos => `input[name='hours[${pos}][1]']`;
     this.saveButton = '#store_form_submit_btn';
     this.alertSuccessBlockParagraph = '.alert-success';
@@ -58,7 +58,7 @@ class AddStore extends BOBasePage {
     await this.setValue(page, this.noteTextarea, storeData.note);
 
     // Set store status
-    await page.click(this.statusToggle(storeData.status ? 'on' : 'off'));
+    await page.check(this.statusToggle(storeData.status ? 'on' : 'off'));
 
     // Set opening hours
     for (let day = 1; day <= 7; day++) {

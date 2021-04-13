@@ -35,6 +35,11 @@ use PrestaShopBundle\Entity\Translation;
 use Symfony\Component\Translation\Loader\LoaderInterface;
 use Symfony\Component\Translation\MessageCatalogue;
 
+/**
+ * The user translated catalogue is stored in database.
+ * This class is a helper to build the query for retrieving the translations.
+ * They depend on parameters like locale, theme or domain.
+ */
 class DatabaseTranslationLoader implements LoaderInterface
 {
     /** @var EntityManagerInterface */

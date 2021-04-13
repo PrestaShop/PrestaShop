@@ -62,7 +62,7 @@ class Translations extends BOBasePage {
   async searchTranslation(page, expression) {
     await this.setValue(page, this.searchInput, expression);
     await page.click(this.searchButton);
-    await page.waitForSelector(this.translationTextarea);
+    await this.waitForAttachedSelector(page, this.translationTextarea);
     await page.waitForTimeout(2000);
   }
 

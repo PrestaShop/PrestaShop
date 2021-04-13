@@ -36,10 +36,10 @@ class UpdateCartRuleException extends CartRuleException
     /**
      * When fails to update single cart rule status
      */
-    const FAILED_UPDATE_STATUS = 10;
+    public const FAILED_UPDATE_STATUS = 10;
 
     /**
      * When fails to update cart rule status in bulk action
      */
-    const FAILED_BULK_UPDATE_STATUS = 20;
+    public const FAILED_BULK_UPDATE_STATUS = 20;
 }

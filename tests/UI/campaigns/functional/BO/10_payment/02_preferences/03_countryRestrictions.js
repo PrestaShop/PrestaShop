@@ -17,7 +17,7 @@ const cartPage = require('@pages/FO/cart');
 const checkoutPage = require('@pages/FO/checkout');
 
 // Import data
-const {DefaultAccount} = require('@data/demo/customer');
+const {DefaultCustomer} = require('@data/demo/customer');
 
 let browserContext;
 let page;
@@ -114,7 +114,7 @@ describe('Configure country restrictions', async () => {
       if (index === 0) {
         // Personal information step - Login
         await checkoutPage.clickOnSignIn(page);
-        const isStepLoginComplete = await checkoutPage.customerLogin(page, DefaultAccount);
+        const isStepLoginComplete = await checkoutPage.customerLogin(page, DefaultCustomer);
         await expect(isStepLoginComplete, 'Step Personal information is not complete').to.be.true;
       }
     });

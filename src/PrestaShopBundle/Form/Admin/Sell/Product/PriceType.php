@@ -88,7 +88,7 @@ class PriceType extends TranslatorAwareType
         $builder
             // @todo we should have DecimalType and MoneyDecimalType it was moved in a separate PR #22162
             ->add('price_tax_excluded', MoneyType::class, [
-                'required' => true,
+                'required' => false,
                 'label' => $this->trans('Retail price (tax excl.)', 'Admin.Catalog.Feature'),
                 'attr' => ['data-display-price-precision' => self::PRESTASHOP_DECIMALS],
                 'currency' => $this->defaultCurrency->iso_code,
@@ -98,7 +98,7 @@ class PriceType extends TranslatorAwareType
                 ],
             ])
             ->add('price_tax_included', MoneyType::class, [
-                'required' => true,
+                'required' => false,
                 'label' => $this->trans('Retail price (tax incl.)', 'Admin.Catalog.Feature'),
                 'attr' => ['data-display-price-precision' => self::PRESTASHOP_DECIMALS],
                 'currency' => $this->defaultCurrency->iso_code,
@@ -109,7 +109,7 @@ class PriceType extends TranslatorAwareType
             ])
             ->add('tax_rules_group_id', ChoiceType::class, [
                 'choices' => $this->taxRuleGroupChoices,
-                'required' => true,
+                'required' => false,
                 'choice_attr' => $this->taxRuleGroupChoicesAttributes,
                 'attr' => [
                     'data-toggle' => 'select2',
