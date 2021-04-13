@@ -30,7 +30,7 @@ admin_products_v2_edit:
 
 admin_products_v2_download_virtual_product_file:
     path: /virtual-product-file/{virtualProductFileId}
-    methods: [GET, POST, PATCH]
+    methods: [GET]
     defaults:
         _controller: PrestaShopBundle:Admin/Sell/Catalog/Product/Product:downloadVirtualFile
         _legacy_controller: AdminProducts
