@@ -52,7 +52,7 @@ class PersistFiltersBuilderTest extends TestCase
         $this->assertNull($filters);
     }
 
-    public function testBuildWithFilterId()
+    public function testBuildWithFilterId(): void
     {
         $expectedFilters = [
             'limit' => 10,
@@ -75,7 +75,7 @@ class PersistFiltersBuilderTest extends TestCase
         $this->assertEquals('language', $filters->getFilterId());
     }
 
-    public function testBuildWithRequest()
+    public function testBuildWithRequest(): void
     {
         $expectedFilters = [
             'limit' => 10,
@@ -101,7 +101,7 @@ class PersistFiltersBuilderTest extends TestCase
         $this->assertEmpty($filters->getFilterId());
     }
 
-    public function testNoNeedForPersist()
+    public function testNoNeedForPersist(): void
     {
         $expectedFilters = [
             'limit' => 10,
