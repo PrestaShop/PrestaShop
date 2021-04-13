@@ -382,7 +382,7 @@ class ToolsCoreTest extends TestCase
 
     public function passwordGenProvider(): array
     {
-        $weakPassWordOrdInvalidLenghtGiven = false;
+        $weakPassWordOrdInvalidLenghtGiven = '/^0$/';
         $alphaNumericPasswordWithTencharacters = '/^(\w){10}$/';
         $numericPasswordWithEightcharacters = '/^(\d{8})$/';
         $numericPasswordWithTwelveCharacters = '/^(\d{12})$/';
