@@ -21,7 +21,8 @@ class Home extends FOBasePage {
     this.newFlag = number => `${this.productArticle(number)} .product-flag.new`;
     this.newsletterFormField = '.block_newsletter [name=email]';
     this.newsletterSubmitButton = '.block_newsletter [name=submitNewsletter]';
-    this.newsletterAlertMessage = '.block_newsletter_alert';
+    // Newsletter Subscription alert message
+    this.subscriptionAlertMessage = '.block_newsletter_alert';
 
     // Quick View modal
     this.quickViewModalDiv = 'div[id*=\'quickview-modal\']';
@@ -57,6 +58,10 @@ class Home extends FOBasePage {
     this.cartModalSubtotalBlock = `${this.cartContentBlock} .subtotal.value`;
     this.cartModalproductTaxInclBlock = `${this.cartContentBlock} .product-total .value`;
     this.cartModalCheckoutLink = `${this.blockCartModalDiv} div.cart-content-btn a`;
+
+    //Newsletter subscription messages
+    this.successSubscriptionMessage = 'You have successfully subscribed to this newsletter.';
+    this.alreadyUsedEmailMessage = 'This email address is already registered.';
   }
 
   /**
@@ -325,7 +330,7 @@ class Home extends FOBasePage {
   }
 
   /**
-   *
+   * subscribe to the newsletter from FO homepage
    * @param page
    * @param email
    * @returns {Promise<string|TextContent|*>}

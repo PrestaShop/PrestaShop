@@ -28,9 +28,6 @@ const testContext = require('@utils/testContext');
 // context
 const baseContext = 'functional_FO_newsletter_subscribeNewsletter';
 
-const unusedEmailNewsletterSubscriptionAlertText = 'You have successfully subscribed to this newsletter.';
-const alreadyUsedEmailNewsletterSubscriptionAlertText = 'This email address is already registered.';
-const unsubscribeNewsletterText = 'Information successfully updated.';
 const moduleName = 'Newsletter subscription';
 
 
@@ -56,7 +53,7 @@ describe('FO Subscribe to Newsletter', async () => {
 
     describe('Go to FO and try to subscribe with already used email', async () => {
       it('should open the shop page', async function () {
-        await testContext.addContextItem(this, 'testIdentifier', '', baseContext);
+        await testContext.addContextItem(this, 'testIdentifier', 'openFoShop', baseContext);
 
         await foHomePage.goTo(page, global.FO.URL);
         const result = await foHomePage.isHomePage(page);
@@ -64,10 +61,10 @@ describe('FO Subscribe to Newsletter', async () => {
       });
 
       it('should subscribe to newsletter with already used email', async function () {
-        await testContext.addContextItem(this, 'testIdentifier', '', baseContext);
+        await testContext.addContextItem(this, 'testIdentifier', 'subscribeWithAlreadyUsedEmail', baseContext);
 
         const newsletterSubscribeAlertMessage = await foHomePage.subscribeToNewsletter(page, DefaultCustomer.email);
-        await expect(newsletterSubscribeAlertMessage).to.contains(alreadyUsedEmailNewsletterSubscriptionAlertText);
+        await expect(newsletterSubscribeAlertMessage).to.contains(foHomePage.alreadyUsedEmailMessage);
       });
     });
 
@@ -102,7 +99,7 @@ describe('FO Subscribe to Newsletter', async () => {
       await testContext.addContextItem(this, 'testIdentifier', 'unsubscribeFromNewsLetter', baseContext);
 
       const unsubscribeAlertText = await foAccountIdentityPage.unsubscribeNewsletter(page, DefaultCustomer.password);
-      await expect(unsubscribeAlertText).to.contains(unsubscribeNewsletterText)
+      await expect(unsubscribeAlertText).to.contains(foAccountIdentityPage.successfulUpdateMessage)
     });
   });
 
@@ -157,10 +154,10 @@ describe('FO Subscribe to Newsletter', async () => {
     });
 
     it('should subscribe to newsletter', async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'NewsletterSubscription', baseContext);
+      await testContext.addContextItem(this, 'testIdentifier', 'subscribeToNewsletter', baseContext);
 
       const newsletterSubscribeAlertMessage = await foHomePage.subscribeToNewsletter(page, DefaultCustomer.email);
-      await expect(newsletterSubscribeAlertMessage).to.contains(unusedEmailNewsletterSubscriptionAlertText);});
+      await expect(newsletterSubscribeAlertMessage).to.contains(foHomePage.successSubscriptionMessage);});
   });
 
   describe('Go to BO to check if correctly subscribed', async () => {
