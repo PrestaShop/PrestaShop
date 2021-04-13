@@ -22,7 +22,7 @@
                   {% if shop.isConfigurationKeyOverridden(shopConfiguration, configurationKey) == true %}
                     <p class="multistore-dropdown-shop-status multistore-dropdown-shop-status-locked">
                       <i class="material-icons">https</i>
-                      {{ "Customized"|trans({}, 'Admin.Global') }}
+                      {{ 'Customized'|trans({}, 'Admin.Global') }}
                   {% else %}
                     <p class="multistore-dropdown-shop-status">
                       {{ 'Inherited'|trans({}, 'Admin.Global') }}
