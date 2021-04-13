@@ -28,6 +28,7 @@ declare(strict_types=1);
 namespace PrestaShopBundle\Controller\Admin\Sell\Catalog\Product;
 
 use Exception;
+use PrestaShop\PrestaShop\Adapter\Image\ImageRetriever;
 use PrestaShop\PrestaShop\Adapter\Product\Combination\Repository\CombinationRepository;
 use PrestaShop\PrestaShop\Core\Domain\Product\AttributeGroup\Query\GetProductAttributeGroups;
 use PrestaShop\PrestaShop\Core\Domain\Product\AttributeGroup\QueryResult\AttributeGroup;
@@ -260,12 +261,21 @@ class CombinationController extends FrameworkBundleAdminController
     }
 
     /**
-     * @param string $imgPath
+     * @param string|null $imgPath
      *
      * @return string
      */
-    private function formatImageUrl(string $imgPath): string
+    private function formatImageUrl(?string $imgPath): string
     {
+        $contextLink = $this->getContext()->link;
+
+        if (!$imgPath) {
+            $imageRetriever = new ImageRetriever($contextLink);
+            $defaultImg = $imageRetriever->getNoPictureImage($this->getContext()->language);
+
+            return $defaultImg['small']['url'];
+        }
+
         return $this->getContext()->link->getAdminBaseLink() . ltrim($imgPath, '/');
     }
 

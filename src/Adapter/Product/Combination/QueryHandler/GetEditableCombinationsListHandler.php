@@ -29,7 +29,6 @@ declare(strict_types=1);
 namespace PrestaShop\PrestaShop\Adapter\Product\Combination\QueryHandler;
 
 use Image;
-use Language;
 use PDO;
 use PrestaShop\Decimal\DecimalNumber;
 use PrestaShop\PrestaShop\Adapter\Attribute\Repository\AttributeRepository;
@@ -167,8 +166,6 @@ final class GetEditableCombinationsListHandler extends AbstractProductHandler im
     ): CombinationListForEditing {
         $combinationsForEditing = [];
 
-        $langIso = Language::getIsoById($langId);
-
         foreach ($combinations as $combination) {
             $combinationId = (int) $combination['id_product_attribute'];
             $combinationAttributesInformation = [];
@@ -193,7 +190,7 @@ final class GetEditableCombinationsListHandler extends AbstractProductHandler im
                 (bool) $combination['default_on'],
                 $impactOnPrice,
                 (int) $this->stockAvailableRepository->getForCombination(new CombinationId($combinationId))->quantity,
-                $this->getImagePath((int) $imageData['id_image'], $langIso)
+                $this->getImagePath((int) $imageData['id_image'])
             );
         }
 
@@ -202,17 +199,16 @@ final class GetEditableCombinationsListHandler extends AbstractProductHandler im
 
     /**
      * @param int $imageId
-     * @param string $langIso
      *
      * @return string
      */
-    private function getImagePath(int $imageId, string $langIso): string
+    private function getImagePath(int $imageId): ?string
     {
         $image = new Image($imageId);
         $type = '-small_default.jpg';
 
         if (empty($image->getImgPath())) {
-            return $this->productImgDir . sprintf('%s-default%s', $langIso, $type);
+            return null;
         }
 
         return sprintf('%s%s%s', $this->productImgDir, $image->getImgPath(), $type);
