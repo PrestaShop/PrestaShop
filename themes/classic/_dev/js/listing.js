@@ -102,7 +102,7 @@ $(document).ready(() => {
       max: 1000000,
     });
 
-    $('.js-touchspin').off('touchstart.touchspin');
+    $(prestashop.themeSelectors.touchspin).off('touchstart.touchspin');
   };
 
   const move = (direction) => {

@@ -137,10 +137,9 @@ $(document).ready(() => {
       buttonup_class: 'btn btn-touchspin js-touchspin',
       min: parseInt($quantityInput.attr('min'), 10),
       max: 1000000,
-      mousewheel: false,
     });
 
-    $('.js-touchspin').off('touchstart.touchspin');
+    $(prestashop.themeSelectors.touchspin).off('touchstart.touchspin');
 
     $quantityInput.focusout(() => {
       if ($quantityInput.val() === '' || $quantityInput.val() < $quantityInput.attr('min')) {
