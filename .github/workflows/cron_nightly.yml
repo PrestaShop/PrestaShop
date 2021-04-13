@@ -9,7 +9,6 @@ jobs:
     runs-on: ubuntu-latest
     name: Nightly
     env:
-      GC_INSTANCE_KEY: ${{ secrets.GC_INSTANCE_KEY }}
       GC_INSTANCE_NAME: ${{ secrets.GC_INSTANCE_NAME }}
       GC_PROJECT_ID: ${{ secrets.GC_PROJECT_ID }}
       GC_SERVICE_KEY: ${{ secrets.GC_SERVICE_KEY }}
