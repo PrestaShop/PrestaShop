@@ -19,6 +19,9 @@ class Home extends FOBasePage {
     this.totalProducts = '#js-product-list-top .total-products > p';
     this.productPrice = number => `${this.productArticle(number)} span[aria-label="Price"]`;
     this.newFlag = number => `${this.productArticle(number)} .product-flag.new`;
+    this.newsletterFormField = '.block_newsletter [name=email]';
+    this.newsletterSubmitButton = '.block_newsletter [name=submitNewsletter]';
+    this.newsletterAlertMessage = '.block_newsletter_alert';
 
     // Quick View modal
     this.quickViewModalDiv = 'div[id*=\'quickview-modal\']';
@@ -319,6 +322,19 @@ class Home extends FOBasePage {
     }
 
     return this.openLinkWithTargetBlank(page, selector, 'body');
+  }
+
+  /**
+   *
+   * @param page
+   * @param email
+   * @returns {Promise<string|TextContent|*>}
+   */
+  async subscribeToNewsletter(page, email){
+    await this.setValue(page, this.newsletterFormField, email);
+    await this.waitForSelectorAndClick(page, this.newsletterSubmitButton);
+
+    return this.getTextContent(page, this.newsletterAlertMessage);
   }
 }
 
