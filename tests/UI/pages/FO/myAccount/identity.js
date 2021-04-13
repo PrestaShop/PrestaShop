@@ -58,6 +58,12 @@ class AccountIdentity extends FOBasePage {
     return this.getTextContent(page, this.alertSuccessBlock);
   }
 
+  /**
+   * Unsubscribe from the newletter from customer edit information page
+   * @param page
+   * @param password
+   * @returns {Promise<string|TextContent|*>}
+   */
   async unsubscribeNewsletter(page, password) {
     await this.setValue(page, this.passwordInput, password);
 
