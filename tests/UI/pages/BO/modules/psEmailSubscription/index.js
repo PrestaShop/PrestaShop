@@ -12,6 +12,7 @@ class PsEmailSubscription extends ModuleConfiguration.constructor {
     this.newsletterTableRow = row => `${this.newsletterTableRows}:nth-child(${row})`;
     this.newsletterTableEmptyColumn = `${this.newsletterTableRows} td.list-empty`;
     this.newsletterTableEmailColumn = row => `${this.newsletterTableRow(row)} td:nth-child(5)`;
+
   }
 
   /* Methods */
