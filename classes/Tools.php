@@ -101,10 +101,6 @@ class ToolsCore
             return false;
         }
 
-        if (null === $flag) {
-            $flag = static::PASSWORDGEN_FLAG_ALPHANUMERIC;
-        }
-
         switch ($flag) {
             case static::PASSWORDGEN_FLAG_NUMERIC:
                 $str = '0123456789';
