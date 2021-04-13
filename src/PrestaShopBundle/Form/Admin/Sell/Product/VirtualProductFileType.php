@@ -32,14 +32,12 @@ use PrestaShop\PrestaShop\Core\Domain\Product\VirtualProductFile\VirtualProductF
 use PrestaShopBundle\Form\Admin\Type\DatePickerType;
 use PrestaShopBundle\Form\Admin\Type\SwitchType;
 use PrestaShopBundle\Form\Admin\Type\TranslatorAwareType;
-use PrestaShopBundle\Form\FormCloner;
 use Symfony\Component\Form\Extension\Core\Type\FileType;
 use Symfony\Component\Form\Extension\Core\Type\HiddenType;
 use Symfony\Component\Form\Extension\Core\Type\NumberType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
-use Symfony\Component\Form\FormEvent;
-use Symfony\Component\Form\FormEvents;
+use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Routing\RouterInterface;
 use Symfony\Component\Translation\TranslatorInterface;
 use Symfony\Component\Validator\Constraints\File;
@@ -77,6 +75,12 @@ class VirtualProductFileType extends TranslatorAwareType
 
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
+        $virtualProductFileDownloadUrl = null;
+        if (!empty($options['virtual_product_file_id'])) {
+            $virtualProductFileDownloadUrl = $this->router->generate('admin_products_v2_download_virtual_product_file', [
+                'virtualProductFileId' => (int) $options['virtual_product_file_id'],
+            ]);
+        }
         $maxUploadSize = $this->maxFileSizeInMegabytes . 'M';
 
         $builder
@@ -94,6 +98,7 @@ class VirtualProductFileType extends TranslatorAwareType
                 'constraints' => [
                     new File(['maxSize' => $maxUploadSize]),
                 ],
+                'download_url' => $virtualProductFileDownloadUrl,
             ])
             ->add('name', TextType::class, [
                 'label' => $this->trans('Filename', 'Admin.Global'),
@@ -153,28 +158,16 @@ class VirtualProductFileType extends TranslatorAwareType
                 'empty_data' => '',
             ])
         ;
+    }
 
-        // Preset the download url option if a virtual file is present
-        $builder->addEventListener(FormEvents::PRE_SET_DATA, function (FormEvent $event) {
-            $data = $event->getData();
-            if (empty($data['virtual_product_file_id'])) {
-                return;
-            }
-
-            $virtualProductFileId = (int) $data['virtual_product_file_id'];
-            $virtualProductFileDownloadUrl = $this->router->generate('admin_products_v2_download_virtual_product_file', [
-                'virtualProductFileId' => $virtualProductFileId,
-            ]);
-
-            $form = $event->getForm();
-            $fileField = $form->get('file');
-            $fileOptions = $fileField->getConfig()->getOptions();
-            $fileOptions['download_url'] = $virtualProductFileDownloadUrl;
-
-            // Replace existing field with new one with adapted options
-            $cloner = new FormCloner();
-            $clonedForm = $cloner->cloneForm($fileField, $fileOptions);
-            $form->add($clonedForm);
-        });
+    /**
+     * {@inheritDoc}
+     */
+    public function configureOptions(OptionsResolver $resolver)
+    {
+        $resolver->setDefaults([
+            'virtual_product_file_id' => null,
+        ]);
+        $resolver->setAllowedTypes('virtual_product_file_id', ['int', 'null']);
     }
 }
