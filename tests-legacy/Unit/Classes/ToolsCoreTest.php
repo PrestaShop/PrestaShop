@@ -370,6 +370,48 @@ class ToolsCoreTest extends TestCase
     }
 
     /**
+     * @param string $passwordGenerated
+     * @param string $expectedPassword
+     *
+     * @dataProvider passwodGenProvider
+     */
+    public function testPasswdGen($passwordGenerated, $expectedPassword)
+    {
+        $this->assertRegExp($expectedPassword, $passwordGenerated, 'The password generated ' . $expectedPassword . ' no match with ' . $expectedPassword);
+    }
+
+    public function passwodGenProvider()
+    {
+        return [
+            '/^(\d{8})$/' => Tools::passwdGen(),
+            '/^(\d{13})$/' => Tools::passwdGen(13, Tools::PASSWORDGEN_FLAG_NUMERIC),
+            '/^[A-Z]{9}$/' => Tools::passwdGen(9, Tools::PASSWORDGEN_FLAG_NO_NUMERIC),
+            '/^(\w){14}$/' => Tools::passwdGen(14, Tools::PASSWORDGEN_FLAG_RANDOM),
+            '/^(\w){10}$/' => Tools::passwdGen(10, Tools::PASSWORDGEN_FLAG_ALPHANUMERIC),
+            '/^(false|0)$/' => Tools::passwdGen(1),
+            '/^(false|0)$/' => Tools::passwdGen(2),
+            '/^(false|0)$/' => Tools::passwdGen(-666),
+            '/^(false|0)$/' => Tools::passwdGen(0),
+            '/^(false|0)$/' => Tools::passwdGen(1, Tools::PASSWORDGEN_FLAG_RANDOM),
+            '/^(false|0)$/' => Tools::passwdGen(2, Tools::PASSWORDGEN_FLAG_RANDOM),
+            '/^(false|0)$/' => Tools::passwdGen(-666, Tools::PASSWORDGEN_FLAG_RANDOM),
+            '/^(false|0)$/' => Tools::passwdGen(0, Tools::PASSWORDGEN_FLAG_RANDOM),
+            '/^(false|0)$/' => Tools::passwdGen(1, Tools::PASSWORDGEN_FLAG_NUMERIC),
+            '/^(false|0)$/' => Tools::passwdGen(2, Tools::PASSWORDGEN_FLAG_NUMERIC),
+            '/^(false|0)$/' => Tools::passwdGen(-666, Tools::PASSWORDGEN_FLAG_NUMERIC),
+            '/^(false|0)$/' => Tools::passwdGen(0, Tools::PASSWORDGEN_FLAG_NUMERIC),
+            '/^(false|0)$/' => Tools::passwdGen(1, Tools::PASSWORDGEN_FLAG_NO_NUMERIC),
+            '/^(false|0)$/' => Tools::passwdGen(2, Tools::PASSWORDGEN_FLAG_NO_NUMERIC),
+            '/^(false|0)$/' => Tools::passwdGen(-666, Tools::PASSWORDGEN_FLAG_NO_NUMERIC),
+            '/^(false|0)$/' => Tools::passwdGen(0, Tools::PASSWORDGEN_FLAG_NO_NUMERIC),
+            '/^(false|0)$/' => Tools::passwdGen(1, Tools::PASSWORDGEN_FLAG_ALPHANUMERIC),
+            '/^(false|0)$/' => Tools::passwdGen(2, Tools::PASSWORDGEN_FLAG_ALPHANUMERIC),
+            '/^(false|0)$/' => Tools::passwdGen(-666, Tools::PASSWORDGEN_FLAG_ALPHANUMERIC),
+            '/^(false|0)$/' => Tools::passwdGen(0, Tools::PASSWORDGEN_FLAG_ALPHANUMERIC),
+        ];
+    }
+
+    /**
      * @param string $url
      * @param string $expectedDomain
      *
