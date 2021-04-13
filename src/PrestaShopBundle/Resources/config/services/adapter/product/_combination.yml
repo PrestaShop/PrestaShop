@@ -57,6 +57,8 @@ services:
             - '@prestashop.adapter.product.stock.repository.stock_available_repository'
             - '@prestashop.core.grid.query_builder.product_combination'
             - '@prestashop.adapter.attribute.repository.attribute_repository'
+            - '@=service("prestashop.adapter.legacy.context").getContext().shop.id'
+            - !php/const _THEME_PROD_DIR_
         tags:
             - name: tactician.handler
               command: PrestaShop\PrestaShop\Core\Domain\Product\Combination\Query\GetEditableCombinationsList

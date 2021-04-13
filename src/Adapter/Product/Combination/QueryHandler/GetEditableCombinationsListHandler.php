@@ -29,14 +29,13 @@ declare(strict_types=1);
 namespace PrestaShop\PrestaShop\Adapter\Product\Combination\QueryHandler;
 
 use Image;
+use Language;
 use PDO;
 use PrestaShop\Decimal\DecimalNumber;
 use PrestaShop\PrestaShop\Adapter\Attribute\Repository\AttributeRepository;
-use PrestaShop\PrestaShop\Adapter\Entity\Product;
 use PrestaShop\PrestaShop\Adapter\Product\AbstractProductHandler;
 use PrestaShop\PrestaShop\Adapter\Product\Combination\Repository\CombinationRepository;
 use PrestaShop\PrestaShop\Adapter\Product\Stock\Repository\StockAvailableRepository;
-use PrestaShop\PrestaShop\Core\Domain\Language\ValueObject\LanguageId;
 use PrestaShop\PrestaShop\Core\Domain\Product\Combination\Query\GetEditableCombinationsList;
 use PrestaShop\PrestaShop\Core\Domain\Product\Combination\QueryHandler\GetEditableCombinationsListHandlerInterface;
 use PrestaShop\PrestaShop\Core\Domain\Product\Combination\QueryResult\CombinationAttributeInformation;
@@ -78,24 +77,40 @@ final class GetEditableCombinationsListHandler extends AbstractProductHandler im
     private $attributeRepository;
 
     /**
+     * @var int
+     */
+    private $contextShopId;
+
+    /**
+     * @var string
+     */
+    private $productImgDir;
+
+    /**
      * @param CombinationRepository $combinationRepository
      * @param NumberExtractor $numberExtractor
      * @param StockAvailableRepository $stockAvailableRepository
      * @param DoctrineQueryBuilderInterface $combinationQueryBuilder
      * @param AttributeRepository $attributeRepository
+     * @param int $contextShopId
+     * @param string $productImgDir
      */
     public function __construct(
         CombinationRepository $combinationRepository,
         NumberExtractor $numberExtractor,
         StockAvailableRepository $stockAvailableRepository,
         DoctrineQueryBuilderInterface $combinationQueryBuilder,
-        AttributeRepository $attributeRepository
+        AttributeRepository $attributeRepository,
+        int $contextShopId,
+        string $productImgDir
     ) {
         $this->combinationRepository = $combinationRepository;
         $this->numberExtractor = $numberExtractor;
         $this->stockAvailableRepository = $stockAvailableRepository;
         $this->combinationQueryBuilder = $combinationQueryBuilder;
         $this->attributeRepository = $attributeRepository;
+        $this->contextShopId = $contextShopId;
+        $this->productImgDir = $productImgDir;
     }
 
     /**
@@ -126,31 +141,33 @@ final class GetEditableCombinationsListHandler extends AbstractProductHandler im
         );
 
         return $this->formatEditableCombinationsForListing(
+            $query->getProductId()->getValue(),
             $combinations,
             $attributesInformation,
             $total,
-            $query->getLanguageId()
+            $query->getLanguageId()->getValue()
         );
     }
 
     /**
+     * @param int $productId
      * @param array $combinations
      * @param array<int, array<int, mixed>> $attributesInformationByCombinationId
      * @param int $totalCombinationsCount
-     * @param LanguageId $langId
+     * @param int $langId
      *
      * @return CombinationListForEditing
-     *
-     * @throws \PrestaShop\PrestaShop\Core\Domain\Product\Stock\Exception\StockAvailableNotFoundException
-     * @throws \PrestaShop\PrestaShop\Core\Exception\CoreException
      */
     private function formatEditableCombinationsForListing(
+        int $productId,
         array $combinations,
         array $attributesInformationByCombinationId,
         int $totalCombinationsCount,
-        LanguageId $langId
+        int $langId
     ): CombinationListForEditing {
         $combinationsForEditing = [];
+
+        $langIso = Language::getIsoById($langId);
 
         foreach ($combinations as $combination) {
             $combinationId = (int) $combination['id_product_attribute'];
@@ -165,8 +182,7 @@ final class GetEditableCombinationsListHandler extends AbstractProductHandler im
                 );
             }
 
-            $imageData = Product::getCombinationImageById($combinationId, $langId->getValue());
-            $image = new Image($imageData['id_image']);
+            $imageData = Image::getBestImageAttribute($this->contextShopId, $langId, $productId, $combinationId);
 
             $impactOnPrice = new DecimalNumber($combination['price']);
             $combinationsForEditing[] = new EditableCombinationForListing(
@@ -177,18 +193,29 @@ final class GetEditableCombinationsListHandler extends AbstractProductHandler im
                 (bool) $combination['default_on'],
                 $impactOnPrice,
                 (int) $this->stockAvailableRepository->getForCombination(new CombinationId($combinationId))->quantity,
-                !empty($image->getImgPath()) ? _THEME_PROD_DIR_ . $image->getImgPath() : null
-// @todo:
-//      Missing combination image:
-//      Old page retrieves it through src/PrestaShopBundle/Controller/Admin/AttributeController::getFormImagesAction.
-//      we could simply get Product::getCombinationImageById and load new Image()->getbasePath,
-//      but not all combinations seems to have associated images with product
-//      (the old page still shows images for all of them - not sure if that is good behavior)
-//      also it is unclear how old page appends suffixes "small_default, home_default" (it seems controller only provides base path)
+                $this->getImagePath((int) $imageData['id_image'], $langIso)
             );
         }
 
         return new CombinationListForEditing($totalCombinationsCount, $combinationsForEditing);
+    }
+
+    /**
+     * @param int $imageId
+     * @param string $langIso
+     *
+     * @return string
+     */
+    private function getImagePath(int $imageId, string $langIso): string
+    {
+        $image = new Image($imageId);
+        $type = '-small_default.jpg';
+
+        if (empty($image->getImgPath())) {
+            return $this->productImgDir . sprintf('%s-default%s', $langIso, $type);
+        }
+
+        return sprintf('%s%s%s', $this->productImgDir, $image->getImgPath(), $type);
     }
 
     /**
