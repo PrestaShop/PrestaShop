@@ -51,7 +51,12 @@ class ProductImagePathFactory
     /**
      * @var string
      */
-    private $productImageDir;
+    private $basePath;
+
+    /**
+     * @var string
+     */
+    private $pathToBaseDir;
 
     /**
      * @var string
@@ -60,20 +65,24 @@ class ProductImagePathFactory
 
     /**
      * @param bool $isLegacyImageMode
-     * @param string $productImageDir
+     * @param string $basePath
+     * @param string $relativeImagesPath
      * @param string $temporaryImgDir
      * @param string $contextLangIsoCode
      */
     public function __construct(
         bool $isLegacyImageMode,
-        string $productImageDir,
+        string $basePath,
+        string $relativeImagesPath,
         string $temporaryImgDir,
         string $contextLangIsoCode
     ) {
         $this->isLegacyImageMode = $isLegacyImageMode;
         $this->temporaryImgDir = $temporaryImgDir;
-        $this->productImageDir = $productImageDir;
+        // make sure one trailing slash is always there
+        $this->pathToBaseDir = rtrim($basePath, '/') . '/' . rtrim($relativeImagesPath, '/') . '/';
         $this->contextLangIsoCode = $contextLangIsoCode;
+        $this->basePath = $basePath;
     }
 
     /**
@@ -113,7 +122,7 @@ class ProductImagePathFactory
             $langIso = $this->contextLangIsoCode;
         }
 
-        return sprintf('%s%s-%s-%s.jpg', $this->productImageDir, $langIso, 'default', $type);
+        return sprintf('%s%s-%s-%s.jpg', $this->pathToBaseDir, $langIso, 'default', $type);
     }
 
     /**
@@ -150,6 +159,6 @@ class ProductImagePathFactory
             $path = $image->getImgPath();
         }
 
-        return sprintf('%s%s', $this->productImageDir, $path);
+        return sprintf('%s%s', $this->pathToBaseDir, $path);
     }
 }
