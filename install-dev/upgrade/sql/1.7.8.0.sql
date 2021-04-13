@@ -70,3 +70,8 @@ UPDATE `PREFIX_product` SET `product_type` = "pack" WHERE `cache_is_pack` = 1;
 UPDATE `PREFIX_product` SET `product_type` = "virtual" WHERE `is_virtual` = 1;
 
 /* PHP:ps_1780_add_feature_flag_tab(); */;
+
+INSERT INTO `PREFIX_feature_flag` (`name`, `state`, `label_wording`, `label_domain`, `description_wording`, `description_domain`)
+VALUES
+	('product_page_v2', 0, 'Experimental product page', 'Admin.Advparameters.Feature', 'This page is a work in progress. It includes new combination management features and other features under development (virtual products, packs, etc.)', 'Admin.Advparameters.Help');
+
