@@ -28,22 +28,44 @@ declare(strict_types=1);
 namespace PrestaShop\PrestaShop\Core\Translation\Storage\Provider\Definition;
 
 /**
- * Properties container for Backoffice translation provider.
+ * Properties container for core translation provider filtering by a single domain name.
  */
-class OthersProviderDefinition extends AbstractCoreProviderDefinition
+class CoreDomainProviderDefinition extends AbstractCoreProviderDefinition
 {
-    public const OTHERS_DOMAIN_NAME = 'messages';
+    private const FILENAME_FILTERS_REGEX = [
+        '#^%s([A-Za-z]|\.|$)#',
+    ];
+    private const TRANSLATION_DOMAINS_REGEX = [
+        '^%s([A-Za-z]|$)',
+    ];
 
-    private const FILENAME_FILTERS_REGEX = ['#^' . self::OTHERS_DOMAIN_NAME . '*#'];
+    /**
+     * @var string
+     */
+    private $domainName;
 
-    private const TRANSLATION_DOMAINS_REGEX = ['^' . self::OTHERS_DOMAIN_NAME . '*'];
+    /**
+     * @param string $domainName
+     */
+    public function __construct(string $domainName)
+    {
+        $this->domainName = $domainName;
+    }
 
     /**
      * {@inheritdoc}
      */
     public function getType(): string
     {
-        return ProviderDefinitionInterface::TYPE_OTHERS;
+        return ProviderDefinitionInterface::TYPE_CORE_DOMAIN;
+    }
+
+    /**
+     * @return string
+     */
+    public function getDomainName(): string
+    {
+        return $this->domainName;
     }
 
     /**
@@ -51,7 +73,9 @@ class OthersProviderDefinition extends AbstractCoreProviderDefinition
      */
     public function getFilenameFilters(): array
     {
-        return self::FILENAME_FILTERS_REGEX;
+        return array_map(function (string $filenameFilter) {
+            return sprintf($filenameFilter, preg_quote($this->domainName, '#'));
+        }, self::FILENAME_FILTERS_REGEX);
     }
 
     /**
@@ -59,6 +83,8 @@ class OthersProviderDefinition extends AbstractCoreProviderDefinition
      */
     public function getTranslationDomains(): array
     {
-        return self::TRANSLATION_DOMAINS_REGEX;
+        return array_map(function (string $translationDomain) {
+            return sprintf($translationDomain, preg_quote($this->domainName, '#'));
+        }, self::TRANSLATION_DOMAINS_REGEX);
     }
 }

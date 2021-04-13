@@ -1,4 +1,3 @@
-<?php
 /**
  * Copyright since 2007 PrestaShop SA and Contributors
  * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
@@ -23,42 +22,13 @@
  * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
-declare(strict_types=1);
 
-namespace PrestaShop\PrestaShop\Core\Translation\Storage\Provider\Definition;
-
-/**
- * Properties container for Backoffice translation provider.
- */
-class OthersProviderDefinition extends AbstractCoreProviderDefinition
-{
-    public const OTHERS_DOMAIN_NAME = 'messages';
-
-    private const FILENAME_FILTERS_REGEX = ['#^' . self::OTHERS_DOMAIN_NAME . '*#'];
-
-    private const TRANSLATION_DOMAINS_REGEX = ['^' . self::OTHERS_DOMAIN_NAME . '*'];
-
-    /**
-     * {@inheritdoc}
-     */
-    public function getType(): string
-    {
-        return ProviderDefinitionInterface::TYPE_OTHERS;
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function getFilenameFilters(): array
-    {
-        return self::FILENAME_FILTERS_REGEX;
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function getTranslationDomains(): array
-    {
-        return self::TRANSLATION_DOMAINS_REGEX;
-    }
-}
+export default {
+  translationType: '.js-translation-type',
+  emailContentType: '.js-email-content-type',
+  emailFormGroup: '.js-email-form-group',
+  modulesFormGroup: '.js-module-form-group',
+  themesFormGroup: '.js-theme-form-group',
+  defaultThemeOption: '.js-default-theme',
+  noThemeOption: '.js-no-theme',
+};

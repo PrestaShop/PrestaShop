@@ -32,7 +32,7 @@ use PrestaShop\PrestaShop\Core\Translation\Builder\TranslationCatalogueBuilder;
 use PrestaShop\PrestaShop\Core\Translation\Builder\TranslationsTreeBuilder;
 use PrestaShop\PrestaShop\Core\Translation\Storage\Provider\CatalogueLayersProviderInterface;
 use PrestaShop\PrestaShop\Core\Translation\Storage\Provider\CatalogueProviderFactory;
-use PrestaShop\PrestaShop\Core\Translation\Storage\Provider\Definition\ProviderDefinitionInterface;
+use PrestaShop\PrestaShop\Core\Translation\Storage\Provider\Definition\BackofficeProviderDefinition;
 use Symfony\Bundle\FrameworkBundle\Routing\Router;
 use Symfony\Component\Translation\MessageCatalogue;
 
@@ -112,11 +112,9 @@ class TranslationTreeBuilderTest extends TestCase
     public function testGetTreeStructure()
     {
         $tree = $this->treeBuilder->getTree(
-             ProviderDefinitionInterface::TYPE_BACK,
+            new BackofficeProviderDefinition(),
             self::LOCALE,
-            [],
-            'theme',
-            'module'
+            []
         );
 
         $this->assertArrayHasKey('tree', $tree);
@@ -147,11 +145,9 @@ class TranslationTreeBuilderTest extends TestCase
     public function testGetTreeContent()
     {
         $tree = $this->treeBuilder->getTree(
-            ProviderDefinitionInterface::TYPE_BACK,
+            new BackofficeProviderDefinition(),
             self::LOCALE,
-            [],
-            'theme',
-            'module'
+            []
         );
 
         $this->assertArrayHasKey('tree', $tree);

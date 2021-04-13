@@ -26,6 +26,9 @@
 
 namespace PrestaShop\PrestaShop\Core\Translation\Storage\Provider\Definition;
 
+/**
+ * Defines translation type and any element to know how and where to find translations catalogue
+ */
 interface ProviderDefinitionInterface
 {
     public const TYPE_BACK = 'back';
@@ -35,6 +38,7 @@ interface ProviderDefinitionInterface
     public const TYPE_OTHERS = 'others';
     public const TYPE_MODULES = 'modules';
     public const TYPE_THEMES = 'themes';
+    public const TYPE_CORE_DOMAIN = 'core_domain';
 
     public const ALLOWED_TYPES = [
         self::TYPE_BACK,
@@ -44,6 +48,7 @@ interface ProviderDefinitionInterface
         self::TYPE_OTHERS,
         self::TYPE_MODULES,
         self::TYPE_THEMES,
+        self::TYPE_CORE_DOMAIN,
     ];
 
     /**
