@@ -32,6 +32,12 @@ use Image;
 
 class ProductImagePathFactory
 {
+    public const IMAGE_TYPE_SMALL_DEFAULT = 'small_default';
+    public const IMAGE_TYPE_MEDIUM_DEFAULT = 'medium_default';
+    public const IMAGE_TYPE_LARGE_DEFAULT = 'large_default';
+    public const IMAGE_TYPE_HOME_DEFAULT = 'home_default';
+    public const IMAGE_TYPE_CART_DEFAULT = 'cart_default';
+
     /**
      * @var bool
      */
@@ -43,15 +49,31 @@ class ProductImagePathFactory
     private $temporaryImgDir;
 
     /**
+     * @var string
+     */
+    private $productImageDir;
+
+    /**
+     * @var string
+     */
+    private $contextLangIsoCode;
+
+    /**
      * @param bool $isLegacyImageMode
+     * @param string $productImageDir
      * @param string $temporaryImgDir
+     * @param string $contextLangIsoCode
      */
     public function __construct(
         bool $isLegacyImageMode,
-        string $temporaryImgDir
+        string $productImageDir,
+        string $temporaryImgDir,
+        string $contextLangIsoCode
     ) {
         $this->isLegacyImageMode = $isLegacyImageMode;
         $this->temporaryImgDir = $temporaryImgDir;
+        $this->productImageDir = $productImageDir;
+        $this->contextLangIsoCode = $contextLangIsoCode;
     }
 
     /**
@@ -61,13 +83,37 @@ class ProductImagePathFactory
      */
     public function getBasePath(Image $image): string
     {
-        if ($this->isLegacyImageMode) {
-            $path = $image->id_product . '-' . $image->id;
-        } else {
-            $path = $image->getImgPath();
+        $path = $this->getBaseImagePath($image);
+
+        return sprintf('%s.%s', $path, $image->image_format);
+    }
+
+    /**
+     * @param Image $image
+     * @param string $type
+     *
+     * @return string
+     */
+    public function getPathByType(Image $image, string $type): string
+    {
+        $path = $this->getBaseImagePath($image);
+
+        return sprintf('%s-%s.%s', $path, $type, $image->image_format);
+    }
+
+    /**
+     * @param string $type
+     * @param string|null $langIso
+     *
+     * @return string
+     */
+    public function getNoImagePath(string $type, ?string $langIso = null): string
+    {
+        if (!$langIso) {
+            $langIso = $this->contextLangIsoCode;
         }
 
-        return sprintf('%s%s.%s', _PS_PROD_IMG_DIR_, $path, $image->image_format);
+        return sprintf('%s%s-%s-%s.jpg', $this->productImageDir, $langIso, 'default', $type);
     }
 
     /**
@@ -89,5 +135,21 @@ class ProductImagePathFactory
     public function getHelperThumbnail(int $productId, int $shopId): string
     {
         return sprintf('%sproduct_mini_%d_%d.jpg', $this->temporaryImgDir, $productId, $shopId);
+    }
+
+    /**
+     * @param Image $image
+     *
+     * @return string
+     */
+    private function getBaseImagePath(Image $image): string
+    {
+        if ($this->isLegacyImageMode) {
+            $path = $image->id_product . '-' . $image->id;
+        } else {
+            $path = $image->getImgPath();
+        }
+
+        return sprintf('%s%s', $this->productImageDir, $path);
     }
 }
