@@ -263,6 +263,9 @@ class CombinationListingFeatureContext extends AbstractCombinationFeatureContext
         foreach ($listCombinations as $key => $editableCombinationForListing) {
             $expectedCombination = $expectedDataRows[$key];
 
+            // @todo: assert combination images when we implement combination image association commands
+            Assert::assertNull($editableCombinationForListing->getImagePath(), 'Unexpected combination image');
+
             Assert::assertSame(
                 $expectedCombination['combination name'],
                 $editableCombinationForListing->getCombinationName(),
