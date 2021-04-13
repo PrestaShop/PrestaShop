@@ -132,12 +132,7 @@ export default class SubmittableInput {
    * @private
    */
   toggleButtonActivity(button, active) {
-    if (active) {
-      $(button).removeClass('d-none');
-      $(button).addClass('active');
-    } else {
-      $(button).removeClass('active');
-    }
+    $(button).toggleClass('active', active);
   }
 
   /**
@@ -147,13 +142,8 @@ export default class SubmittableInput {
    * @private
    */
   toggleButtonVisibility(button, visible) {
-    const $button = $(button);
-
-    if (visible) {
-      $(button).removeClass('d-none');
-    } else {
-      $button.addClass('d-none');
-    }
+    console.log(button, visible, 'Toggle Visib');
+    $(button).toggleClass('d-none', !visible);
   }
 
   /**
@@ -179,11 +169,7 @@ export default class SubmittableInput {
   toggleError(button, error) {
     const input = this.findInput(button);
 
-    if (error) {
-      $(input).addClass('is-invalid');
-    } else {
-      $(input).removeClass('is-invalid');
-    }
+    $(input).toggleClass('is-invalid', !error);
   }
 
   /**
