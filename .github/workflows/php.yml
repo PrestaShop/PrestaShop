@@ -115,7 +115,7 @@ jobs:
                 SYMFONY_DEPRECATIONS_HELPER: disabled
 
         -   name: Latest - Composer Install
-            run: composer update --ansi --prefer-dist --no-interaction --no-progress
+            run: composer config platform --unset && composer update --ansi --prefer-dist --no-interaction --no-progress
 
         -   name: Latest - Run phpunit
             run: ./vendor/bin/phpunit -c tests/Unit/phpunit.xml
