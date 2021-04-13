@@ -180,7 +180,7 @@ export default class CombinationsManager {
   findCombinationId(input) {
     return $(input)
       .closest('tr')
-      .find('.combination-id-input')
+      .find(ProductMap.combinations.combinationIdInputsSelector)
       .val();
   }
 }
