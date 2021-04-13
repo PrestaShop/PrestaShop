@@ -2873,12 +2873,12 @@
     <hook id="actionFeatureFlagForm">
       <name>actionFeatureFlagForm</name>
       <title>Modify feature flag page form content</title>
-      <description>This hook allows to modify feature flag page form FormBuilder</description>
+      <description>This hook allows to modify the Feature Flag page form's FormBuilder</description>
     </hook>
     <hook id="actionFeatureFlagSave">
       <name>actionFeatureFlagSave</name>
       <title>Modify feature flag form submitted data</title>
-      <description>This hook allows to modify feature flag data being submitted through the form after it was saved</description>
+      <description>This hook allows to modify the Feature Flag data being submitted through the form after it was saved</description>
     </hook>
   </entities>
 </entity_hook>
