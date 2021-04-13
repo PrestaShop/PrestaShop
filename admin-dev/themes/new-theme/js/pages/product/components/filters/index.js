@@ -22,30 +22,18 @@
  * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
-import Vue from 'vue';
-import VueI18n from 'vue-i18n';
-import ReplaceFormatter from '@vue/plugins/vue-i18n/replace-formatter';
-import Filters from './Filters.vue';
 
-Vue.use(VueI18n);
+import Vue from 'vue';
+import Filters from '@pages/product/components/filters/Filters';
 
 export default function initCombinationsFilters(combinationsFiltersSelector, eventEmitter) {
   const container = document.querySelector(combinationsFiltersSelector);
-
-  const translations = {};
-  const i18n = new VueI18n({
-    locale: 'en',
-    formatter: new ReplaceFormatter(),
-    messages: {en: translations},
-  });
-
   const productId = Number(container.dataset.productId);
 
   return new Vue({
     el: combinationsFiltersSelector,
     template: '<filters :productId=productId :eventEmitter=eventEmitter />',
     components: {Filters},
-    i18n,
     data: {
       productId,
       eventEmitter,

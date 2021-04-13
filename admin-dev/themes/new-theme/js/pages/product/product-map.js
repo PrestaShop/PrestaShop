@@ -43,7 +43,6 @@ export default {
   price: {
     priceTaxExcludedInput: '#product_price_price_tax_excluded',
   },
-  combinationsFiltersContainer: '#combinations_filters',
   suppliers: {
     productSuppliersCollection: `${productSuppliersId}`,
     supplierIdsInput: '#product_suppliers_supplier_ids',
@@ -86,6 +85,7 @@ export default {
   combinations: {
     navigationTab: '#combinations-tab-nav',
     combinationsContainer: `${combinationListId}`,
+    combinationsFiltersContainer: '#combinations_filters',
     combinationsTable: `${combinationListId} table`,
     combinationsTableBody: `${combinationListId} table tbody`,
     combinationIdInputsSelector: '.combination-id-input',
