@@ -382,7 +382,7 @@ class ToolsTest extends TestCase
      *
      * @dataProvider passwodGenProvider
      */
-    public function testPasswdGen($passwordGenerated, $expectedPassword)
+    public function testPasswdGen($expectedPassword, $passwordGenerated)
     {
         $this->assertRegExp($expectedPassword, $passwordGenerated, 'The password generated ' . $expectedPassword . ' no match with ' . $expectedPassword);
     }
