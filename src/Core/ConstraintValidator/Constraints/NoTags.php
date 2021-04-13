@@ -1,4 +1,5 @@
-{#**
+<?php
+/**
  * Copyright since 2007 PrestaShop SA and Contributors
  * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
  *
@@ -21,30 +22,27 @@
  * @author    PrestaShop SA and Contributors <contact@prestashop.com>
  * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
- *#}
+ */
 
-{% form_theme contactForm 'PrestaShopBundle:Admin/TwigTemplateForm:prestashop_ui_kit.html.twig' %}
+declare(strict_types=1);
 
-{% block contact_form %}
-  {{ form_start(contactForm) }}
-    <div class="card">
-      <h3 class="card-header">
-        <i class="material-icons">mail_outline</i>
-        {{ 'Contacts'|trans({}, 'Admin.Shopparameters.Feature') }}
-      </h3>
-      <div class="card-block row">
-        <div class="card-text">
-          {{ form_widget(contactForm) }}
-        </div>
-      </div>
-      <div class="card-footer">
-        <a href="{{ path('admin_contacts_index') }}" class="btn btn-outline-secondary">
-          {{ 'Cancel'|trans({}, 'Admin.Actions') }}
-        </a>
-        <button class="btn btn-primary float-right" id="save-button">
-          {{ 'Save'|trans({}, 'Admin.Actions') }}
-        </button>
-      </div>
-    </div>
-  {{ form_end(contactForm) }}
-{% endblock %}
+namespace PrestaShop\PrestaShop\Core\ConstraintValidator\Constraints;
+
+use PrestaShop\PrestaShop\Core\ConstraintValidator\NoTagsValidator;
+use Symfony\Component\Validator\Constraint;
+
+/**
+ * Validation constraint for making sure there are no HTML or PHP tags to be removed by strip_tags
+ */
+class NoTags extends Constraint
+{
+    public $message = 'Field must not contain HTML or PHP tags';
+
+    /**
+     * {@inheritdoc}
+     */
+    public function validatedBy()
+    {
+        return NoTagsValidator::class;
+    }
+}

@@ -193,6 +193,12 @@
   {% endif %}
 {%- endblock time_widget %}
 
+{%- block email_widget -%}
+  {%- set type = type|default('email') -%}
+  {{ block('form_widget_simple') }}
+  {{ block('form_help') }}
+{%- endblock email_widget -%}
+
 {% block button_widget -%}
   {% set attr = attr|merge({class: (attr.class|default('btn-default') ~ ' btn')|trim}) %}
   {{- parent() -}}
