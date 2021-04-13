@@ -42,6 +42,11 @@ class ToolsCore
     const SERVICE_LOCALE_REPOSITORY = 'prestashop.core.localization.locale.repository';
     public const CACHE_LIFETIME_SECONDS = 604800;
 
+    public const PASSWORDGEN_FLAG_NUMERIC = 'NUMERIC';
+    public const PASSWORDGEN_FLAG_NO_NUMERIC = 'NO_NUMERIC';
+    public const PASSWORDGEN_FLAG_RANDOM = 'RANDOM';
+    public const PASSWORDGEN_FLAG_ALPHANUMERIC = 'ALPHANUMERIC';
+
     protected static $file_exists_cache = [];
     protected static $_forceCompile;
     protected static $_caching;
@@ -88,7 +93,7 @@ class ToolsCore
      *
      * @return bool|string Password
      */
-    public static function passwdGen($length = 8, $flag = 'ALPHANUMERIC')
+    public static function passwdGen($length = 8, $flag = null)
     {
         $length = (int) $length;
 
@@ -96,21 +101,25 @@ class ToolsCore
             return false;
         }
 
+        if (null === $flag) {
+            $flag = static::PASSWORDGEN_FLAG_ALPHANUMERIC;
+        }
+
         switch ($flag) {
-            case 'NUMERIC':
+            case static::PASSWORDGEN_FLAG_NUMERIC:
                 $str = '0123456789';
 
                 break;
-            case 'NO_NUMERIC':
+            case static::PASSWORDGEN_FLAG_NO_NUMERIC:
                 $str = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
 
                 break;
-            case 'RANDOM':
+            case static::PASSWORDGEN_FLAG_RANDOM:
                 $num_bytes = ceil($length * 0.75);
                 $bytes = self::getBytes($num_bytes);
 
                 return substr(rtrim(base64_encode($bytes), '='), 0, $length);
-            case 'ALPHANUMERIC':
+            case static::PASSWORDGEN_FLAG_ALPHANUMERIC:
             default:
                 $str = 'abcdefghijkmnopqrstuvwxyz0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ';
 
