@@ -113,11 +113,7 @@ export default class CombinationsManager {
       this.eventEmitter,
       this.productId,
     );
-    this.combinationModalApp = initCombinationModal(
-      CombinationsMap.editModal,
-      this.productId,
-      this.eventEmitter,
-    );
+    this.combinationModalApp = initCombinationModal(CombinationsMap.editModal, this.productId, this.eventEmitter);
     this.filtersApp = initFilters(
       CombinationsMap.combinationsFiltersContainer,
       this.eventEmitter,
@@ -322,9 +318,7 @@ export default class CombinationsManager {
       );
       modal.show();
     } catch (error) {
-      const errorMessage = error.responseJSON
-        ? error.responseJSON.error
-        : error;
+      const errorMessage = error.responseJSON ? error.responseJSON.error : error;
       $.growl.error({message: errorMessage});
     }
   }
@@ -335,9 +329,7 @@ export default class CombinationsManager {
    * @private
    */
   async updateDefaultCombination(checkedInput) {
-    const checkedInputs = this.$combinationsContainer.find(
-      `${CombinationsMap.isDefaultInputsSelector}:checked`,
-    );
+    const checkedInputs = this.$combinationsContainer.find(`${CombinationsMap.isDefaultInputsSelector}:checked`);
     const checkedDefaultId = this.findCombinationId(checkedInput);
 
     await this.combinationsService.updateListedCombination(checkedDefaultId, {

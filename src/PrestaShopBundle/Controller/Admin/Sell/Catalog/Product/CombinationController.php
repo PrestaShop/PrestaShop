@@ -246,7 +246,9 @@ class CombinationController extends FrameworkBundleAdminController
             );
         }
 
-        return $this->json([]);
+        return $this->json([
+            'message' => $this->trans('Successful update.', 'Admin.Notifications.Success'),
+        ]);
     }
 
     /**
