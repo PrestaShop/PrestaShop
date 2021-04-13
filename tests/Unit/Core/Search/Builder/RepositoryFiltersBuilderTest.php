@@ -37,7 +37,7 @@ use Symfony\Component\HttpFoundation\Request;
 
 class RepositoryFiltersBuilderTest extends TestCase
 {
-    public function testBuildWithoutParameters()
+    public function testBuildWithoutParameters(): void
     {
         $builder = new RepositoryFiltersBuilder(
             $this->buildUnusedRepository(),
@@ -48,7 +48,7 @@ class RepositoryFiltersBuilderTest extends TestCase
         $this->assertNull($filters);
     }
 
-    public function testBuildWithFilterId()
+    public function testBuildWithFilterId(): void
     {
         $expectedFilters = [
             'limit' => 10,
@@ -68,7 +68,7 @@ class RepositoryFiltersBuilderTest extends TestCase
         $this->assertEquals('language', $filters->getFilterId());
     }
 
-    public function testOverrideWithFilterId()
+    public function testOverrideWithFilterId(): void
     {
         $repositoryFilters = [
             'limit' => 10,
@@ -94,7 +94,7 @@ class RepositoryFiltersBuilderTest extends TestCase
         $this->assertEquals('alternate_language', $filters->getFilterId());
     }
 
-    public function testBuildWithController()
+    public function testBuildWithController(): void
     {
         $expectedFilters = [
             'limit' => 10,
@@ -115,7 +115,7 @@ class RepositoryFiltersBuilderTest extends TestCase
         $this->assertEmpty($filters->getFilterId());
     }
 
-    public function testOverrideWithController()
+    public function testOverrideWithController(): void
     {
         $repositoryFilters = [
             'limit' => 10,
@@ -142,7 +142,7 @@ class RepositoryFiltersBuilderTest extends TestCase
         $this->assertEmpty($builtFilters->getFilterId());
     }
 
-    public function testBuildWithRequest()
+    public function testBuildWithRequest(): void
     {
         $expectedFilters = [
             'limit' => 10,
@@ -162,7 +162,7 @@ class RepositoryFiltersBuilderTest extends TestCase
         $this->assertEmpty($filters->getFilterId());
     }
 
-    public function testNoNeedToPersist()
+    public function testNoNeedToPersist(): void
     {
         $expectedFilters = [
             'limit' => 10,
