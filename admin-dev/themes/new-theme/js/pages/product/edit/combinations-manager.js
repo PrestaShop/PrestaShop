@@ -64,11 +64,8 @@ export default class CombinationsManager {
     // Paginate to first page when tab is shown
     this.$productForm.find(ProductMap.combinations.navigationTab).on('shown.bs.tab', () => this.firstInit());
 
-    // Init combination edition modal
     initCombinationModal(ProductMap.combinations.editModal, productId);
-
-    // Init list filters
-    initFilters(ProductMap.combinationsFiltersContainer, window.prestashop.instance.eventEmitter);
+    initFilters(ProductMap.combinations.combinationsFiltersContainer, window.prestashop.instance.eventEmitter);
 
     // Finally watch events related to combination listing
     this.watchEvents();
