@@ -268,8 +268,9 @@ class CombinationController extends FrameworkBundleAdminController
     private function formatImageUrl(?string $imgPath): string
     {
         if (!$imgPath) {
-            $imagePathFactory = $this->get('prestashop.adapter.product.image.product_image_path_factory');
-            $imgPath = $imagePathFactory->getNoImagePath(ProductImagePathFactory::IMAGE_TYPE_SMALL_DEFAULT);
+            $imagePathFactory = $this->get('prestashop.adapter.product.image.product_image_url_factory');
+
+            return $imagePathFactory->getNoImagePath(ProductImagePathFactory::IMAGE_TYPE_SMALL_DEFAULT);
         }
 
         return $this->getContext()->link->getAdminBaseLink() . ltrim($imgPath, '/');
