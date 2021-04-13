@@ -5603,7 +5603,7 @@ class ProductCore extends ObjectModel
         } else {
             $quantity = (int) $row['minimal_quantity'];
         }
-        
+
         $null = null;
 
         $row['price_tax_exc'] = Product::getPriceStatic(
