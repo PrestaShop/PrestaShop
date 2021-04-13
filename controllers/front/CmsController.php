@@ -25,8 +25,8 @@
  */
 class CmsControllerCore extends FrontController
 {
-    const CMS_CASE_PAGE = 1;
-    const CMS_CASE_CATEGORY = 2;
+    public const CMS_CASE_PAGE = 1;
+    public const CMS_CASE_CATEGORY = 2;
 
     public $php_self = 'cms';
     public $assignCase;
