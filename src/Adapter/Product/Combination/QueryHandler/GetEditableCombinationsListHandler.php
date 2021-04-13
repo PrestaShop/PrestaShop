@@ -34,6 +34,7 @@ use PrestaShop\Decimal\DecimalNumber;
 use PrestaShop\PrestaShop\Adapter\Attribute\Repository\AttributeRepository;
 use PrestaShop\PrestaShop\Adapter\Product\AbstractProductHandler;
 use PrestaShop\PrestaShop\Adapter\Product\Combination\Repository\CombinationRepository;
+use PrestaShop\PrestaShop\Adapter\Product\Image\ProductImagePathFactory;
 use PrestaShop\PrestaShop\Adapter\Product\Stock\Repository\StockAvailableRepository;
 use PrestaShop\PrestaShop\Core\Domain\Product\Combination\Query\GetEditableCombinationsList;
 use PrestaShop\PrestaShop\Core\Domain\Product\Combination\QueryHandler\GetEditableCombinationsListHandlerInterface;
@@ -81,9 +82,9 @@ final class GetEditableCombinationsListHandler extends AbstractProductHandler im
     private $contextShopId;
 
     /**
-     * @var string
+     * @var ProductImagePathFactory
      */
-    private $productImgDir;
+    private $productImagePathFactory;
 
     /**
      * @param CombinationRepository $combinationRepository
@@ -92,7 +93,7 @@ final class GetEditableCombinationsListHandler extends AbstractProductHandler im
      * @param DoctrineQueryBuilderInterface $combinationQueryBuilder
      * @param AttributeRepository $attributeRepository
      * @param int $contextShopId
-     * @param string $productImgDir
+     * @param ProductImagePathFactory $productImagePathFactory
      */
     public function __construct(
         CombinationRepository $combinationRepository,
@@ -101,7 +102,7 @@ final class GetEditableCombinationsListHandler extends AbstractProductHandler im
         DoctrineQueryBuilderInterface $combinationQueryBuilder,
         AttributeRepository $attributeRepository,
         int $contextShopId,
-        string $productImgDir
+        ProductImagePathFactory $productImagePathFactory
     ) {
         $this->combinationRepository = $combinationRepository;
         $this->numberExtractor = $numberExtractor;
@@ -109,7 +110,7 @@ final class GetEditableCombinationsListHandler extends AbstractProductHandler im
         $this->combinationQueryBuilder = $combinationQueryBuilder;
         $this->attributeRepository = $attributeRepository;
         $this->contextShopId = $contextShopId;
-        $this->productImgDir = $productImgDir;
+        $this->productImagePathFactory = $productImagePathFactory;
     }
 
     /**
@@ -190,7 +191,7 @@ final class GetEditableCombinationsListHandler extends AbstractProductHandler im
                 (bool) $combination['default_on'],
                 $impactOnPrice,
                 (int) $this->stockAvailableRepository->getForCombination(new CombinationId($combinationId))->quantity,
-                $this->getImagePath((int) $imageData['id_image'])
+                (int) $imageData['id_image'] ? $this->getImagePath((int) $imageData['id_image']) : null
             );
         }
 
@@ -205,13 +206,8 @@ final class GetEditableCombinationsListHandler extends AbstractProductHandler im
     private function getImagePath(int $imageId): ?string
     {
         $image = new Image($imageId);
-        $type = '-small_default.jpg';
 
-        if (empty($image->getImgPath())) {
-            return null;
-        }
-
-        return sprintf('%s%s%s', $this->productImgDir, $image->getImgPath(), $type);
+        return $this->productImagePathFactory->getPathByType($image, ProductImagePathFactory::IMAGE_TYPE_SMALL_DEFAULT);
     }
 
     /**

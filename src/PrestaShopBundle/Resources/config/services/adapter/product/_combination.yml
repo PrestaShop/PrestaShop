@@ -58,8 +58,7 @@ services:
             - '@prestashop.core.grid.query_builder.product_combination'
             - '@prestashop.adapter.attribute.repository.attribute_repository'
             - '@=service("prestashop.adapter.legacy.context").getContext().shop.id'
-#            @todo; originally _PS_THEME_PROD_DIR_ was used, but it points to same dir and its not visible in tests. Can i use PROD_IMG_DIR?
-            - !php/const _PS_PROD_IMG_DIR_
+            - '@prestashop.adapter.product.image.product_image_path_factory'
         tags:
             - name: tactician.handler
               command: PrestaShop\PrestaShop\Core\Domain\Product\Combination\Query\GetEditableCombinationsList
