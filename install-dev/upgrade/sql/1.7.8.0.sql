@@ -70,3 +70,7 @@ UPDATE `PREFIX_product` SET `product_type` = "pack" WHERE `cache_is_pack` = 1;
 UPDATE `PREFIX_product` SET `product_type` = "virtual" WHERE `is_virtual` = 1;
 
 /* PHP:ps_1780_add_feature_flag_tab(); */;
+
+INSERT IGNORE INTO `PREFIX_hook` (`id_hook`, `name`, `title`, `description`, `position`) VALUES
+(NULL,"actionFeatureFlagForm","Modify feature flag options form content","This hook allows to modify feature flag options form FormBuilder",1),
+(NULL,"actionFeatureFlagSave","Modify feature flag options form saved data","This hook allows to modify data of feature flag options form after it was saved",1);
