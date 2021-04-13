@@ -782,14 +782,23 @@ class AdminModulesControllerCore extends AdminController
                                 if ($attr['need_loggedOnAddons'] == 0
                                         && file_put_contents(
                                             _PS_MODULE_DIR_ . $name . '.zip',
-                                            Tools::addonsRequest('module', ['id_module' => pSQL($attr['id']), 'source' => Tools::getValue('source')])
+                                            Tools::addonsRequest('module', [
+                                                'id_module' => pSQL($attr['id']),
+                                                'source' => Tools::getValue('source'),
+                                                'channel' => Configuration::get('ADDONS_API_MODULE_CHANNEL'),
+                                            ])
                                         )) {
                                     $download_ok = true;
                                 } elseif ($attr['need_loggedOnAddons'] == 1
                                         && $this->logged_on_addons
                                         && file_put_contents(
                                             _PS_MODULE_DIR_ . $name . '.zip',
-                                            Tools::addonsRequest('module', ['id_module' => pSQL($attr['id']), 'username_addons' => pSQL(trim($this->context->cookie->username_addons)), 'password_addons' => pSQL(trim($this->context->cookie->password_addons))])
+                                            Tools::addonsRequest('module', [
+                                                'id_module' => pSQL($attr['id']),
+                                                'username_addons' => pSQL(trim($this->context->cookie->username_addons)),
+                                                'password_addons' => pSQL(trim($this->context->cookie->password_addons)),
+                                                'channel' => Configuration::get('ADDONS_API_MODULE_CHANNEL'),
+                                            ])
                                         )) {
                                     $download_ok = true;
                                 }

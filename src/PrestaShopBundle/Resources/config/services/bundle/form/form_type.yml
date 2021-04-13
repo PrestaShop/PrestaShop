@@ -367,6 +367,8 @@ services:
     form.type.admininistration.general:
         class: 'PrestaShopBundle\Form\Admin\Configure\AdvancedParameters\Administration\GeneralType'
         parent: 'form.type.translatable.aware'
+        arguments:
+            - '@=service("prestashop.adapter.environment").isDebug()'
         public: true
         tags:
             - { name: form.type }
