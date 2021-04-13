@@ -389,10 +389,10 @@ class ToolsTest extends TestCase
 
     public function passwordGenProvider(): array
     {
-        $weakPassWordOrdInvalidLenghtGiven = '/^(false|0)$/';
+        $weakPassWordOrdInvalidLenghtGiven = false;
         $alphaNumericPasswordWithTencharacters = '/^(\w){10}$/';
         $numericPasswordWithEightcharacters = '/^(\d{8})$/';
-        $numericPasswordWithTwelveCharacters = '/^(\d{13})$/';
+        $numericPasswordWithTwelveCharacters = '/^(\d{12})$/';
         $noNumerciPasswordWithNineCharacters = '/^[A-Z]{9}$/';
 
         return [
