@@ -62,7 +62,7 @@ class ViewCustomer extends BOBasePage {
    * Set status
    * @param page
    * @param status
-   * @returns {Promise<*>}
+   * @returns {Promise<string>}
    */
   async setStatus(page, status) {
     let statusID = 0;
