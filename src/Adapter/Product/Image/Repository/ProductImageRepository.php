@@ -33,8 +33,6 @@ use Image;
 use ImageType;
 use PrestaShop\PrestaShop\Adapter\AbstractObjectModelRepository;
 use PrestaShop\PrestaShop\Adapter\Product\Image\Validate\ProductImageValidator;
-use PrestaShop\PrestaShop\Core\Domain\Language\ValueObject\LanguageId;
-use PrestaShop\PrestaShop\Core\Domain\Product\Combination\ValueObject\CombinationId;
 use PrestaShop\PrestaShop\Core\Domain\Product\Image\Exception\CannotAddProductImageException;
 use PrestaShop\PrestaShop\Core\Domain\Product\Image\Exception\CannotDeleteProductImageException;
 use PrestaShop\PrestaShop\Core\Domain\Product\Image\Exception\CannotUpdateProductImageException;
@@ -240,30 +238,46 @@ class ProductImageRepository extends AbstractObjectModelRepository
     }
 
     /**
-     * @param ProductId $productId
-     * @param CombinationId $combinationId
-     * @param LanguageId $langId
+     * Retrieves a list of image ids ordered by position for each provided combination id
      *
-     * @return ImageId|null
+     * @param int[] $combinationIds
+     *
+     * @return array<int, int[]> [(int) id_combination => [(int) id_image]]
      */
-    public function findFirstImageForCombination(ProductId $productId, CombinationId $combinationId, LanguageId $langId): ?Image
+    public function getImagesIdsForCombinations(array $combinationIds): array
     {
-        try {
-            $imageData = Image::getBestImageAttribute(
-                $this->contextShopId,
-                $langId->getValue(),
-                $productId->getValue(),
-                $combinationId->getValue()
-            );
-        } catch (PrestaShopException $e) {
-            throw new CoreException('Error occurred while trying to get combination image', 0, $e);
+        $qb = $this->connection->createQueryBuilder();
+        $qb->select('pai.id_product_attribute, pai.id_image')
+            ->from($this->dbPrefix . 'product_attribute_image', 'pai')
+            ->leftJoin(
+                'pai',
+                $this->dbPrefix . 'image_shop', 'ims',
+                'pai.id_image = ims.id_image'
+            )
+            ->leftJoin(
+                'pai',
+                $this->dbPrefix . 'image', 'i',
+                'i.id_image = pai.id_image'
+            )
+            ->where('ims.id_shop = :shopId')
+            ->setParameter('shopId', $this->contextShopId)
+            ->andWhere($qb->expr()->in('pai.id_product_attribute', ':combinationIds'))
+            ->setParameter('combinationIds', $combinationIds, Connection::PARAM_INT_ARRAY)
+            ->orderBy('i.position', 'asc')
+        ;
+
+        $results = $qb->execute()->fetchAll();
+
+        if (empty($results)) {
+            return [];
         }
 
-        if (empty($imageData)) {
-            return null;
+        $imagesIdsByCombinationIds = [];
+        foreach ($results as $result) {
+            $imagesIdsByCombinationIds[(int) $result['id_product_attribute']][] = (int) $result['id_image'];
         }
 
-        return new Image((int) $imageData['id_image']);
+        return $imagesIdsByCombinationIds;
     }
 
     /**
