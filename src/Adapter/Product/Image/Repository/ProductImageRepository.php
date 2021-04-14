@@ -33,6 +33,8 @@ use Image;
 use ImageType;
 use PrestaShop\PrestaShop\Adapter\AbstractObjectModelRepository;
 use PrestaShop\PrestaShop\Adapter\Product\Image\Validate\ProductImageValidator;
+use PrestaShop\PrestaShop\Core\Domain\Language\ValueObject\LanguageId;
+use PrestaShop\PrestaShop\Core\Domain\Product\Combination\ValueObject\CombinationId;
 use PrestaShop\PrestaShop\Core\Domain\Product\Image\Exception\CannotAddProductImageException;
 use PrestaShop\PrestaShop\Core\Domain\Product\Image\Exception\CannotDeleteProductImageException;
 use PrestaShop\PrestaShop\Core\Domain\Product\Image\Exception\CannotUpdateProductImageException;
@@ -64,18 +66,26 @@ class ProductImageRepository extends AbstractObjectModelRepository
     private $productImageValidator;
 
     /**
+     * @var int
+     */
+    private $contextShopId;
+
+    /**
      * @param Connection $connection
      * @param string $dbPrefix
      * @param ProductImageValidator $productImageValidator
+     * @param int $contextShopId
      */
     public function __construct(
         Connection $connection,
         string $dbPrefix,
-        ProductImageValidator $productImageValidator
+        ProductImageValidator $productImageValidator,
+        int $contextShopId
     ) {
         $this->connection = $connection;
         $this->dbPrefix = $dbPrefix;
         $this->productImageValidator = $productImageValidator;
+        $this->contextShopId = $contextShopId;
     }
 
     /**
@@ -227,6 +237,33 @@ class ProductImageRepository extends AbstractObjectModelRepository
         }
 
         return $id ? $this->get(new ImageId($id)) : null;
+    }
+
+    /**
+     * @param ProductId $productId
+     * @param CombinationId $combinationId
+     * @param LanguageId $langId
+     *
+     * @return ImageId|null
+     */
+    public function findFirstImageForCombination(ProductId $productId, CombinationId $combinationId, LanguageId $langId): ?Image
+    {
+        try {
+            $imageData = Image::getBestImageAttribute(
+                $this->contextShopId,
+                $langId->getValue(),
+                $productId->getValue(),
+                $combinationId->getValue()
+            );
+        } catch (PrestaShopException $e) {
+            throw new CoreException('Error occurred while trying to get combination image', 0, $e);
+        }
+
+        if (empty($imageData)) {
+            return null;
+        }
+
+        return new Image((int) $imageData['id_image']);
     }
 
     /**
