@@ -33,24 +33,20 @@ use PrestaShop\PrestaShop\Adapter\Image\ImageGenerator;
 use PrestaShop\PrestaShop\Adapter\Image\Uploader\AbstractImageUploader;
 use PrestaShop\PrestaShop\Adapter\Product\Image\ProductImagePathFactory;
 use PrestaShop\PrestaShop\Adapter\Product\Image\Repository\ProductImageRepository;
-use PrestaShop\PrestaShop\Core\Configuration\UploadSizeConfigurationInterface;
 use PrestaShop\PrestaShop\Core\Domain\Product\Image\ValueObject\ImageId;
+use PrestaShop\PrestaShop\Core\Foundation\Filesystem\FileSystem as PsFileSystem;
 use PrestaShop\PrestaShop\Core\Hook\HookDispatcherInterface;
 use PrestaShop\PrestaShop\Core\Image\Exception\CannotUnlinkImageException;
 use PrestaShop\PrestaShop\Core\Image\Exception\ImageOptimizationException;
 use PrestaShop\PrestaShop\Core\Image\Uploader\Exception\ImageUploadException;
 use PrestaShop\PrestaShop\Core\Image\Uploader\Exception\MemoryLimitException;
+use Symfony\Component\Filesystem\Filesystem;
 
 /**
  * Uploads product image to filesystem
  */
 class ProductImageUploader extends AbstractImageUploader
 {
-    /**
-     * @var UploadSizeConfigurationInterface
-     */
-    private $uploadSizeConfiguration;
-
     /**
      * @var ProductImagePathFactory
      */
@@ -72,40 +68,35 @@ class ProductImageUploader extends AbstractImageUploader
     private $hookDispatcher;
 
     /**
-     * @var bool
-     */
-    private $isLegacyImageMode;
-
-    /**
      * @var ProductImageRepository
      */
     private $productImageRepository;
 
     /**
-     * @param UploadSizeConfigurationInterface $uploadSizeConfiguration
+     * @var Filesystem
+     */
+    private $fileSystem;
+
+    /**
      * @param ProductImagePathFactory $productImagePathFactory
      * @param int $contextShopId
      * @param ImageGenerator $imageGenerator
      * @param HookDispatcherInterface $hookDispatcher
-     * @param bool $isLegacyImageMode
      * @param ProductImageRepository $productImageRepository
      */
     public function __construct(
-        UploadSizeConfigurationInterface $uploadSizeConfiguration,
         ProductImagePathFactory $productImagePathFactory,
         int $contextShopId,
         ImageGenerator $imageGenerator,
         HookDispatcherInterface $hookDispatcher,
-        bool $isLegacyImageMode,
         ProductImageRepository $productImageRepository
     ) {
-        $this->uploadSizeConfiguration = $uploadSizeConfiguration;
         $this->productImagePathFactory = $productImagePathFactory;
         $this->contextShopId = $contextShopId;
         $this->imageGenerator = $imageGenerator;
         $this->hookDispatcher = $hookDispatcher;
-        $this->isLegacyImageMode = $isLegacyImageMode;
         $this->productImageRepository = $productImageRepository;
+        $this->fileSystem = new Filesystem();
     }
 
     /**
@@ -121,18 +112,20 @@ class ProductImageUploader extends AbstractImageUploader
      */
     public function upload(Image $image, string $filePath): string
     {
-        $imageId = (int) $image->id;
-        $this->createDestinationDirectory($image);
-        $destinationPath = $this->productImagePathFactory->getPath(new ImageId($imageId));
+        $imageId = new ImageId((int) $image->id);
+        $productId = (int) $image->id_product;
+
+        $this->createDestinationDirectory($imageId, $productId);
+        $destinationPath = $this->productImagePathFactory->getPath($imageId);
         $this->uploadFromTemp($filePath, $destinationPath);
         $this->imageGenerator->generateImagesByTypes($destinationPath, $this->productImageRepository->getProductImageTypes());
 
         $this->hookDispatcher->dispatchWithParameters(
             'actionWatermark',
-            ['id_image' => $imageId, 'id_product' => (int) $image->id_product]
+            ['id_image' => $imageId->getValue(), 'id_product' => $productId]
         );
 
-        $this->deleteCachedImages($image);
+        $this->deleteCachedImages($productId);
 
         return $destinationPath;
     }
@@ -145,37 +138,37 @@ class ProductImageUploader extends AbstractImageUploader
     public function remove(Image $image): void
     {
         $destinationPath = $this->productImagePathFactory->getPath(new ImageId((int) $image->id));
-        $this->deleteCachedImages($image);
+        $this->deleteCachedImages((int) $image->id_product);
         $this->deleteGeneratedImages($destinationPath, $this->productImageRepository->getProductImageTypes());
     }
 
     /**
-     * @param Image $image
+     * @param ImageId $imageId
+     * @param int $productId
      *
      * @throws ImageUploadException
      */
-    private function createDestinationDirectory(Image $image): void
+    private function createDestinationDirectory(ImageId $imageId, int $productId): void
     {
-        //@todo: refactor this to some new service which relies on ImagePathFactory & uses symfony Filesystem
-        if ($this->isLegacyImageMode || $image->createImgFolder()) {
+        $imageFolder = $this->productImagePathFactory->getImageFolder($imageId);
+        $this->fileSystem->mkdir($imageFolder, PsFileSystem::DEFAULT_MODE_FOLDER);
+        if (is_dir($imageFolder)) {
             return;
         }
 
         throw new ImageUploadException(sprintf(
             'Error occurred when trying to create directory for product #%d image',
-            $image->id_product
+            $productId
         ));
     }
 
     /**
-     * @param Image $image
+     * @param int $productId
      *
      * @throws CannotUnlinkImageException
      */
-    private function deleteCachedImages(Image $image): void
+    private function deleteCachedImages(int $productId): void
     {
-        $productId = (int) $image->id_product;
-
         $cachedImages = [
             $this->productImagePathFactory->getHelperThumbnail($productId, $this->contextShopId),
             $this->productImagePathFactory->getCachedCover($productId),

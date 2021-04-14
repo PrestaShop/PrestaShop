@@ -84,11 +84,8 @@ services:
     prestashop.adapter.product.image.uploader.product_image_uploader:
         class: 'PrestaShop\PrestaShop\Adapter\Product\Image\Uploader\ProductImageUploader'
         arguments:
-            - '@prestashop.core.configuration.upload_size_configuration'
             - '@prestashop.adapter.product.image.product_image_path_factory'
             - "@=service('prestashop.adapter.legacy.context').getContext().shop.id"
             - "@prestashop.adapter.image.image_generator"
             - "@prestashop.core.hook.dispatcher"
-            - "@=service('prestashop.adapter.legacy.configuration').getBoolean('PS_LEGACY_IMAGES')"
             - '@prestashop.adapter.product.image.repository.product_image_repository'
-
