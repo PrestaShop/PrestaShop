@@ -71,7 +71,7 @@ class ProductImageRepository extends AbstractObjectModelRepository
     public function __construct(
         Connection $connection,
         string $dbPrefix,
-        ProductImageValidator $productImageValidator,
+        ProductImageValidator $productImageValidator
     ) {
         $this->connection = $connection;
         $this->dbPrefix = $dbPrefix;

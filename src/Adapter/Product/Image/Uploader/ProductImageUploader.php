@@ -34,6 +34,7 @@ use PrestaShop\PrestaShop\Adapter\Image\Uploader\AbstractImageUploader;
 use PrestaShop\PrestaShop\Adapter\Product\Image\ProductImagePathFactory;
 use PrestaShop\PrestaShop\Adapter\Product\Image\Repository\ProductImageRepository;
 use PrestaShop\PrestaShop\Core\Configuration\UploadSizeConfigurationInterface;
+use PrestaShop\PrestaShop\Core\Domain\Product\Image\ValueObject\ImageId;
 use PrestaShop\PrestaShop\Core\Hook\HookDispatcherInterface;
 use PrestaShop\PrestaShop\Core\Image\Exception\CannotUnlinkImageException;
 use PrestaShop\PrestaShop\Core\Image\Exception\ImageOptimizationException;
@@ -120,14 +121,15 @@ class ProductImageUploader extends AbstractImageUploader
      */
     public function upload(Image $image, string $filePath): string
     {
+        $imageId = (int) $image->id;
         $this->createDestinationDirectory($image);
-        $destinationPath = $this->productImagePathFactory->getPath($image);
+        $destinationPath = $this->productImagePathFactory->getPath(new ImageId($imageId));
         $this->uploadFromTemp($filePath, $destinationPath);
         $this->imageGenerator->generateImagesByTypes($destinationPath, $this->productImageRepository->getProductImageTypes());
 
         $this->hookDispatcher->dispatchWithParameters(
             'actionWatermark',
-            ['id_image' => (int) $image->id, 'id_product' => (int) $image->id_product]
+            ['id_image' => $imageId, 'id_product' => (int) $image->id_product]
         );
 
         $this->deleteCachedImages($image);
@@ -142,7 +144,7 @@ class ProductImageUploader extends AbstractImageUploader
      */
     public function remove(Image $image): void
     {
-        $destinationPath = $this->productImagePathFactory->getPath($image);
+        $destinationPath = $this->productImagePathFactory->getPath(new ImageId((int) $image->id));
         $this->deleteCachedImages($image);
         $this->deleteGeneratedImages($destinationPath, $this->productImageRepository->getProductImageTypes());
     }
