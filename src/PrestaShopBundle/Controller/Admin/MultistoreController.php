@@ -122,7 +122,7 @@ class MultistoreController extends FrameworkBundleAdminController
                 unset($groupList[$key]);
             }
             foreach ($group->getShops() as $shop) {
-                if ($shop->isConfigurationKeyOverridden($configuration, $configurationKey)) {
+                if ($configuration->isCustomizedForThisShop($configurationKey, $shop)) {
                     $shouldDisplayDropdown = true;
                     break;
                 }

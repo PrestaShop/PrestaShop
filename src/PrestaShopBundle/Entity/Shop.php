@@ -28,8 +28,6 @@ namespace PrestaShopBundle\Entity;
 
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
-use PrestaShop\PrestaShop\Core\Domain\Configuration\ShopConfigurationInterface;
-use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\ShopConstraint;
 
 /**
  * Shop.
@@ -298,34 +296,5 @@ class Shop
         }
 
         return false;
-    }
-
-    /**
-     * Checks if a configuration value is overridden for this shop or its shop group
-     *
-     * @param ShopConfigurationInterface $configuration
-     * @param string $configurationKey
-     *
-     * @return bool
-     */
-    public function isConfigurationKeyOverridden(ShopConfigurationInterface $configuration, string $configurationKey): bool
-    {
-        $shopGroupConstraint = new ShopConstraint(
-            null,
-            $this->getShopGroup()->getId(),
-            true // it must be strict, otherwise the method will also check for configuration settings in all shop context
-        );
-
-        if ($configuration->has($configurationKey, $shopGroupConstraint)) {
-            return true;
-        }
-
-        $shopConstraint = new ShopConstraint(
-            $this->getId(),
-            $this->getShopGroup()->getId(),
-            true
-        );
-
-        return $configuration->has($configurationKey, $shopConstraint);
     }
 }
