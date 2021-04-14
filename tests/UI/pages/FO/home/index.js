@@ -331,7 +331,7 @@ class Home extends FOBasePage {
   }
 
   /**
-   * subscribe to the newsletter from FO homepage
+   * Subscribe to the newsletter from the FO homepage
    * @param {object} page
    * @param {string} email
    *
