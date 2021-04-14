@@ -70,3 +70,8 @@ UPDATE `PREFIX_product` SET `product_type` = "pack" WHERE `cache_is_pack` = 1;
 UPDATE `PREFIX_product` SET `product_type` = "virtual" WHERE `is_virtual` = 1;
 
 /* PHP:ps_1780_add_feature_flag_tab(); */;
+INSERT INTO `PREFIX_meta` (`page`, `configurable`) VALUES ('onsale-products', 1);
+INSERT INTO `PREFIX_meta_lang` (`id_lang`, `id_meta`, `title`, `url_rewrite`) VALUES
+(1, (SELECT `id_meta` FROM `PREFIX_meta` WHERE `page` = 'onsale-products'), 'Products on sale', 'on-sale'),
+(2, (SELECT `id_meta` FROM `PREFIX_meta` WHERE `page` = 'onsale-products'), 'Produits en vente', 'en-vente'),
+(3, (SELECT `id_meta` FROM `PREFIX_meta` WHERE `page` = 'onsale-products'), 'Productos en oferta', 'en-oferta');
