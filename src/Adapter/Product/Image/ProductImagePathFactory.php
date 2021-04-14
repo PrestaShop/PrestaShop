@@ -65,34 +65,21 @@ class ProductImagePathFactory
 
     /**
      * @param bool $isLegacyImageMode
-     * @param string $basePath
-     * @param string $relativeImagesDir
+     * @param string $pathToBaseDir
      * @param string $temporaryImgDir
      * @param string $contextLangIsoCode
      */
     public function __construct(
         bool $isLegacyImageMode,
-        string $basePath,
-        string $relativeImagesDir,
+        string $pathToBaseDir,
         string $temporaryImgDir,
         string $contextLangIsoCode
     ) {
         $this->isLegacyImageMode = $isLegacyImageMode;
         // make sure one trailing slash is always there
         $this->temporaryImgDir = rtrim($temporaryImgDir, '/') . '/';
-        $this->basePath = rtrim($basePath, '/') . '/';
-        $this->pathToBaseDir = $this->basePath . rtrim(ltrim($relativeImagesDir, '/'), '/') . '/';
+        $this->pathToBaseDir = rtrim($pathToBaseDir, '/') . '/';
         $this->contextLangIsoCode = $contextLangIsoCode;
-    }
-
-    /**
-     * @param string $relativePath
-     *
-     * @return string
-     */
-    public function buildFullPath(string $relativePath): string
-    {
-        return $this->basePath . ltrim($relativePath, '/');
     }
 
     /**
