@@ -310,10 +310,20 @@ class Shop
      */
     public function isConfigurationKeyOverridden(ShopConfigurationInterface $configuration, string $configurationKey): bool
     {
+        $shopGroupConstraint = new ShopConstraint(
+            null,
+            $this->getShopGroup()->getId(),
+            true // it must be strict, otherwise the method will also check for configuration settings in all shop context
+        );
+
+        if ($configuration->has($configurationKey, $shopGroupConstraint)) {
+            return true;
+        }
+
         $shopConstraint = new ShopConstraint(
             $this->getId(),
             $this->getShopGroup()->getId(),
-            false
+            true
         );
 
         return $configuration->has($configurationKey, $shopConstraint);
