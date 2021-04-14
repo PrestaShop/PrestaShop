@@ -87,7 +87,7 @@ class OnsaleProductsProductSearchProvider implements ProductSearchProviderInterf
     public function runQuery(
         ProductSearchContext $context,
         ProductSearchQuery $query
-    ) {
+    ): ProductSearchResult {
         if (!$products = $this->getProductsOrCount($context, $query, 'products')) {
             $products = [];
         }
