@@ -129,7 +129,7 @@
                     <li>{{ 'or even activated for one store and deactivated for another.'|trans({}, 'Admin.Modules.Feature') }}</li>
                   </ul>
                 {% elseif module.attributes.multistoreCompatibility is same as(constant('\\Module::MULTISTORE_COMPATIBILITY_PARTIAL')) %}
-                  {{ 'Partially: this module is partially compatible with the multistore feature. Some of its options might not be available.'|trans({}, 'Admin.Modules.Feature') }}
+                  {{ 'This module is partially compatible with the multistore feature. Some of its options might not be available.'|trans({}, 'Admin.Modules.Feature') }}
                 {% elseif module.attributes.multistoreCompatibility is same as(constant('\\Module::MULTISTORE_COMPATIBILITY_NOT_CONCERNED')) %}
                   {{ 'Not concerned: this module is not compatible with the multistore feature because it wouldn\'t be useful.'|trans({}, 'Admin.Modules.Feature') }}
                 {% elseif module.attributes.multistoreCompatibility is same as(constant('\\Module::MULTISTORE_COMPATIBILITY_NO')) %}
