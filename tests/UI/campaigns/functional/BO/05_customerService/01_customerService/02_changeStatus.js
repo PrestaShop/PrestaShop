@@ -124,7 +124,7 @@ describe('Change customer message status', async () => {
         await expect(pageTitle).to.contains(viewPage.pageTitle);
       });
 
-      it(`should change the order status to ${test.args.status}`, async function () {
+      it(`should change the order status to '${test.args.status}'`, async function () {
         await testContext.addContextItem(this, 'testIdentifier', `setOrderStatus${test.args.status}`, baseContext);
 
         const newStatus = await viewPage.setStatus(page, test.args.status);
@@ -150,6 +150,34 @@ describe('Change customer message status', async () => {
         const isChanged = await customerServicePage.isStatusChanged(page, 1, test.args.statusMeaning);
         await expect(isChanged).to.be.true;
       });
+    });
+  });
+
+  describe('Delete the order message', async () => {
+    it('should go to customer service page', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'goToOrderMessagesPageToDelete', baseContext);
+
+      await dashboardPage.goToSubMenu(
+        page,
+        dashboardPage.customerServiceParentLink,
+        dashboardPage.customerServiceLink,
+      );
+
+      const pageTitle = await customerServicePage.getPageTitle(page);
+      await expect(pageTitle).to.contains(customerServicePage.pageTitle);
+    });
+
+    it('should delete the message', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'deleteMessage', baseContext);
+
+      await dashboardPage.goToSubMenu(
+        page,
+        dashboardPage.customerServiceParentLink,
+        dashboardPage.customerServiceLink,
+      );
+
+      const textResult = await customerServicePage.deleteMessage(page, 1);
+      await expect(textResult).to.contains(customerServicePage.successfulDeleteMessage);
     });
   });
 });
