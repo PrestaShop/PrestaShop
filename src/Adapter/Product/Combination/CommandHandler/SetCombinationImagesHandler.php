@@ -32,6 +32,9 @@ use PrestaShop\PrestaShop\Adapter\Product\Combination\Update\CombinationImagesUp
 use PrestaShop\PrestaShop\Core\Domain\Product\Combination\Command\SetCombinationImagesCommand;
 use PrestaShop\PrestaShop\Core\Domain\Product\Combination\CommandHandler\SetCombinationImagesHandlerInterface;
 
+/**
+ * Handles @see SetCombinationImagesCommand using adapter udpater service
+ */
 class SetCombinationImagesHandler implements SetCombinationImagesHandlerInterface
 {
     /**
