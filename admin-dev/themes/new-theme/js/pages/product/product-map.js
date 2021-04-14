@@ -83,6 +83,7 @@ export default {
       tokenKey: 'combination_item[_token]',
     },
     editionForm: 'form[name="combination_form"]',
+    editionFormInputs: 'form[name="combination_form"] input, form[name="combination_form"] textarea',
     editCombinationButtons: '.edit-combination-item',
     tableRow: {
       combinationImg: '.combination-image',
