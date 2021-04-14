@@ -73,7 +73,7 @@ class EditableCombinationForListing
     /**
      * @var string|null
      */
-    private $imagePath;
+    private $relativeImagePath;
 
     /**
      * @param int $combinationId
@@ -83,7 +83,7 @@ class EditableCombinationForListing
      * @param bool $default
      * @param DecimalNumber $impactOnPrice
      * @param int $quantity
-     * @param string|null $imagePath
+     * @param string|null $relativeImagePath
      */
     public function __construct(
         int $combinationId,
@@ -93,7 +93,7 @@ class EditableCombinationForListing
         bool $default,
         DecimalNumber $impactOnPrice,
         int $quantity,
-        ?string $imagePath = null
+        ?string $relativeImagePath = null
     ) {
         $this->combinationId = $combinationId;
         $this->attributesInformation = $attributesInformation;
@@ -102,7 +102,7 @@ class EditableCombinationForListing
         $this->default = $default;
         $this->impactOnPrice = $impactOnPrice;
         $this->quantity = $quantity;
-        $this->imagePath = $imagePath;
+        $this->relativeImagePath = $relativeImagePath;
     }
 
     /**
@@ -164,8 +164,8 @@ class EditableCombinationForListing
     /**
      * @return string|null
      */
-    public function getImagePath(): ?string
+    public function getRelativeImagePath(): ?string
     {
-        return $this->imagePath;
+        return $this->relativeImagePath;
     }
 }
