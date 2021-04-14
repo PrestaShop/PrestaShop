@@ -34,6 +34,9 @@ use Doctrine\DBAL\Exception\InvalidArgumentException;
 use PrestaShop\PrestaShop\Core\Domain\Product\Combination\ValueObject\CombinationId;
 use PrestaShop\PrestaShop\Core\Domain\Product\Image\ValueObject\ImageId;
 
+/**
+ * Updates images associated to combination
+ */
 class CombinationImagesUpdater
 {
     /**

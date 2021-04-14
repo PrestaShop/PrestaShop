@@ -28,7 +28,6 @@ declare(strict_types=1);
 
 namespace PrestaShop\PrestaShop\Adapter\Product\Combination\QueryHandler;
 
-use Image;
 use PDO;
 use PrestaShop\Decimal\DecimalNumber;
 use PrestaShop\PrestaShop\Adapter\Attribute\Repository\AttributeRepository;
@@ -187,33 +186,6 @@ final class GetEditableCombinationsListHandler extends AbstractProductHandler im
         }
 
         return new CombinationListForEditing($totalCombinationsCount, $combinationsForEditing);
-    }
-
-    /**
-     * Fetches image by combination id and caches it in class property
-     * (All combinations are only reusing product images, so there is no point retrieving same image over and over again)
-     *
-     * @param int $combinationId
-     * @param array<int, int[]> $imageIdsByCombinationIds
-     *
-     * @return ImageId|null
-     */
-    private function getImageId(int $combinationId, array $imageIdsByCombinationIds): ?ImageId
-    {
-        if (!isset($imageIdsByCombinationIds[$combinationId][0])) {
-            return null;
-        }
-
-        $imageIdValue = $imageIdsByCombinationIds[$combinationId][0];
-
-        if (isset($this->cachedImageIds[$imageIdValue])) {
-            return $this->cachedImageIds[$imageIdValue];
-        }
-
-        $imageId = new ImageId($imageIdValue);
-        $this->cachedImageIds[$imageIdValue] = $imageId;
-
-        return $imageId;
     }
 
     /**

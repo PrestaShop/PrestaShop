@@ -32,6 +32,9 @@ use PrestaShop\PrestaShop\Adapter\Product\Combination\Update\CombinationImagesUp
 use PrestaShop\PrestaShop\Core\Domain\Product\Combination\Command\RemoveAllCombinationImagesCommand;
 use PrestaShop\PrestaShop\Core\Domain\Product\Combination\CommandHandler\RemoveAllCombinationImagesHandlerInterface;
 
+/**
+ * Handles @see RemoveAllCombinationImagesCommand using adapter udpater service
+ */
 class RemoveAllCombinationImagesHandler implements RemoveAllCombinationImagesHandlerInterface
 {
     /**
