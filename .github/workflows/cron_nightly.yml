@@ -9,7 +9,6 @@ jobs:
     runs-on: ubuntu-latest
     name: Nightly
     env:
-      GC_INSTANCE_KEY: ${{ secrets.GC_INSTANCE_KEY }}
       GC_INSTANCE_NAME: ${{ secrets.GC_INSTANCE_NAME }}
       GC_PROJECT_ID: ${{ secrets.GC_PROJECT_ID }}
       GC_SERVICE_KEY: ${{ secrets.GC_SERVICE_KEY }}
@@ -28,12 +27,12 @@ jobs:
             extensions: mbstring, intl, gd, xml, dom, json, fileinfo, curl, zip, iconv
 
       -   name: Initialize GCloud Service Key
-          run: echo ${{ secrets.GC_SERVICE_KEY }} | base64 --decode -i > $HOME/gcloud-service-key.json
+          run: echo $GC_SERVICE_KEY | base64 --decode -i > $HOME/gcloud-service-key.json
 
       -   uses: google-github-actions/setup-gcloud@master
           with:
-            service_account_key: ${{ secrets.GC_SERVICE_KEY }}
-            project_id: ${{ secrets.GC_PROJECT_ID }}
+            service_account_key: $GC_SERVICE_KEY
+            project_id: $GC_PROJECT_ID
 
       -   name: Create directory
           run: mkdir -p /tmp/ps-release
