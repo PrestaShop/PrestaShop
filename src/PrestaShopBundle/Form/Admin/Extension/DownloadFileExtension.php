@@ -1,4 +1,5 @@
-{#**
+<?php
+/**
  * Copyright since 2007 PrestaShop SA and Contributors
  * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
  *
@@ -21,11 +22,46 @@
  * @author    PrestaShop SA and Contributors <contact@prestashop.com>
  * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
- *#}
+ */
 
-<div role="tabpanel" class="form-contenttab tab-pane container-fluid" id="combinations-tab">
-  {{ render(controller('PrestaShopBundle:Admin\\Sell\\Catalog\\Product\\Combination:listForm')) }}
-  <div id="combinations-stock-availability">
-{#    @todo: render stock availability preferences here when extracted to a reusable component. check StockType.php#}
-  </div>
-</div>
+declare(strict_types=1);
+
+namespace PrestaShopBundle\Form\Admin\Extension;
+
+use Symfony\Component\Form\AbstractTypeExtension;
+use Symfony\Component\Form\Extension\Core\Type\FileType;
+use Symfony\Component\Form\FormInterface;
+use Symfony\Component\Form\FormView;
+use Symfony\Component\OptionsResolver\OptionsResolver;
+
+class DownloadFileExtension extends AbstractTypeExtension
+{
+    /**
+     * {@inheritdoc}
+     */
+    public function configureOptions(OptionsResolver $resolver): void
+    {
+        $resolver
+            ->setDefaults([
+                'download_url' => null,
+            ])
+            ->setAllowedTypes('download_url', ['null', 'string'])
+        ;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function buildView(FormView $view, FormInterface $form, array $options): void
+    {
+        $view->vars['download_url'] = $options['download_url'];
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getExtendedType(): string
+    {
+        return FileType::class;
+    }
+}

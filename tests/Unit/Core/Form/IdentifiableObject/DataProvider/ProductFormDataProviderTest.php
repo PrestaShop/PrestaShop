@@ -29,7 +29,9 @@ declare(strict_types=1);
 namespace Tests\Unit\Core\Form\IdentifiableObject\DataProvider;
 
 use DateTime;
+use DateTimeImmutable;
 use Generator;
+use PHPUnit\Framework\Assert;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 use PrestaShop\Decimal\DecimalNumber;
@@ -64,8 +66,12 @@ use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductVisibility;
 use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\RedirectType;
 use PrestaShop\PrestaShop\Core\Domain\Product\VirtualProductFile\QueryResult\VirtualProductFileForEditing;
 use PrestaShop\PrestaShop\Core\Form\IdentifiableObject\DataProvider\ProductFormDataProvider;
+use PrestaShop\PrestaShop\Core\Util\DateTime\NullDateTime;
 use RuntimeException;
+use Symfony\Component\HttpFoundation\File\File;
+use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 
+// @todo: ProductFormDataProvider needs to be split to multiple classes to allow easier testing
 class ProductFormDataProviderTest extends TestCase
 {
     private const PRODUCT_ID = 42;
@@ -76,7 +82,8 @@ class ProductFormDataProviderTest extends TestCase
     public function testGetDefaultData()
     {
         $queryBusMock = $this->createMock(CommandBusInterface::class);
-        $provider = new ProductFormDataProvider($queryBusMock, false, 42);
+
+        $provider = $this->buildProvider($queryBusMock, false);
 
         $expectedDefaultData = [
             'basic' => [
@@ -105,7 +112,7 @@ class ProductFormDataProviderTest extends TestCase
         // assertSame is very important here We can't assume null and 0 are the same thing
         $this->assertSame($expectedDefaultData, $defaultData);
 
-        $provider = new ProductFormDataProvider($queryBusMock, true, 42);
+        $provider = $this->buildProvider($queryBusMock, true);
 
         $expectedDefaultData = [
             'basic' => [
@@ -144,11 +151,10 @@ class ProductFormDataProviderTest extends TestCase
     public function testGetData(array $productData, array $expectedData)
     {
         $queryBusMock = $this->createQueryBusMock($productData);
-        $provider = new ProductFormDataProvider($queryBusMock, false, 42);
+        $provider = $this->buildProvider($queryBusMock, false);
 
         $formData = $provider->getData(static::PRODUCT_ID);
-        // assertSame is very important here We can't assume null and 0 are the same thing
-        $this->assertSame($expectedData, $formData);
+        Assert::assertSame($expectedData, $formData);
     }
 
     public function getExpectedData(): Generator
@@ -161,6 +167,7 @@ class ProductFormDataProviderTest extends TestCase
             $this->getDataSetsForFeatures(),
             $this->getDataSetsForManufacturer(),
             $this->getDatasetsForCustomizations(),
+            $this->getDatasetsForVirtualProductFile(),
             $this->getDatasetsForPrices(),
             $this->getDatasetsForStock(),
         ];
@@ -170,6 +177,71 @@ class ProductFormDataProviderTest extends TestCase
                 yield $dataset;
             }
         }
+    }
+
+    /**
+     * @return array
+     */
+    private function getDatasetsForVirtualProductFile(): array
+    {
+        $datasets = [];
+
+        $expectedOutputData = $this->getDefaultOutputData();
+        $expectedOutputData['virtual_product_file'] = [
+            'has_file' => true,
+            'virtual_product_file_id' => self::DEFAULT_VIRTUAL_PRODUCT_FILE_ID,
+            'name' => 'heh logo.jpg',
+            'download_times_limit' => 0,
+            'access_days_limit' => 0,
+            'expiration_date' => null,
+        ];
+
+        $productData = [
+            'virtual_product_file' => [
+                'filename' => 'logo.jpg',
+                'display_filename' => 'heh logo.jpg',
+                'nb_days_accessible' => 0,
+                'nb_downloadable' => 0,
+                'date_expiration' => null,
+            ],
+        ];
+
+        $datasets[] = [
+            $productData,
+            $expectedOutputData,
+        ];
+
+        // test case providing expiration date
+        $expirationDate = new DateTimeImmutable();
+        $expectedOutputData['virtual_product_file']['expiration_date'] = $expirationDate->format('Y-m-d');
+        $productData['virtual_product_file']['date_expiration'] = $expirationDate;
+
+        $datasets[] = [
+            $productData,
+            $expectedOutputData,
+        ];
+
+        // test case providing NullDateTime expiration date
+        $expirationDate = new NullDateTime();
+        $expectedOutputData['virtual_product_file']['expiration_date'] = $expirationDate->format('Y-m-d');
+        $productData['virtual_product_file']['date_expiration'] = $expirationDate;
+
+        $datasets[] = [
+            $productData,
+            $expectedOutputData,
+        ];
+
+        // test case has no virtual product file
+        $expectedOutputData['virtual_product_file'] = [
+            'has_file' => false,
+        ];
+
+        $datasets[] = [
+            [],
+            $expectedOutputData,
+        ];
+
+        return $datasets;
     }
 
     /**
@@ -438,7 +510,7 @@ class ProductFormDataProviderTest extends TestCase
     /**
      * @return array
      */
-    public function getDataSetsForManufacturer(): array
+    private function getDataSetsForManufacturer(): array
     {
         $datasets = [];
 
@@ -460,7 +532,7 @@ class ProductFormDataProviderTest extends TestCase
     /**
      * @return array
      */
-    public function getDataSetsForFeatures(): array
+    private function getDataSetsForFeatures(): array
     {
         $datasets = [];
 
@@ -679,7 +751,7 @@ class ProductFormDataProviderTest extends TestCase
         }
 
         return new VirtualProductFileForEditing(
-            self::DEFAULT_VIRTUAL_PRODUCT_FILE_ID,
+            $product['virtual_product_file']['virtual_product_file_id'] ?? self::DEFAULT_VIRTUAL_PRODUCT_FILE_ID,
             $product['virtual_product_file']['filename'] ?? 'filename',
             $product['virtual_product_file']['display_filename'] ?? 'display_filename',
             $product['virtual_product_file']['nb_days_accessible'] ?? 0,
@@ -952,6 +1024,9 @@ class ProductFormDataProviderTest extends TestCase
             ],
             'suppliers' => [],
             'customizations' => [],
+            'virtual_product_file' => [
+                'has_file' => false,
+            ],
             'shortcuts' => [
                 'price' => [
                     'price_tax_excluded' => 19.86,
@@ -963,5 +1038,23 @@ class ProductFormDataProviderTest extends TestCase
                 ],
             ],
         ];
+    }
+
+    /**
+     * @param CommandBusInterface $queryBusMock
+     * @param $activation
+     *
+     * @return ProductFormDataProvider
+     */
+    private function buildProvider(CommandBusInterface $queryBusMock, $activation): ProductFormDataProvider
+    {
+        $urlGeneratorMock = $this->getMockBuilder(UrlGeneratorInterface::class)->getMock();
+        $urlGeneratorMock->method('generate')->willReturnArgument(0);
+
+        return new ProductFormDataProvider(
+            $queryBusMock,
+            $activation,
+            42
+        );
     }
 }

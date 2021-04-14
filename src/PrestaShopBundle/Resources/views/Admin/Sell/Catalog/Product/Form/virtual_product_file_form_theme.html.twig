@@ -23,9 +23,13 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  *#}
 
-<div role="tabpanel" class="form-contenttab tab-pane container-fluid" id="combinations-tab">
-  {{ render(controller('PrestaShopBundle:Admin\\Sell\\Catalog\\Product\\Combination:listForm')) }}
-  <div id="combinations-stock-availability">
-{#    @todo: render stock availability preferences here when extracted to a reusable component. check StockType.php#}
+{% use '@PrestaShop/Admin/TwigTemplateForm/prestashop_ui_kit.html.twig' %}
+
+{%- block virtual_product_file_widget -%}
+  <div id="virtual-product-file-switch">
+    {{ form_row(form.has_file) }}
   </div>
-</div>
+  <div id="virtual-product-file-content">
+    {{ form_rest(form) }}
+  </div>
+{%- endblock virtual_product_file_widget -%}

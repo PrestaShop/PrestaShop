@@ -99,6 +99,7 @@ final class ProductFormDataProvider implements FormDataProviderInterface
             'options' => $this->extractOptionsData($productForEditing),
             'suppliers' => $this->extractSuppliersData($productForEditing),
             'customizations' => $this->extractCustomizationsData($productForEditing),
+            'virtual_product_file' => $this->extractVirtualProductFileData($productForEditing),
         ];
 
         return $this->addShortcutData($productData);
@@ -154,6 +155,34 @@ final class ProductFormDataProvider implements FormDataProviderInterface
         ];
 
         return $productData;
+    }
+
+    /**
+     * @param ProductForEditing $productForEditing
+     *
+     * @return array<string, mixed>
+     */
+    private function extractVirtualProductFileData(ProductForEditing $productForEditing): array
+    {
+        $data = [
+            'has_file' => false,
+        ];
+        $virtualProductFile = $productForEditing->getVirtualProductFile();
+
+        if (null !== $virtualProductFile) {
+            $data = [
+                'has_file' => true,
+                'virtual_product_file_id' => $virtualProductFile->getId(),
+                'name' => $virtualProductFile->getDisplayName(),
+                'download_times_limit' => $virtualProductFile->getDownloadTimesLimit(),
+                'access_days_limit' => $virtualProductFile->getAccessDays(),
+                'expiration_date' => $virtualProductFile->getExpirationDate() ?
+                    $virtualProductFile->getExpirationDate()->format(DateTime::DEFAULT_DATE_FORMAT) :
+                    null,
+            ];
+        }
+
+        return $data;
     }
 
     /**

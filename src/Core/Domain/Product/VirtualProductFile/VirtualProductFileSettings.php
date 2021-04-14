@@ -1,4 +1,5 @@
-{#**
+<?php
+/**
  * Copyright since 2007 PrestaShop SA and Contributors
  * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
  *
@@ -21,11 +22,25 @@
  * @author    PrestaShop SA and Contributors <contact@prestashop.com>
  * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
- *#}
+ */
+declare(strict_types=1);
 
-<div role="tabpanel" class="form-contenttab tab-pane container-fluid" id="combinations-tab">
-  {{ render(controller('PrestaShopBundle:Admin\\Sell\\Catalog\\Product\\Combination:listForm')) }}
-  <div id="combinations-stock-availability">
-{#    @todo: render stock availability preferences here when extracted to a reusable component. check StockType.php#}
-  </div>
-</div>
+namespace PrestaShop\PrestaShop\Core\Domain\Product\VirtualProductFile;
+
+class VirtualProductFileSettings
+{
+    /**
+     * Following constants defines maximum characters length constraints for corresponding fields
+     */
+    public const MAX_DISPLAY_FILENAME_LENGTH = 255;
+    public const MAX_FILENAME_LENGTH = 255;
+    public const MAX_ACCESSIBLE_DAYS_LIMIT = 9999999999;
+    public const MAX_DOWNLOAD_TIMES_LIMIT = 9999999999;
+
+    /**
+     * Class not supposed to be initialized, it only serves as static storage
+     */
+    private function __construct()
+    {
+    }
+}
