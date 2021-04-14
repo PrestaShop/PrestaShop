@@ -22,7 +22,7 @@ const {DefaultCustomer} = require('@data/demo/customer');
 // Import test context
 const testContext = require('@utils/testContext');
 
-const baseContext = 'functional_BO_customerService_orderMessages_changeStatus';
+const baseContext = 'functional_BO_customerService_customerService_changeStatus';
 
 let browserContext;
 let page;
@@ -144,7 +144,7 @@ describe('Change customer message status', async () => {
         await expect(pageTitle).to.contains(customerServicePage.pageTitle);
       });
 
-      it('should check if the status color is changed', async function(){
+      it('should check if the status color is changed', async function () {
         await testContext.addContextItem(this, 'testIdentifier', `checkStatusColor${index}`, baseContext);
 
         const isChanged = await customerServicePage.isStatusChanged(page, 1, test.args.statusMeaning);
