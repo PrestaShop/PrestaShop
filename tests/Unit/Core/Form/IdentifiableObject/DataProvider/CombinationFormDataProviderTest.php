@@ -255,7 +255,8 @@ class CombinationFormDataProviderTest extends TestCase
             $combination['name'] ?? static::DEFAULT_NAME,
             $this->createDetails($combination),
             $this->createPrices($combination),
-            $this->createStock($combination)
+            $this->createStock($combination),
+            $combination['image_ids'] ?? []
         );
     }
 
