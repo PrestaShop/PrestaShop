@@ -86,7 +86,7 @@
           class="btn btn-primary"
           @click.prevent.stop="submitForm"
           :aria-label="$t('modal.save')"
-          :disabled="submittingCombinationForm"
+          :disabled="submittingCombinationForm || !isFormUpdated"
         >
           <span v-if="!submittingCombinationForm">
             {{ $t('modal.save') }}
@@ -158,6 +158,7 @@
         combinationsHistory: [],
         showConfirm: false,
         temporarySelection: null,
+        isFormUpdated: false,
       };
     },
     props: {
@@ -207,6 +208,16 @@
         this.loadingCombinationForm = false;
         this.submittingCombinationForm = false;
         this.applyIframeStyling();
+
+        const iframeInputs = this.$refs.iframe.contentDocument.body.querySelectorAll(
+          ProductMap.combinations.editionFormInputs,
+        );
+
+        iframeInputs.forEach((input) => {
+          input.addEventListener('keyup', () => {
+            this.isFormUpdated = true;
+          });
+        });
       },
       applyIframeStyling() {
         this.$refs.iframe.contentDocument.body.style.overflowX = 'hidden';
@@ -227,17 +238,31 @@
       },
       showPrevious() {
         if (this.previousCombinationId !== null) {
-          this.selectedCombinationId = this.previousCombinationId;
+          if (this.isFormUpdated) {
+            this.temporarySelection = this.previousCombinationId;
+            this.showConfirmModal();
+          } else {
+            this.selectedCombinationId = this.previousCombinationId;
+          }
         }
       },
       showNext() {
         if (this.nextCombinationId !== null) {
-          this.selectedCombinationId = this.nextCombinationId;
+          if (this.isFormUpdated) {
+            this.temporarySelection = this.nextCombinationId;
+            this.showConfirmModal();
+          } else {
+            this.selectedCombinationId = this.nextCombinationId;
+          }
         }
       },
       selectCombination(combination) {
-        this.temporarySelection = combination.id;
-        this.showConfirmModal();
+        if (this.isFormUpdated) {
+          this.temporarySelection = combination.id;
+          this.showConfirmModal();
+        } else {
+          this.selectedCombinationId = combination.id;
+        }
       },
       confirmSelection() {
         this.selectedCombinationId = this.temporarySelection;
@@ -263,10 +288,14 @@
           || !this.combinationsHistory.length
         ) {
           // eslint-disable-next-line
-          this.combinationsHistory = this.combinationsHistory.filter((combination) => combination.id !== selectedCombination.id);
+        this.combinationsHistory = this.combinationsHistory.filter(
+            (combination) => combination.id !== selectedCombination.id,
+          );
 
           this.combinationsHistory.unshift(selectedCombination);
         }
+
+        this.isFormUpdated = false;
       },
       showConfirmModal() {
         this.showConfirm = true;
@@ -281,6 +310,8 @@
     },
     watch: {
       selectedCombinationId(combinationId) {
+        this.isFormUpdated = false;
+
         if (combinationId === null) {
           this.previousCombinationId = null;
           this.nextCombinationId = null;
