@@ -1,6 +1,6 @@
 require('module-alias/register');
 
-const { expect } = require('chai');
+const {expect} = require('chai');
 
 // Import utils
 const helper = require('@utils/helpers');
@@ -15,11 +15,11 @@ const psEmailSubscriptionPage = require('@pages/BO/modules/psEmailSubscription')
 // FO pages
 const foHomePage = require('@pages/FO/home');
 const foLoginPage = require('@pages/FO/login');
-const foMyAccountPage = require('@pages/FO/myAccount')
-const foAccountIdentityPage = require('@pages/FO/myAccount/identity')
+const foMyAccountPage = require('@pages/FO/myAccount');
+const foAccountIdentityPage = require('@pages/FO/myAccount/identity');
 
 // Import datas
-const { DefaultCustomer } = require('@data/demo/customer');
+const {DefaultCustomer} = require('@data/demo/customer');
 
 
 // Import test context
@@ -28,6 +28,8 @@ const testContext = require('@utils/testContext');
 // context
 const baseContext = 'functional_FO_newsletter_subscribeNewsletter';
 
+let browserContext;
+let page;
 const moduleName = 'Newsletter subscription';
 
 
@@ -41,36 +43,36 @@ Try to subscribe again with the same email
 Go to back to BO and delete subsbcription
  */
 describe('FO Subscribe to Newsletter', async () => {
-    // before and after functions
-    before(async function () {
-        browserContext = await helper.createBrowserContext(this.browser);
-        page = await helper.newTab(browserContext);
+  // before and after functions
+  before(async function () {
+    browserContext = await helper.createBrowserContext(this.browser);
+    page = await helper.newTab(browserContext);
+  });
+
+  after(async () => {
+    await helper.closeBrowserContext(browserContext);
+  });
+
+  describe('Go to FO and try to subscribe with already used email', async () => {
+    it('should open the shop page', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'openFoShop', baseContext);
+
+      await foHomePage.goTo(page, global.FO.URL);
+      const result = await foHomePage.isHomePage(page);
+      await expect(result).to.be.true;
     });
 
-    after(async () => {
-        await helper.closeBrowserContext(browserContext);
+    it('should subscribe to newsletter with already used email', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'subscribeWithAlreadyUsedEmail', baseContext);
+
+      const newsletterSubscribeAlertMessage = await foHomePage.subscribeToNewsletter(page, DefaultCustomer.email);
+      await expect(newsletterSubscribeAlertMessage).to.contains(foHomePage.alreadyUsedEmailMessage);
     });
-
-    describe('Go to FO and try to subscribe with already used email', async () => {
-      it('should open the shop page', async function () {
-        await testContext.addContextItem(this, 'testIdentifier', 'openFoShop', baseContext);
-
-        await foHomePage.goTo(page, global.FO.URL);
-        const result = await foHomePage.isHomePage(page);
-        await expect(result).to.be.true;
-      });
-
-      it('should subscribe to newsletter with already used email', async function () {
-        await testContext.addContextItem(this, 'testIdentifier', 'subscribeWithAlreadyUsedEmail', baseContext);
-
-        const newsletterSubscribeAlertMessage = await foHomePage.subscribeToNewsletter(page, DefaultCustomer.email);
-        await expect(newsletterSubscribeAlertMessage).to.contains(foHomePage.alreadyUsedEmailMessage);
-      });
-    });
+  });
 
   describe('Go to FO customer account to unsubscribe newsletter', async () => {
     it('should go to login page', async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'goToLoginFoPage', baseContext);
+      await testContext.addContextItem(this, 'testIdentifier', 'goToFOLoginPage', baseContext);
 
       await foHomePage.goToLoginPage(page);
 
@@ -99,7 +101,7 @@ describe('FO Subscribe to Newsletter', async () => {
       await testContext.addContextItem(this, 'testIdentifier', 'unsubscribeFromNewsLetter', baseContext);
 
       const unsubscribeAlertText = await foAccountIdentityPage.unsubscribeNewsletter(page, DefaultCustomer.password);
-      await expect(unsubscribeAlertText).to.contains(foAccountIdentityPage.successfulUpdateMessage)
+      await expect(unsubscribeAlertText).to.contains(foAccountIdentityPage.successfulUpdateMessage);
     });
   });
 
@@ -109,7 +111,7 @@ describe('FO Subscribe to Newsletter', async () => {
     });
 
     it('should go to module manager page', async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'goToModuleManagerPageToCheckIfUnsubscribed', baseContext);
+      await testContext.addContextItem(this, 'testIdentifier', 'goToModuleManagerPage', baseContext);
 
       await dashboardPage.goToSubMenu(
         page,
@@ -124,7 +126,7 @@ describe('FO Subscribe to Newsletter', async () => {
     });
 
     it('should go to newsletter subscription module configuration page', async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'goToNewsletterSubscriptionModuleConfigurationPageToCheckIfUnsubscribed', baseContext);
+      await testContext.addContextItem(this, 'testIdentifier', 'goToNewsletterModuleConfigPage', baseContext);
 
       await moduleManagerPage.goToConfigurationPage(page, moduleName);
 
@@ -146,7 +148,7 @@ describe('FO Subscribe to Newsletter', async () => {
 
   describe('Go to FO to subscribe to the newsletter', async () => {
     it('should open the shop page', async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'goToShopFOToSubscribeToNewsletter', baseContext);
+      await testContext.addContextItem(this, 'testIdentifier', 'goToFOToSubscribeToNewsletter', baseContext);
 
       await foHomePage.goTo(page, global.FO.URL);
       const result = await foHomePage.isHomePage(page);
@@ -157,7 +159,8 @@ describe('FO Subscribe to Newsletter', async () => {
       await testContext.addContextItem(this, 'testIdentifier', 'subscribeToNewsletter', baseContext);
 
       const newsletterSubscribeAlertMessage = await foHomePage.subscribeToNewsletter(page, DefaultCustomer.email);
-      await expect(newsletterSubscribeAlertMessage).to.contains(foHomePage.successSubscriptionMessage);});
+      await expect(newsletterSubscribeAlertMessage).to.contains(foHomePage.successSubscriptionMessage);
+    });
   });
 
   describe('Go to BO to check if correctly subscribed', async () => {
@@ -166,7 +169,7 @@ describe('FO Subscribe to Newsletter', async () => {
     });
 
     it('should go to module manager page', async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'goToModuleManagerPageToCheckIfSubscribed', baseContext);
+      await testContext.addContextItem(this, 'testIdentifier', 'goToBOToCheckIfSubscribed', baseContext);
 
       await dashboardPage.goToSubMenu(
         page,
@@ -181,7 +184,7 @@ describe('FO Subscribe to Newsletter', async () => {
     });
 
     it('should go to newsletter subscription module configuration page', async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'goToNewsletterSubscriptionModuleConfigurationPageToCheckIfSubscribed', baseContext);
+      await testContext.addContextItem(this, 'testIdentifier', 'goBackToNewsletterModuleConfig', baseContext);
 
       await moduleManagerPage.goToConfigurationPage(page, moduleName);
 
@@ -193,7 +196,7 @@ describe('FO Subscribe to Newsletter', async () => {
       await testContext.addContextItem(this, 'testIdentifier', 'checkIfSubscriptionIsInTable', baseContext);
 
       const subscribedUserList = await psEmailSubscriptionPage.getListOfNewsletterRegistrationEmails(page);
-      await expect(subscribedUserList).to.contains(DefaultCustomer.email)
+      await expect(subscribedUserList).to.contains(DefaultCustomer.email);
     });
 
     it('should logout from BO', async function () {

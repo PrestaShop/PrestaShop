@@ -23,7 +23,7 @@ module.exports = class BOBasePage extends CommonPage {
 
     // left navbar
     // Dashboard
-    this.dashboardLink = '#tab-AdminDashboard'
+    this.dashboardLink = '#tab-AdminDashboard';
 
     // SELL
     // Orders
