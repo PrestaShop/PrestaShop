@@ -59,9 +59,10 @@ class AccountIdentity extends FOBasePage {
   }
 
   /**
-   * Unsubscribe from the newletter from customer edit information page
-   * @param page
-   * @param password
+   * Unsubscribe from the newsletter from customer edit information page
+   * @param {object} page
+   * @param {string} password
+   *
    * @returns {Promise<string|TextContent|*>}
    */
   async unsubscribeNewsletter(page, password) {

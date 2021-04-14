@@ -59,7 +59,7 @@ class Home extends FOBasePage {
     this.cartModalproductTaxInclBlock = `${this.cartContentBlock} .product-total .value`;
     this.cartModalCheckoutLink = `${this.blockCartModalDiv} div.cart-content-btn a`;
 
-    //Newsletter subscription messages
+    // Newsletter subscription messages
     this.successSubscriptionMessage = 'You have successfully subscribed to this newsletter.';
     this.alreadyUsedEmailMessage = 'This email address is already registered.';
   }
@@ -331,15 +331,16 @@ class Home extends FOBasePage {
 
   /**
    * subscribe to the newsletter from FO homepage
-   * @param page
-   * @param email
+   * @param {object} page
+   * @param {string} email
+   *
    * @returns {Promise<string|TextContent|*>}
    */
-  async subscribeToNewsletter(page, email){
+  async subscribeToNewsletter(page, email) {
     await this.setValue(page, this.newsletterFormField, email);
     await this.waitForSelectorAndClick(page, this.newsletterSubmitButton);
 
-    return this.getTextContent(page, this.newsletterAlertMessage);
+    return this.getTextContent(page, this.subscriptionAlertMessage);
   }
 }
 
