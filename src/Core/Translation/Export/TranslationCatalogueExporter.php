@@ -36,6 +36,7 @@ use PrestaShop\PrestaShop\Core\Translation\Storage\Provider\Definition\ProviderD
 use PrestaShop\PrestaShop\Core\Translation\Storage\Provider\Definition\ProviderDefinitionInterface;
 use PrestaShop\TranslationToolsBundle\Translation\Dumper\XliffFileDumper;
 use PrestaShopBundle\Utils\ZipManager;
+use Symfony\Component\Filesystem\Exception\IOException;
 use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\Finder\Finder;
 use Symfony\Component\Translation\MessageCatalogue;
@@ -91,13 +92,14 @@ class TranslationCatalogueExporter
      *
      * @throws TranslationFilesNotFoundException
      * @throws UnexpectedTranslationTypeException
+     * @throws IOException
      */
     public function export(array $selections, string $locale): string
     {
         $this->validateParameters($selections);
 
-        if (!file_exists($this->exportDir)) {
-            mkdir($this->exportDir);
+        if (!$this->filesystem->exists($this->exportDir)) {
+            $this->filesystem->mkdir($this->exportDir);
         }
 
         $zipFilenameParts = [

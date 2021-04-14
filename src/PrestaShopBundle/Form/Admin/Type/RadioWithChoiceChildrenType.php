@@ -37,7 +37,7 @@ class RadioWithChoiceChildrenType extends AbstractType
     /**
      * {@inheritdoc}
      */
-    public function buildForm(FormBuilderInterface $builder, array $options)
+    public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         $builder->add($options['radio_name'], RadioType::class, [
             'required' => false,
@@ -47,16 +47,10 @@ class RadioWithChoiceChildrenType extends AbstractType
         if (isset($options['child_choice'])) {
             $childChoice = $options['child_choice'];
             $builder->add($childChoice['name'], ChoiceType::class, [
-                'label' => $childChoice['label'],
+                'label' => false,
                 'choices' => $childChoice['choices'],
                 'expanded' => $childChoice['multiple'], //same value as multiple. We can only have Select or Checkboxes
                 'multiple' => $childChoice['multiple'],
-                'choice_attr' => [
-                    'material_design' => true,
-                ],
-                'attr' => [
-                    'material_design' => true,
-                ],
             ]);
         }
     }
@@ -64,7 +58,7 @@ class RadioWithChoiceChildrenType extends AbstractType
     /**
      * {@inheritdoc}
      */
-    public function configureOptions(OptionsResolver $resolver)
+    public function configureOptions(OptionsResolver $resolver): void
     {
         $resolver
             ->setRequired([
