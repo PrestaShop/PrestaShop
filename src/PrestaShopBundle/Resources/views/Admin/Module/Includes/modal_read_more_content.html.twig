@@ -122,7 +122,7 @@
               <div class="module-readmore-multistore-content">
                 <h3>{{ 'Multistore compatibility:'|trans({}, 'Admin.Modules.Feature') }}</h3>
                 {% if module.attributes.multistoreCompatibility is same as(constant('\\Module::MULTISTORE_COMPATIBILITY_YES')) %}
-                  {{ 'Yes: this module is compatible with the multistore feature. It can be either:'|trans({}, 'Admin.Modules.Feature') }}
+                  {{ 'This module is compatible with the multistore feature. It can be either:'|trans({}, 'Admin.Modules.Feature') }}
                   <ul>
                     <li>{{ 'configured differently from one store to another;'|trans({}, 'Admin.Modules.Feature') }}</li>
                     <li>{{ 'configured quickly in the same way on all stores thanks to the all shops context or to the group of shops;'|trans({}, 'Admin.Modules.Feature') }}</li>
