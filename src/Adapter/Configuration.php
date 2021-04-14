@@ -420,7 +420,7 @@ class Configuration extends ParameterBag implements ShopConfigurationInterface
             return true;
         }
 
-        // check if given configuration is overriden for the shop
+        // check if given configuration is overridden for the shop
         $shopConstraint = new ShopConstraint(
             $shop->getId(),
             $shop->getShopGroup()->getId(),
