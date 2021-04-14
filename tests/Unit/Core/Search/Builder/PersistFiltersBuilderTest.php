@@ -28,7 +28,6 @@ declare(strict_types=1);
 
 namespace Tests\Unit\Core\Search\Builder;
 
-use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 use PrestaShop\PrestaShop\Core\Employee\ContextEmployeeProviderInterface;
 use PrestaShop\PrestaShop\Core\Search\Builder\PersistFiltersBuilder;
@@ -41,7 +40,7 @@ class PersistFiltersBuilderTest extends TestCase
     private const EMPLOYEE_ID = 42;
     private const SHOP_ID = 51;
 
-    public function testBuildWithoutParameters()
+    public function testBuildWithoutParameters(): void
     {
         $builder = new PersistFiltersBuilder(
             $this->buildUnusedRepository(),
@@ -126,9 +125,9 @@ class PersistFiltersBuilderTest extends TestCase
      * @param array $filters
      * @param string $filterId
      *
-     * @return MockObject|AdminFilterRepository
+     * @return AdminFilterRepository
      */
-    private function buildRepositoryByFilterIdMock(array $filters, $filterId)
+    private function buildRepositoryByFilterIdMock(array $filters, string $filterId): AdminFilterRepository
     {
         $repositoryMock = $this->getMockBuilder(AdminFilterRepository::class)
             ->disableOriginalConstructor()
@@ -159,9 +158,9 @@ class PersistFiltersBuilderTest extends TestCase
      * @param string $controller
      * @param string $action
      *
-     * @return MockObject|AdminFilterRepository
+     * @return AdminFilterRepository
      */
-    private function buildRepositoryByRouteMock(array $filters, $controller, $action)
+    private function buildRepositoryByRouteMock(array $filters, string $controller, string $action): AdminFilterRepository
     {
         $repositoryMock = $this->getMockBuilder(AdminFilterRepository::class)
             ->disableOriginalConstructor()
@@ -189,9 +188,9 @@ class PersistFiltersBuilderTest extends TestCase
     }
 
     /**
-     * @return MockObject|AdminFilterRepository
+     * @return AdminFilterRepository
      */
-    private function buildUnusedRepository()
+    private function buildUnusedRepository(): AdminFilterRepository
     {
         $repositoryMock = $this->getMockBuilder(AdminFilterRepository::class)
             ->disableOriginalConstructor()
@@ -212,9 +211,9 @@ class PersistFiltersBuilderTest extends TestCase
     }
 
     /**
-     * @return MockObject|ContextEmployeeProviderInterface
+     * @return ContextEmployeeProviderInterface
      */
-    private function buildEmployeeProviderMock(?int $calledTimes = null)
+    private function buildEmployeeProviderMock(?int $calledTimes = null): ContextEmployeeProviderInterface
     {
         $employeeProviderMock = $this->getMockBuilder(ContextEmployeeProviderInterface::class)
             ->disableOriginalConstructor()
@@ -231,9 +230,9 @@ class PersistFiltersBuilderTest extends TestCase
     }
 
     /**
-     * @return MockObject|ContextEmployeeProviderInterface
+     * @return ContextEmployeeProviderInterface
      */
-    private function buildUnusedEmployeeProviderMock()
+    private function buildUnusedEmployeeProviderMock(): ContextEmployeeProviderInterface
     {
         $employeeProviderMock = $this->getMockBuilder(ContextEmployeeProviderInterface::class)
             ->disableOriginalConstructor()
@@ -253,7 +252,7 @@ class PersistFiltersBuilderTest extends TestCase
      *
      * @return Request
      */
-    private function buildRequestMock($controller)
+    private function buildRequestMock(string $controller): Request
     {
         /** @var Request $requestMock */
         $requestMock = $this->getMockBuilder(Request::class)
