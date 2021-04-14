@@ -251,7 +251,7 @@ class TranslationsController extends FrameworkBundleAdminController
             if (empty($selections)) {
                 $this->addFlash(
                     'error',
-                    $this->trans('You must select at least one translation type to export catalogue.', 'Admin.International.Notification')
+                    $this->trans('You must select at least one translation type to export translations.', 'Admin.International.Notification')
                 );
 
                 return $this->redirectToRoute('admin_international_translations_show_settings');

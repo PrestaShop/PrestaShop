@@ -57,6 +57,25 @@ class MessageTest extends TestCase
         $this->assertTrue($messageTranslation->isTranslated());
     }
 
+    public function testGetTranslation()
+    {
+        $messageTranslation = new Message('theKey');
+        $this->assertSame('theKey', $messageTranslation->getTranslation());
+
+        $messageTranslation = new Message('theKey');
+        $messageTranslation->setFileTranslation('fileTranslation');
+        $this->assertSame('fileTranslation', $messageTranslation->getTranslation());
+
+        $messageTranslation = new Message('theKey');
+        $messageTranslation->setUserTranslation('userTranslation');
+        $this->assertSame('userTranslation', $messageTranslation->getTranslation());
+
+        $messageTranslation = new Message('theKey');
+        $messageTranslation->setFileTranslation('fileTranslation');
+        $messageTranslation->setUserTranslation('userTranslation');
+        $this->assertSame('userTranslation', $messageTranslation->getTranslation());
+    }
+
     public function testMessageContainsTerms()
     {
         $messageTranslation = new Message('theKey');
