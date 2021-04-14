@@ -23,6 +23,9 @@
  * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
+
+declare(strict_types=1);
+
 use PrestaShop\PrestaShop\Adapter\OnsaleProducts\OnsaleProductsProductSearchProvider;
 use PrestaShop\PrestaShop\Core\Product\Search\ProductSearchQuery;
 use PrestaShop\PrestaShop\Core\Product\Search\SortOrder;
@@ -41,7 +44,7 @@ class OnsaleProductsControllerCore extends ProductListingFrontController
         $this->doProductSearch('catalog/listing/onsale-products', ['entity' => 'onsale-products']);
     }
 
-    protected function getProductSearchQuery()
+    protected function getProductSearchQuery(): ProductSearchQuery
     {
         $query = new ProductSearchQuery();
         $query
@@ -51,14 +54,14 @@ class OnsaleProductsControllerCore extends ProductListingFrontController
         return $query;
     }
 
-    protected function getDefaultProductSearchProvider()
+    protected function getDefaultProductSearchProvider(): OnsaleProductsProductSearchProvider
     {
         return new OnsaleProductsProductSearchProvider(
             $this->getTranslator()
         );
     }
 
-    public function getListingLabel()
+    public function getListingLabel(): string
     {
         return $this->trans(
             'Products on sale',
@@ -67,7 +70,7 @@ class OnsaleProductsControllerCore extends ProductListingFrontController
         );
     }
 
-    public function getBreadcrumbLinks()
+    public function getBreadcrumbLinks(): array
     {
         $breadcrumb = parent::getBreadcrumbLinks();
 

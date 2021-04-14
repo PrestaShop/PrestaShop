@@ -3085,17 +3085,14 @@ class ProductCore extends ObjectModel
      *
      * @return array|int|false Products on sale, total of product if $count is true, false if it fail
      */
-    public static function getOnsaleProducts($id_lang, $page_number = 0, $nb_products = 10, $count = false, $order_by = null, $order_way = null, Context $context = null)
+    public static function getOnsaleProducts(int $id_lang, int $page_number = 0, int $nb_products = 10, bool $count = false, string $order_by = null, string $order_way = null, Context $context = null)
     {
         $now = date('Y-m-d') . ' 00:00:00';
         if (!$context) {
             $context = Context::getContext();
         }
 
-        $front = true;
-        if (!in_array($context->controller->controller_type, ['front', 'modulefront'])) {
-            $front = false;
-        }
+        $front = in_array($context->controller->controller_type, ['front', 'modulefront']);
 
         if ($page_number < 1) {
             $page_number = 1;
@@ -3143,7 +3140,7 @@ class ProductCore extends ObjectModel
                     ' . ($front ? ' AND product_shop.`visibility` IN ("both", "catalog")' : '') . '
                     ' . $sql_groups;
 
-            return (int) Db::getInstance(_PS_USE_SQL_SLAVE_)->getValue($sql);
+            return (int) Db::getInstance((bool) _PS_USE_SQL_SLAVE_)->getValue($sql);
         }
         $sql = new DbQuery();
         $sql->select(
@@ -3191,7 +3188,7 @@ class ProductCore extends ObjectModel
         }
         $sql->join(Product::sqlStock('p', 0));
 
-        $result = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS($sql);
+        $result = Db::getInstance((bool) _PS_USE_SQL_SLAVE_)->executeS($sql);
 
         if (!$result) {
             return false;

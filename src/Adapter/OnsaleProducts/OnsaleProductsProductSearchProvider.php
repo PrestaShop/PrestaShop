@@ -24,6 +24,8 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
 
+declare(strict_types=1);
+
 namespace PrestaShop\PrestaShop\Adapter\OnsaleProducts;
 
 use PrestaShop\PrestaShop\Core\Product\Search\ProductSearchContext;
@@ -68,7 +70,7 @@ class OnsaleProductsProductSearchProvider implements ProductSearchProviderInterf
         ProductSearchContext $context,
         ProductSearchQuery $query,
         $type = 'products'
-    ) {
+    ): array {
         return Product::getOnsaleProducts(
             $context->getIdLang(),
             $query->getPage(),

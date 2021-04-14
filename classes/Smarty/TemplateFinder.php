@@ -35,6 +35,9 @@ class TemplateFinderCore
     private $directories;
     private $extension;
     private $productListEntities = ['category', 'manufacturer', 'supplier'];
+    /**
+     * @var array<int, string>
+     */
     private $productListSearchEntities = ['search', 'price-drop', 'best-sale', 'prices-drop', 'best-sales', 'new-products', 'onsale-products'];
     private $productEntities = ['product'];
     private $brandListEntities = ['manufacturers', 'suppliers'];
