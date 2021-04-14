@@ -52,11 +52,11 @@
         <button
           type="button"
           class="btn btn-secondary btn-close"
-          @click.prevent.stop="closeModal"
+          @click.prevent.stop="tryClose"
           :aria-label="$t('modal.close')"
           :disabled="submittingCombinationForm"
         >
-          {{ $t('modal.close') }}
+          {{ $t('modal.cancel') }}
         </button>
 
         <button
@@ -115,14 +115,24 @@
     >
       <modal
         :modal-title="$t('modal.history.confirmTitle')"
-        :cancel-label="$t('modal.cancel')"
+        :cancel-label="$t('modal.keepEditing')"
         :confirm-label="$t('modal.confirm')"
         :close-label="$t('modal.close')"
         :confirmation="true"
         v-if="showConfirm"
         @close="hideConfirmModal"
         @confirm="confirmSelection"
-      />
+      >
+        <template #body>
+          <p>
+            {{
+              $t('modal.history.confirmBody', {
+                '%combinationName%': selectedCombinationName,
+              })
+            }}
+          </p>
+        </template>
+      </modal>
     </div>
   </div>
 </template>
@@ -148,6 +158,7 @@
         combinationsService: null,
         combinationIds: [],
         selectedCombinationId: null,
+        selectedCombinationName: null,
         previousCombinationId: null,
         nextCombinationId: null,
         editCombinationUrl: '',
@@ -159,6 +170,7 @@
         showConfirm: false,
         temporarySelection: null,
         isFormUpdated: false,
+        isClosing: false,
       };
     },
     props: {
@@ -207,9 +219,13 @@
       onFrameLoaded() {
         this.loadingCombinationForm = false;
         this.submittingCombinationForm = false;
+        const iframeBody = this.$refs.iframe.contentDocument.body;
         this.applyIframeStyling();
+        this.selectedCombinationName = iframeBody.querySelector(
+          ProductMap.combinations.combinationName,
+        ).innerHTML;
 
-        const iframeInputs = this.$refs.iframe.contentDocument.body.querySelectorAll(
+        const iframeInputs = iframeBody.querySelectorAll(
           ProductMap.combinations.editionFormInputs,
         );
 
@@ -221,6 +237,15 @@
       },
       applyIframeStyling() {
         this.$refs.iframe.contentDocument.body.style.overflowX = 'hidden';
+      },
+      tryClose() {
+        if (this.isFormUpdated || this.combinationsHistory.length > 0) {
+          this.isClosing = true;
+
+          this.showConfirmModal();
+        } else {
+          this.closeModal();
+        }
       },
       closeModal() {
         if (this.submittingCombinationForm) {
@@ -265,8 +290,14 @@
         }
       },
       confirmSelection() {
-        this.selectedCombinationId = this.temporarySelection;
-        this.hideConfirmModal();
+        if (this.isClosing) {
+          this.closeModal();
+          this.isClosing = false;
+          this.hideConfirmModal();
+        } else {
+          this.selectedCombinationId = this.temporarySelection;
+          this.hideConfirmModal();
+        }
       },
       submitForm() {
         this.submittingCombinationForm = true;
@@ -301,6 +332,7 @@
         this.showConfirm = true;
       },
       hideConfirmModal() {
+        this.isClosing = false;
         this.showConfirm = false;
       },
       preventClose(event) {
