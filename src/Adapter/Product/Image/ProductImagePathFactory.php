@@ -87,7 +87,7 @@ class ProductImagePathFactory
      *
      * @return string
      */
-    public function getBaseImagePath(Image $image): string
+    public function getPath(Image $image): string
     {
         $path = $this->getBaseImagePathWithoutExtension($image);
 
