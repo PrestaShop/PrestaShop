@@ -86,13 +86,23 @@ class ProductImagePathFactory
     }
 
     /**
+     * @param string $relativePath
+     *
+     * @return string
+     */
+    public function buildFullPath(string $relativePath): string
+    {
+        return $this->basePath . ltrim($relativePath, '/');
+    }
+
+    /**
      * @param Image $image
      *
      * @return string
      */
-    public function getBasePath(Image $image): string
+    public function getBaseImagePath(Image $image): string
     {
-        $path = $this->getBaseImagePath($image);
+        $path = $this->getBaseImagePathWithoutExtension($image);
 
         return sprintf('%s.%s', $path, $image->image_format);
     }
@@ -105,7 +115,7 @@ class ProductImagePathFactory
      */
     public function getPathByType(Image $image, string $type): string
     {
-        $path = $this->getBaseImagePath($image);
+        $path = $this->getBaseImagePathWithoutExtension($image);
 
         return sprintf('%s-%s.%s', $path, $type, $image->image_format);
     }
@@ -151,7 +161,7 @@ class ProductImagePathFactory
      *
      * @return string
      */
-    private function getBaseImagePath(Image $image): string
+    private function getBaseImagePathWithoutExtension(Image $image): string
     {
         if ($this->isLegacyImageMode) {
             $path = $image->id_product . '-' . $image->id;

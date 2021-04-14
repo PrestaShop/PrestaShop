@@ -253,7 +253,7 @@ class CombinationController extends FrameworkBundleAdminController
                 'impactOnPrice' => (string) $combination->getImpactOnPrice(),
                 'quantity' => $combination->getQuantity(),
                 'isDefault' => $combination->isDefault(),
-                'imageUrl' => $this->formatImageUrl($combination->getImagePath()),
+                'imageUrl' => $this->formatImageUrl($combination->getRelativeImagePath()),
             ];
         }
 
@@ -261,19 +261,19 @@ class CombinationController extends FrameworkBundleAdminController
     }
 
     /**
-     * @param string|null $imgPath
+     * @param string|null $relativeImgPath
      *
      * @return string
      */
-    private function formatImageUrl(?string $imgPath): string
+    private function formatImageUrl(?string $relativeImgPath): string
     {
-        if (!$imgPath) {
-            $imagePathFactory = $this->get('prestashop.adapter.product.image.product_image_url_factory');
+        $imageUrlFactory = $this->get('prestashop.adapter.product.image.product_image_url_factory');
 
-            return $imagePathFactory->getNoImagePath(ProductImagePathFactory::IMAGE_TYPE_SMALL_DEFAULT);
+        if (!$relativeImgPath) {
+            return $imageUrlFactory->getNoImagePath(ProductImagePathFactory::IMAGE_TYPE_SMALL_DEFAULT);
         }
 
-        return $this->getContext()->link->getAdminBaseLink() . ltrim($imgPath, '/');
+        return $imageUrlFactory->buildFullPath($relativeImgPath);
     }
 
     /**
