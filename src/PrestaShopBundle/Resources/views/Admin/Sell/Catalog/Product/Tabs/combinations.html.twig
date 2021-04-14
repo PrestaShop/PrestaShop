@@ -24,8 +24,13 @@
  *#}
 
 <div role="tabpanel" class="form-contenttab tab-pane container-fluid" id="combinations-tab">
-  {{ render(controller('PrestaShopBundle:Admin\\Sell\\Catalog\\Product\\Combination:listForm')) }}
+  <div id="combinations_filters" data-product-id="{{ productId }}"></div>
+
+  {{ render(controller('PrestaShopBundle:Admin\\Sell\\Catalog\\Product\\Combination:paginatedList', {
+    'productId': productId,
+  })) }}
+
   <div id="combinations-stock-availability">
-{#    @todo: render stock availability preferences here when extracted to a reusable component. check StockType.php#}
+    {#    @todo: render stock availability preferences here when extracted to a reusable component. check StockType.php#}
   </div>
 </div>

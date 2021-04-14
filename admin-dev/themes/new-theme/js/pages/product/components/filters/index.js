@@ -23,27 +23,20 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
 
-export default {
-  productModelUpdated: 'productModelUpdated',
-  updatedProductModel: 'updatedProductModel',
-  updatedProductField: 'updatedProductField',
-  updateSubmitButtonState: 'updateSubmitButtonState',
-  customizations: {
-    rowRemoved: 'customizationRowRemoved',
-    rowAdded: 'customizationRowAdded',
-  },
-  dropzone: {
-    addedFile: 'addedfile',
-    error: 'error',
-    success: 'success',
-    languageSelected: 'languageSelected',
-    photoswipe: {
-      destroy: 'destroy',
-      closeGallery: 'closeGallery',
+import Vue from 'vue';
+import Filters from '@pages/product/components/filters/Filters';
+
+export default function initCombinationsFilters(combinationsFiltersSelector, eventEmitter) {
+  const container = document.querySelector(combinationsFiltersSelector);
+  const productId = Number(container.dataset.productId);
+
+  return new Vue({
+    el: combinationsFiltersSelector,
+    template: '<filters :productId=productId :eventEmitter=eventEmitter />',
+    components: {Filters},
+    data: {
+      productId,
+      eventEmitter,
     },
-  },
-  combinations: {
-    refreshList: 'refreshCombinationList',
-    updateAttributeGroups: 'updateAttributeGroups',
-  },
-};
+  });
+}

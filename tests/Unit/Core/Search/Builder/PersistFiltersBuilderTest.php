@@ -24,24 +24,28 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
 
+declare(strict_types=1);
+
 namespace Tests\Unit\Core\Search\Builder;
 
 use PHPUnit\Framework\TestCase;
 use PrestaShop\PrestaShop\Core\Employee\ContextEmployeeProviderInterface;
-use PrestaShop\PrestaShop\Core\Search\Builder\RepositoryFiltersBuilder;
+use PrestaShop\PrestaShop\Core\Search\Builder\PersistFiltersBuilder;
 use PrestaShop\PrestaShop\Core\Search\Filters;
-use PrestaShopBundle\Entity\AdminFilter;
 use PrestaShopBundle\Entity\Repository\AdminFilterRepository;
 use Symfony\Component\HttpFoundation\Request;
 
-class RepositoryFiltersBuilderTest extends TestCase
+class PersistFiltersBuilderTest extends TestCase
 {
+    private const EMPLOYEE_ID = 42;
+    private const SHOP_ID = 51;
+
     public function testBuildWithoutParameters(): void
     {
-        $builder = new RepositoryFiltersBuilder(
+        $builder = new PersistFiltersBuilder(
             $this->buildUnusedRepository(),
-            $this->buildEmployeeProviderMock(),
-            0
+            $this->buildUnusedEmployeeProviderMock(),
+            self::SHOP_ID
         );
         $filters = $builder->buildFilters();
         $this->assertNull($filters);
@@ -53,92 +57,21 @@ class RepositoryFiltersBuilderTest extends TestCase
             'limit' => 10,
             'offset' => 10,
         ];
-        $builder = new RepositoryFiltersBuilder(
-            $this->buildRepositoryByFilterIdMock($expectedFilters, 'language'),
+        $inputFilters = new Filters($expectedFilters, 'language');
+        $savedFilters = [
+            'limit' => 10,
+        ];
+
+        $builder = new PersistFiltersBuilder(
+            $this->buildRepositoryByFilterIdMock($savedFilters, 'language'),
             $this->buildEmployeeProviderMock(),
-            1
+            self::SHOP_ID
         );
-        $builder->setConfig([
-            'filter_id' => 'language',
-        ]);
-        $filters = $builder->buildFilters();
+
+        $filters = $builder->buildFilters($inputFilters);
         $this->assertNotNull($filters);
         $this->assertEquals($expectedFilters, $filters->all());
         $this->assertEquals('language', $filters->getFilterId());
-    }
-
-    public function testOverrideWithFilterId(): void
-    {
-        $repositoryFilters = [
-            'limit' => 10,
-            'offset' => 10,
-        ];
-        $builder = new RepositoryFiltersBuilder(
-            $this->buildRepositoryByFilterIdMock($repositoryFilters, 'alternate_language'),
-            $this->buildEmployeeProviderMock(),
-            1
-        );
-        $builder->setConfig([
-            'filter_id' => 'language',
-        ]);
-        $filters = new Filters(['limit' => 20, 'orderBy' => 'language_id'], 'alternate_language');
-        $builtFilters = $builder->buildFilters($filters);
-        $this->assertNotNull($builtFilters);
-        $expectedFilters = [
-            'limit' => 10,
-            'offset' => 10,
-            'orderBy' => 'language_id',
-        ];
-        $this->assertEquals($expectedFilters, $builtFilters->all());
-        $this->assertEquals('alternate_language', $filters->getFilterId());
-    }
-
-    public function testBuildWithController(): void
-    {
-        $expectedFilters = [
-            'limit' => 10,
-            'offset' => 10,
-        ];
-        $builder = new RepositoryFiltersBuilder(
-            $this->buildRepositoryByRouteMock($expectedFilters, 'language', 'index'),
-            $this->buildEmployeeProviderMock(),
-            1
-        );
-        $builder->setConfig([
-            'controller' => 'language',
-            'action' => 'index',
-        ]);
-        $filters = $builder->buildFilters();
-        $this->assertNotNull($filters);
-        $this->assertEquals($expectedFilters, $filters->all());
-        $this->assertEmpty($filters->getFilterId());
-    }
-
-    public function testOverrideWithController(): void
-    {
-        $repositoryFilters = [
-            'limit' => 10,
-            'offset' => 10,
-        ];
-        $builder = new RepositoryFiltersBuilder(
-            $this->buildRepositoryByRouteMock($repositoryFilters, 'language', 'index'),
-            $this->buildEmployeeProviderMock(),
-            1
-        );
-        $builder->setConfig([
-            'controller' => 'language',
-            'action' => 'index',
-        ]);
-        $filters = new Filters(['limit' => 20, 'orderBy' => 'language_id']);
-        $builtFilters = $builder->buildFilters($filters);
-        $this->assertNotNull($builtFilters);
-        $expectedFilters = [
-            'limit' => 10,
-            'offset' => 10,
-            'orderBy' => 'language_id',
-        ];
-        $this->assertEquals($expectedFilters, $builtFilters->all());
-        $this->assertEmpty($builtFilters->getFilterId());
     }
 
     public function testBuildWithRequest(): void
@@ -147,21 +80,27 @@ class RepositoryFiltersBuilderTest extends TestCase
             'limit' => 10,
             'offset' => 10,
         ];
-        $builder = new RepositoryFiltersBuilder(
-            $this->buildRepositoryByRouteMock($expectedFilters, 'language', 'index'),
+        $inputFilters = new Filters($expectedFilters);
+        $savedFilters = [
+            'limit' => 10,
+        ];
+
+        $builder = new PersistFiltersBuilder(
+            $this->buildRepositoryByRouteMock($savedFilters, 'language', 'index'),
             $this->buildEmployeeProviderMock(),
-            1
+            self::SHOP_ID
         );
         $builder->setConfig([
             'request' => $this->buildRequestMock('PrestaShopBundle\Controller\Admin\Improve\International\LanguageController::indexAction'),
         ]);
-        $filters = $builder->buildFilters();
+
+        $filters = $builder->buildFilters($inputFilters);
         $this->assertNotNull($filters);
         $this->assertEquals($expectedFilters, $filters->all());
         $this->assertEmpty($filters->getFilterId());
     }
 
-    public function testNoNeedToPersist(): void
+    public function testNoNeedForPersist(): void
     {
         $expectedFilters = [
             'limit' => 10,
@@ -170,10 +109,10 @@ class RepositoryFiltersBuilderTest extends TestCase
         $inputFilters = new Filters($expectedFilters, 'language');
         $inputFilters->setNeedsToBePersisted(false);
 
-        $builder = new RepositoryFiltersBuilder(
+        $builder = new PersistFiltersBuilder(
             $this->buildUnusedRepository(),
-            $this->buildEmployeeProviderMock(),
-            1
+            $this->buildEmployeeProviderMock(1),
+            self::SHOP_ID
         );
 
         $filters = $builder->buildFilters($inputFilters);
@@ -195,22 +134,20 @@ class RepositoryFiltersBuilderTest extends TestCase
             ->getMock()
         ;
 
-        $adminFilterMock = $this->buildAdminFilterMock($filters);
-
         $repositoryMock
             ->expects($this->once())
-            ->method('findByEmployeeAndFilterId')
+            ->method('createOrUpdateByEmployeeAndFilterId')
             ->with(
-                $this->equalTo(1),
-                $this->equalTo(1),
+                $this->equalTo(self::EMPLOYEE_ID),
+                $this->equalTo(self::SHOP_ID),
+                $this->equalTo($filters),
                 $this->equalTo($filterId)
             )
-            ->willReturn($adminFilterMock)
         ;
 
         $repositoryMock
             ->expects($this->never())
-            ->method('findByEmployeeAndRouteParams')
+            ->method('createOrUpdateByEmployeeAndRouteParams')
         ;
 
         return $repositoryMock;
@@ -230,23 +167,21 @@ class RepositoryFiltersBuilderTest extends TestCase
             ->getMock()
         ;
 
-        $adminFilterMock = $this->buildAdminFilterMock($filters);
-
         $repositoryMock
             ->expects($this->once())
-            ->method('findByEmployeeAndRouteParams')
+            ->method('createOrUpdateByEmployeeAndRouteParams')
             ->with(
-                $this->equalTo(1),
-                $this->equalTo(1),
+                $this->equalTo(self::EMPLOYEE_ID),
+                $this->equalTo(self::SHOP_ID),
+                $this->equalTo($filters),
                 $this->equalTo($controller),
                 $this->equalTo($action)
             )
-            ->willReturn($adminFilterMock)
         ;
 
         $repositoryMock
             ->expects($this->never())
-            ->method('findByEmployeeAndFilterId')
+            ->method('createOrUpdateByEmployeeAndFilterId')
         ;
 
         return $repositoryMock;
@@ -264,42 +199,21 @@ class RepositoryFiltersBuilderTest extends TestCase
 
         $repositoryMock
             ->expects($this->never())
-            ->method('findByEmployeeAndFilterId')
+            ->method('createOrUpdateByEmployeeAndRouteParams')
         ;
 
         $repositoryMock
             ->expects($this->never())
-            ->method('findByEmployeeAndRouteParams')
+            ->method('createOrUpdateByEmployeeAndFilterId')
         ;
 
         return $repositoryMock;
     }
 
     /**
-     * @param array $filters
-     *
-     * @return AdminFilter
-     */
-    private function buildAdminFilterMock(array $filters): AdminFilter
-    {
-        $adminFilterMock = $this->getMockBuilder(AdminFilter::class)
-            ->disableOriginalConstructor()
-            ->getMock()
-        ;
-
-        $adminFilterMock
-            ->expects($this->once())
-            ->method('getFilter')
-            ->willReturn(json_encode($filters))
-        ;
-
-        return $adminFilterMock;
-    }
-
-    /**
      * @return ContextEmployeeProviderInterface
      */
-    private function buildEmployeeProviderMock(): ContextEmployeeProviderInterface
+    private function buildEmployeeProviderMock(?int $calledTimes = null): ContextEmployeeProviderInterface
     {
         $employeeProviderMock = $this->getMockBuilder(ContextEmployeeProviderInterface::class)
             ->disableOriginalConstructor()
@@ -307,9 +221,27 @@ class RepositoryFiltersBuilderTest extends TestCase
         ;
 
         $employeeProviderMock
-            ->expects($this->atLeastOnce())
+            ->expects(null !== $calledTimes ? $this->exactly($calledTimes) : $this->atLeastOnce())
             ->method('getId')
-            ->willReturn(1)
+            ->willReturn(self::EMPLOYEE_ID)
+        ;
+
+        return $employeeProviderMock;
+    }
+
+    /**
+     * @return ContextEmployeeProviderInterface
+     */
+    private function buildUnusedEmployeeProviderMock(): ContextEmployeeProviderInterface
+    {
+        $employeeProviderMock = $this->getMockBuilder(ContextEmployeeProviderInterface::class)
+            ->disableOriginalConstructor()
+            ->getMock()
+        ;
+
+        $employeeProviderMock
+            ->expects($this->never())
+            ->method('getId')
         ;
 
         return $employeeProviderMock;

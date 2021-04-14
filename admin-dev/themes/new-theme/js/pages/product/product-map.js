@@ -85,6 +85,7 @@ export default {
   combinations: {
     navigationTab: '#combinations-tab-nav',
     combinationsContainer: `${combinationListId}`,
+    combinationsFiltersContainer: '#combinations_filters',
     combinationsTable: `${combinationListId} table`,
     combinationsTableBody: `${combinationListId} table tbody`,
     combinationIdInputsSelector: '.combination-id-input',
@@ -94,6 +95,7 @@ export default {
     quantityInputWrapper: '.combination-quantity',
     impactOnPriceInputWrapper: '.combination-impact-on-price',
     referenceInputWrapper: '.combination-reference',
+    sortableColumns: '.ps-sortable-column',
     combinationItemForm: {
       quantityKey: 'combination_item[quantity][value]',
       impactOnPriceKey: 'combination_item[impact_on_price][value]',
@@ -103,6 +105,7 @@ export default {
     editionForm: 'form[name="combination_form"]',
     editCombinationButtons: '.edit-combination-item',
     tableRow: {
+      combinationCheckbox: (rowIndex) => `${combinationListId}_combinations_${rowIndex}_is_selected`,
       combinationIdInput: (rowIndex) => `${combinationListId}_combinations_${rowIndex}_combination_id`,
       combinationNameInput: (rowIndex) => `${combinationListId}_combinations_${rowIndex}_name`,
       referenceInput: (rowIndex) => `${combinationListId}_combinations_${rowIndex}_reference_value`,

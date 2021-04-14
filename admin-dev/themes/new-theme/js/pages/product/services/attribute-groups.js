@@ -23,27 +23,15 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
 
+import Router from '@components/router';
+
+const router = new Router();
+const {$} = window;
+
+export const getProductAttributeGroups = async (productId) => $.get(router.generate('admin_products_attribute_groups', {
+  productId,
+}));
+
 export default {
-  productModelUpdated: 'productModelUpdated',
-  updatedProductModel: 'updatedProductModel',
-  updatedProductField: 'updatedProductField',
-  updateSubmitButtonState: 'updateSubmitButtonState',
-  customizations: {
-    rowRemoved: 'customizationRowRemoved',
-    rowAdded: 'customizationRowAdded',
-  },
-  dropzone: {
-    addedFile: 'addedfile',
-    error: 'error',
-    success: 'success',
-    languageSelected: 'languageSelected',
-    photoswipe: {
-      destroy: 'destroy',
-      closeGallery: 'closeGallery',
-    },
-  },
-  combinations: {
-    refreshList: 'refreshCombinationList',
-    updateAttributeGroups: 'updateAttributeGroups',
-  },
+  getProductAttributeGroups,
 };
