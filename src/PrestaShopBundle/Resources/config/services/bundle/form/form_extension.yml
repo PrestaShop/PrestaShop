@@ -51,3 +51,8 @@ services:
             - '@prestashop.adapter.legacy.configuration'
             - '@prestashop.adapter.shop.context'
             - '@prestashop.core.admin.multistore'
+
+    form.extension.downloadable_file:
+        class: 'PrestaShopBundle\Form\Admin\Extension\DownloadFileExtension'
+        tags:
+            - { name: form.type_extension, extended_type: Symfony\Component\Form\Extension\Core\Type\FileType }
