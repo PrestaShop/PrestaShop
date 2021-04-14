@@ -239,7 +239,7 @@
         this.$refs.iframe.contentDocument.body.style.overflowX = 'hidden';
       },
       tryClose() {
-        if (this.isFormUpdated || this.combinationsHistory.length > 0) {
+        if (this.isFormUpdated) {
           this.isClosing = true;
 
           this.showConfirmModal();
@@ -260,6 +260,9 @@
 
         // This closes the modal which is conditioned to the presence of this value
         this.selectedCombinationId = null;
+
+        // Reset history on close
+        this.combinationsHistory = [];
       },
       showPrevious() {
         if (this.previousCombinationId !== null) {
