@@ -72,8 +72,7 @@ class ProductController extends FrameworkBundleAdminController
      */
     public function createAction(Request $request): Response
     {
-        $productPageV2IsEnabled = $this->isProductPageV2Enabled();
-        if (!$productPageV2IsEnabled) {
+        if (!$this->isProductPageV2Enabled()) {
             $this->addFlashMessageProductV2IsDisabled();
 
             return $this->redirectToRoute('admin_product_new');
@@ -108,8 +107,7 @@ class ProductController extends FrameworkBundleAdminController
      */
     public function editAction(Request $request, int $productId): Response
     {
-        $productPageV2IsEnabled = $this->isProductPageV2Enabled();
-        if (!$productPageV2IsEnabled) {
+        if (!$this->isProductPageV2Enabled()) {
             $this->addFlashMessageProductV2IsDisabled();
 
             return $this->redirectToRoute('admin_product_form', ['id' => $productId]);
@@ -226,15 +224,15 @@ class ProductController extends FrameworkBundleAdminController
 
     private function addFlashMessageProductV2IsDisabled(): void
     {
-        $urlOpening = sprintf('<a href="%s">', $this->get('router')->generate('admin_feature_flags_index'));
-        $urlEnding = '</a>';
-
         $this->addFlash(
             'warning',
             $this->trans(
                 'The experimental product page is not enabled. To enable it, go to the %sExperimental Features%s page.',
                 'Admin.Catalog.Notification',
-                [$urlOpening, $urlEnding]
+                [
+                    sprintf('<a href="%s">', $this->get('router')->generate('admin_feature_flags_index')), 
+                    '</a>'
+                ]
             )
         );
     }
