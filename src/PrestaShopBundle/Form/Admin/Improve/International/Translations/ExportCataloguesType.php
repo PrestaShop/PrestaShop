@@ -41,11 +41,6 @@ class ExportCataloguesType extends TranslatorAwareType
     /**
      * @var array
      */
-    private $exportTranslationMainTypeChoices;
-
-    /**
-     * @var array
-     */
     private $exportTranslationCoreTypeChoices;
 
     /**
@@ -62,20 +57,17 @@ class ExportCataloguesType extends TranslatorAwareType
      * @param TranslatorInterface $translator
      * @param array $locales
      * @param array $themeChoices
-     * @param array $exportTranslationMainTypeChoices
      * @param array $exportTranslationCoreTypeChoices
      * @param array $moduleChoices
      */
     public function __construct(
         TranslatorInterface $translator,
         array $locales,
-        array $exportTranslationMainTypeChoices,
         array $exportTranslationCoreTypeChoices,
         array $themeChoices,
         array $moduleChoices
     ) {
         parent::__construct($translator, $locales);
-        $this->exportTranslationMainTypeChoices = $exportTranslationMainTypeChoices;
         $this->exportTranslationCoreTypeChoices = $exportTranslationCoreTypeChoices;
         $this->themeChoices = $themeChoices;
         $this->moduleChoices = $moduleChoices;
@@ -84,7 +76,7 @@ class ExportCataloguesType extends TranslatorAwareType
     /**
      * {@inheritdoc}
      */
-    public function buildForm(FormBuilderInterface $builder, array $options)
+    public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         $builder
             ->add('iso_code', ChoiceType::class, [
@@ -96,47 +88,43 @@ class ExportCataloguesType extends TranslatorAwareType
                 'choice_translation_domain' => false,
             ]);
 
-        foreach ($this->exportTranslationMainTypeChoices as $exportTranslationMainTypeChoiceLabel => $exportTranslationMainTypeChoiceValue) {
-            $builder->add('type_selector_' . $exportTranslationMainTypeChoiceValue, RadioWithChoiceChildrenType::class, [
-                'radio_name' => 'type_selector_' . $exportTranslationMainTypeChoiceValue,
-                'radio_label' => $exportTranslationMainTypeChoiceLabel,
-                'required' => false,
-                'label' => $this->trans(
-                    'Export',
-                    'Admin.International.Feature'
-                ),
-                'child_choice' => $this->buildChildChoiceOptionsByTranslationType($exportTranslationMainTypeChoiceValue),
-            ]);
-        }
-    }
-
-    private function buildChildChoiceOptionsByTranslationType(string $type): array
-    {
-        $options = [];
-
-        if ('core' === $type) {
-            $options = [
+        $builder->add('type_selector_core', RadioWithChoiceChildrenType::class, [
+            'radio_name' => 'type_selector_core',
+            'radio_label' => $this->trans('PrestaShop translations', 'Admin.International.Feature'),
+            'required' => false,
+            'label' => $this->trans('Export', 'Admin.Actions'),
+            'child_choice' => [
                 'name' => 'selected_value',
                 'choices' => $this->exportTranslationCoreTypeChoices,
                 'label' => false,
                 'multiple' => true,
-            ];
-        } elseif ('themes' === $type) {
-            $options = [
+            ],
+        ]);
+
+        $builder->add('type_selector_themes', RadioWithChoiceChildrenType::class, [
+            'radio_name' => 'type_selector_themes',
+            'radio_label' => $this->trans('Theme translations', 'Admin.International.Feature'),
+            'required' => false,
+            'label' => null,
+            'child_choice' => [
                 'name' => 'selected_value',
                 'choices' => $this->themeChoices,
                 'label' => false,
                 'multiple' => false,
-            ];
-        } elseif ('modules' === $type) {
-            $options = [
+            ],
+        ]);
+
+        $builder->add('type_selector_modules', RadioWithChoiceChildrenType::class, [
+            'radio_name' => 'type_selector_modules',
+            'radio_label' => $this->trans('Installed modules translations', 'Admin.International.Feature'),
+            'required' => false,
+            'label' => null,
+            'child_choice' => [
                 'name' => 'selected_value',
                 'choices' => $this->moduleChoices,
                 'label' => false,
                 'multiple' => false,
-            ];
-        }
-
-        return $options;
+            ],
+        ]);
     }
 }
