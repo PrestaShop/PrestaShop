@@ -21,7 +21,7 @@ services:
             - '@prestashop.translation.dumper.xliff'
             - '@filesystem'
             - '@prestashop.utils.zip_manager'
-            - "%kernel.cache_dir%/export"
+            - "%translation_catalogues_export_dir%"
 
     #TRANSLATIONS FACTORIES
     prestashop.translation.translations_factory:

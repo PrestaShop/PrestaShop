@@ -31,4 +31,10 @@ export default {
   themesFormGroup: '.js-theme-form-group',
   defaultThemeOption: '.js-default-theme',
   noThemeOption: '.js-no-theme',
+  exportCoreType: '#form_type_selector_core_type_selector_core',
+  exportCoreValues: '#form_type_selector_core_selected_value',
+  exportThemesType: '#form_type_selector_themes_type_selector_themes',
+  exportThemesValues: '#form_type_selector_themes_selected_value',
+  exportModulesType: '#form_type_selector_modules_type_selector_modules',
+  exportModulesValues: '#form_type_selector_modules_selected_value',
 };

@@ -588,7 +588,6 @@ services:
         parent: 'form.type.translatable.aware'
         public: true
         arguments:
-            $exportTranslationMainTypeChoices: '@=service("prestashop.core.form.choice_provider.translation_type").getExportMainChoices()'
             $exportTranslationCoreTypeChoices: '@=service("prestashop.core.form.choice_provider.translation_type").getExportCoreChoices()'
             $themeChoices: '@=service("prestashop.core.form.choice_provider.theme_by_name").getChoices()'
             $moduleChoices: '@=service("prestashop.core.form.choice_provider.module_by_name").getChoices()'

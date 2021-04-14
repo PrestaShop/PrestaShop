@@ -71,7 +71,7 @@ class TranslationTreeBuilderTest extends TestCase
      */
     private $treeBuilder;
 
-    protected function setUp()
+    protected function setUp(): void
     {
         $provider = $this->createMock(CatalogueLayersProviderInterface::class);
 
@@ -109,7 +109,7 @@ class TranslationTreeBuilderTest extends TestCase
         );
     }
 
-    public function testGetTreeStructure()
+    public function testGetTreeStructure(): void
     {
         $tree = $this->treeBuilder->getTree(
             new BackofficeProviderDefinition(),
@@ -142,7 +142,7 @@ class TranslationTreeBuilderTest extends TestCase
         ], array_keys($tree['tree']['children'][0]['children'][0]));
     }
 
-    public function testGetTreeContent()
+    public function testGetTreeContent(): void
     {
         $tree = $this->treeBuilder->getTree(
             new BackofficeProviderDefinition(),

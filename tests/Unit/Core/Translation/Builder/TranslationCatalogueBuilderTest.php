@@ -75,7 +75,7 @@ class TranslationCatalogueBuilderTest extends TestCase
      */
     private $translationCatalogueBuilder;
 
-    protected function setUp()
+    protected function setUp(): void
     {
         $provider = $this->createMock(CatalogueLayersProviderInterface::class);
 
@@ -107,7 +107,7 @@ class TranslationCatalogueBuilderTest extends TestCase
         $this->translationCatalogueBuilder = new TranslationCatalogueBuilder($providerFactory);
     }
 
-    public function testGetDomainCatalogueFailsWhenDomainIsEmpty()
+    public function testGetDomainCatalogueFailsWhenDomainIsEmpty(): void
     {
         $this->expectException(InvalidArgumentException::class);
         $this->translationCatalogueBuilder->getDomainCatalogue(
@@ -118,7 +118,7 @@ class TranslationCatalogueBuilderTest extends TestCase
         );
     }
 
-    public function testGetDomainCatalogueWithNonExistentDomain()
+    public function testGetDomainCatalogueWithNonExistentDomain(): void
     {
         $catalogue = $this->translationCatalogueBuilder->getDomainCatalogue(
             new BackofficeProviderDefinition(),
@@ -174,7 +174,7 @@ class TranslationCatalogueBuilderTest extends TestCase
     /**
      * In this test we search for one word and it returns result in one message, one domain.
      */
-    public function testGetDomainCatalogueWithOneWordSearch()
+    public function testGetDomainCatalogueWithOneWordSearch(): void
     {
         // Search single word
         $catalogue = $this->translationCatalogueBuilder->getDomainCatalogue(
@@ -205,7 +205,7 @@ class TranslationCatalogueBuilderTest extends TestCase
      * In this test, we search for multiple words in one term.
      * We also test that if the search doesn't match the message case, it will be found anyway.
      */
-    public function testGetDomainCatalogueWithCaseInsensitiveSearchTerms()
+    public function testGetDomainCatalogueWithCaseInsensitiveSearchTerms(): void
     {
         // Search multiple words and case insensitive
         $catalogue = $this->translationCatalogueBuilder->getDomainCatalogue(
@@ -235,7 +235,7 @@ class TranslationCatalogueBuilderTest extends TestCase
     /**
      * In this test, we expect that searching a word which match multiple messages will return all the matching messages.
      */
-    public function testGetDomainCatalogueWithMultipleResultsSearch()
+    public function testGetDomainCatalogueWithMultipleResultsSearch(): void
     {
         // Search with multiple results
         $catalogue = $this->translationCatalogueBuilder->getDomainCatalogue(
@@ -276,7 +276,7 @@ class TranslationCatalogueBuilderTest extends TestCase
     /**
      * In this test, we search multiple words. If a message contains any of these words, it will be returned.
      */
-    public function testGetDomainCatalogueWithMultipleWordsSearch()
+    public function testGetDomainCatalogueWithMultipleWordsSearch(): void
     {
         // Search with multiple words
         $catalogue = $this->translationCatalogueBuilder->getDomainCatalogue(
@@ -321,7 +321,7 @@ class TranslationCatalogueBuilderTest extends TestCase
      * In this test, we search a term that exists in no message.
      * Doing this we also test that the words are not taken individually but all the term is search.
      */
-    public function testGetDomainCatalogueWithNoResultSearch()
+    public function testGetDomainCatalogueWithNoResultSearch(): void
     {
         // Search no result
         $catalogue = $this->translationCatalogueBuilder->getDomainCatalogue(
@@ -337,7 +337,7 @@ class TranslationCatalogueBuilderTest extends TestCase
         $this->assertSame(0, $catalogue['info']['total_missing_translations']);
     }
 
-    public function testGetCatalogueStructure()
+    public function testGetCatalogueStructure(): void
     {
         $messages = $this->translationCatalogueBuilder->getCatalogue(
             new BackofficeProviderDefinition(),
@@ -360,7 +360,7 @@ class TranslationCatalogueBuilderTest extends TestCase
         $this->assertArrayHasKey('user', $messages['AdminFirstDomain']['First Domain First Wording']);
     }
 
-    public function testGetCatalogue()
+    public function testGetCatalogue(): void
     {
         $messages = $this->translationCatalogueBuilder->getCatalogue(
             new BackofficeProviderDefinition(),
@@ -423,7 +423,7 @@ class TranslationCatalogueBuilderTest extends TestCase
         array $defaultTranslations,
         array $fileTranslatedTranslations,
         array $userTranslatedTranslations
-    ) {
+    ): TranslationCatalogueBuilder {
         $provider = $this->createMock(CatalogueLayersProviderInterface::class);
 
         // Build Default catalogue

@@ -36,10 +36,15 @@ use PrestaShop\PrestaShop\Core\Translation\Storage\Provider\Definition\ProviderD
 use PrestaShop\PrestaShop\Core\Translation\Storage\Provider\Definition\ProviderDefinitionInterface;
 use PrestaShop\TranslationToolsBundle\Translation\Dumper\XliffFileDumper;
 use PrestaShopBundle\Utils\ZipManager;
+use Symfony\Component\Filesystem\Exception\IOException;
 use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\Finder\Finder;
 use Symfony\Component\Translation\MessageCatalogue;
 
+/**
+ * This class is responsible of building translation catalogues exports.
+ * It uses TranslationCatalogueBuilder to get the catalogues content, dump them in files and return them to caller in the desired format.
+ */
 class TranslationCatalogueExporter
 {
     /**
@@ -84,6 +89,19 @@ class TranslationCatalogueExporter
     }
 
     /**
+     * Exports the translation catalogues depending on the selections provided in the given locale.
+     * Catalogues are written in XLF files and stored in a folder with the locale name.
+     * This folder is then compressed in a zip file. The returned value is the path of the created zip file.
+     *
+     * The expected format for $selections parameter is
+     * [
+     *   [
+     *     'type' => string, // Translation type, allowed in ProviderDefinitionInterface::ALLOWED_EXPORT_TYPES
+     *     'selected' => string|null // Must be defined if translation type is themes or modules, otherwise NULL
+     *   ],
+     *   ...
+     * ]
+     *
      * @param array $selections
      * @param string $locale
      *
@@ -91,13 +109,14 @@ class TranslationCatalogueExporter
      *
      * @throws TranslationFilesNotFoundException
      * @throws UnexpectedTranslationTypeException
+     * @throws IOException
      */
     public function export(array $selections, string $locale): string
     {
         $this->validateParameters($selections);
 
-        if (!file_exists($this->exportDir)) {
-            mkdir($this->exportDir);
+        if (!$this->filesystem->exists($this->exportDir)) {
+            $this->filesystem->mkdir($this->exportDir);
         }
 
         $zipFilenameParts = [
@@ -148,13 +167,13 @@ class TranslationCatalogueExporter
         array $selections
     ): void {
         foreach ($selections as $selection) {
-            if (!in_array($selection['type'], ProviderDefinitionInterface::ALLOWED_EXPORT_TYPES)) {
+            if (!in_array($selection['type'], ProviderDefinitionInterface::ALLOWED_EXPORT_TYPES, true)) {
                 throw new UnexpectedTranslationTypeException('This \'type\' param is not valid.');
             }
 
             if (
-                (ProviderDefinitionInterface::TYPE_MODULES === $selection['type'] || ProviderDefinitionInterface::TYPE_THEMES === $selection['type'])
-                && null === $selection['selected']
+                null === $selection['selected']
+                && (in_array($selection['type'], [ProviderDefinitionInterface::TYPE_MODULES, ProviderDefinitionInterface::TYPE_THEMES], true))
             ) {
                 throw new Exception(sprintf('Selected value cannot be null for type %s.', $selection['type']));
             }
@@ -175,17 +194,17 @@ class TranslationCatalogueExporter
         return $messageCatalogue;
     }
 
-    /**
-     * @param string $locale
-     * @param string $path
-     */
     protected function renameCatalogues(string $locale, string $path): void
     {
         $finder = Finder::create();
 
         foreach ($finder->in($path . DIRECTORY_SEPARATOR . $locale)->files() as $file) {
             $filenameParts = explode('.', $file->getFilename());
-            unset($filenameParts[count($filenameParts) - 1]);
+            unset($filenameParts[count($filenameParts) - 1]); // Remove the extension
+            /*
+             * The destination file name will have the format
+             * DIRECTORY/ab-AB/FullDomainName.ab-AB.xlf
+             */
             $destinationFilename = sprintf(
                 '%s' . DIRECTORY_SEPARATOR . '%s' . DIRECTORY_SEPARATOR . '%s.%s.%s',
                 $path,
