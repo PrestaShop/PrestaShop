@@ -28,29 +28,26 @@ declare(strict_types=1);
 namespace Tests\Unit\Adapter\Product\Image;
 
 use Generator;
-use Image;
 use PHPUnit\Framework\Assert;
 use PHPUnit\Framework\TestCase;
 use PrestaShop\PrestaShop\Adapter\Product\Image\ProductImagePathFactory;
+use PrestaShop\PrestaShop\Core\Domain\Product\Image\ValueObject\ImageId;
 
 class ProductImagePathFactoryTest extends TestCase
 {
     /**
      * @dataProvider getArgumentsForSmokeTest
      *
-     * @param bool $isLegacyImageMode
      * @param string $pathToBaseDir
      * @param string $temporaryImgDir
      * @param string $contextLangIsoCode
      */
     public function testConstructImagePathFactory(
-        bool $isLegacyImageMode,
         string $pathToBaseDir,
         string $temporaryImgDir,
         string $contextLangIsoCode
     ): void {
         $imagePathFactory = new ProductImagePathFactory(
-            $isLegacyImageMode,
             $pathToBaseDir,
             $temporaryImgDir,
             $contextLangIsoCode
@@ -62,29 +59,29 @@ class ProductImagePathFactoryTest extends TestCase
      * @dataProvider getDataForBaseImagePathBuilding
      *
      * @param string $pathToBaseDir
-     * @param Image $image
+     * @param ImageId $imageId
      * @param string $expected
      */
-    public function testGetPath(string $pathToBaseDir, Image $image, string $expected): void
+    public function testGetPath(string $pathToBaseDir, ImageId $imageId, string $expected): void
     {
         $imagePathFactory = $this->buildImagePathFactory($pathToBaseDir);
 
-        Assert::assertEquals($expected, $imagePathFactory->getPath($image));
+        Assert::assertEquals($expected, $imagePathFactory->getPath($imageId));
     }
 
     /**
      * @dataProvider getDataForPathByType
      *
      * @param string $pathToBaseDir
-     * @param Image $image
+     * @param ImageId $imageId
      * @param string $type
      * @param string $expected
      */
-    public function testGetPathByType(string $pathToBaseDir, Image $image, string $type, string $expected): void
+    public function testGetPathByType(string $pathToBaseDir, ImageId $imageId, string $type, string $expected): void
     {
         $imagePathFactory = $this->buildImagePathFactory($pathToBaseDir);
 
-        Assert::assertEquals($expected, $imagePathFactory->getPathByType($image, $type));
+        Assert::assertEquals($expected, $imagePathFactory->getPathByType($imageId, $type));
     }
 
     /**
@@ -107,9 +104,9 @@ class ProductImagePathFactoryTest extends TestCase
      */
     public function getArgumentsForSmokeTest(): Generator
     {
-        yield [false, '/img/p/', 'img/tmp', 'en'];
-        yield [true, '/img', 'img/tmp', 'en'];
-        yield [true, '/img', 'img/tmp', 'lt'];
+        yield ['/img/p/', 'img/tmp', 'en'];
+        yield ['/img', 'img/tmp', 'en'];
+        yield ['/img', 'img/tmp', 'lt'];
     }
 
     /**
@@ -117,14 +114,9 @@ class ProductImagePathFactoryTest extends TestCase
      */
     public function getDataForBaseImagePathBuilding(): Generator
     {
-        $img1 = $this->mockImage(10, 'jpg', '/1/0/10');
-        $img2 = $this->mockImage(11, 'jpg', '/1/1/11');
-        $img3 = $this->mockImage(2504, 'png', '/2/5/0/4/2504');
-
-        yield ['/img/p', $img1, '/img/p/1/0/10.jpg'];
-        yield ['whatever/img/p', $img2, 'whatever/img/p/1/1/11.jpg'];
-        yield ['img/p/', $img3, 'img/p/2/5/0/4/2504.png'];
-        yield ['/', $img3, '/2/5/0/4/2504.png'];
+        yield ['/img/p', new ImageId(10), '/img/p/1/0/10.jpg'];
+        yield ['whatever/img/p', new ImageId(11), 'whatever/img/p/1/1/11.jpg'];
+        yield ['img/p/', new ImageId(2504), 'img/p/2/5/0/4/2504.jpg'];
     }
 
     /**
@@ -132,14 +124,10 @@ class ProductImagePathFactoryTest extends TestCase
      */
     public function getDataForPathByType(): Generator
     {
-        $img1 = $this->mockImage(10, 'jpg', '/1/0/10');
-        $img2 = $this->mockImage(11, 'jpg', '/1/1/11');
-        $img3 = $this->mockImage(2504, 'png', '/2/5/0/4/2504');
-
-        yield ['/img/p/', $img1, 'small_default', '/img/p/1/0/10-small_default.jpg'];
-        yield ['/img/p', $img2, 'medium_default', '/img/p/1/1/11-medium_default.jpg'];
-        yield ['img/p/', $img3, 'large_default', 'img/p/2/5/0/4/2504-large_default.png'];
-        yield ['/img/p/', $img3, 'cart_default', '/img/p/2/5/0/4/2504-cart_default.png'];
+        yield ['/img/p/', new ImageId(10), 'small_default', '/img/p/1/0/10-small_default.jpg'];
+        yield ['/img/p', new ImageId(11), 'medium_default', '/img/p/1/1/11-medium_default.jpg'];
+        yield ['img/p/', new ImageId(2504), 'large_default', 'img/p/2/5/0/4/2504-large_default.jpg'];
+        yield ['/img/p/', new ImageId(2504), 'cart_default', '/img/p/2/5/0/4/2504-cart_default.jpg'];
     }
 
     public function getDataForNoImagePath(): Generator
@@ -150,26 +138,6 @@ class ProductImagePathFactoryTest extends TestCase
     }
 
     /**
-     * @param int $id
-     * @param string $format
-     * @param string $imgPathWillReturn
-     *
-     * @return Image
-     */
-    private function mockImage(int $id, string $format, string $imgPathWillReturn): Image
-    {
-        $imageMock =
-            $this->getMockBuilder(Image::class)
-                ->setMethods(['getImgPath'])
-                ->getMock();
-        $imageMock->method('getImgPath')->willReturn($imgPathWillReturn);
-        $imageMock->id = $id;
-        $imageMock->image_format = $format;
-
-        return $imageMock;
-    }
-
-    /**
      * @param string $pathToBaseDir
      *
      * @return ProductImagePathFactory
@@ -177,7 +145,6 @@ class ProductImagePathFactoryTest extends TestCase
     private function buildImagePathFactory(string $pathToBaseDir): ProductImagePathFactory
     {
         return new ProductImagePathFactory(
-            false,
             $pathToBaseDir,
             '/img/tmp/',
             'en'

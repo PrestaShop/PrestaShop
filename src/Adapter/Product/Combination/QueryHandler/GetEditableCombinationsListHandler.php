@@ -89,6 +89,11 @@ final class GetEditableCombinationsListHandler extends AbstractProductHandler im
     private $productImagePathFactory;
 
     /**
+     * @var array<int, ImageId>
+     */
+    private $cachedImageIds = [];
+
+    /**
      * @param CombinationRepository $combinationRepository
      * @param NumberExtractor $numberExtractor
      * @param StockAvailableRepository $stockAvailableRepository
@@ -168,7 +173,6 @@ final class GetEditableCombinationsListHandler extends AbstractProductHandler im
     ): CombinationListForEditing {
         $combinationsForEditing = [];
 
-        $cachedImages = [];
         foreach ($combinations as $combination) {
             $combinationId = (int) $combination['id_product_attribute'];
             $combinationAttributesInformation = [];
@@ -182,7 +186,7 @@ final class GetEditableCombinationsListHandler extends AbstractProductHandler im
                 );
             }
 
-            $image = $this->getImage($combinationId, $imageIdsByCombinationIds, $cachedImages);
+            $imageId = $this->getImageId($combinationId, $imageIdsByCombinationIds);
 
             $impactOnPrice = new DecimalNumber($combination['price']);
             $combinationsForEditing[] = new EditableCombinationForListing(
@@ -193,7 +197,7 @@ final class GetEditableCombinationsListHandler extends AbstractProductHandler im
                 (bool) $combination['default_on'],
                 $impactOnPrice,
                 (int) $this->stockAvailableRepository->getForCombination(new CombinationId($combinationId))->quantity,
-                $image ? $this->productImagePathFactory->getPathByType($image, ProductImagePathFactory::IMAGE_TYPE_SMALL_DEFAULT) : null
+                $imageId ? $this->productImagePathFactory->getPathByType($imageId, ProductImagePathFactory::IMAGE_TYPE_SMALL_DEFAULT) : null
             );
         }
 
@@ -201,31 +205,30 @@ final class GetEditableCombinationsListHandler extends AbstractProductHandler im
     }
 
     /**
-     * Fetches image by combination id and caches it in array variable
+     * Fetches image by combination id and caches it in class property
      * (All combinations are only reusing product images, so there is no point retrieving same image over and over again)
      *
      * @param int $combinationId
      * @param array<int, int[]> $imageIdsByCombinationIds
-     * @param array<int, Image> $cachedImages
      *
-     * @return Image|null
+     * @return ImageId|null
      */
-    private function getImage(int $combinationId, array $imageIdsByCombinationIds, array &$cachedImages): ?Image
+    private function getImageId(int $combinationId, array $imageIdsByCombinationIds): ?ImageId
     {
         if (!isset($imageIdsByCombinationIds[$combinationId][0])) {
             return null;
         }
 
-        $imageId = $imageIdsByCombinationIds[$combinationId][0];
+        $imageIdValue = $imageIdsByCombinationIds[$combinationId][0];
 
-        if (isset($cachedImages[$imageId])) {
-            return $cachedImages[$imageId];
+        if (isset($this->cachedImageIds[$imageIdValue])) {
+            return $this->cachedImageIds[$imageIdValue];
         }
 
-        $image = $this->productImageRepository->get(new ImageId($imageId));
-        $cachedImages[$imageId] = $image;
+        $imageId = new ImageId($imageIdValue);
+        $this->cachedImageIds[$imageIdValue] = $imageId;
 
-        return $image;
+        return $imageId;
     }
 
     /**

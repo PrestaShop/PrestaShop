@@ -28,7 +28,7 @@ declare(strict_types=1);
 
 namespace PrestaShop\PrestaShop\Adapter\Product\Image;
 
-use Image;
+use PrestaShop\PrestaShop\Core\Domain\Product\Image\ValueObject\ImageId;
 
 class ProductImagePathFactory
 {
@@ -37,11 +37,6 @@ class ProductImagePathFactory
     public const IMAGE_TYPE_LARGE_DEFAULT = 'large_default';
     public const IMAGE_TYPE_HOME_DEFAULT = 'home_default';
     public const IMAGE_TYPE_CART_DEFAULT = 'cart_default';
-
-    /**
-     * @var bool
-     */
-    private $isLegacyImageMode;
 
     /**
      * @var string
@@ -59,18 +54,15 @@ class ProductImagePathFactory
     private $contextLangIsoCode;
 
     /**
-     * @param bool $isLegacyImageMode
      * @param string $pathToBaseDir
      * @param string $temporaryImgDir
      * @param string $contextLangIsoCode
      */
     public function __construct(
-        bool $isLegacyImageMode,
         string $pathToBaseDir,
         string $temporaryImgDir,
         string $contextLangIsoCode
     ) {
-        $this->isLegacyImageMode = $isLegacyImageMode;
         // make sure one trailing slash is always there
         $this->temporaryImgDir = rtrim($temporaryImgDir, '/') . '/';
         $this->pathToBaseDir = rtrim($pathToBaseDir, '/') . '/';
@@ -78,28 +70,30 @@ class ProductImagePathFactory
     }
 
     /**
-     * @param Image $image
+     * @param ImageId $imageId
+     * @param string $extension
      *
      * @return string
      */
-    public function getPath(Image $image): string
+    public function getPath(ImageId $imageId, string $extension = 'jpg'): string
     {
-        $path = $this->getBaseImagePathWithoutExtension($image);
+        $path = $this->getBaseImagePathWithoutExtension($imageId);
 
-        return sprintf('%s.%s', $path, $image->image_format);
+        return sprintf('%s.%s', $path, $extension);
     }
 
     /**
-     * @param Image $image
+     * @param ImageId $imageId
      * @param string $type
+     * @param string $extension
      *
      * @return string
      */
-    public function getPathByType(Image $image, string $type): string
+    public function getPathByType(ImageId $imageId, string $type, string $extension = 'jpg'): string
     {
-        $path = $this->getBaseImagePathWithoutExtension($image);
+        $path = $this->getBaseImagePathWithoutExtension($imageId);
 
-        return sprintf('%s-%s.%s', $path, $type, $image->image_format);
+        return sprintf('%s-%s.%s', $path, $type, $extension);
     }
 
     /**
@@ -139,17 +133,14 @@ class ProductImagePathFactory
     }
 
     /**
-     * @param Image $image
+     * @param ImageId $imageId
      *
      * @return string
      */
-    private function getBaseImagePathWithoutExtension(Image $image): string
+    private function getBaseImagePathWithoutExtension(ImageId $imageId): string
     {
-        if ($this->isLegacyImageMode) {
-            $path = $image->id_product . '-' . $image->id;
-        } else {
-            $path = ltrim($image->getImgPath(), '/');
-        }
+        $id = $imageId->getValue();
+        $path = implode('/', str_split((string) $id)) . '/' . $id;
 
         return sprintf('%s%s', $this->pathToBaseDir, $path);
     }
