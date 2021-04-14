@@ -246,6 +246,8 @@ class CombinationController extends FrameworkBundleAdminController
             'combinations' => [],
             'total' => $combinationListForEditing->getTotalCombinationsCount(),
         ];
+
+        $fallbackImageUrl = $this->getFallbackImageUrl();
         foreach ($combinationListForEditing->getCombinations() as $combination) {
             $data['combinations'][] = [
                 'id' => $combination->getCombinationId(),
@@ -255,7 +257,7 @@ class CombinationController extends FrameworkBundleAdminController
                 'impactOnPrice' => (string) $combination->getImpactOnPrice(),
                 'quantity' => $combination->getQuantity(),
                 'isDefault' => $combination->isDefault(),
-                'imageUrl' => $this->formatImageUrl($combination->getImageUrl()),
+                'imageUrl' => $combination->getImageUrl() ?: $fallbackImageUrl,
             ];
         }
 
@@ -263,19 +265,13 @@ class CombinationController extends FrameworkBundleAdminController
     }
 
     /**
-     * @param string|null $imageUrl
-     *
      * @return string
      */
-    private function formatImageUrl(?string $imageUrl): string
+    private function getFallbackImageUrl(): string
     {
-        if (!$imageUrl) {
-            $imageUrlFactory = $this->get('prestashop.adapter.product.image.product_image_url_factory');
+        $imageUrlFactory = $this->get('prestashop.adapter.product.image.product_image_url_factory');
 
-            return $imageUrlFactory->getNoImagePath(ProductImagePathFactory::IMAGE_TYPE_SMALL_DEFAULT);
-        }
-
-        return $imageUrl;
+        return $imageUrlFactory->getNoImagePath(ProductImagePathFactory::IMAGE_TYPE_SMALL_DEFAULT);
     }
 
     /**
