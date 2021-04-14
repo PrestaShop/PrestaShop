@@ -48,3 +48,9 @@ services:
     tags:
       - name: 'tactician.handler'
         command: PrestaShop\PrestaShop\Core\Domain\Shop\Query\SearchShops
+
+  prestashop.adapter.shop.url.product_image_folder_provider:
+      class: 'PrestaShop\PrestaShop\Adapter\Shop\Url\ProductImageFolderProvider'
+      arguments:
+          - "@=service('prestashop.adapter.legacy.context').getContext().link"
+          - !php/const _PS_PROD_IMG_

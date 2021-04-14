@@ -1391,7 +1391,7 @@ class LinkCore
      *
      * @return string
      */
-    public function getBaseLink($idShop = null, $ssl = null, $relativeProtocol = false)
+    public function getBaseShopUrl($idShop = null, $ssl = null, $relativeProtocol = false)
     {
         if (null === $ssl) {
             $ssl = (Configuration::get('PS_SSL_ENABLED') && Configuration::get('PS_SSL_ENABLED_EVERYWHERE'));
@@ -1409,7 +1409,25 @@ class LinkCore
             $base = (($ssl && $this->ssl_enable) ? 'https://' . $shop->domain_ssl : 'http://' . $shop->domain);
         }
 
-        return $base . $shop->getBaseURI();
+        return $base;
+    }
+
+    /**
+     * @param int|null $idShop
+     * @param bool|null $ssl
+     * @param bool $relativeProtocol
+     *
+     * @return string
+     */
+    public function getBaseLink($idShop = null, $ssl = null, $relativeProtocol = false)
+    {
+        if (Configuration::get('PS_MULTISHOP_FEATURE_ACTIVE') && $idShop !== null) {
+            $shop = new Shop($idShop);
+        } else {
+            $shop = Context::getContext()->shop;
+        }
+
+        return $this->getBaseShopUrl($idShop, $ssl, $relativeProtocol) . $shop->getBaseURI();
     }
 
     /**

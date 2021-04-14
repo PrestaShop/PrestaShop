@@ -77,7 +77,7 @@ services:
     prestashop.adapter.product.image.product_image_url_factory:
         class: PrestaShop\PrestaShop\Adapter\Product\Image\ProductImagePathFactory
         arguments:
-            - !php/const _PS_PROD_IMG_
+            - '@=service("prestashop.adapter.shop.url.product_image_folder_provider").getUrl()'
             - !php/const _PS_TMP_IMG_DIR_
             - '@=service("prestashop.adapter.legacy.context").getContext().language.iso_code'
 
