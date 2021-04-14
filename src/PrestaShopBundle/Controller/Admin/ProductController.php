@@ -379,12 +379,9 @@ class ProductController extends FrameworkBundleAdminController
         if ($this->isProductPageV2Enabled()) {
             $toolbarButtons['add_v2'] = [
                 'href' => $this->generateUrl('admin_products_v2_create'),
-                'desc' => $this->trans('New product', 'Admin.Catalog.Feature'),
-                'icon' => 'new_releases',
-                'help' => $this->trans(
-                    'Create a new product on the experimental product page',
-                    'Admin.Catalog.Help'
-                ),
+                'desc' => $this->trans('New product on experimental page', 'Admin.Catalog.Feature'),
+                'icon' => 'add_circle_outline',
+                'class' => 'btn-outline-primary'
             ];
         }
 
