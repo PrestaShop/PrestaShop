@@ -53,4 +53,4 @@ services:
       class: 'PrestaShop\PrestaShop\Adapter\Shop\Url\ProductImageFolderProvider'
       arguments:
           - "@=service('prestashop.adapter.legacy.context').getContext().link"
-          - !php/const _PS_PROD_IMG_
+          - 'img/p'
