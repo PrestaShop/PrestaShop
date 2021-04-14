@@ -35,6 +35,7 @@ use PrestaShop\PrestaShop\Core\Domain\Product\FeatureValue\Exception\InvalidAsso
 use PrestaShop\PrestaShop\Core\Form\IdentifiableObject\Builder\FormBuilderInterface;
 use PrestaShop\PrestaShop\Core\Form\IdentifiableObject\Handler\FormHandlerInterface;
 use PrestaShopBundle\Controller\Admin\FrameworkBundleAdminController;
+use PrestaShopBundle\Controller\Admin\ProductController as V1ProductController;
 use PrestaShopBundle\Security\Annotation\AdminSecurity;
 use PrestaShopBundle\Security\Voter\PageVoter;
 use Symfony\Component\Form\FormInterface;
@@ -213,7 +214,7 @@ class ProductController extends FrameworkBundleAdminController
     private function isProductPageV2Enabled(): bool
     {
         $productPageV2FeatureFlag = $this->get('prestashop.core.feature_flags.modifier')
-            ->getOneFeatureFlagByName(\PrestaShopBundle\Controller\Admin\ProductController::FEATURE_FLAG_PRODUCT_PAGE_V2);
+            ->getOneFeatureFlagByName(V1ProductController::FEATURE_FLAG_PRODUCT_PAGE_V2);
 
         if (null === $productPageV2FeatureFlag) {
             return false;
@@ -230,8 +231,8 @@ class ProductController extends FrameworkBundleAdminController
                 'The experimental product page is not enabled. To enable it, go to the %sExperimental Features%s page.',
                 'Admin.Catalog.Notification',
                 [
-                    sprintf('<a href="%s">', $this->get('router')->generate('admin_feature_flags_index')), 
-                    '</a>'
+                    sprintf('<a href="%s">', $this->get('router')->generate('admin_feature_flags_index')),
+                    '</a>',
                 ]
             )
         );

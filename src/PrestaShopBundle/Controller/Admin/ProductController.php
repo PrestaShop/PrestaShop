@@ -668,7 +668,7 @@ class ProductController extends FrameworkBundleAdminController
             'editable' => $this->isGranted(PageVoter::UPDATE, self::PRODUCT_OBJECT),
             'drawerModules' => $drawerModules,
             'layoutTitle' => $this->trans('Product', 'Admin.Global'),
-            'productPageV2IsEnabled' => ($this->isProductPageV2Enabled()),
+            'isProductPageV2Enabled' => ($this->isProductPageV2Enabled()),
         ];
     }
 
