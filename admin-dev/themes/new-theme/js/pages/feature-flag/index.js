@@ -31,8 +31,23 @@ $(() => {
   const $submitButton = $('#submit-btn-feature-flag');
   const $form = $('#feature-flag-form');
 
+  let noFieldModifiedInTheForm = true;
+
+  $form.find('input').change(() => {
+    noFieldModifiedInTheForm = false;
+  });
+
   $submitButton.on('click', (event) => {
     event.preventDefault();
+
+    const formData = $form.serializeArray();
+    let oneFlagIsEnabled = false;
+
+    for (let i = 0; i < formData.length; i += 1) {
+      if ((formData[i].name !== 'form[_token]') && (formData[i].value !== '0')) {
+        oneFlagIsEnabled = true;
+      }
+    }
 
     const modal = new ConfirmModal(
       {
@@ -46,6 +61,11 @@ $(() => {
         $form.submit();
       },
     );
-    modal.show();
+
+    if (oneFlagIsEnabled && !noFieldModifiedInTheForm) {
+      modal.show();
+    } else {
+      $form.submit();
+    }
   });
 });
