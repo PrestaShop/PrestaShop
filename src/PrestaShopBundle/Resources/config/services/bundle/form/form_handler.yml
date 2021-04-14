@@ -412,13 +412,13 @@ services:
             - 'PrestaShopBundle\Form\Admin\Improve\International\Translations\AddUpdateLanguageType'
             - 'TranslationSettingsPageAddUpdateLanguage'
 
-    prestashop.admin.translations_settings.export_language.form_handler:
+    prestashop.admin.translations_settings.export_catalogues.form_handler:
         class: 'PrestaShopBundle\Form\Admin\Improve\International\Translations\TranslationsSettingsFormHandler'
         arguments:
             - '@form.factory'
             - '@prestashop.core.hook.dispatcher'
-            - 'PrestaShopBundle\Form\Admin\Improve\International\Translations\ExportThemeLanguageType'
-            - 'TranslationSettingsPageExportLanguage'
+            - 'PrestaShopBundle\Form\Admin\Improve\International\Translations\ExportCataloguesType'
+            - 'TranslationSettingsPageExportCatalogues'
 
     prestashop.admin.translations_settings.copy_language.form_handler:
         class: 'PrestaShopBundle\Form\Admin\Improve\International\Translations\TranslationsSettingsFormHandler'

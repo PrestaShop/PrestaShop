@@ -60,4 +60,26 @@ final class TranslationTypeChoiceProvider implements FormChoiceProviderInterface
             $this->translator->trans('Other translations', [], 'Admin.International.Feature') => 'others',
         ];
     }
+
+    /**
+     * Get Main choices export translations form.
+     */
+    public function getExportMainChoices(): array
+    {
+        return [
+            $this->translator->trans('PrestaShop translations', [], 'Admin.International.Feature') => 'core',
+            $this->translator->trans('Theme translations', [], 'Admin.International.Feature') => 'themes',
+            $this->translator->trans('Installed modules translations', [], 'Admin.International.Feature') => 'modules',
+        ];
+    }
+
+    public function getExportCoreChoices()
+    {
+        return [
+            $this->translator->trans('Back office translations', [], 'Admin.International.Feature') => 'back',
+            $this->translator->trans('Front office Translations', [], 'Admin.International.Feature') => 'front',
+            $this->translator->trans('Email translations', [], 'Admin.International.Feature') => 'mails',
+            $this->translator->trans('Other translations', [], 'Admin.International.Feature') => 'others',
+        ];
+    }
 }

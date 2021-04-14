@@ -25,7 +25,7 @@
 
 {% trans_default_domain 'Admin.International.Feature' %}
 
-{{ form_start(exportLanguageForm, {action: path('admin_international_translations_export_theme')}) }}
+{{ form_start(exportCataloguesForm, {action: path('admin_international_translations_export_catalogues')}) }}
 
 <div class="card">
   <h3 class="card-header">
@@ -44,7 +44,7 @@
   </h3>
   <div class="card-block row">
     <div class="card-text">
-      {{ form_rest(exportLanguageForm) }}
+      {{ form_rest(exportCataloguesForm) }}
     </div>
   </div>
 
@@ -58,4 +58,4 @@
   </div>
 </div>
 
-{{ form_end(exportLanguageForm) }}
+{{ form_end(exportCataloguesForm) }}

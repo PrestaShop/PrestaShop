@@ -51,6 +51,16 @@ interface ProviderDefinitionInterface
         self::TYPE_CORE_DOMAIN,
     ];
 
+    public const ALLOWED_EXPORT_TYPES = [
+        self::TYPE_BACK,
+        self::TYPE_FRONT,
+        self::TYPE_MAILS,
+        self::TYPE_MAILS_BODY,
+        self::TYPE_OTHERS,
+        self::TYPE_MODULES,
+        self::TYPE_THEMES,
+    ];
+
     /**
      * @return string
      */
