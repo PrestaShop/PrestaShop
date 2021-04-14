@@ -301,7 +301,7 @@ class Shop
     }
 
     /**
-     * Checks if a configuration value is overridden for this shop
+     * Checks if a configuration value is overridden for this shop or his shop group
      *
      * @param ShopConfigurationInterface $configuration
      * @param string $configurationKey
@@ -313,7 +313,7 @@ class Shop
         $shopConstraint = new ShopConstraint(
             $this->getId(),
             $this->getShopGroup()->getId(),
-            true
+            false
         );
 
         return $configuration->has($configurationKey, $shopConstraint);
