@@ -115,8 +115,7 @@
 
 <script>
   import PhotoSwipe from 'photoswipe';
-  // eslint-disable-next-line
-import PhotoSwipeUI_Default from "photoswipe/dist/photoswipe-ui-default";
+  import PhotoSwipeUIDefault from 'photoswipe/dist/photoswipe-ui-default';
   import ProductMap from '@pages/product/product-map';
   import ProductEventMap from '@pages/product/product-event-map';
 
@@ -132,42 +131,44 @@ import PhotoSwipeUI_Default from "photoswipe/dist/photoswipe-ui-default";
       },
     },
     mounted() {
-      const pswpElement = document.querySelectorAll(PhotoSwipeMap.element)[0];
+      const pswpElement = document.querySelector(PhotoSwipeMap.element);
 
-      const options = {
-        index: 0,
-        shareButtons: [
-          {
-            id: 'download',
-            label: this.$t('window.downloadImage'),
-            url: '{{raw_image_url}}',
-            download: true,
-          },
-        ],
-      };
+      if (pswpElement) {
+        const options = {
+          index: 0,
+          shareButtons: [
+            {
+              id: 'download',
+              label: this.$t('window.downloadImage'),
+              url: '{{raw_image_url}}',
+              download: true,
+            },
+          ],
+        };
 
-      // This is needed to make our files compatible for photoswipe
-      const items = this.files.map((file) => {
-        file.src = file.dataURL;
-        file.h = file.height;
-        file.w = file.width;
+        // This is needed to make our files compatible for photoswipe
+        const items = this.files.map((file) => {
+          file.src = file.dataURL;
+          file.h = file.height;
+          file.w = file.width;
 
-        return file;
-      });
+          return file;
+        });
 
-      const gallery = new PhotoSwipe(
-        pswpElement,
-        PhotoSwipeUI_Default,
-        items,
-        options,
-      );
+        const gallery = new PhotoSwipe(
+          pswpElement,
+          PhotoSwipeUIDefault,
+          items,
+          options,
+        );
 
-      gallery.init();
+        gallery.init();
 
-      // We must tell to the rich component that the gallery have been closed
-      gallery.listen(PhotoSwipeEventMap.destroy, () => {
-        this.$emit(PhotoSwipeEventMap.closeGallery);
-      });
+        // We must tell to the rich component that the gallery have been closed
+        gallery.listen(PhotoSwipeEventMap.destroy, () => {
+          this.$emit(PhotoSwipeEventMap.closeGallery);
+        });
+      }
     },
     methods: {},
   };
