@@ -437,7 +437,7 @@
           );
 
           const savedImageElement = document.querySelector(
-            DropzoneMap.savedImage(savedImage.image_id),
+            DropzoneMap.savedImageContainer(savedImage.image_id),
           );
 
           /**
@@ -483,7 +483,7 @@
             this.token,
           );
           const imageElement = document.querySelector(
-            DropzoneMap.savedImageElement(newImage.image_id),
+            DropzoneMap.savedImage(newImage.image_id),
           );
           imageElement.src = newImage.path;
 
