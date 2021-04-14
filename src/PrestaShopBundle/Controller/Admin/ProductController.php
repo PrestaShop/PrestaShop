@@ -36,6 +36,7 @@ use PrestaShop\PrestaShop\Core\Domain\Product\Exception\CannotUpdateProductExcep
 use PrestaShop\PrestaShop\Core\Domain\Product\Exception\ProductException;
 use PrestaShop\PrestaShop\Core\Domain\Product\Exception\ProductNotFoundException;
 use PrestaShop\PrestaShop\Core\Domain\Product\Query\GetProductIsEnabled;
+use PrestaShop\PrestaShop\Core\FeatureFlag\FeatureFlagSettings;
 use PrestaShop\PrestaShop\Core\Hook\HookDispatcher;
 use PrestaShopBundle\Component\CsvResponse;
 use PrestaShopBundle\Entity\AdminFilter;
@@ -87,8 +88,6 @@ use Tools;
  */
 class ProductController extends FrameworkBundleAdminController
 {
-    public const FEATURE_FLAG_PRODUCT_PAGE_V2 = 'product_page_v2';
-
     /**
      * Used to validate connected user authorizations.
      */
@@ -381,7 +380,7 @@ class ProductController extends FrameworkBundleAdminController
                 'href' => $this->generateUrl('admin_products_v2_create'),
                 'desc' => $this->trans('New product on experimental page', 'Admin.Catalog.Feature'),
                 'icon' => 'add_circle_outline',
-                'class' => 'btn-outline-primary'
+                'class' => 'btn-outline-primary',
             ];
         }
 
@@ -1342,7 +1341,7 @@ class ProductController extends FrameworkBundleAdminController
      */
     private function isProductPageV2Enabled(): bool
     {
-        $productPageV2FeatureFlag = $this->get('prestashop.core.feature_flags.modifier')->getOneFeatureFlagByName(self::FEATURE_FLAG_PRODUCT_PAGE_V2);
+        $productPageV2FeatureFlag = $this->get('prestashop.core.feature_flags.modifier')->getOneFeatureFlagByName(FeatureFlagSettings::FEATURE_FLAG_PRODUCT_PAGE_V2);
 
         if (null === $productPageV2FeatureFlag) {
             return false;

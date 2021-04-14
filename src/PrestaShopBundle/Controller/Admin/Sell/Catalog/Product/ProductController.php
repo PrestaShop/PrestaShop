@@ -32,10 +32,10 @@ use Exception;
 use PrestaShop\PrestaShop\Core\Domain\Product\Exception\ProductConstraintException;
 use PrestaShop\PrestaShop\Core\Domain\Product\FeatureValue\Exception\DuplicateFeatureValueAssociationException;
 use PrestaShop\PrestaShop\Core\Domain\Product\FeatureValue\Exception\InvalidAssociatedFeatureException;
+use PrestaShop\PrestaShop\Core\FeatureFlag\FeatureFlagSettings;
 use PrestaShop\PrestaShop\Core\Form\IdentifiableObject\Builder\FormBuilderInterface;
 use PrestaShop\PrestaShop\Core\Form\IdentifiableObject\Handler\FormHandlerInterface;
 use PrestaShopBundle\Controller\Admin\FrameworkBundleAdminController;
-use PrestaShopBundle\Controller\Admin\ProductController as V1ProductController;
 use PrestaShopBundle\Security\Annotation\AdminSecurity;
 use PrestaShopBundle\Security\Voter\PageVoter;
 use Symfony\Component\Form\FormInterface;
@@ -214,7 +214,7 @@ class ProductController extends FrameworkBundleAdminController
     private function isProductPageV2Enabled(): bool
     {
         $productPageV2FeatureFlag = $this->get('prestashop.core.feature_flags.modifier')
-            ->getOneFeatureFlagByName(V1ProductController::FEATURE_FLAG_PRODUCT_PAGE_V2);
+            ->getOneFeatureFlagByName(FeatureFlagSettings::FEATURE_FLAG_PRODUCT_PAGE_V2);
 
         if (null === $productPageV2FeatureFlag) {
             return false;
