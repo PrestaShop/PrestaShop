@@ -85,6 +85,20 @@ class ProductImagePathFactoryTest extends TestCase
     }
 
     /**
+     * @dataProvider getDataForImageFolder
+     *
+     * @param string $pathToBaseDir
+     * @param ImageId $imageId
+     * @param string $expected
+     */
+    public function testGetImageFolder(string $pathToBaseDir, ImageId $imageId, string $expected): void
+    {
+        $imagePathFactory = $this->buildImagePathFactory($pathToBaseDir);
+
+        Assert::assertEquals($expected, $imagePathFactory->getImageFolder($imageId));
+    }
+
+    /**
      * @dataProvider getDataForNoImagePath
      *
      * @param string $pathToBaseDir
@@ -128,6 +142,14 @@ class ProductImagePathFactoryTest extends TestCase
         yield ['/img/p', new ImageId(11), 'medium_default', '/img/p/1/1/11-medium_default.jpg'];
         yield ['img/p/', new ImageId(2504), 'large_default', 'img/p/2/5/0/4/2504-large_default.jpg'];
         yield ['/img/p/', new ImageId(2504), 'cart_default', '/img/p/2/5/0/4/2504-cart_default.jpg'];
+    }
+
+    public function getDataForImageFolder(): Generator
+    {
+        yield ['/img/p/', new ImageId(10), '/img/p/1/0'];
+        yield ['/img/p', new ImageId(11), '/img/p/1/1'];
+        yield ['img/p/', new ImageId(2504), 'img/p/2/5/0/4'];
+        yield ['/img/p/', new ImageId(2504), '/img/p/2/5/0/4'];
     }
 
     public function getDataForNoImagePath(): Generator

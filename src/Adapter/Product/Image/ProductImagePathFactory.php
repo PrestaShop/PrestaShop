@@ -137,11 +137,21 @@ class ProductImagePathFactory
      *
      * @return string
      */
-    private function getBaseImagePathWithoutExtension(ImageId $imageId): string
+    public function getImageFolder(ImageId $imageId): string
     {
         $id = $imageId->getValue();
-        $path = implode('/', str_split((string) $id)) . '/' . $id;
+        $path = implode('/', str_split((string) $id));
 
         return sprintf('%s%s', $this->pathToBaseDir, $path);
+    }
+
+    /**
+     * @param ImageId $imageId
+     *
+     * @return string
+     */
+    private function getBaseImagePathWithoutExtension(ImageId $imageId): string
+    {
+        return $this->getImageFolder($imageId) . '/' . $imageId->getValue();
     }
 }
