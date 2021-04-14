@@ -19,7 +19,7 @@ class AccountIdentity extends FOBasePage {
     this.birthdateInput = `${this.createAccountForm} input[name='birthday']`;
     this.customerPrivacyCheckbox = `${this.createAccountForm} input[name='customer_privacy']`;
     this.psgdprCheckbox = `${this.createAccountForm} input[name='psgdpr']`;
-    this.newsletterCheckbox = `${this.createAccountForm} input[name='newsletter']`;
+    this.newsletterCheckbox = `${this.createAccountForm} input[name=newsletter]`;
     this.saveButton = `${this.createAccountForm} .form-control-submit`;
   }
 
