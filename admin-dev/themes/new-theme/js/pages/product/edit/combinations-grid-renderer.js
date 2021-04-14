@@ -98,8 +98,9 @@ export default class CombinationsGridRenderer {
       $impactOnPriceInput.data('initial-value', combination.impactOnPrice);
       $(ProductMap.combinations.tableRow.editButton(rowIndex), $row).data('id', combination.id);
       $(ProductMap.combinations.tableRow.deleteButton(rowIndex), $row).data('id', combination.id);
-      $(ProductMap.combinations.tableRow.combinationImg, $row).attr('src', combination.imageUrl);
-      $(ProductMap.combinations.tableRow.combinationImg, $row).attr('alt', combination.name);
+      $(ProductMap.combinations.tableRow.combinationImg, $row)
+        .attr('src', combination.imageUrl)
+        .attr('alt', combination.name);
 
       if (combination.isDefault) {
         $(ProductMap.combinations.tableRow.isDefaultInput(rowIndex), $row).prop('checked', true);
