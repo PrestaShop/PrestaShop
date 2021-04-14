@@ -57,13 +57,21 @@ Feature: Associate combination image from Back Office (BO)
       | Size  | [S,M]              |
       | Color | [White,Black] |
     And product "product1" should have following combinations:
-      | id reference   | combination name        | reference | attributes           | impact on price | quantity | is default |
-      | product1SWhite | Size - S, Color - White |           | [Size:S,Color:White] | 0               | 0        | true       |
-      | product1SBlack | Size - S, Color - Black |           | [Size:S,Color:Black] | 0               | 0        | false      |
-      | product1MWhite | Size - M, Color - White |           | [Size:M,Color:White] | 0               | 0        | false      |
-      | product1MBlack | Size - M, Color - Black |           | [Size:M,Color:Black] | 0               | 0        | false      |
+      | id reference   | combination name        | reference | attributes           | impact on price | quantity | is default | image url |
+      | product1SWhite | Size - S, Color - White |           | [Size:S,Color:White] | 0               | 0        | true       |           |
+      | product1SBlack | Size - S, Color - Black |           | [Size:S,Color:Black] | 0               | 0        | false      |           |
+      | product1MWhite | Size - M, Color - White |           | [Size:M,Color:White] | 0               | 0        | false      |           |
+      | product1MBlack | Size - M, Color - Black |           | [Size:M,Color:Black] | 0               | 0        | false      |           |
     And combination "product1SWhite" should have no images
     When I associate "[image1, image2]" to combination "product1SWhite"
     Then combination "product1SWhite" should have following images "[image1, image2]"
+    When I associate "[image3, image4]" to combination "product1MBlack"
+    Then combination "product1MBlack" should have following images "[image3, image4]"
+    And product "product1" should have following combinations:
+      | id reference   | combination name        | reference | attributes           | impact on price | quantity | is default | image url                         |
+      | product1SWhite | Size - S, Color - White |           | [Size:S,Color:White] | 0               | 0        | true       | /img/p/{image1}-small_default.jpg |
+      | product1SBlack | Size - S, Color - Black |           | [Size:S,Color:Black] | 0               | 0        | false      |                                   |
+      | product1MWhite | Size - M, Color - White |           | [Size:M,Color:White] | 0               | 0        | false      |                                   |
+      | product1MBlack | Size - M, Color - Black |           | [Size:M,Color:Black] | 0               | 0        | false      | /img/p/{image3}-small_default.jpg |
     When I remove all images associated to combination "product1SWhite"
     And combination "product1SWhite" should have no images
