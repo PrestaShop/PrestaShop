@@ -72,8 +72,7 @@ services:
         class: PrestaShop\PrestaShop\Adapter\Product\Image\ProductImagePathFactory
         arguments:
             - "@=service('prestashop.adapter.legacy.configuration').getBoolean('PS_LEGACY_IMAGES')"
-            - ''
-            - !php/const _PS_PROD_IMG_
+            - !php/const _PS_PROD_IMG_DIR_
             - !php/const _PS_TMP_IMG_DIR_
             - '@=service("prestashop.adapter.legacy.context").getContext().language.iso_code'
 
@@ -81,7 +80,6 @@ services:
         class: PrestaShop\PrestaShop\Adapter\Product\Image\ProductImagePathFactory
         arguments:
             - "@=service('prestashop.adapter.legacy.configuration').getBoolean('PS_LEGACY_IMAGES')"
-            - '@=service("prestashop.adapter.legacy.context").getContext().link.getAdminBaseLink()'
             - !php/const _PS_PROD_IMG_
             - !php/const _PS_TMP_IMG_DIR_
             - '@=service("prestashop.adapter.legacy.context").getContext().language.iso_code'
