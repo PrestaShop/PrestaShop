@@ -53,7 +53,7 @@ services:
             - '@prestashop.adapter.product.stock.repository.stock_available_repository'
             - '@prestashop.core.grid.query_builder.product_combination'
             - '@prestashop.adapter.attribute.repository.attribute_repository'
-            - '@=service("prestashop.adapter.legacy.context").getContext().shop.id'
+            - '@prestashop.adapter.product.image.repository.product_image_repository'
             - '@prestashop.adapter.product.image.product_image_path_factory'
         tags:
             - name: tactician.handler
