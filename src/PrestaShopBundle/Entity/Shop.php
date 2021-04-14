@@ -301,7 +301,7 @@ class Shop
     }
 
     /**
-     * Checks if a configuration value is overridden for this shop or his shop group
+     * Checks if a configuration value is overridden for this shop or its shop group
      *
      * @param ShopConfigurationInterface $configuration
      * @param string $configurationKey
