@@ -51,11 +51,6 @@ class ProductImagePathFactory
     /**
      * @var string
      */
-    private $basePath;
-
-    /**
-     * @var string
-     */
     private $pathToBaseDir;
 
     /**
