@@ -167,10 +167,10 @@ export default class CombinationsManager {
       }
 
       // Reset all columns, we need to force the attributes for CSS matching
-      $(ProductMap.combinations.sortableColumns, this.$combinationsContainer).removeData('sortIsCurrent', undefined);
-      $(ProductMap.combinations.sortableColumns, this.$combinationsContainer).removeData('sortDirection', undefined);
-      $(ProductMap.combinations.sortableColumns, this.$combinationsContainer).removeAttr('data-sort-is-current', '');
-      $(ProductMap.combinations.sortableColumns, this.$combinationsContainer).removeAttr('data-sort-direction', '');
+      $(ProductMap.combinations.sortableColumns, this.$combinationsContainer).removeData('sortIsCurrent');
+      $(ProductMap.combinations.sortableColumns, this.$combinationsContainer).removeData('sortDirection');
+      $(ProductMap.combinations.sortableColumns, this.$combinationsContainer).removeAttr('data-sort-is-current');
+      $(ProductMap.combinations.sortableColumns, this.$combinationsContainer).removeAttr('data-sort-direction');
 
       // Set correct data in current column, we need to force the attributes for CSS matching
       $sortableColumn.data('sortIsCurrent', 'true');

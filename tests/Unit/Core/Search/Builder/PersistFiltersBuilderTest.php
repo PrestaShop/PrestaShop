@@ -45,7 +45,7 @@ class PersistFiltersBuilderTest extends TestCase
         $builder = new PersistFiltersBuilder(
             $this->buildUnusedRepository(),
             $this->buildUnusedEmployeeProviderMock(),
-            static::SHOP_ID
+            self::SHOP_ID
         );
         $filters = $builder->buildFilters();
         $this->assertNull($filters);
@@ -65,7 +65,7 @@ class PersistFiltersBuilderTest extends TestCase
         $builder = new PersistFiltersBuilder(
             $this->buildRepositoryByFilterIdMock($savedFilters, 'language'),
             $this->buildEmployeeProviderMock(),
-            static::SHOP_ID
+            self::SHOP_ID
         );
 
         $filters = $builder->buildFilters($inputFilters);
@@ -88,7 +88,7 @@ class PersistFiltersBuilderTest extends TestCase
         $builder = new PersistFiltersBuilder(
             $this->buildRepositoryByRouteMock($savedFilters, 'language', 'index'),
             $this->buildEmployeeProviderMock(),
-            static::SHOP_ID
+            self::SHOP_ID
         );
         $builder->setConfig([
             'request' => $this->buildRequestMock('PrestaShopBundle\Controller\Admin\Improve\International\LanguageController::indexAction'),
@@ -112,7 +112,7 @@ class PersistFiltersBuilderTest extends TestCase
         $builder = new PersistFiltersBuilder(
             $this->buildUnusedRepository(),
             $this->buildEmployeeProviderMock(1),
-            static::SHOP_ID
+            self::SHOP_ID
         );
 
         $filters = $builder->buildFilters($inputFilters);
@@ -138,8 +138,8 @@ class PersistFiltersBuilderTest extends TestCase
             ->expects($this->once())
             ->method('createOrUpdateByEmployeeAndFilterId')
             ->with(
-                $this->equalTo(static::EMPLOYEE_ID),
-                $this->equalTo(static::SHOP_ID),
+                $this->equalTo(self::EMPLOYEE_ID),
+                $this->equalTo(self::SHOP_ID),
                 $this->equalTo($filters),
                 $this->equalTo($filterId)
             )
@@ -171,8 +171,8 @@ class PersistFiltersBuilderTest extends TestCase
             ->expects($this->once())
             ->method('createOrUpdateByEmployeeAndRouteParams')
             ->with(
-                $this->equalTo(static::EMPLOYEE_ID),
-                $this->equalTo(static::SHOP_ID),
+                $this->equalTo(self::EMPLOYEE_ID),
+                $this->equalTo(self::SHOP_ID),
                 $this->equalTo($filters),
                 $this->equalTo($controller),
                 $this->equalTo($action)
@@ -223,7 +223,7 @@ class PersistFiltersBuilderTest extends TestCase
         $employeeProviderMock
             ->expects(null !== $calledTimes ? $this->exactly($calledTimes) : $this->atLeastOnce())
             ->method('getId')
-            ->willReturn(static::EMPLOYEE_ID)
+            ->willReturn(self::EMPLOYEE_ID)
         ;
 
         return $employeeProviderMock;
