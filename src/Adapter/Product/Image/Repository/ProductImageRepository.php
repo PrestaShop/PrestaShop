@@ -64,26 +64,18 @@ class ProductImageRepository extends AbstractObjectModelRepository
     private $productImageValidator;
 
     /**
-     * @var int
-     */
-    private $contextShopId;
-
-    /**
      * @param Connection $connection
      * @param string $dbPrefix
      * @param ProductImageValidator $productImageValidator
-     * @param int $contextShopId
      */
     public function __construct(
         Connection $connection,
         string $dbPrefix,
         ProductImageValidator $productImageValidator,
-        int $contextShopId
     ) {
         $this->connection = $connection;
         $this->dbPrefix = $dbPrefix;
         $this->productImageValidator = $productImageValidator;
-        $this->contextShopId = $contextShopId;
     }
 
     /**
@@ -246,21 +238,15 @@ class ProductImageRepository extends AbstractObjectModelRepository
      */
     public function getImagesIdsForCombinations(array $combinationIds): array
     {
+        //@todo: multishop not handled
         $qb = $this->connection->createQueryBuilder();
         $qb->select('pai.id_product_attribute, pai.id_image')
             ->from($this->dbPrefix . 'product_attribute_image', 'pai')
             ->leftJoin(
                 'pai',
-                $this->dbPrefix . 'image_shop', 'ims',
-                'pai.id_image = ims.id_image'
-            )
-            ->leftJoin(
-                'pai',
                 $this->dbPrefix . 'image', 'i',
                 'i.id_image = pai.id_image'
             )
-            ->where('ims.id_shop = :shopId')
-            ->setParameter('shopId', $this->contextShopId)
             ->andWhere($qb->expr()->in('pai.id_product_attribute', ':combinationIds'))
             ->setParameter('combinationIds', $combinationIds, Connection::PARAM_INT_ARRAY)
             ->orderBy('i.position', 'asc')
