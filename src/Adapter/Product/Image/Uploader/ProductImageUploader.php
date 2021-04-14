@@ -121,7 +121,7 @@ class ProductImageUploader extends AbstractImageUploader
     public function upload(Image $image, string $filePath): string
     {
         $this->createDestinationDirectory($image);
-        $destinationPath = $this->productImagePathFactory->getBaseImagePath($image);
+        $destinationPath = $this->productImagePathFactory->getPath($image);
         $this->uploadFromTemp($filePath, $destinationPath);
         $this->imageGenerator->generateImagesByTypes($destinationPath, $this->productImageRepository->getProductImageTypes());
 
@@ -142,7 +142,7 @@ class ProductImageUploader extends AbstractImageUploader
      */
     public function remove(Image $image): void
     {
-        $destinationPath = $this->productImagePathFactory->getBaseImagePath($image);
+        $destinationPath = $this->productImagePathFactory->getPath($image);
         $this->deleteCachedImages($image);
         $this->deleteGeneratedImages($destinationPath, $this->productImageRepository->getProductImageTypes());
     }

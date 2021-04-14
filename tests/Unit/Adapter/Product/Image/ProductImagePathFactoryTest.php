@@ -65,11 +65,11 @@ class ProductImagePathFactoryTest extends TestCase
      * @param Image $image
      * @param string $expected
      */
-    public function testGetBaseImagePath(string $pathToBaseDir, Image $image, string $expected): void
+    public function testGetPath(string $pathToBaseDir, Image $image, string $expected): void
     {
         $imagePathFactory = $this->buildImagePathFactory($pathToBaseDir);
 
-        Assert::assertEquals($expected, $imagePathFactory->getBaseImagePath($image));
+        Assert::assertEquals($expected, $imagePathFactory->getPath($image));
     }
 
     /**
