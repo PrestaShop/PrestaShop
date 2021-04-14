@@ -120,20 +120,20 @@
             </p>
             {% if module.attributes.multistoreCompatibility is defined and module.attributes.multistoreCompatibility is not null %}
               <div class="module-readmore-multistore-content">
-                <h3>{{ 'Multistore compatibility:'|trans({}, 'Admin.Modules.Notification') }}</h3>
+                <h3>{{ 'Multistore compatibility:'|trans({}, 'Admin.Modules.Feature') }}</h3>
                 {% if module.attributes.multistoreCompatibility is same as(constant('\\Module::MULTISTORE_COMPATIBILITY_YES')) %}
-                  {{ 'Yes: this module is compatible with the multistore feature. It can be either:'|trans({}, 'Admin.Modules.Notification') }}
+                  {{ 'Yes: this module is compatible with the multistore feature. It can be either:'|trans({}, 'Admin.Modules.Feature') }}
                   <ul>
-                    <li>{{ 'configured differently from one store to another;'|trans({}, 'Admin.Modules.Notification') }}</li>
-                    <li>{{ 'configured quickly in the same way on all stores thanks to the all shops context or to the group of shops;'|trans({}, 'Admin.Modules.Notification') }}</li>
-                    <li>{{ 'or even activated for one store and deactivated for another.'|trans({}, 'Admin.Modules.Notification') }}</li>
+                    <li>{{ 'configured differently from one store to another;'|trans({}, 'Admin.Modules.Feature') }}</li>
+                    <li>{{ 'configured quickly in the same way on all stores thanks to the all shops context or to the group of shops;'|trans({}, 'Admin.Modules.Feature') }}</li>
+                    <li>{{ 'or even activated for one store and deactivated for another.'|trans({}, 'Admin.Modules.Feature') }}</li>
                   </ul>
                 {% elseif module.attributes.multistoreCompatibility is same as(constant('\\Module::MULTISTORE_COMPATIBILITY_PARTIAL')) %}
-                  {{ 'Partially: this module is partially compatible with the multistore feature. Some of its options might not be available.'|trans({}, 'Admin.Modules.Notification') }}
+                  {{ 'Partially: this module is partially compatible with the multistore feature. Some of its options might not be available.'|trans({}, 'Admin.Modules.Feature') }}
                 {% elseif module.attributes.multistoreCompatibility is same as(constant('\\Module::MULTISTORE_COMPATIBILITY_NOT_CONCERNED')) %}
-                  {{ 'Not concerned: this module is not compatible with the multistore feature because it wouldn\'t be useful.'|trans({}, 'Admin.Modules.Notification') }}
+                  {{ 'Not concerned: this module is not compatible with the multistore feature because it wouldn\'t be useful.'|trans({}, 'Admin.Modules.Feature') }}
                 {% elseif module.attributes.multistoreCompatibility is same as(constant('\\Module::MULTISTORE_COMPATIBILITY_NO')) %}
-                  {{ 'No: this module is not compatible with the multistore feature. It means that its configuration applies for all stores.'|trans({}, 'Admin.Modules.Notification') }}
+                  {{ 'No: this module is not compatible with the multistore feature. It means that its configuration applies for all stores.'|trans({}, 'Admin.Modules.Feature') }}
                 {% endif %}
               </div>
             {% endif %}
