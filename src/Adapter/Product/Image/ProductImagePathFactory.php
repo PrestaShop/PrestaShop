@@ -66,23 +66,23 @@ class ProductImagePathFactory
     /**
      * @param bool $isLegacyImageMode
      * @param string $basePath
-     * @param string $relativeImagesPath
+     * @param string $relativeImagesDir
      * @param string $temporaryImgDir
      * @param string $contextLangIsoCode
      */
     public function __construct(
         bool $isLegacyImageMode,
         string $basePath,
-        string $relativeImagesPath,
+        string $relativeImagesDir,
         string $temporaryImgDir,
         string $contextLangIsoCode
     ) {
         $this->isLegacyImageMode = $isLegacyImageMode;
-        $this->temporaryImgDir = $temporaryImgDir;
         // make sure one trailing slash is always there
-        $this->pathToBaseDir = rtrim($basePath, '/') . '/' . rtrim($relativeImagesPath, '/') . '/';
+        $this->temporaryImgDir = rtrim($temporaryImgDir, '/') . '/';
+        $this->basePath = rtrim($basePath, '/') . '/';
+        $this->pathToBaseDir = $this->basePath . rtrim(ltrim($relativeImagesDir, '/'), '/') . '/';
         $this->contextLangIsoCode = $contextLangIsoCode;
-        $this->basePath = $basePath;
     }
 
     /**
@@ -166,7 +166,7 @@ class ProductImagePathFactory
         if ($this->isLegacyImageMode) {
             $path = $image->id_product . '-' . $image->id;
         } else {
-            $path = $image->getImgPath();
+            $path = ltrim($image->getImgPath(), '/');
         }
 
         return sprintf('%s%s', $this->pathToBaseDir, $path);
