@@ -33,7 +33,6 @@ use PDO;
 use PrestaShop\Decimal\DecimalNumber;
 use PrestaShop\PrestaShop\Adapter\Attribute\Repository\AttributeRepository;
 use PrestaShop\PrestaShop\Adapter\Product\AbstractProductHandler;
-use PrestaShop\PrestaShop\Adapter\Product\Combination\Repository\CombinationRepository;
 use PrestaShop\PrestaShop\Adapter\Product\Image\ProductImagePathFactory;
 use PrestaShop\PrestaShop\Adapter\Product\Image\Repository\ProductImageRepository;
 use PrestaShop\PrestaShop\Adapter\Product\Stock\Repository\StockAvailableRepository;
@@ -46,23 +45,12 @@ use PrestaShop\PrestaShop\Core\Domain\Product\Combination\ValueObject\Combinatio
 use PrestaShop\PrestaShop\Core\Domain\Product\Image\ValueObject\ImageId;
 use PrestaShop\PrestaShop\Core\Grid\Query\DoctrineQueryBuilderInterface;
 use PrestaShop\PrestaShop\Core\Search\Filters\ProductCombinationFilters;
-use PrestaShop\PrestaShop\Core\Util\Number\NumberExtractor;
 
 /**
  * Handles @see GetEditableCombinationsList using legacy object model
  */
 final class GetEditableCombinationsListHandler extends AbstractProductHandler implements GetEditableCombinationsListHandlerInterface
 {
-    /**
-     * @var CombinationRepository
-     */
-    private $combinationRepository;
-
-    /**
-     * @var NumberExtractor
-     */
-    private $numberExtractor;
-
     /**
      * @var StockAvailableRepository
      */
@@ -94,8 +82,6 @@ final class GetEditableCombinationsListHandler extends AbstractProductHandler im
     private $cachedImageIds = [];
 
     /**
-     * @param CombinationRepository $combinationRepository
-     * @param NumberExtractor $numberExtractor
      * @param StockAvailableRepository $stockAvailableRepository
      * @param DoctrineQueryBuilderInterface $combinationQueryBuilder
      * @param AttributeRepository $attributeRepository
@@ -103,16 +89,12 @@ final class GetEditableCombinationsListHandler extends AbstractProductHandler im
      * @param ProductImagePathFactory $productImagePathFactory
      */
     public function __construct(
-        CombinationRepository $combinationRepository,
-        NumberExtractor $numberExtractor,
         StockAvailableRepository $stockAvailableRepository,
         DoctrineQueryBuilderInterface $combinationQueryBuilder,
         AttributeRepository $attributeRepository,
         ProductImageRepository $productImageRepository,
         ProductImagePathFactory $productImagePathFactory
     ) {
-        $this->combinationRepository = $combinationRepository;
-        $this->numberExtractor = $numberExtractor;
         $this->stockAvailableRepository = $stockAvailableRepository;
         $this->combinationQueryBuilder = $combinationQueryBuilder;
         $this->attributeRepository = $attributeRepository;
@@ -186,7 +168,10 @@ final class GetEditableCombinationsListHandler extends AbstractProductHandler im
                 );
             }
 
-            $imageId = $this->getImageId($combinationId, $imageIdsByCombinationIds);
+            $imageId = null;
+            if (!empty($imageIdsByCombinationIds[$combinationId])) {
+                $imageId = $imageIdsByCombinationIds[$combinationId][0];
+            }
 
             $impactOnPrice = new DecimalNumber($combination['price']);
             $combinationsForEditing[] = new EditableCombinationForListing(

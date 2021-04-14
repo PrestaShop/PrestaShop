@@ -263,9 +263,6 @@ class CombinationListingFeatureContext extends AbstractCombinationFeatureContext
         foreach ($listCombinations as $key => $editableCombinationForListing) {
             $expectedCombination = $expectedDataRows[$key];
 
-            // @todo: assert combination images when we implement combination image association commands
-            Assert::assertNull($editableCombinationForListing->getImageUrl(), 'Unexpected combination image');
-
             Assert::assertSame(
                 $expectedCombination['combination name'],
                 $editableCombinationForListing->getCombinationName(),
@@ -298,6 +295,30 @@ class CombinationListingFeatureContext extends AbstractCombinationFeatureContext
                 count($editableCombinationForListing->getAttributesInformation()),
                 'Unexpected attributes count in combination'
             );
+
+            if (empty($expectedCombination['image url'])) {
+                Assert::assertNull($editableCombinationForListing->getImageUrl(), 'Unexpected combination image');
+            } else {
+                // Get image reference which is integrated in image url
+                $imageUrl = $expectedCombination['image url'];
+                preg_match('_\{(.+)\}_', $imageUrl, $matches);
+                $imageReference = $matches[1];
+                $imageId = $this->getSharedStorage()->get($imageReference);
+
+                // Now rebuild the image folder with image id appended
+                $imageFolder = implode('/', str_split((string) $imageId)) . '/' . $imageId;
+                $realImageUrl = str_replace(
+                    '{' . $imageReference . '}',
+                    $imageFolder,
+                    $imageUrl
+                );
+
+                Assert::assertEquals(
+                    $realImageUrl,
+                    $editableCombinationForListing->getImageUrl(),
+                    'Unexpected combination image url'
+                );
+            }
 
             $this->assertAttributesInfo($expectedAttributesInfo, $editableCombinationForListing->getAttributesInformation());
 
