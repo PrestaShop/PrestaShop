@@ -30,7 +30,7 @@
     "file-loader": "^1.1.11",
     "material-design-icons": "^2",
     "mini-css-extract-plugin": "^0.8.0",
-    "node-sass": "^4.13.1",
+    "node-sass": "^4.14.1",
     "optimize-css-assets-webpack-plugin": "^5.0.0",
     "path": "^0.12.7",
     "postcss-cssnext": "^3.1.0",
