@@ -155,7 +155,7 @@ class ProductController extends FrameworkBundleAdminController
      *
      * @return BinaryFileResponse
      */
-    public function downloadVirtualFileAction($virtualProductFileId)
+    public function downloadVirtualFileAction(int $virtualProductFileId): BinaryFileResponse
     {
         $configuration = $this->get('prestashop.adapter.legacy.configuration');
         $download = $this->getDoctrine()

@@ -129,9 +129,9 @@ final class VirtualProductFileCommandsBuilder implements ProductCommandsBuilderI
         if (isset($virtualProductFileData['expiration_date'])) {
             $update = true;
             $command->setExpirationDate(
-            empty($virtualProductFileData['expiration_date']) ?
-                new NullDateTime() :
-                new DateTimeImmutable($virtualProductFileData['expiration_date'])
+                empty($virtualProductFileData['expiration_date']) ?
+                    new NullDateTime() :
+                    new DateTimeImmutable($virtualProductFileData['expiration_date'])
             );
         }
 
