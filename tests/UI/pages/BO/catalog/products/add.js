@@ -141,11 +141,8 @@ class AddProduct extends BOBasePage {
    * @returns {Promise<string>}
    */
   async saveProduct(page) {
-    const [growlTextMessage] = await Promise.all([
-      this.getGrowlMessageContent(page),
-      page.click(this.saveProductButton),
-    ]);
-
+    await page.click(this.saveProductButton);
+    const growlTextMessage = await this.getGrowlMessageContent(page, 30000);
     await this.closeGrowlMessage(page);
 
     return growlTextMessage;
@@ -238,6 +235,9 @@ class AddProduct extends BOBasePage {
     await page.type(this.productCombinationBulkQuantityInput, quantity.toString());
     await this.scrollTo(page, this.applyOnCombinationsButton);
     await page.click(this.applyOnCombinationsButton);
+
+    // Close growl message
+    await this.closeGrowlMessage(page);
   }
 
   /**
@@ -317,10 +317,8 @@ class AddProduct extends BOBasePage {
         this.waitForVisibleSelector(page, this.modalDialog),
       ]);
       await page.waitForTimeout(250);
-      await Promise.all([
-        page.click(this.modalDialogYesButton),
-        this.waitForSelectorAndClick(page, this.growlCloseButton),
-      ]);
+      await page.click(this.modalDialogYesButton);
+      await this.closeGrowlMessage(page);
     }
   }
 
@@ -383,10 +381,10 @@ class AddProduct extends BOBasePage {
 
     // Apply specific price
     await this.scrollTo(page, this.applyButton);
-    const [growlMessageText] = await Promise.all([
-      this.getGrowlMessageContent(page),
-      page.click(this.applyButton),
-    ]);
+    await page.click(this.applyButton);
+
+    // Get growl message
+    const growlMessageText = await this.getGrowlMessageContent(page, 30000);
 
     await this.closeGrowlMessage(page);
     await this.goToFormStep(page, 1);

@@ -147,7 +147,7 @@ module.exports = class BOBasePage extends CommonPage {
 
     // Growls
     this.growlDefaultDiv = '#growls-default';
-    this.growlMessageBlock = `${this.growlDefaultDiv} .growl-message:last-of-type`;
+    this.growlMessageBlock = `${this.growlDefaultDiv} .growl-message`;
     this.growlCloseButton = `${this.growlDefaultDiv} .growl-close`;
 
     // Alert Text
@@ -218,10 +218,16 @@ module.exports = class BOBasePage extends CommonPage {
    * @returns {Promise<void>}
    */
   async closeOnboardingModal(page, timeout = 1000) {
-    if (!(await this.elementNotVisible(page, this.onboardingCloseButton, timeout))) {
+    if (await this.elementVisible(page, this.onboardingCloseButton, timeout)) {
+      // Close popup
       await page.click(this.onboardingCloseButton);
-      await this.waitForVisibleSelector(page, this.onboardingStopButton);
-      await page.click(this.onboardingStopButton);
+      await this.waitForHiddenSelector(page, this.onboardingCloseButton);
+
+      // Close menu block
+      if (await this.elementVisible(page, this.onboardingStopButton, timeout)) {
+        await page.click(this.onboardingStopButton);
+        await this.waitForHiddenSelector(page, this.onboardingStopButton);
+      }
     }
   }
 
@@ -319,8 +325,8 @@ module.exports = class BOBasePage extends CommonPage {
    * @param page
    * @return {Promise<string>}
    */
-  getGrowlMessageContent(page) {
-    return this.getTextContent(page, this.growlMessageBlock);
+  getGrowlMessageContent(page, timeout = 10000) {
+    return page.textContent(this.growlMessageBlock, {timeout});
   }
 
   /**
@@ -329,13 +335,19 @@ module.exports = class BOBasePage extends CommonPage {
    * @return {Promise<void>}
    */
   async closeGrowlMessage(page) {
-    // Close growl message if exist
-    try {
-      await page.click(this.growlCloseButton);
-      await this.waitForHiddenSelector(page, this.growlMessageBlock);
-    } catch (e) {
-      // If element does not exist it's already not visible
+    let growlNotVisible = await this.elementNotVisible(page, this.growlMessageBlock, 10000);
+
+    while (!growlNotVisible) {
+      try {
+        await page.click(this.growlCloseButton);
+      } catch (e) {
+        // If element does not exist it's already not visible
+      }
+
+      growlNotVisible = await this.elementNotVisible(page, this.growlMessageBlock, 2000);
     }
+
+    await this.waitForHiddenSelector(page, this.growlMessageBlock);
   }
 
   /**
