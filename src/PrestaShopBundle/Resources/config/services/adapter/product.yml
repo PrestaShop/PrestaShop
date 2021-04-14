@@ -75,7 +75,7 @@ services:
             - '@prestashop.core.util.number.number_extractor'
             - '@prestashop.adapter.product.stock.repository.stock_available_repository'
             - '@prestashop.adapter.product.virtual_product.repository.virtual_product_file_repository'
-            - '@prestashop.adapter.tax_rules_group.repository.tax_rules_group_repository'
+            - '@prestashop.adapter.tax.tax_computer'
             - "@=service('prestashop.adapter.legacy.configuration').getInt('PS_COUNTRY_DEFAULT')"
         tags:
             - name: tactician.handler

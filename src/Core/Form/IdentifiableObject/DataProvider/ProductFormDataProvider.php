@@ -229,7 +229,7 @@ final class ProductFormDataProvider implements FormDataProviderInterface
             'quantity' => $stockInformation->getQuantity(),
             'minimal_quantity' => $stockInformation->getMinimalQuantity(),
             'stock_location' => $stockInformation->getLocation(),
-            'low_stock_threshold' => $stockInformation->getLowStockThreshold(),
+            'low_stock_threshold' => $stockInformation->getLowStockThreshold() ?: null,
             'low_stock_alert' => $stockInformation->isLowStockAlertEnabled(),
             'pack_stock_type' => $stockInformation->getPackStockType(),
             'out_of_stock_type' => $stockInformation->getOutOfStockType(),

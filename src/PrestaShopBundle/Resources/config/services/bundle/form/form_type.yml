@@ -1380,6 +1380,8 @@ services:
         arguments:
             - '@prestashop.core.form.choice_provider.out_of_stock_type_choice_provider'
             - '@prestashop.core.form.choice_provider.pack_stock_type_choice_provider'
+            - '@router'
+            - "@=service('prestashop.adapter.legacy.configuration').getBoolean('PS_STOCK_MANAGEMENT')"
         tags:
             - { name: form.type }
 
@@ -1466,6 +1468,24 @@ services:
         public: true
         arguments:
             - '@router'
+            - "@=service('prestashop.adapter.legacy.configuration').getBoolean('PS_STOCK_MANAGEMENT')"
+        tags:
+            - { name: form.type }
+
+    form.type.sell.product.combination.combination_price_impact_type:
+        class: 'PrestaShopBundle\Form\Admin\Sell\Product\Combination\CombinationPriceImpactType'
+        parent: 'form.type.translatable.aware'
+        public: true
+        arguments:
+            - '@=service("prestashop.adapter.data_provider.currency").getDefaultCurrency()'
+            - "@=service('prestashop.adapter.legacy.configuration').get('PS_WEIGHT_UNIT')"
+        tags:
+            - { name: form.type }
+
+    form.type.sell.product.combination.combination_details_type:
+        class: 'PrestaShopBundle\Form\Admin\Sell\Product\Combination\CombinationDetailsType'
+        parent: 'form.type.translatable.aware'
+        public: true
         tags:
             - { name: form.type }
 

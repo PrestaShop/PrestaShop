@@ -59,3 +59,11 @@ services:
     prestashop.core.form.command_builder.product.combination.stock_command_builder:
         class: PrestaShop\PrestaShop\Core\Form\IdentifiableObject\CommandBuilder\Product\Combination\CombinationStockCommandsBuilder
         tags: ['core.combination_command_builder']
+
+    prestashop.core.form.command_builder.product.combination.price_command_builder:
+        class: PrestaShop\PrestaShop\Core\Form\IdentifiableObject\CommandBuilder\Product\Combination\CombinationPriceCommandsBuilder
+        tags: ['core.combination_command_builder']
+
+    prestashop.core.form.command_builder.product.combination.details_command_builder:
+        class: PrestaShop\PrestaShop\Core\Form\IdentifiableObject\CommandBuilder\Product\Combination\CombinationDetailsCommandsBuilder
+        tags: ['core.combination_command_builder']

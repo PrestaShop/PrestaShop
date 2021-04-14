@@ -897,7 +897,7 @@ class ProductFormDataProviderTest extends TestCase
                 'quantity' => static::DEFAULT_QUANTITY,
                 'minimal_quantity' => 0,
                 'stock_location' => 'location',
-                'low_stock_threshold' => 0,
+                'low_stock_threshold' => null,
                 'low_stock_alert' => false,
                 'pack_stock_type' => PackStockType::STOCK_TYPE_DEFAULT,
                 'out_of_stock_type' => OutOfStockType::OUT_OF_STOCK_DEFAULT,
