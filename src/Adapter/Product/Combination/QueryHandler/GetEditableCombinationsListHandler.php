@@ -37,14 +37,12 @@ use PrestaShop\PrestaShop\Adapter\Product\Combination\Repository\CombinationRepo
 use PrestaShop\PrestaShop\Adapter\Product\Image\ProductImagePathFactory;
 use PrestaShop\PrestaShop\Adapter\Product\Image\Repository\ProductImageRepository;
 use PrestaShop\PrestaShop\Adapter\Product\Stock\Repository\StockAvailableRepository;
-use PrestaShop\PrestaShop\Core\Domain\Language\ValueObject\LanguageId;
 use PrestaShop\PrestaShop\Core\Domain\Product\Combination\Query\GetEditableCombinationsList;
 use PrestaShop\PrestaShop\Core\Domain\Product\Combination\QueryHandler\GetEditableCombinationsListHandlerInterface;
 use PrestaShop\PrestaShop\Core\Domain\Product\Combination\QueryResult\CombinationAttributeInformation;
 use PrestaShop\PrestaShop\Core\Domain\Product\Combination\QueryResult\CombinationListForEditing;
 use PrestaShop\PrestaShop\Core\Domain\Product\Combination\QueryResult\EditableCombinationForListing;
 use PrestaShop\PrestaShop\Core\Domain\Product\Combination\ValueObject\CombinationId;
-use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductId;
 use PrestaShop\PrestaShop\Core\Grid\Query\DoctrineQueryBuilderInterface;
 use PrestaShop\PrestaShop\Core\Search\Filters\ProductCombinationFilters;
 use PrestaShop\PrestaShop\Core\Util\Number\NumberExtractor;
@@ -143,33 +141,33 @@ final class GetEditableCombinationsListHandler extends AbstractProductHandler im
             $query->getLanguageId()
         );
 
+        $imageIdsByCombinationIds = $this->productImageRepository->getImagesIdsForCombinations($combinationIds);
+
         return $this->formatEditableCombinationsForListing(
-            $query->getProductId(),
             $combinations,
             $attributesInformation,
             $total,
-            $query->getLanguageId()
+            $imageIdsByCombinationIds
         );
     }
 
     /**
-     * @param ProductId $productId
      * @param array $combinations
      * @param array<int, array<int, mixed>> $attributesInformationByCombinationId
      * @param int $totalCombinationsCount
-     * @param LanguageId $languageId
+     * @param array $imageIdsByCombinationIds
      *
      * @return CombinationListForEditing
      */
     private function formatEditableCombinationsForListing(
-        ProductId $productId,
         array $combinations,
         array $attributesInformationByCombinationId,
         int $totalCombinationsCount,
-        LanguageId $languageId
+        array $imageIdsByCombinationIds
     ): CombinationListForEditing {
         $combinationsForEditing = [];
 
+        $cachedImages = [];
         foreach ($combinations as $combination) {
             $combinationId = (int) $combination['id_product_attribute'];
             $combinationAttributesInformation = [];
@@ -183,12 +181,7 @@ final class GetEditableCombinationsListHandler extends AbstractProductHandler im
                 );
             }
 
-            //@todo - performance can be improved. Image could be cached. Each combination only reuses existing product images
-            $image = $this->productImageRepository->findFirstImageForCombination(
-                $productId,
-                new CombinationId($combinationId),
-                $languageId
-            );
+            $image = $this->getImage($combinationId, $imageIdsByCombinationIds, $cachedImages);
 
             $impactOnPrice = new DecimalNumber($combination['price']);
             $combinationsForEditing[] = new EditableCombinationForListing(
@@ -204,6 +197,34 @@ final class GetEditableCombinationsListHandler extends AbstractProductHandler im
         }
 
         return new CombinationListForEditing($totalCombinationsCount, $combinationsForEditing);
+    }
+
+    /**
+     * Fetches image by combination id and caches it in array variable
+     * (All combinations are only reusing product images, so there is no point retrieving same image over and over again)
+     *
+     * @param int $combinationId
+     * @param array<int, int[]> $imageIdsByCombinationIds
+     * @param array<int, Image> $cachedImages
+     *
+     * @return Image|null
+     */
+    private function getImage(int $combinationId, array $imageIdsByCombinationIds, array &$cachedImages): ?Image
+    {
+        if (!isset($imageIdsByCombinationIds[$combinationId][0])) {
+            return null;
+        }
+
+        $imageId = $imageIdsByCombinationIds[$combinationId][0];
+
+        if (isset($cachedImages[$imageId])) {
+            return $cachedImages[$imageId];
+        }
+
+        $image = new Image($imageId);
+        $cachedImages[$imageId] = $image;
+
+        return $image;
     }
 
     /**
