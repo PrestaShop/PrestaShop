@@ -43,6 +43,7 @@ use PrestaShop\PrestaShop\Core\Domain\Product\Combination\QueryResult\Combinatio
 use PrestaShop\PrestaShop\Core\Domain\Product\Combination\QueryResult\CombinationListForEditing;
 use PrestaShop\PrestaShop\Core\Domain\Product\Combination\QueryResult\EditableCombinationForListing;
 use PrestaShop\PrestaShop\Core\Domain\Product\Combination\ValueObject\CombinationId;
+use PrestaShop\PrestaShop\Core\Domain\Product\Image\ValueObject\ImageId;
 use PrestaShop\PrestaShop\Core\Grid\Query\DoctrineQueryBuilderInterface;
 use PrestaShop\PrestaShop\Core\Search\Filters\ProductCombinationFilters;
 use PrestaShop\PrestaShop\Core\Util\Number\NumberExtractor;
@@ -221,7 +222,7 @@ final class GetEditableCombinationsListHandler extends AbstractProductHandler im
             return $cachedImages[$imageId];
         }
 
-        $image = new Image($imageId);
+        $image = $this->productImageRepository->get(new ImageId($imageId));
         $cachedImages[$imageId] = $image;
 
         return $image;
