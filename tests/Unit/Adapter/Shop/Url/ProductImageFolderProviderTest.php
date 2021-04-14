@@ -26,42 +26,38 @@
 
 declare(strict_types=1);
 
-namespace PrestaShop\PrestaShop\Adapter\Shop\Url;
+namespace Tests\Unit\Adapter\Shop\Url;
 
+use Generator;
 use Link;
-use PrestaShop\PrestaShop\Core\Shop\Url\UrlProviderInterface;
+use PHPUnit\Framework\TestCase;
+use PrestaShop\PrestaShop\Adapter\Shop\Url\ProductImageFolderProvider;
 
-class ProductImageFolderProvider implements UrlProviderInterface
+class ProductImageFolderProviderTest extends TestCase
 {
     /**
-     * @var Link
+     * @dataProvider getTestData
+     *
+     * @param string $baseUrl
+     * @param string $relativeImagePath
+     * @param string $expectedUrl
      */
-    private $link;
-
-    /**
-     * @var string
-     */
-    private $imagesRelativeFolder;
-
-    /**
-     * @param Link $link
-     * @param string $imagesRelativeFolder
-     */
-    public function __construct(
-        Link $link,
-        string $imagesRelativeFolder
-    ) {
-        $this->link = $link;
-        $this->imagesRelativeFolder = $imagesRelativeFolder;
+    public function testGetUrl(string $baseUrl, string $relativeImagePath, string $expectedUrl): void
+    {
+        $linkMock = $this->createMock(Link::class);
+        $linkMock->method('getBaseLink')
+            ->willReturn($baseUrl)
+        ;
+        $provider = new ProductImageFolderProvider($linkMock, $relativeImagePath);
+        $generatedUrl = $provider->getUrl();
+        $this->assertEquals($expectedUrl, $generatedUrl);
     }
 
-    /**
-     * Create a link to product images base folder.
-     *
-     * @return string
-     */
-    public function getUrl(): string
+    public function getTestData(): Generator
     {
-        return rtrim($this->link->getBaseLink(), '/') . '/' . rtrim($this->imagesRelativeFolder, '/');
+        yield ['http://superurl', 'img/p', 'http://superurl/img/p'];
+        yield ['http://superurl/', 'img/p', 'http://superurl/img/p'];
+        yield ['http://superurl', 'img/p/', 'http://superurl/img/p'];
+        yield ['http://superurl/', 'img/p/', 'http://superurl/img/p'];
     }
 }
