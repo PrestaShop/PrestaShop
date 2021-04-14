@@ -91,4 +91,65 @@ describe('Change customer message status', async () => {
       await expect(validationMessage).to.equal(contactUsPage.validationMessage);
     });
   });
+
+  describe('Change message status and check it', async () => {
+    it('should login in BO', async function () {
+      await loginCommon.loginBO(this, page);
+    });
+
+    it('should go to customer service page', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'goToOrderMessagesPage', baseContext);
+
+      await dashboardPage.goToSubMenu(
+        page,
+        dashboardPage.customerServiceParentLink,
+        dashboardPage.customerServiceLink,
+      );
+
+      const pageTitle = await customerServicePage.getPageTitle(page);
+      await expect(pageTitle).to.contains(customerServicePage.pageTitle);
+    });
+    [
+      {args: {status: 'Handled', statusToCheck: 'Re-open', statusMeaning: 'text-danger'}},
+      {args: {status: 'Re-open', statusToCheck: 'Mark as "handled"', statusMeaning: 'text-success'}},
+      {args: {status: 'Pending 1', statusToCheck: 'Disable pending status', statusMeaning: 'text-warning'}},
+      {args: {status: 'Pending 2', statusToCheck: 'Disable pending status', statusMeaning: 'text-warning'}},
+    ].forEach((test, index) => {
+      it('should go to view message page', async function () {
+        await testContext.addContextItem(this, 'testIdentifier', `goToViewMessagePage${index}`, baseContext);
+
+        await customerServicePage.goToViewMessagePage(page);
+
+        const pageTitle = await viewPage.getPageTitle(page);
+        await expect(pageTitle).to.contains(viewPage.pageTitle);
+      });
+
+      it(`should change the order status to ${test.args.status}`, async function () {
+        await testContext.addContextItem(this, 'testIdentifier', `setOrderStatus${test.args.status}`, baseContext);
+
+        const newStatus = await viewPage.setStatus(page, test.args.status);
+        await expect(newStatus).to.contains(test.args.statusToCheck);
+      });
+
+      it('should go to customer service page', async function () {
+        await testContext.addContextItem(this, 'testIdentifier', `goToOrderMessagesPage${index}`, baseContext);
+
+        await dashboardPage.goToSubMenu(
+          page,
+          dashboardPage.customerServiceParentLink,
+          dashboardPage.customerServiceLink,
+        );
+
+        const pageTitle = await customerServicePage.getPageTitle(page);
+        await expect(pageTitle).to.contains(customerServicePage.pageTitle);
+      });
+
+      it('should check if the status color is changed', async function(){
+        await testContext.addContextItem(this, 'testIdentifier', `checkStatusColor${index}`, baseContext);
+
+        const isChanged = await customerServicePage.isStatusChanged(page, 1, test.args.statusMeaning);
+        await expect(isChanged).to.be.true;
+      });
+    });
+  });
 });
