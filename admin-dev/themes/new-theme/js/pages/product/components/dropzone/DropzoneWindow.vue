@@ -88,7 +88,7 @@
           type="checkbox"
           :disabled="isCover"
           :checked="isCover"
-          @change="coverChanged"
+          @change.prevent.stop="coverChanged"
         >
         <i class="md-checkbox-control" />
         {{ $t("window.useAsCover") }}
@@ -98,7 +98,7 @@
     <input
       type="file"
       class="dropzone-window-filemanager"
-      @change="watchFiles"
+      @change.prevent.stop="watchFiles"
     >
 
     <div
@@ -147,6 +147,8 @@
       class="form-control"
       v-if="selectedFile !== null"
       v-model="captionValue[selectedLocale.id_lang]"
+      @change.prevent.stop="prevent"
+      @keyup.prevent.stop="prevent"
     />
 
     <div
@@ -267,6 +269,10 @@
        */
       coverChanged(event) {
         this.coverData = event.target.value;
+      },
+      prevent(event) {
+        event.preventDefault();
+        event.stopPropagation();
       },
     },
   };
