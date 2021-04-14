@@ -93,17 +93,18 @@ export default class SubmittableInput {
         this.toggleLoading(e);
       })
       .catch((error) => {
+        this.toggleError(e, true);
+        this.toggleButtonVisibility(e, false);
+        this.toggleLoading(e);
+
         if (typeof error.responseJSON.errors === 'undefined') {
           return;
         }
-        this.toggleError(e, true);
-        this.toggleButtonVisibility(e, false);
 
         const messages = error.responseJSON.errors;
         Object.keys(messages).forEach((key) => {
           showGrowl('error', messages[key]);
         });
-        this.toggleLoading(e);
       });
   }
 
@@ -142,7 +143,6 @@ export default class SubmittableInput {
    * @private
    */
   toggleButtonVisibility(button, visible) {
-    console.log(button, visible, 'Toggle Visib');
     $(button).toggleClass('d-none', !visible);
   }
 
