@@ -115,7 +115,7 @@
     >
       <modal
         :modal-title="$t('modal.history.confirmTitle')"
-        :cancel-label="$t('modal.keepEditing')"
+        :cancel-label="$t('modal.cancel')"
         :confirm-label="$t('modal.confirm')"
         :close-label="$t('modal.close')"
         :confirmation="true"
@@ -124,7 +124,11 @@
         @confirm="confirmSelection"
       >
         <template #body>
-          <p>{{ $t('modal.history.confirmBody', {'%combinationName%': selectedCombinationName}) }}</p>
+          <p
+            v-html="
+              $t('modal.history.confirmBody', {'%combinationName%': selectedCombinationName})
+            "
+          />
         </template>
       </modal>
     </div>
