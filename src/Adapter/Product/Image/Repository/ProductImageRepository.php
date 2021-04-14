@@ -234,7 +234,7 @@ class ProductImageRepository extends AbstractObjectModelRepository
      *
      * @param int[] $combinationIds
      *
-     * @return array<int, int[]> [(int) id_combination => [(int) id_image]]
+     * @return array<int, ImageId[]> [(int) id_combination => [ImageId]]
      */
     public function getImagesIdsForCombinations(array $combinationIds): array
     {
@@ -258,9 +258,15 @@ class ProductImageRepository extends AbstractObjectModelRepository
             return [];
         }
 
+        // Temporary ImageId pool to avoid creating duplicates
+        $imageIds = [];
         $imagesIdsByCombinationIds = [];
         foreach ($results as $result) {
-            $imagesIdsByCombinationIds[(int) $result['id_product_attribute']][] = (int) $result['id_image'];
+            $id = (int) $result['id_image'];
+            if (!isset($imageIds[$id])) {
+                $imageIds[$id] = new ImageId($id);
+            }
+            $imagesIdsByCombinationIds[(int) $result['id_product_attribute']][] = $imageIds[$id];
         }
 
         return $imagesIdsByCombinationIds;
