@@ -35,13 +35,16 @@ use PrestaShop\PrestaShop\Adapter\Attribute\Repository\AttributeRepository;
 use PrestaShop\PrestaShop\Adapter\Product\AbstractProductHandler;
 use PrestaShop\PrestaShop\Adapter\Product\Combination\Repository\CombinationRepository;
 use PrestaShop\PrestaShop\Adapter\Product\Image\ProductImagePathFactory;
+use PrestaShop\PrestaShop\Adapter\Product\Image\Repository\ProductImageRepository;
 use PrestaShop\PrestaShop\Adapter\Product\Stock\Repository\StockAvailableRepository;
+use PrestaShop\PrestaShop\Core\Domain\Language\ValueObject\LanguageId;
 use PrestaShop\PrestaShop\Core\Domain\Product\Combination\Query\GetEditableCombinationsList;
 use PrestaShop\PrestaShop\Core\Domain\Product\Combination\QueryHandler\GetEditableCombinationsListHandlerInterface;
 use PrestaShop\PrestaShop\Core\Domain\Product\Combination\QueryResult\CombinationAttributeInformation;
 use PrestaShop\PrestaShop\Core\Domain\Product\Combination\QueryResult\CombinationListForEditing;
 use PrestaShop\PrestaShop\Core\Domain\Product\Combination\QueryResult\EditableCombinationForListing;
 use PrestaShop\PrestaShop\Core\Domain\Product\Combination\ValueObject\CombinationId;
+use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductId;
 use PrestaShop\PrestaShop\Core\Grid\Query\DoctrineQueryBuilderInterface;
 use PrestaShop\PrestaShop\Core\Search\Filters\ProductCombinationFilters;
 use PrestaShop\PrestaShop\Core\Util\Number\NumberExtractor;
@@ -77,9 +80,9 @@ final class GetEditableCombinationsListHandler extends AbstractProductHandler im
     private $attributeRepository;
 
     /**
-     * @var int
+     * @var ProductImageRepository
      */
-    private $contextShopId;
+    private $productImageRepository;
 
     /**
      * @var ProductImagePathFactory
@@ -92,7 +95,7 @@ final class GetEditableCombinationsListHandler extends AbstractProductHandler im
      * @param StockAvailableRepository $stockAvailableRepository
      * @param DoctrineQueryBuilderInterface $combinationQueryBuilder
      * @param AttributeRepository $attributeRepository
-     * @param int $contextShopId
+     * @param ProductImageRepository $productImageRepository
      * @param ProductImagePathFactory $productImagePathFactory
      */
     public function __construct(
@@ -101,7 +104,7 @@ final class GetEditableCombinationsListHandler extends AbstractProductHandler im
         StockAvailableRepository $stockAvailableRepository,
         DoctrineQueryBuilderInterface $combinationQueryBuilder,
         AttributeRepository $attributeRepository,
-        int $contextShopId,
+        ProductImageRepository $productImageRepository,
         ProductImagePathFactory $productImagePathFactory
     ) {
         $this->combinationRepository = $combinationRepository;
@@ -109,7 +112,7 @@ final class GetEditableCombinationsListHandler extends AbstractProductHandler im
         $this->stockAvailableRepository = $stockAvailableRepository;
         $this->combinationQueryBuilder = $combinationQueryBuilder;
         $this->attributeRepository = $attributeRepository;
-        $this->contextShopId = $contextShopId;
+        $this->productImageRepository = $productImageRepository;
         $this->productImagePathFactory = $productImagePathFactory;
     }
 
@@ -141,29 +144,29 @@ final class GetEditableCombinationsListHandler extends AbstractProductHandler im
         );
 
         return $this->formatEditableCombinationsForListing(
-            $query->getProductId()->getValue(),
+            $query->getProductId(),
             $combinations,
             $attributesInformation,
             $total,
-            $query->getLanguageId()->getValue()
+            $query->getLanguageId()
         );
     }
 
     /**
-     * @param int $productId
+     * @param ProductId $productId
      * @param array $combinations
      * @param array<int, array<int, mixed>> $attributesInformationByCombinationId
      * @param int $totalCombinationsCount
-     * @param int $langId
+     * @param LanguageId $languageId
      *
      * @return CombinationListForEditing
      */
     private function formatEditableCombinationsForListing(
-        int $productId,
+        ProductId $productId,
         array $combinations,
         array $attributesInformationByCombinationId,
         int $totalCombinationsCount,
-        int $langId
+        LanguageId $languageId
     ): CombinationListForEditing {
         $combinationsForEditing = [];
 
@@ -180,7 +183,12 @@ final class GetEditableCombinationsListHandler extends AbstractProductHandler im
                 );
             }
 
-            $imageData = Image::getBestImageAttribute($this->contextShopId, $langId, $productId, $combinationId);
+            //@todo - performance can be improved. Image could be cached. Each combination only reuses existing product images
+            $image = $this->productImageRepository->findFirstImageForCombination(
+                $productId,
+                new CombinationId($combinationId),
+                $languageId
+            );
 
             $impactOnPrice = new DecimalNumber($combination['price']);
             $combinationsForEditing[] = new EditableCombinationForListing(
@@ -191,23 +199,11 @@ final class GetEditableCombinationsListHandler extends AbstractProductHandler im
                 (bool) $combination['default_on'],
                 $impactOnPrice,
                 (int) $this->stockAvailableRepository->getForCombination(new CombinationId($combinationId))->quantity,
-                (int) $imageData['id_image'] ? $this->getImagePath((int) $imageData['id_image']) : null
+                $image ? $this->productImagePathFactory->getPathByType($image, ProductImagePathFactory::IMAGE_TYPE_SMALL_DEFAULT) : null
             );
         }
 
         return new CombinationListForEditing($totalCombinationsCount, $combinationsForEditing);
-    }
-
-    /**
-     * @param int $imageId
-     *
-     * @return string
-     */
-    private function getImagePath(int $imageId): ?string
-    {
-        $image = new Image($imageId);
-
-        return $this->productImagePathFactory->getPathByType($image, ProductImagePathFactory::IMAGE_TYPE_SMALL_DEFAULT);
     }
 
     /**
