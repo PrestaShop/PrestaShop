@@ -67,7 +67,7 @@ class ModulePresenter implements PresenterInterface
         $attributes['starsRate'] = str_replace('.', '', round($attributes['avgRate'] * 2) / 2); // Round to the nearest 0.5
 
         $moduleInstance = $module->getInstance();
-        if ($moduleInstance !== null && $moduleInstance->getMultistoreCompatibility() !== null) {
+        if ($moduleInstance !== null) {
             $attributes['multistoreCompatibility'] = $moduleInstance->getMultistoreCompatibility();
         }
 

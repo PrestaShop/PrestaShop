@@ -28,7 +28,6 @@ namespace LegacyTests\Unit\Classes\Module;
 
 use Module;
 use PHPUnit\Framework\TestCase;
-use PrestaShopExceptionCore;
 use Symfony\Component\DomCrawler\Crawler;
 
 class FakeModule extends Module
@@ -91,36 +90,11 @@ class ModuleCoreTest extends TestCase
     }
 
     /**
-     * @param int $multistoreCompatibility
-     * @param bool $throwsException
-     *
      * @dataProvider setMultistoreCompatibilityProvider
      */
-    public function testSetAndGetMultistoreCompatibility(int $multistoreCompatibility, bool $throwsException): void
+    public function testSetAndGetMultistoreCompatibility(): void
     {
         $module = new FakeModule();
-        if ($throwsException) {
-            $this->expectException(PrestaShopExceptionCore::class);
-        }
-
-        $module->setMultistoreCompatibility($multistoreCompatibility);
-
-        if (!$throwsException) {
-            $this->assertEquals($multistoreCompatibility, $module->getMultistoreCompatibility());
-        }
-    }
-
-    /**
-     * @return array[]
-     */
-    public function setMultistoreCompatibilityProvider(): array
-    {
-        return [
-            [FakeModule::MULTISTORE_COMPATIBILITY_NO, false],
-            [FakeModule::MULTISTORE_COMPATIBILITY_NOT_CONCERNED, false],
-            [FakeModule::MULTISTORE_COMPATIBILITY_PARTIAL, false],
-            [FakeModule::MULTISTORE_COMPATIBILITY_YES, false],
-            [7, true],
-        ];
+        $this->assertEquals(FakeModule::MULTISTORE_COMPATIBILITY_UNKNOWN, $module->getMultistoreCompatibility());
     }
 }

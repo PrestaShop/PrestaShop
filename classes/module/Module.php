@@ -205,8 +205,8 @@ abstract class ModuleCore implements ModuleInterface
     /** @var array|null used to cache module ids */
     protected static $cachedModuleNames = null;
 
-    /** @var int|null Define the multistore compatibility level of the module */
-    private $multistoreCompatibility;
+    /** @var int Defines the multistore compatibility level of the module */
+    public $multistoreCompatibility = self::MULTISTORE_COMPATIBILITY_UNKNOWN;
 
     const CACHE_FILE_MODULES_LIST = '/config/xml/modules_list.xml';
 
@@ -222,10 +222,11 @@ abstract class ModuleCore implements ModuleInterface
     const CACHE_FILE_TRUSTED_MODULES_LIST = '/config/xml/trusted_modules_list.xml';
     const CACHE_FILE_UNTRUSTED_MODULES_LIST = '/config/xml/untrusted_modules_list.xml';
 
-    public const MULTISTORE_COMPATIBILITY_NO = 0;
-    public const MULTISTORE_COMPATIBILITY_NOT_CONCERNED = 1;
-    public const MULTISTORE_COMPATIBILITY_PARTIAL = 2;
-    public const MULTISTORE_COMPATIBILITY_YES = 3;
+    public const MULTISTORE_COMPATIBILITY_NO = -20;
+    public const MULTISTORE_COMPATIBILITY_NOT_CONCERNED = -10;
+    public const MULTISTORE_COMPATIBILITY_UNKNOWN = 0;
+    public const MULTISTORE_COMPATIBILITY_PARTIAL = 10;
+    public const MULTISTORE_COMPATIBILITY_YES = 20;
 
     public static $hosted_modules_blacklist = ['autoupgrade'];
 
@@ -3507,30 +3508,8 @@ abstract class ModuleCore implements ModuleInterface
     }
 
     /**
-     * @param int $compatibility
+     * Returns the declared multistore compatibility level
      *
-     * @return $this
-     */
-    public function setMultistoreCompatibility(int $compatibility): self
-    {
-        if (!in_array(
-            $compatibility,
-            [
-                self::MULTISTORE_COMPATIBILITY_NO,
-                self::MULTISTORE_COMPATIBILITY_NOT_CONCERNED,
-                self::MULTISTORE_COMPATIBILITY_PARTIAL,
-                self::MULTISTORE_COMPATIBILITY_YES,
-            ]
-        )) {
-            throw new PrestaShopException(sprintf('Value %s is not a valid multistore compatibility value', $compatibility));
-        }
-
-        $this->multistoreCompatibility = $compatibility;
-
-        return $this;
-    }
-
-    /**
      * @return int|null
      */
     public function getMultistoreCompatibility(): ?int
