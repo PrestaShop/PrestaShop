@@ -28,6 +28,7 @@ declare(strict_types=1);
 
 namespace PrestaShop\PrestaShop\Core\Search\Filters;
 
+use PrestaShop\PrestaShop\Core\Grid\Definition\Factory\ProductGridDefinitionFactory;
 use PrestaShop\PrestaShop\Core\Search\Filters;
 
 /**
@@ -35,6 +36,8 @@ use PrestaShop\PrestaShop\Core\Search\Filters;
  */
 final class ProductFilters extends Filters
 {
+    protected $filterId = ProductGridDefinitionFactory::GRID_ID;
+
     /**
      * {@inheritdoc}
      */
