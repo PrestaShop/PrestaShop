@@ -48,7 +48,7 @@
 {%- endblock product_supplier_row -%}
 
 {# Override suppliers collection template to remove the label and init the table #}
-{%- block _product_suppliers_product_suppliers_row -%}
+{%- block collection_row -%}
   {# We put prototype name in a data attribute, so the JS code can get it dynamically #}
   {%- set attr = attr|merge({'data-prototype': form_row(prototype), 'data-prototype-name': prototype.vars.name }) -%}
   {%- set attr = attr|merge({'class': (attr.class|default('') ~ ' form-group row')|trim }) -%}
