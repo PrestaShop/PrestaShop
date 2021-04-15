@@ -50,7 +50,6 @@ class CombinationSuppliersCommandsBuilder implements CombinationCommandsBuilderI
         }
 
         $productSuppliers = [];
-        $defaultSupplierId = (int) $formData['suppliers']['default_supplier_id'];
         foreach ($productSuppliersData as $productSupplierDatum) {
             $supplierId = (int) $productSupplierDatum['supplier_id'];
 
@@ -60,16 +59,21 @@ class CombinationSuppliersCommandsBuilder implements CombinationCommandsBuilderI
             );
         }
 
-        return [
+        $commands = [
             new SetCombinationSuppliersCommand(
                 $combinationId->getValue(),
                 $productSuppliers
             ),
-            new SetCombinationDefaultSupplierCommand(
-                $combinationId->getValue(),
-                $defaultSupplierId
-            ),
         ];
+
+        if (!empty($formData['suppliers']['default_supplier_id'])) {
+            $commands[] = new SetCombinationDefaultSupplierCommand(
+                $combinationId->getValue(),
+                (int) $formData['suppliers']['default_supplier_id']
+            );
+        }
+
+        return $commands;
     }
 
     /**

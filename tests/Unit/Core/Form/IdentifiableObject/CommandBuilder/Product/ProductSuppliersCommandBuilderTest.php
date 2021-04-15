@@ -124,5 +124,70 @@ class ProductSuppliersCommandBuilderTest extends AbstractProductCommandBuilderTe
             ],
             [$suppliersCommand, $defaultSupplierCommand],
         ];
+
+        $suppliersCommand = new SetProductSuppliersCommand(
+            $this->getProductId()->getValue(),
+            [
+                [
+                    'supplier_id' => 5,
+                    'currency_id' => 2,
+                    'reference' => '',
+                    'price_tax_excluded' => '0.5',
+                    'combination_id' => 0,
+                    'product_supplier_id' => 0,
+                ],
+            ]
+        );
+
+        yield [
+            [
+                'suppliers' => [
+                    'default_supplier_id' => 0,
+                    'product_suppliers' => [
+                        [
+                            'supplier_id' => 5,
+                            'currency_id' => 2,
+                            'reference' => '',
+                            'price_tax_excluded' => '0.5',
+                            'combination_id' => 0,
+                            'product_supplier_id' => null,
+                        ],
+                    ],
+                ],
+            ],
+            [$suppliersCommand],
+        ];
+
+        $suppliersCommand = new SetProductSuppliersCommand(
+            $this->getProductId()->getValue(),
+            [
+                [
+                    'supplier_id' => 5,
+                    'currency_id' => 2,
+                    'reference' => '',
+                    'price_tax_excluded' => '0.5',
+                    'combination_id' => 0,
+                    'product_supplier_id' => 0,
+                ],
+            ]
+        );
+
+        yield [
+            [
+                'suppliers' => [
+                    'product_suppliers' => [
+                        [
+                            'supplier_id' => 5,
+                            'currency_id' => 2,
+                            'reference' => '',
+                            'price_tax_excluded' => '0.5',
+                            'combination_id' => 0,
+                            'product_supplier_id' => null,
+                        ],
+                    ],
+                ],
+            ],
+            [$suppliersCommand],
+        ];
     }
 }

@@ -50,7 +50,6 @@ final class ProductSuppliersCommandsBuilder implements ProductCommandsBuilderInt
         }
 
         $productSuppliers = [];
-        $defaultSupplierId = (int) $formData['suppliers']['default_supplier_id'];
         foreach ($productSuppliersData as $productSupplierDatum) {
             $supplierId = (int) $productSupplierDatum['supplier_id'];
 
@@ -60,16 +59,21 @@ final class ProductSuppliersCommandsBuilder implements ProductCommandsBuilderInt
             );
         }
 
-        return [
+        $commands = [
             new SetProductSuppliersCommand(
                 $productId->getValue(),
                 $productSuppliers
             ),
-            new SetProductDefaultSupplierCommand(
-                $productId->getValue(),
-                $defaultSupplierId
-            ),
         ];
+
+        if (!empty($formData['suppliers']['default_supplier_id'])) {
+            $commands[] = new SetProductDefaultSupplierCommand(
+                $productId->getValue(),
+                (int) $formData['suppliers']['default_supplier_id']
+            );
+        }
+
+        return $commands;
     }
 
     /**
