@@ -1557,9 +1557,8 @@ class AdminProductsControllerCore extends AdminController
             $res &= @unlink(_PS_TMP_IMG_DIR_ . 'product_mini_' . $image->id_product . '_' . $this->context->shop->id . '.jpg');
         }
 
-        Hook::exec('actionProductImageDeleted', ['id_image' => $image->id]);
-
         if ($res) {
+            Hook::exec('actionProductImageDeleted', ['id_image' => $image->id]);
             $this->jsonConfirmation($this->_conf[7]);
         } else {
             $this->jsonError($this->trans('An error occurred while attempting to delete the product image.', [], 'Admin.Catalog.Notification'));
