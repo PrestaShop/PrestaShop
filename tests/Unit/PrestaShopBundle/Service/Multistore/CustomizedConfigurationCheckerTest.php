@@ -42,8 +42,7 @@ class CustomizedConfigurationCheckerTest extends TestCase
             $this->assertTrue($customizedConfigurationChecker->isConfigurationCustomizedForThisShop('FAKE_CONFIG_KEY', $this->prophesizeShopEntity()->reveal()));
 
         $customizedConfigurationChecker = new CustomizedConfigurationChecker($this->mockShopConfiguration(false));
-        $res = $customizedConfigurationChecker->isConfigurationCustomizedForThisShop('FAKE_CONFIG_KEY', $this->prophesizeShopEntity()->reveal());
-        $this->assertFalse($res);
+        $this->assertFalse($customizedConfigurationChecker->isConfigurationCustomizedForThisShop('FAKE_CONFIG_KEY', $this->prophesizeShopEntity()->reveal()));
     }
 
     /**
