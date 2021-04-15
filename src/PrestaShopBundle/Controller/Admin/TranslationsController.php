@@ -221,6 +221,16 @@ class TranslationsController extends FrameworkBundleAdminController
                         'type' => $type,
                         'selected' => null,
                     ];
+
+                    /*
+                     * Exporting mails will also export Mails_Body
+                     */
+                    if (ProviderDefinitionInterface::TYPE_MAILS === $type) {
+                        $selections[] = [
+                            'type' => ProviderDefinitionInterface::TYPE_MAILS_BODY,
+                            'selected' => null,
+                        ];
+                    }
                 }
             }
 
