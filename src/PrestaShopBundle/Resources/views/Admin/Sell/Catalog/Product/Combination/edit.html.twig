@@ -60,3 +60,9 @@
   </div>
 </div>
 {% endblock %}
+
+{% block javascripts %}
+  {{ parent() }}
+
+  <script src="{{ asset('themes/new-theme/public/combination_edit.bundle.js') }}"></script>
+{% endblock %}
