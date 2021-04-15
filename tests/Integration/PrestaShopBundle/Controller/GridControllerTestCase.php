@@ -29,8 +29,9 @@ declare(strict_types=1);
 namespace Tests\Integration\PrestaShopBundle\Controller;
 
 use PrestaShop\PrestaShop\Core\Exception\TypeException;
+use Symfony\Bundle\FrameworkBundle\Routing\Router;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
-use Symfony\Component\BrowserKit\Client;
+use Symfony\Bundle\FrameworkBundle\Client;
 use Symfony\Component\DomCrawler\Crawler;
 use Symfony\Component\DomCrawler\Form;
 use Tests\Integration\PrestaShopBundle\Controller\FormFiller\FormFiller;
@@ -97,9 +98,17 @@ abstract class GridControllerTestCase extends WebTestCase
      */
     protected $formHandlerServiceId;
 
+    /**
+     * Save button id should always be the same, but can be overridden if needed
+     *
+     * @var string
+     */
+    protected $saveButtonId;
+
     public function __construct($name = null, array $data = [], $dataName = '')
     {
         parent::__construct($name, $data, $dataName);
+        $this->saveButtonId = 'save-button';
 
         $this->formFiller = new FormFiller();
     }
@@ -115,19 +124,15 @@ abstract class GridControllerTestCase extends WebTestCase
         $this->client->followRedirects(true);
 
         /** Asserts that list contains as many entities as expected */
-        $router = $this->client->getKernel()->getContainer()->get('router');
-        $url = $router->generate($this->gridRoute);
-        $crawler = $this->client->request('GET', $url);
+        $crawler = $this->client->request('GET', $this->getIndexRoute($this->client->getKernel()->getContainer()->get('router')));
         $entities = $this->getEntityList($crawler);
         $this->initialEntityCount = $entities->count();
 
         $this->createTestEntity();
 
         /** Asserts amount of entities in the list increased by one and test entity exists */
-        $url = $router->generate($this->gridRoute);
-        $crawler = $this->client->request('GET', $url);
+        $crawler = $this->client->request('GET', $this->getIndexRoute($this->client->getKernel()->getContainer()->get('router')));
         $entities = $this->getEntityList($crawler);
-
         /* If this fails it means entity was not created correctly */
         self::assertCount($this->initialEntityCount + 1, $entities);
         $this->assertTestEntityExists($entities);
@@ -148,7 +153,9 @@ abstract class GridControllerTestCase extends WebTestCase
          * If it's not the case you can always override tearDown with logic specific to grid you are testing
          */
         $deleteUrl = $router->generate($this->deleteEntityRoute, [$this->testEntityName . 'Id' => $this->testEntityId]);
-        $crawler = $this->client->request('POST', $deleteUrl);
+        $this->client->request('POST', $deleteUrl);
+        $crawler = $this->client->request('GET', $this->getIndexRoute($this->client->getKernel()->getContainer()->get('router')));
+
         $entities = $this->getEntityList($crawler);
 
         /* If this fails it means entity deletion did not work as intended */
@@ -162,22 +169,25 @@ abstract class GridControllerTestCase extends WebTestCase
     {
         $router = $this->client->getContainer()->get('router');
         $createEntityUrl = $router->generate($this->createEntityRoute);
-        $crawler = $this->client->request('GET', $createEntityUrl);
-        $submitButton = $crawler->selectButton('save-button');
-        $addressForm = $submitButton->form();
 
-        $addressForm = $this->formFiller->fillForm($addressForm, $this->getCreateEntityFormModifications());
+        $crawler = $this->client->request('GET', $createEntityUrl);
+
+        $submitButton = $crawler->selectButton($this->saveButtonId);
+
+        $entityForm = $submitButton->form();
+
+        $entityForm = $this->formFiller->fillForm($entityForm, $this->getCreateEntityFormModifications());
 
         /*
          * Without changing followRedirects to false when submitting the form
          * $dataChecker->getLastCreatedId() returns null.
          */
         $this->client->followRedirects(false);
-        $this->client->submit($addressForm);
+        $this->client->submit($entityForm);
         $this->client->followRedirects(true);
         $formHandlerChecker = $this->client->getContainer()->get($this->formHandlerServiceId);
         $this->testEntityId = $formHandlerChecker->getLastCreatedId();
-        $this->assertNotNull($this->testEntityId);
+        self::assertNotNull($this->testEntityId);
     }
 
     /**
@@ -190,9 +200,7 @@ abstract class GridControllerTestCase extends WebTestCase
      */
     protected function assertFiltersFindOnlyTestEntity(array $testFilters): void
     {
-        $router = $this->client->getContainer()->get('router');
-        $url = $router->generate($this->gridRoute);
-        $crawler = $this->client->request('GET', $url);
+        $crawler = $this->client->request('GET', $this->getIndexRoute($this->client->getKernel()->getContainer()->get('router')));
 
         /** Assert that list contains all entities and thus not affected by anything */
         $entities = $this->getEntityList($crawler);
@@ -202,12 +210,15 @@ abstract class GridControllerTestCase extends WebTestCase
          * Submit filters
          */
         $filterForm = $this->fillFiltersForm($crawler, $testFilters);
+        $this->client->followRedirects(true);
+
         $crawler = $this->client->submit($filterForm);
 
         /**
          * Assert that there is only test entity left in the list after using filters
          */
         $entities = $this->getEntityList($crawler);
+
         self::assertCount(1, $entities);
         $this->assertTestEntityExists($entities);
     }
@@ -258,6 +269,18 @@ abstract class GridControllerTestCase extends WebTestCase
         }
 
         return $testEntityDTOCollection;
+    }
+
+    /**
+     * Can be overridden if you need to manipulate route in in any way
+     *
+     * @param Router $router
+     *
+     * @return string
+     */
+    protected function getIndexRoute(Router $router): string
+    {
+        return $router->generate($this->gridRoute);
     }
 
     abstract protected function getTestEntity(): TestEntityDTO;
