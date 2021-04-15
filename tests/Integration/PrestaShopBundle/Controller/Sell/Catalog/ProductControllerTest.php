@@ -1,0 +1,144 @@
+<?php
+/**
+ * Copyright since 2007 PrestaShop SA and Contributors
+ * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
+ *
+ * NOTICE OF LICENSE
+ *
+ * This source file is subject to the Open Software License (OSL 3.0)
+ * that is bundled with this package in the file LICENSE.md.
+ * It is also available through the world-wide-web at this URL:
+ * https://opensource.org/licenses/OSL-3.0
+ * If you did not receive a copy of the license and are unable to
+ * obtain it through the world-wide-web, please send an email
+ * to license@prestashop.com so we can send you a copy immediately.
+ *
+ * DISCLAIMER
+ *
+ * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
+ * versions in the future. If you wish to customize PrestaShop for your
+ * needs please refer to https://devdocs.prestashop.com/ for more information.
+ *
+ * @author    PrestaShop SA and Contributors <contact@prestashop.com>
+ * @copyright Since 2007 PrestaShop SA and Contributors
+ * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
+ */
+
+declare(strict_types=1);
+
+namespace Tests\Integration\PrestaShopBundle\Controller\Sell\Catalog;
+
+use PrestaShop\PrestaShop\Core\Exception\TypeException;
+use Symfony\Bundle\FrameworkBundle\Routing\Router;
+use Tests\Integration\PrestaShopBundle\Controller\GridControllerTestCase;
+use Tests\Integration\PrestaShopBundle\Controller\TestEntityDTO;
+
+class ProductControllerTest extends GridControllerTestCase
+{
+    public function __construct($name = null, array $data = [], $dataName = '')
+    {
+        parent::__construct($name, $data, $dataName);
+
+        $this->createEntityRoute = 'admin_products_v2_create';
+        $this->testEntityName = 'product';
+        $this->deleteEntityRoute = 'admin_products_v2_delete';
+        $this->formHandlerServiceId = 'prestashop.core.form.identifiable_object.product_form_handler';
+        $this->saveButtonId = 'product_save';
+    }
+
+    protected function getIndexRoute(Router $router): string
+    {
+        /** Asserts amount of entities in the list increased by one and test entity exists */
+        return $router->generate('admin_products_v2_index',
+            [
+                '_route' => 0,
+                'product[offset]' => 0,
+                'product[limit]' => 100
+            ]
+        );
+    }
+
+    /**
+     * Tests all provided entity filters
+     * All filters are tested in one test make tests run faster
+     *
+     * @throws TypeException
+     */
+    public function testProductFilters(): void
+    {
+        foreach ($this->getTestFilters() as $testFilter) {
+            $this->assertFiltersFindOnlyTestEntity($testFilter);
+        }
+    }
+
+    /**
+     * @return array
+     */
+    protected function getTestFilters(): array
+    {
+        return [
+            ['product[name]' => 'stProd'],
+            [
+                'product[id_product][min_field]' => $this->getTestEntity()->getId(),
+                'product[id_product][max_field]' => $this->getTestEntity()->getId()
+            ],
+            [
+                'product[quantity][min_field]' => $this->getTestEntity()->quantity,
+                'product[quantity][max_field]' => $this->getTestEntity()->quantity,
+            ],
+            [
+                'product[price_tax_excluded][min_field]' => $this->getTestEntity()->price,
+                'product[price_tax_excluded][max_field]' => $this->getTestEntity()->price
+            ]
+        ];
+    }
+
+    /**
+     * @return TestEntityDTO
+     */
+    protected function getTestEntity(): TestEntityDTO
+    {
+        return new TestEntityDTO(
+            $this->testEntityId,
+            [
+                'name' => 'testProductName',
+                'quantity' => 987,
+                'price' => '87,7'
+            ]
+        );
+    }
+
+    /**
+     * @param $tr
+     * @param $i
+     *
+     * @return TestEntityDTO
+     */
+    protected function getEntity($tr, $i): TestEntityDTO
+    {
+        return new TestEntityDTO(
+            (int) trim($tr->filter('.column-id_product')->text()),
+           [
+
+           ]
+        );
+    }
+
+    /**
+     * Gets modifications that are needed to fill address form
+     *
+     * @return array
+     */
+    protected function getCreateEntityFormModifications(): array
+    {
+        $testEntity = $this->getTestEntity();
+
+        return [
+            'product[basic][name][1]' => $testEntity->name,
+            'product[stock][quantity]' => $testEntity->quantity,
+            'product[stock][minimal_quantity]' => 0,
+            'product[shipping][additional_shipping_cost]' => 0,
+            'product[price][price_tax_excluded]' => $testEntity->price
+        ];
+    }
+}
