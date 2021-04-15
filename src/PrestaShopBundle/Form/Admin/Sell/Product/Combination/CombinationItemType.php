@@ -50,6 +50,9 @@ class CombinationItemType extends TranslatorAwareType
         $builder
             ->add('is_selected', CheckboxType::class, [
                 'label' => false,
+                'attr' => [
+                  'material_design' => true 
+                ]
             ])
             ->add('combination_id', HiddenType::class, [
                 'attr' => [
