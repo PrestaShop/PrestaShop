@@ -8,6 +8,9 @@ services:
     prestashop.adapter.image.uploader.category_cover_image_uploader:
         class: 'PrestaShop\PrestaShop\Adapter\Image\Uploader\CategoryCoverImageUploader'
 
+    prestashop.adapter.shop.url.product_image_folder_provider:
+        class: 'Tests\Integration\Adapter\Shop\Url\TestProductImageFolderProvider'
+
     # Advanced form type
     test.integration.prestashop_bundle.form.advanced_form_type:
         class: 'Tests\Integration\PrestaShopBundle\Form\AdvancedFormType'

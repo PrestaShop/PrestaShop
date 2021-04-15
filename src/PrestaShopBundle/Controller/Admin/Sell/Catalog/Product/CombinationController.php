@@ -29,6 +29,7 @@ namespace PrestaShopBundle\Controller\Admin\Sell\Catalog\Product;
 
 use Exception;
 use PrestaShop\PrestaShop\Adapter\Product\Combination\Repository\CombinationRepository;
+use PrestaShop\PrestaShop\Adapter\Product\Image\ProductImagePathFactory;
 use PrestaShop\PrestaShop\Core\Domain\Product\AttributeGroup\Query\GetProductAttributeGroups;
 use PrestaShop\PrestaShop\Core\Domain\Product\AttributeGroup\QueryResult\AttributeGroup;
 use PrestaShop\PrestaShop\Core\Domain\Product\Combination\Query\GetEditableCombinationsList;
@@ -245,20 +246,32 @@ class CombinationController extends FrameworkBundleAdminController
             'combinations' => [],
             'total' => $combinationListForEditing->getTotalCombinationsCount(),
         ];
+
+        $fallbackImageUrl = $this->getFallbackImageUrl();
         foreach ($combinationListForEditing->getCombinations() as $combination) {
             $data['combinations'][] = [
                 'id' => $combination->getCombinationId(),
                 'isSelected' => false,
                 'name' => $combination->getCombinationName(),
                 'reference' => $combination->getReference(),
-                //@todo: don't forget image path when implemented in the query
                 'impactOnPrice' => (string) $combination->getImpactOnPrice(),
                 'quantity' => $combination->getQuantity(),
                 'isDefault' => $combination->isDefault(),
+                'imageUrl' => $combination->getImageUrl() ?: $fallbackImageUrl,
             ];
         }
 
         return $data;
+    }
+
+    /**
+     * @return string
+     */
+    private function getFallbackImageUrl(): string
+    {
+        $imageUrlFactory = $this->get('prestashop.adapter.product.image.product_image_url_factory');
+
+        return $imageUrlFactory->getNoImagePath(ProductImagePathFactory::IMAGE_TYPE_SMALL_DEFAULT);
     }
 
     /**

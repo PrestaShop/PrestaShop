@@ -32,6 +32,7 @@ use Combination;
 use DateTime;
 use PrestaShop\PrestaShop\Adapter\Attribute\Repository\AttributeRepository;
 use PrestaShop\PrestaShop\Adapter\Product\Combination\Repository\CombinationRepository;
+use PrestaShop\PrestaShop\Adapter\Product\Image\Repository\ProductImageRepository;
 use PrestaShop\PrestaShop\Adapter\Product\Repository\ProductRepository;
 use PrestaShop\PrestaShop\Adapter\Product\Stock\Repository\StockAvailableRepository;
 use PrestaShop\PrestaShop\Adapter\Tax\TaxComputer;
@@ -44,6 +45,7 @@ use PrestaShop\PrestaShop\Core\Domain\Product\Combination\QueryResult\Combinatio
 use PrestaShop\PrestaShop\Core\Domain\Product\Combination\QueryResult\CombinationPrices;
 use PrestaShop\PrestaShop\Core\Domain\Product\Combination\QueryResult\CombinationStock;
 use PrestaShop\PrestaShop\Core\Domain\Product\Combination\ValueObject\CombinationId;
+use PrestaShop\PrestaShop\Core\Domain\Product\Image\ValueObject\ImageId;
 use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductId;
 use PrestaShop\PrestaShop\Core\Domain\TaxRulesGroup\ValueObject\TaxRulesGroupId;
 use PrestaShop\PrestaShop\Core\Util\DateTime\DateTime as DateTimeUtil;
@@ -76,6 +78,11 @@ final class GetCombinationForEditingHandler implements GetCombinationForEditingH
     private $productRepository;
 
     /**
+     * @var ProductImageRepository
+     */
+    private $productImageRepository;
+
+    /**
      * @var int
      */
     private $contextLanguageId;
@@ -100,6 +107,7 @@ final class GetCombinationForEditingHandler implements GetCombinationForEditingH
      * @param StockAvailableRepository $stockAvailableRepository
      * @param AttributeRepository $attributeRepository
      * @param ProductRepository $productRepository
+     * @param ProductImageRepository $productImageRepository
      * @param NumberExtractor $numberExtractor
      * @param TaxComputer $taxComputer
      * @param int $contextLanguageId
@@ -110,6 +118,7 @@ final class GetCombinationForEditingHandler implements GetCombinationForEditingH
         StockAvailableRepository $stockAvailableRepository,
         AttributeRepository $attributeRepository,
         ProductRepository $productRepository,
+        ProductImageRepository $productImageRepository,
         NumberExtractor $numberExtractor,
         TaxComputer $taxComputer,
         int $contextLanguageId,
@@ -119,6 +128,7 @@ final class GetCombinationForEditingHandler implements GetCombinationForEditingH
         $this->stockAvailableRepository = $stockAvailableRepository;
         $this->attributeRepository = $attributeRepository;
         $this->productRepository = $productRepository;
+        $this->productImageRepository = $productImageRepository;
         $this->numberExtractor = $numberExtractor;
         $this->taxComputer = $taxComputer;
         $this->contextLanguageId = $contextLanguageId;
@@ -137,7 +147,8 @@ final class GetCombinationForEditingHandler implements GetCombinationForEditingH
             $this->getCombinationName($query->getCombinationId()),
             $this->getDetails($combination),
             $this->getPrices($combination, $product),
-            $this->getStock($combination)
+            $this->getStock($combination),
+            $this->getImages($combination)
         );
     }
 
@@ -221,5 +232,23 @@ final class GetCombinationForEditingHandler implements GetCombinationForEditingH
             $stockAvailable->location,
             DateTimeUtil::NULL_DATE === $combination->available_date ? null : new DateTime($combination->available_date)
         );
+    }
+
+    /**
+     * @param Combination $combination
+     *
+     * @return int[]
+     */
+    private function getImages(Combination $combination): array
+    {
+        $combinationId = (int) $combination->id;
+        $combinationImageIds = $this->productImageRepository->getImagesIdsForCombinations([$combinationId]);
+        if (empty($combinationImageIds[$combinationId])) {
+            return [];
+        }
+
+        return array_map(function (ImageId $imageId) {
+            return $imageId->getValue();
+        }, $combinationImageIds[$combinationId]);
     }
 }

@@ -36,3 +36,5 @@ services:
 
     prestashop.adapter.image.image_validator:
         class: 'PrestaShop\PrestaShop\Adapter\Image\ImageValidator'
+        arguments:
+            - '@=service("prestashop.core.configuration.upload_size_configuration").getMaxUploadSizeInBytes()'

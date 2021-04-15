@@ -70,17 +70,22 @@ services:
     prestashop.adapter.product.image.product_image_path_factory:
         class: PrestaShop\PrestaShop\Adapter\Product\Image\ProductImagePathFactory
         arguments:
-            - "@=service('prestashop.adapter.legacy.configuration').getBoolean('PS_LEGACY_IMAGES')"
+            - !php/const _PS_PROD_IMG_DIR_
             - !php/const _PS_TMP_IMG_DIR_
+            - '@=service("prestashop.adapter.legacy.context").getContext().language.iso_code'
+
+    prestashop.adapter.product.image.product_image_url_factory:
+        class: PrestaShop\PrestaShop\Adapter\Product\Image\ProductImagePathFactory
+        arguments:
+            - '@=service("prestashop.adapter.shop.url.product_image_folder_provider").getUrl()'
+            - !php/const _PS_TMP_IMG_DIR_
+            - '@=service("prestashop.adapter.legacy.context").getContext().language.iso_code'
 
     prestashop.adapter.product.image.uploader.product_image_uploader:
         class: 'PrestaShop\PrestaShop\Adapter\Product\Image\Uploader\ProductImageUploader'
         arguments:
-            - '@prestashop.core.configuration.upload_size_configuration'
             - '@prestashop.adapter.product.image.product_image_path_factory'
             - "@=service('prestashop.adapter.legacy.context').getContext().shop.id"
             - "@prestashop.adapter.image.image_generator"
             - "@prestashop.core.hook.dispatcher"
-            - "@=service('prestashop.adapter.legacy.configuration').getBoolean('PS_LEGACY_IMAGES')"
             - '@prestashop.adapter.product.image.repository.product_image_repository'
-
