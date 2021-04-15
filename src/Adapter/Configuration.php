@@ -32,7 +32,6 @@ use Feature;
 use Language;
 use PrestaShop\PrestaShop\Core\Domain\Configuration\ShopConfigurationInterface;
 use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\ShopConstraint;
-use PrestaShopBundle\Entity\Shop as ShopEntity;
 use PrestaShopBundle\Exception\NotImplementedException;
 use Shop;
 use Symfony\Component\HttpFoundation\ParameterBag;
@@ -395,38 +394,5 @@ class Configuration extends ParameterBag implements ShopConfigurationInterface
             !empty($shopGroupId) ? $shopGroupId->getValue() : null,
             !empty($shopId) ? $shopId->getValue() : null
         );
-    }
-
-    /**
-     * Tests if a configuration value is overriden for a given shop, not only on the shop itself
-     * but also on parent shop group: when a shop inherits an overridden configuration value from his shop group
-     * the value is considered to be customized for this shop
-     *
-     * @param string $configurationKey
-     * @param ShopEntity $shop
-     *
-     * @return bool
-     */
-    public function isCustomizedForThisShop(string $configurationKey, ShopEntity $shop): bool
-    {
-        // check if given configuration is overridden for the parent shop group
-        $shopGroupConstraint = new ShopConstraint(
-            null,
-            $shop->getShopGroup()->getId(),
-            true // it must be strict, otherwise the method will also check for configuration settings in "all shop" context
-        );
-
-        if ($this->has($configurationKey, $shopGroupConstraint)) {
-            return true;
-        }
-
-        // check if given configuration is overridden for the shop
-        $shopConstraint = new ShopConstraint(
-            $shop->getId(),
-            $shop->getShopGroup()->getId(),
-            true
-        );
-
-        return $this->has($configurationKey, $shopConstraint);
     }
 }

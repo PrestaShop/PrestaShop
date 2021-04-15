@@ -103,3 +103,8 @@ services:
             - "@=service('prestashop.core.foundation.version').getVersion()"
         calls:
             - [ "setSslVerification", ["%prestashop.addons.api_client.verify_ssl%"]]
+
+    prestashop.multistore.customized_configuration_checker:
+        class: PrestaShopBundle\Service\Multistore\CustomizedConfigurationChecker
+        arguments:
+            - "@prestashop.adapter.legacy.configuration"
