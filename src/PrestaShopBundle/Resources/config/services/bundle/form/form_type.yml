@@ -1428,6 +1428,7 @@ services:
         arguments:
             - "@=service('prestashop.adapter.legacy.configuration').getInt('PS_ATTACHMENT_MAXIMUM_SIZE')"
             - "@router"
+            - '@form.form_cloner'
         tags:
             - { name: form.type }
 

@@ -34,6 +34,7 @@ export default {
     VIRTUAL: 'virtual',
     COMBINATIONS: 'combinations',
   },
+  invalidField: '.is-invalid',
   productFormSubmitButton: 'button[name="product[save]"]',
   navigationBar: '#form-nav',
   dropzoneImagesContainer: '#product_images',
