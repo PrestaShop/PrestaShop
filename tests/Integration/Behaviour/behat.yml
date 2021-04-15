@@ -280,6 +280,7 @@ default:
                 - %paths.base%/Features/Scenario/Shop
             contexts:
                 - Tests\Integration\Behaviour\Features\Context\CommonFeatureContext
+                - Tests\Integration\Behaviour\Features\Context\ShopFeatureContext
                 - Tests\Integration\Behaviour\Features\Context\Domain\ShopFeatureContext
         feature_flag:
             paths:
