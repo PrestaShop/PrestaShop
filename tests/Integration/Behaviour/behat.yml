@@ -281,6 +281,7 @@ default:
             contexts:
                 - Tests\Integration\Behaviour\Features\Context\CommonFeatureContext
                 - Tests\Integration\Behaviour\Features\Context\ShopFeatureContext
+                - Tests\Integration\Behaviour\Features\Context\Domain\ShopFeatureContext
         feature_flag:
             paths:
                 - %paths.base%/Features/Scenario/FeatureFlag
@@ -301,3 +302,4 @@ default:
                 - Tests\Integration\Behaviour\Features\Context\LanguageFeatureContext
                 - Tests\Integration\Behaviour\Features\Context\Domain\AttributeGroupFeatureContext
                 - Tests\Integration\Behaviour\Features\Context\Domain\AttributeFeatureContext
+                - Tests\Integration\Behaviour\Features\Context\Domain\ShopFeatureContext
