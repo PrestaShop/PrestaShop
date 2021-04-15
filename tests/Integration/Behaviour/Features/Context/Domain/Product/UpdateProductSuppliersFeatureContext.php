@@ -36,8 +36,9 @@ use PrestaShop\PrestaShop\Core\Domain\Product\Combination\ValueObject\Combinatio
 use PrestaShop\PrestaShop\Core\Domain\Product\Exception\InvalidProductTypeException;
 use PrestaShop\PrestaShop\Core\Domain\Product\Exception\ProductException;
 use PrestaShop\PrestaShop\Core\Domain\Product\Supplier\Command\RemoveAllAssociatedProductSuppliersCommand;
+use PrestaShop\PrestaShop\Core\Domain\Product\Supplier\Command\SetProductDefaultSupplierCommand;
 use PrestaShop\PrestaShop\Core\Domain\Product\Supplier\Command\SetProductSuppliersCommand;
-use PrestaShop\PrestaShop\Core\Domain\Product\Supplier\Exception\ProductSupplierException;
+use PrestaShop\PrestaShop\Core\Domain\Product\Supplier\Exception\DefaultProductSupplierNotAssociatedException;
 use PrestaShop\PrestaShop\Core\Domain\Product\Supplier\Query\GetProductSupplierOptions;
 use PrestaShop\PrestaShop\Core\Domain\Product\Supplier\QueryResult\ProductSupplierOptions;
 use PrestaShop\PrestaShop\Core\Domain\Product\Supplier\ValueObject\ProductSupplierId;
@@ -57,6 +58,26 @@ class UpdateProductSuppliersFeatureContext extends AbstractProductFeatureContext
                 $this->getSharedStorage()->get($productReference))
             );
         } catch (ProductException $e) {
+            $this->setLastException($e);
+        }
+    }
+
+    /**
+     * @When I set product :productReference default supplier to :defaultSupplierReference
+     *
+     * @param string $productReference
+     * @param string $defaultSupplierReference
+     */
+    public function updateProductDefaultSupplier(string $productReference, string $defaultSupplierReference): void
+    {
+        try {
+            $command = new SetProductDefaultSupplierCommand(
+                $this->getSharedStorage()->get($productReference),
+                $this->getSharedStorage()->get($defaultSupplierReference)
+            );
+
+            $this->getCommandBus()->handle($command);
+        } catch (DefaultProductSupplierNotAssociatedException $e) {
             $this->setLastException($e);
         }
     }
@@ -116,7 +137,7 @@ class UpdateProductSuppliersFeatureContext extends AbstractProductFeatureContext
             foreach ($productSupplierIds as $key => $productSupplierId) {
                 $this->getSharedStorage()->set($references[$key], $productSupplierId->getValue());
             }
-        } catch (ProductException $e) {
+        } catch (DefaultProductSupplierNotAssociatedException $e) {
             $this->setLastException($e);
         }
     }
@@ -183,7 +204,7 @@ class UpdateProductSuppliersFeatureContext extends AbstractProductFeatureContext
      */
     public function assertFailedUpdateDefaultSupplierWhichIsNotAssigned(): void
     {
-        $this->assertLastErrorIs(ProductSupplierException::class);
+        $this->assertLastErrorIs(DefaultProductSupplierNotAssociatedException::class);
     }
 
     /**

@@ -73,6 +73,10 @@ Feature: Update product suppliers from Back Office (BO)
     And product product1 should have following supplier values:
       | default supplier           | supplier2                       |
       | default supplier reference | my second supplier for product1 |
+    When I set product product1 default supplier to supplier3
+    Then product product1 should have following supplier values:
+      | default supplier           | supplier3                      |
+      | default supplier reference | my third supplier for product1 |
 
   Scenario: Remove one of product suppliers
     Given product product1 should have following suppliers:

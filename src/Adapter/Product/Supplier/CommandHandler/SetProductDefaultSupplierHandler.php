@@ -24,17 +24,38 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
 
-namespace PrestaShop\PrestaShop\Core\Domain\Product\Supplier\CommandHandler;
+declare(strict_types=1);
 
+namespace PrestaShop\PrestaShop\Adapter\Product\Supplier\CommandHandler;
+
+use PrestaShop\PrestaShop\Adapter\Product\Update\ProductSupplierUpdater;
 use PrestaShop\PrestaShop\Core\Domain\Product\Supplier\Command\SetProductDefaultSupplierCommand;
+use PrestaShop\PrestaShop\Core\Domain\Product\Supplier\CommandHandler\SetProductDefaultSupplierHandlerInterface;
 
 /**
- * Defines contract to handle @see SetProductDefaultSupplierCommand
+ * Handles @see SetProductDefaultSupplierCommand using legacy object model
  */
-interface SetProductDefaultSupplierInterface
+class SetProductDefaultSupplierHandler implements SetProductDefaultSupplierHandlerInterface
 {
     /**
-     * @param SetProductDefaultSupplierCommand $command
+     * @var ProductSupplierUpdater
      */
-    public function handle(SetProductDefaultSupplierCommand $command): void;
+    private $productSupplierUpdater;
+
+    /**
+     * @param ProductSupplierUpdater $productSupplierUpdater
+     */
+    public function __construct(
+        ProductSupplierUpdater $productSupplierUpdater
+    ) {
+        $this->productSupplierUpdater = $productSupplierUpdater;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function handle(SetProductDefaultSupplierCommand $command): void
+    {
+        $this->productSupplierUpdater->updateDefaultSupplier($command->getProductId(), $command->getDefaultSupplierId());
+    }
 }
