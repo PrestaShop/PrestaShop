@@ -55,6 +55,6 @@ final class RemoveAllCombinationImagesHandler implements RemoveAllCombinationIma
      */
     public function handle(RemoveAllCombinationImagesCommand $command): void
     {
-        $this->combinationImagesUpdater->deleteAllImages($command->getCombinationId());
+        $this->combinationImagesUpdater->deleteAllImageAssociations($command->getCombinationId());
     }
 }

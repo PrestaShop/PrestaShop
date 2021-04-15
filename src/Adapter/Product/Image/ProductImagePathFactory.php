@@ -38,6 +38,8 @@ class ProductImagePathFactory
     public const IMAGE_TYPE_HOME_DEFAULT = 'home_default';
     public const IMAGE_TYPE_CART_DEFAULT = 'cart_default';
 
+    public const DEFAULT_IMAGE_FORMAT = 'jpg';
+
     /**
      * @var string
      */
@@ -75,7 +77,7 @@ class ProductImagePathFactory
      *
      * @return string
      */
-    public function getPath(ImageId $imageId, string $extension = 'jpg'): string
+    public function getPath(ImageId $imageId, string $extension = self::DEFAULT_IMAGE_FORMAT): string
     {
         $path = $this->getBaseImagePathWithoutExtension($imageId);
 
@@ -89,7 +91,7 @@ class ProductImagePathFactory
      *
      * @return string
      */
-    public function getPathByType(ImageId $imageId, string $type, string $extension = 'jpg'): string
+    public function getPathByType(ImageId $imageId, string $type, string $extension = self::DEFAULT_IMAGE_FORMAT): string
     {
         $path = $this->getBaseImagePathWithoutExtension($imageId);
 
@@ -98,7 +100,7 @@ class ProductImagePathFactory
 
     /**
      * @param string $type
-     * @param string|null $langIso
+     * @param string|null $langIso if null, will use $contextLangIsoCode by default
      *
      * @return string
      */
@@ -141,7 +143,7 @@ class ProductImagePathFactory
     {
         $path = implode('/', str_split((string) $imageId->getValue()));
 
-        return sprintf('%s%s', $this->pathToBaseDir, $path);
+        return $this->pathToBaseDir . $path;
     }
 
     /**

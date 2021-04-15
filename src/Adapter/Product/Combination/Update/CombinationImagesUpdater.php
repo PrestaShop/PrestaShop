@@ -63,7 +63,7 @@ class CombinationImagesUpdater
      * @throws DBALException
      * @throws InvalidArgumentException
      */
-    public function deleteAllImages(CombinationId $combinationId): void
+    public function deleteAllImageAssociations(CombinationId $combinationId): void
     {
         $this->connection->delete(
             $this->dbPrefix . 'product_attribute_image',
@@ -78,10 +78,10 @@ class CombinationImagesUpdater
      * @throws DBALException
      * @throws InvalidArgumentException
      */
-    public function setImages(CombinationId $combinationId, array $imageIds): void
+    public function associateImages(CombinationId $combinationId, array $imageIds): void
     {
         // First delete all images
-        $this->deleteAllImages($combinationId);
+        $this->deleteAllImageAssociations($combinationId);
 
         // Then create all new ones
         foreach ($imageIds as $imageId) {

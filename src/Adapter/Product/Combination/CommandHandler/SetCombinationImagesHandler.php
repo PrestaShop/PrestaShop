@@ -55,6 +55,6 @@ final class SetCombinationImagesHandler implements SetCombinationImagesHandlerIn
      */
     public function handle(SetCombinationImagesCommand $command): void
     {
-        $this->combinationImagesUpdater->setImages($command->getCombinationId(), $command->getImageIds());
+        $this->combinationImagesUpdater->associateImages($command->getCombinationId(), $command->getImageIds());
     }
 }
