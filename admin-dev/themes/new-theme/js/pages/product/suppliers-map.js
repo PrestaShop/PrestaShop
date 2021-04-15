@@ -35,13 +35,13 @@ export default (suppliersFormId) => {
     productsTable: `${productSuppliersId} table`,
     productsTableBody: `${productSuppliersId} table tbody`,
     productSupplierRow: {
-      supplierNameCell: (supplierIndex) => `#product_supplier_row_${supplierIndex} .supplier_name`,
       supplierIdInput: (supplierIndex) => productSupplierInputId(supplierIndex, 'supplier_id'),
       supplierNameInput: (supplierIndex) => productSupplierInputId(supplierIndex, 'supplier_name'),
       productSupplierIdInput: (supplierIndex) => productSupplierInputId(supplierIndex, 'product_supplier_id'),
       referenceInput: (supplierIndex) => productSupplierInputId(supplierIndex, 'reference'),
       priceInput: (supplierIndex) => productSupplierInputId(supplierIndex, 'price_tax_excluded'),
       currencyIdInput: (supplierIndex) => productSupplierInputId(supplierIndex, 'currency_id'),
+      supplierNamePreview: (supplierIndex) => `#product_supplier_row_${supplierIndex} .supplier_name .preview`,
     },
   };
 };

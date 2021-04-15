@@ -60,8 +60,8 @@ export default class ProductSuppliersManager {
 
       if (input.checked) {
         this.addSupplier({
-          id: input.value,
-          name: input.dataset.label,
+          supplierId: input.value,
+          supplierName: input.dataset.label,
         });
       } else {
         this.removeSupplier(input.value);
@@ -87,14 +87,14 @@ export default class ProductSuppliersManager {
    * @param {Object} supplier
    */
   addSupplier(supplier) {
-    if (typeof this.suppliers[supplier.id] === 'undefined') {
+    if (typeof this.suppliers[supplier.supplierId] === 'undefined') {
       const newSupplier = Object.create(this.defaultDataForSupplier);
-      newSupplier.supplierId = supplier.id;
-      newSupplier.supplierName = supplier.name;
+      newSupplier.supplierId = supplier.supplierId;
+      newSupplier.supplierName = supplier.supplierName;
 
-      this.suppliers[supplier.id] = newSupplier;
+      this.suppliers[supplier.supplierId] = newSupplier;
     } else {
-      this.suppliers[supplier.id].removed = false;
+      this.suppliers[supplier.supplierId].removed = false;
     }
   }
 
@@ -108,25 +108,29 @@ export default class ProductSuppliersManager {
   renderSuppliers() {
     this.$productsTableBody.empty();
 
-    // Custom incremental index since this.suppliers uses the supplierId as key
-    let supplierIndex = 0;
-    this.suppliers.forEach((supplier) => {
+    // Loop through select suppliers so that we use the same order as in the select list
+    this.getSelectedSuppliers().forEach((selectedSupplier) => {
+      const supplier = this.suppliers[selectedSupplier.supplierId];
+
       if (supplier.removed) {
         return;
       }
 
-      const productSupplierRow = this.prototypeTemplate.replace(new RegExp(this.prototypeName, 'g'), supplierIndex);
+      const productSupplierRow = this.prototypeTemplate.replace(
+        new RegExp(this.prototypeName, 'g'),
+        supplier.supplierId,
+      );
 
       this.$productsTableBody.append(productSupplierRow);
       // Fill inputs
-      $(this.suppliersMap.productSupplierRow.supplierIdInput(supplierIndex)).val(supplier.supplierId);
-      $(this.suppliersMap.productSupplierRow.supplierNameCell(supplierIndex)).html(supplier.supplierName);
-      $(this.suppliersMap.productSupplierRow.supplierNameInput(supplierIndex)).val(supplier.supplierName);
-      $(this.suppliersMap.productSupplierRow.productSupplierIdInput(supplierIndex)).val(supplier.productSupplierId);
-      $(this.suppliersMap.productSupplierRow.referenceInput(supplierIndex)).val(supplier.reference);
-      $(this.suppliersMap.productSupplierRow.priceInput(supplierIndex)).val(supplier.price);
-      $(this.suppliersMap.productSupplierRow.currencyIdInput(supplierIndex)).val(supplier.currencyId);
-      supplierIndex += 1;
+      const rowMap = this.suppliersMap.productSupplierRow;
+      $(rowMap.supplierIdInput(supplier.supplierId)).val(supplier.supplierId);
+      $(rowMap.supplierNamePreview(supplier.supplierId)).html(supplier.supplierName);
+      $(rowMap.supplierNameInput(supplier.supplierId)).val(supplier.supplierName);
+      $(rowMap.productSupplierIdInput(supplier.supplierId)).val(supplier.productSupplierId);
+      $(rowMap.referenceInput(supplier.supplierId)).val(supplier.reference);
+      $(rowMap.priceInput(supplier.supplierId)).val(supplier.price);
+      $(rowMap.currencyIdInput(supplier.supplierId)).val(supplier.currencyId);
     });
   }
 
@@ -134,8 +138,8 @@ export default class ProductSuppliersManager {
     const selectedSuppliers = [];
     this.$supplierIdsGroup.find('input:checked').each((index, input) => {
       selectedSuppliers.push({
-        name: input.dataset.label,
-        id: input.value,
+        supplierName: input.dataset.label,
+        supplierId: input.value,
       });
     });
 
@@ -153,7 +157,7 @@ export default class ProductSuppliersManager {
     }
 
     this.showDefaultSuppliers();
-    const selectedSupplierIds = suppliers.map((supplier) => supplier.id);
+    const selectedSupplierIds = suppliers.map((supplier) => supplier.supplierId);
 
     this.$defaultSupplierGroup.find('input').each((key, input) => {
       const isValid = selectedSupplierIds.includes(input.value);
@@ -198,15 +202,14 @@ export default class ProductSuppliersManager {
    * Flag `removed` allows identifying whether supplier was removed from list or should be rendered
    */
   memorizeCurrentSuppliers() {
-    // this.getSelectedSuppliers values are pushed so it's index is 0-based, we can use it as is
-    this.getSelectedSuppliers().forEach((supplier, index) => {
-      this.suppliers[supplier.id] = {
-        supplierId: supplier.id,
-        productSupplierId: $(this.suppliersMap.productSupplierRow.productSupplierIdInput(index)).val(),
-        supplierName: $(this.suppliersMap.productSupplierRow.supplierNameInput(index)).val(),
-        reference: $(this.suppliersMap.productSupplierRow.referenceInput(index)).val(),
-        price: $(this.suppliersMap.productSupplierRow.priceInput(index)).val(),
-        currencyId: $(this.suppliersMap.productSupplierRow.currencyIdInput(index)).val(),
+    this.getSelectedSuppliers().forEach((supplier) => {
+      this.suppliers[supplier.supplierId] = {
+        supplierId: supplier.supplierId,
+        productSupplierId: $(this.suppliersMap.productSupplierRow.productSupplierIdInput(supplier.supplierId)).val(),
+        supplierName: $(this.suppliersMap.productSupplierRow.supplierNameInput(supplier.supplierId)).val(),
+        reference: $(this.suppliersMap.productSupplierRow.referenceInput(supplier.supplierId)).val(),
+        price: $(this.suppliersMap.productSupplierRow.priceInput(supplier.supplierId)).val(),
+        currencyId: $(this.suppliersMap.productSupplierRow.currencyIdInput(supplier.supplierId)).val(),
         removed: false,
       };
     });
