@@ -54,4 +54,8 @@
       </p>
     </div>
   {% endif %}
+
+  {{ include('@PrestaShop/Admin/Common/unavailable-feature.html.twig', {
+    'featureTitle': 'Attached files'|trans({}, 'Admin.Catalog.Feature'),
+  }) }}
 </div>

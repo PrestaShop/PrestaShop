@@ -25,12 +25,18 @@
 
 <div role="tabpanel" class="form-contenttab tab-pane container-fluid" id="combinations-tab">
   <div id="combinations_filters" data-product-id="{{ productId }}"></div>
+    {{ include('@PrestaShop/Admin/Common/unavailable-feature.html.twig', {
+      'featureTitle': 'Generate combinations'|trans({}, 'Admin.Catalog.Feature'),
+    }) }}
 
-  {{ render(controller('PrestaShopBundle:Admin\\Sell\\Catalog\\Product\\Combination:paginatedList', {
-    'productId': productId,
-  })) }}
+    {{ render(controller('PrestaShopBundle:Admin\\Sell\\Catalog\\Product\\Combination:paginatedList', {
+      'productId': productId,
+    })) }}
 
-  <div id="combinations-stock-availability">
-    {#    @todo: render stock availability preferences here when extracted to a reusable component. check StockType.php#}
+    <div id="combinations-stock-availability">
+      {#    @todo: render stock availability preferences here when extracted to a reusable component. check StockType.php#}
+      {{ include('@PrestaShop/Admin/Common/unavailable-feature.html.twig', {
+        'featureTitle': 'Avalaibility preferences'|trans({}, 'Admin.Catalog.Feature'),
+      }) }}
   </div>
 </div>
