@@ -92,7 +92,7 @@ class ModuleCoreTest extends TestCase
     /**
      * @dataProvider setMultistoreCompatibilityProvider
      */
-    public function testSetAndGetMultistoreCompatibility(): void
+    public function testGetDefaultMultistoreCompatibility(): void
     {
         $module = new FakeModule();
         $this->assertEquals(FakeModule::MULTISTORE_COMPATIBILITY_UNKNOWN, $module->getMultistoreCompatibility());
