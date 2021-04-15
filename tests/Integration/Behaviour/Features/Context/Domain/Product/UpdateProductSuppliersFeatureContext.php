@@ -119,8 +119,8 @@ class UpdateProductSuppliersFeatureContext extends AbstractProductFeatureContext
 
         $command = new SetProductSuppliersCommand(
             $this->getSharedStorage()->get($productReference),
-            $productSuppliers,
-            );
+            $productSuppliers
+        );
 
         $productSupplierIds = $this->getCommandBus()->handle($command);
 
