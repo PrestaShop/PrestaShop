@@ -22,6 +22,9 @@ module.exports = class BOBasePage extends CommonPage {
     this.helpButton = '#product_form_open_help';
 
     // left navbar
+    // Dashboard
+    this.dashboardLink = '#tab-AdminDashboard';
+
     // SELL
     // Orders
     this.ordersParentLink = 'li#subtab-AdminParentOrders';
@@ -206,7 +209,9 @@ module.exports = class BOBasePage extends CommonPage {
   async logoutBO(page) {
     if (await this.elementVisible(page, this.userProfileIcon, 1000)) {
       await page.click(this.userProfileIcon);
-    } else await page.$eval(this.userProfileIconNonMigratedPages, el => el.click());
+    } else {
+      await page.click(this.userProfileIconNonMigratedPages);
+    }
     await this.waitForVisibleSelector(page, this.userProfileLogoutLink);
     await this.clickAndWaitForNavigation(page, this.userProfileLogoutLink);
   }
