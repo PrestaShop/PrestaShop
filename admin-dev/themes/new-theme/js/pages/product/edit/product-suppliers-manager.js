@@ -41,8 +41,8 @@ export default class ProductSuppliersManager {
     this.$productSuppliersCollection = $(this.suppliersMap.productSuppliersCollection);
     this.$supplierIdsGroup = $(this.suppliersMap.supplierIdsInput).closest('.form-group');
     this.$defaultSupplierGroup = $(this.suppliersMap.defaultSupplierInput).closest('.form-group');
-    this.$productsTable = $(this.suppliersMap.productsTable);
-    this.$productsTableBody = $(this.suppliersMap.productsTableBody);
+    this.$productsTable = $(this.suppliersMap.productSuppliersTable);
+    this.$productsTableBody = $(this.suppliersMap.productsSuppliersTableBody);
 
     this.suppliers = [];
     this.prototypeTemplate = this.$productSuppliersCollection.data('prototype');

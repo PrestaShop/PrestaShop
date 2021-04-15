@@ -31,9 +31,8 @@ export default (suppliersFormId) => {
     productSuppliersCollection: `${productSuppliersId}`,
     supplierIdsInput: `${suppliersFormId}_supplier_ids`,
     defaultSupplierInput: `${suppliersFormId}_default_supplier_id`,
-    // @todo: why its called productsTable and not productSuppliers|suppliers table? is it a mistake?
-    productsTable: `${productSuppliersId} table`,
-    productsTableBody: `${productSuppliersId} table tbody`,
+    productSuppliersTable: `${productSuppliersId} table`,
+    productsSuppliersTableBody: `${productSuppliersId} table tbody`,
     productSupplierRow: {
       supplierIdInput: (supplierIndex) => productSupplierInputId(supplierIndex, 'supplier_id'),
       supplierNameInput: (supplierIndex) => productSupplierInputId(supplierIndex, 'supplier_name'),
