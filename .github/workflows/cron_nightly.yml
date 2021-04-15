@@ -15,6 +15,7 @@ jobs:
       GC_SERVICE_KEY: ${{ secrets.GC_SERVICE_KEY }}
       GC_ZONE: ${{ secrets.GC_ZONE }}
       GH_BRANCH: 'develop'
+      INSTANCE_TYPE: 'develop'
 
     steps:
       -   uses: actions/checkout@v2
@@ -48,10 +49,6 @@ jobs:
 
       -   name: Upload to Google Cloud Storage (GCS)
           run: gsutil cp -r "/tmp/ps-release" gs://prestashop-core-nightly
-
-      -   name: Set environment variable INSTANCE_TYPE
-          run: |
-            echo "::set-env name=INSTANCE_TYPE::$([[ $GH_BRANCH = "develop" ]] && echo 'develop' || echo 'release';)"
 
       -   name: Stop the instance if started
           run: gcloud compute instances stop --zone $GC_ZONE "${GC_INSTANCE_NAME}-${INSTANCE_TYPE}"
