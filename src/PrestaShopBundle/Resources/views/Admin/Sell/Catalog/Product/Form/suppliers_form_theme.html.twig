@@ -37,7 +37,7 @@
       {# Hidden input with label is displayed, at least its value, with a class allowing to target them #}
       <td class="{{ child.vars.name }}">
         {{ form_widget(form.supplier_name) }}
-        {% if child.vars.value %}{{ child.vars.value }}{% endif %}
+        <span class="preview">{% if child.vars.value %}{{ child.vars.value }}{% endif %}</span>
       </td>
     {% else %}
       {# Other hidden types are simply added and will be invisible #}
