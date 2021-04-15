@@ -126,4 +126,8 @@ export default {
     coveredPreview: '.dz-preview.is-cover',
     windowFileManager: '.dropzone-window-filemanager',
   },
+  suppliers: {
+    productSuppliers: '#product_suppliers',
+    combinationSuppliers: '#combination_form_suppliers',
+  }
 };

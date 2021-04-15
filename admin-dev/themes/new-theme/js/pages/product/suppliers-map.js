@@ -33,6 +33,7 @@ export default (suppliersFormId) => {
     defaultSupplierInput: `${suppliersFormId}_default_supplier_id`,
     productSuppliersTable: `${productSuppliersId} table`,
     productsSuppliersTableBody: `${productSuppliersId} table tbody`,
+    defaultSupplierClass: 'default-supplier',
     productSupplierRow: {
       supplierIdInput: (supplierIndex) => productSupplierInputId(supplierIndex, 'supplier_id'),
       supplierNameInput: (supplierIndex) => productSupplierInputId(supplierIndex, 'supplier_name'),
@@ -42,5 +43,6 @@ export default (suppliersFormId) => {
       currencyIdInput: (supplierIndex) => productSupplierInputId(supplierIndex, 'currency_id'),
       supplierNamePreview: (supplierIndex) => `#product_supplier_row_${supplierIndex} .supplier_name .preview`,
     },
+    checkboxContainer: '.form-check',
   };
 };

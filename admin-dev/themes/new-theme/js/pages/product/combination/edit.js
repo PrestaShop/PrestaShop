@@ -24,6 +24,7 @@
  */
 
 import ProductSuppliersManager from '@pages/product/edit/product-suppliers-manager';
+import ProductMap from '@pages/product/product-map';
 
 const {$} = window;
 
@@ -36,5 +37,5 @@ $(() => {
     'TextWithLengthCounter',
   ]);
 
-  new ProductSuppliersManager('#combination_form_suppliers', false);
+  new ProductSuppliersManager(ProductMap.suppliers.combinationSuppliers, false);
 });
