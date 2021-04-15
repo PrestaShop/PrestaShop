@@ -23,20 +23,19 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  *#}
 
- <span 
-   class="help-box{% if classes is defined %} {{ classes }}{% endif %}"
-   data-toggle="popover"
-   data-trigger="click"
-   {% if content is defined %}
-     data-content="{{ content }}"
-   {% endif %}
+ <div class="unavailable-feature">
+  <h2>
+    {{ featureTitle }}
+    {% if helpbox is defined %}
+      {{ include('@PrestaShop/Admin/Common/HelpBox/helpbox.html.twig', {
+        'content': helpbox,
+      }) }}
+    {% endif %}
+  </h2>
 
-   {% if placement is defined %}
-     data-placement="{{ placement}}"
-   {% endif %}
-
-   {% if title is defined %}
-     data-title="{{ title }}"
-   {% endif %}
- >
- </span>
+  <div class="alert alert-unavailable" role="alert">
+    <p class="alert-text">
+      {{ "Not available yet"|trans({}, 'Admin.Catalog.Feature') }}
+    </p>
+  </div>
+ </div>

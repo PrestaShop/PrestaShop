@@ -41,11 +41,14 @@
   }|json_encode }}"
   ></div>
 
-  {{ render(controller('PrestaShopBundle:Admin\\Sell\\Catalog\\Product\\Combination:paginatedList', {
-    'productId': productId,
-  })) }}
+    {{ render(controller('PrestaShopBundle:Admin\\Sell\\Catalog\\Product\\Combination:paginatedList', {
+      'productId': productId,
+    })) }}
 
-  <div id="combinations-stock-availability">
-    {#    @todo: render stock availability preferences here when extracted to a reusable component. check StockType.php#}
+    <div id="combinations-stock-availability">
+      {#    @todo: render stock availability preferences here when extracted to a reusable component. check StockType.php#}
+      {{ include('@PrestaShop/Admin/Common/unavailable-feature.html.twig', {
+        'featureTitle': 'Avalaibility preferences'|trans({}, 'Admin.Catalog.Feature'),
+      }) }}
   </div>
 </div>
