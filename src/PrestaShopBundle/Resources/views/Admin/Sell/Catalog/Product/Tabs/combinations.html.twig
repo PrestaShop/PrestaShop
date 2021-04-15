@@ -24,11 +24,11 @@
  *#}
 
 <div role="tabpanel" class="form-contenttab tab-pane container-fluid" id="combinations-tab">
-  <div id="combinations_filters" data-product-id="{{ productId }}"></div>
-    {{ include('@PrestaShop/Admin/Common/unavailable-feature.html.twig', {
-      'featureTitle': 'Generate combinations'|trans({}, 'Admin.Catalog.Feature'),
-    }) }}
+  {{ include('@PrestaShop/Admin/Common/unavailable-feature.html.twig', {
+    'featureTitle': 'Generate combinations'|trans({}, 'Admin.Catalog.Feature'),
+  }) }}
 
+  <div id="combinations_filters" data-product-id="{{ productId }}"></div>
     {{ render(controller('PrestaShopBundle:Admin\\Sell\\Catalog\\Product\\Combination:paginatedList', {
       'productId': productId,
     })) }}
