@@ -41,7 +41,17 @@
       {{ form_widget(productForm.manufacturer) }}
     </div>
     <div class="col-md-3 right-column">
+      {{ include('@PrestaShop/Admin/Common/unavailable-feature.html.twig', {
+        'featureTitle': 'Reference'|trans({}, 'Admin.Catalog.Feature'),
+        'helpbox': 'Your reference code for this product. Allowed special characters: .-_#.'|trans({}, 'Admin.Catalog.Feature'),
+      }) }}
+
       {{ form_row(productForm.shortcuts) }}
+
+      {{ include('@PrestaShop/Admin/Common/unavailable-feature.html.twig', {
+        'featureTitle': 'Create category'|trans({}, 'Admin.Catalog.Feature'),
+        'helpbox': "If you want to quickly create a new category, you can do it here. Don’t forget to then go to the Categories page to fill in the needed details (description, image, etc.). A new category will not automatically appear in your shop's menu, please read the Help about it."|trans({}, 'Admin.Catalog.Feature'),
+      }) }}
     </div>
   </div>
 </div>
