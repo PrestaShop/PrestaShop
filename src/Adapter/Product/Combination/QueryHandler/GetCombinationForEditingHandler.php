@@ -242,7 +242,7 @@ final class GetCombinationForEditingHandler implements GetCombinationForEditingH
     private function getImages(Combination $combination): array
     {
         $combinationId = (int) $combination->id;
-        $combinationImageIds = $this->productImageRepository->getImagesIdsForCombinations([]);
+        $combinationImageIds = $this->productImageRepository->getImagesIdsForCombinations([$combinationId]);
         if (empty($combinationImageIds[$combinationId])) {
             return [];
         }

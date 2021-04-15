@@ -54,7 +54,7 @@ Feature: Associate combination image from Back Office (BO)
       | type        | combinations      |
     And product product1 type should be combinations
     And I generate combinations for product product1 using following attributes:
-      | Size  | [S,M]              |
+      | Size  | [S,M]         |
       | Color | [White,Black] |
     And product "product1" should have following combinations:
       | id reference   | combination name        | reference | attributes           | impact on price | quantity | is default | image url |
