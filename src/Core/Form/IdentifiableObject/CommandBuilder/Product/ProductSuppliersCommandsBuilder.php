@@ -55,7 +55,6 @@ final class ProductSuppliersCommandsBuilder implements ProductCommandsBuilderInt
             $supplierId = (int) $productSupplierDatum['supplier_id'];
 
             $productSuppliers[] = $this->formatProductSupplier(
-                $productId->getValue(),
                 $supplierId,
                 $productSupplierDatum
             );
@@ -74,21 +73,18 @@ final class ProductSuppliersCommandsBuilder implements ProductCommandsBuilderInt
     }
 
     /**
-     * @param int $productId
      * @param int $supplierId
      * @param array $productSupplierData
      *
      * @return array<string, mixed>
      */
-    private function formatProductSupplier(int $productId, int $supplierId, array $productSupplierData): array
+    private function formatProductSupplier(int $supplierId, array $productSupplierData): array
     {
         return [
-            'product_id' => $productId,
             'supplier_id' => $supplierId,
             'currency_id' => (int) $productSupplierData['currency_id'],
             'reference' => (string) $productSupplierData['reference'],
             'price_tax_excluded' => (string) $productSupplierData['price_tax_excluded'],
-            'combination_id' => (int) $productSupplierData['combination_id'],
             'product_supplier_id' => (int) $productSupplierData['product_supplier_id'],
         ];
     }
