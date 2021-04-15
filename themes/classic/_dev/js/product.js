@@ -139,6 +139,8 @@ $(document).ready(() => {
       max: 1000000,
     });
 
+    $(prestashop.themeSelectors.touchspin).off('touchstart.touchspin');
+
     $quantityInput.focusout(() => {
       if ($quantityInput.val() === '' || $quantityInput.val() < $quantityInput.attr('min')) {
         $quantityInput.val($quantityInput.attr('min'));
