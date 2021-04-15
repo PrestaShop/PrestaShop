@@ -28,7 +28,15 @@ import SuppliersMap from '@pages/product/suppliers-map';
 const {$} = window;
 
 export default class ProductSuppliersManager {
-  constructor(suppliersFormId) {
+  /**
+   *
+   * @param {string} suppliersFormId
+   * @param {boolean} forceUpdateDefault
+   *
+   * @returns {{}}
+   */
+  constructor(suppliersFormId, forceUpdateDefault) {
+    this.forceUpdateDefault = forceUpdateDefault;
     this.suppliersMap = SuppliersMap(suppliersFormId);
     this.$productSuppliersCollection = $(this.suppliersMap.productSuppliersCollection);
     this.$supplierIdsGroup = $(this.suppliersMap.supplierIdsInput).closest('.form-group');
@@ -50,6 +58,11 @@ export default class ProductSuppliersManager {
     this.memorizeCurrentSuppliers();
     this.toggleTableVisibility();
     this.refreshDefaultSupplierBlock();
+
+    this.$initialDefault = this.$defaultSupplierGroup.find('input:checked').first();
+    if (this.$initialDefault.length) {
+      this.$initialDefault.closest('.form-check').addClass('default-supplier');
+    }
 
     this.$productsTable.on('change', 'input', () => {
       this.memorizeCurrentSuppliers();
@@ -150,7 +163,9 @@ export default class ProductSuppliersManager {
     const suppliers = this.getSelectedSuppliers();
 
     if (suppliers.length === 0) {
-      this.$defaultSupplierGroup.find('input').prop('checked', false);
+      if (this.forceUpdateDefault) {
+        this.$defaultSupplierGroup.find('input').prop('checked', false);
+      }
       this.hideDefaultSuppliers();
 
       return;
@@ -162,13 +177,13 @@ export default class ProductSuppliersManager {
     this.$defaultSupplierGroup.find('input').each((key, input) => {
       const isValid = selectedSupplierIds.includes(input.value);
 
-      if (!isValid && input.checked) {
+      if (this.forceUpdateDefault && !isValid) {
         input.checked = false;
       }
       input.disabled = !isValid;
     });
 
-    if (this.$defaultSupplierGroup.find('input:checked').length === 0) {
+    if (this.$defaultSupplierGroup.find('input:checked').length === 0 && this.forceUpdateDefault) {
       this.checkFirstAvailableDefaultSupplier(selectedSupplierIds);
     }
   }
