@@ -48,7 +48,9 @@ class CustomizedConfigurationCheckerTest extends TestCase
     }
 
     /**
-     * @return ObjectProphecy
+     * @param bool $hasConfig
+     *
+     * @return MockObject
      */
     private function mockShopConfiguration(bool $hasConfig): MockObject
     {
@@ -58,6 +60,9 @@ class CustomizedConfigurationCheckerTest extends TestCase
         return $shopConfigurationMock;
     }
 
+    /**
+     * @return ObjectProphecy
+     */
     private function prophesizeShopEntity(): ObjectProphecy
     {
         $shopMock = $this->prophesize(Shop::class);
