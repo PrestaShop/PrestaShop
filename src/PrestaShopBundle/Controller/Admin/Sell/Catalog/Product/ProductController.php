@@ -32,6 +32,7 @@ use Exception;
 use PrestaShop\PrestaShop\Core\Domain\Product\Exception\ProductConstraintException;
 use PrestaShop\PrestaShop\Core\Domain\Product\FeatureValue\Exception\DuplicateFeatureValueAssociationException;
 use PrestaShop\PrestaShop\Core\Domain\Product\FeatureValue\Exception\InvalidAssociatedFeatureException;
+use PrestaShop\PrestaShop\Core\FeatureFlag\FeatureFlagSettings;
 use PrestaShop\PrestaShop\Core\Form\IdentifiableObject\Builder\FormBuilderInterface;
 use PrestaShop\PrestaShop\Core\Form\IdentifiableObject\Handler\FormHandlerInterface;
 use PrestaShopBundle\Controller\Admin\FrameworkBundleAdminController;
@@ -74,6 +75,12 @@ class ProductController extends FrameworkBundleAdminController
      */
     public function createAction(Request $request): Response
     {
+        if (!$this->isProductPageV2Enabled()) {
+            $this->addFlashMessageProductV2IsDisabled();
+
+            return $this->redirectToRoute('admin_product_new');
+        }
+
         $productForm = $this->getProductFormBuilder()->getForm();
 
         try {
@@ -103,6 +110,12 @@ class ProductController extends FrameworkBundleAdminController
      */
     public function editAction(Request $request, int $productId): Response
     {
+        if (!$this->isProductPageV2Enabled()) {
+            $this->addFlashMessageProductV2IsDisabled();
+
+            return $this->redirectToRoute('admin_product_form', ['id' => $productId]);
+        }
+
         $productForm = $this->getProductFormBuilder()->getFormFor($productId, [], [
             'product_id' => $productId,
             // @todo: patch/partial update doesn't work good for now (especially multiple empty values) so we use POST for now
@@ -220,5 +233,35 @@ class ProductController extends FrameworkBundleAdminController
                 'Admin.Notifications.Error'
             ),
         ];
+    }
+
+    /**
+     * @return bool
+     */
+    private function isProductPageV2Enabled(): bool
+    {
+        $productPageV2FeatureFlag = $this->get('prestashop.core.feature_flags.modifier')
+            ->getOneFeatureFlagByName(FeatureFlagSettings::FEATURE_FLAG_PRODUCT_PAGE_V2);
+
+        if (null === $productPageV2FeatureFlag) {
+            return false;
+        }
+
+        return $productPageV2FeatureFlag->isEnabled();
+    }
+
+    private function addFlashMessageProductV2IsDisabled(): void
+    {
+        $this->addFlash(
+            'warning',
+            $this->trans(
+                'The experimental product page is not enabled. To enable it, go to the %sExperimental Features%s page.',
+                'Admin.Catalog.Notification',
+                [
+                    sprintf('<a href="%s">', $this->get('router')->generate('admin_feature_flags_index')),
+                    '</a>',
+                ]
+            )
+        );
     }
 }

@@ -36,6 +36,7 @@ use PrestaShop\PrestaShop\Core\Domain\Product\Exception\CannotUpdateProductExcep
 use PrestaShop\PrestaShop\Core\Domain\Product\Exception\ProductException;
 use PrestaShop\PrestaShop\Core\Domain\Product\Exception\ProductNotFoundException;
 use PrestaShop\PrestaShop\Core\Domain\Product\Query\GetProductIsEnabled;
+use PrestaShop\PrestaShop\Core\FeatureFlag\FeatureFlagSettings;
 use PrestaShop\PrestaShop\Core\Hook\HookDispatcher;
 use PrestaShopBundle\Component\CsvResponse;
 use PrestaShopBundle\Entity\AdminFilter;
@@ -325,6 +326,7 @@ class ProductController extends FrameworkBundleAdminController
                 ]
             );
             $product['preview_url'] = $adminProductWrapper->getPreviewUrlFromId($product['id_product']);
+            $product['url_v2'] = $this->generateUrl('admin_products_v2_edit', ['productId' => $product['id_product']]);
         }
 
         //Drag and drop is ONLY activated when EXPLICITLY requested by the user
@@ -339,6 +341,7 @@ class ProductController extends FrameworkBundleAdminController
             'last_sql_query' => $lastSql,
             'has_category_filter' => $productProvider->isCategoryFiltered(),
             'is_shop_context' => $this->get('prestashop.adapter.shop.context')->isShopContext(),
+            'productPageV2IsEnabled' => $this->isProductPageV2Enabled(),
         ];
         if ($view !== 'full') {
             return $this->render(
@@ -371,11 +374,15 @@ class ProductController extends FrameworkBundleAdminController
             'icon' => 'add_circle_outline',
             'help' => $this->trans('Create a new product: CTRL+P', 'Admin.Catalog.Help'),
         ];
-        $toolbarButtons['add_v2'] = [
-            'href' => $this->generateUrl('admin_products_v2_create'),
-            'desc' => $this->trans('New product v2', 'Admin.Actions'),
-            'icon' => 'add_circle_outline',
-        ];
+
+        if ($this->isProductPageV2Enabled()) {
+            $toolbarButtons['add_v2'] = [
+                'href' => $this->generateUrl('admin_products_v2_create'),
+                'desc' => $this->trans('New product on experimental page', 'Admin.Catalog.Feature'),
+                'icon' => 'add_circle_outline',
+                'class' => 'btn-outline-primary',
+            ];
+        }
 
         return $toolbarButtons;
     }
@@ -657,6 +664,7 @@ class ProductController extends FrameworkBundleAdminController
             'editable' => $this->isGranted(PageVoter::UPDATE, self::PRODUCT_OBJECT),
             'drawerModules' => $drawerModules,
             'layoutTitle' => $this->trans('Product', 'Admin.Global'),
+            'isProductPageV2Enabled' => ($this->isProductPageV2Enabled()),
         ];
     }
 
@@ -1326,5 +1334,19 @@ class ProductController extends FrameworkBundleAdminController
             'error_code' => $error_code,
             'allow_duplicate' => $allow_duplicate,
         ];
+    }
+
+    /**
+     * @return bool
+     */
+    private function isProductPageV2Enabled(): bool
+    {
+        $productPageV2FeatureFlag = $this->get('prestashop.core.feature_flags.modifier')->getOneFeatureFlagByName(FeatureFlagSettings::FEATURE_FLAG_PRODUCT_PAGE_V2);
+
+        if (null === $productPageV2FeatureFlag) {
+            return false;
+        }
+
+        return $productPageV2FeatureFlag->isEnabled();
     }
 }
