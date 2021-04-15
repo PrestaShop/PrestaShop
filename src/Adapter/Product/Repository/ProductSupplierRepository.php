@@ -126,6 +126,34 @@ class ProductSupplierRepository extends AbstractObjectModelRepository
     }
 
     /**
+     * @param ProductId $productId
+     * @param SupplierId $supplierId
+     *
+     * @return ProductSupplierId[]
+     */
+    public function getAssociatedProductSuppliers(ProductId $productId, SupplierId $supplierId): array
+    {
+        $qb = $this->connection->createQueryBuilder();
+        $qb->select('ps.id_product_supplier AS product_supplier_id')
+            ->from($this->dbPrefix . 'product_supplier', 'ps')
+            ->andWhere('ps.id_product = :productId')
+            ->andWhere('ps.id_supplier = :supplierId')
+            ->setParameter('productId', $productId->getValue())
+            ->setParameter('supplierId', $supplierId->getValue())
+        ;
+
+        $results = $qb->execute()->fetchAll();
+
+        if (empty($results)) {
+            return [];
+        }
+
+        return array_map(function (array $result) {
+            return new ProductSupplierId((int) $result['product_supplier_id']);
+        }, $results);
+    }
+
+    /**
      * @param ProductSupplier $productSupplier
      * @param int $errorCode
      *
@@ -206,6 +234,7 @@ class ProductSupplierRepository extends AbstractObjectModelRepository
                 'ps.id_supplier = s.id_supplier'
             )
             ->where('ps.id_product = :productId')
+            ->addOrderBy('s.name', 'ASC')
             ->setParameter('productId', $productId->getValue())
         ;
 
