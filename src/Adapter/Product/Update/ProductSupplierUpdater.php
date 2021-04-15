@@ -35,7 +35,7 @@ use PrestaShop\PrestaShop\Adapter\Supplier\Repository\SupplierRepository;
 use PrestaShop\PrestaShop\Core\Domain\Product\Combination\ValueObject\CombinationId;
 use PrestaShop\PrestaShop\Core\Domain\Product\Exception\CannotUpdateProductException;
 use PrestaShop\PrestaShop\Core\Domain\Product\Exception\InvalidProductTypeException;
-use PrestaShop\PrestaShop\Core\Domain\Product\Supplier\Exception\ProductSupplierNotFoundException;
+use PrestaShop\PrestaShop\Core\Domain\Product\Supplier\Exception\DefaultProductSupplierNotAssociatedException;
 use PrestaShop\PrestaShop\Core\Domain\Product\Supplier\ValueObject\ProductSupplierId;
 use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductId;
 use PrestaShop\PrestaShop\Core\Domain\Supplier\ValueObject\SupplierId;
@@ -87,14 +87,12 @@ class ProductSupplierUpdater
 
     /**
      * @param ProductId $productId
-     * @param SupplierId $defaultSupplierId
      * @param array<int, ProductSupplier> $productSuppliers
      *
      * @return array<int, ProductSupplierId>
      */
     public function setProductSuppliers(
         ProductId $productId,
-        SupplierId $defaultSupplierId,
         array $productSuppliers
     ): array {
         $product = $this->productRepository->get($productId);
@@ -111,6 +109,14 @@ class ProductSupplierUpdater
         }
 
         $this->persistProductSuppliers($productId, $productSuppliers);
+
+        // Check if product has a default supplier if not use the first one
+        $defaultSupplierId = $this->productSupplierRepository->getProductDefaultSupplierId($productId);
+        if (null === $defaultSupplierId) {
+            /** @var ProductSupplier $defaultSupplier */
+            $defaultSupplier = reset($productSuppliers);
+            $defaultSupplierId = new SupplierId((int) $defaultSupplier->id_supplier);
+        }
         $this->updateDefaultSupplier($productId, $defaultSupplierId);
 
         return $this->getProductSupplierIds($productId);
@@ -208,15 +214,11 @@ class ProductSupplierUpdater
             return;
         }
 
-        if ((int) $product->id_supplier === $supplierIdValue) {
-            return;
-        }
-
         $this->supplierRepository->assertSupplierExists($supplierId);
         $productSupplierId = (int) ProductSupplier::getIdByProductAndSupplier($productIdValue, 0, $supplierIdValue);
 
         if (!$productSupplierId) {
-            throw new ProductSupplierNotFoundException(sprintf(
+            throw new DefaultProductSupplierNotAssociatedException(sprintf(
                 'Supplier #%d is not associated with product #%d', $supplierIdValue, $productIdValue
             ));
         }

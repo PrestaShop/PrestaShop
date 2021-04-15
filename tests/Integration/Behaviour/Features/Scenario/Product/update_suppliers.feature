@@ -52,42 +52,45 @@ Feature: Update product suppliers from Back Office (BO)
       | type        | standard    |
     And product product1 type should be standard
     And product product1 should not have any suppliers assigned
-    When I set product product1 default supplier to supplier1 and following suppliers:
+    When I set product product1 suppliers:
       | reference         | supplier reference | product supplier reference     | currency | price tax excluded |
       | product1supplier1 | supplier1          | my first supplier for product1 | USD      | 10                 |
     Then product product1 should have following suppliers:
       | product supplier reference     | currency | price tax excluded |
       | my first supplier for product1 | USD      | 10                 |
+    # Default supplier is the first one
     And product product1 should have following supplier values:
-      | default supplier | supplier1 |
-    When I set product product1 default supplier to supplier2 and following suppliers:
-      | reference         | supplier reference | product supplier reference      | currency | price tax excluded |
-      | product1supplier1 | supplier1          | my first supplier for product1  | USD      | 10                 |
-      | product1supplier2 | supplier2          | my second supplier for product1 | EUR      | 11                 |
-      | product1supplier3 | supplier3          | my third supplier for product1  | EUR      | 20                 |
+      | default supplier           | supplier1                      |
+      | default supplier reference | my first supplier for product1 |
+    When I set product product1 suppliers:
+      | reference         | supplier reference | product supplier reference         | currency | price tax excluded |
+      | product1supplier1 | supplier1          | my new first supplier for product1 | USD      | 10                 |
+      | product1supplier2 | supplier2          | my second supplier for product1    | EUR      | 11                 |
+      | product1supplier3 | supplier3          | my third supplier for product1     | EUR      | 20                 |
     Then product product1 should have following suppliers:
-      | product supplier reference      | currency | price tax excluded |
-      | my first supplier for product1  | USD      | 10                 |
-      | my second supplier for product1 | EUR      | 11                 |
-      | my third supplier for product1  | EUR      | 20                 |
+      | product supplier reference         | currency | price tax excluded |
+      | my new first supplier for product1 | USD      | 10                 |
+      | my second supplier for product1    | EUR      | 11                 |
+      | my third supplier for product1     | EUR      | 20                 |
+    # Default supplier was already set it should be the same but reference is updated
+    And product product1 should have following supplier values:
+      | default supplier           | supplier1                          |
+      | default supplier reference | my new first supplier for product1 |
+    When I set product product1 default supplier to supplier2
     And product product1 should have following supplier values:
       | default supplier           | supplier2                       |
       | default supplier reference | my second supplier for product1 |
-    When I set product product1 default supplier to supplier3
-    Then product product1 should have following supplier values:
-      | default supplier           | supplier3                      |
-      | default supplier reference | my third supplier for product1 |
 
   Scenario: Remove one of product suppliers
     Given product product1 should have following suppliers:
-      | product supplier reference      | currency | price tax excluded |
-      | my first supplier for product1  | USD      | 10                 |
-      | my second supplier for product1 | EUR      | 11                 |
-      | my third supplier for product1  | EUR      | 20                 |
+      | product supplier reference         | currency | price tax excluded |
+      | my new first supplier for product1 | USD      | 10                 |
+      | my second supplier for product1    | EUR      | 11                 |
+      | my third supplier for product1     | EUR      | 20                 |
     And product product1 should have following supplier values:
       | default supplier           | supplier2                       |
       | default supplier reference | my second supplier for product1 |
-    When I set product product1 default supplier to supplier2 and following suppliers:
+    When I set product product1 suppliers:
       | reference         | supplier reference | product supplier reference      | currency | price tax excluded |
       | product1supplier1 | supplier1          | my first supplier for product1  | USD      | 10                 |
       | product1supplier2 | supplier2          | my second supplier for product1 | EUR      | 11                 |
@@ -98,16 +101,28 @@ Feature: Update product suppliers from Back Office (BO)
     And product product1 should have following supplier values:
       | default supplier           | supplier2                       |
       | default supplier reference | my second supplier for product1 |
+    # If default supplier is removed another one is automatically associated
+    When I set product product1 suppliers:
+      | reference            | supplier reference | product supplier reference      | currency | price tax excluded |
+      | product1supplier3bis | supplier3          | my third supplier for product1  | EUR      | 20                 |
+      | product1supplier1    | supplier1          | my first supplier for product1  | USD      | 10                 |
+    Then product product1 should have following suppliers:
+      | product supplier reference     | currency | price tax excluded |
+      | my first supplier for product1 | USD      | 10                 |
+      | my third supplier for product1 | EUR      | 20                 |
+    And product product1 should have following supplier values:
+      | default supplier           | supplier3                      |
+      | default supplier reference | my third supplier for product1 |
 
   Scenario: Remove all associated product suppliers
     Given product product1 type should be standard
     And product product1 should have following suppliers:
-      | product supplier reference      | currency | price tax excluded |
-      | my first supplier for product1  | USD      | 10                 |
-      | my second supplier for product1 | EUR      | 11                 |
+      | product supplier reference     | currency | price tax excluded |
+      | my first supplier for product1 | USD      | 10                 |
+      | my third supplier for product1 | EUR      | 20                 |
     And product product1 should have following supplier values:
-      | default supplier           | supplier2                       |
-      | default supplier reference | my second supplier for product1 |
+      | default supplier           | supplier3                      |
+      | default supplier reference | my third supplier for product1 |
     When I remove all associated product product1 suppliers
     Then product product1 should not have any suppliers assigned
     And product product1 should not have a default supplier
@@ -116,9 +131,7 @@ Feature: Update product suppliers from Back Office (BO)
   Scenario: Update product default supplier when it is not associated with product
     Given product product1 should not have any suppliers assigned
     And product product1 should not have a default supplier
-    When I set product product1 default supplier to supplier2 and following suppliers:
-      | reference           | supplier reference | product supplier reference     | currency | price tax excluded |
-      | product1supplier1-1 | supplier1          | my first supplier for product1 | USD      | 10                 |
+    When I set product product1 default supplier to supplier1
     Then I should get error that supplier is not associated with product
     And product product1 should not have any suppliers assigned
     And product product1 should not have a default supplier
@@ -139,7 +152,7 @@ Feature: Update product suppliers from Back Office (BO)
       | unit_price       | 0     |
       | unity            |       |
       | unit_price_ratio | 0     |
-    When I set product product3 default supplier to supplier1 and following suppliers:
+    When I set product product3 suppliers:
       | reference         | supplier reference | product supplier reference     | currency | price tax excluded |
       | product3supplier1 | supplier1          | my first supplier for product3 | USD      | 10                 |
     Then product product3 should have following suppliers:
