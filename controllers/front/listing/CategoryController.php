@@ -48,24 +48,29 @@ class CategoryControllerCore extends ProductListingFrontController
         }
     }
 
-    public function getCanonicalURL()
+    /**
+     * {@inheritdoc}
+     * 
+     * @return string
+     */
+    public function getCanonicalURL(): string
     {
         $canonicalUrl = $this->context->link->getCategoryLink($this->category);
         $parsedUrl = parse_url($canonicalUrl);
+        $params = [];
+        $page = (int) Tools::getValue('page');
+
         if (isset($parsedUrl['query'])) {
             parse_str($parsedUrl['query'], $params);
-        } else {
-            $params = [];
         }
-        $page = (int) Tools::getValue('page');
+
         if ($page > 1) {
             $params['page'] = $page;
         } else {
             unset($params['page']);
         }
-        $canonicalUrl = http_build_url($parsedUrl, ['query' => http_build_query($params)]);
 
-        return $canonicalUrl;
+        return http_build_url($parsedUrl, ['query' => http_build_query($params)]);
     }
 
     /**
