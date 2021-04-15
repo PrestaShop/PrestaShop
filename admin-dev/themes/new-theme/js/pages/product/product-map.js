@@ -128,5 +128,5 @@ export default {
   suppliers: {
     productSuppliers: '#product_suppliers',
     combinationSuppliers: '#combination_form_suppliers',
-  }
+  },
 };
