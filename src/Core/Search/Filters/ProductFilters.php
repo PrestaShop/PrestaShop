@@ -23,12 +23,10 @@
  * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
-
 declare(strict_types=1);
 
 namespace PrestaShop\PrestaShop\Core\Search\Filters;
 
-use PrestaShop\PrestaShop\Core\Grid\Definition\Factory\ProductGridDefinitionFactory;
 use PrestaShop\PrestaShop\Core\Search\Filters;
 
 /**
@@ -36,8 +34,6 @@ use PrestaShop\PrestaShop\Core\Search\Filters;
  */
 final class ProductFilters extends Filters
 {
-    protected $filterId = ProductGridDefinitionFactory::GRID_ID;
-
     /**
      * {@inheritdoc}
      */

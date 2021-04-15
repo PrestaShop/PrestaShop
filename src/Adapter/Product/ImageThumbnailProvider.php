@@ -23,7 +23,6 @@
  * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
-
 declare(strict_types=1);
 
 namespace PrestaShop\PrestaShop\Adapter\Product;
@@ -61,7 +60,7 @@ final class ImageThumbnailProvider implements ImageProviderInterface
 
         $image = new Image($imageId);
 
-        $pathToImage = $parentDirectory . DIRECTORY_SEPARATOR . $image->getExistingImgPath() . '.' . $imageType;
+        $pathToImage = $parentDirectory . '/' . $image->getExistingImgPath() . '.' . $imageType;
 
         $imageTag = ImageManager::thumbnail(
             $pathToImage,
