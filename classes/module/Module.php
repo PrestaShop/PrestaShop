@@ -3510,9 +3510,9 @@ abstract class ModuleCore implements ModuleInterface
     /**
      * Returns the declared multistore compatibility level
      *
-     * @return int|null
+     * @return int
      */
-    public function getMultistoreCompatibility(): ?int
+    public function getMultistoreCompatibility(): int
     {
         return $this->multistoreCompatibility;
     }

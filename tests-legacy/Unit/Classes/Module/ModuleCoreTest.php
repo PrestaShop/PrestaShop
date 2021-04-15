@@ -90,7 +90,7 @@ class ModuleCoreTest extends TestCase
     }
 
     /**
-     * @dataProvider setMultistoreCompatibilityProvider
+     * @return void
      */
     public function testGetDefaultMultistoreCompatibility(): void
     {
