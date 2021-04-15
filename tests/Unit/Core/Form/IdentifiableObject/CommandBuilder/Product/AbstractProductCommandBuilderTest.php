@@ -46,7 +46,7 @@ abstract class AbstractProductCommandBuilderTest extends TestCase
     {
         parent::setUp();
         $factory = ComparatorFactory::getInstance();
-        $factory->register(new ProductCommandComparator());
+        //$factory->register(new ProductCommandComparator());
     }
 
     /**
