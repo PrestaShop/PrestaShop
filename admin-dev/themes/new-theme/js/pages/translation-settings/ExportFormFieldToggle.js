@@ -38,7 +38,8 @@ const $modulesValues = $(TranslationSettingsMap.exportModulesValues).closest('.f
 /**
  * Toggles show/hide for the selectors of subtypes (in case of Core type), theme or module when a Type is selected
  *
- * Example : If Core type is selected, the subtypes checkboxes are shown, Theme and Module types are unselected and their value selector are hidden
+ * Example : If Core type is selected, the subtypes checkboxes are shown,
+ * Theme and Module types are unselected and their value selector are hidden
  */
 export default class ExportFormFieldToggle {
   constructor() {
@@ -117,7 +118,7 @@ export default class ExportFormFieldToggle {
   uncheck(...$selectors) {
     Object.values($selectors).forEach((el) => {
       el.prop('checked', false);
-    })
+    });
   }
 
   /**
@@ -129,6 +130,6 @@ export default class ExportFormFieldToggle {
   check(...$selectors) {
     Object.values($selectors).forEach((el) => {
       el.prop('checked', true);
-    })
+    });
   }
 }
