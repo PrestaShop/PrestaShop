@@ -34,6 +34,16 @@ namespace PrestaShop\PrestaShop\Core\Domain\Product\Combination\QueryResult;
 class CombinationForEditing
 {
     /**
+     * @var int
+     */
+    private $combinationId;
+
+    /**
+     * @var int
+     */
+    private $productId;
+
+    /**
      * @var string
      */
     private $name;
@@ -54,21 +64,43 @@ class CombinationForEditing
     private $stock;
 
     /**
+     * @param int $combinationId
+     * @param int $productId
      * @param string $name
      * @param CombinationDetails $options
      * @param CombinationPrices $prices
      * @param CombinationStock $stock
      */
     public function __construct(
+        int $combinationId,
+        int $productId,
         string $name,
         CombinationDetails $options,
         CombinationPrices $prices,
         CombinationStock $stock
     ) {
+        $this->combinationId = $combinationId;
+        $this->productId = $productId;
         $this->name = $name;
         $this->details = $options;
         $this->stock = $stock;
         $this->prices = $prices;
+    }
+
+    /**
+     * @return int
+     */
+    public function getCombinationId(): int
+    {
+        return $this->combinationId;
+    }
+
+    /**
+     * @return int
+     */
+    public function getProductId(): int
+    {
+        return $this->productId;
     }
 
     /**
