@@ -50,7 +50,7 @@ class CategoryControllerCore extends ProductListingFrontController
 
     /**
      * {@inheritdoc}
-     * 
+     *
      * @return string
      */
     public function getCanonicalURL(): string
