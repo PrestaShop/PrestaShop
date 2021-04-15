@@ -177,6 +177,14 @@ services:
             - name: tactician.handler
               command: PrestaShop\PrestaShop\Core\Domain\Product\Supplier\Query\GetProductSupplierOptions
 
+    prestashop.adapter.product.supplier.command_handler.set_product_default_supplier_handler:
+        class: PrestaShop\PrestaShop\Adapter\Product\Supplier\CommandHandler\SetProductDefaultSupplierHandler
+        arguments:
+            - '@prestashop.adapter.product.update.product_supplier_updater'
+        tags:
+            - name: tactician.handler
+              command: PrestaShop\PrestaShop\Core\Domain\Product\Supplier\Command\SetProductDefaultSupplierCommand
+
     prestashop.adapter.product.supplier.command_handler.set_product_suppliers_handler:
         class: PrestaShop\PrestaShop\Adapter\Product\Supplier\CommandHandler\SetProductSuppliersHandler
         arguments:
