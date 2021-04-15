@@ -88,8 +88,8 @@ class ExportCataloguesType extends TranslatorAwareType
                 'choice_translation_domain' => false,
             ]);
 
-        $builder->add('type_selector_core', RadioWithChoiceChildrenType::class, [
-            'radio_name' => 'type_selector_core',
+        $builder->add('core_selectors', RadioWithChoiceChildrenType::class, [
+            'radio_name' => 'core_type',
             'radio_label' => $this->trans('PrestaShop translations', 'Admin.International.Feature'),
             'required' => false,
             'label' => $this->trans('Export', 'Admin.Actions'),
@@ -101,8 +101,8 @@ class ExportCataloguesType extends TranslatorAwareType
             ],
         ]);
 
-        $builder->add('type_selector_themes', RadioWithChoiceChildrenType::class, [
-            'radio_name' => 'type_selector_themes',
+        $builder->add('themes_selectors', RadioWithChoiceChildrenType::class, [
+            'radio_name' => 'themes_type',
             'radio_label' => $this->trans('Theme translations', 'Admin.International.Feature'),
             'required' => false,
             'label' => null,
@@ -114,8 +114,8 @@ class ExportCataloguesType extends TranslatorAwareType
             ],
         ]);
 
-        $builder->add('type_selector_modules', RadioWithChoiceChildrenType::class, [
-            'radio_name' => 'type_selector_modules',
+        $builder->add('modules_selectors', RadioWithChoiceChildrenType::class, [
+            'radio_name' => 'modules_type',
             'radio_label' => $this->trans('Installed module translations', 'Admin.International.Feature'),
             'required' => false,
             'label' => null,

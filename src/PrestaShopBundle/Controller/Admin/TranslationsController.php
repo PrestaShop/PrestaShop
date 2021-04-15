@@ -205,15 +205,15 @@ class TranslationsController extends FrameworkBundleAdminController
             // Get the language
             $isoCode = $data['iso_code'];
 
-            $coreTypeSelector = $data['type_selector_core'];
-            $themesTypeSelector = $data['type_selector_themes'];
-            $modulesTypeSelector = $data['type_selector_modules'];
+            $coreTypeSelector = $data['core_selectors'];
+            $themesTypeSelector = $data['themes_selectors'];
+            $modulesTypeSelector = $data['modules_selectors'];
             $selections = [];
 
             // Core translation types
             if (
-                isset($coreTypeSelector['type_selector_core'])
-                && $coreTypeSelector['type_selector_core']
+                isset($coreTypeSelector['core_type'])
+                && $coreTypeSelector['core_type']
                 && isset($coreTypeSelector['selected_value'])
             ) {
                 foreach ($coreTypeSelector['selected_value'] as $type) {
@@ -236,8 +236,8 @@ class TranslationsController extends FrameworkBundleAdminController
 
             // Theme translation type
             if (
-                isset($themesTypeSelector['type_selector_themes'])
-                && $themesTypeSelector['type_selector_themes']
+                isset($themesTypeSelector['themes_type'])
+                && $themesTypeSelector['themes_type']
                 && isset($themesTypeSelector['selected_value'])
             ) {
                 $selections[] = [
@@ -248,8 +248,8 @@ class TranslationsController extends FrameworkBundleAdminController
 
             // Module translation type
             if (
-                isset($modulesTypeSelector['type_selector_modules'])
-                && $modulesTypeSelector['type_selector_modules']
+                isset($modulesTypeSelector['modules_type'])
+                && $modulesTypeSelector['modules_type']
                 && isset($modulesTypeSelector['selected_value'])
             ) {
                 $selections[] = [
