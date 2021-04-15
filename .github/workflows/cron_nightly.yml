@@ -27,7 +27,7 @@ jobs:
             extensions: mbstring, intl, gd, xml, dom, json, fileinfo, curl, zip, iconv
 
       -   name: Initialize GCloud Service Key
-          run: echo $GC_SERVICE_KEY | base64 --decode -i > $HOME/gcloud-service-key.json
+          run: echo $GC_SERVICE_KEY > $HOME/gcloud-service-key.json
 
       -   uses: google-github-actions/setup-gcloud@master
           with:
