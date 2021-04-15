@@ -29,6 +29,7 @@ declare(strict_types=1);
 namespace PrestaShop\PrestaShop\Core\Form\IdentifiableObject\CommandBuilder\Product;
 
 use PrestaShop\PrestaShop\Core\Domain\Product\Supplier\Command\RemoveAllAssociatedProductSuppliersCommand;
+use PrestaShop\PrestaShop\Core\Domain\Product\Supplier\Command\SetProductDefaultSupplierCommand;
 use PrestaShop\PrestaShop\Core\Domain\Product\Supplier\Command\SetProductSuppliersCommand;
 use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductId;
 
@@ -63,7 +64,10 @@ final class ProductSuppliersCommandsBuilder implements ProductCommandsBuilderInt
         return [
             new SetProductSuppliersCommand(
                 $productId->getValue(),
-                $productSuppliers,
+                $productSuppliers
+            ),
+            new SetProductDefaultSupplierCommand(
+                $productId->getValue(),
                 $defaultSupplierId
             ),
         ];
