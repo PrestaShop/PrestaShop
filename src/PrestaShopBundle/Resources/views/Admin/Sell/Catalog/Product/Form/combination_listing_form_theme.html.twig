@@ -31,7 +31,7 @@
 {%- endblock -%}
 
 {%- block combination_item_row -%}
-  <tr id="combination-list-row-{{ form.vars.name }}">
+  <tr id="combination-list-row-{{ form.vars.name }}" class="combination">
     <td>
       {{ form_widget(form.is_selected) }}
       {{ form_widget(form.combination_id) }}
@@ -59,7 +59,7 @@
       {{ form_widget(form.is_default) }}
       {{ form_errors(form.is_default) }}
     </td>
-    <td>
+    <td class="combination-actions">
       {{ form_widget(form.edit) }}
       {{ form_widget(form.delete) }}
     </td>

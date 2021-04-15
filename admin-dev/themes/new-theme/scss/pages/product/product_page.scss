@@ -19,6 +19,13 @@
 .product-page {
   padding-bottom: 80px;
 
+  .combination {
+    &-actions {
+      display: flex;
+      align-items: center;
+    }   
+  }
+
   > #field-disabled {
     display: flex;
     flex-wrap: wrap;
@@ -240,6 +247,11 @@
   .product-feature {
     align-items: flex-end;
     margin-bottom: 1rem;
+
+    .js-locale-input-group {
+      flex-wrap: nowrap;
+      align-items: center;
+    }
 
     @media screen and (max-width: 1300px) {
       &::after {
