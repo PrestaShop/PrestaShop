@@ -35,7 +35,7 @@ use PrestaShop\PrestaShop\Core\Domain\Product\Combination\CommandHandler\SetComb
 /**
  * Handles @see SetCombinationImagesCommand using adapter udpater service
  */
-class SetCombinationImagesHandler implements SetCombinationImagesHandlerInterface
+final class SetCombinationImagesHandler implements SetCombinationImagesHandlerInterface
 {
     /**
      * @var CombinationImagesUpdater

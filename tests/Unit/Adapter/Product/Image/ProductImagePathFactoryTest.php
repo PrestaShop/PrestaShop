@@ -138,10 +138,11 @@ class ProductImagePathFactoryTest extends TestCase
      */
     public function getDataForPathByType(): Generator
     {
-        yield ['/img/p/', new ImageId(10), 'small_default', '/img/p/1/0/10-small_default.jpg'];
-        yield ['/img/p', new ImageId(11), 'medium_default', '/img/p/1/1/11-medium_default.jpg'];
-        yield ['img/p/', new ImageId(2504), 'large_default', 'img/p/2/5/0/4/2504-large_default.jpg'];
-        yield ['/img/p/', new ImageId(2504), 'cart_default', '/img/p/2/5/0/4/2504-cart_default.jpg'];
+        yield ['/img/p/', new ImageId(10), ProductImagePathFactory::IMAGE_TYPE_SMALL_DEFAULT, '/img/p/1/0/10-small_default.jpg'];
+        yield ['/img/p', new ImageId(11), ProductImagePathFactory::IMAGE_TYPE_MEDIUM_DEFAULT, '/img/p/1/1/11-medium_default.jpg'];
+        yield ['img/p/', new ImageId(2504), ProductImagePathFactory::IMAGE_TYPE_LARGE_DEFAULT, 'img/p/2/5/0/4/2504-large_default.jpg'];
+        yield ['/img/p/', new ImageId(2504), ProductImagePathFactory::IMAGE_TYPE_CART_DEFAULT, '/img/p/2/5/0/4/2504-cart_default.jpg'];
+        yield ['/img/p/', new ImageId(2504), ProductImagePathFactory::IMAGE_TYPE_HOME_DEFAULT, '/img/p/2/5/0/4/2504-home_default.jpg'];
     }
 
     public function getDataForImageFolder(): Generator

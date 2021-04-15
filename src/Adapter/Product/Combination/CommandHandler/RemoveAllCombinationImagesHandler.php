@@ -35,7 +35,7 @@ use PrestaShop\PrestaShop\Core\Domain\Product\Combination\CommandHandler\RemoveA
 /**
  * Handles @see RemoveAllCombinationImagesCommand using adapter udpater service
  */
-class RemoveAllCombinationImagesHandler implements RemoveAllCombinationImagesHandlerInterface
+final class RemoveAllCombinationImagesHandler implements RemoveAllCombinationImagesHandlerInterface
 {
     /**
      * @var CombinationImagesUpdater

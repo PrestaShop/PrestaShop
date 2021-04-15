@@ -41,7 +41,6 @@ use PrestaShop\PrestaShop\Core\Domain\Product\Combination\QueryResult\Combinatio
 use PrestaShop\PrestaShop\Core\Domain\Product\Combination\QueryResult\CombinationListForEditing;
 use PrestaShop\PrestaShop\Core\Domain\Product\Combination\QueryResult\EditableCombinationForListing;
 use PrestaShop\PrestaShop\Core\Domain\Product\Combination\ValueObject\CombinationId;
-use PrestaShop\PrestaShop\Core\Domain\Product\Image\ValueObject\ImageId;
 use PrestaShop\PrestaShop\Core\Grid\Query\DoctrineQueryBuilderInterface;
 use PrestaShop\PrestaShop\Core\Search\Filters\ProductCombinationFilters;
 
@@ -74,11 +73,6 @@ final class GetEditableCombinationsListHandler extends AbstractProductHandler im
      * @var ProductImagePathFactory
      */
     private $productImagePathFactory;
-
-    /**
-     * @var array<int, ImageId>
-     */
-    private $cachedImageIds = [];
 
     /**
      * @param StockAvailableRepository $stockAvailableRepository
@@ -169,7 +163,7 @@ final class GetEditableCombinationsListHandler extends AbstractProductHandler im
 
             $imageId = null;
             if (!empty($imageIdsByCombinationIds[$combinationId])) {
-                $imageId = $imageIdsByCombinationIds[$combinationId][0];
+                $imageId = reset($imageIdsByCombinationIds[$combinationId]);
             }
 
             $impactOnPrice = new DecimalNumber($combination['price']);

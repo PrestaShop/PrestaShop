@@ -40,6 +40,7 @@ use PrestaShop\PrestaShop\Core\Image\Exception\CannotUnlinkImageException;
 use PrestaShop\PrestaShop\Core\Image\Exception\ImageOptimizationException;
 use PrestaShop\PrestaShop\Core\Image\Uploader\Exception\ImageUploadException;
 use PrestaShop\PrestaShop\Core\Image\Uploader\Exception\MemoryLimitException;
+use Symfony\Component\Filesystem\Exception\IOException;
 use Symfony\Component\Filesystem\Filesystem;
 
 /**
@@ -151,15 +152,18 @@ class ProductImageUploader extends AbstractImageUploader
     private function createDestinationDirectory(ImageId $imageId, int $productId): void
     {
         $imageFolder = $this->productImagePathFactory->getImageFolder($imageId);
-        $this->fileSystem->mkdir($imageFolder, PsFileSystem::DEFAULT_MODE_FOLDER);
         if (is_dir($imageFolder)) {
             return;
         }
 
-        throw new ImageUploadException(sprintf(
-            'Error occurred when trying to create directory for product #%d image',
-            $productId
-        ));
+        try {
+            $this->fileSystem->mkdir($imageFolder, PsFileSystem::DEFAULT_MODE_FOLDER);
+        } catch (IOException $e) {
+            throw new ImageUploadException(sprintf(
+                'Error occurred when trying to create directory for product #%d image',
+                $productId
+            ));
+        }
     }
 
     /**

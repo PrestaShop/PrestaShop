@@ -139,8 +139,7 @@ class ProductImagePathFactory
      */
     public function getImageFolder(ImageId $imageId): string
     {
-        $id = $imageId->getValue();
-        $path = implode('/', str_split((string) $id));
+        $path = implode('/', str_split((string) $imageId->getValue()));
 
         return sprintf('%s%s', $this->pathToBaseDir, $path);
     }
