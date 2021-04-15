@@ -46,7 +46,7 @@ abstract class AbstractCombinationCommandBuilderTest extends TestCase
     {
         parent::setUp();
         $factory = ComparatorFactory::getInstance();
-        $factory->register(new CombinationCommandComparator());
+        //$factory->register(new CombinationCommandComparator());
     }
 
     /**
