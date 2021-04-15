@@ -46,6 +46,7 @@ class CombinationFormDataProviderTest extends TestCase
 {
     private const DEFAULT_NAME = 'Combination products';
     private const COMBINATION_ID = 42;
+    private const PRODUCT_ID = 69;
     private const DEFAULT_QUANTITY = 51;
 
     public function testGetDefaultData(): void
@@ -67,7 +68,7 @@ class CombinationFormDataProviderTest extends TestCase
         $queryBusMock = $this->createQueryBusMock($combinationData);
         $provider = new CombinationFormDataProvider($queryBusMock);
 
-        $formData = $provider->getData(static::COMBINATION_ID);
+        $formData = $provider->getData(self::COMBINATION_ID);
         // assertSame is very important here We can't assume null and 0 are the same thing
         $this->assertSame($expectedData, $formData);
     }
@@ -252,7 +253,9 @@ class CombinationFormDataProviderTest extends TestCase
     private function createCombinationForEditing(array $combination): CombinationForEditing
     {
         return new CombinationForEditing(
-            $combination['name'] ?? static::DEFAULT_NAME,
+            self::COMBINATION_ID,
+            self::PRODUCT_ID,
+            $combination['name'] ?? self::DEFAULT_NAME,
             $this->createDetails($combination),
             $this->createPrices($combination),
             $this->createStock($combination),
@@ -284,7 +287,7 @@ class CombinationFormDataProviderTest extends TestCase
     private function createStock(array $combination): CombinationStock
     {
         return new CombinationStock(
-            $combination['quantity'] ?? static::DEFAULT_QUANTITY,
+            $combination['quantity'] ?? self::DEFAULT_QUANTITY,
             $combination['minimal_quantity'] ?? 0,
             $combination['low_stock_threshold'] ?? 0,
             $combination['low_stock_alert'] ?? false,
@@ -316,10 +319,10 @@ class CombinationFormDataProviderTest extends TestCase
     private function getDefaultOutputData(): array
     {
         return [
-            'id' => static::COMBINATION_ID,
-            'name' => static::DEFAULT_NAME,
+            'id' => self::COMBINATION_ID,
+            'name' => self::DEFAULT_NAME,
             'stock' => [
-                'quantity' => static::DEFAULT_QUANTITY,
+                'quantity' => self::DEFAULT_QUANTITY,
                 'minimal_quantity' => 0,
                 'stock_location' => 'location',
                 'low_stock_threshold' => null,
