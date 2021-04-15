@@ -222,7 +222,7 @@ class CombinationFormDataProviderTest extends TestCase
             0 => 1,
             1 => 2,
         ];
-        $expectedOutputData['suppliers']['product_suppliers'][0] = [
+        $expectedOutputData['suppliers']['product_suppliers'][1] = [
             'supplier_id' => 1,
             'supplier_name' => 'test supplier 1',
             'product_supplier_id' => 1,
@@ -231,7 +231,7 @@ class CombinationFormDataProviderTest extends TestCase
             'currency_id' => 1,
             'combination_id' => self::COMBINATION_ID,
         ];
-        $expectedOutputData['suppliers']['product_suppliers'][1] = [
+        $expectedOutputData['suppliers']['product_suppliers'][2] = [
             'supplier_id' => 2,
             'supplier_name' => 'test supplier 2',
             'product_supplier_id' => 2,
