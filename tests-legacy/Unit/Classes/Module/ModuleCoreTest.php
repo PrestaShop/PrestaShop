@@ -73,11 +73,11 @@ class ModuleCoreTest extends TestCase
     public function testDisplayErrorShouldReturnMultipleErrors()
     {
         // given
-        $errors = array(
+        $errors = [
             'Error 1',
             'Error 2',
             'Error 3',
-        );
+        ];
 
         $module = new FakeModule();
 
@@ -87,5 +87,14 @@ class ModuleCoreTest extends TestCase
         // then
         $crawler = new Crawler($htmlOutput);
         $this->assertCount(3, $crawler->filter('.module_error li'));
+    }
+
+    /**
+     * @return void
+     */
+    public function testGetDefaultMultistoreCompatibility(): void
+    {
+        $module = new FakeModule();
+        $this->assertEquals(FakeModule::MULTISTORE_COMPATIBILITY_UNKNOWN, $module->getMultistoreCompatibility());
     }
 }
