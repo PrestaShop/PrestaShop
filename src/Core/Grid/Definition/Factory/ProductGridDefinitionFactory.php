@@ -23,7 +23,6 @@
  * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
-
 declare(strict_types=1);
 
 namespace PrestaShop\PrestaShop\Core\Grid\Definition\Factory;
@@ -32,7 +31,6 @@ use PrestaShop\PrestaShop\Core\ConfigurationInterface;
 use PrestaShop\PrestaShop\Core\Grid\Action\GridActionCollection;
 use PrestaShop\PrestaShop\Core\Grid\Action\Row\RowActionCollection;
 use PrestaShop\PrestaShop\Core\Grid\Action\Row\Type\LinkRowAction;
-use PrestaShop\PrestaShop\Core\Grid\Action\Row\Type\SubmitRowAction;
 use PrestaShop\PrestaShop\Core\Grid\Action\Type\LinkGridAction;
 use PrestaShop\PrestaShop\Core\Grid\Action\Type\SimpleGridAction;
 use PrestaShop\PrestaShop\Core\Grid\Column\ColumnCollection;
@@ -174,54 +172,54 @@ final class ProductGridDefinitionFactory extends AbstractGridDefinitionFactory
                     ])
             )
             ->add((new ActionColumn('actions'))
-            ->setName($this->trans('Actions', [], 'Admin.Global'))
-            ->setOptions([
-                'actions' => (new RowActionCollection())
-                    ->add((new LinkRowAction('edit'))
-                    ->setName($this->trans('Edit', [], 'Admin.Actions'))
-                    ->setIcon('edit')
-                    ->setOptions([
-                        'route' => 'admin_product_form',
-                        'route_param_name' => 'id',
-                        'route_param_field' => 'id_product',
-                    ])
-                    )
-                    ->add((new SubmitRowAction('delete'))
-                        ->setName($this->trans('Delete', [], 'Admin.Actions'))
-                        ->setIcon('delete')
-                        ->setOptions([
-                            'method' => 'DELETE',
-                            'route' => 'admin_products_v2_delete',
-                            'route_param_name' => 'productId',
-                            'route_param_field' => 'id_product',
-                            'confirm_message' => $this->trans(
-                                'Delete selected item?',
-                                [],
-                                'Admin.Notifications.Warning'
-                            ),
-                        ])
-                    ),
+                ->setName($this->trans('Actions', [], 'Admin.Global'))
+                ->setOptions([
+                    'actions' => (new RowActionCollection())
+                        ->add((new LinkRowAction('edit'))
+                            ->setName($this->trans('Edit', [], 'Admin.Actions'))
+                            ->setIcon('edit')
+                            ->setOptions([
+                                'route' => 'admin_product_form',
+                                'route_param_name' => 'id',
+                                'route_param_field' => 'id_product',
+                            ])
+                        )
 
-                //    @todo Implement remaining actions
-                //    ->add((new PreviewProductRowAction('preview_product'))
-                //        ->setName($this->trans('Preview', [], 'Admin.Actions'))
-                //        ->setIcon('remove_red_eye')
-                //        ->setOptions([
-                //            'route' => 'admin_products_preview',
-                //            'route_param_name' => 'productId',
-                //            'route_param_field' => 'id_product',
-                //        ])
-                //    )
-                //    ->add((new SubmitRowAction('duplicate'))
-                //        ->setName($this->trans('Duplicate', [], 'Admin.Actions'))
-                //        ->setIcon('content_copy')
-                //        ->setOptions([
-                //            'route' => 'admin_products_duplicate',
-                //            'route_param_name' => 'productId',
-                //            'route_param_field' => 'id_product',
-                //        ])
-                //    )
-            ])
+                    //    @todo Implement remaining actions actions
+                    //    ->add((new PreviewProductRowAction('preview_product'))
+                    //        ->setName($this->trans('Preview', [], 'Admin.Actions'))
+                    //        ->setIcon('remove_red_eye')
+                    //        ->setOptions([
+                    //            'route' => 'admin_products_preview',
+                    //            'route_param_name' => 'productId',
+                    //            'route_param_field' => 'id_product',
+                    //        ])
+                    //    )
+                    //    ->add((new SubmitRowAction('duplicate'))
+                    //        ->setName($this->trans('Duplicate', [], 'Admin.Actions'))
+                    //        ->setIcon('content_copy')
+                    //        ->setOptions([
+                    //            'route' => 'admin_products_duplicate',
+                    //            'route_param_name' => 'productId',
+                    //            'route_param_field' => 'id_product',
+                    //        ])
+                    //    )
+                    //    ->add((new SubmitRowAction('delete'))
+                    //        ->setName($this->trans('Delete', [], 'Admin.Actions'))
+                    //        ->setIcon('delete')
+                    //        ->setOptions([
+                    //            'method' => 'DELETE',
+                    //            'route' => 'admin_products_delete',
+                    //            'route_param_name' => 'productId',
+                    //            'route_param_field' => 'id_product',
+                    //            'confirm_message' => $this->trans(
+                    //                'Delete selected item?',
+                    //                [],
+                    //                'Admin.Notifications.Warning'
+                    //            ),
+                    //        ])
+                    //    ),
+                ])
             );
         if ($this->configuration->get('PS_STOCK_MANAGEMENT')) {
             $columns->addAfter(
@@ -230,7 +228,8 @@ final class ProductGridDefinitionFactory extends AbstractGridDefinitionFactory
                     ->setName($this->trans('Quantity', [], 'Admin.Catalog.Feature'))
                     ->setOptions([
                         'field' => 'quantity',
-                        'route' => 'admin_product_edit_quantity',
+                        /** @todo change route to link with quantity edit */
+                        'route' => 'admin_products_v2_index',
                         'route_param_name' => 'productId',
                         'route_param_field' => 'id_product',
                     ])
@@ -290,9 +289,8 @@ final class ProductGridDefinitionFactory extends AbstractGridDefinitionFactory
                     ])
                     ->setAssociatedColumn('price_tax_excluded')
             )
-            ->add(
-                (new Filter('active', YesAndNoChoiceType::class))
-                    ->setAssociatedColumn('active')
+            ->add((new Filter('active', YesAndNoChoiceType::class))
+                ->setAssociatedColumn('active')
             )
             ->add(
                 (new Filter('actions', SearchAndResetType::class))

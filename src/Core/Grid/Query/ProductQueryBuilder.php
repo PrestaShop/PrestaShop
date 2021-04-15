@@ -23,14 +23,13 @@
  * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
-
 declare(strict_types=1);
 
 namespace PrestaShop\PrestaShop\Core\Grid\Query;
 
 use Doctrine\DBAL\Connection;
 use Doctrine\DBAL\Query\QueryBuilder;
-use PrestaShop\PrestaShop\Adapter\Configuration;
+use PrestaShop\PrestaShop\Core\ConfigurationInterface;
 use PrestaShop\PrestaShop\Core\Grid\Query\Filter\DoctrineFilterApplicatorInterface;
 use PrestaShop\PrestaShop\Core\Grid\Query\Filter\SqlFilters;
 use PrestaShop\PrestaShop\Core\Grid\Search\SearchCriteriaInterface;
@@ -69,22 +68,21 @@ final class ProductQueryBuilder extends AbstractDoctrineQueryBuilder
      * @var DoctrineFilterApplicatorInterface
      */
     private $filterApplicator;
-
     /**
-     * @var Configuration
+     * @var ConfigurationInterface
      */
     private $configuration;
 
     public function __construct(
         Connection $connection,
-        string $dbPrefix,
+        $dbPrefix,
         DoctrineSearchCriteriaApplicatorInterface $searchCriteriaApplicator,
-        int $contextLanguageId,
-        int $contextShopId,
-        int $contextShopGroupId,
-        bool $isStockSharingBetweenShopGroupEnabled,
+        $contextLanguageId,
+        $contextShopId,
+        $contextShopGroupId,
+        $isStockSharingBetweenShopGroupEnabled,
         DoctrineFilterApplicatorInterface $filterApplicator,
-        Configuration $configuration
+        ConfigurationInterface $configuration
     ) {
         parent::__construct($connection, $dbPrefix);
         $this->searchCriteriaApplicator = $searchCriteriaApplicator;
@@ -110,7 +108,7 @@ final class ProductQueryBuilder extends AbstractDoctrineQueryBuilder
             ->addSelect('img_shop.`id_image`')
         ;
 
-        if ($this->configuration->getBoolean('PS_STOCK_MANAGEMENT')) {
+        if ($this->configuration->get('PS_STOCK_MANAGEMENT')) {
             $qb->addSelect('sa.`quantity`');
         }
 
@@ -179,7 +177,7 @@ final class ProductQueryBuilder extends AbstractDoctrineQueryBuilder
             ->andWhere('p.`state`=1')
         ;
 
-        $isStockManagementEnabled = $this->configuration->getBoolean('PS_STOCK_MANAGEMENT');
+        $isStockManagementEnabled = $this->configuration->get('PS_STOCK_MANAGEMENT');
 
         if ($isStockManagementEnabled) {
             $stockOnCondition =
