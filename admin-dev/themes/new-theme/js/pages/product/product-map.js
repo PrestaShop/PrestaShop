@@ -23,9 +23,6 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
 
-const productSuppliersId = '#product_suppliers_product_suppliers';
-const productSupplierInputId = (supplierIndex, inputName) => `${productSuppliersId}_${supplierIndex}_${inputName}`;
-
 const combinationListId = '#combination_list';
 
 export default {
@@ -42,23 +39,6 @@ export default {
   dropzoneImagesContainer: '#product_images',
   price: {
     priceTaxExcludedInput: '#product_price_price_tax_excluded',
-  },
-  suppliers: {
-    productSuppliersCollection: `${productSuppliersId}`,
-    supplierIdsInput: '#product_suppliers_supplier_ids',
-    defaultSupplierInput: '#product_suppliers_default_supplier_id',
-    // @todo: why its called productsTable and not productSuppliers|suppliers table? is it a mistake?
-    productsTable: `${productSuppliersId} table`,
-    productsTableBody: `${productSuppliersId} table tbody`,
-    productSupplierRow: {
-      supplierNameCell: (supplierIndex) => `#product_supplier_row_${supplierIndex} .supplier_name`,
-      supplierIdInput: (supplierIndex) => productSupplierInputId(supplierIndex, 'supplier_id'),
-      supplierNameInput: (supplierIndex) => productSupplierInputId(supplierIndex, 'supplier_name'),
-      productSupplierIdInput: (supplierIndex) => productSupplierInputId(supplierIndex, 'product_supplier_id'),
-      referenceInput: (supplierIndex) => productSupplierInputId(supplierIndex, 'reference'),
-      priceInput: (supplierIndex) => productSupplierInputId(supplierIndex, 'price_tax_excluded'),
-      currencyIdInput: (supplierIndex) => productSupplierInputId(supplierIndex, 'currency_id'),
-    },
   },
   redirectOption: {
     typeInput: '#product_redirect_option_type',

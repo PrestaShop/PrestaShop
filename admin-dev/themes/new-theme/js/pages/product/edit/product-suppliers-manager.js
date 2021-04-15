@@ -23,24 +23,27 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
 
-import ProductMap from '@pages/product/product-map';
+import SuppliersMap from '@pages/product/suppliers-map';
 
 const {$} = window;
 
 export default class ProductSuppliersManager {
-  constructor() {
-    this.$productSuppliersCollection = $(ProductMap.suppliers.productSuppliersCollection);
-    this.$supplierIdsGroup = $(ProductMap.suppliers.supplierIdsInput).closest('.form-group');
-    this.$defaultSupplierGroup = $(ProductMap.suppliers.defaultSupplierInput).closest('.form-group');
-    this.$productsTable = $(ProductMap.suppliers.productsTable);
-    this.$productsTableBody = $(ProductMap.suppliers.productsTableBody);
+  constructor(suppliersFormId) {
+    this.suppliersMap = SuppliersMap(suppliersFormId);
+    this.$productSuppliersCollection = $(this.suppliersMap.productSuppliersCollection);
+    this.$supplierIdsGroup = $(this.suppliersMap.supplierIdsInput).closest('.form-group');
+    this.$defaultSupplierGroup = $(this.suppliersMap.defaultSupplierInput).closest('.form-group');
+    this.$productsTable = $(this.suppliersMap.productsTable);
+    this.$productsTableBody = $(this.suppliersMap.productsTableBody);
 
     this.suppliers = [];
     this.prototypeTemplate = this.$productSuppliersCollection.data('prototype');
     this.prototypeName = this.$productSuppliersCollection.data('prototypeName');
-    this.defaultDataForSupplier = this.collectDefaultDataForSupplier();
+    this.defaultDataForSupplier = this.getDefaultDataForSupplier();
 
     this.init();
+
+    return {};
   }
 
   init() {
@@ -80,6 +83,9 @@ export default class ProductSuppliersManager {
     this.showTable();
   }
 
+  /**
+   * @param {Object} supplier
+   */
   addSupplier(supplier) {
     if (typeof this.suppliers[supplier.id] === 'undefined') {
       const newSupplier = Object.create(this.defaultDataForSupplier);
@@ -92,6 +98,9 @@ export default class ProductSuppliersManager {
     }
   }
 
+  /**
+   * @param {int} supplierId
+   */
   removeSupplier(supplierId) {
     this.suppliers[supplierId].removed = true;
   }
@@ -110,13 +119,13 @@ export default class ProductSuppliersManager {
 
       this.$productsTableBody.append(productSupplierRow);
       // Fill inputs
-      $(ProductMap.suppliers.productSupplierRow.supplierIdInput(supplierIndex)).val(supplier.supplierId);
-      $(ProductMap.suppliers.productSupplierRow.supplierNameCell(supplierIndex)).html(supplier.supplierName);
-      $(ProductMap.suppliers.productSupplierRow.supplierNameInput(supplierIndex)).val(supplier.supplierName);
-      $(ProductMap.suppliers.productSupplierRow.productSupplierIdInput(supplierIndex)).val(supplier.productSupplierId);
-      $(ProductMap.suppliers.productSupplierRow.referenceInput(supplierIndex)).val(supplier.reference);
-      $(ProductMap.suppliers.productSupplierRow.priceInput(supplierIndex)).val(supplier.price);
-      $(ProductMap.suppliers.productSupplierRow.currencyIdInput(supplierIndex)).val(supplier.currencyId);
+      $(this.suppliersMap.productSupplierRow.supplierIdInput(supplierIndex)).val(supplier.supplierId);
+      $(this.suppliersMap.productSupplierRow.supplierNameCell(supplierIndex)).html(supplier.supplierName);
+      $(this.suppliersMap.productSupplierRow.supplierNameInput(supplierIndex)).val(supplier.supplierName);
+      $(this.suppliersMap.productSupplierRow.productSupplierIdInput(supplierIndex)).val(supplier.productSupplierId);
+      $(this.suppliersMap.productSupplierRow.referenceInput(supplierIndex)).val(supplier.reference);
+      $(this.suppliersMap.productSupplierRow.priceInput(supplierIndex)).val(supplier.price);
+      $(this.suppliersMap.productSupplierRow.currencyIdInput(supplierIndex)).val(supplier.currencyId);
       supplierIndex += 1;
     });
   }
@@ -168,6 +177,9 @@ export default class ProductSuppliersManager {
     this.$defaultSupplierGroup.removeClass('d-none');
   }
 
+  /**
+   * @param {int[]} selectedSupplierIds
+   */
   checkFirstAvailableDefaultSupplier(selectedSupplierIds) {
     const firstSupplierId = selectedSupplierIds[0];
     this.$defaultSupplierGroup.find(`input[value="${firstSupplierId}"]`).prop('checked', true);
@@ -190,11 +202,11 @@ export default class ProductSuppliersManager {
     this.getSelectedSuppliers().forEach((supplier, index) => {
       this.suppliers[supplier.id] = {
         supplierId: supplier.id,
-        productSupplierId: $(ProductMap.suppliers.productSupplierRow.productSupplierIdInput(index)).val(),
-        supplierName: $(ProductMap.suppliers.productSupplierRow.supplierNameInput(index)).val(),
-        reference: $(ProductMap.suppliers.productSupplierRow.referenceInput(index)).val(),
-        price: $(ProductMap.suppliers.productSupplierRow.priceInput(index)).val(),
-        currencyId: $(ProductMap.suppliers.productSupplierRow.currencyIdInput(index)).val(),
+        productSupplierId: $(this.suppliersMap.productSupplierRow.productSupplierIdInput(index)).val(),
+        supplierName: $(this.suppliersMap.productSupplierRow.supplierNameInput(index)).val(),
+        reference: $(this.suppliersMap.productSupplierRow.referenceInput(index)).val(),
+        price: $(this.suppliersMap.productSupplierRow.priceInput(index)).val(),
+        currencyId: $(this.suppliersMap.productSupplierRow.currencyIdInput(index)).val(),
         removed: false,
       };
     });
@@ -206,7 +218,7 @@ export default class ProductSuppliersManager {
    *
    * @returns {{reference, removed: boolean, price, currencyId, productSupplierId}}
    */
-  collectDefaultDataForSupplier() {
+  getDefaultDataForSupplier() {
     const rowPrototype = new DOMParser().parseFromString(
       this.prototypeTemplate,
       'text/html',
@@ -214,11 +226,10 @@ export default class ProductSuppliersManager {
 
     return {
       removed: false,
-      productSupplierId:
-        this.collectDataFromRow(ProductMap.suppliers.productSupplierRow.productSupplierIdInput, rowPrototype),
-      reference: this.collectDataFromRow(ProductMap.suppliers.productSupplierRow.referenceInput, rowPrototype),
-      price: this.collectDataFromRow(ProductMap.suppliers.productSupplierRow.priceInput, rowPrototype),
-      currencyId: this.collectDataFromRow(ProductMap.suppliers.productSupplierRow.currencyIdInput, rowPrototype),
+      productSupplierId: this.getDataFromRow(this.suppliersMap.productSupplierRow.productSupplierIdInput, rowPrototype),
+      reference: this.getDataFromRow(this.suppliersMap.productSupplierRow.referenceInput, rowPrototype),
+      price: this.getDataFromRow(this.suppliersMap.productSupplierRow.priceInput, rowPrototype),
+      currencyId: this.getDataFromRow(this.suppliersMap.productSupplierRow.currencyIdInput, rowPrototype),
     };
   }
 
@@ -228,7 +239,7 @@ export default class ProductSuppliersManager {
    *
    * @returns {*}
    */
-  collectDataFromRow(selectorGenerator, rowPrototype) {
+  getDataFromRow(selectorGenerator, rowPrototype) {
     return rowPrototype.querySelector(selectorGenerator(this.prototypeName)).value;
   }
 }
