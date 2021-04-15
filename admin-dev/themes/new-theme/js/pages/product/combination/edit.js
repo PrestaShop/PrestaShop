@@ -36,5 +36,5 @@ $(() => {
     'TextWithLengthCounter',
   ]);
 
-  new ProductSuppliersManager('#combination_form_suppliers');
+  new ProductSuppliersManager('#combination_form_suppliers', false);
 });
