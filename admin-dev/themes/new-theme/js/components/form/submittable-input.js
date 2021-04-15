@@ -66,10 +66,12 @@ export default class SubmittableInput {
     $(document).on('click', `${this.wrapperSelector} ${this.buttonSelector}`, function () {
       that.submitInput(this);
     });
-    $(document).on('keyup', this.inputSelector, function (e) {
+    $(document).on('keyup', inputs, (e) => {
       if (e.keyCode === 13) {
         e.preventDefault();
-        that.submitInput(this);
+        const button = this.findButton(e.target);
+
+        this.submitInput(button);
       }
     });
   }
@@ -77,25 +79,25 @@ export default class SubmittableInput {
   /**
    * @private
    */
-  submitInput(e) {
-    const input = this.findInput(e);
+  submitInput(button) {
+    const input = this.findInput(button);
 
-    this.toggleLoading(e, true);
+    this.toggleLoading(button, true);
 
     this.callback(input)
       .then((response) => {
         $(input).data('initial-value', input.value);
-        this.toggleButtonVisibility(e, false);
+        this.toggleButtonVisibility(button, false);
 
         if (response.message) {
           showGrowl('success', response.message);
         }
-        this.toggleLoading(e);
+        this.toggleLoading(button, false);
       })
       .catch((error) => {
-        this.toggleError(e, true);
-        this.toggleButtonVisibility(e, false);
-        this.toggleLoading(e);
+        this.toggleError(button, true);
+        this.toggleButtonVisibility(button, false);
+        this.toggleLoading(button, false);
 
         if (typeof error.responseJSON.errors === 'undefined') {
           return;
@@ -186,14 +188,14 @@ export default class SubmittableInput {
   }
 
   /**
-   * @param {HTMLElement} button
+   * @param {HTMLElement} domElement
    *
    * @returns {HTMLElement}
    *
    * @private
    */
-  findInput(button) {
-    return $(button)
+  findInput(domElement) {
+    return $(domElement)
       .closest(this.wrapperSelector)
       .find(this.inputSelector)[0];
   }
