@@ -30,7 +30,6 @@ namespace Tests\Unit\Core\Form\IdentifiableObject\CommandBuilder\Product\Combina
 
 use PHPUnit\Framework\TestCase;
 use PrestaShop\PrestaShop\Core\Domain\Product\Combination\ValueObject\CombinationId;
-use SebastianBergmann\Comparator\Factory as ComparatorFactory;
 
 /**
  * Base class to test a combination command builder
@@ -41,13 +40,6 @@ abstract class AbstractCombinationCommandBuilderTest extends TestCase
      * @var CombinationId
      */
     private $combinationId;
-
-    protected function setUp()
-    {
-        parent::setUp();
-        $factory = ComparatorFactory::getInstance();
-        //$factory->register(new CombinationCommandComparator());
-    }
 
     /**
      * @return CombinationId
