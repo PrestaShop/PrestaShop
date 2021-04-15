@@ -83,7 +83,7 @@ class ProductControllerCore extends ProductPresentingFrontControllerCore
             ));
         }
     }
-    
+
     /**
      * {@inheritdoc}
      * 
