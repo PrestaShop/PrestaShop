@@ -47,6 +47,8 @@ use Symfony\Component\Translation\MessageCatalogue;
  */
 class TranslationCatalogueExporter
 {
+    private const EXPORT_ZIP_FILENAME = '%s/translations_export_%s.zip';
+
     /**
      * @var TranslationCatalogueBuilder
      */
@@ -119,7 +121,7 @@ class TranslationCatalogueExporter
             $this->filesystem->mkdir($this->exportDir);
         }
 
-        $zipFilename = sprintf('%s/translations_export_%s.zip', $this->exportDir, $locale);
+        $zipFilename = sprintf(self::EXPORT_ZIP_FILENAME, $this->exportDir, $locale);
         $path = dirname($zipFilename);
 
         // Clean export folder
