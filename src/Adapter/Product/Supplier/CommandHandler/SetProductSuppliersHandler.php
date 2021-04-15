@@ -70,7 +70,6 @@ final class SetProductSuppliersHandler extends AbstractProductSupplierHandler im
 
         return $this->productSupplierUpdater->setProductSuppliers(
             $productId,
-            $command->getDefaultSupplierId(),
             $productSuppliers
         );
     }

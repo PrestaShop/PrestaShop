@@ -83,13 +83,12 @@ class UpdateProductSuppliersFeatureContext extends AbstractProductFeatureContext
     }
 
     /**
-     * @When I set product :productReference default supplier to :defaultSupplierReference and following suppliers:
+     * @When I set product :productReference suppliers:
      *
      * @param string $productReference
-     * @param string $defaultSupplierReference
      * @param TableNode $tableNode
      */
-    public function updateProductSuppliers(string $productReference, string $defaultSupplierReference, TableNode $tableNode): void
+    public function updateProductSuppliers(string $productReference, TableNode $tableNode): void
     {
         $data = $tableNode->getColumnsHash();
         $productSuppliers = [];
@@ -118,27 +117,22 @@ class UpdateProductSuppliersFeatureContext extends AbstractProductFeatureContext
             ];
         }
 
-        try {
-            $command = new SetProductSuppliersCommand(
-                $this->getSharedStorage()->get($productReference),
-                $productSuppliers,
-                $this->getSharedStorage()->get($defaultSupplierReference)
+        $command = new SetProductSuppliersCommand(
+            $this->getSharedStorage()->get($productReference),
+            $productSuppliers,
             );
 
-            $productSupplierIds = $this->getCommandBus()->handle($command);
+        $productSupplierIds = $this->getCommandBus()->handle($command);
 
-            Assert::assertSameSize(
-                $references,
-                $productSupplierIds,
-                'Cannot set references in shared storage. References and actual product suppliers doesn\'t match.'
-            );
+        Assert::assertSameSize(
+            $references,
+            $productSupplierIds,
+            'Cannot set references in shared storage. References and actual product suppliers doesn\'t match.'
+        );
 
-            /** @var ProductSupplierId $productSupplierId */
-            foreach ($productSupplierIds as $key => $productSupplierId) {
-                $this->getSharedStorage()->set($references[$key], $productSupplierId->getValue());
-            }
-        } catch (DefaultProductSupplierNotAssociatedException $e) {
-            $this->setLastException($e);
+        /** @var ProductSupplierId $productSupplierId */
+        foreach ($productSupplierIds as $key => $productSupplierId) {
+            $this->getSharedStorage()->set($references[$key], $productSupplierId->getValue());
         }
     }
 

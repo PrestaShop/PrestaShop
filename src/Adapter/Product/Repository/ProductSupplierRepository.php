@@ -39,6 +39,7 @@ use PrestaShop\PrestaShop\Core\Domain\Product\Supplier\Exception\CannotUpdatePro
 use PrestaShop\PrestaShop\Core\Domain\Product\Supplier\Exception\ProductSupplierNotFoundException;
 use PrestaShop\PrestaShop\Core\Domain\Product\Supplier\ValueObject\ProductSupplierId;
 use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductId;
+use PrestaShop\PrestaShop\Core\Domain\Supplier\ValueObject\SupplierId;
 use ProductSupplier;
 
 /**
@@ -93,6 +94,35 @@ class ProductSupplierRepository extends AbstractObjectModelRepository
         );
 
         return $productSupplier;
+    }
+
+    /**
+     * @param ProductId $productId
+     *
+     * @return SupplierId|null
+     */
+    public function getProductDefaultSupplierId(ProductId $productId): ?SupplierId
+    {
+        $qb = $this->connection->createQueryBuilder();
+        $qb->select('p.id_supplier AS default_supplier_id')
+            ->from($this->dbPrefix . 'product_supplier', 'ps')
+            ->innerJoin(
+                'ps',
+                $this->dbPrefix . 'product',
+                'p',
+                'ps.id_supplier = p.id_supplier'
+            )
+            ->where('ps.id_product = :productId')
+            ->setParameter('productId', $productId->getValue())
+        ;
+
+        $result = $qb->execute()->fetch();
+
+        if (!$result) {
+            return null;
+        }
+
+        return new SupplierId((int) $result['default_supplier_id']);
     }
 
     /**
