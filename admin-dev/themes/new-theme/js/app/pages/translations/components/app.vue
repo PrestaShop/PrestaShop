@@ -28,7 +28,6 @@
     id="app"
     class="translations-app"
   >
-    <TranslationsHeader />
     <div class="container-fluid">
       <div class="row justify-content-between align-items-center">
         <Search @search="onSearch" />
@@ -60,7 +59,6 @@
 </template>
 
 <script>
-  import TranslationsHeader from '@app/pages/translations/components/header/translations-header';
   import Search from '@app/pages/translations/components/header/search';
   import Sidebar from '@app/pages/translations/components/sidebar';
   import Principal from '@app/pages/translations/components/principal';
@@ -150,7 +148,6 @@
       leave: false,
     }),
     components: {
-      TranslationsHeader,
       Search,
       Sidebar,
       Principal,
@@ -162,11 +159,6 @@
 <style lang="scss" type="text/scss">
   @import '~@scss/config/_settings.scss';
 
-  // hide the layout header
-  #main-div > .header-toolbar {
-    height: 0;
-    display: none;
-  }
   .flex {
     display: flex;
     align-items: center;

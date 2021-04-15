@@ -30,6 +30,7 @@ import DynamicPaginator from '@components/pagination/dynamic-paginator';
 import SubmittableInput from '@components/form/submittable-input';
 import ProductEventMap from '@pages/product/product-event-map';
 import initCombinationModal from '@pages/product/components/combination-modal';
+import initFilters from '@pages/product/components/filters';
 
 const {$} = window;
 const CombinationEvents = ProductEventMap.combinations;
@@ -58,12 +59,30 @@ export default class CombinationsManager {
    * @private
    */
   init(productId) {
+    this.initPaginatedList();
+
+    // Paginate to first page when tab is shown
+    this.$productForm.find(ProductMap.combinations.navigationTab).on('shown.bs.tab', () => this.firstInit());
+
+    initCombinationModal(ProductMap.combinations.editModal, productId);
+    initFilters(ProductMap.combinations.combinationsFiltersContainer, window.prestashop.instance.eventEmitter);
+
+    // Finally watch events related to combination listing
+    this.watchEvents();
+  }
+
+  /**
+   * @private
+   */
+  initPaginatedList() {
     this.paginator = new DynamicPaginator(
       ProductMap.combinations.paginationContainer,
       this.combinationsService,
       new CombinationsGridRenderer(),
     );
+
     this.initSubmittableInputs();
+
     this.$combinationsContainer.on('change', ProductMap.combinations.isDefaultInputsSelector, (e) => {
       if (!e.currentTarget.checked) {
         return;
@@ -71,13 +90,7 @@ export default class CombinationsManager {
       this.updateDefaultCombination(e.currentTarget);
     });
 
-    // Paginate to first page when tab is shown
-    this.$productForm.find(ProductMap.combinations.navigationTab).on('shown.bs.tab', () => this.firstInit());
-
-    // Init combination edition modal
-    initCombinationModal(ProductMap.combinations.editModal, productId);
-
-    this.watchEvents();
+    this.initSortingColumns();
   }
 
   /**
@@ -85,6 +98,20 @@ export default class CombinationsManager {
    */
   watchEvents() {
     this.eventEmitter.on(CombinationEvents.refreshList, () => this.paginator.paginate(this.paginator.getCurrentPage()));
+    this.eventEmitter.on(CombinationEvents.updateAttributeGroups, (attributeGroups) => {
+      const currentFilters = this.combinationsService.getFilters();
+      currentFilters.attributes = {};
+      Object.keys(attributeGroups).forEach((attributeGroupId) => {
+        currentFilters.attributes[attributeGroupId] = [];
+        const attributes = attributeGroups[attributeGroupId];
+        attributes.forEach((attribute) => {
+          currentFilters.attributes[attributeGroupId].push(attribute.id);
+        });
+      });
+
+      this.combinationsService.setFilters(currentFilters);
+      this.paginator.paginate(1);
+    });
   }
 
   /**
@@ -98,24 +125,62 @@ export default class CombinationsManager {
     const {tokenKey} = ProductMap.combinations.combinationItemForm;
 
     new SubmittableInput(ProductMap.combinations.quantityInputWrapper, async (input) => {
-      await this.combinationsService.updateListedCombination(
-        this.findCombinationId(input),
-        {[quantityKey]: input.value, [tokenKey]: combinationToken},
-      );
+      await this.combinationsService.updateListedCombination(this.findCombinationId(input), {
+        [quantityKey]: input.value,
+        [tokenKey]: combinationToken,
+      });
     });
 
     new SubmittableInput(ProductMap.combinations.impactOnPriceInputWrapper, async (input) => {
-      await this.combinationsService.updateListedCombination(
-        this.findCombinationId(input),
-        {[impactOnPriceKey]: input.value, [tokenKey]: combinationToken},
-      );
+      await this.combinationsService.updateListedCombination(this.findCombinationId(input), {
+        [impactOnPriceKey]: input.value,
+        [tokenKey]: combinationToken,
+      });
     });
 
     new SubmittableInput(ProductMap.combinations.referenceInputWrapper, async (input) => {
-      await this.combinationsService.updateListedCombination(
-        this.findCombinationId(input),
-        {[referenceKey]: input.value, [tokenKey]: combinationToken},
-      );
+      await this.combinationsService.updateListedCombination(this.findCombinationId(input), {
+        [referenceKey]: input.value,
+        [tokenKey]: combinationToken,
+      });
+    });
+  }
+
+  /**
+   * @private
+   */
+  initSortingColumns() {
+    this.$combinationsContainer.on('click', ProductMap.combinations.sortableColumns, (event) => {
+      const $sortableColumn = $(event.currentTarget);
+      const columnName = $sortableColumn.data('sortColName');
+
+      if (!columnName) {
+        return;
+      }
+
+      let direction = $sortableColumn.data('sortDirection');
+
+      if (!direction || direction === 'desc') {
+        direction = 'asc';
+      } else {
+        direction = 'desc';
+      }
+
+      // Reset all columns, we need to force the attributes for CSS matching
+      $(ProductMap.combinations.sortableColumns, this.$combinationsContainer).removeData('sortIsCurrent');
+      $(ProductMap.combinations.sortableColumns, this.$combinationsContainer).removeData('sortDirection');
+      $(ProductMap.combinations.sortableColumns, this.$combinationsContainer).removeAttr('data-sort-is-current');
+      $(ProductMap.combinations.sortableColumns, this.$combinationsContainer).removeAttr('data-sort-direction');
+
+      // Set correct data in current column, we need to force the attributes for CSS matching
+      $sortableColumn.data('sortIsCurrent', 'true');
+      $sortableColumn.data('sortDirection', direction);
+      $sortableColumn.attr('data-sort-is-current', 'true');
+      $sortableColumn.attr('data-sort-direction', direction);
+
+      // Finally update list
+      this.combinationsService.setOrderBy(columnName, direction);
+      this.paginator.paginate(1);
     });
   }
 
@@ -130,13 +195,10 @@ export default class CombinationsManager {
     );
     const checkedDefaultId = this.findCombinationId(checkedInput);
 
-    await this.combinationsService.updateListedCombination(
-      checkedDefaultId,
-      {
-        'combination_item[is_default]': checkedInput.value,
-        'combination_item[_token]': this.getCombinationToken(),
-      },
-    );
+    await this.combinationsService.updateListedCombination(checkedDefaultId, {
+      'combination_item[is_default]': checkedInput.value,
+      'combination_item[_token]': this.getCombinationToken(),
+    });
 
     $.each(checkedInputs, (index, input) => {
       if (this.findCombinationId(input) !== checkedDefaultId) {
@@ -181,6 +243,9 @@ export default class CombinationsManager {
    * @private
    */
   findCombinationId(input) {
-    return $(input).closest('tr').find('.combination-id-input').val();
+    return $(input)
+      .closest('tr')
+      .find(this.combinationIdInputsSelector)
+      .val();
   }
 }

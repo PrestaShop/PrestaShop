@@ -1380,6 +1380,8 @@ services:
         arguments:
             - '@prestashop.core.form.choice_provider.out_of_stock_type_choice_provider'
             - '@prestashop.core.form.choice_provider.pack_stock_type_choice_provider'
+            - '@router'
+            - "@=service('prestashop.adapter.legacy.configuration').getBoolean('PS_STOCK_MANAGEMENT')"
         tags:
             - { name: form.type }
 
@@ -1416,6 +1418,16 @@ services:
             - '@prestashop.adapter.form.choice_provider.features_choice_provider'
             - '@form.type.sell.product.event_listener.feature_value_listener'
         public: true
+        tags:
+            - { name: form.type }
+
+    form.type.sell.product.virtual_product_file_type:
+        class: 'PrestaShopBundle\Form\Admin\Sell\Product\VirtualProductFileType'
+        parent: 'form.type.translatable.aware'
+        public: true
+        arguments:
+            - "@=service('prestashop.adapter.legacy.configuration').getInt('PS_ATTACHMENT_MAXIMUM_SIZE')"
+            - "@router"
         tags:
             - { name: form.type }
 
@@ -1466,6 +1478,24 @@ services:
         public: true
         arguments:
             - '@router'
+            - "@=service('prestashop.adapter.legacy.configuration').getBoolean('PS_STOCK_MANAGEMENT')"
+        tags:
+            - { name: form.type }
+
+    form.type.sell.product.combination.combination_price_impact_type:
+        class: 'PrestaShopBundle\Form\Admin\Sell\Product\Combination\CombinationPriceImpactType'
+        parent: 'form.type.translatable.aware'
+        public: true
+        arguments:
+            - '@=service("prestashop.adapter.data_provider.currency").getDefaultCurrency()'
+            - "@=service('prestashop.adapter.legacy.configuration').get('PS_WEIGHT_UNIT')"
+        tags:
+            - { name: form.type }
+
+    form.type.sell.product.combination.combination_details_type:
+        class: 'PrestaShopBundle\Form\Admin\Sell\Product\Combination\CombinationDetailsType'
+        parent: 'form.type.translatable.aware'
+        public: true
         tags:
             - { name: form.type }
 

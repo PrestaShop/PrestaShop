@@ -1,4 +1,4 @@
-<!--**
+/**
  * Copyright since 2007 PrestaShop SA and Contributors
  * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
  *
@@ -21,25 +21,22 @@
  * @author    PrestaShop SA and Contributors <contact@prestashop.com>
  * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
- *-->
-<template>
-  <div class="mb-1">
-    <small>
-      <a :href="internationalLink">{{ trans('link_international') }}</a> /
-      <a :href="translationLink">{{ trans('link_translations') }}</a>
-    </small>
-  </div>
-</template>
+ */
 
-<script>
-  export default {
-    computed: {
-      internationalLink() {
-        return window.data.internationalUrl;
-      },
-      translationLink() {
-        return window.data.translationsUrl;
-      },
+import Vue from 'vue';
+import Filters from '@pages/product/components/filters/Filters';
+
+export default function initCombinationsFilters(combinationsFiltersSelector, eventEmitter) {
+  const container = document.querySelector(combinationsFiltersSelector);
+  const productId = Number(container.dataset.productId);
+
+  return new Vue({
+    el: combinationsFiltersSelector,
+    template: '<filters :productId=productId :eventEmitter=eventEmitter />',
+    components: {Filters},
+    data: {
+      productId,
+      eventEmitter,
     },
-  };
-</script>
+  });
+}

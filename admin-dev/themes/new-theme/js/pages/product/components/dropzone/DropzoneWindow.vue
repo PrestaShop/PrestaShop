@@ -88,7 +88,7 @@
           type="checkbox"
           :disabled="isCover"
           :checked="isCover"
-          @change="coverChanged"
+          @change.prevent.stop="coverChanged"
         >
         <i class="md-checkbox-control" />
         {{ $t("window.useAsCover") }}
@@ -98,7 +98,7 @@
     <input
       type="file"
       class="dropzone-window-filemanager"
-      @change="watchFiles"
+      @change.prevent.stop="watchFiles"
     >
 
     <div
@@ -147,6 +147,8 @@
       class="form-control"
       v-if="selectedFile !== null"
       v-model="captionValue[selectedLocale.id_lang]"
+      @change.prevent.stop="prevent"
+      @keyup.prevent.stop="prevent"
     />
 
     <div
@@ -173,6 +175,10 @@
 </template>
 
 <script>
+  import ProductMap from '@pages/product/product-map';
+
+  const DropzoneMap = ProductMap.dropzone;
+
   export default {
     name: 'DropzoneWindow',
     props: {
@@ -255,7 +261,7 @@
        * Used to open the native file manager
        */
       openFileManager() {
-        const fileInput = document.querySelector('.dropzone-window-filemanager');
+        const fileInput = document.querySelector(DropzoneMap.windowFileManager);
         fileInput.click();
       },
       /**
@@ -263,6 +269,10 @@
        */
       coverChanged(event) {
         this.coverData = event.target.value;
+      },
+      prevent(event) {
+        event.preventDefault();
+        event.stopPropagation();
       },
     },
   };

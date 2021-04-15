@@ -40,7 +40,11 @@ services:
             - '@prestashop.adapter.product.combination.repository.combination_repository'
             - '@prestashop.adapter.product.stock.repository.stock_available_repository'
             - '@prestashop.adapter.attribute.repository.attribute_repository'
+            - '@prestashop.adapter.product.repository.product_repository'
+            - '@prestashop.core.util.number.number_extractor'
+            - '@prestashop.adapter.tax.tax_computer'
             - "@=service('prestashop.adapter.legacy.context').getContext().language.id"
+            - "@=service('prestashop.adapter.legacy.configuration').getInt('PS_COUNTRY_DEFAULT')"
         tags:
             - name: tactician.handler
               command: PrestaShop\PrestaShop\Core\Domain\Product\Combination\Query\GetCombinationForEditing

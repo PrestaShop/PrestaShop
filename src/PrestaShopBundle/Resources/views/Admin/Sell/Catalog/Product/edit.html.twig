@@ -32,7 +32,14 @@
 
 {# @todo: starter for product page. Feel free to move/modify while appending more fields to form #}
 {% block content %}
-  {{ form_start(productForm, {'attr': {'class': 'form-horizontal product-page row justify-content-md-center', 'novalidate': 'novalidate'}}) }}
+  {% set productType = productForm.vars.product_type %}
+  {% set productId = productForm.vars.product_id %}
+
+  {{ form_start(productForm, {'attr': {
+    'class': 'form-horizontal product-page row justify-content-md-center', 'novalidate': 'novalidate',
+    'data-product-id': productId,
+    'data-product-type': productType
+  }}) }}
 
   {% block product_header %}
     {{ include('@PrestaShop/Admin/Sell/Catalog/Product/Blocks/header.html.twig', {
@@ -45,9 +52,11 @@
   {% endblock %}
 
   <div class="col-xxl-10">
+
     {% block product_tabs_container %}
       {{ include('@PrestaShop/Admin/Sell/Catalog/Product/Blocks/tabs.html.twig', {
-        'productForm': productForm
+        'productForm': productForm,
+        'productType': productType
       }) }}
     {% endblock %}
 
@@ -58,15 +67,15 @@
         }) }}
       {% endblock %}
 
-      {% block product_tab_stock %}
-        {{ include('@PrestaShop/Admin/Sell/Catalog/Product/Tabs/stock.html.twig', {
-          'productForm': productForm,
-        }) }}
-      {% endblock %}
-
-      {% block product_tab_combinations %}
-        {{ include('@PrestaShop/Admin/Sell/Catalog/Product/Tabs/combinations.html.twig') }}
-      {% endblock %}
+      {% if productType == 'combinations' %}
+        {% block product_tab_combinations %}
+          {{ include('@PrestaShop/Admin/Sell/Catalog/Product/Tabs/combinations.html.twig') }}
+        {% endblock %}
+      {% else %}
+        {% block product_tab_stock %}
+          {{ include('@PrestaShop/Admin/Sell/Catalog/Product/Tabs/stock.html.twig') }}
+        {% endblock %}
+      {% endif %}
 
       {% block product_tab_pricing %}
         {{ include('@PrestaShop/Admin/Sell/Catalog/Product/Tabs/pricing.html.twig', {
@@ -99,7 +108,8 @@
 
   {{ include('@PrestaShop/Admin/Sell/Catalog/Product/Blocks/footer.html.twig', {
     'productForm': productForm,
-    'editable': editable
+    'editable': editable,
+    'productId': productId,
   }) }}
 
   {{ form_end(productForm) }}

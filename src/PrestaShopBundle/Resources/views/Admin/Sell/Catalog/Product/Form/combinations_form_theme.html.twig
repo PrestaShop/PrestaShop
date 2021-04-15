@@ -64,18 +64,37 @@
 {%- endblock -%}
 
 {%- block collection_row -%}
+  {% import '@PrestaShop/Admin/macros.html.twig' as ps %}
+
   {%- set attr = attr|merge({'data-prototype': form_row(prototype), 'data-prototype-name': prototype.vars.name }) -%}
+  {%- set attr = attr|merge({'class': (attr.class|default('') ~ ' grid-table table grid-ordering-column')|trim }) -%}
   <table {{ block('widget_attributes') }}>
-    <thead>
-    <tr>
-      <th>{{ 'ID'|trans({}, 'Admin.Global') }}</th>
-      <th>{{ 'Combination'|trans({}, 'Admin.Global') }}</th>
-      <th>{{ 'Reference'|trans({}, 'Admin.Global') }}</th>
-      <th>{{ 'Impact on price (tax excl.)'|trans({}, 'Admin.Catalog.Feature') }}</th>
-      <th>{{ 'Final price (tax excl.)'|trans({}, 'Admin.Catalog.Feature') }}</th>
-      <th>{{ 'Quantity'|trans({}, 'Admin.Global') }}</th>
-      <th>{{ 'Default combination'|trans({}, 'Admin.Catalog.Feature') }}</th>
-      <th>{{ 'Actions'|trans({}, 'Admin.Global') }}</th>
+    <thead class="thead-default">
+    <tr class="column-headers">
+      <th scope="col">
+        {{ ps.sortable_column_header('ID'|trans({}, 'Admin.Global'), 'id_product_attribute') }}
+      </th>
+      <th scope="col">
+        {{ 'Combination'|trans({}, 'Admin.Global') }}
+      </th>
+      <th scope="col">
+        {{ ps.sortable_column_header('Reference'|trans({}, 'Admin.Global'), 'reference') }}
+      </th>
+      <th scope="col">
+        {{ ps.sortable_column_header('Impact on price (tax excl.)'|trans({}, 'Admin.Catalog.Feature'), 'price') }}
+      </th>
+      <th scope="col">
+        {{ 'Final price (tax excl.)'|trans({}, 'Admin.Catalog.Feature') }}
+      </th>
+      <th scope="col">
+        {{ ps.sortable_column_header('Quantity'|trans({}, 'Admin.Global'), 'stock_quantity') }}
+      </th>
+      <th scope="col">
+        {{ ps.sortable_column_header('Default combination'|trans({}, 'Admin.Catalog.Feature'), 'default_on') }}
+      </th>
+      <th scope="col">
+        {{ 'Actions'|trans({}, 'Admin.Global') }}
+      </th>
     </tr>
     </thead>
     <tbody>

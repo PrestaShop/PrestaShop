@@ -26,6 +26,7 @@
 {% extends '@PrestaShop/Admin/layout.html.twig' %}
 
 {% block content %}
+  {% if multistoreIsUsed %}{{ ps.infotip(multistoreInfoTip, true) }}{% endif %}
   {% block profiles_list_panel %}
     <div class="row">
       <div class="col">

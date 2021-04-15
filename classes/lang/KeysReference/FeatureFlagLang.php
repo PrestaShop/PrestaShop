@@ -1,4 +1,5 @@
-<!--**
+<?php
+/**
  * Copyright since 2007 PrestaShop SA and Contributors
  * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
  *
@@ -21,45 +22,9 @@
  * @author    PrestaShop SA and Contributors <contact@prestashop.com>
  * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
- *-->
-<template>
-  <div class="header-toolbar">
-    <div class="container-fluid">
-      <Breadcrumb />
-      <div class="title-row">
-        <h1 class="title">
-          {{ trans('head_title') }}
-        </h1>
-      </div>
-    </div>
-  </div>
-</template>
-
-<script>
-  import Breadcrumb from './breadcrumb';
-
-  const {$} = window;
-
-  function getOldHeaderToolbarButtons() {
-    return $('.header-toolbar')
-      .first()
-      .find('.toolbar-icons');
-  }
-
-  export default {
-    components: {
-      Breadcrumb,
-    },
-    mounted() {
-      // move the toolbar buttons to this header
-      const toolbarButtons = getOldHeaderToolbarButtons();
-      toolbarButtons.insertAfter($(this.$el).find('.title-row > .title'));
-
-      // signal header change (so size can be updated)
-      const event = $.Event('vueHeaderMounted', {
-        name: 'stock-header',
-      });
-      $(document).trigger(event);
-    },
-  };
-</script>
+ */
+trans('Experimental product page', 'Admin.Advparameters.Feature');
+trans(
+    'This page is a work in progress. It includes new combination management features and other features under development (virtual products, packs, etc.)',
+    'Admin.Advparameters.Help'
+);
