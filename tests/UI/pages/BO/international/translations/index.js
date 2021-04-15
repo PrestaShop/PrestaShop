@@ -30,7 +30,8 @@ class Translations extends BOBasePage {
     this.addUpdateLanguageButton = `${this.addUpdateLanguageForm} .card-footer button`;
     // Export language form
     this.exportLanguageSelect = '#form_iso_code';
-    this.exportLanguageThemeSelect = '#form_theme_name';
+    this.themeTranslationRadio = '#form_themes_selectors_themes_type';
+    this.exportLanguageThemeSelect = '#form_themes_selectors_selected_value';
     this.exportLanguageButton = '#form-export-language-button';
   }
 
@@ -104,14 +105,25 @@ class Translations extends BOBasePage {
   }
 
   /**
-   * Export language
-   * @param page
-   * @param language
-   * @param theme
-   * @return {Promise<*>}
+   * Select export language
+   * @param page {Page} Browser tab
+   * @param language {string} language to export
+   * @return {Promise<void>}
    */
-  async exportLanguage(page, language, theme) {
+  async selectExportLanguage(page, language) {
     await this.selectByVisibleText(page, this.exportLanguageSelect, language);
+  }
+
+  /**
+   * Export theme translation
+   * @param page {Page} Browser tab
+   * @param language {string} language to export
+   * @param theme {string} Theme to export
+   * @returns {Promise<string>}
+   */
+  async exportThemeTranslations(page, language, theme = 'classic') {
+    await this.selectExportLanguage(page, language);
+    await page.click(this.themeTranslationRadio);
     await this.selectByVisibleText(page, this.exportLanguageThemeSelect, theme);
 
     const [download] = await Promise.all([
