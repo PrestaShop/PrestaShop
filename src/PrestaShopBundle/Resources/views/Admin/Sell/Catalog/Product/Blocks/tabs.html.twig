@@ -31,10 +31,14 @@
   and (productForm.suppliers is not defined or productForm.suppliers.vars.valid)
 %}
 
+{% set isStockTabValid =
+  (productForm.stock is not defined or productForm.stock.vars.valid)
+  and (productForm.virtual_product_file is not defined or productForm.virtual_product_file.vars.valid)
+%}
+
 {% set isPriceTabValid = productForm.price.vars.valid %}
 {% set isShippingTabValid = productForm.shipping.vars.valid %}
 {% set isSEOTabValid = productForm.seo.vars.valid and productForm.redirect_option.vars.valid %}
-{% set isStockTabValid = productForm.stock is not defined or productForm.stock.vars.valid %}
 
 <div class="tabs js-tabs">
   <div class="arrow d-xl-none js-arrow left-arrow float-left">

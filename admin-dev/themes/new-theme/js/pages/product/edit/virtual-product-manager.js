@@ -54,8 +54,11 @@ export default class VirtualProductManager {
     const isOn = this.$virtualProductContainer
       .find(`${ProductMap.virtualProduct.fileSwitchOnInputSelector}:checked`)
       .length !== 0;
+    const hasErrors = this.$virtualProductContainer
+      .find(ProductMap.invalidField)
+      .length !== 0;
 
-    if (isOn) {
+    if (isOn || hasErrors) {
       this.showContent();
     } else {
       this.hideContent();
