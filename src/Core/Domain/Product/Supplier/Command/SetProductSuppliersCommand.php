@@ -28,7 +28,7 @@ declare(strict_types=1);
 
 namespace PrestaShop\PrestaShop\Core\Domain\Product\Supplier\Command;
 
-use PrestaShop\PrestaShop\Core\Domain\Product\Supplier\Exception\ProductSupplierException;
+use PrestaShop\PrestaShop\Core\Domain\Product\Supplier\Exception\DefaultProductSupplierNotAssociatedException;
 use PrestaShop\PrestaShop\Core\Domain\Product\Supplier\ProductSupplier;
 use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductId;
 use PrestaShop\PrestaShop\Core\Domain\Supplier\ValueObject\SupplierId;
@@ -118,7 +118,7 @@ class SetProductSuppliersCommand
     }
 
     /**
-     * @throws ProductSupplierException
+     * @throws DefaultProductSupplierNotAssociatedException
      */
     private function assertDefaultSupplierIsOneOfProvidedSuppliers(): void
     {
@@ -130,6 +130,6 @@ class SetProductSuppliersCommand
             }
         }
 
-        throw new ProductSupplierException('Default supplier must be one of provided suppliers');
+        throw new DefaultProductSupplierNotAssociatedException('Default supplier must be one of provided suppliers');
     }
 }
