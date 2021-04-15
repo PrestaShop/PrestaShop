@@ -1,7 +1,16 @@
 require('module-alias/register');
 const CommonPage = require('@pages/commonPage');
 
-module.exports = class BOBasePage extends CommonPage {
+/**
+ * BO parent page, contains functions that can be used on all BO page
+ * @class
+ * @extends CommonPage
+ */
+class BOBasePage extends CommonPage {
+  /**
+   * @constructs
+   * Setting up texts and selectors to use on all BO pages
+   */
   constructor() {
     super();
 
@@ -178,9 +187,9 @@ module.exports = class BOBasePage extends CommonPage {
    */
   /**
    * Open a subMenu if closed and click on a sublink
-   * @param page
-   * @param parentSelector
-   * @param linkSelector
+   * @param page {Page} Browser tab
+   * @param parentSelector {string} Selector of the parent menu
+   * @param linkSelector {string} Selector of the child menu
    * @returns {Promise<void>}
    */
   async goToSubMenu(page, parentSelector, linkSelector) {
@@ -200,7 +209,7 @@ module.exports = class BOBasePage extends CommonPage {
 
   /**
    * Returns to the dashboard then logout
-   * @param page
+   * @param page {Page} Browser tab
    * @returns {Promise<void>}
    */
   async logoutBO(page) {
@@ -213,8 +222,8 @@ module.exports = class BOBasePage extends CommonPage {
 
   /**
    * Close the onboarding modal if exists
-   * @param page
-   * @param timeout
+   * @param page {Page} Browser tab
+   * @param timeout {number} Timeout to wait for selector by milliseconds
    * @returns {Promise<void>}
    */
   async closeOnboardingModal(page, timeout = 1000) {
@@ -233,8 +242,8 @@ module.exports = class BOBasePage extends CommonPage {
 
   /**
    * Click on View My Shop and wait for page to open in a new Tab
-   * @param page
-   * @return FOPage, page opened
+   * @param page {Page} Browser tab
+   * @return {Promise<Page>}
    */
   async viewMyShop(page) {
     return this.openLinkWithTargetBlank(page, this.headerShopNameLink);
@@ -242,9 +251,9 @@ module.exports = class BOBasePage extends CommonPage {
 
   /**
    * Set value on tinyMce textarea
-   * @param page
-   * @param iFrameSelector
-   * @param value
+   * @param page {Page} Browser tab
+   * @param iFrameSelector {string} Selector of the iFrame to set value on
+   * @param value {string} Value to set on the iFrame
    * @return {Promise<void>}
    */
   async setValueOnTinymceInput(page, iFrameSelector, value) {
@@ -260,7 +269,7 @@ module.exports = class BOBasePage extends CommonPage {
 
   /**
    * Close symfony Toolbar
-   * @param page
+   * @param page {Page} Browser tab
    * @return {Promise<void>}
    */
   async closeSfToolBar(page) {
@@ -271,7 +280,7 @@ module.exports = class BOBasePage extends CommonPage {
 
   /**
    * Open help side bar
-   * @param page
+   * @param page {Page} Browser tab
    * @returns {Promise<boolean>}
    */
   async openHelpSideBar(page) {
@@ -281,7 +290,7 @@ module.exports = class BOBasePage extends CommonPage {
 
   /**
    * Close help side bar
-   * @param page
+   * @param page {Page} Browser tab
    * @returns {Promise<boolean>}
    */
   async closeHelpSideBar(page) {
@@ -291,7 +300,7 @@ module.exports = class BOBasePage extends CommonPage {
 
   /**
    * Get help document URL
-   * @param page
+   * @param page {Page} Browser tab
    * @returns {Promise<string>}
    */
   async getHelpDocumentURL(page) {
@@ -300,9 +309,9 @@ module.exports = class BOBasePage extends CommonPage {
 
   /**
    * Check if Submenu is visible
-   * @param page
-   * @param parentSelector
-   * @param linkSelector
+   * @param page {Page} Browser tab
+   * @param parentSelector {string} Selector of the parent menu
+   * @param linkSelector {string} Selector of the child menu
    * @return {Promise<boolean>}
    */
   async isSubmenuVisible(page, parentSelector, linkSelector) {
@@ -322,7 +331,8 @@ module.exports = class BOBasePage extends CommonPage {
 
   /**
    * Get growl message content
-   * @param page
+   * @param page {Page} Browser tab
+   * @param timeout {number} Timeout to wait for the selector
    * @return {Promise<string>}
    */
   getGrowlMessageContent(page, timeout = 10000) {
@@ -331,7 +341,7 @@ module.exports = class BOBasePage extends CommonPage {
 
   /**
    * Close growl message and return its value
-   * @param page
+   * @param page {Page} Browser tab
    * @return {Promise<void>}
    */
   async closeGrowlMessage(page) {
@@ -352,7 +362,7 @@ module.exports = class BOBasePage extends CommonPage {
 
   /**
    * Get error message from alert danger block
-   * @param page
+   * @param page {Page} Browser tab
    * @return {Promise<string>}
    */
   getAlertDangerBlockParagraphContent(page) {
@@ -361,7 +371,7 @@ module.exports = class BOBasePage extends CommonPage {
 
   /**
    * Get text content of alert success block
-   * @param page
+   * @param page {Page} Browser tab
    * @return {Promise<string>}
    */
   getAlertSuccessBlockContent(page) {
@@ -370,7 +380,7 @@ module.exports = class BOBasePage extends CommonPage {
 
   /**
    * Get text content of alert success block paragraph
-   * @param page
+   * @param page {Page} Browser tab
    * @return {Promise<string>}
    */
   getAlertSuccessBlockParagraphContent(page) {
@@ -379,10 +389,12 @@ module.exports = class BOBasePage extends CommonPage {
 
   /**
    * Get text content of alert success block paragraph
-   * @param page
+   * @param page {Page} Browser tab
    * @return {Promise<string>}
    */
   getAlertInfoBlockParagraphContent(page) {
     return this.getTextContent(page, this.alertInfoBlockParagraph);
   }
-};
+}
+
+module.exports = BOBasePage;
