@@ -116,7 +116,7 @@ class ExportCataloguesType extends TranslatorAwareType
 
         $builder->add('type_selector_modules', RadioWithChoiceChildrenType::class, [
             'radio_name' => 'type_selector_modules',
-            'radio_label' => $this->trans('Installed modules translations', 'Admin.International.Feature'),
+            'radio_label' => $this->trans('Installed module translations', 'Admin.International.Feature'),
             'required' => false,
             'label' => null,
             'child_choice' => [

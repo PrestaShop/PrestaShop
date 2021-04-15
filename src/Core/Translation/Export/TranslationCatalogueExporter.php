@@ -119,12 +119,7 @@ class TranslationCatalogueExporter
             $this->filesystem->mkdir($this->exportDir);
         }
 
-        $zipFilenameParts = [
-            $this->exportDir,
-            $locale . '.zip',
-        ];
-
-        $zipFilename = implode(DIRECTORY_SEPARATOR, $zipFilenameParts);
+        $zipFilename = sprintf('%s/translations_export_%s.zip', $this->exportDir, $locale);
         $path = dirname($zipFilename);
 
         // Clean export folder

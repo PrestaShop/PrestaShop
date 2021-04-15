@@ -64,10 +64,10 @@ final class TranslationTypeChoiceProvider implements FormChoiceProviderInterface
     public function getExportCoreChoices(): array
     {
         return [
-            $this->translator->trans('Back office translations', [], 'Admin.International.Feature') => 'back',
-            $this->translator->trans('Front office Translations', [], 'Admin.International.Feature') => 'front',
-            $this->translator->trans('Email translations', [], 'Admin.International.Feature') => 'mails',
-            $this->translator->trans('Other translations', [], 'Admin.International.Feature') => 'others',
+            $this->translator->trans('Back office', [], 'Admin.International.Feature') => 'back',
+            $this->translator->trans('Front office', [], 'Admin.International.Feature') => 'front',
+            $this->translator->trans('Email', [], 'Admin.International.Feature') => 'mails',
+            $this->translator->trans('Other', [], 'Admin.International.Feature') => 'others',
         ];
     }
 }

@@ -49,6 +49,9 @@ class RadioWithChoiceChildrenType extends AbstractType
             $childChoice = $options['child_choice'];
             $builder->add($childChoice['name'], ChoiceType::class, [
                 'label' => false,
+                'row_attr' => [
+                    'class' => 'export-translations-child',
+                ],
                 'choices' => $childChoice['choices'],
                 'expanded' => $childChoice['multiple'], //same value as multiple. We can only have Select or Checkboxes
                 'multiple' => $childChoice['multiple'],
