@@ -34,11 +34,11 @@ use PHPUnit\Framework\Assert;
 use PrestaShop\Decimal\DecimalNumber;
 use PrestaShop\PrestaShop\Core\Domain\Product\Combination\ValueObject\CombinationId;
 use PrestaShop\PrestaShop\Core\Domain\Product\Exception\InvalidProductTypeException;
-use PrestaShop\PrestaShop\Core\Domain\Product\Exception\ProductException;
 use PrestaShop\PrestaShop\Core\Domain\Product\Supplier\Command\RemoveAllAssociatedProductSuppliersCommand;
 use PrestaShop\PrestaShop\Core\Domain\Product\Supplier\Command\SetProductDefaultSupplierCommand;
 use PrestaShop\PrestaShop\Core\Domain\Product\Supplier\Command\SetProductSuppliersCommand;
 use PrestaShop\PrestaShop\Core\Domain\Product\Supplier\Exception\DefaultProductSupplierNotAssociatedException;
+use PrestaShop\PrestaShop\Core\Domain\Product\Supplier\Exception\ProductSupplierException;
 use PrestaShop\PrestaShop\Core\Domain\Product\Supplier\Query\GetProductSupplierOptions;
 use PrestaShop\PrestaShop\Core\Domain\Product\Supplier\QueryResult\ProductSupplierOptions;
 use PrestaShop\PrestaShop\Core\Domain\Product\Supplier\ValueObject\ProductSupplierId;
@@ -53,11 +53,12 @@ class UpdateProductSuppliersFeatureContext extends AbstractProductFeatureContext
      */
     public function removeAssociatedProductSuppliers(string $productReference): void
     {
+        $this->cleanLastException();
         try {
             $this->getCommandBus()->handle(new RemoveAllAssociatedProductSuppliersCommand(
                 $this->getSharedStorage()->get($productReference))
             );
-        } catch (ProductException $e) {
+        } catch (ProductSupplierException $e) {
             $this->setLastException($e);
         }
     }
@@ -70,6 +71,7 @@ class UpdateProductSuppliersFeatureContext extends AbstractProductFeatureContext
      */
     public function updateProductDefaultSupplier(string $productReference, string $defaultSupplierReference): void
     {
+        $this->cleanLastException();
         try {
             $command = new SetProductDefaultSupplierCommand(
                 $this->getSharedStorage()->get($productReference),
@@ -77,7 +79,7 @@ class UpdateProductSuppliersFeatureContext extends AbstractProductFeatureContext
             );
 
             $this->getCommandBus()->handle($command);
-        } catch (DefaultProductSupplierNotAssociatedException $e) {
+        } catch (DefaultProductSupplierNotAssociatedException | InvalidProductTypeException $e) {
             $this->setLastException($e);
         }
     }
@@ -117,22 +119,27 @@ class UpdateProductSuppliersFeatureContext extends AbstractProductFeatureContext
             ];
         }
 
-        $command = new SetProductSuppliersCommand(
-            $this->getSharedStorage()->get($productReference),
-            $productSuppliers
-        );
+        $this->cleanLastException();
+        try {
+            $command = new SetProductSuppliersCommand(
+                $this->getSharedStorage()->get($productReference),
+                $productSuppliers
+            );
 
-        $productSupplierIds = $this->getCommandBus()->handle($command);
+            $productSupplierIds = $this->getCommandBus()->handle($command);
 
-        Assert::assertSameSize(
-            $references,
-            $productSupplierIds,
-            'Cannot set references in shared storage. References and actual product suppliers doesn\'t match.'
-        );
+            Assert::assertSameSize(
+                $references,
+                $productSupplierIds,
+                'Cannot set references in shared storage. References and actual product suppliers doesn\'t match.'
+            );
 
-        /** @var ProductSupplierId $productSupplierId */
-        foreach ($productSupplierIds as $key => $productSupplierId) {
-            $this->getSharedStorage()->set($references[$key], $productSupplierId->getValue());
+            /** @var ProductSupplierId $productSupplierId */
+            foreach ($productSupplierIds as $key => $productSupplierId) {
+                $this->getSharedStorage()->set($references[$key], $productSupplierId->getValue());
+            }
+        } catch (DefaultProductSupplierNotAssociatedException | InvalidProductTypeException $e) {
+            $this->setLastException($e);
         }
     }
 

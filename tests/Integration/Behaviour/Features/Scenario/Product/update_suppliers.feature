@@ -76,6 +76,7 @@ Feature: Update product suppliers from Back Office (BO)
     And product product1 should have following supplier values:
       | default supplier           | supplier1                          |
       | default supplier reference | my new first supplier for product1 |
+    # Explicitly set default supplier for product
     When I set product product1 default supplier to supplier2
     And product product1 should have following supplier values:
       | default supplier           | supplier2                       |
