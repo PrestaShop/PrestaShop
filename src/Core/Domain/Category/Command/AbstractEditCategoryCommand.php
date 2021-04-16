@@ -42,47 +42,47 @@ class AbstractEditCategoryCommand
     protected $categoryId;
 
     /**
-     * @var null|string[]
+     * @var string[]|null
      */
     private $localizedNames;
 
     /**
-     * @var null|string[]
+     * @var string[]|null
      */
     private $localizedLinkRewrites;
 
     /**
-     * @var null|string[]
+     * @var string[]|null
      */
     private $localizedDescriptions;
 
     /**
-     * @var null|bool
+     * @var bool|null
      */
     private $isActive;
 
     /**
-     * @var null|string[]
+     * @var string[]|null
      */
     private $localizedMetaTitles;
 
     /**
-     * @var null|string[]
+     * @var string[]|null
      */
     private $localizedMetaDescriptions;
 
     /**
-     * @var null|string[]
+     * @var string[]|null
      */
     private $localizedMetaKeywords;
 
     /**
-     * @var null|int[]
+     * @var int[]|null
      */
     private $associatedGroupIds;
 
     /**
-     * @var null|int[]
+     * @var int[]|null
      */
     private $associatedShopIds;
 
@@ -103,7 +103,7 @@ class AbstractEditCategoryCommand
     }
 
     /**
-     * @return null|string[]
+     * @return string[]|null
      */
     public function getLocalizedNames(): ?array
     {
@@ -129,7 +129,7 @@ class AbstractEditCategoryCommand
     }
 
     /**
-     * @return null|string[]
+     * @return string[]|null
      */
     public function getLocalizedLinkRewrites(): ?array
     {
@@ -155,7 +155,7 @@ class AbstractEditCategoryCommand
     }
 
     /**
-     * @return null|string[]
+     * @return string[]|null
      */
     public function getLocalizedDescriptions(): ?array
     {
@@ -175,7 +175,7 @@ class AbstractEditCategoryCommand
     }
 
     /**
-     * @return null|bool
+     * @return bool|null
      */
     public function isActive(): ?bool
     {
@@ -201,7 +201,7 @@ class AbstractEditCategoryCommand
     }
 
     /**
-     * @return null|string[]
+     * @return string[]|null
      */
     public function getLocalizedMetaTitles(): ?array
     {
@@ -221,7 +221,7 @@ class AbstractEditCategoryCommand
     }
 
     /**
-     * @return null|string[]
+     * @return string[]|null
      */
     public function getLocalizedMetaDescriptions(): ?array
     {
@@ -241,7 +241,7 @@ class AbstractEditCategoryCommand
     }
 
     /**
-     * @return null|string[]
+     * @return string[]|null
      */
     public function getLocalizedMetaKeywords(): ?array
     {
@@ -261,7 +261,7 @@ class AbstractEditCategoryCommand
     }
 
     /**
-     * @return null|int[]
+     * @return int[]|null
      */
     public function getAssociatedGroupIds(): ?array
     {
@@ -281,7 +281,7 @@ class AbstractEditCategoryCommand
     }
 
     /**
-     * @return null|int[]
+     * @return int[]|null
      */
     public function getAssociatedShopIds(): ?array
     {
