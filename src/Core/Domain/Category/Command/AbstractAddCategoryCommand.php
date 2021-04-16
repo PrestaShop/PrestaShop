@@ -46,7 +46,7 @@ class AbstractAddCategoryCommand
     private $localizedLinkRewrites;
 
     /**
-     * @var string[]
+     * @var null|string[]
      */
     private $localizedDescriptions;
 
@@ -56,27 +56,27 @@ class AbstractAddCategoryCommand
     private $isActive;
 
     /**
-     * @var string[]
+     * @var null|string[]
      */
     private $localizedMetaTitles;
 
     /**
-     * @var string[]
+     * @var null|string[]
      */
     private $localizedMetaDescriptions;
 
     /**
-     * @var string[]
+     * @var null|string[]
      */
     private $localizedMetaKeywords;
 
     /**
-     * @var int[]
+     * @var null|int[]
      */
     private $associatedGroupIds;
 
     /**
-     * @var int[]
+     * @var null|int[]
      */
     private $associatedShopIds;
 
@@ -87,7 +87,7 @@ class AbstractAddCategoryCommand
      *
      * @throws CategoryConstraintException
      */
-    public function __construct(array $name, array $linkRewrite, $isActive)
+    public function __construct(array $name, array $linkRewrite, bool $isActive)
     {
         $this
             ->setLocalizedNames($name)
@@ -148,9 +148,9 @@ class AbstractAddCategoryCommand
     }
 
     /**
-     * @return string[]
+     * @return null|string[]
      */
-    public function getLocalizedDescriptions(): array
+    public function getLocalizedDescriptions(): ?array
     {
         return $this->localizedDescriptions;
     }
@@ -194,9 +194,9 @@ class AbstractAddCategoryCommand
     }
 
     /**
-     * @return string[]
+     * @return null|string[]
      */
-    public function getLocalizedMetaTitles(): array
+    public function getLocalizedMetaTitles(): ?array
     {
         return $this->localizedMetaTitles;
     }
@@ -214,9 +214,9 @@ class AbstractAddCategoryCommand
     }
 
     /**
-     * @return string[]
+     * @return null|string[]
      */
-    public function getLocalizedMetaDescriptions(): array
+    public function getLocalizedMetaDescriptions(): ?array
     {
         return $this->localizedMetaDescriptions;
     }
@@ -234,9 +234,9 @@ class AbstractAddCategoryCommand
     }
 
     /**
-     * @return string[]
+     * @return null|string[]
      */
-    public function getLocalizedMetaKeywords(): array
+    public function getLocalizedMetaKeywords(): ?array
     {
         return $this->localizedMetaKeywords;
     }
@@ -254,9 +254,9 @@ class AbstractAddCategoryCommand
     }
 
     /**
-     * @return int[]
+     * @return null|int[]
      */
-    public function getAssociatedGroupIds(): array
+    public function getAssociatedGroupIds(): ?array
     {
         return $this->associatedGroupIds;
     }
@@ -274,9 +274,9 @@ class AbstractAddCategoryCommand
     }
 
     /**
-     * @return int[]
+     * @return null|int[]
      */
-    public function getAssociatedShopIds(): array
+    public function getAssociatedShopIds(): ?array
     {
         return $this->associatedShopIds;
     }
