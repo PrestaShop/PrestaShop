@@ -35,7 +35,6 @@ use PrestaShop\PrestaShop\Core\Exception\CoreException;
 use PrestaShop\PrestaShop\Core\Language\LanguageInterface;
 use PrestaShop\PrestaShop\Core\Localization\CLDR\LocaleRepository;
 use PrestaShop\PrestaShop\Core\Localization\RTL\Processor as RtlStylesheetProcessor;
-use PrestaShopBundle\Translation\TranslatorLanguageLoader;
 use Symfony\Component\Intl\Intl;
 
 class LanguageCore extends ObjectModel implements LanguageInterface
@@ -1662,9 +1661,12 @@ class LanguageCore extends ObjectModel implements LanguageInterface
         $shopDefaultLangId = Configuration::get('PS_LANG_DEFAULT', null, $shop->id_shop_group, $shop->id);
         $shopDefaultLanguage = new Language($shopDefaultLangId);
 
-        $translator = SymfonyContainer::getInstance()->get('translator');
+        $sfContainer = SymfonyContainer::getInstance();
+        $translator = $sfContainer->get('translator');
         if (!$translator->isLanguageLoaded($shopDefaultLanguage->locale)) {
-            (new TranslatorLanguageLoader(true))->loadLanguage($translator, $shopDefaultLanguage->locale);
+            $sfContainer->get('prestashop.translation.translator_language_loader')
+                ->setIsAdminContext(true)
+                ->loadLanguage($translator, $shopDefaultLanguage->locale);
         }
 
         (new EntityTranslatorFactory($translator))
