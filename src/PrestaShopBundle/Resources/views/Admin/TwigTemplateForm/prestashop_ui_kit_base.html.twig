@@ -563,13 +563,21 @@
     {% endif %}
 
     {% if material_design is defined or attr.material_design is defined %}
-      <div class="md-checkbox md-checkbox-inline">
-        <label{% for attrname, attrvalue in label_attr %} {{ attrname }}="{{ attrvalue }}"{% endfor %}>
-        {{- widget|raw -}}
-        <i class="md-checkbox-control"></i>
-        {{- label is not same as(false) ? (translation_domain is same as(false) ? label|raw : label|raw) -}}
+      {% if block_prefixes[2] == 'radio' %}
+        <label class="form-check-label">
+          {{- widget|raw -}}
+          <i class="form-check-round"></i>
+          {{- label is not same as(false) ? (translation_domain is same as(false) ? label|raw : label|raw) -}}
         </label>
-      </div>
+      {% else %}
+        <div class="md-checkbox md-checkbox-inline">
+          <label{% for attrname, attrvalue in label_attr %} {{ attrname }}="{{ attrvalue }}"{% endfor %}>
+          {{- widget|raw -}}
+          <i class="md-checkbox-control"></i>
+          {{- label is not same as(false) ? (translation_domain is same as(false) ? label|raw : label|raw) -}}
+          </label>
+        </div>
+      {% endif %}
     {% else %}
       <label{% for attrname, attrvalue in label_attr %} {{ attrname }}="{{ attrvalue }}"{% endfor %}>
       {{- widget|raw -}}
