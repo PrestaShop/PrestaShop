@@ -43,7 +43,7 @@
               {% for shop in group.shops %}
                 <li class="multistore-dropdown-shop">
                   <a class="multistore-dropdown-shop-name{% if shop.hasMainUrl() == false %} multistore-dropdown-no-url">{{ shop.name }}</a>{% else %}" href="{{ app.request.requestURI ~ '&setShopContext=s-' ~ shop.id }}">{{ shop.name }}</a>{% endif %}
-                  {% if shop.isConfigurationKeyOverridden(shopConfiguration, configurationKey) == true %}
+                  {% if shopCustomizationChecker.isConfigurationCustomizedForThisShop(configurationKey, shop) == true %}
                     <p class="multistore-dropdown-shop-status multistore-dropdown-shop-status-locked">
                       <i class="material-icons">https</i>
                       {{ 'Customized'|trans({}, 'Admin.Global') }}
