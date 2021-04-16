@@ -28,16 +28,39 @@ declare(strict_types=1);
 
 namespace PrestaShopBundle\Form\Admin\Sell\Product\Combination;
 
+use PrestaShop\PrestaShop\Core\Form\ConfigurableFormChoiceProviderInterface;
 use PrestaShopBundle\Form\Admin\Sell\Product\SuppliersType;
 use PrestaShopBundle\Form\Admin\Type\TranslatorAwareType;
+use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\HiddenType;
 use Symfony\Component\Form\FormBuilderInterface;
+use Symfony\Component\OptionsResolver\OptionsResolver;
+use Symfony\Component\Translation\TranslatorInterface;
 
 /**
  * Form to edit Combination details.
  */
 class CombinationFormType extends TranslatorAwareType
 {
+    /**
+     * @var ConfigurableFormChoiceProviderInterface
+     */
+    private $imagesChoiceProvider;
+
+    /**
+     * @param TranslatorInterface $translator
+     * @param array $locales
+     * @param ConfigurableFormChoiceProviderInterface $imagesChoiceProvider
+     */
+    public function __construct(
+        TranslatorInterface $translator,
+        array $locales,
+        ConfigurableFormChoiceProviderInterface $imagesChoiceProvider
+    ) {
+        parent::__construct($translator, $locales);
+        $this->imagesChoiceProvider = $imagesChoiceProvider;
+    }
+
     /**
      * @param FormBuilderInterface $builder
      * @param array $options
@@ -70,6 +93,27 @@ class CombinationFormType extends TranslatorAwareType
                     'title' => 'h2',
                 ],
             ])
+            ->add('images', ChoiceType::class, [
+                'label' => $this->trans('Images', 'Admin.Global'),
+                'label_attr' => [
+                    'title' => 'h2',
+                ],
+                'choices' => $this->imagesChoiceProvider->getChoices(['product_id' => $options['product_id']]),
+                'choice_attr' => function ($choice, $key) {
+                    return ['data-image-url' => $key];
+                },
+                'multiple' => true,
+                'expanded' => true,
+            ])
         ;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function configureOptions(OptionsResolver $resolver)
+    {
+        $resolver->setRequired(['product_id']);
+        $resolver->setAllowedTypes('product_id', ['int']);
     }
 }
