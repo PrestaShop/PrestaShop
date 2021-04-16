@@ -212,11 +212,10 @@ class ModuleCatalogueLayersProviderTest extends KernelTestCase
 
         $expected = [
             'ModulesNewsletterAdmin' => [
-                'count' => 3,
+                'count' => 2,
                 'translations' => [
                     'Newsletter' => '',
                     'Generates a .CSV file for mass mailings' => '',
-                    'Some default translation from module files' => '',
                 ],
             ],
         ];

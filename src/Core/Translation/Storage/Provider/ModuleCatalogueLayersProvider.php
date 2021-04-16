@@ -165,14 +165,7 @@ class ModuleCatalogueLayersProvider implements CatalogueLayersProviderInterface
         // If no translation file is found, we extract the catalogue from the module's templates
 
         try {
-            $moduleDefaultCatalogue = $this->getBuiltInDefaultTranslatedCatalogueFinder()->getCatalogue($locale);
-        } catch (TranslationFilesNotFoundException $exception) {
-            // We ignore when module's translation directory does not exist because it's not a requirement for now
-            $moduleDefaultCatalogue = new MessageCatalogue($locale);
-        }
-        try {
             $defaultCatalogue = $this->getDefaultCatalogueFinder()->getCatalogue($locale);
-            $defaultCatalogue->addCatalogue($moduleDefaultCatalogue);
         } catch (TranslationFilesNotFoundException $e) {
             $defaultCatalogue = $this->getDefaultCatalogueExtractedFromTemplates($locale);
         }
