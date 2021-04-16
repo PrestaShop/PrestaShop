@@ -757,7 +757,7 @@ class ValidateCore
      *
      * @param string $way Keyword to validate
      *
-     * @return bool Validity is ok or not
+     * @return int Validity is ok or not
      */
     public static function isOrderWay($way)
     {
