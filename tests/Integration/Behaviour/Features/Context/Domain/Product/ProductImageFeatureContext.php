@@ -102,7 +102,8 @@ class ProductImageFeatureContext extends AbstractProductFeatureContext
 
         /** @var ProductImage $productImage */
         $productImage = $this->getQueryBus()->handle(new GetProductImage($imageId->getValue()));
-        $imagePath = _PS_PROD_IMG_DIR_ . $productImage->getPath();
+
+        $imagePath = $this->getImagePath($productImage->getImageId());
         $this->getSharedStorage()->set($fileName, md5_file($imagePath));
     }
 
@@ -150,11 +151,11 @@ class ProductImageFeatureContext extends AbstractProductFeatureContext
 
         /** @var ProductImage $productImage */
         $productImage = $this->getQueryBus()->handle(new GetProductImage($imageId));
-        $imagePath = _PS_PROD_IMG_DIR_ . $productImage->getPath();
 
         // This was previously saved during image upload
         $generatedDummyMD5 = $this->getSharedStorage()->get($fileName);
 
+        $imagePath = $this->getImagePath($productImage->getImageId());
         if ($generatedDummyMD5 !== md5_file($imagePath)) {
             throw new RuntimeException(sprintf(
                 'Expected files dummy %s and image %s to be identical',
@@ -313,12 +314,23 @@ class ProductImageFeatureContext extends AbstractProductFeatureContext
                 'Unexpected image position'
             );
 
-            $path = _PS_PROD_IMG_DIR_ . $actualImage->getPath();
-
-            if (!file_exists($path)) {
-                throw new RuntimeException(sprintf('File "%s" does not exist', $path));
+            $imagePath = $this->getImagePath($actualImage->getImageId());
+            if (!file_exists($imagePath)) {
+                throw new RuntimeException(sprintf('File "%s" does not exist', $imagePath));
             }
         }
+    }
+
+    /**
+     * @param int $imageId
+     *
+     * @return string
+     */
+    private function getImagePath(int $imageId): string
+    {
+        $imageFolder = implode('/', str_split((string) $imageId));
+
+        return _PS_PROD_IMG_DIR_ . '/' . $imageFolder . '/' . $imageId . '.jpg';
     }
 
     /**
