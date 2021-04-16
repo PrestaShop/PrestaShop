@@ -584,11 +584,13 @@ services:
             - { name: form.type }
 
     form.type.translations.export_language:
-        class: 'PrestaShopBundle\Form\Admin\Improve\International\Translations\ExportThemeLanguageType'
+        class: 'PrestaShopBundle\Form\Admin\Improve\International\Translations\ExportCataloguesType'
         parent: 'form.type.translatable.aware'
         public: true
         arguments:
-            - '@=service("prestashop.core.form.choice_provider.theme_by_name").getChoices()'
+            $exportTranslationCoreTypeChoices: '@=service("prestashop.core.form.choice_provider.translation_type").getExportCoreChoices()'
+            $themeChoices: '@=service("prestashop.core.form.choice_provider.theme_by_name").getChoices()'
+            $moduleChoices: '@=service("prestashop.core.form.choice_provider.module_by_name").getChoices()'
         tags:
             - { name: form.type }
 
