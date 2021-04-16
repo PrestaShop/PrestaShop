@@ -1,7 +1,11 @@
-module.exports = class CommonPage {
+/**
+ * Parent page, contains functions that can be used in every page (BO, FO ...)
+ * @class
+ */
+class CommonPage {
   /**
    * Get page title
-   * @param page
+   * @param page {Page} Browser tab
    * @returns {Promise<string>}
    */
   async getPageTitle(page) {
@@ -10,8 +14,8 @@ module.exports = class CommonPage {
 
   /**
    * Go to URL
-   * @param page
-   * @param url
+   * @param page {Page} Browser tab
+   * @param url {string} Url to go to
    * @returns {Promise<void>}
    */
   async goTo(page, url) {
@@ -20,7 +24,7 @@ module.exports = class CommonPage {
 
   /**
    * Get current url
-   * @param page
+   * @param page {Page} Browser tab
    * @returns {Promise<string>}
    */
   async getCurrentURL(page) {
@@ -29,9 +33,9 @@ module.exports = class CommonPage {
 
   /**
    * Wait for selector to have a state
-   * @param page
-   * @param selector
-   * @param state
+   * @param page {Page} Browser tab
+   * @param selector {string} selector to wait
+   * @param state {string} state
    * @param timeout
    * @returns {Promise<void>}
    */
@@ -41,7 +45,7 @@ module.exports = class CommonPage {
 
   /**
    * Wait for selector to be visible
-   * @param page
+   * @param page {Page} Browser tab
    * @param selector
    * @param timeout
    * @return {Promise<void>}
@@ -52,7 +56,7 @@ module.exports = class CommonPage {
 
   /**
    * Wait for selector to be visible
-   * @param page
+   * @param page {Page} Browser tab
    * @param selector
    * @param timeout
    * @return {Promise<void>}
@@ -63,7 +67,7 @@ module.exports = class CommonPage {
 
   /**
    * Wait for selector to be attached
-   * @param page
+   * @param page {Page} Browser tab
    * @param selector
    * @param timeout
    * @return {Promise<void>}
@@ -74,7 +78,7 @@ module.exports = class CommonPage {
 
   /**
    * Wait for selector to be detached
-   * @param page
+   * @param page {Page} Browser tab
    * @param selector
    * @param timeout
    * @return {Promise<void>}
@@ -85,7 +89,7 @@ module.exports = class CommonPage {
 
   /**
    * Get Text from element
-   * @param page
+   * @param page {Page} Browser tab
    * @param selector, from where to get text
    * @param waitForSelector
    * @return {Promise<string>}
@@ -101,7 +105,7 @@ module.exports = class CommonPage {
 
   /**
    * Get attribute from element
-   * @param page
+   * @param page {Page} Browser tab
    * @param selector
    * @param attribute
    * @returns {Promise<string>}
@@ -114,7 +118,7 @@ module.exports = class CommonPage {
 
   /**
    * Is element visible
-   * @param page
+   * @param page {Page} Browser tab
    * @param selector, element to check
    * @param timeout, how much should we wait
    * @returns {Promise<boolean>}, true if visible, false if not
@@ -130,7 +134,7 @@ module.exports = class CommonPage {
 
   /**
    * Is element not visible
-   * @param page
+   * @param page {Page} Browser tab
    * @param selector, element to check
    * @param timeout, how much should we wait
    * @returns {Promise<boolean>}, true if visible, false if not
@@ -146,7 +150,7 @@ module.exports = class CommonPage {
 
   /**
    * Open link in new Tab and get opened Page
-   * @param page
+   * @param page {Page} Browser tab
    * @param selector, where to click
    * @param newPageSelector, selector to wait in new page (default to FO logo)
    * @return newPage, what was opened by the browser
@@ -165,7 +169,7 @@ module.exports = class CommonPage {
 
   /**
    * Wait for selector and click
-   * @param page
+   * @param page {Page} Browser tab
    * @param selector, element to check
    * @param timeout, wait timeout
    * @return {Promise<void>}
@@ -177,7 +181,7 @@ module.exports = class CommonPage {
 
   /**
    * Reload actual browser page
-   * @param page
+   * @param page {Page} Browser tab
    * @return {Promise<void>}
    */
   async reloadPage(page) {
@@ -186,7 +190,7 @@ module.exports = class CommonPage {
 
   /**
    * Delete the existing text from input then set a value
-   * @param page
+   * @param page {Page} Browser tab
    * @param selector, input
    * @param value, value to set in the input
    * @return {Promise<void>}
@@ -204,7 +208,7 @@ module.exports = class CommonPage {
 
   /**
    * To accept or dismiss a navigator dialog
-   * @param page
+   * @param page {Page} Browser tab
    * @param accept
    * @return {Promise<void>}
    */
@@ -218,7 +222,7 @@ module.exports = class CommonPage {
   /**
    * Close actual tab and goto another tab if wanted
    * @param browserContext
-   * @param page
+   * @param page {Page} Browser tab
    * @param tabId
    * @return {Promise<void>}
    */
@@ -234,7 +238,7 @@ module.exports = class CommonPage {
 
   /**
    * Scroll to element
-   * @param page
+   * @param page {Page} Browser tab
    * @param selector
    * @return {Promise<void>}
    */
@@ -244,7 +248,7 @@ module.exports = class CommonPage {
 
   /**
    * Select option in select by visible text
-   * @param page
+   * @param page {Page} Browser tab
    * @param selector
    * @param textValue
    * @returns {Promise<void>}
@@ -271,7 +275,7 @@ module.exports = class CommonPage {
 
   /**
    * To get a number from text
-   * @param page
+   * @param page {Page} Browser tab
    * @param selector
    * @param timeout
    * @returns {Promise<number>}
@@ -286,7 +290,7 @@ module.exports = class CommonPage {
 
   /**
    * Go to Page and wait for navigation
-   * @param page
+   * @param page {Page} Browser tab
    * @param selector
    * @param waitUntil, the event to wait after click (load/networkidle/domcontentloaded)
    * @return {Promise<void>}
@@ -300,7 +304,7 @@ module.exports = class CommonPage {
 
   /**
    * Navigate to the previous page in history
-   * @param page
+   * @param page {Page} Browser tab
    * @param waitUntil
    * @return {Promise<void>}
    */
@@ -310,7 +314,7 @@ module.exports = class CommonPage {
 
   /**
    * Check if checkbox is selected
-   * @param page
+   * @param page {Page} Browser tab
    * @param selector
    * @return {Promise<boolean>}
    */
@@ -320,7 +324,7 @@ module.exports = class CommonPage {
 
   /**
    * Select, unselect checkbox
-   * @param page
+   * @param page {Page} Browser tab
    * @param checkboxSelector, selector of checkbox
    * @param valueWanted, true if we want to select checkBox, else otherwise
    * @return {Promise<void>}
@@ -351,7 +355,7 @@ module.exports = class CommonPage {
 
   /**
    * Drag and drop element
-   * @param page
+   * @param page {Page} Browser tab
    * @param selectorToDrag
    * @param selectorWhereToDrop
    * @return {Promise<void>}
@@ -374,7 +378,7 @@ module.exports = class CommonPage {
 
   /**
    * Upload file in input type=file selector
-   * @param page
+   * @param page {Page} Browser tab
    * @param selector
    * @param filePath
    * @return {Promise<void>}
@@ -386,7 +390,7 @@ module.exports = class CommonPage {
 
   /**
    * Upload image path in all type
-   * @param page
+   * @param page {Page} Browser tab
    * @param selector
    * @param filePath
    * @returns {Promise<void>}
@@ -401,7 +405,7 @@ module.exports = class CommonPage {
 
   /**
    * Get a float price from text
-   * @param page
+   * @param page {Page} Browser tab
    * @param selector
    * @param timeout
    * @returns {Promise<number>}
@@ -417,7 +421,7 @@ module.exports = class CommonPage {
 
   /**
    * Get parent element from selector
-   * @param page
+   * @param page {Page} Browser tab
    * @param selector
    * @return {Promise<ElementHandle>}
    */
@@ -425,4 +429,6 @@ module.exports = class CommonPage {
     /* eslint-env browser */
     return page.evaluateHandle(sl => document.querySelector(sl).parentElement, selector);
   }
-};
+}
+
+module.exports = CommonPage;
