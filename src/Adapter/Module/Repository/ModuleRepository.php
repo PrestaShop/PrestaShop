@@ -69,7 +69,7 @@ class ModuleRepository extends AbstractObjectModelRepository
      *
      * @return array
      */
-    public function getActiveModulesPaths()
+    public function getActiveModulesPaths(): array
     {
         if (null === $this->activeModulesPaths) {
             $this->activeModulesPaths = [];
