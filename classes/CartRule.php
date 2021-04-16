@@ -1176,7 +1176,12 @@ class CartRuleCore extends ObjectModel
                 // Do not give a reduction on free products!
                 $order_total = $order_package_products_total;
                 foreach ($context->cart->getCartRules(CartRule::FILTER_ACTION_GIFT, false) as $cart_rule) {
-                    $order_total -= Tools::ps_round($cart_rule['obj']->getContextualValue($use_tax, $context, CartRule::FILTER_ACTION_GIFT, $package), Context::getContext()->getComputingPrecision());
+                    $freeProductsPrice = Tools::ps_round($cart_rule['obj']->getContextualValue($use_tax, $context, CartRule::FILTER_ACTION_GIFT, $package), Context::getContext()->getComputingPrecision());
+                    if (isset($basePriceForPercentReduction) && $order_total === $basePriceForPercentReduction) {
+                        // Gifts haven't been excluded yet, we need to do it
+                        $basePriceForPercentReduction -= $freeProductsPrice;
+                    }
+                    $order_total -= $freeProductsPrice;
                 }
 
                 // Remove products that are on special
