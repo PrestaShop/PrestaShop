@@ -161,7 +161,7 @@ class Translations extends BOBasePage {
       page.click(this.exportLanguageButton),
     ]);
 
-    return download.path()
+    return download.path();
   }
 }
 
