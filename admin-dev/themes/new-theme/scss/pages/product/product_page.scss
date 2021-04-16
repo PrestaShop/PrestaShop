@@ -918,6 +918,24 @@
   }
 }
 
+// Combination form page
+.combination-page {
+  .combination-images-selector {
+    display: flex;
+    flex-direction: row;
+
+    .combination-image-choice {
+      margin: 0.35rem;
+      border: solid transparent 3px;
+
+      &:hover,
+      &.selected {
+        border: solid $primary 3px;
+      }
+    }
+  }
+}
+
 .product-page,
 .combination-page {
   .product-suppliers-block {

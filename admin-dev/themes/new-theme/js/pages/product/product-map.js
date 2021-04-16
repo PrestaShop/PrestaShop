@@ -99,6 +99,12 @@ export default {
       deleteButton: (rowIndex) => `${combinationListId}_combinations_${rowIndex}_delete`,
     },
     editModal: '#combination-edit-modal',
+    images: {
+      selectorContainer: '.combination-images-selector',
+      imageChoice: '.combination-image-choice',
+      checkboxContainer: '.form-check',
+      checkbox: 'input[type=checkbox]',
+    },
   },
   virtualProduct: {
     container: '#virtual-product-file',

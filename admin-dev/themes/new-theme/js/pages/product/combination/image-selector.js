@@ -23,21 +23,29 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
 
-import ProductSuppliersManager from '@pages/product/edit/product-suppliers-manager';
-import ImageSelector from '@pages/product/combination/image-selector';
 import ProductMap from '@pages/product/product-map';
 
 const {$} = window;
 
-$(() => {
-  window.prestashop.component.initComponents([
-    'TranslatableField',
-    'TinyMCEEditor',
-    'TranslatableInput',
-    'EventEmitter',
-    'TextWithLengthCounter',
-  ]);
+export default class ImageSelector {
+  constructor() {
+    this.$selectorContainer = $(ProductMap.combinations.images.selectorContainer);
+    this.init();
+  }
 
-  new ProductSuppliersManager(ProductMap.suppliers.combinationSuppliers, false);
-  new ImageSelector();
-});
+  init() {
+    $(ProductMap.combinations.images.checkboxContainer, this.$selectorContainer).hide();
+    this.$selectorContainer.on('click', ProductMap.combinations.images.imageChoice, (event) => {
+      const $imageChoice = $(event.currentTarget);
+      const $checkbox = $(ProductMap.combinations.images.checkbox, $imageChoice);
+
+      if ($checkbox.is(':checked')) {
+        $imageChoice.removeClass('selected');
+        $checkbox.prop('checked', false);
+      } else {
+        $imageChoice.addClass('selected');
+        $checkbox.prop('checked', true);
+      }
+    });
+  }
+}
