@@ -78,7 +78,7 @@ class ModuleCatalogueLayersProviderTest extends KernelTestCase
          * - ModulesCheckpaymentShop.fr-FR.xlf
          * - ModulesWirepaymentAdmin.fr-FR.xlf
          * - ModulesWirepaymentShop.fr-FR.xlf
-         * - ModulesNewsletterAdmin.fr-FR.xlf
+         * - ModulesXlftranslatedmoduleAdmin.fr-FR.xlf
          * - ShopNotificationsWarning.fr-FR.xlf
          */
         $this->translationsDir = self::$kernel->getContainer()->getParameter('test_translations_dir');
@@ -121,10 +121,10 @@ class ModuleCatalogueLayersProviderTest extends KernelTestCase
     public function testItLoadsCatalogueFromXliffFilesFromModuleDirectory(): void
     {
         // load catalogue from translations/fr-FR
-        $catalogue = $this->getProvider('newsletter')->getFileTranslatedCatalogue('fr-FR');
+        $catalogue = $this->getProvider('xlftranslatedmodule')->getFileTranslatedCatalogue('fr-FR');
 
         $expected = [
-            'ModulesNewsletterAdmin' => [
+            'ModulesXlftranslatedmoduleAdmin' => [
                 'count' => 3,
                 'translations' => [
                     'Newsletter' => 'Lettre d\'informations',
@@ -208,15 +208,14 @@ class ModuleCatalogueLayersProviderTest extends KernelTestCase
     {
         // load catalogue from translations/default
         // even if module exists with translations built in
-        $catalogue = $this->getProvider('newsletter')->getDefaultCatalogue('fr-FR');
+        $catalogue = $this->getProvider('xlftranslatedmodule')->getDefaultCatalogue('fr-FR');
 
         $expected = [
-            'ModulesNewsletterAdmin' => [
-                'count' => 3,
+            'ModulesXlftranslatedmoduleAdmin' => [
+                'count' => 2,
                 'translations' => [
                     'Newsletter' => '',
                     'Generates a .CSV file for mass mailings' => '',
-                    'Some default translation from module files' => '',
                 ],
             ],
         ];

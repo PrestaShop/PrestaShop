@@ -23,10 +23,9 @@
  * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
+declare(strict_types=1);
 
 namespace PrestaShop\PrestaShop\Core\Domain\Module\ValueObject;
-
-use PrestaShop\PrestaShop\Core\Domain\Module\Exception\ModuleException;
 
 /**
  * Class ModuleId is responsible for providing currency id data.
@@ -40,22 +39,16 @@ class ModuleId
 
     /**
      * @param int $moduleId
-     *
-     * @throws ModuleException
      */
-    public function __construct($moduleId)
+    public function __construct(int $moduleId)
     {
-        if (!is_int($moduleId) || $moduleId <= 0) {
-            throw new ModuleException(sprintf('Invalid Module id: %s', var_export($moduleId, true)));
-        }
-
         $this->moduleId = $moduleId;
     }
 
     /**
      * @return int
      */
-    public function getValue()
+    public function getValue(): int
     {
         return $this->moduleId;
     }

@@ -165,14 +165,7 @@ class ModuleCatalogueLayersProvider implements CatalogueLayersProviderInterface
         // If no translation file is found, we extract the catalogue from the module's templates
 
         try {
-            $moduleDefaultCatalogue = $this->getBuiltInDefaultTranslatedCatalogueFinder()->getCatalogue($locale);
-        } catch (TranslationFilesNotFoundException $exception) {
-            // We ignore when module's translation directory does not exist because it's not a requirement for now
-            $moduleDefaultCatalogue = new MessageCatalogue($locale);
-        }
-        try {
             $defaultCatalogue = $this->getDefaultCatalogueFinder()->getCatalogue($locale);
-            $defaultCatalogue->addCatalogue($moduleDefaultCatalogue);
         } catch (TranslationFilesNotFoundException $e) {
             $defaultCatalogue = $this->getDefaultCatalogueExtractedFromTemplates($locale);
         }
@@ -187,18 +180,16 @@ class ModuleCatalogueLayersProvider implements CatalogueLayersProviderInterface
      */
     public function getFileTranslatedCatalogue(string $locale): MessageCatalogue
     {
-        try {
-            $moduleFilesCatalogue = $this->getBuiltInFileTranslatedCatalogueFinder()->getCatalogue($locale);
+        try { // First we search in the module's translation directory
+            return $this->getBuiltInFileTranslatedCatalogueFinder()->getCatalogue($locale);
         } catch (TranslationFilesNotFoundException $exception) {
-            // We ignore when module's translation directory does not exist because it's not a requirement for now
-            $moduleFilesCatalogue = new MessageCatalogue($locale);
+            // If no translation file was found in the module, No Exception
+            // we search in the Core's files
         }
         try {
-            $catalogue = $this->getFileTranslatedCatalogueFinder()->getCatalogue($locale);
-            $catalogue->addCatalogue($moduleFilesCatalogue);
-
-            return $catalogue;
+            return $this->getFileTranslatedCatalogueFinder()->getCatalogue($locale);
         } catch (TranslationFilesNotFoundException $exception) {
+            // And finally if no translation was found in the Core files, we search in the legacy files
             return $this->buildTranslationCatalogueFromLegacyFiles($locale);
         }
     }

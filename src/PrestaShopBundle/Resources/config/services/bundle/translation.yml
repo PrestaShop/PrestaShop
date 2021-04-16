@@ -3,7 +3,7 @@ services:
         public: true
 
     prestashop.translation.translator_language_loader:
-        class: PrestaShop\PrestaShop\Core\Translation\TranslatorLanguageLoader
+        class: PrestaShopBundle\Translation\TranslatorLanguageLoader
         arguments:
             - '@prestashop.adapter.module.repository.module_repository'
 
