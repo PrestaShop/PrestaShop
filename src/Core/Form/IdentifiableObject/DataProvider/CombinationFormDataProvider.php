@@ -73,6 +73,7 @@ class CombinationFormDataProvider implements FormDataProviderInterface
             'price_impact' => $this->extractPriceImpactData($combinationForEditing),
             'details' => $this->extractDetailsData($combinationForEditing),
             'suppliers' => $this->extractSuppliersData($combinationForEditing),
+            'images' => $combinationForEditing->getImageIds(),
         ];
     }
 
