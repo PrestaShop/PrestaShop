@@ -78,7 +78,7 @@ class ModuleCatalogueLayersProviderTest extends KernelTestCase
          * - ModulesCheckpaymentShop.fr-FR.xlf
          * - ModulesWirepaymentAdmin.fr-FR.xlf
          * - ModulesWirepaymentShop.fr-FR.xlf
-         * - ModulesNewsletterAdmin.fr-FR.xlf
+         * - ModulesXlftranslatedmoduleAdmin.fr-FR.xlf
          * - ShopNotificationsWarning.fr-FR.xlf
          */
         $this->translationsDir = self::$kernel->getContainer()->getParameter('test_translations_dir');
@@ -116,18 +116,17 @@ class ModuleCatalogueLayersProviderTest extends KernelTestCase
     }
 
     /**
-     * Test it loads a XLIFF catalogue from the locale's `translations` directory
+     * Test it loads a XLIFF catalogue from the module's locale `translations` directory
      */
     public function testItLoadsCatalogueFromXliffFilesFromModuleDirectory(): void
     {
         // load catalogue from translations/fr-FR
-        $catalogue = $this->getProvider('newsletter')->getFileTranslatedCatalogue('fr-FR');
+        $catalogue = $this->getProvider('xlftranslatedmodule')->getFileTranslatedCatalogue('fr-FR');
 
         $expected = [
-            'ModulesNewsletterAdmin' => [
-                'count' => 3,
+            'ModulesXlftranslatedmoduleAdmin' => [
+                'count' => 2,
                 'translations' => [
-                    'Newsletter' => 'Lettre d\'informations',
                     'Generates a .CSV file for mass mailings' => 'Ceci est la traduction provenant des fichiers du module',
                     'Some default translation from module files' => 'Traduction par défaut du module traduite dans le module',
                 ],
@@ -193,30 +192,6 @@ class ModuleCatalogueLayersProviderTest extends KernelTestCase
                 'count' => 1,
                 'translations' => [
                     'Hello World' => 'Bonjour le monde',
-                ],
-            ],
-        ];
-
-        // verify all catalogues are loaded
-        $this->assertResultIsAsExpected($expected, $catalogue);
-    }
-
-    /**
-     * Test it loads a default catalogue from the module's `translations` directory
-     */
-    public function testItLoadsDefaultCatalogueFromModuleFiles(): void
-    {
-        // load catalogue from translations/default
-        // even if module exists with translations built in
-        $catalogue = $this->getProvider('newsletter')->getDefaultCatalogue('fr-FR');
-
-        $expected = [
-            'ModulesNewsletterAdmin' => [
-                'count' => 3,
-                'translations' => [
-                    'Newsletter' => '',
-                    'Generates a .CSV file for mass mailings' => '',
-                    'Some default translation from module files' => '',
                 ],
             ],
         ];

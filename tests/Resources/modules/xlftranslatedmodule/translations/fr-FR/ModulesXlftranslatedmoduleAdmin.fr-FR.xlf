@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xliff xmlns="urn:oasis:names:tc:xliff:document:1.2" version="1.2">
+  <file original="modules/xlftranslatedmodule/xlftranslatedmodule.php" source-language="en" target-language="fr" datatype="plaintext">
+    <body>
+      <trans-unit id="804a924e464fd21ed92f820224c4091d" approved="yes">
+        <source>Generates a .CSV file for mass mailings</source>
+        <target state="final">Ceci est la traduction provenant des fichiers du module</target>
+        <note>Line: 47</note>
+      </trans-unit>
+      <trans-unit id="804a924e464fd21ed92f820224c4091z">
+        <source>Some default translation from module files</source>
+        <target>Traduction par défaut du module traduite dans le module</target>
+        <note>Line: 47</note>
+      </trans-unit>
+    </body>
+  </file>
+</xliff>
