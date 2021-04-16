@@ -12,7 +12,6 @@ const baseContext = 'functional_BO_dashboard_enableDisableDemoMode';
 
 let browserContext;
 let page;
-let fakeStats = [32, 3, 0, 5, 41, 2, 256, 160, 160, 32, 624, 8661, 5196, 4330];
 
 describe('Enable/Disable demo mode', async () => {
   // before and after functions
@@ -35,19 +34,15 @@ describe('Enable/Disable demo mode', async () => {
     'abandoned_cart', 'products_out_of_stock', 'new_messages', 'product_reviews', 'new_customers', 'new_registrations',
     'total_suscribers', 'visits', 'unique_visitors', 'dash_traffic_source'];
 
-  it('should enable demo mode and get fake stats', async function () {
-    await testContext.addContextItem(this, 'testIdentifier', 'enableDemoMode', baseContext);
+  it('should enable demo mode and check fake stats', async function () {
+    await testContext.addContextItem(this, 'testIdentifier', 'checkFakeStats', baseContext);
 
     await dashboardPage.setDemoModeStatus(page, true);
-    fakeStats = await dashboardPage.getAllTrafficValues(page, trafficActivity);
-  });
-
-  it('should disable demo mode and check the difference', async function () {
-    await testContext.addContextItem(this, 'testIdentifier', 'DisableDemoMode', baseContext);
+    const demoModeEnabledTrafficValues = await dashboardPage.getAllTrafficValues(page, trafficActivity);
 
     await dashboardPage.setDemoModeStatus(page, false);
-    const realStats = await dashboardPage.getAllTrafficValues(page, trafficActivity);
+    const demoModeDisabledTrafficValues = await dashboardPage.getAllTrafficValues(page, trafficActivity);
 
-    await expect(fakeStats).to.not.deep.equal(realStats);
+    await expect(demoModeEnabledTrafficValues).to.not.deep.equal(demoModeDisabledTrafficValues);
   });
 });
