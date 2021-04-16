@@ -25,25 +25,30 @@
 <template>
   <div class="pagination">
     <ul class="pagination-list">
-      <li
-        class="pagination-item pagination-previous"
-        @click="goToPage(currentPage - 1)"
-      >
-        <i class="material-icons">chevron_left</i>
+      <li class="pagination-item pagination-previous">
+        <button
+          @click="goToPage(currentPage - 1)"
+          :disabled="currentPage === 1"
+        >
+          <i class="material-icons">chevron_left</i>
+        </button>
       </li>
       <li
         :class="['pagination-item', isActive(key)]"
         v-for="(page, key) of paginatedDatas"
         :key="key"
-        @click="goToPage(key + 1)"
       >
-        {{ key + 1 }}
+        <button @click="goToPage(key + 1)">
+          {{ key + 1 }}
+        </button>
       </li>
-      <li
-        class="pagination-item pagination-next"
-        @click="goToPage(currentPage + 1)"
-      >
-        <i class="material-icons">chevron_right</i>
+      <li class="pagination-item pagination-next">
+        <button
+          @click="goToPage(currentPage + 1)"
+          :disabled="currentPage === paginatedDatas.length"
+        >
+          <i class="material-icons">chevron_right</i>
+        </button>
       </li>
     </ul>
   </div>
@@ -77,7 +82,10 @@
       goToPage(pageNumber) {
         if (this.paginatedDatas[pageNumber - 1]) {
           this.currentPage = pageNumber;
-          this.$emit('paginated', {paginatedDatas: this.paginatedDatas, currentPage: this.currentPage});
+          this.$emit('paginated', {
+            paginatedDatas: this.paginatedDatas,
+            currentPage: this.currentPage,
+          });
         }
       },
       /**
@@ -92,7 +100,10 @@
           this.paginatedDatas.push(newDatas.slice(i, i + this.paginationLength));
         }
 
-        this.$emit('paginated', {paginatedDatas: this.paginatedDatas, currentPage: this.currentPage});
+        this.$emit('paginated', {
+          paginatedDatas: this.paginatedDatas,
+          currentPage: this.currentPage,
+        });
       },
       /**
        * Avoid too much logics in the template
@@ -137,22 +148,35 @@
 
   &-item {
     list-style-type: none;
-    font-size: 1rem;
-    padding: .5rem;
-    transition: .25s ease-out;
-    cursor: pointer;
-    color: #6C868E;
 
-    &:hover {
-      color: $primary;
+    button {
+      font-size: 1rem;
+      padding: 0.5rem;
+      transition: 0.25s ease-out;
+      cursor: pointer;
+      color: #6c868e;
+      border: 0;
+      background-color: inherit;
+
+      &:disabled {
+        cursor: not-allowed;
+        opacity: 0.5;
+      }
+
+      &:hover:not(:disabled) {
+        color: $primary;
+      }
     }
 
     &.active {
-      color: $primary;
+      button {
+        color: $primary;
+      }
     }
   }
 
-  &-previous, &-next {
+  &-previous,
+  &-next {
     font-size: 1.25rem;
   }
 }

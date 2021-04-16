@@ -28,7 +28,11 @@
     @click="preventClose"
   >
     <div class="card-header">
-      {{ $t('modal.history.editedCombination', {'%editedNb%': combinationsList.length}) }}
+      {{
+        $t("modal.history.editedCombination", {
+          "%editedNb%": combinationsList.length,
+        })
+      }}
     </div>
 
     <div class="card-block">
@@ -37,10 +41,7 @@
         v-if="areCombinationsNotEmpty"
       >
         <li
-          :class="[
-            'history-item',
-            isSelected(combination.id),
-          ]"
+          :class="['history-item', isSelected(combination.id)]"
           v-for="(combination, key) of paginatedDatas[currentPage - 1]"
           :key="key"
           @click="selectCombination(combination)"
@@ -53,11 +54,9 @@
         class="history-empty"
         v-else
       >
-        <img
-          :src="emptyImage"
-        >
+        <img :src="emptyImage">
         <p class="history-empty-tip">
-          {{ $t('modal.history.empty') }}
+          {{ $t("modal.history.empty") }}
         </p>
       </div>
     </div>
@@ -176,7 +175,7 @@
     height: calc(100% - 4rem);
 
     &-tip {
-      color: #8A8A8A;
+      color: #8a8a8a;
       font-size: 1rem;
       text-align: center;
       max-width: 280px;
