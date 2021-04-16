@@ -299,20 +299,7 @@ class CombinationListingFeatureContext extends AbstractCombinationFeatureContext
             if (empty($expectedCombination['image url'])) {
                 Assert::assertNull($editableCombinationForListing->getImageUrl(), 'Unexpected combination image');
             } else {
-                // Get image reference which is integrated in image url
-                $imageUrl = $expectedCombination['image url'];
-                preg_match('_\{(.+)\}_', $imageUrl, $matches);
-                $imageReference = $matches[1];
-                $imageId = $this->getSharedStorage()->get($imageReference);
-
-                // Now rebuild the image folder with image id appended
-                $imageFolder = implode('/', str_split((string) $imageId)) . '/' . $imageId;
-                $realImageUrl = str_replace(
-                    '{' . $imageReference . '}',
-                    $imageFolder,
-                    $imageUrl
-                );
-
+                $realImageUrl = $this->getRealImageUrl($expectedCombination['image url']);
                 Assert::assertEquals(
                     $realImageUrl,
                     $editableCombinationForListing->getImageUrl(),

@@ -318,6 +318,28 @@ class ProductImageFeatureContext extends AbstractProductFeatureContext
             if (!file_exists($imagePath)) {
                 throw new RuntimeException(sprintf('File "%s" does not exist', $imagePath));
             }
+
+            if (empty($dataRow['image url'])) {
+                Assert::assertNull($actualImage->getImageUrl(), 'Unexpected product image');
+            } else {
+                $realImageUrl = $this->getRealImageUrl($dataRow['image url']);
+                Assert::assertEquals(
+                    $realImageUrl,
+                    $actualImage->getImageUrl(),
+                    'Unexpected product image url'
+                );
+            }
+
+            if (empty($dataRow['thumbnail url'])) {
+                Assert::assertNull($actualImage->getThumbnailUrl(), 'Unexpected product thumbnail image');
+            } else {
+                $realImageUrl = $this->getRealImageUrl($dataRow['thumbnail url']);
+                Assert::assertEquals(
+                    $realImageUrl,
+                    $actualImage->getThumbnailUrl(),
+                    'Unexpected product thumbnail url'
+                );
+            }
         }
     }
 
