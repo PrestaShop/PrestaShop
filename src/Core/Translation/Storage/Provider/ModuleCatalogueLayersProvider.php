@@ -63,9 +63,19 @@ class ModuleCatalogueLayersProvider implements CatalogueLayersProviderInterface
     private $defaultCatalogueFinder;
 
     /**
+     * @var DefaultCatalogueFinder
+     */
+    private $builtInDefaultTranslatedCatalogueFinder;
+
+    /**
      * @var FileTranslatedCatalogueFinder
      */
     private $fileTranslatedCatalogueFinder;
+
+    /**
+     * @var FileTranslatedCatalogueFinder
+     */
+    private $builtInFileTranslatedCatalogueFinder;
 
     /**
      * @var UserTranslatedCatalogueFinder
@@ -155,7 +165,14 @@ class ModuleCatalogueLayersProvider implements CatalogueLayersProviderInterface
         // If no translation file is found, we extract the catalogue from the module's templates
 
         try {
+            $moduleDefaultCatalogue = $this->getBuiltInDefaultTranslatedCatalogueFinder()->getCatalogue($locale);
+        } catch (TranslationFilesNotFoundException $exception) {
+            // We ignore when module's translation directory does not exist because it's not a requirement for now
+            $moduleDefaultCatalogue = new MessageCatalogue($locale);
+        }
+        try {
             $defaultCatalogue = $this->getDefaultCatalogueFinder()->getCatalogue($locale);
+            $defaultCatalogue->addCatalogue($moduleDefaultCatalogue);
         } catch (TranslationFilesNotFoundException $e) {
             $defaultCatalogue = $this->getDefaultCatalogueExtractedFromTemplates($locale);
         }
@@ -171,7 +188,16 @@ class ModuleCatalogueLayersProvider implements CatalogueLayersProviderInterface
     public function getFileTranslatedCatalogue(string $locale): MessageCatalogue
     {
         try {
-            return $this->getFileTranslatedCatalogueFinder()->getCatalogue($locale);
+            $moduleFilesCatalogue = $this->getBuiltInFileTranslatedCatalogueFinder()->getCatalogue($locale);
+        } catch (TranslationFilesNotFoundException $exception) {
+            // We ignore when module's translation directory does not exist because it's not a requirement for now
+            $moduleFilesCatalogue = new MessageCatalogue($locale);
+        }
+        try {
+            $catalogue = $this->getFileTranslatedCatalogueFinder()->getCatalogue($locale);
+            $catalogue->addCatalogue($moduleFilesCatalogue);
+
+            return $catalogue;
         } catch (TranslationFilesNotFoundException $exception) {
             return $this->buildTranslationCatalogueFromLegacyFiles($locale);
         }
@@ -232,6 +258,49 @@ class ModuleCatalogueLayersProvider implements CatalogueLayersProviderInterface
         }
 
         return $this->userTranslatedCatalogueFinder;
+    }
+
+    /**
+     * @return FileTranslatedCatalogueFinder
+     *
+     * @throws TranslationFilesNotFoundException
+     */
+    private function getBuiltInFileTranslatedCatalogueFinder(): FileTranslatedCatalogueFinder
+    {
+        if (null === $this->builtInFileTranslatedCatalogueFinder) {
+            $this->builtInFileTranslatedCatalogueFinder = new FileTranslatedCatalogueFinder(
+                implode(DIRECTORY_SEPARATOR, [
+                    $this->modulesDirectory,
+                    $this->moduleName,
+                    'translations',
+                ]),
+                $this->filenameFilters
+            );
+        }
+
+        return $this->builtInFileTranslatedCatalogueFinder;
+    }
+
+    /**
+     * @return DefaultCatalogueFinder
+     *
+     * @throws TranslationFilesNotFoundException
+     */
+    private function getBuiltInDefaultTranslatedCatalogueFinder(): DefaultCatalogueFinder
+    {
+        if (null === $this->builtInDefaultTranslatedCatalogueFinder) {
+            $this->builtInDefaultTranslatedCatalogueFinder = new DefaultCatalogueFinder(
+                implode(DIRECTORY_SEPARATOR, [
+                    $this->modulesDirectory,
+                    $this->moduleName,
+                    'translations',
+                    'default',
+                ]),
+                $this->filenameFilters
+            );
+        }
+
+        return $this->builtInDefaultTranslatedCatalogueFinder;
     }
 
     /**
