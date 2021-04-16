@@ -25,11 +25,11 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
 
-namespace PrestaShopBundle\Translation;
+namespace PrestaShop\PrestaShop\Core\Translation;
 
 use PrestaShop\PrestaShop\Adapter\Module\Repository\ModuleRepository;
 use PrestaShop\PrestaShop\Core\Addon\Theme\Theme;
-use PrestaShopBundle\Translation\Loader\SqlTranslationLoader;
+use PrestaShop\PrestaShop\Core\Translation\Storage\Loader\SqlTranslationLoader;
 use Symfony\Component\Finder\Finder;
 use Symfony\Component\Translation\Loader\XliffFileLoader;
 use Symfony\Component\Translation\Translator as BaseTranslatorComponent;

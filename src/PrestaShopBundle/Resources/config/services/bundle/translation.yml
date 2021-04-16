@@ -2,6 +2,11 @@ services:
     _defaults:
         public: true
 
+    prestashop.translation.translator_language_loader:
+        class: PrestaShop\PrestaShop\Core\Translation\TranslatorLanguageLoader
+        arguments:
+            - '@prestashop.adapter.module.repository.module_repository'
+
     prestashop.translation.builder.translation_tree:
         class: PrestaShop\PrestaShop\Core\Translation\Builder\TranslationsTreeBuilder
         arguments:

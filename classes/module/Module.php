@@ -1722,6 +1722,18 @@ abstract class ModuleCore implements ModuleInterface
     }
 
     /**
+     * Return active modules.
+     *
+     * @return array Modules
+     */
+    public static function getActiveModules()
+    {
+        $sql = 'SELECT m.* FROM `' . _DB_PREFIX_ . 'module` m WHERE m.`active` = 1';
+
+        return Db::getInstance()->executeS($sql);
+    }
+
+    /**
      * Return if the module is provided by addons.prestashop.com or not.
      *
      * @param string $module_name The module name (the folder name)

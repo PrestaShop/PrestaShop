@@ -27,7 +27,6 @@
 use Doctrine\Common\Inflector\Inflector;
 use PrestaShop\PrestaShop\Adapter\SymfonyContainer;
 use PrestaShopBundle\Translation\TranslatorInterface;
-use PrestaShopBundle\Translation\TranslatorLanguageLoader;
 
 /**
  * DataLang classes are used by Language
@@ -60,15 +59,18 @@ class DataLangCore
     public function __construct($locale, ?TranslatorInterface $translator = null)
     {
         $this->locale = $locale;
+        $sfContainer = SymfonyContainer::getInstance();
 
         $this->translator = $translator instanceof TranslatorInterface
             ? $translator
-            : SymfonyContainer::getInstance()->get('translator');
+            : $sfContainer->get('translator');
 
         $isAdminContext = defined('_PS_ADMIN_DIR_');
 
         if (!$this->translator->isLanguageLoaded($this->locale)) {
-            (new TranslatorLanguageLoader($isAdminContext))->loadLanguage($this->translator, $this->locale);
+            $sfContainer->get('prestashop.translation.translator_language_loader')
+                ->setIsAdminContext($isAdminContext)
+                ->loadLanguage($this->translator, $this->locale);
             $this->translator->getCatalogue($this->locale);
         }
     }

@@ -43,3 +43,11 @@ services:
             - method: queue
               arguments:
                 - ['@prestashop.core.filter.front_end_object.search_result_product']
+
+    prestashop.adapter.module.repository.module_repository:
+      class: 'PrestaShop\PrestaShop\Adapter\Module\Repository\ModuleRepository'
+
+    prestashop.translation.translator_language_loader:
+      class: PrestaShop\PrestaShop\Core\Translation\TranslatorLanguageLoader
+      arguments:
+        - '@prestashop.adapter.module.repository.module_repository'

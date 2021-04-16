@@ -23,12 +23,16 @@
  * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
+
+use PrestaShop\PrestaShop\Adapter\ContainerFinder;
+use PrestaShop\PrestaShop\Adapter\Module\Repository\ModuleRepository;
 use PrestaShop\PrestaShop\Adapter\SymfonyContainer;
+use PrestaShop\PrestaShop\Core\Exception\ContainerNotFoundException;
 use PrestaShop\PrestaShop\Core\Localization\CLDR\ComputingPrecision;
 use PrestaShop\PrestaShop\Core\Localization\Locale;
+use PrestaShop\PrestaShop\Core\Translation\TranslatorLanguageLoader;
 use PrestaShopBundle\Install\Language as InstallLanguage;
 use PrestaShopBundle\Translation\TranslatorComponent as Translator;
-use PrestaShopBundle\Translation\TranslatorLanguageLoader;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\Finder\Finder;
@@ -438,7 +442,21 @@ class ContextCore
         // because it means that we're looking for the installer translations, so we're not yet connected to the DB
         $withDB = !$this->language instanceof InstallLanguage;
         $theme = $this->shop !== null ? $this->shop->theme : null;
-        (new TranslatorLanguageLoader($adminContext))->loadLanguage($translator, $locale, $withDB, $theme);
+        $sfContainer = SymfonyContainer::getInstance();
+
+        if (null === $sfContainer) { // Symfony container doesn't exist, use the container finder
+            try {
+                $containerFinder = new ContainerFinder($this);
+                $containerFinder->getContainer()->get('prestashop.translation.translator_language_loader')
+                    ->setIsAdminContext($adminContext)
+                    ->loadLanguage($translator, $locale, $withDB, $theme);
+            } catch (ContainerNotFoundException $exception) {
+                // If a container is still not found, instantiate manually the translator loader
+                (new TranslatorLanguageLoader(new ModuleRepository()))
+                    ->setIsAdminContext($adminContext)
+                    ->loadLanguage($translator, $locale, $withDB, $theme);
+            }
+        }
 
         return $translator;
     }
