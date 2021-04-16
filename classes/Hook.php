@@ -1130,7 +1130,7 @@ class HookCore extends ObjectModel
             }
             if (Validate::isLoadedObject($context->currency)) {
                 $currencies = [
-                    (int) $context->currency->id
+                    (int) $context->currency->id,
                 ];
 
                 if ($context->currency->id == $context->cart->id_currency) {
@@ -1146,7 +1146,7 @@ class HookCore extends ObjectModel
                             SELECT `id_currency`
                             FROM `' . _DB_PREFIX_ . 'module_currency` mcr
                             WHERE mcr.`id_module` = m.`id_module`
-                            AND `id_currency` IN ('. implode(', ', $currencies) .')
+                            AND `id_currency` IN (' . implode(', ', $currencies) . ')
                             AND `id_shop` = ' . (int) $shop->id . '
                             LIMIT 1
                         ) IN (' . (int) $context->currency->id . ', -1, -2))'
