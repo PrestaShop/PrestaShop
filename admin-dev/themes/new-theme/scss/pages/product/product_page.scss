@@ -918,6 +918,15 @@
   }
 }
 
+.product-page,
+.combination-page {
+  .product-suppliers-block {
+    .default-supplier {
+      font-weight: $font-weight-semibold;
+    }
+  }
+}
+
 .page-sidebar-closed:not(.mobile) {
   .product-page {
     .product-footer {

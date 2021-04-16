@@ -1,4 +1,4 @@
-{#**
+/**
  * Copyright since 2007 PrestaShop SA and Contributors
  * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
  *
@@ -21,21 +21,21 @@
  * @author    PrestaShop SA and Contributors <contact@prestashop.com>
  * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
- *#}
+ */
 
-{% form_theme suppliersForm '@PrestaShop/Admin/Sell/Catalog/Product/Form/suppliers_form_theme.html.twig' %}
+import ProductSuppliersManager from '@pages/product/edit/product-suppliers-manager';
+import ProductMap from '@pages/product/product-map';
 
-{% block form_product_suppliers %}
-  <div class="product-suppliers-block">
-    <div class="row">
-      <div class="col">
-        {{ form_row(suppliersForm.supplier_ids) }}
-      </div>
-      <div class="col">
-        {{ form_row(suppliersForm.default_supplier_id) }}
-      </div>
-    </div>
+const {$} = window;
 
-    {{ form_row(suppliersForm.product_suppliers) }}
-  </div>
-{% endblock %}
+$(() => {
+  window.prestashop.component.initComponents([
+    'TranslatableField',
+    'TinyMCEEditor',
+    'TranslatableInput',
+    'EventEmitter',
+    'TextWithLengthCounter',
+  ]);
+
+  new ProductSuppliersManager(ProductMap.suppliers.combinationSuppliers, false);
+});

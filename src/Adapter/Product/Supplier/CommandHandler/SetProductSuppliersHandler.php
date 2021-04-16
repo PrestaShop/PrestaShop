@@ -26,7 +26,7 @@
 
 declare(strict_types=1);
 
-namespace PrestaShop\PrestaShop\Adapter\Product\CommandHandler;
+namespace PrestaShop\PrestaShop\Adapter\Product\Supplier\CommandHandler;
 
 use PrestaShop\PrestaShop\Adapter\Product\AbstractProductSupplierHandler;
 use PrestaShop\PrestaShop\Adapter\Product\Repository\ProductSupplierRepository;
@@ -70,7 +70,6 @@ final class SetProductSuppliersHandler extends AbstractProductSupplierHandler im
 
         return $this->productSupplierUpdater->setProductSuppliers(
             $productId,
-            $command->getDefaultSupplierId(),
             $productSuppliers
         );
     }

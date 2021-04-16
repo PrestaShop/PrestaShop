@@ -30,7 +30,11 @@ namespace PrestaShop\PrestaShop\Core\Form\IdentifiableObject\DataProvider;
 
 use PrestaShop\PrestaShop\Core\CommandBus\CommandBusInterface;
 use PrestaShop\PrestaShop\Core\Domain\Product\Combination\Query\GetCombinationForEditing;
+use PrestaShop\PrestaShop\Core\Domain\Product\Combination\Query\GetCombinationSuppliers;
 use PrestaShop\PrestaShop\Core\Domain\Product\Combination\QueryResult\CombinationForEditing;
+use PrestaShop\PrestaShop\Core\Domain\Product\Supplier\Query\GetProductSupplierOptions;
+use PrestaShop\PrestaShop\Core\Domain\Product\Supplier\QueryResult\ProductSupplierInfo;
+use PrestaShop\PrestaShop\Core\Domain\Product\Supplier\QueryResult\ProductSupplierOptions;
 use PrestaShop\PrestaShop\Core\Util\DateTime\DateTime;
 
 /**
@@ -67,6 +71,7 @@ class CombinationFormDataProvider implements FormDataProviderInterface
             'stock' => $this->extractStockData($combinationForEditing),
             'price_impact' => $this->extractPriceImpactData($combinationForEditing),
             'details' => $this->extractDetailsData($combinationForEditing),
+            'suppliers' => $this->extractSuppliersData($combinationForEditing),
         ];
     }
 
@@ -125,6 +130,47 @@ class CombinationFormDataProvider implements FormDataProviderInterface
             'upc' => $details->getUpc(),
             'mpn' => $details->getMpn(),
         ];
+    }
+
+    /**
+     * @param CombinationForEditing $combinationForEditing
+     *
+     * @return array<string, int|array<int, int|array<string, string|int>>>
+     */
+    private function extractSuppliersData(CombinationForEditing $combinationForEditing): array
+    {
+        /** @var ProductSupplierOptions $productSupplierOptions */
+        $productSupplierOptions = $this->queryBus->handle(new GetProductSupplierOptions($combinationForEditing->getProductId()));
+
+        /** @var ProductSupplierInfo[] $combinationSupplierInfos */
+        $combinationSupplierInfos = $this->queryBus->handle(new GetCombinationSuppliers($combinationForEditing->getCombinationId()));
+
+        if (empty($combinationSupplierInfos)) {
+            return [];
+        }
+
+        $defaultSupplierId = $productSupplierOptions->getDefaultSupplierId();
+        $suppliersData = [
+            'default_supplier_id' => $defaultSupplierId,
+        ];
+
+        foreach ($combinationSupplierInfos as $supplierOption) {
+            $supplierForEditing = $supplierOption->getProductSupplierForEditing();
+            $supplierId = $supplierOption->getSupplierId();
+
+            $suppliersData['supplier_ids'][] = $supplierId;
+            $suppliersData['product_suppliers'][$supplierId] = [
+                'supplier_id' => $supplierId,
+                'supplier_name' => $supplierOption->getSupplierName(),
+                'product_supplier_id' => $supplierForEditing->getProductSupplierId(),
+                'price_tax_excluded' => $supplierForEditing->getPriceTaxExcluded(),
+                'reference' => $supplierForEditing->getReference(),
+                'currency_id' => $supplierForEditing->getCurrencyId(),
+                'combination_id' => $supplierForEditing->getCombinationId(),
+            ];
+        }
+
+        return $suppliersData;
     }
 
     /**

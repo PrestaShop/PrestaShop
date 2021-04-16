@@ -37,7 +37,7 @@
       {# Hidden input with label is displayed, at least its value, with a class allowing to target them #}
       <td class="{{ child.vars.name }}">
         {{ form_widget(form.supplier_name) }}
-        {% if child.vars.value %}{{ child.vars.value }}{% endif %}
+        <span class="preview">{% if child.vars.value %}{{ child.vars.value }}{% endif %}</span>
       </td>
     {% else %}
       {# Other hidden types are simply added and will be invisible #}
@@ -48,7 +48,7 @@
 {%- endblock product_supplier_row -%}
 
 {# Override suppliers collection template to remove the label and init the table #}
-{%- block _product_suppliers_product_suppliers_row -%}
+{%- block collection_row -%}
   {# We put prototype name in a data attribute, so the JS code can get it dynamically #}
   {%- set attr = attr|merge({'data-prototype': form_row(prototype), 'data-prototype-name': prototype.vars.name }) -%}
   {%- set attr = attr|merge({'class': (attr.class|default('') ~ ' form-group row')|trim }) -%}

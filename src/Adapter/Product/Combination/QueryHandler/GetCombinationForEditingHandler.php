@@ -141,9 +141,12 @@ final class GetCombinationForEditingHandler implements GetCombinationForEditingH
     public function handle(GetCombinationForEditing $query): CombinationForEditing
     {
         $combination = $this->combinationRepository->get($query->getCombinationId());
-        $product = $this->productRepository->get(new ProductId((int) $combination->id_product));
+        $productId = new ProductId((int) $combination->id_product);
+        $product = $this->productRepository->get($productId);
 
         return new CombinationForEditing(
+            $query->getCombinationId()->getValue(),
+            $productId->getValue(),
             $this->getCombinationName($query->getCombinationId()),
             $this->getDetails($combination),
             $this->getPrices($combination, $product),

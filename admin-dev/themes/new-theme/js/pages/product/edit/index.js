@@ -102,7 +102,7 @@ $(() => {
   new CustomizationsManager();
 
   if (productType !== ProductMap.productType.COMBINATIONS) {
-    new ProductSuppliersManager();
+    new ProductSuppliersManager(ProductMap.suppliers.productSuppliers, true);
   }
   if (productType === ProductMap.productType.VIRTUAL) {
     new VirtualProductManager();

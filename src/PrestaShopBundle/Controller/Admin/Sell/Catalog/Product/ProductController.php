@@ -128,10 +128,17 @@ class ProductController extends FrameworkBundleAdminController
 
             $result = $this->getProductFormHandler()->handleFor($productId, $productForm);
 
-            if ($result->isSubmitted() && $result->isValid()) {
-                $this->addFlash('success', $this->trans('Successful update.', 'Admin.Notifications.Success'));
+            if ($result->isSubmitted()) {
+                if ($result->isValid()) {
+                    $this->addFlash('success', $this->trans('Successful update.', 'Admin.Notifications.Success'));
 
-                return $this->redirectToRoute('admin_products_v2_edit', ['productId' => $productId]);
+                    return $this->redirectToRoute('admin_products_v2_edit', ['productId' => $productId]);
+                } else {
+                    // Display root level errors with flash messages
+                    foreach ($productForm->getErrors() as $error) {
+                        $this->addFlash('error', $error->getMessage());
+                    }
+                }
             }
         } catch (Exception $e) {
             $this->addFlash('error', $this->getErrorMessageForException($e, $this->getErrorMessages($e)));

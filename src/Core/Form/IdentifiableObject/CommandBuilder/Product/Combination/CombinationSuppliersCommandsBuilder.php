@@ -26,19 +26,19 @@
 
 declare(strict_types=1);
 
-namespace PrestaShop\PrestaShop\Core\Form\IdentifiableObject\CommandBuilder\Product;
+namespace PrestaShop\PrestaShop\Core\Form\IdentifiableObject\CommandBuilder\Product\Combination;
 
-use PrestaShop\PrestaShop\Core\Domain\Product\Supplier\Command\RemoveAllAssociatedProductSuppliersCommand;
-use PrestaShop\PrestaShop\Core\Domain\Product\Supplier\Command\SetProductDefaultSupplierCommand;
-use PrestaShop\PrestaShop\Core\Domain\Product\Supplier\Command\SetProductSuppliersCommand;
-use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductId;
+use PrestaShop\PrestaShop\Core\Domain\Product\Combination\Command\RemoveAllAssociatedCombinationSuppliersCommand;
+use PrestaShop\PrestaShop\Core\Domain\Product\Combination\Command\SetCombinationDefaultSupplierCommand;
+use PrestaShop\PrestaShop\Core\Domain\Product\Combination\Command\SetCombinationSuppliersCommand;
+use PrestaShop\PrestaShop\Core\Domain\Product\Combination\ValueObject\CombinationId;
 
-final class ProductSuppliersCommandsBuilder implements ProductCommandsBuilderInterface
+class CombinationSuppliersCommandsBuilder implements CombinationCommandsBuilderInterface
 {
     /**
      * {@inheritDoc}
      */
-    public function buildCommands(ProductId $productId, array $formData): array
+    public function buildCommands(CombinationId $combinationId, array $formData): array
     {
         if (!isset($formData['suppliers']['product_suppliers']) && !isset($formData['suppliers']['default_supplier_id'])) {
             return [];
@@ -46,7 +46,7 @@ final class ProductSuppliersCommandsBuilder implements ProductCommandsBuilderInt
 
         $productSuppliersData = $formData['suppliers']['product_suppliers'];
         if (empty($productSuppliersData)) {
-            return [new RemoveAllAssociatedProductSuppliersCommand($productId->getValue())];
+            return [new RemoveAllAssociatedCombinationSuppliersCommand($combinationId->getValue())];
         }
 
         $productSuppliers = [];
@@ -60,15 +60,15 @@ final class ProductSuppliersCommandsBuilder implements ProductCommandsBuilderInt
         }
 
         $commands = [
-            new SetProductSuppliersCommand(
-                $productId->getValue(),
+            new SetCombinationSuppliersCommand(
+                $combinationId->getValue(),
                 $productSuppliers
             ),
         ];
 
         if (!empty($formData['suppliers']['default_supplier_id'])) {
-            $commands[] = new SetProductDefaultSupplierCommand(
-                $productId->getValue(),
+            $commands[] = new SetCombinationDefaultSupplierCommand(
+                $combinationId->getValue(),
                 (int) $formData['suppliers']['default_supplier_id']
             );
         }

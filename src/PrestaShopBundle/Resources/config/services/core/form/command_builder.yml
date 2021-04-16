@@ -71,3 +71,7 @@ services:
     prestashop.core.form.command_builder.product.combination.details_command_builder:
         class: PrestaShop\PrestaShop\Core\Form\IdentifiableObject\CommandBuilder\Product\Combination\CombinationDetailsCommandsBuilder
         tags: ['core.combination_command_builder']
+
+    prestashop.core.form.command_builder.product.combination.suppliers_command_builder:
+        class: PrestaShop\PrestaShop\Core\Form\IdentifiableObject\CommandBuilder\Product\Combination\CombinationSuppliersCommandsBuilder
+        tags: ['core.combination_command_builder']

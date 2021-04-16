@@ -23,16 +23,17 @@
  * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
+
 declare(strict_types=1);
 
-namespace Tests\Unit\Core\Form\IdentifiableObject\CommandBuilder\Product;
+namespace Tests\Unit\Core\Form\IdentifiableObject\CommandBuilder\Product\Combination;
 
-use PrestaShop\PrestaShop\Core\Domain\Product\Supplier\Command\RemoveAllAssociatedProductSuppliersCommand;
-use PrestaShop\PrestaShop\Core\Domain\Product\Supplier\Command\SetProductDefaultSupplierCommand;
-use PrestaShop\PrestaShop\Core\Domain\Product\Supplier\Command\SetProductSuppliersCommand;
-use PrestaShop\PrestaShop\Core\Form\IdentifiableObject\CommandBuilder\Product\ProductSuppliersCommandsBuilder;
+use PrestaShop\PrestaShop\Core\Domain\Product\Combination\Command\RemoveAllAssociatedCombinationSuppliersCommand;
+use PrestaShop\PrestaShop\Core\Domain\Product\Combination\Command\SetCombinationDefaultSupplierCommand;
+use PrestaShop\PrestaShop\Core\Domain\Product\Combination\Command\SetCombinationSuppliersCommand;
+use PrestaShop\PrestaShop\Core\Form\IdentifiableObject\CommandBuilder\Product\Combination\CombinationSuppliersCommandsBuilder;
 
-class ProductSuppliersCommandBuilderTest extends AbstractProductCommandBuilderTest
+class CombinationSuppliersCommandsBuilderTest extends AbstractCombinationCommandBuilderTest
 {
     /**
      * @dataProvider getExpectedCommands
@@ -42,8 +43,8 @@ class ProductSuppliersCommandBuilderTest extends AbstractProductCommandBuilderTe
      */
     public function testBuildCommand(array $formData, array $expectedCommands)
     {
-        $builder = new ProductSuppliersCommandsBuilder();
-        $builtCommands = $builder->buildCommands($this->getProductId(), $formData);
+        $builder = new CombinationSuppliersCommandsBuilder();
+        $builtCommands = $builder->buildCommands($this->getCombinationId(), $formData);
         $this->assertEquals($expectedCommands, $builtCommands);
     }
 
@@ -69,18 +70,17 @@ class ProductSuppliersCommandBuilderTest extends AbstractProductCommandBuilderTe
                     'product_suppliers' => [],
                 ],
             ],
-            [new RemoveAllAssociatedProductSuppliersCommand($this->getProductId()->getValue())],
+            [new RemoveAllAssociatedCombinationSuppliersCommand($this->getCombinationId()->getValue())],
         ];
 
-        $suppliersCommand = new SetProductSuppliersCommand(
-            $this->getProductId()->getValue(),
+        $suppliersCommand = new SetCombinationSuppliersCommand(
+            $this->getCombinationId()->getValue(),
             [
                 [
                     'supplier_id' => 5,
                     'currency_id' => 2,
                     'reference' => '',
                     'price_tax_excluded' => '0.5',
-                    'combination_id' => 0,
                     'product_supplier_id' => 0,
                 ],
                 [
@@ -88,13 +88,12 @@ class ProductSuppliersCommandBuilderTest extends AbstractProductCommandBuilderTe
                     'currency_id' => 5,
                     'reference' => '',
                     'price_tax_excluded' => '50.65',
-                    'combination_id' => 0,
                     'product_supplier_id' => 1,
                 ],
             ]
         );
-        $defaultSupplierCommand = new SetProductDefaultSupplierCommand(
-            $this->getProductId()->getValue(),
+        $defaultSupplierCommand = new SetCombinationDefaultSupplierCommand(
+            $this->getCombinationId()->getValue(),
             5
         );
 
@@ -108,7 +107,6 @@ class ProductSuppliersCommandBuilderTest extends AbstractProductCommandBuilderTe
                             'currency_id' => 2,
                             'reference' => '',
                             'price_tax_excluded' => '0.5',
-                            'combination_id' => 0,
                             'product_supplier_id' => null,
                         ],
                         [
@@ -116,7 +114,6 @@ class ProductSuppliersCommandBuilderTest extends AbstractProductCommandBuilderTe
                             'currency_id' => 5,
                             'reference' => null,
                             'price_tax_excluded' => '50.65',
-                            'combination_id' => null,
                             'product_supplier_id' => 1,
                         ],
                     ],
@@ -125,15 +122,14 @@ class ProductSuppliersCommandBuilderTest extends AbstractProductCommandBuilderTe
             [$suppliersCommand, $defaultSupplierCommand],
         ];
 
-        $suppliersCommand = new SetProductSuppliersCommand(
-            $this->getProductId()->getValue(),
+        $suppliersCommand = new SetCombinationSuppliersCommand(
+            $this->getCombinationId()->getValue(),
             [
                 [
                     'supplier_id' => 5,
                     'currency_id' => 2,
                     'reference' => '',
                     'price_tax_excluded' => '0.5',
-                    'combination_id' => 0,
                     'product_supplier_id' => 0,
                 ],
             ]
@@ -149,7 +145,6 @@ class ProductSuppliersCommandBuilderTest extends AbstractProductCommandBuilderTe
                             'currency_id' => 2,
                             'reference' => '',
                             'price_tax_excluded' => '0.5',
-                            'combination_id' => 0,
                             'product_supplier_id' => null,
                         ],
                     ],
@@ -157,20 +152,6 @@ class ProductSuppliersCommandBuilderTest extends AbstractProductCommandBuilderTe
             ],
             [$suppliersCommand],
         ];
-
-        $suppliersCommand = new SetProductSuppliersCommand(
-            $this->getProductId()->getValue(),
-            [
-                [
-                    'supplier_id' => 5,
-                    'currency_id' => 2,
-                    'reference' => '',
-                    'price_tax_excluded' => '0.5',
-                    'combination_id' => 0,
-                    'product_supplier_id' => 0,
-                ],
-            ]
-        );
 
         yield [
             [
@@ -181,7 +162,6 @@ class ProductSuppliersCommandBuilderTest extends AbstractProductCommandBuilderTe
                             'currency_id' => 2,
                             'reference' => '',
                             'price_tax_excluded' => '0.5',
-                            'combination_id' => 0,
                             'product_supplier_id' => null,
                         ],
                     ],

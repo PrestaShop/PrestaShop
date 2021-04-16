@@ -1,4 +1,5 @@
-{#**
+<?php
+/**
  * Copyright since 2007 PrestaShop SA and Contributors
  * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
  *
@@ -21,21 +22,19 @@
  * @author    PrestaShop SA and Contributors <contact@prestashop.com>
  * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
- *#}
+ */
 
-{% form_theme suppliersForm '@PrestaShop/Admin/Sell/Catalog/Product/Form/suppliers_form_theme.html.twig' %}
+namespace PrestaShop\PrestaShop\Core\Domain\Product\Combination\CommandHandler;
 
-{% block form_product_suppliers %}
-  <div class="product-suppliers-block">
-    <div class="row">
-      <div class="col">
-        {{ form_row(suppliersForm.supplier_ids) }}
-      </div>
-      <div class="col">
-        {{ form_row(suppliersForm.default_supplier_id) }}
-      </div>
-    </div>
+use PrestaShop\PrestaShop\Core\Domain\Product\Combination\Command\SetCombinationDefaultSupplierCommand;
 
-    {{ form_row(suppliersForm.product_suppliers) }}
-  </div>
-{% endblock %}
+/**
+ * Defines contract to handle @see RemoveAllAssociatedCombinationSuppliersCommand
+ */
+interface SetCombinationDefaultSupplierHandlerInterface
+{
+    /**
+     * @param SetCombinationDefaultSupplierCommand $command
+     */
+    public function handle(SetCombinationDefaultSupplierCommand $command): void;
+}

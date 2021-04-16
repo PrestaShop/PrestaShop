@@ -28,6 +28,7 @@ declare(strict_types=1);
 
 namespace PrestaShopBundle\Form\Admin\Sell\Product\Combination;
 
+use PrestaShopBundle\Form\Admin\Sell\Product\SuppliersType;
 use PrestaShopBundle\Form\Admin\Type\TranslatorAwareType;
 use Symfony\Component\Form\Extension\Core\Type\HiddenType;
 use Symfony\Component\Form\FormBuilderInterface;
@@ -59,6 +60,12 @@ class CombinationFormType extends TranslatorAwareType
             ])
             ->add('details', CombinationDetailsType::class, [
                 'label' => $this->trans('Specific references', 'Admin.Catalog.Feature'),
+                'label_attr' => [
+                    'title' => 'h2',
+                ],
+            ])
+            ->add('suppliers', SuppliersType::class, [
+                'label' => $this->trans('Suppliers', 'Admin.Global'),
                 'label_attr' => [
                     'title' => 'h2',
                 ],

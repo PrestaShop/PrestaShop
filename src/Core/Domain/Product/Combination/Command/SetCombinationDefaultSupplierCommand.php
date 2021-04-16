@@ -23,38 +23,49 @@
  * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
+
 declare(strict_types=1);
 
-namespace PrestaShop\PrestaShop\Adapter\Product\Combination\CommandHandler;
+namespace PrestaShop\PrestaShop\Core\Domain\Product\Combination\Command;
 
-use PrestaShop\PrestaShop\Adapter\Product\Update\ProductSupplierUpdater;
-use PrestaShop\PrestaShop\Core\Domain\Product\Combination\Command\RemoveAllAssociatedCombinationSuppliersCommand;
-use PrestaShop\PrestaShop\Core\Domain\Product\Combination\CommandHandler\RemoveAllAssociatedCombinationSuppliersHandlerInterface;
+use PrestaShop\PrestaShop\Core\Domain\Product\Combination\ValueObject\CombinationId;
+use PrestaShop\PrestaShop\Core\Domain\Supplier\ValueObject\SupplierId;
 
-/**
- * Removes product suppliers associated to a certain combination using legacy object model
- */
-final class RemoveAllAssociatedCombinationSuppliersHandler implements RemoveAllAssociatedCombinationSuppliersHandlerInterface
+class SetCombinationDefaultSupplierCommand
 {
     /**
-     * @var ProductSupplierUpdater
+     * @var CombinationId
      */
-    private $productSupplierUpdater;
+    private $combinationId;
 
     /**
-     * @param ProductSupplierUpdater $productSupplierUpdater
+     * @var SupplierId
      */
-    public function __construct(
-        ProductSupplierUpdater $productSupplierUpdater
-    ) {
-        $this->productSupplierUpdater = $productSupplierUpdater;
+    private $defaultSupplierId;
+
+    /**
+     * @param int $combinationId
+     * @param int $defaultSupplierId
+     */
+    public function __construct(int $combinationId, int $defaultSupplierId)
+    {
+        $this->combinationId = new CombinationId($combinationId);
+        $this->defaultSupplierId = new SupplierId($defaultSupplierId);
     }
 
     /**
-     * {@inheritdoc}
+     * @return CombinationId
      */
-    public function handle(RemoveAllAssociatedCombinationSuppliersCommand $command): void
+    public function getCombinationId(): CombinationId
     {
-        $this->productSupplierUpdater->removeAllForCombination($command->getCombinationId());
+        return $this->combinationId;
+    }
+
+    /**
+     * @return SupplierId
+     */
+    public function getDefaultSupplierId(): SupplierId
+    {
+        return $this->defaultSupplierId;
     }
 }

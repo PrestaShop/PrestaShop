@@ -35,10 +35,15 @@ use PHPUnit\Framework\TestCase;
 use PrestaShop\Decimal\DecimalNumber;
 use PrestaShop\PrestaShop\Core\CommandBus\CommandBusInterface;
 use PrestaShop\PrestaShop\Core\Domain\Product\Combination\Query\GetCombinationForEditing;
+use PrestaShop\PrestaShop\Core\Domain\Product\Combination\Query\GetCombinationSuppliers;
 use PrestaShop\PrestaShop\Core\Domain\Product\Combination\QueryResult\CombinationDetails;
 use PrestaShop\PrestaShop\Core\Domain\Product\Combination\QueryResult\CombinationForEditing;
 use PrestaShop\PrestaShop\Core\Domain\Product\Combination\QueryResult\CombinationPrices;
 use PrestaShop\PrestaShop\Core\Domain\Product\Combination\QueryResult\CombinationStock;
+use PrestaShop\PrestaShop\Core\Domain\Product\Supplier\Query\GetProductSupplierOptions;
+use PrestaShop\PrestaShop\Core\Domain\Product\Supplier\QueryResult\ProductSupplierForEditing;
+use PrestaShop\PrestaShop\Core\Domain\Product\Supplier\QueryResult\ProductSupplierInfo;
+use PrestaShop\PrestaShop\Core\Domain\Product\Supplier\QueryResult\ProductSupplierOptions;
 use PrestaShop\PrestaShop\Core\Form\IdentifiableObject\DataProvider\CombinationFormDataProvider;
 use RuntimeException;
 
@@ -46,6 +51,7 @@ class CombinationFormDataProviderTest extends TestCase
 {
     private const DEFAULT_NAME = 'Combination products';
     private const COMBINATION_ID = 42;
+    private const PRODUCT_ID = 69;
     private const DEFAULT_QUANTITY = 51;
 
     public function testGetDefaultData(): void
@@ -67,7 +73,7 @@ class CombinationFormDataProviderTest extends TestCase
         $queryBusMock = $this->createQueryBusMock($combinationData);
         $provider = new CombinationFormDataProvider($queryBusMock);
 
-        $formData = $provider->getData(static::COMBINATION_ID);
+        $formData = $provider->getData(self::COMBINATION_ID);
         // assertSame is very important here We can't assume null and 0 are the same thing
         $this->assertSame($expectedData, $formData);
     }
@@ -78,6 +84,7 @@ class CombinationFormDataProviderTest extends TestCase
             $this->getDatasetsForStock(),
             $this->getDatasetsForPriceImpact(),
             $this->getDatasetsForDetails(),
+            $this->getDatasetsForProductSuppliers(),
         ];
 
         foreach ($datasetsByType as $datasetByType) {
@@ -203,6 +210,74 @@ class CombinationFormDataProviderTest extends TestCase
     }
 
     /**
+     * @return array
+     */
+    private function getDatasetsForProductSuppliers(): array
+    {
+        $datasets = [];
+
+        $expectedOutputData = $this->getDefaultOutputData();
+        $expectedOutputData['suppliers']['default_supplier_id'] = 1;
+        $expectedOutputData['suppliers']['supplier_ids'] = [
+            0 => 1,
+            1 => 2,
+        ];
+        $expectedOutputData['suppliers']['product_suppliers'][1] = [
+            'supplier_id' => 1,
+            'supplier_name' => 'test supplier 1',
+            'product_supplier_id' => 1,
+            'price_tax_excluded' => '0',
+            'reference' => 'test supp ref 1',
+            'currency_id' => 1,
+            'combination_id' => self::COMBINATION_ID,
+        ];
+        $expectedOutputData['suppliers']['product_suppliers'][2] = [
+            'supplier_id' => 2,
+            'supplier_name' => 'test supplier 2',
+            'product_supplier_id' => 2,
+            'price_tax_excluded' => '0',
+            'reference' => 'test supp ref 2',
+            'currency_id' => 3,
+            'combination_id' => self::COMBINATION_ID,
+        ];
+
+        $combinationData = [
+            'suppliers' => [
+                'default_supplier_id' => 1,
+                'product_suppliers' => [
+                    [
+                        'product_id' => self::PRODUCT_ID,
+                        'supplier_id' => 1,
+                        'supplier_name' => 'test supplier 1',
+                        'product_supplier_id' => 1,
+                        'price' => '0',
+                        'reference' => 'test supp ref 1',
+                        'currency_id' => 1,
+                        'combination_id' => self::COMBINATION_ID,
+                    ],
+                    [
+                        'product_id' => self::PRODUCT_ID,
+                        'supplier_id' => 2,
+                        'supplier_name' => 'test supplier 2',
+                        'product_supplier_id' => 2,
+                        'price' => '0',
+                        'reference' => 'test supp ref 2',
+                        'currency_id' => 3,
+                        'combination_id' => self::COMBINATION_ID,
+                    ],
+                ],
+            ],
+        ];
+
+        $datasets[] = [
+            $combinationData,
+            $expectedOutputData,
+        ];
+
+        return $datasets;
+    }
+
+    /**
      * @param array $combinationData
      *
      * @return MockObject|CommandBusInterface
@@ -214,7 +289,9 @@ class CombinationFormDataProviderTest extends TestCase
         $queryBusMock
             ->method('handle')
             ->with($this->logicalOr(
-                $this->isInstanceOf(GetCombinationForEditing::class)
+                $this->isInstanceOf(GetCombinationForEditing::class),
+                $this->isInstanceOf(GetProductSupplierOptions::class),
+                $this->isInstanceOf(GetCombinationSuppliers::class)
             ))
             ->willReturnCallback(function ($query) use ($combinationData) {
                 return $this->createResultBasedOnQuery($query, $combinationData);
@@ -228,17 +305,18 @@ class CombinationFormDataProviderTest extends TestCase
      * @param GetCombinationForEditing $query
      * @param array $combinationData
      *
-     * @return CombinationForEditing
+     * @return CombinationForEditing|ProductSupplierOptions|ProductSupplierInfo[]
      */
     private function createResultBasedOnQuery($query, array $combinationData)
     {
-        $queryResultMap = [
-            GetCombinationForEditing::class => $this->createCombinationForEditing($combinationData),
-        ];
-
         $queryClass = get_class($query);
-        if (array_key_exists($queryClass, $queryResultMap)) {
-            return $queryResultMap[$queryClass];
+        switch ($queryClass) {
+            case GetCombinationForEditing::class:
+                return $this->createCombinationForEditing($combinationData);
+            case GetProductSupplierOptions::class:
+                return $this->createProductSupplierOptions($combinationData);
+            case GetCombinationSuppliers::class:
+                return $this->createCombinationSupplierInfos($combinationData);
         }
 
         throw new RuntimeException(sprintf('Query "%s" was not expected in query bus mock', $queryClass));
@@ -252,7 +330,9 @@ class CombinationFormDataProviderTest extends TestCase
     private function createCombinationForEditing(array $combination): CombinationForEditing
     {
         return new CombinationForEditing(
-            $combination['name'] ?? static::DEFAULT_NAME,
+            self::COMBINATION_ID,
+            self::PRODUCT_ID,
+            $combination['name'] ?? self::DEFAULT_NAME,
             $this->createDetails($combination),
             $this->createPrices($combination),
             $this->createStock($combination),
@@ -284,7 +364,7 @@ class CombinationFormDataProviderTest extends TestCase
     private function createStock(array $combination): CombinationStock
     {
         return new CombinationStock(
-            $combination['quantity'] ?? static::DEFAULT_QUANTITY,
+            $combination['quantity'] ?? self::DEFAULT_QUANTITY,
             $combination['minimal_quantity'] ?? 0,
             $combination['low_stock_threshold'] ?? 0,
             $combination['low_stock_alert'] ?? false,
@@ -311,15 +391,59 @@ class CombinationFormDataProviderTest extends TestCase
     }
 
     /**
+     * @param array $combinationData
+     *
+     * @return ProductSupplierOptions
+     */
+    private function createProductSupplierOptions(array $combinationData): ProductSupplierOptions
+    {
+        return new ProductSupplierOptions(
+            $combinationData['suppliers']['default_supplier_id'] ?? 0,
+            []
+        );
+    }
+
+    /**
+     * @param array $combinationData
+     *
+     * @return ProductSupplierInfo[]
+     */
+    private function createCombinationSupplierInfos(array $combinationData): array
+    {
+        if (empty($combinationData['suppliers']['product_suppliers'])) {
+            return [];
+        }
+
+        $suppliersInfo = [];
+        foreach ($combinationData['suppliers']['product_suppliers'] as $supplierInfo) {
+            $suppliersInfo[] = new ProductSupplierInfo(
+                $supplierInfo['supplier_name'],
+                $supplierInfo['supplier_id'],
+                new ProductSupplierForEditing(
+                    $supplierInfo['product_supplier_id'],
+                    $supplierInfo['product_id'],
+                    $supplierInfo['supplier_id'],
+                    $supplierInfo['reference'],
+                    $supplierInfo['price'],
+                    $supplierInfo['currency_id'],
+                    $supplierInfo['combination_id']
+                )
+            );
+        }
+
+        return $suppliersInfo;
+    }
+
+    /**
      * @return array
      */
     private function getDefaultOutputData(): array
     {
         return [
-            'id' => static::COMBINATION_ID,
-            'name' => static::DEFAULT_NAME,
+            'id' => self::COMBINATION_ID,
+            'name' => self::DEFAULT_NAME,
             'stock' => [
-                'quantity' => static::DEFAULT_QUANTITY,
+                'quantity' => self::DEFAULT_QUANTITY,
                 'minimal_quantity' => 0,
                 'stock_location' => 'location',
                 'low_stock_threshold' => null,
@@ -340,6 +464,8 @@ class CombinationFormDataProviderTest extends TestCase
                 'ean_13' => 'ean13',
                 'upc' => 'upc',
                 'mpn' => 'mpn',
+            ],
+            'suppliers' => [
             ],
         ];
     }
