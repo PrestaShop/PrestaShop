@@ -340,7 +340,7 @@ class Order extends BOBasePage {
     // Click on change order status button
     await Promise.all([
       page.click(this.bulkUpdateOrdersStatusButton),
-      this.waitForVisibleSelector(page, `${this.updateOrdersStatusModal}:not([aria-hidden='true']`),
+      this.waitForVisibleSelector(page, `${this.updateOrdersStatusModal}:not([aria-hidden='true'])`),
     ]);
     // Select new orders status in modal and confirm update
     await this.selectByVisibleText(page, this.updateOrdersStatusModalSelect, status);
