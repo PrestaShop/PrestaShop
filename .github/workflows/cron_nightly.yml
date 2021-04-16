@@ -2,8 +2,9 @@ name: Nightly
 
 on:
   schedule:
-    - cron:  '30 2 * * *'
-  workflow_dispatch:
+    - cron:  '0 1 * * *'
+  # Allows maintainers to trigger nightly manually
+  # workflow_dispatch:
 
 jobs:
   nightly:
@@ -16,6 +17,7 @@ jobs:
       GC_ZONE: ${{ secrets.GC_ZONE }}
       GH_BRANCH: 'develop'
       INSTANCE_TYPE: 'develop'
+      NIGHTLY_TOKEN: ${{ secrets.NIGHTLY_TOKEN }}
 
     steps:
       -   uses: actions/checkout@v2
