@@ -441,6 +441,7 @@ class CombinationFormDataProviderTest extends TestCase
     {
         return [
             'id' => self::COMBINATION_ID,
+            'product_id' => self::PRODUCT_ID,
             'name' => self::DEFAULT_NAME,
             'stock' => [
                 'quantity' => self::DEFAULT_QUANTITY,
