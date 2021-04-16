@@ -1,0 +1,7 @@
+newsletter_admin_index:
+  path: newsletter
+  methods: [GET]
+  defaults:
+    _controller: 'PrestaShop\Module\Newsletter\Controller\Admin\ExempleController::indexAction'
+    _legacy_controller: 'AdminNewsletterIndexClass'
+    _legacy_link: AdminNewsletterIndexClass

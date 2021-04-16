@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xliff xmlns="urn:oasis:names:tc:xliff:document:1.2" version="1.2">
+  <file original="modules/newsletter/newsletter.php" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="804a924e464fd21ed92f820224c4091a">
+        <source>Some default translation from module files</source>
+        <target>Some default translation from module files</target>
+        <note>Line: 47</note>
+      </trans-unit>
+    </body>
+  </file>
+</xliff>
