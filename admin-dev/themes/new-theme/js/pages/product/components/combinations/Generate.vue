@@ -231,8 +231,6 @@
                 name: selectedItem.group_name,
               };
 
-              delete selectedItem.color;
-
               that.changeSelected(selectedItem, groupName);
             },
             onClose() {
@@ -327,9 +325,13 @@
       max-height: 50vh;
 
       .combination {
-        &:last-of-type {
-          border-bottom: 1px solid $gray-300;
-          margin-bottom: 0.1rem;
+        border-bottom: 1px solid $gray-300;
+        margin-bottom: 0.75rem;
+        border-radius: 4px;
+        overflow: hidden;
+
+        &-name {
+          background-color: $gray-250;
         }
       }
 
@@ -345,16 +347,6 @@
   }
 
   .combination {
-    &:last-of-type {
-      border-bottom-left-radius: 4px;
-      border-bottom-right-radius: 4px;
-    }
-
-    &:first-of-type {
-      border-top-left-radius: 4px;
-      border-top-right-radius: 4px;
-    }
-
     &-content {
       border-top: 1px solid $gray-300;
     }
@@ -376,7 +368,7 @@
       }
 
       &.selected {
-        border: 2px solid $primary;
+        background-color: $gray-disabled;
       }
 
       input {
