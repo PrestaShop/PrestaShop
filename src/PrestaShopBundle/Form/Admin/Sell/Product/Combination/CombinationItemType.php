@@ -54,6 +54,11 @@ class CombinationItemType extends TranslatorAwareType
                   'material_design' => true,
                 ]
             ])
+            ->add('combination_id', HiddenType::class, [
+                'attr' => [
+                    'class' => 'combination-id-input',
+                ],
+            ])
             ->add('name', HiddenType::class)
             ->add('reference', SubmittableInputType::class, [
                 'type' => TextType::class,
