@@ -156,10 +156,12 @@ class AddProduct extends BOBasePage {
    */
   async createEditBasicProduct(page, productData) {
     await this.setBasicSetting(page, productData);
-    await this.setProductStatus(page, productData.status);
+
     if (productData.type === 'Pack of products') {
       await this.addPackOfProducts(page, productData.pack);
     }
+
+    await this.setProductStatus(page, productData.status);
     return this.saveProduct(page);
   }
 
