@@ -46,7 +46,7 @@ class AbstractAddCategoryCommand
     private $localizedLinkRewrites;
 
     /**
-     * @var null|string[]
+     * @var string[]|null
      */
     private $localizedDescriptions;
 
@@ -56,27 +56,27 @@ class AbstractAddCategoryCommand
     private $isActive;
 
     /**
-     * @var null|string[]
+     * @var string[]|null
      */
     private $localizedMetaTitles;
 
     /**
-     * @var null|string[]
+     * @var string[]|null
      */
     private $localizedMetaDescriptions;
 
     /**
-     * @var null|string[]
+     * @var string[]|null
      */
     private $localizedMetaKeywords;
 
     /**
-     * @var null|int[]
+     * @var int[]|null
      */
     private $associatedGroupIds;
 
     /**
-     * @var null|int[]
+     * @var int[]|null
      */
     private $associatedShopIds;
 
@@ -148,7 +148,7 @@ class AbstractAddCategoryCommand
     }
 
     /**
-     * @return null|string[]
+     * @return string[]|null
      */
     public function getLocalizedDescriptions(): ?array
     {
@@ -194,7 +194,7 @@ class AbstractAddCategoryCommand
     }
 
     /**
-     * @return null|string[]
+     * @return string[]|null
      */
     public function getLocalizedMetaTitles(): ?array
     {
@@ -214,7 +214,7 @@ class AbstractAddCategoryCommand
     }
 
     /**
-     * @return null|string[]
+     * @return string[]|null
      */
     public function getLocalizedMetaDescriptions(): ?array
     {
@@ -234,7 +234,7 @@ class AbstractAddCategoryCommand
     }
 
     /**
-     * @return null|string[]
+     * @return string[]|null
      */
     public function getLocalizedMetaKeywords(): ?array
     {
@@ -254,7 +254,7 @@ class AbstractAddCategoryCommand
     }
 
     /**
-     * @return null|int[]
+     * @return int[]|null
      */
     public function getAssociatedGroupIds(): ?array
     {
@@ -274,7 +274,7 @@ class AbstractAddCategoryCommand
     }
 
     /**
-     * @return null|int[]
+     * @return int[]|null
      */
     public function getAssociatedShopIds(): ?array
     {
