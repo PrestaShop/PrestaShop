@@ -1726,7 +1726,7 @@ abstract class ModuleCore implements ModuleInterface
      *
      * @return array Modules
      */
-    public static function getActiveModules()
+    public static function getActiveModules(): array
     {
         $sql = 'SELECT m.* FROM `' . _DB_PREFIX_ . 'module` m WHERE m.`active` = 1';
 

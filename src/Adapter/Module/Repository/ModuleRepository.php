@@ -69,7 +69,7 @@ class ModuleRepository extends AbstractObjectModelRepository
      *
      * @return array
      */
-    public function getActiveModulesPaths()
+    public function getActiveModulesPaths(): array
     {
         if (null === $this->activeModulesPaths) {
             $this->activeModulesPaths = [];
@@ -77,8 +77,9 @@ class ModuleRepository extends AbstractObjectModelRepository
             $activeModules = array_map(function (array $module): string { return $module['name']; }, $this->getActiveModules());
 
             foreach ($modulesFiles as $moduleFile) {
-                if (in_array($moduleFile->getFilename(), $activeModules)) {
-                    $this->activeModulesPaths[] = $moduleFile->getPathname();
+                $moduleName = $moduleFile->getFilename();
+                if (in_array($moduleName, $activeModules)) {
+                    $this->activeModulesPaths[$moduleName] = $moduleFile->getPathname();
                 }
             }
         }

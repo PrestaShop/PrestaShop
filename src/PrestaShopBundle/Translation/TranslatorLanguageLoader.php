@@ -29,6 +29,7 @@ namespace PrestaShopBundle\Translation;
 
 use PrestaShop\PrestaShop\Adapter\Module\Repository\ModuleRepository;
 use PrestaShop\PrestaShop\Core\Addon\Theme\Theme;
+use PrestaShop\TranslationToolsBundle\Translation\Helper\DomainHelper;
 use PrestaShopBundle\Translation\Loader\SqlTranslationLoader;
 use Symfony\Component\Finder\Finder;
 use Symfony\Component\Translation\Loader\XliffFileLoader;
@@ -100,6 +101,7 @@ class TranslatorLanguageLoader
             $translator->addLoader('db', $sqlTranslationLoader);
         }
 
+        // Load the theme translations catalogue
         $finder = Finder::create()
             ->files()
             ->name('*.' . $locale . '.xlf')
@@ -114,13 +116,23 @@ class TranslatorLanguageLoader
             }
         }
 
+        // Load modules translation catalogues
         $activeModulesPaths = $this->moduleRepository->getActiveModulesPaths();
-        if (!empty($activeModulesPaths)) {
+        foreach ($activeModulesPaths as $activeModuleName => $activeModulePath) {
+            $translationDir = sprintf('%s/translations/%s', $activeModulePath, $locale);
+            if (!is_dir($translationDir)) {
+                continue;
+            }
+
+            $filenamePattern = sprintf(
+                '#^%s[A-Z][\w.-]+\.%s\.xlf$#',
+                preg_quote(DomainHelper::buildModuleBaseDomain($activeModuleName)),
+                $locale
+            );
             $modulesCatalogueFinder = Finder::create()
                 ->files()
-                ->name('*.' . $locale . '.xlf')
-                ->notName($this->isAdminContext ? '^Shop*' : '^Admin*')
-                ->in($this->moduleRepository->getActiveModulesPaths());
+                ->name($filenamePattern)
+                ->in($translationDir);
 
             foreach ($modulesCatalogueFinder as $file) {
                 list($domain, $locale, $format) = explode('.', $file->getBasename(), 3);
