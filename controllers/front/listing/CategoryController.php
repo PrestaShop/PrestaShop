@@ -53,7 +53,7 @@ class CategoryControllerCore extends ProductListingFrontController
      *
      * @return string
      */
-    public function getCanonicalURL(): string
+    public function getCanonicalURL()
     {
         $canonicalUrl = $this->context->link->getCategoryLink($this->category);
         $parsedUrl = parse_url($canonicalUrl);
