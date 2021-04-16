@@ -156,22 +156,12 @@ class Translations extends BOBasePage {
       await page.check(selector);
     }
 
-    return this.clickAndWaitForDownload(page, this.exportLanguageButton);
-  }
+    const [download] = await Promise.all([
+      page.waitForEvent('download'),
+      page.click(this.exportLanguageButton),
+    ]);
 
-  /**
-   * Export theme translation
-   * @param page {Page} Browser tab
-   * @param language {string} language to export
-   * @param theme {string} Theme to export
-   * @returns {Promise<string>}
-   */
-  async exportThemeTranslations(page, language, theme = 'classic') {
-    await this.selectExportLanguage(page, language);
-    await page.click(this.themeTranslationRadio);
-    await this.selectByVisibleText(page, this.exportLanguageThemeSelect, theme);
-
-    return this.clickAndWaitForDownload(page, this.exportLanguageButton);
+    return download.path()
   }
 }
 

@@ -425,19 +425,4 @@ module.exports = class CommonPage {
     /* eslint-env browser */
     return page.evaluateHandle(sl => document.querySelector(sl).parentElement, selector);
   }
-
-  /**
-   * Click and wait for download event to finish
-   * @param page {Page} Browser tab
-   * @param selector {string} selector that trigger the download
-   * @returns {Promise<string>}
-   */
-  async clickAndWaitForDownload(page, selector) {
-    const [download] = await Promise.all([
-      page.waitForEvent('download'),
-      page.click(selector),
-    ]);
-
-    return download.path();
-  }
 };
