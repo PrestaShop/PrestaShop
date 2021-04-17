@@ -68,6 +68,7 @@ class TranslationFinderTest extends KernelTestCase
             'ModulesCheckpaymentShop',
             'ModulesWirepaymentAdmin',
             'ModulesWirepaymentShop',
+            'ModulesXlftranslatedmoduleAdmin',
             'ShopNotificationsWarning',
             'messages',
         ], $domains);
@@ -91,6 +92,7 @@ class TranslationFinderTest extends KernelTestCase
             'ModulesCheckpaymentShop',
             'ModulesWirepaymentAdmin',
             'ModulesWirepaymentShop',
+            'ModulesXlftranslatedmoduleAdmin',
         ], $domains);
     }
 }

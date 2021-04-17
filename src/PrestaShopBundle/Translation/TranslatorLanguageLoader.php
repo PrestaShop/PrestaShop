@@ -63,9 +63,9 @@ class TranslatorLanguageLoader
     /**
      * @param bool $isAdminContext
      *
-     * @return TranslatorLanguageLoader
+     * @return self
      */
-    public function setIsAdminContext(bool $isAdminContext): TranslatorLanguageLoader
+    public function setIsAdminContext(bool $isAdminContext): self
     {
         $this->isAdminContext = $isAdminContext;
 
@@ -117,28 +117,30 @@ class TranslatorLanguageLoader
         }
 
         // Load modules translation catalogues
-        $activeModulesPaths = $this->moduleRepository->getActiveModulesPaths();
-        foreach ($activeModulesPaths as $activeModuleName => $activeModulePath) {
-            $translationDir = sprintf('%s/translations/%s', $activeModulePath, $locale);
-            if (!is_dir($translationDir)) {
-                continue;
-            }
+        if (defined(_DB_PREFIX_)) { // if not defined, no need to go further, we won't be able to get the active modules
+            $activeModulesPaths = $this->moduleRepository->getActiveModulesPaths();
+            foreach ($activeModulesPaths as $activeModuleName => $activeModulePath) {
+                $translationDir = sprintf('%s/translations/%s', $activeModulePath, $locale);
+                if (!is_dir($translationDir)) {
+                    continue;
+                }
 
-            $filenamePattern = sprintf(
-                '#^%s[A-Z][\w.-]+\.%s\.xlf$#',
-                preg_quote(DomainHelper::buildModuleBaseDomain($activeModuleName)),
-                $locale
-            );
-            $modulesCatalogueFinder = Finder::create()
-                ->files()
-                ->name($filenamePattern)
-                ->in($translationDir);
+                $filenamePattern = sprintf(
+                    '#^%s[A-Z][\w.-]+\.%s\.xlf$#',
+                    preg_quote(DomainHelper::buildModuleBaseDomain($activeModuleName)),
+                    $locale
+                );
+                $modulesCatalogueFinder = Finder::create()
+                    ->files()
+                    ->name($filenamePattern)
+                    ->in($translationDir);
 
-            foreach ($modulesCatalogueFinder as $file) {
-                list($domain, $locale, $format) = explode('.', $file->getBasename(), 3);
-                $translator->addResource($format, $file, $locale, $domain);
-                if ($withDB) {
-                    $translator->addResource('db', $domain . '.' . $locale . '.db', $locale, $domain);
+                foreach ($modulesCatalogueFinder as $file) {
+                    list($domain, $locale, $format) = explode('.', $file->getBasename(), 3);
+                    $translator->addResource($format, $file, $locale, $domain);
+                    if ($withDB) {
+                        $translator->addResource('db', $domain . '.' . $locale . '.db', $locale, $domain);
+                    }
                 }
             }
         }
