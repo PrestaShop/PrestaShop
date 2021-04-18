@@ -86,8 +86,6 @@ class ProductControllerCore extends ProductPresentingFrontControllerCore
 
     /**
      * {@inheritdoc}
-     *
-     * @return string
      */
     public function getCanonicalURL(): string
     {
