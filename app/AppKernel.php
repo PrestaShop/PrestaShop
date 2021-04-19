@@ -148,6 +148,18 @@ class AppKernel extends Kernel
         });
 
         $loader->load($this->getRootDir() . '/config/config_' . $this->getEnvironment() . '.yml');
+
+        $loader->load(function (ContainerBuilder $container) {
+            $translationPaths = $container->getParameter('modules_translation_paths');
+            $moduleTranslationsPaths = [];
+            foreach ($this->getActiveModulesPaths() as $activeModulePath) {
+                $translationsDir = $activeModulePath . '/translations';
+                if (is_dir($translationsDir)) {
+                    $moduleTranslationsPaths[] = $translationsDir;
+                }
+            }
+            $container->setParameter('modules_translation_paths', array_merge($translationPaths, $moduleTranslationsPaths));
+        });
     }
 
     /**
@@ -168,6 +180,26 @@ class AppKernel extends Kernel
         }
 
         return $activeModules;
+    }
+
+    /**
+     * Return all active modules.
+     *
+     * @return array list of modules names
+     */
+    private function getActiveModulesPaths()
+    {
+        $activeModulesPaths = [];
+        try {
+            if ($modulesRepository = ModuleRepositoryFactory::getInstance()->getRepository()) {
+                $activeModulesPaths = $modulesRepository->getActiveModulesPaths();
+            }
+        } catch (\Exception $e) {
+            //Do nothing because the modules retrieval must not block the kernel, and it won't work
+            //during the installation process
+        }
+
+        return $activeModulesPaths;
     }
 
     /**

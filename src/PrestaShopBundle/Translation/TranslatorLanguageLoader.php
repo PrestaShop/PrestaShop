@@ -93,14 +93,6 @@ class TranslatorLanguageLoader
         }
         $translator->addLoader('xlf', new XliffFileLoader());
 
-        if ($withDB) {
-            $sqlTranslationLoader = new SqlTranslationLoader();
-            if (null !== $theme) {
-                $sqlTranslationLoader->setTheme($theme);
-            }
-            $translator->addLoader('db', $sqlTranslationLoader);
-        }
-
         // Load the theme translations catalogue
         $finder = Finder::create()
             ->files()
@@ -120,28 +112,49 @@ class TranslatorLanguageLoader
         if (defined(_DB_PREFIX_)) { // if not defined, no need to go further, we won't be able to get the active modules
             $activeModulesPaths = $this->moduleRepository->getActiveModulesPaths();
             foreach ($activeModulesPaths as $activeModuleName => $activeModulePath) {
-                $translationDir = sprintf('%s/translations/%s', $activeModulePath, $locale);
-                if (!is_dir($translationDir)) {
-                    continue;
-                }
+                $this->loadModuleTranslations($translator, $activeModuleName, $activeModulePath, $locale, $withDB);
+            }
+        }
 
-                $filenamePattern = sprintf(
-                    '#^%s[A-Z][\w.-]+\.%s\.xlf$#',
-                    preg_quote(DomainHelper::buildModuleBaseDomain($activeModuleName)),
-                    $locale
-                );
-                $modulesCatalogueFinder = Finder::create()
-                    ->files()
-                    ->name($filenamePattern)
-                    ->in($translationDir);
+        if ($withDB) {
+            $sqlTranslationLoader = new SqlTranslationLoader();
+            if (null !== $theme) {
+                $sqlTranslationLoader->setTheme($theme);
+            }
+            $translator->addLoader('db', $sqlTranslationLoader);
+        }
+    }
 
-                foreach ($modulesCatalogueFinder as $file) {
-                    list($domain, $locale, $format) = explode('.', $file->getBasename(), 3);
-                    $translator->addResource($format, $file, $locale, $domain);
-                    if ($withDB) {
-                        $translator->addResource('db', $domain . '.' . $locale . '.db', $locale, $domain);
-                    }
-                }
+    /**
+     * Loads translations for a single module
+     */
+    private function loadModuleTranslations(
+        TranslatorInterface $translator,
+        string $moduleName,
+        string $modulePath,
+        string $locale,
+        bool $withDB = true
+    ): void {
+        $translationDir = sprintf('%s/translations/%s', $modulePath, $locale);
+        if (!is_dir($translationDir)) {
+            return;
+        }
+
+        $filenamePattern = sprintf(
+            '#^%s[A-Z][\w.-]+\.%s\.xlf$#',
+            preg_quote(DomainHelper::buildModuleBaseDomain($moduleName)),
+            $locale
+        );
+        $modulesCatalogueFinder = Finder::create()
+            ->files()
+            ->name($filenamePattern)
+            ->in($translationDir);
+
+        foreach ($modulesCatalogueFinder as $file) {
+            list($domain, $locale, $format) = explode('.', $file->getBasename(), 3);
+            $translator->addResource($format, $file, $locale, $domain);
+            if ($withDB) {
+                $translator->addResource('db', $domain . '.' . $locale . '.db', $locale, $domain);
             }
         }
     }
