@@ -50,7 +50,7 @@ class CombinationImagesCommandsBuilder implements CombinationCommandsBuilderInte
             return [new RemoveAllCombinationImagesCommand($combinationId->getValue())];
         }
 
-        $imageIds = array_map(function ($imageId) { return (int) $imageId; }, $formData['images']);
+        $imageIds = array_map('intval', $formData['images']);
         $command = new SetCombinationImagesCommand($combinationId->getValue(), $imageIds);
 
         return [$command];
