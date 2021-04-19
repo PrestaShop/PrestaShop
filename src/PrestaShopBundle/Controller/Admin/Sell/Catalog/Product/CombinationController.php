@@ -30,6 +30,8 @@ namespace PrestaShopBundle\Controller\Admin\Sell\Catalog\Product;
 use Exception;
 use PrestaShop\PrestaShop\Adapter\Product\Combination\Repository\CombinationRepository;
 use PrestaShop\PrestaShop\Adapter\Product\Image\ProductImagePathFactory;
+use PrestaShop\PrestaShop\Core\Domain\Product\AttributeGroup\Attribute\QueryResult\Attribute;
+use PrestaShop\PrestaShop\Core\Domain\Product\AttributeGroup\Query\GetAttributeGroupList;
 use PrestaShop\PrestaShop\Core\Domain\Product\AttributeGroup\Query\GetProductAttributeGroups;
 use PrestaShop\PrestaShop\Core\Domain\Product\AttributeGroup\QueryResult\AttributeGroup;
 use PrestaShop\PrestaShop\Core\Domain\Product\Combination\Command\RemoveCombinationCommand;
@@ -105,7 +107,7 @@ class CombinationController extends FrameworkBundleAdminController
      */
     public function paginatedListAction(): Response
     {
-        return $this->render('@PrestaShop/Admin/Sell/Catalog/Product/Blocks/combinations.html.twig', [
+        return $this->render('@PrestaShop/Admin/Sell/Catalog/Product/Combination/paginated_list.html.twig', [
             'combinationLimitChoices' => self::COMBINATIONS_PAGINATION_OPTIONS,
             'combinationsLimit' => ProductCombinationFilters::LIST_LIMIT,
             'combinationsForm' => $this->createForm(CombinationListType::class)->createView(),
@@ -124,6 +126,19 @@ class CombinationController extends FrameworkBundleAdminController
     {
         /** @var AttributeGroup[] $attributeGroups */
         $attributeGroups = $this->getQueryBus()->handle(new GetProductAttributeGroups($productId, true));
+
+        return $this->json($this->formatAttributeGroupsForPresentation($attributeGroups));
+    }
+
+    /**
+     * @AdminSecurity("is_granted('read', request.get('_legacy_controller'))")
+     *
+     * @return JsonResponse
+     */
+    public function getAllAttributeGroupsAction(): JsonResponse
+    {
+        /** @var AttributeGroup[] $attributeGroups */
+        $attributeGroups = $this->getQueryBus()->handle(new GetAttributeGroupList(true));
 
         return $this->json($this->formatAttributeGroupsForPresentation($attributeGroups));
     }
@@ -237,12 +252,17 @@ class CombinationController extends FrameworkBundleAdminController
         $formattedGroups = [];
         foreach ($attributeGroups as $attributeGroup) {
             $attributes = [];
+            /** @var Attribute $attribute */
             foreach ($attributeGroup->getAttributes() as $attribute) {
                 $attributeNames = $attribute->getLocalizedNames();
-                $attributes[] = [
+                $attributeData = [
                     'id' => $attribute->getAttributeId(),
                     'name' => $attributeNames[$contextLangId] ?? reset($attributeNames),
                 ];
+                if (null !== $attribute->getColor()) {
+                    $attributeData['color'] = $attribute->getColor();
+                }
+                $attributes[] = $attributeData;
             }
 
             $publicNames = $attributeGroup->getLocalizedPublicNames();
