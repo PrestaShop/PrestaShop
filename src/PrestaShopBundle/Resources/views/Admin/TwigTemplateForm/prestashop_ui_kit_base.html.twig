@@ -566,7 +566,11 @@
       {% if block_prefixes[2] == 'radio' %}
         <label class="form-check-label">
           {{- widget|raw -}}
-          <i class="form-check-round"></i>
+
+          {% if isFirstChild is not defined %}
+            <i class="form-check-round"></i>
+          {% endif %}
+
           {{- label is not same as(false) ? (translation_domain is same as(false) ? label|raw : label|raw) -}}
         </label>
       {% else %}

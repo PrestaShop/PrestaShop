@@ -116,8 +116,9 @@
         </div>
     {%- else -%}
         {%- set attr = attr|merge({class: (attr.class|default('') ~ ' form-check-input')|trim}) -%}
+        {%- set isFirstChild = true -%}
         <div class="form-check form-check-radio{{ 'radio-inline' in parent_label_class ? ' form-check-inline' }}">
-            {{- form_label(form, null, { widget: parent() }) -}}
+            {{- form_label(form, null, { widget: parent(), isFirstChild: isFirstChild }) -}}
         </div>
     {%- endif -%}
 {%- endblock radio_widget %}
