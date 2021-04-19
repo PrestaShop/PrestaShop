@@ -37,16 +37,16 @@ interface FormOptionProviderInterface
      * @param int $id
      * @param array $data
      *
-     * @return mixed
+     * @return array
      */
-    public function getOptions(int $id, array $data);
+    public function getOptions(int $id, array $data): array;
 
     /**
      * Get default form options.
      *
      * @param array $data
      *
-     * @return mixed
+     * @return array
      */
-    public function getDefaultOptions(array $data);
+    public function getDefaultOptions(array $data): array;
 }

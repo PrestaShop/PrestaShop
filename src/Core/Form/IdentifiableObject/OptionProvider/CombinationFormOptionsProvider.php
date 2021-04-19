@@ -33,7 +33,7 @@ class CombinationFormOptionsProvider implements FormOptionProviderInterface
     /**
      * {@inheritDoc}
      */
-    public function getOptions(int $id, array $data)
+    public function getOptions(int $id, array $data): array
     {
         return [
             'product_id' => $data['product_id'] ?? null,
@@ -43,7 +43,7 @@ class CombinationFormOptionsProvider implements FormOptionProviderInterface
     /**
      * {@inheritDoc}
      */
-    public function getDefaultOptions(array $data)
+    public function getDefaultOptions(array $data): array
     {
         return [];
     }

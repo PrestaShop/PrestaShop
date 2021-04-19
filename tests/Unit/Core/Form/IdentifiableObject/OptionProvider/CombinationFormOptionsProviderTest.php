@@ -1,3 +1,4 @@
+<?php
 /**
  * Copyright since 2007 PrestaShop SA and Contributors
  * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
@@ -23,25 +24,37 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
 
-import ProductMap from '@pages/product/product-map';
+declare(strict_types=1);
 
-const {$} = window;
+namespace Tests\Unit\Core\Form\IdentifiableObject\OptionProvider;
 
-export default class ImageSelector {
-  constructor() {
-    this.$selectorContainer = $(ProductMap.combinations.images.selectorContainer);
-    this.init();
-  }
+use Generator;
+use PHPStan\Testing\TestCase;
+use PrestaShop\PrestaShop\Core\Form\IdentifiableObject\OptionProvider\CombinationFormOptionsProvider;
 
-  init() {
-    $(ProductMap.combinations.images.checkboxContainer, this.$selectorContainer).hide();
-    this.$selectorContainer.on('click', ProductMap.combinations.images.imageChoice, (event) => {
-      const $imageChoice = $(event.currentTarget);
-      const $checkbox = $(ProductMap.combinations.images.checkbox, $imageChoice);
+class CombinationFormOptionsProviderTest extends TestCase
+{
+    public function testGetDefaultOptions(): void
+    {
+        $provider = new CombinationFormOptionsProvider();
+        $defaultOptions = $provider->getDefaultOptions([]);
+        $this->assertEquals([], $defaultOptions);
+    }
 
-      const isChecked = $checkbox.prop('checked');
-      $imageChoice.toggleClass('selected', !isChecked);
-      $checkbox.prop('checked', !isChecked);
-    });
-  }
+    /**
+     * @dataProvider getTestData
+     */
+    public function testGetOptions(array $formData, array $expectedOptions): void
+    {
+        $provider = new CombinationFormOptionsProvider();
+        $options = $provider->getOptions(51, $formData);
+        $this->assertEquals($expectedOptions, $options);
+    }
+
+    public function getTestData(): Generator
+    {
+        yield [[], ['product_id' => null]];
+        yield [['product_id' => null], ['product_id' => null]];
+        yield [['product_id' => 42], ['product_id' => 42]];
+    }
 }
