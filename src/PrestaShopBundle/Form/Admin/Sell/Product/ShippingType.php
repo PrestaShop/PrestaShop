@@ -150,9 +150,6 @@ class ShippingType extends TranslatorAwareType
                 'multiple' => false,
                 'required' => false,
                 'label' => $this->trans('Delivery Time', 'Admin.Catalog.Feature'),
-                'attr' => [
-                    'material_design' => true,
-                ],
             ])->add('delivery_time_in_stock_note', TranslatableType::class, [
                 'label' => $this->trans('Delivery time of in-stock products:', 'Admin.Catalog.Feature'),
                 'type' => TextType::class,
@@ -194,9 +191,6 @@ class ShippingType extends TranslatorAwareType
                 'multiple' => true,
                 'required' => false,
                 'label' => $this->trans('Available carriers', 'Admin.Catalog.Feature'),
-                'attr' => [
-                    'material_design' => true,
-                ],
             ])
         ;
     }
