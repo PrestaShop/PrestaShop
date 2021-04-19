@@ -29,16 +29,15 @@ import Generate from './Generate.vue';
 
 Vue.use(VueI18n);
 
-export default function initGenerateCombinations(generateCombinationsSelector) {
+export default function initGenerateCombinations(generateCombinationsSelector, productId) {
   const container = document.querySelector(generateCombinationsSelector);
 
+  const translations = JSON.parse(container.dataset.translations);
   const i18n = new VueI18n({
     locale: 'en',
     formatter: new ReplaceFormatter(),
-    messages: {en: {}},
+    messages: {en: translations},
   });
-
-  const productId = Number(container.dataset.productId);
 
   return new Vue({
     el: generateCombinationsSelector,
