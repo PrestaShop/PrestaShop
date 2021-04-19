@@ -23,7 +23,7 @@
  * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
-use PrestaShop\PrestaShop\Adapter\Container\LegacyContainerInterface;
+
 use PrestaShop\PrestaShop\Adapter\ContainerFinder;
 use PrestaShop\PrestaShop\Adapter\LegacyLogger;
 use PrestaShop\PrestaShop\Adapter\Module\ModuleDataProvider;
@@ -848,6 +848,8 @@ abstract class ModuleCore implements ModuleInterface
                     'id_module' => $this->id,
                     'id_shop' => $id,
                 ]);
+
+                $this->loadBuiltInTranslations();
             }
         }
 
@@ -3527,6 +3529,29 @@ abstract class ModuleCore implements ModuleInterface
     public function getMultistoreCompatibility(): int
     {
         return $this->multistoreCompatibility;
+    }
+
+    /**
+     * In order to load or update the module's translations, we just need to clear SfCache.
+     * The translator service will be loaded again with the catalogue within the module
+     *
+     * @throws ContainerNotFoundException
+     */
+    private function loadBuiltInTranslations()
+    {
+        $modulePath = $this->getLocalPath();
+        if (!is_dir($modulePath)) {
+            return;
+        }
+
+        $container = $this->getContainer();
+        if (null === $container) {
+            return;
+        }
+
+        $container->get('prestashop.adapter.cache.clearer.symfony_cache_clearer')->clear();
+
+        return;
     }
 }
 
