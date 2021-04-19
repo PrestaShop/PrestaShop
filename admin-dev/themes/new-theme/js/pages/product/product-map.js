@@ -32,18 +32,18 @@ export default {
     STANDARD: 'standard',
     PACK: 'pack',
     VIRTUAL: 'virtual',
-    COMBINATIONS: 'combinations'
+    COMBINATIONS: 'combinations',
   },
   invalidField: '.is-invalid',
   productFormSubmitButton: 'button[name="product[save]"]',
   navigationBar: '#form-nav',
   dropzoneImagesContainer: '#product_images',
   price: {
-    priceTaxExcludedInput: '#product_price_price_tax_excluded'
+    priceTaxExcludedInput: '#product_price_price_tax_excluded',
   },
   redirectOption: {
     typeInput: '#product_redirect_option_type',
-    targetInput: '#product_redirect_option_target'
+    targetInput: '#product_redirect_option_target',
   },
   featureValues: {
     collectionContainer: '#product_features_feature_values',
@@ -54,14 +54,14 @@ export default {
     customValueInput: '.custom-values input',
     customFeatureIdInput: 'input.custom-value-id',
     deleteFeatureValue: 'button.delete-feature-value',
-    addFeatureValue: '#product_features_add_feature'
+    addFeatureValue: '#product_features_add_feature',
   },
   customizations: {
     customizationsContainer: '#product_customizations',
     customizationFieldsList: '#product_customizations ul',
     addCustomizationBtn: '#product_customizations_add_customization_field',
     removeCustomizationBtn: '.remove-customization-btn',
-    customizationFieldRow: '.customization-field-row'
+    customizationFieldRow: '.customization-field-row',
   },
   combinations: {
     navigationTab: '#combinations-tab-nav',
@@ -81,31 +81,31 @@ export default {
       quantityKey: 'combination_item[quantity][value]',
       impactOnPriceKey: 'combination_item[impact_on_price][value]',
       referenceKey: 'combination_item[reference][value]',
-      tokenKey: 'combination_item[_token]'
+      tokenKey: 'combination_item[_token]',
     },
     editionForm: 'form[name="combination_form"]',
     editionFormInputs: 'form[name="combination_form"] input, form[name="combination_form"] textarea',
     editCombinationButtons: '.edit-combination-item',
     tableRow: {
       combinationImg: '.combination-image',
-      combinationCheckbox: rowIndex => `${combinationListId}_combinations_${rowIndex}_is_selected`,
-      combinationIdInput: rowIndex => `${combinationListId}_combinations_${rowIndex}_combination_id`,
-      combinationNameInput: rowIndex => `${combinationListId}_combinations_${rowIndex}_name`,
-      referenceInput: rowIndex => `${combinationListId}_combinations_${rowIndex}_reference_value`,
-      impactOnPriceInput: rowIndex => `${combinationListId}_combinations_${rowIndex}_impact_on_price_value`,
-      finalPriceTeInput: rowIndex => `${combinationListId}_combinations_${rowIndex}_final_price_te`,
-      quantityInput: rowIndex => `${combinationListId}_combinations_${rowIndex}_quantity_value`,
-      isDefaultInput: rowIndex => `${combinationListId}_combinations_${rowIndex}_is_default`,
-      editButton: rowIndex => `${combinationListId}_combinations_${rowIndex}_edit`,
-      deleteButton: rowIndex => `${combinationListId}_combinations_${rowIndex}_delete`
+      combinationCheckbox: (rowIndex) => `${combinationListId}_combinations_${rowIndex}_is_selected`,
+      combinationIdInput: (rowIndex) => `${combinationListId}_combinations_${rowIndex}_combination_id`,
+      combinationNameInput: (rowIndex) => `${combinationListId}_combinations_${rowIndex}_name`,
+      referenceInput: (rowIndex) => `${combinationListId}_combinations_${rowIndex}_reference_value`,
+      impactOnPriceInput: (rowIndex) => `${combinationListId}_combinations_${rowIndex}_impact_on_price_value`,
+      finalPriceTeInput: (rowIndex) => `${combinationListId}_combinations_${rowIndex}_final_price_te`,
+      quantityInput: (rowIndex) => `${combinationListId}_combinations_${rowIndex}_quantity_value`,
+      isDefaultInput: (rowIndex) => `${combinationListId}_combinations_${rowIndex}_is_default`,
+      editButton: (rowIndex) => `${combinationListId}_combinations_${rowIndex}_edit`,
+      deleteButton: (rowIndex) => `${combinationListId}_combinations_${rowIndex}_delete`,
     },
     editModal: '#combination-edit-modal',
     images: {
       selectorContainer: '.combination-images-selector',
       imageChoice: '.combination-image-choice',
       checkboxContainer: '.form-check',
-      checkbox: 'input[type=checkbox]'
-    }
+      checkbox: 'input[type=checkbox]',
+    },
   },
   virtualProduct: {
     container: '#virtual-product-file',
@@ -113,14 +113,14 @@ export default {
     fileContentContainer: '#virtual-product-file-content',
     fileSwitchOnInputSelector: '#product_virtual_product_file_has_file_1',
     fileSwitchOffInputSelector: '#product_virtual_product_file_has_file_0',
-    combinationName: '.card-header span'
+    combinationName: '.card-header span',
   },
   dropzone: {
     configuration: {
-      fileManager: '.openfilemanager'
+      fileManager: '.openfilemanager',
     },
     photoswipe: {
-      element: '.pswp'
+      element: '.pswp',
     },
     dzTemplate: '.dz-template',
     dzPreview: '.dz-preview',
@@ -129,13 +129,13 @@ export default {
     dropzoneContainer: '.dropzone-container',
     checkbox: '.md-checkbox input',
     shownTooltips: '.tooltip.show',
-    savedImageContainer: imageId => `.dz-preview[data-id="${imageId}"]`,
-    savedImage: imageId => `.dz-preview[data-id="${imageId}"] img`,
+    savedImageContainer: (imageId) => `.dz-preview[data-id="${imageId}"]`,
+    savedImage: (imageId) => `.dz-preview[data-id="${imageId}"] img`,
     coveredPreview: '.dz-preview.is-cover',
-    windowFileManager: '.dropzone-window-filemanager'
+    windowFileManager: '.dropzone-window-filemanager',
   },
   suppliers: {
     productSuppliers: '#product_suppliers',
-    combinationSuppliers: '#combination_form_suppliers'
-  }
+    combinationSuppliers: '#combination_form_suppliers',
+  },
 };
