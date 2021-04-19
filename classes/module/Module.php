@@ -842,15 +842,19 @@ abstract class ModuleCore implements ModuleInterface
         }
 
         // Enable module in the shop where it is not enabled yet
+        $moduleActivated = false;
         foreach ($list as $id) {
             if (!in_array($id, $items)) {
                 Db::getInstance()->insert('module_shop', [
                     'id_module' => $this->id,
                     'id_shop' => $id,
                 ]);
-
-                $this->loadBuiltInTranslations();
+                $moduleActivated = true;
             }
+        }
+
+        if ($moduleActivated) {
+            $this->loadBuiltInTranslations();
         }
 
         return true;
@@ -1727,12 +1731,19 @@ abstract class ModuleCore implements ModuleInterface
      * Return active modules.
      *
      * @return array Modules
+     *
+     * @throws PrestaShopDatabaseException
      */
     public static function getActiveModules(): array
     {
+        if (!defined('_DB_PREFIX_')) {
+            return []; // This will happen in installer
+        }
         $sql = 'SELECT m.* FROM `' . _DB_PREFIX_ . 'module` m WHERE m.`active` = 1';
 
-        return Db::getInstance()->executeS($sql);
+        $activeModules = Db::getInstance()->executeS($sql);
+
+        return is_array($activeModules) ? $activeModules : [];
     }
 
     /**
