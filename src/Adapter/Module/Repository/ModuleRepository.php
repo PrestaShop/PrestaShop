@@ -61,7 +61,16 @@ class ModuleRepository extends AbstractObjectModelRepository
      */
     public function getActiveModules(): array
     {
-        return array_map(function (array $module): string { return $module['name']; }, Module::getActiveModules());
+        $activeModules = [];
+        try {
+            $activeModules = array_map(function (array $module): string {
+                return $module['name'];
+            }, Module::getActiveModules());
+        } catch (\Exception $exception) {
+            // DO nothing
+        }
+
+        return $activeModules;
     }
 
     /**
