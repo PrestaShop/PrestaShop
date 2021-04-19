@@ -28,28 +28,24 @@ namespace PrestaShop\PrestaShop\Adapter\Order\CommandHandler;
 
 use Address;
 use Cart;
-use Currency;
-use Customer;
 use Order;
 use OrderDetail;
 use OrderInvoice;
 use PrestaShop\PrestaShop\Adapter\Cart\Comparator\CartProductsComparator;
 use PrestaShop\PrestaShop\Adapter\Cart\Comparator\CartProductUpdate;
 use PrestaShop\PrestaShop\Adapter\ContextStateManager;
-use PrestaShop\PrestaShop\Adapter\Order\AbstractOrderHandler;
 use PrestaShop\PrestaShop\Adapter\Order\OrderAmountUpdater;
 use PrestaShop\PrestaShop\Adapter\Order\OrderDetailUpdater;
 use PrestaShop\PrestaShop\Adapter\Order\OrderProductQuantityUpdater;
 use PrestaShop\PrestaShop\Core\Domain\Order\Command\ChangeOrderDeliveryAddressCommand;
 use PrestaShop\PrestaShop\Core\Domain\Order\CommandHandler\ChangeOrderDeliveryAddressHandlerInterface;
 use PrestaShop\PrestaShop\Core\Domain\Order\Exception\OrderException;
-use Shop;
 use Validate;
 
 /**
  * @internal
  */
-final class ChangeOrderDeliveryAddressHandler extends AbstractOrderHandler implements ChangeOrderDeliveryAddressHandlerInterface
+final class ChangeOrderDeliveryAddressHandler extends AbstractOrderCommandHandler implements ChangeOrderDeliveryAddressHandlerInterface
 {
     /**
      * @var OrderAmountUpdater
@@ -103,31 +99,26 @@ final class ChangeOrderDeliveryAddressHandler extends AbstractOrderHandler imple
             throw new OrderException('New delivery address is not valid');
         }
 
-        $this->contextStateManager
-            ->saveCurrentContext()
-            ->setCart($cart)
-            ->setCurrency(new Currency($cart->id_currency))
-            ->setCustomer(new Customer($cart->id_customer))
-            ->setLanguage($cart->getAssociatedLanguage())
-            ->setCountry($cart->getTaxCountry())
-            ->setShop(new Shop($cart->id_shop))
-        ;
+        $this->setCartContext($this->contextStateManager, $cart);
 
-        $comparator = new CartProductsComparator($cart);
+        try {
+            $comparator = new CartProductsComparator($cart);
 
-        $cart->updateDeliveryAddressId((int) $cart->id_address_delivery, (int) $address->id);
-        $cart->setDeliveryOption([
-            (int) $cart->id_address_delivery => $this->formatLegacyDeliveryOptionFromCarrierId($order->id_carrier),
-        ]);
-        $cart->update();
+            $cart->updateDeliveryAddressId((int) $cart->id_address_delivery, (int) $address->id);
+            $cart->setDeliveryOption([
+                (int) $cart->id_address_delivery => $this->formatLegacyDeliveryOptionFromCarrierId($order->id_carrier),
+            ]);
+            $cart->update();
 
-        // gift could have been added/deleted when changing delivery address
-        $this->synchronizeOrderWithCart($order, $cart, $comparator);
+            // gift could have been added/deleted when changing delivery address
+            $this->synchronizeOrderWithCart($order, $cart, $comparator);
 
-        $order->id_address_delivery = $address->id;
-        $this->orderDetailTaxUpdater->updateOrderDetailsTaxes($order);
-        $this->orderAmountUpdater->update($order, $cart);
-        $this->contextStateManager->restorePreviousContext();
+            $order->id_address_delivery = $address->id;
+            $this->orderDetailTaxUpdater->updateOrderDetailsTaxes($order);
+            $this->orderAmountUpdater->update($order, $cart);
+        } finally {
+            $this->contextStateManager->restorePreviousContext();
+        }
     }
 
     /**

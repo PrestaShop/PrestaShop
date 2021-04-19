@@ -1205,6 +1205,20 @@ Feature: Order from Back Office (BO)
       | total_paid_tax_incl      | 20.14 |
       | total_paid               | 20.14 |
       | total_paid_real          | 0.0   |
+    And product "Product 12345" in order "bo_order1" has following details:
+      | product_quantity         | 1     |
+      | product_price            | 12.00 |
+      | unit_price_tax_incl      | 12.72 |
+      | unit_price_tax_excl      | 12.00 |
+      | total_price_tax_incl     | 12.72 |
+      | total_price_tax_excl     | 12.00 |
+    And product "Gift product" in order "bo_order1" has following details:
+      | product_quantity         | 1     |
+      | product_price            | 13.00 |
+      | unit_price_tax_incl      | 13.78 |
+      | unit_price_tax_excl      | 13.00 |
+      | total_price_tax_incl     | 13.78 |
+      | total_price_tax_excl     | 13.00 |
     When I add new address to customer "testCustomer" with following details:
       | Address alias    | test-customer-france-address |
       | First name       | testFirstName                |
@@ -1229,6 +1243,13 @@ Feature: Order from Back Office (BO)
       | total_paid_tax_incl      | 19.00 |
       | total_paid               | 19.00 |
       | total_paid_real          | 0.0   |
+    And product "Product 12345" in order "bo_order1" has following details:
+      | product_quantity         | 1     |
+      | product_price            | 12.00 |
+      | unit_price_tax_incl      | 12.00 |
+      | unit_price_tax_excl      | 12.00 |
+      | total_price_tax_incl     | 12.00 |
+      | total_price_tax_excl     | 12.00 |
     When I add new address to customer "testCustomer" with following details:
       | Address alias    | test-customer-states-address |
       | First name       | testFirstName                |
@@ -1253,6 +1274,20 @@ Feature: Order from Back Office (BO)
       | total_paid_tax_incl      | 20.14 |
       | total_paid               | 20.14 |
       | total_paid_real          | 0.0   |
+    And product "Product 12345" in order "bo_order1" has following details:
+      | product_quantity         | 1     |
+      | product_price            | 12.00 |
+      | unit_price_tax_incl      | 12.72 |
+      | unit_price_tax_excl      | 12.00 |
+      | total_price_tax_incl     | 12.72 |
+      | total_price_tax_excl     | 12.00 |
+    And product "Gift product" in order "bo_order1" has following details:
+      | product_quantity         | 1     |
+      | product_price            | 13.00 |
+      | unit_price_tax_incl      | 13.78 |
+      | unit_price_tax_excl      | 13.00 |
+      | total_price_tax_incl     | 13.78 |
+      | total_price_tax_excl     | 13.00 |
 
 
   Scenario: I have a cart rule that adds a free gift when a certain amount is reached,
@@ -1288,6 +1323,20 @@ Feature: Order from Back Office (BO)
       | total_paid_tax_incl      | 45.58 |
       | total_paid               | 45.58 |
       | total_paid_real          | 0.0   |
+    And product "Product 12345" in order "bo_order1" has following details:
+      | product_quantity         | 3     |
+      | product_price            | 12.00 |
+      | unit_price_tax_incl      | 12.72 |
+      | unit_price_tax_excl      | 12.00 |
+      | total_price_tax_incl     | 38.16 |
+      | total_price_tax_excl     | 36.00 |
+    And product "Gift product" in order "bo_order1" has following details:
+      | product_quantity         | 1     |
+      | product_price            | 13.00 |
+      | unit_price_tax_incl      | 13.78 |
+      | unit_price_tax_excl      | 13.00 |
+      | total_price_tax_incl     | 13.78 |
+      | total_price_tax_excl     | 13.00 |
     When I edit product "Product 12345" to order "bo_order1" with following products details:
       | amount | 1     |
       | price  | 12.00 |
@@ -1305,6 +1354,13 @@ Feature: Order from Back Office (BO)
       | total_paid_tax_incl      | 20.14 |
       | total_paid               | 20.14 |
       | total_paid_real          | 0.0   |
+    And product "Product 12345" in order "bo_order1" has following details:
+      | product_quantity         | 1     |
+      | product_price            | 12.00 |
+      | unit_price_tax_incl      | 12.72 |
+      | unit_price_tax_excl      | 12.00 |
+      | total_price_tax_incl     | 12.72 |
+      | total_price_tax_excl     | 12.00 |
     When I edit product "Product 12345" to order "bo_order1" with following products details:
       | amount | 3 |
       | price  | 12.00 |
@@ -1322,3 +1378,17 @@ Feature: Order from Back Office (BO)
       | total_paid_tax_incl      | 45.58 |
       | total_paid               | 45.58 |
       | total_paid_real          | 0.0   |
+    And product "Product 12345" in order "bo_order1" has following details:
+      | product_quantity         | 3     |
+      | product_price            | 12.00 |
+      | unit_price_tax_incl      | 12.72 |
+      | unit_price_tax_excl      | 12.00 |
+      | total_price_tax_incl     | 38.16 |
+      | total_price_tax_excl     | 36.00 |
+    And product "Gift product" in order "bo_order1" has following details:
+      | product_quantity         | 1     |
+      | product_price            | 13.00 |
+      | unit_price_tax_incl      | 13.78 |
+      | unit_price_tax_excl      | 13.00 |
+      | total_price_tax_incl     | 13.78 |
+      | total_price_tax_excl     | 13.00 |

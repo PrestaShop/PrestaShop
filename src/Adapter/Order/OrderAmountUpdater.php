@@ -216,10 +216,10 @@ class OrderAmountUpdater
      */
     private function findProductInCart(CartProductUpdate $productUpdate, Cart $cart): ?array
     {
+        $combinationId = null === $productUpdate->getCombinationId()
+            ? 0
+            : $productUpdate->getCombinationId()->getValue();
         foreach ($cart->getProducts() as $product) {
-            $combinationId = null === $productUpdate->getCombinationId()
-                ? 0
-                : $productUpdate->getCombinationId()->getValue();
             if ((int) $product['id_product'] === $productUpdate->getProductId()->getValue()
                 && (int) $product['id_product_attribute'] === $combinationId) {
                 return $product;
@@ -237,10 +237,10 @@ class OrderAmountUpdater
      */
     private function findProductInOrder(CartProductUpdate $productUpdate, Order $order): ?array
     {
+        $combinationId = null === $productUpdate->getCombinationId()
+            ? 0
+            : $productUpdate->getCombinationId()->getValue();
         foreach ($order->getProducts() as $product) {
-            $combinationId = null === $productUpdate->getCombinationId()
-                ? 0
-                : $productUpdate->getCombinationId()->getValue();
             if ((int) $product['product_id'] === $productUpdate->getProductId()->getValue()
                 && (int) $product['product_attribute_id'] === $combinationId) {
                 return $product;
