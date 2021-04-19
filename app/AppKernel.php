@@ -24,8 +24,8 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
 
+use PrestaShop\PrestaShop\Adapter\Module\Repository\ModuleRepository;
 use PrestaShop\PrestaShop\Adapter\SymfonyContainer;
-use PrestaShopBundle\Kernel\ModuleRepositoryFactory;
 use Symfony\Component\Config\Loader\LoaderInterface;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\HttpKernel\Kernel;
@@ -72,7 +72,7 @@ class AppKernel extends Kernel
         }
 
         /* Will not work until PrestaShop is installed */
-        $activeModules = $this->getActiveModules();
+        $activeModules = (new ModuleRepository())->getActiveModules();
         if (!empty($activeModules)) {
             try {
                 $this->enableComposerAutoloaderOnModules($activeModules);
@@ -106,7 +106,7 @@ class AppKernel extends Kernel
 
         return array_merge(
             $kernelParameters,
-            array('kernel.active_modules' => $this->getActiveModules())
+            array('kernel.active_modules' => (new ModuleRepository())->getActiveModules())
         );
     }
 
@@ -149,57 +149,17 @@ class AppKernel extends Kernel
 
         $loader->load($this->getRootDir() . '/config/config_' . $this->getEnvironment() . '.yml');
 
+        // Add translation paths to load into the translator. The paths are loaded by the Symfony's FrameworkExtension
         $loader->load(function (ContainerBuilder $container) {
-            $translationPaths = $container->getParameter('modules_translation_paths');
-            $moduleTranslationsPaths = [];
-            foreach ($this->getActiveModulesPaths() as $activeModulePath) {
+            $moduleTranslationsPaths = $container->getParameter('modules_translation_paths');
+            foreach ((new ModuleRepository())->getActiveModulesPaths() as $activeModulePath) {
                 $translationsDir = $activeModulePath . '/translations';
                 if (is_dir($translationsDir)) {
                     $moduleTranslationsPaths[] = $translationsDir;
                 }
             }
-            $container->setParameter('modules_translation_paths', array_merge($translationPaths, $moduleTranslationsPaths));
+            $container->setParameter('modules_translation_paths', $moduleTranslationsPaths);
         });
-    }
-
-    /**
-     * Return all active modules.
-     *
-     * @return array list of modules names
-     */
-    private function getActiveModules()
-    {
-        $activeModules = [];
-        try {
-            if ($modulesRepository = ModuleRepositoryFactory::getInstance()->getRepository()) {
-                $activeModules = $modulesRepository->getActiveModules();
-            }
-        } catch (\Exception $e) {
-            //Do nothing because the modules retrieval must not block the kernel, and it won't work
-            //during the installation process
-        }
-
-        return $activeModules;
-    }
-
-    /**
-     * Return all active modules.
-     *
-     * @return array list of modules names
-     */
-    private function getActiveModulesPaths()
-    {
-        $activeModulesPaths = [];
-        try {
-            if ($modulesRepository = ModuleRepositoryFactory::getInstance()->getRepository()) {
-                $activeModulesPaths = $modulesRepository->getActiveModulesPaths();
-            }
-        } catch (\Exception $e) {
-            //Do nothing because the modules retrieval must not block the kernel, and it won't work
-            //during the installation process
-        }
-
-        return $activeModulesPaths;
     }
 
     /**

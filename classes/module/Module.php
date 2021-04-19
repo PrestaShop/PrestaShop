@@ -3537,21 +3537,15 @@ abstract class ModuleCore implements ModuleInterface
      *
      * @throws ContainerNotFoundException
      */
-    private function loadBuiltInTranslations()
+    private function loadBuiltInTranslations(): void
     {
         $modulePath = $this->getLocalPath();
-        if (!is_dir($modulePath)) {
+        $translationDir = sprintf('%s/translations/', $modulePath);
+        if (!is_dir($translationDir)) {
             return;
         }
 
-        $container = $this->getContainer();
-        if (null === $container) {
-            return;
-        }
-
-        $container->get('prestashop.adapter.cache.clearer.symfony_cache_clearer')->clear();
-
-        return;
+        $this->getContainer()->get('prestashop.adapter.cache.clearer.symfony_cache_clearer')->clear();
     }
 }
 

@@ -61,7 +61,7 @@ class ModuleRepository extends AbstractObjectModelRepository
      */
     public function getActiveModules(): array
     {
-        return Module::getActiveModules();
+        return array_map(function (array $module): string { return $module['name']; }, Module::getActiveModules());
     }
 
     /**
@@ -74,7 +74,7 @@ class ModuleRepository extends AbstractObjectModelRepository
         if (null === $this->activeModulesPaths) {
             $this->activeModulesPaths = [];
             $modulesFiles = Finder::create()->directories()->in(_PS_MODULE_DIR_)->depth(0);
-            $activeModules = array_map(function (array $module): string { return $module['name']; }, $this->getActiveModules());
+            $activeModules = $this->getActiveModules();
 
             foreach ($modulesFiles as $moduleFile) {
                 $moduleName = $moduleFile->getFilename();

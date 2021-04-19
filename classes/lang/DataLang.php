@@ -59,16 +59,15 @@ class DataLangCore
     public function __construct($locale, ?TranslatorInterface $translator = null)
     {
         $this->locale = $locale;
-        $sfContainer = SymfonyContainer::getInstance();
 
         $this->translator = $translator instanceof TranslatorInterface
             ? $translator
-            : $sfContainer->get('translator');
+            : SymfonyContainer::getInstance()->get('translator');
 
         $isAdminContext = defined('_PS_ADMIN_DIR_');
 
         if (!$this->translator->isLanguageLoaded($this->locale)) {
-            $sfContainer->get('prestashop.translation.translator_language_loader')
+            SymfonyContainer::getInstance()->get('prestashop.translation.translator_language_loader')
                 ->setIsAdminContext($isAdminContext)
                 ->loadLanguage($this->translator, $this->locale);
             $this->translator->getCatalogue($this->locale);
