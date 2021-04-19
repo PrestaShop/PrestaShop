@@ -39,18 +39,18 @@
       <template #body>
         <div class="tags-input d-flex flex-wrap">
           <div class="tags-wrapper">
-            <template v-for="(attributes, groupName) in selectedAttributes">
+            <template v-for="selectedGroup in selectedAttributeGroups">
               <span
                 class="tag"
                 :key="selectedAttribute.id"
-                v-for="selectedAttribute in attributes"
-              >{{ groupName }}: {{ selectedAttribute.name
-              }}<i
-                class="material-icons"
-                @click.prevent.stop="
-                  changeSelected(selectedAttribute, { name: groupName })
-                "
-              >close</i></span>
+                v-for="selectedAttribute in selectedGroup.attributes"
+              >
+                {{ selectedGroup.name }}: {{ selectedAttribute.name }}
+                <i
+                  class="material-icons"
+                  @click.prevent.stop="removeSelected(selectedAttribute, selectedGroup)"
+                >close</i>
+              </span>
             </template>
           </div>
           <input
@@ -82,7 +82,7 @@
                 >
                   <label
                     v-for="attribute of attributeGroup.attributes"
-                    :class="['attribute-item', isSelected(attributeGroup, attribute)]"
+                    :class="['attribute-item', getSelectedClass(attribute, attributeGroup)]"
                     :for="`attribute_${attribute.id}`"
                     :key="attribute.id"
                   >
@@ -156,11 +156,13 @@
     data() {
       return {
         attributeGroups: [],
-        selectedAttributes: {},
+        selectedAttributeGroups: {},
         combinationsService: new CombinationsService(this.productId),
         isModalShown: false,
         loading: false,
         scrollbar: null,
+        dataSetConfig: {},
+        searchSource: {},
       };
     },
     props: {
@@ -184,9 +186,50 @@
         try {
           this.attributeGroups = await getAllAttributeGroups();
           window.prestaShopUiKit.init();
+          this.initDataSetConfig();
         } catch (error) {
           window.$.growl.error({message: error});
         }
+      },
+      initDataSetConfig() {
+        const searchItems = this.getSearchableAttributes({});
+        this.searchSource = new Bloodhound({
+          datumTokenizer: Bloodhound.tokenizers.obj.whitespace(
+            'name',
+            'value',
+            'color',
+            'group_name',
+          ),
+          queryTokenizer: Bloodhound.tokenizers.whitespace,
+          local: searchItems,
+        });
+
+        const dataSetConfig = {
+          source: this.searchSource,
+          display: 'name',
+          value: 'name',
+          minLength: 1,
+          onSelect: (attribute, e, $searchInput) => {
+            const attributeGroup = {
+              id: attribute.group_id,
+              name: attribute.group_name,
+            };
+            this.addSelected(attribute, attributeGroup);
+
+            // This resets the search input or else previous search is cached and can be added again
+            $searchInput.typeahead('val', '');
+          },
+          onClose(event, $searchInput) {
+            $searchInput.typeahead('val', '');
+            return true;
+          },
+        };
+
+        dataSetConfig.templates = {
+          suggestion: (item) => `<div class="px-2">${item.group_name}: ${item.name}</div>`,
+        };
+
+        this.dataSetConfig = dataSetConfig;
       },
       /**
        * Show the modal, and execute PerfectScrollBar and Typehead
@@ -194,70 +237,33 @@
       showModal() {
         document.querySelector('body').classList.add('overflow-hidden');
         this.isModalShown = true;
-        const that = this;
-
         // We need to use a setTimeout to add it at the end
         // of the callstack so the modal is already displayed
         // when this is getting executed
         setTimeout(() => {
           this.scrollbar = new PerfectScrollbar(CombinationsMap.scrollBar);
-          const searchItems = [];
-
-          this.attributeGroups.forEach((attributeGroup) => {
-            attributeGroup.attributes.forEach((attribute) => {
-              attribute.group_name = attributeGroup.name;
-              searchItems.push(attribute);
-            });
-          });
-
           const $searchInput = $(CombinationsMap.searchInput);
-          const source = new Bloodhound({
-            datumTokenizer: Bloodhound.tokenizers.obj.whitespace(
-              'name',
-              'value',
-              'color',
-              'group_name',
-            ),
-            queryTokenizer: Bloodhound.tokenizers.whitespace,
-            local: searchItems,
-          });
-
-          const dataSetConfig = {
-            source,
-            display: 'name',
-            value: 'name',
-            minLength: 1,
-            onSelect(attribute) {
-              const attributeGroup = {
-                name: attribute.group_name,
-              };
-
-              that.changeSelected(attribute, attributeGroup);
-            },
-            onClose() {
-              $searchInput.val('');
-              return true;
-            },
-          };
-
-          dataSetConfig.templates = {
-            suggestion: (item) => {
-              let displaySuggestion = item;
-
-              if (typeof dataSetConfig.display === 'function') {
-                dataSetConfig.display(item);
-              } else if (
-                Object.prototype.hasOwnProperty.call(item, dataSetConfig.display)
-              ) {
-                displaySuggestion = item[dataSetConfig.display];
-              }
-
-              return `<div class="px-2">${item.group_name}: ${displaySuggestion}</div>`;
-            },
-          };
-
-          new AutoCompleteSearch($searchInput, dataSetConfig);
+          new AutoCompleteSearch($searchInput, this.dataSetConfig);
         }, 0);
+      },
+      /**
+       * @returns {Array}
+       */
+      getSearchableAttributes(selectedAttributeGroups) {
+        const searchableAttributes = [];
+        this.attributeGroups.forEach((attributeGroup) => {
+          attributeGroup.attributes.forEach((attribute) => {
+            if (this.isSelected(attribute, attributeGroup, selectedAttributeGroups)) {
+              return;
+            }
+
+            attribute.group_name = attributeGroup.name;
+            attribute.group_id = attributeGroup.id;
+            searchableAttributes.push(attribute);
+          });
+        });
+
+        return searchableAttributes;
       },
       /**
        * Handle modal closing
@@ -280,36 +286,81 @@
        * @param {{name: string}} attributeGroup
        */
       changeSelected(selectedAttribute, attributeGroup) {
-        const groupName = attributeGroup.name;
-
-        if (
-          !this.selectedAttributes[groupName]
-          || !this.selectedAttributes[groupName].includes(selectedAttribute)
-        ) {
-          if (!this.selectedAttributes[groupName]) {
-            const newAttributeGroup = {};
-
-            newAttributeGroup[groupName] = [];
-            newAttributeGroup[groupName].push(selectedAttribute);
-            this.selectedAttributes = {
-              ...this.selectedAttributes,
-              ...newAttributeGroup,
-            };
-          } else {
-            this.selectedAttributes[groupName].push(selectedAttribute);
-          }
+        if (!this.isSelected(selectedAttribute, attributeGroup, this.selectedAttributeGroups)) {
+          this.addSelected(selectedAttribute, attributeGroup);
         } else {
-          // eslint-disable-next-line
-        this.selectedAttributes[groupName] = this.selectedAttributes[
-            groupName
-          ].filter((attribute) => attribute.id_attribute !== selectedAttribute.id_attribute);
+          this.removeSelected(selectedAttribute, attributeGroup);
         }
       },
-      isSelected(attributeGroup, attribute) {
-        return this.selectedAttributes[attributeGroup.name]
-          && this.selectedAttributes[attributeGroup.name].includes(attribute)
-          ? 'selected'
-          : 'unselected';
+      /**
+       * @param {Object} attribute
+       * @param {Object} attributeGroup
+       */
+      addSelected(attribute, attributeGroup) {
+        // Add copy of attribute group in selected groups
+        if (!this.selectedAttributeGroups[attributeGroup.id]) {
+          const newAttributeGroup = {
+            [attributeGroup.id]: {
+              id: attributeGroup.id,
+              name: attributeGroup.name,
+              attributes: [],
+            },
+          };
+
+          // This is needed to correctly handle observation
+          this.selectedAttributeGroups = {
+            ...this.selectedAttributeGroups,
+            ...newAttributeGroup,
+          };
+        }
+
+        this.selectedAttributeGroups[attributeGroup.id].attributes.push(attribute);
+        this.updateSearchableAttributes();
+      },
+      /**
+       * @param {Object} selectedAttribute
+       * @param {Object} selectedAttributeGroup
+       */
+      removeSelected(selectedAttribute, selectedAttributeGroup) {
+        if (!Object.prototype.hasOwnProperty.call(this.selectedAttributeGroups, selectedAttributeGroup.id)) {
+          return;
+        }
+
+        const group = this.selectedAttributeGroups[selectedAttributeGroup.id];
+        group.attributes = group.attributes.filter((attribute) => attribute.id !== selectedAttribute.id);
+
+        this.updateSearchableAttributes();
+      },
+      /**
+       * @param {Object} attribute
+       * @param {Object} attributeGroup
+       * @param {Object} attributeGroups
+       *
+       * @returns {boolean}
+       */
+      isSelected(attribute, attributeGroup, attributeGroups) {
+        if (!Object.prototype.hasOwnProperty.call(attributeGroups, attributeGroup.id)) {
+          return false;
+        }
+
+        return attributeGroups[attributeGroup.id].attributes.includes(attribute);
+      },
+      /**
+       * @param {Object} attribute
+       * @param {Object} attributeGroup
+       *
+       * @returns {string}
+       */
+      getSelectedClass(attribute, attributeGroup) {
+        return this.isSelected(attribute, attributeGroup, this.selectedAttributeGroups) ? 'selected' : 'unselected';
+      },
+      /**
+       * Update Bloodhound engine so that it does not include already selected attributes
+       */
+      updateSearchableAttributes() {
+        const searchableAttributes = this.getSearchableAttributes(this.selectedAttributeGroups);
+        this.searchSource.clear();
+        this.searchSource.add(searchableAttributes);
       },
     },
   };
