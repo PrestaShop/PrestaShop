@@ -30,6 +30,7 @@ namespace PrestaShopBundle\Form\Admin\Sell\Product;
 
 use Currency;
 use PrestaShopBundle\Form\Admin\Type\TranslatorAwareType;
+use PrestaShopBundle\Form\Admin\Type\ColumnType;
 use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\MoneyType;
@@ -123,6 +124,9 @@ class PriceType extends TranslatorAwareType
                     'Display the "On sale!" flag on the product page, and on product listings.',
                     'Admin.Catalog.Feature'
                 ),
+                'attr' => [
+                    'material_design' => true,
+                ],
             ])
             ->add('wholesale_price', MoneyType::class, [
                 'required' => false,
