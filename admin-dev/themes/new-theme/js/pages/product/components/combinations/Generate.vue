@@ -192,7 +192,7 @@
         }
       },
       initDataSetConfig() {
-        const searchItems = this.getSearchableAttributes({});
+        const searchItems = this.getSearchableAttributes();
         this.searchSource = new Bloodhound({
           datumTokenizer: Bloodhound.tokenizers.obj.whitespace(
             'name',
@@ -249,11 +249,11 @@
       /**
        * @returns {Array}
        */
-      getSearchableAttributes(selectedAttributeGroups) {
+      getSearchableAttributes() {
         const searchableAttributes = [];
         this.attributeGroups.forEach((attributeGroup) => {
           attributeGroup.attributes.forEach((attribute) => {
-            if (this.isSelected(attribute, attributeGroup, selectedAttributeGroups)) {
+            if (this.isSelected(attribute, attributeGroup, this.selectedAttributeGroups)) {
               return;
             }
 
@@ -297,6 +297,11 @@
        * @param {Object} attributeGroup
        */
       addSelected(attribute, attributeGroup) {
+        // Extra check to avoid adding same attribute twice which would cause a duplicate key error
+        if (this.isSelected(attribute, attributeGroup, this.selectedAttributeGroups)) {
+          return;
+        }
+
         // Add copy of attribute group in selected groups
         if (!this.selectedAttributeGroups[attributeGroup.id]) {
           const newAttributeGroup = {
@@ -332,6 +337,9 @@
         this.updateSearchableAttributes();
       },
       /**
+       * The selected attribute is provided as a parameter instead od using this reference because it helps the
+       * observer work better whe this.selectedAttributeGroups is explicitly used as an argument.
+       *
        * @param {Object} attribute
        * @param {Object} attributeGroup
        * @param {Object} attributeGroups
@@ -358,7 +366,7 @@
        * Update Bloodhound engine so that it does not include already selected attributes
        */
       updateSearchableAttributes() {
-        const searchableAttributes = this.getSearchableAttributes(this.selectedAttributeGroups);
+        const searchableAttributes = this.getSearchableAttributes();
         this.searchSource.clear();
         this.searchSource.add(searchableAttributes);
       },
