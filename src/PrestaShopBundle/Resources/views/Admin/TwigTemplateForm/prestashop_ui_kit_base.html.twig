@@ -29,7 +29,7 @@
 # bootstrap_base_layout which is included first so that bootstrap_4_layout has priority over all other blocks.
 #}
 {% use 'bootstrap_base_layout.html.twig' %}
-{% use 'bootstrap_4_layout.html.twig' with radio_widget as base_radio_widget %}
+{% use 'bootstrap_4_layout.html.twig' with radio_widget as base_radio_widget, checkbox_widget as base_checkbox_widget %}
 
 {% use '@PrestaShop/Admin/TwigTemplateForm/typeahead.html.twig' %}
 {% use '@PrestaShop/Admin/TwigTemplateForm/material.html.twig' %}
@@ -604,6 +604,14 @@
         </div>
     {%- endif -%}
 {%- endblock radio_widget %}
+
+{% block checkbox_widget -%}
+    {%- set parent_label_class = parent_label_class|default(label_attr.class|default('')) -%}
+    {%- set attr = attr|merge({class: (attr.class|default('') ~ ' form-check-input')|trim}) -%}
+    <div class="form-check-radio">
+        {{- form_label(form, null, { widget: parent() }) -}}
+    </div>
+{%- endblock checkbox_widget %}
 
 {# Errors #}
 
