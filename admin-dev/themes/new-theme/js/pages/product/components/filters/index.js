@@ -25,15 +25,26 @@
 
 import Vue from 'vue';
 import Filters from '@pages/product/components/filters/Filters';
+import VueI18n from 'vue-i18n';
+import ReplaceFormatter from '@vue/plugins/vue-i18n/replace-formatter';
 
-export default function initCombinationsFilters(combinationsFiltersSelector, eventEmitter) {
+Vue.use(VueI18n);
+
+export default function initCombinationsFilters(combinationsFiltersSelector, eventEmitter, productId) {
   const container = document.querySelector(combinationsFiltersSelector);
-  const productId = Number(container.dataset.productId);
+
+  const translations = JSON.parse(container.dataset.translations);
+  const i18n = new VueI18n({
+    locale: 'en',
+    formatter: new ReplaceFormatter(),
+    messages: {en: translations},
+  });
 
   return new Vue({
     el: combinationsFiltersSelector,
     template: '<filters :productId=productId :eventEmitter=eventEmitter />',
     components: {Filters},
+    i18n,
     data: {
       productId,
       eventEmitter,

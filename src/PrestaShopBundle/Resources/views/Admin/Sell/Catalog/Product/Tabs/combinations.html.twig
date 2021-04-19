@@ -33,7 +33,12 @@
     'modal.close': 'Cancel'|trans({}, 'Admin.Actions'),
   }|json_encode }}"
   ></div>
-  <div id="combinations_filters"></div>
+  <div id="combinations_filters"
+  data-translations="{{ {
+    'filters.label': 'Filter by:'|trans({}, 'Admin.Actions'),
+    'filters.clear': 'Clear filter|Clear %filtersNb% filters'|trans({}, 'Admin.Actions'),
+  }|json_encode }}"
+  ></div>
 
   {{ render(controller('PrestaShopBundle:Admin\\Sell\\Catalog\\Product\\Combination:paginatedList', {
     'productId': productId,
