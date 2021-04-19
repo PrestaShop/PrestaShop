@@ -39,11 +39,11 @@
       <template #body>
         <div class="tags-input d-flex flex-wrap">
           <div class="tags-wrapper">
-            <template v-for="(group, groupName) in selectedAttributes">
+            <template v-for="(attributes, groupName) in selectedAttributes">
               <span
                 class="tag"
-                :key="selectedAttribute.id_combination"
-                v-for="selectedAttribute in group"
+                :key="selectedAttribute.id"
+                v-for="selectedAttribute in attributes"
               >{{ groupName }}: {{ selectedAttribute.name
               }}<i
                 class="material-icons"
@@ -67,38 +67,38 @@
           >
             <div class="attributes-content">
               <div
-                class="combination attribute-group"
-                v-for="combination of combinations"
-                :key="combination.id_combination"
+                class="attribute-group"
+                v-for="attributeGroup of attributeGroups"
+                :key="attributeGroup.id"
               >
                 <a
-                  class="combination-name attribute-group-name collapsed"
+                  class="attribute-group-name collapsed"
                   data-toggle="collapse"
-                  :href="`#attribute-group-${combination.id_combination}`"
-                >{{ combination.name }}</a>
+                  :href="`#attribute-group-${attributeGroup.id}`"
+                >{{ attributeGroup.name }}</a>
                 <div
-                  class="combination-content attributes collapse"
-                  :id="`attribute-group-${combination.id_combination}`"
+                  class="attribute-group-content attributes collapse"
+                  :id="`attribute-group-${attributeGroup.id}`"
                 >
                   <label
-                    v-for="item of combination.childs"
-                    :class="['combination-item', isSelected(combination, item)]"
-                    :for="`combination_${item.id_combination}`"
-                    :key="item.id"
+                    v-for="attribute of attributeGroup.attributes"
+                    :class="['attribute-item', isSelected(attributeGroup, attribute)]"
+                    :for="`attribute_${attribute.id}`"
+                    :key="attribute.id"
                   >
                     <input
                       type="checkbox"
-                      :name="`combination_${item.id_combination}`"
-                      :id="`combination_${item.id_combination}`"
-                      @change="changeSelected(item, combination)"
+                      :name="`attribute_${attribute.id}`"
+                      :id="`attribute_${attribute.id}`"
+                      @change="changeSelected(attribute, attributeGroup)"
                     >
-                    <div class="combination-item-content">
+                    <div class="attribute-item-content">
                       <span
-                        class="combination-item-color"
-                        v-if="item.color"
-                        :style="`background-color: ${item.color}`"
+                        class="attribute-item-color"
+                        v-if="attribute.color"
+                        :style="`background-color: ${attribute.color}`"
                       />
-                      <span class="combination-item-name">{{ item.name }}</span>
+                      <span class="attribute-item-name">{{ attribute.name }}</span>
                     </div>
                   </label>
                 </div>
@@ -140,6 +140,7 @@
 
 <script>
   import CombinationsService from '@pages/product/services/combinations-service';
+  import {getAllAttributeGroups} from '@pages/product/services/attribute-groups';
   import ProductMap from '@pages/product/product-map';
   import Modal from '@vue/components/Modal';
   import PerfectScrollbar from 'perfect-scrollbar';
@@ -154,9 +155,9 @@
     name: 'Generate',
     data() {
       return {
-        combinations: [],
+        attributeGroups: [],
         selectedAttributes: {},
-        service: new CombinationsService(this.productId),
+        combinationsService: new CombinationsService(this.productId),
         isModalShown: false,
         loading: false,
         scrollbar: null,
@@ -173,15 +174,15 @@
     },
     computed: {},
     mounted() {
-      this.initCombinations();
+      this.initAttributeGroups();
     },
     methods: {
       /**
        * This methods is used to initialize combinations definitions
        */
-      async initCombinations() {
+      async initAttributeGroups() {
         try {
-          this.combinations = await this.service.fetchAll();
+          this.attributeGroups = await getAllAttributeGroups();
           window.prestaShopUiKit.init();
         } catch (error) {
           window.$.growl.error({message: error});
@@ -202,9 +203,9 @@
           this.scrollbar = new PerfectScrollbar(CombinationsMap.scrollBar);
           const searchItems = [];
 
-          this.combinations.forEach((combination) => {
-            combination.childs.forEach((attribute) => {
-              attribute.group_name = combination.name;
+          this.attributeGroups.forEach((attributeGroup) => {
+            attributeGroup.attributes.forEach((attribute) => {
+              attribute.group_name = attributeGroup.name;
               searchItems.push(attribute);
             });
           });
@@ -226,12 +227,12 @@
             display: 'name',
             value: 'name',
             minLength: 1,
-            onSelect(selectedItem) {
-              const groupName = {
-                name: selectedItem.group_name,
+            onSelect(attribute) {
+              const attributeGroup = {
+                name: attribute.group_name,
               };
 
-              that.changeSelected(selectedItem, groupName);
+              that.changeSelected(attribute, attributeGroup);
             },
             onClose() {
               $searchInput.val('');
@@ -275,36 +276,38 @@
       /**
        * Remove the attribute if it's selected or add it
        *
-       * @param {Object} Combination
-       * @param {{name: string}} Combination
+       * @param {Object} selectedAttribute
+       * @param {{name: string}} attributeGroup
        */
-      changeSelected(combination, group) {
+      changeSelected(selectedAttribute, attributeGroup) {
+        const groupName = attributeGroup.name;
+
         if (
-          !this.selectedAttributes[group.name]
-          || !this.selectedAttributes[group.name].includes(combination)
+          !this.selectedAttributes[groupName]
+          || !this.selectedAttributes[groupName].includes(selectedAttribute)
         ) {
-          if (!this.selectedAttributes[group.name]) {
+          if (!this.selectedAttributes[groupName]) {
             const newAttributeGroup = {};
 
-            newAttributeGroup[group.name] = [];
-            newAttributeGroup[group.name].push(combination);
+            newAttributeGroup[groupName] = [];
+            newAttributeGroup[groupName].push(selectedAttribute);
             this.selectedAttributes = {
               ...this.selectedAttributes,
               ...newAttributeGroup,
             };
           } else {
-            this.selectedAttributes[group.name].push(combination);
+            this.selectedAttributes[groupName].push(selectedAttribute);
           }
         } else {
           // eslint-disable-next-line
-        this.selectedAttributes[group.name] = this.selectedAttributes[
-            group.name
-          ].filter((e) => e.id_combination !== combination.id_combination);
+        this.selectedAttributes[groupName] = this.selectedAttributes[
+            groupName
+          ].filter((attribute) => attribute.id_attribute !== selectedAttribute.id_attribute);
         }
       },
-      isSelected(combination, attribut) {
-        return this.selectedAttributes[combination.name]
-          && this.selectedAttributes[combination.name].includes(attribut)
+      isSelected(attributeGroup, attribute) {
+        return this.selectedAttributes[attributeGroup.name]
+          && this.selectedAttributes[attributeGroup.name].includes(attribute)
           ? 'selected'
           : 'unselected';
       },
@@ -324,7 +327,7 @@
     #attributes-list {
       max-height: 50vh;
 
-      .combination {
+      .attribute-group {
         border-bottom: 1px solid $gray-300;
         margin-bottom: 0.75rem;
         border-radius: 4px;
@@ -346,12 +349,12 @@
     }
   }
 
-  .combination {
+  .attribute-group {
     &-content {
       border-top: 1px solid $gray-300;
     }
 
-    &-item {
+    .attribute-item {
       cursor: pointer;
       border-radius: 3px;
       margin: 0.25rem 0;
