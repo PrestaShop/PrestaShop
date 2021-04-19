@@ -23,8 +23,11 @@ const baseContext = 'functional_BO_catalog_brandsAndSuppliers_brands_bulkActions
 let browserContext;
 let page;
 let numberOfBrandAddresses = 0;
+
+// Init data
 const firstAddressData = new BrandAddressFaker({firstName: 'AddressToDelete'});
 const secondAddressData = new BrandAddressFaker({firstName: 'AddressToDeleteTwo'});
+const addressesToCreate = [firstAddressData, secondAddressData];
 
 
 // Create 2 brands, Enable, disable and delete with bulk actions
@@ -68,8 +71,6 @@ describe('Create 2 brand Addresses and delete with bulk actions', async () => {
 
   // 1: Create 2 Addresses
   describe('Create 2 Addresses', async () => {
-    const addressesToCreate = [firstAddressData, secondAddressData];
-
     addressesToCreate.forEach((addressToCreate, index) => {
       it('should go to new brand Address page', async function () {
         await testContext.addContextItem(this, 'testIdentifier', `goToAddAddressPage${index + 1}`, baseContext);
@@ -107,7 +108,7 @@ describe('Create 2 brand Addresses and delete with bulk actions', async () => {
         'manufacturer_address',
       );
 
-      await expect(numberOfBrandAddressesAfterFilter).to.be.at.most(2);
+      await expect(numberOfBrandAddressesAfterFilter).to.be.at.most(addressesToCreate.length);
 
       for (let i = 1; i <= numberOfBrandAddressesAfterFilter; i++) {
         const textColumn = await brandsPage.getTextColumnFromTableAddresses(page, i, 'firstname');
