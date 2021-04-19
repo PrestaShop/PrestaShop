@@ -28,11 +28,11 @@
       class="btn btn-primary"
       @click.prevent.stop="showModal"
     >
-      Open combinations generator
+      {{ $t('generator.open') }}
     </button>
     <modal
       v-if="isModalShown"
-      :modal-title="'Generate combinations'"
+      :modal-title="$t('modal.title')"
       :confirmation="true"
       @close="closeModal"
     >
@@ -55,7 +55,7 @@
           </div>
           <input
             type="text"
-            placeholder="Search some attributes..."
+            :placeholder="$t('search.placeholder')"
             class="form-control input attributes-search"
           >
         </div>
@@ -113,9 +113,9 @@
           type="button"
           class="btn btn-outline-secondary"
           @click.prevent.stop="closeModal"
-          aria-label="Close modal"
+          :aria-label="$t('modal.close')"
         >
-          Cancel
+          {{ $t('modal.close') }}
         </button>
 
         <button
@@ -124,7 +124,7 @@
           @click.prevent.stop="generateCombinations"
         >
           <span v-if="!loading">
-            Generate
+            {{ $t('modal.save') }}
           </span>
           <span
             class="spinner-border spinner-border-sm"
