@@ -22,7 +22,15 @@
  * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  *#}
-{% use 'bootstrap_4_layout.html.twig' %}
+
+{#
+# Since we override radio_widget and use parent() we don't want to use the radio_widget from bootstrap_4_layout so we
+# redefine it as base_radio_widget to ignore it. But we still need the original one so we need to use the one from
+# bootstrap_base_layout which is included first so that bootstrap_4_layout has priority over all other blocks.
+#}
+{% use 'bootstrap_base_layout.html.twig' %}
+{% use 'bootstrap_4_layout.html.twig' with radio_widget as base_radio_widget %}
+
 {% use '@PrestaShop/Admin/TwigTemplateForm/typeahead.html.twig' %}
 {% use '@PrestaShop/Admin/TwigTemplateForm/material.html.twig' %}
 
