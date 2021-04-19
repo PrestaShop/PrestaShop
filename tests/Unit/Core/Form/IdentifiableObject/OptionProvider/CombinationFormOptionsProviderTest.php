@@ -24,26 +24,37 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
 
-namespace PrestaShop\PrestaShop\Core\Form\IdentifiableObject\DataProvider;
+declare(strict_types=1);
 
-/**
- * Interface for services that provide data for identifiable object forms.
- */
-interface FormDataProviderInterface
+namespace Tests\Unit\Core\Form\IdentifiableObject\OptionProvider;
+
+use Generator;
+use PHPStan\Testing\TestCase;
+use PrestaShop\PrestaShop\Core\Form\IdentifiableObject\OptionProvider\CombinationFormOptionsProvider;
+
+class CombinationFormOptionsProviderTest extends TestCase
 {
-    /**
-     * Get form data for given object with given id.
-     *
-     * @param int $id
-     *
-     * @return mixed
-     */
-    public function getData($id);
+    public function testGetDefaultOptions(): void
+    {
+        $provider = new CombinationFormOptionsProvider();
+        $defaultOptions = $provider->getDefaultOptions([]);
+        $this->assertEquals([], $defaultOptions);
+    }
 
     /**
-     * Get default form data.
-     *
-     * @return mixed
+     * @dataProvider getTestData
      */
-    public function getDefaultData();
+    public function testGetOptions(array $formData, array $expectedOptions): void
+    {
+        $provider = new CombinationFormOptionsProvider();
+        $options = $provider->getOptions(51, $formData);
+        $this->assertEquals($expectedOptions, $options);
+    }
+
+    public function getTestData(): Generator
+    {
+        yield [[], ['product_id' => null]];
+        yield [['product_id' => null], ['product_id' => null]];
+        yield [['product_id' => 42], ['product_id' => 42]];
+    }
 }

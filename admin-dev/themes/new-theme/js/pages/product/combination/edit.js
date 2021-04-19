@@ -24,6 +24,7 @@
  */
 
 import ProductSuppliersManager from '@pages/product/edit/product-suppliers-manager';
+import ImageSelector from '@pages/product/combination/image-selector';
 import ProductMap from '@pages/product/product-map';
 
 const {$} = window;
@@ -38,4 +39,5 @@ $(() => {
   ]);
 
   new ProductSuppliersManager(ProductMap.suppliers.combinationSuppliers, false);
+  new ImageSelector();
 });

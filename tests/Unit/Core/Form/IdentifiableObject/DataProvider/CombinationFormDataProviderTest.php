@@ -85,6 +85,7 @@ class CombinationFormDataProviderTest extends TestCase
             $this->getDatasetsForPriceImpact(),
             $this->getDatasetsForDetails(),
             $this->getDatasetsForProductSuppliers(),
+            $this->getDatasetsForImages(),
         ];
 
         foreach ($datasetsByType as $datasetByType) {
@@ -278,6 +279,28 @@ class CombinationFormDataProviderTest extends TestCase
     }
 
     /**
+     * @return array
+     */
+    private function getDatasetsForImages(): array
+    {
+        $datasets = [];
+
+        $expectedOutputData = $this->getDefaultOutputData();
+        $expectedOutputData['images'] = [42, 51];
+
+        $combinationData = [
+            'image_ids' => [42, 51],
+        ];
+
+        $datasets[] = [
+            $combinationData,
+            $expectedOutputData,
+        ];
+
+        return $datasets;
+    }
+
+    /**
      * @param array $combinationData
      *
      * @return MockObject|CommandBusInterface
@@ -441,6 +464,7 @@ class CombinationFormDataProviderTest extends TestCase
     {
         return [
             'id' => self::COMBINATION_ID,
+            'product_id' => self::PRODUCT_ID,
             'name' => self::DEFAULT_NAME,
             'stock' => [
                 'quantity' => self::DEFAULT_QUANTITY,
@@ -465,8 +489,8 @@ class CombinationFormDataProviderTest extends TestCase
                 'upc' => 'upc',
                 'mpn' => 'mpn',
             ],
-            'suppliers' => [
-            ],
+            'suppliers' => [],
+            'images' => [],
         ];
     }
 }

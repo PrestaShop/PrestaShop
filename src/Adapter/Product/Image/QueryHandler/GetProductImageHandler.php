@@ -29,10 +29,12 @@ declare(strict_types=1);
 namespace PrestaShop\PrestaShop\Adapter\Product\Image\QueryHandler;
 
 use Image;
+use PrestaShop\PrestaShop\Adapter\Product\Image\ProductImagePathFactory;
 use PrestaShop\PrestaShop\Adapter\Product\Image\Repository\ProductImageRepository;
 use PrestaShop\PrestaShop\Core\Domain\Product\Image\Query\GetProductImage;
 use PrestaShop\PrestaShop\Core\Domain\Product\Image\QueryHandler\GetProductImageHandlerInterface;
 use PrestaShop\PrestaShop\Core\Domain\Product\Image\QueryResult\ProductImage;
+use PrestaShop\PrestaShop\Core\Domain\Product\Image\ValueObject\ImageId;
 
 /**
  * Handles @see GetProductImage query
@@ -45,12 +47,20 @@ class GetProductImageHandler implements GetProductImageHandlerInterface
     private $productImageRepository;
 
     /**
+     * @var ProductImagePathFactory
+     */
+    private $productImageUrlFactory;
+
+    /**
      * @param ProductImageRepository $productImageRepository
+     * @param ProductImagePathFactory $productImageUrlFactory
      */
     public function __construct(
-        ProductImageRepository $productImageRepository
+        ProductImageRepository $productImageRepository,
+        ProductImagePathFactory $productImageUrlFactory
     ) {
         $this->productImageRepository = $productImageRepository;
+        $this->productImageUrlFactory = $productImageUrlFactory;
     }
 
     /**
@@ -70,12 +80,15 @@ class GetProductImageHandler implements GetProductImageHandlerInterface
      */
     private function formatImage(Image $image): ProductImage
     {
+        $imageId = new ImageId((int) $image->id);
+
         return new ProductImage(
             (int) $image->id,
             (bool) $image->cover,
             (int) $image->position,
             $image->legend,
-            sprintf('%s.%s', $image->getImgPath(), $image->image_format)
+            $this->productImageUrlFactory->getPath($imageId),
+            $this->productImageUrlFactory->getPathByType($imageId, ProductImagePathFactory::IMAGE_TYPE_SMALL_DEFAULT)
         );
     }
 }

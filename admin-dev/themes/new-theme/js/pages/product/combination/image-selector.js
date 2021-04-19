@@ -1,4 +1,3 @@
-<?php
 /**
  * Copyright since 2007 PrestaShop SA and Contributors
  * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
@@ -24,26 +23,25 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
 
-namespace PrestaShop\PrestaShop\Core\Form\IdentifiableObject\DataProvider;
+import ProductMap from '@pages/product/product-map';
 
-/**
- * Interface for services that provide data for identifiable object forms.
- */
-interface FormDataProviderInterface
-{
-    /**
-     * Get form data for given object with given id.
-     *
-     * @param int $id
-     *
-     * @return mixed
-     */
-    public function getData($id);
+const {$} = window;
 
-    /**
-     * Get default form data.
-     *
-     * @return mixed
-     */
-    public function getDefaultData();
+export default class ImageSelector {
+  constructor() {
+    this.$selectorContainer = $(ProductMap.combinations.images.selectorContainer);
+    this.init();
+  }
+
+  init() {
+    $(ProductMap.combinations.images.checkboxContainer, this.$selectorContainer).hide();
+    this.$selectorContainer.on('click', ProductMap.combinations.images.imageChoice, (event) => {
+      const $imageChoice = $(event.currentTarget);
+      const $checkbox = $(ProductMap.combinations.images.checkbox, $imageChoice);
+
+      const isChecked = $checkbox.prop('checked');
+      $imageChoice.toggleClass('selected', !isChecked);
+      $checkbox.prop('checked', !isChecked);
+    });
+  }
 }

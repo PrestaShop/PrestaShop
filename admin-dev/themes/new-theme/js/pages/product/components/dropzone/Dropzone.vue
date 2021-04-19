@@ -242,7 +242,7 @@
           this.initDropZone();
 
           images.forEach((image) => {
-            this.dropzone.displayExistingFile(image, image.path);
+            this.dropzone.displayExistingFile(image, image.image_url);
           });
         } catch (error) {
           window.$.growl.error({message: error});
@@ -485,7 +485,7 @@
           const imageElement = document.querySelector(
             DropzoneMap.savedImage(newImage.image_id),
           );
-          imageElement.src = newImage.path;
+          imageElement.src = newImage.image_url;
 
           $.growl({message: this.$t('window.imageReplaced')});
           this.buttonLoading = false;

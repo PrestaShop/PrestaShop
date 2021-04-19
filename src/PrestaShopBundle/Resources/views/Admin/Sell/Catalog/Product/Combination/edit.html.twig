@@ -24,7 +24,7 @@
  *#}
 {% extends '@PrestaShop/Admin/layout.html.twig' %}
 
-{% form_theme combinationForm 'PrestaShopBundle:Admin/TwigTemplateForm:prestashop_ui_kit.html.twig' %}
+{% form_theme combinationForm '@PrestaShop/Admin/Sell/Catalog/Product/Form/combination_form_theme.html.twig' %}
 
 {% block stylesheets %}
   <link rel="stylesheet" href="{{ asset('themes/new-theme/public/product.css') }}" type="text/css" media="all">
@@ -55,6 +55,8 @@
           {{ include('@PrestaShop/Admin/Sell/Catalog/Product/Blocks/suppliers.html.twig', {
             'suppliersForm': combinationForm.suppliers,
           }) }}
+
+          {{ form_row(combinationForm.images) }}
 
           {{ form_rest(combinationForm) }}
         </div>

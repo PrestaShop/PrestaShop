@@ -35,11 +35,11 @@ Feature: Associate combination image from Back Office (BO)
     And I add new image "image3" named "app_icon.png" to product "product1"
     And I add new image "image4" named "logo.jpg" to product "product1"
     And product "product1" should have following images:
-      | image reference | is cover | legend[en-US] | position |
-      | image1          | true     |               | 1        |
-      | image2          | false    |               | 2        |
-      | image3          | false    |               | 3        |
-      | image4          | false    |               | 4        |
+      | image reference | is cover | legend[en-US] | position | image url                            | thumbnail url                                      |
+      | image1          | true     |               | 1        | http://myshop.com/img/p/{image1}.jpg | http://myshop.com/img/p/{image1}-small_default.jpg |
+      | image2          | false    |               | 2        | http://myshop.com/img/p/{image2}.jpg | http://myshop.com/img/p/{image2}-small_default.jpg |
+      | image3          | false    |               | 3        | http://myshop.com/img/p/{image3}.jpg | http://myshop.com/img/p/{image3}-small_default.jpg |
+      | image4          | false    |               | 4        | http://myshop.com/img/p/{image4}.jpg | http://myshop.com/img/p/{image4}-small_default.jpg |
     And images "[image1, image2, image3, image4]" should have following types generated:
       | name           | width | height |
       | cart_default   | 125   | 125    |

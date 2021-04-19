@@ -67,11 +67,13 @@ class CombinationFormDataProvider implements FormDataProviderInterface
 
         return [
             'id' => $combinationId,
+            'product_id' => $combinationForEditing->getProductId(),
             'name' => $combinationForEditing->getName(),
             'stock' => $this->extractStockData($combinationForEditing),
             'price_impact' => $this->extractPriceImpactData($combinationForEditing),
             'details' => $this->extractDetailsData($combinationForEditing),
             'suppliers' => $this->extractSuppliersData($combinationForEditing),
+            'images' => $combinationForEditing->getImageIds(),
         ];
     }
 

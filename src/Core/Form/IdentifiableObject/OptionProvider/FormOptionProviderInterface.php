@@ -24,26 +24,29 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
 
-namespace PrestaShop\PrestaShop\Core\Form\IdentifiableObject\DataProvider;
+namespace PrestaShop\PrestaShop\Core\Form\IdentifiableObject\OptionProvider;
 
 /**
- * Interface for services that provide data for identifiable object forms.
+ * Interface for services that provide options for identifiable object forms.
  */
-interface FormDataProviderInterface
+interface FormOptionProviderInterface
 {
     /**
-     * Get form data for given object with given id.
+     * Get form options for given object with given id.
      *
      * @param int $id
+     * @param array $data
      *
-     * @return mixed
+     * @return array
      */
-    public function getData($id);
+    public function getOptions(int $id, array $data): array;
 
     /**
-     * Get default form data.
+     * Get default form options.
      *
-     * @return mixed
+     * @param array $data
+     *
+     * @return array
      */
-    public function getDefaultData();
+    public function getDefaultOptions(array $data): array;
 }
