@@ -27,12 +27,12 @@
   {{ form_widget(productForm.price) }}
 
   {{ include('@PrestaShop/Admin/Common/unavailable-feature.html.twig', {
-    'featureTitle': 'Specific price'|trans({}, 'Admin.Catalog.Feature'),
-    'helpbox': 'You can set specific prices for customers belonging to different groups, different countries, etc.'|trans({}, 'Admin.Catalog.Feature'),
+    'featureTitle': 'Specific prices'|trans({}, 'Admin.Catalog.Feature'),
+    'helpbox': 'You can set specific prices for customers belonging to different groups, different countries, etc.'|trans({}, 'Admin.Catalog.Help'),
   }) }}
 
   {{ include('@PrestaShop/Admin/Common/unavailable-feature.html.twig', {
     'featureTitle': 'Priority management'|trans({}, 'Admin.Catalog.Feature'),
-    'helpbox': 'Sometimes one customer can fit into multiple price rules. Priorities allow you to define which rules apply first.'|trans({}, 'Admin.Catalog.Feature'),
+    'helpbox': 'Sometimes one customer can fit into multiple price rules. Priorities allow you to define which rules apply first.'|trans({}, 'Admin.Catalog.Help'),
   }) }}
 </div>
