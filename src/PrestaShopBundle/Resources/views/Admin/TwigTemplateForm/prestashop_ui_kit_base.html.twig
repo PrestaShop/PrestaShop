@@ -566,9 +566,7 @@
       <label class="form-check-label"{% for attrname, attrvalue in label_attr %} {{ attrname }}="{{ attrvalue }}"{% endfor %}>
         {{- widget|raw -}}
 
-        {% if isFirstChild is not defined %}
-          <i class="form-check-round"></i>
-        {% endif %}
+        <i class="form-check-round"></i>
 
         {{- label is not same as(false) ? (translation_domain is same as(false) ? label|raw : label|raw) -}}
       </label>
@@ -593,9 +591,8 @@
         </div>
     {%- else -%}
         {%- set attr = attr|merge({class: (attr.class|default('') ~ ' form-check-input')|trim}) -%}
-        {%- set isFirstChild = true -%}
         <div class="form-check form-check-radio{{ 'radio-inline' in parent_label_class ? ' form-check-inline' }}">
-            {{- form_label(form, null, { widget: parent(), isFirstChild: isFirstChild }) -}}
+            {{- form_label(form, null, { widget: parent() }) -}}
         </div>
     {%- endif -%}
 {%- endblock radio_widget %}
