@@ -107,7 +107,7 @@ describe('Create 2 brand Addresses and delete with bulk actions', async () => {
         'manufacturer_address',
       );
 
-      await expect(numberOfBrandAddressesAfterFilter).to.be.at.most(numberOfBrandAddresses);
+      await expect(numberOfBrandAddressesAfterFilter).to.be.at.most(2);
 
       for (let i = 1; i <= numberOfBrandAddressesAfterFilter; i++) {
         const textColumn = await brandsPage.getTextColumnFromTableAddresses(page, i, 'firstname');
