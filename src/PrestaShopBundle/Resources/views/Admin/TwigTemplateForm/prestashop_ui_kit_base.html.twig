@@ -562,34 +562,43 @@
       {% set label = name|humanize %}
     {% endif %}
 
-    {% if material_design is defined or attr.material_design is defined %}
-      {% if block_prefixes[2] == 'radio' %}
-        <label class="form-check-label">
-          {{- widget|raw -}}
+    {% if block_prefixes[2] == 'radio' %}
+      <label class="form-check-label"{% for attrname, attrvalue in label_attr %} {{ attrname }}="{{ attrvalue }}"{% endfor %}>
+        {{- widget|raw -}}
 
-          {% if isFirstChild is not defined %}
-            <i class="form-check-round"></i>
-          {% endif %}
+        {% if isFirstChild is not defined %}
+          <i class="form-check-round"></i>
+        {% endif %}
 
-          {{- label is not same as(false) ? (translation_domain is same as(false) ? label|raw : label|raw) -}}
-        </label>
-      {% else %}
-        <div class="md-checkbox md-checkbox-inline">
-          <label{% for attrname, attrvalue in label_attr %} {{ attrname }}="{{ attrvalue }}"{% endfor %}>
-          {{- widget|raw -}}
-          <i class="md-checkbox-control"></i>
-          {{- label is not same as(false) ? (translation_domain is same as(false) ? label|raw : label|raw) -}}
-          </label>
-        </div>
-      {% endif %}
-    {% else %}
-      <label{% for attrname, attrvalue in label_attr %} {{ attrname }}="{{ attrvalue }}"{% endfor %}>
-      {{- widget|raw -}}
-      {{- label is not same as(false) ? (translation_domain is same as(false) ? label|raw : label|raw) -}}
+        {{- label is not same as(false) ? (translation_domain is same as(false) ? label|raw : label|raw) -}}
       </label>
+    {% else %}
+      <div class="md-checkbox md-checkbox-inline">
+        <label{% for attrname, attrvalue in label_attr %} {{ attrname }}="{{ attrvalue }}"{% endfor %}>
+        {{- widget|raw -}}
+        <i class="md-checkbox-control"></i>
+        {{- label is not same as(false) ? (translation_domain is same as(false) ? label|raw : label|raw) -}}
+        </label>
+      </div>
     {% endif %}
   {% endif %}
 {% endblock checkbox_radio_label %}
+
+{% block radio_widget -%}
+    {%- set parent_label_class = parent_label_class|default(label_attr.class|default('')) -%}
+    {%- if 'radio-custom' in parent_label_class -%}
+        {%- set attr = attr|merge({class: (attr.class|default('') ~ ' custom-control-input')|trim}) -%}
+        <div class="custom-control custom-radio{{ 'radio-inline' in parent_label_class ? ' custom-control-inline' }}">
+            {{- form_label(form, null, { widget: parent() }) -}}
+        </div>
+    {%- else -%}
+        {%- set attr = attr|merge({class: (attr.class|default('') ~ ' form-check-input')|trim}) -%}
+        {%- set isFirstChild = true -%}
+        <div class="form-check form-check-radio{{ 'radio-inline' in parent_label_class ? ' form-check-inline' }}">
+            {{- form_label(form, null, { widget: parent(), isFirstChild: isFirstChild }) -}}
+        </div>
+    {%- endif -%}
+{%- endblock radio_widget %}
 
 {# Errors #}
 

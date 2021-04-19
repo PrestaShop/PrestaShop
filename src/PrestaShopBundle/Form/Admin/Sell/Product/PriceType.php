@@ -124,9 +124,6 @@ class PriceType extends TranslatorAwareType
                     'Display the "On sale!" flag on the product page, and on product listings.',
                     'Admin.Catalog.Feature'
                 ),
-                'attr' => [
-                    'material_design' => true,
-                ],
             ])
             ->add('wholesale_price', MoneyType::class, [
                 'required' => false,
