@@ -36,7 +36,6 @@ import ProductTypeManager from '@pages/product/edit/product-type-manager';
 import initDropzone from '@pages/product/components/dropzone';
 import ProductFormModel from '@pages/product/edit/product-form-model';
 import VirtualProductManager from '@pages/product/edit/virtual-product-manager';
-import initCombinationGenerator from '@pages/product/components/combinations';
 
 const {$} = window;
 
@@ -95,7 +94,6 @@ $(() => {
   );
 
   initDropzone(ProductMap.dropzoneImagesContainer);
-  initCombinationGenerator(ProductMap.combinationsGeneratorContainer);
 
   // From here we init component specific to edition
   const $productFormSubmitButton = $(ProductMap.productFormSubmitButton);
