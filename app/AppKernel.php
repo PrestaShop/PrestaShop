@@ -72,7 +72,7 @@ class AppKernel extends Kernel
         }
 
         /* Will not work until PrestaShop is installed */
-        $activeModules = (new ModuleRepository())->getActiveModules();
+        $activeModules = $this->getActiveModules();
         if (!empty($activeModules)) {
             try {
                 $this->enableComposerAutoloaderOnModules($activeModules);
@@ -106,7 +106,7 @@ class AppKernel extends Kernel
 
         return array_merge(
             $kernelParameters,
-            array('kernel.active_modules' => (new ModuleRepository())->getActiveModules())
+            array('kernel.active_modules' => $this->getActiveModules())
         );
     }
 
@@ -152,7 +152,7 @@ class AppKernel extends Kernel
         // Add translation paths to load into the translator. The paths are loaded by the Symfony's FrameworkExtension
         $loader->load(function (ContainerBuilder $container) {
             $moduleTranslationsPaths = $container->getParameter('modules_translation_paths');
-            foreach ((new ModuleRepository())->getActiveModulesPaths() as $activeModulePath) {
+            foreach ($this->getActiveModules() as $activeModulePath) {
                 $translationsDir = $activeModulePath . '/translations';
                 if (is_dir($translationsDir)) {
                     $moduleTranslationsPaths[] = $translationsDir;
@@ -194,5 +194,18 @@ class AppKernel extends Kernel
     public function getProjectDir()
     {
         return realpath(__DIR__ . '/..');
+    }
+
+    private function getActiveModules(): array
+    {
+        $activeModules = [];
+        try {
+            $activeModules = (new ModuleRepository())->getActiveModules();
+        } catch (\Exception $e) {
+            //Do nothing because the modules retrieval must not block the kernel, and it won't work
+            //during the installation process
+        }
+
+        return $activeModules;
     }
 }
