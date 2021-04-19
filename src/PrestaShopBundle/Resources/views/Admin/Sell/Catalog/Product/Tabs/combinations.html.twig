@@ -25,7 +25,7 @@
 
 <div role="tabpanel" class="form-contenttab tab-pane container-fluid" id="combinations-tab">
   {{ include('@PrestaShop/Admin/Common/unavailable-feature.html.twig', {
-    'featureTitle': 'Generate combinations'|trans({}, 'Admin.Catalog.Feature'),
+    'featureTitle': 'Generate'|trans({}, 'Admin.Actions'),
   }) }}
 
   <div id="combinations_filters" data-product-id="{{ productId }}"></div>
@@ -36,7 +36,7 @@
     <div id="combinations-stock-availability">
       {#    @todo: render stock availability preferences here when extracted to a reusable component. check StockType.php#}
       {{ include('@PrestaShop/Admin/Common/unavailable-feature.html.twig', {
-        'featureTitle': 'Avalaibility preferences'|trans({}, 'Admin.Catalog.Feature'),
+        'featureTitle': 'Availability preferences'|trans({}, 'Admin.Catalog.Feature'),
       }) }}
   </div>
 </div>
