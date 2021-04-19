@@ -109,11 +109,9 @@ class TranslatorLanguageLoader
         }
 
         // Load modules translation catalogues
-        if (defined(_DB_PREFIX_)) { // if not defined, no need to go further, we won't be able to get the active modules
-            $activeModulesPaths = $this->moduleRepository->getActiveModulesPaths();
-            foreach ($activeModulesPaths as $activeModuleName => $activeModulePath) {
-                $this->loadModuleTranslations($translator, $activeModuleName, $activeModulePath, $locale, $withDB);
-            }
+        $activeModulesPaths = $this->moduleRepository->getActiveModulesPaths();
+        foreach ($activeModulesPaths as $activeModuleName => $activeModulePath) {
+            $this->loadModuleTranslations($translator, $activeModuleName, $activeModulePath, $locale, $withDB);
         }
 
         if ($withDB) {
@@ -129,7 +127,7 @@ class TranslatorLanguageLoader
      * Loads translations for a single module
      */
     private function loadModuleTranslations(
-        TranslatorInterface $translator,
+        BaseTranslatorComponent $translator,
         string $moduleName,
         string $modulePath,
         string $locale,
@@ -164,7 +162,7 @@ class TranslatorLanguageLoader
      *
      * @return array
      */
-    protected function getTranslationResourcesDirectories(Theme $theme = null)
+    protected function getTranslationResourcesDirectories(Theme $theme = null): array
     {
         $locations = [self::TRANSLATION_DIR];
 
