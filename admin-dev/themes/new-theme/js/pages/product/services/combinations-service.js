@@ -99,6 +99,19 @@ export default class CombinationsService {
   }
 
   /**
+   * @param {Object} data Attributes indexed by attributeGroupId { 1: [23, 34], 3: [45, 52]}
+   */
+  generateCombinations(data) {
+    return $.ajax({
+      url: this.router.generate('admin_products_combinations_generate', {
+        productId: this.productId,
+      }),
+      data,
+      method: 'POST',
+    });
+  }
+
+  /**
    * @returns {Promise}
    */
   getCombinationIds() {
