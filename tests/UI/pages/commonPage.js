@@ -35,8 +35,8 @@ class CommonPage {
    * Wait for selector to have a state
    * @param page {Page} Browser tab
    * @param selector {string} selector to wait
-   * @param state {string} state
-   * @param timeout
+   * @param state {string} Selector state between 'visible'|'hidden'|'attached'|'detached'
+   * @param timeout {number} Time to wait on milliseconds before throwing an error
    * @returns {Promise<void>}
    */
   async waitForSelector(page, selector, state, timeout = 10000) {
@@ -46,8 +46,8 @@ class CommonPage {
   /**
    * Wait for selector to be visible
    * @param page {Page} Browser tab
-   * @param selector
-   * @param timeout
+   * @param selector {string} selector to wait
+   * @param timeout {number} Time to wait on milliseconds before throwing an error
    * @return {Promise<void>}
    */
   async waitForVisibleSelector(page, selector, timeout = 10000) {
@@ -57,8 +57,8 @@ class CommonPage {
   /**
    * Wait for selector to be visible
    * @param page {Page} Browser tab
-   * @param selector
-   * @param timeout
+   * @param selector {string} selector to wait
+   * @param timeout {number} Time to wait on milliseconds before throwing an error
    * @return {Promise<void>}
    */
   async waitForHiddenSelector(page, selector, timeout = 10000) {
@@ -68,8 +68,8 @@ class CommonPage {
   /**
    * Wait for selector to be attached
    * @param page {Page} Browser tab
-   * @param selector
-   * @param timeout
+   * @param selector {string} selector to wait
+   * @param timeout {number} Time to wait on milliseconds before throwing an error
    * @return {Promise<void>}
    */
   async waitForAttachedSelector(page, selector, timeout = 10000) {
@@ -79,8 +79,8 @@ class CommonPage {
   /**
    * Wait for selector to be detached
    * @param page {Page} Browser tab
-   * @param selector
-   * @param timeout
+   * @param selector {string} selector to wait
+   * @param timeout {number} Time to wait on milliseconds before throwing an error
    * @return {Promise<void>}
    */
   async waitForDetachedSelector(page, selector, timeout = 10000) {
@@ -90,8 +90,8 @@ class CommonPage {
   /**
    * Get Text from element
    * @param page {Page} Browser tab
-   * @param selector, from where to get text
-   * @param waitForSelector
+   * @param selector{string} From where to get text
+   * @param waitForSelector {boolean} True to wait for selector to be visible before getting text
    * @return {Promise<string>}
    */
   async getTextContent(page, selector, waitForSelector = true) {
@@ -106,8 +106,8 @@ class CommonPage {
   /**
    * Get attribute from element
    * @param page {Page} Browser tab
-   * @param selector
-   * @param attribute
+   * @param selector {string} String to locate the element
+   * @param attribute {string} Name of the attribute to get
    * @returns {Promise<string>}
    */
   async getAttributeContent(page, selector, attribute) {
@@ -119,9 +119,9 @@ class CommonPage {
   /**
    * Is element visible
    * @param page {Page} Browser tab
-   * @param selector, element to check
-   * @param timeout, how much should we wait
-   * @returns {Promise<boolean>}, true if visible, false if not
+   * @param selector {string} String to locate the element
+   * @param timeout {number} Time to wait on milliseconds before throwing an error
+   * @returns {Promise<boolean>} True if visible, false if not
    */
   async elementVisible(page, selector, timeout = 10) {
     try {
@@ -136,7 +136,7 @@ class CommonPage {
    * Is element not visible
    * @param page {Page} Browser tab
    * @param selector, element to check
-   * @param timeout, how much should we wait
+   * @param timeout {number} Time to wait on milliseconds before throwing an error
    * @returns {Promise<boolean>}, true if visible, false if not
    */
   async elementNotVisible(page, selector, timeout = 10) {
@@ -151,9 +151,9 @@ class CommonPage {
   /**
    * Open link in new Tab and get opened Page
    * @param page {Page} Browser tab
-   * @param selector, where to click
-   * @param newPageSelector, selector to wait in new page (default to FO logo)
-   * @return newPage, what was opened by the browser
+   * @param selector {string} String to locate the element for the click
+   * @param newPageSelector {string} String to locate the element on the opened page (default to FO logo)
+   * @return newPage {Promise<Page>} Opened tab after the click
    */
   async openLinkWithTargetBlank(page, selector, newPageSelector = 'body .logo') {
     const [newPage] = await Promise.all([
@@ -170,8 +170,8 @@ class CommonPage {
   /**
    * Wait for selector and click
    * @param page {Page} Browser tab
-   * @param selector, element to check
-   * @param timeout, wait timeout
+   * @param selector {string} String to locate the element for the check
+   * @param timeout {number} Time to wait on milliseconds before throwing an error
    * @return {Promise<void>}
    */
   async waitForSelectorAndClick(page, selector, timeout = 5000) {
@@ -191,8 +191,8 @@ class CommonPage {
   /**
    * Delete the existing text from input then set a value
    * @param page {Page} Browser tab
-   * @param selector, input
-   * @param value, value to set in the input
+   * @param selector {string} String to locate the input to set its value
+   * @param value {string} Value to set on the input
    * @return {Promise<void>}
    */
   async setValue(page, selector, value) {
@@ -207,9 +207,9 @@ class CommonPage {
   }
 
   /**
-   * To accept or dismiss a navigator dialog
+   * To accept or dismiss a javascript dialog
    * @param page {Page} Browser tab
-   * @param accept
+   * @param accept {boolean} True to accept the dialog, false to dismiss
    * @return {Promise<void>}
    */
   async dialogListener(page, accept = true) {
@@ -221,9 +221,9 @@ class CommonPage {
 
   /**
    * Close actual tab and goto another tab if wanted
-   * @param browserContext
+   * @param browserContext {BrowserContext} Context of the page
    * @param page {Page} Browser tab
-   * @param tabId
+   * @param tabId {number} Tab to get focus on after closing the other tab
    * @return {Promise<void>}
    */
   async closePage(browserContext, page, tabId = -1) {
@@ -239,7 +239,7 @@ class CommonPage {
   /**
    * Scroll to element
    * @param page {Page} Browser tab
-   * @param selector
+   * @param selector {string} String to locate the element to scroll to
    * @return {Promise<void>}
    */
   async scrollTo(page, selector) {
@@ -249,8 +249,8 @@ class CommonPage {
   /**
    * Select option in select by visible text
    * @param page {Page} Browser tab
-   * @param selector
-   * @param textValue
+   * @param selector {string} String to locate the select
+   * @param textValue {string} Value to select
    * @returns {Promise<void>}
    */
   async selectByVisibleText(page, selector, textValue) {
@@ -276,8 +276,8 @@ class CommonPage {
   /**
    * To get a number from text
    * @param page {Page} Browser tab
-   * @param selector
-   * @param timeout
+   * @param selector {string} String to locate the element
+   * @param timeout {number} Time to wait on milliseconds before throwing an error
    * @returns {Promise<number>}
    */
   async getNumberFromText(page, selector, timeout = 0) {
@@ -291,8 +291,8 @@ class CommonPage {
   /**
    * Go to Page and wait for navigation
    * @param page {Page} Browser tab
-   * @param selector
-   * @param waitUntil, the event to wait after click (load/networkidle/domcontentloaded)
+   * @param selector {string} String to locate the element
+   * @param waitUntil {string} The event to wait after click (load/networkidle/domcontentloaded)
    * @return {Promise<void>}
    */
   async clickAndWaitForNavigation(page, selector, waitUntil = 'networkidle') {
@@ -305,7 +305,7 @@ class CommonPage {
   /**
    * Navigate to the previous page in history
    * @param page {Page} Browser tab
-   * @param waitUntil
+   * @param waitUntil {string} The event to wait after click (load/networkidle/domcontentloaded)
    * @return {Promise<void>}
    */
   async goToPreviousPage(page, waitUntil = 'load') {
@@ -315,7 +315,7 @@ class CommonPage {
   /**
    * Check if checkbox is selected
    * @param page {Page} Browser tab
-   * @param selector
+   * @param selector {string} String to locate the checkbox
    * @return {Promise<boolean>}
    */
   async isCheckboxSelected(page, selector) {
@@ -325,8 +325,8 @@ class CommonPage {
   /**
    * Select, unselect checkbox
    * @param page {Page} Browser tab
-   * @param checkboxSelector, selector of checkbox
-   * @param valueWanted, true if we want to select checkBox, else otherwise
+   * @param checkboxSelector {string} String to locate the checkbox
+   * @param valueWanted {boolean} Value wanted on the selector
    * @return {Promise<void>}
    */
   async changeCheckboxValue(page, checkboxSelector, valueWanted = true) {
@@ -337,9 +337,10 @@ class CommonPage {
 
   /**
    * Sort array of strings or numbers
-   * @param arrayToSort
-   * @param isFloat
-   * @return {Promise<*>}
+   * @param arrayToSort {Array} Array to sort
+   * @param isFloat {boolean} True if array values type are float
+   * @param isDate {boolean} True if array values type are date
+   * @return {Promise<[]>}
    */
   async sortArray(arrayToSort, isFloat = false, isDate = false) {
     if (isFloat) {
@@ -356,8 +357,8 @@ class CommonPage {
   /**
    * Drag and drop element
    * @param page {Page} Browser tab
-   * @param selectorToDrag
-   * @param selectorWhereToDrop
+   * @param selectorToDrag {string} String to locate the element to drag
+   * @param selectorWhereToDrop String to locate the element where to drop
    * @return {Promise<void>}
    */
   async dragAndDrop(page, selectorToDrag, selectorWhereToDrop) {
@@ -369,7 +370,7 @@ class CommonPage {
 
   /**
    * Uppercase the first character of the word
-   * @param word
+   * @param word {string} String of the word
    * @returns {string}
    */
   uppercaseFirstCharacter(word) {
@@ -379,8 +380,8 @@ class CommonPage {
   /**
    * Upload file in input type=file selector
    * @param page {Page} Browser tab
-   * @param selector
-   * @param filePath
+   * @param selector {string} String to locate the file input
+   * @param filePath {string} Path of the file to add
    * @return {Promise<void>}
    */
   async uploadFile(page, selector, filePath) {
@@ -389,13 +390,13 @@ class CommonPage {
   }
 
   /**
-   * Upload image path in all type
+   * Upload file using file chooser
    * @param page {Page} Browser tab
-   * @param selector
-   * @param filePath
+   * @param selector {string} String to locate the file chooser
+   * @param filePath {string} Path of the file to add
    * @returns {Promise<void>}
    */
-  async uploadFilePath(page, selector, filePath) {
+  async uploadOnFileChooser(page, selector, filePath) {
     // Set value when fileChooser is open
     page.once('filechooser', async (fileChooser) => {
       await fileChooser.setFiles(filePath);
@@ -406,8 +407,8 @@ class CommonPage {
   /**
    * Get a float price from text
    * @param page {Page} Browser tab
-   * @param selector
-   * @param timeout
+   * @param selector {string} String to locate the element
+   * @param timeout {number} Time to wait on milliseconds before throwing an error
    * @returns {Promise<number>}
    */
   async getPriceFromText(page, selector, timeout = 0) {
@@ -422,12 +423,35 @@ class CommonPage {
   /**
    * Get parent element from selector
    * @param page {Page} Browser tab
-   * @param selector
+   * @param selector {string} String to locate the child element
    * @return {Promise<ElementHandle>}
    */
   getParentElement(page, selector) {
     /* eslint-env browser */
     return page.evaluateHandle(sl => document.querySelector(sl).parentElement, selector);
+  }
+
+  /**
+   * Click on selector and wait for download event
+   * @param page {Page} Browser tab
+   * @param selector {string} Selector to click on
+   * @param targetBlank {boolean} Link has attribute target=blank
+   * @returns {Promise<string>}
+   */
+  async clickAndWaitForDownload(page, selector, targetBlank = false) {
+    /* eslint-disable no-return-assign, no-param-reassign */
+    // Delete the target because a new tab is opened when downloading the file
+    if (targetBlank) {
+      await page.$eval(selector, el => el.target = '');
+    }
+    /* eslint-enable no-return-assign, no-param-reassign */
+
+    const [download] = await Promise.all([
+      page.waitForEvent('download'),
+      page.click(selector),
+    ]);
+
+    return download.path();
   }
 }
 

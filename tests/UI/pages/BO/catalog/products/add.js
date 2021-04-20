@@ -104,10 +104,10 @@ class AddProduct extends BOBasePage {
   async setBasicSetting(page, productData) {
     await this.setValue(page, this.productNameInput, productData.name);
     if (productData.coverImage !== null) {
-      await this.uploadFilePath(page, this.productImageDropZoneDiv, productData.coverImage);
+      await this.uploadOnFileChooser(page, this.productImageDropZoneDiv, productData.coverImage);
     }
     if (productData.thumbImage !== null) {
-      await this.uploadFilePath(page, this.openFileManagerDiv, productData.thumbImage);
+      await this.uploadOnFileChooser(page, this.openFileManagerDiv, productData.thumbImage);
     }
     await this.setValueOnTinymceInput(page, this.productDescriptionIframe, productData.description);
     await this.setValueOnTinymceInput(page, this.productShortDescriptionIframe, productData.summary);
