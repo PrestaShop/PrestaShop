@@ -1392,3 +1392,58 @@ Feature: Order from Back Office (BO)
       | unit_price_tax_excl      | 13.00 |
       | total_price_tax_incl     | 13.78 |
       | total_price_tax_excl     | 13.00 |
+    When I edit product "Product 12345" to order "bo_order1" with following products details:
+      | amount | 3 |
+      | price  | 2.00 |
+    Then order "bo_order1" should have 3 products in total
+    And order "bo_order1" should have 0 invoice
+    And order "bo_order1" should have 0 cart rule
+    And order "bo_order1" should have following details:
+      | total_products           | 6.00  |
+      | total_products_wt        | 6.36  |
+      | total_discounts_tax_excl | 0.00  |
+      | total_discounts_tax_incl | 0.00  |
+      | total_shipping_tax_excl  | 7.0   |
+      | total_shipping_tax_incl  | 7.42  |
+      | total_paid_tax_excl      | 13.00 |
+      | total_paid_tax_incl      | 13.78 |
+      | total_paid               | 13.78 |
+      | total_paid_real          | 0.0   |
+    And product "Product 12345" in order "bo_order1" has following details:
+      | product_quantity         | 3     |
+      | product_price            | 2.00  |
+      | unit_price_tax_incl      | 2.12  |
+      | unit_price_tax_excl      | 2.00  |
+      | total_price_tax_incl     | 6.36  |
+      | total_price_tax_excl     | 6.00  |
+    When I edit product "Product 12345" to order "bo_order1" with following products details:
+      | amount | 3 |
+      | price  | 12.00 |
+    Then order "bo_order1" should have 4 products in total
+    And order "bo_order1" should have 0 invoice
+    And order "bo_order1" should have 1 cart rule
+    And order "bo_order1" should have following details:
+      | total_products           | 49.00 |
+      | total_products_wt        | 51.94 |
+      | total_discounts_tax_excl | 13.00 |
+      | total_discounts_tax_incl | 13.78 |
+      | total_shipping_tax_excl  | 7.0   |
+      | total_shipping_tax_incl  | 7.42  |
+      | total_paid_tax_excl      | 43.00 |
+      | total_paid_tax_incl      | 45.58 |
+      | total_paid               | 45.58 |
+      | total_paid_real          | 0.0   |
+    And product "Product 12345" in order "bo_order1" has following details:
+      | product_quantity         | 3     |
+      | product_price            | 12.00 |
+      | unit_price_tax_incl      | 12.72 |
+      | unit_price_tax_excl      | 12.00 |
+      | total_price_tax_incl     | 38.16 |
+      | total_price_tax_excl     | 36.00 |
+    And product "Gift product" in order "bo_order1" has following details:
+      | product_quantity         | 1     |
+      | product_price            | 13.00 |
+      | unit_price_tax_incl      | 13.78 |
+      | unit_price_tax_excl      | 13.00 |
+      | total_price_tax_incl     | 13.78 |
+      | total_price_tax_excl     | 13.00 |
