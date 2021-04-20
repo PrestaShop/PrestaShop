@@ -247,10 +247,7 @@ class ProductLazyArrayTest extends TestCase
                 return true;
             })
         ;
-        $this->mockProductPresentationSettings
-            ->method('shouldShowLabelOOSOnListingPages')
-            ->willReturn(true)
-        ;
+        $this->mockProductPresentationSettings->showLabelOOSListingPages = true;
 
         $productLazyArray = new ProductLazyArray(
             $this->mockProductPresentationSettings,
