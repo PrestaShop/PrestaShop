@@ -83,7 +83,7 @@ class ModuleRepository extends AbstractObjectModelRepository
     /**
      * Returns active module file paths.
      *
-     * @return array
+     * @return array<string, string> File paths indexed by module name
      */
     public function getActiveModulesPaths(): array
     {
