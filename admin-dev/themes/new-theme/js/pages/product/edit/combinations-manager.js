@@ -31,7 +31,7 @@ import SubmittableInput from '@components/form/submittable-input';
 import ProductEventMap from '@pages/product/product-event-map';
 import initCombinationModal from '@pages/product/components/combination-modal';
 import initFilters from '@pages/product/components/filters';
-import initCombinationGenerator from '@pages/product/components/combinations';
+import initCombinationGenerator from '@pages/product/components/generator';
 
 const {$} = window;
 const CombinationEvents = ProductEventMap.combinations;

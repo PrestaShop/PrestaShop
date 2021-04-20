@@ -38,11 +38,12 @@
       @close="closeModal"
     >
       <template #body>
-        <modal-content
+        <attributes-selector
           :attribute-groups="attributeGroups"
           :selected-attribute-groups="selectedAttributeGroups"
           @changeSelected="changeSelected"
           @removeSelected="removeSelected"
+          @addSelected="addSelected"
           v-if="attributeGroups"
         />
       </template>
@@ -84,7 +85,7 @@
 
 <script>
   import CombinationsService from '@pages/product/services/combinations-service';
-  import ModalContent from '@pages/product/components/combinations/ModalContent';
+  import AttributesSelector from '@pages/product/components/generator/AttributesSelector';
   import isSelected from '@pages/product/mixins/is-attribute-selected';
   import {getAllAttributeGroups} from '@pages/product/services/attribute-groups';
   import Modal from '@vue/components/Modal';
@@ -95,7 +96,7 @@
   const CombinationEvents = ProductEventMap.combinations;
 
   export default {
-    name: 'Generate',
+    name: 'CombinationGenerator',
     data() {
       return {
         attributeGroups: [],
@@ -121,7 +122,7 @@
     mixins: [isSelected],
     components: {
       Modal,
-      ModalContent,
+      AttributesSelector,
     },
     computed: {
       generatedCombinationsNb() {
@@ -167,6 +168,8 @@
        */
       showModal() {
         document.querySelector('body').classList.add('overflow-hidden');
+        this.hasGeneratedCombinations = false;
+        this.selectedAttributeGroups = {};
         this.isModalShown = true;
       },
       /**
@@ -205,6 +208,7 @@
               '%combinationsNb%': response.combination_ids.length,
             }),
           });
+          this.selectedAttributeGroups = {};
           this.hasGeneratedCombinations = true;
         } catch (error) {
           if (error.responseJSON && error.responseJSON.error) {
@@ -220,7 +224,7 @@
        * Remove the attribute if it's selected or add it
        *
        * @param {Object} selectedAttribute
-       * @param {{name: string}} attributeGroup
+       * @param {{id: int, name: string}} attributeGroup
        */
       changeSelected({selectedAttribute, attributeGroup}) {
         if (
@@ -230,7 +234,7 @@
             this.selectedAttributeGroups,
           )
         ) {
-          this.addSelected(selectedAttribute, attributeGroup);
+          this.addSelected({selectedAttribute, attributeGroup});
         } else {
           this.removeSelected({
             selectedAttribute,
@@ -239,13 +243,13 @@
         }
       },
       /**
-       * @param {Object} attribute
-       * @param {Object} attributeGroup
+       * @param {Object} selectedAttribute
+       * @param {{id: int, name: string}} attributeGroup
        */
-      addSelected(attribute, attributeGroup) {
+      addSelected({selectedAttribute, attributeGroup}) {
         // Extra check to avoid adding same attribute twice which would cause a duplicate key error
         if (
-          this.isSelected(attribute, attributeGroup, this.selectedAttributeGroups)
+          this.isSelected(selectedAttribute, attributeGroup, this.selectedAttributeGroups)
         ) {
           return;
         }
@@ -268,7 +272,7 @@
         }
 
         this.selectedAttributeGroups[attributeGroup.id].attributes.push(
-          attribute,
+          selectedAttribute,
         );
       },
       /**
