@@ -44,32 +44,25 @@ export default class CombinationsManager {
    * @returns {{}}
    */
   constructor(productId) {
+    this.productId = productId;
     this.eventEmitter = window.prestashop.instance.eventEmitter;
     this.$productForm = $(ProductMap.productForm);
     this.$combinationsContainer = $(ProductMap.combinations.combinationsContainer);
     this.combinationIdInputsSelector = ProductMap.combinations.combinationIdInputsSelector;
     this.initialized = false;
-    this.combinationsService = new CombinationsService(this.getProductId());
+    this.combinationsService = new CombinationsService(this.productId);
 
-    this.init(productId);
+    this.init();
 
     return {};
   }
 
   /**
-   * @param {int} productId
-   *
    * @private
    */
-  init(productId) {
-    this.initPaginatedList();
-
+  init() {
     // Paginate to first page when tab is shown
     this.$productForm.find(CombinationsMap.navigationTab).on('shown.bs.tab', () => this.firstInit());
-
-    initCombinationModal(CombinationsMap.editModal, productId);
-    initCombinationGenerator(CombinationsMap.combinationsGeneratorContainer, productId);
-    initFilters(CombinationsMap.combinationsFiltersContainer, window.prestashop.instance.eventEmitter, productId);
 
     // Finally watch events related to combination listing
     this.watchEvents();
@@ -257,6 +250,19 @@ export default class CombinationsManager {
     }
 
     this.initialized = true;
+
+    this.initPaginatedList();
+    initCombinationModal(CombinationsMap.editModal, this.productId);
+    initCombinationGenerator(
+      CombinationsMap.combinationsGeneratorContainer,
+      this.eventEmitter,
+      this.productId,
+    );
+    initFilters(
+      CombinationsMap.combinationsFiltersContainer,
+      this.eventEmitter,
+      this.productId,
+    );
     this.paginator.paginate(1);
   }
 
@@ -265,15 +271,6 @@ export default class CombinationsManager {
    */
   getCombinationToken() {
     return $(CombinationsMap.combinationsContainer).data('combinationToken');
-  }
-
-  /**
-   * @returns {Number}
-   *
-   * @private
-   */
-  getProductId() {
-    return Number(this.$productForm.data('productId'));
   }
 
   /**

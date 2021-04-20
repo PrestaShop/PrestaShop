@@ -29,7 +29,7 @@ import Generate from './Generate.vue';
 
 Vue.use(VueI18n);
 
-export default function initGenerateCombinations(generateCombinationsSelector, productId) {
+export default function initGenerateCombinations(generateCombinationsSelector, eventEmitter, productId) {
   const container = document.querySelector(generateCombinationsSelector);
 
   const translations = JSON.parse(container.dataset.translations);
@@ -41,11 +41,12 @@ export default function initGenerateCombinations(generateCombinationsSelector, p
 
   return new Vue({
     el: generateCombinationsSelector,
-    template: '<generate :productId=productId />',
+    template: '<generate :productId=productId :eventEmitter=eventEmitter />',
     components: {Generate},
     i18n,
     data: {
       productId,
+      eventEmitter,
     },
   });
 }
