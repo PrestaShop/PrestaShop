@@ -191,7 +191,8 @@ class ProductRepository extends AbstractObjectModelRepository
         $qb->select('COUNT(id_product) as product_count')
             ->from($this->dbPrefix . 'product')
             ->where('id_product IN (:productIds)')
-            ->setParameter('productIds', $ids, Connection::PARAM_INT_ARRAY);
+            ->setParameter('productIds', $ids, Connection::PARAM_INT_ARRAY)
+        ;
 
         $results = $qb->execute()->fetch();
 
