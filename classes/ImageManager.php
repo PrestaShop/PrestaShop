@@ -43,6 +43,7 @@ class ImageManagerCore
         'image/pjpeg',
         'image/png',
         'image/x-png',
+        'image/webp',
     ];
 
     /**
@@ -229,8 +230,12 @@ class ImageManagerCore
         // If PS_IMAGE_QUALITY is activated, the generated image will be a PNG with .jpg as a file extension.
         // This allow for higher quality and for transparency. JPG source files will also benefit from a higher quality
         // because JPG reencoding by GD, even with max quality setting, degrades the image.
-        if (Configuration::get('PS_IMAGE_QUALITY') == 'png_all'
-            || (Configuration::get('PS_IMAGE_QUALITY') == 'png' && $type == IMAGETYPE_PNG) && !$forceType) {
+        // Since WEBP and GIF allow for transparency, save them as png when the option 'png' is selected.
+
+        $psImageQuality = Configuration::get('PS_IMAGE_QUALITY');
+        if (in_array($psImageQuality, ['png_all', 'webp'])
+            || ($psImageQuality == 'png' && $type == IMAGETYPE_PNG && !$forceType)
+            || ($psImageQuality == 'webp_fb' && in_array($type, [IMAGETYPE_PNG, IMAGETYPE_WEBP])) && !$forceType) {
             $fileType = 'png';
         }
 
@@ -248,9 +253,36 @@ class ImageManagerCore
         $heightDiff = $destinationHeight / $sourceHeight;
 
         $psImageGenerationMethod = Configuration::get('PS_IMAGE_GENERATION_METHOD');
+        $keepAspectRatio = false;
+        if($psImageGenerationMethod == 3){
+            $keepAspectRatio = true;
+            $psImageGenerationMethod = 0;
+        }
         if ($widthDiff > 1 && $heightDiff > 1) {
             $nextWidth = $sourceWidth;
             $nextHeight = $sourceHeight;
+            if (Configuration::get('PS_IMAGEOPT_NO_ENLARGE')){
+                $destinationWidth = $sourceWidth;
+                $destinationHeight = $sourceHeight;
+                if (Configuration::get('PS_IMAGEOPT_SYMLINK')){
+                    $imageDirectory = dirname($sourceFile);
+                    $alreadyResized = glob($imageDirectory . DIRECTORY_SEPARATOR . '*-*.jpg');
+                    foreach ($alreadyResized as $filename) {
+                        list($tmpWidth, $tmpHeight) = getimagesize($filename);
+                        if($destinationWidth == $tmpWidth && $destinationHeight = $tmpHeight) {
+                            if($psImageQuality == 'webp_fb' && file_exists(substr($filename, 0, strrpos($filename, '.')) . '.webp')) {
+                                var_dump(substr($filename, 0, strrpos($filename, '.')) . '.webp', substr($destinationFile, 0, strrpos($destinationFile, '.')) . '.webp');
+                                symlink(substr($filename, 0, strrpos($filename, '.')) . '.webp', substr($destinationFile, 0, strrpos($destinationFile, '.')) . '.webp');
+                            } else {
+                                continue;
+                            }
+                            var_dump($filename, $destinationFile);
+                            symlink($filename, $destinationFile);
+                            return true;
+                        }
+                    }
+                }
+            }
         } else {
             if ($psImageGenerationMethod == 2 || (!$psImageGenerationMethod && $widthDiff > $heightDiff)) {
                 $nextHeight = $destinationHeight;
@@ -263,6 +295,11 @@ class ImageManagerCore
             }
         }
 
+        if($keepAspectRatio){
+            $destinationWidth = $nextWidth;
+            $destinationHeight = $nextHeight;
+        }
+
         if (!ImageManager::checkImageMemoryLimit($sourceFile)) {
             return !($error = self::ERROR_MEMORY_LIMIT);
         }
@@ -272,8 +309,8 @@ class ImageManagerCore
 
         $destImage = imagecreatetruecolor($destinationWidth, $destinationHeight);
 
-        // If image is a PNG and the output is PNG, fill with transparency. Else fill with white background.
-        if ($fileType == 'png' && $type == IMAGETYPE_PNG) {
+        // If the output is PNG or WEBP, fill with transparency. Else fill with white background.
+        if ($fileType == 'png' || in_array($psImageQuality, ['webp', 'webp_fb'])) {
             imagealphablending($destImage, false);
             imagesavealpha($destImage, true);
             $transparent = imagecolorallocatealpha($destImage, 255, 255, 255, 127);
@@ -293,14 +330,22 @@ class ImageManagerCore
         } else {
             ImageManager::imagecopyresampled($destImage, $srcImage, (int) (($destinationWidth - $nextWidth) / 2), (int) (($destinationHeight - $nextHeight) / 2), 0, 0, $nextWidth, $nextHeight, $sourceWidth, $sourceHeight, $quality);
         }
-        $writeFile = ImageManager::write($fileType, $destImage, $destinationFile);
+        $writeFile = ImageManager::write($fileType, $destImage, $destinationFile, false);
         Hook::exec('actionOnImageResizeAfter', ['dst_file' => $destinationFile, 'file_type' => $fileType]);
-        @imagedestroy($srcImage);
 
         file_put_contents(
             dirname($destinationFile) . DIRECTORY_SEPARATOR . 'fileType',
             $fileType
         );
+
+        if ($psImageQuality == 'webp_fb') {
+            $fileType = 'webp';
+            $destinationFile = substr($destinationFile, 0, strrpos($destinationFile, '.')) . '.webp';
+            $writeFile &= ImageManager::write($fileType, $destImage, $destinationFile);
+            Hook::exec('actionOnImageResizeAfter', ['dst_file' => $destinationFile, 'file_type' => $fileType]);
+        }
+
+        @imagedestroy($srcImage);
 
         return $writeFile;
     }
@@ -443,7 +488,7 @@ class ImageManagerCore
     {
         // Filter on file extension
         if ($authorizedExtensions === null) {
-            $authorizedExtensions = ['gif', 'jpg', 'jpeg', 'jpe', 'png'];
+            $authorizedExtensions = ['gif', 'jpg', 'jpeg', 'jpe', 'png', 'webp'];
         }
         $nameExplode = explode('.', $filename);
         if (count($nameExplode) >= 2) {
@@ -572,6 +617,11 @@ class ImageManagerCore
 
                 break;
 
+            case IMAGETYPE_WEBP:
+                return imagecreatefromwebp($filename);
+
+                break;
+
             case IMAGETYPE_JPEG:
             default:
                 return imagecreatefromjpeg($filename);
@@ -603,13 +653,15 @@ class ImageManagerCore
      * @param string $type
      * @param resource $resource
      * @param string $filename
-     *
+     * @param bool $destroyImage Facultative argument, allows to avoid destroying of image ressource
      * @return bool
      */
-    public static function write($type, $resource, $filename)
+    public static function write($type, $resource, $filename, $destroyImage = true)
     {
         static $psPngQuality = null;
         static $psJpegQuality = null;
+        static $psImageoptPngquant = null;
+        static $psImageoptOptipng = null;
 
         if ($psPngQuality === null) {
             $psPngQuality = Configuration::get('PS_PNG_QUALITY');
@@ -617,6 +669,14 @@ class ImageManagerCore
 
         if ($psJpegQuality === null) {
             $psJpegQuality = Configuration::get('PS_JPEG_QUALITY');
+        }
+
+        if ($psImageoptPngquant === null) {
+            $psImageoptPngquant = Configuration::get('PS_IMAGEOPT_PNGQUANT');
+        }
+
+        if ($psImageoptOptipng === null) {
+            $psImageoptOptipng = Configuration::get('PS_IMAGEOPT_OPTIPNG');
         }
 
         switch ($type) {
@@ -628,6 +688,18 @@ class ImageManagerCore
             case 'png':
                 $quality = ($psPngQuality === false ? 7 : $psPngQuality);
                 $success = imagepng($resource, $filename, (int) $quality);
+                if ($psImageoptPngquant) {
+                    $pngquant_ext = pathinfo($filename, PATHINFO_EXTENSION) == 'png' ? '--ext=.png' : '--ext=';
+                    exec('/usr/bin/pngquant -f ' . $pngquant_ext . ' ' . escapeshellarg($filename));
+                }
+                if ($psImageoptOptipng){
+                    exec('/usr/bin/optipng -o7 -q ' . escapeshellarg($filename));
+                }
+
+                break;
+
+            case 'webp':
+                $success = imagewebp($resource, $filename);
 
                 break;
 
@@ -640,7 +712,9 @@ class ImageManagerCore
 
                 break;
         }
-        imagedestroy($resource);
+        if($destroyImage) {
+            imagedestroy($resource);
+        }
         @chmod($filename, 0664);
 
         return $success;
@@ -659,6 +733,7 @@ class ImageManagerCore
             'image/gif' => ['gif'],
             'image/jpeg' => ['jpg', 'jpeg'],
             'image/png' => ['png'],
+            'image/webp' => ['webp'],
         ];
         $extension = substr($fileName, strrpos($fileName, '.') + 1);
 
