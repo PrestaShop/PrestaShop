@@ -123,9 +123,10 @@
           type="button"
           class="btn btn-primary"
           @click.prevent.stop="generateCombinations"
+          :disabled="!generatedCombinationsNb || loading"
         >
           <span v-if="!loading">
-            {{ $t('modal.save') }}
+            {{ $tc('generator.action', generatedCombinationsNb, {'%combinationsNb%': generatedCombinationsNb}) }}
           </span>
           <span
             class="spinner-border spinner-border-sm"
@@ -183,7 +184,28 @@
     components: {
       Modal,
     },
-    computed: {},
+    computed: {
+      generatedCombinationsNb() {
+        const groupIds = Object.keys(this.selectedAttributeGroups);
+        let combinationsNumber = 0;
+
+        groupIds.forEach((attributeGroupId) => {
+          const {attributes} = this.selectedAttributeGroups[attributeGroupId];
+
+          if (!attributes.length) {
+            return;
+          }
+
+          // Only start counting when at least one attribute is selected
+          if (combinationsNumber === 0) {
+            combinationsNumber = 1;
+          }
+          combinationsNumber *= this.selectedAttributeGroups[attributeGroupId].attributes.length;
+        });
+
+        return combinationsNumber;
+      },
+    },
     mounted() {
       this.initAttributeGroups();
     },
