@@ -21,11 +21,11 @@ Contributors should follow the following process:
 7. Create a pull request for your changes on the PrestaShop project. Be sure to follow [the contribution guidelines][2] in your pull request. If you need help to make a pull request, read the [Github help page about creating pull requests][3].
 8. Wait for one of the core developers either to include your change in the codebase, or to comment on possible improvements you should make to your code.
 
-That's it: you have contributed to this open-source project! Congratulations!
+That's it: you have contributed to this open source project! Congratulations!
 
 You don't exactly know where to start? Pick one of our [good first issues][9] to get the list of all beginner-friendly improvements and bugs to fix. Read more about this label on [Build][10].
 
-The PrestaShop documentation features a thorough explanation of the [complete process of your first pull request][4].
+The PrestaShop documentation features a thorough explanation of the [complete process to your first pull request][4].
 
 If you don't feel comfortable forking the project or using Git, you can also either:
 * Edit a file directly within GitHub: browse to the target file, click the "Edit" button, make your changes in the editor then click on "Propose File Change". Github will automatically create a new fork and branch on your own Github account, then suggest creating a pull request to PrestaShop. Once the pull request is submitted, you just have to wait for a core developer to answer you.
