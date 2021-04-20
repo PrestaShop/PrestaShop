@@ -29,7 +29,7 @@
       @click.prevent.stop="showModal"
       :disabled="preLoading"
     >
-      {{ $t('generator.open') }}
+      {{ $t("generator.open") }}
     </button>
     <modal
       v-if="isModalShown"
@@ -38,75 +38,13 @@
       @close="closeModal"
     >
       <template #body>
-        <div class="tags-input d-flex flex-wrap">
-          <div class="tags-wrapper">
-            <template v-for="selectedGroup in selectedAttributeGroups">
-              <span
-                class="tag"
-                :key="selectedAttribute.id"
-                v-for="selectedAttribute in selectedGroup.attributes"
-              >
-                {{ selectedGroup.name }}: {{ selectedAttribute.name }}
-                <i
-                  class="material-icons"
-                  @click.prevent.stop="removeSelected(selectedAttribute, selectedGroup)"
-                >close</i>
-              </span>
-            </template>
-          </div>
-          <input
-            type="text"
-            :placeholder="$t('search.placeholder')"
-            class="form-control input attributes-search"
-          >
-        </div>
-
-        <div class="product-combinations-modal-content">
-          <div
-            id="attributes-list"
-            class="attributes-list-overflow"
-          >
-            <div class="attributes-content">
-              <div
-                class="attribute-group"
-                v-for="attributeGroup of attributeGroups"
-                :key="attributeGroup.id"
-              >
-                <a
-                  class="attribute-group-name collapsed"
-                  data-toggle="collapse"
-                  :href="`#attribute-group-${attributeGroup.id}`"
-                >{{ attributeGroup.name }}</a>
-                <div
-                  class="attribute-group-content attributes collapse"
-                  :id="`attribute-group-${attributeGroup.id}`"
-                >
-                  <label
-                    v-for="attribute of attributeGroup.attributes"
-                    :class="['attribute-item', getSelectedClass(attribute, attributeGroup)]"
-                    :for="`attribute_${attribute.id}`"
-                    :key="attribute.id"
-                  >
-                    <input
-                      type="checkbox"
-                      :name="`attribute_${attribute.id}`"
-                      :id="`attribute_${attribute.id}`"
-                      @change="changeSelected(attribute, attributeGroup)"
-                    >
-                    <div class="attribute-item-content">
-                      <span
-                        class="attribute-item-color"
-                        v-if="attribute.color"
-                        :style="`background-color: ${attribute.color}`"
-                      />
-                      <span class="attribute-item-name">{{ attribute.name }}</span>
-                    </div>
-                  </label>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
+        <modal-content
+          :attribute-groups="attributeGroups"
+          :selected-attribute-groups="selectedAttributeGroups"
+          @changeSelected="changeSelected"
+          @removeSelected="removeSelected"
+          v-if="attributeGroups"
+        />
       </template>
 
       <template #footer-confirmation>
@@ -116,7 +54,7 @@
           @click.prevent.stop="closeModal"
           :aria-label="$t('modal.close')"
         >
-          {{ $t('modal.close') }}
+          {{ $t("modal.close") }}
         </button>
 
         <button
@@ -126,7 +64,11 @@
           :disabled="!generatedCombinationsNb || loading"
         >
           <span v-if="!loading">
-            {{ $tc('generator.action', generatedCombinationsNb, {'%combinationsNb%': generatedCombinationsNb}) }}
+            {{
+              $tc("generator.action", generatedCombinationsNb, {
+                "%combinationsNb%": generatedCombinationsNb,
+              })
+            }}
           </span>
           <span
             class="spinner-border spinner-border-sm"
@@ -142,18 +84,14 @@
 
 <script>
   import CombinationsService from '@pages/product/services/combinations-service';
+  import ModalContent from '@pages/product/components/combinations/ModalContent';
   import {getAllAttributeGroups} from '@pages/product/services/attribute-groups';
-  import ProductMap from '@pages/product/product-map';
   import Modal from '@vue/components/Modal';
-  import PerfectScrollbar from 'perfect-scrollbar';
-  import Bloodhound from 'typeahead.js';
-  import AutoCompleteSearch from '@components/auto-complete-search';
   import ProductEventMap from '@pages/product/product-event-map';
 
   const {$} = window;
 
   const CombinationEvents = ProductEventMap.combinations;
-  const CombinationsMap = ProductMap.combinations;
 
   export default {
     name: 'Generate',
@@ -166,8 +104,6 @@
         preLoading: true,
         loading: false,
         scrollbar: null,
-        dataSetConfig: {},
-        searchSource: {},
         hasGeneratedCombinations: false,
       };
     },
@@ -183,6 +119,7 @@
     },
     components: {
       Modal,
+      ModalContent,
     },
     computed: {
       generatedCombinationsNb() {
@@ -200,7 +137,8 @@
           if (combinationsNumber === 0) {
             combinationsNumber = 1;
           }
-          combinationsNumber *= this.selectedAttributeGroups[attributeGroupId].attributes.length;
+          combinationsNumber *= this.selectedAttributeGroups[attributeGroupId]
+            .attributes.length;
         });
 
         return combinationsNumber;
@@ -217,51 +155,10 @@
         try {
           this.attributeGroups = await getAllAttributeGroups();
           window.prestaShopUiKit.init();
-          this.initDataSetConfig();
           this.preLoading = false;
         } catch (error) {
           window.$.growl.error({message: error});
         }
-      },
-      initDataSetConfig() {
-        const searchItems = this.getSearchableAttributes();
-        this.searchSource = new Bloodhound({
-          datumTokenizer: Bloodhound.tokenizers.obj.whitespace(
-            'name',
-            'value',
-            'color',
-            'group_name',
-          ),
-          queryTokenizer: Bloodhound.tokenizers.whitespace,
-          local: searchItems,
-        });
-
-        const dataSetConfig = {
-          source: this.searchSource,
-          display: 'name',
-          value: 'name',
-          minLength: 1,
-          onSelect: (attribute, e, $searchInput) => {
-            const attributeGroup = {
-              id: attribute.group_id,
-              name: attribute.group_name,
-            };
-            this.addSelected(attribute, attributeGroup);
-
-            // This resets the search input or else previous search is cached and can be added again
-            $searchInput.typeahead('val', '');
-          },
-          onClose(event, $searchInput) {
-            $searchInput.typeahead('val', '');
-            return true;
-          },
-        };
-
-        dataSetConfig.templates = {
-          suggestion: (item) => `<div class="px-2">${item.group_name}: ${item.name}</div>`,
-        };
-
-        this.dataSetConfig = dataSetConfig;
       },
       /**
        * Show the modal, and execute PerfectScrollBar and Typehead
@@ -269,33 +166,6 @@
       showModal() {
         document.querySelector('body').classList.add('overflow-hidden');
         this.isModalShown = true;
-        // We need to use a setTimeout to add it at the end
-        // of the callstack so the modal is already displayed
-        // when this is getting executed
-        setTimeout(() => {
-          this.scrollbar = new PerfectScrollbar(CombinationsMap.scrollBar);
-          const $searchInput = $(CombinationsMap.searchInput);
-          new AutoCompleteSearch($searchInput, this.dataSetConfig);
-        }, 0);
-      },
-      /**
-       * @returns {Array}
-       */
-      getSearchableAttributes() {
-        const searchableAttributes = [];
-        this.attributeGroups.forEach((attributeGroup) => {
-          attributeGroup.attributes.forEach((attribute) => {
-            if (this.isSelected(attribute, attributeGroup, this.selectedAttributeGroups)) {
-              return;
-            }
-
-            attribute.group_name = attributeGroup.name;
-            attribute.group_id = attributeGroup.id;
-            searchableAttributes.push(attribute);
-          });
-        });
-
-        return searchableAttributes;
       },
       /**
        * Handle modal closing
@@ -317,13 +187,17 @@
         };
         Object.keys(this.selectedAttributeGroups).forEach((attributeGroupId) => {
           data.attributes[attributeGroupId] = [];
-          this.selectedAttributeGroups[attributeGroupId].attributes.forEach((attribute) => {
-            data.attributes[attributeGroupId].push(attribute.id);
-          });
+          this.selectedAttributeGroups[attributeGroupId].attributes.forEach(
+            (attribute) => {
+              data.attributes[attributeGroupId].push(attribute.id);
+            },
+          );
         });
 
         try {
-          const response = await this.combinationsService.generateCombinations(data);
+          const response = await this.combinationsService.generateCombinations(
+            data,
+          );
           $.growl({
             message: this.$t('generator.success', {
               '%combinationsNb%': response.combination_ids.length,
@@ -338,7 +212,6 @@
           }
         }
 
-
         this.loading = false;
       },
       /**
@@ -347,8 +220,14 @@
        * @param {Object} selectedAttribute
        * @param {{name: string}} attributeGroup
        */
-      changeSelected(selectedAttribute, attributeGroup) {
-        if (!this.isSelected(selectedAttribute, attributeGroup, this.selectedAttributeGroups)) {
+      changeSelected({selectedAttribute, attributeGroup}) {
+        if (
+          !this.isSelected(
+            selectedAttribute,
+            attributeGroup,
+            this.selectedAttributeGroups,
+          )
+        ) {
           this.addSelected(selectedAttribute, attributeGroup);
         } else {
           this.removeSelected(selectedAttribute, attributeGroup);
@@ -360,7 +239,9 @@
        */
       addSelected(attribute, attributeGroup) {
         // Extra check to avoid adding same attribute twice which would cause a duplicate key error
-        if (this.isSelected(attribute, attributeGroup, this.selectedAttributeGroups)) {
+        if (
+          this.isSelected(attribute, attributeGroup, this.selectedAttributeGroups)
+        ) {
           return;
         }
 
@@ -381,22 +262,28 @@
           };
         }
 
-        this.selectedAttributeGroups[attributeGroup.id].attributes.push(attribute);
-        this.updateSearchableAttributes();
+        this.selectedAttributeGroups[attributeGroup.id].attributes.push(
+          attribute,
+        );
       },
       /**
        * @param {Object} selectedAttribute
        * @param {Object} selectedAttributeGroup
        */
-      removeSelected(selectedAttribute, selectedAttributeGroup) {
-        if (!Object.prototype.hasOwnProperty.call(this.selectedAttributeGroups, selectedAttributeGroup.id)) {
+      removeSelected({selectedAttribute, selectedAttributeGroup}) {
+        if (
+          !Object.prototype.hasOwnProperty.call(
+            this.selectedAttributeGroups,
+            selectedAttributeGroup.id,
+          )
+        ) {
           return;
         }
 
         const group = this.selectedAttributeGroups[selectedAttributeGroup.id];
-        group.attributes = group.attributes.filter((attribute) => attribute.id !== selectedAttribute.id);
-
-        this.updateSearchableAttributes();
+        group.attributes = group.attributes.filter(
+          (attribute) => attribute.id !== selectedAttribute.id,
+        );
       },
       /**
        * The selected attribute is provided as a parameter instead od using this reference because it helps the
@@ -409,103 +296,17 @@
        * @returns {boolean}
        */
       isSelected(attribute, attributeGroup, attributeGroups) {
-        if (!Object.prototype.hasOwnProperty.call(attributeGroups, attributeGroup.id)) {
+        if (
+          !Object.prototype.hasOwnProperty.call(
+            attributeGroups,
+            attributeGroup.id,
+          )
+        ) {
           return false;
         }
 
         return attributeGroups[attributeGroup.id].attributes.includes(attribute);
       },
-      /**
-       * @param {Object} attribute
-       * @param {Object} attributeGroup
-       *
-       * @returns {string}
-       */
-      getSelectedClass(attribute, attributeGroup) {
-        return this.isSelected(attribute, attributeGroup, this.selectedAttributeGroups) ? 'selected' : 'unselected';
-      },
-      /**
-       * Update Bloodhound engine so that it does not include already selected attributes
-       */
-      updateSearchableAttributes() {
-        const searchableAttributes = this.getSearchableAttributes();
-        this.searchSource.clear();
-        this.searchSource.add(searchableAttributes);
-      },
     },
   };
 </script>
-
-<style lang="scss" type="text/scss">
-@import "~@scss/config/_settings.scss";
-
-.product-page #product-combinations-generate {
-  .modal {
-    .tags-input {
-      margin-bottom: 1rem;
-    }
-
-    #attributes-list {
-      max-height: 50vh;
-
-      .attribute-group {
-        border-bottom: 1px solid $gray-300;
-        margin-bottom: 0.75rem;
-        border-radius: 4px;
-        overflow: hidden;
-
-        &-name {
-          background-color: $gray-250;
-        }
-      }
-
-      .attributes {
-        height: auto;
-      }
-    }
-
-    .product-combinations-modal-content {
-      position: relative;
-      padding-bottom: 0.5rem;
-    }
-  }
-
-  .attribute-group {
-    &-content {
-      border-top: 1px solid $gray-300;
-    }
-
-    .attribute-item {
-      cursor: pointer;
-      border-radius: 3px;
-      margin: 0.25rem 0;
-      margin-right: 0.5rem;
-
-      &-content {
-        display: flex;
-        align-items: center;
-        padding: 0.5rem;
-      }
-
-      &-color {
-        margin-right: 0.5rem;
-      }
-
-      &.selected {
-        background-color: $gray-disabled;
-      }
-
-      input {
-        display: none;
-      }
-
-      &-color {
-        height: 15px;
-        width: 15px;
-        display: block;
-        border-radius: 3px;
-      }
-    }
-  }
-}
-</style>
