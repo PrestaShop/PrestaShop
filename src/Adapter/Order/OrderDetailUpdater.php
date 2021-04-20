@@ -97,6 +97,8 @@ class OrderDetailUpdater
             $ecotaxTaxFactor = new Number((string) (1 + ($ecotaxTaxCalculator->getTotalRate() / 100)));
             $ecotaxTaxIncluded = $ecotax->times($ecotaxTaxFactor);
 
+            // Prices coming from the backoffice : they are displayed with ecotax
+            // So we need to remove ecotax before having precise price
             $priceTaxExcluded = $priceTaxExcluded->minus($ecotax);
             $priceTaxIncluded = $priceTaxIncluded->minus($ecotaxTaxIncluded);
 
@@ -330,6 +332,8 @@ class OrderDetailUpdater
         $ecotaxTaxFactor = new Number((string) (1 + ($ecotaxTaxCalculator->getTotalRate() / 100)));
         $ecotaxTaxIncluded = $ecotax->times($ecotaxTaxFactor);
 
+        // Prices coming from the backoffice : they are display with ecotax
+        // So we need to remove ecotax before having precise price
         $priceTaxExcluded = $priceTaxExcluded->minus($ecotax);
         $priceTaxIncluded = $priceTaxIncluded->minus($ecotaxTaxIncluded);
 
@@ -460,6 +464,7 @@ class OrderDetailUpdater
         Address $taxAddress
     ): Number {
         // Get price via getPriceStatic so that the catalog price rules are applied
+        $null = null;
 
         return new Number((string) Product::getPriceStatic(
             (int) $orderDetail->product_id,
@@ -473,7 +478,9 @@ class OrderDetailUpdater
             false,
             $order->id_customer, // We still use the customer ID in case this customer has some special prices
             null, // But we keep the cart null as we don't want this order overridden price
-            $taxAddress->id
+            $taxAddress->id,
+            $null,
+            false
         ));
     }
 
