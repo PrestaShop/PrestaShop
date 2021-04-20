@@ -67,14 +67,14 @@
       @click="$emit('selectAll')"
       v-if="files.length > 0 && selectedFiles.length !== files.length"
     >
-      {{ $t("window.selectAll") }}
+      {{ $t('window.selectAll') }}
     </p>
     <p
       class="dropzone-window-unselect"
       v-if="selectedFiles.length === files.length"
       @click="$emit('unselectAll')"
     >
-      {{ $t("window.unselectAll") }}
+      {{ $t('window.unselectAll') }}
     </p>
 
     <div
@@ -91,7 +91,7 @@
           @change.prevent.stop="coverChanged"
         >
         <i class="md-checkbox-control" />
-        {{ $t("window.useAsCover") }}
+        {{ $t('window.useAsCover') }}
       </label>
     </div>
 
@@ -109,7 +109,7 @@
         for="caption-textarea"
         class="control-label"
       >{{
-        $t("window.caption")
+        $t('window.caption')
       }}</label>
       <div
         class="dropdown"
@@ -161,7 +161,7 @@
         @click="$emit('saveSelectedFile', captionValue, coverData)"
       >
         <span v-if="!loading">
-          {{ $t("window.saveImage") }}
+          {{ $t('window.saveImage') }}
         </span>
         <span
           class="spinner-border spinner-border-sm"
@@ -246,6 +246,7 @@
       window.prestaShopUiKit.initToolTips();
       // We set the intial value of the first item in order to use the computed
       this.captionValue = this.selectedFile.legends;
+      this.coverData = this.selectedFile.is_cover;
     },
     updated() {
       window.prestaShopUiKit.initToolTips();
@@ -279,7 +280,7 @@
 </script>
 
 <style lang="scss" type="text/scss">
-@import "~@scss/config/_settings.scss";
+@import '~@scss/config/_settings.scss';
 
 .product-page {
   .dropzone-window {
