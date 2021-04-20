@@ -277,8 +277,7 @@ class OrderAmountUpdater
                 $orderDetail,
                 $order,
                 new Number((string) $cartProduct['price_with_reduction_without_tax']),
-                new Number((string) $cartProduct['price_with_reduction']),
-                new Number((string) $cartProduct['ecotax'])
+                new Number((string) $cartProduct['price_with_reduction'])
             );
         }
     }

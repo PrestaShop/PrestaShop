@@ -111,8 +111,7 @@ final class UpdateProductInOrderHandler extends AbstractOrderCommandHandler impl
                 $orderDetail,
                 $order,
                 $command->getPriceTaxExcluded(),
-                $command->getPriceTaxIncluded(),
-                new Number($orderDetail->ecotax)
+                $command->getPriceTaxIncluded()
             );
 
             // We also need to update all identical OrderDetails to be sure that Cart will get the correct price
