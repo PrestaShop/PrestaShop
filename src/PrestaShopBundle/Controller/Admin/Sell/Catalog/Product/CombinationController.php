@@ -32,6 +32,7 @@ use PrestaShop\PrestaShop\Adapter\Product\Combination\Repository\CombinationRepo
 use PrestaShop\PrestaShop\Adapter\Product\Image\ProductImagePathFactory;
 use PrestaShop\PrestaShop\Core\Domain\Product\AttributeGroup\Query\GetProductAttributeGroups;
 use PrestaShop\PrestaShop\Core\Domain\Product\AttributeGroup\QueryResult\AttributeGroup;
+use PrestaShop\PrestaShop\Core\Domain\Product\Combination\Command\RemoveCombinationCommand;
 use PrestaShop\PrestaShop\Core\Domain\Product\Combination\Query\GetEditableCombinationsList;
 use PrestaShop\PrestaShop\Core\Domain\Product\Combination\QueryResult\CombinationListForEditing;
 use PrestaShop\PrestaShop\Core\Domain\Product\Exception\ProductConstraintException;
@@ -169,6 +170,28 @@ class CombinationController extends FrameworkBundleAdminController
         }
 
         return $this->json($data);
+    }
+
+    /**
+     * @AdminSecurity("is_granted('delete', request.get('_legacy_controller'))")
+     *
+     * @param int $combinationId
+     *
+     * @return JsonResponse
+     */
+    public function removeAction(int $combinationId): JsonResponse
+    {
+        try {
+            $this->getCommandBus()->handle(new RemoveCombinationCommand($combinationId));
+        } catch (Exception $e) {
+            return $this->json([
+                'error' => $this->getErrorMessageForException($e, $this->getErrorMessages($e)),
+            ], Response::HTTP_BAD_REQUEST);
+        }
+
+        return $this->json([
+            'message' => $this->trans('Successful deletion.', 'Admin.Notifications.Success'),
+        ]);
     }
 
     /**
