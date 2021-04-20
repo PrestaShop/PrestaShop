@@ -113,7 +113,7 @@
   const CombinationsMap = ProductMap.combinations;
 
   export default {
-    name: 'Generate',
+    name: 'AttributesSelector',
     props: {
       attributeGroups: {
         type: Array,
@@ -163,7 +163,7 @@
               id: attribute.group_id,
               name: attribute.group_name,
             };
-            this.addSelected(attribute, attributeGroup);
+            this.sendAddEvent(attribute, attributeGroup);
 
             // This resets the search input or else previous search is cached and can be added again
             $searchInput.typeahead('val', '');
@@ -229,6 +229,10 @@
       },
       sendChangeEvent(selectedAttribute, attributeGroup) {
         this.$emit('changeSelected', {selectedAttribute, attributeGroup});
+        this.updateSearchableAttributes();
+      },
+      sendAddEvent(selectedAttribute, attributeGroup) {
+        this.$emit('addSelected', {selectedAttribute, attributeGroup});
         this.updateSearchableAttributes();
       },
       /**

@@ -25,12 +25,12 @@
 import Vue from 'vue';
 import VueI18n from 'vue-i18n';
 import ReplaceFormatter from '@vue/plugins/vue-i18n/replace-formatter';
-import Generate from './Generate.vue';
+import CombinationGenerator from '@pages/product/components/generator/CombinationGenerator.vue';
 
 Vue.use(VueI18n);
 
-export default function initGenerateCombinations(generateCombinationsSelector, eventEmitter, productId) {
-  const container = document.querySelector(generateCombinationsSelector);
+export default function initCombinationGenerator(combinationGeneratorSelector, eventEmitter, productId) {
+  const container = document.querySelector(combinationGeneratorSelector);
 
   const translations = JSON.parse(container.dataset.translations);
   const i18n = new VueI18n({
@@ -40,9 +40,9 @@ export default function initGenerateCombinations(generateCombinationsSelector, e
   });
 
   return new Vue({
-    el: generateCombinationsSelector,
-    template: '<generate :productId=productId :eventEmitter=eventEmitter />',
-    components: {Generate},
+    el: combinationGeneratorSelector,
+    template: '<combination-generator :productId=productId :eventEmitter=eventEmitter />',
+    components: {CombinationGenerator},
     i18n,
     data: {
       productId,
