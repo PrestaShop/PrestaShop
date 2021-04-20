@@ -244,7 +244,7 @@
 </script>
 
 <style lang="scss" type="text/scss">
-@import "~@scss/config/_settings.scss";
+@import '~@scss/config/_settings.scss';
 
 .product-page #product-combinations-generate {
   .modal {
