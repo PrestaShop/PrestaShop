@@ -28,6 +28,7 @@ declare(strict_types=1);
 
 namespace PrestaShop\PrestaShop\Adapter\Module\Repository;
 
+use Exception;
 use PrestaShop\PrestaShop\Adapter\AbstractObjectModelRepository;
 use PrestaShop\PrestaShop\Core\Domain\Module\Exception\ModuleNotFoundException;
 use PrestaShop\PrestaShop\Core\Domain\Module\ValueObject\ModuleId;
@@ -62,6 +63,10 @@ class ModuleRepository extends AbstractObjectModelRepository
      */
     public function getActiveModules(): array
     {
+        if (!defined('_DB_PREFIX_')) {
+            return []; // getActiveModules() can be called during install BEFORE the database configuration has been defined
+        }
+
         $activeModules = [];
         try {
             $modulesData = \Db::getInstance()->executeS(
@@ -73,7 +78,7 @@ class ModuleRepository extends AbstractObjectModelRepository
                     return $module['name'];
                 }, $modulesData);
             }
-        } catch (\Throwable $throwable) {
+        } catch (Exception $exception) {
             // DO nothing. getActiveModules() can be called during install BEFORE the database configuration has been defined
         }
 
