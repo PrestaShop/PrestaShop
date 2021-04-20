@@ -198,9 +198,9 @@ abstract class PaymentModuleCore extends Module
      * @param string $payment_method Payment method (eg. 'Credit card')
      * @param string|null $message Message to attach to order
      * @param array $extra_vars
-     * @param null $currency_special
+     * @param int|null $currency_special
      * @param bool $dont_touch_amount
-     * @param bool $secure_key
+     * @param string|bool $secure_key
      * @param Shop $shop
      *
      * @return bool
