@@ -91,7 +91,7 @@ final class ModuleRepository
 
             foreach ($modulesFiles as $moduleFile) {
                 if (in_array($moduleFile->getFilename(), $activeModules)) {
-                    $this->activeModulesPaths[$moduleFile->getFilename()] = $moduleFile->getPathname();
+                    $this->activeModulesPaths[] = $moduleFile->getPathname();
                 }
             }
         }
