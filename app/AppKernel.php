@@ -153,7 +153,7 @@ class AppKernel extends Kernel
         $loader->load(function (ContainerBuilder $container) {
             $moduleTranslationsPaths = $container->getParameter('modules_translation_paths');
             foreach ($this->getActiveModules() as $activeModulePath) {
-                $translationsDir = $activeModulePath . '/translations';
+                $translationsDir = _PS_MODULE_DIR_ . $activeModulePath . '/translations';
                 if (is_dir($translationsDir)) {
                     $moduleTranslationsPaths[] = $translationsDir;
                 }
