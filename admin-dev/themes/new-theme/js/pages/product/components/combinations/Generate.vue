@@ -85,6 +85,7 @@
 <script>
   import CombinationsService from '@pages/product/services/combinations-service';
   import ModalContent from '@pages/product/components/combinations/ModalContent';
+  import isSelected from '@pages/product/mixins/is-attribute-selected';
   import {getAllAttributeGroups} from '@pages/product/services/attribute-groups';
   import Modal from '@vue/components/Modal';
   import ProductEventMap from '@pages/product/product-event-map';
@@ -117,6 +118,7 @@
         required: true,
       },
     },
+    mixins: [isSelected],
     components: {
       Modal,
       ModalContent,
@@ -230,7 +232,10 @@
         ) {
           this.addSelected(selectedAttribute, attributeGroup);
         } else {
-          this.removeSelected(selectedAttribute, attributeGroup);
+          this.removeSelected({
+            selectedAttribute,
+            selectedAttributeGroup: attributeGroup,
+          });
         }
       },
       /**
@@ -284,28 +289,6 @@
         group.attributes = group.attributes.filter(
           (attribute) => attribute.id !== selectedAttribute.id,
         );
-      },
-      /**
-       * The selected attribute is provided as a parameter instead od using this reference because it helps the
-       * observer work better whe this.selectedAttributeGroups is explicitly used as an argument.
-       *
-       * @param {Object} attribute
-       * @param {Object} attributeGroup
-       * @param {Object} attributeGroups
-       *
-       * @returns {boolean}
-       */
-      isSelected(attribute, attributeGroup, attributeGroups) {
-        if (
-          !Object.prototype.hasOwnProperty.call(
-            attributeGroups,
-            attributeGroup.id,
-          )
-        ) {
-          return false;
-        }
-
-        return attributeGroups[attributeGroup.id].attributes.includes(attribute);
       },
     },
   };

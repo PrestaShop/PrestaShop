@@ -102,6 +102,7 @@
 </template>
 
 <script>
+  import isSelected from '@pages/product/mixins/is-attribute-selected';
   import ProductMap from '@pages/product/product-map';
   import PerfectScrollbar from 'perfect-scrollbar';
   import Bloodhound from 'typeahead.js';
@@ -123,6 +124,7 @@
         default: () => {},
       },
     },
+    mixins: [isSelected],
     data() {
       return {
         dataSetConfig: {},
@@ -202,28 +204,6 @@
         });
 
         return searchableAttributes;
-      },
-      /**
-       * The selected attribute is provided as a parameter instead od using this reference because it helps the
-       * observer work better whe this.selectedAttributeGroups is explicitly used as an argument.
-       *
-       * @param {Object} attribute
-       * @param {Object} attributeGroup
-       * @param {Object} attributeGroups
-       *
-       * @returns {boolean}
-       */
-      isSelected(attribute, attributeGroup, attributeGroups) {
-        if (
-          !Object.prototype.hasOwnProperty.call(
-            attributeGroups,
-            attributeGroup.id,
-          )
-        ) {
-          return false;
-        }
-
-        return attributeGroups[attributeGroup.id].attributes.includes(attribute);
       },
       /**
        * @param {Object} attribute
