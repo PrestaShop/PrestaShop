@@ -93,7 +93,19 @@ class AdminImagesControllerCore extends AdminController
                         'show' => true,
                         'required' => true,
                         'type' => 'radio',
-                        'choices' => ['jpg' => $this->trans('Use JPEG.', [], 'Admin.Design.Feature'), 'png' => $this->trans('Use PNG only if the base image is in PNG format.', [], 'Admin.Design.Feature'), 'png_all' => $this->trans('Use PNG for all images.', [], 'Admin.Design.Feature')],
+                        'choices' => [
+                            'jpg' => $this->trans('Use JPEG.', [], 'Admin.Design.Feature'),
+                            'png' => $this->trans('Use PNG only if the base image is in PNG format.', [], 'Admin.Design.Feature'),
+                            'png_all' => $this->trans('Use PNG for all images.', [], 'Admin.Design.Feature'),
+                            'webp' => $this->trans('Use WEBP for all images.', [], 'Admin.Design.Feature'),
+                            'webp_fb' => $this->trans('Use WEBP with fallback to PNG and JPG.', [], 'Admin.Design.Feature')
+                        ],
+                        'hint' => $this->trans('Use this format to save images internally.', [], 'Admin.Design.Help'),
+                        'desc' => implode('<br>', [
+                            $this->trans('WEBP only: pay attention to browser compatibility (https://caniuse.com/webp).', [], 'Admin.Design.Help'),
+                            $this->trans('WEBP with fallback: must be supported by template.', [], 'Admin.Design.Help'),
+                        ]),
+                        'visibility' => Shop::CONTEXT_ALL,
                     ],
                     'PS_JPEG_QUALITY' => [
                         'title' => $this->trans('JPEG compression', [], 'Admin.Design.Feature'),
@@ -102,6 +114,7 @@ class AdminImagesControllerCore extends AdminController
                         'required' => true,
                         'cast' => 'intval',
                         'type' => 'text',
+                        'visibility' => Shop::CONTEXT_ALL,
                     ],
                     'PS_PNG_QUALITY' => [
                         'title' => $this->trans('PNG compression', [], 'Admin.Design.Feature'),
@@ -110,6 +123,7 @@ class AdminImagesControllerCore extends AdminController
                         'required' => true,
                         'cast' => 'intval',
                         'type' => 'text',
+                        'visibility' => Shop::CONTEXT_ALL,
                     ],
                     'PS_IMAGE_GENERATION_METHOD' => [
                         'title' => $this->trans('Generate images based on one side of the source image', [], 'Admin.Design.Feature'),
@@ -130,8 +144,13 @@ class AdminImagesControllerCore extends AdminController
                                 'id' => '2',
                                 'name' => $this->trans('Height', [], 'Admin.Global'),
                             ],
+                            [
+                                'id' => '3',
+                                'name' => $this->trans('Longest side, but keep aspect ratio', [], 'Admin.Design.Feature'),
+                            ],
                         ],
                         'identifier' => 'id',
+                        'desc' => $this->trans('Keep aspect ratio: May not be compatible with all templates.', [], 'Admin.Design.Help'),
                         'visibility' => Shop::CONTEXT_ALL,
                     ],
                     'PS_PRODUCT_PICTURE_MAX_SIZE' => [
@@ -178,6 +197,51 @@ class AdminImagesControllerCore extends AdminController
                 ],
                 'submit' => ['title' => $this->trans('Save', [], 'Admin.Actions')],
             ],
+            'optimization' => [
+                'title' => $this->trans('Advanced optimization options.', [], 'Admin.Design.Feature'),
+                'icon' => 'icon-picture',
+                'top' => '',
+                'bottom' => '',
+                'description' => $this->trans('Optimize bandwidth and disk usage.', [], 'Admin.Design.Help'),
+                'fields' => [
+                    'PS_IMAGEOPT_NO_ENLARGE' => [
+                        'type' => 'bool',
+                        'title' => $this->trans('Never create images larger than base image', [], 'Admin.Design.Feature'),
+                        'required' => false,
+                        'is_bool' => true,
+                        'hint' => $this->trans('Never add a white or transparent border around an image.', [], 'Admin.Design.Help'),
+                        'desc' => $this->trans('Optimizes bandwidth and disk usage, adds flexibility to template, resizing is handled by the browser. May not be compatible with all templates.', [], 'Admin.Design.Help'),
+                        'visibility' => Shop::CONTEXT_ALL,
+                    ],
+                    'PS_IMAGEOPT_SYMLINK' => [
+                        'type' => 'bool',
+                        'title' => $this->trans('Symlink identical images', [], 'Admin.Design.Feature'),
+                        'required' => false,
+                        'is_bool' => true,
+                        'hint' => $this->trans('Useful if previous option is selected.', [], 'Admin.Design.Help'),
+                        'desc' => $this->trans('Optimizes disk usage. Must be supported by server, but probably is.', [], 'Admin.Design.Help'),
+                        'visibility' => Shop::CONTEXT_ALL,
+                    ],
+                    'PS_IMAGEOPT_PNGQUANT' => [
+                        'type' => 'bool',
+                        'title' => $this->trans('Optimize pngs with pngquant.', [], 'Admin.Design.Feature'),
+                        'required' => false,
+                        'is_bool' => true,
+                        'hint' => $this->trans('Lossy compression using adaptive dithering and optimized palettes. If possible use together with optipng.', [], 'Admin.Design.Help'),
+                        'desc' => $this->trans('Efficient bandwidth and disk usage optimization. Package pngquant must be installed in /usr/bin.', [], 'Admin.Design.Help'),
+                        'visibility' => Shop::CONTEXT_ALL,
+                    ],
+                    'PS_IMAGEOPT_OPTIPNG' => [
+                        'type' => 'bool',
+                        'title' => $this->trans('Optimize pngs with optipng.', [], 'Admin.Design.Feature'),
+                        'required' => false,
+                        'is_bool' => true,
+                        'hint' => $this->trans('Lossless compression by optimized reencoding. If possible use together with pngquant.', [], 'Admin.Design.Help'),
+                        'desc' => $this->trans('Efficient bandwidth and disk usage optimization. Package optipng must be installed in /usr/bin.', [], 'Admin.Design.Help'),
+                        'visibility' => Shop::CONTEXT_ALL,
+                    ],
+                ]
+            ]
         ];
 
         if ($this->display_move) {
