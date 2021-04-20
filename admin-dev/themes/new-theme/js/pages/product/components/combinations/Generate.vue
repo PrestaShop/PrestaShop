@@ -27,6 +27,7 @@
     <button
       class="btn btn-primary"
       @click.prevent.stop="showModal"
+      :disabled="preLoading"
     >
       {{ $t('generator.open') }}
     </button>
@@ -146,9 +147,11 @@
   import PerfectScrollbar from 'perfect-scrollbar';
   import Bloodhound from 'typeahead.js';
   import AutoCompleteSearch from '@components/auto-complete-search';
+  import ProductEventMap from '@pages/product/product-event-map';
 
   const {$} = window;
 
+  const CombinationEvents = ProductEventMap.combinations;
   const CombinationsMap = ProductMap.combinations;
 
   export default {
@@ -159,15 +162,21 @@
         selectedAttributeGroups: {},
         combinationsService: new CombinationsService(this.productId),
         isModalShown: false,
+        preLoading: true,
         loading: false,
         scrollbar: null,
         dataSetConfig: {},
         searchSource: {},
+        hasGeneratedCombinations: false,
       };
     },
     props: {
       productId: {
         type: Number,
+        required: true,
+      },
+      eventEmitter: {
+        type: Object,
         required: true,
       },
     },
@@ -187,6 +196,7 @@
           this.attributeGroups = await getAllAttributeGroups();
           window.prestaShopUiKit.init();
           this.initDataSetConfig();
+          this.preLoading = false;
         } catch (error) {
           window.$.growl.error({message: error});
         }
@@ -271,12 +281,42 @@
       closeModal() {
         this.isModalShown = false;
         document.querySelector('body').classList.remove('overflow-hidden');
+        if (this.hasGeneratedCombinations) {
+          this.eventEmitter.emit(CombinationEvents.refreshList);
+        }
       },
       /**
        * Used when the user clicks on the Generate button of the modal
        */
       async generateCombinations() {
         this.loading = true;
+        const data = {
+          attributes: {},
+        };
+        Object.keys(this.selectedAttributeGroups).forEach((attributeGroupId) => {
+          data.attributes[attributeGroupId] = [];
+          this.selectedAttributeGroups[attributeGroupId].attributes.forEach((attribute) => {
+            data.attributes[attributeGroupId].push(attribute.id);
+          });
+        });
+
+        try {
+          const response = await this.combinationsService.generateCombinations(data);
+          $.growl({
+            message: this.$t('generator.success', {
+              '%combinationsNb%': response.combination_ids.length,
+            }),
+          });
+          this.hasGeneratedCombinations = true;
+        } catch (error) {
+          if (error.responseJSON && error.responseJSON.error) {
+            $.growl.error({message: error.responseJSON.error});
+          } else {
+            $.growl.error({message: error});
+          }
+        }
+
+
         this.loading = false;
       },
       /**
