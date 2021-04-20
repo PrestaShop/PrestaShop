@@ -67,3 +67,12 @@ admin_all_attribute_groups:
     defaults:
         _controller: PrestaShopBundle:Admin/Sell/Catalog/Product/Combination:getAllAttributeGroups
         _legacy_controller: AdminProducts
+
+admin_products_combinations_generate:
+    path: /generate-combinations/{productId}
+    methods: [POST]
+    options:
+        expose: true
+    defaults:
+        _controller: PrestaShopBundle:Admin/Sell/Catalog/Product/Combination:generateCombinations
+        _legacy_controller: AdminProducts

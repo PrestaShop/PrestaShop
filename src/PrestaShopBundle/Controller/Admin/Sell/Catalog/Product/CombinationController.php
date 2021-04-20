@@ -34,9 +34,11 @@ use PrestaShop\PrestaShop\Core\Domain\Product\AttributeGroup\Attribute\QueryResu
 use PrestaShop\PrestaShop\Core\Domain\Product\AttributeGroup\Query\GetAttributeGroupList;
 use PrestaShop\PrestaShop\Core\Domain\Product\AttributeGroup\Query\GetProductAttributeGroups;
 use PrestaShop\PrestaShop\Core\Domain\Product\AttributeGroup\QueryResult\AttributeGroup;
+use PrestaShop\PrestaShop\Core\Domain\Product\Combination\Command\GenerateProductCombinationsCommand;
 use PrestaShop\PrestaShop\Core\Domain\Product\Combination\Command\RemoveCombinationCommand;
 use PrestaShop\PrestaShop\Core\Domain\Product\Combination\Query\GetEditableCombinationsList;
 use PrestaShop\PrestaShop\Core\Domain\Product\Combination\QueryResult\CombinationListForEditing;
+use PrestaShop\PrestaShop\Core\Domain\Product\Combination\ValueObject\CombinationId;
 use PrestaShop\PrestaShop\Core\Domain\Product\Exception\ProductConstraintException;
 use PrestaShop\PrestaShop\Core\Domain\Product\Stock\Exception\ProductStockConstraintException;
 use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductId;
@@ -238,6 +240,38 @@ class CombinationController extends FrameworkBundleAdminController
         }
 
         return $this->json([]);
+    }
+
+    /**
+     * @AdminSecurity("is_granted(['create', 'update'], request.get('_legacy_controller'))")
+     *
+     * @param int $productId
+     * @param Request $request
+     *
+     * @return JsonResponse
+     */
+    public function generateCombinationsAction(int $productId, Request $request): JsonResponse
+    {
+        $requestAttributeGroups = $request->request->get('attributes');
+        $attributes = [];
+        foreach ($requestAttributeGroups as $attributeGroupId => $requestAttributes) {
+            $attributes[(int) $attributeGroupId] = array_map('intval', $requestAttributes);
+        }
+
+        try {
+            /** @var CombinationId[] $combinationsIds */
+            $combinationsIds = $this->getCommandBus()->handle(new GenerateProductCombinationsCommand($productId, $attributes));
+        } catch (Exception $e) {
+            return $this->json([
+                'error' => [
+                    $this->getErrorMessageForException($e, $this->getErrorMessages($e)),
+                ],
+            ], Response::HTTP_BAD_REQUEST);
+        }
+
+        return $this->json([
+            'combination_ids' => array_map(function (CombinationId $combinationId) { return $combinationId->getValue(); }, $combinationsIds),
+        ]);
     }
 
     /**
