@@ -97,6 +97,7 @@ services:
         arguments:
             - '@prestashop.adapter.product.repository.product_repository'
             - '@prestashop.adapter.product.combination.repository.combination_repository'
+            - '@prestashop.adapter.product.combination.update.default_combination_updater'
 
     prestashop.adapter.product.combination.update.combination_images_updater:
         class: PrestaShop\PrestaShop\Adapter\Product\Combination\Update\CombinationImagesUpdater
@@ -166,3 +167,11 @@ services:
         tags:
             - name: tactician.handler
               command: PrestaShop\PrestaShop\Core\Domain\Product\Combination\Command\RemoveAllCombinationImagesCommand
+
+    prestashop.adapter.product.combination.command_handler.remove_combination_handler:
+        class: PrestaShop\PrestaShop\Adapter\Product\Combination\CommandHandler\RemoveCombinationCommandHandler
+        arguments:
+            - '@prestashop.adapter.product.combination.update.combination_remover'
+        tags:
+            - name: tactician.handler
+              command: PrestaShop\PrestaShop\Core\Domain\Product\Combination\Command\RemoveCombinationCommand
