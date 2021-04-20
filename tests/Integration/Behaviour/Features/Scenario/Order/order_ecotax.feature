@@ -56,6 +56,7 @@ Feature: Ecotax for Order in Back Office (BO)
       | name          | Test Ecotax Product |
       | amount        | 2                   |
       | price         | 15.00               |
+      | price_tax_incl| 15.90               |
     ## Check informations
     Then order "bo_order1" should contain 2 products "Test Ecotax Product"
     And the available stock for product "Test Ecotax Product" should be 98
@@ -82,6 +83,7 @@ Feature: Ecotax for Order in Back Office (BO)
       | name          | Test Ecotax Product |
       | amount        | 2                   |
       | price         | 20.12               |
+      | price_tax_incl| 21.02               |
     ## Check informations
     Then the ecotax of the product "Test Ecotax Product" should be 5.12
     And product "Test Ecotax Product" price is 15.00
@@ -119,6 +121,7 @@ Feature: Ecotax for Order in Back Office (BO)
       | name          | Test Ecotax Product |
       | amount        | 3                   |
       | price         | 20.83               |
+      | price_tax_incl| 21.7726             |
     ## Check informations
     Then the ecotax of the product "Test Ecotax Product" should be 5.12
     And product "Test Ecotax Product" price is 15.00
@@ -156,6 +159,7 @@ Feature: Ecotax for Order in Back Office (BO)
       | name          | Test Ecotax Product |
       | amount        | 3                   |
       | price         | 20.83               |
+      | price_tax_incl| 21.7726             |
     ## Check informations
     Then the ecotax of the product "Test Ecotax Product" should be 5.12
     And product "Test Ecotax Product" price is 15.00
@@ -168,6 +172,7 @@ Feature: Ecotax for Order in Back Office (BO)
       | name          | Test Ecotax Product |
       | amount        | 3                   |
       | price         | 24.99               |
+      | price_tax_incl| 26.1822             |
     ## Check informations
     Then the ecotax of the product "Test Ecotax Product" should be 5.12
     And product "Test Ecotax Product" price is 15.00
@@ -205,6 +210,7 @@ Feature: Ecotax for Order in Back Office (BO)
       | name          | Test Ecotax Product |
       | amount        | 3                   |
       | price         | 20.12               |
+      | price_tax_incl| 21.02               |
     ## Check informations
     Then the ecotax of the product "Test Ecotax Product" should be 5.12
     And product "Test Ecotax Product" price is 15.00
@@ -217,6 +223,7 @@ Feature: Ecotax for Order in Back Office (BO)
       | name          | Test Ecotax Product |
       | amount        | 17                  |
       | price         | 20.12               |
+      | price_tax_incl| 21.02               |
     ## Check informations
     Then the ecotax of the product "Test Ecotax Product" should be 5.12
     And product "Test Ecotax Product" price is 15.00

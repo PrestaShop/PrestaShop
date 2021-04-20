@@ -65,6 +65,7 @@ Feature: Ecotax for Order in Back Office (BO)
       | name          | Test Ecotax Product |
       | amount        | 2                   |
       | price         | 15.00               |
+      | price_tax_incl| 15.90               |
     ## Check informations
     Then order "bo_order1" should contain 2 products "Test Ecotax Product"
     And the available stock for product "Test Ecotax Product" should be 98
@@ -83,7 +84,6 @@ Feature: Ecotax for Order in Back Office (BO)
     When I remove product "Test Ecotax Product" from order "bo_order1"
     Then order "bo_order1" should have 1 products in total
 
-  @order-ecotax-with-tax
   Scenario: Add product (with ecotax) to an Order
     ## Set EcoTax
     When the product "Test Ecotax Product" ecotax is 5.12
@@ -92,6 +92,7 @@ Feature: Ecotax for Order in Back Office (BO)
       | name          | Test Ecotax Product |
       | amount        | 2                   |
       | price         | 20.12               |
+      | price_tax_incl| 23.1704             |
     ## Check informations
     Then the ecotax of the product "Test Ecotax Product" should be 5.12
     And product "Test Ecotax Product" price is 15.00
@@ -100,21 +101,21 @@ Feature: Ecotax for Order in Back Office (BO)
     And order "bo_order1" should have 3 products in total
     And order "bo_order1" should have 0 invoices
     And product "Test Ecotax Product" in order "bo_order1" has following details:
-      | product_quantity            | 2     |
-      | ecotax                      | 5.12  |
-      | ecotax_tax_rate             | 42.00 |
-      | product_price               | 20.12 |
+      | product_quantity            | 2       |
+      | ecotax                      | 5.12    |
+      | ecotax_tax_rate             | 42.00   |
+      | product_price               | 20.12   |
       # 20.12 = 15 + 5.12
-      | original_product_price      | 20.12 |
+      | original_product_price      | 20.12   |
       # 20.12 = 15 + 5.12
-      | unit_price_tax_excl         | 20.12 |
+      | unit_price_tax_excl         | 20.12   |
       # 20.12 = 15 + 5.12
-      | unit_price_tax_incl         | 21.02 |
-      # 21.02 = (15 + 6%) + 5.12
-      | total_price_tax_excl        | 40.24 |
+      | unit_price_tax_incl         | 23.1704 |
+      # 23.1704 = (15 + 6%) + (5.12 + 42%)
+      | total_price_tax_excl        | 40.24   |
       # 40.24 = 20.12 * 2
-      | total_price_tax_incl        | 42.04 |
-      # 42.04 = 21.02 * 2
+      | total_price_tax_incl        | 46.34   |
+      # 46.3408 = 23.1704 * 2
     # Reset
     When the product "Test Ecotax Product" ecotax is 0.00
     Then the ecotax of the product "Test Ecotax Product" should be 0.00
@@ -130,6 +131,7 @@ Feature: Ecotax for Order in Back Office (BO)
       | name          | Test Ecotax Product |
       | amount        | 3                   |
       | price         | 20.83               |
+      | price_tax_incl| 23.923              |
     ## Check informations
     Then the ecotax of the product "Test Ecotax Product" should be 5.12
     And product "Test Ecotax Product" price is 15.00
@@ -147,12 +149,12 @@ Feature: Ecotax for Order in Back Office (BO)
       # 20.12 = 15 + 5.12
       | unit_price_tax_excl         | 20.83     |
       # 20.83 = 15.71 + 5.12
-      | unit_price_tax_incl         | 21.7726   |
-      # 21.7726 = (15.71 + 6%) + 5.12
+      | unit_price_tax_incl         | 23.923    |
+      # 23.923 = (15.71 + 6%) + (5.12 + 42%)
       | total_price_tax_excl        | 62.49     |
       # 62.49 = 20.83 * 3
-      | total_price_tax_incl        | 65.32     |
-      # 65.3178 = 21.7726 * 3
+      | total_price_tax_incl        | 71.77     |
+      # 71.769 = 23,923 * 3
     # Reset
     When the product "Test Ecotax Product" ecotax is 0.00
     Then the ecotax of the product "Test Ecotax Product" should be 0.00
@@ -168,6 +170,7 @@ Feature: Ecotax for Order in Back Office (BO)
       | name          | Test Ecotax Product |
       | amount        | 3                   |
       | price         | 20.83               |
+      | price_tax_incl| 23.923              |
     ## Check informations
     Then the ecotax of the product "Test Ecotax Product" should be 5.12
     And product "Test Ecotax Product" price is 15.00
@@ -180,6 +183,7 @@ Feature: Ecotax for Order in Back Office (BO)
       | name          | Test Ecotax Product |
       | amount        | 3                   |
       | price         | 24.99               |
+      | price_tax_incl| 28.3326             |
     ## Check informations
     Then the ecotax of the product "Test Ecotax Product" should be 5.12
     And product "Test Ecotax Product" price is 15.00
@@ -197,12 +201,12 @@ Feature: Ecotax for Order in Back Office (BO)
       # 20.12 = 15 + 5.12
       | unit_price_tax_excl         | 24.99     |
       # 24.99 = 19.87 + 5.12
-      | unit_price_tax_incl         | 26.1822   |
-      # 26.1822 = (15.71 + 6%) + 5.12
+      | unit_price_tax_incl         | 28.3326   |
+      # 28.3326 = (19.87 + 6%) + (5.12 + 42%)
       | total_price_tax_excl        | 74.97     |
       # 74.97 = 24.99 * 3
-      | total_price_tax_incl        | 78.55     |
-      # 78.5466 = 26.1822 * 3
+      | total_price_tax_incl        | 85.00     |
+      # 84.9978 = 28.3326 * 3
     # Reset
     When the product "Test Ecotax Product" ecotax is 0.00
     Then the ecotax of the product "Test Ecotax Product" should be 0.00
@@ -218,6 +222,7 @@ Feature: Ecotax for Order in Back Office (BO)
       | name          | Test Ecotax Product |
       | amount        | 3                   |
       | price         | 20.12               |
+      | price_tax_incl| 23.1704             |
     ## Check informations
     Then the ecotax of the product "Test Ecotax Product" should be 5.12
     And product "Test Ecotax Product" price is 15.00
@@ -230,6 +235,7 @@ Feature: Ecotax for Order in Back Office (BO)
       | name          | Test Ecotax Product |
       | amount        | 17                  |
       | price         | 20.12               |
+      | price_tax_incl| 23.1704             |
     ## Check informations
     Then the ecotax of the product "Test Ecotax Product" should be 5.12
     And product "Test Ecotax Product" price is 15.00
@@ -247,12 +253,12 @@ Feature: Ecotax for Order in Back Office (BO)
       # 20.12 = 15 + 5.12
       | unit_price_tax_excl         | 20.12      |
       # 20.12 = 15 + 5.12
-      | unit_price_tax_incl         | 21.02      |
-      # 21.02 = (15 + 6%) + 5.12
+      | unit_price_tax_incl         | 23.1704    |
+      # 23.1704 = (15 + 6%) + (5.12 + 42%)
       | total_price_tax_excl        | 342.04     |
       # 342.04 = 20.12 * 17
-      | total_price_tax_incl        | 357.34     |
-      # 357.34 = 21.02 * 17
+      | total_price_tax_incl        | 393.90     |
+      # 393.8968 = 21.02 * 17
     # Reset
     When the product "Test Ecotax Product" ecotax is 0.00
     Then the ecotax of the product "Test Ecotax Product" should be 0.00
