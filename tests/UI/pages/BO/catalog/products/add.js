@@ -132,6 +132,7 @@ class AddProduct extends BOBasePage {
    */
   async setProductStatus(page, wantedStatus) {
     const isProductOnline = await this.getOnlineButtonStatus(page);
+
     if (isProductOnline !== wantedStatus) {
       await page.click(this.productOnlineSwitch);
       await this.closeGrowlMessage(page);
@@ -144,11 +145,8 @@ class AddProduct extends BOBasePage {
    * @returns {Promise<string>}
    */
   async saveProduct(page) {
-    const [growlTextMessage] = await Promise.all([
-      this.getGrowlMessageContent(page),
-      page.click(this.saveProductButton),
-    ]);
-
+    await page.click(this.saveProductButton);
+    const growlTextMessage = await this.getGrowlMessageContent(page, 30000);
     await this.closeGrowlMessage(page);
 
     return growlTextMessage;
@@ -162,10 +160,12 @@ class AddProduct extends BOBasePage {
    */
   async createEditBasicProduct(page, productData) {
     await this.setBasicSetting(page, productData);
-    await this.setProductStatus(page, productData.status);
+
     if (productData.type === 'Pack of products') {
       await this.addPackOfProducts(page, productData.pack);
     }
+
+    await this.setProductStatus(page, productData.status);
     return this.saveProduct(page);
   }
 
@@ -205,17 +205,8 @@ class AddProduct extends BOBasePage {
       }
     }
     /* eslint-enable */
-    await this.scrollTo(page, this.generateCombinationsButton);
-    await Promise.all([
-      this.waitForVisibleSelector(page, `${this.productCombinationsBulkForm}:not(.inactive)`),
-      this.waitForVisibleSelector(
-        page,
-        `${this.productCombinationTableRow(1)}[style='display: table-row;']`,
-      ),
-      page.click(this.generateCombinationsButton),
-    ]);
+    await page.$eval(this.generateCombinationsButton, el => el.click());
     await this.closeGrowlMessage(page);
-    await this.closeCombinationsForm(page);
   }
 
   /**
@@ -231,38 +222,28 @@ class AddProduct extends BOBasePage {
   }
 
   /**
-   * @override
-   * Select, unselect checkbox
-   * @param page
-   * @param checkboxSelector, selector of checkbox
-   * @param valueWanted, true if we want to select checkBox, false otherwise
-   * @return {Promise<void>}
-   */
-  async changeCheckboxValue(page, checkboxSelector, valueWanted = true) {
-    if (valueWanted !== (await this.isCheckboxSelected(page, checkboxSelector))) {
-      await page.$eval(checkboxSelector, el => el.click());
-    }
-  }
-
-  /**
    * Set quantity for all combinations
    * @param page
    * @param quantity
    * @return {Promise<void>}
    */
   async setCombinationsQuantity(page, quantity) {
-    // Unselect all
-    await this.changeCheckboxValue(page, this.productCombinationSelectAllCheckbox, false);
-    await Promise.all([
-      this.waitForVisibleSelector(page, `${this.productCombinationsBulkFormTitle}[aria-expanded='true']`),
-      await this.changeCheckboxValue(page, this.productCombinationSelectAllCheckbox, true),
-    ]);
+    // Select all combinations
+    await page.check(this.productCombinationSelectAllCheckbox);
+
+    // Open combinations bulk form
+    if (await this.elementNotVisible(page, this.productCombinationBulkQuantityInput, 1000)) {
+      await page.click(this.productCombinationsBulkFormTitle);
+      await this.waitForVisibleSelector(page, this.productCombinationBulkQuantityInput, 5000);
+    }
+
     // Edit quantity
-    await this.waitForVisibleSelector(page, this.applyOnCombinationsButton);
-    await this.scrollTo(page, this.productCombinationBulkQuantityInput);
     await page.type(this.productCombinationBulkQuantityInput, quantity.toString());
     await this.scrollTo(page, this.applyOnCombinationsButton);
     await page.click(this.applyOnCombinationsButton);
+
+    // Close growl message
+    await this.closeGrowlMessage(page);
   }
 
   /**
@@ -274,6 +255,7 @@ class AddProduct extends BOBasePage {
     await this.waitForVisibleSelector(page, this.previewProductLink);
     const newPage = await this.openLinkWithTargetBlank(page, this.previewProductLink, 'body a');
     const textBody = await this.getTextContent(newPage, 'body');
+
     if (await textBody.includes('[Debug] This page has moved')) {
       await this.clickAndWaitForNavigation(newPage, 'a');
     }
@@ -324,40 +306,25 @@ class AddProduct extends BOBasePage {
    */
   async deleteAllCombinations(page) {
     if (await this.hasCombinations(page)) {
-      // Unselect all
-      await this.changeCheckboxValue(page, this.productCombinationSelectAllCheckbox, false);
-      // Select all and delete combinations
-      await Promise.all([
-        this.changeCheckboxValue(page, this.productCombinationSelectAllCheckbox, true),
-        this.waitForVisibleSelector(page, `${this.bulkCombinationsContainer}.show`),
-      ]);
+      // Select all combinations
+      await page.check(this.productCombinationSelectAllCheckbox);
+
+      // Open combinations bulk form
+      if (await this.elementNotVisible(page, this.productCombinationBulkQuantityInput, 1000)) {
+        await page.click(this.productCombinationsBulkFormTitle);
+        await this.waitForVisibleSelector(page, this.productCombinationBulkQuantityInput, 5000);
+      }
+
+      // Scroll and click on delete combinations button
       await this.scrollTo(page, this.deleteCombinationsButton);
+
       await Promise.all([
         page.click(this.deleteCombinationsButton),
         this.waitForVisibleSelector(page, this.modalDialog),
       ]);
       await page.waitForTimeout(250);
-      await Promise.all([
-        page.click(this.modalDialogYesButton),
-        this.waitForSelectorAndClick(page, this.growlCloseButton),
-      ]);
-      // Unselect all
-      await this.changeCheckboxValue(page, this.productCombinationSelectAllCheckbox, false);
-      await this.closeCombinationsForm(page);
-    }
-  }
-
-  /**
-   * Close combinations form if open
-   * @param page
-   * @return {Promise<void>}
-   */
-  async closeCombinationsForm(page) {
-    if (!(await this.elementVisible(page, `${this.productCombinationsBulkFormTitle}[aria-expanded='false']`, 1000))) {
-      await Promise.all([
-        page.click(this.productCombinationsBulkFormTitle),
-        this.waitForVisibleSelector(page, `${this.productCombinationsBulkFormTitle}[aria-expanded='false']`),
-      ]);
+      await page.click(this.modalDialogYesButton);
+      await this.closeGrowlMessage(page);
     }
   }
 
@@ -420,10 +387,10 @@ class AddProduct extends BOBasePage {
 
     // Apply specific price
     await this.scrollTo(page, this.applyButton);
-    const [growlMessageText] = await Promise.all([
-      this.getGrowlMessageContent(page),
-      page.click(this.applyButton),
-    ]);
+    await page.click(this.applyButton);
+
+    // Get growl message
+    const growlMessageText = await this.getGrowlMessageContent(page, 30000);
 
     await this.closeGrowlMessage(page);
     await this.goToFormStep(page, 1);
@@ -479,6 +446,7 @@ class AddProduct extends BOBasePage {
    */
   async addPackOfProducts(page, pack) {
     const keys = Object.keys(pack);
+
     for (let i = 0; i < keys.length; i += 1) {
       await this.addProductToPack(page, keys[i], pack[keys[i]]);
     }
@@ -509,6 +477,7 @@ class AddProduct extends BOBasePage {
     // Set Stock form
     await this.setValue(page, this.stockLocationInput, product.stockLocation);
     await this.setValue(page, this.lowStockLevelInput, product.lowStockLevel);
+
     // Set Availability preferences form
     switch (product.behaviourOutOfStock) {
       case 'Deny orders':
@@ -526,7 +495,10 @@ class AddProduct extends BOBasePage {
       default:
         throw new Error(`Column ${product.behaviourOutOfStock} was not found`);
     }
-    await this.waitForSelectorAndClick(page, columnSelector);
+
+    await page.$eval(columnSelector, el => el.click());
+
+    // Set value on label In and out of stock inputs
     await this.scrollTo(page, this.labelWhenInStockInput);
     await this.setValue(page, this.labelWhenInStockInput, product.labelWhenInStock);
     await this.setValue(page, this.labelWhenOutOfStock, product.LabelWhenOutOfStock);
