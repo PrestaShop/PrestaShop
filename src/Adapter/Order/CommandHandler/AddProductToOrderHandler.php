@@ -43,7 +43,6 @@ use Order;
 use OrderCarrier;
 use OrderDetail;
 use OrderInvoice;
-use PrestaShop\Decimal\Number;
 use PrestaShop\PrestaShop\Adapter\Cart\Comparator\CartProductsComparator;
 use PrestaShop\PrestaShop\Adapter\Cart\Comparator\CartProductUpdate;
 use PrestaShop\PrestaShop\Adapter\ContextStateManager;

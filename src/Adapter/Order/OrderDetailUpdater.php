@@ -79,7 +79,6 @@ class OrderDetailUpdater
      * @param Order $order
      * @param Number $priceTaxExcluded
      * @param Number $priceTaxIncluded
-     * @param Number $ecotax
      *
      * @throws OrderException
      */
@@ -87,20 +86,25 @@ class OrderDetailUpdater
         OrderDetail $orderDetail,
         Order $order,
         Number $priceTaxExcluded,
-        Number $priceTaxIncluded,
-        Number $ecotax
+        Number $priceTaxIncluded
     ): void {
         list($roundType, $computingPrecision, $taxAddress) = $this->prepareOrderContext($order);
 
         try {
+            $ecotax = new Number($orderDetail->ecotax);
+
+            $ecotaxTaxCalculator = $this->getTaxCalculatorForEcotax($taxAddress);
+            $ecotaxTaxFactor = new Number((string) (1 + ($ecotaxTaxCalculator->getTotalRate() / 100)));
+            $ecotaxTaxIncluded = $ecotax->times($ecotaxTaxFactor);
+
             $priceTaxExcluded = $priceTaxExcluded->minus($ecotax);
-            $priceTaxIncluded = $priceTaxIncluded->minus($ecotax);
+            $priceTaxIncluded = $priceTaxIncluded->minus($ecotaxTaxIncluded);
 
             $precisePriceTaxExcluded = $this->getPrecisePriceTaxExcluded($priceTaxIncluded, $priceTaxExcluded, $order, $orderDetail, $taxAddress);
             $precisePriceTaxIncluded = $this->getPrecisePriceTaxIncluded($priceTaxIncluded, $priceTaxExcluded, $order, $orderDetail, $taxAddress);
 
             $precisePriceTaxExcluded = $precisePriceTaxExcluded->plus($ecotax);
-            $precisePriceTaxIncluded = $precisePriceTaxIncluded->plus($ecotax);
+            $precisePriceTaxIncluded = $precisePriceTaxIncluded->plus($ecotaxTaxIncluded);
 
             $this->applyOrderDetailPriceUpdate(
                 $orderDetail,
@@ -324,16 +328,16 @@ class OrderDetailUpdater
 
         $ecotaxTaxCalculator = $this->getTaxCalculatorForEcotax($taxAddress);
         $ecotaxTaxFactor = new Number((string) (1 + ($ecotaxTaxCalculator->getTotalRate() / 100)));
-        $ecotax = $ecotax->times($ecotaxTaxFactor);
+        $ecotaxTaxIncluded = $ecotax->times($ecotaxTaxFactor);
 
         $priceTaxExcluded = $priceTaxExcluded->minus($ecotax);
-        $priceTaxIncluded = $priceTaxIncluded->minus($ecotax);
+        $priceTaxIncluded = $priceTaxIncluded->minus($ecotaxTaxIncluded);
 
         $precisePriceTaxExcluded = $this->getPrecisePriceTaxExcluded($priceTaxIncluded, $priceTaxExcluded, $order, $orderDetail, $taxAddress);
         $precisePriceTaxIncluded = $this->getPrecisePriceTaxIncluded($priceTaxIncluded, $priceTaxExcluded, $order, $orderDetail, $taxAddress);
 
         $precisePriceTaxExcluded = $precisePriceTaxExcluded->plus($ecotax);
-        $precisePriceTaxIncluded = $precisePriceTaxIncluded->plus($ecotax);
+        $precisePriceTaxIncluded = $precisePriceTaxIncluded->plus($ecotaxTaxIncluded);
 
         foreach ($identicalOrderDetails as $identicalOrderDetail) {
             $this->applyOrderDetailPriceUpdate(
