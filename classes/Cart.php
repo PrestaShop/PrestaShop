@@ -472,10 +472,11 @@ class CartCore extends ObjectModel
      *                    - FILTER_ACTION_GIFT
      *                    - FILTER_ACTION_ALL_NOCAP
      * @param bool $autoAdd automaticaly adds cart ruls without code to cart
+     * @param bool $useOrderPrices
      *
      * @return array|false|mysqli_result|PDOStatement|resource|null Database result
      */
-    public function getCartRules($filter = CartRule::FILTER_ACTION_ALL, $autoAdd = true)
+    public function getCartRules($filter = CartRule::FILTER_ACTION_ALL, $autoAdd = true, $useOrderPrices = false)
     {
         // Define virtual context to prevent case where the cart is not the in the global context
         $virtual_context = Context::getContext()->cloneContext();
@@ -486,7 +487,7 @@ class CartCore extends ObjectModel
             return [];
         }
         if ($autoAdd) {
-            CartRule::autoAddToCart($virtual_context);
+            CartRule::autoAddToCart($virtual_context, $useOrderPrices);
         }
 
         $cache_key = 'Cart::getCartRules_' . $this->id . '-' . $filter;
@@ -1826,7 +1827,7 @@ class CartCore extends ObjectModel
 
         $cart_rule = new CartRule($id_cart_rule, Configuration::get('PS_LANG_DEFAULT'));
         if ((bool) $result && (int) $cart_rule->gift_product) {
-            $this->updateQty(1, $cart_rule->gift_product, $cart_rule->gift_product_attribute, null, 'down', 0, null, false, $useOrderPrices);
+            $this->updateQty(1, $cart_rule->gift_product, $cart_rule->gift_product_attribute, null, 'down', 0, null, false, false, true, $useOrderPrices);
         }
 
         return $result;

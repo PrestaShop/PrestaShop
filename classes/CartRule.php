@@ -1689,7 +1689,7 @@ class CartRuleCore extends ObjectModel
         }
 
         static $errors = [];
-        foreach ($context->cart->getCartRules() as $cart_rule) {
+        foreach ($context->cart->getCartRules(CartRule::FILTER_ACTION_ALL, true, $useOrderPrice) as $cart_rule) {
             if ($error = $cart_rule['obj']->checkValidity($context, true, true, true, $useOrderPrice)) {
                 $context->cart->removeCartRule($cart_rule['obj']->id, $useOrderPrice);
                 $context->cart->update();
