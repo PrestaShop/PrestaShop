@@ -76,3 +76,10 @@ Feature: Remove attribute combinations for product in Back Office (BO)
       | name[en-US] | color   | position | reference |
       | Black       | #434A54 | 6        | Black     |
       | Blue        | #5D9CEC | 9        | Blue      |
+    When I remove combination product1SBlack
+    And I remove combination product1SBlue
+    And I remove combination product1MBlack
+    And I remove combination product1MBlue
+    Then product product1 type should be combinations
+    And product product1 does not have a default combination
+    And product product1 should have no attribute groups
