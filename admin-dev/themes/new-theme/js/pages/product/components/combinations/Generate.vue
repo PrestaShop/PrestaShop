@@ -29,7 +29,7 @@
       @click.prevent.stop="showModal"
       :disabled="preLoading"
     >
-      {{ $t("generator.open") }}
+      {{ $t('generator.open') }}
     </button>
     <modal
       v-if="isModalShown"
@@ -54,7 +54,7 @@
           @click.prevent.stop="closeModal"
           :aria-label="$t('modal.close')"
         >
-          {{ $t("modal.close") }}
+          {{ $t('modal.close') }}
         </button>
 
         <button
@@ -65,8 +65,8 @@
         >
           <span v-if="!loading">
             {{
-              $tc("generator.action", generatedCombinationsNb, {
-                "%combinationsNb%": generatedCombinationsNb,
+              $tc('generator.action', generatedCombinationsNb, {
+                '%combinationsNb%': generatedCombinationsNb,
               })
             }}
           </span>
@@ -83,213 +83,213 @@
 </template>
 
 <script>
-  import CombinationsService from '@pages/product/services/combinations-service';
-  import ModalContent from '@pages/product/components/combinations/ModalContent';
-  import isSelected from '@pages/product/mixins/is-attribute-selected';
-  import {getAllAttributeGroups} from '@pages/product/services/attribute-groups';
-  import Modal from '@vue/components/Modal';
-  import ProductEventMap from '@pages/product/product-event-map';
+import CombinationsService from '@pages/product/services/combinations-service';
+import ModalContent from '@pages/product/components/combinations/ModalContent';
+import isSelected from '@pages/product/mixins/is-attribute-selected';
+import { getAllAttributeGroups } from '@pages/product/services/attribute-groups';
+import Modal from '@vue/components/Modal';
+import ProductEventMap from '@pages/product/product-event-map';
 
-  const {$} = window;
+const { $ } = window;
 
-  const CombinationEvents = ProductEventMap.combinations;
+const CombinationEvents = ProductEventMap.combinations;
 
-  export default {
-    name: 'Generate',
-    data() {
-      return {
-        attributeGroups: [],
-        selectedAttributeGroups: {},
-        combinationsService: new CombinationsService(this.productId),
-        isModalShown: false,
-        preLoading: true,
-        loading: false,
-        scrollbar: null,
-        hasGeneratedCombinations: false,
+export default {
+  name: 'Generate',
+  data() {
+    return {
+      attributeGroups: [],
+      selectedAttributeGroups: {},
+      combinationsService: new CombinationsService(this.productId),
+      isModalShown: false,
+      preLoading: true,
+      loading: false,
+      scrollbar: null,
+      hasGeneratedCombinations: false,
+    };
+  },
+  props: {
+    productId: {
+      type: Number,
+      required: true,
+    },
+    eventEmitter: {
+      type: Object,
+      required: true,
+    },
+  },
+  mixins: [isSelected],
+  components: {
+    Modal,
+    ModalContent,
+  },
+  computed: {
+    generatedCombinationsNb() {
+      const groupIds = Object.keys(this.selectedAttributeGroups);
+      let combinationsNumber = 0;
+
+      groupIds.forEach((attributeGroupId) => {
+        const { attributes } = this.selectedAttributeGroups[attributeGroupId];
+
+        if (!attributes.length) {
+          return;
+        }
+
+        // Only start counting when at least one attribute is selected
+        if (combinationsNumber === 0) {
+          combinationsNumber = 1;
+        }
+        combinationsNumber *= this.selectedAttributeGroups[attributeGroupId]
+          .attributes.length;
+      });
+
+      return combinationsNumber;
+    },
+  },
+  mounted() {
+    this.initAttributeGroups();
+  },
+  methods: {
+    /**
+     * This methods is used to initialize combinations definitions
+     */
+    async initAttributeGroups() {
+      try {
+        this.attributeGroups = await getAllAttributeGroups();
+        window.prestaShopUiKit.init();
+        this.preLoading = false;
+      } catch (error) {
+        window.$.growl.error({ message: error });
+      }
+    },
+    /**
+     * Show the modal, and execute PerfectScrollBar and Typehead
+     */
+    showModal() {
+      document.querySelector('body').classList.add('overflow-hidden');
+      this.isModalShown = true;
+    },
+    /**
+     * Handle modal closing
+     */
+    closeModal() {
+      this.isModalShown = false;
+      document.querySelector('body').classList.remove('overflow-hidden');
+      if (this.hasGeneratedCombinations) {
+        this.eventEmitter.emit(CombinationEvents.refreshList);
+      }
+    },
+    /**
+     * Used when the user clicks on the Generate button of the modal
+     */
+    async generateCombinations() {
+      this.loading = true;
+      const data = {
+        attributes: {},
       };
-    },
-    props: {
-      productId: {
-        type: Number,
-        required: true,
-      },
-      eventEmitter: {
-        type: Object,
-        required: true,
-      },
-    },
-    mixins: [isSelected],
-    components: {
-      Modal,
-      ModalContent,
-    },
-    computed: {
-      generatedCombinationsNb() {
-        const groupIds = Object.keys(this.selectedAttributeGroups);
-        let combinationsNumber = 0;
-
-        groupIds.forEach((attributeGroupId) => {
-          const {attributes} = this.selectedAttributeGroups[attributeGroupId];
-
-          if (!attributes.length) {
-            return;
+      Object.keys(this.selectedAttributeGroups).forEach((attributeGroupId) => {
+        data.attributes[attributeGroupId] = [];
+        this.selectedAttributeGroups[attributeGroupId].attributes.forEach(
+          (attribute) => {
+            data.attributes[attributeGroupId].push(attribute.id);
           }
+        );
+      });
 
-          // Only start counting when at least one attribute is selected
-          if (combinationsNumber === 0) {
-            combinationsNumber = 1;
-          }
-          combinationsNumber *= this.selectedAttributeGroups[attributeGroupId]
-            .attributes.length;
+      try {
+        const response = await this.combinationsService.generateCombinations(
+          data
+        );
+        $.growl({
+          message: this.$t('generator.success', {
+            '%combinationsNb%': response.combination_ids.length,
+          }),
         });
-
-        return combinationsNumber;
-      },
-    },
-    mounted() {
-      this.initAttributeGroups();
-    },
-    methods: {
-      /**
-       * This methods is used to initialize combinations definitions
-       */
-      async initAttributeGroups() {
-        try {
-          this.attributeGroups = await getAllAttributeGroups();
-          window.prestaShopUiKit.init();
-          this.preLoading = false;
-        } catch (error) {
-          window.$.growl.error({message: error});
-        }
-      },
-      /**
-       * Show the modal, and execute PerfectScrollBar and Typehead
-       */
-      showModal() {
-        document.querySelector('body').classList.add('overflow-hidden');
-        this.isModalShown = true;
-      },
-      /**
-       * Handle modal closing
-       */
-      closeModal() {
-        this.isModalShown = false;
-        document.querySelector('body').classList.remove('overflow-hidden');
-        if (this.hasGeneratedCombinations) {
-          this.eventEmitter.emit(CombinationEvents.refreshList);
-        }
-      },
-      /**
-       * Used when the user clicks on the Generate button of the modal
-       */
-      async generateCombinations() {
-        this.loading = true;
-        const data = {
-          attributes: {},
-        };
-        Object.keys(this.selectedAttributeGroups).forEach((attributeGroupId) => {
-          data.attributes[attributeGroupId] = [];
-          this.selectedAttributeGroups[attributeGroupId].attributes.forEach(
-            (attribute) => {
-              data.attributes[attributeGroupId].push(attribute.id);
-            },
-          );
-        });
-
-        try {
-          const response = await this.combinationsService.generateCombinations(
-            data,
-          );
-          $.growl({
-            message: this.$t('generator.success', {
-              '%combinationsNb%': response.combination_ids.length,
-            }),
-          });
-          this.hasGeneratedCombinations = true;
-        } catch (error) {
-          if (error.responseJSON && error.responseJSON.error) {
-            $.growl.error({message: error.responseJSON.error});
-          } else {
-            $.growl.error({message: error});
-          }
-        }
-
-        this.loading = false;
-      },
-      /**
-       * Remove the attribute if it's selected or add it
-       *
-       * @param {Object} selectedAttribute
-       * @param {{name: string}} attributeGroup
-       */
-      changeSelected({selectedAttribute, attributeGroup}) {
-        if (
-          !this.isSelected(
-            selectedAttribute,
-            attributeGroup,
-            this.selectedAttributeGroups,
-          )
-        ) {
-          this.addSelected(selectedAttribute, attributeGroup);
+        this.hasGeneratedCombinations = true;
+      } catch (error) {
+        if (error.responseJSON && error.responseJSON.error) {
+          $.growl.error({ message: error.responseJSON.error });
         } else {
-          this.removeSelected({
-            selectedAttribute,
-            selectedAttributeGroup: attributeGroup,
-          });
+          $.growl.error({ message: error });
         }
-      },
-      /**
-       * @param {Object} attribute
-       * @param {Object} attributeGroup
-       */
-      addSelected(attribute, attributeGroup) {
-        // Extra check to avoid adding same attribute twice which would cause a duplicate key error
-        if (
-          this.isSelected(attribute, attributeGroup, this.selectedAttributeGroups)
-        ) {
-          return;
-        }
+      }
 
-        // Add copy of attribute group in selected groups
-        if (!this.selectedAttributeGroups[attributeGroup.id]) {
-          const newAttributeGroup = {
-            [attributeGroup.id]: {
-              id: attributeGroup.id,
-              name: attributeGroup.name,
-              attributes: [],
-            },
-          };
-
-          // This is needed to correctly handle observation
-          this.selectedAttributeGroups = {
-            ...this.selectedAttributeGroups,
-            ...newAttributeGroup,
-          };
-        }
-
-        this.selectedAttributeGroups[attributeGroup.id].attributes.push(
-          attribute,
-        );
-      },
-      /**
-       * @param {Object} selectedAttribute
-       * @param {Object} selectedAttributeGroup
-       */
-      removeSelected({selectedAttribute, selectedAttributeGroup}) {
-        if (
-          !Object.prototype.hasOwnProperty.call(
-            this.selectedAttributeGroups,
-            selectedAttributeGroup.id,
-          )
-        ) {
-          return;
-        }
-
-        const group = this.selectedAttributeGroups[selectedAttributeGroup.id];
-        group.attributes = group.attributes.filter(
-          (attribute) => attribute.id !== selectedAttribute.id,
-        );
-      },
+      this.loading = false;
     },
-  };
+    /**
+     * Remove the attribute if it's selected or add it
+     *
+     * @param {Object} selectedAttribute
+     * @param {{name: string}} attributeGroup
+     */
+    changeSelected({ selectedAttribute, attributeGroup }) {
+      if (
+        !this.isSelected(
+          selectedAttribute,
+          attributeGroup,
+          this.selectedAttributeGroups
+        )
+      ) {
+        this.addSelected(selectedAttribute, attributeGroup);
+      } else {
+        this.removeSelected({
+          selectedAttribute,
+          selectedAttributeGroup: attributeGroup,
+        });
+      }
+    },
+    /**
+     * @param {Object} attribute
+     * @param {Object} attributeGroup
+     */
+    addSelected(attribute, attributeGroup) {
+      // Extra check to avoid adding same attribute twice which would cause a duplicate key error
+      if (
+        this.isSelected(attribute, attributeGroup, this.selectedAttributeGroups)
+      ) {
+        return;
+      }
+
+      // Add copy of attribute group in selected groups
+      if (!this.selectedAttributeGroups[attributeGroup.id]) {
+        const newAttributeGroup = {
+          [attributeGroup.id]: {
+            id: attributeGroup.id,
+            name: attributeGroup.name,
+            attributes: [],
+          },
+        };
+
+        // This is needed to correctly handle observation
+        this.selectedAttributeGroups = {
+          ...this.selectedAttributeGroups,
+          ...newAttributeGroup,
+        };
+      }
+
+      this.selectedAttributeGroups[attributeGroup.id].attributes.push(
+        attribute
+      );
+    },
+    /**
+     * @param {Object} selectedAttribute
+     * @param {Object} selectedAttributeGroup
+     */
+    removeSelected({ selectedAttribute, selectedAttributeGroup }) {
+      if (
+        !Object.prototype.hasOwnProperty.call(
+          this.selectedAttributeGroups,
+          selectedAttributeGroup.id
+        )
+      ) {
+        return;
+      }
+
+      const group = this.selectedAttributeGroups[selectedAttributeGroup.id];
+      group.attributes = group.attributes.filter(
+        (attribute) => attribute.id !== selectedAttribute.id
+      );
+    },
+  },
+};
 </script>
