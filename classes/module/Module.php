@@ -36,6 +36,7 @@ use PrestaShop\TranslationToolsBundle\Translation\Helper\DomainHelper;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\DependencyInjection\Exception\ServiceCircularReferenceException;
 use Symfony\Component\DependencyInjection\Exception\ServiceNotFoundException;
+use Symfony\Component\Finder\Finder;
 
 abstract class ModuleCore implements ModuleInterface
 {
@@ -3534,6 +3535,14 @@ abstract class ModuleCore implements ModuleInterface
         $modulePath = $this->getLocalPath();
         $translationDir = sprintf('%s/translations/', $modulePath);
         if (!is_dir($translationDir)) {
+            return;
+        }
+
+        $finder = Finder::create()
+            ->files()
+            ->name('*.xlf')
+            ->in($translationDir);
+        if (0 === $finder->count()) {
             return;
         }
 
