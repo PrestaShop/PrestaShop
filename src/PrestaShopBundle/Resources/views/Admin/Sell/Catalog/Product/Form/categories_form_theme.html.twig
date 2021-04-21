@@ -22,12 +22,31 @@
  * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  *#}
+{% extends 'PrestaShopBundle:Admin/TwigTemplateForm:prestashop_ui_kit_base.html.twig' %}
 
-<div class="form-group mb-4" id="categories">
-  <h2>Categories <span class="help-box" data-toggle="popover" data-content="Where should the product be available on your site? The main category is where the product appears by default: this is the category which is seen in the product page's URL. Disabled categories are written in italics." data-original-title="" title=""></span></h2>
+{% block product_category_row %}
+  <li class="category-tree-element">
+    <div class="checkbox category-tree-inputs">
+      <label>
+        {{ form_widget(form.is_associated) }}
+        {{ form_widget(form.is_default) }}
+      </label>
+    </div>
+    <ul class="children-list"></ul>
+  </li>
+{% endblock %}
 
-  <div class="categories-tree js-categories-tree">
-    <fieldset class="form-group hide">
+{%- block checkbox_widget -%}
+  <input type="checkbox" {{ block('widget_attributes') }}{% if value is defined %} value="{{ value }}"{% endif %}{% if checked %} checked="checked"{% endif %} />
+{%- endblock checkbox_widget -%}
+
+{%- block radio_widget -%}
+  <input type="radio" {{ block('widget_attributes') }}{% if value is defined %} value="{{ value }}"{% endif %}{% if checked %} checked="checked"{% endif %} />
+{%- endblock radio_widget -%}
+
+{% block collection_widget %}
+  <div class="categories-tree js-categories-container">
+    <fieldset class="form-group tree-fieldset d-none">
       <div class="ui-widget">
         <div class="search search-with-icon">
           <input type="text" id="ps-select-product-category" class="form-control autocomplete search mb-1 ui-autocomplete-input" placeholder="Search categories" autocomplete="off">
@@ -41,10 +60,16 @@
 
         <div class="categories-tree-actions js-categories-tree-actions">
           <span class="form-control-label" id="categories-tree-expand" style=""><i class="material-icons">expand_more</i>Expand</span>
-          <span class="form-control-label hide" id="categories-tree-reduce"><i class="material-icons">expand_less</i>Collapse</span>
+          <span class="form-control-label d-none" id="categories-tree-reduce"><i class="material-icons">expand_less</i>Collapse</span>
         </div>
 
-        <div id="form_step1_categories" class="category-tree-overflow js-category-tree-overflow"></div>
+        <div class="category-tree-overflow js-category-tree-overflow">
+          {%- set attr = attr|merge({'data-prototype': form_row(prototype), 'data-prototype-name': prototype.vars.name }) -%}
+          {%- set attr = attr|merge({'class': (attr.class|default('') ~ ' js-categories-tree category-tree')|trim }) -%}
+          <ul {{ block('widget_attributes') }}>
+            {{- block('form_rows') -}}
+          </ul>
+        </div>
       </div>
     </fieldset>
 
@@ -52,4 +77,4 @@
       <div class="spinner m-auto d-block"></div>
     </div>
   </div>
-</div>
+{% endblock %}
