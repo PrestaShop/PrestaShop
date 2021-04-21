@@ -658,17 +658,7 @@ class AdminStatusesControllerCore extends AdminController
             if (!$order_state->isRemovable()) {
                 $this->errors[] = $this->trans('For security reasons, you cannot delete default order statuses.', [], 'Admin.Shopparameters.Notification');
             } else {
-                try {
-                    if (!$order_state->softDelete()) {
-                        throw new PrestaShopException('Error when soft deleting order status');
-                    }
-                } catch (PrestaShopException $e) { // see ObjectModel::softDelete too
-                    $this->errors[] = $this->trans('An error occurred during deletion.', [], 'Admin.Notifications.Error');
-
-                    return $order_state;
-                }
-
-                Tools::redirectAdmin(self::$currentIndex . '&conf=1&token=' . $this->token);
+                return parent::postProcess();
             }
         } elseif (Tools::isSubmit('submitBulkdelete' . $this->table)) {
             if (!$this->access('delete')) {

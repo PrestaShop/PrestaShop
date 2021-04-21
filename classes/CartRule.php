@@ -674,7 +674,7 @@ class CartRuleCore extends ObjectModel
         if (!CartRule::isFeatureActive()) {
             return false;
         }
-        $cart = new Cart($context->cart->id);
+        $cart = $context->cart;
 
         // All these checks are necessary when you add the cart rule the first time, so when it's not in cart yet
         // However when it's in the cart and you are checking if the cart rule is still valid (when performing auto remove)
