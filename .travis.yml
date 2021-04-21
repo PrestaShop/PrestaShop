@@ -128,7 +128,7 @@ before_deploy:
 after_deploy:
   - |
     if [ "${TRAVIS_EVENT_TYPE}" = "cron" ]; then
-      [[ $TRAVIS_BRANCH = "develop" ]] && INSTANCE_TYPE="develop" || INSTANCE_TYPE="release";
+      INSTANCE_TYPE="previous";
       # make sure instance is stopped. This step does not need to be chained
       gcloud compute instances stop --zone $GC_ZONE "${GC_INSTANCE_NAME}-${INSTANCE_TYPE}";
       gcloud compute instances add-metadata "${GC_INSTANCE_NAME}-${INSTANCE_TYPE}" --zone $GC_ZONE --metadata=NIGHTLY_TOKEN=$NIGHTLY_TOKEN && \
