@@ -55,6 +55,11 @@ class OrderProductRemover
     private $translator;
 
     /**
+     * @var CartProductsComparator
+     */
+    private $cartProductComparator;
+
+    /**
      * OrderProductRemover constructor.
      *
      * @param LoggerInterface $logger
@@ -86,9 +91,9 @@ class OrderProductRemover
             $this->deleteCustomization($order, $orderDetail);
         }
 
-        $cartComparator = new CartProductsComparator($cart);
+        $this->cartProductComparator = new CartProductsComparator($cart);
         if ($updateCart) {
-            $this->updateCart($cart, $orderDetail, $cartComparator);
+            $this->updateCart($cart, $orderDetail);
         }
 
         $this->deleteSpecificPrice($order, $orderDetail, $cart);
@@ -102,7 +107,7 @@ class OrderProductRemover
             $orderDetail
         );
 
-        return $cartComparator;
+        return $this->cartProductComparator;
     }
 
     /**
@@ -112,8 +117,7 @@ class OrderProductRemover
      */
     private function updateCart(
         Cart $cart,
-        OrderDetail $orderDetail,
-        CartProductsComparator &$cartComparator
+        OrderDetail $orderDetail
     ): void {
         $knownUpdates = [
             new CartProductUpdate(
@@ -124,7 +128,7 @@ class OrderProductRemover
                 (int) $orderDetail->id_customization
             ),
         ];
-        $cartComparator->setKnownUpdates($knownUpdates);
+        $this->cartProductComparator->setKnownUpdates($knownUpdates);
 
         $cart->updateQty(
             $orderDetail->product_quantity,
