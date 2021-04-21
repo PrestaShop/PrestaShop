@@ -27,7 +27,7 @@
 namespace PrestaShop\PrestaShop\Core\Form\IdentifiableObject\Builder;
 
 use PrestaShop\PrestaShop\Core\Form\IdentifiableObject\DataProvider\FormDataProviderInterface;
-use PrestaShop\PrestaShop\Core\Form\IdentifiableObject\OptionProvider\FormOptionProviderInterface;
+use PrestaShop\PrestaShop\Core\Form\IdentifiableObject\OptionProvider\FormOptionsProviderInterface;
 use PrestaShop\PrestaShop\Core\Hook\HookDispatcherInterface;
 use Symfony\Component\Form\FormFactoryInterface;
 
@@ -61,14 +61,14 @@ final class FormBuilderFactory implements FormBuilderFactoryInterface
     /**
      * @param string $formType
      * @param FormDataProviderInterface $dataProvider
-     * @param FormOptionProviderInterface|null $optionProvider
+     * @param FormOptionsProviderInterface|null $optionProvider
      *
      * @return FormBuilder
      */
     public function create(
         $formType,
         FormDataProviderInterface $dataProvider,
-        ?FormOptionProviderInterface $optionProvider = null
+        ?FormOptionsProviderInterface $optionProvider = null
     ) {
         return new FormBuilder(
             $this->formFactory,
