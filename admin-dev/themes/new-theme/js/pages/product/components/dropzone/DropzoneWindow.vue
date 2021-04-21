@@ -280,6 +280,7 @@
 
 <style lang="scss" type="text/scss">
 @import "~@scss/config/_settings.scss";
+@import "~@scss/config/_bootstrap.scss";
 
 .product-page {
   .dropzone-window {
@@ -380,6 +381,11 @@
           color: primary;
         }
       }
+    }
+
+    @include media-breakpoint-down(xs) {
+      width: 100%;
+      min-width: 100%;
     }
   }
 }
