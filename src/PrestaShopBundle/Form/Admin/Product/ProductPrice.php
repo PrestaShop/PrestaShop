@@ -217,7 +217,7 @@ class ProductPrice extends CommonAbstractType
                 [
                     'required' => false,
                     'label' => $this->translator->trans(
-                        'Display the "On sale!" flag on the product page, and on product listings.',
+                        'Display the "Price drop!" flag on the product page, and on product listings.',
                         [],
                         'Admin.Catalog.Feature'
                     ),

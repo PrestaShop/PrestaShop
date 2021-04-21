@@ -65,7 +65,7 @@ class FeatureFlagController extends FrameworkBundleAdminController
         return $this->render('@PrestaShop/Admin/Configure/AdvancedParameters/FeatureFlag/index.html.twig', [
             'enableSidebar' => true,
             'layoutHeaderToolbarBtn' => [],
-            'layoutTitle' => $this->trans('Experimental Features', 'Admin.Navigation.Menu'),
+            'layoutTitle' => $this->trans('Experimental Features', 'Admin.Advparameters.Feature'),
             'requireBulkActions' => false,
             'showContentHeader' => true,
             'featureFlagsForm' => $featureFlagsForm->createView(),

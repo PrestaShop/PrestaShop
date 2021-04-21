@@ -48,30 +48,46 @@ class CombinationStockType extends TranslatorAwareType
     private $router;
 
     /**
+     * @var bool
+     */
+    private $stockManagementEnabled;
+
+    /**
      * @param TranslatorInterface $translator
      * @param array $locales
      * @param RouterInterface $router
+     * @param bool $stockManagementEnabled
      */
     public function __construct(
         TranslatorInterface $translator,
         array $locales,
-        RouterInterface $router
+        RouterInterface $router,
+        bool $stockManagementEnabled
     ) {
         parent::__construct($translator, $locales);
         $this->router = $router;
+        $this->stockManagementEnabled = $stockManagementEnabled;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
+        if ($this->stockManagementEnabled) {
+            $builder
+                ->add('quantity', NumberType::class, [
+                    'required' => false,
+                    'label' => $this->trans('Quantity', 'Admin.Catalog.Feature'),
+                    'constraints' => [
+                        new NotBlank(),
+                        new Type(['type' => 'numeric']),
+                    ],
+                ])
+            ;
+        }
+
         $builder
-            ->add('quantity', NumberType::class, [
-                'required' => false,
-                'label' => $this->trans('Quantity', 'Admin.Catalog.Feature'),
-                'constraints' => [
-                    new NotBlank(),
-                    new Type(['type' => 'numeric']),
-                ],
-            ])
             ->add('minimal_quantity', NumberType::class, [
                 'label' => $this->trans('Minimum quantity for sale', 'Admin.Catalog.Feature'),
                 'constraints' => [
@@ -111,6 +127,9 @@ class CombinationStockType extends TranslatorAwareType
             ->add('available_date', DatePickerType::class, [
                 'label' => $this->trans('Availability date', 'Admin.Catalog.Feature'),
                 'required' => false,
+                'attr' => [
+                    'placeholder' => 'YYYY-MM-DD',
+                ],
             ])
         ;
 

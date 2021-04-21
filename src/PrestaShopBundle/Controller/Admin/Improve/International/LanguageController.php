@@ -75,6 +75,11 @@ class LanguageController extends FrameworkBundleAdminController
             'languageGrid' => $this->presentGrid($languageGrid),
             'isHtaccessFileWriter' => $this->get('prestashop.core.util.url.url_file_checker')->isHtaccessFileWritable(),
             'help_link' => $this->generateSidebarLink($request->attributes->get('_legacy_controller')),
+            'multistoreInfoTip' => $this->trans(
+                'Note that this page is available in all shops context only, this is why your context has just switched.',
+                'Admin.Notifications.Info'
+            ),
+            'multistoreIsUsed' => $this->get('prestashop.adapter.multistore_feature')->isUsed(),
         ]);
     }
 

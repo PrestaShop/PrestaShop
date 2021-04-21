@@ -265,7 +265,7 @@
         this.modifiedTranslations = [];
         const targetTheme = (window.data.type === 'modules') ? '' : window.data.selected;
 
-        this.$store.state.modifiedTranslations.forEach((translation) => {
+        Object.values(this.$store.state.modifiedTranslations).forEach((translation) => {
           this.modifiedTranslations.push({
             default: translation.default,
             edited: translation.edited,
@@ -278,7 +278,7 @@
         return this.modifiedTranslations;
       },
       edited() {
-        return this.$store.state.modifiedTranslations.length > 0;
+        return Object.keys(this.$store.state.modifiedTranslations).length > 0;
       },
     },
     mounted() {

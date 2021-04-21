@@ -63,6 +63,7 @@ default:
             paths:
                 - %paths.base%/Features/Scenario/Order
             contexts:
+                - Tests\Integration\Behaviour\Features\Context\CartFeatureContext
                 - Tests\Integration\Behaviour\Features\Context\CartRuleFeatureContext
                 - Tests\Integration\Behaviour\Features\Context\CommonFeatureContext
                 - Tests\Integration\Behaviour\Features\Context\CustomerFeatureContext
@@ -271,6 +272,7 @@ default:
                 - Tests\Integration\Behaviour\Features\Context\Domain\Product\Combination\UpdateCombinationPricesFeatureContext
                 - Tests\Integration\Behaviour\Features\Context\Domain\Product\Combination\UpdateCombinationStockFeatureContext
                 - Tests\Integration\Behaviour\Features\Context\Domain\Product\Combination\UpdateCombinationSuppliersFeatureContext
+                - Tests\Integration\Behaviour\Features\Context\Domain\Product\Combination\UpdateCombinationImagesFeatureContext
                 - Tests\Integration\Behaviour\Features\Context\Domain\Product\SpecificPriceContext
                 - Tests\Integration\Behaviour\Features\Context\Domain\FeatureFeatureContext
                 - Tests\Integration\Behaviour\Features\Context\Domain\FeatureValueFeatureContext
@@ -281,6 +283,7 @@ default:
             contexts:
                 - Tests\Integration\Behaviour\Features\Context\CommonFeatureContext
                 - Tests\Integration\Behaviour\Features\Context\ShopFeatureContext
+                - Tests\Integration\Behaviour\Features\Context\Domain\ShopFeatureContext
         feature_flag:
             paths:
                 - %paths.base%/Features/Scenario/FeatureFlag
@@ -301,3 +304,4 @@ default:
                 - Tests\Integration\Behaviour\Features\Context\LanguageFeatureContext
                 - Tests\Integration\Behaviour\Features\Context\Domain\AttributeGroupFeatureContext
                 - Tests\Integration\Behaviour\Features\Context\Domain\AttributeFeatureContext
+                - Tests\Integration\Behaviour\Features\Context\Domain\ShopFeatureContext

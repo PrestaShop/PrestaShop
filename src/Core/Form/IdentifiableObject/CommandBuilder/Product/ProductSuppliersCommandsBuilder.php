@@ -29,6 +29,7 @@ declare(strict_types=1);
 namespace PrestaShop\PrestaShop\Core\Form\IdentifiableObject\CommandBuilder\Product;
 
 use PrestaShop\PrestaShop\Core\Domain\Product\Supplier\Command\RemoveAllAssociatedProductSuppliersCommand;
+use PrestaShop\PrestaShop\Core\Domain\Product\Supplier\Command\SetProductDefaultSupplierCommand;
 use PrestaShop\PrestaShop\Core\Domain\Product\Supplier\Command\SetProductSuppliersCommand;
 use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductId;
 
@@ -49,42 +50,45 @@ final class ProductSuppliersCommandsBuilder implements ProductCommandsBuilderInt
         }
 
         $productSuppliers = [];
-        $defaultSupplierId = (int) $formData['suppliers']['default_supplier_id'];
         foreach ($productSuppliersData as $productSupplierDatum) {
             $supplierId = (int) $productSupplierDatum['supplier_id'];
 
             $productSuppliers[] = $this->formatProductSupplier(
-                $productId->getValue(),
                 $supplierId,
                 $productSupplierDatum
             );
         }
 
-        return [
+        $commands = [
             new SetProductSuppliersCommand(
                 $productId->getValue(),
-                $productSuppliers,
-                $defaultSupplierId
+                $productSuppliers
             ),
         ];
+
+        if (!empty($formData['suppliers']['default_supplier_id'])) {
+            $commands[] = new SetProductDefaultSupplierCommand(
+                $productId->getValue(),
+                (int) $formData['suppliers']['default_supplier_id']
+            );
+        }
+
+        return $commands;
     }
 
     /**
-     * @param int $productId
      * @param int $supplierId
      * @param array $productSupplierData
      *
      * @return array<string, mixed>
      */
-    private function formatProductSupplier(int $productId, int $supplierId, array $productSupplierData): array
+    private function formatProductSupplier(int $supplierId, array $productSupplierData): array
     {
         return [
-            'product_id' => $productId,
             'supplier_id' => $supplierId,
             'currency_id' => (int) $productSupplierData['currency_id'],
             'reference' => (string) $productSupplierData['reference'],
             'price_tax_excluded' => (string) $productSupplierData['price_tax_excluded'],
-            'combination_id' => (int) $productSupplierData['combination_id'],
             'product_supplier_id' => (int) $productSupplierData['product_supplier_id'],
         ];
     }

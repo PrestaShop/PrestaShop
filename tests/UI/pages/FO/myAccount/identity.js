@@ -19,6 +19,7 @@ class AccountIdentity extends FOBasePage {
     this.birthdateInput = `${this.createAccountForm} input[name='birthday']`;
     this.customerPrivacyCheckbox = `${this.createAccountForm} input[name='customer_privacy']`;
     this.psgdprCheckbox = `${this.createAccountForm} input[name='psgdpr']`;
+    this.newsletterCheckbox = `${this.createAccountForm} input[name=newsletter]`;
     this.saveButton = `${this.createAccountForm} .form-control-submit`;
   }
 
@@ -51,6 +52,27 @@ class AccountIdentity extends FOBasePage {
     if (await this.elementVisible(page, this.psgdprCheckbox, 500)) {
       await page.click(this.psgdprCheckbox);
     }
+
+    await this.clickAndWaitForNavigation(page, this.saveButton);
+
+    return this.getTextContent(page, this.alertSuccessBlock);
+  }
+
+  /**
+   * Unsubscribe from the newsletter from customer edit information page
+   * @param {object} page
+   * @param {string} password
+   *
+   * @returns {Promise<string|TextContent|*>}
+   */
+  async unsubscribeNewsletter(page, password) {
+    await this.setValue(page, this.passwordInput, password);
+
+    await page.click(this.customerPrivacyCheckbox);
+    if (await this.elementVisible(page, this.psgdprCheckbox, 500)) {
+      await page.click(this.psgdprCheckbox);
+    }
+    await page.click(this.newsletterCheckbox);
 
     await this.clickAndWaitForNavigation(page, this.saveButton);
 

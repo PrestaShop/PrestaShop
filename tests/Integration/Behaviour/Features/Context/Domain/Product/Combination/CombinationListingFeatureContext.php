@@ -136,28 +136,28 @@ class CombinationListingFeatureContext extends AbstractCombinationFeatureContext
         $dataRows = $tableNode->getRowsHash();
         $defaults = ProductCombinationFilters::getDefaults();
 
-        $filters = $defaults['filters'];
-        $filters['product_id'] = $productId;
-
-        if (isset($dataRows['attributes'])) {
-            $attributes = PrimitiveUtils::castStringArrayIntoArray($dataRows['attributes']);
-            foreach ($attributes as $attributeRef) {
-                $filters['attribute_ids'][] = $this->getSharedStorage()->get($attributeRef);
-            }
-        }
-
-        if (isset($dataRows['reference'])) {
-            $filters[$this->getDbField('reference')] = $dataRows['reference'];
-        }
-
-        if (isset($dataRows['is default'])) {
-            $filters[$this->getDbField('is default')] = PrimitiveUtils::castStringBooleanIntoBoolean($dataRows['is default']);
-        }
-
         $limit = isset($dataRows['limit']) ? (int) $dataRows['limit'] : $defaults['limit'];
         $offset = isset($dataRows['page']) ? $this->countOffset((int) $dataRows['page'], $limit) : $defaults['offset'];
         $orderBy = isset($dataRows['order by']) ? $this->getDbField($dataRows['order by']) : $defaults['orderBy'];
         $orderWay = isset($dataRows['order way']) ? $this->getDbField($dataRows['order way']) : $defaults['sortOrder'];
+        unset($dataRows['limit'], $dataRows['page'], $dataRows['order by'], $dataRows['order way'], $dataRows['criteria']);
+
+        $filters = $defaults['filters'];
+        $filters['product_id'] = $productId;
+        foreach ($dataRows as $criteriaField => $criteriaValue) {
+            $attributeGroupMatch = preg_match('/attributes\[(.*?)\]/', $criteriaField, $matches) ? $matches[1] : null;
+            if (null !== $attributeGroupMatch) {
+                $attributeGroupId = $this->getSharedStorage()->get($attributeGroupMatch);
+                $attributes = PrimitiveUtils::castStringArrayIntoArray($criteriaValue);
+                foreach ($attributes as $attributeRef) {
+                    $filters['attributes'][$attributeGroupId][] = $this->getSharedStorage()->get($attributeRef);
+                }
+            } elseif ('is default' === $criteriaField) {
+                $filters[$this->getDbField('is default')] = PrimitiveUtils::castStringBooleanIntoBoolean($dataRows['is default']);
+            } else {
+                $filters[$this->getDbField($criteriaField)] = $criteriaValue;
+            }
+        }
 
         return new ProductCombinationFilters([
             'limit' => $limit,
@@ -295,6 +295,17 @@ class CombinationListingFeatureContext extends AbstractCombinationFeatureContext
                 count($editableCombinationForListing->getAttributesInformation()),
                 'Unexpected attributes count in combination'
             );
+
+            if (empty($expectedCombination['image url'])) {
+                Assert::assertNull($editableCombinationForListing->getImageUrl(), 'Unexpected combination image');
+            } else {
+                $realImageUrl = $this->getRealImageUrl($expectedCombination['image url']);
+                Assert::assertEquals(
+                    $realImageUrl,
+                    $editableCombinationForListing->getImageUrl(),
+                    'Unexpected combination image url'
+                );
+            }
 
             $this->assertAttributesInfo($expectedAttributesInfo, $editableCombinationForListing->getAttributesInformation());
 

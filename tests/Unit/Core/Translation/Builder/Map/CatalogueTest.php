@@ -34,7 +34,7 @@ use PrestaShop\PrestaShop\Core\Translation\Builder\Map\Message;
 
 class CatalogueTest extends TestCase
 {
-    public function testAddDomain()
+    public function testAddDomain(): void
     {
         $translations = new Catalogue();
         $this->assertSame([], $translations->getDomains());
@@ -48,7 +48,7 @@ class CatalogueTest extends TestCase
         ], $translations->getDomains());
     }
 
-    public function testAddDomainIgnoredIfKeyAreTheSame()
+    public function testAddDomainIgnoredIfKeyAreTheSame(): void
     {
         $translations = new Catalogue();
 
@@ -64,7 +64,7 @@ class CatalogueTest extends TestCase
         ], $translations->getDomains());
     }
 
-    public function testGetDomain()
+    public function testGetDomain(): void
     {
         $translations = new Catalogue();
         $this->assertSame([], $translations->getDomains());
@@ -81,7 +81,7 @@ class CatalogueTest extends TestCase
         $this->assertNull($translations->getDomain('thirdDomainName'));
     }
 
-    public function testTranslationCounters()
+    public function testTranslationCounters(): void
     {
         $translations = new Catalogue();
         $this->assertSame([], $translations->getDomains());
@@ -114,7 +114,7 @@ class CatalogueTest extends TestCase
         $this->assertSame(3, $translations->getTranslationsCount());
     }
 
-    public function testToArrayWithMetadata()
+    public function testToArrayWithMetadata(): void
     {
         $translations = new Catalogue();
 
@@ -261,7 +261,7 @@ class CatalogueTest extends TestCase
         ], $translations->toArray());
     }
 
-    public function testToArrayWithoutMetadata()
+    public function testToArrayWithoutMetadata(): void
     {
         $translations = new Catalogue();
 
@@ -330,7 +330,7 @@ class CatalogueTest extends TestCase
         ], $translations->toArray(false));
     }
 
-    public function testGetTree()
+    public function testGetTree(): void
     {
         $translations = new Catalogue();
 

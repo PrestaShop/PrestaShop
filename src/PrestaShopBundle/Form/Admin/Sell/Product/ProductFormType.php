@@ -86,6 +86,9 @@ class ProductFormType extends TranslatorAwareType
             ->add('features', FeaturesType::class)
             ->add('manufacturer', ManufacturerType::class)
             ->add('stock', StockType::class)
+            ->add('virtual_product_file', VirtualProductFileType::class, [
+                'virtual_product_file_id' => $options['data']['virtual_product_file']['virtual_product_file_id'] ?? null,
+            ])
             ->add('price', PriceType::class)
             ->add('shipping', ShippingType::class)
             ->add('options', OptionsType::class)
@@ -135,14 +138,10 @@ class ProductFormType extends TranslatorAwareType
     {
         $productType = $options['data']['basic']['type'] ?? ProductType::TYPE_STANDARD;
         $formVars = [
-            'attr' => [
-                'data-product-type' => $productType,
-            ],
+            'product_type' => $productType,
+            'product_id' => isset($options['product_id']) ? (int) $options['product_id'] : null,
         ];
 
-        if (!empty($options['product_id'])) {
-            $formVars['attr']['data-product-id'] = $options['product_id'];
-        }
         $view->vars = array_replace($view->vars, $formVars);
     }
 

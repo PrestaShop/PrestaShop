@@ -1,7 +1,16 @@
 require('module-alias/register');
 const BOBasePage = require('@pages/BO/BObasePage');
 
+/**
+ * BO Payment preferences page, contains texts, selectors and functions to use on the page.
+ * @class
+ * @extends BOBasePage
+ */
 class Preferences extends BOBasePage {
+  /**
+   * @constructs
+   * Setting up texts and selectors to use
+   */
   constructor() {
     super();
 
@@ -26,9 +35,9 @@ class Preferences extends BOBasePage {
    */
   /**
    * Set currency restrictions
-   * @param page
-   * @param paymentModule
-   * @param valueWanted
+   * @param page {Page} Browser tab
+   * @param paymentModule {string} Name of the module to set restriction on
+   * @param valueWanted {boolean} True to allow the module for the currency
    * @returns {Promise<string>}
    */
   async setCurrencyRestriction(page, paymentModule, valueWanted) {
@@ -50,10 +59,10 @@ class Preferences extends BOBasePage {
 
   /**
    * Set group restrictions
-   * @param page
-   * @param group
-   * @param paymentModule
-   * @param valueWanted
+   * @param page {Page} Browser tab
+   * @param group {string} String of the group
+   * @param paymentModule {string} Name of the module to set restriction on
+   * @param valueWanted {boolean} True to allow the module for the group
    * @returns {Promise<string>}
    */
   async setGroupRestrictions(page, group, paymentModule, valueWanted) {
@@ -70,10 +79,10 @@ class Preferences extends BOBasePage {
 
   /**
    * Set country restrictions
-   * @param page
-   * @param countryID
-   * @param paymentModule
-   * @param valueWanted
+   * @param page {Page} Browser tab
+   * @param countryID {number} Country position on the table
+   * @param paymentModule {string} Name of the module to set restriction on
+   * @param valueWanted {boolean} True to allow the module for the country
    * @returns {Promise<string>}
    */
   async setCountryRestriction(page, countryID, paymentModule, valueWanted) {
@@ -95,10 +104,10 @@ class Preferences extends BOBasePage {
 
   /**
    * Set carrier restriction
-   * @param page
-   * @param carrierID
-   * @param paymentModule
-   * @param valueWanted
+   * @param page {Page} Browser tab
+   * @param carrierID {number} Carrier position on the table
+   * @param paymentModule {string} Name of the module to set restriction on
+   * @param valueWanted {boolean} True to allow the module for the carrier
    * @return {Promise<string>}
    */
   async setCarrierRestriction(page, carrierID, paymentModule, valueWanted) {

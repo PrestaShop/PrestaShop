@@ -88,9 +88,6 @@ class ProductSupplierType extends TranslatorAwareType
             ->add('product_supplier_id', HiddenType::class, [
                 'required' => false,
             ])
-            ->add('combination_id', HiddenType::class, [
-                'required' => false,
-            ])
             ->add('reference', TextType::class, [
                 'label' => $this->trans('Supplier reference', 'Admin.Catalog.Feature'),
                 'constraints' => [

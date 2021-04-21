@@ -68,7 +68,7 @@ final class ProductCombinationQueryBuilder extends AbstractDoctrineQueryBuilder
             );
         }
 
-        $qb = $this->getCombinationsQueryBuilder($searchCriteria)->select('pa.*');
+        $qb = $this->getCombinationsQueryBuilder($searchCriteria)->addSelect('pa.*');
 
         $this->searchCriteriaApplicator
             ->applyPagination($searchCriteria, $qb)
@@ -114,8 +114,8 @@ final class ProductCombinationQueryBuilder extends AbstractDoctrineQueryBuilder
         ;
 
         // filter by attributes
-        if (isset($filters['attribute_ids'])) {
-            $combinationIds = $this->getCombinationIdsByAttributeIds($productId, (array) $filters['attribute_ids']);
+        if (isset($filters['attributes'])) {
+            $combinationIds = $this->getCombinationIdsByAttributeIds($productId, (array) $filters['attributes']);
             $qb->andWhere($qb->expr()->in('pa.id_product_attribute', ':combinationIds'))
                 ->setParameter('combinationIds', $combinationIds, Connection::PARAM_INT_ARRAY)
             ;
@@ -137,6 +137,16 @@ final class ProductCombinationQueryBuilder extends AbstractDoctrineQueryBuilder
 
         if (null === $productCombinationFilters->getOrderBy()) {
             $qb->addOrderBy('id_product_attribute', 'asc');
+        } elseif ('stock_quantity' === $productCombinationFilters->getOrderBy()) {
+            $qb
+                ->addSelect('pa.quantity AS stock_quantity')
+                ->innerJoin(
+                    'pa',
+                    $this->dbPrefix . 'stock_available',
+                    'sa',
+                    'pa.id_product_attribute = sa.id_product_attribute'
+                )
+            ;
         }
 
         return $qb;
@@ -144,14 +154,19 @@ final class ProductCombinationQueryBuilder extends AbstractDoctrineQueryBuilder
 
     /**
      * @param int $productId
-     * @param int[] $attributeIds
+     * @param array<int, int[]> $attributeGroups
      *
      * @return int[]
      */
-    private function getCombinationIdsByAttributeIds(int $productId, array $attributeIds): array
+    private function getCombinationIdsByAttributeIds(int $productId, array $attributeGroups): array
     {
         $qb = $this->connection->createQueryBuilder();
-        $qb->select('pac.id_product_attribute')
+
+        $allAttributes = [];
+        foreach ($attributeGroups as $attributeIds) {
+            $allAttributes = array_merge($allAttributes, $attributeIds);
+        }
+        $qb->select('pac.id_product_attribute, pac.id_attribute')
             ->from($this->dbPrefix . 'product_attribute_combination', 'pac')
             ->leftJoin(
                 'pac',
@@ -160,20 +175,28 @@ final class ProductCombinationQueryBuilder extends AbstractDoctrineQueryBuilder
                 'pac.id_product_attribute = pa.id_product_attribute'
             )
             ->where('pa.id_product = :productId')
+            ->andWhere($qb->expr()->in('pac.id_attribute', ':attributes'))
+            ->setParameter('attributes', $allAttributes, Connection::PARAM_INT_ARRAY)
             ->setParameter('productId', $productId)
-            ->andWhere($qb->expr()->in('pac.id_attribute', ':attributeIds'))
-            ->setParameter('attributeIds', $attributeIds, Connection::PARAM_INT_ARRAY)
-            ->groupBy('pac.id_product_attribute')
         ;
-
         $results = $qb->execute()->fetchAll();
-
         if (!$results) {
             return [];
         }
 
-        return array_map(function (array $result): int {
-            return (int) $result['id_product_attribute'];
-        }, $results);
+        $combinationAttributes = [];
+        foreach ($results as $result) {
+            $combinationAttributes[(int) $result['id_product_attribute']][] = (int) $result['id_attribute'];
+        }
+
+        foreach ($attributeGroups as $groupAttributes) {
+            foreach ($combinationAttributes as $combinationId => $attributeIds) {
+                if (empty(array_intersect($groupAttributes, $attributeIds))) {
+                    unset($combinationAttributes[$combinationId]);
+                }
+            }
+        }
+
+        return empty($combinationAttributes) ? [] : array_keys($combinationAttributes);
     }
 }

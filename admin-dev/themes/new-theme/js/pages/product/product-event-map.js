@@ -37,8 +37,13 @@ export default {
     error: 'error',
     success: 'success',
     languageSelected: 'languageSelected',
+    photoswipe: {
+      destroy: 'destroy',
+      closeGallery: 'closeGallery',
+    },
   },
   combinations: {
     refreshList: 'refreshCombinationList',
+    updateAttributeGroups: 'updateAttributeGroups',
   },
 };

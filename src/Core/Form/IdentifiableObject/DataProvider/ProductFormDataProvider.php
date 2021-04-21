@@ -99,6 +99,7 @@ final class ProductFormDataProvider implements FormDataProviderInterface
             'options' => $this->extractOptionsData($productForEditing),
             'suppliers' => $this->extractSuppliersData($productForEditing),
             'customizations' => $this->extractCustomizationsData($productForEditing),
+            'virtual_product_file' => $this->extractVirtualProductFileData($productForEditing),
         ];
 
         return $this->addShortcutData($productData);
@@ -154,6 +155,34 @@ final class ProductFormDataProvider implements FormDataProviderInterface
         ];
 
         return $productData;
+    }
+
+    /**
+     * @param ProductForEditing $productForEditing
+     *
+     * @return array<string, mixed>
+     */
+    private function extractVirtualProductFileData(ProductForEditing $productForEditing): array
+    {
+        $data = [
+            'has_file' => false,
+        ];
+        $virtualProductFile = $productForEditing->getVirtualProductFile();
+
+        if (null !== $virtualProductFile) {
+            $data = [
+                'has_file' => true,
+                'virtual_product_file_id' => $virtualProductFile->getId(),
+                'name' => $virtualProductFile->getDisplayName(),
+                'download_times_limit' => $virtualProductFile->getDownloadTimesLimit(),
+                'access_days_limit' => $virtualProductFile->getAccessDays(),
+                'expiration_date' => $virtualProductFile->getExpirationDate() ?
+                    $virtualProductFile->getExpirationDate()->format(DateTime::DEFAULT_DATE_FORMAT) :
+                    null,
+            ];
+        }
+
+        return $data;
     }
 
     /**
@@ -229,7 +258,7 @@ final class ProductFormDataProvider implements FormDataProviderInterface
             'quantity' => $stockInformation->getQuantity(),
             'minimal_quantity' => $stockInformation->getMinimalQuantity(),
             'stock_location' => $stockInformation->getLocation(),
-            'low_stock_threshold' => $stockInformation->getLowStockThreshold(),
+            'low_stock_threshold' => $stockInformation->getLowStockThreshold() ?: null,
             'low_stock_alert' => $stockInformation->isLowStockAlertEnabled(),
             'pack_stock_type' => $stockInformation->getPackStockType(),
             'out_of_stock_type' => $stockInformation->getOutOfStockType(),
@@ -408,7 +437,7 @@ final class ProductFormDataProvider implements FormDataProviderInterface
             $supplierId = $supplierOption->getSupplierId();
 
             $suppliersData['supplier_ids'][] = $supplierId;
-            $suppliersData['product_suppliers'][] = [
+            $suppliersData['product_suppliers'][$supplierId] = [
                 'supplier_id' => $supplierId,
                 'supplier_name' => $supplierOption->getSupplierName(),
                 'product_supplier_id' => $supplierForEditing->getProductSupplierId(),

@@ -34,6 +34,7 @@
   {% endblock %}
 
   {% block backup_alerts %}
+    {% if multistoreIsUsed %}{{ ps.infotip(multistoreInfoTip, true) }}{% endif %}
     <div class="row">
       <div class="col">
         {% include '@PrestaShop/Admin/Configure/AdvancedParameters/Backup/Blocks/backup_warning.html.twig' %}

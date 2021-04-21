@@ -29,17 +29,12 @@ class Import extends BOBasePage {
    */
   /**
    * Click on simple file link to download it
-   * @param page
-   * @param type
-   * @return {Promise<void>}
+   * @param page {Page} Browser tab
+   * @param type {string} Type of the data to import
+   * @return {Promise<string>}
    */
-  async downloadSampleFile(page, type) {
-    const [download] = await Promise.all([
-      page.waitForEvent('download'),
-      await page.click(this.downloadSampleFileLink(type)),
-    ]);
-
-    return download.path();
+  downloadSampleFile(page, type) {
+    return this.clickAndWaitForDownload(page, this.downloadSampleFileLink(type));
   }
 
   /**

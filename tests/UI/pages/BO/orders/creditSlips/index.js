@@ -106,35 +106,25 @@ class CreditSlips extends BOBasePage {
 
   /**
    * Download credit slip
-   * @param page
-   * @param lineNumber
-   * @return {Promise<*>}
+   * @param page {Page} Browser tab
+   * @param row {number} Credit slip row on table
+   * @return {Promise<string>}
    */
-  async downloadCreditSlip(page, lineNumber = 1) {
-    const [download] = await Promise.all([
-      page.waitForEvent('download'), // wait for download to start
-      page.click(this.creditSlipDownloadButton(lineNumber)),
-    ]);
-
-    return download.path();
+  downloadCreditSlip(page, row = 1) {
+    return this.clickAndWaitForDownload(page, this.creditSlipDownloadButton(row));
   }
 
   /**
    * Generate PDF by date and download it
-   * @param page
-   * @param dateFrom
-   * @param dateTo
-   * @return {Promise<*>}
+   * @param page {Page} Browser tab
+   * @param dateFrom {string} Value to set on date from input
+   * @param dateTo {string} Value to set on date to input
+   * @return {Promise<string>}
    */
   async generatePDFByDateAndDownload(page, dateFrom = '', dateTo = '') {
     await this.setValuesForGeneratingPDFByDate(page, dateFrom, dateTo);
 
-    const [download] = await Promise.all([
-      page.waitForEvent('download'), // wait for download to start
-      page.click(this.generatePdfByDateButton),
-    ]);
-
-    return download.path();
+    return this.clickAndWaitForDownload(page, this.generatePdfByDateButton);
   }
 
   /**
