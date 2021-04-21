@@ -87,6 +87,7 @@ class ProductFormType extends TranslatorAwareType
             ->add('pricing', PricingType::class)
             ->add('seo', SEOType::class)
             ->add('options', OptionsType::class)
+            ->add('categories', CategoriesType::class)
             ->add('footer', FooterType::class, [
                 'product_id' => $productId,
             ])
