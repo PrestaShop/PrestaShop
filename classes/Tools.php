@@ -93,16 +93,12 @@ class ToolsCore
      *
      * @return bool|string Password
      */
-    public static function passwdGen($length = 8, $flag = null)
+    public static function passwdGen($length = 8, $flag = self::PASSWORDGEN_FLAG_ALPHANUMERIC)
     {
         $length = (int) $length;
 
         if ($length <= 0) {
             return false;
-        }
-
-        if (null === $flag) {
-            $flag = static::PASSWORDGEN_FLAG_ALPHANUMERIC;
         }
 
         switch ($flag) {

@@ -377,43 +377,34 @@ class ToolsCoreTest extends TestCase
      */
     public function testPasswdGen(string $expectedPassword, $passwordGenerated): void
     {
-        $this->assertRegExp($expectedPassword, $passwordGenerated, 'The password generated ' . $expectedPassword . ' no match with ' . $expectedPassword);
+        $this->assertRegExp($expectedPassword, $passwordGenerated, 'The password generated ' . $passwordGenerated . ' no match with ' . $expectedPassword);
     }
 
     public function passwordGenProvider(): array
     {
-        $weakPassWordOrdInvalidLenghtGiven = '/^0$/';
+        $invalidPasswordLenghtGiven = '//';
         $alphaNumericPasswordWithTencharacters = '/^(\w){10}$/';
-        $numericPasswordWithEightcharacters = '/^(\d{8})$/';
+        $alphaNumericPasswordWithEightCharacters = '/^(\w{8})$/';
         $numericPasswordWithTwelveCharacters = '/^(\d{12})$/';
         $noNumerciPasswordWithNineCharacters = '/^[A-Z]{9}$/';
+        $randomPasswordWithTenCharacters = '/[A-Za-z0-9 _!#$%&()*+,\-.\\:\/;=?@^_]+/';
 
         return [
-            [$numericPasswordWithEightCharacters, Tools::passwdGen()],
+            [$alphaNumericPasswordWithEightCharacters, Tools::passwdGen()],
             [$numericPasswordWithTwelveCharacters, Tools::passwdGen(12, Tools::PASSWORDGEN_FLAG_NUMERIC)],
             [$noNumerciPasswordWithNineCharacters, Tools::passwdGen(9, Tools::PASSWORDGEN_FLAG_NO_NUMERIC)],
-            [$alphaNumericPasswordWithTencharacters, Tools::passwdGen(10, Tools::PASSWORDGEN_FLAG_RANDOM)],
+            [$randomPasswordWithTenCharacters, Tools::passwdGen(10, Tools::PASSWORDGEN_FLAG_RANDOM)],
             [$alphaNumericPasswordWithTencharacters, Tools::passwdGen(10, Tools::PASSWORDGEN_FLAG_ALPHANUMERIC)],
-            [$weakPassWordOrdInvalidLenghtGiven, Tools::passwdGen(1)],
-            [$weakPassWordOrdInvalidLenghtGiven, Tools::passwdGen(2)],
-            [$weakPassWordOrdInvalidLenghtGiven, Tools::passwdGen(-666)],
-            [$weakPassWordOrdInvalidLenghtGiven, Tools::passwdGen(0)],
-            [$weakPassWordOrdInvalidLenghtGiven, Tools::passwdGen(1, Tools::PASSWORDGEN_FLAG_RANDOM)],
-            [$weakPassWordOrdInvalidLenghtGiven, Tools::passwdGen(2, Tools::PASSWORDGEN_FLAG_RANDOM)],
-            [$weakPassWordOrdInvalidLenghtGiven, Tools::passwdGen(-666, Tools::PASSWORDGEN_FLAG_RANDOM)],
-            [$weakPassWordOrdInvalidLenghtGiven, Tools::passwdGen(0, Tools::PASSWORDGEN_FLAG_RANDOM)],
-            [$weakPassWordOrdInvalidLenghtGiven, Tools::passwdGen(1, Tools::PASSWORDGEN_FLAG_NUMERIC)],
-            [$weakPassWordOrdInvalidLenghtGiven, Tools::passwdGen(2, Tools::PASSWORDGEN_FLAG_NUMERIC)],
-            [$weakPassWordOrdInvalidLenghtGiven, Tools::passwdGen(-666, Tools::PASSWORDGEN_FLAG_NUMERIC)],
-            [$weakPassWordOrdInvalidLenghtGiven, Tools::passwdGen(0, Tools::PASSWORDGEN_FLAG_NUMERIC)],
-            [$weakPassWordOrdInvalidLenghtGiven, Tools::passwdGen(1, Tools::PASSWORDGEN_FLAG_NO_NUMERIC)],
-            [$weakPassWordOrdInvalidLenghtGiven, Tools::passwdGen(2, Tools::PASSWORDGEN_FLAG_NO_NUMERIC)],
-            [$weakPassWordOrdInvalidLenghtGiven, Tools::passwdGen(-666, Tools::PASSWORDGEN_FLAG_NO_NUMERIC)],
-            [$weakPassWordOrdInvalidLenghtGiven, Tools::passwdGen(0, Tools::PASSWORDGEN_FLAG_NO_NUMERIC)],
-            [$weakPassWordOrdInvalidLenghtGiven, Tools::passwdGen(1, Tools::PASSWORDGEN_FLAG_ALPHANUMERIC)],
-            [$weakPassWordOrdInvalidLenghtGiven, Tools::passwdGen(2, Tools::PASSWORDGEN_FLAG_ALPHANUMERIC)],
-            [$weakPassWordOrdInvalidLenghtGiven, Tools::passwdGen(-666, Tools::PASSWORDGEN_FLAG_ALPHANUMERIC)],
-            [$weakPassWordOrdInvalidLenghtGiven, Tools::passwdGen(0, Tools::PASSWORDGEN_FLAG_ALPHANUMERIC)],
+            [$invalidPasswordLenghtGiven, Tools::passwdGen(0)],
+            [$invalidPasswordLenghtGiven, Tools::passwdGen(0, Tools::PASSWORDGEN_FLAG_RANDOM)],
+            [$invalidPasswordLenghtGiven, Tools::passwdGen(0, Tools::PASSWORDGEN_FLAG_NUMERIC)],
+            [$invalidPasswordLenghtGiven, Tools::passwdGen(0, Tools::PASSWORDGEN_FLAG_NO_NUMERIC)],
+            [$invalidPasswordLenghtGiven, Tools::passwdGen(0, Tools::PASSWORDGEN_FLAG_ALPHANUMERIC)],
+            [$invalidPasswordLenghtGiven, Tools::passwdGen(-666)],
+            [$invalidPasswordLenghtGiven, Tools::passwdGen(-666, Tools::PASSWORDGEN_FLAG_RANDOM)],
+            [$invalidPasswordLenghtGiven, Tools::passwdGen(-666, Tools::PASSWORDGEN_FLAG_NUMERIC)],
+            [$invalidPasswordLenghtGiven, Tools::passwdGen(-666, Tools::PASSWORDGEN_FLAG_NO_NUMERIC)],
+            [$invalidPasswordLenghtGiven, Tools::passwdGen(-666, Tools::PASSWORDGEN_FLAG_ALPHANUMERIC)],
         ];
     }
 
