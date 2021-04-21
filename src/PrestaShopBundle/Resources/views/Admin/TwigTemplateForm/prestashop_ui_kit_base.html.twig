@@ -71,7 +71,9 @@
         {% set label = name|humanize %}
       {%- endif -%}
     {%- endif -%}
-    <label{% for attrname, attrvalue in label_attr %} {{ attrname }}="{{ attrvalue }}"{% endfor %}>
+
+    {% set labelTag = label_attr.title|default('label') %}
+    <{{ labelTag }}{% for attrname, attrvalue in label_attr %} {{ attrname }}="{{ attrvalue }}"{% endfor %}>
     {% if required %}
       <span class="text-danger">*</span>
     {% endif %}
@@ -86,7 +88,7 @@
       {% set placement = label_attr['popover_placement'] is defined ? label_attr['popover_placement'] : 'top' %}
       {% include '@Common/HelpBox/helpbox.html.twig' with { "placement" : placement, "content": label_attr['popover'] } %}
     {% endif %}
-    </label>
+    </{{ labelTag }}>
 
   {%- endif -%}
 {%- endblock form_label -%}
