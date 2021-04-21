@@ -140,4 +140,11 @@ export default {
     productSuppliers: '#product_suppliers',
     combinationSuppliers: '#combination_form_suppliers',
   },
+  jsTabs: '.js-tabs',
+  jsArrow: '.js-arrow',
+  jsNavTabs: '.js-nav-tabs',
+  toggleTab: '[data-toggle="tab"]',
+  formContentTab: '#form_content > .form-contenttab',
+  leftArrow: '.left-arrow',
+  rightArrow: '.right-arrow',
 };
