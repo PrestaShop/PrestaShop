@@ -23,13 +23,15 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
 
+import ProductMap from '@pages/product/product-map';
+
 const {$} = window;
 
 export default function () {
   const $defaultArrowWidth = 35;
-  const $arrow = $('.js-arrow');
-  const $tabs = $('.js-tabs');
-  const $navTabs = $('.js-nav-tabs');
+  const $arrow = $(ProductMap.jsArrow);
+  const $tabs = $(ProductMap.jsTabs);
+  const $navTabs = $(ProductMap.jsNavTabs);
 
   let $positions;
   let $moveTo = 0;
@@ -45,9 +47,9 @@ export default function () {
 
   $navTabs.width($widthWithTabs);
 
-  $navTabs.find('[data-toggle="tab"]').on('click', (e) => {
+  $navTabs.find(ProductMap.toggleTab).on('click', (e) => {
     if (!$(e.target).hasClass('active')) {
-      $('#form_content > .form-contenttab').removeClass('active');
+      $(ProductMap.formContentTab).removeClass('active');
     }
   });
 
@@ -73,11 +75,11 @@ export default function () {
         'easeOutQuad',
         () => {
           if ($(e.currentTarget).hasClass('right-arrow')) {
-            $('.left-arrow').addClass('visible');
-            $('.right-arrow').removeClass('visible');
+            $(ProductMap.leftArrow).addClass('visible');
+            $(ProductMap.rightArrow).removeClass('visible');
           } else {
-            $('.right-arrow').addClass('visible');
-            $('.left-arrow').removeClass('visible');
+            $(ProductMap.rightArrow).addClass('visible');
+            $(ProductMap.leftArrow).removeClass('visible');
           }
         },
       );
