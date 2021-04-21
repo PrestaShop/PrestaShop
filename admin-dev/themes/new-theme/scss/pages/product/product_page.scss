@@ -1375,5 +1375,20 @@
         }
       }
     }
+
+    .product-footer {
+      &-left {
+        width: 80%;
+      }
+
+      &-right {
+        width: 20%;
+      }
+
+      .btn {
+        padding: 0.5rem;
+        font-size: 0.75rem;
+      }
+    }
   }
 }
