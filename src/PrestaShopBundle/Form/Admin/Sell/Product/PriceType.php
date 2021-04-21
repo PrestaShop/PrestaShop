@@ -120,7 +120,7 @@ class PriceType extends TranslatorAwareType
             ->add('on_sale', CheckboxType::class, [
                 'required' => false,
                 'label' => $this->trans(
-                    'Display the "Price drop!" flag on the product page, and on product listings.',
+                    'Display the "On sale!" flag on the product page, and on product listings.',
                     'Admin.Catalog.Feature'
                 ),
             ])
