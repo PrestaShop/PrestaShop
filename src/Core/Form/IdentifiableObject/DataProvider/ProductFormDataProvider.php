@@ -100,6 +100,7 @@ final class ProductFormDataProvider implements FormDataProviderInterface
             'suppliers' => $this->extractSuppliersData($productForEditing),
             'customizations' => $this->extractCustomizationsData($productForEditing),
             'virtual_product_file' => $this->extractVirtualProductFileData($productForEditing),
+            'categories' => $this->extractCategoriesData($productForEditing),
         ];
 
         return $this->addShortcutData($productData);
@@ -155,6 +156,25 @@ final class ProductFormDataProvider implements FormDataProviderInterface
         ];
 
         return $productData;
+    }
+
+    /**
+     * @param ProductForEditing $productForEditing
+     *
+     * @return array
+     */
+    private function extractCategoriesData(ProductForEditing $productForEditing): array
+    {
+        $categoriesInformation = $productForEditing->getCategoriesInformation();
+        $categories = [];
+        foreach ($categoriesInformation->getCategoryIds() as $categoryId) {
+            $categories[$categoryId] = [
+                'is_associated' => true,
+                'is_default' => $categoryId === $categoriesInformation->getDefaultCategoryId(),
+            ];
+        }
+
+        return $categories;
     }
 
     /**
