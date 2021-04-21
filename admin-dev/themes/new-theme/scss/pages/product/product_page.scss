@@ -23,7 +23,7 @@
     &-actions {
       display: flex;
       align-items: center;
-    }   
+    }
   }
 
   > #field-disabled {
@@ -1326,5 +1326,42 @@
 #description {
   #form_step1_description_1_ifr {
     min-height: 80px;
+  }
+}
+
+@media only screen and (max-width: 420px) {
+  .product-page {
+    .left-column,
+    .right-column {
+      width: 100%;
+
+      .form-group.row > .form-control-label:first-of-type:not(.label-on-top) {
+        padding-left: 0.9375rem;
+      }
+    }
+
+    .tab-content {
+      margin-bottom: 3rem;
+    }
+
+    .product-header {
+      .toolbar {
+        display: none;
+      }
+
+      .product-name {
+        margin-bottom: 0.5rem;
+      }
+    }
+
+    h2 {
+      padding-top: 0.5rem;
+      margin-bottom: 0.5rem;
+    }
+
+    .form-group.row,
+    .alert-unavailable {
+      margin-bottom: 1rem;
+    }
   }
 }

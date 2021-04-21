@@ -24,7 +24,7 @@
  *#}
 {% block product_footer %}
   <div class="product-footer justify-content-md-center">
-    <div class="col-lg-4">
+    <div class="col-sm-8 col-lg-4">
     {% if null != productId %}
       <a
         href="{{ path('admin_product_unit_action', {action: 'delete', id: productId}) }}"
@@ -43,7 +43,7 @@
       </a>
     {% endif %}
     </div>
-    <div class="col-sm-5 col-lg-8 text-right">
+    <div class="col-sm-4 col-lg-8 text-right">
       {{ form_widget(productForm.save) }}
     </div>
   </div>
