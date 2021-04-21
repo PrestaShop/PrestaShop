@@ -23,7 +23,7 @@
  * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
-use PrestaShop\PrestaShop\Adapter\Container\LegacyContainerInterface;
+
 use PrestaShop\PrestaShop\Adapter\ContainerFinder;
 use PrestaShop\PrestaShop\Adapter\LegacyLogger;
 use PrestaShop\PrestaShop\Adapter\Module\ModuleDataProvider;
@@ -36,6 +36,7 @@ use PrestaShop\TranslationToolsBundle\Translation\Helper\DomainHelper;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\DependencyInjection\Exception\ServiceCircularReferenceException;
 use Symfony\Component\DependencyInjection\Exception\ServiceNotFoundException;
+use Symfony\Component\Finder\Finder;
 
 abstract class ModuleCore implements ModuleInterface
 {
@@ -842,13 +843,19 @@ abstract class ModuleCore implements ModuleInterface
         }
 
         // Enable module in the shop where it is not enabled yet
+        $moduleActivated = false;
         foreach ($list as $id) {
             if (!in_array($id, $items)) {
                 Db::getInstance()->insert('module_shop', [
                     'id_module' => $this->id,
                     'id_shop' => $id,
                 ]);
+                $moduleActivated = true;
             }
+        }
+
+        if ($moduleActivated) {
+            $this->loadBuiltInTranslations();
         }
 
         return true;
@@ -3515,6 +3522,31 @@ abstract class ModuleCore implements ModuleInterface
     public function getMultistoreCompatibility(): int
     {
         return $this->multistoreCompatibility;
+    }
+
+    /**
+     * In order to load or update the module's translations, we just need to clear SfCache.
+     * The translator service will be loaded again with the catalogue within the module
+     *
+     * @throws ContainerNotFoundException
+     */
+    private function loadBuiltInTranslations(): void
+    {
+        $modulePath = $this->getLocalPath();
+        $translationDir = sprintf('%s/translations/', $modulePath);
+        if (!is_dir($translationDir)) {
+            return;
+        }
+
+        $finder = Finder::create()
+            ->files()
+            ->name('*.xlf')
+            ->in($translationDir);
+        if (0 === $finder->count()) {
+            return;
+        }
+
+        $this->getContainer()->get('prestashop.adapter.cache.clearer.symfony_cache_clearer')->clear();
     }
 }
 
