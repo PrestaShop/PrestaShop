@@ -190,7 +190,7 @@ class CombinationController extends FrameworkBundleAdminController
         }
 
         return $this->json([
-            'message' => $this->trans('Successful deletion.', 'Admin.Notifications.Success'),
+            'message' => $this->trans('Successful deletion', 'Admin.Notifications.Success'),
         ]);
     }
 
