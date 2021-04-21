@@ -36,6 +36,7 @@ import ProductTypeManager from '@pages/product/edit/product-type-manager';
 import initDropzone from '@pages/product/components/dropzone';
 import ProductFormModel from '@pages/product/edit/product-form-model';
 import VirtualProductManager from '@pages/product/edit/virtual-product-manager';
+import initTabs from '@pages/product/components/nav-tabs';
 
 const {$} = window;
 
@@ -51,6 +52,9 @@ $(() => {
   const $productForm = $(ProductMap.productForm);
   const productId = parseInt($productForm.data('productId'), 10);
   const productType = $productForm.data('productType');
+
+  // Responsive navigation tabs
+  initTabs();
 
   // Init product model along with input watching and syncing
   new ProductFormModel($productForm, window.prestashop.instance.eventEmitter);
