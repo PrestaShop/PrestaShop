@@ -395,7 +395,7 @@ class ProductLazyArrayTest extends TestCase
         ]), [
             'on-sale' => [
                 'type' => 'on-sale',
-                'label' => 'Price drop!',
+                'label' => 'On sale!',
             ],
         ], false];
 
