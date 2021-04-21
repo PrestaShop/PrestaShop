@@ -167,7 +167,7 @@ export default {
     loader: '.categories-tree-loader',
     currentAction: '.form-control-label:not(.hide)',
     nextAction: '.hide',
-    childList: '.child-list',
+    childrenList: '.children-list',
     everyItems: '.less, .more',
     itemCheckbox: (id) => `.category[value="${id}"]`,
   },

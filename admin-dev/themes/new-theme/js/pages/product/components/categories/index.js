@@ -42,7 +42,7 @@ export default class CategoriesManager {
       ProductCategoryMap.categoryTree,
     );
     this.treeContainer = document.querySelector(ProductCategoryMap.overflow);
-    this.datas = [];
+    this.categories = [];
     this.typeaheadDatas = [];
     this.categoryTree = null;
     this.actionButton = document.querySelector(ProductCategoryMap.actions);
@@ -53,9 +53,9 @@ export default class CategoriesManager {
   }
 
   async initCategories() {
-    this.datas = await getCategories(1);
+    this.categories = await getCategories();
 
-    this.initTypeaheadDatas(this.datas);
+    this.initTypeaheadData(this.categories, '');
     this.initTypeahead();
     this.initTree();
   }
@@ -67,7 +67,7 @@ export default class CategoriesManager {
     this.categoryTree = document.createElement('ul');
     this.categoryTree.classList.add('category-tree');
 
-    this.datas.forEach((category) => {
+    this.categories.forEach((category) => {
       const item = this.createItem(category);
       this.categoryTree.append(item);
     });
@@ -93,12 +93,12 @@ export default class CategoriesManager {
    */
   createItem(category) {
     const listItem = document.createElement('li');
-    const hasChilds = category.childs && category.childs.length > 0;
+    const hasChildren = category.children && category.children.length > 0;
 
     const checkboxContainer = document.createElement('div');
     checkboxContainer.classList.add('checkbox');
 
-    if (hasChilds) {
+    if (hasChildren) {
       listItem.classList.add('more');
     }
 
@@ -120,18 +120,18 @@ export default class CategoriesManager {
     checkboxContainer.append(labelElement);
     listItem.append(checkboxContainer);
 
-    if (hasChilds) {
-      const childList = document.createElement('ul');
-      childList.classList.add('hide', 'child-list');
+    if (hasChildren) {
+      const childrenList = document.createElement('ul');
+      childrenList.classList.add('hide', ProductCategoryMap.childrenList);
 
       checkboxContainer.addEventListener('click', (event) => {
         if (
           !event.target.classList.contains('default-category')
           && !event.target.classList.contains('category')
         ) {
-          childList.classList.toggle('hide');
+          childrenList.classList.toggle('hide');
 
-          if (childList.classList.contains('hide')) {
+          if (childrenList.classList.contains('hide')) {
             checkboxContainer.parentElement.classList.remove('less');
             checkboxContainer.parentElement.classList.add('more');
           } else {
@@ -141,13 +141,13 @@ export default class CategoriesManager {
         }
       });
 
-      category.childs.forEach((element) => {
+      category.children.forEach((element) => {
         const child = this.createItem(element);
 
-        childList.append(child);
+        childrenList.append(child);
       });
 
-      listItem.append(childList);
+      listItem.append(childrenList);
     }
 
     return listItem;
@@ -171,7 +171,7 @@ export default class CategoriesManager {
     currentAction.style.display = 'none';
 
     this.categoriesElement
-      .querySelectorAll(ProductCategoryMap.childList)
+      .querySelectorAll(ProductCategoryMap.childrenList)
       .forEach((e) => {
         if (this.expanded && !force) {
           e.classList.add('hide');
@@ -198,12 +198,13 @@ export default class CategoriesManager {
   /**
    * Typeahead datas require to have only one array level
    */
-  initTypeaheadDatas(datas) {
-    datas.forEach((item) => {
-      this.typeaheadDatas.push(item);
+  initTypeaheadData(data, parentBreadcrumb) {
+    data.forEach((category) => {
+      category.breadcrumb = parentBreadcrumb ? `${parentBreadcrumb} > ${category.name}` : category.name;
+      this.typeaheadDatas.push(category);
 
-      if (item.childs) {
-        this.initTypeaheadDatas(item.childs);
+      if (category.children) {
+        this.initTypeaheadData(category.children, category.breadcrumb);
       }
     });
   }

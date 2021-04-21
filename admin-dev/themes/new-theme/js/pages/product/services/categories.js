@@ -28,13 +28,7 @@ import Router from '@components/router';
 const router = new Router();
 const {$} = window;
 
-export const getCategories = async (productId) =>
-/* const categoriesUrl = router.generate('admin_products_v2_delete_image', {
-    productId
-    }); */
-
-  // return $.get(categoriesUrl);
-  JSON.parse(document.querySelector('#ps_categoryTree').innerHTML);
+export const getCategories = async () => $.get(router.generate('admin_categories_get_categories_tree'));
 
 export default {
   getCategories,
