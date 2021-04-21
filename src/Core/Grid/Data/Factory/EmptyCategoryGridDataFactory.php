@@ -29,6 +29,6 @@ namespace PrestaShop\PrestaShop\Core\Grid\Data\Factory;
 /**
  * Modifies records from database for empty_category grid
  */
-class EmptyCategoryGridDataFactory extends AbstractCategoryDataFactory
+final class EmptyCategoryGridDataFactory extends AbstractCategoryDataFactory
 {
 }
