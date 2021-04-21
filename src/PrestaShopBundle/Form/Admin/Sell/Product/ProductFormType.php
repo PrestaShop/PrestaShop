@@ -97,6 +97,7 @@ class ProductFormType extends TranslatorAwareType
             ->add('redirect_option', RedirectOptionType::class)
             ->add('suppliers', SuppliersType::class)
             ->add('shortcuts', ShortcutsType::class)
+            ->add('categories', CategoriesType::class)
             ->add('save', SubmitType::class, [
                 'label' => $this->trans('Save', 'Admin.Actions'),
                 'attr' => [

@@ -1316,6 +1316,21 @@ services:
         tags:
             - { name: form.type }
 
+    form.type.sell.product.product_category_type:
+        class: 'PrestaShopBundle\Form\Admin\Sell\Product\ProductCategoryType'
+        parent: 'form.type.translatable.aware'
+        public: true
+        tags:
+            - { name: form.type }
+
+    form.type.sell.product.categories_type:
+        class: 'PrestaShopBundle\Form\Admin\Sell\Product\CategoriesType'
+        arguments:
+            - "@translator"
+        public: true
+        tags:
+            - { name: form.type }
+
     form.type.sell.product.shipping_type:
         class: 'PrestaShopBundle\Form\Admin\Sell\Product\ShippingType'
         parent: 'form.type.translatable.aware'
