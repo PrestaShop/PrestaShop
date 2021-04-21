@@ -160,6 +160,7 @@ class LayoutExtension extends \Twig_Extension implements GlobalsInterface
      * @param array|string $headerTabContent Tabs labels
      * @param bool $enableSidebar Allow to use right sidebar to display docs for instance
      * @param string $helpLink If specified, will be used instead of legacy one
+     * @param string[] $jsRouterMetadata JS Router needed configuration settings: base_url and security token
      * @param string $metaTitle
      * @param bool $useRegularH1Structure allows complex <h1> structure if set to false
      *
