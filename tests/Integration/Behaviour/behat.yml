@@ -63,6 +63,7 @@ default:
             paths:
                 - %paths.base%/Features/Scenario/Order
             contexts:
+                - Tests\Integration\Behaviour\Features\Context\CartFeatureContext
                 - Tests\Integration\Behaviour\Features\Context\CartRuleFeatureContext
                 - Tests\Integration\Behaviour\Features\Context\CommonFeatureContext
                 - Tests\Integration\Behaviour\Features\Context\CustomerFeatureContext
