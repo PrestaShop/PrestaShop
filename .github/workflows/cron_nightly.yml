@@ -17,6 +17,7 @@ jobs:
             instance: develop
           - branch: 1.7.8.x
             instance: release
+      fail-fast: false
     env:
       GC_INSTANCE_NAME: ${{ secrets.GC_INSTANCE_NAME }}
       GC_PROJECT_ID: ${{ secrets.GC_PROJECT_ID }}
