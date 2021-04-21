@@ -24,6 +24,7 @@
  *#}
 
 {% form_theme productForm.shortcuts '@PrestaShop/Admin/Sell/Catalog/Product/Form/shortcuts_form_theme.html.twig' %}
+{% form_theme productForm.categories '@PrestaShop/Admin/Sell/Catalog/Product/Form/categories_form_theme.html.twig' %}
 
 <div role="tabpanel" class="form-contenttab tab-pane container-fluid active" id="basic-tab">
   <div class="row">
@@ -42,8 +43,9 @@
     </div>
     <div class="col-md-3 right-column">
       {{ form_row(productForm.shortcuts) }}
+      {{ form_row(productForm.categories) }}
 
-      {{ include('@PrestaShop/Admin/Sell/Catalog/Product/Blocks/categories.html.twig') }}
+{#      {{ include('@PrestaShop/Admin/Sell/Catalog/Product/Blocks/categories.html.twig') }}#}
     </div>
   </div>
 </div>
