@@ -68,21 +68,21 @@ class Order extends BOBasePage {
 
   /**
    * Click on lint to export orders to a csv file
-   * @param page
-   * @return {Promise<void>}
+     * @param page {Page} Browser tab
+   * @return {Promise<string>}
    */
   async exportDataToCsv(page) {
     await Promise.all([
       page.click(this.gridActionButton),
       this.waitForVisibleSelector(page, `${this.gridActionDropDownMenu}.show`),
     ]);
-    const [download] = await Promise.all([
-      page.waitForEvent('download'),
-      page.click(this.gridActionExportLink),
+
+    const [downloadPath] = await Promise.all([
+      this.clickAndWaitForDownload(page, this.gridActionExportLink),
       this.waitForHiddenSelector(page, `${this.gridActionDropDownMenu}.show`),
     ]);
 
-    return download.path();
+    return downloadPath;
   }
 
   /**
@@ -254,34 +254,23 @@ class Order extends BOBasePage {
 
   /**
    * Click on view invoice to download it
-   * @param page
-   * @param row
-   * @return {Promise<void>}
+   * @param page {Page} Browser tab
+   * @param row {number} Order row on table
+   * @return {Promise<string>}
    */
-  async downloadInvoice(page, row) {
-    const [download] = await Promise.all([
-      page.waitForEvent('download'),
-      page.click(this.viewInvoiceRowLink(row)),
-    ]);
-
-    return download.path();
+  downloadInvoice(page, row) {
+    return this.clickAndWaitForDownload(page, this.viewInvoiceRowLink(row));
   }
 
   /**
    * Click on view delivery slip to download it
-   * @param page
-   * @param row
-   * @return {Promise<void>}
+   * @param page {Page} Browser tab
+   * @param row {number} Order row on table
+   * @return {Promise<string>}
    */
-  async downloadDeliverySlip(page, row) {
-    const [download] = await Promise.all([
-      page.waitForEvent('download'),
-      page.click(this.viewDeliverySlipsRowLink(row)),
-    ]);
-
-    return download.path();
+  downloadDeliverySlip(page, row) {
+    return this.clickAndWaitForDownload(page, this.viewDeliverySlipsRowLink(row));
   }
-
 
   /**
    * Click on customer link to open view page in a new tab

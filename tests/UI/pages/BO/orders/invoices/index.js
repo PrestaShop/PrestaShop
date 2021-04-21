@@ -44,19 +44,15 @@ class Invoice extends BOBasePage {
 
   /**
    * Generate PDF by date and download it
-   * @param page
-   * @param dateFrom
-   * @param dateTo
-   * @returns {Promise<*>}
+   * @param page {Page} Browser tab
+   * @param dateFrom {string} Value to set on date from input
+   * @param dateTo {string} Value to set on date to input
+   * @return {Promise<string>}
    */
   async generatePDFByDateAndDownload(page, dateFrom = '', dateTo = '') {
     await this.setValuesForGeneratingPDFByDate(page, dateFrom, dateTo);
-    const [download] = await Promise.all([
-      page.waitForEvent('download'),
-      page.click(this.generatePdfByDateButton),
-    ]);
 
-    return download.path();
+    return this.clickAndWaitForDownload(page, this.generatePdfByDateButton);
   }
 
   /**
@@ -106,16 +102,11 @@ class Invoice extends BOBasePage {
   }
 
   /** Generate PDF by status
-   * @param page
+   * @param page {Page} Browser tab
    * @return {Promise<void>}
    */
-  async generatePDFByStatusAndDownload(page) {
-    const [download] = await Promise.all([
-      page.waitForEvent('download'), // wait for download to start
-      page.click(this.generatePdfByStatusButton),
-    ]);
-
-    return download.path();
+  generatePDFByStatusAndDownload(page) {
+    return this.clickAndWaitForDownload(page, this.generatePdfByStatusButton);
   }
 
   /**

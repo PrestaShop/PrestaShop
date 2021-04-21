@@ -275,22 +275,12 @@ class Order extends BOBasePage {
 
   /**
    * Download a document in document tab
-   * @param page
-   * @param row
-   * @return {Promise<*>}
+   * @param page {Page} Browser tab
+   * @param row {number} Document row on table
+   * @return {Promise<string>}
    */
-  async downloadDocument(page, row) {
-    /* eslint-disable no-return-assign, no-param-reassign */
-    // Delete the target because a new tab is opened when downloading the file
-    await page.$eval(this.documentNumberLink(row), el => el.target = '');
-
-    const [download] = await Promise.all([
-      page.waitForEvent('download'),
-      page.click(this.documentNumberLink(row)),
-    ]);
-
-    return download.path();
-    /* eslint-enable no-return-assign, no-param-reassign */
+  downloadDocument(page, row) {
+    return this.clickAndWaitForDownload(page, this.documentNumberLink(row));
   }
 
   /**

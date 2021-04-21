@@ -156,12 +156,7 @@ class Translations extends BOBasePage {
       await page.check(selector);
     }
 
-    const [download] = await Promise.all([
-      page.waitForEvent('download'),
-      page.click(this.exportLanguageButton),
-    ]);
-
-    return download.path();
+    return this.clickAndWaitForDownload(page, this.exportLanguageButton);
   }
 }
 
