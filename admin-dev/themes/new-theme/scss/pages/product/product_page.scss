@@ -1334,13 +1334,13 @@
     .left-column,
     .right-column {
       width: 100%;
-
-      .form-group.row > .form-control-label:first-of-type:not(.label-on-top) {
-        padding-left: 0.9375rem;
-      }
     }
 
-    .tab-content {
+    .form-group.row > .form-control-label:first-of-type:not(.label-on-top) {
+      padding-left: 0.9375rem;
+    }
+
+    #form-content {
       margin-bottom: 3rem;
     }
 
@@ -1362,6 +1362,18 @@
     .form-group.row,
     .alert-unavailable {
       margin-bottom: 1rem;
+    }
+
+    #combinations-list {
+      table {
+        display: block;
+        max-width: 100%;
+        overflow: scroll;
+
+        th {
+          min-width: 8rem;
+        }
+      }
     }
   }
 }
