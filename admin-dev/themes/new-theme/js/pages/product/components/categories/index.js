@@ -33,18 +33,16 @@ const {$} = window;
 const ProductCategoryMap = ProductMap.categories;
 
 export default class CategoriesManager {
-  /**
-   * @param eventEmitter {EventEmitter}
-   */
   constructor() {
     this.initCategories();
-    this.categoriesElement = document.querySelector(
-      ProductCategoryMap.categoryTree,
+    this.categoriesContainer = document.querySelector(
+      ProductCategoryMap.categoriesContainer,
     );
-    this.treeContainer = document.querySelector(ProductCategoryMap.overflow);
     this.categories = [];
     this.typeaheadDatas = [];
-    this.categoryTree = null;
+    this.categoryTree = this.categoriesContainer.querySelector(ProductCategoryMap.categoryTree);
+    this.prototypeTemplate = this.categoryTree.dataset.prototype;
+    this.prototypeName = this.categoryTree.dataset.prototypeName;
     this.actionButton = document.querySelector(ProductCategoryMap.actions);
     this.searchInput = $(ProductCategoryMap.searchInput);
     this.expanded = false;
@@ -64,97 +62,109 @@ export default class CategoriesManager {
    * Init the category tree element
    */
   initTree() {
-    this.categoryTree = document.createElement('ul');
-    this.categoryTree.classList.add('category-tree');
+    const initialElements = {};
+
+    let regexpString = ProductCategoryMap.checkboxName('__REGEXP__');
+    regexpString = regexpString.replaceAll('[', '\\[');
+    regexpString = regexpString.replaceAll(']', '\\]');
+    regexpString = regexpString.replace('__REGEXP__', '([0-9]+)');
+    const categoryIdRegexp = new RegExp(regexpString);
+
+    this.categoryTree.querySelectorAll(ProductCategoryMap.categoryTreeElement).forEach((treeElement) => {
+      const checkboxInput = treeElement.querySelector(ProductCategoryMap.checkboxInput);
+      const matches = checkboxInput.name.match(categoryIdRegexp);
+      const categoryId = Number(matches[1]);
+      initialElements[categoryId] = treeElement;
+    });
+    console.log('initialElements', initialElements);
 
     this.categories.forEach((category) => {
-      const item = this.createItem(category);
+      const item = this.generateCategoryTree(category, initialElements);
       this.categoryTree.append(item);
     });
-
-    this.treeContainer.append(this.categoryTree);
 
     this.actionButton.addEventListener('click', () => {
       this.toggleExpand();
     });
 
-    this.categoriesElement
+    // Tree is initialized we can show it and hide loader
+    this.categoriesContainer
       .querySelector(ProductCategoryMap.fieldset)
-      .classList.remove('hide');
-    this.categoriesElement
+      .classList.remove('d-none');
+    this.categoriesContainer
       .querySelector(ProductCategoryMap.loader)
-      .classList.add('hide');
+      .classList.add('d-none');
   }
 
   /**
-   * @param category {object}
+   * @param {Object} category
+   * @param {Object} initialElements
    *
    * Used to recursively create items of the category tree
    */
-  createItem(category) {
-    const listItem = document.createElement('li');
+  generateCategoryTree(category, initialElements) {
     const hasChildren = category.children && category.children.length > 0;
+    const categoryNode = this.generateCategoryNode(category, initialElements);
+    categoryNode.classList.toggle('more', hasChildren);
 
-    const checkboxContainer = document.createElement('div');
-    checkboxContainer.classList.add('checkbox');
-
+    const inputsContainer = categoryNode.querySelector(ProductCategoryMap.categoryTreeInputs);
+    const childrenList = categoryNode.querySelector(ProductCategoryMap.childrenList);
+    childrenList.classList.add('d-none', 'childrenList');
     if (hasChildren) {
-      listItem.classList.add('more');
-    }
-
-    const labelElement = document.createElement('label');
-
-    const inputElement = document.createElement('input');
-    inputElement.setAttribute('type', 'checkbox');
-    inputElement.setAttribute('name', 'form[step1][categories][tree][]');
-    inputElement.setAttribute('value', category.id);
-    inputElement.classList.add('category');
-
-    const radioElement = document.createElement('input');
-    radioElement.setAttribute('type', 'radio');
-    radioElement.setAttribute('name', 'ignore');
-    radioElement.setAttribute('value', category.id);
-    radioElement.classList.add('default-category');
-
-    labelElement.append(inputElement, ` ${category.name}`, radioElement);
-    checkboxContainer.append(labelElement);
-    listItem.append(checkboxContainer);
-
-    if (hasChildren) {
-      const childrenList = document.createElement('ul');
-      childrenList.classList.add('hide', ProductCategoryMap.childrenList);
-
-      checkboxContainer.addEventListener('click', (event) => {
+      inputsContainer.addEventListener('click', (event) => {
         if (
           !event.target.classList.contains('default-category')
           && !event.target.classList.contains('category')
         ) {
-          childrenList.classList.toggle('hide');
+          childrenList.classList.toggle('d-none');
 
-          if (childrenList.classList.contains('hide')) {
-            checkboxContainer.parentElement.classList.remove('less');
-            checkboxContainer.parentElement.classList.add('more');
+          if (childrenList.classList.contains('d-none')) {
+            inputsContainer.parentElement.classList.remove('less');
+            inputsContainer.parentElement.classList.add('more');
           } else {
-            checkboxContainer.parentElement.classList.remove('more');
-            checkboxContainer.parentElement.classList.add('less');
+            inputsContainer.parentElement.classList.remove('more');
+            inputsContainer.parentElement.classList.add('less');
           }
         }
       });
 
-      category.children.forEach((element) => {
-        const child = this.createItem(element);
+      category.children.forEach((childCategory) => {
+        const childTree = this.generateCategoryTree(childCategory, initialElements);
 
-        childrenList.append(child);
+        childrenList.append(childTree);
       });
-
-      listItem.append(childrenList);
     }
 
-    return listItem;
+    return categoryNode;
   }
 
   /**
-   * @param force {boolean} Force expanding instead of toggle
+   * @param {Object} category
+   * @param {Object} initialElements
+   *
+   * @returns {ChildNode}
+   */
+  generateCategoryNode(category, initialElements) {
+    let categoryNode;
+
+    if (!Object.prototype.hasOwnProperty.call(initialElements, category.id)) {
+      const template = this.prototypeTemplate.replace(new RegExp(this.prototypeName, 'g'), category.id);
+      const frag = document.createRange().createContextualFragment(template);
+      categoryNode = frag.querySelector('li');
+    } else {
+      categoryNode = initialElements[category.id];
+    }
+    const radioInput = categoryNode.querySelector(ProductCategoryMap.radioInput);
+    radioInput.parentNode.insertBefore(
+      document.createTextNode(category.name),
+      radioInput,
+    );
+
+    return categoryNode;
+  }
+
+  /**
+   * @param {boolean} force Force expanding instead of toggle
    *
    * Expand the category tree
    */
@@ -165,22 +175,22 @@ export default class CategoriesManager {
     const nextAction = this.actionButton.querySelector(
       ProductCategoryMap.nextAction,
     );
-    nextAction.classList.remove('hide');
+    nextAction.classList.remove('d-none');
     nextAction.style.display = 'block';
-    currentAction.classList.add('hide');
+    currentAction.classList.add('d-none');
     currentAction.style.display = 'none';
 
-    this.categoriesElement
+    this.categoriesContainer
       .querySelectorAll(ProductCategoryMap.childrenList)
       .forEach((e) => {
         if (this.expanded && !force) {
-          e.classList.add('hide');
+          e.classList.add('d-none');
         } else {
-          e.classList.remove('hide');
+          e.classList.remove('d-none');
         }
       });
 
-    this.categoriesElement
+    this.categoriesContainer
       .querySelectorAll(ProductCategoryMap.everyItems)
       .forEach((e) => {
         if (this.expanded && !force) {
