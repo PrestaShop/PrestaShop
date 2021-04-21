@@ -235,6 +235,7 @@ class ProductFormDataProviderTest extends TestCase
             $this->getDatasetsForStock(),
             $this->getDatasetsForShipping(),
             $this->getDatasetsForOptions(),
+            $this->getDatasetsForCategories(),
         ];
 
         foreach ($datasetsByType as $datasetByType) {
@@ -473,6 +474,37 @@ class ProductFormDataProviderTest extends TestCase
         $expectedOutputData['stock']['availability']['available_date'] = '1969-07-20';
 
         $expectedOutputData['shortcuts']['stock']['quantity'] = 42;
+
+        $datasets[] = [
+            $productData,
+            $expectedOutputData,
+        ];
+
+        return $datasets;
+    }
+
+    /**
+     * @return array
+     */
+    private function getDatasetsForCategories(): array
+    {
+        $datasets = [];
+
+        $expectedOutputData = $this->getDefaultOutputData();
+        $productData = [
+            'categories' => [42, 51],
+            'default_category' => 51,
+        ];
+
+        $expectedOutputData['categories'] = [];
+        $expectedOutputData['categories'][42] = [
+            'is_associated' => true,
+            'is_default' => false,
+        ];
+        $expectedOutputData['categories'][51] = [
+            'is_associated' => true,
+            'is_default' => true,
+        ];
 
         $datasets[] = [
             $productData,
@@ -1051,7 +1083,7 @@ class ProductFormDataProviderTest extends TestCase
     {
         return new ProductCategoriesInformation(
             $product['categories'] ?? [self::DEFAULT_CATEGORY_ID],
-            self::DEFAULT_CATEGORY_ID
+            $product['default_category'] ?? self::DEFAULT_CATEGORY_ID
         );
     }
 
@@ -1216,6 +1248,12 @@ class ProductFormDataProviderTest extends TestCase
             ],
             'footer' => [
                 'active' => true,
+            ],
+            'categories' => [
+                self::DEFAULT_CATEGORY_ID => [
+                    'is_associated' => true,
+                    'is_default' => true,
+                ],
             ],
             'shortcuts' => [
                 'retail_price' => [

@@ -98,6 +98,7 @@ final class ProductFormDataProvider implements FormDataProviderInterface
             'seo' => $this->extractSEOData($productForEditing),
             'shipping' => $this->extractShippingData($productForEditing),
             'options' => $this->extractOptionsData($productForEditing),
+            'categories' => $this->extractCategoriesData($productForEditing),
             'footer' => [
                 'active' => $productForEditing->getOptions()->isActive(),
             ],
@@ -178,6 +179,25 @@ final class ProductFormDataProvider implements FormDataProviderInterface
         ];
 
         return $productData;
+    }
+
+    /**
+     * @param ProductForEditing $productForEditing
+     *
+     * @return array
+     */
+    private function extractCategoriesData(ProductForEditing $productForEditing): array
+    {
+        $categoriesInformation = $productForEditing->getCategoriesInformation();
+        $categories = [];
+        foreach ($categoriesInformation->getCategoryIds() as $categoryId) {
+            $categories[$categoryId] = [
+                'is_associated' => true,
+                'is_default' => $categoryId === $categoriesInformation->getDefaultCategoryId(),
+            ];
+        }
+
+        return $categories;
     }
 
     /**
