@@ -109,7 +109,6 @@ class OrderProductRemover
     /**
      * @param Cart $cart
      * @param OrderDetail $orderDetail
-     * @param CartProductsComparator $cartComparator
      */
     private function updateCart(
         Cart $cart,
