@@ -44,6 +44,7 @@
           @changeSelected="changeSelected"
           @removeSelected="removeSelected"
           @addSelected="addSelected"
+          @toggleAll="toggleAll"
           v-if="attributeGroups"
         />
       </template>
@@ -249,7 +250,11 @@
       addSelected({selectedAttribute, attributeGroup}) {
         // Extra check to avoid adding same attribute twice which would cause a duplicate key error
         if (
-          this.isSelected(selectedAttribute, attributeGroup, this.selectedAttributeGroups)
+          this.isSelected(
+            selectedAttribute,
+            attributeGroup,
+            this.selectedAttributeGroups,
+          )
         ) {
           return;
         }
@@ -293,6 +298,26 @@
         group.attributes = group.attributes.filter(
           (attribute) => attribute.id !== selectedAttribute.id,
         );
+      },
+      /**
+       * Remove the attribute if it's selected or add it
+       *
+       * @param {Object} selectedAttribute
+       * @param {{id: int, name: string}} attributeGroup
+       */
+      toggleAll({attributeGroup, select}) {
+        if (select) {
+          attributeGroup.attributes.forEach((attribute) => {
+            this.addSelected({selectedAttribute: attribute, attributeGroup});
+          });
+        } else {
+          attributeGroup.attributes.forEach((attribute) => {
+            this.removeSelected({
+              selectedAttribute: attribute,
+              selectedAttributeGroup: attributeGroup,
+            });
+          });
+        }
       },
     },
   };

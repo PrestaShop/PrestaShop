@@ -60,11 +60,27 @@
             v-for="attributeGroup of attributeGroups"
             :key="attributeGroup.id"
           >
+            <div class="md-checkbox attribute-group-checkbox">
+              <label>
+                <input
+                  class="attribute-group-checkbox"
+                  type="checkbox"
+                  :name="`checkbox_${attributeGroup.id}`"
+                  @change.prevent.stop="toggleAll(attributeGroup)"
+                  :checked="checkboxList.includes(attributeGroup)"
+                >
+
+                <i class="md-checkbox-control" />
+              </label>
+            </div>
+
             <a
               class="attribute-group-name collapsed"
               data-toggle="collapse"
               :href="`#attribute-group-${attributeGroup.id}`"
-            >{{ attributeGroup.name }}</a>
+            >
+              {{ attributeGroup.name }}
+            </a>
             <div
               class="attribute-group-content attributes collapse"
               :id="`attribute-group-${attributeGroup.id}`"
@@ -131,6 +147,7 @@
         searchSource: {},
         scrollbar: null,
         hasGeneratedCombinations: false,
+        checkboxList: [],
       };
     },
     mounted() {
@@ -138,6 +155,15 @@
       this.scrollbar = new PerfectScrollbar(CombinationsMap.scrollBar);
       const $searchInput = $(CombinationsMap.searchInput);
       new AutoCompleteSearch($searchInput, this.dataSetConfig);
+    },
+    watch: {
+      selectedAttributeGroups(value) {
+        const attributes = Object.keys(value);
+
+        if (attributes.length <= 0) {
+          this.checkboxList = [];
+        }
+      },
     },
     methods: {
       initDataSetConfig() {
@@ -226,14 +252,17 @@
           selectedAttributeGroup,
         });
         this.updateSearchableAttributes();
+        this.updateCheckboxes(selectedAttributeGroup);
       },
       sendChangeEvent(selectedAttribute, attributeGroup) {
         this.$emit('changeSelected', {selectedAttribute, attributeGroup});
         this.updateSearchableAttributes();
+        this.updateCheckboxes(attributeGroup);
       },
       sendAddEvent(selectedAttribute, attributeGroup) {
         this.$emit('addSelected', {selectedAttribute, attributeGroup});
         this.updateSearchableAttributes();
+        this.updateCheckboxes(attributeGroup);
       },
       /**
        * Update Bloodhound engine so that it does not include already selected attributes
@@ -242,6 +271,32 @@
         const searchableAttributes = this.getSearchableAttributes();
         this.searchSource.clear();
         this.searchSource.add(searchableAttributes);
+      },
+      toggleAll(attributeGroup) {
+        if (this.checkboxList.includes(attributeGroup)) {
+          this.checkboxList = this.checkboxList.filter(
+            (e) => e.id !== attributeGroup.id,
+          );
+
+          this.$emit('toggleAll', {attributeGroup, select: false});
+        } else {
+          this.checkboxList.push(attributeGroup);
+          this.$emit('toggleAll', {attributeGroup, select: true});
+        }
+      },
+      updateCheckboxes(attributeGroup) {
+        if (
+          this.selectedAttributeGroups[attributeGroup.id]
+          && !this.checkboxList.includes(attributeGroup)
+          && this.selectedAttributeGroups[attributeGroup.id].attributes.length
+            === attributeGroup.attributes.length
+        ) {
+          this.checkboxList.push(attributeGroup);
+        } else {
+          this.checkboxList = this.checkboxList.filter(
+            (group) => group.id !== attributeGroup.id,
+          );
+        }
       },
     },
   };
@@ -286,8 +341,20 @@
   }
 
   .attribute-group {
+    position: relative;
+
     &-content {
       border-top: 1px solid $gray-300;
+    }
+
+    &-checkbox {
+      position: absolute;
+      top: 0.5rem;
+      left: 0.5rem;
+    }
+
+    &-name {
+      padding-left: 2.5rem;
     }
 
     .attribute-item {
