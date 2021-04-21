@@ -80,6 +80,9 @@ jobs:
             with:
                 php-version: ${{ matrix.php }}
                 extensions: mbstring, intl, gd, xml, dom, json, fileinfo, curl, zip, iconv, simplexml
+            env:
+                COMPOSER_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
         -   uses: actions/checkout@v2
 
         -   name: PrestaShop Configuration
@@ -102,6 +105,22 @@ jobs:
             run: composer install --ansi --prefer-dist --no-interaction --no-progress
 
         -   name: Run phpunit
+            run: ./vendor/bin/phpunit -c tests/Unit/phpunit.xml
+            env:
+                SYMFONY_DEPRECATIONS_HELPER: disabled
+
+        -   name: Lowest - Composer Install
+            run: composer update --prefer-lowest --ansi --prefer-dist --no-interaction --no-progress
+
+        -   name: Lowest - Run phpunit
+            run: ./vendor/bin/phpunit -c tests/Unit/phpunit.xml
+            env:
+                SYMFONY_DEPRECATIONS_HELPER: disabled
+
+        -   name: Latest - Composer Install
+            run: composer config platform --unset && composer update --ansi --prefer-dist --no-interaction --no-progress
+
+        -   name: Latest - Run phpunit
             run: ./vendor/bin/phpunit -c tests/Unit/phpunit.xml
             env:
                 SYMFONY_DEPRECATIONS_HELPER: disabled
