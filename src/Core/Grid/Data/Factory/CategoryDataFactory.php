@@ -29,6 +29,6 @@ namespace PrestaShop\PrestaShop\Core\Grid\Data\Factory;
 /**
  * Class CategoryDataFactory decorates DoctrineGridDataFactory configured for categories to modify category records.
  */
-class CategoryDataFactory extends AbstractCategoryDataFactory
+final class CategoryDataFactory extends AbstractCategoryDataFactory
 {
 }
