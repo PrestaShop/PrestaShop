@@ -394,7 +394,7 @@ class ToolsTest extends TestCase
         $alphaNumericPasswordWithEightCharacters = '/^(\w{8})$/';
         $numericPasswordWithTwelveCharacters = '/^(\d{12})$/';
         $noNumerciPasswordWithNineCharacters = '/^[A-Z]{9}$/';
-        $randomPasswordWithTenCharacters = '/[A-Za-z0-9 _!#$%&()*+,\-.\\:\/;=?@^_]+/';
+        $randomPasswordWithTenCharacters = '/([A-Za-z0-9 _!#$%&()*+,\-.\\:\/;=?@^_]+){10}/';
 
         return [
             [$alphaNumericPasswordWithEightCharacters, Tools::passwdGen()],
