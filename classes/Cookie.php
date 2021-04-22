@@ -29,6 +29,7 @@ use PrestaShop\PrestaShop\Core\Session\SessionInterface;
 
 /**
  * @property string $passwd
+ * @property string $shopContext
  */
 class CookieCore
 {

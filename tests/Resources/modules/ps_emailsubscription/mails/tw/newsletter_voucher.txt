@@ -1,0 +1,11 @@
+{shop_url}
+
+您好，
+
+訂閱電子通訊
+
+感謝您訂閱我們的時事通訊。 我們很高興為您提供以下優惠券： {discount}
+
+[{shop_name}]({shop_url})
+
+Powered by [PrestaShop](https://www.prestashop.com/?utm_source=marchandprestashop&utm_medium=e-mail&utm_campaign=footer_1-7)

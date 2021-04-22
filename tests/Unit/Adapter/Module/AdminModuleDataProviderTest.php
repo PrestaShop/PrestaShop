@@ -49,26 +49,32 @@ class AdminModuleDataProviderTest extends TestCase
      * @var AddonsInterface
      */
     private $addonsDataProvider;
+
     /**
      * @var AdminModuleDataProvider
      */
     private $adminModuleDataProvider;
+
     /**
      * @var CacheProvider
      */
     private $cacheProvider;
+
     /**
      * @var CategoriesProvider
      */
     private $categoriesProvider;
+
     /**
      * @var LoggerInterface
      */
     private $logger;
+
     /**
      * @var ModuleDataProvider
      */
     private $moduleProvider;
+
     /**
      * @var TranslatorInterface
      */
