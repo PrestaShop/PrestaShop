@@ -106,6 +106,7 @@ class CombinationStockType extends TranslatorAwareType
                 ],
                 'required' => false,
                 'default_empty_data' => 0,
+                // Using null here allows to keep the field empty in the page instead of 0
                 'empty_view_data' => null,
             ])
             ->add('low_stock_alert', SwitchType::class, [
