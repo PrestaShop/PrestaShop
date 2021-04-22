@@ -31,7 +31,6 @@ namespace PrestaShopBundle\Form\Admin\Sell\Product\Combination;
 use PrestaShopBundle\Form\Admin\Type\DatePickerType;
 use PrestaShopBundle\Form\Admin\Type\SwitchType;
 use PrestaShopBundle\Form\Admin\Type\TranslatorAwareType;
-use PrestaShopBundle\Form\DataTransformer\DefaultEmptyDataTransformer;
 use Symfony\Component\Form\Extension\Core\Type\NumberType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
@@ -106,6 +105,8 @@ class CombinationStockType extends TranslatorAwareType
                     new Type(['type' => 'numeric']),
                 ],
                 'required' => false,
+                'default_empty_data' => 0,
+                'empty_view_data' => null,
             ])
             ->add('low_stock_alert', SwitchType::class, [
                 'label' => $this->trans(
@@ -132,8 +133,5 @@ class CombinationStockType extends TranslatorAwareType
                 ],
             ])
         ;
-
-        // @todo This model transformer association could be simplified with a FormExtension that would allow default_empty_data option
-        $builder->get('low_stock_threshold')->addModelTransformer(new DefaultEmptyDataTransformer(0, null));
     }
 }
