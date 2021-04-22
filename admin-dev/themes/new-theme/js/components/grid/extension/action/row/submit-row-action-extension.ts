@@ -22,10 +22,11 @@
  * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
+import { Grid } from '@PSTypes/grid';
 
 import ConfirmModal from '@components/modal';
 
-const {$} = window;
+const { $ } = window;
 
 /**
  * Class SubmitRowActionExtension handles submitting of row action
@@ -36,7 +37,7 @@ export default class SubmitRowActionExtension {
    *
    * @param {Grid} grid
    */
-  extend(grid) {
+  static extend(grid: Grid): void {
     grid.getContainer().on('click', '.js-submit-row-action', (event) => {
       event.preventDefault();
 
@@ -47,8 +48,15 @@ export default class SubmitRowActionExtension {
       const method = $button.data('method');
 
       if (confirmTitle) {
-        this.showConfirmModal($button, grid, confirmMessage, confirmTitle, method);
+        this.showConfirmModal(
+          $button,
+          grid,
+          confirmMessage,
+          confirmTitle,
+          method
+        );
       } else {
+        // eslint-disable-next-line
         if (confirmMessage.length && !window.confirm(confirmMessage)) {
           return;
         }
@@ -58,7 +66,7 @@ export default class SubmitRowActionExtension {
     });
   }
 
-  postForm($button, method) {
+  static postForm($button: JQuery, method: string): void {
     const isGetOrPostMethod = ['GET', 'POST'].includes(method);
 
     const $form = $('<form>', {
@@ -67,11 +75,13 @@ export default class SubmitRowActionExtension {
     }).appendTo('body');
 
     if (!isGetOrPostMethod) {
-      $form.append($('<input>', {
-        type: '_hidden',
-        name: '_method',
-        value: method,
-      }));
+      $form.append(
+        $('<input>', {
+          type: '_hidden',
+          name: '_method',
+          value: method,
+        })
+      );
     }
 
     $form.submit();
@@ -84,19 +94,28 @@ export default class SubmitRowActionExtension {
    * @param {string} confirmTitle
    * @param {string} method
    */
-  showConfirmModal($submitBtn, grid, confirmMessage, confirmTitle, method) {
+  static showConfirmModal(
+    $submitBtn: JQuery,
+    grid: Grid,
+    confirmMessage: string,
+    confirmTitle: string,
+    method: string
+  ): void {
     const confirmButtonLabel = $submitBtn.data('confirmButtonLabel');
     const closeButtonLabel = $submitBtn.data('closeButtonLabel');
     const confirmButtonClass = $submitBtn.data('confirmButtonClass');
 
-    const modal = new ConfirmModal({
-      id: `${grid.getId()}-grid-confirm-modal`,
-      confirmTitle,
-      confirmMessage,
-      confirmButtonLabel,
-      closeButtonLabel,
-      confirmButtonClass,
-    }, () => this.postForm($submitBtn, method));
+    const modal = new ConfirmModal(
+      {
+        id: `${grid.getId()}-grid-confirm-modal`,
+        confirmTitle,
+        confirmMessage,
+        confirmButtonLabel,
+        closeButtonLabel,
+        confirmButtonClass,
+      },
+      () => this.postForm($submitBtn, method)
+    );
 
     modal.show();
   }

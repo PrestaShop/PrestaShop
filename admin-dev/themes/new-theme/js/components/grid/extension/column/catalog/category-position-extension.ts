@@ -23,18 +23,19 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
 
+import { Grid } from '@PSTypes/grid';
 import 'tablednd/dist/jquery.tablednd.min';
 
-const {$} = window;
+const { $ } = window;
 
 /**
  * Class CategoryPositionExtension extends Grid with reorderable category positions
  */
 export default class CategoryPositionExtension {
+  grid: Grid;
+
   constructor() {
-    return {
-      extend: (grid) => this.extend(grid),
-    };
+    this.grid = null;
   }
 
   /**
@@ -42,19 +43,22 @@ export default class CategoryPositionExtension {
    *
    * @param {Grid} grid
    */
-  extend(grid) {
+  static extend(grid: Grid): void {
     this.grid = grid;
 
     this.addIdsToGridTableRows();
 
-    grid.getContainer().find('.js-grid-table').tableDnD({
-      dragHandle: '.js-drag-handle',
-      onDragClass: 'dragging-row',
-      onDragStart: () => {
-        this.originalPositions = decodeURIComponent($.tableDnD.serialize());
-      },
-      onDrop: (table, row) => this.handleCategoryPositionChange(row),
-    });
+    grid
+      .getContainer()
+      .find('.js-grid-table')
+      .tableDnD({
+        dragHandle: '.js-drag-handle',
+        onDragClass: 'dragging-row',
+        onDragStart: () => {
+          this.originalPositions = decodeURIComponent($.tableDnD.serialize());
+        },
+        onDrop: (table, row) => this.handleCategoryPositionChange(row),
+      });
   }
 
   /**
@@ -64,17 +68,27 @@ export default class CategoryPositionExtension {
    *
    * @private
    */
-  handleCategoryPositionChange(row) {
+  private handleCategoryPositionChange(row: Record<string, never>): void {
     const positions = decodeURIComponent($.tableDnD.serialize());
-    const way = (this.originalPositions.indexOf(row.id) < positions.indexOf(row.id)) ? 1 : 0;
+    const way =
+      this.originalPositions.indexOf(row.id) < positions.indexOf(row.id)
+        ? 1
+        : 0;
 
-    const $categoryPositionContainer = $(row).find(`.js-${this.grid.getId()}-position:first`);
+    const $categoryPositionContainer = $(row).find(
+      `.js-${this.grid.getId()}-position:first`
+    );
 
     const categoryId = $categoryPositionContainer.data('id');
     const categoryParentId = $categoryPositionContainer.data('id-parent');
-    const positionUpdateUrl = $categoryPositionContainer.data('position-update-url');
+    const positionUpdateUrl = $categoryPositionContainer.data(
+      'position-update-url'
+    );
 
-    let params = positions.replace(new RegExp(`${this.grid.getId()}_grid_table`, 'g'), 'positions');
+    let params = positions.replace(
+      new RegExp(`${this.grid.getId()}_grid_table`, 'g'),
+      'positions'
+    );
 
     const queryParams = {
       id_category_parent: categoryParentId,
@@ -96,8 +110,9 @@ export default class CategoryPositionExtension {
    *
    * @private
    */
-  addIdsToGridTableRows() {
-    this.grid.getContainer()
+  private addIdsToGridTableRows(): void {
+    this.grid
+      .getContainer()
       .find('.js-grid-table')
       .find(`.js-${this.grid.getId()}-position`)
       .each((index, positionWrapper) => {
@@ -118,8 +133,9 @@ export default class CategoryPositionExtension {
    *
    * @private
    */
-  updateCategoryIdsAndPositions() {
-    this.grid.getContainer()
+  private updateCategoryIdsAndPositions(): void {
+    this.grid
+      .getContainer()
       .find('.js-grid-table')
       .find(`.js-${this.grid.getId()}-position`)
       .each((index, positionWrapper) => {
@@ -145,7 +161,7 @@ export default class CategoryPositionExtension {
    *
    * @private
    */
-  updateCategoryPosition(url, params) {
+  private updateCategoryPosition(url: string, params: object): void {
     $.post({
       url,
       headers: {

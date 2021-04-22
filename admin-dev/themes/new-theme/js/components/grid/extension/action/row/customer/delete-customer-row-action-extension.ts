@@ -22,43 +22,42 @@
  * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
+import { Grid } from '@PSTypes/grid';
 
-const {$} = window;
+const { $ } = window;
 
 /**
  * Class DeleteCustomerRowActionExtension handles submitting of row action
  */
 export default class DeleteCustomerRowActionExtension {
-  constructor() {
-    return {
-      extend: (grid) => this.extend(grid),
-    };
-  }
-
   /**
    * Extend grid
    *
    * @param {Grid} grid
    */
-  extend(grid) {
-    grid.getContainer().on('click', '.js-delete-customer-row-action', (event) => {
-      event.preventDefault();
+  static extend(grid: Grid): void {
+    grid
+      .getContainer()
+      .on('click', '.js-delete-customer-row-action', (event) => {
+        event.preventDefault();
 
-      const $deleteCustomersModal = $(`#${grid.getId()}_grid_delete_customers_modal`);
-      $deleteCustomersModal.modal('show');
+        const $deleteCustomersModal = $(
+          `#${grid.getId()}_grid_delete_customers_modal`
+        );
+        $deleteCustomersModal.modal('show');
 
-      $deleteCustomersModal.on('click', '.js-submit-delete-customers', () => {
-        const $button = $(event.currentTarget);
-        const customerId = $button.data('customer-id');
+        $deleteCustomersModal.on('click', '.js-submit-delete-customers', () => {
+          const $button = $(event.currentTarget);
+          const customerId = $button.data('customer-id');
 
-        this.addCustomerInput(customerId);
+          this.addCustomerInput(customerId);
 
-        const $form = $deleteCustomersModal.find('form');
+          const $form = $deleteCustomersModal.find('form');
 
-        $form.attr('action', $button.data('customer-delete-url'));
-        $form.submit();
+          $form.attr('action', $button.data('customer-delete-url'));
+          $form.submit();
+        });
       });
-    });
   }
 
   /**
@@ -68,8 +67,10 @@ export default class DeleteCustomerRowActionExtension {
    *
    * @private
    */
-  addCustomerInput(customerId) {
-    const $customersToDeleteInputBlock = $('#delete_customers_customers_to_delete');
+  private static addCustomerInput(customerId: number): void {
+    const $customersToDeleteInputBlock = $(
+      '#delete_customers_customers_to_delete'
+    );
 
     const customerInput = $customersToDeleteInputBlock
       .data('prototype')
