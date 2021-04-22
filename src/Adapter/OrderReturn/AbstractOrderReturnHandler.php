@@ -62,7 +62,7 @@ abstract class AbstractOrderReturnHandler extends AbstractObjectModelHandler
         }
 
         if ($orderReturn->id !== $orderReturnId->getValue()) {
-            throw new OrderReturnNotFoundException($orderReturnId, sprintf('Merchandise return with id "%s" was not found.', $orderReturnId->getValue()));
+            throw new OrderReturnNotFoundException($orderReturnId, sprintf('Merchandise return with id "%d" was not found.', $orderReturnId->getValue()));
         }
 
         return $orderReturn;
@@ -89,7 +89,7 @@ abstract class AbstractOrderReturnHandler extends AbstractObjectModelHandler
         if ($orderReturnState->id !== $orderReturnStateId->getValue()) {
             throw new OrderReturnOrderStateConstraintException(
                 $orderReturnStateId,
-                sprintf('Merchandise return state with id "%s" was not found.', $orderReturnStateId->getValue())
+                sprintf('Merchandise return state with id "%d" was not found.', $orderReturnStateId->getValue())
             );
         }
 
