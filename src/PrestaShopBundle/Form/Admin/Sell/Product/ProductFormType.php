@@ -136,7 +136,9 @@ class ProductFormType extends TranslatorAwareType
      */
     public function buildView(FormView $view, FormInterface $form, array $options)
     {
-        $productType = $options['data']['basic']['type'] ?? ProductType::TYPE_STANDARD;
+        // Important to get data from form and not options as it's the most up to date
+        $formData = $form->getData();
+        $productType = $formData['basic']['type'] ?? ProductType::TYPE_STANDARD;
         $formVars = [
             'product_type' => $productType,
             'product_id' => isset($options['product_id']) ? (int) $options['product_id'] : null,
