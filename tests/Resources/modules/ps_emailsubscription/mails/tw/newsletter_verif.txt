@@ -1,0 +1,10 @@
+{shop_url}
+
+您好，
+
+感謝您訂閱我們的時事通訊。 請點擊以下鏈接確認您的要求：
+{verif_url}
+
+[{shop_name}]({shop_url})
+
+Powered by [PrestaShop](https://www.prestashop.com/?utm_source=marchandprestashop&utm_medium=e-mail&utm_campaign=footer_1-7)

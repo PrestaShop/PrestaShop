@@ -86,32 +86,49 @@ class AccessTest extends TestCase
         $this->assertEquals('AdminClassNameTestChild', $routeSlugs[0]['class_name']);
     }
 
-    public function testSluggifyTab(): void
+    /**
+     * @dataProvider providerSluggifyTab
+     */
+    public function testSluggifyTab(string $expected, array $tab, string $authorization): void
     {
         $this->assertEquals(
-            'ROLE_MOD_TAB_ADMINCLASSNAMETEST_',
-            Access::sluggifyTab(['class_name' => 'AdminClassNameTest'])
+            $expected,
+            Access::sluggifyTab($tab, $authorization)
         );
-        $this->assertEquals(
+    }
+
+    public function providerSluggifyTab(): iterable
+    {
+        yield [
+            'ROLE_MOD_TAB_ADMINCLASSNAMETEST_',
+            ['class_name' => 'AdminClassNameTest'],
+            '',
+        ];
+        yield [
             'ROLE_MOD_TAB_ADMINCLASSNAMETEST_READ',
-            Access::sluggifyTab(['class_name' => 'AdminClassNameTest'], 'READ')
-        );
-        $this->assertEquals(
+            ['class_name' => 'AdminClassNameTest'],
+            'READ',
+        ];
+        yield [
             'ROLE_MOD_TAB_ADMINCLASSNAMETEST_',
-            Access::sluggifyTab(['class_name' => 'AdminClassNameTest', 'route_name' => null])
-        );
-        $this->assertEquals(
+            ['class_name' => 'AdminClassNameTest', 'route_name' => null],
+            '',
+        ];
+        yield [
             'ROLE_MOD_TAB_ADMINCLASSNAMETEST_read',
-            Access::sluggifyTab(['class_name' => 'AdminClassNameTest', 'route_name' => null], 'read')
-        );
-        $this->assertEquals(
+            ['class_name' => 'AdminClassNameTest', 'route_name' => null],
+            'read',
+        ];
+        yield [
             'ROLE_MOD_TAB_ADMINCLASSNAMETEST_',
-            Access::sluggifyTab(['class_name' => 'AdminClassNameTest', 'route_name' => 'admin_route_name_test'])
-        );
-        $this->assertEquals(
+            ['class_name' => 'AdminClassNameTest', 'route_name' => 'admin_route_name_test'],
+            '',
+        ];
+        yield [
             'ROLE_MOD_TAB_ADMINCLASSNAMETEST_READ',
-            Access::sluggifyTab(['class_name' => 'AdminClassNameTest', 'route_name' => 'admin_route_name_test'], 'READ')
-        );
+            ['class_name' => 'AdminClassNameTest', 'route_name' => 'admin_route_name_test'],
+            'READ',
+        ];
     }
 
     public function testFindIdTabByAuthSlug(): void
