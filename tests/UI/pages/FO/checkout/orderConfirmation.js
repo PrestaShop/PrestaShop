@@ -12,6 +12,8 @@ class OrderConfirmation extends FOBasePage {
     this.orderConfirmationCardSection = '#content-hook_order_confirmation';
     this.orderConfirmationCardTitleH3 = `${this.orderConfirmationCardSection} h3.card-title`;
     this.orderSummaryContent = '#order-summary-content';
+    this.orderReferenceValue = '#order-reference-value';
+    this.customerSupportLink = '#content-hook_payment_return a';
   }
 
   /*
@@ -33,6 +35,25 @@ class OrderConfirmation extends FOBasePage {
    */
   getOrderConfirmationCardTitle(page) {
     return this.getTextContent(page, this.orderConfirmationCardTitleH3);
+  }
+
+  /**
+   * Get and return the order reference value
+   * @param page {Page}
+   * @returns {Promise<string>}
+   */
+  getOrderReferenceValue(page) {
+    return this.getTextContent(page, this.orderReferenceValue);
+  }
+
+  /**
+   * Click on the 'customer support' link
+   * @param page {Page}
+   *
+   * @returns {Promise<void>}
+   */
+  async goToContactUsPage(page) {
+    await this.clickAndWaitForNavigation(page, this.customerSupportLink);
   }
 }
 

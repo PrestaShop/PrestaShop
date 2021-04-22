@@ -57,6 +57,15 @@ class ContactUs extends FOBasePage {
 
     return this.getTextContent(page, this.alertSuccessDiv);
   }
+
+  /**
+   * Get and return the content of the email input
+   * @param page {Page}
+   * @returns {Promise<string>}
+   */
+  async getEmailFieldValue(page) {
+    return this.getAttributeContent(page, this.emailAddressInput, 'value');
+  }
 }
 
 module.exports = new ContactUs();

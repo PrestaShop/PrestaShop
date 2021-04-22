@@ -39,6 +39,9 @@ class CustomerService extends BOBasePage {
 
     // Columns selector
     this.tableColumn = (row, column) => `${this.tableBodyColumn(row)}:nth-child(${column})`;
+
+    // Delete message success text
+    this.deleteMessageSuccessAlertText = 'Successful deletion.';
   }
 
   /* Header Methods */
