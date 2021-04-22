@@ -40,7 +40,7 @@ const {$} = window;
  * @param {Function} cancelCallback
  *
  */
-export default function ConfirmModal(params, confirmCallback, cancelCallback) {
+export default function ConfirmModal(params, confirmCallback, cancelCallback = () => {}) {
   // Construct the modal
   const {id, closable} = params;
   this.modal = Modal(params);
@@ -58,7 +58,7 @@ export default function ConfirmModal(params, confirmCallback, cancelCallback) {
     backdrop: closable ? true : 'static',
     keyboard: closable !== undefined ? closable : true,
     closable: closable !== undefined ? closable : true,
-    show: false,
+    show: false
   });
 
   this.$modal.on('hidden.bs.modal', () => {
@@ -84,7 +84,7 @@ function Modal({
   closeButtonLabel = 'Close',
   confirmButtonLabel = 'Accept',
   confirmButtonClass = 'btn-primary',
-  customButtons = [],
+  customButtons = []
 }) {
   const modal = {};
 
