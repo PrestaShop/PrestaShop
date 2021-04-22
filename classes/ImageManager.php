@@ -256,19 +256,19 @@ class ImageManagerCore
         if ($widthDiff > 1 && $heightDiff > 1) {
             $nextWidth = $sourceWidth;
             $nextHeight = $sourceHeight;
-            if ($psImageoptNoEnlarge){
+            if ($psImageoptNoEnlarge) {
                 $destinationWidth = $sourceWidth;
                 $destinationHeight = $sourceHeight;
-                if (Configuration::get('PS_IMAGEOPT_SYMLINK')){
+                if (Configuration::get('PS_IMAGEOPT_SYMLINK')) {
                     $imageDirectory = dirname($sourceFile);
                     $alreadyResized = glob($imageDirectory . DIRECTORY_SEPARATOR . '*-*.jpg');
                     foreach ($alreadyResized as $filename) {
-                        if(is_link($filename)){
+                        if (is_link($filename)) {
                             continue;
                         }
                         list($tmpWidth, $tmpHeight) = getimagesize($filename);
-                        if($destinationWidth == $tmpWidth && $destinationHeight = $tmpHeight) {
-                            if($psImageQuality == 'webp_fb') {
+                        if ($destinationWidth == $tmpWidth && $destinationHeight = $tmpHeight) {
+                            if ($psImageQuality == 'webp_fb') {
                                 if (file_exists(substr($filename, 0, strrpos($filename, '.')) . '.webp')) {
                                     symlink(substr($filename, 0, strrpos($filename, '.')) . '.webp', substr($destinationFile, 0, strrpos($destinationFile, '.')) . '.webp');
                                 } else {
@@ -276,6 +276,7 @@ class ImageManagerCore
                                 }
                             }
                             symlink($filename, $destinationFile);
+
                             return true;
                         }
                     }
@@ -293,7 +294,7 @@ class ImageManagerCore
             }
         }
 
-        if($psImageoptNoEnlarge){
+        if ($psImageoptNoEnlarge) {
             $destinationWidth = $nextWidth;
             $destinationHeight = $nextHeight;
         }
@@ -652,6 +653,7 @@ class ImageManagerCore
      * @param resource $resource
      * @param string $filename
      * @param bool $destroyImage Facultative argument, allows to avoid destroying of image ressource
+     *
      * @return bool
      */
     public static function write($type, $resource, $filename, $destroyImage = true)
@@ -680,7 +682,7 @@ class ImageManagerCore
                     $pngquant_ext = pathinfo($filename, PATHINFO_EXTENSION) == 'png' ? '--ext=.png' : '--ext=';
                     exec('/usr/bin/pngquant -f ' . $pngquant_ext . ' ' . escapeshellarg($filename));
                 }
-                if (Configuration::get('PS_IMAGEOPT_OPTIPNG')){
+                if (Configuration::get('PS_IMAGEOPT_OPTIPNG')) {
                     exec('/usr/bin/optipng -o7 -q ' . escapeshellarg($filename));
                 }
 
@@ -700,7 +702,7 @@ class ImageManagerCore
 
                 break;
         }
-        if($destroyImage) {
+        if ($destroyImage) {
             imagedestroy($resource);
         }
         @chmod($filename, 0664);

@@ -98,7 +98,7 @@ class AdminImagesControllerCore extends AdminController
                             'png' => $this->trans('Use PNG only if the base image is in PNG format.', [], 'Admin.Design.Feature'),
                             'png_all' => $this->trans('Use PNG for all images.', [], 'Admin.Design.Feature'),
                             'webp' => $this->trans('Use WEBP for all images.', [], 'Admin.Design.Feature'),
-                            'webp_fb' => $this->trans('Use WEBP with fallback to PNG and JPG.', [], 'Admin.Design.Feature')
+                            'webp_fb' => $this->trans('Use WEBP with fallback to PNG and JPG.', [], 'Admin.Design.Feature'),
                         ],
                         'hint' => $this->trans('Use this format to save images internally.', [], 'Admin.Design.Help'),
                         'desc' => implode('<br>', [
@@ -235,8 +235,8 @@ class AdminImagesControllerCore extends AdminController
                         'desc' => $this->trans('Efficient bandwidth and disk usage optimization. Package optipng must be installed in /usr/bin.', [], 'Admin.Design.Help'),
                         'visibility' => Shop::CONTEXT_ALL,
                     ],
-                ]
-            ]
+                ],
+            ],
         ];
 
         if ($this->display_move) {
