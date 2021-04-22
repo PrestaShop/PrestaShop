@@ -23,9 +23,9 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
 
-import { Grid } from '@PSTypes/grid';
+import {Grid} from '@PSTypes/grid';
 
-const { $ } = window;
+const {$} = window;
 
 /**
  * Class CategoryDeleteRowActionExtension handles submitting of row action
@@ -43,7 +43,7 @@ export default class DeleteCategoryRowActionExtension {
         event.preventDefault();
 
         const $deleteCategoriesModal = $(
-          `#${grid.getId()}_grid_delete_categories_modal`
+          `#${grid.getId()}_grid_delete_categories_modal`,
         );
         $deleteCategoriesModal.modal('show');
 
@@ -55,14 +55,14 @@ export default class DeleteCategoryRowActionExtension {
             const categoryId = $button.data('category-id');
 
             const $categoriesToDeleteInputBlock = $(
-              '#delete_categories_categories_to_delete'
+              '#delete_categories_categories_to_delete',
             );
 
             const categoryInput = $categoriesToDeleteInputBlock
               .data('prototype')
               .replace(
                 /__name__/g,
-                $categoriesToDeleteInputBlock.children().length
+                $categoriesToDeleteInputBlock.children().length,
               );
 
             const $item = $($.parseHTML(categoryInput)[0]);
@@ -74,7 +74,7 @@ export default class DeleteCategoryRowActionExtension {
 
             $form.attr('action', $button.data('category-delete-url'));
             $form.submit();
-          }
+          },
         );
       });
   }
