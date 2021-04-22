@@ -43,9 +43,9 @@ export default class CategoriesManager {
     this.categoryTree = this.categoriesContainer.querySelector(ProductCategoryMap.categoryTree);
     this.prototypeTemplate = this.categoryTree.dataset.prototype;
     this.prototypeName = this.categoryTree.dataset.prototypeName;
-    this.actionButton = document.querySelector(ProductCategoryMap.actions);
+    this.expandAllButton = this.categoriesContainer.querySelector(ProductCategoryMap.expandAllButton);
+    this.reduceAllButton = this.categoriesContainer.querySelector(ProductCategoryMap.reduceAllButton);
     this.searchInput = $(ProductCategoryMap.searchInput);
-    this.expanded = false;
 
     return {};
   }
@@ -53,9 +53,17 @@ export default class CategoriesManager {
   async initCategories() {
     this.categories = await getCategories();
 
+    // This regexp is gonna be used to get id from checkbox name
+    let regexpString = ProductCategoryMap.checkboxName('__REGEXP__');
+    regexpString = regexpString.replaceAll('[', '\\[');
+    regexpString = regexpString.replaceAll(']', '\\]');
+    regexpString = regexpString.replace('__REGEXP__', '([0-9]+)');
+    this.categoryIdRegexp = new RegExp(regexpString);
+
     this.initTypeaheadData(this.categories, '');
     this.initTypeahead();
     this.initTree();
+    this.updateCategoriesTags();
   }
 
   /**
@@ -64,27 +72,22 @@ export default class CategoriesManager {
   initTree() {
     const initialElements = {};
 
-    let regexpString = ProductCategoryMap.checkboxName('__REGEXP__');
-    regexpString = regexpString.replaceAll('[', '\\[');
-    regexpString = regexpString.replaceAll(']', '\\]');
-    regexpString = regexpString.replace('__REGEXP__', '([0-9]+)');
-    const categoryIdRegexp = new RegExp(regexpString);
-
     this.categoryTree.querySelectorAll(ProductCategoryMap.categoryTreeElement).forEach((treeElement) => {
       const checkboxInput = treeElement.querySelector(ProductCategoryMap.checkboxInput);
-      const matches = checkboxInput.name.match(categoryIdRegexp);
-      const categoryId = Number(matches[1]);
+      const categoryId = this.getIdFromCheckbox(checkboxInput);
       initialElements[categoryId] = treeElement;
     });
-    console.log('initialElements', initialElements);
 
     this.categories.forEach((category) => {
       const item = this.generateCategoryTree(category, initialElements);
       this.categoryTree.append(item);
     });
 
-    this.actionButton.addEventListener('click', () => {
-      this.toggleExpand();
+    this.expandAllButton.addEventListener('click', () => {
+      this.toggleAll(true);
+    });
+    this.reduceAllButton.addEventListener('click', () => {
+      this.toggleAll(false);
     });
 
     // Tree is initialized we can show it and hide loader
@@ -149,8 +152,9 @@ export default class CategoriesManager {
 
     if (!Object.prototype.hasOwnProperty.call(initialElements, category.id)) {
       const template = this.prototypeTemplate.replace(new RegExp(this.prototypeName, 'g'), category.id);
-      const frag = document.createRange().createContextualFragment(template);
-      categoryNode = frag.querySelector('li');
+      // Trim is important here or the first child could be some text (whitespace, or \n)
+      const frag = document.createRange().createContextualFragment(template.trim());
+      categoryNode = frag.firstChild;
     } else {
       categoryNode = initialElements[category.id];
     }
@@ -164,45 +168,26 @@ export default class CategoriesManager {
   }
 
   /**
-   * @param {boolean} force Force expanding instead of toggle
+   * @param {boolean} expanded Force expanding instead of toggle
    *
    * Expand the category tree
    */
-  toggleExpand(force) {
-    const currentAction = this.actionButton.querySelector(
-      ProductCategoryMap.currentAction,
-    );
-    const nextAction = this.actionButton.querySelector(
-      ProductCategoryMap.nextAction,
-    );
-    nextAction.classList.remove('d-none');
-    nextAction.style.display = 'block';
-    currentAction.classList.add('d-none');
-    currentAction.style.display = 'none';
+  toggleAll(expanded) {
+    this.expandAllButton.style.display = expanded ? 'none' : 'block';
+    this.reduceAllButton.style.display = !expanded ? 'none' : 'block';
 
     this.categoriesContainer
       .querySelectorAll(ProductCategoryMap.childrenList)
       .forEach((e) => {
-        if (this.expanded && !force) {
-          e.classList.add('d-none');
-        } else {
-          e.classList.remove('d-none');
-        }
+        e.classList.toggle('d-none', !expanded);
       });
 
     this.categoriesContainer
       .querySelectorAll(ProductCategoryMap.everyItems)
       .forEach((e) => {
-        if (this.expanded && !force) {
-          e.classList.add('more');
-          e.classList.remove('less');
-        } else {
-          e.classList.add('less');
-          e.classList.remove('more');
-        }
+        e.classList.toggle('more', expanded);
+        e.classList.toggle('less', !expanded);
       });
-
-    this.expanded = !this.expanded;
   }
 
   /**
@@ -220,8 +205,6 @@ export default class CategoriesManager {
   }
 
   initTypeahead() {
-    const that = this;
-
     const source = new Bloodhound({
       datumTokenizer: Bloodhound.tokenizers.obj.whitespace(
         'name',
@@ -237,15 +220,15 @@ export default class CategoriesManager {
       source,
       display: 'breadcrumb',
       value: 'id',
-      onSelect(selectedItem) {
-        const checkbox = document.querySelector(
-          ProductCategoryMap.itemCheckbox(selectedItem.id),
+      onSelect: (selectedItem) => {
+        const checkbox = this.categoriesContainer.querySelector(
+          `[name="${ProductCategoryMap.checkboxName(selectedItem.id)}"]`,
         );
         checkbox.checked = true;
-        that.toggleExpand(true);
+        this.toggleAll(true);
       },
-      onClose() {
-        that.searchInput.val('');
+      onClose: () => {
+        this.searchInput.val('');
         return true;
       },
     };
@@ -267,5 +250,67 @@ export default class CategoriesManager {
     };
 
     new AutoCompleteSearch(this.searchInput, dataSetConfig);
+  }
+
+  updateCategoriesTags() {
+    const checkedCheckboxes = this.categoryTree.querySelectorAll(ProductCategoryMap.checkedCheckboxInputs);
+    const tagsContainer = this.categoriesContainer.querySelector(ProductCategoryMap.tagsContainer);
+    tagsContainer.innerHTML = '';
+
+    checkedCheckboxes.forEach((checkboxInput) => {
+      const categoryId = this.getIdFromCheckbox(checkboxInput);
+      const category = this.getCategoryById(categoryId);
+      const template = `
+        <span class="pstaggerTag">
+            <span data-id="${category.id}" title="${category.breadcrumb}">${category.name}</span>
+            <a class="pstaggerClosingCross" href="#" data-id="${category.id}">x</a>
+        </span>
+      `;
+
+      const frag = document.createRange().createContextualFragment(template.trim());
+      tagsContainer.append(frag.firstChild);
+    });
+
+    tagsContainer.classList.toggle('d-block', checkedCheckboxes.length > 0);
+  }
+
+  /**
+   * @param {int} categoryId
+   *
+   * @returns {Object|null}
+   */
+  getCategoryById(categoryId) {
+    return this.searchCategory(categoryId, this.categories);
+  }
+
+  /**
+   * @param {int} categoryId
+   * @param {array} categories
+   * @returns {Object|null}
+   */
+  searchCategory(categoryId, categories) {
+    let searchedCategory = null;
+    categories.forEach((category) => {
+      if (categoryId === category.id) {
+        searchedCategory = category;
+      }
+
+      if (searchedCategory === null && category.children && category.children.length > 0) {
+        searchedCategory = this.searchCategory(categoryId, category.children);
+      }
+    });
+
+    return searchedCategory;
+  }
+
+  /**
+   * @param {HTMLElement} checkboxInput
+   *
+   * @returns {number}
+   */
+  getIdFromCheckbox(checkboxInput) {
+    const matches = checkboxInput.name.match(this.categoryIdRegexp);
+
+    return Number(matches[1]);
   }
 }

@@ -49,18 +49,18 @@
     <fieldset class="form-group tree-fieldset d-none">
       <div class="ui-widget">
         <div class="search search-with-icon">
-          <input type="text" id="ps-select-product-category" class="form-control autocomplete search mb-1 ui-autocomplete-input" placeholder="Search categories" autocomplete="off">
+          <input type="text" id="ps-select-product-category" class="form-control autocomplete search mb-1 ui-autocomplete-input" placeholder="{{ 'Search categories'|trans({}, 'Admin.Catalog.Help') }}" autocomplete="off">
         </div>
 
-        <label class="form-control-label text-uppercase">Associated categories</label>
+        <label class="form-control-label text-uppercase">{{ 'Associated categories'|trans({}, 'Admin.Catalog.Feature') }}</label>
 
-        <div id="ps_categoryTags" class="pstaggerTagsWrapper" style="display: block;">
+        <div id="ps_categoryTags" class="pstaggerTagsWrapper">
           <span class="pstaggerTag"><span data-id="2" title="Root > Home">Home</span><a class="pstaggerClosingCross" href="#" data-id="2">x</a></span>
         </div>
 
         <div class="categories-tree-actions js-categories-tree-actions">
-          <span class="form-control-label" id="categories-tree-expand" style=""><i class="material-icons">expand_more</i>Expand</span>
-          <span class="form-control-label d-none" id="categories-tree-reduce"><i class="material-icons">expand_less</i>Collapse</span>
+          <span class="form-control-label" id="categories-tree-expand"><i class="material-icons">expand_more</i>{{ 'Expand All'|trans({}, 'Admin.Actions') }}</span>
+          <span class="form-control-label" id="categories-tree-reduce"><i class="material-icons">expand_less</i>{{ 'Collapse All'|trans({}, 'Admin.Actions') }}</span>
         </div>
 
         <div class="category-tree-overflow js-category-tree-overflow">
