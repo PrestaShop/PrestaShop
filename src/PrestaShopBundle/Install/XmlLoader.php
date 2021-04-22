@@ -655,6 +655,8 @@ class XmlLoader
         }
         $data['position'] = $position[$data['id_parent']]++;
         $data['icon'] = $data['icon'] ?? '';
+        $data['wording'] = $data['wording'] ?? '';
+        $data['wording_domain'] = $data['wording_domain'] ?? '';
         $data['route_name'] = $data['route_name'] ?? '';
 
         // Generate primary key manually
