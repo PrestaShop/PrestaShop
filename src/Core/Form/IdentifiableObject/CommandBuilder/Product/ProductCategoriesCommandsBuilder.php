@@ -32,8 +32,14 @@ use PrestaShop\PrestaShop\Core\Domain\Product\Command\RemoveAllAssociatedProduct
 use PrestaShop\PrestaShop\Core\Domain\Product\Command\SetAssociatedProductCategoriesCommand;
 use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductId;
 
+/**
+ * Builder used to build SetAssociatedProductCategoriesCommand or RemoveAllAssociatedProductCategoriesCommand.
+ */
 class ProductCategoriesCommandsBuilder implements ProductCommandsBuilderInterface
 {
+    /**
+     * {@inheritdoc}
+     */
     public function buildCommands(ProductId $productId, array $formData): array
     {
         if (!isset($formData['categories'])) {
