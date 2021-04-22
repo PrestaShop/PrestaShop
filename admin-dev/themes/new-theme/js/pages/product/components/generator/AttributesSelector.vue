@@ -277,12 +277,14 @@
           this.checkboxList = this.checkboxList.filter(
             (e) => e.id !== attributeGroup.id,
           );
-
-          this.$emit('toggleAll', {attributeGroup, select: false});
         } else {
           this.checkboxList.push(attributeGroup);
-          this.$emit('toggleAll', {attributeGroup, select: true});
         }
+
+        this.$emit('toggleAll', {
+          attributeGroup,
+          select: this.checkboxList.includes(attributeGroup),
+        });
       },
       updateCheckboxes(attributeGroup) {
         if (
