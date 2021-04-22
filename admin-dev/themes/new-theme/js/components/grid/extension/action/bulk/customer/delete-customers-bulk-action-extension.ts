@@ -22,48 +22,47 @@
  * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
+import { Grid } from '@PSTypes/grid';
 
-const {$} = window;
+const { $ } = window;
 
 /**
  * Handles bulk delete for "Customers" grid.
  */
 export default class DeleteCustomersBulkActionExtension {
-  constructor() {
-    return {
-      extend: (grid) => this.extend(grid),
-    };
-  }
-
   /**
    * Extend grid
    *
    * @param {Grid} grid
    */
-  extend(grid) {
-    grid.getContainer().on('click', '.js-delete-customers-bulk-action', (event) => {
-      event.preventDefault();
+  static extend(grid: Grid): void {
+    grid
+      .getContainer()
+      .on('click', '.js-delete-customers-bulk-action', (event) => {
+        event.preventDefault();
 
-      const submitUrl = $(event.currentTarget).data('customers-delete-url');
+        const submitUrl = $(event.currentTarget).data('customers-delete-url');
 
-      const $modal = $(`#${grid.getId()}_grid_delete_customers_modal`);
-      $modal.modal('show');
+        const $modal = $(`#${grid.getId()}_grid_delete_customers_modal`);
+        $modal.modal('show');
 
-      $modal.on('click', '.js-submit-delete-customers', () => {
-        const $selectedCustomerCheckboxes = grid.getContainer().find('.js-bulk-action-checkbox:checked');
+        $modal.on('click', '.js-submit-delete-customers', () => {
+          const $selectedCustomerCheckboxes = grid
+            .getContainer()
+            .find('.js-bulk-action-checkbox:checked');
 
-        $selectedCustomerCheckboxes.each((i, checkbox) => {
-          const $input = $(checkbox);
+          $selectedCustomerCheckboxes.each((i, checkbox) => {
+            const $input = $(checkbox);
 
-          this.addCustomerToDeleteCollectionInput($input.val());
+            this.addCustomerToDeleteCollectionInput(<number>$input.val());
+          });
+
+          const $form = $modal.find('form');
+
+          $form.attr('action', submitUrl);
+          $form.submit();
         });
-
-        const $form = $modal.find('form');
-
-        $form.attr('action', submitUrl);
-        $form.submit();
       });
-    });
   }
 
   /**
@@ -71,7 +70,7 @@ export default class DeleteCustomersBulkActionExtension {
    *
    * @private
    */
-  addCustomerToDeleteCollectionInput(customerId) {
+  private addCustomerToDeleteCollectionInput = (customerId: number): void => {
     const $customersInput = $('#delete_customers_customers_to_delete');
 
     const customerInput = $customersInput
@@ -81,5 +80,5 @@ export default class DeleteCustomersBulkActionExtension {
     $item.val(customerId);
 
     $customersInput.append($item);
-  }
+  };
 }

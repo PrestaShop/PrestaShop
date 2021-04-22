@@ -23,9 +23,9 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
 
-import {GridExtension} from '@PSTypes/grid';
+import { GridExtension } from '@PSTypes/grid';
 
-const {$}: Window = window;
+const { $ }: Window = window;
 
 /**
  * Class is responsible for handling Grid events
