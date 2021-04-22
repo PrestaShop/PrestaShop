@@ -20,7 +20,7 @@ Feature: Order return Management
       | message             | test                       |
       | payment module name | dummy_payment              |
       | status              | Awaiting bank wire payment |
-    And I add order return state "order_return_state1"
+    And I add order return state "orderReturnState1"
     And I add order return "testOrderReturn" from order "bo_order1"
   Scenario: Change order return status
     When I change order return "testOrderReturn" state to "orderReturnState1"
