@@ -23,10 +23,10 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
 
-import {Grid} from '@PSTypes/grid';
+import { Grid } from '@PSTypes/grid';
 import GridMap from '@components/grid/grid-map';
 
-const {$} = window;
+const { $ } = window;
 
 /**
  * Class DeleteCategoriesBulkActionExtension handles submitting of row action
@@ -44,7 +44,7 @@ export default class DeleteCategoriesBulkActionExtension {
       const submitUrl = $(event.currentTarget).data('categories-delete-url');
 
       const $deleteCategoriesModal = $(
-        GridMap.bulks.deleteCategoriesModal(grid.getId()),
+        GridMap.bulks.deleteCategoriesModal(grid.getId())
       );
       $deleteCategoriesModal.modal('show');
 
@@ -56,7 +56,7 @@ export default class DeleteCategoriesBulkActionExtension {
             .getContainer()
             .find(GridMap.bulks.checkedCheckbox);
           const $categoriesToDeleteInputBlock = $(
-            GridMap.bulks.categoriesToDelete,
+            GridMap.bulks.categoriesToDelete
           );
 
           $checkboxes.each((i, element) => {
@@ -76,7 +76,7 @@ export default class DeleteCategoriesBulkActionExtension {
 
           $form.attr('action', submitUrl);
           $form.submit();
-        },
+        }
       );
     });
   }

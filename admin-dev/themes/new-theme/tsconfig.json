@@ -5,9 +5,9 @@
     "module": "es6",
     "target": "es5",
     "strict": true,
+    "moduleResolution": "node",
     "allowJs": true,
-    "typeRoots": ["./js/types"],
-    "types": ["jquery"],
+    "baseUrl": "./",
     "paths": {
       "@app/*": "js/app/*",
       "@js/*": "js/*",

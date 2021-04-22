@@ -23,10 +23,9 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
 
-import {Grid} from '@PSTypes/grid';
-import GridMap from '@components/grid/grid-map';
+import { Grid } from '@PSTypes/grid';
 
-const {$} = window;
+const { $ } = window;
 
 /**
  * Class CategoryDeleteRowActionExtension handles submitting of row action
@@ -37,33 +36,33 @@ export default class DeleteCategoryRowActionExtension {
    *
    * @param {Grid} grid
    */
-  extend(grid: Grid): void {
+  static extend(grid: Grid): void {
     grid
       .getContainer()
-      .on('click', GridMap.rows.categoryDeleteAction, (event) => {
+      .on('click', '.js-delete-category-row-action', (event) => {
         event.preventDefault();
 
         const $deleteCategoriesModal = $(
-          GridMap.bulks.deleteCategoriesModal(grid.getId()),
+          `#${grid.getId()}_grid_delete_categories_modal`
         );
         $deleteCategoriesModal.modal('show');
 
         $deleteCategoriesModal.on(
           'click',
-          GridMap.bulks.submitDeleteCategories,
+          '.js-submit-delete-categories',
           () => {
             const $button = $(event.currentTarget);
             const categoryId = $button.data('category-id');
 
             const $categoriesToDeleteInputBlock = $(
-              GridMap.bulks.categoriesToDelete,
+              '#delete_categories_categories_to_delete'
             );
 
             const categoryInput = $categoriesToDeleteInputBlock
               .data('prototype')
               .replace(
                 /__name__/g,
-                $categoriesToDeleteInputBlock.children().length,
+                $categoriesToDeleteInputBlock.children().length
               );
 
             const $item = $($.parseHTML(categoryInput)[0]);
@@ -75,7 +74,7 @@ export default class DeleteCategoryRowActionExtension {
 
             $form.attr('action', $button.data('category-delete-url'));
             $form.submit();
-          },
+          }
         );
       });
   }

@@ -22,10 +22,9 @@
  * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
-import {Grid} from '@PSTypes/grid';
-import GridMap from '@components/grid/grid-map';
+import { Grid } from '@PSTypes/grid';
 
-const {$} = window;
+const { $ } = window;
 
 /**
  * Handles bulk delete for "Customers" grid.
@@ -36,32 +35,34 @@ export default class DeleteCustomersBulkActionExtension {
    *
    * @param {Grid} grid
    */
-  extend(grid: Grid): void {
-    grid.getContainer().on('click', GridMap.bulks.deleteCustomers, (event) => {
-      event.preventDefault();
+  static extend(grid: Grid): void {
+    grid
+      .getContainer()
+      .on('click', '.js-delete-customers-bulk-action', (event) => {
+        event.preventDefault();
 
-      const submitUrl = $(event.currentTarget).data('customers-delete-url');
+        const submitUrl = $(event.currentTarget).data('customers-delete-url');
 
-      const $modal = $(GridMap.bulks.deleteCustomerModal(grid.getId()));
-      $modal.modal('show');
+        const $modal = $(`#${grid.getId()}_grid_delete_customers_modal`);
+        $modal.modal('show');
 
-      $modal.on('click', GridMap.bulks.submitDeleteCustomers, () => {
-        const $selectedCustomerCheckboxes = grid
-          .getContainer()
-          .find(GridMap.bulks.checkedCheckbox);
+        $modal.on('click', '.js-submit-delete-customers', () => {
+          const $selectedCustomerCheckboxes = grid
+            .getContainer()
+            .find('.js-bulk-action-checkbox:checked');
 
-        $selectedCustomerCheckboxes.each((i, checkbox) => {
-          const $input = $(checkbox);
+          $selectedCustomerCheckboxes.each((i, checkbox) => {
+            const $input = $(checkbox);
 
-          this.addCustomerToDeleteCollectionInput(<number>$input.val());
+            this.addCustomerToDeleteCollectionInput(<number>$input.val());
+          });
+
+          const $form = $modal.find('form');
+
+          $form.attr('action', submitUrl);
+          $form.submit();
         });
-
-        const $form = $modal.find('form');
-
-        $form.attr('action', submitUrl);
-        $form.submit();
       });
-    });
   }
 
   /**
@@ -69,8 +70,8 @@ export default class DeleteCustomersBulkActionExtension {
    *
    * @private
    */
-  private addCustomerToDeleteCollectionInput(customerId: number): void {
-    const $customersInput = $(GridMap.bulks.customersToDelete);
+  private addCustomerToDeleteCollectionInput = (customerId: number): void => {
+    const $customersInput = $('#delete_customers_customers_to_delete');
 
     const customerInput = $customersInput
       .data('prototype')
@@ -79,5 +80,5 @@ export default class DeleteCustomersBulkActionExtension {
     $item.val(customerId);
 
     $customersInput.append($item);
-  }
+  };
 }
