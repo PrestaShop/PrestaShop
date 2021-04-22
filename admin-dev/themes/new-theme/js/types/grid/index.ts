@@ -4,4 +4,4 @@ interface GridExtension {
   extend: (grid: Grid) => void;
 }
 
-export { Grid, GridExtension };
+export {Grid, GridExtension};
