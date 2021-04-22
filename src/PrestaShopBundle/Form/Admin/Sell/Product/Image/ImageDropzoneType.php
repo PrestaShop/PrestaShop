@@ -65,7 +65,7 @@ class ImageDropzoneType extends TranslatorAwareType
                 'window.imageReplaced' => $this->trans('Image replaced', 'Admin.Catalog.Notification'),
                 'window.unselectAll' => $this->trans('Unselect all', 'Admin.Actions'),
                 'window.replaceSelection' => $this->trans('Replace selection', 'Admin.Actions'),
-                'window.cantDisableCover' => $this->trans('Using another image as cover will automatically uncheck this box.', 'Admin.Actions'),
+                'window.cantDisableCover' => $this->trans('Using another image as cover will automatically uncheck this box.', 'Admin.Catalog.Help'),
                 'window.selectedFiles' => $this->trans(
                     '[1]%filesNb%[/1] selected file(s)',
                     'Admin.Catalog.Feature',
