@@ -26,7 +26,7 @@ class ContactUs extends FOBasePage {
    */
   /**
    * Get email us link href
-   * @param page
+   * @param page {Page} Browser tab
    * @returns {Promise<string>}
    */
   getEmailUsLink(page) {
@@ -35,8 +35,9 @@ class ContactUs extends FOBasePage {
 
   /**
    * Send message
-   * @param page
-   * @param contactUsData
+   * @param page {Page} Browser tab
+   * @param contactUsData {object} Object that contain the data to fill the form
+   * @param file
    * @returns {Promise<string>}
    */
   async sendMessage(page, contactUsData, file = null) {

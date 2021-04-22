@@ -24,7 +24,7 @@ class SearchResults extends FOBasePage {
   // Methods
   /**
    * Get search product results number
-   * @param page
+   * @param page {Page} Browser tab
    * @returns {Promise<number>}
    */
   getSearchResultsNumber(page) {
@@ -33,8 +33,8 @@ class SearchResults extends FOBasePage {
 
   /**
    * Go to the product page
-   * @param page
-   * @param id, product id
+   * @param page {Page} Browser tab
+   * @param id {number} Product id
    * @returns {Promise<void>}
    */
   async goToProductPage(page, id) {
@@ -43,8 +43,8 @@ class SearchResults extends FOBasePage {
 
   /**
    * Click on Quick view Product
-   * @param page
-   * @param id, index of product in list of products
+   * @param page {Page} Browser tab
+   * @param id {number} Index of product in list of products
    * @return {Promise<void>}
    */
   async quickViewProduct(page, id) {
@@ -71,8 +71,8 @@ class SearchResults extends FOBasePage {
 
   /**
    * Select thumb image
-   * @param page
-   * @param id
+   * @param page {Page} Browser tab
+   * @param id {number} ID of the thumb
    * @returns {Promise<string>}
    */
   async selectThumbImage(page, id) {

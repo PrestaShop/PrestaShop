@@ -19,7 +19,7 @@ class OrderConfirmation extends FOBasePage {
      */
   /**
    * Check if final summary is visible
-   * @param page
+   * @param page {Page} Browser tab
    * @returns {boolean}
    */
   isFinalSummaryVisible(page) {
@@ -28,7 +28,7 @@ class OrderConfirmation extends FOBasePage {
 
   /**
    * Get order confirmation card title
-   * @param page
+   * @param page {Page} Browser tab
    * @return {Promise<string>}
    */
   getOrderConfirmationCardTitle(page) {

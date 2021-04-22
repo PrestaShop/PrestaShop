@@ -22,8 +22,8 @@ class Login extends FOBasePage {
 
   /**
    * Login in FO
-   * @param page
-   * @param customer
+   * @param page {Page} Browser tab
+   * @param customer {object} Object of the customer infos (email, password, ....)
    * @return {Promise<void>}
    */
   async customerLogin(page, customer) {
@@ -34,7 +34,7 @@ class Login extends FOBasePage {
 
   /**
    * Go to create account page
-   * @param page
+   * @param page {Page} Browser tab
    * @returns {Promise<void>}
    */
   async goToCreateAccountPage(page) {
@@ -43,7 +43,7 @@ class Login extends FOBasePage {
 
   /**
    * Go to the password reminder page
-   * @param page
+   * @param page {Page} Browser tab
    * @returns {Promise<void>}
    */
   async goToPasswordReminderPage(page) {
