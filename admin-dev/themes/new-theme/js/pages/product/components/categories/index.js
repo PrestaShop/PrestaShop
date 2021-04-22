@@ -164,6 +164,14 @@ export default class CategoriesManager {
       document.createTextNode(category.name),
       radioInput,
     );
+    // Uncheck all other radio inputs when one is selected
+    radioInput.addEventListener('click', () => {
+      this.categoryTree.querySelectorAll(ProductCategoryMap.radioInput).forEach((radioTreeElement) => {
+        if (radioTreeElement !== radioInput) {
+          radioTreeElement.checked = false;
+        }
+      });
+    });
 
     return categoryNode;
   }
