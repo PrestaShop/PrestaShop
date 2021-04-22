@@ -90,6 +90,12 @@ export default class CategoriesManager {
       this.toggleAll(false);
     });
 
+    this.categoryTree.querySelectorAll(ProductCategoryMap.checkboxInput).forEach((checkbox) => {
+      checkbox.addEventListener('change', () => {
+        this.updateCategoriesTags();
+      });
+    });
+
     // Tree is initialized we can show it and hide loader
     this.categoriesContainer
       .querySelector(ProductCategoryMap.fieldset)
@@ -115,20 +121,15 @@ export default class CategoriesManager {
     childrenList.classList.add('d-none', 'childrenList');
     if (hasChildren) {
       inputsContainer.addEventListener('click', (event) => {
-        if (
-          !event.target.classList.contains('default-category')
-          && !event.target.classList.contains('category')
-        ) {
-          childrenList.classList.toggle('d-none');
-
-          if (childrenList.classList.contains('d-none')) {
-            inputsContainer.parentElement.classList.remove('less');
-            inputsContainer.parentElement.classList.add('more');
-          } else {
-            inputsContainer.parentElement.classList.remove('more');
-            inputsContainer.parentElement.classList.add('less');
-          }
+        // We don't want to mess with the inputs behaviour
+        if (event.target !== event.currentTarget) {
+          return;
         }
+        const treeElement = event.currentTarget;
+        const isExpanded = !childrenList.classList.contains('d-none');
+        treeElement.classList.toggle('less', !isExpanded);
+        treeElement.classList.toggle('more', isExpanded);
+        childrenList.classList.toggle('d-none', isExpanded);
       });
 
       category.children.forEach((childCategory) => {
@@ -191,6 +192,35 @@ export default class CategoriesManager {
   }
 
   /**
+   * @param {int} categoryId
+   */
+  toggleCategory(categoryId) {
+    const checkbox = this.categoriesContainer.querySelector(
+      `[name="${ProductCategoryMap.checkboxName(categoryId)}"]`,
+    );
+
+    // This is the element containing the checkbox
+    let parentItem = checkbox.closest(ProductCategoryMap.categoryTreeElement);
+
+    if (parentItem !== null) {
+      // This is the first (potential) parent element
+      parentItem = parentItem.parentNode.closest(ProductCategoryMap.categoryTreeElement);
+    }
+
+    while (parentItem !== null && this.categoryTree.contains(parentItem)) {
+      const childrenList = parentItem.querySelector(ProductCategoryMap.childrenList);
+
+      if (childrenList.childNodes.length) {
+        parentItem.classList.add('less');
+        parentItem.classList.remove('more');
+        parentItem.querySelector(ProductCategoryMap.childrenList).classList.remove('d-none');
+      }
+
+      parentItem = parentItem.parentNode.closest(ProductCategoryMap.categoryTreeElement);
+    }
+  }
+
+  /**
    * Typeahead datas require to have only one array level
    */
   initTypeaheadData(data, parentBreadcrumb) {
@@ -220,15 +250,18 @@ export default class CategoriesManager {
       source,
       display: 'breadcrumb',
       value: 'id',
-      onSelect: (selectedItem) => {
+      onSelect: (selectedItem, e, $searchInput) => {
         const checkbox = this.categoriesContainer.querySelector(
           `[name="${ProductCategoryMap.checkboxName(selectedItem.id)}"]`,
         );
         checkbox.checked = true;
-        this.toggleAll(true);
+        this.toggleCategory(selectedItem.id);
+
+        // This resets the search input or else previous search is cached and can be added again
+        $searchInput.typeahead('val', '');
       },
-      onClose: () => {
-        this.searchInput.val('');
+      onClose: (event, $searchInput) => {
+        $searchInput.typeahead('val', '');
         return true;
       },
     };
@@ -269,6 +302,19 @@ export default class CategoriesManager {
 
       const frag = document.createRange().createContextualFragment(template.trim());
       tagsContainer.append(frag.firstChild);
+    });
+
+    tagsContainer.querySelectorAll('.pstaggerClosingCross').forEach((closeLink) => {
+      closeLink.addEventListener('click', (event) => {
+        event.preventDefault();
+        event.stopImmediatePropagation();
+        const categoryId = event.currentTarget.dataset.id;
+        const checkbox = this.categoriesContainer.querySelector(
+          `[name="${ProductCategoryMap.checkboxName(categoryId)}"]`,
+        );
+        checkbox.checked = false;
+        this.updateCategoriesTags();
+      });
     });
 
     tagsContainer.classList.toggle('d-block', checkedCheckboxes.length > 0);

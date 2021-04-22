@@ -27,10 +27,8 @@
 {% block product_category_row %}
   <li class="category-tree-element">
     <div class="checkbox category-tree-inputs">
-      <label>
-        {{ form_widget(form.is_associated) }}
-        {{ form_widget(form.is_default) }}
-      </label>
+      {{ form_widget(form.is_associated) }}
+      {{ form_widget(form.is_default) }}
     </div>
     <ul class="children-list"></ul>
   </li>

@@ -745,7 +745,8 @@ $product-page-padding-bottom: 80px !default;
         font-weight: 600;
       }
 
-      label {
+      label,
+      .category-tree-inputs {
         position: relative;
         width: 100%;
         max-width: 100%;
