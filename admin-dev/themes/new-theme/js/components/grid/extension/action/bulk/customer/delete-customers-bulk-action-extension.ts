@@ -70,7 +70,7 @@ export default class DeleteCustomersBulkActionExtension {
    *
    * @private
    */
-  private addCustomerToDeleteCollectionInput = (customerId: number): void => {
+  static addCustomerToDeleteCollectionInput = (customerId: number): void => {
     const $customersInput = $('#delete_customers_customers_to_delete');
 
     const customerInput = $customersInput
