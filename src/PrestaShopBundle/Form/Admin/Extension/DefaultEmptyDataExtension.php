@@ -59,8 +59,8 @@ class DefaultEmptyDataExtension extends AbstractTypeExtension
                 'default_empty_data' => null,
                 'empty_view_data' => $this->privateEmptyValue,
             ])
-            ->setAllowedTypes('default_empty_data', ['null', 'string', 'int', 'array', 'object', 'bool'])
-            ->setAllowedTypes('empty_view_data', ['null', 'string', 'int', 'array', 'object', 'bool'])
+            ->setAllowedTypes('default_empty_data', ['null', 'string', 'int', 'array', 'object', 'bool', 'float'])
+            ->setAllowedTypes('empty_view_data', ['null', 'string', 'int', 'array', 'object', 'bool', 'float'])
         ;
     }
 
