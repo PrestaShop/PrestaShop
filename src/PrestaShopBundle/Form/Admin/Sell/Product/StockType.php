@@ -107,6 +107,7 @@ class StockType extends TranslatorAwareType
 
         $builder
             ->add('minimal_quantity', NumberType::class, [
+                'required' => false,
                 'label' => $this->trans('Minimum quantity for sale', 'Admin.Catalog.Feature'),
                 'constraints' => [
                     new NotBlank(),
