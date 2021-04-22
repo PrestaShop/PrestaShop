@@ -171,6 +171,10 @@ export default class CategoriesManager {
           radioTreeElement.checked = false;
         }
       });
+
+      const parentItem = radioInput.parentNode.closest(ProductCategoryMap.categoryTreeElement);
+      const checkbox = parentItem.querySelector(ProductCategoryMap.checkboxInput);
+      checkbox.checked = true;
     });
 
     return categoryNode;
