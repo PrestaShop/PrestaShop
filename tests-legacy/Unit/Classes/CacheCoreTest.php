@@ -226,14 +226,14 @@ class CacheCoreTest extends TestCase
             Cache::getInstance()->setQuery($query, array('queryResult'));
         }
 
-        Cache::getInstance()->setQuery('SELECT name FROM ps_confiture WHERE id = 1', array('queryResultExtra'));
+        Cache::getInstance()->setQuery('SELECT name FROM ' . _DB_PREFIX_ . 'confiture WHERE id = 1', array('queryResultExtra'));
 
-        $tableMapKey = Cache::getInstance()->getTableMapCacheKey('ps_configuration');
+        $tableMapKey = Cache::getInstance()->getTableMapCacheKey(_DB_PREFIX_ . 'configuration');
         $invalidatedKeys = $this->cacheArray[$tableMapKey];
 
         $this->assertArrayHasKey($tableMapKey, $this->cacheArray);
 
-        Cache::getInstance()->deleteQuery('SELECT name FROM ps_configuration WHERE id = 1');
+        Cache::getInstance()->deleteQuery('SELECT name FROM ' . _DB_PREFIX_ . 'configuration WHERE id = 1');
 
         $this->assertArrayNotHasKey($tableMapKey, $this->cacheArray);
 
@@ -241,10 +241,10 @@ class CacheCoreTest extends TestCase
             $this->assertArrayNotHasKey($invalidatedKey, $this->cacheArray);
         }
 
-        $validTableMapKey = Cache::getInstance()->getTableMapCacheKey('ps_confiture');
+        $validTableMapKey = Cache::getInstance()->getTableMapCacheKey(_DB_PREFIX_ . 'confiture');
         $this->assertArrayHasKey($validTableMapKey, $this->cacheArray);
 
-        Cache::getInstance()->deleteQuery('SELECT name FROM ps_confiture WHERE id = 1');
+        Cache::getInstance()->deleteQuery('SELECT name FROM ' . _DB_PREFIX_ . 'confiture WHERE id = 1');
 
         $this->assertArrayNotHasKey($validTableMapKey, $this->cacheArray);
 
@@ -253,16 +253,16 @@ class CacheCoreTest extends TestCase
             Cache::getInstance()->setQuery($query, array('queryResult'));
         }
 
-        $tableMapKey = Cache::getInstance()->getTableMapCacheKey('ps_configuration');
+        $tableMapKey = Cache::getInstance()->getTableMapCacheKey(_DB_PREFIX_ . 'configuration');
         $invalidatedKeys = $this->cacheArray[$tableMapKey];
 
         $this->assertArrayHasKey($tableMapKey, $this->cacheArray);
 
         // all entries from both ps_configuration AND ps_confiture will be deleted
-        Cache::getInstance()->deleteQuery('SELECT name FROM ps_configuration WHERE id = 1');
+        Cache::getInstance()->deleteQuery('SELECT name FROM ' . _DB_PREFIX_ . 'configuration WHERE id = 1');
 
         $this->assertArrayNotHasKey($tableMapKey, $this->cacheArray);
-        $otherTableMapKey = Cache::getInstance()->getTableMapCacheKey('ps_confiture');
+        $otherTableMapKey = Cache::getInstance()->getTableMapCacheKey(_DB_PREFIX_ . 'confiture');
         $this->assertArrayNotHasKey($otherTableMapKey, $this->cacheArray);
     }
 
@@ -288,7 +288,7 @@ class CacheCoreTest extends TestCase
         $selectArray = array();
 
         for ($i = 0; $i <= 9; $i++) {
-            $selectArray[] = 'SELECT name FROM ps_configuration LEFT JOIN ps_confiture WHERE id = '.$i;
+            $selectArray[] = 'SELECT name FROM ' . _DB_PREFIX_ . 'configuration LEFT JOIN ' . _DB_PREFIX_ . 'confiture WHERE id = '.$i;
         }
 
         return $selectArray;

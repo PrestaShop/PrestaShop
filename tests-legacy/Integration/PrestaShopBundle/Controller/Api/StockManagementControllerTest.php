@@ -52,7 +52,7 @@ class StockManagementControllerTest extends ApiTestCase
 
     private function restoreMovements()
     {
-        $deleteMovements = 'DELETE FROM ps_stock_mvt';
+        $deleteMovements = 'DELETE FROM ' . _DB_PREFIX_ . 'stock_mvt';
         $statement = self::$kernel->getContainer()->get('doctrine.dbal.default_connection')
             ->prepare($deleteMovements);
         $statement->execute();
@@ -61,7 +61,7 @@ class StockManagementControllerTest extends ApiTestCase
     private function restoreQuantityEditionFixtures()
     {
         $updateProductQuantity = '
-            UPDATE ps_stock_available
+            UPDATE ' . _DB_PREFIX_ . 'stock_available
             SET quantity = 8,
             physical_quantity = 10,
             reserved_quantity = 2

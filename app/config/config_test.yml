@@ -26,10 +26,6 @@ swiftmailer:
 
 # Doctrine Configuration
 doctrine:
-    dbal:
-        connections:
-            default:
-                dbname: "test_%database_name%"
     orm:
         metadata_cache_driver: "array"
         query_cache_driver: "array"
