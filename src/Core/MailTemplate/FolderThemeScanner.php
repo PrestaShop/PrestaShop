@@ -143,7 +143,7 @@ final class FolderThemeScanner
                 ];
             }
             $templateType = $this->getTemplateType($fileInfo);
-            $layoutFiles[$layoutName][$templateType] = $fileInfo->getRealPath();
+            $layoutFiles[$layoutName][$templateType] = $this->getTemplatePath($fileInfo, $folder, $templateType);
         }
 
         foreach ($layoutFiles as $layoutName => $layouts) {
@@ -180,5 +180,10 @@ final class FolderThemeScanner
         if (!is_dir($mailThemeFolder)) {
             throw new FileNotFoundException(sprintf('Invalid mail theme folder "%s": no such directory', $mailThemeFolder));
         }
+    }
+
+    private function getTemplatePath(SplFileInfo $fileInfo, string $folder, string $templateType): string
+    {
+        return '@MailThemes:' . substr($fileInfo->getRealPath(), strlen($folder) - strlen($templateType));
     }
 }

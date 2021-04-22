@@ -24,7 +24,8 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
 
-use Doctrine\Common\Inflector\Inflector;
+use Doctrine\Inflector\Inflector;
+use Doctrine\Inflector\InflectorFactory;
 use PrestaShop\PrestaShop\Adapter\SymfonyContainer;
 use PrestaShopBundle\Translation\TranslatorInterface;
 
@@ -52,6 +53,9 @@ class DataLangCore
     /** @var string Default translation domain */
     protected $domain;
 
+    /** @var Inflector */
+    private $inflector;
+
     /**
      * @param string $locale
      * @param TranslatorInterface|null $translator If defined, use this translator
@@ -72,6 +76,8 @@ class DataLangCore
                 ->loadLanguage($this->translator, $this->locale);
             $this->translator->getCatalogue($this->locale);
         }
+
+        $this->inflector = InflectorFactory::create()->build();
     }
 
     /**
@@ -138,6 +144,6 @@ class DataLangCore
     {
         $shortClassName = substr(strrchr('\\' . get_class($this), '\\'), 1);
 
-        return Inflector::tableize($shortClassName);
+        return $this->inflector->tableize($shortClassName);
     }
 }
