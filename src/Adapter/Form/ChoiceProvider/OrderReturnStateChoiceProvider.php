@@ -32,7 +32,7 @@ namespace PrestaShop\PrestaShop\Adapter\Form\ChoiceProvider;
 use OrderReturnState;
 use PrestaShop\PrestaShop\Core\Form\FormChoiceProviderInterface;
 
-class OrderReturnStateChoiceProvider implements FormChoiceProviderInterface
+final class OrderReturnStateChoiceProvider implements FormChoiceProviderInterface
 {
     /**
      * @var int
