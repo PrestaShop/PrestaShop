@@ -30,7 +30,7 @@ class CreateAccount extends FOBasePage {
 
   /**
    * Get form header title
-   * @param page
+   * @param page {Page} Browser tab
    * @return {Promise<string>}
    */
   getHeaderTitle(page) {
@@ -39,8 +39,8 @@ class CreateAccount extends FOBasePage {
 
   /**
    * Create new customer account
-   * @param page
-   * @param customer
+   * @param page {Page} Browser tab
+   * @param customer {object} Object of the customer infos (email, password, ....)
    * @returns {Promise<void>}
    */
   async createAccount(page, customer) {
@@ -65,7 +65,7 @@ class CreateAccount extends FOBasePage {
 
   /**
    * Is partner offer required
-   * @param page
+   * @param page {Page} Browser tab
    * @returns {Promise<boolean>}
    */
   async isPartnerOfferRequired(page) {
@@ -74,7 +74,7 @@ class CreateAccount extends FOBasePage {
 
   /**
    * Is birth date input visible
-   * @param page
+   * @param page {Page} Browser tab
    * @returns {Promise<boolean>}
    */
   async isBirthDateVisible(page) {
@@ -83,7 +83,7 @@ class CreateAccount extends FOBasePage {
 
   /**
    * Is partner offer visible
-   * @param page
+   * @param page {Page} Browser tab
    * @returns {Promise<boolean>}
    */
   async isPartnerOfferVisible(page) {
@@ -92,7 +92,7 @@ class CreateAccount extends FOBasePage {
 
   /**
    * Is company input visible
-   * @param page
+   * @param page {Page} Browser tab
    * @returns {Promise<boolean>}
    */
   async isCompanyInputVisible(page) {

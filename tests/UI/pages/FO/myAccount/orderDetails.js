@@ -21,7 +21,7 @@ class OrderHistory extends FOBasePage {
 
   /**
    * Is orderReturn form visible
-   * @param page
+   * @param page {Page} Browser tab
    * @returns {boolean}
    */
   isOrderReturnFormVisible(page) {
@@ -30,9 +30,9 @@ class OrderHistory extends FOBasePage {
 
   /**
    * Add a message to order history
-   * @param page
-   * @param messageOption
-   * @param messageText
+   * @param page {Page} Browser tab
+   * @param messageOption {string} String for the message option
+   * @param messageText {string} String for the message content
    * @returns {Promise<string>}
    */
   async addAMessage(page, messageOption, messageText) {

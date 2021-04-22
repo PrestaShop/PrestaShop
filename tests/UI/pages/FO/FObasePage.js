@@ -64,7 +64,7 @@ module.exports = class FOBasePage extends CommonPage {
 
   /**
    * Go to Fo page
-   * @param page
+   * @param page {Page} Browser tab
    * @return {Promise<void>}
    */
   async goToFo(page) {
@@ -74,8 +74,8 @@ module.exports = class FOBasePage extends CommonPage {
   // Header methods
   /**
    * Go to header link
-   * @param page
-   * @param link
+   * @param page {Page} Browser tab
+   * @param link {string} String of the link
    * @returns {Promise<void>}
    */
   async clickOnHeaderLink(page, link) {
@@ -107,7 +107,7 @@ module.exports = class FOBasePage extends CommonPage {
 
   /**
    * Go to the home page
-   * @param page
+   * @param page {Page} Browser tab
    * @returns {Promise<void>}
    */
   async goToHomePage(page) {
@@ -117,7 +117,7 @@ module.exports = class FOBasePage extends CommonPage {
 
   /**
    * Go to login Page
-   * @param page
+   * @param page {Page} Browser tab
    * @return {Promise<void>}
    */
   async goToLoginPage(page) {
@@ -126,7 +126,7 @@ module.exports = class FOBasePage extends CommonPage {
 
   /**
    * Logout from FO
-   * @param page
+   * @param page {Page} Browser tab
    * @return {Promise<void>}
    */
   async logout(page) {
@@ -135,7 +135,7 @@ module.exports = class FOBasePage extends CommonPage {
 
   /**
    * Check if customer is connected
-   * @param page
+   * @param page {Page} Browser tab
    * @return {Promise<boolean>}
    */
   async isCustomerConnected(page) {
@@ -144,7 +144,7 @@ module.exports = class FOBasePage extends CommonPage {
 
   /**
    * Click on link to go to account page
-   * @param page
+   * @param page {Page} Browser tab
    * @return {Promise<void>}
    */
   async goToMyAccountPage(page) {
@@ -153,8 +153,8 @@ module.exports = class FOBasePage extends CommonPage {
 
   /**
    * Change language in FO
-   * @param page
-   * @param lang
+   * @param page {Page} Browser tab
+   * @param lang {string} String of the lang
    * @return {Promise<void>}
    */
   async changeLanguage(page, lang = 'en') {
@@ -167,7 +167,7 @@ module.exports = class FOBasePage extends CommonPage {
 
   /**
    * Get shop language
-   * @param page
+   * @param page {Page} Browser tab
    * @returns {Promise<string>}
    */
   getShopLanguage(page) {
@@ -176,8 +176,8 @@ module.exports = class FOBasePage extends CommonPage {
 
   /**
    * Return true if language exist in FO
-   * @param page
-   * @param lang
+   * @param page {Page} Browser tab
+   * @param lang {string} String of the lang
    * @return {Promise<boolean>}
    */
   async languageExists(page, lang = 'en') {
@@ -187,9 +187,9 @@ module.exports = class FOBasePage extends CommonPage {
 
   /**
    * Change currency in FO
-   * @param page
-   * @param isoCode
-   * @param symbol
+   * @param page {Page} Browser tab
+   * @param isoCode {string} String of the ISO code
+   * @param symbol {string} String of the currency symbol
    * @return {Promise<void>}
    */
   async changeCurrency(page, isoCode = 'EUR', symbol = '€') {
@@ -204,7 +204,7 @@ module.exports = class FOBasePage extends CommonPage {
 
   /**
    * Get default currency
-   * @param page
+   * @param page {Page} Browser tab
    * @returns {Promise<string>}
    */
   getDefaultCurrency(page) {
@@ -213,8 +213,8 @@ module.exports = class FOBasePage extends CommonPage {
 
   /**
    * Go to category
-   * @param page
-   * @param categoryID, category id from the BO
+   * @param page {Page} Browser tab
+   * @param categoryID {number} Category id from the BO
    * @returns {Promise<void>}
    */
   async goToCategory(page, categoryID) {
@@ -223,9 +223,9 @@ module.exports = class FOBasePage extends CommonPage {
 
   /**
    * Go to subcategory
-   * @param page
-   * @param categoryID, category id from the BO
-   * @param subCategoryID, subcategory id from the BO
+   * @param page {Page} Browser tab
+   * @param categoryID {number} Category id from the BO
+   * @param subCategoryID {number} Subcategory id from the BO
    * @returns {Promise<void>}
    */
   async goToSubCategory(page, categoryID, subCategoryID) {
@@ -235,7 +235,7 @@ module.exports = class FOBasePage extends CommonPage {
 
   /**
    * Get store information
-   * @param page
+   * @param page {Page} Browser tab
    * @returns {Promise<string>}
    */
   async getStoreInformation(page) {
@@ -244,7 +244,7 @@ module.exports = class FOBasePage extends CommonPage {
 
   /**
    * Get cart notifications number
-   * @param page
+   * @param page {Page} Browser tab
    * @returns {Promise<number>}
    */
   async getCartNotificationsNumber(page) {
@@ -253,7 +253,7 @@ module.exports = class FOBasePage extends CommonPage {
 
   /**
    * Go to cart page
-   * @param page
+   * @param page {Page} Browser tab
    * @returns {Promise<void>}
    */
   async goToCartPage(page) {
@@ -262,8 +262,8 @@ module.exports = class FOBasePage extends CommonPage {
 
   /**
    * Get autocomplete search result
-   * @param page
-   * @param productName
+   * @param page {Page} Browser tab
+   * @param productName {string} String of the product name
    * @returns {Promise<*>}
    */
   async getAutocompleteSearchResult(page, productName) {
@@ -274,8 +274,8 @@ module.exports = class FOBasePage extends CommonPage {
 
   /**
    * Search product
-   * @param page
-   * @param productName
+   * @param page {Page} Browser tab
+   * @param productName {string} String of the product name
    * @returns {Promise<void>}
    */
   async searchProduct(page, productName) {
@@ -287,8 +287,8 @@ module.exports = class FOBasePage extends CommonPage {
   // Footer methods
   /**
    * Get Title of Block that contains links in footer
-   * @param page
-   * @param position
+   * @param page {Page} Browser tab
+   * @param position {string} String for the links position
    * @returns {Promise<string>}
    */
   async getFooterLinksBlockTitle(page, position) {
@@ -297,8 +297,8 @@ module.exports = class FOBasePage extends CommonPage {
 
   /**
    * Get text content of footer links
-   * @param page
-   * @param position, position of links
+   * @param page {Page} Browser tab
+   * @param position {string} String for the links position
    * @return {Promise<!Promise<!Object|undefined>|any>}
    */
   async getFooterLinksTextContent(page, position) {
@@ -310,8 +310,8 @@ module.exports = class FOBasePage extends CommonPage {
 
   /**
    * Go to footer link
-   * @param page
-   * @param pageTitle
+   * @param page {Page} Browser tab
+   * @param pageTitle {string} String of the page title
    * @returns {Promise<void>}
    */
   async goToFooterLink(page, pageTitle) {

@@ -67,7 +67,7 @@ class Checkout extends FOBasePage {
 
   /**
    * Check if we are in checkout Page
-   * @param page
+   * @param page {Page} Browser tab
    * @return {Promise<boolean>}
    */
   async isCheckoutPage(page) {
@@ -76,9 +76,8 @@ class Checkout extends FOBasePage {
 
   /**
    * Check if step is complete
-   * @param page
-   * @param stepSelector, step to check is complete
-   * @param stepSelector
+   * @param page {Page} Browser tab
+   * @param stepSelector {string} String of the step to check
    * @returns {Promise<boolean>}
    */
   async isStepCompleted(page, stepSelector) {
@@ -87,7 +86,7 @@ class Checkout extends FOBasePage {
 
   /**
    * Go to Delivery Step and check that Address step is complete
-   * @param page
+   * @param page {Page} Browser tab
    * @return {Promise<boolean>}
    */
   async goToDeliveryStep(page) {
@@ -97,9 +96,9 @@ class Checkout extends FOBasePage {
 
   /**
    * Choose shipping method and add a comment
-   * @param page
-   * @param shippingMethod
-   * @param comment
+   * @param page {Page} Browser tab
+   * @param shippingMethod {string} String of the shipping method
+   * @param comment {string} String for the shipping comment
    * @returns {Promise<boolean>}
    */
   async chooseShippingMethodAndAddComment(page, shippingMethod, comment = '') {
@@ -110,8 +109,8 @@ class Checkout extends FOBasePage {
 
   /**
    * Is shipping method exist
-   * @param page
-   * @param shippingMethod
+   * @param page {Page} Browser tab
+   * @param shippingMethod {string} String of the shipping method
    * @returns {Promise<boolean>}
    */
   isShippingMethodVisible(page, shippingMethod) {
@@ -120,7 +119,7 @@ class Checkout extends FOBasePage {
 
   /**
    * Get selected shipping method name
-   * @param page
+   * @param page {Page} Browser tab
    * @return {Promise<string>}
    */
   async getSelectedShippingMethod(page) {
@@ -145,7 +144,7 @@ class Checkout extends FOBasePage {
 
   /**
    * Get all carriers prices
-   * @param page
+   * @param page {Page} Browser tab
    * @returns {Promise<[]>}
    */
   async getAllCarriersPrices(page) {
@@ -154,7 +153,7 @@ class Checkout extends FOBasePage {
 
   /**
    * Get shipping value
-   * @param page
+   * @param page {Page} Browser tab
    * @returns {Promise<string>}
    */
   getShippingCost(page) {
@@ -163,7 +162,7 @@ class Checkout extends FOBasePage {
 
   /**
    * Get all carriers names
-   * @param page
+   * @param page {Page} Browser tab
    * @returns {Promise<[]>}
    */
   async getAllCarriersNames(page) {
@@ -172,7 +171,7 @@ class Checkout extends FOBasePage {
 
   /**
    * Go to Payment Step and check that delivery step is complete
-   * @param page
+   * @param page {Page} Browser tab
    * @return {Promise<boolean>}
    */
   async goToPaymentStep(page) {
@@ -182,8 +181,8 @@ class Checkout extends FOBasePage {
 
   /**
    * Choose payment method and validate Order
-   * @param page
-   * @param paymentModuleName, payment method chosen (ex : ps_wirepayment)
+   * @param page {Page} Browser tab
+   * @param paymentModuleName {string} String for the chosen payment method
    * @return {Promise<void>}
    */
   async choosePaymentAndOrder(page, paymentModuleName) {
@@ -197,8 +196,8 @@ class Checkout extends FOBasePage {
 
   /**
    * Check payment method existence
-   * @param page
-   * @param paymentModuleName
+   * @param page {Page} Browser tab
+   * @param paymentModuleName {string} String for the payment module name
    * @returns {Promise<boolean>}
    */
   isPaymentMethodExist(page, paymentModuleName) {
@@ -207,17 +206,17 @@ class Checkout extends FOBasePage {
 
   /**
    * Click on sign in
-   * @param page
+   * @param page {Page} Browser tab
    * @return {Promise<void>}
    */
   async clickOnSignIn(page) {
-    page.click(this.signInLink);
+    await page.click(this.signInLink);
   }
 
   /**
    * Login in FO
-   * @param page
-   * @param customer
+   * @param page {Page} Browser tab
+   * @param customer {object} Object that contain customer infos
    * @return {Promise<boolean>}
    */
   async customerLogin(page, customer) {
@@ -230,7 +229,7 @@ class Checkout extends FOBasePage {
 
   /**
    * Is create account notice visible
-   * @param page
+   * @param page {Page} Browser tab
    * @returns {boolean}
    */
   isCreateAnAccountNoticeVisible(page) {
@@ -239,7 +238,7 @@ class Checkout extends FOBasePage {
 
   /**
    * Is password input required
-   * @param page
+   * @param page {Page} Browser tab
    * @returns {boolean}
    */
   isPasswordRequired(page) {
@@ -248,7 +247,7 @@ class Checkout extends FOBasePage {
 
   /**
    * Check if checkbox of condition to approve is visible
-   * @param page
+   * @param page {Page} Browser tab
    * @returns {boolean}
    */
   isConditionToApproveCheckboxVisible(page) {
@@ -257,7 +256,7 @@ class Checkout extends FOBasePage {
 
   /**
    * Get terms of service page title
-   * @param page
+   * @param page {Page} Browser tab
    * @returns {Promise<text>}
    */
   async getTermsOfServicePageTitle(page) {
@@ -267,7 +266,7 @@ class Checkout extends FOBasePage {
 
   /**
    * Check if gift checkbox is visible
-   * @param page
+   * @param page {Page} Browser tab
    * @return {boolean}
    */
   isGiftCheckboxVisible(page) {
@@ -276,7 +275,7 @@ class Checkout extends FOBasePage {
 
   /**
    * Check if recyclable checkbox is visible
-   * @param page
+   * @param page {Page} Browser tab
    * @return {boolean}
    */
   isRecyclableCheckboxVisible(page) {
@@ -285,7 +284,7 @@ class Checkout extends FOBasePage {
 
   /**
    * Get gift price from cart summary
-   * @param page
+   * @param page {Page} Browser tab
    * @return {Promise<string>}
    */
   async getGiftPrice(page) {
@@ -295,8 +294,8 @@ class Checkout extends FOBasePage {
 
   /**
    * Set address
-   * @param page
-   * @param address
+   * @param page {Page} Browser tab
+   * @param address {object} Object that contain the address infos
    * @returns {Promise<boolean>}
    */
   async setAddress(page, address) {
@@ -312,8 +311,8 @@ class Checkout extends FOBasePage {
 
   /**
    * Fill personal information form and click on continue
-   * @param page
-   * @param customerData
+   * @param page {Page} Browser tab
+   * @param customerData {object} Object that contain the customer data
    * @return {Promise<boolean>}
    */
   async setGuestPersonalInformation(page, customerData) {

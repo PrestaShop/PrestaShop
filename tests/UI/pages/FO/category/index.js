@@ -27,7 +27,7 @@ class Category extends FOBasePage {
 
   /**
    * Get number of products displayed in category page
-   * @param page
+   * @param page {Page} Browser tab
    * @return {Promise<number>}
    */
   async getNumberOfProductsDisplayed(page) {
@@ -36,7 +36,7 @@ class Category extends FOBasePage {
 
   /**
    * Get sort by value from button
-   * @param page
+   * @param page {Page} Browser tab
    * @return {Promise<string>}
    */
   getSortByValue(page) {
