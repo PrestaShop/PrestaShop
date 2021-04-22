@@ -234,8 +234,7 @@ class ImageManagerCore
 
         $psImageQuality = Configuration::get('PS_IMAGE_QUALITY');
         if (in_array($psImageQuality, ['png_all', 'webp'])
-            || ($psImageQuality == 'png' && $type == IMAGETYPE_PNG && !$forceType)
-            || ($psImageQuality == 'webp_fb' && in_array($type, [IMAGETYPE_PNG, IMAGETYPE_WEBP])) && !$forceType) {
+            || (in_array($psImageQuality, ['png', 'webp_fb']) && in_array($type, [IMAGETYPE_PNG, IMAGETYPE_GIF, IMAGETYPE_WEBP]) && !$forceType)) {
             $fileType = 'png';
         }
 
@@ -253,30 +252,29 @@ class ImageManagerCore
         $heightDiff = $destinationHeight / $sourceHeight;
 
         $psImageGenerationMethod = Configuration::get('PS_IMAGE_GENERATION_METHOD');
-        $keepAspectRatio = false;
-        if($psImageGenerationMethod == 3){
-            $keepAspectRatio = true;
-            $psImageGenerationMethod = 0;
-        }
+        $psImageoptNoEnlarge = Configuration::get('PS_IMAGEOPT_NO_ENLARGE');
         if ($widthDiff > 1 && $heightDiff > 1) {
             $nextWidth = $sourceWidth;
             $nextHeight = $sourceHeight;
-            if (Configuration::get('PS_IMAGEOPT_NO_ENLARGE')){
+            if ($psImageoptNoEnlarge){
                 $destinationWidth = $sourceWidth;
                 $destinationHeight = $sourceHeight;
                 if (Configuration::get('PS_IMAGEOPT_SYMLINK')){
                     $imageDirectory = dirname($sourceFile);
                     $alreadyResized = glob($imageDirectory . DIRECTORY_SEPARATOR . '*-*.jpg');
                     foreach ($alreadyResized as $filename) {
+                        if(is_link($filename)){
+                            continue;
+                        }
                         list($tmpWidth, $tmpHeight) = getimagesize($filename);
                         if($destinationWidth == $tmpWidth && $destinationHeight = $tmpHeight) {
-                            if($psImageQuality == 'webp_fb' && file_exists(substr($filename, 0, strrpos($filename, '.')) . '.webp')) {
-                                var_dump(substr($filename, 0, strrpos($filename, '.')) . '.webp', substr($destinationFile, 0, strrpos($destinationFile, '.')) . '.webp');
-                                symlink(substr($filename, 0, strrpos($filename, '.')) . '.webp', substr($destinationFile, 0, strrpos($destinationFile, '.')) . '.webp');
-                            } else {
-                                continue;
+                            if($psImageQuality == 'webp_fb') {
+                                if (file_exists(substr($filename, 0, strrpos($filename, '.')) . '.webp')) {
+                                    symlink(substr($filename, 0, strrpos($filename, '.')) . '.webp', substr($destinationFile, 0, strrpos($destinationFile, '.')) . '.webp');
+                                } else {
+                                    continue;
+                                }
                             }
-                            var_dump($filename, $destinationFile);
                             symlink($filename, $destinationFile);
                             return true;
                         }
@@ -295,7 +293,7 @@ class ImageManagerCore
             }
         }
 
-        if($keepAspectRatio){
+        if($psImageoptNoEnlarge){
             $destinationWidth = $nextWidth;
             $destinationHeight = $nextHeight;
         }
@@ -660,8 +658,6 @@ class ImageManagerCore
     {
         static $psPngQuality = null;
         static $psJpegQuality = null;
-        static $psImageoptPngquant = null;
-        static $psImageoptOptipng = null;
 
         if ($psPngQuality === null) {
             $psPngQuality = Configuration::get('PS_PNG_QUALITY');
@@ -669,14 +665,6 @@ class ImageManagerCore
 
         if ($psJpegQuality === null) {
             $psJpegQuality = Configuration::get('PS_JPEG_QUALITY');
-        }
-
-        if ($psImageoptPngquant === null) {
-            $psImageoptPngquant = Configuration::get('PS_IMAGEOPT_PNGQUANT');
-        }
-
-        if ($psImageoptOptipng === null) {
-            $psImageoptOptipng = Configuration::get('PS_IMAGEOPT_OPTIPNG');
         }
 
         switch ($type) {
@@ -688,11 +676,11 @@ class ImageManagerCore
             case 'png':
                 $quality = ($psPngQuality === false ? 7 : $psPngQuality);
                 $success = imagepng($resource, $filename, (int) $quality);
-                if ($psImageoptPngquant) {
+                if (Configuration::get('PS_IMAGEOPT_PNGQUANT')) {
                     $pngquant_ext = pathinfo($filename, PATHINFO_EXTENSION) == 'png' ? '--ext=.png' : '--ext=';
                     exec('/usr/bin/pngquant -f ' . $pngquant_ext . ' ' . escapeshellarg($filename));
                 }
-                if ($psImageoptOptipng){
+                if (Configuration::get('PS_IMAGEOPT_OPTIPNG')){
                     exec('/usr/bin/optipng -o7 -q ' . escapeshellarg($filename));
                 }
 

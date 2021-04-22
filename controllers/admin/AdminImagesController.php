@@ -144,13 +144,8 @@ class AdminImagesControllerCore extends AdminController
                                 'id' => '2',
                                 'name' => $this->trans('Height', [], 'Admin.Global'),
                             ],
-                            [
-                                'id' => '3',
-                                'name' => $this->trans('Longest side, but keep aspect ratio', [], 'Admin.Design.Feature'),
-                            ],
                         ],
                         'identifier' => 'id',
-                        'desc' => $this->trans('Keep aspect ratio: May not be compatible with all templates.', [], 'Admin.Design.Help'),
                         'visibility' => Shop::CONTEXT_ALL,
                     ],
                     'PS_PRODUCT_PICTURE_MAX_SIZE' => [
