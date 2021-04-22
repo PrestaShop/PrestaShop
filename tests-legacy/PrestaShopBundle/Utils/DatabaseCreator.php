@@ -43,7 +43,7 @@ class DatabaseCreator
      */
     public static function createTestDB()
     {
-        define('_PS_IN_TEST_', false);
+        define('_PS_IN_TEST_', true);
         define('__PS_BASE_URI__', '/');
         define('_PS_ROOT_DIR_', __DIR__ . '/../../..');
         define('_PS_MODULE_DIR_', _PS_ROOT_DIR_ . '/modules/');
