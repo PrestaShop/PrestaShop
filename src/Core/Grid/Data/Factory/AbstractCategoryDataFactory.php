@@ -68,12 +68,8 @@ abstract class AbstractCategoryDataFactory implements GridDataFactoryInterface
 
     /**
      * Modify category records.
-     *
-     * @param array $records
-     *
-     * @return array
      */
-    protected function modifyRecords(array $records)
+    protected function modifyRecords(array $records): array
     {
         foreach ($records as $key => $record) {
             $records[$key]['description'] = mb_substr(strip_tags(stripslashes($record['description'])), 0, 150);
