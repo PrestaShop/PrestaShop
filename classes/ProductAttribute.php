@@ -25,9 +25,9 @@
  */
 
 /**
- * Class AttributeCore.
+ * Class ProductAttributeCore.
  */
-class AttributeCore extends ObjectModel
+class ProductAttributeCore extends ObjectModel
 {
     /** @var int Group id which attribute belongs */
     public $id_attribute_group;
@@ -142,12 +142,12 @@ class AttributeCore extends ObjectModel
     }
 
     /**
-     * Adds current Attribute as a new Object to the database.
+     * Adds current ProductAttribute as a new Object to the database.
      *
      * @param bool $autoDate Automatically set `date_upd` and `date_add` column
      * @param bool $nullValues Whether we want to use NULL values instead of empty quotes values
      *
-     * @return bool Whether the Attribute has been successfully added
+     * @return bool Whether the ProductAttribute has been successfully added
      *
      * @throws PrestaShopDatabaseException
      * @throws PrestaShopException
@@ -155,7 +155,7 @@ class AttributeCore extends ObjectModel
     public function add($autoDate = true, $nullValues = false)
     {
         if ($this->position <= 0) {
-            $this->position = Attribute::getHigherPosition($this->id_attribute_group) + 1;
+            $this->position = ProductAttribute::getHigherPosition($this->id_attribute_group) + 1;
         }
 
         $return = parent::add($autoDate, $nullValues);
