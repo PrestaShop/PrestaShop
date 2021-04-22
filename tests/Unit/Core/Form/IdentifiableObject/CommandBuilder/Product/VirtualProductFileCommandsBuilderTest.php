@@ -160,5 +160,14 @@ class VirtualProductFileCommandsBuilderTest extends AbstractProductCommandBuilde
             ],
             [],
         ];
+
+        yield [
+            [
+                'virtual_product_file' => [
+                    'has_file' => false,
+                ],
+            ],
+            [],
+        ];
     }
 }
