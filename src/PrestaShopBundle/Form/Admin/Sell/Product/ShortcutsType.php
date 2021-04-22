@@ -32,6 +32,7 @@ use PrestaShopBundle\Form\Admin\Sell\Product\Shortcut\PriceShortcutType;
 use PrestaShopBundle\Form\Admin\Sell\Product\Shortcut\StockShortcutType;
 use PrestaShopBundle\Form\Admin\Type\TranslatorAwareType;
 use Symfony\Component\Form\FormBuilderInterface;
+use Symfony\Component\OptionsResolver\OptionsResolver;
 
 class ShortcutsType extends TranslatorAwareType
 {
@@ -54,5 +55,18 @@ class ShortcutsType extends TranslatorAwareType
                 'target_tab_name' => $this->trans('Pricing', 'Admin.Catalog.Feature'),
             ])
         ;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function configureOptions(OptionsResolver $resolver)
+    {
+        parent::configureOptions($resolver);
+
+        // We must allow extra fields because when we switch product type some former fields may be present in request
+        $resolver->setDefaults([
+            'allow_extra_fields' => true,
+        ]);
     }
 }

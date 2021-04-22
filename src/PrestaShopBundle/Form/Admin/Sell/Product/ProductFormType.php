@@ -154,9 +154,11 @@ class ProductFormType extends TranslatorAwareType
     {
         parent::configureOptions($resolver);
 
+        // We must allow extra fields because when we switch product type some former fields may be present in request
         $resolver->setDefaults([
             'product_id' => null,
             'product_type' => null,
+            'allow_extra_fields' => true,
         ]);
         $resolver->setAllowedTypes('product_id', ['null', 'int']);
         $resolver->setAllowedTypes('product_type', ['null', 'string']);
