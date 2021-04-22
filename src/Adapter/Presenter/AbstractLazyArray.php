@@ -30,7 +30,8 @@ use ArrayAccess;
 use ArrayIterator;
 use ArrayObject;
 use Countable;
-use Doctrine\Common\Util\Inflector;
+use Doctrine\Inflector\Inflector;
+use Doctrine\Inflector\InflectorFactory;
 use Iterator;
 use JsonSerializable;
 use ReflectionClass;
@@ -82,12 +83,18 @@ abstract class AbstractLazyArray implements Iterator, ArrayAccess, Countable, Js
     private $methodCacheResults = [];
 
     /**
+     * @var Inflector
+     */
+    private $inflector;
+
+    /**
      * AbstractLazyArray constructor.
      *
      * @throws ReflectionException
      */
     public function __construct()
     {
+        $this->inflector = InflectorFactory::create()->build();
         $this->arrayAccessList = new ArrayObject();
         $reflectionClass = new ReflectionClass(get_class($this));
         $methods = $reflectionClass->getMethods(ReflectionMethod::IS_PUBLIC);
@@ -423,6 +430,6 @@ abstract class AbstractLazyArray implements Iterator, ArrayAccess, Countable, Js
         // remove "get" prefix from the function name
         $strippedMethodName = substr($methodName, 3);
 
-        return Inflector::tableize($strippedMethodName);
+        return $this->inflector->tableize($strippedMethodName);
     }
 }

@@ -27,7 +27,8 @@ declare(strict_types=1);
 
 namespace PrestaShop\PrestaShop\Core\Translation\Builder;
 
-use Doctrine\Common\Inflector\Inflector;
+use Doctrine\Inflector\Inflector;
+use Doctrine\Inflector\InflectorFactory;
 use InvalidArgumentException;
 use PrestaShop\PrestaShop\Core\Translation\Builder\Map\Catalogue;
 use PrestaShop\PrestaShop\Core\Translation\Builder\Map\Domain;
@@ -53,9 +54,15 @@ class TranslationCatalogueBuilder
      */
     private $catalogueProviderFactory;
 
+    /**
+     * @var Inflector
+     */
+    private $inflector;
+
     public function __construct(CatalogueProviderFactory $catalogueProviderFactory)
     {
         $this->catalogueProviderFactory = $catalogueProviderFactory;
+        $this->inflector = InflectorFactory::create()->build();
     }
 
     /**
@@ -89,7 +96,7 @@ class TranslationCatalogueBuilder
         // When getting messages for a domain, we have to do the reverse operation to match the catalogue domain
         $catalogueDomain = $domain;
         if ($catalogueDomain !== OthersProviderDefinition::OTHERS_DOMAIN_NAME) {
-            $catalogueDomain = ucfirst(Inflector::camelize($catalogueDomain));
+            $catalogueDomain = ucfirst($this->inflector->camelize($catalogueDomain));
         }
 
         $domainTranslation = $this->getRawCatalogue(
