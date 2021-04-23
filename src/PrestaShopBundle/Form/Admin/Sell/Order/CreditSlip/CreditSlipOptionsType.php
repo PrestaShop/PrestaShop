@@ -64,7 +64,6 @@ final class CreditSlipOptionsType extends TranslatorAwareType
             ])
             ->add('slip_reset', SwitchType::class, [
                 'label' => $this->trans('Reset sequential credit slip number at the beginning of the year', 'Admin.Orderscustomers.Feature'),
-                'help' => $this->trans('Invoice number', 'Admin.Orderscustomers.Help'),
                 'required' => false,
             ]);
     }
