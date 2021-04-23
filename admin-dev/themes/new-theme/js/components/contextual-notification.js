@@ -69,8 +69,8 @@ export default class ContextualNotification {
   }
 
   displayNotification(message, key) {
-    let htmlelem = `<div class="alert alert-info contextual-notification" data-notification-key="${key}" style="display:block;">`;
-    htmlelem += `${message}<button type="button" class="close" data-dismiss="alert">&times;</button></div>`;
-    $(htmlelem).insertBefore('#ajax_confirmation');
+    let htmlElem = `<div class="alert alert-info contextual-notification" data-notification-key="${key}" style="display:block;">`;
+    htmlElem += `${message}<button type="button" class="close" data-dismiss="alert">&times;</button></div>`;
+    $(htmlElem).insertBefore('#ajax_confirmation');
   }
 }
