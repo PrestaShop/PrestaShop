@@ -64,7 +64,6 @@ export default class ContextualNotification {
   }
 
   disableNotification(event) {
-    console.log(event);
     const notificationKey = $(event.target).parent().attr('data-notification-key');
     this.setItem(notificationKey, false);
   }
