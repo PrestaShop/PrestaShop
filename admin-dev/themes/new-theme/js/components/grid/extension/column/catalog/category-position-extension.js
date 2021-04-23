@@ -33,21 +33,12 @@ const {$} = window;
  * Class CategoryPositionExtension extends Grid with reorderable category positions
  */
 export default class CategoryPositionExtension {
-  grid: Grid;
-
-  originalPositions: string;
-
-  constructor(grid: Grid) {
-    this.grid = grid;
-    this.originalPositions = '';
-  }
-
   /**
    * Extend grid
    *
    * @param {Grid} grid
    */
-  extend(grid: Grid): void {
+  extend(grid) {
     this.grid = grid;
 
     this.addIdsToGridTableRows();
@@ -72,26 +63,17 @@ export default class CategoryPositionExtension {
    *
    * @private
    */
-  handleCategoryPositionChange(row: HTMLElement): void {
+  handleCategoryPositionChange(row) {
     const positions = decodeURIComponent($.tableDnD.serialize());
-    const way = this.originalPositions.indexOf(row.id) < positions.indexOf(row.id)
-      ? 1
-      : 0;
+    const way = this.originalPositions.indexOf(row.id) < positions.indexOf(row.id) ? 1 : 0;
 
-    const $categoryPositionContainer = $(row).find(
-      `.js-${this.grid.getId()}-position:first`,
-    );
+    const $categoryPositionContainer = $(row).find(`.js-${this.grid.getId()}-position:first`);
 
     const categoryId = $categoryPositionContainer.data('id');
     const categoryParentId = $categoryPositionContainer.data('id-parent');
-    const positionUpdateUrl = $categoryPositionContainer.data(
-      'position-update-url',
-    );
+    const positionUpdateUrl = $categoryPositionContainer.data('position-update-url');
 
-    let params = positions.replace(
-      new RegExp(GridMap.specificGridTable(this.grid.getId()), 'g'),
-      'positions',
-    );
+    let params = positions.replace(new RegExp(`${this.grid.getId()}_grid_table`, 'g'), 'positions');
 
     const queryParams = {
       id_category_parent: categoryParentId,
@@ -114,7 +96,7 @@ export default class CategoryPositionExtension {
    *
    * @private
    */
-  addIdsToGridTableRows(): void {
+  addIdsToGridTableRows() {
     this.grid
       .getContainer()
       .find(GridMap.gridTable)
@@ -137,7 +119,7 @@ export default class CategoryPositionExtension {
    *
    * @private
    */
-  updateCategoryIdsAndPositions(): void {
+  updateCategoryIdsAndPositions() {
     this.grid
       .getContainer()
       .find(GridMap.gridTable)
@@ -168,7 +150,7 @@ export default class CategoryPositionExtension {
    *
    * @private
    */
-  updateCategoryPosition(url: string, params: string): void {
+  updateCategoryPosition(url, params) {
     $.post({
       url,
       headers: {

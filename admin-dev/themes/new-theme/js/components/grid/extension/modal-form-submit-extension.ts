@@ -24,7 +24,6 @@
  */
 
 import {Grid} from '@PSTypes/grid';
-import GridMap from '@components/grid/grid-map';
 
 const {$} = window;
 
@@ -49,21 +48,21 @@ export default class ModalFormSubmitExtension {
       .getContainer()
       .on(
         'click',
-        GridMap.bulks.modalFormSubmitBtn,
+        '.js-bulk-modal-form-submit-btn',
         (event: JQueryEventObject) => {
           const modalId = $(event.target).data('modal-id');
 
           const $modal = $(`#${modalId}`);
           $modal.modal('show');
 
-          $modal.find(GridMap.actions.submitModalFormBtn).on('click', () => {
+          $modal.find('.js-submit-modal-form-btn').on('click', () => {
             const $form = $modal.find('form');
             const $bulkInputsBlock = $form.find(
-              GridMap.actions.bulkInputsBlock($form.data('bulk-inputs-id')),
+              `#${$form.data('bulk-inputs-id')}`,
             );
             const $checkboxes = grid
               .getContainer()
-              .find(GridMap.bulks.checkedCheckbox);
+              .find('.js-bulk-action-checkbox:checked');
 
             $checkboxes.each((i, element) => {
               const $checkbox = $(element);

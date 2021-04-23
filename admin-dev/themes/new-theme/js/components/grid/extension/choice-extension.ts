@@ -23,7 +23,6 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
 import {Grid} from '@PSTypes/grid';
-import GridMap from '@components/grid/grid-map';
 
 const {$} = window;
 
@@ -46,7 +45,7 @@ export default class ChoiceExtension {
   extend(grid: Grid): void {
     const $choiceOptionsContainer = grid
       .getContainer()
-      .find(GridMap.bulks.choiceOptions);
+      .find('table.table .js-choice-options');
 
     $choiceOptionsContainer.find(GridMap.dropdownItem).on('click', (e) => {
       e.preventDefault();

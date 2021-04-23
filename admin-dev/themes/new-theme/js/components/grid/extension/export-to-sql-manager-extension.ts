@@ -24,7 +24,6 @@
  */
 
 import {Grid} from '@PSTypes/grid';
-import GridMap from '@components/grid/grid-map';
 
 const {$} = window;
 
@@ -40,10 +39,12 @@ export default class ExportToSqlManagerExtension {
   extend(grid: Grid): void {
     grid
       .getHeaderContainer()
-      .on('click', GridMap.actions.showQuery, () => this.onShowSqlQueryClick(grid));
+      .on('click', '.js-common_show_query-grid-action', () => this.onShowSqlQueryClick(grid),
+      );
     grid
       .getHeaderContainer()
-      .on('click', GridMap.actions.exportQuery, () => this.onExportSqlManagerClick(grid));
+      .on('click', '.js-common_export_sql_manager-grid-action', () => this.onExportSqlManagerClick(grid),
+      );
   }
 
   /**
@@ -54,7 +55,7 @@ export default class ExportToSqlManagerExtension {
    * @private
    */
   onShowSqlQueryClick(grid: Grid): void {
-    const $sqlManagerForm = $(GridMap.actions.showModalForm(grid.getId()));
+    const $sqlManagerForm = $(`#${grid.getId()}_common_show_query_modal_form`);
     this.fillExportForm($sqlManagerForm, grid);
 
     const $modal = $(GridMap.actions.showModalGrid(grid.getId()));
@@ -71,7 +72,7 @@ export default class ExportToSqlManagerExtension {
    * @private
    */
   private onExportSqlManagerClick(grid: Grid): void {
-    const $sqlManagerForm = $(GridMap.actions.showModalForm(grid.getId()));
+    const $sqlManagerForm = $(`#${grid.getId()}_common_show_query_modal_form`);
 
     this.fillExportForm($sqlManagerForm, grid);
 
@@ -89,7 +90,7 @@ export default class ExportToSqlManagerExtension {
   private fillExportForm($sqlManagerForm: JQuery, grid: Grid) {
     const query = grid
       .getContainer()
-      .find(GridMap.gridTable)
+      .find('.js-grid-table')
       .data('query');
 
     $sqlManagerForm.find('textarea[name="sql"]').val(query);
@@ -106,7 +107,7 @@ export default class ExportToSqlManagerExtension {
    * @private
    */
   private getNameFromBreadcrumb(): string {
-    const $breadcrumbs = $(GridMap.headerToolbar).find(GridMap.breadcrumbItem);
+    const $breadcrumbs = $('.header-toolbar').find('.breadcrumb-item');
     let name = '';
 
     $breadcrumbs.each((i, item) => {

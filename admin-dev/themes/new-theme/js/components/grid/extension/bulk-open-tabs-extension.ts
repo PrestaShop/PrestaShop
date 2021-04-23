@@ -23,7 +23,6 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
 import {Grid} from '@PSTypes/grid';
-import GridMap from '@components/grid/grid-map';
 import Router from '../../router';
 
 const {$} = window;
@@ -46,9 +45,13 @@ export default class BulkOpenTabsExtension {
   extend(grid: Grid): void {
     grid
       .getContainer()
-      .on('click', GridMap.bulks.openTabsBtn, (event: JQueryEventObject) => {
-        this.openTabs(event, grid);
-      });
+      .on(
+        'click',
+        '.js-bulk-action-btn.open_tabs',
+        (event: JQueryEventObject) => {
+          this.openTabs(event, grid);
+        },
+      );
   }
 
   /**
@@ -65,7 +68,9 @@ export default class BulkOpenTabsExtension {
     const routeParamName = $submitBtn.data('routeParamName');
     const tabsBlockedMessage = $submitBtn.data('tabsBlockedMessage');
 
-    const $checkboxes = grid.getContainer().find(GridMap.bulks.checkedCheckbox);
+    const $checkboxes = grid
+      .getContainer()
+      .find('.js-bulk-action-checkbox:checked');
     let allTabsOpened = true;
     $checkboxes.each((i, element) => {
       const $checkbox = $(element);

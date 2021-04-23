@@ -36,7 +36,7 @@ export default class DeleteCategoryRowActionExtension {
    *
    * @param {Grid} grid
    */
-  static extend(grid: Grid): void {
+  extend(grid: Grid): void {
     grid
       .getContainer()
       .on('click', '.js-delete-category-row-action', (event) => {

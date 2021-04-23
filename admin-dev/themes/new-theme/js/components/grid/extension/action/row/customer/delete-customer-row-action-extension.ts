@@ -23,7 +23,6 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
 import {Grid} from '@PSTypes/grid';
-import GridMap from '@components/grid/grid-map';
 
 const {$} = window;
 
@@ -43,7 +42,7 @@ export default class DeleteCustomerRowActionExtension {
         event.preventDefault();
 
         const $deleteCustomersModal = $(
-          GridMap.bulks.deleteCustomerModal(grid.getId()),
+          `#${grid.getId()}_grid_delete_customers_modal`,
         );
         $deleteCustomersModal.modal('show');
 
@@ -73,7 +72,9 @@ export default class DeleteCustomerRowActionExtension {
    * @private
    */
   private addCustomerInput(customerId: number): void {
-    const $customersToDeleteInputBlock = $(GridMap.bulks.categoriesToDelete);
+    const $customersToDeleteInputBlock = $(
+      '#delete_customers_customers_to_delete',
+    );
 
     const customerInput = $customersToDeleteInputBlock
       .data('prototype')

@@ -41,7 +41,9 @@ const {$} = window;
  *    path: /my-path
  *    options:
  *      expose: true
- * And run `bin/console fos:js-routing:dump --format=json --target=admin-dev/themes/new-theme/js/fos_js_routes.json`
+ * `
+ * And run `bin/console fos:js-routing:dump --format=json
+ * --target=admin-dev/themes/new-theme/js/fos_js_routes.json`
  */
 /* eslint-enable */
 export default class Router {

@@ -60,22 +60,22 @@ export default class PositionExtension {
     this.addIdsToGridTableRows();
     grid
       .getContainer()
-      .find(GridMap.gridTable)
+      .find('.js-grid-table')
       .tableDnD({
-        onDragClass: GridMap.onDragClass,
-        dragHandle: GridMap.dragHandler,
-        onDrop: (table: HTMLElement, row: HTMLElement) => this.handlePositionChange(row),
+        onDragClass: 'position-row-while-drag',
+        dragHandle: '.js-drag-handle',
+        onDrop: (table, row) => this.handlePositionChange(row),
       });
     grid
       .getContainer()
       .find('.js-drag-handle')
       .hover(
-        function hover() {
+        function () {
           $(this)
             .closest('tr')
             .addClass('hover');
         },
-        function stopHover() {
+        function () {
           $(this)
             .closest('tr')
             .removeClass('hover');
@@ -138,7 +138,7 @@ export default class PositionExtension {
 
     this.grid
       .getContainer()
-      .find(GridMap.gridTablePosition(this.grid.getId()))
+      .find(`.js-grid-table .js-${this.grid.getId()}-position`)
       .each((index, positionWrapper) => {
         const $positionWrapper = $(positionWrapper);
         const rowId = $positionWrapper.data('id');
@@ -222,7 +222,9 @@ export default class PositionExtension {
     rowsData: Array<RowDatas>,
   ): Array<DNDPositions> {
     const regex = /^row_(\d+)_(\d+)$/;
-    const mapping = Array(rowsData.length).map(Object);
+    const mapping = Array(rowsData.length)
+      .fill()
+      .map(Object);
 
     for (let i = 0; i < rowsData.length; i += 1) {
       const regexResult = <RegExpPositions>regex.exec(rowsData[i].rowMarker);

@@ -37,7 +37,7 @@ export default class SortingExtension {
    * @param {Grid} grid
    */
   extend(grid: Grid): void {
-    const $sortableTable = grid.getContainer().find(GridMap.table);
+    const $sortableTable = grid.getContainer().find('table.table');
 
     new TableSorting($sortableTable).attach();
   }

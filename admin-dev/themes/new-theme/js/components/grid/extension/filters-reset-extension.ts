@@ -39,7 +39,7 @@ export default class FiltersResetExtension {
    * @param {Grid} grid
    */
   extend(grid: Grid): void {
-    grid.getContainer().on('click', GridMap.resetSearch, (event) => {
+    grid.getContainer().on('click', '.js-reset-search', (event) => {
       resetSearch(
         $(event.currentTarget).data('url'),
         $(event.currentTarget).data('redirect'),

@@ -22,9 +22,9 @@
  * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
-import { Grid } from '@PSTypes/grid';
+import {Grid} from '@PSTypes/grid';
 
-const { $ } = window;
+const {$} = window;
 
 /**
  * Handles bulk delete for "Customers" grid.
@@ -35,7 +35,7 @@ export default class DeleteCustomersBulkActionExtension {
    *
    * @param {Grid} grid
    */
-  static extend(grid: Grid): void {
+  extend(grid: Grid): void {
     grid
       .getContainer()
       .on('click', '.js-delete-customers-bulk-action', (event) => {
@@ -70,7 +70,7 @@ export default class DeleteCustomersBulkActionExtension {
    *
    * @private
    */
-  private addCustomerToDeleteCollectionInput = (customerId: number): void => {
+  private addCustomerToDeleteCollectionInput(customerId: number): void {
     const $customersInput = $('#delete_customers_customers_to_delete');
 
     const customerInput = $customersInput

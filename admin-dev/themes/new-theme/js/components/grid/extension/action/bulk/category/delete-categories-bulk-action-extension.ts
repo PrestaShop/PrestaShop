@@ -38,8 +38,10 @@ export default class DeleteCategoriesBulkActionExtension {
    * @param {Grid} grid
    */
   extend(grid: Grid): void {
-    grid.getContainer().on('click', GridMap.bulks.deleteCategories, (event) => {
-      event.preventDefault();
+    grid
+      .getContainer()
+      .on('click', '.js-delete-categories-bulk-action', (event) => {
+        event.preventDefault();
 
       const submitUrl = $(event.currentTarget).data('categories-delete-url');
 

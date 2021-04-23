@@ -24,7 +24,6 @@
  */
 
 import {Grid} from '@PSTypes/grid';
-import GridMap from '@components/grid/grid-map';
 
 const {$} = window;
 
@@ -38,8 +37,8 @@ export default class ColumnTogglingExtension {
    * @param {Grid} grid
    */
   extend(grid: Grid): void {
-    const $table = grid.getContainer().find(GridMap.table);
-    $table.find(GridMap.togglableRow).on('click', (e) => {
+    const $table = grid.getContainer().find('table.table');
+    $table.find('.ps-togglable-row').on('click', (e) => {
       e.preventDefault();
       this.toggleValue($(e.delegateTarget));
     });
