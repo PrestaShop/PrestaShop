@@ -60,7 +60,7 @@ class ContactUs extends FOBasePage {
 
   /**
    * Get and return the content of the email input
-   * @param page {Page}
+   * @param page {Page} Browser tab
    * @returns {Promise<string>}
    */
   async getEmailFieldValue(page) {

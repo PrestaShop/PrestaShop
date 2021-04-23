@@ -45,7 +45,8 @@ const contactUsData = {
 };
 
 
-/* 1 GO to shop FO
+/*
+1 GO to shop FO
 2 login
 3 make an order
 4 in the 'order confirmation' page recover the command reference number and click on the 'contact support' link
@@ -53,7 +54,8 @@ const contactUsData = {
 9 send the message
 10 go to the shop BO
 11 go to the "customer service" page
-12 check that the previously made message is visible and the infos are correct */
+12 check that the previously made message is visible and the infos are correct
+*/
 describe('FO contact us from order confirmation page', async () => {
   // before and after functions
   before(async function () {
@@ -169,9 +171,6 @@ describe('FO contact us from order confirmation page', async () => {
     });
   });
 
-  // //////////////////////////////////////////////////////////////
-  // //////////////////////////////////////////////////////////////
-
   describe('recover the command reference number and go to the "contact us" page', async () => {
     it('should get the order reference value', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'getOrderReferenceValue', baseContext);
@@ -190,8 +189,6 @@ describe('FO contact us from order confirmation page', async () => {
       await expect(pageTitle).to.contains(contactUsPage.pageTitle);
     });
   });
-  // //////////////////////////////////////////////////////////////
-  // //////////////////////////////////////////////////////////////
 
   describe('check the pre-filled email field, select order, and send the message', async () => {
     it('should check the pre-filled email field', async function () {
@@ -212,8 +209,6 @@ describe('FO contact us from order confirmation page', async () => {
       await expect(sendMessageSuccessAlert).to.contains(contactUsPage.validationMessage);
     });
   });
-  // //////////////////////////////////////////////////////////////
-  // //////////////////////////////////////////////////////////////
 
   describe('Go to BO and check if the message is visible and the information are correct', async () => {
     it('should login in BO', async function () {
@@ -270,6 +265,4 @@ describe('FO contact us from order confirmation page', async () => {
       await expect(deleteMessageSuccessText).to.contains(customerServiceMainPage.deleteMessageSuccessAlertText);
     });
   });
-  // //////////////////////////////////////////////////////////////
-  // //////////////////////////////////////////////////////////////
 });

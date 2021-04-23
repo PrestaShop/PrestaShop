@@ -39,7 +39,7 @@ class OrderConfirmation extends FOBasePage {
 
   /**
    * Get and return the order reference value
-   * @param page {Page}
+   * @param page {Page} Browser tab
    * @returns {Promise<string>}
    */
   getOrderReferenceValue(page) {
@@ -48,8 +48,7 @@ class OrderConfirmation extends FOBasePage {
 
   /**
    * Click on the 'customer support' link
-   * @param page {Page}
-   *
+   * @param page {Page} Browser tab
    * @returns {Promise<void>}
    */
   async goToContactUsPage(page) {
