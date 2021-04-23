@@ -50,7 +50,7 @@ class SecurityFeatureContext extends AbstractDomainFeatureContext
     /**
      * @Given I specify following properties for security form
      */
-    public function specifyPropertiesForSecurityForm(TableNode $node)
+    public function specifyPropertiesForSecurityForm(TableNode $node): void
     {
         $data = $node->getRowsHash();
 

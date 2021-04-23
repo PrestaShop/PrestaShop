@@ -110,6 +110,7 @@ function add_new_tab($className, $name, $id_parent, $returnId = false, $parentTa
  * @param bool $returnId
  * @param string $parentTab
  * @param string $module
+ * @param string $routeName
  *
  * @return int|null Tab id if requested
  */
