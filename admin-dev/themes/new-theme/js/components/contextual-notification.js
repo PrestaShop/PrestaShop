@@ -24,34 +24,32 @@
  */
 
 /**
- * This class is only responsible for initiating, setting and getting data related to contextual notifications,
+ * This class is responsible for initiating, setting and getting data related to contextual notifications,
  * that is to say: should we display the notification related to this key identifier in local storage.
- * The logic of displaying the notifications is not dealt with here.
+ * It also displays the notification itself
  */
 export default class ContextualNotification {
   constructor() {
     // all contextual notification data will be stored under this key in local storage
     this.localStorageKey = 'contextual_notifications';
 
-    // if the contextual_notifications key doesn't exist in localstorage, we set it as an empty array
     let notificationList = localStorage.getItem(this.localStorageKey);
 
+    // if the contextual_notifications key doesn't exist in localstorage, we set it as empty
     if (notificationList === null) {
       notificationList = {};
       localStorage.setItem(this.localStorageKey, JSON.stringify(notificationList));
     }
+
+    $('.contextual-notification').on('click', '.close', (Event) => this.disableNotification(Event));
   }
 
   setItem(key, value) {
-    if (value === 'display') {
-      alert('on passe bien là pour passer le display');
-    }
     let notificationList = localStorage.getItem(this.localStorageKey);
     notificationList = JSON.parse(notificationList);
 
     notificationList[key] = value;
 
-    alert(JSON.stringify(notificationList));
     localStorage.setItem(this.localStorageKey, JSON.stringify(notificationList));
   }
 
@@ -63,5 +61,17 @@ export default class ContextualNotification {
     }
 
     return null;
+  }
+
+  disableNotification(event) {
+    console.log(event);
+    const notificationKey = $(event.target).parent().attr('data-notification-key');
+    this.setItem(notificationKey, false);
+  }
+
+  displayNotification(message, key) {
+    let htmlelem = `<div class="alert alert-info contextual-notification" data-notification-key="${key}" style="display:block;">`;
+    htmlelem += `${message}<button type="button" class="close" data-dismiss="alert">&times;</button></div>`;
+    $(htmlelem).insertBefore('#ajax_confirmation');
   }
 }

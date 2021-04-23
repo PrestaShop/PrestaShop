@@ -86,7 +86,6 @@ const initContextualNotification = () => {
   const multistoreHeader = document.querySelector('.header-multishop');
   const notificationMessage = multistoreHeader.dataset.headerColorNotification;
 
-
   if (notificationMessage.length <= 0) {
     return;
   }
@@ -100,10 +99,10 @@ const initContextualNotification = () => {
   }
 
   // check if key exists, if yes: display or not depending on given value
-  const configValue = contextualNotification.getItem(notificationKey);
+  const configValue = contextualNotification.getItem(notificationKey, notificationKey);
 
   if (configValue === true || configValue === null) {
-    alert('display notif, config value: ' + configValue);
+    contextualNotification.displayNotification(multistoreHeader.dataset.headerColorNotification, notificationKey);
   }
 
   // if the config doesn't exist, we set it to true
