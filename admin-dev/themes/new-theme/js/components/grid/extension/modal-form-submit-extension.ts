@@ -23,6 +23,8 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
 
+import {Grid} from '@PSTypes/grid';
+
 const {$} = window;
 
 /**
@@ -41,33 +43,43 @@ const {$} = window;
  * will be replaced with value of bulk checkbox.
  */
 export default class ModalFormSubmitExtension {
-  extend(grid) {
-    grid.getContainer().on('click', '.js-bulk-modal-form-submit-btn', (event) => {
-      const modalId = $(event.target).data('modal-id');
+  extend(grid: Grid): void {
+    grid
+      .getContainer()
+      .on(
+        'click',
+        '.js-bulk-modal-form-submit-btn',
+        (event: JQueryEventObject) => {
+          const modalId = $(event.target).data('modal-id');
 
-      const $modal = $(`#${modalId}`);
-      $modal.modal('show');
+          const $modal = $(`#${modalId}`);
+          $modal.modal('show');
 
-      $modal.find('.js-submit-modal-form-btn').on('click', () => {
-        const $form = $modal.find('form');
-        const $bulkInputsBlock = $form.find(`#${$form.data('bulk-inputs-id')}`);
-        const $checkboxes = grid.getContainer().find('.js-bulk-action-checkbox:checked');
+          $modal.find('.js-submit-modal-form-btn').on('click', () => {
+            const $form = $modal.find('form');
+            const $bulkInputsBlock = $form.find(
+              `#${$form.data('bulk-inputs-id')}`,
+            );
+            const $checkboxes = grid
+              .getContainer()
+              .find('.js-bulk-action-checkbox:checked');
 
-        $checkboxes.each((i, element) => {
-          const $checkbox = $(element);
+            $checkboxes.each((i, element) => {
+              const $checkbox = $(element);
 
-          const input = $bulkInputsBlock
-            .data('prototype')
-            .replace(/__name__/g, $checkbox.val());
+              const input = $bulkInputsBlock
+                .data('prototype')
+                .replace(/__name__/g, $checkbox.val());
 
-          const $input = $($.parseHTML(input)[0]);
-          $input.val($checkbox.val());
+              const $input = $($.parseHTML(input)[0]);
+              $input.val(<string>$checkbox.val());
 
-          $form.append($input);
-        });
+              $form.append($input);
+            });
 
-        $form.submit();
-      });
-    });
+            $form.submit();
+          });
+        },
+      );
   }
 }

@@ -22,6 +22,7 @@
  * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
+import {Grid} from '@PSTypes/grid';
 import Router from '../../router';
 
 const {$} = window;
@@ -30,11 +31,10 @@ const {$} = window;
  * Class BulkOpenTabsExtension
  */
 export default class BulkOpenTabsExtension {
+  router: Router;
+
   constructor() {
     this.router = new Router();
-    return {
-      extend: (grid) => this.extend(grid),
-    };
   }
 
   /**
@@ -42,10 +42,16 @@ export default class BulkOpenTabsExtension {
    *
    * @param {Grid} grid
    */
-  extend(grid) {
-    grid.getContainer().on('click', '.js-bulk-action-btn.open_tabs', (event) => {
-      this.openTabs(event, grid);
-    });
+  extend(grid: Grid): void {
+    grid
+      .getContainer()
+      .on(
+        'click',
+        '.js-bulk-action-btn.open_tabs',
+        (event: JQueryEventObject) => {
+          this.openTabs(event, grid);
+        },
+      );
   }
 
   /**
@@ -56,17 +62,20 @@ export default class BulkOpenTabsExtension {
    *
    * @private
    */
-  openTabs(event, grid) {
+  openTabs(event: JQueryEventObject, grid: Grid): void {
     const $submitBtn = $(event.currentTarget);
     const route = $submitBtn.data('route');
     const routeParamName = $submitBtn.data('routeParamName');
     const tabsBlockedMessage = $submitBtn.data('tabsBlockedMessage');
 
-    const $checkboxes = grid.getContainer().find('.js-bulk-action-checkbox:checked');
+    const $checkboxes = grid
+      .getContainer()
+      .find('.js-bulk-action-checkbox:checked');
     let allTabsOpened = true;
     $checkboxes.each((i, element) => {
       const $checkbox = $(element);
       const routeParams = {};
+      // @ts-ignore
       routeParams[routeParamName] = $checkbox.val();
 
       const handle = window.open(this.router.generate(route, routeParams));

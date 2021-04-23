@@ -23,55 +23,49 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
 
-import Routing from 'fos-routing';
-import routes from '@js/fos_js_routes.json';
+import {Grid} from '@PSTypes/grid';
 
 const {$} = window;
 
 /**
- * Wraps FOSJsRoutingbundle with exposed routes.
- * To expose route add option `expose: true` in .yml routing config
- *
- * e.g.
- *
- * `my_route
- *    path: /my-path
- *    options:
- *      expose: true
- * `
- * And run `bin/console fos:js-routing:dump --format=json --target=admin-dev/themes/new-theme/js/fos_js_routes.json`
+ * Class ReloadListExtension extends grid with "Column toggling" feature
  */
-export default class Router {
-  constructor() {
-    if (window.prestashop && window.prestashop.customRoutes) {
-      Object.assign(routes.routes, window.prestashop.customRoutes);
-    }
-
-    Routing.setData(routes);
-    Routing.setBaseUrl(
-      $(document)
-        .find('body')
-        .data('base-url'),
-    );
-
-    return this;
+export default class ColumnTogglingExtension {
+  /**
+   * Extend grid
+   *
+   * @param {Grid} grid
+   */
+  extend(grid: Grid): void {
+    const $table = grid.getContainer().find('table.table');
+    $table.find('.ps-togglable-row').on('click', (e) => {
+      e.preventDefault();
+      this.toggleValue($(e.delegateTarget));
+    });
   }
 
   /**
-   * Decorated "generate" method, with predefined security token in params
-   *
-   * @param route
-   * @param params
-   *
-   * @returns {String}
+   * @param {jQuery} row
+   * @private
    */
-  generate(route, params = {}) {
-    const tokenizedParams = Object.assign(params, {
-      _token: $(document)
-        .find('body')
-        .data('token'),
-    });
+  private toggleValue(row: JQuery) {
+    const toggleUrl = row.data('toggleUrl');
 
-    return Routing.generate(route, tokenizedParams);
+    this.submitAsForm(toggleUrl);
+  }
+
+  /**
+   * Submits request url as form
+   *
+   * @param {string} toggleUrl
+   * @private
+   */
+  private submitAsForm(toggleUrl: string) {
+    const $form = $('<form>', {
+      action: toggleUrl,
+      method: 'POST',
+    }).appendTo('body');
+
+    $form.submit();
   }
 }

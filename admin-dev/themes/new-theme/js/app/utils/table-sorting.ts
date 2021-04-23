@@ -30,10 +30,14 @@ const {$} = window;
  * This forces a page reload with more query parameters.
  */
 class TableSorting {
+  selector: string;
+
+  columns: JQuery;
+
   /**
    * @param {jQuery} table
    */
-  constructor(table) {
+  constructor(table: JQuery) {
     this.selector = '.ps-sortable-column';
     this.columns = $(table).find(this.selector);
   }
@@ -41,7 +45,7 @@ class TableSorting {
   /**
    * Attaches the listeners
    */
-  attach() {
+  attach(): void {
     this.columns.on('click', (e) => {
       const $column = $(e.delegateTarget);
       this.sortByColumn($column, this.getToggledSortDirection($column));
@@ -53,14 +57,14 @@ class TableSorting {
    * @param {string} columnName
    * @param {string} direction "asc" or "desc"
    */
-  sortBy(columnName, direction) {
+  sortBy(columnName: string, direction: string): void {
     const $column = this.columns.is(`[data-sort-col-name="${columnName}"]`);
 
     if (!$column) {
       throw new Error(`Cannot sort by "${columnName}": invalid column`);
     }
 
-    this.sortByColumn($column, direction);
+    this.sortByColumn(this.columns, direction);
   }
 
   /**
@@ -69,10 +73,10 @@ class TableSorting {
    * @param {string} direction "asc" or "desc"
    * @private
    */
-  sortByColumn(column, direction) {
-    window.location = this.getUrl(
+  private sortByColumn(column: JQuery, direction: string): void {
+    window.location.href = this.getUrl(
       column.data('sortColName'),
-      (direction === 'desc') ? 'desc' : 'asc',
+      direction === 'desc' ? 'desc' : 'asc',
       column.data('sortPrefix'),
     );
   }
@@ -83,7 +87,7 @@ class TableSorting {
    * @return {string}
    * @private
    */
-  getToggledSortDirection(column) {
+  private getToggledSortDirection(column: JQuery): string {
     return column.data('sortDirection') === 'asc' ? 'desc' : 'asc';
   }
 
@@ -95,7 +99,7 @@ class TableSorting {
    * @return {string}
    * @private
    */
-  getUrl(colName, direction, prefix) {
+  private getUrl(colName: string, direction: string, prefix: string): string {
     const url = new URL(window.location.href);
     const params = url.searchParams;
 

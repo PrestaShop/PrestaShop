@@ -73,6 +73,10 @@ module.exports = {
       extends: ['prestashop', 'plugin:@typescript-eslint/eslint-recommended', 'plugin:@typescript-eslint/recommended'],
       rules: {
         'spaced-comment': 0,
+        'class-methods-use-this': 0,
+        'no-alert': 0,
+        '@typescript-eslint/ban-ts-comment': 0,
+        '@typescript-eslint/no-non-null-assertion': 0,
       },
     },
   ],
