@@ -46,7 +46,7 @@ function register_tab($className, $name, $id_parent, $returnId = false, $parentT
         Db::getInstance()->execute(
             'INSERT INTO `'._DB_PREFIX_.'tab` (`id_parent`, `class_name`, `module`, `position`, `route_name`) ' .
             'VALUES ('.(int)$id_parent.', \''.pSQL($className).'\', \''.pSQL($module).'\', ' .
-            '(SELECT IFNULL(MAX(t.position),0)+ 1 FROM `'._DB_PREFIX_.'tab` t WHERE t.id_parent = '.(int)$id_parent.'), \'' . $routeName . '\')');
+            '(SELECT IFNULL(MAX(t.position),0)+ 1 FROM `'._DB_PREFIX_.'tab` t WHERE t.id_parent = '.(int)$id_parent.'), \'' . pSQL($routeName) . '\')');
     }
 
     $languages = Db::getInstance()->executeS('SELECT id_lang, iso_code FROM `'._DB_PREFIX_.'lang`');

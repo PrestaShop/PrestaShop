@@ -135,11 +135,6 @@ INSERT IGNORE INTO `PREFIX_hook` (`id_hook`, `name`, `title`, `description`, `po
 ;
 
 
-ALTER TABLE `PREFIX_employee_session` ADD `date_upd` DATETIME NOT NULL AFTER `token`;
-ALTER TABLE `PREFIX_employee_session` ADD `date_add` DATETIME NOT NULL AFTER `date_upd`;
-ALTER TABLE `PREFIX_customer_session` ADD `date_upd` DATETIME NOT NULL AFTER `token`;
-ALTER TABLE `PREFIX_customer_session` ADD `date_add` DATETIME NOT NULL AFTER `date_upd`;
-
 ALTER TABLE `PREFIX_employee` ADD `has_enabled_gravatar` TINYINT UNSIGNED DEFAULT 0 NOT NULL;
 
 INSERT INTO `PREFIX_configuration` (`name`, `value`, `date_add`, `date_upd`) VALUES
@@ -185,7 +180,6 @@ UPDATE `PREFIX_product` SET `product_type` = "combinations" WHERE `cache_default
 UPDATE `PREFIX_product` SET `product_type` = "pack" WHERE `cache_is_pack` = 1;
 UPDATE `PREFIX_product` SET `product_type` = "virtual" WHERE `is_virtual` = 1;
 
-/* PHP:ps_1780_update_tabs(); */;
 /* PHP:ps_1780_add_feature_flag_tab(); */;
 
 /* this table should be created by Doctrine but we need to perform INSERT and the 1.7.8.0.sql script is called
