@@ -82,7 +82,7 @@ class Product extends FOBasePage {
   /**
    * Get product attributes from a Ul selector
    * @param page {Page} Browser tab
-   * @param ulSelector {string} The selector
+   * @param ulSelector {string} Selector to locate the element
    * @returns {Promise<[]>}
    */
   getProductsAttributesFromUl(page, ulSelector) {
@@ -203,8 +203,8 @@ class Product extends FOBasePage {
   /**
    * Select product combination
    * @param page {Page} Browser tab
-   * @param quantity {number} Quantity of the product
-   * @param combination {object}  The product data
+   * @param quantity {number} Quantity of the product that customer wants
+   * @param combination {object}  Product's combination data to select
    * @returns {Promise<void>}
    */
   async selectCombination(page, quantity, combination) {
@@ -226,9 +226,9 @@ class Product extends FOBasePage {
   /**
    * Click on Add to cart button then on Proceed to checkout button in the modal
    * @param page {Page} Browser tab
-   * @param quantity {number} Quantity of the product
-   * @param combination {object}  The product data
-   * @param proceedToCheckout {boolean} Boolean for proceed to checkout
+   * @param quantity {number} Quantity of the product that customer wants
+   * @param combination {object}  Product's combination data to add to cart
+   * @param proceedToCheckout {boolean} True to click on proceed to checkout button on modal
    * @returns {Promise<void>}
    */
   async addProductToTheCart(page, quantity = 1, combination = {color: null, size: null}, proceedToCheckout = true) {
@@ -251,7 +251,7 @@ class Product extends FOBasePage {
   /**
    * Go to social sharing link
    * @param page {Page} Browser tab
-   * @param socialSharing {string} The social network
+   * @param socialSharing {string} Social network's name to get link from
    * @returns {Promise<void>}
    */
   async getSocialSharingLink(page, socialSharing) {
@@ -337,7 +337,7 @@ class Product extends FOBasePage {
   /**
    * Is unavailable product color displayed
    * @param page {Page} Browser tab
-   * @param color {string} The color
+   * @param color {string} Product's color to check
    * @returns {boolean}
    */
   isUnavailableProductColorDisplayed(page, color) {

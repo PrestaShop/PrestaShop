@@ -34,7 +34,7 @@ class SearchResults extends FOBasePage {
   /**
    * Go to the product page
    * @param page {Page} Browser tab
-   * @param id {number} Product id
+   * @param id {number} Index of product on the list
    * @returns {Promise<void>}
    */
   async goToProductPage(page, id) {
@@ -44,7 +44,7 @@ class SearchResults extends FOBasePage {
   /**
    * Click on Quick view Product
    * @param page {Page} Browser tab
-   * @param id {number} Index of product in list of products
+   * @param id {number} Index of product on the list
    * @return {Promise<void>}
    */
   async quickViewProduct(page, id) {

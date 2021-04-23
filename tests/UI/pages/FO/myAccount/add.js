@@ -40,7 +40,7 @@ class CreateAccount extends FOBasePage {
   /**
    * Create new customer account
    * @param page {Page} Browser tab
-   * @param customer {object} Object of the customer infos (email, password, ....)
+   * @param customer {object} Customer's information (email and password)
    * @returns {Promise<void>}
    */
   async createAccount(page, customer) {

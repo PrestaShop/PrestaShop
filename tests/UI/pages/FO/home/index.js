@@ -237,8 +237,8 @@ class Home extends FOBasePage {
   /**
    * Select product color
    * @param page {Page} Browser tab
-   * @param id {number} ID of the color
-   * @param color {string} The color
+   * @param id {number} Id of the current product
+   * @param color {string} The color to select
    * @returns {Promise<void>}
    */
   async selectProductColor(page, id, color) {
@@ -305,7 +305,7 @@ class Home extends FOBasePage {
   /**
    * Go to social sharing link
    * @param page {Page} Browser tab
-   * @param socialSharing {string} The social link
+   * @param socialSharing {string} The social network name
    * @returns {Promise<void>}
    */
   async getSocialSharingLink(page, socialSharing) {
@@ -333,7 +333,7 @@ class Home extends FOBasePage {
   /**
    * Subscribe to the newsletter from the FO homepage
    * @param page {Page} Browser tab
-   * @param email {string} The email
+   * @param email {string} Email to set on input
    *
    * @returns {Promise<string|TextContent|*>}
    */

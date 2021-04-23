@@ -23,7 +23,7 @@ class Login extends FOBasePage {
   /**
    * Login in FO
    * @param page {Page} Browser tab
-   * @param customer {object} Object of the customer infos (email, password, ....)
+   * @param customer {object} Customer's information (email and password)
    * @return {Promise<void>}
    */
   async customerLogin(page, customer) {

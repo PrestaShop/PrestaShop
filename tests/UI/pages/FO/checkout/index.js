@@ -97,8 +97,8 @@ class Checkout extends FOBasePage {
   /**
    * Choose shipping method and add a comment
    * @param page {Page} Browser tab
-   * @param shippingMethod {string} String of the shipping method
-   * @param comment {string} String for the shipping comment
+   * @param shippingMethod {number} Position of the shipping method
+   * @param comment {string} Comment to add after selecting a shipping method
    * @returns {Promise<boolean>}
    */
   async chooseShippingMethodAndAddComment(page, shippingMethod, comment = '') {
@@ -110,7 +110,7 @@ class Checkout extends FOBasePage {
   /**
    * Is shipping method exist
    * @param page {Page} Browser tab
-   * @param shippingMethod {string} String of the shipping method
+   * @param shippingMethod {number} Position of the shipping method
    * @returns {Promise<boolean>}
    */
   isShippingMethodVisible(page, shippingMethod) {
@@ -216,7 +216,7 @@ class Checkout extends FOBasePage {
   /**
    * Login in FO
    * @param page {Page} Browser tab
-   * @param customer {object} The customer infos
+   * @param customer {object} Customer's information (email and password)
    * @return {Promise<boolean>}
    */
   async customerLogin(page, customer) {
@@ -295,7 +295,7 @@ class Checkout extends FOBasePage {
   /**
    * Set address
    * @param page {Page} Browser tab
-   * @param address {object} The address infos
+   * @param address {object} Address's information to add
    * @returns {Promise<boolean>}
    */
   async setAddress(page, address) {
@@ -312,7 +312,7 @@ class Checkout extends FOBasePage {
   /**
    * Fill personal information form and click on continue
    * @param page {Page} Browser tab
-   * @param customerData {object} The customer data
+   * @param customerData {object} Guest Customer's information to fill on form
    * @return {Promise<boolean>}
    */
   async setGuestPersonalInformation(page, customerData) {
