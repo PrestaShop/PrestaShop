@@ -21,8 +21,7 @@ class OrderConfirmation extends FOBasePage {
      */
   /**
    * Check if final summary is visible
-   * @param page {Page}
-   *
+   * @param page
    * @returns {boolean}
    */
   isFinalSummaryVisible(page) {
@@ -31,8 +30,7 @@ class OrderConfirmation extends FOBasePage {
 
   /**
    * Get order confirmation card title
-   * @param page {Page}
-   *
+   * @param page
    * @return {Promise<string>}
    */
   getOrderConfirmationCardTitle(page) {
@@ -41,9 +39,8 @@ class OrderConfirmation extends FOBasePage {
 
   /**
    * Get and return the order reference value
-   * @param page {Page}
-   *
-   * @returns {Promise<string>|Promise<TextContent>|*}
+   * @param page {Page} Browser tab
+   * @returns {Promise<string>}
    */
   getOrderReferenceValue(page) {
     return this.getTextContent(page, this.orderReferenceValue);
@@ -51,8 +48,7 @@ class OrderConfirmation extends FOBasePage {
 
   /**
    * Click on the 'customer support' link
-   * @param page {Page}
-   *
+   * @param page {Page} Browser tab
    * @returns {Promise<void>}
    */
   async goToContactUsPage(page) {

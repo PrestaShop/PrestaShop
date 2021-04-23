@@ -28,9 +28,9 @@ class AccountIdentity extends FOBasePage {
    */
   /**
    * Edit account information
-   * @param page {Page}
-   * @param oldPassword {string}
-   * @param customer {object}
+   * @param page
+   * @param oldPassword
+   * @param customer
    *
    * @returns {Promise<string>}
    */
@@ -61,10 +61,10 @@ class AccountIdentity extends FOBasePage {
 
   /**
    * Unsubscribe from the newsletter from customer edit information page
-   * @param page {Page}
-   * @param password {string}
+   * @param page
+   * @param password
    *
-   * @returns {Promise<string|TextContent|*>}
+   * @returns {Promise<string>}
    */
   async unsubscribeNewsletter(page, password) {
     await this.setValue(page, this.passwordInput, password);
