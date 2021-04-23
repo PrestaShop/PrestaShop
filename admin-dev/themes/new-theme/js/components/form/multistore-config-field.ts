@@ -53,8 +53,8 @@ export default class MultistoreConfigField {
   }
 
   initContextualNotification() {
-    const configKeyShopPrefix = 'multistore-checkbox-color-shop-';
-    const configKeyGroupPrefix = 'multistore-checkbox-color-group-';
+    const configKeyShopPrefix = 'multistore-checkbox-shop-';
+    const configKeyGroupPrefix = 'multistore-checkbox-group-';
     const multistoreHeader = document.querySelector('.header-multishop');
     const contextualNotification = new ContextualNotification();
     let notificationKey = configKeyGroupPrefix + multistoreHeader.dataset.groupId;
