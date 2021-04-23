@@ -23,11 +23,14 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
 
+import ContextualNotification from '@components/contextual-notification';
+
 const {$} = window;
 
 export default class MultistoreConfigField {
   constructor() {
     this.updateMultistoreFieldOnChange();
+    this.initContextualNotification();
   }
 
   updateMultistoreFieldOnChange() {
@@ -41,4 +44,30 @@ export default class MultistoreConfigField {
       input.prop('disabled', !isChecked);
     });
   }
+
+  initContextualNotification() {
+    const configKeyShopPrefix = 'multistore-checkbox-color-shop-';
+    const configKeyGroupPrefix = 'multistore-checkbox-color-group-';
+    const multistoreHeader = document.querySelector('.header-multishop');
+    const contextualNotification = new ContextualNotification();
+    let notificationKey = configKeyGroupPrefix + multistoreHeader.dataset.groupId;
+
+    if (multistoreHeader.hasAttribute('data-shop-id')) {
+      notificationKey = configKeyShopPrefix + multistoreHeader.dataset.shopId;
+    }
+
+    // check if key exists, if yes: display or not depending on given value
+    const configValue = contextualNotification.getItem(notificationKey);
+
+    if (configValue === true || configValue === null) {
+      contextualNotification.displayNotification(multistoreHeader.dataset.checkboxNotification, notificationKey);
+    }
+
+    // if the config doesn't exist, we set it to true
+    if (configValue === null) {
+      contextualNotification.setItem(notificationKey, true);
+    }
+  }
+
+
 }
