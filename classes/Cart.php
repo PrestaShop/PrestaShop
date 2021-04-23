@@ -1301,10 +1301,11 @@ class CartCore extends ObjectModel
      * Add a CartRule to the Cart.
      *
      * @param int $id_cart_rule CartRule ID
+     * @param bool $useOrderPrices
      *
      * @return bool Whether the CartRule has been successfully added
      */
-    public function addCartRule($id_cart_rule)
+    public function addCartRule($id_cart_rule, bool $useOrderPrices = false)
     {
         // You can't add a cart rule that does not exist
         $cartRule = new CartRule($id_cart_rule, Context::getContext()->language->id);
@@ -1336,7 +1337,19 @@ class CartCore extends ObjectModel
         Cache::clean('Cart::getOrderedCartRulesIds_' . $this->id . '-' . CartRule::FILTER_ACTION_GIFT . '-ids');
 
         if ((int) $cartRule->gift_product) {
-            $this->updateQty(1, $cartRule->gift_product, $cartRule->gift_product_attribute, false, 'up', 0, null, false);
+            $this->updateQty(
+                1,
+                $cartRule->gift_product,
+                $cartRule->gift_product_attribute,
+                false,
+                'up',
+                0,
+                null,
+                false,
+                false,
+                true,
+                $useOrderPrices
+            );
         }
 
         return true;
@@ -1640,9 +1653,9 @@ class CartCore extends ObjectModel
         $context = Context::getContext()->cloneContext();
         $context->cart = $this;
         Cache::clean('getContextualValue_*');
-        CartRule::autoRemoveFromCart();
+        CartRule::autoRemoveFromCart(null, $useOrderPrices);
         if ($auto_add_cart_rule) {
-            CartRule::autoAddToCart($context);
+            CartRule::autoAddToCart($context, $useOrderPrices);
         }
 
         if ($product->customizable) {
