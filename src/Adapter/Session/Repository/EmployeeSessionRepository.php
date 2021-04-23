@@ -79,8 +79,6 @@ class EmployeeSessionRepository extends AbstractObjectModelRepository
      * @param EmployeeSessionId $sessionId
      *
      * @return EmployeeSession
-     *
-     * @throws CoreException
      */
     public function get(EmployeeSessionId $sessionId): EmployeeSession
     {
@@ -96,8 +94,6 @@ class EmployeeSessionRepository extends AbstractObjectModelRepository
 
     /**
      * @param EmployeeSessionId $employeeSessionId
-     *
-     * @throws CoreException
      */
     public function delete(EmployeeSessionId $employeeSessionId): void
     {
