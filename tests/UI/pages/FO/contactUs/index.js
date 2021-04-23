@@ -37,7 +37,7 @@ class ContactUs extends FOBasePage {
    * Send message
    * @param page {Page} Browser tab
    * @param contactUsData {object} The data for fill the form
-   * @param file
+   * @param file {string} The path of the file to upload
    * @returns {Promise<string>}
    */
   async sendMessage(page, contactUsData, file = null) {
