@@ -48,7 +48,7 @@ class ShortcutsType extends TranslatorAwareType
                 'target_tab_name' => $this->trans('Quantity', 'Admin.Catalog.Feature'),
             ])
             ->add('price', PriceShortcutType::class, [
-                'label' => $this->trans('Price', 'Admin.Global'),
+                'label' => $this->trans('Retail price', 'Admin.Catalog.Feature'),
                 'help' => $this->trans('This is the retail price at which you intend to sell this product to your customers. The tax included price will change according to the tax rule you select.', 'Admin.Catalog.Help'),
                 'target_tab' => 'pricing-tab',
                 'target_tab_name' => $this->trans('Pricing', 'Admin.Catalog.Feature'),
