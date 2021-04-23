@@ -31,7 +31,7 @@ const {PaymentMethods} = require('@data/demo/paymentMethods');
 const testContext = require('@utils/testContext');
 
 // context
-const baseContext = 'functional_FO_newsletter_subscribeNewsletter';
+const baseContext = 'functional_FO_contact_us_from_order_confirmation_page';
 
 let browserContext;
 let page;
