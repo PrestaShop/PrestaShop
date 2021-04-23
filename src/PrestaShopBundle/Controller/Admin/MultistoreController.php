@@ -105,6 +105,7 @@ class MultistoreController extends FrameworkBundleAdminController
             'isAllShopContext' => $isAllShopContext,
             'isGroupContext' => $this->multistoreContext->isGroupShopContext(),
             'lockedToAllShopContext' => $lockedToAllShopContext,
+            'shouldDisplayColorNotification' => !$isAllShopContext && empty($currentContext->getColor()),
         ]);
     }
 
