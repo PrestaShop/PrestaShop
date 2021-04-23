@@ -1654,7 +1654,7 @@ class CartRuleCore extends ObjectModel
                 foreach ($cart_rules as $cart_rule) {
                     /** @var CartRule $cart_rule */
                     if ($cart_rule->checkValidity($context, false, false, true, $useOrderPrices)) {
-                        $context->cart->addCartRule($cart_rule->id);
+                        $context->cart->addCartRule($cart_rule->id, $useOrderPrices);
                     }
                 }
             }
