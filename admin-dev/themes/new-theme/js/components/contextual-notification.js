@@ -41,7 +41,7 @@ export default class ContextualNotification {
       localStorage.setItem(this.localStorageKey, JSON.stringify(notificationList));
     }
 
-    $('.contextual-notification').on('click', '.close', (Event) => this.disableNotification(Event));
+    $(document).on('click', '.contextual-notification .close', (Event) => this.disableNotification(Event));
   }
 
   setItem(key, value) {
