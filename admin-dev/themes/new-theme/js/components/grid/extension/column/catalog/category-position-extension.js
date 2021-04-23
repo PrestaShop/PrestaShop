@@ -23,27 +23,20 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
 
-import { Grid } from '@PSTypes/grid';
 import 'tablednd/dist/jquery.tablednd.min';
 
-const { $ } = window;
+const {$} = window;
 
 /**
  * Class CategoryPositionExtension extends Grid with reorderable category positions
  */
 export default class CategoryPositionExtension {
-  grid: Grid;
-
-  constructor() {
-    this.grid = null;
-  }
-
   /**
    * Extend grid
    *
    * @param {Grid} grid
    */
-  static extend(grid: Grid): void {
+  extend(grid) {
     this.grid = grid;
 
     this.addIdsToGridTableRows();
@@ -68,27 +61,17 @@ export default class CategoryPositionExtension {
    *
    * @private
    */
-  private handleCategoryPositionChange(row: Record<string, never>): void {
+  handleCategoryPositionChange(row) {
     const positions = decodeURIComponent($.tableDnD.serialize());
-    const way =
-      this.originalPositions.indexOf(row.id) < positions.indexOf(row.id)
-        ? 1
-        : 0;
+    const way = this.originalPositions.indexOf(row.id) < positions.indexOf(row.id) ? 1 : 0;
 
-    const $categoryPositionContainer = $(row).find(
-      `.js-${this.grid.getId()}-position:first`
-    );
+    const $categoryPositionContainer = $(row).find(`.js-${this.grid.getId()}-position:first`);
 
     const categoryId = $categoryPositionContainer.data('id');
     const categoryParentId = $categoryPositionContainer.data('id-parent');
-    const positionUpdateUrl = $categoryPositionContainer.data(
-      'position-update-url'
-    );
+    const positionUpdateUrl = $categoryPositionContainer.data('position-update-url');
 
-    let params = positions.replace(
-      new RegExp(`${this.grid.getId()}_grid_table`, 'g'),
-      'positions'
-    );
+    let params = positions.replace(new RegExp(`${this.grid.getId()}_grid_table`, 'g'), 'positions');
 
     const queryParams = {
       id_category_parent: categoryParentId,
@@ -110,7 +93,7 @@ export default class CategoryPositionExtension {
    *
    * @private
    */
-  private addIdsToGridTableRows(): void {
+  addIdsToGridTableRows() {
     this.grid
       .getContainer()
       .find('.js-grid-table')
@@ -133,7 +116,7 @@ export default class CategoryPositionExtension {
    *
    * @private
    */
-  private updateCategoryIdsAndPositions(): void {
+  updateCategoryIdsAndPositions() {
     this.grid
       .getContainer()
       .find('.js-grid-table')
@@ -161,7 +144,7 @@ export default class CategoryPositionExtension {
    *
    * @private
    */
-  private updateCategoryPosition(url: string, params: object): void {
+  updateCategoryPosition(url, params) {
     $.post({
       url,
       headers: {

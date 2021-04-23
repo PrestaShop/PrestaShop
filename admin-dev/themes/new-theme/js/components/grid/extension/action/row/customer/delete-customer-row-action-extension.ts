@@ -22,9 +22,9 @@
  * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
-import { Grid } from '@PSTypes/grid';
+import {Grid} from '@PSTypes/grid';
 
-const { $ } = window;
+const {$} = window;
 
 /**
  * Class DeleteCustomerRowActionExtension handles submitting of row action
@@ -35,14 +35,14 @@ export default class DeleteCustomerRowActionExtension {
    *
    * @param {Grid} grid
    */
-  static extend(grid: Grid): void {
+  extend(grid: Grid): void {
     grid
       .getContainer()
       .on('click', '.js-delete-customer-row-action', (event) => {
         event.preventDefault();
 
         const $deleteCustomersModal = $(
-          `#${grid.getId()}_grid_delete_customers_modal`
+          `#${grid.getId()}_grid_delete_customers_modal`,
         );
         $deleteCustomersModal.modal('show');
 
@@ -67,9 +67,9 @@ export default class DeleteCustomerRowActionExtension {
    *
    * @private
    */
-  private static addCustomerInput(customerId: number): void {
+  private addCustomerInput(customerId: number): void {
     const $customersToDeleteInputBlock = $(
-      '#delete_customers_customers_to_delete'
+      '#delete_customers_customers_to_delete',
     );
 
     const customerInput = $customersToDeleteInputBlock

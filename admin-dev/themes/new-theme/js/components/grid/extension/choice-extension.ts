@@ -22,6 +22,7 @@
  * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
+import {Grid} from '@PSTypes/grid';
 
 const {$} = window;
 
@@ -35,12 +36,16 @@ const {$} = window;
  *
  */
 export default class ChoiceExtension {
+  lockArray: Array<string>;
+
   constructor() {
-    this.lock = [];
+    this.lockArray = [];
   }
 
-  extend(grid) {
-    const $choiceOptionsContainer = grid.getContainer().find('table.table .js-choice-options');
+  extend(grid: Grid): void {
+    const $choiceOptionsContainer = grid
+      .getContainer()
+      .find('table.table .js-choice-options');
 
     $choiceOptionsContainer.find('.js-dropdown-item').on('click', (e) => {
       e.preventDefault();
@@ -58,7 +63,7 @@ export default class ChoiceExtension {
    * @param {jQuery} $button
    * @private
    */
-  submitForm(url, $button) {
+  private submitForm(url: string, $button: JQuery) {
     const selectedStatusId = $button.data('value');
 
     if (this.isLocked(url)) {
@@ -73,7 +78,8 @@ export default class ChoiceExtension {
         name: 'value',
         value: selectedStatusId,
         type: 'hidden',
-      }));
+      }),
+    );
 
     $form.appendTo('body');
     $form.submit();
@@ -89,8 +95,8 @@ export default class ChoiceExtension {
    *
    * @private
    */
-  isLocked(url) {
-    return this.lock.includes(url);
+  private isLocked(url: string): boolean {
+    return this.lockArray.includes(url);
   }
 
   /**
@@ -98,7 +104,7 @@ export default class ChoiceExtension {
    * @param url
    * @private
    */
-  lock(url) {
-    this.lock.push(url);
+  private lock(url: string): void {
+    this.lockArray.push(url);
   }
 }

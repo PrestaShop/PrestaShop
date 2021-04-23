@@ -22,6 +22,7 @@
  * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
+import {Grid} from '@PSTypes/grid';
 
 const {$} = window;
 
@@ -29,18 +30,12 @@ const {$} = window;
  * Class AsyncToggleColumnExtension submits toggle action using AJAX
  */
 export default class AsyncToggleColumnExtension {
-  constructor() {
-    return {
-      extend: (grid) => this.extend(grid),
-    };
-  }
-
   /**
    * Extend grid
    *
    * @param {Grid} grid
    */
-  extend(grid) {
+  extend(grid: Grid): void {
     grid
       .getContainer()
       .find('.js-grid-table')
@@ -65,7 +60,7 @@ export default class AsyncToggleColumnExtension {
 
             window.showErrorMessage(response.message);
           })
-          .catch((error) => {
+          .catch((error: AjaxError) => {
             const response = error.responseJSON;
 
             window.showErrorMessage(response.message);
@@ -80,11 +75,15 @@ export default class AsyncToggleColumnExtension {
    *
    * @private
    */
-  toggleButtonDisplay($button) {
+  private toggleButtonDisplay($button: JQuery): void {
     const isActive = $button.hasClass('grid-toggler-icon-valid');
 
-    const classToAdd = isActive ? 'grid-toggler-icon-not-valid' : 'grid-toggler-icon-valid';
-    const classToRemove = isActive ? 'grid-toggler-icon-valid' : 'grid-toggler-icon-not-valid';
+    const classToAdd = isActive
+      ? 'grid-toggler-icon-not-valid'
+      : 'grid-toggler-icon-valid';
+    const classToRemove = isActive
+      ? 'grid-toggler-icon-valid'
+      : 'grid-toggler-icon-not-valid';
     const icon = isActive ? 'clear' : 'check';
 
     $button.removeClass(classToRemove);

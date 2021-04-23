@@ -22,11 +22,11 @@
  * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
-import { Grid } from '@PSTypes/grid';
+import {Grid} from '@PSTypes/grid';
 
 import ConfirmModal from '@components/modal';
 
-const { $ } = window;
+const {$} = window;
 
 /**
  * Class SubmitRowActionExtension handles submitting of row action
@@ -37,7 +37,7 @@ export default class SubmitRowActionExtension {
    *
    * @param {Grid} grid
    */
-  static extend(grid: Grid): void {
+  extend(grid: Grid): void {
     grid.getContainer().on('click', '.js-submit-row-action', (event) => {
       event.preventDefault();
 
@@ -53,7 +53,7 @@ export default class SubmitRowActionExtension {
           grid,
           confirmMessage,
           confirmTitle,
-          method
+          method,
         );
       } else {
         // eslint-disable-next-line
@@ -66,7 +66,7 @@ export default class SubmitRowActionExtension {
     });
   }
 
-  static postForm($button: JQuery, method: string): void {
+  postForm($button: JQuery, method: string): void {
     const isGetOrPostMethod = ['GET', 'POST'].includes(method);
 
     const $form = $('<form>', {
@@ -80,7 +80,7 @@ export default class SubmitRowActionExtension {
           type: '_hidden',
           name: '_method',
           value: method,
-        })
+        }),
       );
     }
 
@@ -94,12 +94,12 @@ export default class SubmitRowActionExtension {
    * @param {string} confirmTitle
    * @param {string} method
    */
-  static showConfirmModal(
+  showConfirmModal(
     $submitBtn: JQuery,
     grid: Grid,
     confirmMessage: string,
     confirmTitle: string,
-    method: string
+    method: string,
   ): void {
     const confirmButtonLabel = $submitBtn.data('confirmButtonLabel');
     const closeButtonLabel = $submitBtn.data('closeButtonLabel');
@@ -114,7 +114,7 @@ export default class SubmitRowActionExtension {
         closeButtonLabel,
         confirmButtonClass,
       },
-      () => this.postForm($submitBtn, method)
+      () => this.postForm($submitBtn, method),
     );
 
     modal.show();
