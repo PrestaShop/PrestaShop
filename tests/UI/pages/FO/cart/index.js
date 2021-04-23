@@ -144,7 +144,7 @@ class Cart extends FOBasePage {
   /**
    * Set promo code
    * @param page {Page} Browser tab
-   * @param code {string} String of the promo code
+   * @param code {string} The promo code
    * @returns {Promise<void>}
    */
   async addPromoCode(page, code) {

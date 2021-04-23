@@ -182,7 +182,7 @@ class Checkout extends FOBasePage {
   /**
    * Choose payment method and validate Order
    * @param page {Page} Browser tab
-   * @param paymentModuleName {string} String for the chosen payment method
+   * @param paymentModuleName {string} The chosen payment method
    * @return {Promise<void>}
    */
   async choosePaymentAndOrder(page, paymentModuleName) {
@@ -197,7 +197,7 @@ class Checkout extends FOBasePage {
   /**
    * Check payment method existence
    * @param page {Page} Browser tab
-   * @param paymentModuleName {string} String for the payment module name
+   * @param paymentModuleName {string} The payment module name
    * @returns {Promise<boolean>}
    */
   isPaymentMethodExist(page, paymentModuleName) {
@@ -216,7 +216,7 @@ class Checkout extends FOBasePage {
   /**
    * Login in FO
    * @param page {Page} Browser tab
-   * @param customer {object} Object that contain customer infos
+   * @param customer {object} The customer infos
    * @return {Promise<boolean>}
    */
   async customerLogin(page, customer) {
@@ -295,7 +295,7 @@ class Checkout extends FOBasePage {
   /**
    * Set address
    * @param page {Page} Browser tab
-   * @param address {object} Object that contain the address infos
+   * @param address {object} The address infos
    * @returns {Promise<boolean>}
    */
   async setAddress(page, address) {
@@ -312,7 +312,7 @@ class Checkout extends FOBasePage {
   /**
    * Fill personal information form and click on continue
    * @param page {Page} Browser tab
-   * @param customerData {object} Object that contain the customer data
+   * @param customerData {object} The customer data
    * @return {Promise<boolean>}
    */
   async setGuestPersonalInformation(page, customerData) {

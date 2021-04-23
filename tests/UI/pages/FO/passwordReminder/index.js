@@ -23,7 +23,7 @@ class PasswordReminder extends FOBasePage {
   /**
    * Fill the reset password email form field and click "send reset link" button
    * @param page {Page} Browser tab
-   * @param email {string} String of the email
+   * @param email {string} The email
    * @returns {Promise<void>}
    */
   async sendResetPasswordLink(page, email) {

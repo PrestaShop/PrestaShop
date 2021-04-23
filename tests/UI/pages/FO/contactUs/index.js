@@ -36,7 +36,7 @@ class ContactUs extends FOBasePage {
   /**
    * Send message
    * @param page {Page} Browser tab
-   * @param contactUsData {object} Object that contain the data to fill the form
+   * @param contactUsData {object} The data for fill the form
    * @param file
    * @returns {Promise<string>}
    */

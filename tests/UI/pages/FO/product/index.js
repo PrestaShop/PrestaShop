@@ -82,7 +82,7 @@ class Product extends FOBasePage {
   /**
    * Get product attributes from a Ul selector
    * @param page {Page} Browser tab
-   * @param ulSelector {string} String of the selector
+   * @param ulSelector {string} The selector
    * @returns {Promise<[]>}
    */
   getProductsAttributesFromUl(page, ulSelector) {
@@ -204,7 +204,7 @@ class Product extends FOBasePage {
    * Select product combination
    * @param page {Page} Browser tab
    * @param quantity {number} Quantity of the product
-   * @param combination {object}  Object of the product data
+   * @param combination {object}  The product data
    * @returns {Promise<void>}
    */
   async selectCombination(page, quantity, combination) {
@@ -227,7 +227,7 @@ class Product extends FOBasePage {
    * Click on Add to cart button then on Proceed to checkout button in the modal
    * @param page {Page} Browser tab
    * @param quantity {number} Quantity of the product
-   * @param combination {object}  Object of the product data
+   * @param combination {object}  The product data
    * @param proceedToCheckout {boolean} Boolean for proceed to checkout
    * @returns {Promise<void>}
    */
@@ -251,7 +251,7 @@ class Product extends FOBasePage {
   /**
    * Go to social sharing link
    * @param page {Page} Browser tab
-   * @param socialSharing {string} String of the social network
+   * @param socialSharing {string} The social network
    * @returns {Promise<void>}
    */
   async getSocialSharingLink(page, socialSharing) {
@@ -326,7 +326,7 @@ class Product extends FOBasePage {
   /**
    * Is unavailable product size displayed
    * @param page {Page} Browser tab
-   * @param size {string} String of the product size
+   * @param size {string} The product size
    * @returns {Promise<boolean>}
    */
   async isUnavailableProductSizeDisplayed(page, size) {
@@ -337,7 +337,7 @@ class Product extends FOBasePage {
   /**
    * Is unavailable product color displayed
    * @param page {Page} Browser tab
-   * @param color {string} String of the color
+   * @param color {string} The color
    * @returns {boolean}
    */
   isUnavailableProductColorDisplayed(page, color) {

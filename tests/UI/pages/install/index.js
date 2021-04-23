@@ -199,7 +199,7 @@ class Install extends CommonPage {
   /**
    * Check if step installation is finished
    * @param page {Page} Browser tab
-   * @param step {string} String of the installation step
+   * @param step {string} The installation step
    * @param timeout {number} Timeout duration
    * @returns {Promise<boolean>}
    */
