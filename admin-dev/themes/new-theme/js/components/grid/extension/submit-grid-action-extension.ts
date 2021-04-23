@@ -22,6 +22,7 @@
  * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
+import {Grid} from '@PSTypes/grid';
 
 const {$} = window;
 
@@ -29,16 +30,12 @@ const {$} = window;
  * Class SubmitGridActionExtension handles grid action submits
  */
 export default class SubmitGridActionExtension {
-  constructor() {
-    return {
-      extend: (grid) => this.extend(grid),
-    };
-  }
-
-  extend(grid) {
-    grid.getHeaderContainer().on('click', '.js-grid-action-submit-btn', (event) => {
-      this.handleSubmit(event, grid);
-    });
+  extend(grid: Grid): void {
+    grid
+      .getHeaderContainer()
+      .on('click', '.js-grid-action-submit-btn', (event: JQueryEventObject) => {
+        this.handleSubmit(event, grid);
+      });
   }
 
   /**
@@ -50,11 +47,15 @@ export default class SubmitGridActionExtension {
    *
    * @private
    */
-  handleSubmit(event, grid) {
+  private handleSubmit(event: JQueryEventObject, grid: Grid): void {
     const $submitBtn = $(event.currentTarget);
     const confirmMessage = $submitBtn.data('confirm-message');
 
-    if (typeof confirmMessage !== 'undefined' && confirmMessage.length > 0 && !window.confirm(confirmMessage)) {
+    if (
+      typeof confirmMessage !== 'undefined'
+      && confirmMessage.length > 0
+      && !window.confirm(confirmMessage)
+    ) {
       return;
     }
 
@@ -62,7 +63,9 @@ export default class SubmitGridActionExtension {
 
     $form.attr('action', $submitBtn.data('url'));
     $form.attr('method', $submitBtn.data('method'));
-    $form.find(`input[name="${grid.getId()}[_token]"]`).val($submitBtn.data('csrf'));
+    $form
+      .find(`input[name="${grid.getId()}[_token]"]`)
+      .val($submitBtn.data('csrf'));
     $form.submit();
   }
 }
