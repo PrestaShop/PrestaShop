@@ -43,7 +43,7 @@ class AddAddress extends FOBasePage {
   /**
    * Fill address form and save
    * @param page {Page} Browser tab
-   * @param addressData {object} Object for the address data (alias, firstname, lastname, company, address, city ...)
+   * @param addressData {object} Address's information to fill on form
    * @returns {Promise<string>}
    */
   async setAddress(page, addressData) {
