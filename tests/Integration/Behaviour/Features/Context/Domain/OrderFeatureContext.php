@@ -1753,7 +1753,7 @@ class OrderFeatureContext extends AbstractDomainFeatureContext
      * @param int $orderId
      * @param int $productId
      *
-     * @return TaxCalculator|null
+     * @return TaxCalculator
      *
      * @throws \PrestaShopDatabaseException
      * @throws \PrestaShopException

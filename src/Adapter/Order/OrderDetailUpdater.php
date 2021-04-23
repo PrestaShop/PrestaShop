@@ -508,7 +508,10 @@ class OrderDetailUpdater
      */
     private function getTaxCalculatorForEcotax(Address $address): TaxCalculator
     {
-        $tax_manager = TaxManagerFactory::getManager($address, (int) \Configuration::get('PS_ECOTAX_TAX_RULES_GROUP_ID'));
+        $tax_manager = TaxManagerFactory::getManager(
+            $address,
+            (int) $this->shopConfiguration->get('PS_ECOTAX_TAX_RULES_GROUP_ID')
+        );
 
         return $tax_manager->getTaxCalculator();
     }
