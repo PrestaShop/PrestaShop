@@ -23,6 +23,8 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
 
+import {Grid} from '@PSTypes/grid';
+
 const {$} = window;
 
 /**
@@ -34,13 +36,15 @@ export default class ExportToSqlManagerExtension {
    *
    * @param {Grid} grid
    */
-  extend(grid) {
-    grid.getHeaderContainer().on('click', '.js-common_show_query-grid-action', () => this.onShowSqlQueryClick(grid));
-    grid.getHeaderContainer().on(
-      'click',
-      '.js-common_export_sql_manager-grid-action',
-      () => this.onExportSqlManagerClick(grid),
-    );
+  extend(grid: Grid): void {
+    grid
+      .getHeaderContainer()
+      .on('click', '.js-common_show_query-grid-action', () => this.onShowSqlQueryClick(grid),
+      );
+    grid
+      .getHeaderContainer()
+      .on('click', '.js-common_export_sql_manager-grid-action', () => this.onExportSqlManagerClick(grid),
+      );
   }
 
   /**
@@ -50,7 +54,7 @@ export default class ExportToSqlManagerExtension {
    *
    * @private
    */
-  onShowSqlQueryClick(grid) {
+  onShowSqlQueryClick(grid: Grid): void {
     const $sqlManagerForm = $(`#${grid.getId()}_common_show_query_modal_form`);
     this.fillExportForm($sqlManagerForm, grid);
 
@@ -67,7 +71,7 @@ export default class ExportToSqlManagerExtension {
    *
    * @private
    */
-  onExportSqlManagerClick(grid) {
+  private onExportSqlManagerClick(grid: Grid): void {
     const $sqlManagerForm = $(`#${grid.getId()}_common_show_query_modal_form`);
 
     this.fillExportForm($sqlManagerForm, grid);
@@ -83,11 +87,16 @@ export default class ExportToSqlManagerExtension {
    *
    * @private
    */
-  fillExportForm($sqlManagerForm, grid) {
-    const query = grid.getContainer().find('.js-grid-table').data('query');
+  private fillExportForm($sqlManagerForm: JQuery, grid: Grid) {
+    const query = grid
+      .getContainer()
+      .find('.js-grid-table')
+      .data('query');
 
     $sqlManagerForm.find('textarea[name="sql"]').val(query);
-    $sqlManagerForm.find('input[name="name"]').val(this.getNameFromBreadcrumb());
+    $sqlManagerForm
+      .find('input[name="name"]')
+      .val(this.getNameFromBreadcrumb());
   }
 
   /**
@@ -97,7 +106,7 @@ export default class ExportToSqlManagerExtension {
    *
    * @private
    */
-  getNameFromBreadcrumb() {
+  private getNameFromBreadcrumb(): string {
     const $breadcrumbs = $('.header-toolbar').find('.breadcrumb-item');
     let name = '';
 

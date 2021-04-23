@@ -45,19 +45,29 @@ export default class PositionExtension {
   extend(grid) {
     this.grid = grid;
     this.addIdsToGridTableRows();
-    grid.getContainer().find('.js-grid-table').tableDnD({
-      onDragClass: 'position-row-while-drag',
-      dragHandle: '.js-drag-handle',
-      onDrop: (table, row) => this.handlePositionChange(row),
-    });
-    grid.getContainer().find('.js-drag-handle').hover(
-      function () {
-        $(this).closest('tr').addClass('hover');
-      },
-      function () {
-        $(this).closest('tr').removeClass('hover');
-      },
-    );
+    grid
+      .getContainer()
+      .find('.js-grid-table')
+      .tableDnD({
+        onDragClass: 'position-row-while-drag',
+        dragHandle: '.js-drag-handle',
+        onDrop: (table, row) => this.handlePositionChange(row),
+      });
+    grid
+      .getContainer()
+      .find('.js-drag-handle')
+      .hover(
+        function () {
+          $(this)
+            .closest('tr')
+            .addClass('hover');
+        },
+        function () {
+          $(this)
+            .closest('tr')
+            .removeClass('hover');
+        },
+      );
   }
 
   /**
@@ -92,8 +102,7 @@ export default class PositionExtension {
     // retrieve dragAndDropOffset offset to have all needed data
     // for positions mapping evolution over time
     for (let i = 0; i < rowsData.length; i += 1) {
-      trData = this.grid.getContainer()
-        .find(`#${rowsData[i]}`);
+      trData = this.grid.getContainer().find(`#${rowsData[i]}`);
 
       completeRowsData.push({
         rowMarker: rowsData[i],
@@ -112,7 +121,8 @@ export default class PositionExtension {
   addIdsToGridTableRows() {
     let counter = 0;
 
-    this.grid.getContainer()
+    this.grid
+      .getContainer()
       .find(`.js-grid-table .js-${this.grid.getId()}-position`)
       .each((index, positionWrapper) => {
         const $positionWrapper = $(positionWrapper);
@@ -170,11 +180,13 @@ export default class PositionExtension {
 
     // This _method param is used by Symfony to simulate DELETE and PUT methods
     if (!isGetOrPostMethod) {
-      $form.append($('<input>', {
-        type: 'hidden',
-        name: '_method',
-        value: method,
-      }));
+      $form.append(
+        $('<input>', {
+          type: 'hidden',
+          name: '_method',
+          value: method,
+        }),
+      );
     }
 
     $form.submit();
@@ -189,7 +201,9 @@ export default class PositionExtension {
    */
   computeMappingBetweenOldAndNewPositions(rowsData) {
     const regex = /^row_(\d+)_(\d+)$/;
-    const mapping = Array(rowsData.length).fill().map(Object);
+    const mapping = Array(rowsData.length)
+      .fill()
+      .map(Object);
 
     for (let i = 0; i < rowsData.length; i += 1) {
       const [, rowId, oldPosition] = regex.exec(rowsData[i].rowMarker);

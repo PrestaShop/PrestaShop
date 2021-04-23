@@ -23,22 +23,26 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
 
+import {Grid} from '@PSTypes/grid';
+import resetSearch from '@app/utils/reset_search';
+
+const {$} = window;
+
 /**
- * Responsible for grid filters search and reset button availability when filter inputs changes.
+ * Class FiltersResetExtension extends grid with filters resetting
  */
-export default class FiltersSubmitButtonEnablerExtension {
+export default class FiltersResetExtension {
   /**
    * Extend grid
    *
    * @param {Grid} grid
    */
-  extend(grid) {
-    const $filtersRow = grid.getContainer().find('.column-filters');
-    $filtersRow.find('.grid-search-button').prop('disabled', true);
-
-    $filtersRow.find('input:not(.js-bulk-action-select-all), select').on('input dp.change', () => {
-      $filtersRow.find('.grid-search-button').prop('disabled', false);
-      $filtersRow.find('.js-grid-reset-button').prop('hidden', false);
+  extend(grid: Grid): void {
+    grid.getContainer().on('click', '.js-reset-search', (event) => {
+      resetSearch(
+        $(event.currentTarget).data('url'),
+        $(event.currentTarget).data('redirect'),
+      );
     });
   }
 }
