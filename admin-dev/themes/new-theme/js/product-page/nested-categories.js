@@ -25,7 +25,7 @@ export default function () {
         if (category.is(':checked') === false && defaultcat.is(':checked') === true) {
           category.trigger('click');
         }
-        window.defaultCategory.check(categoryId);
+        defaultCategory.check(categoryId);
       });
     },
     removeDefaultIfNeeded() {
@@ -54,7 +54,7 @@ export default function () {
         } else if (category.is(':checked') === false && defaultcat.is(':checked') === true) {
           const newCategory = findClosestCheckedCategory(category);
 
-          window.defaultCategory.check(newCategory.val());
+          defaultCategory.check(newCategory.val());
           window.productCategoriesTags.checkDefaultCategory(newCategory.val());
         }
       });
