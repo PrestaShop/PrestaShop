@@ -23,6 +23,8 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
 
+import {Grid} from '@PSTypes/grid';
+
 /**
  * Class ReloadListExtension extends grid with "List reload" action
  */
@@ -32,9 +34,11 @@ export default class ReloadListExtension {
    *
    * @param {Grid} grid
    */
-  extend(grid) {
-    grid.getHeaderContainer().on('click', '.js-common_refresh_list-grid-action', () => {
-      window.location.reload();
-    });
+  extend(grid: Grid): void {
+    grid
+      .getHeaderContainer()
+      .on('click', '.js-common_refresh_list-grid-action', () => {
+        window.location.reload();
+      });
   }
 }
