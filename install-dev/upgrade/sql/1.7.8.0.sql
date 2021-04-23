@@ -28,14 +28,10 @@ INSERT IGNORE INTO `PREFIX_hook` (`id_hook`, `name`, `title`, `description`, `po
   (NULL, 'actionBeforeUpdateProductFormHandler', 'Modify product identifiable object data before updating it', 'This hook allows to modify product identifiable object form data before it was updated', '1'),
   (NULL, 'actionAfterUpdateProductFormHandler', 'Modify product identifiable object data after updating it', 'This hook allows to modify product identifiable object form data before it was updated', '1'),
   (NULL, 'actionBeforeCreateProductFormHandler', 'Modify product identifiable object data before creating it', 'This hook allows to modify product identifiable object form data before it was created', '1'),
-  (NULL, 'actionAfterCreateProductFormHandler', 'Modify product identifiable object data after creating it', 'This hook allows to modify product identifiable object form data after it was created', '1')
+  (NULL, 'actionAfterCreateProductFormHandler', 'Modify product identifiable object data after creating it', 'This hook allows to modify product identifiable object form data after it was created', '1'),
+  (NULL, 'displayAdminOrderCreateExtraButtons', 'Add buttons on the create order page dropdown', 'Add buttons on the create order page dropdown', '1')
 ;
 
-
-ALTER TABLE `PREFIX_employee_session` ADD `date_upd` DATETIME NOT NULL AFTER `token`;
-ALTER TABLE `PREFIX_employee_session` ADD `date_add` DATETIME NOT NULL AFTER `date_upd`;
-ALTER TABLE `PREFIX_customer_session` ADD `date_upd` DATETIME NOT NULL AFTER `token`;
-ALTER TABLE `PREFIX_customer_session` ADD `date_add` DATETIME NOT NULL AFTER `date_upd`;
 
 ALTER TABLE `PREFIX_employee` ADD `has_enabled_gravatar` TINYINT UNSIGNED DEFAULT 0 NOT NULL;
 
@@ -82,7 +78,6 @@ UPDATE `PREFIX_product` SET `product_type` = "combinations" WHERE `cache_default
 UPDATE `PREFIX_product` SET `product_type` = "pack" WHERE `cache_is_pack` = 1;
 UPDATE `PREFIX_product` SET `product_type` = "virtual" WHERE `is_virtual` = 1;
 
-/* PHP:ps_1780_update_tabs(); */;
 /* PHP:ps_1780_add_feature_flag_tab(); */;
 
 /* this table should be created by Doctrine but we need to perform INSERT and the 1.7.8.0.sql script is called
