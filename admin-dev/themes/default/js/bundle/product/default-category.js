@@ -1,7 +1,8 @@
 /**
  * Default category management
  */
-const defaultCategory = (function () {
+
+export const defaultCategory = (function () {
   const defaultCategoryForm = $('#form_step1_id_category_default');
 
   return {
