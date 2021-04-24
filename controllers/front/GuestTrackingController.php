@@ -53,7 +53,12 @@ class GuestTrackingControllerCore extends FrontController
      */
     public function postProcess()
     {
-        $order_reference = current(explode('#', Tools::getValue('order_reference')));
+        $orderRefArray = explode('#', Tools::getValue('order_reference'));
+        $order_reference = current($orderRefArray);
+        $orderRefNumber = end($orderRefArray);
+        if ($order_reference == $orderRefNumber) {
+            $orderRefNumber = null;
+        }
         $email = Tools::getValue('email');
 
         if (!$email && !$order_reference) {
@@ -68,7 +73,12 @@ class GuestTrackingControllerCore extends FrontController
             return;
         }
 
-        $this->order = Order::getByReferenceAndEmail($order_reference, $email);
+        if ($orderRefNumber) {
+            $this->order = Order::getByReferenceEmailAndNumber($order_reference, $email, (int)$orderRefNumber);
+        } else {
+            $this->order = Order::getByReferenceAndEmail($order_reference, $email);
+        }
+        
         if (!Validate::isLoadedObject($this->order)) {
             $this->errors[] = $this->getTranslator()->trans(
                     'We couldn\'t find your order with the information provided, please try again',
