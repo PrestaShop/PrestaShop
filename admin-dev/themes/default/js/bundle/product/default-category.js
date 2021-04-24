@@ -2,7 +2,7 @@
  * Default category management
  */
 
-export const defaultCategory = (function () {
+const defaultCategory = (function () {
   const defaultCategoryForm = $('#form_step1_id_category_default');
 
   return {
@@ -44,3 +44,5 @@ export const defaultCategory = (function () {
 BOEvent.on('Product Default category Management started', () => {
   defaultCategory.init();
 }, 'Back office');
+
+export default defaultCategory;
