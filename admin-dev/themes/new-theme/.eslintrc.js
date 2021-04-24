@@ -28,6 +28,7 @@ module.exports = {
   rules: {
     'class-methods-use-this': 0,
     'func-names': 0,
+    'no-undef':0,
     'import/no-extraneous-dependencies': [
       'error',
       {
