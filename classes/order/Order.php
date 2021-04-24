@@ -1607,6 +1607,21 @@ class OrderCore extends ObjectModel
 
         return new Order($id);
     }
+    
+    public static function getByReferenceEmailAndNumber($reference, $email, $ordernumber)
+    {
+        $sql = '
+          SELECT id_order
+            FROM `' . _DB_PREFIX_ . 'orders` o
+            LEFT JOIN `' . _DB_PREFIX_ . 'customer` c ON (o.`id_customer` = c.`id_customer`)
+                WHERE o.`reference` = \'' . pSQL($reference) . '\' AND c.`email` = \'' . pSQL($email) . '\'
+        ';
+        
+        $orderArray = Db::getInstance()->executeS($sql);
+        $ordernumber -= 1;
+
+        return new Order((int)$orderArray[$ordernumber]['id_order']);
+    }
 
     public function getTotalWeight()
     {
