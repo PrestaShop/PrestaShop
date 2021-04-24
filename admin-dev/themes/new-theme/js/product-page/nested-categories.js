@@ -1,6 +1,8 @@
 /**
  * Nested categories management
  */
+import {defaultCategory} from '../../../default/js/bundle/product/default-category';
+
 export default function () {
   const nestedCategoriesForm = $('#form_step1_categories');
 
