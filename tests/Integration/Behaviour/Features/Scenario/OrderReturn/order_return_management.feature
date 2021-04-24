@@ -1,5 +1,6 @@
-# ./vendor/bin/behat -c tests/Integration/Behaviour/behat.yml -s order_message
+# ./vendor/bin/behat -c tests/Integration/Behaviour/behat.yml -s order_return
 @reset-database-before-feature
+@clear-cache-before-feature
 Feature: Order return Management
   As BO user I must be able to change status of order return
 
@@ -11,7 +12,6 @@ Feature: Order return Management
     And I am logged in as "test@prestashop.com" employee
     And there is customer "testCustomer" with email "pub@prestashop.com"
     And customer "testCustomer" has address in "US" country
-    And a carrier "default_carrier" with name "My carrier" exists
     And I create an empty cart "dummy_cart" for customer "testCustomer"
     And I select "US" address as delivery and invoice address for customer "testCustomer" in cart "dummy_cart"
     And I add 2 products "Mug The best is yet to come" to the cart "dummy_cart"
