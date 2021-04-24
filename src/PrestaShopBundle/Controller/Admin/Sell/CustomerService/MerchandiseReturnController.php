@@ -153,11 +153,11 @@ class MerchandiseReturnController extends FrameworkBundleAdminController
             ],
             MissingOrderReturnRequiredFieldsException::class => $this->trans(
                 'Missing required fields for merchandise return.',
-                'Admin.Notifications.Error'
+                'Admin.OrdersCustomers.Notification'
             ),
             OrderReturnNotFoundException::class => $this->trans(
                 'Merchandise return not found.',
-                'Admin.Notifications.Error'
+                'Admin.Orderscustomers.Notification'
             ),
             OrderReturnOrderStateConstraintException::class => [
                 OrderReturnOrderStateConstraintException::INVALID_ID => $this->trans(
@@ -167,7 +167,7 @@ class MerchandiseReturnController extends FrameworkBundleAdminController
             ],
             UpdateOrderReturnException::class => $this->trans(
                 'An error occurred while trying to update merchandise return.',
-                'Admin.Notifications.Error'
+                'Admin.OrdersCustomers.Notification'
             ),
         ];
     }
