@@ -30,7 +30,6 @@ namespace Tests\Integration\PrestaShopBundle\Controller\Sell\Catalog;
 
 use PrestaShop\PrestaShop\Core\Exception\TypeException;
 use PrestaShop\PrestaShop\Core\FeatureFlag\FeatureFlagSettings;
-use PrestaShopBundle\Entity\FeatureFlag;
 use Symfony\Bundle\FrameworkBundle\Routing\Router;
 use Symfony\Component\DomCrawler\Crawler;
 use Tests\Integration\PrestaShopBundle\Controller\GridControllerTestCase;
@@ -62,12 +61,11 @@ class ProductControllerTest extends GridControllerTestCase
             $featureFlagModifier = $this->client->getContainer()->get('prestashop.core.feature_flags.modifier');
             $featureFlagModifier->updateConfiguration(
                 [
-                    FeatureFlagSettings::FEATURE_FLAG_PRODUCT_PAGE_V2 => true
+                    FeatureFlagSettings::FEATURE_FLAG_PRODUCT_PAGE_V2 => true,
                 ]
             );
             $this->changedProductFeatureFlag = true;
         }
-
 
         parent::setUp();
     }
@@ -79,7 +77,7 @@ class ProductControllerTest extends GridControllerTestCase
             $featureFlagModifier = $this->client->getContainer()->get('prestashop.core.feature_flags.modifier');
             $featureFlagModifier->updateConfiguration(
                 [
-                    FeatureFlagSettings::FEATURE_FLAG_PRODUCT_PAGE_V2 => false
+                    FeatureFlagSettings::FEATURE_FLAG_PRODUCT_PAGE_V2 => false,
                 ]
             );
         }
