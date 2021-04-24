@@ -29,6 +29,8 @@ declare(strict_types=1);
 namespace Tests\Integration\PrestaShopBundle\Controller\Sell\Catalog;
 
 use PrestaShop\PrestaShop\Core\Exception\TypeException;
+use PrestaShop\PrestaShop\Core\FeatureFlag\FeatureFlagSettings;
+use PrestaShopBundle\Entity\FeatureFlag;
 use Symfony\Bundle\FrameworkBundle\Routing\Router;
 use Symfony\Component\DomCrawler\Crawler;
 use Tests\Integration\PrestaShopBundle\Controller\GridControllerTestCase;
@@ -36,6 +38,11 @@ use Tests\Integration\PrestaShopBundle\Controller\TestEntityDTO;
 
 class ProductControllerTest extends GridControllerTestCase
 {
+    /**
+     * @var bool
+     */
+    private $changedProductFeatureFlag = false;
+
     public function __construct($name = null, array $data = [], $dataName = '')
     {
         parent::__construct($name, $data, $dataName);
@@ -45,6 +52,37 @@ class ProductControllerTest extends GridControllerTestCase
         $this->deleteEntityRoute = 'admin_products_v2_delete';
         $this->formHandlerServiceId = 'prestashop.core.form.identifiable_object.product_form_handler';
         $this->saveButtonId = 'product_save';
+    }
+
+    public function setUp(): void
+    {
+        $this->client = static::createClient();
+        $productFeatureFlag = $this->client->getContainer()->get('doctrine.orm.entity_manager')->getRepository('PrestaShopBundle:FeatureFlag')->findOneBy(['name' => FeatureFlagSettings::FEATURE_FLAG_PRODUCT_PAGE_V2]);
+        if (!$productFeatureFlag->isEnabled()) {
+            $featureFlagModifier = $this->client->getContainer()->get('prestashop.core.feature_flags.modifier');
+            $featureFlagModifier->updateConfiguration(
+                [
+                    FeatureFlagSettings::FEATURE_FLAG_PRODUCT_PAGE_V2 => true
+                ]
+            );
+            $this->changedProductFeatureFlag = true;
+        }
+
+
+        parent::setUp();
+    }
+
+    public function tearDown(): void
+    {
+        parent::tearDown();
+        if ($this->changedProductFeatureFlag) {
+            $featureFlagModifier = $this->client->getContainer()->get('prestashop.core.feature_flags.modifier');
+            $featureFlagModifier->updateConfiguration(
+                [
+                    FeatureFlagSettings::FEATURE_FLAG_PRODUCT_PAGE_V2 => false
+                ]
+            );
+        }
     }
 
     protected function getIndexRoute(Router $router): string
