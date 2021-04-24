@@ -67,6 +67,11 @@
         <target>Number of visits and unique visitors</target>
         <note>Line: 140</note>
       </trans-unit>
+      <trans-unit id="d6be47df1fca07069a3f6a1844b301c6">
+        <source>Enrich your stats, add statistics about your visits and visitors.</source>
+        <target>Enrich your stats, add statistics about your visits and visitors.</target>
+        <note>Line: 47</note>
+      </trans-unit>
     </body>
   </file>
 </xliff>

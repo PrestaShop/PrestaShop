@@ -23,7 +23,7 @@
               <p style="border-bottom:1px solid #D6D4D4;">
                 {{ 'Order {order_name}'|trans({}, 'Emails.Body', locale) }}&nbsp;-&nbsp;{{ 'Payment processing error'|trans({}, 'Emails.Body', locale)|raw }}
               </p>
-            
+
 {% endif %}
             <span>
               {{ 'There is a problem with your payment for <strong><span>{shop_name}</span></strong> order with the reference <strong><span>{order_name}</span></strong>. Please contact us at your earliest convenience.'|trans({}, 'Emails.Body', locale)|raw }}<br/>
@@ -43,7 +43,7 @@
   <td class="linkbelow">
     <font size="2" face="{{ languageDefaultFont }}Open-sans, sans-serif" color="#555454">
       <span>
-        {{ 'You can review your order and download your invoice from the <a href="{history_url}">"Order history"</a> section of your customer account by clicking <a href="{my_account_url}">"My account"</a> on our shop.'|trans({}, 'Emails.Body', locale)|raw }}
+        {{ 'Follow your order and download your invoice on our shop, go to the <a href="{history_url}" target="_blank">%order_history_label%</a> section of your customer account.'|trans({'%order_history_label%': 'Order history and details'|trans({}, 'Shop.Theme.Customeraccount', locale)}, 'Emails.Body', locale)|raw }}
       </span>
     </font>
   </td>
@@ -52,7 +52,7 @@
   <td class="linkbelow">
     <font size="2" face="{{ languageDefaultFont }}Open-sans, sans-serif" color="#555454">
       <span>
-        {{ 'If you have a guest account, you can follow your order via the <a href="{guest_tracking_url}?id_order={order_name}">"Guest Tracking"</a> section on our shop.'|trans({}, 'Emails.Body', locale)|raw }}
+        {{ 'If you have a guest account, you can follow your order via the <a href="{guest_tracking_url}" target="_blank">%guest_tracking_label%</a> section on our shop.'|trans({'%guest_tracking_label%': 'Guest Tracking'|trans({}, 'Shop.Theme.Customeraccount', locale)}, 'Emails.Body', locale)|raw }}
       </span>
     </font>
   </td>

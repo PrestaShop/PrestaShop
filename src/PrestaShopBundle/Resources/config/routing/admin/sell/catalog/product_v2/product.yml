@@ -1,0 +1,38 @@
+_combinations:
+    resource: 'combination.yml'
+
+_images:
+    resource: 'image.yml'
+
+admin_products_v2_create:
+  path: /create
+  methods: [GET, POST]
+  defaults:
+    _controller: PrestaShopBundle:Admin/Sell/Catalog/Product/Product:create
+    _legacy_controller: AdminProducts
+    _legacy_link:
+      - AdminProducts:addproduct
+      - AdminProducts:add
+
+admin_products_v2_edit:
+  path: /{productId}/edit
+  methods: [GET, POST, PATCH]
+  defaults:
+    _controller: PrestaShopBundle:Admin/Sell/Catalog/Product/Product:edit
+    _legacy_controller: AdminProducts
+    _legacy_link:
+      - AdminProducts:updateproduct
+      - AdminProducts:update
+    _legacy_parameters:
+      id_product: productId
+  requirements:
+    productId: \d+
+
+admin_products_v2_download_virtual_product_file:
+    path: /virtual-product-file/{virtualProductFileId}
+    methods: [GET]
+    defaults:
+        _controller: PrestaShopBundle:Admin/Sell/Catalog/Product/Product:downloadVirtualFile
+        _legacy_controller: AdminProducts
+    requirements:
+        virtualProductFileId: \d+

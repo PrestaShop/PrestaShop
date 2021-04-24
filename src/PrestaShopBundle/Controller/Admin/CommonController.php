@@ -1,11 +1,12 @@
 <?php
 /**
- * 2007-2019 PrestaShop SA and Contributors
+ * Copyright since 2007 PrestaShop SA and Contributors
+ * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
  *
  * NOTICE OF LICENSE
  *
  * This source file is subject to the Open Software License (OSL 3.0)
- * that is bundled with this package in the file LICENSE.txt.
+ * that is bundled with this package in the file LICENSE.md.
  * It is also available through the world-wide-web at this URL:
  * https://opensource.org/licenses/OSL-3.0
  * If you did not receive a copy of the license and are unable to
@@ -16,12 +17,11 @@
  *
  * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
  * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to https://www.prestashop.com for more information.
+ * needs please refer to https://devdocs.prestashop.com/ for more information.
  *
- * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2019 PrestaShop SA and Contributors
+ * @author    PrestaShop SA and Contributors <contact@prestashop.com>
+ * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
- * International Registered Trademark & Property of PrestaShop SA
  */
 
 namespace PrestaShopBundle\Controller\Admin;
@@ -31,14 +31,17 @@ use PrestaShop\PrestaShop\Adapter\Module\AdminModuleDataProvider;
 use PrestaShop\PrestaShop\Core\Addon\AddonsCollection;
 use PrestaShop\PrestaShop\Core\Addon\Module\ModuleManagerBuilder;
 use PrestaShop\PrestaShop\Core\Domain\Notification\Command\UpdateEmployeeNotificationLastElementCommand;
-use PrestaShop\PrestaShop\Core\Domain\Notification\Exception\TypeException;
 use PrestaShop\PrestaShop\Core\Domain\Notification\Query\GetNotificationLastElements;
 use PrestaShop\PrestaShop\Core\Domain\Notification\QueryResult\NotificationsResults;
+use PrestaShop\PrestaShop\Core\Grid\Definition\Factory\AbstractGridDefinitionFactory;
+use PrestaShop\PrestaShop\Core\Grid\Definition\Factory\FilterableGridDefinitionFactoryInterface;
 use PrestaShop\PrestaShop\Core\Grid\Definition\Factory\GridDefinitionFactoryInterface;
-use PrestaShop\PrestaShop\Core\Grid\Definition\GridDefinitionInterface;
 use PrestaShop\PrestaShop\Core\Kpi\Row\KpiRowInterface;
 use PrestaShopBundle\Security\Annotation\AdminSecurity;
 use PrestaShopBundle\Service\DataProvider\Admin\RecommendedModules;
+use PrestaShopBundle\Service\Grid\ControllerResponseBuilder;
+use PrestaShopBundle\Service\Grid\ResponseBuilder;
+use ReflectionClass;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\RedirectResponse;
@@ -73,7 +76,7 @@ class CommonController extends FrameworkBundleAdminController
      *
      * @param Request $request
      *
-     * @throws TypeException
+     * @return JsonResponse
      */
     public function notificationsAckAction(Request $request)
     {
@@ -212,12 +215,12 @@ class CommonController extends FrameworkBundleAdminController
      */
     public function recommendedModulesAction($domain, $limit = 0, $randomize = 0)
     {
+        /** @var RecommendedModules $recommendedModules */
         $recommendedModules = $this->get('prestashop.data_provider.modules.recommended');
-        /** @var $recommendedModules RecommendedModules */
         $moduleIdList = $recommendedModules->getRecommendedModuleIdList($domain, ($randomize == 1));
 
+        /** @var AdminModuleDataProvider $modulesProvider */
         $modulesProvider = $this->get('prestashop.core.admin.data_provider.module_interface');
-        /** @var $modulesProvider AdminModuleDataProvider */
         $modulesRepository = ModuleManagerBuilder::getInstance()->buildRepository();
 
         $modules = [];
@@ -247,7 +250,7 @@ class CommonController extends FrameworkBundleAdminController
     /**
      * Render a right sidebar with content from an URL.
      *
-     * @param $url
+     * @param string $url
      * @param string $title
      * @param string $footer
      *
@@ -316,10 +319,10 @@ class CommonController extends FrameworkBundleAdminController
     /**
      * Specific action to render a specific field twice.
      *
-     * @param $formName the form name
-     * @param $formType the form type FQCN
-     * @param $fieldName the field name
-     * @param $fieldData the field data
+     * @param string $formName the form name
+     * @param string $formType the form type FQCN
+     * @param string $fieldName the field name
+     * @param array $fieldData the field data
      *
      * @return Response
      */
@@ -360,27 +363,43 @@ class CommonController extends FrameworkBundleAdminController
     ) {
         /** @var GridDefinitionFactoryInterface $definitionFactory */
         $definitionFactory = $this->get($gridDefinitionFactoryServiceId);
-        /** @var GridDefinitionInterface $definition */
-        $definition = $definitionFactory->getDefinition();
 
-        $gridFilterFormFactory = $this->get('prestashop.core.grid.filter.form_factory');
+        $filterId = null;
 
-        $filtersForm = $gridFilterFormFactory->create($definition);
-        $filtersForm->handleRequest($request);
-
-        $redirectParams = [];
-        if ($filtersForm->isSubmitted()) {
-            $redirectParams = [
-                'filters' => $filtersForm->getData(),
-            ];
-        }
-
-        foreach ($redirectQueryParamsToKeep as $paramName) {
-            if ($request->query->has($paramName)) {
-                $redirectParams[$paramName] = $request->query->get($paramName);
+        if ($definitionFactory instanceof FilterableGridDefinitionFactoryInterface) {
+            $filterId = $definitionFactory->getFilterId();
+        } elseif ($definitionFactory instanceof AbstractGridDefinitionFactory) {
+            // for backward compatibility for AbstractGridDefinitionFactory
+            // using ::GRID_ID (that has been replaced by AbstractFilterableGridDefinitionFactory)
+            $reflect = new ReflectionClass($definitionFactory);
+            if (array_key_exists('GRID_ID', $reflect->getConstants())) {
+                /* @phpstan-ignore-next-line Check of constant is done with ReflectionClass */
+                $filterId = $definitionFactory::GRID_ID;
             }
         }
 
-        return $this->redirectToRoute($redirectRoute, $redirectParams);
+        if (null !== $filterId) {
+            /** @var ResponseBuilder $responseBuilder */
+            $responseBuilder = $this->get('prestashop.bundle.grid.response_builder');
+
+            return $responseBuilder->buildSearchResponse(
+                $definitionFactory,
+                $request,
+                $filterId,
+                $redirectRoute,
+                $redirectQueryParamsToKeep
+            );
+        }
+
+        // Legacy grid definition which use controller/action as filter keys (and no scope for parameters)
+        /** @var ControllerResponseBuilder $controllerResponseBuilder */
+        $controllerResponseBuilder = $this->get('prestashop.bundle.grid.controller_response_builder');
+
+        return $controllerResponseBuilder->buildSearchResponse(
+            $definitionFactory,
+            $request,
+            $redirectRoute,
+            $redirectQueryParamsToKeep
+        );
     }
 }

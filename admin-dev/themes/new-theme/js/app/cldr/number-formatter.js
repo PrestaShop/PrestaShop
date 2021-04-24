@@ -1,10 +1,11 @@
 /**
- * 2007-2019 PrestaShop SA and Contributors
+ * Copyright since 2007 PrestaShop SA and Contributors
+ * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
  *
  * NOTICE OF LICENSE
  *
  * This source file is subject to the Open Software License (OSL 3.0)
- * that is bundled with this package in the file LICENSE.txt.
+ * that is bundled with this package in the file LICENSE.md.
  * It is also available through the world-wide-web at this URL:
  * https://opensource.org/licenses/OSL-3.0
  * If you did not receive a copy of the license and are unable to
@@ -15,12 +16,11 @@
  *
  * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
  * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to https://www.prestashop.com for more information.
+ * needs please refer to https://devdocs.prestashop.com/ for more information.
  *
- * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2019 PrestaShop SA and Contributors
+ * @author    PrestaShop SA and Contributors <contact@prestashop.com>
+ * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
- * International Registered Trademark & Property of PrestaShop SA
  */
 /**
  * These placeholders are used in CLDR number formatting templates.
@@ -75,6 +75,7 @@ class NumberFormatter {
 
     // Assemble the final number
     let formattedNumber = majorDigits;
+
     if (minorDigits) {
       formattedNumber += DECIMAL_SEPARATOR_PLACEHOLDER + minorDigits;
     }
@@ -108,6 +109,7 @@ class NumberFormatter {
     const result = number.toString().split('.');
     const majorDigits = result[0];
     const minorDigits = (result[1] === undefined) ? '' : result[1];
+
     return [majorDigits, minorDigits];
   }
 
@@ -156,6 +158,7 @@ class NumberFormatter {
    */
   adjustMinorDigitsZeroes(minorDigits) {
     let digit = minorDigits;
+
     if (digit.length > this.numberSpecification.getMaxFractionDigits()) {
       // Strip any trailing zeroes.
       digit = digit.replace(/0+$/, '');
@@ -225,11 +228,11 @@ class NumberFormatter {
    */
   strtr(str, pairs) {
     const substrs = Object.keys(pairs).map(escapeRE);
+
     return str.split(RegExp(`(${substrs.join('|')})`))
       .map((part) => pairs[part] || part)
       .join('');
   }
-
 
   /**
    * Add missing placeholders to the number using the passed CLDR pattern.
@@ -285,6 +288,7 @@ class NumberFormatter {
 
   static build(specifications) {
     let symbol;
+
     if (undefined !== specifications.numberSymbols) {
       symbol = new NumberSymbol(...specifications.numberSymbols);
     } else {
@@ -292,6 +296,7 @@ class NumberFormatter {
     }
 
     let specification;
+
     if (specifications.currencySymbol) {
       specification = new PriceSpecification(
         specifications.positivePattern,

@@ -1,11 +1,12 @@
 <?php
 /**
- * 2007-2019 PrestaShop SA and Contributors
+ * Copyright since 2007 PrestaShop SA and Contributors
+ * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
  *
  * NOTICE OF LICENSE
  *
  * This source file is subject to the Open Software License (OSL 3.0)
- * that is bundled with this package in the file LICENSE.txt.
+ * that is bundled with this package in the file LICENSE.md.
  * It is also available through the world-wide-web at this URL:
  * https://opensource.org/licenses/OSL-3.0
  * If you did not receive a copy of the license and are unable to
@@ -16,12 +17,11 @@
  *
  * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
  * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to https://www.prestashop.com for more information.
+ * needs please refer to https://devdocs.prestashop.com/ for more information.
  *
- * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2019 PrestaShop SA and Contributors
+ * @author    PrestaShop SA and Contributors <contact@prestashop.com>
+ * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
- * International Registered Trademark & Property of PrestaShop SA
  */
 
 namespace PrestaShopBundle\Controller\Admin\Sell\Catalog;
@@ -54,7 +54,7 @@ use PrestaShop\PrestaShop\Core\Form\IdentifiableObject\Builder\FormBuilderInterf
 use PrestaShop\PrestaShop\Core\Form\IdentifiableObject\Handler\FormHandlerInterface;
 use PrestaShop\PrestaShop\Core\Grid\Definition\Factory\ManufacturerAddressGridDefinitionFactory;
 use PrestaShop\PrestaShop\Core\Grid\Definition\Factory\ManufacturerGridDefinitionFactory;
-use PrestaShop\PrestaShop\Core\Image\Uploader\Exception\ImageOptimizationException;
+use PrestaShop\PrestaShop\Core\Image\Exception\ImageOptimizationException;
 use PrestaShop\PrestaShop\Core\Image\Uploader\Exception\ImageUploadException;
 use PrestaShop\PrestaShop\Core\Image\Uploader\Exception\MemoryLimitException;
 use PrestaShop\PrestaShop\Core\Image\Uploader\Exception\UploadedImageConstraintException;
@@ -78,10 +78,6 @@ class ManufacturerController extends FrameworkBundleAdminController
      * Show manufacturers listing page.
      *
      * @AdminSecurity("is_granted('read', request.get('_legacy_controller'))")
-     *
-     * @param Request $request
-     * @param ManufacturerFilters $manufacturerFilters
-     * @param ManufacturerAddressFilters $manufacturerAddressFilters
      *
      * @return Response
      */
@@ -109,8 +105,6 @@ class ManufacturerController extends FrameworkBundleAdminController
      * Provides filters functionality
      *
      * @AdminSecurity("is_granted('read', request.get('_legacy_controller'))")
-     *
-     * @param Request $request
      *
      * @return RedirectResponse
      */
@@ -141,16 +135,14 @@ class ManufacturerController extends FrameworkBundleAdminController
      *     "is_granted(['create'], request.get('_legacy_controller'))"
      * )
      *
-     * @param Request $request
-     *
      * @return Response
      */
     public function createAction(Request $request)
     {
-        try {
-            $manufacturerForm = $this->getFormBuilder()->getForm();
-            $manufacturerForm->handleRequest($request);
+        $manufacturerForm = $this->getFormBuilder()->getForm();
+        $manufacturerForm->handleRequest($request);
 
+        try {
             $result = $this->getFormHandler()->handle($manufacturerForm);
 
             if (null !== $result->getIdentifiableObjectId()) {
@@ -174,7 +166,6 @@ class ManufacturerController extends FrameworkBundleAdminController
      *
      * @AdminSecurity("is_granted(['read'], request.get('_legacy_controller'))")
      *
-     * @param Request $request
      * @param int $manufacturerId
      *
      * @return Response
@@ -211,13 +202,15 @@ class ManufacturerController extends FrameworkBundleAdminController
      * )
      *
      * @param int $manufacturerId
-     * @param Request $request
      *
      * @return Response
      */
     public function editAction(Request $request, $manufacturerId)
     {
         try {
+            /** @var EditableManufacturer $editableManufacturer */
+            $editableManufacturer = $this->getQueryBus()->handle(new GetManufacturerForEditing((int) $manufacturerId));
+
             $manufacturerForm = $this->getFormBuilder()->getFormFor((int) $manufacturerId);
             $manufacturerForm->handleRequest($request);
 
@@ -236,8 +229,9 @@ class ManufacturerController extends FrameworkBundleAdminController
             }
         }
 
-        /** @var EditableManufacturer $editableManufacturer */
-        $editableManufacturer = $this->getQueryBus()->handle(new GetManufacturerForEditing((int) $manufacturerId));
+        if (!isset($editableManufacturer) || !isset($manufacturerForm)) {
+            return $this->redirectToRoute('admin_manufacturers_index');
+        }
 
         return $this->render('@PrestaShop/Admin/Sell/Catalog/Manufacturer/edit.html.twig', [
             'help_link' => $this->generateSidebarLink($request->attributes->get('_legacy_controller')),
@@ -254,7 +248,7 @@ class ManufacturerController extends FrameworkBundleAdminController
      * @AdminSecurity("is_granted('delete', request.get('_legacy_controller'))", redirectRoute="admin_manufacturers_index")
      * @DemoRestricted(redirectRoute="admin_manufacturers_index")
      *
-     * @param $manufacturerId
+     * @param int|string $manufacturerId
      *
      * @return RedirectResponse
      */
@@ -278,8 +272,6 @@ class ManufacturerController extends FrameworkBundleAdminController
      *
      * @AdminSecurity("is_granted('delete', request.get('_legacy_controller'))", redirectRoute="admin_manufacturers_index")
      * @DemoRestricted(redirectRoute="admin_manufacturers_index")
-     *
-     * @param Request $request
      *
      * @return RedirectResponse
      */
@@ -306,8 +298,6 @@ class ManufacturerController extends FrameworkBundleAdminController
      * @AdminSecurity("is_granted('update', request.get('_legacy_controller'))", redirectRoute="admin_manufacturers_index")
      * @DemoRestricted(redirectRoute="admin_manufacturers_index")
      *
-     * @param Request $request
-     *
      * @return RedirectResponse
      */
     public function bulkEnableAction(Request $request)
@@ -333,8 +323,6 @@ class ManufacturerController extends FrameworkBundleAdminController
      *
      * @AdminSecurity("is_granted('update', request.get('_legacy_controller'))", redirectRoute="admin_manufacturers_index")
      * @DemoRestricted(redirectRoute="admin_manufacturers_index")
-     *
-     * @param Request $request
      *
      * @return RedirectResponse
      */
@@ -394,8 +382,6 @@ class ManufacturerController extends FrameworkBundleAdminController
      * )
      * @DemoRestricted(redirectRoute="admin_manufacturers_index")
      *
-     * @param ManufacturerFilters $filters
-     *
      * @return Response
      */
     public function exportAction(ManufacturerFilters $filters)
@@ -429,7 +415,7 @@ class ManufacturerController extends FrameworkBundleAdminController
         return (new CsvResponse())
             ->setData($data)
             ->setHeadersData($headers)
-            ->setFileName('manufacturer_' . date('Y-m-d_His') . '.csv')
+            ->setFileName('brands_' . date('Y-m-d_His') . '.csv')
             ;
     }
 
@@ -466,8 +452,6 @@ class ManufacturerController extends FrameworkBundleAdminController
      *     redirectRoute="admin_manufacturers_index"
      * )
      * @DemoRestricted(redirectRoute="admin_manufacturers_index")
-     *
-     * @param ManufacturerAddressFilters $filters
      *
      * @return Response
      */
@@ -513,8 +497,6 @@ class ManufacturerController extends FrameworkBundleAdminController
      * @AdminSecurity("is_granted('delete', request.get('_legacy_controller'))", redirectRoute="admin_manufacturers_index")
      * @DemoRestricted(redirectRoute="admin_manufacturers_index")
      *
-     * @param Request $request
-     *
      * @return RedirectResponse
      */
     public function bulkDeleteAddressAction(Request $request)
@@ -538,8 +520,6 @@ class ManufacturerController extends FrameworkBundleAdminController
      * Show & process address creation.
      *
      * @AdminSecurity("is_granted('create', request.get('_legacy_controller'))")
-     *
-     * @param Request $request
      *
      * @return Response
      */
@@ -586,7 +566,6 @@ class ManufacturerController extends FrameworkBundleAdminController
      * @AdminSecurity("is_granted('update', request.get('_legacy_controller'))")
      *
      * @param int $addressId
-     * @param Request $request
      *
      * @return Response
      */
@@ -597,9 +576,6 @@ class ManufacturerController extends FrameworkBundleAdminController
         $addressFormBuilder = $this->getAddressFormBuilder();
         $addressFormHandler = $this->getAddressFormHandler();
 
-        /** @var EditableManufacturerAddress $address */
-        $address = $this->getQueryBus()->handle(new GetManufacturerAddressForEditing($addressId));
-
         $formData = [];
         if ($request->request->has('manufacturer_address') && isset($request->request->get('manufacturer_address')['id_country'])) {
             $formCountryId = (int) $request->request->get('manufacturer_address')['id_country'];
@@ -607,6 +583,8 @@ class ManufacturerController extends FrameworkBundleAdminController
         }
 
         try {
+            /** @var EditableManufacturerAddress $editableAddress */
+            $editableAddress = $this->getQueryBus()->handle(new GetManufacturerAddressForEditing($addressId));
             $addressForm = $addressFormBuilder->getFormFor($addressId, $formData);
             $addressForm->handleRequest($request);
 
@@ -617,16 +595,16 @@ class ManufacturerController extends FrameworkBundleAdminController
 
                 return $this->redirectToRoute('admin_manufacturers_index');
             }
-
-            /** @var EditableManufacturerAddress $editableAddress */
-            $editableAddress = $this->getQueryBus()->handle(new GetManufacturerAddressForEditing($addressId));
-        } catch (DomainException $e) {
+        } catch (Exception $e) {
             $this->addFlash('error', $this->getErrorMessageForException($e, $this->getErrorMessages()));
 
             if ($e instanceof AddressNotFoundException || $e instanceof AddressConstraintException) {
                 return $this->redirectToRoute('admin_manufacturers_index');
             }
-            $editableAddress = $address;
+        }
+
+        if (!isset($editableAddress) || !isset($addressForm)) {
+            return $this->redirectToRoute('admin_manufacturers_index');
         }
 
         return $this->render('@PrestaShop/Admin/Sell/Catalog/Manufacturer/Address/edit.html.twig', [
@@ -701,7 +679,7 @@ class ManufacturerController extends FrameworkBundleAdminController
                 UploadedImageConstraintException::EXCEEDED_SIZE => $this->trans(
                     'Max file size allowed is "%s" bytes.', 'Admin.Notifications.Error', [
                         $iniConfig->getUploadMaxSizeInBytes(),
-                ]),
+                    ]),
                 UploadedImageConstraintException::UNRECOGNIZED_FORMAT => $this->trans(
                     'Image format not recognized, allowed formats are: .gif, .jpg, .png',
                     'Admin.Notifications.Error'
@@ -712,15 +690,13 @@ class ManufacturerController extends FrameworkBundleAdminController
                 'Admin.Notifications.Error'
             ),
             InvalidAddressFieldException::class => $this->trans(
-                'Address contains invalid field values',
+                'Address fields contain invalid values.',
                 'Admin.Notifications.Error'
             ),
         ];
     }
 
     /**
-     * @param Request $request
-     *
      * @return array
      */
     private function getBulkManufacturersFromRequest(Request $request)
@@ -739,8 +715,6 @@ class ManufacturerController extends FrameworkBundleAdminController
     }
 
     /**
-     * @param Request $request
-     *
      * @return array
      */
     private function getBulkAddressesFromRequest(Request $request)
@@ -797,14 +771,14 @@ class ManufacturerController extends FrameworkBundleAdminController
 
         if ($this->configuration->get('PS_DISPLAY_MANUFACTURERS')) {
             return $this->trans(
-                'The display of your brands is enabled on your store. Go to %sShop Parameters > General to edit settings.%s',
+                'The display of your brands is enabled on your store. Go to %sShop Parameters > General%s to edit settings.',
                 'Admin.Catalog.Notification',
                 [$urlOpening, $urlEnding]
             );
         }
 
         return $this->trans(
-            'The display of your brands is disabled on your store. Go to %sShop Parameters > General to edit settings.%s',
+            'The display of your brands is disabled on your store. Go to %sShop Parameters > General%s to edit settings.',
             'Admin.Catalog.Notification',
             [$urlOpening, $urlEnding]
         );

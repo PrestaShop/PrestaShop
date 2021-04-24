@@ -1,11 +1,12 @@
 <?php
 /**
- * 2007-2019 PrestaShop SA and Contributors
+ * Copyright since 2007 PrestaShop SA and Contributors
+ * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
  *
  * NOTICE OF LICENSE
  *
  * This source file is subject to the Open Software License (OSL 3.0)
- * that is bundled with this package in the file LICENSE.txt.
+ * that is bundled with this package in the file LICENSE.md.
  * It is also available through the world-wide-web at this URL:
  * https://opensource.org/licenses/OSL-3.0
  * If you did not receive a copy of the license and are unable to
@@ -16,17 +17,23 @@
  *
  * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
  * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to https://www.prestashop.com for more information.
+ * needs please refer to https://devdocs.prestashop.com/ for more information.
  *
- * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2019 PrestaShop SA and Contributors
+ * @author    PrestaShop SA and Contributors <contact@prestashop.com>
+ * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
- * International Registered Trademark & Property of PrestaShop SA
  */
 
 namespace PrestaShopBundle\Form\Admin\Product;
 
+use Currency;
+use Language;
+use PrestaShop\PrestaShop\Adapter\Category\CategoryDataProvider;
 use PrestaShop\PrestaShop\Adapter\Configuration;
+use PrestaShop\PrestaShop\Adapter\Feature\FeatureDataProvider;
+use PrestaShop\PrestaShop\Adapter\LegacyContext;
+use PrestaShop\PrestaShop\Adapter\Manufacturer\ManufacturerDataProvider;
+use PrestaShop\PrestaShop\Adapter\Product\ProductDataProvider;
 use PrestaShopBundle\Form\Admin\Category\SimpleCategory;
 use PrestaShopBundle\Form\Admin\Feature\ProductFeature;
 use PrestaShopBundle\Form\Admin\Type\ChoiceCategoriesTreeType;
@@ -36,11 +43,13 @@ use PrestaShopBundle\Form\Admin\Type\TranslateType;
 use PrestaShopBundle\Form\Admin\Type\TypeaheadProductCollectionType;
 use PrestaShopBundle\Form\Admin\Type\TypeaheadProductPackCollectionType;
 use PrestaShopBundle\Form\Validator\Constraints\TinyMceMaxLength;
+use PrestaShopBundle\Service\Routing\Router;
 use Symfony\Component\Form\Extension\Core\Type as FormType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\Form\FormError;
 use Symfony\Component\Form\FormEvent;
 use Symfony\Component\Form\FormEvents;
+use Symfony\Component\Translation\TranslatorInterface;
 use Symfony\Component\Validator\Constraints as Assert;
 
 /**
@@ -48,28 +57,73 @@ use Symfony\Component\Validator\Constraints as Assert;
  */
 class ProductInformation extends CommonAbstractType
 {
-    private $router;
+    /**
+     * @var array
+     */
+    public $categories;
+    /**
+     * @var CategoryDataProvider
+     */
+    public $categoryDataProvider;
+    /**
+     * @var Configuration
+     */
+    public $configuration;
+    /**
+     * @var LegacyContext
+     */
     private $context;
-    private $translator;
+    /**
+     * @var Currency
+     */
+    public $currency;
+    /**
+     * @var FeatureDataProvider
+     */
+    public $featureDataProvider;
+    /**
+     * @var array<int|Language>
+     */
     private $locales;
-    private $productDataProvider;
-    private $nested_categories;
-    private $categoryDataProvider;
+    /**
+     * @var ManufacturerDataProvider
+     */
     private $manufacturerDataProvider;
+    /**
+     * @var array
+     */
     private $manufacturers;
+    /**
+     * @var array
+     */
+    public $nested_categories;
+    /**
+     * @var ProductDataProvider
+     */
     private $productAdapter;
-    private $configuration;
+    /**
+     * @var ProductDataProvider
+     */
+    public $productDataProvider;
+    /**
+     * @var Router
+     */
+    public $router;
+    /**
+     * @var TranslatorInterface
+     */
+    public $translator;
 
     /**
      * Constructor.
      *
-     * @param object $translator
-     * @param object $legacyContext
-     * @param object $router
-     * @param object $categoryDataProvider
-     * @param object $productDataProvider
-     * @param object $featureDataProvider
-     * @param object $manufacturerDataProvider
+     * @param TranslatorInterface $translator
+     * @param LegacyContext $legacyContext
+     * @param Router $router
+     * @param CategoryDataProvider $categoryDataProvider
+     * @param ProductDataProvider $productDataProvider
+     * @param FeatureDataProvider $featureDataProvider
+     * @param ManufacturerDataProvider $manufacturerDataProvider
      */
     public function __construct(
         $translator,
@@ -229,6 +283,7 @@ class ProductInformation extends CommonAbstractType
                     'data-minimumResultsForSearch' => '7',
                 ],
                 'label' => $this->translator->trans('Brand', [], 'Admin.Catalog.Feature'),
+                'placeholder' => $this->translator->trans('Choose a brand', [], 'Admin.Catalog.Feature'),
             ])
             //RIGHT COL
             ->add('active', FormType\CheckboxType::class, [

@@ -1,10 +1,11 @@
 /**
- * 2007-2019 PrestaShop SA and Contributors
+ * Copyright since 2007 PrestaShop SA and Contributors
+ * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
  *
  * NOTICE OF LICENSE
  *
  * This source file is subject to the Open Software License (OSL 3.0)
- * that is bundled with this package in the file LICENSE.txt.
+ * that is bundled with this package in the file LICENSE.md.
  * It is also available through the world-wide-web at this URL:
  * https://opensource.org/licenses/OSL-3.0
  * If you did not receive a copy of the license and are unable to
@@ -15,13 +16,15 @@
  *
  * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
  * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to https://www.prestashop.com for more information.
+ * needs please refer to https://devdocs.prestashop.com/ for more information.
  *
- * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2019 PrestaShop SA and Contributors
+ * @author    PrestaShop SA and Contributors <contact@prestashop.com>
+ * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
- * International Registered Trademark & Property of PrestaShop SA
  */
+
+
+import TranslationSettingsMap from './TranslationSettingsMap';
 
 const {$} = window;
 
@@ -64,8 +67,8 @@ const emailContentBody = 'body';
 
 export default class FormFieldToggle {
   constructor() {
-    $('.js-translation-type').on('change', this.toggleFields.bind(this));
-    $('.js-email-content-type').on('change', this.toggleEmailFields.bind(this));
+    $(TranslationSettingsMap.translationType).on('change', this.toggleFields.bind(this));
+    $(TranslationSettingsMap.emailContentType).on('change', this.toggleEmailFields.bind(this));
 
     this.toggleFields();
   }
@@ -74,13 +77,11 @@ export default class FormFieldToggle {
    * Toggle dependant translations fields, based on selected translation type
    */
   toggleFields() {
-    const selectedOption = $('.js-translation-type').val();
-    const $modulesFormGroup = $('.js-module-form-group');
-    const $emailFormGroup = $('.js-email-form-group');
-    const $themesFormGroup = $('.js-theme-form-group');
-    const $themesSelect = $themesFormGroup.find('select');
-    const $noThemeOption = $themesSelect.find('.js-no-theme');
-    const $firstThemeOption = $themesSelect.find('option:not(.js-no-theme):first');
+    const selectedOption = $(TranslationSettingsMap.translationType).val();
+    const $modulesFormGroup = $(TranslationSettingsMap.modulesFormGroup);
+    const $emailFormGroup = $(TranslationSettingsMap.emailFormGroup);
+    const $themesFormGroup = $(TranslationSettingsMap.themesFormGroup);
+    const $defaultThemeOption = $themesFormGroup.find(TranslationSettingsMap.defaultThemeOption);
 
     switch (selectedOption) {
       case back:
@@ -89,12 +90,8 @@ export default class FormFieldToggle {
         break;
 
       case themes:
-        if ($noThemeOption.is(':selected')) {
-          $themesSelect.val($firstThemeOption.val());
-        }
-
-        this.hide($modulesFormGroup, $emailFormGroup, $noThemeOption);
         this.show($themesFormGroup);
+        this.hide($modulesFormGroup, $emailFormGroup, $defaultThemeOption);
         break;
 
       case modules:
@@ -118,22 +115,22 @@ export default class FormFieldToggle {
    * Toggles fields, which are related to email translations
    */
   toggleEmailFields() {
-    if ($('.js-translation-type').val() !== mails) {
+    if ($(TranslationSettingsMap.translationType).val() !== mails) {
       return;
     }
 
-    const selectedEmailContentType = $('.js-email-form-group').find('select').val();
-    const $themesFormGroup = $('.js-theme-form-group');
-    const $noThemeOption = $themesFormGroup.find('.js-no-theme');
+    const selectedEmailContentType = $(TranslationSettingsMap.emailFormGroup).find('select').val();
+    const $themesFormGroup = $(TranslationSettingsMap.themesFormGroup);
+    const $noThemeOption = $themesFormGroup.find(TranslationSettingsMap.noThemeOption);
+    const $defaultThemeOption = $themesFormGroup.find(TranslationSettingsMap.defaultThemeOption);
 
     if (selectedEmailContentType === emailContentBody) {
       $noThemeOption.prop('selected', true);
-      this.show($noThemeOption, $themesFormGroup);
+      this.show($noThemeOption, $themesFormGroup, $defaultThemeOption);
     } else {
-      this.hide($noThemeOption, $themesFormGroup);
+      this.hide($noThemeOption, $themesFormGroup, $defaultThemeOption);
     }
   }
-
 
   /**
    * Make all given selectors hidden

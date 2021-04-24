@@ -1,10 +1,11 @@
 {#**
- * 2007-2019 PrestaShop SA and Contributors
+ * Copyright since 2007 PrestaShop SA and Contributors
+ * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
  *
  * NOTICE OF LICENSE
  *
  * This source file is subject to the Open Software License (OSL 3.0)
- * that is bundled with this package in the file LICENSE.txt.
+ * that is bundled with this package in the file LICENSE.md.
  * It is also available through the world-wide-web at this URL:
  * https://opensource.org/licenses/OSL-3.0
  * If you did not receive a copy of the license and are unable to
@@ -15,12 +16,11 @@
  *
  * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
  * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to https://www.prestashop.com for more information.
+ * needs please refer to https://devdocs.prestashop.com/ for more information.
  *
- * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2019 PrestaShop SA and Contributors
+ * @author    PrestaShop SA and Contributors <contact@prestashop.com>
+ * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
- * International Registered Trademark & Property of PrestaShop SA
  *#}
 
 {% block order_preview %}
@@ -47,7 +47,11 @@
               <p class="mb-0">
                 <strong>{{ 'Tracking number'|trans({}, 'Admin.Shipping.Feature') }}:</strong>
                 {% if not orderPreview.isVirtual and orderPreview.shippingDetails.trackingNumber is not empty %}
-                  {{ orderPreview.shippingDetails.trackingNumber }}
+                  {% if orderPreview.shippingDetails.trackingUrl %}
+                    <a href="{{ orderPreview.shippingDetails.trackingUrl }}" target="_blank" rel="noopener noreferrer nofollow">{{ orderPreview.shippingDetails.trackingNumber }}</a>
+                  {% else %}
+                    {{ orderPreview.shippingDetails.trackingNumber }}
+                  {% endif %}
                 {% else %}
                   -
                 {% endif %}
@@ -78,6 +82,9 @@
                   {{ orderPreview.shippingDetails.postalCode }}
                 </p>
                 <p class="mb-0">{{ orderPreview.shippingDetails.country }}</p>
+                {% if orderPreview.shippingDetails.dni is not empty %}
+                  <p class="mb-0">{{ orderPreview.shippingDetails.dni }}</p>
+                {% endif %}
                 <p>{{ orderPreview.shippingDetails.phone }}</p>
               {% endif %}
             </div>
@@ -104,7 +111,6 @@
               {% endif %}
               <p class="mb-0">{{ orderPreview.invoiceDetails.address1 }}</p>
               <p class="mb-0">{{ orderPreview.invoiceDetails.address2 }}</p>
-              <p class="mb-0">{{ orderPreview.invoiceDetails.country }}</p>
               <p class="mb-0">
                 {{ orderPreview.invoiceDetails.city }},
                 {% if orderPreview.invoiceDetails.stateName %}
@@ -112,6 +118,10 @@
                 {% endif %}
                 {{ orderPreview.invoiceDetails.postalCode }}
               </p>
+              <p class="mb-0">{{ orderPreview.invoiceDetails.country }}</p>
+              {% if orderPreview.invoiceDetails.dni is not empty %}
+                <p class="mb-0">{{ orderPreview.invoiceDetails.dni }}</p>
+              {% endif %}
               <p class="mb-0">{{ orderPreview.invoiceDetails.phone }}</p>
               <p>{{ orderPreview.invoiceDetails.email }}</p>
             </div>
@@ -135,7 +145,7 @@
               ({{ orderPreview.productDetails|length }})
             </th>
             <th>{{ 'Reference'|trans({}, 'Admin.Global') }}</th>
-            <th>{{ 'Stock location'|trans({}, 'Admin.Orderscustomers.Feature') }}</th>
+            <th class="js-cell-product-stock-location">{{ 'Stock location'|trans({}, 'Admin.Orderscustomers.Feature') }}</th>
             {% if orderPreview.taxIncluded == false %}
               <th class="text-center">
                 {{ 'Tax'|trans({}, 'Admin.Global') }}
@@ -153,8 +163,8 @@
             <tr class="{% if loop.index > productsPreviewLimit %}js-product-preview-more d-none{% endif %}">
               <td class="p-1">{{ productDetail.name }}</td>
               <td class="p-1">{{ productDetail.reference }}</td>
-              <td class="p-1">
-                {% if productDetail.location is not empty %}{{ productDetail.location }}{% else %}-{% endif %}
+              <td class="p-1 js-cell-product-stock-location">
+                {% if productDetail.location is not empty %}{{ productDetail.location }}{% endif %}
               </td>
               {% if orderPreview.taxIncluded == false %}
                 <td class="p-1 text-center">{{ productDetail.totalTax }}</td>
@@ -190,4 +200,3 @@
   </div>
   {{ renderhook('displayOrderPreview', {'order_id': orderId}) }}
 {% endblock %}
-

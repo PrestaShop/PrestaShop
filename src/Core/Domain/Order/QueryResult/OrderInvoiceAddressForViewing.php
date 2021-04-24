@@ -1,11 +1,12 @@
 <?php
 /**
- * 2007-2019 PrestaShop SA and Contributors
+ * Copyright since 2007 PrestaShop SA and Contributors
+ * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
  *
  * NOTICE OF LICENSE
  *
  * This source file is subject to the Open Software License (OSL 3.0)
- * that is bundled with this package in the file LICENSE.txt.
+ * that is bundled with this package in the file LICENSE.md.
  * It is also available through the world-wide-web at this URL:
  * https://opensource.org/licenses/OSL-3.0
  * If you did not receive a copy of the license and are unable to
@@ -16,12 +17,11 @@
  *
  * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
  * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to https://www.prestashop.com for more information.
+ * needs please refer to https://devdocs.prestashop.com/ for more information.
  *
- * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2019 PrestaShop SA and Contributors
+ * @author    PrestaShop SA and Contributors <contact@prestashop.com>
+ * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
- * International Registered Trademark & Property of PrestaShop SA
  */
 
 namespace PrestaShop\PrestaShop\Core\Domain\Order\QueryResult;
@@ -47,6 +47,12 @@ class OrderInvoiceAddressForViewing
      * @var string
      */
     private $companyName;
+
+    /**
+     * @var string|null
+     */
+    private $vatNumber;
+
     /**
      * @var string
      */
@@ -88,6 +94,11 @@ class OrderInvoiceAddressForViewing
     private $mobilePhoneNumber;
 
     /**
+     * @var string|null
+     */
+    private $dni;
+
+    /**
      * @param int $addressId
      * @param string $firstName
      * @param string $lastName
@@ -100,6 +111,8 @@ class OrderInvoiceAddressForViewing
      * @param string $postCode
      * @param string $phone
      * @param string $phoneMobile
+     * @param string|null $vatNumber
+     * @param string|null $dni If null the DNI is not required for the country, else string
      */
     public function __construct(
         int $addressId,
@@ -113,12 +126,15 @@ class OrderInvoiceAddressForViewing
         string $countryName,
         string $postCode,
         string $phone,
-        string $phoneMobile
+        string $phoneMobile,
+        ?string $vatNumber = null,
+        ?string $dni = null
     ) {
         $this->addressId = $addressId;
         $this->firstName = $firstName;
         $this->lastName = $lastName;
         $this->companyName = $companyName;
+        $this->vatNumber = $vatNumber;
         $this->address1 = $address1;
         $this->address2 = $address2;
         $this->stateName = $stateName;
@@ -127,6 +143,7 @@ class OrderInvoiceAddressForViewing
         $this->postCode = $postCode;
         $this->phoneNumber = $phone;
         $this->mobilePhoneNumber = $phoneMobile;
+        $this->dni = $dni;
     }
 
     /**
@@ -154,6 +171,14 @@ class OrderInvoiceAddressForViewing
     }
 
     /**
+     * @return string|null
+     */
+    public function getVatNumber(): ?string
+    {
+        return $this->vatNumber;
+    }
+
+    /**
      * @return string
      */
     public function getAddress1(): string
@@ -175,6 +200,16 @@ class OrderInvoiceAddressForViewing
     public function getCityName(): string
     {
         return $this->cityName;
+    }
+
+    /**
+     * If null the DNI is not required for the country, else string
+     *
+     * @return string|null
+     */
+    public function getDni(): ?string
+    {
+        return $this->dni;
     }
 
     /**

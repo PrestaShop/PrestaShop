@@ -1,11 +1,12 @@
 <?php
 /**
- * 2007-2019 PrestaShop SA and Contributors
+ * Copyright since 2007 PrestaShop SA and Contributors
+ * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
  *
  * NOTICE OF LICENSE
  *
  * This source file is subject to the Open Software License (OSL 3.0)
- * that is bundled with this package in the file LICENSE.txt.
+ * that is bundled with this package in the file LICENSE.md.
  * It is also available through the world-wide-web at this URL:
  * https://opensource.org/licenses/OSL-3.0
  * If you did not receive a copy of the license and are unable to
@@ -16,12 +17,11 @@
  *
  * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
  * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to https://www.prestashop.com for more information.
+ * needs please refer to https://devdocs.prestashop.com/ for more information.
  *
- * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2019 PrestaShop SA and Contributors
+ * @author    PrestaShop SA and Contributors <contact@prestashop.com>
+ * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
- * International Registered Trademark & Property of PrestaShop SA
  */
 
 namespace PrestaShopBundle\Form\Admin\Type;
@@ -74,9 +74,9 @@ class CountryChoiceType extends AbstractType
 
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
-        if ($options['withDniAttr'] || $options['withPostcodeAttr']) {
-            $this->needDni = $options['withDniAttr'];
-            $this->needPostcode = $options['withPostcodeAttr'];
+        if ($options['with_dni_attr'] || $options['with_postcode_attr']) {
+            $this->needDni = $options['with_dni_attr'];
+            $this->needPostcode = $options['with_postcode_attr'];
             $this->countriesAttr = $this->countriesAttrChoicesProvider->getChoicesAttributes();
         }
         parent::buildForm($builder, $options);
@@ -95,13 +95,13 @@ class CountryChoiceType extends AbstractType
         $resolver->setDefaults([
             'choices' => $choices,
             'choice_attr' => [$this, 'getChoiceAttr'],
-            'withDniAttr' => false,
-            'withPostcodeAttr' => false,
+            'with_dni_attr' => false,
+            'with_postcode_attr' => false,
         ]);
 
         $resolver
-            ->setAllowedTypes('withDniAttr', 'boolean')
-            ->setAllowedTypes('withPostcodeAttr', 'boolean');
+            ->setAllowedTypes('with_dni_attr', 'boolean')
+            ->setAllowedTypes('with_postcode_attr', 'boolean');
     }
 
     public function getChoiceAttr($value, $key)

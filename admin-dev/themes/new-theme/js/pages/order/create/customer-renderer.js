@@ -1,10 +1,11 @@
 /**
- * 2007-2019 PrestaShop SA and Contributors
+ * Copyright since 2007 PrestaShop SA and Contributors
+ * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
  *
  * NOTICE OF LICENSE
  *
  * This source file is subject to the Open Software License (OSL 3.0)
- * that is bundled with this package in the file LICENSE.txt.
+ * that is bundled with this package in the file LICENSE.md.
  * It is also available through the world-wide-web at this URL:
  * https://opensource.org/licenses/OSL-3.0
  * If you did not receive a copy of the license and are unable to
@@ -15,12 +16,11 @@
  *
  * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
  * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to https://www.prestashop.com for more information.
+ * needs please refer to https://devdocs.prestashop.com/ for more information.
  *
- * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2019 PrestaShop SA and Contributors
+ * @author    PrestaShop SA and Contributors <contact@prestashop.com>
+ * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
- * International Registered Trademark & Property of PrestaShop SA
  */
 
 import createOrderMap from '@pages/order/create/create-order-map';
@@ -46,16 +46,13 @@ export default class CustomerRenderer {
    * @param foundCustomers
    */
   renderSearchResults(foundCustomers) {
-    this.clearShownCustomers();
-
     if (foundCustomers.length === 0) {
       EventEmitter.emit(eventMap.customersNotFound);
-      this.showNotFoundCustomers();
 
       return;
     }
 
-    Object.entries(foundCustomers).forEach((customerId, customerResult) => {
+    Object.entries(foundCustomers).forEach(([customerId, customerResult]) => {
       const customer = {
         id: customerId,
         firstName: customerResult.firstname,
@@ -65,6 +62,13 @@ export default class CustomerRenderer {
       };
 
       this.renderFoundCustomer(customer);
+    });
+
+    // Show customer details in fancy box
+    $(createOrderMap.customerDetailsBtn).fancybox({
+      type: 'iframe',
+      width: '90%',
+      height: '90%',
     });
   }
 
@@ -87,6 +91,11 @@ export default class CustomerRenderer {
     this.$container.find(createOrderMap.notSelectedCustomerSearchResults)
       .closest(createOrderMap.customerSearchResultColumn)
       .remove();
+
+    // Initial display of the customer, the cart is gonna be created then customer's carts
+    // and orders are going to be fetched, but we can display the loading messages right now
+    this.showLoadingCarts();
+    this.showLoadingOrders();
   }
 
   /**
@@ -94,6 +103,15 @@ export default class CustomerRenderer {
    */
   showCustomerSearch() {
     this.$container.find(createOrderMap.customerSearchRow).removeClass('d-none');
+  }
+
+  /**
+   * Empty the cart list and display a loading message.
+   */
+  showLoadingCarts() {
+    const $cartsTable = $(createOrderMap.customerCartsTable);
+    $cartsTable.find('tbody').empty();
+    this.renderLoading($cartsTable);
   }
 
   /**
@@ -128,7 +146,10 @@ export default class CustomerRenderer {
       $cartsTableRow.find(createOrderMap.cartTotalField).text(cart.totalPrice);
       $cartsTableRow.find(createOrderMap.cartDetailsBtn).prop(
         'href',
-        this.router.generate('admin_carts_view', {cartId: cart.cartId}),
+        this.router.generate('admin_carts_view', {
+          cartId: cart.cartId,
+          liteDisplaying: 1,
+        }),
       );
 
       $cartsTableRow.find(createOrderMap.useCartBtn).data('cart-id', cart.cartId);
@@ -136,6 +157,22 @@ export default class CustomerRenderer {
       $cartsTable.find('thead').removeClass('d-none');
       $cartsTable.find('tbody').append($cartsTableRow);
     });
+
+    // Show cart details in fancy box
+    $(createOrderMap.cartDetailsBtn).fancybox({
+      type: 'iframe',
+      width: '90%',
+      height: '90%',
+    });
+  }
+
+  /**
+   * Empty the order list and display a loading message.
+   */
+  showLoadingOrders() {
+    const $ordersTable = $(createOrderMap.customerOrdersTable);
+    $ordersTable.find('tbody').empty();
+    this.renderLoading($ordersTable);
   }
 
   /**
@@ -158,24 +195,34 @@ export default class CustomerRenderer {
       return;
     }
 
-
     Object.values(orders).forEach((order) => {
       const $template = $rowTemplate.clone();
 
       $template.find(createOrderMap.orderIdField).text(order.orderId);
       $template.find(createOrderMap.orderDateField).text(order.orderPlacedDate);
-      $template.find(createOrderMap.orderProductsField).text(order.totalProductsCount);
+      $template.find(createOrderMap.orderProductsField).text(order.orderProductsCount);
       $template.find(createOrderMap.orderTotalField).text(order.totalPaid);
+      $template.find(createOrderMap.orderPaymentMethod).text(order.paymentMethodName);
       $template.find(createOrderMap.orderStatusField).text(order.orderStatus);
       $template.find(createOrderMap.orderDetailsBtn).prop(
         'href',
-        this.router.generate('admin_orders_view', {orderId: order.orderId}),
+        this.router.generate('admin_orders_view', {
+          orderId: order.orderId,
+          liteDisplaying: 1,
+        }),
       );
 
       $template.find(createOrderMap.useOrderBtn).data('order-id', order.orderId);
 
       $ordersTable.find('thead').removeClass('d-none');
       $ordersTable.find('tbody').append($template);
+    });
+
+    // Show order details in fancy box
+    $(createOrderMap.orderDetailsBtn).fancybox({
+      type: 'iframe',
+      width: '90%',
+      height: '90%',
     });
   }
 
@@ -201,6 +248,20 @@ export default class CustomerRenderer {
   }
 
   /**
+   * Shows searching customers notice during request
+   */
+  showSearchingCustomers() {
+    $(createOrderMap.customerSearchLoadingNotice).removeClass('d-none');
+  }
+
+  /**
+   * Hide searching notice
+   */
+  hideSearchingCustomers() {
+    $(createOrderMap.customerSearchLoadingNotice).addClass('d-none');
+  }
+
+  /**
    * Renders 'No records' warning in list
    *
    * @param $table
@@ -209,6 +270,18 @@ export default class CustomerRenderer {
    */
   renderEmptyList($table) {
     const $emptyTableRow = $($(createOrderMap.emptyListRowTemplate).html()).clone();
+    $table.find('tbody').append($emptyTableRow);
+  }
+
+  /**
+   * Renders 'Loading' message in list
+   *
+   * @param $table
+   *
+   * @private
+   */
+  renderLoading($table) {
+    const $emptyTableRow = $($(createOrderMap.loadingListRowTemplate).html()).clone();
     $table.find('tbody').append($emptyTableRow);
   }
 
@@ -241,7 +314,10 @@ export default class CustomerRenderer {
     $template.find(createOrderMap.chooseCustomerBtn).data('customer-id', customer.id);
     $template.find(createOrderMap.customerDetailsBtn).prop(
       'href',
-      this.router.generate('admin_customers_view', {customerId: customer.id}),
+      this.router.generate('admin_customers_view', {
+        customerId: customer.id,
+        liteDisplaying: 1,
+      }),
     );
 
     return this.$customerSearchResultBlock.append($template);

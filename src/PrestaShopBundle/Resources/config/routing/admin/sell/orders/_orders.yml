@@ -12,7 +12,7 @@ _carts:
 
 _orders:
   resource: "orders.yml"
-  prefix: /orders/
+  prefix: /
 
 _credit_slips:
   resource: "credit_slips.yml"

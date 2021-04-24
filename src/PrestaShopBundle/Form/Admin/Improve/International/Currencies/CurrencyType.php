@@ -1,11 +1,12 @@
 <?php
 /**
- * 2007-2019 PrestaShop SA and Contributors
+ * Copyright since 2007 PrestaShop SA and Contributors
+ * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
  *
  * NOTICE OF LICENSE
  *
  * This source file is subject to the Open Software License (OSL 3.0)
- * that is bundled with this package in the file LICENSE.txt.
+ * that is bundled with this package in the file LICENSE.md.
  * It is also available through the world-wide-web at this URL:
  * https://opensource.org/licenses/OSL-3.0
  * If you did not receive a copy of the license and are unable to
@@ -16,12 +17,11 @@
  *
  * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
  * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to https://www.prestashop.com for more information.
+ * needs please refer to https://devdocs.prestashop.com/ for more information.
  *
- * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2019 PrestaShop SA and Contributors
+ * @author    PrestaShop SA and Contributors <contact@prestashop.com>
+ * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
- * International Registered Trademark & Property of PrestaShop SA
  */
 
 namespace PrestaShopBundle\Form\Admin\Improve\International\Currencies;
@@ -43,6 +43,7 @@ use Symfony\Component\Translation\TranslatorInterface;
 use Symfony\Component\Validator\Constraints\GreaterThan;
 use Symfony\Component\Validator\Constraints\GreaterThanOrEqual;
 use Symfony\Component\Validator\Constraints\Length;
+use Symfony\Component\Validator\Constraints\LessThanOrEqual;
 use Symfony\Component\Validator\Constraints\NotBlank;
 use Symfony\Component\Validator\Constraints\Type;
 
@@ -65,14 +66,14 @@ class CurrencyType extends TranslatorAwareType
      * @param TranslatorInterface $translator
      * @param array $locales
      * @param array $allCurrencies
-     * @param $isShopFeatureEnabled
+     * @param bool $isShopFeatureEnabled
      */
     public function __construct(
         TranslatorInterface $translator,
         array $locales,
         array $allCurrencies,
-        $isShopFeatureEnabled)
-    {
+        $isShopFeatureEnabled
+    ) {
         parent::__construct($translator, $locales);
         $this->allCurrencies = $allCurrencies;
         $this->isShopFeatureEnabled = $isShopFeatureEnabled;
@@ -88,6 +89,11 @@ class CurrencyType extends TranslatorAwareType
         if ($newCurrency) {
             $builder
                 ->add('selected_iso_code', ChoiceType::class, [
+                    'label' => $this->trans('Select a currency', 'Admin.International.Feature'),
+                    'help' => $this->trans(
+                        'By default, PrestaShop comes with a list of official currencies. If you want to use a local currency, you will have to add it manually. For example, to accept the Iranian Toman on your store, you need to create it before.',
+                        'Admin.International.Help'
+                    ),
                     'choices' => $this->allCurrencies,
                     'choice_translation_domain' => false,
                     'required' => false,
@@ -119,6 +125,7 @@ class CurrencyType extends TranslatorAwareType
 
         $builder
             ->add('names', TranslatableType::class, [
+                'label' => $this->trans('Currency name', 'Admin.International.Feature'),
                 'type' => TextType::class,
                 'constraints' => [
                     new DefaultLanguage(),
@@ -137,6 +144,10 @@ class CurrencyType extends TranslatorAwareType
                 ],
             ])
             ->add('symbols', TranslatableType::class, [
+                'label' => $this->trans(
+                    'Symbol',
+                    'Admin.International.Feature'
+                ),
                 'type' => TextType::class,
                 'required' => false,
                 'options' => [
@@ -154,6 +165,14 @@ class CurrencyType extends TranslatorAwareType
             ])
             ->add('iso_code', TextType::class, [
                 'attr' => $isoCodeAttrs,
+                'label' => $this->trans(
+                  'ISO code',
+                    'Admin.International.Feature'
+                ),
+                'help' => $this->trans(
+                    'ISO 4217 code (e.g. USD for Dollars, EUR for Euros, etc.)',
+                    'Admin.International.Help'
+                ),
                 'constraints' => [
                     new NotBlank([
                         'message' => $this->trans(
@@ -170,6 +189,14 @@ class CurrencyType extends TranslatorAwareType
                 ],
             ])
             ->add('exchange_rate', NumberType::class, [
+                'label' => $this->trans(
+                    'Exchange rate',
+                    'Admin.International.Feature'
+                ),
+                'help' => $this->trans(
+                    'Exchange rates are calculated from one unit of your shop\'s default currency. For example, if the default currency is euros and your chosen currency is dollars, type "1.20" (1&euro; = $1.20).',
+                    'Admin.International.Help'
+                ),
                 'scale' => 6,
                 'constraints' => [
                     new NotBlank([
@@ -198,6 +225,10 @@ class CurrencyType extends TranslatorAwareType
                 ),
             ])
             ->add('precision', IntegerType::class, [
+                'label' => $this->trans(
+                    'Decimals',
+                    'Admin.International.Feature'
+                ),
                 'constraints' => [
                     new Type([
                         'type' => 'integer',
@@ -213,22 +244,48 @@ class CurrencyType extends TranslatorAwareType
                             ]
                         ),
                     ]),
+                    /*
+                     * I added this constraint because if range is too big it causes an "out of range" error in Vue.
+                     * I chose maximum precision based on this
+                     * https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Errors/Precision_range
+                     */
+                    new LessThanOrEqual([
+                        'value' => 20,
+                        'message' => $this->trans(
+                            'This value should be less than or equal to %value%.',
+                            'Admin.Notifications.Error',
+                            [
+                                '%value%' => 20,
+                            ]
+                        ),
+                    ]),
                 ],
                 'invalid_message' => $this->trans(
-                    'This field is invalid, it must contain a positive integer',
-                    'Admin.Notifications.Error'
+                    'Please enter a positive value',
+                    'Admin.Orderscustomers.Notification'
                 ),
             ])
             ->add('active', SwitchType::class, [
+                'label' => $this->trans(
+                    'Status',
+                    'Admin.Global'
+                ),
                 'required' => false,
             ])
             ->add('transformations', TranslatableType::class, [
+                'row_attr' => [
+                    'class' => 'd-none',
+                ],
                 'type' => HiddenType::class,
             ])
         ;
 
         if ($this->isShopFeatureEnabled) {
             $builder->add('shop_association', ShopChoiceTreeType::class, [
+                'label' => $this->trans(
+                    'Shop association',
+                    'Admin.Global'
+                ),
                 'constraints' => [
                     new NotBlank([
                         'message' => $this->trans(

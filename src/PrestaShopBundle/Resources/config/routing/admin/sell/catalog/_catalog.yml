@@ -2,6 +2,10 @@ _products:
     resource: "products/products.yml"
     prefix: /products/
 
+_products_v2:
+    resource: "product_v2/product.yml"
+    prefix: /products-v2/
+
 _categories:
     resource: "categories.yml"
     prefix: /categories/

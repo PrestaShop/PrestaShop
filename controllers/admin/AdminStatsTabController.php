@@ -1,11 +1,12 @@
 <?php
 /**
- * 2007-2019 PrestaShop SA and Contributors
+ * Copyright since 2007 PrestaShop SA and Contributors
+ * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
  *
  * NOTICE OF LICENSE
  *
  * This source file is subject to the Open Software License (OSL 3.0)
- * that is bundled with this package in the file LICENSE.txt.
+ * that is bundled with this package in the file LICENSE.md.
  * It is also available through the world-wide-web at this URL:
  * https://opensource.org/licenses/OSL-3.0
  * If you did not receive a copy of the license and are unable to
@@ -16,12 +17,11 @@
  *
  * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
  * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to https://www.prestashop.com for more information.
+ * needs please refer to https://devdocs.prestashop.com/ for more information.
  *
- * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2019 PrestaShop SA and Contributors
+ * @author    PrestaShop SA and Contributors <contact@prestashop.com>
+ * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
- * International Registered Trademark & Property of PrestaShop SA
  */
 abstract class AdminStatsTabControllerCore extends AdminController
 {
@@ -39,7 +39,6 @@ abstract class AdminStatsTabControllerCore extends AdminController
             return;
         }
 
-        $this->addToolBarModulesListButton();
         $this->toolbar_title = $this->trans('Stats', [], 'Admin.Stats.Feature');
 
         if ($this->display == 'view') {
@@ -175,16 +174,10 @@ abstract class AdminStatsTabControllerCore extends AdminController
 
     protected function getModules()
     {
-        $sql = 'SELECT h.`name` AS hook, m.`name`
-				FROM `' . _DB_PREFIX_ . 'module` m
-				LEFT JOIN `' . _DB_PREFIX_ . 'hook_module` hm ON hm.`id_module` = m.`id_module`
-				LEFT JOIN `' . _DB_PREFIX_ . 'hook` h ON hm.`id_hook` = h.`id_hook`
-				WHERE h.`name` = \'displayAdminStatsModules\'
-					AND m.`active` = 1
-				GROUP BY hm.id_module
-				ORDER BY hm.`position`';
-
-        return Db::getInstance()->executeS($sql);
+        return array_map(
+            function ($moduleArray) {return ['name' => $moduleArray['module']]; },
+            Hook::getHookModuleExecList('displayAdminStatsModules')
+        );
     }
 
     public function displayStats()

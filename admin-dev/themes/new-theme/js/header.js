@@ -1,10 +1,11 @@
 /**
- * 2007-2019 PrestaShop SA and Contributors
+ * Copyright since 2007 PrestaShop SA and Contributors
+ * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
  *
  * NOTICE OF LICENSE
  *
  * This source file is subject to the Open Software License (OSL 3.0)
- * that is bundled with this package in the file LICENSE.txt.
+ * that is bundled with this package in the file LICENSE.md.
  * It is also available through the world-wide-web at this URL:
  * https://opensource.org/licenses/OSL-3.0
  * If you did not receive a copy of the license and are unable to
@@ -15,12 +16,11 @@
  *
  * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
  * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to https://www.prestashop.com for more information.
+ * needs please refer to https://devdocs.prestashop.com/ for more information.
  *
- * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2019 PrestaShop SA and Contributors
+ * @author    PrestaShop SA and Contributors <contact@prestashop.com>
+ * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
- * International Registered Trademark & Property of PrestaShop SA
  */
 import refreshNotifications from '@js/notifications.js';
 
@@ -89,7 +89,9 @@ export default class Header {
                 }
               });
             } else if (quicklinkList) {
-              $('#header_quick ul.dropdown-menu .divider').prevAll().remove();
+              $('#header_quick ul.dropdown-menu .divider')
+                .prevAll()
+                .remove();
               $('#header_quick ul.dropdown-menu').prepend(quicklinkList);
               $(e.target).remove();
               window.showSuccessMessage(window.update_success_msg);
@@ -102,7 +104,12 @@ export default class Header {
 
   initMultiStores() {
     $('.js-link').on('click', (e) => {
-      window.open($(e.target).parents('.link').attr('href'), '_blank');
+      window.open(
+        $(e.target)
+          .parents('.link')
+          .attr('href'),
+        '_blank',
+      );
     });
   }
 
@@ -114,7 +121,8 @@ export default class Header {
     });
 
     $('body').on('click', (e) => {
-      if (!$('div.notification-center.dropdown').is(e.target)
+      if (
+        !$('div.notification-center.dropdown').is(e.target)
         && $('div.notification-center.dropdown').has(e.target).length === 0
         && $('.open').has(e.target).length === 0
       ) {
@@ -139,12 +147,9 @@ export default class Header {
   }
 
   updateEmployeeNotifications() {
-    $.post(
-      window.adminNotificationPushLink,
-      {
-        type: $('.notification-center .nav-link.active').attr('data-type'),
-      },
-    );
+    $.post(window.adminNotificationPushLink, {
+      type: $('.notification-center .nav-link.active').attr('data-type'),
+    });
   }
 
   /**

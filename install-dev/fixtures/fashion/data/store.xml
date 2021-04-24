@@ -18,7 +18,7 @@
     <field name="active"/>
   </fields>
   <entities>
-    <store id="Dade_County" id_country="US" id_state="FL" postcode=" 33135" latitude="25.76500500" longitude="-80.24379700" phone="" fax="" active="1">
+    <store id="Dade_County" id_country="US" id_state="FL" postcode="33135" latitude="25.76500500" longitude="-80.24379700" phone="" fax="" active="1">
       <name>Dade County</name>
       <address1>3030 SW 8th St Miami</address1>
       <address2/>
@@ -27,7 +27,7 @@
       <email/>
       <note/>
     </store>
-    <store id="E_Fort_Lauderdale" id_country="US" id_state="FL" postcode=" 33304" latitude="26.13793600" longitude="-80.13943500" phone="" fax="" active="1">
+    <store id="E_Fort_Lauderdale" id_country="US" id_state="FL" postcode="33304" latitude="26.13793600" longitude="-80.13943500" phone="" fax="" active="1">
       <name>E Fort Lauderdale</name>
       <address1>1000 Northeast 4th Ave Fort Lauderdale</address1>
       <address2/>
@@ -45,7 +45,7 @@
       <email/>
       <note/>
     </store>
-    <store id="Coconut_Grove" id_country="US" id_state="FL" postcode=" 33133" latitude="25.73629600" longitude="-80.24479700" phone="" fax="" active="1">
+    <store id="Coconut_Grove" id_country="US" id_state="FL" postcode="33133" latitude="25.73629600" longitude="-80.24479700" phone="" fax="" active="1">
       <name>Coconut Grove</name>
       <address1>2999 SW 32nd Avenue</address1>
       <address2/>

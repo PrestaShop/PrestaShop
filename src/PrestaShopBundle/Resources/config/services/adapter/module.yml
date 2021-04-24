@@ -20,6 +20,7 @@ services:
             - "@translator"
             - "@filesystem"
             - "@=service('prestashop.adapter.legacy.context').getLanguages()"
+            - "@routing.loader.yml"
 
     prestashop.adapter.module.tab.unregister:
         class: PrestaShop\PrestaShop\Adapter\Module\Tab\ModuleTabUnregister
@@ -80,3 +81,6 @@ services:
 
     prestashop.adapter.legacy.module:
         class: PrestaShop\PrestaShop\Adapter\Module\Module
+
+    prestashop.adapter.module.repository.module_repository:
+        class: 'PrestaShop\PrestaShop\Adapter\Module\Repository\ModuleRepository'

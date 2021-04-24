@@ -1,11 +1,12 @@
 <?php
 /**
- * 2007-2019 PrestaShop SA and Contributors
+ * Copyright since 2007 PrestaShop SA and Contributors
+ * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
  *
  * NOTICE OF LICENSE
  *
  * This source file is subject to the Open Software License (OSL 3.0)
- * that is bundled with this package in the file LICENSE.txt.
+ * that is bundled with this package in the file LICENSE.md.
  * It is also available through the world-wide-web at this URL:
  * https://opensource.org/licenses/OSL-3.0
  * If you did not receive a copy of the license and are unable to
@@ -16,24 +17,27 @@
  *
  * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
  * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to https://www.prestashop.com for more information.
+ * needs please refer to https://devdocs.prestashop.com/ for more information.
  *
- * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2019 PrestaShop SA and Contributors
+ * @author    PrestaShop SA and Contributors <contact@prestashop.com>
+ * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
- * International Registered Trademark & Property of PrestaShop SA
  */
 
 namespace PrestaShop\PrestaShop\Adapter\Currency\CommandHandler;
 
-use Currency;
+use PrestaShop\PrestaShop\Core\Currency\CurrencyDataProviderInterface;
 use PrestaShop\PrestaShop\Core\Domain\Currency\Command\AddUnofficialCurrencyCommand;
 use PrestaShop\PrestaShop\Core\Domain\Currency\CommandHandler\AddUnofficialCurrencyHandlerInterface;
 use PrestaShop\PrestaShop\Core\Domain\Currency\Exception\CannotCreateCurrencyException;
+use PrestaShop\PrestaShop\Core\Domain\Currency\Exception\CurrencyConstraintException;
 use PrestaShop\PrestaShop\Core\Domain\Currency\Exception\CurrencyException;
+use PrestaShop\PrestaShop\Core\Domain\Currency\Exception\InvalidUnofficialCurrencyException;
 use PrestaShop\PrestaShop\Core\Domain\Currency\ValueObject\CurrencyId;
+use PrestaShop\PrestaShop\Core\Domain\Language\Exception\LanguageNotFoundException;
 use PrestaShop\PrestaShop\Core\Language\LanguageInterface;
 use PrestaShop\PrestaShop\Core\Localization\CLDR\LocaleRepository;
+use PrestaShop\PrestaShop\Core\Localization\Exception\LocalizationException;
 use PrestaShopException;
 
 /**
@@ -44,28 +48,35 @@ use PrestaShopException;
 final class AddUnofficialCurrencyHandler extends AbstractCurrencyHandler implements AddUnofficialCurrencyHandlerInterface
 {
     /**
-     * @var CurrencyCommandValidator
+     * @var CurrencyDataProviderInterface
      */
-    private $validator;
+    private $currencyDataProvider;
 
     /**
      * @param LocaleRepository $localeRepoCLDR
      * @param LanguageInterface[] $languages
      * @param CurrencyCommandValidator $validator
+     * @param CurrencyDataProviderInterface $currencyDataProvider
      */
     public function __construct(
         LocaleRepository $localeRepoCLDR,
         array $languages,
-        CurrencyCommandValidator $validator
+        CurrencyCommandValidator $validator,
+        CurrencyDataProviderInterface $currencyDataProvider
     ) {
-        parent::__construct($localeRepoCLDR, $languages);
-        $this->validator = $validator;
+        parent::__construct($localeRepoCLDR, $languages, $validator);
+        $this->currencyDataProvider = $currencyDataProvider;
     }
 
     /**
      * {@inheritdoc}
      *
+     * @throws CannotCreateCurrencyException
      * @throws CurrencyException
+     * @throws CurrencyConstraintException
+     * @throws InvalidUnofficialCurrencyException
+     * @throws LanguageNotFoundException
+     * @throws LocalizationException
      */
     public function handle(AddUnofficialCurrencyCommand $command)
     {
@@ -73,36 +84,15 @@ final class AddUnofficialCurrencyHandler extends AbstractCurrencyHandler impleme
         $this->validator->assertCurrencyIsNotAvailableInDatabase($command->getIsoCode()->getValue());
 
         try {
-            $entity = new Currency();
+            $entity = $this->currencyDataProvider->getCurrencyByIsoCodeOrCreate($command->getIsoCode()->getValue());
 
-            $entity->iso_code = $command->getIsoCode()->getValue();
-            $entity->active = $command->isEnabled();
             $entity->unofficial = true;
-            $entity->conversion_rate = $command->getExchangeRate()->getValue();
             $entity->numeric_iso_code = null;
             if (null !== $command->getPrecision()) {
                 $entity->precision = $command->getPrecision()->getValue();
             }
 
-            if (!empty($command->getLocalizedNames())) {
-                $entity->setLocalizedNames($command->getLocalizedNames());
-            }
-            if (!empty($command->getLocalizedSymbols())) {
-                $entity->setLocalizedSymbols($command->getLocalizedSymbols());
-            }
-            if (!empty($command->getLocalizedTransformations())) {
-                $this->applyPatternTransformations($entity, $command->getLocalizedTransformations());
-            }
-
-            $this->refreshLocalizedData($entity);
-
-            //IMPORTANT: specify that we want to save null values
-            if (false === $entity->add(true, true)) {
-                throw new CannotCreateCurrencyException('Failed to create new currency');
-            }
-
-            $this->associateWithShops($entity, $command->getShopIds());
-            $this->associateConversionRateToShops($entity, $command->getShopIds());
+            $this->addEntity($entity, $command);
         } catch (PrestaShopException $exception) {
             throw new CurrencyException('Failed to create new currency', 0, $exception);
         }

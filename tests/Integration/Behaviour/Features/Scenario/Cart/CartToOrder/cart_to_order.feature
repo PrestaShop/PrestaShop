@@ -12,7 +12,7 @@ Feature: Check cart to order data copy
     Given cart rule "cartrule1" has a discount code "foo1"
     Given there is a zone named "zone1"
     Given there is a country named "country1" and iso code "FR" in zone "zone1"
-    Given there is a state named "state1" with iso code "TEST-1" in country"country1" and zone "zone1"
+    Given there is a state named "state1" with iso code "TEST-1" in country "country1" and zone "zone1"
     Given there is an address named "address1" with postcode "1" in state "state1"
     Given there is a tax named "tax1" and rate 4.0%
     Given there is a tax rule named "taxrule1"in country "country1" and state "state1" where tax "tax1" is applied
@@ -28,13 +28,13 @@ Feature: Check cart to order data copy
     When I select address "address1" in my cart
     When I select carrier "carrier1" in my cart
     When I validate my cart using payment module fake
-    Then current cart order total for products should be 20.604480 tax included
-    Then current cart order total for products should be 19.812000 tax excluded
-    Then current cart order total discount should be 10.302240 tax included
-    Then current cart order total discount should be 9.906000 tax excluded
+    Then current cart order total for products should be 20.600000 tax included
+    Then current cart order total for products should be 19.810000 tax excluded
+    Then current cart order total discount should be 10.300000 tax included
+    Then current cart order total discount should be 9.910000 tax excluded
     Then current cart order shipping fees should be 7.0 tax included
     Then current cart order shipping fees should be 7.0 tax excluded
-    Then current cart order should have a discount in position 1 with an amount of 10.3 tax included and 9.91 tax excluded
+    Then current cart order should have a discount in position 1 with an amount of 10.300000 tax included and 9.905000 tax excluded
     Then customer "customer1" should have 0 cart rules that apply to him
 
   Scenario: 1 product in cart, 2 cart rules
@@ -48,7 +48,7 @@ Feature: Check cart to order data copy
     Given cart rule "cartrule2" has a discount code "foo2"
     Given there is a zone named "zone1"
     Given there is a country named "country1" and iso code "FR" in zone "zone1"
-    Given there is a state named "state1" with iso code "TEST-1" in country"country1" and zone "zone1"
+    Given there is a state named "state1" with iso code "TEST-1" in country "country1" and zone "zone1"
     Given there is an address named "address1" with postcode "1" in state "state1"
     Given there is a tax named "tax1" and rate 4.0%
     Given there is a tax rule named "taxrule1"in country "country1" and state "state1" where tax "tax1" is applied
@@ -65,14 +65,14 @@ Feature: Check cart to order data copy
     When I select address "address1" in my cart
     When I select carrier "carrier1" in my cart
     When I validate my cart using payment module fake
-    Then current cart order total for products should be 20.604480 tax included
-    Then current cart order total for products should be 19.812000 tax excluded
-    Then current cart order total discount should be 15.453360 tax included
-    Then current cart order total discount should be 14.859000 tax excluded
+    Then current cart order total for products should be 20.600000 tax included
+    Then current cart order total for products should be 19.810000 tax excluded
+    Then current cart order total discount should be 15.450000 tax included
+    Then current cart order total discount should be 14.860000 tax excluded
     Then current cart order shipping fees should be 7.0 tax included
     Then current cart order shipping fees should be 7.0 tax excluded
-    Then current cart order should have a discount in position 1 with an amount of 10.3 tax included and 9.91 tax excluded
-    Then current cart order should have a discount in position 2 with an amount of 5.15 tax included and 4.95 tax excluded
+    Then current cart order should have a discount in position 1 with an amount of 10.300000 tax included and 9.905000 tax excluded
+    Then current cart order should have a discount in position 2 with an amount of 5.150000 tax included and 4.952500 tax excluded
     Then customer "customer1" should have 0 cart rules that apply to him
 
   Scenario: 3 product in cart, 1 cart rule
@@ -86,7 +86,7 @@ Feature: Check cart to order data copy
     Given cart rule "cartrule1" has a discount code "foo1"
     Given there is a zone named "zone1"
     Given there is a country named "country1" and iso code "FR" in zone "zone1"
-    Given there is a state named "state1" with iso code "TEST-1" in country"country1" and zone "zone1"
+    Given there is a state named "state1" with iso code "TEST-1" in country "country1" and zone "zone1"
     Given there is an address named "address1" with postcode "1" in state "state1"
     Given there is a tax named "tax1" and rate 4.0%
     Given there is a tax rule named "taxrule1"in country "country1" and state "state1" where tax "tax1" is applied
@@ -106,13 +106,13 @@ Feature: Check cart to order data copy
     When I select address "address1" in my cart
     When I select carrier "carrier1" in my cart
     When I validate my cart using payment module fake
-    Then current cart order total for products should be 119.159040 tax included
-    Then current cart order total for products should be 114.576000 tax excluded
-    Then current cart order total discount should be 59.579520 tax included
-    Then current cart order total discount should be 57.288000 tax excluded
+    Then current cart order total for products should be 119.150000 tax included
+    Then current cart order total for products should be 114.580000 tax excluded
+    Then current cart order total discount should be 59.580000 tax included
+    Then current cart order total discount should be 57.290000 tax excluded
     Then current cart order shipping fees should be 7.0 tax included
     Then current cart order shipping fees should be 7.0 tax excluded
-    Then current cart order should have a discount in position 1 with an amount of 59.58 tax included and 57.29 tax excluded
+    Then current cart order should have a discount in position 1 with an amount of 59.575000 tax included and 57.290000 tax excluded
     Then customer "customer1" should have 0 cart rules that apply to him
 
   Scenario: 3 product in cart, 3 cart rules
@@ -128,7 +128,7 @@ Feature: Check cart to order data copy
     Given cart rule "cartrule2" has a discount code "foo2"
     Given there is a zone named "zone1"
     Given there is a country named "country1" and iso code "FR" in zone "zone1"
-    Given there is a state named "state1" with iso code "TEST-1" in country"country1" and zone "zone1"
+    Given there is a state named "state1" with iso code "TEST-1" in country "country1" and zone "zone1"
     Given there is an address named "address1" with postcode "1" in state "state1"
     Given there is a tax named "tax1" and rate 4.0%
     Given there is a tax rule named "taxrule1"in country "country1" and state "state1" where tax "tax1" is applied
@@ -149,14 +149,14 @@ Feature: Check cart to order data copy
     When I select address "address1" in my cart
     When I select carrier "carrier1" in my cart
     When I validate my cart using payment module fake
-    Then current cart order total for products should be 119.159040 tax included
-    Then current cart order total for products should be 114.576000 tax excluded
-    Then current cart order total discount should be 89.369280 tax included
-    Then current cart order total discount should be 85.932000 tax excluded
+    Then current cart order total for products should be 119.150000 tax included
+    Then current cart order total for products should be 114.580000 tax excluded
+    Then current cart order total discount should be 89.360000 tax included
+    Then current cart order total discount should be 85.940000 tax excluded
     Then current cart order shipping fees should be 7.0 tax included
     Then current cart order shipping fees should be 7.0 tax excluded
-    Then current cart order should have a discount in position 1 with an amount of 59.58 tax included and 57.29 tax excluded
-    Then current cart order should have a discount in position 2 with an amount of 29.79 tax included and 28.64 tax excluded
+    Then current cart order should have a discount in position 1 with an amount of 59.575000 tax included and 57.290000 tax excluded
+    Then current cart order should have a discount in position 2 with an amount of 29.787500 tax included and 28.645000 tax excluded
     Then customer "customer1" should have 0 cart rules that apply to him
 
   Scenario: 1 product in cart, 1 cart rule with too-much amount
@@ -168,7 +168,7 @@ Feature: Check cart to order data copy
     Given cart rule "cartrule5" has a discount code "foo5"
     Given there is a zone named "zone1"
     Given there is a country named "country1" and iso code "FR" in zone "zone1"
-    Given there is a state named "state1" with iso code "TEST-1" in country"country1" and zone "zone1"
+    Given there is a state named "state1" with iso code "TEST-1" in country "country1" and zone "zone1"
     Given there is an address named "address1" with postcode "1" in state "state1"
     Given there is a tax named "tax1" and rate 4.0%
     Given there is a tax rule named "taxrule1"in country "country1" and state "state1" where tax "tax1" is applied
@@ -184,15 +184,15 @@ Feature: Check cart to order data copy
     When I select address "address1" in my cart
     When I select carrier "carrier1" in my cart
     When I validate my cart using payment module fake
-    Then current cart order total for products should be 20.604480 tax included
-    Then current cart order total for products should be 19.812000 tax excluded
-    Then current cart order total discount should be 20.604480 tax included
-    Then current cart order total discount should be 19.812000 tax excluded
+    Then current cart order total for products should be 20.600000 tax included
+    Then current cart order total for products should be 19.810000 tax excluded
+    Then current cart order total discount should be 20.600000 tax included
+    Then current cart order total discount should be 19.810000 tax excluded
     Then current cart order shipping fees should be 7.0 tax included
     Then current cart order shipping fees should be 7.0 tax excluded
-    Then current cart order should have a discount in position 1 with an amount of 20.6 tax included and 19.81 tax excluded
+    Then current cart order should have a discount in position 1 with an amount of 20.600000 tax included and 19.810000 tax excluded
     Then customer "customer1" should have 1 cart rules that apply to him
-    Then cart rule for customer "customer1" in position 1 should apply a discount of 480.19
+    Then cart rule for customer "customer1" in position 1 should apply a discount of 480.190000
 
   Scenario: 1 product in cart, 1 cart rule offering free gift
     Given I have an empty default cart
@@ -205,7 +205,7 @@ Feature: Check cart to order data copy
     Given cart rule "cartrule13" offers a gift product "product4"
     Given there is a zone named "zone1"
     Given there is a country named "country1" and iso code "FR" in zone "zone1"
-    Given there is a state named "state1" with iso code "TEST-1" in country"country1" and zone "zone1"
+    Given there is a state named "state1" with iso code "TEST-1" in country "country1" and zone "zone1"
     Given there is an address named "address1" with postcode "1" in state "state1"
     Given there is a tax named "tax1" and rate 4.0%
     Given there is a tax rule named "taxrule1"in country "country1" and state "state1" where tax "tax1" is applied
@@ -222,13 +222,13 @@ Feature: Check cart to order data copy
     When I select address "address1" in my cart
     When I select carrier "carrier1" in my cart
     When I validate my cart using payment module fake
-    Then current cart order total for products should be 57.594160 tax included
-    Then current cart order total for products should be 55.379000 tax excluded
-    Then current cart order total discount should be 36.989680 tax included
-    Then current cart order total discount should be 35.567000 tax excluded
+    Then current cart order total for products should be 57.590000 tax included
+    Then current cart order total for products should be 55.380000 tax excluded
+    Then current cart order total discount should be 36.990000 tax included
+    Then current cart order total discount should be 35.570000 tax excluded
     Then current cart order shipping fees should be 7.0 tax included
     Then current cart order shipping fees should be 7.0 tax excluded
-    Then current cart order should have a discount in position 1 with an amount of 36.99 tax included and 35.57 tax excluded
+    Then current cart order should have a discount in position 1 with an amount of 36.989680 tax included and 35.567000 tax excluded
     Then customer "customer1" should have 0 cart rules that apply to him
 
   Scenario: 2 product in cart, 1 cart rule offering free gift, offering same product as already existing in cart
@@ -242,7 +242,7 @@ Feature: Check cart to order data copy
     Given cart rule "cartrule13" offers a gift product "product4"
     Given there is a zone named "zone1"
     Given there is a country named "country1" and iso code "FR" in zone "zone1"
-    Given there is a state named "state1" with iso code "TEST-1" in country"country1" and zone "zone1"
+    Given there is a state named "state1" with iso code "TEST-1" in country "country1" and zone "zone1"
     Given there is an address named "address1" with postcode "1" in state "state1"
     Given there is a tax named "tax1" and rate 4.0%
     Given there is a tax rule named "taxrule1"in country "country1" and state "state1" where tax "tax1" is applied
@@ -260,11 +260,11 @@ Feature: Check cart to order data copy
     When I select address "address1" in my cart
     When I select carrier "carrier1" in my cart
     When I validate my cart using payment module fake
-    Then current cart order total for products should be 94.583840 tax included
-    Then current cart order total for products should be 90.946000 tax excluded
-    Then current cart order total discount should be 36.989680 tax included
-    Then current cart order total discount should be 35.567000 tax excluded
+    Then current cart order total for products should be 94.580000 tax included
+    Then current cart order total for products should be 90.940000 tax excluded
+    Then current cart order total discount should be 36.990000 tax included
+    Then current cart order total discount should be 35.570000 tax excluded
     Then current cart order shipping fees should be 7.0 tax included
     Then current cart order shipping fees should be 7.0 tax excluded
-    Then current cart order should have a discount in position 1 with an amount of 36.99 tax included and 35.57 tax excluded
+    Then current cart order should have a discount in position 1 with an amount of 36.989680 tax included and 35.567000 tax excluded
     Then customer "customer1" should have 0 cart rules that apply to him

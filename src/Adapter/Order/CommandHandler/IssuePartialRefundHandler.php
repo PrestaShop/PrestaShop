@@ -1,11 +1,12 @@
 <?php
 /**
- * 2007-2019 PrestaShop SA and Contributors
+ * Copyright since 2007 PrestaShop SA and Contributors
+ * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
  *
  * NOTICE OF LICENSE
  *
  * This source file is subject to the Open Software License (OSL 3.0)
- * that is bundled with this package in the file LICENSE.txt.
+ * that is bundled with this package in the file LICENSE.md.
  * It is also available through the world-wide-web at this URL:
  * https://opensource.org/licenses/OSL-3.0
  * If you did not receive a copy of the license and are unable to
@@ -16,27 +17,29 @@
  *
  * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
  * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to https://www.prestashop.com for more information.
+ * needs please refer to https://devdocs.prestashop.com/ for more information.
  *
- * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2019 PrestaShop SA and Contributors
+ * @author    PrestaShop SA and Contributors <contact@prestashop.com>
+ * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
- * International Registered Trademark & Property of PrestaShop SA
  */
 
 namespace PrestaShop\PrestaShop\Adapter\Order\CommandHandler;
 
 use Context;
+use Hook;
 use Order;
 use OrderCarrier;
+use PrestaShop\PrestaShop\Adapter\ContextStateManager;
 use PrestaShop\PrestaShop\Adapter\Order\Refund\OrderRefundCalculator;
-use PrestaShop\PrestaShop\Adapter\Order\Refund\OrderRefundSummary;
+use PrestaShop\PrestaShop\Adapter\Order\Refund\OrderRefundUpdater;
 use PrestaShop\PrestaShop\Adapter\Order\Refund\OrderSlipCreator;
 use PrestaShop\PrestaShop\Adapter\Order\Refund\VoucherGenerator;
 use PrestaShop\PrestaShop\Core\ConfigurationInterface;
+use PrestaShop\PrestaShop\Core\Domain\Order\CancellationActionType;
 use PrestaShop\PrestaShop\Core\Domain\Order\Command\IssuePartialRefundCommand;
 use PrestaShop\PrestaShop\Core\Domain\Order\CommandHandler\IssuePartialRefundHandlerInterface;
-use PrestaShop\PrestaShop\Core\Domain\Order\Exception\CancelProductFromOrderException;
+use PrestaShop\PrestaShop\Core\Domain\Order\Exception\InvalidOrderStateException;
 use Validate;
 
 /**
@@ -65,31 +68,68 @@ final class IssuePartialRefundHandler extends AbstractOrderCommandHandler implem
     private $voucherGenerator;
 
     /**
+     * @var OrderRefundUpdater
+     */
+    private $refundUpdater;
+
+    /**
+     * @var ContextStateManager
+     */
+    private $contextStateManager;
+
+    /**
      * @param ConfigurationInterface $configuration
      * @param OrderRefundCalculator $orderRefundCalculator
      * @param OrderSlipCreator $orderSlipCreator
      * @param VoucherGenerator $voucherGenerator
+     * @param OrderRefundUpdater $refundUpdater
+     * @param ContextStateManager $contextStateManager
      */
     public function __construct(
         ConfigurationInterface $configuration,
         OrderRefundCalculator $orderRefundCalculator,
         OrderSlipCreator $orderSlipCreator,
-        VoucherGenerator $voucherGenerator
+        VoucherGenerator $voucherGenerator,
+        OrderRefundUpdater $refundUpdater,
+        ContextStateManager $contextStateManager
     ) {
         $this->configuration = $configuration;
         $this->orderRefundCalculator = $orderRefundCalculator;
         $this->orderSlipCreator = $orderSlipCreator;
         $this->voucherGenerator = $voucherGenerator;
+        $this->refundUpdater = $refundUpdater;
+        $this->contextStateManager = $contextStateManager;
     }
 
     /**
      * {@inheritdoc}
      */
-    public function handle(IssuePartialRefundCommand $command)
+    public function handle(IssuePartialRefundCommand $command): void
     {
         /** @var Order $order */
-        $order = $this->getOrderObject($command->getOrderId());
-        /** @var OrderRefundSummary $orderRefundSummary */
+        $order = $this->getOrder($command->getOrderId());
+        if (!$order->hasBeenPaid() && !$order->hasPayments()) {
+            throw new InvalidOrderStateException(
+                InvalidOrderStateException::NOT_PAID,
+                'Can not perform partial refund on an order which is not paid'
+            );
+        }
+
+        $this->setOrderContext($this->contextStateManager, $order);
+
+        try {
+            $this->issuePartialRefund($command, $order);
+        } finally {
+            $this->contextStateManager->restorePreviousContext();
+        }
+    }
+
+    /**
+     * @param IssuePartialRefundCommand $command
+     * @param Order $order
+     */
+    private function issuePartialRefund(IssuePartialRefundCommand $command, Order $order): void
+    {
         $orderRefundSummary = $this->orderRefundCalculator->computeOrderRefund(
             $order,
             $command->getOrderDetailRefunds(),
@@ -100,11 +140,13 @@ final class IssuePartialRefundHandler extends AbstractOrderCommandHandler implem
 
         // @todo This part should probably be in a share abstract class as it will probably be common with other handlers
         // Update order details and reinject quantities
+        $shouldReinjectProducts = !$order->hasBeenDelivered() || $command->restockRefundedProducts();
         foreach ($orderRefundSummary->getProductRefunds() as $orderDetailId => $productRefund) {
             $orderDetail = $orderRefundSummary->getOrderDetailById($orderDetailId);
-            if (!$order->hasBeenDelivered() || $command->restockRefundedProducts()) {
+            if ($shouldReinjectProducts) {
                 $this->reinjectQuantity($orderDetail, $productRefund['quantity']);
             }
+            Hook::exec('actionProductCancel', ['order' => $order, 'id_order_detail' => (int) $orderDetailId, 'cancel_quantity' => $productRefund['quantity'], 'cancel_amount' => $productRefund['amount'], 'action' => CancellationActionType::PARTIAL_REFUND], null, false, true, false, $order->id_shop);
         }
 
         // Update order carrier weight
@@ -122,7 +164,12 @@ final class IssuePartialRefundHandler extends AbstractOrderCommandHandler implem
         }
 
         // Update refund details
-        $this->updateOrderDetailsRefundData($order, $orderRefundSummary);
+        $productsReturned = (int) $this->configuration->get('PS_ORDER_RETURN') === 1 && $order->hasBeenDelivered();
+        $this->refundUpdater->updateRefundData(
+            $orderRefundSummary,
+            $productsReturned,
+            $shouldReinjectProducts
+        );
 
         // Generate voucher if needed
         if ($command->generateVoucher() && $orderRefundSummary->getRefundedAmount() > 0) {
@@ -132,42 +179,6 @@ final class IssuePartialRefundHandler extends AbstractOrderCommandHandler implem
                 Context::getContext()->currency->iso_code,
                 $orderRefundSummary->isTaxIncluded()
             );
-        }
-    }
-
-    /**
-     * @param Order $order
-     * @param OrderRefundSummary $orderRefundSummary
-     *
-     * @throws CancelProductFromOrderException
-     * @throws \PrestaShopDatabaseException
-     * @throws \PrestaShopException
-     */
-    private function updateOrderDetailsRefundData(Order $order, OrderRefundSummary $orderRefundSummary)
-    {
-        // I wonder it this is really useful since partial refund is supposed to be enabled only once order
-        // is paid Maybe this should be a more general check at the beginning of the handler and throw an error
-        if (!$order->hasBeenPaid()) {
-            return;
-        }
-
-        // Update order details (after credit slip to avoid updating refunded quantities while the credit slip fails)
-        foreach ($orderRefundSummary->getProductRefunds() as $orderDetailId => $productRefund) {
-            $orderDetail = $orderRefundSummary->getOrderDetailById($orderDetailId);
-            // It appears partial refund only manages product_quantity_refunded when Order::deleteProduct
-            // makes a distinction between product_quantity_refunded and product_quantity_returned depending
-            // on the order status (delivered or not) But this method could not be used as it can fail when
-            // merchandising return is disabled
-            $orderDetail->product_quantity_refunded += $productRefund['quantity'];
-
-            // This was previously done in OrderSlip::create, but it was not consistent and too complicated
-            // Besides this now allows to track refunded products even when credit slip is not generated
-            $orderDetail->total_refunded_tax_excl = $productRefund['total_refunded_tax_excl'];
-            $orderDetail->total_refunded_tax_incl = $productRefund['total_refunded_tax_incl'];
-
-            if (!$orderDetail->update()) {
-                throw new CancelProductFromOrderException('Cannot update order detail');
-            }
         }
     }
 }

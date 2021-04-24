@@ -1,11 +1,12 @@
 <?php
 /**
- * 2007-2019 PrestaShop SA and Contributors
+ * Copyright since 2007 PrestaShop SA and Contributors
+ * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
  *
  * NOTICE OF LICENSE
  *
  * This source file is subject to the Open Software License (OSL 3.0)
- * that is bundled with this package in the file LICENSE.txt.
+ * that is bundled with this package in the file LICENSE.md.
  * It is also available through the world-wide-web at this URL:
  * https://opensource.org/licenses/OSL-3.0
  * If you did not receive a copy of the license and are unable to
@@ -16,12 +17,11 @@
  *
  * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
  * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to https://www.prestashop.com for more information.
+ * needs please refer to https://devdocs.prestashop.com/ for more information.
  *
- * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2019 PrestaShop SA and Contributors
+ * @author    PrestaShop SA and Contributors <contact@prestashop.com>
+ * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
- * International Registered Trademark & Property of PrestaShop SA
  */
 
 namespace PrestaShop\PrestaShop\Core\Addon\Module;
@@ -35,6 +35,7 @@ use PrestaShop\PrestaShop\Adapter\Module\Module;
 use PrestaShop\PrestaShop\Adapter\Module\ModuleDataProvider;
 use PrestaShop\PrestaShop\Adapter\Module\ModuleDataUpdater;
 use PrestaShop\PrestaShop\Adapter\Module\PrestaTrust\PrestaTrustChecker;
+use PrestaShop\PrestaShop\Core\Addon\AddonInterface;
 use PrestaShop\PrestaShop\Core\Addon\AddonListFilter;
 use PrestaShop\PrestaShop\Core\Addon\AddonListFilterOrigin;
 use PrestaShop\PrestaShop\Core\Addon\AddonListFilterStatus;
@@ -46,42 +47,37 @@ use Symfony\Component\Translation\TranslatorInterface;
 
 class ModuleRepository implements ModuleRepositoryInterface
 {
-    const NATIVE_AUTHOR = 'PrestaShop';
+    public const NATIVE_AUTHOR = 'PrestaShop';
 
-    const PARTNER_AUTHOR = 'PrestaShop Partners';
+    public const PARTNER_AUTHOR = 'PrestaShop Partners';
 
     /**
-     * Admin Module Data Provider.
-     *
-     * @var \PrestaShop\PrestaShop\Adapter\Module\AdminModuleDataProvider
+     * @var AdminModuleDataProvider
      */
     private $adminModuleProvider;
 
     /**
-     * Logger.
-     *
-     * @var \Psr\Log\LoggerInterface
+     * @var Finder
+     */
+    private $finder;
+
+    /**
+     * @var LoggerInterface
      */
     private $logger;
 
     /**
-     * Module Data Provider.
-     *
-     * @var \PrestaShop\PrestaShop\Adapter\Module\ModuleDataProvider
+     * @var ModuleDataProvider
      */
     private $moduleProvider;
 
     /**
-     * Module Data Updater.
-     *
-     * @var \PrestaShop\PrestaShop\Adapter\Module\ModuleDataUpdater
+     * @var ModuleDataUpdater
      */
     private $moduleUpdater;
 
     /**
-     * Translator.
-     *
-     * @var \Symfony\Component\Translation\TranslatorInterface
+     * @var TranslatorInterface
      */
     private $translator;
 
@@ -93,11 +89,9 @@ class ModuleRepository implements ModuleRepositoryInterface
     private $modulePath;
 
     /**
-     * @var PrestaTrustChecker
+     * @var PrestaTrustChecker|null
      */
     private $prestaTrustChecker = null;
-
-    //### CACHE PROPERTIES ####
 
     /**
      * Key of the cache content.
@@ -116,7 +110,7 @@ class ModuleRepository implements ModuleRepositoryInterface
     /**
      * Optionnal Doctrine cache provider.
      *
-     * @var \Doctrine\Common\Cache\CacheProvider
+     * @var CacheProvider|null
      */
     private $cacheProvider;
 
@@ -126,8 +120,6 @@ class ModuleRepository implements ModuleRepositoryInterface
      * @var ArrayCache
      */
     private $loadedModules;
-
-    //### END OF CACHE PROPERTIES ####
 
     public function __construct(
         AdminModuleDataProvider $adminModulesProvider,
@@ -210,8 +202,10 @@ class ModuleRepository implements ModuleRepositoryInterface
     {
         if ($filter->status >= AddonListFilterStatus::ON_DISK
             && $filter->status != AddonListFilterStatus::ALL) {
+            /** @var Module[] $modules */
             $modules = $this->getModulesOnDisk($skip_main_class_attributes);
         } else {
+            /** @var Module[] $modules */
             $modules = $this->getList();
         }
 
@@ -312,6 +306,7 @@ class ModuleRepository implements ModuleRepositoryInterface
             $filter = new AddonListFilter();
             $filter->setOrigin(AddonListFilterOrigin::ADDONS_NATIVE);
 
+            /** @var Module[] $nativeModules */
             $nativeModules = $this->getFilteredList($filter);
 
             foreach ($nativeModules as $key => $module) {
@@ -333,6 +328,7 @@ class ModuleRepository implements ModuleRepositoryInterface
         $filter = new AddonListFilter();
         $filter->setOrigin(AddonListFilterOrigin::ADDONS_NATIVE);
 
+        /** @var Module[] $partnersModules */
         $partnersModules = $this->getFilteredList($filter);
 
         foreach ($partnersModules as $key => $module) {
@@ -350,6 +346,7 @@ class ModuleRepository implements ModuleRepositoryInterface
      */
     public function getInstalledPartnersModules()
     {
+        /** @var Module[] $partnersModules */
         $partnersModules = $this->getPartnersModules();
 
         foreach ($partnersModules as $key => $module) {
@@ -366,6 +363,7 @@ class ModuleRepository implements ModuleRepositoryInterface
      */
     public function getNotInstalledPartnersModules()
     {
+        /** @var Module[] $partnersModules */
         $partnersModules = $this->getPartnersModules();
 
         foreach ($partnersModules as $key => $module) {
@@ -460,7 +458,6 @@ class ModuleRepository implements ModuleRepositoryInterface
             $this->cache[$name]['disk']['filemtime'] === $current_filemtime
         ) {
             // OK, cache can be loaded and used directly
-
             $attributes = array_merge($attributes, $this->cache[$name]['attributes']);
             $disk = $this->cache[$name]['disk'];
         } else {
@@ -525,7 +522,7 @@ class ModuleRepository implements ModuleRepositoryInterface
     /**
      * Send request to get module details on the marketplace, then merge the data received in Module instance.
      *
-     * @param $moduleId
+     * @param int $moduleId
      *
      * @return Module
      */

@@ -14,6 +14,14 @@ admin_emails_search:
         _legacy_controller: AdminEmails
         _legacy_link: AdminEmails:search
 
+admin_emails_save_options_get:
+    path: /options
+    methods: [GET]
+    defaults:
+        _controller: 'PrestaShopBundle:Admin\Configure\AdvancedParameters\Email:index'
+        _legacy_controller: AdminEmails
+        _legacy_link: AdminEmails:update
+
 admin_emails_save_options:
     path: /options
     methods: [POST]
@@ -49,7 +57,7 @@ admin_emails_delete_all:
 
 admin_emails_delete:
     path: /delete/{mailId}
-    methods: [GET]
+    methods: [POST]
     defaults:
         _controller: 'PrestaShopBundle:Admin\Configure\AdvancedParameters\Email:delete'
         _legacy_controller: AdminEmails

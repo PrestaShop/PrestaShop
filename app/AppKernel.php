@@ -1,11 +1,12 @@
 <?php
 /**
- * 2007-2019 PrestaShop SA and Contributors
+ * Copyright since 2007 PrestaShop SA and Contributors
+ * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
  *
  * NOTICE OF LICENSE
  *
  * This source file is subject to the Open Software License (OSL 3.0)
- * that is bundled with this package in the file LICENSE.txt.
+ * that is bundled with this package in the file LICENSE.md.
  * It is also available through the world-wide-web at this URL:
  * https://opensource.org/licenses/OSL-3.0
  * If you did not receive a copy of the license and are unable to
@@ -16,26 +17,26 @@
  *
  * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
  * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to https://www.prestashop.com for more information.
+ * needs please refer to https://devdocs.prestashop.com/ for more information.
  *
- * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2019 PrestaShop SA and Contributors
+ * @author    PrestaShop SA and Contributors <contact@prestashop.com>
+ * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
- * International Registered Trademark & Property of PrestaShop SA
  */
-use PrestaShopBundle\Kernel\ModuleRepositoryFactory;
+
+use PrestaShop\PrestaShop\Adapter\Module\Repository\ModuleRepository;
+use PrestaShop\PrestaShop\Adapter\SymfonyContainer;
 use Symfony\Component\Config\Loader\LoaderInterface;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\HttpKernel\Kernel;
 
 class AppKernel extends Kernel
 {
-    const VERSION = '1.7.7.0';
+    const VERSION = '1.7.8.0';
     const MAJOR_VERSION_STRING = '1.7';
     const MAJOR_VERSION = 17;
-    const MINOR_VERSION = 7;
+    const MINOR_VERSION = 8;
     const RELEASE_VERSION = 0;
-
 
     /**
      * {@inheritdoc}
@@ -80,6 +81,20 @@ class AppKernel extends Kernel
         }
 
         return $bundles;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function reboot($warmupDir)
+    {
+        parent::reboot($warmupDir);
+
+        // We have classes to access the container from legacy code, they need to be cleaned after reboot
+        Context::getContext()->container = null;
+        SymfonyContainer::resetStaticCache();
+        // @todo: do not want to risk right now but maybe Context::getContext()->controller->container needs refreshing
+        //        but only if it is a Symfony container (do not override front legacy container)
     }
 
     /**
@@ -133,26 +148,18 @@ class AppKernel extends Kernel
         });
 
         $loader->load($this->getRootDir() . '/config/config_' . $this->getEnvironment() . '.yml');
-    }
 
-    /**
-     * Return all active modules.
-     *
-     * @return array list of modules names
-     */
-    private function getActiveModules()
-    {
-        $activeModules = [];
-        try {
-            if ($modulesRepository = ModuleRepositoryFactory::getInstance()->getRepository()) {
-                $activeModules = $modulesRepository->getActiveModules();
+        // Add translation paths to load into the translator. The paths are loaded by the Symfony's FrameworkExtension
+        $loader->load(function (ContainerBuilder $container) {
+            $moduleTranslationsPaths = $container->getParameter('modules_translation_paths');
+            foreach ($this->getActiveModules() as $activeModulePath) {
+                $translationsDir = _PS_MODULE_DIR_ . $activeModulePath . '/translations';
+                if (is_dir($translationsDir)) {
+                    $moduleTranslationsPaths[] = $translationsDir;
+                }
             }
-        } catch (\Exception $e) {
-            //Do nothing because the modules retrieval must not block the kernel, and it won't work
-            //during the installation process
-        }
-
-        return $activeModules;
+            $container->setParameter('modules_translation_paths', $moduleTranslationsPaths);
+        });
     }
 
     /**
@@ -166,8 +173,9 @@ class AppKernel extends Kernel
      */
     private function enableComposerAutoloaderOnModules($modules)
     {
+        $moduleDirectoryPath = rtrim(_PS_MODULE_DIR_, '/') . '/';
         foreach ($modules as $module) {
-            $autoloader = __DIR__ . '/../modules/' . $module . '/vendor/autoload.php';
+            $autoloader = $moduleDirectoryPath . $module . '/vendor/autoload.php';
 
             if (file_exists($autoloader)) {
                 include_once $autoloader;
@@ -186,5 +194,18 @@ class AppKernel extends Kernel
     public function getProjectDir()
     {
         return realpath(__DIR__ . '/..');
+    }
+
+    private function getActiveModules(): array
+    {
+        $activeModules = [];
+        try {
+            $activeModules = (new ModuleRepository())->getActiveModules();
+        } catch (\Exception $e) {
+            //Do nothing because the modules retrieval must not block the kernel, and it won't work
+            //during the installation process
+        }
+
+        return $activeModules;
     }
 }

@@ -11,6 +11,7 @@ services:
         arguments:
             - '@prestashop.addons.client_api'
             - '@prestashop.module.zip.manager'
+            - '@=service("prestashop.adapter.legacy.configuration").get("ADDONS_API_MODULE_CHANNEL", "stable")'
         properties:
             cacheDir: "%kernel.cache_dir%"
 
@@ -66,6 +67,9 @@ services:
 
     prestashop.adapter.data_provider.order_state:
         class: PrestaShop\PrestaShop\Adapter\OrderState\OrderStateDataProvider
+
+    prestashop.adapter.data_provider.order_return_state:
+      class: PrestaShop\PrestaShop\Adapter\OrderReturnState\OrderReturnStateDataProvider
 
     prestashop.adapter.data_provider.attribute:
         class: PrestaShop\PrestaShop\Adapter\Attribute\AttributeDataProvider

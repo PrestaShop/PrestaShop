@@ -10,7 +10,9 @@ admin_currencies_search:
     path: /
     methods: POST
     defaults:
-        _controller: 'PrestaShopBundle:Admin\Improve\International\Currency:search'
+        _controller: PrestaShopBundle:Admin\Common:searchGrid
+        gridDefinitionFactoryServiceId: prestashop.core.grid.definition.factory.currency
+        redirectRoute: admin_currencies_index
         _legacy_controller: AdminCurrencies
         _legacy_link: AdminCurrencies:submitFiltercurrency
 
@@ -80,3 +82,21 @@ admin_currencies_get_reference_data:
     _controller: 'PrestaShopBundle:Admin\Improve\International\Currency:getReferenceData'
     _legacy_controller: AdminCurrencies
     _legacy_link: AdminCurrencies:getReferenceData
+
+admin_currencies_bulk_delete:
+  path: /bulk-delete
+  methods: [POST, DELETE]
+  defaults:
+    _controller: 'PrestaShopBundle:Admin\Improve\International\Currency:bulkDelete'
+    _legacy_controller: AdminCurrencies
+    _legacy_link: AdminCurrencies:submitBulkdeletecurrency
+
+admin_currencies_bulk_toggle_status:
+  path: /bulk-toggle-status/{status}
+  methods: [POST]
+  defaults:
+    _controller: 'PrestaShopBundle:Admin\Improve\International\Currency:bulkToggleStatus'
+    _legacy_controller: AdminCurrencies
+    _legacy_link: AdminCurrencies:submitBulkupdatecurrency
+  requirements:
+    status: enable|disable

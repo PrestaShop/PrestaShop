@@ -1,11 +1,12 @@
 <?php
 /**
- * 2007-2019 PrestaShop SA and Contributors
+ * Copyright since 2007 PrestaShop SA and Contributors
+ * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
  *
  * NOTICE OF LICENSE
  *
  * This source file is subject to the Open Software License (OSL 3.0)
- * that is bundled with this package in the file LICENSE.txt.
+ * that is bundled with this package in the file LICENSE.md.
  * It is also available through the world-wide-web at this URL:
  * https://opensource.org/licenses/OSL-3.0
  * If you did not receive a copy of the license and are unable to
@@ -16,13 +17,14 @@
  *
  * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
  * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to https://www.prestashop.com for more information.
+ * needs please refer to https://devdocs.prestashop.com/ for more information.
  *
- * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2019 PrestaShop SA and Contributors
+ * @author    PrestaShop SA and Contributors <contact@prestashop.com>
+ * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
- * International Registered Trademark & Property of PrestaShop SA
  */
+
+use PrestaShop\PrestaShop\Core\Domain\Product\VirtualProductFile\VirtualProductFileSettings;
 
 /**
  * Class ProductDownloadCore.
@@ -44,10 +46,10 @@ class ProductDownloadCore extends ObjectModel
     /** @var string DateExpiration deadline of the file */
     public $date_expiration;
 
-    /** @var string NbDaysAccessible how many days the customer can access to file */
+    /** @var int NbDaysAccessible how many days the customer can access to file */
     public $nb_days_accessible;
 
-    /** @var string NbDownloadable how many time the customer can download the file */
+    /** @var int NbDownloadable how many time the customer can download the file */
     public $nb_downloadable;
 
     /** @var bool Active if file is accessible or not */
@@ -66,10 +68,10 @@ class ProductDownloadCore extends ObjectModel
         'primary' => 'id_product_download',
         'fields' => [
             'id_product' => ['type' => self::TYPE_INT, 'validate' => 'isUnsignedId', 'required' => true],
-            'display_filename' => ['type' => self::TYPE_STRING, 'validate' => 'isGenericName', 'size' => 255],
-            'filename' => ['type' => self::TYPE_STRING, 'validate' => 'isSha1', 'size' => 255],
+            'display_filename' => ['type' => self::TYPE_STRING, 'validate' => 'isGenericName', 'size' => VirtualProductFileSettings::MAX_DISPLAY_FILENAME_LENGTH],
+            'filename' => ['type' => self::TYPE_STRING, 'validate' => 'isSha1', 'size' => VirtualProductFileSettings::MAX_FILENAME_LENGTH],
             'date_add' => ['type' => self::TYPE_DATE, 'validate' => 'isDate'],
-            'date_expiration' => ['type' => self::TYPE_DATE, 'validate' => 'isDate'],
+            'date_expiration' => ['type' => self::TYPE_DATE, 'validate' => 'isDateOrNull'],
             'nb_days_accessible' => ['type' => self::TYPE_INT, 'validate' => 'isUnsignedInt', 'size' => 10],
             'nb_downloadable' => ['type' => self::TYPE_INT, 'validate' => 'isUnsignedInt', 'size' => 10],
             'active' => ['type' => self::TYPE_BOOL, 'validate' => 'isBool'],

@@ -8,5 +8,11 @@
     <carrier_group id="carrier_group_2_1" id_carrier="My_carrier" id_group="Visitor"/>
     <carrier_group id="carrier_group_2_2" id_carrier="My_carrier" id_group="Guest"/>
     <carrier_group id="carrier_group_2_3" id_carrier="My_carrier" id_group="Customer"/>
+    <carrier_group id="carrier_group_3_1" id_carrier="My_cheap_carrier" id_group="Visitor"/>
+    <carrier_group id="carrier_group_3_2" id_carrier="My_cheap_carrier" id_group="Guest"/>
+    <carrier_group id="carrier_group_3_3" id_carrier="My_cheap_carrier" id_group="Customer"/>
+    <carrier_group id="carrier_group_4_1" id_carrier="My_light_carrier" id_group="Visitor"/>
+    <carrier_group id="carrier_group_4_2" id_carrier="My_light_carrier" id_group="Guest"/>
+    <carrier_group id="carrier_group_4_3" id_carrier="My_light_carrier" id_group="Customer"/>
   </entities>
 </entity_carrier_group>

@@ -1,11 +1,12 @@
 <?php
 /**
- * 2007-2019 PrestaShop SA and Contributors
+ * Copyright since 2007 PrestaShop SA and Contributors
+ * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
  *
  * NOTICE OF LICENSE
  *
  * This source file is subject to the Open Software License (OSL 3.0)
- * that is bundled with this package in the file LICENSE.txt.
+ * that is bundled with this package in the file LICENSE.md.
  * It is also available through the world-wide-web at this URL:
  * https://opensource.org/licenses/OSL-3.0
  * If you did not receive a copy of the license and are unable to
@@ -16,15 +17,17 @@
  *
  * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
  * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to https://www.prestashop.com for more information.
+ * needs please refer to https://devdocs.prestashop.com/ for more information.
  *
- * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2019 PrestaShop SA and Contributors
+ * @author    PrestaShop SA and Contributors <contact@prestashop.com>
+ * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
- * International Registered Trademark & Property of PrestaShop SA
  */
 class CmsControllerCore extends FrontController
 {
+    public const CMS_CASE_PAGE = 1;
+    public const CMS_CASE_CATEGORY = 2;
+
     public $php_self = 'cms';
     public $assignCase;
     public $cms;
@@ -64,17 +67,16 @@ class CmsControllerCore extends FrontController
 
         $this->canonicalRedirection();
 
-        // assignCase (1 = CMS page, 2 = CMS category)
         if (Validate::isLoadedObject($this->cms)) {
             $adtoken = Tools::getAdminToken('AdminCmsContent' . (int) Tab::getIdFromClassName('AdminCmsContent') . (int) Tools::getValue('id_employee'));
             if (!$this->cms->isAssociatedToShop() || !$this->cms->active && Tools::getValue('adtoken') != $adtoken) {
                 $this->redirect_after = '404';
                 $this->redirect();
             } else {
-                $this->assignCase = 1;
+                $this->assignCase = self::CMS_CASE_PAGE;
             }
         } elseif (Validate::isLoadedObject($this->cms_category) && $this->cms_category->active) {
-            $this->assignCase = 2;
+            $this->assignCase = self::CMS_CASE_CATEGORY;
         } else {
             $this->redirect_after = '404';
             $this->redirect();
@@ -88,7 +90,7 @@ class CmsControllerCore extends FrontController
      */
     public function initContent()
     {
-        if ($this->assignCase == 1) {
+        if ($this->assignCase == self::CMS_CASE_PAGE) {
             $cmsVar = $this->objectPresenter->present($this->cms);
 
             $filteredCmsContent = Hook::exec(
@@ -117,7 +119,7 @@ class CmsControllerCore extends FrontController
                 'cms/page',
                 ['entity' => 'cms', 'id' => $this->cms->id]
             );
-        } elseif ($this->assignCase == 2) {
+        } elseif ($this->assignCase == self::CMS_CASE_CATEGORY) {
             $cmsCategoryVar = $this->getTemplateVarCategoryCms();
 
             $filteredCmsCategoryContent = Hook::exec(
@@ -153,7 +155,7 @@ class CmsControllerCore extends FrontController
     {
         $breadcrumb = parent::getBreadcrumbLinks();
 
-        if ($this->assignCase == 2) {
+        if ($this->assignCase == self::CMS_CASE_CATEGORY) {
             $cmsCategory = new CMSCategory($this->cms_category->id_cms_category);
         } else {
             $cmsCategory = new CMSCategory($this->cms->id_cms_category);
@@ -169,7 +171,7 @@ class CmsControllerCore extends FrontController
             }
         }
 
-        if ($this->assignCase == 1) {
+        if ($this->assignCase == self::CMS_CASE_PAGE) {
             $breadcrumb['links'][] = [
                 'title' => $this->context->controller->cms->meta_title,
                 'url' => $this->context->link->getCMSLink($this->context->controller->cms),
@@ -183,7 +185,7 @@ class CmsControllerCore extends FrontController
     {
         $page = parent::getTemplateVarPage();
 
-        if ($this->assignCase == 2) {
+        if ($this->assignCase == self::CMS_CASE_CATEGORY) {
             $page['body_classes']['cms-id-' . $this->cms_category->id] = true;
         } else {
             $page['body_classes']['cms-id-' . $this->cms->id] = true;

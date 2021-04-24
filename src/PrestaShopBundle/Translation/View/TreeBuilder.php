@@ -1,11 +1,12 @@
 <?php
 /**
- * 2007-2019 PrestaShop SA and Contributors
+ * Copyright since 2007 PrestaShop SA and Contributors
+ * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
  *
  * NOTICE OF LICENSE
  *
  * This source file is subject to the Open Software License (OSL 3.0)
- * that is bundled with this package in the file LICENSE.txt.
+ * that is bundled with this package in the file LICENSE.md.
  * It is also available through the world-wide-web at this URL:
  * https://opensource.org/licenses/OSL-3.0
  * If you did not receive a copy of the license and are unable to
@@ -16,12 +17,11 @@
  *
  * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
  * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to https://www.prestashop.com for more information.
+ * needs please refer to https://devdocs.prestashop.com/ for more information.
  *
- * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2019 PrestaShop SA and Contributors
+ * @author    PrestaShop SA and Contributors <contact@prestashop.com>
+ * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
- * International Registered Trademark & Property of PrestaShop SA
  */
 
 namespace PrestaShopBundle\Translation\View;
@@ -32,9 +32,19 @@ use Symfony\Bundle\FrameworkBundle\Routing\Router;
 
 class TreeBuilder
 {
+    /**
+     * @var string
+     */
     private $locale;
+    /**
+     * @var string
+     */
     private $theme;
 
+    /**
+     * @param string $locale
+     * @param string $theme
+     */
     public function __construct($locale, $theme)
     {
         $this->locale = $locale;
@@ -98,8 +108,8 @@ class TreeBuilder
     /**
      * Check if data contains search word.
      *
-     * @param $search
-     * @param $data
+     * @param string|array|null $search
+     * @param array $data
      *
      * @return bool
      */
@@ -139,6 +149,7 @@ class TreeBuilder
             $tableisedDomain = Inflector::tableize($domain);
             // the third component of the domain may have underscores, so we need to limit pieces to 3
             $parts = explode('_', $tableisedDomain, 3);
+            /** @var array $subtree */
             $subtree = &$translationsTree;
 
             foreach ($parts as $part) {
@@ -167,7 +178,7 @@ class TreeBuilder
     /**
      * Clean tree to use it with the new API system.
      *
-     * @param $tree
+     * @param array $tree
      * @param Router $router
      * @param null $theme
      * @param null $search
@@ -279,13 +290,13 @@ class TreeBuilder
 
     /**
      * @param Router $router
-     * @param $tree
-     * @param $index
-     * @param $name
-     * @param $fullName
+     * @param array $tree
+     * @param int $index
+     * @param string $name
+     * @param string $fullName
      * @param bool $theme
      * @param null $search
-     * @param null $module
+     * @param bool $module
      *
      * @return mixed
      */

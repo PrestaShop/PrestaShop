@@ -1,10 +1,11 @@
 /**
- * 2007-2019 PrestaShop SA and Contributors
+ * Copyright since 2007 PrestaShop SA and Contributors
+ * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
  *
  * NOTICE OF LICENSE
  *
  * This source file is subject to the Open Software License (OSL 3.0)
- * that is bundled with this package in the file LICENSE.txt.
+ * that is bundled with this package in the file LICENSE.md.
  * It is also available through the world-wide-web at this URL:
  * https://opensource.org/licenses/OSL-3.0
  * If you did not receive a copy of the license and are unable to
@@ -15,12 +16,11 @@
  *
  * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
  * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to https://www.prestashop.com for more information.
+ * needs please refer to https://devdocs.prestashop.com/ for more information.
  *
- * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2019 PrestaShop SA and Contributors
+ * @author    PrestaShop SA and Contributors <contact@prestashop.com>
+ * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
- * International Registered Trademark & Property of PrestaShop SA
  */
 
 const {$} = window;
@@ -34,11 +34,13 @@ const {$} = window;
  * @param {String} closeButtonLabel
  * @param {String} confirmButtonLabel
  * @param {String} confirmButtonClass
+ * @param {Array} customButtons
  * @param {Boolean} closable
  * @param {Function} confirmCallback
+ * @param {Function} cancelCallback
  *
  */
-export default function ConfirmModal(params, confirmCallback) {
+export default function ConfirmModal(params, confirmCallback, cancelCallback) {
   // Construct the modal
   const {id, closable} = params;
   this.modal = Modal(params);
@@ -53,7 +55,7 @@ export default function ConfirmModal(params, confirmCallback) {
   this.modal.confirmButton.addEventListener('click', confirmCallback);
 
   this.$modal.modal({
-    backdrop: (closable ? true : 'static'),
+    backdrop: closable ? true : 'static',
     keyboard: closable !== undefined ? closable : true,
     closable: closable !== undefined ? closable : true,
     show: false,
@@ -61,6 +63,9 @@ export default function ConfirmModal(params, confirmCallback) {
 
   this.$modal.on('hidden.bs.modal', () => {
     document.querySelector(`#${id}`).remove();
+    if (cancelCallback) {
+      cancelCallback();
+    }
   });
 
   document.body.appendChild(this.modal.container);
@@ -73,12 +78,13 @@ export default function ConfirmModal(params, confirmCallback) {
  *
  */
 function Modal({
-  id = 'confirm_modal',
+  id = 'confirm-modal',
   confirmTitle,
   confirmMessage = '',
   closeButtonLabel = 'Close',
   confirmButtonLabel = 'Accept',
   confirmButtonClass = 'btn-primary',
+  customButtons = [],
 }) {
   const modal = {};
 
@@ -133,7 +139,7 @@ function Modal({
   modal.closeButton.dataset.dismiss = 'modal';
   modal.closeButton.innerHTML = closeButtonLabel;
 
-  // Modal close button element
+  // Modal confirm button element
   modal.confirmButton = document.createElement('button');
   modal.confirmButton.setAttribute('type', 'button');
   modal.confirmButton.classList.add('btn', confirmButtonClass, 'btn-lg', 'btn-confirm-submit');
@@ -148,7 +154,7 @@ function Modal({
   }
 
   modal.body.appendChild(modal.message);
-  modal.footer.append(modal.closeButton, modal.confirmButton);
+  modal.footer.append(modal.closeButton, ...customButtons, modal.confirmButton);
   modal.content.append(modal.header, modal.body, modal.footer);
   modal.dialog.appendChild(modal.content);
   modal.container.appendChild(modal.dialog);

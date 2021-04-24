@@ -19,7 +19,7 @@ Feature: Currency Management
       | is_enabled       | 1         |
       | is_unofficial    | 0         |
       | shop_association | shop1     |
-    Then I should get no currency error
+    Then I should get no error
     And currency "currency1" should be "EUR"
     And currency "currency1" exchange rate should be 0.88
     And currency "currency1" numeric iso code should be 978
@@ -32,13 +32,13 @@ Feature: Currency Management
     And currency "currency1" should be available in shop "shop1"
     And database contains 1 rows of currency "EUR"
     When I edit currency "currency1" with following properties:
-      | iso_code         | EUR       |
-      | exchange_rate    | 1.0       |
-      | name             | Euro      |
-      | symbol           | €         |
-      | is_enabled       | 0         |
-      | is_unofficial    | 0         |
-      | shop_association | shop1     |
+      | iso_code         | EUR   |
+      | exchange_rate    | 1.0   |
+      | name             | Euro  |
+      | symbol           | €     |
+      | is_enabled       | 0     |
+      | is_unofficial    | 0     |
+      | shop_association | shop1 |
     Then currency "currency1" should be "EUR"
     And currency "currency1" exchange rate should be 1
     And currency "currency1" numeric iso code should be 978
@@ -74,52 +74,55 @@ Feature: Currency Management
 
   Scenario: Deleting non default currency should be allowed
     When I add new currency "currency4" with following properties:
-      | iso_code         | GBP           |
-      | exchange_rate    | 0.88          |
-      | name             | British Pound |
-      | symbol           | £             |
-      | is_enabled       | 1             |
-      | is_unofficial    | 0             |
-      | shop_association | shop1         |
+      | iso_code               | GBP              |
+      | exchange_rate          | 0.88             |
+      | name                   | Pound            |
+      | symbol                 | ££               |
+      | is_enabled             | 1                |
+      | is_unofficial          | 0                |
+      | shop_association       | shop1            |
+      | transformations[fr-FR] | leftWithoutSpace |
     And database contains 1 rows of currency "GBP"
+    And currency "currency4" should have pattern "¤#,##0.00" for language "fr-FR"
+    And currency "currency4" should have modified true
     When I delete currency "currency4"
     Then "GBP" currency should be deleted
     And database contains 1 rows of currency "GBP"
 
-  Scenario: Adding a new instance of deleted currency should be allowed (even though it's duplicated...)
+  Scenario: Adding a new instance of deleted currency should be allowed (it's not duplicated and values are refreshed)
     Given currency with "GBP" has been deleted
     And database contains 1 rows of currency "GBP"
     When I add new currency "currency5" with following properties:
       | iso_code         | GBP           |
-      | exchange_rate    | 0.88          |
-      | precision        | 0             |
-      | name             | British Pound |
-      | symbol           | £             |
-      | is_enabled       | 1             |
+      | exchange_rate    | 0.66          |
+      | precision        | 2             |
+      | is_enabled       | 0             |
       | is_unofficial    | 0             |
       | shop_association | shop1         |
-    Then I should get no currency error
-    And database contains 2 rows of currency "GBP"
+    Then I should get no error
+    And database contains 1 rows of currency "GBP"
+    And currency with "GBP" is not deleted
     And currency "currency5" should be "GBP"
-    And currency "currency5" exchange rate should be 0.88
+    And currency "currency5" exchange rate should be 0.66
     And currency "currency5" numeric iso code should be 826
     And currency "currency5" name should be "British Pound"
     And currency "currency5" symbol should be "£"
-    And currency "currency5" precision should be 0
+    And currency "currency5" precision should be 2
     And currency "currency5" should have unofficial false
     And currency "currency5" should have modified false
-    And currency "currency5" should have status enabled
+    And currency "currency5" should have status disabled
     And currency "currency5" should be available in shop "shop1"
+    And currency "currency5" should have pattern empty for language "fr-FR"
 
   Scenario: Adding invalid unofficial currency
     When I add new currency "currency6" with following properties:
-      | iso_code         | EUR       |
-      | exchange_rate    | 0.88      |
-      | name             | My Euros  |
-      | symbol           | €         |
-      | is_enabled       | 1         |
-      | is_unofficial    | 1         |
-      | shop_association | shop1     |
+      | iso_code         | EUR      |
+      | exchange_rate    | 0.88     |
+      | name             | My Euros |
+      | symbol           | €        |
+      | is_enabled       | 1        |
+      | is_unofficial    | 1        |
+      | shop_association | shop1    |
     Then I should get error that unofficial currency is invalid
 
   Scenario: Adding and editing unofficial currency
@@ -131,7 +134,7 @@ Feature: Currency Management
       | is_enabled       | 1                |
       | is_unofficial    | 1                |
       | shop_association | shop1            |
-    Then I should get no currency error
+    Then I should get no error
     And database contains 1 rows of currency "CST"
     And currency "currency7" should be "CST"
     And currency "currency7" exchange rate should be 0.77
@@ -150,7 +153,7 @@ Feature: Currency Management
       | is_enabled       | 0             |
       | is_unofficial    | 1             |
       | shop_association | shop1         |
-    Then I should get no currency error
+    Then I should get no error
     And database contains 0 rows of currency "CST"
     And database contains 1 rows of currency "CUS"
     And currency "currency7" should be "CUS"
@@ -170,7 +173,7 @@ Feature: Currency Management
       | is_enabled       | 1             |
       | is_unofficial    | 1             |
       | shop_association | shop1         |
-    Then I should get no currency error
+    Then I should get no error
     And currency "currency7" should be "CUS"
     And currency "currency7" exchange rate should be 0.88
     And currency "currency7" numeric iso code should be null
@@ -192,7 +195,7 @@ Feature: Currency Management
       | is_enabled       | 1                |
       | is_unofficial    | 1                |
       | shop_association | shop1            |
-    Then I should get no currency error
+    Then I should get no error
     And database contains 1 rows of currency "CST"
     And currency "currency8" should be "CST"
     And currency "currency8" exchange rate should be 0.77
@@ -205,11 +208,11 @@ Feature: Currency Management
     And currency "currency8" should have status enabled
     And currency "currency8" should be available in shop "shop1"
     When I edit currency "currency8" with following properties:
-      | iso_code         | EUR           |
-      | exchange_rate    | 0.66          |
-      | is_enabled       | 0             |
-      | is_unofficial    | 1             |
-      | shop_association | shop1         |
+      | iso_code         | EUR   |
+      | exchange_rate    | 0.66  |
+      | is_enabled       | 0     |
+      | is_unofficial    | 1     |
+      | shop_association | shop1 |
     Then I should get error that unofficial currency is invalid
 
   Scenario: Adding existing currency should not be allowed
@@ -234,11 +237,11 @@ Feature: Currency Management
     And database contains 1 rows of currency "CST"
     And database contains 1 rows of currency "CUS"
     When I edit currency "currency11" with following properties:
-      | iso_code         | CUS           |
-      | exchange_rate    | 0.66          |
-      | is_enabled       | 0             |
-      | is_unofficial    | 1             |
-      | shop_association | shop1         |
+      | iso_code         | CUS   |
+      | exchange_rate    | 0.66  |
+      | is_enabled       | 0     |
+      | is_unofficial    | 1     |
+      | shop_association | shop1 |
     Then I should get error that currency already exists
     And database contains 1 rows of currency "CST"
     And database contains 1 rows of currency "CUS"
@@ -250,7 +253,7 @@ Feature: Currency Management
       | is_enabled       | 1         |
       | is_unofficial    | 0         |
       | shop_association | shop1     |
-    Then I should get no currency error
+    Then I should get no error
     And currency "currency14" should be "AUD"
     And currency "currency14" exchange rate should be 0.88
     And currency "currency14" numeric iso code should be 036
@@ -269,7 +272,7 @@ Feature: Currency Management
       | is_enabled       | 1         |
       | is_unofficial    | 1         |
       | shop_association | shop1     |
-    Then I should get no currency error
+    Then I should get no error
     And currency "currency15" should be "BTC"
     And currency "currency15" exchange rate should be 0.88
     And currency "currency15" numeric iso code should be null
@@ -283,13 +286,13 @@ Feature: Currency Management
 
   Scenario: Adding and edit official currency with custom pattern
     When I add new currency "currency16" with following properties:
-      | iso_code         | JPY                 |
-      | exchange_rate    | 0.08                |
-      | is_enabled       | 1                   |
-      | is_unofficial    | 0                   |
-      | shop_association | shop1               |
-      | transformations  | fr-FR:leftWithSpace |
-    Then I should get no currency error
+      | iso_code               | JPY           |
+      | exchange_rate          | 0.08          |
+      | is_enabled             | 1             |
+      | is_unofficial          | 0             |
+      | shop_association       | shop1         |
+      | transformations[fr-FR] | leftWithSpace |
+    Then I should get no error
     And currency "currency16" should be "JPY"
     And currency "currency16" exchange rate should be 0.08
     And currency "currency16" numeric iso code should be 392
@@ -304,12 +307,12 @@ Feature: Currency Management
     And currency "currency16" should have pattern empty for language "en-EN"
     And database contains 1 rows of currency "JPY"
     When I edit currency "currency16" with following properties:
-      | iso_code         | JPY                  |
-      | exchange_rate    | 0.08                 |
-      | is_enabled       | 1                    |
-      | is_unofficial    | 0                    |
-      | shop_association | shop1                |
-      | transformations  | en-US:rightWithSpace |
+      | iso_code               | JPY            |
+      | exchange_rate          | 0.08           |
+      | is_enabled             | 1              |
+      | is_unofficial          | 0              |
+      | shop_association       | shop1          |
+      | transformations[en-US] | rightWithSpace |
     And currency "currency16" should be "JPY"
     And currency "currency16" exchange rate should be 0.08
     And currency "currency16" numeric iso code should be 392
@@ -325,18 +328,20 @@ Feature: Currency Management
 
   Scenario: Adding and edit unofficial currency with custom pattern
     When I add new currency "currency17" with following properties:
-      | iso_code         | JPP                    |
-      | exchange_rate    | 0.8                    |
-      | is_enabled       | 1                      |
-      | is_unofficial    | 1                      |
-      | shop_association | shop1                  |
-      | transformations  | fr-FR:leftWithoutSpace |
-    Then I should get no currency error
+      | iso_code               | JPP               |
+      | name                   | Japan Private Yen |
+      | symbol                 | Yen               |
+      | exchange_rate          | 0.8               |
+      | is_enabled             | 1                 |
+      | is_unofficial          | 1                 |
+      | shop_association       | shop1             |
+      | transformations[fr-FR] | leftWithoutSpace  |
+    Then I should get no error
     And currency "currency17" should be "JPP"
     And currency "currency17" exchange rate should be 0.8
     And currency "currency17" numeric iso code should be null
-    And currency "currency17" name should be "JPP"
-    And currency "currency17" symbol should be "JPP"
+    And currency "currency17" name should be "Japan Private Yen"
+    And currency "currency17" symbol should be "Yen"
     And currency "currency17" precision should be 0
     And currency "currency17" should have unofficial true
     And currency "currency17" should have modified true
@@ -346,17 +351,17 @@ Feature: Currency Management
     And currency "currency17" should have pattern empty for language "en-EN"
     And database contains 1 rows of currency "JPP"
     When I edit currency "currency17" with following properties:
-      | iso_code         | JPP                     |
-      | exchange_rate    | 0.8                     |
-      | is_enabled       | 1                       |
-      | is_unofficial    | 1                       |
-      | shop_association | shop1                   |
-      | transformations  | en-US:rightWithoutSpace |
+      | iso_code               | JPP               |
+      | exchange_rate          | 0.8               |
+      | is_enabled             | 1                 |
+      | is_unofficial          | 1                 |
+      | shop_association       | shop1             |
+      | transformations[en-US] | rightWithoutSpace |
     And currency "currency17" should be "JPP"
     And currency "currency17" exchange rate should be 0.8
     And currency "currency17" numeric iso code should be null
-    And currency "currency17" name should be "JPP"
-    And currency "currency17" symbol should be "JPP"
+    And currency "currency17" name should be "Japan Private Yen"
+    And currency "currency17" symbol should be "Yen"
     And currency "currency17" precision should be 0
     And currency "currency17" should have unofficial true
     And currency "currency17" should have modified true
@@ -364,3 +369,68 @@ Feature: Currency Management
     And currency "currency17" should be available in shop "shop1"
     And currency "currency17" should have pattern empty for language "fr-FR"
     And currency "currency17" should have pattern "#,##0.00¤" for language "en-US"
+
+  Scenario: Adding a new instance of deleted unofficial currency should be allowed (it's not duplicated and values are refreshed)
+    Given I delete currency "currency17"
+    And currency with "JPP" has been deleted
+    And database contains 1 rows of currency "JPP"
+    When I add new currency "currency18" with following properties:
+      | iso_code         | JPP   |
+      | exchange_rate    | 0.66  |
+      | precision        | 2     |
+      | is_enabled       | 0     |
+      | is_unofficial    | 1     |
+      | shop_association | shop1 |
+    Then I should get no error
+    And database contains 1 rows of currency "JPP"
+    And currency with "JPP" is not deleted
+    And currency "currency18" should be "JPP"
+    And currency "currency18" exchange rate should be 0.66
+    And currency "currency18" numeric iso code should be null
+    And currency "currency18" name should be "JPP"
+    And currency "currency18" symbol should be "JPP"
+    And currency "currency18" precision should be 2
+    And currency "currency18" should have unofficial true
+    And currency "currency18" should have modified true
+    And currency "currency18" should have status disabled
+    And currency "currency18" should be available in shop "shop1"
+    And currency "currency18" should have pattern empty for language "fr-FR"
+    And currency "currency18" should have pattern empty for language "en-US"
+
+  Scenario: Adding invalid named currency
+    When I add new currency "currency19" with following properties:
+      | iso_code         | IVL       |
+      | exchange_rate    | 0.88      |
+      | name             | <>        |
+      | symbol           | €         |
+      | is_enabled       | 1         |
+      | is_unofficial    | 1         |
+      | shop_association | shop1     |
+    Then I should get error that currency name is invalid
+    When I add new currency "currency19" with following properties:
+      | iso_code         | AOA       |
+      | exchange_rate    | 0.88      |
+      | name             | <>        |
+      | symbol           | €         |
+      | is_enabled       | 1         |
+      | is_unofficial    | 0         |
+      | shop_association | shop1     |
+    Then I should get error that currency name is invalid
+    When I edit currency "currency17" with following properties:
+      | iso_code               | JPP               |
+      | exchange_rate          | 0.8               |
+      | name                   | <>                |
+      | is_enabled             | 1                 |
+      | is_unofficial          | 1                 |
+      | shop_association       | shop1             |
+      | transformations[en-US] | rightWithoutSpace |
+    Then I should get error that currency name is invalid
+    When I edit currency "currency16" with following properties:
+      | iso_code               | JPY            |
+      | exchange_rate          | 0.08           |
+      | name                   | <>             |
+      | is_enabled             | 1              |
+      | is_unofficial          | 0              |
+      | shop_association       | shop1          |
+      | transformations[en-US] | rightWithSpace |
+    Then I should get error that currency name is invalid

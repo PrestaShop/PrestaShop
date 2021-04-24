@@ -1,11 +1,12 @@
 <?php
 /**
- * 2007-2019 PrestaShop SA and Contributors
+ * Copyright since 2007 PrestaShop SA and Contributors
+ * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
  *
  * NOTICE OF LICENSE
  *
  * This source file is subject to the Open Software License (OSL 3.0)
- * that is bundled with this package in the file LICENSE.txt.
+ * that is bundled with this package in the file LICENSE.md.
  * It is also available through the world-wide-web at this URL:
  * https://opensource.org/licenses/OSL-3.0
  * If you did not receive a copy of the license and are unable to
@@ -16,17 +17,21 @@
  *
  * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
  * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to https://www.prestashop.com for more information.
+ * needs please refer to https://devdocs.prestashop.com/ for more information.
  *
- * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2019 PrestaShop SA and Contributors
+ * @author    PrestaShop SA and Contributors <contact@prestashop.com>
+ * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
- * International Registered Trademark & Property of PrestaShop SA
  */
 use PrestaShop\PrestaShop\Adapter\SymfonyContainer;
 use PrestaShop\PrestaShop\Core\Addon\Module\ModuleManagerBuilder;
 use PrestaShop\PrestaShop\Core\Exception\CoreException;
 use PrestaShop\PrestaShop\Core\Feature\TokenInUrls;
+use PrestaShopBundle\Routing\Converter\LegacyUrlConverter;
+use PrestaShopBundle\Service\TransitionalBehavior\AdminPagePreferenceInterface;
+use Symfony\Component\Routing\Exception\InvalidParameterException;
+use Symfony\Component\Routing\Exception\MissingMandatoryParametersException;
+use Symfony\Component\Routing\Exception\RouteNotFoundException;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 
 class LinkCore
@@ -124,13 +129,16 @@ class LinkCore
      * @param string|null $ean13
      * @param int|null $idLang
      * @param int|null $idShop (since 1.5.0) ID shop need to be used when we generate a product link for a product in a cart
-     * @param int|null $ipa ID product attribute
+     * @param int|null $idProductAttribute ID product attribute
      * @param bool $force_routes
      * @param bool $relativeProtocol
-     * @param bool $addAnchor
+     * @param bool $withIdInAnchor
      * @param array $extraParams
+     * @param bool $addAnchor
      *
      * @return string
+     *
+     * @throws PrestaShopException
      */
     public function getProductLink(
         $product,
@@ -139,11 +147,12 @@ class LinkCore
         $ean13 = null,
         $idLang = null,
         $idShop = null,
-        $ipa = null,
+        $idProductAttribute = null,
         $force_routes = false,
         $relativeProtocol = false,
-        $addAnchor = false,
-        $extraParams = []
+        $withIdInAnchor = false,
+        $extraParams = [],
+        bool $addAnchor = true
     ) {
         $dispatcher = Dispatcher::getInstance();
 
@@ -169,10 +178,10 @@ class LinkCore
         }
 
         //Attribute equal to 0 or empty is useless, so we force it to null so that it won't be inserted in query parameters
-        if (empty($ipa)) {
-            $ipa = null;
+        if (empty($idProductAttribute)) {
+            $idProductAttribute = null;
         }
-        $params['id_product_attribute'] = $ipa;
+        $params['id_product_attribute'] = $idProductAttribute;
         if (!$alias) {
             $product = $this->getProductObject($product, $idLang, $idShop);
         }
@@ -234,10 +243,11 @@ class LinkCore
             }
             $params['categories'] = implode('/', $cats);
         }
-        if ($ipa) {
+        if ($idProductAttribute) {
             $product = $this->getProductObject($product, $idLang, $idShop);
         }
-        $anchor = $ipa ? $product->getAnchor((int) $ipa, (bool) $addAnchor) : '';
+
+        $anchor = $addAnchor && $idProductAttribute ? $product->getAnchor((int) $idProductAttribute, (bool) $withIdInAnchor) : '';
 
         return $url . $dispatcher->createUrl('product_rule', $idLang, array_merge($params, $extraParams), $force_routes, $anchor, $idShop);
     }
@@ -381,12 +391,14 @@ class LinkCore
      * @param int $idLang
      *
      * @return Category
+     *
+     * @throws PrestaShopException
      */
     public function getCategoryObject($category, $idLang)
     {
         if (!is_object($category)) {
-            if (is_array($category) && isset($category['id_category'])) {
-                $category = new Category($category, $idLang);
+            if (isset($category['id_category'])) {
+                $category = new Category($category['id_category'], $idLang);
             } elseif ((int) $category) {
                 $category = new Category((int) $category, $idLang);
             } else {
@@ -427,11 +439,14 @@ class LinkCore
 
         // Set available keywords
         $params = [];
-
-        if (!is_object($category)) {
-            $params['id'] = $category;
-        } else {
+        if (Validate::isLoadedObject($category)) {
             $params['id'] = $category->id;
+        } elseif (isset($category['id_category'])) {
+            $params['id'] = $category['id_category'];
+        } elseif (is_int($category) or ctype_digit($category)) {
+            $params['id'] = (int) $category;
+        } else {
+            throw new \InvalidArgumentException('Invalid category parameter');
         }
 
         // Selected filters is used by the module ps_facetedsearch
@@ -702,14 +717,17 @@ class LinkCore
     /**
      * Use controller name to create a link.
      *
+     * Warning on fallback to Symfony Router, this exceptions can be thrown
+     * - RouteNotFoundException If the named route doesn't exist
+     * - MissingMandatoryParametersException When some parameters are missing that are mandatory for the route
+     * - InvalidParameterException When a parameter value for a placeholder is not correct because it does not match the requirement
+     *
      * @param string $controller
      * @param bool $withToken include or not the token in the url
      * @param array $sfRouteParams (Since 1.7.0.0) Optional parameters to use into New architecture specific cases. If these specific cases should redirect to legacy URLs, then this parameter is used to complete GET query string
      * @param array $params (Since 1.7.0.3) Optional
      *
      * @return string url
-     *
-     * @throws PrestaShopException
      */
     public function getAdminLink($controller, $withToken = true, $sfRouteParams = [], $params = [])
     {
@@ -732,7 +750,9 @@ class LinkCore
         $sfRouter = null;
         $legacyUrlConverter = null;
         if (null !== $sfContainer) {
+            /** @var UrlGeneratorInterface $sfRouter */
             $sfRouter = $sfContainer->get('router');
+            /** @var LegacyUrlConverter $legacyUrlConverter */
             $legacyUrlConverter = $sfContainer->get('prestashop.bundle.routing.converter.legacy_url_converter');
         }
 
@@ -747,6 +767,7 @@ class LinkCore
         switch ($controller) {
             case 'AdminProducts':
                 // New architecture modification: temporary behavior to switch between old and new controllers.
+                /** @var AdminPagePreferenceInterface $pagePreference */
                 $pagePreference = $sfContainer->get('prestashop.core.admin.page_preference_interface');
                 $redirectLegacy = $pagePreference->getTemporaryShouldUseLegacyPage('product');
                 if (!$redirectLegacy) {
@@ -840,17 +861,21 @@ class LinkCore
     }
 
     /**
+     * Warning on fallback to Symfony Router, this exceptions can be thrown
+     * - RouteNotFoundException If the named route doesn't exist
+     * - MissingMandatoryParametersException When some parameters are missing that are mandatory for the route
+     * - InvalidParameterException When a parameter value for a placeholder is not correct because it does not match the requirement
+     *
      * @param array $tab
      *
      * @return string
-     *
-     * @throws PrestaShopException
      */
     public function getTabLink(array $tab)
     {
         if (!empty($tab['route_name'])) {
             $sfContainer = SymfonyContainer::getInstance();
             if (null !== $sfContainer) {
+                /** @var UrlGeneratorInterface $sfRouter */
                 $sfRouter = $sfContainer->get('router');
 
                 return $sfRouter->generate($tab['route_name']);
@@ -887,8 +912,6 @@ class LinkCore
      * @param bool $relativeProtocol
      *
      * @return string
-     *
-     * @throws PrestaShopDatabaseException
      */
     public function getAdminBaseLink($idShop = null, $ssl = null, $relativeProtocol = false)
     {
@@ -1180,8 +1203,6 @@ class LinkCore
      * @param Context|null $context the context if needed
      *
      * @return string link
-     *
-     * @throws PrestaShopException
      */
     public function getLanguageLink($idLang, Context $context = null)
     {
@@ -1441,6 +1462,8 @@ class LinkCore
      * @param array $params
      *
      * @return string
+     *
+     * @throws \InvalidArgumentException
      */
     public static function getUrlSmarty($params)
     {
@@ -1462,6 +1485,9 @@ class LinkCore
             'alias' => null,
             'ssl' => null,
             'relative_protocol' => true,
+            'with_id_in_anchor' => false,
+            'extra_params' => [],
+            'add_anchor' => true,
         ];
         $params = array_merge($default, $params);
 
@@ -1482,7 +1508,10 @@ class LinkCore
                     $params['id_shop'],
                     (isset($params['ipa']) ? (int) $params['ipa'] : 0),
                     false,
-                    $params['relative_protocol']
+                    $params['relative_protocol'],
+                    $params['with_id_in_anchor'],
+                    $params['extra_params'],
+                    $params['add_anchor']
                 );
 
                 break;
@@ -1542,6 +1571,7 @@ class LinkCore
 
                 $sfContainer = SymfonyContainer::getInstance();
                 if (null !== $sfContainer) {
+                    /** @var UrlGeneratorInterface $sfRouter */
                     $sfRouter = $sfContainer->get('router');
 
                     if (array_key_exists('sf-params', $params)) {

@@ -1,11 +1,12 @@
 <?php
 /**
- * 2007-2019 PrestaShop SA and Contributors
+ * Copyright since 2007 PrestaShop SA and Contributors
+ * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
  *
  * NOTICE OF LICENSE
  *
  * This source file is subject to the Open Software License (OSL 3.0)
- * that is bundled with this package in the file LICENSE.txt.
+ * that is bundled with this package in the file LICENSE.md.
  * It is also available through the world-wide-web at this URL:
  * https://opensource.org/licenses/OSL-3.0
  * If you did not receive a copy of the license and are unable to
@@ -16,18 +17,19 @@
  *
  * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
  * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to https://www.prestashop.com for more information.
+ * needs please refer to https://devdocs.prestashop.com/ for more information.
  *
- * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2019 PrestaShop SA and Contributors
+ * @author    PrestaShop SA and Contributors <contact@prestashop.com>
+ * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
- * International Registered Trademark & Property of PrestaShop SA
  */
 
 namespace Tests\Integration\Behaviour\Features\Context\Domain;
 
 use Behat\Gherkin\Node\TableNode;
+use Category;
 use Configuration;
+use Language;
 use PHPUnit\Framework\Assert as Assert;
 use PrestaShop\PrestaShop\Adapter\Form\ChoiceProvider\CategoryTreeChoiceProvider;
 use PrestaShop\PrestaShop\Adapter\Form\ChoiceProvider\GroupByIdChoiceProvider;
@@ -43,8 +45,10 @@ use PrestaShop\PrestaShop\Core\Domain\Category\Command\EditRootCategoryCommand;
 use PrestaShop\PrestaShop\Core\Domain\Category\Command\SetCategoryIsEnabledCommand;
 use PrestaShop\PrestaShop\Core\Domain\Category\Command\UpdateCategoryPositionCommand;
 use PrestaShop\PrestaShop\Core\Domain\Category\Exception\CategoryNotFoundException;
+use PrestaShop\PrestaShop\Core\Domain\Category\Query\GetCategoriesTree;
 use PrestaShop\PrestaShop\Core\Domain\Category\Query\GetCategoryForEditing;
 use PrestaShop\PrestaShop\Core\Domain\Category\Query\GetCategoryIsEnabled;
+use PrestaShop\PrestaShop\Core\Domain\Category\QueryResult\CategoryForTree;
 use PrestaShop\PrestaShop\Core\Domain\Category\QueryResult\EditableCategory;
 use PrestaShop\PrestaShop\Core\Domain\Category\ValueObject\CategoryId;
 use RuntimeException;
@@ -84,6 +88,42 @@ class CategoryFeatureContext extends AbstractDomainFeatureContext
         $this->container = $this->getContainer();
         $this->defaultLanguageId = Configuration::get('PS_LANG_DEFAULT');
         $this->psCatImgDir = _PS_CAT_IMG_DIR_;
+    }
+
+    /**
+     * @Then I should see following root categories in ":langIso" language:
+     *
+     * @param TableNode $tableNode
+     * @param string $langIso
+     */
+    public function assertRootCategoriesTree(TableNode $tableNode, string $langIso): void
+    {
+        $langId = Language::getIdByIso($langIso);
+        $categoriesTree = $this->getQueryBus()->handle(new GetCategoriesTree($langId));
+
+        Assert::assertNotEmpty($categoriesTree, 'Categories tree is empty');
+
+        $this->assertCategoriesInTree($categoriesTree, $tableNode->getColumnsHash(), $langId);
+    }
+
+    /**
+     * @Then I should see following categories in ":parentReference" category in ":langIso" language:
+     *
+     * @param TableNode $tableNode
+     * @param string $langIso
+     * @param string $parentReference
+     */
+    public function assertCategoriesTree(TableNode $tableNode, string $langIso, string $parentReference): void
+    {
+        $langId = Language::getIdByIso($langIso);
+        $categoriesTree = $this->getQueryBus()->handle(new GetCategoriesTree($langId));
+
+        Assert::assertNotEmpty($categoriesTree, 'Categories tree is empty');
+
+        $parentCategoryId = $this->getSharedStorage()->get($parentReference);
+        $actualCategories = $this->extractCategoriesByParent($categoriesTree, $parentCategoryId);
+
+        $this->assertCategoriesInTree($actualCategories, $tableNode->getColumnsHash(), $langId);
     }
 
     /**
@@ -209,12 +249,12 @@ class CategoryFeatureContext extends AbstractDomainFeatureContext
     }
 
     /**
-     * @When I update category :categoryReference position with following details:
+     * @When I update category :categoryReference with generated position and following details:
      *
      * @param string $categoryReference
      * @param TableNode $table
      */
-    public function updateCategoryPositionWithFollowingDetails(string $categoryReference, TableNode $table)
+    public function updateCategoryWithGeneratedPositionAndFollowingDetails(string $categoryReference, TableNode $table)
     {
         /** @var array $testCaseData */
         $testCaseData = $table->getRowsHash();
@@ -223,18 +263,18 @@ class CategoryFeatureContext extends AbstractDomainFeatureContext
 
         /** @var CategoryTreeChoiceProvider $categoryTreeChoiceProvider */
         $categoryTreeChoiceProvider = $this->container->get(
-            'prestashop.adapter.form.choice_provider.category_tree_choice_provider');
+            'prestashop.adapter.form.choice_provider.category_tree_choice_provider'
+        );
         $categoryTreeIterator = new CategoryTreeIterator($categoryTreeChoiceProvider);
         $parentCategoryId = $categoryTreeIterator->getCategoryId($testCaseData['Parent category']);
 
         $wayId = array_flip(self::CATEGORY_POSITION_WAYS_MAP)[$testCaseData['Way']];
-        $positionsArray = explode(',', $testCaseData['Positions']);
 
         $this->getCommandBus()->handle(new UpdateCategoryPositionCommand(
             $categoryId,
             $parentCategoryId,
             $wayId,
-            $positionsArray,
+            ['tr_' . $parentCategoryId . '_' . $categoryId], // generated position
             $testCaseData['Found first']
         ));
     }
@@ -457,6 +497,106 @@ class CategoryFeatureContext extends AbstractDomainFeatureContext
     }
 
     /**
+     * @Given category :categoryReference in default language named :categoryName exists
+     *
+     * @param string $categoryReference
+     * @param string $categoryName
+     */
+    public function assertCategoryExistsByName(string $categoryReference, string $categoryName)
+    {
+        $foundCategory = Category::searchByName($this->defaultLanguageId, $categoryName, true);
+
+        if (!isset($foundCategory['name']) || $foundCategory['name'] !== $categoryName) {
+            throw new RuntimeException(sprintf(
+                'Category "%s" named "%s" was not found',
+                $categoryReference,
+                $categoryName
+            ));
+        }
+
+        $this->getSharedStorage()->set($categoryReference, (int) $foundCategory['id_category']);
+    }
+
+    /**
+     * @param CategoryForTree[] $actualCategories
+     * @param array<int, array<string, string>> $expectedCategories
+     * @param int $langId
+     */
+    private function assertCategoriesInTree(array $actualCategories, array $expectedCategories, int $langId): void
+    {
+        Assert::assertEquals(
+            count($actualCategories),
+            count($expectedCategories),
+            'Unexpected categories count'
+        );
+
+        foreach ($actualCategories as $key => $category) {
+            $expectedCategory = $expectedCategories[$key];
+            $expectedId = $this->getSharedStorage()->get($expectedCategory['id reference']);
+            $expectedChildrenCategoryIds = array_map(function (string $childCategoryReference): int {
+                return $this->getSharedStorage()->get($childCategoryReference);
+            }, PrimitiveUtils::castStringArrayIntoArray($expectedCategory['direct child categories']));
+
+            $actualCategoryChildren = $category->getChildren();
+            Assert::assertEquals(
+                count($actualCategoryChildren),
+                count($expectedChildrenCategoryIds),
+                'Unexpected children categories count'
+            );
+
+            Assert::assertEquals($expectedId, $category->getCategoryId(), 'Unexpected category id');
+            Assert::assertEquals([$langId => $expectedCategory['category name']], $category->getLocalizedNames(), 'Unexpected category name');
+
+            foreach ($actualCategoryChildren as $index => $childCategory) {
+                Assert::assertEquals($expectedChildrenCategoryIds[$index], $childCategory->getCategoryId());
+            }
+        }
+    }
+
+    /**
+     * @Given category ":categoryReference" parent is category ":expectedParentReference"
+     *
+     * @param string $categoryReference
+     * @param string $expectedParentReference
+     */
+    public function assertCategoryParent(string $categoryReference, string $expectedParentReference): void
+    {
+        $editableCategory = $this->getEditableCategory($categoryReference);
+        $parentId = $this->getSharedStorage()->get($expectedParentReference);
+
+        Assert::assertEquals(
+            $editableCategory->getParentId(),
+            $parentId,
+            'Unexpected parent category'
+        );
+    }
+
+    /**
+     * @param CategoryForTree[] $categoriesTree
+     * @param int $parentCategoryId
+     *
+     * @return CategoryForTree[]
+     */
+    private function extractCategoriesByParent(array $categoriesTree, int $parentCategoryId): array
+    {
+        foreach ($categoriesTree as $category) {
+            if ($category->getCategoryId() === $parentCategoryId) {
+                return $category->getChildren();
+            }
+
+            $extractedChildren = $this->extractCategoriesByParent($category->getChildren(), $parentCategoryId);
+
+            if (empty($extractedChildren)) {
+                continue;
+            }
+
+            return $extractedChildren;
+        }
+
+        return [];
+    }
+
+    /**
      * @param array $testCaseData
      * @param int $categoryId
      * @param array|null $coverImage
@@ -513,6 +653,7 @@ class CategoryFeatureContext extends AbstractDomainFeatureContext
             );
         }
 
+        //@todo: useless test. Must retrieve it from db.
         return new EditableCategory(
             new CategoryId($categoryId),
             $name,
@@ -563,6 +704,7 @@ class CategoryFeatureContext extends AbstractDomainFeatureContext
      */
     private function pretendImageUploaded(array $testCaseData, int $categoryId): string
     {
+        //@todo: refactor CategoryCoverUploader. Move uploaded file in Form handler instead of Uploader and use the uploader here in tests
         $categoryCoverImageName = $testCaseData['Category cover image'];
         $data = base64_decode(self::JPG_IMAGE_STRING);
         $im = imagecreatefromstring($data);

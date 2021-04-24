@@ -1,11 +1,12 @@
 <?php
 /**
- * 2007-2019 PrestaShop SA and Contributors
+ * Copyright since 2007 PrestaShop SA and Contributors
+ * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
  *
  * NOTICE OF LICENSE
  *
  * This source file is subject to the Open Software License (OSL 3.0)
- * that is bundled with this package in the file LICENSE.txt.
+ * that is bundled with this package in the file LICENSE.md.
  * It is also available through the world-wide-web at this URL:
  * https://opensource.org/licenses/OSL-3.0
  * If you did not receive a copy of the license and are unable to
@@ -16,15 +17,16 @@
  *
  * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
  * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to https://www.prestashop.com for more information.
+ * needs please refer to https://devdocs.prestashop.com/ for more information.
  *
- * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2019 PrestaShop SA and Contributors
+ * @author    PrestaShop SA and Contributors <contact@prestashop.com>
+ * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
- * International Registered Trademark & Property of PrestaShop SA
  */
 
 namespace PrestaShop\PrestaShop\Core\Domain\Order\QueryResult;
+
+use PrestaShop\Decimal\DecimalNumber;
 
 class OrderPricesForViewing
 {
@@ -64,47 +66,47 @@ class OrderPricesForViewing
     private $totalAmountFormatted;
 
     /**
-     * @var float
+     * @var DecimalNumber
      */
     private $productsPriceRaw;
 
     /**
-     * @var float
+     * @var DecimalNumber
      */
     private $discountsAmountRaw;
     /**
-     * @var float
+     * @var DecimalNumber
      */
     private $wrappingPriceRaw;
 
     /**
-     * @var float
+     * @var DecimalNumber
      */
     private $shippingPriceRaw;
 
     /**
-     * @var float
+     * @var DecimalNumber
      */
     private $shippingRefundableAmountRaw;
 
     /**
-     * @var float
+     * @var DecimalNumber
      */
     private $taxesAmountRaw;
 
     /**
-     * @var float
+     * @var DecimalNumber
      */
     private $totalAmountRaw;
 
     public function __construct(
-        float $productsPriceRaw,
-        float $discountsAmountRaw,
-        float $wrappingPriceRaw,
-        float $shippingPriceRaw,
-        float $shippingRefundableAmountRaw,
-        float $taxesAmountRaw,
-        float $totalAmountRaw,
+        DecimalNumber $productsPriceRaw,
+        DecimalNumber $discountsAmountRaw,
+        DecimalNumber $wrappingPriceRaw,
+        DecimalNumber $shippingPriceRaw,
+        DecimalNumber $shippingRefundableAmountRaw,
+        DecimalNumber $taxesAmountRaw,
+        DecimalNumber $totalAmountRaw,
         string $productsPrice,
         string $discountsAmount,
         string $wrappingPrice,
@@ -186,57 +188,57 @@ class OrderPricesForViewing
     }
 
     /**
-     * @return float
+     * @return DecimalNumber
      */
-    public function getProductsPriceRaw(): float
+    public function getProductsPriceRaw(): DecimalNumber
     {
         return $this->productsPriceRaw;
     }
 
     /**
-     * @return float
+     * @return DecimalNumber
      */
-    public function getDiscountsAmountRaw(): float
+    public function getDiscountsAmountRaw(): DecimalNumber
     {
         return $this->discountsAmountRaw;
     }
 
     /**
-     * @return float
+     * @return DecimalNumber
      */
-    public function getWrappingPriceRaw(): float
+    public function getWrappingPriceRaw(): DecimalNumber
     {
         return $this->wrappingPriceRaw;
     }
 
     /**
-     * @return float
+     * @return DecimalNumber
      */
-    public function getShippingPriceRaw(): float
+    public function getShippingPriceRaw(): DecimalNumber
     {
         return $this->shippingPriceRaw;
     }
 
     /**
-     * @return float
+     * @return DecimalNumber
      */
-    public function getShippingRefundableAmountRaw(): float
+    public function getShippingRefundableAmountRaw(): DecimalNumber
     {
         return $this->shippingRefundableAmountRaw;
     }
 
     /**
-     * @return float
+     * @return DecimalNumber
      */
-    public function getTaxesAmountRaw(): float
+    public function getTaxesAmountRaw(): DecimalNumber
     {
         return $this->taxesAmountRaw;
     }
 
     /**
-     * @return float
+     * @return DecimalNumber
      */
-    public function getTotalAmountRaw(): float
+    public function getTotalAmountRaw(): DecimalNumber
     {
         return $this->totalAmountRaw;
     }

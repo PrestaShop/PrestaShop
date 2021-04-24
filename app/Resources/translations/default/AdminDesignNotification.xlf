@@ -42,7 +42,7 @@
       <trans-unit id="c402321a8e5818b776007e8a2d00474a">
         <source>Current theme is unavailable. Please check your theme's directory name ("%s") and permissions.</source>
         <target>Current theme is unavailable. Please check your theme's directory name ("%s") and permissions.</target>
-        <note>Line: 317</note>
+        <note>Line: 327</note>
       </trans-unit>
     </body>
   </file>
@@ -90,52 +90,57 @@
       <trans-unit id="103d86044b78fa59e02ff8480a3a2f46">
         <source>Original image is corrupt (%filename%) for product ID %id% or bad permission on folder.</source>
         <target>Original image is corrupt (%filename%) for product ID %id% or bad permission on folder.</target>
-        <note>Line: 541</note>
+        <note>Line: 542</note>
       </trans-unit>
       <trans-unit id="2934958a3f658892ee502aaf8258a6f7">
         <source>Original image is missing or empty (%filename%) for product ID %id%</source>
         <target>Original image is missing or empty (%filename%) for product ID %id%</target>
-        <note>Line: 554</note>
+        <note>Line: 555</note>
       </trans-unit>
       <trans-unit id="8b772dad7cc4ed15eaf0c433f861e55c">
         <source>Cannot write images for this type: %1$s. Please check the %2$s folder's writing permissions.</source>
         <target>Cannot write images for this type: %1$s. Please check the %2$s folder's writing permissions.</target>
-        <note>Line: 676</note>
+        <note>Line: 677</note>
       </trans-unit>
       <trans-unit id="d4f225ec09e4b0eba6558753f4bd8edd">
         <source>Only part of the images have been regenerated. The server timed out before finishing.</source>
         <target>Only part of the images have been regenerated. The server timed out before finishing.</target>
-        <note>Line: 679</note>
+        <note>Line: 680</note>
       </trans-unit>
       <trans-unit id="f2febdafe25d3517afc3c6dd3d815562">
         <source>Server timed out. The watermark may not have been applied to all images.</source>
         <target>Server timed out. The watermark may not have been applied to all images.</target>
-        <note>Line: 683</note>
+        <note>Line: 684</note>
       </trans-unit>
       <trans-unit id="606495559093a136ed6f2c9daee2645f">
         <source>Cannot write "No picture" image to %s images folder. Please check the folder's writing permissions.</source>
         <target>Cannot write "No picture" image to %s images folder. Please check the folder's writing permissions.</target>
-        <note>Line: 688</note>
+        <note>Line: 689</note>
       </trans-unit>
       <trans-unit id="4004c7590c68a8cbbe499736c56bc33c">
         <source>Error: Your server configuration is not compatible with the new image system. No images were moved.</source>
         <target>Error: Your server configuration is not compatible with the new image system. No images were moved.</target>
-        <note>Line: 716</note>
+        <note>Line: 717</note>
       </trans-unit>
       <trans-unit id="4c9f49243d6dc02028801d9767abe3c1">
         <source>Not all images have been moved. The server timed out before finishing. Click on "Move images" again to resume the moving process.</source>
         <target>Not all images have been moved. The server timed out before finishing. Click on "Move images" again to resume the moving process.</target>
-        <note>Line: 722</note>
+        <note>Line: 723</note>
       </trans-unit>
       <trans-unit id="95871efade00fbd0243355ce7937c40a">
         <source>Error: Some -- or all -- images cannot be moved.</source>
         <target>Error: Some -- or all -- images cannot be moved.</target>
-        <note>Line: 724</note>
+        <note>Line: 731</note>
       </trans-unit>
       <trans-unit id="cb2f901ceed5c3365d056794a1b5047f">
         <source>After modification, do not forget to regenerate thumbnails</source>
         <target>After modification, do not forget to regenerate thumbnails</target>
-        <note>Line: 743</note>
+        <note>Line: 750</note>
+      </trans-unit>
+      <trans-unit id="c26feb9180b94fa563c1e10b7354693b">
+        <source>Not all images have been moved. The server timed out before finishing. Click on "%move_images_label%" again to resume the moving process.</source>
+        <target>Not all images have been moved. The server timed out before finishing. Click on "%move_images_label%" again to resume the moving process.</target>
+        <note>Line: 724</note>
       </trans-unit>
     </body>
   </file>
@@ -181,7 +186,7 @@
       <trans-unit id="f003149576f4755d74550952febe14bb">
         <source>An error occurred while uploading the favicon: cannot copy file "%s" to folder "%s".</source>
         <target>An error occurred while uploading the favicon: cannot copy file "%s" to folder "%s".</target>
-        <note>Line: 175</note>
+        <note>Line: 173</note>
       </trans-unit>
     </body>
   </file>
@@ -199,7 +204,7 @@
       <trans-unit id="29dae1d163226f90bb206b333bbffe1d">
         <source>The page Category cannot be moved here.</source>
         <target>The page Category cannot be moved here.</target>
-        <note>Line: 1135</note>
+        <note>Line: 1123</note>
       </trans-unit>
     </body>
   </file>
@@ -218,17 +223,22 @@
       <trans-unit id="0933caade58197a4ff60c27077f67604">
         <source>There is already a theme %theme_name% in your themes folder. Remove it if you want to continue.</source>
         <target>There is already a theme %theme_name% in your themes folder. Remove it if you want to continue.</target>
-        <note>Line: 483</note>
+        <note>Line: 489</note>
       </trans-unit>
       <trans-unit id="2cca9f161ea0cc1102ad4be82b15cbfb">
         <source>Failed to delete theme. Make sure you have permissions and theme is not used.</source>
         <target>Failed to delete theme. Make sure you have permissions and theme is not used.</target>
-        <note>Line: 530</note>
+        <note>Line: 536</note>
       </trans-unit>
       <trans-unit id="05c176b8092b42c554d570513026207c">
         <source>Cannot adapt theme to RTL languages.</source>
         <target>Cannot adapt theme to RTL languages.</target>
-        <note>Line: 552</note>
+        <note>Line: 558</note>
+      </trans-unit>
+      <trans-unit id="c5d36cf23559e659323adbcb32e2b6d3">
+        <source><![CDATA[Your theme has been correctly reset to its default settings. You may want to regenerate your images. See the Improve > Design > Images Settings screen for the '%regenerate_label%' button.]]></source>
+        <target><![CDATA[Your theme has been correctly reset to its default settings. You may want to regenerate your images. See the Improve > Design > Images Settings screen for the '%regenerate_label%' button.]]></target>
+        <note>Line: 386</note>
       </trans-unit>
     </body>
   </file>

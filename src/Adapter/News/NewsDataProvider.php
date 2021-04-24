@@ -1,11 +1,12 @@
 <?php
 /**
- * 2007-2019 PrestaShop SA and Contributors
+ * Copyright since 2007 PrestaShop SA and Contributors
+ * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
  *
  * NOTICE OF LICENSE
  *
  * This source file is subject to the Open Software License (OSL 3.0)
- * that is bundled with this package in the file LICENSE.txt.
+ * that is bundled with this package in the file LICENSE.md.
  * It is also available through the world-wide-web at this URL:
  * https://opensource.org/licenses/OSL-3.0
  * If you did not receive a copy of the license and are unable to
@@ -16,12 +17,11 @@
  *
  * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
  * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to https://www.prestashop.com for more information.
+ * needs please refer to https://devdocs.prestashop.com/ for more information.
  *
- * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2019 PrestaShop SA and Contributors
+ * @author    PrestaShop SA and Contributors <contact@prestashop.com>
+ * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
- * International Registered Trademark & Property of PrestaShop SA
  */
 
 namespace PrestaShop\PrestaShop\Adapter\News;
@@ -32,20 +32,21 @@ use PrestaShop\PrestaShop\Adapter\Configuration;
 use PrestaShop\PrestaShop\Adapter\Country\CountryDataProvider;
 use PrestaShop\PrestaShop\Adapter\Tools;
 use PrestaShop\PrestaShop\Adapter\Validate;
+use stdClass;
 
 /**
  * Provide the news from https://www.prestashop.com/blog/
  */
 class NewsDataProvider
 {
-    const NUM_ARTICLES = 2;
+    public const NUM_ARTICLES = 2;
 
-    const CLOSED_ALLOWED_FAILURES = 3;
-    const CLOSED_TIMEOUT_SECONDS = 3;
+    public const CLOSED_ALLOWED_FAILURES = 3;
+    public const CLOSED_TIMEOUT_SECONDS = 3;
 
-    const OPEN_ALLOWED_FAILURES = 3;
-    const OPEN_TIMEOUT_SECONDS = 3;
-    const OPEN_THRESHOLD_SECONDS = 86400; // 24 hours
+    public const OPEN_ALLOWED_FAILURES = 3;
+    public const OPEN_TIMEOUT_SECONDS = 3;
+    public const OPEN_THRESHOLD_SECONDS = 86400; // 24 hours
 
     /**
      * @var CircuitBreakerInterface
@@ -138,6 +139,7 @@ class NewsDataProvider
             'utm_campaign' => 'back-office-' . $shop_default_iso_country,
         ];
 
+        /** @var stdClass $item */
         foreach ($rss->channel->item as $item) {
             if ($articles_limit == 0) {
                 break;

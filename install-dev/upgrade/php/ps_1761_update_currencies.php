@@ -1,11 +1,12 @@
 <?php
 /**
- * 2007-2019 PrestaShop SA and Contributors
+ * Copyright since 2007 PrestaShop SA and Contributors
+ * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
  *
  * NOTICE OF LICENSE
  *
  * This source file is subject to the Open Software License (OSL 3.0)
- * that is bundled with this package in the file LICENSE.txt.
+ * that is bundled with this package in the file LICENSE.md.
  * It is also available through the world-wide-web at this URL:
  * https://opensource.org/licenses/OSL-3.0
  * If you did not receive a copy of the license and are unable to
@@ -16,12 +17,11 @@
  *
  * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
  * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to https://www.prestashop.com for more information.
+ * needs please refer to https://devdocs.prestashop.com/ for more information.
  *
- * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2019 PrestaShop SA and Contributors
+ * @author    PrestaShop SA and Contributors <contact@prestashop.com>
+ * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
- * International Registered Trademark & Property of PrestaShop SA
  */
 
 use PrestaShop\PrestaShop\Adapter\SymfonyContainer;
@@ -31,7 +31,7 @@ use PrestaShop\PrestaShop\Core\Localization\CLDR\LocaleRepository;
  * On PrestaShop 1.7.6.0, two new columns have been introduced in the PREFIX_currency table: precision & numeric_iso_code
  * A fresh install would add the proper data in these columns, however an upgraded shop to 1.7.6.0 would not get the
  * corresponding values of each currency.
- * 
+ *
  * This upgrade script will cover this need by loading the CLDR data and update the currency if it still has the default table values.
  */
 function ps_1761_update_currencies()
@@ -62,10 +62,12 @@ function ps_1761_update_currencies()
             $currency->precision = (int) $cldrCurrency->getDecimalDigits();
             $currency->numeric_iso_code = $cldrCurrency->getNumericIsoCode();
         }
-        $currency->save();
+        Db::getInstance()->execute(
+            'UPDATE `' . _DB_PREFIX_ . 'currency`
+            SET `precision` = ' . $currency->precision . ', `numeric_iso_code` = ' . $currency->numeric_iso_code . '
+            WHERE `id_currency` = ' . $currency->id
+        );
     }
 
     ObjectModel::enableCache();
-    
-    
 }

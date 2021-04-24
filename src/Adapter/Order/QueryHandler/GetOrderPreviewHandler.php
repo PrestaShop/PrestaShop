@@ -1,11 +1,12 @@
 <?php
 /**
- * 2007-2019 PrestaShop SA and Contributors
+ * Copyright since 2007 PrestaShop SA and Contributors
+ * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
  *
  * NOTICE OF LICENSE
  *
  * This source file is subject to the Open Software License (OSL 3.0)
- * that is bundled with this package in the file LICENSE.txt.
+ * that is bundled with this package in the file LICENSE.md.
  * It is also available through the world-wide-web at this URL:
  * https://opensource.org/licenses/OSL-3.0
  * If you did not receive a copy of the license and are unable to
@@ -16,12 +17,11 @@
  *
  * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
  * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to https://www.prestashop.com for more information.
+ * needs please refer to https://devdocs.prestashop.com/ for more information.
  *
- * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2019 PrestaShop SA and Contributors
+ * @author    PrestaShop SA and Contributors <contact@prestashop.com>
+ * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
- * International Registered Trademark & Property of PrestaShop SA
  */
 
 namespace PrestaShop\PrestaShop\Adapter\Order\QueryHandler;
@@ -33,7 +33,7 @@ use Customer;
 use Group;
 use Order;
 use OrderCarrier;
-use PrestaShop\Decimal\Number;
+use PrestaShop\Decimal\DecimalNumber;
 use PrestaShop\PrestaShop\Adapter\Entity\Address;
 use PrestaShop\PrestaShop\Core\Domain\Order\Exception\OrderNotFoundException;
 use PrestaShop\PrestaShop\Core\Domain\Order\Query\GetOrderPreview;
@@ -121,6 +121,7 @@ final class GetOrderPreviewHandler implements GetOrderPreviewHandlerInterface
         $country = new Country($address->id_country);
         $state = new State($address->id_state);
         $stateName = Validate::isLoadedObject($state) ? $state->name : null;
+        $dni = Address::dniRequired($address->id_country) ? $address->dni : null;
 
         return new OrderPreviewInvoiceDetails(
             $address->firstname,
@@ -132,9 +133,10 @@ final class GetOrderPreviewHandler implements GetOrderPreviewHandlerInterface
             $address->city,
             $address->postcode,
             $stateName,
-            $country->name[$order->id_lang],
-            $customer->email,
-            $address->phone
+            $country->name[(int) $order->getAssociatedLanguage()->getId()],
+            $customer->email ?? null,
+            $address->phone,
+            $dni
         );
     }
 
@@ -148,15 +150,18 @@ final class GetOrderPreviewHandler implements GetOrderPreviewHandlerInterface
         $carrier = new Carrier($order->id_carrier);
         $state = new State($address->id_state);
 
-        $carrierName = null;
+        $carrierName = $trackingUrl = null;
         $stateName = Validate::isLoadedObject($state) ? $state->name : null;
 
         if (Validate::isLoadedObject($carrier)) {
             $carrierName = $carrier->name;
+            $trackingUrl = $carrier->url;
         }
 
         $orderCarrierId = $order->getIdOrderCarrier();
         $orderCarrier = new OrderCarrier($orderCarrierId);
+
+        $dni = Address::dniRequired($address->id_country) ? $address->dni : null;
 
         return new OrderPreviewShippingDetails(
             $address->firstname,
@@ -168,10 +173,12 @@ final class GetOrderPreviewHandler implements GetOrderPreviewHandlerInterface
             $address->city,
             $address->postcode,
             $stateName,
-            $country->name[$order->id_lang],
+            $country->name[(int) $order->getAssociatedLanguage()->getId()],
             $address->phone,
             $carrierName,
-            $orderCarrier->tracking_number ?: null
+            $orderCarrier->tracking_number ?: null,
+            $dni,
+            $trackingUrl
         );
     }
 
@@ -192,8 +199,8 @@ final class GetOrderPreviewHandler implements GetOrderPreviewHandlerInterface
             $unitPrice = $detail['unit_price_tax_excl'];
             $totalPrice = $detail['total_price_tax_excl'];
 
-            $totalPriceTaxIncl = new Number($detail['total_price_tax_incl']);
-            $totalPriceTaxExcl = new Number($detail['total_price_tax_excl']);
+            $totalPriceTaxIncl = new DecimalNumber($detail['total_price_tax_incl']);
+            $totalPriceTaxExcl = new DecimalNumber($detail['total_price_tax_excl']);
 
             $totalTaxAmount = $totalPriceTaxIncl->minus($totalPriceTaxExcl);
 

@@ -1,11 +1,12 @@
 <?php
 /**
- * 2007-2019 PrestaShop SA and Contributors
+ * Copyright since 2007 PrestaShop SA and Contributors
+ * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
  *
  * NOTICE OF LICENSE
  *
  * This source file is subject to the Open Software License (OSL 3.0)
- * that is bundled with this package in the file LICENSE.txt.
+ * that is bundled with this package in the file LICENSE.md.
  * It is also available through the world-wide-web at this URL:
  * https://opensource.org/licenses/OSL-3.0
  * If you did not receive a copy of the license and are unable to
@@ -16,12 +17,11 @@
  *
  * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
  * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to https://www.prestashop.com for more information.
+ * needs please refer to https://devdocs.prestashop.com/ for more information.
  *
- * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2019 PrestaShop SA and Contributors
+ * @author    PrestaShop SA and Contributors <contact@prestashop.com>
+ * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
- * International Registered Trademark & Property of PrestaShop SA
  */
 use PrestaShop\PrestaShop\Adapter\Presenter\Order\OrderPresenter;
 
@@ -68,23 +68,13 @@ class GuestTrackingControllerCore extends FrontController
             return;
         }
 
-        $isCustomer = Customer::customerExists($email, false, true);
-        if ($isCustomer) {
-            $this->info[] = $this->trans(
-                'Please log in to your customer account to view the order',
-                [],
-                'Shop.Notifications.Info'
-            );
-            $this->redirectWithNotifications($this->context->link->getPageLink('history'));
-        } else {
-            $this->order = Order::getByReferenceAndEmail($order_reference, $email);
-            if (!Validate::isLoadedObject($this->order)) {
-                $this->errors[] = $this->getTranslator()->trans(
+        $this->order = Order::getByReferenceAndEmail($order_reference, $email);
+        if (!Validate::isLoadedObject($this->order)) {
+            $this->errors[] = $this->getTranslator()->trans(
                     'We couldn\'t find your order with the information provided, please try again',
                     [],
                     'Shop.Notifications.Error'
                 );
-            }
         }
 
         if (Tools::isSubmit('submitTransformGuestToCustomer') && Tools::getValue('password')) {
@@ -139,6 +129,7 @@ class GuestTrackingControllerCore extends FrontController
         $this->context->smarty->assign([
             'order' => $presented_order,
             'guest_email' => Tools::getValue('email'),
+            'is_customer' => Customer::customerExists(Tools::getValue('email'), false, true),
             'HOOK_DISPLAYORDERDETAIL' => Hook::exec('displayOrderDetail', ['order' => $this->order]),
         ]);
 
@@ -151,8 +142,15 @@ class GuestTrackingControllerCore extends FrontController
 
         $breadcrumbLinks['links'][] = [
             'title' => $this->getTranslator()->trans('Guest order tracking', [], 'Shop.Theme.Checkout'),
-            'url' => '#',
+            'url' => $this->context->link->getPageLink('guest-tracking'),
         ];
+
+        if (Validate::isLoadedObject($this->order)) {
+            $breadcrumbLinks['links'][] = [
+                'title' => $this->order->reference,
+                'url' => '#',
+            ];
+        }
 
         return $breadcrumbLinks;
     }

@@ -1,11 +1,12 @@
 <?php
 /**
- * 2007-2019 PrestaShop SA and Contributors
+ * Copyright since 2007 PrestaShop SA and Contributors
+ * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
  *
  * NOTICE OF LICENSE
  *
  * This source file is subject to the Open Software License (OSL 3.0)
- * that is bundled with this package in the file LICENSE.txt.
+ * that is bundled with this package in the file LICENSE.md.
  * It is also available through the world-wide-web at this URL:
  * https://opensource.org/licenses/OSL-3.0
  * If you did not receive a copy of the license and are unable to
@@ -16,12 +17,11 @@
  *
  * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
  * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to https://www.prestashop.com for more information.
+ * needs please refer to https://devdocs.prestashop.com/ for more information.
  *
- * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2019 PrestaShop SA and Contributors
+ * @author    PrestaShop SA and Contributors <contact@prestashop.com>
+ * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
- * International Registered Trademark & Property of PrestaShop SA
  */
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 
@@ -84,7 +84,7 @@ abstract class ControllerCore
     /**
      * Set to true to display page footer.
      *
-     * @var string
+     * @var bool
      */
     protected $display_footer;
 
@@ -168,6 +168,13 @@ abstract class ControllerCore
      */
     public function init()
     {
+        Hook::exec(
+            'actionControllerInitBefore',
+            [
+                'controller' => $this,
+            ]
+        );
+
         if (_PS_MODE_DEV_ && $this->controller_type == 'admin') {
             set_error_handler([__CLASS__, 'myErrorHandler']);
         }
@@ -187,6 +194,13 @@ abstract class ControllerCore
         $localeRepo = $this->get(self::SERVICE_LOCALE_REPOSITORY);
         $this->context->currentLocale = $localeRepo->getLocale(
             $this->context->language->getLocale()
+        );
+
+        Hook::exec(
+            'actionControllerInitAfter',
+            [
+                'controller' => $this,
+            ]
         );
     }
 
@@ -725,9 +739,9 @@ abstract class ControllerCore
     }
 
     /**
-     * @param null $value
-     * @param null $controller
-     * @param null $method
+     * @param string|null $value
+     * @param string|null $controller
+     * @param string|null $method
      *
      * @throws PrestaShopException
      */
@@ -794,7 +808,7 @@ abstract class ControllerCore
     /**
      * Gets the dependency container.
      *
-     * @return ContainerBuilder
+     * @return ContainerBuilder|null
      */
     public function getContainer()
     {

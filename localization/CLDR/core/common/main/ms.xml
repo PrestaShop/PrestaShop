@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE ldml SYSTEM "../../common/dtd/ldml.dtd">
-<!-- Copyright © 1991-2019 Unicode, Inc.
+<!-- Copyright © 1991-2020 Unicode, Inc.
 For terms of use, see http://www.unicode.org/copyright.html
 Unicode and the Unicode Logo are registered trademarks of Unicode, Inc. in the U.S. and other countries.
 CLDR data files are interpreted according to the LDML specification (http://unicode.org/reports/tr35/)
@@ -71,7 +71,7 @@ Warnings: All cp values have U+FE0F characters removed. See /annotationsDerived/
 			<language type="bkm">Kom</language>
 			<language type="bla">Siksika</language>
 			<language type="bm">Bambara</language>
-			<language type="bn">Benggala</language>
+			<language type="bn">Benggali</language>
 			<language type="bo">Tibet</language>
 			<language type="bpy">Bishnupriya</language>
 			<language type="br">Breton</language>
@@ -97,6 +97,7 @@ Warnings: All cp values have U+FE0F characters removed. See /annotationsDerived/
 			<language type="chr">Cherokee</language>
 			<language type="chy">Cheyenne</language>
 			<language type="ckb">Kurdi Sorani</language>
+			<language type="ckb" alt="menu">Kurdi, Tengah</language>
 			<language type="co">Corsica</language>
 			<language type="cop">Coptic</language>
 			<language type="crh">Turki Krimea</language>
@@ -142,6 +143,7 @@ Warnings: All cp values have U+FE0F characters removed. See /annotationsDerived/
 			<language type="eu">Basque</language>
 			<language type="ewo">Ewondo</language>
 			<language type="fa">Parsi</language>
+			<language type="fa_AF">Dari</language>
 			<language type="ff">Fulah</language>
 			<language type="fi">Finland</language>
 			<language type="fil">Filipina</language>
@@ -479,11 +481,11 @@ Warnings: All cp values have U+FE0F characters removed. See /annotationsDerived/
 			<script type="Aghb" draft="contributed">Kaukasia Albania</script>
 			<script type="Arab">Arab</script>
 			<script type="Arab" alt="variant">Perso-Arab</script>
+			<script type="Aran" draft="contributed">Nastaliq</script>
 			<script type="Armi" draft="contributed">Aramia Imperial</script>
 			<script type="Armn">Armenia</script>
 			<script type="Avst" draft="contributed">Avestan</script>
 			<script type="Bali" draft="contributed">Bali</script>
-			<script type="Bamu" draft="contributed">Bamu</script>
 			<script type="Bass" draft="contributed">Bassa Vah</script>
 			<script type="Batk" draft="contributed">Batak</script>
 			<script type="Beng">Benggala</script>
@@ -494,7 +496,7 @@ Warnings: All cp values have U+FE0F characters removed. See /annotationsDerived/
 			<script type="Bugi" draft="contributed">Bugis</script>
 			<script type="Buhd" draft="contributed">Buhid</script>
 			<script type="Cakm" draft="contributed">Chakma</script>
-			<script type="Cans" draft="contributed">Cans</script>
+			<script type="Cans">Suku Kata Orang Asli Kanada Bersatu</script>
 			<script type="Cari" draft="contributed">Carian</script>
 			<script type="Cham" draft="contributed">Cham</script>
 			<script type="Cher" draft="contributed">Cherokee</script>
@@ -905,7 +907,6 @@ Warnings: All cp values have U+FE0F characters removed. See /annotationsDerived/
 			<territory type="SX">Sint Maarten</territory>
 			<territory type="SY">Syria</territory>
 			<territory type="SZ">Swaziland</territory>
-			<territory type="SZ" alt="variant">Swaziland</territory>
 			<territory type="TA">Tristan da Cunha</territory>
 			<territory type="TC">Kepulauan Turks dan Caicos</territory>
 			<territory type="TD">Chad</territory>
@@ -942,6 +943,8 @@ Warnings: All cp values have U+FE0F characters removed. See /annotationsDerived/
 			<territory type="VU">Vanuatu</territory>
 			<territory type="WF">Wallis dan Futuna</territory>
 			<territory type="WS">Samoa</territory>
+			<territory type="XA">Aksen Pseudo</territory>
+			<territory type="XB">Bidi Pseudo</territory>
 			<territory type="XK">Kosovo</territory>
 			<territory type="YE">Yaman</territory>
 			<territory type="YT">Mayotte</territory>
@@ -951,12 +954,62 @@ Warnings: All cp values have U+FE0F characters removed. See /annotationsDerived/
 			<territory type="ZZ">Wilayah Tidak Diketahui</territory>
 		</territories>
 		<variants>
+			<variant type="1901">Sistem ejaan Jerman Tradisional</variant>
+			<variant type="1994">Sistem ejaan Resia standard</variant>
+			<variant type="1996">Sistem ejaan Jerman 1996</variant>
+			<variant type="1606NICT">Lewat Pertengahan Era Perancis hingga 1606</variant>
+			<variant type="1694ACAD">Awal Pertengahan Era Perancis</variant>
+			<variant type="1959ACAD">Akademik</variant>
+			<variant type="ABL1943">Perumusan sistem ejaan 1943</variant>
+			<variant type="ALALC97">Perumian ALA-LC, edisi 1997</variant>
+			<variant type="ALUKU">Dialek Aluku</variant>
+			<variant type="AO1990">Perjanjian Sistem Ejaan Bahasa Portugis 1990</variant>
+			<variant type="BAKU1926">Abjad Latin Turki Disatukan</variant>
+			<variant type="BALANKA">Dialek Balanka Anii</variant>
+			<variant type="BARLA">Kumpulan dialek Barlavento Kabuverdianu</variant>
+			<variant type="BISKE">Dialek San Giorgio/Bila</variant>
+			<variant type="BOHORIC">Abjad Bohoric</variant>
+			<variant type="BOONT">Boontling</variant>
+			<variant type="COLB1945">Konvensyen Sistem Ejaan Portugis-Brazil 1945</variant>
+			<variant type="DAJNKO">Abjad Dajnko</variant>
+			<variant type="EKAVSK">Serbia dengan sebutan Ekavia</variant>
+			<variant type="EMODENG">Inggeris Moden Awal</variant>
+			<variant type="FONIPA">Fonetik IPA</variant>
+			<variant type="FONUPA">Fonetik UPA</variant>
+			<variant type="HEPBURN">Perumian Hepburn</variant>
+			<variant type="IJEKAVSK">Fon Serbia dengan sebutan Ijekavia</variant>
+			<variant type="KKCOR">Sistem Ejaan Lazim</variant>
+			<variant type="KSCOR">Sistem Ejaan Standard</variant>
+			<variant type="LIPAW">Dialek Lipovaz Resia</variant>
+			<variant type="METELKO">Abjad Metelko</variant>
+			<variant type="MONOTON">Ekanada</variant>
+			<variant type="NDYUKA">Dialek Ndyuka</variant>
+			<variant type="NEDIS">Dialek Natisone</variant>
+			<variant type="NJIVA">Dialek Gniva/Njiva</variant>
+			<variant type="NULIK">Volapuk Moden</variant>
+			<variant type="OSOJS">Dialek Oseacco/Osojane</variant>
+			<variant type="OXENDICT">Ejaan Kamus Inggeris Oxford</variant>
+			<variant type="PAMAKA">Dialek Pamaka</variant>
+			<variant type="PINYIN">Perumian Pinyin</variant>
+			<variant type="POLYTON">Banyak Nada</variant>
 			<variant type="POSIX">Komputer</variant>
+			<variant type="REVISED">Sistem Ejaan Semakan</variant>
+			<variant type="RIGIK">Vopaluk Klasik</variant>
+			<variant type="ROZAJ">Resia</variant>
+			<variant type="SAAHO">Saho</variant>
 			<variant type="SCOTLAND">Inggeris Standard Scotland</variant>
+			<variant type="SOLBA">Dialek Stolvizza/Solbica</variant>
+			<variant type="SOTAV">Kumpulan dialek Sotavento Kabuverdianu</variant>
+			<variant type="TARASK">Sistem ejaan Taraskievica</variant>
+			<variant type="UCCOR">Sistem Ejaan Bersatu</variant>
+			<variant type="UCRCOR">Sistem Ejaan Semakan Bersatu</variant>
+			<variant type="UNIFON">Abjad fonetik Unifon</variant>
+			<variant type="VALENCIA">Valencia</variant>
+			<variant type="WADEGILE">Perumian Wade-Giles</variant>
 		</variants>
 		<keys>
 			<key type="calendar">Kalendar</key>
-			<key type="cf">Format Mata wang</key>
+			<key type="cf">Format Mata Wang</key>
 			<key type="colAlternate">Abaikan Pengisihan Simbol</key>
 			<key type="colBackwards">Pengisihan Aksen Terbalik</key>
 			<key type="colCaseFirst">Penyusunan Huruf Besar/Huruf Kecil</key>
@@ -1140,8 +1193,7 @@ Warnings: All cp values have U+FE0F characters removed. See /annotationsDerived/
 		</codePatterns>
 	</localeDisplayNames>
 	<characters>
-		<exemplarCharacters>[a {ai} {au} b c d {dz} e f g h i j k {kh} l m n {ng} {ngg} {ny} o p q r s {sy} t {ts} u {ua} v w x y z]</exemplarCharacters>
-		<exemplarCharacters type="auxiliary" draft="contributed">[]</exemplarCharacters>
+		<exemplarCharacters>[a b c d e f g h i j k l m n o p q r s t u v w x y z]</exemplarCharacters>
 		<exemplarCharacters type="index">[A B C D E F G H I J K L M N O P Q R S T U V W X Y Z]</exemplarCharacters>
 		<exemplarCharacters type="numbers">[\- ‑ , . % ‰ + 0 1 2 3 4 5 6 7 8 9]</exemplarCharacters>
 		<exemplarCharacters type="punctuation">[\- ‐ ‑ – — , ; \: ! ? . … ' ‘ ’ &quot; “ ” ( ) \[ \] § @ * / \&amp; # † ‡ ′ ″]</exemplarCharacters>
@@ -2178,7 +2230,7 @@ Warnings: All cp values have U+FE0F characters removed. See /annotationsDerived/
 						</intervalFormatItem>
 						<intervalFormatItem id="GyM">
 							<greatestDifference id="G">M/y GGGGG – M/y GGGGG</greatestDifference>
-							<greatestDifference id="M">M/y –M/y GGGGG</greatestDifference>
+							<greatestDifference id="M">M/y – M/y GGGGG</greatestDifference>
 							<greatestDifference id="y">M/y – M/y GGGGG</greatestDifference>
 						</intervalFormatItem>
 						<intervalFormatItem id="GyMd">
@@ -2798,6 +2850,28 @@ Warnings: All cp values have U+FE0F characters removed. See /annotationsDerived/
 						</dateFormat>
 					</dateFormatLength>
 				</dateFormats>
+				<dateTimeFormats>
+					<dateTimeFormatLength type="full">
+						<dateTimeFormat>
+							<pattern draft="contributed">{1} {0}</pattern>
+						</dateTimeFormat>
+					</dateTimeFormatLength>
+					<dateTimeFormatLength type="long">
+						<dateTimeFormat>
+							<pattern draft="contributed">{1} {0}</pattern>
+						</dateTimeFormat>
+					</dateTimeFormatLength>
+					<dateTimeFormatLength type="medium">
+						<dateTimeFormat>
+							<pattern draft="contributed">{1} {0}</pattern>
+						</dateTimeFormat>
+					</dateTimeFormatLength>
+					<dateTimeFormatLength type="short">
+						<dateTimeFormat>
+							<pattern draft="contributed">{1} {0}</pattern>
+						</dateTimeFormat>
+					</dateTimeFormatLength>
+				</dateTimeFormats>
 			</calendar>
 			<calendar type="persian">
 				<months>
@@ -4447,9 +4521,6 @@ Warnings: All cp values have U+FE0F characters removed. See /annotationsDerived/
 			<zone type="Europe/Kaliningrad">
 				<exemplarCity>Kaliningrad</exemplarCity>
 			</zone>
-			<zone type="Europe/Simferopol">
-				<exemplarCity>Simferopol</exemplarCity>
-			</zone>
 			<zone type="Europe/Moscow">
 				<exemplarCity>Moscow</exemplarCity>
 			</zone>
@@ -4645,6 +4716,9 @@ Warnings: All cp values have U+FE0F characters removed. See /annotationsDerived/
 			<zone type="Europe/Kiev">
 				<exemplarCity>Kiev</exemplarCity>
 			</zone>
+			<zone type="Europe/Simferopol">
+				<exemplarCity>Simferopol</exemplarCity>
+			</zone>
 			<zone type="Europe/Zaporozhye">
 				<exemplarCity>Zaporozhye</exemplarCity>
 			</zone>
@@ -4795,6 +4869,13 @@ Warnings: All cp values have U+FE0F characters removed. See /annotationsDerived/
 			<zone type="Africa/Harare">
 				<exemplarCity>Harare</exemplarCity>
 			</zone>
+			<metazone type="Acre">
+				<long>
+					<generic draft="contributed">Waktu Acre</generic>
+					<standard draft="contributed">Waktu Piawai Acre</standard>
+					<daylight draft="contributed">Waktu Musim Panas Acre</daylight>
+				</long>
+			</metazone>
 			<metazone type="Afghanistan">
 				<long>
 					<standard>Waktu Afghanistan</standard>
@@ -4827,6 +4908,13 @@ Warnings: All cp values have U+FE0F characters removed. See /annotationsDerived/
 					<generic>Waktu Alaska</generic>
 					<standard>Waktu Piawai Alaska</standard>
 					<daylight>Waktu Siang Alaska</daylight>
+				</long>
+			</metazone>
+			<metazone type="Almaty">
+				<long>
+					<generic draft="contributed">Waktu Almaty</generic>
+					<standard draft="contributed">Waktu Piawai Almaty</standard>
+					<daylight draft="contributed">Waktu Musim Panas Almaty</daylight>
 				</long>
 			</metazone>
 			<metazone type="Amazon">
@@ -4883,6 +4971,13 @@ Warnings: All cp values have U+FE0F characters removed. See /annotationsDerived/
 					<generic draft="contributed">Waktu Aqtau</generic>
 					<standard draft="contributed">Waktu Standard Aqtau</standard>
 					<daylight draft="contributed">Waktu Musim Panas Aqtau</daylight>
+				</long>
+			</metazone>
+			<metazone type="Aqtobe">
+				<long>
+					<generic draft="contributed">Waktu Aqtobe</generic>
+					<standard draft="contributed">Waktu Piawai Aqtobe</standard>
+					<daylight draft="contributed">Waktu Musim Panas Aqtobe</daylight>
 				</long>
 			</metazone>
 			<metazone type="Arabian">
@@ -5325,6 +5420,13 @@ Warnings: All cp values have U+FE0F characters removed. See /annotationsDerived/
 					<daylight>Waktu Siang Lord Howe</daylight>
 				</long>
 			</metazone>
+			<metazone type="Macau">
+				<long>
+					<generic draft="contributed">Waktu Macao</generic>
+					<standard draft="contributed">Waktu Piawai Macao</standard>
+					<daylight draft="contributed">Waktu Musim Panas Macao</daylight>
+				</long>
+			</metazone>
 			<metazone type="Macquarie">
 				<long>
 					<standard>Waktu Pulau Macquarie</standard>
@@ -5443,7 +5545,9 @@ Warnings: All cp values have U+FE0F characters removed. See /annotationsDerived/
 			</metazone>
 			<metazone type="Norfolk">
 				<long>
-					<standard>Waktu Kepulauan Norfolk</standard>
+					<generic>Waktu Kepulauan Norfolk</generic>
+					<standard>Waktu Piawai Kepulauan Norfolk</standard>
+					<daylight>Waktu Siang Kepulauan Norfolk</daylight>
 				</long>
 			</metazone>
 			<metazone type="Noronha">
@@ -5451,6 +5555,11 @@ Warnings: All cp values have U+FE0F characters removed. See /annotationsDerived/
 					<generic>Waktu Fernando de Noronha</generic>
 					<standard>Waktu Piawai Fernando de Noronha</standard>
 					<daylight>Waktu Musim Panas Fernando de Noronha</daylight>
+				</long>
+			</metazone>
+			<metazone type="North_Mariana">
+				<long>
+					<standard draft="contributed">Waktu Kepulauan Mariana Utara</standard>
 				</long>
 			</metazone>
 			<metazone type="Novosibirsk">
@@ -5530,6 +5639,13 @@ Warnings: All cp values have U+FE0F characters removed. See /annotationsDerived/
 			<metazone type="Pyongyang">
 				<long>
 					<standard>Waktu Pyongyang</standard>
+				</long>
+			</metazone>
+			<metazone type="Qyzylorda">
+				<long>
+					<generic draft="contributed">Waktu Qyzylorda</generic>
+					<standard draft="contributed">Waktu Piawai Qyzylorda</standard>
+					<daylight draft="contributed">Waktu Musim Panas Qyzylorda</daylight>
 				</long>
 			</metazone>
 			<metazone type="Reunion">
@@ -5719,6 +5835,9 @@ Warnings: All cp values have U+FE0F characters removed. See /annotationsDerived/
 			<native draft="contributed">latn</native>
 		</otherNumberingSystems>
 		<minimumGroupingDigits draft="contributed">1</minimumGroupingDigits>
+		<symbols numberSystem="arabext">
+			<decimal draft="contributed">.</decimal>
+		</symbols>
 		<symbols numberSystem="latn">
 			<decimal draft="contributed">.</decimal>
 			<group draft="contributed">,</group>
@@ -6055,7 +6174,7 @@ Warnings: All cp values have U+FE0F characters removed. See /annotationsDerived/
 				<symbol alt="narrow" draft="contributed">E£</symbol>
 			</currency>
 			<currency type="ERN">
-				<displayName>ERN</displayName>
+				<displayName>Nakfa Eritrea</displayName>
 				<displayName count="other">Nakfa Eritrea</displayName>
 				<symbol draft="contributed">ERN</symbol>
 			</currency>
@@ -6317,6 +6436,9 @@ Warnings: All cp values have U+FE0F characters removed. See /annotationsDerived/
 				<symbol draft="contributed">MGA</symbol>
 				<symbol alt="narrow" draft="contributed">Ar</symbol>
 			</currency>
+			<currency type="MGF">
+				<displayName draft="contributed">Franc Malagasy</displayName>
+			</currency>
 			<currency type="MKD">
 				<displayName>Denar Macedonia</displayName>
 				<displayName count="other">Denar Macedonia</displayName>
@@ -6376,6 +6498,14 @@ Warnings: All cp values have U+FE0F characters removed. See /annotationsDerived/
 				<displayName count="other">Ringgit Malaysia</displayName>
 				<symbol>RM</symbol>
 				<symbol alt="narrow" draft="contributed">RM</symbol>
+			</currency>
+			<currency type="MZE">
+				<displayName draft="contributed">Escudo Mozambique</displayName>
+				<displayName count="other" draft="contributed">Escudo Mozambique</displayName>
+			</currency>
+			<currency type="MZM">
+				<displayName draft="contributed">Metical Mozambique (1980–2006)</displayName>
+				<displayName count="other" draft="contributed">Metical Mozambique (1980–2006)</displayName>
 			</currency>
 			<currency type="MZN">
 				<displayName>Metikal Mozambique</displayName>
@@ -6466,6 +6596,10 @@ Warnings: All cp values have U+FE0F characters removed. See /annotationsDerived/
 				<displayName>Rial Qatar</displayName>
 				<displayName count="other">Rial Qatar</displayName>
 				<symbol draft="contributed">QAR</symbol>
+			</currency>
+			<currency type="RHD">
+				<displayName draft="contributed">Dolar Rhodesia</displayName>
+				<displayName count="other" draft="contributed">Dolar Rhodesia</displayName>
 			</currency>
 			<currency type="RON">
 				<displayName>Leu Romania</displayName>
@@ -6629,6 +6763,10 @@ Warnings: All cp values have U+FE0F characters removed. See /annotationsDerived/
 				<symbol draft="contributed">UAH</symbol>
 				<symbol alt="narrow" draft="contributed">₴</symbol>
 			</currency>
+			<currency type="UGS">
+				<displayName draft="contributed">Shilling Uganda (1966–1987)</displayName>
+				<displayName count="other" draft="contributed">Shilling Uganda (1966–1987)</displayName>
+			</currency>
 			<currency type="UGX">
 				<displayName>Syiling Uganda</displayName>
 				<displayName count="other">Syiling Uganda</displayName>
@@ -6724,6 +6862,18 @@ Warnings: All cp values have U+FE0F characters removed. See /annotationsDerived/
 				<symbol draft="contributed">ZMW</symbol>
 				<symbol alt="narrow" draft="contributed">ZK</symbol>
 			</currency>
+			<currency type="ZWD">
+				<displayName draft="contributed">Dolar Zimbabwe (1980–2008)</displayName>
+				<displayName count="other" draft="contributed">Dolar Zimbabwe (1980–2008)</displayName>
+			</currency>
+			<currency type="ZWL">
+				<displayName draft="contributed">Dolar Zimbabwe (2009)</displayName>
+				<displayName count="other" draft="contributed">Dolar Zimbabwe (2009)</displayName>
+			</currency>
+			<currency type="ZWR">
+				<displayName draft="contributed">Dolar Zimbabwe (2008)</displayName>
+				<displayName count="other" draft="contributed">Dolar Zimbabwe (2008)</displayName>
+			</currency>
 		</currencies>
 		<miscPatterns numberSystem="latn">
 			<pattern type="approximately">~{0}</pattern>
@@ -6733,20 +6883,112 @@ Warnings: All cp values have U+FE0F characters removed. See /annotationsDerived/
 		</miscPatterns>
 		<minimalPairs>
 			<pluralMinimalPairs count="other">{0} hari</pluralMinimalPairs>
-			<ordinalMinimalPairs ordinal="one">Ambil belokan kanan yang pertama.</ordinalMinimalPairs>
+			<ordinalMinimalPairs ordinal="one">Ambil belokan kanan {0}.</ordinalMinimalPairs>
 			<ordinalMinimalPairs ordinal="other">Ambil belokan kanan yang ke-{0}.</ordinalMinimalPairs>
 		</minimalPairs>
 	</numbers>
 	<units>
 		<unitLength type="long">
+			<compoundUnit type="10p-1">
+				<unitPrefixPattern>desi{0}</unitPrefixPattern>
+			</compoundUnit>
+			<compoundUnit type="10p-2">
+				<unitPrefixPattern>senti{0}</unitPrefixPattern>
+			</compoundUnit>
+			<compoundUnit type="10p-3">
+				<unitPrefixPattern>mili{0}</unitPrefixPattern>
+			</compoundUnit>
+			<compoundUnit type="10p-6">
+				<unitPrefixPattern>mikro{0}</unitPrefixPattern>
+			</compoundUnit>
+			<compoundUnit type="10p-9">
+				<unitPrefixPattern>nano{0}</unitPrefixPattern>
+			</compoundUnit>
+			<compoundUnit type="10p-12">
+				<unitPrefixPattern>piko{0}</unitPrefixPattern>
+			</compoundUnit>
+			<compoundUnit type="10p-15">
+				<unitPrefixPattern>femto{0}</unitPrefixPattern>
+			</compoundUnit>
+			<compoundUnit type="10p-18">
+				<unitPrefixPattern>ato{0}</unitPrefixPattern>
+			</compoundUnit>
+			<compoundUnit type="10p-21">
+				<unitPrefixPattern>zepto{0}</unitPrefixPattern>
+			</compoundUnit>
+			<compoundUnit type="10p-24">
+				<unitPrefixPattern>yokto{0}</unitPrefixPattern>
+			</compoundUnit>
+			<compoundUnit type="10p1">
+				<unitPrefixPattern>deka{0}</unitPrefixPattern>
+			</compoundUnit>
+			<compoundUnit type="10p2">
+				<unitPrefixPattern>hekto{0}</unitPrefixPattern>
+			</compoundUnit>
+			<compoundUnit type="10p3">
+				<unitPrefixPattern>kilo{0}</unitPrefixPattern>
+			</compoundUnit>
+			<compoundUnit type="10p6">
+				<unitPrefixPattern>mega{0}</unitPrefixPattern>
+			</compoundUnit>
+			<compoundUnit type="10p9">
+				<unitPrefixPattern>giga{0}</unitPrefixPattern>
+			</compoundUnit>
+			<compoundUnit type="10p12">
+				<unitPrefixPattern>tera{0}</unitPrefixPattern>
+			</compoundUnit>
+			<compoundUnit type="10p15">
+				<unitPrefixPattern>peta{0}</unitPrefixPattern>
+			</compoundUnit>
+			<compoundUnit type="10p18">
+				<unitPrefixPattern>eksa{0}</unitPrefixPattern>
+			</compoundUnit>
+			<compoundUnit type="10p21">
+				<unitPrefixPattern>zetta{0}</unitPrefixPattern>
+			</compoundUnit>
+			<compoundUnit type="10p24">
+				<unitPrefixPattern>yotta{0}</unitPrefixPattern>
+			</compoundUnit>
+			<compoundUnit type="1024p1">
+				<unitPrefixPattern>kibi{0}</unitPrefixPattern>
+			</compoundUnit>
+			<compoundUnit type="1024p2">
+				<unitPrefixPattern>mebi{0}</unitPrefixPattern>
+			</compoundUnit>
+			<compoundUnit type="1024p3">
+				<unitPrefixPattern>gibi{0}</unitPrefixPattern>
+			</compoundUnit>
+			<compoundUnit type="1024p4">
+				<unitPrefixPattern>tebi{0}</unitPrefixPattern>
+			</compoundUnit>
+			<compoundUnit type="1024p5">
+				<unitPrefixPattern>pebi{0}</unitPrefixPattern>
+			</compoundUnit>
+			<compoundUnit type="1024p6">
+				<unitPrefixPattern>eksbi{0}</unitPrefixPattern>
+			</compoundUnit>
+			<compoundUnit type="1024p7">
+				<unitPrefixPattern>zebi{0}</unitPrefixPattern>
+			</compoundUnit>
+			<compoundUnit type="1024p8">
+				<unitPrefixPattern>yobe{0}</unitPrefixPattern>
+			</compoundUnit>
 			<compoundUnit type="per">
 				<compoundUnitPattern>{0} per {1}</compoundUnitPattern>
+			</compoundUnit>
+			<compoundUnit type="power2">
+				<compoundUnitPattern1>{0} persegi</compoundUnitPattern1>
+				<compoundUnitPattern1 count="other">{0} persegi</compoundUnitPattern1>
+			</compoundUnit>
+			<compoundUnit type="power3">
+				<compoundUnitPattern1>{0} padu</compoundUnitPattern1>
+				<compoundUnitPattern1 count="other">{0} padu</compoundUnitPattern1>
 			</compoundUnit>
 			<unit type="acceleration-g-force">
 				<displayName>daya g</displayName>
 				<unitPattern count="other">{0} daya g</unitPattern>
 			</unit>
-			<unit type="acceleration-meter-per-second-squared">
+			<unit type="acceleration-meter-per-square-second">
 				<displayName>meter sesaat ganda dua</displayName>
 				<unitPattern count="other">{0} meter sesaat ganda dua</unitPattern>
 			</unit>
@@ -6823,7 +7065,7 @@ Warnings: All cp values have U+FE0F characters removed. See /annotationsDerived/
 				<displayName>milimol setiap liter</displayName>
 				<unitPattern count="other">{0} milimol setiap liter</unitPattern>
 			</unit>
-			<unit type="concentr-part-per-million">
+			<unit type="concentr-permillion">
 				<displayName>bahagian setiap juta</displayName>
 				<unitPattern count="other">{0} bahagian setiap juta</unitPattern>
 			</unit>
@@ -6843,7 +7085,7 @@ Warnings: All cp values have U+FE0F characters removed. See /annotationsDerived/
 				<displayName>liter sekilometer</displayName>
 				<unitPattern count="other">{0} liter sekilometer</unitPattern>
 			</unit>
-			<unit type="consumption-liter-per-100kilometers">
+			<unit type="consumption-liter-per-100-kilometer">
 				<displayName>liter setiap 100 kilometer</displayName>
 				<unitPattern count="other">{0} liter setiap 100 kilometer</unitPattern>
 			</unit>
@@ -7058,6 +7300,10 @@ Warnings: All cp values have U+FE0F characters removed. See /annotationsDerived/
 				<displayName>bintik seinci</displayName>
 				<unitPattern count="other">{0} bintik seinci</unitPattern>
 			</unit>
+			<unit type="length-earth-radius">
+				<displayName>radius bumi</displayName>
+				<unitPattern count="other">{0} radius bumi</unitPattern>
+			</unit>
 			<unit type="length-kilometer">
 				<displayName>kilometer</displayName>
 				<unitPattern count="other">{0} kilometer</unitPattern>
@@ -7151,6 +7397,14 @@ Warnings: All cp values have U+FE0F characters removed. See /annotationsDerived/
 				<displayName>lux</displayName>
 				<unitPattern count="other">{0} lux</unitPattern>
 			</unit>
+			<unit type="light-candela">
+				<displayName>kandela</displayName>
+				<unitPattern count="other">{0} kandela</unitPattern>
+			</unit>
+			<unit type="light-lumen">
+				<displayName>lumen</displayName>
+				<unitPattern count="other">{0} lumen</unitPattern>
+			</unit>
 			<unit type="light-solar-luminosity">
 				<displayName>luminositi solar</displayName>
 				<unitPattern count="other">{0} luminositi solar</unitPattern>
@@ -7183,7 +7437,7 @@ Warnings: All cp values have U+FE0F characters removed. See /annotationsDerived/
 			</unit>
 			<unit type="mass-stone">
 				<displayName>stone</displayName>
-				<unitPattern count="other">{0} st</unitPattern>
+				<unitPattern count="other">{0} stone</unitPattern>
 			</unit>
 			<unit type="mass-pound">
 				<displayName>paun</displayName>
@@ -7239,15 +7493,15 @@ Warnings: All cp values have U+FE0F characters removed. See /annotationsDerived/
 				<displayName>kuasa kuda</displayName>
 				<unitPattern count="other">{0} kuasa kuda</unitPattern>
 			</unit>
-			<unit type="pressure-millimeter-of-mercury">
+			<unit type="pressure-millimeter-ofhg">
 				<displayName>milimeter raksa</displayName>
 				<unitPattern count="other">{0} milimeter raksa</unitPattern>
 			</unit>
-			<unit type="pressure-pound-per-square-inch">
+			<unit type="pressure-pound-force-per-square-inch">
 				<displayName>paun seinci persegi</displayName>
 				<unitPattern count="other">{0} paun seinci persegi</unitPattern>
 			</unit>
-			<unit type="pressure-inch-hg">
+			<unit type="pressure-inch-ofhg">
 				<displayName>inci raksa</displayName>
 				<unitPattern count="other">{0} inci raksa</unitPattern>
 			</unit>
@@ -7272,7 +7526,7 @@ Warnings: All cp values have U+FE0F characters removed. See /annotationsDerived/
 				<unitPattern count="other">{0} kilopaskal</unitPattern>
 			</unit>
 			<unit type="pressure-megapascal">
-				<displayName>megapascal</displayName>
+				<displayName>megapaskal</displayName>
 				<unitPattern count="other">{0} megapaskal</unitPattern>
 			</unit>
 			<unit type="speed-kilometer-per-hour">
@@ -7307,7 +7561,7 @@ Warnings: All cp values have U+FE0F characters removed. See /annotationsDerived/
 				<displayName>kelvin</displayName>
 				<unitPattern count="other">{0} kelvin</unitPattern>
 			</unit>
-			<unit type="torque-pound-foot">
+			<unit type="torque-pound-force-foot">
 				<displayName>kaki paun</displayName>
 				<unitPattern count="other">{0} kaki paun</unitPattern>
 			</unit>
@@ -7382,6 +7636,10 @@ Warnings: All cp values have U+FE0F characters removed. See /annotationsDerived/
 				<displayName>ekar-kaki</displayName>
 				<unitPattern count="other">{0} ekar-kaki</unitPattern>
 			</unit>
+			<unit type="volume-bushel">
+				<displayName>busyel</displayName>
+				<unitPattern count="other">{0} busyel</unitPattern>
+			</unit>
 			<unit type="volume-gallon">
 				<displayName>gelen</displayName>
 				<unitPattern count="other">{0} gelen</unitPattern>
@@ -7420,6 +7678,33 @@ Warnings: All cp values have U+FE0F characters removed. See /annotationsDerived/
 				<displayName>tong</displayName>
 				<unitPattern count="other">{0} tong</unitPattern>
 			</unit>
+			<unit type="volume-dessert-spoon">
+				<displayName>sudu desert</displayName>
+				<unitPattern count="other">{0} sudu desert</unitPattern>
+			</unit>
+			<unit type="volume-dessert-spoon-imperial">
+				<displayName>sudu desert Imp.</displayName>
+				<unitPattern count="other">{0} sudu desert Imp.</unitPattern>
+			</unit>
+			<unit type="volume-drop">
+				<displayName>titis</displayName>
+				<unitPattern count="other">{0} titis</unitPattern>
+			</unit>
+			<unit type="volume-dram">
+				<displayName>dram</displayName>
+				<unitPattern count="other">{0} dram</unitPattern>
+			</unit>
+			<unit type="volume-jigger">
+				<displayName>jigger</displayName>
+			</unit>
+			<unit type="volume-pinch">
+				<displayName>cubit</displayName>
+				<unitPattern count="other">{0} cubit</unitPattern>
+			</unit>
+			<unit type="volume-quart-imperial">
+				<displayName>kuart Imp.</displayName>
+				<unitPattern count="other">{0} kuart Imp.</unitPattern>
+			</unit>
 			<coordinateUnit>
 				<displayName>arah mata angin</displayName>
 				<coordinateUnitPattern type="east">{0} timur</coordinateUnitPattern>
@@ -7439,7 +7724,7 @@ Warnings: All cp values have U+FE0F characters removed. See /annotationsDerived/
 				<displayName>daya g</displayName>
 				<unitPattern count="other">{0} G</unitPattern>
 			</unit>
-			<unit type="acceleration-meter-per-second-squared">
+			<unit type="acceleration-meter-per-square-second">
 				<displayName>meter/s²</displayName>
 				<unitPattern count="other">{0} m/s²</unitPattern>
 			</unit>
@@ -7516,7 +7801,7 @@ Warnings: All cp values have U+FE0F characters removed. See /annotationsDerived/
 				<displayName>mmol/L</displayName>
 				<unitPattern count="other">{0} mmol/L</unitPattern>
 			</unit>
-			<unit type="concentr-part-per-million">
+			<unit type="concentr-permillion">
 				<displayName>ppm</displayName>
 				<unitPattern count="other">{0} ppm</unitPattern>
 			</unit>
@@ -7532,7 +7817,7 @@ Warnings: All cp values have U+FE0F characters removed. See /annotationsDerived/
 				<displayName>liter/km</displayName>
 				<unitPattern count="other">{0} L/km</unitPattern>
 			</unit>
-			<unit type="consumption-liter-per-100kilometers">
+			<unit type="consumption-liter-per-100-kilometer">
 				<displayName>L/100km</displayName>
 				<unitPattern count="other">{0} L/100km</unitPattern>
 			</unit>
@@ -7736,7 +8021,6 @@ Warnings: All cp values have U+FE0F characters removed. See /annotationsDerived/
 				<unitPattern count="other">{0} dpi</unitPattern>
 			</unit>
 			<unit type="length-kilometer">
-				<displayName>kilometer</displayName>
 				<unitPattern count="other">{0} km</unitPattern>
 				<perUnitPattern>{0}/km</perUnitPattern>
 			</unit>
@@ -7750,7 +8034,6 @@ Warnings: All cp values have U+FE0F characters removed. See /annotationsDerived/
 				<unitPattern count="other">{0} dm</unitPattern>
 			</unit>
 			<unit type="length-centimeter">
-				<displayName>sentimeter</displayName>
 				<unitPattern count="other">{0} cm</unitPattern>
 				<perUnitPattern>{0}/cm</perUnitPattern>
 			</unit>
@@ -7806,7 +8089,7 @@ Warnings: All cp values have U+FE0F characters removed. See /annotationsDerived/
 			</unit>
 			<unit type="length-fathom">
 				<displayName>fathom</displayName>
-				<unitPattern count="other" draft="contributed">{0} fth</unitPattern>
+				<unitPattern count="other">{0} fth</unitPattern>
 			</unit>
 			<unit type="length-nautical-mile">
 				<displayName>btn</displayName>
@@ -7899,15 +8182,15 @@ Warnings: All cp values have U+FE0F characters removed. See /annotationsDerived/
 				<displayName>hp</displayName>
 				<unitPattern count="other">{0} hp</unitPattern>
 			</unit>
-			<unit type="pressure-millimeter-of-mercury">
+			<unit type="pressure-millimeter-ofhg">
 				<displayName>mm Hg</displayName>
 				<unitPattern count="other">{0} mm Hg</unitPattern>
 			</unit>
-			<unit type="pressure-pound-per-square-inch">
+			<unit type="pressure-pound-force-per-square-inch">
 				<displayName>psi</displayName>
 				<unitPattern count="other">{0} psi</unitPattern>
 			</unit>
-			<unit type="pressure-inch-hg">
+			<unit type="pressure-inch-ofhg">
 				<displayName>inHg</displayName>
 				<unitPattern count="other">{0} inHg</unitPattern>
 			</unit>
@@ -8068,6 +8351,17 @@ Warnings: All cp values have U+FE0F characters removed. See /annotationsDerived/
 				<displayName>sudu teh</displayName>
 				<unitPattern count="other">{0} sudu teh</unitPattern>
 			</unit>
+			<unit type="volume-drop">
+				<displayName>titis</displayName>
+				<unitPattern count="other">{0} titis</unitPattern>
+			</unit>
+			<unit type="volume-dram">
+				<displayName>dram fl</displayName>
+			</unit>
+			<unit type="volume-pinch">
+				<displayName>cubit</displayName>
+				<unitPattern count="other">{0} cubit</unitPattern>
+			</unit>
 			<coordinateUnit>
 				<displayName>arah</displayName>
 				<coordinateUnitPattern type="east">{0}E</coordinateUnitPattern>
@@ -8084,8 +8378,11 @@ Warnings: All cp values have U+FE0F characters removed. See /annotationsDerived/
 				<displayName>daya g</displayName>
 				<unitPattern count="other">{0} g</unitPattern>
 			</unit>
-			<unit type="acceleration-meter-per-second-squared">
+			<unit type="acceleration-meter-per-square-second">
 				<unitPattern count="other">{0}m/s²</unitPattern>
+			</unit>
+			<unit type="angle-degree">
+				<unitPattern count="other">{0}°</unitPattern>
 			</unit>
 			<unit type="angle-arc-minute">
 				<unitPattern count="other">{0}′</unitPattern>
@@ -8115,7 +8412,7 @@ Warnings: All cp values have U+FE0F characters removed. See /annotationsDerived/
 				<displayName>%</displayName>
 				<unitPattern count="other">{0}%</unitPattern>
 			</unit>
-			<unit type="consumption-liter-per-100kilometers">
+			<unit type="consumption-liter-per-100-kilometer">
 				<displayName>L/100km</displayName>
 				<unitPattern count="other">{0} L/100km</unitPattern>
 			</unit>
@@ -8170,37 +8467,37 @@ Warnings: All cp values have U+FE0F characters removed. See /annotationsDerived/
 				<unitPattern count="other">{0} ns</unitPattern>
 			</unit>
 			<unit type="length-kilometer">
-				<displayName>kilometer</displayName>
 				<unitPattern count="other">{0} km</unitPattern>
-				<perUnitPattern draft="contributed">{0}/km</perUnitPattern>
+				<perUnitPattern>{0}/km</perUnitPattern>
 			</unit>
 			<unit type="length-meter">
 				<displayName>meter</displayName>
 				<unitPattern count="other">{0} m</unitPattern>
-				<perUnitPattern draft="contributed">{0}/m</perUnitPattern>
+				<perUnitPattern>{0}/m</perUnitPattern>
 			</unit>
 			<unit type="length-decimeter">
-				<displayName draft="contributed">dm</displayName>
-				<unitPattern count="other" draft="contributed">{0} dm</unitPattern>
+				<displayName>dm</displayName>
+				<unitPattern count="other">{0} dm</unitPattern>
 			</unit>
 			<unit type="length-centimeter">
-				<displayName>sentimeter</displayName>
+				<displayName>cm</displayName>
 				<unitPattern count="other">{0} cm</unitPattern>
-				<perUnitPattern draft="contributed">{0}/cm</perUnitPattern>
+				<perUnitPattern>{0}/cm</perUnitPattern>
 			</unit>
 			<unit type="length-millimeter">
 				<displayName>mm</displayName>
 				<unitPattern count="other">{0} mm</unitPattern>
 			</unit>
 			<unit type="length-micrometer">
-				<unitPattern count="other" draft="contributed">{0} µm</unitPattern>
+				<displayName draft="contributed">µm</displayName>
+				<unitPattern count="other">{0} µm</unitPattern>
 			</unit>
 			<unit type="length-nanometer">
-				<displayName draft="contributed">nm</displayName>
-				<unitPattern count="other" draft="contributed">{0} nm</unitPattern>
+				<displayName>nm</displayName>
+				<unitPattern count="other">{0}nm</unitPattern>
 			</unit>
 			<unit type="length-picometer">
-				<displayName draft="contributed">pm</displayName>
+				<displayName>pm</displayName>
 				<unitPattern count="other">{0} pm</unitPattern>
 			</unit>
 			<unit type="length-mile">
@@ -8208,24 +8505,25 @@ Warnings: All cp values have U+FE0F characters removed. See /annotationsDerived/
 				<unitPattern count="other">{0} bt</unitPattern>
 			</unit>
 			<unit type="length-yard">
-				<displayName draft="contributed">ela</displayName>
+				<displayName>ela</displayName>
 				<unitPattern count="other">{0} ela</unitPattern>
 			</unit>
 			<unit type="length-foot">
 				<displayName>ka</displayName>
 				<unitPattern count="other">{0}'</unitPattern>
-				<perUnitPattern draft="contributed">{0}/ka</perUnitPattern>
+				<perUnitPattern>{0}/ka</perUnitPattern>
 			</unit>
 			<unit type="length-inch">
+				<displayName draft="contributed">in</displayName>
 				<unitPattern count="other">{0}&quot;</unitPattern>
-				<perUnitPattern draft="contributed">{0}/in</perUnitPattern>
+				<perUnitPattern>{0}/in</perUnitPattern>
 			</unit>
 			<unit type="length-parsec">
-				<displayName draft="contributed">parsek</displayName>
-				<unitPattern count="other" draft="contributed">{0} pc</unitPattern>
+				<displayName>parsek</displayName>
+				<unitPattern count="other">{0} pc</unitPattern>
 			</unit>
 			<unit type="length-light-year">
-				<displayName draft="contributed">thn cahaya</displayName>
+				<displayName>thn cahaya</displayName>
 				<unitPattern count="other">{0} t. chya</unitPattern>
 			</unit>
 			<unit type="length-astronomical-unit">
@@ -8283,7 +8581,7 @@ Warnings: All cp values have U+FE0F characters removed. See /annotationsDerived/
 				<unitPattern count="other">{0} st</unitPattern>
 			</unit>
 			<unit type="mass-pound">
-				<displayName draft="contributed">lb</displayName>
+				<displayName>lb</displayName>
 				<unitPattern count="other">{0} paun</unitPattern>
 				<perUnitPattern>{0}/lb</perUnitPattern>
 			</unit>
@@ -8293,7 +8591,7 @@ Warnings: All cp values have U+FE0F characters removed. See /annotationsDerived/
 				<perUnitPattern>{0}/oz</perUnitPattern>
 			</unit>
 			<unit type="mass-ounce-troy">
-				<displayName draft="contributed">oz t</displayName>
+				<displayName>oz t</displayName>
 				<unitPattern count="other">{0} oz t</unitPattern>
 			</unit>
 			<unit type="mass-carat">
@@ -8309,15 +8607,15 @@ Warnings: All cp values have U+FE0F characters removed. See /annotationsDerived/
 			<unit type="power-horsepower">
 				<unitPattern count="other" draft="contributed">{0} hp</unitPattern>
 			</unit>
-			<unit type="pressure-millimeter-of-mercury">
+			<unit type="pressure-millimeter-ofhg">
 				<displayName>mm Hg</displayName>
 				<unitPattern count="other">{0} mm Hg</unitPattern>
 			</unit>
-			<unit type="pressure-pound-per-square-inch">
+			<unit type="pressure-pound-force-per-square-inch">
 				<displayName>psi</displayName>
 				<unitPattern count="other">{0} psi</unitPattern>
 			</unit>
-			<unit type="pressure-inch-hg">
+			<unit type="pressure-inch-ofhg">
 				<displayName>inHg</displayName>
 				<unitPattern count="other">{0} inHg</unitPattern>
 			</unit>
@@ -8446,6 +8744,8 @@ Warnings: All cp values have U+FE0F characters removed. See /annotationsDerived/
 		<characterLabelPattern type="other">{0} — Lain</characterLabelPattern>
 		<characterLabelPattern type="scripts">Skrip — {0}</characterLabelPattern>
 		<characterLabelPattern type="strokes" count="other">{0} Lejang</characterLabelPattern>
+		<characterLabelPattern type="subscript">subskrip {0}</characterLabelPattern>
+		<characterLabelPattern type="superscript">superskrip {0}</characterLabelPattern>
 		<characterLabel type="activities">Aktiviti</characterLabel>
 		<characterLabel type="african_scripts">Skrip Afrika</characterLabel>
 		<characterLabel type="american_scripts">Skrip Amerika</characterLabel>

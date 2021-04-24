@@ -1,11 +1,12 @@
 <?php
 /**
- * 2007-2019 PrestaShop SA and Contributors
+ * Copyright since 2007 PrestaShop SA and Contributors
+ * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
  *
  * NOTICE OF LICENSE
  *
  * This source file is subject to the Open Software License (OSL 3.0)
- * that is bundled with this package in the file LICENSE.txt.
+ * that is bundled with this package in the file LICENSE.md.
  * It is also available through the world-wide-web at this URL:
  * https://opensource.org/licenses/OSL-3.0
  * If you did not receive a copy of the license and are unable to
@@ -16,16 +17,16 @@
  *
  * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
  * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to https://www.prestashop.com for more information.
+ * needs please refer to https://devdocs.prestashop.com/ for more information.
  *
- * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2019 PrestaShop SA and Contributors
+ * @author    PrestaShop SA and Contributors <contact@prestashop.com>
+ * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
- * International Registered Trademark & Property of PrestaShop SA
  */
 
 namespace PrestaShop\PrestaShop\Adapter\Supplier\QueryHandler;
 
+use Context;
 use Currency;
 use PrestaShop\PrestaShop\Core\Domain\Language\ValueObject\LanguageId;
 use PrestaShop\PrestaShop\Core\Domain\Supplier\Exception\SupplierException;
@@ -51,12 +52,20 @@ final class GetSupplierForViewingHandler implements GetSupplierForViewingHandler
     private $locale;
 
     /**
+     * @var string
+     */
+    private $defaultCurrencyIsoCode;
+
+    /**
      * @param Locale $locale
+     * @param string|null $defaultCurrencyIsoCode
      */
     public function __construct(
-        Locale $locale
+        Locale $locale,
+        ?string $defaultCurrencyIsoCode = null
     ) {
         $this->locale = $locale;
+        $this->defaultCurrencyIsoCode = $defaultCurrencyIsoCode ?? Context::getContext()->currency->iso_code;
     }
 
     /**
@@ -123,13 +132,15 @@ final class GetSupplierForViewingHandler implements GetSupplierForViewingHandler
                             $product->id,
                             $combination['id_product_attribute']
                         );
+                        $isoCode = Currency::getIsoCodeById((int) $productInfo['id_currency'])
+                            ?: $this->defaultCurrencyIsoCode;
+                        $formattedWholesalePrice = null !== $productInfo['product_supplier_price_te']
+                            ? $this->locale->formatPrice($productInfo['product_supplier_price_te'], $isoCode)
+                            : null;
                         $combinations[$attributeId] = [
                             'reference' => $combination['reference'],
                             'supplier_reference' => $combination['supplier_reference'],
-                            'wholesale_price' => $this->locale->formatPrice(
-                                $productInfo['product_supplier_price_te'],
-                                Currency::getIsoCodeById((int) $productInfo['id_currency'])
-                            ),
+                            'wholesale_price' => $formattedWholesalePrice,
                             'ean13' => $combination['ean13'],
                             'upc' => $combination['upc'],
                             'quantity' => $combination['quantity'],
@@ -156,12 +167,16 @@ final class GetSupplierForViewingHandler implements GetSupplierForViewingHandler
                 );
                 $product->wholesale_price = $productInfo['product_supplier_price_te'];
                 $product->supplier_reference = $productInfo['product_supplier_reference'];
+                $isoCode = Currency::getIsoCodeById((int) $productInfo['id_currency']) ?: $this->defaultCurrencyIsoCode;
+                $formattedWholesalePrice = null !== $product->wholesale_price
+                    ? $this->locale->formatPrice($product->wholesale_price, $isoCode)
+                    : null;
                 $products[] = [
                     'id' => $product->id,
                     'name' => $product->name,
                     'reference' => $product->reference,
                     'supplier_reference' => $product->supplier_reference,
-                    'wholesale_price' => $this->locale->formatPrice($product->wholesale_price, Currency::getIsoCodeById((int) $productInfo['id_currency'])),
+                    'wholesale_price' => $formattedWholesalePrice,
                     'ean13' => $product->ean13,
                     'upc' => $product->upc,
                     'quantity' => $product->quantity,

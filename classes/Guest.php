@@ -1,11 +1,12 @@
 <?php
 /**
- * 2007-2019 PrestaShop SA and Contributors
+ * Copyright since 2007 PrestaShop SA and Contributors
+ * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
  *
  * NOTICE OF LICENSE
  *
  * This source file is subject to the Open Software License (OSL 3.0)
- * that is bundled with this package in the file LICENSE.txt.
+ * that is bundled with this package in the file LICENSE.md.
  * It is also available through the world-wide-web at this URL:
  * https://opensource.org/licenses/OSL-3.0
  * If you did not receive a copy of the license and are unable to
@@ -16,12 +17,11 @@
  *
  * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
  * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to https://www.prestashop.com for more information.
+ * needs please refer to https://devdocs.prestashop.com/ for more information.
  *
- * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2019 PrestaShop SA and Contributors
+ * @author    PrestaShop SA and Contributors <contact@prestashop.com>
+ * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
- * International Registered Trademark & Property of PrestaShop SA
  */
 
 /**
@@ -207,24 +207,31 @@ class GuestCore extends ObjectModel
      *
      * @param int $idGuest Guest ID
      * @param int $idCustomer Customer ID
+     *
+     * @return bool
      */
     public function mergeWithCustomer($idGuest, $idCustomer)
     {
         // Since the guests are merged, the guest id in the connections table must be changed too
-        Db::getInstance()->execute('
-		UPDATE `' . _DB_PREFIX_ . 'connections` c
-		SET c.`id_guest` = ' . (int) ($idGuest) . '
-		WHERE c.`id_guest` = ' . (int) ($this->id));
+        Db::getInstance()->update('connections', [
+            'id_guest' => (int) $idGuest,
+        ], 'id_guest = ' . (int) $this->id);
+
+        // The existing guest is removed from the database
+        $existingGuest = new Guest((int) $idGuest);
+        $existingGuest->delete();
 
         // The current guest is removed from the database
         $this->delete();
 
         // $this is still filled with values, so it's id is changed for the old guest
-        $this->id = (int) ($idGuest);
-        $this->id_customer = (int) ($idCustomer);
+        $this->id = (int) $idGuest;
+        $this->id_customer = (int) $idCustomer;
 
         // $this is now the old guest but filled with the most up to date values
-        $this->update();
+        $this->force_id = true;
+
+        return $this->add();
     }
 
     /**

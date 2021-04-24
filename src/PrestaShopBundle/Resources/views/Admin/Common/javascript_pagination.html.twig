@@ -1,0 +1,86 @@
+{#**
+ * Copyright since 2007 PrestaShop SA and Contributors
+ * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
+ *
+ * NOTICE OF LICENSE
+ *
+ * This source file is subject to the Open Software License (OSL 3.0)
+ * that is bundled with this package in the file LICENSE.md.
+ * It is also available through the world-wide-web at this URL:
+ * https://opensource.org/licenses/OSL-3.0
+ * If you did not receive a copy of the license and are unable to
+ * obtain it through the world-wide-web, please send an email
+ * to license@prestashop.com so we can send you a copy immediately.
+ *
+ * DISCLAIMER
+ *
+ * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
+ * versions in the future. If you wish to customize PrestaShop for your
+ * needs please refer to https://devdocs.prestashop.com/ for more information.
+ *
+ * @author    PrestaShop SA and Contributors <contact@prestashop.com>
+ * @copyright Since 2007 PrestaShop SA and Contributors
+ * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
+ *#}
+
+{#
+  Wrap this template in div and pass its id to paginator component in js side.
+  Related js component: /admin-dev/themes/new-theme/js/components/pagination/dynamic-paginator.js
+#}
+<ul class="pagination mb-0">
+  <li class="page-item first disabled">
+    <button type="button" class="page-link first" data-page="1">1</button>
+  </li>
+  <li class="page-item previous disabled">
+    <button type="button" class="page-link previous" aria-label="Previous"><span class="sr-only">Previous</span></button>
+  </li>
+  <li class="page-item current active">
+    <label>
+      <input
+        name="paginator-jump-page"
+        class="jump-to-page"
+        type="text"
+        value="1"
+      />
+    </label>
+  </li>
+  <li class="page-item next">
+    <button
+      type="button"
+      class="page-link next"
+      aria-label="Next"
+      data-page="2">
+      <span class="sr-only">Next</span>
+    </button>
+  </li>
+  <li class="page-item last">
+    <button type="button" class="page-link last"></button>
+  </li>
+</ul>
+<div class="mx-3">
+  <label class="col-form-label" id="pagination-info"
+         data-pagination-info="{{ "Viewing %from%-%to% on %total% (page %current_page% / %page_count%)"|trans({
+           '%from%': '%from%',
+           '%to%': '%to%',
+           '%total%': '%total%',
+           '%current_page%': '%current_page%',
+           '%page_count%': '%page_count%'
+         }, 'Admin.Catalog.Feature') }}"
+  >
+  </label>
+</div>
+<div class="mx-3">
+  <div class="form-group row mb-0">
+    <label for="paginator-limit" class="col-form-label mr-2">{{ 'Items per page:'|trans({}, 'Admin.Catalog.Feature') }}</label>
+    <div>
+      <select name="paginator-limit" id="paginator-limit" class="pagination-link custom-select">
+        {% if limit not in limitChoices %}
+          <option value="{{ limit }}" selected="selected">{{ limit }}</option>
+        {% endif %}
+        {% for limitChoice in limitChoices %}
+          <option value="{{ limitChoice }}" {% if limit==limitChoice %}selected="selected"{% endif %}>{{ limitChoice }}</option>
+        {% endfor %}
+      </select>
+    </div>
+  </div>
+</div>

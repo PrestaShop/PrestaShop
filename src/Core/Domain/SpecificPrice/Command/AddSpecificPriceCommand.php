@@ -1,11 +1,12 @@
 <?php
 /**
- * 2007-2019 PrestaShop SA and Contributors
+ * Copyright since 2007 PrestaShop SA and Contributors
+ * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
  *
  * NOTICE OF LICENSE
  *
  * This source file is subject to the Open Software License (OSL 3.0)
- * that is bundled with this package in the file LICENSE.txt.
+ * that is bundled with this package in the file LICENSE.md.
  * It is also available through the world-wide-web at this URL:
  * https://opensource.org/licenses/OSL-3.0
  * If you did not receive a copy of the license and are unable to
@@ -16,19 +17,18 @@
  *
  * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
  * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to https://www.prestashop.com for more information.
+ * needs please refer to https://devdocs.prestashop.com/ for more information.
  *
- * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2019 PrestaShop SA and Contributors
+ * @author    PrestaShop SA and Contributors <contact@prestashop.com>
+ * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
- * International Registered Trademark & Property of PrestaShop SA
  */
 
 namespace PrestaShop\PrestaShop\Core\Domain\SpecificPrice\Command;
 
 use DateTime;
 use Exception;
-use PrestaShop\Decimal\Number;
+use PrestaShop\Decimal\DecimalNumber;
 use PrestaShop\PrestaShop\Core\Domain\Exception\DomainConstraintException;
 use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductId;
 use PrestaShop\PrestaShop\Core\Domain\SpecificPrice\Exception\SpecificPriceConstraintException;
@@ -36,6 +36,8 @@ use PrestaShop\PrestaShop\Core\Domain\ValueObject\Reduction;
 
 /**
  * Adds specific price
+ *
+ * @deprecated since 1.7.8.0 Use UpdateProductPriceInCartCommand or AddProductSpecificPriceCommand
  */
 class AddSpecificPriceCommand
 {
@@ -55,7 +57,7 @@ class AddSpecificPriceCommand
     private $includeTax;
 
     /**
-     * @var Number
+     * @var DecimalNumber
      */
     private $price;
 
@@ -92,7 +94,7 @@ class AddSpecificPriceCommand
     /**
      * @var int|null
      */
-    private $cartRuleId;
+    private $catalogPriceRuleId;
 
     /**
      * @var int|null
@@ -140,7 +142,7 @@ class AddSpecificPriceCommand
         $this->productId = new ProductId($productId);
         $this->reduction = new Reduction($reductionType, $reductionValue);
         $this->includeTax = $includeTax;
-        $this->price = new Number((string) $price);
+        $this->price = new DecimalNumber((string) $price);
         $this->fromQuantity = $fromQuantity;
     }
 
@@ -169,9 +171,9 @@ class AddSpecificPriceCommand
     }
 
     /**
-     * @return Number
+     * @return DecimalNumber
      */
-    public function getPrice(): Number
+    public function getPrice(): DecimalNumber
     {
         return $this->price;
     }
@@ -282,18 +284,38 @@ class AddSpecificPriceCommand
 
     /**
      * @return int|null
+     *
+     * @deprecated use getCatalogPriceRuleId() instead. (wrong naming used in migration process)
      */
     public function getCartRuleId(): ?int
     {
-        return $this->cartRuleId;
+        return $this->catalogPriceRuleId;
+    }
+
+    /**
+     * @return int|null
+     */
+    public function getCatalogPriceRuleId(): ?int
+    {
+        return $this->catalogPriceRuleId;
     }
 
     /**
      * @param int $cartRuleId
+     *
+     * @deprecated use setCatalogPriceRuleId() instead. (wrong naming used in migration process)
      */
     public function setCartRuleId(int $cartRuleId): void
     {
-        $this->cartRuleId = $cartRuleId;
+        $this->catalogPriceRuleId = $cartRuleId;
+    }
+
+    /**
+     * @param int $catalogPriceRuleId
+     */
+    public function setCatalogPriceRuleId(int $catalogPriceRuleId): void
+    {
+        $this->catalogPriceRuleId = $catalogPriceRuleId;
     }
 
     /**
@@ -372,7 +394,7 @@ class AddSpecificPriceCommand
         try {
             return new DateTime($dateTime);
         } catch (Exception $e) {
-            throw new SpecificPriceConstraintException('An error occured when creating DateTime object for specific price', SpecificPriceConstraintException::INVALID_DATETIME, $e);
+            throw new SpecificPriceConstraintException('An error occurred when creating DateTime object for specific price', SpecificPriceConstraintException::INVALID_DATETIME, $e);
         }
     }
 }

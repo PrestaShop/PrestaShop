@@ -1,12 +1,13 @@
 <?php
 
 /**
- * 2007-2019 PrestaShop SA and Contributors
+ * Copyright since 2007 PrestaShop SA and Contributors
+ * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
  *
  * NOTICE OF LICENSE
  *
  * This source file is subject to the Open Software License (OSL 3.0)
- * that is bundled with this package in the file LICENSE.txt.
+ * that is bundled with this package in the file LICENSE.md.
  * It is also available through the world-wide-web at this URL:
  * https://opensource.org/licenses/OSL-3.0
  * If you did not receive a copy of the license and are unable to
@@ -17,12 +18,11 @@
  *
  * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
  * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to http://www.prestashop.com for more information.
+ * needs please refer to https://devdocs.prestashop.com/ for more information.
  *
- * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2019 PrestaShop SA and Contributors
+ * @author    PrestaShop SA and Contributors <contact@prestashop.com>
+ * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
- * International Registered Trademark & Property of PrestaShop SA
  */
 
 namespace PrestaShop\PrestaShop\Adapter\Language;
@@ -37,36 +37,41 @@ class LanguageImageManager
     /**
      * Path where images are saved to
      */
-    const IMG_PATH = _PS_IMG_DIR_ . '/l/';
+    public const IMG_PATH = _PS_IMG_DIR_ . '/l/';
+
+    /**
+     * Path were source images are stored
+     */
+    public const IMG_SOURCE_PATH = _PS_IMG_SOURCE_DIR_ . '/l/';
 
     /**
      * Path where flags are stored
      */
-    const FLAGS_SOURCE = _PS_IMG_DIR_ . 'flags/%s.jpg';
+    public const FLAGS_SOURCE = _PS_IMG_SOURCE_DIR_ . 'flags/%s.jpg';
 
     /**
      * Path where flags are copied to
      */
-    const FLAGS_DESTINATION = self::IMG_PATH . '%d.jpg';
+    public const FLAGS_DESTINATION = self::IMG_PATH . '%d.jpg';
 
     /**
      * Default flag
      */
-    const FALLBACK_FLAG_SOURCE = self::IMG_PATH . 'none.jpg';
+    public const FALLBACK_FLAG_SOURCE = self::IMG_SOURCE_PATH . 'none.jpg';
 
-    const IMAGE_DIRECTORIES = [
+    public const IMAGE_DIRECTORIES = [
         _PS_CAT_IMG_DIR_,
         _PS_MANU_IMG_DIR_,
         _PS_PROD_IMG_DIR_,
         _PS_SUPP_IMG_DIR_,
     ];
 
-    const PLACEHOLDER_IMAGE_NAME_PATTERNS = [
+    public const PLACEHOLDER_IMAGE_NAME_PATTERNS = [
         '%s.jpg',
         '%s-default-%s.jpg',
     ];
 
-    const DEFAULT_LANGUAGE_CODE = 'en';
+    public const DEFAULT_LANGUAGE_CODE = 'en';
 
     /**
      * Sets up the language flag image for the given language
@@ -115,7 +120,7 @@ class LanguageImageManager
 
         foreach (static::IMAGE_DIRECTORIES as $destinationDir) {
             foreach ($filesToCopy as $sourceFile => $newFile) {
-                @copy(static::IMG_PATH . $sourceFile, $destinationDir . $newFile);
+                @copy(static::IMG_SOURCE_PATH . $sourceFile, $destinationDir . $newFile);
             }
         }
     }

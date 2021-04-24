@@ -1,11 +1,12 @@
 <?php
 /**
- * 2007-2019 PrestaShop SA and Contributors
+ * Copyright since 2007 PrestaShop SA and Contributors
+ * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
  *
  * NOTICE OF LICENSE
  *
  * This source file is subject to the Open Software License (OSL 3.0)
- * that is bundled with this package in the file LICENSE.txt.
+ * that is bundled with this package in the file LICENSE.md.
  * It is also available through the world-wide-web at this URL:
  * https://opensource.org/licenses/OSL-3.0
  * If you did not receive a copy of the license and are unable to
@@ -16,12 +17,11 @@
  *
  * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
  * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to https://www.prestashop.com for more information.
+ * needs please refer to https://devdocs.prestashop.com/ for more information.
  *
- * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2019 PrestaShop SA and Contributors
+ * @author    PrestaShop SA and Contributors <contact@prestashop.com>
+ * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
- * International Registered Trademark & Property of PrestaShop SA
  */
 
 namespace PrestaShop\PrestaShop\Adapter\Image\Uploader;
@@ -29,11 +29,10 @@ namespace PrestaShop\PrestaShop\Adapter\Image\Uploader;
 use Configuration;
 use ImageManager;
 use ImageType;
-use PrestaShop\PrestaShop\Core\Image\Uploader\Exception\ImageOptimizationException;
+use PrestaShop\PrestaShop\Core\Image\Exception\ImageOptimizationException;
 use PrestaShop\PrestaShop\Core\Image\Uploader\Exception\ImageUploadException;
 use PrestaShop\PrestaShop\Core\Image\Uploader\Exception\MemoryLimitException;
 use PrestaShop\PrestaShop\Core\Image\Uploader\Exception\UploadedImageConstraintException;
-use PrestaShop\PrestaShop\Core\Image\Uploader\ImageUploaderInterface;
 use PrestaShopException;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
 use Tools;
@@ -43,11 +42,9 @@ use Tools;
  *
  * @internal
  */
-abstract class AbstractImageUploader implements ImageUploaderInterface
+abstract class AbstractImageUploader
 {
     /**
-     * Check if image is allowed to be uploaded.
-     *
      * @param UploadedFile $image
      *
      * @throws UploadedImageConstraintException
@@ -91,8 +88,8 @@ abstract class AbstractImageUploader implements ImageUploaderInterface
     /**
      * Uploads resized image from temporary folder to image destination
      *
-     * @param $temporaryImageName
-     * @param $destination
+     * @param string $temporaryImageName
+     * @param string $destination
      *
      * @throws ImageOptimizationException
      * @throws MemoryLimitException
@@ -134,7 +131,6 @@ abstract class AbstractImageUploader implements ImageUploaderInterface
         } catch (PrestaShopException $e) {
             throw new ImageOptimizationException('Unable to resize one or more of your pictures.');
         }
-
         if (!$resized) {
             throw new ImageOptimizationException('Unable to resize one or more of your pictures.');
         }
@@ -143,7 +139,7 @@ abstract class AbstractImageUploader implements ImageUploaderInterface
     }
 
     /**
-     * Resizes the image depending from its type
+     * Resizes the image depending on its type
      *
      * @param int $id
      * @param string $imageDir

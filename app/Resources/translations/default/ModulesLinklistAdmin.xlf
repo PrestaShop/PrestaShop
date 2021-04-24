@@ -44,12 +44,12 @@
       <trans-unit id="b5750478c3c490d2c1df5dfdfdd6b7a4">
         <source>Link List</source>
         <target>Link List</target>
-        <note>Line: 86</note>
+        <note>Line: 80</note>
       </trans-unit>
       <trans-unit id="34a65b805d7e94c02bad18890a97f134">
         <source>Adds a block with several links.</source>
         <target>Adds a block with several links.</target>
-        <note>Line: 87</note>
+        <note>Line: 81</note>
       </trans-unit>
     </body>
   </file>
@@ -58,7 +58,7 @@
       <trans-unit id="0a41f7ebbcf8a28362f8635ca8341d28">
         <source>New block</source>
         <target>New block</target>
-        <note>Line: 302</note>
+        <note>Line: 296</note>
       </trans-unit>
     </body>
   </file>
@@ -67,12 +67,12 @@
       <trans-unit id="b718adec73e04ce3ec720dd11a06a308">
         <source>ID</source>
         <target>ID</target>
-        <note>Line: 83</note>
+        <note>Line: 77</note>
       </trans-unit>
       <trans-unit id="83ef1503b3bd9858cc923a74e5f9e917">
         <source>Name of the block</source>
         <target>Name of the block</target>
-        <note>Line: 89</note>
+        <note>Line: 83</note>
       </trans-unit>
     </body>
   </file>
@@ -81,12 +81,12 @@
       <trans-unit id="e6b391a8d2c4d45902a23a8b6585703d">
         <source>URL</source>
         <target>URL</target>
-        <note>Line: 46</note>
+        <note>Line: 41</note>
       </trans-unit>
       <trans-unit id="b78a3223503896721cca1303f776159b">
         <source>Title</source>
         <target>Title</target>
-        <note>Line: 42</note>
+        <note>Line: 37</note>
       </trans-unit>
     </body>
   </file>
@@ -95,22 +95,22 @@
       <trans-unit id="8b12d77641baf3ee673f6508bde7b707">
         <source>Content pages</source>
         <target>Content pages</target>
-        <note>Line: 107</note>
+        <note>Line: 101</note>
       </trans-unit>
       <trans-unit id="f4e01b4c717593dd98723eaa3c68b423">
         <source>Product pages</source>
         <target>Product pages</target>
-        <note>Line: 113</note>
+        <note>Line: 107</note>
       </trans-unit>
       <trans-unit id="1accac49de3b88324dc4cd52712d9f53">
         <source>Static content</source>
         <target>Static content</target>
-        <note>Line: 119</note>
+        <note>Line: 113</note>
       </trans-unit>
       <trans-unit id="943336f1b4259f6599f4715e6799fac1">
         <source>Custom content</source>
         <target>Custom content</target>
-        <note>Line: 135</note>
+        <note>Line: 129</note>
       </trans-unit>
     </body>
   </file>
@@ -119,12 +119,12 @@
       <trans-unit id="daf3043cd80ce98935908b37e2a7c97b">
         <source>Edit the link block.</source>
         <target>Edit the link block.</target>
-        <note>Line: 43</note>
+        <note>Line: 37</note>
       </trans-unit>
       <trans-unit id="ef7c1780c75500dc68d71a6824d10c6b">
         <source>New link block</source>
         <target>New link block</target>
-        <note>Line: 45</note>
+        <note>Line: 39</note>
       </trans-unit>
     </body>
   </file>

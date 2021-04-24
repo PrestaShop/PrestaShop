@@ -1,11 +1,12 @@
 <?php
 /**
- * 2007-2019 PrestaShop SA and Contributors
+ * Copyright since 2007 PrestaShop SA and Contributors
+ * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
  *
  * NOTICE OF LICENSE
  *
  * This source file is subject to the Open Software License (OSL 3.0)
- * that is bundled with this package in the file LICENSE.txt.
+ * that is bundled with this package in the file LICENSE.md.
  * It is also available through the world-wide-web at this URL:
  * https://opensource.org/licenses/OSL-3.0
  * If you did not receive a copy of the license and are unable to
@@ -16,12 +17,11 @@
  *
  * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
  * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to https://www.prestashop.com for more information.
+ * needs please refer to https://devdocs.prestashop.com/ for more information.
  *
- * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2019 PrestaShop SA and Contributors
+ * @author    PrestaShop SA and Contributors <contact@prestashop.com>
+ * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
- * International Registered Trademark & Property of PrestaShop SA
  */
 
 namespace PrestaShop\PrestaShop\Adapter;
@@ -44,7 +44,10 @@ use Tab;
  */
 class LegacyContext
 {
-    /** @var Currency */
+    /** @var Context */
+    protected static $instance = null;
+
+    /** @var Currency|null */
     private $employeeCurrency;
 
     /** @var string Contains the base uri for mail themes (by default https://domain.com/mails/themes/). Used for mails assets. */
@@ -75,9 +78,7 @@ class LegacyContext
      */
     public function getContext()
     {
-        static $legacyContext = null;
-
-        if (null === $legacyContext) {
+        if (null === static::$instance) {
             $legacyContext = Context::getContext();
 
             if ($legacyContext && !empty($legacyContext->shop) && !isset($legacyContext->controller) && isset($legacyContext->employee)) {
@@ -85,9 +86,10 @@ class LegacyContext
                 $adminController = new AdminController();
                 $adminController->initShopContext();
             }
+            static::$instance = $legacyContext;
         }
 
-        return $legacyContext;
+        return static::$instance;
     }
 
     /**
@@ -115,7 +117,7 @@ class LegacyContext
      *
      * @param string $controller the controller name
      * @param bool $withToken
-     * @param array[string] $extraParams
+     * @param array<string> $extraParams
      *
      * @return string
      */
@@ -160,6 +162,16 @@ class LegacyContext
     public function getRootUrl()
     {
         return __PS_BASE_URI__;
+    }
+
+    /**
+     * Adapter to get upload directory
+     *
+     * @return string
+     */
+    public function getUploadDirectory()
+    {
+        return _PS_UPLOAD_DIR_;
     }
 
     /**
@@ -239,11 +251,11 @@ class LegacyContext
      * @param int|bool $id_shop Shop ID
      * @param bool $ids_only If true, returns an array of language IDs
      *
-     * @return array Languages
+     * @return array<int|array> Languages
      */
     public function getLanguages($active = true, $id_shop = false, $ids_only = false)
     {
-        $languages = Language::getLanguages($active, $id_shop, $ids_only);
+        $languages = $this->getLegacyLanguages($active, $id_shop, $ids_only);
         $defaultLanguageFirst = $this->getLanguage();
         usort($languages, function ($a, $b) use ($defaultLanguageFirst) {
             if ($a['id_lang'] == $defaultLanguageFirst->id) {
@@ -272,12 +284,12 @@ class LegacyContext
     /**
      * Returns Currency set for the current employee.
      *
-     * @return Currency
+     * @return Currency|null
      */
     public function getEmployeeCurrency()
     {
         if (null === $this->employeeCurrency && $this->getContext()->currency) {
-            $this->employeeCurrency = $this->getContext()->currency->sign;
+            $this->employeeCurrency = $this->getContext()->currency;
         }
 
         return $this->employeeCurrency;
@@ -331,6 +343,27 @@ class LegacyContext
      */
     public function getAvailableLanguages()
     {
-        return $this->getLanguages(false);
+        return $this->getLegacyLanguages(false);
+    }
+
+    /**
+     * @param bool $active
+     * @param bool|int $id_shop
+     * @param bool $ids_only
+     *
+     * @return array
+     */
+    private function getLegacyLanguages(bool $active = true, $id_shop = false, bool $ids_only = false): array
+    {
+        return Language::getLanguages($active, $id_shop, $ids_only);
+    }
+
+    /**
+     * @param Context $testInstance
+     *                              Unit testing purpose only
+     */
+    public static function setInstanceForTesting(Context $testInstance)
+    {
+        static::$instance = $testInstance;
     }
 }

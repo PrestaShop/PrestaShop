@@ -1,11 +1,12 @@
 <?php
 /**
- * 2007-2019 PrestaShop SA and Contributors
+ * Copyright since 2007 PrestaShop SA and Contributors
+ * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
  *
  * NOTICE OF LICENSE
  *
  * This source file is subject to the Open Software License (OSL 3.0)
- * that is bundled with this package in the file LICENSE.txt.
+ * that is bundled with this package in the file LICENSE.md.
  * It is also available through the world-wide-web at this URL:
  * https://opensource.org/licenses/OSL-3.0
  * If you did not receive a copy of the license and are unable to
@@ -16,18 +17,17 @@
  *
  * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
  * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to https://www.prestashop.com for more information.
+ * needs please refer to https://devdocs.prestashop.com/ for more information.
  *
- * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2019 PrestaShop SA and Contributors
+ * @author    PrestaShop SA and Contributors <contact@prestashop.com>
+ * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
- * International Registered Trademark & Property of PrestaShop SA
  */
 
 namespace PrestaShop\PrestaShop\Core\Currency;
 
 use PrestaShop\CircuitBreaker\Contract\CircuitBreakerInterface;
-use PrestaShop\Decimal\Number;
+use PrestaShop\Decimal\DecimalNumber;
 use PrestaShop\PrestaShop\Core\Currency\Exception\CurrencyFeedException;
 use PrestaShop\PrestaShop\Core\Domain\Currency\ValueObject\ExchangeRate;
 use SimpleXMLElement;
@@ -45,16 +45,16 @@ class ExchangeRateProvider
      * context because it is weirdly defined in defines_uri.inc.php So it is safer to define
      * it properly here.
      */
-    const CURRENCY_FEED_URL = 'http://api.prestashop.com/xml/currencies.xml';
+    public const CURRENCY_FEED_URL = 'http://api.prestashop.com/xml/currencies.xml';
 
-    const CLOSED_ALLOWED_FAILURES = 3;
-    const CLOSED_TIMEOUT_SECONDS = 1;
+    public const CLOSED_ALLOWED_FAILURES = 3;
+    public const CLOSED_TIMEOUT_SECONDS = 1;
 
-    const OPEN_ALLOWED_FAILURES = 3;
-    const OPEN_TIMEOUT_SECONDS = 2;
-    const OPEN_THRESHOLD_SECONDS = 3600; // 1 hour
+    public const OPEN_ALLOWED_FAILURES = 3;
+    public const OPEN_TIMEOUT_SECONDS = 2;
+    public const OPEN_THRESHOLD_SECONDS = 3600; // 1 hour
 
-    const CACHE_KEY_XML = 'currency_feed.xml';
+    public const CACHE_KEY_XML = 'currency_feed.xml';
 
     /** @var string */
     private $currencyFeedUrl;
@@ -95,7 +95,7 @@ class ExchangeRateProvider
     /**
      * @param string $currencyIsoCode
      *
-     * @return Number
+     * @return DecimalNumber
      *
      * @throws CurrencyFeedException
      */
@@ -126,14 +126,14 @@ class ExchangeRateProvider
     /**
      * @param string $currencyIsoCode
      *
-     * @return Number
+     * @return DecimalNumber
      *
      * @throws CurrencyFeedException
      */
     private function getExchangeRateFromFeed(string $currencyIsoCode)
     {
         if ($this->sourceIsoCode == $currencyIsoCode) {
-            return new Number('1.0');
+            return new DecimalNumber('1.0');
         }
 
         if (!isset($this->currencies[$currencyIsoCode])) {
@@ -203,7 +203,7 @@ class ExchangeRateProvider
 
         $this->sourceIsoCode = (string) ($xmlFeed->source['iso_code']);
         foreach ($xmlCurrencies as $currency) {
-            $this->currencies[(string) $currency['iso_code']] = new Number((string) $currency['rate']);
+            $this->currencies[(string) $currency['iso_code']] = new DecimalNumber((string) $currency['rate']);
         }
     }
 
@@ -227,8 +227,8 @@ class ExchangeRateProvider
      *
      * @return bool
      */
-    private function isValidXMLFeed(SimpleXMLElement $xmlFeed)
+    private function isValidXMLFeed(SimpleXMLElement $xmlFeed): bool
     {
-        return $xmlFeed && $xmlFeed->list && count($xmlFeed->list->currency) && $xmlFeed->source;
+        return (bool) count($xmlFeed->list->currency);
     }
 }

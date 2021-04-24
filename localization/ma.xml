@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <localizationPack name="Morocco" version="1.0">
 	<currencies>
-		<currency name="Moroccan dirham" iso_code="MAD" iso_code_num="504" sign="MAD" blank="1" conversion_rate="1.0000" format="2" decimals="1" />
+		<currency name="Moroccan dirham" iso_code="MAD" iso_code_num="504" sign="MAD" blank="1" format="2" decimals="1" />
 	</currencies>
 	<languages>
 		<language iso_code="ar" />

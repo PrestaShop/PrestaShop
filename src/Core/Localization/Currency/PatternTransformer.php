@@ -1,11 +1,12 @@
 <?php
 /**
- * 2007-2019 PrestaShop SA and Contributors
+ * Copyright since 2007 PrestaShop SA and Contributors
+ * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
  *
  * NOTICE OF LICENSE
  *
  * This source file is subject to the Open Software License (OSL 3.0)
- * that is bundled with this package in the file LICENSE.txt.
+ * that is bundled with this package in the file LICENSE.md.
  * It is also available through the world-wide-web at this URL:
  * https://opensource.org/licenses/OSL-3.0
  * If you did not receive a copy of the license and are unable to
@@ -16,12 +17,11 @@
  *
  * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
  * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to https://www.prestashop.com for more information.
+ * needs please refer to https://devdocs.prestashop.com/ for more information.
  *
- * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2019 PrestaShop SA and Contributors
+ * @author    PrestaShop SA and Contributors <contact@prestashop.com>
+ * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
- * International Registered Trademark & Property of PrestaShop SA
  */
 
 namespace PrestaShop\PrestaShop\Core\Localization\Currency;
@@ -34,31 +34,31 @@ use PrestaShop\PrestaShop\Core\Exception\InvalidArgumentException;
  */
 class PatternTransformer
 {
-    const NO_BREAK_SPACE = "\u{00A0}";
-    const RTL_CHARACTER = "\u{200F}";
-    const REGULAR_SPACE = ' ';
-    const CURRENCY_SYMBOL = '¤';
+    public const NO_BREAK_SPACE = "\u{00A0}";
+    public const RTL_CHARACTER = "\u{200F}";
+    public const REGULAR_SPACE = ' ';
+    public const CURRENCY_SYMBOL = '¤';
 
-    const TYPE_LEFT_SYMBOL_WITH_SPACE = 'leftWithSpace';
-    const TYPE_LEFT_SYMBOL_WITHOUT_SPACE = 'leftWithoutSpace';
-    const TYPE_RIGHT_SYMBOL_WITH_SPACE = 'rightWithSpace';
-    const TYPE_RIGHT_SYMBOL_WITHOUT_SPACE = 'rightWithoutSpace';
+    public const TYPE_LEFT_SYMBOL_WITH_SPACE = 'leftWithSpace';
+    public const TYPE_LEFT_SYMBOL_WITHOUT_SPACE = 'leftWithoutSpace';
+    public const TYPE_RIGHT_SYMBOL_WITH_SPACE = 'rightWithSpace';
+    public const TYPE_RIGHT_SYMBOL_WITHOUT_SPACE = 'rightWithoutSpace';
 
-    const ALLOWED_TRANSFORMATIONS = [
+    public const ALLOWED_TRANSFORMATIONS = [
         self::TYPE_LEFT_SYMBOL_WITH_SPACE,
         self::TYPE_LEFT_SYMBOL_WITHOUT_SPACE,
         self::TYPE_RIGHT_SYMBOL_WITH_SPACE,
         self::TYPE_RIGHT_SYMBOL_WITHOUT_SPACE,
     ];
 
-    const CHARACTERS_TO_TRIM =
+    public const CHARACTERS_TO_TRIM =
         self::CURRENCY_SYMBOL .
         self::NO_BREAK_SPACE .
         self::REGULAR_SPACE .
         self::RTL_CHARACTER
     ;
 
-    const TRANSFORM_DICTIONARY = [
+    public const TRANSFORM_DICTIONARY = [
         self::TYPE_LEFT_SYMBOL_WITH_SPACE => '$rtl$currencySymbol$nbsp$pattern',
         self::TYPE_LEFT_SYMBOL_WITHOUT_SPACE => '$rtl$currencySymbol$pattern',
         self::TYPE_RIGHT_SYMBOL_WITH_SPACE => '$rtl$pattern$nbsp$currencySymbol',

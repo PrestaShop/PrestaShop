@@ -1,11 +1,12 @@
 <?php
 /**
- * 2007-2019 PrestaShop SA and Contributors
+ * Copyright since 2007 PrestaShop SA and Contributors
+ * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
  *
  * NOTICE OF LICENSE
  *
  * This source file is subject to the Open Software License (OSL 3.0)
- * that is bundled with this package in the file LICENSE.txt.
+ * that is bundled with this package in the file LICENSE.md.
  * It is also available through the world-wide-web at this URL:
  * https://opensource.org/licenses/OSL-3.0
  * If you did not receive a copy of the license and are unable to
@@ -16,40 +17,41 @@
  *
  * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
  * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to https://www.prestashop.com for more information.
+ * needs please refer to https://devdocs.prestashop.com/ for more information.
  *
- * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2019 PrestaShop SA and Contributors
+ * @author    PrestaShop SA and Contributors <contact@prestashop.com>
+ * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
- * International Registered Trademark & Property of PrestaShop SA
  */
 
 namespace PrestaShop\PrestaShop\Core\Hook\Provider;
 
+use Exception;
 use Generator;
+use Logger;
 use Symfony\Component\DependencyInjection\Container;
 use Symfony\Component\DependencyInjection\Definition;
 use Symfony\Component\Form\FormFactoryInterface;
-use Symfony\Component\Form\FormRegistryInterface;
+use Throwable;
 
 /**
  * Gets hook names by identifiable object form types.
  */
 final class IdentifiableObjectHookByFormTypeProvider implements HookByFormTypeProviderInterface
 {
-    const FORM_TYPE_POSITION_IN_CONSTRUCTOR_OF_FORM_BUILDER = 0;
+    public const FORM_TYPE_POSITION_IN_CONSTRUCTOR_OF_FORM_BUILDER = 0;
 
-    const FORM_BUILDER_HOOK_PREFIX = 'action';
-    const FORM_BUILDER_HOOK_SUFFIX = 'FormBuilderModifier';
+    public const FORM_BUILDER_HOOK_PREFIX = 'action';
+    public const FORM_BUILDER_HOOK_SUFFIX = 'FormBuilderModifier';
 
-    const FORM_HANDLER_UPDATE_BEFORE_PREFIX = 'actionBeforeUpdate';
-    const FORM_HANDLER_UPDATE_AFTER_PREFIX = 'actionAfterUpdate';
-    const FORM_HANDLER_CREATE_BEFORE_PREFIX = 'actionBeforeCreate';
-    const FORM_HANDLER_CREATE_AFTER_PREFIX = 'actionAfterCreate';
-    const FORM_HANDLER_SUFFIX = 'FormHandler';
+    public const FORM_HANDLER_UPDATE_BEFORE_PREFIX = 'actionBeforeUpdate';
+    public const FORM_HANDLER_UPDATE_AFTER_PREFIX = 'actionAfterUpdate';
+    public const FORM_HANDLER_CREATE_BEFORE_PREFIX = 'actionBeforeCreate';
+    public const FORM_HANDLER_CREATE_AFTER_PREFIX = 'actionAfterCreate';
+    public const FORM_HANDLER_SUFFIX = 'FormHandler';
 
     /**
-     * @var FormRegistryInterface
+     * @var FormFactoryInterface
      */
     private $formFactory;
 
@@ -125,7 +127,13 @@ final class IdentifiableObjectHookByFormTypeProvider implements HookByFormTypePr
     private function getFormNames(array $formTypes)
     {
         foreach ($formTypes as $formType) {
-            yield $this->formFactory->createBuilder($formType)->getName();
+            try {
+                yield $this->formFactory->createBuilder($formType)->getName();
+            } catch (Exception $e) {
+                Logger::addLog(sprintf('Error while loading formType: %s . Error: %s', $formType, $e));
+            } catch (Throwable $e) {
+                Logger::addLog(sprintf('Invalid argument exception: %s . Error: %s', $formType, $e));
+            }
         }
     }
 

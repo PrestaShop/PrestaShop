@@ -1,11 +1,12 @@
 <?php
 /**
- * 2007-2019 PrestaShop SA and Contributors
+ * Copyright since 2007 PrestaShop SA and Contributors
+ * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
  *
  * NOTICE OF LICENSE
  *
  * This source file is subject to the Open Software License (OSL 3.0)
- * that is bundled with this package in the file LICENSE.txt.
+ * that is bundled with this package in the file LICENSE.md.
  * It is also available through the world-wide-web at this URL:
  * https://opensource.org/licenses/OSL-3.0
  * If you did not receive a copy of the license and are unable to
@@ -16,12 +17,11 @@
  *
  * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
  * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to https://www.prestashop.com for more information.
+ * needs please refer to https://devdocs.prestashop.com/ for more information.
  *
- * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2019 PrestaShop SA and Contributors
+ * @author    PrestaShop SA and Contributors <contact@prestashop.com>
+ * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
- * International Registered Trademark & Property of PrestaShop SA
  */
 
 namespace PrestaShop\PrestaShop\Core\Domain\Order\QueryResult;
@@ -92,6 +92,11 @@ class OrderPreviewInvoiceDetails
     private $stateName;
 
     /**
+     * @var string|null
+     */
+    private $dni;
+
+    /**
      * InvoiceDetails constructor.
      *
      * @param string $firstName
@@ -104,8 +109,9 @@ class OrderPreviewInvoiceDetails
      * @param string $postalCode
      * @param string|null $stateName
      * @param string $country
-     * @param string $email
+     * @param string|null $email
      * @param string $phone
+     * @param string|null $dni
      */
     public function __construct(
         string $firstName,
@@ -118,8 +124,9 @@ class OrderPreviewInvoiceDetails
         string $postalCode,
         ?string $stateName,
         string $country,
-        string $email,
-        string $phone
+        ?string $email,
+        string $phone,
+        ?string $dni = null
     ) {
         $this->firstName = $firstName;
         $this->lastName = $lastName;
@@ -133,6 +140,7 @@ class OrderPreviewInvoiceDetails
         $this->vatNumber = $vatNumber;
         $this->postalCode = $postalCode;
         $this->stateName = $stateName;
+        $this->dni = $dni;
     }
 
     /**
@@ -176,9 +184,9 @@ class OrderPreviewInvoiceDetails
     }
 
     /**
-     * @return string
+     * @return string|null
      */
-    public function getEmail(): string
+    public function getEmail(): ?string
     {
         return $this->email;
     }
@@ -229,5 +237,13 @@ class OrderPreviewInvoiceDetails
     public function getStateName(): ?string
     {
         return $this->stateName;
+    }
+
+    /**
+     * @return string|null
+     */
+    public function getDNI(): ?string
+    {
+        return $this->dni;
     }
 }

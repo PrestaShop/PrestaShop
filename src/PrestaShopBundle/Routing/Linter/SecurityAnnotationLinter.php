@@ -1,11 +1,12 @@
 <?php
 /**
- * 2007-2019 PrestaShop SA and Contributors
+ * Copyright since 2007 PrestaShop SA and Contributors
+ * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
  *
  * NOTICE OF LICENSE
  *
  * This source file is subject to the Open Software License (OSL 3.0)
- * that is bundled with this package in the file LICENSE.txt.
+ * that is bundled with this package in the file LICENSE.md.
  * It is also available through the world-wide-web at this URL:
  * https://opensource.org/licenses/OSL-3.0
  * If you did not receive a copy of the license and are unable to
@@ -16,17 +17,17 @@
  *
  * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
  * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to https://www.prestashop.com for more information.
+ * needs please refer to https://devdocs.prestashop.com/ for more information.
  *
- * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2019 PrestaShop SA and Contributors
+ * @author    PrestaShop SA and Contributors <contact@prestashop.com>
+ * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
- * International Registered Trademark & Property of PrestaShop SA
  */
 
 namespace PrestaShopBundle\Routing\Linter;
 
 use Doctrine\Common\Annotations\Reader;
+use InvalidArgumentException;
 use PrestaShopBundle\Routing\Linter\Exception\LinterException;
 use PrestaShopBundle\Security\Annotation\AdminSecurity;
 use ReflectionMethod;
@@ -59,11 +60,21 @@ final class SecurityAnnotationLinter implements RouteLinterInterface
     }
 
     /**
-     * {@inheritdoc}
+     * @param string $routeName
+     * @param Route $route
+     *
+     * @return AdminSecurity
+     *
+     * @throws \ReflectionException
+     * @throws LinterException
      */
-    public function lint($routeName, Route $route)
+    public function getRouteSecurityAnnotation($routeName, Route $route)
     {
         $controllerAndMethod = $this->extractControllerAndMethodNamesFromRoute($route);
+
+        if ($controllerAndMethod === null) {
+            throw new LinterException(sprintf('"%s" cannot be parsed', $route->getDefault('_controller')));
+        }
 
         $reflection = new ReflectionMethod(
             $controllerAndMethod['controller'],
@@ -75,12 +86,22 @@ final class SecurityAnnotationLinter implements RouteLinterInterface
         if (null === $annotation) {
             throw new LinterException(sprintf('"%s:%s" does not have AdminSecurity annotation configured', $controllerAndMethod['controller'], $controllerAndMethod['method']));
         }
+
+        return $annotation;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function lint($routeName, Route $route)
+    {
+        $this->getRouteSecurityAnnotation($routeName, $route);
     }
 
     /**
      * @param Route $route
      *
-     * @return array
+     * @return array|null
      */
     private function extractControllerAndMethodNamesFromRoute(Route $route)
     {
@@ -88,7 +109,11 @@ final class SecurityAnnotationLinter implements RouteLinterInterface
 
         if (strpos($controller, '::') === false) {
             // we need to support controllers defined as services & defined using short notation
-            $controller = $this->controllerNameParser->parse($controller);
+            try {
+                $controller = $this->controllerNameParser->parse($controller);
+            } catch (InvalidArgumentException $e) {
+                return null;
+            }
         }
 
         list($controller, $method) = explode('::', $controller, 2);

@@ -3,18 +3,21 @@ api_stock_list_products:
     methods: [GET]
     defaults:
         _controller: prestashop.core.api.stock.controller:listProductsAction
+        _legacy_controller: AdminStockManagement
 
 api_stock_list_products_export:
     path: /export
     methods: [GET]
     defaults:
         _controller: prestashop.core.api.stock.controller:listProductsExportAction
+        _legacy_controller: AdminStockManagement
 
 api_stock_list_product_combinations:
     path: /{productId}
     methods: [GET]
     defaults:
         _controller: prestashop.core.api.stock.controller:listProductsAction
+        _legacy_controller: AdminStockManagement
     requirements:
         productId: \d+
 

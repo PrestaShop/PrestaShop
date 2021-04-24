@@ -1,11 +1,12 @@
 <?php
 /**
- * 2007-2019 PrestaShop SA and Contributors
+ * Copyright since 2007 PrestaShop SA and Contributors
+ * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
  *
  * NOTICE OF LICENSE
  *
  * This source file is subject to the Open Software License (OSL 3.0)
- * that is bundled with this package in the file LICENSE.txt.
+ * that is bundled with this package in the file LICENSE.md.
  * It is also available through the world-wide-web at this URL:
  * https://opensource.org/licenses/OSL-3.0
  * If you did not receive a copy of the license and are unable to
@@ -16,12 +17,11 @@
  *
  * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
  * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to https://www.prestashop.com for more information.
+ * needs please refer to https://devdocs.prestashop.com/ for more information.
  *
- * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2019 PrestaShop SA and Contributors
+ * @author    PrestaShop SA and Contributors <contact@prestashop.com>
+ * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
- * International Registered Trademark & Property of PrestaShop SA
  */
 
 namespace PrestaShop\PrestaShop\Adapter\Product;
@@ -79,17 +79,24 @@ class AdminProductWrapper
     private $employeeAssociatedShops;
 
     /**
+     * @var FloatParser
+     */
+    private $floatParser;
+
+    /**
      * Constructor : Inject Symfony\Component\Translation Translator.
      *
      * @param object $translator
      * @param array $employeeAssociatedShops
      * @param Locale $locale
+     * @param FloatParser|null $floatParser
      */
-    public function __construct($translator, array $employeeAssociatedShops, Locale $locale)
+    public function __construct($translator, array $employeeAssociatedShops, Locale $locale, FloatParser $floatParser = null)
     {
         $this->translator = $translator;
         $this->employeeAssociatedShops = $employeeAssociatedShops;
         $this->locale = $locale;
+        $this->floatParser = $floatParser ?? new FloatParser();
     }
 
     /**
@@ -110,7 +117,7 @@ class AdminProductWrapper
      * @param object $product
      * @param array $combinationValues the posted values
      *
-     * @return AdminProductsController instance
+     * @return void
      */
     public function processProductAttribute($product, $combinationValues)
     {
@@ -180,18 +187,18 @@ class AdminProductWrapper
 
         if ((isset($combinationValues['attribute_default']) && $combinationValues['attribute_default'] == 1)) {
             Product::updateDefaultAttribute((int) $product->id);
-            if (isset($id_product_attribute)) {
-                $product->cache_default_attribute = (int) $id_product_attribute;
-            }
+            $product->cache_default_attribute = (int) $id_product_attribute;
 
             // We need to reload the product because some other calls have modified the database
             // It's done just for the setAvailableDate to avoid side effects
+            Product::disableCache();
             $consistentProduct = new Product($product->id);
             if ($available_date = $combinationValues['available_date_attribute']) {
                 $consistentProduct->setAvailableDate($available_date);
             } else {
                 $consistentProduct->setAvailableDate();
             }
+            Product::enableCache();
         }
 
         if (isset($combinationValues['attribute_quantity'])) {
@@ -254,24 +261,22 @@ class AdminProductWrapper
      *
      * @param int $id_product
      * @param array $specificPriceValues the posted values
-     * @param int (optional) $id_specific_price if this is an update of an existing specific price, null else
+     * @param int|null $idSpecificPrice if this is an update of an existing specific price, null else
      *
-     * @return AdminProductsController instance
+     * @return AdminProductsController|array
      */
     public function processProductSpecificPrice($id_product, $specificPriceValues, $idSpecificPrice = null)
     {
-        $floatParser = new FloatParser();
-
         // ---- data formatting ----
-        $id_product_attribute = $specificPriceValues['sp_id_product_attribute'];
+        $id_product_attribute = $specificPriceValues['sp_id_product_attribute'] ?? 0;
         $id_shop = $specificPriceValues['sp_id_shop'] ? $specificPriceValues['sp_id_shop'] : 0;
         $id_currency = $specificPriceValues['sp_id_currency'] ? $specificPriceValues['sp_id_currency'] : 0;
         $id_country = $specificPriceValues['sp_id_country'] ? $specificPriceValues['sp_id_country'] : 0;
         $id_group = $specificPriceValues['sp_id_group'] ? $specificPriceValues['sp_id_group'] : 0;
         $id_customer = !empty($specificPriceValues['sp_id_customer']['data']) ? $specificPriceValues['sp_id_customer']['data'][0] : 0;
-        $price = isset($specificPriceValues['leave_bprice']) ? '-1' : $floatParser->fromString($specificPriceValues['sp_price']);
+        $price = isset($specificPriceValues['leave_bprice']) ? '-1' : $this->floatParser->fromString($specificPriceValues['sp_price']);
         $from_quantity = $specificPriceValues['sp_from_quantity'];
-        $reduction = $floatParser->fromString($specificPriceValues['sp_reduction']);
+        $reduction = $this->floatParser->fromString($specificPriceValues['sp_reduction']);
         $reduction_tax = $specificPriceValues['sp_reduction_tax'];
         $reduction_type = !$reduction ? 'amount' : $specificPriceValues['sp_reduction_type'];
         $reduction_type = $reduction_type == '-' ? 'amount' : $reduction_type;
@@ -402,7 +407,10 @@ class AdminProductWrapper
     public function getSpecificPricesList($product, $defaultCurrency, $shops, $currencies, $countries, $groups)
     {
         $content = [];
-        $specific_prices = SpecificPrice::getByProductId((int) $product->id);
+        $specific_prices = array_merge(
+            SpecificPrice::getByProductId((int) $product->id),
+            SpecificPrice::getByProductId(0)
+        );
 
         $tmp = [];
         foreach ($shops as $shop) {
@@ -516,7 +524,7 @@ class AdminProductWrapper
      *
      * @return SpecificPrice
      *
-     * @throws PrestaShopObjectNotFoundException
+     * @throws EntityNotFoundException
      */
     public function getSpecificPriceDataById($id)
     {
@@ -593,7 +601,7 @@ class AdminProductWrapper
      * @param object $product
      * @param array $data
      *
-     * @return bool
+     * @return array<int, int>
      */
     public function processProductCustomization($product, $data)
     {
@@ -716,7 +724,7 @@ class AdminProductWrapper
      * @param object $product
      * @param array $data
      *
-     * @return bool
+     * @return ProductDownload
      */
     public function updateDownloadProduct($product, $data)
     {
@@ -741,8 +749,8 @@ class AdminProductWrapper
             $download->date_expiration = $data['expiration_date'] ? $data['expiration_date'] . ' 23:59:59' : '';
             $download->nb_days_accessible = (int) $data['nb_days'];
             $download->nb_downloadable = (int) $data['nb_downloadable'];
-            $download->active = 1;
-            $download->is_shareable = 0;
+            $download->active = true;
+            $download->is_shareable = false;
 
             if (!$id_product_download) {
                 $download->save();
@@ -752,7 +760,7 @@ class AdminProductWrapper
         } else {
             if (!empty($id_product_download)) {
                 $download->date_expiration = date('Y-m-d H:i:s', time() - 1);
-                $download->active = 0;
+                $download->active = false;
                 $download->update();
             }
         }
@@ -770,7 +778,7 @@ class AdminProductWrapper
         $id_product_download = ProductDownload::getIdFromIdProduct((int) $product->id, false);
         $download = new ProductDownload($id_product_download ? $id_product_download : null);
 
-        if ($download && !empty($download->filename)) {
+        if (!empty($download->filename)) {
             unlink(_PS_DOWNLOAD_DIR_ . $download->filename);
             Db::getInstance()->execute('UPDATE `' . _DB_PREFIX_ . 'product_download` SET filename = "" WHERE `id_product_download` = ' . (int) $download->id);
         }
@@ -785,8 +793,7 @@ class AdminProductWrapper
     {
         $id_product_download = ProductDownload::getIdFromIdProduct((int) $product->id, false);
         $download = new ProductDownload($id_product_download ? $id_product_download : null);
-
-        if ($download) {
+        if (Validate::isLoadedObject($download)) {
             $download->delete(true);
         }
     }
@@ -865,7 +872,7 @@ class AdminProductWrapper
         $img = new Image((int) $idImage);
         if ($data['cover']) {
             Image::deleteCover((int) $img->id_product);
-            $img->cover = 1;
+            $img->cover = true;
         }
         $img->legend = $data['legend'];
         $img->update();
@@ -879,7 +886,7 @@ class AdminProductWrapper
      * @param object $product
      * @param bool $preview
      *
-     * @return string preview url
+     * @return string|bool Preview url
      */
     public function getPreviewUrl($product, $preview = true)
     {

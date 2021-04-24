@@ -1,10 +1,11 @@
 /**
- * 2007-2019 PrestaShop SA and Contributors
+ * Copyright since 2007 PrestaShop SA and Contributors
+ * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
  *
  * NOTICE OF LICENSE
  *
  * This source file is subject to the Open Software License (OSL 3.0)
- * that is bundled with this package in the file LICENSE.txt.
+ * that is bundled with this package in the file LICENSE.md.
  * It is also available through the world-wide-web at this URL:
  * https://opensource.org/licenses/OSL-3.0
  * If you did not receive a copy of the license and are unable to
@@ -15,18 +16,20 @@
  *
  * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
  * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to https://www.prestashop.com for more information.
+ * needs please refer to https://devdocs.prestashop.com/ for more information.
  *
- * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2019 PrestaShop SA and Contributors
+ * @author    PrestaShop SA and Contributors <contact@prestashop.com>
+ * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
- * International Registered Trademark & Property of PrestaShop SA
  */
 const path = require('path');
 const webpack = require('webpack');
-const CleanWebpackPlugin = require('clean-webpack-plugin');
+const {CleanWebpackPlugin} = require('clean-webpack-plugin');
 const CopyPlugin = require('copy-webpack-plugin');
-const ExtractTextPlugin = require('extract-text-webpack-plugin');
+const VueLoaderPlugin = require('vue-loader/lib/plugin');
+const MiniCssExtractPlugin = require('mini-css-extract-plugin');
+const FixStyleOnlyEntriesPlugin = require('webpack-fix-style-only-entries');
+const bourbon = require('bourbon');
 
 module.exports = {
   externals: {
@@ -38,8 +41,10 @@ module.exports = {
     attribute: './js/pages/attribute',
     attribute_group: './js/pages/attribute-group',
     backup: './js/pages/backup',
+    carrier: './js/pages/carrier',
     catalog: './js/app/pages/catalog',
     catalog_product: './js/pages/catalog/product',
+    cart_rule: './js/pages/cart-rule',
     catalog_price_rule: './js/pages/catalog-price-rule',
     catalog_price_rule_form: './js/pages/catalog-price-rule/form',
     category: './js/pages/category',
@@ -52,11 +57,13 @@ module.exports = {
     currency_form: './js/pages/currency/form',
     customer: './js/pages/customer',
     customer_address_form: './js/pages/address/form.js',
+    customer_outstanding: './js/pages/outstanding',
     customer_thread_view: './js/pages/customer-thread/view.js',
     email: './js/pages/email',
     employee: './js/pages/employee/index',
     employee_form: './js/pages/employee/form',
     error: './js/pages/error',
+    feature_flag: './js/pages/feature-flag/index',
     feature_form: './js/pages/feature/form',
     form_popover_error: './js/components/form/form-popover-error',
     geolocation: './js/pages/geolocation',
@@ -81,8 +88,13 @@ module.exports = {
     order_message_form: './js/pages/order_message/form',
     order_message: './js/pages/order_message',
     order_preferences: './js/pages/order-preferences',
+    order_states_form: './js/pages/order-states/form',
+    order_states: './js/pages/order-states',
+    order_return_states_form: './js/pages/order-return-states/form',
     order_view: './js/pages/order/view.js',
     payment_preferences: './js/pages/payment-preferences',
+    product_edit: './js/pages/product/edit',
+    combination_edit: './js/pages/product/combination/edit',
     product_page: './js/product-page/index',
     product_preferences: './js/pages/product-preferences',
     profiles: './js/pages/profiles',
@@ -96,12 +108,23 @@ module.exports = {
     translation_settings: './js/pages/translation-settings',
     translations: './js/app/pages/translations',
     webservice: './js/pages/webservice',
+    zone: './js/pages/zone',
+    multistore_header: './js/components/multistore-header.js',
+    multistore_dropdown: './js/components/multistore-dropdown',
+    theme: './scss/theme.scss',
+    orders: './scss/pages/orders/orders.scss',
+    product: './scss/pages/product/product_page.scss',
+    product_catalog: './scss/pages/product/products_catalog.scss',
+    stock_page: './scss/pages/stock/stock_page.scss',
   },
   output: {
     path: path.resolve(__dirname, '../public'),
     filename: '[name].bundle.js',
     libraryTarget: 'window',
     library: '[name]',
+
+    sourceMapFilename: '[name].[hash:8].map',
+    chunkFilename: '[id].[hash:8].js',
   },
   resolve: {
     extensions: ['.js', '.vue', '.json'],
@@ -121,17 +144,15 @@ module.exports = {
       {
         test: /\.js$/,
         include: path.resolve(__dirname, '../js'),
-        use: [{
-          loader: 'babel-loader',
-          options: {
-            presets: [
-              ['env', {useBuiltIns: 'usage', modules: false}],
-            ],
-            plugins: [
-              'transform-object-rest-spread',
-            ],
+        use: [
+          {
+            loader: 'babel-loader',
+            options: {
+              presets: [['env', {useBuiltIns: 'usage', modules: false}]],
+              plugins: ['transform-object-rest-spread', 'transform-runtime'],
+            },
           },
-        }],
+        ],
       },
       {
         test: /jquery-ui\.js/,
@@ -171,52 +192,59 @@ module.exports = {
         loader: 'imports-loader?define=>false&exports=>false&this=>window',
       },
       {
+        test: /bootstrap-colorpicker\.js/,
+        loader: 'imports-loader?define=>false&exports=>false&this=>window',
+      },
+      {
         test: /jwerty\/jwerty\.js/,
         loader: 'imports-loader?this=>window&module=>false',
       },
       {
         test: /\.vue$/,
         loader: 'vue-loader',
-        options: {
-          loaders: {
-            js: 'babel-loader?presets[]=es2015&presets[]=stage-2',
-            css: 'postcss-loader',
-            scss: 'style-loader!css-loader!sass-loader',
-          },
-        },
       },
       {
         test: /\.css$/,
-        use: ExtractTextPlugin.extract({
-          fallback: 'style-loader',
-          use: ['css-loader'],
-        }),
+        use: [
+          {
+            loader: MiniCssExtractPlugin.loader,
+          },
+          'css-loader',
+        ],
       },
       {
         test: /\.scss$/,
-        use: ExtractTextPlugin.extract({
-          use: [
-            {
-              loader: 'css-loader',
-              options: {
-                minimize: true,
-                sourceMap: true,
+        include: /scss/,
+        exclude: /js/,
+        use: [
+          MiniCssExtractPlugin.loader,
+          {
+            loader: 'css-loader',
+            options: {
+              sourceMap: true,
+            },
+          },
+          {
+            loader: 'postcss-loader',
+            options: {
+              sourceMap: true,
+            },
+          },
+          {
+            loader: 'sass-loader',
+            options: {
+              sourceMap: true,
+              sassOptions: {
+                includePaths: [bourbon.includePaths],
               },
             },
-            {
-              loader: 'postcss-loader',
-              options: {
-                sourceMap: true,
-              },
-            },
-            {
-              loader: 'sass-loader',
-              options: {
-                sourceMap: true,
-              },
-            },
-          ],
-        }),
+          },
+        ],
+      },
+      {
+        test: /\.scss$/,
+        include: /js/,
+        use: ['vue-style-loader', 'css-loader', 'sass-loader'],
       },
       // FILES
       {
@@ -226,18 +254,17 @@ module.exports = {
     ],
   },
   plugins: [
-    new ExtractTextPlugin('theme.css'),
-    new CleanWebpackPlugin(['public'], {
-      root: path.resolve(__dirname, '../'),
-      exclude: ['theme.rtlfix'],
+    new FixStyleOnlyEntriesPlugin(),
+    new CleanWebpackPlugin({
+      cleanOnceBeforeBuildPatterns: ['!theme.rtlfix'],
     }),
+    new MiniCssExtractPlugin({filename: '[name].css'}),
     new webpack.ProvidePlugin({
       moment: 'moment', // needed for bootstrap datetime picker
       $: 'jquery', // needed for jquery-ui
       jQuery: 'jquery',
     }),
-    new CopyPlugin([
-      {from: 'static'},
-    ]),
+    new CopyPlugin([{from: 'static'}]),
+    new VueLoaderPlugin(),
   ],
 };

@@ -1,0 +1,543 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xliff xmlns="urn:oasis:names:tc:xliff:document:1.2" version="1.2">
+  <file original="classes/form/CustomerFormatter.php" source-language="en" target-language="fr" datatype="plaintext">
+    <body>
+      <trans-unit id="a9e3d6296e9b194ee466230d8438935a" approved="yes">
+        <source>Receive offers from our partners</source>
+        <target state="final">Recevoir les offres de nos partenaires</target>
+        <note>Line: 225</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="controllers/front/OrderSlipController.php" source-language="en" target-language="fr" datatype="plaintext">
+    <body>
+      <trans-unit id="6f6347e99d6511fc895179a42301c001" approved="yes">
+        <source>#%id%</source>
+        <target state="final">#%id%</target>
+        <note>Line: 67</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="modules/ps_customersignin/ps_customersignin.tpl" source-language="en" target-language="fr" datatype="plaintext">
+    <body>
+      <trans-unit id="4b877ba8588b19f1b278510bf2b57ebb" approved="yes">
+        <source>Log me out</source>
+        <target state="final">Me déconnecter</target>
+        <note>Line: 3</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="themes/StarterTheme/templates/checkout/_partials/cart-summary.tpl" source-language="en" target-language="fr" datatype="plaintext">
+    <body>
+      <trans-unit id="5238bd0d26ee4c221badd6e6c6475412" approved="yes">
+        <source>Your order</source>
+        <target state="final">Votre commande</target>
+        <note>Context:
+File: themes/StarterTheme/templates/checkout/_partials/cart-summary.tpl:32</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="themes/StarterTheme/templates/checkout/_partials/steps/personal-information.tpl" source-language="en" target-language="fr" datatype="plaintext">
+    <body>
+      <trans-unit id="0fc5b0bad7e8ab38a2cdcadc05cb248f" approved="yes">
+        <source>Connected as %first_name% %last_name%.</source>
+        <target state="final">Connecté en tant que %first_name% %last_name%.</target>
+        <note>Context:
+File: themes/StarterTheme/templates/checkout/_partials/steps/personal-information.tpl:6</note>
+      </trans-unit>
+      <trans-unit id="929c1ec3a80a6e8a557bad8985e63991" approved="yes">
+        <source>No account?</source>
+        <target state="final">Pas de compte ?</target>
+        <note>Context:
+File: themes/StarterTheme/templates/checkout/_partials/steps/personal-information.tpl:24</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="themes/StarterTheme/templates/customer/history.tpl" source-language="en" target-language="fr" datatype="plaintext">
+    <body>
+      <trans-unit id="bcd1b68617759b1dfcff0403a6b5a8d1" approved="yes">
+        <source>PDF</source>
+        <target state="final">PDF</target>
+        <note>Context:
+File: themes/StarterTheme/templates/customer/history.tpl:64</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="themes/StarterTheme/templates/customer/my-account.tpl" source-language="en" target-language="fr" datatype="plaintext">
+    <body>
+      <trans-unit id="999fe77c512638fd1b2ff18646d24781" approved="yes">
+        <source>Welcome to your account. Here you can manage all of your personal information and orders.</source>
+        <target state="final">Bienvenue sur votre page d'accueil. Vous pouvez y gérer vos informations personnelles ainsi que vos commandes.</target>
+        <note>Context:
+File: themes/StarterTheme/templates/customer/my-account.tpl:34</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="themes/classic/modules/ps_customeraccountlinks/ps_customeraccountlinks.tpl" source-language="en" target-language="fr" datatype="plaintext">
+    <body>
+      <trans-unit id="f2fc7490cbdb0db5cd6f1a4e7edb0da1" approved="yes">
+        <source>Your account</source>
+        <target state="final">Votre compte</target>
+        <note>Line: 33</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="themes/classic/modules/ps_customersignin/ps_customersignin.tpl" source-language="en" target-language="fr" datatype="plaintext">
+    <body>
+      <trans-unit id="2cbfb6731610056e1d0aaacde07096c1" approved="yes">
+        <source>View my customer account</source>
+        <target state="final">Voir mon compte client</target>
+        <note>Line: 39</note>
+      </trans-unit>
+      <trans-unit id="d4151a9a3959bdd43690735737034f27" approved="yes">
+        <source>Log in to your customer account</source>
+        <target state="final">Identifiez-vous</target>
+        <note>Line: 48</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="themes/classic/templates/checkout/_partials/steps/personal-information.tpl" source-language="en" target-language="fr" datatype="plaintext">
+    <body>
+      <trans-unit id="8e3ecabff428ab5465ab8feb928436e0" approved="yes">
+        <source>Not you? [1]Log out[/1]</source>
+        <target state="final">Ce n'est pas vous ? [1]Se déconnecter[/1]</target>
+        <note>Line: 26</note>
+      </trans-unit>
+      <trans-unit id="6280ed214163d6e214763ff970910cdc" approved="yes">
+        <source>Connected as [1]%firstname% %lastname%[/1].</source>
+        <target state="final">Connecté en tant que [1]%firstname% %lastname%[/1].</target>
+        <note>Line: 13</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="themes/classic/templates/customer/_partials/my-account-links.tpl" source-language="en" target-language="fr" datatype="plaintext">
+    <body>
+      <trans-unit id="a958dbb46713e59856c35f89e5092a5e" approved="yes">
+        <source>Back to your account</source>
+        <target state="final">Retour à votre compte</target>
+        <note>Line: 28</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="themes/classic/templates/customer/_partials/order-detail-return.tpl" source-language="en" target-language="fr" datatype="plaintext">
+    <body>
+      <trans-unit id="3956298bcfc047e15b0e0d218492ce09" approved="yes">
+        <source>Merchandise return</source>
+        <target state="final">Retour de marchandise</target>
+        <note>Line: 236</note>
+      </trans-unit>
+      <trans-unit id="bef8403608dc4cb3ade799f63dd4bf59" approved="yes">
+        <source>If you wish to return one or more products, please mark the corresponding boxes and provide an explanation for the return. When complete, click the button below.</source>
+        <target state="final">Si vous désirez nous retourner un ou plusieurs produits, veuillez cocher chacun d'entre eux et spécifier un motif de retour, puis valider.</target>
+        <note>Line: 237</note>
+      </trans-unit>
+      <trans-unit id="1af342a10e8238b722ba844facf5768b" approved="yes">
+        <source>Request a return</source>
+        <target state="final">Renvoyer un produit</target>
+        <note>Line: 247</note>
+      </trans-unit>
+      <trans-unit id="fdfac28b5ad628f25649d9c2eb4fc62e" approved="yes">
+        <source>Returned</source>
+        <target state="final">Retourné</target>
+        <note>Line: 205</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="themes/classic/templates/customer/_partials/order-messages.tpl" source-language="en" target-language="fr" datatype="plaintext">
+    <body>
+      <trans-unit id="41de6d6cfb8953c021bbe4ba0701c8a1" approved="yes">
+        <source>Messages</source>
+        <target state="final">Messages</target>
+        <note>Line: 28</note>
+      </trans-unit>
+      <trans-unit id="58b3d8603dffe8484e90c0ca371921ac" approved="yes">
+        <source>Add a message</source>
+        <target state="final">Ajouter un message :</target>
+        <note>Line: 49</note>
+      </trans-unit>
+      <trans-unit id="d93651d012e77dac5581b08db33195b2" approved="yes">
+        <source>If you would like to add a comment about your order, please write it in the field below.</source>
+        <target state="final">Si vous voulez nous laisser un message à propos de votre commande, merci de bien vouloir le renseigner dans le champ ci-contre</target>
+        <note>Line: 50</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="themes/classic/templates/customer/address.tpl" source-language="en" target-language="fr" datatype="plaintext">
+    <body>
+      <trans-unit id="f469203cd9de85e9583bae25f1cb0557" approved="yes">
+        <source>Update your address</source>
+        <target state="final">Mettre à jour votre adresse</target>
+        <note>Line: 29</note>
+      </trans-unit>
+      <trans-unit id="393d8c6bc7a04264bd9523dc8c92b818" approved="yes">
+        <source>New address</source>
+        <target state="final">Nouvelle adresse</target>
+        <note>Line: 31</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="themes/classic/templates/customer/addresses.tpl" source-language="en" target-language="fr" datatype="plaintext">
+    <body>
+      <trans-unit id="3908e1afa0ff22fbf112aff3c5ba55c1" approved="yes">
+        <source>Your addresses</source>
+        <target state="final">Vos adresses</target>
+        <note>Line: 28</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="themes/classic/templates/customer/authentication.tpl" source-language="en" target-language="fr" datatype="plaintext">
+    <body>
+      <trans-unit id="11f4b4ba23dc72ee5e86ff5a90bdde60" approved="yes">
+        <source>Log in to your account</source>
+        <target state="final">Connectez-vous à votre compte</target>
+        <note>Line: 28</note>
+      </trans-unit>
+      <trans-unit id="952998528c20798fbd22b49d505a29d5" approved="yes">
+        <source>No account? Create one here</source>
+        <target state="final">Pas de compte ? Créez-en un</target>
+        <note>Line: 42</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="themes/classic/templates/customer/discount.tpl" source-language="en" target-language="fr" datatype="plaintext">
+    <body>
+      <trans-unit id="70b77fea994d1bda0a46cb5f9c9275f3" approved="yes">
+        <source>Your vouchers</source>
+        <target state="final">Vos bons de réduction</target>
+        <note>Line: 28</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="themes/classic/templates/customer/guest-login.tpl" source-language="en" target-language="fr" datatype="plaintext">
+    <body>
+      <trans-unit id="6b10b52dc4d44e780e6e38073668be56" approved="yes">
+        <source>Guest Order Tracking</source>
+        <target state="final">Suivi de commande invité</target>
+        <note>Line: 28</note>
+      </trans-unit>
+      <trans-unit id="d2948a89e47a4ad7eb8412c1c260ea88" approved="yes">
+        <source>To track your order, please enter the following information:</source>
+        <target state="final">Afin de suivre votre commande, veuillez saisir les informations suivantes :</target>
+        <note>Line: 34</note>
+      </trans-unit>
+      <trans-unit id="92dbb751eb9457441af82a53f3cfae54" approved="yes">
+        <source>For example: QIIXJXNUI or QIIXJXNUI#1</source>
+        <target state="final">Par exemple : QIIXJXNUI ou QIIXJXNUI#1</target>
+        <note>Line: 52</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="themes/classic/templates/customer/guest-tracking.tpl" source-language="en" target-language="fr" datatype="plaintext">
+    <body>
+      <trans-unit id="3aedb5d3a3e36f7bb6baf1fbb9497894" approved="yes">
+        <source>Guest Tracking</source>
+        <target state="final">Suivi de commande</target>
+        <note>Line: 28</note>
+      </trans-unit>
+      <trans-unit id="109636f722b8fccc95d072b2760a6282" approved="yes">
+        <source>Transform your guest account into a customer account and enjoy:</source>
+        <target state="final">Transformez votre compte invité en compte client et bénéficiez des avantages suivants :</target>
+        <note>Line: 42</note>
+      </trans-unit>
+      <trans-unit id="7a8fe8aaa64e691d82f429d39e0df3a5" approved="yes">
+        <source>Personalized and secure access</source>
+        <target state="final">Accès au site sécurisé et personnalisé</target>
+        <note>Line: 44</note>
+      </trans-unit>
+      <trans-unit id="93aef17b1541efc1c3f8bd6679972096" approved="yes">
+        <source>Fast and easy checkout</source>
+        <target state="final">Passage de commande rapide et facile</target>
+        <note>Line: 45</note>
+      </trans-unit>
+      <trans-unit id="1f1015bbef5f42d858e8486397ad8f3e" approved="yes">
+        <source>Easier merchandise return</source>
+        <target state="final">Retours produits plus faciles</target>
+        <note>Line: 46</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="themes/classic/templates/customer/history.tpl" source-language="en" target-language="fr" datatype="plaintext">
+    <body>
+      <trans-unit id="782c8b38bce4f2f6975ca7f33ac8189b" approved="yes">
+        <source>Order history</source>
+        <target state="final">Historique de vos commandes</target>
+        <note>Line: 28</note>
+      </trans-unit>
+      <trans-unit id="28d5817f910ec3a8856126f5860fa490" approved="yes">
+        <source>Here are the orders you've placed since your account was created.</source>
+        <target state="final">Vous trouverez ici vos commandes passées depuis la création de votre compte</target>
+        <note>Line: 32</note>
+      </trans-unit>
+      <trans-unit id="3ec365dd533ddb7ef3d1c111186ce872" approved="yes">
+        <source>Details</source>
+        <target state="final">Détails</target>
+        <note>Line: 101</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="themes/classic/templates/customer/identity.tpl" source-language="en" target-language="fr" datatype="plaintext">
+    <body>
+      <trans-unit id="6335a00a08fde0fbb8f6d6630cdadd92" approved="yes">
+        <source>Your personal information</source>
+        <target state="final">Vos informations personnelles</target>
+        <note>Line: 28</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="themes/classic/templates/customer/my-account.tpl" source-language="en" target-language="fr" datatype="plaintext">
+    <body>
+      <trans-unit id="a82868319826fb092b73968e661b5b38" approved="yes">
+        <source>Vouchers</source>
+        <target state="final">Bons de réduction</target>
+        <note>Line: 80</note>
+      </trans-unit>
+      <trans-unit id="d1a365ea7809ae5831c6d9f86886630c" approved="yes">
+        <source>Credit slips</source>
+        <target state="final">Avoirs</target>
+        <note>Line: 71</note>
+      </trans-unit>
+      <trans-unit id="284b47b0bb63ae2df3b29f0e691d6fcf" approved="yes">
+        <source>Addresses</source>
+        <target state="final">Adresses</target>
+        <note>Line: 46</note>
+      </trans-unit>
+      <trans-unit id="da4791bc9700aca963b560fcb7db0605" approved="yes">
+        <source>Add first address</source>
+        <target state="final">Ajouter une première adresse</target>
+        <note>Line: 53</note>
+      </trans-unit>
+      <trans-unit id="a82be0f551b8708bc08eb33cd9ded0cf" approved="yes">
+        <source>Information</source>
+        <target state="final">Informations</target>
+        <note>Line: 38</note>
+      </trans-unit>
+      <trans-unit id="cea4dedd9147586b361b90e900944690" approved="yes">
+        <source>Order history and details</source>
+        <target state="final">Historique et détails de mes commandes</target>
+        <note>Line: 62</note>
+      </trans-unit>
+      <trans-unit id="e06d7593c1cd6dabef450be6c3da7091" approved="yes">
+        <source>Merchandise returns</source>
+        <target state="final">Retours produit</target>
+        <note>Line: 89</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="themes/classic/templates/customer/order-detail.tpl" source-language="en" target-language="fr" datatype="plaintext">
+    <body>
+      <trans-unit id="f5d74ea75357b5e139854c14f8e24fe3" approved="yes">
+        <source>Order details</source>
+        <target state="final">Détails de la commande</target>
+        <note>Line: 28</note>
+      </trans-unit>
+      <trans-unit id="674592d247a228106f4f0d9f81c0d92c" approved="yes">
+        <source>Order Reference %reference% - placed on %date%</source>
+        <target state="final">Commande n°%reference% du %date%</target>
+        <note>Line: 38</note>
+      </trans-unit>
+      <trans-unit id="e682495785e844d491378817aa34aa3f" approved="yes">
+        <source>Download your invoice as a PDF file.</source>
+        <target state="final">Téléchargez votre facture au format PDF</target>
+        <note>Line: 62</note>
+      </trans-unit>
+      <trans-unit id="755bb0834a77079fd1330b555b69e6bf" approved="yes">
+        <source>You have given permission to receive your order in recycled packaging.</source>
+        <target state="final">Vous avez accepté de recevoir votre commande dans un emballage recyclé.</target>
+        <note>Line: 69</note>
+      </trans-unit>
+      <trans-unit id="e14bc5cef02df7369b604ea3885adb96" approved="yes">
+        <source>You have requested gift wrapping for this order.</source>
+        <target state="final">Vous avez demandé un papier cadeau pour cette commande.</target>
+        <note>Line: 74</note>
+      </trans-unit>
+      <trans-unit id="4c2a8fe7eaf24721cc7a9f0175115bd4" approved="yes">
+        <source>Message</source>
+        <target state="final">Message</target>
+        <note>Line: 75</note>
+      </trans-unit>
+      <trans-unit id="46774573a61204e0aac6c4ab10247d3e" approved="yes">
+        <source>Follow your order's status step-by-step</source>
+        <target state="final">Suivre votre commande pas à pas</target>
+        <note>Line: 84</note>
+      </trans-unit>
+      <trans-unit id="ced55d097872ab13bf177e8d31db396f" approved="yes">
+        <source>Click the following link to track the delivery of your order</source>
+        <target state="final">Cliquez sur le lien suivant pour suivre la livraison de votre commande</target>
+        <note>Line: 122</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="themes/classic/templates/customer/order-follow.tpl" source-language="en" target-language="fr" datatype="plaintext">
+    <body>
+      <trans-unit id="a240fa27925a635b08dc28c9e4f9216d" approved="yes">
+        <source>Order</source>
+        <target state="final">Commande</target>
+        <note>Line: 70</note>
+      </trans-unit>
+      <trans-unit id="446faa7da2d42ba4ffeda73cb119dd91" approved="yes">
+        <source>Date issued</source>
+        <target state="final">Date d'émission</target>
+        <note>Line: 82</note>
+      </trans-unit>
+      <trans-unit id="9cf9ab35a1b24314913bb739d25a0b36" approved="yes">
+        <source>Here is a list of pending merchandise returns</source>
+        <target state="final">Voici la liste des retours produits en cours</target>
+        <note>Line: 35</note>
+      </trans-unit>
+      <trans-unit id="988fd738de9c6d177440c5dcf69e73ce" approved="yes">
+        <source>Return</source>
+        <target state="final">Retour</target>
+        <note>Line: 74</note>
+      </trans-unit>
+      <trans-unit id="d442cb92c3b031eceacbfe87605b9356" approved="yes">
+        <source>Package status</source>
+        <target state="final">État du retour</target>
+        <note>Line: 78</note>
+      </trans-unit>
+      <trans-unit id="6d72e074fdface4ae892543d39434175" approved="yes">
+        <source>Returns form</source>
+        <target state="final">Bon de retour</target>
+        <note>Line: 87</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="themes/classic/templates/customer/order-return.tpl" source-language="en" target-language="fr" datatype="plaintext">
+    <body>
+      <trans-unit id="cd8ee64ef80cd6bb4e320a7d0563b56f" approved="yes">
+        <source>Return details</source>
+        <target state="final">Détails du retour</target>
+        <note>Line: 4</note>
+      </trans-unit>
+      <trans-unit id="4aa65c7cc01324ce850c2975f548d637" approved="yes">
+        <source>%number% on %date%</source>
+        <target state="final">%number% le %date%</target>
+        <note>Line: 12</note>
+      </trans-unit>
+      <trans-unit id="88be9ea838e21273267409d76af3b284" approved="yes">
+        <source>We have logged your return request.</source>
+        <target state="final">Nous avons enregistré votre demande de retour.</target>
+        <note>Line: 18</note>
+      </trans-unit>
+      <trans-unit id="d45c14e2fb387664ad2a66a2b8f7c0a4" approved="yes">
+        <source>Your package must be returned to us within %number% days of receiving your order.</source>
+        <target state="final">Votre colis doit nous être retourné dans les %number% jours suite à la réception de votre commande.</target>
+        <note>Line: 19</note>
+      </trans-unit>
+      <trans-unit id="77264630b0f035a114135e26f0e56a5c" approved="yes">
+        <source>The current status of your merchandise return is: [1] %status% [/1]</source>
+        <target state="final">L'état actuel de votre retour produit est : [1] %status% [/1]</target>
+        <note>Line: 25</note>
+      </trans-unit>
+      <trans-unit id="b24be74c768f02b296d4e8f41be486fb" approved="yes">
+        <source>List of items to be returned:</source>
+        <target state="final">Liste des articles à retourner :</target>
+        <note>Line: 35</note>
+      </trans-unit>
+      <trans-unit id="92a9774c2a5df29ac4bffb46219ea9cd" approved="yes">
+        <source>Reminder</source>
+        <target state="final">Rappel</target>
+        <note>Line: 106</note>
+      </trans-unit>
+      <trans-unit id="2b79d007c64009edf92d06f7cb280b25" approved="yes">
+        <source>All merchandise must be returned in its original packaging and in its original state.</source>
+        <target state="final">Tous les produits doivent être retournés dans leur emballage et leur état d'origine.</target>
+        <note>Line: 108</note>
+      </trans-unit>
+      <trans-unit id="3407538083069a115822986f5b34b21f" approved="yes">
+        <source>Please print out the [1]returns form[/1] and include it with your package.</source>
+        <target state="final">Veuillez imprimer le [1]bon de retour[/1] et l'inclure dans votre colis.</target>
+        <note>Line: 113</note>
+      </trans-unit>
+      <trans-unit id="2e2d29136e330ac7ba96f9004901be3a" approved="yes">
+        <source>Please check the [1]returns form[/1] for the correct address.</source>
+        <target state="final">Veuillez vérifier que le [1]bon de retour[/1] contient la bonne adresse.</target>
+        <note>Line: 123</note>
+      </trans-unit>
+      <trans-unit id="16dafae9102750489087d1d087b72aba" approved="yes">
+        <source>When we receive your package, we will notify you by email. We will then begin processing order reimbursement.</source>
+        <target state="final">Dès réception de votre colis, nous procéderons au remboursement du montant de votre commande et vous en informerons par e-mail.</target>
+        <note>Line: 133</note>
+      </trans-unit>
+      <trans-unit id="f393a2fe17dc0cacff53a136479b845d" approved="yes">
+        <source>Please let us know if you have any questions.</source>
+        <target state="final">Veuillez nous contacter pour toute question.</target>
+        <note>Line: 138</note>
+      </trans-unit>
+      <trans-unit id="f637120d9f24c366b382ede6c21cddf0" approved="yes">
+        <source>If the conditions of return listed above are not respected, we reserve the right to refuse your package and/or reimbursement.</source>
+        <target state="final">Si les conditions de retour listées ci-dessus ne sont pas respectées, nous nous réservons le droit de refuser votre colis ou votre remboursement.</target>
+        <note>Line: 143</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="themes/classic/templates/customer/order-slip.tpl" source-language="en" target-language="fr" datatype="plaintext">
+    <body>
+      <trans-unit id="5996bd24bf8b740b8205e0d9fe1a0709" approved="yes">
+        <source>Credit slips you have received after canceled orders.</source>
+        <target state="final">Liste des avoirs reçus suite à des annulations de commandes.</target>
+        <note>Line: 32</note>
+      </trans-unit>
+      <trans-unit id="cf3bae95c5f6023d5a10fe415b205a45" approved="yes">
+        <source>Credit slip</source>
+        <target state="final">Avoir</target>
+        <note>Line: 65</note>
+      </trans-unit>
+      <trans-unit id="3cb6ea48a427bf3a1687302e3b764c27" approved="yes">
+        <source>View credit slip</source>
+        <target state="final">Afficher l'avoir</target>
+        <note>Line: 73</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="themes/classic/templates/customer/password-email.tpl" source-language="en" target-language="fr" datatype="plaintext">
+    <body>
+      <trans-unit id="f28d8a87d03470521d5a992312bfaed8" approved="yes">
+        <source>Please enter the email address you used to register. You will receive a temporary link to reset your password.</source>
+        <target state="final">Veuillez renseigner l'adresse e-mail que vous avez utilisée à la création de votre compte. Vous recevrez un lien temporaire pour réinitialiser votre mot de passe.</target>
+        <note>Line: 48</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="themes/classic/templates/customer/password-infos.tpl" source-language="en" target-language="fr" datatype="plaintext">
+    <body>
+      <trans-unit id="01a569ddc6cf67ddec2a683f0a5f5956" approved="yes">
+        <source>Forgot your password?</source>
+        <target state="final">Mot de passe oublié ?</target>
+        <note>Line: 28</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="themes/classic/templates/customer/password-new.tpl" source-language="en" target-language="fr" datatype="plaintext">
+    <body>
+      <trans-unit id="32fe59513f5bbdd353b4527cc6af55ce" approved="yes">
+        <source>Reset your password</source>
+        <target state="final">Réinitialiser votre mot de passe</target>
+        <note>Line: 28</note>
+      </trans-unit>
+      <trans-unit id="24e372d72a306d924e8f1e53900dd7b6" approved="yes">
+        <source>Email address: %email%</source>
+        <target state="final">Adresse e-mail : %email%</target>
+        <note>Line: 48</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="themes/classic/templates/customer/registration.tpl" source-language="en" target-language="fr" datatype="plaintext">
+    <body>
+      <trans-unit id="2fdfd506efea08144c0794c32ca8250a" approved="yes">
+        <source>Create an account</source>
+        <target state="final">Créez votre compte</target>
+        <note>Line: 28</note>
+      </trans-unit>
+      <trans-unit id="21bdc5689c12595ae14298354d5550d5" approved="yes">
+        <source>Already have an account?</source>
+        <target state="final">Vous avez déjà un compte ?</target>
+        <note>Line: 35</note>
+      </trans-unit>
+      <trans-unit id="54fc27e749c6998fb54cebc1a0879692" approved="yes">
+        <source>Log in instead!</source>
+        <target state="final">Connectez-vous !</target>
+        <note>Line: 35</note>
+      </trans-unit>
+    </body>
+  </file>
+</xliff>

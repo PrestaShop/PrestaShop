@@ -1,0 +1,39 @@
+parameters:
+	level: 4
+	bootstrapFiles:
+		- .github/workflows/phpstan/autoload.php
+	paths:
+		- src
+		- webservice
+	ignoreErrors:
+		- '#^Call to an undefined method Symfony\\Component\\Config\\Definition\\Builder\\NodeDefinition\:\:#'
+		- '#^Unsafe usage of new static\(\)\.$#'
+		## Relative to Attribute PHP 8
+		- '#^Access to an undefined property Attribute\:\:\$id\.$#'
+		- '#^Call to an undefined method Attribute\:\:delete\(\)\.$#'
+		- '#^Call to an undefined static method Attribute\:\:checkAttributeQty\(\)\.$#'
+		- '#^Call to an undefined static method Attribute\:\:getAttributeMinimalQty\(\)\.$#'
+		- '#^Call to an undefined static method Attribute\:\:getAttributes\(\)\.$#'
+	universalObjectCratesClasses:
+		- Cookie
+		- ObjectModel
+		- Order
+		- OrderInvoice
+		- Product
+
+
+services:
+  strictTypesForNewClassesRuleConfigurationFileLoader:
+    class: PHPStanForPrestaShop\PHPConfigurationLoader\PHPConfigurationFileLoader
+    arguments:
+      - .github/workflows/phpstan/strict-types-for-new-classes-rule-exclusion-list.php
+
+  returnTypesForNewMethodsRuleConfigurationFileLoader:
+    class: PHPStanForPrestaShop\PHPConfigurationLoader\PHPConfigurationFileLoader
+    arguments:
+      - .github/workflows/phpstan/return-types-for-new-class-methods-rule-exclusion-list.php
+
+  typeHintsForNewMethodsRuleConfigurationFileLoader:
+    class: PHPStanForPrestaShop\PHPConfigurationLoader\PHPConfigurationFileLoader
+    arguments:
+      - .github/workflows/phpstan/type-hint-for-new-class-methods-rule-exclusion-list.php

@@ -1,11 +1,12 @@
 <?php
 /**
- * 2007-2019 PrestaShop SA and Contributors
+ * Copyright since 2007 PrestaShop SA and Contributors
+ * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
  *
  * NOTICE OF LICENSE
  *
  * This source file is subject to the Open Software License (OSL 3.0)
- * that is bundled with this package in the file LICENSE.txt.
+ * that is bundled with this package in the file LICENSE.md.
  * It is also available through the world-wide-web at this URL:
  * https://opensource.org/licenses/OSL-3.0
  * If you did not receive a copy of the license and are unable to
@@ -16,18 +17,17 @@
  *
  * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
  * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to https://www.prestashop.com for more information.
+ * needs please refer to https://devdocs.prestashop.com/ for more information.
  *
- * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2019 PrestaShop SA and Contributors
+ * @author    PrestaShop SA and Contributors <contact@prestashop.com>
+ * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
- * International Registered Trademark & Property of PrestaShop SA
  */
 
 namespace Tests\Unit\Core\Domain\CartRule\ValueObject\CartRuleAction;
 
 use PHPUnit\Framework\TestCase;
-use PrestaShop\Decimal\Number;
+use PrestaShop\Decimal\DecimalNumber;
 use PrestaShop\PrestaShop\Core\Domain\CartRule\Exception\CartRuleConstraintException;
 use PrestaShop\PrestaShop\Core\Domain\CartRule\ValueObject\CartRuleAction\AmountDiscountAction;
 use PrestaShop\PrestaShop\Core\Domain\CartRule\ValueObject\CartRuleAction\CartRuleActionBuilder;
@@ -54,7 +54,7 @@ class CartRuleActionBuilderTest extends TestCase
         (new CartRuleActionBuilder())
             ->setAmountDiscount(
                 new MoneyAmountCondition(
-                    new Money(new Number('0'), new CurrencyId(1)),
+                    new Money(new DecimalNumber('0'), new CurrencyId(1)),
                     true
                 )
             )
@@ -75,7 +75,7 @@ class CartRuleActionBuilderTest extends TestCase
         $action = (new CartRuleActionBuilder())
             ->setAmountDiscount(
                 new MoneyAmountCondition(
-                    new Money(new Number('10'), new CurrencyId(1)),
+                    new Money(new DecimalNumber('10'), new CurrencyId(1)),
                     true
                 )
             )
@@ -142,7 +142,7 @@ class CartRuleActionBuilderTest extends TestCase
     public function validActionsProvider()
     {
         $moneyAmount = new MoneyAmountCondition(
-            new Money(new Number('100'), new CurrencyId(1)),
+            new Money(new DecimalNumber('100'), new CurrencyId(1)),
             true
         );
         $percentage = new PercentageDiscount(30.5, true);

@@ -1,11 +1,12 @@
 <?php
 /**
- * 2007-2019 PrestaShop SA and Contributors
+ * Copyright since 2007 PrestaShop SA and Contributors
+ * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
  *
  * NOTICE OF LICENSE
  *
  * This source file is subject to the Open Software License (OSL 3.0)
- * that is bundled with this package in the file LICENSE.txt.
+ * that is bundled with this package in the file LICENSE.md.
  * It is also available through the world-wide-web at this URL:
  * https://opensource.org/licenses/OSL-3.0
  * If you did not receive a copy of the license and are unable to
@@ -16,17 +17,16 @@
  *
  * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
  * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to https://www.prestashop.com for more information.
+ * needs please refer to https://devdocs.prestashop.com/ for more information.
  *
- * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2019 PrestaShop SA and Contributors
+ * @author    PrestaShop SA and Contributors <contact@prestashop.com>
+ * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
- * International Registered Trademark & Property of PrestaShop SA
  */
 
 namespace PrestaShop\PrestaShop\Core\Domain\Order\Command;
 
-use PrestaShop\Decimal\Number;
+use PrestaShop\Decimal\DecimalNumber;
 use PrestaShop\PrestaShop\Core\Domain\Order\Exception\OrderConstraintException;
 use PrestaShop\PrestaShop\Core\Domain\Order\Invoice\ValueObject\OrderInvoiceId;
 use PrestaShop\PrestaShop\Core\Domain\Order\OrderDiscountType;
@@ -48,17 +48,17 @@ class AddCartRuleToOrderCommand
     private $cartRuleName;
 
     /**
-     * @var int
+     * @var string
      */
     private $cartRuleType;
 
     /**
-     * @var float
+     * @var DecimalNumber|null
      */
     private $value;
 
     /**
-     * @var int|null
+     * @var OrderInvoiceId|null
      */
     private $orderInvoiceId;
 
@@ -67,7 +67,7 @@ class AddCartRuleToOrderCommand
      * @param string $cartRuleName
      * @param string $cartRuleType
      * @param string|null $value
-     * @param null $orderInvoiceId
+     * @param int|null $orderInvoiceId
      */
     public function __construct(
         int $orderId,
@@ -82,7 +82,7 @@ class AddCartRuleToOrderCommand
         $this->orderId = new OrderId($orderId);
         $this->cartRuleName = $cartRuleName;
         $this->cartRuleType = $cartRuleType;
-        $this->value = $value ? new Number($value) : null;
+        $this->value = null !== $value ? new DecimalNumber($value) : null;
         $this->orderInvoiceId = $orderInvoiceId ? new OrderInvoiceId($orderInvoiceId) : null;
     }
 
@@ -103,7 +103,7 @@ class AddCartRuleToOrderCommand
     }
 
     /**
-     * @return int
+     * @return string
      */
     public function getCartRuleType(): string
     {
@@ -111,9 +111,9 @@ class AddCartRuleToOrderCommand
     }
 
     /**
-     * @return Number|null
+     * @return DecimalNumber|null
      */
-    public function getDiscountValue(): ?Number
+    public function getDiscountValue(): ?DecimalNumber
     {
         return $this->value;
     }

@@ -1,11 +1,12 @@
 <?php
 /**
- * 2007-2019 PrestaShop SA and Contributors
+ * Copyright since 2007 PrestaShop SA and Contributors
+ * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
  *
  * NOTICE OF LICENSE
  *
  * This source file is subject to the Open Software License (OSL 3.0)
- * that is bundled with this package in the file LICENSE.txt.
+ * that is bundled with this package in the file LICENSE.md.
  * It is also available through the world-wide-web at this URL:
  * https://opensource.org/licenses/OSL-3.0
  * If you did not receive a copy of the license and are unable to
@@ -16,12 +17,11 @@
  *
  * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
  * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to https://www.prestashop.com for more information.
+ * needs please refer to https://devdocs.prestashop.com/ for more information.
  *
- * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2019 PrestaShop SA and Contributors
+ * @author    PrestaShop SA and Contributors <contact@prestashop.com>
+ * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
- * International Registered Trademark & Property of PrestaShop SA
  */
 
 namespace PrestaShop\PrestaShop\Adapter\Admin;
@@ -36,11 +36,11 @@ use Symfony\Component\Process\Exception\LogicException;
  */
 abstract class AbstractAdminQueryBuilder
 {
-    const FILTERING_LIKE_BOTH = 'LIKE \'%%%s%%\'';
-    const FILTERING_LIKE_LEFT = 'LIKE \'%%%s\'';
-    const FILTERING_LIKE_RIGHT = 'LIKE \'%s%%\'';
-    const FILTERING_EQUAL_NUMERIC = '= %s';
-    const FILTERING_EQUAL_STRING = '= \'%s\'';
+    public const FILTERING_LIKE_BOTH = 'LIKE \'%%%s%%\'';
+    public const FILTERING_LIKE_LEFT = 'LIKE \'%%%s\'';
+    public const FILTERING_LIKE_RIGHT = 'LIKE \'%s%%\'';
+    public const FILTERING_EQUAL_NUMERIC = '= %s';
+    public const FILTERING_EQUAL_STRING = '= \'%s\'';
 
     /**
      * @var string|null
@@ -117,11 +117,11 @@ abstract class AbstractAdminQueryBuilder
      * Format example for $order:
      * $order = array('name ASC', 'id_product DESC');
      *
-     * @param array[array[mixed]] $select
-     * @param array[mixed] $table
-     * @param array[mixed] $where
-     * @param array[string] $groupBy
-     * @param array[string] $order
+     * @param array<string,array<string,string>|string> $select
+     * @param array<mixed> $table
+     * @param array<mixed> $where
+     * @param array<string> $groupBy
+     * @param array<string> $order
      * @param string $limit
      *
      * @throws LogicException if SQL elements cannot be joined
@@ -135,7 +135,7 @@ abstract class AbstractAdminQueryBuilder
         // SELECT
         $s = [];
         foreach ($select as $alias => $field) {
-            $a = is_string($alias) ? ' AS `' . $alias . '`' : '';
+            $a = ' AS `' . $alias . '`';
             if (is_array($field)) {
                 if (isset($field['table'])) {
                     $s[] = ' ' . $field['table'] . '.`' . $field['field'] . '` ' . $a;
