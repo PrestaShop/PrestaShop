@@ -23,6 +23,7 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
 import {Grid} from '@PSTypes/grid';
+import GridMap from '@components/grid/grid-map';
 
 const {$} = window;
 
@@ -38,8 +39,8 @@ export default class AsyncToggleColumnExtension {
   extend(grid: Grid): void {
     grid
       .getContainer()
-      .find('.js-grid-table')
-      .on('click', '.ps-togglable-row', (event) => {
+      .find(GridMap.gridTable)
+      .on('click', GridMap.togglableRow, (event) => {
         const $button = $(event.currentTarget);
 
         if (!$button.hasClass('ps-switch')) {

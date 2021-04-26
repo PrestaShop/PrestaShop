@@ -24,6 +24,7 @@
  */
 
 import {Grid} from '@PSTypes/grid';
+import GridMap from '@components/grid/grid-map';
 
 const {$} = window;
 
@@ -39,11 +40,11 @@ export default class ExportToSqlManagerExtension {
   extend(grid: Grid): void {
     grid
       .getHeaderContainer()
-      .on('click', '.js-common_show_query-grid-action', () => this.onShowSqlQueryClick(grid),
+      .on('click', GridMap.actions.showQuery, () => this.onShowSqlQueryClick(grid),
       );
     grid
       .getHeaderContainer()
-      .on('click', '.js-common_export_sql_manager-grid-action', () => this.onExportSqlManagerClick(grid),
+      .on('click', GridMap.actions.exportQuery, () => this.onExportSqlManagerClick(grid),
       );
   }
 
@@ -55,10 +56,10 @@ export default class ExportToSqlManagerExtension {
    * @private
    */
   onShowSqlQueryClick(grid: Grid): void {
-    const $sqlManagerForm = $(`#${grid.getId()}_common_show_query_modal_form`);
+    const $sqlManagerForm = $(GridMap.actions.showModalForm(grid.getId()));
     this.fillExportForm($sqlManagerForm, grid);
 
-    const $modal = $(`#${grid.getId()}_grid_common_show_query_modal`);
+    const $modal = $(GridMap.actions.showModalGrid(grid.getId()));
     $modal.modal('show');
 
     $modal.on('click', '.btn-sql-submit', () => $sqlManagerForm.submit());
@@ -72,7 +73,7 @@ export default class ExportToSqlManagerExtension {
    * @private
    */
   private onExportSqlManagerClick(grid: Grid): void {
-    const $sqlManagerForm = $(`#${grid.getId()}_common_show_query_modal_form`);
+    const $sqlManagerForm = $(GridMap.actions.showModalForm(grid.getId()));
 
     this.fillExportForm($sqlManagerForm, grid);
 
@@ -90,7 +91,7 @@ export default class ExportToSqlManagerExtension {
   private fillExportForm($sqlManagerForm: JQuery, grid: Grid) {
     const query = grid
       .getContainer()
-      .find('.js-grid-table')
+      .find(GridMap.gridTable)
       .data('query');
 
     $sqlManagerForm.find('textarea[name="sql"]').val(query);
@@ -107,7 +108,7 @@ export default class ExportToSqlManagerExtension {
    * @private
    */
   private getNameFromBreadcrumb(): string {
-    const $breadcrumbs = $('.header-toolbar').find('.breadcrumb-item');
+    const $breadcrumbs = $(GridMap.headerToolbar).find(GridMap.breadcrumbItem);
     let name = '';
 
     $breadcrumbs.each((i, item) => {
