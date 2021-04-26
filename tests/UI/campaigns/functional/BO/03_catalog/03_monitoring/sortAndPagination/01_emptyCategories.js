@@ -84,7 +84,7 @@ describe('Sort and pagination list of empty categories', async () => {
         await expect(pageTitle).to.contains(addCategoryPage.pageTitleCreate);
       });
 
-      it(`should create category n°${index} and check the number of categories`, async function () {
+      it(`should create category n°${index + 1} and check the number of categories`, async function () {
         await testContext.addContextItem(this, 'testIdentifier', `createCategory${index}`, baseContext);
 
         const textResult = await addCategoryPage.createEditCategory(page, createCategoryData);
@@ -143,7 +143,7 @@ describe('Sort and pagination list of empty categories', async () => {
 
           let nonSortedTable = await monitoringPage.getAllRowsColumnContent(
             page,
-            'empty_category',
+            tableName,
             test.args.sortBy,
           );
 
@@ -151,7 +151,7 @@ describe('Sort and pagination list of empty categories', async () => {
 
           let sortedTable = await monitoringPage.getAllRowsColumnContent(
             page,
-            'empty_category',
+            tableName,
             test.args.sortBy,
           );
 
@@ -216,7 +216,7 @@ describe('Sort and pagination list of empty categories', async () => {
         await expect(textColumn).to.contains(`todelete${index}`);
       });
 
-      it(`should delete category n°${index}`, async function () {
+      it(`should delete category n°${index + 1}`, async function () {
         await testContext.addContextItem(this, 'testIdentifier', `deleteCategory${index}`, baseContext);
 
         const textResult = await monitoringPage.deleteCategoryInGrid(page, tableName, 1, 1);
