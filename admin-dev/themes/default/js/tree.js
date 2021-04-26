@@ -193,15 +193,16 @@ Tree.prototype =
 		var idTree = this.$element.parent().find('.cattree.tree').first().attr('id');
 		if (typeof(idTree) != 'undefined' && !$('#'+idTree).hasClass('full_loaded'))
 		{
+			var targetTree = $('#'+idTree);
 			var selected = [];
-			$('#'+idTree).find('.tree-selected input').each(
+			targetTree.find('.tree-selected input').each(
 				function()
 				{
 					selected.push($(this).val());
 				}
 			);
-			var name = $('#'+idTree).find('ul.tree input').first().attr('name');
-			var inputType = $('#'+idTree).find('ul.tree input').first().attr('type');
+			var name = targetTree.find('ul.tree input').first().attr('name');
+			var inputType = targetTree.find('ul.tree input').first().attr('type');
 			var useCheckBox = 0;
 			if (inputType == 'checkbox')
 			{
@@ -213,17 +214,17 @@ Tree.prototype =
 				{ controller:'AdminProducts', token:currentToken, action:'getCategoryTree', type:idTree, fullTree:1, selected:selected, inputName:name, useCheckBox:useCheckBox },
 				function(content)
 				{
-					$('#' + idTree).html(content);
+					targetTree.html(content);
 					organizeTree();
-					$('#' + idTree).tree('init');
-          $('#' + idTree).find("label.tree-toggler").each(
+					targetTree.tree('init');
+					targetTree.find("label.tree-toggler").each(
 						function()
 						{
 							$(this).parent().children(".icon-folder-close")
 								.removeClass("icon-folder-close")
 								.addClass("icon-folder-open");
 							$(this).parent().parent().children("ul.tree").show($speed);
-							$('#'+idTree).addClass('full_loaded');
+							targetTree.addClass('full_loaded');
 						}
 					);
 				}
