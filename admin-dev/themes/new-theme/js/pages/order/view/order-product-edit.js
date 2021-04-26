@@ -190,7 +190,7 @@ export default class OrderProductEdit {
       this.orderDetailId,
     );
 
-    if (productPriceMatch || Number(orderInvoiceId) === 0) {
+    if (productPriceMatch) {
       this.editProduct($(event.currentTarget).data('orderId'), this.orderDetailId);
 
       return;
