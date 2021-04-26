@@ -211,7 +211,6 @@ describe('Sort and pagination list of products without price', async () => {
         await monitoringPage.filterTable(page, tableName, 'input', 'name', 'toDelete');
 
         const textColumn = await monitoringPage.getTextColumnFromTable(page, tableName, 1, 'name');
-
         await expect(textColumn).to.contains('TODELETE');
       });
 
@@ -219,7 +218,6 @@ describe('Sort and pagination list of products without price', async () => {
         await testContext.addContextItem(this, 'testIdentifier', `deleteProduct${index}`, baseContext);
 
         const textResult = await monitoringPage.deleteProductInGrid(page, tableName, 1);
-
         await expect(textResult).to.equal(productsPage.productDeletedSuccessfulMessage);
 
         const pageTitle = await productsPage.getPageTitle(page);

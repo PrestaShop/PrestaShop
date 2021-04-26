@@ -220,7 +220,6 @@ describe('Sort and pagination list of products without combinations and without 
         await testContext.addContextItem(this, 'testIdentifier', `deleteProduct${index}`, baseContext);
 
         const textResult = await monitoringPage.deleteProductInGrid(page, tableName, 1);
-
         await expect(textResult).to.equal(productsPage.productDeletedSuccessfulMessage);
 
         const pageTitle = await productsPage.getPageTitle(page);
