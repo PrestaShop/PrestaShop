@@ -22,6 +22,11 @@ services:
       tags:
         - { name: form.type_extension, extended_type: Symfony\Component\Form\Extension\Core\Type\FormType }
 
+    form.extension.label_options:
+        class: 'PrestaShopBundle\Form\Admin\Extension\LabelOptionsExtension'
+        tags:
+            - { name: form.type_extension, extended_type: Symfony\Component\Form\Extension\Core\Type\FormType }
+
     form.extension.data_list:
         class: 'PrestaShopBundle\Form\Extension\DataListExtension'
         tags:

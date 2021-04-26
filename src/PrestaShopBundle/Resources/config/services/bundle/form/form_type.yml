@@ -1565,3 +1565,10 @@ services:
             - '@prestashop.core.feature_flags.modifier'
         tags:
             - { name: form.type }
+
+    form.type.admin.unavailable_type:
+        class: 'PrestaShopBundle\Form\Admin\Type\UnavailableType'
+        parent: 'form.type.translatable.aware'
+        public: true
+        tags:
+            - { name: form.type }
