@@ -110,10 +110,11 @@ class MultistoreController extends FrameworkBundleAdminController
     /**
      * @param ShopConfigurationInterface $configuration
      * @param string $configurationKey
+     * @param int|null $groupId
      *
      * @return Response
      */
-    public function configurationDropdown(ShopConfigurationInterface $configuration, string $configurationKey): Response
+    public function configurationDropdown(ShopConfigurationInterface $configuration, string $configurationKey, int $groupId = null): Response
     {
         $groupList = $this->entityManager->getRepository(ShopGroup::class)->findBy(['active' => true]);
         $shopCustomizationChecker = $this->get('prestashop.multistore.customized_configuration_checker');
@@ -124,7 +125,7 @@ class MultistoreController extends FrameworkBundleAdminController
                 unset($groupList[$key]);
             }
             foreach ($group->getShops() as $shop) {
-                if ($shopCustomizationChecker->isConfigurationCustomizedForThisShop($configurationKey, $shop)) {
+                if ($shopCustomizationChecker->isConfigurationCustomizedForThisShop($configurationKey, $shop) && $group->getId() === $groupId) {
                     $shouldDisplayDropdown = true;
                     break;
                 }
