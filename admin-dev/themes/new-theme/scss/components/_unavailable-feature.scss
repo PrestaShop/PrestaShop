@@ -2,7 +2,6 @@
 .unavailable-feature {
   .alert {
     &.alert-unavailable {
-      cursor: not-allowed;
       background-color: lighten($gray-disabled, 5%);
     }
 
