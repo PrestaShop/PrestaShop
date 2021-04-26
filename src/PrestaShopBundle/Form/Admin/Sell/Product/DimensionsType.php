@@ -29,24 +29,53 @@ declare(strict_types=1);
 namespace PrestaShopBundle\Form\Admin\Sell\Product;
 
 use PrestaShop\PrestaShop\Core\ConstraintValidator\Constraints\PositiveOrZero;
+use PrestaShopBundle\Form\Admin\Type\TextWithUnitType;
 use PrestaShopBundle\Form\Admin\Type\TranslatorAwareType;
-use Symfony\Component\Form\Extension\Core\Type\NumberType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
+use Symfony\Component\Translation\TranslatorInterface;
 use Symfony\Component\Validator\Constraints\NotBlank;
 use Symfony\Component\Validator\Constraints\Type;
 
 class DimensionsType extends TranslatorAwareType
 {
     /**
+     * @var string
+     */
+    private $dimensionUnit;
+
+    /**
+     * @var string
+     */
+    private $weightUnit;
+
+    /**
+     * @param TranslatorInterface $translator
+     * @param array $locales
+     * @param string $dimensionUnit
+     * @param string $weightUnit
+     */
+    public function __construct(
+        TranslatorInterface $translator,
+        array $locales,
+        string $dimensionUnit,
+        string $weightUnit
+    ) {
+        parent::__construct($translator, $locales);
+        $this->dimensionUnit = $dimensionUnit;
+        $this->weightUnit = $weightUnit;
+    }
+
+    /**
      * {@inheritDoc}
      */
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
-            ->add('width', NumberType::class, [
+            ->add('width', TextWithUnitType::class, [
                 'required' => false,
                 'label' => $this->trans('Width', 'Admin.Catalog.Feature'),
+                'unit' => $this->dimensionUnit,
                 'constraints' => [
                     new NotBlank(),
                     new Type([
@@ -59,9 +88,10 @@ class DimensionsType extends TranslatorAwareType
                     new PositiveOrZero(),
                 ],
             ])
-            ->add('height', NumberType::class, [
+            ->add('height', TextWithUnitType::class, [
                 'required' => false,
                 'label' => $this->trans('Height', 'Admin.Catalog.Feature'),
+                'unit' => $this->dimensionUnit,
                 'constraints' => [
                     new NotBlank(),
                     new Type([
@@ -74,9 +104,10 @@ class DimensionsType extends TranslatorAwareType
                     new PositiveOrZero(),
                 ],
             ])
-            ->add('depth', NumberType::class, [
+            ->add('depth', TextWithUnitType::class, [
                 'required' => false,
                 'label' => $this->trans('Depth', 'Admin.Catalog.Feature'),
+                'unit' => $this->dimensionUnit,
                 'constraints' => [
                     new NotBlank(),
                     new Type([
@@ -89,9 +120,10 @@ class DimensionsType extends TranslatorAwareType
                     new PositiveOrZero(),
                 ],
             ])
-            ->add('weight', NumberType::class, [
+            ->add('weight', TextWithUnitType::class, [
                 'required' => false,
                 'label' => $this->trans('Weight', 'Admin.Catalog.Feature'),
+                'unit' => $this->weightUnit,
                 'constraints' => [
                     new NotBlank(),
                     new Type([
