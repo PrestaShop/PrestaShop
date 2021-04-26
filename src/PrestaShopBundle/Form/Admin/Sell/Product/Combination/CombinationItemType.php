@@ -50,9 +50,6 @@ class CombinationItemType extends TranslatorAwareType
         $builder
             ->add('is_selected', CheckboxType::class, [
                 'label' => false,
-                'attr' => [
-                  'material_design' => true,
-                ]
             ])
             ->add('combination_id', HiddenType::class, [
                 'attr' => [
@@ -95,14 +92,13 @@ class CombinationItemType extends TranslatorAwareType
                 'label' => false,
                 'attr' => [
                     'class' => 'combination-is-default-input',
-                    'material_design' => true,
                 ],
             ])
             ->add('edit', IconButtonType::class, [
                 'icon' => 'mode_edit',
                 'attr' => [
                     'class' => 'edit-combination-item tooltip-link',
-                    'data-toggle' => 'pstooltip', 
+                    'data-toggle' => 'pstooltip',
                     'data-original-title' => $this->trans('Edit item', 'Admin.Actions'),
                 ],
             ])
@@ -110,7 +106,7 @@ class CombinationItemType extends TranslatorAwareType
                 'icon' => 'delete',
                 'attr' => [
                     'class' => 'edit-combination-item tooltip-link',
-                    'data-toggle' => 'pstooltip', 
+                    'data-toggle' => 'pstooltip',
                     'data-original-title' => $this->trans('Delete item', 'Admin.Notifications.Warning'),
                 ],
             ])
