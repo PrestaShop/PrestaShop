@@ -1327,6 +1327,13 @@ services:
         tags:
             - { name: form.type }
 
+    form.type.sell.product.dimensions_type:
+        class: 'PrestaShopBundle\Form\Admin\Sell\Product\DimensionsType'
+        parent: 'form.type.translatable.aware'
+        public: true
+        tags:
+            - { name: form.type }
+
     form.type.sell.product.seo_type:
         class: 'PrestaShopBundle\Form\Admin\Sell\Product\SEOType'
         parent: 'form.type.translatable.aware'
