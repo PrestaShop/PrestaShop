@@ -50,9 +50,6 @@ class CombinationItemType extends TranslatorAwareType
         $builder
             ->add('is_selected', CheckboxType::class, [
                 'label' => false,
-                'attr' => [
-                  'material_design' => true,
-                ]
             ])
             ->add('combination_id', HiddenType::class, [
                 'attr' => [
@@ -95,7 +92,6 @@ class CombinationItemType extends TranslatorAwareType
                 'label' => false,
                 'attr' => [
                     'class' => 'combination-is-default-input',
-                    'material_design' => true,
                 ],
             ])
             ->add('edit', IconButtonType::class, [
