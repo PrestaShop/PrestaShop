@@ -24,6 +24,7 @@
  */
 
 import {Grid} from '@PSTypes/grid';
+import GridMap from '@components/grid/grid-map';
 
 const {$} = window;
 
@@ -47,7 +48,7 @@ export default class LinkRowActionExtension {
    * @param {Grid} grid
    */
   initConfirmableActions(grid: Grid): void {
-    grid.getContainer().on('click', '.js-link-row-action', (event) => {
+    grid.getContainer().on('click', GridMap.rows.linkRowAction, (event) => {
       const confirmMessage = $(event.currentTarget).data('confirm-message');
 
       if (confirmMessage.length && !window.confirm(confirmMessage)) {
@@ -65,12 +66,14 @@ export default class LinkRowActionExtension {
     $('tr', grid.getContainer()).each(function initEachRow() {
       const $parentRow = $(this);
 
-      $('.js-link-row-action[data-clickable-row=1]:first', $parentRow).each(
+      $(GridMap.rows.linkRowActionClickableFirst, $parentRow).each(
         function propagateFirstLinkAction() {
           const $rowAction = $(this);
           const $parentCell = $rowAction.closest('td');
 
-          const clickableCells = $('td.clickable', $parentRow).not($parentCell);
+          const clickableCells = $(GridMap.rows.clickableTd, $parentRow).not(
+            $parentCell,
+          );
           let isDragging = false;
           clickableCells.addClass('cursor-pointer').mousedown(() => {
             $(window).mousemove(() => {
