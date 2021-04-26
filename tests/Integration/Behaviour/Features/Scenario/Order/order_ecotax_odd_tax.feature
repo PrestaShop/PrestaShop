@@ -72,6 +72,16 @@ Feature: Ecotax for Order in Back Office (BO)
       | unit_price_tax_incl         | 18.15   |
       | total_price_tax_excl        | 1455.00 |
       | total_price_tax_incl        | 1760.55 |
+    When I generate invoice for "bo_order1" order
+    And the first invoice from order "bo_order1" should have following details:
+      | total_products              | 1455.00 |
+      | total_products_wt           | 1760.55 |
+      | total_discount_tax_excl     | 0.0     |
+      | total_discount_tax_incl     | 0.0     |
+      | total_paid_tax_excl         | 1462.00 |
+      | total_paid_tax_incl         | 1769.02 |
+      | total_shipping_tax_excl     | 7.0     |
+      | total_shipping_tax_incl     | 8.47    |
     ## Reset
     When I remove product "Test Ecotax Product" from order "bo_order1"
     Then order "bo_order1" should have 1 products in total
@@ -107,6 +117,16 @@ Feature: Ecotax for Order in Back Office (BO)
       # 1951.64 = 20.12 * 97
       | total_price_tax_incl        | 2257.19 |
       # 2257.19 = 23.27 * 97
+    When I generate invoice for "bo_order1" order
+    And the first invoice from order "bo_order1" should have following details:
+      | total_products              | 1951.64 |
+      | total_products_wt           | 2257.19 |
+      | total_discount_tax_excl     | 0.0     |
+      | total_discount_tax_incl     | 0.0     |
+      | total_paid_tax_excl         | 1958.64 |
+      | total_paid_tax_incl         | 2265.66 |
+      | total_shipping_tax_excl     | 7.0     |
+      | total_shipping_tax_incl     | 8.47    |
     # Reset
     When the product "Test Ecotax Product" ecotax is 0.00
     Then the ecotax of the product "Test Ecotax Product" should be 0.00
@@ -145,6 +165,16 @@ Feature: Ecotax for Order in Back Office (BO)
       # 2041.34 = 20.83 * 98
       | total_price_tax_incl        | 2364.65   |
       # 2364.6518 = 24.1291 * 98
+    When I generate invoice for "bo_order1" order
+    And the first invoice from order "bo_order1" should have following details:
+      | total_products              | 2041.34   |
+      | total_products_wt           | 2364.65   |
+      | total_discount_tax_excl     | 0.0       |
+      | total_discount_tax_incl     | 0.0       |
+      | total_paid_tax_excl         | 2048.34   |
+      | total_paid_tax_incl         | 2373.12   |
+      | total_shipping_tax_excl     | 7.0       |
+      | total_shipping_tax_incl     | 8.47      |
     # Reset
     When the product "Test Ecotax Product" ecotax is 0.00
     Then the ecotax of the product "Test Ecotax Product" should be 0.00
@@ -196,6 +226,16 @@ Feature: Ecotax for Order in Back Office (BO)
       # 2449.02 = 24.99 * 98
       | total_price_tax_incl        | 2857.94   |
       # 2857.9446 = 29.1627 * 98
+    When I generate invoice for "bo_order1" order
+    And the first invoice from order "bo_order1" should have following details:
+      | total_products              | 2449.02   |
+      | total_products_wt           | 2857.94   |
+      | total_discount_tax_excl     | 0.0       |
+      | total_discount_tax_incl     | 0.0       |
+      | total_paid_tax_excl         | 2456.02   |
+      | total_paid_tax_incl         | 2866.41   |
+      | total_shipping_tax_excl     | 7.0       |
+      | total_shipping_tax_incl     | 8.47      |
     # Reset
     When the product "Test Ecotax Product" ecotax is 0.00
     Then the ecotax of the product "Test Ecotax Product" should be 0.00
@@ -247,6 +287,16 @@ Feature: Ecotax for Order in Back Office (BO)
       # 1991.88 = 20.12 * 99
       | total_price_tax_incl        | 2303.73 |
       # 2303.73 = 23.27 * 99
+    When I generate invoice for "bo_order1" order
+    And the first invoice from order "bo_order1" should have following details:
+      | total_products              | 1991.88 |
+      | total_products_wt           | 2303.73 |
+      | total_discount_tax_excl     | 0.0     |
+      | total_discount_tax_incl     | 0.0     |
+      | total_paid_tax_excl         | 1998.88 |
+      | total_paid_tax_incl         | 2312.20 |
+      | total_shipping_tax_excl     | 7.0     |
+      | total_shipping_tax_incl     | 8.47    |
     # Reset
     When the product "Test Ecotax Product" ecotax is 0.00
     Then the ecotax of the product "Test Ecotax Product" should be 0.00
