@@ -215,7 +215,8 @@ Tree.prototype =
 				function(content)
 				{
 					targetTree.html(content);
-					organizeTree();
+          // Function organizeTree() disabled because it no longer has known usage - Crezzur
+					// organizeTree();
 					targetTree.tree('init');
 					targetTree.find("label.tree-toggler").each(
 						function()
