@@ -415,7 +415,7 @@ class SqlManagerController extends FrameworkBundleAdminController
     }
 
     /**
-     * Get request sql repository.
+     * Get request SQL repository.
      *
      * @return \PrestaShopBundle\Entity\Repository\RequestSqlRepository
      */
