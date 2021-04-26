@@ -24,6 +24,7 @@
  */
 
 import {Grid} from '@PSTypes/grid';
+import GridMap from '@components/grid/grid-map';
 
 const {$} = window;
 
@@ -39,23 +40,23 @@ export default class DeleteCategoryRowActionExtension {
   extend(grid: Grid): void {
     grid
       .getContainer()
-      .on('click', '.js-delete-category-row-action', (event) => {
+      .on('click', GridMap.rows.categoryDeleteAction, (event) => {
         event.preventDefault();
 
         const $deleteCategoriesModal = $(
-          `#${grid.getId()}_grid_delete_categories_modal`,
+          GridMap.bulks.deleteCategoriesModal(grid.getId()),
         );
         $deleteCategoriesModal.modal('show');
 
         $deleteCategoriesModal.on(
           'click',
-          '.js-submit-delete-categories',
+          GridMap.bulks.submitDeleteCategories,
           () => {
             const $button = $(event.currentTarget);
             const categoryId = $button.data('category-id');
 
             const $categoriesToDeleteInputBlock = $(
-              '#delete_categories_categories_to_delete',
+              GridMap.bulks.categoriesToDelete,
             );
 
             const categoryInput = $categoriesToDeleteInputBlock

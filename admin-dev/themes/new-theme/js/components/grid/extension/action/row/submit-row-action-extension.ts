@@ -23,6 +23,7 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
 import {Grid} from '@PSTypes/grid';
+import GridMap from '@components/grid/grid-map';
 
 import ConfirmModal from '@components/modal';
 
@@ -107,7 +108,7 @@ export default class SubmitRowActionExtension {
 
     const modal = new ConfirmModal(
       {
-        id: `${grid.getId()}-grid-confirm-modal`,
+        id: GridMap.confirmModal(grid.getId()),
         confirmTitle,
         confirmMessage,
         confirmButtonLabel,

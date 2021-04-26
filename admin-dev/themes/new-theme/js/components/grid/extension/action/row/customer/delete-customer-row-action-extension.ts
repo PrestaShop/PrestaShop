@@ -23,6 +23,7 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
 import {Grid} from '@PSTypes/grid';
+import GridMap from '@components/grid/grid-map';
 
 const {$} = window;
 
@@ -38,25 +39,29 @@ export default class DeleteCustomerRowActionExtension {
   extend(grid: Grid): void {
     grid
       .getContainer()
-      .on('click', '.js-delete-customer-row-action', (event) => {
+      .on('click', GridMap.rows.customerDeleteAction, (event) => {
         event.preventDefault();
 
         const $deleteCustomersModal = $(
-          `#${grid.getId()}_grid_delete_customers_modal`,
+          GridMap.bulks.deleteCustomerModal(grid.getId()),
         );
         $deleteCustomersModal.modal('show');
 
-        $deleteCustomersModal.on('click', '.js-submit-delete-customers', () => {
-          const $button = $(event.currentTarget);
-          const customerId = $button.data('customer-id');
+        $deleteCustomersModal.on(
+          'click',
+          GridMap.bulks.submitDeleteCustomers,
+          () => {
+            const $button = $(event.currentTarget);
+            const customerId = $button.data('customer-id');
 
-          this.addCustomerInput(customerId);
+            this.addCustomerInput(customerId);
 
-          const $form = $deleteCustomersModal.find('form');
+            const $form = $deleteCustomersModal.find('form');
 
-          $form.attr('action', $button.data('customer-delete-url'));
-          $form.submit();
-        });
+            $form.attr('action', $button.data('customer-delete-url'));
+            $form.submit();
+          },
+        );
       });
   }
 
@@ -68,9 +73,7 @@ export default class DeleteCustomerRowActionExtension {
    * @private
    */
   private addCustomerInput(customerId: number): void {
-    const $customersToDeleteInputBlock = $(
-      '#delete_customers_customers_to_delete',
-    );
+    const $customersToDeleteInputBlock = $(GridMap.bulks.categoriesToDelete);
 
     const customerInput = $customersToDeleteInputBlock
       .data('prototype')
