@@ -72,9 +72,7 @@ class ManufacturerType extends TranslatorAwareType
                 'required' => false,
                 // placeholder false is important to avoid empty option in select input despite required being false
                 'placeholder' => false,
-                'label_attr' => [
-                    'title' => 'h2',
-                ],
+                'label_tag_name' => 'h2',
                 'choices' => $choices,
                 'attr' => [
                     'data-toggle' => 'select2',
