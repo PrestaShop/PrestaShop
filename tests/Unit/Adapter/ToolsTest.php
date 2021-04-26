@@ -58,4 +58,14 @@ class ToolsTest extends TestCase
         yield ['0.0000000', '10', 6, '10.000000'];
         yield ['0.0', '0.00000002', 2, '0.00'];
     }
+
+    /**
+     * Test for refreshCaCertFile : delete de Ca Cert file, refresh and test if the file is created
+     */
+    public function testRefreshCaCertFile(): void
+    {
+        @unlink(_PS_CACHE_CA_CERT_FILE_);
+        (new Tools())->refreshCaCertFile();
+        self::assertEquals(1, file_exists(_PS_CACHE_CA_CERT_FILE_));
+    }
 }
