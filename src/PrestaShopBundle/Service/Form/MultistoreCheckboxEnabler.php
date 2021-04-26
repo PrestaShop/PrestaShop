@@ -165,10 +165,11 @@ class MultistoreCheckboxEnabler
         $options['attr']['disabled'] = !$this->multiStoreContext->isAllShopContext() && !$isOverriddenInCurrentContext;
 
         // add multistore dropdown in field option
-        if ($this->multiStoreContext->isAllShopContext()) {
+        if ($this->multiStoreContext->isAllShopContext() || $this->multiStoreContext->isGroupShopContext()) {
             $options['multistore_dropdown'] = $this->multistoreController->configurationDropdown(
                 $this->configuration,
-                $options['attr']['multistore_configuration_key']
+                $options['attr']['multistore_configuration_key'],
+                $this->multiStoreContext->isGroupShopContext() ? $this->multiStoreContext->getContextShopGroup()->id : null
             )->getContent();
         }
 
