@@ -43,22 +43,23 @@ final class ShippingCommandsBuilder implements ProductCommandsBuilderInterface
         }
 
         $shippingData = $formData['shipping'];
+        $dimensionsData = $shippingData['dimensions'] ?? [];
         $command = new UpdateProductShippingCommand($productId->getValue());
 
-        if (isset($shippingData['width'])) {
-            $command->setWidth((string) $shippingData['width']);
+        if (isset($dimensionsData['width'])) {
+            $command->setWidth((string) $dimensionsData['width']);
         }
 
-        if (isset($shippingData['height'])) {
-            $command->setHeight((string) $shippingData['height']);
+        if (isset($dimensionsData['height'])) {
+            $command->setHeight((string) $dimensionsData['height']);
         }
 
-        if (isset($shippingData['depth'])) {
-            $command->setDepth((string) $shippingData['depth']);
+        if (isset($dimensionsData['depth'])) {
+            $command->setDepth((string) $dimensionsData['depth']);
         }
 
-        if (isset($shippingData['weight'])) {
-            $command->setWeight((string) $shippingData['weight']);
+        if (isset($dimensionsData['weight'])) {
+            $command->setWeight((string) $dimensionsData['weight']);
         }
 
         if (isset($shippingData['delivery_time_note_type'])) {

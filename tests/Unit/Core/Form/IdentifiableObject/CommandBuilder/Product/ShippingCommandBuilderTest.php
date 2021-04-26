@@ -78,10 +78,12 @@ class ShippingCommandBuilderTest extends AbstractProductCommandBuilderTest
         yield [
             [
                 'shipping' => [
-                    'weight' => '10',
-                    'width' => 10.5,
-                    'height' => '109',
-                    'depth' => 0,
+                    'dimensions' => [
+                        'weight' => '10',
+                        'width' => 10.5,
+                        'height' => '109',
+                        'depth' => 0,
+                    ],
                 ],
             ],
             [$command],
