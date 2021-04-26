@@ -102,6 +102,8 @@ class CombinationItemType extends TranslatorAwareType
                 'icon' => 'mode_edit',
                 'attr' => [
                     'class' => 'edit-combination-item tooltip-link',
+                    'data-toggle' => 'pstooltip',
+                    'data-original-title' => $this->trans('Edit item', 'Admin.Actions'),
                 ],
             ])
             ->add('delete', IconButtonType::class, [
