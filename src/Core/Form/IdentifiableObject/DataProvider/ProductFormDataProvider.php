@@ -125,10 +125,12 @@ final class ProductFormDataProvider implements FormDataProviderInterface
                 'unit_price' => 0,
             ],
             'shipping' => [
-                'width' => 0,
-                'height' => 0,
-                'depth' => 0,
-                'weight' => 0,
+                'dimensions' => [
+                    'width' => 0,
+                    'height' => 0,
+                    'depth' => 0,
+                    'weight' => 0,
+                ],
             ],
             'activate' => $this->defaultProductActivation,
         ];
@@ -328,10 +330,12 @@ final class ProductFormDataProvider implements FormDataProviderInterface
         $shipping = $productForEditing->getShippingInformation();
 
         return [
-            'width' => (string) $shipping->getWidth(),
-            'height' => (string) $shipping->getHeight(),
-            'depth' => (string) $shipping->getDepth(),
-            'weight' => (string) $shipping->getWeight(),
+            'dimensions' => [
+                'width' => (string) $shipping->getWidth(),
+                'height' => (string) $shipping->getHeight(),
+                'depth' => (string) $shipping->getDepth(),
+                'weight' => (string) $shipping->getWeight(),
+            ],
             'additional_shipping_cost' => (string) $shipping->getAdditionalShippingCost(),
             'delivery_time_note_type' => $shipping->getDeliveryTimeNoteType(),
             'delivery_time_in_stock_note' => $shipping->getLocalizedDeliveryTimeInStockNotes(),

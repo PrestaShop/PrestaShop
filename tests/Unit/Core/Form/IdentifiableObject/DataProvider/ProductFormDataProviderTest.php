@@ -100,10 +100,12 @@ class ProductFormDataProviderTest extends TestCase
                 'unit_price' => 0,
             ],
             'shipping' => [
-                'width' => 0,
-                'height' => 0,
-                'depth' => 0,
-                'weight' => 0,
+                'dimensions' => [
+                    'width' => 0,
+                    'height' => 0,
+                    'depth' => 0,
+                    'weight' => 0,
+                ],
             ],
             'activate' => false,
         ];
@@ -129,10 +131,12 @@ class ProductFormDataProviderTest extends TestCase
                 'unit_price' => 0,
             ],
             'shipping' => [
-                'width' => 0,
-                'height' => 0,
-                'depth' => 0,
-                'weight' => 0,
+                'dimensions' => [
+                    'width' => 0,
+                    'height' => 0,
+                    'depth' => 0,
+                    'weight' => 0,
+                ],
             ],
             'activate' => true,
         ];
@@ -997,10 +1001,12 @@ class ProductFormDataProviderTest extends TestCase
                 'target' => 0,
             ],
             'shipping' => [
-                'width' => '19.86',
-                'height' => '19.86',
-                'depth' => '19.86',
-                'weight' => '19.86',
+                'dimensions' => [
+                    'width' => '19.86',
+                    'height' => '19.86',
+                    'depth' => '19.86',
+                    'weight' => '19.86',
+                ],
                 'additional_shipping_cost' => '19.86',
                 'delivery_time_note_type' => DeliveryTimeNoteType::TYPE_DEFAULT,
                 'delivery_time_in_stock_note' => [],
