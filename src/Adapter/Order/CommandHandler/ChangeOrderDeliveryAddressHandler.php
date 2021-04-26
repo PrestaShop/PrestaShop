@@ -161,8 +161,8 @@ final class ChangeOrderDeliveryAddressHandler extends AbstractOrderCommandHandle
      */
     private function getOrderDetail(CartProductUpdate $productUpdate, Order $order, Cart $cart): ?OrderDetail
     {
+        $combinationId = $productUpdate->getCombinationId() ? $productUpdate->getCombinationId()->getValue() : 0;
         foreach ($order->getProducts() as $product) {
-            $combinationId = $productUpdate->getCombinationId() ? $productUpdate->getCombinationId()->getValue() : 0;
             if (
                 (int) $product['product_id'] === $productUpdate->getProductId()->getValue()
                 && (int) $product['product_attribute_id'] === $combinationId
@@ -172,7 +172,6 @@ final class ChangeOrderDeliveryAddressHandler extends AbstractOrderCommandHandle
         }
 
         foreach ($cart->getProducts() as $product) {
-            $combinationId = $productUpdate->getCombinationId() ? $productUpdate->getCombinationId()->getValue() : 0;
             if (
                 (int) $product['id_product'] === $productUpdate->getProductId()->getValue()
                 && (int) $product['id_product_attribute'] === $combinationId
