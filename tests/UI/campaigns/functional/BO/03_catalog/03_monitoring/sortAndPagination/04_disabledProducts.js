@@ -17,20 +17,20 @@ const ProductFaker = require('@data/faker/product');
 // Import test context
 const testContext = require('@utils/testContext');
 
-const baseContext = 'functional_BO_catalog_monitoring_sortAndPagination_withoutCombinationsWithoutQuantities';
+const baseContext = 'functional_BO_catalog_monitoring_sortAndPagination_disabledProducts';
 
 let browserContext;
 let page;
 let numberOfProducts = 0;
 let numberOfProductsIngrid = 0;
-const tableName = 'no_qty_product_without_combination';
+const tableName = 'disabled_product';
 
 /*
-Create 11 new products without combinations and without available quantities
-Sort list of products without combinations and without available quantities in monitoring page
+Create 11 new disabled products
+Sort list of disabled products in monitoring page
 Pagination next and previous
  */
-describe('Sort and pagination list of products without combinations and without available quantities', async () => {
+describe('Sort and pagination list of disabled products', async () => {
   // before and after functions
   before(async function () {
     browserContext = await helper.createBrowserContext(this.browser);
@@ -67,11 +67,11 @@ describe('Sort and pagination list of products without combinations and without 
     await expect(numberOfProducts).to.be.above(0);
   });
 
-  // 1 : Create 11 products without combinations and without available quantities
+  // 1 : Create 11 disabled products
   const creationTests = new Array(11).fill(0, 0, 11);
-  describe('Create 11 products without combinations and without available quantities', async () => {
+  describe('Create 11 disabled products', async () => {
     creationTests.forEach((test, index) => {
-      const createProductData = new ProductFaker({name: `todelete${index}`, type: 'Standard product', quantity: 0});
+      const createProductData = new ProductFaker({name: `todelete${index}`, type: 'Standard product', status: false});
       it(`should create product n°${index + 1}`, async function () {
         await testContext.addContextItem(this, 'testIdentifier', `createProduct${index}`, baseContext);
 
@@ -92,8 +92,8 @@ describe('Sort and pagination list of products without combinations and without 
     });
   });
 
-  // 2 : Sort products without combinations and without available quantities
-  describe('sort List of products without combinations and without available quantities', async () => {
+  // 2 : Sort disabled products
+  describe('sort List of disabled products', async () => {
     it('should go to \'catalog > monitoring\' page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'goToMonitoringPage', baseContext);
 
@@ -120,8 +120,6 @@ describe('Sort and pagination list of products without combinations and without 
       {args: {testIdentifier: 'sortByReferenceAsc', sortBy: 'reference', sortDirection: 'asc'}},
       {args: {testIdentifier: 'sortByNameDesc', sortBy: 'name', sortDirection: 'desc'}},
       {args: {testIdentifier: 'sortByNameAsc', sortBy: 'name', sortDirection: 'asc'}},
-      {args: {testIdentifier: 'sortByEnabledAsc', sortBy: 'active', sortDirection: 'asc'}},
-      {args: {testIdentifier: 'sortByEnabledDesc', sortBy: 'active', sortDirection: 'desc'}},
       {
         args: {
           testIdentifier: 'sortByIdAsc', sortBy: 'id_product', sortDirection: 'asc', isFloat: true,
@@ -203,7 +201,7 @@ describe('Sort and pagination list of products without combinations and without 
   });
 
   // 4 : Delete the created products
-  describe('Delete the created products without combinations and without available quantities', async () => {
+  describe('Delete the created products', async () => {
     const deletionTests = new Array(11).fill(0, 0, 11);
     deletionTests.forEach((test, index) => {
       it('should filter list of products', async function () {
