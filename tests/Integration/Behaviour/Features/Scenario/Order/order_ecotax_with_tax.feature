@@ -1,4 +1,4 @@
-# ./vendor/bin/behat -c tests/Integration/Behaviour/behat.yml -s order --tags order-ecotax
+# ./vendor/bin/behat -c tests/Integration/Behaviour/behat.yml -s order --tags order-ecotax-with-tax
 @reset-database-before-feature
 @reboot-kernel-before-feature
 @clear-cache-before-feature
