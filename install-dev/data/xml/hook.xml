@@ -2870,5 +2870,10 @@
       <title>Display after Grid table</title>
       <description>This hook adds new blocks after Grid component table</description>
     </hook>
+    <hook id="actionProductFormBuilderModifier">
+      <name>actionProductFormBuilderModifier</name>
+      <title>Modify product identifiable object form</title>
+      <description>This hook allows to modify product identifiable object form content by modifying form builder data or FormBuilder itself</description>
+    </hook>
   </entities>
 </entity_hook>
