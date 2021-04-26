@@ -110,24 +110,26 @@ class MultistoreController extends FrameworkBundleAdminController
     /**
      * @param ShopConfigurationInterface $configuration
      * @param string $configurationKey
-     * @param int|null $groupId
      *
      * @return Response
      */
-    public function configurationDropdown(ShopConfigurationInterface $configuration, string $configurationKey, int $groupId = null): Response
+    public function configurationDropdown(ShopConfigurationInterface $configuration, string $configurationKey): Response
     {
         $groupList = $this->entityManager->getRepository(ShopGroup::class)->findBy(['active' => true]);
         $shopCustomizationChecker = $this->get('prestashop.multistore.customized_configuration_checker');
+        $isGroupShopContext = $this->multistoreContext->isGroupShopContext();
         $shouldDisplayDropdown = false;
 
         foreach ($groupList as $key => $group) {
             if (count($group->getShops()) === 0) {
                 unset($groupList[$key]);
             }
-            foreach ($group->getShops() as $shop) {
-                if ($shopCustomizationChecker->isConfigurationCustomizedForThisShop($configurationKey, $shop) && $group->getId() === $groupId) {
-                    $shouldDisplayDropdown = true;
-                    break;
+            if ($this->multistoreContext->isAllShopContext() || $group->getId() === $this->multistoreContext->getContextShopGroup()->id) {
+                foreach ($group->getShops() as $shop) {
+                    if ($shopCustomizationChecker->isConfigurationCustomizedForThisShop($configurationKey, $shop, $isGroupShopContext)) {
+                        $shouldDisplayDropdown = true;
+                        break 2;
+                    }
                 }
             }
         }
@@ -141,6 +143,7 @@ class MultistoreController extends FrameworkBundleAdminController
             'groupList' => $groupList,
             'shopCustomizationChecker' => $shopCustomizationChecker,
             'configurationKey' => $configurationKey,
+            'isGroupShopContext' => $isGroupShopContext,
         ]);
     }
 }
