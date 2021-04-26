@@ -177,14 +177,14 @@ describe('Sort and pagination list of products without combinations and without 
       await testContext.addContextItem(this, 'testIdentifier', 'changeItemNumberTo10', baseContext);
 
       const paginationNumber = await monitoringPage.selectPaginationLimit(page, tableName, '10');
-      expect(paginationNumber).to.contains(' (page 1 / 2)');
+      expect(paginationNumber).to.contains('(page 1 / 2)');
     });
 
     it('should click on next', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'clickOnNext', baseContext);
 
       const paginationNumber = await monitoringPage.paginationNext(page, tableName);
-      expect(paginationNumber).to.contains(' (page 2 / 2)');
+      expect(paginationNumber).to.contains('(page 2 / 2)');
     });
 
     it('should click on previous', async function () {
