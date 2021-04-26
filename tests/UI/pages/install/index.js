@@ -199,8 +199,8 @@ class Install extends CommonPage {
   /**
    * Check if step installation is finished
    * @param page {Page} Browser tab
-   * @param step
-   * @param timeout
+   * @param step {string} The installation step
+   * @param timeout {number} Time to wait for step to finish
    * @returns {Promise<boolean>}
    */
   async isInstallationStepFinished(page, step, timeout = 30000) {

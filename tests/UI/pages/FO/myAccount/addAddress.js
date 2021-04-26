@@ -33,7 +33,7 @@ class AddAddress extends FOBasePage {
 
   /**
    * Get form header title
-   * @param page
+   * @param page {Page} Browser tab
    * @return {Promise<string>}
    */
   getHeaderTitle(page) {
@@ -42,8 +42,8 @@ class AddAddress extends FOBasePage {
 
   /**
    * Fill address form and save
-   * @param page
-   * @param addressData
+   * @param page {Page} Browser tab
+   * @param addressData {object} Address's information to fill on form
    * @returns {Promise<string>}
    */
   async setAddress(page, addressData) {
@@ -88,7 +88,7 @@ class AddAddress extends FOBasePage {
 
   /**
    * Is vat number input is required
-   * @param page
+   * @param page {Page} Browser tab
    * @returns {Promise<boolean>}
    */
   async isVatNumberRequired(page) {

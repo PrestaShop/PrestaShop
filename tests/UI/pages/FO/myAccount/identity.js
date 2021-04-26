@@ -28,9 +28,9 @@ class AccountIdentity extends FOBasePage {
    */
   /**
    * Edit account information
-   * @param page
-   * @param oldPassword
-   * @param customer
+   * @param page {Page} Browser tab
+   * @param oldPassword {string} The old password
+   * @param customer {object} Customer's information to fill form
    * @returns {Promise<string>}
    */
   async editAccount(page, oldPassword, customer) {
@@ -60,8 +60,8 @@ class AccountIdentity extends FOBasePage {
 
   /**
    * Unsubscribe from the newsletter from customer edit information page
-   * @param {object} page
-   * @param {string} password
+   * @param page {object} Browser tab
+   * @param password {string} String for the password
    *
    * @returns {Promise<string|TextContent|*>}
    */
