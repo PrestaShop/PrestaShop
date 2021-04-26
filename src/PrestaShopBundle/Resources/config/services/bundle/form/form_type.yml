@@ -1331,6 +1331,9 @@ services:
         class: 'PrestaShopBundle\Form\Admin\Sell\Product\DimensionsType'
         parent: 'form.type.translatable.aware'
         public: true
+        arguments:
+            - "@=service('prestashop.adapter.legacy.configuration').get('PS_DIMENSION_UNIT')"
+            - "@=service('prestashop.adapter.legacy.configuration').get('PS_WEIGHT_UNIT')"
         tags:
             - { name: form.type }
 
