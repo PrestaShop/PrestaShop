@@ -24,6 +24,7 @@
  */
 
 import 'tablednd/dist/jquery.tablednd.min';
+import GridMap from '@components/grid/grid-map';
 
 const {$} = window;
 
@@ -43,9 +44,9 @@ export default class CategoryPositionExtension {
 
     grid
       .getContainer()
-      .find('.js-grid-table')
+      .find(GridMap.gridTable)
       .tableDnD({
-        dragHandle: '.js-drag-handle',
+        dragHandle: GridMap.dragHandler,
         onDragClass: 'dragging-row',
         onDragStart: () => {
           this.originalPositions = decodeURIComponent($.tableDnD.serialize());
@@ -71,7 +72,7 @@ export default class CategoryPositionExtension {
     const categoryParentId = $categoryPositionContainer.data('id-parent');
     const positionUpdateUrl = $categoryPositionContainer.data('position-update-url');
 
-    let params = positions.replace(new RegExp(`${this.grid.getId()}_grid_table`, 'g'), 'positions');
+    let params = positions.replace(new RegExp(GridMap.specificGridTable(this.grid.getId()), 'g'), 'positions');
 
     const queryParams = {
       id_category_parent: categoryParentId,
@@ -96,8 +97,8 @@ export default class CategoryPositionExtension {
   addIdsToGridTableRows() {
     this.grid
       .getContainer()
-      .find('.js-grid-table')
-      .find(`.js-${this.grid.getId()}-position`)
+      .find(GridMap.gridTable)
+      .find(GridMap.gridPosition(this.grid.getId()))
       .each((index, positionWrapper) => {
         const $positionWrapper = $(positionWrapper);
 
@@ -119,8 +120,8 @@ export default class CategoryPositionExtension {
   updateCategoryIdsAndPositions() {
     this.grid
       .getContainer()
-      .find('.js-grid-table')
-      .find(`.js-${this.grid.getId()}-position`)
+      .find(GridMap.gridTable)
+      .find(GridMap.gridPosition(this.grid.getId()))
       .each((index, positionWrapper) => {
         const $positionWrapper = $(positionWrapper);
         const $row = $positionWrapper.closest('tr');
@@ -131,7 +132,7 @@ export default class CategoryPositionExtension {
         const oldId = $row.attr('id');
         $row.attr('id', oldId.replace(/_[0-9]$/g, `_${newPosition}`));
 
-        $positionWrapper.find('.js-position').text(newPosition + 1);
+        $positionWrapper.find(GridMap.position).text(newPosition + 1);
         $positionWrapper.data('position', newPosition);
       });
   }
