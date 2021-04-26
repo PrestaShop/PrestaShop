@@ -138,6 +138,8 @@ export default class DynamicPaginator {
 
     this.renderer.render(data);
     this.renderer.toggleLoading(false);
+
+    window.prestaShopUiKit.initToolTips();
   }
 
   /**
