@@ -31,6 +31,7 @@ namespace PrestaShopBundle\Form\Admin\Sell\Product;
 use PrestaShopBundle\Form\Admin\Sell\Product\Shortcut\PriceShortcutType;
 use PrestaShopBundle\Form\Admin\Sell\Product\Shortcut\StockShortcutType;
 use PrestaShopBundle\Form\Admin\Type\TranslatorAwareType;
+use PrestaShopBundle\Form\Admin\Type\UnavailableType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
@@ -42,17 +43,39 @@ class ShortcutsType extends TranslatorAwareType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
+            ->add('reference', UnavailableType::class, [
+                'label' => $this->trans('Reference', 'Admin.Catalog.Feature'),
+                'label_tag_name' => 'h2',
+                'label_attr' => [
+                    'popover' => $this->trans('Your reference code for this product. Allowed special characters: .-_#.', 'Admin.Catalog.Help'),
+                ],
+            ])
             ->add('stock', StockShortcutType::class, [
                 'label' => $this->trans('Quantity', 'Admin.Catalog.Feature'),
-                'help' => $this->trans('How many products should be available for sale?', 'Admin.Catalog.Help'),
+                'label_tag_name' => 'h2',
+                'label_attr' => [
+                    'popover' => $this->trans('How many products should be available for sale?', 'Admin.Catalog.Help'),
+                ],
+                'required' => false,
                 'target_tab' => 'stock-tab',
                 'target_tab_name' => $this->trans('Quantity', 'Admin.Catalog.Feature'),
             ])
             ->add('price', PriceShortcutType::class, [
                 'label' => $this->trans('Retail price', 'Admin.Catalog.Feature'),
-                'help' => $this->trans('This is the retail price at which you intend to sell this product to your customers. The tax included price will change according to the tax rule you select.', 'Admin.Catalog.Help'),
+                'label_tag_name' => 'h2',
+                'label_attr' => [
+                    'popover' => $this->trans('This is the retail price at which you intend to sell this product to your customers. The tax included price will change according to the tax rule you select.', 'Admin.Catalog.Help'),
+                ],
+                'required' => false,
                 'target_tab' => 'pricing-tab',
                 'target_tab_name' => $this->trans('Pricing', 'Admin.Catalog.Feature'),
+            ])
+            ->add('create_category', UnavailableType::class, [
+                'label' => $this->trans('Create a new category', 'Admin.Catalog.Feature'),
+                'label_tag_name' => 'h2',
+                'label_attr' => [
+                    'popover' => $this->trans('If you want to quickly create a new category, you can do it here. Don’t forget to then go to the Categories page to fill in the needed details (description, image, etc.). A new category will not automatically appear in your shop\'s menu, please read the Help about it.', 'Admin.Catalog.Help'),
+                ],
             ])
         ;
     }
@@ -63,9 +86,10 @@ class ShortcutsType extends TranslatorAwareType
     public function configureOptions(OptionsResolver $resolver)
     {
         parent::configureOptions($resolver);
-
-        // We must allow extra fields because when we switch product type some former fields may be present in request
         $resolver->setDefaults([
+            // This avoids an empty label column
+            'label' => false,
+            // We must allow extra fields because when we switch product type some former fields may be present in request
             'allow_extra_fields' => true,
         ]);
     }
