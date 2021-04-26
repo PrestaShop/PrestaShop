@@ -1,8 +1,9 @@
-# ./vendor/bin/behat -c tests/Integration/Behaviour/behat.yml -s order --tags order-ecotax
+# ./vendor/bin/behat -c tests/Integration/Behaviour/behat.yml -s order --tags basic-order-ecotax
 @reset-database-before-feature
 @reboot-kernel-before-feature
 @clear-cache-before-feature
 @order-ecotax
+@basic-order-ecotax
 Feature: Ecotax for Order in Back Office (BO)
 
   Background:

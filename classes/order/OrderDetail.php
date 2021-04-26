@@ -70,16 +70,16 @@ class OrderDetailCore extends ObjectModel
     /** @var float */
     public $original_product_price;
 
-    /** @var float Without taxes, includes ecotax */
+    /** @var float With taxes, includes ecotax */
     public $unit_price_tax_incl;
 
-    /** @var float With taxes, includes ecotax */
+    /** @var float Without taxes, includes ecotax */
     public $unit_price_tax_excl;
 
-    /** @var float Without taxes, includes ecotax */
+    /** @var float With taxes, includes ecotax */
     public $total_price_tax_incl;
 
-    /** @var float With taxes, includes ecotax */
+    /** @var float Without taxes, includes ecotax */
     public $total_price_tax_excl;
 
     /** @var float */
