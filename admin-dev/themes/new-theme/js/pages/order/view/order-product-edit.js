@@ -185,19 +185,21 @@ export default class OrderProductEdit {
       this.orderDetailId
     );
 
-    if (productPriceMatch || Number(orderInvoiceId) === 0) {
+    if (productPriceMatch) {
       this.editProduct($(event.currentTarget).data('orderId'), this.orderDetailId);
 
       return;
     }
 
+    const dataSelector = Number(orderInvoiceId) === 0 ? this.priceTaxExcludedInput : this.productEditInvoiceSelect;
+
     const modalEditPrice = new ConfirmModal(
       {
         id: 'modal-confirm-new-price',
-        confirmTitle: this.productEditInvoiceSelect.data('modal-edit-price-title'),
-        confirmMessage: this.productEditInvoiceSelect.data('modal-edit-price-body'),
-        confirmButtonLabel: this.productEditInvoiceSelect.data(' '),
-        closeButtonLabel: this.productEditInvoiceSelect.data('modal-edit-price-cancel')
+        confirmTitle: dataSelector.data('modal-edit-price-title'),
+        confirmMessage: dataSelector.data('modal-edit-price-body'),
+        confirmButtonLabel: dataSelector.data('modal-edit-price-apply'),
+        closeButtonLabel: dataSelector.data('modal-edit-price-cancel')
       },
       () => {
         this.editProduct($(event.currentTarget).data('orderId'), this.orderDetailId);
