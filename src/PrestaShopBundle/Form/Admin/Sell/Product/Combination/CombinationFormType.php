@@ -71,33 +71,23 @@ class CombinationFormType extends TranslatorAwareType
             ->add('name', HiddenType::class)
             ->add('stock', CombinationStockType::class, [
                 'label' => $this->trans('Stock', 'Admin.Catalog.Feature'),
-                'label_attr' => [
-                    'title' => 'h2',
-                ],
+                'label_tag_name' => 'h2',
             ])
             ->add('price_impact', CombinationPriceImpactType::class, [
                 'label' => $this->trans('Price and impact', 'Admin.Catalog.Feature'),
-                'label_attr' => [
-                    'title' => 'h2',
-                ],
+                'label_tag_name' => 'h2',
             ])
             ->add('details', CombinationDetailsType::class, [
                 'label' => $this->trans('Specific references', 'Admin.Catalog.Feature'),
-                'label_attr' => [
-                    'title' => 'h2',
-                ],
+                'label_tag_name' => 'h2',
             ])
             ->add('suppliers', SuppliersType::class, [
                 'label' => $this->trans('Suppliers', 'Admin.Global'),
-                'label_attr' => [
-                    'title' => 'h2',
-                ],
+                'label_tag_name' => 'h2',
             ])
             ->add('images', ChoiceType::class, [
                 'label' => $this->trans('Images', 'Admin.Global'),
-                'label_attr' => [
-                    'title' => 'h2',
-                ],
+                'label_tag_name' => 'h2',
                 'choices' => $this->imagesChoiceProvider->getChoices(['product_id' => $options['product_id']]),
                 'choice_attr' => function ($choice, $key) {
                     return ['data-image-url' => $key];
