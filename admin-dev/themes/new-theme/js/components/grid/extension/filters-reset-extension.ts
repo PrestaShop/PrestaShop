@@ -25,6 +25,7 @@
 
 import {Grid} from '@PSTypes/grid';
 import resetSearch from '@app/utils/reset_search';
+import GridMap from '@components/grid/grid-map';
 
 const {$} = window;
 
@@ -38,7 +39,7 @@ export default class FiltersResetExtension {
    * @param {Grid} grid
    */
   extend(grid: Grid): void {
-    grid.getContainer().on('click', '.js-reset-search', (event) => {
+    grid.getContainer().on('click', GridMap.resetSearch, (event) => {
       resetSearch(
         $(event.currentTarget).data('url'),
         $(event.currentTarget).data('redirect'),
