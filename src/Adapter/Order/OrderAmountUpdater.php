@@ -179,19 +179,17 @@ class OrderAmountUpdater
     {
         $productsToAddToOrder = [];
         foreach ($modifiedProducts as $modifiedProduct) {
-            if (null === $this->findProductInCart($modifiedProduct, $cart)) {
+            $orderProduct = $this->findProductInOrder($modifiedProduct, $order);
+            $cartProduct = $this->findProductInCart($modifiedProduct, $cart);
+            if (null === $cartProduct) {
                 // The product is not in the cart anymore: delete it from the order
-                $product = $this->findProductInOrder($modifiedProduct, $order);
-                $orderDetail = new OrderDetail($product['id_order_detail']);
+                $orderDetail = new OrderDetail($orderProduct['id_order_detail']);
                 $this->orderProductRemover->deleteProductFromOrder($order, $orderDetail, false);
-            } elseif (null === $this->findProductInOrder($modifiedProduct, $order)) {
+            } elseif (null === $orderProduct) {
                 // The product is not in the order but in the cart: add it to the order
-                $product = $this->findProductInCart($modifiedProduct, $cart);
-                $productsToAddToOrder[] = $product;
+                $productsToAddToOrder[] = $cartProduct;
             } else {
                 // the product is both in the cart and the order: update its quantity and price with the cart values
-                $orderProduct = $this->findProductInOrder($modifiedProduct, $order);
-                $cartProduct = $this->findProductInCart($modifiedProduct, $cart);
                 $orderDetail = new OrderDetail($orderProduct['id_order_detail']);
                 $orderDetail->product_quantity = $cartProduct['cart_quantity'];
                 $this->orderDetailUpdater->updateOrderDetail(
