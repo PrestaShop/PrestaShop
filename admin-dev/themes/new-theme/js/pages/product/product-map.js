@@ -83,7 +83,9 @@ export default {
       tokenKey: 'combination_item[_token]',
     },
     editionForm: 'form[name="combination_form"]',
-    editionFormInputs: 'form[name="combination_form"] input, form[name="combination_form"] textarea',
+    editionFormInputs:
+      // eslint-disable-next-line
+      'form[name="combination_form"] input, form[name="combination_form"] textarea, form[name="combination_form"] select',
     editCombinationButtons: '.edit-combination-item',
     tableRow: {
       combinationImg: '.combination-image',
