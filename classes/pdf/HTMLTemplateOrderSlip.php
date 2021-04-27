@@ -86,16 +86,16 @@ class HTMLTemplateOrderSlipCore extends HTMLTemplateInvoice
      */
     public function getNumberOrderSlip(int $id_order_slip): int
     {
-        $row = Db::getInstance()->executeS('SELECT date_add FROM `' . _DB_PREFIX_ . 'order_slip` WHERE id_order_slip=' . $id_order_slip);
+        $date = Db::getInstance()->executeS('SELECT date_add FROM `' . _DB_PREFIX_ . 'order_slip` WHERE id_order_slip=' . $id_order_slip);
 
-        if (isset($row[0]['date_add'])) {
-            $current_year = date('Y-01-01 00:00:00', strtotime($row[0]['date_add']));
+        if (isset($date)) {
+            $current_year = date('Y-01-01 00:00:00', strtotime($date));
 
-            $rowCount = Db::getInstance()->executeS(
-                'SELECT count(*) as "n" FROM `' . _DB_PREFIX_ . 'order_slip` WHERE date_add > "' . $current_year . '" AND date_add < "' . $row[0]['date_add'] . '"'
+            $counts = Db::getInstance()->getValue(
+                'SELECT count(*) as "n" FROM `' . _DB_PREFIX_ . 'order_slip` WHERE date_add > "' . $current_year . '" AND date_add < "' . $date . '"'
             );
 
-            return intval($rowCount[0]['n']) + 1;
+            return intval($counts) + 1;
         }
 
         return 1;
