@@ -89,9 +89,7 @@ class ProductFormDataProviderTest extends TestCase
             'basic' => [
                 'type' => ProductType::TYPE_STANDARD,
             ],
-            'manufacturer' => [
-                'manufacturer_id' => NoManufacturerId::NO_MANUFACTURER_ID,
-            ],
+            'manufacturer' => NoManufacturerId::NO_MANUFACTURER_ID,
             'price' => [
                 'price_tax_excluded' => 0,
                 'price_tax_included' => 0,
@@ -120,9 +118,7 @@ class ProductFormDataProviderTest extends TestCase
             'basic' => [
                 'type' => ProductType::TYPE_STANDARD,
             ],
-            'manufacturer' => [
-                'manufacturer_id' => NoManufacturerId::NO_MANUFACTURER_ID,
-            ],
+            'manufacturer' => NoManufacturerId::NO_MANUFACTURER_ID,
             'price' => [
                 'price_tax_excluded' => 0,
                 'price_tax_included' => 0,
@@ -519,7 +515,7 @@ class ProductFormDataProviderTest extends TestCase
         $datasets = [];
 
         $expectedOutputData = $this->getDefaultOutputData();
-        $expectedOutputData['manufacturer']['manufacturer_id'] = 42;
+        $expectedOutputData['manufacturer'] = 42;
 
         $productData = [
             'manufacturer_id' => 42,
@@ -966,9 +962,7 @@ class ProductFormDataProviderTest extends TestCase
                 'description_short' => [],
             ],
             'features' => [],
-            'manufacturer' => [
-                'manufacturer_id' => NoManufacturerId::NO_MANUFACTURER_ID,
-            ],
+            'manufacturer' => NoManufacturerId::NO_MANUFACTURER_ID,
             'stock' => [
                 'quantity' => static::DEFAULT_QUANTITY,
                 'minimal_quantity' => 0,
