@@ -83,7 +83,7 @@ class DeliverySlips extends BOBasePage {
   /** Edit delivery slip Prefix
    * @param page {Page} Browser tab
    * @param prefix {string} Prefix value to set
-   * @return {Promise<void>}
+   * @returns {Promise<void>}
    */
   async changePrefix(page, prefix) {
     await this.setValue(page, this.deliveryPrefixInput, prefix);
@@ -92,7 +92,7 @@ class DeliverySlips extends BOBasePage {
   /** Edit delivery slip number
    * @param page {Page} Browser tab
    * @param number {number} Number value to change
-   * @return {Promise<void>}
+   * @returns {Promise<void>}
    */
   async changeNumber(page, number) {
     await this.setValue(page, this.deliveryNumberInput, number);
@@ -102,7 +102,7 @@ class DeliverySlips extends BOBasePage {
    * Enable disable product image
    * @param page {Page} Browser tab
    * @param enable {boolean} True if we need to enable product image
-   * @return {Promise<void>}
+   * @returns {Promise<void>}
    */
   async setEnableProductImage(page, enable = true) {
     await page.check(this.deliveryProductImageStatusToggleInput(enable ? 1 : 0));
@@ -110,7 +110,7 @@ class DeliverySlips extends BOBasePage {
 
   /** Save delivery slip options
    * @param page {Page} Browser tab
-   * @return {Promise<string>}
+   * @returns {Promise<string>}
    */
   async saveDeliverySlipOptions(page) {
     await this.clickAndWaitForNavigation(page, this.saveDeliverySlipOptionsButton);

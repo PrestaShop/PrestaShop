@@ -169,7 +169,7 @@ class CreditSlips extends BOBasePage {
   /** Edit credit slip Prefix
    * @param page {Page} Browser tab
    * @param prefix {string} Prefix value to change
-   * @return {Promise<void>}
+   * @returns {Promise<void>}
    */
   async changePrefix(page, prefix) {
     await this.setValue(page, this.invoicePrefixInput, prefix);
@@ -177,7 +177,7 @@ class CreditSlips extends BOBasePage {
 
   /** Save credit slip options
    * @param page {Page} Browser tab
-   * @return {Promise<void>}
+   * @returns {Promise<void>}
    */
   async saveCreditSlipOptions(page) {
     await this.clickAndWaitForNavigation(page, this.saveCreditSlipOptionsButton);

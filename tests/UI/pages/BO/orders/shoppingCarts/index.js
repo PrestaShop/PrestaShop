@@ -208,7 +208,7 @@ class ShoppingCarts extends BOBasePage {
   /**
    * Bulk delete shopping carts
    * @param page {Page} Browser tab
-   * @return {Promise<string>}
+   * @returns {Promise<string>}
    */
   async bulkDeleteShoppingCarts(page) {
     // To confirm bulk delete action with dialog
