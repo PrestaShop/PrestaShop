@@ -23,6 +23,7 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
 import {Grid} from '@PSTypes/grid';
+import GridMap from '@components/grid/grid-map';
 
 const {$} = window;
 
@@ -33,9 +34,13 @@ export default class SubmitGridActionExtension {
   extend(grid: Grid): void {
     grid
       .getHeaderContainer()
-      .on('click', '.js-grid-action-submit-btn', (event: JQueryEventObject) => {
-        this.handleSubmit(event, grid);
-      });
+      .on(
+        'click',
+        GridMap.bulks.gridSubmitAction,
+        (event: JQueryEventObject) => {
+          this.handleSubmit(event, grid);
+        },
+      );
   }
 
   /**
@@ -59,7 +64,7 @@ export default class SubmitGridActionExtension {
       return;
     }
 
-    const $form = $(`#${grid.getId()}_filter_form`);
+    const $form = $(GridMap.filterForm(grid.getId()));
 
     $form.attr('action', $submitBtn.data('url'));
     $form.attr('method', $submitBtn.data('method'));
