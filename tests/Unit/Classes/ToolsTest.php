@@ -376,42 +376,48 @@ class ToolsTest extends TestCase
         $this->assertEquals($expected, Tools::StrReplaceFirst($search, $replace, $subject, $cur));
     }
 
+<<<<<<< HEAD:tests/Unit/Classes/ToolsTest.php
+    public function providerExtractHost(): array
+=======
     /**
+     * @param string $passwordGenerated
      * @param string $expectedPassword
-     * @param mixed $passwordGenerated
      *
-     * @dataProvider passwordGenProvider
+     * @dataProvider passwodGenProvider
      */
-    public function testPasswdGen(string $expectedPassword, $passwordGenerated): void
+    public function testPasswdGen($passwordGenerated, $expectedPassword)
     {
-        $this->assertRegExp($expectedPassword, $passwordGenerated, 'The password generated ' . $passwordGenerated . ' no match with ' . $expectedPassword);
+        $this->assertRegExp($expectedPassword, $passwordGenerated, 'The password generated ' . $expectedPassword . ' no match with ' . $expectedPassword);
     }
 
-    public function passwordGenProvider(): array
+    public function passwodGenProvider()
     {
-        $invalidPasswordLenghtGiven = '//';
-        $alphaNumericPasswordWithTencharacters = '/^(\w){10}$/';
-        $alphaNumericPasswordWithEightCharacters = '/^(\w{8})$/';
-        $numericPasswordWithTwelveCharacters = '/^(\d{12})$/';
-        $noNumerciPasswordWithNineCharacters = '/^[A-Z]{9}$/';
-        $randomPasswordWithTenCharacters = '/([A-Za-z0-9 _!#$%&()*+,\-.\\:\/;=?@^_]+){10}/';
-
         return [
-            [$alphaNumericPasswordWithEightCharacters, Tools::passwdGen()],
-            [$numericPasswordWithTwelveCharacters, Tools::passwdGen(12, Tools::PASSWORDGEN_FLAG_NUMERIC)],
-            [$noNumerciPasswordWithNineCharacters, Tools::passwdGen(9, Tools::PASSWORDGEN_FLAG_NO_NUMERIC)],
-            [$randomPasswordWithTenCharacters, Tools::passwdGen(10, Tools::PASSWORDGEN_FLAG_RANDOM)],
-            [$alphaNumericPasswordWithTencharacters, Tools::passwdGen(10, Tools::PASSWORDGEN_FLAG_ALPHANUMERIC)],
-            [$invalidPasswordLenghtGiven, Tools::passwdGen(0)],
-            [$invalidPasswordLenghtGiven, Tools::passwdGen(0, Tools::PASSWORDGEN_FLAG_RANDOM)],
-            [$invalidPasswordLenghtGiven, Tools::passwdGen(0, Tools::PASSWORDGEN_FLAG_NUMERIC)],
-            [$invalidPasswordLenghtGiven, Tools::passwdGen(0, Tools::PASSWORDGEN_FLAG_NO_NUMERIC)],
-            [$invalidPasswordLenghtGiven, Tools::passwdGen(0, Tools::PASSWORDGEN_FLAG_ALPHANUMERIC)],
-            [$invalidPasswordLenghtGiven, Tools::passwdGen(-666)],
-            [$invalidPasswordLenghtGiven, Tools::passwdGen(-666, Tools::PASSWORDGEN_FLAG_RANDOM)],
-            [$invalidPasswordLenghtGiven, Tools::passwdGen(-666, Tools::PASSWORDGEN_FLAG_NUMERIC)],
-            [$invalidPasswordLenghtGiven, Tools::passwdGen(-666, Tools::PASSWORDGEN_FLAG_NO_NUMERIC)],
-            [$invalidPasswordLenghtGiven, Tools::passwdGen(-666, Tools::PASSWORDGEN_FLAG_ALPHANUMERIC)],
+            '/^(\d{8})$/' => Tools::passwdGen(),
+            '/^(\d{13})$/' => Tools::passwdGen(13, Tools::PASSWORDGEN_FLAG_NUMERIC),
+            '/^[A-Z]{9}$/' => Tools::passwdGen(9, Tools::PASSWORDGEN_FLAG_NO_NUMERIC),
+            '/^(\w){14}$/' => Tools::passwdGen(14, Tools::PASSWORDGEN_FLAG_RANDOM),
+            '/^(\w){10}$/' => Tools::passwdGen(10, Tools::PASSWORDGEN_FLAG_ALPHANUMERIC),
+            '/^(false|0)$/' => Tools::passwdGen(1),
+            '/^(false|0)$/' => Tools::passwdGen(2),
+            '/^(false|0)$/' => Tools::passwdGen(-666),
+            '/^(false|0)$/' => Tools::passwdGen(0),
+            '/^(false|0)$/' => Tools::passwdGen(1, Tools::PASSWORDGEN_FLAG_RANDOM),
+            '/^(false|0)$/' => Tools::passwdGen(2, Tools::PASSWORDGEN_FLAG_RANDOM),
+            '/^(false|0)$/' => Tools::passwdGen(-666, Tools::PASSWORDGEN_FLAG_RANDOM),
+            '/^(false|0)$/' => Tools::passwdGen(0, Tools::PASSWORDGEN_FLAG_RANDOM),
+            '/^(false|0)$/' => Tools::passwdGen(1, Tools::PASSWORDGEN_FLAG_NUMERIC),
+            '/^(false|0)$/' => Tools::passwdGen(2, Tools::PASSWORDGEN_FLAG_NUMERIC),
+            '/^(false|0)$/' => Tools::passwdGen(-666, Tools::PASSWORDGEN_FLAG_NUMERIC),
+            '/^(false|0)$/' => Tools::passwdGen(0, Tools::PASSWORDGEN_FLAG_NUMERIC),
+            '/^(false|0)$/' => Tools::passwdGen(1, Tools::PASSWORDGEN_FLAG_NO_NUMERIC),
+            '/^(false|0)$/' => Tools::passwdGen(2, Tools::PASSWORDGEN_FLAG_NO_NUMERIC),
+            '/^(false|0)$/' => Tools::passwdGen(-666, Tools::PASSWORDGEN_FLAG_NO_NUMERIC),
+            '/^(false|0)$/' => Tools::passwdGen(0, Tools::PASSWORDGEN_FLAG_NO_NUMERIC),
+            '/^(false|0)$/' => Tools::passwdGen(1, Tools::PASSWORDGEN_FLAG_ALPHANUMERIC),
+            '/^(false|0)$/' => Tools::passwdGen(2, Tools::PASSWORDGEN_FLAG_ALPHANUMERIC),
+            '/^(false|0)$/' => Tools::passwdGen(-666, Tools::PASSWORDGEN_FLAG_ALPHANUMERIC),
+            '/^(false|0)$/' => Tools::passwdGen(0, Tools::PASSWORDGEN_FLAG_ALPHANUMERIC),
         ];
     }
 
@@ -427,6 +433,7 @@ class ToolsTest extends TestCase
     }
 
     public function domainProvider()
+>>>>>>> Add Tools:passwdGen tests:tests-legacy/Unit/Classes/ToolsCoreTest.php
     {
         return [
             ['http://example.com:80#@google.com/', 'example.com'],
