@@ -58,7 +58,7 @@ class Order extends BOBasePage {
    */
   /**
    * Go to create new order page
-   * @param page
+   * @param page {Page} Browser tab
    * @return {Promise<void>}
    */
   async goToCreateOrderPage(page) {
@@ -68,7 +68,7 @@ class Order extends BOBasePage {
 
   /**
    * Click on lint to export orders to a csv file
-     * @param page {Page} Browser tab
+   * @param page {Page} Browser tab
    * @return {Promise<string>}
    */
   async exportDataToCsv(page) {
@@ -87,10 +87,10 @@ class Order extends BOBasePage {
 
   /**
    * Filter Orders
-   * @param page
-   * @param filterType
-   * @param filterBy
-   * @param value
+   * @param page {Page} Browser tab
+   * @param filterType {string} Type of filter
+   * @param filterBy {string} Column to filter with
+   * @param value {string} Value to filter
    * @return {Promise<void>}
    */
   async filterOrders(page, filterType, filterBy, value = '') {
@@ -110,9 +110,9 @@ class Order extends BOBasePage {
 
   /**
    * Filter orders by date from and date to
-   * @param page
-   * @param dateFrom
-   * @param dateTo
+   * @param page {Page} Browser tab
+   * @param dateFrom {string} Date from to filter with
+   * @param dateTo {string} Date to to filter with
    * @returns {Promise<void>}
    */
   async filterOrdersByDate(page, dateFrom, dateTo) {
@@ -124,7 +124,7 @@ class Order extends BOBasePage {
 
   /**
    * Reset filter in orders
-   * @param page
+   * @param page {Page} Browser tab
    * @return {Promise<void>}
    */
   async resetFilter(page) {
@@ -135,7 +135,7 @@ class Order extends BOBasePage {
 
   /**
    * Reset Filter And get number of elements in list
-   * @param page
+   * @param page {Page} Browser tab
    * @returns {Promise<number>}
    */
   async resetAndGetNumberOfLines(page) {
@@ -145,7 +145,7 @@ class Order extends BOBasePage {
 
   /**
    * Get number of orders in grid
-   * @param page
+   * @param page {Page} Browser tab
    * @returns {Promise<number>}
    */
   async getNumberOfElementInGrid(page) {
@@ -154,8 +154,8 @@ class Order extends BOBasePage {
 
   /**
    * Go to orders Page
-   * @param page
-   * @param orderRow
+   * @param page {Page} Browser tab
+   * @param orderRow {number} Order row in table
    * @return {Promise<void>}
    */
   async goToOrder(page, orderRow) {
@@ -164,9 +164,9 @@ class Order extends BOBasePage {
 
   /**
    * Get text from Column
-   * @param page
-   * @param columnName
-   * @param row
+   * @param page {Page} Browser tab
+   * @param columnName {string} Column name in table
+   * @param row {number} Order row in table
    * @returns {Promise<string>}
    */
   async getTextColumn(page, columnName, row) {
@@ -178,8 +178,8 @@ class Order extends BOBasePage {
 
   /**
    * Get all row information from orders table
-   * @param page
-   * @param row
+   * @param page {Page} Browser tab
+   * @param row {number} Order row in table
    * @returns {Promise<{reference: string, newClient: string, delivery: string,
    * totalPaid: string, payment: string, id: *, customer: string, status: string}>}
    */
@@ -198,8 +198,8 @@ class Order extends BOBasePage {
 
   /**
    * Get column content in all rows
-   * @param page
-   * @param column
+   * @param page {Page} Browser tab
+   * @param column {string} Column name in table
    * @return {Promise<[]>}
    */
   async getAllRowsColumnContent(page, column) {
@@ -216,8 +216,8 @@ class Order extends BOBasePage {
 
   /**
    * Get order from table in csv format
-   * @param page
-   * @param row
+   * @param page {Page} Browser tab
+   * @param row {number} Order row in table
    * @return {Promise<string>}
    */
   async getOrderInCsvFormat(page, row) {
@@ -235,9 +235,9 @@ class Order extends BOBasePage {
 
   /**
    * Set order status
-   * @param page
-   * @param row, order row in table
-   * @param status, object{id, status} from demo orderStatuses
+   * @param page {Page} Browser tab
+   * @param row {number} Order row in table
+   * @param status {string} Order status in table
    * @return {Promise<string>}
    */
   async setOrderStatus(page, row, status) {
@@ -274,8 +274,8 @@ class Order extends BOBasePage {
 
   /**
    * Click on customer link to open view page in a new tab
-   * @param page
-   * @param row
+   * @param page {Page} Browser tab
+   * @param row {number} Order row in table
    * @return {Promise<*>}, new browser tab to work with
    */
   viewCustomer(page, row) {
@@ -288,8 +288,8 @@ class Order extends BOBasePage {
 
   /**
    * Get order total price
-   * @param page
-   * @param row
+   * @param page {Page} Browser tab
+   * @param row {number} Order row in table
    * @return {number}
    */
   async getOrderATIPrice(page, row) {
@@ -302,10 +302,10 @@ class Order extends BOBasePage {
 
   /**
    * Bulk change orders status
-   * @param page
-   * @param status, new status to give to orders
-   * @param allOrders, true if want to change all selectors
-   * @param rows, array of which orders rows to change (if allOrders = false)
+   * @param page {Page} Browser tab
+   * @param status {string} New status to give to orders
+   * @param allOrders {boolean} True if want to update all orders status
+   * @param rows {array} Array of which orders rows to change (if allOrders = false)
    * @return {Promise<string>}
    */
   async bulkUpdateOrdersStatus(page, status, allOrders = true, rows = []) {
@@ -341,9 +341,9 @@ class Order extends BOBasePage {
   /* Sort functions */
   /**
    * Sort table by clicking on column name
-   * @param page
-   * @param sortBy, column to sort with
-   * @param sortDirection, asc or desc
+   * @param page {Page} Browser tab
+   * @param sortBy {string} Column to sort with
+   * @param sortDirection {string} Sort direction asc or desc
    * @return {Promise<void>}
    */
   async sortTable(page, sortBy, sortDirection) {
