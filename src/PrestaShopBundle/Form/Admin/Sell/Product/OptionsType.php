@@ -77,16 +77,14 @@ class OptionsType extends TranslatorAwareType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
-            ->add('active', SwitchType::class, [
-                'label' => $this->trans('Online', 'Admin.Global'),
-                'required' => false,
-            ])
             ->add('visibility', ChoiceType::class, [
                 'choices' => $this->productVisibilityChoiceProvider->getChoices(),
                 'attr' => [
                     'class' => 'custom-select',
                 ],
                 'label' => $this->trans('Visibility', 'Admin.Catalog.Feature'),
+                'label_tag_name' => 'h2',
+                'label_subtitle' => $this->trans('Where do you want your product to appear?', 'Admin.Catalog.Feature'),
                 'required' => false,
             ])
             ->add('available_for_order', SwitchType::class, [
@@ -156,6 +154,7 @@ class OptionsType extends TranslatorAwareType
             ->add('show_condition', SwitchType::class, [
                 'required' => false,
                 'label' => $this->trans('Display condition on product page', 'Admin.Catalog.Feature'),
+                'required' => false,
             ])
             ->add('condition', ChoiceType::class, [
                 'choices' => $this->productConditionChoiceProvider->getChoices(),

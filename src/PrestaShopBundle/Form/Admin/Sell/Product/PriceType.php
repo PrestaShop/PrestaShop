@@ -148,18 +148,12 @@ class PriceType extends TranslatorAwareType
                 'label_attr' => [
                     'popover' => $this->trans('You can set specific prices for customers belonging to different groups, different countries, etc.', 'Admin.Catalog.Help'),
                 ],
-                'row_attr' => [
-                    'class' => 'form-columns-full',
-                ],
             ])
             ->add('priority_management', UnavailableType::class, [
                 'label' => $this->trans('Priority management', 'Admin.Catalog.Feature'),
                 'label_tag_name' => 'h2',
                 'label_attr' => [
                     'popover' => $this->trans('Sometimes one customer can fit into multiple price rules. Priorities allow you to define which rules apply first.', 'Admin.Catalog.Help'),
-                ],
-                'row_attr' => [
-                    'class' => 'form-columns-full',
                 ],
             ])
         ;
