@@ -30,13 +30,17 @@ namespace PrestaShopBundle\Form\Admin\Sell\Product;
 
 use PrestaShop\PrestaShop\Core\Domain\Manufacturer\ValueObject\NoManufacturerId;
 use PrestaShop\PrestaShop\Core\Form\FormChoiceProviderInterface;
-use PrestaShopBundle\Form\Admin\Type\TranslatorAwareType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
-use Symfony\Component\Form\FormBuilderInterface;
+use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Translation\TranslatorInterface;
 
-class ManufacturerType extends TranslatorAwareType
+class ManufacturerType extends ChoiceType
 {
+    /**
+     * @var TranslatorInterface
+     */
+    private $translator;
+
     /**
      * @var FormChoiceProviderInterface
      */
@@ -44,40 +48,50 @@ class ManufacturerType extends TranslatorAwareType
 
     /**
      * @param TranslatorInterface $translator
-     * @param array $locales
      * @param FormChoiceProviderInterface $manufacturerChoiceProvider
      */
     public function __construct(
         TranslatorInterface $translator,
-        array $locales,
         FormChoiceProviderInterface $manufacturerChoiceProvider
     ) {
-        parent::__construct($translator, $locales);
+        parent::__construct();
+        $this->translator = $translator;
         $this->manufacturerChoiceProvider = $manufacturerChoiceProvider;
     }
 
     /**
      * {@inheritDoc}
      */
-    public function buildForm(FormBuilderInterface $builder, array $options)
+    public function configureOptions(OptionsResolver $resolver)
     {
+        parent::configureOptions($resolver);
         $manufacturers = $this->manufacturerChoiceProvider->getChoices();
         $choices = array_merge([
             $this->trans('No brand', 'Admin.Catalog.Feature') => NoManufacturerId::NO_MANUFACTURER_ID,
         ], $manufacturers);
 
-        $builder
-            ->add('manufacturer_id', ChoiceType::class, [
-                'label' => $this->trans('Brand', 'Admin.Catalog.Feature'),
-                'required' => false,
-                // placeholder false is important to avoid empty option in select input despite required being false
-                'placeholder' => false,
-                'label_tag_name' => 'h2',
-                'choices' => $choices,
-                'attr' => [
-                    'data-toggle' => 'select2',
-                ],
-            ])
-        ;
+        $resolver->setDefaults([
+            'label' => $this->trans('Brand', 'Admin.Catalog.Feature'),
+            'label_tag_name' => 'h2',
+            'required' => false,
+            // placeholder false is important to avoid empty option in select input despite required being false
+            'placeholder' => false,
+            'choices' => $choices,
+            'attr' => [
+                'data-toggle' => 'select2',
+            ],
+        ]);
+    }
+
+    /**
+     * @param string $key
+     * @param string $domain
+     * @param array $parameters
+     *
+     * @return string
+     */
+    protected function trans(string $key, string $domain, $parameters = [])
+    {
+        return $this->translator->trans($key, $parameters, $domain);
     }
 }
