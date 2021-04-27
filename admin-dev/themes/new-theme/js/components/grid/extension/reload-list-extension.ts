@@ -24,6 +24,7 @@
  */
 
 import {Grid} from '@PSTypes/grid';
+import GridMap from '@components/grid/grid-map';
 
 /**
  * Class ReloadListExtension extends grid with "List reload" action
@@ -37,7 +38,7 @@ export default class ReloadListExtension {
   extend(grid: Grid): void {
     grid
       .getHeaderContainer()
-      .on('click', '.js-common_refresh_list-grid-action', () => {
+      .on('click', GridMap.commonRefreshListAction, () => {
         window.location.reload();
       });
   }

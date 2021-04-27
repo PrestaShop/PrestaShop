@@ -25,6 +25,7 @@
 
 import {Grid} from '@PSTypes/grid';
 import ConfirmModal from '@components/modal';
+import GridMap from '@components/grid/grid-map';
 
 const {$} = window;
 
@@ -40,7 +41,7 @@ export default class SubmitBulkActionExtension {
   extend(grid: Grid): void {
     grid
       .getContainer()
-      .on('click', '.js-bulk-action-submit-btn', (event: JQueryEventObject) => {
+      .on('click', GridMap.bulks.submitAction, (event: JQueryEventObject) => {
         this.submit(event, grid);
       });
   }
@@ -87,7 +88,7 @@ export default class SubmitBulkActionExtension {
 
     const modal = new ConfirmModal(
       {
-        id: `${grid.getId()}-grid-confirm-modal`,
+        id: GridMap.confirmModal(grid.getId()),
         confirmTitle,
         confirmMessage,
         confirmButtonLabel,
@@ -105,7 +106,7 @@ export default class SubmitBulkActionExtension {
    * @param {Grid} grid
    */
   private postForm($submitBtn: JQuery<Element>, grid: Grid): void {
-    const $form = $(`#${grid.getId()}_filter_form`);
+    const $form = $(GridMap.filterForm(grid.getId()));
 
     $form.attr('action', $submitBtn.data('form-url'));
     $form.attr('method', $submitBtn.data('form-method'));
