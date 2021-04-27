@@ -1337,8 +1337,8 @@ services:
         tags:
             - { name: form.type }
 
-    form.type.sell.product.delivery_time_type:
-        class: 'PrestaShopBundle\Form\Admin\Sell\Product\DeliveryTimeType'
+    form.type.sell.product.delivery_time_notes_type:
+        class: 'PrestaShopBundle\Form\Admin\Sell\Product\DeliveryTimeNotesType'
         parent: 'form.type.translatable.aware'
         public: true
         tags:

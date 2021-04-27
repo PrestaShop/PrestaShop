@@ -96,7 +96,7 @@ class ShippingType extends TranslatorAwareType
                     'popover' => $this->trans('Display delivery time for a product is advised for merchants selling in Europe to comply with the local laws.', 'Admin.Catalog.Help'),
                 ],
             ])
-            ->add('delivery_time', DeliveryTimeType::class)
+            ->add('delivery_time_notes', DeliveryTimeNotesType::class)
             ->add('additional_shipping_cost', MoneyType::class, [
                 'required' => false,
                 'label' => $this->trans('Shipping fees', 'Admin.Catalog.Feature'),
