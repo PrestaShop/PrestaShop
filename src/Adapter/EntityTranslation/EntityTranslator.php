@@ -208,7 +208,7 @@ class EntityTranslator implements EntityTranslatorInterface
             );
         }
 
-        return $this->translator->getSourceString($data[$fieldName], $this->dataLang->getDomain());
+        return (string) $this->translator->getSourceString($data[$fieldName], $this->dataLang->getDomain());
     }
 
     /**
