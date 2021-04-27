@@ -111,6 +111,5 @@ final class SqlRequestFormDataHandler implements FormDataHandlerInterface
                 SqlRequestConstraintException::INVALID_SQL_QUERY
             );
         }
-
     }
 }
