@@ -150,9 +150,7 @@ class DimensionsType extends TranslatorAwareType
             'label_tag_name' => 'h2',
             'help' => $this->trans('Charge additional shipping costs based on packet dimensions covered here.', 'Admin.Catalog.Feature'),
             'required' => false,
-            'attr' => [
-              'class' => 'form-columns-4',
-            ],
+            'columns_number' => 4,
         ]);
     }
 }

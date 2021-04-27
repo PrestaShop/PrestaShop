@@ -24,6 +24,8 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
 
+declare(strict_types=1);
+
 namespace PrestaShopBundle\Form\Admin\Extension;
 
 use Symfony\Component\Form\AbstractTypeExtension;
@@ -33,17 +35,16 @@ use Symfony\Component\Form\FormView;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
 /**
- * Adds the "row_attr" option to all Form Types.
+ * Adds the "columns_number" option to all Form Types.
  *
- * You can use it together with the UI kit form theme to add classes to your from rows:
+ * You can use it together with the UI kit form theme to adapt the display of a form group into columns,
+ * the form theme will add a class that affects the display into flex container with fixed size for sub elements.
  *
  * ```
- * 'row_attr' => [
- *   'class' => 'foo bar',
- * ],
+ * 'columns_number' => 4,
  * ```
  */
-class RowAttributesExtension extends AbstractTypeExtension
+class ColumnsNumberExtension extends AbstractTypeExtension
 {
     /**
      * {@inheritdoc}
@@ -52,9 +53,9 @@ class RowAttributesExtension extends AbstractTypeExtension
     {
         $resolver
             ->setDefaults([
-                'row_attr' => null,
+                'columns_number' => null,
             ])
-            ->setAllowedTypes('row_attr', ['null', 'array'])
+            ->setAllowedTypes('columns_number', ['null', 'int'])
         ;
     }
 
@@ -63,7 +64,9 @@ class RowAttributesExtension extends AbstractTypeExtension
      */
     public function buildView(FormView $view, FormInterface $form, array $options)
     {
-        $view->vars['row_attr'] = $options['row_attr'] ?? [];
+        if (!empty($options['columns_number'])) {
+            $view->vars['columns_number'] = $options['columns_number'];
+        }
     }
 
     /**
