@@ -1,7 +1,16 @@
 require('module-alias/register');
 const BOBasePage = require('@pages/BO/BObasePage');
 
+/**
+ * Orders page, contains functions that can be used on orders page
+ * @class
+ * @extends BOBasePage
+ */
 class Order extends BOBasePage {
+  /**
+   * @constructs
+   * Setting up texts and selectors to use on orders page
+   */
   constructor() {
     super();
 
@@ -180,8 +189,7 @@ class Order extends BOBasePage {
    * Get all row information from orders table
    * @param page {Page} Browser tab
    * @param row {number} Order row in table
-   * @returns {Promise<{reference: string, newClient: string, delivery: string,
-   * totalPaid: string, payment: string, id: *, customer: string, status: string}>}
+   * @returns {Promise<[]>}
    */
   async getOrderFromTable(page, row) {
     return {
@@ -304,13 +312,13 @@ class Order extends BOBasePage {
    * Bulk change orders status
    * @param page {Page} Browser tab
    * @param status {string} New status to give to orders
-   * @param allOrders {boolean} True if want to update all orders status
+   * @param isAllOrders {boolean} True if want to update all orders status
    * @param rows {array} Array of which orders rows to change (if allOrders = false)
    * @return {Promise<string>}
    */
-  async bulkUpdateOrdersStatus(page, status, allOrders = true, rows = []) {
+  async bulkUpdateOrdersStatus(page, status, isAllOrders = true, rows = []) {
     // Select all orders or some
-    if (allOrders) {
+    if (isAllOrders) {
       await Promise.all([
         page.click(this.selectAllRowsLabel),
         this.waitForVisibleSelector(page, `${this.bulkActionsToggleButton}:not([disabled])`),
