@@ -66,12 +66,12 @@ final class ShippingCommandsBuilder implements ProductCommandsBuilderInterface
             $command->setDeliveryTimeNoteType((int) $shippingData['delivery_time_note_type']);
         }
 
-        if (isset($shippingData['delivery_time_in_stock_note'])) {
-            $command->setLocalizedDeliveryTimeInStockNotes($shippingData['delivery_time_in_stock_note']);
+        if (isset($shippingData['delivery_time_notes']['in_stock'])) {
+            $command->setLocalizedDeliveryTimeInStockNotes($shippingData['delivery_time_notes']['in_stock']);
         }
 
-        if (isset($shippingData['delivery_time_out_stock_note'])) {
-            $command->setLocalizedDeliveryTimeOutOfStockNotes($shippingData['delivery_time_out_stock_note']);
+        if (isset($shippingData['delivery_time_notes']['out_of_stock'])) {
+            $command->setLocalizedDeliveryTimeOutOfStockNotes($shippingData['delivery_time_notes']['out_of_stock']);
         }
 
         if (isset($shippingData['additional_shipping_cost'])) {

@@ -68,7 +68,6 @@ use PrestaShop\PrestaShop\Core\Domain\Product\VirtualProductFile\QueryResult\Vir
 use PrestaShop\PrestaShop\Core\Form\IdentifiableObject\DataProvider\ProductFormDataProvider;
 use PrestaShop\PrestaShop\Core\Util\DateTime\NullDateTime;
 use RuntimeException;
-use Symfony\Component\HttpFoundation\File\File;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 
 // @todo: ProductFormDataProvider needs to be split to multiple classes to allow easier testing
@@ -210,6 +209,7 @@ class ProductFormDataProviderTest extends TestCase
             $this->getDatasetsForVirtualProductFile(),
             $this->getDatasetsForPrices(),
             $this->getDatasetsForStock(),
+            $this->getDatasetsForShipping(),
         ];
 
         foreach ($datasetsByType as $datasetByType) {
@@ -447,6 +447,55 @@ class ProductFormDataProviderTest extends TestCase
         $expectedOutputData['stock']['available_date'] = '1969-07-20';
 
         $expectedOutputData['shortcuts']['stock']['quantity'] = 42;
+
+        $datasets[] = [
+            $productData,
+            $expectedOutputData,
+        ];
+
+        return $datasets;
+    }
+
+    /**
+     * @return array
+     */
+    private function getDatasetsForShipping(): array
+    {
+        $datasets = [];
+
+        $expectedOutputData = $this->getDefaultOutputData();
+        $productData = [];
+
+        $datasets[] = [
+            $productData,
+            $expectedOutputData,
+        ];
+
+        $localizedValues = [
+            1 => 'english',
+            2 => 'french',
+        ];
+        $expectedOutputData = $this->getDefaultOutputData();
+        $productData = [
+            'width' => new DecimalNumber('45.87'),
+            'height' => new DecimalNumber('46.87'),
+            'depth' => new DecimalNumber('47.87'),
+            'weight' => new DecimalNumber('48.87'),
+            'additional_shipping_cost' => new DecimalNumber('49.87'),
+            'carrier_references' => [69, 99],
+            'delivery_time_note_type' => DeliveryTimeNoteType::TYPE_SPECIFIC,
+            'delivery_time_in_stock_note' => $localizedValues,
+            'delivery_time_out_stock_note' => $localizedValues,
+        ];
+        $expectedOutputData['shipping']['dimensions']['width'] = '45.87';
+        $expectedOutputData['shipping']['dimensions']['height'] = '46.87';
+        $expectedOutputData['shipping']['dimensions']['depth'] = '47.87';
+        $expectedOutputData['shipping']['dimensions']['weight'] = '48.87';
+        $expectedOutputData['shipping']['additional_shipping_cost'] = '49.87';
+        $expectedOutputData['shipping']['delivery_time_note_type'] = DeliveryTimeNoteType::TYPE_SPECIFIC;
+        $expectedOutputData['shipping']['delivery_time_notes']['in_stock'] = $localizedValues;
+        $expectedOutputData['shipping']['delivery_time_notes']['out_of_stock'] = $localizedValues;
+        $expectedOutputData['shipping']['carriers'] = [69, 99];
 
         $datasets[] = [
             $productData,
@@ -1043,8 +1092,10 @@ class ProductFormDataProviderTest extends TestCase
                 ],
                 'additional_shipping_cost' => '19.86',
                 'delivery_time_note_type' => DeliveryTimeNoteType::TYPE_DEFAULT,
-                'delivery_time_in_stock_note' => [],
-                'delivery_time_out_stock_note' => [],
+                'delivery_time_notes' => [
+                    'in_stock' => [],
+                    'out_of_stock' => [],
+                ],
                 'carriers' => [],
             ],
             'options' => [

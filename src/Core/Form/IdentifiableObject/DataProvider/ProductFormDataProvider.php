@@ -337,8 +337,10 @@ final class ProductFormDataProvider implements FormDataProviderInterface
             ],
             'additional_shipping_cost' => (string) $shipping->getAdditionalShippingCost(),
             'delivery_time_note_type' => $shipping->getDeliveryTimeNoteType(),
-            'delivery_time_in_stock_note' => $shipping->getLocalizedDeliveryTimeInStockNotes(),
-            'delivery_time_out_stock_note' => $shipping->getLocalizedDeliveryTimeOutOfStockNotes(),
+            'delivery_time_notes' => [
+                'in_stock' => $shipping->getLocalizedDeliveryTimeInStockNotes(),
+                'out_of_stock' => $shipping->getLocalizedDeliveryTimeOutOfStockNotes(),
+            ],
             'carriers' => $shipping->getCarrierReferences(),
         ];
     }
