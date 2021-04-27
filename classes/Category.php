@@ -403,7 +403,6 @@ class CategoryCore extends ObjectModel
             if (!$cat->hasMultishopEntries()) {
                 $cat->deleteImage();
                 $cat->cleanGroups();
-                $cat->cleanAssoProducts();
                 // Delete associated restrictions on cart rules
                 CartRule::cleanProductRuleIntegrity('categories', [$cat->id]);
                 Category::cleanPositions($cat->id_parent);
@@ -1643,16 +1642,6 @@ class CategoryCore extends ObjectModel
     public function cleanGroups()
     {
         return Db::getInstance()->delete('category_group', 'id_category = ' . (int) $this->id);
-    }
-
-    /**
-     * Remove associated products.
-     *
-     * @return bool Indicates whether the cleanup was successful
-     */
-    public function cleanAssoProducts()
-    {
-        return Db::getInstance()->delete('category_product', 'id_category = ' . (int) $this->id);
     }
 
     /**

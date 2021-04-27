@@ -75,4 +75,14 @@ abstract class AbstractDeleteCategoryHandler
             }
         }
     }
+
+    /**
+     * Remove associated products.
+     *
+     * @return bool Indicates whether the cleanup was successful
+     */
+    protected function cleanAssoProducts($categoryId)
+    {
+        return \Db::getInstance()->delete('category_product', 'id_category = ' . (int) $categoryId);
+    }
 }

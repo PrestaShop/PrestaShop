@@ -63,5 +63,6 @@ final class DeleteCategoryHandler extends AbstractDeleteCategoryHandler implemen
         }
 
         $this->handleProductsUpdate($categoryIdValue, (int) $category->id_parent, $command->getDeleteMode());
+        $this->cleanAssoProducts($categoryIdValue);
     }
 }
