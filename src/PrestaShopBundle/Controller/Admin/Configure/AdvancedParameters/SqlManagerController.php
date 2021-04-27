@@ -191,7 +191,6 @@ class SqlManagerController extends FrameworkBundleAdminController
             $this->addFlash('error', $this->handleDeleteException($e));
         }
 
-
         return $this->render('@PrestaShop/Admin/Configure/AdvancedParameters/RequestSql/create.html.twig', [
             'layoutTitle' => $this->trans('SQL Manager', 'Admin.Navigation.Menu'),
             'requireAddonsSearch' => true,
