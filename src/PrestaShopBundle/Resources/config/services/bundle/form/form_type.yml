@@ -1457,9 +1457,9 @@ services:
 
     form.type.sell.product.manufacturer_type:
         class: 'PrestaShopBundle\Form\Admin\Sell\Product\ManufacturerType'
-        parent: 'form.type.translatable.aware'
         public: true
         arguments:
+            - '@translator'
             - '@prestashop.adapter.form.choice_provider.manufacturer_name_by_id'
         tags:
             - { name: form.type }
