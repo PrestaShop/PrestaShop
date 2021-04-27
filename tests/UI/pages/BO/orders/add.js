@@ -5,14 +5,14 @@ const BOBasePage = require('@pages/BO/BObasePage');
 const addCustomerPage = require('@pages/BO/customers/add');
 
 /**
- * Add order page, contains functions that can be used on create/edit order page
+ * Add order page, contains functions that can be used on create order page
  * @class
  * @extends BOBasePage
  */
 class AddOrder extends BOBasePage {
   /**
    * @constructs
-   * Setting up texts and selectors to use on create/edit order page
+   * Setting up texts and selectors to use on create order page
    */
   constructor() {
     super();
