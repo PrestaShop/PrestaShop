@@ -109,3 +109,22 @@
     }
   }
 }
+
+[class^="form-columns"] {
+  display: flex;
+  flex-wrap: wrap;
+  margin: 0 -1rem;
+
+  > .form-group {
+    width: 100%;
+    margin: 0 1rem;
+  }
+
+  @for $i from 2 through 6 {
+    &.form-columns-#{$i} {
+      > .form-group {
+        max-width: calc(100% / #{$i} - 2rem);
+      }
+    }
+  }
+}
