@@ -50,7 +50,7 @@ export default class PositionExtension {
       .getContainer()
       .find(GridMap.gridTable)
       .tableDnD({
-        onDragClass: 'position-row-while-drag',
+        onDragClass: GridMap.onDragClass,
         dragHandle: GridMap.dragHandler,
         onDrop: (table, row) => this.handlePositionChange(row),
       });
