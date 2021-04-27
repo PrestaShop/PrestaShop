@@ -23,14 +23,17 @@ class Order extends BOBasePage {
     this.gridPanel = '#order_grid_panel';
     this.gridTable = '#order_grid_table';
     this.gridHeaderTitle = `${this.gridPanel} h3.card-header-title`;
+
     // Sort Selectors
     this.tableHead = `${this.gridTable} thead`;
     this.sortColumnDiv = column => `${this.tableHead} div.ps-sortable-column[data-sort-col-name='${column}']`;
     this.sortColumnSpanButton = column => `${this.sortColumnDiv(column)} span.ps-sort`;
+
     // Filters
     this.filterColumn = filterBy => `${this.gridTable} #order_${filterBy}`;
     this.filterSearchButton = `${this.gridTable} .grid-search-button`;
     this.filterResetButton = `${this.gridTable} .grid-reset-button`;
+
     // Table rows and columns
     this.tableBody = `${this.gridTable} tbody`;
     this.tableRow = row => `${this.tableBody} tr:nth-child(${row})`;
@@ -41,21 +44,25 @@ class Order extends BOBasePage {
     this.updateStatusInTableDropdown = row => `${this.tableColumnStatus(row)} div.js-choice-options`;
     this.updateStatusInTableDropdownChoice = (row, statusId) => `${this.updateStatusInTableDropdown(row)}`
       + ` button[data-value='${statusId}']`;
+
     // Column actions selectors
     this.actionsColumn = row => `${this.tableRow(row)} td.column-actions`;
     this.viewRowLink = row => `${this.actionsColumn(row)} a.grid-view-row-link`;
     this.viewInvoiceRowLink = row => `${this.actionsColumn(row)} a.grid-view-invoice-row-link`;
     this.viewDeliverySlipsRowLink = row => `${this.actionsColumn(row)} a.grid-view-delivery-slip-row-link`;
+
     // Grid Actions
     this.gridActionButton = '#order-grid-actions-button';
     this.gridActionDropDownMenu = '#order-grid-actions-dropdown-menu';
     this.gridActionExportLink = '#order-grid-action-export';
+
     // Bulk actions
     this.selectAllRowsLabel = `${this.gridPanel} tr.column-filters .grid_bulk_action_select_all`;
     this.bulkActionsToggleButton = `${this.gridPanel} button.js-bulk-actions-btn`;
     this.bulkUpdateOrdersStatusButton = '#order_grid_bulk_action_change_order_status';
     this.tableColumnOrderBulk = row => `${this.tableRow(row)} td.column-orders_bulk`;
     this.tableColumnOrderBulkCheckboxLabel = row => `${this.tableColumnOrderBulk(row)} .md-checkbox`;
+
     // Order status modal
     this.updateOrdersStatusModal = '#changeOrdersStatusModal';
     this.updateOrdersStatusModalSelect = '#change_orders_status_new_order_status_id';
@@ -68,17 +75,16 @@ class Order extends BOBasePage {
   /**
    * Go to create new order page
    * @param page {Page} Browser tab
-   * @return {Promise<void>}
+   * @returns {Promise<void>}
    */
   async goToCreateOrderPage(page) {
     await this.clickAndWaitForNavigation(page, this.createNewOrderButton);
   }
 
-
   /**
    * Click on lint to export orders to a csv file
    * @param page {Page} Browser tab
-   * @return {Promise<string>}
+   * @returns {Promise<string>}
    */
   async exportDataToCsv(page) {
     await Promise.all([
@@ -100,7 +106,7 @@ class Order extends BOBasePage {
    * @param filterType {string} Type of filter
    * @param filterBy {string} Column to filter with
    * @param value {string} Value to filter
-   * @return {Promise<void>}
+   * @returns {Promise<void>}
    */
   async filterOrders(page, filterType, filterBy, value = '') {
     switch (filterType) {
@@ -134,7 +140,7 @@ class Order extends BOBasePage {
   /**
    * Reset filter in orders
    * @param page {Page} Browser tab
-   * @return {Promise<void>}
+   * @returns {Promise<void>}
    */
   async resetFilter(page) {
     if (!(await this.elementNotVisible(page, this.filterResetButton, 2000))) {
@@ -164,8 +170,8 @@ class Order extends BOBasePage {
   /**
    * Go to orders Page
    * @param page {Page} Browser tab
-   * @param orderRow {number} Order row in table
-   * @return {Promise<void>}
+   * @param orderRow {number} Order row on table
+   * @returns {Promise<void>}
    */
   async goToOrder(page, orderRow) {
     await this.clickAndWaitForNavigation(page, this.viewRowLink(orderRow));
@@ -174,7 +180,7 @@ class Order extends BOBasePage {
   /**
    * Get text from Column
    * @param page {Page} Browser tab
-   * @param columnName {string} Column name in table
+   * @param columnName {string} Column name on table
    * @param row {number} Order row in table
    * @returns {Promise<string>}
    */
@@ -188,7 +194,7 @@ class Order extends BOBasePage {
   /**
    * Get all row information from orders table
    * @param page {Page} Browser tab
-   * @param row {number} Order row in table
+   * @param row {number} Order row on table
    * @returns {Promise<[]>}
    */
   async getOrderFromTable(page, row) {
@@ -207,8 +213,8 @@ class Order extends BOBasePage {
   /**
    * Get column content in all rows
    * @param page {Page} Browser tab
-   * @param column {string} Column name in table
-   * @return {Promise<[]>}
+   * @param column {string} Column name on table
+   * @returns {Promise<[]>}
    */
   async getAllRowsColumnContent(page, column) {
     const rowsNumber = await this.getNumberOfElementInGrid(page);
@@ -225,8 +231,8 @@ class Order extends BOBasePage {
   /**
    * Get order from table in csv format
    * @param page {Page} Browser tab
-   * @param row {number} Order row in table
-   * @return {Promise<string>}
+   * @param row {number} Order row on table
+   * @returns {Promise<string>}
    */
   async getOrderInCsvFormat(page, row) {
     const order = await this.getOrderFromTable(page, row);
@@ -245,8 +251,8 @@ class Order extends BOBasePage {
    * Set order status
    * @param page {Page} Browser tab
    * @param row {number} Order row in table
-   * @param status {string} Order status in table
-   * @return {Promise<string>}
+   * @param status {string} Order status on table
+   * @returns {Promise<string>}
    */
   async setOrderStatus(page, row, status) {
     await Promise.all([
@@ -264,7 +270,7 @@ class Order extends BOBasePage {
    * Click on view invoice to download it
    * @param page {Page} Browser tab
    * @param row {number} Order row on table
-   * @return {Promise<string>}
+   * @returns {Promise<string>}
    */
   downloadInvoice(page, row) {
     return this.clickAndWaitForDownload(page, this.viewInvoiceRowLink(row));
@@ -274,7 +280,7 @@ class Order extends BOBasePage {
    * Click on view delivery slip to download it
    * @param page {Page} Browser tab
    * @param row {number} Order row on table
-   * @return {Promise<string>}
+   * @returns {Promise<string>}
    */
   downloadDeliverySlip(page, row) {
     return this.clickAndWaitForDownload(page, this.viewDeliverySlipsRowLink(row));
@@ -283,8 +289,8 @@ class Order extends BOBasePage {
   /**
    * Click on customer link to open view page in a new tab
    * @param page {Page} Browser tab
-   * @param row {number} Order row in table
-   * @return {Promise<*>}, new browser tab to work with
+   * @param row {number} Order row on table
+   * @returns {Promise<*>}, new browser tab to work with
    */
   viewCustomer(page, row) {
     return this.openLinkWithTargetBlank(
@@ -297,8 +303,8 @@ class Order extends BOBasePage {
   /**
    * Get order total price
    * @param page {Page} Browser tab
-   * @param row {number} Order row in table
-   * @return {number}
+   * @param row {number} Order row on table
+   * @returns {number}
    */
   async getOrderATIPrice(page, row) {
     // Delete the first character (currency symbol) before getting price ATI
@@ -314,7 +320,7 @@ class Order extends BOBasePage {
    * @param status {string} New status to give to orders
    * @param isAllOrders {boolean} True if want to update all orders status
    * @param rows {array} Array of which orders rows to change (if allOrders = false)
-   * @return {Promise<string>}
+   * @returns {Promise<string>}
    */
   async bulkUpdateOrdersStatus(page, status, isAllOrders = true, rows = []) {
     // Select all orders or some
@@ -352,7 +358,7 @@ class Order extends BOBasePage {
    * @param page {Page} Browser tab
    * @param sortBy {string} Column to sort with
    * @param sortDirection {string} Sort direction asc or desc
-   * @return {Promise<void>}
+   * @returns {Promise<void>}
    */
   async sortTable(page, sortBy, sortDirection) {
     const sortColumnDiv = `${this.sortColumnDiv(sortBy)}[data-sort-direction='${sortDirection}']`;

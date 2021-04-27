@@ -25,9 +25,11 @@ class AddOrder extends BOBasePage {
     this.addCustomerIframe = 'iframe.fancybox-iframe';
     this.customerSearchInput = '#customer-search-input';
     this.customerSearchLoadingNoticeBlock = '#customer-search-loading-notice';
+
     // Empty results
     this.customerSearchEmptyResultBlock = '#customer-search-empty-result-warn';
     this.customerSearchEmptyResultParagraphe = `${this.customerSearchEmptyResultBlock} .alert-text`;
+
     // Full results
     this.customerSearchFullResultsBlock = '.js-customer-search-results';
     this.customerCardBlock = pos => `${this.customerSearchFullResultsBlock} `
@@ -67,7 +69,7 @@ class AddOrder extends BOBasePage {
    * Fill customer search input and wait for results to load
    * @param page {Page} Browser tab
    * @param customer {string} Customer name/email to search
-   * @return {Promise<void>}
+   * @returns {Promise<void>}
    */
   async searchCustomer(page, customer) {
     await this.setValue(page, this.customerSearchInput, customer);
@@ -78,7 +80,7 @@ class AddOrder extends BOBasePage {
   /**
    * Get Error message when when no customer was found after searching
    * @param page {Page} Browser tab
-   * @return {Promise<string>}
+   * @returns {Promise<string>}
    */
   getNoCustomerFoundError(page) {
     return this.getTextContent(page, this.customerSearchEmptyResultParagraphe);
@@ -88,7 +90,7 @@ class AddOrder extends BOBasePage {
    * Get customer name from card result
    * @param page {Page} Browser tab
    * @param cardPosition {number} Position of the card in results
-   * @return {Promise<string>}
+   * @returns {Promise<string>}
    */
   getCustomerNameFromResult(page, cardPosition = 1) {
     return this.getTextContent(page, this.customerCardNameTitle(cardPosition));
@@ -98,7 +100,7 @@ class AddOrder extends BOBasePage {
    * Click on add new customer and new customer iFrame
    * @param page {Page} Browser tab
    * @param customerData {object} Customer data fake object
-   * @return {Promise<string>}
+   * @returns {Promise<string>}
    */
   async addNewCustomer(page, customerData) {
     await page.click(this.addCustomerLink);
@@ -119,8 +121,8 @@ class AddOrder extends BOBasePage {
   /**
    * Click on choose customer in list
    * @param page {Page} Browser tab
-   * @param cardPosition {number} Position of customer to choose in the list
-   * @return {Promise<void>}
+   * @param cardPosition {number} Position of customer to choose on the list
+   * @returns {Promise<void>}
    */
   async chooseCustomer(page, cardPosition = 1) {
     await page.click(this.customerCardChooseButton(cardPosition));
@@ -138,7 +140,7 @@ class AddOrder extends BOBasePage {
    * @param page {Page} Browser tab
    * @param product {object} Product data to search with
    * @param quantity {number} Product quantity to add to the cart
-   * @return {Promise<void>}
+   * @returns {Promise<void>}
    */
   async addProductToCart(page, product, quantity) {
     // Search product
@@ -162,7 +164,7 @@ class AddOrder extends BOBasePage {
    * @param page {Page} Browser tab
    * @param deliveryAddress {string} Delivery address to choose
    * @param invoiceAddress {string} Invoice address to choose
-   * @return {Promise<void>}
+   * @returns {Promise<void>}
    */
   async chooseAddresses(page, deliveryAddress, invoiceAddress) {
     await this.selectByVisibleText(page, this.deliveryAddressSelect, deliveryAddress);
@@ -176,7 +178,7 @@ class AddOrder extends BOBasePage {
    * @param page {Page} Browser tab
    * @param deliveryOptionName {string} Delivery option name to choose
    * @param isFreeShipping {boolean} True if we want a free shipping
-   * @return {Promise<void>}
+   * @returns {Promise<void>}
    */
   async setDeliveryOption(page, deliveryOptionName, isFreeShipping = false) {
     await this.selectByVisibleText(page, this.deliveryOptionSelect, deliveryOptionName);
@@ -188,7 +190,7 @@ class AddOrder extends BOBasePage {
    * Set payment method
    * @param page {Page} Browser tab
    * @param paymentMethodName {string} Payment method to choose
-   * @return {Promise<void>}
+   * @returns {Promise<void>}
    */
   async setPaymentMethod(page, paymentMethodName) {
     await this.selectByVisibleText(page, this.paymentMethodSelect, paymentMethodName);
@@ -198,7 +200,7 @@ class AddOrder extends BOBasePage {
    * Set order status
    * @param page {Page} Browser tab
    * @param orderStatus {string} Order status to choose
-   * @return {Promise<void>}
+   * @returns {Promise<void>}
    */
   async setOrderStatus(page, orderStatus) {
     await this.selectByVisibleText(page, this.orderStatusSelect, orderStatus.status);
@@ -211,7 +213,7 @@ class AddOrder extends BOBasePage {
    * @param page {Page} Browser tab
    * @param orderToMake {object} Order data to create
    * @param isNewCustomer {boolean} True if the customer is new
-   * @return {Promise<void>}
+   * @returns {Promise<void>}
    */
   async createOrder(page, orderToMake, isNewCustomer = false) {
     // Choose customer
