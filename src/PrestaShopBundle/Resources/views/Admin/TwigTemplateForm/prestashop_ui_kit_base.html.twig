@@ -44,6 +44,9 @@
 {# Widgets #}
 
 {%- block form_widget -%}
+  {% if columns_number is defined %}
+    {% set attr = attr|merge({class: (attr.class|default('') ~ ' form-columns-' ~ columns_number)|trim}) %}
+  {% endif %}
   {{ parent() }}
   {{- block('form_help') -}}
 {%- endblock form_widget -%}
