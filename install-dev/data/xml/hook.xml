@@ -2875,6 +2875,16 @@
       <title>Modify product identifiable object form</title>
       <description>This hook allows to modify product identifiable object form content by modifying form builder data or FormBuilder itself</description>
     </hook>
+    <hook id="actionBeforeCreateProductFormHandler">
+      <name>actionBeforeCreateProductFormHandler</name>
+      <title>Modify product identifiable object data before creating it</title>
+      <description>This hook allows to modify product identifiable object form data before it was created</description>
+    </hook>
+    <hook id="actionAfterCreateProductFormHandler">
+      <name>actionBeforeCreateProductFormHandler</name>
+      <title>Modify product identifiable object data after creating it</title>
+      <description>This hook allows to modify product identifiable object form data after it was created</description>
+    </hook>
     <hook id="actionBeforeUpdateProductFormHandler">
       <name>actionBeforeUpdateProductFormHandler</name>
       <title>Modify product identifiable object data before updating it</title>
