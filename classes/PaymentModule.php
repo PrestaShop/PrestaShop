@@ -39,6 +39,11 @@ abstract class PaymentModuleCore extends Module
     /** @var MailPartialTemplateRenderer */
     protected $partialRenderer;
 
+    /**
+     * @var CustomerThread|null
+     */
+    protected $customerThread;
+
     public function install()
     {
         if (!parent::install()) {
@@ -411,6 +416,8 @@ abstract class PaymentModuleCore extends Module
                             $msg->id_order = (int) $order->id;
                             $msg->private = 1;
                             $msg->add();
+
+                            $this->copyMessageIntoCustomerMessage($order, $msg);
                         }
                     }
 
@@ -513,26 +520,7 @@ abstract class PaymentModuleCore extends Module
                         $update_message->update();
 
                         // Add this message in the customer thread
-                        $customer_thread = new CustomerThread();
-                        $customer_thread->id_contact = 0;
-                        $customer_thread->id_customer = (int) $order->id_customer;
-                        $customer_thread->id_shop = (int) $this->context->shop->id;
-                        $customer_thread->id_order = (int) $order->id;
-                        $customer_thread->id_lang = (int) $this->context->language->id;
-                        $customer_thread->email = $this->context->customer->email;
-                        $customer_thread->status = 'open';
-                        $customer_thread->token = Tools::passwdGen(12);
-                        $customer_thread->add();
-
-                        $customer_message = new CustomerMessage();
-                        $customer_message->id_customer_thread = $customer_thread->id;
-                        $customer_message->id_employee = 0;
-                        $customer_message->message = $update_message->message;
-                        $customer_message->private = 0;
-
-                        if (!$customer_message->add()) {
-                            $this->errors[] = $this->trans('An error occurred while saving message', [], 'Admin.Payment.Notification');
-                        }
+                        $this->copyMessageIntoCustomerMessage($order, $update_message);
                     }
 
                     if (self::DEBUG_MODE) {
@@ -1249,5 +1237,37 @@ abstract class PaymentModuleCore extends Module
         }
 
         return $cart_rules_list;
+    }
+
+    /**
+     * @param $order
+     * @param Message $update_message
+     */
+    private function copyMessageIntoCustomerMessage(Order $order, Message $update_message): void
+    {
+        if (null === $this->customerThread) {
+            $customer_thread = new CustomerThread();
+            $customer_thread->id_contact = 0;
+            $customer_thread->id_customer = (int)$order->id_customer;
+            $customer_thread->id_shop = (int)$this->context->shop->id;
+            $customer_thread->id_order = (int)$order->id;
+            $customer_thread->id_lang = (int)$this->context->language->id;
+            $customer_thread->email = $this->context->customer->email;
+            $customer_thread->status = 'open';
+            $customer_thread->token = Tools::passwdGen(12);
+            $customer_thread->add();
+
+            $this->customerThread = $customer_thread;
+        }
+
+        $customer_message = new CustomerMessage();
+        $customer_message->id_customer_thread = $this->customerThread->id;
+        $customer_message->id_employee = 0;
+        $customer_message->message = $update_message->message;
+        $customer_message->private = 0;
+
+        if (!$customer_message->add()) {
+            $this->errors[] = $this->trans('An error occurred while saving message', [], 'Admin.Payment.Notification');
+        }
     }
 }
