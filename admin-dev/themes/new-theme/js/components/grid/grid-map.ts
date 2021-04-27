@@ -90,4 +90,5 @@ export default {
   trNotPreviewRow: 'tr:not(.preview-row)',
   commonRefreshListAction: '.js-common_refresh_list-grid-action',
   filterForm: (id: string): string => `#${id}_filter_form`,
+  onDragClass: 'position-row-while-drag',
 };
