@@ -83,9 +83,7 @@ class ProductOptionsCommandBuilderTest extends AbstractProductCommandBuilderTest
         $command->setManufacturerId(1);
         yield [
             [
-                'manufacturer' => [
-                    'manufacturer_id' => '1',
-                ],
+                'manufacturer' => '1',
             ],
             [$command],
         ];
