@@ -1,7 +1,16 @@
 require('module-alias/register');
 const BOBasePage = require('@pages/BO/BObasePage');
 
+/**
+ * Invoices page, contains functions that can be used on invoices page
+ * @class
+ * @extends BOBasePage
+ */
 class Invoice extends BOBasePage {
+  /**
+   * @constructs
+   * Setting up texts and selectors to use on invoices page
+   */
   constructor() {
     super();
 
@@ -47,7 +56,7 @@ class Invoice extends BOBasePage {
    * @param page {Page} Browser tab
    * @param dateFrom {string} Value to set on date from input
    * @param dateTo {string} Value to set on date to input
-   * @return {Promise<string>}
+   * @returns {Promise<string>}
    */
   async generatePDFByDateAndDownload(page, dateFrom = '', dateTo = '') {
     await this.setValuesForGeneratingPDFByDate(page, dateFrom, dateTo);
@@ -57,9 +66,9 @@ class Invoice extends BOBasePage {
 
   /**
    * Get message error after generate invoice by status fail
-   * @param page
-   * @param dateFrom
-   * @param dateTo
+   * @param page {Page} Browser tab
+   * @param dateFrom Value to set on filter date from input
+   * @param dateTo Value to set on filter date to input
    * @returns {Promise<string>}
    */
   async generatePDFByDateAndFail(page, dateFrom = '', dateTo = '') {
@@ -71,9 +80,9 @@ class Invoice extends BOBasePage {
 
   /**
    * Set values to generate pdf by date
-   * @param page
-   * @param dateFrom
-   * @param dateTo
+   * @param page {Page} Browser tab
+   * @param dateFrom Value to set on filter date from input
+   * @param dateTo Value to set on filter date to input
    * @returns {Promise<void>}
    */
   async setValuesForGeneratingPDFByDate(page, dateFrom = '', dateTo = '') {
@@ -84,10 +93,10 @@ class Invoice extends BOBasePage {
   }
 
   /**
-   * Click on the Status
-   * @param page
-   * @param statusName
-   * @return {Promise<void>}
+   * Choose order status to generate
+   * @param page {Page} Browser tab
+   * @param statusName {string} Status name to select
+   * @returns {Promise<void>}
    */
   async chooseStatus(page, statusName) {
     const statusElements = await page.$$(this.statusOrderStateSpan);
@@ -98,12 +107,12 @@ class Invoice extends BOBasePage {
         break;
       }
     }
-    //
   }
 
-  /** Generate PDF by status
+  /**
+   * Generate PDF by status
    * @param page {Page} Browser tab
-   * @return {Promise<void>}
+   * @returns {Promise<void>}
    */
   generatePDFByStatusAndDownload(page) {
     return this.clickAndWaitForDownload(page, this.generatePdfByStatusButton);
@@ -111,8 +120,8 @@ class Invoice extends BOBasePage {
 
   /**
    * Get message error after generate invoice by status fail
-   * @param page
-   * @return {Promise<string>}
+   * @param page {Page} Browser tab
+   * @returns {Promise<string>}
    */
   async generatePDFByStatusAndFail(page) {
     await page.click(this.generatePdfByStatusButton);
@@ -121,17 +130,18 @@ class Invoice extends BOBasePage {
 
   /**
    * Enable disable invoices
-   * @param page
-   * @param enable
-   * @return {Promise<void>}
+   * @param page {Page} Browser tab
+   * @param enable {boolean} True if we need to enable invoices
+   * @returns {Promise<void>}
    */
   async enableInvoices(page, enable = true) {
     await page.check(this.invoiceOptionsStatusToggleInput(enable ? 1 : 0));
   }
 
-  /** Save invoice options
-   * @param page
-   * @return {Promise<void>}
+  /**
+   * Save invoice options
+   * @param page {Page} Browser tab
+   * @returns {Promise<void>}
    */
   async saveInvoiceOptions(page) {
     await this.clickAndWaitForNavigation(page, this.saveInvoiceOptionsButton);
@@ -140,9 +150,9 @@ class Invoice extends BOBasePage {
 
   /**
    * Enable disable product image
-   * @param page
-   * @param enable
-   * @return {Promise<void>}
+   * @param page {Page} Browser tab
+   * @param enable {boolean} True if we need to enable product image in the invoice
+   * @returns {Promise<void>}
    */
   async enableProductImage(page, enable = true) {
     await page.check(this.invoiceOptionStatusToggleInput(enable ? 1 : 0));
@@ -150,9 +160,9 @@ class Invoice extends BOBasePage {
 
   /**
    * Enable tax breakdown
-   * @param page
-   * @param enable
-   * @return {Promise<void>}
+   * @param page {Page} Browser tab
+   * @param enable {boolean} True if we need to enable tax breakdown in the invoice
+   * @returns {Promise<void>}
    */
   async enableTaxBreakdown(page, enable = true) {
     await page.check(this.taxBreakdownStatusToggleInput(enable ? 1 : 0));
@@ -160,9 +170,9 @@ class Invoice extends BOBasePage {
 
   /**
    * Set invoiceNumber, LegalFreeText, footerText
-   * @param page
-   * @param data
-   * @return {Promise<void>}
+   * @param page {Page} Browser tab
+   * @param data {object} Values to set on invoice option inputs
+   * @returns {Promise<void>}
    */
   async setInputOptions(page, data) {
     await this.setValue(page, this.invoiceNumberInput, data.invoiceNumber);
@@ -171,9 +181,9 @@ class Invoice extends BOBasePage {
 
   /**
    * Enable add current year to invoice
-   * @param page
-   * @param enable
-   * @return {Promise<void>}
+   * @param page {Page} Browser tab
+   * @param enable {boolean} True if we need to enable add current year to invoice
+   * @returns {Promise<void>}
    */
   async enableAddCurrentYearToInvoice(page, enable = true) {
     await page.check(this.invoiceAddCurrentYearToggleInput(enable ? 1 : 0));
@@ -181,18 +191,19 @@ class Invoice extends BOBasePage {
 
   /**
    * Choose the position of the year
-   * @param page
-   * @param id
-   * @return {Promise<void>}
+   * @param page {Page} Browser tab
+   * @param id {number} Radio button id for position of the year date
+   * @returns {Promise<void>}
    */
   async chooseInvoiceOptionsYearPosition(page, id) {
     await page.click(this.optionYearPositionRadioButton(id));
   }
 
-  /** Edit invoice Prefix
-   * @param page
-   * @param prefix
-   * @return {Promise<void>}
+  /**
+   * Edit invoice Prefix
+   * @param page {Page} Browser tab
+   * @param prefix {string} Prefix value to change
+   * @returns {Promise<void>}
    */
   async changePrefix(page, prefix) {
     await this.setValue(page, this.invoicePrefixInput, prefix);
