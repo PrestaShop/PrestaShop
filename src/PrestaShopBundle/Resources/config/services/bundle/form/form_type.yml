@@ -1337,6 +1337,13 @@ services:
         tags:
             - { name: form.type }
 
+    form.type.sell.product.delivery_time_type:
+        class: 'PrestaShopBundle\Form\Admin\Sell\Product\DeliveryTimeType'
+        parent: 'form.type.translatable.aware'
+        public: true
+        tags:
+            - { name: form.type }
+
     form.type.sell.product.seo_type:
         class: 'PrestaShopBundle\Form\Admin\Sell\Product\SEOType'
         parent: 'form.type.translatable.aware'
