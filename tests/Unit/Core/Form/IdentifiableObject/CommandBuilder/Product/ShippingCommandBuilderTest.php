@@ -131,7 +131,9 @@ class ShippingCommandBuilderTest extends AbstractProductCommandBuilderTest
         yield [
             [
                 'shipping' => [
-                    'delivery_time_in_stock_note' => $localizedNotes,
+                    'delivery_time_notes' => [
+                        'in_stock' => $localizedNotes,
+                    ],
                 ],
             ],
             [$command],
@@ -146,7 +148,9 @@ class ShippingCommandBuilderTest extends AbstractProductCommandBuilderTest
         yield [
             [
                 'shipping' => [
-                    'delivery_time_out_stock_note' => $localizedNotes,
+                    'delivery_time_notes' => [
+                        'out_of_stock' => $localizedNotes,
+                    ],
                 ],
             ],
             [$command],
