@@ -30,6 +30,7 @@ import routes from '@js/fos_js_routes.json';
 
 const {$} = window;
 
+/* eslint-disable */
 /**
  * Wraps FOSJsRoutingbundle with exposed routes.
  * To expose route add option `expose: true` in .yml routing config
@@ -40,10 +41,9 @@ const {$} = window;
  *    path: /my-path
  *    options:
  *      expose: true
- * `
- * And run `bin/console fos:js-routing:dump --format=json
- * --target=admin-dev/themes/new-theme/js/fos_js_routes.json`
+ * And run `bin/console fos:js-routing:dump --format=json --target=admin-dev/themes/new-theme/js/fos_js_routes.json`
  */
+/* eslint-enable */
 export default class Router {
   constructor() {
     if (window.prestashop && window.prestashop.customRoutes) {
