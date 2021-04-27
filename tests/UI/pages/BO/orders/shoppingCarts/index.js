@@ -1,12 +1,20 @@
 require('module-alias/register');
 const BOBasePage = require('@pages/BO/BObasePage');
 
+/**
+ * Shopping carts page, contains functions that can be used on shopping carts page
+ * @class
+ * @extends BOBasePage
+ */
 class ShoppingCarts extends BOBasePage {
+  /**
+   * @constructs
+   * Setting up texts and selectors to use on shopping carts page
+   */
   constructor() {
     super();
 
     this.pageTitle = 'Shopping Carts •';
-
     this.alertSuccessBlockParagraph = '.alert-success';
 
     // Form selectors
@@ -64,8 +72,8 @@ class ShoppingCarts extends BOBasePage {
 
   /**
    * Get Number of shopping carts
-   * @param page
-   * @return {Promise<number>}
+   * @param page {Page} Browser tab
+   * @returns {Promise<number>}
    */
   getNumberOfElementInGrid(page) {
     return this.getNumberFromText(page, this.gridTableNumberOfTitlesSpan);
@@ -73,8 +81,8 @@ class ShoppingCarts extends BOBasePage {
 
   /**
    * Reset all filters
-   * @param page
-   * @return {Promise<void>}
+   * @param page {Page} Browser tab
+   * @returns {Promise<void>}
    */
   async resetFilter(page) {
     if (!(await this.elementNotVisible(page, this.filterResetButton, 2000))) {
@@ -85,8 +93,8 @@ class ShoppingCarts extends BOBasePage {
 
   /**
    * Reset and get number of shopping carts
-   * @param page
-   * @return {Promise<number>}
+   * @param page {Page} Browser tab
+   * @returns {Promise<number>}
    */
   async resetAndGetNumberOfLines(page) {
     await this.resetFilter(page);
@@ -95,11 +103,11 @@ class ShoppingCarts extends BOBasePage {
 
   /**
    * Filter shopping carts
-   * @param page
-   * @param filterType
-   * @param filterBy
-   * @param value
-   * @return {Promise<void>}
+   * @param page {Page} Browser tab
+   * @param filterType {string} Type of filter (input/select)
+   * @param filterBy {string} Column to filter with
+   * @param value {string} Value to filter
+   * @returns {Promise<void>}
    */
   async filterTable(page, filterType, filterBy, value) {
     switch (filterType) {
@@ -122,9 +130,9 @@ class ShoppingCarts extends BOBasePage {
 
   /**
    * Filter by date
-   * @param page
-   * @param dateFrom
-   * @param dateTo
+   * @param page {Page} Browser tab
+   * @param dateFrom Value to set on filter date from input
+   * @param dateTo Value to set on filter date to input
    * @returns {Promise<void>}
    */
   async filterByDate(page, dateFrom, dateTo) {
@@ -138,10 +146,10 @@ class ShoppingCarts extends BOBasePage {
 
   /**
    * Get text from column in table
-   * @param page
-   * @param row
-   * @param columnName
-   * @return {Promise<string>}
+   * @param page {Page} Browser tab
+   * @param row {number} Shopping cart row on table
+   * @param columnName {string} Column name of the value to return
+   * @returns {Promise<string>}
    */
   async getTextColumn(page, row, columnName) {
     let columnSelector;
@@ -180,9 +188,9 @@ class ShoppingCarts extends BOBasePage {
 
   /**
    * Get content from all rows
-   * @param page
-   * @param columnName
-   * @return {Promise<[]>}
+   * @param page {Page} Browser tab
+   * @param columnName Column name on table
+   * @returns {Promise<[]>}
    */
   async getAllRowsColumnContent(page, columnName) {
     const rowsNumber = await this.getNumberOfElementInGrid(page);
@@ -199,7 +207,7 @@ class ShoppingCarts extends BOBasePage {
   /* Bulk actions methods */
   /**
    * Bulk delete shopping carts
-   * @param page
+   * @param page {Page} Browser tab
    * @return {Promise<string>}
    */
   async bulkDeleteShoppingCarts(page) {
@@ -232,8 +240,8 @@ class ShoppingCarts extends BOBasePage {
   /* Pagination methods */
   /**
    * Get pagination label
-   * @param page
-   * @return {Promise<string>}
+   * @param page {Page} Browser tab
+   * @returns {Promise<string>}
    */
   getPaginationLabel(page) {
     return this.getTextContent(page, this.paginationActiveLabel);
@@ -241,8 +249,8 @@ class ShoppingCarts extends BOBasePage {
 
   /**
    * Select pagination limit
-   * @param page
-   * @param number
+   * @param page {Page} Browser tab
+   * @param number {number} Pagination limit number to select
    * @returns {Promise<string>}
    */
   async selectPaginationLimit(page, number) {
@@ -253,7 +261,7 @@ class ShoppingCarts extends BOBasePage {
 
   /**
    * Click on next
-   * @param page
+   * @param page {Page} Browser tab
    * @returns {Promise<string>}
    */
   async paginationNext(page) {
@@ -263,7 +271,7 @@ class ShoppingCarts extends BOBasePage {
 
   /**
    * Click on previous
-   * @param page
+   * @param page {Page} Browser tab
    * @returns {Promise<string>}
    */
   async paginationPrevious(page) {
@@ -274,10 +282,10 @@ class ShoppingCarts extends BOBasePage {
   // Sort methods
   /**
    * Sort table by clicking on column name
-   * @param page
-   * @param sortBy, column to sort with
-   * @param sortDirection, asc or desc
-   * @return {Promise<void>}
+   * @param page {Page} Browser tab
+   * @param sortBy {string} Column name to sort with
+   * @param sortDirection {string} Sort direction by asc or desc
+   * @returns {Promise<void>}
    */
   async sortTable(page, sortBy, sortDirection) {
     let columnSelector;
