@@ -56,11 +56,15 @@
   {% include "@Twig/form_max_length.html.twig" with {"attr": attr} %}
 {%- endblock form_widget_simple -%}
 
-{#--deleted {%- block checkbox_widget -%}
-  {% set switch = switch|default('') -%}
-  <input type="checkbox"
-         {% if switch %}data-toggle="switch"{% endif %} {% if switch %}class="{{ switch }}"{% endif %} {{ block('widget_attributes') }}{% if value is defined %} value="{{ value }}"{% endif %}{% if checked %} checked="checked"{% endif %} />
-{%- endblock checkbox_widget -%}#}
+{# Rows #}
+
+{% block form_row -%}
+  <div class="form-group{% if (not compound or force_error|default(false)) and not valid %} has-error{% endif %}{% if row_attr.class is defined %} {{ row_attr.class }}{% endif %}">
+    {{- form_label(form) -}}
+    {{- form_widget(form) -}}
+    {{- form_errors(form) -}}
+  </div>
+{%- endblock form_row %}
 
 {# Labels #}
 
@@ -82,7 +86,9 @@
         {% set label = name|humanize %}
       {%- endif -%}
     {%- endif -%}
-    <label{% for attrname, attrvalue in label_attr %} {{ attrname }}="{{ attrvalue }}"{% endfor %}>
+
+    {% set labelTag = label_tag_name|default('label') %}
+    <{{ labelTag }}{% for attrname, attrvalue in label_attr %} {{ attrname }}="{{ attrvalue }}"{% endfor %}>
     {% if required %}
       <span class="text-danger">*</span>
     {% endif %}
@@ -97,20 +103,16 @@
       {% set placement = label_attr['popover_placement'] is defined ? label_attr['popover_placement'] : 'top' %}
       {% include '@Common/HelpBox/helpbox.html.twig' with { "placement" : placement, "content": label_attr['popover'] } %}
     {% endif %}
-    </label>
+    </{{ labelTag }}>
+    {% if label_subtitle is defined %}
+      <p class="subtitle">{{ label_subtitle }}</p>
+    {% endif %}
 
   {%- endif -%}
 {%- endblock form_label -%}
 
 {# Misc #}
 
-{#--deleted {%- block form_row -%}
-  {% import '@PrestaShop/Admin/macros.html.twig' as ps %}
-
-  {{- ps.form_group_row(form, { attr: form.vars.attr }, {
-    'label': form.vars.label
-  }) -}}
-{% endblock form_row %}#}
 
 {# overrides from bootstrap_4_layout #}
 
@@ -1036,3 +1038,11 @@
     </datalist>
   {% endif %}
 {% endblock text_widget %}
+
+{% block unavailable_widget %}
+  <div class="alert alert-unavailable" role="alert">
+    <p class="alert-text">
+      {{ 'Not available yet'|trans({}, 'Admin.Catalog.Feature') }}
+    </p>
+  </div>
+{% endblock %}
