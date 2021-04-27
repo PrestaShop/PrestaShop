@@ -55,10 +55,9 @@
 
 {% block form_row -%}
 {% spaceless %}
-    {% if label_attr.title is defined %}
-      <{{ label_attr.title }}{% for attrname, attrvalue in label_attr %} {{ attrname }}="{{ attrvalue }}"{% endfor %}>
-      {{ label|raw }}
-      </{{ label_attr.title }}>
+    {# In horizontal theme when using a title for label it needs to be outside of the row div #}
+    {% if label_tag_name is defined %}
+      {{ form_label(form) }}
     {% endif %}
 
     {% import '@PrestaShop/Admin/macros.html.twig' as ps %}
@@ -74,7 +73,7 @@
         {{ form_widget(attribute(form.parent, multistoreCheckboxName)) }}
       {% endif %}
 
-      {% if label_attr.title is not defined %}
+      {% if label_tag_name is not defined %}
         {{ form_label(form) }}
       {% endif %}
       <div class="{{ block('form_group_class') }}{% if disabledField %} disabled{% endif %}">
