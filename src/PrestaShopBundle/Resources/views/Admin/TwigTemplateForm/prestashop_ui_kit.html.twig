@@ -56,7 +56,7 @@
 {% block form_row -%}
 {% spaceless %}
     {# In horizontal theme when using a title for label it needs to be outside of the row div #}
-    {% if label_tag_name is not null %}
+    {% if label_tag_name is defined %}
       {{ form_label(form) }}
     {% endif %}
 
@@ -73,7 +73,7 @@
         {{ form_widget(attribute(form.parent, multistoreCheckboxName)) }}
       {% endif %}
 
-      {% if label_tag_name is null %}
+      {% if label_tag_name is not defined %}
         {{ form_label(form) }}
       {% endif %}
       <div class="{{ block('form_group_class') }}{% if disabledField %} disabled{% endif %}">

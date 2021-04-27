@@ -104,6 +104,9 @@
       {% include '@Common/HelpBox/helpbox.html.twig' with { "placement" : placement, "content": label_attr['popover'] } %}
     {% endif %}
     </{{ labelTag }}>
+    {% if label_subtitle is defined %}
+      <p class="subtitle">{{ label_subtitle }}</p>
+    {% endif %}
 
   {%- endif -%}
 {%- endblock form_label -%}

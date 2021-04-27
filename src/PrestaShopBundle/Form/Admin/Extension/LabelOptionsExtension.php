@@ -52,8 +52,11 @@ class LabelOptionsExtension extends AbstractTypeExtension
             ->setDefaults([
                 // Allows to use a different kind of HTML tag in place of the label, e.g: label_tag_name => h2
                 'label_tag_name' => null,
+                // Allows to add a subtitle after a label (mostly useful when using label_tag_name with header tags)
+                'label_subtitle' => null,
             ])
             ->setAllowedTypes('label_tag_name', ['null', 'string'])
+            ->setAllowedTypes('label_subtitle', ['null', 'string'])
         ;
     }
 
@@ -62,7 +65,12 @@ class LabelOptionsExtension extends AbstractTypeExtension
      */
     public function buildView(FormView $view, FormInterface $form, array $options)
     {
-        $view->vars['label_tag_name'] = $options['label_tag_name'] ?? null;
+        if (!empty($options['label_tag_name'])) {
+            $view->vars['label_tag_name'] = $options['label_tag_name'];
+        }
+        if (!empty($options['label_subtitle'])) {
+            $view->vars['label_subtitle'] = $options['label_subtitle'];
+        }
     }
 
     /**
