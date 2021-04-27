@@ -23,6 +23,8 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
 
+import GridMap from '@components/grid/grid-map';
+
 const {$} = window;
 
 /**
@@ -31,10 +33,10 @@ const {$} = window;
 export default class PreviewExtension {
   constructor(previewCustomization) {
     this.locks = [];
-    this.expandSelector = '.js-expand';
-    this.collapseSelector = '.js-collapse';
+    this.expandSelector = GridMap.expand;
+    this.collapseSelector = GridMap.collapse;
     this.previewOpenClass = 'preview-open';
-    this.previewToggleSelector = '.preview-toggle';
+    this.previewToggleSelector = GridMap.previewToggle;
     this.previewCustomization = previewCustomization;
   }
 
@@ -77,7 +79,7 @@ export default class PreviewExtension {
     const $columnRow = $previewToggle.closest('tr');
 
     if ($columnRow.hasClass(this.previewOpenClass)) {
-      $columnRow.next('.preview-row').remove();
+      $columnRow.next(GridMap.previewRow).remove();
       $columnRow.removeClass(this.previewOpenClass);
       this.showExpandIcon($columnRow);
       this.hideCollapseIcon($columnRow);
@@ -104,11 +106,13 @@ export default class PreviewExtension {
       complete: () => {
         this.unlock(dataUrl);
       },
-    }).then((response) => {
-      this.renderPreviewContent($columnRow, response.preview);
-    }).catch((e) => {
-      window.showErrorMessage(e.responseJSON.message);
-    });
+    })
+      .then((response) => {
+        this.renderPreviewContent($columnRow, response.preview);
+      })
+      .catch((e) => {
+        window.showErrorMessage(e.responseJSON.message);
+      });
   }
 
   /**
@@ -207,7 +211,7 @@ export default class PreviewExtension {
    * @private
    */
   closeOpenedPreviews() {
-    const $rows = this.$gridContainer.find('.grid-table tbody').find('tr:not(.preview-row)');
+    const $rows = this.$gridContainer.find(GridMap.gridTbody).find(GridMap.trNotPreviewRow);
 
     $.each($rows, (i, row) => {
       const $row = $(row);

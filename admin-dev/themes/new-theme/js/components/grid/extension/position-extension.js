@@ -23,6 +23,7 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
 
+import GridMap from '@components/grid/grid-map';
 import 'tablednd/dist/jquery.tablednd.min';
 
 const {$} = window;
@@ -47,10 +48,10 @@ export default class PositionExtension {
     this.addIdsToGridTableRows();
     grid
       .getContainer()
-      .find('.js-grid-table')
+      .find(GridMap.gridTable)
       .tableDnD({
         onDragClass: 'position-row-while-drag',
-        dragHandle: '.js-drag-handle',
+        dragHandle: GridMap.dragHandler,
         onDrop: (table, row) => this.handlePositionChange(row),
       });
     grid
@@ -78,7 +79,7 @@ export default class PositionExtension {
    * @private
    */
   handlePositionChange(row) {
-    const $rowPositionContainer = $(row).find(`.js-${this.grid.getId()}-position:first`);
+    const $rowPositionContainer = $(row).find(GridMap.gridPositionFirst(this.grid.getId()));
     const updateUrl = $rowPositionContainer.data('update-url');
     const method = $rowPositionContainer.data('update-method');
     const positions = this.getRowsPositions();
@@ -123,14 +124,14 @@ export default class PositionExtension {
 
     this.grid
       .getContainer()
-      .find(`.js-grid-table .js-${this.grid.getId()}-position`)
+      .find(GridMap.gridTablePosition(this.grid.getId()))
       .each((index, positionWrapper) => {
         const $positionWrapper = $(positionWrapper);
         const rowId = $positionWrapper.data('id');
         const position = $positionWrapper.data('position');
         const id = `row_${rowId}_${position}`;
         $positionWrapper.closest('tr').attr('id', id);
-        $positionWrapper.closest('td').addClass('js-drag-handle');
+        $positionWrapper.closest('td').addClass(GridMap.dragHandler);
         $positionWrapper.closest('tr').data('dragAndDropOffset', counter);
 
         counter += 1;

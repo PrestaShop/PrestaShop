@@ -25,6 +25,7 @@
 
 import {Grid} from '@PSTypes/grid';
 import TableSorting from '@app/utils/table-sorting';
+import GridMap from '@components/grid/grid-map';
 
 /**
  * Class ReloadListExtension extends grid with "List reload" action
@@ -36,7 +37,7 @@ export default class SortingExtension {
    * @param {Grid} grid
    */
   extend(grid: Grid): void {
-    const $sortableTable = grid.getContainer().find('table.table');
+    const $sortableTable = grid.getContainer().find(GridMap.table);
 
     new TableSorting($sortableTable).attach();
   }
