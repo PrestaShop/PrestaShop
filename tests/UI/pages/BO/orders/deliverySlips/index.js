@@ -1,7 +1,16 @@
 require('module-alias/register');
 const BOBasePage = require('@pages/BO/BObasePage');
 
+/**
+ * Delivery slips page, contains functions that can be used on delivery slips page
+ * @class
+ * @extends BOBasePage
+ */
 class DeliverySlips extends BOBasePage {
+  /**
+   * @constructs
+   * Setting up texts and selectors to use on delivery slips page
+   */
   constructor() {
     super();
 
@@ -33,7 +42,7 @@ class DeliverySlips extends BOBasePage {
    * @param page {Page} Browser tab
    * @param dateFrom {string} Value to set on date from input
    * @param dateTo {string} Value to set on date to input
-   * @return {Promise<string>}
+   * @returns {Promise<string>}
    */
   async generatePDFByDateAndDownload(page, dateFrom = '', dateTo = '') {
     await this.setValuesForGeneratingPDFByDate(page, dateFrom, dateTo);
@@ -43,10 +52,10 @@ class DeliverySlips extends BOBasePage {
 
   /**
    * Get message error after generate delivery slip fail
-   * @param page
-   * @param dateFrom
-   * @param dateTo
-   * @return {Promise<string>}
+   * @param page {Page} Browser tab
+   * @param dateFrom {string} Value to set on date from input
+   * @param dateTo {string} Value to set on date to input
+   * @returns {Promise<string>}
    */
   async generatePDFByDateAndFail(page, dateFrom = '', dateTo = '') {
     await this.setValuesForGeneratingPDFByDate(page, dateFrom, dateTo);
@@ -56,9 +65,9 @@ class DeliverySlips extends BOBasePage {
 
   /**
    * Set values to generate pdf by date
-   * @param page
-   * @param dateFrom
-   * @param dateTo
+   * @param page {Page} Browser tab
+   * @param dateFrom {string} Value to set on date from input
+   * @param dateTo {string} Value to set on date to input
    * @returns {Promise<void>}
    */
   async setValuesForGeneratingPDFByDate(page, dateFrom = '', dateTo = '') {
@@ -72,17 +81,17 @@ class DeliverySlips extends BOBasePage {
   }
 
   /** Edit delivery slip Prefix
-   * @param page
-   * @param prefix
+   * @param page {Page} Browser tab
+   * @param prefix {string} Prefix value to set
    * @return {Promise<void>}
    */
   async changePrefix(page, prefix) {
     await this.setValue(page, this.deliveryPrefixInput, prefix);
   }
 
-  /** Edit delivery slip Prefix
-   * @param page
-   * @param number
+  /** Edit delivery slip number
+   * @param page {Page} Browser tab
+   * @param number {number} Number value to change
    * @return {Promise<void>}
    */
   async changeNumber(page, number) {
@@ -91,8 +100,8 @@ class DeliverySlips extends BOBasePage {
 
   /**
    * Enable disable product image
-   * @param page
-   * @param enable
+   * @param page {Page} Browser tab
+   * @param enable {boolean} True if we need to enable product image
    * @return {Promise<void>}
    */
   async setEnableProductImage(page, enable = true) {
@@ -100,7 +109,7 @@ class DeliverySlips extends BOBasePage {
   }
 
   /** Save delivery slip options
-   * @param page
+   * @param page {Page} Browser tab
    * @return {Promise<string>}
    */
   async saveDeliverySlipOptions(page) {
