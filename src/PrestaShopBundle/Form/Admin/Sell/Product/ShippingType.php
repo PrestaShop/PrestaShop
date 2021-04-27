@@ -29,11 +29,9 @@ declare(strict_types=1);
 namespace PrestaShopBundle\Form\Admin\Sell\Product;
 
 use PrestaShop\PrestaShop\Core\Form\FormChoiceProviderInterface;
-use PrestaShopBundle\Form\Admin\Type\TranslatableType;
 use PrestaShopBundle\Form\Admin\Type\TranslatorAwareType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\MoneyType;
-use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\Translation\TranslatorInterface;
 use Symfony\Component\Validator\Constraints\NotBlank;
@@ -93,30 +91,19 @@ class ShippingType extends TranslatorAwareType
                 'multiple' => false,
                 'required' => false,
                 'label' => $this->trans('Delivery Time', 'Admin.Catalog.Feature'),
-            ])->add('delivery_time_in_stock_note', TranslatableType::class, [
-                'label' => $this->trans('Delivery time of in-stock products:', 'Admin.Catalog.Feature'),
-                'type' => TextType::class,
-                'required' => false,
-                'options' => [
-                    'attr' => [
-                        'placeholder' => $this->trans('Delivered within 3-4 days', 'Admin.Catalog.Feature'),
-                    ],
+                'label_tag_name' => 'h2',
+                'label_attr' => [
+                    'popover' => $this->trans('Display delivery time for a product is advised for merchants selling in Europe to comply with the local laws.', 'Admin.Catalog.Help'),
                 ],
-            ])->add('delivery_time_out_stock_note', TranslatableType::class, [
-                'locales' => $this->locales,
-                'required' => false,
-                'label' => $this->trans(
-                    'Delivery time of out-of-stock products with allowed orders:',
-                    'Admin.Catalog.Feature'
-                ),
-                'options' => [
-                    'attr' => [
-                        'placeholder' => $this->trans('Delivered within 5-7 days', 'Admin.Catalog.Feature'),
-                    ],
-                ],
-            ])->add('additional_shipping_cost', MoneyType::class, [
+            ])
+            ->add('delivery_time', DeliveryTimeType::class)
+            ->add('additional_shipping_cost', MoneyType::class, [
                 'required' => false,
                 'label' => $this->trans('Shipping fees', 'Admin.Catalog.Feature'),
+                'label_tag_name' => 'h2',
+                'label_attr' => [
+                    'popover' => $this->trans('If a carrier has a tax, it will be added to the shipping fees. Does not apply to free shipping.', 'Admin.Catalog.Help'),
+                ],
                 'currency' => $this->currencyIsoCode,
                 'constraints' => [
                     new NotBlank(),
@@ -128,12 +115,14 @@ class ShippingType extends TranslatorAwareType
                         ),
                     ]),
                 ],
-            ])->add('carriers', ChoiceType::class, [
+            ])
+            ->add('carriers', ChoiceType::class, [
                 'choices' => $this->carrierChoiceProvider->getChoices(),
                 'expanded' => true,
                 'multiple' => true,
                 'required' => false,
                 'label' => $this->trans('Available carriers', 'Admin.Catalog.Feature'),
+                'label_tag_name' => 'h2',
             ])
         ;
     }
