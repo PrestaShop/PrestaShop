@@ -38,6 +38,7 @@ use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\Translation\TranslatorInterface;
 use Symfony\Component\Validator\Constraints\NotBlank;
 use Symfony\Component\Validator\Constraints\Type;
+use Symfony\Component\OptionsResolver\OptionsResolver;
 
 /**
  * Form type containing price fields for Pricing tab
@@ -107,23 +108,6 @@ class PriceType extends TranslatorAwareType
                     new Type(['type' => 'float']),
                 ],
             ])
-            ->add('tax_rules_group_id', ChoiceType::class, [
-                'choices' => $this->taxRuleGroupChoices,
-                'required' => false,
-                'choice_attr' => $this->taxRuleGroupChoicesAttributes,
-                'attr' => [
-                    'data-toggle' => 'select2',
-                    'data-minimumResultsForSearch' => '7',
-                ],
-                'label' => $this->trans('Tax rule', 'Admin.Catalog.Feature'),
-            ])
-            ->add('on_sale', CheckboxType::class, [
-                'required' => false,
-                'label' => $this->trans(
-                    'Display the "On sale!" flag on the product page, and on product listings.',
-                    'Admin.Catalog.Feature'
-                ),
-            ])
             ->add('wholesale_price', MoneyType::class, [
                 'required' => false,
                 'label' => $this->trans('Cost price (tax excl.)', 'Admin.Catalog.Feature'),
@@ -136,10 +120,44 @@ class PriceType extends TranslatorAwareType
                 'attr' => ['data-display-price-precision' => self::PRESTASHOP_DECIMALS],
                 'currency' => $this->defaultCurrency->iso_code,
             ])
+            ->add('tax_rules_group_id', ChoiceType::class, [
+                'choices' => $this->taxRuleGroupChoices,
+                'required' => false,
+                'choice_attr' => $this->taxRuleGroupChoicesAttributes,
+                'attr' => [
+                    'data-toggle' => 'select2',
+                    'data-minimumResultsForSearch' => '7',
+                ],
+                'label' => $this->trans('Tax rule', 'Admin.Catalog.Feature'),
+            ])
             ->add('unity', TextType::class, [
                 'required' => false,
                 'attr' => ['placeholder' => $this->trans('Per kilo, per litre', 'Admin.Catalog.Help')],
             ])
+            ->add('on_sale', CheckboxType::class, [
+                'required' => false,
+                'label' => $this->trans(
+                    'Display the "On sale!" flag on the product page, and on product listings.',
+                    'Admin.Catalog.Feature'
+                ),
+            ])
         ;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function configureOptions(OptionsResolver $resolver)
+    {
+        parent::configureOptions($resolver);
+        $resolver->setDefaults([
+            'label' => $this->trans('Retail price', 'Admin.Catalog.Feature'),
+            'label_tag_name' => 'h2',
+            'label_attr' => [
+                'popover' => $this->trans('This is the net sales price for your customers. The retail price will automatically be calculated using the applied tax rate.', 'Admin.Catalog.Help'),
+            ],
+            'required' => false,
+            'columns_number' => 3,
+        ]);
     }
 }
