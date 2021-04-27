@@ -34,7 +34,7 @@ use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
-class DeliveryTimeType extends TranslatorAwareType
+class DeliveryTimeNotesType extends TranslatorAwareType
 {
     /**
      * {@inheritDoc}
@@ -42,7 +42,7 @@ class DeliveryTimeType extends TranslatorAwareType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
-            ->add('in_stock_note', TranslatableType::class, [
+            ->add('in_stock', TranslatableType::class, [
                 'label' => $this->trans('Delivery time of in-stock products:', 'Admin.Catalog.Feature'),
                 'type' => TextType::class,
                 'required' => false,
@@ -53,7 +53,7 @@ class DeliveryTimeType extends TranslatorAwareType
                 ],
                 'help' => $this->trans('Leave empty to disable', 'Admin.Catalog.Help'),
             ])
-            ->add('out_stock_note', TranslatableType::class, [
+            ->add('out_of_stock', TranslatableType::class, [
                 'locales' => $this->locales,
                 'required' => false,
                 'label' => $this->trans(
