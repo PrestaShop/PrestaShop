@@ -135,7 +135,6 @@
     <tab id="Marketing_tools" name="Module Selections" />
     <tab id="Tabs" name="Menu" />
     <tab id="FeatureFlag" name="Experimental Features" />
-    <tab id="Security_1" name="Configuration" />
     <tab id="Security_1" name="Security" />
     <tab id="EmployeeSessions" name="Employee Sessions" />
     <tab id="CustomerSessions" name="Customer Sessions" />
