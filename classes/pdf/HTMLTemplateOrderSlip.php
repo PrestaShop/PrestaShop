@@ -68,9 +68,38 @@ class HTMLTemplateOrderSlipCore extends HTMLTemplateInvoice
         // header informations
         $this->date = Tools::displayDate($this->order_slip->date_add);
         $prefix = Configuration::get('PS_CREDIT_SLIP_PREFIX', Context::getContext()->language->id);
-        $this->title = sprintf(HTMLTemplateOrderSlip::l('%1$s%2$06d'), $prefix, (int) $this->order_slip->id);
+
+        $this->title = sprintf(
+            HTMLTemplateOrderSlip::l('%1$s%2$06d'),
+            $prefix,
+            Configuration::get('PS_CREDIT_SLIP_RESET') ? $this->getNumberOrderSlip((int) $order_slip->id) : (int) $order_slip->id
+        );
 
         $this->shop = new Shop((int) $this->order->id_shop);
+    }
+
+    /**
+     * Returns the numbering of the subscription invoice with respect to the year.
+     *
+     * @param int $id_order_slip order_slip
+     *
+     * @return int number for year
+     */
+    public function getNumberOrderSlip(int $id_order_slip): int
+    {
+        $date = Db::getInstance()->getValue('SELECT date_add FROM `' . _DB_PREFIX_ . 'order_slip` WHERE id_order_slip=' . $id_order_slip);
+
+        if (isset($date)) {
+            $current_year = date('Y-01-01 00:00:00', strtotime($date));
+
+            $counts = Db::getInstance()->getValue(
+                'SELECT count(*) as "n" FROM `' . _DB_PREFIX_ . 'order_slip` WHERE date_add > "' . $current_year . '" AND date_add < "' . $date . '"'
+            );
+
+            return intval($counts) + 1;
+        }
+
+        return 1;
     }
 
     /**
