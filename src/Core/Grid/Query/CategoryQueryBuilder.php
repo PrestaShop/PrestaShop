@@ -159,7 +159,7 @@ final class CategoryQueryBuilder extends AbstractDoctrineQueryBuilder
                 'c.id_category = cs.id_category AND cs.id_shop = c.id_shop_default'
         );
 
-        $qb->leftJoin(
+        $qb->innerJoin(
             'c',
             $this->dbPrefix . 'category_product',
             'cp',
