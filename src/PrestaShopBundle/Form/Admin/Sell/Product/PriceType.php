@@ -89,38 +89,7 @@ class PriceType extends TranslatorAwareType
     {
         $builder
             // @todo we should have DecimalType and MoneyDecimalType it was moved in a separate PR #22162
-            ->add('price_tax_excluded', MoneyType::class, [
-                'required' => false,
-                'label' => $this->trans('Retail price (tax excl.)', 'Admin.Catalog.Feature'),
-                'attr' => ['data-display-price-precision' => self::PRESTASHOP_DECIMALS],
-                'currency' => $this->defaultCurrency->iso_code,
-                'constraints' => [
-                    new NotBlank(),
-                    new Type(['type' => 'float']),
-                ],
-            ])
-            ->add('price_tax_included', MoneyType::class, [
-                'required' => false,
-                'label' => $this->trans('Retail price (tax incl.)', 'Admin.Catalog.Feature'),
-                'attr' => ['data-display-price-precision' => self::PRESTASHOP_DECIMALS],
-                'currency' => $this->defaultCurrency->iso_code,
-                'constraints' => [
-                    new NotBlank(),
-                    new Type(['type' => 'float']),
-                ],
-            ])
-            ->add('wholesale_price', MoneyType::class, [
-                'required' => false,
-                'label' => $this->trans('Cost price (tax excl.)', 'Admin.Catalog.Feature'),
-                'attr' => ['data-display-price-precision' => self::PRESTASHOP_DECIMALS],
-                'currency' => $this->defaultCurrency->iso_code,
-            ])
-            ->add('unit_price', MoneyType::class, [
-                'required' => false,
-                'label' => $this->trans('Retail price per unit (tax excl.)', 'Admin.Catalog.Feature'),
-                'attr' => ['data-display-price-precision' => self::PRESTASHOP_DECIMALS],
-                'currency' => $this->defaultCurrency->iso_code,
-            ])
+            ->add('retail_price', RetailPriceType::class)
             ->add('tax_rules_group_id', ChoiceType::class, [
                 'choices' => $this->taxRuleGroupChoices,
                 'required' => false,
@@ -131,16 +100,23 @@ class PriceType extends TranslatorAwareType
                 ],
                 'label' => $this->trans('Tax rule', 'Admin.Catalog.Feature'),
             ])
-            ->add('unity', TextType::class, [
-                'required' => false,
-                'attr' => ['placeholder' => $this->trans('Per kilo, per litre', 'Admin.Catalog.Help')],
-            ])
+            ->add('unit_price_parent', UnitPriceType::class)
             ->add('on_sale', CheckboxType::class, [
                 'required' => false,
                 'label' => $this->trans(
                     'Display the "On sale!" flag on the product page, and on product listings.',
                     'Admin.Catalog.Feature'
                 ),
+            ])
+            ->add('wholesale_price', MoneyType::class, [
+                'required' => false,
+                'label' => $this->trans('Cost price (tax excl.)', 'Admin.Catalog.Feature'),
+                'label_tag_name' => 'h2',
+                'label_attr' => [
+                    'popover' => $this->trans('The cost price is the price you paid for the product. Do not include the tax. It should be lower than the net sales price: the difference between the two will be your margin.', 'Admin.Catalog.Help'),
+                ],
+                'attr' => ['data-display-price-precision' => self::PRESTASHOP_DECIMALS],
+                'currency' => $this->defaultCurrency->iso_code,
             ])
             ->add('specific_prices', UnavailableType::class, [
                 'label' => $this->trans('Specific prices', 'Admin.Catalog.Feature'),
@@ -166,13 +142,8 @@ class PriceType extends TranslatorAwareType
     {
         parent::configureOptions($resolver);
         $resolver->setDefaults([
-            'label' => $this->trans('Retail price', 'Admin.Catalog.Feature'),
-            'label_tag_name' => 'h2',
-            'label_attr' => [
-                'popover' => $this->trans('This is the net sales price for your customers. The retail price will automatically be calculated using the applied tax rate.', 'Admin.Catalog.Help'),
-            ],
+            'label' => false,
             'required' => false,
-            'columns_number' => 3,
         ]);
     }
 }

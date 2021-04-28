@@ -46,6 +46,9 @@ class SEOType extends TranslatorAwareType
         $builder
             ->add('meta_title', TranslatableType::class, [
                 'label' => $this->trans('Meta title', 'Admin.Catalog.Feature'),
+                'label_attr' => [
+                    'popover' => $this->trans('Public title for the product page and for search engines. Leave blank to use the product name. The number of remaining characters is displayed to the left of the field.', 'Admin.Catalog.Help'),
+                ],
                 'required' => false,
                 'type' => TextWithLengthCounterType::class,
                 'help' => $this->trans(
@@ -73,6 +76,9 @@ class SEOType extends TranslatorAwareType
             ])
             ->add('meta_description', TranslatableType::class, [
                 'label' => $this->trans('Meta description', 'Admin.Catalog.Feature'),
+                'label_attr' => [
+                    'popover' => $this->trans('This description will appear in search engines. You need a single sentence, shorter than 160 characters (including spaces)', 'Admin.Catalog.Help'),
+                ],
                 'required' => false,
                 'type' => TextWithLengthCounterType::class,
                 'help' => $this->trans(
@@ -100,6 +106,9 @@ class SEOType extends TranslatorAwareType
             ])
             ->add('link_rewrite', TranslatableType::class, [
                 'label' => $this->trans('Friendly URL', 'Admin.Catalog.Feature'),
+                'label_attr' => [
+                    'popover' => $this->trans('This is the human-readable URL, as generated from the product\'s name. You can change it if you want.', 'Admin.Catalog.Help'),
+                ],
                 'required' => false,
                 'type' => TextType::class,
                 'help' => $this->trans(
