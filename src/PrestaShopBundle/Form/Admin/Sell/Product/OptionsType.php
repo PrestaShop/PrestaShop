@@ -28,16 +28,13 @@ declare(strict_types=1);
 namespace PrestaShopBundle\Form\Admin\Sell\Product;
 
 use PrestaShop\PrestaShop\Core\ConstraintValidator\Constraints\TypedRegex;
-use PrestaShop\PrestaShop\Core\Domain\Product\ProductSettings;
 use PrestaShop\PrestaShop\Core\Form\FormChoiceProviderInterface;
 use PrestaShopBundle\Form\Admin\Type\SwitchType;
 use PrestaShopBundle\Form\Admin\Type\TranslatableType;
 use PrestaShopBundle\Form\Admin\Type\TranslatorAwareType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
-use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\Translation\TranslatorInterface;
-use Symfony\Component\Validator\Constraints\Length;
 
 /**
  * This form class is responsible to generate the product options form.
@@ -50,25 +47,17 @@ class OptionsType extends TranslatorAwareType
     private $productVisibilityChoiceProvider;
 
     /**
-     * @var FormChoiceProviderInterface
-     */
-    private $productConditionChoiceProvider;
-
-    /**
      * @param TranslatorInterface $translator
      * @param array $locales
      * @param FormChoiceProviderInterface $productVisibilityChoiceProvider
-     * @param FormChoiceProviderInterface $productConditionChoiceProvider
      */
     public function __construct(
         TranslatorInterface $translator,
         array $locales,
-        FormChoiceProviderInterface $productVisibilityChoiceProvider,
-        FormChoiceProviderInterface $productConditionChoiceProvider
+        FormChoiceProviderInterface $productVisibilityChoiceProvider
     ) {
         parent::__construct($translator, $locales);
         $this->productVisibilityChoiceProvider = $productVisibilityChoiceProvider;
-        $this->productConditionChoiceProvider = $productConditionChoiceProvider;
     }
 
     /**
@@ -113,57 +102,7 @@ class OptionsType extends TranslatorAwareType
                     'required' => false,
                 ],
             ])
-            ->add('mpn', TextType::class, [
-                'required' => false,
-                'label' => $this->trans('MPN', 'Admin.Catalog.Feature'),
-                'constraints' => [
-                    new Length(['max' => ProductSettings::MAX_MPN_LENGTH]),
-                ],
-                'empty_data' => '',
-            ])
-            ->add('upc', TextType::class, [
-                'required' => false,
-                'label' => $this->trans('UPC barcode', 'Admin.Catalog.Feature'),
-                'constraints' => [
-                    new TypedRegex(TypedRegex::TYPE_UPC),
-                ],
-                'empty_data' => '',
-            ])
-            ->add('ean_13', TextType::class, [
-                'required' => false,
-                'error_bubbling' => true,
-                'label' => $this->trans('EAN-13 or JAN barcode', 'Admin.Catalog.Feature'),
-                'constraints' => [
-                    new TypedRegex(TypedRegex::TYPE_EAN_13),
-                ],
-                'empty_data' => '',
-            ])
-            ->add('isbn', TextType::class, [
-                'required' => false,
-                'label' => $this->trans('ISBN', 'Admin.Catalog.Feature'),
-                'constraints' => [
-                    new TypedRegex(TypedRegex::TYPE_ISBN),
-                ],
-                'empty_data' => '',
-            ])
-            ->add('reference', TextType::class, [
-                'required' => false,
-                'label' => $this->trans('Reference', 'Admin.Global'),
-                'empty_data' => '',
-            ])
-            ->add('show_condition', SwitchType::class, [
-                'required' => false,
-                'label' => $this->trans('Display condition on product page', 'Admin.Catalog.Feature'),
-                'required' => false,
-            ])
-            ->add('condition', ChoiceType::class, [
-                'choices' => $this->productConditionChoiceProvider->getChoices(),
-                'attr' => [
-                    'class' => 'custom-select',
-                ],
-                'required' => false,
-                'label' => $this->trans('Condition', 'Admin.Catalog.Feature'),
-            ])
+            ->add('references', ReferencesType::class)
         ;
     }
 }

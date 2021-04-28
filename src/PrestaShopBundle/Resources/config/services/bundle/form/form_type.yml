@@ -1284,6 +1284,24 @@ services:
       tags:
         - { name: form.type }
 
+    form.type.sell.product.retail_price_type:
+        class: 'PrestaShopBundle\Form\Admin\Sell\Product\RetailPriceType'
+        parent: 'form.type.translatable.aware'
+        public: true
+        arguments:
+            - '@=service("prestashop.adapter.data_provider.currency").getDefaultCurrency()'
+        tags:
+            - { name: form.type }
+
+    form.type.sell.product.unit_price_type:
+        class: 'PrestaShopBundle\Form\Admin\Sell\Product\UnitPriceType'
+        parent: 'form.type.translatable.aware'
+        public: true
+        arguments:
+            - '@=service("prestashop.adapter.data_provider.currency").getDefaultCurrency()'
+        tags:
+            - { name: form.type }
+
     form.type.sell.product.basic_information_type:
       class: 'PrestaShopBundle\Form\Admin\Sell\Product\BasicInformationType'
       parent: 'form.type.translatable.aware'
@@ -1375,6 +1393,16 @@ services:
             - '@prestashop.core.form.choice_provider.product_condition_choice_provider'
         tags:
             - { name: form.type }
+
+    form.type.sell.product.references_type:
+        class: 'PrestaShopBundle\Form\Admin\Sell\Product\ReferencesType'
+        parent: 'form.type.translatable.aware'
+        public: true
+        arguments:
+            - '@prestashop.core.form.choice_provider.product_condition_choice_provider'
+        tags:
+            - { name: form.type }
+
 
     form.type.sell.product.customizations_type:
         class: 'PrestaShopBundle\Form\Admin\Sell\Product\CustomizationsType'

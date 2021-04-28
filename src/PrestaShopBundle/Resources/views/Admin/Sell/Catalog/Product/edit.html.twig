@@ -53,6 +53,12 @@
 
   <div class="col-xxl-10">
 
+  <div class="alert alert-info" role="alert">
+    <p class="alert-text">
+      {{ 'You are on the experimental version of the product page.'|trans({}, 'Admin.Catalog.Help') }}
+    </p>
+  </div>
+
     {% block product_tabs_container %}
       {{ include('@PrestaShop/Admin/Sell/Catalog/Product/Blocks/tabs.html.twig', {
         'productForm': productForm,

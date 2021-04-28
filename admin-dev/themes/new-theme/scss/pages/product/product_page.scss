@@ -229,6 +229,22 @@
     .title {
       margin-bottom: 1.25rem;
     }
+
+    .money-type {
+      max-width: 16.5rem;
+    }
+
+    select,
+    .select2 {
+      max-width: 16.5rem;
+    }
+
+    [class^="form-columns"] {
+      select,
+      .select2 {
+        max-width: 100%;
+      }
+    }
   }
 
   .hide {
