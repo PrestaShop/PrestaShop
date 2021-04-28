@@ -24,6 +24,20 @@
       display: flex;
       align-items: center;
     }
+
+    &-image {
+      width: 3rem;
+    }
+
+    td {
+      .form-check-radio {
+        margin-bottom: 0;
+
+        .form-check-label {
+          justify-content: center;
+        }
+      }
+    }
   }
 
   > #field-disabled {
