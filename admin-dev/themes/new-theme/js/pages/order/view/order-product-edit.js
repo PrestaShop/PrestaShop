@@ -190,13 +190,13 @@ export default class OrderProductEdit {
       this.orderDetailId,
     );
 
-    if (productPriceMatch) {
+    if (productPriceMatch === null) {
       this.editProduct($(event.currentTarget).data('orderId'), this.orderDetailId);
 
       return;
     }
 
-    const dataSelector = Number(orderInvoiceId) === 0 ? this.priceTaxExcludedInput : this.productEditInvoiceSelect;
+    const dataSelector = productPriceMatch === 'product' ? this.priceTaxExcludedInput : this.productEditInvoiceSelect;
 
     const modalEditPrice = new ConfirmModal(
       {

@@ -70,13 +70,22 @@ export default class OrderPricesRefresher {
     });
   }
 
+  /**
+   * This method will check if the same product is already present in the order
+   * and if so and if the price of the 2 products doesn't match will return either
+   * 'invoice' if the 2 products are in 2 different invoices or 'product' if the 2 products
+   * are in the same invoice (or no invoice yet). Only products that have different customizations
+   * can be twice in a same invoice.
+   * Will return null if no matching products are found.
+   */
   checkOtherProductPricesMatch(givenPrice, productId, combinationId, invoiceId, orderDetailId) {
     const productRows = document.querySelectorAll('tr.cellProduct');
     // We convert the expected values into int/float to avoid a type mismatch that would be wrongly interpreted
     const expectedProductId = Number(productId);
     const expectedCombinationId = Number(combinationId);
     const expectedGivenPrice = Number(givenPrice);
-    let unmatchingPriceExists = false;
+    let unmatchingInvoicePriceExists = false;
+    let unmatchingProductPriceExists = false;
 
     productRows.forEach((productRow) => {
       const productRowId = $(productRow).attr('id');
@@ -89,11 +98,6 @@ export default class OrderPricesRefresher {
       const productEditBtn = $(`#${productRowId} ${OrderViewPageMap.productEditButtons}`);
       const currentOrderInvoiceId = Number(productEditBtn.data('order-invoice-id'));
 
-      // No need to check target invoice, only if others have matching products
-      if (invoiceId && currentOrderInvoiceId && invoiceId === currentOrderInvoiceId) {
-        return;
-      }
-
       const currentProductId = Number(productEditBtn.data('product-id'));
       const currentCombinationId = Number(productEditBtn.data('combination-id'));
 
@@ -102,10 +106,21 @@ export default class OrderPricesRefresher {
       }
 
       if (expectedGivenPrice !== Number(productEditBtn.data('product-price-tax-incl'))) {
-        unmatchingPriceExists = true;
+        if (!invoiceId || (invoiceId && currentOrderInvoiceId && invoiceId === currentOrderInvoiceId)) {
+          unmatchingProductPriceExists = true;
+        } else {
+          unmatchingInvoicePriceExists = true;
+        }
       }
     });
 
-    return !unmatchingPriceExists;
+    if (unmatchingInvoicePriceExists) {
+      return 'invoice';
+    }
+    if (unmatchingProductPriceExists) {
+      return 'product';
+    }
+
+    return null;
   }
 }
