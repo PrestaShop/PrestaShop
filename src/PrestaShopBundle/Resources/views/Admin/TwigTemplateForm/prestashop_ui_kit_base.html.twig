@@ -65,13 +65,13 @@
     {{- form_errors(form) -}}
 
     {% if external_link.value is defined and external_link.text is defined %}
-      <span class="small font-secondary">
-        {% if external_link.type is same as('tab') %}
-          {{ external_link.text|replace({'[1]': '<button type="button" class="btn btn-link px-0 tab-link" data-target-tab="' ~ external_link.value ~ '"><i class="material-icons">open_in_new</i>', '[/1]': '</button>'})|raw }}
+      <div class="small font-secondary text-right">
+        {% if external_link.type is same as('button') %}
+          {{ external_link.text|replace({'[1]': '<button type="button" class="btn btn-link px-0 tab-link align-right" data-target-tab="' ~ external_link.value ~ '"><i class="material-icons">open_in_new</i>', '[/1]': '</button>'})|raw }}
         {% else %}
           {{ external_link.text|replace({'[1]': '<a class="btn btn-link px-0 tab-link" href="' ~ external_link.value ~ '"><i class="material-icons">open_in_new</i>', '[/1]': '</a>'})|raw }}
         {% endif %}
-      </span>
+      </div>
     {% endif %}
   </div>
 {%- endblock form_row %}
