@@ -571,7 +571,7 @@ class OrderCore extends ObjectModel
     public function getProductsDetail()
     {
         // The `od.ecotax` is a newly added at end as ecotax is used in multiples columns but it's the ecotax value we need
-        $sql = 'SELECT *, od.ecotax';
+        $sql = 'SELECT p.*, ps.*, od.*';
         $sql .= ' FROM `%sorder_detail` od';
         $sql .= ' LEFT JOIN `%sproduct` p ON (p.id_product = od.product_id)';
         $sql .= ' LEFT JOIN `%sproduct_shop` ps ON (ps.id_product = p.id_product AND ps.id_shop = od.id_shop)';
