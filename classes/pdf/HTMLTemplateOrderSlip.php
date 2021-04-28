@@ -87,7 +87,7 @@ class HTMLTemplateOrderSlipCore extends HTMLTemplateInvoice
      */
     public function getNumberOrderSlip(int $id_order_slip): int
     {
-        $date = Db::getInstance()->executeS('SELECT date_add FROM `' . _DB_PREFIX_ . 'order_slip` WHERE id_order_slip=' . $id_order_slip);
+        $date = Db::getInstance()->getValue('SELECT date_add FROM `' . _DB_PREFIX_ . 'order_slip` WHERE id_order_slip=' . $id_order_slip);
 
         if (isset($date)) {
             $current_year = date('Y-01-01 00:00:00', strtotime($date));
