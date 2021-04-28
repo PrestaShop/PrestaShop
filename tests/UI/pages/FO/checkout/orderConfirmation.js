@@ -42,8 +42,9 @@ class OrderConfirmation extends FOBasePage {
    * @param page {Page} Browser tab
    * @returns {Promise<string>}
    */
-  getOrderReferenceValue(page) {
-    return this.getTextContent(page, this.orderReferenceValue);
+  async getOrderReferenceValue(page) {
+    const orderRefText = await this.getTextContent(page, this.orderReferenceValue);
+    return (orderRefText.split(':'))[1].trim();
   }
 
   /**
