@@ -106,7 +106,7 @@ class SqlManagerFeatureContext extends AbstractDomainFeatureContext
     /**
      * @Then I should get an error that the SQL request is malformed
      */
-    public function assertLastErrorIsAMalformedSqlREquest()
+    public function assertLastErrorIsAMalformedSqlRequest(): void
     {
         $this->assertLastErrorIs(SqlRequestConstraintException::class);
         Assert::assertEquals(
