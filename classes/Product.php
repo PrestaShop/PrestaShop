@@ -3597,9 +3597,9 @@ class ProductCore extends ObjectModel
             $tax_rate = $withTaxes ? (1 + ($orderDetail['tax_rate'] / 100)) : 1;
             $price = $orderDetail['original_product_price'] * $tax_rate;
         }
-        $ecoTaxValue = $withTaxes ? $orderDetail['ecotax'] * (1 + $orderDetail['ecotax_tax_rate']) : $orderDetail['ecotax'];
         if (!$withEcoTax) {
-            $price -= $ecoTaxValue;
+            // Remove the ecotax as the order detail contains already ecotax in the price
+            $price -= ($withTaxes ? $orderDetail['ecotax'] * (1 + $orderDetail['ecotax_tax_rate']) : $orderDetail['ecotax']);
         }
 
         return $price;
