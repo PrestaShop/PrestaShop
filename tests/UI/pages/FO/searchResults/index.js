@@ -17,8 +17,7 @@ class SearchResults extends FOBasePage {
     // Quick View modal
     this.quickViewModalDiv = 'div[id*=\'quickview-modal\']';
     this.quickViewCoverImage = `${this.quickViewModalDiv} img.js-qv-product-cover`;
-    this.quickViewThumbFirstImage = `${this.quickViewModalDiv} li:nth-child(1) img.js-thumb`;
-    this.quickViewThumb2ndImage = `${this.quickViewModalDiv} li:nth-child(2) img.js-thumb`;
+    this.quickViewThumbImage = position => `${this.quickViewModalDiv} li:nth-child(${position}) img.js-thumb`;
   }
 
   // Methods
@@ -72,17 +71,13 @@ class SearchResults extends FOBasePage {
   /**
    * Select thumb image
    * @param page {Page} Browser tab
-   * @param id {number} ID of the thumb
+   * @param position {number} Position of the image
    * @returns {Promise<string>}
    */
-  async selectThumbImage(page, id) {
-    if (id === 1) {
-      await this.waitForSelectorAndClick(page, this.quickViewThumbFirstImage);
-      await this.waitForVisibleSelector(page, `${this.quickViewThumbFirstImage}.selected`);
-    } else {
-      await this.waitForSelectorAndClick(page, this.quickViewThumb2ndImage);
-      await this.waitForVisibleSelector(page, `${this.quickViewThumb2ndImage}.selected`);
-    }
+  async selectThumbImage(page, position) {
+    await page.click(this.quickViewThumbImage(position));
+    await this.waitForVisibleSelector(page, `${this.quickViewThumbImage(position)}.selected`);
+
     return this.getAttributeContent(page, this.quickViewCoverImage, 'src');
   }
 }
