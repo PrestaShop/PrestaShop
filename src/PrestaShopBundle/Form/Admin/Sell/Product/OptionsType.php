@@ -47,6 +47,12 @@ class OptionsType extends TranslatorAwareType
     private $productVisibilityChoiceProvider;
 
     /**
+     * @var FormChoiceProviderInterface
+     */
+    private $productConditionChoiceProvider;
+
+
+    /**
      * @param TranslatorInterface $translator
      * @param array $locales
      * @param FormChoiceProviderInterface $productVisibilityChoiceProvider
@@ -54,10 +60,12 @@ class OptionsType extends TranslatorAwareType
     public function __construct(
         TranslatorInterface $translator,
         array $locales,
-        FormChoiceProviderInterface $productVisibilityChoiceProvider
+        FormChoiceProviderInterface $productVisibilityChoiceProvider,
+        FormChoiceProviderInterface $productConditionChoiceProvider
     ) {
         parent::__construct($translator, $locales);
         $this->productVisibilityChoiceProvider = $productVisibilityChoiceProvider;
+        $this->productConditionChoiceProvider = $productConditionChoiceProvider;
     }
 
     /**
@@ -101,6 +109,23 @@ class OptionsType extends TranslatorAwareType
                     ],
                     'required' => false,
                 ],
+            ])
+            ->add('condition', ChoiceType::class, [
+                'choices' => $this->productConditionChoiceProvider->getChoices(),
+                'attr' => [
+                    'class' => 'custom-select',
+                ],
+                'required' => false,
+                'label' => $this->trans('Condition', 'Admin.Catalog.Feature'),
+                'label_tag_name' => 'h2',
+                'label_attr' => [
+                    'popover' => $this->trans('Not all shops sell new products. This option enables you to indicate the condition of the product. It can be required on some marketplaces.', 'Admin.Catalog.Help'),
+                ],
+            ])
+            ->add('show_condition', SwitchType::class, [
+                'required' => false,
+                'label' => $this->trans('Display condition on product page', 'Admin.Catalog.Feature'),
+                'required' => false,
             ])
             ->add('references', ReferencesType::class)
         ;

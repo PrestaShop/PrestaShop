@@ -47,22 +47,15 @@ use Currency;
 class ReferencesType extends TranslatorAwareType
 {
     /**
-     * @var FormChoiceProviderInterface
-     */
-    private $productConditionChoiceProvider;
-
-    /**
      * @param TranslatorInterface $translator
      * @param array $locales
      * @param Currency $defaultCurrency
      */
     public function __construct(
         TranslatorInterface $translator,
-        array $locales,
-        FormChoiceProviderInterface $productConditionChoiceProvider
+        array $locales
     ) {
         parent::__construct($translator, $locales);
-        $this->productConditionChoiceProvider = $productConditionChoiceProvider;
     }
 
     /**
@@ -71,22 +64,6 @@ class ReferencesType extends TranslatorAwareType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
-            ->add('condition', ChoiceType::class, [
-                'choices' => $this->productConditionChoiceProvider->getChoices(),
-                'attr' => [
-                    'class' => 'custom-select',
-                ],
-                'required' => true,
-                'label' => $this->trans('Condition', 'Admin.Catalog.Feature'),
-                'label_attr' => [
-                    'popover' => $this->trans('Not all shops sell new products. This option enables you to indicate the condition of the product. It can be required on some marketplaces.', 'Admin.Catalog.Help'),
-                ],
-            ])
-            ->add('show_condition', SwitchType::class, [
-                'required' => false,
-                'label' => $this->trans('Display condition on product page', 'Admin.Catalog.Feature'),
-                'required' => false,
-            ])
             ->add('mpn', TextType::class, [
                 'required' => false,
                 'label' => $this->trans('MPN', 'Admin.Catalog.Feature'),
@@ -151,7 +128,7 @@ class ReferencesType extends TranslatorAwareType
         parent::configureOptions($resolver);
 
         $resolver->setDefaults([
-            'label' => $this->trans('Condition & References', 'Admin.Catalog.Feature'),
+            'label' => $this->trans('References', 'Admin.Catalog.Feature'),
             'label_tag_name' => 'h2',
             'required' => false,
             'columns_number' => 3,
