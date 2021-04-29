@@ -97,9 +97,11 @@ class ExternalLinkExtension extends AbstractTypeExtension
             ->setRequired(['href', 'text'])
             ->setDefaults([
                 'attr' => [],
+                'align' => 'left',
             ])
             ->setAllowedTypes('href', 'string')
             ->setAllowedTypes('text', 'string')
+            ->setAllowedTypes('align', 'string')
             ->setAllowedTypes('attr', ['null', 'array'])
         ;
 
