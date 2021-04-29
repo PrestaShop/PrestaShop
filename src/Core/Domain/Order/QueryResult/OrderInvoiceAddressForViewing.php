@@ -31,7 +31,7 @@ use PrestaShop\PrestaShop\Adapter\Address\AddressFormatter;
 @trigger_error(
     sprintf(
         '%s is deprecated since version 1.7.7.5 and will be removed in the next major version. Use %s instead.',
-        OrderShippingAddressForViewing::class,
+        OrderInvoiceAddressForViewing::class,
         AddressFormatter::class
     ),
     E_USER_DEPRECATED

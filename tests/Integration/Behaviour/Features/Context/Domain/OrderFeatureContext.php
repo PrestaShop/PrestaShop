@@ -30,6 +30,7 @@ namespace Tests\Integration\Behaviour\Features\Context\Domain;
 
 use Address;
 use AdminController;
+use Behat\Gherkin\Node\PyStringNode;
 use Behat\Gherkin\Node\TableNode;
 use Cart;
 use Configuration;
@@ -1865,6 +1866,43 @@ class OrderFeatureContext extends AbstractDomainFeatureContext
                 )
             );
         }
+    }
+
+    /**
+     * @Then /^the order "(.+)" has following the formatted (shipping|invoice) address$/
+     *
+     * @param string $orderReference
+     * @param string $addressType
+     * @param PyStringNode $pyStringNode
+     */
+    public function orderCheckAddressFormatted(string $orderReference, string $addressType, PyStringNode $pyStringNode): void
+    {
+        $orderId = SharedStorage::getStorage()->get($orderReference);
+        /** @var OrderForViewing $orderForViewing */
+        $orderForViewing = $this->getQueryBus()->handle(new GetOrderForViewing($orderId));
+        switch ($addressType) {
+            case 'shipping':
+                /** @var OrderShippingAddressForViewing $address */
+                $address = $orderForViewing->getShippingAddress();
+                break;
+            case 'invoice':
+                /** @var OrderInvoiceAddressForViewing $address */
+                $address = $orderForViewing->getInvoiceAddress();
+                break;
+            default:
+                throw new RuntimeException('Address Type is invalid');
+        }
+        $expected = implode(PHP_EOL, $address->getAddressFormatted());
+        Assert::assertEquals(
+            $expected,
+            $pyStringNode->getRaw(),
+            sprintf(
+                'Invalid formatted address for order %s, expected %s instead of %s',
+                $orderReference,
+                $expected,
+                $pyStringNode->getRaw()
+            )
+        );
     }
 
     /**
