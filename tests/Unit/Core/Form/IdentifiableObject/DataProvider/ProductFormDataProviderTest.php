@@ -93,12 +93,16 @@ class ProductFormDataProviderTest extends TestCase
                 'quantity' => 0,
                 'minimal_quantity' => 0,
             ],
-            'price' => [
-                'price_tax_excluded' => 0,
-                'price_tax_included' => 0,
+            'pricing' => [
+                'retail_price' => [
+                    'price_tax_excluded' => 0,
+                    'price_tax_included' => 0,
+                ],
                 'tax_rules_group_id' => 42,
                 'wholesale_price' => 0,
-                'unit_price' => 0,
+                'unit_price' => [
+                    'price' => 0,
+                ],
             ],
             'shipping' => [
                 'dimensions' => [
@@ -142,12 +146,16 @@ class ProductFormDataProviderTest extends TestCase
                 'quantity' => 0,
                 'minimal_quantity' => 0,
             ],
-            'price' => [
-                'price_tax_excluded' => 0,
-                'price_tax_included' => 0,
+            'pricing' => [
+                'retail_price' => [
+                    'price_tax_excluded' => 0,
+                    'price_tax_included' => 0,
+                ],
                 'tax_rules_group_id' => 42,
                 'wholesale_price' => 0,
-                'unit_price' => 0,
+                'unit_price' => [
+                    'price' => 0,
+                ],
             ],
             'shipping' => [
                 'dimensions' => [
@@ -379,21 +387,21 @@ class ProductFormDataProviderTest extends TestCase
             'unity' => 'candies',
             'unit_price_ratio' => new DecimalNumber('5'),
         ];
-        $expectedOutputData['price']['price_tax_excluded'] = 42.00;
-        $expectedOutputData['price']['price_tax_included'] = 50.40;
-        $expectedOutputData['price']['ecotax'] = 69.51;
-        $expectedOutputData['price']['tax_rules_group_id'] = 49;
-        $expectedOutputData['price']['on_sale'] = true;
-        $expectedOutputData['price']['wholesale_price'] = 66.56;
-        $expectedOutputData['price']['unit_price'] = 6.656;
-        $expectedOutputData['price']['unity'] = 'candies';
+        $expectedOutputData['pricing']['retail_price']['price_tax_excluded'] = 42.00;
+        $expectedOutputData['pricing']['retail_price']['price_tax_included'] = 50.40;
+        $expectedOutputData['pricing']['retail_price']['ecotax'] = 69.51;
+        $expectedOutputData['pricing']['tax_rules_group_id'] = 49;
+        $expectedOutputData['pricing']['on_sale'] = true;
+        $expectedOutputData['pricing']['wholesale_price'] = 66.56;
+        $expectedOutputData['pricing']['unit_price']['price'] = 6.656;
+        $expectedOutputData['pricing']['unit_price']['unity'] = 'candies';
 
         // Not handled yet
         // $expectedOutputData['price']['unit_price_ratio'] = 5;
 
-        $expectedOutputData['shortcuts']['price']['price_tax_excluded'] = 42.00;
-        $expectedOutputData['shortcuts']['price']['price_tax_included'] = 50.40;
-        $expectedOutputData['shortcuts']['price']['tax_rules_group_id'] = 49;
+        $expectedOutputData['shortcuts']['retail_price']['price_tax_excluded'] = 42.00;
+        $expectedOutputData['shortcuts']['retail_price']['price_tax_included'] = 50.40;
+        $expectedOutputData['shortcuts']['retail_price']['tax_rules_group_id'] = 49;
 
         $datasets[] = [
             $productData,
@@ -1064,15 +1072,19 @@ class ProductFormDataProviderTest extends TestCase
                 'available_later_label' => [],
                 'available_date' => '',
             ],
-            'price' => [
-                'price_tax_excluded' => 19.86,
-                'price_tax_included' => 23.832,
-                'ecotax' => 19.86,
+            'pricing' => [
+                'retail_price' => [
+                    'price_tax_excluded' => 19.86,
+                    'price_tax_included' => 23.832,
+                    'ecotax' => 19.86,
+                ],
                 'tax_rules_group_id' => 1,
                 'on_sale' => false,
                 'wholesale_price' => 19.86,
-                'unit_price' => 19.86,
-                'unity' => '',
+                'unit_price' => [
+                    'price' => 19.86,
+                    'unity' => '',
+                ],
             ],
             'seo' => [
                 'meta_title' => [],
@@ -1119,7 +1131,7 @@ class ProductFormDataProviderTest extends TestCase
                 'has_file' => false,
             ],
             'shortcuts' => [
-                'price' => [
+                'retail_price' => [
                     'price_tax_excluded' => 19.86,
                     'price_tax_included' => 23.832,
                     'tax_rules_group_id' => 1,

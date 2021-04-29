@@ -41,18 +41,18 @@ class PricesCommandsBuilder implements ProductCommandsBuilderInterface
      */
     public function buildCommands(ProductId $productId, array $formData): array
     {
-        if (!isset($formData['price'])) {
+        if (!isset($formData['pricing'])) {
             return [];
         }
 
-        $priceData = $formData['price'];
+        $priceData = $formData['pricing'];
         $command = new UpdateProductPricesCommand($productId->getValue());
 
-        if (isset($priceData['price_tax_excluded'])) {
-            $command->setPrice((string) $priceData['price_tax_excluded']);
+        if (isset($priceData['retail_price']['price_tax_excluded'])) {
+            $command->setPrice((string) $priceData['retail_price']['price_tax_excluded']);
         }
-        if (isset($priceData['ecotax'])) {
-            $command->setEcotax((string) $priceData['ecotax']);
+        if (isset($priceData['retail_price']['ecotax'])) {
+            $command->setEcotax((string) $priceData['retail_price']['ecotax']);
         }
         if (isset($priceData['tax_rules_group_id'])) {
             $command->setTaxRulesGroupId((int) $priceData['tax_rules_group_id']);
@@ -63,11 +63,11 @@ class PricesCommandsBuilder implements ProductCommandsBuilderInterface
         if (isset($priceData['wholesale_price'])) {
             $command->setWholesalePrice((string) $priceData['wholesale_price']);
         }
-        if (isset($priceData['unit_price'])) {
-            $command->setUnitPrice((string) $priceData['unit_price']);
+        if (isset($priceData['unit_price']['price'])) {
+            $command->setUnitPrice((string) $priceData['unit_price']['price']);
         }
-        if (isset($priceData['unity'])) {
-            $command->setUnity((string) $priceData['unity']);
+        if (isset($priceData['unit_price']['unity'])) {
+            $command->setUnity((string) $priceData['unit_price']['unity']);
         }
 
         return [$command];
