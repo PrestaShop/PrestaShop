@@ -680,10 +680,10 @@ class ImageManagerCore
                 $success = imagepng($resource, $filename, (int) $quality);
                 if (Configuration::get('PS_IMAGEOPT_PNGQUANT')) {
                     $pngquant_ext = pathinfo($filename, PATHINFO_EXTENSION) == 'png' ? '--ext=.png' : '--ext=';
-                    exec('/usr/bin/pngquant -f ' . $pngquant_ext . ' ' . escapeshellarg($filename));
+                    exec('pngquant -f ' . $pngquant_ext . ' ' . escapeshellarg($filename));
                 }
                 if (Configuration::get('PS_IMAGEOPT_OPTIPNG')) {
-                    exec('/usr/bin/optipng -o7 -q ' . escapeshellarg($filename));
+                    exec('optipng -o7 -q ' . escapeshellarg($filename));
                 }
 
                 break;
