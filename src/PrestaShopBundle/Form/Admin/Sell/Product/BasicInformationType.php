@@ -43,46 +43,11 @@ use Symfony\Component\Form\FormBuilderInterface;
 class BasicInformationType extends TranslatorAwareType
 {
     /**
-     * @param FormBuilderInterface $builder
-     * @param array $options
+     * {@inheritDoc}
      */
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
-            ->add('type', ChoiceType::class, [
-                'choices' => [
-                    $this->trans('Standard product', 'Admin.Catalog.Feature') => ProductType::TYPE_STANDARD,
-                    $this->trans('Pack of products', 'Admin.Catalog.Feature') => ProductType::TYPE_PACK,
-                    $this->trans('Virtual product', 'Admin.Catalog.Feature') => ProductType::TYPE_VIRTUAL,
-                    $this->trans('Product with combinations', 'Admin.Catalog.Feature') => ProductType::TYPE_COMBINATIONS,
-                ],
-                'choice_translation_domain' => 'Admin.Catalog.Feature',
-                'attr' => [
-                    'class' => 'custom-select',
-                    'data-modal-title' => $this->trans('Are you sure you want to change the product type?', 'Admin.Catalog.Notification'),
-                    'data-modal-apply' => $this->trans('Change product type', 'Admin.Catalog.Notification'),
-                    'data-modal-cancel' => $this->trans('Cancel', 'Admin.Global'),
-                    'data-confirm-message' => $this->trans('Changing the product type will immediately save the product and refresh the page.', 'Admin.Catalog.Notification'),
-                    'data-combinations-warning' => $this->trans('This will delete all combinations.', 'Admin.Catalog.Notification'),
-                    'data-pack-warning' => $this->trans('This will delete the list of products in this pack.', 'Admin.Catalog.Notification'),
-                    'data-virtual-warning' => $this->trans('This will delete the associated virtual file.', 'Admin.Catalog.Notification'),
-                ],
-                'label' => $this->trans('Type', 'Admin.Catalog.Feature'),
-                'help' => $this->trans('Is the product a pack (a combination of at least two existing products), a virtual product (downloadable file, service, etc.), or simply a standard, physical product?', 'Admin.Catalog.Help'),
-                'required' => true,
-            ])
-            ->add('name', TranslatableType::class, [
-                'label' => $this->trans('Name', 'Admin.Global'),
-                'type' => TextType::class,
-                'constraints' => [
-                    new DefaultLanguage(),
-                ],
-                'options' => [
-                    'attr' => [
-                        'class' => 'serp-default-title',
-                    ],
-                ],
-            ])
             ->add('description_short', TranslatableType::class, [
                 'required' => false,
                 'label' => $this->trans('Summary', 'Admin.Global'),
