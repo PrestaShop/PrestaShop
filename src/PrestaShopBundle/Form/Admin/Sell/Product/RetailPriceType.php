@@ -28,16 +28,14 @@ declare(strict_types=1);
 
 namespace PrestaShopBundle\Form\Admin\Sell\Product;
 
-use PrestaShop\PrestaShop\Core\ConstraintValidator\Constraints\PositiveOrZero;
-use PrestaShopBundle\Form\Admin\Type\TextWithUnitType;
+use Currency;
 use PrestaShopBundle\Form\Admin\Type\TranslatorAwareType;
+use Symfony\Component\Form\Extension\Core\Type\MoneyType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Translation\TranslatorInterface;
 use Symfony\Component\Validator\Constraints\NotBlank;
 use Symfony\Component\Validator\Constraints\Type;
-use Symfony\Component\Form\Extension\Core\Type\MoneyType;
-use Currency;
 
 class RetailPriceType extends TranslatorAwareType
 {

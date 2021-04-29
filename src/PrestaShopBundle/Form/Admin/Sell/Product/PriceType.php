@@ -30,16 +30,14 @@ namespace PrestaShopBundle\Form\Admin\Sell\Product;
 
 use Currency;
 use PrestaShopBundle\Form\Admin\Type\TranslatorAwareType;
+use PrestaShopBundle\Form\Admin\Type\UnavailableType;
 use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\MoneyType;
-use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
-use Symfony\Component\Translation\TranslatorInterface;
-use Symfony\Component\Validator\Constraints\NotBlank;
-use Symfony\Component\Validator\Constraints\Type;
 use Symfony\Component\OptionsResolver\OptionsResolver;
-use PrestaShopBundle\Form\Admin\Type\UnavailableType;
+use Symfony\Component\Translation\TranslatorInterface;
+use Symfony\Component\Validator\Constraints\Type;
 
 /**
  * Form type containing price fields for Pricing tab
