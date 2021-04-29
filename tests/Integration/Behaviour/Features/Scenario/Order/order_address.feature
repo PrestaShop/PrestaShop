@@ -58,6 +58,13 @@ Feature: Order from Back Office (BO)
       | Country          | France                       |
       | Postal code      | 75008                        |
       | DNI              |                              |
+    And the order "bo_order1" has the following formatted shipping address
+    """
+    testFirstName testLastName
+    36 Avenue des Champs Elysees
+    75008 Paris
+    France
+    """
     And the order "bo_order1" has following invoice address
       | Fullname         | testFirstName testLastName   |
       | Address          | 36 Avenue des Champs Elysees |
@@ -65,6 +72,13 @@ Feature: Order from Back Office (BO)
       | Country          | France                       |
       | Postal code      | 75008                        |
       | DNI              |                              |
+    And the order "bo_order1" has the following formatted invoice address
+    """
+    testFirstName testLastName
+    36 Avenue des Champs Elysees
+    75008 Paris
+    France
+    """
 
   Scenario: Check address when DNI not defined
     Given I add new address to customer "testCustomer" with following details:
@@ -104,6 +118,14 @@ Feature: Order from Back Office (BO)
       | Country          | Spain                        |
       | Postal code      | 28071                        |
       | DNI              | 12345                        |
+    And the order "bo_order1" has the following formatted shipping address
+    """
+    testFirstName testLastName
+    Calle de Bailén
+    28071 Madrid
+    Spain
+    12345
+    """
     And the order "bo_order1" has following invoice address
       | Fullname         | testFirstName testLastName   |
       | Address          | Calle de Bailén              |
@@ -111,6 +133,14 @@ Feature: Order from Back Office (BO)
       | Country          | Spain                        |
       | Postal code      | 28071                        |
       | DNI              | 12345                        |
+    And the order "bo_order1" has the following formatted invoice address
+    """
+    testFirstName testLastName
+    Calle de Bailén
+    28071 Madrid
+    Spain
+    12345
+    """
 
   Scenario: Check shipping details after updating carrier tracking number & url
     Given there is a carrier named "tracking-carrier"

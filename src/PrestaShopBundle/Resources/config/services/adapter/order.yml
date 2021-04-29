@@ -204,6 +204,7 @@ services:
       - '@prestashop.adapter.data_provider.customer'
       - '@prestashop.adapter.order.query_handler.get_order_products_for_viewing_handler'
       - '@prestashop.adapter.legacy.configuration'
+      - '@prestashop.adapter.address.formatter'
     tags:
       - name: tactician.handler
         command: PrestaShop\PrestaShop\Core\Domain\Order\Query\GetOrderForViewing
