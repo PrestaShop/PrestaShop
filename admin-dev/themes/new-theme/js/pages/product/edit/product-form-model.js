@@ -27,15 +27,10 @@ import BigNumber from 'bignumber.js';
 import ObjectFormMapper from '@components/form/form-object-mapper';
 import ProductFormMapping from '@pages/product/edit/product-form-mapping';
 import ProductEventMap from '@pages/product/product-event-map';
-import ProductMap from '@pages/product/product-map';
 
 export default class ProductFormModel {
   constructor($form, eventEmitter) {
     this.eventEmitter = eventEmitter;
-
-    // For now we get precision only in the component, but maybe it would deserve a more global configuration
-    // BigNumber.set({DECIMAL_PLACES: someConfig}) But where can we define/inject this global config?
-    this.precision = $(ProductMap.price.priceTaxExcludedInput).data('displayPricePrecision');
 
     // Init form mapper
     this.mapper = new ObjectFormMapper(
@@ -48,6 +43,11 @@ export default class ProductFormModel {
         modelFieldUpdated: ProductEventMap.updatedProductField,
       },
     );
+
+    // For now we get precision only in the component, but maybe it would deserve a more global configuration
+    // BigNumber.set({DECIMAL_PLACES: someConfig}) But where can we define/inject this global config?
+    const $priceTaxExcludedInput = this.mapper.getInputsFor('product.price.priceTaxExcluded');
+    this.precision = $priceTaxExcludedInput.data('displayPricePrecision');
 
     // Listens to event for product modification (registered after the model is constructed, because events are
     // triggered during the initial parsing but don't need them at first).
