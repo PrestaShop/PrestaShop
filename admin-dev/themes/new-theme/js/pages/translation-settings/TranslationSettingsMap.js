@@ -37,4 +37,5 @@ export default {
   exportThemesValues: '#form_themes_selectors_selected_value',
   exportModulesType: '#form_modules_selectors_modules_type',
   exportModulesValues: '#form_modules_selectors_selected_value',
+  exportLanguageButton: '#form-export-language-button',
 };
