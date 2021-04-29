@@ -92,7 +92,7 @@ export default class NavbarHandler {
         return;
       }
 
-      this.switchToTarget(`#${target}`);
+      this.switchToTarget(`${target}`);
     });
   }
 
