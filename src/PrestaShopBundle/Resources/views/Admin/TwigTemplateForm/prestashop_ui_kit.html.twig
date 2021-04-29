@@ -54,7 +54,7 @@
 {# Rows #}
 
 {% block form_row -%}
-{% spaceless %}
+  {% spaceless %}
     {# In horizontal theme when using a title for label it needs to be outside of the row div #}
     {% if label_tag_name is defined %}
       {{ form_label(form) }}
@@ -83,6 +83,8 @@
       {% if attribute(form.parent, form.vars.name) is defined and attribute(form.parent, form.vars.name).vars.multistore_dropdown != false %}
         {{ attribute(form.parent, form.vars.name).vars.multistore_dropdown | raw }}
       {% endif %}
+
+      {{- block('form_external_link') -}}
     </div>
   {% endspaceless %}
 {%- endblock form_row %}
