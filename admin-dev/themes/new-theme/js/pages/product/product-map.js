@@ -38,9 +38,6 @@ export default {
   productFormSubmitButton: 'button[name="product[save]"]',
   navigationBar: '#form-nav',
   dropzoneImagesContainer: '#product_images',
-  price: {
-    priceTaxExcludedInput: '#product_price_price_tax_excluded',
-  },
   redirectOption: {
     typeInput: '#product_redirect_option_type',
     targetInput: '#product_redirect_option_target',
