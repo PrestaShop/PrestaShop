@@ -66,4 +66,8 @@
     </div>
   {% endblock %}
   {{ form_end(generalForm) }}
+  {% block javascripts %}
+    {{ parent() }}
+    <script src="{{ asset('themes/new-theme/public/shop_preferences.bundle.js') }}"></script>
+  {% endblock %}
 {% endblock %}

@@ -116,6 +116,7 @@ module.exports = {
     profiles: './js/pages/profiles',
     search_engine: './js/pages/search-engine',
     shipping_preferences: './js/pages/shipping-preferences',
+    shop_preferences: './js/pages/shop-preferences',
     specific_price_form: './js/pages/specific-price/form',
     security: './js/pages/security',
     sql_manager: './js/pages/sql-manager',
