@@ -95,7 +95,7 @@ final class ProductFormDataProvider implements FormDataProviderInterface
             'features' => $this->extractFeatureValues((int) $id),
             'manufacturer' => $productForEditing->getOptions()->getManufacturerId(),
             'stock' => $this->extractStockData($productForEditing),
-            'price' => $this->extractPriceData($productForEditing),
+            'pricing' => $this->extractPricingData($productForEditing),
             'seo' => $this->extractSEOData($productForEditing),
             'redirect_option' => $this->extractRedirectOptionData($productForEditing),
             'shipping' => $this->extractShippingData($productForEditing),
@@ -122,12 +122,16 @@ final class ProductFormDataProvider implements FormDataProviderInterface
                 'quantity' => 0,
                 'minimal_quantity' => 0,
             ],
-            'price' => [
-                'price_tax_excluded' => 0,
-                'price_tax_included' => 0,
+            'pricing' => [
+                'retail_price' => [
+                    'price_tax_excluded' => 0,
+                    'price_tax_included' => 0,
+                ],
                 'tax_rules_group_id' => $this->mostUsedTaxRulesGroupId,
                 'wholesale_price' => 0,
-                'unit_price' => 0,
+                'unit_price' => [
+                    'price' => 0,
+                ],
             ],
             'shipping' => [
                 'dimensions' => [
@@ -157,10 +161,10 @@ final class ProductFormDataProvider implements FormDataProviderInterface
     private function addShortcutData(array $productData): array
     {
         $productData['shortcuts'] = [
-            'price' => [
-                'price_tax_excluded' => $productData['price']['price_tax_excluded'],
-                'price_tax_included' => $productData['price']['price_tax_included'],
-                'tax_rules_group_id' => $productData['price']['tax_rules_group_id'],
+            'retail_price' => [
+                'price_tax_excluded' => $productData['pricing']['retail_price']['price_tax_excluded'],
+                'price_tax_included' => $productData['pricing']['retail_price']['price_tax_included'],
+                'tax_rules_group_id' => $productData['pricing']['tax_rules_group_id'],
             ],
             'stock' => [
                 'quantity' => $productData['stock']['quantity'],
@@ -274,17 +278,21 @@ final class ProductFormDataProvider implements FormDataProviderInterface
      *
      * @return array<string, mixed>
      */
-    private function extractPriceData(ProductForEditing $productForEditing): array
+    private function extractPricingData(ProductForEditing $productForEditing): array
     {
         return [
-            'price_tax_excluded' => (float) (string) $productForEditing->getPricesInformation()->getPrice(),
-            'price_tax_included' => (float) (string) $productForEditing->getPricesInformation()->getPriceTaxIncluded(),
-            'ecotax' => (float) (string) $productForEditing->getPricesInformation()->getEcotax(),
+            'retail_price' => [
+                'price_tax_excluded' => (float) (string) $productForEditing->getPricesInformation()->getPrice(),
+                'price_tax_included' => (float) (string) $productForEditing->getPricesInformation()->getPriceTaxIncluded(),
+                'ecotax' => (float) (string) $productForEditing->getPricesInformation()->getEcotax(),
+            ],
             'tax_rules_group_id' => $productForEditing->getPricesInformation()->getTaxRulesGroupId(),
             'on_sale' => $productForEditing->getPricesInformation()->isOnSale(),
             'wholesale_price' => (float) (string) $productForEditing->getPricesInformation()->getWholesalePrice(),
-            'unit_price' => (float) (string) $productForEditing->getPricesInformation()->getUnitPrice(),
-            'unity' => $productForEditing->getPricesInformation()->getUnity(),
+            'unit_price' => [
+                'price' => (float) (string) $productForEditing->getPricesInformation()->getUnitPrice(),
+                'unity' => $productForEditing->getPricesInformation()->getUnity(),
+            ],
         ];
     }
 
