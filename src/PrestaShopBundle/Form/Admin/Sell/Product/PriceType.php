@@ -36,6 +36,7 @@ use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\MoneyType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
+use Symfony\Component\Routing\RouterInterface;
 use Symfony\Component\Translation\TranslatorInterface;
 use Symfony\Component\Validator\Constraints\Type;
 
@@ -60,23 +61,31 @@ class PriceType extends TranslatorAwareType
     private $defaultCurrency;
 
     /**
+     * @var RouterInterface
+     */
+    private $router;
+
+    /**
      * @param TranslatorInterface $translator
      * @param array $locales
      * @param array $taxRuleGroupChoices
      * @param array $taxRuleGroupChoicesAttributes
      * @param Currency $defaultCurrency
+     * @param RouterInterface $router
      */
     public function __construct(
         TranslatorInterface $translator,
         array $locales,
         array $taxRuleGroupChoices,
         array $taxRuleGroupChoicesAttributes,
-        Currency $defaultCurrency
+        Currency $defaultCurrency,
+        RouterInterface $router
     ) {
         parent::__construct($translator, $locales);
         $this->taxRuleGroupChoices = $taxRuleGroupChoices;
         $this->taxRuleGroupChoicesAttributes = $taxRuleGroupChoicesAttributes;
         $this->defaultCurrency = $defaultCurrency;
+        $this->router = $router;
     }
 
     /**
@@ -97,6 +106,10 @@ class PriceType extends TranslatorAwareType
                     'data-minimumResultsForSearch' => '7',
                 ],
                 'label' => $this->trans('Tax rule', 'Admin.Catalog.Feature'),
+                'external_link' => [
+                    'text' => $this->trans('[1]Manage tax rules[/1]', 'Admin.Catalog.Feature'),
+                    'href' => $this->router->generate('admin_taxes_index'),
+                ],
             ])
             ->add('unit_price_parent', UnitPriceType::class)
             ->add('on_sale', CheckboxType::class, [

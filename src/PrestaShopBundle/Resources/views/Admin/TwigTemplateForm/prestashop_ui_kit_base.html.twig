@@ -1021,21 +1021,11 @@
 {% endblock form_help %}
 
 {% block form_external_link %}
-  {% if external_link.href is defined and external_link.text is defined %}
-    {% set attr = external_link.attr|merge({class: (external_link.attr.class|default('') ~ ' btn btn-link px-0 align-right')|trim}) %}
-    {% set openingTag %}
-      <a
-        {% for attrname, attrvalue in external_link.attr %}
-          {% if attrname not in ['href', 'class'] %} 
-            {{ attrname }}="{{ attrvalue }}"
-          {% endif %}
-        {% endfor %} 
-
-        href="{{ external_link.href }}"
-        class="{{ attr.class }}"
-      >
+  {% if external_link is defined %}
+    {%- set openingTag -%}
+      <a {{ block('form_external_link_attributes') }}>
         <i class="material-icons">open_in_new</i>
-    {% endset %}
+    {%- endset -%}
 
     <div class="small font-secondary text-right">
       {{ external_link.text|replace({'[1]': openingTag, '[/1]': '</a>'})|raw }}
@@ -1043,6 +1033,19 @@
   {% endif %}
 {% endblock form_external_link %}
 
+{%- block form_external_link_attributes -%}
+  {% set external_link_attr = external_link.attr|merge({class: (external_link.attr.class|default('') ~ ' btn btn-link px-0 align-right')|trim}) %}
+
+  {% for attrname, attrvalue in external_link_attr %}
+    {% if attrname not in ['href', 'class'] %}
+      {{ attrname }}="{{ attrvalue }}"
+    {% endif %}
+  {% endfor %}
+
+  target="_blank"
+  href="{{ external_link.href }}"
+  class="{{ external_link_attr.class }}"
+{%- endblock -%}
 
 {% block custom_content_widget %}
   {% include template with data %}
