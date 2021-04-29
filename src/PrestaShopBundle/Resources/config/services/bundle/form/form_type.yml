@@ -1273,6 +1273,13 @@ services:
         tags:
             - { name: form.type }
 
+    form.type.sell.product.header_type:
+        class: 'PrestaShopBundle\Form\Admin\Sell\Product\HeaderType'
+        parent: 'form.type.translatable.aware'
+        public: true
+        tags:
+            - { name: form.type }
+
     form.type.sell.product.pricing_type:
       class: 'PrestaShopBundle\Form\Admin\Sell\Product\PricingType'
       parent: 'form.type.translatable.aware'

@@ -75,13 +75,13 @@ class ProductFormType extends TranslatorAwareType
     }
 
     /**
-     * @param FormBuilderInterface $builder
-     * @param array $options
+     * {@inheritDoc}
      */
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $formIsUsedToEditAProduct = !empty($options['product_id']);
         $builder
+            ->add('header', HeaderType::class)
             ->add('basic', BasicInformationType::class)
             ->add('features', FeaturesType::class)
             ->add('manufacturer', ManufacturerType::class)

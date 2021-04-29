@@ -162,6 +162,24 @@
       display: flex;
       align-items: center;
     }
+
+    .product-header-form {
+      #product_header {
+        display: flex;
+        flex-direction: row;
+        margin: 0 -1rem;
+
+        > .form-group {
+          flex-grow: 1;
+          margin: 0 1rem;
+
+          &.select-widget {
+            display: flex;
+            flex-direction: row;
+          }
+        }
+      }
+    }
   }
 
   .big-input {
