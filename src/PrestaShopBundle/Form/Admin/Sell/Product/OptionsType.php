@@ -51,7 +51,6 @@ class OptionsType extends TranslatorAwareType
      */
     private $productConditionChoiceProvider;
 
-
     /**
      * @param TranslatorInterface $translator
      * @param array $locales
