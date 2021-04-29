@@ -63,7 +63,7 @@ class AccountIdentity extends FOBasePage {
    * @param page {object} Browser tab
    * @param password {string} String for the password
    *
-   * @returns {Promise<string|TextContent|*>}
+   * @returns {Promise<string>}
    */
   async unsubscribeNewsletter(page, password) {
     await this.setValue(page, this.passwordInput, password);
