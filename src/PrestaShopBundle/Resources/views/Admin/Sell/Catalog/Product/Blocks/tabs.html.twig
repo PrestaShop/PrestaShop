@@ -36,7 +36,7 @@
   and (productForm.virtual_product_file is not defined or productForm.virtual_product_file.vars.valid)
 %}
 
-{% set isPriceTabValid = productForm.price.vars.valid %}
+{% set isPricingTabValid = productForm.pricing.vars.valid %}
 {% set isShippingTabValid = productForm.shipping.vars.valid %}
 {% set isSEOTabValid = productForm.seo.vars.valid and productForm.redirect_option.vars.valid %}
 
@@ -70,7 +70,7 @@
       </li>
     {% endif %}
 
-    <li id="pricing-tab-nav" class="nav-item{% if not isPriceTabValid %} has-error{% endif %}">
+    <li id="pricing-tab-nav" class="nav-item{% if not isPricingTabValid %} has-error{% endif %}">
       <a href="#pricing-tab" role="tab" data-toggle="tab" class="nav-link">
         {{ 'Pricing'|trans({}, 'Admin.Catalog.Feature') }}
       </a>

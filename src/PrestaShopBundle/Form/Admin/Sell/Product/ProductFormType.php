@@ -89,7 +89,7 @@ class ProductFormType extends TranslatorAwareType
             ->add('virtual_product_file', VirtualProductFileType::class, [
                 'virtual_product_file_id' => $options['data']['virtual_product_file']['virtual_product_file_id'] ?? null,
             ])
-            ->add('price', PriceType::class)
+            ->add('pricing', PricingType::class)
             ->add('shipping', ShippingType::class)
             ->add('options', OptionsType::class)
             ->add('customizations', CustomizationsType::class)

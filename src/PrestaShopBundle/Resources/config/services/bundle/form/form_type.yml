@@ -1273,8 +1273,8 @@ services:
         tags:
             - { name: form.type }
 
-    form.type.sell.product.price_type:
-      class: 'PrestaShopBundle\Form\Admin\Sell\Product\PriceType'
+    form.type.sell.product.pricing_type:
+      class: 'PrestaShopBundle\Form\Admin\Sell\Product\PricingType'
       parent: 'form.type.translatable.aware'
       public: true
       arguments:
@@ -1291,6 +1291,7 @@ services:
         public: true
         arguments:
             - '@=service("prestashop.adapter.data_provider.currency").getDefaultCurrency()'
+            - "@=service('prestashop.adapter.legacy.configuration').getBoolean('PS_USE_ECOTAX')"
         tags:
             - { name: form.type }
 
