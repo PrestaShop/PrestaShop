@@ -65,7 +65,7 @@ class ShortcutsType extends TranslatorAwareType
                     ],
                 ],
             ])
-            ->add('price', PriceShortcutType::class, [
+            ->add('retail_price', PriceShortcutType::class, [
                 'label' => $this->trans('Retail price', 'Admin.Catalog.Feature'),
                 'label_tag_name' => 'h2',
                 'label_attr' => [

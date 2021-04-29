@@ -30,6 +30,7 @@ namespace PrestaShopBundle\Form\Admin\Sell\Product;
 
 use Currency;
 use PrestaShopBundle\Form\Admin\Type\TranslatorAwareType;
+use PrestaShopBundle\Form\Admin\Type\UnavailableType;
 use Symfony\Component\Form\Extension\Core\Type\MoneyType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
@@ -45,6 +46,11 @@ class RetailPriceType extends TranslatorAwareType
     private $defaultCurrency;
 
     /**
+     * @var bool
+     */
+    private $isEcotaxEnabled;
+
+    /**
      * @param TranslatorInterface $translator
      * @param array $locales
      * @param Currency $defaultCurrency
@@ -52,10 +58,12 @@ class RetailPriceType extends TranslatorAwareType
     public function __construct(
         TranslatorInterface $translator,
         array $locales,
-        Currency $defaultCurrency
+        Currency $defaultCurrency,
+        bool $isEcotaxEnabled
     ) {
         parent::__construct($translator, $locales);
         $this->defaultCurrency = $defaultCurrency;
+        $this->isEcotaxEnabled = $isEcotaxEnabled;
     }
 
     /**
@@ -64,6 +72,7 @@ class RetailPriceType extends TranslatorAwareType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
+            // @todo we should have DecimalType and MoneyDecimalType it was moved in a separate PR #22162
             ->add('price_tax_excluded', MoneyType::class, [
                 'required' => false,
                 'label' => $this->trans('Retail price (tax excl.)', 'Admin.Catalog.Feature'),
@@ -85,6 +94,12 @@ class RetailPriceType extends TranslatorAwareType
                 ],
             ])
         ;
+
+        if ($this->isEcotaxEnabled) {
+            $builder->add('ecotax', UnavailableType::class, [
+                'label' => $this->trans('Ecotax (tax incl.)', 'Admin.Catalog.Feature'),
+            ]);
+        }
     }
 
     /**

@@ -38,12 +38,11 @@ use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Routing\RouterInterface;
 use Symfony\Component\Translation\TranslatorInterface;
-use Symfony\Component\Validator\Constraints\Type;
 
 /**
  * Form type containing price fields for Pricing tab
  */
-class PriceType extends TranslatorAwareType
+class PricingType extends TranslatorAwareType
 {
     /**
      * @var array
@@ -95,7 +94,6 @@ class PriceType extends TranslatorAwareType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
-            // @todo we should have DecimalType and MoneyDecimalType it was moved in a separate PR #22162
             ->add('retail_price', RetailPriceType::class)
             ->add('tax_rules_group_id', ChoiceType::class, [
                 'choices' => $this->taxRuleGroupChoices,
@@ -111,7 +109,7 @@ class PriceType extends TranslatorAwareType
                     'href' => $this->router->generate('admin_taxes_index'),
                 ],
             ])
-            ->add('unit_price_parent', UnitPriceType::class)
+            ->add('unit_price', UnitPriceType::class)
             ->add('on_sale', CheckboxType::class, [
                 'required' => false,
                 'label' => $this->trans(

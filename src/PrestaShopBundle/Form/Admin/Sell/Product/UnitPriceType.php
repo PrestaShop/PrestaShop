@@ -63,7 +63,7 @@ class UnitPriceType extends TranslatorAwareType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
-            ->add('unit_price', MoneyType::class, [
+            ->add('price', MoneyType::class, [
                 'required' => false,
                 'label' => $this->trans('Retail price per unit (tax excl.)', 'Admin.Catalog.Feature'),
                 'label_attr' => [
