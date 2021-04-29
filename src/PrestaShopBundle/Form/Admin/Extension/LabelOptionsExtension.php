@@ -54,9 +54,12 @@ class LabelOptionsExtension extends AbstractTypeExtension
                 'label_tag_name' => null,
                 // Allows to add a subtitle after a label (mostly useful when using label_tag_name with header tags)
                 'label_subtitle' => null,
+                // Allows to add a help box after a label
+                'label_help_box' => null,
             ])
             ->setAllowedTypes('label_tag_name', ['null', 'string'])
             ->setAllowedTypes('label_subtitle', ['null', 'string'])
+            ->setAllowedTypes('label_help_box', ['null', 'string'])
         ;
     }
 
@@ -70,6 +73,9 @@ class LabelOptionsExtension extends AbstractTypeExtension
         }
         if (!empty($options['label_subtitle'])) {
             $view->vars['label_subtitle'] = $options['label_subtitle'];
+        }
+        if (!empty($options['label_help_box'])) {
+            $view->vars['label_help_box'] = $options['label_help_box'];
         }
     }
 

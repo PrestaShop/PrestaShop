@@ -104,9 +104,7 @@ class RedirectOptionType extends TranslatorAwareType
             ->add('type', ChoiceType::class, [
                 'label' => $this->trans('Redirection page', 'Admin.Catalog.Feature'),
                 'label_tag_name' => 'h2',
-                'label_attr' => [
-                    'popover' => $this->trans('When your product is disabled, choose to which page you’d like to redirect the customers visiting its page by typing the product or category name.', 'Admin.Catalog.Help'),
-                ],
+                'label_help_box' => $this->trans('When your product is disabled, choose to which page you’d like to redirect the customers visiting its page by typing the product or category name.', 'Admin.Catalog.Help'),
                 'label_subtitle' => $this->trans('Charge additional shipping costs based on packet dimensions covered here.', 'Admin.Catalog.Feature'),
                 'required' => false,
                 'placeholder' => false, // Guaranties that no empty value is added in options
