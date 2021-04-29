@@ -59,7 +59,7 @@
 {# Rows #}
 
 {% block form_row -%}
-  <div class="form-group{% if (not compound or force_error|default(false)) and not valid %} has-error{% endif %}{% if row_attr.class is defined %} {{ row_attr.class }}{% endif %}">
+  <div class="form-group{{ block('widget_type_class') }}{% if (not compound or force_error|default(false)) and not valid %} has-error{% endif %}{% if row_attr.class is defined %} {{ row_attr.class }}{% endif %}">
     {{- form_label(form) -}}
     {{- form_widget(form) -}}
     {{- form_errors(form) -}}
@@ -67,6 +67,26 @@
     {{- block('form_external_link') -}}
   </div>
 {%- endblock form_row %}
+
+{% block widget_type_class %}
+{% if not compound and form.vars.block_prefixes|length > 2 %}
+ {% spaceless %}
+
+    {% set index = form.vars.block_prefixes|length - 2 %}
+    {% set widgetType = form.vars.block_prefixes[index] %}
+    {% if widgetType == 'choice' %}
+      {% if not expanded %}
+        {% set widgetType = 'select' %}
+      {% elseif multiple %}
+        {% set widgetType = 'checboxes' %}
+      {% else %}
+        {% set widgetType = 'radio' %}
+      {% endif %}
+    {% endif %}
+    {{ widgetType }}-widget
+{% endspaceless %}
+{% endif %}
+{% endblock %}
 
 {# Labels #}
 
