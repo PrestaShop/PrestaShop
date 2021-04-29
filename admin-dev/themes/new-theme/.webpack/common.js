@@ -98,6 +98,7 @@ module.exports = {
     product_page: './js/product-page/index',
     product_preferences: './js/pages/product-preferences',
     profiles: './js/pages/profiles',
+    shop_preferences: './js/pages/shop-preferences',
     sql_manager: './js/pages/sql-manager',
     stock: './js/app/pages/stock',
     supplier: './js/pages/supplier',
