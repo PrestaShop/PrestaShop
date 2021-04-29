@@ -40,7 +40,7 @@ use PrestaShop\PrestaShop\Core\Domain\SqlManagement\ValueObject\SqlRequestId;
 
 @trigger_error(
     sprintf(
-        '%s is deprecated since version 1.7.7.4 and will be removed in the next major version.',
+        '%s is deprecated since version 1.7.7.5 and will be removed in the next major version.',
         SqlRequestFormDataProvider::class
     ),
     E_USER_DEPRECATED
@@ -49,7 +49,7 @@ use PrestaShop\PrestaShop\Core\Domain\SqlManagement\ValueObject\SqlRequestId;
 /**
  * Class RequestSqlFormDataProvider is responsible for getting/saving RequestSql form data.
  *
- * @deprecated Since 1.7.7.4 and will be removed in the next major.
+ * @deprecated Since 1.7.7.5 and will be removed in the next major.
  */
 class SqlRequestFormDataProvider
 {

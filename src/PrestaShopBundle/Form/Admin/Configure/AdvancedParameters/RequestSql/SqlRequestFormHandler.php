@@ -32,7 +32,7 @@ use Symfony\Component\Form\FormInterface;
 
 @trigger_error(
     sprintf(
-        '%s is deprecated since version 1.7.7.4 and will be removed in the next major version.',
+        '%s is deprecated since version 1.7.7.5 and will be removed in the next major version.',
         SqlRequestFormHandler::class
     ),
     E_USER_DEPRECATED
@@ -41,7 +41,7 @@ use Symfony\Component\Form\FormInterface;
 /**
  * Class RequestSqlFormHandler is responsible for creating RequestSql form.
  *
- * @deprecated Since 1.7.7.4 and will be removed in the next major.
+ * @deprecated Since 1.7.7.5 and will be removed in the next major.
  */
 class SqlRequestFormHandler
 {
