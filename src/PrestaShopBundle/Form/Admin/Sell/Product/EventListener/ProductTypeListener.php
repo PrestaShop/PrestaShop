@@ -57,8 +57,9 @@ class ProductTypeListener implements EventSubscriberInterface
     {
         $form = $event->getForm();
         $data = $event->getData();
+        $productType = $data['header']['type'];
 
-        if (ProductType::TYPE_COMBINATIONS === $data['basic']['type']) {
+        if (ProductType::TYPE_COMBINATIONS === $productType) {
             $form->remove('suppliers');
             $form->remove('stock');
             if ($form->has('shortcuts')) {
@@ -66,7 +67,7 @@ class ProductTypeListener implements EventSubscriberInterface
                 $shortcutsForm->remove('stock');
             }
         }
-        if (ProductType::TYPE_VIRTUAL !== $data['basic']['type']) {
+        if (ProductType::TYPE_VIRTUAL !== $productType) {
             $form->remove('virtual_product_file');
         }
     }

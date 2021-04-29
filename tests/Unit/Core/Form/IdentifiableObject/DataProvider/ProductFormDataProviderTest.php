@@ -85,7 +85,7 @@ class ProductFormDataProviderTest extends TestCase
         $provider = $this->buildProvider($queryBusMock, false);
 
         $expectedDefaultData = [
-            'basic' => [
+            'header' => [
                 'type' => ProductType::TYPE_STANDARD,
             ],
             'manufacturer' => NoManufacturerId::NO_MANUFACTURER_ID,
@@ -138,7 +138,7 @@ class ProductFormDataProviderTest extends TestCase
         $provider = $this->buildProvider($queryBusMock, true);
 
         $expectedDefaultData = [
-            'basic' => [
+            'header' => [
                 'type' => ProductType::TYPE_STANDARD,
             ],
             'manufacturer' => NoManufacturerId::NO_MANUFACTURER_ID,
@@ -347,8 +347,9 @@ class ProductFormDataProviderTest extends TestCase
             'description' => $localizedValues,
             'description_short' => $localizedValues,
         ];
-        $expectedOutputData['basic']['name'] = $localizedValues;
-        $expectedOutputData['basic']['type'] = ProductType::TYPE_COMBINATIONS;
+        $expectedOutputData['header']['name'] = $localizedValues;
+        $expectedOutputData['header']['type'] = ProductType::TYPE_COMBINATIONS;
+
         $expectedOutputData['basic']['description'] = $localizedValues;
         $expectedOutputData['basic']['description_short'] = $localizedValues;
 
@@ -1052,9 +1053,11 @@ class ProductFormDataProviderTest extends TestCase
     {
         return [
             'id' => static::PRODUCT_ID,
-            'basic' => [
+            'header' => [
                 'type' => ProductType::TYPE_STANDARD,
                 'name' => [],
+            ],
+            'basic' => [
                 'description' => [],
                 'description_short' => [],
             ],

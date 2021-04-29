@@ -78,6 +78,8 @@ class HeaderType extends TranslatorAwareType
                 'label' => false,
                 'help' => $this->trans('Is the product a pack (a combination of at least two existing products), a virtual product (downloadable file, service, etc.), or simply a standard, physical product?', 'Admin.Catalog.Help'),
                 'required' => false,
+                // placeholder false is important to avoid empty option in select input despite required being false
+                'placeholder' => false,
             ])
         ;
     }

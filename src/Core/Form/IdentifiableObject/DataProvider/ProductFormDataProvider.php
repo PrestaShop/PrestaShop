@@ -91,6 +91,7 @@ final class ProductFormDataProvider implements FormDataProviderInterface
 
         $productData = [
             'id' => $productId,
+            'header' => $this->extractHeaderData($productForEditing),
             'basic' => $this->extractBasicData($productForEditing),
             'features' => $this->extractFeatureValues((int) $id),
             'manufacturer' => $productForEditing->getOptions()->getManufacturerId(),
@@ -114,7 +115,7 @@ final class ProductFormDataProvider implements FormDataProviderInterface
     public function getDefaultData()
     {
         return $this->addShortcutData([
-            'basic' => [
+            'header' => [
                 'type' => ProductType::TYPE_STANDARD,
             ],
             'manufacturer' => NoManufacturerId::NO_MANUFACTURER_ID,
@@ -207,11 +208,22 @@ final class ProductFormDataProvider implements FormDataProviderInterface
      *
      * @return array<string, mixed>
      */
-    private function extractBasicData(ProductForEditing $productForEditing): array
+    private function extractHeaderData(ProductForEditing $productForEditing): array
     {
         return [
             'type' => $productForEditing->getType(),
             'name' => $productForEditing->getBasicInformation()->getLocalizedNames(),
+        ];
+    }
+
+    /**
+     * @param ProductForEditing $productForEditing
+     *
+     * @return array<string, mixed>
+     */
+    private function extractBasicData(ProductForEditing $productForEditing): array
+    {
+        return [
             'description' => $productForEditing->getBasicInformation()->getLocalizedDescriptions(),
             'description_short' => $productForEditing->getBasicInformation()->getLocalizedShortDescriptions(),
         ];
