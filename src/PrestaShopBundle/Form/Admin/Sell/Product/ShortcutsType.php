@@ -46,16 +46,12 @@ class ShortcutsType extends TranslatorAwareType
             ->add('reference', UnavailableType::class, [
                 'label' => $this->trans('Reference', 'Admin.Catalog.Feature'),
                 'label_tag_name' => 'h2',
-                'label_attr' => [
-                    'popover' => $this->trans('Your reference code for this product. Allowed special characters: .-_#.', 'Admin.Catalog.Help'),
-                ],
+                'label_help_box' => $this->trans('Your reference code for this product. Allowed special characters: .-_#.', 'Admin.Catalog.Help'),
             ])
             ->add('stock', StockShortcutType::class, [
                 'label' => $this->trans('Quantity', 'Admin.Catalog.Feature'),
                 'label_tag_name' => 'h2',
-                'label_attr' => [
-                    'popover' => $this->trans('How many products should be available for sale?', 'Admin.Catalog.Help'),
-                ],
+                'label_help_box' => $this->trans('How many products should be available for sale?', 'Admin.Catalog.Help'),
                 'required' => false,
                 'external_link' => [
                     'text' => $this->trans('Advanced settings in [1]%settings_label%[/1]', 'Admin.Catalog.Feature', ['%settings_label%' => $this->trans('Stock', 'Admin.Catalog.Feature')]),
@@ -68,9 +64,7 @@ class ShortcutsType extends TranslatorAwareType
             ->add('retail_price', PriceShortcutType::class, [
                 'label' => $this->trans('Retail price', 'Admin.Catalog.Feature'),
                 'label_tag_name' => 'h2',
-                'label_attr' => [
-                    'popover' => $this->trans('This is the retail price at which you intend to sell this product to your customers. The tax included price will change according to the tax rule you select.', 'Admin.Catalog.Help'),
-                ],
+                'label_help_box' => $this->trans('This is the retail price at which you intend to sell this product to your customers. The tax included price will change according to the tax rule you select.', 'Admin.Catalog.Help'),
                 'required' => false,
                 'external_link' => [
                     'text' => $this->trans('Advanced settings in [1]%settings_label%[/1]', 'Admin.Catalog.Feature', ['%settings_label%' => $this->trans('Pricing', 'Admin.Catalog.Feature')]),
@@ -84,9 +78,7 @@ class ShortcutsType extends TranslatorAwareType
             ->add('create_category', UnavailableType::class, [
                 'label' => $this->trans('Create a new category', 'Admin.Catalog.Feature'),
                 'label_tag_name' => 'h2',
-                'label_attr' => [
-                    'popover' => $this->trans('If you want to quickly create a new category, you can do it here. Don’t forget to then go to the Categories page to fill in the needed details (description, image, etc.). A new category will not automatically appear in your shop\'s menu, please read the Help about it.', 'Admin.Catalog.Help'),
-                ],
+                'label_help_box' => $this->trans('If you want to quickly create a new category, you can do it here. Don’t forget to then go to the Categories page to fill in the needed details (description, image, etc.). A new category will not automatically appear in your shop\'s menu, please read the Help about it.', 'Admin.Catalog.Help'),
             ])
         ;
     }

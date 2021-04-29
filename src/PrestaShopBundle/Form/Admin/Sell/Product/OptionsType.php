@@ -117,14 +117,11 @@ class OptionsType extends TranslatorAwareType
                 'required' => false,
                 'label' => $this->trans('Condition', 'Admin.Catalog.Feature'),
                 'label_tag_name' => 'h2',
-                'label_attr' => [
-                    'popover' => $this->trans('Not all shops sell new products. This option enables you to indicate the condition of the product. It can be required on some marketplaces.', 'Admin.Catalog.Help'),
-                ],
+                'label_help_box' => $this->trans('Not all shops sell new products. This option enables you to indicate the condition of the product. It can be required on some marketplaces.', 'Admin.Catalog.Help'),
             ])
             ->add('show_condition', SwitchType::class, [
                 'required' => false,
                 'label' => $this->trans('Display condition on product page', 'Admin.Catalog.Feature'),
-                'required' => false,
             ])
             ->add('references', ReferencesType::class)
         ;

@@ -122,25 +122,19 @@ class PricingType extends TranslatorAwareType
                 'required' => false,
                 'label' => $this->trans('Cost price (tax excl.)', 'Admin.Catalog.Feature'),
                 'label_tag_name' => 'h2',
-                'label_attr' => [
-                    'popover' => $this->trans('The cost price is the price you paid for the product. Do not include the tax. It should be lower than the net sales price: the difference between the two will be your margin.', 'Admin.Catalog.Help'),
-                ],
+                'label_help_box' => $this->trans('The cost price is the price you paid for the product. Do not include the tax. It should be lower than the net sales price: the difference between the two will be your margin.', 'Admin.Catalog.Help'),
                 'attr' => ['data-display-price-precision' => self::PRESTASHOP_DECIMALS],
                 'currency' => $this->defaultCurrency->iso_code,
             ])
             ->add('specific_prices', UnavailableType::class, [
                 'label' => $this->trans('Specific prices', 'Admin.Catalog.Feature'),
                 'label_tag_name' => 'h2',
-                'label_attr' => [
-                    'popover' => $this->trans('You can set specific prices for customers belonging to different groups, different countries, etc.', 'Admin.Catalog.Help'),
-                ],
+                'label_help_box' => $this->trans('You can set specific prices for customers belonging to different groups, different countries, etc.', 'Admin.Catalog.Help'),
             ])
             ->add('priority_management', UnavailableType::class, [
                 'label' => $this->trans('Priority management', 'Admin.Catalog.Feature'),
                 'label_tag_name' => 'h2',
-                'label_attr' => [
-                    'popover' => $this->trans('Sometimes one customer can fit into multiple price rules. Priorities allow you to define which rules apply first.', 'Admin.Catalog.Help'),
-                ],
+                'label_help_box' => $this->trans('Sometimes one customer can fit into multiple price rules. Priorities allow you to define which rules apply first.', 'Admin.Catalog.Help'),
             ])
         ;
     }

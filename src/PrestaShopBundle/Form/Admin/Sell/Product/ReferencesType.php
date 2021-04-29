@@ -61,9 +61,7 @@ class ReferencesType extends TranslatorAwareType
             ->add('mpn', TextType::class, [
                 'required' => false,
                 'label' => $this->trans('MPN', 'Admin.Catalog.Feature'),
-                'label_attr' => [
-                    'popover' => $this->trans('MPN is used internationally to identify the Manufacturer Part Number.', 'Admin.Catalog.Help'),
-                ],
+                'label_help_box' => $this->trans('MPN is used internationally to identify the Manufacturer Part Number.', 'Admin.Catalog.Help'),
                 'constraints' => [
                     new Length(['max' => ProductSettings::MAX_MPN_LENGTH]),
                 ],
@@ -72,9 +70,7 @@ class ReferencesType extends TranslatorAwareType
             ->add('upc', TextType::class, [
                 'required' => false,
                 'label' => $this->trans('UPC barcode', 'Admin.Catalog.Feature'),
-                'label_attr' => [
-                    'popover' => $this->trans('This type of product code is widely used in the United States, Canada, the United Kingdom, Australia, New Zealand and in other countries.', 'Admin.Catalog.Help'),
-                ],
+                'label_help_box' => $this->trans('This type of product code is widely used in the United States, Canada, the United Kingdom, Australia, New Zealand and in other countries.', 'Admin.Catalog.Help'),
                 'constraints' => [
                     new TypedRegex(TypedRegex::TYPE_UPC),
                 ],
@@ -84,9 +80,7 @@ class ReferencesType extends TranslatorAwareType
                 'required' => false,
                 'error_bubbling' => true,
                 'label' => $this->trans('EAN-13 or JAN barcode', 'Admin.Catalog.Feature'),
-                'label_attr' => [
-                    'popover' => $this->trans('This type of product code is specific to Europe and Japan, but is widely used internationally. It is a superset of the UPC code: all products marked with an EAN will be accepted in North America.', 'Admin.Catalog.Help'),
-                ],
+                'label_help_box' => $this->trans('This type of product code is specific to Europe and Japan, but is widely used internationally. It is a superset of the UPC code: all products marked with an EAN will be accepted in North America.', 'Admin.Catalog.Help'),
                 'constraints' => [
                     new TypedRegex(TypedRegex::TYPE_EAN_13),
                 ],
@@ -95,9 +89,7 @@ class ReferencesType extends TranslatorAwareType
             ->add('isbn', TextType::class, [
                 'required' => false,
                 'label' => $this->trans('ISBN', 'Admin.Catalog.Feature'),
-                'label_attr' => [
-                    'popover' => $this->trans('The International Standard Book Number (ISBN) is used to identify books and other publications.', 'Admin.Catalog.Help'),
-                ],
+                'label_help_box' => $this->trans('The International Standard Book Number (ISBN) is used to identify books and other publications.', 'Admin.Catalog.Help'),
                 'constraints' => [
                     new TypedRegex(TypedRegex::TYPE_ISBN),
                 ],
@@ -106,9 +98,7 @@ class ReferencesType extends TranslatorAwareType
             ->add('reference', TextType::class, [
                 'required' => false,
                 'label' => $this->trans('Reference', 'Admin.Global'),
-                'label_attr' => [
-                    'popover' => $this->trans('Your reference code for this product. Allowed special characters: .-_#.', 'Admin.Catalog.Help'),
-                ],
+                'label_help_box' => $this->trans('Your reference code for this product. Allowed special characters: .-_#.', 'Admin.Catalog.Help'),
                 'empty_data' => '',
             ])
         ;
