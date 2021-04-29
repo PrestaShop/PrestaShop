@@ -107,6 +107,7 @@ class PricingType extends TranslatorAwareType
                 'external_link' => [
                     'text' => $this->trans('[1]Manage tax rules[/1]', 'Admin.Catalog.Feature'),
                     'href' => $this->router->generate('admin_taxes_index'),
+                    'align' => 'right',
                 ],
             ])
             ->add('unit_price', UnitPriceType::class)

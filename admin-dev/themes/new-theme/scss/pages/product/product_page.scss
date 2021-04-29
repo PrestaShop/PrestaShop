@@ -234,16 +234,15 @@
       max-width: 16.5rem;
     }
 
-    select,
-    .select2 {
+    &.select-widget {
       max-width: 16.5rem;
     }
 
     @include media-breakpoint-down("sm") {
       input,
-      select,
-      .money-type,
-      .select2 {
+      &.select-widget,
+      .money-type
+       {
         max-width: inherit;
       }
     }
