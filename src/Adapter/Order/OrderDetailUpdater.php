@@ -36,6 +36,7 @@ use Customer;
 use Db;
 use Order;
 use OrderDetail;
+use PrestaShop\Decimal\Exception\DivisionByZeroException;
 use PrestaShop\Decimal\Number;
 use PrestaShop\PrestaShop\Adapter\ContextStateManager;
 use PrestaShop\PrestaShop\Core\Domain\Configuration\ShopConfigurationInterface;
@@ -112,6 +113,7 @@ class OrderDetailUpdater
      * @param int $combinationId
      * @param Number $priceTaxExcluded
      * @param Number $priceTaxIncluded
+     * @param bool $quantityDependent Says if the price is dependent of the quantity. Set to false when updating a product so we don't modify the price
      *
      * @throws OrderException
      */
@@ -120,7 +122,8 @@ class OrderDetailUpdater
         int $productId,
         int $combinationId,
         Number $priceTaxExcluded,
-        Number $priceTaxIncluded
+        Number $priceTaxIncluded,
+        bool $quantityDependent = false
     ): void {
         list($roundType, $computingPrecision, $taxAddress) = $this->prepareOrderContext($order);
 
@@ -133,7 +136,8 @@ class OrderDetailUpdater
                 $priceTaxIncluded,
                 $roundType,
                 $computingPrecision,
-                $taxAddress
+                $taxAddress,
+                $quantityDependent
             );
         } finally {
             $this->contextStateManager->restorePreviousContext();
@@ -292,6 +296,7 @@ class OrderDetailUpdater
      * @param int $roundType
      * @param int $computingPrecision
      * @param Address $taxAddress
+     * @param bool $quantityDependent Says if the price is dependent of the quantity. Set to false when updating a product so we don't modify the price
      *
      * @throws OrderException
      */
@@ -303,7 +308,8 @@ class OrderDetailUpdater
         Number $priceTaxIncluded,
         int $roundType,
         int $computingPrecision,
-        Address $taxAddress
+        Address $taxAddress,
+        bool $quantityDependent = false
     ): void {
         $identicalOrderDetails = $this->getOrderDetailsForProduct($order, $productId, $combinationId);
         if (empty($identicalOrderDetails)) {
@@ -312,8 +318,8 @@ class OrderDetailUpdater
 
         // Get precise prices thanks to first OrderDetail (they all have the same price anyway)
         $orderDetail = $identicalOrderDetails[0];
-        $precisePriceTaxExcluded = $this->getPrecisePriceTaxExcluded($priceTaxIncluded, $priceTaxExcluded, $order, $orderDetail, $taxAddress);
-        $precisePriceTaxIncluded = $this->getPrecisePriceTaxIncluded($priceTaxIncluded, $priceTaxExcluded, $order, $orderDetail, $taxAddress);
+        $precisePriceTaxExcluded = $this->getPrecisePriceTaxExcluded($priceTaxIncluded, $priceTaxExcluded, $order, $orderDetail, $taxAddress, $quantityDependent);
+        $precisePriceTaxIncluded = $this->getPrecisePriceTaxIncluded($priceTaxIncluded, $priceTaxExcluded, $order, $orderDetail, $taxAddress, $quantityDependent);
 
         foreach ($identicalOrderDetails as $identicalOrderDetail) {
             $this->applyOrderDetailPriceUpdate(
@@ -360,28 +366,32 @@ class OrderDetailUpdater
      * @param Order $order
      * @param OrderDetail $orderDetail
      * @param Address $taxAddress
+     * @param bool $quantityDependent Says if the price is dependent of the quantity. Set to false when updating a product so we don't modify the price
      *
      * @return Number
+     *
+     * @throws DivisionByZeroException
      */
     private function getPrecisePriceTaxExcluded(
         Number $priceTaxIncluded,
         Number $priceTaxExcluded,
         Order $order,
         OrderDetail $orderDetail,
-        Address $taxAddress
+        Address $taxAddress,
+        bool $quantityDependent = false
     ): Number {
         $productOriginalPrice = $this->getProductRegularPrice($order, $orderDetail, $taxAddress);
-        // Specific price, quantity dependent
-        $productOriginalPriceForQuantity = $this->getProductRegularPrice($order, $orderDetail, $taxAddress, true);
 
-        // If provided price is equal to catalog price and specific price
-        // If equal to catalog price and not to specific price, we take the specific price tax excluded and compute taxes
+        // If provided price is equal to catalog price
+        // That means that the user doesn't modify the price himself
+        // no need to recompute
         if ($productOriginalPrice->equals($priceTaxExcluded)) {
-            if (!$productOriginalPriceForQuantity->equals($priceTaxExcluded)) {
-                $priceTaxExcluded = $productOriginalPriceForQuantity;
+            if ($quantityDependent) {
+                // Specific price, quantity dependent
+                return $this->getProductRegularPrice($order, $orderDetail, $taxAddress, true);
+            } else {
+                return $priceTaxExcluded;
             }
-
-            return $priceTaxExcluded;
         }
 
         $productTaxCalculator = $this->getTaxCalculatorByAddress($taxAddress, $orderDetail);
@@ -407,6 +417,7 @@ class OrderDetailUpdater
      * @param Order $order
      * @param OrderDetail $orderDetail
      * @param Address $taxAddress
+     * @param bool $quantityDependent Says if the price is dependent of the quantity. Set to false when updating a product so we don't modify the price
      *
      * @return Number
      */
@@ -415,20 +426,20 @@ class OrderDetailUpdater
         Number $priceTaxExcluded,
         Order $order,
         OrderDetail $orderDetail,
-        Address $taxAddress
+        Address $taxAddress,
+        bool $quantityDependent = false
     ): Number {
         $productOriginalPrice = $this->getProductRegularPrice($order, $orderDetail, $taxAddress);
-        // Specific price, quantity dependent
-        $productOriginalPriceForQuantity = $this->getProductRegularPrice($order, $orderDetail, $taxAddress, true);
 
         // If provided price is different from the catalog price we use the input price tax included as a base
-        // If provided price is equal the catalog price we use the catalog price (depending on the quantity if relevant)
-        if ($productOriginalPrice->equals($priceTaxExcluded)) {
-            if (!$productOriginalPriceForQuantity->equals($priceTaxExcluded)) {
-                $priceTaxExcluded = $productOriginalPriceForQuantity;
-            }
-        } else {
+        if (!$productOriginalPrice->equals($priceTaxExcluded)) {
             return $priceTaxIncluded;
+        }
+
+        // User doesn't modify the price himself
+        if ($quantityDependent) {
+            // Specific price, quantity dependent
+            $priceTaxExcluded = $this->getProductRegularPrice($order, $orderDetail, $taxAddress, true);
         }
 
         $productTaxCalculator = $this->getTaxCalculatorByAddress($taxAddress, $orderDetail);
@@ -441,7 +452,7 @@ class OrderDetailUpdater
      * @param Order $order
      * @param OrderDetail $orderDetail
      * @param Address $taxAddress
-     * @param bool $quantityDependent
+     * @param bool $quantityDependent Says if the price is dependent of the quantity. Set to false when updating a product so we don't modify the price
      *
      * @return Number
      */
