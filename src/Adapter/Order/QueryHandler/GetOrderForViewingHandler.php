@@ -42,6 +42,7 @@ use OrderPayment;
 use OrderSlip;
 use OrderState;
 use PrestaShop\Decimal\Number;
+use PrestaShop\PrestaShop\Adapter\Address\AddressFormatter;
 use PrestaShop\PrestaShop\Adapter\Configuration;
 use PrestaShop\PrestaShop\Adapter\Customer\CustomerDataProvider;
 use PrestaShop\PrestaShop\Adapter\Order\AbstractOrderHandler;
@@ -130,6 +131,11 @@ final class GetOrderForViewingHandler extends AbstractOrderHandler implements Ge
     private $getOrderProductsForViewingHandler;
 
     /**
+     * @var AddressFormatter
+     */
+    private $addressFormatter;
+
+    /**
      * @param ImageTagSourceParserInterface $imageTagSourceParser
      * @param TranslatorInterface $translator
      * @param int $contextLanguageId
@@ -145,7 +151,8 @@ final class GetOrderForViewingHandler extends AbstractOrderHandler implements Ge
         Context $context,
         CustomerDataProvider $customerDataProvider,
         GetOrderProductsForViewingHandlerInterface $getOrderProductsForViewingHandler,
-        Configuration $configuration
+        Configuration $configuration,
+        AddressFormatter $addressFormatter = null
     ) {
         $this->translator = $translator;
         $this->contextLanguageId = $contextLanguageId;
@@ -155,6 +162,7 @@ final class GetOrderForViewingHandler extends AbstractOrderHandler implements Ge
         $this->customerDataProvider = $customerDataProvider;
         $this->getOrderProductsForViewingHandler = $getOrderProductsForViewingHandler;
         $this->configuration = $configuration;
+        $this->addressFormatter = $addressFormatter ?? new AddressFormatter();
     }
 
     /**
@@ -287,7 +295,8 @@ final class GetOrderForViewingHandler extends AbstractOrderHandler implements Ge
             $address->phone,
             $address->phone_mobile,
             $address->vat_number,
-            $dni
+            $dni,
+            $this->addressFormatter->generateAddress($address->id)
         );
     }
 
@@ -324,7 +333,8 @@ final class GetOrderForViewingHandler extends AbstractOrderHandler implements Ge
             $address->phone,
             $address->phone_mobile,
             $address->vat_number,
-            $dni
+            $dni,
+            $this->addressFormatter->generateAddress($address->id)
         );
     }
 

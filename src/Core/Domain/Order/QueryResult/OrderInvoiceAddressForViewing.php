@@ -26,6 +26,17 @@
 
 namespace PrestaShop\PrestaShop\Core\Domain\Order\QueryResult;
 
+use PrestaShop\PrestaShop\Adapter\Address\AddressFormatter;
+
+@trigger_error(
+    sprintf(
+        '%s is deprecated since version 1.7.7.5 and will be removed in the next major version. Use %s instead.',
+        OrderShippingAddressForViewing::class,
+        AddressFormatter::class
+    ),
+    E_USER_DEPRECATED
+);
+
 class OrderInvoiceAddressForViewing
 {
     /**
@@ -99,6 +110,11 @@ class OrderInvoiceAddressForViewing
     private $dni;
 
     /**
+     * @var array
+     */
+    private $addressFormatted;
+
+    /**
      * @param int $addressId
      * @param string $firstName
      * @param string $lastName
@@ -113,6 +129,7 @@ class OrderInvoiceAddressForViewing
      * @param string $phoneMobile
      * @param string|null $vatNumber
      * @param string|null $dni If null the DNI is not required for the country, else string
+     * @param array $addressFormatted
      */
     public function __construct(
         int $addressId,
@@ -128,7 +145,8 @@ class OrderInvoiceAddressForViewing
         string $phone,
         string $phoneMobile,
         ?string $vatNumber = null,
-        ?string $dni = null
+        ?string $dni = null,
+        array $addressFormatted = []
     ) {
         $this->addressId = $addressId;
         $this->firstName = $firstName;
@@ -144,6 +162,7 @@ class OrderInvoiceAddressForViewing
         $this->phoneNumber = $phone;
         $this->mobilePhoneNumber = $phoneMobile;
         $this->dni = $dni;
+        $this->addressFormatted = $addressFormatted;
     }
 
     /**
@@ -250,5 +269,13 @@ class OrderInvoiceAddressForViewing
     public function getMobilePhoneNumber(): string
     {
         return $this->mobilePhoneNumber;
+    }
+
+    /**
+     * @return array
+     */
+    public function getAddressFormatted(): array
+    {
+        return $this->addressFormatted;
     }
 }

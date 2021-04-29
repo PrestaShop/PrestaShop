@@ -47,6 +47,7 @@ class OrderInvoiceAddressForViewingTest extends TestCase
         $this->assertEquals('k', $instance->getMobilePhoneNumber());
         $this->assertNull($instance->getVatNumber());
         $this->assertNull($instance->getDni());
+        $this->assertSame([], $instance->getAddressFormatted());
     }
 
     public function testConstructWithVatNumber(): void
@@ -65,6 +66,7 @@ class OrderInvoiceAddressForViewingTest extends TestCase
         $this->assertEquals('k', $instance->getMobilePhoneNumber());
         $this->assertEquals('l', $instance->getVatNumber());
         $this->assertNull($instance->getDni());
+        $this->assertSame([], $instance->getAddressFormatted());
     }
 
     public function testConstructWithDNI(): void
@@ -83,5 +85,25 @@ class OrderInvoiceAddressForViewingTest extends TestCase
         $this->assertEquals('k', $instance->getMobilePhoneNumber());
         $this->assertEquals('l', $instance->getVatNumber());
         $this->assertEquals('m', $instance->getDni());
+        $this->assertSame([], $instance->getAddressFormatted());
+    }
+
+    public function testConstructWithFormattedAddress(): void
+    {
+        $instance = new OrderInvoiceAddressForViewing(1, 'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', ['n', 'o',]);
+        $this->assertEquals(1, $instance->getAddressId());
+        $this->assertEquals('a b', $instance->getFullName());
+        $this->assertEquals('c', $instance->getCompanyName());
+        $this->assertEquals('d', $instance->getAddress1());
+        $this->assertEquals('e', $instance->getAddress2());
+        $this->assertEquals('f', $instance->getStateName());
+        $this->assertEquals('g', $instance->getCityName());
+        $this->assertEquals('h', $instance->getCountryName());
+        $this->assertEquals('i', $instance->getPostCode());
+        $this->assertEquals('j', $instance->getPhoneNumber());
+        $this->assertEquals('k', $instance->getMobilePhoneNumber());
+        $this->assertEquals('l', $instance->getVatNumber());
+        $this->assertEquals('m', $instance->getDni());
+        $this->assertSame(['n', 'o',], $instance->getAddressFormatted());
     }
 }
