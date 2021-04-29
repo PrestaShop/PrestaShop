@@ -239,6 +239,15 @@
       max-width: 16.5rem;
     }
 
+    @include media-breakpoint-down("sm") {
+      input,
+      select,
+      .money-type,
+      .select2 {
+        max-width: inherit;
+      }
+    }
+
     [class^="form-columns"] {
       select,
       .select2 {
@@ -1218,6 +1227,7 @@
     }
 
     .tabs {
+      position: relative;
       width: auto;
       overflow: hidden;
 
@@ -1228,7 +1238,7 @@
       .arrow {
         position: absolute;
         top: 0;
-        left: 15px;
+        left: 0;
         z-index: 2;
         height: 3rem;
         padding: 0.9375rem 0.3125rem;
@@ -1243,7 +1253,7 @@
       }
 
       .right-arrow {
-        right: 15px;
+        right: 0;
         left: auto;
       }
     }

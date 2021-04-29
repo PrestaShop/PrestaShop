@@ -124,6 +124,10 @@
     &.form-columns-#{$i} {
       > .form-group {
         max-width: calc(100% / #{$i} - 2rem);
+
+        @include media-breakpoint-down("sm") {
+          max-width: inherit;
+        }
       }
     }
   }
