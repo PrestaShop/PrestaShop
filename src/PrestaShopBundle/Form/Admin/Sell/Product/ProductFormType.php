@@ -138,7 +138,7 @@ class ProductFormType extends TranslatorAwareType
     {
         // Important to get data from form and not options as it's the most up to date
         $formData = $form->getData();
-        $productType = $formData['basic']['type'] ?? ProductType::TYPE_STANDARD;
+        $productType = $formData['header']['type'] ?? ProductType::TYPE_STANDARD;
         $formVars = [
             'product_type' => $productType,
             'product_id' => isset($options['product_id']) ? (int) $options['product_id'] : null,
