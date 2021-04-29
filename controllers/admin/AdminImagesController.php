@@ -223,7 +223,7 @@ class AdminImagesControllerCore extends AdminController
                         'required' => false,
                         'is_bool' => true,
                         'hint' => $this->trans('Lossy compression using adaptive dithering and optimized palettes. If possible use together with optipng.', [], 'Admin.Design.Help'),
-                        'desc' => $this->trans('Efficient bandwidth and disk usage optimization. Package pngquant must be installed in /usr/bin.', [], 'Admin.Design.Help'),
+                        'desc' => $this->trans('Efficient bandwidth and disk usage optimization. Package pngquant must be available in the path for the apache user.', [], 'Admin.Design.Help'),
                         'visibility' => Shop::CONTEXT_ALL,
                     ],
                     'PS_IMAGEOPT_OPTIPNG' => [
@@ -232,7 +232,7 @@ class AdminImagesControllerCore extends AdminController
                         'required' => false,
                         'is_bool' => true,
                         'hint' => $this->trans('Lossless compression by optimized reencoding. If possible use together with pngquant.', [], 'Admin.Design.Help'),
-                        'desc' => $this->trans('Efficient bandwidth and disk usage optimization. Package optipng must be installed in /usr/bin.', [], 'Admin.Design.Help'),
+                        'desc' => $this->trans('Efficient bandwidth and disk usage optimization. Package optipng must be available in the path for the apache user.', [], 'Admin.Design.Help'),
                         'visibility' => Shop::CONTEXT_ALL,
                     ],
                 ],
