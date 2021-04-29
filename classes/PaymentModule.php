@@ -439,6 +439,12 @@ abstract class PaymentModuleCore extends Module
                             'customization' => [],
                         ];
 
+	                    Hook::exec('actionGetOrderProductPropertiesBefore', [
+		                    'id_lang' => $this->context->language->id,
+		                    'product' => &$product_var_tpl,
+		                    'context' => $this->context,
+	                    ]);
+
                         if (isset($product['price']) && $product['price']) {
                             $product_var_tpl['unit_price'] = Tools::getContextLocale($this->context)->formatPrice($product_price, $this->context->currency->iso_code);
                             $product_var_tpl['unit_price_full'] = Tools::getContextLocale($this->context)->formatPrice($product_price, $this->context->currency->iso_code)
@@ -471,6 +477,12 @@ abstract class PaymentModuleCore extends Module
                                 ];
                             }
                         }
+
+	                    Hook::exec('actionGetOrderProductPropertiesAfter', [
+		                    'id_lang' => $this->context->language->id,
+		                    'product' => &$product_var_tpl,
+		                    'context' => $this->context,
+	                    ]);
 
                         $product_var_tpl_list[] = $product_var_tpl;
                         // Check if is not a virtual product for the displaying of shipping
