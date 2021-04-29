@@ -29,6 +29,7 @@ declare(strict_types=1);
 namespace PrestaShopBundle\Form\Admin\Sell\Product\Shortcut;
 
 use Currency;
+use PrestaShopBundle\Form\Admin\Type\TranslatorAwareType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\MoneyType;
 use Symfony\Component\Form\FormBuilderInterface;
@@ -36,7 +37,7 @@ use Symfony\Component\Translation\TranslatorInterface;
 use Symfony\Component\Validator\Constraints\NotBlank;
 use Symfony\Component\Validator\Constraints\Type;
 
-class PriceShortcutType extends ShortcutType
+class PriceShortcutType extends TranslatorAwareType
 {
     /**
      * @var array
@@ -109,15 +110,7 @@ class PriceShortcutType extends ShortcutType
                     'data-minimumResultsForSearch' => '7',
                 ],
                 'label' => $this->trans('Tax rule', 'Admin.Catalog.Feature'),
-                'external_link' => [
-                    'text' => $this->trans('Advanced settings in [1]%settings_label%[/1]', 'Admin.Catalog.Feature', ['%settings_label%' => $this->trans('Pricing', 'Admin.Catalog.Feature')]),
-                    'type' => 'button',
-                    'value' => 'pricing-tab',
-                ],
             ])
         ;
-
-        // Call parent build to add potential target tab button
-        parent::buildForm($builder, $options);
     }
 }

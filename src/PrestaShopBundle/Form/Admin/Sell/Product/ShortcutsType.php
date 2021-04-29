@@ -57,8 +57,6 @@ class ShortcutsType extends TranslatorAwareType
                     'popover' => $this->trans('How many products should be available for sale?', 'Admin.Catalog.Help'),
                 ],
                 'required' => false,
-                'target_tab' => 'stock-tab',
-                'target_tab_name' => $this->trans('Quantity', 'Admin.Catalog.Feature'),
             ])
             ->add('price', PriceShortcutType::class, [
                 'label' => $this->trans('Retail price', 'Admin.Catalog.Feature'),
@@ -67,8 +65,11 @@ class ShortcutsType extends TranslatorAwareType
                     'popover' => $this->trans('This is the retail price at which you intend to sell this product to your customers. The tax included price will change according to the tax rule you select.', 'Admin.Catalog.Help'),
                 ],
                 'required' => false,
-                'target_tab' => 'pricing-tab',
-                'target_tab_name' => $this->trans('Pricing', 'Admin.Catalog.Feature'),
+                'external_link' => [
+                    'text' => $this->trans('Advanced settings in [1]%settings_label%[/1]', 'Admin.Catalog.Feature', ['%settings_label%' => $this->trans('Pricing', 'Admin.Catalog.Feature')]),
+                    'type' => 'button',
+                    'value' => 'pricing-tab',
+                ],
             ])
             ->add('create_category', UnavailableType::class, [
                 'label' => $this->trans('Create a new category', 'Admin.Catalog.Feature'),
