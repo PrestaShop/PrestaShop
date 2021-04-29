@@ -1027,7 +1027,7 @@
         <i class="material-icons">open_in_new</i>
     {%- endset -%}
 
-    <div class="small font-secondary text-right">
+    <div class="small font-secondary{% if external_link.align is same as('right') %} text-right{% endif %}">
       {{ external_link.text|replace({'[1]': openingTag, '[/1]': '</a>'})|raw }}
     </div>
   {% endif %}
