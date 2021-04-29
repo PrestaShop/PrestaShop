@@ -35,6 +35,12 @@ const $coreValues = $(TranslationSettingsMap.exportCoreValues).closest('.form-gr
 const $themesValues = $(TranslationSettingsMap.exportThemesValues).closest('.form-group');
 const $modulesValues = $(TranslationSettingsMap.exportModulesValues).closest('.form-group');
 
+const $coreCheckboxes = $(TranslationSettingsMap.exportCoreValues);
+const $themesSelect = $(TranslationSettingsMap.exportThemesValues);
+const $modulesSelect = $(TranslationSettingsMap.exportModulesValues);
+
+const $exportButton = $(TranslationSettingsMap.exportLanguageButton);
+
 /**
  * Toggles show/hide for the selectors of subtypes (in case of Core type), theme or module when a Type is selected
  *
@@ -46,6 +52,10 @@ export default class ExportFormFieldToggle {
     $coreType.on('change', this.coreTypeChanged.bind(this));
     $themesType.on('change', this.themesTypeChanged.bind(this));
     $modulesType.on('change', this.modulesTypeChanged.bind(this));
+
+    $coreCheckboxes.on('change', this.subChoicesChanged.bind(this));
+    $themesSelect.on('change', this.subChoicesChanged.bind(this));
+    $modulesSelect.on('change', this.subChoicesChanged.bind(this));
 
     this.check($coreType);
   }
@@ -59,6 +69,7 @@ export default class ExportFormFieldToggle {
     this.uncheck($themesType, $modulesType);
     this.show($coreValues);
     this.hide($themesValues, $modulesValues);
+    this.subChoicesChanged();
   }
 
   themesTypeChanged() {
@@ -70,6 +81,7 @@ export default class ExportFormFieldToggle {
     this.uncheck($coreType, $modulesType);
     this.show($themesValues);
     this.hide($coreValues, $modulesValues);
+    this.subChoicesChanged();
   }
 
   modulesTypeChanged() {
@@ -81,6 +93,21 @@ export default class ExportFormFieldToggle {
     this.uncheck($themesType, $coreType);
     this.show($modulesValues);
     this.hide($themesValues, $coreValues);
+    this.subChoicesChanged();
+  }
+
+  subChoicesChanged() {
+    if (
+      ($coreType.prop('checked') && $coreCheckboxes.find(':checked').size() > 0)
+      || ($themesType.prop('checked') && $themesSelect.val() !== null)
+      || ($modulesType.prop('checked') && $modulesSelect.val() !== null)
+    ) {
+      $exportButton.prop('disabled', false);
+
+      return;
+    }
+
+    $exportButton.prop('disabled', true);
   }
 
   /**

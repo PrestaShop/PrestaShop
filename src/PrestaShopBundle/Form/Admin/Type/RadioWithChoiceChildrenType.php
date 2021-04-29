@@ -47,12 +47,18 @@ class RadioWithChoiceChildrenType extends AbstractType
 
         if (isset($options['child_choice'])) {
             $childChoice = $options['child_choice'];
+            $childChoiceAttr = [];
+            if (isset($childChoice['empty'])) {
+                $childChoice['choices'] = array_merge([$childChoice['empty'] => ''], $childChoice['choices']);
+                $childChoiceAttr[$childChoice['empty']] = ['disabled' => true];
+            }
             $builder->add($childChoice['name'], ChoiceType::class, [
                 'label' => false,
                 'row_attr' => [
                     'class' => 'export-translations-child',
                 ],
                 'choices' => $childChoice['choices'],
+                'choice_attr' => $childChoiceAttr,
                 'expanded' => $childChoice['multiple'], //same value as multiple. We can only have Select or Checkboxes
                 'multiple' => $childChoice['multiple'],
             ]);
