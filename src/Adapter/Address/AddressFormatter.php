@@ -39,6 +39,7 @@ class AddressFormatter implements AddressFormatterInterface
         $formatted = AddressFormat::generateAddress(
             new Address($addressId)
         );
+
         return explode(AddressFormat::FORMAT_NEW_LINE, $formatted);
     }
 }

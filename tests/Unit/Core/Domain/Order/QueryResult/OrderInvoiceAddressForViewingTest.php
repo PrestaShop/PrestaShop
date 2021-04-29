@@ -90,7 +90,7 @@ class OrderInvoiceAddressForViewingTest extends TestCase
 
     public function testConstructWithFormattedAddress(): void
     {
-        $instance = new OrderInvoiceAddressForViewing(1, 'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', ['n', 'o',]);
+        $instance = new OrderInvoiceAddressForViewing(1, 'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', ['n', 'o']);
         $this->assertEquals(1, $instance->getAddressId());
         $this->assertEquals('a b', $instance->getFullName());
         $this->assertEquals('c', $instance->getCompanyName());
@@ -104,6 +104,6 @@ class OrderInvoiceAddressForViewingTest extends TestCase
         $this->assertEquals('k', $instance->getMobilePhoneNumber());
         $this->assertEquals('l', $instance->getVatNumber());
         $this->assertEquals('m', $instance->getDni());
-        $this->assertSame(['n', 'o',], $instance->getAddressFormatted());
+        $this->assertSame(['n', 'o'], $instance->getAddressFormatted());
     }
 }
