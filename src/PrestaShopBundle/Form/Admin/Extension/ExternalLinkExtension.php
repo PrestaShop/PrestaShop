@@ -30,6 +30,7 @@ use Symfony\Component\Form\AbstractTypeExtension;
 use Symfony\Component\Form\Extension\Core\Type\FormType;
 use Symfony\Component\Form\FormInterface;
 use Symfony\Component\Form\FormView;
+use Symfony\Component\OptionsResolver\Options;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
 /**
@@ -56,6 +57,15 @@ class ExternalLinkExtension extends AbstractTypeExtension
                 'external_link' => null,
             ])
             ->setAllowedTypes('external_link', ['null', 'array'])
+            ->setNormalizer('external_link', function (Options $options, $value) {
+                if (null === $value) {
+                    return null;
+                }
+
+                $resolver = $this->getExternalLinkResolver();
+
+                return $resolver->resolve($value);
+            })
         ;
     }
 
@@ -64,7 +74,9 @@ class ExternalLinkExtension extends AbstractTypeExtension
      */
     public function buildView(FormView $view, FormInterface $form, array $options)
     {
-        $view->vars['external_link'] = $options['external_link'] ?? [];
+        if (!empty($options['external_link'])) {
+            $view->vars['external_link'] = $options['external_link'];
+        }
     }
 
     /**
@@ -73,5 +85,24 @@ class ExternalLinkExtension extends AbstractTypeExtension
     public function getExtendedType()
     {
         return FormType::class;
+    }
+
+    /**
+     * @return OptionsResolver
+     */
+    private function getExternalLinkResolver(): OptionsResolver
+    {
+        $externalLinkResolver = new OptionsResolver();
+        $externalLinkResolver
+            ->setRequired(['href', 'text'])
+            ->setDefaults([
+                'attr' => [],
+            ])
+            ->setAllowedTypes('href', 'string')
+            ->setAllowedTypes('text', 'string')
+            ->setAllowedTypes('attr', ['null', 'array'])
+        ;
+
+        return $externalLinkResolver;
     }
 }

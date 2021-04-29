@@ -57,6 +57,13 @@ class ShortcutsType extends TranslatorAwareType
                     'popover' => $this->trans('How many products should be available for sale?', 'Admin.Catalog.Help'),
                 ],
                 'required' => false,
+                'external_link' => [
+                    'text' => $this->trans('Advanced settings in [1]%settings_label%[/1]', 'Admin.Catalog.Feature', ['%settings_label%' => $this->trans('Stock', 'Admin.Catalog.Feature')]),
+                    'href' => '#stock-tab',
+                    'attr' => [
+                        'class' => 'tab-link',
+                    ],
+                ],
             ])
             ->add('price', PriceShortcutType::class, [
                 'label' => $this->trans('Retail price', 'Admin.Catalog.Feature'),
@@ -67,7 +74,6 @@ class ShortcutsType extends TranslatorAwareType
                 'required' => false,
                 'external_link' => [
                     'text' => $this->trans('Advanced settings in [1]%settings_label%[/1]', 'Admin.Catalog.Feature', ['%settings_label%' => $this->trans('Pricing', 'Admin.Catalog.Feature')]),
-                    'type' => 'button',
                     'href' => '#pricing-tab',
                     'attr' => [
                         'class' => 'tab-link',
