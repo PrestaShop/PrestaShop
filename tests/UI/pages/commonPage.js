@@ -393,7 +393,7 @@ class CommonPage {
    * Upload file using file chooser
    * @param page {Page} Browser tab
    * @param selector {string} String to locate the file chooser
-   * @param filePath {string[]} Path of the file to add
+   * @param filePath {Array<string>} Path of the file to add
    * @returns {Promise<void>}
    */
   async uploadOnFileChooser(page, selector, filePath) {
