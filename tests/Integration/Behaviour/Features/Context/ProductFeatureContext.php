@@ -188,7 +188,7 @@ class ProductFeatureContext extends AbstractPrestaShopFeatureContext
     public function remainingQuantityOfProductNamedShouldBe($productName, $productQuantity)
     {
         if (!$this->hasProduct($productName)) {
-            throw new Exception('Product named "' . $productName . '" doesn\'t exist');
+            throw new Exception(sprintf('Product named "%s" doesn\'t exist', $productName));
         }
         // Be careful this counts the amount present in the cart as well event if the stock has not been updated yet
         $nbProduct = Product::getQuantity($this->getProductWithName($productName)->id, null, null, $this->getCurrentCart(), null);
@@ -203,7 +203,7 @@ class ProductFeatureContext extends AbstractPrestaShopFeatureContext
     public function actualQuantityOfProductNamedShouldBe($productName, $productQuantity)
     {
         if (!$this->hasProduct($productName)) {
-            throw new Exception('Product named "' . $productName . '" doesn\'t exist');
+            throw new Exception(sprintf('Product named "%s" doesn\'t exist', $productName));
         }
         $nbProduct = StockAvailable::getQuantityAvailableByProduct($this->getProductWithName($productName)->id, null);
         if ($productQuantity != $nbProduct) {
@@ -238,7 +238,7 @@ class ProductFeatureContext extends AbstractPrestaShopFeatureContext
     protected function createProduct($productName, $price, $productQuantity)
     {
         if ($this->hasProduct($productName)) {
-            throw new \Exception('Product named "' . $productName . '" was already added in fixtures');
+            throw new Exception(sprintf('Product named "%s" was already added in fixtures', $productName));
         }
         $product = new Product();
         $product->price = $price;
@@ -433,7 +433,7 @@ class ProductFeatureContext extends AbstractPrestaShopFeatureContext
     public function productWithNameCannotBeOrderedOutOfStock($productName)
     {
         if (!$this->hasProduct($productName)) {
-            throw new Exception('Product named "' . $productName . '" doesn\'t exist');
+            throw new Exception(sprintf('Product named "%s" doesn\'t exist', $productName));
         }
         StockAvailable::setProductOutOfStock($this->getProductWithName($productName)->id, 0);
     }
@@ -503,11 +503,20 @@ class ProductFeatureContext extends AbstractPrestaShopFeatureContext
 
     /**
      * @Given /^product "(.+)" has a specific price named "(.+)" with a discount of (\d+\.\d+) percent from quantity (\d+)$/
+     *
+     * @param string $productName
+     * @param string $specificPriceName
+     * @param float $specificPricePercent
+     * @param int $quantityThreshold
      */
-    public function productWithNameHasASpecificPriceWithPercentageDiscountFromQuantity(string $productName, string $specificPriceName, float $specificPricePercent, int $quantityThreshold)
-    {
+    public function productWithNameHasASpecificPriceWithPercentageDiscountFromQuantity(
+        string $productName,
+        string $specificPriceName,
+        float $specificPricePercent,
+        int $quantityThreshold
+    ): void {
         if (isset($this->specificPrices[$productName][$specificPriceName])) {
-            throw new \Exception('Product named "' . $productName . '" has already a specific price named "' . $specificPriceName . '"');
+            throw new \Exception(sprintf('Product named %s has already a specific price named %s', $productName, $specificPriceName));
         }
         $specificPrice = new SpecificPrice();
         $specificPrice->id_product = $this->products[$productName]->id;
@@ -599,7 +608,7 @@ class ProductFeatureContext extends AbstractPrestaShopFeatureContext
     public function productWithNameHasACombinationWithNameAndQuantity($productName, $combinationName, $combinationQuantity)
     {
         if (isset($this->combinations[$productName][$combinationName])) {
-            throw new \Exception('Product named "' . $productName . '" has already a combination named "' . $combinationName . '"');
+            throw new \Exception(sprintf('Product named %s has already a combination named %s', $productName, $combinationName));
         }
         $combination = new Combination();
         $combination->reference = $combinationName;
@@ -869,7 +878,7 @@ class ProductFeatureContext extends AbstractPrestaShopFeatureContext
      */
     public function checkCustomizationIsInCart($productName)
     {
-        $this->checkFixtureExists($this->customizationsInCart, 'Customization for product named ' . $productName, $productName);
+        $this->checkFixtureExists($this->customizationsInCart, sprintf('Customization for product named %s', $productName), $productName);
     }
 
     /* PACK */

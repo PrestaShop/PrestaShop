@@ -42,6 +42,7 @@ use OrderState;
 use PHPUnit\Framework\Assert as Assert;
 use PrestaShop\PrestaShop\Core\Domain\Cart\ValueObject\CartId;
 use PrestaShop\PrestaShop\Core\Domain\CartRule\Exception\InvalidCartRuleDiscountValueException;
+use PrestaShop\PrestaShop\Core\Domain\Exception\InvalidSortingException;
 use PrestaShop\PrestaShop\Core\Domain\Order\Command\AddCartRuleToOrderCommand;
 use PrestaShop\PrestaShop\Core\Domain\Order\Command\AddOrderFromBackOfficeCommand;
 use PrestaShop\PrestaShop\Core\Domain\Order\Command\BulkChangeOrderStatusCommand;
@@ -226,6 +227,10 @@ class OrderFeatureContext extends AbstractDomainFeatureContext
      *
      * @param string $productReference
      * @param string $orderReference
+     * @param string|null $combinationName
+     *
+     * @throws OrderException
+     * @throws InvalidSortingException
      */
     public function removeProductsFromOrder(string $productReference, string $orderReference, ?string $combinationName = null)
     {
@@ -1079,6 +1084,7 @@ class OrderFeatureContext extends AbstractDomainFeatureContext
      * @param string $orderReference
      * @param string $productName
      * @param TableNode $table
+     * @param string|null $combinationName
      */
     public function checkProductDetailsWithReference(string $orderReference, string $productName, TableNode $table, ?string $combinationName = null)
     {
