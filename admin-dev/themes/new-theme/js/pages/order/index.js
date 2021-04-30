@@ -54,6 +54,6 @@ $(() => {
   orderGrid.addExtension(new FiltersSubmitButtonEnablerExtension());
   orderGrid.addExtension(new ModalFormSubmitExtension());
   orderGrid.addExtension(new ChoiceExtension());
-  orderGrid.addExtension(new PreviewExtension(previewProductsToggler));
+  orderGrid.addExtension(new PreviewExtension(previewProductsToggler, orderGrid));
   orderGrid.addExtension(new BulkOpenTabsExtension());
 });
