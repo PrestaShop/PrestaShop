@@ -53,7 +53,7 @@
 
 {%- block form_widget_simple -%}
   {{ parent() }}
-  {% include "@Twig/form_max_length.html.twig" with {"attr": attr} %}
+  {% include '@PrestaShop/Admin/TwigTemplateForm/form_max_length.html.twig' with {'attr': attr} %}
 {%- endblock form_widget_simple -%}
 
 {# Rows #}
@@ -143,6 +143,7 @@
 {% block textarea_widget -%}
   {% set attr = attr|merge({class: (attr.class|default('') ~ ' form-control')|trim}) %}
   {{- parent() -}}
+  {% include '@PrestaShop/Admin/TwigTemplateForm/form_max_length.html.twig' with {'attr': attr} %}
   {{ block('form_help') }}
 {%- endblock textarea_widget %}
 
@@ -824,7 +825,7 @@
 {% endblock material_multiple_choice_table_widget %}
 
 {# Copied translatablefields_widget made to be compatible with TranslatableType.php and to be used in translatable widget#}
-{% block translatable_formatted_fields %}
+{% block translatable_fields_with_tabs %}
   <div class="translations tabbable" id="{{ form.vars.id }}">
     {% if hide_locales == false and form|length > 1 %}
       <ul class="translationsLocales nav nav-pills">
@@ -848,7 +849,7 @@
   </div>
 {% endblock %}
 
-{% block translatable_default -%}
+{% block translatable_fields_with_dropdown -%}
     {% set formClass = (form.vars.attr.class|default('') ~ ' input-group locale-input-group js-locale-input-group d-flex')|trim %}
     <div class="{{ formClass }}">
       {% for translateField in form %}
@@ -883,13 +884,13 @@
         </div>
       {% endif %}
     </div>
-{%- endblock translatable_default %}
+{%- endblock %}
 
 {% block translatable_widget -%}
-  {% if formatted_text_area %}
-    {{ block('translatable_formatted_fields') }}
+  {% if use_tabs %}
+    {{ block('translatable_fields_with_tabs') }}
   {% else %}
-    {{ block('translatable_default') }}
+    {{ block('translatable_fields_with_dropdown') }}
   {% endif %}
   {{ block('form_help') }}
 {%- endblock translatable_widget %}
@@ -1013,7 +1014,36 @@
       })|raw }}
     </em>
   </small>
-{% endblock text_with_recommended_length_widget %}
+{% endblock %}
+
+{% block text_with_length_counter_widget %}
+  <div class="input-group js-text-with-length-counter">
+    {% set current_length = form.vars.max_length - form.vars.value|length %}
+
+    {% if form.vars.position == 'before' %}
+      <div class="input-group-prepend">
+        <span class="input-group-text js-countable-text">{{ current_length }}</span>
+      </div>
+    {% endif %}
+
+    {% set attr = attr|merge({'data-max-length': form.vars.max_length, 'maxlength': form.vars.max_length, 'class': 'js-countable-input'}) -%}
+    {% set attr = attr|merge(input_attr) -%}
+
+    {% if form.vars.input == 'input' %}
+      {{- block('form_widget_simple') -}}
+    {% elseif form.vars.input == 'textarea' %}
+      {{- block('textarea_widget') -}}
+    {% else %}
+      {{- block('form_widget') -}}
+    {% endif %}
+
+    {% if form.vars.position == 'after' %}
+      <div class="input-group-append">
+        <span class="input-group-text js-countable-text">{{ current_length }}</span>
+      </div>
+    {% endif %}
+  </div>
+{% endblock %}
 
 {% block integer_min_max_filter_widget %}
   {{ form_widget(form['min_field'], { attr: {class: 'min-field'}}) }}
