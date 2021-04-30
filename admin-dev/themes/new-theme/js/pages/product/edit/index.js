@@ -57,7 +57,7 @@ $(() => {
   initTabs();
 
   // Init product model along with input watching and syncing
-  new ProductFormModel($productForm, window.prestashop.instance.eventEmitter);
+  const productFormModel = new ProductFormModel($productForm, window.prestashop.instance.eventEmitter);
 
   if (productId && productType === ProductMap.productType.COMBINATIONS) {
     // Combinations manager must be initialised before nav handler, or it won't trigger the pagination if the tab is
@@ -111,6 +111,6 @@ $(() => {
     new ProductSuppliersManager(ProductMap.suppliers.productSuppliers, true);
   }
   if (productType === ProductMap.productType.VIRTUAL) {
-    new VirtualProductManager();
+    new VirtualProductManager(productFormModel);
   }
 });

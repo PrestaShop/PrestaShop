@@ -55,6 +55,7 @@ export default class ProductFormModel {
 
     return {
       getProduct: () => this.getProduct(),
+      watch: (productModelKey, callback) => this.watchProductModel(productModelKey, callback),
     };
   }
 
@@ -63,6 +64,14 @@ export default class ProductFormModel {
    */
   getProduct() {
     return this.mapper.getModel().product;
+  }
+
+  /**
+   * @param {string} productModelKey
+   * @param {function} callback
+   */
+  watchProductModel(productModelKey, callback) {
+    this.mapper.watch(`product.${productModelKey}`, callback);
   }
 
   /**

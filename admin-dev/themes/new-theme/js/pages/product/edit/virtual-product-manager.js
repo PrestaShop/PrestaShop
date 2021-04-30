@@ -28,9 +28,9 @@ import ProductMap from '@pages/product/product-map';
 const {$} = window;
 
 export default class VirtualProductManager {
-  constructor() {
+  constructor(productFormModel) {
+    this.productFormModel = productFormModel;
     this.$virtualProductContainer = $(ProductMap.virtualProduct.container);
-    this.$fileSwitchContainer = $(ProductMap.virtualProduct.fileSwitchContainer);
     this.$fileContentContainer = $(ProductMap.virtualProduct.fileContentContainer);
 
     this.init();
@@ -42,23 +42,17 @@ export default class VirtualProductManager {
    * @private
    */
   init() {
+    this.productFormModel.watch('stock.hasVirtualProductFile', () => this.toggleContentVisibility());
     this.toggleContentVisibility();
-    this.$virtualProductContainer.on(
-      'change',
-      `${ProductMap.virtualProduct.fileSwitchOnInputSelector}, ${ProductMap.virtualProduct.fileSwitchOffInputSelector}`,
-      () => this.toggleContentVisibility(),
-    );
   }
 
   toggleContentVisibility() {
-    const isOn = this.$virtualProductContainer
-      .find(`${ProductMap.virtualProduct.fileSwitchOnInputSelector}:checked`)
-      .length !== 0;
+    const hasVirtualFile = Number(this.productFormModel.getProduct().stock.hasVirtualProductFile) === 1;
     const hasErrors = this.$virtualProductContainer
       .find(ProductMap.invalidField)
       .length !== 0;
 
-    if (isOn || hasErrors) {
+    if (hasVirtualFile || hasErrors) {
       this.showContent();
     } else {
       this.hideContent();
