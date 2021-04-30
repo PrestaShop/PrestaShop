@@ -83,20 +83,24 @@
         {% block product_tab_combinations %}
           {{ include('@PrestaShop/Admin/Sell/Catalog/Product/Tabs/combinations.html.twig') }}
         {% endblock %}
-      {% else %}
+      {% endif %}
+
+      {% if productForm.stock is defined %}
         {% block product_tab_stock %}
           {{ include('@PrestaShop/Admin/Sell/Catalog/Product/Tabs/stock.html.twig') }}
         {% endblock %}
       {% endif %}
 
+      {% if productForm.shipping is defined %}
+        {% block product_tab_shipping %}
+          {{ include('@PrestaShop/Admin/Sell/Catalog/Product/Tabs/shipping.html.twig', {
+            'productForm': productForm,
+          }) }}
+        {% endblock %}
+      {% endif %}
+
       {% block product_tab_pricing %}
         {{ include('@PrestaShop/Admin/Sell/Catalog/Product/Tabs/pricing.html.twig', {
-          'productForm': productForm,
-        }) }}
-      {% endblock %}
-
-      {% block product_tab_shipping %}
-        {{ include('@PrestaShop/Admin/Sell/Catalog/Product/Tabs/shipping.html.twig', {
           'productForm': productForm,
         }) }}
       {% endblock %}

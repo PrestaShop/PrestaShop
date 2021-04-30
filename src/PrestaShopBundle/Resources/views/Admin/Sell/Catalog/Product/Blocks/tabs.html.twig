@@ -26,15 +26,12 @@
 {% set isOptionsTabValid = productForm.options.vars.valid
   and (productForm.suppliers is not defined or productForm.suppliers.vars.valid)
 %}
-
-{% set isStockTabValid =
-  (productForm.stock is not defined or productForm.stock.vars.valid)
-  and (productForm.virtual_product_file is not defined or productForm.virtual_product_file.vars.valid)
-%}
-
 {% set isPricingTabValid = productForm.pricing.vars.valid %}
-{% set isShippingTabValid = productForm.shipping.vars.valid %}
 {% set isSEOTabValid = productForm.seo.vars.valid and productForm.redirect_option.vars.valid %}
+
+{# Some forms may be removed #}
+{% set isStockTabValid = productForm.stock is not defined or productForm.stock.vars.valid %}
+{% set isShippingTabValid = productForm.shipping is not defined or productForm.shipping.vars.valid %}
 
 <div class="tabs js-tabs">
   <div class="arrow d-xl-none js-arrow left-arrow float-left">
@@ -48,13 +45,7 @@
       </a>
     </li>
 
-    {% if productType == 'combinations' %}
-      <li id="combinations-tab-nav" class="nav-item">
-        <a href="#combinations-tab" role="tab" data-toggle="tab" class="nav-link">
-          {{ 'Combinations'|trans({}, 'Admin.Catalog.Feature') }}
-        </a>
-      </li>
-    {% else %}
+    {% if productForm.stock is defined %}
       <li id="stock-tab-nav" class="nav-item{% if not isStockTabValid %} has-error{% endif %}">
         <a href="#stock-tab" role="tab" data-toggle="tab" class="nav-link">
           {% if productType == 'virtual' %}
@@ -66,15 +57,25 @@
       </li>
     {% endif %}
 
+    {% if productType == 'combinations' %}
+      <li id="combinations-tab-nav" class="nav-item">
+        <a href="#combinations-tab" role="tab" data-toggle="tab" class="nav-link">
+          {{ 'Combinations'|trans({}, 'Admin.Catalog.Feature') }}
+        </a>
+      </li>
+    {% endif %}
+
+    {% if productForm.shipping is defined %}
+      <li id="shipping-tab-nav" class="nav-item{% if not isShippingTabValid %} has-error{% endif %}">
+        <a href="#shipping-tab" role="tab" data-toggle="tab" class="nav-link">
+          {{ 'Shipping'|trans({}, 'Admin.Catalog.Feature') }}
+        </a>
+      </li>
+    {% endif %}
+
     <li id="pricing-tab-nav" class="nav-item{% if not isPricingTabValid %} has-error{% endif %}">
       <a href="#pricing-tab" role="tab" data-toggle="tab" class="nav-link">
         {{ 'Pricing'|trans({}, 'Admin.Catalog.Feature') }}
-      </a>
-    </li>
-
-    <li id="shipping-tab-nav" class="nav-item{% if not isShippingTabValid %} has-error{% endif %}">
-      <a href="#shipping-tab" role="tab" data-toggle="tab" class="nav-link">
-        {{ 'Shipping'|trans({}, 'Admin.Catalog.Feature') }}
       </a>
     </li>
 

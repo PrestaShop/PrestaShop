@@ -32,6 +32,7 @@ use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductType;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Symfony\Component\Form\FormEvent;
 use Symfony\Component\Form\FormEvents;
+use Symfony\Component\Form\FormInterface;
 
 /**
  * This listener dynamically updates the form depending on the product type, like
@@ -61,11 +62,7 @@ class ProductTypeListener implements EventSubscriberInterface
 
         if (ProductType::TYPE_COMBINATIONS === $productType) {
             $form->remove('suppliers');
-            $form->remove('stock');
-            if ($form->has('shortcuts')) {
-                $shortcutsForm = $form->get('shortcuts');
-                $shortcutsForm->remove('stock');
-            }
+            $this->removeStock($form);
         } else {
             $stock = $form->get('stock');
             if (ProductType::TYPE_PACK !== $productType) {
@@ -73,7 +70,21 @@ class ProductTypeListener implements EventSubscriberInterface
             }
             if (ProductType::TYPE_VIRTUAL !== $productType) {
                 $stock->remove('virtual_product_file');
+            } else {
+                $form->remove('shipping');
             }
+        }
+    }
+
+    /**
+     * @param FormInterface $form
+     */
+    private function removeStock(FormInterface $form): void
+    {
+        $form->remove('stock');
+        if ($form->has('shortcuts')) {
+            $shortcutsForm = $form->get('shortcuts');
+            $shortcutsForm->remove('stock');
         }
     }
 }
