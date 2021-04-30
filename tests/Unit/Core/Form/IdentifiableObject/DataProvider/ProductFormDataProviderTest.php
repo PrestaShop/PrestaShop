@@ -88,7 +88,9 @@ class ProductFormDataProviderTest extends TestCase
             'header' => [
                 'type' => ProductType::TYPE_STANDARD,
             ],
-            'manufacturer' => NoManufacturerId::NO_MANUFACTURER_ID,
+            'basic' => [
+                'manufacturer' => NoManufacturerId::NO_MANUFACTURER_ID,
+            ],
             'stock' => [
                 'quantity' => 0,
                 'minimal_quantity' => 0,
@@ -141,7 +143,9 @@ class ProductFormDataProviderTest extends TestCase
             'header' => [
                 'type' => ProductType::TYPE_STANDARD,
             ],
-            'manufacturer' => NoManufacturerId::NO_MANUFACTURER_ID,
+            'basic' => [
+                'manufacturer' => NoManufacturerId::NO_MANUFACTURER_ID,
+            ],
             'stock' => [
                 'quantity' => 0,
                 'minimal_quantity' => 0,
@@ -613,7 +617,7 @@ class ProductFormDataProviderTest extends TestCase
         $datasets = [];
 
         $expectedOutputData = $this->getDefaultOutputData();
-        $expectedOutputData['manufacturer'] = 42;
+        $expectedOutputData['basic']['manufacturer'] = 42;
 
         $productData = [
             'manufacturer_id' => 42,
@@ -635,8 +639,8 @@ class ProductFormDataProviderTest extends TestCase
         $datasets = [];
 
         $expectedOutputData = $this->getDefaultOutputData();
-        $expectedOutputData['features']['feature_values'] = [];
-        $expectedOutputData['features']['feature_values'][] = [
+        $expectedOutputData['basic']['features']['feature_values'] = [];
+        $expectedOutputData['basic']['features']['feature_values'][] = [
             'feature_id' => 42,
             'feature_value_id' => 51,
         ];
@@ -645,7 +649,7 @@ class ProductFormDataProviderTest extends TestCase
             1 => 'english',
             2 => 'french',
         ];
-        $expectedOutputData['features']['feature_values'][] = [
+        $expectedOutputData['basic']['features']['feature_values'][] = [
             'feature_id' => 42,
             'feature_value_id' => 69,
             'custom_value' => $localizedValues,
@@ -1060,9 +1064,9 @@ class ProductFormDataProviderTest extends TestCase
             'basic' => [
                 'description' => [],
                 'description_short' => [],
+                'features' => [],
+                'manufacturer' => NoManufacturerId::NO_MANUFACTURER_ID,
             ],
-            'features' => [],
-            'manufacturer' => NoManufacturerId::NO_MANUFACTURER_ID,
             'stock' => [
                 'quantity' => static::DEFAULT_QUANTITY,
                 'minimal_quantity' => 0,

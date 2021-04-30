@@ -93,8 +93,6 @@ final class ProductFormDataProvider implements FormDataProviderInterface
             'id' => $productId,
             'header' => $this->extractHeaderData($productForEditing),
             'basic' => $this->extractBasicData($productForEditing),
-            'features' => $this->extractFeatureValues((int) $id),
-            'manufacturer' => $productForEditing->getOptions()->getManufacturerId(),
             'stock' => $this->extractStockData($productForEditing),
             'pricing' => $this->extractPricingData($productForEditing),
             'seo' => $this->extractSEOData($productForEditing),
@@ -118,7 +116,9 @@ final class ProductFormDataProvider implements FormDataProviderInterface
             'header' => [
                 'type' => ProductType::TYPE_STANDARD,
             ],
-            'manufacturer' => NoManufacturerId::NO_MANUFACTURER_ID,
+            'basic' => [
+                'manufacturer' => NoManufacturerId::NO_MANUFACTURER_ID,
+            ],
             'stock' => [
                 'quantity' => 0,
                 'minimal_quantity' => 0,
@@ -226,6 +226,8 @@ final class ProductFormDataProvider implements FormDataProviderInterface
         return [
             'description' => $productForEditing->getBasicInformation()->getLocalizedDescriptions(),
             'description_short' => $productForEditing->getBasicInformation()->getLocalizedShortDescriptions(),
+            'features' => $this->extractFeatureValues($productForEditing->getProductId()),
+            'manufacturer' => $productForEditing->getOptions()->getManufacturerId(),
         ];
     }
 
