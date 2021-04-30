@@ -31,8 +31,7 @@ import SubmitRowActionExtension from '@components/grid/extension/action/row/subm
 import SubmitBulkExtension from '@components/grid/extension/submit-bulk-action-extension';
 import BulkActionCheckboxExtension from '@components/grid/extension/bulk-action-checkbox-extension';
 import ExportToSqlManagerExtension from '@components/grid/extension/export-to-sql-manager-extension';
-import FiltersSubmitButtonEnablerExtension
-  from '@components/grid/extension/filters-submit-button-enabler-extension';
+import FiltersSubmitButtonEnablerExtension from '@components/grid/extension/filters-submit-button-enabler-extension';
 import ShowcaseCard from '@components/showcase-card/showcase-card';
 import ShowcaseCardCloseExtension from '@components/showcase-card/extension/showcase-card-close-extension';
 import PositionExtension from '@components/grid/extension/position-extension';
@@ -50,7 +49,7 @@ $(() => {
   grid.addExtension(new SubmitBulkExtension());
   grid.addExtension(new BulkActionCheckboxExtension());
   grid.addExtension(new FiltersSubmitButtonEnablerExtension());
-  grid.addExtension(new PositionExtension());
+  grid.addExtension(new PositionExtension(grid));
 
   const showcaseCard = new ShowcaseCard('attributesShowcaseCard');
   showcaseCard.addExtension(new ShowcaseCardCloseExtension());

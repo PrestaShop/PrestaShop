@@ -222,10 +222,7 @@ export default class PositionExtension {
     rowsData: Array<RowDatas>,
   ): Array<DNDPositions> {
     const regex = /^row_(\d+)_(\d+)$/;
-    const mapping = Array(rowsData.length)
-      .fill()
-      .map(Object);
-    console.log(mapping);
+    const mapping = Array(rowsData.length).map(Object);
 
     for (let i = 0; i < rowsData.length; i += 1) {
       const regexResult = <RegExpPositions>regex.exec(rowsData[i].rowMarker);
