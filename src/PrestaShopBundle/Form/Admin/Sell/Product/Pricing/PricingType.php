@@ -26,7 +26,7 @@
 
 declare(strict_types=1);
 
-namespace PrestaShopBundle\Form\Admin\Sell\Product;
+namespace PrestaShopBundle\Form\Admin\Sell\Product\Pricing;
 
 use Currency;
 use PrestaShopBundle\Form\Admin\Type\TranslatorAwareType;
