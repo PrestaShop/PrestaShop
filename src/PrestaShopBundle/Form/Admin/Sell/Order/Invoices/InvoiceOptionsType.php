@@ -31,7 +31,7 @@ use PrestaShopBundle\Form\Admin\Type\SwitchType;
 use PrestaShopBundle\Form\Admin\Type\TranslatableType;
 use PrestaShopBundle\Form\Admin\Type\TranslatorAwareType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
-use Symfony\Component\Form\Extension\Core\Type\NumberType;
+use Symfony\Component\Form\Extension\Core\Type\IntegerType;
 use Symfony\Component\Form\Extension\Core\Type\TextareaType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
@@ -125,7 +125,7 @@ class InvoiceOptionsType extends TranslatorAwareType
                 'expanded' => true,
                 'label' => $this->trans('Position of the year date', 'Admin.Orderscustomers.Feature'),
             ])
-            ->add(static::FIELD_INVOICE_NUMBER, NumberType::class, [
+            ->add(static::FIELD_INVOICE_NUMBER, IntegerType::class, [
                 'required' => false,
                 'label' => $this->trans('Invoice number', 'Admin.Orderscustomers.Feature'),
                 'help' => $this->trans(
