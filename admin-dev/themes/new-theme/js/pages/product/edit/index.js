@@ -23,8 +23,6 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
 
-import Serp from '@app/utils/serp';
-import RedirectOptionManager from '@pages/product/edit/redirect-option-manager';
 import ProductSuppliersManager from '@pages/product/edit/product-suppliers-manager';
 import FeatureValuesManager from '@pages/product/edit/feature-values-manager';
 import CustomizationsManager from '@pages/product/edit/customizations-manager';
@@ -33,6 +31,7 @@ import ProductPartialUpdater from '@pages/product/edit/product-partial-updater';
 import NavbarHandler from '@components/navbar-handler';
 import CombinationsManager from '@pages/product/edit/combinations-manager';
 import ProductTypeManager from '@pages/product/edit/product-type-manager';
+import ProductSEOManager from '@pages/product/edit/product-seo-manager';
 import initDropzone from '@pages/product/components/dropzone';
 import ProductFormModel from '@pages/product/edit/product-form-model';
 import VirtualProductManager from '@pages/product/edit/virtual-product-manager';
@@ -65,11 +64,7 @@ $(() => {
     new CombinationsManager(productId);
   }
   new NavbarHandler(ProductMap.navigationBar);
-
-  // Init the product/category search field for redirection target
-  const $redirectTypeInput = $(ProductMap.redirectOption.typeInput);
-  const $redirectTargetInput = $(ProductMap.redirectOption.targetInput);
-  new RedirectOptionManager($redirectTypeInput, $redirectTargetInput);
+  new ProductSEOManager();
 
   // Product type has strong impact on the page rendering so when it is modified it must be submitted right away
   new ProductTypeManager($(ProductMap.productTypeSelector), $productForm);
@@ -78,22 +73,6 @@ $(() => {
   if (!productId) {
     return;
   }
-
-  // Init Serp component to preview Search engine display
-  const translatorInput = window.prestashop.instance.translatableInput;
-  new Serp(
-    {
-      container: '#serp-app',
-      defaultTitle: '.serp-default-title:input',
-      watchedTitle: '.serp-watched-title:input',
-      defaultDescription: '.serp-default-description',
-      watchedDescription: '.serp-watched-description',
-      watchedMetaUrl: '.serp-watched-url:input',
-      multiLanguageInput: `${translatorInput.localeInputSelector}:not(.d-none)`,
-      multiLanguageItem: translatorInput.localeItemSelector,
-    },
-    $('#product_preview').data('seo-url'),
-  );
 
   initDropzone(ProductMap.dropzoneImagesContainer);
 

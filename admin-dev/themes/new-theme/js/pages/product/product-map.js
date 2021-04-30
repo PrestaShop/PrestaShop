@@ -38,10 +38,6 @@ export default {
   productFormSubmitButton: 'button[name="product[save]"]',
   navigationBar: '#form-nav',
   dropzoneImagesContainer: '.product-image-dropzone',
-  redirectOption: {
-    typeInput: '#product_redirect_option_type',
-    targetInput: '#product_redirect_option_target',
-  },
   featureValues: {
     collectionContainer: '.feature-values-collection',
     collectionRowsContainer: '.feature-values-collection > .col-sm',
@@ -133,6 +129,18 @@ export default {
   suppliers: {
     productSuppliers: '#product_suppliers',
     combinationSuppliers: '#combination_form_suppliers',
+  },
+  seo: {
+    container: '#product_seo_serp',
+    defaultTitle: '.serp-default-title:input',
+    watchedTitle: '.serp-watched-title:input',
+    defaultDescription: '.serp-default-description',
+    watchedDescription: '.serp-watched-description',
+    watchedMetaUrl: '.serp-watched-url:input',
+    redirectOption: {
+      typeInput: '#product_seo_redirect_option_type',
+      targetInput: '#product_seo_redirect_option_target',
+    },
   },
   jsTabs: '.js-tabs',
   jsArrow: '.js-arrow',
