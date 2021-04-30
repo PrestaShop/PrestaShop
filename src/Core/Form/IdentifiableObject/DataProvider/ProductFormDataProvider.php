@@ -168,7 +168,7 @@ final class ProductFormDataProvider implements FormDataProviderInterface
                 'tax_rules_group_id' => $productData['pricing']['tax_rules_group_id'],
             ],
             'stock' => [
-                'quantity' => $productData['stock']['quantity'],
+                'quantity' => $productData['stock']['quantities']['quantity'],
             ],
         ];
 
@@ -274,16 +274,22 @@ final class ProductFormDataProvider implements FormDataProviderInterface
         $availableDate = $stockInformation->getAvailableDate();
 
         return [
-            'quantity' => $stockInformation->getQuantity(),
-            'minimal_quantity' => $stockInformation->getMinimalQuantity(),
-            'stock_location' => $stockInformation->getLocation(),
-            'low_stock_threshold' => $stockInformation->getLowStockThreshold() ?: null,
-            'low_stock_alert' => $stockInformation->isLowStockAlertEnabled(),
+            'quantities' => [
+                'quantity' => $stockInformation->getQuantity(),
+                'minimal_quantity' => $stockInformation->getMinimalQuantity(),
+            ],
+            'options' => [
+                'stock_location' => $stockInformation->getLocation(),
+                'low_stock_threshold' => $stockInformation->getLowStockThreshold() ?: null,
+                'low_stock_alert' => $stockInformation->isLowStockAlertEnabled(),
+            ],
             'pack_stock_type' => $stockInformation->getPackStockType(),
-            'out_of_stock_type' => $stockInformation->getOutOfStockType(),
-            'available_now_label' => $stockInformation->getLocalizedAvailableNowLabels(),
-            'available_later_label' => $stockInformation->getLocalizedAvailableLaterLabels(),
-            'available_date' => $availableDate ? $availableDate->format(DateTime::DEFAULT_DATE_FORMAT) : '',
+            'availability' => [
+                'out_of_stock_type' => $stockInformation->getOutOfStockType(),
+                'available_now_label' => $stockInformation->getLocalizedAvailableNowLabels(),
+                'available_later_label' => $stockInformation->getLocalizedAvailableLaterLabels(),
+                'available_date' => $availableDate ? $availableDate->format(DateTime::DEFAULT_DATE_FORMAT) : '',
+            ],
         ];
     }
 

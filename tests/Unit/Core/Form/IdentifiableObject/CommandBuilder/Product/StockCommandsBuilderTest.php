@@ -34,7 +34,7 @@ use PrestaShop\PrestaShop\Core\Domain\Product\Stock\Command\UpdateProductStockIn
 use PrestaShop\PrestaShop\Core\Domain\Product\Stock\ValueObject\OutOfStockType;
 use PrestaShop\PrestaShop\Core\Form\IdentifiableObject\CommandBuilder\Product\StockCommandsBuilder;
 
-class StockCommandBuilderTest extends AbstractProductCommandBuilderTest
+class StockCommandsBuilderTest extends AbstractProductCommandBuilderTest
 {
     /**
      * @dataProvider getExpectedCommands
@@ -77,8 +77,10 @@ class StockCommandBuilderTest extends AbstractProductCommandBuilderTest
         yield [
             [
                 'stock' => [
-                    'quantity' => '100',
-                    'minimal_quantity' => 1,
+                    'quantities' => [
+                        'quantity' => '100',
+                        'minimal_quantity' => 1,
+                    ],
                 ],
             ],
             [$command],
@@ -89,7 +91,9 @@ class StockCommandBuilderTest extends AbstractProductCommandBuilderTest
         yield [
             [
                 'stock' => [
-                    'stock_location' => 'Im in miami...',
+                    'options' => [
+                        'stock_location' => 'Im in miami...',
+                    ],
                 ],
             ],
             [$command],
@@ -100,7 +104,9 @@ class StockCommandBuilderTest extends AbstractProductCommandBuilderTest
         yield [
             [
                 'stock' => [
-                    'low_stock_threshold' => '5',
+                    'options' => [
+                        'low_stock_threshold' => '5',
+                    ],
                 ],
             ],
             [$command],
@@ -111,7 +117,9 @@ class StockCommandBuilderTest extends AbstractProductCommandBuilderTest
         yield [
             [
                 'stock' => [
-                    'low_stock_alert' => '0',
+                    'options' => [
+                        'low_stock_alert' => '0',
+                    ],
                 ],
             ],
             [$command],
@@ -133,7 +141,9 @@ class StockCommandBuilderTest extends AbstractProductCommandBuilderTest
         yield [
             [
                 'stock' => [
-                    'out_of_stock_type' => '2',
+                    'availability' => [
+                        'out_of_stock_type' => '2',
+                    ],
                 ],
             ],
             [$command],
@@ -148,7 +158,9 @@ class StockCommandBuilderTest extends AbstractProductCommandBuilderTest
         yield [
             [
                 'stock' => [
-                    'available_now_label' => $localizedNotes,
+                    'availability' => [
+                        'available_now_label' => $localizedNotes,
+                    ],
                 ],
             ],
             [$command],
@@ -163,7 +175,9 @@ class StockCommandBuilderTest extends AbstractProductCommandBuilderTest
         yield [
             [
                 'stock' => [
-                    'available_later_label' => $localizedNotes,
+                    'availability' => [
+                        'available_later_label' => $localizedNotes,
+                    ],
                 ],
             ],
             [$command],
@@ -174,7 +188,9 @@ class StockCommandBuilderTest extends AbstractProductCommandBuilderTest
         yield [
             [
                 'stock' => [
-                    'available_date' => '2022-10-10',
+                    'availability' => [
+                        'available_date' => '2022-10-10',
+                    ],
                 ],
             ],
             [$command],
