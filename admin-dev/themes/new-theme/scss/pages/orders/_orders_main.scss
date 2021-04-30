@@ -106,6 +106,7 @@ $order-block-background-color: #f8f8f8 !default;
   padding-right: 18px;
   padding-bottom: 16px;
   padding-left: 18px;
+  background-color: $info-block-background;
 
   & &-col {
     > .row {
