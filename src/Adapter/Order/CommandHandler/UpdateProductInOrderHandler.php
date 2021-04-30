@@ -120,7 +120,7 @@ final class UpdateProductInOrderHandler extends AbstractOrderCommandHandler impl
                 (int) $orderDetail->product_attribute_id,
                 $command->getPriceTaxExcluded(),
                 $command->getPriceTaxIncluded(),
-                false
+                false // when updating product we don't apply quantity based discounts
             );
 
             // Update invoice, quantity and amounts

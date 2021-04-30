@@ -414,12 +414,10 @@ class OrderDetailUpdater
         // That means that the user doesn't modify the price himself
         // no need to recompute
         if ($productOriginalPrice->equals($priceTaxExcluded)) {
-            if ($quantityDependent) {
+            return $quantityDependent
                 // Specific price, quantity dependent
-                return $this->getProductRegularPrice($order, $orderDetail, $taxAddress, true);
-            } else {
-                return $priceTaxExcluded;
-            }
+                ? $this->getProductRegularPrice($order, $orderDetail, $taxAddress, true)
+                : $priceTaxExcluded;
         }
 
         $productTaxCalculator = $this->getTaxCalculatorByAddress($taxAddress, $orderDetail);
