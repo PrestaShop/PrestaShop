@@ -34,7 +34,7 @@ use PrestaShop\PrestaShop\Core\Domain\Product\FeatureValue\Command\SetProductFea
 use PrestaShop\PrestaShop\Core\Domain\Product\FeatureValue\Exception\InvalidProductFeatureValuesFormatException;
 use PrestaShop\PrestaShop\Core\Form\IdentifiableObject\CommandBuilder\Product\FeatureValuesCommandsBuilder;
 
-class FeatureValuesCommandBuilderTest extends AbstractProductCommandBuilderTest
+class FeatureValuesCommandsBuilderTest extends AbstractProductCommandBuilderTest
 {
     /**
      * @dataProvider getExpectedCommands
@@ -60,15 +60,19 @@ class FeatureValuesCommandBuilderTest extends AbstractProductCommandBuilderTest
 
         yield [
             [
-                'features' => [],
+                'basic' => [
+                    'features' => [],
+                ],
             ],
             [],
         ];
 
         yield [
             [
-                'features' => [
-                    'feature_values' => [],
+                'basic' => [
+                    'features' => [
+                        'feature_values' => [],
+                    ],
                 ],
             ],
             [new RemoveAllFeatureValuesFromProductCommand($this->getProductId()->getValue())],
@@ -82,9 +86,11 @@ class FeatureValuesCommandBuilderTest extends AbstractProductCommandBuilderTest
         );
         yield [
             [
-                'features' => [
-                    'feature_values' => [
-                        ['feature_id' => 42, 'feature_value_id' => 51],
+                'basic' => [
+                    'features' => [
+                        'feature_values' => [
+                            ['feature_id' => 42, 'feature_value_id' => 51],
+                        ],
                     ],
                 ],
             ],
@@ -103,9 +109,11 @@ class FeatureValuesCommandBuilderTest extends AbstractProductCommandBuilderTest
         );
         yield [
             [
-                'features' => [
-                    'feature_values' => [
-                        ['feature_id' => 42, 'custom_value' => $localizedValues],
+                'basic' => [
+                    'features' => [
+                        'feature_values' => [
+                            ['feature_id' => 42, 'custom_value' => $localizedValues],
+                        ],
                     ],
                 ],
             ],
@@ -120,9 +128,11 @@ class FeatureValuesCommandBuilderTest extends AbstractProductCommandBuilderTest
         );
         yield [
             [
-                'features' => [
-                    'feature_values' => [
-                        ['feature_id' => 42, 'custom_value_id' => 69, 'custom_value' => $localizedValues],
+                'basic' => [
+                    'features' => [
+                        'feature_values' => [
+                            ['feature_id' => 42, 'custom_value_id' => 69, 'custom_value' => $localizedValues],
+                        ],
                     ],
                 ],
             ],
@@ -138,9 +148,11 @@ class FeatureValuesCommandBuilderTest extends AbstractProductCommandBuilderTest
         );
         yield [
             [
-                'features' => [
-                    'feature_values' => [
-                        ['feature_id' => 42, 'feature_value_id' => 51, 'custom_value_id' => 69, 'custom_value' => $localizedValues],
+                'basic' => [
+                    'features' => [
+                        'feature_values' => [
+                            ['feature_id' => 42, 'feature_value_id' => 51, 'custom_value_id' => 69, 'custom_value' => $localizedValues],
+                        ],
                     ],
                 ],
             ],
@@ -156,9 +168,11 @@ class FeatureValuesCommandBuilderTest extends AbstractProductCommandBuilderTest
         );
         yield [
             [
-                'features' => [
-                    'feature_values' => [
-                        ['feature_id' => 42, 'feature_value_id' => 51, 'custom_value' => $localizedValues],
+                'basic' => [
+                    'features' => [
+                        'feature_values' => [
+                            ['feature_id' => 42, 'feature_value_id' => 51, 'custom_value' => $localizedValues],
+                        ],
                     ],
                 ],
             ],
@@ -178,9 +192,11 @@ class FeatureValuesCommandBuilderTest extends AbstractProductCommandBuilderTest
         );
         yield [
             [
-                'features' => [
-                    'feature_values' => [
-                        ['feature_id' => 42, 'feature_value_id' => 51, 'custom_value' => $localizedValues],
+                'basic' => [
+                    'features' => [
+                        'feature_values' => [
+                            ['feature_id' => 42, 'feature_value_id' => 51, 'custom_value' => $localizedValues],
+                        ],
                     ],
                 ],
             ],
@@ -200,9 +216,11 @@ class FeatureValuesCommandBuilderTest extends AbstractProductCommandBuilderTest
         );
         yield [
             [
-                'features' => [
-                    'feature_values' => [
-                        ['feature_id' => 42, 'feature_value_id' => 51, 'custom_value' => $localizedValues],
+                'basic' => [
+                    'features' => [
+                        'feature_values' => [
+                            ['feature_id' => 42, 'feature_value_id' => 51, 'custom_value' => $localizedValues],
+                        ],
                     ],
                 ],
             ],
@@ -220,9 +238,11 @@ class FeatureValuesCommandBuilderTest extends AbstractProductCommandBuilderTest
         );
         yield [
             [
-                'features' => [
-                    'feature_values' => [
-                        ['feature_id' => 42, 'custom_value' => $localizedValues],
+                'basic' => [
+                    'features' => [
+                        'feature_values' => [
+                            ['feature_id' => 42, 'custom_value' => $localizedValues],
+                        ],
                     ],
                 ],
             ],
@@ -247,9 +267,11 @@ class FeatureValuesCommandBuilderTest extends AbstractProductCommandBuilderTest
     {
         yield [
             [
-                'features' => [
-                    'feature_values' => [
-                        ['feature_id' => 42],
+                'basic' => [
+                    'features' => [
+                        'feature_values' => [
+                            ['feature_id' => 42],
+                        ],
                     ],
                 ],
             ],
