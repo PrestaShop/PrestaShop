@@ -66,6 +66,10 @@
 
     {{- block('form_external_link') -}}
   </div>
+
+  {% if column_breaker %}
+  <div class="form-group form-column-breaker"></div>
+  {% endif %}
 {%- endblock form_row %}
 
 {% block widget_type_class %}
@@ -537,6 +541,7 @@
         <span class="slide-button"></span>
     </span>
   {% endspaceless %}
+  {{- block('form_help') -}}
 {% endblock switch_widget %}
 
 {% block _form_step6_attachments_widget %}
