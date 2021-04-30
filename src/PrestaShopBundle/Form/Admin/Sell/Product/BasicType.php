@@ -28,21 +28,33 @@ declare(strict_types=1);
 
 namespace PrestaShopBundle\Form\Admin\Sell\Product;
 
+use PrestaShopBundle\Form\Admin\Sell\Product\Image\ImageDropzoneType;
+use PrestaShopBundle\Form\Admin\Sell\Product\Image\ProductImageType;
 use PrestaShopBundle\Form\Admin\Type\FormattedTextareaType;
 use PrestaShopBundle\Form\Admin\Type\TranslatableType;
 use PrestaShopBundle\Form\Admin\Type\TranslatorAwareType;
+use PrestaShopBundle\Form\Admin\Type\UnavailableType;
 use Symfony\Component\Form\FormBuilderInterface;
+use Symfony\Component\OptionsResolver\OptionsResolver;
 
-/**
- * Form type containing basic information (some of them are in the Basic settings tab but name and type are in the header)
- */
-class BasicInformationType extends TranslatorAwareType
+class BasicType extends TranslatorAwareType
 {
     /**
      * {@inheritDoc}
      */
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
+        $formIsUsedToEditAProduct = !empty($options['product_id']);
+        if ($formIsUsedToEditAProduct) {
+            $productId = (int) $options['product_id'];
+            $builder
+                ->add('images', ImageDropzoneType::class, [
+                    'product_id' => $productId,
+                    'update_form_type' => ProductImageType::class,
+                ])
+            ;
+        }
+
         $builder
             ->add('description_short', TranslatableType::class, [
                 'required' => false,
@@ -61,6 +73,28 @@ class BasicInformationType extends TranslatorAwareType
                 'type' => FormattedTextareaType::class,
                 'label_tag_name' => 'h2',
             ])
+            ->add('features', FeaturesType::class)
+            ->add('manufacturer', ManufacturerType::class)
+            ->add('related_products', UnavailableType::class, [
+                'label' => $this->trans('Related products', 'Admin.Catalog.Feature'),
+                'label_tag_name' => 'h2',
+            ])
+        ;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function configureOptions(OptionsResolver $resolver)
+    {
+        parent::configureOptions($resolver);
+        $resolver
+            ->setDefaults([
+                'product_id' => null,
+                'required' => false,
+                'label' => false,
+            ])
+            ->setAllowedTypes('product_id', ['null', 'int'])
         ;
     }
 }

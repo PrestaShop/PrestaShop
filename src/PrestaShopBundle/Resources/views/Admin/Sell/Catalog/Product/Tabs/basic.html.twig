@@ -26,17 +26,8 @@
 <div role="tabpanel" class="form-contenttab tab-pane container-fluid active" id="basic-tab">
   <div class="row">
     <div class="col-md-9 left-column">
-      {% if productForm.images is defined %}
-        {{ form_widget(productForm.images) }}
-      {% endif %}
-
-      {{ form_widget(productForm.basic) }}
-
-      {{ include('@PrestaShop/Admin/Sell/Catalog/Product/Blocks/features.html.twig', {
-        'productForm': productForm,
-      }) }}
-
-      {{ form_row(productForm.manufacturer) }}
+      {% form_theme productForm.basic.features '@PrestaShop/Admin/Sell/Catalog/Product/Form/features_form_theme.html.twig' %}
+      {{ form_row(productForm.basic) }}
     </div>
     <div class="col-md-3 right-column">
       {{ form_row(productForm.shortcuts) }}
