@@ -32,6 +32,7 @@ use PrestaShop\PrestaShop\Adapter\Shop\Url\ProductProvider;
 use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductType;
 use PrestaShopBundle\Form\Admin\Sell\Product\Basic\BasicType;
 use PrestaShopBundle\Form\Admin\Sell\Product\Pricing\PricingType;
+use PrestaShopBundle\Form\Admin\Sell\Product\Shipping\ShippingType;
 use PrestaShopBundle\Form\Admin\Sell\Product\Stock\StockType;
 use PrestaShopBundle\Form\Admin\Type\TranslatorAwareType;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
