@@ -42,6 +42,11 @@ services:
       tags:
         - { name: form.type_extension, extended_type: Symfony\Component\Form\Extension\Core\Type\FormType }
 
+    form.extension.alert:
+        class: 'PrestaShopBundle\Form\Admin\Extension\AlertExtension'
+        tags:
+            - { name: form.type_extension, extended_type: Symfony\Component\Form\Extension\Core\Type\FormType }
+
     form.extension.columns_number:
         class: 'PrestaShopBundle\Form\Admin\Extension\ColumnsNumberExtension'
         tags:

@@ -120,6 +120,8 @@ class ShippingType extends TranslatorAwareType
                 'required' => false,
                 'label' => $this->trans('Available carriers', 'Admin.Catalog.Feature'),
                 'label_tag_name' => 'h2',
+                'alert_message' => $this->trans('If no carrier is selected then all the carriers will be available for customers orders.', 'Admin.Catalog.Notification'),
+                'alert_type' => 'warning',
             ])
         ;
     }

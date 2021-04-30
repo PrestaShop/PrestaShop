@@ -162,7 +162,7 @@ class SEOCommandsBuilderTest extends AbstractProductCommandBuilderTest
                         'type' => RedirectType::TYPE_CATEGORY_TEMPORARY,
                         'target' => 51,
                     ],
-                ]
+                ],
             ],
             [$command],
         ];
