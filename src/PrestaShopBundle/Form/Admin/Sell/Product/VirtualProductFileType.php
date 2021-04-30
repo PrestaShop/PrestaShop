@@ -111,11 +111,12 @@ class VirtualProductFileType extends TranslatorAwareType implements EventSubscri
         $builder
             ->add('has_file', SwitchType::class, [
                 'label' => $this->trans('Does this product have an associated file?', 'Admin.Catalog.Feature'),
+                'label_tag_name' => 'h2',
             ])
             ->add('virtual_product_file_id', HiddenType::class)
             ->add('file', FileType::class, [
                 'label' => $this->trans('File', 'Admin.Global'),
-                'help' => $this->trans(
+                'label_help_box' => $this->trans(
                     'Upload a file from your computer (%maxUploadSize% max.)',
                     'Admin.Catalog.Help',
                     ['%maxUploadSize%' => $maxUploadSize]
@@ -124,10 +125,11 @@ class VirtualProductFileType extends TranslatorAwareType implements EventSubscri
                     new File(['maxSize' => $maxUploadSize]),
                 ],
                 'download_url' => $virtualProductFileDownloadUrl,
+                'column_breaker' => true,
             ])
             ->add('name', TextType::class, [
                 'label' => $this->trans('Filename', 'Admin.Global'),
-                'help' => $this->trans('The full filename with its extension (e.g. Book.pdf)', 'Admin.Catalog.Help'),
+                'label_help_box' => $this->trans('The full filename with its extension (e.g. Book.pdf)', 'Admin.Catalog.Help'),
                 'constraints' => [
                     new NotBlank(),
                     new TypedRegex(TypedRegex::TYPE_GENERIC_NAME),
@@ -138,7 +140,7 @@ class VirtualProductFileType extends TranslatorAwareType implements EventSubscri
             ])
             ->add('download_times_limit', NumberType::class, [
                 'label' => $this->trans('Number of allowed downloads', 'Admin.Catalog.Feature'),
-                'help' => $this->trans(
+                'label_help_box' => $this->trans(
                     'Number of downloads allowed per customer. Set to 0 for unlimited downloads.',
                     'Admin.Catalog.Help'
                 ),
@@ -153,10 +155,21 @@ class VirtualProductFileType extends TranslatorAwareType implements EventSubscri
                         ),
                     ]),
                 ],
+                'column_breaker' => true,
+            ])
+            ->add('expiration_date', DatePickerType::class, [
+                'label' => $this->trans('Expiration date', 'Admin.Catalog.Feature'),
+                'label_help_box' => $this->trans(
+                    'If set, the file will not be downloadable after this date. Leave blank if you do not wish to attach an expiration date.',
+                    'Admin.Catalog.Help'
+                ),
+                'attr' => ['placeholder' => 'YYYY-MM-DD'],
+                'required' => false,
+                'empty_data' => '',
             ])
             ->add('access_days_limit', NumberType::class, [
                 'label' => $this->trans('Number of days', 'Admin.Catalog.Feature'),
-                'help' => $this->trans(
+                'label_help_box' => $this->trans(
                     'Number of days this file can be accessed by customers. Set to zero for unlimited access.',
                     'Admin.Catalog.Help'
                 ),
@@ -171,16 +184,6 @@ class VirtualProductFileType extends TranslatorAwareType implements EventSubscri
                         ),
                     ]),
                 ],
-            ])
-            ->add('expiration_date', DatePickerType::class, [
-                'label' => $this->trans('Expiration date', 'Admin.Catalog.Feature'),
-                'help' => $this->trans(
-                    'If set, the file will not be downloadable after this date. Leave blank if you do not wish to attach an expiration date.',
-                    'Admin.Catalog.Help'
-                ),
-                'attr' => ['placeholder' => 'YYYY-MM-DD'],
-                'required' => false,
-                'empty_data' => '',
             ])
         ;
 
@@ -212,6 +215,15 @@ class VirtualProductFileType extends TranslatorAwareType implements EventSubscri
     {
         $resolver->setDefaults([
             'virtual_product_file_id' => null,
+            'label' => false,
+            'required' => false,
+            'row_attr' => [
+                'class' => 'virtual-product-file-container',
+            ],
+            'attr' => [
+                'class' => 'virtual-product-file-content',
+            ],
+            'columns_number' => 3,
         ]);
         $resolver->setAllowedTypes('virtual_product_file_id', ['int', 'null']);
     }

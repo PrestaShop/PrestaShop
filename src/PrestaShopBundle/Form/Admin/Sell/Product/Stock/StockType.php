@@ -28,9 +28,11 @@ declare(strict_types=1);
 namespace PrestaShopBundle\Form\Admin\Sell\Product\Stock;
 
 use PrestaShop\PrestaShop\Core\Form\FormChoiceProviderInterface;
+use PrestaShopBundle\Form\Admin\Sell\Product\VirtualProductFileType;
 use PrestaShopBundle\Form\Admin\Type\TranslatorAwareType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\FormBuilderInterface;
+use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Translation\TranslatorInterface;
 
 class StockType extends TranslatorAwareType
@@ -62,6 +64,9 @@ class StockType extends TranslatorAwareType
         $builder
             ->add('quantities', QuantityType::class)
             ->add('options', StockOptionsType::class)
+            ->add('virtual_product_file', VirtualProductFileType::class, [
+                'virtual_product_file_id' => $options['virtual_product_file_id'] ?? null,
+            ])
             ->add('pack_stock_type', ChoiceType::class, [
                 'choices' => $this->packStockTypeChoiceProvider->getChoices(),
                 'expanded' => true,
@@ -71,5 +76,18 @@ class StockType extends TranslatorAwareType
             ])
             ->add('availability', AvailabilityType::class)
         ;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function configureOptions(OptionsResolver $resolver)
+    {
+        $resolver->setDefaults([
+            'label' => false,
+            'required' => false,
+            'virtual_product_file_id' => null,
+        ]);
+        $resolver->setAllowedTypes('virtual_product_file_id', ['int', 'null']);
     }
 }
