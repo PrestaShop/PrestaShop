@@ -48,8 +48,8 @@ class AddCarrier extends BOBasePage {
 
   /**
    * Fill carrier form in create or edit page and save
-   * @param page
-   * @param carrierData
+   * @param page {Page} Browser tab
+   * @param carrierData {Object} Carrier information
    * @return {Promise<string>}
    */
   async createEditCarrier(page, carrierData) {
@@ -103,8 +103,8 @@ class AddCarrier extends BOBasePage {
 
   /**
    * Set handling cost
-   * @param page
-   * @param toEnable
+   * @param page {Page} Browser tab
+   * @param toEnable {Boolean} Handling cost toggle button value
    * @returns {Promise<string>}
    */
   async setHandlingCosts(page, toEnable = true) {
