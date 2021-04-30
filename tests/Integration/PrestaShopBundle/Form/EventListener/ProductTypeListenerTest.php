@@ -94,7 +94,7 @@ class ProductTypeListenerTest extends FormListenerTestCase
         $listener = new ProductTypeListener();
 
         $formData = [
-            'basic' => [
+            'header' => [
                 'type' => $productType,
             ],
         ];
