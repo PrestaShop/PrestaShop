@@ -1360,6 +1360,34 @@ services:
         tags:
             - { name: form.type }
 
+    form.type.sell.product.shipping.shipping_type:
+        class: 'PrestaShopBundle\Form\Admin\Sell\Product\Shipping\ShippingType'
+        parent: 'form.type.translatable.aware'
+        arguments:
+            - "@=service('prestashop.adapter.legacy.context').getContext().currency.iso_code"
+            - '@prestashop.core.form.choice_provider.carrier_by_reference_id'
+            - '@prestashop.core.form.choice_provider.delivery_time_note_types_provider'
+        public: true
+        tags:
+            - { name: form.type }
+
+    form.type.sell.product.shipping.dimensions_type:
+        class: 'PrestaShopBundle\Form\Admin\Sell\Product\Shipping\DimensionsType'
+        parent: 'form.type.translatable.aware'
+        public: true
+        arguments:
+            - "@=service('prestashop.adapter.legacy.configuration').get('PS_DIMENSION_UNIT')"
+            - "@=service('prestashop.adapter.legacy.configuration').get('PS_WEIGHT_UNIT')"
+        tags:
+            - { name: form.type }
+
+    form.type.sell.product.shipping.delivery_time_notes_type:
+        class: 'PrestaShopBundle\Form\Admin\Sell\Product\Shipping\DeliveryTimeNotesType'
+        parent: 'form.type.translatable.aware'
+        public: true
+        tags:
+            - { name: form.type }
+
     form.type.sell.product.pricing.pricing_type:
       class: 'PrestaShopBundle\Form\Admin\Sell\Product\Pricing\PricingType'
       parent: 'form.type.translatable.aware'
@@ -1411,34 +1439,6 @@ services:
 
     form.type.sell.product.shortcut.stock_shortcut_type:
         class: 'PrestaShopBundle\Form\Admin\Sell\Product\Shortcut\StockShortcutType'
-        parent: 'form.type.translatable.aware'
-        public: true
-        tags:
-            - { name: form.type }
-
-    form.type.sell.product.shipping_type:
-        class: 'PrestaShopBundle\Form\Admin\Sell\Product\ShippingType'
-        parent: 'form.type.translatable.aware'
-        arguments:
-            - "@=service('prestashop.adapter.legacy.context').getContext().currency.iso_code"
-            - '@prestashop.core.form.choice_provider.carrier_by_reference_id'
-            - '@prestashop.core.form.choice_provider.delivery_time_note_types_provider'
-        public: true
-        tags:
-            - { name: form.type }
-
-    form.type.sell.product.dimensions_type:
-        class: 'PrestaShopBundle\Form\Admin\Sell\Product\DimensionsType'
-        parent: 'form.type.translatable.aware'
-        public: true
-        arguments:
-            - "@=service('prestashop.adapter.legacy.configuration').get('PS_DIMENSION_UNIT')"
-            - "@=service('prestashop.adapter.legacy.configuration').get('PS_WEIGHT_UNIT')"
-        tags:
-            - { name: form.type }
-
-    form.type.sell.product.delivery_time_notes_type:
-        class: 'PrestaShopBundle\Form\Admin\Sell\Product\DeliveryTimeNotesType'
         parent: 'form.type.translatable.aware'
         public: true
         tags:
