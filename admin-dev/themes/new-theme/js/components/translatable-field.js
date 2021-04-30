@@ -38,6 +38,7 @@ class TranslatableField {
 
     this.localeButtonSelector = opts.localeButtonSelector || '.translationsLocales.nav .nav-item a[data-toggle="tab"]';
     this.localeNavigationSelector = opts.localeNavigationSelector || '.translationsLocales.nav';
+    this.translationFieldSelector = opts.translationFieldSelector || '.translation-field';
 
     $('body').on('shown.bs.tab', this.localeButtonSelector, this.toggleLanguage.bind(this));
     EventEmitter.on('languageSelected', this.toggleFields.bind(this));
