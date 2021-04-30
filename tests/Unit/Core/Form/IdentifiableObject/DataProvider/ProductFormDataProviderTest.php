@@ -448,16 +448,16 @@ class ProductFormDataProviderTest extends TestCase
             'available_later' => $localizedValues,
             'available_date' => new DateTime('1969/07/20'),
         ];
-        $expectedOutputData['stock']['quantity'] = 42;
-        $expectedOutputData['stock']['minimal_quantity'] = 7;
-        $expectedOutputData['stock']['stock_location'] = 'top shelf';
-        $expectedOutputData['stock']['low_stock_threshold'] = 5;
-        $expectedOutputData['stock']['low_stock_alert'] = true;
+        $expectedOutputData['stock']['quantities']['quantity'] = 42;
+        $expectedOutputData['stock']['quantities']['minimal_quantity'] = 7;
+        $expectedOutputData['stock']['options']['stock_location'] = 'top shelf';
+        $expectedOutputData['stock']['options']['low_stock_threshold'] = 5;
+        $expectedOutputData['stock']['options']['low_stock_alert'] = true;
         $expectedOutputData['stock']['pack_stock_type'] = PackStockType::STOCK_TYPE_PACK_ONLY;
-        $expectedOutputData['stock']['out_of_stock_type'] = OutOfStockType::OUT_OF_STOCK_AVAILABLE;
-        $expectedOutputData['stock']['available_now_label'] = $localizedValues;
-        $expectedOutputData['stock']['available_later_label'] = $localizedValues;
-        $expectedOutputData['stock']['available_date'] = '1969-07-20';
+        $expectedOutputData['stock']['availability']['out_of_stock_type'] = OutOfStockType::OUT_OF_STOCK_AVAILABLE;
+        $expectedOutputData['stock']['availability']['available_now_label'] = $localizedValues;
+        $expectedOutputData['stock']['availability']['available_later_label'] = $localizedValues;
+        $expectedOutputData['stock']['availability']['available_date'] = '1969-07-20';
 
         $expectedOutputData['shortcuts']['stock']['quantity'] = 42;
 
@@ -1068,16 +1068,22 @@ class ProductFormDataProviderTest extends TestCase
                 'manufacturer' => NoManufacturerId::NO_MANUFACTURER_ID,
             ],
             'stock' => [
-                'quantity' => static::DEFAULT_QUANTITY,
-                'minimal_quantity' => 0,
-                'stock_location' => 'location',
-                'low_stock_threshold' => null,
-                'low_stock_alert' => false,
+                'quantities' => [
+                    'quantity' => static::DEFAULT_QUANTITY,
+                    'minimal_quantity' => 0,
+                ],
+                'options' => [
+                    'stock_location' => 'location',
+                    'low_stock_threshold' => null,
+                    'low_stock_alert' => false,
+                ],
                 'pack_stock_type' => PackStockType::STOCK_TYPE_DEFAULT,
-                'out_of_stock_type' => OutOfStockType::OUT_OF_STOCK_DEFAULT,
-                'available_now_label' => [],
-                'available_later_label' => [],
-                'available_date' => '',
+                'availability' => [
+                    'out_of_stock_type' => OutOfStockType::OUT_OF_STOCK_DEFAULT,
+                    'available_now_label' => [],
+                    'available_later_label' => [],
+                    'available_date' => '',
+                ],
             ],
             'pricing' => [
                 'retail_price' => [
