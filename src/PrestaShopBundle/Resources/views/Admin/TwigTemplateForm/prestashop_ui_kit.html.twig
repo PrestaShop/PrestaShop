@@ -87,6 +87,10 @@
       {{- block('form_external_link') -}}
     </div>
   {% endspaceless %}
+
+  {% if column_breaker %}
+    <div class="form-group form-column-breaker"></div>
+  {% endif %}
 {%- endblock form_row %}
 
 {% block form_group_class -%}

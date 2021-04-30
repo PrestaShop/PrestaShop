@@ -54,8 +54,10 @@ class ColumnsNumberExtension extends AbstractTypeExtension
         $resolver
             ->setDefaults([
                 'columns_number' => null,
+                'column_breaker' => false,
             ])
             ->setAllowedTypes('columns_number', ['null', 'int'])
+            ->setAllowedTypes('column_breaker', ['bool'])
         ;
     }
 
@@ -67,6 +69,7 @@ class ColumnsNumberExtension extends AbstractTypeExtension
         if (!empty($options['columns_number'])) {
             $view->vars['columns_number'] = $options['columns_number'];
         }
+        $view->vars['column_breaker'] = $options['column_breaker'];
     }
 
     /**
