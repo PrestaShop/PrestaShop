@@ -1313,6 +1313,42 @@ services:
         tags:
             - { name: form.type }
 
+    form.type.sell.product.stock.stock_type:
+        class: 'PrestaShopBundle\Form\Admin\Sell\Product\Stock\StockType'
+        parent: 'form.type.translatable.aware'
+        public: true
+        arguments:
+            - '@prestashop.core.form.choice_provider.pack_stock_type_choice_provider'
+        tags:
+            - { name: form.type }
+
+    form.type.sell.product.stock.quantity_type:
+        class: 'PrestaShopBundle\Form\Admin\Sell\Product\Stock\QuantityType'
+        parent: 'form.type.translatable.aware'
+        public: true
+        arguments:
+            - "@=service('prestashop.adapter.legacy.configuration').getBoolean('PS_STOCK_MANAGEMENT')"
+        tags:
+            - { name: form.type }
+
+    form.type.sell.product.stock.stock_options_type:
+        class: 'PrestaShopBundle\Form\Admin\Sell\Product\Stock\StockOptionsType'
+        parent: 'form.type.translatable.aware'
+        public: true
+        arguments:
+            - '@router'
+        tags:
+            - { name: form.type }
+
+    form.type.sell.product.stock.availability_type:
+        class: 'PrestaShopBundle\Form\Admin\Sell\Product\Stock\AvailabilityType'
+        parent: 'form.type.translatable.aware'
+        public: true
+        arguments:
+            - '@prestashop.core.form.choice_provider.out_of_stock_type_choice_provider'
+        tags:
+            - { name: form.type }
+
     form.type.sell.product.pricing_type:
       class: 'PrestaShopBundle\Form\Admin\Sell\Product\PricingType'
       parent: 'form.type.translatable.aware'
@@ -1452,18 +1488,6 @@ services:
         public: true
         arguments:
             - '@prestashop.core.form.choice_provider.customization_field_type_choice_provider'
-        tags:
-            - { name: form.type }
-
-    form.type.sell.product.stock_type:
-        class: 'PrestaShopBundle\Form\Admin\Sell\Product\StockType'
-        parent: 'form.type.translatable.aware'
-        public: true
-        arguments:
-            - '@prestashop.core.form.choice_provider.out_of_stock_type_choice_provider'
-            - '@prestashop.core.form.choice_provider.pack_stock_type_choice_provider'
-            - '@router'
-            - "@=service('prestashop.adapter.legacy.configuration').getBoolean('PS_STOCK_MANAGEMENT')"
         tags:
             - { name: form.type }
 
