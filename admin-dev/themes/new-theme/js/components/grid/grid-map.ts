@@ -91,4 +91,5 @@ export default {
   commonRefreshListAction: '.js-common_refresh_list-grid-action',
   filterForm: (id: string): string => `#${id}_filter_form`,
   onDragClass: 'position-row-while-drag',
+  sqlSubmit: '.btn-sql-submit',
 };

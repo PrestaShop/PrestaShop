@@ -23,19 +23,31 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
 
+import {Grid} from '@PSTypes/grid';
 import GridMap from '@components/grid/grid-map';
 import 'tablednd/dist/jquery.tablednd.min';
 
 const {$} = window;
 
+interface RowDatas {
+  rowMarker: string;
+  offset: number;
+}
+
+interface DNDPositions {
+  rowId: string;
+  oldPosition: number;
+  newPosition: number;
+}
+
 /**
  * Class PositionExtension extends Grid with reorderable positions
  */
 export default class PositionExtension {
-  constructor() {
-    return {
-      extend: (grid) => this.extend(grid),
-    };
+  grid: Grid;
+
+  constructor(grid: Grid) {
+    this.grid = grid;
   }
 
   /**
@@ -43,7 +55,7 @@ export default class PositionExtension {
    *
    * @param {Grid} grid
    */
-  extend(grid) {
+  extend(grid: Grid): void {
     this.grid = grid;
     this.addIdsToGridTableRows();
     grid
@@ -52,18 +64,18 @@ export default class PositionExtension {
       .tableDnD({
         onDragClass: GridMap.onDragClass,
         dragHandle: GridMap.dragHandler,
-        onDrop: (table, row) => this.handlePositionChange(row),
+        onDrop: (table: HTMLElement, row: HTMLElement) => this.handlePositionChange(row),
       });
     grid
       .getContainer()
       .find('.js-drag-handle')
       .hover(
-        function () {
+        function hover() {
           $(this)
             .closest('tr')
             .addClass('hover');
         },
-        function () {
+        function stopHover() {
           $(this)
             .closest('tr')
             .removeClass('hover');
@@ -78,8 +90,10 @@ export default class PositionExtension {
    *
    * @private
    */
-  handlePositionChange(row) {
-    const $rowPositionContainer = $(row).find(GridMap.gridPositionFirst(this.grid.getId()));
+  private handlePositionChange(row: HTMLElement): void {
+    const $rowPositionContainer = $(row).find(
+      GridMap.gridPositionFirst(this.grid.getId()),
+    );
     const updateUrl = $rowPositionContainer.data('update-url');
     const method = $rowPositionContainer.data('update-method');
     const positions = this.getRowsPositions();
@@ -93,7 +107,7 @@ export default class PositionExtension {
    * @returns {Array}
    * @private
    */
-  getRowsPositions() {
+  private getRowsPositions(): Array<DNDPositions> {
     const tableData = JSON.parse($.tableDnD.jsonize());
     const rowsData = tableData[`${this.grid.getId()}_grid_table`];
     const completeRowsData = [];
@@ -119,7 +133,7 @@ export default class PositionExtension {
    *
    * @private
    */
-  addIdsToGridTableRows() {
+  private addIdsToGridTableRows(): void {
     let counter = 0;
 
     this.grid
@@ -147,7 +161,11 @@ export default class PositionExtension {
    *
    * @private
    */
-  updatePosition(url, params, method) {
+  private updatePosition(
+    url: string,
+    params: Record<string, Array<DNDPositions>>,
+    method: string,
+  ): void {
     const isGetOrPostMethod = ['GET', 'POST'].includes(method);
 
     const $form = $('<form>', {
@@ -200,16 +218,22 @@ export default class PositionExtension {
    * @returns {Array}
    * @private
    */
-  computeMappingBetweenOldAndNewPositions(rowsData) {
+  private computeMappingBetweenOldAndNewPositions(
+    rowsData: Array<RowDatas>,
+  ): Array<DNDPositions> {
     const regex = /^row_(\d+)_(\d+)$/;
     const mapping = Array(rowsData.length)
       .fill()
       .map(Object);
+    console.log(mapping);
 
     for (let i = 0; i < rowsData.length; i += 1) {
-      const [, rowId, oldPosition] = regex.exec(rowsData[i].rowMarker);
-      mapping[i].rowId = rowId;
-      mapping[i].oldPosition = parseInt(oldPosition, 10);
+      const regexResult = <RegExpPositions>regex.exec(rowsData[i].rowMarker);
+
+      if (regexResult?.rowId && regexResult?.oldPosition) {
+        mapping[i].rowId = regexResult.rowId;
+        mapping[i].oldPosition = parseInt(regexResult.oldPosition, 10);
+      }
       // This row will have as a new position the old position of the current one
       mapping[rowsData[i].offset].newPosition = mapping[i].oldPosition;
     }
