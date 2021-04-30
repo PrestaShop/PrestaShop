@@ -28,6 +28,7 @@ declare(strict_types=1);
 
 namespace PrestaShopBundle\Form\Admin\Sell\Product;
 
+use PrestaShop\PrestaShop\Core\Domain\Product\ProductSettings;
 use PrestaShopBundle\Form\Admin\Sell\Product\Image\ImageDropzoneType;
 use PrestaShopBundle\Form\Admin\Sell\Product\Image\ProductImageType;
 use PrestaShopBundle\Form\Admin\Type\FormattedTextareaType;
@@ -36,6 +37,7 @@ use PrestaShopBundle\Form\Admin\Type\TranslatorAwareType;
 use PrestaShopBundle\Form\Admin\Type\UnavailableType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
+use Symfony\Component\Validator\Constraints\Length;
 
 class BasicType extends TranslatorAwareType
 {
@@ -61,17 +63,45 @@ class BasicType extends TranslatorAwareType
                 'label' => $this->trans('Summary', 'Admin.Global'),
                 'type' => FormattedTextareaType::class,
                 'options' => [
+                    'limit' => ProductSettings::MAX_DESCRIPTION_SHORT_LENGTH,
                     'attr' => [
                         'class' => 'serp-default-description h2',
                     ],
                 ],
                 'label_tag_name' => 'h2',
+                'constraints' => [
+                    new Length([
+                        'max' => ProductSettings::MAX_DESCRIPTION_SHORT_LENGTH,
+                        'maxMessage' => $this->trans(
+                            'This field cannot be longer than %limit% characters',
+                            'Admin.Notifications.Error',
+                            [
+                                '%limit%' => ProductSettings::MAX_DESCRIPTION_SHORT_LENGTH,
+                            ]
+                        ),
+                    ]),
+                ],
             ])
             ->add('description', TranslatableType::class, [
                 'required' => false,
                 'label' => $this->trans('Description', 'Admin.Global'),
                 'type' => FormattedTextareaType::class,
+                'options' => [
+                    'limit' => ProductSettings::MAX_DESCRIPTION_LENGTH,
+                ],
                 'label_tag_name' => 'h2',
+                'constraints' => [
+                    new Length([
+                        'max' => ProductSettings::MAX_DESCRIPTION_LENGTH,
+                        'maxMessage' => $this->trans(
+                            'This field cannot be longer than %limit% characters',
+                            'Admin.Notifications.Error',
+                            [
+                                '%limit%' => ProductSettings::MAX_DESCRIPTION_LENGTH,
+                            ]
+                        ),
+                    ]),
+                ],
             ])
             ->add('features', FeaturesType::class)
             ->add('manufacturer', ManufacturerType::class)
