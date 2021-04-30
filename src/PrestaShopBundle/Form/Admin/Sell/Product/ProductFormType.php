@@ -86,8 +86,7 @@ class ProductFormType extends TranslatorAwareType
                 'product_id' => $options['product_id'] ?? null,
             ])
             ->add('shortcuts', ShortcutsType::class)
-            ->add('stock', StockType::class)
-            ->add('virtual_product_file', VirtualProductFileType::class, [
+            ->add('stock', StockType::class, [
                 'virtual_product_file_id' => $options['data']['virtual_product_file']['virtual_product_file_id'] ?? null,
             ])
             ->add('pricing', PricingType::class)
