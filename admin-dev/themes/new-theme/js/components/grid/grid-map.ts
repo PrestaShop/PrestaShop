@@ -63,7 +63,7 @@ export default {
   },
   confirmModal: (id: string): string => `${id}-grid-confirm-modal`,
   gridTable: '.js-grid-table',
-  dragHandler: 'js-drag-handle',
+  dragHandler: '.js-drag-handle',
   specificGridTable: (id: string): string => `${id}_grid_table`,
   grid: (id: string): string => `#${id}_grid`,
   gridPanel: '.js-grid-panel',

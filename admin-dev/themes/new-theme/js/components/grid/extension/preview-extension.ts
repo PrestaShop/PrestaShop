@@ -23,6 +23,7 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
 
+import {Grid} from '@PSTypes/grid';
 import GridMap from '@components/grid/grid-map';
 
 const {$} = window;
@@ -31,13 +32,28 @@ const {$} = window;
  * Extends grid with preview functionality.
  */
 export default class PreviewExtension {
-  constructor(previewCustomization) {
+  locks: Array<unknown>;
+
+  expandSelector: string;
+
+  previewOpenClass: string;
+
+  collapseSelector: string;
+
+  previewToggleSelector: string;
+
+  previewCustomization: (previewTemplate: JQuery) => void;
+
+  $gridContainer: JQuery;
+
+  constructor(previewCustomization: (previewTemplate: JQuery) => void, grid: Grid) {
     this.locks = [];
     this.expandSelector = GridMap.expand;
     this.collapseSelector = GridMap.collapse;
     this.previewOpenClass = 'preview-open';
     this.previewToggleSelector = GridMap.previewToggle;
     this.previewCustomization = previewCustomization;
+    this.$gridContainer = $(grid.getContainer);
   }
 
   /**
@@ -45,11 +61,11 @@ export default class PreviewExtension {
    *
    * @param grid
    */
-  extend(grid) {
+  extend(grid: Grid): void {
     this.$gridContainer = $(grid.getContainer);
 
-    this.$gridContainer.find('tbody tr').on('mouseover mouseleave', (event) => this.handleIconHovering(event));
-    this.$gridContainer.find(this.previewToggleSelector).on('click', (event) => this.togglePreview(event));
+    this.$gridContainer.find('tbody tr').on('mouseover mouseleave', (event: JQueryEventObject) => this.handleIconHovering(event));
+    this.$gridContainer.find(this.previewToggleSelector).on('click', (event: JQueryEventObject) => this.togglePreview(event));
   }
 
   /**
@@ -58,7 +74,7 @@ export default class PreviewExtension {
    * @param event
    * @private
    */
-  handleIconHovering(event) {
+  private handleIconHovering(event: JQueryEventObject) {
     const $previewToggle = $(event.currentTarget).find(this.previewToggleSelector);
 
     if (event.type === 'mouseover' && !$(event.currentTarget).hasClass(this.previewOpenClass)) {
@@ -74,7 +90,7 @@ export default class PreviewExtension {
    * @param event
    * @private
    */
-  togglePreview(event) {
+  togglePreview(event: JQueryEventObject): void {
     const $previewToggle = $(event.currentTarget);
     const $columnRow = $previewToggle.closest('tr');
 
@@ -110,7 +126,7 @@ export default class PreviewExtension {
       .then((response) => {
         this.renderPreviewContent($columnRow, response.preview);
       })
-      .catch((e) => {
+      .catch((e: AjaxError) => {
         window.showErrorMessage(e.responseJSON.message);
       });
   }
@@ -123,7 +139,7 @@ export default class PreviewExtension {
    *
    * @private
    */
-  renderPreviewContent($columnRow, content) {
+  private renderPreviewContent($columnRow: JQuery<Element>, content: string) {
     const rowColumnCount = $columnRow.find('td').length;
 
     const $previewTemplate = $(`
@@ -149,7 +165,7 @@ export default class PreviewExtension {
    * @param parent
    * @private
    */
-  showExpandIcon(parent) {
+  private showExpandIcon(parent: JQuery<Element>): void {
     parent.find(this.expandSelector).removeClass('d-none');
   }
 
@@ -159,7 +175,7 @@ export default class PreviewExtension {
    * @param parent
    * @private
    */
-  hideExpandIcon(parent) {
+  private hideExpandIcon(parent: JQuery<Element>): void {
     parent.find(this.expandSelector).addClass('d-none');
   }
 
@@ -169,7 +185,7 @@ export default class PreviewExtension {
    * @param parent
    * @private
    */
-  showCollapseIcon(parent) {
+  private showCollapseIcon(parent: JQuery<Element>): void {
     parent.find(this.collapseSelector).removeClass('d-none');
   }
 
@@ -179,15 +195,15 @@ export default class PreviewExtension {
    * @param parent
    * @private
    */
-  hideCollapseIcon(parent) {
+  private hideCollapseIcon(parent: JQuery<Element>): void {
     parent.find(this.collapseSelector).addClass('d-none');
   }
 
-  isLocked(key) {
+  isLocked(key: number): boolean {
     return this.locks.indexOf(key) !== -1;
   }
 
-  lock(key) {
+  lock(key: number): void {
     if (this.isLocked(key)) {
       return;
     }
@@ -195,7 +211,7 @@ export default class PreviewExtension {
     this.locks.push(key);
   }
 
-  unlock(key) {
+  unlock(key: number): void {
     const index = this.locks.indexOf(key);
 
     if (index === -1) {
@@ -210,7 +226,7 @@ export default class PreviewExtension {
    *
    * @private
    */
-  closeOpenedPreviews() {
+  private closeOpenedPreviews(): void {
     const $rows = this.$gridContainer.find(GridMap.gridTbody).find(GridMap.trNotPreviewRow);
 
     $.each($rows, (i, row) => {
