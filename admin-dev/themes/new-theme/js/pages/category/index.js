@@ -34,16 +34,15 @@ import SubmitRowActionExtension from '@components/grid/extension/action/row/subm
 import LinkRowActionExtension from '@components/grid/extension/link-row-action-extension';
 import CategoryPositionExtension from '@components/grid/extension/column/catalog/category-position-extension';
 import AsyncToggleColumnExtension from '@components/grid/extension/column/common/async-toggle-column-extension';
-import DeleteCategoryRowActionExtension
-  from '@components/grid/extension/action/row/category/delete-category-row-action-extension';
-import DeleteCategoriesBulkActionExtension
-  from '@components/grid/extension/action/bulk/category/delete-categories-bulk-action-extension';
+/* eslint-disable */
+import DeleteCategoryRowActionExtension from '@components/grid/extension/action/row/category/delete-category-row-action-extension';
+import DeleteCategoriesBulkActionExtension from '@components/grid/extension/action/bulk/category/delete-categories-bulk-action-extension';
+/* eslint-enable */
 import ChoiceTable from '@components/choice-table';
 import textToLinkRewriteCopier from '@components/text-to-link-rewrite-copier';
 import ChoiceTree from '@components/form/choice-tree';
 import FormSubmitButton from '@components/form-submit-button';
-import FiltersSubmitButtonEnablerExtension
-  from '@components/grid/extension/filters-submit-button-enabler-extension';
+import FiltersSubmitButtonEnablerExtension from '@components/grid/extension/filters-submit-button-enabler-extension';
 import ShowcaseCard from '@components/showcase-card/showcase-card';
 import ShowcaseCardCloseExtension from '@components/showcase-card/extension/showcase-card-close-extension';
 import TextWithRecommendedLengthCounter from '@components/form/text-with-recommended-length-counter';
@@ -56,7 +55,7 @@ $(() => {
 
   categoriesGrid.addExtension(new FiltersResetExtension());
   categoriesGrid.addExtension(new SortingExtension());
-  categoriesGrid.addExtension(new CategoryPositionExtension());
+  categoriesGrid.addExtension(new CategoryPositionExtension(categoriesGrid));
   categoriesGrid.addExtension(new ExportToSqlManagerExtension());
   categoriesGrid.addExtension(new ReloadListExtension());
   categoriesGrid.addExtension(new BulkActionCheckboxExtension());
@@ -71,13 +70,7 @@ $(() => {
   const showcaseCard = new ShowcaseCard('categoriesShowcaseCard');
   showcaseCard.addExtension(new ShowcaseCardCloseExtension());
 
-  window.prestashop.component.initComponents(
-    [
-      'TranslatableField',
-      'TinyMCEEditor',
-      'TranslatableInput',
-    ],
-  );
+  window.prestashop.component.initComponents(['TranslatableField', 'TinyMCEEditor', 'TranslatableInput']);
 
   const translatorInput = window.prestashop.instance.translatableInput;
   new ChoiceTable();
