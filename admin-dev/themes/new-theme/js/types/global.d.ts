@@ -29,3 +29,8 @@ interface AjaxResponse {
 interface PrestashopWindow {
   customRoutes: unknown;
 }
+
+interface RegExpPositions extends RegExpExecArray {
+  rowId: string;
+  oldPosition: string;
+}

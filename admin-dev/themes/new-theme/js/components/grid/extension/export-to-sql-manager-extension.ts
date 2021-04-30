@@ -62,7 +62,7 @@ export default class ExportToSqlManagerExtension {
     const $modal = $(GridMap.actions.showModalGrid(grid.getId()));
     $modal.modal('show');
 
-    $modal.on('click', '.btn-sql-submit', () => $sqlManagerForm.submit());
+    $modal.on('click', GridMap.sqlSubmit, () => $sqlManagerForm.submit());
   }
 
   /**
