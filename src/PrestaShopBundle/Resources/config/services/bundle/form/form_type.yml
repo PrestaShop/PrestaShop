@@ -1340,6 +1340,17 @@ services:
         tags:
             - { name: form.type }
 
+    form.type.sell.product.stock.virtual_product_file_type:
+        class: 'PrestaShopBundle\Form\Admin\Sell\Product\Stock\VirtualProductFileType'
+        parent: 'form.type.translatable.aware'
+        public: true
+        arguments:
+            - "@=service('prestashop.adapter.legacy.configuration').getInt('PS_ATTACHMENT_MAXIMUM_SIZE')"
+            - "@router"
+            - '@form.form_cloner'
+        tags:
+            - { name: form.type }
+
     form.type.sell.product.stock.availability_type:
         class: 'PrestaShopBundle\Form\Admin\Sell\Product\Stock\AvailabilityType'
         parent: 'form.type.translatable.aware'
@@ -1349,8 +1360,8 @@ services:
         tags:
             - { name: form.type }
 
-    form.type.sell.product.pricing_type:
-      class: 'PrestaShopBundle\Form\Admin\Sell\Product\PricingType'
+    form.type.sell.product.pricing.pricing_type:
+      class: 'PrestaShopBundle\Form\Admin\Sell\Product\Pricing\PricingType'
       parent: 'form.type.translatable.aware'
       public: true
       arguments:
@@ -1361,8 +1372,8 @@ services:
       tags:
         - { name: form.type }
 
-    form.type.sell.product.retail_price_type:
-        class: 'PrestaShopBundle\Form\Admin\Sell\Product\RetailPriceType'
+    form.type.sell.product.pricing.retail_price_type:
+        class: 'PrestaShopBundle\Form\Admin\Sell\Product\Pricing\RetailPriceType'
         parent: 'form.type.translatable.aware'
         public: true
         arguments:
@@ -1371,8 +1382,8 @@ services:
         tags:
             - { name: form.type }
 
-    form.type.sell.product.unit_price_type:
-        class: 'PrestaShopBundle\Form\Admin\Sell\Product\UnitPriceType'
+    form.type.sell.product.pricing.unit_price_type:
+        class: 'PrestaShopBundle\Form\Admin\Sell\Product\Pricing\UnitPriceType'
         parent: 'form.type.translatable.aware'
         public: true
         arguments:
@@ -1507,17 +1518,6 @@ services:
         arguments:
             - '@prestashop.core.form.choice_provider.currency_by_id'
             - "@=service('prestashop.adapter.legacy.context').getContext().currency.iso_code"
-        tags:
-            - { name: form.type }
-
-    form.type.sell.product.virtual_product_file_type:
-        class: 'PrestaShopBundle\Form\Admin\Sell\Product\VirtualProductFileType'
-        parent: 'form.type.translatable.aware'
-        public: true
-        arguments:
-            - "@=service('prestashop.adapter.legacy.configuration').getInt('PS_ATTACHMENT_MAXIMUM_SIZE')"
-            - "@router"
-            - '@form.form_cloner'
         tags:
             - { name: form.type }
 
