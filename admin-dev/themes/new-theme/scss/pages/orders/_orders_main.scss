@@ -99,8 +99,6 @@
   margin-top: 8px;
 }
 
-$order-block-background-color: #f8f8f8 !default;
-
 .info-block {
   padding-top: 18px;
   padding-right: 18px;
@@ -142,7 +140,7 @@ $order-block-background-color: #f8f8f8 !default;
 
 .messages-block {
   padding: 3rem 0;
-  background-color: $order-block-background-color;
+  background-color: $info-block-background;
   $private-message-color: #7a8a8f;
 
   .employee-icon {
