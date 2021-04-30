@@ -30,8 +30,6 @@ namespace PrestaShopBundle\Form\Admin\Sell\Product;
 
 use PrestaShop\PrestaShop\Adapter\Shop\Url\ProductProvider;
 use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductType;
-use PrestaShopBundle\Form\Admin\Sell\Product\Image\ImageDropzoneType;
-use PrestaShopBundle\Form\Admin\Sell\Product\Image\ProductImageType;
 use PrestaShopBundle\Form\Admin\Type\TranslatorAwareType;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Symfony\Component\Form\Extension\Core\Type\ButtonType;
@@ -82,9 +80,10 @@ class ProductFormType extends TranslatorAwareType
         $formIsUsedToEditAProduct = !empty($options['product_id']);
         $builder
             ->add('header', HeaderType::class)
-            ->add('basic', BasicInformationType::class)
-            ->add('features', FeaturesType::class)
-            ->add('manufacturer', ManufacturerType::class)
+            ->add('basic', BasicType::class, [
+                'product_id' => $options['product_id'] ?? null,
+            ])
+            ->add('shortcuts', ShortcutsType::class)
             ->add('stock', StockType::class)
             ->add('virtual_product_file', VirtualProductFileType::class, [
                 'virtual_product_file_id' => $options['data']['virtual_product_file']['virtual_product_file_id'] ?? null,
@@ -96,7 +95,6 @@ class ProductFormType extends TranslatorAwareType
             ->add('seo', SEOType::class)
             ->add('redirect_option', RedirectOptionType::class)
             ->add('suppliers', SuppliersType::class)
-            ->add('shortcuts', ShortcutsType::class)
             ->add('save', SubmitType::class, [
                 'label' => $this->trans('Save', 'Admin.Actions'),
                 'attr' => [
@@ -110,10 +108,6 @@ class ProductFormType extends TranslatorAwareType
         if ($formIsUsedToEditAProduct) {
             $productId = (int) $options['product_id'];
             $builder
-                ->add('images', ImageDropzoneType::class, [
-                    'product_id' => $productId,
-                    'update_form_type' => ProductImageType::class,
-                ])
                 ->add('preview', ButtonType::class, [
                     'label' => $this->trans('Preview', 'Admin.Actions'),
                     'attr' => [

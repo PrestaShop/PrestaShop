@@ -22,11 +22,7 @@
  * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  *#}
-{% set isBasicTabValid = productForm.basic.description.vars.valid
-  and productForm.basic.description_short.vars.valid
-  and productForm.manufacturer.vars.valid
-  and productForm.features.vars.valid
-%}
+{% set isBasicTabValid = productForm.basic.vars.valid %}
 {% set isOptionsTabValid = productForm.options.vars.valid
   and (productForm.suppliers is not defined or productForm.suppliers.vars.valid)
 %}

@@ -52,7 +52,7 @@ class FeaturesType extends TranslatorAwareType
                 'label' => $this->trans('Add a feature', 'Admin.Catalog.Feature'),
                 'icon' => 'add_circle',
                 'attr' => [
-                    'class' => 'btn-outline-primary',
+                    'class' => 'btn-outline-primary feature-value-add-button',
                 ],
             ])
         ;
