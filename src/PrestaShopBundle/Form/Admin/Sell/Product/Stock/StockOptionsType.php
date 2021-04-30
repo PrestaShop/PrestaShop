@@ -23,67 +23,42 @@
  * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
+
 declare(strict_types=1);
 
-namespace PrestaShopBundle\Form\Admin\Sell\Product;
+namespace PrestaShopBundle\Form\Admin\Sell\Product\Stock;
 
-use PrestaShop\PrestaShop\Core\Form\FormChoiceProviderInterface;
-use PrestaShopBundle\Form\Admin\Type\DatePickerType;
 use PrestaShopBundle\Form\Admin\Type\SwitchType;
-use PrestaShopBundle\Form\Admin\Type\TranslatableType;
 use PrestaShopBundle\Form\Admin\Type\TranslatorAwareType;
+use PrestaShopBundle\Form\DataTransformer\DefaultEmptyDataTransformer;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\NumberType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
+use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Routing\RouterInterface;
 use Symfony\Component\Translation\TranslatorInterface;
-use Symfony\Component\Validator\Constraints\NotBlank;
 use Symfony\Component\Validator\Constraints\Type;
 
-class StockType extends TranslatorAwareType
+class StockOptionsType extends TranslatorAwareType
 {
-    /**
-     * @var FormChoiceProviderInterface
-     */
-    private $outOfStockTypeChoiceProvider;
-
-    /**
-     * @var FormChoiceProviderInterface
-     */
-    private $packStockTypeChoiceProvider;
-
     /**
      * @var RouterInterface
      */
     private $router;
 
     /**
-     * @var bool
-     */
-    private $stockManagementEnabled;
-
-    /**
      * @param TranslatorInterface $translator
      * @param array $locales
-     * @param FormChoiceProviderInterface $outOfStockTypeChoiceProvider
-     * @param FormChoiceProviderInterface $packStockTypeChoiceProvider
      * @param RouterInterface $router
-     * @param bool $stockManagementEnabled
      */
     public function __construct(
         TranslatorInterface $translator,
         array $locales,
-        FormChoiceProviderInterface $outOfStockTypeChoiceProvider,
-        FormChoiceProviderInterface $packStockTypeChoiceProvider,
-        RouterInterface $router,
-        bool $stockManagementEnabled
+        RouterInterface $router
     ) {
         parent::__construct($translator, $locales);
-        $this->outOfStockTypeChoiceProvider = $outOfStockTypeChoiceProvider;
-        $this->packStockTypeChoiceProvider = $packStockTypeChoiceProvider;
         $this->router = $router;
-        $this->stockManagementEnabled = $stockManagementEnabled;
     }
 
     /**
@@ -91,31 +66,11 @@ class StockType extends TranslatorAwareType
      */
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
-        if ($this->stockManagementEnabled) {
-            $builder
-                ->add('quantity', NumberType::class, [
-                    'required' => false,
-                    'label' => $this->trans('Quantity', 'Admin.Catalog.Feature'),
-                    'constraints' => [
-                        new NotBlank(),
-                        new Type(['type' => 'numeric']),
-                    ],
-                ])
-            ;
-        }
-
         $builder
-            ->add('minimal_quantity', NumberType::class, [
-                'required' => false,
-                'label' => $this->trans('Minimum quantity for sale', 'Admin.Catalog.Feature'),
-                'constraints' => [
-                    new NotBlank(),
-                    new Type(['type' => 'numeric']),
-                ],
-            ])
             ->add('stock_location', TextType::class, [
                 'label' => $this->trans('Stock location', 'Admin.Catalog.Feature'),
                 'required' => false,
+                'column_breaker' => true,
             ])
             ->add('low_stock_threshold', NumberType::class, [
                 'label' => $this->trans('Low stock level', 'Admin.Catalog.Feature'),
@@ -134,7 +89,7 @@ class StockType extends TranslatorAwareType
                     'Send me an email when the quantity is below or equals this level',
                     'Admin.Catalog.Feature'
                 ),
-                'help' => $this->trans(
+                'label_help_box' => $this->trans(
                     'The email will be sent to all the users who have the right to run the stock page. To modify the permissions, go to [1]Advanced Parameters > Team[/1]',
                     'Admin.Catalog.Help',
                     [
@@ -146,34 +101,20 @@ class StockType extends TranslatorAwareType
                     ]
                 ),
             ])
-            ->add('pack_stock_type', ChoiceType::class, [
-                'choices' => $this->packStockTypeChoiceProvider->getChoices(),
-            ])
-            // @todo: available_now/later_labels could be hidden depending on out_of_stock_type. (remove ux noise)
-            // @todo: will need to reuse some fields bellow combinations tab as shared "Availability preferences"
-            ->add('out_of_stock_type', ChoiceType::class, [
-                'choices' => $this->outOfStockTypeChoiceProvider->getChoices(),
-            ])
-            ->add('available_now_label', TranslatableType::class, [
-                'type' => TextType::class,
-                'label' => $this->trans('Label when in stock', 'Admin.Catalog.Feature'),
-                'required' => false,
-            ])
-            ->add('available_later_label', TranslatableType::class, [
-                'type' => TextType::class,
-                'label' => $this->trans(
-                    'Label when out of stock (and back order allowed)',
-                    'Admin.Catalog.Feature'
-                ),
-                'required' => false,
-            ])
-            ->add('available_date', DatePickerType::class, [
-                'label' => $this->trans('Availability date', 'Admin.Catalog.Feature'),
-                'required' => false,
-                'attr' => [
-                    'placeholder' => 'YYYY-MM-DD',
-                ],
-            ])
         ;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function configureOptions(OptionsResolver $resolver)
+    {
+        parent::configureOptions($resolver);
+        $resolver->setDefaults([
+            'required' => false,
+            'label' => $this->trans('Stock', 'Admin.Catalog.Feature'),
+            'label_tag_name' => 'h2',
+            'columns_number' => 3,
+        ]);
     }
 }
