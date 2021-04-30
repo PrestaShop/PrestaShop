@@ -79,6 +79,21 @@ class ProductTypeListenerTest extends FormListenerTestCase
         yield [ProductType::TYPE_VIRTUAL, 'stock', true];
         yield [ProductType::TYPE_COMBINATIONS, 'stock', false];
 
+        yield [ProductType::TYPE_STANDARD, 'shipping', true];
+        yield [ProductType::TYPE_PACK, 'shipping', true];
+        yield [ProductType::TYPE_VIRTUAL, 'shipping', false];
+        yield [ProductType::TYPE_COMBINATIONS, 'shipping', true];
+
+        yield [ProductType::TYPE_STANDARD, 'stock.pack_stock_type', false];
+        yield [ProductType::TYPE_PACK, 'stock.pack_stock_type', true];
+        yield [ProductType::TYPE_VIRTUAL, 'stock.pack_stock_type', false];
+        yield [ProductType::TYPE_COMBINATIONS, 'stock.pack_stock_type', false];
+
+        yield [ProductType::TYPE_STANDARD, 'stock.virtual_product_file', false];
+        yield [ProductType::TYPE_PACK, 'stock.virtual_product_file', false];
+        yield [ProductType::TYPE_VIRTUAL, 'stock.virtual_product_file', true];
+        yield [ProductType::TYPE_COMBINATIONS, 'stock.virtual_product_file', false];
+
         yield [ProductType::TYPE_STANDARD, 'shortcuts.stock', true];
         yield [ProductType::TYPE_PACK, 'shortcuts.stock', true];
         yield [ProductType::TYPE_VIRTUAL, 'shortcuts.stock', true];
@@ -128,7 +143,7 @@ class ProductTypeListenerTest extends FormListenerTestCase
         $typeNames = explode('.', $typeName);
         $child = $form;
         foreach ($typeNames as $typeName) {
-            $child = $form->get($typeName);
+            $child = $child->get($typeName);
         }
 
         return $child;
@@ -142,8 +157,11 @@ class SimpleProductFormTest extends CommonAbstractType
         $builder
             ->add('suppliers', ChoiceType::class)
             ->add('stock', FormType::class)
+            ->add('shipping', FormType::class)
             ->add('shortcuts', FormType::class)
         ;
         $builder->get('shortcuts')->add('stock', FormType::class);
+        $builder->get('stock')->add('pack_stock_type', ChoiceType::class);
+        $builder->get('stock')->add('virtual_product_file', FormType::class);
     }
 }
