@@ -4,7 +4,16 @@ const BOBasePage = require('@pages/BO/BObasePage');
 // Needed to create customer in orders page
 const addAddressPage = require('@pages/BO/customers/addresses/add');
 
+/**
+ * Add order page, contains functions that can be used on view/edit order page
+ * @class
+ * @extends BOBasePage
+ */
 class Order extends BOBasePage {
+  /**
+   * @constructs
+   * Setting up texts and selectors to use on view/edit order page
+   */
   constructor() {
     super();
 
@@ -99,8 +108,8 @@ class Order extends BOBasePage {
 
   /**
    * Get shipping address from customer card
-   * @param page
-   * @return {Promise<string>}
+   * @param page {Page} Browser tab
+   * @returns {Promise<string>}
    */
   getShippingAddress(page) {
     return this.getTextContent(page, this.shippingAddressBlock);
@@ -108,8 +117,8 @@ class Order extends BOBasePage {
 
   /**
    * Get invoice address from customer card
-   * @param page
-   * @return {Promise<string>}
+   * @param page {Page} Browser tab
+   * @returns {Promise<string>}
    */
   getInvoiceAddress(page) {
     return this.getTextContent(page, this.invoiceAddressBlock);
@@ -117,9 +126,9 @@ class Order extends BOBasePage {
 
   /**
    * Get product name from products table
-   * @param page
-   * @param row
-   * @return {Promise<string>}
+   * @param page {Page} Browser tab
+   * @param row {number} Product row on table
+   * @returns {Promise<string>}
    */
   getProductNameFromTable(page, row) {
     return this.getTextContent(page, this.orderProductsTableProductName(row));
@@ -127,9 +136,9 @@ class Order extends BOBasePage {
 
   /**
    * Modify the product quantity
-   * @param page
-   * @param row
-   * @param quantity
+   * @param page {Page} Browser tab
+   * @param row {number} Product row on table
+   * @param quantity {number} Quantity to edit
    * @returns {Promise<number>}
    */
   async modifyProductQuantity(page, row, quantity) {
@@ -149,9 +158,9 @@ class Order extends BOBasePage {
 
   /**
    * Modify product price
-   * @param page
-   * @param row
-   * @param price
+   * @param page {Page} Browser tab
+   * @param row {number} Product row on table
+   * @param price {float} Price to edit
    * @returns {Promise<void>}
    */
   async modifyProductPrice(page, row, price) {
@@ -170,8 +179,8 @@ class Order extends BOBasePage {
 
   /**
    * Delete product
-   * @param page
-   * @param row
+   * @param page {Page} Browser tab
+   * @param row {number} Product row on table
    * @returns {Promise<string>}
    */
   async deleteProduct(page, row) {
@@ -182,8 +191,8 @@ class Order extends BOBasePage {
 
   /**
    * Modify the order status
-   * @param page
-   * @param status
+   * @param page {Page} Browser tab
+   * @param status {string} Status to edit
    * @returns {Promise<string>}
    */
   async modifyOrderStatus(page, status) {
@@ -199,8 +208,8 @@ class Order extends BOBasePage {
 
   /**
    * Get order status
-   * @param page
-   * @return {Promise<string>}
+   * @param page {Page} Browser tab
+   * @returns {Promise<string>}
    */
   async getOrderStatus(page) {
     return this.getTextContent(page, `${this.orderStatusesSelect} option[selected='selected']`, false);
@@ -208,8 +217,8 @@ class Order extends BOBasePage {
 
   /**
    * Does status exist
-   * @param page
-   * @param statusName
+   * @param page {Page} Browser tab
+   * @param statusName {string} Status to check
    * @returns {Promise<boolean>}
    */
   async doesStatusExist(page, statusName) {
@@ -228,8 +237,8 @@ class Order extends BOBasePage {
 
   /**
    * Get total price from products tab
-   * @param page
-   * @return {Promise<number>}
+   * @param page {Page} Browser tab
+   * @returns {Promise<number>}
    */
   getOrderTotalPrice(page) {
     return this.getPriceFromText(page, this.orderTotalPriceSpan);
@@ -237,8 +246,8 @@ class Order extends BOBasePage {
 
   /**
    * Get document name
-   * @param page
-   * @param rowChild
+   * @param page {Page} Browser tab
+   * @param rowChild {number} Document row on table
    * @returns {Promise<string>}
    */
   async getDocumentName(page, rowChild = 1) {
@@ -249,8 +258,8 @@ class Order extends BOBasePage {
 
   /**
    * Go to documents tab
-   * @param page
-   * @return {Promise<void>}
+   * @param page {Page} Browser tab
+   * @returns {Promise<void>}
    */
   async goToDocumentsTab(page) {
     await Promise.all([
@@ -261,9 +270,9 @@ class Order extends BOBasePage {
 
   /**
    * Get file name
-   * @param page
-   * @param rowChild
-   * @returns fileName
+   * @param page {Page} Browser tab
+   * @param rowChild {number} Document row on table
+   * @returns {Promise<string>}
    */
   async getFileName(page, rowChild = 1) {
     await this.goToDocumentsTab(page);
@@ -285,7 +294,7 @@ class Order extends BOBasePage {
 
   /**
    * Download invoice
-   * @param page
+   * @param page {Page} Browser tab
    * @returns {Promise<void>}
    */
   async downloadInvoice(page) {
@@ -296,7 +305,7 @@ class Order extends BOBasePage {
 
   /**
    * Click on partial refund button
-   * @param page
+   * @param page {Page} Browser tab
    * @returns {Promise<void>}
    */
   async clickOnPartialRefund(page) {
@@ -306,11 +315,11 @@ class Order extends BOBasePage {
 
   /**
    * Add partial refund product
-   * @param page
-   * @param productRow
-   * @param quantity
-   * @param amount
-   * @param shipping
+   * @param page {Page} Browser tab
+   * @param productRow {number} Product row on table
+   * @param quantity {number} Quantity value to set
+   * @param amount {number} Amount value to set
+   * @param shipping {number} Shipping cost to set
    * @returns {Promise<string>}
    */
   async addPartialRefundProduct(page, productRow, quantity = 0, amount = 0, shipping = 0) {
@@ -327,7 +336,7 @@ class Order extends BOBasePage {
 
   /**
    * Download delivery slip
-   * @param page
+   * @param page {Page} Browser tab
    * @returns {Promise<*>}
    */
   async downloadDeliverySlip(page) {
@@ -341,7 +350,7 @@ class Order extends BOBasePage {
 
   /**
    * Is return products button visible
-   * @param page
+   * @param page {Page} Browser tab
    * @returns {Promise<boolean>}
    */
   isReturnProductsButtonVisible(page) {
@@ -350,7 +359,7 @@ class Order extends BOBasePage {
 
   /**
    * Go to view full details page
-   * @param page
+   * @param page {Page} Browser tab
    * @returns {Promise<void>}
    */
   async goToViewFullDetails(page) {
@@ -359,7 +368,7 @@ class Order extends BOBasePage {
 
   /**
    * Get customer information
-   * @param page
+   * @param page {Page} Browser tab
    * @returns {Promise<string>}
    */
   getCustomerInfoBlock(page) {
@@ -368,7 +377,7 @@ class Order extends BOBasePage {
 
   /**
    * Get customer email
-   * @param page
+   * @param page {Page} Browser tab
    * @returns {Promise<string>}
    */
   getCustomerEmail(page) {
@@ -377,7 +386,7 @@ class Order extends BOBasePage {
 
   /**
    * Get validated orders number
-   * @param page
+   * @param page {Page} Browser tab
    * @returns {Promise<number>}
    */
   getValidatedOrdersNumber(page) {
@@ -386,7 +395,8 @@ class Order extends BOBasePage {
 
   /**
    * Edit existing shipping address
-   * @param page
+   * @param page {Page} Browser tab
+   * @param addressData {object} Shipping address data to edit
    * @returns {Promise<void>}
    */
   async editExistingShippingAddress(page, addressData) {
@@ -409,8 +419,8 @@ class Order extends BOBasePage {
 
   /**
    * Select another shipping address
-   * @param page
-   * @param address
+   * @param page {Page} Browser tab
+   * @param address {string} Shipping address to select
    * @returns {Promise<string>}
    */
   async selectAnotherShippingAddress(page, address) {
@@ -425,7 +435,8 @@ class Order extends BOBasePage {
 
   /**
    * Edit existing shipping address
-   * @param page
+   * @param page {Page} Browser tab
+   * @param addressData {object} Invoice address data to edit
    * @returns {Promise<void>}
    */
   async editExistingInvoiceAddress(page, addressData) {
@@ -448,8 +459,8 @@ class Order extends BOBasePage {
 
   /**
    * Select another shipping address
-   * @param page
-   * @param address
+   * @param page {Page} Browser tab
+   * @param address {string} Invoice address to select
    * @returns {Promise<string>}
    */
   async selectAnotherInvoiceAddress(page, address) {
@@ -464,7 +475,7 @@ class Order extends BOBasePage {
 
   /**
    * Is private note textarea visible
-   * @param page
+   * @param page {Page} Browser tab
    * @returns {Promise<boolean>}
    */
   isPrivateNoteTextareaVisible(page) {
@@ -473,7 +484,7 @@ class Order extends BOBasePage {
 
   /**
    * Click on add new private note link
-   * @param page
+   * @param page {Page} Browser tab
    * @returns {Promise<void>}
    */
   async clickAddNewPrivateNote(page) {
@@ -483,8 +494,8 @@ class Order extends BOBasePage {
 
   /**
    * Set private note
-   * @param page
-   * @param note
+   * @param page {Page} Browser tab
+   * @param note {string} Private note to set
    * @returns {Promise<string>}
    */
   async setPrivateNote(page, note) {
@@ -496,7 +507,7 @@ class Order extends BOBasePage {
 
   /**
    * Get private note content
-   * @param page
+   * @param page {Page} Browser tab
    * @returns {Promise<string>}
    */
   getPrivateNoteContent(page) {
@@ -505,7 +516,7 @@ class Order extends BOBasePage {
 
   /**
    * Get products number
-   * @param page
+   * @param page {Page} Browser tab
    * @returns {Promise<number>}
    */
   getProductsNumber(page) {
@@ -514,8 +525,8 @@ class Order extends BOBasePage {
 
   /**
    * Search product
-   * @param page
-   * @param name
+   * @param page {Page} Browser tab
+   * @param name {string} Product name to search
    * @returns {Promise<void>}
    */
   async searchProduct(page, name) {
@@ -526,8 +537,8 @@ class Order extends BOBasePage {
 
   /**
    * Get searched product details
-   * @param page
-   * @returns {Promise<{available: *, basePriceTInc: *, basePriceTExc: *}>}
+   * @param page {Page} Browser tab
+   * @returns {Promise<[]>}
    */
   async getSearchedProductDetails(page) {
     return {
@@ -538,8 +549,8 @@ class Order extends BOBasePage {
 
   /**
    * Add product to cart
-   * @param page
-   * @param quantity
+   * @param page {Page} Browser tab
+   * @param quantity {number} Product quantity to add
    * @returns {Promise<string>}
    */
   async addProductToCart(page, quantity = 0) {
@@ -553,8 +564,8 @@ class Order extends BOBasePage {
 
   /**
    * add product quantity
-   * @param page
-   * @param quantity
+   * @param page {Page} Browser tab
+   * @param quantity {number} Product quantity to add
    * @returns {Promise<void>}
    */
   async addQuantity(page, quantity) {
@@ -563,7 +574,7 @@ class Order extends BOBasePage {
 
   /**
    * Cancel add product
-   * @param page
+   * @param page {Page} Browser tab
    * @returns {Promise<void>}
    */
   async cancelAddProductToCart(page) {
@@ -572,7 +583,7 @@ class Order extends BOBasePage {
 
   /**
    * Is button disabled
-   * @param page
+   * @param page {Page} Browser tab
    * @returns {Promise<boolean>}
    */
   isAddButtonDisabled(page) {
@@ -581,9 +592,9 @@ class Order extends BOBasePage {
 
   /**
    * Get product details
-   * @param page
-   * @param row
-   * @returns {Promise<{total: number, quantity: number, name: *, available: number, basePrice: number}>}
+   * @param page {Page} Browser tab
+   * @param row {number} Product row on table
+   * @returns {Promise<[]>}
    */
   async getProductDetails(page, row) {
     return {
@@ -601,7 +612,7 @@ class Order extends BOBasePage {
   // Methods for product list pagination
   /**
    * Get pagination label
-   * @param page
+   * @param page {Page} Browser tab
    * @returns {Promise<string>}
    */
   async getPaginationLabel(page) {
@@ -610,7 +621,7 @@ class Order extends BOBasePage {
 
   /**
    * Click on next
-   * @param page
+   * @param page {Page} Browser tab
    * @returns {Promise<string>}
    */
   async paginationNext(page) {
@@ -621,7 +632,7 @@ class Order extends BOBasePage {
 
   /**
    * Click on previous
-   * @param page
+   * @param page {Page} Browser tab
    * @returns {Promise<string>}
    */
   async paginationPrevious(page) {
@@ -633,8 +644,8 @@ class Order extends BOBasePage {
 
   /**
    * Select pagination limit
-   * @param page
-   * @param number
+   * @param page {Page} Browser tab
+   * @param number {number} Pagination number to select
    * @returns {Promise<boolean>}
    */
   async selectPaginationLimit(page, number) {
