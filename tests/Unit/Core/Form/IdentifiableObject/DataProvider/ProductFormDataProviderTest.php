@@ -239,7 +239,7 @@ class ProductFormDataProviderTest extends TestCase
         $datasets = [];
 
         $expectedOutputData = $this->getDefaultOutputData();
-        $expectedOutputData['virtual_product_file'] = [
+        $expectedOutputData['stock']['virtual_product_file'] = [
             'has_file' => true,
             'virtual_product_file_id' => self::DEFAULT_VIRTUAL_PRODUCT_FILE_ID,
             'name' => 'heh logo.jpg',
@@ -265,7 +265,7 @@ class ProductFormDataProviderTest extends TestCase
 
         // test case providing expiration date
         $expirationDate = new DateTimeImmutable();
-        $expectedOutputData['virtual_product_file']['expiration_date'] = $expirationDate->format('Y-m-d');
+        $expectedOutputData['stock']['virtual_product_file']['expiration_date'] = $expirationDate->format('Y-m-d');
         $productData['virtual_product_file']['date_expiration'] = $expirationDate;
 
         $datasets[] = [
@@ -275,7 +275,7 @@ class ProductFormDataProviderTest extends TestCase
 
         // test case providing NullDateTime expiration date
         $expirationDate = new NullDateTime();
-        $expectedOutputData['virtual_product_file']['expiration_date'] = $expirationDate->format('Y-m-d');
+        $expectedOutputData['stock']['virtual_product_file']['expiration_date'] = $expirationDate->format('Y-m-d');
         $productData['virtual_product_file']['date_expiration'] = $expirationDate;
 
         $datasets[] = [
@@ -284,7 +284,7 @@ class ProductFormDataProviderTest extends TestCase
         ];
 
         // test case has no virtual product file
-        $expectedOutputData['virtual_product_file'] = [
+        $expectedOutputData['stock']['virtual_product_file'] = [
             'has_file' => false,
         ];
 
@@ -1077,6 +1077,9 @@ class ProductFormDataProviderTest extends TestCase
                     'low_stock_threshold' => null,
                     'low_stock_alert' => false,
                 ],
+                'virtual_product_file' => [
+                    'has_file' => false,
+                ],
                 'pack_stock_type' => PackStockType::STOCK_TYPE_DEFAULT,
                 'availability' => [
                     'out_of_stock_type' => OutOfStockType::OUT_OF_STOCK_DEFAULT,
@@ -1140,9 +1143,6 @@ class ProductFormDataProviderTest extends TestCase
             ],
             'suppliers' => [],
             'customizations' => [],
-            'virtual_product_file' => [
-                'has_file' => false,
-            ],
             'shortcuts' => [
                 'retail_price' => [
                     'price_tax_excluded' => 19.86,
