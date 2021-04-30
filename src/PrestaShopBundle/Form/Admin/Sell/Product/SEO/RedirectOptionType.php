@@ -26,7 +26,7 @@
 
 declare(strict_types=1);
 
-namespace PrestaShopBundle\Form\Admin\Sell\Product;
+namespace PrestaShopBundle\Form\Admin\Sell\Product\SEO;
 
 use PrestaShop\PrestaShop\Adapter\LegacyContext;
 use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\RedirectType;
@@ -39,6 +39,7 @@ use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\Form\FormEvent;
 use Symfony\Component\Form\FormEvents;
+use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Routing\RouterInterface;
 use Symfony\Component\Translation\TranslatorInterface;
 
@@ -102,10 +103,7 @@ class RedirectOptionType extends TranslatorAwareType
 
         $builder
             ->add('type', ChoiceType::class, [
-                'label' => $this->trans('Redirection page', 'Admin.Catalog.Feature'),
-                'label_tag_name' => 'h2',
-                'label_help_box' => $this->trans('When your product is disabled, choose to which page you’d like to redirect the customers visiting its page by typing the product or category name.', 'Admin.Catalog.Help'),
-                'label_subtitle' => $this->trans('Charge additional shipping costs based on packet dimensions covered here.', 'Admin.Catalog.Feature'),
+                'label' => $this->trans('Redirection when offline.', 'Admin.Catalog.Feature'),
                 'required' => false,
                 'placeholder' => false, // Guaranties that no empty value is added in options
                 'choices' => [
@@ -167,11 +165,32 @@ class RedirectOptionType extends TranslatorAwareType
             $targetOptions['placeholder'] = $entityAttributes[$dataEntity]['placeholder'];
             $targetOptions['help'] = $entityAttributes[$dataEntity]['help'];
             $targetOptions['remote_url'] = $entityAttributes[$dataEntity]['searchUrl'];
+            if (RedirectType::TYPE_NOT_FOUND === $dataType) {
+                $targetOptions['row_attr']['class'] = 'd-none';
+            }
 
             // Replace existing field with new one with adapted options
             $cloner = new FormCloner();
             $clonedForm = $cloner->cloneForm($targetField, $targetOptions);
             $form->add($clonedForm);
         });
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function configureOptions(OptionsResolver $resolver)
+    {
+        parent::configureOptions($resolver);
+        $resolver->setDefaults([
+            'required' => false,
+            'label' => $this->trans('Redirection page', 'Admin.Catalog.Feature'),
+            'label_tag_name' => 'h2',
+            'label_help_box' => $this->trans('When your product is disabled, choose to which page you’d like to redirect the customers visiting its page by typing the product or category name.', 'Admin.Catalog.Help'),
+            'columns_number' => 2,
+            'row_attr' => [
+                'class' => 'redirect-option-widget',
+            ],
+        ]);
     }
 }

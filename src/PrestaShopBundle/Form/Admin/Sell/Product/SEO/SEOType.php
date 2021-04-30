@@ -26,7 +26,7 @@
 
 declare(strict_types=1);
 
-namespace PrestaShopBundle\Form\Admin\Sell\Product;
+namespace PrestaShopBundle\Form\Admin\Sell\Product\SEO;
 
 use PrestaShop\PrestaShop\Core\Domain\Product\ProductSettings;
 use PrestaShopBundle\Form\Admin\Type\TextWithLengthCounterType;
@@ -34,6 +34,7 @@ use PrestaShopBundle\Form\Admin\Type\TranslatableType;
 use PrestaShopBundle\Form\Admin\Type\TranslatorAwareType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
+use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Validator\Constraints\Length;
 
 class SEOType extends TranslatorAwareType
@@ -44,6 +45,7 @@ class SEOType extends TranslatorAwareType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
+            ->add('serp', SerpType::class)
             ->add('meta_title', TranslatableType::class, [
                 'label' => $this->trans('Meta title', 'Admin.Catalog.Feature'),
                 'label_help_box' => $this->trans('Public title for the product page and for search engines. Leave blank to use the product name. The number of remaining characters is displayed to the left of the field.', 'Admin.Catalog.Help'),
@@ -115,6 +117,21 @@ class SEOType extends TranslatorAwareType
                     ],
                 ],
             ])
+            ->add('redirect_option', RedirectOptionType::class)
         ;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function configureOptions(OptionsResolver $resolver)
+    {
+        parent::configureOptions($resolver);
+        $resolver->setDefaults([
+            'label' => $this->trans('Search Engine Optimization', 'Admin.Catalog.Feature'),
+            'label_tag_name' => 'h2',
+            'label_subtitle' => $this->trans('Improve your ranking and how your product page will appear in search engines results.', 'Admin.Catalog.Feature'),
+            'required' => false,
+        ]);
     }
 }

@@ -1419,6 +1419,31 @@ services:
         tags:
             - { name: form.type }
 
+    form.type.sell.product.seo.seo_type:
+        class: 'PrestaShopBundle\Form\Admin\Sell\Product\SEO\SEOType'
+        parent: 'form.type.translatable.aware'
+        public: true
+        tags:
+            - { name: form.type }
+
+    form.type.sell.product.seo.serp_type:
+        class: 'PrestaShopBundle\Form\Admin\Sell\Product\SEO\SerpType'
+        parent: 'form.type.translatable.aware'
+        public: true
+        tags:
+            - { name: form.type }
+
+    form.type.sell.product.seo.redirect_option_type:
+        class: 'PrestaShopBundle\Form\Admin\Sell\Product\SEO\RedirectOptionType'
+        parent: 'form.type.translatable.aware'
+        public: true
+        arguments:
+            - "@prestashop.adapter.legacy.context"
+            - "@router"
+            - '@form.type.sell.product.data_transformer.typeahead_redirection_target_transformer'
+        tags:
+            - { name: form.type }
+
     form.type.sell.product.shortcuts_type:
         class: 'PrestaShopBundle\Form\Admin\Sell\Product\ShortcutsType'
         parent: 'form.type.translatable.aware'
@@ -1441,24 +1466,6 @@ services:
         class: 'PrestaShopBundle\Form\Admin\Sell\Product\Shortcut\StockShortcutType'
         parent: 'form.type.translatable.aware'
         public: true
-        tags:
-            - { name: form.type }
-
-    form.type.sell.product.seo_type:
-        class: 'PrestaShopBundle\Form\Admin\Sell\Product\SEOType'
-        parent: 'form.type.translatable.aware'
-        public: true
-        tags:
-            - { name: form.type }
-
-    form.type.sell.product.redirect_option_type:
-        class: 'PrestaShopBundle\Form\Admin\Sell\Product\RedirectOptionType'
-        parent: 'form.type.translatable.aware'
-        public: true
-        arguments:
-            - "@prestashop.adapter.legacy.context"
-            - "@router"
-            - '@form.type.sell.product.data_transformer.typeahead_redirection_target_transformer'
         tags:
             - { name: form.type }
 
