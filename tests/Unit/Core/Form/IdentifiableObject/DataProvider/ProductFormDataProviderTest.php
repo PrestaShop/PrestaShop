@@ -530,8 +530,8 @@ class ProductFormDataProviderTest extends TestCase
             'redirect_type' => RedirectType::TYPE_CATEGORY_TEMPORARY,
             'id_type_redirected' => static::DEFAULT_CATEGORY_ID,
         ];
-        $expectedOutputData['redirect_option']['type'] = RedirectType::TYPE_CATEGORY_TEMPORARY;
-        $expectedOutputData['redirect_option']['target'] = static::DEFAULT_CATEGORY_ID;
+        $expectedOutputData['seo']['redirect_option']['type'] = RedirectType::TYPE_CATEGORY_TEMPORARY;
+        $expectedOutputData['seo']['redirect_option']['target'] = static::DEFAULT_CATEGORY_ID;
 
         $datasets[] = [
             $productData,
@@ -1106,10 +1106,10 @@ class ProductFormDataProviderTest extends TestCase
                 'meta_title' => [],
                 'meta_description' => [],
                 'link_rewrite' => [],
-            ],
-            'redirect_option' => [
-                'type' => RedirectType::TYPE_NOT_FOUND,
-                'target' => 0,
+                'redirect_option' => [
+                    'type' => RedirectType::TYPE_NOT_FOUND,
+                    'target' => 0,
+                ],
             ],
             'shipping' => [
                 'dimensions' => [
