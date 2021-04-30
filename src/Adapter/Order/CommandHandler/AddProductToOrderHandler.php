@@ -208,7 +208,7 @@ final class AddProductToOrderHandler extends AbstractOrderHandler implements Add
                 null !== $command->getCombinationId() ? $command->getCombinationId()->getValue() : 0,
                 $command->getProductPriceTaxExcluded(),
                 $command->getProductPriceTaxIncluded(),
-                true
+                $this->shouldQuantityDiscountsBeApplied($command)
             );
             StockAvailable::synchronize($product->id);
 
@@ -608,5 +608,19 @@ final class AddProductToOrderHandler extends AbstractOrderHandler implements Add
             $invoiceNumber = $orderInvoice->getInvoiceNumberFormatted((int) Configuration::get('PS_LANG_DEFAULT'), $order->id_shop);
             throw new DuplicateProductInOrderInvoiceException($invoiceNumber, 'You cannot add this product in this invoice as it is already present');
         }
+    }
+
+    private function shouldQuantityDiscountsBeApplied(AddProductToOrderCommand $command): bool
+    {
+        // PS_QTY_DISCOUNT_ON_COMBINATION === 1 => qty discount is based on Combinations, otherwise it's based on Products
+        $qtyDiscountOnCombination = (1 === (int) Configuration::get('PS_QTY_DISCOUNT_ON_COMBINATION'));
+
+        /*
+         * The rule is :
+         * If the qtyDiscount is based on Products
+         * and the item added to the order is a combination
+         * we don't apply the specific prices based on the quantity
+         */
+        return !(!$qtyDiscountOnCombination && (null !== $command->getCombinationId()));
     }
 }

@@ -222,11 +222,12 @@ class OrderFeatureContext extends AbstractDomainFeatureContext
 
     /**
      * @When I remove product :productReference from order :orderReference
+     * @When I remove combination :combinationName of product :productReference from order :orderReference
      *
      * @param string $productReference
      * @param string $orderReference
      */
-    public function removeProductsFromOrder(string $productReference, string $orderReference)
+    public function removeProductsFromOrder(string $productReference, string $orderReference, ?string $combinationName = null)
     {
         $orderId = SharedStorage::getStorage()->get($orderReference);
         $productId = $this->getProductIdByName($productReference);
@@ -237,7 +238,14 @@ class OrderFeatureContext extends AbstractDomainFeatureContext
         /** @var OrderProductForViewing[] $products */
         $products = $orderForViewing->getProducts()->getProducts();
         foreach ($products as $product) {
-            if ($product->getId() == $productId) {
+            $matches = $product->getId() == $productId;
+            if (null !== $combinationName) {
+                $matches &= $product->getCombinationId() == $this->getProductCombinationId(
+                        $this->getProductByName($productReference),
+                        $combinationName
+                    );
+            }
+            if ($matches) {
                 $orderDetailId = $product->getOrderDetailId();
                 break;
             }
@@ -1014,6 +1022,7 @@ class OrderFeatureContext extends AbstractDomainFeatureContext
 
     /**
      * @Then cart of order :orderReference should contain :quantity product(s) :productName
+     * @Then cart of order :orderReference should contain :quantity combination(s) :combinationName of product :productName
      *
      * @param string $orderReference
      * @param int $quantity
@@ -1065,14 +1074,15 @@ class OrderFeatureContext extends AbstractDomainFeatureContext
 
     /**
      * @Then product :productName in order :orderReference has following details:
+     * @Then combination :combinationName of product :productName in order :orderReference has following details:
      *
      * @param string $orderReference
      * @param string $productName
      * @param TableNode $table
      */
-    public function checkProductDetailsWithReference(string $orderReference, string $productName, TableNode $table)
+    public function checkProductDetailsWithReference(string $orderReference, string $productName, TableNode $table, ?string $combinationName = null)
     {
-        $productOrderDetail = $this->getOrderDetailFromOrder($productName, $orderReference);
+        $productOrderDetail = $this->getOrderDetailFromOrder($productName, $orderReference, $combinationName);
         $expectedDetails = $table->getRowsHash();
         foreach ($expectedDetails as $detailName => $expectedDetailValue) {
             Assert::assertEquals(
