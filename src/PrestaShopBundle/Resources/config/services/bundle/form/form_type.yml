@@ -1280,10 +1280,36 @@ services:
         tags:
             - { name: form.type }
 
-    form.type.sell.product.basic_type:
-        class: 'PrestaShopBundle\Form\Admin\Sell\Product\BasicType'
+    form.type.sell.product.basic.basic_type:
+        class: 'PrestaShopBundle\Form\Admin\Sell\Product\Basic\BasicType'
         parent: 'form.type.translatable.aware'
         public: true
+        tags:
+            - { name: form.type }
+
+    form.type.sell.product.basic.features_type:
+        class: 'PrestaShopBundle\Form\Admin\Sell\Product\Basic\FeaturesType'
+        parent: 'form.type.translatable.aware'
+        public: true
+        tags:
+            - { name: form.type }
+
+    form.type.sell.product.basic.feature_value_type:
+        class: 'PrestaShopBundle\Form\Admin\Sell\Product\Basic\FeatureValueType'
+        parent: 'form.type.translatable.aware'
+        arguments:
+            - '@prestashop.adapter.form.choice_provider.features_choice_provider'
+            - '@form.type.sell.product.event_listener.feature_value_listener'
+        public: true
+        tags:
+            - { name: form.type }
+
+    form.type.sell.product.basic.manufacturer_type:
+        class: 'PrestaShopBundle\Form\Admin\Sell\Product\Basic\ManufacturerType'
+        public: true
+        arguments:
+            - '@translator'
+            - '@prestashop.adapter.form.choice_provider.manufacturer_name_by_id'
         tags:
             - { name: form.type }
 
@@ -1460,23 +1486,6 @@ services:
         tags:
             - { name: form.type }
 
-    form.type.sell.product.features_type:
-        class: 'PrestaShopBundle\Form\Admin\Sell\Product\FeaturesType'
-        parent: 'form.type.translatable.aware'
-        public: true
-        tags:
-            - { name: form.type }
-
-    form.type.sell.product.feature_value_type:
-        class: 'PrestaShopBundle\Form\Admin\Sell\Product\FeatureValueType'
-        parent: 'form.type.translatable.aware'
-        arguments:
-            - '@prestashop.adapter.form.choice_provider.features_choice_provider'
-            - '@form.type.sell.product.event_listener.feature_value_listener'
-        public: true
-        tags:
-            - { name: form.type }
-
     form.type.sell.product.virtual_product_file_type:
         class: 'PrestaShopBundle\Form\Admin\Sell\Product\VirtualProductFileType'
         parent: 'form.type.translatable.aware'
@@ -1498,15 +1507,6 @@ services:
     form.type.sell.product.event_listener.product_type_listener:
         class: 'PrestaShopBundle\Form\Admin\Sell\Product\EventListener\ProductTypeListener'
         public: true
-
-    form.type.sell.product.manufacturer_type:
-        class: 'PrestaShopBundle\Form\Admin\Sell\Product\ManufacturerType'
-        public: true
-        arguments:
-            - '@translator'
-            - '@prestashop.adapter.form.choice_provider.manufacturer_name_by_id'
-        tags:
-            - { name: form.type }
 
     form.type.sell.product.combination_list_type:
         class: 'PrestaShopBundle\Form\Admin\Sell\Product\Combination\CombinationListType'
