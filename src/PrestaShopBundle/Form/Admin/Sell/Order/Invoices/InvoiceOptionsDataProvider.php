@@ -91,7 +91,6 @@ final class InvoiceOptionsDataProvider implements FormDataProviderInterface
     private function validate(array $data): void
     {
         $errorCollection = new InvalidConfigurationDataErrorCollection();
-        dump($data);
         if (isset($data[InvoiceOptionsType::FIELD_INVOICE_NUMBER])) {
             $invoiceNumber = $data[InvoiceOptionsType::FIELD_INVOICE_NUMBER];
             if ($invoiceNumber !== 0 && $invoiceNumber <= $this->nextInvoiceNumber) {
