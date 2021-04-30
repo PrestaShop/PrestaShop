@@ -65,6 +65,7 @@
     {{- form_errors(form) -}}
 
     {{- block('form_external_link') -}}
+    {{- block('form_alert') -}}
   </div>
 
   {% if column_breaker %}
@@ -1122,6 +1123,18 @@
     </datalist>
   {% endif %}
 {% endblock text_widget %}
+
+{%- block form_alert -%}
+  {% if alert_message is defined %}
+  <div class="alert alert-{{ alert_type }}" role="alert">
+    {% for message in alert_message %}
+    <p class="alert-text">
+      {{ message|raw }}
+    </p>
+    {% endfor %}
+  </div>
+  {% endif %}
+{%- endblock -%}
 
 {% block unavailable_widget %}
   <div class="alert alert-unavailable" role="alert">
