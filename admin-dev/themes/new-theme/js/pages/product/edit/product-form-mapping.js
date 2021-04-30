@@ -25,7 +25,7 @@
 
 export default {
   'product.stock.quantity': [
-    'product[stock][quantity]',
+    'product[stock][quantities][quantity]',
     'product[shortcuts][stock][quantity]',
   ],
   'product.price.priceTaxExcluded': [
@@ -40,4 +40,5 @@ export default {
     'product[pricing][tax_rules_group_id]',
     'product[shortcuts][retail_price][tax_rules_group_id]',
   ],
+  'product.stock.hasVirtualProductFile': 'product[stock][virtual_product_file][has_file]',
 };

@@ -108,11 +108,8 @@ export default {
     searchInput: '#product-combinations-generate .attributes-search',
   },
   virtualProduct: {
-    container: '#virtual-product-file',
-    fileSwitchContainer: '#virtual-product-file-switch',
-    fileContentContainer: '#virtual-product-file-content',
-    fileSwitchOnInputSelector: '#product_virtual_product_file_has_file_1',
-    fileSwitchOffInputSelector: '#product_virtual_product_file_has_file_0',
+    container: '.virtual-product-file-container',
+    fileContentContainer: '.virtual-product-file-content',
   },
   dropzone: {
     configuration: {
