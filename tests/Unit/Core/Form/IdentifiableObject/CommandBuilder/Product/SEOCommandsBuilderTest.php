@@ -32,7 +32,7 @@ use PrestaShop\PrestaShop\Core\Domain\Product\Command\UpdateProductSeoCommand;
 use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\RedirectType;
 use PrestaShop\PrestaShop\Core\Form\IdentifiableObject\CommandBuilder\Product\SEOCommandsBuilder;
 
-class SEOCommandBuilderTest extends AbstractProductCommandBuilderTest
+class SEOCommandsBuilderTest extends AbstractProductCommandBuilderTest
 {
     /**
      * @dataProvider getExpectedCommands
@@ -130,8 +130,10 @@ class SEOCommandBuilderTest extends AbstractProductCommandBuilderTest
         $command->setRedirectOption(RedirectType::TYPE_NOT_FOUND, 0);
         yield [
             [
-                'redirect_option' => [
-                    'type' => RedirectType::TYPE_NOT_FOUND,
+                'seo' => [
+                    'redirect_option' => [
+                        'type' => RedirectType::TYPE_NOT_FOUND,
+                    ],
                 ],
             ],
             [$command],
@@ -141,9 +143,11 @@ class SEOCommandBuilderTest extends AbstractProductCommandBuilderTest
         $command->setRedirectOption(RedirectType::TYPE_PRODUCT_TEMPORARY, 42);
         yield [
             [
-                'redirect_option' => [
-                    'type' => RedirectType::TYPE_PRODUCT_TEMPORARY,
-                    'target' => 42,
+                'seo' => [
+                    'redirect_option' => [
+                        'type' => RedirectType::TYPE_PRODUCT_TEMPORARY,
+                        'target' => 42,
+                    ],
                 ],
             ],
             [$command],
@@ -153,10 +157,12 @@ class SEOCommandBuilderTest extends AbstractProductCommandBuilderTest
         $command->setRedirectOption(RedirectType::TYPE_CATEGORY_TEMPORARY, 51);
         yield [
             [
-                'redirect_option' => [
-                    'type' => RedirectType::TYPE_CATEGORY_TEMPORARY,
-                    'target' => 51,
-                ],
+                'seo' => [
+                    'redirect_option' => [
+                        'type' => RedirectType::TYPE_CATEGORY_TEMPORARY,
+                        'target' => 51,
+                    ],
+                ]
             ],
             [$command],
         ];

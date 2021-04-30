@@ -96,7 +96,6 @@ final class ProductFormDataProvider implements FormDataProviderInterface
             'stock' => $this->extractStockData($productForEditing),
             'pricing' => $this->extractPricingData($productForEditing),
             'seo' => $this->extractSEOData($productForEditing),
-            'redirect_option' => $this->extractRedirectOptionData($productForEditing),
             'shipping' => $this->extractShippingData($productForEditing),
             'options' => $this->extractOptionsData($productForEditing),
             'suppliers' => $this->extractSuppliersData($productForEditing),
@@ -319,7 +318,7 @@ final class ProductFormDataProvider implements FormDataProviderInterface
     /**
      * @param ProductForEditing $productForEditing
      *
-     * @return array<string, array<int, string>>
+     * @return array
      */
     private function extractSEOData(ProductForEditing $productForEditing): array
     {
@@ -329,6 +328,7 @@ final class ProductFormDataProvider implements FormDataProviderInterface
             'meta_title' => $seoOptions->getLocalizedMetaTitles(),
             'meta_description' => $seoOptions->getLocalizedMetaDescriptions(),
             'link_rewrite' => $seoOptions->getLocalizedLinkRewrites(),
+            'redirect_option' => $this->extractRedirectOptionData($productForEditing),
         ];
     }
 
