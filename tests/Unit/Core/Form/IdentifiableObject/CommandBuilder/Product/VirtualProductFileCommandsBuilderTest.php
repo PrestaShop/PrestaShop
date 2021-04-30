@@ -75,11 +75,13 @@ class VirtualProductFileCommandsBuilderTest extends AbstractProductCommandBuilde
         );
         yield [
             [
-                'virtual_product_file' => [
-                    'has_file' => true,
-                    'virtual_product_file_id' => '0',
-                    'file' => $dummyFile,
-                    'name' => 'The file',
+                'stock' => [
+                    'virtual_product_file' => [
+                        'has_file' => true,
+                        'virtual_product_file_id' => '0',
+                        'file' => $dummyFile,
+                        'name' => 'The file',
+                    ],
                 ],
             ],
             [$command],
@@ -95,14 +97,16 @@ class VirtualProductFileCommandsBuilderTest extends AbstractProductCommandBuilde
         );
         yield [
             [
-                'virtual_product_file' => [
-                    'has_file' => true,
-                    'virtual_product_file_id' => null,
-                    'file' => $dummyFile,
-                    'name' => 'The file',
-                    'access_days_limit' => 1,
-                    'download_times_limit' => 5,
-                    'expiration_date' => '2020-10-20',
+                'stock' => [
+                    'virtual_product_file' => [
+                        'has_file' => true,
+                        'virtual_product_file_id' => null,
+                        'file' => $dummyFile,
+                        'name' => 'The file',
+                        'access_days_limit' => 1,
+                        'download_times_limit' => 5,
+                        'expiration_date' => '2020-10-20',
+                    ],
                 ],
             ],
             [$command],
@@ -112,10 +116,12 @@ class VirtualProductFileCommandsBuilderTest extends AbstractProductCommandBuilde
         $command->setFilePath($dummyFile->getPathname());
         yield [
             [
-                'virtual_product_file' => [
-                    'has_file' => true,
-                    'virtual_product_file_id' => 5,
-                    'file' => $dummyFile,
+                'stock' => [
+                    'virtual_product_file' => [
+                        'has_file' => true,
+                        'virtual_product_file_id' => 5,
+                        'file' => $dummyFile,
+                    ],
                 ],
             ],
             [$command],
@@ -128,13 +134,15 @@ class VirtualProductFileCommandsBuilderTest extends AbstractProductCommandBuilde
         $command->setExpirationDate(new DateTimeImmutable('2020-10-21'));
         yield [
             [
-                'virtual_product_file' => [
-                    'has_file' => true,
-                    'virtual_product_file_id' => '6',
-                    'name' => 'new display name',
-                    'access_days_limit' => 10,
-                    'download_times_limit' => '50',
-                    'expiration_date' => '2020-10-21',
+                'stock' => [
+                    'virtual_product_file' => [
+                        'has_file' => true,
+                        'virtual_product_file_id' => '6',
+                        'name' => 'new display name',
+                        'access_days_limit' => 10,
+                        'download_times_limit' => '50',
+                        'expiration_date' => '2020-10-21',
+                    ],
                 ],
             ],
             [$command],
@@ -143,9 +151,11 @@ class VirtualProductFileCommandsBuilderTest extends AbstractProductCommandBuilde
         $command = new DeleteVirtualProductFileCommand(17);
         yield [
             [
-                'virtual_product_file' => [
-                    'has_file' => 0,
-                    'virtual_product_file_id' => 17,
+                'stock' => [
+                    'virtual_product_file' => [
+                        'has_file' => 0,
+                        'virtual_product_file_id' => 17,
+                    ],
                 ],
             ],
             [$command],
@@ -153,9 +163,11 @@ class VirtualProductFileCommandsBuilderTest extends AbstractProductCommandBuilde
 
         yield [
             [
-                'virtual_product_file' => [
-                    'has_file' => 0,
-                    'virtual_product_file_id' => 0,
+                'stock' => [
+                    'virtual_product_file' => [
+                        'has_file' => 0,
+                        'virtual_product_file_id' => 0,
+                    ],
                 ],
             ],
             [],

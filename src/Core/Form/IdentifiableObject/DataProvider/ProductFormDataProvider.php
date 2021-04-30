@@ -101,7 +101,6 @@ final class ProductFormDataProvider implements FormDataProviderInterface
             'options' => $this->extractOptionsData($productForEditing),
             'suppliers' => $this->extractSuppliersData($productForEditing),
             'customizations' => $this->extractCustomizationsData($productForEditing),
-            'virtual_product_file' => $this->extractVirtualProductFileData($productForEditing),
         ];
 
         return $this->addShortcutData($productData);
@@ -283,6 +282,7 @@ final class ProductFormDataProvider implements FormDataProviderInterface
                 'low_stock_threshold' => $stockInformation->getLowStockThreshold() ?: null,
                 'low_stock_alert' => $stockInformation->isLowStockAlertEnabled(),
             ],
+            'virtual_product_file' => $this->extractVirtualProductFileData($productForEditing),
             'pack_stock_type' => $stockInformation->getPackStockType(),
             'availability' => [
                 'out_of_stock_type' => $stockInformation->getOutOfStockType(),
