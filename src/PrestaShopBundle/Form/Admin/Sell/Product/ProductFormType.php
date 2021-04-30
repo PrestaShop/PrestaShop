@@ -32,6 +32,7 @@ use PrestaShop\PrestaShop\Adapter\Shop\Url\ProductProvider;
 use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductType;
 use PrestaShopBundle\Form\Admin\Sell\Product\Basic\BasicType;
 use PrestaShopBundle\Form\Admin\Sell\Product\Pricing\PricingType;
+use PrestaShopBundle\Form\Admin\Sell\Product\SEO\SEOType;
 use PrestaShopBundle\Form\Admin\Sell\Product\Shipping\ShippingType;
 use PrestaShopBundle\Form\Admin\Sell\Product\Stock\StockType;
 use PrestaShopBundle\Form\Admin\Type\TranslatorAwareType;
@@ -96,7 +97,6 @@ class ProductFormType extends TranslatorAwareType
             ->add('options', OptionsType::class)
             ->add('customizations', CustomizationsType::class)
             ->add('seo', SEOType::class)
-            ->add('redirect_option', RedirectOptionType::class)
             ->add('suppliers', SuppliersType::class)
             ->add('save', SubmitType::class, [
                 'label' => $this->trans('Save', 'Admin.Actions'),

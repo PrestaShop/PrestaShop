@@ -27,7 +27,7 @@
   and (productForm.suppliers is not defined or productForm.suppliers.vars.valid)
 %}
 {% set isPricingTabValid = productForm.pricing.vars.valid %}
-{% set isSEOTabValid = productForm.seo.vars.valid and productForm.redirect_option.vars.valid %}
+{% set isSEOTabValid = productForm.seo.vars.valid %}
 
 {# Some forms may be removed #}
 {% set isStockTabValid = productForm.stock is not defined or productForm.stock.vars.valid %}

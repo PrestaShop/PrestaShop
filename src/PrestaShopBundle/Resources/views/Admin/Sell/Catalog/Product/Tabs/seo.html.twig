@@ -24,16 +24,7 @@
  *#}
 
 <div role="tabpanel" class="form-contenttab tab-pane container-fluid" id="seo-tab">
-  <h2>{{ 'Search Engine Optimization'|trans({}, 'Admin.Catalog.Feature') }}</h2>
-  <p class="subtitle">{{ 'Improve your ranking and how your product page will appear in search engines results.'|trans({}, 'Admin.Catalog.Feature') }}</p>
-
-  {% block product_catalog_tool_serp %}
-    <p>{{ 'Here is a preview of your search engine result, play with it!'|trans({}, 'Admin.Catalog.Feature') }}</p>
-    {# Div targeted by the SERP component in VueJs. It displays a Google search result preview. #}
-    <div id="serp-app"></div>
-  {% endblock %}
-
-  {{ form_widget(productForm.seo) }}
+  {{ form_row(productForm.seo) }}
 
   <div class="row">
     <div class="col-md-9">
@@ -57,6 +48,4 @@
       </div>
     </div>
   </div>
-
-  {{ form_widget(productForm.redirect_option) }}
 </div>
