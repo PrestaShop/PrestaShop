@@ -31,6 +31,7 @@ use PrestaShopBundle\Form\Admin\Type\IconButtonType;
 use PrestaShopBundle\Form\Admin\Type\TranslatorAwareType;
 use Symfony\Component\Form\Extension\Core\Type\CollectionType;
 use Symfony\Component\Form\FormBuilderInterface;
+use Symfony\Component\OptionsResolver\OptionsResolver;
 
 class CustomizationsType extends TranslatorAwareType
 {
@@ -47,9 +48,25 @@ class CustomizationsType extends TranslatorAwareType
                 'label' => $this->trans('Add a customization field', 'Admin.Catalog.Feature'),
                 'icon' => 'add_circle',
                 'attr' => [
-                    'class' => 'btn-outline-secondary',
+                    'class' => 'btn-outline-secondary add-customization-btn',
                 ],
             ])
         ;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function configureOptions(OptionsResolver $resolver)
+    {
+        parent::configureOptions($resolver);
+        $resolver->setDefaults([
+            'label' => $this->trans('Customization', 'Admin.Catalog.Feature'),
+            'label_tag_name' => 'h2',
+            'label_subtitle' => $this->trans('Customers can personalize the product by entering some text or by providing custom image files.', 'Admin.Catalog.Feature'),
+            'attr' => [
+                'class' => 'product-customizations-collection',
+            ],
+        ]);
     }
 }
