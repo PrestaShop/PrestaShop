@@ -23,33 +23,25 @@
  * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
+
 declare(strict_types=1);
 
-namespace PrestaShopBundle\Form\Admin\Sell\Product;
+namespace PrestaShopBundle\Form\Admin\Sell\Product\Options;
 
-use PrestaShop\PrestaShop\Core\ConstraintValidator\Constraints\TypedRegex;
 use PrestaShop\PrestaShop\Core\Form\FormChoiceProviderInterface;
 use PrestaShopBundle\Form\Admin\Type\SwitchType;
-use PrestaShopBundle\Form\Admin\Type\TranslatableType;
 use PrestaShopBundle\Form\Admin\Type\TranslatorAwareType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\FormBuilderInterface;
+use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Translation\TranslatorInterface;
 
-/**
- * This form class is responsible to generate the product options form.
- */
-class OptionsType extends TranslatorAwareType
+class VisibilityType extends TranslatorAwareType
 {
     /**
      * @var FormChoiceProviderInterface
      */
     private $productVisibilityChoiceProvider;
-
-    /**
-     * @var FormChoiceProviderInterface
-     */
-    private $productConditionChoiceProvider;
 
     /**
      * @param TranslatorInterface $translator
@@ -59,16 +51,14 @@ class OptionsType extends TranslatorAwareType
     public function __construct(
         TranslatorInterface $translator,
         array $locales,
-        FormChoiceProviderInterface $productVisibilityChoiceProvider,
-        FormChoiceProviderInterface $productConditionChoiceProvider
+        FormChoiceProviderInterface $productVisibilityChoiceProvider
     ) {
         parent::__construct($translator, $locales);
         $this->productVisibilityChoiceProvider = $productVisibilityChoiceProvider;
-        $this->productConditionChoiceProvider = $productConditionChoiceProvider;
     }
 
     /**
-     * {@inheritdoc}
+     * {@inheritDoc}
      */
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
@@ -78,10 +68,9 @@ class OptionsType extends TranslatorAwareType
                 'attr' => [
                     'class' => 'custom-select',
                 ],
-                'label' => $this->trans('Visibility', 'Admin.Catalog.Feature'),
-                'label_tag_name' => 'h2',
-                'label_subtitle' => $this->trans('Where do you want your product to appear?', 'Admin.Catalog.Feature'),
+                'label' => $this->trans('Where do you want your product to appear?', 'Admin.Catalog.Feature'),
                 'required' => false,
+                'column_breaker' => true,
             ])
             ->add('available_for_order', SwitchType::class, [
                 'label' => $this->trans('Available for order', 'Admin.Catalog.Feature'),
@@ -95,35 +84,20 @@ class OptionsType extends TranslatorAwareType
                 'label' => $this->trans('Web only (not sold in your retail store)', 'Admin.Catalog.Feature'),
                 'required' => false,
             ])
-            ->add('tags', TranslatableType::class, [
-                'required' => false,
-                'label' => $this->trans('Tags', 'Admin.Catalog.Feature'),
-                'options' => [
-                    'constraints' => [
-                        new TypedRegex(TypedRegex::TYPE_GENERIC_NAME),
-                    ],
-                    'attr' => [
-                        'class' => 'js-taggable-field',
-                        'placeholder' => $this->trans('Use a comma to create separate tags. E.g.: dress, cotton, party dresses.', 'Admin.Catalog.Help'),
-                    ],
-                    'required' => false,
-                ],
-            ])
-            ->add('condition', ChoiceType::class, [
-                'choices' => $this->productConditionChoiceProvider->getChoices(),
-                'attr' => [
-                    'class' => 'custom-select',
-                ],
-                'required' => false,
-                'label' => $this->trans('Condition', 'Admin.Catalog.Feature'),
-                'label_tag_name' => 'h2',
-                'label_help_box' => $this->trans('Not all shops sell new products. This option enables you to indicate the condition of the product. It can be required on some marketplaces.', 'Admin.Catalog.Help'),
-            ])
-            ->add('show_condition', SwitchType::class, [
-                'required' => false,
-                'label' => $this->trans('Display condition on product page', 'Admin.Catalog.Feature'),
-            ])
-            ->add('references', ReferencesType::class)
         ;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function configureOptions(OptionsResolver $resolver)
+    {
+        parent::configureOptions($resolver);
+        $resolver->setDefaults([
+            'label' => $this->trans('Visibility', 'Admin.Catalog.Feature'),
+            'label_tag_name' => 'h2',
+            'required' => false,
+            'columns_number' => 4,
+        ]);
     }
 }

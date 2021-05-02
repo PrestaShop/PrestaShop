@@ -1313,6 +1313,31 @@ services:
         tags:
             - { name: form.type }
 
+    form.type.sell.product.shortcuts_type:
+        class: 'PrestaShopBundle\Form\Admin\Sell\Product\ShortcutsType'
+        parent: 'form.type.translatable.aware'
+        public: true
+        tags:
+            - { name: form.type }
+
+    form.type.sell.product.shortcut.price_shortcut_type:
+        class: 'PrestaShopBundle\Form\Admin\Sell\Product\Shortcut\PriceShortcutType'
+        parent: 'form.type.translatable.aware'
+        public: true
+        arguments:
+            - '@=service("prestashop.core.form.choice_provider.tax_rule_group_choice_provider").getChoices()'
+            - '@=service("prestashop.core.form.choice_provider.tax_rule_group_choice_provider").getChoicesAttributes()'
+            - '@=service("prestashop.adapter.data_provider.currency").getDefaultCurrency()'
+        tags:
+            - { name: form.type }
+
+    form.type.sell.product.shortcut.stock_shortcut_type:
+        class: 'PrestaShopBundle\Form\Admin\Sell\Product\Shortcut\StockShortcutType'
+        parent: 'form.type.translatable.aware'
+        public: true
+        tags:
+            - { name: form.type }
+
     form.type.sell.product.stock.stock_type:
         class: 'PrestaShopBundle\Form\Admin\Sell\Product\Stock\StockType'
         parent: 'form.type.translatable.aware'
@@ -1448,47 +1473,30 @@ services:
         tags:
             - { name: form.type }
 
-    form.type.sell.product.shortcuts_type:
-        class: 'PrestaShopBundle\Form\Admin\Sell\Product\ShortcutsType'
-        parent: 'form.type.translatable.aware'
-        public: true
-        tags:
-            - { name: form.type }
-
-    form.type.sell.product.shortcut.price_shortcut_type:
-        class: 'PrestaShopBundle\Form\Admin\Sell\Product\Shortcut\PriceShortcutType'
-        parent: 'form.type.translatable.aware'
-        public: true
-        arguments:
-            - '@=service("prestashop.core.form.choice_provider.tax_rule_group_choice_provider").getChoices()'
-            - '@=service("prestashop.core.form.choice_provider.tax_rule_group_choice_provider").getChoicesAttributes()'
-            - '@=service("prestashop.adapter.data_provider.currency").getDefaultCurrency()'
-        tags:
-            - { name: form.type }
-
-    form.type.sell.product.shortcut.stock_shortcut_type:
-        class: 'PrestaShopBundle\Form\Admin\Sell\Product\Shortcut\StockShortcutType'
-        parent: 'form.type.translatable.aware'
-        public: true
-        tags:
-            - { name: form.type }
-
     form.type.sell.product.data_transformer.typeahead_redirection_target_transformer:
         class: 'PrestaShopBundle\Form\Admin\Sell\Product\DataTransformer\TypeaheadRedirectionTargetTransformer'
         public: true
 
-    form.type.sell.product.options_type:
-        class: 'PrestaShopBundle\Form\Admin\Sell\Product\OptionsType'
+    form.type.sell.product.options.options_type:
+        class: 'PrestaShopBundle\Form\Admin\Sell\Product\Options\OptionsType'
+        parent: 'form.type.translatable.aware'
+        public: true
+        arguments:
+            - '@prestashop.core.form.choice_provider.product_condition_choice_provider'
+        tags:
+            - { name: form.type }
+
+    form.type.sell.product.options.visibility_type:
+        class: 'PrestaShopBundle\Form\Admin\Sell\Product\Options\VisibilityType'
         parent: 'form.type.translatable.aware'
         public: true
         arguments:
             - '@prestashop.core.form.choice_provider.product_visibility_choice_provider'
-            - '@prestashop.core.form.choice_provider.product_condition_choice_provider'
         tags:
             - { name: form.type }
 
-    form.type.sell.product.references_type:
-        class: 'PrestaShopBundle\Form\Admin\Sell\Product\ReferencesType'
+    form.type.sell.product.options.references_type:
+        class: 'PrestaShopBundle\Form\Admin\Sell\Product\Options\ReferencesType'
         parent: 'form.type.translatable.aware'
         public: true
         arguments:
@@ -1496,16 +1504,15 @@ services:
         tags:
             - { name: form.type }
 
-
-    form.type.sell.product.customizations_type:
-        class: 'PrestaShopBundle\Form\Admin\Sell\Product\CustomizationsType'
+    form.type.sell.product.options.customizations_type:
+        class: 'PrestaShopBundle\Form\Admin\Sell\Product\Options\CustomizationsType'
         parent: 'form.type.translatable.aware'
         public: true
         tags:
             - { name: form.type }
 
-    form.type.sell.product.customization_field_type:
-        class: 'PrestaShopBundle\Form\Admin\Sell\Product\CustomizationFieldType'
+    form.type.sell.product.options.customization_field_type:
+        class: 'PrestaShopBundle\Form\Admin\Sell\Product\Options\CustomizationFieldType'
         parent: 'form.type.translatable.aware'
         public: true
         arguments:

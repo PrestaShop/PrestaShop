@@ -26,7 +26,7 @@
 
 declare(strict_types=1);
 
-namespace PrestaShopBundle\Form\Admin\Sell\Product;
+namespace PrestaShopBundle\Form\Admin\Sell\Product\Options;
 
 use Currency;
 use PrestaShop\PrestaShop\Core\ConstraintValidator\Constraints\TypedRegex;
@@ -78,7 +78,6 @@ class ReferencesType extends TranslatorAwareType
             ])
             ->add('ean_13', TextType::class, [
                 'required' => false,
-                'error_bubbling' => true,
                 'label' => $this->trans('EAN-13 or JAN barcode', 'Admin.Catalog.Feature'),
                 'label_help_box' => $this->trans('This type of product code is specific to Europe and Japan, but is widely used internationally. It is a superset of the UPC code: all products marked with an EAN will be accepted in North America.', 'Admin.Catalog.Help'),
                 'constraints' => [
