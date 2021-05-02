@@ -65,22 +65,22 @@ class BasicType extends TranslatorAwareType
                 'options' => [
                     'limit' => ProductSettings::MAX_DESCRIPTION_SHORT_LENGTH,
                     'attr' => [
-                        'class' => 'serp-default-description h2',
+                        'class' => 'serp-default-description',
+                    ],
+                    'constraints' => [
+                        new Length([
+                            'max' => ProductSettings::MAX_DESCRIPTION_SHORT_LENGTH,
+                            'maxMessage' => $this->trans(
+                                'This field cannot be longer than %limit% characters',
+                                'Admin.Notifications.Error',
+                                [
+                                    '%limit%' => ProductSettings::MAX_DESCRIPTION_SHORT_LENGTH,
+                                ]
+                            ),
+                        ]),
                     ],
                 ],
                 'label_tag_name' => 'h2',
-                'constraints' => [
-                    new Length([
-                        'max' => ProductSettings::MAX_DESCRIPTION_SHORT_LENGTH,
-                        'maxMessage' => $this->trans(
-                            'This field cannot be longer than %limit% characters',
-                            'Admin.Notifications.Error',
-                            [
-                                '%limit%' => ProductSettings::MAX_DESCRIPTION_SHORT_LENGTH,
-                            ]
-                        ),
-                    ]),
-                ],
             ])
             ->add('description', TranslatableType::class, [
                 'required' => false,
@@ -88,20 +88,20 @@ class BasicType extends TranslatorAwareType
                 'type' => FormattedTextareaType::class,
                 'options' => [
                     'limit' => ProductSettings::MAX_DESCRIPTION_LENGTH,
+                    'constraints' => [
+                        new Length([
+                            'max' => ProductSettings::MAX_DESCRIPTION_LENGTH,
+                            'maxMessage' => $this->trans(
+                                'This field cannot be longer than %limit% characters',
+                                'Admin.Notifications.Error',
+                                [
+                                    '%limit%' => ProductSettings::MAX_DESCRIPTION_LENGTH,
+                                ]
+                            ),
+                        ]),
+                    ],
                 ],
                 'label_tag_name' => 'h2',
-                'constraints' => [
-                    new Length([
-                        'max' => ProductSettings::MAX_DESCRIPTION_LENGTH,
-                        'maxMessage' => $this->trans(
-                            'This field cannot be longer than %limit% characters',
-                            'Admin.Notifications.Error',
-                            [
-                                '%limit%' => ProductSettings::MAX_DESCRIPTION_LENGTH,
-                            ]
-                        ),
-                    ]),
-                ],
             ])
             ->add('features', FeaturesType::class)
             ->add('manufacturer', ManufacturerType::class)
