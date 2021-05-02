@@ -81,6 +81,7 @@ class OptionsType extends TranslatorAwareType
                     ],
                     'required' => false,
                 ],
+                'alert_message' => $this->trans('Tags are meant to help your customers find your products via the search bar.', 'Admin.Catalog.Help'),
             ])
             ->add('condition', ChoiceType::class, [
                 'choices' => $this->productConditionChoiceProvider->getChoices(),
