@@ -99,7 +99,6 @@ final class ProductFormDataProvider implements FormDataProviderInterface
             'shipping' => $this->extractShippingData($productForEditing),
             'options' => $this->extractOptionsData($productForEditing),
             'suppliers' => $this->extractSuppliersData($productForEditing),
-            'customizations' => $this->extractCustomizationsData($productForEditing),
         ];
 
         return $this->addShortcutData($productData);
@@ -385,18 +384,23 @@ final class ProductFormDataProvider implements FormDataProviderInterface
 
         return [
             'active' => $options->isActive(),
-            'visibility' => $options->getVisibility(),
-            'available_for_order' => $options->isAvailableForOrder(),
-            'show_price' => $options->showPrice(),
-            'online_only' => $options->isOnlineOnly(),
+            'visibility' => [
+                'visibility' => $options->getVisibility(),
+                'available_for_order' => $options->isAvailableForOrder(),
+                'show_price' => $options->showPrice(),
+                'online_only' => $options->isOnlineOnly(),
+            ],
+            'tags' => $this->presentTags($productForEditing->getBasicInformation()->getLocalizedTags()),
             'show_condition' => $options->showCondition(),
             'condition' => $options->getCondition(),
-            'tags' => $this->presentTags($productForEditing->getBasicInformation()->getLocalizedTags()),
-            'mpn' => $details->getMpn(),
-            'upc' => $details->getUpc(),
-            'ean_13' => $details->getEan13(),
-            'isbn' => $details->getIsbn(),
-            'reference' => $details->getReference(),
+            'references' => [
+                'mpn' => $details->getMpn(),
+                'upc' => $details->getUpc(),
+                'ean_13' => $details->getEan13(),
+                'isbn' => $details->getIsbn(),
+                'reference' => $details->getReference(),
+            ],
+            'customizations' => $this->extractCustomizationsData($productForEditing),
         ];
     }
 

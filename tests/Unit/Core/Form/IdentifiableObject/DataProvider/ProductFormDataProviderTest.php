@@ -222,6 +222,7 @@ class ProductFormDataProviderTest extends TestCase
             $this->getDatasetsForPrices(),
             $this->getDatasetsForStock(),
             $this->getDatasetsForShipping(),
+            $this->getDatasetsForOptions(),
         ];
 
         foreach ($datasetsByType as $datasetByType) {
@@ -521,6 +522,61 @@ class ProductFormDataProviderTest extends TestCase
     /**
      * @return array
      */
+    private function getDatasetsForOptions(): array
+    {
+        $datasets = [];
+
+        $expectedOutputData = $this->getDefaultOutputData();
+        $productData = [];
+
+        $datasets[] = [
+            $productData,
+            $expectedOutputData,
+        ];
+
+        $localizedValues = [
+            1 => 'english',
+            2 => 'french',
+        ];
+        $expectedOutputData = $this->getDefaultOutputData();
+        $productData = [
+            'active' => false,
+            'visibility' => ProductVisibility::VISIBLE_IN_CATALOG,
+            'available_for_order' => false,
+            'online_only' => true,
+            'show_price' => false,
+            'condition' => ProductCondition::USED,
+            'show_condition' => true,
+            'isbn' => 'isbn_2',
+            'upc' => 'upc_2',
+            'ean13' => 'ean13_2',
+            'mpn' => 'mpn_2',
+            'reference' => 'reference_2',
+        ];
+        $expectedOutputData['options']['active'] = false;
+        $expectedOutputData['options']['visibility']['visibility'] = ProductVisibility::VISIBLE_IN_CATALOG;
+        $expectedOutputData['options']['visibility']['available_for_order'] = false;
+        $expectedOutputData['options']['visibility']['online_only'] = true;
+        $expectedOutputData['options']['visibility']['show_price'] = false;
+        $expectedOutputData['options']['condition'] = ProductCondition::USED;
+        $expectedOutputData['options']['show_condition'] = true;
+        $expectedOutputData['options']['references']['isbn'] = 'isbn_2';
+        $expectedOutputData['options']['references']['upc'] = 'upc_2';
+        $expectedOutputData['options']['references']['ean_13'] = 'ean13_2';
+        $expectedOutputData['options']['references']['mpn'] = 'mpn_2';
+        $expectedOutputData['options']['references']['reference'] = 'reference_2';
+
+        $datasets[] = [
+            $productData,
+            $expectedOutputData,
+        ];
+
+        return $datasets;
+    }
+
+    /**
+     * @return array
+     */
     private function getDatasetsForRedirectOption(): array
     {
         $datasets = [];
@@ -711,7 +767,7 @@ class ProductFormDataProviderTest extends TestCase
             ],
         ];
 
-        $expectedOutputData['customizations']['customization_fields'] = [
+        $expectedOutputData['options']['customizations']['customization_fields'] = [
             [
                 'id' => 1,
                 'name' => $localizedNames,
@@ -1128,21 +1184,25 @@ class ProductFormDataProviderTest extends TestCase
             ],
             'options' => [
                 'active' => true,
-                'visibility' => ProductVisibility::VISIBLE_EVERYWHERE,
-                'available_for_order' => true,
-                'show_price' => true,
-                'online_only' => false,
+                'visibility' => [
+                    'visibility' => ProductVisibility::VISIBLE_EVERYWHERE,
+                    'available_for_order' => true,
+                    'show_price' => true,
+                    'online_only' => false,
+                ],
+                'tags' => [],
                 'show_condition' => false,
                 'condition' => ProductCondition::NEW,
-                'tags' => [],
-                'mpn' => 'mpn',
-                'upc' => 'upc',
-                'ean_13' => 'ean13',
-                'isbn' => 'isbn',
-                'reference' => 'reference',
+                'references' => [
+                    'mpn' => 'mpn',
+                    'upc' => 'upc',
+                    'ean_13' => 'ean13',
+                    'isbn' => 'isbn',
+                    'reference' => 'reference',
+                ],
+                'customizations' => [],
             ],
             'suppliers' => [],
-            'customizations' => [],
             'shortcuts' => [
                 'retail_price' => [
                     'price_tax_excluded' => 19.86,
