@@ -58,7 +58,6 @@ class CombinationDetailsType extends TranslatorAwareType
             ])
             ->add('ean_13', TextType::class, [
                 'required' => false,
-                'error_bubbling' => true,
                 'label' => $this->trans('EAN-13 or JAN barcode', 'Admin.Catalog.Feature'),
                 'help' => $this->trans('This type of product code is specific to Europe and Japan, but is widely used internationally. It is a superset of the UPC code: all products marked with an EAN will be accepted in North America.', 'Admin.Catalog.Help'),
                 'constraints' => [
