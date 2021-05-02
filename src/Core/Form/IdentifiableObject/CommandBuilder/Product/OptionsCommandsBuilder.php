@@ -49,17 +49,17 @@ final class OptionsCommandsBuilder implements ProductCommandsBuilderInterface
         if (isset($options['active'])) {
             $command->setActive((bool) $options['active']);
         }
-        if (isset($options['visibility'])) {
-            $command->setVisibility($options['visibility']);
+        if (isset($options['visibility']['visibility'])) {
+            $command->setVisibility($options['visibility']['visibility']);
         }
-        if (isset($options['available_for_order'])) {
-            $command->setAvailableForOrder((bool) $options['available_for_order']);
+        if (isset($options['visibility']['available_for_order'])) {
+            $command->setAvailableForOrder((bool) $options['visibility']['available_for_order']);
         }
-        if (isset($options['show_price'])) {
-            $command->setShowPrice((bool) $options['show_price']);
+        if (isset($options['visibility']['show_price'])) {
+            $command->setShowPrice((bool) $options['visibility']['show_price']);
         }
-        if (isset($options['online_only'])) {
-            $command->setOnlineOnly((bool) $options['online_only']);
+        if (isset($options['visibility']['online_only'])) {
+            $command->setOnlineOnly((bool) $options['visibility']['online_only']);
         }
         if (isset($options['show_condition'])) {
             $command->setShowCondition((bool) $options['show_condition']);

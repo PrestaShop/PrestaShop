@@ -33,7 +33,7 @@ use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductCondition;
 use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductVisibility;
 use PrestaShop\PrestaShop\Core\Form\IdentifiableObject\CommandBuilder\Product\OptionsCommandsBuilder;
 
-class ProductOptionsCommandBuilderTest extends AbstractProductCommandBuilderTest
+class ProductOptionsCommandsBuilderTest extends AbstractProductCommandBuilderTest
 {
     /**
      * @dataProvider getExpectedCommands
@@ -117,7 +117,9 @@ class ProductOptionsCommandBuilderTest extends AbstractProductCommandBuilderTest
             [
                 'options' => [
                     'not_handled' => 0,
-                    'online_only' => true,
+                    'visibility' => [
+                        'online_only' => true,
+                    ],
                 ],
             ],
             [$command],
@@ -129,7 +131,9 @@ class ProductOptionsCommandBuilderTest extends AbstractProductCommandBuilderTest
             [
                 'options' => [
                     'not_handled' => 0,
-                    'show_price' => false,
+                    'visibility' => [
+                        'show_price' => false,
+                    ],
                 ],
             ],
             [$command],
@@ -141,7 +145,9 @@ class ProductOptionsCommandBuilderTest extends AbstractProductCommandBuilderTest
             [
                 'options' => [
                     'not_handled' => 0,
-                    'available_for_order' => '1',
+                    'visibility' => [
+                        'available_for_order' => '1',
+                    ],
                 ],
             ],
             [$command],
@@ -153,7 +159,9 @@ class ProductOptionsCommandBuilderTest extends AbstractProductCommandBuilderTest
             [
                 'options' => [
                     'not_handled' => 0,
-                    'visibility' => 'none',
+                    'visibility' => [
+                        'visibility' => ProductVisibility::INVISIBLE,
+                    ],
                 ],
             ],
             [$command],
