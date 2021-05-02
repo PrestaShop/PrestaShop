@@ -50,9 +50,9 @@ export default {
     addFeatureValue: '.feature-value-add-button',
   },
   customizations: {
-    customizationsContainer: '#product_customizations',
-    customizationFieldsList: '#product_customizations ul',
-    addCustomizationBtn: '#product_customizations_add_customization_field',
+    customizationsContainer: '.product-customizations-collection',
+    customizationFieldsList: '.product-customizations-collection ul',
+    addCustomizationBtn: '.add-customization-btn',
     removeCustomizationBtn: '.remove-customization-btn',
     customizationFieldRow: '.customization-field-row',
   },
