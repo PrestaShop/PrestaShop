@@ -33,7 +33,7 @@ use PrestaShop\PrestaShop\Core\Domain\Product\Customization\Command\SetProductCu
 use PrestaShop\PrestaShop\Core\Domain\Product\Customization\ValueObject\CustomizationFieldType;
 use PrestaShop\PrestaShop\Core\Form\IdentifiableObject\CommandBuilder\Product\CustomizationFieldsCommandsBuilder;
 
-class CustomizationFieldsCommandBuilderTest extends AbstractProductCommandBuilderTest
+class CustomizationFieldsCommandsBuilderTest extends AbstractProductCommandBuilderTest
 {
     /**
      * @var CustomizationFieldsCommandsBuilder
@@ -75,7 +75,18 @@ class CustomizationFieldsCommandBuilderTest extends AbstractProductCommandBuilde
 
         yield [
             [
-                'customizations' => [],
+                'options' => [
+                    'customizations' => null,
+                ],
+            ],
+            [],
+        ];
+
+        yield [
+            [
+                'options' => [
+                    'customizations' => [],
+                ],
             ],
             [new RemoveAllCustomizationFieldsFromProductCommand($this->getProductId()->getValue())],
         ];
@@ -114,25 +125,27 @@ class CustomizationFieldsCommandBuilderTest extends AbstractProductCommandBuilde
 
         yield [
             [
-                'customizations' => [
-                    'customization_fields' => [
-                        [
-                            'type' => 1,
-                            'name' => $localizedNames,
-                            'required' => 0,
-                            'id' => '3',
-                        ],
-                        [
-                            'type' => 1,
-                            'name' => $localizedNames,
-                            'required' => false,
-                            'id' => '0',
-                        ],
-                        [
-                            'type' => '0',
-                            'name' => $localizedNames,
-                            'required' => true,
-                            'id' => 0,
+                'options' => [
+                    'customizations' => [
+                        'customization_fields' => [
+                            [
+                                'type' => 1,
+                                'name' => $localizedNames,
+                                'required' => 0,
+                                'id' => '3',
+                            ],
+                            [
+                                'type' => 1,
+                                'name' => $localizedNames,
+                                'required' => false,
+                                'id' => '0',
+                            ],
+                            [
+                                'type' => '0',
+                                'name' => $localizedNames,
+                                'required' => true,
+                                'id' => 0,
+                            ],
                         ],
                     ],
                 ],
