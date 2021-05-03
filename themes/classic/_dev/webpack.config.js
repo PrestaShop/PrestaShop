@@ -24,7 +24,8 @@
  */
 const webpack = require('webpack');
 const path = require('path');
-const ExtractTextPlugin = require('extract-text-webpack-plugin');
+const MiniCssExtractPlugin = require('mini-css-extract-plugin');
+const UglifyJsPlugin = require('uglifyjs-webpack-plugin');
 
 let config = {
   entry: {
@@ -43,9 +44,8 @@ let config = {
       },
       {
         test: /\.scss$/,
-        use: ExtractTextPlugin.extract({
-          fallback: 'style-loader',
-          use: [
+        use:[ 
+            MiniCssExtractPlugin.loader,
             {
               loader: 'css-loader',
               options: {
@@ -55,7 +55,6 @@ let config = {
             'postcss-loader',
             'sass-loader',
           ],
-        }),
       },
       {
         test: /.(png|woff(2)?|eot|otf|ttf|svg|gif)(\?[a-z0-9=\.]+)?$/,
@@ -70,7 +69,7 @@ let config = {
       },
       {
         test: /\.css$/,
-        use: ['style-loader', 'css-loader', 'postcss-loader'],
+        use: [MiniCssExtractPlugin.loader, 'style-loader', 'css-loader', 'postcss-loader'],
       },
     ],
   },
@@ -79,27 +78,32 @@ let config = {
     $: '$',
     jquery: 'jQuery',
   },
-  plugins: [new ExtractTextPlugin(path.join('..', 'css', '[name].css'))],
+  plugins: [
+    new MiniCssExtractPlugin({filename: '[name].css'}),
+  ]
 };
 
 if (process.env.NODE_ENV === 'production') {
-  config.plugins.push(
-    new webpack.optimize.UglifyJsPlugin({
-      sourceMap: false,
-      compress: {
-        sequences: true,
-        conditionals: true,
-        booleans: true,
-        if_return: true,
-        join_vars: true,
-        drop_console: true,
-      },
-      output: {
-        comments: false,
-      },
-      minimize: true,
-    })
-  );
+  config.optimization = {
+    minimizer: [
+      new UglifyJsPlugin({
+        sourceMap: false,
+        uglifyOptions: {
+          compress: {
+            sequences: true,
+            conditionals: true,
+            booleans: true,
+            if_return: true,
+            join_vars: true,
+            drop_console: true,
+          },
+          output: {
+            comments: false,
+          },
+        }
+      })
+    ]
+  }
 }
 
 module.exports = config;
