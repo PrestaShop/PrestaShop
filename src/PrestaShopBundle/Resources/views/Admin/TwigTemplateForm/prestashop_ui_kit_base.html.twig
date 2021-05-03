@@ -24,22 +24,32 @@
  *#}
 
 {#
-# Since we override radio_widget and use parent() we don't want to use the radio_widget from bootstrap_4_layout so we
-# redefine it as base_radio_widget to ignore it. But we still need the original one so we need to use the one from
-# bootstrap_base_layout which is included first so that bootstrap_4_layout has priority over all other blocks.
+# This form theme is an implementation of PrestaShop UI kit, it based on the bootstrap4 layout and overrides a few
+# blocks to match our expected integration of the UI kit.
+#
+# This theme uses/extends the basic bootstrap_4_layout meaning the form labels/inputs are displayed one under the other.
+# Unlike our prestashop_ui_kit.html.twig theme which extends this base kit but uses bootstrap_4_horizontal_layout as a
+# base, where labels/inputs are displayed horizontally in a column way.
 #}
-{% use 'bootstrap_base_layout.html.twig' %}
-{% use 'bootstrap_4_layout.html.twig' with radio_widget as base_radio_widget, checkbox_widget as base_checkbox_widget %}
 
+{#
+# We need to radio_widget and checkbox_widget from the original bootsrap 4 layout because we need to add form-check-radio
+# on the last wrapping div which is not possible with the attributes, so we basically copied the content, but then we cannot
+# use parent() to render the internal widget because it would reuse the one from bootstrap_4_layout and duplicate content.
+#
+# So we extract the initial widget from the bootstrap_base_layout to inject them as the internal widget, it is important
+# to do it before we use bootstrap_4_layout or the base layout will override the blocks from bootstrap_4_layout.
+#
+# See https://symfony.com/doc/3.4/form/form_customization.html#referencing-blocks-from-inside-the-same-template-as-the-form
+#}
+{% use 'bootstrap_base_layout.html.twig' with radio_widget as base_radio_widget, checkbox_widget as base_checkbox_widget %}
+
+{# Use bootstrap4 theme (from the Symfony framework) as default base #}
+{% use 'bootstrap_4_layout.html.twig' %}
 {% use '@PrestaShop/Admin/TwigTemplateForm/typeahead.html.twig' %}
 {% use '@PrestaShop/Admin/TwigTemplateForm/material.html.twig' %}
 
-{# overrides from form_div_layout #}
-
-{#--deleted {% block form_start -%}
-  {% set attr = attr|merge({class: (attr.class|default('') ~ ' form-horizontal')|trim}) %}
-  {{- parent() -}}
-{%- endblock form_start %}#}
+{# overrides from bootstrap_4_layout #}
 
 {# Widgets #}
 
@@ -162,11 +172,6 @@
   {%- endif -%}
 {%- endblock form_label -%}
 
-{# Misc #}
-
-
-{# overrides from bootstrap_4_layout #}
-
 {# Widgets #}
 
 {% block textarea_widget -%}
@@ -271,43 +276,17 @@
 
 {% block icon_button_widget -%}
   {% set attr = attr|merge({class: (attr.class|default('btn-default') ~ ' btn')|trim}) %}
-  {%- if label is empty and label != false -%}
-    {%- if label_format is not empty -%}
-      {% set label = label_format|replace({
-        '%name%': name,
-        '%id%': id,
-      }) %}
-    {%- else -%}
-      {% set label = name|humanize %}
-    {%- endif -%}
-  {%- endif -%}
-  <button type="{{ type|default('button') }}" {{ block('button_attributes') }}>
-    <i class="material-icons">{{ icon }}</i>
+  {% if button_type == 'link' %}
+    {% set buttonTag = 'a' %}
+  {% else %}
+    {% set buttonTag = 'button' %}
+  {% endif %}
+
+  <{{ buttonTag }} {{ block('button_attributes') }}>
+    <i class="material-icons">{{ button_icon }}</i>
     {{ label }}
-  </button>
+  </{{ buttonTag }}>
 {%- endblock %}
-
-{# {% block checkbox_widget -%}
-  {% set parent_label_class = parent_label_class|default('') -%}
-  {% if 'checkbox-inline' in parent_label_class %}
-    {{- form_label(form, null, { widget: parent() }) -}}
-  {% else -%}
-    <div class="checkbox">
-      {{- form_label(form, null, { widget: parent() }) -}}
-    </div>
-  {%- endif %}
-{%- endblock checkbox_widget %}
-
-{% block radio_widget -%}
-  {%- set parent_label_class = parent_label_class|default('') -%}
-  {% if 'radio-inline' in parent_label_class %}
-    {{- form_label(form, null, { widget: parent() }) -}}
-  {% else -%}
-    <div class="radio">
-      {{- form_label(form, null, { widget: parent() }) -}}
-    </div>
-  {%- endif %}
-{%- endblock radio_widget %}#}
 
 {% block choice_widget %}
   {{- parent() -}}
@@ -437,9 +416,8 @@
         {% set classes = classes ~ ' d-none' %}
       {% endif %}
 
-      {% set attr = translateField.vars.attr %}
-
-      {{ form_widget(translateField, {attr: {'class': classes|trim}}) }}
+      {%- set attr = attr|merge({class: classes|trim}) -%}
+      {{ block('form_widget') }}
     {% endfor %}
 
     {% if not hide_locales %}
@@ -655,12 +633,12 @@
     {%- if 'radio-custom' in parent_label_class -%}
         {%- set attr = attr|merge({class: (attr.class|default('') ~ ' custom-control-input')|trim}) -%}
         <div class="custom-control custom-radio{{ 'radio-inline' in parent_label_class ? ' custom-control-inline' }}">
-            {{- form_label(form, null, { widget: parent() }) -}}
+            {{- form_label(form, null, { widget: block('base_radio_widget') }) -}}
         </div>
     {%- else -%}
         {%- set attr = attr|merge({class: (attr.class|default('') ~ ' form-check-input')|trim}) -%}
         <div class="form-check form-check-radio{{ 'radio-inline' in parent_label_class ? ' form-check-inline' }}">
-            {{- form_label(form, null, { widget: parent() }) -}}
+            {{- form_label(form, null, { widget: block('base_radio_widget') }) -}}
         </div>
     {%- endif -%}
 {%- endblock radio_widget %}
@@ -669,7 +647,7 @@
     {%- set parent_label_class = parent_label_class|default(label_attr.class|default('')) -%}
     {%- set attr = attr|merge({class: (attr.class|default('') ~ ' form-check-input')|trim}) -%}
     <div class="form-check-radio">
-        {{- form_label(form, null, { widget: parent() }) -}}
+        {{- form_label(form, null, { widget: block('base_checkbox_widget') }) -}}
     </div>
 {%- endblock checkbox_widget %}
 
