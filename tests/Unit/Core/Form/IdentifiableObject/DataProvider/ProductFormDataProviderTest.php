@@ -92,8 +92,10 @@ class ProductFormDataProviderTest extends TestCase
                 'manufacturer' => NoManufacturerId::NO_MANUFACTURER_ID,
             ],
             'stock' => [
-                'quantity' => 0,
-                'minimal_quantity' => 0,
+                'quantities' => [
+                    'quantity' => 0,
+                    'minimal_quantity' => 0,
+                ],
             ],
             'pricing' => [
                 'retail_price' => [
@@ -122,7 +124,7 @@ class ProductFormDataProviderTest extends TestCase
                 'activate' => false,
             ],
             'shortcuts' => [
-                'price' => [
+                'retail_price' => [
                     'price_tax_excluded' => 0,
                     'price_tax_included' => 0,
                     'tax_rules_group_id' => 42,
@@ -147,8 +149,10 @@ class ProductFormDataProviderTest extends TestCase
                 'manufacturer' => NoManufacturerId::NO_MANUFACTURER_ID,
             ],
             'stock' => [
-                'quantity' => 0,
-                'minimal_quantity' => 0,
+                'quantities' => [
+                    'quantity' => 0,
+                    'minimal_quantity' => 0,
+                ],
             ],
             'pricing' => [
                 'retail_price' => [
@@ -177,7 +181,7 @@ class ProductFormDataProviderTest extends TestCase
                 'activate' => true,
             ],
             'shortcuts' => [
-                'price' => [
+                'retail_price' => [
                     'price_tax_excluded' => 0,
                     'price_tax_included' => 0,
                     'tax_rules_group_id' => 42,

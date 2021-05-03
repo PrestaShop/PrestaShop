@@ -117,8 +117,10 @@ final class ProductFormDataProvider implements FormDataProviderInterface
                 'manufacturer' => NoManufacturerId::NO_MANUFACTURER_ID,
             ],
             'stock' => [
-                'quantity' => 0,
-                'minimal_quantity' => 0,
+                'quantities' => [
+                    'quantity' => 0,
+                    'minimal_quantity' => 0,
+                ],
             ],
             'pricing' => [
                 'retail_price' => [
