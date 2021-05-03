@@ -67,15 +67,13 @@ $(() => {
   const $redirectTargetInput = $(ProductMap.redirectOption.targetInput);
   new RedirectOptionManager($redirectTypeInput, $redirectTargetInput);
 
+  // Product type has strong impact on the page rendering so when it is modified it must be submitted right away
+  new ProductTypeManager($(ProductMap.productTypeSelector), $productForm);
+
   // Form has no productId data means that we are in creation mode
   if (!productId) {
     return;
   }
-
-  // On creation product type can be modified as you wish, but once it is created it has strong impacts, so we must
-  // force submit because it influences the available features in the form, and it also perform cleaning on non relevant
-  // associations
-  new ProductTypeManager($(ProductMap.productTypeSelector), $productForm);
 
   // Init Serp component to preview Search engine display
   const translatorInput = window.prestashop.instance.translatableInput;

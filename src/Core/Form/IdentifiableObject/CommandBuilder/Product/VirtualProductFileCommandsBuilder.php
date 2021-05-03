@@ -72,11 +72,11 @@ final class VirtualProductFileCommandsBuilder implements ProductCommandsBuilderI
      */
     public function buildAddCommand(ProductId $productId, array $virtualProductFileData): ?AddVirtualProductFileCommand
     {
-        if (!$virtualProductFileData['has_file'] || $virtualProductFileData['virtual_product_file_id']) {
+        if (empty($virtualProductFileData['has_file']) || !empty($virtualProductFileData['virtual_product_file_id'])) {
             return null;
         }
 
-        if (!isset($virtualProductFileData['file'])) {
+        if (empty($virtualProductFileData['file'])) {
             return null;
         }
 
@@ -102,7 +102,7 @@ final class VirtualProductFileCommandsBuilder implements ProductCommandsBuilderI
     {
         $update = false;
 
-        if (!$virtualProductFileData['has_file'] || !$virtualProductFileData['virtual_product_file_id']) {
+        if (empty($virtualProductFileData['has_file']) || empty($virtualProductFileData['virtual_product_file_id'])) {
             return null;
         }
 
@@ -145,7 +145,7 @@ final class VirtualProductFileCommandsBuilder implements ProductCommandsBuilderI
      */
     private function buildDeleteCommand(array $virtualProductFileData): ?DeleteVirtualProductFileCommand
     {
-        if ($virtualProductFileData['has_file'] || !$virtualProductFileData['virtual_product_file_id']) {
+        if (!empty($virtualProductFileData['has_file']) || empty($virtualProductFileData['virtual_product_file_id'])) {
             return null;
         }
 
