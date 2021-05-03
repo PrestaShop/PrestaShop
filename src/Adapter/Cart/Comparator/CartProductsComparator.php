@@ -121,7 +121,8 @@ class CartProductsComparator
                     (int) $newProduct['id_product'],
                     (int) $newProduct['id_product_attribute'],
                     (int) $newProduct['cart_quantity'],
-                    true
+                    true,
+                    (int) $newProduct['id_customization']
                 );
             }
         }
@@ -153,7 +154,8 @@ class CartProductsComparator
                     (int) $oldProduct['id_product'],
                     (int) $oldProduct['id_product_attribute'],
                     $deltaQuantity,
-                    false
+                    false,
+                    (int) $oldProduct['id_customization']
                 );
             }
         }
@@ -203,8 +205,9 @@ class CartProductsComparator
 
             $productMatch = $item['id_product'] == $searchedProduct['id_product'];
             $combinationMatch = $item['id_product_attribute'] == $searchedProduct['id_product_attribute'];
+            $customizationMatch = $item['id_customization'] == $searchedProduct['id_customization'];
 
-            return $productMatch && $combinationMatch ? $item : null;
+            return $productMatch && $combinationMatch && $customizationMatch ? $item : null;
         });
     }
 }
