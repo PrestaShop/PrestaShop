@@ -22,9 +22,10 @@
  * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  *#}
-{% form_theme productForm.footer _self %}
 
 <div class="product-footer">
-  {{ form_row(productForm.footer) }}
+  {% block product_header_form %}
+    {% form_theme productForm.footer '@PrestaShop/Admin/Sell/Catalog/Product/Form/footer_form_theme.html.twig' %}
+    {{ form_row(productForm.footer) }}
+  {% endblock %}
 </div>
-
