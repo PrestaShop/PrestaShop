@@ -41,18 +41,6 @@ use Symfony\Component\Validator\Constraints\Length;
 class ReferencesType extends TranslatorAwareType
 {
     /**
-     * @param TranslatorInterface $translator
-     * @param array $locales
-     * @param Currency $defaultCurrency
-     */
-    public function __construct(
-        TranslatorInterface $translator,
-        array $locales
-    ) {
-        parent::__construct($translator, $locales);
-    }
-
-    /**
      * {@inheritDoc}
      */
     public function buildForm(FormBuilderInterface $builder, array $options)
@@ -109,7 +97,6 @@ class ReferencesType extends TranslatorAwareType
     public function configureOptions(OptionsResolver $resolver)
     {
         parent::configureOptions($resolver);
-
         $resolver->setDefaults([
             'label' => $this->trans('References', 'Admin.Catalog.Feature'),
             'label_tag_name' => 'h2',
