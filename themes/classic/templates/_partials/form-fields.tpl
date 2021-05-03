@@ -53,7 +53,7 @@
 
         {block name='form_field_item_country'}
           <select
-            id="{$field.name}"
+            id="field-{$field.name}"
             class="form-control form-control-select js-country"
             name="{$field.name}"
             {if $field.required}required{/if}
