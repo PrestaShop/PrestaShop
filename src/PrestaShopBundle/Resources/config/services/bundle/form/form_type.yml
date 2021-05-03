@@ -1499,8 +1499,6 @@ services:
         class: 'PrestaShopBundle\Form\Admin\Sell\Product\Options\ReferencesType'
         parent: 'form.type.translatable.aware'
         public: true
-        arguments:
-            - '@prestashop.core.form.choice_provider.product_condition_choice_provider'
         tags:
             - { name: form.type }
 
