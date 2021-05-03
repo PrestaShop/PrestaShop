@@ -127,7 +127,7 @@ export default {
     windowFileManager: '.dropzone-window-filemanager',
   },
   suppliers: {
-    productSuppliers: '#product_suppliers',
+    productSuppliers: '#product_options_suppliers',
     combinationSuppliers: '#combination_form_suppliers',
   },
   seo: {
