@@ -30,6 +30,7 @@ namespace PrestaShopBundle\Form\Admin\Sell\Product;
 
 use PrestaShop\PrestaShop\Adapter\Shop\Url\ProductProvider;
 use PrestaShopBundle\Form\Admin\Type\IconButtonType;
+use PrestaShopBundle\Form\Admin\Type\SwitchType;
 use PrestaShopBundle\Form\Admin\Type\TranslatorAwareType;
 use Symfony\Component\Form\Extension\Core\Type\ButtonType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
@@ -73,7 +74,7 @@ class FooterType extends TranslatorAwareType
                 ->add('delete', IconButtonType::class, [
                     'icon' => 'delete',
                     'attr' => [
-                        'class' => 'tooltip-link align-left',
+                        'class' => 'tooltip-link',
                         'data-toggle' => 'pstooltip',
                         'data-placement' => 'left',
                         'title' => $this->trans('Permanently delete this product.', 'Admin.Catalog.Help'),
@@ -87,7 +88,7 @@ class FooterType extends TranslatorAwareType
                 ->add('preview', ButtonType::class, [
                     'label' => $this->trans('Preview', 'Admin.Actions'),
                     'attr' => [
-                        'class' => 'align-left btn-secondary',
+                        'class' => 'btn-secondary',
                         'data-seo-url' => $this->productUrlProvider->getUrl($productId, '{friendly-url}'),
                     ],
                 ])
@@ -95,7 +96,7 @@ class FooterType extends TranslatorAwareType
                     'label' => $this->trans('Back to standard page', 'Admin.Catalog.Feature'),
                     'type' => 'link',
                     'attr' => [
-                        'class' => 'btn-outline-secondary align-left',
+                        'class' => 'btn-outline-secondary',
                         'href' => $this->router->generate('admin_product_form', [
                             'id' => $productId,
                         ]),
@@ -105,6 +106,13 @@ class FooterType extends TranslatorAwareType
         }
 
         $builder
+            ->add('active', SwitchType::class, [
+                'label' => false,
+                'choices' => [
+                    $this->trans('Offline', 'Admin.Catalog.Feature') => false,
+                    $this->trans('Online', 'Admin.Catalog.Feature') => true,
+                ],
+            ])
             ->add('save', SubmitType::class, [
                 'label' => $this->trans('Save', 'Admin.Actions'),
                 'attr' => [
