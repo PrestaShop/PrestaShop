@@ -23,9 +23,11 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  *#}
 
-{%- block virtual_product_file_widget -%}
-  {# The switch button is displayed outside of the div that contains evry other fields to allow toggling the content #}
-  {{ form_row(form.has_file) }}
+{# No sugar coating here just display the widgets without surrounding divs #}
+{% block form_row -%}
+  {{- form_widget(form) -}}
+{%- endblock form_row %}
 
-  {{ form_widget(form) }}
-{%- endblock virtual_product_file_widget -%}
+{% block button_row -%}
+  {{- form_widget(form) -}}
+{% endblock %}

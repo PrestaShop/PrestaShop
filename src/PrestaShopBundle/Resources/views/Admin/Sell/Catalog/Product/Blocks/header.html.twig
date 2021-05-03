@@ -35,9 +35,10 @@
     <div class="col-xxl-10">
       <div class="row">
         <div class="col-md-10 product-header-form">
-          {% form_theme productForm.header '@PrestaShop/Admin/Sell/Catalog/Product/Form/header_form_theme.html.twig' %}
-
-          {{ form_row(productForm.header) }}
+          {% block product_header_form %}
+            {% form_theme productForm.header '@PrestaShop/Admin/Sell/Catalog/Product/Form/header_form_theme.html.twig' %}
+            {{ form_row(productForm.header) }}
+          {% endblock %}
         </div>
 
         <div class="toolbar col-sm-3 col-md-2 text-md-right">

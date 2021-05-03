@@ -24,6 +24,7 @@
  *#}
 {% extends '@PrestaShop/Admin/layout.html.twig' %}
 
+{# It is very important to use product theme ONLY or the default theme from Symfony config is always preloaded #}
 {% form_theme productForm with ['@PrestaShop/Admin/Sell/Catalog/Product/Form/product_form_theme.html.twig'] only %}
 
 {% block stylesheets %}

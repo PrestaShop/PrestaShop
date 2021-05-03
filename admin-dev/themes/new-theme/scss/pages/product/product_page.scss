@@ -229,6 +229,17 @@
     @include media-breakpoint-down(md) {
       left: 0;
     }
+
+    .product-footer-container {
+      display: flex;
+      flex-direction: row;
+      justify-content: flex-start;
+      width: 100%;
+
+      > * {
+        margin: 0 0.5rem;
+      }
+    }
   }
 
   .help-box {
