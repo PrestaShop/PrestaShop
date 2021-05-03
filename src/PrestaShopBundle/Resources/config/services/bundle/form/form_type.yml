@@ -1520,8 +1520,8 @@ services:
         tags:
             - { name: form.type }
 
-    form.type.sell.product.suppliers_type:
-        class: 'PrestaShopBundle\Form\Admin\Sell\Product\SuppliersType'
+    form.type.sell.product.options.suppliers_type:
+        class: 'PrestaShopBundle\Form\Admin\Sell\Product\Options\SuppliersType'
         parent: 'form.type.translatable.aware'
         public: true
         arguments:
@@ -1529,8 +1529,8 @@ services:
         tags:
             - { name: form.type }
 
-    form.type.product.product_supplier_type:
-        class: 'PrestaShopBundle\Form\Admin\Sell\Product\ProductSupplierType'
+    form.type.product.options.product_supplier_type:
+        class: 'PrestaShopBundle\Form\Admin\Sell\Product\Options\ProductSupplierType'
         parent: 'form.type.translatable.aware'
         public: true
         arguments:
