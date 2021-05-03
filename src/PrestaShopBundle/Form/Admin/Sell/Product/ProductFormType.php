@@ -53,11 +53,6 @@ use Symfony\Component\Translation\TranslatorInterface;
 class ProductFormType extends TranslatorAwareType
 {
     /**
-     * @var ProductProvider
-     */
-    private $productUrlProvider;
-
-    /**
      * @var EventSubscriberInterface
      */
     private $productTypeListener;
@@ -65,17 +60,14 @@ class ProductFormType extends TranslatorAwareType
     /**
      * @param TranslatorInterface $translator
      * @param array $locales
-     * @param ProductProvider $productUrlProvider
      * @param EventSubscriberInterface $productTypeListener
      */
     public function __construct(
         TranslatorInterface $translator,
         array $locales,
-        ProductProvider $productUrlProvider,
         EventSubscriberInterface $productTypeListener
     ) {
         parent::__construct($translator, $locales);
-        $this->productUrlProvider = $productUrlProvider;
         $this->productTypeListener = $productTypeListener;
     }
 
@@ -84,11 +76,11 @@ class ProductFormType extends TranslatorAwareType
      */
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
-        $formIsUsedToEditAProduct = !empty($options['product_id']);
+        $productId = $options['product_id'] ?? null;
         $builder
             ->add('header', HeaderType::class)
             ->add('basic', BasicType::class, [
-                'product_id' => $options['product_id'] ?? null,
+                'product_id' => $productId,
             ])
             ->add('shortcuts', ShortcutsType::class)
             ->add('stock', StockType::class, [
@@ -98,28 +90,10 @@ class ProductFormType extends TranslatorAwareType
             ->add('pricing', PricingType::class)
             ->add('seo', SEOType::class)
             ->add('options', OptionsType::class)
-            ->add('save', SubmitType::class, [
-                'label' => $this->trans('Save', 'Admin.Actions'),
-                'attr' => [
-                    'disabled' => $formIsUsedToEditAProduct,
-                    'data-toggle' => 'pstooltip',
-                    'title' => $this->trans('Save the product and stay on the current page: ALT+SHIFT+S', 'Admin.Catalog.Help'),
-                ],
+            ->add('footer', FooterType::class, [
+                'product_id' => $productId,
             ])
         ;
-
-        if ($formIsUsedToEditAProduct) {
-            $productId = (int) $options['product_id'];
-            $builder
-                ->add('preview', ButtonType::class, [
-                    'label' => $this->trans('Preview', 'Admin.Actions'),
-                    'attr' => [
-                        'class' => 'btn-secondary',
-                        'data-seo-url' => $this->productUrlProvider->getUrl($productId, '{friendly-url}'),
-                    ],
-                ])
-            ;
-        }
 
         /*
          * This listener adapts the content of the form based on the Product type, it can remove add or transforms some

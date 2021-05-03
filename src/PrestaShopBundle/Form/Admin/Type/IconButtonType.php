@@ -44,9 +44,15 @@ class IconButtonType extends ButtonType
     public function configureOptions(OptionsResolver $resolver)
     {
         parent::configureOptions($resolver);
-        $resolver->setDefaults([
-            'icon' => 'add_circle',
-        ]);
+        $resolver
+            ->setDefaults([
+                'icon' => null,
+                'type' => 'button',
+            ])
+            ->setAllowedTypes('icon', ['string', 'null'])
+            ->setAllowedTypes('type', 'string')
+            ->setAllowedValues('type', ['button', 'link'])
+        ;
     }
 
     /**
@@ -55,7 +61,8 @@ class IconButtonType extends ButtonType
     public function buildView(FormView $view, FormInterface $form, array $options)
     {
         parent::buildView($view, $form, $options);
-        $view->vars['icon'] = $options['icon'];
+        $view->vars['button_icon'] = $options['icon'];
+        $view->vars['button_type'] = $options['type'];
     }
 
     /**

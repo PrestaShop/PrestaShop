@@ -1268,7 +1268,6 @@ services:
         parent: 'form.type.translatable.aware'
         public: true
         arguments:
-            - '@prestashop.adapter.shop.url.product_provider'
             - '@form.type.sell.product.event_listener.product_type_listener'
         tags:
             - { name: form.type }
@@ -1480,10 +1479,6 @@ services:
         tags:
             - { name: form.type }
 
-    form.type.sell.product.data_transformer.typeahead_redirection_target_transformer:
-        class: 'PrestaShopBundle\Form\Admin\Sell\Product\DataTransformer\TypeaheadRedirectionTargetTransformer'
-        public: true
-
     form.type.sell.product.options.options_type:
         class: 'PrestaShopBundle\Form\Admin\Sell\Product\Options\OptionsType'
         parent: 'form.type.translatable.aware'
@@ -1544,6 +1539,20 @@ services:
         tags:
             - { name: form.type }
 
+    form.type.sell.product.footer_type:
+        class: 'PrestaShopBundle\Form\Admin\Sell\Product\FooterType'
+        parent: 'form.type.translatable.aware'
+        public: true
+        arguments:
+            - '@prestashop.adapter.shop.url.product_provider'
+            - '@router'
+        tags:
+            - { name: form.type }
+
+    form.type.sell.product.data_transformer.typeahead_redirection_target_transformer:
+        class: 'PrestaShopBundle\Form\Admin\Sell\Product\DataTransformer\TypeaheadRedirectionTargetTransformer'
+        public: true
+
     form.type.sell.product.event_listener.feature_value_listener:
         class: 'PrestaShopBundle\Form\Admin\Sell\Product\EventListener\FeatureValueListener'
         arguments:
@@ -1554,6 +1563,8 @@ services:
     form.type.sell.product.event_listener.product_type_listener:
         class: 'PrestaShopBundle\Form\Admin\Sell\Product\EventListener\ProductTypeListener'
         public: true
+
+    # Combination form types
 
     form.type.sell.product.combination_list_type:
         class: 'PrestaShopBundle\Form\Admin\Sell\Product\Combination\CombinationListType'
