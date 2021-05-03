@@ -70,6 +70,8 @@ class VisibilityType extends TranslatorAwareType
                     'class' => 'custom-select',
                 ],
                 'required' => false,
+                // placeholder false is important to avoid empty option in select input despite required being false
+                'placeholder' => false,
                 'column_breaker' => true,
             ])
             ->add('available_for_order', SwitchType::class, [
