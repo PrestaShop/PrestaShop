@@ -69,6 +69,20 @@ export default class CombinationsService {
   }
 
   /**
+   * @param {int} combinationId
+   *
+   * @returns {Promise}
+   */
+  removeCombination(combinationId) {
+    return $.ajax({
+      url: this.router.generate('admin_products_combinations_remove_combination', {
+        combinationId,
+      }),
+      type: 'DELETE',
+    });
+  }
+
+  /**
    * @param {Number} combinationId
    * @param {Object} data
    *
