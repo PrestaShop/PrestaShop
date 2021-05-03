@@ -37,7 +37,7 @@ Release Notes for PrestaShop 1.7
     - #24094: Fix OrderState deletion when not in default language context (by @atomiix)
     - #23819: Open tracking url in a new tab and add the link to the order preview (by @atomiix)
     - #23691: Fix notification refresh on migrated pages (by @NeOMakinG)
-    - #22228: [BC Break] Fixed Update Quantity in an order in multishop context (by @Progi1984)
+    - #22228: Fixed Update Quantity in an order in multishop context (by @Progi1984)
 - Front Office:
   - Bug fix:
     - #23802: Fix jquery selector warning with ps_currencyselector (by @NeOMakinG)
