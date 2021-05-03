@@ -24,17 +24,16 @@
  *#}
 {% extends '@PrestaShop/Admin/layout.html.twig' %}
 
-{% form_theme productForm '@PrestaShop/Admin/Sell/Catalog/Product/Form/product_form_theme.html.twig' %}
+{% form_theme productForm with ['@PrestaShop/Admin/Sell/Catalog/Product/Form/product_form_theme.html.twig'] only %}
 
 {% block stylesheets %}
   <link rel="stylesheet" href="{{ asset('themes/new-theme/public/product.css') }}" type="text/css" media="all">
 {% endblock %}
 
-{# We mepty the parent content header block because session alert is gonna be displayed inside the content #}
+{# We empty the parent content header block because session alert is gonna be displayed inside the content #}
 {% block content_header %}
 {% endblock %}
 
-{# @todo: starter for product page. Feel free to move/modify while appending more fields to form #}
 {% block content %}
   {% set productType = productForm.vars.product_type %}
   {% set productId = productForm.vars.product_id %}
@@ -122,13 +121,18 @@
     </div>
   </div>
 
+  {% block product_footer %}
   {{ include('@PrestaShop/Admin/Sell/Catalog/Product/Blocks/footer.html.twig', {
     'productForm': productForm,
     'editable': editable,
     'productId': productId,
   }) }}
+  {% endblock %}
 
+  {% block product_rest %}
   {{ form_end(productForm) }}
+  {% endblock %}
+
 {% endblock %}
 
 {% block javascripts %}
