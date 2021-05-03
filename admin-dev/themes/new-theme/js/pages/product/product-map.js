@@ -27,7 +27,7 @@ const combinationListId = '#combination_list';
 
 export default {
   productForm: 'form[name=product]',
-  productTypeSelector: '#product_basic_type',
+  productTypeSelector: '#product_header_type',
   productType: {
     STANDARD: 'standard',
     PACK: 'pack',
