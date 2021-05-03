@@ -27,7 +27,8 @@
   }
 
   .product-cover img {
-    width: 95%;
+    width: 100%;
+    height: auto;
   }
 
   .images-container {
@@ -38,6 +39,7 @@
     .product-images > li.thumb-container > .thumb {
       width: 100%;
       max-width: 4.938rem;
+      height: auto;
       margin-bottom: 0.8125rem;
       background: $white;
     }
