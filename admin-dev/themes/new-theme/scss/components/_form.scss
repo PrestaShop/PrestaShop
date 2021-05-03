@@ -38,6 +38,12 @@
     @extend .col-sm-10;
   }
 
+  .form-group {
+    > .alert {
+      margin-top: 0.75rem;
+    }
+  }
+
   .form-group.row {
     margin-bottom: 1.2rem;
 
