@@ -220,6 +220,10 @@
       bottom: $grid-gutter-width / 2;
     }
 
+    .form-group {
+      margin-bottom: 0;
+    }
+
     .for-switch {
       display: inline-block;
       margin-right: 0.25rem;
@@ -231,17 +235,17 @@
     }
 
     .product-footer-container {
+      display: flex;
       width: 100%;
       height: 100%;
-      text-align: right;
 
       > * {
-        float: none;
         margin: 0 0.5rem;
+      }
 
-        &.align-left {
-          float: left;
-        }
+      .switch-widget {
+        min-width: 6rem;
+        padding-top: 0.25rem;
       }
     }
   }
