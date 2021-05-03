@@ -40,11 +40,11 @@ final class ProductSuppliersCommandsBuilder implements ProductCommandsBuilderInt
      */
     public function buildCommands(ProductId $productId, array $formData): array
     {
-        if (!isset($formData['suppliers']['product_suppliers']) && !isset($formData['suppliers']['default_supplier_id'])) {
+        if (!isset($formData['options']['suppliers']['product_suppliers']) && !isset($formData['options']['suppliers']['default_supplier_id'])) {
             return [];
         }
 
-        $productSuppliersData = $formData['suppliers']['product_suppliers'];
+        $productSuppliersData = $formData['options']['suppliers']['product_suppliers'];
         if (empty($productSuppliersData)) {
             return [new RemoveAllAssociatedProductSuppliersCommand($productId->getValue())];
         }
@@ -66,10 +66,10 @@ final class ProductSuppliersCommandsBuilder implements ProductCommandsBuilderInt
             ),
         ];
 
-        if (!empty($formData['suppliers']['default_supplier_id'])) {
+        if (!empty($formData['options']['suppliers']['default_supplier_id'])) {
             $commands[] = new SetProductDefaultSupplierCommand(
                 $productId->getValue(),
-                (int) $formData['suppliers']['default_supplier_id']
+                (int) $formData['options']['suppliers']['default_supplier_id']
             );
         }
 

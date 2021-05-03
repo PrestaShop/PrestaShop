@@ -32,7 +32,7 @@ use PrestaShop\PrestaShop\Core\Domain\Product\Supplier\Command\SetProductDefault
 use PrestaShop\PrestaShop\Core\Domain\Product\Supplier\Command\SetProductSuppliersCommand;
 use PrestaShop\PrestaShop\Core\Form\IdentifiableObject\CommandBuilder\Product\ProductSuppliersCommandsBuilder;
 
-class ProductSuppliersCommandBuilderTest extends AbstractProductCommandBuilderTest
+class ProductSuppliersCommandsBuilderTest extends AbstractProductCommandBuilderTest
 {
     /**
      * @dataProvider getExpectedCommands
@@ -65,8 +65,19 @@ class ProductSuppliersCommandBuilderTest extends AbstractProductCommandBuilderTe
 
         yield [
             [
-                'suppliers' => [
-                    'product_suppliers' => [],
+                'options' => [
+                    'suppliers' => [],
+                ],
+            ],
+            [],
+        ];
+
+        yield [
+            [
+                'options' => [
+                    'suppliers' => [
+                        'product_suppliers' => [],
+                    ],
                 ],
             ],
             [new RemoveAllAssociatedProductSuppliersCommand($this->getProductId()->getValue())],
@@ -100,24 +111,26 @@ class ProductSuppliersCommandBuilderTest extends AbstractProductCommandBuilderTe
 
         yield [
             [
-                'suppliers' => [
-                    'default_supplier_id' => 5,
-                    'product_suppliers' => [
-                        [
-                            'supplier_id' => 5,
-                            'currency_id' => 2,
-                            'reference' => '',
-                            'price_tax_excluded' => '0.5',
-                            'combination_id' => 0,
-                            'product_supplier_id' => null,
-                        ],
-                        [
-                            'supplier_id' => 3,
-                            'currency_id' => 5,
-                            'reference' => null,
-                            'price_tax_excluded' => '50.65',
-                            'combination_id' => null,
-                            'product_supplier_id' => 1,
+                'options' => [
+                    'suppliers' => [
+                        'default_supplier_id' => 5,
+                        'product_suppliers' => [
+                            [
+                                'supplier_id' => 5,
+                                'currency_id' => 2,
+                                'reference' => '',
+                                'price_tax_excluded' => '0.5',
+                                'combination_id' => 0,
+                                'product_supplier_id' => null,
+                            ],
+                            [
+                                'supplier_id' => 3,
+                                'currency_id' => 5,
+                                'reference' => null,
+                                'price_tax_excluded' => '50.65',
+                                'combination_id' => null,
+                                'product_supplier_id' => 1,
+                            ],
                         ],
                     ],
                 ],
@@ -141,16 +154,18 @@ class ProductSuppliersCommandBuilderTest extends AbstractProductCommandBuilderTe
 
         yield [
             [
-                'suppliers' => [
-                    'default_supplier_id' => 0,
-                    'product_suppliers' => [
-                        [
-                            'supplier_id' => 5,
-                            'currency_id' => 2,
-                            'reference' => '',
-                            'price_tax_excluded' => '0.5',
-                            'combination_id' => 0,
-                            'product_supplier_id' => null,
+                'options' => [
+                    'suppliers' => [
+                        'default_supplier_id' => 0,
+                        'product_suppliers' => [
+                            [
+                                'supplier_id' => 5,
+                                'currency_id' => 2,
+                                'reference' => '',
+                                'price_tax_excluded' => '0.5',
+                                'combination_id' => 0,
+                                'product_supplier_id' => null,
+                            ],
                         ],
                     ],
                 ],
@@ -174,15 +189,17 @@ class ProductSuppliersCommandBuilderTest extends AbstractProductCommandBuilderTe
 
         yield [
             [
-                'suppliers' => [
-                    'product_suppliers' => [
-                        [
-                            'supplier_id' => 5,
-                            'currency_id' => 2,
-                            'reference' => '',
-                            'price_tax_excluded' => '0.5',
-                            'combination_id' => 0,
-                            'product_supplier_id' => null,
+                'options' => [
+                    'suppliers' => [
+                        'product_suppliers' => [
+                            [
+                                'supplier_id' => 5,
+                                'currency_id' => 2,
+                                'reference' => '',
+                                'price_tax_excluded' => '0.5',
+                                'combination_id' => 0,
+                                'product_supplier_id' => null,
+                            ],
                         ],
                     ],
                 ],

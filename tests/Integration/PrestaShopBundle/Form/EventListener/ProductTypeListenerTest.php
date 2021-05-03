@@ -69,10 +69,10 @@ class ProductTypeListenerTest extends FormListenerTestCase
 
     public function getFormTypeExpectationsBasedOnProductType(): Generator
     {
-        yield [ProductType::TYPE_STANDARD, 'suppliers', true];
-        yield [ProductType::TYPE_PACK, 'suppliers', true];
-        yield [ProductType::TYPE_VIRTUAL, 'suppliers', true];
-        yield [ProductType::TYPE_COMBINATIONS, 'suppliers', false];
+        yield [ProductType::TYPE_STANDARD, 'options.suppliers', true];
+        yield [ProductType::TYPE_PACK, 'options.suppliers', true];
+        yield [ProductType::TYPE_VIRTUAL, 'options.suppliers', true];
+        yield [ProductType::TYPE_COMBINATIONS, 'options.suppliers', false];
 
         yield [ProductType::TYPE_STANDARD, 'stock', true];
         yield [ProductType::TYPE_PACK, 'stock', true];
@@ -155,13 +155,14 @@ class SimpleProductFormTest extends CommonAbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
-            ->add('suppliers', ChoiceType::class)
+            ->add('shortcuts', FormType::class)
             ->add('stock', FormType::class)
             ->add('shipping', FormType::class)
-            ->add('shortcuts', FormType::class)
+            ->add('options', FormType::class)
         ;
         $builder->get('shortcuts')->add('stock', FormType::class);
         $builder->get('stock')->add('pack_stock_type', ChoiceType::class);
         $builder->get('stock')->add('virtual_product_file', FormType::class);
+        $builder->get('options')->add('suppliers', ChoiceType::class);
     }
 }

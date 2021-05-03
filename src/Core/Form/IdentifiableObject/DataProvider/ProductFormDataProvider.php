@@ -98,7 +98,6 @@ final class ProductFormDataProvider implements FormDataProviderInterface
             'seo' => $this->extractSEOData($productForEditing),
             'shipping' => $this->extractShippingData($productForEditing),
             'options' => $this->extractOptionsData($productForEditing),
-            'suppliers' => $this->extractSuppliersData($productForEditing),
         ];
 
         return $this->addShortcutData($productData);
@@ -403,6 +402,7 @@ final class ProductFormDataProvider implements FormDataProviderInterface
                 'reference' => $details->getReference(),
             ],
             'customizations' => $this->extractCustomizationsData($productForEditing),
+            'suppliers' => $this->extractSuppliersData($productForEditing),
         ];
     }
 
