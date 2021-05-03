@@ -52,9 +52,13 @@ function disableTreeItem(item) {
 }
 
 function organizeTree() {
-	if ($('#id_category').length != 0) {
-		var id = $('#id_category').val();
-		var item = getCategoryById(id).parent().parent();
+	let categoryId = $('#id_category');
+	if (categoryId.length > 0) {
+		const category = getCategoryById(categoryId.val());
+		if (null === category) {
+			return;
+		}
+		let item = category.parent().parent();
 		disableTreeItem(item);
 	}
 }
@@ -215,8 +219,7 @@ Tree.prototype =
 				function(content)
 				{
 					targetTree.html(content);
-          // Function organizeTree() disabled because it no longer has known usage - Crezzur
-					// organizeTree();
+					organizeTree();
 					targetTree.tree('init');
 					targetTree.find("label.tree-toggler").each(
 						function()
