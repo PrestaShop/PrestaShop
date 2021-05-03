@@ -17,21 +17,18 @@ const {Attributes} = require('@data/demo/attributes');
 // Import test context
 const testContext = require('@utils/testContext');
 
-const baseContext = 'functional_BO_catalog_attributesAndFeatures_attributes_filterAttributeValues';
+const baseContext = 'functional_BO_catalog_attributesAndFeatures_attributes_values_filterValues';
 
 // Import expect from chai
 const {expect} = require('chai');
-
 
 // Browser and tab
 let browserContext;
 let page;
 
-
 let numberOfAttributes = 0;
 
-
-describe('Filter attribute values by id, name and position', async () => {
+describe('Filter values by id, name and position', async () => {
   // before and after functions
   before(async function () {
     browserContext = await helper.createBrowserContext(this.browser);
@@ -46,7 +43,7 @@ describe('Filter attribute values by id, name and position', async () => {
     await loginCommon.loginBO(this, page);
   });
 
-  it('should go to attributes page', async function () {
+  it('should go to \'Catalog > Attributes & Features\' page', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'goToAttributesPage', baseContext);
 
     await dashboardPage.goToSubMenu(
@@ -61,7 +58,6 @@ describe('Filter attribute values by id, name and position', async () => {
     await expect(pageTitle).to.contains(attributesPage.pageTitle);
   });
 
-
   it('should reset all filters and get number of attributes in BO', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'resetFilterFirst', baseContext);
 
@@ -69,8 +65,7 @@ describe('Filter attribute values by id, name and position', async () => {
     await expect(numberOfAttributes).to.be.above(0);
   });
 
-
-  it('should filter by name \'Size\'', async function () {
+  it('should filter attributes table by name \'Size\'', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'filterAttributes', baseContext);
 
     await attributesPage.filterTable(
@@ -97,7 +92,7 @@ describe('Filter attribute values by id, name and position', async () => {
     await expect(pageTitle).to.contains(`${viewAttributePage.pageTitle} ${Attributes.size.name}`);
   });
 
-  describe('Filter attribute value', async () => {
+  describe('Filter values table', async () => {
     const tests = [
       {
         args:
