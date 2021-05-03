@@ -216,6 +216,90 @@ class FactoryTest extends TestCase
         $this->assertEquals($specification->getMaxFractionDigits(), $maxFractionDigits);
     }
 
+    /**
+     * Given a valid CLDR locale
+     * Given a Max Fractions digits to display in a number's decimal
+     * Given a boolean to define if we should group digits in a number's integer part
+     * Given an integer to specify max fraction digits
+     * Then calling buildPriceSpecification() should return an NumberSpecification
+     *
+     * @dataProvider getPriceData
+     */
+    public function testBuildPriceSpecificationWithPrecisionFallback($data, $expected)
+    {
+        // if maxFractionDigits < minFractionDigits, minFractionDigits = maxFractionDigits
+        // see PrestaShop\PrestaShop\Core\Localization\Specification\Number
+        // The dataProvider provides minFractionDigits === 2
+        $precisions = [
+            [
+                'currencyPrecision' => 6,
+                'maxFractionDigits' => 3,
+                'expectedMinFractionDigits' => 3,
+            ], //minFractionDigits will be equal to 3
+            [
+                'currencyPrecision' => 6,
+                'maxFractionDigits' => 6,
+                'expectedMinFractionDigits' => 6,
+            ], //minFractionDigits will be equal to 6
+            [
+                'currencyPrecision' => 1,
+                'maxFractionDigits' => 3,
+                'expectedMinFractionDigits' => 1,
+            ], //minFractionDigits will be equal to 1
+            [
+                'currencyPrecision' => '4',
+                'maxFractionDigits' => 6,
+                'expectedMinFractionDigits' => 2,
+            ], //minFractionDigits will be equal to 2
+            [
+                'currencyPrecision' => null,
+                'maxFractionDigits' => 6,
+                'expectedMinFractionDigits' => 2,
+            ], //minFractionDigits will be equal to 2
+            [
+                'currencyPrecision' => [],
+                'maxFractionDigits' => 6,
+                'expectedMinFractionDigits' => 2,
+            ], //minFractionDigits will be equal to 2
+        ];
+
+        foreach ($precisions as $expectedPrecisions) {
+            $currencyPrecision = $expectedPrecisions['currencyPrecision'];
+            $maxFractionDigits = $expectedPrecisions['maxFractionDigits'];
+            $expectedMinFractionDigits = $expectedPrecisions['expectedMinFractionDigits'];
+
+            $specification = $this->factory->buildPriceSpecification(
+                $data[0],
+                $this->createLocale(
+                    ...$data
+                ),
+                new Currency(
+                    null,
+                    null,
+                    'EUR',
+                    '978',
+                    [
+                        $data[0] => '€',
+                    ],
+                    $currencyPrecision,
+                    [
+                        $data[0] => 'Euro',
+                    ]
+                ),
+                3,
+                true,
+                $maxFractionDigits
+            );
+            $expected['maxFractionDigits'] = $maxFractionDigits;
+            $expected['minFractionDigits'] = $expectedMinFractionDigits;
+            $this->assertEquals(
+                $expected,
+                $specification->toArray()
+            );
+            $this->assertEquals($specification->getMaxFractionDigits(), $maxFractionDigits);
+        }
+    }
+
     public function getPriceData()
     {
         return [
