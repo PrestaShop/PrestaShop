@@ -41,7 +41,7 @@ Feature: Add discounts to order from Back Office (BO)
       | discounts     | $0.00    |
       | shipping      | $7.00    |
       | taxes         | $1.85    |
-      | total         | $30.80   |
+      | total         | $32.65   |
 
   Scenario: Add amount type discount to order which has no invoices
     Given order "bo_order1" does not have any invoices
@@ -66,7 +66,7 @@ Feature: Add discounts to order from Back Office (BO)
       | discounts     | $5.19  |
       | shipping      | $7.00  |
       | taxes         | $1.54  |
-      | total         | $25.61 |
+      | total         | $27.15 |
 
   Scenario: Add percent type discount to order which has no invoices
     Given order "bo_order1" does not have any invoices
@@ -91,7 +91,7 @@ Feature: Add discounts to order from Back Office (BO)
       | discounts     | $11.90 |
       | shipping      | $7.00  |
       | taxes         | $1.13  |
-      | total         | $18.90 |
+      | total         | $20.03 |
 
   # The discount amount was voluntarily computed on whole total (shipping included 32.648) excluded tax and then applied the tax rate
   # This emphasizes the difference compared to performing rounding on each steps which makes a 0.01 difference
@@ -118,7 +118,7 @@ Feature: Add discounts to order from Back Office (BO)
       | discounts     | $15.40 |
       | shipping      | $7.00  |
       | taxes         | $0.93  |
-      | total         | $15.40 |
+      | total         | $16.33 |
 
   Scenario: Add amount discount matching fifty percent on products only
     Given order "bo_order1" does not have any invoices
@@ -143,7 +143,7 @@ Feature: Add discounts to order from Back Office (BO)
       | discounts     | $11.90 |
       | shipping      | $7.00  |
       | taxes         | $1.14  |
-      | total         | $18.90 |
+      | total         | $20.04 |
 
   Scenario: Add amount type discount to order and update single invoice
     When I generate invoice for "bo_order1" order
@@ -169,7 +169,7 @@ Feature: Add discounts to order from Back Office (BO)
       | discounts     | $5.19     |
       | shipping      | $7.00     |
       | taxes         | $1.54     |
-      | total         | $25.61    |
+      | total         | $27.15    |
     And the last invoice for order "bo_order1" should have following prices:
       | products                  | 23.80 |
       | discounts tax excluded    | 5.19  |
@@ -203,7 +203,7 @@ Feature: Add discounts to order from Back Office (BO)
       | discounts     | $11.90 |
       | shipping      | $7.00  |
       | taxes         | $1.13  |
-      | total         | $18.90 |
+      | total         | $20.03 |
     And the last invoice for order "bo_order1" should have following prices:
       | products                  | 23.80 |
       | discounts tax excluded    | 11.90 |
