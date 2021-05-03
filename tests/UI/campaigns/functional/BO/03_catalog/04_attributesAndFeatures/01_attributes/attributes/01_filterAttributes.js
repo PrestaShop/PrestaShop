@@ -21,14 +21,11 @@ const baseContext = 'functional_BO_catalog_attributesAndFeatures_attributes_filt
 // Import expect from chai
 const {expect} = require('chai');
 
-
 // Browser and tab
 let browserContext;
 let page;
 
-
 let numberOfAttributes = 0;
-
 
 describe('Filter attributes by id, name and position', async () => {
   // before and after functions
@@ -45,7 +42,7 @@ describe('Filter attributes by id, name and position', async () => {
     await loginCommon.loginBO(this, page);
   });
 
-  it('should go to attributes page', async function () {
+  it('should go to \'Catalog > Attributes & Features\' page', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'goToAttributesPage', baseContext);
 
     await dashboardPage.goToSubMenu(
@@ -59,7 +56,6 @@ describe('Filter attributes by id, name and position', async () => {
     const pageTitle = await attributesPage.getPageTitle(page);
     await expect(pageTitle).to.contains(attributesPage.pageTitle);
   });
-
 
   it('should reset all filters and get number of attributes in BO', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'resetFilterFirst', baseContext);

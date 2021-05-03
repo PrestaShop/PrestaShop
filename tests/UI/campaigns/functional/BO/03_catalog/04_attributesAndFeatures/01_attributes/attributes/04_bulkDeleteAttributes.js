@@ -48,7 +48,7 @@ describe('Bulk delete attributes', async () => {
     await loginCommon.loginBO(this, page);
   });
 
-  it('should go to attributes page', async function () {
+  it('should go to \'Catalog > Attributes & Features\' page', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'goToAttributesPage', baseContext);
 
     await dashboardPage.goToSubMenu(
@@ -62,7 +62,6 @@ describe('Bulk delete attributes', async () => {
     const pageTitle = await attributesPage.getPageTitle(page);
     await expect(pageTitle).to.contains(attributesPage.pageTitle);
   });
-
 
   it('should reset all filters and get number of attributes in BO', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'resetFilterFirst', baseContext);

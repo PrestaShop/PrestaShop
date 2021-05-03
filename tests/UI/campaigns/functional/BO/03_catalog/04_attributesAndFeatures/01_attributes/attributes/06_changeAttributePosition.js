@@ -49,7 +49,7 @@ describe('Change attribute and value position', async () => {
     await loginCommon.loginBO(this, page);
   });
 
-  it('should go to attributes page', async function () {
+  it('should go to \'Catalog > Attributes & Features\' page', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'goToAttributesPage', baseContext);
 
     await dashboardPage.goToSubMenu(
@@ -61,7 +61,6 @@ describe('Change attribute and value position', async () => {
     const pageTitle = await attributesPage.getPageTitle(page);
     await expect(pageTitle).to.contains(attributesPage.pageTitle);
   });
-
 
   describe('Change attribute position', async () => {
     // Should reset filters and sort by position before changing position
