@@ -609,12 +609,12 @@ class ProductFormDataProviderTest extends TestCase
         $datasets = [];
 
         $expectedOutputData = $this->getDefaultOutputData();
-        $expectedOutputData['suppliers']['default_supplier_id'] = 1;
-        $expectedOutputData['suppliers']['supplier_ids'] = [
+        $expectedOutputData['options']['suppliers']['default_supplier_id'] = 1;
+        $expectedOutputData['options']['suppliers']['supplier_ids'] = [
             0 => 1,
             1 => 2,
         ];
-        $expectedOutputData['suppliers']['product_suppliers'][1] = [
+        $expectedOutputData['options']['suppliers']['product_suppliers'][1] = [
             'supplier_id' => 1,
             'supplier_name' => 'test supplier 1',
             'product_supplier_id' => 1,
@@ -623,7 +623,7 @@ class ProductFormDataProviderTest extends TestCase
             'currency_id' => 1,
             'combination_id' => 0,
         ];
-        $expectedOutputData['suppliers']['product_suppliers'][2] = [
+        $expectedOutputData['options']['suppliers']['product_suppliers'][2] = [
             'supplier_id' => 2,
             'supplier_name' => 'test supplier 2',
             'product_supplier_id' => 2,
@@ -1205,8 +1205,8 @@ class ProductFormDataProviderTest extends TestCase
                     'reference' => 'reference',
                 ],
                 'customizations' => [],
+                'suppliers' => [],
             ],
-            'suppliers' => [],
             'shortcuts' => [
                 'retail_price' => [
                     'price_tax_excluded' => 19.86,

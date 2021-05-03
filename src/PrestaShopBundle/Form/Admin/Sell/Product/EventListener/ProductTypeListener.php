@@ -61,7 +61,7 @@ class ProductTypeListener implements EventSubscriberInterface
         $productType = $data['header']['type'];
 
         if (ProductType::TYPE_COMBINATIONS === $productType) {
-            $form->remove('suppliers');
+            $this->removeSuppliers($form);
             $this->removeStock($form);
         } else {
             $stock = $form->get('stock');
@@ -73,6 +73,18 @@ class ProductTypeListener implements EventSubscriberInterface
             } else {
                 $form->remove('shipping');
             }
+        }
+    }
+
+    /**
+     * @param FormInterface $form
+     */
+    private function removeSuppliers(FormInterface $form): void
+    {
+        if ($form->has('options')) {
+            $optionsForm = $form->get('options');
+            $optionsForm->remove('suppliers');
+            $optionsForm->remove('product_suppliers');
         }
     }
 
