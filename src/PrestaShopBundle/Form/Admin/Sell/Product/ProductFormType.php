@@ -98,7 +98,6 @@ class ProductFormType extends TranslatorAwareType
             ->add('pricing', PricingType::class)
             ->add('seo', SEOType::class)
             ->add('options', OptionsType::class)
-            ->add('suppliers', SuppliersType::class)
             ->add('save', SubmitType::class, [
                 'label' => $this->trans('Save', 'Admin.Actions'),
                 'attr' => [

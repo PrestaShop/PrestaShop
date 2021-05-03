@@ -33,6 +33,7 @@ use PrestaShopBundle\Form\Admin\Type\TranslatorAwareType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\CollectionType;
 use Symfony\Component\Form\FormBuilderInterface;
+use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Translation\TranslatorInterface;
 
 class SuppliersType extends TranslatorAwareType
@@ -92,7 +93,26 @@ class SuppliersType extends TranslatorAwareType
                 'allow_add' => true,
                 'allow_delete' => true,
                 'prototype_name' => '__PRODUCT_SUPPLIER_INDEX__',
+                'attr' => [
+                    'class' => 'product-suppliers-collection',
+                ],
             ])
         ;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function configureOptions(OptionsResolver $resolver)
+    {
+        parent::configureOptions($resolver);
+        $resolver->setDefaults([
+            'label' => $this->trans('Suppliers', 'Admin.Global'),
+            'label_tag_name' => 'h2',
+            'columns_number' => 2,
+            'row_attr' => [
+                'class' => 'product-suppliers-block',
+            ],
+        ]);
     }
 }
