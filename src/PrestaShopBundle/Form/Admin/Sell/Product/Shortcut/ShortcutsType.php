@@ -26,10 +26,8 @@
 
 declare(strict_types=1);
 
-namespace PrestaShopBundle\Form\Admin\Sell\Product;
+namespace PrestaShopBundle\Form\Admin\Sell\Product\Shortcut;
 
-use PrestaShopBundle\Form\Admin\Sell\Product\Shortcut\PriceShortcutType;
-use PrestaShopBundle\Form\Admin\Sell\Product\Shortcut\StockShortcutType;
 use PrestaShopBundle\Form\Admin\Type\TranslatorAwareType;
 use PrestaShopBundle\Form\Admin\Type\UnavailableType;
 use Symfony\Component\Form\FormBuilderInterface;

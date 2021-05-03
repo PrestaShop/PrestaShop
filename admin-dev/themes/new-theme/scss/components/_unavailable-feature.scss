@@ -1,17 +1,13 @@
 // ToDo: Move to the UIKit
-.unavailable-feature {
-  .alert {
-    &.alert-unavailable {
-      background-color: lighten($gray-disabled, 5%);
-    }
+.alert-unavailable {
+  background-color: lighten($gray-disabled, 5%);
 
-    &-text {
-      color: lighten($gray-600, 10%);
-    }
+  .alert-text {
+    color: lighten($gray-600, 10%);
+  }
 
-    &::before {
-      color: lighten($gray-600, 30%);
-      content: "\E88E";
-    }
+  &::before {
+    color: lighten($gray-600, 30%);
+    content: "\E88E";
   }
 }

@@ -1313,8 +1313,15 @@ services:
         tags:
             - { name: form.type }
 
-    form.type.sell.product.shortcuts_type:
-        class: 'PrestaShopBundle\Form\Admin\Sell\Product\ShortcutsType'
+    form.type.sell.product.image.image_dropzone_type:
+        class: 'PrestaShopBundle\Form\Admin\Sell\Product\Image\ImageDropzoneType'
+        parent: 'form.type.translatable.aware'
+        public: true
+        tags:
+            - { name: form.type }
+
+    form.type.sell.product.shortcut.shortcuts_type:
+        class: 'PrestaShopBundle\Form\Admin\Sell\Product\Shortcut\ShortcutsType'
         parent: 'form.type.translatable.aware'
         public: true
         tags:
@@ -1630,15 +1637,15 @@ services:
         tags:
             - { name: form.type }
 
-    form.type.submittable_input:
-        class: 'PrestaShopBundle\Form\Admin\Type\SubmittableInputType'
+    form.type.unavailable_type:
+        class: 'PrestaShopBundle\Form\Admin\Type\UnavailableType'
+        parent: 'form.type.translatable.aware'
+        public: true
         tags:
             - { name: form.type }
 
-    form.type.sell.product.image_dropzone_type:
-        class: 'PrestaShopBundle\Form\Admin\Sell\Product\Image\ImageDropzoneType'
-        parent: 'form.type.translatable.aware'
-        public: true
+    form.type.submittable_input:
+        class: 'PrestaShopBundle\Form\Admin\Type\SubmittableInputType'
         tags:
             - { name: form.type }
 
