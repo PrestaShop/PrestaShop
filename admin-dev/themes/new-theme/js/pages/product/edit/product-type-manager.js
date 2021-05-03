@@ -89,6 +89,7 @@ export default class ProductTypeManager {
         closable: false,
       },
       () => {
+        $(ProductMap.productFormSubmitButton).prop('disabled', true);
         this.$productForm.submit();
       },
       () => {
