@@ -45,11 +45,11 @@ let numberOfAttributes = 0;
 /*
 Create attribute
 View attribute
-Create values
+Create two values
 Update attribute
 View updated attribute
-Update 1 value
-Delete 1 value
+Update first value
+Delete second value
 Delete attribute
  */
 
@@ -152,43 +152,32 @@ describe('CRUD attribute and values', async () => {
     });
   });
 
-  describe('Create values', async () => {
+  describe('Create 2 values', async () => {
+    it('should go to add new value page', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'goToCreateValuePage', baseContext);
+
+      await viewAttributePage.goToAddNewValuePage(page);
+
+      const pageTitle = await addValuePage.getPageTitle(page);
+      await expect(pageTitle).to.contains(addValuePage.createPageTitle);
+    });
+
     valuesToCreate.forEach((valueToCreate, index) => {
-      it('should go to add new value page', async function () {
-        await testContext.addContextItem(this, 'testIdentifier', `goToCreateValue${index}Page`, baseContext);
-
-        await viewAttributePage.goToAddNewValuePage(page);
-        const pageTitle = await addValuePage.getPageTitle(page);
-        await expect(pageTitle).to.contains(addValuePage.createPageTitle);
-      });
-
-      it('should create value', async function () {
+      it(`should create value n°${index + 1}`, async function () {
         await testContext.addContextItem(this, 'testIdentifier', `createValue${index}`, baseContext);
 
-        const textResult = await addValuePage.addEditValue(page, valueToCreate);
+        let textResult;
+        if (index === 0) {
+          textResult = await addValuePage.addEditValue(page, valueToCreate, true);
+        } else {
+          textResult = await addValuePage.addEditValue(page, valueToCreate, false);
+        }
         await expect(textResult).to.contains(viewAttributePage.successfulCreationMessage);
-      });
-
-      it('should view attribute', async function () {
-        await testContext.addContextItem(this, 'testIdentifier', `viewAfterValueCreation${index}`, baseContext);
-
-        await attributesPage.viewAttribute(page, 1);
-
-        const pageTitle = await viewAttributePage.getPageTitle(page);
-        await expect(pageTitle).to.contains(`${viewAttributePage.pageTitle} ${createAttributeData.name}`);
       });
     });
   });
 
   describe('Update attribute', async () => {
-    it('should go to attributes page', async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'goBackToAttributesPageToUpdate', baseContext);
-
-      await viewAttributePage.backToAttributesList(page);
-      const pageTitle = await attributesPage.getPageTitle(page);
-      await expect(pageTitle).to.contains(attributesPage.pageTitle);
-    });
-
     it('should filter list of attributes', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'filterToUpdateAttribute', baseContext);
 
