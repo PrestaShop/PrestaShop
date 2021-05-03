@@ -76,6 +76,7 @@ class SuppliersType extends TranslatorAwareType
                     return ['data-label' => $name];
                 },
                 'label' => $this->trans('Choose the suppliers associated with this product', 'Admin.Catalog.Feature'),
+                'label_tag_name' => 'h4',
             ])
             ->add('default_supplier_id', ChoiceType::class, [
                 'choices' => $suppliers,
@@ -84,11 +85,14 @@ class SuppliersType extends TranslatorAwareType
                 // placeholder false is important to avoid empty option in select input despite required being false
                 'placeholder' => false,
                 'label' => $this->trans('Default supplier', 'Admin.Catalog.Feature'),
+                'label_tag_name' => 'h4',
                 'choice_attr' => [
                     'disabled' => true,
                 ],
             ])
             ->add('product_suppliers', CollectionType::class, [
+                'label' => $this->trans('Supplier reference(s)', 'Admin.Catalog.Feature'),
+                'label_tag_name' => 'h4',
                 'entry_type' => ProductSupplierType::class,
                 'allow_add' => true,
                 'allow_delete' => true,
@@ -96,6 +100,14 @@ class SuppliersType extends TranslatorAwareType
                 'attr' => [
                     'class' => 'product-suppliers-collection',
                 ],
+                'alert_message' => $this->trans(
+                    'You can specify product reference(s) for each associated supplier. Click "%save_label%" after changing selected suppliers to display the associated product references.',
+                    'Admin.Catalog.Help',
+                    [
+                        '%save_label%' => $this->trans('Save', 'Admin.Actions'),
+                    ]
+                ),
+                'alert_position' => 'prepend',
             ])
         ;
     }
@@ -113,6 +125,11 @@ class SuppliersType extends TranslatorAwareType
             'row_attr' => [
                 'class' => 'product-suppliers-block',
             ],
+            'alert_message' => [
+                $this->trans('This interface allows you to specify the warehouse in which the product is stocked.', 'Admin.Catalog.Help'),
+                $this->trans('It is also possible to specify the location within the warehouse for each product or combination.', 'Admin.Catalog.Help'),
+            ],
+            'alert_position' => 'prepend',
         ]);
     }
 }

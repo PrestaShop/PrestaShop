@@ -56,16 +56,40 @@
   {% include '@PrestaShop/Admin/TwigTemplateForm/form_max_length.html.twig' with {'attr': attr} %}
 {%- endblock form_widget_simple -%}
 
+{% block text_with_unit_widget %}
+  <div class="input-group">
+    {{- block('form_widget_simple') -}}
+    {% if form.vars.unit is defined %}
+      <div class="input-group-append">
+        <span class="input-group-text">{{ form.vars.unit }}</span>
+      </div>
+    {% endif %}
+  </div>
+  {{ block('form_help') }}
+{% endblock text_with_unit_widget %}
+
+{% block ip_address_text_widget %}
+  <div class="input-group">
+    {{- block('form_widget_simple') -}}
+    <button type="button" class="btn btn-outline-primary add_ip_button" data-ip="{{ currentIp }}">
+      <i class="material-icons">add_circle</i> {{ 'Add my IP'|trans({}, 'Admin.Actions') }}
+    </button>
+  </div>
+  {{ block('form_help') }}
+{% endblock ip_address_text_widget %}
+
 {# Rows #}
 
 {% block form_row -%}
   <div class="form-group{{ block('widget_type_class') }}{% if (not compound or force_error|default(false)) and not valid %} has-error{% endif %}{% if row_attr.class is defined %} {{ row_attr.class }}{% endif %}">
     {{- form_label(form) -}}
+    {{- block('form_prepend_alert') -}}
+
     {{- form_widget(form) -}}
     {{- form_errors(form) -}}
 
     {{- block('form_external_link') -}}
-    {{- block('form_alert') -}}
+    {{- block('form_append_alert') -}}
   </div>
 
   {% if column_breaker %}
@@ -533,6 +557,7 @@
 
 {% block switch_widget %}
   {% spaceless %}
+  <div class="input-group">
     <span class="ps-switch">
         {% for choice in choices %}
           {% set inputId = id ~'_' ~ choice.value %}
@@ -541,6 +566,7 @@
         {% endfor %}
         <span class="slide-button"></span>
     </span>
+  </div>
   {% endspaceless %}
   {{- block('form_help') -}}
 {% endblock switch_widget %}
@@ -1123,6 +1149,18 @@
     </datalist>
   {% endif %}
 {% endblock text_widget %}
+
+{%- block form_prepend_alert -%}
+  {% if alert_position is defined and alert_position == 'prepend' %}
+  {{- block('form_alert') -}}
+  {% endif %}
+{% endblock %}
+
+{%- block form_append_alert -%}
+  {% if alert_position is defined and alert_position == 'append' %}
+  {{- block('form_alert') -}}
+  {% endif %}
+{% endblock %}
 
 {%- block form_alert -%}
   {% if alert_message is defined %}
