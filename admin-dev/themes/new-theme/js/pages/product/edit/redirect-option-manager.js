@@ -42,6 +42,7 @@ export default class RedirectOptionManager {
     this.$redirectTargetInput = $redirectTargetInput;
     this.$redirectTargetRow = this.$redirectTargetInput.closest('.form-group');
     this.$redirectTargetLabel = $('.form-control-label', this.$redirectTargetRow).first();
+    this.$redirectTargetHint = $('.typeahead-hint', this.$redirectTargetRow);
     this.buildAutoCompleteSearchInput();
     this.watchRedirectType();
   }
@@ -65,6 +66,7 @@ export default class RedirectOptionManager {
           if (this.lastSelectedType !== '301-category' && this.lastSelectedType !== '302-category') {
             this.entitySearchInput.setValue(null);
           }
+          this.$redirectTargetHint.html(this.$redirectTargetInput.data('categoryHelp'));
           this.showTarget();
           break;
         case '301-product':
@@ -76,6 +78,7 @@ export default class RedirectOptionManager {
           if (this.lastSelectedType !== '301-product' && this.lastSelectedType !== '302-product') {
             this.entitySearchInput.setValue(null);
           }
+          this.$redirectTargetHint.html(this.$redirectTargetInput.data('productHelp'));
           this.showTarget();
           break;
         case '404':

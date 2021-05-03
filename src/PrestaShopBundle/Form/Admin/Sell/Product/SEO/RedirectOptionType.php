@@ -127,9 +127,10 @@ class RedirectOptionType extends TranslatorAwareType
                     'data-product-label' => $entityAttributes['product']['label'],
                     'data-product-placeholder' => $entityAttributes['product']['placeholder'],
                     'data-product-search-url' => $entityAttributes['product']['searchUrl'],
+                    'data-product-help' => $entityAttributes['product']['help'],
                     'data-category-label' => $entityAttributes['category']['label'],
                     'data-category-placeholder' => $entityAttributes['category']['placeholder'],
-                    'data-category-hint' => $entityAttributes['category']['help'],
+                    'data-category-help' => $entityAttributes['category']['help'],
                     'data-category-search-url' => $entityAttributes['category']['searchUrl'],
                 ],
             ])
