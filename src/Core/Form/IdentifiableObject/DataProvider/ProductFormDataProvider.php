@@ -98,6 +98,9 @@ final class ProductFormDataProvider implements FormDataProviderInterface
             'seo' => $this->extractSEOData($productForEditing),
             'shipping' => $this->extractShippingData($productForEditing),
             'options' => $this->extractOptionsData($productForEditing),
+            'footer' => [
+                'active' => $productForEditing->getOptions()->isActive(),
+            ],
         ];
 
         return $this->addShortcutData($productData);
@@ -145,7 +148,9 @@ final class ProductFormDataProvider implements FormDataProviderInterface
             'options' => [
                 'visibility' => ProductVisibility::VISIBLE_EVERYWHERE,
                 'condition' => ProductCondition::NEW,
-                'activate' => $this->defaultProductActivation,
+            ],
+            'footer' => [
+                'active' => $this->defaultProductActivation,
             ],
         ]);
     }
@@ -384,7 +389,6 @@ final class ProductFormDataProvider implements FormDataProviderInterface
         $details = $productForEditing->getDetails();
 
         return [
-            'active' => $options->isActive(),
             'visibility' => [
                 'visibility' => $options->getVisibility(),
                 'available_for_order' => $options->isAvailableForOrder(),

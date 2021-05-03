@@ -71,8 +71,8 @@ class ProductOptionsCommandsBuilderTest extends AbstractProductCommandBuilderTes
         $command->setActive(true);
         yield [
             [
-                'options' => [
-                    'not_handled' => 0,
+                'not_handled' => 0,
+                'footer' => [
                     'active' => 1,
                 ],
             ],
