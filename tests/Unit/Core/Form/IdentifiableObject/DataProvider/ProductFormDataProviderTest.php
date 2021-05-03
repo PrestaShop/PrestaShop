@@ -121,7 +121,9 @@ class ProductFormDataProviderTest extends TestCase
             'options' => [
                 'visibility' => ProductVisibility::VISIBLE_EVERYWHERE,
                 'condition' => ProductCondition::NEW,
-                'activate' => false,
+            ],
+            'footer' => [
+                'active' => false,
             ],
             'shortcuts' => [
                 'retail_price' => [
@@ -178,7 +180,9 @@ class ProductFormDataProviderTest extends TestCase
             'options' => [
                 'visibility' => ProductVisibility::VISIBLE_EVERYWHERE,
                 'condition' => ProductCondition::NEW,
-                'activate' => true,
+            ],
+            'footer' => [
+                'active' => true,
             ],
             'shortcuts' => [
                 'retail_price' => [
@@ -557,7 +561,7 @@ class ProductFormDataProviderTest extends TestCase
             'mpn' => 'mpn_2',
             'reference' => 'reference_2',
         ];
-        $expectedOutputData['options']['active'] = false;
+        $expectedOutputData['footer']['active'] = false;
         $expectedOutputData['options']['visibility']['visibility'] = ProductVisibility::VISIBLE_IN_CATALOG;
         $expectedOutputData['options']['visibility']['available_for_order'] = false;
         $expectedOutputData['options']['visibility']['online_only'] = true;
@@ -1187,7 +1191,6 @@ class ProductFormDataProviderTest extends TestCase
                 'carriers' => [],
             ],
             'options' => [
-                'active' => true,
                 'visibility' => [
                     'visibility' => ProductVisibility::VISIBLE_EVERYWHERE,
                     'available_for_order' => true,
@@ -1206,6 +1209,9 @@ class ProductFormDataProviderTest extends TestCase
                 ],
                 'customizations' => [],
                 'suppliers' => [],
+            ],
+            'footer' => [
+                'active' => true,
             ],
             'shortcuts' => [
                 'retail_price' => [
