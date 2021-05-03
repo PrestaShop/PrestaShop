@@ -28,6 +28,11 @@ let page;
 
 let numberOfValues = 0;
 
+/*
+Go to Attributes & Features page
+Go to view attribute 'Size' page
+Filter values table by ID, Name and Position
+ */
 describe('Filter values by id, name and position', async () => {
   // before and after functions
   before(async function () {

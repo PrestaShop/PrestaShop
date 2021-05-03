@@ -34,6 +34,12 @@ let page;
 
 let numberOfValues = 0;
 
+/*
+Go to Attributes & Features page
+Create 2 values for the attribute Color
+Go to view attribute 'Color' page
+Delete the created values by bulk actions
+ */
 describe('Bulk delete values', async () => {
   // before and after functions
   before(async function () {

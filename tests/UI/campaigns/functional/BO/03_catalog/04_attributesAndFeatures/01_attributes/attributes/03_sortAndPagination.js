@@ -17,7 +17,7 @@ const {Attribute} = require('@data/faker/attributeAndValue');
 // Import test context
 const testContext = require('@utils/testContext');
 
-const baseContext = 'functional_BO_catalog_attributesAndFeatures_attributes_sortAndPagination';
+const baseContext = 'functional_BO_catalog_attributesAndFeatures_attributes_attributes_sortAndPagination';
 
 // Import expect from chai
 const {expect} = require('chai');
@@ -28,6 +28,13 @@ let page;
 
 let numberOfAttributes = 0;
 
+/*
+Go to Attributes & Features page
+Create 17 new attributes
+Pagination next and previous
+Sort attributes table by ID, Name and Position
+Delete the created attributes
+ */
 describe('Sort and pagination attributes', async () => {
   // before and after functions
   before(async function () {

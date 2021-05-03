@@ -14,7 +14,7 @@ const addAttributePage = require('@pages/BO/catalog/attributes/addAttribute');
 // Import test context
 const testContext = require('@utils/testContext');
 
-const baseContext = 'functional_BO_catalog_attributesAndFeatures_attributes_bulkDeleteAttributes';
+const baseContext = 'functional_BO_catalog_attributesAndFeatures_attributes_attributes_bulkDeleteAttributes';
 
 // Import expect from chai
 const {expect} = require('chai');
@@ -33,6 +33,11 @@ let page;
 
 let numberOfAttributes = 0;
 
+/*
+Go to Attributes & Features page
+Create 2 attributes
+Delete the created attributes by bulk actions
+ */
 describe('Bulk delete attributes', async () => {
   // before and after functions
   before(async function () {

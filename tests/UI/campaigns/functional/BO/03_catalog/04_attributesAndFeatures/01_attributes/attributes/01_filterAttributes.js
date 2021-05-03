@@ -16,7 +16,7 @@ const {Attributes} = require('@data/demo/attributes');
 // Import test context
 const testContext = require('@utils/testContext');
 
-const baseContext = 'functional_BO_catalog_attributesAndFeatures_attributes_filterAttributes';
+const baseContext = 'functional_BO_catalog_attributesAndFeatures_attributes_attributes_filterAttributes';
 
 // Import expect from chai
 const {expect} = require('chai');
@@ -27,6 +27,10 @@ let page;
 
 let numberOfAttributes = 0;
 
+/*
+Go to Attributes & Features page
+Filter attributes table by ID, Name and Position
+ */
 describe('Filter attributes by id, name and position', async () => {
   // before and after functions
   before(async function () {
