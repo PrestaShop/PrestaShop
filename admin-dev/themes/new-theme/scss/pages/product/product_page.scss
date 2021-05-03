@@ -249,18 +249,17 @@
     }
 
     .money-type {
-      max-width: 16.5rem;
+      max-width: 20rem;
     }
 
     &.select-widget {
-      max-width: 16.5rem;
+      max-width: 20rem;
     }
 
     @include media-breakpoint-down("sm") {
       input,
       &.select-widget,
-      .money-type
-       {
+      .money-type {
         max-width: inherit;
       }
     }
