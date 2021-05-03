@@ -155,7 +155,7 @@ export default class OrderProductEdit {
     this.taxRate = product.tax_rate;
     this.initialTotal = this.priceTaxCalculator.calculateTotalPrice(
       product.quantity,
-      product.price_tax_incl,
+      product.isOrderTaxIncluded ? product.price_tax_incl : product.price_tax_excl,
       this.currencyPrecision
     );
     this.quantity = product.quantity;
