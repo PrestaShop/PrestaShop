@@ -717,15 +717,14 @@ final class GetOrderForViewingHandler extends AbstractOrderHandler implements Ge
             $wrappingPrice = (float) $order->total_wrapping_tax_excl;
             $shippingPrice = (float) $order->total_shipping_tax_excl;
             $shippingRefundable = max(0, $shipping_refundable_tax_excl);
-            $totalAmount = (float) $order->total_paid_tax_excl;
         } else {
             $productsPrice = (float) $order->total_products_wt;
             $discountsAmount = (float) $order->total_discounts_tax_incl;
             $wrappingPrice = (float) $order->total_wrapping_tax_incl;
             $shippingPrice = (float) $order->total_shipping_tax_incl;
             $shippingRefundable = max(0, $shipping_refundable_tax_incl);
-            $totalAmount = (float) $order->total_paid_tax_incl;
         }
+        $totalAmount = (float) $order->total_paid_tax_incl;
 
         $taxesAmount = $order->total_paid_tax_incl - $order->total_paid_tax_excl;
 
