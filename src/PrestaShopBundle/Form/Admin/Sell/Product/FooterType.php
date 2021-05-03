@@ -73,7 +73,7 @@ class FooterType extends TranslatorAwareType
                 ->add('delete', IconButtonType::class, [
                     'icon' => 'delete',
                     'attr' => [
-                        'class' => 'tooltip-link',
+                        'class' => 'tooltip-link align-left',
                         'data-toggle' => 'pstooltip',
                         'data-placement' => 'left',
                         'title' => $this->trans('Permanently delete this product.', 'Admin.Catalog.Help'),
@@ -84,21 +84,21 @@ class FooterType extends TranslatorAwareType
                         ]),
                     ],
                 ])
+                ->add('preview', ButtonType::class, [
+                    'label' => $this->trans('Preview', 'Admin.Actions'),
+                    'attr' => [
+                        'class' => 'align-left btn-secondary',
+                        'data-seo-url' => $this->productUrlProvider->getUrl($productId, '{friendly-url}'),
+                    ],
+                ])
                 ->add('standard_page', IconButtonType::class, [
                     'label' => $this->trans('Back to standard page', 'Admin.Catalog.Feature'),
                     'type' => 'link',
                     'attr' => [
-                        'class' => 'btn-outline-secondary',
+                        'class' => 'btn-outline-secondary align-left',
                         'href' => $this->router->generate('admin_product_form', [
                             'id' => $productId,
                         ]),
-                    ],
-                ])
-                ->add('preview', ButtonType::class, [
-                    'label' => $this->trans('Preview', 'Admin.Actions'),
-                    'attr' => [
-                        'class' => 'btn-secondary',
-                        'data-seo-url' => $this->productUrlProvider->getUrl($productId, '{friendly-url}'),
                     ],
                 ])
             ;
@@ -110,6 +110,7 @@ class FooterType extends TranslatorAwareType
                 'attr' => [
                     'data-toggle' => 'pstooltip',
                     'title' => $this->trans('Save the product and stay on the current page: ALT+SHIFT+S', 'Admin.Catalog.Help'),
+                    'class' => 'btn-primary',
                 ],
             ])
         ;
