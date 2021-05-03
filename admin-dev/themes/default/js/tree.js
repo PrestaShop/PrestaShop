@@ -73,7 +73,7 @@ Tree.prototype = {
             .removeClass('icon-folder-open')
             .addClass('icon-folder-close');
 
-		  $(this).trigger('collapse');
+          $(this).trigger('collapse');
           $(this).parent().parent().children('ul.tree')
             .toggle(300);
         } else {
@@ -106,15 +106,18 @@ Tree.prototype = {
                 useCheckBox,
               },
               (content) => {
-				$(this).parent().closest('.tree-folder').find('ul.tree').html(content);
-                $(`#${idTree}`).tree('collapse', thatOne.closest('.tree-folder').children('ul.tree'));
-				$(this).trigger('expand');
-				$(this).parent().parent().children('ul.tree').toggle(300);
-                $(`#${idTree}`).tree('init');
+                const targetTree = $(`#${idTree}`);
+                $(this).parent().closest('.tree-folder').find('ul.tree')
+                  .html(content);
+                targetTree.tree('collapse', $(this).closest('.tree-folder').children('ul.tree'));
+                $(this).trigger('expand');
+                $(this).parent().parent().children('ul.tree')
+                  .toggle(300);
+                targetTree.tree('init');
               },
             );
           } else {
-			$(this).trigger('expand');
+            $(this).trigger('expand');
             $(this).parent().parent().children('ul.tree')
               .toggle(300);
           }
@@ -185,11 +188,10 @@ Tree.prototype = {
 
   expandAll($speed) {
     const idTree = this.$element.parent().find('.cattree.tree').first().attr('id');
+    const targetTree = $(`#${idTree}`);
 
-    if (typeof (idTree) !== 'undefined' && !$(`#${idTree}`).hasClass('full_loaded')) {
+    if (typeof (idTree) !== 'undefined' && !targetTree.hasClass('full_loaded')) {
       const selected = [];
-      const targetTree = $(`#${idTree}`);
-      const that = this;
       targetTree.find('.tree-selected input').each(
         function () {
           selected.push($(this).val());
@@ -214,10 +216,10 @@ Tree.prototype = {
         },
         (content) => {
           targetTree.html(content);
-		  // Function organizeTree() disabled because it no longer has known usage - Crezzur
+          // Function organizeTree() disabled because it no longer has known usage - Crezzur
           // organizeTree();
           targetTree.tree('init');
-		  targetTree.find('label.tree-toggler').each(
+          targetTree.find('label.tree-toggler').each(
             function () {
               $(this).parent().children('.icon-folder-close')
                 .removeClass('icon-folder-close')
