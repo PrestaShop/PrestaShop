@@ -61,7 +61,9 @@ export default class ProductSuppliersManager {
 
     this.$initialDefault = this.$defaultSupplierGroup.find('input:checked').first();
     if (this.$initialDefault.length) {
-      this.$initialDefault.closest(this.suppliers.checkboxContainer).addClass(this.suppliersMap.defaultSupplierClass);
+      this.$initialDefault
+        .closest(this.suppliersMap.checkboxContainer)
+        .addClass(this.suppliersMap.defaultSupplierClass);
     }
 
     this.$productsTable.on('change', 'input', () => {
