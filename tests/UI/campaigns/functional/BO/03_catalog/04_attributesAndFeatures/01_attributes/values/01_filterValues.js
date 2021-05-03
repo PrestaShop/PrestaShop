@@ -26,7 +26,7 @@ const {expect} = require('chai');
 let browserContext;
 let page;
 
-let numberOfAttributes = 0;
+let numberOfValues = 0;
 
 describe('Filter values by id, name and position', async () => {
   // before and after functions
@@ -58,28 +58,12 @@ describe('Filter values by id, name and position', async () => {
     await expect(pageTitle).to.contains(attributesPage.pageTitle);
   });
 
-  it('should reset all filters and get number of attributes in BO', async function () {
-    await testContext.addContextItem(this, 'testIdentifier', 'resetFilterFirst', baseContext);
-
-    numberOfAttributes = await attributesPage.resetAndGetNumberOfLines(page);
-    await expect(numberOfAttributes).to.be.above(0);
-  });
-
   it('should filter attributes table by name \'Size\'', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'filterAttributes', baseContext);
 
-    await attributesPage.filterTable(
-      page,
-      'b!name',
-      Attributes.size.name,
-    );
+    await attributesPage.filterTable(page, 'b!name', Attributes.size.name);
 
-    const textColumn = await attributesPage.getTextColumn(
-      page,
-      1,
-      'b!name',
-    );
-
+    const textColumn = await attributesPage.getTextColumn(page, 1, 'b!name');
     await expect(textColumn).to.contains(Attributes.size.name);
   });
 
@@ -90,6 +74,13 @@ describe('Filter values by id, name and position', async () => {
 
     const pageTitle = await viewAttributePage.getPageTitle(page);
     await expect(pageTitle).to.contains(`${viewAttributePage.pageTitle} ${Attributes.size.name}`);
+  });
+
+  it('should reset all filters and get number of values in BO', async function () {
+    await testContext.addContextItem(this, 'testIdentifier', 'resetFilterFirst', baseContext);
+
+    numberOfValues = await viewAttributePage.resetAndGetNumberOfLines(page);
+    await expect(numberOfValues).to.be.above(0);
   });
 
   describe('Filter values table', async () => {
@@ -130,14 +121,10 @@ describe('Filter values by id, name and position', async () => {
           test.args.filterValue,
         );
 
-        const numberOfAttributesAfterFilter = await viewAttributePage.getNumberOfElementInGrid(page);
-        await expect(numberOfAttributesAfterFilter).to.be.at.most(numberOfAttributes);
+        const numberOfValuesAfterFilter = await viewAttributePage.getNumberOfElementInGrid(page);
+        await expect(numberOfValuesAfterFilter).to.be.at.most(numberOfValues);
 
-        const textColumn = await viewAttributePage.getTextColumn(
-          page,
-          1,
-          test.args.filterBy,
-        );
+        const textColumn = await viewAttributePage.getTextColumn(page, 1, test.args.filterBy);
 
         if (test.args.filterBy === 'a!position') {
           await expect(textColumn).to.contains(test.args.filterValue + 1);
@@ -149,8 +136,8 @@ describe('Filter values by id, name and position', async () => {
       it('should reset all filters', async function () {
         await testContext.addContextItem(this, 'testIdentifier', `${test.args.testIdentifier}Reset`, baseContext);
 
-        const numberOfAttributesAfterReset = await viewAttributePage.resetAndGetNumberOfLines(page);
-        await expect(numberOfAttributesAfterReset).to.equal(numberOfAttributes);
+        const numberOfValuesAfterReset = await viewAttributePage.resetAndGetNumberOfLines(page);
+        await expect(numberOfValuesAfterReset).to.equal(numberOfValues);
       });
     });
   });
