@@ -28,36 +28,6 @@ const Tree = function (element, options) {
   this.init();
 };
 
-function getCategoryById(param) {
-  let elem = null;
-  $('input[name=id_parent]').each(function () {
-    if ($(this).val() === `${param}`) {
-      elem = $(this);
-    }
-  });
-  return elem;
-}
-
-function disableTreeItem(item) {
-  item.find('input[name=id_parent]').attr('disabled', 'disabled');
-  if (item.hasClass('tree-folder')) {
-    item.find('span.tree-folder-name').addClass('tree-folder-name-disable');
-    item.find('ul li').each(function () {
-      disableTreeItem($(this));
-    });
-  } else if (item.hasClass('tree-item')) {
-    item.addClass('tree-item-disable');
-  }
-}
-
-function organizeTree() {
-  if ($('#id_category').length !== 0) {
-    const id = $('#id_category').val();
-    const item = getCategoryById(id).parent().parent();
-    disableTreeItem(item);
-  }
-}
-
 Tree.prototype = {
   constructor: Tree,
 
@@ -216,8 +186,6 @@ Tree.prototype = {
         },
         (content) => {
           targetTree.html(content);
-          // Function organizeTree() disabled because it no longer has known usage - Crezzur
-          // organizeTree();
           targetTree.tree('init');
           targetTree.find('label.tree-toggler').each(
             function () {
