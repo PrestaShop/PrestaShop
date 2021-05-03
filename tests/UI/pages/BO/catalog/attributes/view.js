@@ -46,6 +46,13 @@ class ViewAttribute extends BOBasePage {
     this.tableColumnActionsDropdownMenu = row => `${this.tableColumnActions(row)} .dropdown-menu`;
     this.tableColumnActionsDeleteLink = row => `${this.tableColumnActionsDropdownMenu(row)} a.delete`;
 
+    // Bulk actions selectors
+    this.bulkActionBlock = 'div.bulk-actions';
+    this.bulkActionMenuButton = '#bulk_action_menu_attribute';
+    this.bulkActionDropdownMenu = `${this.bulkActionBlock} ul.dropdown-menu`;
+    this.selectAllLink = `${this.bulkActionDropdownMenu} li:nth-child(1)`;
+    this.bulkDeleteLink = `${this.bulkActionDropdownMenu} li:nth-child(4)`;
+
     // Confirmation modal
     this.deleteModalButtonYes = '#popup_ok';
 
@@ -195,6 +202,39 @@ class ViewAttribute extends BOBasePage {
     );
 
     return this.getGrowlMessageContent(page);
+  }
+
+  /* Bulk actions methods */
+  /**
+   * Bulk delete attributes
+   * @param page
+   * @return {Promise<string>}
+   */
+  async bulkDeleteValues(page) {
+    // To confirm bulk delete action with dialog
+    await this.dialogListener(page, true);
+
+    // Select all rows
+    await Promise.all([
+      page.click(this.bulkActionMenuButton),
+      this.waitForVisibleSelector(page, this.selectAllLink),
+    ]);
+
+    await Promise.all([
+      page.click(this.selectAllLink),
+      this.waitForHiddenSelector(page, this.selectAllLink),
+    ]);
+
+    // Perform delete
+    await Promise.all([
+      page.click(this.bulkActionMenuButton),
+      this.waitForVisibleSelector(page, this.bulkDeleteLink),
+    ]);
+
+    await this.clickAndWaitForNavigation(page, this.bulkDeleteLink);
+
+    // Return successful message
+    return this.getAlertSuccessBlockParagraphContent(page);
   }
 }
 
