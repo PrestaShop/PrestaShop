@@ -104,6 +104,8 @@ class PriceShortcutType extends TranslatorAwareType
             ->add('tax_rules_group_id', ChoiceType::class, [
                 'choices' => $this->taxRuleGroupChoices,
                 'required' => false,
+                // placeholder false is important to avoid empty option in select input despite required being false
+                'placeholder' => false,
                 'choice_attr' => $this->taxRuleGroupChoicesAttributes,
                 'attr' => [
                     'data-toggle' => 'select2',
