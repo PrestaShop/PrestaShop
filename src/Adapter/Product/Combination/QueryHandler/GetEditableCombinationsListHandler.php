@@ -122,13 +122,15 @@ final class GetEditableCombinationsListHandler extends AbstractProductHandler im
             $query->getLanguageId()
         );
 
+        $productImageIds = $this->productImageRepository->getImagesIds($query->getProductId());
         $imageIdsByCombinationIds = $this->productImageRepository->getImagesIdsForCombinations($combinationIds);
 
         return $this->formatEditableCombinationsForListing(
             $combinations,
             $attributesInformation,
             $total,
-            $imageIdsByCombinationIds
+            $imageIdsByCombinationIds,
+            $productImageIds
         );
     }
 
@@ -137,6 +139,7 @@ final class GetEditableCombinationsListHandler extends AbstractProductHandler im
      * @param array<int, array<int, mixed>> $attributesInformationByCombinationId
      * @param int $totalCombinationsCount
      * @param array $imageIdsByCombinationIds
+     * @param array $defaultImageIds
      *
      * @return CombinationListForEditing
      */
@@ -144,7 +147,8 @@ final class GetEditableCombinationsListHandler extends AbstractProductHandler im
         array $combinations,
         array $attributesInformationByCombinationId,
         int $totalCombinationsCount,
-        array $imageIdsByCombinationIds
+        array $imageIdsByCombinationIds,
+        array $defaultImageIds
     ): CombinationListForEditing {
         $combinationsForEditing = [];
 
@@ -164,6 +168,8 @@ final class GetEditableCombinationsListHandler extends AbstractProductHandler im
             $imageId = null;
             if (!empty($imageIdsByCombinationIds[$combinationId])) {
                 $imageId = reset($imageIdsByCombinationIds[$combinationId]);
+            } elseif (!empty($defaultImageIds)) {
+                $imageId = reset($defaultImageIds);
             }
 
             $impactOnPrice = new DecimalNumber($combination['price']);
