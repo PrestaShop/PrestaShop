@@ -182,6 +182,14 @@
     }
   }
 
+  .form-group {
+    .locale-input-group {
+      input {
+        width: 100%;
+      }
+    }
+  }
+
   .big-input {
     .form-control {
       font-size: 1.5rem;
