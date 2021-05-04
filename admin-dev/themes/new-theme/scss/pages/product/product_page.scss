@@ -182,14 +182,6 @@
     }
   }
 
-  .form-group {
-    .locale-input-group {
-      input {
-        width: 100%;
-      }
-    }
-  }
-
   .big-input {
     .form-control {
       font-size: 1.5rem;
@@ -271,6 +263,16 @@
   }
 
   .form-group {
+    .locale-input-group {
+      input {
+        width: 1007;
+      }
+    }
+
+    > .alert {
+      max-width: 47.65rem;
+    }
+
     > .help-box {
       margin-top: 0.6rem;
     }
