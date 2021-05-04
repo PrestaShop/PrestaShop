@@ -38,7 +38,8 @@ class ViewAttribute extends BOBasePage {
     this.tableColumnId = row => `${this.tableBodyColumn(row)}:nth-child(2)`;
     this.tableColumnValue = row => `${this.tableBodyColumn(row)}:nth-child(3)`;
     this.tableColumnColor = row => `${this.tableBodyColumn(row)}:nth-child(4) div`;
-    this.tableColumnPosition = row => `${this.tableBodyColumn(row)}:nth-child(5)`;
+    this.tableColumnPosition = row => `${this.tableBodyColumn(row)}:nth-child(4)`;
+    this.tableColorColumnPosition = row => `${this.tableBodyColumn(row)}:nth-child(5)`;
 
     // Row actions selectors
     this.tableColumnActions = row => `${this.tableBodyColumn(row)} .btn-group-action`;
@@ -154,7 +155,7 @@ class ViewAttribute extends BOBasePage {
         break;
 
       case 'a!position':
-        columnSelector = this.tableColumnPosition(row);
+        columnSelector = this.tableColorColumnPosition(row);
         break;
 
       default:

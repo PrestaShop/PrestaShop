@@ -18,7 +18,7 @@ const {Value} = require('@data/faker/attributeAndValue');
 // Import test context
 const testContext = require('@utils/testContext');
 
-const baseContext = 'functional_BO_catalog_attributesAndFeatures_attributes_values_sortAndPagination';
+const baseContext = 'functional_BO_catalog_attributesAndFeatures_attributes_values_sortPaginationAndBulkDelete';
 
 // Import expect from chai
 const {expect} = require('chai');
@@ -205,7 +205,7 @@ describe('Sort and pagination values', async () => {
     ];
 
     sortTests.forEach((test) => {
-      it(`should sort by '${test.args.sortBy}' '${test.args.sortDirection}' And check result`, async function () {
+      it(`should sort by '${test.args.sortBy}' '${test.args.sortDirection}' and check result`, async function () {
         await testContext.addContextItem(this, 'testIdentifier', test.args.testIdentifier, baseContext);
 
         let nonSortedTable = await viewAttributePage.getAllRowsColumnContent(page, test.args.sortBy);

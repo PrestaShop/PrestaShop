@@ -89,7 +89,7 @@ describe('Change value position', async () => {
     });
 
     // Should reset filters before changing position
-    it('should reset all filters and get number of attributes in BO', async function () {
+    it('should reset all filters and get number of values in BO', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'resetValueFilters', baseContext);
 
       const numberOfValues = await viewAttributePage.resetAndGetNumberOfLines(page);
