@@ -27,6 +27,7 @@ import ProductMap from '@pages/product/product-map';
 import {getCategories} from '@pages/product/services/categories';
 import Bloodhound from 'typeahead.js';
 import AutoCompleteSearch from '@components/auto-complete-search';
+import _ from 'lodash';
 
 const {$} = window;
 
@@ -55,9 +56,7 @@ export default class CategoriesManager {
 
     // This regexp is gonna be used to get id from checkbox name
     let regexpString = ProductCategoryMap.checkboxName('__REGEXP__');
-    regexpString = regexpString.replaceAll('[', '\\[');
-    regexpString = regexpString.replaceAll(']', '\\]');
-    regexpString = regexpString.replace('__REGEXP__', '([0-9]+)');
+    regexpString = _.escapeRegExp(regexpString).replace('__REGEXP__', '([0-9]+)');
     this.categoryIdRegexp = new RegExp(regexpString);
 
     this.initTypeaheadData(this.categories, '');
