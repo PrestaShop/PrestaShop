@@ -40,7 +40,7 @@ class AddValue extends BOBasePage {
     // Set color and texture inputs
     if (await this.elementVisible(page, this.colorInput, 1000)) {
       await this.setValue(page, this.colorInput, valueData.color);
-      //await this.uploadFile(this.textureFileInput, valueData.textureFileName);
+      // await this.uploadFile(this.textureFileInput, valueData.textureFileName);
     }
 
     // Save value
