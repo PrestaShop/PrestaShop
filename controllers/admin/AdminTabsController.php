@@ -31,16 +31,26 @@ class AdminTabsControllerCore extends AdminController
 {
     protected $position_identifier = 'id_tab';
 
+    /**
+     * @deprecated since 1.7.8, to be removed in the next minor
+     */
     public function __construct()
     {
+        // construct parent just to have the translator :D
+        parent::__construct();
+
+        @trigger_error(
+            'The AdminTabsController is deprecated and will be removed in the next minor',
+            E_USER_DEPRECATED
+        );
+        die($this->trans('This functionality has been disabled.', [], 'Admin.Notifications.Error'));
+
         $this->bootstrap = true;
         $this->multishop_context = Shop::CONTEXT_ALL;
         $this->table = 'tab';
         $this->list_id = 'tab';
         $this->className = 'Tab';
         $this->lang = true;
-
-        parent::__construct();
 
         $this->fieldImageSettings = [
             'name' => 'icon',
