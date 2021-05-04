@@ -30,11 +30,15 @@ namespace PrestaShopBundle\Controller\Admin\Sell\Catalog\Product;
 use Exception;
 use PrestaShop\PrestaShop\Adapter\Product\Combination\Repository\CombinationRepository;
 use PrestaShop\PrestaShop\Adapter\Product\Image\ProductImagePathFactory;
+use PrestaShop\PrestaShop\Core\Domain\Product\AttributeGroup\Attribute\QueryResult\Attribute;
+use PrestaShop\PrestaShop\Core\Domain\Product\AttributeGroup\Query\GetAttributeGroupList;
 use PrestaShop\PrestaShop\Core\Domain\Product\AttributeGroup\Query\GetProductAttributeGroups;
 use PrestaShop\PrestaShop\Core\Domain\Product\AttributeGroup\QueryResult\AttributeGroup;
+use PrestaShop\PrestaShop\Core\Domain\Product\Combination\Command\GenerateProductCombinationsCommand;
 use PrestaShop\PrestaShop\Core\Domain\Product\Combination\Command\RemoveCombinationCommand;
 use PrestaShop\PrestaShop\Core\Domain\Product\Combination\Query\GetEditableCombinationsList;
 use PrestaShop\PrestaShop\Core\Domain\Product\Combination\QueryResult\CombinationListForEditing;
+use PrestaShop\PrestaShop\Core\Domain\Product\Combination\ValueObject\CombinationId;
 use PrestaShop\PrestaShop\Core\Domain\Product\Exception\ProductConstraintException;
 use PrestaShop\PrestaShop\Core\Domain\Product\Stock\Exception\ProductStockConstraintException;
 use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductId;
@@ -105,7 +109,7 @@ class CombinationController extends FrameworkBundleAdminController
      */
     public function paginatedListAction(): Response
     {
-        return $this->render('@PrestaShop/Admin/Sell/Catalog/Product/Blocks/combinations.html.twig', [
+        return $this->render('@PrestaShop/Admin/Sell/Catalog/Product/Combination/paginated_list.html.twig', [
             'combinationLimitChoices' => self::COMBINATIONS_PAGINATION_OPTIONS,
             'combinationsLimit' => ProductCombinationFilters::LIST_LIMIT,
             'combinationsForm' => $this->createForm(CombinationListType::class)->createView(),
@@ -124,6 +128,19 @@ class CombinationController extends FrameworkBundleAdminController
     {
         /** @var AttributeGroup[] $attributeGroups */
         $attributeGroups = $this->getQueryBus()->handle(new GetProductAttributeGroups($productId, true));
+
+        return $this->json($this->formatAttributeGroupsForPresentation($attributeGroups));
+    }
+
+    /**
+     * @AdminSecurity("is_granted('read', request.get('_legacy_controller'))")
+     *
+     * @return JsonResponse
+     */
+    public function getAllAttributeGroupsAction(): JsonResponse
+    {
+        /** @var AttributeGroup[] $attributeGroups */
+        $attributeGroups = $this->getQueryBus()->handle(new GetAttributeGroupList(true));
 
         return $this->json($this->formatAttributeGroupsForPresentation($attributeGroups));
     }
@@ -226,6 +243,38 @@ class CombinationController extends FrameworkBundleAdminController
     }
 
     /**
+     * @AdminSecurity("is_granted(['create', 'update'], request.get('_legacy_controller'))")
+     *
+     * @param int $productId
+     * @param Request $request
+     *
+     * @return JsonResponse
+     */
+    public function generateCombinationsAction(int $productId, Request $request): JsonResponse
+    {
+        $requestAttributeGroups = $request->request->get('attributes');
+        $attributes = [];
+        foreach ($requestAttributeGroups as $attributeGroupId => $requestAttributes) {
+            $attributes[(int) $attributeGroupId] = array_map('intval', $requestAttributes);
+        }
+
+        try {
+            /** @var CombinationId[] $combinationsIds */
+            $combinationsIds = $this->getCommandBus()->handle(new GenerateProductCombinationsCommand($productId, $attributes));
+        } catch (Exception $e) {
+            return $this->json([
+                'error' => [
+                    $this->getErrorMessageForException($e, $this->getErrorMessages($e)),
+                ],
+            ], Response::HTTP_BAD_REQUEST);
+        }
+
+        return $this->json([
+            'combination_ids' => array_map(function (CombinationId $combinationId) { return $combinationId->getValue(); }, $combinationsIds),
+        ]);
+    }
+
+    /**
      * @param AttributeGroup[] $attributeGroups
      *
      * @return array<int, array<string, mixed>>
@@ -237,12 +286,17 @@ class CombinationController extends FrameworkBundleAdminController
         $formattedGroups = [];
         foreach ($attributeGroups as $attributeGroup) {
             $attributes = [];
+            /** @var Attribute $attribute */
             foreach ($attributeGroup->getAttributes() as $attribute) {
                 $attributeNames = $attribute->getLocalizedNames();
-                $attributes[] = [
+                $attributeData = [
                     'id' => $attribute->getAttributeId(),
                     'name' => $attributeNames[$contextLangId] ?? reset($attributeNames),
                 ];
+                if (null !== $attribute->getColor()) {
+                    $attributeData['color'] = $attribute->getColor();
+                }
+                $attributes[] = $attributeData;
             }
 
             $publicNames = $attributeGroup->getLocalizedPublicNames();

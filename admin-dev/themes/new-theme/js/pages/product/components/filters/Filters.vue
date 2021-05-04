@@ -25,9 +25,8 @@
 <template>
   <div class="combinations-filters">
     <label
-      for="caption-textarea"
       class="control-label"
-    >Filter by:</label>
+    >{{ $t('filters.label') }}</label>
 
     <div class="combinations-filters-line">
       <filter-dropdown
@@ -45,8 +44,8 @@
         class="btn btn-outline-secondary combinations-filters-clear"
         @click="clearAll"
       >
-        <i class="material-icons">close</i> Clear
-        {{ selectedFiltersNumber }} filters
+        <i class="material-icons">close</i>
+        {{ $tc('filters.clear', selectedFiltersNumber, { '%filtersNb%': selectedFiltersNumber }) }}
       </button>
     </div>
   </div>

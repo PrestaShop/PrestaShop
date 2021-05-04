@@ -22,16 +22,15 @@
  * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
-
 import Vue from 'vue';
-import Filters from '@pages/product/components/filters/Filters';
 import VueI18n from 'vue-i18n';
 import ReplaceFormatter from '@vue/plugins/vue-i18n/replace-formatter';
+import CombinationGenerator from '@pages/product/components/generator/CombinationGenerator.vue';
 
 Vue.use(VueI18n);
 
-export default function initCombinationsFilters(combinationsFiltersSelector, eventEmitter, productId) {
-  const container = document.querySelector(combinationsFiltersSelector);
+export default function initCombinationGenerator(combinationGeneratorSelector, eventEmitter, productId) {
+  const container = document.querySelector(combinationGeneratorSelector);
 
   const translations = JSON.parse(container.dataset.translations);
   const i18n = new VueI18n({
@@ -41,9 +40,9 @@ export default function initCombinationsFilters(combinationsFiltersSelector, eve
   });
 
   return new Vue({
-    el: combinationsFiltersSelector,
-    template: '<filters :productId=productId :eventEmitter=eventEmitter />',
-    components: {Filters},
+    el: combinationGeneratorSelector,
+    template: '<combination-generator :productId=productId :eventEmitter=eventEmitter />',
+    components: {CombinationGenerator},
     i18n,
     data: {
       productId,

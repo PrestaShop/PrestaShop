@@ -23,31 +23,24 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
 
-import Vue from 'vue';
-import Filters from '@pages/product/components/filters/Filters';
-import VueI18n from 'vue-i18n';
-import ReplaceFormatter from '@vue/plugins/vue-i18n/replace-formatter';
+export default {
+  methods: {
+    /**
+     * The selected attribute is provided as a parameter instead od using this reference because it helps the
+     * observer work better whe this.selectedAttributeGroups is explicitly used as an argument.
+     *
+     * @param {Object} attribute
+     * @param {Object} attributeGroup
+     * @param {Object} attributeGroups
+     *
+     * @returns {boolean}
+     */
+    isSelected(attribute, attributeGroup, attributeGroups) {
+      if (!Object.prototype.hasOwnProperty.call(attributeGroups, attributeGroup.id)) {
+        return false;
+      }
 
-Vue.use(VueI18n);
-
-export default function initCombinationsFilters(combinationsFiltersSelector, eventEmitter, productId) {
-  const container = document.querySelector(combinationsFiltersSelector);
-
-  const translations = JSON.parse(container.dataset.translations);
-  const i18n = new VueI18n({
-    locale: 'en',
-    formatter: new ReplaceFormatter(),
-    messages: {en: translations},
-  });
-
-  return new Vue({
-    el: combinationsFiltersSelector,
-    template: '<filters :productId=productId :eventEmitter=eventEmitter />',
-    components: {Filters},
-    i18n,
-    data: {
-      productId,
-      eventEmitter,
+      return attributeGroups[attributeGroup.id].attributes.includes(attribute);
     },
-  });
-}
+  },
+};
