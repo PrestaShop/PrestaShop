@@ -425,6 +425,7 @@ abstract class ModuleCore implements ModuleInterface
         $this->id = Db::getInstance()->Insert_ID();
 
         Cache::clean('Module::isInstalled' . $this->name);
+        Cache::clean('Module::getModuleIdByName_' . pSQL($this->name));
 
         // Enable the module for current shops in context
         $this->enable();

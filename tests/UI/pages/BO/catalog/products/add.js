@@ -18,7 +18,8 @@ class AddProduct extends BOBasePage {
     this.productNameInput = '#form_step1_name_1';
     this.productImageDropZoneDiv = '#product-images-dropzone';
     this.productTypeSelect = '#form_step1_type_product';
-    this.openFileManagerDiv = '.disabled.openfilemanager.dz-clickable';
+    this.openFileManagerDiv = `${this.productImageDropZoneDiv} .disabled.openfilemanager.dz-clickable`;
+    this.imagePreviewBlock = `${this.productImageDropZoneDiv} > div.dz-complete.dz-image-preview`;
     this.productWithCombinationsInput = '#show_variations_selector div:nth-of-type(2) input';
     this.productReferenceInput = '#form_step6_reference';
     this.productQuantityInput = '#form_step1_qty_0_shortcut';
@@ -96,6 +97,36 @@ class AddProduct extends BOBasePage {
   }
 
   /**
+   * Get Number of images to set on the product
+   * @param page {Page} Browser tab
+   * @returns {Promise<number>}
+   */
+  async getNumberOfImages(page) {
+    return (await page.$$(this.imagePreviewBlock)).length;
+  }
+
+  /**
+   * Add product images
+   * @param page {Page} Browser tab
+   * @param imagesPaths {Array<string|null>} Paths of the images to add to the product
+   * @returns {Promise<void>}
+   */
+  async addProductImages(page, imagesPaths = []) {
+    const filteredImagePaths = imagesPaths.filter(el => el !== null);
+
+    if (filteredImagePaths !== null && filteredImagePaths.length !== 0) {
+      const numberOfImages = await this.getNumberOfImages(page);
+      await this.uploadOnFileChooser(
+        page,
+        numberOfImages === 0 ? this.productImageDropZoneDiv : this.openFileManagerDiv,
+        filteredImagePaths,
+      );
+
+      await this.waitForVisibleSelector(page, this.imagePreviewBlock);
+    }
+  }
+
+  /**
    * Set Name, type of product, Reference, price ATI, description and short description
    * @param page
    * @param productData
@@ -103,12 +134,10 @@ class AddProduct extends BOBasePage {
    */
   async setBasicSetting(page, productData) {
     await this.setValue(page, this.productNameInput, productData.name);
-    if (productData.coverImage !== null) {
-      await this.uploadOnFileChooser(page, this.productImageDropZoneDiv, productData.coverImage);
-    }
-    if (productData.thumbImage !== null) {
-      await this.uploadOnFileChooser(page, this.openFileManagerDiv, productData.thumbImage);
-    }
+
+    // Set product images
+    await this.addProductImages(page, [productData.coverImage, productData.thumbImage]);
+
     await this.setValueOnTinymceInput(page, this.productDescriptionIframe, productData.description);
     await this.setValueOnTinymceInput(page, this.productShortDescriptionIframe, productData.summary);
     await this.selectByVisibleText(page, this.productTypeSelect, productData.type);

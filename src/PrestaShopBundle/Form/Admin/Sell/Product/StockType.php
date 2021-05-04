@@ -32,7 +32,6 @@ use PrestaShopBundle\Form\Admin\Type\DatePickerType;
 use PrestaShopBundle\Form\Admin\Type\SwitchType;
 use PrestaShopBundle\Form\Admin\Type\TranslatableType;
 use PrestaShopBundle\Form\Admin\Type\TranslatorAwareType;
-use PrestaShopBundle\Form\DataTransformer\DefaultEmptyDataTransformer;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\NumberType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
@@ -107,6 +106,7 @@ class StockType extends TranslatorAwareType
 
         $builder
             ->add('minimal_quantity', NumberType::class, [
+                'required' => false,
                 'label' => $this->trans('Minimum quantity for sale', 'Admin.Catalog.Feature'),
                 'constraints' => [
                     new NotBlank(),
@@ -124,6 +124,9 @@ class StockType extends TranslatorAwareType
                     new Type(['type' => 'numeric']),
                 ],
                 'required' => false,
+                'default_empty_data' => 0,
+                // Using null here allows to keep the field empty in the page instead of 0
+                'empty_view_data' => null,
             ])
             ->add('low_stock_alert', SwitchType::class, [
                 'required' => false,
@@ -172,7 +175,5 @@ class StockType extends TranslatorAwareType
                 ],
             ])
         ;
-
-        $builder->get('low_stock_threshold')->addModelTransformer(new DefaultEmptyDataTransformer(0, null));
     }
 }

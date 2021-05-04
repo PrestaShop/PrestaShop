@@ -92,6 +92,10 @@ class ProductFormDataProviderTest extends TestCase
             'manufacturer' => [
                 'manufacturer_id' => NoManufacturerId::NO_MANUFACTURER_ID,
             ],
+            'stock' => [
+                'quantity' => 0,
+                'minimal_quantity' => 0,
+            ],
             'price' => [
                 'price_tax_excluded' => 0,
                 'price_tax_included' => 0,
@@ -104,8 +108,24 @@ class ProductFormDataProviderTest extends TestCase
                 'height' => 0,
                 'depth' => 0,
                 'weight' => 0,
+                'additional_shipping_cost' => 0,
+                'delivery_time_note_type' => DeliveryTimeNoteType::TYPE_DEFAULT,
             ],
-            'activate' => false,
+            'options' => [
+                'visibility' => ProductVisibility::VISIBLE_EVERYWHERE,
+                'condition' => ProductCondition::NEW,
+                'activate' => false,
+            ],
+            'shortcuts' => [
+                'price' => [
+                    'price_tax_excluded' => 0,
+                    'price_tax_included' => 0,
+                    'tax_rules_group_id' => 42,
+                ],
+                'stock' => [
+                    'quantity' => 0,
+                ],
+            ],
         ];
 
         $defaultData = $provider->getDefaultData();
@@ -121,6 +141,10 @@ class ProductFormDataProviderTest extends TestCase
             'manufacturer' => [
                 'manufacturer_id' => NoManufacturerId::NO_MANUFACTURER_ID,
             ],
+            'stock' => [
+                'quantity' => 0,
+                'minimal_quantity' => 0,
+            ],
             'price' => [
                 'price_tax_excluded' => 0,
                 'price_tax_included' => 0,
@@ -133,8 +157,24 @@ class ProductFormDataProviderTest extends TestCase
                 'height' => 0,
                 'depth' => 0,
                 'weight' => 0,
+                'additional_shipping_cost' => 0,
+                'delivery_time_note_type' => DeliveryTimeNoteType::TYPE_DEFAULT,
             ],
-            'activate' => true,
+            'options' => [
+                'visibility' => ProductVisibility::VISIBLE_EVERYWHERE,
+                'condition' => ProductCondition::NEW,
+                'activate' => true,
+            ],
+            'shortcuts' => [
+                'price' => [
+                    'price_tax_excluded' => 0,
+                    'price_tax_included' => 0,
+                    'tax_rules_group_id' => 42,
+                ],
+                'stock' => [
+                    'quantity' => 0,
+                ],
+            ],
         ];
 
         $defaultData = $provider->getDefaultData();

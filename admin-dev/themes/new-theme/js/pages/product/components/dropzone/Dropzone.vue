@@ -49,11 +49,11 @@
         ]"
       >
         <i class="material-icons">add_a_photo</i><br>
-        {{ $t("window.dropImages") }}<br>
-        <a>{{ $t("window.selectFiles") }}</a><br>
+        {{ $t('window.dropImages') }}<br>
+        <a>{{ $t('window.selectFiles') }}</a><br>
         <small>
-          {{ $t("window.recommendedSize") }}<br>
-          {{ $t("window.recommendedFormats") }}
+          {{ $t('window.recommendedSize') }}<br>
+          {{ $t('window.recommendedFormats') }}
         </small>
       </div>
 
@@ -126,7 +126,7 @@
           </div>
         </div>
         <div class="iscover">
-          {{ $t("window.cover") }}
+          {{ $t('window.cover') }}
         </div>
       </div>
     </div>
@@ -299,6 +299,7 @@
           if (file.is_cover) {
             file.previewElement.classList.add('is-cover');
           }
+
           file.previewElement.addEventListener('click', () => {
             const input = file.previewElement.querySelector(DropzoneMap.checkbox);
             input.checked = !input.checked;
@@ -328,6 +329,10 @@
           file.legends = response.legends;
           // Update dataset so that it can be selected later
           file.previewElement.dataset.id = file.image_id;
+
+          if (file.is_cover) {
+            file.previewElement.classList.add('is-cover');
+          }
         });
       },
       /**
@@ -449,7 +454,11 @@
               const coverElement = document.querySelector(
                 DropzoneMap.coveredPreview,
               );
-              coverElement.classList.remove('is-cover');
+
+              if (coverElement) {
+                coverElement.classList.remove('is-cover');
+              }
+
               savedImageElement.classList.add('is-cover');
 
               this.files = this.files.map((file) => {
@@ -537,7 +546,7 @@
 </script>
 
 <style lang="scss" type="text/scss">
-@import "~@scss/config/_settings.scss";
+@import '~@scss/config/_settings.scss';
 
 .product-page #product-images-dropzone {
   &.full {
