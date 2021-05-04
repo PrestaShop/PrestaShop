@@ -100,11 +100,7 @@ describe('Filter attributes by id, name and position', async () => {
         const numberOfAttributesAfterFilter = await attributesPage.getNumberOfElementInGrid(page);
         await expect(numberOfAttributesAfterFilter).to.be.at.most(numberOfAttributes);
 
-        const textColumn = await attributesPage.getTextColumn(
-          page,
-          1,
-          test.args.filterBy,
-        );
+        const textColumn = await attributesPage.getTextColumn(page, 1, test.args.filterBy);
 
         if (test.args.filterBy === 'a!position') {
           await expect(textColumn).to.contains(test.args.filterValue + 1);

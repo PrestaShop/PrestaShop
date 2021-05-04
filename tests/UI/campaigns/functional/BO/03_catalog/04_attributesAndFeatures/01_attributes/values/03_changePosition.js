@@ -64,18 +64,9 @@ describe('Change value position', async () => {
     it('should filter list of attributes', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'filterAttributes', baseContext);
 
-      await attributesPage.filterTable(
-        page,
-        'b!name',
-        Attributes.size.name,
-      );
+      await attributesPage.filterTable(page, 'b!name', Attributes.size.name);
 
-      const textColumn = await attributesPage.getTextColumn(
-        page,
-        1,
-        'b!name',
-      );
-
+      const textColumn = await attributesPage.getTextColumn(page, 1, 'b!name');
       await expect(textColumn).to.contains(Attributes.size.name);
     });
 
