@@ -381,4 +381,9 @@ class AdminTabsControllerCore extends AdminController
             }
         }
     }
+
+    public function access($action, $disable = false)
+    {
+        return false;
+    }
 }
