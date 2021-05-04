@@ -118,11 +118,11 @@ class ProductImageRepository extends AbstractObjectModelRepository
     /**
      * @param ProductId $productId
      *
-     * @return Image[]
+     * @return ImageId[]
      *
      * @throws CoreException
      */
-    public function getImages(ProductId $productId): array
+    public function getImagesIds(ProductId $productId): array
     {
         $qb = $this->connection->createQueryBuilder();
 
@@ -141,9 +141,31 @@ class ProductImageRepository extends AbstractObjectModelRepository
             return [];
         }
 
-        $images = [];
+        $imagesIds = [];
         foreach ($results as $result) {
-            $imageId = new ImageId((int) $result['id_image']);
+            $imagesIds[] = new ImageId((int) $result['id_image']);
+        }
+
+        return $imagesIds;
+    }
+
+    /**
+     * @param ProductId $productId
+     *
+     * @return Image[]
+     *
+     * @throws CoreException
+     */
+    public function getImages(ProductId $productId): array
+    {
+        $imagesIds = $this->getImagesIds($productId);
+
+        if (empty($imagesIds)) {
+            return [];
+        }
+
+        $images = [];
+        foreach ($imagesIds as $imageId) {
             $images[] = $this->get($imageId);
         }
 

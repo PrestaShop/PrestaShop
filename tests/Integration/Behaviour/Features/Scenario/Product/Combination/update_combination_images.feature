@@ -49,29 +49,28 @@ Feature: Associate combination image from Back Office (BO)
       | small_default  | 98    | 98     |
 
   Scenario: I associate images to a combination
-    Given I add product "product1" with following information:
-      | name[en-US] | universal T-shirt |
-      | type        | combinations      |
+    Given I update product "product1" type to combinations
     And product product1 type should be combinations
     And I generate combinations for product product1 using following attributes:
       | Size  | [S,M]         |
       | Color | [White,Black] |
+    # The fallback image is the first one from the product
     And product "product1" should have following combinations:
-      | id reference   | combination name        | reference | attributes           | impact on price | quantity | is default | image url |
-      | product1SWhite | Size - S, Color - White |           | [Size:S,Color:White] | 0               | 0        | true       |           |
-      | product1SBlack | Size - S, Color - Black |           | [Size:S,Color:Black] | 0               | 0        | false      |           |
-      | product1MWhite | Size - M, Color - White |           | [Size:M,Color:White] | 0               | 0        | false      |           |
-      | product1MBlack | Size - M, Color - Black |           | [Size:M,Color:Black] | 0               | 0        | false      |           |
+      | id reference   | combination name        | reference | attributes           | impact on price | quantity | is default | image url                                          |
+      | product1SWhite | Size - S, Color - White |           | [Size:S,Color:White] | 0               | 0        | true       | http://myshop.com/img/p/{image1}-small_default.jpg |
+      | product1SBlack | Size - S, Color - Black |           | [Size:S,Color:Black] | 0               | 0        | false      | http://myshop.com/img/p/{image1}-small_default.jpg |
+      | product1MWhite | Size - M, Color - White |           | [Size:M,Color:White] | 0               | 0        | false      | http://myshop.com/img/p/{image1}-small_default.jpg |
+      | product1MBlack | Size - M, Color - Black |           | [Size:M,Color:Black] | 0               | 0        | false      | http://myshop.com/img/p/{image1}-small_default.jpg |
     And combination "product1SWhite" should have no images
-    When I associate "[image1, image2]" to combination "product1SWhite"
-    Then combination "product1SWhite" should have following images "[image1, image2]"
+    When I associate "[image2]" to combination "product1SWhite"
+    Then combination "product1SWhite" should have following images "[image2]"
     When I associate "[image3, image4]" to combination "product1MBlack"
     Then combination "product1MBlack" should have following images "[image3, image4]"
     And product "product1" should have following combinations:
       | id reference   | combination name        | reference | attributes           | impact on price | quantity | is default | image url                                          |
-      | product1SWhite | Size - S, Color - White |           | [Size:S,Color:White] | 0               | 0        | true       | http://myshop.com/img/p/{image1}-small_default.jpg |
-      | product1SBlack | Size - S, Color - Black |           | [Size:S,Color:Black] | 0               | 0        | false      |                                                    |
-      | product1MWhite | Size - M, Color - White |           | [Size:M,Color:White] | 0               | 0        | false      |                                                    |
+      | product1SWhite | Size - S, Color - White |           | [Size:S,Color:White] | 0               | 0        | true       | http://myshop.com/img/p/{image2}-small_default.jpg |
+      | product1SBlack | Size - S, Color - Black |           | [Size:S,Color:Black] | 0               | 0        | false      | http://myshop.com/img/p/{image1}-small_default.jpg |
+      | product1MWhite | Size - M, Color - White |           | [Size:M,Color:White] | 0               | 0        | false      | http://myshop.com/img/p/{image1}-small_default.jpg |
       | product1MBlack | Size - M, Color - Black |           | [Size:M,Color:Black] | 0               | 0        | false      | http://myshop.com/img/p/{image3}-small_default.jpg |
     When I remove all images associated to combination "product1SWhite"
     And combination "product1SWhite" should have no images
