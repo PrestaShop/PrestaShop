@@ -5162,6 +5162,7 @@ class CartCore extends ObjectModel
     protected function splitGiftsProductsQuantity()
     {
         $this->shouldSplitGiftProductsQuantity = true;
+        $this->_products = null;
 
         return $this;
     }
@@ -5172,6 +5173,7 @@ class CartCore extends ObjectModel
     protected function mergeGiftsProductsQuantity()
     {
         $this->shouldSplitGiftProductsQuantity = false;
+        $this->_products = null;
 
         return $this;
     }
@@ -5179,6 +5181,7 @@ class CartCore extends ObjectModel
     protected function excludeGiftsDiscountFromTotal()
     {
         $this->shouldExcludeGiftsDiscount = true;
+        $this->_products = null;
 
         return $this;
     }
@@ -5186,6 +5189,7 @@ class CartCore extends ObjectModel
     protected function includeGiftsDiscountInTotal()
     {
         $this->shouldExcludeGiftsDiscount = false;
+        $this->_products = null;
 
         return $this;
     }
