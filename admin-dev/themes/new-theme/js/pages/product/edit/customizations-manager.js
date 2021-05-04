@@ -25,6 +25,7 @@
 
 import ProductMap from '@pages/product/product-map';
 import ProductEventMap from '@pages/product/product-event-map';
+import ConfirmModal from '@components/modal';
 
 const {$} = window;
 
@@ -53,15 +54,32 @@ export default class CustomizationsManager {
     const newItem = this.prototypeTemplate.replace(new RegExp(this.prototypeName, 'g'), this.getIndex());
 
     this.$customizationFieldsList.append(newItem);
-    this.eventEmitter.emit(ProductEventMap.customizations.rowAdded, {index});
     window.prestaShopUiKit.initToolTips();
+    const {translatableInput} = window.prestashop.instance;
+    translatableInput.refreshFormInputs(this.$customizationsContainer.closest('form'));
+    this.eventEmitter.emit(ProductEventMap.customizations.rowAdded, {index});
   }
 
   removeCustomizationField(event) {
-    $(event.currentTarget)
-      .closest(ProductMap.customizations.customizationFieldRow)
-      .remove();
-    this.eventEmitter.emit(ProductEventMap.customizations.rowRemoved);
+    const $deleteButton = $(event.currentTarget);
+    const modal = new ConfirmModal(
+      {
+        id: 'modal-confirm-delete-customization',
+        confirmTitle: $deleteButton.data('modal-title'),
+        confirmMessage: $deleteButton.data('modal-message'),
+        confirmButtonLabel: $deleteButton.data('modal-apply'),
+        closeButtonLabel: $deleteButton.data('modal-cancel'),
+        confirmButtonClass: 'btn-danger',
+        closable: true,
+      },
+      () => {
+        $deleteButton
+          .closest(ProductMap.customizations.customizationFieldRow)
+          .remove();
+        this.eventEmitter.emit(ProductEventMap.customizations.rowRemoved);
+      },
+    );
+    modal.show();
   }
 
   getIndex() {
