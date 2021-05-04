@@ -72,7 +72,7 @@ class AlertExtension extends AbstractTypeExtension
             $view->vars['alert_position'] = $options['alert_position'];
 
             if (is_string($options['alert_title'])) {
-              $view->vars['alert_title'] = $options['alert_title'];
+                $view->vars['alert_title'] = $options['alert_title'];
             }
         }
     }
