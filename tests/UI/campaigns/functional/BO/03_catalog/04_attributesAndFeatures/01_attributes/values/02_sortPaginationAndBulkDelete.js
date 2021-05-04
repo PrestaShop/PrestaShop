@@ -35,7 +35,7 @@ Go to view attribute 'Color'
 Create 7 new values
 Pagination next and previous
 Sort values table by ID, Value, Color and Position
-Delete the created values
+Delete the created values by bulk actions
  */
 describe('Sort and pagination values', async () => {
   // before and after functions
@@ -230,7 +230,7 @@ describe('Sort and pagination values', async () => {
     });
   });
 
-  // 4 : Delete created values
+  // 4 : Delete created values by bulk actions
   describe('Bulk delete values', async () => {
     it('should filter by value name \'toDelete\'', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'filterToBulkDelete', baseContext);

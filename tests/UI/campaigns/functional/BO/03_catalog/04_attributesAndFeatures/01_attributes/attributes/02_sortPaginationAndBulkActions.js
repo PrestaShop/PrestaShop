@@ -33,7 +33,7 @@ Go to Attributes & Features page
 Create 17 new attributes
 Pagination next and previous
 Sort attributes table by ID, Name and Position
-Delete the created attributes
+Delete the created attributes by bulk actions
  */
 describe('Sort and pagination attributes', async () => {
   // before and after functions
@@ -191,23 +191,14 @@ describe('Sort and pagination attributes', async () => {
     });
   });
 
-  // 4 : Delete created attributes
-  describe('Delete created attributes', async () => {
+  // 4 : Delete created attributes by bulk actions
+  describe('Bulk delete attributes', async () => {
     it('should filter list of attributes', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'filterToBulkDeleteAttributes', baseContext);
 
-      await attributesPage.filterTable(
-        page,
-        'b!name',
-        'todelete',
-      );
+      await attributesPage.filterTable(page, 'b!name', 'todelete');
 
-      const textColumn = await attributesPage.getTextColumn(
-        page,
-        1,
-        'b!name',
-      );
-
+      const textColumn = await attributesPage.getTextColumn(page, 1, 'b!name');
       await expect(textColumn).to.contains('todelete');
     });
 
