@@ -72,7 +72,7 @@ class HTMLTemplateOrderSlipCore extends HTMLTemplateInvoice
         $this->title = sprintf(
             HTMLTemplateOrderSlip::l('%1$s%2$06d'),
             $prefix,
-            Configuration::get('PS_CREDIT_SLIP_RESET') ? $this->getNumberOrderSlip((int) $order_slip->id) : (int) $order_slip->id
+            Configuration::get('PS_CREDIT_SLIP_RESET') ? $this->getOrderSlipIdForYear((int) $order_slip->id) : (int) $order_slip->id
         );
 
         $this->shop = new Shop((int) $this->order->id_shop);
