@@ -165,6 +165,7 @@
 {%- block number_widget -%}
   {# type="number" doesn't work with floats #}
   {%- set type = type|default('text') -%}
+  {% set attr = attr|merge({'class': 'js-comma-transformer'} ) %}
   {{ block('form_widget_simple') }}
 {%- endblock number_widget -%}
 

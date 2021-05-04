@@ -30,6 +30,7 @@ use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormInterface;
 use Symfony\Component\Form\FormView;
+use Symfony\Component\OptionsResolver\Options;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
 class TextWithUnitType extends AbstractType
@@ -51,6 +52,17 @@ class TextWithUnitType extends AbstractType
             'widget' => 'single_text',
             'unit' => 'unit',
         ]);
+
+        $resolver->setNormalizer('attr', function (Options $options, $value) {
+            $classes = 'js-comma-transformer';
+            if (!empty($value['class'])) {
+                $classes .= ' ' . $value['class'];
+            }
+
+            $value['class'] = $classes;
+
+            return $value;
+        });
     }
 
     /**
