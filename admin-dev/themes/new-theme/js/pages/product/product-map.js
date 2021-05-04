@@ -149,4 +149,8 @@ export default {
   formContentTab: '#form_content > .form-contenttab',
   leftArrow: '.left-arrow',
   rightArrow: '.right-arrow',
+  footer: {
+    previewUrlButton: '.preview-url-button',
+    deleteProductButton: '.delete-product-button',
+  },
 };

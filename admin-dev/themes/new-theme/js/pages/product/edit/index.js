@@ -23,18 +23,21 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
 
-import ProductSuppliersManager from '@pages/product/edit/product-suppliers-manager';
-import FeatureValuesManager from '@pages/product/edit/feature-values-manager';
-import CustomizationsManager from '@pages/product/edit/customizations-manager';
-import ProductMap from '@pages/product/product-map';
-import ProductPartialUpdater from '@pages/product/edit/product-partial-updater';
 import NavbarHandler from '@components/navbar-handler';
+import ProductMap from '@pages/product/product-map';
+
 import CombinationsManager from '@pages/product/edit/combinations-manager';
-import ProductTypeManager from '@pages/product/edit/product-type-manager';
-import ProductSEOManager from '@pages/product/edit/product-seo-manager';
-import initDropzone from '@pages/product/components/dropzone';
+import CustomizationsManager from '@pages/product/edit/customizations-manager';
+import FeatureValuesManager from '@pages/product/edit/feature-values-manager';
+import ProductFooterManager from '@pages/product/edit/product-footer-manager';
 import ProductFormModel from '@pages/product/edit/product-form-model';
+import ProductPartialUpdater from '@pages/product/edit/product-partial-updater';
+import ProductSEOManager from '@pages/product/edit/product-seo-manager';
+import ProductSuppliersManager from '@pages/product/edit/product-suppliers-manager';
+import ProductTypeManager from '@pages/product/edit/product-type-manager';
 import VirtualProductManager from '@pages/product/edit/virtual-product-manager';
+
+import initDropzone from '@pages/product/components/dropzone';
 import initTabs from '@pages/product/components/nav-tabs';
 
 const {$} = window;
@@ -68,6 +71,7 @@ $(() => {
 
   // Product type has strong impact on the page rendering so when it is modified it must be submitted right away
   new ProductTypeManager($(ProductMap.productTypeSelector), $productForm);
+  new ProductFooterManager();
 
   // Form has no productId data means that we are in creation mode
   if (!productId) {
