@@ -85,7 +85,9 @@ class CustomizationFieldType extends TranslatorAwareType
             ->add('remove', IconButtonType::class, [
                 'icon' => 'delete',
                 'attr' => [
-                    'class' => 'text-secondary remove-customization-btn',
+                    'class' => 'text-secondary remove-customization-btn tooltip-link',
+                    'data-toggle' => 'pstooltip',
+                    'data-original-title' => $this->trans('Remove', 'Admin.Actions'),
                 ],
             ])
         ;

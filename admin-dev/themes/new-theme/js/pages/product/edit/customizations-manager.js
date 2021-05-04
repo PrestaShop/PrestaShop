@@ -54,10 +54,13 @@ export default class CustomizationsManager {
 
     this.$customizationFieldsList.append(newItem);
     this.eventEmitter.emit(ProductEventMap.customizations.rowAdded, {index});
+    window.prestaShopUiKit.initToolTips();
   }
 
   removeCustomizationField(event) {
-    $(event.currentTarget).closest(ProductMap.customizations.customizationFieldRow).remove();
+    $(event.currentTarget)
+      .closest(ProductMap.customizations.customizationFieldRow)
+      .remove();
     this.eventEmitter.emit(ProductEventMap.customizations.rowRemoved);
   }
 
