@@ -280,6 +280,7 @@
     {% set buttonTag = 'a' %}
   {% else %}
     {% set buttonTag = 'button' %}
+    {% set attr = attr|merge({type: 'button'}) %}
   {% endif %}
 
   <{{ buttonTag }} {{ block('button_attributes') }}>
