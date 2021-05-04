@@ -36,22 +36,34 @@ use Shop;
 abstract class AbstractDeleteCategoryHandler
 {
     /**
+     * Get products that belong to a category
+     *
+     * @param int $categoryId
+     */
+    protected function getProductsWithoutCategory($categoryId)
+    {
+        $productsWithoutCategory = \Db::getInstance()->executeS('
+                    SELECT p.`id_product`
+                    FROM `' . _DB_PREFIX_ . 'product` p
+                    ' . Shop::addSqlAssociation('product', 'p') . '
+                    WHERE EXISTS (
+                        SELECT 1 FROM `' . _DB_PREFIX_ . 'category_product` cp
+                        WHERE cp.`id_product` = p.`id_product`
+                        AND cp.`id_category` = ' . $categoryId . '
+                    )
+                ');
+
+        return $productsWithoutCategory;
+    }
+
+    /**
      * Handle products category after its deletion.
      *
      * @param int $parentCategoryId
      * @param CategoryDeleteMode $mode
      */
-    protected function handleProductsUpdate($parentCategoryId, CategoryDeleteMode $mode)
+    protected function handleProductsUpdate($productsWithoutCategory, $parentCategoryId, CategoryDeleteMode $mode)
     {
-        $productsWithoutCategory = \Db::getInstance()->executeS('
-			SELECT p.`id_product`
-			FROM `' . _DB_PREFIX_ . 'product` p
-			' . Shop::addSqlAssociation('product', 'p') . '
-			WHERE NOT EXISTS (
-			    SELECT 1 FROM `' . _DB_PREFIX_ . 'category_product` cp WHERE cp.`id_product` = p.`id_product`
-			)
-		');
-
         foreach ($productsWithoutCategory as $productWithoutCategory) {
             $product = new Product((int) $productWithoutCategory['id_product']);
 
