@@ -63,6 +63,23 @@ class ProductCategoriesCommandsBuilder implements ProductCommandsBuilderInterfac
             }
         }
 
+        // Default is always amongst the associated
+        if (!empty($defaultCategoryId) && !in_array($defaultCategoryId, $associatedCategoryIds)) {
+            $associatedCategoryIds[] = $defaultCategoryId;
+        }
+
+        // If no associated categories is defined remove them all
+        if (empty($associatedCategoryIds)) {
+            return [
+                new RemoveAllAssociatedProductCategoriesCommand($productId->getValue()),
+            ];
+        }
+
+        // If no default is defined use the first one
+        if (empty($defaultCategoryId)) {
+            $defaultCategoryId = $associatedCategoryIds[0];
+        }
+
         return [
             new SetAssociatedProductCategoriesCommand(
                 $productId->getValue(),

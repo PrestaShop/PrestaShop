@@ -32,7 +32,7 @@ use PrestaShop\PrestaShop\Core\Domain\Product\Command\RemoveAllAssociatedProduct
 use PrestaShop\PrestaShop\Core\Domain\Product\Command\SetAssociatedProductCategoriesCommand;
 use PrestaShop\PrestaShop\Core\Form\IdentifiableObject\CommandBuilder\Product\ProductCategoriesCommandsBuilder;
 
-class ProductCategoriesCommandBuilderTest extends AbstractProductCommandBuilderTest
+class ProductCategoriesCommandsBuilderTest extends AbstractProductCommandBuilderTest
 {
     /**
      * @dataProvider getExpectedCommands
@@ -84,9 +84,10 @@ class ProductCategoriesCommandBuilderTest extends AbstractProductCommandBuilderT
             [$command],
         ];
 
+        // Use last defined as default as default
         $command = new SetAssociatedProductCategoriesCommand(
             $this->getProductId()->getValue(),
-            49,
+            51,
             [42, 51]
         );
         yield [
@@ -95,6 +96,32 @@ class ProductCategoriesCommandBuilderTest extends AbstractProductCommandBuilderT
                     42 => [
                         'is_associated' => true,
                         'is_default' => true,
+                    ],
+                    49 => [
+                        'is_associated' => false,
+                        'is_default' => true,
+                    ],
+                    51 => [
+                        'is_associated' => true,
+                        'is_default' => true,
+                    ],
+                ],
+            ],
+            [$command],
+        ];
+
+        // Default is always amongst the list
+        $command = new SetAssociatedProductCategoriesCommand(
+            $this->getProductId()->getValue(),
+            49,
+            [42, 51, 49]
+        );
+        yield [
+            [
+                'categories' => [
+                    42 => [
+                        'is_associated' => true,
+                        'is_default' => false,
                     ],
                     49 => [
                         'is_associated' => false,
@@ -113,6 +140,80 @@ class ProductCategoriesCommandBuilderTest extends AbstractProductCommandBuilderT
         yield [
             [
                 'categories' => [
+                ],
+            ],
+            [$command],
+        ];
+
+        // Use first associated as default
+        $command = new SetAssociatedProductCategoriesCommand(
+            $this->getProductId()->getValue(),
+            49,
+            [49, 51]
+        );
+        yield [
+            [
+                'categories' => [
+                    42 => [
+                        'is_associated' => false,
+                        'is_default' => false,
+                    ],
+                    49 => [
+                        'is_associated' => true,
+                        'is_default' => false,
+                    ],
+                    51 => [
+                        'is_associated' => true,
+                        'is_default' => false,
+                    ],
+                ],
+            ],
+            [$command],
+        ];
+
+        // Default is always associated
+        $command = new SetAssociatedProductCategoriesCommand(
+            $this->getProductId()->getValue(),
+            49,
+            [49]
+        );
+        yield [
+            [
+                'categories' => [
+                    42 => [
+                        'is_associated' => false,
+                        'is_default' => false,
+                    ],
+                    49 => [
+                        'is_associated' => false,
+                        'is_default' => true,
+                    ],
+                    51 => [
+                        'is_associated' => false,
+                        'is_default' => false,
+                    ],
+                ],
+            ],
+            [$command],
+        ];
+
+        // No associations means remove all
+        $command = new RemoveAllAssociatedProductCategoriesCommand($this->getProductId()->getValue());
+        yield [
+            [
+                'categories' => [
+                    42 => [
+                        'is_associated' => false,
+                        'is_default' => false,
+                    ],
+                    49 => [
+                        'is_associated' => false,
+                        'is_default' => false,
+                    ],
+                    51 => [
+                        'is_associated' => false,
+                        'is_default' => false,
+                    ],
                 ],
             ],
             [$command],
