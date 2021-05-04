@@ -35,7 +35,7 @@ export default {
     COMBINATIONS: 'combinations',
   },
   invalidField: '.is-invalid',
-  productFormSubmitButton: 'button[name="product[save]"]',
+  productFormSubmitButton: '.product-form-save-button',
   navigationBar: '#form-nav',
   dropzoneImagesContainer: '.product-image-dropzone',
   featureValues: {

@@ -122,7 +122,7 @@ class FooterType extends TranslatorAwareType
                     'data-toggle' => 'pstooltip',
                     'disabled' => true,
                     'title' => $this->trans('Save the product and stay on the current page: ALT+SHIFT+S', 'Admin.Catalog.Help'),
-                    'class' => 'btn-primary',
+                    'class' => 'btn-primary product-form-save-button',
                 ],
             ])
         ;
