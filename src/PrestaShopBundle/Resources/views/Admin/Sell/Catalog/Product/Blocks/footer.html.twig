@@ -25,6 +25,21 @@
 
 <div class="product-footer">
   {% block product_header_form %}
-    {{ form_row(productForm.footer) }}
+    <div class="product-footer-container">
+      {# Only a few selected elements are in the left column #}
+      <div class="product-footer-left">
+        {% if productId %}
+          {{ form_row(productForm.footer.delete) }}
+          {{ form_row(productForm.footer.preview) }}
+          {{ form_row(productForm.footer.standard_page) }}
+        {% endif %}
+        {{ form_row(productForm.footer.active) }}
+      </div>
+
+      {# The rest is displayed in the right column #}
+      <div class="product-footer-right">
+        {{ form_row(productForm.footer) }}
+      </div>
+    </div>
   {% endblock %}
 </div>
