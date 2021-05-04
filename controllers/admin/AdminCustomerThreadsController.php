@@ -857,8 +857,7 @@ class AdminCustomerThreadsControllerCore extends AdminController
         }
 
         $tpl->assign([
-            'thread_url' => 
-                $this->context->link->getAdminLink('AdminCustomerThreads') . '&amp;id_customer_thread='
+            'thread_url' => $this->context->link->getAdminLink('AdminCustomerThreads') . '&amp;id_customer_thread='
                 . (int) $message['id_customer_thread'] . '&amp;viewcustomer_thread=1',
             'link' => Context::getContext()->link,
             'current' => self::$currentIndex,
