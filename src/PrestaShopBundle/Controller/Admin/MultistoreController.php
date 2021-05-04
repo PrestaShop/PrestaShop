@@ -115,14 +115,15 @@ class MultistoreController extends FrameworkBundleAdminController
      */
     public function configurationDropdown(ShopConfigurationInterface $configuration, string $configurationKey): Response
     {
-        $groupList = $this->entityManager->getRepository(ShopGroup::class)->findBy(['active' => true]);
+        $shopGroups = $this->entityManager->getRepository(ShopGroup::class)->findBy(['active' => true]);
         $shopCustomizationChecker = $this->get('prestashop.multistore.customized_configuration_checker');
         $isGroupShopContext = $this->multistoreContext->isGroupShopContext();
         $shouldDisplayDropdown = false;
+        $groupList = [];
 
-        foreach ($groupList as $key => $group) {
-            if (count($group->getShops()) === 0) {
-                unset($groupList[$key]);
+        foreach ($shopGroups as $key => $group) {
+            if ($this->shouldIncludeGroupShop($group)) {
+                $groupList[] = $group;
             }
             if ($this->multistoreContext->isAllShopContext() || $group->getId() === $this->multistoreContext->getContextShopGroup()->id) {
                 foreach ($group->getShops() as $shop) {
@@ -145,5 +146,27 @@ class MultistoreController extends FrameworkBundleAdminController
             'configurationKey' => $configurationKey,
             'isGroupShopContext' => $isGroupShopContext,
         ]);
+    }
+
+    /**
+     * @param ShopGroup $group
+     *
+     * @return bool
+     */
+    private function shouldIncludeGroupShop(ShopGroup $group): bool
+    {
+        if (count($group->getShops()) > 0
+            && (
+                $this->multistoreContext->isAllShopContext()
+                || (
+                    $this->multistoreContext->isGroupShopContext()
+                    && $group->getId() === $this->multistoreContext->getContextShopGroup()->id
+                )
+            )
+        ) {
+            return true;
+        }
+
+        return false;
     }
 }
