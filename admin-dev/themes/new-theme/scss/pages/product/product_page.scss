@@ -269,7 +269,7 @@
       }
     }
 
-    > .alert {
+    > .alert:not(.alert-unavailable) {
       max-width: 47.65rem;
     }
 
