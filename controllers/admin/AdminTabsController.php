@@ -24,25 +24,25 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
 
+@trigger_error(
+    'The AdminTabsController is deprecated since 1.7.8 and will be removed in the next minor',
+    E_USER_DEPRECATED
+);
+
 /**
+ * @deprecated since 1.7.8, to be removed in the next minor
+ *
  * @property Tab $object
  */
 class AdminTabsControllerCore extends AdminController
 {
     protected $position_identifier = 'id_tab';
 
-    /**
-     * @deprecated since 1.7.8, to be removed in the next minor
-     */
     public function __construct()
     {
         // construct parent just to have the translator :D
         parent::__construct();
 
-        @trigger_error(
-            'The AdminTabsController is deprecated and will be removed in the next minor',
-            E_USER_DEPRECATED
-        );
         die($this->trans('This functionality has been disabled.', [], 'Admin.Notifications.Error'));
 
         $this->bootstrap = true;
