@@ -30,7 +30,7 @@ let numberOfValues = 0;
 
 /*
 Go to Attributes & Features page
-Go to view attribute 'Size' page
+Go to view attribute 'Color' page
 Filter values table by ID, Name and Position
  */
 describe('Filter values by id, name and position', async () => {
@@ -63,13 +63,13 @@ describe('Filter values by id, name and position', async () => {
     await expect(pageTitle).to.contains(attributesPage.pageTitle);
   });
 
-  it('should filter attributes table by name \'Size\'', async function () {
+  it('should filter attributes table by name \'Color\'', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'filterAttributes', baseContext);
 
-    await attributesPage.filterTable(page, 'b!name', Attributes.size.name);
+    await attributesPage.filterTable(page, 'b!name', Attributes.color.name);
 
     const textColumn = await attributesPage.getTextColumn(page, 1, 'b!name');
-    await expect(textColumn).to.contains(Attributes.size.name);
+    await expect(textColumn).to.contains(Attributes.color.name);
   });
 
   it('should view attribute', async function () {
@@ -78,7 +78,7 @@ describe('Filter values by id, name and position', async () => {
     await attributesPage.viewAttribute(page, 1);
 
     const pageTitle = await viewAttributePage.getPageTitle(page);
-    await expect(pageTitle).to.contains(`${viewAttributePage.pageTitle} ${Attributes.size.name}`);
+    await expect(pageTitle).to.contains(`${viewAttributePage.pageTitle} ${Attributes.color.name}`);
   });
 
   it('should reset all filters and get number of values in BO', async function () {
@@ -95,7 +95,7 @@ describe('Filter values by id, name and position', async () => {
           {
             testIdentifier: 'filterId',
             filterBy: 'id_attribute',
-            filterValue: Attributes.size.values.small.id,
+            filterValue: Attributes.color.values.pink.id,
           },
       },
       {
@@ -103,7 +103,15 @@ describe('Filter values by id, name and position', async () => {
           {
             testIdentifier: 'filterName',
             filterBy: 'b!name',
-            filterValue: Attributes.size.values.small.value,
+            filterValue: Attributes.color.values.white.value,
+          },
+      },
+      {
+        args:
+          {
+            testIdentifier: 'filterColor',
+            filterBy: 'a!color',
+            filterValue: Attributes.color.values.camel.color,
           },
       },
       {
@@ -111,7 +119,7 @@ describe('Filter values by id, name and position', async () => {
           {
             testIdentifier: 'filterPosition',
             filterBy: 'a!position',
-            filterValue: (Attributes.size.values.small.position - 1),
+            filterValue: (Attributes.color.values.green.position - 1),
           },
       },
     ];
