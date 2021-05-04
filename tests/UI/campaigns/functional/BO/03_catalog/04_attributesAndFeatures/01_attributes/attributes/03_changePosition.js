@@ -9,10 +9,6 @@ const loginCommon = require('@commonTests/loginBO');
 // Import pages
 const dashboardPage = require('@pages/BO/dashboard');
 const attributesPage = require('@pages/BO/catalog/attributes');
-const viewAttributePage = require('@pages/BO/catalog/attributes/view');
-
-// Import data
-const {Attributes} = require('@data/demo/attributes');
 
 // Import test context
 const testContext = require('@utils/testContext');
@@ -31,7 +27,7 @@ Go To attributes page
 Change first attribute position to 3
 Reset attribute position
  */
-describe('Change attribute and value position', async () => {
+describe('Change attribute position', async () => {
   // before and after functions
   before(async function () {
     browserContext = await helper.createBrowserContext(this.browser);
