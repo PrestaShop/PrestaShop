@@ -51,8 +51,10 @@ class AlertExtension extends AbstractTypeExtension
                 'alert_message' => null,
                 'alert_type' => 'info',
                 'alert_position' => 'append',
+                'alert_title' => null,
             ])
             ->setAllowedTypes('alert_message', ['null', 'string', 'array'])
+            ->setAllowedTypes('alert_title', ['string', 'null'])
             ->setAllowedTypes('alert_type', ['string'])
             ->setAllowedTypes('alert_position', ['string'])
             ->setAllowedValues('alert_position', ['append', 'prepend'])
@@ -68,6 +70,10 @@ class AlertExtension extends AbstractTypeExtension
             $view->vars['alert_message'] = is_string($options['alert_message']) ? [$options['alert_message']] : $options['alert_message'];
             $view->vars['alert_type'] = $options['alert_type'];
             $view->vars['alert_position'] = $options['alert_position'];
+
+            if (is_string($options['alert_title'])) {
+              $view->vars['alert_title'] = $options['alert_title'];
+            }
         }
     }
 
