@@ -1038,6 +1038,14 @@
   #form_step3_tags .token-input {
     min-width: 768px;
   }
+
+  .alert-info {
+    &.alert-experimental {
+      &::before {
+        content: "\ea4b";
+      }
+    }
+  }
 }
 
 // Combination form page
