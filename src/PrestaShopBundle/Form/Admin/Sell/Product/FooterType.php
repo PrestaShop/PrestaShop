@@ -74,21 +74,24 @@ class FooterType extends TranslatorAwareType
                 ->add('delete', IconButtonType::class, [
                     'icon' => 'delete',
                     'attr' => [
-                        'class' => 'tooltip-link',
-                        'data-toggle' => 'pstooltip',
-                        'data-placement' => 'left',
-                        'title' => $this->trans('Permanently delete this product.', 'Admin.Catalog.Help'),
-                        'data-original-title' => $this->trans('Delete item', 'Admin.Notifications.Warning'),
+                        'class' => 'tooltip-link delete-product-button',
+                        'data-modal-title' => $this->trans('Permanently delete this product.', 'Admin.Catalog.Help'),
+                        'data-modal-message' => $this->trans('Are you sure you want to delete this item?', 'Admin.Notifications.Warning'),
+                        'data-modal-apply' => $this->trans('Delete', 'Admin.Actions'),
+                        'data-modal-cancel' => $this->trans('Cancel', 'Admin.Actions'),
                         'data-remove-url' => $this->router->generate('admin_product_unit_action', [
                             'action' => 'delete',
                             'id' => $productId,
                         ]),
+                        'data-toggle' => 'pstooltip',
+                        'data-placement' => 'left',
+                        'title' => $this->trans('Permanently delete this product.', 'Admin.Catalog.Help'),
                     ],
                 ])
                 ->add('preview', ButtonType::class, [
                     'label' => $this->trans('Preview', 'Admin.Actions'),
                     'attr' => [
-                        'class' => 'btn-secondary',
+                        'class' => 'btn-secondary preview-url-button',
                         'data-seo-url' => $this->productUrlProvider->getUrl($productId, '{friendly-url}'),
                     ],
                 ])

@@ -30,7 +30,7 @@ const {$} = window;
 
 export default class ProductSEOManager {
   constructor() {
-    this.$previewButton = $('#product_preview');
+    this.$previewButton = $(ProductMap.footer.previewUrlButton);
 
     this.init();
 
@@ -48,7 +48,7 @@ export default class ProductSEOManager {
 
     // Init Serp component to preview Search engine display
     const {translatableInput, translatableField} = window.prestashop.instance;
-    let previewUrl = this.$previewButton.data('seo-url');
+    let previewUrl = this.$previewButton.data('seoUrl');
 
     if (!previewUrl) {
       previewUrl = '';
