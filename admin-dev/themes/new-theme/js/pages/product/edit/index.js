@@ -73,6 +73,7 @@ $(() => {
 
   // Product type has strong impact on the page rendering so when it is modified it must be submitted right away
   new ProductTypeManager($(ProductMap.productTypeSelector), $productForm);
+  new CategoriesManager();
   new ProductFooterManager();
 
   const $productFormSubmitButton = $(ProductMap.productFormSubmitButton);
@@ -92,7 +93,6 @@ $(() => {
 
   new FeatureValuesManager(window.prestashop.instance.eventEmitter);
   new CustomizationsManager();
-  new CategoriesManager();
 
   if (productType !== ProductMap.productType.COMBINATIONS) {
     new ProductSuppliersManager(ProductMap.suppliers.productSuppliers, true);
