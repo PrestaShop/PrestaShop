@@ -95,3 +95,5 @@ INSERT INTO `PREFIX_feature_flag` (`name`, `state`, `label_wording`, `label_doma
 VALUES
 	('product_page_v2', 0, 'Experimental product page', 'Admin.Advparameters.Feature', 'This page benefits from increased performance and includes new features such as a new combination management system. Please note this is a work in progress and some features are not available yet.', 'Admin.Advparameters.Help');
 
+/* Disable AdminTabs tab */
+UPDATE `PREFIX_access` SET `view` = '0', `add` = '0', `edit` = '0', `delete` = '0' WHERE `id_profile` = '1' AND `id_tab` = (SELECT `id_tab` FROM `PREFIX_tab` t WHERE t.class_name = 'AdminTabs' LIMIT 1);
