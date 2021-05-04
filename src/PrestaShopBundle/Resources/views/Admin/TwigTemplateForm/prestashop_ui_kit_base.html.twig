@@ -1142,12 +1142,33 @@
 
 {%- block form_alert -%}
   {% if alert_message is defined %}
-  <div class="alert alert-{{ alert_type }}" role="alert">
-    {% for message in alert_message %}
-    <p class="alert-text">
-      {{ message|raw }}
-    </p>
-    {% endfor %}
+    <div class="alert alert-{{ alert_type }}{% if alert_title is defined %} expandable-alert{% endif %}" role="alert">
+    {% if alert_title is defined %}
+      <p class="alert-text">
+        {{ alert_title|raw }}
+      </p>
+    {% else %}
+      {% for message in alert_message %}
+        <p class="alert-text">
+          {{ message|raw }}
+        </p>
+      {% endfor %}
+    {% endif %}
+
+    {% if alert_title is defined %}
+      <div class="alert-more collapse" id="expandable_{{form.vars.id}}" style="">
+        {% for message in alert_message %}
+          <p>
+            {{ message|raw }}
+          </p>
+        {% endfor %}
+      </div>
+      <div class="read-more-container">
+         <button type="button" class="read-more btn-link" data-toggle="collapse" data-target="#expandable_{{form.vars.id}}" aria-expanded="true" aria-controls="collapseDanger">
+            {{ 'Read more'|trans({}, 'Admin.Actions') }}
+          </button>
+       </div>
+    {% endif %}
   </div>
   {% endif %}
 {%- endblock -%}

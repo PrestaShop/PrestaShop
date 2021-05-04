@@ -82,7 +82,12 @@ class OptionsType extends TranslatorAwareType
                     ],
                     'required' => false,
                 ],
-                'alert_message' => $this->trans('Tags are meant to help your customers find your products via the search bar.', 'Admin.Catalog.Help'),
+                'alert_title' => $this->trans('Tags are meant to help your customers find your products via the search bar.', 'Admin.Catalog.Help'),
+                'alert_message' => $this->trans('Choose terms and keywords which your potential customers commonly would search for when looking for this product. Make sure that they are consistent with the tags you may have already defined.
+You can manage tag aliases in the [1]Search section[/1]. If you add new tags, you have to rebuild the index.', 'Admin.Catalog.Notification', [
+                        '[1]' => '<a target="_blank" href="https://mangemoi.com">',
+                        '[/1]' => '</a>',
+                    ])
             ])
             ->add('condition', ChoiceType::class, [
                 'choices' => $this->productConditionChoiceProvider->getChoices(),
