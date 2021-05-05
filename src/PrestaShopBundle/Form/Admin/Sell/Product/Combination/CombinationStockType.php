@@ -31,16 +31,11 @@ namespace PrestaShopBundle\Form\Admin\Sell\Product\Combination;
 use PrestaShopBundle\Form\Admin\Sell\Product\Stock\QuantityType;
 use PrestaShopBundle\Form\Admin\Sell\Product\Stock\StockOptionsType;
 use PrestaShopBundle\Form\Admin\Type\DatePickerType;
-use PrestaShopBundle\Form\Admin\Type\SwitchType;
 use PrestaShopBundle\Form\Admin\Type\TranslatorAwareType;
-use Symfony\Component\Form\Extension\Core\Type\NumberType;
-use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Routing\RouterInterface;
 use Symfony\Component\Translation\TranslatorInterface;
-use Symfony\Component\Validator\Constraints\NotBlank;
-use Symfony\Component\Validator\Constraints\Type;
 
 class CombinationStockType extends TranslatorAwareType
 {
@@ -90,7 +85,7 @@ class CombinationStockType extends TranslatorAwareType
     }
 
     /**
-     * @inheritDoc
+     * {@inheritDoc}
      */
     public function configureOptions(OptionsResolver $resolver)
     {

@@ -88,11 +88,15 @@ class CombinationFormDataProvider implements FormDataProviderInterface
         $availableDate = $stockInformation->getAvailableDate();
 
         return [
-            'quantity' => $stockInformation->getQuantity(),
-            'minimal_quantity' => $stockInformation->getMinimalQuantity(),
-            'stock_location' => $stockInformation->getLocation(),
-            'low_stock_threshold' => $stockInformation->getLowStockThreshold() ?: null,
-            'low_stock_alert' => $stockInformation->isLowStockAlertEnabled(),
+            'quantities' => [
+                'quantity' => $stockInformation->getQuantity(),
+                'minimal_quantity' => $stockInformation->getMinimalQuantity(),
+            ],
+            'options' => [
+                'stock_location' => $stockInformation->getLocation(),
+                'low_stock_threshold' => $stockInformation->getLowStockThreshold() ?: null,
+                'low_stock_alert' => $stockInformation->isLowStockAlertEnabled(),
+            ],
             'available_date' => $availableDate ? $availableDate->format(DateTime::DEFAULT_DATE_FORMAT) : '',
         ];
     }
