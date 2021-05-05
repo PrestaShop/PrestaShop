@@ -178,7 +178,7 @@
         this.isModalShown = false;
         document.querySelector('body').classList.remove('overflow-hidden');
         if (this.hasGeneratedCombinations) {
-          this.eventEmitter.emit(CombinationEvents.refreshList);
+          this.eventEmitter.emit(CombinationEvents.refreshCombinationList);
         }
       },
       /**

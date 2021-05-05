@@ -91,6 +91,9 @@
         return Object.values(this.selectedFilters).reduce((total, attributes) => total + attributes.length, 0);
       },
     },
+    mounted() {
+      this.eventEmitter.on(CombinationEvents.clearFilters, () => this.clearAll());
+    },
     methods: {
       /**
        * This methods is used to initialize product filters
