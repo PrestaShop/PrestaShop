@@ -761,7 +761,7 @@ class ValidateCore
      */
     public static function isOrderWay($way)
     {
-        return $way === 'ASC' | $way === 'DESC' | $way === 'asc' | $way === 'desc';
+        return $way === 'ASC' | $way === 'DESC' | $way === 'asc' | $way === 'desc' | $way === 'random';
     }
 
     /**
