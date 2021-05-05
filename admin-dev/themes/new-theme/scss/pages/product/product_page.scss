@@ -1071,6 +1071,10 @@ $product-page-padding-bottom: 80px !default;
       &.selected {
         border: solid $primary 3px;
       }
+
+      .form-check-radio {
+        display: none;
+      }
     }
   }
 }
