@@ -146,7 +146,9 @@ final class ProductFormDataProvider implements FormDataProviderInterface
                 'delivery_time_note_type' => DeliveryTimeNoteType::TYPE_DEFAULT,
             ],
             'options' => [
-                'visibility' => ProductVisibility::VISIBLE_EVERYWHERE,
+                'visibility' => [
+                    'visibility' => ProductVisibility::VISIBLE_EVERYWHERE,
+                ],
                 'condition' => ProductCondition::NEW,
             ],
             'footer' => [
