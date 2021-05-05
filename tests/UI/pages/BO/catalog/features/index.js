@@ -7,6 +7,9 @@ class Features extends BOBasePage {
 
     this.pageTitle = 'Features • ';
 
+    // Header selectors
+    this.addNewFeatureLink = '#page-header-desc-feature-new_feature';
+
     // Help card selectors
     this.helpCardLink = '#toolbar-nav a.btn-help';
     this.helpContainerBlock = '#help-container';
@@ -41,6 +44,24 @@ class Features extends BOBasePage {
     // Row actions selectors
     this.tableColumnActions = row => `${this.tableBodyColumn(row)} .btn-group-action`;
     this.tableColumnActionsViewLink = row => `${this.tableColumnActions(row)} a[title='View']`;
+
+    // Pagination selectors
+    this.paginationActiveLabel = `${this.gridForm} ul.pagination.pull-right li.active a`;
+    this.paginationDiv = `${this.gridForm} .pagination`;
+    this.paginationDropdownButton = `${this.paginationDiv} .dropdown-toggle`;
+    this.paginationItems = number => `${this.gridForm} .dropdown-menu a[data-items='${number}']`;
+    this.paginationPreviousLink = `${this.gridForm} .icon-angle-left`;
+    this.paginationNextLink = `${this.gridForm} .icon-angle-right`;
+  }
+
+  /* Header methods */
+  /**
+   * Go to add new feature page
+   * @param page
+   * @return {Promise<void>}
+   */
+  async goToAddFeaturePage(page) {
+    await this.clickAndWaitForNavigation(page, this.addNewFeatureLink);
   }
 
   /* Filter methods */
@@ -165,6 +186,51 @@ class Features extends BOBasePage {
    */
   async getHelpDocumentURL(page) {
     return this.getAttributeContent(page, this.helpCardLink, 'href');
+  }
+
+  /* Pagination methods */
+  /**
+   * Get pagination label
+   * @param page
+   * @return {Promise<string>}
+   */
+  getPaginationLabel(page) {
+    return this.getTextContent(page, this.paginationActiveLabel);
+  }
+
+  /**
+   * Select pagination limit
+   * @param page
+   * @param number
+   * @returns {Promise<string>}
+   */
+  async selectPaginationLimit(page, number) {
+    await this.waitForSelectorAndClick(page, this.paginationDropdownButton);
+    await this.clickAndWaitForNavigation(page, this.paginationItems(number));
+
+    return this.getPaginationLabel(page);
+  }
+
+  /**
+   * Click on next
+   * @param page
+   * @returns {Promise<string>}
+   */
+  async paginationNext(page) {
+    await this.clickAndWaitForNavigation(page, this.paginationNextLink);
+
+    return this.getPaginationLabel(page);
+  }
+
+  /**
+   * Click on previous
+   * @param page
+   * @returns {Promise<string>}
+   */
+  async paginationPrevious(page) {
+    await this.clickAndWaitForNavigation(page, this.paginationPreviousLink);
+
+    return this.getPaginationLabel(page);
   }
 }
 
