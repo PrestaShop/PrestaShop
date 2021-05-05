@@ -28,12 +28,15 @@ declare(strict_types=1);
 
 namespace PrestaShopBundle\Form\Admin\Sell\Product\Combination;
 
+use PrestaShopBundle\Form\Admin\Sell\Product\Stock\QuantityType;
+use PrestaShopBundle\Form\Admin\Sell\Product\Stock\StockOptionsType;
 use PrestaShopBundle\Form\Admin\Type\DatePickerType;
 use PrestaShopBundle\Form\Admin\Type\SwitchType;
 use PrestaShopBundle\Form\Admin\Type\TranslatorAwareType;
 use Symfony\Component\Form\Extension\Core\Type\NumberType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
+use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Routing\RouterInterface;
 use Symfony\Component\Translation\TranslatorInterface;
 use Symfony\Component\Validator\Constraints\NotBlank;
@@ -73,59 +76,9 @@ class CombinationStockType extends TranslatorAwareType
      */
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
-        if ($this->stockManagementEnabled) {
-            $builder
-                ->add('quantity', NumberType::class, [
-                    'required' => false,
-                    'label' => $this->trans('Quantity', 'Admin.Catalog.Feature'),
-                    'constraints' => [
-                        new NotBlank(),
-                        new Type(['type' => 'numeric']),
-                    ],
-                ])
-            ;
-        }
-
         $builder
-            ->add('minimal_quantity', NumberType::class, [
-                'label' => $this->trans('Minimum quantity for sale', 'Admin.Catalog.Feature'),
-                'constraints' => [
-                    new NotBlank(),
-                    new Type(['type' => 'numeric']),
-                ],
-            ])
-            ->add('stock_location', TextType::class, [
-                'label' => $this->trans('Stock location', 'Admin.Catalog.Feature'),
-                'required' => false,
-            ])
-            ->add('low_stock_threshold', NumberType::class, [
-                'label' => $this->trans('Low stock level', 'Admin.Catalog.Feature'),
-                'help' => $this->trans('Leave empty to disable', 'Admin.Catalog.Help'),
-                'constraints' => [
-                    new Type(['type' => 'numeric']),
-                ],
-                'required' => false,
-                'default_empty_data' => 0,
-                // Using null here allows to keep the field empty in the page instead of 0
-                'empty_view_data' => null,
-            ])
-            ->add('low_stock_alert', SwitchType::class, [
-                'label' => $this->trans(
-                    'Send me an email when the quantity is below or equals this level',
-                    'Admin.Catalog.Feature'
-                ),
-                'help' => $this->trans(
-                    'The email will be sent to all the users who have the right to run the stock page. To modify the permissions, go to [1]Advanced Parameters > Team[/1]',
-                    'Admin.Catalog.Help',
-                    [
-                        '[1]' => sprintf(
-                            '<a target="_blank" href="%s">',
-                            $this->router->generate('admin_employees_index')
-                        ),
-                        '[/1]' => '</a>',
-                    ]
-                ),
-            ])
+            ->add('quantities', QuantityType::class)
+            ->add('options', StockOptionsType::class)
             ->add('available_date', DatePickerType::class, [
                 'label' => $this->trans('Availability date', 'Admin.Catalog.Feature'),
                 'required' => false,
@@ -134,5 +87,16 @@ class CombinationStockType extends TranslatorAwareType
                 ],
             ])
         ;
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function configureOptions(OptionsResolver $resolver)
+    {
+        parent::configureOptions($resolver);
+        $resolver->setDefaults([
+            'label' => false,
+        ]);
     }
 }
