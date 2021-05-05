@@ -24,28 +24,44 @@
  *#}
 {% form_theme combinationsForm '@PrestaShop/Admin/Sell/Catalog/Product/Form/combination_listing_form_theme.html.twig' %}
 
-{% block form_product_combinations %}
-  <div id="combination-edit-modal"
-  data-translations="{{ {
-    'modal.save': 'Save'|trans({}, 'Admin.Actions'),
-    'modal.close': 'Close'|trans({}, 'Admin.Actions'),
-    'modal.previous': 'Previous combination'|trans({}, 'Admin.Catalog.Feature'),
-    'modal.next': 'Next combination'|trans({}, 'Admin.Catalog.Feature'),
-  }|json_encode }}"
-  ></div>
-  <div class="justify-content-center" id="combinations-list">
-    <div class="spinner-product-combinations-container" id="productCombinationsLoading">
-      <div class="spinner spinner-primary"></div>
+{% block combinations_paginated_list %}
+  <div id="combinations-paginated-list" class="d-none">
+    {# Combination filters for paginated list #}
+    <div id="combinations_filters"
+         data-translations="{{ {
+           'filters.label': 'Filter by:'|trans({}, 'Admin.Actions'),
+           'filters.clear': 'Clear filter|Clear %filtersNb% filters'|trans({}, 'Admin.Actions'),
+         }|json_encode }}"
+    ></div>
+
+    <div id="combination-edit-modal"
+         data-translations="{{ {
+           'modal.save': 'Save'|trans({}, 'Admin.Actions'),
+           'modal.close': 'Close'|trans({}, 'Admin.Actions'),
+           'modal.previous': 'Previous combination'|trans({}, 'Admin.Catalog.Feature'),
+           'modal.next': 'Next combination'|trans({}, 'Admin.Catalog.Feature'),
+         }|json_encode }}"
+    ></div>
+    <div class="justify-content-center" id="combinations-list">
+      <div class="spinner-product-combinations-container" id="productCombinationsLoading">
+        <div class="spinner spinner-primary"></div>
+      </div>
+
+      {# Integrate the token that will be required in the combination update request #}
+      {{ form_row(combinationsForm, {'attr': {'data-combination-token': csrf_token(combinationItemForm.vars.name) }}) }}
     </div>
 
-    {# Integrate the token that will be required in the combination update request #}
-    {{ form_row(combinationsForm, {'attr': {'data-combination-token': csrf_token(combinationItemForm.vars.name) }}) }}
-  </div>
+    <div class="row justify-content-center" id="combinations-pagination">
+      {{ include('@PrestaShop/Admin/Common/javascript_pagination.html.twig', {
+        'limit': combinationsLimit,
+        'limitChoices': combinationLimitChoices,
+      }) }}
+    </div>
 
-  <div class="row justify-content-center" id="combinations-pagination">
-    {{ include('@PrestaShop/Admin/Common/javascript_pagination.html.twig', {
-      'limit': combinationsLimit,
-      'limitChoices': combinationLimitChoices,
-    }) }}
+    <div class="justify-content-start mt-2 mb-3">
+      <button id="generate-combinations-button" class="btn btn-primary generate-combinations-button" disabled="disabled">
+        {{ 'Generate combinations'|trans({}, 'Admin.Catalog.Feature') }}
+      </button>
+    </div>
   </div>
-{% endblock form_product_combinations %}
+{% endblock %}
