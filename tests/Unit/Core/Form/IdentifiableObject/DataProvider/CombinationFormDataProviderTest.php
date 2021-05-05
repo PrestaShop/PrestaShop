@@ -119,11 +119,11 @@ class CombinationFormDataProviderTest extends TestCase
             'location' => 'top shelf',
             'available_date' => new DateTime('1969/07/20'),
         ];
-        $expectedOutputData['stock']['quantity'] = 42;
-        $expectedOutputData['stock']['minimal_quantity'] = 7;
-        $expectedOutputData['stock']['low_stock_threshold'] = 5;
-        $expectedOutputData['stock']['low_stock_alert'] = true;
-        $expectedOutputData['stock']['stock_location'] = 'top shelf';
+        $expectedOutputData['stock']['quantities']['quantity'] = 42;
+        $expectedOutputData['stock']['quantities']['minimal_quantity'] = 7;
+        $expectedOutputData['stock']['options']['low_stock_threshold'] = 5;
+        $expectedOutputData['stock']['options']['low_stock_alert'] = true;
+        $expectedOutputData['stock']['options']['stock_location'] = 'top shelf';
         $expectedOutputData['stock']['available_date'] = '1969-07-20';
 
         $datasets[] = [
@@ -467,11 +467,15 @@ class CombinationFormDataProviderTest extends TestCase
             'product_id' => self::PRODUCT_ID,
             'name' => self::DEFAULT_NAME,
             'stock' => [
-                'quantity' => self::DEFAULT_QUANTITY,
-                'minimal_quantity' => 0,
-                'stock_location' => 'location',
-                'low_stock_threshold' => null,
-                'low_stock_alert' => false,
+                'quantities' => [
+                    'quantity' => self::DEFAULT_QUANTITY,
+                    'minimal_quantity' => 0,
+                ],
+                'options' => [
+                    'stock_location' => 'location',
+                    'low_stock_threshold' => null,
+                    'low_stock_alert' => false,
+                ],
                 'available_date' => '',
             ],
             'price_impact' => [
