@@ -3484,6 +3484,7 @@
       <name>actionFeatureFlagSave</name>
       <title>Modify feature flag form submitted data</title>
       <description>This hook allows to modify the Feature Flag data being submitted through the form after it was saved</description>
+    </hook>
     <hook id="actionAdminSecurityControllerPostProcessBefore">
       <name>actionAdminSecurityControllerPostProcessBefore</name>
       <title>On post-process in Admin Security Controller</title>
