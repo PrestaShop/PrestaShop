@@ -29,6 +29,7 @@ declare(strict_types=1);
 namespace PrestaShopBundle\Form\Admin\Sell\Product\Combination;
 
 use PrestaShop\PrestaShop\Core\Form\ConfigurableFormChoiceProviderInterface;
+use PrestaShopBundle\Form\Admin\Sell\Product\Options\ReferencesType;
 use PrestaShopBundle\Form\Admin\Sell\Product\Options\SuppliersType;
 use PrestaShopBundle\Form\Admin\Type\TranslatorAwareType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
@@ -71,10 +72,7 @@ class CombinationFormType extends TranslatorAwareType
             ->add('name', HiddenType::class)
             ->add('stock', CombinationStockType::class)
             ->add('price_impact', CombinationPriceImpactType::class)
-            ->add('details', CombinationDetailsType::class, [
-                'label' => $this->trans('Specific references', 'Admin.Catalog.Feature'),
-                'label_tag_name' => 'h2',
-            ])
+            ->add('references', ReferencesType::class)
             ->add('suppliers', SuppliersType::class, [
                 'alert_message' => [
                     $this->trans('This interface allows you to specify the suppliers of the current combination.', 'Admin.Catalog.Help'),
