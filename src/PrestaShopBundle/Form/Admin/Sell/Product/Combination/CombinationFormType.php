@@ -69,10 +69,7 @@ class CombinationFormType extends TranslatorAwareType
     {
         $builder
             ->add('name', HiddenType::class)
-            ->add('stock', CombinationStockType::class, [
-                'label' => $this->trans('Stock', 'Admin.Catalog.Feature'),
-                'label_tag_name' => 'h2',
-            ])
+            ->add('stock', CombinationStockType::class)
             ->add('price_impact', CombinationPriceImpactType::class, [
                 'label' => $this->trans('Price and impact', 'Admin.Catalog.Feature'),
                 'label_tag_name' => 'h2',
@@ -82,8 +79,10 @@ class CombinationFormType extends TranslatorAwareType
                 'label_tag_name' => 'h2',
             ])
             ->add('suppliers', SuppliersType::class, [
-                'label' => $this->trans('Suppliers', 'Admin.Global'),
-                'label_tag_name' => 'h2',
+                'alert_message' => [
+                    $this->trans('This interface allows you to specify the suppliers of the current combination.', 'Admin.Catalog.Help'),
+                    $this->trans('You can specify supplier references according to previously associated suppliers.', 'Admin.Catalog.Help'),
+                ],
             ])
             ->add('images', ChoiceType::class, [
                 'label' => $this->trans('Images', 'Admin.Global'),
@@ -103,7 +102,13 @@ class CombinationFormType extends TranslatorAwareType
      */
     public function configureOptions(OptionsResolver $resolver)
     {
-        $resolver->setRequired(['product_id']);
-        $resolver->setAllowedTypes('product_id', ['int']);
+        $resolver
+            ->setRequired(['product_id'])
+            ->setAllowedTypes('product_id', ['int'])
+            ->setDefaults([
+                'required' => false,
+                'label' => false,
+            ])
+        ;
     }
 }
