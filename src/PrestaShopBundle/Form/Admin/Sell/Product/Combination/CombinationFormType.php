@@ -70,10 +70,7 @@ class CombinationFormType extends TranslatorAwareType
         $builder
             ->add('name', HiddenType::class)
             ->add('stock', CombinationStockType::class)
-            ->add('price_impact', CombinationPriceImpactType::class, [
-                'label' => $this->trans('Price and impact', 'Admin.Catalog.Feature'),
-                'label_tag_name' => 'h2',
-            ])
+            ->add('price_impact', CombinationPriceImpactType::class)
             ->add('details', CombinationDetailsType::class, [
                 'label' => $this->trans('Specific references', 'Admin.Catalog.Feature'),
                 'label_tag_name' => 'h2',
