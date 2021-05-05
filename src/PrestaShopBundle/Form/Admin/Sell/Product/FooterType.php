@@ -68,44 +68,47 @@ class FooterType extends TranslatorAwareType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $productId = !empty($options['product_id']) ? (int) $options['product_id'] : null;
+        $deleteUrl = $productId ? $this->router->generate('admin_product_unit_action', [
+            'action' => 'delete',
+            'id' => $productId,
+        ]) : null;
+        $seoUrl = $productId ? $this->productUrlProvider->getUrl($productId, '{friendly-url}') : null;
 
-        if ($productId) {
-            $builder
-                ->add('delete', IconButtonType::class, [
-                    'icon' => 'delete',
-                    'attr' => [
-                        'class' => 'tooltip-link delete-product-button',
-                        'data-modal-title' => $this->trans('Permanently delete this product.', 'Admin.Catalog.Help'),
-                        'data-modal-message' => $this->trans('Are you sure you want to delete this item?', 'Admin.Notifications.Warning'),
-                        'data-modal-apply' => $this->trans('Delete', 'Admin.Actions'),
-                        'data-modal-cancel' => $this->trans('Cancel', 'Admin.Actions'),
-                        'data-remove-url' => $this->router->generate('admin_product_unit_action', [
-                            'action' => 'delete',
-                            'id' => $productId,
-                        ]),
-                        'data-toggle' => 'pstooltip',
-                        'data-placement' => 'left',
-                        'title' => $this->trans('Permanently delete this product.', 'Admin.Catalog.Help'),
-                    ],
-                ])
-                ->add('preview', ButtonType::class, [
-                    'label' => $this->trans('Preview', 'Admin.Actions'),
-                    'attr' => [
-                        'class' => 'btn-secondary preview-url-button',
-                        'data-seo-url' => $this->productUrlProvider->getUrl($productId, '{friendly-url}'),
-                    ],
-                ])
-                ->add('standard_page', IconButtonType::class, [
-                    'label' => $this->trans('Back to standard page', 'Admin.Catalog.Feature'),
-                    'type' => 'link',
-                    'attr' => [
-                        'class' => 'btn-outline-secondary',
-                        'href' => $this->router->generate('admin_product_form', [
-                            'id' => $productId,
-                        ]),
-                    ],
-                ])
-            ;
+        $builder
+            ->add('delete', IconButtonType::class, [
+                'icon' => 'delete',
+                'attr' => [
+                    'class' => 'tooltip-link delete-product-button',
+                    'data-modal-title' => $this->trans('Permanently delete this product.', 'Admin.Catalog.Help'),
+                    'data-modal-message' => $this->trans('Are you sure you want to delete this item?', 'Admin.Notifications.Warning'),
+                    'data-modal-apply' => $this->trans('Delete', 'Admin.Actions'),
+                    'data-modal-cancel' => $this->trans('Cancel', 'Admin.Actions'),
+                    'data-remove-url' => $deleteUrl,
+                    'data-toggle' => 'pstooltip',
+                    'data-placement' => 'left',
+                    'title' => $this->trans('Permanently delete this product.', 'Admin.Catalog.Help'),
+                    'disabled' => empty($productId),
+                ],
+            ])
+            ->add('preview', ButtonType::class, [
+                'label' => $this->trans('Preview', 'Admin.Actions'),
+                'attr' => [
+                    'class' => 'btn-secondary preview-url-button',
+                    'data-seo-url' => $seoUrl,
+                    'disabled' => empty($productId),
+                ],
+            ])
+        ;
+
+        if (!empty($productId)) {
+            $builder->add('standard_page', IconButtonType::class, [
+                'label' => $this->trans('Back to standard page', 'Admin.Catalog.Feature'),
+                'type' => 'link',
+                'attr' => [
+                    'class' => 'btn-outline-secondary',
+                    'href' => $this->router->generate('admin_product_form', ['id' => $productId]),
+                ],
+            ]);
         }
 
         $builder
