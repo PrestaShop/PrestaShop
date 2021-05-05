@@ -119,7 +119,9 @@ class ProductFormDataProviderTest extends TestCase
                 'delivery_time_note_type' => DeliveryTimeNoteType::TYPE_DEFAULT,
             ],
             'options' => [
-                'visibility' => ProductVisibility::VISIBLE_EVERYWHERE,
+                'visibility' => [
+                    'visibility' => ProductVisibility::VISIBLE_EVERYWHERE,
+                ],
                 'condition' => ProductCondition::NEW,
             ],
             'footer' => [
@@ -178,7 +180,9 @@ class ProductFormDataProviderTest extends TestCase
                 'delivery_time_note_type' => DeliveryTimeNoteType::TYPE_DEFAULT,
             ],
             'options' => [
-                'visibility' => ProductVisibility::VISIBLE_EVERYWHERE,
+                'visibility' => [
+                    'visibility' => ProductVisibility::VISIBLE_EVERYWHERE,
+                ],
                 'condition' => ProductCondition::NEW,
             ],
             'footer' => [
