@@ -58,6 +58,10 @@ export default {
   },
   combinations: {
     navigationTab: '#combinations-tab-nav',
+    externalCombinationTab: '#external-combination-tab',
+    preloader: '#combinations-preloader',
+    emptyState: '#combinations-empty-state',
+    combinationsPaginatedList: '#combinations-paginated-list',
     combinationsContainer: `${combinationListId}`,
     combinationsFiltersContainer: '#combinations_filters',
     combinationsGeneratorContainer: '#product_combinations_generator',
@@ -102,6 +106,7 @@ export default {
     },
     scrollBar: '.attributes-list-overflow',
     searchInput: '#product-combinations-generate .attributes-search',
+    generateCombinationsButton: '.generate-combinations-button',
   },
   virtualProduct: {
     container: '.virtual-product-file-container',
