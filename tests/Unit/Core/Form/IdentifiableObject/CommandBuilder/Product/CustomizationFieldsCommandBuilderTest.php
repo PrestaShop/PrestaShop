@@ -31,18 +31,18 @@ use Generator;
 use PrestaShop\PrestaShop\Core\Domain\Product\Customization\Command\RemoveAllCustomizationFieldsFromProductCommand;
 use PrestaShop\PrestaShop\Core\Domain\Product\Customization\Command\SetProductCustomizationFieldsCommand;
 use PrestaShop\PrestaShop\Core\Domain\Product\Customization\ValueObject\CustomizationFieldType;
-use PrestaShop\PrestaShop\Core\Form\IdentifiableObject\CommandBuilder\Product\CustomizationFieldsCommandBuilder;
+use PrestaShop\PrestaShop\Core\Form\IdentifiableObject\CommandBuilder\Product\CustomizationFieldsCommandsBuilder;
 
 class CustomizationFieldsCommandBuilderTest extends AbstractProductCommandBuilderTest
 {
     /**
-     * @var CustomizationFieldsCommandBuilder
+     * @var CustomizationFieldsCommandsBuilder
      */
     private $customizationFieldsCommandBuilder;
 
     public function setUp(): void
     {
-        $this->customizationFieldsCommandBuilder = new CustomizationFieldsCommandBuilder();
+        $this->customizationFieldsCommandBuilder = new CustomizationFieldsCommandsBuilder();
     }
 
     /**
@@ -53,7 +53,7 @@ class CustomizationFieldsCommandBuilderTest extends AbstractProductCommandBuilde
      */
     public function testBuildCommand(array $formData, array $expectedCommands): void
     {
-        $builtCommands = $this->customizationFieldsCommandBuilder->buildCommand($this->getProductId(), $formData);
+        $builtCommands = $this->customizationFieldsCommandBuilder->buildCommands($this->getProductId(), $formData);
         $this->assertEquals($expectedCommands, $builtCommands);
     }
 

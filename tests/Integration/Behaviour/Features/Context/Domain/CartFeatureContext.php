@@ -152,7 +152,7 @@ class CartFeatureContext extends AbstractDomainFeatureContext
     }
 
     /**
-     * @When I add :quantity products :productName to the cart :cartReference
+     * @When /^I add (\d+) product(?:s)? "(.+)" to the cart "(.+)"$/
      *
      * @param int $quantity
      * @param string $productName
@@ -1045,7 +1045,13 @@ class CartFeatureContext extends AbstractDomainFeatureContext
      */
     private function getProductIdByName(string $productName)
     {
-        $products = $this->getQueryBus()->handle(new SearchProducts($productName, 1, Context::getContext()->currency->iso_code));
+        $products = $this->getQueryBus()->handle(
+            new SearchProducts(
+                $productName,
+                1,
+                Context::getContext()->currency->iso_code
+            )
+        );
 
         if (empty($products)) {
             throw new RuntimeException(sprintf('Product with name "%s" was not found', $productName));

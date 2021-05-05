@@ -30,3 +30,4 @@ Feature: Combination actions are forbidden on product which do not have combinat
       | Color | [White,Black,Blue] |
     Then I should get error that this action is allowed for combinations product only
     And product "product1" type should be standard
+    And product "product1" should have no attribute groups

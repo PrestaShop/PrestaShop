@@ -96,8 +96,8 @@
   display: inline-block;
   padding: 0.125rem $small-space;
   font-weight: 600;
-  background: #fff;
-  border: 2px solid #fff;
+  background: $white;
+  border: 2px solid $white;
 }
 
 .product-actions {
@@ -137,7 +137,7 @@
     height: 2.75rem;
     padding: 0.175rem 0.5rem;
     color: $gray-darker;
-    background-color: #fff;
+    background-color: $white;
   }
 
   .input-group-btn-vertical {
@@ -172,7 +172,7 @@
       width: 33%;
       padding: $small-space $medium-space;
       text-align: center;
-      background: #fff;
+      background: $white;
       border: 0.3125rem $gray-light solid;
     }
 
@@ -180,7 +180,7 @@
       background: $gray-lighter;
 
       &:nth-of-type(even) {
-        background: #fff;
+        background: $white;
       }
 
       td {
@@ -237,7 +237,7 @@
     margin-left: $small-space;
     font-size: $font-size-base;
     font-weight: 600;
-    color: #fff;
+    color: $white;
     text-transform: uppercase;
     background: $brand-secondary;
   }
@@ -252,7 +252,7 @@
 .tabs {
   padding: $medium-space $large-space;
   margin-top: 2rem;
-  background: #fff;
+  background: $white;
 
   .tab-pane {
     padding-top: $medium-space;
@@ -290,7 +290,7 @@
   margin-bottom: $medium-space;
 
   img {
-    background: #fff;
+    background: $white;
   }
 
   .layer {
@@ -331,13 +331,13 @@
       margin-left: -30%;
 
       .product-cover-modal {
-        background: #fff;
+        background: $white;
       }
 
       .image-caption {
         width: 800px;
         padding: 0.625rem 1.25rem;
-        background: #fff;
+        background: $white;
         border-top: $gray-light 1px solid;
 
         p {
@@ -367,7 +367,7 @@
         img {
           width: 9.25rem;
           cursor: pointer;
-          background: #fff;
+          background: $white;
 
           &:hover {
             border: $brand-primary 3px solid;
@@ -382,7 +382,7 @@
         z-index: 0;
         width: 100%;
         height: 100%;
-        color: #fff;
+        color: $white;
         text-align: center;
         cursor: pointer;
 
@@ -410,7 +410,7 @@
   color: $gray-darker;
 
   .modal-header {
-    background: #fff;
+    background: $white;
 
     .close {
       opacity: 1;
@@ -652,7 +652,7 @@
     select {
       width: auto;
       padding-right: 1.875rem;
-      background-color: #fff;
+      background-color: $white;
     }
 
     ul li {
@@ -683,7 +683,7 @@
     margin-top: $small-space;
     font-size: $base-font-size;
     font-weight: 700;
-    color: #fff;
+    color: $white;
     text-transform: uppercase;
     pointer-events: auto;
     background: $brand-primary;
@@ -737,7 +737,7 @@
     border: none;
 
     &:focus {
-      background-color: #fff;
+      background-color: $white;
       outline: 0.1875rem solid $brand-primary;
     }
   }
@@ -828,7 +828,7 @@
     height: 2.5rem;
     margin-left: 0.5rem;
     cursor: pointer;
-    background-color: #fff;
+    background-color: $white;
     background-repeat: no-repeat;
     background-position: 0.25rem 0.25rem;
     background-size: 2rem 2rem;

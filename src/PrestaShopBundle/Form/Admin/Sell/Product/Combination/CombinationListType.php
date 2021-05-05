@@ -32,6 +32,9 @@ use Symfony\Component\Form\Extension\Core\Type\CollectionType;
 use Symfony\Component\Form\Extension\Core\Type\HiddenType;
 use Symfony\Component\Form\FormBuilderInterface;
 
+/**
+ * Form uses collection of combination items and so it can be rendered as a grid consisting of submittable inputs.
+ */
 class CombinationListType extends TranslatorAwareType
 {
     /**

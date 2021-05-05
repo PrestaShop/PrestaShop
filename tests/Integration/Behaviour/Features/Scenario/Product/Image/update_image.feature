@@ -27,13 +27,13 @@ Feature: Update product image from Back Office (BO)
     When I add new image "image5" named "app_icon.png" to product "product1"
     When I add new image "image6" named "logo.jpg" to product "product1"
     And product "product1" should have following images:
-      | image reference | is cover | legend[en-US] | position |
-      | image1          | true     |               | 1        |
-      | image2          | false    |               | 2        |
-      | image3          | false    |               | 3        |
-      | image4          | false    |               | 4        |
-      | image5          | false    |               | 5        |
-      | image6          | false    |               | 6        |
+      | image reference | is cover | legend[en-US] | position | image url                            | thumbnail url                                      |
+      | image1          | true     |               | 1        | http://myshop.com/img/p/{image1}.jpg | http://myshop.com/img/p/{image1}-small_default.jpg |
+      | image2          | false    |               | 2        | http://myshop.com/img/p/{image2}.jpg | http://myshop.com/img/p/{image2}-small_default.jpg |
+      | image3          | false    |               | 3        | http://myshop.com/img/p/{image3}.jpg | http://myshop.com/img/p/{image3}-small_default.jpg |
+      | image4          | false    |               | 4        | http://myshop.com/img/p/{image4}.jpg | http://myshop.com/img/p/{image4}-small_default.jpg |
+      | image5          | false    |               | 5        | http://myshop.com/img/p/{image5}.jpg | http://myshop.com/img/p/{image5}-small_default.jpg |
+      | image6          | false    |               | 6        | http://myshop.com/img/p/{image6}.jpg | http://myshop.com/img/p/{image6}-small_default.jpg |
     And images "[image1, image2, image3, image4, image5, image6]" should have following types generated:
       | name           | width | height |
       | cart_default   | 125   | 125    |
@@ -51,87 +51,86 @@ Feature: Update product image from Back Office (BO)
     When I update image "image1" with following information:
       | legend[en-US] | preston is alive |
     Then product "product1" should have following images:
-      | image reference | is cover | legend[en-US]    | position |
-      | image1          | true     | preston is alive | 1        |
-      | image2          | false    |                  | 2        |
-      | image3          | false    |                  | 3        |
-      | image4          | false    |                  | 4        |
-      | image5          | false    |                  | 5        |
-      | image6          | false    |                  | 6        |
+      | image reference | is cover | legend[en-US]    | position | image url                            | thumbnail url                                      |
+      | image1          | true     | preston is alive | 1        | http://myshop.com/img/p/{image1}.jpg | http://myshop.com/img/p/{image1}-small_default.jpg |
+      | image2          | false    |                  | 2        | http://myshop.com/img/p/{image2}.jpg | http://myshop.com/img/p/{image2}-small_default.jpg |
+      | image3          | false    |                  | 3        | http://myshop.com/img/p/{image3}.jpg | http://myshop.com/img/p/{image3}-small_default.jpg |
+      | image4          | false    |                  | 4        | http://myshop.com/img/p/{image4}.jpg | http://myshop.com/img/p/{image4}-small_default.jpg |
+      | image5          | false    |                  | 5        | http://myshop.com/img/p/{image5}.jpg | http://myshop.com/img/p/{image5}-small_default.jpg |
+      | image6          | false    |                  | 6        | http://myshop.com/img/p/{image6}.jpg | http://myshop.com/img/p/{image6}-small_default.jpg |
 
   Scenario: I update image cover
     When I update image "image2" with following information:
       | cover | true |
     Then product "product1" should have following images:
-      | image reference | is cover | legend[en-US] | position |
-      | image1          | false    |               | 1        |
-      | image2          | true     |               | 2        |
-      | image3          | false    |               | 3        |
-      | image4          | false    |               | 4        |
-      | image5          | false    |               | 5        |
-      | image6          | false    |               | 6        |
+      | image reference | is cover | legend[en-US] | position | image url                            | thumbnail url                                      |
+      | image1          | false    |               | 1        | http://myshop.com/img/p/{image1}.jpg | http://myshop.com/img/p/{image1}-small_default.jpg |
+      | image2          | true     |               | 2        | http://myshop.com/img/p/{image2}.jpg | http://myshop.com/img/p/{image2}-small_default.jpg |
+      | image3          | false    |               | 3        | http://myshop.com/img/p/{image3}.jpg | http://myshop.com/img/p/{image3}-small_default.jpg |
+      | image4          | false    |               | 4        | http://myshop.com/img/p/{image4}.jpg | http://myshop.com/img/p/{image4}-small_default.jpg |
+      | image5          | false    |               | 5        | http://myshop.com/img/p/{image5}.jpg | http://myshop.com/img/p/{image5}-small_default.jpg |
+      | image6          | false    |               | 6        | http://myshop.com/img/p/{image6}.jpg | http://myshop.com/img/p/{image6}-small_default.jpg |
     # Set cover false just to check it does not force the cover (it happened ^^)
     When I update image "image1" with following information:
       | legend[en-US] | preston is alive |
       | cover         | false            |
     Then product "product1" should have following images:
-      | image reference | is cover | legend[en-US]    | position |
-      | image1          | false    | preston is alive | 1        |
-      | image2          | true     |                  | 2        |
-      | image3          | false    |                  | 3        |
-      | image4          | false    |                  | 4        |
-      | image5          | false    |                  | 5        |
-      | image6          | false    |                  | 6        |
+      | image reference | is cover | legend[en-US]    | position | image url                            | thumbnail url                                      |
+      | image1          | false    | preston is alive | 1        | http://myshop.com/img/p/{image1}.jpg | http://myshop.com/img/p/{image1}-small_default.jpg |
+      | image2          | true     |                  | 2        | http://myshop.com/img/p/{image2}.jpg | http://myshop.com/img/p/{image2}-small_default.jpg |
+      | image3          | false    |                  | 3        | http://myshop.com/img/p/{image3}.jpg | http://myshop.com/img/p/{image3}-small_default.jpg |
+      | image4          | false    |                  | 4        | http://myshop.com/img/p/{image4}.jpg | http://myshop.com/img/p/{image4}-small_default.jpg |
+      | image5          | false    |                  | 5        | http://myshop.com/img/p/{image5}.jpg | http://myshop.com/img/p/{image5}-small_default.jpg |
+      | image6          | false    |                  | 6        | http://myshop.com/img/p/{image6}.jpg | http://myshop.com/img/p/{image6}-small_default.jpg |
 
-  @product-image-position
   Scenario: I update image positions
     When I update image "image2" with following information:
       | position | 5 |
     Then product "product1" should have following images:
-      | image reference | is cover | legend[en-US] | position |
-      | image1          | true     |               | 1        |
-      | image3          | false    |               | 2        |
-      | image4          | false    |               | 3        |
-      | image5          | false    |               | 4        |
-      | image2          | false    |               | 5        |
-      | image6          | false    |               | 6        |
+      | image reference | is cover | legend[en-US] | position | image url                            | thumbnail url                                      |
+      | image1          | true     |               | 1        | http://myshop.com/img/p/{image1}.jpg | http://myshop.com/img/p/{image1}-small_default.jpg |
+      | image3          | false    |               | 2        | http://myshop.com/img/p/{image3}.jpg | http://myshop.com/img/p/{image3}-small_default.jpg |
+      | image4          | false    |               | 3        | http://myshop.com/img/p/{image4}.jpg | http://myshop.com/img/p/{image4}-small_default.jpg |
+      | image5          | false    |               | 4        | http://myshop.com/img/p/{image5}.jpg | http://myshop.com/img/p/{image5}-small_default.jpg |
+      | image2          | false    |               | 5        | http://myshop.com/img/p/{image2}.jpg | http://myshop.com/img/p/{image2}-small_default.jpg |
+      | image6          | false    |               | 6        | http://myshop.com/img/p/{image6}.jpg | http://myshop.com/img/p/{image6}-small_default.jpg |
     When I update image "image6" with following information:
       | position | 2 |
     Then product "product1" should have following images:
-      | image reference | is cover | legend[en-US] | position |
-      | image1          | true     |               | 1        |
-      | image6          | false    |               | 2        |
-      | image3          | false    |               | 3        |
-      | image4          | false    |               | 4        |
-      | image5          | false    |               | 5        |
-      | image2          | false    |               | 6        |
+      | image reference | is cover | legend[en-US] | position | image url                            | thumbnail url                                      |
+      | image1          | true     |               | 1        | http://myshop.com/img/p/{image1}.jpg | http://myshop.com/img/p/{image1}-small_default.jpg |
+      | image6          | false    |               | 2        | http://myshop.com/img/p/{image6}.jpg | http://myshop.com/img/p/{image6}-small_default.jpg |
+      | image3          | false    |               | 3        | http://myshop.com/img/p/{image3}.jpg | http://myshop.com/img/p/{image3}-small_default.jpg |
+      | image4          | false    |               | 4        | http://myshop.com/img/p/{image4}.jpg | http://myshop.com/img/p/{image4}-small_default.jpg |
+      | image5          | false    |               | 5        | http://myshop.com/img/p/{image5}.jpg | http://myshop.com/img/p/{image5}-small_default.jpg |
+      | image2          | false    |               | 6        | http://myshop.com/img/p/{image2}.jpg | http://myshop.com/img/p/{image2}-small_default.jpg |
     When I update image "image1" with following information:
       | position | 2 |
     Then product "product1" should have following images:
-      | image reference | is cover | legend[en-US] | position |
-      | image6          | false    |               | 1        |
-      | image1          | true     |               | 2        |
-      | image3          | false    |               | 3        |
-      | image4          | false    |               | 4        |
-      | image5          | false    |               | 5        |
-      | image2          | false    |               | 6        |
+      | image reference | is cover | legend[en-US] | position | image url                            | thumbnail url                                      |
+      | image6          | false    |               | 1        | http://myshop.com/img/p/{image6}.jpg | http://myshop.com/img/p/{image6}-small_default.jpg |
+      | image1          | true     |               | 2        | http://myshop.com/img/p/{image1}.jpg | http://myshop.com/img/p/{image1}-small_default.jpg |
+      | image3          | false    |               | 3        | http://myshop.com/img/p/{image3}.jpg | http://myshop.com/img/p/{image3}-small_default.jpg |
+      | image4          | false    |               | 4        | http://myshop.com/img/p/{image4}.jpg | http://myshop.com/img/p/{image4}-small_default.jpg |
+      | image5          | false    |               | 5        | http://myshop.com/img/p/{image5}.jpg | http://myshop.com/img/p/{image5}-small_default.jpg |
+      | image2          | false    |               | 6        | http://myshop.com/img/p/{image2}.jpg | http://myshop.com/img/p/{image2}-small_default.jpg |
     When I update image "image1" with following information:
       | position | 42 |
     Then product "product1" should have following images:
-      | image reference | is cover | legend[en-US] | position |
-      | image6          | false    |               | 1        |
-      | image3          | false    |               | 2        |
-      | image4          | false    |               | 3        |
-      | image5          | false    |               | 4        |
-      | image2          | false    |               | 5        |
-      | image1          | true     |               | 6        |
+      | image reference | is cover | legend[en-US] | position | image url                            | thumbnail url                                      |
+      | image6          | false    |               | 1        | http://myshop.com/img/p/{image6}.jpg | http://myshop.com/img/p/{image6}-small_default.jpg |
+      | image3          | false    |               | 2        | http://myshop.com/img/p/{image3}.jpg | http://myshop.com/img/p/{image3}-small_default.jpg |
+      | image4          | false    |               | 3        | http://myshop.com/img/p/{image4}.jpg | http://myshop.com/img/p/{image4}-small_default.jpg |
+      | image5          | false    |               | 4        | http://myshop.com/img/p/{image5}.jpg | http://myshop.com/img/p/{image5}-small_default.jpg |
+      | image2          | false    |               | 5        | http://myshop.com/img/p/{image2}.jpg | http://myshop.com/img/p/{image2}-small_default.jpg |
+      | image1          | true     |               | 6        | http://myshop.com/img/p/{image1}.jpg | http://myshop.com/img/p/{image1}-small_default.jpg |
     When I update image "image3" with following information:
       | position | -8000 |
     Then product "product1" should have following images:
-      | image reference | is cover | legend[en-US] | position |
-      | image3          | false    |               | 1        |
-      | image6          | false    |               | 2        |
-      | image4          | false    |               | 3        |
-      | image5          | false    |               | 4        |
-      | image2          | false    |               | 5        |
-      | image1          | true     |               | 6        |
+      | image reference | is cover | legend[en-US] | position | image url                            | thumbnail url                                      |
+      | image3          | false    |               | 1        | http://myshop.com/img/p/{image3}.jpg | http://myshop.com/img/p/{image3}-small_default.jpg |
+      | image6          | false    |               | 2        | http://myshop.com/img/p/{image6}.jpg | http://myshop.com/img/p/{image6}-small_default.jpg |
+      | image4          | false    |               | 3        | http://myshop.com/img/p/{image4}.jpg | http://myshop.com/img/p/{image4}-small_default.jpg |
+      | image5          | false    |               | 4        | http://myshop.com/img/p/{image5}.jpg | http://myshop.com/img/p/{image5}-small_default.jpg |
+      | image2          | false    |               | 5        | http://myshop.com/img/p/{image2}.jpg | http://myshop.com/img/p/{image2}-small_default.jpg |
+      | image1          | true     |               | 6        | http://myshop.com/img/p/{image1}.jpg | http://myshop.com/img/p/{image1}-small_default.jpg |

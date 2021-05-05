@@ -22,7 +22,7 @@
 
 @mixin action-button {
   height: 2.5rem;
-  background-color: #fff;
+  background-color: $white;
   @include border-radius(1.65rem);
 }
 
@@ -106,7 +106,7 @@
 
     .action-button:not(:first-child):not(:disabled):hover,
     .delete-button:hover {
-      color: #fff;
+      color: $white;
       background-color: #3ed1f0;
       box-shadow: 0 0 0.9375rem 0 rgba(0, 0, 0, 0.2);
     }

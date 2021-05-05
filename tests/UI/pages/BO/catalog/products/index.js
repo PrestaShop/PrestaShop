@@ -382,10 +382,10 @@ class Product extends BOBasePage {
     // Click and wait to be open
     await page.click(this.filterByCategoriesButton);
     await this.waitForVisibleSelector(page, `${this.filterByCategoriesButton}[aria-expanded='true']`);
-    await Promise.all([
-      this.waitForVisibleSelector(page, `${this.filterByCategoriesButton}[aria-expanded='false']`),
-      this.clickAndWaitForNavigation(page, this.filterByCategoriesUnselectButton),
-    ]);
+
+    // Unselect all categories
+    await this.clickAndWaitForNavigation(page, this.filterByCategoriesUnselectButton);
+    await this.waitForVisibleSelector(page, `${this.filterByCategoriesButton}[aria-expanded='false']`);
   }
 
   /**

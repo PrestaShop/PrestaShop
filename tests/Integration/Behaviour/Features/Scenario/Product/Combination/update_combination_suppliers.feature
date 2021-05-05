@@ -64,14 +64,14 @@ Feature: Update product combination suppliers in Back Office (BO)
     And I generate combinations for product product1 using following attributes:
       | Size  | [S,M]              |
       | Color | [White,Black,Blue] |
-    And product product1 should have following list of combinations:
-      | reference      | combination name        | combination reference | attributes           | impact on price | final price | quantity | is default |
-      | product1SWhite | Size - S, Color - White |                       | [Size:S,Color:White] | 0               | 0           | 0        | true       |
-      | product1SBlack | Size - S, Color - Black |                       | [Size:S,Color:Black] | 0               | 0           | 0        | false      |
-      | product1Blue   | Size - S, Color - Blue  |                       | [Size:S,Color:Blue]  | 0               | 0           | 0        | false      |
-      | product1MWhite | Size - M, Color - White |                       | [Size:M,Color:White] | 0               | 0           | 0        | false      |
-      | product1MBlack | Size - M, Color - Black |                       | [Size:M,Color:Black] | 0               | 0           | 0        | false      |
-      | product1MBlue  | Size - M, Color - Blue  |                       | [Size:M,Color:Blue]  | 0               | 0           | 0        | false      |
+    And product "product1" should have following combinations:
+      | id reference   | combination name        | reference | attributes           | impact on price | quantity | is default |
+      | product1SWhite | Size - S, Color - White |           | [Size:S,Color:White] | 0               | 0        | true       |
+      | product1SBlack | Size - S, Color - Black |           | [Size:S,Color:Black] | 0               | 0        | false      |
+      | product1Blue   | Size - S, Color - Blue  |           | [Size:S,Color:Blue]  | 0               | 0        | false      |
+      | product1MWhite | Size - M, Color - White |           | [Size:M,Color:White] | 0               | 0        | false      |
+      | product1MBlack | Size - M, Color - Black |           | [Size:M,Color:Black] | 0               | 0        | false      |
+      | product1MBlue  | Size - M, Color - Blue  |           | [Size:M,Color:Blue]  | 0               | 0        | false      |
     And combination "product1SWhite" should not have any suppliers assigned
     And combination "product1SBlack" should not have any suppliers assigned
     And combination "product1Blue" should not have any suppliers assigned
@@ -81,28 +81,48 @@ Feature: Update product combination suppliers in Back Office (BO)
     When I set following suppliers for combination "product1SWhite":
       | reference               | supplier reference | combination supplier reference | currency | price tax excluded |
       | product1SWhiteSupplier1 | supplier1          | sup white shirt S 1            | USD      | 10                 |
-      | product1SWhiteSupplier2 | supplier2          | sup S2                         | USD      | 0                  |
-      | product1SWhiteSupplier3 | supplier3          | sup S3                         | USD      | 5.5                |
     Then combination "product1SWhite" should have following suppliers:
       | combination supplier reference | currency | price tax excluded |
       | sup white shirt S 1            | USD      | 10                 |
-      | sup S2                         | USD      | 0                  |
-      | sup S3                         | USD      | 5.5                |
     And combination "product1SBlack" should not have any suppliers assigned
     And combination "product1Blue" should not have any suppliers assigned
     And combination "product1MWhite" should not have any suppliers assigned
     And combination "product1MBlack" should not have any suppliers assigned
     And combination "product1MBlue" should not have any suppliers assigned
+    # Default supplier is the first one
+    And product product1 should have following supplier values:
+      | default supplier           | supplier1           |
+      | default supplier reference | sup white shirt S 1 |
+    When I set following suppliers for combination "product1SWhite":
+      | reference               | supplier reference | combination supplier reference | currency | price tax excluded |
+      | product1SWhiteSupplier1 | supplier1          | new sup white shirt S 1        | USD      | 10                 |
+      | product1SWhiteSupplier2 | supplier2          | sup S2                         | USD      | 0                  |
+      | product1SWhiteSupplier3 | supplier3          | sup S3                         | USD      | 5.5                |
+    Then combination "product1SWhite" should have following suppliers:
+      | combination supplier reference | currency | price tax excluded |
+      | new sup white shirt S 1        | USD      | 10                 |
+      | sup S2                         | USD      | 0                  |
+      | sup S3                         | USD      | 5.5                |
+    # Default supplier was already set it should be the same but reference is updated
+    And product product1 should have following supplier values:
+      | default supplier           | supplier1               |
+      | default supplier reference | new sup white shirt S 1 |
+    # Explicitly set default supplier for product
+    When I set product product1 default supplier to supplier2
+    When I set combination "product1SWhite" default supplier to supplier2
+    And product product1 should have following supplier values:
+      | default supplier           | supplier2 |
+      | default supplier reference | sup S2    |
 
   Scenario: Set suppliers for standard product while it has combinations
     Given product product1 type should be combinations
     And product product1 should not have any suppliers assigned
     And combination "product1SWhite" should have following suppliers:
       | combination supplier reference | currency | price tax excluded |
-      | sup white shirt S 1            | USD      | 10                 |
+      | new sup white shirt S 1        | USD      | 10                 |
       | sup S2                         | USD      | 0                  |
       | sup S3                         | USD      | 5.5                |
-    When I set product product1 default supplier to supplier2 and following suppliers:
+    When I set product product1 suppliers:
       | reference         | supplier reference | product supplier reference      | currency | price tax excluded |
       | product1supplier1 | supplier1          | my first supplier for product1  | USD      | 10                 |
       | product1supplier2 | supplier2          | my second supplier for product1 | EUR      | 11                 |
@@ -110,16 +130,53 @@ Feature: Update product combination suppliers in Back Office (BO)
     And product product1 should not have any suppliers assigned
     And combination "product1SWhite" should have following suppliers:
       | combination supplier reference | currency | price tax excluded |
-      | sup white shirt S 1            | USD      | 10                 |
+      | new sup white shirt S 1        | USD      | 10                 |
       | sup S2                         | USD      | 0                  |
       | sup S3                         | USD      | 5.5                |
+    When I set product product1 default supplier to supplier2
+    Then I should get error that this action is allowed for single product only
+    And product product1 should have following supplier values:
+      | default supplier           | supplier2 |
+      | default supplier reference | sup S2    |
 
-  Scenario: Remove all associated combination suppliers
-    Given product product1 type should be combinations
-    And combination "product1SWhite" should have following suppliers:
+  Scenario: Remove one of combination suppliers
+    Given combination "product1SWhite" should have following suppliers:
+      | combination supplier reference | currency | price tax excluded |
+      | new sup white shirt S 1        | USD      | 10                 |
+      | sup S2                         | USD      | 0                  |
+      | sup S3                         | USD      | 5.5                |
+    And product product1 should have following supplier values:
+      | default supplier           | supplier2 |
+      | default supplier reference | sup S2    |
+    When I set following suppliers for combination "product1SWhite":
+      | reference               | supplier reference | combination supplier reference | currency | price tax excluded |
+      | product1SWhiteSupplier1 | supplier1          | sup white shirt S 1            | USD      | 10                 |
+      | product1SWhiteSupplier2 | supplier2          | sup S2                         | USD      | 0                  |
+    Then combination "product1SWhite" should have following suppliers:
       | combination supplier reference | currency | price tax excluded |
       | sup white shirt S 1            | USD      | 10                 |
       | sup S2                         | USD      | 0                  |
+    And product product1 should have following supplier values:
+      | default supplier           | supplier2 |
+      | default supplier reference | sup S2    |
+    # If default supplier is removed another one is automatically associated
+    When I set following suppliers for combination "product1SWhite":
+      | reference                  | supplier reference | combination supplier reference | currency | price tax excluded |
+      | product1SWhiteSupplier3bis | supplier3          | sup S3                         | USD      | 5.5                |
+      | product1SWhiteSupplier1    | supplier1          | sup white shirt S 1            | USD      | 10                 |
+    Given combination "product1SWhite" should have following suppliers:
+      | combination supplier reference | currency | price tax excluded |
+      | sup white shirt S 1            | USD      | 10                 |
+      | sup S3                         | USD      | 5.5                |
+    And product product1 should have following supplier values:
+      | default supplier           | supplier3 |
+      | default supplier reference | sup S3    |
+
+  Scenario: Remove all associated combination suppliers
+    Given product product1 type should be combinations
+    Given combination "product1SWhite" should have following suppliers:
+      | combination supplier reference | currency | price tax excluded |
+      | sup white shirt S 1            | USD      | 10                 |
       | sup S3                         | USD      | 5.5                |
     When I remove all associated combination "product1SWhite" suppliers
     And combination "product1SWhite" should not have any suppliers assigned

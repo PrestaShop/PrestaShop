@@ -29,6 +29,7 @@ namespace Tests\Integration\Behaviour\Features\Context\Domain;
 use Behat\Gherkin\Node\TableNode;
 use Category;
 use Configuration;
+use Language;
 use PHPUnit\Framework\Assert as Assert;
 use PrestaShop\PrestaShop\Adapter\Form\ChoiceProvider\CategoryTreeChoiceProvider;
 use PrestaShop\PrestaShop\Adapter\Form\ChoiceProvider\GroupByIdChoiceProvider;
@@ -44,8 +45,10 @@ use PrestaShop\PrestaShop\Core\Domain\Category\Command\EditRootCategoryCommand;
 use PrestaShop\PrestaShop\Core\Domain\Category\Command\SetCategoryIsEnabledCommand;
 use PrestaShop\PrestaShop\Core\Domain\Category\Command\UpdateCategoryPositionCommand;
 use PrestaShop\PrestaShop\Core\Domain\Category\Exception\CategoryNotFoundException;
+use PrestaShop\PrestaShop\Core\Domain\Category\Query\GetCategoriesTree;
 use PrestaShop\PrestaShop\Core\Domain\Category\Query\GetCategoryForEditing;
 use PrestaShop\PrestaShop\Core\Domain\Category\Query\GetCategoryIsEnabled;
+use PrestaShop\PrestaShop\Core\Domain\Category\QueryResult\CategoryForTree;
 use PrestaShop\PrestaShop\Core\Domain\Category\QueryResult\EditableCategory;
 use PrestaShop\PrestaShop\Core\Domain\Category\ValueObject\CategoryId;
 use RuntimeException;
@@ -85,6 +88,42 @@ class CategoryFeatureContext extends AbstractDomainFeatureContext
         $this->container = $this->getContainer();
         $this->defaultLanguageId = Configuration::get('PS_LANG_DEFAULT');
         $this->psCatImgDir = _PS_CAT_IMG_DIR_;
+    }
+
+    /**
+     * @Then I should see following root categories in ":langIso" language:
+     *
+     * @param TableNode $tableNode
+     * @param string $langIso
+     */
+    public function assertRootCategoriesTree(TableNode $tableNode, string $langIso): void
+    {
+        $langId = Language::getIdByIso($langIso);
+        $categoriesTree = $this->getQueryBus()->handle(new GetCategoriesTree($langId));
+
+        Assert::assertNotEmpty($categoriesTree, 'Categories tree is empty');
+
+        $this->assertCategoriesInTree($categoriesTree, $tableNode->getColumnsHash(), $langId);
+    }
+
+    /**
+     * @Then I should see following categories in ":parentReference" category in ":langIso" language:
+     *
+     * @param TableNode $tableNode
+     * @param string $langIso
+     * @param string $parentReference
+     */
+    public function assertCategoriesTree(TableNode $tableNode, string $langIso, string $parentReference): void
+    {
+        $langId = Language::getIdByIso($langIso);
+        $categoriesTree = $this->getQueryBus()->handle(new GetCategoriesTree($langId));
+
+        Assert::assertNotEmpty($categoriesTree, 'Categories tree is empty');
+
+        $parentCategoryId = $this->getSharedStorage()->get($parentReference);
+        $actualCategories = $this->extractCategoriesByParent($categoriesTree, $parentCategoryId);
+
+        $this->assertCategoriesInTree($actualCategories, $tableNode->getColumnsHash(), $langId);
     }
 
     /**
@@ -476,6 +515,85 @@ class CategoryFeatureContext extends AbstractDomainFeatureContext
         }
 
         $this->getSharedStorage()->set($categoryReference, (int) $foundCategory['id_category']);
+    }
+
+    /**
+     * @param CategoryForTree[] $actualCategories
+     * @param array<int, array<string, string>> $expectedCategories
+     * @param int $langId
+     */
+    private function assertCategoriesInTree(array $actualCategories, array $expectedCategories, int $langId): void
+    {
+        Assert::assertEquals(
+            count($actualCategories),
+            count($expectedCategories),
+            'Unexpected categories count'
+        );
+
+        foreach ($actualCategories as $key => $category) {
+            $expectedCategory = $expectedCategories[$key];
+            $expectedId = $this->getSharedStorage()->get($expectedCategory['id reference']);
+            $expectedChildrenCategoryIds = array_map(function (string $childCategoryReference): int {
+                return $this->getSharedStorage()->get($childCategoryReference);
+            }, PrimitiveUtils::castStringArrayIntoArray($expectedCategory['direct child categories']));
+
+            $actualCategoryChildren = $category->getChildren();
+            Assert::assertEquals(
+                count($actualCategoryChildren),
+                count($expectedChildrenCategoryIds),
+                'Unexpected children categories count'
+            );
+
+            Assert::assertEquals($expectedId, $category->getCategoryId(), 'Unexpected category id');
+            Assert::assertEquals([$langId => $expectedCategory['category name']], $category->getLocalizedNames(), 'Unexpected category name');
+
+            foreach ($actualCategoryChildren as $index => $childCategory) {
+                Assert::assertEquals($expectedChildrenCategoryIds[$index], $childCategory->getCategoryId());
+            }
+        }
+    }
+
+    /**
+     * @Given category ":categoryReference" parent is category ":expectedParentReference"
+     *
+     * @param string $categoryReference
+     * @param string $expectedParentReference
+     */
+    public function assertCategoryParent(string $categoryReference, string $expectedParentReference): void
+    {
+        $editableCategory = $this->getEditableCategory($categoryReference);
+        $parentId = $this->getSharedStorage()->get($expectedParentReference);
+
+        Assert::assertEquals(
+            $editableCategory->getParentId(),
+            $parentId,
+            'Unexpected parent category'
+        );
+    }
+
+    /**
+     * @param CategoryForTree[] $categoriesTree
+     * @param int $parentCategoryId
+     *
+     * @return CategoryForTree[]
+     */
+    private function extractCategoriesByParent(array $categoriesTree, int $parentCategoryId): array
+    {
+        foreach ($categoriesTree as $category) {
+            if ($category->getCategoryId() === $parentCategoryId) {
+                return $category->getChildren();
+            }
+
+            $extractedChildren = $this->extractCategoriesByParent($category->getChildren(), $parentCategoryId);
+
+            if (empty($extractedChildren)) {
+                continue;
+            }
+
+            return $extractedChildren;
+        }
+
+        return [];
     }
 
     /**

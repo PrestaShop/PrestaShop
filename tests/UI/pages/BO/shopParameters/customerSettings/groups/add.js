@@ -41,7 +41,7 @@ class AddGroup extends BOBasePage {
 
     await Promise.all([
       page.click(this.dropdownMenuItemLink(idLang)),
-      page.waitForSelector(this.dropdownMenuItemLink(idLang), {state: 'hidden'}),
+      this.waitForHiddenSelector(page, this.dropdownMenuItemLink(idLang)),
     ]);
   }
 

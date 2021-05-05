@@ -31,13 +31,14 @@ namespace PrestaShopBundle\Controller\Admin;
 use Doctrine\ORM\EntityManager;
 use PrestaShop\PrestaShop\Adapter\Feature\MultistoreFeature;
 use PrestaShop\PrestaShop\Adapter\Shop\Context;
+use PrestaShop\PrestaShop\Core\Domain\Configuration\ShopConfigurationInterface;
 use PrestaShopBundle\Entity\Shop;
 use PrestaShopBundle\Entity\ShopGroup;
 use Symfony\Component\HttpFoundation\Response;
 
 /**
  * This class is responsible for preparing multistore elements that will be displayed in the BO
- * For now there is only the multistore header.
+ * It does not control or render a BO page, the items being output are used inside other BO pages.
  */
 class MultistoreController extends FrameworkBundleAdminController
 {
@@ -103,6 +104,42 @@ class MultistoreController extends FrameworkBundleAdminController
             'isAllShopContext' => $isAllShopContext,
             'isGroupContext' => $this->multistoreContext->isGroupShopContext(),
             'lockedToAllShopContext' => $lockedToAllShopContext,
+        ]);
+    }
+
+    /**
+     * @param ShopConfigurationInterface $configuration
+     * @param string $configurationKey
+     *
+     * @return Response
+     */
+    public function configurationDropdown(ShopConfigurationInterface $configuration, string $configurationKey): Response
+    {
+        $groupList = $this->entityManager->getRepository(ShopGroup::class)->findBy(['active' => true]);
+        $shopCustomizationChecker = $this->get('prestashop.multistore.customized_configuration_checker');
+        $shouldDisplayDropdown = false;
+
+        foreach ($groupList as $key => $group) {
+            if (count($group->getShops()) === 0) {
+                unset($groupList[$key]);
+            }
+            foreach ($group->getShops() as $shop) {
+                if ($shopCustomizationChecker->isConfigurationCustomizedForThisShop($configurationKey, $shop)) {
+                    $shouldDisplayDropdown = true;
+                    break;
+                }
+            }
+        }
+
+        if (!$shouldDisplayDropdown) {
+            // no dropdown is displayed if no shop overrides this configuration value, so we return an empty response.
+            return new Response();
+        }
+
+        return $this->render('@PrestaShop/Admin/Multistore/dropdown.html.twig', [
+            'groupList' => $groupList,
+            'shopCustomizationChecker' => $shopCustomizationChecker,
+            'configurationKey' => $configurationKey,
         ]);
     }
 }

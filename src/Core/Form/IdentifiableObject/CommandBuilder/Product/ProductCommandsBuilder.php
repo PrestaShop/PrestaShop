@@ -33,17 +33,17 @@ use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductId;
 /**
  * This class builds a collection of product commands based on the form data and a list of ProductCommandBuilderInterface
  */
-class ProductCommandsBuilder
+class ProductCommandsBuilder implements ProductCommandsBuilderInterface
 {
     /**
-     * @var ProductCommandBuilderInterface[]
+     * @var ProductCommandsBuilderInterface[]
      */
     private $commandBuilders;
 
     /**
-     * @param ProductCommandBuilderInterface[] $commandBuilders
+     * @param ProductCommandsBuilderInterface[] $commandBuilders
      */
-    public function __construct(array $commandBuilders)
+    public function __construct(iterable $commandBuilders)
     {
         $this->commandBuilders = $commandBuilders;
     }
@@ -52,15 +52,15 @@ class ProductCommandsBuilder
      * @param ProductId $productId
      * @param array $formData
      *
-     * @return ProductCommandCollection
+     * @return array
      */
-    public function buildCommands(ProductId $productId, array $formData): ProductCommandCollection
+    public function buildCommands(ProductId $productId, array $formData): array
     {
-        $commandCollection = new ProductCommandCollection();
+        $commandCollection = [];
         foreach ($this->commandBuilders as $commandBuilder) {
-            $commands = $commandBuilder->buildCommand($productId, $formData);
+            $commands = $commandBuilder->buildCommands($productId, $formData);
             if (!empty($commands)) {
-                $commandCollection->merge($commands);
+                $commandCollection = array_merge($commandCollection, $commands);
             }
         }
 

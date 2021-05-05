@@ -24,13 +24,17 @@ INSERT IGNORE INTO `PREFIX_hook` (`id_hook`, `name`, `title`, `description`, `po
   (NULL, 'displayAdminOrderCreateExtraButtons', 'Add buttons on the create order page dropdown', 'Add buttons on the create order page dropdown', '1'),
   (NULL, 'actionPresentProductListing', 'Product Listing Presenter', 'This hook is called before a product listing is presented', '1'),
   (NULL, 'actionGetProductPropertiesAfterUnitPrice', 'Product Properties', 'This hook is called after defining the properties of a product', '1'),
-  (NULL, 'actionValidateOrderAfter', 'New Order', 'This hook is called after the complete creation of an order', '1')
+  (NULL, 'actionValidateOrderAfter', 'New Order', 'This hook is called after the complete creation of an order', '1'),
+  (NULL, 'actionFeatureFlagForm', 'Modify feature flag options form content', 'This hook allows to modify the Feature Flag page form FormBuilder', 1),
+  (NULL, 'actionFeatureFlagSave', 'Modify feature flag options form saved data', 'This hook allows to modify the Feature Flag data being submitted through the form after it was saved', 1)
 ;
 
 ALTER TABLE `PREFIX_employee` ADD `has_enabled_gravatar` TINYINT UNSIGNED DEFAULT 0 NOT NULL;
 
 INSERT INTO `PREFIX_configuration` (`name`, `value`, `date_add`, `date_upd`) VALUES
-    ('PS_COOKIE_SAMESITE', 'Lax', NOW(), NOW())
+    ('PS_COOKIE_SAMESITE', 'Lax', NOW(), NOW()),
+    ('PS_SHOW_LABEL_OOS_LISTING_PAGES', '1', NOW(), NOW()),
+    ('ADDONS_API_MODULE_CHANNEL', 'stable', NOW(), NOW())
 ;
 
 ALTER TABLE `PREFIX_hook` ADD `active` TINYINT(1) UNSIGNED DEFAULT 1 NOT NULL AFTER `description`;
@@ -46,6 +50,9 @@ ALTER TABLE `PREFIX_log`
   ADD `id_lang` INT(10) NULL DEFAULT NULL after `id_shop_group`,
   ADD `in_all_shops` TINYINT(1) unsigned NOT NULL DEFAULT '0'
 ;
+
+ALTER TABLE `PREFIX_tab` ADD `wording` VARCHAR(255) DEFAULT NULL AFTER `icon`;
+ALTER TABLE `PREFIX_tab` ADD `wording_domain` VARCHAR(255) DEFAULT NULL AFTER `wording`;
 
 UPDATE `PREFIX_product` SET `location` = '' WHERE `location` IS NULL;
 ALTER TABLE `PREFIX_product` MODIFY COLUMN `location` VARCHAR(255) NOT NULL DEFAULT '';
@@ -66,3 +73,25 @@ UPDATE `PREFIX_product` SET `product_type` = "standard";
 UPDATE `PREFIX_product` SET `product_type` = "combinations" WHERE `cache_default_attribute` != 0;
 UPDATE `PREFIX_product` SET `product_type` = "pack" WHERE `cache_is_pack` = 1;
 UPDATE `PREFIX_product` SET `product_type` = "virtual" WHERE `is_virtual` = 1;
+
+/* PHP:ps_1780_add_feature_flag_tab(); */;
+
+/* this table should be created by Doctrine but we need to perform INSERT and the 1.7.8.0.sql script is called
+before Doctrine schema update */
+/* consequently we create the table manually */
+CREATE TABLE IF NOT EXISTS `PREFIX_feature_flag` (
+  `id_feature_flag` INT(10) unsigned NOT NULL AUTO_INCREMENT,
+  `name` VARCHAR(191) COLLATE utf8mb4_general_ci NOT NULL,
+  `state` TINYINT(1) NOT NULL DEFAULT '0',
+  `label_wording` VARCHAR(191) COLLATE utf8mb4_general_ci NOT NULL DEFAULT '',
+  `label_domain` VARCHAR(255) COLLATE utf8mb4_general_ci NOT NULL DEFAULT '',
+  `description_wording` VARCHAR(191) COLLATE utf8mb4_general_ci NOT NULL DEFAULT '',
+  `description_domain` VARCHAR(255) COLLATE utf8mb4_general_ci NOT NULL DEFAULT '',
+  PRIMARY KEY (`id_feature_flag`),
+  UNIQUE KEY `UNIQ_91700F175E237E06` (`name`)
+) ENGINE=ENGINE_TYPE DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+INSERT INTO `PREFIX_feature_flag` (`name`, `state`, `label_wording`, `label_domain`, `description_wording`, `description_domain`)
+VALUES
+	('product_page_v2', 0, 'Experimental product page', 'Admin.Advparameters.Feature', 'This page is a work in progress. It includes new combination management features and other features under development (virtual products, packs, etc.)', 'Admin.Advparameters.Help');
+

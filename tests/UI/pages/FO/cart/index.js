@@ -33,27 +33,27 @@ class Cart extends FOBasePage {
 
   /**
    * Get Product detail from cart
-   * @param page
-   * @param row
+   * @param page {Page} Browser tab
+   * @param row {number} Row number in the table
    * @returns {Promise<{discountPercentage: *, image: *, quantity: number, size: *, color: *, totalPrice: *,
    * price: number, regularPrice: number, name: *}>}
    */
   async getProductDetail(page, row) {
     return {
       name: await this.getTextContent(page, this.productName(row)),
-      regularPrice: parseFloat((await this.getTextContent(page, this.productRegularPrice(row))).replace('€', '')),
-      price: parseFloat((await this.getTextContent(page, this.productPrice(row))).replace('€', '')),
+      regularPrice: await this.getPriceFromText(page, this.productRegularPrice(row)),
+      price: await this.getPriceFromText(page, this.productPrice(row)),
       discountPercentage: await this.getTextContent(page, this.productDiscountPercentage(row)),
       image: await this.getAttributeContent(page, this.productImage(row), 'src'),
       quantity: parseFloat(await this.getAttributeContent(page, this.productQuantity(row), 'value')),
-      totalPrice: parseFloat((await this.getTextContent(page, this.productTotalPrice(row))).replace('€', '')),
+      totalPrice: await this.getPriceFromText(page, this.productTotalPrice(row)),
     };
   }
 
   /**
    * Get product attributes
-   * @param page
-   * @param row
+   * @param page {Page} Browser tab
+   * @param row {number} Row number in the table
    * @returns {Promise<{size: *, color: *}>}
    */
   async getProductAttributes(page, row) {
@@ -65,7 +65,7 @@ class Cart extends FOBasePage {
 
   /**
    * Click on Proceed to checkout button
-   * @param page
+   * @param page {Page} Browser tab
    * @returns {Promise<void>}
    */
   async clickOnProceedToCheckout(page) {
@@ -75,9 +75,9 @@ class Cart extends FOBasePage {
 
   /**
    * To edit the product quantity
-   * @param page
-   * @param productID
-   * @param quantity
+   * @param page {Page} Browser tab
+   * @param productID {number} ID of the product
+   * @param quantity {number} New quantity of the product
    * @returns {Promise<void>}
    */
   async editProductQuantity(page, productID, quantity) {
@@ -88,8 +88,8 @@ class Cart extends FOBasePage {
 
   /**
    * Delete product
-   * @param page
-   * @param productID
+   * @param page {Page} Browser tab
+   * @param productID {number} ID of the product
    * @returns {Promise<void>}
    */
   async deleteProduct(page, productID) {
@@ -98,20 +98,25 @@ class Cart extends FOBasePage {
 
   /**
    * Get All tax included price
-   * @param page
+   * @param page {Page} Browser tab
    * @returns {Promise<number>}
    */
   getATIPrice(page) {
     return this.getPriceFromText(page, this.cartTotalATI, 2000);
   }
 
+  /**
+   * Get subtotal discount value
+   * @param page {Page} Browser tab
+   * @returns {Promise<number>}
+   */
   getSubtotalDiscountValue(page) {
     return this.getPriceFromText(page, this.subtotalDiscountValueSpan, 2000);
   }
 
   /**
    * Is proceed to checkout button disabled
-   * @param page
+   * @param page {Page} Browser tab
    * @returns {boolean}
    */
   isProceedToCheckoutButtonDisabled(page) {
@@ -120,7 +125,7 @@ class Cart extends FOBasePage {
 
   /**
    * Is alert warning for minimum purchase total visible
-   * @param page
+   * @param page {Page} Browser tab
    * @returns {boolean}
    */
   isAlertWarningForMinimumPurchaseVisible(page) {
@@ -129,7 +134,7 @@ class Cart extends FOBasePage {
 
   /**
    * Get alert warning
-   * @param page
+   * @param page {Page} Browser tab
    * @returns {Promise<string>}
    */
   getAlertWarning(page) {
@@ -138,8 +143,8 @@ class Cart extends FOBasePage {
 
   /**
    * Set promo code
-   * @param page
-   * @param code
+   * @param page {Page} Browser tab
+   * @param code {string} The promo code
    * @returns {Promise<void>}
    */
   async addPromoCode(page, code) {

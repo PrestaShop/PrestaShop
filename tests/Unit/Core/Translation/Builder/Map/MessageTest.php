@@ -32,13 +32,13 @@ use PrestaShop\PrestaShop\Core\Translation\Builder\Map\Message;
 
 class MessageTest extends TestCase
 {
-    public function testGetKey()
+    public function testGetKey(): void
     {
         $messageTranslation = new Message('theKey');
         $this->assertSame('theKey', $messageTranslation->getKey());
     }
 
-    public function testIsTranslated()
+    public function testIsTranslated(): void
     {
         $messageTranslation = new Message('theKey');
         $this->assertFalse($messageTranslation->isTranslated());
@@ -57,7 +57,26 @@ class MessageTest extends TestCase
         $this->assertTrue($messageTranslation->isTranslated());
     }
 
-    public function testMessageContainsTerms()
+    public function testGetTranslation(): void
+    {
+        $messageTranslation = new Message('theKey');
+        $this->assertSame('theKey', $messageTranslation->getTranslation());
+
+        $messageTranslation = new Message('theKey');
+        $messageTranslation->setFileTranslation('fileTranslation');
+        $this->assertSame('fileTranslation', $messageTranslation->getTranslation());
+
+        $messageTranslation = new Message('theKey');
+        $messageTranslation->setUserTranslation('userTranslation');
+        $this->assertSame('userTranslation', $messageTranslation->getTranslation());
+
+        $messageTranslation = new Message('theKey');
+        $messageTranslation->setFileTranslation('fileTranslation');
+        $messageTranslation->setUserTranslation('userTranslation');
+        $this->assertSame('userTranslation', $messageTranslation->getTranslation());
+    }
+
+    public function testMessageContainsTerms(): void
     {
         $messageTranslation = new Message('theKey');
         $this->assertFalse($messageTranslation->contains([]));
@@ -89,7 +108,7 @@ class MessageTest extends TestCase
         $this->assertTrue($messageTranslation->contains(['kEY']));
     }
 
-    public function testMessageToArray()
+    public function testMessageToArray(): void
     {
         $messageTranslation = new Message('theKey');
         $this->assertSame([

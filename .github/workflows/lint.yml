@@ -31,6 +31,16 @@ jobs:
         with:
             node-version: '10.x'
 
+      -   name: Validate npm config
+          run: >-
+            (cd admin-dev/themes/default && npm ci)
+            && (cd admin-dev/themes/new-theme && npm ci)
+            && (cd themes && npm ci)
+            && (cd themes/classic/_dev && npm ci)
+
+      - name: BackOffice Theme `default`
+        run: cd ./admin-dev/themes/default && npm install && npm run lint
+
       - name: BackOffice Theme `new-theme`
         run: cd ./admin-dev/themes/new-theme && npm install && npm run lint
 

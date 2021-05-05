@@ -118,6 +118,25 @@
                 {{ 'No description found for this module :('|trans({}, 'Admin.Modules.Notification') }}
               {% endif %}
             </p>
+            {% if module.attributes.multistoreCompatibility is defined and module.attributes.multistoreCompatibility is not same as(constant('\\Module::MULTISTORE_COMPATIBILITY_UNKNOWN')) %}
+              <div class="module-readmore-multistore-content">
+                <h3>{{ 'Multistore compatibility:'|trans({}, 'Admin.Modules.Feature') }}</h3>
+                {% if module.attributes.multistoreCompatibility is same as(constant('\\Module::MULTISTORE_COMPATIBILITY_YES')) %}
+                  {{ 'This module is compatible with the multistore feature. It can be either:'|trans({}, 'Admin.Modules.Feature') }}
+                  <ul>
+                    <li>{{ 'configured differently from one store to another;'|trans({}, 'Admin.Modules.Feature') }}</li>
+                    <li>{{ 'configured quickly in the same way on all stores thanks to the all shops context or to the group of shops;'|trans({}, 'Admin.Modules.Feature') }}</li>
+                    <li>{{ 'or even activated for one store and deactivated for another.'|trans({}, 'Admin.Modules.Feature') }}</li>
+                  </ul>
+                {% elseif module.attributes.multistoreCompatibility is same as(constant('\\Module::MULTISTORE_COMPATIBILITY_PARTIAL')) %}
+                  {{ 'This module is partially compatible with the multistore feature. Some of its options might not be available.'|trans({}, 'Admin.Modules.Feature') }}
+                {% elseif module.attributes.multistoreCompatibility is same as(constant('\\Module::MULTISTORE_COMPATIBILITY_NOT_CONCERNED')) %}
+                  {{ 'This module is not compatible with the multistore feature because it would not be useful.'|trans({}, 'Admin.Modules.Feature') }}
+                {% elseif module.attributes.multistoreCompatibility is same as(constant('\\Module::MULTISTORE_COMPATIBILITY_NO')) %}
+                  {{ 'This module is not compatible with the multistore feature. It means that its configuration applies for all stores.'|trans({}, 'Admin.Modules.Feature') }}
+                {% endif %}
+              </div>
+            {% endif %}
           </div>
 
           <div id="additional-{{ name }}" class="tab-pane fade">

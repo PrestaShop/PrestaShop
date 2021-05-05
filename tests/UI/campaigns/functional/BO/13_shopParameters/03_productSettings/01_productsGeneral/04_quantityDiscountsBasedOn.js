@@ -42,8 +42,8 @@ const productWithCombinations = new ProductFaker(
   },
 );
 
-const firstAttributeToChoose = {color: 'White'};
-const secondAttributeToChoose = {color: 'Black'};
+const firstAttributeToChoose = {color: 'White', size: 'S'};
+const secondAttributeToChoose = {color: 'Black', size: 'S'};
 
 const firstCartTotalATI = 30;
 const secondCartTotalATI = 40;

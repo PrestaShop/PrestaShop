@@ -26,7 +26,6 @@
 
 namespace Tests\Unit\Core\Search\Builder;
 
-use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 use PrestaShop\PrestaShop\Core\Employee\ContextEmployeeProviderInterface;
 use PrestaShop\PrestaShop\Core\Search\Builder\RepositoryFiltersBuilder;
@@ -37,26 +36,18 @@ use Symfony\Component\HttpFoundation\Request;
 
 class RepositoryFiltersBuilderTest extends TestCase
 {
-    public function testBuildWithoutParameters()
+    public function testBuildWithoutParameters(): void
     {
-        /** @var AdminFilterRepository $repositoryMock */
-        $repositoryMock = $this->getMockBuilder(AdminFilterRepository::class)
-            ->disableOriginalConstructor()
-            ->getMock()
-        ;
-
-        /** @var ContextEmployeeProviderInterface $employeeProviderMock */
-        $employeeProviderMock = $this->getMockBuilder(ContextEmployeeProviderInterface::class)
-            ->disableOriginalConstructor()
-            ->getMock()
-        ;
-
-        $builder = new RepositoryFiltersBuilder($repositoryMock, $employeeProviderMock, 0);
+        $builder = new RepositoryFiltersBuilder(
+            $this->buildUnusedRepository(),
+            $this->buildEmployeeProviderMock(),
+            0
+        );
         $filters = $builder->buildFilters();
         $this->assertNull($filters);
     }
 
-    public function testBuildWithFilterId()
+    public function testBuildWithFilterId(): void
     {
         $expectedFilters = [
             'limit' => 10,
@@ -76,7 +67,7 @@ class RepositoryFiltersBuilderTest extends TestCase
         $this->assertEquals('language', $filters->getFilterId());
     }
 
-    public function testOverrideWithFilterId()
+    public function testOverrideWithFilterId(): void
     {
         $repositoryFilters = [
             'limit' => 10,
@@ -102,7 +93,7 @@ class RepositoryFiltersBuilderTest extends TestCase
         $this->assertEquals('alternate_language', $filters->getFilterId());
     }
 
-    public function testBuildWithController()
+    public function testBuildWithController(): void
     {
         $expectedFilters = [
             'limit' => 10,
@@ -123,7 +114,7 @@ class RepositoryFiltersBuilderTest extends TestCase
         $this->assertEmpty($filters->getFilterId());
     }
 
-    public function testOverrideWithController()
+    public function testOverrideWithController(): void
     {
         $repositoryFilters = [
             'limit' => 10,
@@ -150,7 +141,7 @@ class RepositoryFiltersBuilderTest extends TestCase
         $this->assertEmpty($builtFilters->getFilterId());
     }
 
-    public function testBuildWithRequest()
+    public function testBuildWithRequest(): void
     {
         $expectedFilters = [
             'limit' => 10,
@@ -170,13 +161,34 @@ class RepositoryFiltersBuilderTest extends TestCase
         $this->assertEmpty($filters->getFilterId());
     }
 
+    public function testNoNeedToPersist(): void
+    {
+        $expectedFilters = [
+            'limit' => 10,
+            'offset' => 10,
+        ];
+        $inputFilters = new Filters($expectedFilters, 'language');
+        $inputFilters->setNeedsToBePersisted(false);
+
+        $builder = new RepositoryFiltersBuilder(
+            $this->buildUnusedRepository(),
+            $this->buildEmployeeProviderMock(),
+            1
+        );
+
+        $filters = $builder->buildFilters($inputFilters);
+        $this->assertNotNull($filters);
+        $this->assertEquals($expectedFilters, $filters->all());
+        $this->assertEquals('language', $filters->getFilterId());
+    }
+
     /**
      * @param array $filters
      * @param string $filterId
      *
-     * @return MockObject|AdminFilterRepository
+     * @return AdminFilterRepository
      */
-    private function buildRepositoryByFilterIdMock(array $filters, $filterId)
+    private function buildRepositoryByFilterIdMock(array $filters, string $filterId): AdminFilterRepository
     {
         $repositoryMock = $this->getMockBuilder(AdminFilterRepository::class)
             ->disableOriginalConstructor()
@@ -209,9 +221,9 @@ class RepositoryFiltersBuilderTest extends TestCase
      * @param string $controller
      * @param string $action
      *
-     * @return MockObject|AdminFilterRepository
+     * @return AdminFilterRepository
      */
-    private function buildRepositoryByRouteMock(array $filters, $controller, $action)
+    private function buildRepositoryByRouteMock(array $filters, string $controller, string $action): AdminFilterRepository
     {
         $repositoryMock = $this->getMockBuilder(AdminFilterRepository::class)
             ->disableOriginalConstructor()
@@ -241,11 +253,34 @@ class RepositoryFiltersBuilderTest extends TestCase
     }
 
     /**
+     * @return AdminFilterRepository
+     */
+    private function buildUnusedRepository(): AdminFilterRepository
+    {
+        $repositoryMock = $this->getMockBuilder(AdminFilterRepository::class)
+            ->disableOriginalConstructor()
+            ->getMock()
+        ;
+
+        $repositoryMock
+            ->expects($this->never())
+            ->method('findByEmployeeAndFilterId')
+        ;
+
+        $repositoryMock
+            ->expects($this->never())
+            ->method('findByEmployeeAndRouteParams')
+        ;
+
+        return $repositoryMock;
+    }
+
+    /**
      * @param array $filters
      *
-     * @return MockObject|AdminFilter
+     * @return AdminFilter
      */
-    private function buildAdminFilterMock(array $filters)
+    private function buildAdminFilterMock(array $filters): AdminFilter
     {
         $adminFilterMock = $this->getMockBuilder(AdminFilter::class)
             ->disableOriginalConstructor()
@@ -262,9 +297,9 @@ class RepositoryFiltersBuilderTest extends TestCase
     }
 
     /**
-     * @return MockObject|ContextEmployeeProviderInterface
+     * @return ContextEmployeeProviderInterface
      */
-    private function buildEmployeeProviderMock()
+    private function buildEmployeeProviderMock(): ContextEmployeeProviderInterface
     {
         $employeeProviderMock = $this->getMockBuilder(ContextEmployeeProviderInterface::class)
             ->disableOriginalConstructor()
@@ -285,7 +320,7 @@ class RepositoryFiltersBuilderTest extends TestCase
      *
      * @return Request
      */
-    private function buildRequestMock($controller)
+    private function buildRequestMock(string $controller): Request
     {
         /** @var Request $requestMock */
         $requestMock = $this->getMockBuilder(Request::class)

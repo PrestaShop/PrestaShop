@@ -20,49 +20,39 @@ Feature: Generate attribute combinations for product in Back Office (BO)
     And attribute "Red" named "Red" in en language exists
 
   Scenario: Generate product combinations
-    When I add product "product1" with following information:
+    Given I add product "product1" with following information:
       | name[en-US] | universal T-shirt |
       | type        | combinations      |
-    Then product product1 type should be combinations
+    And product product1 type should be combinations
     And product product1 does not have a default combination
     When I generate combinations for product product1 using following attributes:
       | Size  | [S,M]              |
       | Color | [White,Black,Blue] |
-    Then product product1 should have following list of combinations:
-      | reference      | combination name        | combination reference | attributes           | impact on price | final price | quantity | is default |
-      | product1SWhite | Size - S, Color - White |                       | [Size:S,Color:White] | 0               | 0           | 0        | true       |
-      | product1SBlack | Size - S, Color - Black |                       | [Size:S,Color:Black] | 0               | 0           | 0        | false      |
-      | product1Blue   | Size - S, Color - Blue  |                       | [Size:S,Color:Blue]  | 0               | 0           | 0        | false      |
-      | product1MWhite | Size - M, Color - White |                       | [Size:M,Color:White] | 0               | 0           | 0        | false      |
-      | product1MBlack | Size - M, Color - Black |                       | [Size:M,Color:Black] | 0               | 0           | 0        | false      |
-      | product1MBlue  | Size - M, Color - Blue  |                       | [Size:M,Color:Blue]  | 0               | 0           | 0        | false      |
+    Then product "product1" should have following combinations:
+      | id reference   | combination name        | reference | attributes           | impact on price | quantity | is default |
+      | product1SWhite | Size - S, Color - White |           | [Size:S,Color:White] | 0               | 0        | true       |
+      | product1SBlack | Size - S, Color - Black |           | [Size:S,Color:Black] | 0               | 0        | false      |
+      | product1SBlue  | Size - S, Color - Blue  |           | [Size:S,Color:Blue]  | 0               | 0        | false      |
+      | product1MWhite | Size - M, Color - White |           | [Size:M,Color:White] | 0               | 0        | false      |
+      | product1MBlack | Size - M, Color - Black |           | [Size:M,Color:Black] | 0               | 0        | false      |
+      | product1MBlue  | Size - M, Color - Blue  |           | [Size:M,Color:Blue]  | 0               | 0        | false      |
     And product product1 default combination should be "product1SWhite"
-
-  Scenario: Product combinations pagination returns correct results
-    Given product product1 should have following list of combinations:
-      | reference      | combination name        | combination reference | attributes           | impact on price | final price | quantity | is default |
-      | product1SWhite | Size - S, Color - White |                       | [Size:S,Color:White] | 0               | 0           | 0        | true       |
-      | product1SBlack | Size - S, Color - Black |                       | [Size:S,Color:Black] | 0               | 0           | 0        | false      |
-      | product1Blue   | Size - S, Color - Blue  |                       | [Size:S,Color:Blue]  | 0               | 0           | 0        | false      |
-      | product1MWhite | Size - M, Color - White |                       | [Size:M,Color:White] | 0               | 0           | 0        | false      |
-      | product1MBlack | Size - M, Color - Black |                       | [Size:M,Color:Black] | 0               | 0           | 0        | false      |
-      | product1MBlue  | Size - M, Color - Blue  |                       | [Size:M,Color:Blue]  | 0               | 0           | 0        | false      |
-    Then I should see following combinations of product product1 in page 1 limited to maximum 2 per page:
-      | reference      | combination name        | combination reference | attributes           | impact on price | final price | quantity | is default |
-      | product1SWhite | Size - S, Color - White |                       | [Size:S,Color:White] | 0               | 0           | 0        | true       |
-      | product1SBlack | Size - S, Color - Black |                       | [Size:S,Color:Black] | 0               | 0           | 0        | false      |
-    And I should see following combinations of product product1 in page 2 limited to maximum 2 per page:
-      | reference      | combination name        | combination reference | attributes           | impact on price | final price | quantity | is default |
-      | product1Blue   | Size - S, Color - Blue  |                       | [Size:S,Color:Blue]  | 0               | 0           | 0        | false      |
-      | product1MWhite | Size - M, Color - White |                       | [Size:M,Color:White] | 0               | 0           | 0        | false      |
-    And I should see following combinations of product product1 in page 3 limited to maximum 2 per page:
-      | reference      | combination name        | combination reference | attributes           | impact on price | final price | quantity | is default |
-      | product1MBlack | Size - M, Color - Black |                       | [Size:M,Color:Black] | 0               | 0           | 0        | false      |
-      | product1MBlue  | Size - M, Color - Blue  |                       | [Size:M,Color:Blue]  | 0               | 0           | 0        | false      |
-    And there should be no combinations of product1 in page 4 when limited to maximum 2 per page
-    And I should see following combinations of product product1 in page 2 limited to maximum 3 per page:
-      | reference      | combination name        | combination reference | attributes           | impact on price | final price | quantity | is default |
-      | product1MWhite | Size - M, Color - White |                       | [Size:M,Color:White] | 0               | 0           | 0        | false      |
-      | product1MBlack | Size - M, Color - Black |                       | [Size:M,Color:Black] | 0               | 0           | 0        | false      |
-      | product1MBlue  | Size - M, Color - Blue  |                       | [Size:M,Color:Blue]  | 0               | 0           | 0        | false      |
-    And there should be no combinations of product1 in page 3 when limited to maximum 3 per page
+    And product "product1" should have the following list of attribute groups:
+      | name[en-US] | public_name[en-US] | is_color_group | group_type | position | reference  |
+      | Size        | Size               | false          | select     | 0        | Size       |
+      | Color       | Color              | true           | color      | 1        | Color      |
+    And product "product1" should have the following list of attributes in attribute group "Size":
+      | name[en-US] | color | position | reference |
+      | S           |       | 0        | S         |
+      | M           |       | 1        | M         |
+    And product "product1" should have the following list of attributes in attribute group "Color":
+      | name[en-US] | color   | position | reference |
+      | White       | #ffffff | 3        | White     |
+      | Black       | #434A54 | 6        | Black     |
+      | Blue        | #5D9CEC | 9        | Blue      |
+    And combination product1SWhite should be named "Size - S, Color - White"
+    And combination product1SBlack should be named "Size - S, Color - Black"
+    And combination product1SBlue should be named "Size - S, Color - Blue"
+    And combination product1MWhite should be named "Size - M, Color - White"
+    And combination product1MBlack should be named "Size - M, Color - Black"
+    And combination product1MBlue should be named "Size - M, Color - Blue"
