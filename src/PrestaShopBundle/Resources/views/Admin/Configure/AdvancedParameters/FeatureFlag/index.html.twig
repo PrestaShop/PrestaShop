@@ -28,6 +28,7 @@
 {% form_theme featureFlagsForm 'PrestaShopBundle:Admin/TwigTemplateForm:prestashop_ui_kit.html.twig' %}
 
 {% block content %}
+  {% if displayAllShopsContextForced %}{{ ps.infotip(multistoreForcedContextInfoTip, true) }}{% endif %}
   <div class="row justify-content-center">
     {{ form_start(featureFlagsForm, {attr : {class: 'form col', id:'feature-flag-form'}, action: path('admin_feature_flags_index') }) }}
     {% block feature_flag_form %}

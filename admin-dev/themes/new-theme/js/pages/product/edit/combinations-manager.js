@@ -31,6 +31,7 @@ import SubmittableInput from '@components/form/submittable-input';
 import ProductEventMap from '@pages/product/product-event-map';
 import initCombinationModal from '@pages/product/components/combination-modal';
 import initFilters from '@pages/product/components/filters';
+import ConfirmModal from '@components/modal';
 
 const {$} = window;
 const CombinationEvents = ProductEventMap.combinations;
@@ -83,11 +84,15 @@ export default class CombinationsManager {
 
     this.initSubmittableInputs();
 
-    this.$combinationsContainer.on('change', ProductMap.combinations.isDefaultInputsSelector, (e) => {
+    this.$combinationsContainer.on('change', ProductMap.combinations.isDefaultInputsSelector, async (e) => {
       if (!e.currentTarget.checked) {
         return;
       }
-      this.updateDefaultCombination(e.currentTarget);
+      await this.updateDefaultCombination(e.currentTarget);
+    });
+
+    this.$combinationsContainer.on('click', ProductMap.combinations.removeCombinationSelector, async (e) => {
+      await this.removeCombination(e.currentTarget);
     });
 
     this.initSortingColumns();
@@ -182,6 +187,39 @@ export default class CombinationsManager {
       this.combinationsService.setOrderBy(columnName, direction);
       this.paginator.paginate(1);
     });
+  }
+
+  /**
+   * @param {HTMLElement} button
+   *
+   * @private
+   */
+  async removeCombination(button) {
+    try {
+      const $deleteButton = $(button);
+      const modal = new ConfirmModal(
+        {
+          id: 'modal-confirm-delete-combination',
+          confirmTitle: $deleteButton.data('modal-title'),
+          confirmMessage: $deleteButton.data('modal-message'),
+          confirmButtonLabel: $deleteButton.data('modal-apply'),
+          closeButtonLabel: $deleteButton.data('modal-cancel'),
+          confirmButtonClass: 'btn-danger',
+          closable: true,
+        },
+        async () => {
+          const response = await this.combinationsService.removeCombination(this.findCombinationId(button));
+          $.growl({message: response.message});
+          this.eventEmitter.emit(CombinationEvents.refreshList);
+        },
+      );
+      modal.show();
+    } catch (error) {
+      const errorMessage = error.responseJSON
+        ? error.responseJSON.error
+        : error;
+      $.growl.error({message: errorMessage});
+    }
   }
 
   /**

@@ -1,7 +1,16 @@
 require('module-alias/register');
 const BOBasePage = require('@pages/BO/BObasePage');
 
+/**
+ * Credit slips page, contains functions that can be used on credit slips page
+ * @class
+ * @extends BOBasePage
+ */
 class CreditSlips extends BOBasePage {
+  /**
+   * @constructs
+   * Setting up texts and selectors to use on credit slips page
+   */
   constructor() {
     super();
 
@@ -38,7 +47,7 @@ class CreditSlips extends BOBasePage {
    */
   /**
    * Reset input filters
-   * @param page
+   * @param page {Page} Browser tab
    * @returns {Promise<void>}
    */
   async resetFilter(page) {
@@ -49,7 +58,7 @@ class CreditSlips extends BOBasePage {
 
   /**
    * Get number of elements in grid
-   * @param page
+   * @param page {Page} Browser tab
    * @returns {Promise<number>}
    */
   async getNumberOfElementInGrid(page) {
@@ -58,7 +67,7 @@ class CreditSlips extends BOBasePage {
 
   /**
    * Reset Filter And get number of elements in list
-   * @param page
+   * @param page {Page} Browser tab
    * @returns {Promise<number>}
    */
   async resetAndGetNumberOfLines(page) {
@@ -68,10 +77,10 @@ class CreditSlips extends BOBasePage {
 
   /**
    * Filter credit slips
-   * @param page
-   * @param filterBy, column to filter
-   * @param value, value to filter with
-   * @return {Promise<void>}
+   * @param page {Page} Browser tab
+   * @param filterBy {string} Column to filter with
+   * @param value {string} value to filter with
+   * @returns {Promise<void>}
    */
   async filterCreditSlips(page, filterBy, value = '') {
     await this.setValue(page, this.creditSlipsFilterColumnInput(filterBy), value.toString());
@@ -81,10 +90,10 @@ class CreditSlips extends BOBasePage {
 
   /**
    * Filter credit slips by date
-   * @param page
-   * @param dateFrom
-   * @param dateTo
-   * @return {Promise<void>}
+   * @param page {Page} Browser tab
+   * @param dateFrom {string} Value to set on filter date from input
+   * @param dateTo {string} Value to set on filter date to input
+   * @returns {Promise<void>}
    */
   async filterCreditSlipsByDate(page, dateFrom, dateTo) {
     await page.type(this.creditSlipsFilterColumnInput('date_issued_from'), dateFrom);
@@ -95,9 +104,9 @@ class CreditSlips extends BOBasePage {
 
   /**
    * get text from a column
-   * @param page
-   * @param row, row in table
-   * @param column, which column
+   * @param page {Page} Browser tab
+   * @param row {number} Credit slip row on table
+   * @param column {string} Column name to get
    * @returns {Promise<string>}
    */
   async getTextColumnFromTableCreditSlips(page, row, column) {
@@ -108,7 +117,7 @@ class CreditSlips extends BOBasePage {
    * Download credit slip
    * @param page {Page} Browser tab
    * @param row {number} Credit slip row on table
-   * @return {Promise<string>}
+   * @returns {Promise<string>}
    */
   downloadCreditSlip(page, row = 1) {
     return this.clickAndWaitForDownload(page, this.creditSlipDownloadButton(row));
@@ -119,7 +128,7 @@ class CreditSlips extends BOBasePage {
    * @param page {Page} Browser tab
    * @param dateFrom {string} Value to set on date from input
    * @param dateTo {string} Value to set on date to input
-   * @return {Promise<string>}
+   * @returns {Promise<string>}
    */
   async generatePDFByDateAndDownload(page, dateFrom = '', dateTo = '') {
     await this.setValuesForGeneratingPDFByDate(page, dateFrom, dateTo);
@@ -129,10 +138,10 @@ class CreditSlips extends BOBasePage {
 
   /**
    * Get message error after generate credit slip fail
-   * @param page
-   * @param dateFrom
-   * @param dateTo
-   * @return {Promise<string>}
+   * @param page {Page} Browser tab
+   * @param dateFrom {string} Value to set on date from input
+   * @param dateTo {string} Value to set on date to input
+   * @returns {Promise<string>}
    */
   async generatePDFByDateAndFail(page, dateFrom = '', dateTo = '') {
     await this.setValuesForGeneratingPDFByDate(page, dateFrom, dateTo);
@@ -142,9 +151,9 @@ class CreditSlips extends BOBasePage {
 
   /**
    * Set values to generate pdf by date
-   * @param page
-   * @param dateFrom
-   * @param dateTo
+   * @param page {Page} Browser tab
+   * @param dateFrom {string} Value to set on date from input
+   * @param dateTo {string} Value to set on date to input
    * @returns {Promise<void>}
    */
   async setValuesForGeneratingPDFByDate(page, dateFrom = '', dateTo = '') {
@@ -158,17 +167,17 @@ class CreditSlips extends BOBasePage {
   }
 
   /** Edit credit slip Prefix
-   * @param page
-   * @param prefix
-   * @return {Promise<void>}
+   * @param page {Page} Browser tab
+   * @param prefix {string} Prefix value to change
+   * @returns {Promise<void>}
    */
   async changePrefix(page, prefix) {
     await this.setValue(page, this.invoicePrefixInput, prefix);
   }
 
   /** Save credit slip options
-   * @param page
-   * @return {Promise<void>}
+   * @param page {Page} Browser tab
+   * @returns {Promise<void>}
    */
   async saveCreditSlipOptions(page) {
     await this.clickAndWaitForNavigation(page, this.saveCreditSlipOptionsButton);

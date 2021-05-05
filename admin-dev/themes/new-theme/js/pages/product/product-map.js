@@ -71,6 +71,7 @@ export default {
     combinationsTableBody: `${combinationListId} table tbody`,
     combinationIdInputsSelector: '.combination-id-input',
     isDefaultInputsSelector: '.combination-is-default-input',
+    removeCombinationSelector: '.remove-combination-item',
     paginationContainer: '#combinations-pagination',
     loadingSpinner: '#productCombinationsLoading',
     quantityInputWrapper: '.combination-quantity',

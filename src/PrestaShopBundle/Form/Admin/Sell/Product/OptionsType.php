@@ -79,6 +79,7 @@ class OptionsType extends TranslatorAwareType
         $builder
             ->add('active', SwitchType::class, [
                 'label' => $this->trans('Online', 'Admin.Global'),
+                'required' => false,
             ])
             ->add('visibility', ChoiceType::class, [
                 'choices' => $this->productVisibilityChoiceProvider->getChoices(),
@@ -86,9 +87,11 @@ class OptionsType extends TranslatorAwareType
                     'class' => 'custom-select',
                 ],
                 'label' => $this->trans('Visibility', 'Admin.Catalog.Feature'),
+                'required' => false,
             ])
             ->add('available_for_order', SwitchType::class, [
                 'label' => $this->trans('Available for order', 'Admin.Catalog.Feature'),
+                'required' => false,
             ])
             ->add('show_price', SwitchType::class, [
                 'label' => $this->trans('Show price', 'Admin.Catalog.Feature'),
@@ -159,7 +162,7 @@ class OptionsType extends TranslatorAwareType
                 'attr' => [
                     'class' => 'custom-select',
                 ],
-                'required' => true,
+                'required' => false,
                 'label' => $this->trans('Condition', 'Admin.Catalog.Feature'),
             ])
         ;

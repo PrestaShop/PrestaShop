@@ -26,7 +26,7 @@ class ContactUs extends FOBasePage {
    */
   /**
    * Get email us link href
-   * @param page
+   * @param page {Page} Browser tab
    * @returns {Promise<string>}
    */
   getEmailUsLink(page) {
@@ -35,8 +35,9 @@ class ContactUs extends FOBasePage {
 
   /**
    * Send message
-   * @param page
-   * @param contactUsData
+   * @param page {Page} Browser tab
+   * @param contactUsData {object} The data for fill the form
+   * @param file {string|null} The path of the file to upload
    * @returns {Promise<string>}
    */
   async sendMessage(page, contactUsData, file = null) {
@@ -55,6 +56,15 @@ class ContactUs extends FOBasePage {
     await page.click(this.sendButton);
 
     return this.getTextContent(page, this.alertSuccessDiv);
+  }
+
+  /**
+   * Get and return the content of the email input
+   * @param page {Page} Browser tab
+   * @returns {Promise<string>}
+   */
+  async getEmailFieldValue(page) {
+    return this.getAttributeContent(page, this.emailAddressInput, 'value');
   }
 }
 

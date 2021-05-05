@@ -136,7 +136,9 @@ class ProductFormType extends TranslatorAwareType
      */
     public function buildView(FormView $view, FormInterface $form, array $options)
     {
-        $productType = $options['data']['basic']['type'] ?? ProductType::TYPE_STANDARD;
+        // Important to get data from form and not options as it's the most up to date
+        $formData = $form->getData();
+        $productType = $formData['basic']['type'] ?? ProductType::TYPE_STANDARD;
         $formVars = [
             'product_type' => $productType,
             'product_id' => isset($options['product_id']) ? (int) $options['product_id'] : null,
@@ -152,9 +154,11 @@ class ProductFormType extends TranslatorAwareType
     {
         parent::configureOptions($resolver);
 
+        // We must allow extra fields because when we switch product type some former fields may be present in request
         $resolver->setDefaults([
             'product_id' => null,
             'product_type' => null,
+            'allow_extra_fields' => true,
         ]);
         $resolver->setAllowedTypes('product_id', ['null', 'int']);
         $resolver->setAllowedTypes('product_type', ['null', 'string']);

@@ -39,7 +39,10 @@ use PrestaShop\PrestaShop\Core\Domain\Product\QueryResult\LocalizedTags;
 use PrestaShop\PrestaShop\Core\Domain\Product\QueryResult\ProductForEditing;
 use PrestaShop\PrestaShop\Core\Domain\Product\Supplier\Query\GetProductSupplierOptions;
 use PrestaShop\PrestaShop\Core\Domain\Product\Supplier\QueryResult\ProductSupplierOptions;
+use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\DeliveryTimeNoteType;
+use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductCondition;
 use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductType;
+use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductVisibility;
 use PrestaShop\PrestaShop\Core\Util\DateTime\DateTime;
 
 /**
@@ -110,12 +113,16 @@ final class ProductFormDataProvider implements FormDataProviderInterface
      */
     public function getDefaultData()
     {
-        return [
+        return $this->addShortcutData([
             'basic' => [
                 'type' => ProductType::TYPE_STANDARD,
             ],
             'manufacturer' => [
                 'manufacturer_id' => NoManufacturerId::NO_MANUFACTURER_ID,
+            ],
+            'stock' => [
+                'quantity' => 0,
+                'minimal_quantity' => 0,
             ],
             'price' => [
                 'price_tax_excluded' => 0,
@@ -129,9 +136,15 @@ final class ProductFormDataProvider implements FormDataProviderInterface
                 'height' => 0,
                 'depth' => 0,
                 'weight' => 0,
+                'additional_shipping_cost' => 0,
+                'delivery_time_note_type' => DeliveryTimeNoteType::TYPE_DEFAULT,
             ],
-            'activate' => $this->defaultProductActivation,
-        ];
+            'options' => [
+                'visibility' => ProductVisibility::VISIBLE_EVERYWHERE,
+                'condition' => ProductCondition::NEW,
+                'activate' => $this->defaultProductActivation,
+            ],
+        ]);
     }
 
     /**

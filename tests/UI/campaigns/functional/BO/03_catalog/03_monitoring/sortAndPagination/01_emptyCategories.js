@@ -18,41 +18,28 @@ const CategoryFaker = require('@data/faker/category');
 // Import test context
 const testContext = require('@utils/testContext');
 
-const baseContext = 'functional_BO_catalog_monitoring_sortListOfEmptyCategories';
+const baseContext = 'functional_BO_catalog_monitoring_sortAndPagination_emptyCategories';
 
 let browserContext;
 let page;
 let numberOfCategories = 0;
 let numberOfEmptyCategories = 0;
-const firstCreateCategoryData = new CategoryFaker({displayed: false});
-const secondCreateCategoryData = new CategoryFaker();
-const thirdCreateCategoryData = new CategoryFaker();
+const tableName = 'empty_category';
 
 /*
-Create new category
+Create 11 new categories
 Sort list of empty categories
+Pagination next and previous
  */
-describe('Sort list of empty categories', async () => {
+describe('Sort and pagination list of empty categories', async () => {
   // before and after functions
   before(async function () {
     browserContext = await helper.createBrowserContext(this.browser);
     page = await helper.newTab(browserContext);
-
-    // Create categories images
-    await Promise.all([
-      files.generateImage(`${firstCreateCategoryData.name}.jpg`),
-      files.generateImage(`${secondCreateCategoryData.name}.jpg`),
-      files.generateImage(`${thirdCreateCategoryData.name}.jpg`),
-    ]);
   });
 
   after(async () => {
     await helper.closeBrowserContext(browserContext);
-
-    /* Delete the generated image */
-    await files.deleteFile(`${firstCreateCategoryData.name}.jpg`);
-    await files.deleteFile(`${secondCreateCategoryData.name}.jpg`);
-    await files.deleteFile(`${thirdCreateCategoryData.name}.jpg`);
   });
 
   it('should login in BO', async function () {
@@ -81,32 +68,33 @@ describe('Sort list of empty categories', async () => {
     await expect(numberOfCategories).to.be.above(0);
   });
 
-  // 1 : Create 3 empty categories
-  describe('Create 3 empty categories in BO', async () => {
-    const tests = [
-      {args: {categoryToCreate: firstCreateCategoryData}},
-      {args: {categoryToCreate: secondCreateCategoryData}},
-      {args: {categoryToCreate: thirdCreateCategoryData}},
-    ];
+  // 1 : Create 11 categories
+  const creationTests = new Array(11).fill(0, 0, 11);
+  describe('Create 11 categories in BO', async () => {
+    creationTests.forEach((test, index) => {
+      const createCategoryData = new CategoryFaker({name: `todelete${index}`});
+      before(() => files.generateImage(`todelete${index}.jpg`));
 
-    tests.forEach((test, index) => {
       it('should go to add new category page', async function () {
         await testContext.addContextItem(this, 'testIdentifier', `goToAddCategoryPage${index}`, baseContext);
 
         await categoriesPage.goToAddNewCategoryPage(page);
+
         const pageTitle = await addCategoryPage.getPageTitle(page);
         await expect(pageTitle).to.contains(addCategoryPage.pageTitleCreate);
       });
 
-      it('should create category and check the  number of categories', async function () {
+      it(`should create category n°${index + 1} and check the number of categories`, async function () {
         await testContext.addContextItem(this, 'testIdentifier', `createCategory${index}`, baseContext);
 
-        const textResult = await addCategoryPage.createEditCategory(page, test.args.categoryToCreate);
+        const textResult = await addCategoryPage.createEditCategory(page, createCategoryData);
         await expect(textResult).to.equal(categoriesPage.successfulCreationMessage);
 
         const numberOfCategoriesAfterCreation = await categoriesPage.getNumberOfElementInGrid(page);
         await expect(numberOfCategoriesAfterCreation).to.be.equal(numberOfCategories + 1 + index);
       });
+
+      after(() => files.deleteFile(`todelete${index}.jpg`));
     });
   });
 
@@ -149,13 +137,13 @@ describe('Sort list of empty categories', async () => {
 
     sortTests.forEach((test) => {
       it(
-        `should sort empty categories by '${test.args.sortBy}' '${test.args.sortDirection}' and check result`,
+        `should sort empty categories table by '${test.args.sortBy}' '${test.args.sortDirection}' and check result`,
         async function () {
           await testContext.addContextItem(this, 'testIdentifier', test.args.testIdentifier, baseContext);
 
           let nonSortedTable = await monitoringPage.getAllRowsColumnContent(
             page,
-            'empty_category',
+            tableName,
             test.args.sortBy,
           );
 
@@ -163,7 +151,7 @@ describe('Sort list of empty categories', async () => {
 
           let sortedTable = await monitoringPage.getAllRowsColumnContent(
             page,
-            'empty_category',
+            tableName,
             test.args.sortBy,
           );
 
@@ -184,45 +172,65 @@ describe('Sort list of empty categories', async () => {
     });
   });
 
-  // 3 : Delete the 3 created categories
-  describe('Delete the created 3 categories from monitoring page', async () => {
-    const tests = [
-      {args: {categoryToCreate: firstCreateCategoryData}},
-      {args: {categoryToCreate: secondCreateCategoryData}},
-      {args: {categoryToCreate: thirdCreateCategoryData}},
-    ];
+  // 3 : Pagination
+  describe('Pagination next and previous', async () => {
+    it('should change the items number to 10 per page', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'changeItemNumberTo10', baseContext);
 
-    tests.forEach((test, index) => {
-      it('should filter categories grid', async function () {
+      const paginationNumber = await monitoringPage.selectPaginationLimit(page, tableName, '10');
+      expect(paginationNumber).to.contains('(page 1 / 2)');
+    });
+
+    it('should click on next', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'clickOnNext', baseContext);
+
+      const paginationNumber = await monitoringPage.paginationNext(page, tableName);
+      expect(paginationNumber).to.contains('(page 2 / 2)');
+    });
+
+    it('should click on previous', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'clickOnPrevious', baseContext);
+
+      const paginationNumber = await monitoringPage.paginationPrevious(page, tableName);
+      expect(paginationNumber).to.contains('(page 1 / 2)');
+    });
+
+    it('should change the items number to 20 per page', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'changeItemNumberTo50', baseContext);
+
+      const paginationNumber = await monitoringPage.selectPaginationLimit(page, tableName, '20');
+      expect(paginationNumber).to.contains('(page 1 / 1)');
+    });
+  });
+
+  // 4 : Delete the created categories
+  describe('Delete the created categories from monitoring page', async () => {
+    const deletionTests = new Array(11).fill(0, 0, 11);
+    deletionTests.forEach((test, index) => {
+      it('should filter list of empty categories', async function () {
         await testContext.addContextItem(this, 'testIdentifier', `filterToDelete${index}`, baseContext);
 
-        await monitoringPage.filterTable(
-          page,
-          'empty_category',
-          'input',
-          'name',
-          test.args.categoryToCreate.name,
-        );
+        await monitoringPage.filterTable(page, tableName, 'input', 'name', `todelete${index}`);
 
-        const textColumn = await monitoringPage.getTextColumnFromTable(page, 'empty_category', 1, 'name');
-        await expect(textColumn).to.contains(test.args.categoryToCreate.name);
+        const textColumn = await monitoringPage.getTextColumnFromTable(page, tableName, 1, 'name');
+        await expect(textColumn).to.contains(`todelete${index}`);
       });
 
-      it('should delete category', async function () {
+      it(`should delete category n°${index + 1}`, async function () {
         await testContext.addContextItem(this, 'testIdentifier', `deleteCategory${index}`, baseContext);
 
-        const textResult = await monitoringPage.deleteCategoryInGrid(page, 'empty_category', 1, 1);
+        const textResult = await monitoringPage.deleteCategoryInGrid(page, tableName, 1, 1);
         await expect(textResult).to.equal(monitoringPage.successfulDeleteMessage);
 
         const pageTitle = await categoriesPage.getPageTitle(page);
         await expect(pageTitle).to.contains(categoriesPage.pageTitle);
       });
 
-      it('should reset filter and check number of categories', async function () {
+      it('should reset filter and check number of empty categories', async function () {
         await testContext.addContextItem(this, 'testIdentifier', `resetFilterAfterDelete${index}`, baseContext);
 
         const numberOfCategoriesAfterDelete = await categoriesPage.resetAndGetNumberOfLines(page);
-        await expect(numberOfCategoriesAfterDelete).to.be.equal(numberOfCategories + 3 - index - 1);
+        await expect(numberOfCategoriesAfterDelete).to.be.equal(numberOfCategories + 11 - index - 1);
       });
 
       it('should go to \'catalog > monitoring\' page', async function () {
