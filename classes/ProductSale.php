@@ -96,6 +96,12 @@ class ProductSaleCore
         if ($invalidOrderWay || null === $orderWay || $orderBy == 'sales') {
             $orderWay = 'DESC';
         }
+        
+        if ($orderWay == 'random') {
+            $orderWay = 'RAND()';
+            $orderBy = '';
+            $orderTable = '';
+        }
 
         $interval = Validate::isUnsignedInt(Configuration::get('PS_NB_DAYS_NEW_PRODUCT')) ? Configuration::get('PS_NB_DAYS_NEW_PRODUCT') : 20;
 
@@ -144,7 +150,7 @@ class ProductSaleCore
 
         if ($finalOrderBy != 'price') {
             $sql .= '
-					ORDER BY ' . (!empty($orderTable) ? '`' . pSQL($orderTable) . '`.' : '') . '`' . pSQL($orderBy) . '` ' . pSQL($orderWay) . '
+					ORDER BY ' . (!empty($orderTable) ? '`' . pSQL($orderTable) . '`.' : '') . ' ' . (!empty($orderBy) ? '`' . pSQL($orderBy) . '`.' : '') . ' ' . pSQL($orderWay) . '
 					LIMIT ' . (int) (($pageNumber - 1) * $nbProducts) . ', ' . (int) $nbProducts;
         }
 
