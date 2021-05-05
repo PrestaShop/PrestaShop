@@ -30,7 +30,13 @@ import ReplaceFormatter from '@vue/plugins/vue-i18n/replace-formatter';
 
 Vue.use(VueI18n);
 
-export default function initCombinationsFilters(combinationsFiltersSelector, eventEmitter, productId) {
+/**
+ * @param {string} combinationsFiltersSelector
+ * @param {EventEmitter} eventEmitter
+ * @param {array} filters
+ * @returns {Vue | CombinedVueInstance<Vue, {eventEmitter, filters}, object, object, Record<never, any>>}
+ */
+export default function initCombinationsFilters(combinationsFiltersSelector, eventEmitter, filters) {
   const container = document.querySelector(combinationsFiltersSelector);
 
   const translations = JSON.parse(container.dataset.translations);
@@ -42,11 +48,11 @@ export default function initCombinationsFilters(combinationsFiltersSelector, eve
 
   return new Vue({
     el: combinationsFiltersSelector,
-    template: '<filters :productId=productId :eventEmitter=eventEmitter />',
+    template: '<filters :filters=filters :eventEmitter=eventEmitter />',
     components: {Filters},
     i18n,
     data: {
-      productId,
+      filters,
       eventEmitter,
     },
   });
