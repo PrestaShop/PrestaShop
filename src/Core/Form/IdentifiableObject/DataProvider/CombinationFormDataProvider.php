@@ -71,7 +71,7 @@ class CombinationFormDataProvider implements FormDataProviderInterface
             'name' => $combinationForEditing->getName(),
             'stock' => $this->extractStockData($combinationForEditing),
             'price_impact' => $this->extractPriceImpactData($combinationForEditing),
-            'details' => $this->extractDetailsData($combinationForEditing),
+            'references' => $this->extractReferencesData($combinationForEditing),
             'suppliers' => $this->extractSuppliersData($combinationForEditing),
             'images' => $combinationForEditing->getImageIds(),
         ];
@@ -125,7 +125,7 @@ class CombinationFormDataProvider implements FormDataProviderInterface
      *
      * @return array
      */
-    private function extractDetailsData(CombinationForEditing $combinationForEditing): array
+    private function extractReferencesData(CombinationForEditing $combinationForEditing): array
     {
         $details = $combinationForEditing->getDetails();
 

@@ -196,11 +196,11 @@ class CombinationFormDataProviderTest extends TestCase
             'upc' => 'upc_bis',
             'mpn' => 'mpn_bis',
         ];
-        $expectedOutputData['details']['reference'] = 'reference_bis';
-        $expectedOutputData['details']['isbn'] = 'isbn_bis';
-        $expectedOutputData['details']['ean_13'] = 'ean13_bis';
-        $expectedOutputData['details']['upc'] = 'upc_bis';
-        $expectedOutputData['details']['mpn'] = 'mpn_bis';
+        $expectedOutputData['references']['reference'] = 'reference_bis';
+        $expectedOutputData['references']['isbn'] = 'isbn_bis';
+        $expectedOutputData['references']['ean_13'] = 'ean13_bis';
+        $expectedOutputData['references']['upc'] = 'upc_bis';
+        $expectedOutputData['references']['mpn'] = 'mpn_bis';
 
         $datasets[] = [
             $combinationData,
@@ -486,7 +486,7 @@ class CombinationFormDataProviderTest extends TestCase
                 'unit_price' => 69.00,
                 'weight' => 42.00,
             ],
-            'details' => [
+            'references' => [
                 'reference' => 'reference',
                 'isbn' => 'isbn',
                 'ean_13' => 'ean13',
