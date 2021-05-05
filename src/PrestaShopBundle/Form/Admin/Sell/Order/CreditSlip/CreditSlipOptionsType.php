@@ -27,6 +27,7 @@
 namespace PrestaShopBundle\Form\Admin\Sell\Order\CreditSlip;
 
 use PrestaShop\PrestaShop\Core\ConstraintValidator\Constraints\TypedRegex;
+use PrestaShopBundle\Form\Admin\Type\SwitchType;
 use PrestaShopBundle\Form\Admin\Type\TranslatableType;
 use PrestaShopBundle\Form\Admin\Type\TranslatorAwareType;
 use Symfony\Component\Form\FormBuilderInterface;
@@ -43,22 +44,27 @@ final class CreditSlipOptionsType extends TranslatorAwareType
      */
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
-        $builder->add('slip_prefix', TranslatableType::class, [
-            'label' => $this->trans('Credit slip prefix', 'Admin.Orderscustomers.Feature'),
-            'help' => $this->trans('Prefix used for credit slips.', 'Admin.Orderscustomers.Help'),
-            'required' => false,
-            'error_bubbling' => true,
-            'options' => [
-                'constraints' => [
-                    new TypedRegex([
-                        'type' => 'file_name',
-                        'message' => $this->trans(
-                            '%s is invalid.',
-                            'Admin.Notifications.Error'
-                        ),
-                    ]),
+        $builder
+            ->add('slip_prefix', TranslatableType::class, [
+                'label' => $this->trans('Credit slip prefix', 'Admin.Orderscustomers.Feature'),
+                'help' => $this->trans('Prefix used for credit slips.', 'Admin.Orderscustomers.Help'),
+                'required' => false,
+                'error_bubbling' => true,
+                'options' => [
+                    'constraints' => [
+                        new TypedRegex([
+                            'type' => 'file_name',
+                            'message' => $this->trans(
+                                '%s is invalid.',
+                                'Admin.Notifications.Error'
+                            ),
+                        ]),
+                    ],
                 ],
-            ],
-        ]);
+            ])
+            ->add('slip_reset', SwitchType::class, [
+                'label' => $this->trans('Reset sequential credit slip number at the beginning of the year', 'Admin.Orderscustomers.Feature'),
+                'required' => false,
+            ]);
     }
 }

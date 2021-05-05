@@ -54,6 +54,7 @@ final class CreditSlipOptionsConfiguration implements DataConfigurationInterface
     {
         return [
             'slip_prefix' => $this->configuration->get('PS_CREDIT_SLIP_PREFIX'),
+            'slip_reset' => $this->configuration->get('PS_CREDIT_SLIP_RESET'),
         ];
     }
 
@@ -64,6 +65,7 @@ final class CreditSlipOptionsConfiguration implements DataConfigurationInterface
     {
         if ($this->validateConfiguration($configuration)) {
             $this->configuration->set('PS_CREDIT_SLIP_PREFIX', $configuration['slip_prefix']);
+            $this->configuration->set('PS_CREDIT_SLIP_RESET', $configuration['slip_reset']);
         }
 
         return [];
