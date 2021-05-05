@@ -21,27 +21,6 @@ $product-page-padding-bottom: 80px !default;
 .product-page {
   padding-bottom: $product-page-padding-bottom;
 
-  .combination {
-    &-actions {
-      display: flex;
-      align-items: center;
-    }
-
-    &-image {
-      width: 3rem;
-    }
-
-    td {
-      .form-check-radio {
-        margin-bottom: 0;
-
-        .form-check-label {
-          justify-content: center;
-        }
-      }
-    }
-  }
-
   > #field-disabled {
     display: flex;
     flex-wrap: wrap;
@@ -1033,6 +1012,27 @@ $product-page-padding-bottom: 80px !default;
   #combinations-list {
     position: relative;
     min-height: 3.5rem;
+
+    .combination {
+      &-actions {
+        display: flex;
+        align-items: center;
+      }
+
+      &-image {
+        width: 3rem;
+      }
+
+      td {
+        .form-check-radio {
+          margin-bottom: 0;
+
+          .form-check-label {
+            justify-content: center;
+          }
+        }
+      }
+    }
 
     .spinner-product-combinations-container {
       position: absolute;
