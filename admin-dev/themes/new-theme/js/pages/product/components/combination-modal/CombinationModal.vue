@@ -170,7 +170,7 @@
 
         // If modifications have been made refresh the combination list
         if (this.hasSubmittedCombinations) {
-          window.prestashop.instance.eventEmitter.emit(ProductEventMap.combinations.refreshList);
+          window.prestashop.instance.eventEmitter.emit(ProductEventMap.combinations.refreshPage);
         }
         this.hasSubmittedCombinations = false;
 

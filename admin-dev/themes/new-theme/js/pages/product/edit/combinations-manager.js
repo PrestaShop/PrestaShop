@@ -136,13 +136,14 @@ export default class CombinationsManager {
     this.$paginatedList.toggleClass('d-none', firstTime);
     this.$emptyState.addClass('d-none');
 
-    // Start with pagination call (when present) so that the request happens in parallel
+    // When attributes are refreshed we show first page
     this.paginator.paginate(1);
 
     // Wait for product attributes to adapt rendering depending on their number
     this.productAttributeGroups = await getProductAttributeGroups(this.productId);
-    this.$preloader.addClass('d-none');
     this.filtersApp.filters = this.productAttributeGroups;
+    this.eventEmitter.emit(CombinationEvents.clearFilters);
+    this.$preloader.addClass('d-none');
 
     const hasCombinations = this.productAttributeGroups && this.productAttributeGroups.length;
     this.$paginatedList.toggleClass('d-none', !hasCombinations);
@@ -152,6 +153,13 @@ export default class CombinationsManager {
       this.combinationsRenderer.render({combinations: []});
       this.$emptyState.removeClass('d-none');
     }
+  }
+
+  /**
+   * @private
+   */
+  refreshPage() {
+    this.paginator.paginate(this.paginator.getCurrentPage());
   }
 
   /**
@@ -186,7 +194,8 @@ export default class CombinationsManager {
    * @private
    */
   watchEvents() {
-    this.eventEmitter.on(CombinationEvents.refreshList, () => this.refreshCombinationList(false));
+    this.eventEmitter.on(CombinationEvents.refreshCombinationList, () => this.refreshCombinationList(false));
+    this.eventEmitter.on(CombinationEvents.refreshPage, () => this.refreshPage());
     this.eventEmitter.on(CombinationEvents.updateAttributeGroups, (attributeGroups) => {
       const currentFilters = this.combinationsService.getFilters();
       currentFilters.attributes = {};
@@ -304,7 +313,7 @@ export default class CombinationsManager {
         async () => {
           const response = await this.combinationsService.removeCombination(this.findCombinationId(button));
           $.growl({message: response.message});
-          this.eventEmitter.emit(CombinationEvents.refreshList);
+          this.eventEmitter.emit(CombinationEvents.refreshCombinationList);
         },
       );
       modal.show();
