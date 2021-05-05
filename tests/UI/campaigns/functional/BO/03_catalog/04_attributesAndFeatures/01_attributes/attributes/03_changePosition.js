@@ -13,7 +13,7 @@ const attributesPage = require('@pages/BO/catalog/attributes');
 // Import test context
 const testContext = require('@utils/testContext');
 
-const baseContext = 'functional_BO_catalog_attributesAndFeatures_attributes_attributes_changeAttributePosition';
+const baseContext = 'functional_BO_catalog_attributesAndFeatures_attributes_attributes_changePosition';
 
 // Import expect from chai
 const {expect} = require('chai');
