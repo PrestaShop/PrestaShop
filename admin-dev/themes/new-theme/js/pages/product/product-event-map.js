@@ -45,5 +45,7 @@ export default {
   combinations: {
     refreshList: 'refreshCombinationList',
     updateAttributeGroups: 'updateAttributeGroups',
+    combinationGeneratorReady: 'combinationGeneratorReady',
+    openCombinationsGenerator: 'openCombinationsGenerator',
   },
 };
