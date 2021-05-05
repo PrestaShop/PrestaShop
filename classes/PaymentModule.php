@@ -737,6 +737,7 @@ abstract class PaymentModuleCore extends Module
                 'currency' => $this->context->currency,
                 'orderStatus' => new OrderState($order->current_state)
             ]);
+
             return true;
         } else {
             $error = $this->trans('Cart cannot be loaded or an order has already been placed using this cart', [], 'Admin.Payment.Notification');
