@@ -185,6 +185,7 @@ abstract class AbstractOrderCommandHandler extends AbstractOrderHandler
     protected function setCartContext(ContextStateManager $contextStateManager, Cart $cart): void
     {
         $contextStateManager
+            ->saveCurrentContext()
             ->setCart($cart)
             ->setCustomer(new Customer($cart->id_customer))
             ->setCurrency(new Currency($cart->id_currency))

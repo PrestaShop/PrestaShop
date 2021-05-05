@@ -64,7 +64,7 @@ class AddOrder extends BOBasePage {
   async searchCustomer(page, customerToSearch) {
     await this.setValue(page, this.customerSearchInput, customerToSearch);
 
-    await page.waitForSelector(this.customerSearchLoadingNoticeBlock, {state: 'hidden'});
+    await this.waitForHiddenSelector(page, this.customerSearchLoadingNoticeBlock);
   }
 
   /**
@@ -102,7 +102,7 @@ class AddOrder extends BOBasePage {
 
     await Promise.all([
       customerFrame.click(addCustomerPage.saveCustomerButton),
-      page.waitForSelector(this.addCustomerIframe, {state: 'hidden'}),
+      this.waitForHiddenSelector(page, this.addCustomerIframe),
     ]);
 
     return this.getCustomerNameFromResult(page);
@@ -118,7 +118,7 @@ class AddOrder extends BOBasePage {
     await page.click(this.customerCardChooseButton(cardPosition));
 
     await Promise.all([
-      page.waitForSelector(this.customerCardChooseButton(cardPosition), {state: 'hidden'}),
+      this.waitForHiddenSelector(page, this.customerCardChooseButton(cardPosition)),
       this.waitForVisibleSelector(page, this.checkoutHistoryBlock),
     ]);
   }

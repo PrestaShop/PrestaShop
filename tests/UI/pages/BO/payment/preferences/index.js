@@ -34,9 +34,9 @@ class Preferences extends BOBasePage {
    * @returns {Promise<string>}
    */
   async setCurrencyRestriction(page, paymentModule, valueWanted) {
-    await page.waitForSelector(
+    await this.waitForAttachedSelector(
+      page,
       this.euroCurrencyRestrictionsCheckbox(paymentModule),
-      {state: 'attached'},
     );
     const isCheckboxSelected = await this.isCheckboxSelected(
       page,
@@ -59,7 +59,7 @@ class Preferences extends BOBasePage {
    */
   async setGroupRestrictions(page, group, paymentModule, valueWanted) {
     const selector = this.paymentModuleCheckbox(paymentModule, group);
-    await page.waitForSelector(`${selector} + i`, {state: 'attached'});
+    await this.waitForAttachedSelector(page, `${selector} + i`);
     const isCheckboxSelected = await this.isCheckboxSelected(page, selector);
     if (valueWanted !== isCheckboxSelected) {
       await page.$eval(`${selector} + i`, el => el.click());
@@ -77,9 +77,9 @@ class Preferences extends BOBasePage {
    * @returns {Promise<string>}
    */
   async setCountryRestriction(page, countryID, paymentModule, valueWanted) {
-    await page.waitForSelector(
+    await this.waitForAttachedSelector(
+      page,
       `${this.countryRestrictionsCheckbox(paymentModule, countryID)} + i`,
-      {state: 'attached'},
     );
     const isCheckboxSelected = await this.isCheckboxSelected(
       page,
@@ -101,9 +101,9 @@ class Preferences extends BOBasePage {
    * @return {Promise<string>}
    */
   async setCarrierRestriction(page, carrierID, paymentModule, valueWanted) {
-    await page.waitForSelector(
+    await this.waitForAttachedSelector(
+      page,
       `${this.carrierRestrictionsCheckbox(paymentModule, carrierID)} + i`,
-      {state: 'attached'},
     );
     const isCheckboxSelected = await this.isCheckboxSelected(
       page,

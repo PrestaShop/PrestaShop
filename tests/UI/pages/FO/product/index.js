@@ -182,10 +182,10 @@ class Product extends FOBasePage {
   async selectThumbImage(page, id) {
     if (id === 1) {
       await this.waitForSelectorAndClick(page, this.thumbFirstImg);
-      await page.waitForSelector(`${this.thumbFirstImg}.selected`, {state: 'visible'});
+      await this.waitForVisibleSelector(page, `${this.thumbFirstImg}.selected`);
     } else {
       await this.waitForSelectorAndClick(page, this.thumbSecondImg);
-      await page.waitForSelector(`${this.thumbSecondImg}.selected`, {state: 'visible'});
+      await this.waitForVisibleSelector(page, `${this.thumbSecondImg}.selected`);
     }
     return this.getAttributeContent(page, this.productCoverImg, 'src');
   }
@@ -207,7 +207,7 @@ class Product extends FOBasePage {
 
     if (combination.size !== null) {
       await Promise.all([
-        page.waitForSelector(`${this.productSizeOption(combination.size)}[selected]`, {state: 'attached'}),
+        this.waitForAttachedSelector(page, `${this.productSizeOption(combination.size)}[selected]`),
         this.selectByVisibleText(page, this.productSizeSelect, combination.size),
       ]);
     }
@@ -234,7 +234,7 @@ class Product extends FOBasePage {
       await this.clickAndWaitForNavigation(page, this.proceedToCheckoutButton);
     } else {
       await this.waitForSelectorAndClick(page, this.continueShoppingButton);
-      await page.waitForSelector(this.continueShoppingButton, {hidden: true});
+      await this.waitForHiddenSelector(page, this.continueShoppingButton);
     }
   }
 

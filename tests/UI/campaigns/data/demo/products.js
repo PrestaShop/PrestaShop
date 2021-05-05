@@ -17,8 +17,8 @@ module.exports = {
       quantity: 2400,
       coverImage: 'hummingbird-printed-t-shirt.jpg',
       combination: {
-        size: 'S M L XL',
-        color: 'White Black',
+        size: ['S', 'M', 'L', 'XL'],
+        color: ['White', 'Black'],
       },
       status: true,
     },

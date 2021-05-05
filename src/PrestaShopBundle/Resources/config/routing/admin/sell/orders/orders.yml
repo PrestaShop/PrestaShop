@@ -385,8 +385,8 @@ admin_orders_display_customization_image:
     _legacy_controller: AdminOrders
   requirements:
     orderId: \d+
-    name: \w+
-    value: \w+
+    name: .+
+    value: .+
 
 admin_orders_product_prices:
   path: /{orderId}/products/prices

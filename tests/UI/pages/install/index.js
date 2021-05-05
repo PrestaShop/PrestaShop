@@ -131,10 +131,7 @@ class Install extends CommonPage {
    * @return {Promise<void>}
    */
   async agreeToTermsAndConditions(page) {
-    const isChecked = await this.elementChecked(page, this.termsConditionsCheckbox);
-    if (!isChecked) {
-      await page.click(this.termsConditionsCheckbox);
-    }
+    await this.changeCheckboxValue(page, this.termsConditionsCheckbox);
   }
 
   /**

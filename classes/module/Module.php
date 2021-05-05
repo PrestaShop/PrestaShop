@@ -203,7 +203,7 @@ abstract class ModuleCore implements ModuleInterface
     private $container;
 
     /** @var array|null used to cache module ids */
-    private static $cachedModuleNames = null;
+    protected static $cachedModuleNames = null;
 
     const CACHE_FILE_MODULES_LIST = '/config/xml/modules_list.xml';
 
@@ -221,6 +221,14 @@ abstract class ModuleCore implements ModuleInterface
 
     public static $hosted_modules_blacklist = ['autoupgrade'];
 
+    public static function setContextInstanceForTesting(Context $context)
+    {
+        /** @var Module $module */
+        foreach (static::$_INSTANCE as $module) {
+            $module->context = $context;
+        }
+    }
+
     /**
      * Set the flag to indicate we are doing an import.
      *
@@ -228,7 +236,7 @@ abstract class ModuleCore implements ModuleInterface
      */
     public static function setBatchMode($value)
     {
-        self::$_batch_mode = (bool) $value;
+        static::$_batch_mode = (bool) $value;
     }
 
     /**
@@ -236,17 +244,17 @@ abstract class ModuleCore implements ModuleInterface
      */
     public static function getBatchMode()
     {
-        return self::$_batch_mode;
+        return static::$_batch_mode;
     }
 
     public static function processDeferedFuncCall()
     {
-        self::setBatchMode(false);
-        foreach (self::$_defered_func_call as $func_call) {
+        static::setBatchMode(false);
+        foreach (static::$_defered_func_call as $func_call) {
             call_user_func_array($func_call[0], $func_call[1]);
         }
 
-        self::$_defered_func_call = [];
+        static::$_defered_func_call = [];
     }
 
     /**
@@ -254,13 +262,13 @@ abstract class ModuleCore implements ModuleInterface
      */
     public static function processDeferedClearCache()
     {
-        self::setBatchMode(false);
+        static::setBatchMode(false);
 
-        foreach (self::$_defered_clearCache as $clearCache_array) {
-            self::_deferedClearCache($clearCache_array[0], $clearCache_array[1], $clearCache_array[2]);
+        foreach (static::$_defered_clearCache as $clearCache_array) {
+            static::_deferedClearCache($clearCache_array[0], $clearCache_array[1], $clearCache_array[2]);
         }
 
-        self::$_defered_clearCache = [];
+        static::$_defered_clearCache = [];
     }
 
     /**
@@ -309,10 +317,10 @@ abstract class ModuleCore implements ModuleInterface
         // If the module has the name we load the corresponding data from the cache
         if ($this->name != null) {
             // If cache is not generated, we generate it
-            if (self::$modules_cache == null && !is_array(self::$modules_cache)) {
+            if (static::$modules_cache == null && !is_array(static::$modules_cache)) {
                 $id_shop = (Validate::isLoadedObject($this->context->shop) ? $this->context->shop->id : Configuration::get('PS_SHOP_DEFAULT'));
 
-                self::$modules_cache = [];
+                static::$modules_cache = [];
                 // Join clause is done to check if the module is activated in current shop context
                 $result = Db::getInstance()->executeS('
                 SELECT m.`id_module`, m.`name`, ms.`id_module`as `mshop`
@@ -321,17 +329,17 @@ abstract class ModuleCore implements ModuleInterface
                 ON m.`id_module` = ms.`id_module`
                 AND ms.`id_shop` = ' . (int) $id_shop);
                 foreach ($result as $row) {
-                    self::$modules_cache[$row['name']] = $row;
-                    self::$modules_cache[$row['name']]['active'] = ($row['mshop'] > 0) ? 1 : 0;
+                    static::$modules_cache[$row['name']] = $row;
+                    static::$modules_cache[$row['name']]['active'] = ($row['mshop'] > 0) ? 1 : 0;
                 }
             }
 
             // We load configuration from the cache
-            if (isset(self::$modules_cache[$this->name])) {
-                if (isset(self::$modules_cache[$this->name]['id_module'])) {
-                    $this->id = self::$modules_cache[$this->name]['id_module'];
+            if (isset(static::$modules_cache[$this->name])) {
+                if (isset(static::$modules_cache[$this->name]['id_module'])) {
+                    $this->id = static::$modules_cache[$this->name]['id_module'];
                 }
-                foreach (self::$modules_cache[$this->name] as $key => $value) {
+                foreach (static::$modules_cache[$this->name] as $key => $value) {
                     if (array_key_exists($key, $this)) {
                         $this->{$key} = $value;
                     }
@@ -339,7 +347,7 @@ abstract class ModuleCore implements ModuleInterface
                 $this->_path = __PS_BASE_URI__ . 'modules/' . $this->name . '/';
             }
             if (!$this->context->controller instanceof Controller) {
-                self::$modules_cache = null;
+                static::$modules_cache = null;
             }
             $this->local_path = _PS_MODULE_DIR_ . $this->name . '/';
         }
@@ -503,7 +511,7 @@ abstract class ModuleCore implements ModuleInterface
         }
 
         // Init cache upgrade details
-        self::$modules_cache[$module->name]['upgrade'] = [
+        static::$modules_cache[$module->name]['upgrade'] = [
             'success' => false, // bool to know if upgrade succeed or not
             'available_upgrade' => 0, // Number of available module before any upgrade
             'number_upgraded' => 0, // Number of upgrade done
@@ -527,7 +535,7 @@ abstract class ModuleCore implements ModuleInterface
      */
     public function runUpgradeModule()
     {
-        $upgrade = &self::$modules_cache[$this->name]['upgrade'];
+        $upgrade = &static::$modules_cache[$this->name]['upgrade'];
         foreach ($upgrade['upgrade_file_left'] as $num => $file_detail) {
             foreach ($file_detail['upgrade_function'] as $item) {
                 if (function_exists($item)) {
@@ -601,7 +609,7 @@ abstract class ModuleCore implements ModuleInterface
      */
     public static function needUpgrade($module)
     {
-        self::$modules_cache[$module->name]['upgrade']['upgraded_from'] = $module->database_version;
+        static::$modules_cache[$module->name]['upgrade']['upgraded_from'] = $module->database_version;
         // Check the version of the module with the registered one and look if any upgrade file exist
         if (Tools::version_compare($module->version, $module->database_version, '>')) {
             $old_version = $module->database_version;
@@ -660,15 +668,15 @@ abstract class ModuleCore implements ModuleInterface
 
         // No files upgrade, then upgrade succeed
         if (count($list) == 0) {
-            self::$modules_cache[$module_name]['upgrade']['success'] = true;
+            static::$modules_cache[$module_name]['upgrade']['success'] = true;
             Module::upgradeModuleVersion($module_name, $module_version);
         }
 
         usort($list, 'ps_module_version_sort');
 
         // Set the list to module cache
-        self::$modules_cache[$module_name]['upgrade']['upgrade_file_left'] = $list;
-        self::$modules_cache[$module_name]['upgrade']['available_upgrade'] = count($list);
+        static::$modules_cache[$module_name]['upgrade']['upgrade_file_left'] = $list;
+        static::$modules_cache[$module_name]['upgrade']['available_upgrade'] = count($list);
 
         return (bool) count($list);
     }
@@ -682,8 +690,8 @@ abstract class ModuleCore implements ModuleInterface
      */
     public static function getUpgradeStatus($module_name)
     {
-        return isset(self::$modules_cache[$module_name]) &&
-            self::$modules_cache[$module_name]['upgrade']['success'];
+        return isset(static::$modules_cache[$module_name]) &&
+            static::$modules_cache[$module_name]['upgrade']['success'];
     }
 
     /**
@@ -1088,7 +1096,7 @@ abstract class ModuleCore implements ModuleInterface
     {
         // Module can now define AdminTab keeping the module translations method,
         // i.e. in modules/[module name]/[iso_code].php
-        if (!isset(self::$classInModule[$current_class]) && class_exists($current_class)) {
+        if (!isset(static::$classInModule[$current_class]) && class_exists($current_class)) {
             global $_MODULES;
             $_MODULE = [];
             $reflection_class = new ReflectionClass($current_class);
@@ -1097,23 +1105,23 @@ abstract class ModuleCore implements ModuleInterface
             if (substr(realpath($file_path), 0, strlen($realpath_module_dir)) == $realpath_module_dir) {
                 // For controllers in module/controllers path
                 if (basename(dirname(dirname($file_path))) == 'controllers') {
-                    self::$classInModule[$current_class] = basename(dirname(dirname(dirname($file_path))));
+                    static::$classInModule[$current_class] = basename(dirname(dirname(dirname($file_path))));
                 } else {
                     // For old AdminTab controllers
-                    self::$classInModule[$current_class] = substr(dirname($file_path), strlen($realpath_module_dir) + 1);
+                    static::$classInModule[$current_class] = substr(dirname($file_path), strlen($realpath_module_dir) + 1);
                 }
 
-                $file = _PS_MODULE_DIR_ . self::$classInModule[$current_class] . '/' . Context::getContext()->language->iso_code . '.php';
+                $file = _PS_MODULE_DIR_ . static::$classInModule[$current_class] . '/' . Context::getContext()->language->iso_code . '.php';
                 if (Tools::file_exists_cache($file) && include_once($file)) {
                     $_MODULES = !empty($_MODULES) ? array_merge($_MODULES, $_MODULE) : $_MODULE;
                 }
             } else {
-                self::$classInModule[$current_class] = false;
+                static::$classInModule[$current_class] = false;
             }
         }
 
         // return name of the module, or false
-        return self::$classInModule[$current_class];
+        return static::$classInModule[$current_class];
     }
 
     /**
@@ -1133,7 +1141,7 @@ abstract class ModuleCore implements ModuleInterface
             return false;
         }
 
-        if (!isset(self::$_INSTANCE[$module_name])) {
+        if (!isset(static::$_INSTANCE[$module_name])) {
             if (!Tools::file_exists_no_cache(_PS_MODULE_DIR_ . $module_name . '/' . $module_name . '.php')) {
                 return false;
             }
@@ -1141,7 +1149,7 @@ abstract class ModuleCore implements ModuleInterface
             return Module::coreLoadModule($module_name);
         }
 
-        return self::$_INSTANCE[$module_name];
+        return static::$_INSTANCE[$module_name];
     }
 
     protected static function coreLoadModule($module_name)
@@ -1154,12 +1162,12 @@ abstract class ModuleCore implements ModuleInterface
             $override = $module_name . 'Override';
 
             if (class_exists($override, false)) {
-                $r = self::$_INSTANCE[$module_name] = ServiceLocator::get($override);
+                $r = static::$_INSTANCE[$module_name] = ServiceLocator::get($override);
             }
         }
 
         if (!$r && class_exists($module_name, false)) {
-            $r = self::$_INSTANCE[$module_name] = ServiceLocator::get($module_name);
+            $r = static::$_INSTANCE[$module_name] = ServiceLocator::get($module_name);
         }
 
         return $r;
@@ -1174,18 +1182,18 @@ abstract class ModuleCore implements ModuleInterface
      */
     public static function getInstanceById($id_module)
     {
-        if (null === self::$cachedModuleNames) {
-            self::$cachedModuleNames = [];
+        if (null === static::$cachedModuleNames) {
+            static::$cachedModuleNames = [];
             $sql = 'SELECT `id_module`, `name` FROM `' . _DB_PREFIX_ . 'module`';
             if ($results = Db::getInstance()->executeS($sql)) {
                 foreach ($results as $row) {
-                    self::$cachedModuleNames[$row['id_module']] = $row['name'];
+                    static::$cachedModuleNames[$row['id_module']] = $row['name'];
                 }
             }
         }
 
-        if (isset(self::$cachedModuleNames[$id_module])) {
-            return Module::getInstanceByName(self::$cachedModuleNames[$id_module]);
+        if (isset(static::$cachedModuleNames[$id_module])) {
+            return Module::getInstanceByName(static::$cachedModuleNames[$id_module]);
         }
 
         return false;
@@ -1196,7 +1204,7 @@ abstract class ModuleCore implements ModuleInterface
      */
     public static function clearStaticCache()
     {
-        self::$cachedModuleNames = null;
+        static::$cachedModuleNames = null;
     }
 
     public static function configXmlStringFormat($string)
@@ -1438,9 +1446,9 @@ abstract class ModuleCore implements ModuleInterface
                         $module_list[$item->name . '_disk'] = $item;
 
                         if (!$xml_exist || $need_new_config_file) {
-                            self::$_generate_config_xml_mode = true;
+                            static::$_generate_config_xml_mode = true;
                             $tmp_module->_generateConfigXml();
-                            self::$_generate_config_xml_mode = false;
+                            static::$_generate_config_xml_mode = false;
                         }
 
                         unset($tmp_module);
@@ -1474,9 +1482,9 @@ abstract class ModuleCore implements ModuleInterface
 
         // Get Default Country Modules and customer module
         $files_list = [
-            ['type' => 'addonsNative', 'file' => _PS_ROOT_DIR_ . self::CACHE_FILE_DEFAULT_COUNTRY_MODULES_LIST, 'loggedOnAddons' => 0],
-            ['type' => 'addonsMustHave', 'file' => _PS_ROOT_DIR_ . self::CACHE_FILE_MUST_HAVE_MODULES_LIST, 'loggedOnAddons' => 0],
-            ['type' => 'addonsBought', 'file' => _PS_ROOT_DIR_ . self::CACHE_FILE_CUSTOMER_MODULES_LIST, 'loggedOnAddons' => 1],
+            ['type' => 'addonsNative', 'file' => _PS_ROOT_DIR_ . static::CACHE_FILE_DEFAULT_COUNTRY_MODULES_LIST, 'loggedOnAddons' => 0],
+            ['type' => 'addonsMustHave', 'file' => _PS_ROOT_DIR_ . static::CACHE_FILE_MUST_HAVE_MODULES_LIST, 'loggedOnAddons' => 0],
+            ['type' => 'addonsBought', 'file' => _PS_ROOT_DIR_ . static::CACHE_FILE_CUSTOMER_MODULES_LIST, 'loggedOnAddons' => 1],
         ];
         foreach ($files_list as $f) {
             if (file_exists($f['file']) && ($f['loggedOnAddons'] == 0 || $logged_on_addons)) {
@@ -1574,7 +1582,7 @@ abstract class ModuleCore implements ModuleInterface
             if (!isset($module->tab)) {
                 $module->tab = 'others';
             }
-            if (defined('_PS_HOST_MODE_') && in_array($module->name, self::$hosted_modules_blacklist)) {
+            if (defined('_PS_HOST_MODE_') && in_array($module->name, static::$hosted_modules_blacklist)) {
                 unset($module_list[$key]);
             } elseif (isset($modules_installed[$module->name])) {
                 $module->installed = true;
@@ -1653,7 +1661,7 @@ abstract class ModuleCore implements ModuleInterface
     public static function getNonNativeModuleList()
     {
         $db = Db::getInstance();
-        $module_list_xml = _PS_ROOT_DIR_ . self::CACHE_FILE_MODULES_LIST;
+        $module_list_xml = _PS_ROOT_DIR_ . static::CACHE_FILE_MODULES_LIST;
         $native_modules = @simplexml_load_file($module_list_xml);
         if ($native_modules) {
             $native_modules = $native_modules->modules;
@@ -1680,7 +1688,7 @@ abstract class ModuleCore implements ModuleInterface
 
     public static function getNativeModuleList()
     {
-        $module_list_xml = _PS_ROOT_DIR_ . self::CACHE_FILE_MODULES_LIST;
+        $module_list_xml = _PS_ROOT_DIR_ . static::CACHE_FILE_MODULES_LIST;
         if (!file_exists($module_list_xml)) {
             return false;
         }
@@ -1748,31 +1756,31 @@ abstract class ModuleCore implements ModuleInterface
         // and if the theme hadn't change
         // we use the file, otherwise we regenerate it
         if (!(
-            file_exists(_PS_ROOT_DIR_ . self::CACHE_FILE_TRUSTED_MODULES_LIST)
-            && filesize(_PS_ROOT_DIR_ . self::CACHE_FILE_TRUSTED_MODULES_LIST) > 0
-            && ((time() - filemtime(_PS_ROOT_DIR_ . self::CACHE_FILE_TRUSTED_MODULES_LIST)) < 86400)
+            file_exists(_PS_ROOT_DIR_ . static::CACHE_FILE_TRUSTED_MODULES_LIST)
+            && filesize(_PS_ROOT_DIR_ . static::CACHE_FILE_TRUSTED_MODULES_LIST) > 0
+            && ((time() - filemtime(_PS_ROOT_DIR_ . static::CACHE_FILE_TRUSTED_MODULES_LIST)) < 86400)
             )) {
-            self::generateTrustedXml();
+            static::generateTrustedXml();
         }
 
         if ($trusted_modules_list_content === null) {
-            $trusted_modules_list_content = Tools::file_get_contents(_PS_ROOT_DIR_ . self::CACHE_FILE_TRUSTED_MODULES_LIST);
+            $trusted_modules_list_content = Tools::file_get_contents(_PS_ROOT_DIR_ . static::CACHE_FILE_TRUSTED_MODULES_LIST);
             if (strpos($trusted_modules_list_content, $context->shop->theme->getName()) === false) {
-                self::generateTrustedXml();
+                static::generateTrustedXml();
             }
         }
 
-        $modulesListCacheFilepath = _PS_ROOT_DIR_ . self::CACHE_FILE_MODULES_LIST;
+        $modulesListCacheFilepath = _PS_ROOT_DIR_ . static::CACHE_FILE_MODULES_LIST;
         if ($modules_list_content === null && is_readable($modulesListCacheFilepath)) {
             $modules_list_content = Tools::file_get_contents($modulesListCacheFilepath);
         }
 
         if ($default_country_modules_list_content === null) {
-            $default_country_modules_list_content = Tools::file_get_contents(_PS_ROOT_DIR_ . self::CACHE_FILE_DEFAULT_COUNTRY_MODULES_LIST);
+            $default_country_modules_list_content = Tools::file_get_contents(_PS_ROOT_DIR_ . static::CACHE_FILE_DEFAULT_COUNTRY_MODULES_LIST);
         }
 
         if ($untrusted_modules_list_content === null) {
-            $untrusted_modules_list_content = Tools::file_get_contents(_PS_ROOT_DIR_ . self::CACHE_FILE_UNTRUSTED_MODULES_LIST);
+            $untrusted_modules_list_content = Tools::file_get_contents(_PS_ROOT_DIR_ . static::CACHE_FILE_UNTRUSTED_MODULES_LIST);
         }
 
         // If the module is trusted, which includes both partner modules and modules bought on Addons
@@ -1794,7 +1802,7 @@ abstract class ModuleCore implements ModuleInterface
             // If the module isn't in one of the xml files
             // It might have been uploaded recenlty so we check
             // Addons API and clear XML files to be regenerated next time
-            self::deleteTrustedXmlCache();
+            static::deleteTrustedXmlCache();
 
             return (int) Module::checkModuleFromAddonsApi($module_name);
         }
@@ -1805,8 +1813,8 @@ abstract class ModuleCore implements ModuleInterface
      */
     final public static function deleteTrustedXmlCache()
     {
-        Tools::deleteFile(_PS_ROOT_DIR_ . self::CACHE_FILE_TRUSTED_MODULES_LIST);
-        Tools::deleteFile(_PS_ROOT_DIR_ . self::CACHE_FILE_UNTRUSTED_MODULES_LIST);
+        Tools::deleteFile(_PS_ROOT_DIR_ . static::CACHE_FILE_TRUSTED_MODULES_LIST);
+        Tools::deleteFile(_PS_ROOT_DIR_ . static::CACHE_FILE_UNTRUSTED_MODULES_LIST);
     }
 
     /**
@@ -1819,13 +1827,13 @@ abstract class ModuleCore implements ModuleInterface
         $untrusted = [];
 
         $trusted_modules_xml = [
-            _PS_ROOT_DIR_ . self::CACHE_FILE_ALL_COUNTRY_MODULES_LIST,
-            _PS_ROOT_DIR_ . self::CACHE_FILE_MUST_HAVE_MODULES_LIST,
-            _PS_ROOT_DIR_ . self::CACHE_FILE_DEFAULT_COUNTRY_MODULES_LIST,
+            _PS_ROOT_DIR_ . static::CACHE_FILE_ALL_COUNTRY_MODULES_LIST,
+            _PS_ROOT_DIR_ . static::CACHE_FILE_MUST_HAVE_MODULES_LIST,
+            _PS_ROOT_DIR_ . static::CACHE_FILE_DEFAULT_COUNTRY_MODULES_LIST,
         ];
 
-        if (file_exists(_PS_ROOT_DIR_ . self::CACHE_FILE_CUSTOMER_MODULES_LIST)) {
-            $trusted_modules_xml[] = _PS_ROOT_DIR_ . self::CACHE_FILE_CUSTOMER_MODULES_LIST;
+        if (file_exists(_PS_ROOT_DIR_ . static::CACHE_FILE_CUSTOMER_MODULES_LIST)) {
+            $trusted_modules_xml[] = _PS_ROOT_DIR_ . static::CACHE_FILE_CUSTOMER_MODULES_LIST;
         }
 
         // Create 2 arrays with trusted and untrusted modules
@@ -1876,7 +1884,7 @@ abstract class ModuleCore implements ModuleInterface
             $module = $modules->addChild('module');
             $module->addAttribute('name', $name);
         }
-        $success = file_put_contents(_PS_ROOT_DIR_ . self::CACHE_FILE_TRUSTED_MODULES_LIST, $trusted_xml->asXML());
+        $success = file_put_contents(_PS_ROOT_DIR_ . static::CACHE_FILE_TRUSTED_MODULES_LIST, $trusted_xml->asXML());
 
         $untrusted_xml = new SimpleXMLElement('<modules_list/>');
         $modules = $untrusted_xml->addChild('modules');
@@ -1885,7 +1893,7 @@ abstract class ModuleCore implements ModuleInterface
             $module = $modules->addChild('module');
             $module->addAttribute('name', $name);
         }
-        $success &= file_put_contents(_PS_ROOT_DIR_ . self::CACHE_FILE_UNTRUSTED_MODULES_LIST, $untrusted_xml->asXML());
+        $success &= file_put_contents(_PS_ROOT_DIR_ . static::CACHE_FILE_UNTRUSTED_MODULES_LIST, $untrusted_xml->asXML());
 
         if ($success) {
             return true;
@@ -1985,7 +1993,7 @@ abstract class ModuleCore implements ModuleInterface
      */
     public function l($string, $specific = false, $locale = null)
     {
-        if (self::$_generate_config_xml_mode) {
+        if (static::$_generate_config_xml_mode) {
             return $string;
         }
 
@@ -2571,7 +2579,7 @@ abstract class ModuleCore implements ModuleInterface
             $ps_smarty_clear_cache = Configuration::get('PS_SMARTY_CLEAR_CACHE');
         }
 
-        if (self::$_batch_mode) {
+        if (static::$_batch_mode) {
             if ($ps_smarty_clear_cache == 'never') {
                 return 0;
             }
@@ -2581,8 +2589,8 @@ abstract class ModuleCore implements ModuleInterface
             }
 
             $key = $template . '-' . $cache_id . '-' . $compile_id;
-            if (!isset(self::$_defered_clearCache[$key])) {
-                self::$_defered_clearCache[$key] = [$this->getTemplatePath($template), $cache_id, $compile_id];
+            if (!isset(static::$_defered_clearCache[$key])) {
+                static::$_defered_clearCache[$key] = [$this->getTemplatePath($template), $cache_id, $compile_id];
             }
         } else {
             if ($ps_smarty_clear_cache == 'never') {
@@ -2676,11 +2684,11 @@ abstract class ModuleCore implements ModuleInterface
      */
     public static function getModulesAccessesByIdProfile($idProfile)
     {
-        if (empty(self::$cache_modules_roles)) {
-            self::warmupRolesCache();
+        if (empty(static::$cache_modules_roles)) {
+            static::warmupRolesCache();
         }
 
-        $roles = self::$cache_lgc_access;
+        $roles = static::$cache_lgc_access;
 
         $profileRoles = Db::getInstance()->executeS('
             SELECT `slug`,
@@ -2733,14 +2741,14 @@ abstract class ModuleCore implements ModuleInterface
             $m = Module::getInstanceByName(strtolower($matches['moduleName']));
 
             // the following condition handles invalid modules
-            if ($m && !isset(self::$cache_lgc_access[$matches['moduleName']])) {
-                self::$cache_lgc_access[$matches['moduleName']] = [];
-                self::$cache_lgc_access[$matches['moduleName']]['id_module'] = $m->id;
-                self::$cache_lgc_access[$matches['moduleName']]['name'] = $m->displayName;
-                self::$cache_lgc_access[$matches['moduleName']]['add'] = '0';
-                self::$cache_lgc_access[$matches['moduleName']]['view'] = '0';
-                self::$cache_lgc_access[$matches['moduleName']]['configure'] = '0';
-                self::$cache_lgc_access[$matches['moduleName']]['uninstall'] = '0';
+            if ($m && !isset(static::$cache_lgc_access[$matches['moduleName']])) {
+                static::$cache_lgc_access[$matches['moduleName']] = [];
+                static::$cache_lgc_access[$matches['moduleName']]['id_module'] = $m->id;
+                static::$cache_lgc_access[$matches['moduleName']]['name'] = $m->displayName;
+                static::$cache_lgc_access[$matches['moduleName']]['add'] = '0';
+                static::$cache_lgc_access[$matches['moduleName']]['view'] = '0';
+                static::$cache_lgc_access[$matches['moduleName']]['configure'] = '0';
+                static::$cache_lgc_access[$matches['moduleName']]['uninstall'] = '0';
             }
         }
     }

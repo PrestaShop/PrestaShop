@@ -1435,6 +1435,7 @@ class OrderFeatureContext extends AbstractDomainFeatureContext
             'phone' => $shippingAddress->getPhone(),
             'carrierName' => $shippingAddress->getCarrierName(),
             'trackingNumber' => $shippingAddress->getTrackingNumber(),
+            'trackingUrl' => $shippingAddress->getTrackingUrl(),
         ];
 
         $expectedDetails = $table->getRowsHash();
@@ -1465,9 +1466,11 @@ class OrderFeatureContext extends AbstractDomainFeatureContext
     /**
      * @param string $productName
      *
-     * @return int
+     * @throws RuntimeException
+     *
+     * @return FoundProduct
      */
-    private function getProductByName(string $productName)
+    private function getProductByName(string $productName): FoundProduct
     {
         $products = $this->getQueryBus()->handle(new SearchProducts($productName, 1, Context::getContext()->currency->iso_code));
 
@@ -1833,7 +1836,7 @@ class OrderFeatureContext extends AbstractDomainFeatureContext
                 $address = $orderForViewing->getInvoiceAddress();
                 break;
             default:
-                throw new RuntimeException('Adress Type is invalid');
+                throw new RuntimeException('Address Type is invalid');
         }
 
         $expectedDetails = $table->getRowsHash();
@@ -1866,6 +1869,7 @@ class OrderFeatureContext extends AbstractDomainFeatureContext
 
     /**
      * @Then /^the preview order "(.+)" has following (shipping|invoice) address$/
+     * @Then /^the preview order "(.+)" has following (shipping) details$/
      *
      * @param string $orderReference
      * @param string $addressType
@@ -1886,7 +1890,7 @@ class OrderFeatureContext extends AbstractDomainFeatureContext
                 $address = $orderPreview->getInvoiceDetails();
                 break;
             default:
-                throw new RuntimeException('Adress Type is invalid');
+                throw new RuntimeException('Address Type is invalid');
         }
 
         $expectedDetails = $table->getRowsHash();
@@ -1898,6 +1902,12 @@ class OrderFeatureContext extends AbstractDomainFeatureContext
             'Fullname' => $address->getFirstName() . ' ' . $address->getLastname(),
             'Postal code' => $address->getPostalCode(),
         ];
+        if ('shipping' === $addressType) {
+            $arrayActual += [
+                'Tracking number' => $address->getTrackingNumber(),
+                'Tracking URL' => $address->getTrackingUrl(),
+            ];
+        }
         foreach ($expectedDetails as $detailName => $expectedDetailValue) {
             if (!array_key_exists($detailName, $arrayActual)) {
                 throw new RuntimeException(sprintf('Invalid check for address field %s', $detailName));

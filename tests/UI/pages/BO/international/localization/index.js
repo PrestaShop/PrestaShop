@@ -40,19 +40,22 @@ class Localization extends LocalizationBasePage {
   async importLocalizationPack(page, country, contentToImport, downloadPackData = true) {
     // Choose which country to import
     await this.selectByVisibleText(page, this.importlocalizationPackSelect, country);
+
     // Set content import checkboxes
-    await this.updateCheckboxValue(page, this.importStatesCheckbox, contentToImport.importStates);
-    await this.updateCheckboxValue(page, this.importTaxesCheckbox, contentToImport.importTaxes);
-    await this.updateCheckboxValue(page, this.importCurrenciesCheckbox, contentToImport.importCurrencies);
-    await this.updateCheckboxValue(page, this.importLanguagesCheckbox, contentToImport.importLanguages);
-    await this.updateCheckboxValue(page, this.importUnitsCheckbox, contentToImport.importUnits);
-    await this.updateCheckboxValue(
+    await this.changeCheckboxValue(page, this.importStatesCheckbox, contentToImport.importStates);
+    await this.changeCheckboxValue(page, this.importTaxesCheckbox, contentToImport.importTaxes);
+    await this.changeCheckboxValue(page, this.importCurrenciesCheckbox, contentToImport.importCurrencies);
+    await this.changeCheckboxValue(page, this.importLanguagesCheckbox, contentToImport.importLanguages);
+    await this.changeCheckboxValue(page, this.importUnitsCheckbox, contentToImport.importUnits);
+    await this.changeCheckboxValue(
       page,
       this.updatepriceDisplayForGroupsCHeckbox,
       contentToImport.updatePriceDisplayForGroups,
     );
+
     // Choose if we download pack of data
     await page.click(this.downloadPackDataSwitch(downloadPackData ? 1 : 0));
+
     // Import the pack
     await this.clickAndWaitForNavigation(page, this.importButton);
     return this.getAlertSuccessBlockParagraphContent(page);

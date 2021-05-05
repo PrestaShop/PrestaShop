@@ -633,7 +633,7 @@ class CartRuleCore extends ObjectModel
         if (!CartRule::isFeatureActive()) {
             return false;
         }
-        $cart = new Cart($context->cart->id);
+        $cart = $context->cart;
 
         // All these checks are necessary when you add the cart rule the first time, so when it's not in cart yet
         // However when it's in the cart and you are checking if the cart rule is still valid (when performing auto remove)
@@ -1175,8 +1175,14 @@ class CartRuleCore extends ObjectModel
             if ((float) $this->reduction_percent && $this->reduction_product == 0) {
                 // Do not give a reduction on free products!
                 $order_total = $order_package_products_total;
+                $basePriceContainsDiscount = isset($basePriceForPercentReduction) && $order_total === $basePriceForPercentReduction;
                 foreach ($context->cart->getCartRules(CartRule::FILTER_ACTION_GIFT, false) as $cart_rule) {
-                    $order_total -= Tools::ps_round($cart_rule['obj']->getContextualValue($use_tax, $context, CartRule::FILTER_ACTION_GIFT, $package), Context::getContext()->getComputingPrecision());
+                    $freeProductsPrice = Tools::ps_round($cart_rule['obj']->getContextualValue($use_tax, $context, CartRule::FILTER_ACTION_GIFT, $package), Context::getContext()->getComputingPrecision());
+                    if ($basePriceContainsDiscount) {
+                        // Gifts haven't been excluded yet, we need to do it
+                        $basePriceForPercentReduction -= $freeProductsPrice;
+                    }
+                    $order_total -= $freeProductsPrice;
                 }
 
                 // Remove products that are on special
@@ -1184,9 +1190,13 @@ class CartRuleCore extends ObjectModel
                     foreach ($package_products as $product) {
                         if ($product['reduction_applies']) {
                             if ($use_tax) {
-                                $order_total -= Tools::ps_round($product['total_wt'], Context::getContext()->getComputingPrecision());
+                                $excludedReduction = Tools::ps_round($product['total_wt'], Context::getContext()->getComputingPrecision());
                             } else {
-                                $order_total -= Tools::ps_round($product['total'], Context::getContext()->getComputingPrecision());
+                                $excludedReduction = Tools::ps_round($product['total'], Context::getContext()->getComputingPrecision());
+                            }
+                            $order_total -= $excludedReduction;
+                            if ($basePriceContainsDiscount) {
+                                $basePriceForPercentReduction -= $excludedReduction;
                             }
                         }
                     }
