@@ -62,10 +62,11 @@ $(() => {
   const productFormModel = new ProductFormModel($productForm, window.prestashop.instance.eventEmitter);
 
   if (productId && productType === ProductMap.productType.COMBINATIONS) {
-    // Combinations manager must be initialised before nav handler, or it won't trigger the pagination if the tab is
-    // selected on load, but only when productId exists (edition mode)
+    // Combinations manager must be initialised BEFORE nav handler, or it won't trigger the pagination if the tab is
+    // selected on load, ii is only initialised when productId exists though (edition mode)
     new CombinationsManager(productId);
   }
+
   new NavbarHandler(ProductMap.navigationBar);
   new ProductSEOManager();
 
@@ -73,20 +74,21 @@ $(() => {
   new ProductTypeManager($(ProductMap.productTypeSelector), $productForm);
   new ProductFooterManager();
 
-  // Form has no productId data means that we are in creation mode
-  if (!productId) {
-    return;
-  }
-
-  initDropzone(ProductMap.dropzoneImagesContainer);
-
-  // From here we init component specific to edition
   const $productFormSubmitButton = $(ProductMap.productFormSubmitButton);
   new ProductPartialUpdater(
     window.prestashop.instance.eventEmitter,
     $productForm,
     $productFormSubmitButton,
   ).watch();
+
+  // Form has no productId data means that we are in creation mode
+  if (!productId) {
+    return;
+  }
+
+  // From here we init component specific to edition
+  initDropzone(ProductMap.dropzoneImagesContainer);
+
   new FeatureValuesManager(window.prestashop.instance.eventEmitter);
   new CustomizationsManager();
 
