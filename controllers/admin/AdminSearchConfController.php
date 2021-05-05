@@ -475,7 +475,7 @@ class AdminSearchConfControllerCore extends AdminController
             if (Tools::getValue('id_alias')) {
                 $this->confirmations[] = $this->trans('Successful update.', [], 'Admin.Notifications.Success');
             } else {
-                $this->confirmations[] = $this->trans('Creation successful', [], 'Admin.Shopparameters.Notification');
+                $this->confirmations[] = $this->trans('Successful creation.', [], 'Admin.Notifications.Success');
             }
         }
     }
