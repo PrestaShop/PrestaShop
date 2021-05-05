@@ -97,7 +97,7 @@ class ProductSaleCore
             $orderWay = 'DESC';
         }
         
-        if ($orderWay == 'random') {
+        if ($orderWay === 'random') {
             $orderWay = 'RAND()';
             $orderBy = '';
             $orderTable = '';
