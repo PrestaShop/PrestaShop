@@ -87,7 +87,7 @@
           </div>
         </div>
         {if $is_recyclable}
-          <em>{l s='I would like to receive my order in recycled packaging.' d="Shop.Theme.Checkout"}</em>
+          <em>{l s='You have given permission to receive your order in recycled packaging.' d="Shop.Theme.Customeraccount"}</em>
         {/if}
       </div>
     </div>
