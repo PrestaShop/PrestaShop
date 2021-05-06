@@ -13,7 +13,8 @@ class OrderHistory extends FOBasePage {
     this.productIdSelect = '[name=id_product]';
     this.messageTextarea = '[name=msgText]';
     this.submitMessageButton = '[name=submitMessage]';
-    this.headerTitle = `.page-header h1`
+    this.headerTitle = '.page-header h1';
+    this.reorderLink = '#order-infos a';
 
     // Table selectors
     this.gridTable = '#order-products';
@@ -59,19 +60,24 @@ class OrderHistory extends FOBasePage {
    * Retrieve and return product name from order detail page
    * @param page {Page} Browser tab
    * @param row {Number} row in orders details table
-   * @returns {Promise<string|TextContent|*>}
+   * @returns {Promise<string>}
    */
-  async getProductName(page, row = 1){
-    return this.getTextContent(page, this.productName(row))
+  getProductName(page, row = 1) {
+    return this.getTextContent(page, this.productName(row));
   }
 
   /**
-   * Get the poge title from the header H1
+   * @override
+   * Get the page title from the main section
    * @param page {Page} Browser tab
-   * @returns {Promise<string|TextContent|*>}
+   * @returns {Promise<string>}
    */
-  async getPageTitle(page){
-    return this.getTextContent(page, this.headerTitle)
+  async getPageTitle(page) {
+    return this.getTextContent(page, this.headerTitle);
+  }
+
+  async clickOnReorderLink(page) {
+    await this.clickAndWaitForNavigation(page, this.reorderLink);
   }
 }
 
