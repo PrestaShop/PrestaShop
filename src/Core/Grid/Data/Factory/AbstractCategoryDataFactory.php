@@ -37,6 +37,8 @@ use PrestaShop\PrestaShop\Core\Grid\Search\SearchCriteriaInterface;
  */
 abstract class AbstractCategoryDataFactory implements GridDataFactoryInterface
 {
+    public const DESCRIPTION_MAX_LENGTH = 150;
+
     /**
      * @var GridDataFactoryInterface
      */
@@ -72,7 +74,7 @@ abstract class AbstractCategoryDataFactory implements GridDataFactoryInterface
     protected function modifyRecords(array $records): array
     {
         foreach ($records as $key => $record) {
-            $records[$key]['description'] = mb_substr(strip_tags(stripslashes($record['description'])), 0, 150);
+            $records[$key]['description'] = mb_substr(strip_tags(stripslashes($record['description'])), 0, self::DESCRIPTION_MAX_LENGTH);
         }
 
         return $records;
