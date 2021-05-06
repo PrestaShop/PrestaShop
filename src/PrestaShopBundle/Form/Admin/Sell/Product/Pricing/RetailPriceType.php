@@ -112,7 +112,7 @@ class RetailPriceType extends TranslatorAwareType
         $resolver->setDefaults([
             'label' => $this->trans('Retail price', 'Admin.Catalog.Feature'),
             'label_tag_name' => 'h2',
-            'label_help_box' => $this->trans('This is the net sales price for your customers. The retail price will automatically be calculated using the applied tax rate.', 'Admin.Catalog.Help'),
+            'label_help_box' => $this->trans('This is the net sales price for your customers. The retail price (tax incl.) will automatically be calculated using the selected tax rate.', 'Admin.Catalog.Help'),
             'required' => false,
             'columns_number' => 4,
         ]);

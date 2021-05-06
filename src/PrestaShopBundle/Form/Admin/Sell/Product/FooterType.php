@@ -134,7 +134,7 @@ class FooterType extends TranslatorAwareType
                 ],
             ])
             ->add('duplicate_product', IconButtonType::class, [
-                'label' => $this->trans('Duplicate', 'Admin.Catalog.Feature'),
+                'label' => $this->trans('Duplicate', 'Admin.Actions'),
                 'type' => 'link',
                 'icon' => 'content_copy',
                 'attr' => [

@@ -71,7 +71,7 @@ class BasicType extends TranslatorAwareType
                         new Length([
                             'max' => ProductSettings::MAX_DESCRIPTION_SHORT_LENGTH,
                             'maxMessage' => $this->trans(
-                                'This field cannot be longer than %limit% characters',
+                                'This field cannot be longer than %limit% characters.',
                                 'Admin.Notifications.Error',
                                 [
                                     '%limit%' => ProductSettings::MAX_DESCRIPTION_SHORT_LENGTH,
@@ -92,7 +92,7 @@ class BasicType extends TranslatorAwareType
                         new Length([
                             'max' => ProductSettings::MAX_DESCRIPTION_LENGTH,
                             'maxMessage' => $this->trans(
-                                'This field cannot be longer than %limit% characters',
+                                'This field cannot be longer than %limit% characters.',
                                 'Admin.Notifications.Error',
                                 [
                                     '%limit%' => ProductSettings::MAX_DESCRIPTION_LENGTH,
