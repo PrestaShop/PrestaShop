@@ -62,8 +62,8 @@ $(() => {
   const productFormModel = new ProductFormModel($productForm, window.prestashop.instance.eventEmitter);
 
   if (productId && productType === ProductMap.productType.COMBINATIONS) {
-    // Combinations manager must be initialised BEFORE nav handler, or it won't trigger the pagination if the tab is
-    // selected on load, ii is only initialised when productId exists though (edition mode)
+    // Combinations manager must be initialized BEFORE nav handler, or it won't trigger the pagination if the tab is
+    // selected on load, it is only initialized when productId exists though (edition mode)
     new CombinationsManager(productId);
   }
 

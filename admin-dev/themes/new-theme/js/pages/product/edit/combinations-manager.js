@@ -113,7 +113,11 @@ export default class CombinationsManager {
       this.eventEmitter,
       this.productId,
     );
-    this.combinationModalApp = initCombinationModal(CombinationsMap.editModal, this.productId);
+    this.combinationModalApp = initCombinationModal(
+      CombinationsMap.editModal,
+      this.productId,
+      this.eventEmitter,
+    );
     this.filtersApp = initFilters(
       CombinationsMap.combinationsFiltersContainer,
       this.eventEmitter,

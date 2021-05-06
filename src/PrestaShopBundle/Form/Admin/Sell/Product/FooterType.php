@@ -179,7 +179,7 @@ class FooterType extends TranslatorAwareType
                 'label' => false,
                 'attr' => [
                     'class' => 'product-footer-right',
-                ]
+                ],
             ])
             ->setAllowedTypes('product_id', ['null', 'int'])
         ;
