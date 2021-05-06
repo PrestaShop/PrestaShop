@@ -85,19 +85,13 @@ class FooterType extends TranslatorAwareType
         ]) : null;
 
         $builder
-            ->add('delete', IconButtonType::class, [
-                'icon' => 'delete',
+            ->add('catalog', IconButtonType::class, [
+                'label' => $this->trans('Go to catalog', 'Admin.Catalog.Feature'),
+                'type' => 'link',
+                'icon' => 'arrow_back_ios',
                 'attr' => [
-                    'class' => 'tooltip-link delete-product-button',
-                    'data-modal-title' => $this->trans('Permanently delete this product.', 'Admin.Catalog.Help'),
-                    'data-modal-message' => $this->trans('Are you sure you want to delete this item?', 'Admin.Notifications.Warning'),
-                    'data-modal-apply' => $this->trans('Delete', 'Admin.Actions'),
-                    'data-modal-cancel' => $this->trans('Cancel', 'Admin.Actions'),
-                    'data-remove-url' => $deleteUrl,
-                    'data-toggle' => 'pstooltip',
-                    'data-placement' => 'left',
-                    'title' => $this->trans('Permanently delete this product.', 'Admin.Catalog.Help'),
-                    'disabled' => empty($productId),
+                    'class' => 'btn-outline-secondary',
+                    'href' => $this->router->generate('admin_product_catalog', ['offset' => 'last', 'limit' => 'last']),
                 ],
             ])
             ->add('preview', IconButtonType::class, [
@@ -124,6 +118,21 @@ class FooterType extends TranslatorAwareType
                     $this->trans('Online', 'Admin.Global') => true,
                 ],
             ])
+            ->add('delete', IconButtonType::class, [
+                'icon' => 'delete',
+                'attr' => [
+                    'class' => 'tooltip-link delete-product-button',
+                    'data-modal-title' => $this->trans('Permanently delete this product.', 'Admin.Catalog.Help'),
+                    'data-modal-message' => $this->trans('Are you sure you want to delete this item?', 'Admin.Notifications.Warning'),
+                    'data-modal-apply' => $this->trans('Delete', 'Admin.Actions'),
+                    'data-modal-cancel' => $this->trans('Cancel', 'Admin.Actions'),
+                    'data-remove-url' => $deleteUrl,
+                    'data-toggle' => 'pstooltip',
+                    'data-placement' => 'left',
+                    'title' => $this->trans('Permanently delete this product.', 'Admin.Catalog.Help'),
+                    'disabled' => empty($productId),
+                ],
+            ])
             ->add('save', SubmitType::class, [
                 'label' => $this->trans('Save', 'Admin.Actions'),
                 'attr' => [
@@ -141,14 +150,6 @@ class FooterType extends TranslatorAwareType
                     'class' => 'btn-outline-secondary',
                     'href' => $duplicateUrl,
                     'disabled' => empty($productId),
-                ],
-            ])
-            ->add('catalog', IconButtonType::class, [
-                'label' => $this->trans('Go to catalog', 'Admin.Catalog.Feature'),
-                'type' => 'link',
-                'attr' => [
-                    'class' => 'btn-outline-secondary',
-                    'href' => $this->router->generate('admin_product_catalog', ['offset' => 'last', 'limit' => 'last']),
                 ],
             ])
             ->add('new_product', IconButtonType::class, [

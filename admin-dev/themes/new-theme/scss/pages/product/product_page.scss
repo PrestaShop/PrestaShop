@@ -1526,5 +1526,18 @@ $product-page-padding-bottom: 80px !default;
         font-size: 0.75rem;
       }
     }
+
+    .product-footer-container {
+      .product-footer-left,
+      .product-footer-right {
+        width: 50%;
+      }
+
+      .product-footer-left,
+      .product-footer-right,
+      #product_footer {
+        flex-wrap: wrap;
+      }
+    }
   }
 }
