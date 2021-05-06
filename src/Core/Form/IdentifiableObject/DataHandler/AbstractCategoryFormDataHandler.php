@@ -82,7 +82,7 @@ abstract class AbstractCategoryFormDataHandler implements FormDataHandlerInterfa
      */
     public function create(array $data)
     {
-        if (!isset($data['menu_thumbnail_images']) || count($data['menu_thumbnail_images']) > count(MenuThumbnailId::ALLOWED_ID_VALUES)) {
+        if (!isset($data['menu_thumbnail_images']) && count($data['menu_thumbnail_images']) > count(MenuThumbnailId::ALLOWED_ID_VALUES)) {
             throw new MenuThumbnailsLimitException('Maximum number of menu thumbnails exceeded for new category');
         }
         $command = $this->createAddCategoryCommand($data);
@@ -112,7 +112,7 @@ abstract class AbstractCategoryFormDataHandler implements FormDataHandlerInterfa
         $categoryId = (int) $categoryId;
         $availableKeys = $this->getAvailableKeys($categoryId);
 
-        if (!isset($data['menu_thumbnail_images']) || count($data['menu_thumbnail_images']) > count($availableKeys)) {
+        if (isset($data['menu_thumbnail_images']) && count($data['menu_thumbnail_images']) > count($availableKeys)) {
             throw new MenuThumbnailsLimitException(sprintf('Maximum number of menu thumbnails was reached for category "%d"', $categoryId));
         }
         $command = $this->createEditCategoryCommand($categoryId, $data);
