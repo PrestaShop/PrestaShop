@@ -22,6 +22,8 @@
  * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
+
+// eslint-disable-next-line
 var Tree = function (element, options) {
   this.$element = $(element);
   this.options = $.extend({}, $.fn.tree.defaults, options);
