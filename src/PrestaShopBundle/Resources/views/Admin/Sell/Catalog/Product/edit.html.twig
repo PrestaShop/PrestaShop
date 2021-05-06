@@ -60,8 +60,11 @@
   {{ block('session_alert') }}
 
   <div class="alert alert-info alert-experimental" role="alert">
+    <p class="mb-1">
+      <strong>{{ 'This is the experimental product page.'|trans({}, 'Admin.Catalog.Help') }}</strong>
+    </p>
     <p class="alert-text">
-      {{ 'You are on the experimental product page.'|trans({}, 'Admin.Catalog.Help') }}
+      {{ 'This page is a work in progress. It includes new combination management features and other features under development (virtual products, packs, etc.)'|trans({}, 'Admin.Advparameters.Help') }}
     </p>
   </div>
 
