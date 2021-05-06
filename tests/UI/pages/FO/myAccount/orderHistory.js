@@ -32,11 +32,22 @@ class OrderHistory extends FOBasePage {
   /**
    * Is reorder link visible
    * @param page {Page} Browser tab
-   * @param idOrder {number} Database id of the order
+   * @param idOrder {Number} database id of the order
    * @returns {boolean}
    */
   isReorderLinkVisible(page, idOrder = 1) {
     return this.elementVisible(page, this.reorderLink(idOrder), 1000);
+  }
+
+
+  /**
+   *
+   * @param page {Page} Browser tab
+   * @param orderRow {Number} row in orders table
+   * @returns {Promise<void>}
+   */
+  async clickOnReorderLink(page, orderRow= 1){
+    await this.clickAndWaitForNavigation(page, this.reorderLink(orderRow));
   }
 
   /**
@@ -50,9 +61,9 @@ class OrderHistory extends FOBasePage {
   }
 
   /**
-   * Go to details page
+   * Go to details page from order history page
    * @param page {Page} Browser tab
-   * @param orderRow {number} Row number in orders table
+   * @param orderRow {Number} row in orders table
    * @returns {Promise<void>}
    */
   async goToDetailsPage(page, orderRow = 1) {
