@@ -74,13 +74,8 @@ export default function () {
         400,
         'easeOutQuad',
         () => {
-          if ($(e.currentTarget).hasClass('right-arrow')) {
-            $(ProductMap.leftArrow).addClass('visible');
-            $(ProductMap.rightArrow).removeClass('visible');
-          } else {
-            $(ProductMap.rightArrow).addClass('visible');
-            $(ProductMap.leftArrow).removeClass('visible');
-          }
+          $(ProductMap.leftArrow).toggleClass('visible', $(e.currentTarget).hasClass('right-arrow'));
+          $(ProductMap.rightArrow).toggleClass('visible', !$(e.currentTarget).hasClass('right-arrow'));
         },
       );
     }
