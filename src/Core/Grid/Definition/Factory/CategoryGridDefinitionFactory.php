@@ -42,7 +42,7 @@ use PrestaShop\PrestaShop\Core\Grid\Column\Type\Category\CategoryPositionColumn;
 use PrestaShop\PrestaShop\Core\Grid\Column\Type\Common\ActionColumn;
 use PrestaShop\PrestaShop\Core\Grid\Column\Type\Common\DataColumn;
 use PrestaShop\PrestaShop\Core\Grid\Column\Type\Common\DraggableColumn;
-use PrestaShop\PrestaShop\Core\Grid\Column\Type\Common\HtmlColumn;
+use PrestaShop\PrestaShop\Core\Grid\Column\Type\DataColumn;
 use PrestaShop\PrestaShop\Core\Grid\Column\Type\Common\IdentifierColumn;
 use PrestaShop\PrestaShop\Core\Grid\Column\Type\Common\LinkColumn;
 use PrestaShop\PrestaShop\Core\Grid\Column\Type\Common\ToggleColumn;
@@ -129,7 +129,7 @@ final class CategoryGridDefinitionFactory extends AbstractFilterableGridDefiniti
                     ])
             )
             ->add(
-                (new HtmlColumn('description'))
+                (new DataColumn('description'))
                     ->setName($this->trans('Description', [], 'Admin.Global'))
                     ->setOptions([
                         'field' => 'description',
