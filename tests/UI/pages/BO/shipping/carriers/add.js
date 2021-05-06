@@ -49,7 +49,7 @@ class AddCarrier extends BOBasePage {
   /**
    * Fill carrier form in create or edit page and save
    * @param page {Page} Browser tab
-   * @param carrierData {Object} Carrier information
+   * @param carrierData {CarrierData} Carrier information
    * @return {Promise<string>}
    */
   async createEditCarrier(page, carrierData) {
