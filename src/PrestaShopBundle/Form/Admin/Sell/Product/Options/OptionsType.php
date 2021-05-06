@@ -27,6 +27,7 @@ declare(strict_types=1);
 
 namespace PrestaShopBundle\Form\Admin\Sell\Product\Options;
 
+use PrestaShop\PrestaShop\Adapter\LegacyContext;
 use PrestaShop\PrestaShop\Core\ConstraintValidator\Constraints\TypedRegex;
 use PrestaShop\PrestaShop\Core\Form\FormChoiceProviderInterface;
 use PrestaShopBundle\Form\Admin\Type\SwitchType;
@@ -49,17 +50,25 @@ class OptionsType extends TranslatorAwareType
     private $productConditionChoiceProvider;
 
     /**
+     * @var LegacyContext
+     */
+    private $legacyContext;
+
+    /**
      * @param TranslatorInterface $translator
      * @param array $locales
      * @param FormChoiceProviderInterface $productConditionChoiceProvider
+     * @param LegacyContext $legacyContext
      */
     public function __construct(
         TranslatorInterface $translator,
         array $locales,
-        FormChoiceProviderInterface $productConditionChoiceProvider
+        FormChoiceProviderInterface $productConditionChoiceProvider,
+        LegacyContext $legacyContext
     ) {
         parent::__construct($translator, $locales);
         $this->productConditionChoiceProvider = $productConditionChoiceProvider;
+        $this->legacyContext = $legacyContext;
     }
 
     /**
@@ -83,11 +92,16 @@ class OptionsType extends TranslatorAwareType
                     'required' => false,
                 ],
                 'alert_title' => $this->trans('Tags are meant to help your customers find your products via the search bar.', 'Admin.Catalog.Help'),
-                'alert_message' => $this->trans('Choose terms and keywords which your potential customers commonly would search for when looking for this product. Make sure that they are consistent with the tags you may have already defined.
-You can manage tag aliases in the [1]Search section[/1]. If you add new tags, you have to rebuild the index.', 'Admin.Catalog.Notification', [
-                    '[1]' => '<a target="_blank" href="https://mangemoi.com">',
-                    '[/1]' => '</a>',
-                ]),
+                'alert_message' => [
+                    $this->trans('Choose terms and keywords that your customers will use to search for this product and make sure you are consistent with the tags you may have already used.', 'Admin.Catalog.Help'),
+                    $this->trans('You can manage tag aliases in the [1]Search section[/1]. If you add new tags, you have to rebuild the index.', 'Admin.Catalog.Help', [
+                        '[1]' => sprintf(
+                            '<a target="_blank" href="%s">',
+                            $this->legacyContext->getAdminLink('AdminSearchConf')
+                        ),
+                        '[/1]' => '</a>',
+                    ]),
+                ],
             ])
             ->add('condition', ChoiceType::class, [
                 'choices' => $this->productConditionChoiceProvider->getChoices(),

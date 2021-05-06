@@ -1056,7 +1056,7 @@ $product-page-padding-bottom: 80px !default;
   }
 }
 
-// Combination form page
+// Combination form page (in modal)
 .combination-page {
   .combination-images-selector {
     display: flex;
@@ -1075,6 +1075,13 @@ $product-page-padding-bottom: 80px !default;
       .form-check-radio {
         display: none;
       }
+    }
+  }
+
+  .form-group {
+    &.select-widget,
+    &.date_picker-widget {
+      max-width: 20rem;
     }
   }
 }
