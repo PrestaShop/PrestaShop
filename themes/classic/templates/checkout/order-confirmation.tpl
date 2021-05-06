@@ -65,6 +65,11 @@
                   <em>{$order.carrier.delay}</em>
                 </li>
               {/if}
+              {if $order.details.recyclable}
+                <li>  
+                  {l s='I would like to receive my order in recycled packaging.' d="Shop.Theme.Checkout"}
+                </li>
+              {/if}
             </ul>
           </div>
         {/block}
