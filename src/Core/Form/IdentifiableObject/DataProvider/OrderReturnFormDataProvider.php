@@ -34,7 +34,7 @@ use PrestaShop\PrestaShop\Core\Domain\OrderReturn\Query\GetOrderReturnForEditing
 /**
  * Provides data for order return edit form
  */
-final class OrderReturnFormDataProvider implements FormDataProviderInterface
+class OrderReturnFormDataProvider implements FormDataProviderInterface
 {
     /**
      * @var CommandBusInterface

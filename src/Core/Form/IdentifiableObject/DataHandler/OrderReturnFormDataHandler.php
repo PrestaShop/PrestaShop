@@ -34,7 +34,7 @@ use PrestaShop\PrestaShop\Core\Domain\OrderReturn\Command\UpdateOrderReturnState
 /**
  * Saves or updates order return data submitted in form
  */
-final class OrderReturnFormDataHandler implements FormDataHandlerInterface
+class OrderReturnFormDataHandler implements FormDataHandlerInterface
 {
     /**
      * @var CommandBusInterface

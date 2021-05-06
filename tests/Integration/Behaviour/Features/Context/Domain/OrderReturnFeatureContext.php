@@ -74,13 +74,9 @@ class OrderReturnFeatureContext extends AbstractDomainFeatureContext
         $orderReturn->id_customer = (int) $order->id_customer;
         $orderReturn->id_order = $order->id;
         $orderReturn->question = 'Why?';
-
         $orderReturn->state = 1;
         $orderReturn->add();
-        $orderDetailIds = [];
-        $quantities = [];
-        $customizationIds = [];
-        $customizationQuantityIds = [];
+        $orderDetailIds = $quantities = $customizationIds = $customizationQuantityIds = [];
         foreach ($order->getProducts() as $product) {
             $orderDetailIds[] = $product['id_order_detail'];
             $quantities[] = $product['product_quantity'];
