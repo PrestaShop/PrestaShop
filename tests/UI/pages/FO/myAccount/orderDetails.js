@@ -76,6 +76,11 @@ class OrderHistory extends FOBasePage {
     return this.getTextContent(page, this.headerTitle);
   }
 
+  /**
+   * Click on the reorder link in the order detail
+   * @param page {Page} Browser tab
+   * @returns {Promise<void>}
+   */
   async clickOnReorderLink(page) {
     await this.clickAndWaitForNavigation(page, this.reorderLink);
   }

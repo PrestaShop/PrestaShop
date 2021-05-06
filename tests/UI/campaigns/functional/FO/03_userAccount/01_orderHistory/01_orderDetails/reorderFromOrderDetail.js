@@ -25,7 +25,7 @@ const {PaymentMethods} = require('@data/demo/paymentMethods');
 const testContext = require('@utils/testContext');
 
 // context
-const baseContext = 'functional_FO_userAccount_orderHistory_orderDetail_reorderFromOrderList';
+const baseContext = 'functional_FO_userAccount_orderHistory_orderDetail_reorderFromOrderDetail';
 
 let browserContext;
 let page;
