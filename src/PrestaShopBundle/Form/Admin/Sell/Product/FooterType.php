@@ -115,8 +115,8 @@ class FooterType extends TranslatorAwareType
             ->add('active', SwitchType::class, [
                 'label' => false,
                 'choices' => [
-                    $this->trans('Offline', 'Admin.Catalog.Feature') => false,
-                    $this->trans('Online', 'Admin.Catalog.Feature') => true,
+                    $this->trans('Offline', 'Admin.Global') => false,
+                    $this->trans('Online', 'Admin.Global') => true,
                 ],
             ])
             ->add('save', SubmitType::class, [

@@ -124,7 +124,7 @@ class PricingType extends TranslatorAwareType
                 'required' => false,
                 'label' => $this->trans('Cost price (tax excl.)', 'Admin.Catalog.Feature'),
                 'label_tag_name' => 'h2',
-                'label_help_box' => $this->trans('The cost price is the price you paid for the product. Do not include the tax. It should be lower than the net sales price: the difference between the two will be your margin.', 'Admin.Catalog.Help'),
+                'label_help_box' => $this->trans('The cost price is the price you paid for the product. Do not include the tax. It should be lower than the retail price: the difference between the two will be your margin.', 'Admin.Catalog.Help'),
                 'attr' => ['data-display-price-precision' => self::PRESTASHOP_DECIMALS],
                 'currency' => $this->defaultCurrency->iso_code,
             ])

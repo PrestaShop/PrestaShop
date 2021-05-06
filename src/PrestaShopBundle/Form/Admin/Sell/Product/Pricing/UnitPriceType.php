@@ -66,7 +66,7 @@ class UnitPriceType extends TranslatorAwareType
             ->add('price', MoneyType::class, [
                 'required' => false,
                 'label' => $this->trans('Retail price per unit (tax excl.)', 'Admin.Catalog.Feature'),
-                'label_help_box' => $this->trans('If your country\'s pricing laws or regulations require mandatory informations about the base price of a unit, fill in the base price here (for example, price per kg, per liter, per meter).', 'Admin.Catalog.Help'),
+                'label_help_box' => $this->trans('Indicate the price for one unit of the product. For instance, if you’re selling fabrics, it would be the price per meter.', 'Admin.Catalog.Help'),
                 'attr' => ['data-display-price-precision' => self::PRESTASHOP_DECIMALS],
                 'currency' => $this->defaultCurrency->iso_code,
             ])

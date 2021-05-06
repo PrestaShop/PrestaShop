@@ -84,11 +84,11 @@ class SEOType extends TranslatorAwareType
             ->add('serp', SerpType::class)
             ->add('meta_title', TranslatableType::class, [
                 'label' => $this->trans('Meta title', 'Admin.Catalog.Feature'),
-                'label_help_box' => $this->trans('Public title for the product page and for search engines. Leave blank to use the product name. The number of remaining characters is displayed to the left of the field.', 'Admin.Catalog.Help'),
+                'label_help_box' => $this->trans('Public title for the product page, and for search engines. Leave blank to use the product name. The number of remaining characters is displayed to the left of the field.', 'Admin.Catalog.Help'),
                 'required' => false,
                 'type' => TextWithLengthCounterType::class,
                 'help' => $this->trans(
-                    'Public title for the product\'s page, and for search engines. Leave blank to use the product name. The number of remaining characters is displayed to the left of the field.',
+                    'Public title for the product page, and for search engines. Leave blank to use the product name. The number of remaining characters is displayed to the left of the field.',
                     'Admin.Catalog.Help'
                 ),
                 'options' => [

@@ -74,10 +74,7 @@ class CombinationFormType extends TranslatorAwareType
             ->add('price_impact', CombinationPriceImpactType::class)
             ->add('references', ReferencesType::class)
             ->add('suppliers', SuppliersType::class, [
-                'alert_message' => [
-                    $this->trans('This interface allows you to specify the suppliers of the current combination.', 'Admin.Catalog.Help'),
-                    $this->trans('You can specify supplier references according to previously associated suppliers.', 'Admin.Catalog.Help'),
-                ],
+                'alert_message' => $this->trans('This interface allows you to specify the suppliers of the current combination.', 'Admin.Catalog.Help'),
             ])
             ->add('images', ChoiceType::class, [
                 'label' => $this->trans('Images', 'Admin.Global'),
