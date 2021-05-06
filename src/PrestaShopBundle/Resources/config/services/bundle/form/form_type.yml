@@ -1485,6 +1485,7 @@ services:
         public: true
         arguments:
             - '@prestashop.core.form.choice_provider.product_condition_choice_provider'
+            - '@prestashop.adapter.legacy.context'
         tags:
             - { name: form.type }
 
