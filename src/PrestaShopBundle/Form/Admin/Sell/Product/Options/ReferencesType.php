@@ -80,7 +80,7 @@ class ReferencesType extends TranslatorAwareType
             ->add('isbn', TextType::class, [
                 'required' => false,
                 'label' => $this->trans('ISBN', 'Admin.Catalog.Feature'),
-                'label_help_box' => $this->trans('The International Standard Book Number (ISBN) is used to identify books and other publications.', 'Admin.Catalog.Help'),
+                'label_help_box' => $this->trans('ISBN is used internationally to identify books and their various editions.', 'Admin.Catalog.Help'),
                 'constraints' => [
                     new TypedRegex(TypedRegex::TYPE_ISBN),
                 ],

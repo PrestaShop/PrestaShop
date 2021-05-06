@@ -92,7 +92,7 @@ class CustomizationFieldType extends TranslatorAwareType
                     'data-modal-apply' => $this->trans('Delete', 'Admin.Actions'),
                     'data-modal-cancel' => $this->trans('Cancel', 'Admin.Actions'),
                     'data-toggle' => 'pstooltip',
-                    'data-original-title' => $this->trans('Delete item', 'Admin.Notifications.Warning'),
+                    'data-original-title' => $this->trans('Delete', 'Admin.Global'),
                 ],
             ])
         ;

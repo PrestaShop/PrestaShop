@@ -103,7 +103,7 @@ class RedirectOptionType extends TranslatorAwareType
 
         $builder
             ->add('type', ChoiceType::class, [
-                'label' => $this->trans('Redirection when offline.', 'Admin.Catalog.Feature'),
+                'label' => $this->trans('Redirection when offline', 'Admin.Catalog.Feature'),
                 'required' => false,
                 'placeholder' => false, // Guaranties that no empty value is added in options
                 'choices' => [

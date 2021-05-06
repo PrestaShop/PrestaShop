@@ -125,10 +125,6 @@ class SuppliersType extends TranslatorAwareType
             'row_attr' => [
                 'class' => 'product-suppliers-block',
             ],
-            'alert_message' => [
-                $this->trans('This interface allows you to specify the warehouse in which the product is stocked.', 'Admin.Catalog.Help'),
-                $this->trans('It is also possible to specify the location within the warehouse for each product or combination.', 'Admin.Catalog.Help'),
-            ],
             'alert_position' => 'prepend',
         ]);
     }
