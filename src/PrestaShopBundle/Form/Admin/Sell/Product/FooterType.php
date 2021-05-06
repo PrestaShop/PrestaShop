@@ -32,7 +32,6 @@ use PrestaShop\PrestaShop\Adapter\Shop\Url\ProductProvider;
 use PrestaShopBundle\Form\Admin\Type\IconButtonType;
 use PrestaShopBundle\Form\Admin\Type\SwitchType;
 use PrestaShopBundle\Form\Admin\Type\TranslatorAwareType;
-use Symfony\Component\Form\Extension\Core\Type\ButtonType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
@@ -51,6 +50,12 @@ class FooterType extends TranslatorAwareType
      */
     private $router;
 
+    /**
+     * @param TranslatorInterface $translator
+     * @param array $locales
+     * @param ProductProvider $productUrlProvider
+     * @param RouterInterface $router
+     */
     public function __construct(
         TranslatorInterface $translator,
         array $locales,
@@ -73,6 +78,11 @@ class FooterType extends TranslatorAwareType
             'id' => $productId,
         ]) : null;
         $seoUrl = $productId ? $this->productUrlProvider->getUrl($productId, '{friendly-url}') : null;
+        $standardPageUrl = $productId ? $this->router->generate('admin_product_form', ['id' => $productId]) : $this->router->generate('admin_product_new');
+        $duplicateUrl = $productId ? $this->router->generate('admin_product_unit_action', [
+            'action' => 'duplicate',
+            'id' => $productId,
+        ]) : null;
 
         $builder
             ->add('delete', IconButtonType::class, [
@@ -90,28 +100,23 @@ class FooterType extends TranslatorAwareType
                     'disabled' => empty($productId),
                 ],
             ])
-            ->add('preview', ButtonType::class, [
+            ->add('preview', IconButtonType::class, [
                 'label' => $this->trans('Preview', 'Admin.Actions'),
+                'icon' => 'remove_red_eye',
                 'attr' => [
                     'class' => 'btn-secondary preview-url-button',
                     'data-seo-url' => $seoUrl,
                     'disabled' => empty($productId),
                 ],
             ])
-        ;
-
-        if (!empty($productId)) {
-            $builder->add('standard_page', IconButtonType::class, [
+            ->add('standard_page', IconButtonType::class, [
                 'label' => $this->trans('Back to standard page', 'Admin.Catalog.Feature'),
                 'type' => 'link',
                 'attr' => [
                     'class' => 'btn-outline-secondary',
-                    'href' => $this->router->generate('admin_product_form', ['id' => $productId]),
+                    'href' => $standardPageUrl,
                 ],
-            ]);
-        }
-
-        $builder
+            ])
             ->add('active', SwitchType::class, [
                 'label' => false,
                 'choices' => [
@@ -126,6 +131,34 @@ class FooterType extends TranslatorAwareType
                     'disabled' => true,
                     'title' => $this->trans('Save the product and stay on the current page: ALT+SHIFT+S', 'Admin.Catalog.Help'),
                     'class' => 'btn-primary product-form-save-button',
+                ],
+            ])
+            ->add('duplicate_product', IconButtonType::class, [
+                'label' => $this->trans('Duplicate', 'Admin.Catalog.Feature'),
+                'type' => 'link',
+                'icon' => 'content_copy',
+                'attr' => [
+                    'class' => 'btn-outline-secondary',
+                    'href' => $duplicateUrl,
+                    'disabled' => empty($productId),
+                ],
+            ])
+            ->add('catalog', IconButtonType::class, [
+                'label' => $this->trans('Go to catalog', 'Admin.Catalog.Feature'),
+                'type' => 'link',
+                'attr' => [
+                    'class' => 'btn-outline-secondary',
+                    'href' => $this->router->generate('admin_product_catalog', ['offset' => 'last', 'limit' => 'last']),
+                ],
+            ])
+            ->add('new_product', IconButtonType::class, [
+                'label' => $this->trans('New product on experimental page', 'Admin.Catalog.Feature'),
+                'type' => 'link',
+                'icon' => 'add_circle_outline',
+                'attr' => [
+                    'class' => 'btn-outline-secondary',
+                    'href' => $this->router->generate('admin_products_v2_create'),
+                    'disabled' => empty($productId),
                 ],
             ])
         ;

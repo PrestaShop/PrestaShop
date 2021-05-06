@@ -278,6 +278,10 @@
   {% set attr = attr|merge({class: (attr.class|default('btn-default') ~ ' btn')|trim}) %}
   {% if button_type == 'link' %}
     {% set buttonTag = 'a' %}
+    {# Link tags need extra class for disabled, the attribute itself is not enough #}
+    {% if attr.disabled|default(false) %}
+      {% set attr = attr|merge({class: (attr.class ~ ' disabled')|trim}) %}
+    {% endif %}
   {% else %}
     {% set buttonTag = 'button' %}
     {% set attr = attr|merge({type: 'button'}) %}
