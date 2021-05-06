@@ -128,9 +128,12 @@ abstract class AbstractColumn implements ColumnInterface
             ->setDefaults([
                 'sortable' => true,
                 'clickable' => false,
+                'alignment' => false,
             ])
             ->setAllowedTypes('sortable', 'bool')
-            ->setAllowedTypes('clickable', 'bool');
+            ->setAllowedTypes('clickable', 'bool')
+            ->setAllowedTypes('alignment', ['bool', 'string'])
+            ->setAllowedValues('alignment', ['center', 'left', 'right', 'justify', false]);
     }
 
     /**
