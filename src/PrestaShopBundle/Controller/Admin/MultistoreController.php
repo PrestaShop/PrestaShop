@@ -125,11 +125,11 @@ class MultistoreController extends FrameworkBundleAdminController
             if ($this->shouldIncludeGroupShop($group)) {
                 $groupList[] = $group;
             }
-            if ($this->multistoreContext->isAllShopContext() || $group->getId() === $this->multistoreContext->getContextShopGroup()->id) {
+            if ($this->multistoreContext->isAllShopContext() || $group->getId() === $this->multistoreContext->getContextShopGroup()->id && !$shouldDisplayDropdown) {
                 foreach ($group->getShops() as $shop) {
                     if ($shopCustomizationChecker->isConfigurationCustomizedForThisShop($configurationKey, $shop, $isGroupShopContext)) {
                         $shouldDisplayDropdown = true;
-                        break 2;
+                        continue;
                     }
                 }
             }
