@@ -57,6 +57,13 @@ class Features extends BOBasePage {
     this.tableHead = `${this.gridTable} thead`;
     this.sortColumnDiv = column => `${this.tableHead} th:nth-child(${column})`;
     this.sortColumnSpanButton = column => `${this.sortColumnDiv(column)} span.ps-sort`;
+
+    // Bulk actions selectors
+    this.bulkActionBlock = 'div.bulk-actions';
+    this.bulkActionMenuButton = '#bulk_action_menu_feature';
+    this.bulkActionDropdownMenu = `${this.bulkActionBlock} ul.dropdown-menu`;
+    this.selectAllLink = `${this.bulkActionDropdownMenu} li:nth-child(1)`;
+    this.bulkDeleteLink = `${this.bulkActionDropdownMenu} li:nth-child(4)`;
   }
 
   /* Header methods */
@@ -286,6 +293,38 @@ class Features extends BOBasePage {
     }
 
     return allRowsContentTable;
+  }
+
+  /* Bulk actions methods */
+  /**
+   * Bulk delete features
+   * @param page
+   * @return {Promise<string>}
+   */
+  async bulkDeleteFeatures(page) {
+    // To confirm bulk delete action with dialog
+    await this.dialogListener(page, true);
+
+    // Select all rows
+    await Promise.all([
+      page.click(this.bulkActionMenuButton),
+      this.waitForVisibleSelector(page, this.selectAllLink),
+    ]);
+
+    await Promise.all([
+      page.click(this.selectAllLink),
+      this.waitForHiddenSelector(page, this.selectAllLink),
+    ]);
+
+    await Promise.all([
+      page.click(this.bulkActionMenuButton),
+      this.waitForVisibleSelector(page, this.bulkDeleteLink),
+    ]);
+
+    await this.clickAndWaitForNavigation(page, this.bulkDeleteLink);
+
+    // Return successful message
+    return this.getAlertSuccessBlockContent(page);
   }
 }
 

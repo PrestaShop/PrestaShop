@@ -27,7 +27,7 @@ const {expect} = require('chai');
 let browserContext;
 let page;
 
-let numberOfAttributes = 0;
+let numberOfFeatures = 0;
 
 /*
 Go to Attributes & Features page
@@ -37,7 +37,7 @@ Pagination next and previous
 Sort features table by ID, Name and Position
 Delete the created features by bulk actions
  */
-describe('Sort and pagination features', async () => {
+describe('Sort, pagination and delete by bulk actions features', async () => {
   // before and after functions
   before(async function () {
     browserContext = await helper.createBrowserContext(this.browser);
@@ -74,13 +74,16 @@ describe('Sort and pagination features', async () => {
 
     const pageTitle = await featuresPage.getPageTitle(page);
     await expect(pageTitle).to.contains(featuresPage.pageTitle);
+
+    numberOfFeatures = await featuresPage.resetAndGetNumberOfLines(page);
+    await expect(numberOfFeatures).to.be.above(0);
   });
 
   // 1 : Create 19 new features
   const creationTests = new Array(19).fill(0, 0, 19);
   describe('Create new features in BO', async () => {
     creationTests.forEach((test, index) => {
-      const createFeatureData = new Feature({Name: `todelete${index}`});
+      const createFeatureData = new Feature({name: `todelete${index}`});
       it('should go to add new feature page', async function () {
         await testContext.addContextItem(this, 'testIdentifier', `goToAddNewFeaturePage${index}`, baseContext);
 
@@ -94,7 +97,7 @@ describe('Sort and pagination features', async () => {
         await testContext.addContextItem(this, 'testIdentifier', `createNewValue${index}`, baseContext);
 
         const textResult = await addFeaturePage.setFeature(page, createFeatureData);
-        await expect(textResult).to.contains(attributesPage.successfulCreationMessage);
+        await expect(textResult).to.contains(featuresPage.successfulCreationMessage);
       });
     });
   });
@@ -188,6 +191,32 @@ describe('Sort and pagination features', async () => {
           await expect(sortedTable).to.deep.equal(expectedResult.reverse());
         }
       });
+    });
+  });
+
+  // 4 : Delete created features by bulk actions
+  describe('Bulk delete features', async () => {
+    it('should filter by feature name \'toDelete\'', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'filterToBulkDelete', baseContext);
+
+      await featuresPage.filterTable(page, 'b!name', 'toDelete');
+
+      const numberOfFeaturesAfterFilter = await featuresPage.getNumberOfElementInGrid(page);
+      await expect(numberOfFeaturesAfterFilter).to.be.equal(19);
+    });
+
+    it('should delete features with Bulk Actions and check result', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'bulkDeleteFeatures', baseContext);
+
+      const deleteTextResult = await featuresPage.bulkDeleteFeatures(page);
+      await expect(deleteTextResult).to.be.contains(featuresPage.successfulMultiDeleteMessage);
+    });
+
+    it('should reset all filters', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'resetFilter', baseContext);
+
+      const numberOfFeaturesAfterReset = await featuresPage.resetAndGetNumberOfLines(page);
+      await expect(numberOfFeaturesAfterReset).to.equal(numberOfFeatures);
     });
   });
 });
