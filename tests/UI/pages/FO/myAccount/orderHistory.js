@@ -42,11 +42,12 @@ class OrderHistory extends FOBasePage {
 
   /**
    *
+   * Click on reorder link
    * @param page {Page} Browser tab
    * @param orderRow {Number} row in orders table
    * @returns {Promise<void>}
    */
-  async clickOnReorderLink(page, orderRow= 1){
+  async clickOnReorderLink(page, orderRow = 1) {
     await this.clickAndWaitForNavigation(page, this.reorderLink(orderRow));
   }
 
