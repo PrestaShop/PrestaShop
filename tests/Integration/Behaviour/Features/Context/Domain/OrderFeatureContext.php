@@ -183,16 +183,12 @@ class OrderFeatureContext extends AbstractDomainFeatureContext
 
         $productName = $data['name'];
         $product = $this->getProductByName($productName);
+        $productId = (int) $product->getProductId();
 
-        $productId = $product->getProductId();
-        if (isset($data['combination'])) {
-            $combinationId = $this->getProductCombinationId($product, $data['combination']);
-        } else {
-            $combinationId = 0;
-        }
+        $combinationId = isset($data['combination']) ? $this->getProductCombinationId($product, $data['combination']) : 0;
 
         if (empty($data['price_tax_incl'])) {
-            $taxCalculator = $this->getProductTaxCalculator((int) $orderId, (int) $productId);
+            $taxCalculator = $this->getProductTaxCalculator((int) $orderId, $productId);
             $data['price_tax_incl'] = !empty($taxCalculator) ? (string) $taxCalculator->addTaxes($data['price']) : $data['price'];
         }
 
@@ -651,7 +647,7 @@ class OrderFeatureContext extends AbstractDomainFeatureContext
         }
         $this->lastException = null;
 
-        // if tax included price is not given, it is calculated
+        // If tax included price is not given, it is calculated
         if (!isset($data['price_tax_incl'])) {
             $taxCalculator = $this->getProductTaxCalculator($orderId, (int) $productOrderDetail['product_id']);
             $data['price_tax_incl'] = !empty($taxCalculator) ? (string) $taxCalculator->addTaxes($data['price']) : $data['price'];
@@ -1755,13 +1751,14 @@ class OrderFeatureContext extends AbstractDomainFeatureContext
 
     /**
      * @param int $orderId
+     * @param int $productId
      *
-     * @return TaxCalculator|null
+     * @return TaxCalculator
      *
      * @throws \PrestaShopDatabaseException
      * @throws \PrestaShopException
      */
-    private function getProductTaxCalculator(int $orderId, int $productId)
+    private function getProductTaxCalculator(int $orderId, int $productId): TaxCalculator
     {
         $order = new Order($orderId);
         $taxAddress = new Address($order->{Configuration::get('PS_TAX_ADDRESS_TYPE', null, null, $order->id_shop)});
