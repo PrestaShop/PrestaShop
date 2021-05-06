@@ -98,7 +98,7 @@ class FooterType extends TranslatorAwareType
                 'label' => $this->trans('Preview', 'Admin.Actions'),
                 'icon' => 'remove_red_eye',
                 'attr' => [
-                    'class' => 'btn-secondary preview-url-button',
+                    'class' => 'btn-outline-secondary preview-url-button',
                     'data-seo-url' => $seoUrl,
                     'disabled' => empty($productId),
                 ],
@@ -111,17 +111,11 @@ class FooterType extends TranslatorAwareType
                     'href' => $standardPageUrl,
                 ],
             ])
-            ->add('active', SwitchType::class, [
-                'label' => false,
-                'choices' => [
-                    $this->trans('Offline', 'Admin.Global') => false,
-                    $this->trans('Online', 'Admin.Global') => true,
-                ],
-            ])
             ->add('delete', IconButtonType::class, [
                 'icon' => 'delete',
+                'label' => $this->trans('Delete', 'Admin.Actions'),
                 'attr' => [
-                    'class' => 'tooltip-link delete-product-button',
+                    'class' => 'tooltip-link delete-product-button btn-outline-secondary',
                     'data-modal-title' => $this->trans('Permanently delete this product.', 'Admin.Catalog.Help'),
                     'data-modal-message' => $this->trans('Are you sure you want to delete this item?', 'Admin.Notifications.Warning'),
                     'data-modal-apply' => $this->trans('Delete', 'Admin.Actions'),
@@ -131,6 +125,13 @@ class FooterType extends TranslatorAwareType
                     'data-placement' => 'left',
                     'title' => $this->trans('Permanently delete this product.', 'Admin.Catalog.Help'),
                     'disabled' => empty($productId),
+                ],
+            ])
+            ->add('active', SwitchType::class, [
+                'label' => false,
+                'choices' => [
+                    $this->trans('Offline', 'Admin.Global') => false,
+                    $this->trans('Online', 'Admin.Global') => true,
                 ],
             ])
             ->add('save', SubmitType::class, [
@@ -176,6 +177,9 @@ class FooterType extends TranslatorAwareType
                 'product_id' => null,
                 'required' => false,
                 'label' => false,
+                'attr' => [
+                    'class' => 'product-footer-right',
+                ]
             ])
             ->setAllowedTypes('product_id', ['null', 'int'])
         ;

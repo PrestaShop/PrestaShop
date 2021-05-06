@@ -223,10 +223,10 @@ $product-page-padding-bottom: 80px !default;
       height: 100%;
 
       .product-footer-left,
-      .product-footer-right,
-      #product_footer {
+      .product-footer-right {
         display: flex;
         flex-direction: row;
+        margin: 0 0.5rem;
 
         > * {
           margin: 0 0.5rem;
@@ -244,6 +244,10 @@ $product-page-padding-bottom: 80px !default;
       .switch-widget {
         min-width: 6rem;
         padding-top: 0.25rem;
+      }
+
+      .delete-product-button {
+        padding: 0.5rem;
       }
     }
   }
@@ -1530,13 +1534,8 @@ $product-page-padding-bottom: 80px !default;
     .product-footer-container {
       .product-footer-left,
       .product-footer-right {
-        width: 50%;
-      }
-
-      .product-footer-left,
-      .product-footer-right,
-      #product_footer {
         flex-wrap: wrap;
+        width: 50%;
       }
     }
   }
