@@ -90,7 +90,7 @@ class ManufacturerType extends ChoiceType
      *
      * @return string
      */
-    protected function trans(string $key, string $domain, $parameters = [])
+    protected function trans(string $key, string $domain, array $parameters = []): string
     {
         return $this->translator->trans($key, $parameters, $domain);
     }
