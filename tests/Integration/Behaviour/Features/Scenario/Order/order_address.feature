@@ -65,6 +65,13 @@ Feature: Order from Back Office (BO)
     75008 Paris
     France
     """
+    And the order "bo_order1" preview has the following formatted shipping address
+    """
+    testFirstName testLastName
+    36 Avenue des Champs Elysees
+    75008 Paris
+    France
+    """
     And the order "bo_order1" has following invoice address
       | Fullname         | testFirstName testLastName   |
       | Address          | 36 Avenue des Champs Elysees |
@@ -73,6 +80,13 @@ Feature: Order from Back Office (BO)
       | Postal code      | 75008                        |
       | DNI              |                              |
     And the order "bo_order1" has the following formatted invoice address
+    """
+    testFirstName testLastName
+    36 Avenue des Champs Elysees
+    75008 Paris
+    France
+    """
+    And the order "bo_order1" preview has the following formatted invoice address
     """
     testFirstName testLastName
     36 Avenue des Champs Elysees

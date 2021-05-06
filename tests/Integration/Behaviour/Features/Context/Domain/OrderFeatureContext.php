@@ -1445,6 +1445,36 @@ class OrderFeatureContext extends AbstractDomainFeatureContext
     }
 
     /**
+     * @Then /^the order "(.+)" preview has the following formatted (shipping|invoice) address$/
+     */
+    public function getOrderPreviewFormattedAddress(
+        string $orderReference,
+        string $addressType,
+        PyStringNode $pyStringNode
+    ): void {
+        $orderId = $this->getSharedStorage()->get($orderReference);
+        /** @var OrderPreview $orderPreview */
+        $orderPreview = $this->getQueryBus()->handle(new GetOrderPreview($orderId));
+
+        if ($addressType == 'shipping') {
+            $address = $orderPreview->getShippingAddressFormatted();
+        } elseif ($addressType == 'invoice') {
+            $address = $orderPreview->getInvoiceAddressFormatted();
+        }
+
+        Assert::assertEquals(
+            $address,
+            $pyStringNode->getRaw(),
+            sprintf(
+                'Invalid formatted address for preview order %s, expected %s instead of %s',
+                $orderReference,
+                $address,
+                $pyStringNode->getRaw()
+            )
+        );
+    }
+
+    /**
      * @param int $productId
      * @param int $combinationId
      * @param int $orderId

@@ -231,6 +231,7 @@ services:
     arguments:
       - '@prestashop.core.localization.locale.repository'
       - "@=service('prestashop.adapter.legacy.context').getContext().language.getLocale()"
+      - '@prestashop.adapter.address.formatter'
     tags:
       - name: tactician.handler
         command: 'PrestaShop\PrestaShop\Core\Domain\Order\Query\GetOrderPreview'
