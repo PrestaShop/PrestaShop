@@ -26,9 +26,6 @@
   <div class="row">
     <div class="col-md-12">
       <h4 class="h4 black">{l s='Please check your order before payment' d='Shop.Theme.Checkout'}</h4>
-      {if $is_recyclable_packaging}
-          {l s='I would like to receive my order in recycled packaging.' d="Shop.Theme.Checkout"}
-      {/if}
     </div>
   </div>
 
@@ -89,6 +86,9 @@
             </div>
           </div>
         </div>
+        {if $is_recyclable}
+          <em>{l s='I would like to receive my order in recycled packaging.' d="Shop.Theme.Checkout"}</em>
+        {/if}
       </div>
     </div>
   {/if}
