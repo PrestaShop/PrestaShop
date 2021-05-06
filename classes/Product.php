@@ -5757,10 +5757,12 @@ class ProductCore extends ObjectModel
             }
         }
 
-        $attributes = Product::getAttributesParams($row['id_product'], $row['id_product_attribute']);
+        if (!isset($row['attributes'])) {
+            $attributes = Product::getAttributesParams($row['id_product'], $row['id_product_attribute']);
 
-        foreach ($attributes as $attribute) {
-            $row['attributes'][$attribute['id_attribute_group']] = $attribute;
+            foreach ($attributes as $attribute) {
+                $row['attributes'][$attribute['id_attribute_group']] = $attribute;
+            }
         }
 
         $row = Product::getTaxesInformations($row, $context);
