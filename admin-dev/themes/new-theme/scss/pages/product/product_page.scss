@@ -267,12 +267,6 @@ $product-page-padding-bottom: 80px !default;
   }
 
   .form-group {
-    .locale-input-group {
-      input {
-        width: 100%;
-      }
-    }
-
     > .alert:not(.alert-unavailable) {
       max-width: 47.65rem;
     }
