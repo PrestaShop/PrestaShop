@@ -39,7 +39,7 @@ use PrestaShop\PrestaShop\Core\Domain\OrderReturn\QueryResult\EditableOrderRetur
 /**
  * Handles query which gets order return for editing
  */
-final class GetOrderReturnForEditingHandler extends AbstractOrderReturnHandler implements GetOrderReturnForEditingHandlerInterface
+class GetOrderReturnForEditingHandler extends AbstractOrderReturnHandler implements GetOrderReturnForEditingHandlerInterface
 {
     /**
      * {@inheritdoc}
