@@ -67,6 +67,7 @@ export default {
     navigationTab: '#combinations-tab-nav',
     combinationsContainer: `${combinationListId}`,
     combinationsFiltersContainer: '#combinations_filters',
+    combinationsGeneratorContainer: '#product_combinations_generator',
     combinationsTable: `${combinationListId} table`,
     combinationsTableBody: `${combinationListId} table tbody`,
     combinationIdInputsSelector: '.combination-id-input',
@@ -106,6 +107,8 @@ export default {
       checkboxContainer: '.form-check',
       checkbox: 'input[type=checkbox]',
     },
+    scrollBar: '.attributes-list-overflow',
+    searchInput: '#product-combinations-generate .attributes-search',
   },
   virtualProduct: {
     container: '#virtual-product-file',

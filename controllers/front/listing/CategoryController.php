@@ -50,6 +50,9 @@ class CategoryControllerCore extends ProductListingFrontController
 
     public function getCanonicalURL()
     {
+        if (!Validate::isLoadedObject($this->category)) {
+            return '';
+        }
         $canonicalUrl = $this->context->link->getCategoryLink($this->category);
         $parsedUrl = parse_url($canonicalUrl);
         if (isset($parsedUrl['query'])) {
@@ -130,7 +133,11 @@ class CategoryControllerCore extends ProductListingFrontController
     {
         parent::initContent();
 
-        if ($this->category->checkAccess($this->context->customer->id)) {
+        if (
+            Validate::isLoadedObject($this->category)
+            && $this->category->active
+            && $this->category->checkAccess($this->context->customer->id)
+        ) {
             $this->doProductSearch(
                 'catalog/listing/category',
                 [

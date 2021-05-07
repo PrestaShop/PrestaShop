@@ -22,20 +22,31 @@
  * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
+import Vue from 'vue';
+import VueI18n from 'vue-i18n';
+import ReplaceFormatter from '@vue/plugins/vue-i18n/replace-formatter';
+import CombinationGenerator from '@pages/product/components/generator/CombinationGenerator.vue';
 
-export default {
-  translationType: '.js-translation-type',
-  emailContentType: '.js-email-content-type',
-  emailFormGroup: '.js-email-form-group',
-  modulesFormGroup: '.js-module-form-group',
-  themesFormGroup: '.js-theme-form-group',
-  defaultThemeOption: '.js-default-theme',
-  noThemeOption: '.js-no-theme',
-  exportCoreType: '#form_core_selectors_core_type',
-  exportCoreValues: '#form_core_selectors_selected_value',
-  exportThemesType: '#form_themes_selectors_themes_type',
-  exportThemesValues: '#form_themes_selectors_selected_value',
-  exportModulesType: '#form_modules_selectors_modules_type',
-  exportModulesValues: '#form_modules_selectors_selected_value',
-  exportLanguageButton: '#form-export-language-button',
-};
+Vue.use(VueI18n);
+
+export default function initCombinationGenerator(combinationGeneratorSelector, eventEmitter, productId) {
+  const container = document.querySelector(combinationGeneratorSelector);
+
+  const translations = JSON.parse(container.dataset.translations);
+  const i18n = new VueI18n({
+    locale: 'en',
+    formatter: new ReplaceFormatter(),
+    messages: {en: translations},
+  });
+
+  return new Vue({
+    el: combinationGeneratorSelector,
+    template: '<combination-generator :productId=productId :eventEmitter=eventEmitter />',
+    components: {CombinationGenerator},
+    i18n,
+    data: {
+      productId,
+      eventEmitter,
+    },
+  });
+}

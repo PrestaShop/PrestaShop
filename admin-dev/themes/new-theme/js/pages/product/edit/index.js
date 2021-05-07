@@ -95,7 +95,11 @@ $(() => {
 
   // From here we init component specific to edition
   const $productFormSubmitButton = $(ProductMap.productFormSubmitButton);
-  new ProductPartialUpdater(window.prestashop.instance.eventEmitter, $productForm, $productFormSubmitButton).watch();
+  new ProductPartialUpdater(
+    window.prestashop.instance.eventEmitter,
+    $productForm,
+    $productFormSubmitButton,
+  ).watch();
   new FeatureValuesManager(window.prestashop.instance.eventEmitter);
   new CustomizationsManager();
 

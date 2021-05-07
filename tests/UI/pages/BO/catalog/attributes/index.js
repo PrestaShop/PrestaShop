@@ -16,6 +16,7 @@ class Attributes extends BOBasePage {
 
     // Header selectors
     this.addNewAttributeLink = '#page-header-desc-attribute_group-new_attribute_group';
+    this.addNewValueLink = '#page-header-desc-attribute_group-new_value';
     this.featuresSubtabLink = '#subtab-AdminFeatures';
 
     // Form selectors
@@ -95,6 +96,15 @@ class Attributes extends BOBasePage {
    */
   async goToAddAttributePage(page) {
     await this.clickAndWaitForNavigation(page, this.addNewAttributeLink);
+  }
+
+  /**
+   * Go to add new value page
+   * @param page
+   * @return {Promise<void>}
+   */
+  async goToAddNewValuePage(page) {
+    await this.clickAndWaitForNavigation(page, this.addNewValueLink);
   }
 
   /* Filter methods */

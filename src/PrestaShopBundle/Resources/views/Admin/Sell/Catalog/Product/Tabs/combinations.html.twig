@@ -24,7 +24,22 @@
  *#}
 
 <div role="tabpanel" class="form-contenttab tab-pane container-fluid" id="combinations-tab">
-  <div id="combinations_filters" data-product-id="{{ productId }}"></div>
+  <div id="product_combinations_generator"
+  data-translations="{{ {
+    'generator.open': 'Open combinations generator'|trans({}, 'Admin.Catalog.Feature'),
+    'generator.success': 'Successfully generated %combinationsNb% combinations.'|trans({}, 'Admin.Catalog.Feature'),
+    'generator.action': 'Generate combinations|Generate combination|Generate %combinationsNb% combinations'|trans({}, 'Admin.Catalog.Feature'),
+    'search.placeholder': 'Search some attributes...'|trans({}, 'Admin.Catalog.Feature'),
+    'modal.title': 'Generate combinations'|trans({}, 'Admin.Catalog.Feature'),
+    'modal.close': 'Cancel'|trans({}, 'Admin.Actions'),
+  }|json_encode }}"
+  ></div>
+  <div id="combinations_filters"
+  data-translations="{{ {
+    'filters.label': 'Filter by:'|trans({}, 'Admin.Actions'),
+    'filters.clear': 'Clear filter|Clear %filtersNb% filters'|trans({}, 'Admin.Actions'),
+  }|json_encode }}"
+  ></div>
 
   {{ render(controller('PrestaShopBundle:Admin\\Sell\\Catalog\\Product\\Combination:paginatedList', {
     'productId': productId,

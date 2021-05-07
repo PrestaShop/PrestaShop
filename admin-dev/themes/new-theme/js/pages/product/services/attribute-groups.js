@@ -32,6 +32,9 @@ export const getProductAttributeGroups = async (productId) => $.get(router.gener
   productId,
 }));
 
+export const getAllAttributeGroups = async () => $.get(router.generate('admin_all_attribute_groups'));
+
 export default {
   getProductAttributeGroups,
+  getAllAttributeGroups,
 };
