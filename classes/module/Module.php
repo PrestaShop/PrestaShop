@@ -1119,7 +1119,7 @@ abstract class ModuleCore implements ModuleInterface
     /**
      * This function is used to determine the module name
      * of an AdminTab which belongs to a module, in order to keep translation
-     * related to a module in its directory (instead of $_LANGADM).
+     * related to a module in its directory.
      *
      * @param string $current_class Name of Module class
      *
