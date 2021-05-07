@@ -265,7 +265,7 @@ class AdminSearchControllerCore extends AdminController
         $this->_list['features'] = [];
 
         $result = Db::getInstance()->executeS(
-            'SELECT class_name, name
+            'SELECT class_name, name, route_name
             FROM ' . _DB_PREFIX_ . 'tab t
             INNER JOIN ' . _DB_PREFIX_ . 'tab_lang tl ON (t.id_tab = tl.id_tab AND tl.id_lang = ' . (int) $this->context->employee->id_lang . ')
             WHERE active = 1'
@@ -275,7 +275,11 @@ class AdminSearchControllerCore extends AdminController
                 false !== stripos($row['name'], $this->query)
                 && Access::isGranted('ROLE_MOD_TAB_' . strtoupper($row['class_name']) . '_READ', $this->context->employee->id_profile)
             ) {
-                $this->_list['features'][$row['name']][] = ['link' => Context::getContext()->link->getAdminLink($row['class_name']), 'value' => Tools::safeOutput($value)];
+                $sfRouteParams = (!empty($row['route_name'])) ? ['route' => $row['route_name']] : [];
+                $this->_list['features'][$row['name']][] = [
+                    'link' => Context::getContext()->link->getAdminLink((string) $row['class_name'], true, $sfRouteParams),
+                    'value' => Tools::safeOutput($value)
+                ];
             }
         }
     }
