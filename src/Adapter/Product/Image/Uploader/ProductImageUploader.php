@@ -141,6 +141,8 @@ class ProductImageUploader extends AbstractImageUploader
         $destinationPath = $this->productImagePathFactory->getPath(new ImageId((int) $image->id));
         $this->deleteCachedImages((int) $image->id_product);
         $this->deleteGeneratedImages($destinationPath, $this->productImageRepository->getProductImageTypes());
+
+        $this->hookDispatcher->dispatchWithParameters('actionProductImageDeleted', ['id_image' => $image->id]);
     }
 
     /**
