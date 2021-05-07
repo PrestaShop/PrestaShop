@@ -89,7 +89,7 @@ Feature: Duplicate product from Back Office (BO).
       | meta description[en-US] |                    |
       | meta keywords[en-US]    | sup,1              |
       | shops                   | [shop1]            |
-    And I set product product1 default supplier to supplier1 and following suppliers:
+    When I set product product1 suppliers:
       | reference         | supplier reference | product supplier reference     | currency | price tax excluded |
       | product1supplier1 | supplier1          | my first supplier for product1 | USD      | 10                 |
     And I set following related products to product product1:

@@ -2,6 +2,11 @@ services:
     _defaults:
         public: true
 
+    prestashop.translation.translator_language_loader:
+        class: PrestaShopBundle\Translation\TranslatorLanguageLoader
+        arguments:
+            - '@prestashop.adapter.module.repository.module_repository'
+
     prestashop.translation.builder.translation_tree:
         class: PrestaShop\PrestaShop\Core\Translation\Builder\TranslationsTreeBuilder
         arguments:
@@ -12,6 +17,16 @@ services:
         class: PrestaShop\PrestaShop\Core\Translation\Builder\TranslationCatalogueBuilder
         arguments:
             - '@prestashop.translation.provider.catalogue_provider_factory'
+
+    prestashop.translation.export.translation_catalogue:
+        class: PrestaShop\PrestaShop\Core\Translation\Export\TranslationCatalogueExporter
+        arguments:
+            - '@prestashop.translation.builder.translation_catalogue'
+            - '@prestashop.translation.factory.provider_definition'
+            - '@prestashop.translation.dumper.xliff'
+            - '@filesystem'
+            - '@prestashop.utils.zip_manager'
+            - "%translation_catalogues_export_dir%"
 
     #TRANSLATIONS FACTORIES
     prestashop.translation.translations_factory:

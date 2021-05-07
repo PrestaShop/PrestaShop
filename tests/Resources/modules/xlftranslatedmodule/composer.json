@@ -1,0 +1,17 @@
+{
+    "name": "prestashop/xlftranslatedmodule",
+    "authors": [
+        {
+            "name": "Ibrahima SOW",
+            "email": "dev@prestashop.com"
+        }
+    ],
+    "autoload": {
+        "psr-4": {
+            "PrestaShop\\Module\\Xlftranslatedmodule\\": "src/"
+        }
+    },
+    "license": "MIT",
+    "type": "prestashop-module",
+    "require": {}
+}

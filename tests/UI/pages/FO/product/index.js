@@ -49,7 +49,7 @@ class Product extends FOBasePage {
 
   /**
    * Get product page URL
-   * @param page
+   * @param page {Page} Browser tab
    * @returns {Promise<string>}
    */
   getProductPageURL(page) {
@@ -58,7 +58,7 @@ class Product extends FOBasePage {
 
   /**
    * Get Product information (Product name, price, description)
-   * @param page
+   * @param page {Page} Browser tab
    * @returns {Promise<{price: (number), name: (string), description: (string)}>}
    */
   async getProductInformation(page) {
@@ -72,7 +72,7 @@ class Product extends FOBasePage {
 
   /**
    * get regular price
-   * @param page
+   * @param page {Page} Browser tab
    * @returns {Promise<number>}
    */
   getRegularPrice(page) {
@@ -81,8 +81,8 @@ class Product extends FOBasePage {
 
   /**
    * Get product attributes from a Ul selector
-   * @param page
-   * @param ulSelector
+   * @param page {Page} Browser tab
+   * @param ulSelector {string} Selector to locate the element
    * @returns {Promise<[]>}
    */
   getProductsAttributesFromUl(page, ulSelector) {
@@ -91,7 +91,7 @@ class Product extends FOBasePage {
 
   /**
    * Get product attributes
-   * @param page
+   * @param page {Page} Browser tab
    * @returns {Promise<{size: string, color: string}>}
    */
   async getProductAttributes(page) {
@@ -103,7 +103,7 @@ class Product extends FOBasePage {
 
   /**
    * Get selected product attributes
-   * @param page
+   * @param page {Page} Browser tab
    * @returns {Promise<{size: *, color: *}>}
    */
   async getSelectedProductAttributes(page) {
@@ -115,7 +115,7 @@ class Product extends FOBasePage {
 
   /**
    * Get product image urls
-   * @param page
+   * @param page {Page} Browser tab
    * @returns {Promise<{thumbImage: string, coverImage: string}>}
    */
   async getProductImageUrls(page) {
@@ -127,7 +127,7 @@ class Product extends FOBasePage {
 
   /**
    * Get discount column title
-   * @param page
+   * @param page {Page} Browser tab
    * @returns {Promise<string>}
    */
   getDiscountColumnTitle(page) {
@@ -136,7 +136,7 @@ class Product extends FOBasePage {
 
   /**
    * Get quantity discount value from volume discounts table
-   * @param page
+   * @param page {Page} Browser tab
    * @returns {Promise<number>}
    */
   getQuantityDiscountValue(page) {
@@ -145,7 +145,7 @@ class Product extends FOBasePage {
 
   /**
    * Get discount value from volume discounts table
-   * @param page
+   * @param page {Page} Browser tab
    * @returns {Promise<string>}
    */
   getDiscountValue(page) {
@@ -154,7 +154,7 @@ class Product extends FOBasePage {
 
   /**
    * Get discount amount
-   * @param page
+   * @param page {Page} Browser tab
    * @returns {Promise<string>}
    */
   getDiscountAmount(page) {
@@ -163,7 +163,7 @@ class Product extends FOBasePage {
 
   /**
    * Get discount percentage
-   * @param page
+   * @param page {Page} Browser tab
    * @returns {Promise<string>}
    */
   getDiscountPercentage(page) {
@@ -176,7 +176,7 @@ class Product extends FOBasePage {
 
   /**
    * Get delivery information text
-   * @param page
+   * @param page {Page} Browser tab
    * @return {Promise<string>}
    */
   getDeliveryInformationText(page) {
@@ -185,8 +185,8 @@ class Product extends FOBasePage {
 
   /**
    * Select thumb image
-   * @param page
-   * @param id
+   * @param page {Page} Browser tab
+   * @param id {number} Id for the thumb
    * @returns {Promise<string>}
    */
   async selectThumbImage(page, id) {
@@ -202,9 +202,9 @@ class Product extends FOBasePage {
 
   /**
    * Select product combination
-   * @param page
-   * @param quantity
-   * @param combination
+   * @param page {Page} Browser tab
+   * @param quantity {number} Quantity of the product that customer wants
+   * @param combination {object}  Product's combination data to select
    * @returns {Promise<void>}
    */
   async selectCombination(page, quantity, combination) {
@@ -225,10 +225,10 @@ class Product extends FOBasePage {
 
   /**
    * Click on Add to cart button then on Proceed to checkout button in the modal
-   * @param page
-   * @param quantity
-   * @param combination
-   * @param proceedToCheckout
+   * @param page {Page} Browser tab
+   * @param quantity {number} Quantity of the product that customer wants
+   * @param combination {object}  Product's combination data to add to cart
+   * @param proceedToCheckout {boolean} True to click on proceed to checkout button on modal
    * @returns {Promise<void>}
    */
   async addProductToTheCart(page, quantity = 1, combination = {color: null, size: null}, proceedToCheckout = true) {
@@ -250,8 +250,8 @@ class Product extends FOBasePage {
 
   /**
    * Go to social sharing link
-   * @param page
-   * @param socialSharing
+   * @param page {Page} Browser tab
+   * @param socialSharing {string} Social network's name to get link from
    * @returns {Promise<void>}
    */
   async getSocialSharingLink(page, socialSharing) {
@@ -278,8 +278,8 @@ class Product extends FOBasePage {
 
   /**
    * Set quantity
-   * @param page
-   * @param quantity
+   * @param page {Page} Browser tab
+   * @param quantity {number} Quantity to set
    * @returns {Promise<void>}
    */
   async setQuantity(page, quantity) {
@@ -288,7 +288,7 @@ class Product extends FOBasePage {
 
   /**
    * Is quantity displayed
-   * @param page
+   * @param page {Page} Browser tab
    * @returns {Promise<boolean>}
    */
   async isQuantityDisplayed(page) {
@@ -298,7 +298,7 @@ class Product extends FOBasePage {
 
   /**
    * Is availability product displayed
-   * @param page
+   * @param page {Page} Browser tab
    * @returns {boolean}
    */
   isAvailabilityQuantityDisplayed(page) {
@@ -307,7 +307,7 @@ class Product extends FOBasePage {
 
   /**
    * Is price displayed
-   * @param page
+   * @param page {Page} Browser tab
    * @returns {boolean}
    */
   isPriceDisplayed(page) {
@@ -316,7 +316,7 @@ class Product extends FOBasePage {
 
   /**
    * Is add to cart button displayed
-   * @param page
+   * @param page {Page} Browser tab
    * @returns {boolean}
    */
   isAddToCartButtonDisplayed(page) {
@@ -325,21 +325,19 @@ class Product extends FOBasePage {
 
   /**
    * Is unavailable product size displayed
-   * @param page
-   * @param size
+   * @param page {Page} Browser tab
+   * @param size {string} The product size
    * @returns {Promise<boolean>}
    */
   async isUnavailableProductSizeDisplayed(page, size) {
     await page.waitForTimeout(2000);
-    const exist = await page.$(this.productSizeOption(size)) !== null;
-
-    return exist;
+    return await page.$(this.productSizeOption(size)) !== null;
   }
 
   /**
    * Is unavailable product color displayed
-   * @param page
-   * @param color
+   * @param page {Page} Browser tab
+   * @param color {string} Product's color to check
    * @returns {boolean}
    */
   isUnavailableProductColorDisplayed(page, color) {
@@ -348,7 +346,7 @@ class Product extends FOBasePage {
 
   /**
    * Is add to cart button enabled
-   * @param page
+   * @param page {Page} Browser tab
    * @returns {boolean}
    */
   isAddToCartButtonEnabled(page) {
@@ -357,7 +355,7 @@ class Product extends FOBasePage {
 
   /**
    * Check if delivery information text is visible
-   * @param page
+   * @param page {Page} Browser tab
    * @return {boolean}
    */
   isDeliveryInformationVisible(page) {
@@ -366,7 +364,7 @@ class Product extends FOBasePage {
 
   /**
    * Get product availability label
-   * @param page
+   * @param page {Page} Browser tab
    * @returns {Promise<string>}
    */
 }

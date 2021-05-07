@@ -22,6 +22,11 @@ services:
       tags:
         - { name: form.type_extension, extended_type: Symfony\Component\Form\Extension\Core\Type\FormType }
 
+    form.extension.default_empty_data:
+      class: 'PrestaShopBundle\Form\Admin\Extension\DefaultEmptyDataExtension'
+      tags:
+        - { name: form.type_extension, extended_type: Symfony\Component\Form\Extension\Core\Type\FormType }
+
     form.extension.data_list:
         class: 'PrestaShopBundle\Form\Extension\DataListExtension'
         tags:
@@ -51,3 +56,8 @@ services:
             - '@prestashop.adapter.legacy.configuration'
             - '@prestashop.adapter.shop.context'
             - '@prestashop.core.admin.multistore'
+
+    form.extension.downloadable_file:
+        class: 'PrestaShopBundle\Form\Admin\Extension\DownloadFileExtension'
+        tags:
+            - { name: form.type_extension, extended_type: Symfony\Component\Form\Extension\Core\Type\FileType }

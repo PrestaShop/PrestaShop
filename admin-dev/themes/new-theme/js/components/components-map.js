@@ -23,11 +23,16 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
 
-const ComponentsMap = {};
-ComponentsMap.multistoreDropdown = {};
-const MultistoreDropdownMap = ComponentsMap.multistoreDropdown;
-
-MultistoreDropdownMap.searchInput = '.js-multistore-dropdown-search';
-MultistoreDropdownMap.scrollbar = '.js-multistore-scrollbar';
-
-export default ComponentsMap;
+export default {
+  multistoreDropdown: {
+    searchInput: '.js-multistore-dropdown-search',
+    scrollbar: '.js-multistore-scrollbar',
+  },
+  multistoreHeader: {
+    modal: '.js-multishop-modal',
+    headerButton: '.js-header-multishop-open-modal',
+    searchInput: '.js-multishop-modal-search',
+    jsScrollbar: '.js-multishop-scrollbar',
+    setContextUrl: (location, urlLetter, itemId) => `${location}&setShopContext=${urlLetter}-${itemId}`,
+  },
+};

@@ -23,9 +23,6 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
 
-const productSuppliersId = '#product_suppliers_product_suppliers';
-const productSupplierInputId = (supplierIndex, inputName) => `${productSuppliersId}_${supplierIndex}_${inputName}`;
-
 const combinationListId = '#combination_list';
 
 export default {
@@ -37,28 +34,12 @@ export default {
     VIRTUAL: 'virtual',
     COMBINATIONS: 'combinations',
   },
+  invalidField: '.is-invalid',
   productFormSubmitButton: 'button[name="product[save]"]',
   navigationBar: '#form-nav',
   dropzoneImagesContainer: '#product_images',
   price: {
     priceTaxExcludedInput: '#product_price_price_tax_excluded',
-  },
-  suppliers: {
-    productSuppliersCollection: `${productSuppliersId}`,
-    supplierIdsInput: '#product_suppliers_supplier_ids',
-    defaultSupplierInput: '#product_suppliers_default_supplier_id',
-    // @todo: why its called productsTable and not productSuppliers|suppliers table? is it a mistake?
-    productsTable: `${productSuppliersId} table`,
-    productsTableBody: `${productSuppliersId} table tbody`,
-    productSupplierRow: {
-      supplierNameCell: (supplierIndex) => `#product_supplier_row_${supplierIndex} .supplier_name`,
-      supplierIdInput: (supplierIndex) => productSupplierInputId(supplierIndex, 'supplier_id'),
-      supplierNameInput: (supplierIndex) => productSupplierInputId(supplierIndex, 'supplier_name'),
-      productSupplierIdInput: (supplierIndex) => productSupplierInputId(supplierIndex, 'product_supplier_id'),
-      referenceInput: (supplierIndex) => productSupplierInputId(supplierIndex, 'reference'),
-      priceInput: (supplierIndex) => productSupplierInputId(supplierIndex, 'price_tax_excluded'),
-      currencyIdInput: (supplierIndex) => productSupplierInputId(supplierIndex, 'currency_id'),
-    },
   },
   redirectOption: {
     typeInput: '#product_redirect_option_type',
@@ -85,15 +66,19 @@ export default {
   combinations: {
     navigationTab: '#combinations-tab-nav',
     combinationsContainer: `${combinationListId}`,
+    combinationsFiltersContainer: '#combinations_filters',
+    combinationsGeneratorContainer: '#product_combinations_generator',
     combinationsTable: `${combinationListId} table`,
     combinationsTableBody: `${combinationListId} table tbody`,
     combinationIdInputsSelector: '.combination-id-input',
     isDefaultInputsSelector: '.combination-is-default-input',
+    removeCombinationSelector: '.remove-combination-item',
     paginationContainer: '#combinations-pagination',
     loadingSpinner: '#productCombinationsLoading',
     quantityInputWrapper: '.combination-quantity',
     impactOnPriceInputWrapper: '.combination-impact-on-price',
     referenceInputWrapper: '.combination-reference',
+    sortableColumns: '.ps-sortable-column',
     combinationItemForm: {
       quantityKey: 'combination_item[quantity][value]',
       impactOnPriceKey: 'combination_item[impact_on_price][value]',
@@ -103,6 +88,8 @@ export default {
     editionForm: 'form[name="combination_form"]',
     editCombinationButtons: '.edit-combination-item',
     tableRow: {
+      combinationImg: '.combination-image',
+      combinationCheckbox: (rowIndex) => `${combinationListId}_combinations_${rowIndex}_is_selected`,
       combinationIdInput: (rowIndex) => `${combinationListId}_combinations_${rowIndex}_combination_id`,
       combinationNameInput: (rowIndex) => `${combinationListId}_combinations_${rowIndex}_name`,
       referenceInput: (rowIndex) => `${combinationListId}_combinations_${rowIndex}_reference_value`,
@@ -114,6 +101,21 @@ export default {
       deleteButton: (rowIndex) => `${combinationListId}_combinations_${rowIndex}_delete`,
     },
     editModal: '#combination-edit-modal',
+    images: {
+      selectorContainer: '.combination-images-selector',
+      imageChoice: '.combination-image-choice',
+      checkboxContainer: '.form-check',
+      checkbox: 'input[type=checkbox]',
+    },
+    scrollBar: '.attributes-list-overflow',
+    searchInput: '#product-combinations-generate .attributes-search',
+  },
+  virtualProduct: {
+    container: '#virtual-product-file',
+    fileSwitchContainer: '#virtual-product-file-switch',
+    fileContentContainer: '#virtual-product-file-content',
+    fileSwitchOnInputSelector: '#product_virtual_product_file_has_file_1',
+    fileSwitchOffInputSelector: '#product_virtual_product_file_has_file_0',
   },
   dropzone: {
     configuration: {
@@ -133,5 +135,9 @@ export default {
     savedImage: (imageId) => `.dz-preview[data-id="${imageId}"] img`,
     coveredPreview: '.dz-preview.is-cover',
     windowFileManager: '.dropzone-window-filemanager',
+  },
+  suppliers: {
+    productSuppliers: '#product_suppliers',
+    combinationSuppliers: '#combination_form_suppliers',
   },
 };

@@ -102,6 +102,7 @@ class MultistoreCheckboxEnablerTest extends TypeTestCase
         // the added multistore checkbox must have the correct `multistore_configuration_key` attribute
         $multistoreFirstFieldCheckboxOptions = $form->get(MultistoreCheckboxEnabler::MULTISTORE_FIELD_PREFIX . 'first_field')->getConfig()->getOptions();
         $this->assertEquals('TEST_CONFIGURATION_KEY', $multistoreFirstFieldCheckboxOptions['attr']['multistore_configuration_key']);
+        $this->assertArrayHasKey('multistore_dropdown', $multistoreFirstFieldCheckboxOptions);
     }
 
     /**
@@ -154,16 +155,18 @@ class MultistoreCheckboxEnablerTest extends TypeTestCase
 
     /**
      * @param bool $isAllShopContext
+     * @param bool $isGroupShopContext
      *
      * @return MockObject
      */
-    private function createMultistoreContextMock(bool $isAllShopContext = false): MockObject
+    private function createMultistoreContextMock(bool $isAllShopContext = false, bool $isGroupShopContext = true): MockObject
     {
         $shopGroupObject = new stdClass();
         $shopGroupObject->id = 2;
         $stub = $this->createMock(ShopContext::class);
         $stub->method('getContextShopId')->willReturn(1);
         $stub->method('isAllShopContext')->willReturn($isAllShopContext);
+        $stub->method('isGroupShopContext')->willReturn($isGroupShopContext);
         $stub->method('getContextShopGroup')->willReturn($shopGroupObject);
 
         return $stub;

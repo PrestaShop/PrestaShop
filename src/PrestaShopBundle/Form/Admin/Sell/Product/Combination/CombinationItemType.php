@@ -103,7 +103,11 @@ class CombinationItemType extends TranslatorAwareType
             ->add('delete', IconButtonType::class, [
                 'icon' => 'delete',
                 'attr' => [
-                    'class' => 'edit-combination-item tooltip-link',
+                    'class' => 'remove-combination-item tooltip-link',
+                    'data-modal-title' => $this->trans('Delete item', 'Admin.Notifications.Warning'),
+                    'data-modal-message' => $this->trans('Are you sure you want to delete this item?', 'Admin.Notifications.Warning'),
+                    'data-modal-apply' => $this->trans('Delete', 'Admin.Actions'),
+                    'data-modal-cancel' => $this->trans('Cancel', 'Admin.Actions'),
                 ],
             ])
         ;

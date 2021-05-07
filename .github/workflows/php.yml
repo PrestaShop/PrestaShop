@@ -34,6 +34,9 @@ jobs:
       -   name: Run PHPCSFixer
           run: ./vendor/bin/php-cs-fixer fix --dry-run --diff
 
+      -   name: Run ergebnis/composer-normalize
+          run: composer normalize --dry-run --no-check-lock
+
   phpstan:
     name: PHP Static Analysis
     runs-on: ubuntu-20.04

@@ -65,10 +65,16 @@ class FeatureFlagController extends FrameworkBundleAdminController
         return $this->render('@PrestaShop/Admin/Configure/AdvancedParameters/FeatureFlag/index.html.twig', [
             'enableSidebar' => true,
             'layoutHeaderToolbarBtn' => [],
-            'layoutTitle' => $this->trans('Experimental Features', 'Admin.Navigation.Menu'),
+            'layoutTitle' => $this->trans('Experimental Features', 'Admin.Advparameters.Feature'),
             'requireBulkActions' => false,
             'showContentHeader' => true,
             'featureFlagsForm' => $featureFlagsForm->createView(),
+            'multistoreForcedContextInfoTip' => $this->trans(
+                'Note that this page is available in all shops context only, this is why your context has just switched.',
+                'Admin.Notifications.Info'
+            ),
+            'displayAllShopsContextForced' => ($this->get('prestashop.adapter.multistore_feature')->isUsed()
+                && $this->get('prestashop.adapter.shop.context')->isShopContext()),
         ]);
     }
 }

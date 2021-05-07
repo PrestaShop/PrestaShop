@@ -28,6 +28,7 @@ declare(strict_types=1);
 namespace Tests\Unit\Core\Form\IdentifiableObject\CommandBuilder\Product;
 
 use PrestaShop\PrestaShop\Core\Domain\Product\Supplier\Command\RemoveAllAssociatedProductSuppliersCommand;
+use PrestaShop\PrestaShop\Core\Domain\Product\Supplier\Command\SetProductDefaultSupplierCommand;
 use PrestaShop\PrestaShop\Core\Domain\Product\Supplier\Command\SetProductSuppliersCommand;
 use PrestaShop\PrestaShop\Core\Form\IdentifiableObject\CommandBuilder\Product\ProductSuppliersCommandsBuilder;
 
@@ -71,7 +72,7 @@ class ProductSuppliersCommandBuilderTest extends AbstractProductCommandBuilderTe
             [new RemoveAllAssociatedProductSuppliersCommand($this->getProductId()->getValue())],
         ];
 
-        $command = new SetProductSuppliersCommand(
+        $suppliersCommand = new SetProductSuppliersCommand(
             $this->getProductId()->getValue(),
             [
                 [
@@ -90,7 +91,10 @@ class ProductSuppliersCommandBuilderTest extends AbstractProductCommandBuilderTe
                     'combination_id' => 0,
                     'product_supplier_id' => 1,
                 ],
-            ],
+            ]
+        );
+        $defaultSupplierCommand = new SetProductDefaultSupplierCommand(
+            $this->getProductId()->getValue(),
             5
         );
 
@@ -118,7 +122,72 @@ class ProductSuppliersCommandBuilderTest extends AbstractProductCommandBuilderTe
                     ],
                 ],
             ],
-            [$command],
+            [$suppliersCommand, $defaultSupplierCommand],
+        ];
+
+        $suppliersCommand = new SetProductSuppliersCommand(
+            $this->getProductId()->getValue(),
+            [
+                [
+                    'supplier_id' => 5,
+                    'currency_id' => 2,
+                    'reference' => '',
+                    'price_tax_excluded' => '0.5',
+                    'combination_id' => 0,
+                    'product_supplier_id' => 0,
+                ],
+            ]
+        );
+
+        yield [
+            [
+                'suppliers' => [
+                    'default_supplier_id' => 0,
+                    'product_suppliers' => [
+                        [
+                            'supplier_id' => 5,
+                            'currency_id' => 2,
+                            'reference' => '',
+                            'price_tax_excluded' => '0.5',
+                            'combination_id' => 0,
+                            'product_supplier_id' => null,
+                        ],
+                    ],
+                ],
+            ],
+            [$suppliersCommand],
+        ];
+
+        $suppliersCommand = new SetProductSuppliersCommand(
+            $this->getProductId()->getValue(),
+            [
+                [
+                    'supplier_id' => 5,
+                    'currency_id' => 2,
+                    'reference' => '',
+                    'price_tax_excluded' => '0.5',
+                    'combination_id' => 0,
+                    'product_supplier_id' => 0,
+                ],
+            ]
+        );
+
+        yield [
+            [
+                'suppliers' => [
+                    'product_suppliers' => [
+                        [
+                            'supplier_id' => 5,
+                            'currency_id' => 2,
+                            'reference' => '',
+                            'price_tax_excluded' => '0.5',
+                            'combination_id' => 0,
+                            'product_supplier_id' => null,
+                        ],
+                    ],
+                ],
+            ],
+            [$suppliersCommand],
         ];
     }
 }

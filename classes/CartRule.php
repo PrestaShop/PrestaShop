@@ -365,22 +365,18 @@ class CartRuleCore extends ObjectModel
         static $haveCartRuleToday = [];
 
         if (!isset($haveCartRuleToday[$idCustomer])) {
-            $sql = '(SELECT 1 FROM `' . _DB_PREFIX_ . 'cart_rule` ' .
-                'WHERE date_to >= "' . date('Y-m-d 00:00:00') .
-                '" AND date_to <= "' . date('Y-m-d 23:59:59') .
-                '" AND `id_customer` IN (0,' . (int) $idCustomer . ') LIMIT 1)';
+            $start_date = date('Y-m-d 00:00:00');
+            $end_date = date('Y-m-d 23:59:59');
+            $sql = 'SELECT 1 FROM `' . _DB_PREFIX_ . 'cart_rule` ' .
+                'WHERE ((date_to >= "' . $start_date .
+                '" AND date_to <= "' . $end_date .
+                '") OR (date_from >= "' . $start_date .
+                '" AND date_from <= "' . $end_date .
+                '") OR (date_from < "' . $start_date .
+                '" AND date_to > "' . $end_date .
+                '")) AND `id_customer` IN (0,' . (int) $idCustomer . ')';
 
-            $sql .= 'UNION ALL (SELECT 1 FROM `' . _DB_PREFIX_ . 'cart_rule` ' .
-                'WHERE date_from >= "' . date('Y-m-d 00:00:00') .
-                '" AND date_from <= "' . date('Y-m-d 23:59:59') .
-                '" AND `id_customer` IN (0,' . (int) $idCustomer . ') LIMIT 1)';
-
-            $sql .= 'UNION ALL (SELECT 1 FROM `' . _DB_PREFIX_ . 'cart_rule` ' .
-                'WHERE date_from < "' . date('Y-m-d 00:00:00') .
-                '" AND date_to > "' . date('Y-m-d 23:59:59') .
-                '" AND `id_customer` IN (0,' . (int) $idCustomer . ') LIMIT 1) LIMIT 1';
-
-            $haveCartRuleToday[$idCustomer] = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS($sql);
+            $haveCartRuleToday[$idCustomer] = Db::getInstance(_PS_USE_SQL_SLAVE_)->getValue($sql);
         }
 
         return !empty($haveCartRuleToday[$idCustomer]);
@@ -419,11 +415,19 @@ class CartRuleCore extends ObjectModel
         }
 
         $sql_part1 = '* FROM `' . _DB_PREFIX_ . 'cart_rule` cr
-				LEFT JOIN `' . _DB_PREFIX_ . 'cart_rule_lang` crl ON (cr.`id_cart_rule` = crl.`id_cart_rule` AND crl.`id_lang` = ' . (int) $id_lang . ')';
+			LEFT JOIN `' . _DB_PREFIX_ . 'cart_rule_lang` crl ON (cr.`id_cart_rule` = crl.`id_cart_rule` AND crl.`id_lang` = ' . (int) $id_lang . ')';
+
+        $sql_where = ' WHERE ((cr.`id_customer` = ' . (int) $id_customer . ' OR (cr.`id_customer` = 0 AND (cr.`highlight` = 1 OR cr.`code` = "")))';
+
+        if ($includeGeneric && (int) $id_customer !== 0) {
+            $sql_where .= ' OR cr.`id_customer` = 0)';
+        } else {
+            $sql_where .= ')';
+        }
 
         $sql_part2 = ' AND NOW() BETWEEN cr.date_from AND cr.date_to
-				' . ($active ? 'AND cr.`active` = 1' : '') . '
-				' . ($inStock ? 'AND cr.`quantity` > 0' : '');
+            ' . ($active ? 'AND cr.`active` = 1' : '') . '
+            ' . ($inStock ? 'AND cr.`quantity` > 0' : '');
 
         if ($free_shipping_only) {
             $sql_part2 .= ' AND free_shipping = 1 AND carrier_restriction = 1';
@@ -433,13 +437,7 @@ class CartRuleCore extends ObjectModel
             $sql_part2 .= ' AND highlight = 1 AND code NOT LIKE "' . pSQL(CartRule::BO_ORDER_CODE_PREFIX) . '%"';
         }
 
-        $sql = '(SELECT SQL_NO_CACHE ' . $sql_part1 . '
-            WHERE (cr.`id_customer` = ' . (int) $id_customer . '
-            OR (cr.`id_customer` = 0 AND (cr.`highlight` = 1 OR cr.`code` = "")))
-            ' . $sql_part2 . ')';
-        if ($includeGeneric && (int) $id_customer != 0) {
-            $sql .= ' UNION (SELECT ' . $sql_part1 . ' WHERE cr.`id_customer` = 0 ' . $sql_part2 . ')';
-        }
+        $sql = 'SELECT SQL_NO_CACHE ' . $sql_part1 . $sql_where . $sql_part2;
 
         $result = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS($sql, true, false);
 
@@ -674,7 +672,7 @@ class CartRuleCore extends ObjectModel
         if (!CartRule::isFeatureActive()) {
             return false;
         }
-        $cart = new Cart($context->cart->id);
+        $cart = $context->cart;
 
         // All these checks are necessary when you add the cart rule the first time, so when it's not in cart yet
         // However when it's in the cart and you are checking if the cart rule is still valid (when performing auto remove)
@@ -1216,8 +1214,14 @@ class CartRuleCore extends ObjectModel
             if ((float) $this->reduction_percent && $this->reduction_product == 0) {
                 // Do not give a reduction on free products!
                 $order_total = $order_package_products_total;
+                $basePriceContainsDiscount = isset($basePriceForPercentReduction) && $order_total === $basePriceForPercentReduction;
                 foreach ($context->cart->getCartRules(CartRule::FILTER_ACTION_GIFT, false) as $cart_rule) {
-                    $order_total -= Tools::ps_round($cart_rule['obj']->getContextualValue($use_tax, $context, CartRule::FILTER_ACTION_GIFT, $package), Context::getContext()->getComputingPrecision());
+                    $freeProductsPrice = Tools::ps_round($cart_rule['obj']->getContextualValue($use_tax, $context, CartRule::FILTER_ACTION_GIFT, $package), Context::getContext()->getComputingPrecision());
+                    if ($basePriceContainsDiscount) {
+                        // Gifts haven't been excluded yet, we need to do it
+                        $basePriceForPercentReduction -= $freeProductsPrice;
+                    }
+                    $order_total -= $freeProductsPrice;
                 }
 
                 // Remove products that are on special
@@ -1225,9 +1229,13 @@ class CartRuleCore extends ObjectModel
                     foreach ($package_products as $product) {
                         if ($product['reduction_applies']) {
                             if ($use_tax) {
-                                $order_total -= Tools::ps_round($product['total_wt'], Context::getContext()->getComputingPrecision());
+                                $excludedReduction = Tools::ps_round($product['total_wt'], Context::getContext()->getComputingPrecision());
                             } else {
-                                $order_total -= Tools::ps_round($product['total'], Context::getContext()->getComputingPrecision());
+                                $excludedReduction = Tools::ps_round($product['total'], Context::getContext()->getComputingPrecision());
+                            }
+                            $order_total -= $excludedReduction;
+                            if ($basePriceContainsDiscount) {
+                                $basePriceForPercentReduction -= $excludedReduction;
                             }
                         }
                     }

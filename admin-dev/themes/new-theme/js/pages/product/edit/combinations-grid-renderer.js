@@ -74,6 +74,7 @@ export default class CombinationsGridRenderer {
       const $row = $(this.getPrototypeRow(rowIndex));
 
       // fill inputs
+      const $combinationCheckbox = $(ProductMap.combinations.tableRow.combinationCheckbox(rowIndex), $row);
       const $combinationIdInput = $(ProductMap.combinations.tableRow.combinationIdInput(rowIndex), $row);
       const $combinationNameInput = $(ProductMap.combinations.tableRow.combinationNameInput(rowIndex), $row);
       const $quantityInput = $(ProductMap.combinations.tableRow.quantityInput(rowIndex), $row);
@@ -84,8 +85,9 @@ export default class CombinationsGridRenderer {
       const $finalPriceInput = $(ProductMap.combinations.tableRow.finalPriceTeInput(rowIndex), $row);
       $combinationIdInput.val(combination.id);
       $combinationNameInput.val(combination.name);
+      // This adds the ID in the checkbox label
+      $combinationCheckbox.closest('label').append(combination.id);
       // This adds a text after the cell children (do not use text which replaces everything)
-      $combinationIdInput.closest('td').append(combination.id);
       $combinationNameInput.closest('td').append(combination.name);
       $finalPriceInput.closest('td').append(combination.finalPriceTe);
       $referenceInput.val(combination.reference);
@@ -96,13 +98,15 @@ export default class CombinationsGridRenderer {
       $impactOnPriceInput.data('initial-value', combination.impactOnPrice);
       $(ProductMap.combinations.tableRow.editButton(rowIndex), $row).data('id', combination.id);
       $(ProductMap.combinations.tableRow.deleteButton(rowIndex), $row).data('id', combination.id);
+      $(ProductMap.combinations.tableRow.combinationImg, $row)
+        .attr('src', combination.imageUrl)
+        .attr('alt', combination.name);
 
       if (combination.isDefault) {
         $(ProductMap.combinations.tableRow.isDefaultInput(rowIndex), $row).prop('checked', true);
       }
 
       this.$combinationsTableBody.append($row);
-
       rowIndex += 1;
     });
   }

@@ -192,7 +192,8 @@ class ImageController extends FrameworkBundleAdminController
             'image_id' => $image->getImageId(),
             'is_cover' => $image->isCover(),
             'position' => $image->getPosition(),
-            'path' => _THEME_PROD_DIR_ . $image->getPath(),
+            'image_url' => $image->getImageUrl(),
+            'thumbnail_url' => $image->getThumbnailUrl(),
             'legends' => $image->getLocalizedLegends(),
         ];
     }

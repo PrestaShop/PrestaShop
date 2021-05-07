@@ -86,6 +86,17 @@ class Message
     }
 
     /**
+     * Returns the translated string
+     * UserTranslation OR FileTranslation OR Default key
+     *
+     * @return string
+     */
+    public function getTranslation(): string
+    {
+        return $this->userTranslation ?? $this->fileTranslation ?? $this->getKey();
+    }
+
+    /**
      * Check if data contains search word.
      *
      * @param array $search

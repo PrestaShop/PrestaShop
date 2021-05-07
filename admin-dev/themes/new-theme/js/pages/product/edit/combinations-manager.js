@@ -30,9 +30,13 @@ import DynamicPaginator from '@components/pagination/dynamic-paginator';
 import SubmittableInput from '@components/form/submittable-input';
 import ProductEventMap from '@pages/product/product-event-map';
 import initCombinationModal from '@pages/product/components/combination-modal';
+import initFilters from '@pages/product/components/filters';
+import ConfirmModal from '@components/modal';
+import initCombinationGenerator from '@pages/product/components/generator';
 
 const {$} = window;
 const CombinationEvents = ProductEventMap.combinations;
+const CombinationsMap = ProductMap.combinations;
 
 export default class CombinationsManager {
   /**
@@ -40,44 +44,54 @@ export default class CombinationsManager {
    * @returns {{}}
    */
   constructor(productId) {
+    this.productId = productId;
     this.eventEmitter = window.prestashop.instance.eventEmitter;
     this.$productForm = $(ProductMap.productForm);
     this.$combinationsContainer = $(ProductMap.combinations.combinationsContainer);
     this.combinationIdInputsSelector = ProductMap.combinations.combinationIdInputsSelector;
     this.initialized = false;
-    this.combinationsService = new CombinationsService(this.getProductId());
+    this.combinationsService = new CombinationsService(this.productId);
 
-    this.init(productId);
+    this.init();
 
     return {};
   }
 
   /**
-   * @param {int} productId
-   *
    * @private
    */
-  init(productId) {
+  init() {
+    // Paginate to first page when tab is shown
+    this.$productForm.find(CombinationsMap.navigationTab).on('shown.bs.tab', () => this.firstInit());
+
+    // Finally watch events related to combination listing
+    this.watchEvents();
+  }
+
+  /**
+   * @private
+   */
+  initPaginatedList() {
     this.paginator = new DynamicPaginator(
-      ProductMap.combinations.paginationContainer,
+      CombinationsMap.paginationContainer,
       this.combinationsService,
       new CombinationsGridRenderer(),
     );
+
     this.initSubmittableInputs();
-    this.$combinationsContainer.on('change', ProductMap.combinations.isDefaultInputsSelector, (e) => {
+
+    this.$combinationsContainer.on('change', CombinationsMap.isDefaultInputsSelector, async (e) => {
       if (!e.currentTarget.checked) {
         return;
       }
-      this.updateDefaultCombination(e.currentTarget);
+      await this.updateDefaultCombination(e.currentTarget);
     });
 
-    // Paginate to first page when tab is shown
-    this.$productForm.find(ProductMap.combinations.navigationTab).on('shown.bs.tab', () => this.firstInit());
+    this.$combinationsContainer.on('click', CombinationsMap.removeCombinationSelector, async (e) => {
+      await this.removeCombination(e.currentTarget);
+    });
 
-    // Init combination edition modal
-    initCombinationModal(ProductMap.combinations.editModal, productId);
-
-    this.watchEvents();
+    this.initSortingColumns();
   }
 
   /**
@@ -85,6 +99,20 @@ export default class CombinationsManager {
    */
   watchEvents() {
     this.eventEmitter.on(CombinationEvents.refreshList, () => this.paginator.paginate(this.paginator.getCurrentPage()));
+    this.eventEmitter.on(CombinationEvents.updateAttributeGroups, (attributeGroups) => {
+      const currentFilters = this.combinationsService.getFilters();
+      currentFilters.attributes = {};
+      Object.keys(attributeGroups).forEach((attributeGroupId) => {
+        currentFilters.attributes[attributeGroupId] = [];
+        const attributes = attributeGroups[attributeGroupId];
+        attributes.forEach((attribute) => {
+          currentFilters.attributes[attributeGroupId].push(attribute.id);
+        });
+      });
+
+      this.combinationsService.setFilters(currentFilters);
+      this.paginator.paginate(1);
+    });
   }
 
   /**
@@ -92,31 +120,102 @@ export default class CombinationsManager {
    */
   initSubmittableInputs() {
     const combinationToken = this.getCombinationToken();
-    const {quantityKey} = ProductMap.combinations.combinationItemForm;
-    const {impactOnPriceKey} = ProductMap.combinations.combinationItemForm;
-    const {referenceKey} = ProductMap.combinations.combinationItemForm;
-    const {tokenKey} = ProductMap.combinations.combinationItemForm;
+    const {quantityKey} = CombinationsMap.combinationItemForm;
+    const {impactOnPriceKey} = CombinationsMap.combinationItemForm;
+    const {referenceKey} = CombinationsMap.combinationItemForm;
+    const {tokenKey} = CombinationsMap.combinationItemForm;
 
-    new SubmittableInput(ProductMap.combinations.quantityInputWrapper, async (input) => {
-      await this.combinationsService.updateListedCombination(
-        this.findCombinationId(input),
-        {[quantityKey]: input.value, [tokenKey]: combinationToken},
-      );
+    new SubmittableInput(CombinationsMap.quantityInputWrapper, async (input) => {
+      await this.combinationsService.updateListedCombination(this.findCombinationId(input), {
+        [quantityKey]: input.value,
+        [tokenKey]: combinationToken,
+      });
     });
 
-    new SubmittableInput(ProductMap.combinations.impactOnPriceInputWrapper, async (input) => {
-      await this.combinationsService.updateListedCombination(
-        this.findCombinationId(input),
-        {[impactOnPriceKey]: input.value, [tokenKey]: combinationToken},
-      );
+    new SubmittableInput(CombinationsMap.impactOnPriceInputWrapper, async (input) => {
+      await this.combinationsService.updateListedCombination(this.findCombinationId(input), {
+        [impactOnPriceKey]: input.value,
+        [tokenKey]: combinationToken,
+      });
     });
 
-    new SubmittableInput(ProductMap.combinations.referenceInputWrapper, async (input) => {
-      await this.combinationsService.updateListedCombination(
-        this.findCombinationId(input),
-        {[referenceKey]: input.value, [tokenKey]: combinationToken},
-      );
+    new SubmittableInput(CombinationsMap.referenceInputWrapper, async (input) => {
+      await this.combinationsService.updateListedCombination(this.findCombinationId(input), {
+        [referenceKey]: input.value,
+        [tokenKey]: combinationToken,
+      });
     });
+  }
+
+  /**
+   * @private
+   */
+  initSortingColumns() {
+    this.$combinationsContainer.on('click', CombinationsMap.sortableColumns, (event) => {
+      const $sortableColumn = $(event.currentTarget);
+      const columnName = $sortableColumn.data('sortColName');
+
+      if (!columnName) {
+        return;
+      }
+
+      let direction = $sortableColumn.data('sortDirection');
+
+      if (!direction || direction === 'desc') {
+        direction = 'asc';
+      } else {
+        direction = 'desc';
+      }
+
+      // Reset all columns, we need to force the attributes for CSS matching
+      $(CombinationsMap.sortableColumns, this.$combinationsContainer).removeData('sortIsCurrent');
+      $(CombinationsMap.sortableColumns, this.$combinationsContainer).removeData('sortDirection');
+      $(CombinationsMap.sortableColumns, this.$combinationsContainer).removeAttr('data-sort-is-current');
+      $(CombinationsMap.sortableColumns, this.$combinationsContainer).removeAttr('data-sort-direction');
+
+      // Set correct data in current column, we need to force the attributes for CSS matching
+      $sortableColumn.data('sortIsCurrent', 'true');
+      $sortableColumn.data('sortDirection', direction);
+      $sortableColumn.attr('data-sort-is-current', 'true');
+      $sortableColumn.attr('data-sort-direction', direction);
+
+      // Finally update list
+      this.combinationsService.setOrderBy(columnName, direction);
+      this.paginator.paginate(1);
+    });
+  }
+
+  /**
+   * @param {HTMLElement} button
+   *
+   * @private
+   */
+  async removeCombination(button) {
+    try {
+      const $deleteButton = $(button);
+      const modal = new ConfirmModal(
+        {
+          id: 'modal-confirm-delete-combination',
+          confirmTitle: $deleteButton.data('modal-title'),
+          confirmMessage: $deleteButton.data('modal-message'),
+          confirmButtonLabel: $deleteButton.data('modal-apply'),
+          closeButtonLabel: $deleteButton.data('modal-cancel'),
+          confirmButtonClass: 'btn-danger',
+          closable: true,
+        },
+        async () => {
+          const response = await this.combinationsService.removeCombination(this.findCombinationId(button));
+          $.growl({message: response.message});
+          this.eventEmitter.emit(CombinationEvents.refreshList);
+        },
+      );
+      modal.show();
+    } catch (error) {
+      const errorMessage = error.responseJSON
+        ? error.responseJSON.error
+        : error;
+      $.growl.error({message: errorMessage});
+    }
   }
 
   /**
@@ -126,17 +225,14 @@ export default class CombinationsManager {
    */
   async updateDefaultCombination(checkedInput) {
     const checkedInputs = this.$combinationsContainer.find(
-      `${ProductMap.combinations.isDefaultInputsSelector}:checked`,
+      `${CombinationsMap.isDefaultInputsSelector}:checked`,
     );
     const checkedDefaultId = this.findCombinationId(checkedInput);
 
-    await this.combinationsService.updateListedCombination(
-      checkedDefaultId,
-      {
-        'combination_item[is_default]': checkedInput.value,
-        'combination_item[_token]': this.getCombinationToken(),
-      },
-    );
+    await this.combinationsService.updateListedCombination(checkedDefaultId, {
+      'combination_item[is_default]': checkedInput.value,
+      'combination_item[_token]': this.getCombinationToken(),
+    });
 
     $.each(checkedInputs, (index, input) => {
       if (this.findCombinationId(input) !== checkedDefaultId) {
@@ -154,6 +250,19 @@ export default class CombinationsManager {
     }
 
     this.initialized = true;
+
+    this.initPaginatedList();
+    initCombinationModal(CombinationsMap.editModal, this.productId);
+    initCombinationGenerator(
+      CombinationsMap.combinationsGeneratorContainer,
+      this.eventEmitter,
+      this.productId,
+    );
+    initFilters(
+      CombinationsMap.combinationsFiltersContainer,
+      this.eventEmitter,
+      this.productId,
+    );
     this.paginator.paginate(1);
   }
 
@@ -161,16 +270,7 @@ export default class CombinationsManager {
    * @returns {String}
    */
   getCombinationToken() {
-    return $(ProductMap.combinations.combinationsContainer).data('combinationToken');
-  }
-
-  /**
-   * @returns {Number}
-   *
-   * @private
-   */
-  getProductId() {
-    return Number(this.$productForm.data('productId'));
+    return $(CombinationsMap.combinationsContainer).data('combinationToken');
   }
 
   /**
@@ -181,6 +281,9 @@ export default class CombinationsManager {
    * @private
    */
   findCombinationId(input) {
-    return $(input).closest('tr').find('.combination-id-input').val();
+    return $(input)
+      .closest('tr')
+      .find(this.combinationIdInputsSelector)
+      .val();
   }
 }

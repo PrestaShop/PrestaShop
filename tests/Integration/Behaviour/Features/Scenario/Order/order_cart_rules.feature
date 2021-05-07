@@ -665,3 +665,24 @@ Feature: Order from Back Office (BO)
     When I remove product "Test Product With Percent Discount" from order "bo_order1"
     Then order "bo_order1" should have 2 products in total
     Then order "bo_order1" should contain 0 product "Test Product With Percent Discount"
+
+  Scenario: When a cart rule is associated to a carrier, when I change the carrier the cart rule should be added/removed accordingly
+    Given there is a product in the catalog named "product1" with a price of 10.00 and 100 items in stock
+    And there is a product in the catalog named "product2" with a price of 15.00 and 100 items in stock
+    And there is a zone named "zone1"
+    And there is a country named "country1" and iso code "FR" in zone "zone1"
+    And there is a carrier named "carrier1"
+    And there is a carrier named "carrier2"
+    And carrier "carrier1" applies shipping fees of 0.0 in zone "zone1" for price between 0 and 10000
+    And carrier "carrier2" applies shipping fees of 0.0 in zone "zone1" for price between 0 and 10000
+    And there is a cart rule named "FreeGift" that applies no discount with priority 1, quantity of 1 and quantity per user 1
+    And cart rule "FreeGift" offers a gift product "product1"
+    And cart rule "FreeGift" is restricted to carrier "carrier1"
+    When I create an empty cart "dummy_cart_freegift" for customer "testCustomer"
+    And I select "FR" address as delivery and invoice address for customer "testCustomer" in cart "dummy_cart_freegift"
+    And I add 1 products "product2" to the cart "dummy_cart_freegift"
+    Then cart "dummy_cart_freegift" should contain 1 products
+    When I select carrier "carrier1" for cart "dummy_cart_freegift"
+    Then cart "dummy_cart_freegift" should contain 2 products
+    When I select carrier "carrier2" for cart "dummy_cart_freegift"
+    Then cart "dummy_cart_freegift" should contain 1 products

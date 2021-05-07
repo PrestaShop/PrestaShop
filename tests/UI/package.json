@@ -6,16 +6,50 @@
     "test": "test"
   },
   "scripts": {
-    "linkchecker": "./node_modules/mocha/bin/mocha campaigns/tools/linkchecker.js",
+    "// ESLint": "To run ESLint commands",
     "lint-fix": "eslint --fix --ignore-path .gitignore .",
     "lint": "eslint --ignore-path .gitignore .",
-    "specific-test": "./node_modules/mocha/bin/mocha --bail --recursive --file campaigns/utils/setup.js campaigns/$TEST_PATH",
-    "sanity-tests": "./node_modules/mocha/bin/mocha --file campaigns/utils/setup.js campaigns/sanity/*",
-    "sanity-tests-fast-fail": "./node_modules/mocha/bin/mocha --bail --file campaigns/utils/setup.js campaigns/sanity/*",
-    "functional-tests": "./node_modules/mocha/bin/mocha --recursive --file campaigns/utils/setup.js campaigns/functional/*",
-    "regression-tests": "./node_modules/mocha/bin/mocha --recursive --file campaigns/utils/setup.js campaigns/regression/*",
-    "all-tests": "./node_modules/mocha/bin/mocha --recursive --file campaigns/utils/setup.js campaigns/functional/* campaigns/sanity/* campaigns/regression/*",
-    "step-identifiers-checker": "node campaigns/tools/stepIdentifiersChecker.js "
+
+    "// Step identifiers": "Script to check step identifiers",
+    "step-identifiers-checker": "node campaigns/tools/stepIdentifiersChecker.js ",
+
+    "// Linkchecker": "Script to run link checker",
+    "linkchecker": "./node_modules/mocha/bin/mocha campaigns/tools/linkchecker.js",
+
+    "// Specific test": "Script to run a specific test/folder",
+    "specific-test": "./node_modules/mocha/bin/mocha --recursive --file campaigns/utils/setup.js campaigns/$TEST_PATH",
+    "specific-test-fast-fail": "./node_modules/mocha/bin/mocha --bail --recursive --file campaigns/utils/setup.js campaigns/$TEST_PATH",
+
+    "// Sanity": "Scripts to run sanity tests",
+    "sanity-tests": "TEST_PATH='sanity/*' npm run specific-test",
+    "sanity-tests-fast-fail": "TEST_PATH='sanity/*' npm run specific-test-fast-fail",
+
+    "// Functional": "Scripts to run functional tests",
+    "functional-tests": "TEST_PATH='functional/*' npm run specific-test",
+
+    "// Functional BO": "Scripts to run functional BO tests",
+    "functional-BO": "TEST_PATH='functional/BO/*' npm run specific-test",
+    "functional-BO-login": "TEST_PATH='functional/BO/00_login/*' npm run specific-test",
+    "functional-BO-orders": "TEST_PATH='functional/BO/02_orders/*' npm run specific-test",
+    "functional-BO-catalog": "TEST_PATH='functional/BO/03_catalog/*' npm run specific-test",
+    "functional-BO-customer": "TEST_PATH='functional/BO/04_customers/*' npm run specific-test",
+    "functional-BO-customer-service": "TEST_PATH='functional/BO/05_customerService/*' npm run specific-test",
+    "functional-BO-modules": "TEST_PATH='functional/BO/07_modules/*' npm run specific-test",
+    "functional-BO-design": "TEST_PATH='functional/BO/08_design/*' npm run specific-test",
+    "functional-BO-shipping": "TEST_PATH='functional/BO/09_shipping/*' npm run specific-test",
+    "functional-BO-payment": "TEST_PATH='functional/BO/10_payment/*' npm run specific-test",
+    "functional-BO-international": "TEST_PATH='functional/BO/11_international/*' npm run specific-test",
+    "functional-BO-shop-parameters": "TEST_PATH='functional/BO/13_shopParameters/*' npm run specific-test",
+    "functional-BO-advanced-parameters": "TEST_PATH='functional/BO/14_advancedParameters/*' npm run specific-test",
+
+    "// Functional FO": "Scripts to run functional FO tests",
+    "functional-FO": "TEST_PATH='functional/FO/*' npm run specific-test",
+
+    "// Regression tests": "Scripts to run regression tests",
+    "regression-tests": "TEST_PATH='regression/*' npm run specific-test",
+
+    "// All tests": "Scripts to run all campaigns",
+    "all-tests": "./node_modules/mocha/bin/mocha --recursive --file campaigns/utils/setup.js campaigns/functional/* campaigns/sanity/* campaigns/regression/*"
   },
   "_moduleAliases": {
     "@pages": "pages",

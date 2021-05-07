@@ -22,7 +22,14 @@ INSERT IGNORE INTO `PREFIX_hook` (`id_hook`, `name`, `title`, `description`, `po
   (NULL, 'displayAdminGridTableBefore', 'Display before Grid table', 'This hook adds new blocks before Grid component table.', '1'),
   (NULL, 'displayAdminGridTableAfter', 'Display after Grid table', 'This hook adds new blocks after Grid component table.', '1'),
   (NULL, 'displayAdminOrderCreateExtraButtons', 'Add buttons on the create order page dropdown', 'Add buttons on the create order page dropdown', '1'),
-  (NULL, 'actionProductImageDeleted', 'Runs an action when a product image is deleted', 'Runs an action when a product image is deleted', '1')
+  (NULL, 'actionProductImageDeleted', 'Runs an action when a product image is deleted', 'Runs an action when a product image is deleted', '1'),
+  (NULL, 'actionFeatureFlagForm', 'Modify feature flag options form content', 'This hook allows to modify the Feature Flag page form FormBuilder', 1),
+  (NULL, 'actionFeatureFlagSave', 'Modify feature flag options form saved data', 'This hook allows to modify the Feature Flag data being submitted through the form after it was saved', 1),
+  (NULL, 'actionProductFormBuilderModifier', 'Modify product identifiable object form', 'This hook allows to modify product identifiable object form content by modifying form builder data or FormBuilder itself', '1'),
+  (NULL, 'actionBeforeUpdateProductFormHandler', 'Modify product identifiable object data before updating it', 'This hook allows to modify product identifiable object form data before it was updated', '1'),
+  (NULL, 'actionAfterUpdateProductFormHandler', 'Modify product identifiable object data after updating it', 'This hook allows to modify product identifiable object form data before it was updated', '1'),
+  (NULL, 'actionBeforeCreateProductFormHandler', 'Modify product identifiable object data before creating it', 'This hook allows to modify product identifiable object form data before it was created', '1'),
+  (NULL, 'actionAfterCreateProductFormHandler', 'Modify product identifiable object data after creating it', 'This hook allows to modify product identifiable object form data after it was created', '1')
 ;
 
 ALTER TABLE `PREFIX_employee` ADD `has_enabled_gravatar` TINYINT UNSIGNED DEFAULT 0 NOT NULL;
@@ -71,3 +78,23 @@ UPDATE `PREFIX_product` SET `product_type` = "pack" WHERE `cache_is_pack` = 1;
 UPDATE `PREFIX_product` SET `product_type` = "virtual" WHERE `is_virtual` = 1;
 
 /* PHP:ps_1780_add_feature_flag_tab(); */;
+
+/* this table should be created by Doctrine but we need to perform INSERT and the 1.7.8.0.sql script is called
+before Doctrine schema update */
+/* consequently we create the table manually */
+CREATE TABLE IF NOT EXISTS `PREFIX_feature_flag` (
+  `id_feature_flag` INT(10) unsigned NOT NULL AUTO_INCREMENT,
+  `name` VARCHAR(191) COLLATE utf8mb4_general_ci NOT NULL,
+  `state` TINYINT(1) NOT NULL DEFAULT '0',
+  `label_wording` VARCHAR(191) COLLATE utf8mb4_general_ci NOT NULL DEFAULT '',
+  `label_domain` VARCHAR(255) COLLATE utf8mb4_general_ci NOT NULL DEFAULT '',
+  `description_wording` VARCHAR(191) COLLATE utf8mb4_general_ci NOT NULL DEFAULT '',
+  `description_domain` VARCHAR(255) COLLATE utf8mb4_general_ci NOT NULL DEFAULT '',
+  PRIMARY KEY (`id_feature_flag`),
+  UNIQUE KEY `UNIQ_91700F175E237E06` (`name`)
+) ENGINE=ENGINE_TYPE DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+INSERT INTO `PREFIX_feature_flag` (`name`, `state`, `label_wording`, `label_domain`, `description_wording`, `description_domain`)
+VALUES
+	('product_page_v2', 0, 'Experimental product page', 'Admin.Advparameters.Feature', 'This page is a work in progress. It includes new combination management features and other features under development (virtual products, packs, etc.)', 'Admin.Advparameters.Help');
+

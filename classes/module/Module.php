@@ -23,7 +23,7 @@
  * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
-use PrestaShop\PrestaShop\Adapter\Container\LegacyContainerInterface;
+
 use PrestaShop\PrestaShop\Adapter\ContainerFinder;
 use PrestaShop\PrestaShop\Adapter\LegacyLogger;
 use PrestaShop\PrestaShop\Adapter\Module\ModuleDataProvider;
@@ -36,6 +36,7 @@ use PrestaShop\TranslationToolsBundle\Translation\Helper\DomainHelper;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\DependencyInjection\Exception\ServiceCircularReferenceException;
 use Symfony\Component\DependencyInjection\Exception\ServiceNotFoundException;
+use Symfony\Component\Finder\Finder;
 
 abstract class ModuleCore implements ModuleInterface
 {
@@ -205,6 +206,9 @@ abstract class ModuleCore implements ModuleInterface
     /** @var array|null used to cache module ids */
     protected static $cachedModuleNames = null;
 
+    /** @var int Defines the multistore compatibility level of the module */
+    public $multistoreCompatibility = self::MULTISTORE_COMPATIBILITY_UNKNOWN;
+
     const CACHE_FILE_MODULES_LIST = '/config/xml/modules_list.xml';
 
     const CACHE_FILE_TAB_MODULES_LIST = '/config/xml/tab_modules_list.xml';
@@ -218,6 +222,12 @@ abstract class ModuleCore implements ModuleInterface
 
     const CACHE_FILE_TRUSTED_MODULES_LIST = '/config/xml/trusted_modules_list.xml';
     const CACHE_FILE_UNTRUSTED_MODULES_LIST = '/config/xml/untrusted_modules_list.xml';
+
+    public const MULTISTORE_COMPATIBILITY_NO = -20;
+    public const MULTISTORE_COMPATIBILITY_NOT_CONCERNED = -10;
+    public const MULTISTORE_COMPATIBILITY_UNKNOWN = 0;
+    public const MULTISTORE_COMPATIBILITY_PARTIAL = 10;
+    public const MULTISTORE_COMPATIBILITY_YES = 20;
 
     public static $hosted_modules_blacklist = ['autoupgrade'];
 
@@ -415,6 +425,7 @@ abstract class ModuleCore implements ModuleInterface
         $this->id = Db::getInstance()->Insert_ID();
 
         Cache::clean('Module::isInstalled' . $this->name);
+        Cache::clean('Module::getModuleIdByName_' . pSQL($this->name));
 
         // Enable the module for current shops in context
         $this->enable();
@@ -833,13 +844,19 @@ abstract class ModuleCore implements ModuleInterface
         }
 
         // Enable module in the shop where it is not enabled yet
+        $moduleActivated = false;
         foreach ($list as $id) {
             if (!in_array($id, $items)) {
                 Db::getInstance()->insert('module_shop', [
                     'id_module' => $this->id,
                     'id_shop' => $id,
                 ]);
+                $moduleActivated = true;
             }
+        }
+
+        if ($moduleActivated) {
+            $this->loadBuiltInTranslations();
         }
 
         return true;
@@ -1727,9 +1744,9 @@ abstract class ModuleCore implements ModuleInterface
 
         $context = Context::getContext();
 
-        // If the xml file exist, isn't empty, isn't too old
-        // and if the theme hadn't change
-        // we use the file, otherwise we regenerate it
+        // Check whether the xml file exist, is not empty, is not too old
+        // and if the theme has not changed
+        // If conditions are not met, refresh file
         if (!(
             file_exists(_PS_ROOT_DIR_ . static::CACHE_FILE_TRUSTED_MODULES_LIST)
             && filesize(_PS_ROOT_DIR_ . static::CACHE_FILE_TRUSTED_MODULES_LIST) > 0
@@ -1758,7 +1775,7 @@ abstract class ModuleCore implements ModuleInterface
         if (stripos($trusted_modules_list_content, $module_name) !== false) {
             // If the module is not a partner, then return 1 (which means the module is "trusted")
             if (stripos($default_country_modules_list_content, '<name><![CDATA[' . $module_name . ']]></name>') !== false) {
-                // The module is a parter. If the module is in the file that contains module for this country then return 1 (which means the module is "trusted")
+                // The module is a partner. If the module is in the file that contains module for this country then return 1 (which means the module is "trusted")
                 return 1;
             }
             // The module seems to be trusted, but it does not seem to be dedicated to this country
@@ -1767,8 +1784,8 @@ abstract class ModuleCore implements ModuleInterface
             // If the module is already in the untrusted list, then return 0 (untrusted)
             return 0;
         } else {
-            // If the module isn't in one of the xml files
-            // It might have been uploaded recenlty so we check
+            // If the module is not registered in xml files
+            // It might have been uploaded recently so we check
             // Addons API and clear XML files to be regenerated next time
             static::deleteTrustedXmlCache();
 
@@ -2504,7 +2521,7 @@ abstract class ModuleCore implements ModuleInterface
     }
 
     /**
-     * Get realpath of a template of current module (check if template is overriden too).
+     * Get realpath of a template of current module (check if template is overridden too).
      *
      * @since 1.5.0
      *
@@ -3496,6 +3513,41 @@ abstract class ModuleCore implements ModuleInterface
     public function saveDashConfig(array $config)
     {
         return false;
+    }
+
+    /**
+     * Returns the declared multistore compatibility level
+     *
+     * @return int
+     */
+    public function getMultistoreCompatibility(): int
+    {
+        return $this->multistoreCompatibility;
+    }
+
+    /**
+     * In order to load or update the module's translations, we just need to clear SfCache.
+     * The translator service will be loaded again with the catalogue within the module
+     *
+     * @throws ContainerNotFoundException
+     */
+    private function loadBuiltInTranslations(): void
+    {
+        $modulePath = $this->getLocalPath();
+        $translationDir = sprintf('%s/translations/', $modulePath);
+        if (!is_dir($translationDir)) {
+            return;
+        }
+
+        $finder = Finder::create()
+            ->files()
+            ->name('*.xlf')
+            ->in($translationDir);
+        if (0 === $finder->count()) {
+            return;
+        }
+
+        $this->getContainer()->get('prestashop.adapter.cache.clearer.symfony_cache_clearer')->clear();
     }
 }
 

@@ -77,7 +77,7 @@ class AdminLegacyLayoutControllerCore extends AdminController
         // Some controllers can only be used in "All shops" context.
         // This makes sure that user cannot switch shop contexts
         // when in one of pages (controller) below.
-        $controllers = ['AdminLanguages', 'AdminProfiles', 'AdminSpecificPriceRule', 'AdminPerformance', 'AdminTranslations'];
+        $controllers = ['AdminLanguages', 'AdminProfiles', 'AdminSpecificPriceRule', 'AdminPerformance', 'AdminTranslations', 'AdminFeatureFlag'];
 
         if (in_array($controllerName, $controllers)) {
             $this->multishop_context = Shop::CONTEXT_ALL;

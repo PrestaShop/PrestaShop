@@ -44,5 +44,6 @@ export default {
   },
   combinations: {
     refreshList: 'refreshCombinationList',
+    updateAttributeGroups: 'updateAttributeGroups',
   },
 };

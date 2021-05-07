@@ -23,7 +23,7 @@ class Addresses extends FOBasePage {
    */
   /**
    * Open create new address form
-   * @param page
+   * @param page {Page} Browser tab
    * @returns {Promise<void>}
    * @constructor
    */
@@ -33,8 +33,8 @@ class Addresses extends FOBasePage {
 
   /**
    * Is country exist
-   * @param page
-   * @param countryName
+   * @param page {Page} Browser tab
+   * @param countryName {string} String of the country name
    * @returns {Promise<boolean>}
    */
   async isCountryExist(page, countryName) {
@@ -52,8 +52,8 @@ class Addresses extends FOBasePage {
 
   /**
    * Go to edit address page in FO
-   * @param page
-   * @param position
+   * @param page {Page} Browser tab
+   * @param position {string} String of the position
    * @returns {Promise<void>}
    */
   async goToEditAddressPage(page, position = 'last') {
@@ -67,8 +67,8 @@ class Addresses extends FOBasePage {
 
   /**
    * Delete address in FO
-   * @param page
-   * @param position
+   * @param page {Page} Browser tab
+   * @param position {string} String of the position
    * @returns {Promise<string>}
    */
   async deleteAddress(page, position = 'last') {

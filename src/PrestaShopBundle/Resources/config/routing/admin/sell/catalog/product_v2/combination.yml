@@ -39,6 +39,17 @@ admin_products_combinations_edit_combination:
     requirements:
         combinationId: \d+
 
+admin_products_combinations_remove_combination:
+    path: /combinations/{combinationId}/remove
+    methods: [DELETE]
+    options:
+        expose: true
+    defaults:
+        _controller: PrestaShopBundle:Admin/Sell/Catalog/Product/Combination:remove
+        _legacy_controller: AdminProducts
+    requirements:
+        combinationId: \d+
+
 admin_products_attribute_groups:
     path: /{productId}/attribute-groups
     methods: [GET]
@@ -46,4 +57,22 @@ admin_products_attribute_groups:
         expose: true
     defaults:
         _controller: PrestaShopBundle:Admin/Sell/Catalog/Product/Combination:getAttributeGroups
+        _legacy_controller: AdminProducts
+
+admin_all_attribute_groups:
+    path: /all-attribute-groups
+    methods: [GET]
+    options:
+        expose: true
+    defaults:
+        _controller: PrestaShopBundle:Admin/Sell/Catalog/Product/Combination:getAllAttributeGroups
+        _legacy_controller: AdminProducts
+
+admin_products_combinations_generate:
+    path: /generate-combinations/{productId}
+    methods: [POST]
+    options:
+        expose: true
+    defaults:
+        _controller: PrestaShopBundle:Admin/Sell/Catalog/Product/Combination:generateCombinations
         _legacy_controller: AdminProducts

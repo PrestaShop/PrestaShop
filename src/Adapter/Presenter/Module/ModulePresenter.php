@@ -29,6 +29,7 @@ namespace PrestaShop\PrestaShop\Adapter\Presenter\Module;
 use Currency;
 use Exception;
 use Hook;
+use Module as LegacyModule;
 use PrestaShop\PrestaShop\Adapter\Module\Module;
 use PrestaShop\PrestaShop\Adapter\Presenter\PresenterInterface;
 use PrestaShop\PrestaShop\Adapter\Product\PriceFormatter;
@@ -65,6 +66,12 @@ class ModulePresenter implements PresenterInterface
         $attributes['picos'] = $this->addPicos($attributes);
         $attributes['price'] = $this->getModulePrice($attributes['price']);
         $attributes['starsRate'] = str_replace('.', '', round($attributes['avgRate'] * 2) / 2); // Round to the nearest 0.5
+
+        $moduleInstance = $module->getInstance();
+
+        if ($moduleInstance instanceof LegacyModule) {
+            $attributes['multistoreCompatibility'] = $moduleInstance->getMultistoreCompatibility();
+        }
 
         $result = [
             'attributes' => $attributes,

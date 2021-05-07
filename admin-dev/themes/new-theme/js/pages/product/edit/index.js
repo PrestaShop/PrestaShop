@@ -35,6 +35,7 @@ import CombinationsManager from '@pages/product/edit/combinations-manager';
 import ProductTypeManager from '@pages/product/edit/product-type-manager';
 import initDropzone from '@pages/product/components/dropzone';
 import ProductFormModel from '@pages/product/edit/product-form-model';
+import VirtualProductManager from '@pages/product/edit/virtual-product-manager';
 
 const {$} = window;
 
@@ -66,15 +67,13 @@ $(() => {
   const $redirectTargetInput = $(ProductMap.redirectOption.targetInput);
   new RedirectOptionManager($redirectTypeInput, $redirectTargetInput);
 
+  // Product type has strong impact on the page rendering so when it is modified it must be submitted right away
+  new ProductTypeManager($(ProductMap.productTypeSelector), $productForm);
+
   // Form has no productId data means that we are in creation mode
   if (!productId) {
     return;
   }
-
-  // On creation product type can be modified as you wish, but once it is created it has strong impacts, so we must
-  // force submit because it influences the available features in the form, and it also perform cleaning on non relevant
-  // associations
-  new ProductTypeManager($(ProductMap.productTypeSelector), $productForm);
 
   // Init Serp component to preview Search engine display
   const translatorInput = window.prestashop.instance.translatableInput;
@@ -96,11 +95,18 @@ $(() => {
 
   // From here we init component specific to edition
   const $productFormSubmitButton = $(ProductMap.productFormSubmitButton);
-  new ProductPartialUpdater(window.prestashop.instance.eventEmitter, $productForm, $productFormSubmitButton).watch();
+  new ProductPartialUpdater(
+    window.prestashop.instance.eventEmitter,
+    $productForm,
+    $productFormSubmitButton,
+  ).watch();
   new FeatureValuesManager(window.prestashop.instance.eventEmitter);
   new CustomizationsManager();
 
   if (productType !== ProductMap.productType.COMBINATIONS) {
-    new ProductSuppliersManager();
+    new ProductSuppliersManager(ProductMap.suppliers.productSuppliers, true);
+  }
+  if (productType === ProductMap.productType.VIRTUAL) {
+    new VirtualProductManager();
   }
 });
