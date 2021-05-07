@@ -8,7 +8,7 @@ admin_preferences:
 
 admin_preferences_save:
   path: preferences
-  methods: [ POST ]
+  methods: [ PATCH, POST ]
   defaults:
     _controller: 'PrestaShopBundle\Controller\Admin\Configure\ShopParameters\PreferencesController::processFormAction'
     _legacy_controller: AdminPreferences
