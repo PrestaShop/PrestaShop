@@ -26,6 +26,8 @@
 
 namespace PrestaShop\PrestaShop\Core\Form\IdentifiableObject\DataProvider;
 
+use Configuration;
+use PrestaShop\PrestaShop\Adapter\Entity\Group;
 use PrestaShop\PrestaShop\Core\CommandBus\CommandBusInterface;
 use PrestaShop\PrestaShop\Core\Domain\Category\Query\GetCategoryForEditing;
 use PrestaShop\PrestaShop\Core\Domain\Category\QueryResult\EditableCategory;
@@ -101,15 +103,11 @@ final class CategoryFormDataProvider implements FormDataProviderInterface
      */
     public function getDefaultData()
     {
-        $defaultGroups = $this->defaultGroupsProvider->getGroups();
+        $allGroupIds = array_column(Group::getGroups((int) Configuration::get('PS_LANG_DEFAULT')), 'id_group');
 
         return [
             'id_parent' => $this->contextShopRootCategoryId,
-            'group_association' => [
-                $defaultGroups->getVisitorsGroup()->getId(),
-                $defaultGroups->getGuestsGroup()->getId(),
-                $defaultGroups->getCustomersGroup()->getId(),
-            ],
+            'group_association' => $allGroupIds,
             'shop_association' => $this->contextShopId,
             'active' => true,
         ];
