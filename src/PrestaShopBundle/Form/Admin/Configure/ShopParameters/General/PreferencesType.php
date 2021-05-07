@@ -165,9 +165,9 @@ class PreferencesType extends TranslatorAwareType
                         'You can choose among 6 different ways of rounding prices. "Round up away from zero ..." is the recommended behavior.',
                         'Admin.Shopparameters.Help'
                     ),
-                'attr' => [
-                    'multistore_configuration_key' => 'PS_PRICE_ROUND_MODE',
-                ],
+                    'attr' => [
+                        'multistore_configuration_key' => 'PS_PRICE_ROUND_MODE',
+                    ],
                 ])
             ->add('price_round_type', ChoiceType::class, [
                 'placeholder' => false,
@@ -192,9 +192,9 @@ class PreferencesType extends TranslatorAwareType
                         'Enable suppliers page on your front office even when its module is disabled.',
                         'Admin.Shopparameters.Help'
                     ),
-                'attr' => [
-                    'multistore_configuration_key' => 'PS_DISPLAY_SUPPLIERS',
-                ],
+                    'attr' => [
+                        'multistore_configuration_key' => 'PS_DISPLAY_SUPPLIERS',
+                    ],
                 ])
             ->add(
                 'display_manufacturers', SwitchType::class, [
@@ -203,9 +203,9 @@ class PreferencesType extends TranslatorAwareType
                         'Enable brands page on your front office even when its module is disabled.',
                         'Admin.Shopparameters.Help'
                     ),
-                'attr' => [
-                    'multistore_configuration_key' => 'PS_DISPLAY_MANUFACTURERS',
-                ],
+                    'attr' => [
+                        'multistore_configuration_key' => 'PS_DISPLAY_MANUFACTURERS',
+                    ],
                 ])
             ->add(
                 'display_best_sellers', SwitchType::class, [
@@ -214,9 +214,9 @@ class PreferencesType extends TranslatorAwareType
                         'Enable best sellers page on your front office even when its respective module is disabled.',
                         'Admin.Shopparameters.Help'
                     ),
-                'attr' => [
-                    'multistore_configuration_key' => 'PS_DISPLAY_BEST_SELLERS',
-                ],
+                    'attr' => [
+                        'multistore_configuration_key' => 'PS_DISPLAY_BEST_SELLERS',
+                    ],
                 ])
             ->add('multishop_feature_active', SwitchType::class, [
                 'disabled' => !$this->isContextDependantOptionEnabled(),
