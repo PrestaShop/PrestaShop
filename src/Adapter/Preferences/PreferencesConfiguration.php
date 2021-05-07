@@ -28,23 +28,13 @@ namespace PrestaShop\PrestaShop\Adapter\Preferences;
 
 use Cookie;
 use PrestaShop\PrestaShop\Adapter\Configuration;
-use PrestaShop\PrestaShop\Core\Configuration\DataConfigurationInterface;
+use PrestaShop\PrestaShop\Core\Configuration\AbstractMultistoreConfiguration;
 
 /**
  * This class will provide Shop Preferences configuration.
  */
-class PreferencesConfiguration implements DataConfigurationInterface
+class PreferencesConfiguration extends AbstractMultistoreConfiguration
 {
-    /**
-     * @var Configuration
-     */
-    private $configuration;
-
-    public function __construct(Configuration $configuration)
-    {
-        $this->configuration = $configuration;
-    }
-
     /**
      * {@inheritdoc}
      */
@@ -91,18 +81,20 @@ class PreferencesConfiguration implements DataConfigurationInterface
             ];
         }
 
-        $this->configuration->set('PS_SSL_ENABLED', $configuration['enable_ssl']);
-        $this->configuration->set('PS_SSL_ENABLED_EVERYWHERE', $configuration['enable_ssl_everywhere']);
-        $this->configuration->set('PS_TOKEN_ENABLE', $configuration['enable_token']);
-        $this->configuration->set('PS_ALLOW_HTML_IFRAME', $configuration['allow_html_iframes']);
-        $this->configuration->set('PS_USE_HTMLPURIFIER', $configuration['use_htmlpurifier']);
-        $this->configuration->set('PS_PRICE_ROUND_MODE', $configuration['price_round_mode']);
-        $this->configuration->set('PS_ROUND_TYPE', $configuration['price_round_type']);
-        $this->configuration->set('PS_DISPLAY_SUPPLIERS', $configuration['display_suppliers']);
-        $this->configuration->set('PS_DISPLAY_MANUFACTURERS', $configuration['display_manufacturers']);
-        $this->configuration->set('PS_DISPLAY_BEST_SELLERS', $configuration['display_best_sellers']);
-        $this->configuration->set('PS_MULTISHOP_FEATURE_ACTIVE', $configuration['multishop_feature_active']);
-        $this->configuration->set('PS_SHOP_ACTIVITY', $configuration['shop_activity']);
+        $shopConstraint = $this->getShopConstraint();
+
+        $this->updateConfigurationValue('PS_SSL_ENABLED', 'enable_ssl', $configuration, $shopConstraint);
+        $this->updateConfigurationValue('PS_SSL_ENABLED_EVERYWHERE', 'enable_ssl_everywhere', $configuration, $shopConstraint);
+        $this->updateConfigurationValue('PS_TOKEN_ENABLE', 'enable_token', $configuration, $shopConstraint);
+        $this->updateConfigurationValue('PS_ALLOW_HTML_IFRAME', 'allow_html_iframes', $configuration, $shopConstraint);
+        $this->updateConfigurationValue('PS_USE_HTMLPURIFIER', 'use_htmlpurifier', $configuration, $shopConstraint);
+        $this->updateConfigurationValue('PS_PRICE_ROUND_MODE', 'price_round_mode', $configuration, $shopConstraint);
+        $this->updateConfigurationValue('PS_ROUND_TYPE', 'price_round_type', $configuration, $shopConstraint);
+        $this->updateConfigurationValue('PS_DISPLAY_SUPPLIERS', 'display_suppliers', $configuration, $shopConstraint);
+        $this->updateConfigurationValue('PS_DISPLAY_MANUFACTURERS', 'display_manufacturers', $configuration, $shopConstraint);
+        $this->updateConfigurationValue('PS_DISPLAY_BEST_SELLERS', 'display_best_sellers', $configuration, $shopConstraint);
+        $this->updateConfigurationValue('PS_MULTISHOP_FEATURE_ACTIVE', 'multishop_feature_active', $configuration, $shopConstraint);
+        $this->updateConfigurationValue('PS_SHOP_ACTIVITY', 'shop_activity', $configuration, $shopConstraint);
 
         return [];
     }
