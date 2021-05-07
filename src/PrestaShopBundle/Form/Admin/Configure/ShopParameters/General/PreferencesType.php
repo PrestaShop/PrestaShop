@@ -133,7 +133,7 @@ class PreferencesType extends TranslatorAwareType
                     'Admin.Shopparameters.Help'
                 ),
                 'attr' => [
-                    'multistore_configuration_key' => 'PS_SHOP_ENABLE',
+                    'multistore_configuration_key' => 'PS_ALLOW_HTML_IFRAME',
                 ],
             ])
             ->add('use_htmlpurifier', SwitchType::class, [
@@ -146,7 +146,7 @@ class PreferencesType extends TranslatorAwareType
                     'Admin.Shopparameters.Help'
                 ),
                 'attr' => [
-                    'multistore_configuration_key' => 'PS_SHOP_ENABLE',
+                    'multistore_configuration_key' => 'PS_USE_HTMLPURIFIER',
                 ],
             ])
             ->add(
@@ -166,7 +166,7 @@ class PreferencesType extends TranslatorAwareType
                         'Admin.Shopparameters.Help'
                     ),
                 'attr' => [
-                    'multistore_configuration_key' => 'PS_SHOP_ENABLE',
+                    'multistore_configuration_key' => 'PS_PRICE_ROUND_MODE',
                 ],
                 ])
             ->add('price_round_type', ChoiceType::class, [
@@ -182,7 +182,7 @@ class PreferencesType extends TranslatorAwareType
                     'Admin.Shopparameters.Help'
                 ),
                 'attr' => [
-                    'multistore_configuration_key' => 'PS_SHOP_ENABLE',
+                    'multistore_configuration_key' => 'PS_ROUND_TYPE',
                 ],
             ])
             ->add(
@@ -193,7 +193,7 @@ class PreferencesType extends TranslatorAwareType
                         'Admin.Shopparameters.Help'
                     ),
                 'attr' => [
-                    'multistore_configuration_key' => 'PS_SHOP_ENABLE',
+                    'multistore_configuration_key' => 'PS_DISPLAY_SUPPLIERS',
                 ],
                 ])
             ->add(
@@ -204,7 +204,7 @@ class PreferencesType extends TranslatorAwareType
                         'Admin.Shopparameters.Help'
                     ),
                 'attr' => [
-                    'multistore_configuration_key' => 'PS_SHOP_ENABLE',
+                    'multistore_configuration_key' => 'PS_DISPLAY_MANUFACTURERS',
                 ],
                 ])
             ->add(
@@ -215,7 +215,7 @@ class PreferencesType extends TranslatorAwareType
                         'Admin.Shopparameters.Help'
                     ),
                 'attr' => [
-                    'multistore_configuration_key' => 'PS_SHOP_ENABLE',
+                    'multistore_configuration_key' => 'PS_DISPLAY_BEST_SELLERS',
                 ],
                 ])
             ->add('multishop_feature_active', SwitchType::class, [
@@ -254,7 +254,7 @@ class PreferencesType extends TranslatorAwareType
                 'label' => $this->trans('Main Shop Activity', 'Admin.Shopparameters.Feature'),
                 'choice_translation_domain' => 'Install',
                 'attr' => [
-                    'multistore_configuration_key' => 'PS_SHOP_ENABLE',
+                    'multistore_configuration_key' => 'PS_SHOP_ACTIVITY',
                 ],
             ]);
     }
