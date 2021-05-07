@@ -149,7 +149,7 @@ class ProductSaleCore
 
         if ($finalOrderBy != 'price') {
             $sql .= ' ORDER BY ' . (!empty($orderTable) ? '`' . pSQL($orderTable) . '`' : '') . ' ' . (!empty($orderBy) ? '`' . pSQL($orderBy) . '`' : '') . ' ' . pSQL($orderWay) . '
-            LIMIT ' . (int) (($pageNumber - 1) * $nbProducts) . ', ' . (int) $nbProducts;
+                LIMIT ' . (int) (($pageNumber - 1) * $nbProducts) . ', ' . (int) $nbProducts;
         }
 
         $result = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS($sql);
