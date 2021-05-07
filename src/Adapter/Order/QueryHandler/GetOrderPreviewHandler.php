@@ -34,7 +34,10 @@ use Group;
 use Order;
 use OrderCarrier;
 use PrestaShop\Decimal\Number;
+use PrestaShop\PrestaShop\Adapter\Address\AddressFormatter;
 use PrestaShop\PrestaShop\Adapter\Entity\Address;
+use PrestaShop\PrestaShop\Core\Address\AddressFormatterInterface;
+use PrestaShop\PrestaShop\Core\Domain\Address\ValueObject\AddressId;
 use PrestaShop\PrestaShop\Core\Domain\Order\Exception\OrderNotFoundException;
 use PrestaShop\PrestaShop\Core\Domain\Order\Query\GetOrderPreview;
 use PrestaShop\PrestaShop\Core\Domain\Order\QueryHandler\GetOrderPreviewHandlerInterface;
@@ -64,15 +67,23 @@ final class GetOrderPreviewHandler implements GetOrderPreviewHandlerInterface
     private $locale;
 
     /**
+     * @var AddressFormatterInterface
+     */
+    private $addressFormatter;
+
+    /**
      * @param LocaleRepository $localeRepository
      * @param string $locale
+     * @param AddressFormatterInterface|null $addressFormatter
      */
     public function __construct(
         LocaleRepository $localeRepository,
-        string $locale
+        string $locale,
+        AddressFormatterInterface $addressFormatter = null
     ) {
         $this->localeRepository = $localeRepository;
         $this->locale = $locale;
+        $this->addressFormatter = $addressFormatter ?? new AddressFormatter();
     }
 
     /**
@@ -88,7 +99,9 @@ final class GetOrderPreviewHandler implements GetOrderPreviewHandlerInterface
             $this->getShippingDetails($order),
             $this->getProductDetails($order),
             $order->isVirtual(),
-            $priceDisplayMethod == PS_TAX_INC
+            $priceDisplayMethod == PS_TAX_INC,
+            $this->addressFormatter->format(new AddressId((int) $order->id_address_invoice)),
+            $this->addressFormatter->format(new AddressId((int) $order->id_address_delivery))
         );
     }
 

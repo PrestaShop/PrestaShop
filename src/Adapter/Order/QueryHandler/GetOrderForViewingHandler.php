@@ -42,9 +42,12 @@ use OrderPayment;
 use OrderSlip;
 use OrderState;
 use PrestaShop\Decimal\Number;
+use PrestaShop\PrestaShop\Adapter\Address\AddressFormatter;
 use PrestaShop\PrestaShop\Adapter\Configuration;
 use PrestaShop\PrestaShop\Adapter\Customer\CustomerDataProvider;
 use PrestaShop\PrestaShop\Adapter\Order\AbstractOrderHandler;
+use PrestaShop\PrestaShop\Core\Address\AddressFormatterInterface;
+use PrestaShop\PrestaShop\Core\Domain\Address\ValueObject\AddressId;
 use PrestaShop\PrestaShop\Core\Domain\Exception\InvalidSortingException;
 use PrestaShop\PrestaShop\Core\Domain\Order\Exception\OrderException;
 use PrestaShop\PrestaShop\Core\Domain\Order\OrderDocumentType;
@@ -130,6 +133,11 @@ final class GetOrderForViewingHandler extends AbstractOrderHandler implements Ge
     private $getOrderProductsForViewingHandler;
 
     /**
+     * @var AddressFormatterInterface
+     */
+    private $addressFormatter;
+
+    /**
      * @param ImageTagSourceParserInterface $imageTagSourceParser
      * @param TranslatorInterface $translator
      * @param int $contextLanguageId
@@ -145,7 +153,8 @@ final class GetOrderForViewingHandler extends AbstractOrderHandler implements Ge
         Context $context,
         CustomerDataProvider $customerDataProvider,
         GetOrderProductsForViewingHandlerInterface $getOrderProductsForViewingHandler,
-        Configuration $configuration
+        Configuration $configuration,
+        AddressFormatterInterface $addressFormatter = null
     ) {
         $this->translator = $translator;
         $this->contextLanguageId = $contextLanguageId;
@@ -155,6 +164,7 @@ final class GetOrderForViewingHandler extends AbstractOrderHandler implements Ge
         $this->customerDataProvider = $customerDataProvider;
         $this->getOrderProductsForViewingHandler = $getOrderProductsForViewingHandler;
         $this->configuration = $configuration;
+        $this->addressFormatter = $addressFormatter ?? new AddressFormatter();
     }
 
     /**
@@ -208,7 +218,9 @@ final class GetOrderForViewingHandler extends AbstractOrderHandler implements Ge
             $this->getOrderPrices($order),
             $this->getOrderDiscounts($order),
             $this->getOrderSources($order),
-            $this->getLinkedOrders($order)
+            $this->getLinkedOrders($order),
+            $this->addressFormatter->format(new AddressId((int) $order->id_address_delivery)),
+            $this->addressFormatter->format(new AddressId((int) $order->id_address_invoice))
         );
     }
 
