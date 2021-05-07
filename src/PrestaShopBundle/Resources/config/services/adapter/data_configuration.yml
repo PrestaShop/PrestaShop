@@ -97,6 +97,8 @@ services:
     arguments:
       - '@prestashop.adapter.legacy.configuration'
       - '@prestashop.core.admin.feature_flag.repository'
+      - '@prestashop.adapter.shop.context'
+      - '@prestashop.adapter.multistore_feature'
 
   prestashop.adapter.upload_quota.configuration:
     class: 'PrestaShop\PrestaShop\Adapter\Upload\UploadQuotaConfiguration'
