@@ -86,6 +86,8 @@ class StockType extends TranslatorAwareType
             'label' => false,
             'required' => false,
             'virtual_product_file_id' => null,
+            // Suppliers can be removed so there might be extra data during type switching
+            'allow_extra_fields' => true,
         ]);
         $resolver->setAllowedTypes('virtual_product_file_id', ['int', 'null']);
     }

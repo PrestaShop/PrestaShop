@@ -91,7 +91,7 @@ class ShortcutsType extends TranslatorAwareType
         $resolver->setDefaults([
             // This avoids an empty label column
             'label' => false,
-            // We must allow extra fields because when we switch product type some former fields may be present in request
+            // Stock can be removed so there might be extra data in the request during type switching
             'allow_extra_fields' => true,
         ]);
     }

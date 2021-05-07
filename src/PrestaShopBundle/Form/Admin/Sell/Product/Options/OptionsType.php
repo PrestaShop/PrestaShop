@@ -138,6 +138,8 @@ class OptionsType extends TranslatorAwareType
         $resolver->setDefaults([
             'required' => false,
             'label' => false,
+            // Suppliers can be removed so there might be extra data in the request during type switching
+            'allow_extra_fields' => true,
         ]);
     }
 }

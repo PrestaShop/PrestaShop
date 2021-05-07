@@ -64,13 +64,17 @@ class ProductTypeListener implements EventSubscriberInterface
             $this->removeSuppliers($form);
             $this->removeStock($form);
         } else {
-            $stock = $form->get('stock');
-            if (ProductType::TYPE_PACK !== $productType) {
-                $stock->remove('pack_stock_type');
+            if ($form->has('stock')) {
+                $stock = $form->get('stock');
+                if (ProductType::TYPE_PACK !== $productType) {
+                    $stock->remove('pack_stock_type');
+                }
+                if (ProductType::TYPE_VIRTUAL !== $productType) {
+                    $stock->remove('virtual_product_file');
+                }
             }
-            if (ProductType::TYPE_VIRTUAL !== $productType) {
-                $stock->remove('virtual_product_file');
-            } else {
+
+            if (ProductType::TYPE_VIRTUAL === $productType) {
                 $form->remove('shipping');
             }
         }

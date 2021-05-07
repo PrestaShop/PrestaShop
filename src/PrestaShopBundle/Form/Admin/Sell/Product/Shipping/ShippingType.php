@@ -112,6 +112,7 @@ class ShippingType extends TranslatorAwareType
                         ),
                     ]),
                 ],
+                'default_empty_data' => 0,
             ])
             ->add('carriers', ChoiceType::class, [
                 'choices' => $this->carrierChoiceProvider->getChoices(),

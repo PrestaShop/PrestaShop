@@ -87,6 +87,7 @@ class DimensionsType extends TranslatorAwareType
                     ]),
                     new PositiveOrZero(),
                 ],
+                'default_empty_data' => 0,
             ])
             ->add('height', TextWithUnitType::class, [
                 'required' => false,
@@ -103,6 +104,7 @@ class DimensionsType extends TranslatorAwareType
                     ]),
                     new PositiveOrZero(),
                 ],
+                'default_empty_data' => 0,
             ])
             ->add('depth', TextWithUnitType::class, [
                 'required' => false,
@@ -119,6 +121,7 @@ class DimensionsType extends TranslatorAwareType
                     ]),
                     new PositiveOrZero(),
                 ],
+                'default_empty_data' => 0,
             ])
             ->add('weight', TextWithUnitType::class, [
                 'required' => false,
@@ -135,6 +138,7 @@ class DimensionsType extends TranslatorAwareType
                     ]),
                     new PositiveOrZero(),
                 ],
+                'default_empty_data' => 0,
             ])
         ;
     }
