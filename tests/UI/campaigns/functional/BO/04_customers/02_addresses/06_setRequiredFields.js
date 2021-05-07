@@ -97,6 +97,7 @@ describe('Set required fields for addresses', async () => {
     it('should go to addresses page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', `goToFOAddressesPage${index}`, baseContext);
 
+      await foHomePage.goToMyAccountPage(page);
       await foMyAccountPage.goToAddressesPage(page);
       const pageHeaderTitle = await foAddressesPage.getPageTitle(page);
       await expect(pageHeaderTitle).to.equal(foAddressesPage.pageTitle);

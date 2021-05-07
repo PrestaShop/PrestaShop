@@ -91,6 +91,7 @@ describe('FO Subscribe to Newsletter', async () => {
     it('should go account information page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'goToAccountInformationPage', baseContext);
 
+      await foHomePage.goToMyAccountPage(page);
       await foMyAccountPage.goToInformationPage(page);
 
       const pageTitle = await foAccountIdentityPage.getPageTitle(page);
