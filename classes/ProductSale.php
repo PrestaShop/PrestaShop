@@ -96,7 +96,7 @@ class ProductSaleCore
         if ($invalidOrderWay || null === $orderWay || $orderBy == 'sales') {
             $orderWay = 'DESC';
         }
-        
+
         if ($orderWay === 'random') {
             $orderWay = 'RAND()';
             $orderBy = '';
@@ -241,7 +241,8 @@ class ProductSaleCore
      */
     public static function addProductSale($productId, $qty = 1)
     {
-        return Db::getInstance()->execute('INSERT INTO ' . _DB_PREFIX_ . 'product_sale
+        return Db::getInstance()->execute('
+            INSERT INTO ' . _DB_PREFIX_ . 'product_sale
             (`id_product`, `quantity`, `sale_nbr`, `date_upd`)
             VALUES (' . (int) $productId . ', ' . (int) $qty . ', 1, NOW())
             ON DUPLICATE KEY UPDATE `quantity` = `quantity` + ' . (int) $qty . ', `sale_nbr` = `sale_nbr` + 1, `date_upd` = NOW()');
@@ -276,10 +277,8 @@ class ProductSaleCore
     {
         $totalSales = ProductSale::getNbrSales($idProduct);
         if ($totalSales > 1) {
-            return Db::getInstance()->execute('UPDATE ' . _DB_PREFIX_ . 'product_sale
-                SET `quantity` = CAST(`quantity` AS SIGNED) - ' . (int) $qty . ', `sale_nbr` = CAST(`sale_nbr` AS SIGNED) - 1, `date_upd` = NOW()
-                WHERE `id_product` = ' . (int) $idProduct
-            );
+            return Db::getInstance()->execute('UPDATE ' . _DB_PREFIX_ . 'product_sale SET `quantity` = CAST(`quantity` AS SIGNED) - ' . (int) $qty . ', `sale_nbr` = CAST(`sale_nbr` AS SIGNED) - 1, `date_upd` = NOW()
+                WHERE `id_product` = ' . (int) $idProduct);
         } elseif ($totalSales == 1) {
             return Db::getInstance()->delete('product_sale', 'id_product = ' . (int) $idProduct);
         }
