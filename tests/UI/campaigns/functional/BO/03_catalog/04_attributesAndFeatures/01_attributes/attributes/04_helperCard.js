@@ -13,7 +13,7 @@ const attributesPage = require('@pages/BO/catalog/attributes');
 // Import test context
 const testContext = require('@utils/testContext');
 
-const baseContext = 'functional_BO_catalog_attributesAndFeatures_attributes_helperCard';
+const baseContext = 'functional_BO_catalog_attributesAndFeatures_attributes_attributes_helperCard';
 
 let browserContext;
 let page;
@@ -38,7 +38,7 @@ describe('Helper card on attributes page', async () => {
     await loginCommon.loginBO(this, page);
   });
 
-  it('should go to attributes page', async function () {
+  it('should go to \'Catalog > Attributes & Features\' page', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'goToAttributesPage', baseContext);
 
     await dashboardPage.goToSubMenu(

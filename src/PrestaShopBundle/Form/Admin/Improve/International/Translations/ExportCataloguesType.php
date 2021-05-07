@@ -110,6 +110,7 @@ class ExportCataloguesType extends TranslatorAwareType
             'label' => null,
             'child_choice' => [
                 'name' => 'selected_value',
+                'empty' => $this->trans('Select a theme', 'Admin.International.Feature'),
                 'choices' => $this->excludeDefaultThemeFromChoices($this->themeChoices),
                 'label' => false,
                 'multiple' => false,
@@ -123,6 +124,7 @@ class ExportCataloguesType extends TranslatorAwareType
             'label' => null,
             'child_choice' => [
                 'name' => 'selected_value',
+                'empty' => $this->trans('Select a module', 'Admin.International.Feature'),
                 'choices' => $this->moduleChoices,
                 'label' => false,
                 'multiple' => false,

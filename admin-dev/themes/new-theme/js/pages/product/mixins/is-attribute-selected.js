@@ -24,18 +24,23 @@
  */
 
 export default {
-  translationType: '.js-translation-type',
-  emailContentType: '.js-email-content-type',
-  emailFormGroup: '.js-email-form-group',
-  modulesFormGroup: '.js-module-form-group',
-  themesFormGroup: '.js-theme-form-group',
-  defaultThemeOption: '.js-default-theme',
-  noThemeOption: '.js-no-theme',
-  exportCoreType: '#form_core_selectors_core_type',
-  exportCoreValues: '#form_core_selectors_selected_value',
-  exportThemesType: '#form_themes_selectors_themes_type',
-  exportThemesValues: '#form_themes_selectors_selected_value',
-  exportModulesType: '#form_modules_selectors_modules_type',
-  exportModulesValues: '#form_modules_selectors_selected_value',
-  exportLanguageButton: '#form-export-language-button',
+  methods: {
+    /**
+     * The selected attribute is provided as a parameter instead od using this reference because it helps the
+     * observer work better whe this.selectedAttributeGroups is explicitly used as an argument.
+     *
+     * @param {Object} attribute
+     * @param {Object} attributeGroup
+     * @param {Object} attributeGroups
+     *
+     * @returns {boolean}
+     */
+    isSelected(attribute, attributeGroup, attributeGroups) {
+      if (!Object.prototype.hasOwnProperty.call(attributeGroups, attributeGroup.id)) {
+        return false;
+      }
+
+      return attributeGroups[attributeGroup.id].attributes.includes(attribute);
+    },
+  },
 };

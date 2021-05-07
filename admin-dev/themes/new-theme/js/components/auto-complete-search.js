@@ -97,9 +97,9 @@ export default class AutoCompleteSearch {
    */
   buildTypeahead() {
     this.$searchInput.typeahead(this.config, this.dataSetConfig)
-      .bind('typeahead:select', (e, selectedItem) => this.config.onSelect(selectedItem, e))
+      .bind('typeahead:select', (e, selectedItem) => this.config.onSelect(selectedItem, e, this.$searchInput))
       .bind('typeahead:close', (e) => {
-        this.config.onClose(e);
+        this.config.onClose(e, this.$searchInput);
       });
   }
 }

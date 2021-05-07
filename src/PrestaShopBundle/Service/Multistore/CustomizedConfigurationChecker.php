@@ -56,20 +56,24 @@ class CustomizedConfigurationChecker
      *
      * @param string $configurationKey
      * @param Shop $shop
+     * @param bool $isGroupShopContext
      *
      * @return bool
      */
-    public function isConfigurationCustomizedForThisShop(string $configurationKey, Shop $shop): bool
+    public function isConfigurationCustomizedForThisShop(string $configurationKey, Shop $shop, bool $isGroupShopContext): bool
     {
-        // check if given configuration is overridden for the parent shop group
-        $shopGroupConstraint = new ShopConstraint(
-            null,
-            $shop->getShopGroup()->getId(),
-            true // it must be strict, otherwise the method will also check for configuration settings in "all shop" context
-        );
+        // we don't check group shop customization if we are already in group shop context
+        if (!$isGroupShopContext) {
+            // check if given configuration is overridden for the parent group shop
+            $shopGroupConstraint = new ShopConstraint(
+                null,
+                $shop->getShopGroup()->getId(),
+                true // it must be strict, otherwise the method will also check for configuration settings in "all shop" context
+            );
 
-        if ($this->configuration->has($configurationKey, $shopGroupConstraint)) {
-            return true;
+            if ($this->configuration->has($configurationKey, $shopGroupConstraint)) {
+                return true;
+            }
         }
 
         // check if given configuration is overridden for the shop

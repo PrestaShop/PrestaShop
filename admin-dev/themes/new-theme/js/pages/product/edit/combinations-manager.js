@@ -32,9 +32,11 @@ import ProductEventMap from '@pages/product/product-event-map';
 import initCombinationModal from '@pages/product/components/combination-modal';
 import initFilters from '@pages/product/components/filters';
 import ConfirmModal from '@components/modal';
+import initCombinationGenerator from '@pages/product/components/generator';
 
 const {$} = window;
 const CombinationEvents = ProductEventMap.combinations;
+const CombinationsMap = ProductMap.combinations;
 
 export default class CombinationsManager {
   /**
@@ -42,31 +44,25 @@ export default class CombinationsManager {
    * @returns {{}}
    */
   constructor(productId) {
+    this.productId = productId;
     this.eventEmitter = window.prestashop.instance.eventEmitter;
     this.$productForm = $(ProductMap.productForm);
     this.$combinationsContainer = $(ProductMap.combinations.combinationsContainer);
     this.combinationIdInputsSelector = ProductMap.combinations.combinationIdInputsSelector;
     this.initialized = false;
-    this.combinationsService = new CombinationsService(this.getProductId());
+    this.combinationsService = new CombinationsService(this.productId);
 
-    this.init(productId);
+    this.init();
 
     return {};
   }
 
   /**
-   * @param {int} productId
-   *
    * @private
    */
-  init(productId) {
-    this.initPaginatedList();
-
+  init() {
     // Paginate to first page when tab is shown
-    this.$productForm.find(ProductMap.combinations.navigationTab).on('shown.bs.tab', () => this.firstInit());
-
-    initCombinationModal(ProductMap.combinations.editModal, productId);
-    initFilters(ProductMap.combinations.combinationsFiltersContainer, window.prestashop.instance.eventEmitter);
+    this.$productForm.find(CombinationsMap.navigationTab).on('shown.bs.tab', () => this.firstInit());
 
     // Finally watch events related to combination listing
     this.watchEvents();
@@ -77,21 +73,21 @@ export default class CombinationsManager {
    */
   initPaginatedList() {
     this.paginator = new DynamicPaginator(
-      ProductMap.combinations.paginationContainer,
+      CombinationsMap.paginationContainer,
       this.combinationsService,
       new CombinationsGridRenderer(),
     );
 
     this.initSubmittableInputs();
 
-    this.$combinationsContainer.on('change', ProductMap.combinations.isDefaultInputsSelector, async (e) => {
+    this.$combinationsContainer.on('change', CombinationsMap.isDefaultInputsSelector, async (e) => {
       if (!e.currentTarget.checked) {
         return;
       }
       await this.updateDefaultCombination(e.currentTarget);
     });
 
-    this.$combinationsContainer.on('click', ProductMap.combinations.removeCombinationSelector, async (e) => {
+    this.$combinationsContainer.on('click', CombinationsMap.removeCombinationSelector, async (e) => {
       await this.removeCombination(e.currentTarget);
     });
 
@@ -124,26 +120,26 @@ export default class CombinationsManager {
    */
   initSubmittableInputs() {
     const combinationToken = this.getCombinationToken();
-    const {quantityKey} = ProductMap.combinations.combinationItemForm;
-    const {impactOnPriceKey} = ProductMap.combinations.combinationItemForm;
-    const {referenceKey} = ProductMap.combinations.combinationItemForm;
-    const {tokenKey} = ProductMap.combinations.combinationItemForm;
+    const {quantityKey} = CombinationsMap.combinationItemForm;
+    const {impactOnPriceKey} = CombinationsMap.combinationItemForm;
+    const {referenceKey} = CombinationsMap.combinationItemForm;
+    const {tokenKey} = CombinationsMap.combinationItemForm;
 
-    new SubmittableInput(ProductMap.combinations.quantityInputWrapper, async (input) => {
+    new SubmittableInput(CombinationsMap.quantityInputWrapper, async (input) => {
       await this.combinationsService.updateListedCombination(this.findCombinationId(input), {
         [quantityKey]: input.value,
         [tokenKey]: combinationToken,
       });
     });
 
-    new SubmittableInput(ProductMap.combinations.impactOnPriceInputWrapper, async (input) => {
+    new SubmittableInput(CombinationsMap.impactOnPriceInputWrapper, async (input) => {
       await this.combinationsService.updateListedCombination(this.findCombinationId(input), {
         [impactOnPriceKey]: input.value,
         [tokenKey]: combinationToken,
       });
     });
 
-    new SubmittableInput(ProductMap.combinations.referenceInputWrapper, async (input) => {
+    new SubmittableInput(CombinationsMap.referenceInputWrapper, async (input) => {
       await this.combinationsService.updateListedCombination(this.findCombinationId(input), {
         [referenceKey]: input.value,
         [tokenKey]: combinationToken,
@@ -155,7 +151,7 @@ export default class CombinationsManager {
    * @private
    */
   initSortingColumns() {
-    this.$combinationsContainer.on('click', ProductMap.combinations.sortableColumns, (event) => {
+    this.$combinationsContainer.on('click', CombinationsMap.sortableColumns, (event) => {
       const $sortableColumn = $(event.currentTarget);
       const columnName = $sortableColumn.data('sortColName');
 
@@ -172,10 +168,10 @@ export default class CombinationsManager {
       }
 
       // Reset all columns, we need to force the attributes for CSS matching
-      $(ProductMap.combinations.sortableColumns, this.$combinationsContainer).removeData('sortIsCurrent');
-      $(ProductMap.combinations.sortableColumns, this.$combinationsContainer).removeData('sortDirection');
-      $(ProductMap.combinations.sortableColumns, this.$combinationsContainer).removeAttr('data-sort-is-current');
-      $(ProductMap.combinations.sortableColumns, this.$combinationsContainer).removeAttr('data-sort-direction');
+      $(CombinationsMap.sortableColumns, this.$combinationsContainer).removeData('sortIsCurrent');
+      $(CombinationsMap.sortableColumns, this.$combinationsContainer).removeData('sortDirection');
+      $(CombinationsMap.sortableColumns, this.$combinationsContainer).removeAttr('data-sort-is-current');
+      $(CombinationsMap.sortableColumns, this.$combinationsContainer).removeAttr('data-sort-direction');
 
       // Set correct data in current column, we need to force the attributes for CSS matching
       $sortableColumn.data('sortIsCurrent', 'true');
@@ -229,7 +225,7 @@ export default class CombinationsManager {
    */
   async updateDefaultCombination(checkedInput) {
     const checkedInputs = this.$combinationsContainer.find(
-      `${ProductMap.combinations.isDefaultInputsSelector}:checked`,
+      `${CombinationsMap.isDefaultInputsSelector}:checked`,
     );
     const checkedDefaultId = this.findCombinationId(checkedInput);
 
@@ -254,6 +250,19 @@ export default class CombinationsManager {
     }
 
     this.initialized = true;
+
+    this.initPaginatedList();
+    initCombinationModal(CombinationsMap.editModal, this.productId);
+    initCombinationGenerator(
+      CombinationsMap.combinationsGeneratorContainer,
+      this.eventEmitter,
+      this.productId,
+    );
+    initFilters(
+      CombinationsMap.combinationsFiltersContainer,
+      this.eventEmitter,
+      this.productId,
+    );
     this.paginator.paginate(1);
   }
 
@@ -261,16 +270,7 @@ export default class CombinationsManager {
    * @returns {String}
    */
   getCombinationToken() {
-    return $(ProductMap.combinations.combinationsContainer).data('combinationToken');
-  }
-
-  /**
-   * @returns {Number}
-   *
-   * @private
-   */
-  getProductId() {
-    return Number(this.$productForm.data('productId'));
+    return $(CombinationsMap.combinationsContainer).data('combinationToken');
   }
 
   /**

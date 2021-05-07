@@ -267,4 +267,39 @@ class CombinationRepository extends AbstractObjectModelRepository
 
         return $id ? $this->get(new CombinationId($id)) : null;
     }
+
+    /**
+     * @param int[] $attributeIds
+     *
+     * @return CombinationId[]
+     */
+    public function getCombinationIdsByAttributes(ProductId $productId, array $attributeIds): array
+    {
+        sort($attributeIds);
+        $qb = $this->connection->createQueryBuilder();
+        $qb
+            ->addSelect('pa.id_product_attribute')
+            ->addSelect('GROUP_CONCAT(pac.id_attribute ORDER BY pac.id_attribute ASC SEPARATOR "-") AS attribute_ids')
+            ->from($this->dbPrefix . 'product_attribute', 'pa')
+            ->innerJoin(
+                'pa',
+                $this->dbPrefix . 'product_attribute_combination',
+                'pac',
+                'pac.id_product_attribute = pa.id_product_attribute'
+            )
+            ->andWhere('pa.id_product = :productId')
+            ->andHaving('attribute_ids = :attributeIds')
+            ->setParameter('productId', $productId->getValue())
+            ->setParameter('attributeIds', implode('-', $attributeIds))
+            ->addGroupBy('pa.id_product_attribute')
+        ;
+        $result = $qb->execute()->fetchAll();
+        if (empty($result)) {
+            return [];
+        }
+
+        return array_map(function (array $combination) {
+            return new CombinationId((int) $combination['id_product_attribute']);
+        }, $result);
+    }
 }
