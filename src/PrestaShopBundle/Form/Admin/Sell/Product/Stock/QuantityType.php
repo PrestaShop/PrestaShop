@@ -71,6 +71,7 @@ class QuantityType extends TranslatorAwareType
                         new NotBlank(),
                         new Type(['type' => 'numeric']),
                     ],
+                    'default_empty_data' => 0,
                 ])
             ;
         }
@@ -84,6 +85,7 @@ class QuantityType extends TranslatorAwareType
                     new Type(['type' => 'numeric']),
                 ],
                 'required' => false,
+                'default_empty_data' => 0,
             ])
         ;
     }

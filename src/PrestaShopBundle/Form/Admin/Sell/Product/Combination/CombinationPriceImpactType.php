@@ -79,6 +79,10 @@ class CombinationPriceImpactType extends TranslatorAwareType
                 'label' => $this->trans('Cost price (tax excl.)', 'Admin.Catalog.Feature'),
                 'attr' => ['data-display-price-precision' => self::PRESTASHOP_DECIMALS],
                 'currency' => $this->defaultCurrency->iso_code,
+                'constraints' => [
+                    new NotBlank(),
+                    new Type(['type' => 'float']),
+                ],
             ])
             ->add('price_tax_excluded', MoneyType::class, [
                 'required' => false,
@@ -107,6 +111,10 @@ class CombinationPriceImpactType extends TranslatorAwareType
                 'label_help_box' => $this->trans('Does this combination have a different price per unit?', 'Admin.Catalog.Feature'),
                 'attr' => ['data-display-price-precision' => self::PRESTASHOP_DECIMALS],
                 'currency' => $this->defaultCurrency->iso_code,
+                'constraints' => [
+                    new NotBlank(),
+                    new Type(['type' => 'float']),
+                ],
             ])
             ->add('weight', TextWithUnitType::class, [
                 'required' => false,

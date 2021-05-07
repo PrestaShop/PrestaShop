@@ -49,6 +49,7 @@ class StockShortcutType extends TranslatorAwareType
                     new NotBlank(),
                     new Type(['type' => 'numeric']),
                 ],
+                'default_empty_data' => 0,
             ])
         ;
     }

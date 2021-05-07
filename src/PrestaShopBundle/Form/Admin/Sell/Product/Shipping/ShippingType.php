@@ -104,15 +104,9 @@ class ShippingType extends TranslatorAwareType
                 'currency' => $this->currencyIsoCode,
                 'constraints' => [
                     new NotBlank(),
-                    new Type([
-                        'type' => 'numeric',
-                        'message' => $this->trans(
-                            '%s is invalid.',
-                            'Admin.Notifications.Error'
-                        ),
-                    ]),
+                    new Type(['type' => 'float']),
                 ],
-                'default_empty_data' => 0,
+                'default_empty_data' => 0.0,
             ])
             ->add('carriers', ChoiceType::class, [
                 'choices' => $this->carrierChoiceProvider->getChoices(),

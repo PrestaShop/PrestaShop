@@ -35,6 +35,8 @@ use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Translation\TranslatorInterface;
+use Symfony\Component\Validator\Constraints\NotBlank;
+use Symfony\Component\Validator\Constraints\Type;
 
 class UnitPriceType extends TranslatorAwareType
 {
@@ -69,6 +71,11 @@ class UnitPriceType extends TranslatorAwareType
                 'label_help_box' => $this->trans('Indicate the price for a single unit of the product. For instance, if you\'re selling fabrics, it would be the price per meter.', 'Admin.Catalog.Help'),
                 'attr' => ['data-display-price-precision' => self::PRESTASHOP_DECIMALS],
                 'currency' => $this->defaultCurrency->iso_code,
+                'constraints' => [
+                    new NotBlank(),
+                    new Type(['type' => 'float']),
+                ],
+                'default_empty_data' => 0.0,
             ])
             ->add('unity', TextType::class, [
                 'required' => false,
