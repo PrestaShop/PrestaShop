@@ -137,7 +137,7 @@ class ProductSaleCore
             LEFT JOIN `' . _DB_PREFIX_ . 'tax` t ON (t.`id_tax` = tr.`id_tax`)
             ' . Product::sqlStock('p', 0);
 
-        $sql .= 'WHERE product_shop.`active` = 1
+        $sql .= ' WHERE product_shop.`active` = 1
             AND product_shop.`visibility` != \'none\'';
 
         if (Group::isFeatureActive()) {
@@ -241,8 +241,7 @@ class ProductSaleCore
      */
     public static function addProductSale($productId, $qty = 1)
     {
-        return Db::getInstance()->execute('
-            INSERT INTO ' . _DB_PREFIX_ . 'product_sale
+        return Db::getInstance()->execute('INSERT INTO ' . _DB_PREFIX_ . 'product_sale
             (`id_product`, `quantity`, `sale_nbr`, `date_upd`)
             VALUES (' . (int) $productId . ', ' . (int) $qty . ', 1, NOW())
             ON DUPLICATE KEY UPDATE `quantity` = `quantity` + ' . (int) $qty . ', `sale_nbr` = `sale_nbr` + 1, `date_upd` = NOW()');
@@ -277,8 +276,7 @@ class ProductSaleCore
     {
         $totalSales = ProductSale::getNbrSales($idProduct);
         if ($totalSales > 1) {
-            return Db::getInstance()->execute('
-                UPDATE ' . _DB_PREFIX_ . 'product_sale
+            return Db::getInstance()->execute('UPDATE ' . _DB_PREFIX_ . 'product_sale
                 SET `quantity` = CAST(`quantity` AS SIGNED) - ' . (int) $qty . ', `sale_nbr` = CAST(`sale_nbr` AS SIGNED) - 1, `date_upd` = NOW()
                 WHERE `id_product` = ' . (int) $idProduct
             );
