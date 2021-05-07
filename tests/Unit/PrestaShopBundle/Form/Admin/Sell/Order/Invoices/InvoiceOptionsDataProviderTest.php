@@ -36,7 +36,6 @@ use PrestaShopBundle\Form\Exception\DataProviderException;
 
 class InvoiceOptionsDataProviderTest extends TestCase
 {
-
     /**
      * Tests that exception is thrown if invoice number is incorrect
      */
@@ -45,7 +44,7 @@ class InvoiceOptionsDataProviderTest extends TestCase
         $dataConfiguration = $this->getMockBuilder(DataConfigurationInterface::class)->getMock();
         $invoiceOptionsDataProvider = new InvoiceOptionsDataProvider($dataConfiguration, 5);
         $data = [
-            InvoiceOptionsType::FIELD_INVOICE_NUMBER => 4
+            InvoiceOptionsType::FIELD_INVOICE_NUMBER => 4,
         ];
         $this->expectException(DataProviderException::class);
         $invoiceOptionsDataProvider->setData($data);
@@ -53,6 +52,7 @@ class InvoiceOptionsDataProviderTest extends TestCase
 
     /**
      * Tests that all 3 text fields throw an exception if you pass HTML
+     *
      * @dataProvider getInvoiceNoHtmlFields
      *
      * @param string $field
@@ -64,8 +64,8 @@ class InvoiceOptionsDataProviderTest extends TestCase
         $data = [
             $field => [
                 1 => 'text',
-                2 => '<html>'
-            ]
+                2 => '<html>',
+            ],
         ];
         $this->expectException(DataProviderException::class);
         $invoiceOptionsDataProvider->setData($data);
@@ -92,7 +92,7 @@ class InvoiceOptionsDataProviderTest extends TestCase
         return [
             [InvoiceOptionsType::FIELD_INVOICE_PREFIX],
             [InvoiceOptionsType::FIELD_LEGAL_FREE_TEXT],
-            [InvoiceOptionsType::FIELD_FOOTER_TEXT]
+            [InvoiceOptionsType::FIELD_FOOTER_TEXT],
         ];
     }
 
@@ -102,31 +102,31 @@ class InvoiceOptionsDataProviderTest extends TestCase
             [
                 [
                     InvoiceOptionsType::FIELD_INVOICE_PREFIX => [
-                        1 => 'data'
+                        1 => 'data',
                     ],
                     InvoiceOptionsType::FIELD_LEGAL_FREE_TEXT => [
-                        1 => 'data'
+                        1 => 'data',
                     ],
                     InvoiceOptionsType::FIELD_FOOTER_TEXT => [
-                        1 => 'data'
+                        1 => 'data',
                     ],
-                    InvoiceOptionsType::FIELD_INVOICE_NUMBER => 6
-                ]
+                    InvoiceOptionsType::FIELD_INVOICE_NUMBER => 6,
+                ],
             ],
             [
                 [
                     InvoiceOptionsType::FIELD_INVOICE_PREFIX => [
-                        1 => 'data'
+                        1 => 'data',
                     ],
                     InvoiceOptionsType::FIELD_LEGAL_FREE_TEXT => [
-                        1 => 'data'
+                        1 => 'data',
                     ],
                     InvoiceOptionsType::FIELD_FOOTER_TEXT => [
-                        1 => 'data'
+                        1 => 'data',
                     ],
-                    InvoiceOptionsType::FIELD_INVOICE_NUMBER => 0
-                ]
-            ]
+                    InvoiceOptionsType::FIELD_INVOICE_NUMBER => 0,
+                ],
+            ],
         ];
     }
 }
