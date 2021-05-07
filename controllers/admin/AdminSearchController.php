@@ -277,7 +277,7 @@ class AdminSearchControllerCore extends AdminController
             ) {
                 $sfRouteParams = (!empty($row['route_name'])) ? ['route' => $row['route_name']] : [];
                 $this->_list['features'][$row['name']][] = [
-                    'link' => Context::getContext()->link->getAdminLink((string) $row['class_name'], true, $sfRouteParams)
+                    'link' => Context::getContext()->link->getAdminLink((string) $row['class_name'], true, $sfRouteParams),
                 ];
             }
         }
