@@ -1104,6 +1104,14 @@ class HookCore extends ObjectModel
         } elseif ($frontend) {
             // For payment modules, we check that they are available in the contextual country
             if (Validate::isLoadedObject($context->country)) {
+                //Validate if the billing address is different from the delivery address in a valid cart.
+                $id_country = $context->country->id;
+                if (Validate::isLoadedObject($context->cart) && $context->cart->id_address_delivery !== $context->cart->id_address_invoice) {
+                    $address_invoice = new Address($context->cart->id_address_invoice);
+                    if (Validate::isLoadedObject($address_invoice)) {
+                        $id_country = $address_invoice->id_country;
+                    }
+                }
                 $sql->where(
                     '(
                         h.`name` IN ("displayPayment", "displayPaymentEU", "paymentOptions")
@@ -1111,10 +1119,10 @@ class HookCore extends ObjectModel
                             SELECT `id_country`
                             FROM `' . _DB_PREFIX_ . 'module_country` mc
                             WHERE mc.`id_module` = m.`id_module`
-                            AND `id_country` = ' . (int) $context->country->id . '
+                            AND `id_country` = ' . (int) $id_country . '
                             AND `id_shop` = ' . (int) $shop->id . '
                             LIMIT 1
-                        ) = ' . (int) $context->country->id . ')'
+                        ) = ' . (int) $id_country . ')'
                 );
             }
             if (Validate::isLoadedObject($context->currency)) {
