@@ -3059,7 +3059,7 @@ exit;
     {
         $directoryList = glob($path . '/*', GLOB_ONLYDIR | GLOB_NOSORT);
         if ($directoryList === false) {
-            $directoryList = [];
+            return [];
         }
 
         $directoryList = array_map(function ($path) {
