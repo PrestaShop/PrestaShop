@@ -1103,6 +1103,7 @@ class FrontControllerCore extends Controller
             'inline' => false,
             'attributes' => null,
             'server' => 'local',
+            'version' => null,
         ];
         $params = array_merge($default_params, $params);
 
@@ -1111,7 +1112,7 @@ class FrontControllerCore extends Controller
                 . ($this->javascriptManager->getFullPath($relativePath) ?? $relativePath);
             $params['server'] = 'remote';
         }
-        $this->javascriptManager->register($id, $relativePath, $params['position'], $params['priority'], $params['inline'], $params['attributes'], $params['server']);
+        $this->javascriptManager->register($id, $relativePath, $params['position'], $params['priority'], $params['inline'], $params['attributes'], $params['server'], $params['version']);
     }
 
     public function unregisterJavascript($id)
