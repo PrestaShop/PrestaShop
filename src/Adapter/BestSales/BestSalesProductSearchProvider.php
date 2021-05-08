@@ -69,7 +69,7 @@ class BestSalesProductSearchProvider implements ProductSearchProviderInterface
             $this->translator->trans('Sales, highest to lowest', [], 'Shop.Theme.Catalog')
         );
 
-        if (!Tools::getValue('order', 0)) {
+        if (!Tools::getValue('order', 0) && $query->getSortOrder()->toLegacyOrderWay() !== 'random') {
             $query->setSortOrder($sortBySales);
         }
 

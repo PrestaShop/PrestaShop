@@ -82,19 +82,22 @@ class ProductSaleCore
         $finalOrderBy = $orderBy;
         $orderTable = '';
 
-        $invalidOrderBy = !Validate::isOrderBy($orderBy);
-        if ($invalidOrderBy || null === $orderBy) {
-            $orderBy = 'quantity';
-            $orderTable = 'ps';
-        }
+        if (strtolower($orderWay) === 'random') {
+            $orderWay = 'RAND()';
+            $orderBy = '';
+        } else {
+            $invalidOrderBy = !Validate::isOrderBy($orderBy);
+            if ($invalidOrderBy || null === $orderBy) {
+                $orderBy = 'quantity';
+                $orderTable = 'ps';
+            } elseif (($orderBy == 'date_add' || $orderBy == 'date_upd')) {
+                $orderTable = 'product_shop';
+            }
 
-        if ($orderBy == 'date_add' || $orderBy == 'date_upd') {
-            $orderTable = 'product_shop';
-        }
-
-        $invalidOrderWay = !Validate::isOrderWay($orderWay);
-        if ($invalidOrderWay || null === $orderWay || $orderBy == 'sales') {
-            $orderWay = 'DESC';
+            $invalidOrderWay = !Validate::isOrderWay($orderWay);
+            if ($invalidOrderWay || null === $orderWay || $orderBy == 'sales') {
+                $orderWay = 'DESC';
+            }
         }
 
         $interval = Validate::isUnsignedInt(Configuration::get('PS_NB_DAYS_NEW_PRODUCT')) ? Configuration::get('PS_NB_DAYS_NEW_PRODUCT') : 20;
@@ -143,9 +146,8 @@ class ProductSaleCore
         }
 
         if ($finalOrderBy != 'price') {
-            $sql .= '
-					ORDER BY ' . (!empty($orderTable) ? '`' . pSQL($orderTable) . '`.' : '') . '`' . pSQL($orderBy) . '` ' . pSQL($orderWay) . '
-					LIMIT ' . (int) (($pageNumber - 1) * $nbProducts) . ', ' . (int) $nbProducts;
+            $sql .= ' ORDER BY ' . (!empty($orderTable) ? '`' . pSQL($orderTable) . '`' : '') . ' ' . (!empty($orderBy) ? '`' . pSQL($orderBy) . '`' : '') . ' ' . pSQL($orderWay) . '
+                LIMIT ' . (int) (($pageNumber - 1) * $nbProducts) . ', ' . (int) $nbProducts;
         }
 
         $result = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS($sql);
