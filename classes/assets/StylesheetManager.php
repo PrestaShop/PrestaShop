@@ -62,18 +62,19 @@ class StylesheetManagerCore extends AbstractAssetManager
         $priority = self::DEFAULT_PRIORITY,
         $inline = false,
         $server = 'local',
-        $needRtl = true
+        $needRtl = true,
+        $version = null
     ) {
         $fullPath = $this->getFullPath($relativePath);
         $rtlFullPath = $this->getFullPath(str_replace('.css', '_rtl.css', $relativePath));
         $context = Context::getContext();
         $isRTL = is_object($context->language) && $context->language->is_rtl;
         if ('remote' === $server) {
-            $this->add($id, $relativePath, $media, $priority, $inline, $server);
+            $this->add($id, $relativePath, $media, $priority, $inline, $server, $version);
         } elseif ($needRtl && $isRTL && $rtlFullPath) {
-            $this->add($id, $rtlFullPath, $media, $priority, $inline, $server);
+            $this->add($id, $rtlFullPath, $media, $priority, $inline, $server, $version);
         } elseif ($fullPath) {
-            $this->add($id, $fullPath, $media, $priority, $inline, $server);
+            $this->add($id, $fullPath, $media, $priority, $inline, $server, $version);
         }
     }
 
@@ -106,11 +107,15 @@ class StylesheetManagerCore extends AbstractAssetManager
      * @param int $priority
      * @param bool $inline
      * @param string $server
+     * @param string $version
      */
-    protected function add($id, $fullPath, $media, $priority, $inline, $server)
+    protected function add($id, $fullPath, $media, $priority, $inline, $server, $version)
     {
         $priority = is_int($priority) ? $priority : self::DEFAULT_PRIORITY;
         $media = $this->getSanitizedMedia($media);
+
+        //../stylesheet.css?{version}
+        $fullPath = ($version)? $fullPath.'?'.$version : $fullPath;
 
         if ('remote' === $server) {
             $uri = $fullPath;
