@@ -58,7 +58,7 @@ class PricesCommandBuilderTest extends AbstractProductCommandBuilderTest
         $command = new UpdateProductPricesCommand($this->getProductId()->getValue());
         yield [
             [
-                'price' => [
+                'pricing' => [
                     'not_handled' => 0,
                 ],
             ],
@@ -69,9 +69,11 @@ class PricesCommandBuilderTest extends AbstractProductCommandBuilderTest
         $command->setPrice('45.56');
         yield [
             [
-                'price' => [
+                'pricing' => [
                     'not_handled' => 0,
-                    'price_tax_excluded' => 45.56,
+                    'retail_price' => [
+                        'price_tax_excluded' => 45.56,
+                    ],
                 ],
             ],
             [$command],
@@ -81,10 +83,12 @@ class PricesCommandBuilderTest extends AbstractProductCommandBuilderTest
         $command->setPrice('45.56');
         yield [
             [
-                'price' => [
+                'pricing' => [
                     'not_handled' => 0,
-                    'price_tax_excluded' => '45.56',
-                    'price_tax_included' => '65.56', // Price tax included is ignored
+                    'retail_price' => [
+                        'price_tax_excluded' => '45.56',
+                        'price_tax_included' => '65.56', // Price tax included is ignored
+                    ],
                 ],
             ],
             [$command],
@@ -94,9 +98,11 @@ class PricesCommandBuilderTest extends AbstractProductCommandBuilderTest
         $command->setEcotax('45.56');
         yield [
             [
-                'price' => [
+                'pricing' => [
                     'not_handled' => 0,
-                    'ecotax' => '45.56',
+                    'retail_price' => [
+                        'ecotax' => '45.56',
+                    ],
                 ],
             ],
             [$command],
@@ -106,7 +112,7 @@ class PricesCommandBuilderTest extends AbstractProductCommandBuilderTest
         $command->setTaxRulesGroupId(42);
         yield [
             [
-                'price' => [
+                'pricing' => [
                     'not_handled' => 0,
                     'tax_rules_group_id' => '42',
                 ],
@@ -118,7 +124,7 @@ class PricesCommandBuilderTest extends AbstractProductCommandBuilderTest
         $command->setOnSale(true);
         yield [
             [
-                'price' => [
+                'pricing' => [
                     'not_handled' => 0,
                     'on_sale' => '42',
                 ],
@@ -130,7 +136,7 @@ class PricesCommandBuilderTest extends AbstractProductCommandBuilderTest
         $command->setOnSale(false);
         yield [
             [
-                'price' => [
+                'pricing' => [
                     'not_handled' => 0,
                     'on_sale' => '0',
                 ],
@@ -142,7 +148,7 @@ class PricesCommandBuilderTest extends AbstractProductCommandBuilderTest
         $command->setWholesalePrice('45.56');
         yield [
             [
-                'price' => [
+                'pricing' => [
                     'not_handled' => 0,
                     'wholesale_price' => '45.56',
                 ],
@@ -154,9 +160,11 @@ class PricesCommandBuilderTest extends AbstractProductCommandBuilderTest
         $command->setUnitPrice('45.56');
         yield [
             [
-                'price' => [
+                'pricing' => [
                     'not_handled' => 0,
-                    'unit_price' => '45.56',
+                    'unit_price' => [
+                        'price' => '45.56',
+                    ],
                 ],
             ],
             [$command],
@@ -166,9 +174,11 @@ class PricesCommandBuilderTest extends AbstractProductCommandBuilderTest
         $command->setUnity('kg');
         yield [
             [
-                'price' => [
+                'pricing' => [
                     'not_handled' => 0,
-                    'unity' => 'kg',
+                    'unit_price' => [
+                        'unity' => 'kg',
+                    ],
                 ],
             ],
             [$command],

@@ -22,6 +22,18 @@
  * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  *#}
+
+{#
+# This form theme is an implementation of PrestaShop UI kit, it based on the bootstrap4 layout and overrides a few
+# blocks to match our expected integration of the UI kit.
+#
+# This theme uses/extends the basic bootstrap_4_horizontal_layout meaning the form labels/inputs are displayed
+# are displayed horizontally in a column way.
+#
+# Unlike our prestashop_ui_kit_base.html.twig theme which is the parent of this theme and is based on bootstrap_4_layout
+# where labels/inputs are displayed one under the other.
+#}
+
 {% use 'bootstrap_4_horizontal_layout.html.twig' %}
 {% use '@PrestaShop/Admin/TwigTemplateForm/prestashop_ui_kit_base.html.twig' %}
 
@@ -55,10 +67,9 @@
 
 {% block form_row -%}
   {% spaceless %}
-    {% if label_attr.title is defined %}
-      <{{ label_attr.title }}{% for attrname, attrvalue in label_attr %} {{ attrname }}="{{ attrvalue }}"{% endfor %}>
-      {{ label|raw }}
-      </{{ label_attr.title }}>
+    {# In horizontal theme when using a title for label it needs to be outside of the row div #}
+    {% if label_tag_name is defined %}
+      {{ form_label(form) }}
     {% endif %}
 
     {% import '@PrestaShop/Admin/macros.html.twig' as ps %}
@@ -68,13 +79,13 @@
       {% set disabledField = true %}
     {% endif %}
 
-    <div class="{{ block('form_row_class') }}{% if (not compound or force_error|default(false)) and not valid %} has-error{% endif %}"{% if (attr.visible is defined and not attr.visible) %} style="display: none;"{% endif %}>
+    <div class="{{ block('form_row_class') }}{{ block('widget_type_class') }}{% if (not compound or force_error|default(false)) and not valid %} has-error{% endif %}"{% if (attr.visible is defined and not attr.visible) %} style="display: none;"{% endif %}>
       {% if attribute(form.parent, multistoreCheckboxName) is defined %}
         {{ form_errors(attribute(form.parent, multistoreCheckboxName)) }}
         {{ form_widget(attribute(form.parent, multistoreCheckboxName)) }}
       {% endif %}
 
-      {% if label_attr.title is not defined %}
+      {% if label_tag_name is not defined %}
         {{ form_label(form) }}
       {% endif %}
       <div class="{{ block('form_group_class') }}{% if disabledField %} disabled{% endif %}">
@@ -84,8 +95,15 @@
       {% if attribute(form.parent, form.vars.name) is defined and attribute(form.parent, form.vars.name).vars.multistore_dropdown != false %}
         {{ attribute(form.parent, form.vars.name).vars.multistore_dropdown | raw }}
       {% endif %}
+
+      {{- block('form_external_link') -}}
+      {{- block('form_alert') -}}
     </div>
   {% endspaceless %}
+
+  {% if column_breaker %}
+    <div class="form-group form-column-breaker"></div>
+  {% endif %}
 {%- endblock form_row %}
 
 {% block form_group_class -%}
@@ -95,81 +113,3 @@
 {% block form_row_class -%}
   form-group row{% if row_attr.class is defined %} {{ row_attr.class }}{% endif %}
 {%- endblock form_row_class %}
-
-{# Widgets #}
-
-{% block text_with_unit_widget %}
-  <div class="input-group">
-    {{- block('form_widget_simple') -}}
-    {% if form.vars.unit is defined %}
-      <div class="input-group-append">
-        <span class="input-group-text">{{ form.vars.unit }}</span>
-      </div>
-    {% endif %}
-  </div>
-  {{ block('form_help') }}
-{% endblock text_with_unit_widget %}
-
-{% block ip_address_text_widget %}
-  <div class="input-group">
-    {{- block('form_widget_simple') -}}
-    <button type="button" class="btn btn-outline-primary add_ip_button" data-ip="{{ currentIp }}">
-      <i class="material-icons">add_circle</i> {{ 'Add my IP'|trans({}, 'Admin.Actions') }}
-    </button>
-  </div>
-  {{ block('form_help') }}
-
-{% endblock ip_address_text_widget %}
-
-{% block switch_widget %}
-  <div class="input-group">
-    {{- parent() -}}
-  </div>
-  {{ block('form_help') }}
-{% endblock switch_widget %}
-
-{% block custom_content_widget %}
-  {% include template with data %}
-  {{ block('form_help') }}
-{% endblock %}
-
-{% block text_with_length_counter_widget %}
-  <div class="input-group js-text-with-length-counter">
-    {% set current_length = form.vars.max_length - form.vars.value|length %}
-
-    {% if form.vars.position == 'before' %}
-      <div class="input-group-prepend">
-        <span class="input-group-text js-countable-text">{{ current_length }}</span>
-      </div>
-    {% endif %}
-
-    {% set attr = attr|merge({'data-max-length': form.vars.max_length, 'maxlength': form.vars.max_length, 'class': 'js-countable-input'}) -%}
-    {% set attr = attr|merge(input_attr) -%}
-
-    {% if form.vars.input == 'textarea' %}
-      {{- block('textarea_widget') -}}
-    {% else %}
-      {{- block('form_widget_simple') -}}
-    {% endif %}
-
-    {% if form.vars.position == 'after' %}
-      <div class="input-group-append">
-        <span class="input-group-text js-countable-text">{{ current_length }}</span>
-      </div>
-    {% endif %}
-  </div>
-{% endblock text_with_length_counter_widget %}
-
-{% block image_dropzone_widget %}
-  {% set attr = attr|merge({
-    'class': (attr.class|default('') ~ ' image-dropzone')|trim,
-    'data-translations': translations|json_encode,
-    'data-locales': locales|json_encode,
-    'data-product-id': product_id,
-    'data-form-name': update_form_name,
-    'data-token': csrf_token(update_form_name)
-  }) %}
-
-  <div {{ block('widget_attributes') }}>
-  </div>
-{% endblock %}

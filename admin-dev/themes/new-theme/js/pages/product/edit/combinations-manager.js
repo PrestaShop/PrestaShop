@@ -33,6 +33,7 @@ import initCombinationModal from '@pages/product/components/combination-modal';
 import initFilters from '@pages/product/components/filters';
 import ConfirmModal from '@components/modal';
 import initCombinationGenerator from '@pages/product/components/generator';
+import {getProductAttributeGroups} from '@pages/product/services/attribute-groups';
 
 const {$} = window;
 const CombinationEvents = ProductEventMap.combinations;
@@ -49,8 +50,21 @@ export default class CombinationsManager {
     this.$productForm = $(ProductMap.productForm);
     this.$combinationsContainer = $(ProductMap.combinations.combinationsContainer);
     this.combinationIdInputsSelector = ProductMap.combinations.combinationIdInputsSelector;
+    this.$externalCombinationTab = $(ProductMap.combinations.externalCombinationTab);
+
+    this.$preloader = $(ProductMap.combinations.preloader);
+    this.$paginatedList = $(CombinationsMap.combinationsPaginatedList);
+    this.$emptyState = $(CombinationsMap.emptyState);
+
+    this.paginator = null;
+    this.combinationsRenderer = null;
+    this.filtersApp = null;
+    this.combinationModalApp = null;
+    this.combinationGeneratorApp = null;
+
     this.initialized = false;
     this.combinationsService = new CombinationsService(this.productId);
+    this.productAttributeGroups = [];
 
     this.init();
 
@@ -62,7 +76,8 @@ export default class CombinationsManager {
    */
   init() {
     // Paginate to first page when tab is shown
-    this.$productForm.find(CombinationsMap.navigationTab).on('shown.bs.tab', () => this.firstInit());
+    this.$productForm.find(CombinationsMap.navigationTab).on('shown.bs.tab', () => this.showCombinationTab());
+    this.$productForm.find(CombinationsMap.navigationTab).on('hidden.bs.tab', () => this.hideCombinationTab());
 
     // Finally watch events related to combination listing
     this.watchEvents();
@@ -71,11 +86,95 @@ export default class CombinationsManager {
   /**
    * @private
    */
+  showCombinationTab() {
+    this.$externalCombinationTab.removeClass('d-none');
+    this.firstInit();
+  }
+
+  /**
+   * @private
+   */
+  hideCombinationTab() {
+    this.$externalCombinationTab.addClass('d-none');
+  }
+
+  /**
+   * @private
+   */
+  firstInit() {
+    if (this.initialized) {
+      return;
+    }
+
+    this.initialized = true;
+
+    this.combinationGeneratorApp = initCombinationGenerator(
+      CombinationsMap.combinationsGeneratorContainer,
+      this.eventEmitter,
+      this.productId,
+    );
+    this.combinationModalApp = initCombinationModal(
+      CombinationsMap.editModal,
+      this.productId,
+      this.eventEmitter,
+    );
+    this.filtersApp = initFilters(
+      CombinationsMap.combinationsFiltersContainer,
+      this.eventEmitter,
+      this.productAttributeGroups,
+    );
+    this.initPaginatedList();
+
+    this.refreshCombinationList(true);
+  }
+
+  /**
+   * @param {boolean} firstTime
+   * @returns {Promise<void>}
+   *
+   * @private
+   */
+  async refreshCombinationList(firstTime) {
+    // Preloader is only shown on first load
+    this.$preloader.toggleClass('d-none', !firstTime);
+    this.$paginatedList.toggleClass('d-none', firstTime);
+    this.$emptyState.addClass('d-none');
+
+    // When attributes are refreshed we show first page
+    this.paginator.paginate(1);
+
+    // Wait for product attributes to adapt rendering depending on their number
+    this.productAttributeGroups = await getProductAttributeGroups(this.productId);
+    this.filtersApp.filters = this.productAttributeGroups;
+    this.eventEmitter.emit(CombinationEvents.clearFilters);
+    this.$preloader.addClass('d-none');
+
+    const hasCombinations = this.productAttributeGroups && this.productAttributeGroups.length;
+    this.$paginatedList.toggleClass('d-none', !hasCombinations);
+
+    if (!hasCombinations) {
+      // Empty list
+      this.combinationsRenderer.render({combinations: []});
+      this.$emptyState.removeClass('d-none');
+    }
+  }
+
+  /**
+   * @private
+   */
+  refreshPage() {
+    this.paginator.paginate(this.paginator.getCurrentPage());
+  }
+
+  /**
+   * @private
+   */
   initPaginatedList() {
+    this.combinationsRenderer = new CombinationsGridRenderer();
     this.paginator = new DynamicPaginator(
       CombinationsMap.paginationContainer,
       this.combinationsService,
-      new CombinationsGridRenderer(),
+      this.combinationsRenderer,
     );
 
     this.initSubmittableInputs();
@@ -92,13 +191,15 @@ export default class CombinationsManager {
     });
 
     this.initSortingColumns();
+    this.paginator.paginate(1);
   }
 
   /**
    * @private
    */
   watchEvents() {
-    this.eventEmitter.on(CombinationEvents.refreshList, () => this.paginator.paginate(this.paginator.getCurrentPage()));
+    this.eventEmitter.on(CombinationEvents.refreshCombinationList, () => this.refreshCombinationList(false));
+    this.eventEmitter.on(CombinationEvents.refreshPage, () => this.refreshPage());
     this.eventEmitter.on(CombinationEvents.updateAttributeGroups, (attributeGroups) => {
       const currentFilters = this.combinationsService.getFilters();
       currentFilters.attributes = {};
@@ -112,6 +213,16 @@ export default class CombinationsManager {
 
       this.combinationsService.setFilters(currentFilters);
       this.paginator.paginate(1);
+    });
+
+    this.eventEmitter.on(CombinationEvents.combinationGeneratorReady, () => {
+      const $generateButtons = $(ProductMap.combinations.generateCombinationsButton);
+      $generateButtons.prop('disabled', false);
+      $('body').on('click', ProductMap.combinations.generateCombinationsButton, (event) => {
+        // Stop event or it will be caught by click-outside directive and automatically close the modal
+        event.stopImmediatePropagation();
+        this.eventEmitter.emit(CombinationEvents.openCombinationsGenerator);
+      });
     });
   }
 
@@ -206,7 +317,7 @@ export default class CombinationsManager {
         async () => {
           const response = await this.combinationsService.removeCombination(this.findCombinationId(button));
           $.growl({message: response.message});
-          this.eventEmitter.emit(CombinationEvents.refreshList);
+          this.eventEmitter.emit(CombinationEvents.refreshCombinationList);
         },
       );
       modal.show();
@@ -239,31 +350,6 @@ export default class CombinationsManager {
         $(input).prop('checked', false);
       }
     });
-  }
-
-  /**
-   * @private
-   */
-  firstInit() {
-    if (this.initialized) {
-      return;
-    }
-
-    this.initialized = true;
-
-    this.initPaginatedList();
-    initCombinationModal(CombinationsMap.editModal, this.productId);
-    initCombinationGenerator(
-      CombinationsMap.combinationsGeneratorContainer,
-      this.eventEmitter,
-      this.productId,
-    );
-    initFilters(
-      CombinationsMap.combinationsFiltersContainer,
-      this.eventEmitter,
-      this.productId,
-    );
-    this.paginator.paginate(1);
   }
 
   /**

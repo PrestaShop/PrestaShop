@@ -83,6 +83,7 @@ class DefaultEmptyDataExtension extends AbstractTypeExtension
         }
 
         $builder->addModelTransformer($transformer);
+        $builder->addViewTransformer($transformer);
     }
 
     /**
