@@ -1,4 +1,5 @@
-{**
+<?php
+/**
  * Copyright since 2007 PrestaShop SA and Contributors
  * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
  *
@@ -21,15 +22,28 @@
  * @author    PrestaShop SA and Contributors <contact@prestashop.com>
  * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
- *}
+ */
 
-{$module_name = $module_name|escape:'html':'UTF-8'}
-{capture}{'/&module_name='|cat:$module_name|cat:'/'}{/capture}
-{if isset($display_multishop_checkbox) && $display_multishop_checkbox}
-<div class="bootstrap panel">
-	<h3><i class="icon-cogs"></i> {l s='Configuration' d='Admin.Global'}</h3>
-	<input type="checkbox" name="activateModule" value="1"{if $module->isEnabledForShopContext()} checked="checked"{/if}
-		onclick="location.href = '{$current_url|regex_replace:$smarty.capture.default:''}&amp;module_name={$module_name}&amp;enable=' + ($(this).prop('checked') ? '1' : '0');" />
-	{l s='Activate module for this shop context: %s.' sprintf=[$shop_context] d='Admin.Modules.Notification'}
-</div>
-{/if}
+declare(strict_types=1);
+
+namespace PrestaShop\PrestaShop\Adapter\Address;
+
+use Address;
+use AddressFormat;
+use PrestaShop\PrestaShop\Core\Address\AddressFormatterInterface;
+use PrestaShop\PrestaShop\Core\Domain\Address\ValueObject\AddressId;
+
+class AddressFormatter implements AddressFormatterInterface
+{
+    /**
+     * @param AddressId $addressId
+     *
+     * @return string
+     */
+    public function format(AddressId $addressId): string
+    {
+        return AddressFormat::generateAddress(
+            new Address($addressId->getValue())
+        );
+    }
+}
