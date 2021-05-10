@@ -455,7 +455,7 @@ abstract class QueryParamsCollection
 
     /**
      * @param string $column
-     * @param array $value
+     * @param array|int|string $value
      * @param int|array<int> $sqlParams
      *
      * @return mixed

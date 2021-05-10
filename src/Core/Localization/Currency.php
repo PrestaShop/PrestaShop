@@ -116,7 +116,7 @@ class Currency implements CurrencyInterface
      * @param bool $isActive Is this currency active ?
      * @param float $conversionRate Conversion rate of this currency against the default shop's currency
      * @param string $isoCode Currency's alphabetic ISO code (ISO 4217)
-     * @param int $numericIsoCode Currency's numeric ISO code (ISO 4217)
+     * @param int|null $numericIsoCode Currency's numeric ISO code (ISO 4217)
      * @param string[] $symbols Currency's symbols, by locale code
      * @param int $precision Number of decimal digits to use with this currency
      * @param string[] $names the currency's name, by locale code

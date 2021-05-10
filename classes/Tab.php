@@ -29,7 +29,7 @@
  */
 class TabCore extends ObjectModel
 {
-    /** @var string|array<string> Displayed name */
+    /** @var string|array<int, string> Displayed name */
     public $name;
 
     /** @var string Class and file name */

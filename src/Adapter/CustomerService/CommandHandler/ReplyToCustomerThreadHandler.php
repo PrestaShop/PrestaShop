@@ -138,7 +138,7 @@ final class ReplyToCustomerThreadHandler implements ReplyToCustomerThreadHandler
         $contact = new Contact((int) $customerThread->id_contact, (int) $customerThread->id_lang);
 
         if (Validate::isLoadedObject($contact)) {
-            $fromName = $contact->name;
+            $fromName = is_array($contact->name) ? $contact->name[array_key_first($contact->name)] : $contact->name;
             $fromEmail = $contact->email;
         } else {
             $fromName = null;
