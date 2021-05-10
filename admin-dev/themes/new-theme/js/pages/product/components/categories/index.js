@@ -87,9 +87,28 @@ export default class CategoriesManager {
     });
 
     this.categoryTree.querySelectorAll(ProductCategoryMap.checkboxInput).forEach((checkbox) => {
-      checkbox.addEventListener('change', () => {
-        this.updateCategoriesTags();
+      checkbox.addEventListener('change', (event) => {
+        const checkboxInput = event.currentTarget;
+        const parentItem = checkboxInput.parentNode.closest(ProductCategoryMap.treeElement);
+        const radioInput = parentItem.querySelector(ProductCategoryMap.radioInput);
+        // If checkbox is associated to the default radio input it cannot be unchecked
+        if (radioInput.checked) {
+          event.preventDefault();
+          event.stopImmediatePropagation();
+          checkboxInput.checked = true;
+        } else {
+          this.updateCategoriesTags();
+        }
       });
+    });
+
+    this.categoryTree.querySelectorAll(ProductCategoryMap.radioInput).forEach((radioInput) => {
+      radioInput.addEventListener('click', () => {
+        this.selectedDefaultCategory(radioInput);
+      });
+      if (radioInput.checked) {
+        this.lockDefaultCheckbox(radioInput);
+      }
     });
 
     // Tree is initialized we can show it and hide loader
@@ -168,12 +187,6 @@ export default class CategoriesManager {
       document.createTextNode(category.name),
       radioInput,
     );
-    radioInput.addEventListener('click', () => {
-      this.selectedDefaultCategory(radioInput);
-    });
-    if (radioInput.checked) {
-      this.lockDefaultCheckbox(radioInput);
-    }
 
     return categoryNode;
   }
@@ -189,24 +202,19 @@ export default class CategoriesManager {
       }
     });
 
-    // All checkboxes are enabled (only the one associated with the default will be disabled)
-    this.categoryTree.querySelectorAll(ProductCategoryMap.checkboxInput).forEach((checkboxTreeElement) => {
-      checkboxTreeElement.disabled = false;
-    });
-    this.lockDefaultCheckbox(radioInput);
+    this.updateDefaultCheckbox(radioInput);
   }
 
   /**
    * @param {HTMLElement} radioInput
    */
-  lockDefaultCheckbox(radioInput) {
+  updateDefaultCheckbox(radioInput) {
     // If the element is selected as default it is also associated by definition
     const parentItem = radioInput.parentNode.closest(ProductCategoryMap.treeElement);
     const checkbox = parentItem.querySelector(ProductCategoryMap.checkboxInput);
 
     // A default category is necessarily associated
     checkbox.checked = true;
-    checkbox.disabled = true;
   }
 
   /**
@@ -355,6 +363,7 @@ export default class CategoriesManager {
           return;
         }
         checkbox.checked = false;
+        checkbox.dispatchEvent(new Event('change'));
         this.updateCategoriesTags();
       });
     });
