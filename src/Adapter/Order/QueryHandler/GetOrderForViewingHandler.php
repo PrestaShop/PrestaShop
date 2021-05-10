@@ -391,7 +391,6 @@ final class GetOrderForViewingHandler extends AbstractOrderHandler implements Ge
             $amount = null;
             $numericAmount = null;
             $amountMismatch = null;
-            $availableAction = null;
             $isAddPaymentAllowed = false;
 
             if ($document instanceof OrderInvoice) {
@@ -438,11 +437,8 @@ final class GetOrderForViewingHandler extends AbstractOrderHandler implements Ge
                     $conf[$this->contextLanguageId] ?? '',
                     $document->delivery_number
                 );
-                $amount = $this->locale->formatPrice(
-                    $document->total_shipping_tax_incl,
-                    $currency->iso_code
-                );
-                $numericAmount = $document->total_shipping_tax_incl;
+                $amount = $this->locale->formatPrice($document->total_paid_tax_incl, $currency->iso_code);
+                $numericAmount = $document->total_paid_tax_incl;
             } elseif (OrderDocumentType::CREDIT_SLIP) {
                 $conf = $this->configuration->get('PS_CREDIT_SLIP_PREFIX');
                 $number = sprintf(
