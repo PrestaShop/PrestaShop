@@ -760,6 +760,33 @@ $product-page-padding-bottom: 80px !default;
         }
       }
 
+      .category-tree-inputs {
+        display: flex;
+        flex-wrap: nowrap;
+        justify-content: space-between;
+        width: 100%;
+        padding: 0 0 0 1.25rem;
+
+        .form-radio {
+          label {
+            padding: 0;
+          }
+        }
+
+        [type="checkbox"] {
+          &.disabled {
+            + .md-checkbox-control {
+              cursor: not-allowed;
+              opacity: 0.5;
+
+              &::before {
+                cursor: not-allowed;
+              }
+            }
+          }
+        }
+      }
+
       ul {
         padding-left: 0.75rem;
       }

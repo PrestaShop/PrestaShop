@@ -91,6 +91,7 @@ export default class CategoriesManager {
         const checkboxInput = event.currentTarget;
         const parentItem = checkboxInput.parentNode.closest(ProductCategoryMap.treeElement);
         const radioInput = parentItem.querySelector(ProductCategoryMap.radioInput);
+
         // If checkbox is associated to the default radio input it cannot be unchecked
         if (radioInput.checked) {
           event.preventDefault();
@@ -107,7 +108,7 @@ export default class CategoriesManager {
         this.selectedDefaultCategory(radioInput);
       });
       if (radioInput.checked) {
-        this.lockDefaultCheckbox(radioInput);
+        this.updateDefaultCheckbox(radioInput);
       }
     });
 
@@ -182,10 +183,10 @@ export default class CategoriesManager {
     }
 
     // Add category name as a text between the checkbox and the radio
-    const radioInput = categoryNode.querySelector(ProductCategoryMap.radioInput);
-    radioInput.parentNode.insertBefore(
+    const checkboxInput = categoryNode.querySelector(ProductCategoryMap.checkboxInput);
+    checkboxInput.parentNode.insertBefore(
       document.createTextNode(category.name),
-      radioInput,
+      checkboxInput,
     );
 
     return categoryNode;
@@ -202,6 +203,10 @@ export default class CategoriesManager {
       }
     });
 
+    this.categoryTree.querySelectorAll(ProductCategoryMap.checkboxInput).forEach((checkboxTreeElement) => {
+      checkboxTreeElement.classList.remove('disabled');
+    });
+
     this.updateDefaultCheckbox(radioInput);
   }
 
@@ -215,6 +220,7 @@ export default class CategoriesManager {
 
     // A default category is necessarily associated
     checkbox.checked = true;
+    checkbox.classList.add('disabled');
   }
 
   /**
