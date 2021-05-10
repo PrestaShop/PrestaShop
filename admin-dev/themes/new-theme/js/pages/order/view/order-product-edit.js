@@ -47,7 +47,7 @@ export default class OrderProductEdit {
   }
 
   setupListener() {
-    this.quantityInput.on('change keyup', event => {
+    this.quantityInput.on('change keyup', (event) => {
       const newQuantity = Number(event.target.value);
       const availableQuantity = parseInt($(event.currentTarget).data('availableQuantity'), 10);
       const previousQuantity = parseInt(this.quantityInput.data('previousQuantity'), 10);
@@ -64,18 +64,18 @@ export default class OrderProductEdit {
       this.productEditSaveBtn.prop('disabled', false);
     });
 
-    this.priceTaxIncludedInput.on('change keyup', event => {
+    this.priceTaxIncludedInput.on('change keyup', (event) => {
       this.taxIncluded = parseFloat(event.target.value);
       const taxExcluded = this.priceTaxCalculator.calculateTaxExcluded(
         this.taxIncluded,
         this.taxRate,
-        this.currencyPrecision
+        this.currencyPrecision,
       );
       this.priceTaxExcludedInput.val(taxExcluded);
       this.updateTotal();
     });
 
-    this.priceTaxExcludedInput.on('change keyup', event => {
+    this.priceTaxExcludedInput.on('change keyup', (event) => {
       const taxExcluded = parseFloat(event.target.value);
       this.taxIncluded = this.priceTaxCalculator.calculateTaxIncluded(
         taxExcluded,
@@ -204,7 +204,7 @@ export default class OrderProductEdit {
         confirmTitle: dataSelector.data('modal-edit-price-title'),
         confirmMessage: dataSelector.data('modal-edit-price-body'),
         confirmButtonLabel: dataSelector.data('modal-edit-price-apply'),
-        closeButtonLabel: dataSelector.data('modal-edit-price-cancel')
+        closeButtonLabel: dataSelector.data('modal-edit-price-cancel'),
       },
       () => {
         this.editProduct($(event.currentTarget).data('orderId'), this.orderDetailId);
