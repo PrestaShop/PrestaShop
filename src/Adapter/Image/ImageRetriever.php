@@ -189,8 +189,8 @@ class ImageRetriever
                     ImageManager::resize(
                         $mainImagePath,
                         $resizedImagePath,
-                        (int)$image_type['width'],
-                        (int)$image_type['height']
+                        (int) $image_type['width'],
+                        (int) $image_type['height']
                     );
                 }
             }
