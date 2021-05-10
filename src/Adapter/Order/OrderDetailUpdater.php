@@ -91,10 +91,10 @@ class OrderDetailUpdater
         list($roundType, $computingPrecision, $taxAddress) = $this->prepareOrderContext($order);
 
         try {
-            $ecotax = new Number($orderDetail->ecotax);
+            $ecotax = new DecimalNumber($orderDetail->ecotax);
 
             $ecotaxTaxCalculator = $this->getTaxCalculatorForEcotax($taxAddress);
-            $ecotaxTaxFactor = new Number((string) (1 + ($ecotaxTaxCalculator->getTotalRate() / 100)));
+            $ecotaxTaxFactor = new DecimalNumber((string) (1 + ($ecotaxTaxCalculator->getTotalRate() / 100)));
             $ecotaxTaxIncluded = $ecotax->times($ecotaxTaxFactor);
 
             // Prices coming from the backoffice : they are displayed with ecotax
@@ -326,10 +326,10 @@ class OrderDetailUpdater
 
         // Get precise prices thanks to first OrderDetail (they all have the same price anyway)
         $orderDetail = $identicalOrderDetails[0];
-        $ecotax = new Number($orderDetail->ecotax);
+        $ecotax = new DecimalNumber($orderDetail->ecotax);
 
         $ecotaxTaxCalculator = $this->getTaxCalculatorForEcotax($taxAddress);
-        $ecotaxTaxFactor = new Number((string) (1 + ($ecotaxTaxCalculator->getTotalRate() / 100)));
+        $ecotaxTaxFactor = new DecimalNumber((string) (1 + ($ecotaxTaxCalculator->getTotalRate() / 100)));
         $ecotaxTaxIncluded = $ecotax->times($ecotaxTaxFactor);
 
         // Prices coming from the backoffice : they are display with ecotax
