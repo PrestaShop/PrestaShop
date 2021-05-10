@@ -25,6 +25,7 @@
 {% extends '@PrestaShop/Admin/layout.html.twig' %}
 
 {% form_theme combinationForm '@PrestaShop/Admin/Sell/Catalog/Product/Form/combination_form_theme.html.twig' %}
+{% form_theme combinationForm.suppliers '@PrestaShop/Admin/Sell/Catalog/Product/Form/suppliers_form_theme.html.twig' %}
 
 {% block stylesheets %}
   <link rel="stylesheet" href="{{ asset('themes/new-theme/public/product.css') }}" type="text/css" media="all">
@@ -41,24 +42,7 @@
       </div>
       <div class="card-block row">
         <div id="{{ combinationForm.vars.id }}">
-          {{ form_row(combinationForm.stock) }}
-          {{ form_row(combinationForm.price_impact) }}
-          {{ form_row(combinationForm.details) }}
-
-          <h2>{{ 'Suppliers'|trans({}, 'Admin.Global') }}</h2>
-          <div class="alert alert-info" role="alert">
-            <p class="alert-text">
-              {{ 'This interface allows you to specify the suppliers of the current combination.'|trans({}, 'Admin.Catalog.Help')|raw }}<br>
-              {{ 'You can specify supplier references according to previously associated suppliers.'|trans({}, 'Admin.Catalog.Help')|raw }}
-            </p>
-          </div>
-          {{ include('@PrestaShop/Admin/Sell/Catalog/Product/Blocks/suppliers.html.twig', {
-            'suppliersForm': combinationForm.suppliers,
-          }) }}
-
-          {{ form_row(combinationForm.images) }}
-
-          {{ form_rest(combinationForm) }}
+          {{ form_row(combinationForm) }}
         </div>
       </div>
     </div>

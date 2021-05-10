@@ -29,7 +29,8 @@ declare(strict_types=1);
 namespace PrestaShopBundle\Form\Admin\Sell\Product\Combination;
 
 use PrestaShop\PrestaShop\Core\Form\ConfigurableFormChoiceProviderInterface;
-use PrestaShopBundle\Form\Admin\Sell\Product\SuppliersType;
+use PrestaShopBundle\Form\Admin\Sell\Product\Options\ReferencesType;
+use PrestaShopBundle\Form\Admin\Sell\Product\Options\SuppliersType;
 use PrestaShopBundle\Form\Admin\Type\TranslatorAwareType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\HiddenType;
@@ -69,35 +70,15 @@ class CombinationFormType extends TranslatorAwareType
     {
         $builder
             ->add('name', HiddenType::class)
-            ->add('stock', CombinationStockType::class, [
-                'label' => $this->trans('Stock', 'Admin.Catalog.Feature'),
-                'label_attr' => [
-                    'title' => 'h2',
-                ],
-            ])
-            ->add('price_impact', CombinationPriceImpactType::class, [
-                'label' => $this->trans('Price and impact', 'Admin.Catalog.Feature'),
-                'label_attr' => [
-                    'title' => 'h2',
-                ],
-            ])
-            ->add('details', CombinationDetailsType::class, [
-                'label' => $this->trans('Specific references', 'Admin.Catalog.Feature'),
-                'label_attr' => [
-                    'title' => 'h2',
-                ],
-            ])
+            ->add('stock', CombinationStockType::class)
+            ->add('price_impact', CombinationPriceImpactType::class)
+            ->add('references', ReferencesType::class)
             ->add('suppliers', SuppliersType::class, [
-                'label' => $this->trans('Suppliers', 'Admin.Global'),
-                'label_attr' => [
-                    'title' => 'h2',
-                ],
+                'alert_message' => $this->trans('This interface allows you to specify the suppliers of the current combination.', 'Admin.Catalog.Help'),
             ])
             ->add('images', ChoiceType::class, [
                 'label' => $this->trans('Images', 'Admin.Global'),
-                'label_attr' => [
-                    'title' => 'h2',
-                ],
+                'label_tag_name' => 'h2',
                 'choices' => $this->imagesChoiceProvider->getChoices(['product_id' => $options['product_id']]),
                 'choice_attr' => function ($choice, $key) {
                     return ['data-image-url' => $key];
@@ -113,7 +94,13 @@ class CombinationFormType extends TranslatorAwareType
      */
     public function configureOptions(OptionsResolver $resolver)
     {
-        $resolver->setRequired(['product_id']);
-        $resolver->setAllowedTypes('product_id', ['int']);
+        $resolver
+            ->setRequired(['product_id'])
+            ->setAllowedTypes('product_id', ['int'])
+            ->setDefaults([
+                'required' => false,
+                'label' => false,
+            ])
+        ;
     }
 }

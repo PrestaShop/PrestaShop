@@ -259,7 +259,8 @@ class TinyMCEEditor {
     const textarea = $(`#${id}`);
     const counter = textarea.attr('counter');
     const counterType = textarea.attr('counter_type');
-    const max = window.tinyMCE.activeEditor.getContent().textContent;
+    const editor = window.tinyMCE.get(id);
+    const max = editor.getContent().length;
 
     textarea
       .parent()

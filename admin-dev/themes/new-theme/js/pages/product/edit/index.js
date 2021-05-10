@@ -23,19 +23,22 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
 
-import Serp from '@app/utils/serp';
-import RedirectOptionManager from '@pages/product/edit/redirect-option-manager';
-import ProductSuppliersManager from '@pages/product/edit/product-suppliers-manager';
-import FeatureValuesManager from '@pages/product/edit/feature-values-manager';
-import CustomizationsManager from '@pages/product/edit/customizations-manager';
-import ProductMap from '@pages/product/product-map';
-import ProductPartialUpdater from '@pages/product/edit/product-partial-updater';
 import NavbarHandler from '@components/navbar-handler';
+import ProductMap from '@pages/product/product-map';
+
 import CombinationsManager from '@pages/product/edit/combinations-manager';
-import ProductTypeManager from '@pages/product/edit/product-type-manager';
-import initDropzone from '@pages/product/components/dropzone';
+import CustomizationsManager from '@pages/product/edit/customizations-manager';
+import FeatureValuesManager from '@pages/product/edit/feature-values-manager';
+import ProductFooterManager from '@pages/product/edit/product-footer-manager';
 import ProductFormModel from '@pages/product/edit/product-form-model';
+import ProductPartialUpdater from '@pages/product/edit/product-partial-updater';
+import ProductSEOManager from '@pages/product/edit/product-seo-manager';
+import ProductSuppliersManager from '@pages/product/edit/product-suppliers-manager';
+import ProductTypeManager from '@pages/product/edit/product-type-manager';
 import VirtualProductManager from '@pages/product/edit/virtual-product-manager';
+
+import initDropzone from '@pages/product/components/dropzone';
+import initTabs from '@pages/product/components/nav-tabs';
 
 const {$} = window;
 
@@ -52,54 +55,40 @@ $(() => {
   const productId = parseInt($productForm.data('productId'), 10);
   const productType = $productForm.data('productType');
 
+  // Responsive navigation tabs
+  initTabs();
+
   // Init product model along with input watching and syncing
-  new ProductFormModel($productForm, window.prestashop.instance.eventEmitter);
+  const productFormModel = new ProductFormModel($productForm, window.prestashop.instance.eventEmitter);
 
   if (productId && productType === ProductMap.productType.COMBINATIONS) {
-    // Combinations manager must be initialised before nav handler, or it won't trigger the pagination if the tab is
-    // selected on load, but only when productId exists (edition mode)
+    // Combinations manager must be initialized BEFORE nav handler, or it won't trigger the pagination if the tab is
+    // selected on load, it is only initialized when productId exists though (edition mode)
     new CombinationsManager(productId);
   }
-  new NavbarHandler(ProductMap.navigationBar);
 
-  // Init the product/category search field for redirection target
-  const $redirectTypeInput = $(ProductMap.redirectOption.typeInput);
-  const $redirectTargetInput = $(ProductMap.redirectOption.targetInput);
-  new RedirectOptionManager($redirectTypeInput, $redirectTargetInput);
+  new NavbarHandler(ProductMap.navigationBar);
+  new ProductSEOManager();
 
   // Product type has strong impact on the page rendering so when it is modified it must be submitted right away
   new ProductTypeManager($(ProductMap.productTypeSelector), $productForm);
+  new ProductFooterManager();
 
-  // Form has no productId data means that we are in creation mode
-  if (!productId) {
-    return;
-  }
-
-  // Init Serp component to preview Search engine display
-  const translatorInput = window.prestashop.instance.translatableInput;
-  new Serp(
-    {
-      container: '#serp-app',
-      defaultTitle: '.serp-default-title:input',
-      watchedTitle: '.serp-watched-title:input',
-      defaultDescription: '.serp-default-description',
-      watchedDescription: '.serp-watched-description',
-      watchedMetaUrl: '.serp-watched-url:input',
-      multiLanguageInput: `${translatorInput.localeInputSelector}:not(.d-none)`,
-      multiLanguageItem: translatorInput.localeItemSelector,
-    },
-    $('#product_preview').data('seo-url'),
-  );
-
-  initDropzone(ProductMap.dropzoneImagesContainer);
-
-  // From here we init component specific to edition
   const $productFormSubmitButton = $(ProductMap.productFormSubmitButton);
   new ProductPartialUpdater(
     window.prestashop.instance.eventEmitter,
     $productForm,
     $productFormSubmitButton,
   ).watch();
+
+  // Form has no productId data means that we are in creation mode
+  if (!productId) {
+    return;
+  }
+
+  // From here we init component specific to edition
+  initDropzone(ProductMap.dropzoneImagesContainer);
+
   new FeatureValuesManager(window.prestashop.instance.eventEmitter);
   new CustomizationsManager();
 
@@ -107,6 +96,6 @@ $(() => {
     new ProductSuppliersManager(ProductMap.suppliers.productSuppliers, true);
   }
   if (productType === ProductMap.productType.VIRTUAL) {
-    new VirtualProductManager();
+    new VirtualProductManager(productFormModel);
   }
 });

@@ -659,13 +659,4 @@ Comment: Special case for Product : either one or the other. Not both.</note>
       </trans-unit>
     </body>
   </file>
-  <file original="classes/lang/KeysReference/FeatureFlagLang.php" source-language="en-US" target-language="en" datatype="plaintext">
-     <body>
-       <trans-unit id="8973e77239ddf9d3b87c3d268fb17a63">
-         <source>This page is a work in progress. It includes new combination management features and other features under development (virtual products, packs, etc.)</source>
-         <target>This page is a work in progress. It includes new combination management features and other features under development (virtual products, packs, etc.)</target>
-         <note>Line: 27</note>
-        </trans-unit>
-     </body>
-   </file>
 </xliff>

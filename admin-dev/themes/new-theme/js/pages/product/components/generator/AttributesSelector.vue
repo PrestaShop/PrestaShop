@@ -51,7 +51,7 @@
 
     <div class="product-combinations-modal-content">
       <div
-        id="attributes-list"
+        id="attributes-list-selector"
         class="attributes-list-overflow"
       >
         <div class="attributes-content">
@@ -60,27 +60,29 @@
             v-for="attributeGroup of attributeGroups"
             :key="attributeGroup.id"
           >
-            <div class="md-checkbox attribute-group-checkbox">
-              <label>
-                <input
-                  class="attribute-group-checkbox"
-                  type="checkbox"
-                  :name="`checkbox_${attributeGroup.id}`"
-                  @change.prevent.stop="toggleAll(attributeGroup)"
-                  :checked="checkboxList.includes(attributeGroup)"
-                >
+            <div class="attribute-group-header">
+              <div class="md-checkbox attribute-group-checkbox">
+                <label>
+                  <input
+                    class="attribute-group-checkbox"
+                    type="checkbox"
+                    :name="`checkbox_${attributeGroup.id}`"
+                    @change.prevent.stop="toggleAll(attributeGroup)"
+                    :checked="checkboxList.includes(attributeGroup)"
+                  >
 
-                <i class="md-checkbox-control" />
-              </label>
+                  <i class="md-checkbox-control" />
+                </label>
+              </div>
+
+              <a
+                class="attribute-group-name collapsed"
+                data-toggle="collapse"
+                :href="`#attribute-group-${attributeGroup.id}`"
+              >
+                {{ attributeGroup.name }}
+              </a>
             </div>
-
-            <a
-              class="attribute-group-name collapsed"
-              data-toggle="collapse"
-              :href="`#attribute-group-${attributeGroup.id}`"
-            >
-              {{ attributeGroup.name }}
-            </a>
             <div
               class="attribute-group-content attributes collapse"
               :id="`attribute-group-${attributeGroup.id}`"
@@ -307,7 +309,7 @@
 <style lang="scss" type="text/scss">
 @import '~@scss/config/_settings.scss';
 
-.product-page #product-combinations-generate {
+#product-combinations-generate {
   .modal {
     .tags-input {
       margin-bottom: 1rem;
@@ -317,78 +319,80 @@
       }
     }
 
-    #attributes-list {
+    #attributes-list-selector {
       max-height: 50vh;
 
       .attribute-group {
-        border-bottom: 1px solid $gray-300;
+        position: relative;
         margin-bottom: 0.75rem;
-        border-radius: 4px;
         overflow: hidden;
+        border: 1px solid $gray-300;
+        border-radius: 4px;
+
+        &-header {
+          display: flex;
+          background-color: $gray-250;
+        }
+
+        &-content {
+          border-top: 1px solid $gray-300;
+        }
+
+        &-checkbox {
+          position: absolute;
+          top: 0.5rem;
+          left: 0.5rem;
+        }
 
         &-name {
-          background-color: $gray-250;
+          width: 100%;
+          padding: 0.4375rem 0.4375rem 0.4375rem 2.5rem;
+          font-weight: 600;
+          color: #363a41;
+
+          &:hover {
+            text-decoration: none;
+          }
+        }
+
+        .attribute-item {
+          margin: 0.25rem;
+          cursor: pointer;
+          border-radius: 3px;
+
+          &-content {
+            display: flex;
+            align-items: center;
+            padding: 0.5rem;
+          }
+
+          &.selected {
+            background-color: $gray-disabled;
+          }
+
+          input {
+            display: none;
+          }
+
+          &-color {
+            display: block;
+            width: 15px;
+            height: 15px;
+            margin-right: 0.5rem;
+            border-radius: 3px;
+          }
         }
       }
 
       .attributes {
         height: auto;
+        padding: 0.4375rem;
       }
     }
 
     .product-combinations-modal-content {
       position: relative;
       padding-bottom: 0.5rem;
-    }
-  }
-
-  .attribute-group {
-    position: relative;
-
-    &-content {
-      border-top: 1px solid $gray-300;
-    }
-
-    &-checkbox {
-      position: absolute;
-      top: 0.5rem;
-      left: 0.5rem;
-    }
-
-    &-name {
-      padding-left: 2.5rem;
-    }
-
-    .attribute-item {
-      cursor: pointer;
-      border-radius: 3px;
-      margin: 0.25rem 0;
-      margin-right: 0.5rem;
-
-      &-content {
-        display: flex;
-        align-items: center;
-        padding: 0.5rem;
-      }
-
-      &-color {
-        margin-right: 0.5rem;
-      }
-
-      &.selected {
-        background-color: $gray-disabled;
-      }
-
-      input {
-        display: none;
-      }
-
-      &-color {
-        height: 15px;
-        width: 15px;
-        display: block;
-        border-radius: 3px;
-      }
     }
   }
 }

@@ -36,6 +36,7 @@ use PrestaShop\PrestaShop\Core\Domain\Product\AttributeGroup\Query\GetProductAtt
 use PrestaShop\PrestaShop\Core\Domain\Product\AttributeGroup\QueryResult\AttributeGroup;
 use PrestaShop\PrestaShop\Core\Domain\Product\Combination\Command\GenerateProductCombinationsCommand;
 use PrestaShop\PrestaShop\Core\Domain\Product\Combination\Command\RemoveCombinationCommand;
+use PrestaShop\PrestaShop\Core\Domain\Product\Combination\Exception\CombinationNotFoundException;
 use PrestaShop\PrestaShop\Core\Domain\Product\Combination\Query\GetEditableCombinationsList;
 use PrestaShop\PrestaShop\Core\Domain\Product\Combination\QueryResult\CombinationListForEditing;
 use PrestaShop\PrestaShop\Core\Domain\Product\Combination\ValueObject\CombinationId;
@@ -70,7 +71,13 @@ class CombinationController extends FrameworkBundleAdminController
     public function editAction(Request $request, int $combinationId): Response
     {
         $liteDisplaying = $request->query->has('liteDisplaying');
-        $combinationForm = $this->getCombinationFormBuilder()->getFormFor($combinationId);
+        try {
+            $combinationForm = $this->getCombinationFormBuilder()->getFormFor($combinationId);
+        } catch (CombinationNotFoundException $e) {
+            return $this->render('@PrestaShop/Admin/Exception/not_found.html.twig', [
+                'errorMessage' => $this->getErrorMessageForException($e, $this->getErrorMessages($e)),
+            ]);
+        }
 
         try {
             $combinationForm->handleRequest($request);

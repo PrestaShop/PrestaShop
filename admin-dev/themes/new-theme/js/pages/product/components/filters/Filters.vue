@@ -26,9 +26,13 @@
   <div class="combinations-filters">
     <label
       class="control-label"
+      v-if="filters.length"
     >{{ $t('filters.label') }}</label>
 
-    <div class="combinations-filters-line">
+    <div
+      class="combinations-filters-line"
+      v-if="filters.length"
+    >
       <filter-dropdown
         :key="filter.id"
         v-for="filter in filters"
@@ -52,7 +56,7 @@
 </template>
 
 <script>
-  import {getProductAttributeGroups} from '@pages/product/services/attribute-groups';
+
   import FilterDropdown from '@pages/product/components/filters/FilterDropdown';
   import ProductEventMap from '@pages/product/product-event-map';
 
@@ -62,13 +66,12 @@
     name: 'Filters',
     data() {
       return {
-        filters: [],
         selectedFilters: {},
       };
     },
     props: {
-      productId: {
-        type: Number,
+      filters: {
+        type: Array,
         required: true,
       },
       eventEmitter: {
@@ -89,19 +92,12 @@
       },
     },
     mounted() {
-      this.initFilters();
+      this.eventEmitter.on(CombinationEvents.clearFilters, () => this.clearAll());
     },
     methods: {
       /**
        * This methods is used to initialize product filters
        */
-      async initFilters() {
-        try {
-          this.filters = await getProductAttributeGroups(this.productId);
-        } catch (error) {
-          window.$.growl.error({message: error});
-        }
-      },
       addFilter(filter, parentId) {
         // If absent set new field with set method so that it's reactive
         if (!this.selectedFilters[parentId]) {

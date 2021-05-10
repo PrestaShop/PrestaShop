@@ -43,7 +43,11 @@ export default {
     },
   },
   combinations: {
-    refreshList: 'refreshCombinationList',
+    refreshPage: 'refreshPage',
+    refreshCombinationList: 'refreshCombinationList',
     updateAttributeGroups: 'updateAttributeGroups',
+    combinationGeneratorReady: 'combinationGeneratorReady',
+    openCombinationsGenerator: 'openCombinationsGenerator',
+    clearFilters: 'clearFilters',
   },
 };

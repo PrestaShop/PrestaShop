@@ -49,27 +49,33 @@
 
 {# Override suppliers collection template to remove the label and init the table #}
 {%- block collection_row -%}
-  {# We put prototype name in a data attribute, so the JS code can get it dynamically #}
-  {%- set attr = attr|merge({'data-prototype': form_row(prototype), 'data-prototype-name': prototype.vars.name }) -%}
-  {%- set attr = attr|merge({'class': (attr.class|default('') ~ ' form-group row')|trim }) -%}
-  <div {{ block('widget_attributes') }}>
-    <div class="col-sm">
-      <table class="table">
-        <thead class="thead-default">
-        <tr>
-        {% for child in prototype.children %}
-          {# We add column for children that are not hidden type, unless their label is not empty (like supplier_name) #}
-          {% set childType = child.vars.block_prefixes.1 %}
-          {% if childType != 'hidden' or (child.vars.label is not empty) %}
-            <th>{{ child.vars.label }}</th>
-          {% endif %}
-        {% endfor %}
-        </tr>
-        </thead>
-        <tbody>
-        {{- block('form_rows') -}}
-        </tbody>
-      </table>
+  <div class="form-group product-suppliers-collection-row">
+    {{ form_label(form) }}
+    {{- block('form_alert') -}}
+
+    {# We put prototype name in a data attribute, so the JS code can get it dynamically #}
+    {%- set attr = attr|merge({'data-prototype': form_row(prototype), 'data-prototype-name': prototype.vars.name }) -%}
+    <div {{ block('widget_attributes') }}>
+      <div class="row">
+        <div class="col-sm">
+          <table class="table">
+            <thead class="thead-default">
+            <tr>
+              {% for child in prototype.children %}
+                {# We add column for children that are not hidden type, unless their label is not empty (like supplier_name) #}
+                {% set childType = child.vars.block_prefixes.1 %}
+                {% if childType != 'hidden' or (child.vars.label is not empty) %}
+                  <th>{{ child.vars.label }}</th>
+                {% endif %}
+              {% endfor %}
+            </tr>
+            </thead>
+            <tbody>
+            {{- block('form_rows') -}}
+            </tbody>
+          </table>
+        </div>
+      </div>
     </div>
   </div>
 {%- endblock -%}
