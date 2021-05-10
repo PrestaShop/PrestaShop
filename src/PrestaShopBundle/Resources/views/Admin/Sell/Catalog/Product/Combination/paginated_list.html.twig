@@ -35,11 +35,19 @@
     ></div>
 
     <div id="combination-edit-modal"
+         data-empty-image="{{ asset('themes/new-theme/img/empty_state/credit_slip.png') }}"
          data-translations="{{ {
-           'modal.save': 'Save'|trans({}, 'Admin.Actions'),
-           'modal.close': 'Close'|trans({}, 'Admin.Actions'),
-           'modal.previous': 'Previous combination'|trans({}, 'Admin.Catalog.Feature'),
-           'modal.next': 'Next combination'|trans({}, 'Admin.Catalog.Feature'),
+          'modal.save': 'Save'|trans({}, 'Admin.Actions'),
+          'modal.close': 'Close'|trans({}, 'Admin.Actions'),
+          'modal.previous': 'Previous combination'|trans({}, 'Admin.Catalog.Feature'),
+          'modal.next': 'Next combination'|trans({}, 'Admin.Catalog.Feature'),
+          'modal.history.editedCombination': 'Edited combinations (%editedNb%)'|trans({}, 'Admin.Catalog.Feature'),
+          'modal.history.confirmTitle': 'Discard changes?'|trans({}, 'Admin.Catalog.Notification'),
+          'modal.history.confirmBody': 'All unsaved modifications made on the combination [1]%combinationName%[/1] will be lost.'|trans({'[1]': '<span class="font-weight-bold">', '[/1]': '</span>'}, 'Admin.Catalog.Notification'),
+          'modal.cancel': 'Cancel'|trans({}, 'Admin.Actions'),
+          'modal.confirm': 'Discard'|trans({}, 'Admin.Actions'),
+          'modal.history.empty': 'Here, you can have a look at the combinations you have edited. The list will reset when you exit the editing window.'|trans({}, 'Admin.Catalog.Feature'),
+
          }|json_encode }}"
     ></div>
     <div class="justify-content-center" id="combinations-list">
