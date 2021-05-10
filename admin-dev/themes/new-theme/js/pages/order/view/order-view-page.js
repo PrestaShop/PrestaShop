@@ -315,9 +315,10 @@ export default class OrderViewPage {
     const currentPage = parseInt($(OrderViewPageMap.productsTablePaginationActive).html(), 10);
 
     $.ajax(this.router.generate('admin_orders_get_products', {orderId}))
-      .done((response) => {
-        // Delete previous product lines
-        $(OrderViewPageMap.productsTable).find(OrderViewPageMap.productsTableRows).remove();
+        .done((response) => {
+          // Delete previous product lines
+          $(OrderViewPageMap.productsTable).find(OrderViewPageMap.productsTableRows).remove();
+          $(OrderViewPageMap.productsTableCustomizationRows).remove();
 
         $(`${OrderViewPageMap.productsTable} tbody`).prepend(response);
 

@@ -325,6 +325,90 @@ class ProductFeatureContext extends AbstractPrestaShopFeatureContext
     }
 
     /**
+     * @Given /^the product "(.+)" ecotax is (\d+\.\d+)$/
+     *
+     * @param string $productName
+     * @param float $ecotax
+     */
+    public function setProductEcotax(string $productName, float $ecotax): void
+    {
+        $this->checkProductWithNameExists($productName);
+        $this->products[$productName]->ecotax = $ecotax;
+        $this->products[$productName]->save();
+
+        Product::flushPriceCache();
+        Product::resetStaticCache();
+    }
+
+    /**
+     * @Given /^the ecotax for combination "(.+)" of the product "(.+)" is (\d+\.\d+)$/
+     *
+     * @param string $combinationName
+     * @param string $productName
+     * @param float $ecotax
+     */
+    public function setProductCombinationEcotax(string $combinationName, string $productName, float $ecotax): void
+    {
+        $this->checkProductWithNameExists($productName);
+        $this->checkCombinationWithNameExists($productName, $combinationName);
+        $this->combinations[$productName][$combinationName]->ecotax = $ecotax;
+        $this->combinations[$productName][$combinationName]->save();
+
+        Product::flushPriceCache();
+        Product::resetStaticCache();
+    }
+
+    /**
+     * @Given /^the price for combination "(.+)" of the product "(.+)" is (\d+\.\d+)$/
+     *
+     * @param string $combinationName
+     * @param string $productName
+     * @param float $price
+     */
+    public function setProductCombinationPrice(string $combinationName, string $productName, float $price): void
+    {
+        $this->checkProductWithNameExists($productName);
+        $this->checkCombinationWithNameExists($productName, $combinationName);
+        $this->combinations[$productName][$combinationName]->price = $price;
+        $this->combinations[$productName][$combinationName]->save();
+
+        Product::flushPriceCache();
+        Product::resetStaticCache();
+        Cart::resetStaticCache();
+    }
+
+    /**
+     * @Then /^the ecotax of the product "(.+)" should be (\d+\.\d+)$/
+     *
+     * @param string $productName
+     * @param float $ecotax
+     */
+    public function productCheckEcotax(string $productName, float $ecotax): void
+    {
+        $this->checkProductWithNameExists($productName);
+        if ($this->products[$productName]->ecotax !== $ecotax) {
+            throw new RuntimeException(sprintf('Expects %f, got %f instead', $ecotax, $this->products[$productName]->ecotax));
+        }
+    }
+
+    /**
+     * @Then /^the ecotax for combination "(.+)" of the product "(.+)" should be (\d+\.\d+)$/
+     *
+     * @param string $combinationName
+     * @param string $productName
+     * @param float $ecotax
+     */
+    public function productCombinationCheckEcotax(string $combinationName, string $productName, float $ecotax): void
+    {
+        $this->checkProductWithNameExists($productName);
+        $this->checkCombinationWithNameExists($productName, $combinationName);
+
+        if ($this->combinations[$productName][$combinationName]->ecotax !== $ecotax) {
+            throw new RuntimeException(sprintf('Expects %f, got %f instead', $ecotax, $this->products[$productName]->ecotax));
+        }
+    }
+
+    /**
      * @Given /^the product "(.+)" minimal quantity is (\d+)$/
      *
      * @param string $productName
@@ -528,6 +612,7 @@ class ProductFeatureContext extends AbstractPrestaShopFeatureContext
     public function productWithNameHasCombinationsWithFollowingDetails($productName, TableNode $table)
     {
         $this->checkProductWithNameExists($productName);
+        Product::resetStaticCache();
         $productId = (int) $this->getProductWithName($productName)->id;
         $combinationsList = $table->getColumnsHash();
 

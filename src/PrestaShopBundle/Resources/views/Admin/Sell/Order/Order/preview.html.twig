@@ -65,27 +65,9 @@
               </p>
 
               {% if not orderPreview.virtual %}
-                <p class="mb-0">{{ orderPreview.shippingDetails.firstName }} {{ orderPreview.shippingDetails.lastName }}</p>
-                {% if orderPreview.shippingDetails.company %}
-                  <p class="mb-0">{{ orderPreview.shippingDetails.company }}</p>
-                {% endif %}
-                {% if orderPreview.shippingDetails.vatNumber %}
-                  <p class="mb-0">{{ orderPreview.shippingDetails.vatNumber }}</p>
-                {% endif %}
-                <p class="mb-0">{{ orderPreview.shippingDetails.address1 }}</p>
-                <p class="mb-0">{{ orderPreview.shippingDetails.address2 }}</p>
-                <p class="mb-0">
-                  {{ orderPreview.shippingDetails.city }},
-                  {% if orderPreview.shippingDetails.stateName %}
-                    {{ orderPreview.shippingDetails.stateName }}
-                  {% endif %}
-                  {{ orderPreview.shippingDetails.postalCode }}
-                </p>
-                <p class="mb-0">{{ orderPreview.shippingDetails.country }}</p>
-                {% if orderPreview.shippingDetails.dni is not empty %}
-                  <p class="mb-0">{{ orderPreview.shippingDetails.dni }}</p>
-                {% endif %}
-                <p>{{ orderPreview.shippingDetails.phone }}</p>
+                {% for line in orderPreview.shippingAddressFormatted|split("\n") %}
+                  <p{% if not loop.last %} class="mb-0"{% endif %}>{{ line }}</p>
+                {% endfor %}
               {% endif %}
             </div>
           </div>
@@ -102,28 +84,10 @@
                 <strong>{{ 'Invoice details'|trans({}, 'Admin.Orderscustomers.Feature') }}:</strong>
               </p>
 
-              <p class="mb-0">{{ orderPreview.invoiceDetails.firstName }} {{ orderPreview.invoiceDetails.lastName }}</p>
-              {% if orderPreview.invoiceDetails.company %}
-                <p class="mb-0">{{ orderPreview.invoiceDetails.company }}</p>
-              {% endif %}
-              {% if orderPreview.invoiceDetails.vatNumber %}
-                <p class="mb-0">{{ orderPreview.invoiceDetails.vatNumber }}</p>
-              {% endif %}
-              <p class="mb-0">{{ orderPreview.invoiceDetails.address1 }}</p>
-              <p class="mb-0">{{ orderPreview.invoiceDetails.address2 }}</p>
-              <p class="mb-0">
-                {{ orderPreview.invoiceDetails.city }},
-                {% if orderPreview.invoiceDetails.stateName %}
-                  {{ orderPreview.invoiceDetails.stateName }}
-                {% endif %}
-                {{ orderPreview.invoiceDetails.postalCode }}
-              </p>
-              <p class="mb-0">{{ orderPreview.invoiceDetails.country }}</p>
-              {% if orderPreview.invoiceDetails.dni is not empty %}
-                <p class="mb-0">{{ orderPreview.invoiceDetails.dni }}</p>
-              {% endif %}
-              <p class="mb-0">{{ orderPreview.invoiceDetails.phone }}</p>
-              <p>{{ orderPreview.invoiceDetails.email }}</p>
+
+              {% for line in orderPreview.invoiceAddressFormatted|split("\n") %}
+                <p{% if not loop.last %} class="mb-0"{% endif %}>{{ line }}</p>
+              {% endfor %}
             </div>
           </div>
         </div>
