@@ -34,9 +34,9 @@ use Country;
 use Hook;
 use PrestaShop\PrestaShop\Adapter\Image\ImageRetriever;
 use PrestaShop\PrestaShop\Adapter\Presenter\PresenterInterface;
-use PrestaShop\PrestaShop\Adapter\Presenter\Product\ProductListingPresenter;
 use PrestaShop\PrestaShop\Adapter\Presenter\Product\ProductLazyArray;
 use PrestaShop\PrestaShop\Adapter\Presenter\Product\ProductListingLazyArray;
+use PrestaShop\PrestaShop\Adapter\Presenter\Product\ProductListingPresenter;
 use PrestaShop\PrestaShop\Adapter\Product\PriceFormatter;
 use PrestaShop\PrestaShop\Adapter\Product\ProductColorsRetriever;
 use PrestaShop\PrestaShop\Core\Product\ProductPresentationSettings;
@@ -104,9 +104,9 @@ class CartPresenter implements PresenterInterface
     /**
      * @param array $rawProduct
      *
-     * @return ProductLazyArray|ProductList
+     * @return ProductLazyArray|ProductListingLazyArray
      */
-    public function presentProduct(array $rawProduct)
+    private function presentProduct(array $rawProduct)
     {
         $assembledProduct = $this->getProductAssembler()->assembleProduct($rawProduct);
         $rawProduct = array_merge($assembledProduct, $rawProduct);
