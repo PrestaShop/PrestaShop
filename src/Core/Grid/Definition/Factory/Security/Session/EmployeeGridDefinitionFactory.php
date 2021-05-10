@@ -99,7 +99,7 @@ final class EmployeeGridDefinitionFactory extends AbstractGridDefinitionFactory
             )
             ->add(
                 (new DataColumn('id_employee'))
-                    ->setName($this->trans('Employee ID', [], 'Admin.Global'))
+                    ->setName($this->trans('Employee ID', [], 'Admin.Advparameters.Feature'))
                     ->setOptions([
                         'field' => 'id_employee',
                     ])
