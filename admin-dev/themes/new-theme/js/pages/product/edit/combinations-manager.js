@@ -232,26 +232,26 @@ export default class CombinationsManager {
     const {referenceKey} = CombinationsMap.combinationItemForm;
     const {tokenKey} = CombinationsMap.combinationItemForm;
 
-    new SubmittableInput(CombinationsMap.quantityInputWrapper, async (input) => {
-      await this.combinationsService.updateListedCombination(this.findCombinationId(input), {
-        [quantityKey]: input.value,
-        [tokenKey]: combinationToken,
-      });
-    });
+    // eslint-disable-next-line
+    new SubmittableInput(CombinationsMap.quantityInputWrapper, input => this.combinationsService.updateListedCombination(this.findCombinationId(input), {
+      [quantityKey]: input.value,
+      [tokenKey]: combinationToken,
+    }),
+    );
 
-    new SubmittableInput(CombinationsMap.impactOnPriceInputWrapper, async (input) => {
-      await this.combinationsService.updateListedCombination(this.findCombinationId(input), {
-        [impactOnPriceKey]: input.value,
-        [tokenKey]: combinationToken,
-      });
-    });
+    // eslint-disable-next-line
+    new SubmittableInput(CombinationsMap.impactOnPriceInputWrapper, input => this.combinationsService.updateListedCombination(this.findCombinationId(input), {
+      [impactOnPriceKey]: input.value,
+      [tokenKey]: combinationToken,
+    }),
+    );
 
-    new SubmittableInput(CombinationsMap.referenceInputWrapper, async (input) => {
-      await this.combinationsService.updateListedCombination(this.findCombinationId(input), {
-        [referenceKey]: input.value,
-        [tokenKey]: combinationToken,
-      });
-    });
+    // eslint-disable-next-line
+    new SubmittableInput(CombinationsMap.referenceInputWrapper, input => this.combinationsService.updateListedCombination(this.findCombinationId(input), {
+      [referenceKey]: input.value,
+      [tokenKey]: combinationToken,
+    }),
+    );
   }
 
   /**
