@@ -175,7 +175,7 @@ class AdminImagesControllerCore extends AdminController
                         'desc' => $this->trans('Enable to optimize the display of your images on high pixel density screens.', [], 'Admin.Design.Help'),
                         'visibility' => Shop::CONTEXT_ALL,
                     ],
-                    'PS_IMAGEOPT_RESIZE' => [
+                    'PS_IMAGEOPT_LAZY_RESIZE' => [
                         'type' => 'bool',
                         'title' => $this->trans('Resize missing thumbnails on demand', [], 'Admin.Design.Feature'),
                         'required' => false,

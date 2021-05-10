@@ -26,7 +26,7 @@ switch ($img_path) {
         break;
 }
 if (!isset($type)) {
-    http_response_code(400);
+    display('404');
     die();
 }
 $image_types = ImageType::getImagesTypes($type, true);
@@ -37,7 +37,7 @@ foreach ($image_types as $item) {
     }
 }
 if (!isset($image_types)) {
-    http_response_code(400);
+    display('404');
     die();
 }
 $doc_root = $_SERVER['DOCUMENT_ROOT'];
@@ -51,13 +51,14 @@ if (file_exists($file_resized)) {
         display($file_fullsize);
         ImageManager::resize($file_fullsize, $file_resized, $image_type['width'], $image_type['height']);
     } else {
-        http_response_code(400);
+        display('404');
         die();
     }
 }
 
 function display ($filename){
-    if(!file_exists($filename)){
+    if($filename == '404' || !file_exists($filename)){
+        http_response_code(404);
         $filename = _PS_IMG_DIR_.'404.gif';
     }
     ignore_user_abort(true);

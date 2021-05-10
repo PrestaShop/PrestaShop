@@ -137,14 +137,14 @@ class ImageRetriever
      */
     public function getImage($object, $id_image)
     {
-        static $psImageoptResize = null;
+        static $psImageoptLazyResize = null;
 
         if (!$id_image) {
             return null;
         }
 
-        if ($psImageoptResize === null) {
-            $psImageoptResize = \Configuration::get('PS_IMAGEOPT_RESIZE');
+        if ($psImageoptLazyResize === null) {
+            $psImageoptLazyResize = \Configuration::get('PS_IMAGEOPT_LAZY_RESIZE');
         }
 
         if (get_class($object) === 'Product') {
@@ -179,7 +179,7 @@ class ImageRetriever
         $generateHighDpiImages = (bool) Configuration::get('PS_HIGHT_DPI');
 
         foreach ($image_types as $image_type) {
-            if (!$psImageoptResize) {
+            if (!$psImageoptLazyResize) {
                 $resizedImagePath = implode(DIRECTORY_SEPARATOR, [
                     $imageFolderPath,
                     $id_image . '-' . $image_type['name'] . '.' . $ext,
