@@ -24,7 +24,7 @@
  */
 
 // eslint-disable-next-line
-var Tree = function (element, options) {
+window.Tree = function (element, options) {
   this.$element = $(element);
   this.options = $.extend({}, $.fn.tree.defaults, options);
   this.init();
