@@ -57,24 +57,40 @@ class OrderPreview
     private $isVirtual;
 
     /**
+     * @var string
+     */
+    private $invoiceAddressFormatted;
+
+    /**
+     * @var string
+     */
+    private $shippingAddressFormatted;
+
+    /**
      * @param OrderPreviewInvoiceDetails $invoiceDetails
      * @param OrderPreviewShippingDetails $shippingDetails
      * @param array $productDetails
      * @param bool $isVirtual
      * @param bool $taxIncluded
+     * @param string $invoiceAddressFormatted
+     * @param string $shippingAddressFormatted
      */
     public function __construct(
         OrderPreviewInvoiceDetails $invoiceDetails,
         OrderPreviewShippingDetails $shippingDetails,
         array $productDetails,
         bool $isVirtual,
-        bool $taxIncluded
+        bool $taxIncluded,
+        string $invoiceAddressFormatted = '',
+        string $shippingAddressFormatted = ''
     ) {
         $this->invoiceDetails = $invoiceDetails;
         $this->shippingDetails = $shippingDetails;
         $this->productDetails = $productDetails;
         $this->taxIncluded = $taxIncluded;
         $this->isVirtual = $isVirtual;
+        $this->invoiceAddressFormatted = $invoiceAddressFormatted;
+        $this->shippingAddressFormatted = $shippingAddressFormatted;
     }
 
     /**
@@ -115,5 +131,21 @@ class OrderPreview
     public function isVirtual(): bool
     {
         return $this->isVirtual;
+    }
+
+    /**
+     * @return string
+     */
+    public function getInvoiceAddressFormatted(): string
+    {
+        return $this->invoiceAddressFormatted;
+    }
+
+    /**
+     * @return string
+     */
+    public function getShippingAddressFormatted(): string
+    {
+        return $this->shippingAddressFormatted;
     }
 }

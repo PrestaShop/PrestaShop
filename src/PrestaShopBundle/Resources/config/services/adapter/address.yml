@@ -79,3 +79,6 @@ services:
     tags:
       - name: tactician.handler
         command: 'PrestaShop\PrestaShop\Core\Domain\Address\Command\EditCartAddressCommand'
+
+  prestashop.adapter.address.formatter:
+      class: 'PrestaShop\PrestaShop\Adapter\Address\AddressFormatter'
