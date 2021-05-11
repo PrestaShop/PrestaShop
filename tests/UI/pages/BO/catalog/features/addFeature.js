@@ -1,7 +1,16 @@
 require('module-alias/register');
 const BOBasePage = require('@pages/BO/BObasePage');
 
-class AddAttribute extends BOBasePage {
+/**
+ * Add feature page, contains functions that can be used on add feature page
+ * @class
+ * @extends BOBasePage
+ */
+class AddFeature extends BOBasePage {
+  /**
+   * @constructs
+   * Setting up texts and selectors to use on add feature page
+   */
   constructor() {
     super();
 
@@ -19,8 +28,8 @@ class AddAttribute extends BOBasePage {
 
   /**
    * Fill feature form and save it
-   * @param page
-   * @param featureData
+   * @param page {Page} Browser tab
+   * @param featureData {string}  Values to set on feature form inputs
    * @return {Promise<string>}
    */
   async setFeature(page, featureData) {
@@ -42,4 +51,4 @@ class AddAttribute extends BOBasePage {
   }
 }
 
-module.exports = new AddAttribute();
+module.exports = new AddFeature();
