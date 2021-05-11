@@ -40,7 +40,13 @@ const initMultistoreDropdown = () => {
     searchTerm: '__QUERY__',
   });
 
-  new PerfectScrollbar(MultistoreDropdownMap.scrollbar);
+  try {
+    new PerfectScrollbar(MultistoreDropdownMap.scrollbar);
+  } catch (error) {
+    // there is no dropdown on which to add a scrollbar, stop silently
+    return;
+  }
+
 
   const source = new Bloodhound({
     datumTokenizer: Bloodhound.tokenizers.obj.whitespace,
