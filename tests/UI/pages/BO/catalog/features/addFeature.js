@@ -16,8 +16,6 @@ class AddFeature extends BOBasePage {
 
     this.createPageTitle = 'Features > Add New Feature •';
 
-    this.alertSuccessBlockParagraph = '.alert-success';
-
     // Form selectors
     this.nameInput = '#name_1';
     this.urlInput = 'input[name=\'url_name_1\']';
@@ -29,7 +27,7 @@ class AddFeature extends BOBasePage {
   /**
    * Fill feature form and save it
    * @param page {Page} Browser tab
-   * @param featureData {string}  Values to set on feature form inputs
+   * @param featureData {object} Values to set on add feature form inputs
    * @return {Promise<string>}
    */
   async setFeature(page, featureData) {

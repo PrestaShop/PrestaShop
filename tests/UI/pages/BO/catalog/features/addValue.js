@@ -1,14 +1,21 @@
 require('module-alias/register');
 const BOBasePage = require('@pages/BO/BObasePage');
 
+/**
+ * Add feature page, contains functions that can be used on add feature page
+ * @class
+ * @extends BOBasePage
+ */
 class AddValue extends BOBasePage {
+  /**
+   * @constructs
+   * Setting up texts and selectors to use on add feature page
+   */
   constructor() {
     super();
 
     this.createPageTitle = 'Features > Add New Feature •';
     this.editPageTitle = 'Features > Edit New Feature •';
-
-    this.alertSuccessBlockParagraph = '.alert-success';
 
     // Form selectors
     this.featureSelect = '#id_feature';
@@ -21,9 +28,9 @@ class AddValue extends BOBasePage {
 
   /**
    * Fill value form and save it
-   * @param page
-   * @param valueData
-   * @param saveAndStay
+   * @param page {Page} Browser tab
+   * @param valueData {object} Values to set on add feature value form inputs
+   * @param saveAndStay {boolean} True if we need to save and stay
    * @returns {Promise<string>}
    */
   async addEditValue(page, valueData, saveAndStay = false) {
