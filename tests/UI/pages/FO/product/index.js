@@ -353,11 +353,6 @@ class Product extends FOBasePage {
     return this.elementVisible(page, this.deliveryInformationSpan, 1000);
   }
 
-  /**
-   * Get product availability label
-   * @param page
-   * @returns {Promise<string>}
-   */
 }
 
 module.exports = new Product();
