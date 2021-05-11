@@ -250,7 +250,8 @@ class OrderProductQuantityUpdater
                 (int) $orderDetail->product_id,
                 (int) $orderDetail->product_attribute_id,
                 $deltaQuantity,
-                false
+                false,
+                (int) $orderDetail->id_customization
             ),
         ];
 

@@ -29,7 +29,6 @@ declare(strict_types=1);
 namespace PrestaShopBundle\Form\Admin\Sell\Product\Image;
 
 use PrestaShopBundle\Form\Admin\Type\TranslatorAwareType;
-use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\Form\FormInterface;
 use Symfony\Component\Form\FormView;
 use Symfony\Component\Form\Util\StringUtil;
@@ -44,14 +43,6 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
  */
 class ImageDropzoneType extends TranslatorAwareType
 {
-    /**
-     * {@inheritDoc}
-     */
-    public function buildForm(FormBuilderInterface $builder, array $options)
-    {
-        parent::buildForm($builder, $options);
-    }
-
     /**
      * {@inheritDoc}
      */
@@ -101,6 +92,11 @@ class ImageDropzoneType extends TranslatorAwareType
             ],
             'product_id' => null,
             'update_form_type' => null,
+            'attr' => [
+                'class' => 'product-image-dropzone',
+            ],
+            'required' => false,
+            'label' => false,
         ]);
 
         $resolver->setAllowedTypes('product_id', ['int', 'null']);

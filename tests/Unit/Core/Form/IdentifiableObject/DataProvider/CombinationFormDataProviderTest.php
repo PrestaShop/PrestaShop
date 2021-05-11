@@ -119,11 +119,11 @@ class CombinationFormDataProviderTest extends TestCase
             'location' => 'top shelf',
             'available_date' => new DateTime('1969/07/20'),
         ];
-        $expectedOutputData['stock']['quantity'] = 42;
-        $expectedOutputData['stock']['minimal_quantity'] = 7;
-        $expectedOutputData['stock']['low_stock_threshold'] = 5;
-        $expectedOutputData['stock']['low_stock_alert'] = true;
-        $expectedOutputData['stock']['stock_location'] = 'top shelf';
+        $expectedOutputData['stock']['quantities']['quantity'] = 42;
+        $expectedOutputData['stock']['quantities']['minimal_quantity'] = 7;
+        $expectedOutputData['stock']['options']['low_stock_threshold'] = 5;
+        $expectedOutputData['stock']['options']['low_stock_alert'] = true;
+        $expectedOutputData['stock']['options']['stock_location'] = 'top shelf';
         $expectedOutputData['stock']['available_date'] = '1969-07-20';
 
         $datasets[] = [
@@ -196,11 +196,11 @@ class CombinationFormDataProviderTest extends TestCase
             'upc' => 'upc_bis',
             'mpn' => 'mpn_bis',
         ];
-        $expectedOutputData['details']['reference'] = 'reference_bis';
-        $expectedOutputData['details']['isbn'] = 'isbn_bis';
-        $expectedOutputData['details']['ean_13'] = 'ean13_bis';
-        $expectedOutputData['details']['upc'] = 'upc_bis';
-        $expectedOutputData['details']['mpn'] = 'mpn_bis';
+        $expectedOutputData['references']['reference'] = 'reference_bis';
+        $expectedOutputData['references']['isbn'] = 'isbn_bis';
+        $expectedOutputData['references']['ean_13'] = 'ean13_bis';
+        $expectedOutputData['references']['upc'] = 'upc_bis';
+        $expectedOutputData['references']['mpn'] = 'mpn_bis';
 
         $datasets[] = [
             $combinationData,
@@ -467,11 +467,15 @@ class CombinationFormDataProviderTest extends TestCase
             'product_id' => self::PRODUCT_ID,
             'name' => self::DEFAULT_NAME,
             'stock' => [
-                'quantity' => self::DEFAULT_QUANTITY,
-                'minimal_quantity' => 0,
-                'stock_location' => 'location',
-                'low_stock_threshold' => null,
-                'low_stock_alert' => false,
+                'quantities' => [
+                    'quantity' => self::DEFAULT_QUANTITY,
+                    'minimal_quantity' => 0,
+                ],
+                'options' => [
+                    'stock_location' => 'location',
+                    'low_stock_threshold' => null,
+                    'low_stock_alert' => false,
+                ],
                 'available_date' => '',
             ],
             'price_impact' => [
@@ -482,7 +486,7 @@ class CombinationFormDataProviderTest extends TestCase
                 'unit_price' => 69.00,
                 'weight' => 42.00,
             ],
-            'details' => [
+            'references' => [
                 'reference' => 'reference',
                 'isbn' => 'isbn',
                 'ean_13' => 'ean13',

@@ -71,7 +71,7 @@ class CombinationFormDataProvider implements FormDataProviderInterface
             'name' => $combinationForEditing->getName(),
             'stock' => $this->extractStockData($combinationForEditing),
             'price_impact' => $this->extractPriceImpactData($combinationForEditing),
-            'details' => $this->extractDetailsData($combinationForEditing),
+            'references' => $this->extractReferencesData($combinationForEditing),
             'suppliers' => $this->extractSuppliersData($combinationForEditing),
             'images' => $combinationForEditing->getImageIds(),
         ];
@@ -88,11 +88,15 @@ class CombinationFormDataProvider implements FormDataProviderInterface
         $availableDate = $stockInformation->getAvailableDate();
 
         return [
-            'quantity' => $stockInformation->getQuantity(),
-            'minimal_quantity' => $stockInformation->getMinimalQuantity(),
-            'stock_location' => $stockInformation->getLocation(),
-            'low_stock_threshold' => $stockInformation->getLowStockThreshold() ?: null,
-            'low_stock_alert' => $stockInformation->isLowStockAlertEnabled(),
+            'quantities' => [
+                'quantity' => $stockInformation->getQuantity(),
+                'minimal_quantity' => $stockInformation->getMinimalQuantity(),
+            ],
+            'options' => [
+                'stock_location' => $stockInformation->getLocation(),
+                'low_stock_threshold' => $stockInformation->getLowStockThreshold() ?: null,
+                'low_stock_alert' => $stockInformation->isLowStockAlertEnabled(),
+            ],
             'available_date' => $availableDate ? $availableDate->format(DateTime::DEFAULT_DATE_FORMAT) : '',
         ];
     }
@@ -121,7 +125,7 @@ class CombinationFormDataProvider implements FormDataProviderInterface
      *
      * @return array
      */
-    private function extractDetailsData(CombinationForEditing $combinationForEditing): array
+    private function extractReferencesData(CombinationForEditing $combinationForEditing): array
     {
         $details = $combinationForEditing->getDetails();
 

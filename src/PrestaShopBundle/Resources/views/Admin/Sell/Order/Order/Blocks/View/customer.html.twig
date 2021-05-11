@@ -149,32 +149,9 @@
             {% endif %}
           </div>
 
-          <p class="mb-0">{{ orderForViewing.shippingAddress.fullName }}</p>
-          {% if orderForViewing.shippingAddress.companyName is not empty %}
-            <p class="mb-0">{{ orderForViewing.shippingAddress.companyName }}</p>
-          {% endif %}
-          {% if orderForViewing.shippingAddress.vatNumber is not empty %}
-            <p class="mb-0">{{ orderForViewing.shippingAddress.vatNumber }}</p>
-          {% endif %}
-          <p class="mb-0">{{ orderForViewing.shippingAddress.address1 }}</p>
-          {% if orderForViewing.shippingAddress.address2 is not empty %}
-            <p class="mb-0">{{ orderForViewing.shippingAddress.address2 }}</p>
-          {% endif %}
-          <p class="mb-0">
-            {{ orderForViewing.shippingAddress.cityName }},
-            {% if orderForViewing.shippingAddress.stateName is not empty %}
-              {{ orderForViewing.shippingAddress.stateName }}
-            {% endif %}
-            {{ orderForViewing.shippingAddress.postCode }}
-          </p>
-          <p class="mb-0">{{ orderForViewing.shippingAddress.countryName }}</p>
-          {% if orderForViewing.shippingAddress.dni is not empty %}
-            <p class="mb-0">{{ orderForViewing.shippingAddress.dni }}</p>
-          {% endif %}
-          <p>
-            {{ orderForViewing.shippingAddress.phoneNumber }}
-            {{ orderForViewing.shippingAddress.mobilePhoneNumber }}
-          </p>
+          {% for line in orderForViewing.shippingAddressFormatted|split("\n") %}
+            <p class="mb-0">{{ line }}</p>
+          {% endfor %}
         </div>
         {% endif %}
         <div id="addressInvoice" class="info-block-col {% if orderForViewing.virtual %}col-md-12{% else %}col-xl-6{% endif %}">
@@ -205,32 +182,9 @@
             {% endif %}
           </div>
 
-          <p class="mb-0">{{ orderForViewing.invoiceAddress.fullName }}</p>
-          {% if orderForViewing.invoiceAddress.companyName is not empty %}
-            <p class="mb-0">{{ orderForViewing.invoiceAddress.companyName }}</p>
-          {% endif %}
-          {% if orderForViewing.invoiceAddress.vatNumber is not empty %}
-            <p class="mb-0">{{ orderForViewing.invoiceAddress.vatNumber }}</p>
-          {% endif %}
-          <p class="mb-0">{{ orderForViewing.invoiceAddress.address1 }}</p>
-          {% if orderForViewing.invoiceAddress.address2 is not empty %}
-            <p class="mb-0">{{ orderForViewing.invoiceAddress.address2 }}</p>
-          {% endif %}
-          <p class="mb-0">
-            {{ orderForViewing.invoiceAddress.cityName }},
-            {% if orderForViewing.invoiceAddress.stateName is not empty %}
-              {{ orderForViewing.invoiceAddress.stateName }}
-            {% endif %}
-            {{ orderForViewing.invoiceAddress.postCode }}
-          </p>
-          <p class="mb-0">{{ orderForViewing.invoiceAddress.countryName }}</p>
-          {% if orderForViewing.invoiceAddress.dni is not empty %}
-            <p class="mb-0">{{ orderForViewing.invoiceAddress.dni }}</p>
-          {% endif %}
-          <p>
-            {{ orderForViewing.invoiceAddress.phoneNumber }}
-            {{ orderForViewing.invoiceAddress.mobilePhoneNumber }}
-          </p>
+          {% for line in orderForViewing.invoiceAddressFormatted|split("\n") %}
+            <p class="mb-0">{{ line }}</p>
+          {% endfor %}
         </div>
       </div>
     </div>

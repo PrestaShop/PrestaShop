@@ -3994,11 +3994,10 @@ class ProductCore extends ObjectModel
             $tax_rate = $withTaxes ? (1 + ($orderDetail['tax_rate'] / 100)) : 1;
             $price = $orderDetail['original_product_price'] * $tax_rate;
         }
-        $ecoTaxValue = 0;
-        if ($withEcoTax) {
-            $ecoTaxValue = $withTaxes ? $orderDetail['ecotax'] * (1 + $orderDetail['ecotax_tax_rate']) : $orderDetail['ecotax'];
+        if (!$withEcoTax) {
+            // Remove the ecotax as the order detail contains already ecotax in the price
+            $price -= ($withTaxes ? $orderDetail['ecotax'] * (1 + $orderDetail['ecotax_tax_rate']) : $orderDetail['ecotax']);
         }
-        $price += $ecoTaxValue;
 
         return $price;
     }
@@ -5759,10 +5758,12 @@ class ProductCore extends ObjectModel
             }
         }
 
-        $attributes = Product::getAttributesParams($row['id_product'], $row['id_product_attribute']);
+        if (!isset($row['attributes'])) {
+            $attributes = Product::getAttributesParams($row['id_product'], $row['id_product_attribute']);
 
-        foreach ($attributes as $attribute) {
-            $row['attributes'][$attribute['id_attribute_group']] = $attribute;
+            foreach ($attributes as $attribute) {
+                $row['attributes'][$attribute['id_attribute_group']] = $attribute;
+            }
         }
 
         $row = Product::getTaxesInformations($row, $context);

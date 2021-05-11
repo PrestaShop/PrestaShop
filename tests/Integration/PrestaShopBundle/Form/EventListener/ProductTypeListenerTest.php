@@ -69,20 +69,68 @@ class ProductTypeListenerTest extends FormListenerTestCase
 
     public function getFormTypeExpectationsBasedOnProductType(): Generator
     {
-        yield [ProductType::TYPE_STANDARD, 'suppliers', true];
-        yield [ProductType::TYPE_PACK, 'suppliers', true];
-        yield [ProductType::TYPE_VIRTUAL, 'suppliers', true];
-        yield [ProductType::TYPE_COMBINATIONS, 'suppliers', false];
+        yield [ProductType::TYPE_STANDARD, 'options.suppliers', true];
+        yield [ProductType::TYPE_PACK, 'options.suppliers', true];
+        yield [ProductType::TYPE_VIRTUAL, 'options.suppliers', true];
+        yield [ProductType::TYPE_COMBINATIONS, 'options.suppliers', false];
 
         yield [ProductType::TYPE_STANDARD, 'stock', true];
         yield [ProductType::TYPE_PACK, 'stock', true];
         yield [ProductType::TYPE_VIRTUAL, 'stock', true];
         yield [ProductType::TYPE_COMBINATIONS, 'stock', false];
 
+        yield [ProductType::TYPE_STANDARD, 'shipping', true];
+        yield [ProductType::TYPE_PACK, 'shipping', true];
+        yield [ProductType::TYPE_VIRTUAL, 'shipping', false];
+        yield [ProductType::TYPE_COMBINATIONS, 'shipping', true];
+
+        yield [ProductType::TYPE_STANDARD, 'stock.pack_stock_type', false];
+        yield [ProductType::TYPE_PACK, 'stock.pack_stock_type', true];
+        yield [ProductType::TYPE_VIRTUAL, 'stock.pack_stock_type', false];
+        yield [ProductType::TYPE_COMBINATIONS, 'stock.pack_stock_type', false];
+
+        yield [ProductType::TYPE_STANDARD, 'stock.virtual_product_file', false];
+        yield [ProductType::TYPE_PACK, 'stock.virtual_product_file', false];
+        yield [ProductType::TYPE_VIRTUAL, 'stock.virtual_product_file', true];
+        yield [ProductType::TYPE_COMBINATIONS, 'stock.virtual_product_file', false];
+
         yield [ProductType::TYPE_STANDARD, 'shortcuts.stock', true];
         yield [ProductType::TYPE_PACK, 'shortcuts.stock', true];
         yield [ProductType::TYPE_VIRTUAL, 'shortcuts.stock', true];
         yield [ProductType::TYPE_COMBINATIONS, 'shortcuts.stock', false];
+    }
+
+    /**
+     * When type is switched, the removed fields are not the same but the adapt function is called twice in the same
+     * request (PRE_SET_DATA and PRE_SUBMIT) so we must be sure that it doesn't create error because of fields no
+     * present any more
+     *
+     * @dataProvider getFormTypeSwitching
+     *
+     * @param string $initialProductType
+     * @param string $newProductType
+     */
+    public function testFormTypeSwitching(string $initialProductType, string $newProductType): void
+    {
+        $form = $this->createForm(SimpleProductFormTest::class);
+        $this->adaptProductFormBasedOnProductType($form, $initialProductType);
+        $this->adaptProductFormBasedOnProductType($form, $newProductType);
+    }
+
+    public function getFormTypeSwitching(): Generator
+    {
+        $productTypes = [
+            ProductType::TYPE_STANDARD,
+            ProductType::TYPE_COMBINATIONS,
+            ProductType::TYPE_VIRTUAL,
+            ProductType::TYPE_PACK,
+        ];
+
+        foreach ($productTypes as $initialProductType) {
+            foreach ($productTypes as $newProductType) {
+                yield [$initialProductType, $newProductType];
+            }
+        }
     }
 
     /**
@@ -94,7 +142,7 @@ class ProductTypeListenerTest extends FormListenerTestCase
         $listener = new ProductTypeListener();
 
         $formData = [
-            'basic' => [
+            'header' => [
                 'type' => $productType,
             ],
         ];
@@ -128,7 +176,7 @@ class ProductTypeListenerTest extends FormListenerTestCase
         $typeNames = explode('.', $typeName);
         $child = $form;
         foreach ($typeNames as $typeName) {
-            $child = $form->get($typeName);
+            $child = $child->get($typeName);
         }
 
         return $child;
@@ -140,10 +188,14 @@ class SimpleProductFormTest extends CommonAbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
-            ->add('suppliers', ChoiceType::class)
-            ->add('stock', FormType::class)
             ->add('shortcuts', FormType::class)
+            ->add('stock', FormType::class)
+            ->add('shipping', FormType::class)
+            ->add('options', FormType::class)
         ;
         $builder->get('shortcuts')->add('stock', FormType::class);
+        $builder->get('stock')->add('pack_stock_type', ChoiceType::class);
+        $builder->get('stock')->add('virtual_product_file', FormType::class);
+        $builder->get('options')->add('suppliers', ChoiceType::class);
     }
 }
