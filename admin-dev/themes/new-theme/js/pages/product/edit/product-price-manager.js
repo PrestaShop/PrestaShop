@@ -31,6 +31,14 @@ export default class ProductPriceManager {
     this.$priceTaxIncludedInput = $(ProductMap.pricing.retailPriceTaxIncluded);
     this.$priceTaxExcludedInput = $(ProductMap.pricing.retailPriceTaxExcluded);
 
+    this.init();
+
     return {};
+  }
+
+  /**
+   * @private
+   */
+  init() {
   }
 }
