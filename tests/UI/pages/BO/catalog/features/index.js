@@ -1,7 +1,16 @@
 require('module-alias/register');
 const BOBasePage = require('@pages/BO/BObasePage');
 
+/**
+ * Features page, contains functions that can be used on features page
+ * @class
+ * @extends BOBasePage
+ */
 class Features extends BOBasePage {
+  /**
+   * @constructs
+   * Setting up texts and selectors to use on features page
+   */
   constructor() {
     super();
 
@@ -35,7 +44,6 @@ class Features extends BOBasePage {
     this.tableBodyColumn = row => `${this.tableBodyRow(row)} td`;
 
     // Columns selectors
-    this.tableColumnSelectRowCheckbox = row => `${this.tableBodyColumn(row)} input[name='featureBox[]']`;
     this.tableColumnId = row => `${this.tableBodyColumn(row)}:nth-child(2)`;
     this.tableColumnName = row => `${this.tableBodyColumn(row)}:nth-child(3)`;
     this.tableColumnValues = row => `${this.tableBodyColumn(row)}:nth-child(4)`;
@@ -72,7 +80,7 @@ class Features extends BOBasePage {
   /* Header methods */
   /**
    * Go to add new feature page
-   * @param page
+   * @param page {Page} Browser tab
    * @return {Promise<void>}
    */
   async goToAddFeaturePage(page) {
@@ -82,7 +90,7 @@ class Features extends BOBasePage {
   /* Filter methods */
   /**
    * Reset all filters
-   * @param page
+   * @param page {Page} Browser tab
    * @return {Promise<void>}
    */
   async resetFilter(page) {
@@ -94,7 +102,7 @@ class Features extends BOBasePage {
 
   /**
    * Get Number of features
-   * @param page
+   * @param page {Page} Browser tab
    * @return {Promise<number>}
    */
   getNumberOfElementInGrid(page) {
@@ -103,7 +111,7 @@ class Features extends BOBasePage {
 
   /**
    * Reset and get number of features
-   * @param page
+   * @param page {Page} Browser tab
    * @return {Promise<number>}
    */
   async resetAndGetNumberOfLines(page) {
@@ -113,9 +121,9 @@ class Features extends BOBasePage {
 
   /**
    * Filter table
-   * @param page
-   * @param filterBy
-   * @param value
+   * @param page {Page} Browser tab
+   * @param filterBy {string} Column to filter with
+   * @param value {string} value to filter with
    * @return {Promise<void>}
    */
   async filterTable(page, filterBy, value) {
@@ -126,9 +134,9 @@ class Features extends BOBasePage {
   /* Column methods */
   /**
    * Get text column from table
-   * @param page
-   * @param row
-   * @param columnName
+   * @param page {Page} Browser tab
+   * @param row {number} Feature row in table
+   * @param columnName {string} Column name to get
    * @return {Promise<string>}
    */
   async getTextColumn(page, row, columnName) {
@@ -160,8 +168,8 @@ class Features extends BOBasePage {
 
   /**
    * Go to view feature page
-   * @param page
-   * @param row
+   * @param page {Page} Browser tab
+   * @param row {number} Feature row in table
    * @return {Promise<void>}
    */
   async viewFeature(page, row) {
@@ -172,7 +180,7 @@ class Features extends BOBasePage {
   /**
    * @override
    * Open help side bar
-   * @param page
+   * @param page {Page} Browser tab
    * @returns {Promise<boolean>}
    */
   async openHelpSideBar(page) {
@@ -184,7 +192,7 @@ class Features extends BOBasePage {
   /**
    * @override
    * Close help side bar
-   * @param page
+   * @param page {Page} Browser tab
    * @returns {Promise<boolean>}
    */
   async closeHelpSideBar(page) {
@@ -196,7 +204,7 @@ class Features extends BOBasePage {
   /**
    * @override
    * Get help card URL
-   * @param page
+   * @param page {Page} Browser tab
    * @returns {Promise<string>}
    */
   async getHelpDocumentURL(page) {
@@ -206,7 +214,7 @@ class Features extends BOBasePage {
   /* Pagination methods */
   /**
    * Get pagination label
-   * @param page
+   * @param page {Page} Browser tab
    * @return {Promise<string>}
    */
   getPaginationLabel(page) {
@@ -215,8 +223,8 @@ class Features extends BOBasePage {
 
   /**
    * Select pagination limit
-   * @param page
-   * @param number
+   * @param page {Page} Browser tab
+   * @param number {number} Pagination limit number to select
    * @returns {Promise<string>}
    */
   async selectPaginationLimit(page, number) {
@@ -228,7 +236,7 @@ class Features extends BOBasePage {
 
   /**
    * Click on next
-   * @param page
+   * @param page {Page} Browser tab
    * @returns {Promise<string>}
    */
   async paginationNext(page) {
@@ -239,7 +247,7 @@ class Features extends BOBasePage {
 
   /**
    * Click on previous
-   * @param page
+   * @param page {Page} Browser tab
    * @returns {Promise<string>}
    */
   async paginationPrevious(page) {
@@ -251,9 +259,9 @@ class Features extends BOBasePage {
   /* Sort functions */
   /**
    * Sort table by clicking on column name
-   * @param page
-   * @param sortBy, column to sort with
-   * @param sortDirection, asc or desc
+   * @param page {Page} Browser tab
+   * @param sortBy {string} column name to sort with
+   * @param sortDirection {string} Sort direction by asc or desc
    * @return {Promise<void>}
    */
   async sortTable(page, sortBy, sortDirection) {
@@ -282,8 +290,8 @@ class Features extends BOBasePage {
 
   /**
    * Get content from all rows
-   * @param page
-   * @param columnName
+   * @param page {Page} Browser tab
+   * @param columnName {string} Column name to get all content
    * @return {Promise<[]>}
    */
   async getAllRowsColumnContent(page, columnName) {
@@ -301,7 +309,7 @@ class Features extends BOBasePage {
   /* Bulk actions methods */
   /**
    * Bulk delete features
-   * @param page
+   * @param page {Page} Browser tab
    * @return {Promise<string>}
    */
   async bulkDeleteFeatures(page) {
@@ -332,9 +340,9 @@ class Features extends BOBasePage {
 
   /**
    * Change feature position
-   * @param page
-   * @param actualPosition
-   * @param newPosition
+   * @param page {Page} Browser tab
+   * @param actualPosition {number} Actual position to change
+   * @param newPosition {number} New position to change
    * @return {Promise<string>}
    */
   async changePosition(page, actualPosition, newPosition) {
