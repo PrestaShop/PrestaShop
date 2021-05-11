@@ -773,14 +773,16 @@ $product-page-padding-bottom: 80px !default;
           }
         }
 
-        [type="checkbox"] {
+        .md-checkbox {
           &.disabled {
-            + .md-checkbox-control {
-              cursor: not-allowed;
-              opacity: 0.5;
-
-              &::before {
+            [type="checkbox"] {
+              + .md-checkbox-control {
                 cursor: not-allowed;
+                opacity: 0.5;
+
+                &::before {
+                  cursor: not-allowed;
+                }
               }
             }
           }

@@ -65,7 +65,12 @@ export default class CategoriesManager {
     // This regexp is gonna be used to get id from checkbox name
     let regexpString = ProductCategoryMap.checkboxName('__REGEXP__');
     regexpString = _.escapeRegExp(regexpString).replace('__REGEXP__', '([0-9]+)');
-    this.categoryIdRegexp = new RegExp(regexpString);
+    this.checkboxIdRegexp = new RegExp(regexpString);
+
+    // This regexp is gonna be used to get id from radio name
+    regexpString = ProductCategoryMap.radioName('__REGEXP__');
+    regexpString = _.escapeRegExp(regexpString).replace('__REGEXP__', '([0-9]+)');
+    this.radioIdRegexp = new RegExp(regexpString);
 
     this.initTypeaheadData(this.categories, '');
     this.initTypeahead();
@@ -212,7 +217,8 @@ export default class CategoriesManager {
     });
 
     this.categoryTree.querySelectorAll(ProductCategoryMap.checkboxInput).forEach((checkboxTreeElement) => {
-      checkboxTreeElement.classList.remove('disabled');
+      const materialCheckbox = checkboxTreeElement.parentNode.closest(ProductCategoryMap.materialCheckbox);
+      materialCheckbox.classList.remove('disabled');
     });
 
     this.updateDefaultCheckbox(radioInput);
@@ -226,8 +232,11 @@ export default class CategoriesManager {
     const parentItem = radioInput.parentNode.closest(ProductCategoryMap.treeElement);
     const checkbox = parentItem.querySelector(ProductCategoryMap.checkboxInput);
 
-    // A default category is necessarily associated
-    checkbox.classList.add('disabled');
+    // A default category is necessarily associated, so displayed as disabled (we do not use the disabled
+    // attribute because it removes the data from the form).
+    const materialCheckbox = checkbox.parentNode.closest(ProductCategoryMap.materialCheckbox);
+    materialCheckbox.classList.add('disabled');
+
     this.updateCheckbox(checkbox, true);
     this.updateCategoriesTags();
     this.eventEmitter.emit(ProductEventMap.updateSubmitButtonState);
@@ -368,6 +377,7 @@ export default class CategoriesManager {
     const checkedCheckboxes = this.categoryTree.querySelectorAll(ProductCategoryMap.checkedCheckboxInputs);
     const tagsContainer = this.categoriesContainer.querySelector(ProductCategoryMap.tagsContainer);
     tagsContainer.innerHTML = '';
+    const defaultCategoryId = this.getDefaultCategoryId();
 
     checkedCheckboxes.forEach((checkboxInput) => {
       const categoryId = this.getIdFromCheckbox(checkboxInput);
@@ -376,10 +386,14 @@ export default class CategoriesManager {
       if (!category) {
         return;
       }
+
+      const removeCrossTemplate = defaultCategoryId !== categoryId
+        ? `<a class="pstaggerClosingCross" href="#" data-id="${category.id}">x</a>`
+        : '';
       const template = `
         <span class="pstaggerTag">
             <span data-id="${category.id}" title="${category.breadcrumb}">${category.name}</span>
-            <a class="pstaggerClosingCross" href="#" data-id="${category.id}">x</a>
+            ${removeCrossTemplate}
         </span>
       `;
 
@@ -393,8 +407,11 @@ export default class CategoriesManager {
         event.preventDefault();
         event.stopImmediatePropagation();
 
-        const categoryId = event.currentTarget.dataset.id;
-        this.unselectCategory(categoryId);
+        const categoryId = Number(event.currentTarget.dataset.id);
+
+        if (categoryId !== defaultCategoryId) {
+          this.unselectCategory(categoryId);
+        }
       });
     });
 
@@ -431,12 +448,36 @@ export default class CategoriesManager {
   }
 
   /**
+   * @returns {number|undefined}
+   */
+  getDefaultCategoryId() {
+    const radioInput = this.categoryTree.querySelector(ProductCategoryMap.defaultRadioInput);
+
+    if (!radioInput) {
+      return undefined;
+    }
+
+    return this.getIdFromRadio(radioInput);
+  }
+
+  /**
+   * @param {HTMLElement} radioInput
+   *
+   * @returns {number}
+   */
+  getIdFromRadio(radioInput) {
+    const matches = radioInput.name.match(this.radioIdRegexp);
+
+    return Number(matches[1]);
+  }
+
+  /**
    * @param {HTMLElement} checkboxInput
    *
    * @returns {number}
    */
   getIdFromCheckbox(checkboxInput) {
-    const matches = checkboxInput.name.match(this.categoryIdRegexp);
+    const matches = checkboxInput.name.match(this.checkboxIdRegexp);
 
     return Number(matches[1]);
   }
