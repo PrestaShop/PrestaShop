@@ -16,7 +16,7 @@ const brandsPage = require('@pages/BO/catalog/brands');
 // Import test context
 const testContext = require('@utils/testContext');
 
-const baseContext = 'functional_BO_catalog_brandsAndSuppliers_brands_addresses_filterBrandAddresses';
+const baseContext = 'functional_BO_catalog_brandsAndSuppliers_brands_addresses_filterAddresses';
 
 let browserContext;
 let page;
@@ -24,7 +24,7 @@ let numberOfAddresses = 0;
 const tableName = 'manufacturer_address';
 
 // Filter And Quick Edit Addresses
-describe('Filter And Quick Edit Addresses', async () => {
+describe('Filter and Quick Edit Addresses', async () => {
   // before and after functions
   before(async function () {
     browserContext = await helper.createBrowserContext(this.browser);
@@ -63,7 +63,7 @@ describe('Filter And Quick Edit Addresses', async () => {
   });
 
   // 1 : Filter addresses table
-  describe('Filter addresses table', async () => {
+  describe('Filter Addresses table', async () => {
     const tests = [
       {
         args:
