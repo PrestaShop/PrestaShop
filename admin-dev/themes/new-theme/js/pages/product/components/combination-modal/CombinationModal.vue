@@ -321,8 +321,7 @@
             && this.combinationsHistory[0].id !== selectedCombination.id)
           || !this.combinationsHistory.length
         ) {
-          // eslint-disable-next-line
-        this.combinationsHistory = this.combinationsHistory.filter(
+          this.combinationsHistory = this.combinationsHistory.filter(
             (combination) => combination.id !== selectedCombination.id,
           );
 
