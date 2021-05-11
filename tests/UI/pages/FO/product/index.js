@@ -352,7 +352,6 @@ class Product extends FOBasePage {
   isDeliveryInformationVisible(page) {
     return this.elementVisible(page, this.deliveryInformationSpan, 1000);
   }
-
 }
 
 module.exports = new Product();
