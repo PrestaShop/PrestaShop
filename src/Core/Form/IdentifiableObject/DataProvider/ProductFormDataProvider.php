@@ -66,18 +66,26 @@ final class ProductFormDataProvider implements FormDataProviderInterface
     private $mostUsedTaxRulesGroupId;
 
     /**
+     * @var int
+     */
+    private $defaultCategoryId;
+
+    /**
      * @param CommandBusInterface $queryBus
      * @param bool $defaultProductActivation
      * @param int $mostUsedTaxRulesGroupId
+     * @param int $defaultCategoryId
      */
     public function __construct(
         CommandBusInterface $queryBus,
         bool $defaultProductActivation,
-        int $mostUsedTaxRulesGroupId
+        int $mostUsedTaxRulesGroupId,
+        int $defaultCategoryId
     ) {
         $this->queryBus = $queryBus;
         $this->defaultProductActivation = $defaultProductActivation;
         $this->mostUsedTaxRulesGroupId = $mostUsedTaxRulesGroupId;
+        $this->defaultCategoryId = $defaultCategoryId;
     }
 
     /**
@@ -151,6 +159,14 @@ final class ProductFormDataProvider implements FormDataProviderInterface
                     'visibility' => ProductVisibility::VISIBLE_EVERYWHERE,
                 ],
                 'condition' => ProductCondition::NEW,
+            ],
+            'categories' => [
+                'product_categories' => [
+                    $this->defaultCategoryId => [
+                        'is_associated' => true,
+                        'is_default' => true,
+                    ],
+                ],
             ],
             'footer' => [
                 'active' => $this->defaultProductActivation,

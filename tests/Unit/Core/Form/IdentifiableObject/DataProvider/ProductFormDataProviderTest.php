@@ -74,6 +74,7 @@ use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 class ProductFormDataProviderTest extends TestCase
 {
     private const PRODUCT_ID = 42;
+    private const HOME_CATEGORY_ID = 49;
     private const DEFAULT_CATEGORY_ID = 51;
     private const DEFAULT_VIRTUAL_PRODUCT_FILE_ID = 69;
     private const DEFAULT_QUANTITY = 12;
@@ -123,6 +124,14 @@ class ProductFormDataProviderTest extends TestCase
                     'visibility' => ProductVisibility::VISIBLE_EVERYWHERE,
                 ],
                 'condition' => ProductCondition::NEW,
+            ],
+            'categories' => [
+                'product_categories' => [
+                    self::HOME_CATEGORY_ID => [
+                        'is_associated' => true,
+                        'is_default' => true,
+                    ],
+                ],
             ],
             'footer' => [
                 'active' => false,
@@ -184,6 +193,14 @@ class ProductFormDataProviderTest extends TestCase
                     'visibility' => ProductVisibility::VISIBLE_EVERYWHERE,
                 ],
                 'condition' => ProductCondition::NEW,
+            ],
+            'categories' => [
+                'product_categories' => [
+                    self::HOME_CATEGORY_ID => [
+                        'is_associated' => true,
+                        'is_default' => true,
+                    ],
+                ],
             ],
             'footer' => [
                 'active' => true,
@@ -1284,7 +1301,8 @@ class ProductFormDataProviderTest extends TestCase
         return new ProductFormDataProvider(
             $queryBusMock,
             $activation,
-            42
+            42,
+            self::HOME_CATEGORY_ID
         );
     }
 }
