@@ -32,6 +32,7 @@ export default class ProductPriceManager {
     this.$priceTaxExcludedInput = $(ProductMap.pricing.retailPriceTaxExcluded);
 
     this.init();
+    this.watchPriceChange();
 
     return {};
   }
@@ -40,5 +41,21 @@ export default class ProductPriceManager {
    * @private
    */
   init() {
+  }
+
+  /**
+   * Converts a price string into a number
+   * @param {String} price
+   * @return {Number}
+   */
+  normalizePrice(price) {
+    return Tools.parseFloatFromString(price, true);
+  }
+
+  watchPriceChange() {
+    this.$priceTaxIncludedInput.keyup(function () {
+      const price = this.normalizePrice($(this).val());
+      this.$priceTaxExcludedInput.val(price).change();
+    });
   }
 }
