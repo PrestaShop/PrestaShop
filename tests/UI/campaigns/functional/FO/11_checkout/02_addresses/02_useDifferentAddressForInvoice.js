@@ -68,7 +68,7 @@ describe('Guest checkout: Use different invoice address', async () => {
     await helper.closeBrowserContext(browserContext);
   });
 
-  describe('Make an oder with 2 different addresses for delivery and invoice', async () => {
+  describe('Make an order with 2 different addresses for delivery and invoice', async () => {
     it('should go to FO', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'goToFo', baseContext);
 
@@ -117,7 +117,7 @@ describe('Guest checkout: Use different invoice address', async () => {
       await expect(isStepCompleted).to.be.true;
     });
 
-    it('should fill different delivery and invoice addresses address', async function () {
+    it('should fill different delivery and invoice addresses', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'fillCustomerAddresses', baseContext);
 
       const isStepCompleted = await foCheckoutPage.setAddress(page, deliveryAddress, invoiceAddress);
