@@ -22,9 +22,15 @@
  * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
+import ProductMap from '@pages/product/product-map';
 
 const {$} = window;
 
 export default class ProductPriceManager {
+  constructor() {
+    this.$priceTaxIncludedInput = $(ProductMap.pricing.retailPriceTaxIncluded);
+    this.$priceTaxExcludedInput = $(ProductMap.pricing.retailPriceTaxExcluded);
 
+    return {};
+  }
 }
