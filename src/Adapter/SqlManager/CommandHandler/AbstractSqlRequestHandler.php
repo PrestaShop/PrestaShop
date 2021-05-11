@@ -48,9 +48,6 @@ abstract class AbstractSqlRequestHandler
      */
     private $translator;
 
-    /**
-     * @param CommandBusInterface $bus
-     */
     public function __construct(
         SqlQueryValidator $sqlQueryValidator,
         TranslatorInterface $translator

@@ -44,9 +44,8 @@ final class SqlRequestFormDataHandler implements FormDataHandlerInterface
     /**
      * @param CommandBusInterface $bus
      */
-    public function __construct(
-        CommandBusInterface $bus
-    ) {
+    public function __construct(CommandBusInterface $bus)
+    {
         $this->commandBus = $bus;
     }
 
