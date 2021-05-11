@@ -3,7 +3,9 @@ parameters:
 	bootstrapFiles:
 		- .github/workflows/phpstan/autoload.php
 	paths:
+		- override
 		- src
+		- tools
 		- webservice
 	ignoreErrors:
 		- '#^Call to an undefined method Symfony\\Component\\Config\\Definition\\Builder\\NodeDefinition\:\:#'
@@ -14,6 +16,11 @@ parameters:
 		- '#^Call to an undefined static method Attribute\:\:checkAttributeQty\(\)\.$#'
 		- '#^Call to an undefined static method Attribute\:\:getAttributeMinimalQty\(\)\.$#'
 		- '#^Call to an undefined static method Attribute\:\:getAttributes\(\)\.$#'
+		## Relative to Profiler
+		- '#^Access to an undefined property Db\:\:\$queries\.#'
+		- '#^Access to an undefined property Db\:\:\$tables\.#'
+		- '#^Access to an undefined property Db\:\:\$uniqQueries\.#'
+		- '#^Static access to instance property ObjectModel\:\:\$debug_list\.#'
 	universalObjectCratesClasses:
 		- Cookie
 		- ObjectModel
