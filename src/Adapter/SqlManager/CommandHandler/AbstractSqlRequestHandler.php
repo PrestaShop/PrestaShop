@@ -29,7 +29,6 @@ declare(strict_types=1);
 namespace PrestaShop\PrestaShop\Adapter\SqlManager\CommandHandler;
 
 use PrestaShop\PrestaShop\Adapter\SqlManager\SqlQueryValidator;
-use PrestaShop\PrestaShop\Core\CommandBus\CommandBusInterface;
 use PrestaShop\PrestaShop\Core\Domain\SqlManagement\Exception\SqlRequestConstraintException;
 use Symfony\Component\Translation\TranslatorInterface;
 
