@@ -64,6 +64,9 @@ class Features extends BOBasePage {
     this.bulkActionDropdownMenu = `${this.bulkActionBlock} ul.dropdown-menu`;
     this.selectAllLink = `${this.bulkActionDropdownMenu} li:nth-child(1)`;
     this.bulkDeleteLink = `${this.bulkActionDropdownMenu} li:nth-child(4)`;
+
+    // Growl message
+    this.growlMessageBlock = '#growls .growl-message';
   }
 
   /* Header methods */
@@ -325,6 +328,23 @@ class Features extends BOBasePage {
 
     // Return successful message
     return this.getAlertSuccessBlockContent(page);
+  }
+
+  /**
+   * Change feature position
+   * @param page
+   * @param actualPosition
+   * @param newPosition
+   * @return {Promise<string>}
+   */
+  async changePosition(page, actualPosition, newPosition) {
+    await this.dragAndDrop(
+      page,
+      this.tableColumnPosition(actualPosition),
+      this.tableColumnPosition(newPosition),
+    );
+
+    return page.textContent(this.growlMessageBlock, 2000);
   }
 }
 
