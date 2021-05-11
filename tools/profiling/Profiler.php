@@ -30,6 +30,8 @@ class Profiler
     protected $hooksPerfs = [];
     protected $modulesPerfs = [];
     protected $profiler = [];
+    protected $globalVarSize = [];
+    protected $queries = [];
 
     protected $totalFilesize = 0;
     protected $totalGlobalVarSize = 0;
@@ -39,6 +41,7 @@ class Profiler
     protected $totalHooksTime = 0;
     protected $totalHooksMemory = 0;
     protected $startTime = 0;
+    protected $totalCacheSize = 0;
 
     protected static $instance = null;
 
