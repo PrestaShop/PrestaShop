@@ -496,12 +496,12 @@ class ProductFormDataProviderTest extends TestCase
             'default_category' => 51,
         ];
 
-        $expectedOutputData['categories'] = [];
-        $expectedOutputData['categories'][42] = [
+        $expectedOutputData['categories']['product_categories'] = [];
+        $expectedOutputData['categories']['product_categories'][42] = [
             'is_associated' => true,
             'is_default' => false,
         ];
-        $expectedOutputData['categories'][51] = [
+        $expectedOutputData['categories']['product_categories'][51] = [
             'is_associated' => true,
             'is_default' => true,
         ];
@@ -1247,9 +1247,11 @@ class ProductFormDataProviderTest extends TestCase
                 'suppliers' => [],
             ],
             'categories' => [
-                self::DEFAULT_CATEGORY_ID => [
-                    'is_associated' => true,
-                    'is_default' => true,
+                'product_categories' => [
+                    self::DEFAULT_CATEGORY_ID => [
+                        'is_associated' => true,
+                        'is_default' => true,
+                    ],
                 ],
             ],
             'footer' => [

@@ -42,19 +42,20 @@ class ProductCategoriesCommandsBuilder implements ProductCommandsBuilderInterfac
      */
     public function buildCommands(ProductId $productId, array $formData): array
     {
-        if (!isset($formData['categories'])) {
+        if (!isset($formData['categories']['product_categories'])) {
             return [];
         }
 
-        if (empty($formData['categories'])) {
+        if (empty($formData['categories']['product_categories'])) {
             return [
                 new RemoveAllAssociatedProductCategoriesCommand($productId->getValue()),
             ];
         }
 
+        $productCategories = $formData['categories']['product_categories'];
         $associatedCategoryIds = [];
         $defaultCategoryId = 0;
-        foreach ($formData['categories'] as $categoryId => $categoryData) {
+        foreach ($productCategories as $categoryId => $categoryData) {
             if ((bool) $categoryData['is_associated']) {
                 $associatedCategoryIds[] = (int) $categoryId;
             }

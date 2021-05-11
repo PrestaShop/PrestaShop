@@ -197,7 +197,9 @@ final class ProductFormDataProvider implements FormDataProviderInterface
             ];
         }
 
-        return $categories;
+        return [
+            'product_categories' => $categories,
+        ];
     }
 
     /**

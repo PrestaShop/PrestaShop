@@ -59,6 +59,14 @@ class ProductCategoriesCommandsBuilderTest extends AbstractProductCommandBuilder
             [],
         ];
 
+        yield [
+            [
+                'categories' => [
+                ],
+            ],
+            [],
+        ];
+
         $command = new SetAssociatedProductCategoriesCommand(
             $this->getProductId()->getValue(),
             42,
@@ -67,17 +75,19 @@ class ProductCategoriesCommandsBuilderTest extends AbstractProductCommandBuilder
         yield [
             [
                 'categories' => [
-                    42 => [
-                        'is_associated' => true,
-                        'is_default' => true,
-                    ],
-                    49 => [
-                        'is_associated' => false,
-                        'is_default' => false,
-                    ],
-                    51 => [
-                        'is_associated' => true,
-                        'is_default' => false,
+                    'product_categories' => [
+                        42 => [
+                            'is_associated' => true,
+                            'is_default' => true,
+                        ],
+                        49 => [
+                            'is_associated' => false,
+                            'is_default' => false,
+                        ],
+                        51 => [
+                            'is_associated' => true,
+                            'is_default' => false,
+                        ],
                     ],
                 ],
             ],
@@ -93,17 +103,19 @@ class ProductCategoriesCommandsBuilderTest extends AbstractProductCommandBuilder
         yield [
             [
                 'categories' => [
-                    42 => [
-                        'is_associated' => true,
-                        'is_default' => true,
-                    ],
-                    49 => [
-                        'is_associated' => false,
-                        'is_default' => true,
-                    ],
-                    51 => [
-                        'is_associated' => true,
-                        'is_default' => true,
+                    'product_categories' => [
+                        42 => [
+                            'is_associated' => true,
+                            'is_default' => true,
+                        ],
+                        49 => [
+                            'is_associated' => false,
+                            'is_default' => true,
+                        ],
+                        51 => [
+                            'is_associated' => true,
+                            'is_default' => true,
+                        ],
                     ],
                 ],
             ],
@@ -119,17 +131,19 @@ class ProductCategoriesCommandsBuilderTest extends AbstractProductCommandBuilder
         yield [
             [
                 'categories' => [
-                    42 => [
-                        'is_associated' => true,
-                        'is_default' => false,
-                    ],
-                    49 => [
-                        'is_associated' => false,
-                        'is_default' => true,
-                    ],
-                    51 => [
-                        'is_associated' => true,
-                        'is_default' => false,
+                    'product_categories' => [
+                        42 => [
+                            'is_associated' => true,
+                            'is_default' => false,
+                        ],
+                        49 => [
+                            'is_associated' => false,
+                            'is_default' => true,
+                        ],
+                        51 => [
+                            'is_associated' => true,
+                            'is_default' => false,
+                        ],
                     ],
                 ],
             ],
@@ -140,6 +154,8 @@ class ProductCategoriesCommandsBuilderTest extends AbstractProductCommandBuilder
         yield [
             [
                 'categories' => [
+                    'product_categories' => [
+                    ],
                 ],
             ],
             [$command],
@@ -154,17 +170,19 @@ class ProductCategoriesCommandsBuilderTest extends AbstractProductCommandBuilder
         yield [
             [
                 'categories' => [
-                    42 => [
-                        'is_associated' => false,
-                        'is_default' => false,
-                    ],
-                    49 => [
-                        'is_associated' => true,
-                        'is_default' => false,
-                    ],
-                    51 => [
-                        'is_associated' => true,
-                        'is_default' => false,
+                    'product_categories' => [
+                        42 => [
+                            'is_associated' => false,
+                            'is_default' => false,
+                        ],
+                        49 => [
+                            'is_associated' => true,
+                            'is_default' => false,
+                        ],
+                        51 => [
+                            'is_associated' => true,
+                            'is_default' => false,
+                        ],
                     ],
                 ],
             ],
@@ -180,17 +198,19 @@ class ProductCategoriesCommandsBuilderTest extends AbstractProductCommandBuilder
         yield [
             [
                 'categories' => [
-                    42 => [
-                        'is_associated' => false,
-                        'is_default' => false,
-                    ],
-                    49 => [
-                        'is_associated' => false,
-                        'is_default' => true,
-                    ],
-                    51 => [
-                        'is_associated' => false,
-                        'is_default' => false,
+                    'product_categories' => [
+                        42 => [
+                            'is_associated' => false,
+                            'is_default' => false,
+                        ],
+                        49 => [
+                            'is_associated' => false,
+                            'is_default' => true,
+                        ],
+                        51 => [
+                            'is_associated' => false,
+                            'is_default' => false,
+                        ],
                     ],
                 ],
             ],
@@ -202,17 +222,19 @@ class ProductCategoriesCommandsBuilderTest extends AbstractProductCommandBuilder
         yield [
             [
                 'categories' => [
-                    42 => [
-                        'is_associated' => false,
-                        'is_default' => false,
-                    ],
-                    49 => [
-                        'is_associated' => false,
-                        'is_default' => false,
-                    ],
-                    51 => [
-                        'is_associated' => false,
-                        'is_default' => false,
+                    'product_categories' => [
+                        42 => [
+                            'is_associated' => false,
+                            'is_default' => false,
+                        ],
+                        49 => [
+                            'is_associated' => false,
+                            'is_default' => false,
+                        ],
+                        51 => [
+                            'is_associated' => false,
+                            'is_default' => false,
+                        ],
                     ],
                 ],
             ],
