@@ -59,6 +59,7 @@ $(document).ready(() => {
   $(".money-type input[type='text']").change(function validate() {
     const inputValue = priceCalculation.normalizePrice($(this).val());
     const parsedValue = truncateDecimals(inputValue, 6);
+
     $(this).val(parsedValue);
   });
 
