@@ -294,7 +294,7 @@ class FactoryTest extends TestCase
                 $expected,
                 $specification->toArray()
             );
-            $this->assertEquals($specification->getMaxFractionDigits(), $maxFractionDigits);
+            self::assertEquals($specification->getMaxFractionDigits(), $maxFractionDigits);
         }
     }
 
