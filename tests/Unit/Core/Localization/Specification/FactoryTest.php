@@ -292,7 +292,7 @@ class FactoryTest extends TestCase
             );
             $expected['maxFractionDigits'] = $maxFractionDigits;
             $expected['minFractionDigits'] = $expectedMinFractionDigits;
-            $this->assertEquals(
+            self::assertEquals(
                 $expected,
                 $specification->toArray()
             );
