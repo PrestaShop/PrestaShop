@@ -1344,17 +1344,24 @@ services:
         tags:
             - { name: form.type }
 
-    form.type.sell.product.product_category_type:
-        class: 'PrestaShopBundle\Form\Admin\Sell\Product\ProductCategoryType'
+    form.type.sell.product.category.categories_type:
+        class: 'PrestaShopBundle\Form\Admin\Sell\Product\Category\CategoriesType'
         parent: 'form.type.translatable.aware'
         public: true
         tags:
             - { name: form.type }
 
-    form.type.sell.product.categories_type:
-        class: 'PrestaShopBundle\Form\Admin\Sell\Product\CategoriesType'
+    form.type.sell.product.category.categories_collection_type:
+        class: 'PrestaShopBundle\Form\Admin\Sell\Product\Category\CategoriesCollectionType'
         arguments:
             - "@translator"
+        public: true
+        tags:
+            - { name: form.type }
+
+    form.type.sell.product.category.product_category_type:
+        class: 'PrestaShopBundle\Form\Admin\Sell\Product\Category\ProductCategoryType'
+        parent: 'form.type.translatable.aware'
         public: true
         tags:
             - { name: form.type }

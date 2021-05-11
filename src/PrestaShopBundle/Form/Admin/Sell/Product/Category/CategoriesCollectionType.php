@@ -26,13 +26,13 @@
 
 declare(strict_types=1);
 
-namespace PrestaShopBundle\Form\Admin\Sell\Product;
+namespace PrestaShopBundle\Form\Admin\Sell\Product\Category;
 
 use Symfony\Component\Form\Extension\Core\Type\CollectionType;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Translation\TranslatorInterface;
 
-class CategoriesType extends CollectionType
+class CategoriesCollectionType extends CollectionType
 {
     /**
      * @var TranslatorInterface
@@ -56,15 +56,13 @@ class CategoriesType extends CollectionType
 
         $resolver->setDefaults([
             'label' => $this->trans('Categories', 'Admin.Catalog.Feature'),
+            'label_help_box' => $this->trans('Where should the product be available on your site? The main category is where the product appears by default: this is the category which is seen in the product page\'s URL. Disabled categories are written in italics.', 'Admin.Catalog.Help'),
+            'label_tag_name' => 'h2',
             'required' => false,
             'entry_type' => ProductCategoryType::class,
             'allow_add' => true,
             'allow_delete' => true,
             'prototype_name' => '__CATEGORY_INDEX__',
-            'label_attr' => [
-                'popover' => $this->trans('Where should the product be available on your site? The main category is where the product appears by default: this is the category which is seen in the product page\'s URL. Disabled categories are written in italics.', 'Admin.Catalog.Help'),
-                'title' => 'h2',
-            ],
         ]);
     }
 

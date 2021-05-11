@@ -26,30 +26,39 @@
 
 declare(strict_types=1);
 
-namespace PrestaShopBundle\Form\Admin\Sell\Product;
+namespace PrestaShopBundle\Form\Admin\Sell\Product\Category;
 
 use PrestaShopBundle\Form\Admin\Type\TranslatorAwareType;
-use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
-use Symfony\Component\Form\Extension\Core\Type\RadioType;
+use PrestaShopBundle\Form\Admin\Type\UnavailableType;
 use Symfony\Component\Form\FormBuilderInterface;
+use Symfony\Component\OptionsResolver\OptionsResolver;
 
-class ProductCategoryType extends TranslatorAwareType
+class CategoriesType extends TranslatorAwareType
 {
+    /**
+     * {@inheritDoc}
+     */
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
-            ->add('is_associated', CheckboxType::class, [
-                'label' => false,
-                'attr' => [
-                    'class' => 'category',
-                ],
-            ])
-            ->add('is_default', RadioType::class, [
-                'label' => false,
-                'attr' => [
-                    'class' => 'default-category',
-                ],
+            ->add('product_categories', CategoriesCollectionType::class)
+            ->add('create_category', UnavailableType::class, [
+                'label' => $this->trans('Create a new category', 'Admin.Catalog.Feature'),
+                'label_tag_name' => 'h2',
+                'label_help_box' => $this->trans('If you want to quickly create a new category, you can do it here. Don’t forget to then go to the Categories page to fill in the needed details (description, image, etc.). A new category will not automatically appear in your shop\'s menu, please read the Help about it.', 'Admin.Catalog.Help'),
             ])
         ;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function configureOptions(OptionsResolver $resolver)
+    {
+        parent::configureOptions($resolver);
+        $resolver->setDefaults([
+            'label' => false,
+            'required' => false,
+        ]);
     }
 }
