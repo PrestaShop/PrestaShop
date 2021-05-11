@@ -38,6 +38,9 @@
 {% block content %}
   {% set productType = productForm.vars.product_type %}
   {% set productId = productForm.vars.product_id %}
+  <div class="header-toolbar d-print-none">
+    {{ multistore_controller.header(false).getContent()|raw }}
+  </div>
 
   {{ form_start(productForm, {'attr': {
     'class': 'form-horizontal product-page row justify-content-md-center', 'novalidate': 'novalidate',
