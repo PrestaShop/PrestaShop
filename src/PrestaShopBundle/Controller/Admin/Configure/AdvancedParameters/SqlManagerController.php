@@ -188,7 +188,7 @@ class SqlManagerController extends FrameworkBundleAdminController
                 return $this->redirectToRoute('admin_sql_requests_index');
             }
         } catch (SqlRequestException $e) {
-            $this->addFlash('error', $this->handleDeleteException($e));
+            $this->addFlash('error', $this->handleException($e));
         }
 
         return $this->render('@PrestaShop/Admin/Configure/AdvancedParameters/RequestSql/create.html.twig', [
@@ -237,7 +237,7 @@ class SqlManagerController extends FrameworkBundleAdminController
 
             return $this->redirectToRoute('admin_sql_requests_index');
         } catch (SqlRequestException $e) {
-            $this->addFlash('error', $this->handleDeleteException($e));
+            $this->addFlash('error', $this->handleException($e));
         }
 
         return $this->render('@PrestaShop/Admin/Configure/AdvancedParameters/RequestSql/edit.html.twig', [
@@ -275,7 +275,7 @@ class SqlManagerController extends FrameworkBundleAdminController
 
             $this->addFlash('success', $this->trans('Successful deletion', 'Admin.Notifications.Success'));
         } catch (SqlRequestException $e) {
-            $this->addFlash('error', $this->handleDeleteException($e));
+            $this->addFlash('error', $this->handleException($e));
         }
 
         return $this->redirectToRoute('admin_sql_requests_index');
@@ -308,7 +308,7 @@ class SqlManagerController extends FrameworkBundleAdminController
                 $this->trans('The selection has been successfully deleted.', 'Admin.Notifications.Success')
             );
         } catch (SqlRequestException $e) {
-            $this->addFlash('error', $this->handleDeleteException($e));
+            $this->addFlash('error', $this->handleException($e));
         }
 
         return $this->redirectToRoute('admin_sql_requests_index');
@@ -478,7 +478,7 @@ class SqlManagerController extends FrameworkBundleAdminController
      *
      * @return string Error message
      */
-    protected function handleDeleteException(SqlRequestException $e)
+    protected function handleException(SqlRequestException $e)
     {
         $code = $e->getCode();
         $type = get_class($e);
