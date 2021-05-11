@@ -23,18 +23,26 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
 
-import ProductMap from '@pages/product/product-map';
-import {getCategories} from '@pages/product/services/categories';
 import Bloodhound from 'typeahead.js';
-import AutoCompleteSearch from '@components/auto-complete-search';
 import _ from 'lodash';
+
+import AutoCompleteSearch from '@components/auto-complete-search';
+import Tokenizers from '@components/bloodhound/tokenizers';
+import ProductMap from '@pages/product/product-map';
+import ProductEventMap from '@pages/product/product-event-map';
+import {getCategories} from '@pages/product/services/categories';
 
 const {$} = window;
 
 const ProductCategoryMap = ProductMap.categories;
 
 export default class CategoriesManager {
-  constructor() {
+  /**
+   * @param {EventEmitter} eventEmitter
+   * @returns {{}}
+   */
+  constructor(eventEmitter) {
+    this.eventEmitter = eventEmitter;
     this.categoriesContainer = document.querySelector(
       ProductCategoryMap.categoriesContainer,
     );
@@ -96,7 +104,7 @@ export default class CategoriesManager {
         if (radioInput.checked) {
           event.preventDefault();
           event.stopImmediatePropagation();
-          checkboxInput.checked = true;
+          this.updateCheckbox(checkboxInput, true);
         } else {
           this.updateCategoriesTags();
         }
@@ -219,8 +227,10 @@ export default class CategoriesManager {
     const checkbox = parentItem.querySelector(ProductCategoryMap.checkboxInput);
 
     // A default category is necessarily associated
-    checkbox.checked = true;
     checkbox.classList.add('disabled');
+    this.updateCheckbox(checkbox, true);
+    this.updateCategoriesTags();
+    this.eventEmitter.emit(ProductEventMap.updateSubmitButtonState);
   }
 
   /**
@@ -259,8 +269,15 @@ export default class CategoriesManager {
     if (!checkbox) {
       return;
     }
-    checkbox.checked = true;
+    this.updateCheckbox(checkbox, true);
+    this.openCategoryParents(checkbox);
+    this.updateCategoriesTags();
+  }
 
+  /**
+   * @param {HTMLElement} checkbox
+   */
+  openCategoryParents(checkbox) {
     // This is the element containing the checkbox
     let parentItem = checkbox.closest(ProductCategoryMap.treeElement);
 
@@ -283,6 +300,22 @@ export default class CategoriesManager {
   }
 
   /**
+   * @param {int} categoryId
+   */
+  unselectCategory(categoryId) {
+    const checkbox = this.categoriesContainer.querySelector(
+      `[name="${ProductCategoryMap.checkboxName(categoryId)}"]`,
+    );
+
+    if (!checkbox) {
+      return;
+    }
+    this.updateCheckbox(checkbox, false);
+    this.openCategoryParents(checkbox);
+    this.updateCategoriesTags();
+  }
+
+  /**
    * Typeahead data require to have only one array level, we also build the breadcrumb as we go through the
    * categories.
    */
@@ -299,11 +332,11 @@ export default class CategoriesManager {
 
   initTypeahead() {
     const source = new Bloodhound({
-      datumTokenizer: Bloodhound.tokenizers.obj.whitespace(
+      datumTokenizer: Tokenizers.obj.letters(
         'name',
-        'value',
+        'breadcrumb',
       ),
-      queryTokenizer: Bloodhound.tokenizers.whitespace,
+      queryTokenizer: Bloodhound.tokenizers.nonword,
       local: this.typeaheadDatas,
     });
 
@@ -361,16 +394,7 @@ export default class CategoriesManager {
         event.stopImmediatePropagation();
 
         const categoryId = event.currentTarget.dataset.id;
-        const checkbox = this.categoriesContainer.querySelector(
-          `[name="${ProductCategoryMap.checkboxName(categoryId)}"]`,
-        );
-
-        if (!checkbox) {
-          return;
-        }
-        checkbox.checked = false;
-        checkbox.dispatchEvent(new Event('change'));
-        this.updateCategoriesTags();
+        this.unselectCategory(categoryId);
       });
     });
 
@@ -415,5 +439,16 @@ export default class CategoriesManager {
     const matches = checkboxInput.name.match(this.categoryIdRegexp);
 
     return Number(matches[1]);
+  }
+
+  /**
+   * @param {HTMLElement} checkboxInput
+   * @param {boolean} checked
+   */
+  updateCheckbox(checkboxInput, checked) {
+    if (checkboxInput.checked !== checked) {
+      checkboxInput.checked = checked;
+      this.eventEmitter.emit(ProductEventMap.updateSubmitButtonState);
+    }
   }
 }
