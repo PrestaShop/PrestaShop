@@ -1246,14 +1246,14 @@ class ProductFormDataProviderTest extends TestCase
                 'customizations' => [],
                 'suppliers' => [],
             ],
-            'footer' => [
-                'active' => true,
-            ],
             'categories' => [
                 self::DEFAULT_CATEGORY_ID => [
                     'is_associated' => true,
                     'is_default' => true,
                 ],
+            ],
+            'footer' => [
+                'active' => true,
             ],
             'shortcuts' => [
                 'retail_price' => [
