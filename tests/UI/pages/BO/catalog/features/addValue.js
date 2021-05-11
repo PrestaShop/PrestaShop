@@ -17,6 +17,8 @@ class AddValue extends BOBasePage {
     this.createPageTitle = 'Features > Add New Feature •';
     this.editPageTitle = 'Features > Edit New Feature •';
 
+    this.alertSuccessBlockParagraph = '.alert-success';
+
     // Form selectors
     this.featureSelect = '#id_feature';
     this.valueInput = '#value_1';

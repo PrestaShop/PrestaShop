@@ -81,7 +81,7 @@ describe('Sort, pagination and delete by bulk actions features', async () => {
 
   // 1 : Create 19 new features
   const creationTests = new Array(19).fill(0, 0, 19);
-  describe('Create new features in BO', async () => {
+  describe('Create 19 new features in BO', async () => {
     creationTests.forEach((test, index) => {
       const createFeatureData = new Feature({name: `todelete${index}`});
       it('should go to add new feature page', async function () {
@@ -94,7 +94,7 @@ describe('Sort, pagination and delete by bulk actions features', async () => {
       });
 
       it(`should create feature n°${index + 1}`, async function () {
-        await testContext.addContextItem(this, 'testIdentifier', `createNewValue${index}`, baseContext);
+        await testContext.addContextItem(this, 'testIdentifier', `createNewFeature${index}`, baseContext);
 
         const textResult = await addFeaturePage.setFeature(page, createFeatureData);
         await expect(textResult).to.contains(featuresPage.successfulCreationMessage);

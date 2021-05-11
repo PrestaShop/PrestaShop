@@ -101,7 +101,7 @@ describe('Sort, pagination and delete by bulk actions feature values', async () 
 
   // 1 : Create 15 new values
   const creationTests = new Array(15).fill(0, 0, 15);
-  describe('Create new values in BO', async () => {
+  describe('Create 15 new values in BO', async () => {
     it('should go to add new value page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'goToAddNewValuePage', baseContext);
 

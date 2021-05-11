@@ -16,6 +16,8 @@ class AddFeature extends BOBasePage {
 
     this.createPageTitle = 'Features > Add New Feature •';
 
+    this.alertSuccessBlockParagraph = '.alert-success';
+
     // Form selectors
     this.nameInput = '#name_1';
     this.urlInput = 'input[name=\'url_name_1\']';
