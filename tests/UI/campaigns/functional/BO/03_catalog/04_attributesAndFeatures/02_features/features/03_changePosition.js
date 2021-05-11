@@ -10,10 +10,6 @@ const loginCommon = require('@commonTests/loginBO');
 const dashboardPage = require('@pages/BO/dashboard');
 const attributesPage = require('@pages/BO/catalog/attributes');
 const featuresPage = require('@pages/BO/catalog/features');
-const viewFeaturePage = require('@pages/BO/catalog/features/view');
-
-// Import data
-const {Features} = require('@data/demo/features');
 
 // Import test context
 const testContext = require('@utils/testContext');

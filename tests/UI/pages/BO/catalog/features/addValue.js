@@ -33,8 +33,9 @@ class AddValue extends BOBasePage {
    * @param page {Page} Browser tab
    * @param valueData {object} Values to set on add feature value form inputs
    * @param saveAndStay {boolean} True if we need to save and stay
-   * @returns {Promise<string>}
+   * @return {Promise<string>}
    */
+  // eslint-disable-next-line consistent-return
   async addEditValue(page, valueData, saveAndStay = false) {
     // Set group and value
     await this.selectByVisibleText(page, this.featureSelect, valueData.featureName);
