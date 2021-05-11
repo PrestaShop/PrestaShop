@@ -14,7 +14,7 @@
       <trans-unit id="a85eba4c6c699122b2bb1387ea4813ad">
         <source>Cart</source>
         <target>Cart</target>
-        <note>Line: 5</note>
+        <note>Line: 23</note>
       </trans-unit>
     </body>
   </file>
@@ -128,12 +128,12 @@ File: themes/StarterTheme/templates/checkout/_partials/steps/payment.tpl:115</no
       <trans-unit id="300225ee958b6350abc51805dab83c24">
         <source>Continue shopping</source>
         <target>Continue shopping</target>
-        <note>Line: 76</note>
+        <note>Line: 91</note>
       </trans-unit>
       <trans-unit id="7e0bf6d67701868aac3116ade8fea957">
         <source>Proceed to checkout</source>
         <target>Proceed to checkout</target>
-        <note>Line: 77</note>
+        <note>Line: 92</note>
       </trans-unit>
     </body>
   </file>
@@ -156,12 +156,12 @@ File: themes/StarterTheme/templates/checkout/_partials/steps/payment.tpl:115</no
       <trans-unit id="498f79c4c5bbde77f1bceb6c86fd0f6d">
         <source>Show</source>
         <target>Show</target>
-        <note>Line: 153</note>
+        <note>Line: 154</note>
       </trans-unit>
       <trans-unit id="62a5e490880a92eef74f167d9dc6dca0">
         <source>Hide</source>
         <target>Hide</target>
-        <note>Line: 151</note>
+        <note>Line: 152</note>
       </trans-unit>
     </body>
   </file>
@@ -207,7 +207,7 @@ File: themes/StarterTheme/templates/checkout/_partials/steps/payment.tpl:115</no
       <trans-unit id="c91e4ee170226d66e90f99ba917e4c20">
         <source>Quick view</source>
         <target>Quick view</target>
-        <note>Line: 94</note>
+        <note>Line: 104</note>
       </trans-unit>
     </body>
   </file>
@@ -216,12 +216,12 @@ File: themes/StarterTheme/templates/checkout/_partials/steps/payment.tpl:115</no
       <trans-unit id="2d0f6b8300be19cf35e89e66f0677f95">
         <source>Add to cart</source>
         <target>Add to cart</target>
-        <note>Line: 53</note>
+        <note>Line: 60</note>
       </trans-unit>
       <trans-unit id="694e8d1f2ee056f98ee488bdc4982d73">
         <source>Quantity</source>
         <target>Quantity</target>
-        <note>Line: 39</note>
+        <note>Line: 46</note>
       </trans-unit>
     </body>
   </file>
@@ -271,7 +271,7 @@ File: themes/StarterTheme/templates/checkout/_partials/steps/payment.tpl:115</no
       <trans-unit id="801ab24683a4a8c433c6eb40c48bcd9d">
         <source>Download</source>
         <target>Download</target>
-        <note>Line: 208</note>
+        <note>Line: 207</note>
       </trans-unit>
     </body>
   </file>
@@ -284,12 +284,12 @@ File: themes/StarterTheme/templates/checkout/_partials/steps/payment.tpl:115</no
       </trans-unit>
     </body>
   </file>
-  <file original="themes/classic/templates/checkout/_partials/cart-summary.tpl" source-language="en-US" target-language="en" datatype="plaintext">
+  <file original="themes/classic/templates/checkout/_partials/cart-summary-products.tpl" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
       <trans-unit id="acb0f29bb6d39aaabc7d2d62aaa4a57d">
         <source>show details</source>
         <target>show details</target>
-        <note>Line: 38</note>
+        <note>Line: 31</note>
       </trans-unit>
     </body>
   </file>
@@ -321,7 +321,7 @@ File: themes/StarterTheme/templates/checkout/_partials/steps/payment.tpl:115</no
       <trans-unit id="de95b43bceeb4b998aed4aed5cef1ae7">
         <source>edit</source>
         <target>edit</target>
-        <note>Line: 63</note>
+        <note>Line: 64</note>
       </trans-unit>
     </body>
   </file>
@@ -330,7 +330,7 @@ File: themes/StarterTheme/templates/checkout/_partials/steps/payment.tpl:115</no
       <trans-unit id="e512598333dceaaaf22889038b89a4a4">
         <source>add new address</source>
         <target>add new address</target>
-        <note>Line: 120</note>
+        <note>Line: 118</note>
       </trans-unit>
     </body>
   </file>
