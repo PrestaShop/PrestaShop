@@ -24,6 +24,8 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
 
+declare(strict_types=1);
+
 namespace PrestaShop\PrestaShop\Adapter\SqlManager\CommandHandler;
 
 use PrestaShop\PrestaShop\Adapter\SqlManager\SqlQueryValidator;
@@ -32,8 +34,6 @@ use PrestaShop\PrestaShop\Core\Domain\SqlManagement\Exception\SqlRequestConstrai
 use Symfony\Component\Translation\TranslatorInterface;
 
 /**
- * Class EditSqlRequestHandler is responsible for updating SqlRequest.
- *
  * @internal
  */
 abstract class AbstractSqlRequestHandler

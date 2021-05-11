@@ -21,7 +21,6 @@ Feature: SQL Manager SQL request
     Given I add sql request "sql-request-invalid-select" with the following properties
       | name            | sql request |
       | sql             | SELECT FROM ps_customer; |
-
     Then I should get an error that the SQL request is malformed
 
   Scenario: Create an SELECT request targetting an unknown table
@@ -46,4 +45,16 @@ Feature: SQL Manager SQL request
     Given I add sql request "sql-request-invalid-insert" with the following properties
       | name            | sql request |
       | sql             | INSERT INTO ps_customer VALUES(NULL, 'test'); |
+    Then I should get an error that only the SELECT request is allowed
+
+  Scenario: Create an ALTER request
+    Given I add sql request "sql-request-invalid-alter" with the following properties
+      | name            | sql request |
+      | sql             | ALTER TABLE ps_customer ADD troufignon BOOLEAN; |
+    Then I should get an error that only the SELECT request is allowed
+
+  Scenario: Create an DROP request
+    Given I add sql request "sql-request-invalid-drop" with the following properties
+      | name            | sql request |
+      | sql             | DROP TABLE ps_customer; |
     Then I should get an error that only the SELECT request is allowed
