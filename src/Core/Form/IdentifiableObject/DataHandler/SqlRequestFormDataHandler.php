@@ -26,13 +26,10 @@
 
 namespace PrestaShop\PrestaShop\Core\Form\IdentifiableObject\DataHandler;
 
-use PrestaShop\PrestaShop\Adapter\SqlManager\SqlRequestFormDataValidator;
 use PrestaShop\PrestaShop\Core\CommandBus\CommandBusInterface;
 use PrestaShop\PrestaShop\Core\Domain\SqlManagement\Command\AddSqlRequestCommand;
 use PrestaShop\PrestaShop\Core\Domain\SqlManagement\Command\EditSqlRequestCommand;
-use PrestaShop\PrestaShop\Core\Domain\SqlManagement\Exception\SqlRequestConstraintException;
 use PrestaShop\PrestaShop\Core\Domain\SqlManagement\ValueObject\SqlRequestId;
-use Symfony\Component\Translation\TranslatorInterface;
 
 /**
  * Creates or updates SqlRequest objects using form data.
@@ -45,26 +42,12 @@ final class SqlRequestFormDataHandler implements FormDataHandlerInterface
     private $commandBus;
 
     /**
-     * @var SqlRequestFormDataValidator
-     */
-    private $requestSqlFormDataValidator;
-
-    /**
-     * @var TranslatorInterface
-     */
-    private $translator;
-
-    /**
      * @param CommandBusInterface $bus
      */
     public function __construct(
-        CommandBusInterface $bus,
-        SqlRequestFormDataValidator $requestSqlFormDataValidator,
-        TranslatorInterface $translator
+        CommandBusInterface $bus
     ) {
         $this->commandBus = $bus;
-        $this->requestSqlFormDataValidator = $requestSqlFormDataValidator;
-        $this->translator = $translator;
     }
 
     /**
@@ -72,8 +55,6 @@ final class SqlRequestFormDataHandler implements FormDataHandlerInterface
      */
     public function create(array $data)
     {
-        $this->assertRequestIsValid($data);
-
         /** @var SqlRequestId $sqlRequestId */
         $sqlRequestId = $this->commandBus->handle(new AddSqlRequestCommand($data['name'], $data['sql']));
 
@@ -85,8 +66,6 @@ final class SqlRequestFormDataHandler implements FormDataHandlerInterface
      */
     public function update($id, array $data)
     {
-        $this->assertRequestIsValid($data);
-
         $sqlRequestId = new SqlRequestId($id);
 
         $command = (new EditSqlRequestCommand($sqlRequestId))
@@ -94,22 +73,5 @@ final class SqlRequestFormDataHandler implements FormDataHandlerInterface
             ->setSql($data['sql']);
 
         $this->commandBus->handle($command);
-    }
-
-    private function assertRequestIsValid(array $data): void
-    {
-        $errors = $this->requestSqlFormDataValidator->validate($data);
-        if (0 !== count($errors)) {
-            $message = $this->translator->trans(
-                $errors[0]['key'],
-                $errors[0]['parameters'],
-                $errors[0]['domain']
-            );
-
-            throw new SqlRequestConstraintException(
-                $message,
-                SqlRequestConstraintException::INVALID_SQL_QUERY
-            );
-        }
     }
 }

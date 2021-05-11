@@ -31,8 +31,10 @@ namespace Tests\Integration\Behaviour\Features\Context\Domain;
 use Behat\Gherkin\Node\TableNode;
 use Exception;
 use PHPUnit\Framework\Assert;
+use PrestaShop\PrestaShop\Core\Domain\SqlManagement\Command\AddSqlRequestCommand;
+use PrestaShop\PrestaShop\Core\Domain\SqlManagement\Command\EditSqlRequestCommand;
 use PrestaShop\PrestaShop\Core\Domain\SqlManagement\Exception\SqlRequestConstraintException;
-use RuntimeException;
+use PrestaShop\PrestaShop\Core\Domain\SqlManagement\ValueObject\SqlRequestId;
 use Symfony\Component\HttpFoundation\Request;
 use Tests\Integration\Behaviour\Features\Context\SharedStorage;
 
@@ -41,52 +43,50 @@ class SqlManagerFeatureContext extends AbstractDomainFeatureContext
     private const SQL_REQUEST_FORM_KEY = 'sql-request-form';
 
     /**
-     * @Given I specify following properties for sql request form
+     * @Given /^I add sql request "(.+)" with the following properties$/
      */
-    public function specifyPropertiesForSqlRequestForm(TableNode $node): void
+    public function addSqlRequestWithProperties(string $sqlQueryReference, TableNode $node): void
     {
         $data = $node->getRowsHash();
 
-        SharedStorage::getStorage()->set(static::SQL_REQUEST_FORM_KEY, $data);
-    }
-
-    /**
-     * @When I submit the sql request form
-     */
-    public function submitTheSqlRequestForm(): void
-    {
-        $data = SharedStorage::getStorage()->get(static::SQL_REQUEST_FORM_KEY);
-
-        $request = Request::createFromGlobals();
-        $request->setMethod(Request::METHOD_POST);
-        $request->request->set(
-            'sql_request',
-            $data
-        );
-
-        $form = $this
-              ->getContainer()
-              ->get('prestashop.core.form.builder.sql_request_form_builder')
-              ->getForm([], ['csrf_protection' => false]);
-        $form->handleRequest($request);
-
-        $formHandler = $this->getContainer()->get('prestashop.core.form.identifiable_object.sql_request_form_handler');
         try {
-            $result = $formHandler->handle($form);
-            if (!$result->isValid()) {
-                $this->lastException = new RuntimeException('Unable to save form');
-            }
+            /** @var SqlRequestId $sqlRequestId */
+            $sqlRequestId = $this->getCommandBus()->handle(
+                new AddSqlRequestCommand(
+                    $data['name'],
+                    $data['sql']
+                )
+            );
+            SharedStorage::getStorage()->set($sqlQueryReference, $sqlRequestId->getValue());
         } catch (Exception $e) {
             $this->lastException = $e;
         }
-
-        SharedStorage::getStorage()->clear(static::SQL_REQUEST_FORM_KEY);
     }
 
     /**
-     * @Then the sql request form is valid
+     * @Given /^I edit sql request "(.+)" with the following properties$/
      */
-    public function sqlRequestFormIsValid(): void
+    public function editSqlRequestWithProperties(string $sqlQueryReference, TableNode $node): void
+    {
+        $sqlRequestId = SharedStorage::getStorage()->get($sqlQueryReference);
+        $data = $node->getRowsHash();
+
+        try {
+            /** @var SqlRequestId $sqlRequestId */
+            $sqlRequestId = $this->getCommandBus()->handle(
+                (new EditSqlRequestCommand(new SqlRequestId($sqlRequestId)))
+                ->setName($data['name'])
+                ->setSql($data['sql'])
+            );
+        } catch (Exception $e) {
+            $this->lastException = $e;
+        }
+    }
+
+    /**
+     * @Then the sql request is valid
+     */
+    public function sqlRequestIsValid(): void
     {
         $this->assertLastErrorIsNull();
     }
