@@ -1,7 +1,16 @@
 require('module-alias/register');
 const BOBasePage = require('@pages/BO/BObasePage');
 
+/**
+ * View feature page, contains functions that can be used on view feature page
+ * @class
+ * @extends BOBasePage
+ */
 class ViewFeature extends BOBasePage {
+  /**
+   * @constructs
+   * Setting up texts and selectors to use on feature page
+   */
   constructor() {
     super();
 
@@ -31,7 +40,6 @@ class ViewFeature extends BOBasePage {
     this.tableBodyColumn = row => `${this.tableBodyRow(row)} td`;
 
     // Columns selectors
-    this.tableColumnSelectRowCheckbox = row => `${this.tableBodyColumn(row)} input[name='feature_valueBox[]']`;
     this.tableColumnId = row => `${this.tableBodyColumn(row)}:nth-child(2)`;
     this.tableColumnValue = row => `${this.tableBodyColumn(row)}:nth-child(3)`;
 
@@ -69,7 +77,7 @@ class ViewFeature extends BOBasePage {
 
   /**
    * Go to add new value page
-   * @param page
+   * @param page {Page} Browser tab
    * @return {Promise<void>}
    */
   async goToAddNewValuePage(page) {
@@ -79,7 +87,7 @@ class ViewFeature extends BOBasePage {
   /* Filter methods */
   /**
    * Reset all filters
-   * @param page
+   * @param page {Page} Browser tab
    * @return {Promise<void>}
    */
   async resetFilter(page) {
@@ -91,7 +99,7 @@ class ViewFeature extends BOBasePage {
 
   /**
    * Get Number of feature values
-   * @param page
+   * @param page {Page} Browser tab
    * @return {Promise<number>}
    */
   getNumberOfElementInGrid(page) {
@@ -100,7 +108,7 @@ class ViewFeature extends BOBasePage {
 
   /**
    * Reset and get number of feature values
-   * @param page
+   * @param page {Page} Browser tab
    * @return {Promise<number>}
    */
   async resetAndGetNumberOfLines(page) {
@@ -110,9 +118,9 @@ class ViewFeature extends BOBasePage {
 
   /**
    * Filter table
-   * @param page
-   * @param filterBy
-   * @param value
+   * @param page {Page} Browser tab
+   * @param filterBy {string} Column to filter with
+   * @param value {string} value to filter with
    * @return {Promise<void>}
    */
   async filterTable(page, filterBy, value) {
@@ -123,9 +131,9 @@ class ViewFeature extends BOBasePage {
   /* Column methods */
   /**
    * Get text column from table
-   * @param page
-   * @param row
-   * @param columnName
+   * @param page {Page} Browser tab
+   * @param row {number} Feature value row on table
+   * @param columnName Column name of the value to return
    * @return {Promise<string>}
    */
   async getTextColumn(page, row, columnName) {
@@ -150,7 +158,7 @@ class ViewFeature extends BOBasePage {
   /* Bulk actions methods */
   /**
    * Bulk delete attributes
-   * @param page
+   * @param page {Page} Browser tab
    * @return {Promise<string>}
    */
   async bulkDeleteValues(page) {
@@ -183,7 +191,7 @@ class ViewFeature extends BOBasePage {
   /* Pagination methods */
   /**
    * Get pagination label
-   * @param page
+   * @param page {Page} Browser tab
    * @return {Promise<string>}
    */
   getPaginationLabel(page) {
@@ -192,8 +200,8 @@ class ViewFeature extends BOBasePage {
 
   /**
    * Select pagination limit
-   * @param page
-   * @param number
+   * @param page {Page} Browser tab
+   * @param number {number} Pagination number to select
    * @returns {Promise<string>}
    */
   async selectPaginationLimit(page, number) {
@@ -205,7 +213,7 @@ class ViewFeature extends BOBasePage {
 
   /**
    * Click on next
-   * @param page
+   * @param page {Page} Browser tab
    * @returns {Promise<string>}
    */
   async paginationNext(page) {
@@ -216,7 +224,7 @@ class ViewFeature extends BOBasePage {
 
   /**
    * Click on previous
-   * @param page
+   * @param page {Page} Browser tab
    * @returns {Promise<string>}
    */
   async paginationPrevious(page) {
@@ -228,9 +236,9 @@ class ViewFeature extends BOBasePage {
   /* Sort functions */
   /**
    * Sort table by clicking on column name
-   * @param page
-   * @param sortBy, column to sort with
-   * @param sortDirection, asc or desc
+   * @param page {Page} Browser tab
+   * @param sortBy {string} Column name to sort with
+   * @param sortDirection {string} Sort direction by asc or desc
    * @return {Promise<void>}
    */
   async sortTable(page, sortBy, sortDirection) {
@@ -255,8 +263,8 @@ class ViewFeature extends BOBasePage {
 
   /**
    * Get content from all rows
-   * @param page
-   * @param columnName
+   * @param page {Page} Browser tab
+   * @param columnName Column name on table
    * @return {Promise<[]>}
    */
   async getAllRowsColumnContent(page, columnName) {
