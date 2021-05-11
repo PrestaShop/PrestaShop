@@ -225,7 +225,7 @@ class FactoryTest extends TestCase
      *
      * @dataProvider getPriceData
      */
-    public function testBuildPriceSpecificationWithPrecisionFallback($data, $expected)
+    public function testBuildPriceSpecificationWithPrecisionFallback(array $data, array $expected): void
     {
         // if maxFractionDigits < minFractionDigits, minFractionDigits = maxFractionDigits
         // see PrestaShop\PrestaShop\Core\Localization\Specification\Number
