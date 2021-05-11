@@ -250,7 +250,7 @@ class CommonPage {
    * Select option in select by visible text
    * @param page {Page} Browser tab
    * @param selector {string} String to locate the select
-   * @param textValue {string} Value to select
+   * @param textValue {string/number} Value to select
    * @returns {Promise<void>}
    */
   async selectByVisibleText(page, selector, textValue) {

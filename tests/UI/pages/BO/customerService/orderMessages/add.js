@@ -1,7 +1,16 @@
 require('module-alias/register');
 const BOBasePage = require('@pages/BO/BObasePage');
 
+/**
+ * Add order message page, contains selectors and functions for the page
+ * @class
+ * @extends BOBasePage
+ */
 class AddOrderMessage extends BOBasePage {
+  /**
+   * @constructs
+   * Setting up titles and selectors to use on add order message page
+   */
   constructor() {
     super();
 
@@ -23,8 +32,8 @@ class AddOrderMessage extends BOBasePage {
 
   /**
    * Change form language
-   * @param page
-   * @param lang
+   * @param page {Page} Browser tab
+   * @param lang {string} Language to set on form
    * @return {Promise<void>}
    */
   async changeFormLang(page, lang = 'en') {
@@ -40,8 +49,8 @@ class AddOrderMessage extends BOBasePage {
 
   /**
    * Add/Edit order message
-   * @param page
-   * @param orderMessageData
+   * @param page {Page} Browser tab
+   * @param orderMessageData {OrderMessage} Data to set order message form
    * @returns {Promise<string>}
    */
   async addEditOrderMessage(page, orderMessageData) {

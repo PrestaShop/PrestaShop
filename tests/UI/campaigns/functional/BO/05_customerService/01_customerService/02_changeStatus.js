@@ -110,10 +110,10 @@ describe('Change customer message status', async () => {
       await expect(pageTitle).to.contains(customerServicePage.pageTitle);
     });
     [
-      {args: {status: 'Handled', statusToCheck: 'Re-open', statusMeaning: 'text-danger'}},
-      {args: {status: 'Re-open', statusToCheck: 'Mark as "handled"', statusMeaning: 'text-success'}},
-      {args: {status: 'Pending 1', statusToCheck: 'Disable pending status', statusMeaning: 'text-warning'}},
-      {args: {status: 'Pending 2', statusToCheck: 'Disable pending status', statusMeaning: 'text-warning'}},
+      {args: {status: 'Handled', statusToCheck: 'Re-open'}},
+      {args: {status: 'Re-open', statusToCheck: 'Mark as "handled"'}},
+      {args: {status: 'Pending 1', statusToCheck: 'Disable pending status'}},
+      {args: {status: 'Pending 2', statusToCheck: 'Disable pending status'}},
     ].forEach((test, index) => {
       it('should go to view message page', async function () {
         await testContext.addContextItem(this, 'testIdentifier', `goToViewMessagePage${index}`, baseContext);

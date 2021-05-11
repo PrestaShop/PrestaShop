@@ -1,7 +1,16 @@
 require('module-alias/register');
 const BOBasePage = require('@pages/BO/BObasePage');
 
+/**
+ * View customer service page, contains selectors and functions for the page
+ * @class
+ * @extends BOBasePage
+ */
 class ViewCustomer extends BOBasePage {
+  /**
+   * @constructs
+   * Setting up titles and selectors to use on view customer service page
+   */
   constructor() {
     super();
 
@@ -22,7 +31,7 @@ class ViewCustomer extends BOBasePage {
   // Thread form
   /**
    * Get badge number
-   * @param page
+   * @param page {Page} Browser tab
    * @returns {Promise<string>}
    */
   getBadgeNumber(page) {
@@ -31,7 +40,7 @@ class ViewCustomer extends BOBasePage {
 
   /**
    * Get customer message
-   * @param page
+   * @param page {Page} Browser tab
    * @returns {Promise<string>}
    */
   getCustomerMessage(page) {
@@ -41,7 +50,7 @@ class ViewCustomer extends BOBasePage {
   // Your answer form
   /**
    * Get your answer form content
-   * @param page
+   * @param page {Page} Browser tab
    * @returns {Promise<string>}
    */
   getYourAnswerContent(page) {
@@ -51,7 +60,7 @@ class ViewCustomer extends BOBasePage {
   // Orders and messages timeline form
   /**
    * Get orders and messages form content
-   * @param page
+   * @param page {Page} Browser tab
    * @returns {Promise<string>}
    */
   getOrdersAndMessagesTimeline(page) {
@@ -60,8 +69,8 @@ class ViewCustomer extends BOBasePage {
 
   /**
    * Set status
-   * @param page
-   * @param status
+   * @param page {Page} Browser tab
+   * @param status {string} Status to set on the message
    * @returns {Promise<string>}
    */
   async setStatus(page, status) {
