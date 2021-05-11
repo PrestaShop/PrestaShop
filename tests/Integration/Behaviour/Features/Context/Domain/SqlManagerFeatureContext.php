@@ -40,8 +40,6 @@ use Tests\Integration\Behaviour\Features\Context\SharedStorage;
 
 class SqlManagerFeatureContext extends AbstractDomainFeatureContext
 {
-    private const SQL_REQUEST_FORM_KEY = 'sql-request-form';
-
     /**
      * @Given /^I add sql request "(.+)" with the following properties$/
      */
