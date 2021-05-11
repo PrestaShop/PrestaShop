@@ -31,19 +31,19 @@ Feature: SQL Manager SQL request
     Then I should get an error that the table "ps_customers" does not exists
 
   Scenario: Create a UPDATE request
-    Given I add sql request "sql-request-invalid-select" with the following properties
+    Given I add sql request "sql-request-invalid-update" with the following properties
       | name            | sql request |
       | sql             | UPDATE ps_customer SET name='test'; |
     Then I should get an error that only the SELECT request is allowed
 
   Scenario: Create a DELETE request
-    Given I add sql request "sql-request-invalid-select" with the following properties
+    Given I add sql request "sql-request-invalid-delete" with the following properties
       | name            | sql request |
       | sql             | DELETE FROM ps_customer WHERE id=1; |
     Then I should get an error that only the SELECT request is allowed
 
   Scenario: Create an INSERT request
-    Given I add sql request "sql-request-invalid-select" with the following properties
+    Given I add sql request "sql-request-invalid-insert" with the following properties
       | name            | sql request |
       | sql             | INSERT INTO ps_customer VALUES(NULL, 'test'); |
     Then I should get an error that only the SELECT request is allowed
