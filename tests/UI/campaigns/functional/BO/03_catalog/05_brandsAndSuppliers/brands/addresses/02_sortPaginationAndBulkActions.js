@@ -202,7 +202,7 @@ describe('Sort, pagination and bulk actions Addresses table', async () => {
       await expect(textColumn).to.contains('todelete');
     });
 
-    it('should delete with Bulk Actions and check Result', async function () {
+    it('should delete with Bulk Actions and check result', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'deleteAddresses', baseContext);
 
       const deleteTextResult = await brandsPage.deleteWithBulkActions(page, tableName);
