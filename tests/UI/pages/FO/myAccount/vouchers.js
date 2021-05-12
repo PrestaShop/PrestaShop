@@ -21,8 +21,8 @@ class Vouchers extends FOBasePage {
 
   /**
    * Get
-   * @param page
-   * @param row
+   * @param page {Page} Browser tab
+   * @param row {number} Row number in vouchers table
    * @returns {string}
    */
   getVoucherCodeFromTable(page, row) {

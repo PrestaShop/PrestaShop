@@ -70,9 +70,9 @@ class Files extends BOBasePage {
 
   /**
    * View (download) file
-   * @param page
-   * @param row
-   * @return {Promise<void>}
+   * @param page {Page} Browser tab
+   * @param row {number} File row on table
+   * @return {Promise<string>}
    */
   async viewFile(page, row = 1) {
     await Promise.all([
@@ -80,12 +80,7 @@ class Files extends BOBasePage {
       this.waitForVisibleSelector(page, `${this.dropdownToggleButton(row)}[aria-expanded='true']`),
     ]);
 
-    const [download] = await Promise.all([
-      page.waitForEvent('download'), // wait for download to start
-      page.click(this.viewRowLink(row)),
-    ]);
-
-    return download.path();
+    return this.clickAndWaitForDownload(page, this.viewRowLink(row));
   }
 
   /**

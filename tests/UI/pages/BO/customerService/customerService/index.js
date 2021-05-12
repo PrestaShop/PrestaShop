@@ -39,6 +39,9 @@ class CustomerService extends BOBasePage {
 
     // Columns selector
     this.tableColumn = (row, column) => `${this.tableBodyColumn(row)}:nth-child(${column})`;
+
+    // Delete message success text
+    this.deleteMessageSuccessAlertText = 'Successful deletion.';
   }
 
   /* Header Methods */
@@ -143,6 +146,21 @@ class CustomerService extends BOBasePage {
     }
 
     return this.getTextContent(page, columnSelector);
+  }
+
+  /**
+   * Is status changed
+   * @param page
+   * @param row
+   * @param statusClass
+   * @returns {Promise<boolean>}
+   */
+  async isStatusChanged(page, row = 1, statusClass) {
+    let i = 6;
+    if (await this.elementVisible(page, this.filterColumn('id_customer_thread'), 2000)) {
+      i += 1;
+    }
+    return this.elementVisible(page, `${this.tableColumn(row, i)} i.${statusClass}`, 2000);
   }
 
   /**

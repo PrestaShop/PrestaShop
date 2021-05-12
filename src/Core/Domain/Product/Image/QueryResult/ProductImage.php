@@ -56,27 +56,35 @@ class ProductImage
     /**
      * @var string
      */
-    private $path;
+    private $imageUrl;
+
+    /**
+     * @var string
+     */
+    private $thumbnailUrl;
 
     /**
      * @param int $imageId
      * @param bool $cover
      * @param int $position
      * @param array $localizedLegends
-     * @param string $path
+     * @param string $imageUrl
+     * @param string $thumbnailUrl
      */
     public function __construct(
         int $imageId,
         bool $cover,
         int $position,
         array $localizedLegends,
-        string $path
+        string $imageUrl,
+        string $thumbnailUrl
     ) {
         $this->imageId = $imageId;
         $this->cover = $cover;
         $this->position = $position;
         $this->localizedLegends = $localizedLegends;
-        $this->path = $path;
+        $this->imageUrl = $imageUrl;
+        $this->thumbnailUrl = $thumbnailUrl;
     }
 
     /**
@@ -114,8 +122,16 @@ class ProductImage
     /**
      * @return string
      */
-    public function getPath(): string
+    public function getImageUrl(): string
     {
-        return $this->path;
+        return $this->imageUrl;
+    }
+
+    /**
+     * @return string
+     */
+    public function getThumbnailUrl(): string
+    {
+        return $this->thumbnailUrl;
     }
 }

@@ -28,41 +28,10 @@ const Tree = function (element, options) {
   this.init();
 };
 
-function getCategoryById(param) {
-  let elem = null;
-  $('input[name=id_parent]').each(function () {
-    if ($(this).val() === `${param}`) {
-      elem = $(this);
-    }
-  });
-  return elem;
-}
-
-function disableTreeItem(item) {
-  item.find('input[name=id_parent]').attr('disabled', 'disabled');
-  if (item.hasClass('tree-folder')) {
-    item.find('span.tree-folder-name').addClass('tree-folder-name-disable');
-    item.find('ul li').each(function () {
-      disableTreeItem($(this));
-    });
-  } else if (item.hasClass('tree-item')) {
-    item.addClass('tree-item-disable');
-  }
-}
-
-function organizeTree() {
-  if ($('#id_category').length !== 0) {
-    const id = $('#id_category').val();
-    const item = getCategoryById(id).parent().parent();
-    disableTreeItem(item);
-  }
-}
-
 Tree.prototype = {
   constructor: Tree,
 
   init() {
-    const that = $(this);
     const name = this.$element.parent().find('ul.tree input').first().attr('name');
     const idTree = this.$element.parent().find('.cattree.tree').first().attr('id');
     this.$element.find('label.tree-toggler, .icon-folder-close, .icon-folder-open').unbind('click');
@@ -74,7 +43,7 @@ Tree.prototype = {
             .removeClass('icon-folder-open')
             .addClass('icon-folder-close');
 
-          that.trigger('collapse');
+          $(this).trigger('collapse');
           $(this).parent().parent().children('ul.tree')
             .toggle(300);
         } else {
@@ -95,7 +64,6 @@ Tree.prototype = {
 
             const useCheckBox = inputType === 'checkbox' ? 1 : 0;
 
-            const thatOne = $(this);
             $.get(
               'ajax-tab.php',
               {
@@ -108,15 +76,18 @@ Tree.prototype = {
                 useCheckBox,
               },
               (content) => {
-                thatOne.parent().closest('.tree-folder').find('ul.tree').html(content);
-                $(`#${idTree}`).tree('collapse', thatOne.closest('.tree-folder').children('ul.tree'));
-                that.trigger('expand');
-                thatOne.parent().parent().children('ul.tree').toggle(300);
-                $(`#${idTree}`).tree('init');
+                const targetTree = $(`#${idTree}`);
+                $(this).parent().closest('.tree-folder').find('ul.tree')
+                  .html(content);
+                targetTree.tree('collapse', $(this).closest('.tree-folder').children('ul.tree'));
+                $(this).trigger('expand');
+                $(this).parent().parent().children('ul.tree')
+                  .toggle(300);
+                targetTree.tree('init');
               },
             );
           } else {
-            that.trigger('expand');
+            $(this).trigger('expand');
             $(this).parent().parent().children('ul.tree')
               .toggle(300);
           }
@@ -187,17 +158,17 @@ Tree.prototype = {
 
   expandAll($speed) {
     const idTree = this.$element.parent().find('.cattree.tree').first().attr('id');
+    const targetTree = $(`#${idTree}`);
 
-    if (typeof (idTree) !== 'undefined' && !$(`#${idTree}`).hasClass('full_loaded')) {
+    if (typeof (idTree) !== 'undefined' && !targetTree.hasClass('full_loaded')) {
       const selected = [];
-      const that = this;
-      $(`#${idTree}`).find('.tree-selected input').each(
+      targetTree.find('.tree-selected input').each(
         function () {
           selected.push($(this).val());
         },
       );
-      const name = $(`#${idTree}`).find('ul.tree input').first().attr('name');
-      const inputType = $(`#${idTree}`).find('ul.tree input').first().attr('type');
+      const name = targetTree.find('ul.tree input').first().attr('name');
+      const inputType = targetTree.find('ul.tree input').first().attr('type');
 
       const useCheckBox = inputType === 'checkbox' ? 1 : 0;
 
@@ -214,23 +185,22 @@ Tree.prototype = {
           useCheckBox,
         },
         (content) => {
-          $(`#${idTree}`).html(content);
-          organizeTree();
-          $(`#${idTree}`).tree('init');
-          that.$element.find('label.tree-toggler').each(
+          targetTree.html(content);
+          targetTree.tree('init');
+          targetTree.find('label.tree-toggler').each(
             function () {
               $(this).parent().children('.icon-folder-close')
                 .removeClass('icon-folder-close')
                 .addClass('icon-folder-open');
               $(this).parent().parent().children('ul.tree')
                 .show($speed);
-              $(`#${idTree}`).addClass('full_loaded');
+              targetTree.addClass('full_loaded');
             },
           );
         },
       );
     } else {
-      this.$element.find('label.tree-toggler').each(
+      $(this).$element.find('label.tree-toggler').each(
         function () {
           $(this).parent().children('.icon-folder-close')
             .removeClass('icon-folder-close')

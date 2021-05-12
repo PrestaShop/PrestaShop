@@ -100,6 +100,15 @@ describe('Create, update and delete supplier', async () => {
 
   // 2: View supplier
   describe('View supplier', async () => {
+    it('should filter suppliers by name', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'filterToViewCreatedSupplier', baseContext);
+
+      await suppliersPage.filterTable(page, 'input', 'name', createSupplierData.name);
+
+      const textColumn = await suppliersPage.getTextColumnFromTableSupplier(page, 1, 'name');
+      await expect(textColumn).to.contain(createSupplierData.name);
+    });
+
     it('should view supplier', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'viewCreatedSupplier', baseContext);
 
@@ -138,6 +147,16 @@ describe('Create, update and delete supplier', async () => {
 
   // 4: View supplier
   describe('View edited supplier', async () => {
+    it('should filter suppliers by name', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'filterToViewUpdatedSupplier', baseContext);
+
+      await suppliersPage.resetFilter(page);
+      await suppliersPage.filterTable(page, 'input', 'name', editSupplierData.name);
+
+      const textColumn = await suppliersPage.getTextColumnFromTableSupplier(page, 1, 'name');
+      await expect(textColumn).to.contain(editSupplierData.name);
+    });
+
     it('should view supplier', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'viewUpdatedSupplier', baseContext);
 
@@ -158,6 +177,16 @@ describe('Create, update and delete supplier', async () => {
 
   // 5: Delete supplier
   describe('Delete supplier', async () => {
+    it('should filter suppliers by name', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'filterToViewDeleteSupplier', baseContext);
+
+      await suppliersPage.resetFilter(page);
+      await suppliersPage.filterTable(page, 'input', 'name', editSupplierData.name);
+
+      const textColumn = await suppliersPage.getTextColumnFromTableSupplier(page, 1, 'name');
+      await expect(textColumn).to.contain(editSupplierData.name);
+    });
+
     it('should delete supplier', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'deleteSupplier', baseContext);
 

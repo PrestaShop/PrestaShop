@@ -48,7 +48,7 @@ class CheckTranslationDuplicatesCommand extends ContainerAwareCommand
         $catalogue = $translator->getCatalogue()->all();
 
         // Init progress bar
-        $progress = new ProgressBar($output, count($catalogue, true));
+        $progress = new ProgressBar($output, count($catalogue, COUNT_RECURSIVE));
         $progress->start();
         $progress->setRedrawFrequency(20);
 
@@ -79,7 +79,7 @@ class CheckTranslationDuplicatesCommand extends ContainerAwareCommand
             $output->writeln('Duplicates found:');
             dump($duplicates);
 
-            return count($duplicates, true);
+            return count($duplicates, COUNT_RECURSIVE);
         }
 
         $output->writeln('Awww yisss! There is no duplicate in your translator catalog.');

@@ -5,6 +5,7 @@ class ShopURLSettings extends BOBasePage {
   constructor() {
     super();
 
+    this.successUpdateMessage = 'The status has been successfully updated.';
     this.alertSuccessBlockParagraph = '.alert-success';
 
     // Header selectors
@@ -24,6 +25,8 @@ class ShopURLSettings extends BOBasePage {
     this.tableBodyRow = row => `${this.tableBodyRows}:nth-child(${row})`;
     this.tableBodyColumn = row => `${this.tableBodyRow(row)} td`;
     this.tableColumn = (row, column) => `${this.tableBodyRow(row)} td:nth-child(${column})`;
+    this.columnValidIcon = (row, column) => `${this.tableColumn(row, column)} a[title='Enabled']`;
+    this.columnNotValidIcon = (row, column) => `${this.tableColumn(row, column)} a[title='Disabled']`;
 
     // Row actions selectors
     this.tableColumnActions = row => `${this.tableBodyColumn(row)} .btn-group-action`;
@@ -53,6 +56,14 @@ class ShopURLSettings extends BOBasePage {
     this.tableHead = `${this.gridTable} thead`;
     this.sortColumnDiv = column => `${this.tableHead} th:nth-child(${column})`;
     this.sortColumnSpanButton = column => `${this.sortColumnDiv(column)} span.ps-sort`;
+
+    // Bulk actions selectors
+    this.bulkActionBlock = 'div.bulk-actions';
+    this.bulkActionMenuButton = '#bulk_action_menu_shop_url';
+    this.bulkActionDropdownMenu = `${this.bulkActionBlock} ul.dropdown-menu`;
+    this.selectAllLink = `${this.bulkActionDropdownMenu} li:nth-child(1)`;
+    this.bulkEnableLink = `${this.bulkActionDropdownMenu} li:nth-child(4)`;
+    this.bulkDisableLink = `${this.bulkActionDropdownMenu} li:nth-child(5)`;
   }
 
   /* Methods */
@@ -279,6 +290,77 @@ class ShopURLSettings extends BOBasePage {
     }
     const sortColumnButton = `${columnSelector} i.icon-caret-${sortDirection}`;
     await this.clickAndWaitForNavigation(page, sortColumnButton);
+  }
+
+  // Quick edit methods
+  /**
+   * Get Value of column Displayed in table
+   * @param page
+   * @param row, row in table
+   * @param column, column in table
+   * @return {Promise<boolean>}
+   */
+  async getStatus(page, row, column) {
+    return this.elementVisible(page, this.columnValidIcon(row, column), 100);
+  }
+
+  /**
+   * Quick edit toggle column value in table
+   * @param page
+   * @param row, row in table
+   * @param column, column in table
+   * @param valueWanted, Value wanted in column
+   * @return {Promise<boolean>} return true if action is done, false otherwise
+   */
+  async setStatus(page, row, column, valueWanted = true) {
+    await this.waitForVisibleSelector(page, this.tableColumn(row, column), 2000);
+    if (await this.getStatus(page, row, column) !== valueWanted) {
+      page.click(this.tableColumn(row, column));
+      await this.waitForVisibleSelector(
+        page,
+        (valueWanted ? this.columnValidIcon : this.columnNotValidIcon)(row, column),
+      );
+      return true;
+    }
+
+    return false;
+  }
+
+  // Bulk actions methods
+  /**
+   * Select All rows
+   * @param page
+   * @returns {Promise<void>}
+   */
+  async bulkSelectRows(page) {
+    await page.click(this.bulkActionMenuButton);
+
+    await Promise.all([
+      page.click(this.selectAllLink),
+      this.waitForHiddenSelector(page, this.selectAllLink),
+    ]);
+  }
+
+  /**
+   * Enable/Disable shop url
+   * @param page
+   * @param wantedStatus
+   * @returns {Promise<void>}
+   */
+  async bulkSetStatus(page, wantedStatus) {
+    // Select all rows
+    await this.bulkSelectRows(page);
+
+    // Set status
+    await Promise.all([
+      page.click(this.bulkActionMenuButton),
+      this.waitForVisibleSelector(page, this.bulkEnableLink),
+    ]);
+
+    await this.clickAndWaitForNavigation(
+      page,
+      wantedStatus ? this.bulkEnableLink : this.bulkDisableLink,
+    );
   }
 }
 

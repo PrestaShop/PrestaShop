@@ -54,7 +54,7 @@ class MultistoreConfigurationTypeExtension extends AbstractTypeExtension
      */
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
-        if (!$this->multistoreCheckboxEnabler->shouldAddCheckboxes()) {
+        if (!$this->multistoreCheckboxEnabler->shouldAddMultistoreElements()) {
             return;
         }
 
@@ -65,7 +65,7 @@ class MultistoreConfigurationTypeExtension extends AbstractTypeExtension
 
         $builder->addEventListener(FormEvents::PRE_SET_DATA, static function (FormEvent $event) use ($checkboxEnabler) {
             $form = $event->getForm();
-            $checkboxEnabler->addCheckboxes($form);
+            $checkboxEnabler->addMultistoreElements($form);
         });
     }
 

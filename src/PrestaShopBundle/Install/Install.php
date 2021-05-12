@@ -27,7 +27,6 @@
 namespace PrestaShopBundle\Install;
 
 use AppKernel;
-use InstallSession;
 use Language as LanguageLegacy;
 use PhpEncryption;
 use PrestaShop\PrestaShop\Adapter\Entity\Cache;
@@ -464,6 +463,10 @@ class Install extends AbstractInstall
     /**
      * PROCESS : populateDatabase
      * Populate database with default data.
+     *
+     * @param string|null $entity [default=null] If provided, entity to populate
+     *
+     * @return bool
      */
     public function populateDatabase($entity = null)
     {
@@ -614,28 +617,29 @@ class Install extends AbstractInstall
                 'locale' => (string) $xml->locale,
             ];
 
-            if (InstallSession::getInstance()->safe_mode) {
-                $this->callWithUnityAutoincrement(function () use ($iso, $params_lang) {
-                    EntityLanguage::checkAndAddLanguage($iso, false, true, $params_lang);
-                });
-            } else {
-                if (file_exists(_PS_TRANSLATIONS_DIR_ . (string) $iso . '.gzip') == false) {
-                    $language = EntityLanguage::downloadLanguagePack($iso, _PS_INSTALL_VERSION_);
+            if (file_exists(_PS_TRANSLATIONS_DIR_ . (string) $iso . '.gzip') == false) {
+                $language = EntityLanguage::downloadLanguagePack($iso, _PS_INSTALL_VERSION_);
 
-                    if ($language == false) {
-                        throw new PrestashopInstallerException($this->translator->trans('Cannot download language pack "%iso%"', ['%iso%' => $iso], 'Install'));
-                    }
+                if ($language == false) {
+                    throw new PrestashopInstallerException($this->translator->trans('Cannot download language pack "%iso%"', ['%iso%' => $iso], 'Install'));
                 }
-
-                $errors = [];
-                $this->callWithUnityAutoincrement(function () use ($iso, $params_lang, &$errors) {
-                    EntityLanguage::installLanguagePack($iso, $params_lang, $errors);
-                });
             }
 
-            EntityLanguage::loadLanguages();
+            $errors = [];
+            $locale = $params_lang['locale'];
 
-            Tools::clearCache();
+            /* @todo check if a newer pack is available */
+            if (!EntityLanguage::translationPackIsInCache($locale)) {
+                EntityLanguage::downloadXLFLanguagePack($locale, $errors);
+
+                if (!empty($errors)) {
+                    throw new PrestashopInstallerException($this->translator->trans('Cannot download language pack "%iso%"', ['%iso%' => $iso], 'Install'));
+                }
+            }
+
+            $this->callWithUnityAutoincrement(function () use ($iso, $params_lang, &$errors) {
+                EntityLanguage::installFirstLanguagePack($iso, $params_lang, $errors);
+            });
 
             if (!$id_lang = EntityLanguage::getIdByIso($iso, true)) {
                 throw new PrestashopInstallerException($this->translator->trans(
@@ -835,7 +839,7 @@ class Install extends AbstractInstall
 
         $locale = new LocalizationPack();
         $this->callWithUnityAutoincrement(function () use ($locale, $localization_file_content) {
-            $locale->loadLocalisationPack($localization_file_content, false, true);
+            $locale->loadLocalisationPack($localization_file_content, [], true);
         });
 
         // Create default employee
@@ -891,11 +895,12 @@ class Install extends AbstractInstall
     public function getModulesList()
     {
         return [
+            'blockwishlist',
             'contactform',
             'dashactivity',
+            'dashtrends',
             'dashgoals',
             'dashproducts',
-            'dashtrends',
             'graphnvd3',
             'gridhtml',
             'gsitemap',
@@ -925,7 +930,6 @@ class Install extends AbstractInstall
             'ps_socialfollow',
             'ps_themecusto',
             'ps_wirepayment',
-            'sekeywords',
             'statsbestcategories',
             'statsbestcustomers',
             'statsbestproducts',
@@ -935,18 +939,15 @@ class Install extends AbstractInstall
             'statscatalog',
             'statscheckup',
             'statsdata',
-            'statsequipment',
             'statsforecast',
             'statslive',
             'statsnewsletter',
-            'statsorigin',
             'statspersonalinfos',
             'statsproduct',
             'statsregistrations',
             'statssales',
             'statssearch',
             'statsstock',
-            'statsvisits',
             'welcome',
         ];
     }
@@ -991,7 +992,6 @@ class Install extends AbstractInstall
             'blocktopmenu',
             'blockuserinfo',
             'blockviewed',
-            'blockwishlist',
             'cheque',
             'crossselling',
             'homefeatured',
@@ -1005,7 +1005,7 @@ class Install extends AbstractInstall
 
         $addons_modules = [];
         $content = Tools::addonsRequest('install-modules', $params);
-        $xml = @simplexml_load_string($content, null, LIBXML_NOCDATA);
+        $xml = @simplexml_load_string($content, 'SimpleXMLElement', LIBXML_NOCDATA);
 
         if ($xml !== false && isset($xml->module)) {
             foreach ($xml->module as $modaddons) {

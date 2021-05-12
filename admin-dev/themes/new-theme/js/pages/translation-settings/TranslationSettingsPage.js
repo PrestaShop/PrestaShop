@@ -24,9 +24,11 @@
  */
 
 import FormFieldToggle from './FormFieldToggle';
+import ExportFormFieldToggle from './ExportFormFieldToggle';
 
 export default class TranslationSettingsPage {
   constructor() {
     new FormFieldToggle();
+    new ExportFormFieldToggle();
   }
 }

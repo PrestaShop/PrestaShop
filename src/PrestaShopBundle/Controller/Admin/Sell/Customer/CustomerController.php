@@ -115,6 +115,7 @@ class CustomerController extends AbstractAdminController
             'deleteCustomersForm' => $deleteCustomerForm->createView(),
             'showcaseCardName' => ShowcaseCard::CUSTOMERS_CARD,
             'isShowcaseCardClosed' => $showcaseCardIsClosed,
+            'layoutHeaderToolbarBtn' => $this->getCustomerToolbarButtons(),
         ]);
     }
 
@@ -343,14 +344,6 @@ class CustomerController extends AbstractAdminController
                     (int) $customerId,
                     $data['note']
                 ));
-
-                if ($request->isXmlHttpRequest()) {
-                    return $this->json([
-                        'success' => true,
-                        'message' => $this->trans('Successful update.', 'Admin.Notifications.Success'),
-                    ]);
-                }
-
                 $this->addFlash('success', $this->trans('Successful update.', 'Admin.Notifications.Success'));
             } catch (CustomerException $e) {
                 $this->addFlash(
@@ -991,5 +984,32 @@ class CustomerController extends AbstractAdminController
                 $messages[$messageId]
             );
         }
+    }
+
+    /**
+     * @return array
+     */
+    private function getCustomerToolbarButtons(): array
+    {
+        $toolbarButtons = [];
+
+        $isSingleShopContext = $this->get('prestashop.adapter.shop.context')->isSingleShopContext();
+
+        $toolbarButtons['add'] = [
+            'href' => $this->generateUrl('admin_customers_create'),
+            'desc' => $this->trans('Add new customer', 'Admin.Orderscustomers.Feature'),
+            'icon' => 'add_circle_outline',
+            'disabled' => !$isSingleShopContext,
+        ];
+
+        if (!$isSingleShopContext) {
+            $toolbarButtons['add']['help'] = $this->trans(
+                'You can use this feature in a single shop context only. Switch context to enable it.',
+                'Admin.Orderscustomers.Feature'
+            );
+            $toolbarButtons['add']['href'] = '#';
+        }
+
+        return $toolbarButtons;
     }
 }

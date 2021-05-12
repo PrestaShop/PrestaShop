@@ -277,3 +277,8 @@ services:
       class: 'PrestaShop\PrestaShop\Core\Form\ChoiceProvider\CustomizationFieldTypeChoiceProvider'
       arguments:
           - '@translator'
+
+  prestashop.core.form.choice_provider.product_images_choice_provider:
+      class: 'PrestaShop\PrestaShop\Core\Form\ChoiceProvider\ProductImagesChoiceProvider'
+      arguments:
+          - '@prestashop.core.command_bus'

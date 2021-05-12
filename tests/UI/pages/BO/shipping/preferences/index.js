@@ -25,8 +25,8 @@ class Preferences extends BOBasePage {
 
   /**
    * Set handling charges button
-   * @param page
-   * @param value
+   * @param page {Page} Browser tab
+   * @param value {String} The handling charges value
    * @returns {Promise<string>}
    */
   async setHandlingCharges(page, value) {
@@ -41,8 +41,8 @@ class Preferences extends BOBasePage {
 
   /**
    * Set default carrier in carrier options form
-   * @param page
-   * @param carrierName
+   * @param page {Page} Browser tab
+   * @param carrierName {String} The carrier name
    * @return {Promise<string>}
    */
   async setDefaultCarrier(page, carrierName) {
@@ -55,9 +55,9 @@ class Preferences extends BOBasePage {
 
   /**
    * Set carriers sort By 'Price' or 'Position' / order by 'Ascending' or 'descending' in carrier options form
-   * @param page
-   * @param sortBy
-   * @param orderBy
+   * @param page {Page} Browser tab
+   * @param sortBy {String} Sort by 'Price' or 'Position'
+   * @param orderBy {String} Order by 'Ascending' or 'Descending'
    * @returns {Promise<string>}
    */
   async setCarrierSortOrderBy(page, sortBy, orderBy = 'Ascending') {

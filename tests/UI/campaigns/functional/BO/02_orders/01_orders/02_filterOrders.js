@@ -17,11 +17,29 @@ let numberOfOrders;
 let browserContext;
 let page;
 
+// Today date
+const today = new Date();
+
+// Current day
+const day = (`0${today.getDate()}`).slice(-2);
+
+// Current month
+const month = (`0${today.getMonth() + 1}`).slice(-2);
+
+// Current year
+const year = today.getFullYear();
+
+// Date today format (yyy-mm-dd)
+const dateToday = `${year}-${month}-${day}`;
+
+// Date today format (mm/dd/yyyy)
+const dateTodayToCheck = `${month}/${day}/${year}`;
+
 /*
 Filter orders By :
-Id, reference, new client, delivery, customer, total, payment and status
+Id, reference, new client, delivery, customer, total, payment, status and date from, date to
 */
-describe('Filter the Orders table by ID, REFERENCE, STATUS', async () => {
+describe('Filter the Orders table', async () => {
   // before and after functions
   before(async function () {
     browserContext = await helper.createBrowserContext(this.browser);
@@ -156,5 +174,28 @@ describe('Filter the Orders table by ID, REFERENCE, STATUS', async () => {
       const numberOfOrdersAfterReset = await ordersPage.resetAndGetNumberOfLines(page);
       await expect(numberOfOrdersAfterReset).to.be.equal(numberOfOrders);
     });
+  });
+
+  it('should filter the orders table by \'Date from\' and \'Date to\'', async function () {
+    await testContext.addContextItem(this, 'testIdentifier', 'filterByDate', baseContext);
+
+    // Filter orders
+    await ordersPage.filterOrdersByDate(page, dateToday, dateToday);
+
+    // Check number of element
+    const numberOfOrdersAfterFilter = await ordersPage.getNumberOfElementInGrid(page);
+    await expect(numberOfOrdersAfterFilter).to.be.at.most(numberOfOrders);
+
+    for (let i = 1; i <= numberOfOrdersAfterFilter; i++) {
+      const textColumn = await ordersPage.getTextColumn(page, 'date_add', i);
+      await expect(textColumn).to.contains(dateTodayToCheck);
+    }
+  });
+
+  it('should reset all filters', async function () {
+    await testContext.addContextItem(this, 'testIdentifier', 'resetFilter', baseContext);
+
+    const numberOfOrdersAfterReset = await ordersPage.resetAndGetNumberOfLines(page);
+    await expect(numberOfOrdersAfterReset).to.be.equal(numberOfOrders);
   });
 });

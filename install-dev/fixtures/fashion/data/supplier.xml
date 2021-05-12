@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<entity_supplier>
+  <fields id="name" class="Supplier">
+    <field name="name"/>
+    <field name="active"/>
+  </fields>
+  <entities>
+    <supplier id="Fashion_Supplier" active="1">
+      <name>Fashion supplier</name>
+    </supplier>
+    <supplier id="Accessories_Supplier" active="1">
+      <name>Accessories supplier</name>
+    </supplier>
+  </entities>
+</entity_supplier>

@@ -54,7 +54,7 @@ class CategoryRepository extends AbstractObjectModelRepository
                 CategoryException::class
             );
         } catch (CategoryException $e) {
-            throw new CategoryNotFoundException($categoryId, $e);
+            throw new CategoryNotFoundException($categoryId, $e->getMessage());
         }
     }
 }

@@ -27,6 +27,7 @@
 {% trans_default_domain 'Admin.Advparameters.Feature' %}
 
 {% block content %}
+  {% if multistoreIsUsed %}{{ ps.infotip(multistoreInfoTip, true) }}{% endif %}
   {% if requestSqlForm.vars.errors is not empty %}
     <div class="alert alert-danger">
       {% for error in requestSqlForm.vars.errors %}

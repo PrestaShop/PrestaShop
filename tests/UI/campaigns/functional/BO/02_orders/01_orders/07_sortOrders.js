@@ -87,6 +87,18 @@ describe('Sort orders', async () => {
     {
       args:
         {
+          testIdentifier: 'sortByDateDesc', sortBy: 'date_add', sortDirection: 'desc', isFloat: false,
+        },
+    },
+    {
+      args:
+        {
+          testIdentifier: 'sortByDateAsc', sortBy: 'date_add', sortDirection: 'asc', isFloat: false,
+        },
+    },
+    {
+      args:
+        {
           testIdentifier: 'sortByTotalPaidAsc', sortBy: 'total_paid_tax_incl', sortDirection: 'asc', isFloat: true,
         },
     },

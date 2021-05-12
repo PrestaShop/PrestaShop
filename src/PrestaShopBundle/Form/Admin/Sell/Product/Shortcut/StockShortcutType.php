@@ -28,12 +28,13 @@ declare(strict_types=1);
 
 namespace PrestaShopBundle\Form\Admin\Sell\Product\Shortcut;
 
+use PrestaShopBundle\Form\Admin\Type\TranslatorAwareType;
 use Symfony\Component\Form\Extension\Core\Type\NumberType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\Validator\Constraints\NotBlank;
 use Symfony\Component\Validator\Constraints\Type;
 
-class StockShortcutType extends ShortcutType
+class StockShortcutType extends TranslatorAwareType
 {
     /**
      * {@inheritDoc}
@@ -48,10 +49,8 @@ class StockShortcutType extends ShortcutType
                     new NotBlank(),
                     new Type(['type' => 'numeric']),
                 ],
+                'default_empty_data' => 0,
             ])
         ;
-
-        // Call parent build to add potential target tab button
-        parent::buildForm($builder, $options);
     }
 }

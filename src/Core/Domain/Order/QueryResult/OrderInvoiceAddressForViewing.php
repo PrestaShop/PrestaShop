@@ -26,6 +26,19 @@
 
 namespace PrestaShop\PrestaShop\Core\Domain\Order\QueryResult;
 
+@trigger_error(
+    sprintf(
+        '%s is deprecated since version 1.7.7.5 and will be removed in the next major version. Use %s::%s instead.',
+        OrderInvoiceAddressForViewing::class,
+        OrderForViewing::class,
+        'getInvoiceAddressFormatted()'
+    ),
+    E_USER_DEPRECATED
+);
+
+/**
+ * @deprecated Since 1.7.7.5 and will be removed in the next major.
+ */
 class OrderInvoiceAddressForViewing
 {
     /**

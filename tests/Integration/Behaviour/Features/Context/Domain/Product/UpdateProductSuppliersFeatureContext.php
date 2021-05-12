@@ -34,9 +34,10 @@ use PHPUnit\Framework\Assert;
 use PrestaShop\Decimal\DecimalNumber;
 use PrestaShop\PrestaShop\Core\Domain\Product\Combination\ValueObject\CombinationId;
 use PrestaShop\PrestaShop\Core\Domain\Product\Exception\InvalidProductTypeException;
-use PrestaShop\PrestaShop\Core\Domain\Product\Exception\ProductException;
 use PrestaShop\PrestaShop\Core\Domain\Product\Supplier\Command\RemoveAllAssociatedProductSuppliersCommand;
+use PrestaShop\PrestaShop\Core\Domain\Product\Supplier\Command\SetProductDefaultSupplierCommand;
 use PrestaShop\PrestaShop\Core\Domain\Product\Supplier\Command\SetProductSuppliersCommand;
+use PrestaShop\PrestaShop\Core\Domain\Product\Supplier\Exception\DefaultProductSupplierNotAssociatedException;
 use PrestaShop\PrestaShop\Core\Domain\Product\Supplier\Exception\ProductSupplierException;
 use PrestaShop\PrestaShop\Core\Domain\Product\Supplier\Query\GetProductSupplierOptions;
 use PrestaShop\PrestaShop\Core\Domain\Product\Supplier\QueryResult\ProductSupplierOptions;
@@ -52,23 +53,44 @@ class UpdateProductSuppliersFeatureContext extends AbstractProductFeatureContext
      */
     public function removeAssociatedProductSuppliers(string $productReference): void
     {
+        $this->cleanLastException();
         try {
             $this->getCommandBus()->handle(new RemoveAllAssociatedProductSuppliersCommand(
                 $this->getSharedStorage()->get($productReference))
             );
-        } catch (ProductException $e) {
+        } catch (ProductSupplierException $e) {
             $this->setLastException($e);
         }
     }
 
     /**
-     * @When I set product :productReference default supplier to :defaultSupplierReference and following suppliers:
+     * @When I set product :productReference default supplier to :defaultSupplierReference
      *
      * @param string $productReference
      * @param string $defaultSupplierReference
+     */
+    public function updateProductDefaultSupplier(string $productReference, string $defaultSupplierReference): void
+    {
+        $this->cleanLastException();
+        try {
+            $command = new SetProductDefaultSupplierCommand(
+                $this->getSharedStorage()->get($productReference),
+                $this->getSharedStorage()->get($defaultSupplierReference)
+            );
+
+            $this->getCommandBus()->handle($command);
+        } catch (DefaultProductSupplierNotAssociatedException | InvalidProductTypeException $e) {
+            $this->setLastException($e);
+        }
+    }
+
+    /**
+     * @When I set product :productReference suppliers:
+     *
+     * @param string $productReference
      * @param TableNode $tableNode
      */
-    public function updateProductSuppliers(string $productReference, string $defaultSupplierReference, TableNode $tableNode): void
+    public function updateProductSuppliers(string $productReference, TableNode $tableNode): void
     {
         $data = $tableNode->getColumnsHash();
         $productSuppliers = [];
@@ -97,11 +119,11 @@ class UpdateProductSuppliersFeatureContext extends AbstractProductFeatureContext
             ];
         }
 
+        $this->cleanLastException();
         try {
             $command = new SetProductSuppliersCommand(
                 $this->getSharedStorage()->get($productReference),
-                $productSuppliers,
-                $this->getSharedStorage()->get($defaultSupplierReference)
+                $productSuppliers
             );
 
             $productSupplierIds = $this->getCommandBus()->handle($command);
@@ -116,7 +138,7 @@ class UpdateProductSuppliersFeatureContext extends AbstractProductFeatureContext
             foreach ($productSupplierIds as $key => $productSupplierId) {
                 $this->getSharedStorage()->set($references[$key], $productSupplierId->getValue());
             }
-        } catch (ProductException $e) {
+        } catch (DefaultProductSupplierNotAssociatedException | InvalidProductTypeException $e) {
             $this->setLastException($e);
         }
     }
@@ -183,7 +205,7 @@ class UpdateProductSuppliersFeatureContext extends AbstractProductFeatureContext
      */
     public function assertFailedUpdateDefaultSupplierWhichIsNotAssigned(): void
     {
-        $this->assertLastErrorIs(ProductSupplierException::class);
+        $this->assertLastErrorIs(DefaultProductSupplierNotAssociatedException::class);
     }
 
     /**

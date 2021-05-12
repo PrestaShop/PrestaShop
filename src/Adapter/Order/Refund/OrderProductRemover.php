@@ -79,16 +79,16 @@ class OrderProductRemover
         // Important to remove order cart rule before the product is removed, so that cart rule can detect if it's applied on it
         $this->deleteOrderCartRule($order, $orderDetail, $cart);
 
-        if ((int) $orderDetail->id_customization > 0) {
-            $this->deleteCustomization($order, $orderDetail);
-        }
-
         $updatedProducts = [];
         if ($updateCart) {
             $updatedProducts = $this->updateCart($cart, $orderDetail);
         }
 
         $this->deleteSpecificPrice($order, $orderDetail, $cart);
+
+        if ((int) $orderDetail->id_customization > 0) {
+            $this->deleteCustomization($order, $orderDetail);
+        }
 
         $this->deleteOrderDetail(
             $order,
@@ -112,7 +112,8 @@ class OrderProductRemover
                 (int) $orderDetail->product_id,
                 (int) $orderDetail->product_attribute_id,
                 -$orderDetail->product_quantity,
-                false
+                false,
+                (int) $orderDetail->id_customization
             ),
         ];
 
@@ -120,7 +121,7 @@ class OrderProductRemover
             $orderDetail->product_quantity,
             $orderDetail->product_id,
             $orderDetail->product_attribute_id,
-            false,
+            $orderDetail->id_customization,
             'down',
             0,
             null,

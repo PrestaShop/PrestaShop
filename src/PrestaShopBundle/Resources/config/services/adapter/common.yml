@@ -25,4 +25,4 @@ services:
     prestashop.adapter.context_state_manager:
       class: PrestaShop\PrestaShop\Adapter\ContextStateManager
       arguments:
-        - '@=service("prestashop.adapter.legacy.context").getContext()'
+        - '@prestashop.adapter.legacy.context'

@@ -36,10 +36,10 @@ class CannotToggleCarrierStatusException extends CarrierException
     /**
      * Thrown when cannot toggle single carrier status.
      */
-    const SINGLE_TOGGLE = 10;
+    public const SINGLE_TOGGLE = 10;
 
     /**
      * Thrown when cannot bulk toggle carrier status.
      */
-    const BULK_TOGGLE = 20;
+    public const BULK_TOGGLE = 20;
 }

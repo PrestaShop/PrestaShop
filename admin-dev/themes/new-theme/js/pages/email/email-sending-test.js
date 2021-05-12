@@ -55,6 +55,10 @@ class EmailSendingTest {
     $('#test_email_sending_smtp_password').val($('#form_smtp_config_password').val());
     $('#test_email_sending_smtp_port').val($('#form_smtp_config_port').val());
     $('#test_email_sending_smtp_encryption').val($('#form_smtp_config_encryption').val());
+    $('#test_email_sending_dkim_enable').val($('input[name="form[dkim_enable]"]:checked').val());
+    $('#test_email_sending_dkim_key').val($('#form_dkim_config_key').val());
+    $('#test_email_sending_dkim_selector').val($('#form_dkim_config_selector').val());
+    $('#test_email_sending_dkim_domain').val($('#form_dkim_config_domain').val());
 
     const $testEmailSendingForm = $(event.currentTarget).closest('form');
 

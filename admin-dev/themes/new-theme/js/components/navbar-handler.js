@@ -85,13 +85,14 @@ export default class NavbarHandler {
 
   watchTabLinks() {
     $('.tab-link').click((event) => {
-      const target = $(event.target).data('targetTab');
+      event.preventDefault();
+      const target = $(event.target).attr('href');
 
       if (!target) {
         return;
       }
 
-      this.switchToTarget(`#${target}`);
+      this.switchToTarget(`${target}`);
     });
   }
 

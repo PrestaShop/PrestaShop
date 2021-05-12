@@ -206,6 +206,7 @@ describe('Check invoice downloaded from list', async () => {
     it('should go to orders history page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'goToOrderHistoryPage', baseContext);
 
+      await homePage.goToMyAccountPage(page);
       await foMyAccountPage.goToHistoryAndDetailsPage(page);
       const pageTitle = await foOrderHistoryPage.getPageTitle(page);
       await expect(pageTitle, 'Fail to open order history page').to.contains(foOrderHistoryPage.pageTitle);

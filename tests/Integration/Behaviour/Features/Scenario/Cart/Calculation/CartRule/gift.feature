@@ -35,6 +35,44 @@ Feature: Cart calculation with cart rules giving gift
     # Test known not to be reliable on previous
     # Then my cart total using previous calculation method should be 60.4924 tax included
 
+  Scenario: 3 products in cart, one cart rule offering a gift and a global 10% discount
+    Given I have an empty default cart
+    Given shop configuration for "PS_CART_RULE_FEATURE_ACTIVE" is set to 1
+    Given there is a product in the catalog named "product1" with a price of 19.812 and 1000 items in stock
+    Given there is a product in the catalog named "product4" with a price of 35.567 and 1000 items in stock
+    Given there is a cart rule named "cartrule13" that applies a percent discount of 10.0% with priority 13, quantity of 1000 and quantity per user 1000
+    Given cart rule "cartrule13" has a discount code "foo13"
+    Given cart rule "cartrule13" offers a gift product "product4"
+    When I add 3 items of product "product1" in my cart
+    When I use the discount "cartrule13"
+    Then I should have 4 products in my cart
+    Then my cart total should be 60.487 tax included
+    Then shipping handling fees are set to 7.0
+    Then the current cart should have the following contextual reductions:
+      | cartrule13        |  41.514  |
+
+  Scenario: 2 products in cart including one with specific price, one cart rule offering a gift and a global 10% discount
+    but does not apply to already discounted products
+
+    Given I have an empty default cart
+    Given shop configuration for "PS_CART_RULE_FEATURE_ACTIVE" is set to 1
+    Given there is a product in the catalog named "product1" with a price of 19.812 and 1000 items in stock
+    And product "product1" has a specific price named "discount" with a discount of 20.00 percent
+    Given there is a product in the catalog named "product2" with a price of 11.00 and 1000 items in stock
+    Given there is a product in the catalog named "product4" with a price of 35.567 and 1000 items in stock
+    Given there is a cart rule named "cartrule13" that applies a percent discount of 10.0% with priority 13, quantity of 1000 and quantity per user 1000
+    Given cart rule "cartrule13" has a discount code "foo13"
+    Given cart rule "cartrule13" offers a gift product "product4"
+    Given cart rule "cartrule13" does not apply to already discounted products
+    When I add 1 items of product "product1" in my cart
+    And I add 1 items of product "product2" in my cart
+    When I use the discount "cartrule13"
+    Then I should have 3 products in my cart
+    Then my cart total should be 32.8 tax included
+    Then shipping handling fees are set to 7.0
+    Then the current cart should have the following contextual reductions:
+      | cartrule13        |  36.67  |
+
   Scenario: 1 product in my cart, one cart rule offering the same product and a global 50% discount
     Given I have an empty default cart
     Given shop configuration for "PS_CART_RULE_FEATURE_ACTIVE" is set to 1

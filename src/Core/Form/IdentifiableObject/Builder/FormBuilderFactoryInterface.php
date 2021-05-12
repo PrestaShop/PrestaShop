@@ -30,6 +30,8 @@ use PrestaShop\PrestaShop\Core\Form\IdentifiableObject\DataProvider\FormDataProv
 
 /**
  * Defines interface for creating form builders.
+ *
+ * @todo in next major: Add ?FormOptionProviderInterface $optionProvider = null as a third parameter to this interface
  */
 interface FormBuilderFactoryInterface
 {

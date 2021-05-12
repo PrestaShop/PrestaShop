@@ -1,9 +1,10 @@
 parameters:
-	level: 4
+	level: 5
 	bootstrapFiles:
 		- .github/workflows/phpstan/autoload.php
 	paths:
 		- src
+		- webservice
 	ignoreErrors:
 		- '#^Call to an undefined method Symfony\\Component\\Config\\Definition\\Builder\\NodeDefinition\:\:#'
 		- '#^Unsafe usage of new static\(\)\.$#'

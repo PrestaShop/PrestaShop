@@ -22,7 +22,7 @@ class OrderHistory extends FOBasePage {
 
   /**
    * Get number of order in order history page
-   * @param page
+   * @param page {Page} Browser tab
    * @returns {Promise<number>}
    */
   async getNumberOfOrders(page) {
@@ -31,8 +31,8 @@ class OrderHistory extends FOBasePage {
 
   /**
    * Is reorder link visible
-   * @param page
-   * @param idOrder, database id of the order
+   * @param page {Page} Browser tab
+   * @param idOrder {number} Database id of the order
    * @returns {boolean}
    */
   isReorderLinkVisible(page, idOrder = 1) {
@@ -41,8 +41,8 @@ class OrderHistory extends FOBasePage {
 
   /**
    * Get order status from orders history page
-   * @param page
-   * @param orderRow, row in orders table
+   * @param page {Page} Browser tab
+   * @param orderRow {number} Row number in orders table
    * @return {Promise<string>}
    */
   getOrderStatus(page, orderRow = 1) {
@@ -51,8 +51,8 @@ class OrderHistory extends FOBasePage {
 
   /**
    * Go to details page
-   * @param page
-   * @param orderRow
+   * @param page {Page} Browser tab
+   * @param orderRow {number} Row number in orders table
    * @returns {Promise<void>}
    */
   async goToDetailsPage(page, orderRow = 1) {

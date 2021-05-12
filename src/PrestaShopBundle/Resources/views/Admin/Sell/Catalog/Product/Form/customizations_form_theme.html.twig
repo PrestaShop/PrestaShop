@@ -23,14 +23,6 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  *#}
 
-{%- block customizations_row -%}
-  {%- set attr = attr|merge({'class': (attr.class|default('') ~ ' col-md-12')|trim }) -%}
-  <h2>{{ 'Customization'|trans({}, 'Admin.Catalog.Feature') }}</h2>
-  <div {{ block('widget_attributes') }}>
-    {{- block('form_rows') -}}
-  </div>
-{%- endblock customizations_row -%}
-
 {%- block customization_field_row -%}
   <li class="form-group row customization-field-row">
     {{ form_widget(form.id) }}

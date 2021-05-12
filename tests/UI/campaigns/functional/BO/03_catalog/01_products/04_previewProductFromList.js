@@ -85,7 +85,7 @@ describe('Preview product from list', async () => {
     page = await productsPage.previewProduct(page, 1);
 
     // Check product information in FO
-    const productInformation = await foProductPage.getProductInformation(page, 1);
+    const productInformation = await foProductPage.getProductInformation(page);
     await expect(productInformation.name).to.equal(Products.demo_5.name);
   });
 });

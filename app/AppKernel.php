@@ -24,8 +24,8 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
 
+use PrestaShop\PrestaShop\Adapter\Module\Repository\ModuleRepository;
 use PrestaShop\PrestaShop\Adapter\SymfonyContainer;
-use PrestaShopBundle\Kernel\ModuleRepositoryFactory;
 use Symfony\Component\Config\Loader\LoaderInterface;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\HttpKernel\Kernel;
@@ -148,26 +148,18 @@ class AppKernel extends Kernel
         });
 
         $loader->load($this->getRootDir() . '/config/config_' . $this->getEnvironment() . '.yml');
-    }
 
-    /**
-     * Return all active modules.
-     *
-     * @return array list of modules names
-     */
-    private function getActiveModules()
-    {
-        $activeModules = [];
-        try {
-            if ($modulesRepository = ModuleRepositoryFactory::getInstance()->getRepository()) {
-                $activeModules = $modulesRepository->getActiveModules();
+        // Add translation paths to load into the translator. The paths are loaded by the Symfony's FrameworkExtension
+        $loader->load(function (ContainerBuilder $container) {
+            $moduleTranslationsPaths = $container->getParameter('modules_translation_paths');
+            foreach ($this->getActiveModules() as $activeModulePath) {
+                $translationsDir = _PS_MODULE_DIR_ . $activeModulePath . '/translations';
+                if (is_dir($translationsDir)) {
+                    $moduleTranslationsPaths[] = $translationsDir;
+                }
             }
-        } catch (\Exception $e) {
-            //Do nothing because the modules retrieval must not block the kernel, and it won't work
-            //during the installation process
-        }
-
-        return $activeModules;
+            $container->setParameter('modules_translation_paths', $moduleTranslationsPaths);
+        });
     }
 
     /**
@@ -202,5 +194,18 @@ class AppKernel extends Kernel
     public function getProjectDir()
     {
         return realpath(__DIR__ . '/..');
+    }
+
+    private function getActiveModules(): array
+    {
+        $activeModules = [];
+        try {
+            $activeModules = (new ModuleRepository())->getActiveModules();
+        } catch (\Exception $e) {
+            //Do nothing because the modules retrieval must not block the kernel, and it won't work
+            //during the installation process
+        }
+
+        return $activeModules;
     }
 }

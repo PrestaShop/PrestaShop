@@ -25,6 +25,7 @@
 
 import EmailSendingTest from '@pages/email/email-sending-test';
 import SmtpConfigurationToggler from '@pages/email/smtp-configuration-toggler';
+import DkimConfigurationToggler from '@pages/email/dkim-configuration-toggler';
 import Grid from '@components/grid/grid';
 import ReloadListActionExtension from '@components/grid/extension/reload-list-extension';
 import ExportToSqlManagerExtension from '@components/grid/extension/export-to-sql-manager-extension';
@@ -56,4 +57,5 @@ $(() => {
 
   new EmailSendingTest();
   new SmtpConfigurationToggler();
+  new DkimConfigurationToggler();
 });

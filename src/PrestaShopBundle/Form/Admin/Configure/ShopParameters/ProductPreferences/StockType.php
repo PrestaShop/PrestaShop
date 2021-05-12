@@ -74,6 +74,16 @@ class StockType extends TranslatorAwareType
                     'Decrement products in pack only.' => 1,
                     'Decrement both.' => 2,
                 ],
+            ])
+            ->add('oos_show_label_listing_pages', SwitchType::class, [
+                'label' => $this->trans(
+                    'Display out-of-stock label on product listing pages',
+                    'Admin.Shopparameters.Feature'
+                ),
+                'help' => $this->trans(
+                    'Note that the label will be displayed only if backorders are denied.',
+                    'Admin.Shopparameters.Help'
+                ),
             ]);
     }
 
