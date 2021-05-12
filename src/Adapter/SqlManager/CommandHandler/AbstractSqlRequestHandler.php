@@ -24,26 +24,18 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
 
-namespace PrestaShop\PrestaShop\Adapter\SqlManager;
+declare(strict_types=1);
 
-use RequestSql;
+namespace PrestaShop\PrestaShop\Adapter\SqlManager\CommandHandler;
 
-@trigger_error(
-    sprintf(
-        '%s is deprecated since version 1.7.7.5 and will be removed in the next major version.',
-        SqlRequestFormDataValidator::class
-    ),
-    E_USER_DEPRECATED
-);
+use PrestaShop\PrestaShop\Adapter\SqlManager\SqlQueryValidator;
+use PrestaShop\PrestaShop\Core\Domain\SqlManagement\Exception\SqlRequestConstraintException;
+use Symfony\Component\Translation\TranslatorInterface;
 
 /**
- * Class SqlRequestFormDataValidator validates SqlRequest data that is submitted via from.
- *
  * @internal
- *
- * @deprecated Since 1.7.7.5 and will be removed in the next major.
  */
-class SqlRequestFormDataValidator
+abstract class AbstractSqlRequestHandler
 {
     /**
      * @var SqlQueryValidator
@@ -51,34 +43,32 @@ class SqlRequestFormDataValidator
     private $sqlQueryValidator;
 
     /**
-     * @param SqlQueryValidator $sqlQueryValidator
+     * @var TranslatorInterface
      */
-    public function __construct(SqlQueryValidator $sqlQueryValidator)
-    {
+    private $translator;
+
+    public function __construct(
+        SqlQueryValidator $sqlQueryValidator,
+        TranslatorInterface $translator
+    ) {
         $this->sqlQueryValidator = $sqlQueryValidator;
+        $this->translator = $translator;
     }
 
-    /**
-     * Validate SqlRequest form data.
-     *
-     * @param array $data
-     *
-     * @return array Errors if any
-     */
-    public function validate(array $data)
+    protected function assertSqlQueryIsValid(string $sql): void
     {
-        if ($errors = $this->sqlQueryValidator->validate($data['sql'])) {
-            return $errors;
+        $errors = $this->sqlQueryValidator->validate($sql);
+        if (0 !== count($errors)) {
+            $message = $this->translator->trans(
+                $errors[0]['key'],
+                $errors[0]['parameters'],
+                $errors[0]['domain']
+            );
+
+            throw new SqlRequestConstraintException(
+                $message,
+                SqlRequestConstraintException::INVALID_SQL_QUERY
+            );
         }
-
-        $requestSql = new RequestSql();
-        $requestSql->name = $data['name'];
-        $requestSql->sql = $data['sql'];
-
-        if (true !== $error = $requestSql->validateFields(false, true)) {
-            return [$error];
-        }
-
-        return [];
     }
 }
