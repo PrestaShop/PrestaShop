@@ -38,10 +38,6 @@ export default {
   productFormSubmitButton: '.product-form-save-button',
   navigationBar: '#form-nav',
   dropzoneImagesContainer: '.product-image-dropzone',
-  pricing: {
-    retailPriceTaxIncluded: '#product_shortcuts_retail_price_price_tax_included',
-    retailPriceTaxExcluded: '#product_shortcuts_retail_price_price_tax_excluded',
-  },
   featureValues: {
     collectionContainer: '.feature-values-collection',
     collectionRowsContainer: '.feature-values-collection > .col-sm',
