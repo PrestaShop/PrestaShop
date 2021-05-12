@@ -175,7 +175,7 @@ describe('Sort, Pagination and Bulk Actions Brands table', async () => {
   // 4 : Disable, enable Brands
   describe('Disable, enable created Brands', async () => {
     it('should filter list by name', async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'filterToDeleteBrands', baseContext);
+      await testContext.addContextItem(this, 'testIdentifier', 'filterToDeleteBrands1', baseContext);
 
       await brandsPage.filterBrands(page, 'input', 'name', 'todelete');
       const textColumn = await brandsPage.getTextColumnFromTableBrands(page, 1, 'name');
@@ -215,7 +215,7 @@ describe('Sort, Pagination and Bulk Actions Brands table', async () => {
   // 5 : Delete brands with bulk actions
   describe('Delete Brands with bulk actions', async () => {
     it('should filter list by name', async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'filterToDeleteBrands', baseContext);
+      await testContext.addContextItem(this, 'testIdentifier', 'filterToDeleteBrands2', baseContext);
 
       await brandsPage.filterBrands(page, 'input', 'name', 'todelete');
       const textColumn = await brandsPage.getTextColumnFromTableBrands(page, 1, 'name');
