@@ -336,6 +336,21 @@ class CommonPage {
   }
 
   /**
+   * Set checkbox value when its hidden
+   * @param page {Page} Browser tab
+   * @param checkboxSelector {string} Selector of the checkbox resolve hidden
+   * @param valueWanted {boolean} Wanted value for the checkbox
+   * @return {Promise<void>}
+   */
+  async setHiddenCheckboxValue(page, checkboxSelector, valueWanted = true) {
+    const checkboxElement = await page.$(checkboxSelector);
+    if (valueWanted !== (await checkboxElement.isChecked())) {
+      const parentElement = await this.getParentElement(page, checkboxSelector);
+      await parentElement.click();
+    }
+  }
+
+  /**
    * Sort array of strings or numbers
    * @param arrayToSort {Array} Array to sort
    * @param isFloat {boolean} True if array values type are float
