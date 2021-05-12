@@ -114,6 +114,7 @@ abstract class ModuleCore implements ModuleInterface
     /** @var string Fill it if the module is installed but not yet set up */
     public $warning;
 
+    /** @var int Mix of (Context::DEVICE_COMPUTER & Context::DEVICE_TABLET & Context::DEVICE_MOBILE) * */
     public $enable_device = 7;
 
     /** @var array to store the limited country */
@@ -841,15 +842,37 @@ abstract class ModuleCore implements ModuleInterface
         return true;
     }
 
+    /**
+     * @param int $device
+     *
+     * @return bool
+     */
     public function enableDevice($device)
     {
-        Db::getInstance()->execute(
-            '
-            UPDATE ' . _DB_PREFIX_ . 'module_shop
-            SET enable_device = enable_device + ' . (int) $device . '
-            WHERE (enable_device &~ ' . (int) $device . ' OR enable_device = 0) AND id_module=' . (int) $this->id .
-            Shop::addSqlRestriction()
-        );
+        // Check if module has rows (FYI disable remove rows for table)
+        $query = new DbQuery();
+        $query->select('COUNT(*)');
+        $query->from('module_shop', 'ms');
+        $query->where('ms.id_module = ' . (int) $this->id);
+        $result = Db::getInstance()->getValue($query);
+        if ((int) $result === 0) {
+            $shopsId = Shop::getContextListShopID();
+            foreach ($shopsId as $shopId) {
+                Db::getInstance()->insert('module_shop', [
+                    'id_module' => $this->id,
+                    'id_shop' => $shopId,
+                    'enable_device' => (int) $device,
+                ]);
+            }
+        } else {
+            Db::getInstance()->execute(
+                'UPDATE ' . _DB_PREFIX_ . 'module_shop
+                SET enable_device = enable_device + ' . (int) $device . '
+                WHERE (enable_device &~ ' . (int) $device . ' OR enable_device = 0)
+                AND id_module=' . (int) $this->id .
+                Shop::addSqlRestriction()
+            );
+        }
 
         return true;
     }
@@ -864,6 +887,21 @@ abstract class ModuleCore implements ModuleInterface
         );
 
         return true;
+    }
+
+    public function isDeviceEnabled(int $device): bool
+    {
+        $query = new DbQuery();
+        $query->select('enable_device');
+        $query->from('module_shop', 'ms');
+        $query->where('ms.id_module = ' . (int) $this->id);
+
+        $row = Db::getInstance()->getRow($query);
+        if (!is_array($row)) {
+            return false;
+        }
+
+        return (bool) ($row['enable_device'] & $device);
     }
 
     /**
