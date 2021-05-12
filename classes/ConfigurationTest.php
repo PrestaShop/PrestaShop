@@ -146,7 +146,7 @@ class ConfigurationTestCore
 
     public static function test_phpversion()
     {
-        return version_compare(PHP_VERSION, '7.1.3', '>=');
+        return version_compare(PHP_VERSION, '7.2.5', '>=');
     }
 
     public static function test_apache_mod_rewrite()
