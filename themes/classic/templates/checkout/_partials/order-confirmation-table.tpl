@@ -105,7 +105,7 @@
 
       <table>
         {foreach $subtotals as $subtotal}
-          {if $subtotal.type !== 'tax' && $subtotal.label !== null}
+          {if $subtotal !== null && $subtotal.type !== 'tax' && $subtotal.label !== null}
             <tr>
               <td>{$subtotal.label}</td>
               <td>{if 'discount' == $subtotal.type}-&nbsp;{/if}{$subtotal.value}</td>
@@ -128,7 +128,7 @@
             <td>{$totals.total.value}</td>
           </tr>
         {/if}
-        {if $subtotals.tax.label !== null}
+        {if $subtotals.tax !== null && $subtotals.tax.label !== null}
           <tr class="sub taxes">
             <td colspan="2"><span class="label">{l s='%label%:' sprintf=['%label%' => $subtotals.tax.label] d='Shop.Theme.Global'}</span>&nbsp;<span class="value">{$subtotals.tax.value}</span></td>
           </tr>
