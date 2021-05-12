@@ -7,7 +7,7 @@ const loginCommon = require('@commonTests/loginBO');
 // Importing pages
 const dashboardPage = require('@pages/BO/dashboard');
 const brandsPage = require('@pages/BO/catalog/brands');
-const addBrandAddressPage = require('@pages/BO/catalog/brands/addresses/add');
+const addBrandAddressPage = require('@pages/BO/catalog/brands/addAddress');
 
 // Importing data
 const BrandAddressFaker = require('@data/faker/brandAddress');

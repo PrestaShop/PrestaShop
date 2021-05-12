@@ -16,7 +16,7 @@ const dashboardPage = require('@pages/BO/dashboard');
 const brandsPage = require('@pages/BO/catalog/brands');
 const addBrandPage = require('@pages/BO/catalog/brands/add');
 const viewBrandPage = require('@pages/BO/catalog/brands/view');
-const addBrandAddressPage = require('@pages/BO/catalog/brands/addresses/add');
+const addBrandAddressPage = require('@pages/BO/catalog/brands/addAddress');
 
 // Import test context
 const testContext = require('@utils/testContext');
