@@ -314,6 +314,7 @@ class ImageGenerator implements ImageGeneratorInterface
     public function regenerateThumbnails(array $data): array
     {
         $this->startTime = time();
+        // Not sure why this is necessary, but this was in legacy code
         ini_set('max_execution_time', (string) $this->maxExecutionTime);
         $this->maxExecutionTime = (int) ini_get('max_execution_time');
         $languages = Language::getLanguages(false);
