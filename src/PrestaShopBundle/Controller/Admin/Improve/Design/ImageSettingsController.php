@@ -209,7 +209,7 @@ class ImageSettingsController extends FrameworkBundleAdminController
             $result = $imageTypeFormHandler->handle($imageTypeForm);
 
             if (null !== $result->getIdentifiableObjectId()) {
-                $this->addFlash('success', $this->trans('Successful creation.', 'Admin.Notifications.Success'));
+                $this->addFlash('success', $this->trans('Successful creation', 'Admin.Notifications.Success'));
 
                 return $this->redirectToRoute('admin_image_settings_index');
             }
@@ -255,7 +255,7 @@ class ImageSettingsController extends FrameworkBundleAdminController
             $result = $imageTypeFormHandler->handleFor($imageTypeId, $imageTypeForm);
 
             if ($result->isSubmitted() && $result->isValid()) {
-                $this->addFlash('success', $this->trans('Successful update.', 'Admin.Notifications.Success'));
+                $this->addFlash('success', $this->trans('Update successful', 'Admin.Notifications.Success'));
 
                 return $this->redirectToRoute('admin_image_settings_index');
             }
@@ -296,7 +296,7 @@ class ImageSettingsController extends FrameworkBundleAdminController
             $this->getCommandBus()->handle(new DeleteImageTypeCommand($imageTypeId));
             $this->addFlash(
                 'success',
-                $this->trans('Successful deletion.', 'Admin.Notifications.Success')
+                $this->trans('Successful deletion', 'Admin.Notifications.Success')
             );
         } catch (ImageTypeException $exception) {
             $this->addFlash('error', $this->getErrorMessageForException($exception, $this->getErrorMessages()));
@@ -356,7 +356,7 @@ class ImageSettingsController extends FrameworkBundleAdminController
     {
         return [
             ImageTypeNotFoundException::class => $this->trans(
-                'The object cannot be loaded (or found)',
+                'The object cannot be loaded (or found).',
                 'Admin.Notifications.Error'
             ),
             DeleteImageTypeException::class => [
