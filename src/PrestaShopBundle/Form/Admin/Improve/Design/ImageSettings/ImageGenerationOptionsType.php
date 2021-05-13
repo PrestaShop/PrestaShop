@@ -141,7 +141,7 @@ class ImageGenerationOptionsType extends TranslatorAwareType
                         new Type([
                             'type' => 'numeric',
                             'message' => $this->trans(
-                                'This field is invalid, it must contain numeric values',
+                                'This field is invalid, it must contain numeric values.',
                                 'Admin.Notifications.Error'
                             ),
                         ]),
@@ -156,7 +156,7 @@ class ImageGenerationOptionsType extends TranslatorAwareType
                         new Type([
                             'type' => 'numeric',
                             'message' => $this->trans(
-                                'This field is invalid, it must contain numeric values',
+                                'This field is invalid, it must contain numeric values.',
                                 'Admin.Notifications.Error'
                             ),
                         ]),
@@ -171,7 +171,7 @@ class ImageGenerationOptionsType extends TranslatorAwareType
                         new Type([
                             'type' => 'numeric',
                             'message' => $this->trans(
-                                'This field is invalid, it must contain numeric values',
+                                'This field is invalid, it must contain numeric values.',
                                 'Admin.Notifications.Error'
                             ),
                         ]),
