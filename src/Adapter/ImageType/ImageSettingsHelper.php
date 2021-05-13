@@ -81,6 +81,7 @@ class ImageSettingsHelper implements ImageSettingsHelperInterface
             )];
         }
 
+        // Not sure why this is necessary, but this was in legacy code
         ini_set('max_execution_time', (string) $this->max_execution_time);
         $this->max_execution_time = (int) ini_get('max_execution_time');
         $result = Image::moveToNewFileSystem($this->max_execution_time);
