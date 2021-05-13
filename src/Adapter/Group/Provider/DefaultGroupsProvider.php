@@ -98,6 +98,6 @@ final class DefaultGroupsProvider implements DefaultGroupsProviderInterface
      */
     public function getAllGroupIds()
     {
-        return array_column(Group::getGroups((int) $this->configuration->get('PS_LANG_DEFAULT')), 'id_group')
+        return array_column(Group::getGroups((int) $this->configuration->get('PS_LANG_DEFAULT')), 'id_group');
     }
 }
