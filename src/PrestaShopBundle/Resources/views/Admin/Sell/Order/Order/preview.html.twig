@@ -84,10 +84,11 @@
                 <strong>{{ 'Invoice details'|trans({}, 'Admin.Orderscustomers.Feature') }}:</strong>
               </p>
 
-
               {% for line in orderPreview.invoiceAddressFormatted|split("\n") %}
                 <p{% if not loop.last %} class="mb-0"{% endif %}>{{ line }}</p>
               {% endfor %}
+
+              <p class="mb-0">{{ orderPreview.invoiceDetails.email }}</p>
             </div>
           </div>
         </div>
