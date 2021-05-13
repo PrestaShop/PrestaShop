@@ -78,7 +78,7 @@ export default class ChoiceExtension {
     $form.appendTo('body');
     $form.submit();
 
-    this.lock(url);
+    this.lockUrl(url);
   }
 
   /**
@@ -98,7 +98,7 @@ export default class ChoiceExtension {
    * @param url
    * @private
    */
-  lock(url) {
+  lockUrl(url) {
     this.lock.push(url);
   }
 }
