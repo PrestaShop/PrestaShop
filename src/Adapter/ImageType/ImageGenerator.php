@@ -40,6 +40,9 @@ use Symfony\Component\Translation\TranslatorInterface;
 
 class ImageGenerator implements ImageGeneratorInterface
 {
+    private const MAX_EXECUTION_TIME_DEFAULT = 7200;
+    private const START_TIME_DEFAULT = 0;
+
     /**
      * @var TranslatorInterface
      */
@@ -48,12 +51,12 @@ class ImageGenerator implements ImageGeneratorInterface
     /**
      * @var int
      */
-    private $startTime = 0;
+    private $startTime = self::START_TIME_DEFAULT;
 
     /**
      * @var int
      */
-    private $maxExecutionTime = 7200;
+    private $maxExecutionTime = self::MAX_EXECUTION_TIME_DEFAULT;
 
     /**
      * @var Configuration

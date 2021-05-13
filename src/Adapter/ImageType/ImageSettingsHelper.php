@@ -37,10 +37,12 @@ use Symfony\Component\Translation\TranslatorInterface;
  */
 class ImageSettingsHelper implements ImageSettingsHelperInterface
 {
+    private const MAX_EXECUTION_TIME_DEFAULT = 7200;
+
     /**
      * @var int
      */
-    protected $max_execution_time = 7200;
+    protected $max_execution_time = self::MAX_EXECUTION_TIME_DEFAULT;
 
     /**
      * @var TranslatorInterface
