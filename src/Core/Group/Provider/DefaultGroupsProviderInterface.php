@@ -35,4 +35,9 @@ interface DefaultGroupsProviderInterface
      * @return DefaultGroups
      */
     public function getGroups();
+
+    /**
+     * @return array of ids
+     */
+    public function getAllGroupIds();
 }
