@@ -36,7 +36,7 @@ const {$} = window;
  */
 export default class ChoiceExtension {
   constructor() {
-    this.lock = [];
+    this.locks = [];
   }
 
   extend(grid) {
@@ -78,7 +78,7 @@ export default class ChoiceExtension {
     $form.appendTo('body');
     $form.submit();
 
-    this.lockUrl(url);
+    this.lock(url);
   }
 
   /**
@@ -90,7 +90,7 @@ export default class ChoiceExtension {
    * @private
    */
   isLocked(url) {
-    return this.lock.includes(url);
+    return this.locks.includes(url);
   }
 
   /**
@@ -98,7 +98,7 @@ export default class ChoiceExtension {
    * @param url
    * @private
    */
-  lockUrl(url) {
-    this.lock.push(url);
+  lock(url) {
+    this.locks.push(url);
   }
 }
