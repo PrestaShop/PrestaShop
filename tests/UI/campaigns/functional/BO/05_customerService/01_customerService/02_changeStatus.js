@@ -147,7 +147,7 @@ describe('Change customer message status', async () => {
       it('should check if the status color is changed', async function () {
         await testContext.addContextItem(this, 'testIdentifier', `checkStatusColor${index}`, baseContext);
 
-        const isChanged = await customerServicePage.isStatusChanged(page, 1, test.args.statusMeaning);
+        const isChanged = await customerServicePage.isStatusChanged(page, 1, test.args.status);
         await expect(isChanged).to.be.true;
       });
     });
