@@ -119,6 +119,10 @@ class TinyMCEEditor {
       ...config,
     };
 
+    if (typeof window.defaultTinyMceConfig !== 'undefined') {
+      Object.assign(cfg, window.defaultTinyMceConfig);
+    }
+
     if (typeof cfg.editor_selector !== 'undefined') {
       cfg.selector = `.${cfg.editor_selector}`;
     }

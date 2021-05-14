@@ -99,7 +99,7 @@
     return this.each(function () {
       const $this = $(this);
       let data = $this.data('bs.sidebar');
-      const options = $.extend({}, Sidebar.DEFAULTS, $this.data(), typeof options === 'object' && option);
+      const options = $.extend({}, Sidebar.DEFAULTS, $this.data(), typeof this.options === 'object' && option);
 
       if (!data && options.toggle && option === 'show') {
         // eslint-disable-next-line

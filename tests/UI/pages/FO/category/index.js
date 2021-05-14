@@ -10,7 +10,7 @@ class Category extends FOBasePage {
     this.mainSection = '#main';
     this.productsSection = '#products';
     this.productListDiv = '#js-product-list';
-    this.productItemListDiv = `${this.productListDiv} .products div[itemprop='itemListElement']`;
+    this.productItemListDiv = `${this.productListDiv} .products div.product`;
     this.sortByDiv = `${this.productsSection} div.sort-by-row`;
     this.sortByButton = `${this.sortByDiv} button.select-title`;
   }
@@ -27,7 +27,7 @@ class Category extends FOBasePage {
 
   /**
    * Get number of products displayed in category page
-   * @param page
+   * @param page {Page} Browser tab
    * @return {Promise<number>}
    */
   async getNumberOfProductsDisplayed(page) {
@@ -36,7 +36,7 @@ class Category extends FOBasePage {
 
   /**
    * Get sort by value from button
-   * @param page
+   * @param page {Page} Browser tab
    * @return {Promise<string>}
    */
   getSortByValue(page) {

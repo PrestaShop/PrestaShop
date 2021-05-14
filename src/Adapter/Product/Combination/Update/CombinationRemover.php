@@ -30,8 +30,12 @@ namespace PrestaShop\PrestaShop\Adapter\Product\Combination\Update;
 
 use PrestaShop\PrestaShop\Adapter\Product\Combination\Repository\CombinationRepository;
 use PrestaShop\PrestaShop\Adapter\Product\Repository\ProductRepository;
+use PrestaShop\PrestaShop\Core\Domain\Product\Combination\Exception\CannotAddCombinationException;
 use PrestaShop\PrestaShop\Core\Domain\Product\Combination\Exception\CannotDeleteCombinationException;
+use PrestaShop\PrestaShop\Core\Domain\Product\Combination\Exception\CombinationNotFoundException;
+use PrestaShop\PrestaShop\Core\Domain\Product\Combination\ValueObject\CombinationId;
 use PrestaShop\PrestaShop\Core\Domain\Product\Exception\InvalidProductTypeException;
+use PrestaShop\PrestaShop\Core\Domain\Product\Exception\ProductConstraintException;
 use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductId;
 use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductType;
 use PrestaShop\PrestaShop\Core\Exception\CoreException;
@@ -49,15 +53,44 @@ class CombinationRemover
     private $combinationRepository;
 
     /**
+     * @var DefaultCombinationUpdater
+     */
+    private $defaultCombinationUpdater;
+
+    /**
      * @param ProductRepository $productRepository
      * @param CombinationRepository $combinationRepository
+     * @param DefaultCombinationUpdater $defaultCombinationUpdater
      */
     public function __construct(
         ProductRepository $productRepository,
-        CombinationRepository $combinationRepository
+        CombinationRepository $combinationRepository,
+        DefaultCombinationUpdater $defaultCombinationUpdater
     ) {
         $this->productRepository = $productRepository;
         $this->combinationRepository = $combinationRepository;
+        $this->defaultCombinationUpdater = $defaultCombinationUpdater;
+    }
+
+    /**
+     * @param CombinationId $combinationId
+     *
+     * @throws CoreException
+     * @throws CannotAddCombinationException
+     * @throws CombinationNotFoundException
+     * @throws ProductConstraintException
+     */
+    public function removeCombination(CombinationId $combinationId): void
+    {
+        $combination = $this->combinationRepository->get($combinationId);
+        $this->combinationRepository->delete($combinationId);
+        if ($combination->default_on) {
+            $productId = new ProductId((int) $combination->id_product);
+            $defaultCombination = $this->combinationRepository->findDefaultCombination($productId);
+            if (null !== $defaultCombination) {
+                $this->defaultCombinationUpdater->setDefaultCombination(new CombinationId((int) $defaultCombination->id));
+            }
+        }
     }
 
     /**

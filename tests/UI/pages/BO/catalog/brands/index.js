@@ -516,9 +516,9 @@ class Brands extends BOBasePage {
   // Export methods
   /**
    * Click on lint to export categories to a csv file
-   * @param table, which table to export
-   * @param page
-   * @return {Promise<*>}
+   * @param page {Page} Browser tab
+   * @param table {string} Which table to export
+   * @return {Promise<string>}
    */
   async exportDataToCsv(page, table) {
     await Promise.all([
@@ -526,12 +526,7 @@ class Brands extends BOBasePage {
       this.waitForVisibleSelector(page, `${this.gridActionDropDownMenu(table)}.show`),
     ]);
 
-    const [download] = await Promise.all([
-      page.waitForEvent('download'), // wait for download to start
-      page.click(this.gridActionExportLink(table)),
-    ]);
-
-    return download.path();
+    return this.clickAndWaitForDownload(page, this.gridActionExportLink(table));
   }
 
   /**

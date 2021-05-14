@@ -51,7 +51,7 @@ describe('Edit translation', async () => {
   it('should choose the translation to modify', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'modifyTranslation', baseContext);
 
-    await translationsPage.modifyTranslation(page, 'Themes translations', 'classic', Languages.french.name);
+    await translationsPage.modifyTranslation(page, 'Front office Translations', 'classic', Languages.french.name);
     const pageTitle = await translationsPage.getPageTitle(page);
     await expect(pageTitle).to.contains(translationsPage.pageTitle);
   });

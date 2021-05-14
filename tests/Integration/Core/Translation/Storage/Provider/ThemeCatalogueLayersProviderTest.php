@@ -92,16 +92,6 @@ class ThemeCatalogueLayersProviderTest extends AbstractCatalogueLayersProviderTe
         $catalogue = $this->getFileTranslatedCatalogue('fr-FR');
 
         $expected = [
-            'ModulesCheckpaymentShop' => [
-                'count' => 19,
-                'translations' => [
-                    'Send your check to this address' => 'Envoyez votre chèque à cette adresse',
-                ],
-            ],
-            'ModulesWirepaymentShop' => [
-                'count' => 15,
-                'translations' => [],
-            ],
             'ShopNotificationsWarning' => [
                 'count' => 8,
                 'translations' => [],

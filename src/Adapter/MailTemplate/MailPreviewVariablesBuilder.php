@@ -231,7 +231,7 @@ final class MailPreviewVariablesBuilder
             '{order_name}' => $order->getUniqReference(),
             '{id_order}' => $order->id,
             '{payment}' => Tools::substr($order->payment, 0, 255),
-            '{total_products}' => count($order->getProducts()),
+            '{total_products}' => $this->locale->formatPrice($order->total_products_wt, $this->context->currency->iso_code),
             '{total_discounts}' => $this->locale->formatPrice($order->total_discounts, $this->context->currency->iso_code),
             '{total_wrapping}' => $this->locale->formatPrice($order->total_wrapping, $this->context->currency->iso_code),
             '{total_shipping}' => $this->locale->formatPrice($order->total_shipping, $this->context->currency->iso_code),

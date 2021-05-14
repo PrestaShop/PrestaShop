@@ -136,7 +136,7 @@ class JavascriptManagerCore extends AbstractAssetManager
             foreach ($this->list[$position]['inline'] as &$item) {
                 $item['content'] =
                     '/* ---- ' . $item['id'] . ' @ ' . $item['path'] . ' ---- */' . "\r\n" .
-                    file_get_contents($item['path']);
+                    file_get_contents($this->getPathFromUri($item['path']));
             }
         }
     }

@@ -32,14 +32,17 @@ use Exception;
 use PrestaShop\PrestaShop\Core\Domain\Product\Exception\ProductConstraintException;
 use PrestaShop\PrestaShop\Core\Domain\Product\FeatureValue\Exception\DuplicateFeatureValueAssociationException;
 use PrestaShop\PrestaShop\Core\Domain\Product\FeatureValue\Exception\InvalidAssociatedFeatureException;
+use PrestaShop\PrestaShop\Core\FeatureFlag\FeatureFlagSettings;
 use PrestaShop\PrestaShop\Core\Form\IdentifiableObject\Builder\FormBuilderInterface;
 use PrestaShop\PrestaShop\Core\Form\IdentifiableObject\Handler\FormHandlerInterface;
 use PrestaShopBundle\Controller\Admin\FrameworkBundleAdminController;
 use PrestaShopBundle\Security\Annotation\AdminSecurity;
 use PrestaShopBundle\Security\Voter\PageVoter;
 use Symfony\Component\Form\FormInterface;
+use Symfony\Component\HttpFoundation\BinaryFileResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpFoundation\ResponseHeaderBag;
 
 /**
  * Admin controller for the Product pages using the Symfony architecture:
@@ -72,6 +75,12 @@ class ProductController extends FrameworkBundleAdminController
      */
     public function createAction(Request $request): Response
     {
+        if (!$this->isProductPageV2Enabled()) {
+            $this->addFlashMessageProductV2IsDisabled();
+
+            return $this->redirectToRoute('admin_product_new');
+        }
+
         $productForm = $this->getProductFormBuilder()->getForm();
 
         try {
@@ -101,6 +110,12 @@ class ProductController extends FrameworkBundleAdminController
      */
     public function editAction(Request $request, int $productId): Response
     {
+        if (!$this->isProductPageV2Enabled()) {
+            $this->addFlashMessageProductV2IsDisabled();
+
+            return $this->redirectToRoute('admin_product_form', ['id' => $productId]);
+        }
+
         $productForm = $this->getProductFormBuilder()->getFormFor($productId, [], [
             'product_id' => $productId,
             // @todo: patch/partial update doesn't work good for now (especially multiple empty values) so we use POST for now
@@ -113,10 +128,17 @@ class ProductController extends FrameworkBundleAdminController
 
             $result = $this->getProductFormHandler()->handleFor($productId, $productForm);
 
-            if ($result->isSubmitted() && $result->isValid()) {
-                $this->addFlash('success', $this->trans('Successful update.', 'Admin.Notifications.Success'));
+            if ($result->isSubmitted()) {
+                if ($result->isValid()) {
+                    $this->addFlash('success', $this->trans('Successful update.', 'Admin.Notifications.Success'));
 
-                return $this->redirectToRoute('admin_products_v2_edit', ['productId' => $productId]);
+                    return $this->redirectToRoute('admin_products_v2_edit', ['productId' => $productId]);
+                } else {
+                    // Display root level errors with flash messages
+                    foreach ($productForm->getErrors() as $error) {
+                        $this->addFlash('error', $error->getMessage());
+                    }
+                }
             }
         } catch (Exception $e) {
             $this->addFlash('error', $this->getErrorMessageForException($e, $this->getErrorMessages($e)));
@@ -136,17 +158,42 @@ class ProductController extends FrameworkBundleAdminController
         $shopContext = $this->get('prestashop.adapter.shop.context');
         $isMultiShopContext = count($shopContext->getContextListShopID()) > 1;
 
-        $statsLink = null !== $productId ? $this->getAdminLink('AdminStats', ['module' => 'statsproduct', 'id_product' => $productId]) : null;
-
         return $this->render('@PrestaShop/Admin/Sell/Catalog/Product/edit.html.twig', [
             'showContentHeader' => false,
             'productForm' => $productForm->createView(),
-            'productId' => $productId,
-            'statsLink' => $statsLink,
+            'statsLink' => $productId ? $this->getAdminLink('AdminStats', ['module' => 'statsproduct', 'id_product' => $productId]) : null,
             'helpLink' => $this->generateSidebarLink('AdminProducts'),
             'isMultiShopContext' => $isMultiShopContext,
             'editable' => $this->isGranted(PageVoter::UPDATE, self::PRODUCT_CONTROLLER_PERMISSION),
         ]);
+    }
+
+    /**
+     * Download the content of the virtual product.
+     *
+     * @param int $virtualProductFileId
+     *
+     * @return BinaryFileResponse
+     */
+    public function downloadVirtualFileAction(int $virtualProductFileId): BinaryFileResponse
+    {
+        $configuration = $this->get('prestashop.adapter.legacy.configuration');
+        $download = $this->getDoctrine()
+            ->getRepository('PrestaShopBundle:ProductDownload')
+            ->findOneBy([
+                'id' => $virtualProductFileId,
+            ]);
+
+        $response = new BinaryFileResponse(
+            $configuration->get('_PS_DOWNLOAD_DIR_') . $download->getFilename()
+        );
+
+        $response->setContentDisposition(
+            ResponseHeaderBag::DISPOSITION_ATTACHMENT,
+            $download->getDisplayFilename()
+        );
+
+        return $response;
     }
 
     /**
@@ -193,5 +240,35 @@ class ProductController extends FrameworkBundleAdminController
                 'Admin.Notifications.Error'
             ),
         ];
+    }
+
+    /**
+     * @return bool
+     */
+    private function isProductPageV2Enabled(): bool
+    {
+        $productPageV2FeatureFlag = $this->get('prestashop.core.feature_flags.modifier')
+            ->getOneFeatureFlagByName(FeatureFlagSettings::FEATURE_FLAG_PRODUCT_PAGE_V2);
+
+        if (null === $productPageV2FeatureFlag) {
+            return false;
+        }
+
+        return $productPageV2FeatureFlag->isEnabled();
+    }
+
+    private function addFlashMessageProductV2IsDisabled(): void
+    {
+        $this->addFlash(
+            'warning',
+            $this->trans(
+                'The experimental product page is not enabled. To enable it, go to the %sExperimental Features%s page.',
+                'Admin.Catalog.Notification',
+                [
+                    sprintf('<a href="%s">', $this->get('router')->generate('admin_feature_flags_index')),
+                    '</a>',
+                ]
+            )
+        );
     }
 }

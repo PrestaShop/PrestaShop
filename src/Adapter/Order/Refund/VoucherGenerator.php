@@ -141,10 +141,10 @@ class VoucherGenerator
         ];
 
         // @todo: use private method to send mail and later a decoupled mail sender
-        $orderLanguage = new Language((int) $order->id_lang);
+        $orderLanguage = $order->getAssociatedLanguage();
 
         @Mail::Send(
-            (int) $order->id_lang,
+            (int) $orderLanguage->getId(),
             'voucher',
             $this->translator->trans(
                 'New voucher for your order #%s',

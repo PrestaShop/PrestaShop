@@ -28,6 +28,7 @@ namespace PrestaShopBundle\Controller\Admin;
 
 use PrestaShop\PrestaShop\Core\Form\FormHandlerInterface;
 use PrestaShop\PrestaShop\Core\Language\Copier\LanguageCopierConfig;
+use PrestaShop\PrestaShop\Core\Translation\Storage\Provider\Definition\ProviderDefinitionInterface;
 use PrestaShopBundle\Exception\InvalidModuleException;
 use PrestaShopBundle\Security\Annotation\AdminSecurity;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
@@ -101,10 +102,10 @@ class TranslationsController extends FrameworkBundleAdminController
         $legacyController = $request->attributes->get('_legacy_controller');
         $legacyContext = $this->get('prestashop.adapter.legacy.context');
         $kpiRowFactory = $this->get('prestashop.core.kpi_row.factory.translations_page');
-        $modifyTranslationsForm = $this->getModifyTranslationsFormHander()->getForm();
-        $addUpdateLanguageForm = $this->getAddUpdateLanguageTranslationsFormHander()->getForm();
-        $exportLanguageForm = $this->getExportLanguageTranslationsFormHander()->getForm();
-        $copyLanguageForm = $this->getCopyLanguageTranslationsFormHander()->getForm();
+        $modifyTranslationsForm = $this->getModifyTranslationsFormHandler()->getForm();
+        $addUpdateLanguageForm = $this->getAddUpdateLanguageTranslationsFormHandler()->getForm();
+        $exportCataloguesForm = $this->getExportTranslationCataloguesFormHandler()->getForm();
+        $copyLanguageForm = $this->getCopyLanguageTranslationsFormHandler()->getForm();
 
         return [
             'layoutTitle' => $this->trans('Translations', 'Admin.Navigation.Menu'),
@@ -112,7 +113,7 @@ class TranslationsController extends FrameworkBundleAdminController
             'help_link' => $this->generateSidebarLink($legacyController),
             'kpiRow' => $kpiRowFactory->build(),
             'copyLanguageForm' => $copyLanguageForm->createView(),
-            'exportLanguageForm' => $exportLanguageForm->createView(),
+            'exportCataloguesForm' => $exportCataloguesForm->createView(),
             'addUpdateLanguageForm' => $addUpdateLanguageForm->createView(),
             'modifyTranslationsForm' => $modifyTranslationsForm->createView(),
             'addLanguageUrl' => $legacyContext->getAdminLink('AdminLanguages', true, ['addlang' => '']),
@@ -155,7 +156,7 @@ class TranslationsController extends FrameworkBundleAdminController
      */
     public function addUpdateLanguageAction(Request $request)
     {
-        $formHandler = $this->getAddUpdateLanguageTranslationsFormHander();
+        $formHandler = $this->getAddUpdateLanguageTranslationsFormHandler();
         $addUpdateLanguageForm = $formHandler->getForm();
         $addUpdateLanguageForm->handleRequest($request);
 
@@ -184,7 +185,7 @@ class TranslationsController extends FrameworkBundleAdminController
     }
 
     /**
-     * Extract theme using locale and theme name.
+     * Extract catalogues using locale.
      *
      * @AdminSecurity("is_granted('create', request.get('_legacy_controller')~'_')")
      *
@@ -192,28 +193,87 @@ class TranslationsController extends FrameworkBundleAdminController
      *
      * @return BinaryFileResponse|RedirectResponse
      */
-    public function exportThemeLanguageAction(Request $request)
+    public function exportCataloguesAction(Request $request)
     {
-        $formHandler = $this->getExportLanguageTranslationsFormHander();
-        $exportThemeLanguageForm = $formHandler->getForm();
-        $exportThemeLanguageForm->handleRequest($request);
+        $formHandler = $this->getExportTranslationCataloguesFormHandler();
+        $exportTranslationCataloguesForm = $formHandler->getForm();
+        $exportTranslationCataloguesForm->handleRequest($request);
 
-        if ($exportThemeLanguageForm->isSubmitted()) {
-            $data = $exportThemeLanguageForm->getData();
+        if ($exportTranslationCataloguesForm->isSubmitted()) {
+            $data = $exportTranslationCataloguesForm->getData();
 
-            $themeName = $data['theme_name'];
+            // Get the language
             $isoCode = $data['iso_code'];
+
+            $coreTypeSelector = $data['core_selectors'];
+            $themesTypeSelector = $data['themes_selectors'];
+            $modulesTypeSelector = $data['modules_selectors'];
+            $selections = [];
+
+            // Core translation types
+            if (
+                isset($coreTypeSelector['core_type'])
+                && $coreTypeSelector['core_type']
+                && isset($coreTypeSelector['selected_value'])
+            ) {
+                foreach ($coreTypeSelector['selected_value'] as $type) {
+                    $selections[] = [
+                        'type' => $type,
+                        'selected' => null,
+                    ];
+
+                    /*
+                     * Exporting mails will also export Mails_Body
+                     */
+                    if (ProviderDefinitionInterface::TYPE_MAILS === $type) {
+                        $selections[] = [
+                            'type' => ProviderDefinitionInterface::TYPE_MAILS_BODY,
+                            'selected' => null,
+                        ];
+                    }
+                }
+            }
+
+            // Theme translation type
+            if (
+                isset($themesTypeSelector['themes_type'])
+                && $themesTypeSelector['themes_type']
+                && isset($themesTypeSelector['selected_value'])
+            ) {
+                $selections[] = [
+                    'type' => ProviderDefinitionInterface::TYPE_THEMES,
+                    'selected' => $themesTypeSelector['selected_value'],
+                ];
+            }
+
+            // Module translation type
+            if (
+                isset($modulesTypeSelector['modules_type'])
+                && $modulesTypeSelector['modules_type']
+                && isset($modulesTypeSelector['selected_value'])
+            ) {
+                $selections[] = [
+                    'type' => ProviderDefinitionInterface::TYPE_MODULES,
+                    'selected' => $modulesTypeSelector['selected_value'],
+                ];
+            }
+
+            if (empty($selections)) {
+                $this->addFlash(
+                    'error',
+                    $this->trans('You must select at least one translation type to export translations.', 'Admin.International.Notification')
+                );
+
+                return $this->redirectToRoute('admin_international_translations_show_settings');
+            }
 
             $langRepository = $this->get('prestashop.core.admin.lang.repository');
             $locale = $langRepository->getLocaleByIsoCode($isoCode);
 
-            $themeExporter = $this->get('prestashop.translation.theme.exporter');
-            $zipFile = $themeExporter->createZipArchive($themeName, $locale, _PS_ROOT_DIR_ . DIRECTORY_SEPARATOR);
+            $zipFilename = $this->get('prestashop.translation.export.translation_catalogue')->export($selections, $locale);
 
-            $response = new BinaryFileResponse($zipFile);
+            $response = new BinaryFileResponse($zipFilename);
             $response->deleteFileAfterSend(true);
-
-            $themeExporter->cleanArtifacts($themeName);
 
             return $response->setContentDisposition(ResponseHeaderBag::DISPOSITION_ATTACHMENT);
         }
@@ -232,7 +292,7 @@ class TranslationsController extends FrameworkBundleAdminController
      */
     public function copyLanguageAction(Request $request)
     {
-        $formHandler = $this->getCopyLanguageTranslationsFormHander();
+        $formHandler = $this->getCopyLanguageTranslationsFormHandler();
         $form = $formHandler->getForm();
         $form->handleRequest($request);
 
@@ -262,7 +322,7 @@ class TranslationsController extends FrameworkBundleAdminController
     /**
      * @return FormHandlerInterface
      */
-    private function getModifyTranslationsFormHander(): FormHandlerInterface
+    private function getModifyTranslationsFormHandler(): FormHandlerInterface
     {
         return $this->get('prestashop.admin.translations_settings.modify_translations.form_handler');
     }
@@ -270,7 +330,7 @@ class TranslationsController extends FrameworkBundleAdminController
     /**
      * @return FormHandlerInterface
      */
-    private function getAddUpdateLanguageTranslationsFormHander(): FormHandlerInterface
+    private function getAddUpdateLanguageTranslationsFormHandler(): FormHandlerInterface
     {
         return $this->get('prestashop.admin.translations_settings.add_update_language.form_handler');
     }
@@ -278,16 +338,16 @@ class TranslationsController extends FrameworkBundleAdminController
     /**
      * @return FormHandlerInterface
      */
-    private function getExportLanguageTranslationsFormHander(): FormHandlerInterface
+    private function getCopyLanguageTranslationsFormHandler(): FormHandlerInterface
     {
-        return $this->get('prestashop.admin.translations_settings.export_language.form_handler');
+        return $this->get('prestashop.admin.translations_settings.copy_language.form_handler');
     }
 
     /**
      * @return FormHandlerInterface
      */
-    private function getCopyLanguageTranslationsFormHander(): FormHandlerInterface
+    private function getExportTranslationCataloguesFormHandler(): FormHandlerInterface
     {
-        return $this->get('prestashop.admin.translations_settings.copy_language.form_handler');
+        return $this->get('prestashop.admin.translations_settings.export_catalogues.form_handler');
     }
 }

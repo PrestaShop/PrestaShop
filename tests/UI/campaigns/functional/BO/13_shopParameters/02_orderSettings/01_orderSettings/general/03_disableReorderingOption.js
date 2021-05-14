@@ -98,6 +98,7 @@ describe('Enable reordering option', async () => {
       await expect(isCustomerConnected).to.be.true;
 
       // Go to order history page
+      await homePage.goToMyAccountPage(page);
       await myAccountPage.goToHistoryAndDetailsPage(page);
 
       // Check reorder link

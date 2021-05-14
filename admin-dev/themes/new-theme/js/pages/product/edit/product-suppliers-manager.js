@@ -23,30 +23,46 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
 
-import ProductMap from '@pages/product/product-map';
+import SuppliersMap from '@pages/product/suppliers-map';
 
 const {$} = window;
 
 export default class ProductSuppliersManager {
-  constructor() {
-    this.$productSuppliersCollection = $(ProductMap.suppliers.productSuppliersCollection);
-    this.$supplierIdsGroup = $(ProductMap.suppliers.supplierIdsInput).closest('.form-group');
-    this.$defaultSupplierGroup = $(ProductMap.suppliers.defaultSupplierInput).closest('.form-group');
-    this.$productsTable = $(ProductMap.suppliers.productsTable);
-    this.$productsTableBody = $(ProductMap.suppliers.productsTableBody);
+  /**
+   *
+   * @param {string} suppliersFormId
+   * @param {boolean} forceUpdateDefault
+   *
+   * @returns {{}}
+   */
+  constructor(suppliersFormId, forceUpdateDefault) {
+    this.forceUpdateDefault = forceUpdateDefault;
+    this.suppliersMap = SuppliersMap(suppliersFormId);
+    this.$productSuppliersCollection = $(this.suppliersMap.productSuppliersCollection);
+    this.$supplierIdsGroup = $(this.suppliersMap.supplierIdsInput).closest('.form-group');
+    this.$defaultSupplierGroup = $(this.suppliersMap.defaultSupplierInput).closest('.form-group');
+    this.$productsTable = $(this.suppliersMap.productSuppliersTable);
+    this.$productsTableBody = $(this.suppliersMap.productsSuppliersTableBody);
 
     this.suppliers = [];
     this.prototypeTemplate = this.$productSuppliersCollection.data('prototype');
     this.prototypeName = this.$productSuppliersCollection.data('prototypeName');
-    this.defaultDataForSupplier = this.collectDefaultDataForSupplier();
+    this.defaultDataForSupplier = this.getDefaultDataForSupplier();
 
     this.init();
+
+    return {};
   }
 
   init() {
     this.memorizeCurrentSuppliers();
     this.toggleTableVisibility();
     this.refreshDefaultSupplierBlock();
+
+    this.$initialDefault = this.$defaultSupplierGroup.find('input:checked').first();
+    if (this.$initialDefault.length) {
+      this.$initialDefault.closest(this.suppliers.checkboxContainer).addClass(this.suppliersMap.defaultSupplierClass);
+    }
 
     this.$productsTable.on('change', 'input', () => {
       this.memorizeCurrentSuppliers();
@@ -57,8 +73,8 @@ export default class ProductSuppliersManager {
 
       if (input.checked) {
         this.addSupplier({
-          id: input.value,
-          name: input.dataset.label,
+          supplierId: input.value,
+          supplierName: input.dataset.label,
         });
       } else {
         this.removeSupplier(input.value);
@@ -80,18 +96,24 @@ export default class ProductSuppliersManager {
     this.showTable();
   }
 
+  /**
+   * @param {Object} supplier
+   */
   addSupplier(supplier) {
-    if (typeof this.suppliers[supplier.id] === 'undefined') {
+    if (typeof this.suppliers[supplier.supplierId] === 'undefined') {
       const newSupplier = Object.create(this.defaultDataForSupplier);
-      newSupplier.supplierId = supplier.id;
-      newSupplier.supplierName = supplier.name;
+      newSupplier.supplierId = supplier.supplierId;
+      newSupplier.supplierName = supplier.supplierName;
 
-      this.suppliers[supplier.id] = newSupplier;
+      this.suppliers[supplier.supplierId] = newSupplier;
     } else {
-      this.suppliers[supplier.id].removed = false;
+      this.suppliers[supplier.supplierId].removed = false;
     }
   }
 
+  /**
+   * @param {int} supplierId
+   */
   removeSupplier(supplierId) {
     this.suppliers[supplierId].removed = true;
   }
@@ -99,25 +121,29 @@ export default class ProductSuppliersManager {
   renderSuppliers() {
     this.$productsTableBody.empty();
 
-    // Custom incremental index since this.suppliers uses the supplierId as key
-    let supplierIndex = 0;
-    this.suppliers.forEach((supplier) => {
+    // Loop through select suppliers so that we use the same order as in the select list
+    this.getSelectedSuppliers().forEach((selectedSupplier) => {
+      const supplier = this.suppliers[selectedSupplier.supplierId];
+
       if (supplier.removed) {
         return;
       }
 
-      const productSupplierRow = this.prototypeTemplate.replace(new RegExp(this.prototypeName, 'g'), supplierIndex);
+      const productSupplierRow = this.prototypeTemplate.replace(
+        new RegExp(this.prototypeName, 'g'),
+        supplier.supplierId,
+      );
 
       this.$productsTableBody.append(productSupplierRow);
       // Fill inputs
-      $(ProductMap.suppliers.productSupplierRow.supplierIdInput(supplierIndex)).val(supplier.supplierId);
-      $(ProductMap.suppliers.productSupplierRow.supplierNameCell(supplierIndex)).html(supplier.supplierName);
-      $(ProductMap.suppliers.productSupplierRow.supplierNameInput(supplierIndex)).val(supplier.supplierName);
-      $(ProductMap.suppliers.productSupplierRow.productSupplierIdInput(supplierIndex)).val(supplier.productSupplierId);
-      $(ProductMap.suppliers.productSupplierRow.referenceInput(supplierIndex)).val(supplier.reference);
-      $(ProductMap.suppliers.productSupplierRow.priceInput(supplierIndex)).val(supplier.price);
-      $(ProductMap.suppliers.productSupplierRow.currencyIdInput(supplierIndex)).val(supplier.currencyId);
-      supplierIndex += 1;
+      const rowMap = this.suppliersMap.productSupplierRow;
+      $(rowMap.supplierIdInput(supplier.supplierId)).val(supplier.supplierId);
+      $(rowMap.supplierNamePreview(supplier.supplierId)).html(supplier.supplierName);
+      $(rowMap.supplierNameInput(supplier.supplierId)).val(supplier.supplierName);
+      $(rowMap.productSupplierIdInput(supplier.supplierId)).val(supplier.productSupplierId);
+      $(rowMap.referenceInput(supplier.supplierId)).val(supplier.reference);
+      $(rowMap.priceInput(supplier.supplierId)).val(supplier.price);
+      $(rowMap.currencyIdInput(supplier.supplierId)).val(supplier.currencyId);
     });
   }
 
@@ -125,8 +151,8 @@ export default class ProductSuppliersManager {
     const selectedSuppliers = [];
     this.$supplierIdsGroup.find('input:checked').each((index, input) => {
       selectedSuppliers.push({
-        name: input.dataset.label,
-        id: input.value,
+        supplierName: input.dataset.label,
+        supplierId: input.value,
       });
     });
 
@@ -137,25 +163,27 @@ export default class ProductSuppliersManager {
     const suppliers = this.getSelectedSuppliers();
 
     if (suppliers.length === 0) {
-      this.$defaultSupplierGroup.find('input').prop('checked', false);
+      if (this.forceUpdateDefault) {
+        this.$defaultSupplierGroup.find('input').prop('checked', false);
+      }
       this.hideDefaultSuppliers();
 
       return;
     }
 
     this.showDefaultSuppliers();
-    const selectedSupplierIds = suppliers.map((supplier) => supplier.id);
+    const selectedSupplierIds = suppliers.map((supplier) => supplier.supplierId);
 
     this.$defaultSupplierGroup.find('input').each((key, input) => {
       const isValid = selectedSupplierIds.includes(input.value);
 
-      if (!isValid && input.checked) {
+      if (this.forceUpdateDefault && !isValid) {
         input.checked = false;
       }
       input.disabled = !isValid;
     });
 
-    if (this.$defaultSupplierGroup.find('input:checked').length === 0) {
+    if (this.$defaultSupplierGroup.find('input:checked').length === 0 && this.forceUpdateDefault) {
       this.checkFirstAvailableDefaultSupplier(selectedSupplierIds);
     }
   }
@@ -168,6 +196,9 @@ export default class ProductSuppliersManager {
     this.$defaultSupplierGroup.removeClass('d-none');
   }
 
+  /**
+   * @param {int[]} selectedSupplierIds
+   */
   checkFirstAvailableDefaultSupplier(selectedSupplierIds) {
     const firstSupplierId = selectedSupplierIds[0];
     this.$defaultSupplierGroup.find(`input[value="${firstSupplierId}"]`).prop('checked', true);
@@ -186,15 +217,14 @@ export default class ProductSuppliersManager {
    * Flag `removed` allows identifying whether supplier was removed from list or should be rendered
    */
   memorizeCurrentSuppliers() {
-    // this.getSelectedSuppliers values are pushed so it's index is 0-based, we can use it as is
-    this.getSelectedSuppliers().forEach((supplier, index) => {
-      this.suppliers[supplier.id] = {
-        supplierId: supplier.id,
-        productSupplierId: $(ProductMap.suppliers.productSupplierRow.productSupplierIdInput(index)).val(),
-        supplierName: $(ProductMap.suppliers.productSupplierRow.supplierNameInput(index)).val(),
-        reference: $(ProductMap.suppliers.productSupplierRow.referenceInput(index)).val(),
-        price: $(ProductMap.suppliers.productSupplierRow.priceInput(index)).val(),
-        currencyId: $(ProductMap.suppliers.productSupplierRow.currencyIdInput(index)).val(),
+    this.getSelectedSuppliers().forEach((supplier) => {
+      this.suppliers[supplier.supplierId] = {
+        supplierId: supplier.supplierId,
+        productSupplierId: $(this.suppliersMap.productSupplierRow.productSupplierIdInput(supplier.supplierId)).val(),
+        supplierName: $(this.suppliersMap.productSupplierRow.supplierNameInput(supplier.supplierId)).val(),
+        reference: $(this.suppliersMap.productSupplierRow.referenceInput(supplier.supplierId)).val(),
+        price: $(this.suppliersMap.productSupplierRow.priceInput(supplier.supplierId)).val(),
+        currencyId: $(this.suppliersMap.productSupplierRow.currencyIdInput(supplier.supplierId)).val(),
         removed: false,
       };
     });
@@ -206,7 +236,7 @@ export default class ProductSuppliersManager {
    *
    * @returns {{reference, removed: boolean, price, currencyId, productSupplierId}}
    */
-  collectDefaultDataForSupplier() {
+  getDefaultDataForSupplier() {
     const rowPrototype = new DOMParser().parseFromString(
       this.prototypeTemplate,
       'text/html',
@@ -214,11 +244,10 @@ export default class ProductSuppliersManager {
 
     return {
       removed: false,
-      productSupplierId:
-        this.collectDataFromRow(ProductMap.suppliers.productSupplierRow.productSupplierIdInput, rowPrototype),
-      reference: this.collectDataFromRow(ProductMap.suppliers.productSupplierRow.referenceInput, rowPrototype),
-      price: this.collectDataFromRow(ProductMap.suppliers.productSupplierRow.priceInput, rowPrototype),
-      currencyId: this.collectDataFromRow(ProductMap.suppliers.productSupplierRow.currencyIdInput, rowPrototype),
+      productSupplierId: this.getDataFromRow(this.suppliersMap.productSupplierRow.productSupplierIdInput, rowPrototype),
+      reference: this.getDataFromRow(this.suppliersMap.productSupplierRow.referenceInput, rowPrototype),
+      price: this.getDataFromRow(this.suppliersMap.productSupplierRow.priceInput, rowPrototype),
+      currencyId: this.getDataFromRow(this.suppliersMap.productSupplierRow.currencyIdInput, rowPrototype),
     };
   }
 
@@ -228,7 +257,7 @@ export default class ProductSuppliersManager {
    *
    * @returns {*}
    */
-  collectDataFromRow(selectorGenerator, rowPrototype) {
+  getDataFromRow(selectorGenerator, rowPrototype) {
     return rowPrototype.querySelector(selectorGenerator(this.prototypeName)).value;
   }
 }

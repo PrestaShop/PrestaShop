@@ -45,3 +45,12 @@ Feature: Webservice key management
     And I specify "View" permission for "addresses, carriers, carts" resources for new webservice key "key2"
     When I add webservice key "key2" with specified properties
     Then I should get error that webservice key is duplicate
+
+  Scenario: Editing Webservice Key
+    When I edit webservice key "key1" with specified properties:
+      | key              | ABCD1EFGHIJKLM2PQRS345TUVWXYZ678 |
+      | description      | My testing WS key                |
+      | is_enabled       | 0                                |
+    Then webservice key "key1" key should be "ABCD1EFGHIJKLM2PQRS345TUVWXYZ678"
+    And webservice key "key1" description should be "My testing WS key"
+    And webservice key "key1" should be disabled

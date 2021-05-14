@@ -48,11 +48,11 @@
         {/block}
       </header>
 
-      {block name='notifications'}
-        {include file='_partials/notifications.tpl'}
-      {/block}
-
       <section id="wrapper">
+        {block name='notifications'}
+          {include file='_partials/notifications.tpl'}
+        {/block}
+
         {hook h="displayWrapperTop"}
         <div class="container">
           {block name='breadcrumb'}

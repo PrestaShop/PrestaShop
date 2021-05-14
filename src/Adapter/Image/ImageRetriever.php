@@ -164,8 +164,7 @@ class ImageRetriever
         $urls = [];
         $image_types = ImageType::getImagesTypes($type, true);
 
-        $extPath = $imageFolderPath . DIRECTORY_SEPARATOR . 'fileType';
-        $ext = @file_get_contents($extPath) ?: 'jpg';
+        $ext = 'jpg';
 
         $mainImagePath = implode(DIRECTORY_SEPARATOR, [
             $imageFolderPath,

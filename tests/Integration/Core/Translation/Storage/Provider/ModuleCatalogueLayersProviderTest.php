@@ -78,6 +78,7 @@ class ModuleCatalogueLayersProviderTest extends KernelTestCase
          * - ModulesCheckpaymentShop.fr-FR.xlf
          * - ModulesWirepaymentAdmin.fr-FR.xlf
          * - ModulesWirepaymentShop.fr-FR.xlf
+         * - ModulesXlftranslatedmoduleAdmin.fr-FR.xlf
          * - ShopNotificationsWarning.fr-FR.xlf
          */
         $this->translationsDir = self::$kernel->getContainer()->getParameter('test_translations_dir');
@@ -115,7 +116,29 @@ class ModuleCatalogueLayersProviderTest extends KernelTestCase
     }
 
     /**
-     * Test it loads a XLIFF catalogue from the locale's `translations` directory
+     * Test it loads a XLIFF catalogue from the module's locale `translations` directory
+     */
+    public function testItLoadsCatalogueFromXliffFilesFromModuleDirectory(): void
+    {
+        // load catalogue from translations/fr-FR
+        $catalogue = $this->getProvider('xlftranslatedmodule')->getFileTranslatedCatalogue('fr-FR');
+
+        $expected = [
+            'ModulesXlftranslatedmoduleAdmin' => [
+                'count' => 2,
+                'translations' => [
+                    'Generates a .CSV file for mass mailings' => 'Ceci est la traduction provenant des fichiers du module',
+                    'Some default translation from module files' => 'Traduction par défaut du module traduite dans le module',
+                ],
+            ],
+        ];
+
+        // verify all catalogues are loaded
+        $this->assertResultIsAsExpected($expected, $catalogue);
+    }
+
+    /**
+     * Test it extracts a XLIFF catalogue from the module's templates id locale's `translations` directory does not exist
      */
     public function testItLoadsCatalogueFromXliffWhenLocaleDirectoryNotFound(): void
     {

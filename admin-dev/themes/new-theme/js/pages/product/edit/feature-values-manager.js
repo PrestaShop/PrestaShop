@@ -69,6 +69,8 @@ export default class FeatureValuesManager {
           confirmMessage: $deleteButton.data('modal-message'),
           confirmButtonLabel: $deleteButton.data('modal-apply'),
           closeButtonLabel: $deleteButton.data('modal-cancel'),
+          confirmButtonClass: 'btn-danger',
+          closable: true,
         },
         () => {
           $collectionRow.remove();

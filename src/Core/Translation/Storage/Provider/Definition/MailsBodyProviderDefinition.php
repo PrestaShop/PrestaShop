@@ -32,6 +32,10 @@ namespace PrestaShop\PrestaShop\Core\Translation\Storage\Provider\Definition;
  */
 class MailsBodyProviderDefinition extends AbstractCoreProviderDefinition
 {
+    private const FILENAME_FILTERS_REGEX = ['#EmailsBody*#'];
+
+    private const TRANSLATION_DOMAINS_REGEX = ['EmailsBody*'];
+
     /**
      * {@inheritdoc}
      */
@@ -45,7 +49,7 @@ class MailsBodyProviderDefinition extends AbstractCoreProviderDefinition
      */
     public function getFilenameFilters(): array
     {
-        return ['#EmailsBody*#'];
+        return self::FILENAME_FILTERS_REGEX;
     }
 
     /**
@@ -53,6 +57,6 @@ class MailsBodyProviderDefinition extends AbstractCoreProviderDefinition
      */
     public function getTranslationDomains(): array
     {
-        return ['EmailsBody*'];
+        return self::TRANSLATION_DOMAINS_REGEX;
     }
 }

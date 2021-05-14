@@ -26,6 +26,7 @@
 {% extends 'PrestaShopBundle:Admin:layout.html.twig' %}
 
 {% block content %}
+  {% if multistoreIsUsed %}{{ ps.infotip(multistoreInfoTip, true) }}{% endif %}
   <div class="row justify-content-center">
     <div class="col">
       {% include '@PrestaShop/Admin/Sell/CustomerService/OrderMessage/Blocks/form.html.twig' %}

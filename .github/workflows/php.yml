@@ -25,11 +25,17 @@ jobs:
               restore-keys: |
                   ${{ runner.os }}-composer-
 
+      -   name: Validate composer config
+          run: composer validate --strict
+
       -   name: Composer Install
           run: composer install --ansi --prefer-dist --no-interaction --no-progress
 
       -   name: Run PHPCSFixer
           run: ./vendor/bin/php-cs-fixer fix --dry-run --diff
+
+      -   name: Run ergebnis/composer-normalize
+          run: composer normalize --dry-run --no-check-lock
 
   phpstan:
     name: PHP Static Analysis

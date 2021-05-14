@@ -51,5 +51,12 @@
       <city>Miami</city>
       <other/>
     </address>
+    <address id="accessories_supplier" id_country="FR" id_state="" id_customer="" id_manufacturer="" id_supplier="Accessories_Supplier" id_warehouse="0" alias="accessories_supplier" lastname="accessories" firstname="accessories" postcode="64990" phone="0102030405" phone_mobile="" vat_number="" dni="" active="1">
+      <company>Accessories and Co</company>
+      <address1>42 Avenue Maréchal Soult</address1>
+      <address2/>
+      <city>Bayonne</city>
+      <other/>
+    </address>
   </entities>
 </entity_address>

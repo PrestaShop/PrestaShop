@@ -72,11 +72,11 @@
     computed: {
       getTranslated: {
         get() {
-          return this.translated.database ? this.translated.database : this.translated.xliff;
+          return this.translated.user ? this.translated.user : this.translated.project;
         },
         set(modifiedValue) {
           const modifiedTranslated = this.translated;
-          modifiedTranslated.database = modifiedValue;
+          modifiedTranslated.user = modifiedValue;
           modifiedTranslated.edited = modifiedValue;
           this.$emit('input', modifiedTranslated);
           this.$emit('editedAction', {

@@ -32,7 +32,6 @@ use PrestaShop\PrestaShop\Core\ConstraintValidator\Constraints\TypedRegex;
 use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\Reference;
 use PrestaShop\PrestaShop\Core\Form\FormChoiceProviderInterface;
 use PrestaShopBundle\Form\Admin\Type\TranslatorAwareType;
-use PrestaShopBundle\Form\DataTransformer\DefaultEmptyDataTransformer;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\HiddenType;
 use Symfony\Component\Form\Extension\Core\Type\MoneyType;
@@ -88,9 +87,6 @@ class ProductSupplierType extends TranslatorAwareType
             ->add('product_supplier_id', HiddenType::class, [
                 'required' => false,
             ])
-            ->add('combination_id', HiddenType::class, [
-                'required' => false,
-            ])
             ->add('reference', TextType::class, [
                 'label' => $this->trans('Supplier reference', 'Admin.Catalog.Feature'),
                 'constraints' => [
@@ -109,6 +105,7 @@ class ProductSupplierType extends TranslatorAwareType
                     new NotBlank(),
                     new Type(['type' => 'float']),
                 ],
+                'default_empty_data' => 0.0,
             ])
             ->add('currency_id', ChoiceType::class, [
                 'label' => $this->trans('Currency', 'Admin.Global'),
@@ -118,8 +115,5 @@ class ProductSupplierType extends TranslatorAwareType
                 'choices' => $this->currencyByIdChoiceProvider->getChoices(),
             ])
         ;
-
-        // Used to force default value when empty (especially in the prototype)
-        $builder->get('price_tax_excluded')->addModelTransformer(new DefaultEmptyDataTransformer(0.0));
     }
 }

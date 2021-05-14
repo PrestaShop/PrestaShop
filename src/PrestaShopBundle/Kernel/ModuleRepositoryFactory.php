@@ -36,6 +36,8 @@ use PrestaShop\PrestaShop\Adapter\Environment;
  *
  * WARNING: this factory is only to be used in the specific cases mentioned above, for any other case please use the
  * 'prestashop.module_kernel.repository' or 'prestashop.bundle.repository.module' depending on your needs.
+ *
+ * @deprecated Since 1.7.8
  */
 class ModuleRepositoryFactory
 {

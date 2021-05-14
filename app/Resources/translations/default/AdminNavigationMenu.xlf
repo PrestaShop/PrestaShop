@@ -406,6 +406,11 @@ Comment: subtab</note>
         <target>Module Manager</target>
         <note>Line: 135</note>
       </trans-unit>
+      <trans-unit id="559c42f0eb9cc586d7994f4e9e496609">
+        <source>Experimental Features</source>
+        <target>Experimental Features</target>
+        <note>Line: 136</note>
+      </trans-unit>
       <trans-unit id="9ac41b6a577daadd588f0fcde0071e8b">
         <source>Updates</source>
         <target>Updates</target>

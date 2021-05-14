@@ -34,6 +34,10 @@ class ThemeProviderDefinition implements ProviderDefinitionInterface
 {
     public const DEFAULT_THEME_NAME = 'classic';
 
+    private const FILENAME_FILTERS_REGEX = [];
+
+    private const TRANSLATION_DOMAINS_REGEX = [];
+
     /**
      * @var string
      */
@@ -72,7 +76,7 @@ class ThemeProviderDefinition implements ProviderDefinitionInterface
      */
     public function getFilenameFilters(): array
     {
-        return [];
+        return self::FILENAME_FILTERS_REGEX;
     }
 
     /**
@@ -80,6 +84,6 @@ class ThemeProviderDefinition implements ProviderDefinitionInterface
      */
     public function getTranslationDomains(): array
     {
-        return [];
+        return self::TRANSLATION_DOMAINS_REGEX;
     }
 }

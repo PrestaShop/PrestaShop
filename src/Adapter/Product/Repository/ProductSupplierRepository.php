@@ -39,6 +39,7 @@ use PrestaShop\PrestaShop\Core\Domain\Product\Supplier\Exception\CannotUpdatePro
 use PrestaShop\PrestaShop\Core\Domain\Product\Supplier\Exception\ProductSupplierNotFoundException;
 use PrestaShop\PrestaShop\Core\Domain\Product\Supplier\ValueObject\ProductSupplierId;
 use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductId;
+use PrestaShop\PrestaShop\Core\Domain\Supplier\ValueObject\SupplierId;
 use ProductSupplier;
 
 /**
@@ -93,6 +94,63 @@ class ProductSupplierRepository extends AbstractObjectModelRepository
         );
 
         return $productSupplier;
+    }
+
+    /**
+     * @param ProductId $productId
+     *
+     * @return SupplierId|null
+     */
+    public function getProductDefaultSupplierId(ProductId $productId): ?SupplierId
+    {
+        $qb = $this->connection->createQueryBuilder();
+        $qb->select('p.id_supplier AS default_supplier_id')
+            ->from($this->dbPrefix . 'product_supplier', 'ps')
+            ->innerJoin(
+                'ps',
+                $this->dbPrefix . 'product',
+                'p',
+                'ps.id_supplier = p.id_supplier'
+            )
+            ->where('ps.id_product = :productId')
+            ->setParameter('productId', $productId->getValue())
+        ;
+
+        $result = $qb->execute()->fetch();
+
+        if (!$result) {
+            return null;
+        }
+
+        return new SupplierId((int) $result['default_supplier_id']);
+    }
+
+    /**
+     * @param ProductId $productId
+     * @param SupplierId $supplierId
+     *
+     * @return ProductSupplierId[]
+     */
+    public function getAssociatedProductSuppliers(ProductId $productId, SupplierId $supplierId): array
+    {
+        $qb = $this->connection->createQueryBuilder();
+        $qb->select('ps.id_product_supplier AS product_supplier_id')
+            ->from($this->dbPrefix . 'product_supplier', 'ps')
+            ->andWhere('ps.id_product = :productId')
+            ->andWhere('ps.id_supplier = :supplierId')
+            ->setParameter('productId', $productId->getValue())
+            ->setParameter('supplierId', $supplierId->getValue())
+        ;
+
+        $results = $qb->execute()->fetchAll();
+
+        if (empty($results)) {
+            return [];
+        }
+
+        return array_map(function (array $result) {
+            return new ProductSupplierId((int) $result['product_supplier_id']);
+        }, $results);
     }
 
     /**
@@ -176,6 +234,7 @@ class ProductSupplierRepository extends AbstractObjectModelRepository
                 'ps.id_supplier = s.id_supplier'
             )
             ->where('ps.id_product = :productId')
+            ->addOrderBy('s.name', 'ASC')
             ->setParameter('productId', $productId->getValue())
         ;
 

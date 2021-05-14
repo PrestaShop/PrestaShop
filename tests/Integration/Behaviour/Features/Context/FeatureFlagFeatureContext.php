@@ -91,9 +91,9 @@ class FeatureFlagFeatureContext extends AbstractPrestaShopFeatureContext
         /** @var FeatureFlag $featureFlag */
         $featureFlag = $doctrineEntityManager->getRepository('PrestaShopBundle:FeatureFlag')->findOneBy(['name' => $name]);
 
-        if ($state === 'enabled' && !$featureFlag->getState()) {
+        if ($state === 'enabled' && !$featureFlag->isEnabled()) {
             throw new RuntimeException(sprintf('Feature flag %s is disabled although it was expected to be enabled', $name));
-        } elseif ($state === 'disabled' && $featureFlag->getState()) {
+        } elseif ($state === 'disabled' && $featureFlag->isEnabled()) {
             throw new RuntimeException(sprintf('Feature flag %s is enabled although it was expected to be disabled', $name));
         }
     }

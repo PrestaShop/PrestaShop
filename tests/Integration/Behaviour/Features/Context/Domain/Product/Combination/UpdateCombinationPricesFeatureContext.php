@@ -50,6 +50,7 @@ class UpdateCombinationPricesFeatureContext extends AbstractCombinationFeatureCo
         return new CombinationPrices(
             new DecimalNumber($dataRows['eco tax']),
             new DecimalNumber($dataRows['impact on price']),
+            new DecimalNumber($dataRows['impact on price with taxes']),
             new DecimalNUmber($dataRows['impact on unit price']),
             new DecimalNUmber($dataRows['wholesale price'])
         );

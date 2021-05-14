@@ -36,6 +36,7 @@ use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\NumberType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
+use Symfony\Component\Routing\RouterInterface;
 use Symfony\Component\Translation\TranslatorInterface;
 use Symfony\Component\Validator\Constraints\NotBlank;
 use Symfony\Component\Validator\Constraints\Type;
@@ -53,34 +54,59 @@ class StockType extends TranslatorAwareType
     private $packStockTypeChoiceProvider;
 
     /**
+     * @var RouterInterface
+     */
+    private $router;
+
+    /**
+     * @var bool
+     */
+    private $stockManagementEnabled;
+
+    /**
      * @param TranslatorInterface $translator
      * @param array $locales
      * @param FormChoiceProviderInterface $outOfStockTypeChoiceProvider
      * @param FormChoiceProviderInterface $packStockTypeChoiceProvider
+     * @param RouterInterface $router
+     * @param bool $stockManagementEnabled
      */
     public function __construct(
         TranslatorInterface $translator,
         array $locales,
         FormChoiceProviderInterface $outOfStockTypeChoiceProvider,
-        FormChoiceProviderInterface $packStockTypeChoiceProvider
+        FormChoiceProviderInterface $packStockTypeChoiceProvider,
+        RouterInterface $router,
+        bool $stockManagementEnabled
     ) {
         parent::__construct($translator, $locales);
         $this->outOfStockTypeChoiceProvider = $outOfStockTypeChoiceProvider;
         $this->packStockTypeChoiceProvider = $packStockTypeChoiceProvider;
+        $this->router = $router;
+        $this->stockManagementEnabled = $stockManagementEnabled;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
+        if ($this->stockManagementEnabled) {
+            $builder
+                ->add('quantity', NumberType::class, [
+                    'required' => false,
+                    'label' => $this->trans('Quantity', 'Admin.Catalog.Feature'),
+                    'constraints' => [
+                        new NotBlank(),
+                        new Type(['type' => 'numeric']),
+                    ],
+                ])
+            ;
+        }
+
         $builder
-            ->add('quantity', NumberType::class, [
-                'required' => false,
-                'label' => $this->trans('Quantity', 'Admin.Catalog.Feature'),
-                'constraints' => [
-                    new NotBlank(),
-                    new Type(['type' => 'numeric']),
-                ],
-            ])
             ->add('minimal_quantity', NumberType::class, [
+                'required' => false,
                 'label' => $this->trans('Minimum quantity for sale', 'Admin.Catalog.Feature'),
                 'constraints' => [
                     new NotBlank(),
@@ -93,20 +119,38 @@ class StockType extends TranslatorAwareType
             ])
             ->add('low_stock_threshold', NumberType::class, [
                 'label' => $this->trans('Low stock level', 'Admin.Catalog.Feature'),
+                'help' => $this->trans('Leave empty to disable', 'Admin.Catalog.Help'),
                 'constraints' => [
                     new Type(['type' => 'numeric']),
                 ],
                 'required' => false,
+                'default_empty_data' => 0,
+                // Using null here allows to keep the field empty in the page instead of 0
+                'empty_view_data' => null,
             ])
             ->add('low_stock_alert', SwitchType::class, [
+                'required' => false,
                 'label' => $this->trans(
                     'Send me an email when the quantity is below or equals this level',
                     'Admin.Catalog.Feature'
+                ),
+                'help' => $this->trans(
+                    'The email will be sent to all the users who have the right to run the stock page. To modify the permissions, go to [1]Advanced Parameters > Team[/1]',
+                    'Admin.Catalog.Help',
+                    [
+                        '[1]' => sprintf(
+                            '<a target="_blank" href="%s">',
+                            $this->router->generate('admin_employees_index')
+                        ),
+                        '[/1]' => '</a>',
+                    ]
                 ),
             ])
             ->add('pack_stock_type', ChoiceType::class, [
                 'choices' => $this->packStockTypeChoiceProvider->getChoices(),
             ])
+            // @todo: available_now/later_labels could be hidden depending on out_of_stock_type. (remove ux noise)
+            // @todo: will need to reuse some fields bellow combinations tab as shared "Availability preferences"
             ->add('out_of_stock_type', ChoiceType::class, [
                 'choices' => $this->outOfStockTypeChoiceProvider->getChoices(),
             ])
@@ -126,6 +170,9 @@ class StockType extends TranslatorAwareType
             ->add('available_date', DatePickerType::class, [
                 'label' => $this->trans('Availability date', 'Admin.Catalog.Feature'),
                 'required' => false,
+                'attr' => [
+                    'placeholder' => 'YYYY-MM-DD',
+                ],
             ])
         ;
     }

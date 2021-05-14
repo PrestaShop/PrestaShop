@@ -80,24 +80,20 @@ export default class DynamicPaginator {
    * @param {Number|null} startingPage If provided it will load the provided page data on page load
    * @param {Object|null} selectorsMap If provided it will override css selectors used for all the actions.
    */
-  constructor(
-    containerSelector,
-    paginationService,
-    renderer,
-    startingPage = null,
-    selectorsMap = null,
-  ) {
+  constructor(containerSelector, paginationService, renderer, startingPage = null, selectorsMap = null) {
     this.$paginationContainer = $(containerSelector);
     this.paginationService = paginationService;
     this.renderer = renderer;
     this.setSelectorsMap(selectorsMap);
     this.init();
+    this.currentPage = 1;
     if (startingPage !== null) {
       this.paginate(startingPage);
     }
 
     return {
       paginate: (page) => this.paginate(page),
+      getCurrentPage: () => this.currentPage,
     };
   }
 
@@ -126,6 +122,7 @@ export default class DynamicPaginator {
    * @param {Number} page
    */
   async paginate(page) {
+    this.currentPage = page;
     this.renderer.toggleLoading(true);
     const limit = this.getLimit();
     const data = await this.paginationService.fetch(this.calculateOffset(page, limit), limit);
@@ -173,7 +170,8 @@ export default class DynamicPaginator {
     const limit = this.getLimit();
     const from = page === 1 ? 1 : Math.round((page - 1) * limit);
     const to = page === this.pagesCount ? total : Math.round(page * limit);
-    const modifiedInfoText = infoLabel.data('pagination-info')
+    const modifiedInfoText = infoLabel
+      .data('pagination-info')
       .replace(/%from%/g, from)
       .replace(/%to%/g, to)
       .replace(/%total%/g, total)

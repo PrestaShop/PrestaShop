@@ -22,8 +22,8 @@ Feature: Delete product image from Back Office (BO)
     And product "product1" should have no images
     When I add new image "image1" named "app_icon.png" to product "product1"
     Then product "product1" should have following images:
-      | image reference | is cover | legend[en-US] | position |
-      | image1          | true     |               | 1        |
+      | image reference | is cover | legend[en-US] | position | image url                            | thumbnail url                                      |
+      | image1          | true     |               | 1        | http://myshop.com/img/p/{image1}.jpg | http://myshop.com/img/p/{image1}-small_default.jpg |
     And images "[image1]" should have following types generated:
       | name           | width | height |
       | cart_default   | 125   | 125    |
@@ -56,13 +56,13 @@ Feature: Delete product image from Back Office (BO)
     And product "product1" should have no images
     When I add new image "image1" named "app_icon.png" to product "product1"
     Then product "product1" should have following images:
-      | image reference | is cover | legend[en-US] | position |
-      | image1          | true     |               | 1        |
+      | image reference | is cover | legend[en-US] | position | image url                            | thumbnail url                                      |
+      | image1          | true     |               | 1        | http://myshop.com/img/p/{image1}.jpg | http://myshop.com/img/p/{image1}-small_default.jpg |
     When I add new image "image2" named "logo.jpg" to product "product1"
     Then product "product1" should have following images:
-      | image reference | is cover | legend[en-US] | position |
-      | image1          | true     |               | 1        |
-      | image2          | false    |               | 2        |
+      | image reference | is cover | legend[en-US] | position | image url                            | thumbnail url                                      |
+      | image1          | true     |               | 1        | http://myshop.com/img/p/{image1}.jpg | http://myshop.com/img/p/{image1}-small_default.jpg |
+      | image2          | false    |               | 2        | http://myshop.com/img/p/{image2}.jpg | http://myshop.com/img/p/{image2}-small_default.jpg |
     And images "[image1, image2]" should have following types generated:
       | name           | width | height |
       | cart_default   | 125   | 125    |
@@ -79,8 +79,8 @@ Feature: Delete product image from Back Office (BO)
       | medium_default |
       | small_default  |
     Then product "product1" should have following images:
-      | image reference | is cover | legend[en-US] | position |
-      | image2          | true     |               | 1        |
+      | image reference | is cover | legend[en-US] | position | image url                            | thumbnail url                                      |
+      | image2          | true     |               | 1        | http://myshop.com/img/p/{image2}.jpg | http://myshop.com/img/p/{image2}-small_default.jpg |
     And images "[image2]" should have following types generated:
       | name           | width | height |
       | cart_default   | 125   | 125    |

@@ -28,7 +28,7 @@ You don't exactly know where to start? Pick one of our [good first issues][9] to
 The PrestaShop documentation features a thorough explanation of the [complete process to your first pull request][4].
 
 If you don't feel comfortable forking the project or using Git, you can also either:
-* Edit a file directly within GitHub: browse to the target file, click the "Edit" button, make your changes in the editor then click on "Propose File Change". Github will automatically create a new fork and branch on your own Github account, then suggest to create a pull request to PrestaShop. Once the pull request is submitted, you just have to wait for a core developer to answer you.
+* Edit a file directly within GitHub: browse to the target file, click the "Edit" button, make your changes in the editor then click on "Propose File Change". Github will automatically create a new fork and branch on your own Github account, then suggest creating a pull request to PrestaShop. Once the pull request is submitted, you just have to wait for a core developer to answer you.
 * [Submit an issue using GitHub][5]: this is the official ticket-tracker for PrestaShop, and the best place to write a bug ticket or request an improvement, while not having to be a developer at all. You will need to [create an account on GitHub][6].
 
 Thank you for your help in making PrestaShop even better!

@@ -39,6 +39,7 @@ export default class ProductTypeManager {
   constructor($typeSelector, $productForm) {
     this.$typeSelector = $typeSelector;
     this.$productForm = $productForm;
+    this.productId = parseInt($productForm.data('productId'), 10);
     this.initialType = $typeSelector.val();
 
     this.$typeSelector.on('change', (event) => this.confirmTypeSubmit(event));
@@ -51,22 +52,25 @@ export default class ProductTypeManager {
    */
   confirmTypeSubmit() {
     let confirmMessage = this.$typeSelector.data('confirm-message');
-    let confirmWarning;
+    let confirmWarning = '';
 
-    switch (this.initialType) {
-      case ProductMap.productType.COMBINATIONS:
-        confirmWarning = this.$typeSelector.data('combinations-warning');
-        break;
-      case ProductMap.productType.PACK:
-        confirmWarning = this.$typeSelector.data('pack-warning');
-        break;
-      case ProductMap.productType.VIRTUAL:
-        confirmWarning = this.$typeSelector.data('virtual-warning');
-        break;
-      case ProductMap.productType.STANDARD:
-      default:
-        confirmWarning = '';
-        break;
+    // If no productId we are in creation page so no need for extra warning
+    if (this.productId) {
+      switch (this.initialType) {
+        case ProductMap.productType.COMBINATIONS:
+          confirmWarning = this.$typeSelector.data('combinations-warning');
+          break;
+        case ProductMap.productType.PACK:
+          confirmWarning = this.$typeSelector.data('pack-warning');
+          break;
+        case ProductMap.productType.VIRTUAL:
+          confirmWarning = this.$typeSelector.data('virtual-warning');
+          break;
+        case ProductMap.productType.STANDARD:
+        default:
+          confirmWarning = '';
+          break;
+      }
     }
 
     if (confirmWarning) {
@@ -85,6 +89,7 @@ export default class ProductTypeManager {
         closable: false,
       },
       () => {
+        $(ProductMap.productFormSubmitButton).prop('disabled', true);
         this.$productForm.submit();
       },
       () => {

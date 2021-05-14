@@ -44,6 +44,36 @@ use Tests\Integration\Behaviour\Features\Context\Util\PrimitiveUtils;
 abstract class AbstractProductFeatureContext extends AbstractDomainFeatureContext
 {
     /**
+     * Transform url from behat test into a proper one, expected value looks like this:
+     *   http://myshop.com/img/p/{image1}-small_default.jpg
+     *
+     * Where image1 is the reference to the image id in the shared storage, it allows to get the image
+     * id and correctly rebuild the url into something like this:
+     *  http://myshop.com/img/p/4/5/45-small_default.jpg
+     *
+     * @param string $imageUrl
+     *
+     * @return string
+     */
+    protected function getRealImageUrl(string $imageUrl): string
+    {
+        // Get image reference which is integrated in image url
+        preg_match('_\{(.+)\}_', $imageUrl, $matches);
+        $imageReference = $matches[1];
+        $imageId = $this->getSharedStorage()->get($imageReference);
+
+        // Now rebuild the image folder with image id appended
+        $imageFolder = implode('/', str_split((string) $imageId)) . '/' . $imageId;
+        $realImageUrl = str_replace(
+            '{' . $imageReference . '}',
+            $imageFolder,
+            $imageUrl
+        );
+
+        return $realImageUrl;
+    }
+
+    /**
      * @param string $reference
      *
      * @return ProductForEditing

@@ -134,10 +134,19 @@ class CombinationCreator
     {
         $product->setAvailableDate();
         $productId = new ProductId((int) $product->id);
-        $hasDefault = (bool) $this->combinationRepository->findDefaultCombination($productId);
+        $alreadyHasCombinations = $hasDefault = (bool) $this->combinationRepository->findDefaultCombination($productId);
 
         $addedCombinationIds = [];
         foreach ($generatedCombinations as $generatedCombination) {
+            // Product already has combinations so we need to filter existing ones
+            if ($alreadyHasCombinations) {
+                $attributeIds = array_values($generatedCombination);
+                $matchingCombinations = $this->combinationRepository->getCombinationIdsByAttributes($productId, $attributeIds);
+                if (!empty($matchingCombinations)) {
+                    continue;
+                }
+            }
+
             $addedCombinationIds[] = $this->persistCombination($productId, $generatedCombination, !$hasDefault);
             $hasDefault = true;
         }

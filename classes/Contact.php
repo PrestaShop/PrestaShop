@@ -72,7 +72,7 @@ class ContactCore extends ObjectModel
             'description' => [
                 'type' => self::TYPE_STRING,
                 'lang' => true,
-                'validate' => 'isCleanHtml',
+                'validate' => 'isString',
             ],
         ],
     ];

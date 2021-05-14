@@ -11,6 +11,7 @@ services:
         arguments:
             - '@prestashop.addons.client_api'
             - '@prestashop.module.zip.manager'
+            - '@=service("prestashop.adapter.legacy.configuration").get("ADDONS_API_MODULE_CHANNEL", "stable")'
         properties:
             cacheDir: "%kernel.cache_dir%"
 

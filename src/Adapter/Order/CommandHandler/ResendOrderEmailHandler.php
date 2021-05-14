@@ -55,7 +55,7 @@ final class ResendOrderEmailHandler extends AbstractOrderCommandHandler implemen
 
         $history = new OrderHistory($command->getOrderHistoryId());
 
-        $carrier = new Carrier($order->id_carrier, $order->id_lang);
+        $carrier = new Carrier($order->id_carrier, (int) $order->getAssociatedLanguage()->getId());
         $templateVars = [];
 
         if ($orderState->id == Configuration::get('PS_OS_SHIPPING') && $order->shipping_number) {

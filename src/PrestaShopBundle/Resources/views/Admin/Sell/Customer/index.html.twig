@@ -26,16 +26,6 @@
 {% set enableSidebar = true %}
 {% set layoutTitle = 'Manage your Customers'|trans({}, 'Admin.Orderscustomers.Feature') %}
 
-{% if isSingleShopContext %}
-  {% set layoutHeaderToolbarBtn = {
-    'add': {
-      'href': path('admin_customers_create'),
-      'desc': 'Add new customer'|trans({}, 'Admin.Orderscustomers.Feature'),
-      'icon': 'add_circle_outline'
-    }
-  } %}
-{% endif %}
-
 {% extends 'PrestaShopBundle:Admin:layout.html.twig' %}
 
 {% block content %}
