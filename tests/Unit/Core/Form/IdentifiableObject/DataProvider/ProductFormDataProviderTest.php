@@ -68,7 +68,6 @@ use PrestaShop\PrestaShop\Core\Domain\Product\VirtualProductFile\QueryResult\Vir
 use PrestaShop\PrestaShop\Core\Form\IdentifiableObject\DataProvider\ProductFormDataProvider;
 use PrestaShop\PrestaShop\Core\Util\DateTime\NullDateTime;
 use RuntimeException;
-use Symfony\Component\HttpFoundation\File\File;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 
 // @todo: ProductFormDataProvider needs to be split to multiple classes to allow easier testing
@@ -86,38 +85,50 @@ class ProductFormDataProviderTest extends TestCase
         $provider = $this->buildProvider($queryBusMock, false);
 
         $expectedDefaultData = [
-            'basic' => [
+            'header' => [
                 'type' => ProductType::TYPE_STANDARD,
             ],
-            'manufacturer' => [
-                'manufacturer_id' => NoManufacturerId::NO_MANUFACTURER_ID,
+            'basic' => [
+                'manufacturer' => NoManufacturerId::NO_MANUFACTURER_ID,
             ],
             'stock' => [
-                'quantity' => 0,
-                'minimal_quantity' => 0,
+                'quantities' => [
+                    'quantity' => 0,
+                    'minimal_quantity' => 0,
+                ],
             ],
-            'price' => [
-                'price_tax_excluded' => 0,
-                'price_tax_included' => 0,
+            'pricing' => [
+                'retail_price' => [
+                    'price_tax_excluded' => 0,
+                    'price_tax_included' => 0,
+                ],
                 'tax_rules_group_id' => 42,
                 'wholesale_price' => 0,
-                'unit_price' => 0,
+                'unit_price' => [
+                    'price' => 0,
+                ],
             ],
             'shipping' => [
-                'width' => 0,
-                'height' => 0,
-                'depth' => 0,
-                'weight' => 0,
+                'dimensions' => [
+                    'width' => 0,
+                    'height' => 0,
+                    'depth' => 0,
+                    'weight' => 0,
+                ],
                 'additional_shipping_cost' => 0,
                 'delivery_time_note_type' => DeliveryTimeNoteType::TYPE_DEFAULT,
             ],
             'options' => [
-                'visibility' => ProductVisibility::VISIBLE_EVERYWHERE,
+                'visibility' => [
+                    'visibility' => ProductVisibility::VISIBLE_EVERYWHERE,
+                ],
                 'condition' => ProductCondition::NEW,
-                'activate' => false,
+            ],
+            'footer' => [
+                'active' => false,
             ],
             'shortcuts' => [
-                'price' => [
+                'retail_price' => [
                     'price_tax_excluded' => 0,
                     'price_tax_included' => 0,
                     'tax_rules_group_id' => 42,
@@ -135,38 +146,50 @@ class ProductFormDataProviderTest extends TestCase
         $provider = $this->buildProvider($queryBusMock, true);
 
         $expectedDefaultData = [
-            'basic' => [
+            'header' => [
                 'type' => ProductType::TYPE_STANDARD,
             ],
-            'manufacturer' => [
-                'manufacturer_id' => NoManufacturerId::NO_MANUFACTURER_ID,
+            'basic' => [
+                'manufacturer' => NoManufacturerId::NO_MANUFACTURER_ID,
             ],
             'stock' => [
-                'quantity' => 0,
-                'minimal_quantity' => 0,
+                'quantities' => [
+                    'quantity' => 0,
+                    'minimal_quantity' => 0,
+                ],
             ],
-            'price' => [
-                'price_tax_excluded' => 0,
-                'price_tax_included' => 0,
+            'pricing' => [
+                'retail_price' => [
+                    'price_tax_excluded' => 0,
+                    'price_tax_included' => 0,
+                ],
                 'tax_rules_group_id' => 42,
                 'wholesale_price' => 0,
-                'unit_price' => 0,
+                'unit_price' => [
+                    'price' => 0,
+                ],
             ],
             'shipping' => [
-                'width' => 0,
-                'height' => 0,
-                'depth' => 0,
-                'weight' => 0,
+                'dimensions' => [
+                    'width' => 0,
+                    'height' => 0,
+                    'depth' => 0,
+                    'weight' => 0,
+                ],
                 'additional_shipping_cost' => 0,
                 'delivery_time_note_type' => DeliveryTimeNoteType::TYPE_DEFAULT,
             ],
             'options' => [
-                'visibility' => ProductVisibility::VISIBLE_EVERYWHERE,
+                'visibility' => [
+                    'visibility' => ProductVisibility::VISIBLE_EVERYWHERE,
+                ],
                 'condition' => ProductCondition::NEW,
-                'activate' => true,
+            ],
+            'footer' => [
+                'active' => true,
             ],
             'shortcuts' => [
-                'price' => [
+                'retail_price' => [
                     'price_tax_excluded' => 0,
                     'price_tax_included' => 0,
                     'tax_rules_group_id' => 42,
@@ -210,6 +233,8 @@ class ProductFormDataProviderTest extends TestCase
             $this->getDatasetsForVirtualProductFile(),
             $this->getDatasetsForPrices(),
             $this->getDatasetsForStock(),
+            $this->getDatasetsForShipping(),
+            $this->getDatasetsForOptions(),
         ];
 
         foreach ($datasetsByType as $datasetByType) {
@@ -227,7 +252,7 @@ class ProductFormDataProviderTest extends TestCase
         $datasets = [];
 
         $expectedOutputData = $this->getDefaultOutputData();
-        $expectedOutputData['virtual_product_file'] = [
+        $expectedOutputData['stock']['virtual_product_file'] = [
             'has_file' => true,
             'virtual_product_file_id' => self::DEFAULT_VIRTUAL_PRODUCT_FILE_ID,
             'name' => 'heh logo.jpg',
@@ -253,7 +278,7 @@ class ProductFormDataProviderTest extends TestCase
 
         // test case providing expiration date
         $expirationDate = new DateTimeImmutable();
-        $expectedOutputData['virtual_product_file']['expiration_date'] = $expirationDate->format('Y-m-d');
+        $expectedOutputData['stock']['virtual_product_file']['expiration_date'] = $expirationDate->format('Y-m-d');
         $productData['virtual_product_file']['date_expiration'] = $expirationDate;
 
         $datasets[] = [
@@ -263,7 +288,7 @@ class ProductFormDataProviderTest extends TestCase
 
         // test case providing NullDateTime expiration date
         $expirationDate = new NullDateTime();
-        $expectedOutputData['virtual_product_file']['expiration_date'] = $expirationDate->format('Y-m-d');
+        $expectedOutputData['stock']['virtual_product_file']['expiration_date'] = $expirationDate->format('Y-m-d');
         $productData['virtual_product_file']['date_expiration'] = $expirationDate;
 
         $datasets[] = [
@@ -272,7 +297,7 @@ class ProductFormDataProviderTest extends TestCase
         ];
 
         // test case has no virtual product file
-        $expectedOutputData['virtual_product_file'] = [
+        $expectedOutputData['stock']['virtual_product_file'] = [
             'has_file' => false,
         ];
 
@@ -339,8 +364,9 @@ class ProductFormDataProviderTest extends TestCase
             'description' => $localizedValues,
             'description_short' => $localizedValues,
         ];
-        $expectedOutputData['basic']['name'] = $localizedValues;
-        $expectedOutputData['basic']['type'] = ProductType::TYPE_COMBINATIONS;
+        $expectedOutputData['header']['name'] = $localizedValues;
+        $expectedOutputData['header']['type'] = ProductType::TYPE_COMBINATIONS;
+
         $expectedOutputData['basic']['description'] = $localizedValues;
         $expectedOutputData['basic']['description_short'] = $localizedValues;
 
@@ -379,21 +405,21 @@ class ProductFormDataProviderTest extends TestCase
             'unity' => 'candies',
             'unit_price_ratio' => new DecimalNumber('5'),
         ];
-        $expectedOutputData['price']['price_tax_excluded'] = 42.00;
-        $expectedOutputData['price']['price_tax_included'] = 50.40;
-        $expectedOutputData['price']['ecotax'] = 69.51;
-        $expectedOutputData['price']['tax_rules_group_id'] = 49;
-        $expectedOutputData['price']['on_sale'] = true;
-        $expectedOutputData['price']['wholesale_price'] = 66.56;
-        $expectedOutputData['price']['unit_price'] = 6.656;
-        $expectedOutputData['price']['unity'] = 'candies';
+        $expectedOutputData['pricing']['retail_price']['price_tax_excluded'] = 42.00;
+        $expectedOutputData['pricing']['retail_price']['price_tax_included'] = 50.40;
+        $expectedOutputData['pricing']['retail_price']['ecotax'] = 69.51;
+        $expectedOutputData['pricing']['tax_rules_group_id'] = 49;
+        $expectedOutputData['pricing']['on_sale'] = true;
+        $expectedOutputData['pricing']['wholesale_price'] = 66.56;
+        $expectedOutputData['pricing']['unit_price']['price'] = 6.656;
+        $expectedOutputData['pricing']['unit_price']['unity'] = 'candies';
 
         // Not handled yet
         // $expectedOutputData['price']['unit_price_ratio'] = 5;
 
-        $expectedOutputData['shortcuts']['price']['price_tax_excluded'] = 42.00;
-        $expectedOutputData['shortcuts']['price']['price_tax_included'] = 50.40;
-        $expectedOutputData['shortcuts']['price']['tax_rules_group_id'] = 49;
+        $expectedOutputData['shortcuts']['retail_price']['price_tax_excluded'] = 42.00;
+        $expectedOutputData['shortcuts']['retail_price']['price_tax_included'] = 50.40;
+        $expectedOutputData['shortcuts']['retail_price']['tax_rules_group_id'] = 49;
 
         $datasets[] = [
             $productData,
@@ -435,18 +461,122 @@ class ProductFormDataProviderTest extends TestCase
             'available_later' => $localizedValues,
             'available_date' => new DateTime('1969/07/20'),
         ];
-        $expectedOutputData['stock']['quantity'] = 42;
-        $expectedOutputData['stock']['minimal_quantity'] = 7;
-        $expectedOutputData['stock']['stock_location'] = 'top shelf';
-        $expectedOutputData['stock']['low_stock_threshold'] = 5;
-        $expectedOutputData['stock']['low_stock_alert'] = true;
+        $expectedOutputData['stock']['quantities']['quantity'] = 42;
+        $expectedOutputData['stock']['quantities']['minimal_quantity'] = 7;
+        $expectedOutputData['stock']['options']['stock_location'] = 'top shelf';
+        $expectedOutputData['stock']['options']['low_stock_threshold'] = 5;
+        $expectedOutputData['stock']['options']['low_stock_alert'] = true;
         $expectedOutputData['stock']['pack_stock_type'] = PackStockType::STOCK_TYPE_PACK_ONLY;
-        $expectedOutputData['stock']['out_of_stock_type'] = OutOfStockType::OUT_OF_STOCK_AVAILABLE;
-        $expectedOutputData['stock']['available_now_label'] = $localizedValues;
-        $expectedOutputData['stock']['available_later_label'] = $localizedValues;
-        $expectedOutputData['stock']['available_date'] = '1969-07-20';
+        $expectedOutputData['stock']['availability']['out_of_stock_type'] = OutOfStockType::OUT_OF_STOCK_AVAILABLE;
+        $expectedOutputData['stock']['availability']['available_now_label'] = $localizedValues;
+        $expectedOutputData['stock']['availability']['available_later_label'] = $localizedValues;
+        $expectedOutputData['stock']['availability']['available_date'] = '1969-07-20';
 
         $expectedOutputData['shortcuts']['stock']['quantity'] = 42;
+
+        $datasets[] = [
+            $productData,
+            $expectedOutputData,
+        ];
+
+        return $datasets;
+    }
+
+    /**
+     * @return array
+     */
+    private function getDatasetsForShipping(): array
+    {
+        $datasets = [];
+
+        $expectedOutputData = $this->getDefaultOutputData();
+        $productData = [];
+
+        $datasets[] = [
+            $productData,
+            $expectedOutputData,
+        ];
+
+        $localizedValues = [
+            1 => 'english',
+            2 => 'french',
+        ];
+        $expectedOutputData = $this->getDefaultOutputData();
+        $productData = [
+            'width' => new DecimalNumber('45.87'),
+            'height' => new DecimalNumber('46.87'),
+            'depth' => new DecimalNumber('47.87'),
+            'weight' => new DecimalNumber('48.87'),
+            'additional_shipping_cost' => new DecimalNumber('49.87'),
+            'carrier_references' => [69, 99],
+            'delivery_time_note_type' => DeliveryTimeNoteType::TYPE_SPECIFIC,
+            'delivery_time_in_stock_note' => $localizedValues,
+            'delivery_time_out_stock_note' => $localizedValues,
+        ];
+        $expectedOutputData['shipping']['dimensions']['width'] = '45.87';
+        $expectedOutputData['shipping']['dimensions']['height'] = '46.87';
+        $expectedOutputData['shipping']['dimensions']['depth'] = '47.87';
+        $expectedOutputData['shipping']['dimensions']['weight'] = '48.87';
+        $expectedOutputData['shipping']['additional_shipping_cost'] = '49.87';
+        $expectedOutputData['shipping']['delivery_time_note_type'] = DeliveryTimeNoteType::TYPE_SPECIFIC;
+        $expectedOutputData['shipping']['delivery_time_notes']['in_stock'] = $localizedValues;
+        $expectedOutputData['shipping']['delivery_time_notes']['out_of_stock'] = $localizedValues;
+        $expectedOutputData['shipping']['carriers'] = [69, 99];
+
+        $datasets[] = [
+            $productData,
+            $expectedOutputData,
+        ];
+
+        return $datasets;
+    }
+
+    /**
+     * @return array
+     */
+    private function getDatasetsForOptions(): array
+    {
+        $datasets = [];
+
+        $expectedOutputData = $this->getDefaultOutputData();
+        $productData = [];
+
+        $datasets[] = [
+            $productData,
+            $expectedOutputData,
+        ];
+
+        $localizedValues = [
+            1 => 'english',
+            2 => 'french',
+        ];
+        $expectedOutputData = $this->getDefaultOutputData();
+        $productData = [
+            'active' => false,
+            'visibility' => ProductVisibility::VISIBLE_IN_CATALOG,
+            'available_for_order' => false,
+            'online_only' => true,
+            'show_price' => false,
+            'condition' => ProductCondition::USED,
+            'show_condition' => true,
+            'isbn' => 'isbn_2',
+            'upc' => 'upc_2',
+            'ean13' => 'ean13_2',
+            'mpn' => 'mpn_2',
+            'reference' => 'reference_2',
+        ];
+        $expectedOutputData['footer']['active'] = false;
+        $expectedOutputData['options']['visibility']['visibility'] = ProductVisibility::VISIBLE_IN_CATALOG;
+        $expectedOutputData['options']['visibility']['available_for_order'] = false;
+        $expectedOutputData['options']['visibility']['online_only'] = true;
+        $expectedOutputData['options']['visibility']['show_price'] = false;
+        $expectedOutputData['options']['condition'] = ProductCondition::USED;
+        $expectedOutputData['options']['show_condition'] = true;
+        $expectedOutputData['options']['references']['isbn'] = 'isbn_2';
+        $expectedOutputData['options']['references']['upc'] = 'upc_2';
+        $expectedOutputData['options']['references']['ean_13'] = 'ean13_2';
+        $expectedOutputData['options']['references']['mpn'] = 'mpn_2';
+        $expectedOutputData['options']['references']['reference'] = 'reference_2';
 
         $datasets[] = [
             $productData,
@@ -468,8 +598,8 @@ class ProductFormDataProviderTest extends TestCase
             'redirect_type' => RedirectType::TYPE_CATEGORY_TEMPORARY,
             'id_type_redirected' => static::DEFAULT_CATEGORY_ID,
         ];
-        $expectedOutputData['redirect_option']['type'] = RedirectType::TYPE_CATEGORY_TEMPORARY;
-        $expectedOutputData['redirect_option']['target'] = static::DEFAULT_CATEGORY_ID;
+        $expectedOutputData['seo']['redirect_option']['type'] = RedirectType::TYPE_CATEGORY_TEMPORARY;
+        $expectedOutputData['seo']['redirect_option']['target'] = static::DEFAULT_CATEGORY_ID;
 
         $datasets[] = [
             $productData,
@@ -487,12 +617,12 @@ class ProductFormDataProviderTest extends TestCase
         $datasets = [];
 
         $expectedOutputData = $this->getDefaultOutputData();
-        $expectedOutputData['suppliers']['default_supplier_id'] = 1;
-        $expectedOutputData['suppliers']['supplier_ids'] = [
+        $expectedOutputData['options']['suppliers']['default_supplier_id'] = 1;
+        $expectedOutputData['options']['suppliers']['supplier_ids'] = [
             0 => 1,
             1 => 2,
         ];
-        $expectedOutputData['suppliers']['product_suppliers'][1] = [
+        $expectedOutputData['options']['suppliers']['product_suppliers'][1] = [
             'supplier_id' => 1,
             'supplier_name' => 'test supplier 1',
             'product_supplier_id' => 1,
@@ -501,7 +631,7 @@ class ProductFormDataProviderTest extends TestCase
             'currency_id' => 1,
             'combination_id' => 0,
         ];
-        $expectedOutputData['suppliers']['product_suppliers'][2] = [
+        $expectedOutputData['options']['suppliers']['product_suppliers'][2] = [
             'supplier_id' => 2,
             'supplier_name' => 'test supplier 2',
             'product_supplier_id' => 2,
@@ -555,7 +685,7 @@ class ProductFormDataProviderTest extends TestCase
         $datasets = [];
 
         $expectedOutputData = $this->getDefaultOutputData();
-        $expectedOutputData['manufacturer']['manufacturer_id'] = 42;
+        $expectedOutputData['basic']['manufacturer'] = 42;
 
         $productData = [
             'manufacturer_id' => 42,
@@ -577,8 +707,8 @@ class ProductFormDataProviderTest extends TestCase
         $datasets = [];
 
         $expectedOutputData = $this->getDefaultOutputData();
-        $expectedOutputData['features']['feature_values'] = [];
-        $expectedOutputData['features']['feature_values'][] = [
+        $expectedOutputData['basic']['features']['feature_values'] = [];
+        $expectedOutputData['basic']['features']['feature_values'][] = [
             'feature_id' => 42,
             'feature_value_id' => 51,
         ];
@@ -587,7 +717,7 @@ class ProductFormDataProviderTest extends TestCase
             1 => 'english',
             2 => 'french',
         ];
-        $expectedOutputData['features']['feature_values'][] = [
+        $expectedOutputData['basic']['features']['feature_values'][] = [
             'feature_id' => 42,
             'feature_value_id' => 69,
             'custom_value' => $localizedValues,
@@ -649,7 +779,7 @@ class ProductFormDataProviderTest extends TestCase
             ],
         ];
 
-        $expectedOutputData['customizations']['customization_fields'] = [
+        $expectedOutputData['options']['customizations']['customization_fields'] = [
             [
                 'id' => 1,
                 'name' => $localizedNames,
@@ -995,80 +1125,100 @@ class ProductFormDataProviderTest extends TestCase
     {
         return [
             'id' => static::PRODUCT_ID,
-            'basic' => [
+            'header' => [
                 'type' => ProductType::TYPE_STANDARD,
                 'name' => [],
+            ],
+            'basic' => [
                 'description' => [],
                 'description_short' => [],
-            ],
-            'features' => [],
-            'manufacturer' => [
-                'manufacturer_id' => NoManufacturerId::NO_MANUFACTURER_ID,
+                'features' => [],
+                'manufacturer' => NoManufacturerId::NO_MANUFACTURER_ID,
             ],
             'stock' => [
-                'quantity' => static::DEFAULT_QUANTITY,
-                'minimal_quantity' => 0,
-                'stock_location' => 'location',
-                'low_stock_threshold' => null,
-                'low_stock_alert' => false,
+                'quantities' => [
+                    'quantity' => static::DEFAULT_QUANTITY,
+                    'minimal_quantity' => 0,
+                ],
+                'options' => [
+                    'stock_location' => 'location',
+                    'low_stock_threshold' => null,
+                    'low_stock_alert' => false,
+                ],
+                'virtual_product_file' => [
+                    'has_file' => false,
+                ],
                 'pack_stock_type' => PackStockType::STOCK_TYPE_DEFAULT,
-                'out_of_stock_type' => OutOfStockType::OUT_OF_STOCK_DEFAULT,
-                'available_now_label' => [],
-                'available_later_label' => [],
-                'available_date' => '',
+                'availability' => [
+                    'out_of_stock_type' => OutOfStockType::OUT_OF_STOCK_DEFAULT,
+                    'available_now_label' => [],
+                    'available_later_label' => [],
+                    'available_date' => '',
+                ],
             ],
-            'price' => [
-                'price_tax_excluded' => 19.86,
-                'price_tax_included' => 23.832,
-                'ecotax' => 19.86,
+            'pricing' => [
+                'retail_price' => [
+                    'price_tax_excluded' => 19.86,
+                    'price_tax_included' => 23.832,
+                    'ecotax' => 19.86,
+                ],
                 'tax_rules_group_id' => 1,
                 'on_sale' => false,
                 'wholesale_price' => 19.86,
-                'unit_price' => 19.86,
-                'unity' => '',
+                'unit_price' => [
+                    'price' => 19.86,
+                    'unity' => '',
+                ],
             ],
             'seo' => [
                 'meta_title' => [],
                 'meta_description' => [],
                 'link_rewrite' => [],
-            ],
-            'redirect_option' => [
-                'type' => RedirectType::TYPE_NOT_FOUND,
-                'target' => 0,
+                'redirect_option' => [
+                    'type' => RedirectType::TYPE_NOT_FOUND,
+                    'target' => 0,
+                ],
             ],
             'shipping' => [
-                'width' => '19.86',
-                'height' => '19.86',
-                'depth' => '19.86',
-                'weight' => '19.86',
+                'dimensions' => [
+                    'width' => '19.86',
+                    'height' => '19.86',
+                    'depth' => '19.86',
+                    'weight' => '19.86',
+                ],
                 'additional_shipping_cost' => '19.86',
                 'delivery_time_note_type' => DeliveryTimeNoteType::TYPE_DEFAULT,
-                'delivery_time_in_stock_note' => [],
-                'delivery_time_out_stock_note' => [],
+                'delivery_time_notes' => [
+                    'in_stock' => [],
+                    'out_of_stock' => [],
+                ],
                 'carriers' => [],
             ],
             'options' => [
-                'active' => true,
-                'visibility' => ProductVisibility::VISIBLE_EVERYWHERE,
-                'available_for_order' => true,
-                'show_price' => true,
-                'online_only' => false,
+                'visibility' => [
+                    'visibility' => ProductVisibility::VISIBLE_EVERYWHERE,
+                    'available_for_order' => true,
+                    'show_price' => true,
+                    'online_only' => false,
+                ],
+                'tags' => [],
                 'show_condition' => false,
                 'condition' => ProductCondition::NEW,
-                'tags' => [],
-                'mpn' => 'mpn',
-                'upc' => 'upc',
-                'ean_13' => 'ean13',
-                'isbn' => 'isbn',
-                'reference' => 'reference',
+                'references' => [
+                    'mpn' => 'mpn',
+                    'upc' => 'upc',
+                    'ean_13' => 'ean13',
+                    'isbn' => 'isbn',
+                    'reference' => 'reference',
+                ],
+                'customizations' => [],
+                'suppliers' => [],
             ],
-            'suppliers' => [],
-            'customizations' => [],
-            'virtual_product_file' => [
-                'has_file' => false,
+            'footer' => [
+                'active' => true,
             ],
             'shortcuts' => [
-                'price' => [
+                'retail_price' => [
                     'price_tax_excluded' => 19.86,
                     'price_tax_included' => 23.832,
                     'tax_rules_group_id' => 1,

@@ -78,10 +78,12 @@ class ShippingCommandBuilderTest extends AbstractProductCommandBuilderTest
         yield [
             [
                 'shipping' => [
-                    'weight' => '10',
-                    'width' => 10.5,
-                    'height' => '109',
-                    'depth' => 0,
+                    'dimensions' => [
+                        'weight' => '10',
+                        'width' => 10.5,
+                        'height' => '109',
+                        'depth' => 0,
+                    ],
                 ],
             ],
             [$command],
@@ -129,7 +131,9 @@ class ShippingCommandBuilderTest extends AbstractProductCommandBuilderTest
         yield [
             [
                 'shipping' => [
-                    'delivery_time_in_stock_note' => $localizedNotes,
+                    'delivery_time_notes' => [
+                        'in_stock' => $localizedNotes,
+                    ],
                 ],
             ],
             [$command],
@@ -144,7 +148,9 @@ class ShippingCommandBuilderTest extends AbstractProductCommandBuilderTest
         yield [
             [
                 'shipping' => [
-                    'delivery_time_out_stock_note' => $localizedNotes,
+                    'delivery_time_notes' => [
+                        'out_of_stock' => $localizedNotes,
+                    ],
                 ],
             ],
             [$command],

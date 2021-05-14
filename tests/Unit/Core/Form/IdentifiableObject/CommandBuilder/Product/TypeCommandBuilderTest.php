@@ -62,7 +62,7 @@ class TypeCommandBuilderTest extends AbstractProductCommandBuilderTest
         );
         yield [
             [
-                'basic' => [
+                'header' => [
                     'type' => ProductType::TYPE_STANDARD,
                 ],
             ],

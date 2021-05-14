@@ -201,6 +201,7 @@ class CombinationRepository extends AbstractObjectModelRepository
             ->from($this->dbPrefix . 'product_attribute', 'pa')
             ->andWhere('pa.id_product = :productId')
             ->setParameter('productId', $productId->getValue())
+            ->addOrderBy('pa.id_product_attribute', 'ASC')
         ;
         $combinationIds = $qb->execute()->fetchAll();
 

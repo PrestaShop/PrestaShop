@@ -40,6 +40,9 @@
           <input type="text" id="{{ form.vars.id }}" placeholder="{{ placeholder }}" autocomplete="off" {{ block('widget_attributes') }}>
         </div>
         <small class="form-text text-muted text-right typeahead-hint">
+          {% if help %}
+            {{ help|raw }}
+          {% endif %}
         </small>
         <ul id="{{ form.vars.id }}-data" class="typeahead-list nostyle col-sm-12 product-list">
             {% if collection is defined and collection|length > 0 %}

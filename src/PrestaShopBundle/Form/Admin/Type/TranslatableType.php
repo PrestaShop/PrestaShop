@@ -122,7 +122,6 @@ class TranslatableType extends TranslatorAwareType
      */
     public function buildView(FormView $view, FormInterface $form, array $options)
     {
-        $view->vars['formatted_text_area'] = ($options['type'] === FormattedTextareaType::class);
         $errors = iterator_to_array($view->vars['errors']);
 
         $errorsByLocale = $this->getErrorsByLocale($view, $form, $options['locales']);
@@ -153,6 +152,14 @@ class TranslatableType extends TranslatorAwareType
                 'admin_employees_change_form_language'
             );
         }
+
+        if (!empty($options['use_tabs'])) {
+            $view->vars['use_tabs'] = true;
+        } elseif (!empty($options['use_dropdown'])) {
+            $view->vars['use_tabs'] = false;
+        } else {
+            $view->vars['use_tabs'] = ($options['type'] === FormattedTextareaType::class);
+        }
     }
 
     /**
@@ -171,12 +178,18 @@ class TranslatableType extends TranslatorAwareType
                     $this->availableLocales
                 ;
             },
+            // These two options allow to override the default choice of the component between tab and dropdown (by
+            // default it is based on input type being a textarea)
+            'use_tabs' => null,
+            'use_dropdown' => null,
         ]);
 
         $resolver->setAllowedTypes('locales', 'array');
         $resolver->setAllowedTypes('options', 'array');
         $resolver->setAllowedTypes('type', 'string');
         $resolver->setAllowedTypes('error_bubbling', 'bool');
+        $resolver->setAllowedTypes('use_tabs', ['null', 'bool']);
+        $resolver->setAllowedTypes('use_dropdown', ['null', 'bool']);
     }
 
     /**

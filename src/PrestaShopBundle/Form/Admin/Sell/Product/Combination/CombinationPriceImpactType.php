@@ -34,6 +34,7 @@ use PrestaShopBundle\Form\Admin\Type\TextWithUnitType;
 use PrestaShopBundle\Form\Admin\Type\TranslatorAwareType;
 use Symfony\Component\Form\Extension\Core\Type\MoneyType;
 use Symfony\Component\Form\FormBuilderInterface;
+use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Translation\TranslatorInterface;
 use Symfony\Component\Validator\Constraints\NotBlank;
 use Symfony\Component\Validator\Constraints\Type;
@@ -78,11 +79,15 @@ class CombinationPriceImpactType extends TranslatorAwareType
                 'label' => $this->trans('Cost price (tax excl.)', 'Admin.Catalog.Feature'),
                 'attr' => ['data-display-price-precision' => self::PRESTASHOP_DECIMALS],
                 'currency' => $this->defaultCurrency->iso_code,
+                'constraints' => [
+                    new NotBlank(),
+                    new Type(['type' => 'float']),
+                ],
             ])
             ->add('price_tax_excluded', MoneyType::class, [
                 'required' => false,
                 'label' => $this->trans('Impact on price (tax excl.)', 'Admin.Catalog.Feature'),
-                'help' => $this->trans('Does this combination have a different price? Is it cheaper or more expensive than the default retail price?', 'Admin.Catalog.Help'),
+                'label_help_box' => $this->trans('Does this combination have a different price? Is it cheaper or more expensive than the default retail price?', 'Admin.Catalog.Help'),
                 'attr' => ['data-display-price-precision' => self::PRESTASHOP_DECIMALS],
                 'currency' => $this->defaultCurrency->iso_code,
                 'constraints' => [
@@ -103,9 +108,13 @@ class CombinationPriceImpactType extends TranslatorAwareType
             ->add('unit_price', MoneyType::class, [
                 'required' => false,
                 'label' => $this->trans('Impact on price per unit (tax excl.)', 'Admin.Catalog.Feature'),
-                'help' => $this->trans('Does this combination have a different price per unit?', 'Admin.Catalog.Feature'),
+                'label_help_box' => $this->trans('Does this combination have a different price per unit?', 'Admin.Catalog.Feature'),
                 'attr' => ['data-display-price-precision' => self::PRESTASHOP_DECIMALS],
                 'currency' => $this->defaultCurrency->iso_code,
+                'constraints' => [
+                    new NotBlank(),
+                    new Type(['type' => 'float']),
+                ],
             ])
             ->add('weight', TextWithUnitType::class, [
                 'required' => false,
@@ -124,5 +133,18 @@ class CombinationPriceImpactType extends TranslatorAwareType
                 ],
             ])
         ;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function configureOptions(OptionsResolver $resolver)
+    {
+        parent::configureOptions($resolver);
+        $resolver->setDefaults([
+            'label' => $this->trans('Price and impact', 'Admin.Catalog.Feature'),
+            'label_tag_name' => 'h2',
+            'columns_number' => 3,
+        ]);
     }
 }

@@ -108,6 +108,7 @@
   import Router from '@components/router';
 
   const {$} = window;
+  const CombinationEvents = ProductEventMap.combinations;
 
   const router = new Router();
 
@@ -133,12 +134,17 @@
         type: Number,
         required: true,
       },
+      eventEmitter: {
+        type: Object,
+        required: true,
+      },
     },
     mounted() {
       this.combinationList = $(ProductMap.combinations.combinationsContainer);
       this.combinationsService = new CombinationsService(this.productId);
       this.initCombinationIds();
       this.watchEditButtons();
+      this.eventEmitter.on(CombinationEvents.refreshCombinationList, () => this.initCombinationIds());
     },
     methods: {
       watchEditButtons() {
@@ -170,7 +176,7 @@
 
         // If modifications have been made refresh the combination list
         if (this.hasSubmittedCombinations) {
-          window.prestashop.instance.eventEmitter.emit(ProductEventMap.combinations.refreshList);
+          this.eventEmitter.emit(CombinationEvents.refreshPage);
         }
         this.hasSubmittedCombinations = false;
 

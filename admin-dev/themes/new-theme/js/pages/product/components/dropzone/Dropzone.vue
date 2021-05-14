@@ -547,6 +547,7 @@
 
 <style lang="scss" type="text/scss">
 @import '~@scss/config/_settings.scss';
+@import '~@scss/config/_bootstrap.scss';
 
 .product-page #product-images-dropzone {
   &.full {
@@ -673,8 +674,38 @@
 }
 
 .product-page #product-images-container {
-  display: flex;
-  align-items: flex-start;
-  justify-content: space-between;
+  @include media-breakpoint-down(xs) {
+    flex-wrap: wrap;
+  }
+
+  #product-images-dropzone.dropzone {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    border-radius: 4px;
+
+    @include media-breakpoint-down(xs) {
+      flex-wrap: wrap;
+      justify-content: space-around;
+      width: 100%;
+
+      .dz-preview {
+        width: 100px;
+        height: 100px;
+        min-height: 100px;
+        margin: 0.5rem;
+
+        img {
+          max-width: 100%;
+          max-height: 100%;
+        }
+
+        .dz-image {
+          width: 100px;
+          height: 100px;
+        }
+      }
+    }
+  }
 }
 </style>

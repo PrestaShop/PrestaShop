@@ -839,7 +839,7 @@ class Install extends AbstractInstall
 
         $locale = new LocalizationPack();
         $this->callWithUnityAutoincrement(function () use ($locale, $localization_file_content) {
-            $locale->loadLocalisationPack($localization_file_content, false, true);
+            $locale->loadLocalisationPack($localization_file_content, [], true);
         });
 
         // Create default employee
@@ -1005,7 +1005,7 @@ class Install extends AbstractInstall
 
         $addons_modules = [];
         $content = Tools::addonsRequest('install-modules', $params);
-        $xml = @simplexml_load_string($content, null, LIBXML_NOCDATA);
+        $xml = @simplexml_load_string($content, 'SimpleXMLElement', LIBXML_NOCDATA);
 
         if ($xml !== false && isset($xml->module)) {
             foreach ($xml->module as $modaddons) {

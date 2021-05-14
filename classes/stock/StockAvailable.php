@@ -304,7 +304,7 @@ class StockAvailableCore extends ObjectModel
      * For a given id_product, sets if stock available depends on stock.
      *
      * @param int $id_product
-     * @param int $depends_on_stock Optional : true by default
+     * @param bool $depends_on_stock Optional : true by default
      * @param int $id_shop Optional : gets context by default
      */
     public static function setProductDependsOnStock($id_product, $depends_on_stock = true, $id_shop = null, $id_product_attribute = 0)
@@ -562,10 +562,10 @@ class StockAvailableCore extends ObjectModel
     /**
      * For a given id_product and id_product_attribute sets the quantity available.
      *
-     * @param $id_product
-     * @param $id_product_attribute
+     * @param int $id_product
+     * @param int $id_product_attribute
      * @param $quantity
-     * @param null $id_shop
+     * @param int|null $id_shop
      * @param bool $add_movement
      *
      * @return bool
@@ -748,9 +748,9 @@ class StockAvailableCore extends ObjectModel
      * For a given product, get its "out of stock" flag.
      *
      * @param int $id_product
-     * @param int $id_shop Optional : gets context if null @see Context::getContext()
+     * @param int|null $id_shop Optional : gets context if null @see Context::getContext()
      *
-     * @return bool : depends on stock @see $depends_on_stock
+     * @return int|bool : depends on stock @see $depends_on_stock
      */
     public static function outOfStock($id_product, $id_shop = null)
     {

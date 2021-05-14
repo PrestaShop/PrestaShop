@@ -48,35 +48,35 @@ final class StockCommandsBuilder implements ProductCommandsBuilderInterface
         $quantityData = $formData['stock'];
         $command = new UpdateProductStockInformationCommand($productId->getValue());
 
-        if (isset($quantityData['quantity'])) {
-            $command->setQuantity((int) $quantityData['quantity']);
+        if (isset($quantityData['quantities']['quantity'])) {
+            $command->setQuantity((int) $quantityData['quantities']['quantity']);
         }
-        if (isset($quantityData['minimal_quantity'])) {
-            $command->setMinimalQuantity((int) $quantityData['minimal_quantity']);
+        if (isset($quantityData['quantities']['minimal_quantity'])) {
+            $command->setMinimalQuantity((int) $quantityData['quantities']['minimal_quantity']);
         }
-        if (isset($quantityData['stock_location'])) {
-            $command->setLocation($quantityData['stock_location']);
+        if (isset($quantityData['options']['stock_location'])) {
+            $command->setLocation($quantityData['options']['stock_location']);
         }
-        if (isset($quantityData['low_stock_threshold'])) {
-            $command->setLowStockThreshold((int) $quantityData['low_stock_threshold']);
+        if (isset($quantityData['options']['low_stock_threshold'])) {
+            $command->setLowStockThreshold((int) $quantityData['options']['low_stock_threshold']);
         }
-        if (isset($quantityData['low_stock_alert'])) {
-            $command->setLowStockAlert((bool) $quantityData['low_stock_alert']);
+        if (isset($quantityData['options']['low_stock_alert'])) {
+            $command->setLowStockAlert((bool) $quantityData['options']['low_stock_alert']);
         }
         if (isset($quantityData['pack_stock_type'])) {
             $command->setPackStockType((int) $quantityData['pack_stock_type']);
         }
-        if (isset($quantityData['out_of_stock_type'])) {
-            $command->setOutOfStockType((int) $quantityData['out_of_stock_type']);
+        if (isset($quantityData['availability']['out_of_stock_type'])) {
+            $command->setOutOfStockType((int) $quantityData['availability']['out_of_stock_type']);
         }
-        if (isset($quantityData['available_now_label'])) {
-            $command->setLocalizedAvailableNowLabels($quantityData['available_now_label']);
+        if (isset($quantityData['availability']['available_now_label'])) {
+            $command->setLocalizedAvailableNowLabels($quantityData['availability']['available_now_label']);
         }
-        if (isset($quantityData['available_later_label'])) {
-            $command->setLocalizedAvailableLaterLabels($quantityData['available_later_label']);
+        if (isset($quantityData['availability']['available_later_label'])) {
+            $command->setLocalizedAvailableLaterLabels($quantityData['availability']['available_later_label']);
         }
-        if (isset($quantityData['available_date'])) {
-            $command->setAvailableDate(new DateTime($quantityData['available_date']));
+        if (isset($quantityData['availability']['available_date'])) {
+            $command->setAvailableDate(new DateTime($quantityData['availability']['available_date']));
         }
 
         return [$command];

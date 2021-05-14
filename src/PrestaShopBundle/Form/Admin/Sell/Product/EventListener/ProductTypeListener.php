@@ -32,6 +32,7 @@ use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductType;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Symfony\Component\Form\FormEvent;
 use Symfony\Component\Form\FormEvents;
+use Symfony\Component\Form\FormInterface;
 
 /**
  * This listener dynamically updates the form depending on the product type, like
@@ -57,17 +58,49 @@ class ProductTypeListener implements EventSubscriberInterface
     {
         $form = $event->getForm();
         $data = $event->getData();
+        $productType = $data['header']['type'];
 
-        if (ProductType::TYPE_COMBINATIONS === $data['basic']['type']) {
-            $form->remove('suppliers');
-            $form->remove('stock');
-            if ($form->has('shortcuts')) {
-                $shortcutsForm = $form->get('shortcuts');
-                $shortcutsForm->remove('stock');
+        if (ProductType::TYPE_COMBINATIONS === $productType) {
+            $this->removeSuppliers($form);
+            $this->removeStock($form);
+        } else {
+            if ($form->has('stock')) {
+                $stock = $form->get('stock');
+                if (ProductType::TYPE_PACK !== $productType) {
+                    $stock->remove('pack_stock_type');
+                }
+                if (ProductType::TYPE_VIRTUAL !== $productType) {
+                    $stock->remove('virtual_product_file');
+                }
+            }
+
+            if (ProductType::TYPE_VIRTUAL === $productType) {
+                $form->remove('shipping');
             }
         }
-        if (ProductType::TYPE_VIRTUAL !== $data['basic']['type']) {
-            $form->remove('virtual_product_file');
+    }
+
+    /**
+     * @param FormInterface $form
+     */
+    private function removeSuppliers(FormInterface $form): void
+    {
+        if ($form->has('options')) {
+            $optionsForm = $form->get('options');
+            $optionsForm->remove('suppliers');
+            $optionsForm->remove('product_suppliers');
+        }
+    }
+
+    /**
+     * @param FormInterface $form
+     */
+    private function removeStock(FormInterface $form): void
+    {
+        $form->remove('stock');
+        if ($form->has('shortcuts')) {
+            $shortcutsForm = $form->get('shortcuts');
+            $shortcutsForm->remove('stock');
         }
     }
 }

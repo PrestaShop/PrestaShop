@@ -257,6 +257,6 @@ class ModuleManagerBuilder
      */
     private function getCountryIso()
     {
-        return \CountryCore::getIsoById(\Configuration::get('PS_COUNTRY_DEFAULT'));
+        return \CountryCore::getIsoById((int) \Configuration::get('PS_COUNTRY_DEFAULT'));
     }
 }

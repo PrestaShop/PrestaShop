@@ -41,11 +41,11 @@ class CombinationDetailsCommandsBuilder implements CombinationCommandsBuilderInt
      */
     public function buildCommands(CombinationId $combinationId, array $formData): array
     {
-        if (!isset($formData['details']) && !isset($formData['price_impact']['weight'])) {
+        if (!isset($formData['references']) && !isset($formData['price_impact']['weight'])) {
             return [];
         }
 
-        $detailsData = $formData['details'] ?? [];
+        $detailsData = $formData['references'] ?? [];
         $command = new UpdateCombinationDetailsCommand($combinationId->getValue());
 
         if (isset($detailsData['reference'])) {

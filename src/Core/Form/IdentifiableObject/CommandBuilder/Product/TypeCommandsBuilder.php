@@ -38,13 +38,13 @@ class TypeCommandsBuilder implements ProductCommandsBuilderInterface
 {
     public function buildCommands(ProductId $productId, array $formData): array
     {
-        if (!isset($formData['basic']['type'])) {
+        if (!isset($formData['header']['type'])) {
             return [];
         }
 
         return [new UpdateProductTypeCommand(
             $productId->getValue(),
-            $formData['basic']['type']
+            $formData['header']['type']
         )];
     }
 }

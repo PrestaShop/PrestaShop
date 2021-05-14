@@ -30,6 +30,7 @@ namespace Tests\Integration\Behaviour\Features\Context\Domain;
 
 use Address;
 use AdminController;
+use Behat\Gherkin\Node\PyStringNode;
 use Behat\Gherkin\Node\TableNode;
 use Cart;
 use Configuration;
@@ -184,16 +185,12 @@ class OrderFeatureContext extends AbstractDomainFeatureContext
 
         $productName = $data['name'];
         $product = $this->getProductByName($productName);
+        $productId = (int) $product->getProductId();
 
-        $productId = $product->getProductId();
-        if (isset($data['combination'])) {
-            $combinationId = $this->getProductCombinationId($product, $data['combination']);
-        } else {
-            $combinationId = 0;
-        }
+        $combinationId = isset($data['combination']) ? $this->getProductCombinationId($product, $data['combination']) : 0;
 
         if (empty($data['price_tax_incl'])) {
-            $taxCalculator = $this->getProductTaxCalculator((int) $orderId, (int) $productId);
+            $taxCalculator = $this->getProductTaxCalculator((int) $orderId, $productId);
             $data['price_tax_incl'] = !empty($taxCalculator) ? (string) $taxCalculator->addTaxes($data['price']) : $data['price'];
         }
 
@@ -648,7 +645,7 @@ class OrderFeatureContext extends AbstractDomainFeatureContext
             $invoiceId = (int) $invoice->id;
         }
 
-        // if tax included price is not given, it is calculated
+        // If tax included price is not given, it is calculated
         if (!isset($data['price_tax_incl'])) {
             $taxCalculator = $this->getProductTaxCalculator($orderId, (int) $productOrderDetail['product_id']);
             $data['price_tax_incl'] = !empty($taxCalculator) ? (string) $taxCalculator->addTaxes($data['price']) : $data['price'];
@@ -1478,6 +1475,36 @@ class OrderFeatureContext extends AbstractDomainFeatureContext
     }
 
     /**
+     * @Then /^the order "(.+)" preview has the following formatted (shipping|invoice) address$/
+     */
+    public function getOrderPreviewFormattedAddress(
+        string $orderReference,
+        string $addressType,
+        PyStringNode $pyStringNode
+    ): void {
+        $orderId = $this->getSharedStorage()->get($orderReference);
+        /** @var OrderPreview $orderPreview */
+        $orderPreview = $this->getQueryBus()->handle(new GetOrderPreview($orderId));
+
+        if ($addressType == 'shipping') {
+            $address = $orderPreview->getShippingAddressFormatted();
+        } elseif ($addressType == 'invoice') {
+            $address = $orderPreview->getInvoiceAddressFormatted();
+        }
+
+        Assert::assertEquals(
+            $address,
+            $pyStringNode->getRaw(),
+            sprintf(
+                'Invalid formatted address for preview order %s, expected %s instead of %s',
+                $orderReference,
+                $address,
+                $pyStringNode->getRaw()
+            )
+        );
+    }
+
+    /**
      * @param int $productId
      * @param int $combinationId
      * @param int $orderId
@@ -1785,13 +1812,14 @@ class OrderFeatureContext extends AbstractDomainFeatureContext
 
     /**
      * @param int $orderId
+     * @param int $productId
      *
-     * @return TaxCalculator|null
+     * @return TaxCalculator
      *
      * @throws \PrestaShopDatabaseException
      * @throws \PrestaShopException
      */
-    private function getProductTaxCalculator(int $orderId, int $productId)
+    private function getProductTaxCalculator(int $orderId, int $productId): TaxCalculator
     {
         $order = new Order($orderId);
         $taxAddress = new Address($order->{Configuration::get('PS_TAX_ADDRESS_TYPE', null, null, $order->id_shop)});
@@ -1856,17 +1884,13 @@ class OrderFeatureContext extends AbstractDomainFeatureContext
         $orderId = SharedStorage::getStorage()->get($orderReference);
         /** @var OrderForViewing $orderForViewing */
         $orderForViewing = $this->getQueryBus()->handle(new GetOrderForViewing($orderId));
-        switch ($addressType) {
-            case 'shipping':
-                /** @var OrderShippingAddressForViewing $address */
-                $address = $orderForViewing->getShippingAddress();
-                break;
-            case 'invoice':
-                /** @var OrderInvoiceAddressForViewing $address */
-                $address = $orderForViewing->getInvoiceAddress();
-                break;
-            default:
-                throw new RuntimeException('Address Type is invalid');
+
+        if ($addressType == 'shipping') {
+            /** @var OrderShippingAddressForViewing $address */
+            $address = $orderForViewing->getShippingAddress();
+        } elseif ($addressType == 'invoice') {
+            /** @var OrderInvoiceAddressForViewing $address */
+            $address = $orderForViewing->getInvoiceAddress();
         }
 
         $expectedDetails = $table->getRowsHash();
@@ -1895,6 +1919,39 @@ class OrderFeatureContext extends AbstractDomainFeatureContext
                 )
             );
         }
+    }
+
+    /**
+     * @Then /^the order "(.+)" has the following formatted (shipping|invoice) address$/
+     *
+     * @param string $orderReference
+     * @param string $addressType
+     * @param PyStringNode $pyStringNode
+     */
+    public function orderCheckAddressFormatted(string $orderReference, string $addressType, PyStringNode $pyStringNode): void
+    {
+        $orderId = SharedStorage::getStorage()->get($orderReference);
+        /** @var OrderForViewing $orderForViewing */
+        $orderForViewing = $this->getQueryBus()->handle(new GetOrderForViewing($orderId));
+
+        if ($addressType == 'shipping') {
+            /** @var OrderShippingAddressForViewing $address */
+            $address = $orderForViewing->getShippingAddressFormatted();
+        } elseif ($addressType == 'invoice') {
+            /** @var OrderInvoiceAddressForViewing $address */
+            $address = $orderForViewing->getInvoiceAddressFormatted();
+        }
+
+        Assert::assertEquals(
+            $address,
+            $pyStringNode->getRaw(),
+            sprintf(
+                'Invalid formatted address for order %s, expected %s instead of %s',
+                $orderReference,
+                $address,
+                $pyStringNode->getRaw()
+            )
+        );
     }
 
     /**

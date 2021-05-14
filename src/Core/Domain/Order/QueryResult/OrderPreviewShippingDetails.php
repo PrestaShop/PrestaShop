@@ -26,8 +26,20 @@
 
 namespace PrestaShop\PrestaShop\Core\Domain\Order\QueryResult;
 
+@trigger_error(
+    sprintf(
+        '%s is deprecated since version 1.7.7.5 and will be removed in the next major version. Use %s::%s instead.',
+        OrderPreviewShippingDetails::class,
+        OrderPreview::class,
+        'getShippingAddressFormatted()'
+    ),
+    E_USER_DEPRECATED
+);
+
 /**
  * DTO for order shipping details
+ *
+ * @deprecated Since 1.7.7.5 and will be removed in the next major.
  */
 class OrderPreviewShippingDetails
 {

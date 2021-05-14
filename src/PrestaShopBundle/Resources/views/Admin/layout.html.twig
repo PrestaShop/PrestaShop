@@ -54,6 +54,10 @@
 {% endblock %}
 
 {% block content_header %}
+  {{ block('session_alert') }}
+{% endblock %}
+
+{% block session_alert %}
   {% macro alert(type, flashbagContent) %}
     <div class="alert alert-{{ type }} d-print-none" role="alert">
       <button type="button" class="close" data-dismiss="alert" aria-label="Close">

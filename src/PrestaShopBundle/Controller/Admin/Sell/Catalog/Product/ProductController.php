@@ -136,7 +136,11 @@ class ProductController extends FrameworkBundleAdminController
                 } else {
                     // Display root level errors with flash messages
                     foreach ($productForm->getErrors() as $error) {
-                        $this->addFlash('error', $error->getMessage());
+                        $this->addFlash('error', sprintf(
+                            '%s: %s',
+                            $error->getOrigin()->getName(),
+                            $error->getMessage()
+                        ));
                     }
                 }
             }

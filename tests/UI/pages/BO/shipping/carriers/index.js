@@ -81,7 +81,7 @@ class Carriers extends BOBasePage {
    */
   /**
    * Go to add new carrier page
-   * @param page
+   * @param page {Page} Browser tab
    * @returns {Promise<void>}
    */
   async goToAddNewCarrierPage(page) {
@@ -92,7 +92,7 @@ class Carriers extends BOBasePage {
 
   /**
    * Get Number of carriers
-   * @param page
+   * @param page {Page} Browser tab
    * @return {Promise<number>}
    */
   getNumberOfElementInGrid(page) {
@@ -101,7 +101,7 @@ class Carriers extends BOBasePage {
 
   /**
    * Reset all filters
-   * @param page
+   * @param page {Page} Browser tab
    * @return {Promise<void>}
    */
   async resetFilter(page) {
@@ -113,7 +113,7 @@ class Carriers extends BOBasePage {
 
   /**
    * Reset and get number of image types
-   * @param page
+   * @param page {Page} Browser tab
    * @return {Promise<number>}
    */
   async resetAndGetNumberOfLines(page) {
@@ -123,10 +123,10 @@ class Carriers extends BOBasePage {
 
   /**
    * Filter carriers table
-   * @param page
-   * @param filterType
-   * @param filterBy
-   * @param value
+   * @param page {Page} Browser tab
+   * @param filterType {String} Type of the filter (input or select)
+   * @param filterBy {String} Value to use for the select type filter
+   * @param value {String} Value for the select filter
    * @return {Promise<void>}
    */
   async filterTable(page, filterType, filterBy, value) {
@@ -152,8 +152,8 @@ class Carriers extends BOBasePage {
 
   /**
    * Go to edit carrier page
-   * @param page
-   * @param row
+   * @param page {Page} Browser tab
+   * @param row {Number} Row index in the table
    * @return {Promise<void>}
    */
   async gotoEditCarrierPage(page, row) {
@@ -162,9 +162,9 @@ class Carriers extends BOBasePage {
 
   /**
    * Get text from column in table
-   * @param page
-   * @param row
-   * @param columnName
+   * @param page {Page} Browser tab
+   * @param row {Number} Row index in the table
+   * @param columnName {String} Column name in the table
    * @return {Promise<string>}
    */
   async getTextColumn(page, row, columnName) {
@@ -207,8 +207,8 @@ class Carriers extends BOBasePage {
 
   /**
    * Delete carrier from row
-   * @param page
-   * @param row
+   * @param page {Page} Browser tab
+   * @param row {Number} Row index in the table
    * @return {Promise<string>}
    */
   async deleteCarrier(page, row) {
@@ -229,8 +229,8 @@ class Carriers extends BOBasePage {
   // Sort methods
   /**
    * Get content from all rows
-   * @param page
-   * @param columnName
+   * @param page {Page} Browser tab
+   * @param columnName {String} Column name in the table
    * @return {Promise<[]>}
    */
   async getAllRowsColumnContent(page, columnName) {
@@ -247,9 +247,9 @@ class Carriers extends BOBasePage {
 
   /**
    * Sort table by clicking on column name
-   * @param page
-   * @param sortBy, column to sort with
-   * @param sortDirection, asc or desc
+   * @param page {Page} Browser tab
+   * @param sortBy {String} column to sort with
+   * @param sortDirection {String} asc or desc
    * @return {Promise<void>}
    */
   async sortTable(page, sortBy, sortDirection) {
@@ -279,7 +279,7 @@ class Carriers extends BOBasePage {
   /* Pagination methods */
   /**
    * Get pagination label
-   * @param page
+   * @param page {Page} Browser tab
    * @return {Promise<string>}
    */
   getPaginationLabel(page) {
@@ -288,8 +288,8 @@ class Carriers extends BOBasePage {
 
   /**
    * Select pagination limit
-   * @param page
-   * @param number
+   * @param page {Page} Browser tab
+   * @param number {Number} The pagination number value
    * @returns {Promise<string>}
    */
   async selectPaginationLimit(page, number) {
@@ -300,7 +300,7 @@ class Carriers extends BOBasePage {
 
   /**
    * Click on next
-   * @param page
+   * @param page {Page} Browser tab
    * @returns {Promise<string>}
    */
   async paginationNext(page) {
@@ -310,7 +310,7 @@ class Carriers extends BOBasePage {
 
   /**
    * Click on previous
-   * @param page
+   * @param page {Page} Browser tab
    * @returns {Promise<string>}
    */
   async paginationPrevious(page) {
@@ -321,12 +321,12 @@ class Carriers extends BOBasePage {
   /* Bulk actions methods */
   /**
    * Bulk delete carriers
-   * @param page
+   * @param page {Page} Browser tab
    * @return {Promise<string>}
    */
   async bulkDeleteCarriers(page) {
     // To confirm bulk delete action with dialog
-    this.dialogListener(page, true);
+    await this.dialogListener(page, true);
 
     // Select all rows
     await Promise.all([
@@ -353,8 +353,8 @@ class Carriers extends BOBasePage {
 
   /**
    * Bulk set carriers status
-   * @param page
-   * @param action
+   * @param page {Page} Browser tab
+   * @param action {String} The action to perform in bulk
    * @returns {Promise<void>}
    */
   async bulkSetStatus(page, action) {
@@ -388,8 +388,8 @@ class Carriers extends BOBasePage {
 
   /**
    * Get carrier status
-   * @param page
-   * @param row
+   * @param page {Page} Browser tab
+   * @param row {Number} Row index in the table
    * @returns {Promise<boolean>}
    */
   async getStatus(page, row = 1) {
@@ -398,9 +398,9 @@ class Carriers extends BOBasePage {
 
   /**
    * Set carriers status
-   * @param page
-   * @param row
-   * @param valueWanted
+   * @param page {Page} Browser tab
+   * @param row {Number} Row index in the table
+   * @param valueWanted {Boolean} The carrier status value
    * @return {Promise<boolean>}, true if click has been performed
    */
   async setStatus(page, row = 1, valueWanted = true) {
@@ -416,9 +416,9 @@ class Carriers extends BOBasePage {
 
   /**
    * Change carrier position
-   * @param page
-   * @param actualPosition
-   * @param newPosition
+   * @param page {Page} Browser tab
+   * @param actualPosition {Number} The actual row position
+   * @param newPosition {Number} The new position for the row
    * @return {Promise<string>}
    */
   async changePosition(page, actualPosition, newPosition) {

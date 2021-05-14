@@ -29,6 +29,7 @@ declare(strict_types=1);
 namespace PrestaShopBundle\Form\Admin\Sell\Product\Shortcut;
 
 use Currency;
+use PrestaShopBundle\Form\Admin\Type\TranslatorAwareType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\MoneyType;
 use Symfony\Component\Form\FormBuilderInterface;
@@ -36,7 +37,7 @@ use Symfony\Component\Translation\TranslatorInterface;
 use Symfony\Component\Validator\Constraints\NotBlank;
 use Symfony\Component\Validator\Constraints\Type;
 
-class PriceShortcutType extends ShortcutType
+class PriceShortcutType extends TranslatorAwareType
 {
     /**
      * @var array
@@ -89,6 +90,7 @@ class PriceShortcutType extends ShortcutType
                     new NotBlank(),
                     new Type(['type' => 'float']),
                 ],
+                'default_empty_data' => 0.0,
             ])
             ->add('price_tax_included', MoneyType::class, [
                 'required' => false,
@@ -99,10 +101,13 @@ class PriceShortcutType extends ShortcutType
                     new NotBlank(),
                     new Type(['type' => 'float']),
                 ],
+                'default_empty_data' => 0.0,
             ])
             ->add('tax_rules_group_id', ChoiceType::class, [
                 'choices' => $this->taxRuleGroupChoices,
                 'required' => false,
+                // placeholder false is important to avoid empty option in select input despite required being false
+                'placeholder' => false,
                 'choice_attr' => $this->taxRuleGroupChoicesAttributes,
                 'attr' => [
                     'data-toggle' => 'select2',
@@ -111,8 +116,5 @@ class PriceShortcutType extends ShortcutType
                 'label' => $this->trans('Tax rule', 'Admin.Catalog.Feature'),
             ])
         ;
-
-        // Call parent build to add potential target tab button
-        parent::buildForm($builder, $options);
     }
 }

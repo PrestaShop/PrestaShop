@@ -43,11 +43,11 @@ final class VirtualProductFileCommandsBuilder implements ProductCommandsBuilderI
      */
     public function buildCommands(ProductId $productId, array $formData): array
     {
-        if (!isset($formData['virtual_product_file'])) {
+        if (!isset($formData['stock']['virtual_product_file'])) {
             return [];
         }
 
-        $virtualProductFileData = $formData['virtual_product_file'];
+        $virtualProductFileData = $formData['stock']['virtual_product_file'];
 
         if ($addCommand = $this->buildAddCommand($productId, $virtualProductFileData)) {
             return [$addCommand];

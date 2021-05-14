@@ -98,6 +98,8 @@ class CombinationItemType extends TranslatorAwareType
                 'icon' => 'mode_edit',
                 'attr' => [
                     'class' => 'edit-combination-item tooltip-link',
+                    'data-toggle' => 'pstooltip',
+                    'data-original-title' => $this->trans('Edit', 'Admin.Global'),
                 ],
             ])
             ->add('delete', IconButtonType::class, [
@@ -108,6 +110,8 @@ class CombinationItemType extends TranslatorAwareType
                     'data-modal-message' => $this->trans('Are you sure you want to delete this item?', 'Admin.Notifications.Warning'),
                     'data-modal-apply' => $this->trans('Delete', 'Admin.Actions'),
                     'data-modal-cancel' => $this->trans('Cancel', 'Admin.Actions'),
+                    'data-toggle' => 'pstooltip',
+                    'data-original-title' => $this->trans('Delete', 'Admin.Global'),
                 ],
             ])
         ;

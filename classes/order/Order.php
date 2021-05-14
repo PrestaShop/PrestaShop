@@ -505,8 +505,8 @@ class OrderCore extends ObjectModel
      * Get order history.
      *
      * @param int $id_lang Language id
-     * @param int $id_order_state Filter a specific order status
-     * @param int $no_hidden Filter no hidden status
+     * @param int|bool $id_order_state Filter a specific order status
+     * @param int|bool $no_hidden Filter no hidden status
      * @param int $filters Flag to use specific field filter
      *
      * @return array History entries ordered by date DESC
@@ -577,12 +577,15 @@ class OrderCore extends ObjectModel
 
     public function getProductsDetail()
     {
-        return Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS('
-        SELECT *
-        FROM `' . _DB_PREFIX_ . 'order_detail` od
-        LEFT JOIN `' . _DB_PREFIX_ . 'product` p ON (p.id_product = od.product_id)
-        LEFT JOIN `' . _DB_PREFIX_ . 'product_shop` ps ON (ps.id_product = p.id_product AND ps.id_shop = od.id_shop)
-        WHERE od.`id_order` = ' . (int) $this->id);
+        // The `od.ecotax` is a newly added at end as ecotax is used in multiples columns but it's the ecotax value we need
+        $sql = 'SELECT p.*, ps.*, od.*';
+        $sql .= ' FROM `%sorder_detail` od';
+        $sql .= ' LEFT JOIN `%sproduct` p ON (p.id_product = od.product_id)';
+        $sql .= ' LEFT JOIN `%sproduct_shop` ps ON (ps.id_product = p.id_product AND ps.id_shop = od.id_shop)';
+        $sql .= ' WHERE od.`id_order` = %d';
+        $sql = sprintf($sql, _DB_PREFIX_, _DB_PREFIX_, _DB_PREFIX_, (int) $this->id);
+
+        return Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS($sql);
     }
 
     public function getFirstMessage()
@@ -1852,7 +1855,7 @@ class OrderCore extends ObjectModel
      *
      * @since 1.5.0.1
      *
-     * @param float $amount_paid
+     * @param string $amount_paid
      * @param string $payment_method
      * @param string $payment_transaction_id
      * @param Currency $currency

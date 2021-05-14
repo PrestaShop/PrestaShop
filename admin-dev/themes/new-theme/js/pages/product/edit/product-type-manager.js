@@ -85,7 +85,6 @@ export default class ProductTypeManager {
         confirmMessage: `${confirmMessage} ${confirmWarning}`,
         confirmButtonLabel: this.$typeSelector.data('modal-apply'),
         closeButtonLabel: this.$typeSelector.data('modal-cancel'),
-        confirmButtonClass: 'btn-warning',
         closable: false,
       },
       () => {

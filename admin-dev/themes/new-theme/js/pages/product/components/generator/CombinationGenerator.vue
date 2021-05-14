@@ -24,13 +24,6 @@
  *-->
 <template>
   <div id="product-combinations-generate">
-    <button
-      class="btn btn-primary"
-      @click.prevent.stop="showModal"
-      :disabled="preLoading"
-    >
-      {{ $t('generator.open') }}
-    </button>
     <modal
       v-if="isModalShown"
       :modal-title="$t('modal.title')"
@@ -150,6 +143,7 @@
     },
     mounted() {
       this.initAttributeGroups();
+      this.eventEmitter.on(CombinationEvents.openCombinationsGenerator, () => this.showModal());
     },
     methods: {
       /**
@@ -160,6 +154,7 @@
           this.attributeGroups = await getAllAttributeGroups();
           window.prestaShopUiKit.init();
           this.preLoading = false;
+          this.eventEmitter.emit(CombinationEvents.combinationGeneratorReady);
         } catch (error) {
           window.$.growl.error({message: error});
         }
@@ -168,6 +163,9 @@
        * Show the modal, and execute PerfectScrollBar and Typehead
        */
       showModal() {
+        if (this.preLoading) {
+          return;
+        }
         document.querySelector('body').classList.add('overflow-hidden');
         this.hasGeneratedCombinations = false;
         this.selectedAttributeGroups = {};
@@ -180,7 +178,7 @@
         this.isModalShown = false;
         document.querySelector('body').classList.remove('overflow-hidden');
         if (this.hasGeneratedCombinations) {
-          this.eventEmitter.emit(CombinationEvents.refreshList);
+          this.eventEmitter.emit(CombinationEvents.refreshCombinationList);
         }
       },
       /**

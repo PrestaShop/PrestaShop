@@ -25,19 +25,20 @@
 
 export default {
   'product.stock.quantity': [
-    'product[stock][quantity]',
+    'product[stock][quantities][quantity]',
     'product[shortcuts][stock][quantity]',
   ],
   'product.price.priceTaxExcluded': [
-    'product[price][price_tax_excluded]',
-    'product[shortcuts][price][price_tax_excluded]',
+    'product[pricing][retail_price][price_tax_excluded]',
+    'product[shortcuts][retail_price][price_tax_excluded]',
   ],
   'product.price.priceTaxIncluded': [
-    'product[price][price_tax_included]',
-    'product[shortcuts][price][price_tax_included]',
+    'product[pricing][retail_price][price_tax_included]',
+    'product[shortcuts][retail_price][price_tax_included]',
   ],
   'product.price.taxRulesGroupId': [
-    'product[price][tax_rules_group_id]',
-    'product[shortcuts][price][tax_rules_group_id]',
+    'product[pricing][tax_rules_group_id]',
+    'product[shortcuts][retail_price][tax_rules_group_id]',
   ],
+  'product.stock.hasVirtualProductFile': 'product[stock][virtual_product_file][has_file]',
 };

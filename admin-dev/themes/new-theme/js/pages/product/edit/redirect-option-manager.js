@@ -42,6 +42,7 @@ export default class RedirectOptionManager {
     this.$redirectTargetInput = $redirectTargetInput;
     this.$redirectTargetRow = this.$redirectTargetInput.closest('.form-group');
     this.$redirectTargetLabel = $('.form-control-label', this.$redirectTargetRow).first();
+    this.$redirectTargetHint = $('.typeahead-hint', this.$redirectTargetRow);
     this.buildAutoCompleteSearchInput();
     this.watchRedirectType();
   }
@@ -65,7 +66,8 @@ export default class RedirectOptionManager {
           if (this.lastSelectedType !== '301-category' && this.lastSelectedType !== '302-category') {
             this.entitySearchInput.setValue(null);
           }
-          this.$redirectTargetRow.show();
+          this.$redirectTargetHint.html(this.$redirectTargetInput.data('categoryHelp'));
+          this.showTarget();
           break;
         case '301-product':
         case '302-product':
@@ -76,12 +78,13 @@ export default class RedirectOptionManager {
           if (this.lastSelectedType !== '301-product' && this.lastSelectedType !== '302-product') {
             this.entitySearchInput.setValue(null);
           }
-          this.$redirectTargetRow.show();
+          this.$redirectTargetHint.html(this.$redirectTargetInput.data('productHelp'));
+          this.showTarget();
           break;
         case '404':
         default:
           this.entitySearchInput.setValue(null);
-          this.$redirectTargetRow.hide();
+          this.hideTarget();
           break;
       }
       this.lastSelectedType = this.$redirectTypeInput.val();
@@ -90,5 +93,13 @@ export default class RedirectOptionManager {
 
   buildAutoCompleteSearchInput() {
     this.entitySearchInput = new EntitySearchInput(this.$redirectTargetInput);
+  }
+
+  showTarget() {
+    this.$redirectTargetRow.removeClass('d-none');
+  }
+
+  hideTarget() {
+    this.$redirectTargetRow.addClass('d-none');
   }
 }

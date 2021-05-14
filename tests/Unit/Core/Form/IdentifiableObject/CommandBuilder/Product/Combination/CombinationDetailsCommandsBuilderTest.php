@@ -65,7 +65,7 @@ class CombinationDetailsCommandsBuilderTest extends AbstractCombinationCommandBu
                 'price_impact' => [
                     'not_handled' => 0,
                 ],
-                'details' => [
+                'references' => [
                     'not_handled' => 0,
                 ],
             ],
@@ -81,7 +81,7 @@ class CombinationDetailsCommandsBuilderTest extends AbstractCombinationCommandBu
                     'not_handled' => 0,
                     'weight' => 12.0,
                 ],
-                'details' => [
+                'references' => [
                     'reference' => 'toto',
                 ],
             ],
@@ -105,7 +105,7 @@ class CombinationDetailsCommandsBuilderTest extends AbstractCombinationCommandBu
         $command->setMpn('mpn');
         yield [
             [
-                'details' => [
+                'references' => [
                     'upc' => '123456',
                     'mpn' => 'mpn',
                 ],
@@ -118,7 +118,7 @@ class CombinationDetailsCommandsBuilderTest extends AbstractCombinationCommandBu
         $command->setEan13('12345678910');
         yield [
             [
-                'details' => [
+                'references' => [
                     'isbn' => '123456789',
                     'ean_13' => '12345678910',
                 ],

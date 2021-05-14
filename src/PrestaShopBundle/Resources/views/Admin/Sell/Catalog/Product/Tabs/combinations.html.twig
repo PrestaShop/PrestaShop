@@ -24,28 +24,8 @@
  *#}
 
 <div role="tabpanel" class="form-contenttab tab-pane container-fluid" id="combinations-tab">
-  <div id="product_combinations_generator"
-  data-translations="{{ {
-    'generator.open': 'Open combinations generator'|trans({}, 'Admin.Catalog.Feature'),
-    'generator.success': 'Successfully generated %combinationsNb% combinations.'|trans({}, 'Admin.Catalog.Feature'),
-    'generator.action': 'Generate combinations|Generate combination|Generate %combinationsNb% combinations'|trans({}, 'Admin.Catalog.Feature'),
-    'search.placeholder': 'Search some attributes...'|trans({}, 'Admin.Catalog.Feature'),
-    'modal.title': 'Generate combinations'|trans({}, 'Admin.Catalog.Feature'),
-    'modal.close': 'Cancel'|trans({}, 'Admin.Actions'),
-  }|json_encode }}"
-  ></div>
-  <div id="combinations_filters"
-  data-translations="{{ {
-    'filters.label': 'Filter by:'|trans({}, 'Admin.Actions'),
-    'filters.clear': 'Clear filter|Clear %filtersNb% filters'|trans({}, 'Admin.Actions'),
-  }|json_encode }}"
-  ></div>
-
-  {{ render(controller('PrestaShopBundle:Admin\\Sell\\Catalog\\Product\\Combination:paginatedList', {
-    'productId': productId,
-  })) }}
-
-  <div id="combinations-stock-availability">
-    {#    @todo: render stock availability preferences here when extracted to a reusable component. check StockType.php#}
-  </div>
+  {#
+  # This fake tab is actually empty the real content is in
+  # src/PrestaShopBundle/Resources/views/Admin/Sell/Catalog/Product/Combination/external_tab.html.twig
+  #}
 </div>

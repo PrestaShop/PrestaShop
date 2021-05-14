@@ -49,24 +49,19 @@ describe('Search for a hook', async () => {
     await expect(pageTitle).to.contains(positionsPage.pageTitle);
   });
 
-  const tests = [
-    {args: {hookName: 'displayAdminAfterHeader'}},
-    {args: {hookName: 'displayAdminNavBarBeforeEnd'}},
-    {args: {hookName: 'displayAfterBodyOpeningTag'}},
-    {args: {hookName: 'displayBackOfficeHeader'}},
-  ];
+  const hooks = ['displayCustomerAccount', 'displayFooter', 'displayAfterBodyOpeningTag', 'displayBackOfficeHeader'];
 
-  tests.forEach((test) => {
-    it(`should search for the hook '${test.args.hookName}' and check result`, async function () {
+  hooks.forEach((hook) => {
+    it(`should search for the hook '${hook}' and check result`, async function () {
       await testContext.addContextItem(
         this,
         'testIdentifier',
-        `searchForHook_${test.args.hookName}`,
+        `searchForHook_${hook}`,
         baseContext,
       );
 
-      const textResult = await positionsPage.searchHook(page, test.args.hookName);
-      await expect(textResult).to.equal(test.args.hookName);
+      const textResult = await positionsPage.searchHook(page, hook);
+      await expect(textResult).to.equal(hook);
     });
   });
 });

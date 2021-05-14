@@ -24,6 +24,45 @@ needs please refer to https://devdocs.prestashop.com/ for more information.
 Release Notes for PrestaShop 1.7
 --------------------------------
 ####################################
+#   v1.7.7.4 - (2021-04-28)
+####################################
+
+- Back Office:
+  - Bug fix:
+    - #23625: Collapse option not working for the the BO category tree (by @crezzur)
+    - #24088: Fix Gift + discount cartRule calculation in cart summary (by @atomiix)
+    - #24161: Allow all characters when using combination, not only \w (by @PierreRambaud)
+    - #24015: Fix gift not added when changing carrier in Create order page (by @atomiix)
+    - #24072: Fix category filter not checked (by @atomiix)
+    - #24094: Fix OrderState deletion when not in default language context (by @atomiix)
+    - #23819: Open tracking url in a new tab and add the link to the order preview (by @atomiix)
+    - #23691: Fix notification refresh on migrated pages (by @NeOMakinG)
+    - #22228: Fixed Update Quantity in an order in multishop context (by @Progi1984)
+- Front Office:
+  - Bug fix:
+    - #23802: Fix jquery selector warning with ps_currencyselector (by @NeOMakinG)
+- Core:
+  - Bug fix:
+    - #24017: Update SHOP_LOGO_* configuration when changing shop logo (by @atomiix)
+    - #23925: Fix translator bug when iso code is unknown (by @atomiix)
+    - #23722: Add missing license headers (by @eternoendless)
+- Tests:
+  - Improvement:
+    - #24144: Use different instance name for 1.7.7.x branch (by @PierreRambaud)
+  - Refactoring:
+    - #24225: Fix nightly 177x for 27-04-2021 (by @boubkerbribri)
+    - #24176: Upgrade playwright to 1.8.1 (by @boubkerbribri)
+    - #24115: Backport fix on growl messages (by @boubkerbribri)
+    - #24086: Delete dashboad UI test (by @nesrineabdmouleh)
+    - #24030: Fix nightly - Separate enable and disable demo mode iteration (by @nesrineabdmouleh)
+    - #23852: Fix 'Add to cart' test (by @boubkerbribri)
+    - #23736: Add test 'Send a message with an ordered product' (by @RomainBocheux)
+    - #23778: Wrap playwright function waitForSelector (by @boubkerbribri)
+    - #23780: Delete unused functions on common page (by @boubkerbribri)
+    - #23792: Fix enable demo mode on dashboard and trim the message set on contact us page (by @boubkerbribri)
+    - #23740: Create message with only 35 characters for contact us test (by @boubkerbribri)
+
+####################################
 #   v1.7.7.3 - (2021-03-22)
 ####################################
 

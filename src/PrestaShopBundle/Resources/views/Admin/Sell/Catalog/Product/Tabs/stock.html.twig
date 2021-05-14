@@ -24,8 +24,8 @@
  *#}
 
 <div role="tabpanel" class="form-contenttab tab-pane container-fluid" id="stock-tab">
-  {% if productType == 'virtual' %}
-    {{ include('@PrestaShop/Admin/Sell/Catalog/Product/Blocks/virtual.html.twig') }}
+  {% if productForm.stock.virtual_product_file is defined %}
+    {% form_theme productForm.stock.virtual_product_file '@PrestaShop/Admin/Sell/Catalog/Product/Form/virtual_product_file_form_theme.html.twig' %}
   {% endif %}
-  {{ form_widget(productForm.stock) }}
+  {{ form_row(productForm.stock) }}
 </div>

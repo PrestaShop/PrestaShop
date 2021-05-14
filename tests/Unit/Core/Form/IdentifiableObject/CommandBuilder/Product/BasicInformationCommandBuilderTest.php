@@ -73,7 +73,7 @@ class BasicInformationCommandBuilderTest extends AbstractProductCommandBuilderTe
         $command->setLocalizedNames($localizedNames);
         yield [
             [
-                'basic' => [
+                'header' => [
                     'name' => $localizedNames,
                 ],
             ],

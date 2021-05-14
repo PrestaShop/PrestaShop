@@ -127,9 +127,14 @@
 
 <style lang="scss" type="text/scss">
 @import "~@scss/config/_settings.scss";
+@import "~@scss/config/_bootstrap.scss";
 
 .combinations-filters-dropdown {
   margin: 0 0.35rem;
+
+  @include media-breakpoint-down(xs) {
+    margin-bottom: .5rem;
+  }
 
   .dropdown-item {
     padding: 0.438rem 0.938rem;

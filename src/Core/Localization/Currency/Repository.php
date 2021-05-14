@@ -110,11 +110,13 @@ class Repository implements CurrencyRepositoryInterface
      */
     private function createCurrencyFromData(CurrencyData $currencyData)
     {
+        $numericIsoCode = $currencyData->getNumericIsoCode() ? (int) $currencyData->getNumericIsoCode() : null;
+
         return new Currency(
             $currencyData->isActive(),
             $currencyData->getConversionRate(),
             $currencyData->getIsoCode(),
-            $currencyData->getNumericIsoCode(),
+            $numericIsoCode,
             $currencyData->getSymbols(),
             $currencyData->getPrecision(),
             $currencyData->getNames(),

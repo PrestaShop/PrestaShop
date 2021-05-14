@@ -76,8 +76,10 @@ class CombinationStockCommandsBuilderTest extends AbstractCombinationCommandBuil
         yield [
             [
                 'stock' => [
-                    'quantity' => '100',
-                    'minimal_quantity' => 1,
+                    'quantities' => [
+                        'quantity' => '100',
+                        'minimal_quantity' => 1,
+                    ],
                 ],
             ],
             [$command],
@@ -88,7 +90,9 @@ class CombinationStockCommandsBuilderTest extends AbstractCombinationCommandBuil
         yield [
             [
                 'stock' => [
-                    'stock_location' => 'Im in miami...',
+                    'options' => [
+                        'stock_location' => 'Im in miami...',
+                    ],
                 ],
             ],
             [$command],
@@ -99,7 +103,9 @@ class CombinationStockCommandsBuilderTest extends AbstractCombinationCommandBuil
         yield [
             [
                 'stock' => [
-                    'low_stock_threshold' => '5',
+                    'options' => [
+                        'low_stock_threshold' => '5',
+                    ],
                 ],
             ],
             [$command],
@@ -110,7 +116,9 @@ class CombinationStockCommandsBuilderTest extends AbstractCombinationCommandBuil
         yield [
             [
                 'stock' => [
-                    'low_stock_alert' => '0',
+                    'options' => [
+                        'low_stock_alert' => '0',
+                    ],
                 ],
             ],
             [$command],

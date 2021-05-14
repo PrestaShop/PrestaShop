@@ -39,6 +39,7 @@ class TranslatableInput {
     this.localeItemSelector = opts.localeItemSelector || '.js-locale-item';
     this.localeButtonSelector = opts.localeButtonSelector || '.js-locale-btn';
     this.localeInputSelector = opts.localeInputSelector || '.js-locale-input';
+    this.selectedLocale = $(this.localeItemSelector).data('locale');
 
     $('body').on(
       'click',
@@ -46,41 +47,75 @@ class TranslatableInput {
       this.toggleLanguage.bind(this),
     );
     EventEmitter.on('languageSelected', this.toggleInputs.bind(this));
+
+    return {
+      localeItemSelector: this.localeItemSelector,
+      localeButtonSelector: this.localeButtonSelector,
+      localeInputSelector: this.localeInputSelector,
+
+      /**
+       * @param {jQuery} form
+       */
+      refreshFormInputs: (form) => { this.refreshInputs(form); },
+
+      /**
+       * @returns {string|undefined}
+       */
+      getSelectedLocale: () => this.selectedLocale,
+    };
+  }
+
+  /**
+   * @param {jQuery} form
+   *
+   * @private
+   */
+  refreshInputs(form) {
+    if (!this.selectedLocale) {
+      return;
+    }
+
+    EventEmitter.emit('languageSelected', {
+      selectedLocale: this.selectedLocale,
+      form,
+    });
   }
 
   /**
    * Dispatch event on language selection to update inputs and other components which depend on the locale.
    *
    * @param event
+   *
+   * @private
    */
   toggleLanguage(event) {
     const localeItem = $(event.target);
     const form = localeItem.closest('form');
-    EventEmitter.emit('languageSelected', {
-      selectedLocale: localeItem.data('locale'),
-      form,
-    });
+    this.selectedLocale = localeItem.data('locale');
+    this.refreshInputs(form);
   }
 
   /**
    * Toggle all translatable inputs in form in which locale was changed
    *
    * @param {Event} event
+   *
+   * @private
    */
   toggleInputs(event) {
     const {form} = event;
-    const {selectedLocale} = event;
+    this.selectedLocale = event.selectedLocale;
     const localeButton = form.find(this.localeButtonSelector);
     const changeLanguageUrl = localeButton.data('change-language-url');
 
-    localeButton.text(selectedLocale);
+    localeButton.text(this.selectedLocale);
     form.find(this.localeInputSelector).addClass('d-none');
     form
-      .find(`${this.localeInputSelector}.js-locale-${selectedLocale}`)
+      .find(`${this.localeInputSelector}.js-locale-${this.selectedLocale}`)
       .removeClass('d-none');
 
     if (changeLanguageUrl) {
-      this.saveSelectedLanguage(changeLanguageUrl, selectedLocale);
+      this.saveSelectedLanguage(changeLanguageUrl, this.selectedLocale);
     }
   }
 

@@ -27,11 +27,9 @@
 namespace PrestaShop\PrestaShop\Core\Domain\SpecificPrice\Command;
 
 use DateTime;
-use Exception;
 use PrestaShop\Decimal\DecimalNumber;
 use PrestaShop\PrestaShop\Core\Domain\Exception\DomainConstraintException;
 use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductId;
-use PrestaShop\PrestaShop\Core\Domain\SpecificPrice\Exception\SpecificPriceConstraintException;
 use PrestaShop\PrestaShop\Core\Domain\ValueObject\Reduction;
 
 /**
@@ -199,7 +197,7 @@ class AddSpecificPriceCommand
      */
     public function setDateTimeFrom(?DateTime $dateTimeFrom): void
     {
-        $this->dateTimeFrom = $this->createDateTime($dateTimeFrom);
+        $this->dateTimeFrom = $dateTimeFrom;
     }
 
     /**
@@ -379,22 +377,6 @@ class AddSpecificPriceCommand
      */
     public function setDateTimeTo(?DateTime $dateTimeTo): void
     {
-        $this->dateTimeTo = $this->createDateTime($dateTimeTo);
-    }
-
-    /**
-     * @param string $dateTime
-     *
-     * @return DateTime
-     *
-     * @throws SpecificPriceConstraintException
-     */
-    private function createDateTime(string $dateTime): DateTime
-    {
-        try {
-            return new DateTime($dateTime);
-        } catch (Exception $e) {
-            throw new SpecificPriceConstraintException('An error occurred when creating DateTime object for specific price', SpecificPriceConstraintException::INVALID_DATETIME, $e);
-        }
+        $this->dateTimeTo = $dateTimeTo;
     }
 }

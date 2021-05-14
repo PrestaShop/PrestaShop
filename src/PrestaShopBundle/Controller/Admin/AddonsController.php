@@ -78,7 +78,7 @@ class AddonsController extends FrameworkBundleAdminController
                 new Cookie('password_addons', $phpEncryption->encrypt($params['password_addons']))
             );
             $response->headers->setCookie(
-                new Cookie('is_contributor', (int) $json->is_contributor)
+                new Cookie('is_contributor', (string) (int) $json->is_contributor)
             );
 
             $response->setData(['success' => 1, 'message' => '']);

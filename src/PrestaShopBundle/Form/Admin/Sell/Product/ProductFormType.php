@@ -28,14 +28,16 @@ declare(strict_types=1);
 
 namespace PrestaShopBundle\Form\Admin\Sell\Product;
 
-use PrestaShop\PrestaShop\Adapter\Shop\Url\ProductProvider;
 use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductType;
-use PrestaShopBundle\Form\Admin\Sell\Product\Image\ImageDropzoneType;
-use PrestaShopBundle\Form\Admin\Sell\Product\Image\ProductImageType;
+use PrestaShopBundle\Form\Admin\Sell\Product\Basic\BasicType;
+use PrestaShopBundle\Form\Admin\Sell\Product\Options\OptionsType;
+use PrestaShopBundle\Form\Admin\Sell\Product\Pricing\PricingType;
+use PrestaShopBundle\Form\Admin\Sell\Product\SEO\SEOType;
+use PrestaShopBundle\Form\Admin\Sell\Product\Shipping\ShippingType;
+use PrestaShopBundle\Form\Admin\Sell\Product\Shortcut\ShortcutsType;
+use PrestaShopBundle\Form\Admin\Sell\Product\Stock\StockType;
 use PrestaShopBundle\Form\Admin\Type\TranslatorAwareType;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
-use Symfony\Component\Form\Extension\Core\Type\ButtonType;
-use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\Form\FormInterface;
 use Symfony\Component\Form\FormView;
@@ -48,11 +50,6 @@ use Symfony\Component\Translation\TranslatorInterface;
 class ProductFormType extends TranslatorAwareType
 {
     /**
-     * @var ProductProvider
-     */
-    private $productUrlProvider;
-
-    /**
      * @var EventSubscriberInterface
      */
     private $productTypeListener;
@@ -60,69 +57,40 @@ class ProductFormType extends TranslatorAwareType
     /**
      * @param TranslatorInterface $translator
      * @param array $locales
-     * @param ProductProvider $productUrlProvider
      * @param EventSubscriberInterface $productTypeListener
      */
     public function __construct(
         TranslatorInterface $translator,
         array $locales,
-        ProductProvider $productUrlProvider,
         EventSubscriberInterface $productTypeListener
     ) {
         parent::__construct($translator, $locales);
-        $this->productUrlProvider = $productUrlProvider;
         $this->productTypeListener = $productTypeListener;
     }
 
     /**
-     * @param FormBuilderInterface $builder
-     * @param array $options
+     * {@inheritDoc}
      */
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
-        $formIsUsedToEditAProduct = !empty($options['product_id']);
+        $productId = $options['product_id'] ?? null;
         $builder
-            ->add('basic', BasicInformationType::class)
-            ->add('features', FeaturesType::class)
-            ->add('manufacturer', ManufacturerType::class)
-            ->add('stock', StockType::class)
-            ->add('virtual_product_file', VirtualProductFileType::class, [
-                'virtual_product_file_id' => $options['data']['virtual_product_file']['virtual_product_file_id'] ?? null,
+            ->add('header', HeaderType::class)
+            ->add('basic', BasicType::class, [
+                'product_id' => $productId,
             ])
-            ->add('price', PriceType::class)
-            ->add('shipping', ShippingType::class)
-            ->add('options', OptionsType::class)
-            ->add('customizations', CustomizationsType::class)
-            ->add('seo', SEOType::class)
-            ->add('redirect_option', RedirectOptionType::class)
-            ->add('suppliers', SuppliersType::class)
             ->add('shortcuts', ShortcutsType::class)
-            ->add('save', SubmitType::class, [
-                'label' => $this->trans('Save', 'Admin.Actions'),
-                'attr' => [
-                    'disabled' => $formIsUsedToEditAProduct,
-                    'data-toggle' => 'pstooltip',
-                    'title' => $this->trans('Save the product and stay on the current page: ALT+SHIFT+S', 'Admin.Catalog.Help'),
-                ],
+            ->add('stock', StockType::class, [
+                'virtual_product_file_id' => $options['data']['stock']['virtual_product_file']['virtual_product_file_id'] ?? null,
+            ])
+            ->add('shipping', ShippingType::class)
+            ->add('pricing', PricingType::class)
+            ->add('seo', SEOType::class)
+            ->add('options', OptionsType::class)
+            ->add('footer', FooterType::class, [
+                'product_id' => $productId,
             ])
         ;
-
-        if ($formIsUsedToEditAProduct) {
-            $productId = (int) $options['product_id'];
-            $builder
-                ->add('images', ImageDropzoneType::class, [
-                    'product_id' => $productId,
-                    'update_form_type' => ProductImageType::class,
-                ])
-                ->add('preview', ButtonType::class, [
-                    'label' => $this->trans('Preview', 'Admin.Actions'),
-                    'attr' => [
-                        'class' => 'btn-secondary',
-                        'data-seo-url' => $this->productUrlProvider->getUrl($productId, '{friendly-url}'),
-                    ],
-                ])
-            ;
-        }
 
         /*
          * This listener adapts the content of the form based on the Product type, it can remove add or transforms some
@@ -138,7 +106,7 @@ class ProductFormType extends TranslatorAwareType
     {
         // Important to get data from form and not options as it's the most up to date
         $formData = $form->getData();
-        $productType = $formData['basic']['type'] ?? ProductType::TYPE_STANDARD;
+        $productType = $formData['header']['type'] ?? ProductType::TYPE_STANDARD;
         $formVars = [
             'product_type' => $productType,
             'product_id' => isset($options['product_id']) ? (int) $options['product_id'] : null,
