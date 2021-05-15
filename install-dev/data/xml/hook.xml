@@ -261,8 +261,8 @@
       <title>Order slip creation</title>
       <description>This hook is called when a new credit slip is added regarding client order</description>
     </hook>
-    <hook id="actionPDFDeliverySlipGenerator">
-      <name>actionPDFDeliverySlipGenerator</name>
+    <hook id="actionPDFDeliverySlipGenerate">
+      <name>actionPDFDeliverySlipGenerate</name>
       <title>Delivery slip generation</title>
       <description>This hook is executed before the common delivery slips is generated. If true is return by the handler, the system will interpreter that the slip is processed elsewhere and the common delivery slip will not be generated.</description>
     </hook>
