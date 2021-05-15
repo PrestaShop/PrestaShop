@@ -34,14 +34,13 @@
 
     <div class="col-xxl-10">
       <div class="row">
-        <div class="col-md-8">
-          {{ form_widget(productForm.basic.name) }}
-          {{ form_errors(productForm.basic.name) }}
+        <div class="col-md-10 product-header-form">
+          {% block product_header_form %}
+            {% form_theme productForm.header '@PrestaShop/Admin/Sell/Catalog/Product/Form/header_form_theme.html.twig' %}
+            {{ form_row(productForm.header) }}
+          {% endblock %}
         </div>
-        <div class="col-sm-7 col-md-2">
-          {{ form_widget(productForm.basic.type) }}
-          {{ form_errors(productForm.basic.type) }}
-        </div>
+
         <div class="toolbar col-sm-3 col-md-2 text-md-right">
         {% if null != statsLink %}
           <a class="toolbar-button btn-sales" href="{{ statsLink }}" target="_blank" title="{{ 'Sales'|trans({}, 'Admin.Global') }}"

@@ -185,8 +185,8 @@ final class SearchProductsHandler extends AbstractOrderHandler implements Search
         ?Address $address = null
     ): FoundProduct {
         // It's important to use null (not 0) as attribute ID so that Product::priceCalculation can fallback to default combination
-        $priceTaxExcluded = $this->getProductPriceForOrder((int) $product->id, null, false, $computingPrecision, $order);
-        $priceTaxIncluded = $this->getProductPriceForOrder((int) $product->id, null, true, $computingPrecision, $order);
+        $priceTaxExcluded = $this->getProductPriceForOrder((int) $product->id, null, false, $computingPrecision, $order) ?? 0.00;
+        $priceTaxIncluded = $this->getProductPriceForOrder((int) $product->id, null, true, $computingPrecision, $order) ?? 0.00;
         $product->loadStockData();
 
         return new FoundProduct(

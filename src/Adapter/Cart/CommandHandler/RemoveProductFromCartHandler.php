@@ -28,7 +28,6 @@ namespace PrestaShop\PrestaShop\Adapter\Cart\CommandHandler;
 
 use Currency;
 use Customer;
-use Language;
 use PrestaShop\PrestaShop\Adapter\Cart\AbstractCartHandler;
 use PrestaShop\PrestaShop\Adapter\ContextStateManager;
 use PrestaShop\PrestaShop\Core\Domain\Cart\Command\RemoveProductFromCartCommand;
@@ -67,7 +66,7 @@ final class RemoveProductFromCartHandler extends AbstractCartHandler implements 
         $this->contextStateManager
             ->setCart($cart)
             ->setCurrency(new Currency($cart->id_currency))
-            ->setLanguage(new Language($cart->id_lang))
+            ->setLanguage($cart->getAssociatedLanguage())
             ->setCustomer(new Customer($cart->id_customer))
             ->setShop(new Shop($cart->id_shop))
         ;

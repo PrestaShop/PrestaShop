@@ -145,7 +145,7 @@
        * @returns {boolean}
        */
       edited: function edited() {
-        return this.$store.state.modifiedTranslations.length > 0;
+        return Object.keys(this.$store.state.modifiedTranslations).length > 0;
       },
     },
     components: {

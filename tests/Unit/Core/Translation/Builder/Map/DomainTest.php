@@ -34,7 +34,7 @@ use PrestaShop\PrestaShop\Core\Translation\Builder\Map\Message;
 
 class DomainTest extends TestCase
 {
-    public function testAddMessage()
+    public function testAddMessage(): void
     {
         $domainTranslation = new Domain('domainName');
         $this->assertSame('domainName', $domainTranslation->getDomainName());
@@ -50,7 +50,7 @@ class DomainTest extends TestCase
         ], $domainTranslation->getMessages());
     }
 
-    public function testAddMessageIgnoredIfKeyAreTheSame()
+    public function testAddMessageIgnoredIfKeyAreTheSame(): void
     {
         $domainTranslation = new Domain('domainName');
         $this->assertSame('domainName', $domainTranslation->getDomainName());
@@ -69,7 +69,7 @@ class DomainTest extends TestCase
         ], $domainTranslation->getMessages());
     }
 
-    public function testAddMessageNotTranslatedAreOnTop()
+    public function testAddMessageNotTranslatedAreOnTop(): void
     {
         $domainTranslation = new Domain('domainName');
         $this->assertSame('domainName', $domainTranslation->getDomainName());
@@ -96,7 +96,7 @@ class DomainTest extends TestCase
         ], $domainTranslation->getMessages());
     }
 
-    public function testToArrayWithMetadata()
+    public function testToArrayWithMetadata(): void
     {
         $domainTranslation = new Domain('domainName');
 
@@ -192,7 +192,7 @@ class DomainTest extends TestCase
         ], $domainTranslation->toArray());
     }
 
-    public function testToArrayWithoutMetadata()
+    public function testToArrayWithoutMetadata(): void
     {
         $domainTranslation = new Domain('domainName');
 
@@ -274,7 +274,7 @@ class DomainTest extends TestCase
         ], $domainTranslation->toArray(false));
     }
 
-    public function testGetTree()
+    public function testGetTree(): void
     {
         $domainTranslation = new Domain('domainName');
         $tree = [];
@@ -371,7 +371,7 @@ class DomainTest extends TestCase
         ], $domainTranslation->mergeTree($tree));
     }
 
-    public function testGetTreeWithSubDomain()
+    public function testGetTreeWithSubDomain(): void
     {
         $domainTranslation = new Domain('domainNameWithMoreThanTreeSubdomain');
 
@@ -490,7 +490,7 @@ class DomainTest extends TestCase
         ], $domainTranslation->mergeTree($tree));
     }
 
-    public function testSplitDomain()
+    public function testSplitDomain(): void
     {
         $this->assertSame([''], Domain::splitDomain(''));
         $this->assertSame(['domain'], Domain::splitDomain('Domain'));

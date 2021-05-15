@@ -32,7 +32,6 @@ use Currency;
 use Customer;
 use Db;
 use Hook;
-use Language;
 use Mail;
 use Order;
 use OrderDetail;
@@ -121,12 +120,12 @@ class OrderSlipCreator
                 '{order_name}' => $order->getUniqReference(),
             ];
 
-            $orderLanguage = new Language((int) $order->id_lang);
+            $orderLanguage = $order->getAssociatedLanguage();
 
             // @todo: use a dedicated Mail class (see #13945)
             // @todo: remove this @and have a proper error handling
             @Mail::Send(
-                (int) $order->id_lang,
+                (int) $orderLanguage->getId(),
                 'credit_slip',
                 $this->translator->trans(
                     'New credit slip regarding your order',
@@ -298,7 +297,7 @@ class OrderSlipCreator
             if ($this->configuration->get('PS_ROUND_TYPE') == Order::ROUND_TOTAL) {
                 $tmp = explode('_', $key);
                 $address = Address::initialize((int) $tmp[1], true);
-                $tax_calculator = TaxManagerFactory::getManager($address, $tmp[0])->getTaxCalculator();
+                $tax_calculator = TaxManagerFactory::getManager($address, (int) $tmp[0])->getTaxCalculator();
 
                 if ($add_tax) {
                     $orderSlip->total_products_tax_incl += Tools::ps_round($tax_calculator->addTaxes($price), $precision);

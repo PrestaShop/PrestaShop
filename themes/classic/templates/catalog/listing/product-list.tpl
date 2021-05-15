@@ -74,8 +74,13 @@
         <div id="js-product-list-top"></div>
 
         <div id="js-product-list">
-          {include file='errors/not-found.tpl'}
-        </div>
+          {capture assign="errorContent"}
+            <h4>{l s='No products available yet' d='Shop.Theme.Catalog'}</h4>
+            <p>{l s='Stay tuned! More products will be shown here as they are added.' d='Shop.Theme.Catalog'}</p>
+          {/capture}
+
+          {include file='errors/not-found.tpl' errorContent=$errorContent}
+        <rdiv>
 
         <div id="js-product-list-bottom"></div>
       {/if}

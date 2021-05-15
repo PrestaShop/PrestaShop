@@ -146,7 +146,7 @@ class SqlRequestFormDataProvider
     /**
      * Transform exception into translatable errors.
      *
-     * @param SqlRequestException $e
+     * @param SqlRequestConstraintException|SqlRequestException $e
      *
      * @return array Errors
      */
@@ -154,7 +154,7 @@ class SqlRequestFormDataProvider
     {
         $exceptionType = get_class($e);
 
-        if (SqlRequestConstraintException::class === $exceptionType) {
+        if ($e instanceof SqlRequestConstraintException) {
             return $this->getConstraintError($e);
         }
 

@@ -34,10 +34,19 @@ namespace Tests\Unit\Adapter {
     use PHPUnit\Framework\MockObject\MockObject;
     use PHPUnit\Framework\TestCase;
     use PrestaShop\PrestaShop\Adapter\ContextStateManager;
+    use PrestaShop\PrestaShop\Adapter\LegacyContext;
     use Shop;
 
     class ContextStateManagerTest extends TestCase
     {
+        protected $legacyContext;
+
+        protected function setUp()
+        {
+            parent::setUp();
+            $this->legacyContext = new LegacyContext();
+        }
+
         public function testCartState()
         {
             $context = $this->createContextMock([
@@ -45,15 +54,20 @@ namespace Tests\Unit\Adapter {
             ]);
             $this->assertEquals(42, $context->cart->id);
 
-            $contextStateManager = new ContextStateManager($context);
+            $contextStateManager = new ContextStateManager($this->legacyContext);
+            $this->assertNull($contextStateManager->getContextFieldsStack());
+
             $contextStateManager->setCart($this->createContextFieldMock(Cart::class, 51));
             $this->assertEquals(51, $context->cart->id);
+            $this->assertCount(1, $contextStateManager->getContextFieldsStack());
 
             $contextStateManager->setCart($this->createContextFieldMock(Cart::class, 69));
             $this->assertEquals(69, $context->cart->id);
+            $this->assertCount(1, $contextStateManager->getContextFieldsStack());
 
             $contextStateManager->restorePreviousContext();
             $this->assertEquals(42, $context->cart->id);
+            $this->assertNull($contextStateManager->getContextFieldsStack());
         }
 
         public function testCountryState()
@@ -63,15 +77,20 @@ namespace Tests\Unit\Adapter {
             ]);
             $this->assertEquals(42, $context->country->id);
 
-            $contextStateManager = new ContextStateManager($context);
+            $contextStateManager = new ContextStateManager($this->legacyContext);
+            $this->assertNull($contextStateManager->getContextFieldsStack());
+
             $contextStateManager->setCountry($this->createContextFieldMock(Country::class, 51));
             $this->assertEquals(51, $context->country->id);
+            $this->assertCount(1, $contextStateManager->getContextFieldsStack());
 
             $contextStateManager->setCountry($this->createContextFieldMock(Country::class, 69));
             $this->assertEquals(69, $context->country->id);
+            $this->assertCount(1, $contextStateManager->getContextFieldsStack());
 
             $contextStateManager->restorePreviousContext();
             $this->assertEquals(42, $context->country->id);
+            $this->assertNull($contextStateManager->getContextFieldsStack());
         }
 
         public function testCurrencyState()
@@ -81,15 +100,20 @@ namespace Tests\Unit\Adapter {
             ]);
             $this->assertEquals(42, $context->currency->id);
 
-            $contextStateManager = new ContextStateManager($context);
+            $contextStateManager = new ContextStateManager($this->legacyContext);
+            $this->assertNull($contextStateManager->getContextFieldsStack());
+
             $contextStateManager->setCurrency($this->createContextFieldMock(Currency::class, 51));
             $this->assertEquals(51, $context->currency->id);
+            $this->assertCount(1, $contextStateManager->getContextFieldsStack());
 
             $contextStateManager->setCurrency($this->createContextFieldMock(Currency::class, 69));
             $this->assertEquals(69, $context->currency->id);
+            $this->assertCount(1, $contextStateManager->getContextFieldsStack());
 
             $contextStateManager->restorePreviousContext();
             $this->assertEquals(42, $context->currency->id);
+            $this->assertNull($contextStateManager->getContextFieldsStack());
         }
 
         public function testCustomerState()
@@ -99,15 +123,20 @@ namespace Tests\Unit\Adapter {
             ]);
             $this->assertEquals(42, $context->customer->id);
 
-            $contextStateManager = new ContextStateManager($context);
+            $contextStateManager = new ContextStateManager($this->legacyContext);
+            $this->assertNull($contextStateManager->getContextFieldsStack());
+
             $contextStateManager->setCustomer($this->createContextFieldMock(Customer::class, 51));
             $this->assertEquals(51, $context->customer->id);
+            $this->assertCount(1, $contextStateManager->getContextFieldsStack());
 
             $contextStateManager->setCustomer($this->createContextFieldMock(Customer::class, 69));
             $this->assertEquals(69, $context->customer->id);
+            $this->assertCount(1, $contextStateManager->getContextFieldsStack());
 
             $contextStateManager->restorePreviousContext();
             $this->assertEquals(42, $context->customer->id);
+            $this->assertNull($contextStateManager->getContextFieldsStack());
         }
 
         public function testLanguageState()
@@ -117,15 +146,20 @@ namespace Tests\Unit\Adapter {
             ]);
             $this->assertEquals(42, $context->language->id);
 
-            $contextStateManager = new ContextStateManager($context);
+            $contextStateManager = new ContextStateManager($this->legacyContext);
+            $this->assertNull($contextStateManager->getContextFieldsStack());
+
             $contextStateManager->setLanguage($this->createContextFieldMock(Language::class, 51));
             $this->assertEquals(51, $context->language->id);
+            $this->assertCount(1, $contextStateManager->getContextFieldsStack());
 
             $contextStateManager->setLanguage($this->createContextFieldMock(Language::class, 69));
             $this->assertEquals(69, $context->language->id);
+            $this->assertCount(1, $contextStateManager->getContextFieldsStack());
 
             $contextStateManager->restorePreviousContext();
             $this->assertEquals(42, $context->language->id);
+            $this->assertNull($contextStateManager->getContextFieldsStack());
         }
 
         public function testShopState()
@@ -139,30 +173,36 @@ namespace Tests\Unit\Adapter {
             $this->assertEquals(42, Shop::getContextShopGroupID());
             $this->assertEquals(Shop::CONTEXT_SHOP, Shop::getContext());
 
-            $contextStateManager = new ContextStateManager($context);
+            $contextStateManager = new ContextStateManager($this->legacyContext);
+            $this->assertNull($contextStateManager->getContextFieldsStack());
+
             $contextStateManager->setShop($this->createContextFieldMock(Shop::class, 51));
             $this->assertEquals(51, $context->shop->id);
             $this->assertEquals(51, Shop::getContextShopID());
             $this->assertEquals(51, Shop::getContextShopGroupID());
             $this->assertEquals(Shop::CONTEXT_SHOP, Shop::getContext());
+            $this->assertCount(1, $contextStateManager->getContextFieldsStack());
 
             $contextStateManager->setShop($this->createContextFieldMock(Shop::class, 69));
             $this->assertEquals(69, $context->shop->id);
             $this->assertEquals(69, Shop::getContextShopID());
             $this->assertEquals(69, Shop::getContextShopGroupID());
             $this->assertEquals(Shop::CONTEXT_SHOP, Shop::getContext());
+            $this->assertCount(1, $contextStateManager->getContextFieldsStack());
 
             $contextStateManager->restorePreviousContext();
             $this->assertEquals(42, $context->shop->id);
             $this->assertEquals(42, Shop::getContextShopID());
             $this->assertEquals(42, Shop::getContextShopGroupID());
             $this->assertEquals(Shop::CONTEXT_SHOP, Shop::getContext());
+            $this->assertNull($contextStateManager->getContextFieldsStack());
 
             $contextStateManager->restorePreviousContext();
             $this->assertEquals(42, $context->shop->id);
             $this->assertEquals(42, Shop::getContextShopID());
             $this->assertEquals(42, Shop::getContextShopGroupID());
             $this->assertEquals(Shop::CONTEXT_SHOP, Shop::getContext());
+            $this->assertNull($contextStateManager->getContextFieldsStack());
         }
 
         public function testShopStateAll()
@@ -176,30 +216,36 @@ namespace Tests\Unit\Adapter {
             $this->assertEquals(null, Shop::getContextShopGroupID());
             $this->assertEquals(Shop::CONTEXT_ALL, Shop::getContext());
 
-            $contextStateManager = new ContextStateManager($context);
+            $contextStateManager = new ContextStateManager($this->legacyContext);
+            $this->assertNull($contextStateManager->getContextFieldsStack());
+
             $contextStateManager->setShop($this->createContextFieldMock(Shop::class, 51));
             $this->assertEquals(51, $context->shop->id);
             $this->assertEquals(51, Shop::getContextShopID());
             $this->assertEquals(51, Shop::getContextShopGroupID());
             $this->assertEquals(Shop::CONTEXT_SHOP, Shop::getContext());
+            $this->assertCount(1, $contextStateManager->getContextFieldsStack());
 
             $contextStateManager->setShop($this->createContextFieldMock(Shop::class, 69));
             $this->assertEquals(69, $context->shop->id);
             $this->assertEquals(69, Shop::getContextShopID());
             $this->assertEquals(69, Shop::getContextShopGroupID());
             $this->assertEquals(Shop::CONTEXT_SHOP, Shop::getContext());
+            $this->assertCount(1, $contextStateManager->getContextFieldsStack());
 
             $contextStateManager->restorePreviousContext();
             $this->assertEquals(42, $context->shop->id);
             $this->assertEquals(null, Shop::getContextShopID());
             $this->assertEquals(null, Shop::getContextShopGroupID());
             $this->assertEquals(Shop::CONTEXT_ALL, Shop::getContext());
+            $this->assertNull($contextStateManager->getContextFieldsStack());
 
             $contextStateManager->restorePreviousContext();
             $this->assertEquals(42, $context->shop->id);
             $this->assertEquals(null, Shop::getContextShopID());
             $this->assertEquals(null, Shop::getContextShopGroupID());
             $this->assertEquals(Shop::CONTEXT_ALL, Shop::getContext());
+            $this->assertNull($contextStateManager->getContextFieldsStack());
         }
 
         public function testShopStateGroup()
@@ -213,30 +259,36 @@ namespace Tests\Unit\Adapter {
             $this->assertEquals(42, Shop::getContextShopGroupID());
             $this->assertEquals(Shop::CONTEXT_GROUP, Shop::getContext());
 
-            $contextStateManager = new ContextStateManager($context);
+            $contextStateManager = new ContextStateManager($this->legacyContext);
+            $this->assertNull($contextStateManager->getContextFieldsStack());
+
             $contextStateManager->setShop($this->createContextFieldMock(Shop::class, 51));
             $this->assertEquals(51, $context->shop->id);
             $this->assertEquals(51, Shop::getContextShopID());
             $this->assertEquals(51, Shop::getContextShopGroupID());
             $this->assertEquals(Shop::CONTEXT_SHOP, Shop::getContext());
+            $this->assertCount(1, $contextStateManager->getContextFieldsStack());
 
             $contextStateManager->setShop($this->createContextFieldMock(Shop::class, 69));
             $this->assertEquals(69, $context->shop->id);
             $this->assertEquals(69, Shop::getContextShopID());
             $this->assertEquals(69, Shop::getContextShopGroupID());
             $this->assertEquals(Shop::CONTEXT_SHOP, Shop::getContext());
+            $this->assertCount(1, $contextStateManager->getContextFieldsStack());
 
             $contextStateManager->restorePreviousContext();
             $this->assertEquals(42, $context->shop->id);
             $this->assertEquals(null, Shop::getContextShopID());
             $this->assertEquals(42, Shop::getContextShopGroupID());
             $this->assertEquals(Shop::CONTEXT_GROUP, Shop::getContext());
+            $this->assertNull($contextStateManager->getContextFieldsStack());
 
             $contextStateManager->restorePreviousContext();
             $this->assertEquals(42, $context->shop->id);
             $this->assertEquals(null, Shop::getContextShopID());
             $this->assertEquals(42, Shop::getContextShopGroupID());
             $this->assertEquals(Shop::CONTEXT_GROUP, Shop::getContext());
+            $this->assertNull($contextStateManager->getContextFieldsStack());
         }
 
         public function testNullField()
@@ -246,12 +298,16 @@ namespace Tests\Unit\Adapter {
             ]);
             $this->assertNull($context->language);
 
-            $contextStateManager = new ContextStateManager($context);
+            $contextStateManager = new ContextStateManager($this->legacyContext);
+            $this->assertNull($contextStateManager->getContextFieldsStack());
+
             $contextStateManager->setLanguage($this->createContextFieldMock(Language::class, 51));
             $this->assertEquals(51, $context->language->id);
+            $this->assertCount(1, $contextStateManager->getContextFieldsStack());
 
             $contextStateManager->setLanguage($this->createContextFieldMock(Language::class, 69));
             $this->assertEquals(69, $context->language->id);
+            $this->assertCount(1, $contextStateManager->getContextFieldsStack());
 
             $contextStateManager->restorePreviousContext();
             $this->assertNull($context->language);
@@ -272,7 +328,9 @@ namespace Tests\Unit\Adapter {
             $this->assertEquals(42, $context->customer->id);
             $this->assertEquals(42, $context->language->id);
 
-            $contextStateManager = new ContextStateManager($context);
+            $contextStateManager = new ContextStateManager($this->legacyContext);
+            $this->assertNull($contextStateManager->getContextFieldsStack());
+
             $contextStateManager
                 ->setCart($this->createContextFieldMock(Cart::class, 51))
                 ->setCountry($this->createContextFieldMock(Country::class, 51))
@@ -280,6 +338,7 @@ namespace Tests\Unit\Adapter {
                 ->setCustomer($this->createContextFieldMock(Customer::class, 51))
                 ->setLanguage($this->createContextFieldMock(Language::class, 51))
             ;
+            $this->assertCount(1, $contextStateManager->getContextFieldsStack());
 
             $this->assertEquals(51, $context->cart->id);
             $this->assertEquals(51, $context->country->id);
@@ -294,6 +353,7 @@ namespace Tests\Unit\Adapter {
             $this->assertEquals(42, $context->currency->id);
             $this->assertEquals(42, $context->customer->id);
             $this->assertEquals(42, $context->language->id);
+            $this->assertNull($contextStateManager->getContextFieldsStack());
         }
 
         public function testSavedContexts()
@@ -303,38 +363,49 @@ namespace Tests\Unit\Adapter {
             ]);
             $this->assertEquals(42, $context->language->id);
 
-            $contextStateManager = new ContextStateManager($context);
+            $contextStateManager = new ContextStateManager($this->legacyContext);
+            $this->assertNull($contextStateManager->getContextFieldsStack());
+
             $contextStateManager->setLanguage($this->createContextFieldMock(Language::class, 51));
             $this->assertEquals(51, $context->language->id);
+            $this->assertCount(1, $contextStateManager->getContextFieldsStack());
 
             $contextStateManager->setLanguage($this->createContextFieldMock(Language::class, 69));
             $this->assertEquals(69, $context->language->id);
+            $this->assertCount(1, $contextStateManager->getContextFieldsStack());
 
             $contextStateManager->saveCurrentContext();
+            $this->assertCount(2, $contextStateManager->getContextFieldsStack());
 
             $contextStateManager->setLanguage($this->createContextFieldMock(Language::class, 93));
             $this->assertEquals(93, $context->language->id);
+            $this->assertCount(2, $contextStateManager->getContextFieldsStack());
 
             $contextStateManager->restorePreviousContext();
             $this->assertEquals(69, $context->language->id);
+            $this->assertCount(1, $contextStateManager->getContextFieldsStack());
 
             $contextStateManager->restorePreviousContext();
             $this->assertEquals(42, $context->language->id);
+            $this->assertNull($contextStateManager->getContextFieldsStack());
 
             // If several sets have been called, the state returns to the value that was saved
             $contextStateManager->saveCurrentContext();
 
             $contextStateManager->setLanguage($this->createContextFieldMock(Language::class, 51));
             $this->assertEquals(51, $context->language->id);
+            $this->assertCount(1, $contextStateManager->getContextFieldsStack());
 
             $contextStateManager->setLanguage($this->createContextFieldMock(Language::class, 69));
             $this->assertEquals(69, $context->language->id);
+            $this->assertCount(1, $contextStateManager->getContextFieldsStack());
 
             $contextStateManager->restorePreviousContext();
             $this->assertEquals(42, $context->language->id);
+            $this->assertNull($contextStateManager->getContextFieldsStack());
         }
 
-        public function testMultipleSavedContextFieds()
+        public function testMultipleSavedContextFields()
         {
             $context = $this->createContextMock([
                 'cart' => $this->createContextFieldMock(Cart::class, 42),
@@ -349,12 +420,15 @@ namespace Tests\Unit\Adapter {
             $this->assertEquals(42, $context->customer->id);
             $this->assertEquals(42, $context->language->id);
 
-            $contextStateManager = new ContextStateManager($context);
+            $contextStateManager = new ContextStateManager($this->legacyContext);
+            $this->assertNull($contextStateManager->getContextFieldsStack());
+
             $contextStateManager
                 ->setCart($this->createContextFieldMock(Cart::class, 51))
                 ->setCurrency($this->createContextFieldMock(Currency::class, 51))
                 ->setCustomer($this->createContextFieldMock(Customer::class, 51))
             ;
+            $this->assertCount(1, $contextStateManager->getContextFieldsStack());
 
             $this->assertEquals(51, $context->cart->id);
             $this->assertEquals(42, $context->country->id);
@@ -363,6 +437,7 @@ namespace Tests\Unit\Adapter {
             $this->assertEquals(42, $context->language->id);
 
             $contextStateManager->saveCurrentContext();
+            $this->assertCount(2, $contextStateManager->getContextFieldsStack());
 
             $contextStateManager
                 ->setCart($this->createContextFieldMock(Cart::class, 69))
@@ -374,6 +449,7 @@ namespace Tests\Unit\Adapter {
             $this->assertEquals(69, $context->currency->id);
             $this->assertEquals(51, $context->customer->id);
             $this->assertEquals(42, $context->language->id);
+            $this->assertCount(2, $contextStateManager->getContextFieldsStack());
 
             $contextStateManager->restorePreviousContext();
 
@@ -382,6 +458,7 @@ namespace Tests\Unit\Adapter {
             $this->assertEquals(51, $context->currency->id);
             $this->assertEquals(51, $context->customer->id);
             $this->assertEquals(42, $context->language->id);
+            $this->assertCount(1, $contextStateManager->getContextFieldsStack());
 
             $contextStateManager->restorePreviousContext();
 
@@ -390,6 +467,7 @@ namespace Tests\Unit\Adapter {
             $this->assertEquals(42, $context->currency->id);
             $this->assertEquals(42, $context->customer->id);
             $this->assertEquals(42, $context->language->id);
+            $this->assertNull($contextStateManager->getContextFieldsStack());
         }
 
         public function testTooManyRestore()
@@ -399,33 +477,83 @@ namespace Tests\Unit\Adapter {
             ]);
             $this->assertEquals(42, $context->language->id);
 
-            $contextStateManager = new ContextStateManager($context);
+            $contextStateManager = new ContextStateManager($this->legacyContext);
+            $this->assertNull($contextStateManager->getContextFieldsStack());
+
             $contextStateManager->setLanguage($this->createContextFieldMock(Language::class, 51));
             $this->assertEquals(51, $context->language->id);
+            $this->assertCount(1, $contextStateManager->getContextFieldsStack());
 
             $contextStateManager->setLanguage($this->createContextFieldMock(Language::class, 69));
             $this->assertEquals(69, $context->language->id);
+            $this->assertCount(1, $contextStateManager->getContextFieldsStack());
 
             $contextStateManager->saveCurrentContext();
 
             $contextStateManager->setLanguage($this->createContextFieldMock(Language::class, 93));
             $this->assertEquals(93, $context->language->id);
+            $this->assertCount(2, $contextStateManager->getContextFieldsStack());
 
             $contextStateManager->restorePreviousContext();
             $this->assertEquals(69, $context->language->id);
+            $this->assertCount(1, $contextStateManager->getContextFieldsStack());
 
             $contextStateManager->restorePreviousContext();
             $this->assertEquals(42, $context->language->id);
+            $this->assertNull($contextStateManager->getContextFieldsStack());
 
-            // This removes all persisted states, but we always re-init one for future calls
+            // This removes all persisted states, we keep null when nothing is saved
             $contextStateManager->restorePreviousContext();
             $this->assertEquals(42, $context->language->id);
+            $this->assertNull($contextStateManager->getContextFieldsStack());
 
             $contextStateManager->setLanguage($this->createContextFieldMock(Language::class, 93));
             $this->assertEquals(93, $context->language->id);
+            $this->assertCount(1, $contextStateManager->getContextFieldsStack());
 
             $contextStateManager->restorePreviousContext();
             $this->assertEquals(42, $context->language->id);
+            $this->assertNull($contextStateManager->getContextFieldsStack());
+        }
+
+        public function testSavedContextsFirst()
+        {
+            $context = $this->createContextMock([
+                'language' => $this->createContextFieldMock(Language::class, 42),
+            ]);
+            $this->assertEquals(42, $context->language->id);
+
+            $contextStateManager = new ContextStateManager($this->legacyContext);
+            $this->assertNull($contextStateManager->getContextFieldsStack());
+
+            // Save point 1
+            $contextStateManager->saveCurrentContext();
+            // Nothing saved yet so no reason to init the stack
+            $this->assertNull($contextStateManager->getContextFieldsStack());
+
+            $contextStateManager->setLanguage($this->createContextFieldMock(Language::class, 51));
+            $this->assertEquals(51, $context->language->id);
+            $this->assertCount(1, $contextStateManager->getContextFieldsStack());
+
+            $contextStateManager->setLanguage($this->createContextFieldMock(Language::class, 69));
+            $this->assertEquals(69, $context->language->id);
+            $this->assertCount(1, $contextStateManager->getContextFieldsStack());
+
+            // Save point 2
+            $contextStateManager->saveCurrentContext();
+            $contextStateManager->setLanguage($this->createContextFieldMock(Language::class, 93));
+            $this->assertEquals(93, $context->language->id);
+            $this->assertCount(2, $contextStateManager->getContextFieldsStack());
+
+            // Back to save point 2
+            $contextStateManager->restorePreviousContext();
+            $this->assertEquals(69, $context->language->id);
+            $this->assertCount(1, $contextStateManager->getContextFieldsStack());
+
+            // Back to save point 1
+            $contextStateManager->restorePreviousContext();
+            $this->assertEquals(42, $context->language->id);
+            $this->assertNull($contextStateManager->getContextFieldsStack());
         }
 
         /**
@@ -459,6 +587,7 @@ namespace Tests\Unit\Adapter {
             foreach ($contextFields as $fieldName => $contextValue) {
                 $contextMock->$fieldName = $contextValue;
             }
+            LegacyContext::setInstanceForTesting($contextMock);
 
             return $contextMock;
         }

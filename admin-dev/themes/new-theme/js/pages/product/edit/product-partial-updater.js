@@ -235,6 +235,13 @@ export default class ProductPartialUpdater {
       serializedForm[formField.name] = value;
     });
 
+    // File inputs must be handled manually
+    $('input[type="file"]', this.$productForm).each((inputIndex, fileInput) => {
+      $.each($(fileInput)[0].files, (fileIndex, file) => {
+        serializedForm[fileInput.name] = file;
+      });
+    });
+
     return serializedForm;
   }
 

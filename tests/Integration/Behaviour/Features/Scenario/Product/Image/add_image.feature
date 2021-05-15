@@ -23,14 +23,14 @@ Feature: Add product image from Back Office (BO)
     When I add new image "image1" named "app_icon.png" to product "product1"
     Then image "image1" should have same file as "app_icon.png"
     And product "product1" should have following images:
-      | image reference | is cover | legend[en-US] | position |
-      | image1          | true     |               | 1        |
+      | image reference | is cover | legend[en-US] | position | image url                            | thumbnail url                                      |
+      | image1          | true     |               | 1        | http://myshop.com/img/p/{image1}.jpg | http://myshop.com/img/p/{image1}-small_default.jpg |
     When I add new image "image2" named "logo.jpg" to product "product1"
     Then image "image2" should have same file as "logo.jpg"
     And product "product1" should have following images:
-      | image reference | is cover | legend[en-US] | position |
-      | image1          | true     |               | 1        |
-      | image2          | false    |               | 2        |
+      | image reference | is cover | legend[en-US] | position | image url                            | thumbnail url                                      |
+      | image1          | true     |               | 1        | http://myshop.com/img/p/{image1}.jpg | http://myshop.com/img/p/{image1}-small_default.jpg |
+      | image2          | false    |               | 2        | http://myshop.com/img/p/{image2}.jpg | http://myshop.com/img/p/{image2}-small_default.jpg |
     And images "[image1, image2]" should have following types generated:
       | name           | width | height |
       | cart_default   | 125   | 125    |

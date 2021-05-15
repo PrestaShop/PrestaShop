@@ -26,6 +26,7 @@
 {% extends '@PrestaShop/Admin/layout.html.twig' %}
 
 {% block content %}
+  {% if multistoreIsUsed %}{{ ps.infotip(multistoreInfoTip, true) }}{% endif %}
   <div class="row">
     <div class="col">
       {% include '@PrestaShop/Admin/Configure/AdvancedParameters/Profiles/Blocks/form.html.twig' %}

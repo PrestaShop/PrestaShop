@@ -45,3 +45,7 @@ _employee:
 _profiles:
     resource: "profiles.yml"
     prefix: /profiles
+
+_feature_flags:
+    resource: "feature_flags.yml"
+    prefix: /feature-flags

@@ -63,7 +63,7 @@ class RowAttributesExtension extends AbstractTypeExtension
      */
     public function buildView(FormView $view, FormInterface $form, array $options)
     {
-        $view->vars['row_attr'] = isset($options['row_attr']) ? $options['row_attr'] : [];
+        $view->vars['row_attr'] = $options['row_attr'] ?? [];
     }
 
     /**

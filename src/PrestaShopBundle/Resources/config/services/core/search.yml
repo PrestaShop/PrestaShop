@@ -34,8 +34,6 @@ services:
 
     prestashop.core.search.builder.class:
         class: 'PrestaShop\PrestaShop\Core\Search\Builder\ClassFiltersBuilder'
-        arguments:
-            - !tagged core.typed_filters_builder
 
     prestashop.core.search.builder.request:
         class: 'PrestaShop\PrestaShop\Core\Search\Builder\RequestFiltersBuilder'

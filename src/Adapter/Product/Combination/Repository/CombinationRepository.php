@@ -34,7 +34,6 @@ use Doctrine\DBAL\Connection;
 use PrestaShop\PrestaShop\Adapter\AbstractObjectModelRepository;
 use PrestaShop\PrestaShop\Adapter\Attribute\Repository\AttributeRepository;
 use PrestaShop\PrestaShop\Adapter\Product\Combination\Validate\CombinationValidator;
-use PrestaShop\PrestaShop\Core\Domain\Language\ValueObject\LanguageId;
 use PrestaShop\PrestaShop\Core\Domain\Product\Combination\Exception\CannotAddCombinationException;
 use PrestaShop\PrestaShop\Core\Domain\Product\Combination\Exception\CannotBulkDeleteCombinationException;
 use PrestaShop\PrestaShop\Core\Domain\Product\Combination\Exception\CannotDeleteCombinationException;
@@ -194,7 +193,7 @@ class CombinationRepository extends AbstractObjectModelRepository
      *
      * @return CombinationId[]
      */
-    private function getCombinationIdsByProductId(ProductId $productId): array
+    public function getCombinationIdsByProductId(ProductId $productId): array
     {
         $qb = $this->connection->createQueryBuilder();
         $qb
@@ -202,6 +201,7 @@ class CombinationRepository extends AbstractObjectModelRepository
             ->from($this->dbPrefix . 'product_attribute', 'pa')
             ->andWhere('pa.id_product = :productId')
             ->setParameter('productId', $productId->getValue())
+            ->addOrderBy('pa.id_product_attribute', 'ASC')
         ;
         $combinationIds = $qb->execute()->fetchAll();
 
@@ -209,32 +209,6 @@ class CombinationRepository extends AbstractObjectModelRepository
             function (array $combination) { return new CombinationId((int) $combination['id_product_attribute']); },
             $combinationIds
         );
-    }
-
-    /**
-     * @param int[] $combinationIds
-     * @param LanguageId $langId
-     *
-     * @return array<int, array<int, mixed>>
-     */
-    public function getAttributesInfoByCombinationIds(array $combinationIds, LanguageId $langId): array
-    {
-        $attributeCombinationAssociations = $this->getAttributeCombinationAssociations($combinationIds);
-
-        $attributeIds = array_unique(array_map(function (array $attributeByCombination): int {
-            return (int) $attributeByCombination['id_attribute'];
-        }, $attributeCombinationAssociations));
-
-        $attributesInfoByAttributeId = $this->getAttributesInformation($attributeIds, $langId->getValue());
-
-        $attributesInfoByCombinationId = [];
-        foreach ($attributeCombinationAssociations as $attributeCombinationAssociation) {
-            $combinationId = (int) $attributeCombinationAssociation['id_product_attribute'];
-            $attributeId = (int) $attributeCombinationAssociation['id_attribute'];
-            $attributesInfoByCombinationId[$combinationId][] = $attributesInfoByAttributeId[$attributeId];
-        }
-
-        return $attributesInfoByCombinationId;
     }
 
     /**
@@ -296,64 +270,37 @@ class CombinationRepository extends AbstractObjectModelRepository
     }
 
     /**
-     * @param int[] $combinationIds
-     *
-     * @return array<int, array<string, mixed>>
-     */
-    private function getAttributeCombinationAssociations(array $combinationIds): array
-    {
-        $qb = $this->connection->createQueryBuilder();
-        $qb->select('pac.id_attribute')
-            ->addSelect('pac.id_product_attribute')
-            ->from($this->dbPrefix . 'product_attribute_combination', 'pac')
-            ->where($qb->expr()->in('pac.id_product_attribute', ':combinationIds'))
-            ->setParameter('combinationIds', $combinationIds, Connection::PARAM_INT_ARRAY)
-        ;
-
-        return $qb->execute()->fetchAll();
-    }
-
-    /**
      * @param int[] $attributeIds
-     * @param int $langId
      *
-     * @return array<int, array<int, mixed>>
+     * @return CombinationId[]
      */
-    private function getAttributesInformation(array $attributeIds, int $langId): array
+    public function getCombinationIdsByAttributes(ProductId $productId, array $attributeIds): array
     {
+        sort($attributeIds);
         $qb = $this->connection->createQueryBuilder();
-        $qb->select('a.id_attribute')
-            ->addSelect('ag.id_attribute_group')
-            ->addSelect('al.name AS attribute_name')
-            ->addSelect('agl.name AS attribute_group_name')
-            ->from($this->dbPrefix . 'attribute', 'a')
-            ->leftJoin(
-                'a',
-                $this->dbPrefix . 'attribute_lang',
-                'al',
-                'a.id_attribute = al.id_attribute AND al.id_lang = :langId'
-            )->leftJoin(
-                'a',
-                $this->dbPrefix . 'attribute_group',
-                'ag',
-                'a.id_attribute_group = ag.id_attribute_group'
-            )->leftJoin(
-                'ag',
-                $this->dbPrefix . 'attribute_group_lang',
-                'agl',
-                'agl.id_attribute_group = ag.id_attribute_group AND agl.id_lang = :langId'
-            )->where($qb->expr()->in('a.id_attribute', ':attributeIds'))
-            ->setParameter('attributeIds', $attributeIds, Connection::PARAM_INT_ARRAY)
-            ->setParameter('langId', $langId)
+        $qb
+            ->addSelect('pa.id_product_attribute')
+            ->addSelect('GROUP_CONCAT(pac.id_attribute ORDER BY pac.id_attribute ASC SEPARATOR "-") AS attribute_ids')
+            ->from($this->dbPrefix . 'product_attribute', 'pa')
+            ->innerJoin(
+                'pa',
+                $this->dbPrefix . 'product_attribute_combination',
+                'pac',
+                'pac.id_product_attribute = pa.id_product_attribute'
+            )
+            ->andWhere('pa.id_product = :productId')
+            ->andHaving('attribute_ids = :attributeIds')
+            ->setParameter('productId', $productId->getValue())
+            ->setParameter('attributeIds', implode('-', $attributeIds))
+            ->addGroupBy('pa.id_product_attribute')
         ;
-
-        $attributesInfo = $qb->execute()->fetchAll();
-
-        $attributesInfoByAttributeId = [];
-        foreach ($attributesInfo as $attributeInfo) {
-            $attributesInfoByAttributeId[(int) $attributeInfo['id_attribute']] = $attributeInfo;
+        $result = $qb->execute()->fetchAll();
+        if (empty($result)) {
+            return [];
         }
 
-        return $attributesInfoByAttributeId;
+        return array_map(function (array $combination) {
+            return new CombinationId((int) $combination['id_product_attribute']);
+        }, $result);
     }
 }

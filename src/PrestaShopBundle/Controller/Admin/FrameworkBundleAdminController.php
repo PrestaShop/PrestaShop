@@ -86,13 +86,13 @@ class FrameworkBundleAdminController extends Controller
      *
      * Parse all errors mapped by id html field
      *
-     * @param Form $form
+     * @param FormInterface $form
      *
-     * @return array[array[string]] Errors
+     * @return array<array<string>> Errors
      *
      * @throws \Symfony\Component\Translation\Exception\InvalidArgumentException
      */
-    public function getFormErrorsForJS(Form $form)
+    public function getFormErrorsForJS(FormInterface $form)
     {
         $errors = [];
 

@@ -30,8 +30,10 @@ namespace PrestaShop\PrestaShop\Adapter\Product\Combination\QueryHandler;
 
 use PDO;
 use PrestaShop\Decimal\DecimalNumber;
+use PrestaShop\PrestaShop\Adapter\Attribute\Repository\AttributeRepository;
 use PrestaShop\PrestaShop\Adapter\Product\AbstractProductHandler;
-use PrestaShop\PrestaShop\Adapter\Product\Combination\Repository\CombinationRepository;
+use PrestaShop\PrestaShop\Adapter\Product\Image\ProductImagePathFactory;
+use PrestaShop\PrestaShop\Adapter\Product\Image\Repository\ProductImageRepository;
 use PrestaShop\PrestaShop\Adapter\Product\Stock\Repository\StockAvailableRepository;
 use PrestaShop\PrestaShop\Core\Domain\Product\Combination\Query\GetEditableCombinationsList;
 use PrestaShop\PrestaShop\Core\Domain\Product\Combination\QueryHandler\GetEditableCombinationsListHandlerInterface;
@@ -41,23 +43,12 @@ use PrestaShop\PrestaShop\Core\Domain\Product\Combination\QueryResult\EditableCo
 use PrestaShop\PrestaShop\Core\Domain\Product\Combination\ValueObject\CombinationId;
 use PrestaShop\PrestaShop\Core\Grid\Query\DoctrineQueryBuilderInterface;
 use PrestaShop\PrestaShop\Core\Search\Filters\ProductCombinationFilters;
-use PrestaShop\PrestaShop\Core\Util\Number\NumberExtractor;
 
 /**
  * Handles @see GetEditableCombinationsList using legacy object model
  */
 final class GetEditableCombinationsListHandler extends AbstractProductHandler implements GetEditableCombinationsListHandlerInterface
 {
-    /**
-     * @var CombinationRepository
-     */
-    private $combinationRepository;
-
-    /**
-     * @var NumberExtractor
-     */
-    private $numberExtractor;
-
     /**
      * @var StockAvailableRepository
      */
@@ -69,21 +60,39 @@ final class GetEditableCombinationsListHandler extends AbstractProductHandler im
     private $combinationQueryBuilder;
 
     /**
-     * @param CombinationRepository $combinationRepository
-     * @param NumberExtractor $numberExtractor
+     * @var AttributeRepository
+     */
+    private $attributeRepository;
+
+    /**
+     * @var ProductImageRepository
+     */
+    private $productImageRepository;
+
+    /**
+     * @var ProductImagePathFactory
+     */
+    private $productImagePathFactory;
+
+    /**
      * @param StockAvailableRepository $stockAvailableRepository
      * @param DoctrineQueryBuilderInterface $combinationQueryBuilder
+     * @param AttributeRepository $attributeRepository
+     * @param ProductImageRepository $productImageRepository
+     * @param ProductImagePathFactory $productImagePathFactory
      */
     public function __construct(
-        CombinationRepository $combinationRepository,
-        NumberExtractor $numberExtractor,
         StockAvailableRepository $stockAvailableRepository,
-        DoctrineQueryBuilderInterface $combinationQueryBuilder
+        DoctrineQueryBuilderInterface $combinationQueryBuilder,
+        AttributeRepository $attributeRepository,
+        ProductImageRepository $productImageRepository,
+        ProductImagePathFactory $productImagePathFactory
     ) {
-        $this->combinationRepository = $combinationRepository;
-        $this->numberExtractor = $numberExtractor;
         $this->stockAvailableRepository = $stockAvailableRepository;
         $this->combinationQueryBuilder = $combinationQueryBuilder;
+        $this->attributeRepository = $attributeRepository;
+        $this->productImageRepository = $productImageRepository;
+        $this->productImagePathFactory = $productImagePathFactory;
     }
 
     /**
@@ -108,15 +117,20 @@ final class GetEditableCombinationsListHandler extends AbstractProductHandler im
             return (int) $combination['id_product_attribute'];
         }, $combinations);
 
-        $attributesInformation = $this->combinationRepository->getAttributesInfoByCombinationIds(
+        $attributesInformation = $this->attributeRepository->getAttributesInfoByCombinationIds(
             $combinationIds,
             $query->getLanguageId()
         );
 
+        $productImageIds = $this->productImageRepository->getImagesIds($query->getProductId());
+        $imageIdsByCombinationIds = $this->productImageRepository->getImagesIdsForCombinations($combinationIds);
+
         return $this->formatEditableCombinationsForListing(
             $combinations,
             $attributesInformation,
-            $total
+            $total,
+            $imageIdsByCombinationIds,
+            $productImageIds
         );
     }
 
@@ -124,13 +138,17 @@ final class GetEditableCombinationsListHandler extends AbstractProductHandler im
      * @param array $combinations
      * @param array<int, array<int, mixed>> $attributesInformationByCombinationId
      * @param int $totalCombinationsCount
+     * @param array $imageIdsByCombinationIds
+     * @param array $defaultImageIds
      *
      * @return CombinationListForEditing
      */
     private function formatEditableCombinationsForListing(
         array $combinations,
         array $attributesInformationByCombinationId,
-        int $totalCombinationsCount
+        int $totalCombinationsCount,
+        array $imageIdsByCombinationIds,
+        array $defaultImageIds
     ): CombinationListForEditing {
         $combinationsForEditing = [];
 
@@ -147,6 +165,13 @@ final class GetEditableCombinationsListHandler extends AbstractProductHandler im
                 );
             }
 
+            $imageId = null;
+            if (!empty($imageIdsByCombinationIds[$combinationId])) {
+                $imageId = reset($imageIdsByCombinationIds[$combinationId]);
+            } elseif (!empty($defaultImageIds)) {
+                $imageId = reset($defaultImageIds);
+            }
+
             $impactOnPrice = new DecimalNumber($combination['price']);
             $combinationsForEditing[] = new EditableCombinationForListing(
                 $combinationId,
@@ -155,14 +180,8 @@ final class GetEditableCombinationsListHandler extends AbstractProductHandler im
                 $combinationAttributesInformation,
                 (bool) $combination['default_on'],
                 $impactOnPrice,
-                (int) $this->stockAvailableRepository->getForCombination(new CombinationId($combinationId))->quantity
-// @todo:
-//      Missing combination image:
-//      Old page retrieves it through src/PrestaShopBundle/Controller/Admin/AttributeController::getFormImagesAction.
-//      we could simply get Product::getCombinationImageById and load new Image()->getbasePath,
-//      but not all combinations seems to have associated images with product
-//      (the old page still shows images for all of them - not sure if that is good behavior)
-//      also it is unclear how old page appends suffixes "small_default, home_default" (it seems controller only provides base path)
+                (int) $this->stockAvailableRepository->getForCombination(new CombinationId($combinationId))->quantity,
+                $imageId ? $this->productImagePathFactory->getPathByType($imageId, ProductImagePathFactory::IMAGE_TYPE_SMALL_DEFAULT) : null
             );
         }
 

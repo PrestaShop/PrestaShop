@@ -115,7 +115,6 @@ export default class CartRulesRenderer {
     this.$searchResultBox.html($template);
   }
 
-
   /**
    * Empties cart rule search results block
    *

@@ -27,20 +27,22 @@ import Bloodhound from 'typeahead.js';
 import Router from '@components/router';
 import AutoCompleteSearch from '@components/auto-complete-search';
 import PerfectScrollbar from 'perfect-scrollbar';
+import ComponentsMap from '@components/components-map';
 import 'perfect-scrollbar/css/perfect-scrollbar.css';
 
 const {$} = window;
 
 const initMultistoreHeader = () => {
-  const headerButton = document.querySelector('.js-header-multishop-open-modal');
-  const modalMultishop = document.querySelector('.js-multishop-modal');
-  const $searchInput = $('.js-multishop-modal-search');
+  const MultistoreHeaderMap = ComponentsMap.multistoreHeader;
+  const headerButton = document.querySelector(MultistoreHeaderMap.headerButton);
+  const modalMultishop = document.querySelector(MultistoreHeaderMap.modal);
+  const $searchInput = $(MultistoreHeaderMap.searchInput);
   const router = new Router();
   const route = router.generate('admin_shops_search', {
     searchTerm: '__QUERY__',
   });
 
-  new PerfectScrollbar('.js-multishop-scrollbar');
+  new PerfectScrollbar(MultistoreHeaderMap.jsScrollbar);
 
   const source = new Bloodhound({
     datumTokenizer: Bloodhound.tokenizers.obj.whitespace,
@@ -55,7 +57,7 @@ const initMultistoreHeader = () => {
     source,
     onSelect(selectedItem) {
       const contextUrlLetter = typeof selectedItem.groupName !== 'undefined' ? 's' : 'g';
-      const setContextUrl = `${window.location.href}&setShopContext=${contextUrlLetter}-${selectedItem.id}`;
+      const setContextUrl = MultistoreHeaderMap.setContextUrl(window.location.href, contextUrlLetter, selectedItem.id);
       window.location.href = setContextUrl;
 
       return true;

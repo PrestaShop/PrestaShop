@@ -47,16 +47,6 @@ class FrontofficeCatalogueLayersProviderTest extends AbstractCatalogueLayersProv
         $catalogue = $this->getFileTranslatedCatalogue('fr-FR');
 
         $expected = [
-            'ModulesCheckpaymentShop' => [
-                'count' => 19,
-                'translations' => [],
-            ],
-            'ModulesWirepaymentShop' => [
-                'count' => 15,
-                'translations' => [
-                    '(order processing will be longer)' => '(le traitement de la commande sera plus long)',
-                ],
-            ],
             'ShopNotificationsWarning' => [
                 'count' => 8,
                 'translations' => [
@@ -78,16 +68,6 @@ class FrontofficeCatalogueLayersProviderTest extends AbstractCatalogueLayersProv
         $catalogue = $this->getDefaultCatalogue('fr-FR');
 
         $expected = [
-            'ModulesCheckpaymentShop' => [
-                'count' => 19,
-                'translations' => [],
-            ],
-            'ModulesWirepaymentShop' => [
-                'count' => 20,
-                'translations' => [
-                    '(order processing will be longer)' => '',
-                ],
-            ],
             'ShopNotificationsWarning' => [
                 'count' => 8,
                 'translations' => [
@@ -123,12 +103,6 @@ class FrontofficeCatalogueLayersProviderTest extends AbstractCatalogueLayersProv
         $catalogue = $this->getUserTranslatedCatalogue('fr-FR', $databaseContent);
 
         $expected = [
-            'ModulesWirepaymentShop' => [
-                'count' => 1,
-                'translations' => [
-                    'Install' => 'Install Traduction customisée',
-                ],
-            ],
             'ShopNotificationsWarning' => [
                 'count' => 1,
                 'translations' => [

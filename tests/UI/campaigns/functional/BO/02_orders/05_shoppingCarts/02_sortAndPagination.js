@@ -43,7 +43,7 @@ Sort shopping cart table by :
 Id, Order ID, Customer, carrier, date and Online
 Delete customers
 */
-describe('sort and pagination shopping carts', async () => {
+describe('Sort and pagination shopping carts', async () => {
   // before and after functions
   before(async function () {
     browserContext = await helper.createBrowserContext(this.browser);
@@ -171,6 +171,14 @@ describe('sort and pagination shopping carts', async () => {
 
   // 3 - Sort table
   describe('Sort shopping cart table', async () => {
+    it('should filter by customer \'todelete\'', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'filterToSort', baseContext);
+
+      await shoppingCartsPage.filterTable(page, 'input', 'c!lastname', 'todelete');
+      const textColumn = await shoppingCartsPage.getTextColumn(page, 1, 'c!lastname');
+      await expect(textColumn).to.contains('todelete');
+    });
+
     const sortTests = [
       {
         args: {
@@ -225,6 +233,7 @@ describe('sort and pagination shopping carts', async () => {
         },
       },
     ];
+
     sortTests.forEach((test) => {
       it(`should sort by '${test.args.sortBy}' '${test.args.sortDirection}' and check result`, async function () {
         await testContext.addContextItem(this, 'testIdentifier', test.args.testIdentifier, baseContext);
@@ -248,6 +257,13 @@ describe('sort and pagination shopping carts', async () => {
           await expect(sortedTable).to.deep.equal(expectedResult.reverse());
         }
       });
+    });
+
+    it('should reset all filters', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'resetAfterSort', baseContext);
+
+      const numberOfShoppingCartsAfterReset = await shoppingCartsPage.resetAndGetNumberOfLines(page);
+      await expect(numberOfShoppingCartsAfterReset).to.be.above(1);
     });
   });
 

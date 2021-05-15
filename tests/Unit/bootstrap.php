@@ -32,3 +32,5 @@ require_once _PS_CONFIG_DIR_ . 'autoload.php';
 if (!defined('PHPUNIT_COMPOSER_INSTALL')) {
     define('PHPUNIT_COMPOSER_INSTALL', __DIR__ . '/../../vendor/autoload.php');
 }
+
+define('_NEW_COOKIE_KEY_', PhpEncryption::createNewRandomKey());

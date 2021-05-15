@@ -86,13 +86,13 @@ class TranslationFinder
 
     /**
      * @param string[] $paths
-     * @param string $pattern
+     * @param string|null $pattern
      *
      * @return Finder
      *
      * @throws FileNotFoundException
      */
-    private function getTranslationFilesFromPath(array $paths, string $pattern): Finder
+    private function getTranslationFilesFromPath(array $paths, ?string $pattern = null): Finder
     {
         $finder = new Finder();
 

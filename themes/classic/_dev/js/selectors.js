@@ -60,6 +60,7 @@ prestashop.themeSelectors = {
   footer: '#footer, .js-footer',
   modalContent: '.js-modal-content',
   modal: '#modal, .js-checkout-modal',
+  touchspin: '.js-touchspin',
   checkout: {
     termsLink: '.js-terms a',
     giftCheckbox: '.js-gift-checkbox',

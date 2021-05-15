@@ -56,6 +56,7 @@ class ProductCombinationFilters extends Filters
             throw new InvalidArgumentException(sprintf('%s filters expect a product_id filter', static::class));
         }
 
+        $this->needsToBePersisted = false;
         $this->productId = (int) $filters['filters']['product_id'];
 
         // Since each combination lists depends on its associated product, the filterId must depends on it so that each

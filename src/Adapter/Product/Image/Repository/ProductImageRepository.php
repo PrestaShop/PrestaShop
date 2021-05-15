@@ -118,11 +118,11 @@ class ProductImageRepository extends AbstractObjectModelRepository
     /**
      * @param ProductId $productId
      *
-     * @return Image[]
+     * @return ImageId[]
      *
      * @throws CoreException
      */
-    public function getImages(ProductId $productId): array
+    public function getImagesIds(ProductId $productId): array
     {
         $qb = $this->connection->createQueryBuilder();
 
@@ -141,9 +141,31 @@ class ProductImageRepository extends AbstractObjectModelRepository
             return [];
         }
 
-        $images = [];
+        $imagesIds = [];
         foreach ($results as $result) {
-            $imageId = new ImageId((int) $result['id_image']);
+            $imagesIds[] = new ImageId((int) $result['id_image']);
+        }
+
+        return $imagesIds;
+    }
+
+    /**
+     * @param ProductId $productId
+     *
+     * @return Image[]
+     *
+     * @throws CoreException
+     */
+    public function getImages(ProductId $productId): array
+    {
+        $imagesIds = $this->getImagesIds($productId);
+
+        if (empty($imagesIds)) {
+            return [];
+        }
+
+        $images = [];
+        foreach ($imagesIds as $imageId) {
             $images[] = $this->get($imageId);
         }
 
@@ -227,6 +249,49 @@ class ProductImageRepository extends AbstractObjectModelRepository
         }
 
         return $id ? $this->get(new ImageId($id)) : null;
+    }
+
+    /**
+     * Retrieves a list of image ids ordered by position for each provided combination id
+     *
+     * @param int[] $combinationIds
+     *
+     * @return array<int, ImageId[]> [(int) id_combination => [ImageId]]
+     */
+    public function getImagesIdsForCombinations(array $combinationIds): array
+    {
+        //@todo: multishop not handled
+        $qb = $this->connection->createQueryBuilder();
+        $qb->select('pai.id_product_attribute, pai.id_image')
+            ->from($this->dbPrefix . 'product_attribute_image', 'pai')
+            ->leftJoin(
+                'pai',
+                $this->dbPrefix . 'image', 'i',
+                'i.id_image = pai.id_image'
+            )
+            ->andWhere($qb->expr()->in('pai.id_product_attribute', ':combinationIds'))
+            ->setParameter('combinationIds', $combinationIds, Connection::PARAM_INT_ARRAY)
+            ->orderBy('i.position', 'asc')
+        ;
+
+        $results = $qb->execute()->fetchAll();
+
+        if (empty($results)) {
+            return [];
+        }
+
+        // Temporary ImageId pool to avoid creating duplicates
+        $imageIds = [];
+        $imagesIdsByCombinationIds = [];
+        foreach ($results as $result) {
+            $id = (int) $result['id_image'];
+            if (!isset($imageIds[$id])) {
+                $imageIds[$id] = new ImageId($id);
+            }
+            $imagesIdsByCombinationIds[(int) $result['id_product_attribute']][] = $imageIds[$id];
+        }
+
+        return $imagesIdsByCombinationIds;
     }
 
     /**

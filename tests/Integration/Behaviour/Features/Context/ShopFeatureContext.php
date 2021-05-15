@@ -27,7 +27,9 @@
 namespace Tests\Integration\Behaviour\Features\Context;
 
 use Behat\Gherkin\Node\TableNode;
+use Cache;
 use Configuration;
+use Context;
 use Db;
 use PHPUnit\Framework\Assert;
 use PrestaShop\PrestaShop\Core\Domain\Shop\Exception\SearchShopException;
@@ -39,6 +41,7 @@ use Shop;
 use ShopGroup;
 use ShopUrl;
 use Tests\Integration\Behaviour\Features\Context\Domain\AbstractDomainFeatureContext;
+use Tests\Integration\Behaviour\Features\Context\Util\PrimitiveUtils;
 
 class ShopFeatureContext extends AbstractDomainFeatureContext
 {
@@ -73,39 +76,50 @@ class ShopFeatureContext extends AbstractDomainFeatureContext
     }
 
     /**
-     * @Given single shop context is loaded
-     */
-    public function singleShopContextIsLoaded(): void
-    {
-        Shop::setContext(Shop::CONTEXT_SHOP, Configuration::get('PS_SHOP_DEFAULT'));
-    }
-
-    /**
-     * @Given multiple shop context is loaded
-     */
-    public function multipleShopContextIsLoaded(): void
-    {
-        Shop::setContext(Shop::CONTEXT_ALL);
-    }
-
-    /**
-     * @Given I add a shop group :reference with name :groupName and color :color
+     * @Given /^I add a shop group "(.+)" with name "(.+?)"(?: and color "(.+)")?$/
      *
      * @param string $reference
      * @param string $groupName
-     * @param string $color
+     * @param string|null $color
      */
-    public function addShopGroup(string $reference, string $groupName, string $color): void
+    public function addShopGroup(string $reference, string $groupName, string $color = null): void
     {
         $shopGroup = new ShopGroup();
         $shopGroup->name = $groupName;
-        $shopGroup->color = $color;
         $shopGroup->active = true;
+
+        if ($color !== null) {
+            $shopGroup->color = $color;
+        }
+
         if (!$shopGroup->add()) {
             throw new RuntimeException(sprintf('Could not create shop group: %s', Db::getInstance()->getMsgError()));
         }
 
         SharedStorage::getStorage()->set($reference, $shopGroup);
+    }
+
+    /**
+     * @Given /^I copy "(.+)" shop data from "(.+)" to "(.+)"$/
+     *
+     * @param string $what
+     * @param string $from
+     * @param string $to
+     */
+    public function copyShopData(string $what, string $from, string $to): void
+    {
+        $shopToId = (int) Shop::getIdByName($to);
+        if (empty($shopToId)) {
+            throw new RuntimeException(sprintf('Could not find shop: %s', $from));
+        }
+
+        $shopFromId = (int) Shop::getIdByName($from);
+        if (empty($shopFromId)) {
+            throw new RuntimeException(sprintf('Could not find shop: %s', $from));
+        }
+
+        $shopTo = new Shop($shopToId);
+        $shopTo->copyShopData($shopFromId, [$what => true]);
     }
 
     /**
@@ -120,6 +134,7 @@ class ShopFeatureContext extends AbstractDomainFeatureContext
         $shop = new Shop();
         $shop->active = true;
         $shop->id_shop_group = ShopGroup::getIdByName($shopGroupName);
+        // 2 : ID Category for "Home" in database
         $shop->id_category = 2;
         $shop->theme_name = _THEME_NAME_;
         $shop->name = $shopName;
@@ -130,6 +145,93 @@ class ShopFeatureContext extends AbstractDomainFeatureContext
         $shop->setTheme();
 
         SharedStorage::getStorage()->set($reference, $shop);
+    }
+
+    /**
+     * @Given single shop context is loaded
+     */
+    public function singleShopContextIsLoaded(): void
+    {
+        $this->setShopContext(Shop::CONTEXT_SHOP, (int) Configuration::get('PS_SHOP_DEFAULT'));
+    }
+
+    /**
+     * @Given multiple shop context is loaded
+     */
+    public function multipleShopContextIsLoaded(): void
+    {
+        $this->setShopContext(Shop::CONTEXT_ALL, (int) Configuration::get('PS_SHOP_DEFAULT'));
+    }
+
+    /**
+     * @Given /^shop context "(.+)" is loaded$/
+     *
+     * @param string $shopName
+     */
+    public function specificShopContextIsLoaded(string $shopName): void
+    {
+        $this->setShopContext(Shop::CONTEXT_SHOP, (int) Shop::getIdByName($shopName));
+    }
+
+    /**
+     * @Then /^I should have (\d) shop group(s)$/
+     *
+     * @param int $expectedCount
+     */
+    public function checkShopGroupCount(int $expectedCount): void
+    {
+        $countShopGroup = ShopGroup::getTotalShopGroup();
+
+        if ($countShopGroup == $expectedCount) {
+            return;
+        }
+        throw new RuntimeException(
+            sprintf(
+                'Invalid number of shop groups, expected %s but got %s instead',
+                $expectedCount,
+                $countShopGroup
+            )
+        );
+    }
+
+    /**
+     * @Then /^I should have (\d) shop(?:|s) in group "(.+)"$/
+     *
+     * @param int $expectedCount
+     */
+    public function checkShopCount(int $expectedCount, string $shopGroupName): void
+    {
+        $shopGroupId = ShopGroup::getIdByName($shopGroupName);
+        if (false === $shopGroupId) {
+            throw new RuntimeException(sprintf('Shop Group with name "%s" does not exist', $shopGroupName));
+        }
+
+        $shops = ShopGroup::getShopsFromGroup($shopGroupId);
+        if (count($shops) == $expectedCount) {
+            return;
+        }
+        throw new RuntimeException(
+            sprintf(
+                'Invalid number of shop groups, expected %s but got %s instead',
+                $expectedCount,
+                count($shops)
+            )
+        );
+    }
+
+    /**
+     * @param int $context
+     * @param int $shopId
+     *
+     * @throws \PrestaShopException
+     */
+    private function setShopContext(int $context, int $shopId): void
+    {
+        Shop::setContext($context, $shopId);
+        Context::getContext()->shop = new Shop($shopId);
+        // Clean cache
+        Cache::clean('Shop::getCompleteListOfShopsID');
+        Cache::clean('StockAvailable::*');
     }
 
     /**
@@ -166,7 +268,8 @@ class ShopFeatureContext extends AbstractDomainFeatureContext
         $foundElements = [];
 
         foreach ($dataRows as $row) {
-            if (!$row['is_shop_group']) {
+            $isShopGroup = PrimitiveUtils::castStringBooleanIntoBoolean($row['is_shop_group']);
+            if (!$isShopGroup) {
                 $foundElements[] = new FoundShop(
                     4, // id not relevant for the test
                     $row['color'],
@@ -235,12 +338,20 @@ class ShopFeatureContext extends AbstractDomainFeatureContext
                     continue;
                 }
             }
+
             if (!$wasCurrentExpectedShopFound) {
-                throw new RuntimeException(sprintf(
-                    'Expected shop with name %s in shop group %s was not found',
-                    $currentExpectedShop->getName(),
-                    $currentExpectedShop->getGroupName()
-                ));
+                if ($currentExpectedShop instanceof FoundShop) {
+                    throw new RuntimeException(sprintf(
+                        'Expected shop with name %s in shop group %s was not found',
+                        $currentExpectedShop->getName(),
+                        $currentExpectedShop->getGroupName()
+                    ));
+                } else {
+                    throw new RuntimeException(sprintf(
+                        'Expected shop group with name %s',
+                        $currentExpectedShop->getName()
+                    ));
+                }
             }
         }
     }

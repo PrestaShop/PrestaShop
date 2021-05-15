@@ -428,6 +428,7 @@ Feature: Order from Back Office (BO)
     And order "bo_order1" should have 1 cart rule
     Then order "bo_order1" should have cart rule "FreeShippingDiscount" with amount "$6.00"
     And order "bo_order1" should have "price_carrier" as a carrier
+    # Shipping cost is 4 (for US zone) + 2 (general fee)
     And order "bo_order1" should have following details:
       | total_products           | 23.800 |
       | total_products_wt        | 25.230 |
@@ -462,6 +463,7 @@ Feature: Order from Back Office (BO)
     And I change order "bo_order1" shipping address to "test-customer-france-address"
     Then order "bo_order1" shipping address should be "test-customer-france-address"
     # Shipping cost changes because we are not in the same zone but the tax is still the one from invoice address
+    # Shipping cost is 3 (for Europe zone) + 2 (general fee)
     Then order "bo_order1" should have following details:
       | total_products           | 23.800 |
       | total_products_wt        | 25.230 |

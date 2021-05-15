@@ -170,7 +170,7 @@ $order-block-background-color: #f8f8f8 !default;
     @include border-radius(5px);
 
     &.customer-message {
-      background-color: #fff;
+      background-color: $white;
     }
 
     &.employee-message {
@@ -178,7 +178,7 @@ $order-block-background-color: #f8f8f8 !default;
     }
 
     &.employee-message--private {
-      color: #fff;
+      color: $white;
       background-color: $private-message-color;
     }
   }
@@ -425,7 +425,7 @@ input#partial_refund_shipping {
   display: none;
   width: 100%;
   height: 100%;
-  background: #fff;
+  background: $white;
 
   .spinner {
     position: relative;

@@ -20,7 +20,7 @@
   #search {
     .search-input {
       min-height: 35px;
-      background-color: #fff;
+      background-color: $white;
       border: $gray-light 1px solid;
       @include border-radius(4px);
       outline: none;
@@ -87,7 +87,7 @@
 
   #filters {
     width: 150%;
-    background: #fff;
+    background: $white;
     border: solid 1px #b9cdd2;
     box-shadow: 1px 2px 3px 0 rgba(108, 134, 142, 0.3);
     @include border-radius(4px);
@@ -139,7 +139,7 @@
       @include border-right-radius(4px);
 
       .material-icons {
-        color: #fff;
+        color: $white;
         vertical-align: middle;
       }
 
@@ -172,7 +172,7 @@
       display: inline-block;
       min-width: 50px;
       padding: 2px 5px;
-      color: #fff;
+      color: $white;
       background-color: $gray-dark;
       @include border-radius(4px);
 
@@ -255,7 +255,7 @@
       }
 
       .update-qty {
-        color: #fff;
+        color: $white;
         @include transition(background-color 0.2s ease);
       }
 

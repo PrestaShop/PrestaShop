@@ -70,7 +70,7 @@ interface CurrencyInterface
      *
      * @see https://www.iso.org/iso-4217-currency-codes.html
      *
-     * @return int
+     * @return int|null
      */
     public function getNumericIsoCode();
 

@@ -75,8 +75,8 @@ class SendProcessOrderEmailHandler implements SendProcessOrderEmailHandlerInterf
         try {
             $cart = $this->getCart($cartId);
             $customer = $this->getCustomer(new CustomerId((int) $cart->id_customer));
-            $langId = (int) $cart->id_lang;
-            $cartLanguage = new Language($langId);
+            $cartLanguage = $cart->getAssociatedLanguage();
+            $langId = (int) $cartLanguage->getId();
 
             if (!Mail::send(
                 $langId,
