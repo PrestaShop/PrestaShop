@@ -256,10 +256,20 @@
       <title>Order slip creation</title>
       <description>This hook is called when a new credit slip is added regarding client order</description>
     </hook>
-    <hook id="displayShoppingCartFooter">
-      <name>displayShoppingCartFooter</name>
-      <title>Shopping cart footer</title>
-      <description>This hook displays some specific information on the shopping cart's page</description>
+    <hook id="actionOrderSlipAdd">
+      <name>actionOrderSlipAdd</name>
+      <title>Order slip creation</title>
+      <description>This hook is called when a new credit slip is added regarding client order</description>
+    </hook>
+    <hook id="actionPDFDeliverySlipGenerator">
+      <name>actionPDFDeliverySlipGenerator</name>
+      <title>Delivery slip generation</title>
+      <description>This hook is executed before the common delivery slips is generated. If true is return by the handler, the system will interpreter that the slip is processed elsewhere and the common delivery slip will not be generated.</description>
+    </hook>
+    <hook id="actionPDFDeliverySlipRender">
+      <name>actionPDFDeliverySlipRender</name>
+      <title>Delivery slip render</title>
+      <description>This hook is executed before the common delivery slips is generated. It is similar to the hook actionPDFInvoiceRender. If true is return by the handler, the system will interpreter that the slip is proccessed elsewhere and the common delivery slip will not be generated.</description>
     </hook>
     <hook id="displayCreateAccountEmailFormBottom">
       <name>displayCreateAccountEmailFormBottom</name>
