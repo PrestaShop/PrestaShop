@@ -452,12 +452,7 @@ class LinkCore
         // Selected filters is used by the module ps_facetedsearch
         $selectedFilters = null === $selectedFilters ? '' : $selectedFilters;
 
-        if (empty($selectedFilters)) {
-            $rule = 'category_rule';
-        } else {
-            $rule = 'layered_rule';
-            $params['selected_filters'] = $selectedFilters;
-        }
+        $rule = 'category_rule';
 
         if (!$alias) {
             $category = $this->getCategoryObject($category, $idLang);
