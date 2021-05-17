@@ -9,7 +9,7 @@ const BOBasePage = require('@pages/BO/BObasePage');
 class OrderSettings extends BOBasePage {
   /**
    * @constructs
-   * Setting up titles and selectors to use on add order settings page
+   * Setting up titles and selectors to use on order settings page
    */
   constructor() {
     super();
