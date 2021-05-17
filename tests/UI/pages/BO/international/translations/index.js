@@ -153,7 +153,7 @@ class Translations extends BOBasePage {
           throw new Error(`${types[i]} was not found as a translation option`);
       }
 
-      await page.check(selector);
+      await this.setHiddenCheckboxValue(page, selector, true);
     }
 
     return this.clickAndWaitForDownload(page, this.exportLanguageButton);

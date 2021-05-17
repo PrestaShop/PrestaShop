@@ -143,35 +143,35 @@ const AdminModuleCard = function () {
       if ($('#modal-prestatrust').length) {
         $('#modal-prestatrust').modal('hide');
       }
-      return that.dispatchPreEvent('install', this) && _this.confirmAction('install', this) && _this.requestToController('install', $(this));
+      return that.dispatchPreEvent('install', this) && that.confirmAction('install', this) && that.requestToController('install', $(this));
     });
     $(document).on('click', this.moduleActionMenuEnableLinkSelector, function () {
-      return that.dispatchPreEvent('enable', this) && _this.confirmAction('enable', this) && _this.requestToController('enable', $(this));
+      return that.dispatchPreEvent('enable', this) && that.confirmAction('enable', this) && that.requestToController('enable', $(this));
     });
     $(document).on('click', this.moduleActionMenuUninstallLinkSelector, function () {
-      return that.dispatchPreEvent('uninstall', this) && _this.confirmAction('uninstall', this) && _this.requestToController('uninstall', $(this));
+      return that.dispatchPreEvent('uninstall', this) && that.confirmAction('uninstall', this) && that.requestToController('uninstall', $(this));
     });
     $(document).on('click', this.moduleActionMenuDisableLinkSelector, function () {
-      return that.dispatchPreEvent('disable', this) && _this.confirmAction('disable', this) && _this.requestToController('disable', $(this));
+      return that.dispatchPreEvent('disable', this) && that.confirmAction('disable', this) && that.requestToController('disable', $(this));
     });
     $(document).on('click', this.moduleActionMenuEnableMobileLinkSelector, function () {
-      return that.dispatchPreEvent('enable_mobile', this) && _this.confirmAction('enable_mobile', this) && _this.requestToController('enable_mobile', $(this));
+      return that.dispatchPreEvent('enable_mobile', this) && that.confirmAction('enable_mobile', this) && that.requestToController('enable_mobile', $(this));
     });
     $(document).on('click', this.moduleActionMenuDisableMobileLinkSelector, function () {
-      return that.dispatchPreEvent('disable_mobile', this) && _this.confirmAction('disable_mobile', this) && _this.requestToController('disable_mobile', $(this));
+      return that.dispatchPreEvent('disable_mobile', this) && that.confirmAction('disable_mobile', this) && that.requestToController('disable_mobile', $(this));
     });
     $(document).on('click', this.moduleActionMenuResetLinkSelector, function () {
-      return that.dispatchPreEvent('reset', this) && _this.confirmAction('reset', this) && _this.requestToController('reset', $(this));
+      return that.dispatchPreEvent('reset', this) && that.confirmAction('reset', this) && that.requestToController('reset', $(this));
     });
     $(document).on('click', this.moduleActionMenuUpdateLinkSelector, function () {
-      return that.dispatchPreEvent('update', this) && _this.confirmAction('update', this) && _this.requestToController('update', $(this));
+      return that.dispatchPreEvent('update', this) && that.confirmAction('update', this) && that.requestToController('update', $(this));
     });
 
     $(document).on('click', this.moduleActionModalDisableLinkSelector, function () {
-      return that.requestToController('disable', $(_this.moduleActionMenuDisableLinkSelector, $(`div.module-item-list[data-tech-name='${$(this).attr('data-tech-name')}']`)));
+      return that.requestToController('disable', $(that.moduleActionMenuDisableLinkSelector, $(`div.module-item-list[data-tech-name='${$(this).attr('data-tech-name')}']`)));
     });
     $(document).on('click', this.moduleActionModalResetLinkSelector, function () {
-      return that.requestToController('reset', $(_this.moduleActionMenuResetLinkSelector, $(`div.module-item-list[data-tech-name='${$(this).attr('data-tech-name')}']`)));
+      return that.requestToController('reset', $(that.moduleActionMenuResetLinkSelector, $(`div.module-item-list[data-tech-name='${$(this).attr('data-tech-name')}']`)));
     });
     $(document).on('click', this.moduleActionModalUninstallLinkSelector, (e) => {
       $(e.target).parents('.modal').on('hidden.bs.modal', (() => that.requestToController(

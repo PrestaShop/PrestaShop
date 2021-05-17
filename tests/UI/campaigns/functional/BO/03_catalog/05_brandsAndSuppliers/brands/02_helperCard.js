@@ -15,7 +15,6 @@ const testContext = require('@utils/testContext');
 
 const baseContext = 'functional_BO_catalog_brandsAndSuppliers_brands_helperCard';
 
-
 let browserContext;
 let page;
 
@@ -34,7 +33,7 @@ describe('Helper card', async () => {
     await loginCommon.loginBO(this, page);
   });
 
-  it('should go to brands page', async function () {
+  it('should go to \'Catalog > Brands & Suppliers\' page', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'goToBrandsPage', baseContext);
 
     await dashboardPage.goToSubMenu(

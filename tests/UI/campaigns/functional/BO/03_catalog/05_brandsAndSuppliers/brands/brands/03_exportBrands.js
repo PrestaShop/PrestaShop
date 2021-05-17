@@ -14,13 +14,13 @@ const brandsPage = require('@pages/BO/catalog/brands');
 // Import test context
 const testContext = require('@utils/testContext');
 
-const baseContext = 'functional_BO_catalog_brandsAndSuppliers_brands_exportBrands';
-
+const baseContext = 'functional_BO_catalog_brandsAndSuppliers_brands_brands_exportBrands';
 
 let browserContext;
 let page;
 let numberOfBrands = 0;
 let filePath;
+const tableName = 'manufacturer';
 
 /*
 Export brands
@@ -42,7 +42,7 @@ describe('Export brands', async () => {
     await loginCommon.loginBO(this, page);
   });
 
-  it('should go to brands page', async function () {
+  it('should go to \'Catalog > Brands & Suppliers\' page', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'goToBrandsPage', baseContext);
 
     await dashboardPage.goToSubMenu(
@@ -60,7 +60,7 @@ describe('Export brands', async () => {
   it('should reset all filters and get number of brands in BO', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'resetFilter', baseContext);
 
-    numberOfBrands = await brandsPage.resetAndGetNumberOfLines(page, 'manufacturer');
+    numberOfBrands = await brandsPage.resetAndGetNumberOfLines(page, tableName);
     await expect(numberOfBrands).to.be.above(0);
   });
 
@@ -75,7 +75,7 @@ describe('Export brands', async () => {
   it('should check existence of brands data in csv file', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'checkAllBrandsInCsvFile', baseContext);
 
-    const numberOfCategories = await brandsPage.getNumberOfElementInGrid(page, 'manufacturer');
+    const numberOfCategories = await brandsPage.getNumberOfElementInGrid(page, tableName);
 
     for (let row = 1; row <= numberOfCategories; row++) {
       const brandInCsvFormat = await brandsPage.getBrandInCsvFormat(page, row);

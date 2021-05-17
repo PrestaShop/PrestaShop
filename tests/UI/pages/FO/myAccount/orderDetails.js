@@ -13,6 +13,20 @@ class OrderHistory extends FOBasePage {
     this.productIdSelect = '[name=id_product]';
     this.messageTextarea = '[name=msgText]';
     this.submitMessageButton = '[name=submitMessage]';
+    this.headerTitle = '.page-header h1';
+    this.reorderLink = '#order-infos a';
+
+    // Table selectors
+    this.gridTable = '#order-products';
+
+    // Table body selectors
+    this.tableBody = `${this.gridTable} tbody`;
+    this.tableBodyRows = `${this.tableBody} tr`;
+    this.tableBodyRow = row => `${this.tableBodyRows}:nth-child(${row})`;
+    this.tableBodyColumn = row => `${this.tableBodyRow(row)} td`;
+
+    // Table content
+    this.productName = row => `${this.tableBodyColumn(row)} a`;
   }
 
   /*
@@ -31,8 +45,8 @@ class OrderHistory extends FOBasePage {
   /**
    * Add a message to order history
    * @param page {Page} Browser tab
-   * @param messageOption {string} String for the message option
-   * @param messageText {string} String for the message content
+   * @param messageOption {String} The reference of the order
+   * @param messageText {String} The message content
    * @returns {Promise<string>}
    */
   async addAMessage(page, messageOption, messageText) {
@@ -40,6 +54,35 @@ class OrderHistory extends FOBasePage {
     await this.setValue(page, this.messageTextarea, messageText);
     await this.clickAndWaitForNavigation(page, this.submitMessageButton);
     return this.getTextContent(page, this.alertSuccessBlock);
+  }
+
+  /**
+   * Retrieve and return product name from order detail page
+   * @param page {Page} Browser tab
+   * @param row {Number} row in orders details table
+   * @returns {Promise<string>}
+   */
+  getProductName(page, row = 1) {
+    return this.getTextContent(page, this.productName(row));
+  }
+
+  /**
+   * @override
+   * Get the page title from the main section
+   * @param page {Page} Browser tab
+   * @returns {Promise<string>}
+   */
+  async getPageTitle(page) {
+    return this.getTextContent(page, this.headerTitle);
+  }
+
+  /**
+   * Click on the reorder link in the order detail
+   * @param page {Page} Browser tab
+   * @returns {Promise<void>}
+   */
+  async clickOnReorderLink(page) {
+    await this.clickAndWaitForNavigation(page, this.reorderLink);
   }
 }
 

@@ -1,7 +1,16 @@
 require('module-alias/register');
 const BOBasePage = require('@pages/BO/BObasePage');
 
+/**
+ * Merchandise returns page, contains selectors and functions for the page
+ * @class
+ * @extends BOBasePage
+ */
 class MerchandiseReturns extends BOBasePage {
+  /**
+   * @constructs
+   * Setting up titles and selectors to use on merchandise return page
+   */
   constructor() {
     super();
 
@@ -21,12 +30,12 @@ class MerchandiseReturns extends BOBasePage {
 
   /**
    * Enable/Disable merchandise returns
-   * @param page
-   * @param toEnable
+   * @param page {Page} Browser tab
+   * @param status {boolean} Status to set on the order return
    * @returns {Promise<string>}
    */
-  async setOrderReturnStatus(page, toEnable = true) {
-    await page.check(this.enableOrderReturnLabel(toEnable ? 'on' : 'off'));
+  async setOrderReturnStatus(page, status = true) {
+    await page.check(this.enableOrderReturnLabel(status ? 'on' : 'off'));
     await this.clickAndWaitForNavigation(page, this.saveButton);
     return this.getTextContent(page, this.alertSuccessBlock);
   }

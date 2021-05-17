@@ -34,6 +34,8 @@ use Country;
 use Hook;
 use PrestaShop\PrestaShop\Adapter\Image\ImageRetriever;
 use PrestaShop\PrestaShop\Adapter\Presenter\PresenterInterface;
+use PrestaShop\PrestaShop\Adapter\Presenter\Product\ProductLazyArray;
+use PrestaShop\PrestaShop\Adapter\Presenter\Product\ProductListingLazyArray;
 use PrestaShop\PrestaShop\Adapter\Presenter\Product\ProductListingPresenter;
 use PrestaShop\PrestaShop\Adapter\Product\PriceFormatter;
 use PrestaShop\PrestaShop\Adapter\Product\ProductColorsRetriever;
@@ -71,6 +73,16 @@ class CartPresenter implements PresenterInterface
      */
     private $taxConfiguration;
 
+    /**
+     * @var ProductPresentationSettings
+     */
+    protected $settings;
+
+    /**
+     * @var ProductAssembler
+     */
+    protected $productAssembler;
+
     public function __construct()
     {
         $context = Context::getContext();
@@ -92,23 +104,12 @@ class CartPresenter implements PresenterInterface
     /**
      * @param array $rawProduct
      *
-     * @return \PrestaShop\PrestaShop\Adapter\Presenter\Product\ProductLazyArray|\PrestaShop\PrestaShop\Adapter\Presenter\Product\ProductListingLazyArray
+     * @return ProductLazyArray|ProductListingLazyArray
      */
     private function presentProduct(array $rawProduct)
     {
-        $assembler = new ProductAssembler(Context::getContext());
-        $assembledProduct = $assembler->assembleProduct($rawProduct);
+        $assembledProduct = $this->getProductAssembler()->assembleProduct($rawProduct);
         $rawProduct = array_merge($assembledProduct, $rawProduct);
-
-        $settings = new ProductPresentationSettings();
-
-        $settings->catalog_mode = Configuration::isCatalogMode();
-        $settings->catalog_mode_with_prices = (int) Configuration::get('PS_CATALOG_MODE_WITH_PRICES');
-        $settings->include_taxes = $this->includeTaxes();
-        $settings->allow_add_variant_to_cart_from_listing = (int) Configuration::get('PS_ATTRIBUTE_CATEGORY_DISPLAY');
-        $settings->stock_management_enabled = Configuration::get('PS_STOCK_MANAGEMENT');
-        $settings->showPrices = Configuration::showPrices();
-        $settings->showLabelOOSListingPages = (bool) Configuration::get('PS_SHOW_LABEL_OOS_LISTING_PAGES');
 
         if (isset($rawProduct['attributes']) && is_string($rawProduct['attributes'])) {
             $rawProduct['attributes'] = $this->getAttributesArrayFromString($rawProduct['attributes']);
@@ -179,7 +180,7 @@ class CartPresenter implements PresenterInterface
         );
 
         return $presenter->present(
-            $settings,
+            $this->getSettings(),
             $rawProduct,
             Context::getContext()->language
         );
@@ -678,5 +679,31 @@ class CartPresenter implements PresenterInterface
         }
 
         return $attributesArray;
+    }
+
+    protected function getSettings(): ProductPresentationSettings
+    {
+        if ($this->settings === null) {
+            $this->settings = new ProductPresentationSettings();
+
+            $this->settings->catalog_mode = Configuration::isCatalogMode();
+            $this->settings->catalog_mode_with_prices = (int) Configuration::get('PS_CATALOG_MODE_WITH_PRICES');
+            $this->settings->include_taxes = $this->includeTaxes();
+            $this->settings->allow_add_variant_to_cart_from_listing = (int) Configuration::get('PS_ATTRIBUTE_CATEGORY_DISPLAY');
+            $this->settings->stock_management_enabled = Configuration::get('PS_STOCK_MANAGEMENT');
+            $this->settings->showPrices = Configuration::showPrices();
+            $this->settings->showLabelOOSListingPages = (bool) Configuration::get('PS_SHOW_LABEL_OOS_LISTING_PAGES');
+        }
+
+        return $this->settings;
+    }
+
+    protected function getProductAssembler(): ProductAssembler
+    {
+        if ($this->productAssembler === null) {
+            $this->productAssembler = new ProductAssembler(Context::getContext());
+        }
+
+        return $this->productAssembler;
     }
 }
