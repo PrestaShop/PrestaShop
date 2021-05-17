@@ -285,7 +285,7 @@ abstract class PaymentModuleCore extends Module
                     $reference = Order::generateReference();
                 } while (Order::getByReference($reference)->count());
             } else {
-                $reference = $order_ref;
+                $reference = $order_reference;
             }
 
             $this->currentOrderReference = $reference;
