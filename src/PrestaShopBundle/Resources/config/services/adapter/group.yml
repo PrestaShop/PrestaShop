@@ -10,3 +10,5 @@ services:
 
   prestashop.adapter.customer.group.repository.group_repository:
     class: 'PrestaShop\PrestaShop\Adapter\Customer\Group\Repository\GroupRepository'
+  prestashop.adapter.group.group_data_provider:
+    class: 'PrestaShop\PrestaShop\Adapter\Group\GroupDataProvider'
