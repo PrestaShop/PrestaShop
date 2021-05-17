@@ -472,10 +472,11 @@ class CartCore extends ObjectModel
      *                    - FILTER_ACTION_GIFT
      *                    - FILTER_ACTION_ALL_NOCAP
      * @param bool $autoAdd automaticaly adds cart ruls without code to cart
+     * @param bool $active true if the cart ruls must be active
      *
      * @return array|false|mysqli_result|PDOStatement|resource|null Database result
      */
-    public function getCartRules($filter = CartRule::FILTER_ACTION_ALL, $autoAdd = true)
+    public function getCartRules($filter = CartRule::FILTER_ACTION_ALL, $autoAdd = true, $active = false)
     {
         // Define virtual context to prevent case where the cart is not the in the global context
         $virtual_context = Context::getContext()->cloneContext();
@@ -489,7 +490,7 @@ class CartCore extends ObjectModel
             CartRule::autoAddToCart($virtual_context);
         }
 
-        $cache_key = 'Cart::getCartRules_' . $this->id . '-' . $filter;
+        $cache_key = 'Cart::getCartRules_' . $this->id . '-' . $filter . '-' . $active;
         if (!Cache::isStored($cache_key)) {
             $result = Db::getInstance()->executeS(
                 'SELECT cr.*, crl.`id_lang`, crl.`name`, cd.`id_cart`
@@ -500,6 +501,7 @@ class CartCore extends ObjectModel
                     AND crl.id_lang = ' . (int) $this->getAssociatedLanguage()->getId() . '
                 )
                 WHERE `id_cart` = ' . (int) $this->id . '
+                ' . ($active ? ' AND cr.active = 1' : '') . '
                 ' . ($filter == CartRule::FILTER_ACTION_SHIPPING ? 'AND free_shipping = 1' : '') . '
                 ' . ($filter == CartRule::FILTER_ACTION_GIFT ? 'AND gift_product != 0' : '') . '
                 ' . ($filter == CartRule::FILTER_ACTION_REDUCTION ? 'AND (reduction_percent != 0 OR reduction_amount != 0)' : '')
@@ -2319,11 +2321,11 @@ class CartCore extends ObjectModel
     protected function getTotalCalculationCartRules($type, $withShipping)
     {
         if ($withShipping || $type == Cart::ONLY_DISCOUNTS) {
-            $cartRules = $this->getCartRules(CartRule::FILTER_ACTION_ALL);
+            $cartRules = $this->getCartRules(CartRule::FILTER_ACTION_ALL, true, true);
         } else {
-            $cartRules = $this->getCartRules(CartRule::FILTER_ACTION_REDUCTION, false);
+            $cartRules = $this->getCartRules(CartRule::FILTER_ACTION_REDUCTION, false, true);
             // Cart Rules array are merged manually in order to avoid doubles
-            foreach ($this->getCartRules(CartRule::FILTER_ACTION_GIFT, false) as $cartRuleCandidate) {
+            foreach ($this->getCartRules(CartRule::FILTER_ACTION_GIFT, false, true) as $cartRuleCandidate) {
                 $alreadyAddedCartRule = false;
                 foreach ($cartRules as $cartRule) {
                     if ($cartRuleCandidate['id_cart_rule'] == $cartRule['id_cart_rule']) {
