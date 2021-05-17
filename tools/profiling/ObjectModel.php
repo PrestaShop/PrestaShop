@@ -43,6 +43,9 @@ abstract class ObjectModel extends ObjectModelCore
                 break;
             }
         }
+        if (!isset($trace_id)) {
+            return;
+        }
         --$trace_id;
 
         self::$debug_list[$classname][] = [
