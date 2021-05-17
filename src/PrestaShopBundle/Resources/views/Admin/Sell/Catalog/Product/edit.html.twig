@@ -39,7 +39,7 @@
   {% set productType = productForm.vars.product_type %}
   {% set productId = productForm.vars.product_id %}
   <div class="header-toolbar d-print-none">
-    {{ multistore_controller.header(false).getContent()|raw }}
+    {{ multistoreHeader()|raw }}
   </div>
 
   {{ form_start(productForm, {'attr': {
