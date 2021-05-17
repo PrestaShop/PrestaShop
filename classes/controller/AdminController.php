@@ -1869,7 +1869,7 @@ class AdminControllerCore extends Controller
         }
         $this->context->smarty->assign('meta_title', $this->meta_title);
 
-        $template_dirs = $this->context->smarty->getTemplateDir();
+        $template_dirs = $this->context->smarty->getTemplateDir() ?: [];
 
         // Check if header/footer have been overridden
         $dir = $this->context->smarty->getTemplateDir(0) . 'controllers' . DIRECTORY_SEPARATOR . trim($this->override_folder, '\\/') . DIRECTORY_SEPARATOR;

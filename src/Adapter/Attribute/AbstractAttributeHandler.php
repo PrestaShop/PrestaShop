@@ -26,11 +26,11 @@
 
 namespace PrestaShop\PrestaShop\Adapter\Attribute;
 
-use ProductAttribute;
 use PrestaShop\PrestaShop\Core\Domain\Product\AttributeGroup\Attribute\Exception\AttributeException;
 use PrestaShop\PrestaShop\Core\Domain\Product\AttributeGroup\Attribute\Exception\AttributeNotFoundException;
 use PrestaShop\PrestaShop\Core\Domain\Product\AttributeGroup\Attribute\ValueObject\AttributeId;
 use PrestaShopException;
+use ProductAttribute;
 
 /**
  * Provides common methods for attribute command/query handlers

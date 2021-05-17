@@ -30,7 +30,6 @@ use LegacyTests\PrestaShopBundle\Utils\DatabaseCreator as Database;
 use LegacyTests\Unit\ContextMocker;
 use Symfony\Bundle\FrameworkBundle\Client;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
-use Symfony\Component\DependencyInjection\ContainerInterface;
 
 class SymfonyIntegrationTestCase extends WebTestCase
 {
@@ -38,11 +37,6 @@ class SymfonyIntegrationTestCase extends WebTestCase
      * @var ContextMocker
      */
     protected $contextMocker;
-
-    /**
-     * @var ContainerInterface
-     */
-    protected $container;
 
     /**
      * @var Client
@@ -59,7 +53,7 @@ class SymfonyIntegrationTestCase extends WebTestCase
 
         //createClient already creates the kernel
         //$this->bootKernel();
-        $this->container = self::$kernel->getContainer();
+        self::$container = self::$kernel->getContainer();
 
         // Global var for SymfonyContainer
         global $kernel;

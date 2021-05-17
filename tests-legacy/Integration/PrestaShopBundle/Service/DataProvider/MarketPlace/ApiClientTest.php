@@ -26,6 +26,7 @@
 
 namespace LegacyTests\Integration\PrestaShopBundle\Service\DataProvider\MarketPlace;
 
+use GuzzleHttp\Psr7\Response;
 use Phake;
 use PHPUnit\Framework\MockObject\MockObject;
 use PrestaShopBundle\Service\DataProvider\Marketplace\ApiClient;
@@ -65,26 +66,8 @@ class ApiClientTest extends KernelTestCase
     /**
      * @return MockObject
      */
-    protected function mockResponse()
-    {
-        $responseMock = $this->getMockBuilder('\GuzzleHttp\Message\Response')
-            ->disableOriginalConstructor()
-            ->setMethods(['getBody'])
-            ->getMock();
-
-        $responseMock->method('getBody')
-            ->willReturn(json_encode((object)['modules' => []]));
-
-        return $responseMock;
-    }
-
-    /**
-     * @return MockObject
-     */
     protected function mockClient()
     {
-        $responseMock = $this->mockResponse();
-
         $clientMock = $this->getMockBuilder('\GuzzleHttp\Client')
             ->disableOriginalConstructor()
             ->setMethods(['get'])
@@ -92,7 +75,7 @@ class ApiClientTest extends KernelTestCase
 
         $clientMock->method('get')
             ->with($this->anything())
-            ->willReturn($responseMock);
+            ->willReturn(new Response(200, [], json_encode((object) ['modules' => []])));
 
         return $clientMock;
     }

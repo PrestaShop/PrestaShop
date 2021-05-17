@@ -255,7 +255,7 @@ class ApiClient
     {
         return (string) $this->addonsApiClient
             ->get(
-                null,
+                '',
                 ['query' => $this->queryParameters,
                 ]
             )->getBody();
@@ -265,7 +265,7 @@ class ApiClient
     {
         return (string) $this->addonsApiClient
             ->post(
-                null,
+                '',
                 ['query' => $this->queryParameters,
                 ]
             )->getBody();

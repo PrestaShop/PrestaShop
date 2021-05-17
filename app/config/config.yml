@@ -27,6 +27,10 @@ services:
           - 'controller.service_arguments'
           - !php/const PrestaShopBundle\Controller\Admin\FrameworkBundleAdminController::PRESTASHOP_CORE_CONTROLLERS_TAG
 
+    logger:
+        alias: monolog.logger
+        public: true
+
 framework:
     assets:
         version: !php/const \AppKernel::VERSION
@@ -51,6 +55,10 @@ framework:
         handler_id:  ~
     fragments:       ~
     http_method_override: true
+    cache:
+        pools:
+            '%cache.driver%':
+                 adapter: '%cache.adapter%'
 
 # Monolog configuration #
 monolog:
