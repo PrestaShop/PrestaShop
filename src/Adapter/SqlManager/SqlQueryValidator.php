@@ -84,10 +84,6 @@ class SqlQueryValidator
         $errors = [];
 
         foreach ($sqlErrors as $key => $sqlError) {
-            if (false === is_array($sqlError)) {
-                $sqlError = [];
-            }
-
             if ('checkedFrom' === $key) {
                 $errors[] = $this->getFromKeywordError($sqlError);
             } elseif ('checkedSelect' === $key) {

@@ -230,11 +230,10 @@ export default class OrderProductEdit {
       method: 'POST',
       data: params,
     }).then(
-      (response) => {
+      () => {
         EventEmitter.emit(OrderViewEventMap.productUpdated, {
           orderId,
           orderDetailId,
-          newRow: response,
         });
       },
       (response) => {
