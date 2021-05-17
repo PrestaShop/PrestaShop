@@ -219,7 +219,7 @@ abstract class PaymentModuleCore extends Module
         $dont_touch_amount = false,
         $secure_key = false,
         Shop $shop = null,
-        $order_reference = null
+        ?string $order_reference = null
     ) {
         if (self::DEBUG_MODE) {
             PrestaShopLogger::addLog('PaymentModule::validateOrder - Function called', 1, null, 'Cart', (int) $id_cart, true);
