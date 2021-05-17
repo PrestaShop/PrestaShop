@@ -1,7 +1,16 @@
 require('module-alias/register');
 const BOBasePage = require('@pages/BO/BObasePage');
 
+/**
+ * Statuses page, contains selectors and functions for the page
+ * @class
+ * @extends BOBasePage
+ */
 class Statuses extends BOBasePage {
+  /**
+   * @constructs
+   * Setting up titles and selectors to use on statuses page
+   */
   constructor() {
     super();
 
@@ -12,7 +21,6 @@ class Statuses extends BOBasePage {
     this.newOrderStatusLink = '#page-header-desc-order_return_state-new_order_state';
     this.newOrderReturnStatusLink = '#page-header-desc-order_return_state-new_order_return_state';
 
-    // Selectors
     // Form selectors
     this.gridForm = tableName => `#form-${tableName}_state`;
     this.gridTableHeaderTitle = tableName => `${this.gridForm(tableName)} .panel-heading`;
@@ -80,13 +88,11 @@ class Statuses extends BOBasePage {
     this.bulkDeleteLink = `${this.bulkActionDropdownMenu} li:nth-child(4)`;
   }
 
-  /* Statuses methods */
-
   /* Header methods */
 
   /**
    * Go to new orders status page
-   * @param page
+   * @param page {Page} Browser tab
    * @return {Promise<void>}
    */
   async goToNewOrderStatusPage(page) {
@@ -95,7 +101,7 @@ class Statuses extends BOBasePage {
 
   /**
    * Go to new orders return status page
-   * @param page
+   * @param page {Page} Browser tab
    * @return {Promise<void>}
    */
   async goToNewOrderReturnStatusPage(page) {
@@ -105,9 +111,9 @@ class Statuses extends BOBasePage {
   /* Filter methods */
 
   /**
-   * Get Number of order statuses
-   * @param page
-   * @param tableName
+   * Get Number of element in grid of statuses/return statuses table
+   * @param page {Page} Browser tab
+   * @param tableName {string} Table name to get number of elements
    * @return {Promise<number>}
    */
   getNumberOfElementInGrid(page, tableName) {
@@ -116,8 +122,8 @@ class Statuses extends BOBasePage {
 
   /**
    * Reset all filters
-   * @param page
-   * @param tableName
+   * @param page {Page} Browser tab
+   * @param tableName {string} Table name to reset filter
    * @return {Promise<void>}
    */
   async resetFilter(page, tableName) {
@@ -129,8 +135,8 @@ class Statuses extends BOBasePage {
 
   /**
    * Reset and get number of lines
-   * @param page
-   * @param tableName
+   * @param page {Page} Browser tab
+   * @param tableName {string} Table name to reset and get number of lines
    * @return {Promise<number>}
    */
   async resetAndGetNumberOfLines(page, tableName) {
@@ -141,11 +147,11 @@ class Statuses extends BOBasePage {
 
   /**
    * Filter table
-   * @param page
-   * @param tableName
-   * @param filterType
-   * @param filterBy
-   * @param value
+   * @param page {Page} Browser tab
+   * @param tableName {string} Table name to filter
+   * @param filterType {string} Type of filter (input/select)
+   * @param filterBy {string} Column to filter with
+   * @param  value {string} value to filter with
    * @return {Promise<void>}
    */
   async filterTable(page, tableName, filterType, filterBy, value) {
@@ -171,36 +177,36 @@ class Statuses extends BOBasePage {
 
   /**
    * Get text from column in table
-   * @param page
-   * @param tableName
-   * @param row
-   * @param columnName
-   * @param column
+   * @param page {Page} Browser tab
+   * @param tableName {string} Table name to get text column
+   * @param row {number} Row on table
+   * @param columnName {string} Column name of the value to return
+   * @param columnID {number} Id of column in table
    * @return {Promise<string>}
    */
-  async getTextColumn(page, tableName, row, columnName, column) {
+  async getTextColumn(page, tableName, row, columnName, columnID) {
     if (columnName === 'send_email' || columnName === 'delivery' || columnName === 'invoice') {
-      return this.getAttributeContent(page, `${this.tableColumn(tableName, row, column)} a`, 'title');
+      return this.getAttributeContent(page, `${this.tableColumn(tableName, row, columnID)} a`, 'title');
     }
-    return this.getTextContent(page, this.tableColumn(tableName, row, column));
+    return this.getTextContent(page, this.tableColumn(tableName, row, columnID));
   }
 
   /**
    * Go to edit page
-   * @param page
-   * @param tableName
-   * @param row
+   * @param page {Page} Browser tab
+   * @param tableName {string} Table name to edit
+   * @param row {number} Row on table
    * @return {Promise<void>}
    */
-  async gotoEditPage(page, tableName, row) {
+  async goToEditPage(page, tableName, row) {
     await this.clickAndWaitForNavigation(page, this.tableColumnActionsEditLink(tableName, row));
   }
 
   /**
    * Delete order status from row
-   * @param page
-   * @param tableName
-   * @param row
+   * @param page {Page} Browser tab
+   * @param tableName {string} Table name to delete
+   * @param row {number} Row on table
    * @return {Promise<string>}
    */
   async deleteOrderStatus(page, tableName, row) {
@@ -221,8 +227,8 @@ class Statuses extends BOBasePage {
   /* Pagination methods */
   /**
    * Get pagination label
-   * @param page
-   * @param tableName
+   * @param page {Page} Browser tab
+   * @param tableName {string} Table name to get pagination label
    * @return {Promise<string>}
    */
   getPaginationLabel(page, tableName) {
@@ -231,9 +237,9 @@ class Statuses extends BOBasePage {
 
   /**
    * Select pagination limit
-   * @param page
-   * @param tableName
-   * @param number
+   * @param page {Page} Browser tab
+   * @param tableName {string} Table name to select pagination limit
+   * @param number {number} Number of pagination to select
    * @returns {Promise<string>}
    */
   async selectPaginationLimit(page, tableName, number) {
@@ -245,8 +251,8 @@ class Statuses extends BOBasePage {
 
   /**
    * Click on next
-   * @param page
-   * @param tableName
+   * @param page {Page} Browser tab
+   * @param tableName {string} Table name to select next page
    * @returns {Promise<string>}
    */
   async paginationNext(page, tableName) {
@@ -257,8 +263,8 @@ class Statuses extends BOBasePage {
 
   /**
    * Click on previous
-   * @param page
-   * @param tableName
+   * @param page {Page} Browser tab
+   * @param tableName {string} Table name to select previous page
    * @returns {Promise<string>}
    */
   async paginationPrevious(page, tableName) {
@@ -270,10 +276,10 @@ class Statuses extends BOBasePage {
   // Sort methods
   /**
    * Get content from all rows
-   * @param page
-   * @param tableName
-   * @param columnName
-   * @param columnID
+   * @param page {Page} Browser tab
+   * @param tableName {string} Table name to get all rows column content
+   * @param columnName {string} Column name of the value to return
+   * @param columnID {number} Column id of the table
    * @return {Promise<[]>}
    */
   async getAllRowsColumnContent(page, tableName, columnName, columnID) {
@@ -290,11 +296,11 @@ class Statuses extends BOBasePage {
 
   /**
    * Sort table
-   * @param page
-   * @param tableName
-   * @param sortBy, column to sort with
-   * @param columnID, id column
-   * @param sortDirection, asc or desc
+   * @param page {Page} Browser tab
+   * @param tableName {string} Table name to sort
+   * @param sortBy {string} Column name to sort with
+   * @param columnID {number} Column id of the table
+   * @param sortDirection {string} Sort direction by asc or desc
    * @return {Promise<void>}
    */
   async sortTable(page, tableName, sortBy, columnID, sortDirection) {
@@ -305,8 +311,8 @@ class Statuses extends BOBasePage {
   /* Bulk actions methods */
   /**
    * Select all rows
-   * @param page
-   * @param tableName
+   * @param page {Page} Browser tab
+   * @param tableName {string} Table name to bulk select rows
    * @return {Promise<void>}
    */
   async bulkSelectRows(page, tableName) {
@@ -320,8 +326,8 @@ class Statuses extends BOBasePage {
 
   /**
    * Delete order statuses by bulk action
-   * @param page
-   * @param tableName
+   * @param page {Page} Browser tab
+   * @param tableName {string} Table name to bulk delete
    * @returns {Promise<string>}
    */
   async bulkDeleteOrderStatuses(page, tableName) {
@@ -339,30 +345,31 @@ class Statuses extends BOBasePage {
 
   /**
    * Get Value of column Displayed
-   * @param page
-   * @param row, row in table
+   * @param page {Page} Browser tab
+   * @param row {number} Row on table
+   * @param columnID {number} Column id to get status
    * @returns {Promise<boolean>}
    */
-  async getStatus(page, row, column) {
-    return this.elementVisible(page, this.tableColumnValidIcon(row, column), 100);
+  async getStatus(page, row, columnID) {
+    return this.elementVisible(page, this.tableColumnValidIcon(row, columnID), 100);
   }
 
   /**
    * Quick edit toggle column value
-   * @param page
-   * @param row, row in table
-   * @param column, column number in table
-   * @param valueWanted, Value wanted in column
+   * @param page {Page} Browser tab
+   * @param row {number} Row on table
+   * @param columnID {number} column id in table
+   * @param valueWanted {boolean} True if we need to enable status
    * @returns {Promise<boolean>} return true if action is done, false otherwise
    */
-  async setStatus(page, row, column, valueWanted = true) {
-    await this.waitForVisibleSelector(page, this.tableColumn('order', row, column), 2000);
+  async setStatus(page, row, columnID, valueWanted = true) {
+    await this.waitForVisibleSelector(page, this.tableColumn('order', row, columnID), 2000);
 
-    if (await this.getStatus(page, row, column) !== valueWanted) {
-      page.click(this.tableColumn('order', row, column));
+    if (await this.getStatus(page, row, columnID) !== valueWanted) {
+      await page.click(this.tableColumn('order', row, columnID));
       await this.waitForVisibleSelector(
         page,
-        (valueWanted ? this.tableColumnValidIcon(row, column) : this.tableColumnNotValidIcon(row, column)),
+        (valueWanted ? this.tableColumnValidIcon(row, columnID) : this.tableColumnNotValidIcon(row, columnID)),
       );
       return true;
     }
@@ -371,7 +378,7 @@ class Statuses extends BOBasePage {
 
   /**
    * Get growl message content
-   * @param page
+   * @param page {Page} Browser tab
    * @return {Promise<string>}
    */
   getGrowlMessageContent(page) {
