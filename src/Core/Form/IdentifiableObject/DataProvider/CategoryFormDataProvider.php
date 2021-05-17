@@ -30,7 +30,6 @@ use PrestaShop\PrestaShop\Adapter\Group\GroupDataProvider;
 use PrestaShop\PrestaShop\Core\CommandBus\CommandBusInterface;
 use PrestaShop\PrestaShop\Core\Domain\Category\Query\GetCategoryForEditing;
 use PrestaShop\PrestaShop\Core\Domain\Category\QueryResult\EditableCategory;
-use PrestaShop\PrestaShop\Core\Group\Provider\DefaultGroupsProviderInterface;
 
 /**
  * Provides data for category add/edit category forms
@@ -53,26 +52,26 @@ final class CategoryFormDataProvider implements FormDataProviderInterface
     private $contextShopRootCategoryId;
 
     /**
-     * @var DefaultGroupsProviderInterface
+     * @var GroupDataProvider
      */
-    private $defaultGroupsProvider;
+    private $groupDataProvider;
 
     /**
      * @param CommandBusInterface $queryBus
      * @param int $contextShopId
      * @param int $contextShopRootCategoryId
-     * @param DefaultGroupsProviderInterface $defaultGroupsProvider
+     * @param GroupDataProvider $groupDataProvider
      */
     public function __construct(
         CommandBusInterface $queryBus,
         $contextShopId,
         $contextShopRootCategoryId,
-        DefaultGroupsProviderInterface $defaultGroupsProvider
+        GroupDataProvider $groupDataProvider
     ) {
         $this->queryBus = $queryBus;
         $this->contextShopId = $contextShopId;
         $this->contextShopRootCategoryId = $contextShopRootCategoryId;
-        $this->defaultGroupsProvider = $defaultGroupsProvider;
+        $this->groupDataProvider = $groupDataProvider;
     }
 
     /**
@@ -102,7 +101,7 @@ final class CategoryFormDataProvider implements FormDataProviderInterface
      */
     public function getDefaultData()
     {
-        $allGroupIds = GroupDataProvider::getAllGroupIds();
+        $allGroupIds = $this->groupDataProvider->getAllGroupIds();
 
         return [
             'id_parent' => $this->contextShopRootCategoryId,
