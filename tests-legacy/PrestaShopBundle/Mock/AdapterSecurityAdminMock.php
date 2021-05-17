@@ -28,14 +28,14 @@ namespace LegacyTests\PrestaShopBundle\Mock;
 
 use PrestaShop\PrestaShop\Adapter\LegacyContext;
 use Symfony\Component\HttpKernel\Event\GetResponseEvent;
-use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorage;
+use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 
 /**
  * Admin Middleware security
  */
 class AdapterSecurityAdminMock
 {
-    public function __construct(LegacyContext $context, TokenStorage $securityTokenStorage)
+    public function __construct(LegacyContext $context, TokenStorageInterface $securityTokenStorage)
     {
     }
 

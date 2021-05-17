@@ -26,11 +26,11 @@
 
 namespace PrestaShop\PrestaShop\Adapter\Attribute;
 
-use ProductAttribute;
 use Combination;
 use Context;
 use Db;
 use Product;
+use ProductAttribute;
 use Shop;
 
 /**

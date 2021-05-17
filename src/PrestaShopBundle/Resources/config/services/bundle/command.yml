@@ -1,0 +1,5 @@
+services:
+    PrestaShopBundle\Command\:
+        resource: "%kernel.root_dir%/../src/PrestaShopBundle/Command/*"
+        tags:
+            - 'console.command'

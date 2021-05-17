@@ -26,7 +26,6 @@
 
 namespace PrestaShop\PrestaShop\Adapter\Cart\CommandHandler;
 
-use ProductAttribute;
 use Cart;
 use Context;
 use Customer;
@@ -43,6 +42,7 @@ use PrestaShop\PrestaShop\Core\Domain\Product\Exception\ProductNotFoundException
 use PrestaShop\PrestaShop\Core\Domain\Product\Exception\ProductOutOfStockException;
 use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductId;
 use Product;
+use ProductAttribute;
 use Shop;
 
 /**

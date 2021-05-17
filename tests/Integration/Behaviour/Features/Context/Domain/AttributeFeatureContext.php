@@ -28,9 +28,9 @@ declare(strict_types=1);
 
 namespace Tests\Integration\Behaviour\Features\Context\Domain;
 
-use Attribute;
 use Language;
 use PHPUnit\Framework\Assert;
+use ProductAttribute;
 use RuntimeException;
 
 class AttributeFeatureContext extends AbstractDomainFeatureContext
@@ -50,7 +50,7 @@ class AttributeFeatureContext extends AbstractDomainFeatureContext
             throw new RuntimeException(sprintf('Language by iso code "%s" was not found', $langIso));
         }
 
-        $attributes = Attribute::getAttributes($langId);
+        $attributes = ProductAttribute::getAttributes($langId);
         $foundAttributeId = null;
 
         foreach ($attributes as $attribute) {
