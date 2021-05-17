@@ -60,7 +60,7 @@ final class CategoryFormDataProvider implements FormDataProviderInterface
      * @param CommandBusInterface $queryBus
      * @param int $contextShopId
      * @param int $contextShopRootCategoryId
-     * @param DefaultGroupsProviderInterface $groupDataProvider
+     * @param GroupDataProvider $groupDataProvider
      */
     public function __construct(
         CommandBusInterface $queryBus,
