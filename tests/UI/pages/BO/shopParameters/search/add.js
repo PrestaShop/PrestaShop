@@ -1,7 +1,16 @@
 require('module-alias/register');
 const BOBasePage = require('@pages/BO/BObasePage');
 
+/**
+ * Add alias page, contains selectors and functions for the page
+ * @class
+ * @extends BOBasePage
+ */
 class AddAlias extends BOBasePage {
+  /**
+   * @constructs
+   * Setting up titles and selectors to use on add alias page
+   */
   constructor() {
     super();
 
@@ -17,8 +26,8 @@ class AddAlias extends BOBasePage {
   /* Methods */
   /**
    * Create/Edit alias
-   * @param page
-   * @param aliasData
+   * @param page {Page} Browser tab
+   * @param aliasData {object} Data to set on alias form
    * @returns {Promise<void>}
    */
   async setAlias(page, aliasData) {

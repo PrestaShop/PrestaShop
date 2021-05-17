@@ -1,7 +1,16 @@
 require('module-alias/register');
 const BOBasePage = require('@pages/BO/BObasePage');
 
+/**
+ * Add tag page, contains selectors and functions for the page
+ * @class
+ * @extends BOBasePage
+ */
 class AddTag extends BOBasePage {
+  /**
+   * @constructs
+   * Setting up titles and selectors to use on add tag page
+   */
   constructor() {
     super();
 
@@ -20,8 +29,8 @@ class AddTag extends BOBasePage {
   /* Methods */
   /**
    * Create/Edit tag
-   * @param page
-   * @param tagData
+   * @param page {Page} Browser tab
+   * @param tagData {object} Data to set to tag form
    * @returns {Promise<void>}
    */
   async setTag(page, tagData) {
