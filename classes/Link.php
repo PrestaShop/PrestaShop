@@ -449,9 +449,6 @@ class LinkCore
             throw new \InvalidArgumentException('Invalid category parameter');
         }
 
-        // Selected filters is used by the module ps_facetedsearch
-        $selectedFilters = null === $selectedFilters ? '' : $selectedFilters;
-
         $rule = 'category_rule';
 
         if (!$alias) {
