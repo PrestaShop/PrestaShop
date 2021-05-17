@@ -202,7 +202,7 @@ abstract class PaymentModuleCore extends Module
      * @param bool $dont_touch_amount
      * @param string|bool $secure_key
      * @param Shop $shop
-     * @param string $order_ref order reference generated from outside when set this reference is taken
+     * @param string $order_reference if this parameter is not provided, a random order reference will be generated
      *
      * @return bool
      *
