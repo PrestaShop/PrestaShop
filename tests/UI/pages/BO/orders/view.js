@@ -164,7 +164,7 @@ class Order extends BOBasePage {
    * @returns {Promise<void>}
    */
   async modifyProductPrice(page, row, price) {
-    await this.dialogListener(page);
+    this.dialogListener(page);
     await Promise.all([
       page.click(this.editProductButton(row)),
       this.waitForVisibleSelector(page, this.editProductPriceInput),
@@ -172,9 +172,14 @@ class Order extends BOBasePage {
     await this.setValue(page, this.editProductPriceInput, price);
     await Promise.all([
       page.click(this.UpdateProductButton),
-      this.waitForVisibleSelector(page, this.editProductPriceInput),
+      this.waitForHiddenSelector(page, this.editProductPriceInput),
     ]);
-    await this.waitForVisibleSelector(page, this.orderProductsTableProductBasePrice(row));
+
+    await page.waitForTimeout(1000);
+    await Promise.all([
+      this.waitForVisibleSelector(page, this.customerInfoBlock),
+      this.waitForVisibleSelector(page, this.orderProductsTableProductBasePrice(row)),
+    ]);
   }
 
   /**

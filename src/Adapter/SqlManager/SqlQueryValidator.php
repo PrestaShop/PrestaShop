@@ -84,12 +84,6 @@ class SqlQueryValidator
         $errors = [];
 
         foreach ($sqlErrors as $key => $sqlError) {
-            if (!in_array($key, ['testedRequired', 'testedUnauthorized'])
-                && false === is_array($sqlError)
-            ) {
-                $sqlError = [];
-            }
-
             if ('checkedFrom' === $key) {
                 $errors[] = $this->getFromKeywordError($sqlError);
             } elseif ('checkedSelect' === $key) {

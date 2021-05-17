@@ -361,12 +361,6 @@ class Product extends FOBasePage {
   isDeliveryInformationVisible(page) {
     return this.elementVisible(page, this.deliveryInformationSpan, 1000);
   }
-
-  /**
-   * Get product availability label
-   * @param page {Page} Browser tab
-   * @returns {Promise<string>}
-   */
 }
 
 module.exports = new Product();

@@ -41,12 +41,12 @@ class Localization extends LocalizationBasePage {
     await this.selectByVisibleText(page, this.importlocalizationPackSelect, country);
 
     // Set content import checkboxes
-    await this.changeCheckboxValue(page, this.importStatesCheckbox, contentToImport.importStates);
-    await this.changeCheckboxValue(page, this.importTaxesCheckbox, contentToImport.importTaxes);
-    await this.changeCheckboxValue(page, this.importCurrenciesCheckbox, contentToImport.importCurrencies);
-    await this.changeCheckboxValue(page, this.importLanguagesCheckbox, contentToImport.importLanguages);
-    await this.changeCheckboxValue(page, this.importUnitsCheckbox, contentToImport.importUnits);
-    await this.changeCheckboxValue(
+    await this.setHiddenCheckboxValue(page, this.importStatesCheckbox, contentToImport.importStates);
+    await this.setHiddenCheckboxValue(page, this.importTaxesCheckbox, contentToImport.importTaxes);
+    await this.setHiddenCheckboxValue(page, this.importCurrenciesCheckbox, contentToImport.importCurrencies);
+    await this.setHiddenCheckboxValue(page, this.importLanguagesCheckbox, contentToImport.importLanguages);
+    await this.setHiddenCheckboxValue(page, this.importUnitsCheckbox, contentToImport.importUnits);
+    await this.setHiddenCheckboxValue(
       page,
       this.updatepriceDisplayForGroupsCHeckbox,
       contentToImport.updatePriceDisplayForGroups,

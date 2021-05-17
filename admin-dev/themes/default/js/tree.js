@@ -22,7 +22,8 @@
  * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
-const Tree = function (element, options) {
+
+window.Tree = function (element, options) {
   this.$element = $(element);
   this.options = $.extend({}, $.fn.tree.defaults, options);
   this.init();
@@ -200,7 +201,7 @@ Tree.prototype = {
         },
       );
     } else {
-      $(this).$element.find('label.tree-toggler').each(
+      this.$element.find('label.tree-toggler').each(
         function () {
           $(this).parent().children('.icon-folder-close')
             .removeClass('icon-folder-close')
