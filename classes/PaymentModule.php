@@ -1267,7 +1267,7 @@ abstract class PaymentModuleCore extends Module
         $customer_message->private = 0;
 
         if (!$customer_message->add()) {
-            $this->errors[] = $this->trans('An error occurred while saving message', [], 'Admin.Payment.Notification');
+            $this->errors[] = $this->trans('An error occurred while saving the message.', [], 'Admin.Notifications.Error');
         }
     }
 }
