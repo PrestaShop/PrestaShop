@@ -280,7 +280,7 @@ abstract class PaymentModuleCore extends Module
             $order_list = [];
             $order_detail_list = [];
 
-            if ($order_ref == null) {
+            if ($order_reference == null) {
                 do {
                     $reference = Order::generateReference();
                 } while (Order::getByReference($reference)->count());
