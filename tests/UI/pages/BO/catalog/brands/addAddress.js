@@ -1,7 +1,16 @@
 require('module-alias/register');
 const BOBasePage = require('@pages/BO/BObasePage');
 
+/**
+ * Add brand address page, contains selectors and functions for the page
+ * @class
+ * @extends BOBasePage
+ */
 class AddBrandAddress extends BOBasePage {
+  /**
+   * @constructs
+   * Setting up titles and selectors to use on add brand address page
+   */
   constructor() {
     super();
 
@@ -27,8 +36,8 @@ class AddBrandAddress extends BOBasePage {
    */
   /**
    * Create or edit Brand Address
-   * @param page
-   * @param brandAddressData
+   * @param page {Page} Browser tab
+   * @param brandAddressData {object} Data to set in address form
    * @return {Promise<string>}
    */
   async createEditBrandAddress(page, brandAddressData) {

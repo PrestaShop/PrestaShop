@@ -52,8 +52,9 @@ class CartProductsComparatorTest extends TestCase
     ) {
         $cart = $this->mockCart($initialProducts, $newProducts);
         $comparator = new CartProductsComparator($cart);
+        $comparator->setKnownUpdates($knownUpdatedProducts);
 
-        $modifiedProducts = $comparator->getModifiedProducts($knownUpdatedProducts);
+        $modifiedProducts = $comparator->getModifiedProducts();
         Assert::assertEquals($expectedModifiedProducts, $modifiedProducts);
     }
 
@@ -265,8 +266,9 @@ class CartProductsComparatorTest extends TestCase
     ) {
         $cart = $this->mockCart($initialProducts, $newProducts);
         $comparator = new CartProductsComparator($cart);
+        $comparator->setKnownUpdates($knownUpdatedProducts);
 
-        $modifiedProducts = $comparator->getAdditionalProducts($knownUpdatedProducts);
+        $modifiedProducts = $comparator->getAdditionalProducts();
         Assert::assertEquals($expectedModifiedProducts, $modifiedProducts);
     }
 
@@ -306,8 +308,9 @@ class CartProductsComparatorTest extends TestCase
     ) {
         $cart = $this->mockCart($initialProducts, $newProducts);
         $comparator = new CartProductsComparator($cart);
+        $comparator->setKnownUpdates($knownUpdatedProducts);
 
-        $modifiedProducts = $comparator->getUpdatedProducts($knownUpdatedProducts);
+        $modifiedProducts = $comparator->getUpdatedProducts();
         Assert::assertEquals($expectedModifiedProducts, $modifiedProducts);
     }
 

@@ -599,6 +599,6 @@ class AdminStoresControllerCore extends AdminController
     {
         $separator = array_fill(0, count($value), ' | ');
 
-        return array_map('implode', $value, $separator);
+        return array_map('implode', $separator, $value);
     }
 }

@@ -156,7 +156,7 @@ class Home extends FOBasePage {
    * Add product to cart with Quick view
    * @param page {Page} Browser tab
    * @param id {number} Index of product in list of products
-   * @param quantity_wanted {number} Quantity to order
+   * @param quantity_wanted {string} Quantity to order
    * @return {Promise<void>}
    */
   async addProductToCartByQuickView(page, id, quantity_wanted = 1) {

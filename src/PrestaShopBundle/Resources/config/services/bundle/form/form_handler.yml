@@ -495,19 +495,21 @@ services:
             - 'PrestaShopBundle\Form\Admin\Improve\Design\Theme\ShopLogosType'
             - 'ShopLogo'
 
-  # Entity form handler
+    # Entity form handler
     prestashop.admin.request_sql.form_handler:
         class: 'PrestaShopBundle\Form\Admin\Configure\AdvancedParameters\RequestSql\SqlRequestFormHandler'
         arguments:
             - '@form.factory'
             - '@prestashop.adapter.sql_manager.request_sql_form_data_validator'
             - '@prestashop.bundle.form.admin.configure.advanced_parameters.request_sql.form_data_provider'
+        deprecated: 'The "%service_id% service is deprecated. Use "prestashop.core.form.identifiable_object.sql_request_form_data_handler" instead'
 
     prestashop.bundle.form.admin.configure.advanced_parameters.request_sql.form_data_provider:
         class: 'PrestaShopBundle\Form\Admin\Configure\AdvancedParameters\RequestSql\SqlRequestFormDataProvider'
         arguments:
             - '@prestashop.core.command_bus'
             - '@prestashop.core.query_bus'
+        deprecated: 'The "%service_id% service is deprecated. Use "prestashop.core.form.identifiable_object.data_provider.sql_request_form_data_provider" instead'
 
     prestashop.admin.tax_options.form_handler:
         class: 'PrestaShop\PrestaShop\Core\Form\Handler'
