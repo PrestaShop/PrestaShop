@@ -59,7 +59,7 @@ class GroupDataProvider
         return Group::getCurrent();
     }
 
-    public static function getAllGroupIds()
+    public function getAllGroupIds(): array
     {
         $query = new DbQuery();
         $query
