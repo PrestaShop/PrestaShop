@@ -174,12 +174,12 @@ class SqlManagerController extends FrameworkBundleAdminController
      */
     public function createAction(Request $request)
     {
+        $data = $this->getSqlRequestDataFromRequest($request);
+
+        $sqlRequestForm = $this->getSqlRequestFormBuilder()->getForm($data);
+        $sqlRequestForm->handleRequest($request);
+
         try {
-            $data = $this->getSqlRequestDataFromRequest($request);
-
-            $sqlRequestForm = $this->getSqlRequestFormBuilder()->getForm($data);
-            $sqlRequestForm->handleRequest($request);
-
             $result = $this->getSqlRequestFormHandler()->handle($sqlRequestForm);
 
             if (null !== $result->getIdentifiableObjectId()) {
@@ -223,10 +223,10 @@ class SqlManagerController extends FrameworkBundleAdminController
      */
     public function editAction($sqlRequestId, Request $request)
     {
-        try {
-            $sqlRequestForm = $this->getSqlRequestFormBuilder()->getFormFor($sqlRequestId);
-            $sqlRequestForm->handleRequest($request);
+        $sqlRequestForm = $this->getSqlRequestFormBuilder()->getFormFor($sqlRequestId);
+        $sqlRequestForm->handleRequest($request);
 
+        try {
             $result = $this->getSqlRequestFormHandler()->handleFor($sqlRequestId, $sqlRequestForm);
 
             if ($result->isSubmitted() && $result->isValid()) {

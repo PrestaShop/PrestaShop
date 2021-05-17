@@ -181,8 +181,8 @@ class SqlManagerFeatureContext extends AbstractDomainFeatureContext
             /** @var SqlRequestId $sqlRequestId */
             $sqlRequestId = $this->getCommandBus()->handle(
                 (new EditSqlRequestCommand(new SqlRequestId($sqlRequestId)))
-                ->setName($data['name'])
-                ->setSql($data['sql'])
+                    ->setName($data['name'])
+                    ->setSql($data['sql'])
             );
         } catch (Exception $e) {
             $this->lastException = $e;
