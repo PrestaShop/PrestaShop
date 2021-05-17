@@ -165,7 +165,7 @@ class SqlManagerFeatureContext extends AbstractDomainFeatureContext
             );
             SharedStorage::getStorage()->set($sqlQueryReference, $sqlRequestId->getValue());
         } catch (Exception $e) {
-            $this->lastException = $e;
+            $this->setLastException($e);
         }
     }
 
@@ -180,12 +180,12 @@ class SqlManagerFeatureContext extends AbstractDomainFeatureContext
         try {
             /** @var SqlRequestId $sqlRequestId */
             $sqlRequestId = $this->getCommandBus()->handle(
-                (new EditSqlRequestCommand(new SqlRequestId($sqlRequestId)))
+                (new EditSqlRequestCommand(new SqlRequestId((int) $sqlRequestId)))
                     ->setName($data['name'])
                     ->setSql($data['sql'])
             );
         } catch (Exception $e) {
-            $this->lastException = $e;
+            $this->setLastException($e);
         }
     }
 
@@ -205,7 +205,7 @@ class SqlManagerFeatureContext extends AbstractDomainFeatureContext
         $this->assertLastErrorIs(SqlRequestConstraintException::class);
         Assert::assertEquals(
             '"SELECT" does not exist.',
-            $this->lastException->getMessage()
+            $this->getLastException()->getMessage()
         );
     }
 
@@ -217,7 +217,7 @@ class SqlManagerFeatureContext extends AbstractDomainFeatureContext
         $this->assertLastErrorIs(SqlRequestConstraintException::class);
         Assert::assertEquals(
             'Bad SQL query',
-            $this->lastException->getMessage()
+            $this->getLastException()->getMessage()
         );
     }
 
@@ -229,7 +229,7 @@ class SqlManagerFeatureContext extends AbstractDomainFeatureContext
         $this->assertLastErrorIs(SqlRequestConstraintException::class);
         Assert::assertEquals(
             sprintf('The "%s" table does not exist.', $tableName),
-            $this->lastException->getMessage()
+            $this->getLastException()->getMessage()
         );
     }
 }
