@@ -55,6 +55,9 @@
         <div class="category-tree-overflow js-category-tree-overflow">
           {%- set attr = attr|merge({'data-prototype': form_row(prototype), 'data-prototype-name': prototype.vars.name }) -%}
           {%- set attr = attr|merge({'class': (attr.class|default('') ~ ' js-categories-tree category-tree')|trim }) -%}
+          <label class="main-category">
+            {{ 'Main category'|trans({}, 'Admin.Catalog.Feature') }}
+          </label>
           <ul {{ block('widget_attributes') }}>
             {{- block('form_rows') -}}
           </ul>
