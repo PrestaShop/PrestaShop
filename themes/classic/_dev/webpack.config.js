@@ -28,11 +28,12 @@ const ExtractTextPlugin = require('extract-text-webpack-plugin');
 
 let config = {
   entry: {
-    main: ['./js/theme.js', './css/theme.scss'],
+    theme: ['./js/theme.js', './css/theme.scss'],
+    error: ['./css/error.scss'],
   },
   output: {
     path: path.resolve(__dirname, '../assets/js'),
-    filename: 'theme.js',
+    filename: '[name].js',
   },
   module: {
     rules: [
@@ -78,7 +79,7 @@ let config = {
     $: '$',
     jquery: 'jQuery',
   },
-  plugins: [new ExtractTextPlugin(path.join('..', 'css', 'theme.css'))],
+  plugins: [new ExtractTextPlugin(path.join('..', 'css', '[name].css'))],
 };
 
 if (process.env.NODE_ENV === 'production') {

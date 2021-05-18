@@ -1,0 +1,60 @@
+#body {
+  background-color: #f7f7f7;
+}
+
+#layout-error {
+  padding: 50px 15px;
+  margin: 50px auto 0;
+  text-align: center;
+  background-color: #fff;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.3);
+
+  .logo {
+    margin: 0 0 31px;
+    text-align: center;
+  }
+
+  h1 {
+    padding: 0 0 14px;
+    margin: 0 0 19px;
+    font: 24px sans-serif;
+    color: #333;
+  }
+
+  h2 {
+    padding: 0 0 14px;
+    margin: 0 0 19px;
+    font: 20px sans-serif;
+    color: #333;
+  }
+
+  .page-content {
+    font: 16px sans-serif;
+    color: #555454;
+    text-align: center;
+  }
+}
+@media (min-width: 1200px) {
+  #layout-error {
+    width: 500px;
+    padding: 50px;
+    margin: 126px auto 0;
+  }
+}
+@media (min-width: 768px) {
+  #layout-error {
+    width: 500px;
+  }
+}
+@media (min-width: 992px) {
+  #layout-error {
+    width: 500px;
+  }
+}
+@media only screen and (min-width: 1200px) {
+  #layout-error {
+    padding-right: 0;
+    padding-left: 0;
+  }
+}
+
