@@ -659,7 +659,7 @@ class ModuleManager implements AddonManagerInterface
      */
     private function dispatch($event, $module)
     {
-        $this->eventDispatcher->dispatch($event, new ModuleManagementEvent($module));
+        $this->eventDispatcher->dispatch(new ModuleManagementEvent($module), $event);
     }
 
     private function checkIsInstalled($name)

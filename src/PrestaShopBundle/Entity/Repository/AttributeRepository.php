@@ -26,6 +26,8 @@
 
 namespace PrestaShopBundle\Entity\Repository;
 
+use Doctrine\Common\Collections\ArrayCollection;
+
 /**
  * AttributeRepository.
  *
@@ -56,10 +58,10 @@ class AttributeRepository extends \Doctrine\ORM\EntityRepository
             ->andWhere('s.id = :idShop')
             ->orderBy('attributePosition')
             ->addOrderBy('attributeGroupPosition')
-            ->setParameters([
+            ->setParameters(new ArrayCollection([
                 'idShop' => $idShop,
                 'idLang' => $idLang,
-            ]);
+            ]));
 
         $result = $qb->getQuery()->getArrayResult();
 
