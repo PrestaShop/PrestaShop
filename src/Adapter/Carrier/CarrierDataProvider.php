@@ -124,4 +124,40 @@ class CarrierDataProvider
     {
         return Carrier::ALL_CARRIERS;
     }
+
+    /**
+     * Get all carriers in a given language but modified to a format suitable for creation
+     *
+     * @param int $id_lang Language id
+     * @param bool $active Returns only active carriers when true
+     * @param bool $delete
+     * @param bool|int $id_zone
+     * @param string|null $ids_group
+     * @param int $modules_filters Possible values:
+     *                             - PS_CARRIERS_ONLY
+     *                             - CARRIERS_MODULE
+     *                             - CARRIERS_MODULE_NEED_RANGE
+     *                             - PS_CARRIERS_AND_CARRIER_MODULES_NEED_RANGE
+     *                             - ALL_CARRIERS
+     *
+     * @return array Carriers
+     */
+    public function getCarriersForCreation($id_lang, $active = false, $delete = false, $id_zone = false, $ids_group = null, $modules_filters = Carrier::PS_CARRIERS_ONLY)
+    {
+        $allCarriers = $this->getCarriers(
+            $id_lang,
+            $active,
+            $delete,
+            $id_zone,
+            $ids_group,
+            $modules_filters
+        );
+
+        $allCarriersModified = [];
+        foreach ($allCarriers as $carrier) {
+            $allCarriersModified[] = $carrier['id_reference'];
+        }
+
+        return $allCarriersModified;
+    }
 }
