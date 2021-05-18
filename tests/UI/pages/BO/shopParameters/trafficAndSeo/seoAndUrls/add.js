@@ -1,15 +1,22 @@
 require('module-alias/register');
 const BOBasePage = require('@pages/BO/BObasePage');
 
+/**
+ * Add seo url page, contains selectors and functions for the page
+ * @class
+ * @extends BOBasePage
+ */
 class AddSeoUrl extends BOBasePage {
+  /**
+   * @constructs
+   * Setting up titles and selectors to use on add seo url page
+   */
   constructor() {
     super();
 
     this.pageTitle = 'SEO & URLs • ';
 
     // Selectors
-    this.pageNameSpan = '#select2-meta_page_name-container';
-
     this.pageTitleLangButton = '#meta_page_title';
     this.pageTitleLangSpan = lang => 'div.dropdown-menu[aria-labelledby=\'meta_page_title\']'
       + ` span[data-locale='${lang}']`;
@@ -18,6 +25,7 @@ class AddSeoUrl extends BOBasePage {
     this.metaDescriptionInput = id => `#meta_meta_description_${id}`;
     this.metaKeywordsInput = id => `#meta_meta_keywords_${id}-tokenfield`;
     this.friendlyUrlInput = id => `#meta_url_rewrite_${id}`;
+
     // Selectors for Meta keywords
     this.taggableFieldDiv = lang => `div.input-group div.js-locale-${lang}`;
     this.deleteKeywordLink = lang => `${this.taggableFieldDiv(lang)} a.close`;
@@ -28,8 +36,8 @@ class AddSeoUrl extends BOBasePage {
 
   /**
    * Change language for selectors
-   * @param page
-   * @param lang
+   * @param page {Page} Browser tab
+   * @param lang {string} Language to change
    * @return {Promise<void>}
    */
   async changeLanguageForSelectors(page, lang = 'en') {
@@ -45,8 +53,8 @@ class AddSeoUrl extends BOBasePage {
 
   /**
    * Delete all keywords
-   * @param page
-   * @param lang, to specify which input to empty
+   * @param page {Page} Browser tab
+   * @param lang {string} To specify which input to empty
    * @return {Promise<void>}
    */
   async deleteKeywords(page, lang = 'en') {
@@ -59,9 +67,9 @@ class AddSeoUrl extends BOBasePage {
 
   /**
    * Add keywords
-   * @param page
-   * @param keywords, array of keywords
-   * @param idLang, to choose which lang (1 for en, 2 for fr)
+   * @param page {Page} Browser tab
+   * @param keywords {array} Array of keywords
+   * @param idLang {number} To choose which lang (1 for en, 2 for fr)
    * @return {Promise<void>}
    */
   async addKeywords(page, keywords, idLang = 1) {
@@ -73,8 +81,8 @@ class AddSeoUrl extends BOBasePage {
 
   /**
    * Create/Edit seo page
-   * @param page
-   * @param seoPageData
+   * @param page {Page} Browser tab
+   * @param seoPageData {object} Data to set on seo form
    * @return {Promise<void>}
    */
   async createEditSeoPage(page, seoPageData) {

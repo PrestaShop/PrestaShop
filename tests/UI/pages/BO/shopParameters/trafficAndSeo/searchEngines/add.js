@@ -1,7 +1,16 @@
 require('module-alias/register');
 const BOBasePage = require('@pages/BO/BObasePage');
 
+/**
+ * Add search engine page, contains selectors and functions for the page
+ * @class
+ * @extends BOBasePage
+ */
 class AddSearchEngine extends BOBasePage {
+  /**
+   * @constructs
+   * Setting up titles and selectors to use on add search engine page
+   */
   constructor() {
     super();
 
@@ -21,8 +30,8 @@ class AddSearchEngine extends BOBasePage {
 
   /**
    * Fill create or edit search engine form and save it
-   * @param page
-   * @param searchEngineData
+   * @param page {Page} Browser tab
+   * @param searchEngineData {object} Data to set on search engine form
    * @return {Promise<string>}
    */
   async createEditSearchEngine(page, searchEngineData) {
