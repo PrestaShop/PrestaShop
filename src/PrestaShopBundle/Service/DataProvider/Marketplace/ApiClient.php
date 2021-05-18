@@ -46,11 +46,11 @@ class ApiClient
 
     /**
      * @param Client $addonsApiClient
-     * @param $locale
-     * @param $isoCode
+     * @param string $locale
+     * @param string|false $isoCode
      * @param null $toolsAdapter
-     * @param $domain
-     * @param $shopVersion
+     * @param string $domain
+     * @param string $shopVersion
      */
     public function __construct(
         Client $addonsApiClient,
