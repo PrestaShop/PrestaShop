@@ -46,10 +46,10 @@ use Symfony\Component\HttpFoundation\Request;
  */
 final class RequestSqlGridDefinitionFactory extends AbstractGridDefinitionFactory
 {
-    public const GRID_ID = 'sql_request';
-
     use BulkDeleteActionTrait;
     use DeleteActionTrait;
+
+    public const GRID_ID = 'sql_request';
 
     /**
      * {@inheritdoc}
