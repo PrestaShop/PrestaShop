@@ -2895,5 +2895,211 @@
       <title>Modify product identifiable object data after updating it</title>
       <description>This hook allows to modify product identifiable object form data after it was updated</description>
     </hook>
+    <hook id="actionCustomerDiscountGridDefinitionModifier">
+      <name>actionCustomerDiscountGridDefinitionModifier</name>
+      <title>Modify customer discount grid definition</title>
+      <description>This hook allows to alter customer discount grid columns, actions and filters</description>
+    </hook>
+    <hook id="actionCustomerAddressGridDefinitionModifier">
+      <name>actionCustomerAddressGridDefinitionModifier</name>
+      <title>Modify customer address grid definition</title>
+      <description>This hook allows to alter customer address grid columns, actions and filters</description>
+    </hook>
+    <hook id="actionCartRuleGridDefinitionModifier">
+      <name>actionCartRuleGridDefinitionModifier</name>
+      <title>Modify cart rule grid definition</title>
+      <description>This hook allows to alter cart rule grid columns, actions and filters</description>
+    </hook>
+    <hook id="actionOrderStatesGridDefinitionModifier">
+      <name>actionOrderStatesGridDefinitionModifier</name>
+      <title>Modify order states grid definition</title>
+      <description>This hook allows to alter order states grid columns, actions and filters</description>
+    </hook>
+    <hook id="actionOrderReturnStatesGridDefinitionModifier">
+      <name>actionOrderReturnStatesGridDefinitionModifier</name>
+      <title>Modify order return states grid definition</title>
+      <description>This hook allows to alter order return states grid columns, actions and filters</description>
+    </hook>
+    <hook id="actionOutstandingGridDefinitionModifier">
+      <name>actionOutstandingGridDefinitionModifier</name>
+      <title>Modify outstanding grid definition</title>
+      <description>This hook allows to alter outstanding grid columns, actions and filters</description>
+    </hook>
+    <hook id="actionCarrierGridDefinitionModifier">
+      <name>actionCarrierGridDefinitionModifier</name>
+      <title>Modify carrier grid definition</title>
+      <description>This hook allows to alter carrier grid columns, actions and filters</description>
+    </hook>
+    <hook id="actionZoneGridDefinitionModifier">
+      <name>actionZoneGridDefinitionModifier</name>
+      <title>Modify zone grid definition</title>
+      <description>This hook allows to alter zone grid columns, actions and filters</description>
+    </hook>
+    <hook id="actionCustomerDiscountGridQueryBuilderModifier">
+      <name>actionCustomerDiscountGridQueryBuilderModifier</name>
+      <title>Modify customer discount grid query builder</title>
+      <description>This hook allows to alter Doctrine query builder for customer discount grid</description>
+    </hook>
+    <hook id="actionCustomerAddressGridQueryBuilderModifier">
+      <name>actionCustomerAddressGridQueryBuilderModifier</name>
+      <title>Modify customer address grid query builder</title>
+      <description>This hook allows to alter Doctrine query builder for customer address grid</description>
+    </hook>
+    <hook id="actionCartRuleGridQueryBuilderModifier">
+      <name>actionCartRuleGridQueryBuilderModifier</name>
+      <title>Modify cart rule grid query builder</title>
+      <description>This hook allows to alter Doctrine query builder for cart rule grid</description>
+    </hook>
+    <hook id="actionOrderStatesGridQueryBuilderModifier">
+      <name>actionOrderStatesGridQueryBuilderModifier</name>
+      <title>Modify order states grid query builder</title>
+      <description>This hook allows to alter Doctrine query builder for order states grid</description>
+    </hook>
+    <hook id="actionOrderReturnStatesGridQueryBuilderModifier">
+      <name>actionOrderReturnStatesGridQueryBuilderModifier</name>
+      <title>Modify order return states grid query builder</title>
+      <description>This hook allows to alter Doctrine query builder for order return states grid</description>
+    </hook>
+    <hook id="actionOutstandingGridQueryBuilderModifier">
+      <name>actionOutstandingGridQueryBuilderModifier</name>
+      <title>Modify outstanding grid query builder</title>
+      <description>This hook allows to alter Doctrine query builder for outstanding grid</description>
+    </hook>
+    <hook id="actionCarrierGridQueryBuilderModifier">
+      <name>actionCarrierGridQueryBuilderModifier</name>
+      <title>Modify carrier grid query builder</title>
+      <description>This hook allows to alter Doctrine query builder for carrier grid</description>
+    </hook>
+    <hook id="actionZoneGridQueryBuilderModifier">
+      <name>actionZoneGridQueryBuilderModifier</name>
+      <title>Modify zone grid query builder</title>
+      <description>This hook allows to alter Doctrine query builder for zone grid</description>
+    </hook>
+    <hook id="actionCustomerDiscountGridDataModifier">
+      <name>actionCustomerDiscountGridDataModifier</name>
+      <title>Modify customer discount grid data</title>
+      <description>This hook allows to modify customer discount grid data</description>
+    </hook>
+    <hook id="actionCustomerAddressGridDataModifier">
+      <name>actionCustomerAddressGridDataModifier</name>
+      <title>Modify customer address grid data</title>
+      <description>This hook allows to modify customer address grid data</description>
+    </hook>
+    <hook id="actionCartRuleGridDataModifier">
+      <name>actionCartRuleGridDataModifier</name>
+      <title>Modify cart rule grid data</title>
+      <description>This hook allows to modify cart rule grid data</description>
+    </hook>
+    <hook id="actionOrderStatesGridDataModifier">
+      <name>actionOrderStatesGridDataModifier</name>
+      <title>Modify order states grid data</title>
+      <description>This hook allows to modify order states grid data</description>
+    </hook>
+    <hook id="actionOrderReturnStatesGridDataModifier">
+      <name>actionOrderReturnStatesGridDataModifier</name>
+      <title>Modify order return states grid data</title>
+      <description>This hook allows to modify order return states grid data</description>
+    </hook>
+    <hook id="actionOutstandingGridDataModifier">
+      <name>actionOutstandingGridDataModifier</name>
+      <title>Modify outstanding grid data</title>
+      <description>This hook allows to modify outstanding grid data</description>
+    </hook>
+    <hook id="actionCarrierGridDataModifier">
+      <name>actionCarrierGridDataModifier</name>
+      <title>Modify carrier grid data</title>
+      <description>This hook allows to modify carrier grid data</description>
+    </hook>
+    <hook id="actionZoneGridDataModifier">
+      <name>actionZoneGridDataModifier</name>
+      <title>Modify zone grid data</title>
+      <description>This hook allows to modify zone grid data</description>
+    </hook>
+    <hook id="actionCustomerDiscountGridFilterFormModifier">
+      <name>actionCustomerDiscountGridFilterFormModifier</name>
+      <title>Modify customer discount grid filters</title>
+      <description>This hook allows to modify filters for customer discount grid</description>
+    </hook>
+    <hook id="actionCustomerAddressGridFilterFormModifier">
+      <name>actionCustomerAddressGridFilterFormModifier</name>
+      <title>Modify customer address grid filters</title>
+      <description>This hook allows to modify filters for customer address grid</description>
+    </hook>
+    <hook id="actionCartRuleGridFilterFormModifier">
+      <name>actionCartRuleGridFilterFormModifier</name>
+      <title>Modify cart rule grid filters</title>
+      <description>This hook allows to modify filters for cart rule grid</description>
+    </hook>
+    <hook id="actionOrderStatesGridFilterFormModifier">
+      <name>actionOrderStatesGridFilterFormModifier</name>
+      <title>Modify order states grid filters</title>
+      <description>This hook allows to modify filters for order states grid</description>
+    </hook>
+    <hook id="actionOrderReturnStatesGridFilterFormModifier">
+      <name>actionOrderReturnStatesGridFilterFormModifier</name>
+      <title>Modify order return states grid filters</title>
+      <description>This hook allows to modify filters for order return states grid</description>
+    </hook>
+    <hook id="actionOutstandingGridFilterFormModifier">
+      <name>actionOutstandingGridFilterFormModifier</name>
+      <title>Modify outstanding grid filters</title>
+      <description>This hook allows to modify filters for outstanding grid</description>
+    </hook>
+    <hook id="actionCarrierGridFilterFormModifier">
+      <name>actionCarrierGridFilterFormModifier</name>
+      <title>Modify carrier grid filters</title>
+      <description>This hook allows to modify filters for carrier grid</description>
+    </hook>
+    <hook id="actionZoneGridFilterFormModifier">
+      <name>actionZoneGridFilterFormModifier</name>
+      <title>Modify zone grid filters</title>
+      <description>This hook allows to modify filters for zone grid</description>
+    </hook>
+    <hook id="actionCustomerDiscountGridPresenterModifier">
+      <name>actionCustomerDiscountGridPresenterModifier</name>
+      <title>Modify customer discount grid template data</title>
+      <description>This hook allows to modify data which is about to be used in template for customer discount grid
+      </description>
+    </hook>
+    <hook id="actionCustomerAddressGridPresenterModifier">
+      <name>actionCustomerAddressGridPresenterModifier</name>
+      <title>Modify customer address grid template data</title>
+      <description>This hook allows to modify data which is about to be used in template for customer address grid
+      </description>
+    </hook>
+    <hook id="actionCartRuleGridPresenterModifier">
+      <name>actionCartRuleGridPresenterModifier</name>
+      <title>Modify cart rule grid template data</title>
+      <description>This hook allows to modify data which is about to be used in template for cart rule grid
+      </description>
+    </hook>
+    <hook id="actionOrderStatesGridPresenterModifier">
+      <name>actionOrderStatesGridPresenterModifier</name>
+      <title>Modify order states grid template data</title>
+      <description>This hook allows to modify data which is about to be used in template for order states grid
+      </description>
+    </hook>
+    <hook id="actionOrderReturnStatesGridPresenterModifier">
+      <name>actionOrderReturnStatesGridPresenterModifier</name>
+      <title>Modify order return states grid template data</title>
+      <description>This hook allows to modify data which is about to be used in template for order return states grid
+      </description>
+    </hook>
+    <hook id="actionOutstandingGridPresenterModifier">
+      <name>actionOutstandingGridPresenterModifier</name>
+      <title>Modify outstanding grid template data</title>
+      <description>This hook allows to modify data which is about to be used in template for outstanding grid
+      </description>
+    </hook>
+    <hook id="actionCarrierGridPresenterModifier">
+      <name>actionCarrierGridPresenterModifier</name>
+      <title>Modify carrier grid template data</title>
+      <description>This hook allows to modify data which is about to be used in template for carrier grid</description>
+    </hook>
+    <hook id="actionZoneGridPresenterModifier">
+      <name>actionZoneGridPresenterModifier</name>
+      <title>Modify zone grid template data</title>
+      <description>This hook allows to modify data which is about to be used in template for zone grid</description>
+    </hook>
   </entities>
 </entity_hook>
