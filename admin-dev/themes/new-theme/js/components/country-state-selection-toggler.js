@@ -74,27 +74,32 @@ export default class CountryStateSelectionToggler {
       data: {
         id_country: countryId,
       },
-    }).then((response) => {
-      this.$countryStateSelector.empty();
+    })
+      .then((response) => {
+        this.$countryStateSelector.empty();
 
-      Object.keys(response.states).forEach((value) => {
-        this.$countryStateSelector.append($('<option></option>').attr('value', response.states[value]).text(value));
+        Object.keys(response.states).forEach((value) => {
+          this.$countryStateSelector.append(
+            $('<option></option>')
+              .attr('value', response.states[value])
+              .text(value),
+          );
+        });
+
+        this.toggle();
+      })
+      .catch((response) => {
+        if (typeof response.responseJSON !== 'undefined') {
+          window.showErrorMessage(response.responseJSON.message);
+        }
       });
-
-      this.toggle();
-    }).catch((response) => {
-      if (typeof response.responseJSON !== 'undefined') {
-        window.showErrorMessage(response.responseJSON.message);
-      }
-    });
   }
 
   toggle() {
     if (this.$countryStateSelector.find('option').length > 0) {
-      this.$stateSelectionBlock.fadeIn();
       this.$stateSelectionBlock.removeClass('d-none');
     } else {
-      this.$stateSelectionBlock.fadeOut();
+      this.$stateSelectionBlock.addClass('d-none');
     }
   }
 }
