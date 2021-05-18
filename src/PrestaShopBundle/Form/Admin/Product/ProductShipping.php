@@ -180,7 +180,6 @@ class ProductShipping extends CommonAbstractType
                     'multiple' => true,
                     'required' => false,
                     'label' => $this->translator->trans('Available carriers', [], 'Admin.Catalog.Feature'),
-                    'data' => array_values($this->carriersChoices),
                 ]
             )
             ->add(

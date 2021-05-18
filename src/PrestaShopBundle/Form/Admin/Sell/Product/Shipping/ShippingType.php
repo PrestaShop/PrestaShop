@@ -115,7 +115,6 @@ class ShippingType extends TranslatorAwareType
                 'required' => false,
                 'label' => $this->trans('Available carriers', 'Admin.Catalog.Feature'),
                 'label_tag_name' => 'h2',
-                'data' => array_values($this->carrierChoiceProvider->getChoices()),
             ])
         ;
     }

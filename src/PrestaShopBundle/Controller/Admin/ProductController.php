@@ -428,8 +428,24 @@ class ProductController extends FrameworkBundleAdminController
             $product->link_rewrite[$lang['id_lang']] = '';
         }
 
+        $carrierProvider = $this->get('prestashop.adapter.data_provider.carrier');
+        $allCarriers = $carrierProvider->getCarriers(
+            $lang['id_lang'],
+            false,
+            false,
+            false,
+            null,
+            $carrierProvider->getAllCarriersConstant()
+        );
+
+        $allCarriersModified = [];
+        foreach ($allCarriers as $carrier) {
+            $allCarriersModified[] = $carrier['id_reference'];
+        }
+
         $product->save();
         $product->addToCategories([$productShopCategory]);
+        $product->setCarriers($allCarriersModified);
 
         return $this->redirectToRoute('admin_product_form', ['id' => $product->id]);
     }
