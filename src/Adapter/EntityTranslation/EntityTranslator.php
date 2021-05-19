@@ -63,11 +63,6 @@ class EntityTranslator implements EntityTranslatorInterface
     protected $tableName;
 
     /**
-     * @var int
-     */
-    protected $shopId;
-
-    /**
      * @var string
      */
     protected $dbPrefix;
@@ -109,9 +104,8 @@ class EntityTranslator implements EntityTranslatorInterface
         }
 
         $tableNameSql = bqSQL($this->tableName);
-
         $shopWhere = ($this->shopFieldExists($tableNameSql))
-            ? sprintf(' AND `id_shop` = %d', $this->shopId)
+            ? sprintf(' AND `id_shop` = %d', $shopId)
             : '';
 
         // get table data
