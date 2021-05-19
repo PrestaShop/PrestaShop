@@ -1,6 +1,10 @@
 const faker = require('faker');
 
-module.exports = class SeoPage {
+/**
+ * Class representing seo page data
+ * @class
+ */
+class SeoPage {
   constructor(seoPageToCreate) {
     this.page = seoPageToCreate.page;
     this.title = seoPageToCreate.title || faker.lorem.word();
@@ -12,4 +16,5 @@ module.exports = class SeoPage {
     this.friendlyUrl = seoPageToCreate.friendlyUrl || this.page.replace(new RegExp(' ', 'g'), '-');
     this.frFriendlyUrl = seoPageToCreate.frFriendlyUrl || this.friendlyUrl;
   }
-};
+}
+module.exports = SeoPage;
