@@ -38,6 +38,7 @@ module.exports = (env, argv) => {
     ],
     output: {
       path: path.resolve(__dirname, 'public'),
+      publicPath: '',
       filename: 'bundle.js',
     },
     module: {
@@ -95,7 +96,7 @@ module.exports = (env, argv) => {
   if (!devMode) {
     config.optimization.minimizer = [
       new UglifyJsPlugin({
-        sourceMap: false,
+        sourceMap: true,
         uglifyOptions: {
           compress: {
             drop_console: true,
@@ -105,7 +106,6 @@ module.exports = (env, argv) => {
           },
         },
       }),
-      new OptimizeCSSAssetsPlugin(),
     ];
   }
 
