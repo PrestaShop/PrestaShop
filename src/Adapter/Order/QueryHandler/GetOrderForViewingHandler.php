@@ -516,8 +516,8 @@ final class GetOrderForViewingHandler extends AbstractOrderHandler implements Ge
                 $trackingUrl = null;
                 $trackingNumber = $item['tracking_number'];
 
-                if ($item['url'] && $item['tracking_number']) {
-                    $trackingUrl = str_replace('@', $item['tracking_number'], $item['url']);
+                if ($item['url'] && $trackingNumber) {
+                    $trackingUrl = str_replace('@', $trackingNumber, $item['url']);
                 }
 
                 $weight = sprintf('%.3f %s', $item['weight'], $this->configuration->get('PS_WEIGHT_UNIT'));
