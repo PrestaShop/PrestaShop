@@ -2,14 +2,14 @@ require('module-alias/register');
 const BOBasePage = require('@pages/BO/BObasePage');
 
 /**
- * Add seo url page, contains selectors and functions for the page
+ * Add seo and url page, contains selectors and functions for the page
  * @class
  * @extends BOBasePage
  */
 class AddSeoUrl extends BOBasePage {
   /**
    * @constructs
-   * Setting up titles and selectors to use on add seo url page
+   * Setting up titles and selectors to use on add seo and url page
    */
   constructor() {
     super();
@@ -82,7 +82,7 @@ class AddSeoUrl extends BOBasePage {
   /**
    * Create/Edit seo page
    * @param page {Page} Browser tab
-   * @param seoPageData {object} Data to set on seo form
+   * @param seoPageData {SeoPage} Data to set on seo form
    * @return {Promise<void>}
    */
   async createEditSeoPage(page, seoPageData) {

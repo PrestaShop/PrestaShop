@@ -9,7 +9,7 @@ const BOBasePage = require('@pages/BO/BObasePage');
 class AddContact extends BOBasePage {
   /**
    * @constructs
-   * Setting up texts and selectors to use on credit slips page
+   * Setting up texts and selectors to use on add contact page
    */
   constructor() {
     super();
@@ -53,7 +53,7 @@ class AddContact extends BOBasePage {
   /**
    * Fill form for add/edit contact
    * @param page {Page} Browser tab
-   * @param contactData {object} Data to set on contact form
+   * @param contactData {Contact} Data to set on contact form
    * @returns {Promise<string>}
    */
   async createEditContact(page, contactData) {

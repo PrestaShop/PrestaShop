@@ -42,7 +42,7 @@ class AddStore extends BOBasePage {
   /**
    * Fill creation / edition form for store and save it
    * @param page {Page} Browser tab
-   * @param storeData {object} Data to set on store form
+   * @param storeData {Store} Data to set on store form
    * @return {Promise<string>}
    */
   async createEditStore(page, storeData) {

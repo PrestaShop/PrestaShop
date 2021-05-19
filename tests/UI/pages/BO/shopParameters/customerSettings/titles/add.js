@@ -2,7 +2,7 @@ require('module-alias/register');
 const BOBasePage = require('@pages/BO/BObasePage');
 
 /**
- * Add title page, contains functions that can be used on credit slips page
+ * Add title page, contains functions that can be used on the page
  * @class
  * @extends BOBasePage
  */
@@ -58,7 +58,7 @@ class AddTitle extends BOBasePage {
   /**
    * Fill title form and get successful message
    * @param page {Page} Browser tab
-   * @param titleData {object} Data to set on create/edit title form
+   * @param titleData {Title} Data to set on create/edit title form
    * @return {Promise<string>}
    */
   async createEditTitle(page, titleData) {

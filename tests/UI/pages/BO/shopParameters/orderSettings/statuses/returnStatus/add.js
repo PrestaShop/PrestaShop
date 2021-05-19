@@ -28,7 +28,7 @@ class AddOrderReturnStatus extends BOBasePage {
   /**
    * Fill order return status form
    * @param page {Page} Browser tab
-   * @param orderReturnStatusData {object} Data to set on order return status form
+   * @param orderReturnStatusData {OrderReturnStatus} Data to set on order return status form
    * @return {Promise<string>}
    */
   async setOrderReturnStatus(page, orderReturnStatusData) {

@@ -27,7 +27,7 @@ class AddAlias extends BOBasePage {
   /**
    * Create/Edit alias
    * @param page {Page} Browser tab
-   * @param aliasData {object} Data to set on alias form
+   * @param aliasData {Alias} Data to set on alias form
    * @returns {Promise<void>}
    */
   async setAlias(page, aliasData) {

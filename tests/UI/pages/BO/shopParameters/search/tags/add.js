@@ -30,7 +30,7 @@ class AddTag extends BOBasePage {
   /**
    * Create/Edit tag
    * @param page {Page} Browser tab
-   * @param tagData {object} Data to set to tag form
+   * @param tagData {Tag} Data to set to tag form
    * @returns {Promise<void>}
    */
   async setTag(page, tagData) {

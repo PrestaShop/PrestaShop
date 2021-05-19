@@ -1,7 +1,16 @@
 require('module-alias/register');
 const BOBasePage = require('@pages/BO/BObasePage');
 
+/**
+ * Add group page, contains functions that can be used on the page
+ * @class
+ * @extends BOBasePage
+ */
 class AddGroup extends BOBasePage {
+  /**
+   * @constructs
+   * Setting up texts and selectors to use on add group page
+   */
   constructor() {
     super();
 
@@ -29,8 +38,8 @@ class AddGroup extends BOBasePage {
 
   /**
    * Change language in form
-   * @param page
-   * @param idLang
+   * @param page {Page} Browser tab
+   * @param idLang {number} Language to change 1 for 'EN' 2 for 'FR'
    * @return {Promise<void>}
    */
   async changeLanguage(page, idLang) {
@@ -47,8 +56,8 @@ class AddGroup extends BOBasePage {
 
   /**
    * Fill group form and get successful message
-   * @param page
-   * @param groupData
+   * @param page {Page} Browser tab
+   * @param groupData {Group} Data to set on create/edit form
    * @return {Promise<string>}
    */
   async createEditGroup(page, groupData) {
@@ -73,8 +82,8 @@ class AddGroup extends BOBasePage {
 
   /**
    * Set price display method and save the form
-   * @param page
-   * @param priceDisplayMethod
+   * @param page {Page} Browser tab
+   * @param priceDisplayMethod {string} Value to select on price display method select
    * @returns {Promise<void>}
    */
   async setPriceDisplayMethod(page, priceDisplayMethod) {
