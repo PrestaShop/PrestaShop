@@ -1,10 +1,6 @@
 const faker = require('faker');
 
-/**
- * Class representing store data
- * @class
- */
-class Store {
+module.exports = class Store {
   constructor(storeToCreate = {}) {
     this.name = storeToCreate.name || faker.company.companyName();
 
@@ -27,5 +23,4 @@ class Store {
 
     this.hours = storeToCreate.hours || new Array(7).fill('10:00 - 18:00', 0, 7);
   }
-}
-module.exports = Store;
+};

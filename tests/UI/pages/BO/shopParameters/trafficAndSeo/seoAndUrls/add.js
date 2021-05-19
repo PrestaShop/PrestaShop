@@ -82,7 +82,7 @@ class AddSeoUrl extends BOBasePage {
   /**
    * Create/Edit seo page
    * @param page {Page} Browser tab
-   * @param seoPageData {SeoPage} Data to set on seo form
+   * @param seoPageData {SeoPageData} Data to set on seo form
    * @return {Promise<void>}
    */
   async createEditSeoPage(page, seoPageData) {

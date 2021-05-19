@@ -53,7 +53,7 @@ class AddContact extends BOBasePage {
   /**
    * Fill form for add/edit contact
    * @param page {Page} Browser tab
-   * @param contactData {Contact} Data to set on contact form
+   * @param contactData {ContactData} Data to set on contact form
    * @returns {Promise<string>}
    */
   async createEditContact(page, contactData) {

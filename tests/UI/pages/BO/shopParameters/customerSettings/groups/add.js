@@ -57,7 +57,7 @@ class AddGroup extends BOBasePage {
   /**
    * Fill group form and get successful message
    * @param page {Page} Browser tab
-   * @param groupData {Group} Data to set on create/edit form
+   * @param groupData {GroupData} Data to set on create/edit form
    * @return {Promise<string>}
    */
   async createEditGroup(page, groupData) {

@@ -31,7 +31,7 @@ class AddSearchEngine extends BOBasePage {
   /**
    * Fill create or edit search engine form and save it
    * @param page {Page} Browser tab
-   * @param searchEngineData {SearchEngine} Data to set on search engine form
+   * @param searchEngineData {SearchEngineData} Data to set on search engine form
    * @return {Promise<string>}
    */
   async createEditSearchEngine(page, searchEngineData) {

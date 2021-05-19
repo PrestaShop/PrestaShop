@@ -58,7 +58,7 @@ class AddTitle extends BOBasePage {
   /**
    * Fill title form and get successful message
    * @param page {Page} Browser tab
-   * @param titleData {Title} Data to set on create/edit title form
+   * @param titleData {TitleData} Data to set on create/edit title form
    * @return {Promise<string>}
    */
   async createEditTitle(page, titleData) {

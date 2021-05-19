@@ -38,7 +38,7 @@ class AddOrderStatus extends BOBasePage {
   /**
    * Fill order status form in create or edit page and save
    * @param page {Page} Browser tab
-   * @param orderStatusData {orderStatus} Data to set on order status form
+   * @param orderStatusData {orderStatusData} Data to set on order status form
    * @return {Promise<string>}
    */
   async setOrderStatus(page, orderStatusData) {

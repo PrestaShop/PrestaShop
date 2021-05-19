@@ -2,11 +2,7 @@ const faker = require('faker');
 
 const genders = ['Male', 'Female', 'Neutral'];
 
-/**
- * Class representing title data
- * @class
- */
-class Title {
+module.exports = class Title {
   constructor(titleToCreate = {}) {
     // Title name should contain at most 20 characters
     this.name = titleToCreate.name || (faker.random.word()).substring(0, 19).trim();
@@ -16,5 +12,4 @@ class Title {
     this.imageWidth = titleToCreate.imageWidth || 16;
     this.imageHeight = titleToCreate.imageHeight || 16;
   }
-}
-module.exports = Title;
+};

@@ -2,11 +2,7 @@ const faker = require('faker');
 
 const priceDisplayMethod = ['Tax included', 'Tax excluded'];
 
-/**
- * Class representing contact data
- * @class
- */
-class Group {
+module.exports = class Group {
   constructor(groupToCreate = {}) {
     this.name = groupToCreate.name || faker.name.jobType();
     this.frName = groupToCreate.frName || this.name;
@@ -14,5 +10,4 @@ class Group {
     this.priceDisplayMethod = groupToCreate.priceDisplayMethod || faker.random.arrayElement(priceDisplayMethod);
     this.shownPrices = groupToCreate.shownPrices === undefined ? true : groupToCreate.shownPrices;
   }
-}
-module.exports = Group;
+};

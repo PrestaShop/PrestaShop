@@ -1,10 +1,6 @@
 const faker = require('faker');
 
-/**
- * Class representing order status data
- * @class
- */
-class OrderStatus {
+module.exports = class OrderStatus {
   constructor(orderStatusToCreate = {}) {
     this.name = orderStatusToCreate.name || `order_status_${faker.lorem.word()}`;
     this.color = orderStatusToCreate.color || faker.internet.color();
@@ -18,5 +14,4 @@ class OrderStatus {
     this.paidOn = orderStatusToCreate.paidOn === undefined ? true : orderStatusToCreate.paidOn;
     this.deliveryOn = orderStatusToCreate.deliveryOn === undefined ? true : orderStatusToCreate.deliveryOn;
   }
-}
-module.exports = OrderStatus;
+};
