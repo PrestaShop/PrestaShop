@@ -126,7 +126,16 @@ $(() => {
     const $valueInput = $form.find(OrderViewPageMap.addCartRuleValueInput);
     const $valueFormGroup = $valueInput.closest('.form-group');
 
-    $form.find(OrderViewPageMap.addCartRuleTypeSelect).on('change', event => {
+    $modal.on('shown.bs.modal', () => {
+      $(OrderViewPageMap.addCartRuleSubmit).attr('disabled', true);
+    });
+
+    $form.find(OrderViewPageMap.addCartRuleNameInput).on('keyup', (event) => {
+      const cartRuleName = $(event.currentTarget).val();
+      $(OrderViewPageMap.addCartRuleSubmit).attr('disabled', cartRuleName.trim().length === 0);
+    });
+
+    $form.find(OrderViewPageMap.addCartRuleTypeSelect).on('change', (event) => {
       const selectedCartRuleType = $(event.currentTarget).val();
       const $valueUnit = $form.find(OrderViewPageMap.addCartRuleValueUnit);
 
