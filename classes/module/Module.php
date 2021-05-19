@@ -428,7 +428,9 @@ abstract class ModuleCore implements ModuleInterface
         Cache::clean('Module::getModuleIdByName_' . pSQL($this->name));
 
         // Enable the module for current shops in context
-        $this->enable();
+        if (!$this->enable()) {
+            return false;
+        }
 
         // Permissions management
         foreach (['CREATE', 'READ', 'UPDATE', 'DELETE'] as $action) {
@@ -1121,6 +1123,8 @@ abstract class ModuleCore implements ModuleInterface
      * of an AdminTab which belongs to a module, in order to keep translation
      * related to a module in its directory.
      *
+     * Note: this won't work if the module's path contains symbolic links
+     *
      * @param string $current_class Name of Module class
      *
      * @return bool|string if the class belongs to a module, will return the module name. Otherwise, return false.
@@ -1130,8 +1134,6 @@ abstract class ModuleCore implements ModuleInterface
         // Module can now define AdminTab keeping the module translations method,
         // i.e. in modules/[module name]/[iso_code].php
         if (!isset(static::$classInModule[$current_class]) && class_exists($current_class)) {
-            global $_MODULES;
-            $_MODULE = [];
             $reflection_class = new ReflectionClass($current_class);
             $file_path = realpath($reflection_class->getFileName());
             $realpath_module_dir = realpath(_PS_MODULE_DIR_);
@@ -1142,11 +1144,6 @@ abstract class ModuleCore implements ModuleInterface
                 } else {
                     // For old AdminTab controllers
                     static::$classInModule[$current_class] = substr(dirname($file_path), strlen($realpath_module_dir) + 1);
-                }
-
-                $file = _PS_MODULE_DIR_ . static::$classInModule[$current_class] . '/' . Context::getContext()->language->iso_code . '.php';
-                if (Tools::file_exists_cache($file) && include_once($file)) {
-                    $_MODULES = !empty($_MODULES) ? array_merge($_MODULES, $_MODULE) : $_MODULE;
                 }
             } else {
                 static::$classInModule[$current_class] = false;
@@ -1275,7 +1272,7 @@ abstract class ModuleCore implements ModuleInterface
         // Find translations
         global $_MODULES;
         $file = _PS_MODULE_DIR_ . $module . '/' . Context::getContext()->language->iso_code . '.php';
-        if (Tools::file_exists_cache($file) && include_once($file)) {
+        if (Tools::file_exists_cache($file) && include_once ($file)) {
             if (isset($_MODULE) && is_array($_MODULE)) {
                 $_MODULES = !empty($_MODULES) ? array_merge($_MODULES, $_MODULE) : $_MODULE;
             }
@@ -1374,7 +1371,7 @@ abstract class ModuleCore implements ModuleInterface
                 // If no errors in Xml, no need instand and no need new config.xml file, we load only translations
                 if (!count($module_errors) && (int) $xml_module->need_instance == 0) {
                     $file = _PS_MODULE_DIR_ . $module . '/' . Context::getContext()->language->iso_code . '.php';
-                    if (Tools::file_exists_cache($file) && include_once($file)) {
+                    if (Tools::file_exists_cache($file) && include_once ($file)) {
                         if (isset($_MODULE) && is_array($_MODULE)) {
                             $_MODULES = !empty($_MODULES) ? array_merge($_MODULES, $_MODULE) : $_MODULE;
                         }
@@ -3069,8 +3066,14 @@ abstract class ModuleCore implements ModuleInterface
             $override_file = array_diff($override_file, ["\n"]);
             eval(
                 preg_replace(
-                    ['#^\s*<\?(?:php)?#', '#class\s+' . $classname . '\s+extends\s+([a-z0-9_]+)(\s+implements\s+([a-z0-9_]+))?#i'],
-                    [' ', 'class ' . $classname . 'OverrideOriginal' . $uniq . ' extends \stdClass'],
+                    [
+                        '#^\s*<\?(?:php)?#',
+                        '#class\s+' . $classname . '\s+extends\s+([a-z0-9_]+)(\s+implements\s+([a-z0-9_]+))?#i',
+                    ],
+                    [
+                        ' ',
+                        'class ' . $classname . 'OverrideOriginal' . $uniq . ' extends \stdClass',
+                    ],
                     implode('', $override_file)
                 )
             );
@@ -3080,8 +3083,14 @@ abstract class ModuleCore implements ModuleInterface
             $module_file = array_diff($module_file, ["\n"]);
             eval(
                 preg_replace(
-                    ['#^\s*<\?(?:php)?#', '#class\s+' . $classname . '(\s+extends\s+([a-z0-9_]+)(\s+implements\s+([a-z0-9_]+))?)?#i'],
-                    [' ', 'class ' . $classname . 'Override' . $uniq . ' extends \stdClass'],
+                    [
+                        '#^\s*<\?(?:php)?#',
+                        '#class\s+' . $classname . '(\s+extends\s+([a-z0-9_]+)(\s+implements\s+([a-z0-9_]+))?)?#i',
+                    ],
+                    [
+                        ' ',
+                        'class ' . $classname . 'Override' . $uniq . ' extends \stdClass',
+                    ],
                     implode('', $module_file)
                 )
             );
@@ -3155,8 +3164,14 @@ abstract class ModuleCore implements ModuleInterface
                 } while (class_exists($classname . 'OverrideOriginal_remove', false));
                 eval(
                     preg_replace(
-                        ['#^\s*<\?(?:php)?#', '#class\s+' . $classname . '(\s+extends\s+([a-z0-9_]+)(\s+implements\s+([a-z0-9_]+))?)?#i'],
-                        [' ', 'class ' . $classname . 'Override' . $uniq . ' extends \stdClass'],
+                        [
+                            '#^\s*<\?(?:php)?#',
+                            '#class\s+' . $classname . '(\s+extends\s+([a-z0-9_]+)(\s+implements\s+([a-z0-9_]+))?)?#i',
+                        ],
+                        [
+                            ' ',
+                            'class ' . $classname . 'Override' . $uniq . ' extends \stdClass',
+                        ],
                         implode('', $module_file)
                     )
                 );
@@ -3241,8 +3256,14 @@ abstract class ModuleCore implements ModuleInterface
 
             eval(
                 preg_replace(
-                    ['#^\s*<\?(?:php)?#', '#class\s+' . $classname . '\s+extends\s+([a-z0-9_]+)(\s+implements\s+([a-z0-9_]+))?#i'],
-                    [' ', 'class ' . $classname . 'OverrideOriginal_remove' . $uniq . ' extends \stdClass'],
+                    [
+                        '#^\s*<\?(?:php)?#',
+                        '#class\s+' . $classname . '\s+extends\s+([a-z0-9_]+)(\s+implements\s+([a-z0-9_]+))?#i',
+                    ],
+                    [
+                        ' ',
+                        'class ' . $classname . 'OverrideOriginal_remove' . $uniq . ' extends \stdClass',
+                    ],
                     implode('', $override_file)
                 )
             );
@@ -3251,8 +3272,14 @@ abstract class ModuleCore implements ModuleInterface
             $module_file = file($this->getLocalPath() . 'override/' . $path);
             eval(
                 preg_replace(
-                    ['#^\s*<\?(?:php)?#', '#class\s+' . $classname . '(\s+extends\s+([a-z0-9_]+)(\s+implements\s+([a-z0-9_]+))?)?#i'],
-                    [' ', 'class ' . $classname . 'Override_remove' . $uniq . ' extends \stdClass'],
+                    [
+                        '#^\s*<\?(?:php)?#',
+                        '#class\s+' . $classname . '(\s+extends\s+([a-z0-9_]+)(\s+implements\s+([a-z0-9_]+))?)?#i',
+                    ],
+                    [
+                        ' ',
+                        'class ' . $classname . 'Override_remove' . $uniq . ' extends \stdClass',
+                    ],
                     implode('', $module_file)
                 )
             );
