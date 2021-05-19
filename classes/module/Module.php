@@ -1109,6 +1109,8 @@ abstract class ModuleCore implements ModuleInterface
      * of an AdminTab which belongs to a module, in order to keep translation
      * related to a module in its directory.
      *
+     * Note: this won't work if the module's path contains symbolic links
+     *
      * @param string $current_class Name of Module class
      *
      * @return bool|string if the class belongs to a module, will return the module name. Otherwise, return false.
@@ -1118,8 +1120,6 @@ abstract class ModuleCore implements ModuleInterface
         // Module can now define AdminTab keeping the module translations method,
         // i.e. in modules/[module name]/[iso_code].php
         if (!isset(static::$classInModule[$current_class]) && class_exists($current_class)) {
-            global $_MODULES;
-            $_MODULE = [];
             $reflection_class = new ReflectionClass($current_class);
             $file_path = realpath($reflection_class->getFileName());
             $realpath_module_dir = realpath(_PS_MODULE_DIR_);
@@ -1130,11 +1130,6 @@ abstract class ModuleCore implements ModuleInterface
                 } else {
                     // For old AdminTab controllers
                     static::$classInModule[$current_class] = substr(dirname($file_path), strlen($realpath_module_dir) + 1);
-                }
-
-                $file = _PS_MODULE_DIR_ . static::$classInModule[$current_class] . '/' . Context::getContext()->language->iso_code . '.php';
-                if (Tools::file_exists_cache($file) && include_once ($file)) {
-                    $_MODULES = !empty($_MODULES) ? array_merge($_MODULES, $_MODULE) : $_MODULE;
                 }
             } else {
                 static::$classInModule[$current_class] = false;
