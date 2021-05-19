@@ -422,7 +422,7 @@ class Stores extends BOBasePage {
   /**
    * Se contact details
    * @param page {Page} Browser tab
-   * @param storeContactData {object} Store contact data to set on contact detail form
+   * @param storeContactData {StoreData} Store contact data to set on contact detail form
    * @returns {Promise<string>}
    */
   async setContactDetails(page, storeContactData) {
