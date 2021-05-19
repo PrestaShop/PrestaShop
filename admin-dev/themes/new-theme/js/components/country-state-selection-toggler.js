@@ -96,10 +96,6 @@ export default class CountryStateSelectionToggler {
   }
 
   toggle() {
-    if (this.$countryStateSelector.find('option').length > 0) {
-      this.$stateSelectionBlock.removeClass('d-none');
-    } else {
-      this.$stateSelectionBlock.addClass('d-none');
-    }
+    this.$stateSelectionBlock.toggleClass('d-none', !this.$countryStateSelector.find('option').length > 0);
   }
 }
