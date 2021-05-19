@@ -2747,7 +2747,7 @@ class AdminControllerCore extends Controller
     }
 
     /**
-     * Non-static method which uses AdminController::translate().
+     * Translates a wording
      *
      * @deprecated Use $this->trans instead
      *
@@ -2762,22 +2762,7 @@ class AdminControllerCore extends Controller
     {
         @trigger_error(__FUNCTION__ . 'is deprecated. Use AdminController::trans instead.', E_USER_DEPRECATED);
 
-        $translated = $this->translator->trans($string);
-
-        if ($translated !== $string) {
-            return $translated;
-        }
-
-        // fallback for legacy modules
-
-        if ($class === null || $class == 'AdminTab') {
-            $class = substr(get_class($this), 0, -10);
-        } elseif (strtolower(substr($class, -10)) == 'controller') {
-            /* classname has changed, from AdminXXX to AdminXXXController, so we remove 10 characters and we keep same keys */
-            $class = substr($class, 0, -10);
-        }
-
-        return Translate::getAdminTranslation($string, $class, $addslashes, $htmlentities);
+        return $this->translator->trans($string);
     }
 
     /**

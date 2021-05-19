@@ -79,20 +79,6 @@ class TranslateCore
     {
         @trigger_error(__FUNCTION__ . 'is deprecated. Use Context::getContext()->getTranslator()->trans() instead.', E_USER_DEPRECATED);
 
-        static $modulesTabs = null;
-
-        if ($modulesTabs === null) {
-            $modulesTabs = Tab::getModuleTabList();
-        }
-
-        if (isset($modulesTabs[strtolower($class)])) {
-            $classNameController = $class . 'controller';
-            // if the class is extended by a module, use modules/[module_name]/xx.php lang file
-            if (class_exists($classNameController) && Module::getModuleNameFromClass($classNameController)) {
-                return Translate::getModuleTranslation(Module::$classInModule[$classNameController], $string, $classNameController, $sprintf, $addslashes);
-            }
-        }
-
         $str = Context::getContext()->getTranslator()->trans($string);
 
         if ($htmlentities) {
