@@ -29,10 +29,50 @@ declare(strict_types=1);
 namespace Tests\Unit\Classes;
 
 use DbQuery;
-use PhpEncryption;
 use PHPUnit\Framework\TestCase;
+
+class DbQueryFake extends DbQuery
+{
+    public function getQuery()
+    {
+        return $this->query;
+    }
+}
 
 class DbQueryCoreTest extends TestCase
 {
-    
+    public DbQuery $dbQuery;
+
+    public function __construct($name = null, array $data = [], $dataName = '')
+    {
+        $this->dbQuery = new DbQueryFake();
+        parent::__construct($name, $data, $dataName);
+    }
+
+    /**
+     * @param mixed $type
+     * @param string $expectedType
+     *
+     * @dataProvider providerType
+     */
+    public function testType($type, string $expectedType): void
+    {
+        $dbQuery = $this->dbQuery;
+        $dbQuery->type($type);
+        $this->assertSame($expectedType, $dbQuery->getQuery()['type']);
+    }
+
+    public function providerType(): array
+    {
+        return [
+            ['SELECT', 'SELECT'],
+            ['DELETE', 'DELETE'],
+            ['INVALID_TYPE', 'SELECT'],
+            ['select', 'SELECT'],
+            ['delete', 'SELECT'],
+            [666, 'SELECT'],
+            [false, 'SELECT'],
+            [null, 'SELECT'],
+        ];
+    }
 }
