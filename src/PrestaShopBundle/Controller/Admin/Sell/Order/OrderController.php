@@ -960,9 +960,9 @@ class OrderController extends FrameworkBundleAdminController
             $this->getCommandBus()->handle(new UpdateInvoiceNoteCommand(
             $orderInvoiceId,
             $request->request->get('invoice_note')
-        ))) {
+            )));
             $this->addFlash('success', $this->trans('Successful update.', 'Admin.Notifications.Success'));
-        } else {
+        } catch(InvoiceException $e) {
             $this->addFlash('error', $this->trans('Invalid characters:', 'Admin.Notifications.Info'));
         }
 
