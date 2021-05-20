@@ -1,7 +1,16 @@
 require('module-alias/register');
 const BOBasePage = require('@pages/BO/BObasePage');
 
+/**
+ * Order settings page, contains selectors and functions for the page
+ * @class
+ * @extends BOBasePage
+ */
 class OrderSettings extends BOBasePage {
+  /**
+   * @constructs
+   * Setting up titles and selectors to use on order settings page
+   */
   constructor() {
     super();
 
@@ -20,6 +29,7 @@ class OrderSettings extends BOBasePage {
     this.enableTermsOfServiceToggleInput = toggle => `#general_enable_tos_${toggle}`;
     this.pageForTermsAndConditionsSelect = '#general_tos_cms_id';
     this.saveGeneralFormButton = `${this.generalForm} #form-general-save-button`;
+
     // Gift options form
     this.giftForm = '#configuration_gift_options_form';
     this.giftWrappingToggleInput = toggle => `#gift_options_enable_gift_wrapping_${toggle}`;
@@ -35,57 +45,61 @@ class OrderSettings extends BOBasePage {
 
   /**
    * Enable/disable final summary
-   * @param page
-   * @param toEnable, true to enable and false to disable
+   * @param page {Page} Browser tab
+   * @param toEnable {boolean} True if we need to enable final summary status
    * @return {Promise<string>}
    */
   async setFinalSummaryStatus(page, toEnable = true) {
     await page.check(this.enableFinalSummaryToggleInput(toEnable ? 1 : 0));
     await this.clickAndWaitForNavigation(page, this.saveGeneralFormButton);
+
     return this.getAlertSuccessBlockParagraphContent(page);
   }
 
   /**
    * Enable/Disable guest checkout
-   * @param page
-   * @param toEnable
+   * @param page {Page} Browser tab
+   * @param toEnable {boolean} True if we need to enable guest checkout status
    * @returns {Promise<string>}
    */
   async setGuestCheckoutStatus(page, toEnable = true) {
     await page.check(this.enableGuestCheckoutToggleInput(toEnable ? 1 : 0));
     await this.clickAndWaitForNavigation(page, this.saveGeneralFormButton);
+
     return this.getAlertSuccessBlockParagraphContent(page);
   }
 
   /**
    * Enable/Disable reordering option
-   * @param page
-   * @param toEnable
+   * @param page {Page} Browser tab
+   * @param toEnable {boolean} True if we need to enable reordering option status
    * @returns {Promise<string>}
    */
   async setReorderOptionStatus(page, toEnable = true) {
     await page.check(this.disableReorderingToggleInput(toEnable ? 1 : 0));
     await this.clickAndWaitForNavigation(page, this.saveGeneralFormButton);
+
     return this.getAlertSuccessBlockParagraphContent(page);
   }
 
   /**
    * Set minimum quantity required to purchase
-   * @param page
-   * @param value
+   * @param page {Page} Browser tab
+   * @param value {number} Value to set on minimum purchase input
    * @returns {Promise<string>}
    */
   async setMinimumPurchaseRequiredTotal(page, value) {
     await this.setValue(page, this.minimumPurchaseRequiredValue, value.toString());
     await this.clickAndWaitForNavigation(page, this.saveGeneralFormButton);
+
     return this.getAlertSuccessBlockParagraphContent(page);
   }
 
   /**
    * Set terms of service
-   * @param page
-   * @param toEnable
-   * @param pageName
+   * @param page {Page} Browser tab
+   * @param toEnable {boolean} True if we need to enable terms of service
+   * @param pageName {string} Page name to choose
    * @returns {Promise<string>}
    */
   async setTermsOfService(page, toEnable = true, pageName = '') {
@@ -94,16 +108,17 @@ class OrderSettings extends BOBasePage {
       await this.selectByVisibleText(page, this.pageForTermsAndConditionsSelect, pageName);
     }
     await this.clickAndWaitForNavigation(page, this.saveGeneralFormButton);
+
     return this.getAlertSuccessBlockParagraphContent(page);
   }
 
   /**
    * Set gift options form
-   * @param page
-   * @param wantedStatus
-   * @param price
-   * @param tax
-   * @param recyclePackagingStatus
+   * @param page {Page} Browser tab
+   * @param wantedStatus {boolean}  True if we need to enable gift wrapping status
+   * @param price {number} Price to set on gift wrapping price input
+   * @param tax {string} Value of tax to select
+   * @param recyclePackagingStatus {boolean} True if we need to enable recycle packaging status
    * @return {Promise<string>}
    */
   async setGiftOptions(page, wantedStatus = false, price = 0, tax = 'none', recyclePackagingStatus = false) {
@@ -115,12 +130,13 @@ class OrderSettings extends BOBasePage {
 
     await page.check(this.recycledPackagingToggleInput(recyclePackagingStatus ? 1 : 0));
     await this.clickAndWaitForNavigation(page, this.saveGiftOptionsFormButton);
+
     return this.getAlertSuccessBlockParagraphContent(page);
   }
 
   /**
    * Go to statuses page
-   * @param page
+   * @param page {Page} Browser tab
    * @returns {Promise<void>}
    */
   async goToStatusesPage(page) {

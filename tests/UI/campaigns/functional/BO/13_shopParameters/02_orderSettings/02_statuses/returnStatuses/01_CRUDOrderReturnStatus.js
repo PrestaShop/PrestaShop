@@ -129,7 +129,7 @@ describe('Create, update and delete order return status in BO', async () => {
     it('should go to edit order return status page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'goToEditOrderReturnStatusPage', baseContext);
 
-      await statusesPage.gotoEditPage(page, tableName, 1);
+      await statusesPage.goToEditPage(page, tableName, 1);
 
       const pageTitle = await addOrderReturnStatusPage.getPageTitle(page);
       await expect(pageTitle).to.contains(addOrderReturnStatusPage.pageTitleEdit);
