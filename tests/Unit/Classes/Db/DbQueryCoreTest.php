@@ -28,25 +28,23 @@ declare(strict_types=1);
 
 namespace Tests\Unit\Classes;
 
+if (!defined('_DB_PREFIX_')) {
+    define('_DB_PREFIX_', 'test_');
+}
+
 use DbQuery;
 use PHPUnit\Framework\TestCase;
 
-class DbQueryFake extends DbQuery
-{
-    public function getQuery()
-    {
-        return $this->query;
-    }
-}
-
 class DbQueryCoreTest extends TestCase
 {
-    public DbQuery $dbQuery;
-
-    public function __construct($name = null, array $data = [], $dataName = '')
+    /*
+     * get DbQuery object
+     *
+     * @return DbQuery
+     */
+    public function dbQueryInstance(): DbQuery
     {
-        $this->dbQuery = new DbQueryFake();
-        parent::__construct($name, $data, $dataName);
+        return new DbQuery();
     }
 
     /**
@@ -57,9 +55,33 @@ class DbQueryCoreTest extends TestCase
      */
     public function testType($type, string $expectedType): void
     {
-        $dbQuery = $this->dbQuery;
+        $dbQuery = $this->dbQueryInstance();
         $dbQuery->type($type);
         $this->assertSame($expectedType, $dbQuery->getQuery()['type']);
+    }
+
+    /**
+     * @param mixed $fields
+     * @param mixed $expectedSelect
+     *
+     * @dataProvider providerSelect
+     */
+    public function testSelect($fields, $expectedSelect): void
+    {
+        $dbQuery = $this->dbQueryInstance();
+        $dbQuery->select($fields);
+        $this->assertSame($expectedSelect, $dbQuery->getQuery()['select']);
+    }
+
+    /**
+     * @param mixed $dbQuery
+     * @param mixed $expectedValue
+     *
+     * @dataProvider providerBuild
+     */
+    public function testBuild(DbQuery $dbQuery, $expectedValue)
+    {
+        $this->assertSame(trim($dbQuery->build()), trim($expectedValue));
     }
 
     public function providerType(): array
@@ -73,6 +95,66 @@ class DbQueryCoreTest extends TestCase
             [666, 'SELECT'],
             [false, 'SELECT'],
             [null, 'SELECT'],
+        ];
+    }
+
+    public function providerSelect(): array
+    {
+        return [
+            ['FIELD1', [
+                0 => 'FIELD1',
+            ]],
+            ['FIELD1, FIELD2', [
+                0 => 'FIELD1, FIELD2',
+            ]],
+            [null, []],
+            [false, []],
+        ];
+    }
+
+    public function providerBuild()
+    {
+        define('_BREAK_LINE_', "\n");
+
+        $simpleSelectQuery = $this->dbQueryInstance()
+            ->select('id_product')
+            ->from('product')
+        ;
+
+        $simpleSelectQueryWithAlias = $this->dbQueryInstance()
+            ->select('p.name')
+            ->from('product', 'p')
+        ;
+
+        $simpleSelectQueryWhere = $this->dbQueryInstance()
+            ->select('id_product')
+            ->from('product')
+            ->where('id_category_default = 1')
+        ;
+
+        $simpleSelectQueryWithAliasandWhere = $this->dbQueryInstance()
+            ->select('p.*')
+            ->from('product', 'p')
+            ->where('p.reference = "testreference"')
+        ;
+
+        return [
+            [
+                $simpleSelectQuery,
+                'SELECT id_product' . _BREAK_LINE_ . 'FROM `' . _DB_PREFIX_ . 'product`',
+            ],
+            [
+                $simpleSelectQueryWhere,
+                'SELECT id_product' . _BREAK_LINE_ . 'FROM `' . _DB_PREFIX_ . 'product`' . _BREAK_LINE_ . 'WHERE (id_category_default = 1)',
+            ],
+            [
+                $simpleSelectQueryWithAlias,
+                'SELECT p.name' . _BREAK_LINE_ . 'FROM `' . _DB_PREFIX_ . 'product` p',
+            ],
+            [
+                $simpleSelectQueryWithAliasandWhere,
+                'SELECT p.*' . _BREAK_LINE_ . 'FROM `' . _DB_PREFIX_ . 'product` p' . _BREAK_LINE_ . 'WHERE (p.reference = "testreference")',
+            ],
         ];
     }
 }
