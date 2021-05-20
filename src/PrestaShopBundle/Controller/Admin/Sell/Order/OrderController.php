@@ -65,6 +65,7 @@ use PrestaShop\PrestaShop\Core\Domain\Order\Exception\OrderNotFoundException;
 use PrestaShop\PrestaShop\Core\Domain\Order\Exception\TransistEmailSendingException;
 use PrestaShop\PrestaShop\Core\Domain\Order\Invoice\Command\GenerateInvoiceCommand;
 use PrestaShop\PrestaShop\Core\Domain\Order\Invoice\Command\UpdateInvoiceNoteCommand;
+use PrestaShop\PrestaShop\Core\Domain\Order\Invoice\Exception\InvoiceException;
 use PrestaShop\PrestaShop\Core\Domain\Order\OrderConstraints;
 use PrestaShop\PrestaShop\Core\Domain\Order\Payment\Command\AddPaymentCommand;
 use PrestaShop\PrestaShop\Core\Domain\Order\Product\Command\AddProductToOrderCommand;
@@ -958,9 +959,9 @@ class OrderController extends FrameworkBundleAdminController
     {
         try {
             $this->getCommandBus()->handle(new UpdateInvoiceNoteCommand(
-            $orderInvoiceId,
-            $request->request->get('invoice_note')
-            )));
+                $orderInvoiceId,
+                $request->request->get('invoice_note')
+            ));
             $this->addFlash('success', $this->trans('Successful update.', 'Admin.Notifications.Success'));
         } catch(InvoiceException $e) {
             $this->addFlash('error', $this->trans('Invalid characters:', 'Admin.Notifications.Info'));
