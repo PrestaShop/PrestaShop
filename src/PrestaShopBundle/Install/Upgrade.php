@@ -108,9 +108,9 @@ namespace PrestaShopBundle\Install {
         // used for translations
         public static $l_cache;
 
-        const FILE_PREFIX = 'PREFIX_';
-        const ENGINE_TYPE = 'ENGINE_TYPE';
-        const DB_NAME = 'DB_NAME';
+        public const FILE_PREFIX = 'PREFIX_';
+        public const ENGINE_TYPE = 'ENGINE_TYPE';
+        public const DB_NAME = 'DB_NAME';
 
         private static $classes14 = ['Cache', 'CacheFS', 'CarrierModule', 'Db', 'FrontController', 'Helper', 'ImportModule',
             'MCached', 'Module', 'ModuleGraph', 'ModuleGraphEngine', 'ModuleGrid', 'ModuleGridEngine',
@@ -164,7 +164,6 @@ namespace PrestaShopBundle\Install {
             'blockpaymentlogo',
             'blockstore',
             'blocktags',
-            'blockwishlist',
             'productpaymentlogos',
             'sendtoafriend',
             'themeconfigurator',
@@ -280,8 +279,8 @@ namespace PrestaShopBundle\Install {
             if (!defined('_PS_TRANSLATIONS_DIR_')) {
                 define('_PS_TRANSLATIONS_DIR_', _PS_ROOT_DIR_ . '/translations/');
             }
-            if (!defined('_PS_MODULES_DIR_')) {
-                define('_PS_MODULES_DIR_', _PS_ROOT_DIR_ . '/modules/');
+            if (!defined('_PS_MODULE_DIR_')) {
+                define('_PS_MODULE_DIR_', _PS_ROOT_DIR_ . '/modules/');
             }
             if (!defined('_PS_MAILS_DIR_')) {
                 define('_PS_MAILS_DIR_', _PS_ROOT_DIR_ . '/mails/');
@@ -1090,7 +1089,7 @@ namespace PrestaShopBundle\Install {
             return !empty($this->failureList);
         }
 
-        const SETTINGS_FILE = 'config/settings.inc.php';
+        public const SETTINGS_FILE = 'config/settings.inc.php';
 
         /* @phpstan-ignore-next-line */
         public static function migrateSettingsFile(Event $event = null)
@@ -1200,13 +1199,13 @@ namespace PrestaShopBundle\Install {
                         'database_password' => _LEGACY_DB_PASSWD_,
                         'database_name' => _LEGACY_DB_NAME_,
                         'database_prefix' => _LEGACY_DB_PREFIX_,
-                        'database_engine' => defined(_LEGACY_MYSQL_ENGINE_) ? _LEGACY_MYSQL_ENGINE_ : 'InnoDB',
+                        'database_engine' => defined('_LEGACY_MYSQL_ENGINE_') ? _LEGACY_MYSQL_ENGINE_ : 'InnoDB',
                         'cookie_key' => _LEGACY_COOKIE_KEY_,
                         'cookie_iv' => _LEGACY_COOKIE_IV_,
                         'new_cookie_key' => _LEGACY_NEW_COOKIE_KEY_,
-                        'ps_caching' => defined(_LEGACY_PS_CACHING_SYSTEM_) ? _LEGACY_PS_CACHING_SYSTEM_ : 'CacheMemcache',
-                        'ps_cache_enable' => defined(_LEGACY_PS_CACHE_ENABLED_) ? _LEGACY_PS_CACHE_ENABLED_ : false,
-                        'ps_creation_date' => defined(_LEGACY_PS_CREATION_DATE_) ? _LEGACY_PS_CREATION_DATE_ : date('Y-m-d H:i:s'),
+                        'ps_caching' => defined('_LEGACY_PS_CACHING_SYSTEM_') ? _LEGACY_PS_CACHING_SYSTEM_ : 'CacheMemcache',
+                        'ps_cache_enable' => defined('_LEGACY_PS_CACHE_ENABLED_') ? _LEGACY_PS_CACHE_ENABLED_ : false,
+                        'ps_creation_date' => defined('_LEGACY_PS_CREATION_DATE_') ? _LEGACY_PS_CREATION_DATE_ : date('Y-m-d H:i:s'),
                         'secret' => $secret,
                         'mailer_transport' => 'smtp',
                         'mailer_host' => '127.0.0.1',

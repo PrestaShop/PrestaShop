@@ -146,6 +146,7 @@ export default class PositionExtension {
 
     const positionsNb = params.positions.length;
     let position;
+
     for (let i = 0; i < positionsNb; i += 1) {
       position = params.positions[i];
       $form.append(

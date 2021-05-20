@@ -29,7 +29,6 @@ services:
             - '@router'
             - 'admin_merchandise_returns_filter'
 
-
     prestashop.core.grid.filter.credit_slip_form_factory:
         class: 'PrestaShop\PrestaShop\Core\Grid\Filter\FilterFormFactoryFormActionDecorator'
         arguments:

@@ -127,7 +127,10 @@ abstract class AbstractDomainFeatureContext implements Context
         return CommonFeatureContext::getContainer();
     }
 
-    protected function assertLastErrorIsNull()
+    /**
+     * @throws RuntimeException
+     */
+    protected function assertLastErrorIsNull(): void
     {
         $e = $this->getLastException();
 
@@ -180,6 +183,24 @@ abstract class AbstractDomainFeatureContext implements Context
         }
 
         return $rows;
+    }
+
+    /**
+     * @param string $localizedValue
+     *
+     * @return array
+     */
+    protected function localizeByCell(string $localizedValue): array
+    {
+        $localizedValues = [];
+        $valuesByLang = explode(';', $localizedValue);
+        foreach ($valuesByLang as $valueByLang) {
+            $value = explode(':', $valueByLang);
+            $langId = (int) Language::getIdByLocale($value[0], true);
+            $localizedValues[$langId] = $value[1];
+        }
+
+        return $localizedValues;
     }
 
     /**

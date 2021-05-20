@@ -223,7 +223,8 @@ class OrderControllerCore extends FrontController
     public function displayAjaxselectDeliveryOption()
     {
         $cart = $this->cart_presenter->present(
-            $this->context->cart
+            $this->context->cart,
+            true
         );
 
         ob_end_clean();
@@ -247,7 +248,7 @@ class OrderControllerCore extends FrontController
             Tools::getAllValues()
         );
 
-        $presentedCart = $this->cart_presenter->present($this->context->cart);
+        $presentedCart = $this->cart_presenter->present($this->context->cart, true);
 
         if (count($presentedCart['products']) <= 0 || $presentedCart['minimalPurchaseRequired']) {
             // if there is no product in current cart, redirect to cart page

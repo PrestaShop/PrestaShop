@@ -14,6 +14,11 @@
     > .count {
       @include notification_counter();
 
+      @include media-breakpoint-down("sm") {
+        top: 0.7rem;
+        right: 0.2rem;
+      }
+
       &.hide {
         display: none;
       }
@@ -33,13 +38,15 @@
 
   .notifications {
     top: 42px;
-    right: 5px;
+    // stylelint-disable-next-line
+    right: 5px !important;
     min-width: 25rem;
     padding: 0;
     margin: 0;
     font-size: $font-size-base;
     @include border-radius(0);
     box-shadow: 0 2px 2px 0 rgba(0, 0, 0, 0.1);
+
     &::before,
     &::after {
       position: absolute;
@@ -51,12 +58,14 @@
       content: " ";
       border: solid transparent;
     }
+
     &::after {
       margin-right: 1px;
       border-color: transparent;
       border-width: 7px;
-      border-bottom-color: #fff;
+      border-bottom-color: $white;
     }
+
     &::before {
       margin-left: -8px;
       border-color: transparent;
@@ -79,7 +88,7 @@
         &.active {
           color: $gray-dark;
           border-top: 0;
-          border-bottom: 2px solid $nav-tabs-active-link-hover-border-color;
+          border-bottom: 2px solid $brand-primary;
         }
 
         &:hover {
@@ -116,7 +125,9 @@
               display: block;
               margin-top: 1rem;
               font-size: 1.625rem;
-              color: $gray-medium;
+              // To be changed to var when UIKit sources are imported
+              color: #363a41;
+              opacity: 1;
             }
           }
 
@@ -125,9 +136,15 @@
             bottom: 0;
             display: block;
             width: 100%;
+
             .mobile & {
               bottom: 3.125rem;
             }
+          }
+
+          @include media-breakpoint-down("sm") {
+            // To be changed to var when UIKit sources are imported
+            color: #363a41;
           }
         }
       }
@@ -172,6 +189,7 @@
       }
     }
   }
+
   .mobile & {
     .nav-link::before {
       display: none;
@@ -179,15 +197,19 @@
       font-size: 30px;
       color: $gray-dark;
     }
+
     #orders-tab::before {
       content: "\E8CB";
     }
+
     #customers-tab::before {
       content: "\E7FE";
     }
+
     #messages-tab::before {
       content: "\E0BE";
     }
+
     .no-notification {
       top: 7.75rem;
     }

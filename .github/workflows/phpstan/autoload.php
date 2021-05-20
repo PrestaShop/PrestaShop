@@ -25,6 +25,13 @@ require_once _PS_ROOT_DIR_ . '/config/bootstrap.php';
 require_once _PS_ROOT_DIR_ . '/install-dev/classes/exception.php';
 require_once _PS_ROOT_DIR_ . '/install-dev/classes/session.php';
 require_once _PS_ROOT_DIR_ . '/var/SymfonyRequirements.php';
+include_once _PS_TOOL_DIR_ . 'profiling/Profiler.php';
+include_once _PS_TOOL_DIR_ . 'profiling/Controller.php';
+include_once _PS_TOOL_DIR_ . 'profiling/ObjectModel.php';
+include_once _PS_TOOL_DIR_ . 'profiling/Db.php';
+include_once _PS_TOOL_DIR_ . 'profiling/Hook.php';
+include_once _PS_TOOL_DIR_ . 'profiling/Module.php';
+include_once _PS_TOOL_DIR_ . 'profiling/Tools.php';
 
 // Make sure loader php-parser is coming from php stan composer
 

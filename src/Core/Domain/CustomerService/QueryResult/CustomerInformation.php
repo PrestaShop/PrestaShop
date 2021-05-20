@@ -52,12 +52,12 @@ class CustomerInformation
     private $email;
 
     /**
-     * @var int
+     * @var int|null
      */
     private $validatedOrdersCount;
 
     /**
-     * @var string
+     * @var string|null
      */
     private $validatedOrdersAmount;
 
@@ -81,9 +81,9 @@ class CustomerInformation
      * @param string|null $firstName
      * @param string|null $lastName
      * @param string $email
-     * @param int $validatedOrdersCount
-     * @param string $validatedOrdersAmount
-     * @param string $customerSinceDate
+     * @param int|null $validatedOrdersCount
+     * @param string|null $validatedOrdersAmount
+     * @param string|null $customerSinceDate
      */
     public function __construct(
         $customerId,
@@ -136,7 +136,7 @@ class CustomerInformation
     }
 
     /**
-     * @return int
+     * @return int|null
      */
     public function getValidatedOrdersCount()
     {
@@ -144,7 +144,7 @@ class CustomerInformation
     }
 
     /**
-     * @return string
+     * @return string|null
      */
     public function getValidatedOrdersAmount()
     {

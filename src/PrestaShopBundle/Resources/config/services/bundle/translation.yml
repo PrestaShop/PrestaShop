@@ -2,6 +2,32 @@ services:
     _defaults:
         public: true
 
+    prestashop.translation.translator_language_loader:
+        class: PrestaShopBundle\Translation\TranslatorLanguageLoader
+        arguments:
+            - '@prestashop.adapter.module.repository.module_repository'
+
+    prestashop.translation.builder.translation_tree:
+        class: PrestaShop\PrestaShop\Core\Translation\Builder\TranslationsTreeBuilder
+        arguments:
+            - '@router.default'
+            - '@prestashop.translation.builder.translation_catalogue'
+
+    prestashop.translation.builder.translation_catalogue:
+        class: PrestaShop\PrestaShop\Core\Translation\Builder\TranslationCatalogueBuilder
+        arguments:
+            - '@prestashop.translation.provider.catalogue_provider_factory'
+
+    prestashop.translation.export.translation_catalogue:
+        class: PrestaShop\PrestaShop\Core\Translation\Export\TranslationCatalogueExporter
+        arguments:
+            - '@prestashop.translation.builder.translation_catalogue'
+            - '@prestashop.translation.factory.provider_definition'
+            - '@prestashop.translation.dumper.xliff'
+            - '@filesystem'
+            - '@prestashop.utils.zip_manager'
+            - "%translation_catalogues_export_dir%"
+
     #TRANSLATIONS FACTORIES
     prestashop.translation.translations_factory:
         class: PrestaShopBundle\Translation\Factory\TranslationsFactory
@@ -18,7 +44,23 @@ services:
     ps.theme_translations_factory:
         alias: "prestashop.translation.theme_translations_factory"
 
+    prestashop.translation.factory.provider_definition:
+        class: PrestaShop\PrestaShop\Core\Translation\Storage\Provider\Definition\ProviderDefinitionFactory
+
     #TRANSLATIONS PROVIDERS
+    prestashop.translation.provider.catalogue_provider_factory:
+        class: PrestaShop\PrestaShop\Core\Translation\Storage\Provider\CatalogueProviderFactory
+        arguments:
+            - '@prestashop.translation.loader.database'
+            - '@prestashop.translation.extractor.legacy_module'
+            - '@prestashop.translation.loader.legacy_file'
+            - '@prestashop.translation.extractor.theme'
+            - '@prestashop.core.addon.theme.repository'
+            - '@filesystem'
+            - '%themes_translations_dir%'
+            - '%modules_dir%'
+            - "%translations_dir%"
+
     prestashop.translation.backoffice_provider:
         class: PrestaShopBundle\Translation\Provider\BackOfficeProvider
         arguments:
@@ -116,15 +158,33 @@ services:
         tags:
             - {name: translation.loader, alias: db}
 
+    prestashop.translation.loader.database:
+        class: PrestaShop\PrestaShop\Core\Translation\Storage\Loader\DatabaseTranslationLoader
+        arguments:
+            - "@prestashop.core.admin.lang.repository"
+            - "@prestashop.core.admin.translation.repository"
+
     prestashop.translation.sql_loader:
         class: PrestaShopBundle\Translation\Loader\SqlTranslationLoader
         tags:
             - {name: translation.loader, alias: db}
 
+    prestashop.translation.reader.legacy_file:
+        class: PrestaShop\PrestaShop\Core\Translation\Storage\Loader\LegacyFileReader
+        arguments:
+            - "@prestashop.core.translation.locale.converter"
+
     prestashop.translation.legacy_file_reader:
         class: PrestaShopBundle\Translation\Loader\LegacyFileReader
         arguments:
             - "@prestashop.core.translation.locale.converter"
+
+    prestashop.translation.loader.legacy_file:
+        class: PrestaShop\PrestaShop\Core\Translation\Storage\Loader\LegacyFileLoader
+        arguments:
+            - "@prestashop.translation.reader.legacy_file"
+        tags:
+            - {name: translation.loader, alias: legacy_files}
 
     prestashop.translation.legacy_file_loader:
       class: PrestaShopBundle\Translation\Loader\LegacyFileLoader
@@ -141,10 +201,24 @@ services:
             - "@prestashop.compiler.smarty.template"
             - true
 
+
+    prestashop.translation.extractor.theme:
+        class: PrestaShop\PrestaShop\Core\Translation\Storage\Extractor\ThemeExtractor
+        arguments:
+            - "@prestashop.translation.extractor.smarty.legacy"
+
     prestashop.translation.theme_extractor:
         class: PrestaShopBundle\Translation\Extractor\ThemeExtractor
         arguments:
             - "@prestashop.translation.extractor.smarty.legacy"
+
+    prestashop.translation.extractor.legacy_module:
+        class: PrestaShop\PrestaShop\Core\Translation\Storage\Extractor\LegacyModuleExtractor
+        arguments:
+            - "@prestashop.translation.extractor.php"
+            - "@prestashop.translation.extractor.smarty.legacy"
+            - "@prestashop.translation.extractor.twig"
+            - "%modules_dir%"
 
     prestashop.translation.legacy_module.extractor:
         class: PrestaShopBundle\Translation\Extractor\LegacyModuleExtractor

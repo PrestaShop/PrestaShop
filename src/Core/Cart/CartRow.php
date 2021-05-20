@@ -44,22 +44,22 @@ class CartRow
     /**
      * row round mode by item.
      */
-    const ROUND_MODE_ITEM = 'item';
+    public const ROUND_MODE_ITEM = 'item';
 
     /**
      * row round mode by line.
      */
-    const ROUND_MODE_LINE = 'line';
+    public const ROUND_MODE_LINE = 'line';
 
     /**
      * row round mode by all lines.
      */
-    const ROUND_MODE_TOTAL = 'total';
+    public const ROUND_MODE_TOTAL = 'total';
 
     /**
      * static cache key pattern.
      */
-    const PRODUCT_PRICE_CACHE_ID_PATTERN = 'Product::getPriceStatic_%d-%d';
+    public const PRODUCT_PRICE_CACHE_ID_PATTERN = 'Product::getPriceStatic_%d-%d';
 
     /**
      * @var PriceCalculator adapter to calculate price
@@ -333,9 +333,9 @@ class CartRow
 				WHERE `id_product` = ' . (int) $productId . '
 				AND `id_cart` = ' . (int) $cart->id;
                 $cartQuantity = (int) $this->databaseAdapter->getValue($sql, _PS_USE_SQL_SLAVE_);
-                $this->cacheAdapter->store($cacheId, $cartQuantity);
+                $this->cacheAdapter->store($cacheId, (string) $cartQuantity);
             } else {
-                $cartQuantity = $this->cacheAdapter->retrieve($cacheId);
+                $cartQuantity = (int) $this->cacheAdapter->retrieve($cacheId);
             }
         }
 

@@ -100,8 +100,8 @@
             <div class="sf-toolbar-info-piece">
                 <b>Resources</b>
                 <span>
-                    {% set appVersion = collector.applicationversion|split('.')|join()[:2] %}
-                    <a href="http://doc.prestashop.com/display/PS{{ appVersion }}" rel="help">
+                    {% set appVersion = collector.applicationversion|join()[:3] %}
+                    <a href="https://devdocs.prestashop.com/{{ appVersion }}/" rel="help">
                         Read PrestaShop {{ collector.applicationversion }} Docs
                     </a>
                 </span>
@@ -224,8 +224,8 @@
         <div class="sf-toolbar-info-piece">
           <b>Resources</b>
           <span>
-            {% set appVersion = collector.applicationversion|split('.')|join()[:2] %}
-              <a href="http://doc.prestashop.com/display/PS{{ appVersion }}" rel="help">
+            {% set appVersion = collector.applicationversion|join()[:3] %}
+              <a href="https://devdocs.prestashop.com/{{ appVersion }}/" rel="help">
                   Read PrestaShop {{ collector.applicationversion }} Docs
               </a>
           </span>

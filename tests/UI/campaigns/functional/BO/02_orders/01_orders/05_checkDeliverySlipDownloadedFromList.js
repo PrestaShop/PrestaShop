@@ -20,7 +20,7 @@ const orderConfirmationPage = require('@pages/FO/checkout/orderConfirmation');
 
 // Importing data
 const {PaymentMethods} = require('@data/demo/paymentMethods');
-const {DefaultAccount} = require('@data/demo/customer');
+const {DefaultCustomer} = require('@data/demo/customer');
 
 // Test context imports
 const testContext = require('@utils/testContext');
@@ -70,7 +70,7 @@ describe('Check delivery slip downloaded from list', async () => {
     it('should sign in with default customer', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'sighInFoToOrder', baseContext);
 
-      await foLoginPage.customerLogin(page, DefaultAccount);
+      await foLoginPage.customerLogin(page, DefaultCustomer);
       const isCustomerConnected = await foLoginPage.isCustomerConnected(page);
       await expect(isCustomerConnected, 'Customer is not connected').to.be.true;
     });
@@ -213,7 +213,7 @@ describe('Check delivery slip downloaded from list', async () => {
     it('should sign in with default customer', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'sighInFoToCheckStatus', baseContext);
 
-      await foLoginPage.customerLogin(page, DefaultAccount);
+      await foLoginPage.customerLogin(page, DefaultCustomer);
       const isCustomerConnected = await foLoginPage.isCustomerConnected(page);
       await expect(isCustomerConnected, 'Customer is not connected').to.be.true;
     });
@@ -221,6 +221,7 @@ describe('Check delivery slip downloaded from list', async () => {
     it('should go to orders history page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'goToOrderHistoryPage', baseContext);
 
+      await homePage.goToMyAccountPage(page);
       await foMyAccountPage.goToHistoryAndDetailsPage(page);
       const pageTitle = await foOrderHistoryPage.getPageTitle(page);
       await expect(pageTitle, 'Fail to open order history page').to.contains(foOrderHistoryPage.pageTitle);

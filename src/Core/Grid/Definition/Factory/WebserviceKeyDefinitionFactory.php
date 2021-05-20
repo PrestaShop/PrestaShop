@@ -49,6 +49,8 @@ use Symfony\Component\Form\Extension\Core\Type\TextType;
  */
 final class WebserviceKeyDefinitionFactory extends AbstractGridDefinitionFactory
 {
+    public const GRID_ID = 'webservice_key';
+
     use BulkDeleteActionTrait;
     use DeleteActionTrait;
 
@@ -58,33 +60,17 @@ final class WebserviceKeyDefinitionFactory extends AbstractGridDefinitionFactory
     private $statusChoices;
 
     /**
-     * @var string
-     */
-    private $resetActionUrl;
-
-    /**
-     * @var string
-     */
-    private $redirectionUrl;
-
-    /**
      * WebserviceKeyDefinitionFactory constructor.
      *
      * @param HookDispatcherInterface $hookDispatcher
      * @param array $statusChoices
-     * @param string $resetActionUrl
-     * @param string $redirectionUrl
      */
     public function __construct(
         HookDispatcherInterface $hookDispatcher,
-        array $statusChoices,
-        $resetActionUrl,
-        $redirectionUrl
+        array $statusChoices
     ) {
         parent::__construct($hookDispatcher);
         $this->statusChoices = $statusChoices;
-        $this->resetActionUrl = $resetActionUrl;
-        $this->redirectionUrl = $redirectionUrl;
     }
 
     /**
@@ -92,7 +78,7 @@ final class WebserviceKeyDefinitionFactory extends AbstractGridDefinitionFactory
      */
     protected function getId()
     {
-        return 'webservice_key';
+        return self::GRID_ID;
     }
 
     /**
@@ -205,10 +191,11 @@ final class WebserviceKeyDefinitionFactory extends AbstractGridDefinitionFactory
             ->add(
                 (new Filter('actions', SearchAndResetType::class))
                     ->setTypeOptions([
-                        'attr' => [
-                            'data-url' => $this->resetActionUrl,
-                            'data-redirect' => $this->redirectionUrl,
+                        'reset_route' => 'admin_common_reset_search_by_filter_id',
+                        'reset_route_params' => [
+                            'filterId' => self::GRID_ID,
                         ],
+                        'redirect_route' => 'admin_webservice_keys_index',
                     ])
                     ->setAssociatedColumn('actions')
             );

@@ -37,7 +37,7 @@ class SupplierCore extends ObjectModel
     /** @var string Name */
     public $name;
 
-    /** @var array<string> A short description for the discount */
+    /** @var string|array<int, string> A short description for the discount */
     public $description;
 
     /** @var string Object creation date */
@@ -49,13 +49,13 @@ class SupplierCore extends ObjectModel
     /** @var string Friendly URL */
     public $link_rewrite;
 
-    /** @var array<string> Meta title */
+    /** @var string|array<int, string> Meta title */
     public $meta_title;
 
-    /** @var array<string> Meta keywords */
+    /** @var string|array<int, string> Meta keywords */
     public $meta_keywords;
 
-    /** @var array<string> Meta description */
+    /** @var string|array<int, string> Meta description */
     public $meta_description;
 
     /** @var bool active */
@@ -91,8 +91,8 @@ class SupplierCore extends ObjectModel
     /**
      * SupplierCore constructor.
      *
-     * @param null $id
-     * @param null $idLang
+     * @param int|null $id
+     * @param int|null $idLang
      */
     public function __construct($id = null, $idLang = null)
     {
@@ -266,13 +266,13 @@ class SupplierCore extends ObjectModel
      * @param $idLang
      * @param $p
      * @param $n
-     * @param null $orderBy
-     * @param null $orderWay
+     * @param string|null $orderBy
+     * @param string|null $orderWay
      * @param bool $getTotal
      * @param bool $active
      * @param bool $activeCategory
      *
-     * @return array|bool
+     * @return int|array|bool
      */
     public static function getProducts(
         $idSupplier,

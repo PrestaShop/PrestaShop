@@ -627,6 +627,10 @@ class ProductControllerCore extends ProductPresentingFrontControllerCore
                 $this->combinations[$row['id_product_attribute']]['weight'] = (float) $row['weight'];
                 $this->combinations[$row['id_product_attribute']]['quantity'] = (int) $row['quantity'];
                 $this->combinations[$row['id_product_attribute']]['reference'] = $row['reference'];
+                $this->combinations[$row['id_product_attribute']]['ean13'] = $row['ean13'];
+                $this->combinations[$row['id_product_attribute']]['mpn'] = $row['mpn'];
+                $this->combinations[$row['id_product_attribute']]['upc'] = $row['upc'];
+                $this->combinations[$row['id_product_attribute']]['isbn'] = $row['isbn'];
                 $this->combinations[$row['id_product_attribute']]['unit_impact'] = $row['unit_price_impact'];
                 $this->combinations[$row['id_product_attribute']]['minimal_quantity'] = $row['minimal_quantity'];
                 if ($row['available_date'] != '0000-00-00' && Validate::isDate($row['available_date'])) {
@@ -1106,7 +1110,6 @@ class ProductControllerCore extends ProductPresentingFrontControllerCore
         $product['quantity_wanted'] = $this->getRequiredQuantity($product);
         $product['extraContent'] = $extraContentFinder->addParams(['product' => $this->product])->present();
         $product['ecotax'] = Tools::convertPrice((float) $product['ecotax'], $this->context->currency, true, $this->context);
-        $product['ecotax_tax_inc'] = $product['ecotax_tax_inc'];
 
         $product_full = Product::getProductProperties($this->context->language->id, $product, $this->context);
 
@@ -1177,17 +1180,13 @@ class ProductControllerCore extends ProductPresentingFrontControllerCore
      */
     public function findProductCombinationById($combinationId)
     {
-        $foundCombination = null;
-        $combinations = $this->product->getAttributesGroups($this->context->language->id);
-        foreach ($combinations as $combination) {
-            if ((int) ($combination['id_product_attribute']) === $combinationId) {
-                $foundCombination = $combination;
+        $combinations = $this->product->getAttributesGroups($this->context->language->id, $combinationId);
 
-                break;
-            }
+        if ($combinations === false || !is_array($combinations) || empty($combinations)) {
+            return null;
         }
 
-        return $foundCombination;
+        return reset($combinations);
     }
 
     /**
@@ -1212,13 +1211,19 @@ class ProductControllerCore extends ProductPresentingFrontControllerCore
         $categoryDefault = new Category($this->product->id_category_default, $this->context->language->id);
 
         foreach ($categoryDefault->getAllParents() as $category) {
-            if ($category->id_parent != 0 && !$category->is_root_category) {
-                $breadcrumb['links'][] = $this->getCategoryPath($category);
+            if ($category->id_parent != 0 && !$category->is_root_category && $category->active) {
+                $breadcrumb['links'][] = [
+                    'title' => $category->name,
+                    'url' => $this->context->link->getCategoryLink($category),
+                ];
             }
         }
 
-        if (!$categoryDefault->is_root_category) {
-            $breadcrumb['links'][] = $this->getCategoryPath($categoryDefault);
+        if ($categoryDefault->id_parent != 0 && !$categoryDefault->is_root_category && $categoryDefault->active) {
+            $breadcrumb['links'][] = [
+                'title' => $categoryDefault->name,
+                'url' => $this->context->link->getCategoryLink($categoryDefault),
+            ];
         }
 
         $breadcrumb['links'][] = [

@@ -23,26 +23,79 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
 
-import ProductMap from '../product-map';
-import ProductPartialUpdater from './product-partial-updater';
+import NavbarHandler from '@components/navbar-handler';
+import ProductMap from '@pages/product/product-map';
+
+import CombinationsManager from '@pages/product/edit/combinations-manager';
+import CustomizationsManager from '@pages/product/edit/customizations-manager';
+import FeatureValuesManager from '@pages/product/edit/feature-values-manager';
+import ProductFooterManager from '@pages/product/edit/product-footer-manager';
+import ProductFormModel from '@pages/product/edit/product-form-model';
+import ProductPartialUpdater from '@pages/product/edit/product-partial-updater';
+import ProductSEOManager from '@pages/product/edit/product-seo-manager';
+import ProductSuppliersManager from '@pages/product/edit/product-suppliers-manager';
+import ProductTypeManager from '@pages/product/edit/product-type-manager';
+import VirtualProductManager from '@pages/product/edit/virtual-product-manager';
+
+import initDropzone from '@pages/product/components/dropzone';
+import initTabs from '@pages/product/components/nav-tabs';
 
 const {$} = window;
 
 $(() => {
-  window.prestashop.component.initComponents(
-    [
-      'TranslatableField',
-      'TinyMCEEditor',
-      'TranslatableInput',
-      'EventEmitter',
-    ],
-  );
+  window.prestashop.component.initComponents([
+    'TranslatableField',
+    'TinyMCEEditor',
+    'TranslatableInput',
+    'EventEmitter',
+    'TextWithLengthCounter',
+  ]);
 
   const $productForm = $(ProductMap.productForm);
+  const productId = parseInt($productForm.data('productId'), 10);
+  const productType = $productForm.data('productType');
 
-  // Form has productId data means that we are in edit mode
-  if ($productForm.data('productId')) {
-    const $productFormSubmitButton = $(ProductMap.productFormSubmitButton);
-    new ProductPartialUpdater(window.prestashop.instance.eventEmitter, $productForm, $productFormSubmitButton).watch();
+  // Responsive navigation tabs
+  initTabs();
+
+  // Init product model along with input watching and syncing
+  const productFormModel = new ProductFormModel($productForm, window.prestashop.instance.eventEmitter);
+
+  if (productId && productType === ProductMap.productType.COMBINATIONS) {
+    // Combinations manager must be initialized BEFORE nav handler, or it won't trigger the pagination if the tab is
+    // selected on load, it is only initialized when productId exists though (edition mode)
+    new CombinationsManager(productId);
+  }
+
+  new NavbarHandler(ProductMap.navigationBar);
+  new ProductSEOManager();
+
+  // Product type has strong impact on the page rendering so when it is modified it must be submitted right away
+  new ProductTypeManager($(ProductMap.productTypeSelector), $productForm);
+  new ProductFooterManager();
+
+  const $productFormSubmitButton = $(ProductMap.productFormSubmitButton);
+  new ProductPartialUpdater(
+    window.prestashop.instance.eventEmitter,
+    $productForm,
+    $productFormSubmitButton,
+  ).watch();
+
+  // Form has no productId data means that we are in creation mode
+  if (!productId) {
+    return;
+  }
+
+  // From here we init component specific to edition
+  initDropzone(ProductMap.dropzoneImagesContainer);
+
+  new FeatureValuesManager(window.prestashop.instance.eventEmitter);
+  new CustomizationsManager();
+
+  if (productType !== ProductMap.productType.COMBINATIONS) {
+    new ProductSuppliersManager(ProductMap.suppliers.productSuppliers, true);
+  }
+  if (productType === ProductMap.productType.VIRTUAL) {
+    new VirtualProductManager(productFormModel);
   }
 });

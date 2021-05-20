@@ -277,10 +277,12 @@ class Customers extends BOBasePage {
   async getAllRowsColumnContent(page, column) {
     const rowsNumber = await this.getNumberOfElementInGrid(page);
     const allRowsContentTable = [];
+
     for (let i = 1; i <= rowsNumber; i++) {
       const rowContent = await this.getTextColumnFromTableCustomers(page, i, column);
       await allRowsContentTable.push(rowContent);
     }
+
     return allRowsContentTable;
   }
 
@@ -336,7 +338,7 @@ class Customers extends BOBasePage {
       this.waitForVisibleSelector(page, this.deleteCustomerModal),
     ]);
     await this.chooseRegistrationAndDelete(page, allowRegistrationAfterDelete);
-    return this.getTextContent(page, this.alertSuccessBlockParagraph);
+    return this.getAlertSuccessBlockParagraphContent(page);
   }
 
   /**
@@ -362,7 +364,7 @@ class Customers extends BOBasePage {
       this.waitForVisibleSelector(page, this.deleteCustomerModal),
     ]);
     await this.chooseRegistrationAndDelete(page, allowRegistrationAfterDelete);
-    return this.getTextContent(page, this.alertSuccessBlockParagraph);
+    return this.getAlertSuccessBlockParagraphContent(page);
   }
 
   /**
@@ -399,7 +401,7 @@ class Customers extends BOBasePage {
     ]);
     // Click on delete and wait for modal
     await this.clickAndWaitForNavigation(page, enable ? this.bulkActionsEnableButton : this.bulkActionsDisableButton);
-    return this.getTextContent(page, this.alertSuccessBlockParagraph);
+    return this.getAlertSuccessBlockParagraphContent(page);
   }
 
   /* Sort functions */
@@ -441,20 +443,21 @@ class Customers extends BOBasePage {
 
     // Click on checkbox if not selected
     const isCheckboxSelected = await this.isCheckboxSelected(page, this.requiredFieldCheckBox(id));
+
     if (valueWanted !== isCheckboxSelected) {
       await page.$eval(`${this.requiredFieldCheckBox(id)} + i`, el => el.click());
     }
 
     // Save setting
     await this.clickAndWaitForNavigation(page, this.saveButton);
-    return this.getTextContent(page, this.alertSuccessBlockParagraph);
+    return this.getAlertSuccessBlockParagraphContent(page);
   }
 
   // Export methods
   /**
    * Click on link to export customers to a csv file
-   * @param page
-   * @return {Promise<*>}
+   * @param page {Page} Browser tab
+   * @return {Promise<string>}
    */
   async exportDataToCsv(page) {
     await Promise.all([
@@ -462,12 +465,12 @@ class Customers extends BOBasePage {
       this.waitForVisibleSelector(page, `${this.gridActionDropDownMenu}.show`),
     ]);
 
-    const [download] = await Promise.all([
-      page.waitForEvent('download'),
-      page.click(this.gridActionExportLink),
-      page.waitForSelector(`${this.gridActionDropDownMenu}.show`, {state: 'hidden'}),
+    const [downloadPath] = await Promise.all([
+      this.clickAndWaitForDownload(page, this.gridActionExportLink),
+      this.waitForHiddenSelector(page, `${this.gridActionDropDownMenu}.show`),
     ]);
-    return download.path();
+
+    return downloadPath;
   }
 
   /**
@@ -479,6 +482,7 @@ class Customers extends BOBasePage {
    */
   async getCustomerInCsvFormat(page, row) {
     const customer = await this.getCustomerFromTable(page, row);
+
     return `${customer.id};`
       + `${customer.socialTitle};`
       + `${customer.firstName};`

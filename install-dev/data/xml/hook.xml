@@ -171,6 +171,16 @@
       <title>Order status update - Event</title>
       <description>This hook launches modules when the status of an order changes</description>
     </hook>
+    <hook id="displayAdminGridTableBefore">
+      <name>displayAdminGridTableBefore</name>
+      <title>Display before Grid table</title>
+      <description>This hook adds new blocks before Grid component table</description>
+    </hook>
+    <hook id="displayAdminGridTableAfter">
+      <name>displayAdminGridTableAfter</name>
+      <title>Display after Grid table</title>
+      <description>This hook adds new blocks after Grid component table</description>
+    </hook>
     <hook id="displayAdminOrder">
       <name>displayAdminOrder</name>
       <title>Display new elements in the Back Office, tab AdminOrder</title>
@@ -2844,6 +2854,56 @@
       <name>actionFrontControllerSetVariables</name>
       <title>Add variables in JavaScript object and Smarty templates</title>
       <description>Add variables to javascript object that is available in Front Office. These are also available in smarty templates in modules.your_module_name.</description>
+    </hook>
+    <hook id="displayAdminOrderCreateExtraButtons">
+      <name>displayAdminOrderCreateExtraButtons</name>
+      <title>Add buttons on the create order page dropdown</title>
+      <description>Add buttons on the create order page dropdown</description>
+    </hook>
+    <hook id="displayAdminGridTableBefore">
+      <name>displayAdminGridTableBefore</name>
+      <title>Display before Grid table</title>
+      <description>This hook adds new blocks before Grid component table</description>
+    </hook>
+    <hook id="displayAdminGridTableAfter">
+      <name>displayAdminGridTableAfter</name>
+      <title>Display after Grid table</title>
+      <description>This hook adds new blocks after Grid component table</description>
+    </hook>
+    <hook id="actionProductFormBuilderModifier">
+      <name>actionProductFormBuilderModifier</name>
+      <title>Modify product identifiable object form</title>
+      <description>This hook allows to modify product identifiable object form content by modifying form builder data or FormBuilder itself</description>
+    </hook>
+    <hook id="actionBeforeCreateProductFormHandler">
+      <name>actionBeforeCreateProductFormHandler</name>
+      <title>Modify product identifiable object data before creating it</title>
+      <description>This hook allows to modify product identifiable object form data before it was created</description>
+    </hook>
+    <hook id="actionAfterCreateProductFormHandler">
+      <name>actionBeforeCreateProductFormHandler</name>
+      <title>Modify product identifiable object data after creating it</title>
+      <description>This hook allows to modify product identifiable object form data after it was created</description>
+    </hook>
+    <hook id="actionBeforeUpdateProductFormHandler">
+      <name>actionBeforeUpdateProductFormHandler</name>
+      <title>Modify product identifiable object data before updating it</title>
+      <description>This hook allows to modify product identifiable object form data before it was updated</description>
+    </hook>
+    <hook id="actionAfterUpdateProductFormHandler">
+      <name>actionAfterUpdateProductFormHandler</name>
+      <title>Modify product identifiable object data after updating it</title>
+      <description>This hook allows to modify product identifiable object form data before it was updated</description>
+    </hook>
+    <hook id="actionFeatureFlagForm">
+      <name>actionFeatureFlagForm</name>
+      <title>Modify feature flag page form content</title>
+      <description>This hook allows to modify the Feature Flag page form's FormBuilder</description>
+    </hook>
+    <hook id="actionFeatureFlagSave">
+      <name>actionFeatureFlagSave</name>
+      <title>Modify feature flag form submitted data</title>
+      <description>This hook allows to modify the Feature Flag data being submitted through the form after it was saved</description>
     </hook>
   </entities>
 </entity_hook>

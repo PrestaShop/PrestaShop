@@ -10,7 +10,7 @@ Feature: Add basic product from Back Office (BO)
   Scenario: I add a product with basic information
     When I add product "product1" with following information:
       | name[en-US] | bottle of beer |
-      | is_virtual  | false          |
+      | type        | standard       |
     Then product "product1" should be disabled
     And product "product1" type should be standard
     And product "product1" localized "name" should be:
@@ -21,7 +21,7 @@ Feature: Add basic product from Back Office (BO)
   Scenario: I add a product with basic information
     When I add product "product1" with following information:
       | name[en-US] | bottle of beer |
-      | is_virtual  | true           |
+      | type        | virtual        |
     Then product "product1" should be disabled
     And product "product1" should have following options:
       | product option      | value |
@@ -42,13 +42,13 @@ Feature: Add basic product from Back Office (BO)
   Scenario: I add a product with invalid characters in name
     When I add product "product2" with following information:
       | name[en-US] | T-shirt #1 |
-      | is_virtual  | false      |
+      | type        | standard   |
     Then I should get error that product name is invalid
 
   Scenario: I add a product with symbol in its name
     When I add product "product3" with following information:
       | name[en-US] | Shirt - Dom & Jquery |
-      | is_virtual  | false                |
+      | type        | standard             |
     And product "product3" localized "name" should be:
       | locale | value                |
       | en-US  | Shirt - Dom & Jquery |

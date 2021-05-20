@@ -60,6 +60,8 @@ export default {
   orderMessageChangeWarning: '.js-message-change-warning',
   orderDocumentsTabCount: '#orderDocumentsTab .count',
   orderDocumentsTabBody: '#orderDocumentsTabContent .card-body',
+  orderShippingTabCount: '#orderShippingTab .count',
+  orderShippingTabBody: '#orderShippingTabContent .card-body',
   allMessagesModal: '#view_all_messages_modal',
   allMessagesList: '#all-messages-list',
   openAllMessagesBtn: '.js-open-all-messages-btn',
@@ -202,4 +204,5 @@ export default {
   orderNoteBlock: '.js-order-notes-block',
   orderNoteInput: '#internal_note_note',
   orderNoteSubmitBtn: '.js-order-notes-btn',
+  refreshProductsListLoadingSpinner: '#orderProductsPanel .spinner-order-products-container#orderProductsLoading',
 };

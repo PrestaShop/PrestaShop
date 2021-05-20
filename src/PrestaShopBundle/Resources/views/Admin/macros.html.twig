@@ -273,6 +273,10 @@
           <span class="text-danger">*</span>
         {% endif %}
         {{ extraVars.label }}
+
+        {% if form.vars.label_attr and form.vars.label_attr['popover'] %}
+          {{ include('@Common/HelpBox/helpbox.html.twig', {'content': form.vars.label_attr['popover']}) }}
+        {% endif %}
       </label>
     {% endif %}
 

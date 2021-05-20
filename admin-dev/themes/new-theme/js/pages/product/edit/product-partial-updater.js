@@ -23,6 +23,9 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
 
+import _ from 'lodash';
+import ProductEventMap from '@pages/product/product-event-map';
+
 const {$} = window;
 
 /**
@@ -52,11 +55,25 @@ export default class ProductPartialUpdater {
    * ex: new ProductPartialUpdater($productForm, $productFormSubmitButton).watch();
    */
   watch() {
+    // Avoid submitting form when pressing Enter
+    this.$productForm.keypress((e) => e.which !== 13);
     this.$productFormSubmitButton.prop('disabled', true);
     this.initialData = this.getFormDataAsObject();
-    this.$productForm.submit((e) => this.updatePartialForm(e));
-    this.$productForm.on('change', ':input', () => this.updateSubmitButtonState());
+    this.$productForm.submit(() => this.updatePartialForm());
+    // 'dp.change' event allows tracking datepicker input changes
+    this.$productForm.on('keyup change dp.change', ':input', () => this.updateSubmitButtonState());
+    this.eventEmitter.on(ProductEventMap.updateSubmitButtonState, () => this.updateSubmitButtonState());
+
+    this.watchCustomizations();
     this.initFormattedTextarea();
+  }
+
+  /**
+   * Watch events specifically related to customizations subform
+   */
+  watchCustomizations() {
+    this.eventEmitter.on(ProductEventMap.customizations.rowAdded, () => this.updateSubmitButtonState());
+    this.eventEmitter.on(ProductEventMap.customizations.rowRemoved, () => this.updateSubmitButtonState());
   }
 
   /**
@@ -71,16 +88,27 @@ export default class ProductPartialUpdater {
   /**
    * This methods handles the form submit
    *
-   * @param event
    * @returns {boolean}
+   *
    * @private
    */
-  updatePartialForm(event) {
-    event.stopImmediatePropagation();
-
+  updatePartialForm() {
     const updatedData = this.getUpdatedFormData();
+
     if (updatedData !== null) {
-      this.postUpdatedData(updatedData);
+      let formMethod = this.$productForm.prop('method');
+
+      if (Object.prototype.hasOwnProperty.call(updatedData, '_method')) {
+        // eslint-disable-next-line dot-notation
+        formMethod = updatedData['_method'];
+      }
+
+      if (formMethod !== 'PATCH') {
+        // Returning true will continue submitting form as usual
+        return true;
+      }
+      // On patch method we extract changed values and submit only them
+      this.submitUpdatedData(updatedData);
     } else {
       // @todo: This is temporary we should probably use a nice modal instead, that said since the submit button is
       //        disabled when no data has been modified it should never happen
@@ -95,21 +123,34 @@ export default class ProductPartialUpdater {
    *
    * @param updatedData {Object} Contains an object with all form fields to update indexed by query parameters name
    */
-  postUpdatedData(updatedData) {
+  submitUpdatedData(updatedData) {
     this.$productFormSubmitButton.prop('disabled', true);
+    const $updatedForm = this.createShadowForm(updatedData);
+
+    $updatedForm.appendTo('body');
+    $updatedForm.submit();
+  }
+
+  /**
+   * @param updatedData
+   *
+   * @returns {Object} Form clone (Jquery object)
+   */
+  createShadowForm(updatedData) {
     const $updatedForm = this.$productForm.clone();
     $updatedForm.empty();
     $updatedForm.prop('class', '');
     Object.keys(updatedData).forEach((fieldName) => {
-      $('<input>').attr({
-        name: fieldName,
-        type: 'hidden',
-        value: updatedData[fieldName],
-      }).appendTo($updatedForm);
+      if (Array.isArray(updatedData[fieldName])) {
+        updatedData[fieldName].forEach((value) => {
+          this.appendInputToForm($updatedForm, fieldName, value);
+        });
+      } else {
+        this.appendInputToForm($updatedForm, fieldName, updatedData[fieldName]);
+      }
     });
 
-    $updatedForm.appendTo('body');
-    $updatedForm.submit();
+    return $updatedForm;
   }
 
   /**
@@ -134,10 +175,17 @@ export default class ProductPartialUpdater {
     // This way only updated AND new values remain
     Object.keys(this.initialData).forEach((fieldName) => {
       const fieldValue = this.initialData[fieldName];
-      if (currentData[fieldName] === fieldValue) {
+
+      // Field is absent in the new data (it was not in the initial) we force it to empty string (not null
+      // or it will be ignored)
+      if (!Object.prototype.hasOwnProperty.call(currentData, fieldName)) {
+        currentData[fieldName] = '';
+      } else if (_.isEqual(currentData[fieldName], fieldValue)) {
         delete currentData[fieldName];
       }
     });
+    // No need to loop through the field contained in currentData and not in the initial
+    // they are new values so are, by fact, updated values
 
     if (Object.keys(currentData).length === 0) {
       return null;
@@ -167,10 +215,48 @@ export default class ProductPartialUpdater {
   getFormDataAsObject() {
     const formArray = this.$productForm.serializeArray();
     const serializedForm = {};
+
     formArray.forEach((formField) => {
-      serializedForm[formField.name] = formField.value;
+      let {value} = formField;
+
+      // Input names can be identical when expressing array of values for same field (like multiselect checkboxes)
+      // so we need to put these input values into single array indexed by that field name
+      if (formField.name.endsWith('[]')) {
+        let multiField = [];
+
+        if (Object.prototype.hasOwnProperty.call(serializedForm, formField.name)) {
+          multiField = serializedForm[formField.name];
+        }
+
+        multiField.push(formField.value);
+        value = multiField;
+      }
+
+      serializedForm[formField.name] = value;
+    });
+
+    // File inputs must be handled manually
+    $('input[type="file"]', this.$productForm).each((inputIndex, fileInput) => {
+      $.each($(fileInput)[0].files, (fileIndex, file) => {
+        serializedForm[fileInput.name] = file;
+      });
     });
 
     return serializedForm;
+  }
+
+  /**
+   * @param $form
+   * @param name
+   * @param value
+   *
+   * @private
+   */
+  appendInputToForm($form, name, value) {
+    $('<input>').attr({
+      name,
+      type: 'hidden',
+      value,
+    }).appendTo($form);
   }
 }

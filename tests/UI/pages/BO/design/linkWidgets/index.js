@@ -5,7 +5,7 @@ class LinkWidgets extends BOBasePage {
   constructor() {
     super();
 
-    this.pageTitle = 'Link Widget •';
+    this.pageTitle = 'Link List •';
 
     // Header Selectors
     this.newBlockLink = '#page-header-desc-configuration-add';
@@ -55,7 +55,7 @@ class LinkWidgets extends BOBasePage {
       this.waitForVisibleSelector(page, `${this.dropdownToggleButton(hookName, row)}[aria-expanded='true']`),
     ]);
     await this.clickAndWaitForNavigation(page, this.deleteRowLink(hookName, row));
-    return this.getTextContent(page, this.alertSuccessBlockParagraph);
+    return this.getAlertSuccessBlockParagraphContent(page);
   }
 }
 

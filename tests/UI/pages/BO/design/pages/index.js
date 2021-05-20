@@ -84,6 +84,7 @@ class Pages extends BOBasePage {
    */
   async resetAndGetNumberOfLines(page, table) {
     const resetButton = this.filterResetButton(table);
+
     if (await this.elementVisible(page, resetButton, 2000)) {
       await this.clickAndWaitForNavigation(page, resetButton);
     }
@@ -133,7 +134,7 @@ class Pages extends BOBasePage {
       this.waitForVisibleSelector(page, `${this.confirmDeleteModal(table)}.show`),
     ]);
     await this.confirmDeleteFromTable(page, table);
-    return this.getTextContent(page, this.alertSuccessBlockParagraph);
+    return this.getAlertSuccessBlockParagraphContent(page);
   }
 
   /**
@@ -161,7 +162,7 @@ class Pages extends BOBasePage {
       this.waitForVisibleSelector(page, `${this.confirmDeleteModal(table)}.show`),
     ]);
     await this.confirmDeleteFromTable(page, table);
-    return this.getTextContent(page, this.alertSuccessBlockParagraph);
+    return this.getAlertSuccessBlockParagraphContent(page);
   }
 
   /**
@@ -234,7 +235,7 @@ class Pages extends BOBasePage {
       page,
       enable ? this.bulkActionsEnableButton(table) : this.bulkActionsDisableButton(table),
     );
-    return this.getTextContent(page, this.alertSuccessBlockParagraph);
+    return this.getAlertSuccessBlockParagraphContent(page);
   }
 
   /**
@@ -283,6 +284,7 @@ class Pages extends BOBasePage {
     const rowsNumber = await this.getNumberOfElementInGrid(page, table);
     const allRowsContentTable = [];
     let rowContent;
+
     for (let i = 1; i <= rowsNumber; i++) {
       if (table === 'cms_page_category') {
         rowContent = await this.getTextColumnFromTableCmsPageCategory(page, i, column);
@@ -291,6 +293,7 @@ class Pages extends BOBasePage {
       }
       await allRowsContentTable.push(rowContent);
     }
+
     return allRowsContentTable;
   }
 

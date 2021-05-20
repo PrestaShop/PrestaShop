@@ -137,10 +137,7 @@ describe('Quick edit and bulk actions carriers', async () => {
         const isActionPerformed = await carriersPage.setStatus(page, 1, test.args.enabledValue);
 
         if (isActionPerformed) {
-          const resultMessage = await carriersPage.getTextContent(
-            page,
-            carriersPage.alertSuccessBlock,
-          );
+          const resultMessage = await carriersPage.getAlertSuccessBlockContent(page);
           await expect(resultMessage).to.contains(carriersPage.successfulUpdateStatusMessage);
         }
 

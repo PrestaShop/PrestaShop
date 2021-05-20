@@ -89,7 +89,9 @@ export default class Header {
                 }
               });
             } else if (quicklinkList) {
-              $('#header_quick ul.dropdown-menu .divider').prevAll().remove();
+              $('#header_quick ul.dropdown-menu .divider')
+                .prevAll()
+                .remove();
               $('#header_quick ul.dropdown-menu').prepend(quicklinkList);
               $(e.target).remove();
               window.showSuccessMessage(window.update_success_msg);
@@ -102,7 +104,12 @@ export default class Header {
 
   initMultiStores() {
     $('.js-link').on('click', (e) => {
-      window.open($(e.target).parents('.link').attr('href'), '_blank');
+      window.open(
+        $(e.target)
+          .parents('.link')
+          .attr('href'),
+        '_blank',
+      );
     });
   }
 
@@ -114,7 +121,8 @@ export default class Header {
     });
 
     $('body').on('click', (e) => {
-      if (!$('div.notification-center.dropdown').is(e.target)
+      if (
+        !$('div.notification-center.dropdown').is(e.target)
         && $('div.notification-center.dropdown').has(e.target).length === 0
         && $('.open').has(e.target).length === 0
       ) {
@@ -139,12 +147,9 @@ export default class Header {
   }
 
   updateEmployeeNotifications() {
-    $.post(
-      window.adminNotificationPushLink,
-      {
-        type: $('.notification-center .nav-link.active').attr('data-type'),
-      },
-    );
+    $.post(window.adminNotificationPushLink, {
+      type: $('.notification-center .nav-link.active').attr('data-type'),
+    });
   }
 
   /**

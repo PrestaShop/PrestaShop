@@ -160,6 +160,7 @@ class Product extends BOBasePage {
     const selector = withTaxes ? this.productsListTableColumnPriceATI : this.productsListTableColumnPrice;
     const text = await this.getTextContent(page, selector(row));
     const price = /\d+(\.\d+)?/g.exec(text).toString();
+
     return parseFloat(price);
   }
 
@@ -279,10 +280,12 @@ class Product extends BOBasePage {
   async getAllRowsColumnContent(page, column) {
     const rowsNumber = await this.getNumberOfProductsFromList(page);
     const allRowsContentTable = [];
+
     for (let i = 1; i <= rowsNumber; i++) {
       const rowContent = await this.getTextColumn(page, column, i);
       await allRowsContentTable.push(rowContent);
     }
+
     return allRowsContentTable;
   }
 
@@ -293,6 +296,7 @@ class Product extends BOBasePage {
    */
   async getNumberOfProductsFromList(page) {
     const found = await this.elementVisible(page, this.paginationNextLink, 1000);
+
     // In case we filter products and there is only one page, link next from pagination does not appear
     if (!found) {
       return (await page.$$(this.productRow)).length;
@@ -300,6 +304,7 @@ class Product extends BOBasePage {
 
     const footerText = await this.getTextContent(page, this.productNumberBloc);
     const numberOfProduct = /\d+/g.exec(footerText.match(/out of ([0-9]+)/)).toString();
+
     return parseInt(numberOfProduct, 10);
   }
 
@@ -354,6 +359,7 @@ class Product extends BOBasePage {
       /* eslint-env browser */
       const allCategories = [...await document.querySelectorAll(args.allCategoriesSelector)];
       const category = await allCategories.find(el => el.textContent.includes(args.val));
+
       if (category === undefined) {
         return false;
       }
@@ -376,10 +382,10 @@ class Product extends BOBasePage {
     // Click and wait to be open
     await page.click(this.filterByCategoriesButton);
     await this.waitForVisibleSelector(page, `${this.filterByCategoriesButton}[aria-expanded='true']`);
-    await Promise.all([
-      this.waitForVisibleSelector(page, `${this.filterByCategoriesButton}[aria-expanded='false']`),
-      this.clickAndWaitForNavigation(page, this.filterByCategoriesUnselectButton),
-    ]);
+
+    // Unselect all categories
+    await this.clickAndWaitForNavigation(page, this.filterByCategoriesUnselectButton);
+    await this.waitForVisibleSelector(page, `${this.filterByCategoriesButton}[aria-expanded='false']`);
   }
 
   /**
@@ -441,7 +447,7 @@ class Product extends BOBasePage {
     // Duplicate product and go to add product page
     await this.clickAndWaitForNavigation(page, this.dropdownMenuDuplicateLink(row));
 
-    return this.getTextContent(page, this.alertSuccessBlockParagraph);
+    return this.getAlertSuccessBlockParagraphContent(page);
   }
 
   /**
@@ -466,7 +472,7 @@ class Product extends BOBasePage {
     ]);
 
     await this.clickAndWaitForNavigation(page, this.modalDialogDeleteNowButton);
-    return this.getTextContent(page, this.alertSuccessBlockParagraph);
+    return this.getAlertSuccessBlockParagraphContent(page);
   }
 
   /**
@@ -492,7 +498,7 @@ class Product extends BOBasePage {
     ]);
 
     await this.clickAndWaitForNavigation(page, this.modalDialogDeleteNowButton);
-    return this.getTextContent(page, this.alertSuccessBlockParagraph);
+    return this.getAlertSuccessBlockParagraphContent(page);
   }
 
   /**
@@ -513,7 +519,7 @@ class Product extends BOBasePage {
     ]);
 
     await this.clickAndWaitForNavigation(page, status ? this.productBulkEnableLink : this.productBulkDisableLink);
-    return this.getTextContent(page, this.alertSuccessBlockParagraph);
+    return this.getAlertSuccessBlockParagraphContent(page);
   }
 
   /**
@@ -525,6 +531,7 @@ class Product extends BOBasePage {
    */
   async setProductStatus(page, row, valueWanted = true) {
     const actualValue = await this.getProductStatusFromList(page, row);
+
     if (actualValue !== valueWanted) {
       await this.clickAndWaitForNavigation(page, this.productsListTableColumnStatus(row));
       return true;

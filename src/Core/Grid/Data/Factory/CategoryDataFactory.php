@@ -26,57 +26,9 @@
 
 namespace PrestaShop\PrestaShop\Core\Grid\Data\Factory;
 
-use PrestaShop\PrestaShop\Core\Grid\Data\GridData;
-use PrestaShop\PrestaShop\Core\Grid\Record\RecordCollection;
-use PrestaShop\PrestaShop\Core\Grid\Search\SearchCriteriaInterface;
-
 /**
  * Class CategoryDataFactory decorates DoctrineGridDataFactory configured for categories to modify category records.
  */
-final class CategoryDataFactory implements GridDataFactoryInterface
+final class CategoryDataFactory extends AbstractCategoryDataFactory
 {
-    /**
-     * @var GridDataFactoryInterface
-     */
-    private $doctrineCategoryDataFactory;
-
-    /**
-     * @param GridDataFactoryInterface $doctrineCategoryDataFactory
-     */
-    public function __construct(GridDataFactoryInterface $doctrineCategoryDataFactory)
-    {
-        $this->doctrineCategoryDataFactory = $doctrineCategoryDataFactory;
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function getData(SearchCriteriaInterface $searchCriteria)
-    {
-        $data = $this->doctrineCategoryDataFactory->getData($searchCriteria);
-
-        $records = $this->modifyRecords($data->getRecords()->all());
-
-        return new GridData(
-            new RecordCollection($records),
-            $data->getRecordsTotal(),
-            $data->getQuery()
-        );
-    }
-
-    /**
-     * Modify category records.
-     *
-     * @param array $records
-     *
-     * @return array
-     */
-    private function modifyRecords(array $records)
-    {
-        foreach ($records as $key => $record) {
-            $records[$key]['description'] = mb_substr(strip_tags(stripslashes($record['description'])), 0, 150);
-        }
-
-        return $records;
-    }
 }

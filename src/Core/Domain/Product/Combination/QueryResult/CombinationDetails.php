@@ -63,7 +63,7 @@ class CombinationDetails
     /**
      * @var DecimalNumber
      */
-    private $weight;
+    private $impactOnWeight;
 
     /**
      * @param string $ean13
@@ -71,7 +71,7 @@ class CombinationDetails
      * @param string $mpn
      * @param string $reference
      * @param string $upc
-     * @param DecimalNumber $weight
+     * @param DecimalNumber $impactOnWeight
      */
     public function __construct(
         string $ean13,
@@ -79,14 +79,14 @@ class CombinationDetails
         string $mpn,
         string $reference,
         string $upc,
-        DecimalNumber $weight
+        DecimalNumber $impactOnWeight
     ) {
         $this->ean13 = $ean13;
         $this->isbn = $isbn;
         $this->mpn = $mpn;
         $this->reference = $reference;
         $this->upc = $upc;
-        $this->weight = $weight;
+        $this->impactOnWeight = $impactOnWeight;
     }
 
     /**
@@ -132,8 +132,8 @@ class CombinationDetails
     /**
      * @return DecimalNumber
      */
-    public function getWeight(): DecimalNumber
+    public function getImpactOnWeight(): DecimalNumber
     {
-        return $this->weight;
+        return $this->impactOnWeight;
     }
 }

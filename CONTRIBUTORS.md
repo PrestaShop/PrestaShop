@@ -138,6 +138,7 @@ GitHub contributors:
 - Connie
 - Corentin Delcourt
 - Cosmin Hutanu
+- crezzur
 - Cristiano Verardi
 - Cyril Dussert
 - Damian Dominella
@@ -403,6 +404,7 @@ GitHub contributors:
 - Lucas CERDAN
 - Lucas Rolff
 - LucasC
+- Ludovic CHEVRAUX
 - Luis David de la Fuente
 - Lyo Nick
 - LyoNick
@@ -617,6 +619,7 @@ GitHub contributors:
 - Rokas Zygmantas
 - Roland Schütz
 - Rolige eCommerce Solutions
+- Romain BOCHEUX
 - Romain Soulard
 - romainberger
 - Roman Gusev

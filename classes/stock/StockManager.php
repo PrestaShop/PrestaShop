@@ -47,7 +47,7 @@ class StockManagerCore implements StockManagerInterface
      * @param int $id_product_attribute
      * @param Warehouse $warehouse
      * @param int $quantity
-     * @param int $id_stock_mvt_reason
+     * @param int|null $id_stock_mvt_reason
      * @param float $price_te
      * @param bool $is_usable
      * @param int|null $id_supply_order

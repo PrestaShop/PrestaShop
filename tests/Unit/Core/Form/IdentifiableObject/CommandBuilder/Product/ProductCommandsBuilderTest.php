@@ -29,9 +29,8 @@ declare(strict_types=1);
 namespace Tests\Unit\Core\Form\IdentifiableObject\CommandBuilder\Product;
 
 use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductId;
-use PrestaShop\PrestaShop\Core\Form\IdentifiableObject\CommandBuilder\Product\ProductCommandBuilderInterface;
-use PrestaShop\PrestaShop\Core\Form\IdentifiableObject\CommandBuilder\Product\ProductCommandCollection;
 use PrestaShop\PrestaShop\Core\Form\IdentifiableObject\CommandBuilder\Product\ProductCommandsBuilder;
+use PrestaShop\PrestaShop\Core\Form\IdentifiableObject\CommandBuilder\Product\ProductCommandsBuilderInterface;
 
 class ProductCommandsBuilderTest extends AbstractProductCommandBuilderTest
 {
@@ -40,9 +39,9 @@ class ProductCommandsBuilderTest extends AbstractProductCommandBuilderTest
      *
      * @param array $formData
      * @param array $commandBuilders
-     * @param ProductCommandCollection $expectedCommands
+     * @param array $expectedCommands
      */
-    public function testBuildCommands(array $formData, array $commandBuilders, ProductCommandCollection $expectedCommands)
+    public function testBuildCommands(array $formData, array $commandBuilders, array $expectedCommands)
     {
         $builder = new ProductCommandsBuilder($commandBuilders);
         $builtCommands = $builder->buildCommands($this->getProductId(), $formData);
@@ -51,17 +50,17 @@ class ProductCommandsBuilderTest extends AbstractProductCommandBuilderTest
 
     public function getExpectedCommands()
     {
-        $collection = new ProductCommandCollection();
+        $collection = [];
         yield [
             [],
             [],
             $collection,
         ];
 
-        $nullBuilder = new AlwaysNullBuilder();
+        $alwaysEmptyBuilder = new AlwaysEmptyBuilder();
         yield [
             [],
-            [$nullBuilder],
+            [$alwaysEmptyBuilder],
             $collection,
         ];
 
@@ -73,26 +72,40 @@ class ProductCommandsBuilderTest extends AbstractProductCommandBuilderTest
 
         yield [
             ['field_a' => 'c', 'field_b' => 'b'],
-            [$nullBuilder, $builderA, $builderB],
-            new ProductCommandCollection([$commandB]),
+            [$alwaysEmptyBuilder, $builderA, $builderB],
+            [$commandB],
         ];
 
         yield [
             ['field_a' => 'a'],
-            [$nullBuilder, $builderA, $builderB],
-            new ProductCommandCollection([$commandA]),
+            [$alwaysEmptyBuilder, $builderA, $builderB],
+            [$commandA],
         ];
 
         yield [
             ['field_a' => 'a', 'field_b' => 'b'],
-            [$builderA, $nullBuilder, $builderB],
-            new ProductCommandCollection([$commandA, $commandB]),
+            [$builderA, $alwaysEmptyBuilder, $builderB],
+            [$commandA, $commandB],
         ];
 
         yield [
             ['field_a' => 'a', 'field_b' => 'b'],
-            [$builderB, $builderA, $nullBuilder],
-            new ProductCommandCollection([$commandB, $commandA]),
+            [$builderB, $builderA, $alwaysEmptyBuilder],
+            [$commandB, $commandA],
+        ];
+
+        $multiBuilder = new MultiCommandsBuilder([$builderA, $builderB]);
+        yield [
+            ['field_a' => 'a', 'field_b' => 'b'],
+            [$multiBuilder, $alwaysEmptyBuilder],
+            [$commandA, $commandB],
+        ];
+
+        $multiBuilder = new MultiCommandsBuilder([$builderB, $builderA]);
+        yield [
+            ['field_a' => 'a', 'field_b' => 'b'],
+            [$multiBuilder, $alwaysEmptyBuilder],
+            [$commandB, $commandA],
         ];
     }
 }
@@ -120,7 +133,7 @@ class FakeProductCommand
     }
 }
 
-class ConditionBuilder implements ProductCommandBuilderInterface
+class ConditionBuilder implements ProductCommandsBuilderInterface
 {
     /**
      * @var array
@@ -145,25 +158,56 @@ class ConditionBuilder implements ProductCommandBuilderInterface
     /**
      * {@inheritdoc}
      */
-    public function buildCommand(ProductId $productId, array $formData)
+    public function buildCommands(ProductId $productId, array $formData): array
     {
         foreach ($this->formCondition as $key => $value) {
             if (!isset($formData[$key]) || $formData[$key] !== $value) {
-                return null;
+                return [];
             }
         }
 
-        return $this->command;
+        return [$this->command];
     }
 }
 
-class AlwaysNullBuilder implements ProductCommandBuilderInterface
+class AlwaysEmptyBuilder implements ProductCommandsBuilderInterface
 {
     /**
      * {@inheritdoc}
      */
-    public function buildCommand(ProductId $productId, array $formData)
+    public function buildCommands(ProductId $productId, array $formData): array
     {
-        return null;
+        return [];
+    }
+}
+
+class MultiCommandsBuilder implements ProductCommandsBuilderInterface
+{
+    /**
+     * @var ProductCommandsBuilderInterface[]
+     */
+    private $builders;
+
+    /**
+     * MultiCommandsBuilder constructor.
+     *
+     * @param array $commandBuilders
+     */
+    public function __construct(array $commandBuilders)
+    {
+        $this->builders = $commandBuilders;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function buildCommands(ProductId $productId, array $formData): array
+    {
+        $commands = [];
+        foreach ($this->builders as $builder) {
+            $commands = array_merge($commands, $builder->buildCommands($productId, $formData));
+        }
+
+        return $commands;
     }
 }

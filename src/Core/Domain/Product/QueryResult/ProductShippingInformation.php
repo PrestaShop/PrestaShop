@@ -164,7 +164,7 @@ class ProductShippingInformation
     /**
      * @return int
      */
-    public function getDeliveryTimeNotesType(): int
+    public function getDeliveryTimeNoteType(): int
     {
         return $this->deliveryTimeNotesType;
     }

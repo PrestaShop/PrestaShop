@@ -127,14 +127,14 @@
     {% for attribute_group in attribute_groups %}
       <div class="attribute-group">
         <a
-          class="attribute-group-name {% if loop.index > 3 %} collapsed {% endif %}"
+          class="attribute-group-name {% if loop.index > 3 or has_combinations %} collapsed {% endif %}"
           data-toggle="collapse"
           href="#attribute-group-{{ attribute_group.id }}"
-          aria-expanded="{% if loop.index <= 3 %}true{% else %}false{% endif %}"
+          aria-expanded="{% if loop.index <= 3 or not has_combinations %}true{% else %}false{% endif %}"
         >
           {{ attribute_group.name }}
         </a>
-        <div class="collapse {% if loop.index <= 3 %} show {% endif %} attributes " id="attribute-group-{{ attribute_group.id }}">
+        <div class="collapse {% if loop.index <= 3 and not has_combinations %} show {% endif %} attributes " id="attribute-group-{{ attribute_group.id }}">
           <div class="attributes-overflow {% if attribute_group.attributes|length > 7 %} two-columns {% endif %}">
             {% for attribute in attribute_group.attributes %}
               <div class="attribute">

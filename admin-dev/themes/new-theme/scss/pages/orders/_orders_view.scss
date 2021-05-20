@@ -70,15 +70,16 @@
   .select-status {
     position: relative;
     max-width: 280px;
-    color: #fff;
-    background: #fff;
+    color: $white;
+    background: $white;
     border: none;
     @include border-radius(4px);
     box-shadow: 0 0 10px 0 rgba(0, 0, 0, 0.1);
     @include transition(0.2s ease-out);
 
     .select-status-colored {
-      color: #fff;
+      padding: 0.375rem 2.2rem 0.375rem 0.4375rem;
+      color: $white;
       background: none;
       border: none;
 
@@ -94,7 +95,7 @@
       right: 10px;
       font-family: "Material Icons", Arial, sans-serif;
       font-size: 1.25rem;
-      color: #fff;
+      color: $white;
       pointer-events: none;
       cursor: pointer;
       content: "keyboard_arrow_down";
@@ -166,6 +167,7 @@
     &-actions {
       display: flex;
       flex-wrap: wrap;
+
       > * {
         margin-bottom: 0.9375rem;
 
@@ -204,6 +206,7 @@
     .card-details {
       border: none;
       box-shadow: none;
+
       .card-body {
         padding: 0;
       }
@@ -242,6 +245,7 @@
     .tab-content {
       padding: 0;
       background-color: inherit;
+
       .tab-pane {
         opacity: 1;
       }
@@ -256,18 +260,25 @@
     .badge-dark,
     .badge-secondary {
       color: #000;
-      background-color: #fff;
+      background-color: $white;
     }
 
     .badge-print-light {
       font-weight: 500;
       color: #000 !important; // stylelint-disable-line
-      background-color: #fff !important; // stylelint-disable-line
+      background-color: $white !important; // stylelint-disable-line
     }
   }
 }
 
 .adminorders {
+  .header-toolbar {
+    h1,
+    p {
+      margin-bottom: 0;
+    }
+  }
+
   .alert .alert-text {
     ol {
       margin-top: 5px;
@@ -349,8 +360,6 @@
   }
 
   #order-view-page {
-    padding: 0 10px;
-
     .right-column .tab-content,
     #orderProductsPanel {
       table {
@@ -379,6 +388,7 @@
           order: 2;
         }
       }
+
       .nav-tabs {
         display: flex;
         flex-wrap: nowrap;
@@ -400,34 +410,21 @@
     }
 
     .order-actions {
-      #update_order_status_action_form {
-        .select-status {
-          margin-bottom: 0.9375rem;
-        }
-      }
+      justify-content: center;
 
       .select-status {
-        width: 100%;
-        max-width: inherit;
+        max-width: 206px;
 
         .select-status-colored {
           max-width: inherit;
-          /* stylelint-disable-next-line */
-          margin-right: 0 !important;
+          padding-right: 2.5rem;
+          text-overflow: ellipsis;
         }
       }
 
       > * {
         &:not(:last-child) {
           margin-right: 0;
-        }
-
-        a,
-        button,
-        & {
-          width: 100%;
-          /* stylelint-disable-next-line */
-          margin-left: 0 !important;
         }
       }
 
@@ -437,6 +434,21 @@
 
         i {
           margin-right: 20px;
+        }
+      }
+
+      &-print {
+        width: 100%;
+        max-width: 242px;
+
+        > .input-group,
+        button {
+          width: 100%;
+          text-align: center;
+
+          i {
+            margin-right: 0.5rem;
+          }
         }
       }
     }
@@ -502,17 +514,19 @@
       }
 
       .input-group {
-        min-width: 90px;
+        min-width: 100px;
         max-width: 110px;
 
         .form-control {
-          min-width: 30px;
+          min-width: 44px;
           max-width: 76px;
           height: 35px;
         }
+
         .input-group-append {
           height: 35px;
         }
+
         .max-refund {
           flex-basis: 100%;
           padding-left: 10px;
@@ -531,7 +545,7 @@
 
 .voucher-refund-type-negative-error {
   display: none;
-  color: $color-error;
+  color: $danger;
 }
 
 input.refund-quantity {
@@ -559,5 +573,19 @@ input#partial_refund_shipping {
 .discountList {
   &-name {
     max-width: 400px;
+  }
+}
+
+@media (max-width: 374px) {
+  #order-view-page {
+    .order-actions {
+      &-print {
+        max-width: 186px;
+      }
+
+      .select-status {
+        max-width: 150px;
+      }
+    }
   }
 }

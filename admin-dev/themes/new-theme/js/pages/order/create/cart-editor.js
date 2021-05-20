@@ -119,6 +119,7 @@ export default class CartEditor {
    */
   addProduct(cartId, data) {
     let fileSizeHeader = '';
+
     if (!$.isEmptyObject(data.fileSizes)) {
       fileSizeHeader = JSON.stringify(data.fileSizes);
     }

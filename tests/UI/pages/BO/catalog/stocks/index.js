@@ -9,6 +9,12 @@ class Stocks extends BOBasePage {
     this.successfulUpdateMessage = 'Stock successfully updated';
 
     // Selectors
+    // Alert Box
+    this.alertBoxBlock = 'div.alert-box';
+    this.alertBoxTextSpan = `${this.alertBoxBlock} p.alert-text span`;
+    this.alertBoxButtonClose = `${this.alertBoxBlock} button.close`;
+
+    // Search
     this.movementsNavItemLink = '#head_tabs li:nth-child(2) > a';
     this.searchForm = 'form.search-form';
     this.searchInput = `${this.searchForm} input.input`;
@@ -79,18 +85,21 @@ class Stocks extends BOBasePage {
    */
   async getTotalNumberOfProducts(page) {
     await this.waitForVisibleSelector(page, this.searchButton, 2000);
-    await page.waitForSelector(this.productListLoading, {state: 'hidden'});
+    await this.waitForHiddenSelector(page, this.productListLoading);
     // If pagination that return number of products in this page
     const pagesLength = await this.getProductsPagesLength(page);
+
     if (pagesLength === 0) {
       return (await page.$$(this.productRows)).length;
     }
     // Get number of products in all pages
     let numberOfProducts = 0;
+
     for (let i = pagesLength; i > 0; i--) {
       await this.paginateTo(page, i);
       numberOfProducts += (await page.$$(this.productRows)).length;
     }
+
     return numberOfProducts;
   }
 
@@ -101,7 +110,7 @@ class Stocks extends BOBasePage {
    */
   async getNumberOfProductsFromList(page) {
     await this.waitForVisibleSelector(page, this.searchButton, 2000);
-    await page.waitForSelector(this.productListLoading, {state: 'hidden'});
+    await this.waitForHiddenSelector(page, this.productListLoading);
     return (await page.$$(this.productRows)).length;
   }
 
@@ -125,7 +134,7 @@ class Stocks extends BOBasePage {
       page.click(this.paginationListItemLink(pageNumber)),
       this.waitForVisibleSelector(page, this.productListLoading),
     ]);
-    await page.waitForSelector(this.productListLoading, {state: 'hidden'});
+    await this.waitForHiddenSelector(page, this.productListLoading);
   }
 
   /**
@@ -135,10 +144,12 @@ class Stocks extends BOBasePage {
    */
   async resetFilter(page) {
     const closeButtons = await page.$$(this.searchTagsListCloseSpan);
+
     /* eslint-disable no-restricted-syntax */
     for (const closeButton of closeButtons) {
       await closeButton.click();
     }
+
     /* eslint-enable no-restricted-syntax */
     return this.getTotalNumberOfProducts(page);
   }
@@ -155,7 +166,7 @@ class Stocks extends BOBasePage {
       page.click(this.searchButton),
       this.waitForVisibleSelector(page, this.productListLoading),
     ]);
-    await page.waitForSelector(this.productListLoading, {state: 'hidden'});
+    await this.waitForHiddenSelector(page, this.productListLoading);
   }
 
   /**
@@ -269,7 +280,7 @@ class Stocks extends BOBasePage {
     await this.openCloseAdvancedFilter(page);
     await page.click(this.filterCategoryExpandButton);
     await page.click(this.filterCategoryCheckBoxDiv(category));
-    await page.waitForSelector(this.productListLoading, {state: 'hidden'});
+    await this.waitForHiddenSelector(page, this.productListLoading);
     await page.click(this.filterCategoryCollapseButton);
     await this.openCloseAdvancedFilter(page, false);
   }

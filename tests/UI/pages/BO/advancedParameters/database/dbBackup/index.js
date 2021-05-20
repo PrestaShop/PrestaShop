@@ -76,23 +76,20 @@ class DbBackup extends BOBasePage {
   async createDbDbBackup(page) {
     await Promise.all([
       page.click(this.newBackupButton),
-      page.waitForSelector(this.tableRow(1), {state: 'visible'}),
-      page.waitForSelector(this.downloadBackupButton, {state: 'visible'}),
+      this.waitForVisibleSelector(page, this.tableRow(1)),
+      this.waitForVisibleSelector(page, this.downloadBackupButton),
     ]);
-    return this.getTextContent(page, this.alertSuccessBlockParagraph);
+
+    return this.getAlertSuccessBlockParagraphContent(page);
   }
 
   /**
    * Download backup
-   * @param page
-   * @return {Promise<void>}
+   * @param page {Page} Browser tab
+   * @return {Promise<string>}
    */
-  async downloadDbBackup(page) {
-    const [download] = await Promise.all([
-      page.waitForEvent('download'),
-      await page.click(this.downloadBackupButton),
-    ]);
-    return download.path();
+  downloadDbBackup(page) {
+    return this.clickAndWaitForDownload(page, this.downloadBackupButton);
   }
 
   /**
@@ -104,7 +101,7 @@ class DbBackup extends BOBasePage {
   async deleteBackup(page, row) {
     await Promise.all([
       page.click(this.dropdownToggleButton(row)),
-      page.waitForSelector(`${this.dropdownToggleButton(row)}[aria-expanded='true']`),
+      this.waitForVisibleSelector(page, `${this.dropdownToggleButton(row)}[aria-expanded='true']`),
     ]);
     // Click on delete and wait for modal
     await Promise.all([
@@ -112,7 +109,7 @@ class DbBackup extends BOBasePage {
       this.waitForVisibleSelector(page, `${this.confirmDeleteModal}.show`),
     ]);
     await this.confirmDeleteDbBackups(page);
-    return this.getTextContent(page, this.alertSuccessBlockParagraph);
+    return this.getAlertSuccessBlockParagraphContent(page);
   }
 
   /**
@@ -148,7 +145,7 @@ class DbBackup extends BOBasePage {
     ]);
 
     await this.confirmDeleteDbBackups(page);
-    return this.getTextContent(page, this.alertSuccessBlockParagraph);
+    return this.getAlertSuccessBlockParagraphContent(page);
   }
 
   /* Pagination methods */

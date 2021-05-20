@@ -46,6 +46,8 @@ use Symfony\Component\HttpFoundation\Request;
  */
 final class MetaGridDefinitionFactory extends AbstractGridDefinitionFactory
 {
+    public const GRID_ID = 'meta';
+
     use BulkDeleteActionTrait;
     use DeleteActionTrait;
 
@@ -54,7 +56,7 @@ final class MetaGridDefinitionFactory extends AbstractGridDefinitionFactory
      */
     protected function getId()
     {
-        return 'meta';
+        return self::GRID_ID;
     }
 
     /**
@@ -170,10 +172,9 @@ final class MetaGridDefinitionFactory extends AbstractGridDefinitionFactory
             ->add(
                 (new Filter('actions', SearchAndResetType::class))
                     ->setTypeOptions([
-                        'reset_route' => 'admin_common_reset_search',
+                        'reset_route' => 'admin_common_reset_search_by_filter_id',
                         'reset_route_params' => [
-                            'controller' => 'meta',
-                            'action' => 'index',
+                            'filterId' => self::GRID_ID,
                         ],
                         'redirect_route' => 'admin_metas_index',
                     ])

@@ -1,16 +1,19 @@
 ul.category-tree {
   padding: 0;
+
   .less,
   .more {
     position: relative;
     background: none;
+
     > .checkbox,
     > .radio {
       cursor: pointer;
+
       &::before {
         position: absolute;
-        top: -.25rem;
-        left: -.1rem;
+        top: -0.25rem;
+        left: -0.1rem;
         font-family: "Material Icons", Arial, Helvetica, sans-serif;
         font-size: 1.25rem;
         color: $gray-medium;
@@ -18,6 +21,7 @@ ul.category-tree {
       }
     }
   }
+
   .less {
     > .checkbox,
     > .radio {
@@ -26,6 +30,7 @@ ul.category-tree {
       }
     }
   }
+
   .more {
     > .checkbox,
     > .radio {
@@ -34,6 +39,7 @@ ul.category-tree {
       }
     }
   }
+
   .category-label {
     position: relative;
     display: block;
@@ -41,19 +47,22 @@ ul.category-tree {
 
     .category {
       position: absolute;
-      top: .4em; // relative to the current font size, so "em" and not "rem"
-      right: .4em;
+      top: 0.4em; // relative to the current font size, so "em" and not "rem"
+      right: 0.4em;
       cursor: pointer;
     }
   }
+
   ul {
     padding-left: 1.563rem;
   }
+
   li {
     list-style: none;
     background-repeat: no-repeat;
     background-position: 0 3px;
     background-size: 12px 12px;
+
     .checkbox,
     .radio {
       padding-top: 0;
@@ -64,21 +73,21 @@ ul.category-tree {
 
 // category tree on the catalog page
 #tree-categories {
-  padding: .625rem;
+  padding: 0.625rem;
 
   .categories-tree-actions {
-    margin-bottom: .625rem;
+    margin-bottom: 0.625rem;
     white-space: nowrap; // prevent buttons from collapsing
-    border-bottom: .063rem solid $gray-light;
+    border-bottom: 0.063rem solid $gray-light;
 
     > a {
       display: inline-block;
 
-      margin-bottom: .625rem;
+      margin-bottom: 0.625rem;
       color: $gray-medium;
 
       + a {
-        margin-left: .9375rem;
+        margin-left: 0.9375rem;
       }
 
       &:hover {

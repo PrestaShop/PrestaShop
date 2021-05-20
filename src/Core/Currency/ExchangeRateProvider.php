@@ -45,16 +45,16 @@ class ExchangeRateProvider
      * context because it is weirdly defined in defines_uri.inc.php So it is safer to define
      * it properly here.
      */
-    const CURRENCY_FEED_URL = 'http://api.prestashop.com/xml/currencies.xml';
+    public const CURRENCY_FEED_URL = 'http://api.prestashop.com/xml/currencies.xml';
 
-    const CLOSED_ALLOWED_FAILURES = 3;
-    const CLOSED_TIMEOUT_SECONDS = 1;
+    public const CLOSED_ALLOWED_FAILURES = 3;
+    public const CLOSED_TIMEOUT_SECONDS = 1;
 
-    const OPEN_ALLOWED_FAILURES = 3;
-    const OPEN_TIMEOUT_SECONDS = 2;
-    const OPEN_THRESHOLD_SECONDS = 3600; // 1 hour
+    public const OPEN_ALLOWED_FAILURES = 3;
+    public const OPEN_TIMEOUT_SECONDS = 2;
+    public const OPEN_THRESHOLD_SECONDS = 3600; // 1 hour
 
-    const CACHE_KEY_XML = 'currency_feed.xml';
+    public const CACHE_KEY_XML = 'currency_feed.xml';
 
     /** @var string */
     private $currencyFeedUrl;

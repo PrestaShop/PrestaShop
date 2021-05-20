@@ -36,7 +36,7 @@ class Email
     /**
      * @var int Maximum allowed length for email
      */
-    const MAX_LENGTH = 255;
+    public const MAX_LENGTH = 255;
 
     /**
      * @var string

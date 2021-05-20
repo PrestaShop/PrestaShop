@@ -122,6 +122,7 @@ export default {
       product_id: updatedProduct.product_id,
       combination_id: updatedProduct.combination_id,
     });
+
     if (index !== -1) {
       state.productsToUpdate.splice(index, 1, updatedProduct);
     } else {
@@ -167,6 +168,7 @@ export default {
       product_id: product.product_id,
       combination_id: product.combination_id,
     });
+
     if (index !== -1) {
       state.selectedProducts.splice(index, 1, product);
     } else {
@@ -178,6 +180,7 @@ export default {
       product_id: product.product_id,
       combination_id: product.combination_id,
     });
+
     if (index !== -1) {
       state.selectedProducts[index].qty = 0;
     }

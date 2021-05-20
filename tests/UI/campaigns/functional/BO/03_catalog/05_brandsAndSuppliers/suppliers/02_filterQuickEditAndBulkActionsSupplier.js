@@ -222,10 +222,7 @@ describe('Filter, Quick edit and bulk actions suppliers', async () => {
         const isActionPerformed = await suppliersPage.setStatus(page, 1, test.args.enabledValue);
 
         if (isActionPerformed) {
-          const resultMessage = await suppliersPage.getTextContent(
-            page,
-            suppliersPage.alertSuccessBlockParagraph,
-          );
+          const resultMessage = await suppliersPage.getAlertSuccessBlockParagraphContent(page);
           await expect(resultMessage).to.contains(suppliersPage.successfulUpdateStatusMessage);
         }
 

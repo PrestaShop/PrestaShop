@@ -80,6 +80,7 @@ class Payment {
     this.collapseOptions();
 
     const selectedOption = this.getSelectedOption();
+
     if (!selectedOption) {
       show = false;
     }

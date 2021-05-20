@@ -42,7 +42,7 @@ class AddTitle extends BOBasePage {
 
     await Promise.all([
       page.click(this.dropdownMenuItemLink(idLang)),
-      page.waitForSelector(this.dropdownMenuItemLink(idLang), {state: 'hidden'}),
+      this.waitForHiddenSelector(page, this.dropdownMenuItemLink(idLang)),
     ]);
   }
 
@@ -71,7 +71,7 @@ class AddTitle extends BOBasePage {
     await this.clickAndWaitForNavigation(page, this.saveButton);
 
     // Return successful message
-    return this.getTextContent(page, this.alertSuccessBlockParagraph);
+    return this.getAlertSuccessBlockParagraphContent(page);
   }
 }
 

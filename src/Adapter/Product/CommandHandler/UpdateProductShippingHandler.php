@@ -108,8 +108,8 @@ final class UpdateProductShippingHandler extends AbstractProductHandler implemen
             $product->setCarriers($command->getCarrierReferences());
         }
 
-        if (null !== $command->getDeliveryTimeNotesType()) {
-            $product->additional_delivery_times = $command->getDeliveryTimeNotesType()->getValue();
+        if (null !== $command->getDeliveryTimeNoteType()) {
+            $product->additional_delivery_times = $command->getDeliveryTimeNoteType()->getValue();
             $updatableProperties[] = 'additional_delivery_times';
         }
 

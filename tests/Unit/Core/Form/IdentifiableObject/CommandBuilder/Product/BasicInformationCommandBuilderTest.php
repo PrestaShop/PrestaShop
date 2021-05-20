@@ -29,8 +29,7 @@ declare(strict_types=1);
 namespace Tests\Unit\Core\Form\IdentifiableObject\CommandBuilder\Product;
 
 use PrestaShop\PrestaShop\Core\Domain\Product\Command\UpdateProductBasicInformationCommand;
-use PrestaShop\PrestaShop\Core\Domain\Product\QueryResult\ProductType;
-use PrestaShop\PrestaShop\Core\Form\IdentifiableObject\CommandBuilder\Product\BasicInformationCommandBuilder;
+use PrestaShop\PrestaShop\Core\Form\IdentifiableObject\CommandBuilder\Product\BasicInformationCommandsBuilder;
 
 class BasicInformationCommandBuilderTest extends AbstractProductCommandBuilderTest
 {
@@ -38,13 +37,13 @@ class BasicInformationCommandBuilderTest extends AbstractProductCommandBuilderTe
      * @dataProvider getExpectedCommands
      *
      * @param array $formData
-     * @param UpdateProductBasicInformationCommand|null $expectedCommand
+     * @param array $expectedCommands
      */
-    public function testBuildCommand(array $formData, ?UpdateProductBasicInformationCommand $expectedCommand)
+    public function testBuildCommand(array $formData, array $expectedCommands)
     {
-        $builder = new BasicInformationCommandBuilder();
-        $builtCommand = $builder->buildCommand($this->getProductId(), $formData);
-        $this->assertEquals($expectedCommand, $builtCommand);
+        $builder = new BasicInformationCommandsBuilder();
+        $builtCommands = $builder->buildCommands($this->getProductId(), $formData);
+        $this->assertEquals($expectedCommands, $builtCommands);
     }
 
     public function getExpectedCommands()
@@ -53,7 +52,7 @@ class BasicInformationCommandBuilderTest extends AbstractProductCommandBuilderTe
             [
                 'no_price_data' => ['useless value'],
             ],
-            null,
+            [],
         ];
 
         $command = new UpdateProductBasicInformationCommand($this->getProductId()->getValue());
@@ -63,18 +62,7 @@ class BasicInformationCommandBuilderTest extends AbstractProductCommandBuilderTe
                     'not_handled' => 0,
                 ],
             ],
-            $command,
-        ];
-
-        $command = new UpdateProductBasicInformationCommand($this->getProductId()->getValue());
-        $command->setVirtual(true);
-        yield [
-            [
-                'basic' => [
-                    'type' => ProductType::TYPE_VIRTUAL,
-                ],
-            ],
-            $command,
+            [$command],
         ];
 
         $command = new UpdateProductBasicInformationCommand($this->getProductId()->getValue());
@@ -82,16 +70,14 @@ class BasicInformationCommandBuilderTest extends AbstractProductCommandBuilderTe
             1 => 'Nom français',
             2 => 'French name',
         ];
-        $command->setVirtual(false);
         $command->setLocalizedNames($localizedNames);
         yield [
             [
-                'basic' => [
-                    'type' => ProductType::TYPE_STANDARD,
+                'header' => [
                     'name' => $localizedNames,
                 ],
             ],
-            $command,
+            [$command],
         ];
 
         $command = new UpdateProductBasicInformationCommand($this->getProductId()->getValue());
@@ -106,7 +92,7 @@ class BasicInformationCommandBuilderTest extends AbstractProductCommandBuilderTe
                     'description' => $localizedDescriptions,
                 ],
             ],
-            $command,
+            [$command],
         ];
 
         $command = new UpdateProductBasicInformationCommand($this->getProductId()->getValue());
@@ -121,7 +107,7 @@ class BasicInformationCommandBuilderTest extends AbstractProductCommandBuilderTe
                     'description_short' => $localizedShortDescriptions,
                 ],
             ],
-            $command,
+            [$command],
         ];
     }
 }

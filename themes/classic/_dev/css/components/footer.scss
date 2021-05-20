@@ -89,6 +89,7 @@
     }
   }
 }
+
 .facebook {
   background-image: url("../img/facebook.svg");
 
@@ -105,6 +106,7 @@
     }
   }
 }
+
 .twitter {
   background-image: url("../img/twitter.svg");
 
@@ -157,6 +159,7 @@
     color: $gray-darker;
   }
 }
+
 .pinterest {
   background-image: url("../img/pinterest.svg");
 
@@ -185,7 +188,6 @@
 .footer-container {
   padding-top: $extra-large-space;
   overflow: hidden;
-  box-shadow: 2px 2px 11px 0 rgba(0, 0, 0, 0.3);
 
   .h3,
   .h4 {
@@ -244,7 +246,7 @@
         > li {
           padding: 0.625rem;
           font-weight: 600;
-          border-bottom: 1px solid #fff;
+          border-bottom: 1px solid $white;
 
           a {
             color: $gray-darker;

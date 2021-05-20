@@ -44,6 +44,7 @@ function handleCheckoutStepChange() {
 
   clickableSteps.on('click', (event) => {
     const clickedStep = Steps.getClickedStep(event);
+
     if (!clickedStep.isUnreachable()) {
       steps.makeCurrent(clickedStep);
       if (clickedStep.hasContinueButton()) {

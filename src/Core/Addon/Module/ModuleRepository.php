@@ -47,9 +47,9 @@ use Symfony\Component\Translation\TranslatorInterface;
 
 class ModuleRepository implements ModuleRepositoryInterface
 {
-    const NATIVE_AUTHOR = 'PrestaShop';
+    public const NATIVE_AUTHOR = 'PrestaShop';
 
-    const PARTNER_AUTHOR = 'PrestaShop Partners';
+    public const PARTNER_AUTHOR = 'PrestaShop Partners';
 
     /**
      * @var AdminModuleDataProvider

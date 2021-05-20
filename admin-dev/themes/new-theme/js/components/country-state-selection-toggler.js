@@ -64,6 +64,7 @@ export default class CountryStateSelectionToggler {
    */
   change() {
     const countryId = this.$countryInput.val();
+
     if (countryId === '') {
       return;
     }

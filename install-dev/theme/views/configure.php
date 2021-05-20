@@ -55,7 +55,7 @@
 
 	<!-- Install type (with fixtures or not) -->
 	<div class="field clearfix">
-		<label class="aligned"><?php echo $this->translator->trans('Install demo products', array(), 'Install'); ?></label>
+		<label class="aligned"><?php echo $this->translator->trans('Install demonstration data', array(), 'Install'); ?></label>
 		<div class="contentinput">
 			<label>
 				<input value="full" type="radio" name="db_mode" style="vertical-align: middle;" <?php if ($this->install_type == 'full'): ?>checked="checked"<?php endif; ?> autocomplete="off" />

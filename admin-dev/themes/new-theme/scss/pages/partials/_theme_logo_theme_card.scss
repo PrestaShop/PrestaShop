@@ -22,7 +22,7 @@
 
 @mixin action-button {
   height: 2.5rem;
-  background-color: #fff;
+  background-color: $white;
   @include border-radius(1.65rem);
 }
 
@@ -96,6 +96,7 @@
       @include action-button();
       position: relative;
       width: 2.5rem;
+
       i {
         position: absolute;
         right: 25%;
@@ -105,7 +106,7 @@
 
     .action-button:not(:first-child):not(:disabled):hover,
     .delete-button:hover {
-      color: #fff;
+      color: $white;
       background-color: #3ed1f0;
       box-shadow: 0 0 0.9375rem 0 rgba(0, 0, 0, 0.2);
     }
@@ -139,9 +140,11 @@
 
 .theme-catalog-card {
   background-color: #f8f8f8;
+
   .catalog-image {
     padding-top: 3.7rem;
   }
+
   .catalog-description {
     padding-top: 0.975rem;
   }

@@ -44,7 +44,7 @@ class AddPage extends BOBasePage {
     await this.clickAndWaitForNavigation(page, this.savePageButton);
 
     // Return successful message
-    return this.getTextContent(page, this.alertSuccessBlockParagraph);
+    return this.getAlertSuccessBlockParagraphContent(page);
   }
 
   /**

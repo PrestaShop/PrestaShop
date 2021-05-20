@@ -18,7 +18,7 @@
   position: fixed;
   top: 0;
   bottom: 0;
-  z-index: 502;
+  z-index: 999;
   width: $size-navbar-width;
   height: 100%;
   margin-top: $size-header-height;
@@ -33,12 +33,29 @@
   .material-icons {
     font-size: 1.188rem;
     line-height: inherit;
-    color: #fff;
+    color: $white;
   }
+
   &.mobile-nav {
     width: 70%;
     margin-top: $size-header-height + ($header-mobile-padding-y * 2);
     margin-left: -100%;
+
+    &::before {
+      position: fixed;
+      top: 5rem;
+      left: 75%;
+      display: block;
+      font-family: "Material Icons", sans-serif;
+      font-size: 1.5rem;
+      color: $white;
+      pointer-events: none;
+      content: "\e5cd";
+
+      @include media-breakpoint-only(md) {
+        left: 50%;
+      }
+    }
 
     @include media-breakpoint-only(sm) {
       width: 60%;
@@ -52,9 +69,11 @@
       display: block;
       margin-left: 0;
     }
+
     .onboarding-navbar {
       display: none;
     }
+
     .panel-collapse {
       padding-left: 0;
 
@@ -62,6 +81,7 @@
         padding-left: 0.75rem;
       }
     }
+
     .employee-avatar {
       padding-top: 1rem;
       text-align: center;
@@ -80,7 +100,7 @@
       span {
         display: block;
         margin-bottom: 0.625rem;
-        color: #fff;
+        color: $white;
 
         @include media-breakpoint-down(md) {
           font-size: 1.09375rem;
@@ -97,6 +117,7 @@
         }
       }
     }
+
     .shop-list {
       padding-bottom: 1rem;
       font-weight: 600;
@@ -108,6 +129,7 @@
         }
       }
     }
+
     .main-menu {
       margin-top: 0.625rem;
 
@@ -115,6 +137,7 @@
         padding-bottom: 1rem;
       }
     }
+
     .shop-list-title {
       margin-bottom: 0.9375rem;
       font-size: 1rem;
@@ -131,6 +154,7 @@
         content: "\E313";
       }
     }
+
     .items-list {
       padding-left: 0;
 
@@ -139,7 +163,7 @@
       }
 
       li {
-        background-color: #fff;
+        background-color: $white;
         border-bottom: $gray-light 1px solid;
 
         &.group a {
@@ -165,6 +189,7 @@
           }
         }
       }
+
       li:first-child a {
         padding: 0.9375rem 1.25rem;
         font-size: 0.9375rem;
@@ -201,17 +226,28 @@
     $padding-size: 1.25rem;
     display: block;
 
+    #header_logout {
+      margin-top: 1rem;
+      color: #f44336;
+
+      i {
+        color: #f44336;
+      }
+    }
+
     &[data-submenu] {
       @include media-breakpoint-down(md) {
         a.link {
-          padding-top: 1.25rem;
-          padding-bottom: 1.25rem;
-          font-size: 1.25rem;
+          padding-top: 0.5rem;
+          padding-bottom: 0.5rem;
+          padding-left: 1rem;
+          font-size: 1rem;
           line-height: inherit;
 
           .material-icons {
-            font-size: 2rem;
-            line-height: 2rem;
+            margin-top: 0.1rem;
+            font-size: 1.25rem;
+            line-height: 1.4rem;
 
             &.sub-tabs-arrow {
               padding-right: 1.2rem;
@@ -235,7 +271,7 @@
       }
 
       > .link {
-        padding-left: 0.638rem;
+        padding-left: 1rem;
         border-left: 0.25rem solid #25b9d7;
 
         .material-icons {
@@ -270,7 +306,7 @@
       }
 
       span {
-        padding-left: 0.625rem;
+        padding-left: 1rem;
       }
 
       .sub-tabs-arrow {
@@ -286,7 +322,7 @@
     &.link-active,
     &.link-hover {
       & > .link {
-        color: #fff;
+        color: $white;
         background: #202226;
         @include transition(background 300ms ease);
 
@@ -306,7 +342,7 @@
 
     > .submenu {
       display: none;
-      padding-left: 2.75rem;
+      padding-left: 2.8rem;
       white-space: nowrap;
       list-style: none;
       background: #202226;
@@ -314,8 +350,8 @@
       & > li {
         @include media-breakpoint-down(md) {
           a.link {
-            padding-top: 0.75rem;
-            padding-bottom: 0.75rem;
+            padding-top: 0.5rem;
+            padding-bottom: 0.5rem;
           }
         }
 
@@ -361,7 +397,7 @@
     &.link-active {
       > .link {
         padding-left: 0;
-        color: #fff;
+        color: $white;
         border-left: none;
       }
     }
@@ -393,11 +429,14 @@
   border-top: 1px solid #bbcdd2;
 
   @include media-breakpoint-down(md) {
-    display: none;
+    margin: 0.75rem 0 0 0.5rem;
+    font-size: 1rem;
+    font-weight: 500;
+    border-top: none;
   }
 
   & > .title {
-    color: #fff;
+    color: $white;
     background: $gray-dark;
 
     @at-root .sidebar-closed & {
@@ -539,7 +578,7 @@
   position: fixed;
   top: 0;
   left: 0;
-  z-index: 501;
+  z-index: 998;
   display: none;
   width: 100%;
   height: 100%;

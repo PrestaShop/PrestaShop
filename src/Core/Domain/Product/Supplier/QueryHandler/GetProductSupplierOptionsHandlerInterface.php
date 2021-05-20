@@ -26,13 +26,18 @@
 
 namespace PrestaShop\PrestaShop\Core\Domain\Product\Supplier\QueryHandler;
 
-use PrestaShop\PrestaShop\Core\Domain\Product\QueryResult\ProductSupplierOptions;
 use PrestaShop\PrestaShop\Core\Domain\Product\Supplier\Query\GetProductSupplierOptions;
+use PrestaShop\PrestaShop\Core\Domain\Product\Supplier\QueryResult\ProductSupplierOptions;
 
 /**
- * Defines cotntract to handle @see GetProductSupplierOptions
+ * Defines contract to handle @see GetProductSupplierOptions
  */
 interface GetProductSupplierOptionsHandlerInterface
 {
+    /**
+     * @param GetProductSupplierOptions $query
+     *
+     * @return ProductSupplierOptions
+     */
     public function handle(GetProductSupplierOptions $query): ProductSupplierOptions;
 }

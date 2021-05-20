@@ -45,10 +45,6 @@ class SeoAndUrls extends BOBasePage {
     this.dropdownToggleButton = row => `${this.actionsColumn(row)} a.dropdown-toggle`;
     this.dropdownToggleMenu = row => `${this.actionsColumn(row)} div.dropdown-menu`;
     this.deleteRowLink = row => `${this.dropdownToggleMenu(row)} a.grid-delete-row-link`;
-    // Set up URL form
-    this.switchFriendlyUrlLabel = toggle => `#meta_settings_set_up_urls_form_friendly_url_${toggle}`;
-    this.switchAccentedUrlLabel = toggle => `#meta_settings_set_up_urls_form_accented_url_${toggle}`;
-    this.saveSeoAndUrlFormButton = '#form-set-up-urls-save-button';
     // Delete modal
     this.confirmDeleteModal = '#meta-grid-confirm-modal';
     this.confirmDeleteButton = `${this.confirmDeleteModal} button.btn-confirm-submit`;
@@ -58,8 +54,13 @@ class SeoAndUrls extends BOBasePage {
     this.paginationNextLink = `${this.gridPanel} #pagination_next_url`;
     this.paginationPreviousLink = `${this.gridPanel} [aria-label='Previous']`;
 
+    // Set up URL form
+    this.friendlyUrlToggleInput = toggle => `#meta_settings_set_up_urls_form_friendly_url_${toggle}`;
+    this.accentedUrlToggleInput = toggle => `#meta_settings_set_up_urls_form_accented_url_${toggle}`;
+    this.saveSeoAndUrlFormButton = '#form-set-up-urls-save-button';
+
     // Seo options form
-    this.switchDisplayAttributesToggleInput = toggle => '#meta_settings_seo_options_form_product_attributes_in_title_'
+    this.displayAttributesToggleInput = toggle => '#meta_settings_seo_options_form_product_attributes_in_title_'
       + `${toggle}`;
     this.saveSeoOptionsFormButton = '#meta_settings_seo_options_form_save_button';
   }
@@ -109,7 +110,7 @@ class SeoAndUrls extends BOBasePage {
     ]);
 
     await this.confirmDeleteSeoUrlPage(page);
-    return this.getTextContent(page, this.alertSuccessBlockParagraph);
+    return this.getAlertSuccessBlockParagraphContent(page);
   }
 
   /* Column methods */
@@ -133,10 +134,12 @@ class SeoAndUrls extends BOBasePage {
   async getAllRowsColumnContent(page, column) {
     const rowsNumber = await this.getNumberOfElementInGrid(page);
     const allRowsContentTable = [];
+
     for (let row = 1; row <= rowsNumber; row++) {
       const rowContent = await this.getTextColumnFromTable(page, row, column);
       await allRowsContentTable.push(rowContent);
     }
+
     return allRowsContentTable;
   }
 
@@ -170,7 +173,7 @@ class SeoAndUrls extends BOBasePage {
       this.waitForVisibleSelector(page, `${this.confirmDeleteModal}.show`),
     ]);
     await this.confirmDeleteSeoUrlPage(page);
-    return this.getTextContent(page, this.alertSuccessBlockParagraph);
+    return this.getAlertSuccessBlockParagraphContent(page);
   }
 
   /**
@@ -297,9 +300,9 @@ class SeoAndUrls extends BOBasePage {
    * @return {Promise<string>}
    */
   async enableDisableFriendlyURL(page, toEnable = true) {
-    await this.waitForSelectorAndClick(page, this.switchFriendlyUrlLabel(toEnable ? 1 : 0));
+    await page.check(this.friendlyUrlToggleInput(toEnable ? 1 : 0));
     await this.clickAndWaitForNavigation(page, this.saveSeoAndUrlFormButton);
-    return this.getTextContent(page, this.alertSuccessBlock);
+    return this.getAlertSuccessBlockParagraphContent(page);
   }
 
   /**
@@ -309,9 +312,9 @@ class SeoAndUrls extends BOBasePage {
    * @return {Promise<string>}
    */
   async enableDisableAccentedURL(page, toEnable = true) {
-    await this.waitForSelectorAndClick(page, this.switchAccentedUrlLabel(toEnable ? 1 : 0));
+    await page.check(this.accentedUrlToggleInput(toEnable ? 1 : 0));
     await this.clickAndWaitForNavigation(page, this.saveSeoAndUrlFormButton);
-    return this.getTextContent(page, this.alertSuccessBlock);
+    return this.getAlertSuccessBlockParagraphContent(page);
   }
 
   /**
@@ -321,9 +324,9 @@ class SeoAndUrls extends BOBasePage {
    * @return {Promise<string>}
    */
   async setStatusAttributesInProductMetaTitle(page, toEnable = true) {
-    await page.check(this.switchDisplayAttributesToggleInput(toEnable ? 1 : 0));
+    await page.check(this.displayAttributesToggleInput(toEnable ? 1 : 0));
     await this.clickAndWaitForNavigation(page, this.saveSeoOptionsFormButton);
-    return this.getTextContent(page, this.alertSuccessBlock);
+    return this.getAlertSuccessBlockParagraphContent(page);
   }
 }
 

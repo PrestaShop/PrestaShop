@@ -425,7 +425,7 @@ class AdminStatsControllerCore extends AdminStatsTabController
 			LEFT JOIN (
 				SELECT pr.`id_product`,
 					IFNULL(SUM(cp.`product_quantity`), 0) AS totalQuantitySold,
-					IFNULL(SUM(cp.`product_price` * cp.`product_quantity`), 0) / o.conversion_rate AS totalPriceSold
+					IFNULL(SUM(cp.`unit_price_tax_excl` * cp.`product_quantity`), 0) / o.conversion_rate AS totalPriceSold
 				FROM `' . _DB_PREFIX_ . 'product` pr
 				LEFT OUTER JOIN `' . _DB_PREFIX_ . 'order_detail` cp ON pr.`id_product` = cp.`product_id`
 				LEFT JOIN `' . _DB_PREFIX_ . 'orders` o ON o.`id_order` = cp.`id_order`
@@ -1023,6 +1023,17 @@ class AdminStatsControllerCore extends AdminStatsTabController
                     [$this->context->language->id => strtotime('+1 day')]
                 );
 
+                break;
+
+            case 'shopping_cart_total':
+                $cartId = Tools::getValue('cartId');
+                $cart = new Cart((int) $cartId);
+                if (Validate::isLoadedObject($cart)) {
+                    $value = $this->context->getCurrentLocale()->formatPrice(
+                        $cart->getCartTotalPrice(),
+                        Currency::getIsoCodeById((int) $cart->id_currency)
+                    );
+                }
                 break;
 
             default:

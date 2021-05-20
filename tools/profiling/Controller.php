@@ -130,11 +130,13 @@ abstract class Controller extends ControllerCore
             );
         }
 
-        $this->outPutHtml = str_replace(
-            '{$content}',
-            '{$content}' . $this->context->smarty->fetch(__DIR__ . '/templates/profiling.tpl'),
-            $content
-        );
+        if (isset($this->outPutHtml)) {
+            $this->outPutHtml = str_replace(
+                '{$content}',
+                '{$content}' . $this->context->smarty->fetch(__DIR__ . '/templates/profiling.tpl'),
+                $content
+            );
+        }
 
         // Return empty string since we change the outPutHtml
         return '';

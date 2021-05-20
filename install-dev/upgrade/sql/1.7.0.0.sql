@@ -78,8 +78,6 @@ ALTER TABLE  `PREFIX_product_lang` ADD  `social_sharing_description` VARCHAR( 25
 ALTER TABLE `PREFIX_hook` DROP `live_edit`;
 
 /* Remove comparator feature */
-DELETE FROM `PREFIX_hook_alias` WHERE `name` = 'displayProductComparison';
-DELETE FROM `PREFIX_hook` WHERE `name` = 'displayProductComparison';
 DELETE FROM `PREFIX_meta` WHERE `page` = 'products-comparison';
 DROP TABLE IF EXISTS `PREFIX_compare`;
 DROP TABLE IF EXISTS `PREFIX_compare_product`;
@@ -119,6 +117,14 @@ CREATE TABLE `PREFIX_authorization_role` (
   UNIQUE KEY (`slug`)
 ) ENGINE=ENGINE_TYPE DEFAULT CHARSET=utf8;
 
+/* Add missing access entries on certain installation */
+INSERT INTO `PREFIX_access` (`id_profile`, `id_tab`, `view`, `add`, `edit`, `delete`)
+  SELECT 1, `id_tab`, 0, 0 ,0 ,0
+  FROM `PREFIX_tab` WHERE `id_tab` NOT IN (SELECT `id_tab` FROM `PREFIX_access` WHERE `id_profile` = 1);
+INSERT INTO `PREFIX_module_access` (`id_profile`, `id_module`, `view`, `configure`, `uninstall`)
+  SELECT 1, `id_module`, 1, 0, 0
+  FROM `PREFIX_module` WHERE `id_module` NOT IN (SELECT `id_module` FROM `PREFIX_module_access` WHERE `id_profile` = 1);
+
 /* Create a copy without indexes to make ID updates without conflict. */
 CREATE TABLE `PREFIX_access_old` AS SELECT * FROM `PREFIX_access`;
 DROP TABLE `PREFIX_access`;
@@ -156,19 +162,18 @@ INSERT INTO `PREFIX_hook` (`name`, `title`, `description`, `position`) VALUES
   ('displayAfterBodyOpeningTag', 'Very top of pages', 'Use this hook for advertisement or modals you want to load first.', '1'),
   ('displayBeforeBodyClosingTag', 'Very bottom of pages', 'Use this hook for your modals or any content you want to load at the very end.', '1');
 
-
-DELETE FROM `PREFIX_hook` WHERE `name` IN (
-  'displayProductTab',
-  'displayProductTabContent',
-  'displayBeforePayment',
-  'actionBeforeAuthentication',
-  'actionOrderDetail',
-  'actionProductListOverride',
-  'actionSearch',
-  'displayCustomerIdentityForm',
-  'displayHomeTab',
-  'displayHomeTabContent',
-  'displayPayment');
+/* PHP:delete_hook(displayProductTab); */;
+/* PHP:delete_hook(displayProductTabContent); */;
+/* PHP:delete_hook(displayBeforePayment); */;
+/* PHP:delete_hook(actionBeforeAuthentication); */;
+/* PHP:delete_hook(actionOrderDetail); */;
+/* PHP:delete_hook(actionProductListOverride); */;
+/* PHP:delete_hook(actionSearch); */;
+/* PHP:delete_hook(displayCustomerIdentityForm); */;
+/* PHP:delete_hook(displayHomeTab); */;
+/* PHP:delete_hook(displayHomeTabContent); */;
+/* PHP:delete_hook(displayPayment); */;
+/* PHP:delete_hook(displayProductComparison); */;
 
 DELETE FROM `PREFIX_hook_alias` WHERE `name` IN (
   'beforeAuthentication',
@@ -178,7 +183,8 @@ DELETE FROM `PREFIX_hook_alias` WHERE `name` IN (
   'orderDetail',
   'payment',
   'productListAssign',
-  'search');
+  'search',
+  'displayProductComparison');
 
 DELETE FROM `PREFIX_configuration` WHERE `name` IN (
   '_MEDIA_SERVER_2_',

@@ -42,6 +42,11 @@ class ToolsCore
     const SERVICE_LOCALE_REPOSITORY = 'prestashop.core.localization.locale.repository';
     public const CACHE_LIFETIME_SECONDS = 604800;
 
+    public const PASSWORDGEN_FLAG_NUMERIC = 'NUMERIC';
+    public const PASSWORDGEN_FLAG_NO_NUMERIC = 'NO_NUMERIC';
+    public const PASSWORDGEN_FLAG_RANDOM = 'RANDOM';
+    public const PASSWORDGEN_FLAG_ALPHANUMERIC = 'ALPHANUMERIC';
+
     protected static $file_exists_cache = [];
     protected static $_forceCompile;
     protected static $_caching;
@@ -88,7 +93,7 @@ class ToolsCore
      *
      * @return bool|string Password
      */
-    public static function passwdGen($length = 8, $flag = 'ALPHANUMERIC')
+    public static function passwdGen($length = 8, $flag = self::PASSWORDGEN_FLAG_ALPHANUMERIC)
     {
         $length = (int) $length;
 
@@ -97,20 +102,20 @@ class ToolsCore
         }
 
         switch ($flag) {
-            case 'NUMERIC':
+            case static::PASSWORDGEN_FLAG_NUMERIC:
                 $str = '0123456789';
 
                 break;
-            case 'NO_NUMERIC':
+            case static::PASSWORDGEN_FLAG_NO_NUMERIC:
                 $str = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
 
                 break;
-            case 'RANDOM':
+            case static::PASSWORDGEN_FLAG_RANDOM:
                 $num_bytes = ceil($length * 0.75);
                 $bytes = self::getBytes($num_bytes);
 
                 return substr(rtrim(base64_encode($bytes), '='), 0, $length);
-            case 'ALPHANUMERIC':
+            case static::PASSWORDGEN_FLAG_ALPHANUMERIC:
             default:
                 $str = 'abcdefghijkmnopqrstuvwxyz0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ';
 
@@ -202,10 +207,7 @@ class ToolsCore
             }
 
             $explode = explode('?', $url);
-            // don't use ssl if url is home page
-            // used when logout for example
-            $use_ssl = !empty($url);
-            $url = $link->getPageLink($explode[0], $use_ssl);
+            $url = $link->getPageLink($explode[0]);
             if (isset($explode[1])) {
                 $url .= '?' . $explode[1];
             }
@@ -817,7 +819,7 @@ class ToolsCore
      * @deprecated Since 1.7.6.0. Please use Locale::formatNumber() instead
      * @see Locale
      *
-     * @param float $number The number to format
+     * @param int|float|string $number The number to format
      * @param null $currency not used anymore
      *
      * @return string The formatted number
@@ -859,7 +861,7 @@ class ToolsCore
      * @deprecated since 1.7.4 use convertPriceToCurrency()
      *
      * @param float|null $price Product price
-     * @param object|array $currency Current currency object
+     * @param object|array|int|string|null $currency Current currency object
      * @param bool $to_currency convert to currency or from currency to default currency
      * @param Context $context
      *
@@ -4127,9 +4129,9 @@ exit;
             return '0';
         }
         $base = log($size) / log(1024);
-        $suffixes = ['', 'k', 'M', 'G', 'T'];
+        $suffixes = ['B', 'KB', 'MB', 'GB', 'TB'];
 
-        return round(1024 ** ($base - floor($base)), $precision) . $suffixes[floor($base)];
+        return round(1024 ** ($base - floor($base)), $precision) . Context::getContext()->getTranslator()->trans($suffixes[floor($base)], [], 'Shop.Theme.Catalog');
     }
 
     public static function boolVal($value)

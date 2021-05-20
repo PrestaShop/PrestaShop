@@ -1,8 +1,7 @@
 /*** SOME GENERIC STYLES ***/
 @mixin customer-area-base-box {
-  @include box-shadow();
   padding: 1rem;
-  background: #fff;
+  background: $white;
 }
 
 @mixin customer-area-box {
@@ -25,7 +24,7 @@
     margin: 0.125rem;
     font-size: inherit;
     font-weight: 400;
-    color: #fff;
+    color: $white;
     white-space: nowrap;
     border-radius: 3px;
   }
@@ -120,11 +119,10 @@
 /*** Addresses page ***/
 .page-addresses {
   .address {
-    @include box-shadow();
     margin-bottom: 1.875rem;
     font-size: $font-size-sm;
     color: $gray-darker;
-    background: #fff;
+    background: $white;
 
     .address-body {
       padding: 1rem;
@@ -191,6 +189,7 @@
   #content {
     font-size: 0.875rem;
   }
+
   .box {
     @include customer-area-base-box();
     margin-bottom: 1rem;
@@ -224,7 +223,7 @@
           display: inline-block;
           padding: 0.25rem 0.375rem;
           margin: 0.25rem 0;
-          color: #fff;
+          color: $white;
           border-radius: 3px;
         }
       }
@@ -277,6 +276,7 @@
       }
     }
   }
+
   .order-items {
     // stylelint-disable-next-line
     padding: 0 !important;
@@ -413,7 +413,7 @@
         display: inline-block;
         padding: 0.25rem 0.375rem;
         margin: 0.25rem 0;
-        color: #fff;
+        color: $white;
         border-radius: 3px;
       }
 

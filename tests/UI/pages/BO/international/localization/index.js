@@ -39,22 +39,25 @@ class Localization extends LocalizationBasePage {
   async importLocalizationPack(page, country, contentToImport, downloadPackData = true) {
     // Choose which country to import
     await this.selectByVisibleText(page, this.importlocalizationPackSelect, country);
+
     // Set content import checkboxes
-    await this.updateCheckboxValue(page, this.importStatesCheckbox, contentToImport.importStates);
-    await this.updateCheckboxValue(page, this.importTaxesCheckbox, contentToImport.importTaxes);
-    await this.updateCheckboxValue(page, this.importCurrenciesCheckbox, contentToImport.importCurrencies);
-    await this.updateCheckboxValue(page, this.importLanguagesCheckbox, contentToImport.importLanguages);
-    await this.updateCheckboxValue(page, this.importUnitsCheckbox, contentToImport.importUnits);
-    await this.updateCheckboxValue(
+    await this.setHiddenCheckboxValue(page, this.importStatesCheckbox, contentToImport.importStates);
+    await this.setHiddenCheckboxValue(page, this.importTaxesCheckbox, contentToImport.importTaxes);
+    await this.setHiddenCheckboxValue(page, this.importCurrenciesCheckbox, contentToImport.importCurrencies);
+    await this.setHiddenCheckboxValue(page, this.importLanguagesCheckbox, contentToImport.importLanguages);
+    await this.setHiddenCheckboxValue(page, this.importUnitsCheckbox, contentToImport.importUnits);
+    await this.setHiddenCheckboxValue(
       page,
       this.updatepriceDisplayForGroupsCHeckbox,
       contentToImport.updatePriceDisplayForGroups,
     );
+
     // Choose if we download pack of data
     await page.check(this.downloadPackDataToggleInput(downloadPackData ? 1 : 0));
+
     // Import the pack
     await this.clickAndWaitForNavigation(page, this.importButton);
-    return this.getTextContent(page, this.alertSuccessBlockParagraph);
+    return this.getAlertSuccessBlockParagraphContent(page);
   }
 
 
@@ -69,7 +72,7 @@ class Localization extends LocalizationBasePage {
     await this.selectByVisibleText(page, this.defaultLanguageSelector, language);
     await page.check(this.languageFromBrowserToggleInput(languageFromBrowser ? 1 : 0));
     await this.clickAndWaitForNavigation(page, this.saveConfigurationFormButton);
-    return this.getTextContent(page, this.alertSuccessBlockParagraph);
+    return this.getAlertSuccessBlockParagraphContent(page);
   }
 
   /**
@@ -82,7 +85,7 @@ class Localization extends LocalizationBasePage {
     this.dialogListener(page);
     await this.selectByVisibleText(page, this.defaultCurrencySelect, currency);
     await this.waitForSelectorAndClick(page, this.saveConfigurationFormButton);
-    return this.getTextContent(page, this.alertSuccessBlockParagraph);
+    return this.getAlertSuccessBlockParagraphContent(page);
   }
 
   /**
@@ -94,7 +97,7 @@ class Localization extends LocalizationBasePage {
   async setDefaultCountry(page, country) {
     await this.selectByVisibleText(page, this.defaultCountrySelect, country);
     await this.clickAndWaitForNavigation(page, this.saveConfigurationFormButton);
-    return this.getTextContent(page, this.alertSuccessBlockParagraph);
+    return this.getAlertSuccessBlockParagraphContent(page);
   }
 }
 module.exports = new Localization();

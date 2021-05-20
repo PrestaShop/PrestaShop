@@ -163,11 +163,7 @@ describe('Create unofficial currency and check it in FO', async () => {
       const isActionPerformed = await currenciesPage.setStatus(page, 1, false);
 
       if (isActionPerformed) {
-        const resultMessage = await currenciesPage.getTextContent(
-          page,
-          currenciesPage.alertSuccessBlockParagraph,
-        );
-
+        const resultMessage = await currenciesPage.getAlertSuccessBlockParagraphContent(page);
         await expect(resultMessage).to.contains(currenciesPage.successfulUpdateStatusMessage);
       }
 

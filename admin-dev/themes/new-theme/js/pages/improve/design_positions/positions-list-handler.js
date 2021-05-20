@@ -116,6 +116,7 @@ class PositionsListHandler {
 
     self.$hookSearch.on('keypress', (e) => {
       const keyCode = e.keyCode || e.which;
+
       return keyCode !== 13;
     });
 

@@ -59,8 +59,23 @@ class WebserviceController extends FrameworkBundleAdminController
     public function indexAction(WebserviceKeyFilters $filters, Request $request)
     {
         $form = $this->getFormHandler()->getForm();
+        $gridWebserviceFactory = $this->get('prestashop.core.grid.factory.webservice_key');
+        $grid = $gridWebserviceFactory->getGrid($filters);
 
-        return $this->renderPage($request, $filters, $form);
+        $gridPresenter = $this->get('prestashop.core.grid.presenter.grid_presenter');
+        $presentedGrid = $gridPresenter->present($grid);
+
+        $configurationWarnings = $this->lookForWarnings();
+
+        return $this->render(
+            '@PrestaShop/Admin/Configure/AdvancedParameters/Webservice/index.html.twig',
+            [
+                'help_link' => $this->generateSidebarLink($request->get('_legacy_controller')),
+                'webserviceConfigurationForm' => $form->createView(),
+                'grid' => $presentedGrid,
+                'configurationWarnings' => $configurationWarnings,
+            ]
+        );
     }
 
     /**
@@ -139,6 +154,8 @@ class WebserviceController extends FrameworkBundleAdminController
     }
 
     /**
+     * @deprecated since 1.7.8 and will be removed in next major. Use CommonController:searchGridAction instead
+     *
      * Searches for specific records.
      *
      * @AdminSecurity("is_granted('read', request.get('_legacy_controller'))")

@@ -35,7 +35,12 @@ npm install
 | DB_USER             | Login user of your MySql (default to **`root`**) |
 | DB_NAME             | Name of the MySql database (default to **`prestashop_db`**) |
 | DB_PASSWD           | Password for your MySql (default to **`empty`**) |
+### Maildev parameters
 
+| Parameter           | Description                                          |
+|---------------------|----------------------------------------------------- |
+| SMTP_SERVER             | The smtp server address for maildev (default to **`172.20.0.4`**)|
+| SMTP_PORT            | The smtp port for maildev (default to **`1025`**)|
 ### Playwright parameters
 
 | Parameter           | Description                                          |
@@ -68,7 +73,7 @@ HEADLESS=false URL_BO="Your_Shop_URL_BO" URL_FO="Your_Shop_URL_FO" npm run sanit
 If you want to run all sanity tests "safely", you can use the Travis-specific command : this will add the Mocha `--bail` parameter which stops the campaign when the first test fails.
 
 ```bash
-npm run sanity-travis
+npm run sanity-tests-fast-fail
 ```
 
 ## Functional tests 

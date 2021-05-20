@@ -21,6 +21,7 @@ module.exports = class Carrier {
     this.outOfRangeBehavior = carrierToCreate.outOfRangeBehavior || faker.random.arrayElement(outOfRangeBehavior);
     this.rangeSup = carrierToCreate.rangeSup || faker.random.number({min: 1, max: 100});
     this.allZones = carrierToCreate.allZones === undefined ? 'on' : carrierToCreate.allZones;
+    this.allZonesValue = carrierToCreate.allZonesValue || faker.random.number({min: 1, max: 100});
     this.zoneID = carrierToCreate.zoneID || faker.random.arrayElement(zonesID);
     this.maxWidth = carrierToCreate.maxWidth || faker.random.number({min: 1, max: 100});
     this.maxHeight = carrierToCreate.maxHeight || faker.random.number({min: 1, max: 100});

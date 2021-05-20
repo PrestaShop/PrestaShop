@@ -35,7 +35,7 @@ const {expect} = require('chai');
 
 // Import demo data
 const {PaymentMethods} = require('@data/demo/paymentMethods');
-const {DefaultAccount} = require('@data/demo/customer');
+const {DefaultCustomer} = require('@data/demo/customer');
 const {Currencies} = require('@data/demo/currencies');
 
 const {Products} = require('@data/demo/products');
@@ -241,7 +241,7 @@ describe('Change currency precision and check orders total price in FO, BO and d
     it('should sign in with default customer', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'loginInFO', baseContext);
 
-      await foLoginPage.customerLogin(page, DefaultAccount);
+      await foLoginPage.customerLogin(page, DefaultCustomer);
       const isCustomerConnected = await foLoginPage.isCustomerConnected(page);
       await expect(isCustomerConnected, 'Customer is not connected').to.be.true;
     });

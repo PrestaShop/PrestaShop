@@ -27,6 +27,7 @@
 namespace PrestaShop\PrestaShop\Core\Domain\Theme\Exception;
 
 use PrestaShop\PrestaShop\Core\Domain\Theme\ValueObject\ThemeName;
+use Throwable;
 
 /**
  * Thrown when trying to import already existing theme
@@ -42,7 +43,7 @@ class ImportedThemeAlreadyExistsException extends ThemeException
      * @param ThemeName $themeName
      * @param string $message
      * @param int $code
-     * @param null $previous
+     * @param Throwable|null $previous
      */
     public function __construct(ThemeName $themeName, $message = '', $code = 0, $previous = null)
     {

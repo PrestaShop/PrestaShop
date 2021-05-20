@@ -11,9 +11,9 @@ class AddShopGroup extends BOBasePage {
     // Selectors
     this.shopGroupForm = '#shop_group_form';
     this.nameInput = '#name';
-    this.shareCustomersToggleInput = toggle => `${this.shopGroupForm} label[for='share_customer_${toggle}']`;
-    this.shareAvailableQuantitiesToggleLabel = toggle => `${this.shopGroupForm} label[for='share_customer_${toggle}']`;
-    this.statusToggleLabel = toggle => `${this.shopGroupForm} label[for='share_customer_${toggle}']`;
+    this.shareCustomersToggleInput = toggle => `${this.shopGroupForm} #share_customer_${toggle}`;
+    this.shareAvailableQuantitiesToggleLabel = toggle => `${this.shopGroupForm} #share_customer_${toggle}`;
+    this.statusToggleLabel = toggle => `${this.shopGroupForm} #share_customer_${toggle}`;
     this.saveButton = '#shop_group_form_submit_btn';
   }
 
@@ -35,7 +35,7 @@ class AddShopGroup extends BOBasePage {
     await page.check(this.statusToggleLabel(shopGroupData.status ? 'on' : 'off'));
 
     await this.clickAndWaitForNavigation(page, this.saveButton);
-    return this.getTextContent(page, this.alertSuccessBlock);
+    return this.getAlertSuccessBlockContent(page);
   }
 }
 

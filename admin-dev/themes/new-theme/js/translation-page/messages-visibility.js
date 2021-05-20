@@ -29,6 +29,7 @@ export default function (callback) {
 
   function hideCurrentTranslationForms(formsContainer) {
     const currentTranslationForms = formsContainer.find('.translation-forms');
+
     if (currentTranslationForms.length > 0) {
       const hiddenFormsContainer = $(`[data-parent-of="${currentTranslationForms.attr('id')}"]`);
       currentTranslationForms.find('form').addClass(hideClass);
@@ -38,6 +39,7 @@ export default function (callback) {
 
   function hideCurrentNavigationBar(navigationContainer) {
     const currentNavigationBar = navigationContainer.find('nav');
+
     if (currentNavigationBar.length > 0) {
       const navIdentifier = currentNavigationBar.attr('data-navigation-of');
       const hiddenNavigationBarContainer = $(`[data-navigation-parent-of="${navIdentifier}"]`);
@@ -77,6 +79,7 @@ export default function (callback) {
 
   function updateMissingTranslationsMessages(title) {
     const missingTranslationsMessage = title.find('.missing-translations-long-message');
+
     if (missingTranslationsMessage.text().length > 0) {
       $('.translation-domains .missing-translations-paragraph').text(missingTranslationsMessage.text());
     } else {
@@ -135,6 +138,7 @@ export default function (callback) {
     $('.domain-part .delegate-toggle-messages').each((togglerIndex, toggler) => {
       $(toggler).click((event) => {
         let title = $(event.target);
+
         if (!$(event.target).hasClass('domain-part')) {
           title = $(event.target).parent();
         }

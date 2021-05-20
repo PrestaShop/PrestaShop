@@ -35,9 +35,9 @@ class OrderStateConstraintException extends OrderStateException
     /**
      * @var int Code is used when invalid name is provided for order state
      */
-    const INVALID_NAME = 1;
+    public const INVALID_NAME = 1;
     /**
      * @var int Code is used when empty name is provided for order state
      */
-    const EMPTY_NAME = 2;
+    public const EMPTY_NAME = 2;
 }

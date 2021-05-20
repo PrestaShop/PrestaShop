@@ -38,12 +38,12 @@ class Isbn
     /**
      * Valid ISBN regex pattern
      */
-    const VALID_PATTERN = '/^[0-9-]{0,32}$/';
+    public const VALID_PATTERN = '/^[0-9-]{0,32}$/';
 
     /**
      * Maximum allowed symbols
      */
-    const MAX_LENGTH = 32;
+    public const MAX_LENGTH = 32;
 
     /**
      * @var string

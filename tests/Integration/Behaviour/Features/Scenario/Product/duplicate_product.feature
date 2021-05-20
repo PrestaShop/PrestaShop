@@ -21,11 +21,11 @@ Feature: Duplicate product from Back Office (BO).
     Given I add product "product1" with following information:
       | name[en-US] | smart sunglasses   |
       | name[fr-FR] | lunettes de soleil |
-      | is_virtual  | false              |
+      | type        | standard           |
     And I add product "product2" with following information:
       | name[en-US] | Reading glasses |
       | name[fr-FR] | lunettes        |
-      | is_virtual  | false           |
+      | type        | standard        |
     And I update product "product1" basic information with following values:
       | description[en-US]       | nice sunglasses            |
       | description[fr-FR]       | belles lunettes            |
@@ -89,7 +89,7 @@ Feature: Duplicate product from Back Office (BO).
       | meta description[en-US] |                    |
       | meta keywords[en-US]    | sup,1              |
       | shops                   | [shop1]            |
-    And I set product product1 default supplier to supplier1 and following suppliers:
+    When I set product product1 suppliers:
       | reference         | supplier reference | product supplier reference     | currency | price tax excluded |
       | product1supplier1 | supplier1          | my first supplier for product1 | USD      | 10                 |
     And I set following related products to product product1:
@@ -199,3 +199,4 @@ Feature: Duplicate product from Back Office (BO).
     And product copy_of_product1 should have 1 customizable text field
     And product copy_of_product1 should have 0 customizable file fields
 #@todo: assert stock info
+#@todo: add tests for other type of products Pack, Virtual, Combinations

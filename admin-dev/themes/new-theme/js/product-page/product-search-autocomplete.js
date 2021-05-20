@@ -107,6 +107,7 @@ export default function () {
       }
 
       let value = suggestion[autocompleteObject.attr('data-mappingvalue')];
+
       if (suggestion.id_product_attribute) {
         value = `${value},${suggestion.id_product_attribute}`;
       }

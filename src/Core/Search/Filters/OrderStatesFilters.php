@@ -35,7 +35,7 @@ use PrestaShop\PrestaShop\Core\Search\Filters;
  */
 final class OrderStatesFilters extends Filters
 {
-    const LIST_LIMIT = 50;
+    public const LIST_LIMIT = 50;
 
     /** @var string */
     protected $filterId = OrderStatesGridDefinitionFactory::GRID_ID;

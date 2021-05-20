@@ -18,6 +18,12 @@ services:
         arguments:
         - 'PrestaShopBundle\Entity\Shop'
 
+    prestashop.core.admin.shop_group.repository:
+        class: 'PrestaShopBundle\Entity\Repository\ShopGroupRepository'
+        factory: [ '@doctrine.orm.default_entity_manager', getRepository ]
+        arguments:
+            - 'PrestaShopBundle\Entity\ShopGroup'
+
     prestashop.core.admin.translation.repository:
         class: PrestaShopBundle\Entity\Repository\TranslationRepository
         factory: ['@doctrine.orm.default_entity_manager', getRepository]
@@ -121,3 +127,9 @@ services:
         arguments:
             - "@doctrine.dbal.default_connection"
             - "%database_prefix%"
+
+    prestashop.core.admin.attribute_group.repository:
+        class: PrestaShopBundle\Entity\Repository\AttributeGroupRepository
+        factory: ['@doctrine.orm.default_entity_manager', getRepository]
+        arguments:
+            - PrestaShopBundle\Entity\AttributeGroup

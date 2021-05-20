@@ -48,6 +48,7 @@ export default function () {
     $('.pagination').removeClass('hide');
 
     let i;
+
     for (i = 1; i < totalPages; i += 1) {
       pageIndex = i + 1;
       pageLink = pageLinkTemplate.clone();

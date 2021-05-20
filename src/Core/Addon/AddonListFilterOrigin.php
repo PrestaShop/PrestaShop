@@ -29,13 +29,13 @@ namespace PrestaShop\PrestaShop\Core\Addon;
 class AddonListFilterOrigin
 {
     /* Bitwise operators */
-    const DISK = 1;
-    const ADDONS_MUST_HAVE = 2;
-    const ADDONS_SERVICE = 4;
-    const ADDONS_NATIVE = 8;
-    const ADDONS_NATIVE_ALL = 16;
-    const ADDONS_CUSTOMER = 32;
-    const ADDONS_ALL = 62;
+    public const DISK = 1;
+    public const ADDONS_MUST_HAVE = 2;
+    public const ADDONS_SERVICE = 4;
+    public const ADDONS_NATIVE = 8;
+    public const ADDONS_NATIVE_ALL = 16;
+    public const ADDONS_CUSTOMER = 32;
+    public const ADDONS_ALL = 62;
 
-    const ALL = 63;
+    public const ALL = 63;
 }

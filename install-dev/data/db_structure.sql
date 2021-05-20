@@ -1647,9 +1647,9 @@ CREATE TABLE `PREFIX_product` (
   `text_fields` tinyint(4) NOT NULL DEFAULT '0',
   `active` tinyint(1) unsigned NOT NULL DEFAULT '0',
   `redirect_type` ENUM(
-    '', '404', '301-product', '302-product',
+    '404', '301-product', '302-product',
     '301-category', '302-category'
-  ) NOT NULL DEFAULT '',
+  ) NOT NULL DEFAULT '404',
   `id_type_redirected` int(10) unsigned NOT NULL DEFAULT '0',
   `available_for_order` tinyint(1) NOT NULL DEFAULT '1',
   `available_date` date DEFAULT NULL,
@@ -1669,6 +1669,9 @@ CREATE TABLE `PREFIX_product` (
   `advanced_stock_management` tinyint(1) DEFAULT '0' NOT NULL,
   `pack_stock_type` int(11) unsigned DEFAULT '3' NOT NULL,
   `state` int(11) unsigned NOT NULL DEFAULT '1',
+  `product_type` ENUM(
+    'standard', 'pack', 'virtual', 'combinations', ''
+  ) NOT NULL DEFAULT '',
   PRIMARY KEY (`id_product`),
   INDEX reference_idx(`reference`),
   INDEX supplier_reference_idx(`supplier_reference`),
@@ -2791,15 +2794,6 @@ CREATE TABLE `PREFIX_smarty_cache` (
   KEY `name` (`name`),
   KEY `cache_id` (`cache_id`),
   KEY `modified` (`modified`)
-) ENGINE=ENGINE_TYPE DEFAULT CHARSET=utf8mb4 COLLATION;
-
-CREATE TABLE IF NOT EXISTS `PREFIX_order_slip_detail_tax` (
-  `id_order_slip_detail` int(11) unsigned NOT NULL,
-  `id_tax` int(11) unsigned NOT NULL,
-  `unit_amount` decimal(16, 6) NOT NULL DEFAULT '0.000000',
-  `total_amount` decimal(16, 6) NOT NULL DEFAULT '0.000000',
-  KEY (`id_order_slip_detail`),
-  KEY `id_tax` (`id_tax`)
 ) ENGINE=ENGINE_TYPE DEFAULT CHARSET=utf8mb4 COLLATION;
 
 CREATE TABLE IF NOT EXISTS `PREFIX_mail` (

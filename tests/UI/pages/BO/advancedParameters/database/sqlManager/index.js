@@ -200,22 +200,19 @@ class SqlManager extends BOBasePage {
       page.click(this.sqlQueryListTableDeleteLink(row)),
       this.waitForVisibleSelector(page, `${this.confirmDeleteModal}.show`),
     ]);
+
     await this.confirmDeleteSQLQuery(page);
-    return this.getTextContent(page, this.alertSuccessBlockParagraph);
+    return this.getAlertSuccessBlockParagraphContent(page);
   }
 
   /**
    * Export sql result to csv
-   * @param page
-   * @param row
-   * @returns {Promise<void>}
+   * @param page {Page} Browser tab
+   * @param row {number} Row of the sql result on table
+   * @returns {Promise<string>}
    */
-  async exportSqlResultDataToCsv(page, row = 1) {
-    const [download] = await Promise.all([
-      page.waitForEvent('download'),
-      await page.click(this.sqlQueryListTableExportLink(row)),
-    ]);
-    return download.path();
+  exportSqlResultDataToCsv(page, row = 1) {
+    return this.clickAndWaitForDownload(page, this.sqlQueryListTableExportLink(row));
   }
 
   /**
@@ -320,7 +317,7 @@ class SqlManager extends BOBasePage {
     ]);
     await this.clickAndWaitForNavigation(page, this.modalDeleteButton);
 
-    return this.getTextContent(page, this.alertSuccessBlockParagraph);
+    return this.getAlertSuccessBlockParagraphContent(page);
   }
 }
 

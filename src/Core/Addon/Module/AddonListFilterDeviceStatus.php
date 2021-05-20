@@ -28,9 +28,9 @@ namespace PrestaShop\PrestaShop\Core\Addon\Module;
 
 class AddonListFilterDeviceStatus
 {
-    const DEVICE_COMPUTER = 1;
-    const DEVICE_TABLET = 2;
-    const DEVICE_MOBILE = 4;
+    public const DEVICE_COMPUTER = 1;
+    public const DEVICE_TABLET = 2;
+    public const DEVICE_MOBILE = 4;
 
-    const ALL = 7;
+    public const ALL = 7;
 }

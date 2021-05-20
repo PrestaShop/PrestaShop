@@ -202,10 +202,12 @@ class Categories extends BOBasePage {
   async getAllRowsColumnContent(page, column) {
     const rowsNumber = await this.getNumberOfElementInGrid(page);
     const allRowsContentTable = [];
+
     for (let i = 1; i <= rowsNumber; i++) {
       const rowContent = await this.getTextColumnFromTableCategories(page, i, column);
       await allRowsContentTable.push(rowContent);
     }
+
     return allRowsContentTable;
   }
 
@@ -263,7 +265,7 @@ class Categories extends BOBasePage {
       this.waitForVisibleSelector(page, this.deleteCategoryModal),
     ]);
     await this.chooseOptionAndDelete(page, modeID);
-    return this.getTextContent(page, this.alertSuccessBlockParagraph);
+    return this.getAlertSuccessBlockParagraphContent(page);
   }
 
   /**
@@ -297,7 +299,7 @@ class Categories extends BOBasePage {
     ]);
     // Click on delete and wait for modal
     await this.clickAndWaitForNavigation(page, enable ? this.bulkActionsEnableButton : this.bulkActionsDisableButton);
-    return this.getTextContent(page, this.alertSuccessBlockParagraph);
+    return this.getAlertSuccessBlockParagraphContent(page);
   }
 
   /**
@@ -323,7 +325,7 @@ class Categories extends BOBasePage {
       this.waitForVisibleSelector(page, this.deleteCategoryModal),
     ]);
     await this.chooseOptionAndDelete(page, modeID);
-    return this.getTextContent(page, this.alertSuccessBlockParagraph);
+    return this.getAlertSuccessBlockParagraphContent(page);
   }
 
   /**
@@ -339,7 +341,7 @@ class Categories extends BOBasePage {
       this.categoriesListTableDraggableColumn(categoryRow),
       this.categoriesListTableDraggableColumn(position),
     );
-    return this.getTextContent(page, this.growlMessageBlock);
+    return this.getGrowlMessageContent(page);
   }
 
   /* Sort methods */
@@ -367,20 +369,21 @@ class Categories extends BOBasePage {
   // Export methods
   /**
    * Click on lint to export categories to a csv file
-   * @param page
-   * @return {Promise<*>}
+   * @param page {Page} Browser tab
+   * @return {Promise<string>}
    */
   async exportDataToCsv(page) {
     await Promise.all([
       page.click(this.categoryGridActionsButton),
       this.waitForVisibleSelector(page, `${this.gridActionDropDownMenu}.show`),
     ]);
-    const [download] = await Promise.all([
-      page.waitForEvent('download'),
-      page.click(this.gridActionExportLink),
-      page.waitForSelector(`${this.gridActionDropDownMenu}.show`, {state: 'hidden'}),
+
+    const [downloadPath] = await Promise.all([
+      this.clickAndWaitForDownload(page, this.gridActionExportLink),
+      this.waitForHiddenSelector(page, `${this.gridActionDropDownMenu}.show`),
     ]);
-    return download.path();
+
+    return downloadPath;
   }
 
   /**
@@ -391,6 +394,7 @@ class Categories extends BOBasePage {
    */
   async getCategoryInCsvFormat(page, row) {
     const category = await this.getCategoryFromTable(page, row);
+
     return `${category.id};`
       + `${category.name};`
       + `"${category.description}";`

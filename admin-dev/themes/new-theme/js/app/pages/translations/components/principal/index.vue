@@ -195,6 +195,7 @@
       },
       searchInfo() {
         const transKey = (this.$store.state.totalTranslations <= 1) ? 'search_info_singular' : 'search_info';
+
         return this.trans(transKey)
           .replace('%s', this.$store.getters.searchTags.join(' - '))
           .replace('%d', this.$store.state.totalTranslations);
@@ -264,7 +265,7 @@
         this.modifiedTranslations = [];
         const targetTheme = (window.data.type === 'modules') ? '' : window.data.selected;
 
-        this.$store.state.modifiedTranslations.forEach((translation) => {
+        Object.values(this.$store.state.modifiedTranslations).forEach((translation) => {
           this.modifiedTranslations.push({
             default: translation.default,
             edited: translation.edited,
@@ -277,7 +278,7 @@
         return this.modifiedTranslations;
       },
       edited() {
-        return this.$store.state.modifiedTranslations.length > 0;
+        return Object.keys(this.$store.state.modifiedTranslations).length > 0;
       },
     },
     mounted() {

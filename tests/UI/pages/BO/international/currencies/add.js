@@ -38,6 +38,7 @@ class AddCurrency extends BOBasePage {
     // Waiting for currency to be loaded : 10 sec max
     // To check if modal still exist
     let displayed = false;
+
     for (let i = 0; i < 50 && !displayed; i++) {
       /* eslint-env browser */
       displayed = await page.evaluate(
@@ -50,6 +51,7 @@ class AddCurrency extends BOBasePage {
 
     // Wait for input to have value
     let inputHasValue = false;
+
     for (let i = 0; i < 50 && !inputHasValue; i++) {
       /* eslint-env browser */
       inputHasValue = await page.evaluate(
@@ -62,7 +64,7 @@ class AddCurrency extends BOBasePage {
 
     await page.check(this.statusToggleInput(currencyData.enabled ? 1 : 0));
     await this.clickAndWaitForNavigation(page, this.saveButton);
-    return this.getTextContent(page, this.alertSuccessBlockParagraph);
+    return this.getAlertSuccessBlockParagraphContent(page);
   }
 
   /**
@@ -80,7 +82,7 @@ class AddCurrency extends BOBasePage {
     await this.setValue(page, this.exchangeRateInput, currencyData.exchangeRate.toString());
     await page.check(this.statusToggleInput(currencyData.enabled ? 1 : 0));
     await this.clickAndWaitForNavigation(page, this.saveButton);
-    return this.getTextContent(page, this.alertSuccessBlockParagraph);
+    return this.getAlertSuccessBlockParagraphContent(page);
   }
 
   /**
@@ -92,7 +94,7 @@ class AddCurrency extends BOBasePage {
   async updateExchangeRate(page, value) {
     await this.setValue(page, this.exchangeRateInput, value.toString());
     await this.clickAndWaitForNavigation(page, this.saveButton);
-    return this.getTextContent(page, this.alertSuccessBlockParagraph);
+    return this.getAlertSuccessBlockParagraphContent(page);
   }
 
   /**
@@ -106,7 +108,7 @@ class AddCurrency extends BOBasePage {
 
     // Save new value
     await this.clickAndWaitForNavigation(page, this.saveButton);
-    return this.getTextContent(page, this.alertSuccessBlockParagraph);
+    return this.getAlertSuccessBlockParagraphContent(page);
   }
 }
 

@@ -109,6 +109,7 @@ $(document).ready(() => {
       $input.each((index, input) => {
         const $currentInput = $(input);
         const minimalValue = parseInt($currentInput.attr('min'), 10);
+
         if (minimalValue && $currentInput.val() < minimalValue) {
           onInvalidQuantity($currentInput);
           validInput = false;
@@ -131,6 +132,7 @@ $(document).ready(() => {
     };
 
     const $quantityInput = $form.find('input[min]');
+
     if (!isQuantityInputValid($quantityInput)) {
       onInvalidQuantity($quantityInput);
 

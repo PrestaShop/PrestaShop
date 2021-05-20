@@ -8,7 +8,7 @@ admin_maintenance:
 
 admin_maintenance_save:
     path: /
-    methods: [POST]
+    methods: [PATCH, POST]
     defaults:
         _controller: 'PrestaShopBundle:Admin\Configure\ShopParameters\Maintenance:processForm'
         _legacy_controller: AdminMaintenance

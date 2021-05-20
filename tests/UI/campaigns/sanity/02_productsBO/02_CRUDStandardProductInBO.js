@@ -80,7 +80,7 @@ describe('Create, read, update and delete Standard product in BO', async () => {
 
     // Preview product in FO and get product information
     page = await addProductPage.previewProduct(page);
-    const result = await foProductPage.getProductInformation(page, productData);
+    const result = await foProductPage.getProductInformation(page);
 
     // Go back to BO
     page = await foProductPage.closePage(browserContext, page, 0);
@@ -104,7 +104,7 @@ describe('Create, read, update and delete Standard product in BO', async () => {
     await testContext.addContextItem(this, 'testIdentifier', 'previewProduct2', baseContext);
 
     page = await addProductPage.previewProduct(page);
-    const result = await foProductPage.getProductInformation(page, editedProductData);
+    const result = await foProductPage.getProductInformation(page);
 
     page = await foProductPage.closePage(browserContext, page, 0);
 

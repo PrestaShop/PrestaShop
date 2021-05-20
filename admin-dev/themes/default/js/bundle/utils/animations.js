@@ -30,6 +30,7 @@
  * @return {string} The transition keywoard of the browser.
 */
 
+// eslint-disable-next-line
 function getAnimationEvent(type, lifecycle) {
   const el = document.createElement('element');
   const typeUpper = type.charAt(0).toUpperCase() + type.substring(1);
@@ -42,7 +43,7 @@ function getAnimationEvent(type, lifecycle) {
     WebkitTransition: `webkit${typeUpper}${lifecycleUpper}`,
   };
 
-  const key = Object.keys(properties).find(propKey => el.style[propKey] !== undefined);
+  const key = Object.keys(properties).find((propKey) => el.style[propKey] !== undefined);
 
   return key !== undefined ? properties[key] : false;
 }

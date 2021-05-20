@@ -55,6 +55,7 @@ class TableSorting {
    */
   sortBy(columnName, direction) {
     const $column = this.columns.is(`[data-sort-col-name="${columnName}"]`);
+
     if (!$column) {
       throw new Error(`Cannot sort by "${columnName}": invalid column`);
     }

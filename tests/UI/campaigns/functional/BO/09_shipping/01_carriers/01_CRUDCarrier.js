@@ -17,7 +17,7 @@ const checkoutPage = require('@pages/FO/checkout');
 
 // Import data
 const CarrierFaker = require('@data/faker/carrier');
-const {DefaultAccount} = require('@data/demo/customer');
+const {DefaultCustomer} = require('@data/demo/customer');
 
 // Import test context
 const testContext = require('@utils/testContext');
@@ -162,7 +162,7 @@ describe('Create, update and delete carrier in BO', async () => {
     it('should sign in with default customer', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'firstSighInFO', baseContext);
 
-      await foLoginPage.customerLogin(page, DefaultAccount);
+      await foLoginPage.customerLogin(page, DefaultCustomer);
       const isCustomerConnected = await foLoginPage.isCustomerConnected(page);
       await expect(isCustomerConnected, 'Customer is not connected').to.be.true;
     });
@@ -228,8 +228,8 @@ describe('Create, update and delete carrier in BO', async () => {
         createCarrierData.name,
       );
 
-      const textEmail = await carriersPage.getTextColumn(page, 1, 'name');
-      await expect(textEmail).to.contains(createCarrierData.name);
+      const carrierName = await carriersPage.getTextColumn(page, 1, 'name');
+      await expect(carrierName).to.contains(createCarrierData.name);
     });
 
     it('should go to edit carrier page', async function () {
@@ -295,7 +295,7 @@ describe('Create, update and delete carrier in BO', async () => {
     it('should sign in with default customer', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'secondSighInFO', baseContext);
 
-      await foLoginPage.customerLogin(page, DefaultAccount);
+      await foLoginPage.customerLogin(page, DefaultCustomer);
       const isCustomerConnected = await foLoginPage.isCustomerConnected(page);
       await expect(isCustomerConnected, 'Customer is not connected').to.be.true;
     });
@@ -361,8 +361,8 @@ describe('Create, update and delete carrier in BO', async () => {
         editCarrierData.name,
       );
 
-      const textEmail = await carriersPage.getTextColumn(page, 1, 'name');
-      await expect(textEmail).to.contains(editCarrierData.name);
+      const carrierName = await carriersPage.getTextColumn(page, 1, 'name');
+      await expect(carrierName).to.contains(editCarrierData.name);
     });
 
     it('should delete carrier', async function () {

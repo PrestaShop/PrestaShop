@@ -11,6 +11,7 @@ class Import extends BOBasePage {
     this.importPanelTitle = 'Match your data';
 
     // Selectors
+    this.alertSuccessBlockParagraph = `${this.alertSuccessBlock} p.alert-text.js-import-file`;
     this.downloadSampleFileLink = type => `a[href*='import/sample/download/${type}']`;
     this.fileInputField = '#file';
     this.nextStepButton = 'button[name=submitImportFile]';
@@ -28,16 +29,12 @@ class Import extends BOBasePage {
    */
   /**
    * Click on simple file link to download it
-   * @param page
-   * @param type
-   * @return {Promise<void>}
+   * @param page {Page} Browser tab
+   * @param type {string} Type of the data to import
+   * @return {Promise<string>}
    */
-  async downloadSampleFile(page, type) {
-    const [download] = await Promise.all([
-      page.waitForEvent('download'),
-      await page.click(this.downloadSampleFileLink(type)),
-    ]);
-    return download.path();
+  downloadSampleFile(page, type) {
+    return this.clickAndWaitForDownload(page, this.downloadSampleFileLink(type));
   }
 
   /**
@@ -51,7 +48,7 @@ class Import extends BOBasePage {
     await this.selectByVisibleText(page, this.fileTypeSelector, dropdownValue);
     await page.setInputFiles(this.fileInputField, filePath);
 
-    return this.getTextContent(page, this.alertSuccessBlock);
+    return this.getAlertSuccessBlockParagraphContent(page);
   }
 
   /**

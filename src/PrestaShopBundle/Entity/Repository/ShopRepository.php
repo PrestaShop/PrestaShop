@@ -41,4 +41,24 @@ class ShopRepository extends \Doctrine\ORM\EntityRepository
     {
         return count($this->findAll()) > 1;
     }
+
+    /**
+     * Get a list of shops for a given search term
+     *
+     * @param string $searchTerm
+     *
+     * @return array
+     */
+    public function findBySearchTerm(string $searchTerm): array
+    {
+        $qb = $this->createQueryBuilder('s')
+            ->select(['s', 'sg'])
+            ->join('s.shopGroup', 'sg')
+            ->where('s.active = true')
+            ->andWhere('s.deleted = false')
+            ->andWhere('LOWER(s.name) LIKE :searchTerm')
+            ->setParameter('searchTerm', '%' . strtolower($searchTerm) . '%');
+
+        return $qb->getQuery()->getResult();
+    }
 }

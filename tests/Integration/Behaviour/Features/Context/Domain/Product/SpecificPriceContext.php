@@ -104,11 +104,7 @@ class SpecificPriceContext extends AbstractProductFeatureContext
             /** @var SpecificPriceId $specificPriceId */
             $specificPriceId = $this->getCommandBus()->handle($command);
             $this->getSharedStorage()->set($specificPriceReference, $specificPriceId->getValue());
-        } catch (SpecificPriceException $e) {
-            $this->setLastException($e);
-        } catch (ProductException $e) {
-            $this->setLastException($e);
-        } catch (DomainConstraintException $e) {
+        } catch (SpecificPriceException | DomainConstraintException | ProductException $e) {
             $this->setLastException($e);
         }
     }

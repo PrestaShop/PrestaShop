@@ -55,7 +55,7 @@ class HelpTextExtension extends AbstractTypeExtension
      */
     public function buildView(FormView $view, FormInterface $form, array $options)
     {
-        $view->vars['help'] = isset($options['help']) ? $options['help'] : null;
+        $view->vars['help'] = $options['help'] ?? null;
     }
 
     /**

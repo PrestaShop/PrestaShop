@@ -28,10 +28,20 @@ namespace PrestaShop\PrestaShop\Adapter\SqlManager;
 
 use RequestSql;
 
+@trigger_error(
+    sprintf(
+        '%s is deprecated since version 1.7.7.5 and will be removed in the next major version.',
+        SqlRequestFormDataValidator::class
+    ),
+    E_USER_DEPRECATED
+);
+
 /**
  * Class SqlRequestFormDataValidator validates SqlRequest data that is submitted via from.
  *
  * @internal
+ *
+ * @deprecated Since 1.7.7.5 and will be removed in the next major.
  */
 class SqlRequestFormDataValidator
 {

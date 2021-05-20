@@ -153,4 +153,11 @@ describe('Enable/Disable accented URL', async () => {
     const testResult = await addProductPage.deleteProduct(page);
     await expect(testResult).to.equal(productsPage.productDeletedSuccessfulMessage);
   });
+
+  it('should reset all filters', async function () {
+    await testContext.addContextItem(this, 'testIdentifier', 'resetFilters', baseContext);
+
+    const numberOfProducts = await productsPage.resetAndGetNumberOfLines(page);
+    await expect(numberOfProducts).to.be.above(0);
+  });
 });

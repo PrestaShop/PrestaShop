@@ -158,7 +158,7 @@ class ModuleDataProvider
     /**
      * Check if a module is enabled in the current shop context.
      *
-     * @param bool $name The technical module name
+     * @param string $name The technical module name
      *
      * @return bool True if enable
      */
