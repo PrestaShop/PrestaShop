@@ -30,3 +30,8 @@ define('_PS_VERSION_', AppKernel::VERSION);
 require_once _PS_CONFIG_DIR_.'alias.php';
 require_once _PS_CLASS_DIR_.'PrestaShopAutoload.php';
 spl_autoload_register(array(PrestaShopAutoload::getInstance(), 'load'));
+
+// make sure Attribute class is never loaded from symfony/polyfill-php80,
+// related with: https://github.com/PrestaShop/PrestaShop/pull/20710
+// remove once PHP 8.0 support is added
+PrestaShopAutoload::getInstance()->load(Attribute::class);
