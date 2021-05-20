@@ -97,8 +97,8 @@
 	</div>
 </div>
 <div class="panel">
+    <h3>{l s="Your answer to" d='Admin.Orderscustomers.Feature'} {if isset($customer->firstname)}{$customer->firstname|escape:'html':'UTF-8'} {$customer->lastname|escape:'html':'UTF-8'} {else} {$thread->email}{/if}</h3>
 	<form action="{$link->getAdminLink('AdminCustomerThreads', true, [], ['id_customer_thread' => $thread->id|intval, 'viewcustomer_thread' => 1])|escape:'html':'UTF-8'}" method="post" enctype="multipart/form-data" class="form-horizontal">
-	<h3>{l s="Your answer to" d='Admin.Orderscustomers.Feature'} {if isset($customer->firstname)}{$customer->firstname|escape:'html':'UTF-8'} {$customer->lastname|escape:'html':'UTF-8'} {else} {$thread->email}{/if}</h3>
 	<div class="row">
 		<div class="media">
 			<div class="pull-left">
