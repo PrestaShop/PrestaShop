@@ -956,7 +956,8 @@ class OrderController extends FrameworkBundleAdminController
      */
     public function updateInvoiceNoteAction(int $orderId, int $orderInvoiceId, Request $request): RedirectResponse
     {
-        if ($this->getCommandBus()->handle(new UpdateInvoiceNoteCommand(
+        try {
+            $this->getCommandBus()->handle(new UpdateInvoiceNoteCommand(
             $orderInvoiceId,
             $request->request->get('invoice_note')
         ))) {
