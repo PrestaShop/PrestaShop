@@ -151,7 +151,7 @@ class Statuses extends BOBasePage {
    * @param tableName {string} Table name to filter
    * @param filterType {string} Type of filter (input/select)
    * @param filterBy {string} Column to filter with
-   * @param  value {string} value to filter with
+   * @param value {string} value to filter with
    * @return {Promise<void>}
    */
   async filterTable(page, tableName, filterType, filterBy, value) {
