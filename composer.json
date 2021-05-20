@@ -1,7 +1,7 @@
 {
     "name": "prestashop/prestashop",
     "type": "project",
-    "description": "PrestaShop offers a free, fully scalable, Open Source e-commerce solution.",
+    "description": "PrestaShop is an Open Source e-commerce platform, committed to providing the best shopping cart experience for both merchants and customers.",
     "license": "OSL-3.0",
     "authors": [
         {
