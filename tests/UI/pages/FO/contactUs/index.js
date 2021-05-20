@@ -66,6 +66,15 @@ class ContactUs extends FOBasePage {
   async getEmailFieldValue(page) {
     return this.getAttributeContent(page, this.emailAddressInput, 'value');
   }
+
+  /**
+   * Check if attachment input is visible
+   * @param page {Page} Browser tab
+   * @returns {Promise<boolean>}
+   */
+  isAttachmentInputVisible(page) {
+    return this.elementVisible(page, this.attachmentLabel, 1000);
+  }
 }
 
 module.exports = new ContactUs();
