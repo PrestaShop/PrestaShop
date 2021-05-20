@@ -46,12 +46,7 @@ let config = {
         test: /\.scss$/,
         use:[ 
             MiniCssExtractPlugin.loader,
-            {
-              loader: 'css-loader',
-              options: {
-                minimize: true,
-              },
-            },
+            'css-loader',
             'postcss-loader',
             'sass-loader',
           ],
