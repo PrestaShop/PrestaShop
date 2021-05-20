@@ -108,8 +108,8 @@ csa_guzzle:
                 headers:
                     Accept: "application/json"
                 curl:
-                    'forbid_reuse': true
-                    'fresh_connect': true
+                    forbid_reuse: true
+                    fresh_connect: true
 
 prestashop:
     addons:
