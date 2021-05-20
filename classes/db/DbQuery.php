@@ -331,7 +331,7 @@ class DbQueryCore
     {
         return $this->build();
     }
-    
+
     /**
      * Get query.
      *
