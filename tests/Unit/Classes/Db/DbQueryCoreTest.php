@@ -74,6 +74,20 @@ class DbQueryCoreTest extends TestCase
     }
 
     /**
+     * @param string $table
+     * @param string|null $alias
+     * @param string $expectedValue
+     *
+     * @dataProvider providerFrom
+     */
+    public function testFrom($table, $alias, $expectedValue): void
+    {
+        $dbQuery = $this->dbQueryInstance();
+        $dbQuery->from($table, $alias);
+        $this->assertSame($expectedValue, $dbQuery->getQuery()['from']);
+    }
+
+    /**
      * @param mixed $dbQuery
      * @param mixed $expectedValue
      *
@@ -109,6 +123,18 @@ class DbQueryCoreTest extends TestCase
             ]],
             [null, []],
             [false, []],
+        ];
+    }
+
+    public function providerFrom(): array
+    {
+        return [
+            ['table_name', 'alias', [
+                0 => '`' . _DB_PREFIX_ . 'table_name` alias',
+            ]],
+            ['table_name', null, [
+                0 => '`' . _DB_PREFIX_ . 'table_name`',
+            ]],
         ];
     }
 
