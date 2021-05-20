@@ -96,7 +96,7 @@ module.exports = (env, argv) => {
   if (!devMode) {
     config.optimization.minimizer = [
       new UglifyJsPlugin({
-        sourceMap: true,
+        sourceMap: false,
         uglifyOptions: {
           compress: {
             drop_console: true,
