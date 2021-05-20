@@ -956,12 +956,14 @@ class OrderController extends FrameworkBundleAdminController
      */
     public function updateInvoiceNoteAction(int $orderId, int $orderInvoiceId, Request $request): RedirectResponse
     {
-        $this->getCommandBus()->handle(new UpdateInvoiceNoteCommand(
+        if ($this->getCommandBus()->handle(new UpdateInvoiceNoteCommand(
             $orderInvoiceId,
             $request->request->get('invoice_note')
-        ));
-
-        $this->addFlash('success', $this->trans('Successful update.', 'Admin.Notifications.Success'));
+        ))) {
+            $this->addFlash('success', $this->trans('Successful update.', 'Admin.Notifications.Success'));
+        } else {
+            $this->addFlash('error', $this->trans('Invalid characters:', 'Admin.Notifications.Info'));
+        }
 
         return $this->redirectToRoute('admin_orders_view', [
             'orderId' => $orderId,
