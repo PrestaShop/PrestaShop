@@ -30,6 +30,7 @@ use Exception;
 use PrestaShop\PrestaShop\Core\Domain\OrderMessage\Command\BulkDeleteOrderMessageCommand;
 use PrestaShop\PrestaShop\Core\Domain\OrderMessage\Command\DeleteOrderMessageCommand;
 use PrestaShop\PrestaShop\Core\Domain\OrderMessage\Exception\OrderMessageException;
+use PrestaShop\PrestaShop\Core\Domain\OrderMessage\Exception\OrderMessageNameAlreadyUsedException;
 use PrestaShop\PrestaShop\Core\Domain\OrderMessage\Exception\OrderMessageNotFoundException;
 use PrestaShop\PrestaShop\Core\Domain\OrderMessage\Query\GetOrderMessageForEditing;
 use PrestaShop\PrestaShop\Core\Domain\OrderMessage\QueryResult\EditableOrderMessage;
@@ -242,6 +243,10 @@ class OrderMessageController extends FrameworkBundleAdminController
             ],
             OrderMessageNotFoundException::class => $this->trans(
                 'The object cannot be loaded (or found)',
+                'Admin.Notifications.Error'
+            ),
+            OrderMessageNameAlreadyUsedException::class => $this->trans(
+                'An order message already exists for this name',
                 'Admin.Notifications.Error'
             ),
         ];
