@@ -113,3 +113,14 @@
 {% block form_row_class -%}
   form-group row{% if row_attr.class is defined %} {{ row_attr.class }}{% endif %}
 {%- endblock form_row_class %}
+
+{%- block repeated_row -%}
+  {{- block('form_rows') -}}
+  {{ block('form_help') }}
+{%- endblock repeated_row -%}
+
+{%- block password_widget -%}
+  {%- set type = type|default('password') -%}
+  {{ block('form_widget_simple') }}
+  {{ block('form_help') }}
+{%- endblock password_widget -%}
