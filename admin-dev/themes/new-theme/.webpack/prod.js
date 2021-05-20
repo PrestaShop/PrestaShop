@@ -17,22 +17,22 @@ function prodConfig() {
           sourceMap: false,
           uglifyOptions: {
             compress: {
-              drop_console: true
+              drop_console: true,
             },
             output: {
-              comments: keepLicense
-            }
-          }
-        })
-      ]
-    }
+              comments: keepLicense,
+            },
+          },
+        }),
+      ],
+    },
   });
 
   // Required for Vue production environment
   prod.plugins.push(
     new webpack.DefinePlugin({
-      'process.env.NODE_ENV': JSON.stringify('production')
-    })
+      'process.env.NODE_ENV': JSON.stringify('production'),
+    }),
   );
 
   return prod;
