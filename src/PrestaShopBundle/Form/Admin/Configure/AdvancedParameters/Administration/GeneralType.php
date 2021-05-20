@@ -70,7 +70,7 @@ class GeneralType extends TranslatorAwareType
         $builder
             ->add('check_modules_update', SwitchType::class, [
                 'label' => $this->trans('Automatically check for module updates', 'Admin.Advparameters.Feature'),
-                'help' => $this->trans('Choose a stability level for the modules downloaded from Addons Marketplace. All zips pushed on Addons are in stable state unless stated otherwise.', 'Admin.Advparameters.Help'),
+                'help' => $this->trans('Choose a stability level for the modules downloaded from the Addons Marketplace. All zips pushed on Addons are in stable state unless stated otherwise.', 'Admin.Advparameters.Help'),
             ]);
         if ($this->isDebug) {
             $builder->add('check_modules_stability_channel', ChoiceType::class, [

@@ -55,7 +55,7 @@ class UploadQuotaType extends TranslatorAwareType
                         'Admin.Advparameters.Feature'
                     ),
                     'help' => $this->trans(
-                        'Set the maximum size allowed for attachment files (in megabytes). This value has to be lower or equal to the maximum file upload allotted by your server (currently: %size% MB).',
+                        'Set the maximum size allowed for attachment files (in megabytes). This value has to be lower than or equal to the maximum file upload allotted by your server (currently: %size% MB).',
                         'Admin.Advparameters.Help',
                         [
                             '%size%' => $configuration->get('PS_ATTACHMENT_MAXIMUM_SIZE'),
@@ -66,13 +66,13 @@ class UploadQuotaType extends TranslatorAwareType
                         new Type(
                             [
                                 'value' => 'numeric',
-                                'message' => $this->trans('The field is invalid. Please enter an integer greater or equal to 0.', 'Admin.Notifications.Error'),
+                                'message' => $this->trans('The field is invalid. Please enter an integer greater than or equal to 0.', 'Admin.Notifications.Error'),
                             ]
                         ),
                         new GreaterThanOrEqual(
                             [
                                 'value' => 0,
-                                'message' => $this->trans('The field is invalid. Please enter an integer greater or equal to 0.', 'Admin.Notifications.Error'),
+                                'message' => $this->trans('The field is invalid. Please enter an integer greater than or equal to 0.', 'Admin.Notifications.Error'),
                             ]
                         ),
                     ],
@@ -98,13 +98,13 @@ class UploadQuotaType extends TranslatorAwareType
                         new Type(
                             [
                                 'value' => 'numeric',
-                                'message' => $this->trans('The field is invalid. Please enter an integer greater or equal to 0.', 'Admin.Notifications.Error'),
+                                'message' => $this->trans('The field is invalid. Please enter an integer greater than or equal to 0.', 'Admin.Notifications.Error'),
                             ]
                         ),
                         new GreaterThanOrEqual(
                             [
                                 'value' => 0,
-                                'message' => $this->trans('The field is invalid. Please enter an integer greater or equal to 0.', 'Admin.Notifications.Error'),
+                                'message' => $this->trans('The field is invalid. Please enter an integer greater than or equal to 0.', 'Admin.Notifications.Error'),
                             ]
                         ),
                     ],
@@ -129,13 +129,13 @@ class UploadQuotaType extends TranslatorAwareType
                         new Type(
                             [
                                 'value' => 'numeric',
-                                'message' => $this->trans('The field is invalid. Please enter an integer greater or equal to 0.', 'Admin.Notifications.Error'),
+                                'message' => $this->trans('The field is invalid. Please enter an integer greater than or equal to 0.', 'Admin.Notifications.Error'),
                             ]
                         ),
                         new GreaterThanOrEqual(
                             [
                                 'value' => 0,
-                                'message' => $this->trans('The field is invalid. Please enter an integer greater or equal to 0.', 'Admin.Notifications.Error'),
+                                'message' => $this->trans('The field is invalid. Please enter an integer greater than or equal to 0.', 'Admin.Notifications.Error'),
                             ]
                         ),
                     ],
