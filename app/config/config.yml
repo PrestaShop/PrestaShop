@@ -107,6 +107,9 @@ csa_guzzle:
                     timeout: "5.0"
                 headers:
                     Accept: "application/json"
+                curl:
+                    'forbid_reuse': true
+                    'fresh_connect': true
 
 prestashop:
     addons:
