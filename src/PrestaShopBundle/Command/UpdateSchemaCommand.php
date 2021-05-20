@@ -154,14 +154,18 @@ class UpdateSchemaCommand extends ContainerAwareCommand
             if (preg_match('/ALTER TABLE (.+?) /', $sql, $matches)) {
                 $tableName = $matches[1];
                 $matches = [];
-                if (preg_match_all('/([^\s,]*?) CHANGE (.+?) (.+?)(,|$)/', $sql, $matches)) {
-                    foreach ($matches[2] as $matchKey => $fieldName) {
+
+                $findChange = strpos($sql, 'CHANGE');
+                if ($findChange === false) {
+                    continue;
+                }
+
+                $subject = substr($sql, $findChange + strlen('CHANGE') + 1);
+                if (preg_match_all('/(.+?) (.+?)(, CHANGE |$)/', $subject, $matches)) {
+                    $matches[1] = array_map('trim', $matches[1]);
+                    foreach ($matches[1] as $matchKey => $fieldName) {
                         // remove table name
-                        $matches[0][$matchKey] = preg_replace(
-                            '/(.+?) CHANGE/',
-                            ' CHANGE',
-                            $matches[0][$matchKey]
-                        );
+                        $matches[0][$matchKey] = ' CHANGE ' . $matches[0][$matchKey];
                         // remove quote
                         $originalFieldName = $fieldName;
                         $fieldName = str_replace('`', '', $fieldName);
@@ -186,16 +190,16 @@ class UpdateSchemaCommand extends ContainerAwareCommand
                         ) {
                             if (preg_match('/DEFAULT/', $matches[0][$matchKey])) {
                                 $matches[0][$matchKey] =
-                                    preg_replace('/DEFAULT (.+?)(,|$)/', 'DEFAULT ' .
+                                    preg_replace('/DEFAULT (.+?)(, CHANGE |$)/', 'DEFAULT ' .
                                         $oldDefaultValue . '$2' . ' ' . $extra, $matches[0][$matchKey]);
                             } else {
                                 $matches[0][$matchKey] =
-                                    preg_replace('/(.+?)(,|$)/uis', '$1 DEFAULT ' .
+                                    preg_replace('/(.+?)(, CHANGE |$)/uis', '$1 DEFAULT ' .
                                         $oldDefaultValue . ' ' . $extra . '$2', $matches[0][$matchKey]);
                             }
                         }
                         $updateSchemaSql[$key] = preg_replace(
-                            '/ CHANGE ' . $originalFieldName . ' (.+?)(,|$)/uis',
+                            '/ CHANGE ' . $originalFieldName . ' (.+?)(, CHANGE |$)/uis',
                             $matches[0][$matchKey],
                             $updateSchemaSql[$key]
                         );
