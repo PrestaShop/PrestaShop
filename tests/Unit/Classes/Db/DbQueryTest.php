@@ -37,7 +37,7 @@ use PHPUnit\Framework\TestCase;
 
 class DbQueryTest extends TestCase
 {
-    public const _BREAK_LINE_ = "\n";
+    public const BREAK_LINE = "\n";
 
     /*
      * get DbQuery object
@@ -167,19 +167,19 @@ class DbQueryTest extends TestCase
         return [
             [
                 $simpleSelectQuery,
-                'SELECT id_product' . self::_BREAK_LINE_ . 'FROM `' . _DB_PREFIX_ . 'product`',
+                'SELECT id_product' . self::BREAK_LINE . 'FROM `' . _DB_PREFIX_ . 'product`',
             ],
             [
                 $simpleSelectQueryWhere,
-                'SELECT id_product' . self::_BREAK_LINE_ . 'FROM `' . _DB_PREFIX_ . 'product`' . self::_BREAK_LINE_ . 'WHERE (id_category_default = 1)',
+                'SELECT id_product' . self::BREAK_LINE . 'FROM `' . _DB_PREFIX_ . 'product`' . self::BREAK_LINE . 'WHERE (id_category_default = 1)',
             ],
             [
                 $simpleSelectQueryWithAlias,
-                'SELECT p.name' . self::_BREAK_LINE_ . 'FROM `' . _DB_PREFIX_ . 'product` p',
+                'SELECT p.name' . self::BREAK_LINE . 'FROM `' . _DB_PREFIX_ . 'product` p',
             ],
             [
                 $simpleSelectQueryWithAliasandWhere,
-                'SELECT p.*' . self::_BREAK_LINE_ . 'FROM `' . _DB_PREFIX_ . 'product` p' . self::_BREAK_LINE_ . 'WHERE (p.reference = "testreference")',
+                'SELECT p.*' . self::BREAK_LINE . 'FROM `' . _DB_PREFIX_ . 'product` p' . self::BREAK_LINE . 'WHERE (p.reference = "testreference")',
             ],
         ];
     }
