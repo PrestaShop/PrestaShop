@@ -29,10 +29,12 @@ const {$} = window;
  * Handles UI interactions of choice tree
  */
 export default class ChoiceTree {
+  $container: JQuery<HTMLElement>;
+
   /**
    * @param {String} treeSelector
    */
-  constructor(treeSelector) {
+  constructor(treeSelector: string) {
     this.$container = $(treeSelector);
 
     this.$container.on('click', '.js-input-wrapper', (event) => {
@@ -46,18 +48,12 @@ export default class ChoiceTree {
 
       this.toggleTree($action);
     });
-
-    return {
-      enableAutoCheckChildren: () => this.enableAutoCheckChildren(),
-      enableAllInputs: () => this.enableAllInputs(),
-      disableAllInputs: () => this.disableAllInputs(),
-    };
   }
 
   /**
    * Enable automatic check/uncheck of clicked item's children.
    */
-  enableAutoCheckChildren() {
+  enableAutoCheckChildren(): void {
     this.$container.on('change', 'input[type="checkbox"]', (event) => {
       const $clickedCheckbox = $(event.currentTarget);
       const $itemWithChildren = $clickedCheckbox.closest('li');
@@ -71,14 +67,14 @@ export default class ChoiceTree {
   /**
    * Enable all inputs in the choice tree.
    */
-  enableAllInputs() {
+  enableAllInputs(): void {
     this.$container.find('input').removeAttr('disabled');
   }
 
   /**
    * Disable all inputs in the choice tree.
    */
-  disableAllInputs() {
+  disableAllInputs(): void {
     this.$container.find('input').attr('disabled', 'disabled');
   }
 
@@ -89,21 +85,17 @@ export default class ChoiceTree {
    *
    * @private
    */
-  toggleChildTree($inputWrapper) {
+  toggleChildTree($inputWrapper: JQuery<HTMLElement>): void {
     const $parentWrapper = $inputWrapper.closest('li');
 
     if ($parentWrapper.hasClass('expanded')) {
-      $parentWrapper
-        .removeClass('expanded')
-        .addClass('collapsed');
+      $parentWrapper.removeClass('expanded').addClass('collapsed');
 
       return;
     }
 
     if ($parentWrapper.hasClass('collapsed')) {
-      $parentWrapper
-        .removeClass('collapsed')
-        .addClass('expanded');
+      $parentWrapper.removeClass('collapsed').addClass('expanded');
     }
   }
 
@@ -114,12 +106,12 @@ export default class ChoiceTree {
    *
    * @private
    */
-  toggleTree($action) {
+  private toggleTree($action: JQuery<HTMLElement>): void {
     const $parentContainer = $action.closest('.js-choice-tree-container');
-    const action = $action.data('action');
+    const action: string = $action.data('action');
 
     // toggle action configuration
-    const config = {
+    const config: Record<string, Record<string, string>> = {
       addClass: {
         expand: 'expanded',
         collapse: 'collapsed',
@@ -146,7 +138,8 @@ export default class ChoiceTree {
       const $item = $(item);
 
       if ($item.hasClass(config.removeClass[action])) {
-        $item.removeClass(config.removeClass[action])
+        $item
+          .removeClass(config.removeClass[action])
           .addClass(config.addClass[action]);
       }
     });

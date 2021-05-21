@@ -23,22 +23,38 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
 
-const {$} = window;
+const {$}: Window = window;
 
-export default class MultistoreConfigField {
-  constructor() {
-    this.updateMultistoreFieldOnChange();
+export default class AutocompleteWithEmail {
+  map: SelectorsMap;
+
+  $emailInput: JQuery;
+
+  constructor(emailInputSelector: string, map: SelectorsMap = {}) {
+    this.map = map;
+    this.$emailInput = $(emailInputSelector);
+    this.$emailInput.on('change', () => this.change());
   }
 
-  updateMultistoreFieldOnChange() {
-    $(document).on('change', '.multistore-checkbox', function () {
-      const input = $(this).closest('.form-group').find(':input:not(.multistore-checkbox)');
-      const inputContainer = $(this).closest('.form-group').find('.input-container');
-      const labelContainer = $(this).closest('.form-group').find('.form-control-label');
-      const isChecked = $(this).is(':checked');
-      inputContainer.toggleClass('disabled', !isChecked);
-      labelContainer.toggleClass('disabled', !isChecked);
-      input.prop('disabled', !isChecked);
-    });
+  private change(): void {
+    $.get({
+      url: this.$emailInput.data('customer-information-url'),
+      dataType: 'json',
+      data: {
+        email: this.$emailInput.val(),
+      },
+    })
+      .then((response) => {
+        Object.keys(this.map).forEach((key: string) => {
+          if (response[key] !== undefined) {
+            $(this.map[key]).val(response[key]);
+          }
+        });
+      })
+      .catch((response: AjaxError) => {
+        if (typeof response.responseJSON !== 'undefined') {
+          window.showErrorMessage(response.responseJSON.message);
+        }
+      });
   }
 }

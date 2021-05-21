@@ -25,31 +25,26 @@
 
 const {$} = window;
 
-/**
- * Responsible for opening another page with specified url.
- * For example used in 'Save and preview' cms page create/edit actions.
- *
- * Usage: In selector element attr 'data-preview-url' provide page url.
- * The page will be opened once provided 'open_preview' parameter in query url
- */
-export default class PreviewOpener {
-  constructor(previewUrlSelector) {
-    this.previewUrl = $(previewUrlSelector).data('preview-url');
-    this.open();
-
-    return {};
+export default class MultistoreConfigField {
+  constructor() {
+    this.updateMultistoreFieldOnChange();
   }
 
-  /**
-   * Opens new page of provided url
-   *
-   * @private
-   */
-  open() {
-    const urlParams = new URLSearchParams(window.location.search);
-
-    if (this.previewUrl && urlParams.has('open_preview')) {
-      window.open(this.previewUrl, '_blank');
-    }
+  updateMultistoreFieldOnChange(): void {
+    $(document).on('change', '.multistore-checkbox', () => {
+      const input = $(this)
+        .closest('.form-group')
+        .find(':input:not(.multistore-checkbox)');
+      const inputContainer = $(this)
+        .closest('.form-group')
+        .find('.input-container');
+      const labelContainer = $(this)
+        .closest('.form-group')
+        .find('.form-control-label');
+      const isChecked = $(this).is(':checked');
+      inputContainer.toggleClass('disabled', !isChecked);
+      labelContainer.toggleClass('disabled', !isChecked);
+      input.prop('disabled', !isChecked);
+    });
   }
 }

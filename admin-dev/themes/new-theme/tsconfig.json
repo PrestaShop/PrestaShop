@@ -6,6 +6,7 @@
     "target": "es5",
     "strict": true,
     "moduleResolution": "node",
+    "esModuleInterop": true,
     "allowJs": true,
     "baseUrl": "./",
     "paths": {

@@ -33,27 +33,33 @@ const {$} = window;
  * After button is clicked, component fires the callback function which was provided to constructor.
  */
 export default class SubmittableInput {
+  inputSelector: string;
+
+  callback: (input: Element) => any;
+
+  wrapperSelector: string;
+
+  buttonSelector: string;
+
   /**
    * @param {String} wrapperSelector
    * @param {Function} callback
    *
    * @returns {{}}
    */
-  constructor(wrapperSelector, callback) {
+  constructor(wrapperSelector: string, callback: () => any) {
     this.inputSelector = '.submittable-input';
     this.callback = callback;
     this.wrapperSelector = wrapperSelector;
     this.buttonSelector = '.check-button';
 
     this.init();
-
-    return {};
   }
 
   /**
    * @private
    */
-  init() {
+  private init(): void {
     const inputs = `${this.wrapperSelector} ${this.inputSelector}`;
 
     $(document).on('focus', inputs, (e) => {
@@ -62,10 +68,14 @@ export default class SubmittableInput {
     $(document).on('input blur', inputs, (e) => {
       this.refreshButtonState(e.currentTarget);
     });
-    $(document).on('click', `${this.wrapperSelector} ${this.buttonSelector}`, (e) => {
-      this.submitInput(e);
-    });
-    $(document).on('keyup', this.inputSelector, (e) => {
+    $(document).on(
+      'click',
+      `${this.wrapperSelector} ${this.buttonSelector}`,
+      (e: JQueryEventObject) => {
+        this.submitInput(e);
+      },
+    );
+    $(document).on('keyup', this.inputSelector, (e: JQueryEventObject) => {
       if (e.keyCode === 13) {
         e.preventDefault();
         this.submitInput(e);
@@ -76,22 +86,24 @@ export default class SubmittableInput {
   /**
    * @private
    */
-  submitInput(e) {
-    const input = this.findInput(e.currentTarget);
+  private submitInput(e: JQueryEventObject): void {
+    const input: HTMLInputElement = this.findInput(e.currentTarget);
 
-    this.callback(input).then(() => {
-      $(input).data('initial-value', input.value);
-      this.toggleButtonVisibility(e.currentTarget, false);
-    }).catch((error) => {
-      if (typeof error.responseJSON.errors === 'undefined') {
-        return;
-      }
+    this.callback(input)
+      .then(() => {
+        $(input).data('initial-value', input.value);
+        this.toggleButtonVisibility(<HTMLButtonElement>e.currentTarget, false);
+      })
+      .catch((error: AjaxError) => {
+        if (typeof error.responseJSON.errors === 'undefined') {
+          return;
+        }
 
-      const messages = error.responseJSON.errors;
-      Object.keys(messages).forEach((key) => {
-        showGrowl('error', messages[key]);
+        const messages = error.responseJSON.errors;
+        Object.keys(messages).forEach((key) => {
+          showGrowl('error', messages[key]);
+        });
       });
-    });
   }
 
   /**
@@ -100,7 +112,10 @@ export default class SubmittableInput {
    *
    * @private
    */
-  refreshButtonState(input, visible = null) {
+  private refreshButtonState(
+    input: HTMLElement,
+    visible: boolean | null = null,
+  ): void {
     const button = this.findButton(input);
     const valueWasChanged = this.inputValueChanged(input);
     this.toggleButtonActivity(button, valueWasChanged);
@@ -118,7 +133,7 @@ export default class SubmittableInput {
    *
    * @private
    */
-  toggleButtonActivity(button, active) {
+  private toggleButtonActivity(button: HTMLElement, active: boolean): void {
     if (active) {
       $(button).removeClass('d-none');
       $(button).addClass('active');
@@ -133,7 +148,10 @@ export default class SubmittableInput {
    *
    * @private
    */
-  toggleButtonVisibility(button, visible) {
+  private toggleButtonVisibility(
+    button: HTMLButtonElement,
+    visible: boolean,
+  ): void {
     const $button = $(button);
 
     if (visible) {
@@ -150,8 +168,10 @@ export default class SubmittableInput {
    *
    * @private
    */
-  findButton(input) {
-    return $(input).closest(this.wrapperSelector).find(this.buttonSelector)[0];
+  private findButton(input: HTMLElement): HTMLButtonElement {
+    return <HTMLButtonElement>$(input)
+      .closest(this.wrapperSelector)
+      .find(this.buttonSelector)[0];
   }
 
   /**
@@ -161,8 +181,10 @@ export default class SubmittableInput {
    *
    * @private
    */
-  findInput(button) {
-    return $(button).closest(this.wrapperSelector).find(this.inputSelector)[0];
+  private findInput(button: Element): HTMLInputElement {
+    return <HTMLInputElement>$(button)
+      .closest(this.wrapperSelector)
+      .find(this.inputSelector)[0];
   }
 
   /**
@@ -172,7 +194,7 @@ export default class SubmittableInput {
    *
    * @private
    */
-  inputValueChanged(input) {
+  private inputValueChanged(input: HTMLElement): boolean {
     const initialValue = $(input).data('initial-value');
     let newValue = $(input).val();
 

@@ -25,30 +25,31 @@
 
 const {$} = window;
 
-export default class AutocompleteWithEmail {
-  constructor(emailInputSelector, map = []) {
-    this.map = map;
-    this.$emailInput = $(emailInputSelector);
-    this.$emailInput.on('change', () => this.change());
+/**
+ * Responsible for opening another page with specified url.
+ * For example used in 'Save and preview' cms page create/edit actions.
+ *
+ * Usage: In selector element attr 'data-preview-url' provide page url.
+ * The page will be opened once provided 'open_preview' parameter in query url
+ */
+export default class PreviewOpener {
+  previewUrl: string;
+
+  constructor(previewUrlSelector: string) {
+    this.previewUrl = $(previewUrlSelector).data('preview-url');
+    this.open();
   }
 
-  change() {
-    $.get({
-      url: this.$emailInput.data('customer-information-url'),
-      dataType: 'json',
-      data: {
-        email: this.$emailInput.val(),
-      },
-    }).then((response) => {
-      Object.keys(this.map).forEach((key) => {
-        if (response[key] !== undefined) {
-          $(this.map[key]).val(response[key]);
-        }
-      });
-    }).catch((response) => {
-      if (typeof response.responseJSON !== 'undefined') {
-        window.showErrorMessage(response.responseJSON.message);
-      }
-    });
+  /**
+   * Opens new page of provided url
+   *
+   * @private
+   */
+  private open(): void {
+    const urlParams = new URLSearchParams(window.location.search);
+
+    if (this.previewUrl && urlParams.has('open_preview')) {
+      window.open(this.previewUrl, '_blank');
+    }
   }
 }
