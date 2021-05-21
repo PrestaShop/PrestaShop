@@ -80,7 +80,7 @@ class DbQueryTest extends TestCase
      *
      * @dataProvider providerFrom
      */
-    public function testFrom($table, $alias, $expectedValue): void
+    public function testFrom(string $table, ?string $alias, string $expectedValue): void
     {
         $dbQuery = $this->dbQueryInstance();
         $dbQuery->from($table, $alias);
