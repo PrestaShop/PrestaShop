@@ -196,14 +196,7 @@ class CommonPage {
    * @return {Promise<void>}
    */
   async setValue(page, selector, value) {
-    await this.waitForSelectorAndClick(page, selector);
-    await page.click(selector, {clickCount: 3});
-    // Delete text from input before typing
-    await page.waitForTimeout(100);
-    await page.press(selector, 'Delete');
-    if (value !== null) {
-      await page.type(selector, value.toString());
-    }
+    await page.fill(selector, value);
   }
 
   /**
