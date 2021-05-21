@@ -104,21 +104,7 @@ class CustomerAddressFormCore extends AbstractForm
 
     public function validate()
     {
-        $is_valid = true;
-
-        if (($postcode = $this->getField('postcode'))) {
-            if ($postcode->isRequired()) {
-                $country = $this->formatter->getCountry();
-                if (!$country->checkZipCode($postcode->getValue())) {
-                    $postcode->addError($this->translator->trans(
-                        'Invalid postcode - should look like "%zipcode%"',
-                        ['%zipcode%' => $country->zip_code_format],
-                        'Shop.Forms.Errors'
-                    ));
-                    $is_valid = false;
-                }
-            }
-        }
+        $is_valid = $this->validateFieldsValues();
 
         if (($hookReturn = Hook::exec('actionValidateCustomerAddressForm', ['form' => $this])) !== '') {
             $is_valid &= (bool) $hookReturn;
@@ -216,5 +202,112 @@ class CustomerAddressFormCore extends AbstractForm
             'errors' => $this->getErrors(),
             'formFields' => $formFields,
         ];
+    }
+
+    /**
+     * Performs validation on field values.
+     * Returns true if all field values are correct, false otherwise.
+     *
+     * @return bool
+     */
+    private function validateFieldsValues(): bool
+    {
+        $isValid = true;
+
+        $isValid &= $this->validatePostcode();
+        $isValid &= $this->validateFirstname();
+        $isValid &= $this->validateLastname();
+        $isValid &= $this->validateCity();
+
+        return (bool) $isValid;
+    }
+
+    private function validatePostcode(): bool
+    {
+        if (($postcode = $this->getField('postcode'))) {
+            if ($postcode->isRequired()) {
+                $country = $this->formatter->getCountry();
+                if (!$country->checkZipCode($postcode->getValue())) {
+                    $postcode->addError($this->translator->trans(
+                        'Invalid postcode - should look like "%zipcode%"',
+                        ['%zipcode%' => $country->zip_code_format],
+                        'Shop.Forms.Errors'
+                    ));
+
+                    return false;
+                }
+            }
+        }
+
+        return true;
+    }
+
+    private function validateCity(): bool
+    {
+        $field = $this->getField('city');
+        if (null === $field) {
+            return true;
+        }
+        $value = $field->getValue();
+        if ($field->isRequired() && empty($value)) {
+            return false;
+        }
+        if (!empty($value) && false === (bool) Validate::isCityName($value)) {
+            $field->AddError($this->translator->trans(
+                'Invalid format.',
+                [],
+                'Shop.Forms.Errors'
+            ));
+
+            return false;
+        }
+
+        return true;
+    }
+
+    private function validateFirstname(): bool
+    {
+        $field = $this->getField('firstname');
+        if (null === $field) {
+            return true;
+        }
+        $value = $field->getValue();
+        if ($field->isRequired() && empty($value)) {
+            return false;
+        }
+        if (!empty($value) && false === (bool) Validate::isName($value)) {
+            $field->AddError($this->translator->trans(
+                'Invalid name',
+                [],
+                'Shop.Forms.Errors'
+            ));
+
+            return false;
+        }
+
+        return true;
+    }
+
+    private function validateLastname(): bool
+    {
+        $field = $this->getField('lastname');
+        if (null === $field) {
+            return true;
+        }
+        $value = $field->getValue();
+        if ($field->isRequired() && empty($value)) {
+            return false;
+        }
+        if (!empty($value) && false === (bool) Validate::isName($value)) {
+            $field->AddError($this->translator->trans(
+                'Invalid name',
+                [],
+                'Shop.Forms.Errors'
+            ));
+
+            return false;
+        }
+
+        return true;
     }
 }

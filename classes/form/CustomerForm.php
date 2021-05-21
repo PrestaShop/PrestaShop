@@ -149,7 +149,9 @@ class CustomerFormCore extends AbstractForm
                 'Shop.Notifications.Error'
             ));
         }
+
         $this->validateFieldsLengths();
+        $this->validateFieldsValues();
         $this->validateByModules();
 
         return parent::validate();
@@ -273,6 +275,48 @@ class CustomerFormCore extends AbstractForm
                     array_merge($this->formFields, $validatedCustomerFormFields);
                 }
             }
+        }
+    }
+
+    /**
+     * Performs validation on field values.
+     * Adds error to the field object if value is not as expected.
+     */
+    private function validateFieldsValues(): void
+    {
+        $this->validateFirstname();
+        $this->validateLastname();
+    }
+
+    private function validateFirstname(): void
+    {
+        $field = $this->getField('firstname');
+        if (null === $field) {
+            return;
+        }
+        $value = $field->getValue();
+        if (!empty($value) && false === (bool) Validate::isCustomerName($value)) {
+            $field->AddError($this->translator->trans(
+                'Invalid format.',
+                [],
+                'Shop.Forms.Errors'
+            ));
+        }
+    }
+
+    private function validateLastname(): void
+    {
+        $field = $this->getField('lastname');
+        if (null === $field) {
+            return;
+        }
+        $value = $field->getValue();
+        if (!empty($value) && false === (bool) Validate::isCustomerName($value)) {
+            $field->AddError($this->translator->trans(
+                'Invalid format.',
+                [],
+                'Shop.Forms.Errors'
+            ));
         }
     }
 }
