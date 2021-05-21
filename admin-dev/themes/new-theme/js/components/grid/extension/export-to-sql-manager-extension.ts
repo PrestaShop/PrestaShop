@@ -40,12 +40,10 @@ export default class ExportToSqlManagerExtension {
   extend(grid: Grid): void {
     grid
       .getHeaderContainer()
-      .on('click', GridMap.actions.showQuery, () => this.onShowSqlQueryClick(grid),
-      );
+      .on('click', GridMap.actions.showQuery, () => this.onShowSqlQueryClick(grid));
     grid
       .getHeaderContainer()
-      .on('click', GridMap.actions.exportQuery, () => this.onExportSqlManagerClick(grid),
-      );
+      .on('click', GridMap.actions.exportQuery, () => this.onExportSqlManagerClick(grid));
   }
 
   /**
