@@ -331,4 +331,14 @@ class DbQueryCore
     {
         return $this->build();
     }
+
+    /**
+     * Get query.
+     *
+     * @return array
+     */
+    public function getQuery(): array
+    {
+        return $this->query;
+    }
 }
