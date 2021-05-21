@@ -138,7 +138,7 @@ class DbQueryTest extends TestCase
         ];
     }
 
-    public function providerBuild()
+    public function providerBuild(): array
     {
         define('_BREAK_LINE_', "\n");
 
