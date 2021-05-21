@@ -24,7 +24,8 @@
  */
 
 /**
- * Component responsible for displaying form popover errors with modified width which is calculated based on the
+ * Component responsible for displaying form popover errors with modified
+ * width which is calculated based on the
  * form group width.
  */
 $(() => {
@@ -72,7 +73,7 @@ $(() => {
   const getHorizontalDifference = (
     $invalidFeedbackContainer: JQuery,
     $errorPopover: JQuery,
-  ): number | void => {
+  ): number | null => {
     const invalidContainerOffset = $invalidFeedbackContainer.offset();
     const errorPopoverOffset = $errorPopover.offset();
 
@@ -82,10 +83,13 @@ $(() => {
 
       return inputHorizontalPosition - popoverHorizontalPosition;
     }
+
+    return null;
   };
 
   /**
-   * Gets popover error content pre-fetched in html. It used unique selector to identify which one content to render.
+   * Gets popover error content pre-fetched in html.
+   * It used unique selector to identify which one content to render.
    *
    * @param popoverTriggerElement
    * @returns {jQuery}
