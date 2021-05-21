@@ -66,7 +66,7 @@ class DbQueryTest extends TestCase
      *
      * @dataProvider providerSelect
      */
-    public function testSelect($fields, $expectedSelect): void
+    public function testSelect($fields, array $expectedSelect): void
     {
         $dbQuery = $this->dbQueryInstance();
         $dbQuery->select($fields);
