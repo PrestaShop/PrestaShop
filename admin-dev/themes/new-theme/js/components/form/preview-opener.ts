@@ -33,11 +33,11 @@ const {$} = window;
  * The page will be opened once provided 'open_preview' parameter in query url
  */
 export default class PreviewOpener {
-  constructor(previewUrlSelector) {
+  previewUrl: string;
+
+  constructor(previewUrlSelector: string) {
     this.previewUrl = $(previewUrlSelector).data('preview-url');
     this.open();
-
-    return {};
   }
 
   /**
@@ -45,7 +45,7 @@ export default class PreviewOpener {
    *
    * @private
    */
-  open() {
+  private open(): void {
     const urlParams = new URLSearchParams(window.location.search);
 
     if (this.previewUrl && urlParams.has('open_preview')) {

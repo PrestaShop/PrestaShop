@@ -25,32 +25,26 @@
 
 const {$} = window;
 
-export default class AutocompleteWithEmail {
-  constructor(emailInputSelector, map = {}) {
-    this.map = map;
-    this.$emailInput = $(emailInputSelector);
-    this.$emailInput.on('change', () => this.change());
+export default class MultistoreConfigField {
+  constructor() {
+    this.updateMultistoreFieldOnChange();
   }
 
-  change() {
-    $.get({
-      url: this.$emailInput.data('customer-information-url'),
-      dataType: 'json',
-      data: {
-        email: this.$emailInput.val(),
-      },
-    })
-      .then((response) => {
-        Object.keys(this.map).forEach((key) => {
-          if (response[key] !== undefined) {
-            $(this.map[key]).val(response[key]);
-          }
-        });
-      })
-      .catch((response) => {
-        if (typeof response.responseJSON !== 'undefined') {
-          window.showErrorMessage(response.responseJSON.message);
-        }
-      });
+  updateMultistoreFieldOnChange(): void {
+    $(document).on('change', '.multistore-checkbox', () => {
+      const input = $(this)
+        .closest('.form-group')
+        .find(':input:not(.multistore-checkbox)');
+      const inputContainer = $(this)
+        .closest('.form-group')
+        .find('.input-container');
+      const labelContainer = $(this)
+        .closest('.form-group')
+        .find('.form-control-label');
+      const isChecked = $(this).is(':checked');
+      inputContainer.toggleClass('disabled', !isChecked);
+      labelContainer.toggleClass('disabled', !isChecked);
+      input.prop('disabled', !isChecked);
+    });
   }
 }

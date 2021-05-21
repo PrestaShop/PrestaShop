@@ -25,7 +25,6 @@ interface Window {
 /* eslint-disable */
 interface JQuery {
   tableDnD(params: unknown): void;
-  passy: any;
   tokenfield: any;
   clickableDropdown: () => void;
   datetimepicker: any;
@@ -34,6 +33,8 @@ interface JQuery {
   fancybox: any;
   growl: any;
   pstooltip: any;
+  passy(params: unknown, length?: number): void;
+  serializeJSON: any;
 }
 /* eslint-disable */
 
@@ -48,6 +49,7 @@ interface JQueryStatic {
   fancybox: any;
   growl: any;
   pstooltip: any;
+  serializeJSON: any;
 }
 
 interface TableDnD {
@@ -62,6 +64,7 @@ interface AjaxError {
 interface AjaxResponse {
   message: string;
   responseJSON?: AjaxResponse;
+  errors?: Record<string, string>;
 }
 
 interface PrestashopWindow {
@@ -78,3 +81,7 @@ interface RegExpPositions extends RegExpExecArray {
 type FetchResponse = Record<string, any>;
 
 type OptionsObject = FetchResponse;
+
+interface SelectorsMap extends Record<string, string> {
+  [key: string]: string;
+}
