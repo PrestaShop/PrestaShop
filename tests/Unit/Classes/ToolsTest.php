@@ -551,4 +551,24 @@ class ToolsTest extends TestCase
             [$invalidPasswordLenghtGiven, Tools::passwdGen(-666, Tools::PASSWORDGEN_FLAG_ALPHANUMERIC)],
         ];
     }
+
+    /**
+     * @param bool|null $useSsl
+     * @param string $expectedReturn
+     *
+     * @dataProvider providerGetProtocol
+     */
+    public function testGetProtocol(?bool $useSsl, string $expectedReturn): void
+    {
+        $this->assertSame(Tools::getProtocol($useSsl), $expectedReturn);
+    }
+
+    public function providerGetProtocol(): array
+    {
+        return [
+            [true, 'https://'],
+            [false, 'http://'],
+            [null, 'http://'],
+        ];
+    }
 }
