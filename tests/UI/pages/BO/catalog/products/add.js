@@ -138,6 +138,7 @@ class AddProduct extends BOBasePage {
     // Set product images
     await this.addProductImages(page, [productData.coverImage, productData.thumbImage]);
 
+    await page.click(this.productDescriptionTab);
     await this.setValueOnTinymceInput(page, this.productDescriptionIframe, productData.description);
     await this.setValueOnTinymceInput(page, this.productShortDescriptionIframe, productData.summary);
     await this.selectByVisibleText(page, this.productTypeSelect, productData.type);
