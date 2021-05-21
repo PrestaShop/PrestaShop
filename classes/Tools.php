@@ -319,7 +319,7 @@ class ToolsCore
             $host = htmlspecialchars($host, ENT_COMPAT, 'UTF-8');
         }
         if ($http) {
-            $host = (Configuration::get('PS_SSL_ENABLED') ? 'https://' : 'http://') . $host;
+            $host = self::getProtocol((bool) Configuration::get('PS_SSL_ENABLED')) . $host;
         }
 
         return $host;
@@ -365,7 +365,7 @@ class ToolsCore
             $domain = htmlspecialchars($domain, ENT_COMPAT, 'UTF-8');
         }
         if ($http) {
-            $domain = (Configuration::get('PS_SSL_ENABLED') ? 'https://' : 'http://') . $domain;
+            $domain = self::getProtocol((bool) Configuration::get('PS_SSL_ENABLED')) . $domain;
         }
 
         return $domain;
@@ -2915,7 +2915,7 @@ FileETag none
         if (file_exists($sitemap_file) && filesize($sitemap_file)) {
             fwrite($write_fd, "# Sitemap\n");
             $sitemap_filename = basename($sitemap_file);
-            fwrite($write_fd, 'Sitemap: ' . (Configuration::get('PS_SSL_ENABLED') ? 'https://' : 'http://') . $_SERVER['SERVER_NAME']
+            fwrite($write_fd, 'Sitemap: ' . self::getProtocol((bool) Configuration::get('PS_SSL_ENABLED')) . $_SERVER['SERVER_NAME']
                 . __PS_BASE_URI__ . $sitemap_filename . PHP_EOL);
         }
 
