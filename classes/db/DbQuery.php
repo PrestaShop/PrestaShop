@@ -337,7 +337,7 @@ class DbQueryCore
      *
      * @return array
      */
-    public function getQuery()
+    public function getQuery(): array
     {
         return $this->query;
     }
