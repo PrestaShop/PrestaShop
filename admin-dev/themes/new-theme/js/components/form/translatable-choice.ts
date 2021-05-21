@@ -31,38 +31,50 @@ const {$} = window;
 export default class TranslatableChoice {
   constructor() {
     // registers the event which displays the popover
-    $(document).on('change', 'select.translatable_choice_language', (event) => {
-      this.filterSelect(event);
-    });
+    $(document).on(
+      'change',
+      'select.translatable_choice_language',
+      (event: JQueryEventObject) => {
+        this.filterSelect(event);
+      },
+    );
 
     $('select.translatable_choice_language').trigger('change');
   }
 
-  filterSelect(event) {
+  filterSelect(event: JQueryEventObject): void {
     const $element = $(event.currentTarget);
     const $formGroup = $element.closest('.form-group');
     const language = $element.find('option:selected').val();
 
     // show all the languages selects
-    $formGroup.find(`select.translatable_choice[data-language="${language}"]`).parent().show();
+    $formGroup
+      .find(`select.translatable_choice[data-language="${language}"]`)
+      .parent()
+      .show();
 
     const $selects = $formGroup.find('select.translatable_choice');
 
     // Hide all the selects not corresponding to the language selected
-    $selects.not(`select.translatable_choice[data-language="${language}"]`).each((index, item) => {
-      $(item).parent().hide();
-    });
+    $selects
+      .not(`select.translatable_choice[data-language="${language}"]`)
+      .each((index, item) => {
+        $(item)
+          .parent()
+          .hide();
+      });
 
     // Bind choice selection to fill the hidden input
     this.bindValueSelection($selects);
   }
 
-  bindValueSelection($selects) {
+  bindValueSelection($selects: JQuery): void {
     $selects.each((index, element) => {
       $(element).on('change', (event) => {
         const $select = $(event.currentTarget);
         const selectId = $select.attr('id');
-        $(`#${selectId}_value`).val($select.find('option:selected').val());
+        const selectedValue = $select.find('option:selected').val();
+        $(`#${selectId}_value`).val(<string>selectedValue);
       });
     });
   }
