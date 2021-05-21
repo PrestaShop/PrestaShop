@@ -62,7 +62,7 @@ class DbQueryTest extends TestCase
 
     /**
      * @param mixed $fields
-     * @param mixed $expectedSelect
+     * @param array $expectedSelect
      *
      * @dataProvider providerSelect
      */
