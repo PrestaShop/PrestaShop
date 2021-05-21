@@ -35,7 +35,7 @@ if (!defined('_DB_PREFIX_')) {
 use DbQuery;
 use PHPUnit\Framework\TestCase;
 
-class DbQueryCoreTest extends TestCase
+class DbQueryTest extends TestCase
 {
     /*
      * get DbQuery object
