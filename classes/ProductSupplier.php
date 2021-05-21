@@ -238,6 +238,10 @@ class ProductSupplierCore extends ObjectModel
         $query->where('id_supplier = ' . (int) $idSupplier);
 
         $row = Db::getInstance(_PS_USE_SQL_SLAVE_)->getRow($query);
+        if (empty($row)) {
+            return;
+        }
+
         if ($convertedPrice) {
             return Tools::convertPrice($row['price_te'], $row['id_currency']);
         }
