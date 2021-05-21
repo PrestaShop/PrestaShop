@@ -3597,7 +3597,104 @@
     <hook id="actionFeatureFlagSave">
       <name>actionFeatureFlagSave</name>
       <title>Modify feature flag form submitted data</title>
-      <description>This hook allows to modify the Feature Flag data being submitted through the form after it was saved</description>
+      <description>This hook allows to modify the Feature Flag data being submitted through the form after it was
+        saved
+      </description>
+    </hook>
+    <hook id="actionOrderStateFormBuilderModifier">
+      <name>actionOrderStateFormBuilderModifier</name>
+      <title>Modify order state identifiable object form</title>
+      <description>This hook allows to modify order state identifiable object forms content by modifying form builder
+        data or FormBuilder itself
+      </description>
+    </hook>
+    <hook id="actionOrderReturnStateFormBuilderModifier">
+      <name>actionOrderReturnStateFormBuilderModifier</name>
+      <title>Modify order return state identifiable object form</title>
+      <description>This hook allows to modify order return state identifiable object forms content by modifying form
+        builder data or FormBuilder itself
+      </description>
+    </hook>
+    <hook id="actionZoneFormBuilderModifier">
+      <name>actionZoneFormBuilderModifier</name>
+      <title>Modify zone identifiable object form</title>
+      <description>This hook allows to modify zone identifiable object forms content by modifying form builder data or
+        FormBuilder itself
+      </description>
+    </hook>
+    <hook id="actionBeforeUpdateOrderStateFormHandler">
+      <name>actionBeforeUpdateOrderStateFormHandler</name>
+      <title>Modify order state identifiable object data before updating it</title>
+      <description>This hook allows to modify order state identifiable object forms data before it was updated
+      </description>
+    </hook>
+    <hook id="actionBeforeUpdateOrderReturnStateFormHandler">
+      <name>actionBeforeUpdateOrderReturnStateFormHandler</name>
+      <title>Modify order return state identifiable object data before updating it</title>
+      <description>This hook allows to modify order return state identifiable object forms data before it was updated
+      </description>
+    </hook>
+    <hook id="actionBeforeUpdateZoneFormHandler">
+      <name>actionBeforeUpdateZoneFormHandler</name>
+      <title>Modify zone identifiable object data before updating it</title>
+      <description>This hook allows to modify zone identifiable object forms data before it was updated</description>
+    </hook>
+    <hook id="actionAfterUpdateOrderStateFormHandler">
+      <name>actionAfterUpdateOrderStateFormHandler</name>
+      <title>Modify order state identifiable object data after updating it</title>
+      <description>This hook allows to modify order state identifiable object forms data after it was updated
+      </description>
+    </hook>
+    <hook id="actionAfterUpdateOrderReturnStateFormHandler">
+      <name>actionAfterUpdateOrderReturnStateFormHandler</name>
+      <title>Modify order return state identifiable object data after updating it</title>
+      <description>This hook allows to modify order return state identifiable object forms data after it was updated
+      </description>
+    </hook>
+    <hook id="actionAfterUpdateProductImageFormHandler">
+      <name>actionAfterUpdateProductImageFormHandler</name>
+      <title>Modify product image identifiable object data after updating it</title>
+      <description>This hook allows to modify product image identifiable object forms data after it was updated
+      </description>
+    </hook>
+    <hook id="actionAfterUpdateZoneFormHandler">
+      <name>actionAfterUpdateZoneFormHandler</name>
+      <title>Modify zone identifiable object data after updating it</title>
+      <description>This hook allows to modify zone identifiable object forms data after it was updated</description>
+    </hook>
+    <hook id="actionBeforeCreateOrderStateFormHandler">
+      <name>actionBeforeCreateOrderStateFormHandler</name>
+      <title>Modify order state identifiable object data before creating it</title>
+      <description>This hook allows to modify order state identifiable object forms data before it was created
+      </description>
+    </hook>
+    <hook id="actionBeforeCreateOrderReturnStateFormHandler">
+      <name>actionBeforeCreateOrderReturnStateFormHandler</name>
+      <title>Modify order return state identifiable object data before creating it</title>
+      <description>This hook allows to modify order return state identifiable object forms data before it was created
+      </description>
+    </hook>
+    <hook id="actionBeforeCreateZoneFormHandler">
+      <name>actionBeforeCreateZoneFormHandler</name>
+      <title>Modify zone identifiable object data before creating it</title>
+      <description>This hook allows to modify zone identifiable object forms data before it was created</description>
+    </hook>
+    <hook id="actionAfterCreateOrderStateFormHandler">
+      <name>actionAfterCreateOrderStateFormHandler</name>
+      <title>Modify order state identifiable object data after creating it</title>
+      <description>This hook allows to modify order state identifiable object forms data after it was created
+      </description>
+    </hook>
+    <hook id="actionAfterCreateOrderReturnStateFormHandler">
+      <name>actionAfterCreateOrderReturnStateFormHandler</name>
+      <title>Modify order return state identifiable object data after creating it</title>
+      <description>This hook allows to modify order return state identifiable object forms data after it was created
+      </description>
+    </hook>
+    <hook id="actionAfterCreateZoneFormHandler">
+      <name>actionAfterCreateZoneFormHandler</name>
+      <title>Modify zone identifiable object data after creating it</title>
+      <description>This hook allows to modify zone identifiable object forms data after it was created</description>
     </hook>
   </entities>
 </entity_hook>
