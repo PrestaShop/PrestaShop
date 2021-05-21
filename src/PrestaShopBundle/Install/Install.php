@@ -905,7 +905,7 @@ class Install extends AbstractInstall
             'gridhtml',
             'gsitemap',
             'pagesnotfound',
-            'productcomments',
+            //'productcomments', @ToDo: reactivate it when it will have been updated to work with circuit-breaker v4
             'ps_banner',
             'ps_categorytree',
             'ps_checkpayment',
