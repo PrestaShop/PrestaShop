@@ -6866,19 +6866,20 @@
         },
         {
             "name": "prestashop/translationtools-bundle",
-            "version": "v4.0.4",
+            "version": "v4.0.5",
             "source": {
                 "type": "git",
                 "url": "https://github.com/PrestaShop/TranslationToolsBundle.git",
-                "reference": "9da37780f6004271616579365238d9421a2d1b97"
+                "reference": "ff1b71ae389071a2328405638487c86cc97f00fa"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/PrestaShop/TranslationToolsBundle/zipball/9da37780f6004271616579365238d9421a2d1b97",
-                "reference": "9da37780f6004271616579365238d9421a2d1b97",
+                "url": "https://api.github.com/repos/PrestaShop/TranslationToolsBundle/zipball/ff1b71ae389071a2328405638487c86cc97f00fa",
+                "reference": "ff1b71ae389071a2328405638487c86cc97f00fa",
                 "shasum": ""
             },
             "require": {
+                "friendsofphp/php-cs-fixer": "^2.18",
                 "nikic/php-parser": "^4",
                 "php": ">=7.1",
                 "smarty/smarty": "^3.1",
@@ -6919,9 +6920,9 @@
             ],
             "support": {
                 "issues": "https://github.com/PrestaShop/TranslationToolsBundle/issues",
-                "source": "https://github.com/PrestaShop/TranslationToolsBundle/tree/v4.0.4"
+                "source": "https://github.com/PrestaShop/TranslationToolsBundle/tree/v4.0.5"
             },
-            "time": "2020-11-13T08:11:44+00:00"
+            "time": "2021-05-19T07:52:12+00:00"
         },
         {
             "name": "prestashop/welcome",
