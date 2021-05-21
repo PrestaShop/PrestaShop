@@ -213,12 +213,17 @@ class CustomerFormCore extends AbstractForm
             $clearTextPassword = $this->getValue('password');
             $newPassword = $this->getValue('new_password');
 
-            $ok = $this->customerPersister->save(
-                $this->getCustomer(),
-                $clearTextPassword,
-                $newPassword,
-                $this->passwordRequired
-            );
+            try {
+                $ok = $this->customerPersister->save(
+                    $this->getCustomer(),
+                    $clearTextPassword,
+                    $newPassword,
+                    $this->passwordRequired
+                );
+            } catch (PrestaShopException $e) {
+                $this->errors[] = $this->translator->trans('Could not update your information, please check your data.', [], 'Shop.Notifications.Error');
+                $ok = false;
+            }
 
             if (!$ok) {
                 foreach ($this->customerPersister->getErrors() as $field => $errors) {
@@ -284,29 +289,18 @@ class CustomerFormCore extends AbstractForm
      */
     private function validateFieldsValues(): void
     {
-        $this->validateFirstname();
-        $this->validateLastname();
+        $this->validateFieldIsCustomerName('firstname');
+        $this->validateFieldIsCustomerName('lastname');
     }
 
-    private function validateFirstname(): void
+    /**
+     * Checks whether a field's value is a valid customer(person) name.
+     *
+     * @param string $fieldName
+     */
+    private function validateFieldIsCustomerName(string $fieldName): void
     {
-        $field = $this->getField('firstname');
-        if (null === $field) {
-            return;
-        }
-        $value = $field->getValue();
-        if (!empty($value) && false === (bool) Validate::isCustomerName($value)) {
-            $field->AddError($this->translator->trans(
-                'Invalid format.',
-                [],
-                'Shop.Forms.Errors'
-            ));
-        }
-    }
-
-    private function validateLastname(): void
-    {
-        $field = $this->getField('lastname');
+        $field = $this->getField($fieldName);
         if (null === $field) {
             return;
         }

@@ -140,10 +140,16 @@ class CustomerAddressFormCore extends AbstractForm
 
         $this->setAddress($address);
 
-        return $this->getPersister()->save(
-            $address,
-            $this->getValue('token')
-        );
+        try {
+            return $this->getPersister()->save(
+                $address,
+                $this->getValue('token')
+            );
+        } catch (PrestaShopException $e) {
+            $this->errors[] = $this->translator->trans('Could not update your information, please check your data.', [], 'Shop.Notifications.Error');
+        }
+
+        return false;
     }
 
     /**
@@ -215,36 +221,57 @@ class CustomerAddressFormCore extends AbstractForm
         $isValid = true;
 
         $isValid &= $this->validatePostcode();
-        $isValid &= $this->validateFirstname();
-        $isValid &= $this->validateLastname();
-        $isValid &= $this->validateCity();
+        $isValid &= $this->validateField('firstname', 'isName', $this->translator->trans(
+            'Invalid name',
+            [],
+            'Shop.Forms.Errors'
+        ));
+        $isValid &= $this->validateField('lastname', 'isName', $this->translator->trans(
+            'Invalid name',
+            [],
+            'Shop.Forms.Errors'
+        ));
+        $isValid &= $this->validateField('city', 'isCityName', $this->translator->trans(
+            'Invalid format.',
+            [],
+            'Shop.Forms.Errors'
+        ));
 
         return (bool) $isValid;
     }
 
+    /**
+     * @return bool
+     */
     private function validatePostcode(): bool
     {
-        if (($postcode = $this->getField('postcode'))) {
-            if ($postcode->isRequired()) {
-                $country = $this->formatter->getCountry();
-                if (!$country->checkZipCode($postcode->getValue())) {
-                    $postcode->addError($this->translator->trans(
-                        'Invalid postcode - should look like "%zipcode%"',
-                        ['%zipcode%' => $country->zip_code_format],
-                        'Shop.Forms.Errors'
-                    ));
+        $postcode = $this->getField('postcode');
+        if ($postcode && $postcode->isRequired()) {
+            $country = $this->formatter->getCountry();
+            if (!$country->checkZipCode($postcode->getValue())) {
+                $postcode->addError($this->translator->trans(
+                    'Invalid postcode - should look like "%zipcode%"',
+                    ['%zipcode%' => $country->zip_code_format],
+                    'Shop.Forms.Errors'
+                ));
 
-                    return false;
-                }
+                return false;
             }
         }
 
         return true;
     }
 
-    private function validateCity(): bool
+    /**
+     * @param string $fieldName
+     * @param string $validationFunction
+     * @param string $validationFailMessage
+     *
+     * @return bool
+     */
+    private function validateField(string $fieldName, string $validationFunction, string $validationFailMessage): bool
     {
-        $field = $this->getField('city');
+        $field = $this->getField($fieldName);
         if (null === $field) {
             return true;
         }
@@ -252,58 +279,8 @@ class CustomerAddressFormCore extends AbstractForm
         if ($field->isRequired() && empty($value)) {
             return false;
         }
-        if (!empty($value) && false === (bool) Validate::isCityName($value)) {
-            $field->AddError($this->translator->trans(
-                'Invalid format.',
-                [],
-                'Shop.Forms.Errors'
-            ));
-
-            return false;
-        }
-
-        return true;
-    }
-
-    private function validateFirstname(): bool
-    {
-        $field = $this->getField('firstname');
-        if (null === $field) {
-            return true;
-        }
-        $value = $field->getValue();
-        if ($field->isRequired() && empty($value)) {
-            return false;
-        }
-        if (!empty($value) && false === (bool) Validate::isName($value)) {
-            $field->AddError($this->translator->trans(
-                'Invalid name',
-                [],
-                'Shop.Forms.Errors'
-            ));
-
-            return false;
-        }
-
-        return true;
-    }
-
-    private function validateLastname(): bool
-    {
-        $field = $this->getField('lastname');
-        if (null === $field) {
-            return true;
-        }
-        $value = $field->getValue();
-        if ($field->isRequired() && empty($value)) {
-            return false;
-        }
-        if (!empty($value) && false === (bool) Validate::isName($value)) {
-            $field->AddError($this->translator->trans(
-                'Invalid name',
-                [],
-                'Shop.Forms.Errors'
-            ));
+        if (!empty($value) && false === (bool) Validate::$validationFunction($value)) {
+            $field->AddError($validationFailMessage);
 
             return false;
         }
