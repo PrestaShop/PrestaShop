@@ -42,7 +42,7 @@ class DbQueryTest extends TestCase
      *
      * @return DbQuery
      */
-    public function dbQueryInstance(): DbQuery
+    private function getDbQueryInstance(): DbQuery
     {
         return new DbQuery();
     }
