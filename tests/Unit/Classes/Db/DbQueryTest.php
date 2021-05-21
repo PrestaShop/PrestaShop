@@ -37,6 +37,8 @@ use PHPUnit\Framework\TestCase;
 
 class DbQueryTest extends TestCase
 {
+    public const _BREAK_LINE_ = "\n";
+
     /*
      * get DbQuery object
      *
@@ -55,7 +57,7 @@ class DbQueryTest extends TestCase
      */
     public function testType($type, string $expectedType): void
     {
-        $dbQuery = $this->dbQueryInstance();
+        $dbQuery = $this->getDbQueryInstance();
         $dbQuery->type($type);
         $this->assertSame($expectedType, $dbQuery->getQuery()['type']);
     }
@@ -68,7 +70,7 @@ class DbQueryTest extends TestCase
      */
     public function testSelect($fields, array $expectedSelect): void
     {
-        $dbQuery = $this->dbQueryInstance();
+        $dbQuery = $this->getDbQueryInstance();
         $dbQuery->select($fields);
         $this->assertSame($expectedSelect, $dbQuery->getQuery()['select']);
     }
@@ -76,13 +78,13 @@ class DbQueryTest extends TestCase
     /**
      * @param string $table
      * @param string|null $alias
-     * @param string $expectedValue
+     * @param array $expectedValue
      *
      * @dataProvider providerFrom
      */
-    public function testFrom(string $table, ?string $alias, string $expectedValue): void
+    public function testFrom(string $table, ?string $alias, array $expectedValue): void
     {
-        $dbQuery = $this->dbQueryInstance();
+        $dbQuery = $this->getDbQueryInstance();
         $dbQuery->from($table, $alias);
         $this->assertSame($expectedValue, $dbQuery->getQuery()['from']);
     }
@@ -140,25 +142,23 @@ class DbQueryTest extends TestCase
 
     public function providerBuild(): array
     {
-        define('_BREAK_LINE_', "\n");
-
-        $simpleSelectQuery = $this->dbQueryInstance()
+        $simpleSelectQuery = $this->getDbQueryInstance()
             ->select('id_product')
             ->from('product')
         ;
 
-        $simpleSelectQueryWithAlias = $this->dbQueryInstance()
+        $simpleSelectQueryWithAlias = $this->getDbQueryInstance()
             ->select('p.name')
             ->from('product', 'p')
         ;
 
-        $simpleSelectQueryWhere = $this->dbQueryInstance()
+        $simpleSelectQueryWhere = $this->getDbQueryInstance()
             ->select('id_product')
             ->from('product')
             ->where('id_category_default = 1')
         ;
 
-        $simpleSelectQueryWithAliasandWhere = $this->dbQueryInstance()
+        $simpleSelectQueryWithAliasandWhere = $this->getDbQueryInstance()
             ->select('p.*')
             ->from('product', 'p')
             ->where('p.reference = "testreference"')
@@ -167,19 +167,19 @@ class DbQueryTest extends TestCase
         return [
             [
                 $simpleSelectQuery,
-                'SELECT id_product' . _BREAK_LINE_ . 'FROM `' . _DB_PREFIX_ . 'product`',
+                'SELECT id_product' . self::_BREAK_LINE_ . 'FROM `' . _DB_PREFIX_ . 'product`',
             ],
             [
                 $simpleSelectQueryWhere,
-                'SELECT id_product' . _BREAK_LINE_ . 'FROM `' . _DB_PREFIX_ . 'product`' . _BREAK_LINE_ . 'WHERE (id_category_default = 1)',
+                'SELECT id_product' . self::_BREAK_LINE_ . 'FROM `' . _DB_PREFIX_ . 'product`' . self::_BREAK_LINE_ . 'WHERE (id_category_default = 1)',
             ],
             [
                 $simpleSelectQueryWithAlias,
-                'SELECT p.name' . _BREAK_LINE_ . 'FROM `' . _DB_PREFIX_ . 'product` p',
+                'SELECT p.name' . self::_BREAK_LINE_ . 'FROM `' . _DB_PREFIX_ . 'product` p',
             ],
             [
                 $simpleSelectQueryWithAliasandWhere,
-                'SELECT p.*' . _BREAK_LINE_ . 'FROM `' . _DB_PREFIX_ . 'product` p' . _BREAK_LINE_ . 'WHERE (p.reference = "testreference")',
+                'SELECT p.*' . self::_BREAK_LINE_ . 'FROM `' . _DB_PREFIX_ . 'product` p' . self::_BREAK_LINE_ . 'WHERE (p.reference = "testreference")',
             ],
         ];
     }
