@@ -1086,7 +1086,8 @@ class FrontControllerCore extends Controller
                 . ($this->stylesheetManager->getFullPath($relativePath) ?? $relativePath);
             $params['server'] = 'remote';
         }
-        $this->stylesheetManager->register($id, $relativePath, $params['media'], $params['priority'], $params['inline'], $params['server'], true, $params['version']);
+
+        $this->stylesheetManager->register($id, $relativePath, $params['media'], $params['priority'], $params['inline'], $params['server'], isset($params['needRtl']) ? $params['needRtl'] : true, $params['version']);
     }
 
     public function unregisterStylesheet($id)
