@@ -114,7 +114,6 @@ class StylesheetManagerCore extends AbstractAssetManager
         $priority = is_int($priority) ? $priority : self::DEFAULT_PRIORITY;
         $media = $this->getSanitizedMedia($media);
 
-        //../stylesheet.css?{version}
         $fullPath = ($version)? $fullPath.'?'.$version : $fullPath;
 
         if ('remote' === $server) {
