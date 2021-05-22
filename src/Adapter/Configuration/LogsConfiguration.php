@@ -29,6 +29,7 @@ namespace PrestaShop\PrestaShop\Adapter\Configuration;
 use PrestaShop\PrestaShop\Core\Configuration\DataConfigurationInterface;
 use PrestaShop\PrestaShop\Core\ConfigurationInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
+use Validate;
 
 /**
  * This class will manage Logs configuration for a Shop.
@@ -62,6 +63,16 @@ class LogsConfiguration implements DataConfigurationInterface
     public function updateConfiguration(array $configuration)
     {
         if ($this->validateConfiguration($configuration)) {
+            $checkEmails = explode(',',$configuration['logs_email_receivers']);
+            $errors = [];
+            foreach ($checkEmails as $email) {
+                if (!Validate::isEmail($email))
+                    $errors[] = $email;
+            }
+            if ($errors) {
+                return $errors;
+            }
+
             $this->configuration->set('PS_LOGS_BY_EMAIL', $configuration['logs_by_email']);
             $this->configuration->set('PS_LOGS_EMAIL_RECEIVERS', $configuration['logs_email_receivers']);
         }

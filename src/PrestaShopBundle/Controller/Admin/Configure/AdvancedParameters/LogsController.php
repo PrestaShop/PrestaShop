@@ -37,6 +37,7 @@ use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 
+
 /**
  * Responsible of "Configure > Advanced Parameters > Logs" page display.
  */
@@ -122,7 +123,7 @@ class LogsController extends FrameworkBundleAdminController
                 return $this->redirectToRoute('admin_logs_index');
             }
 
-            $this->flashErrors($saveErrors);
+            $this->addFlash('error', $this->trans('Invalid email address.', 'Admin.Notifications.Error') . ' ( ' . implode(',',$saveErrors) . ' ) ');
         }
 
         return $this->redirectToRoute('admin_logs_index');
