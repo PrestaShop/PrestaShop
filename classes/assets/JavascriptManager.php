@@ -102,7 +102,6 @@ class JavascriptManagerCore extends AbstractAssetManager
         $position = $this->getSanitizedPosition($position);
         $attribute = $this->getSanitizedAttribute($attribute);
 
-        //../javascript.js?{version}
         $fullPath = ($version)? $fullPath.'?'.$version : $fullPath;
 
         if ('remote' === $server) {
