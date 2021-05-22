@@ -80,7 +80,7 @@ class JavascriptManagerCore extends AbstractAssetManager
         $position = $this->getSanitizedPosition($position);
         $attribute = $this->getSanitizedAttribute($attribute);
 
-        $fullPath = ($version)? $fullPath.'?'.$version : $fullPath;
+        $fullPath = $version ? $fullPath.'?'.$version : $fullPath;
 
         if ('remote' === $server) {
             $uri = $fullPath;
