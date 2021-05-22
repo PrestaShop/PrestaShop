@@ -66,8 +66,9 @@ class LogsConfiguration implements DataConfigurationInterface
             $checkEmails = explode(',',$configuration['logs_email_receivers']);
             $errors = [];
             foreach ($checkEmails as $email) {
-                if (!Validate::isEmail($email))
+                if (!Validate::isEmail($email)) {
                     $errors[] = $email;
+                }
             }
             if ($errors) {
                 return $errors;
