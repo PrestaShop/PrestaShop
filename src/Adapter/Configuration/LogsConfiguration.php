@@ -63,7 +63,7 @@ class LogsConfiguration implements DataConfigurationInterface
     public function updateConfiguration(array $configuration)
     {
         if ($this->validateConfiguration($configuration)) {
-            $checkEmails = explode(',',$configuration['logs_email_receivers']);
+            $checkEmails = explode(',', $configuration['logs_email_receivers']);
             $errors = [];
             foreach ($checkEmails as $email) {
                 if (!Validate::isEmail($email)) {
