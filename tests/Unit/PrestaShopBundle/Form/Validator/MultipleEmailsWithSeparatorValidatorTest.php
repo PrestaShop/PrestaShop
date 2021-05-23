@@ -28,29 +28,26 @@ declare(strict_types=1);
 
 namespace Tests\Unit\PrestaShopBundle\Form\Validator;
 
-use stdClass;
-use Symfony\Component\Validator\Test\ConstraintValidatorTestCase;
+use Exception;
+use InvalidArgumentException;
 use PrestaShopBundle\Form\Validator\Constraints\MultipleEmailsWithSeparator;
 use PrestaShopBundle\Form\Validator\Constraints\MultipleEmailsWithSeparatorValidator;
-use Symfony\Component\Validator\Exception\UnexpectedTypeException;
-use Symfony\Component\Validator\Exception\UnexpectedValueException;
-use InvalidArgumentException;
-use Exception;
+use stdClass;
+use Symfony\Component\Validator\Test\ConstraintValidatorTestCase;
 
-
-class MultipleEmailsWithSeparatorValidatorTest extends ConstraintValidatorTestCase{
-
+class MultipleEmailsWithSeparatorValidatorTest extends ConstraintValidatorTestCase
+{
     public const TEST_EMAILS_SEPARATOR = '|';
-    
+
     protected function createValidator()
     {
         return new MultipleEmailsWithSeparatorValidator();
     }
-    
+
     /**
      * @param string $separator
      * @param string|null $message
-     * 
+     *
      * @return MultipleEmailsWithSeparator
      */
     private function getConstraintInstance(string $separator = self::TEST_EMAILS_SEPARATOR, ?string $message = null): MultipleEmailsWithSeparator
@@ -60,10 +57,10 @@ class MultipleEmailsWithSeparatorValidatorTest extends ConstraintValidatorTestCa
             'message' => $message,
         ]);
     }
-    
+
     /**
      * @param mixed $multipleEmailsWithSeparator
-     * 
+     *
      * @dataProvider exceptionsInvalidMultipleEmailsWithSeparatorProvider
      */
     public function testExceptionsInvalidMultipleEmailsWithSeparator(Exception $expectedException, $multipleEmailsWithSeparator): void
@@ -71,38 +68,39 @@ class MultipleEmailsWithSeparatorValidatorTest extends ConstraintValidatorTestCa
         $expectedExceptionClassName = \get_class($expectedException);
         $this->expectException($expectedExceptionClassName);
         $this->validator->validate(
-            $multipleEmailsWithSeparator, 
+            $multipleEmailsWithSeparator,
             $this->getConstraintInstance()
         );
     }
-    
-    public function exceptionsInvalidMultipleEmailsWithSeparatorProvider(): array{
+
+    public function exceptionsInvalidMultipleEmailsWithSeparatorProvider(): array
+    {
         return [
             [new InvalidArgumentException(), new stdClass()],
             [new InvalidArgumentException(), null],
             [new InvalidArgumentException(), false],
             [new InvalidArgumentException(), true],
             [new InvalidArgumentException(), 6666],
-
         ];
     }
-    
+
     /**
      * @param string $multipleEmailsWithSeparator
      * @param string $separator
-     * 
+     *
      * @dataProvider validMultipleEmailsWithSeparatorProvider
      */
     public function testValidMultipleEmailsWithSeparator(string $multipleEmailsWithSeparator, string $separator): void
     {
         $constraint = $this->getConstraintInstance($separator);
-        
+
         $this->validator->validate($multipleEmailsWithSeparator, $constraint);
 
         $this->assertNoViolation();
     }
-    
-    public function validMultipleEmailsWithSeparatorProvider(): array {
+
+    public function validMultipleEmailsWithSeparatorProvider(): array
+    {
         return [
             ['a@test.com', '|'],
             ['a@test.com|b@test.com', '|'],
@@ -118,12 +116,12 @@ class MultipleEmailsWithSeparatorValidatorTest extends ConstraintValidatorTestCa
             ['a@test.com:b@test.com:c@test.com', ':'],
         ];
     }
-    
+
     /**
      * @param string $code error code
      * @param string|null $multipleEmailsWithSeparator
      * @param string $separator mais separator
-     * 
+     *
      * @dataProvider InvalidMultipleEmailsWithSeparatorProvider
      */
     public function testInvalidMultipleEmailsWithSeparator(string $code, ?string $multipleEmailsWithSeparator, string $separator): void
@@ -132,21 +130,21 @@ class MultipleEmailsWithSeparatorValidatorTest extends ConstraintValidatorTestCa
         $constraint = $this->getConstraintInstance($separator, $fakeTestMessage);
 
         $this->validator->validate($multipleEmailsWithSeparator, $constraint);
-        
+
         $this->buildViolation($fakeTestMessage)
-            ->setParameter('{{ value }}', '"'.$multipleEmailsWithSeparator.'"')
+            ->setParameter('{{ value }}', '"' . $multipleEmailsWithSeparator . '"')
             ->setCode($code)
             ->assertRaised()
         ;
-
     }
-    
-    public function InvalidMultipleEmailsWithSeparatorProvider(): array {
+
+    public function InvalidMultipleEmailsWithSeparatorProvider(): array
+    {
         return [
             [MultipleEmailsWithSeparator::INVALID_EMAILS_ERROR_CODE, 'a@,test', '|'],
             [MultipleEmailsWithSeparator::INVALID_EMAILS_ERROR_CODE, 'a@test.com|@^testcom', '|'],
             [MultipleEmailsWithSeparator::INVALID_EMAILS_ERROR_CODE, 'a@test.com|b@test.com|ctest.com', '|'],
-            [MultipleEmailsWithSeparator::INVALID_EMAILS_ERROR_CODE, 'a@@test.com', ';'], 
+            [MultipleEmailsWithSeparator::INVALID_EMAILS_ERROR_CODE, 'a@@test.com', ';'],
             [MultipleEmailsWithSeparator::INVALID_EMAILS_ERROR_CODE, 'a@test.com;@test.com', ';'],
             [MultipleEmailsWithSeparator::INVALID_EMAILS_ERROR_CODE, 'a@test.com;b@test.com;.@@test.com', ';'],
             [MultipleEmailsWithSeparator::INVALID_EMAILS_ERROR_CODE, 'atest.com', ','],
@@ -158,5 +156,4 @@ class MultipleEmailsWithSeparatorValidatorTest extends ConstraintValidatorTestCa
             [MultipleEmailsWithSeparator::INVALID_EMAILS_ERROR_CODE, 'a@testcom,b@ç test.com,c@test.com', ','],
         ];
     }
-    
 }

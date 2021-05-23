@@ -51,7 +51,7 @@ class ValidateTest extends TestCase
         yield [1, 'asc'];
         yield [1, 'desc'];
     }
-    
+
     /**
      * @dataProvider isEmailDataProvider
      */
@@ -59,7 +59,7 @@ class ValidateTest extends TestCase
     {
         $this->assertSame($expected, Validate::isEmail($email));
     }
-    
+
     /**
      * @dataProvider isStringDataProvider
      */
@@ -67,7 +67,7 @@ class ValidateTest extends TestCase
     {
         $this->assertSame($expected, Validate::isString($data));
     }
-    
+
     public function isStringDataProvider()
     {
         return [
@@ -86,7 +86,7 @@ class ValidateTest extends TestCase
             [false, 0],
         ];
     }
-    
+
     public function isEmailDataProvider()
     {
         return [

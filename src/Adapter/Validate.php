@@ -135,7 +135,7 @@ class Validate
     {
         return ValidateLegacy::isLinkRewrite($value);
     }
-    
+
     /**
      * Check for a given email validity.
      *
@@ -147,7 +147,7 @@ class Validate
     {
         return ValidateLegacy::isEmail($email);
     }
-    
+
     /**
      * Check if $data is a string.
      *

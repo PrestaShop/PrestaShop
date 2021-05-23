@@ -38,7 +38,6 @@ class MultipleEmailsWithSeparator extends Constraint
     public $separator;
     public $message;
 
-
     public function __construct($options = null)
     {
         if (null !== $options && !is_array($options)) {

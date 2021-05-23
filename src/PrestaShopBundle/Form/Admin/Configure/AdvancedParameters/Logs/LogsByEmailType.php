@@ -28,10 +28,10 @@ namespace PrestaShopBundle\Form\Admin\Configure\AdvancedParameters\Logs;
 
 use PrestaShopBundle\Form\Admin\Type\LogSeverityChoiceType;
 use PrestaShopBundle\Form\Admin\Type\TranslatorAwareType;
+use PrestaShopBundle\Form\Validator\Constraints\MultipleEmailsWithSeparator;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
-use PrestaShopBundle\Form\Validator\Constraints\MultipleEmailsWithSeparator;
 use Symfony\Component\Validator\Constraints\NotBlank;
 
 /**
@@ -69,18 +69,17 @@ final class LogsByEmailType extends TranslatorAwareType
                     'Admin.Advparameters.Help'
                 ),
                 'constraints' => [
-                        new NotBlank([
-                            'message' => $this->trans(
-                                'The %s field is required.',
-                                'Admin.Notifications.Error',
-                                [
-                                    sprintf('"%s"', $this->trans('Send emails to','Admin.Advparameters.Feature')),
-                                ]
-                            ),
-                        ]),
-                        new MultipleEmailsWithSeparator(','),
-                    ],
-
+                    new NotBlank([
+                        'message' => $this->trans(
+                            'The %s field is required.',
+                            'Admin.Notifications.Error',
+                            [
+                                sprintf('"%s"', $this->trans('Send emails to', 'Admin.Advparameters.Feature')),
+                            ]
+                        ),
+                    ]),
+                    new MultipleEmailsWithSeparator(','),
+                ],
             ]);
     }
 

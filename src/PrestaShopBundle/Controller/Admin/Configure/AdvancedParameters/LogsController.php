@@ -112,17 +112,16 @@ class LogsController extends FrameworkBundleAdminController
         $this->dispatchHook('actionAdminLogsControllerPostProcessBefore', ['controller' => $this]);
 
         if ($logsByEmailForm->isSubmitted()) {
-            
-            if(!$logsByEmailForm->isValid()) {
+            if (!$logsByEmailForm->isValid()) {
                 $validationErrors = $logsByEmailForm->getErrors(true);
-                
-                foreach($validationErrors as $error){
+
+                foreach ($validationErrors as $error) {
                     $this->addFlash('error', $error->getMessage());
                 }
-                
+
                 return $this->redirectToRoute('admin_logs_index');
             }
-            
+
             $data = $logsByEmailForm->getData();
 
             $saveErrors = $this->getFormHandler()->save($data);

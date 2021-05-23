@@ -28,12 +28,11 @@ declare(strict_types=1);
 
 namespace PrestaShopBundle\Form\Validator\Constraints;
 
+use PrestaShop\PrestaShop\Adapter\LegacyContext;
+use PrestaShop\PrestaShop\Adapter\Validate;
 use Symfony\Component\Validator\Constraint;
 use Symfony\Component\Validator\ConstraintValidator;
 use Symfony\Component\Validator\Exception\UnexpectedTypeException;
-use PrestaShop\PrestaShop\Adapter\LegacyContext;
-use PrestaShopBundle\Form\Validator\Constraints\MultipleEmailsWithSeparator;
-use PrestaShop\PrestaShop\Adapter\Validate;
 
 class MultipleEmailsWithSeparatorValidator extends ConstraintValidator
 {
@@ -42,37 +41,35 @@ class MultipleEmailsWithSeparatorValidator extends ConstraintValidator
         if (!$constraint instanceof MultipleEmailsWithSeparator) {
             throw new UnexpectedTypeException($constraint, MultipleEmailsWithSeparator::class);
         }
-        
+
         $translator = (new LegacyContext())->getContext()->getTranslator();
 
         if (!Validate::isString($value)) {
-            throw new \InvalidArgumentException('Value must be string. Input was: '.\gettype($value));
+            throw new \InvalidArgumentException('Value must be string. Input was: ' . \gettype($value));
         }
 
         $emailsList = array_map('trim', explode($constraint->separator, $value));
-        
+
         $invalidEmails = [];
 
-        foreach($emailsList as $email) {
-            if(!Validate::isEmail($email)){
+        foreach ($emailsList as $email) {
+            if (!Validate::isEmail($email)) {
                 $invalidEmails[] = $email;
             }
         }
 
-        if(!empty($invalidEmails)){
+        if (!empty($invalidEmails)) {
             $message = $constraint->message ?? $translator->trans(
-                'Invalid email(s) : %invalid_emails%.', 
-                ['%invalid_emails%' => implode(',', $invalidEmails)], 
+                'Invalid email(s) : %invalid_emails%.',
+                ['%invalid_emails%' => implode(',', $invalidEmails)],
                 'Admin.Global.Notification'
             );
-            
+
             $this->context->buildViolation($message)
                 ->setParameter('{{ value }}', $this->formatValue($value))
                 ->setCode(MultipleEmailsWithSeparator::INVALID_EMAILS_ERROR_CODE)
                 ->addViolation()
             ;
         }
-        
-        
     }
 }
