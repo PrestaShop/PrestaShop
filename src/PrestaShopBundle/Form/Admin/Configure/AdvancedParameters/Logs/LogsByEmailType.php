@@ -31,6 +31,8 @@ use PrestaShopBundle\Form\Admin\Type\TranslatorAwareType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
+use PrestaShopBundle\Form\Validator\Constraints\MultipleEmailsWithSeparator;
+use Symfony\Component\Validator\Constraints\NotBlank;
 
 /**
  * This form class generates the "Logs by email" form in Logs page.
@@ -66,6 +68,19 @@ final class LogsByEmailType extends TranslatorAwareType
                     'Log alerts will be sent to these emails. Please use a comma to separate them (e.g. pub@prestashop.com, anonymous@psgdpr.com).',
                     'Admin.Advparameters.Help'
                 ),
+                'constraints' => [
+                        new NotBlank([
+                            'message' => $this->trans(
+                                'The %s field is required.',
+                                'Admin.Notifications.Error',
+                                [
+                                    sprintf('"%s"', $this->trans('Send emails to','Admin.Advparameters.Feature')),
+                                ]
+                            ),
+                        ]),
+                        new MultipleEmailsWithSeparator(','),
+                    ],
+
             ]);
     }
 
