@@ -119,7 +119,7 @@ class Validate
      *
      * @return bool
      */
-    public function isUnsignedInt($value)
+    public static function isUnsignedInt($value)
     {
         return ValidateLegacy::isUnsignedInt($value);
     }
