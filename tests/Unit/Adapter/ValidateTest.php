@@ -51,4 +51,60 @@ class ValidateTest extends TestCase
         yield [1, 'asc'];
         yield [1, 'desc'];
     }
+    
+    /**
+     * @dataProvider isEmailDataProvider
+     */
+    public function testIsEmail($expected, $email)
+    {
+        $this->assertSame($expected, Validate::isEmail($email));
+    }
+    
+    /**
+     * @dataProvider isStringDataProvider
+     */
+    public function testIsString($expected, $data)
+    {
+        $this->assertSame($expected, Validate::isString($data));
+    }
+    
+    public function isStringDataProvider()
+    {
+        return [
+            [true, 'jdkiizdù%'],
+            [true, ' '],
+            [true, '666xlkQM'],
+            [true, '666'],
+            [true, 'true'],
+            [true, 'false'],
+            [true, 'null'],
+            [false, true],
+            [false, false],
+            [false, null],
+            [false, 666],
+            [false, -5864],
+            [false, 0],
+        ];
+    }
+    
+    public function isEmailDataProvider()
+    {
+        return [
+            [true, 'john.doe@prestashop.com'],
+            [true, 'john.doe+alias@prestshop.com'],
+            [true, 'john.doe+alias@pr.e.sta.shop.com'],
+            [true, 'j@p.com'],
+            [true, 'john#doe@prestashop.com'],
+            [false, ''],
+            [false, 'john.doe@prestashop,com'],
+            [true, 'john.doe@prestashop'],
+            [true, 'john.doe@сайт.рф'],
+            [true, 'john.doe@xn--80aswg.xn--p1ai'],
+            [false, 'иван@prestashop.com'], // rfc6531 valid but not swift mailer compatible
+            [true, 'xn--80adrw@prestashop.com'],
+            [true, 'xn--80adrw@xn--80aswg.xn--p1ai'],
+            [false, 123456789],
+            [false, false],
+        ];
+    }
 }
