@@ -27,13 +27,24 @@
 namespace PrestaShopBundle\Form\Validator\Constraints;
 
 use PrestaShop\PrestaShop\Adapter\LegacyContext;
+use PrestaShop\PrestaShop\Adapter\Validate;
 use Symfony\Component\Validator\Constraint;
 use Symfony\Component\Validator\ConstraintValidator;
+use Symfony\Component\Validator\Exception\UnexpectedTypeException;
+use Symfony\Component\Validator\Exception\UnexpectedValueException;
 
 class TinyMceMaxLengthValidator extends ConstraintValidator
 {
     public function validate($value, Constraint $constraint)
     {
+        if (!$constraint instanceof TinyMceMaxLength) {
+            throw new UnexpectedTypeException($constraint, TinyMceMaxLength::class);
+        }
+
+        if (!Validate::isUnsignedInt($value)) {
+            throw new UnexpectedValueException($value, 'int');
+        }
+
         $replaceArray = [
             "\n",
             "\r",
@@ -41,11 +52,20 @@ class TinyMceMaxLengthValidator extends ConstraintValidator
         ];
         $str = str_replace($replaceArray, [''], strip_tags($value));
 
-        if ($constraint instanceof TinyMceMaxLength && iconv_strlen($str) > $constraint->max) {
-            $this->context->addViolation(
-                (new LegacyContext())->getContext()->getTranslator()->trans('This value is too long. It should have %limit% characters or less.', [], 'Admin.Catalog.Notification'),
-                ['%limit%' => $constraint->max]
+        if (iconv_strlen($str) > $constraint->max) {
+            $translator = (new LegacyContext())->getContext()->getTranslator();
+
+            $message = $constraint->message ?? $translator->trans(
+                'This value is too long. It should have %limit% characters or less.',
+                ['%limit%' => $constraint->max],
+                'Admin.Catalog.Notification'
             );
+
+            $this->context->buildViolation($message)
+                ->setParameter('{{ value }}', $this->formatValue($value))
+                ->setCode(TinyMceMaxLength::TOO_LONG_ERROR_CODE)
+                ->addViolation()
+            ;
         }
     }
 }
