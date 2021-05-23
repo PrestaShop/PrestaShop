@@ -41,8 +41,8 @@ class TinyMceMaxLengthValidator extends ConstraintValidator
             throw new UnexpectedTypeException($constraint, TinyMceMaxLength::class);
         }
 
-        if (!Validate::isUnsignedInt($value)) {
-            throw new UnexpectedValueException($value, 'int');
+        if (!Validate::isUnsignedInt($constraint->max)) {
+            throw new \InvalidArgumentException('Max must be int. Input was: ' . \gettype($constraint->max));
         }
 
         $replaceArray = [
