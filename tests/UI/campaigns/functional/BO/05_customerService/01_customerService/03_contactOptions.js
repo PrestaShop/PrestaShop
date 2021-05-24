@@ -20,7 +20,7 @@ const ContactUsFakerData = require('@data/faker/contactUs');
 // Import test context
 const testContext = require('@utils/testContext');
 
-const baseContext = 'functional_BO_customerService_customerService_contactOption';
+const baseContext = 'functional_BO_customerService_customerService_contactOptions';
 
 let browserContext;
 let page;
@@ -29,6 +29,7 @@ const contactUsData = new ContactUsFakerData({subject: 'Customer service', refer
 /*
 Disable Allow file uploading
 Enable Allow file uploading
+Update customer default service message
  */
 describe('Contact options', async () => {
   // before and after functions
@@ -160,7 +161,7 @@ describe('Contact options', async () => {
     });
 
     it('should go back to default message', async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'updateDefaultMessage', baseContext);
+      await testContext.addContextItem(this, 'testIdentifier', 'goBackToDefaultMessage', baseContext);
 
       const result = await customerServicePage.setDefaultMessage(page, 'Dear Customer\n\n Regards,\nCustomer service');
       await expect(result).to.contains(customerServicePage.successfulUpdateMessage);
