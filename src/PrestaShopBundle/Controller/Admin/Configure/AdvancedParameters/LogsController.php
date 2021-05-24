@@ -122,7 +122,7 @@ class LogsController extends FrameworkBundleAdminController
                 return $this->redirectToRoute('admin_logs_index');
             }
 
-            $this->addFlash('error', $this->trans('Invalid email address.', 'Admin.Notifications.Error') . ' ( ' . implode(',', $saveErrors) . ' ) ');
+            $this->flashErrors($saveErrors);
         }
 
         return $this->redirectToRoute('admin_logs_index');

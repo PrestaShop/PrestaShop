@@ -29,6 +29,7 @@ namespace PrestaShop\PrestaShop\Adapter\Configuration;
 use PrestaShop\PrestaShop\Core\Configuration\DataConfigurationInterface;
 use PrestaShop\PrestaShop\Core\ConfigurationInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
+use Symfony\Component\Translation\TranslatorInterface;
 use Validate;
 
 /**
@@ -41,9 +42,15 @@ class LogsConfiguration implements DataConfigurationInterface
      */
     private $configuration;
 
-    public function __construct(ConfigurationInterface $configuration)
+    /**
+     * @var TranslatorInterface
+     */
+    private $translator;
+
+    public function __construct(ConfigurationInterface $configuration, TranslatorInterface $translator)
     {
         $this->configuration = $configuration;
+        $this->translator = $translator;
     }
 
     /**
@@ -67,7 +74,7 @@ class LogsConfiguration implements DataConfigurationInterface
             $errors = [];
             foreach ($checkEmails as $email) {
                 if (!Validate::isEmail($email)) {
-                    $errors[] = $email;
+                    $errors[] = $this->translator->trans('Invalid email address.', [], 'Admin.Notifications.Error') . ' ( ' . $email . ' ) ';
                 }
             }
             if ($errors) {
