@@ -29,7 +29,7 @@ const contactUsData = new ContactUsFakerData({subject: 'Customer service', refer
 /*
 Disable Allow file uploading
 Enable Allow file uploading
-Update customer default service message
+Update default message
  */
 describe('Contact options', async () => {
   // before and after functions
