@@ -34,6 +34,9 @@ use Symfony\Component\Validator\Exception\UnexpectedTypeException;
 
 class TinyMceMaxLengthValidator extends ConstraintValidator
 {
+    /**
+     * @var Validate
+     */
     private $validateAdapter;
 
     public function __construct(Validate $validate)
