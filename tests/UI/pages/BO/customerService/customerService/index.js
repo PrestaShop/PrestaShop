@@ -257,7 +257,7 @@ class CustomerService extends BOBasePage {
    * @returns {Promise<string>}
    */
   async setDefaultMessage(page, message) {
-    await this.setValue(page, this.defaultMessageTextarea, message);
+    await page.fill(this.defaultMessageTextarea, message);
     await this.clickAndWaitForNavigation(page, this.contactOptionSaveButton);
 
     return this.getAlertSuccessBlockContent(page);
