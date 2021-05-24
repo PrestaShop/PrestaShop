@@ -30,6 +30,7 @@ namespace Tests\Unit\PrestaShopBundle\Form\Validator;
 
 use Exception;
 use InvalidArgumentException;
+use PrestaShop\PrestaShop\Adapter\Validate;
 use PrestaShopBundle\Form\Validator\Constraints\TinyMceMaxLength;
 use PrestaShopBundle\Form\Validator\Constraints\TinyMceMaxLengthValidator;
 use stdClass;
@@ -40,7 +41,7 @@ class TinyMceMaxLengthValidatorTest extends ConstraintValidatorTestCase
 {
     protected function createValidator()
     {
-        return new TinyMceMaxLengthValidator();
+        return new TinyMceMaxLengthValidator(new Validate());
     }
 
     /**
