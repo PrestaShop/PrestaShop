@@ -26,7 +26,7 @@
 import _ from 'lodash';
 import EventEmitter from '@components/event-emitter';
 
-const {$} = window;
+const { $ } = window;
 
 /**
  * This is able to watch an HTML form and parse it as a Javascript object based on a configurable
@@ -104,7 +104,7 @@ export default class FormObjectMapper {
     $form: JQuery<HTMLElement>,
     modelMapping: Record<string, any>,
     eventEmitter: typeof EventEmitter,
-    config: Record<string, any>,
+    config: Record<string, any>
   ) {
     this.$form = $form;
     this.fullModelMapping = modelMapping;
@@ -137,14 +137,16 @@ export default class FormObjectMapper {
 
     // This event is emitted each time an object field is updated
     // (from both input change and external event)
-    this.modelFieldUpdatedEventName = inputConfig.modelFieldUpdated || 'modelFieldUpdated';
+    this.modelFieldUpdatedEventName =
+      inputConfig.modelFieldUpdated || 'modelFieldUpdated';
 
     // Contains callbacks identified by model keys
     this.watchedProperties = {};
 
     // This event is emitted each time an object
     // field is updated (from both input change and external event)
-    this.modelFieldUpdatedEventName = inputConfig.modelFieldUpdated || 'modelFieldUpdated';
+    this.modelFieldUpdatedEventName =
+      inputConfig.modelFieldUpdated || 'modelFieldUpdated';
 
     this.initFormMapping();
     this.updateFullObject();
@@ -204,8 +206,8 @@ export default class FormObjectMapper {
    */
   set(modelKey: string, value: string | number | string[] | undefined): void {
     if (
-      !Object.prototype.hasOwnProperty.call(this.modelMapping, modelKey)
-      || value === this.getValue(modelKey)
+      !Object.prototype.hasOwnProperty.call(this.modelMapping, modelKey) ||
+      value === this.getValue(modelKey)
     ) {
       return;
     }
@@ -264,9 +266,10 @@ export default class FormObjectMapper {
       ':input',
       _.debounce((event: JQueryEventObject) => this.inputUpdated(event), 350, {
         maxWait: 1500,
-      }),
+      })
     );
-    this.eventEmitter.on(this.updateModelEventName, () => this.updateFullObject(),
+    this.eventEmitter.on(this.updateModelEventName, () =>
+      this.updateFullObject()
     );
   }
 
@@ -308,7 +311,7 @@ export default class FormObjectMapper {
   private updateInputValue(
     modelKey: string,
     value: string | number | string[] | undefined,
-    sourceInputName?: string,
+    sourceInputName?: string
   ): void {
     const modelInputs = this.fullModelMapping[modelKey];
 
@@ -336,7 +339,7 @@ export default class FormObjectMapper {
    */
   private updateInputByName(
     inputName: string,
-    value: string | number | string[] | undefined,
+    value: string | number | string[] | undefined
   ): void {
     const $input = $(`[name="${inputName}"]`, this.$form);
 
@@ -394,7 +397,7 @@ export default class FormObjectMapper {
    */
   private updateObjectByKey(
     modelKey: string,
-    value: string | number | string[] | undefined,
+    value: string | number | string[] | undefined
   ): void {
     const modelKeys = modelKey.split('.');
     const previousValue = $.serializeJSON.deepGet(this.model, modelKeys);
@@ -424,9 +427,11 @@ export default class FormObjectMapper {
       Object.prototype.hasOwnProperty.call(this.watchedProperties, modelKey)
     ) {
       const propertyWatchers = this.watchedProperties[modelKey];
-      propertyWatchers.forEach((callback) => {
-        callback(updateEvent);
-      });
+      propertyWatchers.forEach(
+        (callback: (param: typeof updateEvent) => void) => {
+          callback(updateEvent);
+        }
+      );
     }
   }
 
@@ -459,7 +464,7 @@ export default class FormObjectMapper {
   private addFormMapping(formName: string, modelMapping: string): void {
     if (Object.prototype.hasOwnProperty.call(this.formMapping, formName)) {
       console.error(
-        `The form element ${formName} is already mapped to ${this.formMapping[formName]}`,
+        `The form element ${formName} is already mapped to ${this.formMapping[formName]}`
       );
 
       return;
