@@ -319,7 +319,7 @@ class ToolsCore
             $host = htmlspecialchars($host, ENT_COMPAT, 'UTF-8');
         }
         if ($http) {
-            $host = self::getProtocol((bool) Configuration::get('PS_SSL_ENABLED')) . $host;
+            $host = static::getProtocol((bool) Configuration::get('PS_SSL_ENABLED')) . $host;
         }
 
         return $host;
