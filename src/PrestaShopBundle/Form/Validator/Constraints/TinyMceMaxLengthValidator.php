@@ -36,9 +36,9 @@ class TinyMceMaxLengthValidator extends ConstraintValidator
 {
     private $validateAdapter;
 
-    public function __construct()
+    public function __construct(Validate $validate)
     {
-        $this->validateAdapter = new Validate();
+        $this->validateAdapter = $validate;
     }
 
     public function validate($value, Constraint $constraint)
