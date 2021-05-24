@@ -28,8 +28,17 @@
  * typeahead weirdly uses two different configs). It also provides some default rendering
  * functions which are, of course, overridable.
  */
+
 export default class AutoCompleteSearch {
-  constructor($searchInput, config) {
+  $searchInput: JQuery;
+
+  searchInputId: string;
+
+  config: TypeaheadConfig;
+
+  dataSetConfig: TypeaheadDatasetConfig;
+
+  constructor($searchInput: JQuery, config: Record<string, unknown>) {
     this.$searchInput = $searchInput;
     this.searchInputId = this.$searchInput.prop('id');
 
@@ -49,13 +58,12 @@ export default class AutoCompleteSearch {
       value: 'id', // Which field of the object from the list is used for value (can be a string or a callback)
       limit: 20, // Limit the number of displayed suggestion
       dataLimit: 0, // How many elements can be selected max
-      /* eslint-disable-next-line no-unused-vars */
-      onSelect(selectedItem, event) {
+      /* eslint-disable-next-line @typescript-eslint/no-unused-vars */
+      onSelect(selectedItem: unknown, event: Event, searchInput: JQuery) {
         return true;
       },
-      /* eslint-disable-next-line no-unused-vars */
-      onClose(event) {
-      },
+      /* eslint-disable-next-line */
+      onClose(event: Event, searchInput: JQuery) {},
       ...inputConfig,
     };
 
@@ -64,27 +72,35 @@ export default class AutoCompleteSearch {
     const defaultTemplates = {
       // Be careful that your rendering function must return HTML node not pure text so always include the
       // content in a div at least
-      suggestion: (item) => {
-        let displaySuggestion = item;
+      suggestion: (item: Record<string, string>) => {
+        let displaySuggestion: Record<string, string> | string = item;
 
         if (typeof this.dataSetConfig.display === 'function') {
-          this.dataSetConfig.display(item);
-        } else if (Object.prototype.hasOwnProperty.call(item, this.dataSetConfig.display)) {
+          this.dataSetConfig.display((item as unknown) as string);
+        } else if (
+          Object.prototype.hasOwnProperty.call(
+            item,
+            <string>this.dataSetConfig.display
+          )
+        ) {
           displaySuggestion = item[this.dataSetConfig.display];
         }
 
         return `<div class="px-2">${displaySuggestion}</div>`;
       },
-      pending(query) {
+      pending(query: Record<string, string>) {
         return `<div class="px-2">Searching for "${query.query}"</div>`;
       },
-      notFound(query) {
+      notFound(query: Record<string, string>) {
         return `<div class="px-2">No results found for "${query.query}"</div>`;
       },
     };
 
     if (Object.prototype.hasOwnProperty.call(inputConfig, 'templates')) {
-      this.dataSetConfig.templates = {...defaultTemplates, ...inputConfig.templates};
+      this.dataSetConfig.templates = {
+        ...defaultTemplates,
+        ...(<Record<string, unknown>>inputConfig.templates),
+      };
     } else {
       this.dataSetConfig.templates = defaultTemplates;
     }
@@ -95,11 +111,14 @@ export default class AutoCompleteSearch {
   /**
    * Build the typeahead component based on provided configuration.
    */
-  buildTypeahead() {
-    this.$searchInput.typeahead(this.config, this.dataSetConfig)
-      .bind('typeahead:select', (e, selectedItem) => this.config.onSelect(selectedItem, e, this.$searchInput))
-      .bind('typeahead:close', (e) => {
-        this.config.onClose(e, this.$searchInput);
+  buildTypeahead(): void {
+    this.$searchInput
+      .typeahead(this.config, this.dataSetConfig)
+      .bind('typeahead:select', (e: any, selectedItem: unknown) =>
+        this.dataSetConfig.onSelect(selectedItem, e, this.$searchInput)
+      )
+      .bind('typeahead:close', (e: any) => {
+        this.dataSetConfig.onClose(e, this.$searchInput);
       });
   }
 }

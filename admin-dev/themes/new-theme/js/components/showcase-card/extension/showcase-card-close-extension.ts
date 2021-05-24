@@ -22,38 +22,35 @@
  * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
+import {ShowcaseCard} from '@PSTypes/showcase';
 
 const {$} = window;
 
 /**
- * Class ShowcaseCard is responsible for handling events related with showcase card.
+ * Class ShowcaseCardCloseExtension is responsible for providing helper block closing behavior
  */
-export default class ShowcaseCard {
+export default class ShowcaseCardCloseExtension {
   /**
-   * Showcase card id.
+   * Extend helper block.
    *
-   * @param {string} id
+   * @param {ShowcaseCard} helperBlock
    */
-  constructor(id) {
-    this.id = id;
-    this.$container = $(`#${this.id}`);
-  }
+  extend(helperBlock: ShowcaseCard): void {
+    const container = helperBlock.getContainer();
+    container.on('click', '.js-remove-helper-block', (evt) => {
+      container.remove();
 
-  /**
-   * Get showcase card container.
-   *
-   * @returns {jQuery}
-   */
-  getContainer() {
-    return this.$container;
-  }
+      const $btn = $(evt.target);
+      const url = $btn.data('closeUrl');
+      const cardName = $btn.data('cardName');
 
-  /**
-   * Extend showcase card with external extensions.
-   *
-   * @param {object} extension
-   */
-  addExtension(extension) {
-    extension.extend(this);
+      if (url) {
+        // notify the card was closed
+        $.post(url, {
+          close: 1,
+          name: cardName,
+        });
+      }
+    });
   }
 }
