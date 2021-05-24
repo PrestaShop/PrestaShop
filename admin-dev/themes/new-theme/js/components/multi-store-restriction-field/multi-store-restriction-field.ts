@@ -35,13 +35,13 @@ export default class MultiStoreRestrictionField {
     $(document).on(
       'change',
       multiStoreRestrictionFieldMap.multiStoreRestrictionCheckbox,
-      (e) => this.multiStoreRestrictionCheckboxFieldChangeEvent(e),
+      (e: JQueryEventObject) => this.multiStoreRestrictionCheckboxFieldChangeEvent(e),
     );
 
     $(document).on(
       'change',
       multiStoreRestrictionFieldMap.multiStoreRestrictionSwitch,
-      (e) => this.multiStoreRestrictionSwitchFieldChangeEvent(e),
+      (e: JQueryEventObject) => this.multiStoreRestrictionSwitchFieldChangeEvent(e),
     );
   }
 
@@ -51,10 +51,15 @@ export default class MultiStoreRestrictionField {
    * @param {Event} e
    * @private
    */
-  multiStoreRestrictionCheckboxFieldChangeEvent(e) {
-    const $currentItem = $(e.currentTarget);
+  private multiStoreRestrictionCheckboxFieldChangeEvent(
+    e: JQueryEventObject,
+  ): void {
+    const $currentItem = <JQuery<HTMLElement>>$(e.currentTarget);
 
-    this.toggleSourceFieldByTargetElement($currentItem, !$currentItem.is(':checked'));
+    this.toggleSourceFieldByTargetElement(
+      $currentItem,
+      !$currentItem.is(':checked'),
+    );
   }
 
   /**
@@ -64,9 +69,11 @@ export default class MultiStoreRestrictionField {
    * @param {Event} e
    * @private
    */
-  multiStoreRestrictionSwitchFieldChangeEvent(e) {
+  private multiStoreRestrictionSwitchFieldChangeEvent(
+    e: JQueryEventObject,
+  ): void {
     const $currentItem = $(e.currentTarget);
-    const isSelected = parseInt($currentItem.val(), 10) === 1;
+    const isSelected = parseInt(<string>$currentItem.val(), 10) === 1;
     const targetFormName = $currentItem.data('targetFormName');
 
     $(`form[name="${targetFormName}"]`)
@@ -87,9 +94,14 @@ export default class MultiStoreRestrictionField {
    * @param {boolean} isDisabled
    * @private
    */
-  toggleSourceFieldByTargetElement($targetElement, isDisabled) {
+  private toggleSourceFieldByTargetElement(
+    $targetElement: JQuery,
+    isDisabled: boolean,
+  ): void {
     const targetValue = $targetElement.data('shopRestrictionTarget');
-    const $sourceFieldSelector = $(`[data-shop-restriction-source="${targetValue}"]`);
+    const $sourceFieldSelector = $(
+      `[data-shop-restriction-source="${targetValue}"]`,
+    );
     $sourceFieldSelector.prop('disabled', isDisabled);
     $sourceFieldSelector.toggleClass('disabled', isDisabled);
   }

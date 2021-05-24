@@ -30,16 +30,18 @@ const {$} = window;
  * Makes an addons connect request to the server, displays error messages if it fails.
  */
 export default class AddonsConnector {
+  addonsConnectFormSelector: string;
+
+  $loadingSpinner: JQuery;
+
   constructor(
-    addonsConnectFormSelector,
-    loadingSpinnerSelector,
+    addonsConnectFormSelector: string,
+    loadingSpinnerSelector: string,
   ) {
     this.addonsConnectFormSelector = addonsConnectFormSelector;
     this.$loadingSpinner = $(loadingSpinnerSelector);
 
     this.initEvents();
-
-    return {};
   }
 
   /**
@@ -47,18 +49,14 @@ export default class AddonsConnector {
    *
    * @private
    */
-  initEvents() {
-    $('body').on(
-      'submit',
-      this.addonsConnectFormSelector,
-      (event) => {
-        const $form = $(event.currentTarget);
-        event.preventDefault();
-        event.stopPropagation();
+  private initEvents(): void {
+    $('body').on('submit', this.addonsConnectFormSelector, (event) => {
+      const $form = $(event.currentTarget);
+      event.preventDefault();
+      event.stopPropagation();
 
-        this.connect($form.attr('action'), $form.serialize());
-      },
-    );
+      this.connect(<string>$form.attr('action'), $form.serialize());
+    });
   }
 
   /**
@@ -69,7 +67,7 @@ export default class AddonsConnector {
    *
    * @private
    */
-  connect(addonsConnectUrl, formData) {
+  private connect(addonsConnectUrl: string, formData: string): void {
     $.ajax({
       method: 'POST',
       url: addonsConnectUrl,
@@ -79,24 +77,30 @@ export default class AddonsConnector {
         this.$loadingSpinner.show();
         $('button.btn[type="submit"]', this.addonsConnectFormSelector).hide();
       },
-    }).then((response) => {
-      if (response.success === 1) {
-        window.location.reload();
-      } else {
+    }).then(
+      (response) => {
+        if (response.success === 1) {
+          window.location.reload();
+        } else {
+          $.growl.error({
+            message: response.message,
+          });
+
+          this.$loadingSpinner.hide();
+          $(
+            'button.btn[type="submit"]',
+            this.addonsConnectFormSelector,
+          ).fadeIn();
+        }
+      },
+      () => {
         $.growl.error({
-          message: response.message,
+          message: $(this.addonsConnectFormSelector).data('error-message'),
         });
 
         this.$loadingSpinner.hide();
-        $('button.btn[type="submit"]', this.addonsConnectFormSelector).fadeIn();
-      }
-    }, () => {
-      $.growl.error({
-        message: $(this.addonsConnectFormSelector).data('error-message'),
-      });
-
-      this.$loadingSpinner.hide();
-      $('button.btn[type="submit"]', this.addonsConnectFormSelector).show();
-    });
+        $('button.btn[type="submit"]', this.addonsConnectFormSelector).show();
+      },
+    );
   }
 }
