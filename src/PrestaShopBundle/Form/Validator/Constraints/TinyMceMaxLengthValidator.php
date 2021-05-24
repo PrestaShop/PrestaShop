@@ -34,13 +34,20 @@ use Symfony\Component\Validator\Exception\UnexpectedTypeException;
 
 class TinyMceMaxLengthValidator extends ConstraintValidator
 {
+    private $validateAdapter;
+
+    public function __construct()
+    {
+        $this->validateAdapter = new Validate();
+    }
+
     public function validate($value, Constraint $constraint)
     {
         if (!$constraint instanceof TinyMceMaxLength) {
             throw new UnexpectedTypeException($constraint, TinyMceMaxLength::class);
         }
 
-        if (!Validate::isUnsignedInt($constraint->max)) {
+        if (!$this->validateAdapter->isUnsignedInt($constraint->max)) {
             throw new \InvalidArgumentException('Max must be int. Input was: ' . \gettype($constraint->max));
         }
 
