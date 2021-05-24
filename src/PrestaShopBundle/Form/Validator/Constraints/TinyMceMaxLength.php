@@ -54,6 +54,6 @@ class TinyMceMaxLength extends Constraint
 
     public function validatedBy()
     {
-        return 'tinymce_max_length_validator';
+        return get_class($this) . 'Validator';
     }
 }
