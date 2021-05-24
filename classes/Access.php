@@ -331,14 +331,14 @@ class AccessCore extends ObjectModel
      * @param int $idProfile Profile ID
      * @param int $idTab Tab ID
      * @param string $lgcAuth Legacy authorization
-     * @param int $enabled Whether access should be granted
-     * @param int $addFromParent Child from parents
+     * @param bool $enabled Whether access should be granted
+     * @param bool $addFromParent Child from parents
      *
      * @return string Whether legacy access has been successfully updated ("ok", "error")
      *
      * @throws Exception
      */
-    public function updateLgcAccess($idProfile, $idTab, $lgcAuth, $enabled, $addFromParent = 0)
+    public function updateLgcAccess($idProfile, $idTab, $lgcAuth, $enabled, $addFromParent = true)
     {
         $idProfile = (int) $idProfile;
         $idTab = (int) $idTab;
@@ -356,7 +356,7 @@ class AccessCore extends ObjectModel
             $whereClauses[] = ' `slug` LIKE "' . $slugLike . '"';
         }
 
-        if ($addFromParent == 1) {
+        if ($addFromParent) {
             foreach (self::findSlugByIdParentTab($idTab) as $child) {
                 $child = self::sluggifyTab($child);
                 foreach ((array) self::getAuthorizationFromLegacy($lgcAuth) as $auth) {
@@ -394,7 +394,7 @@ class AccessCore extends ObjectModel
      * @param int $idProfile Profile ID
      * @param int $idModule Module ID
      * @param string $lgcAuth Legacy authorization
-     * @param int $enabled Whether module access should be granted
+     * @param bool $enabled Whether module access should be granted
      *
      * @return string Whether module access has been succesfully changed ("ok", "error")
      */
