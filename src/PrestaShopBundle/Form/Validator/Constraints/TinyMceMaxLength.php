@@ -51,4 +51,9 @@ class TinyMceMaxLength extends Constraint
             throw new MissingOptionsException(sprintf('Option "max" must be given for constraint %s', __CLASS__), ['max']);
         }
     }
+
+    public function validatedBy()
+    {
+        return 'tinymce_max_lengt_validator';
+    }
 }
