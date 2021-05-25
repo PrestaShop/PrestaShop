@@ -1,0 +1,11 @@
+services:
+    _defaults:
+        public: true
+
+    validator.unique.multiple_emails_with_separator_validator:
+        class: PrestaShopBundle\Form\Validator\Constraints\MultipleEmailsWithSeparatorValidator
+        arguments:
+            - "@prestashop.adapter.validate"
+            - "@translator"
+        tags:
+            - { name: validator.constraint_validator, alias: multiple_emails_with_separator_validator }

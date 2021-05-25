@@ -34,6 +34,22 @@ use PrestaShop\PrestaShop\Adapter\Validate;
 class ValidateTest extends TestCase
 {
     /**
+     * @var Validate
+     */
+    private $validate;
+
+    /**
+     * @param string $name
+     * @param string $dataName
+     */
+    public function __construct($name = null, array $data = [], $dataName = '')
+    {
+        parent::__construct($name, $data, $dataName);
+
+        $this->validate = new Validate();
+    }
+
+    /**
      * @dataProvider getIsOrderWay
      */
     public function testIsOrderWay(int $expected, $input): void
@@ -55,9 +71,9 @@ class ValidateTest extends TestCase
     /**
      * @dataProvider isEmailDataProvider
      */
-    public function testIsEmail(bool $expected, $email): void
+    public function testIsEmail(bool $expected, string $email): void
     {
-        $this->assertSame($expected, Validate::isEmail($email));
+        $this->assertSame($expected, $this->validate->isEmail($email));
     }
 
     /**
@@ -65,7 +81,7 @@ class ValidateTest extends TestCase
      */
     public function testIsString(bool $expected, $data): void
     {
-        $this->assertSame($expected, Validate::isString($data));
+        $this->assertSame($expected, $this->validate->isString($data));
     }
 
     public function isStringDataProvider(): array
@@ -78,12 +94,6 @@ class ValidateTest extends TestCase
             [true, 'true'],
             [true, 'false'],
             [true, 'null'],
-            [false, true],
-            [false, false],
-            [false, null],
-            [false, 666],
-            [false, -5864],
-            [false, 0],
         ];
     }
 
@@ -103,8 +113,6 @@ class ValidateTest extends TestCase
             [false, 'иван@prestashop.com'], // rfc6531 valid but not swift mailer compatible
             [true, 'xn--80adrw@prestashop.com'],
             [true, 'xn--80adrw@xn--80aswg.xn--p1ai'],
-            [false, 123456789],
-            [false, false],
         ];
     }
 }

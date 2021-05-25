@@ -28,24 +28,39 @@ declare(strict_types=1);
 
 namespace PrestaShopBundle\Form\Validator\Constraints;
 
-use PrestaShop\PrestaShop\Adapter\LegacyContext;
+use InvalidArgumentException;
 use PrestaShop\PrestaShop\Adapter\Validate;
+use Symfony\Component\Translation\TranslatorInterface;
 use Symfony\Component\Validator\Constraint;
 use Symfony\Component\Validator\ConstraintValidator;
 use Symfony\Component\Validator\Exception\UnexpectedTypeException;
 
 class MultipleEmailsWithSeparatorValidator extends ConstraintValidator
 {
+    /**
+     * @var Validate
+     */
+    private $validateAdapter;
+
+    /**
+     * @var TranslatorInterface
+     */
+    protected $translator;
+
+    public function __construct(Validate $validate, TranslatorInterface $translator)
+    {
+        $this->validateAdapter = $validate;
+        $this->translator = $translator;
+    }
+
     public function validate($value, Constraint $constraint)
     {
         if (!$constraint instanceof MultipleEmailsWithSeparator) {
             throw new UnexpectedTypeException($constraint, MultipleEmailsWithSeparator::class);
         }
 
-        $translator = (new LegacyContext())->getContext()->getTranslator();
-
-        if (!Validate::isString($value)) {
-            throw new \InvalidArgumentException('Value must be string. Input was: ' . \gettype($value));
+        if (!$this->validateAdapter->isString($value)) {
+            throw new InvalidArgumentException('Value must be string. Input was: ' . gettype($value));
         }
 
         $emailsList = array_map('trim', explode($constraint->separator, $value));
@@ -53,14 +68,16 @@ class MultipleEmailsWithSeparatorValidator extends ConstraintValidator
         $invalidEmails = [];
 
         foreach ($emailsList as $email) {
-            if (!Validate::isEmail($email)) {
+            if (!$this->validateAdapter->isEmail($email)) {
                 $invalidEmails[] = $email;
             }
         }
 
         if (!empty($invalidEmails)) {
-            $message = $constraint->message ?? $translator->trans(
-                'Invalid email(s) : %invalid_emails%.',
+            $nbInvalidEmails = count($invalidEmails);
+            $message = $constraint->message ?? $this->translator->transChoice(
+                'Invalid email : %invalid_emails%.|Invalid emails : %invalid_emails%.',
+                $nbInvalidEmails,
                 ['%invalid_emails%' => implode(',', $invalidEmails)],
                 'Admin.Notifications.Error'
             );

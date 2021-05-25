@@ -53,4 +53,9 @@ class MultipleEmailsWithSeparator extends Constraint
             throw new MissingOptionsException(sprintf('Option "separator" must be given for constraint %s', __CLASS__), ['separator']);
         }
     }
+
+    public function validatedBy(): string
+    {
+        return get_class($this) . 'Validator';
+    }
 }

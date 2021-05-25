@@ -30,10 +30,13 @@ namespace Tests\Unit\PrestaShopBundle\Form\Validator;
 
 use Exception;
 use InvalidArgumentException;
+use PrestaShop\PrestaShop\Adapter\Validate;
 use PrestaShopBundle\Form\Validator\Constraints\MultipleEmailsWithSeparator;
 use PrestaShopBundle\Form\Validator\Constraints\MultipleEmailsWithSeparatorValidator;
 use stdClass;
+use Symfony\Component\Translation\TranslatorInterface;
 use Symfony\Component\Validator\Test\ConstraintValidatorTestCase;
+use TypeError;
 
 class MultipleEmailsWithSeparatorValidatorTest extends ConstraintValidatorTestCase
 {
@@ -41,7 +44,9 @@ class MultipleEmailsWithSeparatorValidatorTest extends ConstraintValidatorTestCa
 
     protected function createValidator(): MultipleEmailsWithSeparatorValidator
     {
-        return new MultipleEmailsWithSeparatorValidator();
+        $this->translator = $this->createMock(TranslatorInterface::class);
+
+        return new MultipleEmailsWithSeparatorValidator(new Validate(), $this->translator);
     }
 
     /**
@@ -67,6 +72,7 @@ class MultipleEmailsWithSeparatorValidatorTest extends ConstraintValidatorTestCa
     {
         $expectedExceptionClassName = \get_class($expectedException);
         $this->expectException($expectedExceptionClassName);
+        $this->expectException(TypeError::class);
         $this->validator->validate(
             $multipleEmailsWithSeparator,
             $this->getConstraintInstance()
