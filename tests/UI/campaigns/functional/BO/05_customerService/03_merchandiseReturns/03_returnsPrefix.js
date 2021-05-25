@@ -36,7 +36,7 @@ let page;
 
 /*
 Create order in FO
-Activate/Deactivate merchandise return
+Update returns prefix
 Change the first order status in the list to shipped
 Check the existence of the button return products
 Go to FO>My account>Order history> first order detail in the list
@@ -128,8 +128,8 @@ describe('Activate/Deactivate merchandise return', async () => {
   });
 
   const tests = [
-    {args: {action: 'activate', enable: true, prefix: '#NE'}},
-    {args: {action: 'deactivate', enable: false, prefix: '#RE'}},
+    {args: {enable: true, prefix: '#NE'}},
+    {args: {enable: false, prefix: '#RE'}},
   ];
 
   tests.forEach((test, index) => {
@@ -148,15 +148,8 @@ describe('Activate/Deactivate merchandise return', async () => {
       await expect(pageTitle).to.contains(merchandiseReturnsPage.pageTitle);
     });
 
-    it(`should ${test.args.action} merchandise returns`, async function () {
+    it('should update returns prefix', async function () {
       await testContext.addContextItem(this, 'testIdentifier', `${test.args.action}Returns`, baseContext);
-
-      const result = await merchandiseReturnsPage.setOrderReturnStatus(page, test.args.enable);
-      await expect(result).to.contains(merchandiseReturnsPage.successfulUpdateMessage);
-    });
-
-    it('should update Returns prefix', async function () {
-      await testContext.addContextItem(this, 'testIdentifier', `updateOrderStatus${index}`, baseContext);
 
       const result = await merchandiseReturnsPage.setReturnsPrefix(page, test.args.prefix);
       await expect(result).to.contains(merchandiseReturnsPage.successfulUpdateMessage);
@@ -263,13 +256,6 @@ describe('Activate/Deactivate merchandise return', async () => {
       const result = await orderDetailsPage.isOrderReturnFormVisible(page);
       await expect(result).to.equal(test.args.enable);
     });
-    if (test.args.enable) {
-      it('should create a merchandise return', async function () {
-        await testContext.addContextItem(this, 'testIdentifier', 'createMerchandiseReturn', baseContext);
-
-        await orderDetailsPage.requestMerchandiseReturn(page, 'test');
-      });
-    }
 
     it('should close the FO page and go back to BO', async function () {
       await testContext.addContextItem(this, 'testIdentifier', `closeFoAndGoBackToBO${index}`, baseContext);
