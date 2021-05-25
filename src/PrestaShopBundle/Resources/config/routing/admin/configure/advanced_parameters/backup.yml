@@ -2,7 +2,7 @@ admin_backups_index:
     path: /
     methods: [GET]
     defaults:
-        _controller: 'PrestaShopBundle:Admin\Configure\AdvancedParameters\Backup:index'
+        _controller: 'PrestaShopBundle\Controller\Admin\Configure\AdvancedParameters\BackupController::indexAction'
         _legacy_controller: 'AdminBackup'
         _legacy_link: 'AdminBackup'
 
@@ -10,7 +10,7 @@ admin_backups_save_options:
     path: /
     methods: [POST]
     defaults:
-        _controller: 'PrestaShopBundle:Admin\Configure\AdvancedParameters\Backup:saveOptions'
+        _controller: 'PrestaShopBundle\Controller\Admin\Configure\AdvancedParameters\BackupController::saveOptionsAction'
         _legacy_controller: 'AdminBackup'
         _legacy_link: 'AdminBackup:update'
 
@@ -18,7 +18,7 @@ admin_backups_create:
     path: /new
     methods: [POST]
     defaults:
-        _controller: 'PrestaShopBundle:Admin\Configure\AdvancedParameters\Backup:create'
+        _controller: 'PrestaShopBundle\Controller\Admin\Configure\AdvancedParameters\BackupController::createAction'
         _legacy_controller: 'AdminBackup'
         _legacy_link: 'AdminBackup:addbackup'
 
@@ -26,21 +26,21 @@ admin_backups_download_view:
     path: /view/{downloadFileName}
     methods: [GET]
     defaults:
-        _controller: 'PrestaShopBundle:Admin\Configure\AdvancedParameters\Backup:downloadView'
+        _controller: 'PrestaShopBundle\Controller\Admin\Configure\AdvancedParameters\BackupController::downloadViewAction'
         _legacy_controller: 'AdminBackup'
 
 admin_backup_download:
     path: /download/{downloadFileName}
     methods: [GET]
     defaults:
-        _controller: 'PrestaShopBundle:Admin\Configure\AdvancedParameters\Backup:downloadContent'
+        _controller: 'PrestaShopBundle\Controller\Admin\Configure\AdvancedParameters\BackupController::downloadContentAction'
         _legacy_controller: 'AdminBackup'
 
 admin_backups_delete:
     path: /{deleteFileName}
     methods: [DELETE, POST]
     defaults:
-        _controller: 'PrestaShopBundle:Admin\Configure\AdvancedParameters\Backup:delete'
+        _controller: 'PrestaShopBundle\Controller\Admin\Configure\AdvancedParameters\BackupController::deleteAction'
         _legacy_controller: 'AdminBackup'
         _legacy_link: 'AdminBackup:delete'
         _legacy_parameters:
@@ -50,6 +50,6 @@ admin_backups_bulk_delete:
     path: /bulk-delete/
     methods: [POST]
     defaults:
-        _controller: 'PrestaShopBundle:Admin\Configure\AdvancedParameters\Backup:bulkDelete'
+        _controller: 'PrestaShopBundle\Controller\Admin\Configure\AdvancedParameters\BackupController::bulkDeleteAction'
         _legacy_controller: 'AdminBackup'
         _legacy_link: 'AdminBackup:submitBulkdeletebackup'

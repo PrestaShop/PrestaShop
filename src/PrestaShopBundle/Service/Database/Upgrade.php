@@ -32,22 +32,12 @@ use PrestaShopBundle\Service\Command\AbstractCommand;
 class Upgrade extends AbstractCommand
 {
     /**
-     * @var UpdateSchemaCommand
-     */
-    private $updateSchemaCommand;
-
-    public function __construct()
-    {
-        parent::__construct();
-        $this->updateSchemaCommand = $this->kernel->getContainer()->get(UpdateSchemaCommand::class);
-    }
-
-    /**
      * Run the custom schemaUpgrade command.
      */
     public function addDoctrineSchemaUpdate()
     {
-        $this->application->add($this->updateSchemaCommand);
+        $updateSchemaCommand = $this->kernel->getContainer()->get(UpdateSchemaCommand::class);
+        $this->application->add($updateSchemaCommand);
 
         $this->commands[] = [
             'command' => 'prestashop:schema:update-without-foreign',

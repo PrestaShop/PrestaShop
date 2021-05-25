@@ -2,4 +2,4 @@ admin_security_compromised:
     path:     /compromised
     methods:  [GET]
     defaults:
-        _controller: PrestaShopBundle:Admin/Security:compromisedAccess
+        _controller: PrestaShopBundle\Controller\Admin\SecurityController::compromisedAccessAction
