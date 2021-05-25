@@ -27,7 +27,6 @@
 namespace PrestaShopBundle\Form\Validator\Constraints;
 
 use InvalidArgumentException;
-use PrestaShop\PrestaShop\Adapter\LegacyContext;
 use PrestaShop\PrestaShop\Adapter\Validate;
 use Symfony\Component\Translation\TranslatorInterface;
 use Symfony\Component\Validator\Constraint;
@@ -70,8 +69,6 @@ class TinyMceMaxLengthValidator extends ConstraintValidator
         $str = str_replace($replaceArray, [''], strip_tags($value));
 
         if (iconv_strlen($str) > $constraint->max) {
-            $translator = (new LegacyContext())->getContext()->getTranslator();
-
             $message = $constraint->message ?? $this->translator->trans(
                 'This value is too long. It should have %limit% characters or less.',
                 ['%limit%' => $constraint->max],
