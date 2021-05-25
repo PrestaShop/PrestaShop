@@ -33,9 +33,13 @@ export default class ChoiceTable {
    * Init constructor
    */
   constructor() {
-    $(document).on('change', '.js-choice-table-select-all', (e) => {
-      this.handleSelectAll(e);
-    });
+    $(document).on(
+      'change',
+      '.js-choice-table-select-all',
+      (e: JQueryEventObject) => {
+        this.handleSelectAll(e);
+      },
+    );
   }
 
   /**
@@ -43,10 +47,13 @@ export default class ChoiceTable {
    *
    * @param {Event} event
    */
-  handleSelectAll(event) {
+  handleSelectAll(event: JQueryEventObject): void {
     const $selectAllCheckboxes = $(event.target);
     const isSelectAllChecked = $selectAllCheckboxes.is(':checked');
 
-    $selectAllCheckboxes.closest('table').find('tbody input:checkbox').prop('checked', isSelectAllChecked);
+    $selectAllCheckboxes
+      .closest('table')
+      .find('tbody input:checkbox')
+      .prop('checked', isSelectAllChecked);
   }
 }

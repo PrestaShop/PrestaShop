@@ -47,14 +47,22 @@ const {$} = window;
  * new CountryStateSelectionToggler('#id_country', '#id_state', '.js-state-selection-block');
  */
 export default class CountryStateSelectionToggler {
-  constructor(countryInputSelector, countryStateSelector, stateSelectionBlockSelector) {
+  $stateSelectionBlock: JQuery;
+
+  $countryStateSelector: JQuery;
+
+  $countryInput: JQuery;
+
+  constructor(
+    countryInputSelector: string,
+    countryStateSelector: string,
+    stateSelectionBlockSelector: string,
+  ) {
     this.$stateSelectionBlock = $(stateSelectionBlockSelector);
     this.$countryStateSelector = $(countryStateSelector);
     this.$countryInput = $(countryInputSelector);
 
     this.$countryInput.on('change', () => this.change());
-
-    return {};
   }
 
   /**
@@ -62,7 +70,7 @@ export default class CountryStateSelectionToggler {
    *
    * @private
    */
-  change() {
+  private change(): void {
     const countryId = this.$countryInput.val();
 
     if (countryId === '') {
@@ -74,22 +82,28 @@ export default class CountryStateSelectionToggler {
       data: {
         id_country: countryId,
       },
-    }).then((response) => {
-      this.$countryStateSelector.empty();
+    })
+      .then((response) => {
+        this.$countryStateSelector.empty();
 
-      Object.keys(response.states).forEach((value) => {
-        this.$countryStateSelector.append($('<option></option>').attr('value', response.states[value]).text(value));
+        Object.keys(response.states).forEach((value) => {
+          this.$countryStateSelector.append(
+            $('<option></option>')
+              .attr('value', response.states[value])
+              .text(value),
+          );
+        });
+
+        this.toggle();
+      })
+      .catch((response: AjaxError) => {
+        if (typeof response.responseJSON !== 'undefined') {
+          window.showErrorMessage(response.responseJSON.message);
+        }
       });
-
-      this.toggle();
-    }).catch((response) => {
-      if (typeof response.responseJSON !== 'undefined') {
-        window.showErrorMessage(response.responseJSON.message);
-      }
-    });
   }
 
-  toggle() {
+  toggle(): void {
     if (this.$countryStateSelector.find('option').length > 0) {
       this.$stateSelectionBlock.fadeIn();
       this.$stateSelectionBlock.removeClass('d-none');

@@ -24,6 +24,7 @@
  */
 
 import AutoCompleteSearch from '@components/auto-complete-search';
+// @ts-ignore-next-line
 import Bloodhound from 'typeahead.js';
 
 /**
@@ -39,12 +40,32 @@ import Bloodhound from 'typeahead.js';
  * creating a new clean form type with better templating (the tplcollection brings nearly no value as is)
  */
 export default class EntitySearchInput {
-  constructor($entitySearchInput, options) {
+  $entitySearchInput: JQuery;
+
+  entitySearchInputId: string;
+
+  $autoCompleteSearchContainer: JQuery;
+
+  $selectionContainer: JQuery;
+
+  searchInputFullName: string;
+
+  options: OptionsObject;
+
+  entityRemoteSource: any;
+
+  autoSearch: any;
+
+  constructor($entitySearchInput: JQuery, options: OptionsObject) {
     this.$entitySearchInput = $entitySearchInput;
     this.entitySearchInputId = this.$entitySearchInput.prop('id');
-    this.$autoCompleteSearchContainer = this.$entitySearchInput.closest('.autocomplete-search');
+    this.$autoCompleteSearchContainer = this.$entitySearchInput.closest(
+      '.autocomplete-search',
+    );
     this.$selectionContainer = $(`#${this.entitySearchInputId}-data`);
-    this.searchInputFullName = this.$autoCompleteSearchContainer.data('fullname');
+    this.searchInputFullName = this.$autoCompleteSearchContainer.data(
+      'fullname',
+    );
 
     const inputOptions = options || {};
     this.options = {
@@ -52,6 +73,7 @@ export default class EntitySearchInput {
       dataLimit: 1,
       ...inputOptions,
     };
+    this.entityRemoteSource = {};
     this.buildRemoteSource();
     this.buildAutoCompleteSearch();
   }
@@ -61,7 +83,7 @@ export default class EntitySearchInput {
    *
    * @param remoteUrl {string}
    */
-  setRemoteUrl(remoteUrl) {
+  setRemoteUrl(remoteUrl: string): void {
     this.entityRemoteSource.remote.url = remoteUrl;
   }
 
@@ -71,13 +93,13 @@ export default class EntitySearchInput {
    *
    * @param values {array}
    */
-  setValue(values) {
+  setValue(values: JQuery): void {
     this.clearSelectedItems();
     if (!values || values.length <= 0) {
       return;
     }
 
-    values.each((value) => {
+    values.each((index: number, value: any) => {
       this.appendSelectedItem(value);
     });
   }
@@ -85,12 +107,13 @@ export default class EntitySearchInput {
   /**
    * Build the AutoCompleteSearch component
    */
-  buildAutoCompleteSearch() {
+  buildAutoCompleteSearch(): void {
     const autoSearchConfig = {
       source: this.entityRemoteSource,
       dataLimit: this.options.dataLimit,
+      value: '',
       templates: {
-        suggestion: (entity) => {
+        suggestion: (entity: OptionsObject) => {
           let entityImage;
 
           if (Object.prototype.hasOwnProperty.call(entity, 'image')) {
@@ -100,11 +123,11 @@ export default class EntitySearchInput {
           return `<div class="search-suggestion">${entityImage}${entity.name}</div>`;
         },
       },
-      onClose: (event) => {
+      onClose: (event: JQueryEventObject) => {
         this.onSelectionClose(event);
       },
-      /* eslint-disable-next-line no-unused-vars */
-      onSelect: (selectedItem, event) => {
+      /* eslint-disable-next-line @typescript-eslint/no-unused-vars */
+      onSelect: (selectedItem: OptionsObject, event: JQueryEventObject) => {
         // When limit is one we cannot select additional elements so we replace them instead
         if (this.options.dataLimit === 1) {
           return this.replaceSelectedItem(selectedItem);
@@ -115,9 +138,12 @@ export default class EntitySearchInput {
 
     // Can be used to format value depending on selected item
     if (this.options.value !== undefined) {
-      autoSearchConfig.value = this.options.value;
+      autoSearchConfig.value = <string> this.options.value;
     }
-    this.autoSearch = new AutoCompleteSearch(this.$entitySearchInput, autoSearchConfig);
+    this.autoSearch = new AutoCompleteSearch(
+      this.$entitySearchInput,
+      autoSearchConfig,
+    );
   }
 
   /**
@@ -126,7 +152,7 @@ export default class EntitySearchInput {
    *
    * @returns {Bloodhound}
    */
-  buildRemoteSource() {
+  buildRemoteSource(): void {
     const sourceConfig = {
       mappingValue: this.$autoCompleteSearchContainer.data('mappingvalue'),
       remoteUrl: this.$autoCompleteSearchContainer.data('remoteurl'),
@@ -135,14 +161,14 @@ export default class EntitySearchInput {
     this.entityRemoteSource = new Bloodhound({
       datumTokenizer: Bloodhound.tokenizers.whitespace,
       queryTokenizer: Bloodhound.tokenizers.whitespace,
-      identify(obj) {
+      identify(obj: any) {
         return obj[sourceConfig.mappingValue];
       },
       remote: {
         url: sourceConfig.remoteUrl,
         cache: false,
         wildcard: '__QUERY__',
-        transform(response) {
+        transform(response: any) {
           if (!response) {
             return [];
           }
@@ -157,14 +183,14 @@ export default class EntitySearchInput {
    *
    * @param event
    */
-  onSelectionClose(event) {
+  onSelectionClose(event: JQueryEventObject): void {
     $(event.target).val('');
   }
 
   /**
    * Removes selected items.
    */
-  clearSelectedItems() {
+  clearSelectedItems(): void {
     const formIdItem = $('li', this.$selectionContainer);
     formIdItem.remove();
   }
@@ -176,7 +202,7 @@ export default class EntitySearchInput {
    * @param selectedItem {Object}
    * @returns {boolean}
    */
-  replaceSelectedItem(selectedItem) {
+  replaceSelectedItem(selectedItem: OptionsObject): boolean {
     this.clearSelectedItems();
     this.addSelectedContentToContainer(selectedItem);
 
@@ -190,11 +216,14 @@ export default class EntitySearchInput {
    * @param selectedItem {Object}
    * @returns {boolean}
    */
-  appendSelectedItem(selectedItem) {
+  appendSelectedItem(selectedItem: OptionsObject): boolean {
     // If collection length is up to limit, return
     const formIdItem = $('li', this.$selectionContainer);
 
-    if (this.options.dataLimit !== 0 && formIdItem.length >= this.options.dataLimit) {
+    if (
+      this.options.dataLimit !== 0
+      && formIdItem.length >= this.options.dataLimit
+    ) {
       return false;
     }
 
@@ -209,19 +238,22 @@ export default class EntitySearchInput {
    *
    * @param selectedItem {Object}
    */
-  addSelectedContentToContainer(selectedItem) {
+  addSelectedContentToContainer(selectedItem: OptionsObject): void {
     let value;
 
     if (typeof this.options.value === 'function') {
+      // @ts-ignore-next-line
       value = this.options.value(selectedItem);
     } else {
-      value = selectedItem[this.options.value];
+      value = selectedItem[<string> this.options.value];
     }
 
     const selectedHtml = this.renderSelected(selectedItem);
     // Hidden input is added into the selected li
     const $selectedNode = $(selectedHtml);
-    const $hiddenInput = $(`<input type="hidden" name="${this.searchInputFullName}[data][]" value="${value}" />`);
+    const $hiddenInput = $(
+      `<input type="hidden" name="${this.searchInputFullName}[data][]" value="${value}" />`,
+    );
     $selectedNode.append($hiddenInput);
 
     // Then the li is added to the list
@@ -239,13 +271,13 @@ export default class EntitySearchInput {
    *
    * @returns {string}
    */
-  renderSelected(entity) {
+  renderSelected(entity: OptionsObject): string {
     // @todo: the tplcollection idea is not bad but it only contains a span for now, to fo to the end of this idea
     // it should contain the whole div (with media-left media-body and all)
     const $templateContainer = $(`#tplcollection-${this.entitySearchInputId}`);
     const innerTemplateHtml = $templateContainer
       .html()
-      .replace('%s', entity.name);
+      .replace('%s', <string>entity.name);
 
     return `<li class="media">
         <div class="media-left">

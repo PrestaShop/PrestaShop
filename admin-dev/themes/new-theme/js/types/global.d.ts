@@ -4,7 +4,6 @@ interface Window {
   showErrorMessage(message: string): void;
   prestashop: PrestashopWindow;
 }
-
 interface TypeaheadDatasetConfig {
   display: string | ((text: string) => void);
   value: string;
@@ -25,15 +24,13 @@ interface TypeaheadConfig {
 /* eslint-disable */
 interface JQuery {
   tableDnD(params: unknown): void;
-  typeahead(
-    options: TypeaheadConfig,
-    dataSet: TypeaheadDatasetConfig
-  ): Function;
+  passy: any;
 }
 /* eslint-disable */
 
 interface JQueryStatic {
   tableDnD: TableDnD;
+  passy: any;
 }
 
 interface TableDnD {
@@ -59,3 +56,5 @@ interface RegExpPositions extends RegExpExecArray {
 }
 
 type FetchResponse = Record<string, number | string | Record<string, unknown>>;
+
+type OptionsObject = FetchResponse;
