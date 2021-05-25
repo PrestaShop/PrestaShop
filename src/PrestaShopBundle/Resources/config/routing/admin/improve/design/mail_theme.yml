@@ -6,7 +6,7 @@ admin_mail_theme_index:
   path: /
   methods: [GET]
   defaults:
-    _controller: PrestaShopBundle:Admin\Improve\Design\MailTheme:index
+    _controller: PrestaShopBundle\Controller\Admin\Improve\Design\MailThemeController::indexAction
     _legacy_controller: AdminMailTheme
     _legacy_link: AdminMailTheme
 
@@ -14,7 +14,7 @@ admin_mail_theme_generate:
   path: /generate
   methods: [POST]
   defaults:
-    _controller: PrestaShopBundle:Admin\Improve\Design\MailTheme:generateMails
+    _controller: PrestaShopBundle\Controller\Admin\Improve\Design\MailThemeController:generateMailsAction
     _legacy_controller: AdminMailTheme
     _legacy_link: AdminMailTheme:postGenerateMails
 
@@ -22,7 +22,7 @@ admin_mail_theme_save_configuration:
   path: /save-configuration
   methods: [POST]
   defaults:
-    _controller: PrestaShopBundle:Admin\Improve\Design\MailTheme:saveConfiguration
+    _controller: PrestaShopBundle\Controller\Admin\Improve\Design\MailThemeController::saveConfigurationAction
     _legacy_controller: AdminMailTheme
     _legacy_link: AdminMailTheme:saveConfiguration
 
@@ -30,7 +30,7 @@ admin_mail_theme_preview:
   path: /preview/{theme}
   methods: [GET]
   defaults:
-    _controller: PrestaShopBundle:Admin\Improve\Design\MailTheme:previewTheme
+    _controller: PrestaShopBundle\Controller\Admin\Improve\Design\MailThemeController::previewThemeAction
     _legacy_controller: AdminMailTheme
     _legacy_link: AdminMailTheme:previewTheme
 
@@ -39,7 +39,7 @@ admin_mail_theme_preview_layout:
   path: /preview/{locale}/{theme}/{layout}.{type}
   methods: [GET]
   defaults:
-    _controller: PrestaShopBundle:Admin\Improve\Design\MailTheme:previewLayout
+    _controller: PrestaShopBundle\Controller\Admin\Improve\Design\MailThemeController::previewLayoutAction
     _legacy_controller: AdminMailTheme
     _legacy_link: AdminMailTheme:previewLayout
     module: ''
@@ -48,7 +48,7 @@ admin_mail_theme_preview_module_layout:
   path: /preview/{locale}/{theme}/{module}/{layout}.{type}
   methods: [GET]
   defaults:
-    _controller: PrestaShopBundle:Admin\Improve\Design\MailTheme:previewLayout
+    _controller: PrestaShopBundle\Controller\Admin\Improve\Design\MailThemeController::previewLayoutAction
     _legacy_controller: AdminMailTheme
     _legacy_link: AdminMailTheme:previewModuleLayout
 
@@ -56,7 +56,7 @@ admin_mail_theme_raw_layout:
   path: /raw/{locale}/{theme}/{layout}.{type}
   methods: [GET]
   defaults:
-    _controller: PrestaShopBundle:Admin\Improve\Design\MailTheme:rawLayout
+    _controller: PrestaShopBundle\Controller\Admin\Improve\Design\MailThemeController::rawLayoutAction
     _legacy_controller: AdminMailTheme
     _legacy_link: AdminMailTheme:rawLayout
     module: ''
@@ -65,7 +65,7 @@ admin_mail_theme_raw_module_layout:
   path: /raw/{locale}/{theme}/{module}/{layout}.{type}
   methods: [GET]
   defaults:
-    _controller: PrestaShopBundle:Admin\Improve\Design\MailTheme:rawLayout
+    _controller: PrestaShopBundle\Controller\Admin\Improve\Design\MailThemeController::rawLayoutAction
     _legacy_link: AdminMailTheme:rawModuleLayout
     _legacy_controller: AdminMailTheme
 
@@ -73,7 +73,7 @@ admin_mail_theme_send_test_mail:
   path: /send-test-mail/{locale}/{theme}/{layout}
   methods: [GET]
   defaults:
-    _controller: PrestaShopBundle:Admin\Improve\Design\MailTheme:sendTestMail
+    _controller: PrestaShopBundle\Controller\Admin\Improve\Design\MailThemeController::sendTestMailAction
     _legacy_link: AdminMailTheme:rawModuleLayout
     _legacy_controller: AdminMailTheme
     module: ''
@@ -82,7 +82,7 @@ admin_mail_theme_send_test_module_mail:
   path: /send-test-mail/{locale}/{theme}/{module}/{layout}
   methods: [GET]
   defaults:
-    _controller: PrestaShopBundle:Admin\Improve\Design\MailTheme:sendTestMail
+    _controller: PrestaShopBundle\Controller\Admin\Improve\Design\MailThemeController::sendTestMailAction
     _legacy_link: AdminMailTheme:rawModuleLayout
     _legacy_controller: AdminMailTheme
 
@@ -90,6 +90,6 @@ admin_mail_theme_translate_body:
   path: /translate-body
   methods: [POST]
   defaults:
-    _controller: PrestaShopBundle:Admin\Improve\Design\MailTheme:translateBody
+    _controller: PrestaShopBundle\Controller\Admin\Improve\Design\MailThemeController::translateBodyAction
     _legacy_controller: AdminMailTheme
     _legacy_link: AdminMailTheme:translateBody

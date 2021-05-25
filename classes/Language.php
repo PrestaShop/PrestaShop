@@ -57,7 +57,7 @@ class LanguageCore extends ObjectModel implements LanguageInterface
     private const TRANSLATION_PACK_CACHE_DIR = _PS_TRANSLATIONS_DIR_;
 
     /** Path to the symfony translations directory */
-    private const SF_TRANSLATIONS_DIR = _PS_ROOT_DIR_ . '/app/Resources/translations';
+    private const SF_TRANSLATIONS_DIR = _PS_ROOT_DIR_ . '/translations';
 
     /** @var int */
     public $id;

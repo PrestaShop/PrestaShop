@@ -2,7 +2,7 @@ admin_modules_positions:
     path: /
     methods: [GET]
     defaults:
-        _controller: 'PrestaShopBundle:Admin\Improve\Design\Positions:index'
+        _controller: 'PrestaShopBundle\Controller\Admin\Improve\Design\PositionsController::indexAction'
         _legacy_controller: AdminModulesPositions
         _legacy_link: AdminModulesPositions
 
@@ -10,7 +10,7 @@ admin_modules_positions_unhook:
     path: /unhook
     methods: [POST,GET]
     defaults:
-        _controller: 'PrestaShopBundle:Admin\Improve\Design\Positions:unhook'
+        _controller: 'PrestaShopBundle\Controller\Admin\Improve\Design\PositionsController::unhookAction'
         _legacy_controller: AdminModulesPositions
         _legacy_link: AdminModulesPositions:unhook
 
@@ -18,6 +18,6 @@ admin_modules_positions_toggle_status:
     path: /toggle-status
     methods: [POST]
     defaults:
-        _controller: 'PrestaShopBundle:Admin\Improve\Design\Positions:toggleStatus'
+        _controller: 'PrestaShopBundle\Controller\Admin\Improve\Design\PositionsController::toggleStatusAction'
         _legacy_controller: AdminModulesPositions
         _legacy_link: AdminModulesPositions
