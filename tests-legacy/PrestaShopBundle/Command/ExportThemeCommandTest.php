@@ -38,11 +38,12 @@ class ExportThemeCommandTest extends TestCase
 {
     public function testExecute()
     {
-        $command = new ExportThemeCommand();
+        $command = new ExportThemeCommand(
+            $this->mockThemeRepository(),
+            $this->mockThemeExporter(),
+            $this->mockTranslator()
+        );
         $commandTester = new CommandTester($command);
-
-        $containerMock = $this->mockContainer();
-        $command->setContainer($containerMock);
 
         $helperSetMock = $this->mockHelperSet();
         $command->setHelperSet($helperSetMock);

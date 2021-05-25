@@ -38,13 +38,14 @@ use PrestaShop\PrestaShop\Core\MailTemplate\MailTemplateInterface;
 use PrestaShop\PrestaShop\Core\MailTemplate\MailTemplateRendererInterface;
 use PrestaShop\PrestaShop\Core\MailTemplate\Transformation\TransformationCollectionInterface;
 use PrestaShop\PrestaShop\Core\MailTemplate\Transformation\TransformationInterface;
-use Symfony\Component\Templating\EngineInterface;
+use Twig\Environment;
+use Twig\Error\LoaderError;
 
 class MailTemplateTwigRendererTest extends TestCase
 {
     public function testConstructor()
     {
-        $engineMock = $this->getMockBuilder(EngineInterface::class)
+        $engineMock = $this->getMockBuilder(Environment::class)
             ->disableOriginalConstructor()
             ->getMock()
         ;
@@ -73,10 +74,15 @@ class MailTemplateTwigRendererTest extends TestCase
         $expectedVariables = ['locale' => null, 'url' => 'http://test.com'];
         $expectedLanguage = $this->createLanguageMock();
         $mailLayout = $this->createMailLayoutMock($templatePaths);
-        /** @var EngineInterface $engineMock */
-        $engineMock = $this->getMockBuilder(EngineInterface::class)
+        /** @var Environment $engineMock */
+        $engineMock = $this->getMockBuilder(Environment::class)
             ->disableOriginalConstructor()
             ->getMock()
+        ;
+        $engineMock
+            ->expects($this->once())
+            ->method('render')
+            ->willThrowException(new LoaderError(''))
         ;
         /** @var HookDispatcherInterface $dispatcherMock */
         $dispatcherMock = $this->getMockBuilder(HookDispatcherInterface::class)
@@ -249,11 +255,11 @@ class MailTemplateTwigRendererTest extends TestCase
      * @param array $expectedVariables
      * @param string $generatedTemplate
      *
-     * @return MockObject|EngineInterface
+     * @return MockObject|Environment
      */
     private function createEngineMock($expectedPath, array $expectedVariables, $generatedTemplate)
     {
-        $engineMock = $this->getMockBuilder(EngineInterface::class)
+        $engineMock = $this->getMockBuilder(Environment::class)
             ->disableOriginalConstructor()
             ->getMock()
         ;
@@ -267,10 +273,6 @@ class MailTemplateTwigRendererTest extends TestCase
             )
             ->willReturn($generatedTemplate)
         ;
-
-        $engineMock->expects($this->once())
-            ->method('exists')
-            ->willReturn(file_exists(str_replace('@Resources', __DIR__ . '/../../Resources', $expectedPath)));
 
         return $engineMock;
     }
