@@ -87,7 +87,7 @@ class ValidateTest extends TestCase
         ];
     }
 
-    public function isEmailDataProvider()
+    public function isEmailDataProvider(): array
     {
         return [
             [true, 'john.doe@prestashop.com'],
