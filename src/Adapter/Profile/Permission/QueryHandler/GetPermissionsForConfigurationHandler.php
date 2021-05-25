@@ -28,7 +28,6 @@ declare(strict_types=1);
 
 namespace PrestaShop\PrestaShop\Adapter\Profile\Permission\QueryHandler;
 
-use Context;
 use Module;
 use PrestaShop\PrestaShop\Core\Domain\Profile\Permission\Query\GetPermissionsForConfiguration;
 use PrestaShop\PrestaShop\Core\Domain\Profile\Permission\QueryHandler\GetPermissionsForConfigurationHandlerInterface;
@@ -63,11 +62,19 @@ final class GetPermissionsForConfigurationHandler implements GetPermissionsForCo
     private $whitelist = [];
 
     /**
+     * @var int
+     */
+    private $languageId;
+
+    /**
      * @param AuthorizationCheckerInterface $authorizationChecker
      */
-    public function __construct(AuthorizationCheckerInterface $authorizationChecker)
-    {
+    public function __construct(
+        AuthorizationCheckerInterface $authorizationChecker,
+        int $languageId
+    ) {
         $this->authorizationChecker = $authorizationChecker;
+        $this->languageId = $languageId;
     }
 
     /**
@@ -129,7 +136,7 @@ final class GetPermissionsForConfigurationHandler implements GetPermissionsForCo
      */
     private function getProfilesForPermissionsConfiguration(): array
     {
-        $legacyProfiles = Profile::getProfiles(Context::getContext()->language->id);
+        $legacyProfiles = Profile::getProfiles($this->languageId);
         $profiles = [];
 
         foreach ($legacyProfiles as $profile) {
@@ -149,7 +156,7 @@ final class GetPermissionsForConfigurationHandler implements GetPermissionsForCo
     private function getTabsForPermissionsConfiguration(): array
     {
         $nonConfigurableTabs = $this->getNonConfigurableTabs();
-        $legacyTabs = Tab::getTabs(Context::getContext()->language->id);
+        $legacyTabs = Tab::getTabs($this->languageId);
         $tabs = [];
 
         foreach ($legacyTabs as $tab) {
