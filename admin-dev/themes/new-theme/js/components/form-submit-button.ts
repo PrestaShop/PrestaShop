@@ -53,50 +53,59 @@ const {$} = window;
  */
 export default class FormSubmitButton {
   constructor() {
-    $(document).on('click', '.js-form-submit-btn', function (event) {
-      event.preventDefault();
+    $(document).on(
+      'click',
+      '.js-form-submit-btn',
+      (event: JQueryEventObject) => {
+        event.preventDefault();
 
-      const $btn = $(this);
+        const $btn = $(this);
 
-      if ($btn.data('form-confirm-message') && window.confirm($btn.data('form-confirm-message')) === false) {
-        return;
-      }
-
-      let method = 'POST';
-      let addInput = null;
-
-      if ($btn.data('method')) {
-        const btnMethod = $btn.data('method');
-        const isGetOrPostMethod = ['GET', 'POST'].includes(btnMethod);
-        method = isGetOrPostMethod ? btnMethod : 'POST';
-
-        if (!isGetOrPostMethod) {
-          addInput = $('<input>', {
-            type: '_hidden',
-            name: '_method',
-            value: btnMethod,
-          });
+        if (
+          $btn.data('form-confirm-message')
+          && window.confirm($btn.data('form-confirm-message')) === false
+        ) {
+          return;
         }
-      }
 
-      const $form = $('<form>', {
-        action: $btn.data('form-submit-url'),
-        method,
-      });
+        let method = 'POST';
+        let addInput = null;
 
-      if (addInput) {
-        $form.append(addInput);
-      }
+        if ($btn.data('method')) {
+          const btnMethod = $btn.data('method');
+          const isGetOrPostMethod = ['GET', 'POST'].includes(btnMethod);
+          method = isGetOrPostMethod ? btnMethod : 'POST';
 
-      if ($btn.data('form-csrf-token')) {
-        $form.append($('<input>', {
-          type: '_hidden',
-          name: '_csrf_token',
-          value: $btn.data('form-csrf-token'),
-        }));
-      }
+          if (!isGetOrPostMethod) {
+            addInput = $('<input>', {
+              type: '_hidden',
+              name: '_method',
+              value: btnMethod,
+            });
+          }
+        }
 
-      $form.appendTo('body').submit();
-    });
+        const $form = $('<form>', {
+          action: $btn.data('form-submit-url'),
+          method,
+        });
+
+        if (addInput) {
+          $form.append(addInput);
+        }
+
+        if ($btn.data('form-csrf-token')) {
+          $form.append(
+            $('<input>', {
+              type: '_hidden',
+              name: '_csrf_token',
+              value: $btn.data('form-csrf-token'),
+            }),
+          );
+        }
+
+        $form.appendTo('body').submit();
+      },
+    );
   }
 }

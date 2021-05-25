@@ -32,8 +32,24 @@
  * @method showNavBarContent - Toggle the class based on event and if body got a class.
  * @method toggle - Add the listener if there is no transition launched yet.
  * @return {Object} The object with methods wich permit to toggle on specific event.
-*/
-function NavbarTransitionHandler($navBar, $mainMenu, endTransitionEvent, $body) {
+ */
+interface NavbarTransitionType {
+  $body: JQuery;
+  transitionFired: boolean;
+  $navBar: HTMLElement;
+  $mainMenu: JQuery;
+  endTransitionEvent: string;
+  showNavBarContent: (event: Event) => void;
+  toggle: () => void;
+}
+
+function NavbarTransitionHandler(
+  this: NavbarTransitionType,
+  $navBar: JQuery,
+  $mainMenu: JQuery,
+  endTransitionEvent: string,
+  $body: JQuery,
+): void {
   this.$body = $body;
   this.transitionFired = false;
   this.$navBar = $navBar.get(0);
@@ -41,11 +57,15 @@ function NavbarTransitionHandler($navBar, $mainMenu, endTransitionEvent, $body) 
   this.endTransitionEvent = endTransitionEvent;
 
   this.showNavBarContent = (event) => {
+    // @ts-ignore-next-line
     if (event.propertyName !== 'width') {
       return;
     }
 
-    this.$navBar.removeEventListener(this.endTransitionEvent, this.showNavBarContent);
+    this.$navBar.removeEventListener(
+      this.endTransitionEvent,
+      this.showNavBarContent,
+    );
     const isSidebarClosed = this.$body.hasClass('page-sidebar-closed');
     this.$mainMenu.toggleClass('sidebar-closed', isSidebarClosed);
     this.transitionFired = false;
@@ -53,9 +73,15 @@ function NavbarTransitionHandler($navBar, $mainMenu, endTransitionEvent, $body) 
 
   this.toggle = () => {
     if (!this.transitionFired) {
-      this.$navBar.addEventListener(this.endTransitionEvent, this.showNavBarContent.bind(this));
+      this.$navBar.addEventListener(
+        this.endTransitionEvent,
+        this.showNavBarContent.bind(this),
+      );
     } else {
-      this.$navBar.removeEventListener(this.endTransitionEvent, this.showNavBarContent);
+      this.$navBar.removeEventListener(
+        this.endTransitionEvent,
+        this.showNavBarContent,
+      );
     }
 
     this.transitionFired = !this.transitionFired;

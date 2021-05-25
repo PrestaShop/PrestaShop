@@ -25,6 +25,37 @@
 
 const {$} = window;
 
+export interface ModalType {
+  container: HTMLElement;
+  dialog: HTMLElement;
+  content: HTMLElement;
+  header: HTMLElement;
+  title: HTMLElement;
+  closeIcon: HTMLButtonElement;
+  body: HTMLElement;
+  message: HTMLElement;
+  footer: HTMLElement;
+  closeButton: HTMLElement;
+  confirmButton: HTMLButtonElement;
+}
+
+export interface ConfirmModalType {
+  modal: ModalType;
+  $modal: JQuery;
+  show: () => void;
+}
+
+export interface ModalParams {
+  id: string;
+  confirmTitle?: string;
+  confirmMessage?: string;
+  closeButtonLabel?: string;
+  confirmButtonLabel?: string;
+  confirmButtonClass?: string;
+  customButtons?: Array<HTMLButtonElement>;
+  closable?: boolean;
+}
+
 /**
  * ConfirmModal component
  *
@@ -40,10 +71,15 @@ const {$} = window;
  * @param {Function} cancelCallback
  *
  */
-export default function ConfirmModal(params, confirmCallback, cancelCallback = () => {}) {
+export function ConfirmModal(
+  this: ConfirmModalType,
+  params: ModalParams,
+  confirmCallback: (event: Event) => void,
+  cancelCallback = () => true,
+): void {
   // Construct the modal
   const {id, closable} = params;
-  this.modal = Modal(params);
+  this.modal = <ModalType>Modal(params);
 
   // jQuery modal object
   this.$modal = $(this.modal.container);
@@ -57,12 +93,16 @@ export default function ConfirmModal(params, confirmCallback, cancelCallback = (
   this.$modal.modal({
     backdrop: closable ? true : 'static',
     keyboard: closable !== undefined ? closable : true,
-    closable: closable !== undefined ? closable : true,
     show: false,
   });
 
   this.$modal.on('hidden.bs.modal', () => {
-    document.querySelector(`#${id}`).remove();
+    const modal = document.querySelector(`#${id}`);
+
+    if (modal) {
+      modal.remove();
+    }
+
     if (cancelCallback) {
       cancelCallback();
     }
@@ -77,7 +117,7 @@ export default function ConfirmModal(params, confirmCallback, cancelCallback = (
  * @param {Object} params
  *
  */
-function Modal({
+export function Modal({
   id = 'confirm-modal',
   confirmTitle,
   confirmMessage = '',
@@ -85,8 +125,8 @@ function Modal({
   confirmButtonLabel = 'Accept',
   confirmButtonClass = 'btn-primary',
   customButtons = [],
-}) {
-  const modal = {};
+}: ModalParams): ModalType {
+  const modal = <ModalType>{};
 
   // Main modal element
   modal.container = document.createElement('div');
@@ -142,7 +182,12 @@ function Modal({
   // Modal confirm button element
   modal.confirmButton = document.createElement('button');
   modal.confirmButton.setAttribute('type', 'button');
-  modal.confirmButton.classList.add('btn', confirmButtonClass, 'btn-lg', 'btn-confirm-submit');
+  modal.confirmButton.classList.add(
+    'btn',
+    confirmButtonClass,
+    'btn-lg',
+    'btn-confirm-submit',
+  );
   modal.confirmButton.dataset.dismiss = 'modal';
   modal.confirmButton.innerHTML = confirmButtonLabel;
 
@@ -161,3 +206,5 @@ function Modal({
 
   return modal;
 }
+
+export default ConfirmModal;

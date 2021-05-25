@@ -3,6 +3,10 @@ interface Window {
   showSuccessMessage(message: string): void;
   showErrorMessage(message: string): void;
   prestashop: PrestashopWindow;
+  isShopMaintenance: boolean;
+  moduleTranslations: Record<string, any>;
+  moduleURLs: Record<string, any>;
+  str2url: any;
 }
 interface TypeaheadDatasetConfig {
   display: string | ((text: string) => void);
@@ -25,6 +29,7 @@ interface TypeaheadConfig {
 interface JQuery {
   tableDnD(params: unknown): void;
   passy: any;
+  tokenfield: any;
 }
 /* eslint-disable */
 

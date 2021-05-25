@@ -23,6 +23,7 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
 
+// @ts-ignore-next-line
 import Bloodhound from 'typeahead.js';
 import Router from '@components/router';
 import AutoCompleteSearch from '@components/auto-complete-search';
@@ -55,9 +56,13 @@ const initMultistoreHeader = () => {
 
   const dataSetConfig = {
     source,
-    onSelect(selectedItem) {
+    onSelect(selectedItem: any) {
       const contextUrlLetter = typeof selectedItem.groupName !== 'undefined' ? 's' : 'g';
-      const setContextUrl = MultistoreHeaderMap.setContextUrl(window.location.href, contextUrlLetter, selectedItem.id);
+      const setContextUrl = MultistoreHeaderMap.setContextUrl(
+        window.location.href,
+        contextUrlLetter,
+        selectedItem.id,
+      );
       window.location.href = setContextUrl;
 
       return true;
@@ -66,10 +71,12 @@ const initMultistoreHeader = () => {
 
   new AutoCompleteSearch($searchInput, dataSetConfig);
 
-  headerButton.addEventListener('click', () => {
-    modalMultishop.classList.toggle('multishop-modal-hidden');
-    headerButton.classList.toggle('active');
-  });
+  if (headerButton && modalMultishop) {
+    headerButton.addEventListener('click', () => {
+      modalMultishop.classList.toggle('multishop-modal-hidden');
+      headerButton.classList.toggle('active');
+    });
+  }
 };
 
 $(() => {

@@ -29,14 +29,29 @@
  * If password confirmation input is provided, can validate if entered password is matching confirmation.
  */
 export default class PasswordValidator {
+  newPasswordInput: HTMLInputElement | null;
+
+  confirmPasswordInput: HTMLInputElement | null;
+
+  minPasswordLength: number;
+
+  maxPasswordLength: number;
+
   /**
    * @param {String} passwordInputSelector selector of the password input.
    * @param {String|null} confirmPasswordInputSelector (optional) selector for the password confirmation input.
    * @param {Object} options allows overriding default options.
    */
-  constructor(passwordInputSelector, confirmPasswordInputSelector = null, options = {}) {
+  constructor(
+    passwordInputSelector: string,
+    confirmPasswordInputSelector: string,
+    options: any = {},
+  ) {
     this.newPasswordInput = document.querySelector(passwordInputSelector);
-    this.confirmPasswordInput = document.querySelector(confirmPasswordInputSelector);
+
+    this.confirmPasswordInput = document.querySelector(
+      confirmPasswordInputSelector,
+    );
 
     // Minimum allowed length for entered password
     this.minPasswordLength = options.minPasswordLength || 8;
@@ -50,7 +65,7 @@ export default class PasswordValidator {
    *
    * @returns {boolean}
    */
-  isPasswordValid() {
+  isPasswordValid(): boolean {
     if (this.confirmPasswordInput && !this.isPasswordMatchingConfirmation()) {
       return false;
     }
@@ -63,7 +78,7 @@ export default class PasswordValidator {
    *
    * @returns {boolean}
    */
-  isPasswordLengthValid() {
+  isPasswordLengthValid(): boolean {
     return !this.isPasswordTooShort() && !this.isPasswordTooLong();
   }
 
@@ -72,12 +87,14 @@ export default class PasswordValidator {
    *
    * @returns {boolean}
    */
-  isPasswordMatchingConfirmation() {
+  isPasswordMatchingConfirmation(): boolean {
     if (!this.confirmPasswordInput) {
-      throw new Error('Confirm password input is not provided for the password validator.');
+      throw new Error(
+        'Confirm password input is not provided for the password validator.',
+      );
     }
 
-    if (this.confirmPasswordInput.value === '') {
+    if (this.confirmPasswordInput.value === '' || !this.newPasswordInput) {
       return true;
     }
 
@@ -89,8 +106,12 @@ export default class PasswordValidator {
    *
    * @returns {boolean}
    */
-  isPasswordTooShort() {
-    return this.newPasswordInput.value.length < this.minPasswordLength;
+  isPasswordTooShort(): boolean {
+    if (this.newPasswordInput?.value) {
+      return this.newPasswordInput.value.length < this.minPasswordLength;
+    }
+
+    return false;
   }
 
   /**
@@ -98,7 +119,11 @@ export default class PasswordValidator {
    *
    * @returns {boolean}
    */
-  isPasswordTooLong() {
-    return this.newPasswordInput.value.length > this.maxPasswordLength;
+  isPasswordTooLong(): boolean {
+    if (this.newPasswordInput?.value) {
+      return this.newPasswordInput.value.length > this.maxPasswordLength;
+    }
+
+    return false;
   }
 }

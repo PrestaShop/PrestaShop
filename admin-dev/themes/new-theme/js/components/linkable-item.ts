@@ -26,17 +26,12 @@
 const {$} = window;
 
 /**
- * class TaggableField is responsible for providing functionality from bootstrap-tokenfield plugin.
- * It allows to have taggable fields which are split in separate blocks once you click enter. Values originally saved
- * in comma split strings.
+ * Takes link from clicked item and redirects to it.
  */
-export default class TaggableField {
-  /**
-   * @param {string} tokenFieldSelector -  a selector which is used within jQuery object.
-   * @param {object} options - extends basic tokenField behavior with additional options such as minLength, delimiter,
-   * allow to add token on focus out action. See bootstrap-tokenfield docs for more information.
-   */
-  constructor({tokenFieldSelector, options = {}}) {
-    $(tokenFieldSelector).tokenfield(options);
+export default class LinkableItem {
+  constructor() {
+    $(document).on('click', '.js-linkable-item', (event: JQueryEventObject) => {
+      window.location = $(event.currentTarget).data('linkable-href');
+    });
   }
 }
