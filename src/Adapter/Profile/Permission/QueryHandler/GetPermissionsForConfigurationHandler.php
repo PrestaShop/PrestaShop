@@ -128,6 +128,7 @@ final class GetPermissionsForConfigurationHandler implements GetPermissionsForCo
         return [
             Tab::getIdFromClassName('AdminLogin'),
             Tab::getIdFromClassName('AdminQuickAccesses'),
+            Tab::getIdFromClassName('AdminTabs'),
         ];
     }
 
@@ -204,12 +205,13 @@ final class GetPermissionsForConfigurationHandler implements GetPermissionsForCo
         $children = [];
 
         foreach ($tabs as &$tab) {
-            $id = $tab['id'];
-
-            if ((int) $tab['id_parent'] === (int) $parentId) {
-                $children[$id] = $tab;
-                $children[$id]['children'] = $this->buildTabsTree($tabs, (int) $id, $nestingLevel + 1);
+            if ((int) $tab['id_parent'] !== (int) $parentId) {
+                continue;
             }
+
+            $id = $tab['id'];
+            $children[$id] = $tab;
+            $children[$id]['children'] = $this->buildTabsTree($tabs, (int) $id, $nestingLevel + 1);
         }
 
         return $children;
