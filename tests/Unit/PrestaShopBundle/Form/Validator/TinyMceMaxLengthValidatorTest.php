@@ -39,7 +39,7 @@ use Symfony\Component\Validator\Test\ConstraintValidatorTestCase;
 
 class TinyMceMaxLengthValidatorTest extends ConstraintValidatorTestCase
 {
-    protected function createValidator()
+    protected function createValidator(): TinyMceMaxLengthValidator
     {
         return new TinyMceMaxLengthValidator(new Validate());
     }
