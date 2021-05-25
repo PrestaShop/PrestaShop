@@ -34,6 +34,9 @@ class TinyMceMaxLength extends Constraint
     public const TOO_LONG_ERROR_CODE = 'TOO_LONG_ERROR_CODE';
 
     public $max;
+    /**
+     * @var string
+     */
     public $message;
 
     public function __construct($options = null)
