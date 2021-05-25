@@ -55,7 +55,7 @@ class ValidateTest extends TestCase
     /**
      * @dataProvider isEmailDataProvider
      */
-    public function testIsEmail($expected, $email)
+    public function testIsEmail(bool $expected, $email): void
     {
         $this->assertSame($expected, Validate::isEmail($email));
     }
