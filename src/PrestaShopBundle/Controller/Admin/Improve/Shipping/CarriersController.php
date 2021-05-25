@@ -77,7 +77,7 @@ class CarriersController extends FrameworkBundleAdminController
             new GetShowcaseCardIsClosed((int) $this->getContext()->employee->id, ShowcaseCard::CARRIERS_CARD)
         );
 
-        return $this->render('PrestaShopBundle:Admin/Improve/Shipping/Carriers:index.html.twig', [
+        return $this->render('@PrestaShop/Admin/Improve/Shipping/Carriers/index.html.twig', [
             'carrierGrid' => $this->presentGrid($carrierGrid),
             'help_link' => $this->generateSidebarLink($request->attributes->get('_legacy_controller')),
             'showHeaderAlert' => $showHeaderAlert,
@@ -91,7 +91,7 @@ class CarriersController extends FrameworkBundleAdminController
     /**
      * Process Grid search.
      *
-     * @AdminSecurity("is_granted(['read'], request.get('_legacy_controller'))")
+     * @AdminSecurity("is_granted('read', request.get('_legacy_controller'))")
      *
      * @param Request $request
      *

@@ -28,10 +28,12 @@ declare(strict_types=1);
 
 namespace Tests\Integration\PrestaShopBundle\Command;
 
+use Context;
+use PrestaShop\PrestaShop\Adapter\LegacyContextLoader;
 use Product;
-use Symfony\Bundle\FrameworkBundle\Command\ContainerAwareCommand;
 use Symfony\Bundle\FrameworkBundle\Console\Application;
 use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
+use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Tester\CommandTester;
@@ -53,7 +55,7 @@ class LoadLegacyClassesinCommandTest extends KernelTestCase
         $this->expectException(TypeError::class, 'Not enough arguments (missing: "theme, locale").');
 
         $application = new Application(static::$kernel);
-        $application->add(new class() extends ContainerAwareCommand {
+        $application->add(new class() extends Command {
             protected function configure()
             {
                 $this->setName('prestashop-tests:load-legacy-classes');
@@ -65,6 +67,7 @@ class LoadLegacyClassesinCommandTest extends KernelTestCase
             }
         });
 
+        Context::getContext()->currency = null;
         $command = $application->find('prestashop-tests:load-legacy-classes');
         $this->assertNotNull($command);
         $commandTester = new CommandTester($command);
@@ -76,7 +79,7 @@ class LoadLegacyClassesinCommandTest extends KernelTestCase
     public function testLoadLegacyCommandWithContextWorks()
     {
         $application = new Application(static::$kernel);
-        $application->add(new class() extends ContainerAwareCommand {
+        $application->add(new class() extends Command {
             protected function configure()
             {
                 $this->setName('prestashop-tests:load-legacy-classes');
@@ -84,11 +87,13 @@ class LoadLegacyClassesinCommandTest extends KernelTestCase
 
             protected function execute(InputInterface $input, OutputInterface $output)
             {
-                $this->getContainer()->get('prestashop.adapter.legacy_context_loader')->loadGenericContext();
+                $contextLoader = new LegacyContextLoader(Context::getContext());
+                $contextLoader->loadGenericContext();
                 $products = Product::getNewProducts(1);
             }
         });
 
+        Context::getContext()->currency = null;
         $command = $application->find('prestashop-tests:load-legacy-classes');
         $this->assertNotNull($command);
         $commandTester = new CommandTester($command);

@@ -1,0 +1,64 @@
+{#**
+ * Copyright since 2007 PrestaShop SA and Contributors
+ * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
+ *
+ * NOTICE OF LICENSE
+ *
+ * This source file is subject to the Open Software License (OSL 3.0)
+ * that is bundled with this package in the file LICENSE.md.
+ * It is also available through the world-wide-web at this URL:
+ * https://opensource.org/licenses/OSL-3.0
+ * If you did not receive a copy of the license and are unable to
+ * obtain it through the world-wide-web, please send an email
+ * to license@prestashop.com so we can send you a copy immediately.
+ *
+ * DISCLAIMER
+ *
+ * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
+ * versions in the future. If you wish to customize PrestaShop for your
+ * needs please refer to https://devdocs.prestashop.com/ for more information.
+ *
+ * @author    PrestaShop SA and Contributors <contact@prestashop.com>
+ * @copyright Since 2007 PrestaShop SA and Contributors
+ * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
+ *#}
+{% trans_default_domain 'Admin.Advparameters.Feature' %}
+{% form_theme emailConfigurationForm '@PrestaShop/Admin/TwigTemplateForm/prestashop_ui_kit.html.twig' %}
+
+{% block email_configuration %}
+  <div class="col-12">
+    <div class="card">
+      <h3 class="card-header">
+        <i class="material-icons">mail</i> {{ 'Email'|trans({}, 'Admin.Global') }}
+      </h3>
+      <div class="card-block row">
+        <div class="card-text">
+          {{ form_row(emailConfigurationForm.send_emails_to) }}
+          {{ form_row(emailConfigurationForm.mail_method) }}
+          <div class="js-smtp-configuration{% if emailConfigurationForm.mail_method.vars.value != smtpMailMethod %} d-none{% endif %}">
+            {{ form_widget(emailConfigurationForm.smtp_config) }}
+          </div>
+          {{ form_row(emailConfigurationForm.mail_type) }}
+          {{ form_row(emailConfigurationForm.log_emails) }}
+          <div class="alert alert-info" role="alert">
+            <p class="alert-text">
+              {{ 'Fill in the fields below to set up DKIM signing of outgoing emails. This will reduce the likelihood of your emails being marked as spam.
+              You can get the data below from your server administrator or generate it yourself by using one of the freely available tools, such as dkimcore.org.
+              Also, make sure that your server is registered as an authorized sender in your SPF record. '|trans({}, 'Admin.Advparameters.Help') }}
+            </p>
+          </div>
+          {{ form_row(emailConfigurationForm.dkim_enable) }}
+          <div class="js-dkim-configuration{% if emailConfigurationForm.dkim_enable.vars.value == 0 %} d-none{% endif %}">
+            {{ form_widget(emailConfigurationForm.dkim_config) }}
+          </div>
+          {{ form_rest(emailConfigurationForm) }}
+        </div>
+      </div>
+      <div class="card-footer">
+        <div class="d-flex justify-content-end">
+          <button class="btn btn-primary" id="form-log-email-save-button">{{ 'Save'|trans({}, 'Admin.Actions') }}</button>
+        </div>
+      </div>
+    </div>
+  </div>
+{% endblock %}
