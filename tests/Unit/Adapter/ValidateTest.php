@@ -33,6 +33,9 @@ use PrestaShop\PrestaShop\Adapter\Validate;
 
 class ValidateTest extends TestCase
 {
+    /**
+     * @var Validate
+     */
     private $validate;
 
     /**
