@@ -50,7 +50,7 @@ class LogsConfiguration implements DataConfigurationInterface
     /**
      * @var Validate
      */
-    private $validate;    
+    private $validate;
 
     public function __construct(ConfigurationInterface $configuration, TranslatorInterface $translator, Validate $validate)
     {
