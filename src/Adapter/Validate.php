@@ -155,7 +155,7 @@ class Validate
      *
      * @return bool Validity is ok or not
      */
-    public static function isString($data)
+    public function isString(string $data): bool
     {
         return ValidateLegacy::isString($data);
     }
