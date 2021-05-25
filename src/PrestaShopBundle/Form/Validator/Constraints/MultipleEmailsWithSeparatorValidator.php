@@ -62,7 +62,7 @@ class MultipleEmailsWithSeparatorValidator extends ConstraintValidator
             $message = $constraint->message ?? $translator->trans(
                 'Invalid email(s) : %invalid_emails%.',
                 ['%invalid_emails%' => implode(',', $invalidEmails)],
-                'Admin.Global.Notification'
+                'Admin.Notifications.Error'
             );
 
             $this->context->buildViolation($message)
