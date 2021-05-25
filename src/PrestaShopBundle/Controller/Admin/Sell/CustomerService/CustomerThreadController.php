@@ -50,7 +50,7 @@ class CustomerThreadController extends FrameworkBundleAdminController
 {
     /**
      * @AdminSecurity(
-     *     "is_granted(['read'], request.get('_legacy_controller'))",
+     *     "is_granted('read', request.get('_legacy_controller'))",
      *     message="You do not have permission to view this.",
      *     redirectRoute="admin_customer_threads_index"
      * )
@@ -94,7 +94,7 @@ class CustomerThreadController extends FrameworkBundleAdminController
      * Reply to customer thread
      *
      * @AdminSecurity(
-     *     "is_granted(['create', 'update'], request.get('_legacy_controller'))",
+     *     "is_granted('create', request.get('_legacy_controller')) && is_granted('update', request.get('_legacy_controller'))",
      *     message="You do not have permission to update this.",
      *     redirectRoute="admin_customer_threads_index"
      * )
@@ -152,7 +152,7 @@ class CustomerThreadController extends FrameworkBundleAdminController
      * Update customer thread status
      *
      * @AdminSecurity(
-     *     "is_granted(['update'], request.get('_legacy_controller'))",
+     *     "is_granted('update', request.get('_legacy_controller'))",
      *     message="You do not have permission to update this.",
      *     redirectRoute="admin_customer_threads_index"
      * )
@@ -186,7 +186,7 @@ class CustomerThreadController extends FrameworkBundleAdminController
      * Forward customer thread to another employee
      *
      * @AdminSecurity(
-     *     "is_granted(['create', 'update'], request.get('_legacy_controller'))",
+     *     "is_granted('create', request.get('_legacy_controller')) && is_granted('update', request.get('_legacy_controller'))",
      *     message="You do not have permission to update this.",
      *     redirectRoute="admin_customer_threads_index"
      * )

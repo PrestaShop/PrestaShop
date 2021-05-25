@@ -4,21 +4,21 @@ services:
 
     prestashop.admin.import.form_builder:
         class: 'Symfony\Component\Form\FormBuilder'
-        factory: 'form.factory:createNamedBuilder'
+        factory: ['@form.factory', 'createNamedBuilder']
         arguments:
             - ''
             - 'PrestaShopBundle\Form\Admin\Configure\AdvancedParameters\Import\ImportType'
 
     prestashop.admin.import_data_configuration.form_builder:
         class: 'Symfony\Component\Form\FormBuilder'
-        factory: 'form.factory:createNamedBuilder'
+        factory: ['@form.factory', 'createNamedBuilder']
         arguments:
             - ''
             - 'PrestaShopBundle\Form\Admin\Configure\AdvancedParameters\Import\ImportDataConfigurationType'
 
     prestashop.admin.advanced_parameters.performance.memcache.form_builder:
         class: 'Symfony\Component\Form\FormBuilder'
-        factory: 'form.factory:createNamedBuilder'
+        factory: ['@form.factory', 'createNamedBuilder']
         arguments:
             - ''
             - 'PrestaShopBundle\Form\Admin\AdvancedParameters\Performance\MemcacheServerType'

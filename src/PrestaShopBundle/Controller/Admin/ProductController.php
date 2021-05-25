@@ -124,8 +124,10 @@ class ProductController extends FrameworkBundleAdminController
         $orderBy = 'id_product',
         $sortOrder = 'desc'
     ) {
-        if (!$this->isGranted([PageVoter::READ, PageVoter::UPDATE, PageVoter::CREATE], self::PRODUCT_OBJECT)) {
-            return $this->redirect('admin_dashboard');
+        foreach ([PageVoter::READ, PageVoter::UPDATE, PageVoter::CREATE] as $permission) {
+            if (!$this->isGranted($permission, self::PRODUCT_OBJECT)) {
+                return $this->redirect('admin_dashboard');
+            }
         }
 
         $language = $this->getContext()->language;
@@ -272,7 +274,7 @@ class ProductController extends FrameworkBundleAdminController
         $sortOrder = 'asc',
         $view = 'full'
     ) {
-        if (!$this->isGranted([PageVoter::READ], self::PRODUCT_OBJECT)) {
+        if (!$this->isGranted(PageVoter::READ, self::PRODUCT_OBJECT)) {
             return $this->redirect('admin_dashboard');
         }
 
@@ -451,8 +453,10 @@ class ProductController extends FrameworkBundleAdminController
     {
         gc_disable();
 
-        if (!$this->isGranted([PageVoter::READ, PageVoter::UPDATE, PageVoter::CREATE], self::PRODUCT_OBJECT)) {
-            return $this->redirect('admin_dashboard');
+        foreach ([PageVoter::READ, PageVoter::UPDATE, PageVoter::CREATE] as $permission) {
+            if (!$this->isGranted($permission, self::PRODUCT_OBJECT)) {
+                return $this->redirect('admin_dashboard');
+            }
         }
 
         $productAdapter = $this->get('prestashop.adapter.data_provider.product');
@@ -1172,7 +1176,7 @@ class ProductController extends FrameworkBundleAdminController
      * Toggle product status
      *
      * @AdminSecurity(
-     *     "is_granted(['update'], request.get('_legacy_controller'))",
+     *     "is_granted('update', request.get('_legacy_controller'))",
      *     message="You do not have permission to update this."
      * )
      *

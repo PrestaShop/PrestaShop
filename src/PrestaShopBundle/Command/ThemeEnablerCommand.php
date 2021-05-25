@@ -28,13 +28,14 @@ namespace PrestaShopBundle\Command;
 
 use Context;
 use Employee;
-use Symfony\Bundle\FrameworkBundle\Command\ContainerAwareCommand;
+use PrestaShop\PrestaShop\Core\Addon\Theme\ThemeManager;
+use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Style\SymfonyStyle;
 
-final class ThemeEnablerCommand extends ContainerAwareCommand
+final class ThemeEnablerCommand extends Command
 {
     /**
      * @var bool using CLI, the user must be allowed to enable themes
@@ -45,6 +46,17 @@ final class ThemeEnablerCommand extends ContainerAwareCommand
      * @var int if the activation of the theme fails, return the right code
      */
     public const RETURN_CODE_FAILED = 1;
+
+    /**
+     * @var ThemeManager
+     */
+    private $themeManager;
+
+    public function __construct(ThemeManager $themeManager)
+    {
+        parent::__construct();
+        $this->themeManager = $themeManager;
+    }
 
     /**
      * {@inheritdoc}
@@ -75,8 +87,7 @@ final class ThemeEnablerCommand extends ContainerAwareCommand
         $theme = $input->getArgument('theme');
         $this->init($input, $output);
 
-        $activationSuccess = $this->getContainer()
-            ->get('prestashop.core.addon.theme.theme_manager')
+        $activationSuccess = $this->themeManager
             ->enable(
                 $theme,
                 self::USER_ALLOWED_TO_ENABLE

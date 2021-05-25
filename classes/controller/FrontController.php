@@ -1304,7 +1304,7 @@ class FrontControllerCore extends Controller
     /**
      * Sets template file for page content output.
      *
-     * @param string $default_template
+     * @param string $template
      */
     public function setTemplate($template, $params = [], $locale = null)
     {
