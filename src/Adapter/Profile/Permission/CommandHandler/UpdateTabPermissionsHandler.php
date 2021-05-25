@@ -44,7 +44,7 @@ final class UpdateTabPermissionsHandler implements UpdateTabPermissionsHandlerIn
     /**
      * {@inheritdoc}
      */
-    public function handle(UpdateTabPermissionsCommand $command)
+    public function handle(UpdateTabPermissionsCommand $command): void
     {
         $access = new Access();
 
