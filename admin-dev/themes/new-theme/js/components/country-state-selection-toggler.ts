@@ -47,14 +47,22 @@ const {$} = window;
  * new CountryStateSelectionToggler('#id_country', '#id_state', '.js-state-selection-block');
  */
 export default class CountryStateSelectionToggler {
-  constructor(countryInputSelector, countryStateSelector, stateSelectionBlockSelector) {
+  $stateSelectionBlock: JQuery;
+
+  $countryStateSelector: JQuery;
+
+  $countryInput: JQuery;
+
+  constructor(
+    countryInputSelector: string,
+    countryStateSelector: string,
+    stateSelectionBlockSelector: string,
+  ) {
     this.$stateSelectionBlock = $(stateSelectionBlockSelector);
     this.$countryStateSelector = $(countryStateSelector);
     this.$countryInput = $(countryInputSelector);
 
     this.$countryInput.on('change', () => this.change());
-
-    return {};
   }
 
   /**
@@ -62,7 +70,7 @@ export default class CountryStateSelectionToggler {
    *
    * @private
    */
-  change() {
+  private change(): void {
     const countryId = this.$countryInput.val();
 
     if (countryId === '') {
@@ -88,14 +96,17 @@ export default class CountryStateSelectionToggler {
 
         this.toggle();
       })
-      .catch((response) => {
+      .catch((response: AjaxError) => {
         if (typeof response.responseJSON !== 'undefined') {
           window.showErrorMessage(response.responseJSON.message);
         }
       });
   }
 
-  toggle() {
-    this.$stateSelectionBlock.toggleClass('d-none', !this.$countryStateSelector.find('option').length > 0);
+  toggle(): void {
+    this.$stateSelectionBlock.toggleClass(
+      'd-none',
+      !(this.$countryStateSelector.find('option').length > 0),
+    );
   }
 }

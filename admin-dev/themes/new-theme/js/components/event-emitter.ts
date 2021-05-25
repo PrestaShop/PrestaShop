@@ -23,16 +23,12 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
 
-export default {
-  multistoreDropdown: {
-    searchInput: '.js-multistore-dropdown-search',
-    scrollbar: '.js-multistore-scrollbar',
-  },
-  multistoreHeader: {
-    modal: '.js-multishop-modal',
-    headerButton: '.js-header-multishop-open-modal',
-    searchInput: '.js-multishop-modal-search',
-    jsScrollbar: '.js-multishop-scrollbar',
-    setContextUrl: (location, urlLetter, itemId) => `${location}&setShopContext=${urlLetter}-${itemId}`,
-  },
-};
+import {EventEmitter} from 'events';
+
+/**
+ * We instanciate one EventEmitter (restricted via a const) so that every components
+ * register/dispatch on the same one and can communicate with each other.
+ */
+export const EventEmitterInstance = new EventEmitter();
+
+export default EventEmitterInstance;

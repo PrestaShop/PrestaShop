@@ -31,17 +31,19 @@ const {$} = window;
  * You can also generate a random password into an input.
  */
 export default class ChangePasswordHandler {
-  constructor(passwordStrengthFeedbackContainerSelector, options = {}) {
+  minLength: number;
+
+  $feedbackContainer: JQuery;
+
+  constructor(
+    passwordStrengthFeedbackContainerSelector: string,
+    options: OptionsObject = {},
+  ) {
     // Minimum length of the generated password.
-    this.minLength = options.minLength || 8;
+    this.minLength = <number>options.minLength || 8;
 
     // Feedback container holds messages representing password strength.
     this.$feedbackContainer = $(passwordStrengthFeedbackContainerSelector);
-
-    return {
-      watchPasswordStrength: ($input) => this.watchPasswordStrength($input),
-      generatePassword: ($input) => this.generatePassword($input),
-    };
   }
 
   /**
@@ -49,7 +51,7 @@ export default class ChangePasswordHandler {
    *
    * @param {jQuery} $input the input to watch.
    */
-  watchPasswordStrength($input) {
+  watchPasswordStrength($input: JQuery): void {
     $.passy.requirements.length.min = this.minLength;
     $.passy.requirements.characters = 'DIGIT';
 
@@ -58,7 +60,7 @@ export default class ChangePasswordHandler {
 
       $outputContainer.insertAfter($(element));
 
-      $(element).passy((strength, valid) => {
+      $(element).passy((strength: number, valid: boolean) => {
         this.displayFeedback($outputContainer, strength, valid);
       });
     });
@@ -69,7 +71,7 @@ export default class ChangePasswordHandler {
    *
    * @param {jQuery} $input the input to fill the password into.
    */
-  generatePassword($input) {
+  generatePassword($input: JQuery): void {
     $input.passy('generate', this.minLength);
   }
 
@@ -82,7 +84,11 @@ export default class ChangePasswordHandler {
    *
    * @private
    */
-  displayFeedback($outputContainer, passwordStrength, isPasswordValid) {
+  private displayFeedback(
+    $outputContainer: JQuery,
+    passwordStrength: number,
+    isPasswordValid: boolean,
+  ): void {
     const feedback = this.getPasswordStrengthFeedback(passwordStrength);
     $outputContainer.text(feedback.message);
     $outputContainer.removeClass('text-danger text-warning text-success');
@@ -98,7 +104,7 @@ export default class ChangePasswordHandler {
    *
    * @private
    */
-  getPasswordStrengthFeedback(strength) {
+  private getPasswordStrengthFeedback(strength: number) {
     switch (strength) {
       case $.passy.strength.LOW:
         return {

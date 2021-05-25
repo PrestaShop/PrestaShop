@@ -6,6 +6,7 @@
     "target": "es5",
     "strict": true,
     "moduleResolution": "node",
+    "allowSyntheticDefaultImports": true,
     "allowJs": true,
     "baseUrl": "./",
     "paths": {

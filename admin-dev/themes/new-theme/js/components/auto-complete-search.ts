@@ -29,14 +29,22 @@
  * functions which are, of course, overridable.
  */
 
+interface TypeaheadJQueryDataset extends Twitter.Typeahead.Dataset<any> {
+  dataLimit: number;
+  value: string;
+  onSelect: (selectedItem: unknown, event: JQueryEventObject) => boolean;
+  onClose: (event: Event) => void;
+  templates: any;
+}
+
 export default class AutoCompleteSearch {
   $searchInput: JQuery;
 
   searchInputId: string;
 
-  config: TypeaheadConfig;
+  config: Twitter.Typeahead.Options;
 
-  dataSetConfig: TypeaheadDatasetConfig;
+  dataSetConfig: TypeaheadJQueryDataset;
 
   constructor($searchInput: JQuery, config: Record<string, unknown>) {
     this.$searchInput = $searchInput;
@@ -47,12 +55,12 @@ export default class AutoCompleteSearch {
     this.config = {
       minLength: 2,
       highlight: true,
-      cache: false,
       hint: false,
       ...inputConfig,
     };
 
     // Merge default and input dataSetConfig
+    // @ts-ignore-next-line
     this.dataSetConfig = {
       display: 'name', // Which field of the object from the list is used for display (can be a string or a callback)
       value: 'id', // Which field of the object from the list is used for value (can be a string or a callback)
@@ -80,10 +88,10 @@ export default class AutoCompleteSearch {
         } else if (
           Object.prototype.hasOwnProperty.call(
             item,
-            <string>this.dataSetConfig.display
+            <string> this.dataSetConfig.display,
           )
         ) {
-          displaySuggestion = item[this.dataSetConfig.display];
+          displaySuggestion = item[<string> this.dataSetConfig.display];
         }
 
         return `<div class="px-2">${displaySuggestion}</div>`;
@@ -112,6 +120,7 @@ export default class AutoCompleteSearch {
    * Build the typeahead component based on provided configuration.
    */
   buildTypeahead(): void {
+    /* eslint-disable */
     this.$searchInput
       .typeahead(this.config, this.dataSetConfig)
       .bind('typeahead:select', (e: any, selectedItem: unknown) =>
@@ -120,5 +129,6 @@ export default class AutoCompleteSearch {
       .bind('typeahead:close', (e: any) => {
         this.dataSetConfig.onClose(e, this.$searchInput);
       });
+    /* eslint-enable */
   }
 }
