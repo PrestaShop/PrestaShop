@@ -33,5 +33,5 @@ interface UpdateTabPermissionsHandlerInterface
     /**
      * @param UpdateTabPermissionsCommand $command
      */
-    public function handle(UpdateTabPermissionsCommand $command);
+    public function handle(UpdateTabPermissionsCommand $command): void;
 }
