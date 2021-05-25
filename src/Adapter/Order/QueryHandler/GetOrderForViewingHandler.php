@@ -390,7 +390,6 @@ final class GetOrderForViewingHandler extends AbstractOrderHandler implements Ge
             $amount = null;
             $numericAmount = null;
             $amountMismatch = null;
-            $availableAction = null;
             $isAddPaymentAllowed = false;
 
             if ($document instanceof OrderInvoice) {
@@ -438,10 +437,10 @@ final class GetOrderForViewingHandler extends AbstractOrderHandler implements Ge
                     $document->delivery_number
                 );
                 $amount = $this->locale->formatPrice(
-                    $document->total_shipping_tax_incl,
+                    $document->total_paid_tax_incl,
                     $currency->iso_code
                 );
-                $numericAmount = $document->total_shipping_tax_incl;
+                $numericAmount = $document->total_paid_tax_incl;
             } elseif (OrderDocumentType::CREDIT_SLIP === $type) {
                 $conf = $this->configuration->get('PS_CREDIT_SLIP_PREFIX');
                 $number = sprintf(
@@ -519,8 +518,8 @@ final class GetOrderForViewingHandler extends AbstractOrderHandler implements Ge
                 $trackingUrl = null;
                 $trackingNumber = $item['tracking_number'];
 
-                if ($item['url'] && $item['tracking_number']) {
-                    $trackingUrl = str_replace('@', $item['tracking_number'], $item['url']);
+                if ($item['url'] && $trackingNumber) {
+                    $trackingUrl = str_replace('@', $trackingNumber, $item['url']);
                 }
 
                 $weight = sprintf('%.3f %s', $item['weight'], $this->configuration->get('PS_WEIGHT_UNIT'));

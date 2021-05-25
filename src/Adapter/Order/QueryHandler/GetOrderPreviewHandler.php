@@ -166,13 +166,13 @@ final class GetOrderPreviewHandler implements GetOrderPreviewHandlerInterface
         $carrierName = $trackingUrl = null;
         $stateName = Validate::isLoadedObject($state) ? $state->name : null;
 
-        if (Validate::isLoadedObject($carrier)) {
-            $carrierName = $carrier->name;
-            $trackingUrl = $carrier->url;
-        }
-
         $orderCarrierId = $order->getIdOrderCarrier();
         $orderCarrier = new OrderCarrier($orderCarrierId);
+
+        if (Validate::isLoadedObject($carrier)) {
+            $carrierName = $carrier->name;
+            $trackingUrl = str_replace('@', $orderCarrier->tracking_number ?: '@', $carrier->url);
+        }
 
         $dni = Address::dniRequired($address->id_country) ? $address->dni : null;
 
