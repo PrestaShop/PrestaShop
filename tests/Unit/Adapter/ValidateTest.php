@@ -63,7 +63,7 @@ class ValidateTest extends TestCase
     /**
      * @dataProvider isStringDataProvider
      */
-    public function testIsString($expected, $data)
+    public function testIsString(bool $expected, $data): void
     {
         $this->assertSame($expected, Validate::isString($data));
     }
