@@ -2,7 +2,7 @@ admin_employees_index:
   path: /
   methods: [GET]
   defaults:
-    _controller: 'PrestaShopBundle:Admin\Configure\AdvancedParameters\Employee:index'
+    _controller: 'PrestaShopBundle\Controller\Admin\Configure\AdvancedParameters\EmployeeController::indexAction'
     _legacy_controller: AdminEmployees
     _legacy_link: AdminEmployees
 
@@ -10,7 +10,7 @@ admin_employees_search:
   path: /
   methods: [POST]
   defaults:
-    _controller: 'PrestaShopBundle:Admin\Common:searchGrid'
+    _controller: 'PrestaShopBundle\Controller\Admin\CommonController::searchGridAction'
     _legacy_controller: AdminEmployees
     _legacy_link: AdminEmployees:submitFilteremployee
     gridDefinitionFactoryServiceId: prestashop.core.grid.definition.factory.employee
@@ -20,7 +20,7 @@ admin_employees_save_options:
   path: /save-options
   methods: [POST]
   defaults:
-    _controller: 'PrestaShopBundle:Admin\Configure\AdvancedParameters\Employee:saveOptions'
+    _controller: 'PrestaShopBundle\Controller\Admin\Configure\AdvancedParameters\EmployeeController::saveOptionsAction'
     _legacy_controller: AdminEmployees
     _legacy_link: AdminEmployees:submitOptionsemployee
 
@@ -28,7 +28,7 @@ admin_employees_toggle_status:
   path: /{employeeId}/toggle-status
   methods: [POST]
   defaults:
-    _controller: 'PrestaShopBundle:Admin\Configure\AdvancedParameters\Employee:toggleStatus'
+    _controller: 'PrestaShopBundle\Controller\Admin\Configure\AdvancedParameters\EmployeeController::toggleStatusAction'
     _legacy_controller: AdminEmployees
     _legacy_link: AdminEmployees:statusemployee
     _legacy_parameters:
@@ -38,7 +38,7 @@ admin_employees_bulk_enable_status:
   path: /bulk-enable-status
   methods: [POST]
   defaults:
-    _controller: 'PrestaShopBundle:Admin\Configure\AdvancedParameters\Employee:bulkStatusEnable'
+    _controller: 'PrestaShopBundle\Controller\Admin\Configure\AdvancedParameters\EmployeeController::bulkStatusEnableAction'
     _legacy_controller: AdminEmployees
     _legacy_link: AdminEmployees:submitBulkenableSelectionemployee
 
@@ -46,7 +46,7 @@ admin_employees_bulk_disable_status:
   path: /bulk-disable-status
   methods: [POST]
   defaults:
-    _controller: 'PrestaShopBundle:Admin\Configure\AdvancedParameters\Employee:bulkStatusDisable'
+    _controller: 'PrestaShopBundle\Controller\Admin\Configure\AdvancedParameters\EmployeeController::bulkStatusDisableAction'
     _legacy_controller: AdminEmployees
     _legacy_link: AdminEmployees:submitBulkdisableSelectionemployee
 
@@ -54,7 +54,7 @@ admin_employees_delete:
   path: /{employeeId}/delete
   methods: [POST]
   defaults:
-    _controller: 'PrestaShopBundle:Admin\Configure\AdvancedParameters\Employee:delete'
+    _controller: 'PrestaShopBundle\Controller\Admin\Configure\AdvancedParameters\EmployeeController::deleteAction'
     _legacy_controller: AdminEmployees
     _legacy_link: AdminEmployees:deleteemployee
     _legacy_parameters:
@@ -64,7 +64,7 @@ admin_employees_bulk_delete:
   path: /bulk-delete
   methods: [POST]
   defaults:
-    _controller: 'PrestaShopBundle:Admin\Configure\AdvancedParameters\Employee:bulkDelete'
+    _controller: 'PrestaShopBundle\Controller\Admin\Configure\AdvancedParameters\EmployeeController::bulkDeleteAction'
     _legacy_controller: AdminEmployees
     _legacy_link: AdminEmployees:submitBulkdeleteemployee
 
@@ -72,7 +72,7 @@ admin_employees_create:
   path: /new
   methods: [GET,POST]
   defaults:
-    _controller: 'PrestaShopBundle:Admin\Configure\AdvancedParameters\Employee:create'
+    _controller: 'PrestaShopBundle\Controller\Admin\Configure\AdvancedParameters\EmployeeController::createAction'
     _legacy_controller: AdminEmployees
     _legacy_link: AdminEmployees:addemployee
 
@@ -80,7 +80,7 @@ admin_employees_edit:
   path: /{employeeId}/edit
   methods: [GET,POST]
   defaults:
-    _controller: 'PrestaShopBundle:Admin\Configure\AdvancedParameters\Employee:edit'
+    _controller: 'PrestaShopBundle\Controller\Admin\Configure\AdvancedParameters\EmployeeController::editAction'
     _legacy_controller: AdminEmployees
     _legacy_link: AdminEmployees:updateemployee
     _legacy_parameters:
@@ -92,17 +92,17 @@ admin_employees_toggle_navigation:
   path: /toggle-navigation
   methods: [POST]
   defaults:
-    _controller: 'PrestaShopBundle:Admin\Configure\AdvancedParameters\Employee:toggleNavigationMenu'
+    _controller: 'PrestaShopBundle\Controller\Admin\Configure\AdvancedParameters\EmployeeController::toggleNavigationMenuAction'
 
 admin_employees_change_form_language:
   path: /change-form-language
   methods: [POST]
   defaults:
-    _controller: 'PrestaShopBundle:Admin\Configure\AdvancedParameters\Employee:changeFormLanguage'
+    _controller: 'PrestaShopBundle\Controller\Admin\Configure\AdvancedParameters\EmployeeController::changeFormLanguageAction'
 
 admin_employees_get_tabs:
   path: /tabs
   methods: [GET]
   defaults:
-    _controller: 'PrestaShopBundle:Admin\Configure\AdvancedParameters\Employee:getAccessibleTabs'
+    _controller: 'PrestaShopBundle\Controller\Admin\Configure\AdvancedParameters\EmployeeController::getAccessibleTabsAction'
     _legacy_controller: AdminEmployees

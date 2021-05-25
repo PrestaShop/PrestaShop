@@ -2,7 +2,7 @@ admin_order_preferences:
     path: /
     methods: [GET]
     defaults:
-        _controller: 'PrestaShopBundle:Admin\Configure\ShopParameters\OrderPreferences:index'
+        _controller: 'PrestaShopBundle\Controller\Admin\Configure\ShopParameters\OrderPreferencesController::indexAction'
         _legacy_controller: AdminOrderPreferences
         _legacy_link: AdminOrderPreferences
 
@@ -10,7 +10,7 @@ admin_order_preferences_general_save:
     path: /general
     methods: [POST]
     defaults:
-        _controller: 'PrestaShopBundle:Admin\Configure\ShopParameters\OrderPreferences:processGeneralForm'
+        _controller: 'PrestaShopBundle\Controller\Admin\Configure\ShopParameters\OrderPreferencesController::processGeneralFormAction'
         _legacy_controller: AdminOrderPreferences
         _legacy_link: AdminOrderPreferences:update
 
@@ -18,5 +18,5 @@ admin_order_preferences_gift_options_save:
     path: /gift-options
     methods: [POST]
     defaults:
-        _controller: 'PrestaShopBundle:Admin\Configure\ShopParameters\OrderPreferences:processGiftOptionsForm'
+        _controller: 'PrestaShopBundle\Controller\Admin\Configure\ShopParameters\OrderPreferencesController::processGiftOptionsFormAction'
         _legacy_controller: AdminOrderPreferences

@@ -2,7 +2,7 @@ admin_currencies_index:
     path: /
     methods: GET
     defaults:
-        _controller: 'PrestaShopBundle:Admin\Improve\International\Currency:index'
+        _controller: 'PrestaShopBundle\Controller\Admin\Improve\International\CurrencyController::indexAction'
         _legacy_controller: AdminCurrencies
         _legacy_link: AdminCurrencies
 
@@ -10,7 +10,7 @@ admin_currencies_search:
     path: /
     methods: POST
     defaults:
-        _controller: PrestaShopBundle:Admin\Common:searchGrid
+        _controller: PrestaShopBundle\Controller\Admin\CommonController::searchGridAction
         gridDefinitionFactoryServiceId: prestashop.core.grid.definition.factory.currency
         redirectRoute: admin_currencies_index
         _legacy_controller: AdminCurrencies
@@ -20,7 +20,7 @@ admin_currencies_create:
     path: /new
     methods: [GET, POST]
     defaults:
-        _controller: 'PrestaShopBundle:Admin\Improve\International\Currency:create'
+        _controller: 'PrestaShopBundle\Controller\Admin\Improve\International\CurrencyController::createAction'
         _legacy_controller: AdminCurrencies
         _legacy_link: AdminCurrencies:addcurrency
 
@@ -28,7 +28,7 @@ admin_currencies_edit:
     path: /{currencyId}/edit
     methods: [GET, POST]
     defaults:
-        _controller: 'PrestaShopBundle:Admin\Improve\International\Currency:edit'
+        _controller: 'PrestaShopBundle\Controller\Admin\Improve\International\CurrencyController::editAction'
         _legacy_controller: AdminCurrencies
         _legacy_link: AdminCurrencies:updatecurrency
         _legacy_parameters:
@@ -40,7 +40,7 @@ admin_currencies_delete:
     path: /{currencyId}/delete
     methods: DELETE
     defaults:
-        _controller: 'PrestaShopBundle:Admin\Improve\International\Currency:delete'
+        _controller: 'PrestaShopBundle\Controller\Admin\Improve\International\CurrencyController::deleteAction'
         _legacy_controller: AdminCurrencies
         _legacy_link: AdminCurrencies:deletecurrency
         _legacy_parameters:
@@ -52,7 +52,7 @@ admin_currencies_toggle_status:
     path: /{currencyId}/toggle-status
     methods: POST
     defaults:
-        _controller: 'PrestaShopBundle:Admin\Improve\International\Currency:toggleStatus'
+        _controller: 'PrestaShopBundle\Controller\Admin\Improve\International\CurrencyController::toggleStatusAction'
         _legacy_controller: AdminCurrencies
         _legacy_link: AdminCurrencies:statuscurrency
         _legacy_parameters:
@@ -64,14 +64,14 @@ admin_currencies_update_live_exchange_rates:
     path: /update-live-exchange-rates
     methods: POST
     defaults:
-        _controller: 'PrestaShopBundle:Admin\Improve\International\Currency:updateLiveExchangeRates'
+        _controller: 'PrestaShopBundle\Controller\Admin\Improve\International\CurrencyController::updateLiveExchangeRatesAction'
         _legacy_controller: AdminCurrencies
 
 admin_currencies_refresh_exchange_rates:
     path: /refresh-exchange-rates
     methods: POST
     defaults:
-        _controller: 'PrestaShopBundle:Admin\Improve\International\Currency:refreshExchangeRates'
+        _controller: 'PrestaShopBundle\Controller\Admin\Improve\International\CurrencyController::refreshExchangeRatesAction'
         _legacy_controller: AdminCurrencies
         _legacy_link: AdminCurrencies:SubmitExchangesRates
 
@@ -79,7 +79,7 @@ admin_currencies_get_reference_data:
   path: /reference-data/{currencyIsoCode}
   methods: GET
   defaults:
-    _controller: 'PrestaShopBundle:Admin\Improve\International\Currency:getReferenceData'
+    _controller: 'PrestaShopBundle\Controller\Admin\Improve\International\CurrencyController::getReferenceDataAction'
     _legacy_controller: AdminCurrencies
     _legacy_link: AdminCurrencies:getReferenceData
 
@@ -87,7 +87,7 @@ admin_currencies_bulk_delete:
   path: /bulk-delete
   methods: [POST, DELETE]
   defaults:
-    _controller: 'PrestaShopBundle:Admin\Improve\International\Currency:bulkDelete'
+    _controller: 'PrestaShopBundle\Controller\Admin\Improve\International\CurrencyController::bulkDeleteAction'
     _legacy_controller: AdminCurrencies
     _legacy_link: AdminCurrencies:submitBulkdeletecurrency
 
@@ -95,7 +95,7 @@ admin_currencies_bulk_toggle_status:
   path: /bulk-toggle-status/{status}
   methods: [POST]
   defaults:
-    _controller: 'PrestaShopBundle:Admin\Improve\International\Currency:bulkToggleStatus'
+    _controller: 'PrestaShopBundle\Controller\Admin\Improve\International\CurrencyController::bulkToggleStatusAction'
     _legacy_controller: AdminCurrencies
     _legacy_link: AdminCurrencies:submitBulkupdatecurrency
   requirements:

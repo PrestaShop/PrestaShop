@@ -3,7 +3,7 @@ admin_shipping_preferences:
     path: /
     methods: [GET]
     defaults:
-        _controller: 'PrestaShopBundle:Admin\Improve\Shipping\Preferences:index'
+        _controller: 'PrestaShopBundle\Controller\Admin\Improve\Shipping\PreferencesController::indexAction'
         _legacy_controller: AdminShipping
         _legacy_link: AdminShipping
 
@@ -11,7 +11,7 @@ admin_shipping_preferences_handling_save:
     path: /handling
     methods: [POST]
     defaults:
-        _controller: 'PrestaShopBundle:Admin\Improve\Shipping\Preferences:processHandlingForm'
+        _controller: 'PrestaShopBundle\Controller\Admin\Improve\Shipping\PreferencesController::processHandlingFormAction'
         _legacy_controller: AdminShipping
         _legacy_link: AdminShipping:update
 
@@ -19,5 +19,5 @@ admin_shipping_preferences_carrier_options_save:
     path: /carrier-options
     methods: [POST]
     defaults:
-        _controller: 'PrestaShopBundle:Admin\Improve\Shipping\Preferences:processCarrierOptionsForm'
+        _controller: 'PrestaShopBundle\Controller\Admin\Improve\Shipping\PreferencesController::processCarrierOptionsFormAction'
         _legacy_controller: AdminShipping
