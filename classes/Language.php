@@ -1600,7 +1600,7 @@ class LanguageCore extends ObjectModel implements LanguageInterface
         }
 
         // Fetch all countries from Intl in specified locale
-        $langCountries = (new self())->getCountries($lang->locale);
+        $langCountries = (new self())->getCountries($lang->getLocale());
         foreach ($translatableCountries as $country) {
             $isoCode = strtolower($country['iso_code']);
             if (empty($langCountries[$isoCode])) {
@@ -1630,7 +1630,7 @@ class LanguageCore extends ObjectModel implements LanguageInterface
 
         try {
             $classObject = (new DataLangFactory(_DB_PREFIX_, $translator))
-                ->buildFromClassName($className, $lang->locale);
+                ->buildFromClassName($className, $lang->getLocale());
         } catch (DataLangClassNameNotFoundException $e) {
             return;
         }

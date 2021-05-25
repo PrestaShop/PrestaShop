@@ -104,6 +104,12 @@ class XmlLoader1700 extends XmlLoader
         if (isset($data['enabled'])) {
             unset($data['enabled']);
         }
+        if (isset($data['wording'])) {
+            unset($data['wording']);
+        }
+        if (isset($data['wording_domain'])) {
+            unset($data['wording_domain']);
+        }
         parent::createEntityTab($identifier, $data, $data_lang);
     }
 }
