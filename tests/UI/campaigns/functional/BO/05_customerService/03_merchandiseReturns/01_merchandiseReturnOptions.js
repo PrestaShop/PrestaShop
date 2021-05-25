@@ -38,10 +38,12 @@ let page;
 /*
 Create order in FO
 Activate/Deactivate merchandise return
+Update returns prefix
 Change the first order status in the list to shipped
 Check the existence of the button return products
 Go to FO>My account>Order history> first order detail in the list
 Check the existence of product return form
+Create a merchandise returns then check the file prefix
  */
 describe('Merchandise return (RMA) options', async () => {
   // before and after functions
