@@ -100,7 +100,6 @@ class ProductType
     }
 
     /**
-     *
      * @param string $value
      *
      * @throws ProductConstraintException
