@@ -56,7 +56,8 @@ class PreferencesController extends FrameworkBundleAdminController
     }
 
     /**
-     * @AdminSecurity("is_granted(['update', 'create', 'delete'], request.get('_legacy_controller'))",
+     * @AdminSecurity(
+     *     "is_granted('update', request.get('_legacy_controller')) && is_granted('create', request.get('_legacy_controller')) && is_granted('delete', request.get('_legacy_controller'))",
      *     message="You do not have permission to edit this.",
      *     redirectRoute="admin_shipping_preferences")
      *
@@ -93,7 +94,8 @@ class PreferencesController extends FrameworkBundleAdminController
     }
 
     /**
-     * @AdminSecurity("is_granted(['update', 'create', 'delete'], request.get('_legacy_controller'))",
+     * @AdminSecurity(
+     *     "is_granted('update', request.get('_legacy_controller')) && is_granted('create', request.get('_legacy_controller')) && is_granted('delete', request.get('_legacy_controller'))",
      *     message="You do not have permission to edit this.",
      *     redirectRoute="admin_shipping_preferences")
      *
