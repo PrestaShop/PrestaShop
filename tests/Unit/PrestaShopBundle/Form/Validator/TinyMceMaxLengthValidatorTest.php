@@ -69,7 +69,7 @@ class TinyMceMaxLengthValidatorTest extends ConstraintValidatorTestCase
      */
     public function testExceptionsInvalidTinyMceMaxLength(Exception $expectedException, $tinyMceMaxLength): void
     {
-        $expectedExceptionClassName = \get_class($expectedException);
+        $expectedExceptionClassName = get_class($expectedException);
         $this->expectException($expectedExceptionClassName);
         $this->validator->validate(
             'fakeTinyMceText',
