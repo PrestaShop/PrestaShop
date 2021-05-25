@@ -23,6 +23,7 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
 
+// @ts-ignore-next-line
 import Bloodhound from 'typeahead.js';
 import Router from '@components/router';
 import AutoCompleteSearch from '@components/auto-complete-search';
@@ -57,16 +58,16 @@ const initMultistoreDropdown = () => {
     display: 'name',
     value: 'id',
     source,
-    /* eslint-disable-next-line no-unused-vars */
-    onSelect(selectedItem, event) {
+    /* eslint-disable-next-line @typescript-eslint/no-unused-vars */
+    onSelect(selectedItem: any, event: Event) {
       const contextUrlLetter = typeof selectedItem.groupName !== 'undefined' ? 's' : 'g';
       const setContextUrl = `${window.location.href}&setShopContext=${contextUrlLetter}-${selectedItem.id}`;
       window.location.href = setContextUrl;
 
       return true;
     },
-    /* eslint-disable-next-line no-unused-vars */
-    onClose(event) {},
+    /* eslint-disable-next-line */
+    onClose(event: Event) {},
   };
 
   new AutoCompleteSearch($searchInput, dataSetConfig);

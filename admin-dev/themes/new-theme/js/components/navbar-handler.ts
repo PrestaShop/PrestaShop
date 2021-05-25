@@ -35,7 +35,11 @@
  * and of course the hash is kept in sync when the navbar or alternative links are used.
  */
 export default class NavbarHandler {
-  constructor($navigationContainer, tabPrefix) {
+  tabPrefix: string;
+
+  $navigationContainer: JQuery;
+
+  constructor($navigationContainer: JQuery, tabPrefix: string) {
     // We use a tab prefix for hastag so that on reload the page doesn't auto scroll to the anchored element
     this.tabPrefix = tabPrefix || 'tab-';
     this.$navigationContainer = $navigationContainer;
@@ -45,7 +49,7 @@ export default class NavbarHandler {
     this.switchOnPageLoad();
   }
 
-  switchToTarget(target) {
+  switchToTarget(target: string): void {
     if (!target) {
       return;
     }
@@ -60,30 +64,35 @@ export default class NavbarHandler {
     this.switchToTab(tabLink);
   }
 
-  switchToTab(tab) {
+  switchToTab(tab: JQuery): void {
     tab.click();
-    this.updateBrowserHash(tab.attr('href'));
+    this.updateBrowserHash(<string>tab.attr('href'));
   }
 
-  updateBrowserHash(target) {
+  updateBrowserHash(target: string): void {
     const hashName = target.replace('#', `#${this.tabPrefix}`);
 
     if (window.history.pushState) {
-      window.history.pushState(null, null, hashName);
+      window.history.pushState(null, '', hashName);
     } else {
       window.location.hash = hashName;
     }
   }
 
-  watchNavbar() {
-    $(this.$navigationContainer).on('shown.bs.tab', (event) => {
-      if (event.target.hash) {
-        this.updateBrowserHash(event.target.hash);
-      }
-    });
+  watchNavbar(): void {
+    $(this.$navigationContainer).on(
+      'shown.bs.tab',
+      (event: JQueryEventObject) => {
+        // @ts-ignore-next-line
+        if (event.target.hash) {
+          // @ts-ignore-next-line
+          this.updateBrowserHash(event.target.hash);
+        }
+      },
+    );
   }
 
-  watchTabLinks() {
+  watchTabLinks(): void {
     $('.tab-link').click((event) => {
       event.preventDefault();
       const target = $(event.target).attr('href');
@@ -96,7 +105,7 @@ export default class NavbarHandler {
     });
   }
 
-  switchOnPageLoad() {
+  switchOnPageLoad(): void {
     const errorTabs = $('.has-error', this.$navigationContainer);
 
     if (errorTabs.length) {

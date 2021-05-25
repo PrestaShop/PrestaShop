@@ -33,32 +33,32 @@ const {$} = window;
  * Also compatible with TranslatableInput changes.
  */
 class TranslatableField {
-  constructor(options) {
+  localeButtonSelector: string;
+
+  localeNavigationSelector: string;
+
+  translationFieldSelector: string;
+
+  selectedLocale: string;
+
+  constructor(options: Record<string, any>) {
     const opts = options || {};
 
-    this.localeButtonSelector = opts.localeButtonSelector || '.translationsLocales.nav .nav-item a[data-toggle="tab"]';
+    this.localeButtonSelector = opts.localeButtonSelector
+      || '.translationsLocales.nav .nav-item a[data-toggle="tab"]';
     this.localeNavigationSelector = opts.localeNavigationSelector || '.translationsLocales.nav';
     this.translationFieldSelector = opts.translationFieldSelector || '.translation-field';
-    this.selectedLocale = $('.nav-item a.active', $(this.localeNavigationSelector)).data('locale');
+    this.selectedLocale = $(
+      '.nav-item a.active',
+      $(this.localeNavigationSelector),
+    ).data('locale');
 
-    $('body').on('shown.bs.tab', this.localeButtonSelector, this.toggleLanguage.bind(this));
+    $('body').on(
+      'shown.bs.tab',
+      this.localeButtonSelector,
+      this.toggleLanguage.bind(this),
+    );
     EventEmitter.on('languageSelected', this.toggleFields.bind(this));
-
-    return {
-      localeButtonSelector: this.localeButtonSelector,
-      localeNavigationSelector: this.localeNavigationSelector,
-      translationFieldSelector: this.translationFieldSelector,
-
-      /**
-       * @param {jQuery} form
-       */
-      refreshFormInputs: (form) => { this.refreshInputs(form); },
-
-      /**
-       * @returns {string|undefined}
-       */
-      getSelectedLocale: () => this.selectedLocale,
-    };
   }
 
   /**
@@ -66,7 +66,7 @@ class TranslatableField {
    *
    * @private
    */
-  refreshInputs(form) {
+  private refreshInputs(form: JQuery<Element>) {
     EventEmitter.emit('languageSelected', {
       selectedLocale: this.selectedLocale,
       form,
@@ -80,7 +80,7 @@ class TranslatableField {
    *
    * @private
    */
-  toggleLanguage(event) {
+  toggleLanguage(event: JQueryEventObject): void {
     const localeLink = $(event.target);
     const form = localeLink.closest('form');
     this.selectedLocale = localeLink.data('locale');
@@ -94,14 +94,17 @@ class TranslatableField {
    *
    * @private
    */
-  toggleFields(event) {
+  toggleFields(event: Record<string, string>): void {
     this.selectedLocale = event.selectedLocale;
+
     $(this.localeNavigationSelector).each((index, navigation) => {
       const selectedLink = $('.nav-item a.active', navigation);
       const selectedLocale = selectedLink.data('locale');
 
       if (this.selectedLocale !== selectedLocale) {
-        $(`.nav-item a[data-locale="${this.selectedLocale}"]`, navigation).tab('show');
+        $(`.nav-item a[data-locale="${this.selectedLocale}"]`, navigation).tab(
+          'show',
+        );
       }
     });
   }

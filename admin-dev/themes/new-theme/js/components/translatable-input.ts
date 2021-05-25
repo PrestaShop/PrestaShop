@@ -33,7 +33,13 @@ const {$} = window;
  * Also compatible with TranslatableField changes.
  */
 class TranslatableInput {
-  constructor(options) {
+  localeItemSelector: string;
+
+  localeButtonSelector: string;
+
+  localeInputSelector: string;
+
+  constructor(options: Record<string, any>) {
     const opts = options || {};
 
     this.localeItemSelector = opts.localeItemSelector || '.js-locale-item';
@@ -88,7 +94,7 @@ class TranslatableInput {
    *
    * @private
    */
-  toggleLanguage(event) {
+  toggleLanguage(event: JQueryEventObject): void {
     const localeItem = $(event.target);
     const form = localeItem.closest('form');
     this.selectedLocale = localeItem.data('locale');
@@ -102,7 +108,7 @@ class TranslatableInput {
    *
    * @private
    */
-  toggleInputs(event) {
+  toggleInputs(event: Record<string, any>): void {
     const {form} = event;
     this.selectedLocale = event.selectedLocale;
     const localeButton = form.find(this.localeButtonSelector);
@@ -127,7 +133,10 @@ class TranslatableInput {
    *
    * @private
    */
-  saveSelectedLanguage(changeLanguageUrl, selectedLocale) {
+  private saveSelectedLanguage(
+    changeLanguageUrl: string,
+    selectedLocale: string,
+  ): void {
     $.post({
       url: changeLanguageUrl,
       data: {

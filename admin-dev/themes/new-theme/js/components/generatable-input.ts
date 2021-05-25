@@ -50,12 +50,6 @@
  * as long as 2 required data-* attributes are present at each button.
  */
 export default class GeneratableInput {
-  constructor() {
-    return {
-      attachOn: (btnSelector) => this.attachOn(btnSelector),
-    };
-  }
-
   /**
    * Attaches event listener on button than can generate value
    *
@@ -63,17 +57,23 @@ export default class GeneratableInput {
    *
    * @private
    */
-  attachOn(generatorBtnSelector) {
+  private attachOn(generatorBtnSelector: string): void {
     const generatorBtn = document.querySelector(generatorBtnSelector);
 
     if (generatorBtn !== null) {
-      generatorBtn.addEventListener('click', (event) => {
-        const {attributes} = event.currentTarget;
+      generatorBtn.addEventListener('click', (event: Event): void => {
+        const {attributes} = <HTMLButtonElement>event.currentTarget;
 
-        const targetInputId = attributes.getNamedItem('data-target-input-id').value;
-        const generatedValueLength = parseInt(attributes.getNamedItem('data-generated-value-length').value, 10);
+        const targetInputId = attributes.getNamedItem('data-target-input-id')
+          ?.value;
+        const generatedValueLength = parseInt(
+          <string>attributes.getNamedItem('data-generated-value-length')?.value,
+          10,
+        );
 
-        const targetInput = document.querySelector(`#${targetInputId}`);
+        const targetInput = <HTMLInputElement>(
+          document.querySelector(`#${targetInputId}`)
+        );
         targetInput.value = this.generateValue(generatedValueLength);
       });
     }
@@ -88,7 +88,7 @@ export default class GeneratableInput {
    *
    * @private
    */
-  generateValue(length) {
+  private generateValue(length: number): string {
     const chars = '123456789ABCDEFGHIJKLMNPQRSTUVWXYZ';
     let generatedValue = '';
 

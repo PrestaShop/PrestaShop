@@ -25,6 +25,12 @@
 
 const {$} = window;
 
+interface TextToLinkParams {
+  sourceElementSelector: string;
+  destinationElementSelector: string;
+  options: Record<string, string>;
+}
+
 /**
  * Component which allows to copy regular text to url friendly text
  *
@@ -57,15 +63,15 @@ const {$} = window;
  * });
  *
  */
-const textToLinkRewriteCopier = (
-  {
-    sourceElementSelector,
-    destinationElementSelector,
-    options = {eventName: 'input'},
-  },
-) => {
+const textToLinkRewriteCopier = ({
+  sourceElementSelector,
+  destinationElementSelector,
+  options = {eventName: 'input'},
+}: TextToLinkParams): void => {
   $(document).on(options.eventName, `${sourceElementSelector}`, (event) => {
-    $(destinationElementSelector).val(window.str2url($(event.currentTarget).val(), 'UTF-8'));
+    $(destinationElementSelector).val(
+      window.str2url($(event.currentTarget).val(), 'UTF-8'),
+    );
   });
 };
 

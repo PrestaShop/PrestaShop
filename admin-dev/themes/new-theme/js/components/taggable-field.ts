@@ -25,33 +25,23 @@
 
 const {$} = window;
 
+interface TaggableFieldParams {
+  tokenFieldSelector: string;
+  options: any;
+}
+
 /**
- * MultipleChoiceTable is responsible for managing common actions in multiple choice table form type
+ * class TaggableField is responsible for providing functionality from bootstrap-tokenfield plugin.
+ * It allows to have taggable fields which are split in separate blocks once you click enter. Values originally saved
+ * in comma split strings.
  */
-export default class MultipleChoiceTable {
+export default class TaggableField {
   /**
-   * Init constructor
+   * @param {string} tokenFieldSelector -  a selector which is used within jQuery object.
+   * @param {object} options - extends basic tokenField behavior with additional options such as minLength, delimiter,
+   * allow to add token on focus out action. See bootstrap-tokenfield docs for more information.
    */
-  constructor() {
-    $(document).on('click', '.js-multiple-choice-table-select-column', (e) => this.handleSelectColumn(e));
-  }
-
-  /**
-   * Check/uncheck all boxes in column
-   *
-   * @param {Event} event
-   */
-  handleSelectColumn(event) {
-    event.preventDefault();
-
-    const $selectColumnBtn = $(event.target);
-    const checked = $selectColumnBtn.data('column-checked');
-    $selectColumnBtn.data('column-checked', !checked);
-
-    const $table = $selectColumnBtn.closest('table');
-
-    $table
-      .find(`tbody tr td:nth-child(${$selectColumnBtn.data('column-num')}) input[type=checkbox]`)
-      .prop('checked', !checked);
+  constructor({tokenFieldSelector, options = {}}: TaggableFieldParams) {
+    $(tokenFieldSelector).tokenfield(options);
   }
 }

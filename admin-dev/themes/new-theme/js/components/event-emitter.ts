@@ -23,12 +23,12 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
 
-import {EventEmitter} from 'events';
+import {EventEmitter as EventEmitterClass} from 'events';
 
 /**
  * We instanciate one EventEmitter (restricted via a const) so that every components
  * register/dispatch on the same one and can communicate with each other.
  */
-export const EventEmitterInstance = new EventEmitter();
+export const EventEmitter = new EventEmitterClass();
 
-export default EventEmitterInstance;
+export default EventEmitter;
