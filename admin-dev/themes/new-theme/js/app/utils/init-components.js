@@ -37,6 +37,7 @@ import TextWithLengthCounter from '@components/form/text-with-length-counter';
 import PreviewOpener from '@components/form/preview-opener';
 import MultistoreConfigField from '@js/components/form/multistore-config-field.js';
 import {EventEmitter} from '@components/event-emitter';
+import Router from '@components/router';
 
 const initPrestashopComponents = () => {
   window.prestashop = {...window.prestashop};
@@ -93,6 +94,7 @@ const initPrestashopComponents = () => {
     TextWithLengthCounter,
     MultistoreConfigField,
     PreviewOpener,
+    Router,
   };
 };
 export default initPrestashopComponents;
