@@ -65,7 +65,7 @@ class JavascriptManagerCore extends AbstractAssetManager
         $inline = false,
         $attribute = null,
         $server = 'local',
-        $version = null
+        ?string $version = null
     ) {
         if ('remote' === $server) {
             $this->add($id, $relativePath, $position, $priority, $inline, $attribute, $server, $version);
@@ -97,7 +97,7 @@ class JavascriptManagerCore extends AbstractAssetManager
      * @param string $server
      * @param string $version
      */
-    protected function add($id, $fullPath, $position, $priority, $inline, $attribute, $server, $version)
+    protected function add($id, $fullPath, $position, $priority, $inline, $attribute, $server, ?string $version)
     {
         $priority = is_int($priority) ? $priority : self::DEFAULT_PRIORITY;
         $position = $this->getSanitizedPosition($position);
