@@ -27,7 +27,7 @@
 namespace PrestaShopBundle\Event;
 
 use PrestaShop\PrestaShop\Adapter\Module\ModuleZip;
-use Symfony\Component\EventDispatcher\Event;
+use Symfony\Contracts\EventDispatcher\Event;
 
 class ModuleZipManagementEvent extends Event
 {

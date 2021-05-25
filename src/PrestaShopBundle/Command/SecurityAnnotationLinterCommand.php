@@ -26,9 +26,10 @@
 
 namespace PrestaShopBundle\Command;
 
+use PrestaShopBundle\Routing\Linter\AdminRouteProvider;
 use PrestaShopBundle\Routing\Linter\Exception\LinterException;
 use PrestaShopBundle\Routing\Linter\SecurityAnnotationLinter;
-use Symfony\Bundle\FrameworkBundle\Command\ContainerAwareCommand;
+use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
@@ -40,10 +41,26 @@ use Symfony\Component\Routing\Route;
  *
  * @see \PrestaShopBundle\Security\Annotation\AdminSecurity
  */
-final class SecurityAnnotationLinterCommand extends ContainerAwareCommand
+final class SecurityAnnotationLinterCommand extends Command
 {
     public const ACTION_LIST_ALL = 'list';
     public const ACTION_FIND_MISSING = 'find-missing';
+    /**
+     * @var AdminRouteProvider
+     */
+    private $adminRouteProvider;
+
+    /**
+     * @var SecurityAnnotationLinter
+     */
+    private $securityAnnotationLinter;
+
+    public function __construct(AdminRouteProvider $adminRouteProvider, SecurityAnnotationLinter $securityAnnotationLinter)
+    {
+        parent::__construct();
+        $this->adminRouteProvider = $adminRouteProvider;
+        $this->securityAnnotationLinter = $securityAnnotationLinter;
+    }
 
     /**
      * @param string $expression
@@ -130,20 +147,12 @@ final class SecurityAnnotationLinterCommand extends ContainerAwareCommand
      */
     private function listAllRoutesAndRelatedPermissions(InputInterface $input, OutputInterface $output)
     {
-        $container = $this->getContainer();
-
-        $adminRouteProvider = $container
-            ->get('prestashop.bundle.routing.linter.admin_route_provider');
-        /** @var SecurityAnnotationLinter $securityAnnotationLinter */
-        $securityAnnotationLinter = $container
-            ->get('prestashop.bundle.routing.linter.security_annotation_linter');
-
         $listing = [];
 
-        foreach ($adminRouteProvider->getRoutes() as $routeName => $route) {
+        foreach ($this->adminRouteProvider->getRoutes() as $routeName => $route) {
             /* @var Route $route */
             try {
-                $annotation = $securityAnnotationLinter->getRouteSecurityAnnotation($routeName, $route);
+                $annotation = $this->securityAnnotationLinter->getRouteSecurityAnnotation($routeName, $route);
                 $listing[] = [
                     $route->getDefault('_controller'),
                     implode(', ', $route->getMethods()),
@@ -172,20 +181,12 @@ final class SecurityAnnotationLinterCommand extends ContainerAwareCommand
      */
     private function findRoutesWithMissingSecurityAnnotations(InputInterface $input, OutputInterface $output)
     {
-        $container = $this->getContainer();
-
-        $adminRouteProvider = $container
-            ->get('prestashop.bundle.routing.linter.admin_route_provider');
-        /** @var SecurityAnnotationLinter $securityAnnotationLinter */
-        $securityAnnotationLinter = $container
-            ->get('prestashop.bundle.routing.linter.security_annotation_linter');
-
         $notConfiguredRoutes = [];
 
         /** @var Route $route */
-        foreach ($adminRouteProvider->getRoutes() as $routeName => $route) {
+        foreach ($this->adminRouteProvider->getRoutes() as $routeName => $route) {
             try {
-                $securityAnnotationLinter->lint($routeName, $route);
+                $this->securityAnnotationLinter->lint($routeName, $route);
             } catch (LinterException $e) {
                 $notConfiguredRoutes[] = $routeName;
             }

@@ -54,7 +54,9 @@ class PositionsController extends FrameworkBundleAdminController
      * Display hooks positions.
      *
      * @Template("@PrestaShop/Admin/Improve/Design/positions.html.twig")
-     * @AdminSecurity("is_granted(['read', 'update', 'create', 'delete'], request.get('_legacy_controller')~'_')", message="Access denied.")
+     * @AdminSecurity(
+     *     "is_granted('read', request.get('_legacy_controller')~'_') && is_granted('update', request.get('_legacy_controller')~'_') && is_granted('create', request.get('_legacy_controller')~'_') && is_granted('delete', request.get('_legacy_controller')~'_')",
+     *     message="Access denied.")
      *
      * @param Request $request
      *
@@ -144,7 +146,7 @@ class PositionsController extends FrameworkBundleAdminController
     /**
      * Unhook module.
      *
-     * @AdminSecurity("is_granted(['delete'], request.get('_legacy_controller')~'_')", message="Access denied.")
+     * @AdminSecurity("is_granted('delete', request.get('_legacy_controller')~'_')", message="Access denied.")
      *
      * @param Request $request
      *
@@ -241,7 +243,7 @@ class PositionsController extends FrameworkBundleAdminController
     /**
      * Toggle hook status
      *
-     * @AdminSecurity("is_granted(['update'], request.get('_legacy_controller')~'_')", message="Access denied.")
+     * @AdminSecurity("is_granted('update', request.get('_legacy_controller')~'_')", message="Access denied.")
      *
      * @param Request $request
      *

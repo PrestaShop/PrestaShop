@@ -38,7 +38,7 @@ use Symfony\Component\Translation\TranslatorInterface;
 
 class TranslatorLanguageLoader
 {
-    public const TRANSLATION_DIR = _PS_ROOT_DIR_ . '/app/Resources/translations';
+    public const TRANSLATION_DIR = _PS_ROOT_DIR_ . '/translations';
     private const MODULE_TRANSLATION_FILENAME_PATTERN = '#^%s[A-Z][\w.-]+\.%s\.xlf$#';
 
     /**
