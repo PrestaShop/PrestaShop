@@ -189,6 +189,7 @@ default:
                 - Tests\Integration\Behaviour\Features\Context\CommonFeatureContext
                 - Tests\Integration\Behaviour\Features\Context\Domain\OrderMessageContext
                 - Tests\Integration\Behaviour\Features\Context\OrderMessageContext
+                - Tests\Integration\Behaviour\Features\Context\Domain\CommonDomainFeatureContext
         misc:
             paths:
               - %paths.base%/Features/Scenario/Misc

@@ -40,7 +40,9 @@ const initMultistoreDropdown = () => {
     searchTerm: '__QUERY__',
   });
 
-  new PerfectScrollbar(MultistoreDropdownMap.scrollbar);
+  if ($(MultistoreDropdownMap.scrollbar).length > 0) {
+    new PerfectScrollbar(MultistoreDropdownMap.scrollbar);
+  }
 
   const source = new Bloodhound({
     datumTokenizer: Bloodhound.tokenizers.obj.whitespace,

@@ -1,8 +1,21 @@
 const faker = require('faker');
 
-module.exports = class Profile {
+/**
+ * Create new alias to use on alias creation form on search page on BO
+ * @class
+ */
+class SearchAliasData {
+  /**
+   * Constructor for class SearchAliasData
+   * @param aliasToCreate {Object} Could be used to force the value of some members
+   */
   constructor(aliasToCreate = {}) {
+    /** @member {string} Name of the alias */
     this.alias = aliasToCreate.alias || `alias_${faker.lorem.word()}`;
+
+    /** @member {string} Result to display on the search */
     this.result = aliasToCreate.result || `result_${faker.lorem.word()}`;
   }
-};
+}
+
+module.exports = SearchAliasData;

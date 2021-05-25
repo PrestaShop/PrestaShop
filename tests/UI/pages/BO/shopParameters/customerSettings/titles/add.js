@@ -1,7 +1,16 @@
 require('module-alias/register');
 const BOBasePage = require('@pages/BO/BObasePage');
 
+/**
+ * Add title page, contains functions that can be used on the page
+ * @class
+ * @extends BOBasePage
+ */
 class AddTitle extends BOBasePage {
+  /**
+   * @constructs
+   * Setting up texts and selectors to use on add title page
+   */
   constructor() {
     super();
 
@@ -30,8 +39,8 @@ class AddTitle extends BOBasePage {
 
   /**
    * Change language in form
-   * @param page
-   * @param idLang
+   * @param page {Page} Browser tab
+   * @param idLang {number} Id language to select
    * @return {Promise<void>}
    */
   async changeLanguage(page, idLang) {
@@ -48,8 +57,8 @@ class AddTitle extends BOBasePage {
 
   /**
    * Fill title form and get successful message
-   * @param page
-   * @param titleData
+   * @param page {Page} Browser tab
+   * @param titleData {TitleData} Data to set on create/edit title form
    * @return {Promise<string>}
    */
   async createEditTitle(page, titleData) {

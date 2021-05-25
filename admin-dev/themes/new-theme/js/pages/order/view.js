@@ -155,9 +155,17 @@ $(() => {
     const $valueInput = $form.find(OrderViewPageMap.addCartRuleValueInput);
     const $valueFormGroup = $valueInput.closest('.form-group');
 
+    $modal.on('shown.bs.modal', () => {
+      $(OrderViewPageMap.addCartRuleSubmit).attr('disabled', true);
+    });
+
+    $form.find(OrderViewPageMap.addCartRuleNameInput).on('keyup', (event) => {
+      const cartRuleName = $(event.currentTarget).val();
+      $(OrderViewPageMap.addCartRuleSubmit).attr('disabled', cartRuleName.trim().length === 0);
+    });
+
     $form.find(OrderViewPageMap.addCartRuleApplyOnAllInvoicesCheckbox).on('change', (event) => {
       const isChecked = $(event.currentTarget).is(':checked');
-
       $invoiceSelect.attr('disabled', isChecked);
     });
 

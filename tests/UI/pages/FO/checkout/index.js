@@ -44,6 +44,7 @@ class Checkout extends FOBasePage {
     this.addressStepPostCodeInput = `${this.addressStepSection} input[name='postcode']`;
     this.addressStepCityInput = `${this.addressStepSection} input[name='city']`;
     this.addressStepPhoneInput = `${this.addressStepSection} input[name='phone']`;
+    this.addressStepUseSameAddressCheckbox = '#use_same_address';
     this.addressStepContinueButton = `${this.addressStepSection} button[name='confirm-addresses']`;
     // Shipping method step
     this.deliveryStepSection = '#checkout-delivery-step';
@@ -293,18 +294,40 @@ class Checkout extends FOBasePage {
   }
 
   /**
-   * Set address
+   * Fill address form, used for delivery and invoice addresses
    * @param page {Page} Browser tab
-   * @param address {object} Address's information to add
-   * @returns {Promise<boolean>}
+   * @param address {object} Address's information to fill form with
+   * @returns {Promise<void>}
    */
-  async setAddress(page, address) {
+  async fillAddressForm(page, address) {
     await this.setValue(page, this.addressStepCompanyInput, address.company);
     await this.setValue(page, this.addressStepAddress1Input, address.address);
     await this.setValue(page, this.addressStepPostCodeInput, address.postalCode);
     await this.setValue(page, this.addressStepCityInput, address.city);
     await page.type(this.addressStepPhoneInput, address.phone, {delay: 50});
     await this.setValue(page, this.addressStepPhoneInput, address.phone);
+  }
+
+  /**
+   * Set address step
+   * @param page {Page} Browser tab
+   * @param deliveryAddress {object} Address's information to add (for delivery)
+   * @param invoiceAddress {object} Address's information to add (for invoice
+   * @returns {Promise<boolean>}
+   */
+  async setAddress(page, deliveryAddress, invoiceAddress = null) {
+    // Set delivery address
+    await this.fillAddressForm(page, deliveryAddress);
+
+    // Set invoice address if not null
+    if (invoiceAddress !== null) {
+      await page.uncheck(this.addressStepUseSameAddressCheckbox);
+      await page.click(this.addressStepContinueButton);
+      await this.fillAddressForm(page, invoiceAddress);
+    } else {
+      await page.check(this.addressStepUseSameAddressCheckbox);
+    }
+
     await page.click(this.addressStepContinueButton);
     return this.isStepCompleted(page, this.addressStepSection);
   }
@@ -352,7 +375,8 @@ class Checkout extends FOBasePage {
 
     // Click on continue
     await page.click(this.checkoutGuestContinueButton);
-    return this.isStepCompleted(page, this.personalInformationStepForm, 2000);
+
+    return this.isStepCompleted(page, this.personalInformationStepForm);
   }
 }
 

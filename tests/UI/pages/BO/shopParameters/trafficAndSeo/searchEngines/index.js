@@ -1,7 +1,16 @@
 require('module-alias/register');
 const BOBasePage = require('@pages/BO/BObasePage');
 
+/**
+ * Search engine page, contains selectors and functions for the page
+ * @class
+ * @extends BOBasePage
+ */
 class SearchEngines extends BOBasePage {
+  /**
+   * @constructs
+   * Setting up titles and selectors to use on search engine page
+   */
   constructor() {
     super();
 
@@ -71,7 +80,7 @@ class SearchEngines extends BOBasePage {
   /* Header methods */
   /**
    * Go to new search engine page
-   * @param page
+   * @param page {Page} Browser tab
    * @return {Promise<void>}
    */
   async goToNewSearchEnginePage(page) {
@@ -81,8 +90,8 @@ class SearchEngines extends BOBasePage {
   /* Filter methods */
 
   /**
-   * Get Number of search engines
-   * @param page
+   * Get number of search engines
+   * @param page {Page} Browser tab
    * @return {Promise<number>}
    */
   getNumberOfElementInGrid(page) {
@@ -91,7 +100,7 @@ class SearchEngines extends BOBasePage {
 
   /**
    * Reset all filters
-   * @param page
+   * @param page {Page} Browser tab
    * @return {Promise<void>}
    */
   async resetFilter(page) {
@@ -104,7 +113,7 @@ class SearchEngines extends BOBasePage {
 
   /**
    * Reset and get number of search engines
-   * @param page
+   * @param page {Page} Browser tab
    * @return {Promise<number>}
    */
   async resetAndGetNumberOfLines(page) {
@@ -115,9 +124,9 @@ class SearchEngines extends BOBasePage {
 
   /**
    * Filter search engines
-   * @param page
-   * @param filterBy
-   * @param value
+   * @param page {Page} Browser tab
+   * @param filterBy {string} Column to filter with
+   * @param value {string} value to filter with
    * @return {Promise<void>}
    */
   async filterTable(page, filterBy, value) {
@@ -129,9 +138,9 @@ class SearchEngines extends BOBasePage {
 
   /**
    * Get text from column in table
-   * @param page
-   * @param row
-   * @param columnName
+   * @param page {Page} Browser tab
+   * @param row {number} Row on table
+   * @param columnName {string} Column name of the value to return
    * @return {Promise<string>}
    */
   async getTextColumn(page, row, columnName) {
@@ -159,8 +168,8 @@ class SearchEngines extends BOBasePage {
 
   /**
    * Get column content from all rows
-   * @param page
-   * @param columnName
+   * @param page {Page} Browser tab
+   * @param columnName {string} Column name of the value to return
    * @return {Promise<[]>}
    */
   async getAllRowsColumnContent(page, columnName) {
@@ -179,9 +188,9 @@ class SearchEngines extends BOBasePage {
   /* Sort functions */
   /**
    * Sort table by clicking on column name
-   * @param page
-   * @param sortBy, column to sort with
-   * @param sortDirection, asc or desc
+   * @param page {Page} Browser tab
+   * @param sortBy {string} Column name to sort with
+   * @param sortDirection {string} Sort direction by asc or desc
    * @return {Promise<void>}
    */
   async sortTable(page, sortBy, sortDirection) {
@@ -210,8 +219,8 @@ class SearchEngines extends BOBasePage {
 
   /**
    * Go to edit search engine page
-   * @param page
-   * @param row
+   * @param page {Page} Browser tab
+   * @param row {number} Row on table
    * @return {Promise<void>}
    */
   async goToEditSearchEnginePage(page, row) {
@@ -220,8 +229,8 @@ class SearchEngines extends BOBasePage {
 
   /**
    * Delete search engine
-   * @param page
-   * @param row
+   * @param page {Page} Browser tab
+   * @param row {number} Row on table
    * @return {Promise<string>}
    */
   async deleteSearchEngine(page, row) {
@@ -243,7 +252,7 @@ class SearchEngines extends BOBasePage {
 
   /**
    * Get pagination label
-   * @param page
+   * @param page {Page} Browser tab
    * @return {Promise<string>}
    */
   getPaginationLabel(page) {
@@ -252,8 +261,8 @@ class SearchEngines extends BOBasePage {
 
   /**
    * Select pagination limit
-   * @param page
-   * @param number
+   * @param page {Page} Browser tab
+   * @param number {number} Pagination limit number to select
    * @returns {Promise<string>}
    */
   async selectPaginationLimit(page, number) {
@@ -265,7 +274,7 @@ class SearchEngines extends BOBasePage {
 
   /**
    * Click on next
-   * @param page
+   * @param page {Page} Browser tab
    * @returns {Promise<string>}
    */
   async paginationNext(page) {
@@ -276,7 +285,7 @@ class SearchEngines extends BOBasePage {
 
   /**
    * Click on previous
-   * @param page
+   * @param page {Page} Browser tab
    * @returns {Promise<string>}
    */
   async paginationPrevious(page) {
@@ -288,7 +297,7 @@ class SearchEngines extends BOBasePage {
   /* Bulk actions methods */
   /**
    * Select all rows
-   * @param page
+   * @param page {Page} Browser tab
    * @return {Promise<void>}
    */
   async bulkSelectRows(page) {
@@ -302,7 +311,7 @@ class SearchEngines extends BOBasePage {
 
   /**
    * Delete Search engine by bulk actions
-   * @param page
+   * @param page {Page} Browser tab
    * @returns {Promise<string>}
    */
   async bulkDeleteSearchEngine(page) {
