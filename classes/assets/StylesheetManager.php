@@ -54,6 +54,7 @@ class StylesheetManagerCore extends AbstractAssetManager
      * @param bool $inline
      * @param string $server
      * @param bool $needRtl
+     * @param string $version
      */
     public function register(
         $id,
