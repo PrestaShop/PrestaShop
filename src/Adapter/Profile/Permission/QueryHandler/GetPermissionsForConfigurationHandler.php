@@ -219,14 +219,12 @@ final class GetPermissionsForConfigurationHandler implements GetPermissionsForCo
 
         foreach ($profiles as $profile) {
             // Allow only whitelisted elements
-            $filteredProfileAccesses = array_filter(
+            $permissions[$profile['id']] = array_filter(
                 Profile::getProfileAccesses($profile['id']),
                 function ($item) {
                     return in_array($item['id_tab'], $this->whitelist);
                 }
             );
-
-            $permissions[$profile['id']] = $filteredProfileAccesses;
         }
 
         return $permissions;

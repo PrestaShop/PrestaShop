@@ -33,5 +33,5 @@ interface UpdateModulePermissionsHandlerInterface
     /**
      * @param UpdateModulePermissionsCommand $command
      */
-    public function handle(UpdateModulePermissionsCommand $command);
+    public function handle(UpdateModulePermissionsCommand $command): void;
 }
