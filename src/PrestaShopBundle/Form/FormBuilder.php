@@ -34,11 +34,12 @@ final class FormBuilder extends \Symfony\Component\Form\FormBuilder implements F
     public function addBefore(string $targetFieldName, $child, $type = null, array $options = []): FormBuilderInterface
     {
         $this->assertFieldExists($targetFieldName);
+        $childFormBuilders = $this->removeAllChild();
 
-        foreach ($this->all() as $formBuilder) {
-            $this->add($formBuilder);
+        foreach ($childFormBuilders as $childFormBuilder) {
+            $this->add($childFormBuilder);
 
-            if ($formBuilder->getName() === $targetFieldName) {
+            if ($childFormBuilder->getName() === $targetFieldName) {
                 $this->add($child, $type, $options);
             }
         }
@@ -49,16 +50,28 @@ final class FormBuilder extends \Symfony\Component\Form\FormBuilder implements F
     public function addAfter(string $targetFieldName, $child, $type = null, array $options = []): FormBuilderInterface
     {
         $this->assertFieldExists($targetFieldName);
+        $childFormBuilders = $this->removeAllChild();
 
-        foreach ($this->all() as $formBuilder) {
-            if ($formBuilder->getName() === $targetFieldName) {
+        foreach ($childFormBuilders as $childFormBuilder) {
+            if ($childFormBuilder->getName() === $targetFieldName) {
                 $this->add($child, $type, $options);
             }
 
-            $this->add($formBuilder);
+            $this->add($childFormBuilder);
         }
 
         return $this;
+    }
+
+    private function removeAllChild(): array
+    {
+        $childFormBuilders = [];
+        foreach ($this->all() as $formBuilder) {
+            $this->remove($formBuilder->getName());
+            $childFormBuilders[] = $formBuilder;
+        }
+
+        return $childFormBuilders;
     }
 
     private function assertFieldExists(string $name): void
