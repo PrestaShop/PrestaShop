@@ -24,7 +24,7 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
 
-namespace PrestaShop\PrestaShop\Adapter;
+namespace PrestaShop\PrestaShop\Adapter; 
 
 use Validate as ValidateLegacy;
 
@@ -74,6 +74,18 @@ class Validate
     public function isCleanHtml($html, $allowIframe = false)
     {
         return ValidateLegacy::isCleanHtml($html, $allowIframe);
+    }
+
+    /**
+     * Check for a given email validity.
+     *
+     * @param string $email
+     *
+     * @return bool
+     */
+    public function isEmail($email): bool
+    {
+        return ValidateLegacy::isEmail($email);
     }
 
     /**
