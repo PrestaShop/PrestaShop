@@ -26,8 +26,10 @@
 
 namespace PrestaShopBundle\Form\Validator\Constraints;
 
+use InvalidArgumentException;
 use PrestaShop\PrestaShop\Adapter\LegacyContext;
 use PrestaShop\PrestaShop\Adapter\Validate;
+use Symfony\Component\Translation\TranslatorInterface;
 use Symfony\Component\Validator\Constraint;
 use Symfony\Component\Validator\ConstraintValidator;
 use Symfony\Component\Validator\Exception\UnexpectedTypeException;
@@ -39,9 +41,15 @@ class TinyMceMaxLengthValidator extends ConstraintValidator
      */
     private $validateAdapter;
 
-    public function __construct(Validate $validate)
+    /**
+     * @var TranslatorInterface
+     */
+    protected $translator;
+
+    public function __construct(Validate $validate, TranslatorInterface $translator)
     {
         $this->validateAdapter = $validate;
+        $this->translator = $translator;
     }
 
     public function validate($value, Constraint $constraint)
@@ -51,7 +59,7 @@ class TinyMceMaxLengthValidator extends ConstraintValidator
         }
 
         if (!$this->validateAdapter->isUnsignedInt($constraint->max)) {
-            throw new \InvalidArgumentException('Max must be int. Input was: ' . \gettype($constraint->max));
+            throw new InvalidArgumentException('Max must be int. Input was: ' . \gettype($constraint->max));
         }
 
         $replaceArray = [
@@ -64,7 +72,7 @@ class TinyMceMaxLengthValidator extends ConstraintValidator
         if (iconv_strlen($str) > $constraint->max) {
             $translator = (new LegacyContext())->getContext()->getTranslator();
 
-            $message = $constraint->message ?? $translator->trans(
+            $message = $constraint->message ?? $this->translator->trans(
                 'This value is too long. It should have %limit% characters or less.',
                 ['%limit%' => $constraint->max],
                 'Admin.Catalog.Notification'
