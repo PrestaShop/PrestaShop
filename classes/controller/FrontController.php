@@ -1078,6 +1078,7 @@ class FrontControllerCore extends Controller
             'inline' => false,
             'server' => 'local',
             'version' => null,
+            'needRtl' => true
         ];
         $params = array_merge($default_params, $params);
 
@@ -1087,7 +1088,7 @@ class FrontControllerCore extends Controller
             $params['server'] = 'remote';
         }
 
-        $this->stylesheetManager->register($id, $relativePath, $params['media'], $params['priority'], $params['inline'], $params['server'], isset($params['needRtl']) ? $params['needRtl'] : true, $params['version']);
+        $this->stylesheetManager->register($id, $relativePath, $params['media'], $params['priority'], $params['inline'], $params['server'], $params['needRtl'], $params['version']);
     }
 
     public function unregisterStylesheet($id)
