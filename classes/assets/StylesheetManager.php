@@ -64,7 +64,7 @@ class StylesheetManagerCore extends AbstractAssetManager
         $inline = false,
         $server = 'local',
         $needRtl = true,
-        $version = null
+        string $version = null
     ) {
         $fullPath = $this->getFullPath($relativePath);
         $rtlFullPath = $this->getFullPath(str_replace('.css', '_rtl.css', $relativePath));
@@ -110,7 +110,7 @@ class StylesheetManagerCore extends AbstractAssetManager
      * @param string $server
      * @param string $version
      */
-    protected function add($id, $fullPath, $media, $priority, $inline, $server, $version)
+    protected function add($id, $fullPath, $media, $priority, $inline, $server, ?string $version)
     {
         $priority = is_int($priority) ? $priority : self::DEFAULT_PRIORITY;
         $media = $this->getSanitizedMedia($media);
