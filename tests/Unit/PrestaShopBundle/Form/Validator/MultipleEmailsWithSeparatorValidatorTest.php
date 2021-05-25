@@ -39,7 +39,7 @@ class MultipleEmailsWithSeparatorValidatorTest extends ConstraintValidatorTestCa
 {
     public const TEST_EMAILS_SEPARATOR = '|';
 
-    protected function createValidator()
+    protected function createValidator(): MultipleEmailsWithSeparatorValidator
     {
         return new MultipleEmailsWithSeparatorValidator();
     }
