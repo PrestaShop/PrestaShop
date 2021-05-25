@@ -68,7 +68,7 @@ class ValidateTest extends TestCase
         $this->assertSame($expected, Validate::isString($data));
     }
 
-    public function isStringDataProvider()
+    public function isStringDataProvider(): array
     {
         return [
             [true, 'jdkiizdù%'],
