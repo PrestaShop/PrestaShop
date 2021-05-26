@@ -249,8 +249,8 @@ class FactoryTest extends TestCase
             [
                 'currencyPrecision' => '4',
                 'maxFractionDigits' => 6,
-                'expectedMinFractionDigits' => 2,
-            ], //minFractionDigits will be equal to 2
+                'expectedMinFractionDigits' => 4,
+            ], //minFractionDigits will be equal to 4 because precision is numeric
             [
                 'currencyPrecision' => null,
                 'maxFractionDigits' => 6,
