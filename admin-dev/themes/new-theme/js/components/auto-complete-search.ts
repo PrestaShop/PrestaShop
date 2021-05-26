@@ -70,14 +70,15 @@ export default class AutoCompleteSearch {
       value: 'id', // Which field of the object from the list is used for value (can be a string or a callback)
       limit: 20, // Limit the number of displayed suggestion
       dataLimit: 0, // How many elements can be selected max
-      /* eslint-disable-next-line @typescript-eslint/no-unused-vars */
+      /* eslint-disable @typescript-eslint/no-unused-vars */
       onSelect(
         selectedItem: unknown,
         event: JQueryEventObject,
-        searchInput: JQuery
+        searchInput: JQuery,
       ) {
         return true;
       },
+      /* eslint-enable */
       /* eslint-disable-next-line */
       onClose(event: Event, searchInput: JQuery) {},
       ...inputConfig,
@@ -96,10 +97,10 @@ export default class AutoCompleteSearch {
         } else if (
           Object.prototype.hasOwnProperty.call(
             item,
-            <string>this.dataSetConfig.display
+            <string> this.dataSetConfig.display,
           )
         ) {
-          displaySuggestion = item[<string>this.dataSetConfig.display];
+          displaySuggestion = item[<string> this.dataSetConfig.display];
         }
 
         return `<div class="px-2">${displaySuggestion}</div>`;
