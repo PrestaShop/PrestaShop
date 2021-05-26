@@ -95,7 +95,7 @@ class JavascriptManagerCore extends AbstractAssetManager
      * @param bool $inline
      * @param string $attribute
      * @param string $server
-     * @param string $version
+     * @param string|null $version
      */
     protected function add($id, $fullPath, $position, $priority, $inline, $attribute, $server, ?string $version)
     {
