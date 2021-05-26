@@ -38,6 +38,7 @@ use PrestaShop\PrestaShop\Core\Domain\Product\Exception\ProductException;
 use PrestaShop\PrestaShop\Core\Domain\Product\SpecificPrice\Command\AddProductSpecificPriceCommand;
 use PrestaShop\PrestaShop\Core\Domain\Product\SpecificPrice\Exception\SpecificPriceConstraintException;
 use PrestaShop\PrestaShop\Core\Domain\Product\SpecificPrice\Exception\SpecificPriceException;
+use PrestaShop\PrestaShop\Core\Domain\Product\SpecificPrice\Command\EditProductSpecificPriceCommand;
 use PrestaShop\PrestaShop\Core\Domain\Product\SpecificPrice\Query\GetEditableSpecificPricesList;
 use PrestaShop\PrestaShop\Core\Domain\Product\SpecificPrice\Query\GetSpecificPriceForEditing;
 use PrestaShop\PrestaShop\Core\Domain\Product\SpecificPrice\QueryResult\SpecificPriceForEditing;
@@ -107,6 +108,20 @@ class SpecificPriceContext extends AbstractProductFeatureContext
         } catch (SpecificPriceException | DomainConstraintException | ProductException $e) {
             $this->setLastException($e);
         }
+    }
+
+    /**
+     * @When I edit specific price ":specificPriceReference" with following details:
+     *
+     * @param string $specificPriceReference
+     * @param TableNode $tableNode
+     */
+    public function editSpecificPrice(string $specificPriceReference, TableNode $tableNode): void
+    {
+        $specificPriceId = $this->getSharedStorage()->get($specificPriceReference);
+        $command = $this->createEditSpecificPriceCommand($specificPriceId, $tableNode);
+
+        $this->getCommandBus()->handle($command);
     }
 
     /**
@@ -276,6 +291,64 @@ class SpecificPriceContext extends AbstractProductFeatureContext
         }
 
         return $addCommand;
+    }
+
+    /**
+     * @param int $specificPriceId
+     * @param TableNode $tableNode
+     *
+     * @return EditProductSpecificPriceCommand
+     */
+    private function createEditSpecificPriceCommand(int $specificPriceId, TableNode $tableNode): EditProductSpecificPriceCommand
+    {
+        $dataRows = $tableNode->getRowsHash();
+        $editCommand = new EditProductSpecificPriceCommand($specificPriceId);
+
+        if (isset($dataRows['reduction type'], $dataRows['reduction value'])) {
+            $editCommand->setReduction($dataRows['reduction type'], (float) $dataRows['reduction value']);
+        }
+
+        if (isset($dataRows['includes tax'])) {
+            $editCommand->setIncludesTax(PrimitiveUtils::castStringBooleanIntoBoolean($dataRows['includes tax']));
+        }
+
+        if (isset($dataRows['price'])) {
+            $editCommand->setPrice($dataRows['price']);
+        }
+
+        if (isset($dataRows['from quantity'])) {
+            $editCommand->setFromQuantity((int) $dataRows['from quantity']);
+        }
+
+        if (isset($dataRows['combination'])) {
+            $editCommand->setCombinationId($this->getStoredId($dataRows, 'combination'));
+        }
+        if (isset($dataRows['shop group'])) {
+            $editCommand->setShopGroupId($this->getStoredId($dataRows, 'shop group'));
+        }
+        if (isset($dataRows['shop'])) {
+            $editCommand->setShopId($this->getStoredId($dataRows, 'shop'));
+        }
+        if (isset($dataRows['currency'])) {
+            $editCommand->setCurrencyId($this->getStoredId($dataRows, 'currency'));
+        }
+        if (isset($dataRows['country'])) {
+            $editCommand->setCountryId($this->getStoredId($dataRows, 'country'));
+        }
+        if (isset($dataRows['group'])) {
+            $editCommand->setGroupId($this->getStoredId($dataRows, 'group'));
+        }
+        if (isset($dataRows['customer'])) {
+            $editCommand->setCustomerId($this->getStoredId($dataRows, 'customer'));
+        }
+        if (isset($dataRows['from'])) {
+            $editCommand->setDateTimeFrom(new DateTime($dataRows['from']));
+        }
+        if (isset($dataRows['to'])) {
+            $editCommand->setDateTimeTo(new DateTime($dataRows['to']));
+        }
+
+        return $editCommand;
     }
 
     /**
