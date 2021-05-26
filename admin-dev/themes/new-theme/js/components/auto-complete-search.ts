@@ -32,8 +32,12 @@
 interface TypeaheadJQueryDataset extends Twitter.Typeahead.Dataset<any> {
   dataLimit: number;
   value: string;
-  onSelect: (selectedItem: unknown, event: JQueryEventObject) => boolean;
-  onClose: (event: Event) => void;
+  onSelect: (
+    selectedItem: unknown,
+    event: JQueryEventObject,
+    searchInput: JQuery
+  ) => boolean;
+  onClose: (event: Event, searchInput: JQuery) => void;
   templates: any;
 }
 
@@ -67,7 +71,11 @@ export default class AutoCompleteSearch {
       limit: 20, // Limit the number of displayed suggestion
       dataLimit: 0, // How many elements can be selected max
       /* eslint-disable-next-line @typescript-eslint/no-unused-vars */
-      onSelect(selectedItem: unknown, event: Event, searchInput: JQuery) {
+      onSelect(
+        selectedItem: unknown,
+        event: JQueryEventObject,
+        searchInput: JQuery
+      ) {
         return true;
       },
       /* eslint-disable-next-line */
@@ -88,10 +96,10 @@ export default class AutoCompleteSearch {
         } else if (
           Object.prototype.hasOwnProperty.call(
             item,
-            <string> this.dataSetConfig.display,
+            <string>this.dataSetConfig.display
           )
         ) {
-          displaySuggestion = item[<string> this.dataSetConfig.display];
+          displaySuggestion = item[<string>this.dataSetConfig.display];
         }
 
         return `<div class="px-2">${displaySuggestion}</div>`;
