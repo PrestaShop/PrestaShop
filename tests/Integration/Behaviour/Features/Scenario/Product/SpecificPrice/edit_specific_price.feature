@@ -41,3 +41,110 @@ Feature: Edit existing Specific Price from Back Office (BO).
       | from quantity         | 1          |
       | from                  |            |
       | to                    |            |
+    When I edit specific price "price1" with following details:
+      | reduction type  | amount |
+      | reduction value | 12.56  |
+    And specific price price1 should have following details:
+      | specific price detail | value  |
+      | reduction type        | amount |
+      | reduction value       | 12.56  |
+      | includes tax          | true   |
+      | price                 | 45.78  |
+      | from quantity         | 1      |
+      | from                  |        |
+      | to                    |        |
+
+  Scenario: I edit specific price price and tax
+    Given specific price price1 should have following details:
+      | specific price detail | value  |
+      | reduction type        | amount |
+      | reduction value       | 12.56  |
+      | includes tax          | true   |
+      | price                 | 45.78  |
+      | from quantity         | 1      |
+      | from                  |        |
+      | to                    |        |
+    When I edit specific price "price1" with following details:
+      | includes tax | false |
+      | price        | 50    |
+    Then specific price price1 should have following details:
+      | specific price detail | value  |
+      | reduction type        | amount |
+      | reduction value       | 12.56  |
+      | includes tax          | false  |
+      | price                 | 50     |
+      | from quantity         | 1      |
+      | from                  |        |
+      | to                    |        |
+    When I edit specific price "price1" with following details:
+      | includes tax          | true   |
+      | price                 | 45.78  |
+      | specific price detail | value  |
+      | reduction type        | amount |
+      | reduction value       | 12.56  |
+      | includes tax          | true   |
+      | price                 | 45.78  |
+      | from quantity         | 1      |
+      | from                  |        |
+      | to                    |        |
+
+  Scenario: I edit specific price relations
+    Given specific price price1 should have following details:
+      | specific price detail | value  |
+      | reduction type        | amount |
+      | reduction value       | 12.56  |
+      | includes tax          | true   |
+      | price                 | 45.78  |
+      | from quantity         | 1      |
+      | from                  |        |
+      | to                    |        |
+      | shop group            |        |
+      | shop                  |        |
+      | currency              |        |
+      | country               |        |
+      | group                 |        |
+      | customer              |        |
+    When I edit specific price "price1" with following details:
+      | shop group | 42 |
+      | shop       | 51 |
+      | currency   | 69 |
+      | country    | 21 |
+      | group      | 33 |
+      | customer   | 99 |
+    Then specific price price1 should have following details:
+      | specific price detail | value  |
+      | reduction type        | amount |
+      | reduction value       | 12.56  |
+      | includes tax          | true   |
+      | price                 | 45.78  |
+      | from quantity         | 1      |
+      | from                  |        |
+      | to                    |        |
+      | shop group            | 42     |
+      | shop                  | 51     |
+      | currency              | 69     |
+      | country               | 21     |
+      | group                 | 33     |
+      | customer              | 99     |
+    When I edit specific price "price1" with following details:
+      | shop group |  |
+      | shop       |  |
+      | currency   |  |
+      | country    |  |
+      | group      |  |
+      | customer   |  |
+    Then specific price price1 should have following details:
+      | specific price detail | value  |
+      | reduction type        | amount |
+      | reduction value       | 12.56  |
+      | includes tax          | true   |
+      | price                 | 45.78  |
+      | from quantity         | 1      |
+      | from                  |        |
+      | to                    |        |
+      | shop group            |        |
+      | shop                  |        |
+      | currency              |        |
+      | country               |        |
+      | group                 |        |
+      | customer              |        |
