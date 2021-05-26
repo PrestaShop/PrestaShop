@@ -1046,6 +1046,12 @@ $product-page-padding-bottom: 80px !default;
   }
 }
 
+.product-page-v2 {
+  .maxLength {
+    float: none;
+  }
+}
+
 #external-combination-tab {
   padding-bottom: $product-page-padding-bottom;
   margin-top: -$product-page-padding-bottom;
