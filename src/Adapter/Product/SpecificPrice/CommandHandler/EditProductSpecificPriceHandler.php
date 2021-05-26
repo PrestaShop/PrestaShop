@@ -30,6 +30,7 @@ namespace PrestaShop\PrestaShop\Adapter\Product\SpecificPrice\CommandHandler;
 use PrestaShop\PrestaShop\Adapter\Product\SpecificPrice\Repository\SpecificPriceRepository;
 use PrestaShop\PrestaShop\Core\Domain\Product\SpecificPrice\Command\EditProductSpecificPriceCommand;
 use PrestaShop\PrestaShop\Core\Domain\Product\SpecificPrice\CommandHandler\EditProductSpecificPriceHandlerInterface;
+use SpecificPrice;
 
 /**
  * Handles @see EditProductSpecificPriceCommand using legacy object model
@@ -49,12 +50,82 @@ final class EditProductSpecificPriceHandler implements EditProductSpecificPriceH
     ) {
         $this->specificPriceRepository = $specificPriceRepository;
     }
+
     /**
      * {@inheritDoc}
      */
     public function handle(EditProductSpecificPriceCommand $command): void
     {
         $specificPrice = $this->specificPriceRepository->get($command->getSpecificPriceId());
-        //@todo implement update.
+
+        $this->specificPriceRepository->partialUpdate(
+            $specificPrice,
+            $this->fillUpdatableProperties($command, $specificPrice)
+        );
+    }
+
+    private function fillUpdatableProperties(EditProductSpecificPriceCommand $command, SpecificPrice $specificPrice): array
+    {
+        $updatableProperties = [];
+        if (null !== $command->getReduction()) {
+            $specificPrice->reduction_type = $command->getReduction()->getType();
+            $specificPrice->reduction = (float) (string) $command->getReduction()->getValue();
+            $updatableProperties = [
+                'reduction_type',
+                'reduction',
+            ];
+        }
+
+        if (null !== $command->includesTax()) {
+            $specificPrice->reduction_tax = $command->includesTax();
+            $updatableProperties[] = 'reduction_tax';
+        }
+
+        if (null !== $command->getPrice()) {
+            $specificPrice->price = (float) (string) $command->getPrice();
+            $updatableProperties[] = 'price';
+        }
+
+        if (null !== $command->getFromQuantity()) {
+            $specificPrice->from_quantity = $command->getFromQuantity();
+            $updatableProperties[] = 'from_quantity';
+        }
+
+        if (null !== $command->getShopGroupId()) {
+            $specificPrice->id_shop_group = $command->getShopGroupId();
+            $updatableProperties[] = 'id_shop_group';
+        }
+
+        if (null !== $command->getShopId()) {
+            $specificPrice->id_shop = $command->getShopId();
+            $updatableProperties[] = 'id_shop';
+        }
+
+        if (null !== $command->getCombinationId()) {
+            $specificPrice->id_product_attribute = $command->getCombinationId();
+            $updatableProperties[] = 'id_product_attribute';
+        }
+
+        if (null !== $command->getCurrencyId()) {
+            $specificPrice->id_currency = $command->getCurrencyId();
+            $updatableProperties[] = 'id_currency';
+        }
+
+        if (null !== $command->getCurrencyId()) {
+            $specificPrice->id_country = $command->getCurrencyId();
+            $updatableProperties[] = 'id_country';
+        }
+
+        if (null !== $command->getCurrencyId()) {
+            $specificPrice->id_group = $command->getCurrencyId();
+            $updatableProperties[] = 'id_group';
+        }
+
+        if (null !== $command->getCustomerId()) {
+            $specificPrice->id_customer = $command->getCustomerId();
+            $updatableProperties[] = 'id_customer';
+        }
+
+        return $updatableProperties;
     }
 }
