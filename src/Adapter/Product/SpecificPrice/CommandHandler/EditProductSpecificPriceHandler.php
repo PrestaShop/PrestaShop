@@ -117,13 +117,13 @@ final class EditProductSpecificPriceHandler implements EditProductSpecificPriceH
             $updatableProperties[] = 'id_currency';
         }
 
-        if (null !== $command->getCurrencyId()) {
-            $specificPrice->id_country = $command->getCurrencyId();
+        if (null !== $command->getCountryId()) {
+            $specificPrice->id_country = $command->getCountryId();
             $updatableProperties[] = 'id_country';
         }
 
-        if (null !== $command->getCurrencyId()) {
-            $specificPrice->id_group = $command->getCurrencyId();
+        if (null !== $command->getGroupId()) {
+            $specificPrice->id_group = $command->getGroupId();
             $updatableProperties[] = 'id_group';
         }
 
