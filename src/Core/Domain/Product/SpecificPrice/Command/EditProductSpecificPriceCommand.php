@@ -29,7 +29,6 @@ namespace PrestaShop\PrestaShop\Core\Domain\Product\SpecificPrice\Command;
 
 use DateTime;
 use PrestaShop\Decimal\DecimalNumber;
-use PrestaShop\PrestaShop\Core\Domain\Product\Combination\ValueObject\CombinationId;
 use PrestaShop\PrestaShop\Core\Domain\SpecificPrice\ValueObject\SpecificPriceId;
 use PrestaShop\PrestaShop\Core\Domain\ValueObject\Reduction;
 
@@ -64,40 +63,58 @@ class EditProductSpecificPriceCommand
 
     /**
      * @var int|null
+     *
+     * @todo: introduce ShopGroupIdInterface (refer to example of ManufacturerIdInterface)
      */
     private $shopGroupId;
 
     /**
      * @var int|null
+     *
+     * @todo: introduce ShopIdInterface (refer to example of ManufacturerIdInterface)
      */
     private $shopId;
 
     /**
-     * @var CombinationId|null
+     * @var int|null
+     *
+     * @todo: introduce CombinationIdInterface (refer to example of ManufacturerIdInterface)
      */
     private $combinationId;
 
     /**
      * @var int|null
+     *
+     * @todo: introduce CurrencyIdInterface (refer to example of ManufacturerIdInterface)
      */
     private $currencyId;
 
     /**
      * @var int|null
+     *
+     * @todo: introduce CountryIdInterface (refer to example of ManufacturerIdInterface)
      */
     private $countryId;
 
     /**
      * @var int|null
+     *
+     * @todo: introduce GroupIdInterface (refer to example of ManufacturerIdInterface). GroupId VO doesnt exist yet
      */
     private $groupId;
 
     /**
      * @var int|null
+     *
+     * @todo: introduce CustomerIdInterface (refer to example of ManufacturerIdInterface)
      */
     private $customerId;
 
     /**
+     * @todo: its impossible to reset $from to NULL (database doesnt support null and the 0000-00-00 is actually invalid)
+     *      for that we could have some "DateRange" Value object which would contain ranges OR some "no-range" value.
+     *      Also this would require BC break - making datetime column nullable in specific_price table.
+     *
      * @var DateTime|null
      */
     private $dateTimeFrom;
@@ -147,7 +164,7 @@ class EditProductSpecificPriceCommand
     /**
      * @return bool
      */
-    public function isIncludesTax(): bool
+    public function includesTax(): bool
     {
         return $this->includesTax;
     }
@@ -245,19 +262,19 @@ class EditProductSpecificPriceCommand
     }
 
     /**
-     * @return CombinationId|null
+     * @return int|null
      */
-    public function getCombinationId(): ?CombinationId
+    public function getCombinationId(): ?int
     {
         return $this->combinationId;
     }
 
     /**
-     * @param CombinationId|null $combinationId
+     * @param int|null $combinationId
      *
      * @return EditProductSpecificPriceCommand
      */
-    public function setCombinationId(?CombinationId $combinationId): EditProductSpecificPriceCommand
+    public function setCombinationId(?int $combinationId): EditProductSpecificPriceCommand
     {
         $this->combinationId = $combinationId;
 
