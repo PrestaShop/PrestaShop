@@ -106,7 +106,7 @@ export default class OrderPricesRefresher {
       }
 
       if (expectedGivenPrice !== Number(productEditBtn.data('product-price-tax-incl'))) {
-        if (!invoiceId || (invoiceId && currentOrderInvoiceId && invoiceId === currentOrderInvoiceId)) {
+        if (invoiceId === '' || (invoiceId && currentOrderInvoiceId && invoiceId === currentOrderInvoiceId)) {
           unmatchingProductPriceExists = true;
         } else {
           unmatchingInvoicePriceExists = true;
