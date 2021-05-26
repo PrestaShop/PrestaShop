@@ -255,6 +255,9 @@ class ProductFeatureContext extends AbstractPrestaShopFeatureContext
 
         $this->addProduct($product);
 
+        // Shared Storage
+        SharedStorage::getStorage()->set($productName, $this->getProductWithName($productName)->id);
+
         // Fix issue pack cache is set when adding products.
         Pack::resetStaticCache();
     }
@@ -277,7 +280,7 @@ class ProductFeatureContext extends AbstractPrestaShopFeatureContext
      *
      * @param string $productName
      */
-    public function productWithNameIsOutOfStock($productName)
+    public function productWithNameIsOutOfStock(string $productName): void
     {
         $this->checkProductWithNameExists($productName);
         $this->getProductWithName($productName)->quantity = 0;
@@ -285,6 +288,48 @@ class ProductFeatureContext extends AbstractPrestaShopFeatureContext
         $this->getProductWithName($productName)->save();
         StockAvailable::setQuantity($this->getProductWithName($productName)->id, 0, 0);
         StockAvailable::setProductOutOfStock((int) $this->getProductWithName($productName)->id, 0);
+    }
+
+    /**
+     * @Given /^the product "(.+)" (allows|denies) order if out of stock/
+     *
+     * @param string $productName
+     * @param string $status
+     */
+    public function productWithNameSetStatusOutOfStockOrders(string $productName, string $status): void
+    {
+        $this->checkProductWithNameExists($productName);
+        // Update Product
+        $this->getProductWithName($productName)->out_of_stock = ($status === 'allows' ? 1 : 0);
+        $this->getProductWithName($productName)->save();
+        // Update StockAvailable
+        StockAvailable::setProductOutOfStock(
+            (int) $this->getProductWithName($productName)->id,
+            (int) $this->getProductWithName($productName)->out_of_stock
+        );
+    }
+
+    /**
+     * @Given /^the pack "(.+)" decrements (pack only|products in pack only|both packs and products)$/
+     *
+     * @param string $productName
+     * @param string $mode
+     */
+    public function setProductPackDecrementMode(string $productName, string $mode): void
+    {
+        $this->checkProductWithNameExists($productName);
+        switch ($mode) {
+            case 'pack only':
+                $this->getProductWithName($productName)->pack_stock_type = Pack::STOCK_TYPE_PACK_ONLY;
+                break;
+            case 'products in pack only':
+                $this->getProductWithName($productName)->pack_stock_type = Pack::STOCK_TYPE_PRODUCTS_ONLY;
+                break;
+            case 'both packs and products':
+                $this->getProductWithName($productName)->pack_stock_type = Pack::STOCK_TYPE_PACK_BOTH;
+                break;
+        }
+        $this->getProductWithName($productName)->save();
     }
 
     /**

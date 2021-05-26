@@ -30,6 +30,7 @@ use Attribute;
 use Cart;
 use Context;
 use Customer;
+use Pack;
 use PrestaShop\PrestaShop\Adapter\Cart\AbstractCartHandler;
 use PrestaShop\PrestaShop\Adapter\ContextStateManager;
 use PrestaShop\PrestaShop\Core\Domain\Cart\Command\UpdateProductQuantityInCartCommand;
@@ -37,6 +38,7 @@ use PrestaShop\PrestaShop\Core\Domain\Cart\CommandHandler\UpdateProductQuantityI
 use PrestaShop\PrestaShop\Core\Domain\Cart\Exception\CartConstraintException;
 use PrestaShop\PrestaShop\Core\Domain\Cart\Exception\CartException;
 use PrestaShop\PrestaShop\Core\Domain\Cart\Exception\MinimalQuantityException;
+use PrestaShop\PrestaShop\Core\Domain\Product\Exception\PackOutOfStockException;
 use PrestaShop\PrestaShop\Core\Domain\Product\Exception\ProductCustomizationNotFoundException;
 use PrestaShop\PrestaShop\Core\Domain\Product\Exception\ProductException;
 use PrestaShop\PrestaShop\Core\Domain\Product\Exception\ProductNotFoundException;
@@ -177,18 +179,31 @@ final class UpdateProductQuantityInCartHandler extends AbstractCartHandler imple
      * @param UpdateProductQuantityInCartCommand $command
      *
      * @throws ProductOutOfStockException
+     * @throws PackOutOfStockException
      */
-    private function assertProductIsInStock(Product $product, UpdateProductQuantityInCartCommand $command)
+    private function assertProductIsInStock(Product $product, UpdateProductQuantityInCartCommand $command): void
     {
+        $isAvailableWhenOutOfStock = Product::isAvailableWhenOutOfStock($product->out_of_stock);
         if (null !== $command->getCombinationId()) {
-            $isAvailableWhenOutOfStock = Product::isAvailableWhenOutOfStock($product->out_of_stock);
             $isEnoughQuantity = Attribute::checkAttributeQty(
                 $command->getCombinationId()->getValue(),
                 $command->getNewQuantity()
             );
 
             if (!$isAvailableWhenOutOfStock && !$isEnoughQuantity) {
-                throw new ProductOutOfStockException(sprintf('Product with id "%s" is out of stock, thus cannot be added to cart', $product->id));
+                throw new ProductOutOfStockException(
+                    sprintf('Product with id "%s" is out of stock, thus cannot be added to cart', $product->id)
+                );
+            }
+
+            return;
+        } elseif (Pack::isPack($product->id)) {
+            $hasPackEnoughQuantity = Pack::isInStock($product->id, $command->getNewQuantity());
+
+            if (!$isAvailableWhenOutOfStock && !$hasPackEnoughQuantity) {
+                throw new PackOutOfStockException(
+                    sprintf('Product with id "%s" is out of stock, thus cannot be added to cart', $product->id)
+                );
             }
 
             return;
