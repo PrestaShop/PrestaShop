@@ -30,6 +30,7 @@ use Attribute;
 use Cart;
 use Context;
 use Customer;
+use Pack;
 use PrestaShop\PrestaShop\Adapter\Cart\AbstractCartHandler;
 use PrestaShop\PrestaShop\Adapter\ContextStateManager;
 use PrestaShop\PrestaShop\Core\Domain\Cart\Command\UpdateProductQuantityInCartCommand;
@@ -178,14 +179,24 @@ final class UpdateProductQuantityInCartHandler extends AbstractCartHandler imple
      *
      * @throws ProductOutOfStockException
      */
-    private function assertProductIsInStock(Product $product, UpdateProductQuantityInCartCommand $command)
+    private function assertProductIsInStock(Product $product, UpdateProductQuantityInCartCommand $command): void
     {
+        $isAvailableWhenOutOfStock = Product::isAvailableWhenOutOfStock($product->out_of_stock);
         if (null !== $command->getCombinationId()) {
-            $isAvailableWhenOutOfStock = Product::isAvailableWhenOutOfStock($product->out_of_stock);
             $isEnoughQuantity = Attribute::checkAttributeQty(
                 $command->getCombinationId()->getValue(),
                 $command->getNewQuantity()
             );
+
+            if (!$isAvailableWhenOutOfStock && !$isEnoughQuantity) {
+                throw new ProductOutOfStockException(sprintf('Product with id "%s" is out of stock, thus cannot be added to cart', $product->id));
+            }
+
+            return;
+        }
+
+        if (Pack::isPack($product->id)) {
+            $isEnoughQuantity = Pack::isInStock($product->id, $command->getNewQuantity());
 
             if (!$isAvailableWhenOutOfStock && !$isEnoughQuantity) {
                 throw new ProductOutOfStockException(sprintf('Product with id "%s" is out of stock, thus cannot be added to cart', $product->id));
