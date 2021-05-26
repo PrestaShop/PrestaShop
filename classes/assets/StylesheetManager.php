@@ -108,7 +108,7 @@ class StylesheetManagerCore extends AbstractAssetManager
      * @param int $priority
      * @param bool $inline
      * @param string $server
-     * @param string $version
+     * @param string|null $version
      */
     protected function add($id, $fullPath, $media, $priority, $inline, $server, ?string $version)
     {
