@@ -1,4 +1,3 @@
-<?php
 /**
  * Copyright since 2007 PrestaShop SA and Contributors
  * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
@@ -24,27 +23,13 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
 
-declare(strict_types=1);
+import Router from '@components/router';
 
-namespace PrestaShop\PrestaShop\Core\Form\IdentifiableObject\OptionProvider;
+const router = new Router();
+const {$} = window;
 
-class CombinationFormOptionsProvider implements FormOptionsProviderInterface
-{
-    /**
-     * {@inheritDoc}
-     */
-    public function getOptions(int $id, array $data): array
-    {
-        return [
-            'product_id' => $data['product_id'] ?? null,
-        ];
-    }
+export const getCategories = async () => $.get(router.generate('admin_categories_get_categories_tree'));
 
-    /**
-     * {@inheritDoc}
-     */
-    public function getDefaultOptions(array $data): array
-    {
-        return [];
-    }
-}
+export default {
+  getCategories,
+};

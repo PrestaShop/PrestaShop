@@ -642,7 +642,7 @@
         </div>
     {%- else -%}
         {%- set attr = attr|merge({class: (attr.class|default('') ~ ' form-check-input')|trim}) -%}
-        <div class="form-check form-check-radio{{ 'radio-inline' in parent_label_class ? ' form-check-inline' }}">
+        <div class="form-check form-check-radio form-radio{{ 'radio-inline' in parent_label_class ? ' form-check-inline' }}">
             {{- form_label(form, null, { widget: block('base_radio_widget') }) -}}
         </div>
     {%- endif -%}
@@ -651,7 +651,7 @@
 {% block checkbox_widget -%}
     {%- set parent_label_class = parent_label_class|default(label_attr.class|default('')) -%}
     {%- set attr = attr|merge({class: (attr.class|default('') ~ ' form-check-input')|trim}) -%}
-    <div class="form-check-radio">
+    <div class="form-check form-check-radio form-checkbox">
         {{- form_label(form, null, { widget: block('base_checkbox_widget') }) -}}
     </div>
 {%- endblock checkbox_widget %}

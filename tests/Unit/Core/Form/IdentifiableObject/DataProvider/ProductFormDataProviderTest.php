@@ -74,6 +74,7 @@ use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 class ProductFormDataProviderTest extends TestCase
 {
     private const PRODUCT_ID = 42;
+    private const HOME_CATEGORY_ID = 49;
     private const DEFAULT_CATEGORY_ID = 51;
     private const DEFAULT_VIRTUAL_PRODUCT_FILE_ID = 69;
     private const DEFAULT_QUANTITY = 12;
@@ -123,6 +124,14 @@ class ProductFormDataProviderTest extends TestCase
                     'visibility' => ProductVisibility::VISIBLE_EVERYWHERE,
                 ],
                 'condition' => ProductCondition::NEW,
+            ],
+            'categories' => [
+                'product_categories' => [
+                    self::HOME_CATEGORY_ID => [
+                        'is_associated' => true,
+                        'is_default' => true,
+                    ],
+                ],
             ],
             'footer' => [
                 'active' => false,
@@ -185,6 +194,14 @@ class ProductFormDataProviderTest extends TestCase
                 ],
                 'condition' => ProductCondition::NEW,
             ],
+            'categories' => [
+                'product_categories' => [
+                    self::HOME_CATEGORY_ID => [
+                        'is_associated' => true,
+                        'is_default' => true,
+                    ],
+                ],
+            ],
             'footer' => [
                 'active' => true,
             ],
@@ -235,6 +252,7 @@ class ProductFormDataProviderTest extends TestCase
             $this->getDatasetsForStock(),
             $this->getDatasetsForShipping(),
             $this->getDatasetsForOptions(),
+            $this->getDatasetsForCategories(),
         ];
 
         foreach ($datasetsByType as $datasetByType) {
@@ -473,6 +491,37 @@ class ProductFormDataProviderTest extends TestCase
         $expectedOutputData['stock']['availability']['available_date'] = '1969-07-20';
 
         $expectedOutputData['shortcuts']['stock']['quantity'] = 42;
+
+        $datasets[] = [
+            $productData,
+            $expectedOutputData,
+        ];
+
+        return $datasets;
+    }
+
+    /**
+     * @return array
+     */
+    private function getDatasetsForCategories(): array
+    {
+        $datasets = [];
+
+        $expectedOutputData = $this->getDefaultOutputData();
+        $productData = [
+            'categories' => [42, 51],
+            'default_category' => 51,
+        ];
+
+        $expectedOutputData['categories']['product_categories'] = [];
+        $expectedOutputData['categories']['product_categories'][42] = [
+            'is_associated' => true,
+            'is_default' => false,
+        ];
+        $expectedOutputData['categories']['product_categories'][51] = [
+            'is_associated' => true,
+            'is_default' => true,
+        ];
 
         $datasets[] = [
             $productData,
@@ -1051,7 +1100,7 @@ class ProductFormDataProviderTest extends TestCase
     {
         return new ProductCategoriesInformation(
             $product['categories'] ?? [self::DEFAULT_CATEGORY_ID],
-            self::DEFAULT_CATEGORY_ID
+            $product['default_category'] ?? self::DEFAULT_CATEGORY_ID
         );
     }
 
@@ -1214,6 +1263,14 @@ class ProductFormDataProviderTest extends TestCase
                 'customizations' => [],
                 'suppliers' => [],
             ],
+            'categories' => [
+                'product_categories' => [
+                    self::DEFAULT_CATEGORY_ID => [
+                        'is_associated' => true,
+                        'is_default' => true,
+                    ],
+                ],
+            ],
             'footer' => [
                 'active' => true,
             ],
@@ -1244,7 +1301,8 @@ class ProductFormDataProviderTest extends TestCase
         return new ProductFormDataProvider(
             $queryBusMock,
             $activation,
-            42
+            42,
+            self::HOME_CATEGORY_ID
         );
     }
 }

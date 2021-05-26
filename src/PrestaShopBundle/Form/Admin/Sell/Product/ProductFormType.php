@@ -30,6 +30,7 @@ namespace PrestaShopBundle\Form\Admin\Sell\Product;
 
 use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductType;
 use PrestaShopBundle\Form\Admin\Sell\Product\Basic\BasicType;
+use PrestaShopBundle\Form\Admin\Sell\Product\Category\CategoriesType;
 use PrestaShopBundle\Form\Admin\Sell\Product\Options\OptionsType;
 use PrestaShopBundle\Form\Admin\Sell\Product\Pricing\PricingType;
 use PrestaShopBundle\Form\Admin\Sell\Product\SEO\SEOType;
@@ -87,6 +88,7 @@ class ProductFormType extends TranslatorAwareType
             ->add('pricing', PricingType::class)
             ->add('seo', SEOType::class)
             ->add('options', OptionsType::class)
+            ->add('categories', CategoriesType::class)
             ->add('footer', FooterType::class, [
                 'product_id' => $productId,
             ])

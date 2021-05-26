@@ -23,6 +23,8 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  *#}
 
+{% form_theme productForm.categories '@PrestaShop/Admin/Sell/Catalog/Product/Form/categories_form_theme.html.twig' %}
+
 <div role="tabpanel" class="form-contenttab tab-pane container-fluid active" id="basic-tab">
   <div class="row">
     <div class="col-md-9 left-column">
@@ -31,6 +33,7 @@
     </div>
     <div class="col-md-3 right-column">
       {{ form_row(productForm.shortcuts) }}
+      {{ form_row(productForm.categories) }}
     </div>
   </div>
 </div>

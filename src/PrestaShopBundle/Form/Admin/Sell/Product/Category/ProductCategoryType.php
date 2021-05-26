@@ -26,25 +26,30 @@
 
 declare(strict_types=1);
 
-namespace PrestaShop\PrestaShop\Core\Form\IdentifiableObject\OptionProvider;
+namespace PrestaShopBundle\Form\Admin\Sell\Product\Category;
 
-class CombinationFormOptionsProvider implements FormOptionsProviderInterface
+use PrestaShopBundle\Form\Admin\Type\TranslatorAwareType;
+use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
+use Symfony\Component\Form\Extension\Core\Type\RadioType;
+use Symfony\Component\Form\FormBuilderInterface;
+
+class ProductCategoryType extends TranslatorAwareType
 {
-    /**
-     * {@inheritDoc}
-     */
-    public function getOptions(int $id, array $data): array
+    public function buildForm(FormBuilderInterface $builder, array $options)
     {
-        return [
-            'product_id' => $data['product_id'] ?? null,
-        ];
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    public function getDefaultOptions(array $data): array
-    {
-        return [];
+        $builder
+            ->add('is_associated', CheckboxType::class, [
+                'label' => false,
+                'attr' => [
+                    'class' => 'category',
+                ],
+            ])
+            ->add('is_default', RadioType::class, [
+                'label' => false,
+                'attr' => [
+                    'class' => 'default-category',
+                ],
+            ])
+        ;
     }
 }
