@@ -28,6 +28,7 @@ declare(strict_types=1);
 
 namespace PrestaShopBundle\Form\Validator\Constraints;
 
+use function get_class;
 use Symfony\Component\Validator\Constraint;
 use Symfony\Component\Validator\Exception\MissingOptionsException;
 
@@ -35,7 +36,14 @@ class MultipleEmailsWithSeparator extends Constraint
 {
     public const INVALID_EMAILS_ERROR_CODE = 'INVALID_EMAILS_ERROR_CODE';
 
+    /**
+     * @var string
+     */
     public $separator;
+
+    /**
+     * @var string
+     */
     public $message;
 
     public function __construct($options = null)

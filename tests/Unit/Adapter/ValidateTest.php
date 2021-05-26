@@ -40,6 +40,7 @@ class ValidateTest extends TestCase
 
     /**
      * @param string $name
+     * @param array $data
      * @param string $dataName
      */
     public function __construct($name = null, array $data = [], $dataName = '')
@@ -69,6 +70,9 @@ class ValidateTest extends TestCase
     }
 
     /**
+     * @param bool $expected
+     * @param string $email
+     *
      * @dataProvider isEmailDataProvider
      */
     public function testIsEmail(bool $expected, string $email): void
@@ -77,9 +81,12 @@ class ValidateTest extends TestCase
     }
 
     /**
+     * @param bool $expected
+     * @param string $data
+     *
      * @dataProvider isStringDataProvider
      */
-    public function testIsString(bool $expected, $data): void
+    public function testIsString(bool $expected, string $data): void
     {
         $this->assertSame($expected, $this->validate->isString($data));
     }

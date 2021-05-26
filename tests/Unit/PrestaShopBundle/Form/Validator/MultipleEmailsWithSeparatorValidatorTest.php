@@ -29,6 +29,7 @@ declare(strict_types=1);
 namespace Tests\Unit\PrestaShopBundle\Form\Validator;
 
 use Exception;
+use function get_class;
 use InvalidArgumentException;
 use PrestaShop\PrestaShop\Adapter\Validate;
 use PrestaShopBundle\Form\Validator\Constraints\MultipleEmailsWithSeparator;
@@ -64,13 +65,14 @@ class MultipleEmailsWithSeparatorValidatorTest extends ConstraintValidatorTestCa
     }
 
     /**
+     * @param Exception $expectedException
      * @param mixed $multipleEmailsWithSeparator
      *
      * @dataProvider exceptionsInvalidMultipleEmailsWithSeparatorProvider
      */
     public function testExceptionsInvalidMultipleEmailsWithSeparator(Exception $expectedException, $multipleEmailsWithSeparator): void
     {
-        $expectedExceptionClassName = \get_class($expectedException);
+        $expectedExceptionClassName = get_class($expectedException);
         $this->expectException($expectedExceptionClassName);
         $this->expectException(TypeError::class);
         $this->validator->validate(
