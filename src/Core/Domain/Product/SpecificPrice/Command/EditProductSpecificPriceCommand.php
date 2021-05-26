@@ -42,22 +42,22 @@ class EditProductSpecificPriceCommand
     private $specificPriceId;
 
     /**
-     * @var Reduction
+     * @var Reduction|null
      */
     private $reduction;
 
     /**
-     * @var bool
+     * @var bool|null
      */
     private $includesTax;
 
     /**
-     * @var DecimalNumber
+     * @var DecimalNumber|null
      */
     private $price;
 
     /**
-     * @var int
+     * @var int|null
      */
     private $fromQuantity;
 
@@ -127,9 +127,8 @@ class EditProductSpecificPriceCommand
     /**
      * @param int $specificPriceId
      */
-    public function __construct(
-        int $specificPriceId
-    ) {
+    public function __construct(int $specificPriceId)
+    {
         $this->specificPriceId = new SpecificPriceId($specificPriceId);
     }
 
@@ -142,29 +141,33 @@ class EditProductSpecificPriceCommand
     }
 
     /**
-     * @return Reduction
+     * @return Reduction|null
      */
-    public function getReduction(): Reduction
+    public function getReduction(): ?Reduction
     {
         return $this->reduction;
     }
 
     /**
-     * @param Reduction $reduction
+     * @param string $reductionType
+     * @param float $reductionValue
+     *
+     * @todo: reduction value could also be a numeric string, because it is later converted to DecimalNumber.
+     *      (would require to refacto AddProductSpecificPriceCommand too)
      *
      * @return EditProductSpecificPriceCommand
      */
-    public function setReduction(Reduction $reduction): EditProductSpecificPriceCommand
+    public function setReduction(string $reductionType, float $reductionValue): EditProductSpecificPriceCommand
     {
-        $this->reduction = $reduction;
+        $this->reduction = new Reduction($reductionType, $reductionValue);
 
         return $this;
     }
 
     /**
-     * @return bool
+     * @return bool|null
      */
-    public function includesTax(): bool
+    public function includesTax(): ?bool
     {
         return $this->includesTax;
     }
@@ -182,29 +185,29 @@ class EditProductSpecificPriceCommand
     }
 
     /**
-     * @return DecimalNumber
+     * @return DecimalNumber|null
      */
-    public function getPrice(): DecimalNumber
+    public function getPrice(): ?DecimalNumber
     {
         return $this->price;
     }
 
     /**
-     * @param DecimalNumber $price
+     * @param string $price
      *
      * @return EditProductSpecificPriceCommand
      */
-    public function setPrice(DecimalNumber $price): EditProductSpecificPriceCommand
+    public function setPrice(string $price): EditProductSpecificPriceCommand
     {
-        $this->price = $price;
+        $this->price = new DecimalNumber($price);
 
         return $this;
     }
 
     /**
-     * @return int
+     * @return int|null
      */
-    public function getFromQuantity(): int
+    public function getFromQuantity(): ?int
     {
         return $this->fromQuantity;
     }
