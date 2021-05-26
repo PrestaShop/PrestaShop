@@ -324,22 +324,22 @@ class SpecificPriceContext extends AbstractProductFeatureContext
             $editCommand->setCombinationId($this->getStoredId($dataRows, 'combination'));
         }
         if (isset($dataRows['shop group'])) {
-            $editCommand->setShopGroupId($this->getStoredId($dataRows, 'shop group'));
+            $editCommand->setShopGroupId($this->getNullableIdForEdit($dataRows, 'shop group'));
         }
         if (isset($dataRows['shop'])) {
-            $editCommand->setShopId($this->getStoredId($dataRows, 'shop'));
+            $editCommand->setShopId($this->getNullableIdForEdit($dataRows, 'shop'));
         }
         if (isset($dataRows['currency'])) {
-            $editCommand->setCurrencyId($this->getStoredId($dataRows, 'currency'));
+            $editCommand->setCurrencyId($this->getNullableIdForEdit($dataRows, 'currency'));
         }
         if (isset($dataRows['country'])) {
-            $editCommand->setCountryId($this->getStoredId($dataRows, 'country'));
+            $editCommand->setCountryId($this->getNullableIdForEdit($dataRows, 'country'));
         }
         if (isset($dataRows['group'])) {
-            $editCommand->setGroupId($this->getStoredId($dataRows, 'group'));
+            $editCommand->setGroupId($this->getNullableIdForEdit($dataRows, 'group'));
         }
         if (isset($dataRows['customer'])) {
-            $editCommand->setCustomerId($this->getStoredId($dataRows, 'customer'));
+            $editCommand->setCustomerId($this->getNullableIdForEdit($dataRows, 'customer'));
         }
         if (isset($dataRows['from'])) {
             $editCommand->setDateTimeFrom(new DateTime($dataRows['from']));
@@ -349,6 +349,23 @@ class SpecificPriceContext extends AbstractProductFeatureContext
         }
 
         return $editCommand;
+    }
+
+    /**
+     * When editing the id fields can be 0 (if we leave it empty it acts as reset action)
+     *
+     * @param array $dataRows
+     * @param string $fieldId
+     *
+     * @return int
+     */
+    private function getNullableIdForEdit(array $dataRows, string $fieldId): int
+    {
+        if (empty($dataRows[$fieldId])) {
+            return 0;
+        }
+
+        return $this->getStoredId($dataRows, $fieldId);
     }
 
     /**
