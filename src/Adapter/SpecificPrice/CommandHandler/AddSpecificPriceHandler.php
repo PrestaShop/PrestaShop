@@ -38,7 +38,7 @@ use PrestaShopException;
 use SpecificPrice;
 
 /**
- * @deprecated since 1.7.9.0
+ * @deprecated since 1.7.8.0
  * @see AddProductSpecificPriceHandler
  */
 final class AddSpecificPriceHandler extends AbstractSpecificPriceHandler implements AddSpecificPriceHandlerInterface

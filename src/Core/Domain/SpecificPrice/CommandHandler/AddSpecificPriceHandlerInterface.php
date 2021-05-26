@@ -31,7 +31,7 @@ use PrestaShop\PrestaShop\Core\Domain\SpecificPrice\Command\AddSpecificPriceComm
 use PrestaShop\PrestaShop\Core\Domain\SpecificPrice\ValueObject\SpecificPriceId;
 
 /**
- * @deprecated since 1.7.9.0
+ * @deprecated since 1.7.8.0
  * @see AddProductSpecificPriceHandlerInterface
  */
 interface AddSpecificPriceHandlerInterface
