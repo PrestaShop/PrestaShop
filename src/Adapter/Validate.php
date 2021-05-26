@@ -83,7 +83,7 @@ class Validate
      *
      * @return bool
      */
-    public function isEmail($email): bool
+    public function isEmail(string $email): bool
     {
         return ValidateLegacy::isEmail($email);
     }
