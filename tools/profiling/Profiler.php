@@ -30,6 +30,8 @@ class Profiler
     protected $hooksPerfs = [];
     protected $modulesPerfs = [];
     protected $profiler = [];
+    protected $globalVarSize = [];
+    protected $queries = [];
 
     protected $totalFilesize = 0;
     protected $totalGlobalVarSize = 0;
@@ -39,6 +41,7 @@ class Profiler
     protected $totalHooksTime = 0;
     protected $totalHooksMemory = 0;
     protected $startTime = 0;
+    protected $totalCacheSize = 0;
 
     protected static $instance = null;
 
@@ -159,7 +162,8 @@ class Profiler
      */
     public function interceptModule(array $params)
     {
-        $this->modulesPerfs[] = $params;
+        $this->modulesPerfs[$params['module']][] = $params;
+
         $this->totalModulesTime += $params['time'];
         $this->totalModulesMemory += $params['memory'];
     }
@@ -214,7 +218,7 @@ class Profiler
                 }
 
                 foreach ($explain as $row) {
-                    $queryRow['rows'] *= $row['rows'];
+                    $queryRow['rows'] *= (int) $row['rows'];
                 }
 
                 if (stristr($data['query'], 'group by') && !preg_match('/(avg|count|min|max|group_concat|sum)\s*\(/i', $data['query'])) {
@@ -234,6 +238,37 @@ class Profiler
         arsort(Db::getInstance()->tables);
         arsort(Db::getInstance()->uniqQueries);
         uasort($this->hooksPerfs, [$this, 'sortByQueryTime']);
+    }
+
+    /**
+     * Format performance details for modules
+     * 
+     * @return array
+     */
+    public function getFormattedModulePerfs(): array
+    {
+        $formattedOutput = [];
+        foreach ($this->modulesPerfs as $moduleName => $perfs) {
+            $formattedOutput[$moduleName] = [
+                'total_time' => array_reduce(
+                    $perfs,
+                    function (&$res, $item) {
+                        return $res + $item['time'];
+                    },
+                    0
+                ),
+                'total_memory' => array_reduce(
+                    $perfs,
+                    function (&$res, $item) {
+                        return $res + $item['memory'];
+                    },
+                    0
+                ),
+                'details' => $perfs
+            ];
+        }
+        
+        return $formattedOutput;
     }
 
     /**
@@ -274,7 +309,7 @@ class Profiler
                 'totalHooksMemory' => $this->totalHooksMemory,
             ],
             'modules' => [
-                'perfs' => $this->modulesPerfs,
+                'perfs' => $this->getFormattedModulePerfs(),
                 'totalHooksTime' => $this->totalModulesTime,
                 'totalHooksMemory' => $this->totalModulesMemory,
             ],
