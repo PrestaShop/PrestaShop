@@ -64,7 +64,7 @@ class StylesheetManagerCore extends AbstractAssetManager
         $inline = false,
         $server = 'local',
         $needRtl = true,
-        string $version = null
+        ?string $version = null
     ) {
         $fullPath = $this->getFullPath($relativePath);
         $rtlFullPath = $this->getFullPath(str_replace('.css', '_rtl.css', $relativePath));
