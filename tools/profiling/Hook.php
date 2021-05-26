@@ -66,13 +66,13 @@ class Hook extends HookCore
         Profiler::getInstance()->interceptHook(
             $registeredHookName,
             [
-                'module' => $module->name.' (widget)',
+                'module' => $module->name . ' (widget)',
                 'params' => $params,
                 'time' => microtime(true) - $timeStart,
                 'memory' => memory_get_usage() - $memoryStart,
             ]
         );
-        
+
         Profiler::getInstance()->interceptModule(
             [
                 'module' => $module->name,

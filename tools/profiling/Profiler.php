@@ -27,20 +27,45 @@ declare(strict_types=1);
 
 class Profiler
 {
+    /** @var array */
     protected $hooksPerfs = [];
+
+    /** @var array */
     protected $modulesPerfs = [];
+
+    /** @var array */
     protected $profiler = [];
+    /** @var array */
     protected $globalVarSize = [];
+
+    /** @var array */
     protected $queries = [];
 
+    /** @var int */
     protected $totalFilesize = 0;
+
+    /** @var int */
     protected $totalGlobalVarSize = 0;
+
+    /** @var float */
     protected $totalQueryTime = 0;
+
+    /** @var float */
     protected $totalModulesTime = 0;
+
+    /** @var int */
     protected $totalModulesMemory = 0;
+
+    /** @var float */
     protected $totalHooksTime = 0;
+
+    /** @var int */
     protected $totalHooksMemory = 0;
+
+    /** @var float */
     protected $startTime = 0;
+
+    /** @var int */
     protected $totalCacheSize = 0;
 
     protected static $instance = null;
@@ -242,7 +267,7 @@ class Profiler
 
     /**
      * Format performance details for modules
-     * 
+     *
      * @return array
      */
     public function getFormattedModulePerfs(): array
@@ -264,10 +289,10 @@ class Profiler
                     },
                     0
                 ),
-                'details' => $perfs
+                'details' => $perfs,
             ];
         }
-        
+
         return $formattedOutput;
     }
 
