@@ -26,13 +26,10 @@
 
 declare(strict_types=1);
 
-namespace PrestaShop\PrestaShop\Core\Domain\SpecificPrice\Exception;
-
-use PrestaShop\PrestaShop\Core\Domain\Product\SpecificPrice\Exception\CannotAddSpecificPriceException as CannotAddProductSpecificPriceException;
+namespace PrestaShop\PrestaShop\Core\Domain\Product\SpecificPrice\Exception;
 
 /**
- * @deprecated since 1.7.8.0
- * @see CannotAddProductSpecificPriceException
+ * Exception thrown when SpecificPrice could not be created
  */
 class CannotAddSpecificPriceException extends SpecificPriceException
 {

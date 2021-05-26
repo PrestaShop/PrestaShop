@@ -23,17 +23,15 @@
  * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
-
 declare(strict_types=1);
 
-namespace PrestaShop\PrestaShop\Core\Domain\SpecificPrice\Exception;
+namespace PrestaShop\PrestaShop\Core\Domain\Product\SpecificPrice\Exception;
 
-use PrestaShop\PrestaShop\Core\Domain\Product\SpecificPrice\Exception\CannotAddSpecificPriceException as CannotAddProductSpecificPriceException;
+use PrestaShop\PrestaShop\Core\Domain\Product\Exception\ProductException;
 
 /**
- * @deprecated since 1.7.8.0
- * @see CannotAddProductSpecificPriceException
+ * Base exception for SpecificPrice subdomain
  */
-class CannotAddSpecificPriceException extends SpecificPriceException
+class SpecificPriceException extends ProductException
 {
 }

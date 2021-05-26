@@ -26,6 +26,7 @@
 
 namespace PrestaShop\PrestaShop\Adapter\SpecificPrice\CommandHandler;
 
+use PrestaShop\PrestaShop\Adapter\Product\SpecificPrice\CommandHandler\AddProductSpecificPriceHandler;
 use PrestaShop\PrestaShop\Adapter\SpecificPrice\AbstractSpecificPriceHandler;
 use PrestaShop\PrestaShop\Core\Domain\SpecificPrice\Command\AddSpecificPriceCommand;
 use PrestaShop\PrestaShop\Core\Domain\SpecificPrice\CommandHandler\AddSpecificPriceHandlerInterface;
@@ -37,7 +38,8 @@ use PrestaShopException;
 use SpecificPrice;
 
 /**
- * Handles AddSpecificPriceCommand using legacy object model
+ * @deprecated since 1.7.9.0
+ * @see AddProductSpecificPriceHandler
  */
 final class AddSpecificPriceHandler extends AbstractSpecificPriceHandler implements AddSpecificPriceHandlerInterface
 {

@@ -26,11 +26,13 @@
 
 namespace PrestaShop\PrestaShop\Core\Domain\SpecificPrice\CommandHandler;
 
+use PrestaShop\PrestaShop\Core\Domain\Product\SpecificPrice\CommandHandler\AddProductSpecificPriceHandlerInterface;
 use PrestaShop\PrestaShop\Core\Domain\SpecificPrice\Command\AddSpecificPriceCommand;
 use PrestaShop\PrestaShop\Core\Domain\SpecificPrice\ValueObject\SpecificPriceId;
 
 /**
- * Interface for handling AddSpecificPrice command
+ * @deprecated since 1.7.9.0
+ * @see AddProductSpecificPriceHandlerInterface
  */
 interface AddSpecificPriceHandlerInterface
 {

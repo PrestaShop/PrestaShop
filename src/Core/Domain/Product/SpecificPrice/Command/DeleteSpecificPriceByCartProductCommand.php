@@ -24,15 +24,13 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
 
-namespace PrestaShop\PrestaShop\Core\Domain\SpecificPrice\Command;
+namespace PrestaShop\PrestaShop\Core\Domain\Product\SpecificPrice\Command;
 
 use PrestaShop\PrestaShop\Core\Domain\Cart\ValueObject\CartId;
-use PrestaShop\PrestaShop\Core\Domain\Product\SpecificPrice\Command\DeleteSpecificPriceByCartProductCommand as DeleteProductSpecificPriceByCartProductCommand;
 use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductId;
 
 /**
- * @deprecated since 1.7.9.0
- * @see DeleteProductSpecificPriceByCartProductCommand
+ * Deletes specific price by cart id
  */
 class DeleteSpecificPriceByCartProductCommand
 {

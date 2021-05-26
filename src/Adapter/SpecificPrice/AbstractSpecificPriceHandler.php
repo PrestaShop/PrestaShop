@@ -27,6 +27,7 @@
 namespace PrestaShop\PrestaShop\Adapter\SpecificPrice;
 
 use DateTime;
+use PrestaShop\PrestaShop\Core\Domain\Product\SpecificPrice\CommandHandler\AddProductSpecificPriceHandlerInterface;
 use PrestaShop\PrestaShop\Core\Domain\SpecificPrice\Exception\SpecificPriceConstraintException;
 use PrestaShop\PrestaShop\Core\Domain\SpecificPrice\Exception\SpecificPriceException;
 use PrestaShop\PrestaShop\Core\Domain\SpecificPrice\Exception\SpecificPriceNotFoundException;
@@ -35,7 +36,8 @@ use PrestaShopException;
 use SpecificPrice;
 
 /**
- * Provides reusable methods for specific price handlers
+ * @deprecated since 1.7.9.0
+ * @see AddProductSpecificPriceHandlerInterface
  */
 abstract class AbstractSpecificPriceHandler
 {

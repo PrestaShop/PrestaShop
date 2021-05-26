@@ -26,10 +26,12 @@
 
 namespace PrestaShop\PrestaShop\Core\Domain\SpecificPrice\CommandHandler;
 
+use PrestaShop\PrestaShop\Core\Domain\Product\SpecificPrice\CommandHandler\DeleteSpecificPriceByCartProductHandlerInterface as DeleteProductSpecificPriceByCartProductHandlerInterface;
 use PrestaShop\PrestaShop\Core\Domain\SpecificPrice\Command\DeleteSpecificPriceByCartProductCommand;
 
 /**
- * Interface for handling DeleteSpecificPriceByCartProduct command
+ * @deprecated since 1.7.9.0
+ * @see DeleteProductSpecificPriceByCartProductHandlerInterface
  */
 interface DeleteSpecificPriceByCartProductHandlerInterface
 {

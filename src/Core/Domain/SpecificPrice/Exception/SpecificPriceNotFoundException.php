@@ -26,8 +26,11 @@
 
 namespace PrestaShop\PrestaShop\Core\Domain\SpecificPrice\Exception;
 
+use PrestaShop\PrestaShop\Core\Domain\Product\SpecificPrice\Exception\SpecificPriceNotFoundException as ProductSpecificPriceNotFoundException;
+
 /**
- * Thrown when requested specific price could not be found
+ * @deprecated since 1.7.9.0
+ * @see ProductSpecificPriceNotFoundException
  */
 class SpecificPriceNotFoundException extends SpecificPriceException
 {

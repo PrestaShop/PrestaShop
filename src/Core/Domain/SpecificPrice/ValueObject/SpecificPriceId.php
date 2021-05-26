@@ -26,10 +26,12 @@
 
 namespace PrestaShop\PrestaShop\Core\Domain\SpecificPrice\ValueObject;
 
+use PrestaShop\PrestaShop\Core\Domain\Product\SpecificPrice\ValueObject\SpecificPriceId as ProductSpecificPriceId;
 use PrestaShop\PrestaShop\Core\Domain\SpecificPrice\Exception\SpecificPriceConstraintException;
 
 /**
- * Holds identification data of specific price
+ * @deprecated since 1.7.9.0
+ * @see ProductSpecificPriceId
  */
 class SpecificPriceId
 {

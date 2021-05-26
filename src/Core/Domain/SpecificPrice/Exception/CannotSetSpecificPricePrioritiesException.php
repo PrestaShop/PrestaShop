@@ -28,8 +28,11 @@ declare(strict_types=1);
 
 namespace PrestaShop\PrestaShop\Core\Domain\SpecificPrice\Exception;
 
+use PrestaShop\PrestaShop\Core\Domain\Product\SpecificPrice\Exception\CannotSetSpecificPricePrioritiesException as CannotSetProductSpecificPricePrioritiesException;
+
 /**
- * Thrown when setting specific price priorities fails
+ * @deprecated since 1.7.9.0
+ * @see CannotSetProductSpecificPricePrioritiesException
  */
 class CannotSetSpecificPricePrioritiesException extends SpecificPriceException
 {

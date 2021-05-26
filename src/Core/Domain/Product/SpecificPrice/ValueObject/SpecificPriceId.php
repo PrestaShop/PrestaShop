@@ -23,23 +23,49 @@
  * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
-
 declare(strict_types=1);
 
-namespace PrestaShop\PrestaShop\Core\Domain\Product\SpecificPrice\CommandHandler;
+namespace PrestaShop\PrestaShop\Core\Domain\Product\SpecificPrice\ValueObject;
 
-use PrestaShop\PrestaShop\Core\Domain\Product\SpecificPrice\Command\AddProductSpecificPriceCommand;
-use PrestaShop\PrestaShop\Core\Domain\Product\SpecificPrice\ValueObject\SpecificPriceId;
+use PrestaShop\PrestaShop\Core\Domain\Product\SpecificPrice\Exception\SpecificPriceConstraintException;
 
-/**
- * Interface for handling AddProductSpecificPriceCommand command
- */
-interface AddProductSpecificPriceHandlerInterface
+class SpecificPriceId
 {
     /**
-     * @param AddProductSpecificPriceCommand $command
-     *
-     * @return SpecificPriceId
+     * @var int
      */
-    public function handle(AddProductSpecificPriceCommand $command): SpecificPriceId;
+    private $specificPriceId;
+
+    /**
+     * @param int $specificPriceId
+     *
+     * @throws SpecificPriceConstraintException
+     */
+    public function __construct(int $specificPriceId)
+    {
+        $this->assertIsGreaterThanZero($specificPriceId);
+        $this->specificPriceId = $specificPriceId;
+    }
+
+    /**
+     * @return int
+     */
+    public function getValue(): int
+    {
+        return $this->specificPriceId;
+    }
+
+    /**
+     * Validates that the value is greater than zero
+     *
+     * @param int $value
+     *
+     * @throws SpecificPriceConstraintException
+     */
+    private function assertIsGreaterThanZero(int $value): void
+    {
+        if (!is_int($value) || 0 >= $value) {
+            throw new SpecificPriceConstraintException(sprintf('Invalid specific price id "%s".', $value), SpecificPriceConstraintException::INVALID_ID);
+        }
+    }
 }

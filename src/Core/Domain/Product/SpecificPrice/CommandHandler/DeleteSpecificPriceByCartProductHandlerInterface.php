@@ -24,16 +24,17 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
 
-declare(strict_types=1);
+namespace PrestaShop\PrestaShop\Core\Domain\Product\SpecificPrice\CommandHandler;
 
-namespace PrestaShop\PrestaShop\Core\Domain\SpecificPrice\Exception;
-
-use PrestaShop\PrestaShop\Core\Domain\Product\SpecificPrice\Exception\CannotAddSpecificPriceException as CannotAddProductSpecificPriceException;
+use PrestaShop\PrestaShop\Core\Domain\Product\SpecificPrice\Command\DeleteSpecificPriceByCartProductCommand;
 
 /**
- * @deprecated since 1.7.8.0
- * @see CannotAddProductSpecificPriceException
+ * Interface for handling DeleteSpecificPriceByCartProduct command
  */
-class CannotAddSpecificPriceException extends SpecificPriceException
+interface DeleteSpecificPriceByCartProductHandlerInterface
 {
+    /**
+     * @param DeleteSpecificPriceByCartProductCommand $command
+     */
+    public function handle(DeleteSpecificPriceByCartProductCommand $command): void;
 }

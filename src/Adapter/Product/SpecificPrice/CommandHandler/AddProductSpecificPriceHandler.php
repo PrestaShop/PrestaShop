@@ -31,8 +31,8 @@ namespace PrestaShop\PrestaShop\Adapter\Product\SpecificPrice\CommandHandler;
 use PrestaShop\PrestaShop\Adapter\Product\SpecificPrice\Repository\SpecificPriceRepository;
 use PrestaShop\PrestaShop\Core\Domain\Product\SpecificPrice\Command\AddProductSpecificPriceCommand;
 use PrestaShop\PrestaShop\Core\Domain\Product\SpecificPrice\CommandHandler\AddProductSpecificPriceHandlerInterface;
-use PrestaShop\PrestaShop\Core\Domain\SpecificPrice\Exception\SpecificPriceConstraintException;
-use PrestaShop\PrestaShop\Core\Domain\SpecificPrice\ValueObject\SpecificPriceId;
+use PrestaShop\PrestaShop\Core\Domain\Product\SpecificPrice\Exception\SpecificPriceConstraintException;
+use PrestaShop\PrestaShop\Core\Domain\Product\SpecificPrice\ValueObject\SpecificPriceId;
 use PrestaShop\PrestaShop\Core\Util\DateTime\DateTime as DateTimeUtil;
 use PrestaShopException;
 use SpecificPrice;
@@ -92,8 +92,8 @@ final class AddProductSpecificPriceHandler implements AddProductSpecificPriceHan
         $specificPrice->id_country = $command->getCountryId() ?? 0;
         $specificPrice->id_group = $command->getGroupId() ?? 0;
         $specificPrice->id_customer = $command->getCustomerId() ?? 0;
-        $specificPrice->from = DateTimeUtil::NULL_VALUE;
-        $specificPrice->to = DateTimeUtil::NULL_VALUE;
+        $specificPrice->from = DateTimeUtil::NULL_DATETIME;
+        $specificPrice->to = DateTimeUtil::NULL_DATETIME;
 
         $from = $command->getDateTimeFrom();
         if (null !== $from) {

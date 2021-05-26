@@ -24,18 +24,16 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
 
-namespace PrestaShop\PrestaShop\Adapter\SpecificPrice\CommandHandler;
+namespace PrestaShop\PrestaShop\Adapter\Product\SpecificPrice\CommandHandler;
 
-use PrestaShop\PrestaShop\Adapter\Product\SpecificPrice\CommandHandler\DeleteSpecificPriceByCartProductHandler as DeleteProductSpecificPriceByCartProductHandler;
-use PrestaShop\PrestaShop\Core\Domain\SpecificPrice\Command\DeleteSpecificPriceByCartProductCommand;
-use PrestaShop\PrestaShop\Core\Domain\SpecificPrice\CommandHandler\DeleteSpecificPriceByCartProductHandlerInterface;
-use PrestaShop\PrestaShop\Core\Domain\SpecificPrice\Exception\SpecificPriceException;
+use PrestaShop\PrestaShop\Core\Domain\Product\SpecificPrice\Command\DeleteSpecificPriceByCartProductCommand;
+use PrestaShop\PrestaShop\Core\Domain\Product\SpecificPrice\CommandHandler\DeleteSpecificPriceByCartProductHandlerInterface;
+use PrestaShop\PrestaShop\Core\Domain\Product\SpecificPrice\Exception\SpecificPriceException;
 use PrestaShopException;
 use SpecificPrice;
 
 /**
- * @deprecated since 1.7.9.0
- * @see DeleteProductSpecificPriceByCartProductHandler
+ * Handles @see DeleteSpecificPriceByCartProductCommand using legacy object model
  */
 final class DeleteSpecificPriceByCartProductHandler implements DeleteSpecificPriceByCartProductHandlerInterface
 {
