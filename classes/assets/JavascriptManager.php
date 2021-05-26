@@ -55,7 +55,7 @@ class JavascriptManagerCore extends AbstractAssetManager
      * @param bool $inline
      * @param string $attribute
      * @param string $server
-     * @param string $version
+     * @param string|null $version
      */
     public function register(
         $id,
