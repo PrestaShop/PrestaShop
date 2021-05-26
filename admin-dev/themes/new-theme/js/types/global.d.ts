@@ -7,6 +7,7 @@ interface Window {
   moduleTranslations: Record<string, any>;
   moduleURLs: Record<string, any>;
   str2url: any;
+  prestaShopUiKit: any;
 }
 interface TypeaheadDatasetConfig {
   display: string | ((text: string) => void);
