@@ -35,6 +35,7 @@ use PrestaShop\PrestaShop\Adapter\Product\SpecificPrice\Validate\SpecificPriceVa
 use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductId;
 use PrestaShop\PrestaShop\Core\Domain\SpecificPrice\Exception\CannotAddSpecificPriceException;
 use PrestaShop\PrestaShop\Core\Domain\SpecificPrice\Exception\SpecificPriceConstraintException;
+use PrestaShop\PrestaShop\Core\Domain\SpecificPrice\Exception\SpecificPriceException;
 use PrestaShop\PrestaShop\Core\Domain\SpecificPrice\Exception\SpecificPriceNotFoundException;
 use PrestaShop\PrestaShop\Core\Domain\SpecificPrice\ValueObject\SpecificPriceId;
 use PrestaShop\PrestaShop\Core\Exception\CoreException;
@@ -109,6 +110,20 @@ class SpecificPriceRepository extends AbstractObjectModelRepository
         );
 
         return $specificPrice;
+    }
+
+    /**
+     * @param SpecificPrice $specificPrice
+     * @param string[] $updatableProperties
+     */
+    public function partialUpdate(SpecificPrice $specificPrice, array $updatableProperties): void
+    {
+        // @todo: implement new CannotUpdateSpecificPriceException and use instead of generic one.
+        $this->partiallyUpdateObjectModel(
+            $specificPrice,
+            $updatableProperties,
+            SpecificPriceException::class
+        );
     }
 
     /**
