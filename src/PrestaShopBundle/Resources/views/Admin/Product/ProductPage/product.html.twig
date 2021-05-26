@@ -31,7 +31,7 @@
 {% block content %}
   {% set hooks = renderhooksarray('displayAdminProductsExtra', { 'id_product': id_product }) %}
   <div class="header-toolbar d-print-none">
-    {{ multistoreHeader()|raw }}
+    {{ multistoreHeader() }}
   </div>
   <form name="form" id="form" method="post" class="form-horizontal product-page row justify-content-md-center" novalidate="novalidate">
 
