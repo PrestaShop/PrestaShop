@@ -43,8 +43,8 @@ class MerchandiseReturns extends BOBasePage {
 
   /**
    * Update returns prefix
-   * @param page
-   * @param prefix
+   * @param page {Page} Browser tab
+   * @param prefix {string} Value of prefix to set on return prefix input
    * @returns {Promise<string>}
    */
   async setReturnsPrefix(page, prefix) {
