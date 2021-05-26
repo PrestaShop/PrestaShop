@@ -24,7 +24,7 @@
  *#}
 
 {% if hooksarraycontent(hooks) is not empty %}
-<div role="tabpanel" class="form-contenttab tab-pane container-fluid active" id="hooks-tab">
+<div role="tabpanel" class="form-contenttab tab-pane container-fluid" id="hooks-tab">
   {{ include('@PrestaShop/Admin/Common/unavailable-feature.html.twig', {
     'featureTitle': 'Choose a module to configure'|trans({}, 'Admin.Catalog.Feature'),
   }) }}
