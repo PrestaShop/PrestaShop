@@ -39,6 +39,8 @@ class TranslatableInput {
 
   localeInputSelector: string;
 
+  selectedLocale: string;
+
   constructor(options: Record<string, any>) {
     const opts = options || {};
 
@@ -53,22 +55,6 @@ class TranslatableInput {
       this.toggleLanguage.bind(this),
     );
     EventEmitter.on('languageSelected', this.toggleInputs.bind(this));
-
-    return {
-      localeItemSelector: this.localeItemSelector,
-      localeButtonSelector: this.localeButtonSelector,
-      localeInputSelector: this.localeInputSelector,
-
-      /**
-       * @param {jQuery} form
-       */
-      refreshFormInputs: (form) => { this.refreshInputs(form); },
-
-      /**
-       * @returns {string|undefined}
-       */
-      getSelectedLocale: () => this.selectedLocale,
-    };
   }
 
   /**
@@ -76,7 +62,7 @@ class TranslatableInput {
    *
    * @private
    */
-  refreshInputs(form) {
+  refreshInputs(form: JQuery<Element>): void {
     if (!this.selectedLocale) {
       return;
     }
