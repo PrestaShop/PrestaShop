@@ -150,11 +150,6 @@ class InstallControllerConsoleProcess extends InstallControllerConsole implement
             }
         }
 
-        if (in_array('addons_modules', $steps)) {
-            if (!$this->processInstallAddonsModules()) {
-                $this->printErrors();
-            }
-        }
 
         if (in_array('theme', $steps)) {
             if (!$this->processInstallTheme()) {
@@ -164,6 +159,12 @@ class InstallControllerConsoleProcess extends InstallControllerConsole implement
 
         if (in_array('fixtures', $steps) && $this->datas->fixtures) {
             if (!$this->processInstallFixtures()) {
+                $this->printErrors();
+            }
+        }
+
+        if (in_array('postInstall', $steps)) {
+            if (!$this->processPostInstall()) {
                 $this->printErrors();
             }
         }
@@ -289,12 +290,11 @@ class InstallControllerConsoleProcess extends InstallControllerConsole implement
     }
 
     /**
-     * PROCESS : installModulesAddons
-     * Install modules from addons
+     * Process post install execution
      */
-    public function processInstallAddonsModules()
+    public function processPostInstall(): bool
     {
-        return $this->model_install->installModulesAddons();
+        return $this->model_install->postInstall();
     }
 
     /**

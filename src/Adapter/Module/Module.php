@@ -260,6 +260,18 @@ class Module implements ModuleInterface
     /**
      * {@inheritdoc}
      */
+    public function onPostInstall(): bool
+    {
+        if (!$this->hasValidInstance()) {
+            return false;
+        }
+
+        return $this->instance->postInstall();
+    }
+
+    /**
+     * {@inheritdoc}
+     */
     public function onUninstall()
     {
         if (!$this->hasValidInstance()) {

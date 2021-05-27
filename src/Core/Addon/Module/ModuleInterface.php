@@ -32,6 +32,8 @@ interface ModuleInterface extends AddonInterface
 {
     public function onInstall();
 
+    public function onPostInstall(): bool;
+
     public function onUninstall();
 
     /**

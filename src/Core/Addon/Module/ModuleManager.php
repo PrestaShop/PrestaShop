@@ -295,24 +295,42 @@ class ModuleManager implements AddonManagerInterface
         if (!empty($source)) {
             $this->moduleZipManager->storeInModulesFolder($source);
         } elseif (!$this->moduleProvider->isOnDisk($name)) {
-            if (!$this->moduleUpdater->setModuleOnDiskFromAddons($name)) {
-                throw new FailedToEnableThemeModuleException(
-                    $name,
-                    $this->translator->trans(
-                        'The module %name% could not be found on Addons.',
-                        ['%name%' => $name],
-                        'Admin.Modules.Notification'
-                    )
-                );
-            }
+            return false;
         }
 
         $module = $this->moduleRepository->getModule($name);
-        $this->checkConfirmationGiven(__FUNCTION__, $module);
         $result = $module->onInstall();
 
         $this->checkAndClearCache($result);
         $this->dispatch(ModuleManagementEvent::INSTALL, $module);
+
+        return $result;
+    }
+
+
+    /**
+     * Execute post install
+     *
+     * @param string $moduleName
+     *
+     * @return bool true for success
+     */
+    public function postInstall(string $moduleName): bool
+    {
+        if (!$this->moduleProvider->isInstalled($moduleName)) {
+            return false;
+        }
+
+        if (!$this->moduleProvider->isOnDisk($moduleName)) {
+            return false;
+        }
+
+        $module = $this->moduleRepository->getModule($moduleName);
+        /** @var Module */
+        $result = $module->onPostInstall();
+
+        $this->checkAndClearCache($result);
+        $this->dispatch(ModuleManagementEvent::POST_INSTALL, $module);
 
         return $result;
     }
@@ -666,23 +684,6 @@ class ModuleManager implements AddonManagerInterface
     {
         if (!$this->moduleProvider->isInstalled($name)) {
             throw new Exception($this->translator->trans('The module %module% must be installed first', ['%module%' => $name], 'Admin.Modules.Notification'));
-        }
-    }
-
-    /**
-     * We check the module does not ask for pre-requisites to be respected prior the action being executed.
-     *
-     * @param string $action
-     * @param Module $module
-     *
-     * @throws UnconfirmedModuleActionException
-     */
-    private function checkConfirmationGiven($action, Module $module)
-    {
-        if ($action === 'install') {
-            if ($module->attributes->has('prestatrust') && !$this->actionParams->has('confirmPrestaTrust')) {
-                throw (new UnconfirmedModuleActionException())->setModule($module)->setAction($action)->setSubject('PrestaTrust');
-            }
         }
     }
 
