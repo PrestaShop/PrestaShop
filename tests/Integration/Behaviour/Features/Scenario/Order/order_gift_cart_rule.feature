@@ -46,6 +46,7 @@ Feature: Order from Back Office (BO)
     And product "Test Product Gifted" in order "bo_order1" has following details:
       | product_quantity            | 1     |
       | product_price               | 15.00 |
+      | original_product_price      | 15.00 |
       | unit_price_tax_incl         | 15.90 |
       | unit_price_tax_excl         | 15.00 |
       | total_price_tax_incl        | 15.90 |
@@ -95,6 +96,7 @@ Feature: Order from Back Office (BO)
     And product "Test Product Gifted" in order "bo_order1" has following details:
       | product_quantity            | 2     |
       | product_price               | 15.00 |
+      | original_product_price      | 15.00 |
       | unit_price_tax_incl         | 15.90 |
       | unit_price_tax_excl         | 15.00 |
       | total_price_tax_incl        | 31.80 |
@@ -120,6 +122,7 @@ Feature: Order from Back Office (BO)
     And product "Test Product Gifted" in order "bo_order1" has following details:
       | product_quantity            | 1     |
       | product_price               | 15.00 |
+      | original_product_price      | 15.00 |
       | unit_price_tax_incl         | 15.90 |
       | unit_price_tax_excl         | 15.00 |
       | total_price_tax_incl        | 15.90 |
@@ -152,6 +155,7 @@ Feature: Order from Back Office (BO)
     And product "Test Product Gifted" in order "bo_order1" has following details:
       | product_quantity            | 1     |
       | product_price               | 15.00 |
+      | original_product_price      | 15.00 |
       | unit_price_tax_incl         | 15.90 |
       | unit_price_tax_excl         | 15.00 |
       | total_price_tax_incl        | 15.90 |
@@ -199,6 +203,7 @@ Feature: Order from Back Office (BO)
     And product "Test Product Gifted" in order "bo_order1" has following details:
       | product_quantity            | 1     |
       | product_price               | 15.00 |
+      | original_product_price      | 15.00 |
       | unit_price_tax_incl         | 15.90 |
       | unit_price_tax_excl         | 15.00 |
       | total_price_tax_incl        | 15.90 |
@@ -236,6 +241,7 @@ Feature: Order from Back Office (BO)
     And the product "Test Product Gifted" in the first invoice from the order "bo_order1" should have the following details:
       | product_quantity            | 1     |
       | product_price               | 15.00 |
+      | original_product_price      | 15.00 |
       | unit_price_tax_incl         | 15.90 |
       | unit_price_tax_excl         | 15.00 |
       | total_price_tax_incl        | 15.90 |
@@ -243,6 +249,7 @@ Feature: Order from Back Office (BO)
     And the product "Test Product Gifted" in the second invoice from the order "bo_order1" should have the following details:
       | product_quantity            | 2     |
       | product_price               | 15.00 |
+      | original_product_price      | 15.00 |
       | unit_price_tax_incl         | 15.90 |
       | unit_price_tax_excl         | 15.00 |
       | total_price_tax_incl        | 31.80 |
@@ -268,6 +275,7 @@ Feature: Order from Back Office (BO)
     And the product "Test Product Gifted" in the first invoice from the order "bo_order1" should have the following details:
       | product_quantity            | 1     |
       | product_price               | 15.00 |
+      | original_product_price      | 15.00 |
       | unit_price_tax_incl         | 15.90 |
       | unit_price_tax_excl         | 15.00 |
       | total_price_tax_incl        | 15.90 |
@@ -275,6 +283,7 @@ Feature: Order from Back Office (BO)
     And the product "Test Product Gifted" in the second invoice from the order "bo_order1" should have the following details:
       | product_quantity            | 1     |
       | product_price               | 15.00 |
+      | original_product_price      | 15.00 |
       | unit_price_tax_incl         | 15.90 |
       | unit_price_tax_excl         | 15.00 |
       | total_price_tax_incl        | 15.90 |
@@ -311,6 +320,7 @@ Feature: Order from Back Office (BO)
     And the product "Test Product Gifted" in the first invoice from the order "bo_order1" should have the following details:
       | product_quantity            | 1     |
       | product_price               | 15.00 |
+      | original_product_price      | 15.00 |
       | unit_price_tax_incl         | 15.90 |
       | unit_price_tax_excl         | 15.00 |
       | total_price_tax_incl        | 15.90 |
@@ -318,6 +328,7 @@ Feature: Order from Back Office (BO)
     And the product "Test Product Gifted" in the second invoice from the order "bo_order1" should have the following details:
       | product_quantity            | 1     |
       | product_price               | 15.00 |
+      | original_product_price      | 15.00 |
       | unit_price_tax_incl         | 15.90 |
       | unit_price_tax_excl         | 15.00 |
       | total_price_tax_incl        | 15.90 |
@@ -344,6 +355,7 @@ Feature: Order from Back Office (BO)
     And the product "Test Product Gifted" in the second invoice from the order "bo_order1" should have the following details:
       | product_quantity            | 1     |
       | product_price               | 15.00 |
+      | original_product_price      | 15.00 |
       | unit_price_tax_incl         | 15.90 |
       | unit_price_tax_excl         | 15.00 |
       | total_price_tax_incl        | 15.90 |
@@ -380,6 +392,7 @@ Feature: Order from Back Office (BO)
     And product "Test Product Gifted" in order "bo_order1" has following details:
       | product_quantity            | 1     |
       | product_price               | 15.00 |
+      | original_product_price      | 15.00 |
       | unit_price_tax_incl         | 15.90 |
       | unit_price_tax_excl         | 15.00 |
       | total_price_tax_incl        | 15.90 |
@@ -387,6 +400,7 @@ Feature: Order from Back Office (BO)
     And product "Test Product With Auto Gift" in order "bo_order1" has following details:
       | product_quantity            | 1     |
       | product_price               | 12.00 |
+      | original_product_price      | 12.00 |
       | unit_price_tax_incl         | 12.72 |
       | unit_price_tax_excl         | 12.00 |
       | total_price_tax_incl        | 12.72 |
@@ -459,6 +473,7 @@ Feature: Order from Back Office (BO)
     And product "Test Product Gifted" in order "bo_order1" has following details:
       | product_quantity            | 1     |
       | product_price               | 15.00 |
+      | original_product_price      | 15.00 |
       | unit_price_tax_incl         | 15.90 |
       | unit_price_tax_excl         | 15.00 |
       | total_price_tax_incl        | 15.90 |
@@ -466,6 +481,7 @@ Feature: Order from Back Office (BO)
     And product "Test Product With Auto Gift" in order "bo_order1" has following details:
       | product_quantity            | 1     |
       | product_price               | 12.00 |
+      | original_product_price      | 12.00 |
       | unit_price_tax_incl         | 12.72 |
       | unit_price_tax_excl         | 12.00 |
       | total_price_tax_incl        | 12.72 |
@@ -523,6 +539,7 @@ Feature: Order from Back Office (BO)
     And product "Test Product Gifted" in order "bo_order1" has following details:
       | product_quantity            | 2     |
       | product_price               | 15.00 |
+      | original_product_price      | 15.00 |
       | unit_price_tax_incl         | 15.90 |
       | unit_price_tax_excl         | 15.00 |
       | total_price_tax_incl        | 31.80 |
@@ -530,6 +547,7 @@ Feature: Order from Back Office (BO)
     And product "Test Product With Auto Gift" in order "bo_order1" has following details:
       | product_quantity            | 1     |
       | product_price               | 12.00 |
+      | original_product_price      | 12.00 |
       | unit_price_tax_incl         | 12.72 |
       | unit_price_tax_excl         | 12.00 |
       | total_price_tax_incl        | 12.72 |
@@ -556,6 +574,7 @@ Feature: Order from Back Office (BO)
     And product "Test Product Gifted" in order "bo_order1" has following details:
       | product_quantity            | 1     |
       | product_price               | 15.00 |
+      | original_product_price      | 15.00 |
       | unit_price_tax_incl         | 15.90 |
       | unit_price_tax_excl         | 15.00 |
       | total_price_tax_incl        | 15.90 |
@@ -592,6 +611,7 @@ Feature: Order from Back Office (BO)
     And product "Test Product Gifted" in order "bo_order1" has following details:
       | product_quantity            | 1     |
       | product_price               | 15.00 |
+      | original_product_price      | 15.00 |
       | unit_price_tax_incl         | 15.90 |
       | unit_price_tax_excl         | 15.00 |
       | total_price_tax_incl        | 15.90 |
@@ -618,6 +638,7 @@ Feature: Order from Back Office (BO)
     And product "Test Product Gifted" in order "bo_order1" has following details:
       | product_quantity            | 2     |
       | product_price               | 15.00 |
+      | original_product_price      | 15.00 |
       | unit_price_tax_incl         | 15.90 |
       | unit_price_tax_excl         | 15.00 |
       | total_price_tax_incl        | 31.80 |
@@ -625,6 +646,7 @@ Feature: Order from Back Office (BO)
     And product "Test Product With Auto Gift" in order "bo_order1" has following details:
       | product_quantity            | 1     |
       | product_price               | 12.00 |
+      | original_product_price      | 12.00 |
       | unit_price_tax_incl         | 12.72 |
       | unit_price_tax_excl         | 12.00 |
       | total_price_tax_incl        | 12.72 |
@@ -650,6 +672,7 @@ Feature: Order from Back Office (BO)
     And product "Test Product Gifted" in order "bo_order1" has following details:
       | product_quantity            | 1     |
       | product_price               | 15.00 |
+      | original_product_price      | 15.00 |
       | unit_price_tax_incl         | 15.90 |
       | unit_price_tax_excl         | 15.00 |
       | total_price_tax_incl        | 15.90 |
@@ -687,6 +710,7 @@ Feature: Order from Back Office (BO)
     And product "Test Product Gifted" in order "bo_order1" has following details:
       | product_quantity            | 1     |
       | product_price               | 15.00 |
+      | original_product_price      | 15.00 |
       | unit_price_tax_incl         | 15.90 |
       | unit_price_tax_excl         | 15.00 |
       | total_price_tax_incl        | 15.90 |
@@ -694,6 +718,7 @@ Feature: Order from Back Office (BO)
     And product "Test Product With Auto Gift" in order "bo_order1" has following details:
       | product_quantity            | 1     |
       | product_price               | 12.00 |
+      | original_product_price      | 12.00 |
       | unit_price_tax_incl         | 12.72 |
       | unit_price_tax_excl         | 12.00 |
       | total_price_tax_incl        | 12.72 |
@@ -719,6 +744,7 @@ Feature: Order from Back Office (BO)
     And product "Test Product With Auto Gift" in order "bo_order1" has following details:
       | product_quantity            | 1     |
       | product_price               | 12.00 |
+      | original_product_price      | 12.00 |
       | unit_price_tax_incl         | 12.72 |
       | unit_price_tax_excl         | 12.00 |
       | total_price_tax_incl        | 12.72 |
@@ -757,6 +783,7 @@ Feature: Order from Back Office (BO)
     And product "Test Product Gifted" in order "bo_order1" has following details:
       | product_quantity            | 1     |
       | product_price               | 15.00 |
+      | original_product_price      | 15.00 |
       | unit_price_tax_incl         | 15.90 |
       | unit_price_tax_excl         | 15.00 |
       | total_price_tax_incl        | 15.90 |
@@ -764,6 +791,7 @@ Feature: Order from Back Office (BO)
     And product "Test Product With Auto Gift" in order "bo_order1" has following details:
       | product_quantity            | 1     |
       | product_price               | 12.00 |
+      | original_product_price      | 12.00 |
       | unit_price_tax_incl         | 12.72 |
       | unit_price_tax_excl         | 12.00 |
       | total_price_tax_incl        | 12.72 |
@@ -789,6 +817,7 @@ Feature: Order from Back Office (BO)
     And product "Test Product With Auto Gift" in order "bo_order1" has following details:
       | product_quantity            | 1     |
       | product_price               | 12.00 |
+      | original_product_price      | 12.00 |
       | unit_price_tax_incl         | 12.72 |
       | unit_price_tax_excl         | 12.00 |
       | total_price_tax_incl        | 12.72 |
@@ -829,6 +858,7 @@ Feature: Order from Back Office (BO)
     And product "Test Product Gifted" in order "bo_order1" has following details:
       | product_quantity            | 2     |
       | product_price               | 15.00 |
+      | original_product_price      | 15.00 |
       | unit_price_tax_incl         | 15.90 |
       | unit_price_tax_excl         | 15.00 |
       | total_price_tax_incl        | 31.80 |
@@ -836,6 +866,7 @@ Feature: Order from Back Office (BO)
     And product "Test Product With Auto Gift" in order "bo_order1" has following details:
       | product_quantity            | 1     |
       | product_price               | 12.00 |
+      | original_product_price      | 12.00 |
       | unit_price_tax_incl         | 12.72 |
       | unit_price_tax_excl         | 12.00 |
       | total_price_tax_incl        | 12.72 |
@@ -863,6 +894,7 @@ Feature: Order from Back Office (BO)
     And product "Test Product Gifted" in order "bo_order1" has following details:
       | product_quantity            | 1     |
       | product_price               | 15.00 |
+      | original_product_price      | 15.00 |
       | unit_price_tax_incl         | 15.90 |
       | unit_price_tax_excl         | 15.00 |
       | total_price_tax_incl        | 15.90 |
@@ -870,6 +902,7 @@ Feature: Order from Back Office (BO)
     And product "Test Product With Auto Gift" in order "bo_order1" has following details:
       | product_quantity            | 1     |
       | product_price               | 12.00 |
+      | original_product_price      | 12.00 |
       | unit_price_tax_incl         | 12.72 |
       | unit_price_tax_excl         | 12.00 |
       | total_price_tax_incl        | 12.72 |
@@ -895,6 +928,7 @@ Feature: Order from Back Office (BO)
     And product "Test Product Gifted" in order "bo_order1" has following details:
       | product_quantity            | 2     |
       | product_price               | 15.00 |
+      | original_product_price      | 15.00 |
       | unit_price_tax_incl         | 15.90 |
       | unit_price_tax_excl         | 15.00 |
       | total_price_tax_incl        | 31.80 |
@@ -902,6 +936,7 @@ Feature: Order from Back Office (BO)
     And product "Test Product With Auto Gift" in order "bo_order1" has following details:
       | product_quantity            | 1     |
       | product_price               | 12.00 |
+      | original_product_price      | 12.00 |
       | unit_price_tax_incl         | 12.72 |
       | unit_price_tax_excl         | 12.00 |
       | total_price_tax_incl        | 12.72 |
@@ -927,6 +962,7 @@ Feature: Order from Back Office (BO)
     And product "Test Product With Auto Gift" in order "bo_order1" has following details:
       | product_quantity            | 1     |
       | product_price               | 12.00 |
+      | original_product_price      | 12.00 |
       | unit_price_tax_incl         | 12.72 |
       | unit_price_tax_excl         | 12.00 |
       | total_price_tax_incl        | 12.72 |
@@ -964,6 +1000,7 @@ Feature: Order from Back Office (BO)
     And product "Test Product Gifted" in order "bo_order1" has following details:
       | product_quantity            | 2     |
       | product_price               | 15.00 |
+      | original_product_price      | 15.00 |
       | unit_price_tax_incl         | 15.90 |
       | unit_price_tax_excl         | 15.00 |
       | total_price_tax_incl        | 31.80 |
@@ -1010,6 +1047,7 @@ Feature: Order from Back Office (BO)
     And product "Test Product Gifted" in order "bo_order1" has following details:
       | product_quantity            | 2     |
       | product_price               | 15.00 |
+      | original_product_price      | 15.00 |
       | unit_price_tax_incl         | 15.90 |
       | unit_price_tax_excl         | 15.00 |
       | total_price_tax_incl        | 31.80 |
@@ -1054,6 +1092,7 @@ Feature: Order from Back Office (BO)
     And product "gifted product" in order "bo_order1" has following details:
       | product_quantity            | 2     |
       | product_price               | 15.00 |
+      | original_product_price      | 15.00 |
       | unit_price_tax_incl         | 15.90 |
       | unit_price_tax_excl         | 15.00 |
       | total_price_tax_incl        | 31.80 |
@@ -1208,6 +1247,7 @@ Feature: Order from Back Office (BO)
     And product "Product 12345" in order "bo_order1" has following details:
       | product_quantity         | 1     |
       | product_price            | 12.00 |
+      | original_product_price   | 12.00 |
       | unit_price_tax_incl      | 12.72 |
       | unit_price_tax_excl      | 12.00 |
       | total_price_tax_incl     | 12.72 |
@@ -1215,6 +1255,7 @@ Feature: Order from Back Office (BO)
     And product "Gift product" in order "bo_order1" has following details:
       | product_quantity         | 1     |
       | product_price            | 13.00 |
+      | original_product_price   | 13.00 |
       | unit_price_tax_incl      | 13.78 |
       | unit_price_tax_excl      | 13.00 |
       | total_price_tax_incl     | 13.78 |
@@ -1246,6 +1287,7 @@ Feature: Order from Back Office (BO)
     And product "Product 12345" in order "bo_order1" has following details:
       | product_quantity         | 1     |
       | product_price            | 12.00 |
+      | original_product_price   | 12.00 |
       | unit_price_tax_incl      | 12.00 |
       | unit_price_tax_excl      | 12.00 |
       | total_price_tax_incl     | 12.00 |
@@ -1277,6 +1319,7 @@ Feature: Order from Back Office (BO)
     And product "Product 12345" in order "bo_order1" has following details:
       | product_quantity         | 1     |
       | product_price            | 12.00 |
+      | original_product_price   | 12.00 |
       | unit_price_tax_incl      | 12.72 |
       | unit_price_tax_excl      | 12.00 |
       | total_price_tax_incl     | 12.72 |
@@ -1284,6 +1327,7 @@ Feature: Order from Back Office (BO)
     And product "Gift product" in order "bo_order1" has following details:
       | product_quantity         | 1     |
       | product_price            | 13.00 |
+      | original_product_price   | 13.00 |
       | unit_price_tax_incl      | 13.78 |
       | unit_price_tax_excl      | 13.00 |
       | total_price_tax_incl     | 13.78 |
@@ -1326,6 +1370,7 @@ Feature: Order from Back Office (BO)
     And product "Product 12345" in order "bo_order1" has following details:
       | product_quantity         | 3     |
       | product_price            | 12.00 |
+      | original_product_price   | 12.00 |
       | unit_price_tax_incl      | 12.72 |
       | unit_price_tax_excl      | 12.00 |
       | total_price_tax_incl     | 38.16 |
@@ -1333,6 +1378,7 @@ Feature: Order from Back Office (BO)
     And product "Gift product" in order "bo_order1" has following details:
       | product_quantity         | 1     |
       | product_price            | 13.00 |
+      | original_product_price   | 13.00 |
       | unit_price_tax_incl      | 13.78 |
       | unit_price_tax_excl      | 13.00 |
       | total_price_tax_incl     | 13.78 |
@@ -1357,6 +1403,7 @@ Feature: Order from Back Office (BO)
     And product "Product 12345" in order "bo_order1" has following details:
       | product_quantity         | 1     |
       | product_price            | 12.00 |
+      | original_product_price   | 12.00 |
       | unit_price_tax_incl      | 12.72 |
       | unit_price_tax_excl      | 12.00 |
       | total_price_tax_incl     | 12.72 |
@@ -1381,6 +1428,7 @@ Feature: Order from Back Office (BO)
     And product "Product 12345" in order "bo_order1" has following details:
       | product_quantity         | 3     |
       | product_price            | 12.00 |
+      | original_product_price   | 12.00 |
       | unit_price_tax_incl      | 12.72 |
       | unit_price_tax_excl      | 12.00 |
       | total_price_tax_incl     | 38.16 |
@@ -1388,6 +1436,7 @@ Feature: Order from Back Office (BO)
     And product "Gift product" in order "bo_order1" has following details:
       | product_quantity         | 1     |
       | product_price            | 13.00 |
+      | original_product_price   | 13.00 |
       | unit_price_tax_incl      | 13.78 |
       | unit_price_tax_excl      | 13.00 |
       | total_price_tax_incl     | 13.78 |
@@ -1429,6 +1478,7 @@ Feature: Order from Back Office (BO)
     And product "Product 12345" in order "bo_order1" has following details:
       | product_quantity         | 1     |
       | product_price            | 12.00 |
+      | original_product_price   | 12.00 |
       | unit_price_tax_incl      | 12.72 |
       | unit_price_tax_excl      | 12.00 |
       | total_price_tax_incl     | 12.72 |
@@ -1453,6 +1503,7 @@ Feature: Order from Back Office (BO)
     And product "Product 12345" in order "bo_order1" has following details:
       | product_quantity         | 1     |
       | product_price            | 30.00 |
+      | original_product_price   | 12.00 |
       | unit_price_tax_incl      | 31.80 |
       | unit_price_tax_excl      | 30.00 |
       | total_price_tax_incl     | 31.80 |
@@ -1460,6 +1511,7 @@ Feature: Order from Back Office (BO)
     And product "Gift product" in order "bo_order1" has following details:
       | product_quantity         | 1     |
       | product_price            | 13.00 |
+      | original_product_price   | 13.00 |
       | unit_price_tax_incl      | 13.78 |
       | unit_price_tax_excl      | 13.00 |
       | total_price_tax_incl     | 13.78 |

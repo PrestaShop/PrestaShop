@@ -93,7 +93,7 @@ Feature: Order from Back Office (BO)
       | price          | 7.80 |
       | price_tax_incl | 9.44 |
     Then product "Test Product With Odd Tax" in order "bo_order1" should have no specific price
-    # product_price is computed for backward compatibility which is why it is rounded
+    # product_price is computed for backward compatibility which is why it is rounded (database value is correct though)
     And product "Test Product With Odd Tax" in order "bo_order1" has following details:
       | product_quantity            | 80     |
       | product_price               | 7.80   |
@@ -167,7 +167,7 @@ Feature: Order from Back Office (BO)
       | amount         | 80    |
       | price          | 78.02 |
       | price_tax_incl | 94.40 |
-    # product_price is computed for backward compatibility which is why it is rounded
+    # product_price is computed for backward compatibility which is why it is rounded (database value is correct though)
     And product "Test Product With Odd Tax" in order "bo_order1" has following details:
       | product_quantity            | 80        |
       | product_price               | 78.02     |
@@ -242,7 +242,7 @@ Feature: Order from Back Office (BO)
       | amount         | 80   |
       | price          | 7.85 |
       | price_tax_incl | 9.50 |
-    # product_price is computed for backward compatibility which is why it is rounded
+    # product_price is computed for backward compatibility which is why it is rounded (database value is correct though)
     And product "Test Product With Odd Tax" in order "bo_order1" has following details:
       | product_quantity            | 80       |
       | product_price               | 7.85     |
@@ -269,7 +269,7 @@ Feature: Order from Back Office (BO)
       | amount         | 80   |
       | price          | 7.44 |
       | price_tax_incl | 9.00 |
-    # product_price is computed for backward compatibility which is why it is rounded
+    # product_price is computed for backward compatibility which is why it is rounded (database value is correct though)
     And product "Test Product With Odd Tax" in order "bo_order1" has following details:
       | product_quantity            | 80       |
       | product_price               | 7.44     |
