@@ -266,7 +266,7 @@ final class EmployeeType extends AbstractType
     private function getNotBlankConstraint()
     {
         return new NotBlank([
-            'message' => $this->trans('This field cannot be empty', [], 'Admin.Notifications.Error'),
+            'message' => $this->trans('This field cannot be empty.', [], 'Admin.Notifications.Error'),
         ]);
     }
 }

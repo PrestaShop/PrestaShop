@@ -4208,7 +4208,7 @@ class AdminControllerCore extends Controller
                 $this->errors[] = $this->trans('An error occurred while updating the status.', [], 'Admin.Notifications.Error');
             }
         } else {
-            $this->errors[] = $this->trans('You need to select at least one item to use the bulk action.', [], 'Admin.Notifications.Error');
+            $this->errors[] = $this->trans('You must select at least one item to perform a bulk action.', [], 'Admin.Notifications.Error');
         }
 
         return $result;
