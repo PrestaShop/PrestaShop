@@ -22,6 +22,7 @@
  * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
+import ComponentsMap from './components-map';
 
 const {$} = window;
 
@@ -35,7 +36,7 @@ export default class MultipleChoiceTable {
   constructor() {
     $(document).on(
       'click',
-      '.js-multiple-choice-table-select-column',
+      ComponentsMap.multipleChoiceTable.selectColumn,
       (e: JQueryEventObject) => this.handleSelectColumn(e),
     );
   }
@@ -56,9 +57,9 @@ export default class MultipleChoiceTable {
 
     $table
       .find(
-        `tbody tr td:nth-child(${$selectColumnBtn.data(
-          'column-num',
-        )}) input[type=checkbox]`,
+        ComponentsMap.multipleChoiceTable.selectColumnCheckbox(
+          $selectColumnBtn.data('column-num'),
+        ),
       )
       .prop('checked', !checked);
   }

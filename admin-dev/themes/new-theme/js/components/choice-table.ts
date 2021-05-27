@@ -22,6 +22,9 @@
  * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
+import ComponentsMap from './components-map';
+
+const ChoiceTableMap = ComponentsMap.choiceTable;
 
 const {$} = window;
 
@@ -35,7 +38,7 @@ export default class ChoiceTable {
   constructor() {
     $(document).on(
       'change',
-      '.js-choice-table-select-all',
+      ChoiceTableMap.selectAll,
       (e: JQueryEventObject) => {
         this.handleSelectAll(e);
       },

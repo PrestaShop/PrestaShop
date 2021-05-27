@@ -22,6 +22,7 @@
  * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
+import ComponentsMap from './components-map';
 
 const {$} = window;
 
@@ -55,7 +56,7 @@ export default class FormSubmitButton {
   constructor() {
     $(document).on(
       'click',
-      '.js-form-submit-btn',
+      ComponentsMap.formSubmitButton,
       (event: JQueryEventObject) => {
         event.preventDefault();
 

@@ -23,6 +23,9 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
 import ConfirmModal from '@components/modal';
+import ComponentsMap from './components-map';
+
+const ModuleCardMap = ComponentsMap.moduleCard;
 
 const {$} = window;
 
@@ -113,11 +116,7 @@ export default class ModuleCard {
     $(document).on('click', this.forceDeletionOption, function () {
       const btn = $(
         self.moduleActionModalUninstallLinkSelector,
-        $(
-          `div.module-item-list[data-tech-name='${$(this).attr(
-            'data-tech-name',
-          )}']`,
-        ),
+        $(ModuleCardMap.moduleItemList(<string>$(this).attr('data-tech-name'))),
       );
 
       if ($(this).prop('checked') === true) {
@@ -131,8 +130,8 @@ export default class ModuleCard {
       'click',
       this.moduleActionMenuInstallLinkSelector,
       function () {
-        if ($('#modal-prestatrust').length) {
-          $('#modal-prestatrust').modal('hide');
+        if ($(ComponentsMap.modalPrestaTrust).length) {
+          $(ComponentsMap.modalPrestaTrust).modal('hide');
         }
 
         return (
@@ -270,9 +269,9 @@ export default class ModuleCard {
           $(
             self.moduleActionMenuDisableLinkSelector,
             $(
-              `div.module-item-list[data-tech-name='${$(this).attr(
-                'data-tech-name',
-              )}']`,
+              ModuleCardMap.moduleItemList(
+                <string>$(this).attr('data-tech-name'),
+              ),
             ),
           ),
         );
@@ -288,9 +287,9 @@ export default class ModuleCard {
           $(
             self.moduleActionMenuResetLinkSelector,
             $(
-              `div.module-item-list[data-tech-name='${$(this).attr(
-                'data-tech-name',
-              )}']`,
+              ModuleCardMap.moduleItemList(
+                <string>$(this).attr('data-tech-name'),
+              ),
             ),
           ),
         );
@@ -308,9 +307,9 @@ export default class ModuleCard {
             $(
               self.moduleActionMenuUninstallLinkSelector,
               $(
-                `div.module-item-list[data-tech-name='${$(e.target).attr(
-                  'data-tech-name',
-                )}']`,
+                ModuleCardMap.moduleItemList(
+                    <string>$(this).attr('data-tech-name'),
+                ),
               ),
             ),
             $(e.target).attr('data-deletion'),
@@ -329,7 +328,9 @@ export default class ModuleCard {
   }
 
   confirmAction(action: string, element: string): boolean {
-    const modal = $(`#${$(element).data('confirm_modal')}`);
+    const modal = $(
+      ComponentsMap.confirmModal($(element).data('confirm_modal')),
+    );
 
     if (modal.length !== 1) {
       return true;
@@ -357,7 +358,7 @@ export default class ModuleCard {
         // Find related form, update it and submit it
         const installButton = $(
           that.moduleActionMenuInstallLinkSelector,
-          `.module-item[data-tech-name="${result.module.attributes.name}"]`,
+          ModuleCardMap.moduleItem(result.module.attributes.name),
         );
 
         const form = installButton.parent('form');
@@ -379,7 +380,7 @@ export default class ModuleCard {
   replacePrestaTrustPlaceholders(
     result: Record<string, any>,
   ): JQuery | boolean {
-    const modal = $('#modal-prestatrust');
+    const modal = $();
     const module = result.module.attributes;
 
     if (result.confirmation_subject !== 'PrestaTrust' || !modal.length) {
