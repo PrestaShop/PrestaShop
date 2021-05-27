@@ -5,12 +5,12 @@
       <trans-unit id="5a95a425f74314a96f13a2f136992178">
         <source>Share</source>
         <target>Share</target>
-        <note>Line: 177</note>
+        <note>Line: 200</note>
       </trans-unit>
       <trans-unit id="3746d4aa96f19672260a424d76729dd1">
         <source>Tweet</source>
         <target>Tweet</target>
-        <note>Line: 185</note>
+        <note>Line: 208</note>
       </trans-unit>
       <trans-unit id="5b2c8bfd1bc974966209b7be1cb51a72">
         <source>Google+</source>
@@ -20,7 +20,7 @@
       <trans-unit id="86709a608bd914b28221164e6680ebf7">
         <source>Pinterest</source>
         <target>Pinterest</target>
-        <note>Line: 193</note>
+        <note>Line: 216</note>
       </trans-unit>
     </body>
   </file>

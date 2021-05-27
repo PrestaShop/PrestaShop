@@ -5,7 +5,7 @@
       <trans-unit id="93ba210a7ea13de4214e57bf9d3f0096">
         <source>Deleted account</source>
         <target>Deleted account</target>
-        <note>Line: 72</note>
+        <note>Line: 75</note>
       </trans-unit>
     </body>
   </file>
@@ -53,7 +53,7 @@
       <trans-unit id="95a184e3d0444294153577d952e9791f">
         <source>You already reported this review as abusive.</source>
         <target>You already reported this review as abusive.</target>
-        <note>Line: 82</note>
+        <note>Line: 83</note>
       </trans-unit>
     </body>
   </file>
@@ -62,7 +62,7 @@
       <trans-unit id="198645056f217f726ff1dc6e65ccc322">
         <source>Cannot find the requested product review.</source>
         <target>Cannot find the requested product review.</target>
-        <note>Line: 86</note>
+        <note>Line: 87</note>
       </trans-unit>
       <trans-unit id="4ab403bbf7563d87b327f2a9b2e04baa">
         <source>This feature is not enabled.</source>

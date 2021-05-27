@@ -15,47 +15,47 @@
       <trans-unit id="b3786b970611c1a3809dd51b630812a7">
         <source>"%s" is not a valid url</source>
         <target>"%s" is not a valid url</target>
-        <note>Line: 1202</note>
+        <note>Line: 1211</note>
       </trans-unit>
       <trans-unit id="ccc12c5568381293a27db0232877937b">
         <source>Filter template name required (cannot be empty)</source>
         <target>Filter template name required (cannot be empty)</target>
-        <note>Line: 580</note>
+        <note>Line: 590</note>
       </trans-unit>
       <trans-unit id="8c97e587c1b4e519bec26f3903561da3">
         <source>You must select at least one category.</source>
         <target>You must select at least one category.</target>
-        <note>Line: 582</note>
+        <note>Line: 592</note>
       </trans-unit>
       <trans-unit id="817c37b9c1f5cd4a450dad384e63e6c7">
         <source>Your filter</source>
         <target>Your filter</target>
-        <note>Line: 671</note>
+        <note>Line: 681</note>
       </trans-unit>
       <trans-unit id="3185cefd67b575e582063148e4f15860">
         <source>was updated successfully.</source>
         <target>was updated successfully.</target>
-        <note>Line: 675</note>
+        <note>Line: 685</note>
       </trans-unit>
       <trans-unit id="7ccab4d8de5d6b9bb61e99c7bba343ab">
         <source>was added successfully.</source>
         <target>was added successfully.</target>
-        <note>Line: 676</note>
+        <note>Line: 686</note>
       </trans-unit>
       <trans-unit id="fe016d3b990c2a9dd72ab6b45892f2ae">
         <source>Settings saved successfully</source>
         <target>Settings saved successfully</target>
-        <note>Line: 693</note>
+        <note>Line: 703</note>
       </trans-unit>
       <trans-unit id="0d07af70081a2421e2b2972609d699db">
         <source>Filter template deleted, categories updated (reverted to default Filter template).</source>
         <target>Filter template deleted, categories updated (reverted to default Filter template).</target>
-        <note>Line: 708</note>
+        <note>Line: 718</note>
       </trans-unit>
       <trans-unit id="491f46aa6101560e9f1e0d55a063231b">
         <source>Filter template not found</source>
         <target>Filter template not found</target>
-        <note>Line: 710</note>
+        <note>Line: 720</note>
       </trans-unit>
       <trans-unit id="fa03eb688ad8aa1db593d33dabd89bad">
         <source>Root</source>
@@ -65,12 +65,17 @@
       <trans-unit id="a3868119dc6858db57127fd26e6f9656">
         <source>My template - %s</source>
         <target>My template - %s</target>
-        <note>Line: 758</note>
+        <note>Line: 768</note>
       </trans-unit>
       <trans-unit id="32d2e6cd4bb1719c572ef470a3a525b6">
         <source>My template %s</source>
         <target>My template %s</target>
-        <note>Line: 1079</note>
+        <note>Line: 1089</note>
+      </trans-unit>
+      <trans-unit id="2b998534020532daa37c8948b41f3116">
+        <source>Filter your catalog to help visitors picture the category tree and browse your store easily.</source>
+        <target>Filter your catalog to help visitors picture the category tree and browse your store easily.</target>
+        <note>Line: 103</note>
       </trans-unit>
     </body>
   </file>

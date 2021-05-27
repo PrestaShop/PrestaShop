@@ -74,21 +74,39 @@
       </trans-unit>
     </body>
   </file>
-  <file original="src/PrestaShopBundle/Resources/views/Admin/Improve/International/Tax/Blocks/form.html.twig" source-language="en-US" target-language="en" datatype="plaintext">
+  <file original="src/PrestaShopBundle/Controller/Admin/Improve/International/LanguageController.php" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
-      <trans-unit id="6252c0f2c2ed83b7b06dfca86d4650bb">
-        <source>Invalid characters:</source>
-        <target>Invalid characters:</target>
-        <note>Line: 40</note>
+      <trans-unit id="233a1ce8ca8efc5c0f45bf2df346812a">
+        <source>Note that this page is available in all shops context only, this is why your context has just switched.</source>
+        <target>Note that this page is available in all shops context only, this is why your context has just switched.</target>
+        <note>Line: 79</note>
       </trans-unit>
     </body>
   </file>
-  <file original="src/PrestaShopBundle/Resources/views/Admin/Sell/Customer/Blocks/form.html.twig" source-language="en-US" target-language="en" datatype="plaintext">
+  <file original="src/PrestaShopBundle/Controller/Admin/Improve/International/TaxController.php" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="2ca177b474e501c55d3825873c2addfe">
+        <source>Note that this feature is available in all shops context only. It will be added to all your stores.</source>
+        <target>Note that this feature is available in all shops context only. It will be added to all your stores.</target>
+        <note>Line: 189</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="src/PrestaShopBundle/Form/Admin/Sell/Customer/CustomerType.php" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
       <trans-unit id="f6916f4f1a268d4d0014ce47a2dfc3e4">
         <source>Password should be at least %length% characters long.</source>
         <target>Password should be at least %length% characters long.</target>
-        <note>Line: 62</note>
+        <note>Line: 186</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="src/PrestaShopBundle/Resources/views/Admin/Sell/Catalog/Categories/Blocks/form.html.twig" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="6252c0f2c2ed83b7b06dfca86d4650bb">
+        <source>Invalid characters:</source>
+        <target>Invalid characters:</target>
+        <note>Line: 160</note>
       </trans-unit>
     </body>
   </file>

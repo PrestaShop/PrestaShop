@@ -26,6 +26,16 @@
         <target>After moving all of your product images, set the "Use the legacy image filesystem" option above to "No" for best performance.</target>
         <note>Line: 46</note>
       </trans-unit>
+      <trans-unit id="1978cf7404a3be3f014b9d966d91eb9d">
+        <source>Be careful! Depending on the options selected, former manually uploaded thumbnails might be erased and replaced by automatically generated thumbnails.</source>
+        <target>Be careful! Depending on the options selected, former manually uploaded thumbnails might be erased and replaced by automatically generated thumbnails.</target>
+        <note>Line: 67</note>
+      </trans-unit>
+      <trans-unit id="96faff5bfd0f40c490359113625e7660">
+        <source>Also, regenerating thumbnails for all existing images can take several minutes, please be patient.</source>
+        <target>Also, regenerating thumbnails for all existing images can take several minutes, please be patient.</target>
+        <note>Line: 68</note>
+      </trans-unit>
     </body>
   </file>
   <file original="admin-dev/themes/default/template/controllers/modules_positions/list_modules.tpl" source-language="en-US" target-language="en" datatype="plaintext">
@@ -42,7 +52,7 @@
       <trans-unit id="c402321a8e5818b776007e8a2d00474a">
         <source>Current theme is unavailable. Please check your theme's directory name ("%s") and permissions.</source>
         <target>Current theme is unavailable. Please check your theme's directory name ("%s") and permissions.</target>
-        <note>Line: 327</note>
+        <note>Line: 347</note>
       </trans-unit>
     </body>
   </file>
@@ -186,7 +196,7 @@
       <trans-unit id="f003149576f4755d74550952febe14bb">
         <source>An error occurred while uploading the favicon: cannot copy file "%s" to folder "%s".</source>
         <target>An error occurred while uploading the favicon: cannot copy file "%s" to folder "%s".</target>
-        <note>Line: 173</note>
+        <note>Line: 179</note>
       </trans-unit>
     </body>
   </file>
@@ -204,7 +214,7 @@
       <trans-unit id="29dae1d163226f90bb206b333bbffe1d">
         <source>The page Category cannot be moved here.</source>
         <target>The page Category cannot be moved here.</target>
-        <note>Line: 1123</note>
+        <note>Line: 1139</note>
       </trans-unit>
     </body>
   </file>
@@ -213,7 +223,7 @@
       <trans-unit id="4a9fdf95b29176bd9260016655a80852">
         <source>Your RTL stylesheets has been generated successfully</source>
         <target>Your RTL stylesheets has been generated successfully</target>
-        <note>Line: 358</note>
+        <note>Line: 360</note>
       </trans-unit>
       <trans-unit id="9ccfef29efe298e9a48295a69436e11f">
         <source><![CDATA[Your theme has been correctly reset to its default settings. You may want to regenerate your images. See the Improve > Design > Images Settings screen for the 'Regenerate thumbnails' button.]]></source>
@@ -223,22 +233,22 @@
       <trans-unit id="0933caade58197a4ff60c27077f67604">
         <source>There is already a theme %theme_name% in your themes folder. Remove it if you want to continue.</source>
         <target>There is already a theme %theme_name% in your themes folder. Remove it if you want to continue.</target>
-        <note>Line: 489</note>
+        <note>Line: 491</note>
       </trans-unit>
       <trans-unit id="2cca9f161ea0cc1102ad4be82b15cbfb">
         <source>Failed to delete theme. Make sure you have permissions and theme is not used.</source>
         <target>Failed to delete theme. Make sure you have permissions and theme is not used.</target>
-        <note>Line: 536</note>
+        <note>Line: 552</note>
       </trans-unit>
       <trans-unit id="05c176b8092b42c554d570513026207c">
         <source>Cannot adapt theme to RTL languages.</source>
         <target>Cannot adapt theme to RTL languages.</target>
-        <note>Line: 558</note>
+        <note>Line: 574</note>
       </trans-unit>
       <trans-unit id="c5d36cf23559e659323adbcb32e2b6d3">
         <source><![CDATA[Your theme has been correctly reset to its default settings. You may want to regenerate your images. See the Improve > Design > Images Settings screen for the '%regenerate_label%' button.]]></source>
         <target><![CDATA[Your theme has been correctly reset to its default settings. You may want to regenerate your images. See the Improve > Design > Images Settings screen for the '%regenerate_label%' button.]]></target>
-        <note>Line: 386</note>
+        <note>Line: 388</note>
       </trans-unit>
     </body>
   </file>
@@ -256,7 +266,7 @@
       <trans-unit id="1ecb89bb5b6dce906edaf8e12968c167">
         <source>Invalid file format.</source>
         <target>Invalid file format.</target>
-        <note>Line: 68</note>
+        <note>Line: 77</note>
       </trans-unit>
     </body>
   </file>
