@@ -3,10 +3,13 @@ parameters:
   bootstrapFiles:
     - .github/workflows/phpstan/autoload.php
   paths:
+    - admin-dev
     - override
     - src
     - tools
     - webservice
+  excludePaths:
+    - admin-dev/filemanager
   ignoreErrors:
     - '#^Call to an undefined method Symfony\\Component\\Config\\Definition\\Builder\\NodeDefinition\:\:#'
     - '#^Unsafe usage of new static\(\)\.$#'

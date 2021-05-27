@@ -1050,7 +1050,7 @@ class AdminImportControllerCore extends AdminController
      *
      * @param $in_array boolean
      *
-     * @return string or return array
+     * @return string|array
      */
     public function getAvailableFields($in_array = false)
     {
