@@ -25,8 +25,8 @@
 
 import _ from 'lodash';
 
-const findAllUnwantedCharsExceptTheLatestOne = /[^\d]+(?=.*[^\d])/g;
-const findAllUnwantedChars = /([^\d]+)/g;
+const findAllUnwantedCharsExceptTheLatestOne = /(?:(?!^-\d+))[^\d]+(?=.*[^\d])/g;
+const findAllUnwantedChars = /(?:(?!^-\d+))([^\d]+)/g;
 
 /**
  * Same explode function as on PHP
@@ -47,14 +47,19 @@ const clearNumberInputValue = (event, selector) => {
 
   let value = event.target.value;
 
-  /**
-   * If there is a dot in the string
-   * split the string at the first dot, and
-   * replace all unwanted characters.
-   * Otherwise, replace all unwanted characters expect the
-   * latest one, and remove the latest character
-   * by a dot.
-   */
+
+  event.target.value = transform(value);
+};
+
+/**
+ * If there is a dot in the string
+ * split the string at the first dot, and
+ * replace all unwanted characters.
+ * Otherwise, replace all unwanted characters expect the
+ * latest one, and replace the latest character
+ * by a dot.
+ */
+export const transform = (value) => {
   if (value.indexOf('.') !== -1) {
     value = explode(value, '.', 2)
       .map(num => num.replace(findAllUnwantedChars, ''))
@@ -65,7 +70,7 @@ const clearNumberInputValue = (event, selector) => {
       .replace(findAllUnwantedChars, '.');
   }
 
-  event.target.value = value;
+  return value;
 };
 
 export default (selector) => {
