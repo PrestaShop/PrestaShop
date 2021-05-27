@@ -63,22 +63,4 @@ describe('Quick access links', async () => {
     const validationMessage = await dashboardPage.removeLinkFromQuickAccess(page);
     await expect(validationMessage).to.contains(dashboardPage.successfulUpdateMessage);
   });
-
-  it('should refresh the page and add current page to Quick access', async function () {
-    await testContext.addContextItem(this, 'testIdentifier', 'addCurrentPageToQuickAccess', baseContext);
-
-    await dashboardPage.reloadPage(page);
-
-    const validationMessage = await dashboardPage.addCurrentPageToQuickAccess(page, 'New voucher');
-    await expect(validationMessage).to.contains(dashboardPage.successfulUpdateMessage);
-  });
-
-  it('should go to manage quick access page', async function () {
-    await testContext.addContextItem(this, 'testIdentifier', 'addQuickAccessPage', baseContext);
-
-    await dashboardPage.manageQuickAccess(page);
-
-    const pageTitle = await quickAccessPage.getPageTitle(page);
-    await expect(pageTitle).to.contains(quickAccessPage.pageTitle);
-  });
 });
