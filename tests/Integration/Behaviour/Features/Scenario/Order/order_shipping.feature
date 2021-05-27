@@ -448,6 +448,7 @@ Feature: Order from Back Office (BO)
     And product "Mug The best is yet to come" in order "bo_order1" has following details:
       | product_quantity            | 2      |
       | product_price               | 11.900 |
+      | original_product_price      | 11.900 |
       | unit_price_tax_incl         | 12.614 |
       | unit_price_tax_excl         | 11.900 |
       | total_price_tax_incl        | 25.230 |
@@ -483,6 +484,7 @@ Feature: Order from Back Office (BO)
     And product "Mug The best is yet to come" in order "bo_order1" has following details:
       | product_quantity            | 2      |
       | product_price               | 11.900 |
+      | original_product_price      | 11.900 |
       | unit_price_tax_incl         | 12.614 |
       | unit_price_tax_excl         | 11.900 |
       | total_price_tax_incl        | 25.230 |
@@ -512,6 +514,7 @@ Feature: Order from Back Office (BO)
     And product "Mug The best is yet to come" in order "bo_order1" has following details:
       | product_quantity            | 2      |
       | product_price               | 11.900 |
+      | original_product_price      | 11.900 |
       | unit_price_tax_incl         | 11.900 |
       | unit_price_tax_excl         | 11.900 |
       | total_price_tax_incl        | 23.800 |
@@ -554,6 +557,7 @@ Feature: Order from Back Office (BO)
     And product "Mug The best is yet to come" in order "bo_order1" has following details:
       | product_quantity            | 2      |
       | product_price               | 11.900 |
+      | original_product_price      | 11.900 |
       | unit_price_tax_incl         | 12.614 |
       | unit_price_tax_excl         | 11.900 |
       | total_price_tax_incl        | 25.230 |
@@ -588,6 +592,7 @@ Feature: Order from Back Office (BO)
     And product "Mug The best is yet to come" in order "bo_order1" has following details:
       | product_quantity            | 2      |
       | product_price               | 11.900 |
+      | original_product_price      | 11.900 |
       | unit_price_tax_incl         | 12.614 |
       | unit_price_tax_excl         | 11.900 |
       | total_price_tax_incl        | 25.230 |
@@ -616,6 +621,7 @@ Feature: Order from Back Office (BO)
     And product "Mug The best is yet to come" in order "bo_order1" has following details:
       | product_quantity            | 2      |
       | product_price               | 11.900 |
+      | original_product_price      | 11.900 |
       | unit_price_tax_incl         | 11.900 |
       | unit_price_tax_excl         | 11.900 |
       | total_price_tax_incl        | 23.800 |
@@ -652,6 +658,7 @@ Feature: Order from Back Office (BO)
     And product "Mug The best is yet to come" in order "bo_order1" has following details:
       | product_quantity            | 2      |
       | product_price               | 11.900 |
+      | original_product_price      | 11.900 |
       | unit_price_tax_incl         | 12.614 |
       | unit_price_tax_excl         | 11.900 |
       | total_price_tax_incl        | 25.230 |
@@ -678,6 +685,7 @@ Feature: Order from Back Office (BO)
     And product "Mug The best is yet to come" in order "bo_order1" has following details:
       | product_quantity            | 2      |
       | product_price               | 11.900 |
+      | original_product_price      | 11.900 |
       | unit_price_tax_incl         | 12.614 |
       | unit_price_tax_excl         | 11.900 |
       | total_price_tax_incl        | 25.230 |
@@ -708,6 +716,7 @@ Feature: Order from Back Office (BO)
     And product "Mug The best is yet to come" in order "bo_order1" has following details:
       | product_quantity            | 2      |
       | product_price               | 11.900 |
+      | original_product_price      | 11.900 |
       | unit_price_tax_incl         | 12.614 |
       | unit_price_tax_excl         | 11.900 |
       | total_price_tax_incl        | 25.230 |
@@ -755,6 +764,7 @@ Feature: Order from Back Office (BO)
     And product "Mug The best is yet to come" in order "bo_order1" has following details:
       | product_quantity            | 2      |
       | product_price               | 11.900 |
+      | original_product_price      | 11.900 |
       | unit_price_tax_incl         | 11.900 |
       | unit_price_tax_excl         | 11.900 |
       | total_price_tax_incl        | 23.800 |
@@ -803,6 +813,7 @@ Feature: Order from Back Office (BO)
     And product "Mug The best is yet to come" in order "bo_order1" has following details:
       | product_quantity            | 2      |
       | product_price               | 11.900 |
+      | original_product_price      | 11.900 |
       | unit_price_tax_incl         | 12.614 |
       | unit_price_tax_excl         | 11.900 |
       | total_price_tax_incl        | 25.230 |
@@ -844,6 +855,7 @@ Feature: Order from Back Office (BO)
     And product "Mug The best is yet to come" in order "bo_order1" has following details:
       | product_quantity            | 2      |
       | product_price               | 11.900 |
+      | original_product_price      | 11.900 |
       | unit_price_tax_incl         | 11.900 |
       | unit_price_tax_excl         | 11.900 |
       | total_price_tax_incl        | 23.800 |
@@ -896,6 +908,7 @@ Feature: Order from Back Office (BO)
     And product "Mug The best is yet to come" in order "bo_order1" has following details:
       | product_quantity            | 2      |
       | product_price               | 11.900 |
+      | original_product_price      | 11.900 |
       | unit_price_tax_incl         | 11.900 |
       | unit_price_tax_excl         | 11.900 |
       | total_price_tax_incl        | 23.800 |
@@ -944,6 +957,7 @@ Feature: Order from Back Office (BO)
     And product "Mug The best is yet to come" in order "bo_order1" has following details:
       | product_quantity            | 2      |
       | product_price               | 11.900 |
+      | original_product_price      | 11.900 |
       | unit_price_tax_incl         | 12.610000 |
       | unit_price_tax_excl         | 11.900 |
       | total_price_tax_incl        | 25.220000 |
@@ -985,6 +999,7 @@ Feature: Order from Back Office (BO)
     And product "Mug The best is yet to come" in order "bo_order1" has following details:
       | product_quantity            | 2      |
       | product_price               | 11.900 |
+      | original_product_price      | 11.900 |
       | unit_price_tax_incl         | 11.900 |
       | unit_price_tax_excl         | 11.900 |
       | total_price_tax_incl        | 23.800000 |

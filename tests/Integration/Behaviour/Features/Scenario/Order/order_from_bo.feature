@@ -345,6 +345,7 @@ Feature: Order from Back Office (BO)
     And product "Mug The best is yet to come" in order "bo_order1" has following details:
       | product_quantity            | 3      |
       | product_price               | 11.90  |
+      | original_product_price      | 11.90  |
       | unit_price_tax_incl         | 12.614 |
       | unit_price_tax_excl         | 11.90  |
       | total_price_tax_incl        | 37.84  |
@@ -389,6 +390,7 @@ Feature: Order from Back Office (BO)
     And product "Mug The best is yet to come" in order "bo_order1" has following details:
       | product_quantity            | 2      |
       | product_price               | 11.9   |
+      | original_product_price      | 11.90  |
       | unit_price_tax_incl         | 12.614 |
       | unit_price_tax_excl         | 11.9   |
       | total_price_tax_incl        | 25.230000 |
@@ -414,6 +416,7 @@ Feature: Order from Back Office (BO)
     And product "Mug The best is yet to come" in order "bo_order1" has following details:
       | product_quantity            | 2      |
       | product_price               | 11.9   |
+      | original_product_price      | 11.90  |
       | unit_price_tax_incl         | 12.614 |
       | unit_price_tax_excl         | 11.9   |
       | total_price_tax_incl        | 25.23  |
@@ -518,6 +521,7 @@ Feature: Order from Back Office (BO)
     And product "Mug The best is yet to come" in order "bo_order1" has following details:
       | product_quantity            | 2      |
       | product_price               | 11.90  |
+      | original_product_price      | 11.90  |
       | unit_price_tax_incl         | 12.614 |
       | unit_price_tax_excl         | 11.90  |
       | total_price_tax_incl        | 25.23  |
@@ -528,6 +532,7 @@ Feature: Order from Back Office (BO)
       | price          | 94.34                   |
       | price_tax_incl | 100                     |
     When I generate invoice for "bo_order1" order
+    # product_price is computed for backward compatibility which is why it is rounded (database value is correct though)
     Then the product "Mug The best is yet to come" in the first invoice from the order "bo_order1" should have the following details:
       | product_quantity            | 1         |
       | product_price               | 94.34     |
