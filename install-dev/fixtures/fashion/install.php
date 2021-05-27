@@ -60,6 +60,13 @@ class InstallFixturesFashion extends XmlLoader
 
         parent::populateFromXmlFiles();
 
+        Db::getInstance()->execute(
+            'UPDATE ' . _DB_PREFIX_ . 'country SET active = 1 ' .
+            'WHERE id_country IN (' .
+            '  SELECT id_country FROM ' . _DB_PREFIX_ . 'address' .
+            ')'
+        );
+
         /**
          * Refresh facetedsearch cache
          */
