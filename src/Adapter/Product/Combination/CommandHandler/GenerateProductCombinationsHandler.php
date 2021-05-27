@@ -28,7 +28,6 @@ declare(strict_types=1);
 
 namespace PrestaShop\PrestaShop\Adapter\Product\Combination\CommandHandler;
 
-use PrestaShop\PrestaShop\Adapter\Product\AbstractProductHandler;
 use PrestaShop\PrestaShop\Adapter\Product\Combination\Create\CombinationCreator;
 use PrestaShop\PrestaShop\Core\Domain\Product\Combination\Command\GenerateProductCombinationsCommand;
 use PrestaShop\PrestaShop\Core\Domain\Product\Combination\CommandHandler\GenerateProductCombinationsHandlerInterface;
@@ -36,7 +35,7 @@ use PrestaShop\PrestaShop\Core\Domain\Product\Combination\CommandHandler\Generat
 /**
  * Handles @see GenerateProductCombinationsCommand using legacy object model
  */
-final class GenerateProductCombinationsHandler extends AbstractProductHandler implements GenerateProductCombinationsHandlerInterface
+final class GenerateProductCombinationsHandler implements GenerateProductCombinationsHandlerInterface
 {
     /**
      * @var CombinationCreator
