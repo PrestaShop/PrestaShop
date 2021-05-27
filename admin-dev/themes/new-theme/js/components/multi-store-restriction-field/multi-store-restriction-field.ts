@@ -100,7 +100,7 @@ export default class MultiStoreRestrictionField {
   ): void {
     const targetValue = $targetElement.data('shopRestrictionTarget');
     const $sourceFieldSelector = $(
-      `[data-shop-restriction-source="${targetValue}"]`,
+      multiStoreRestrictionFieldMap.sourceField(targetValue),
     );
     $sourceFieldSelector.prop('disabled', isDisabled);
     $sourceFieldSelector.toggleClass('disabled', isDisabled);

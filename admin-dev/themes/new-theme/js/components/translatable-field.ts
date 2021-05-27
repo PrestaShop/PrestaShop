@@ -24,6 +24,7 @@
  */
 
 import {EventEmitter} from './event-emitter';
+import ComponentsMap from './components-map';
 
 const {$} = window;
 
@@ -44,10 +45,9 @@ class TranslatableField {
   constructor(options: Record<string, any>) {
     const opts = options || {};
 
-    this.localeButtonSelector = opts.localeButtonSelector
-      || '.translationsLocales.nav .nav-item a[data-toggle="tab"]';
-    this.localeNavigationSelector = opts.localeNavigationSelector || '.translationsLocales.nav';
-    this.translationFieldSelector = opts.translationFieldSelector || '.translation-field';
+    this.localeButtonSelector = opts.localeButtonSelector || ComponentsMap.translatableField.toggleTab;
+    this.localeNavigationSelector = opts.localeNavigationSelector || ComponentsMap.translatableField.nav;
+    this.translationFieldSelector = opts.translationFieldSelector || ComponentsMap.translatableField.select;
     this.selectedLocale = $(
       '.nav-item a.active',
       $(this.localeNavigationSelector),
@@ -102,9 +102,10 @@ class TranslatableField {
       const selectedLocale = selectedLink.data('locale');
 
       if (this.selectedLocale !== selectedLocale) {
-        $(`.nav-item a[data-locale="${this.selectedLocale}"]`, navigation).tab(
-          'show',
-        );
+        $(
+          ComponentsMap.translatableField.specificLocale(this.selectedLocale),
+          navigation,
+        ).tab('show');
       }
     });
   }

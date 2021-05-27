@@ -29,4 +29,5 @@
 export default {
   multiStoreRestrictionCheckbox: '.js-multi-store-restriction-checkbox',
   multiStoreRestrictionSwitch: '.js-multi-store-restriction-switch',
+  sourceField: (targetValue: string): string => `[data-shop-restriction-source="${targetValue}"]`,
 };

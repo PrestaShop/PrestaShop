@@ -39,4 +39,24 @@ export default {
       itemId: string,
     ): string => `${location}&setShopContext=${urlLetter}-${itemId}`,
   },
+  choiceTable: {
+    selectAll: '.js-choice-table-select-all',
+  },
+  multipleChoiceTable: {
+    selectColumn: '.js-multiple-choice-table-select-column',
+    selectColumnCheckbox: (columnNum: string): string => `tbody tr td:nth-child(${columnNum}) input[type=checkbox]`,
+  },
+  formSubmitButton: '.js-form-submit-btn',
+  moduleCard: {
+    moduleItemList: (techName: string): string => `div.module-item-list[data-tech-name='${techName}']`,
+    moduleItem: (techName: string): string => `.module-item[data-tech-name='${techName}']`,
+  },
+  confirmModal: (modalId: string): string => `#${modalId}`,
+  modalPrestaTrust: '#modal-prestatrust',
+  translatableField: {
+    toggleTab: '.translationsLocales.nav .nav-item a[data-toggle="tab"]',
+    nav: '.translationsLocales.nav',
+    select: '.translation-field',
+    specificLocale: (selectedLocale: string): string => `.nav-item a[data-locale="${selectedLocale}"]`,
+  },
 };
