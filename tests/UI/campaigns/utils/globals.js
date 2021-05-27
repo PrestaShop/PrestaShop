@@ -33,7 +33,7 @@ global.BROWSER = {
   sandboxArgs: ['--no-sandbox', '--disable-setuid-sandbox'],
   acceptDownloads: true,
   config: {
-    headless: JSON.parse(process.env.HEADLESS || true),
+    headless: JSON.parse(process.env.HEADLESS || false),
     timeout: 0,
     slowMo: parseInt(process.env.SLOW_MO, 10) || 5,
   },

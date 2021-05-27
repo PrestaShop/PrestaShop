@@ -212,9 +212,10 @@ class CommonPage {
    * @param accept {boolean} True to accept the dialog, false to dismiss
    * @return {Promise<void>}
    */
-  async dialogListener(page, accept = true) {
+  async dialogListener(page, accept = true, text = '') {
     page.once('dialog', (dialog) => {
-      if (accept) dialog.accept();
+      if (accept && text === '') dialog.accept();
+      else if (text !== '') dialog.accept( text);
       else dialog.dismiss();
     });
   }
