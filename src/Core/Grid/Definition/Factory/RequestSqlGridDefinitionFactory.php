@@ -88,7 +88,7 @@ final class RequestSqlGridDefinitionFactory extends AbstractGridDefinitionFactor
             )
             ->add(
                 (new DataColumn('name'))
-                    ->setName($this->trans('SQL query Name', [], 'Admin.Advparameters.Feature'))
+                    ->setName($this->trans('SQL query name', [], 'Admin.Advparameters.Feature'))
                     ->setOptions([
                         'field' => 'name',
                     ])
