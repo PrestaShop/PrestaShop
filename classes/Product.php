@@ -3392,7 +3392,7 @@ class ProductCore extends ObjectModel
             $sql->innerJoin('product_shop', 'product_shop', '(product_shop.id_product=p.id_product AND product_shop.id_shop = ' . (int) $id_shop . ')');
             $sql->where('p.`id_product` = ' . (int) $id_product);
             if (Combination::isFeatureActive()) {
-                $sql->select('IFNULL(product_attribute_shop.id_product_attribute,0) id_product_attribute, product_attribute_shop.`price` AS attribute_price, product_attribute_shop.default_on');
+                $sql->select('IFNULL(product_attribute_shop.id_product_attribute,0) id_product_attribute, product_attribute_shop.`price` AS attribute_price, product_attribute_shop.default_on, product_attribute_shop.`ecotax` AS attribute_ecotax');
                 $sql->leftJoin('product_attribute_shop', 'product_attribute_shop', '(product_attribute_shop.id_product = p.id_product AND product_attribute_shop.id_shop = ' . (int) $id_shop . ')');
             } else {
                 $sql->select('0 as id_product_attribute');
@@ -3406,6 +3406,7 @@ class ProductCore extends ObjectModel
                         'price' => $row['price'],
                         'ecotax' => $row['ecotax'],
                         'attribute_price' => (isset($row['attribute_price']) ? $row['attribute_price'] : null),
+                        'attribute_ecotax' => (isset($row['attribute_ecotax']) ? $row['attribute_ecotax'] : null),
                     ];
                     self::$_pricesLevel2[$cache_id_2][(int) $row['id_product_attribute']] = $array_tmp;
 
