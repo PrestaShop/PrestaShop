@@ -50,6 +50,9 @@ class CategoryControllerCore extends ProductListingFrontController
 
     public function getCanonicalURL()
     {
+        if (!Validate::isLoadedObject($this->category)) {
+            return '';
+        }
         $canonicalUrl = $this->context->link->getCategoryLink($this->category);
         $parsedUrl = parse_url($canonicalUrl);
         if (isset($parsedUrl['query'])) {
@@ -130,7 +133,11 @@ class CategoryControllerCore extends ProductListingFrontController
     {
         parent::initContent();
 
-        if ($this->category->checkAccess($this->context->customer->id)) {
+        if (
+            Validate::isLoadedObject($this->category)
+            && $this->category->active
+            && $this->category->checkAccess($this->context->customer->id)
+        ) {
             $this->doProductSearch(
                 'catalog/listing/category',
                 [
@@ -229,13 +236,19 @@ class CategoryControllerCore extends ProductListingFrontController
         $breadcrumb = parent::getBreadcrumbLinks();
 
         foreach ($this->category->getAllParents() as $category) {
-            if ($category->id_parent != 0 && !$category->is_root_category) {
-                $breadcrumb['links'][] = $this->getCategoryPath($category);
+            if ($category->id_parent != 0 && !$category->is_root_category && $category->active) {
+                $breadcrumb['links'][] = [
+                    'title' => $category->name,
+                    'url' => $this->context->link->getCategoryLink($category),
+                ];
             }
         }
 
-        if ($this->category->id_parent != 0 && !$this->category->is_root_category) {
-            $breadcrumb['links'][] = $this->getCategoryPath($this->category);
+        if ($this->category->id_parent != 0 && !$this->category->is_root_category && $category->active) {
+            $breadcrumb['links'][] = [
+                'title' => $this->category->name,
+                'url' => $this->context->link->getCategoryLink($this->category),
+            ];
         }
 
         return $breadcrumb;

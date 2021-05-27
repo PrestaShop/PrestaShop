@@ -23,10 +23,10 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
 const path = require('path');
-const MiniCssExtractPlugin = require("mini-css-extract-plugin");
+const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 const UglifyJsPlugin = require('uglifyjs-webpack-plugin');
 const keepLicense = require('uglify-save-license');
-const OptimizeCSSAssetsPlugin = require("optimize-css-assets-webpack-plugin");
+const OptimizeCSSAssetsPlugin = require('optimize-css-assets-webpack-plugin');
 const CleanWebpackPlugin = require('clean-webpack-plugin');
 
 module.exports = (env, argv) => {
@@ -34,13 +34,12 @@ module.exports = (env, argv) => {
 
   const config = {
     entry: [
-      './js/theme.js'
+      './js/theme.js',
     ],
     output: {
       path: path.resolve(__dirname, 'public'),
-      filename: 'bundle.js'
+      filename: 'bundle.js',
     },
-    //devtool: 'source-map', // uncomment me to build source maps (really slow)
     module: {
       rules: [{
         test: path.join(__dirname, 'js'),
@@ -48,42 +47,33 @@ module.exports = (env, argv) => {
           loader: 'babel-loader',
           options: {
             presets: [
-              ['@babel/preset-env', {modules: false}]
-            ]
-          }
-        }]
+              ['@babel/preset-env', {modules: false}],
+            ],
+          },
+        }],
       }, {
         test: /\.(scss|sass|css)$/,
         use: [
           MiniCssExtractPlugin.loader,
           {
             loader: 'css-loader',
-            options: {
-              //sourceMap: true, // uncomment me to generate source maps
-            }
           },
           {
             loader: 'postcss-loader',
-            options: {
-              //sourceMap: true, // uncomment me to generate source maps
-            }
           },
           {
             loader: 'sass-loader',
-            options: {
-              //sourceMap: true, // uncomment me to generate source maps
-            }
-          }
-        ]
+          },
+        ],
       }, {
         test: /.(gif|png|woff(2)?|eot|ttf|svg)(\?[a-z0-9=\.]+)?$/,
         use: [{
           loader: 'file-loader',
           options: {
-            name: '[hash].[ext]'
-          }
-        }]
-      }]
+            name: '[hash].[ext]',
+          },
+        }],
+      }],
     },
     optimization: {
 
@@ -93,13 +83,13 @@ module.exports = (env, argv) => {
         root: path.resolve(__dirname),
         cleanOnceBeforeBuildPatterns: [
           '**/*', // required
-          '!theme.rtlfix' // exclusion
-        ]
+          '!theme.rtlfix', // exclusion
+        ],
       }),
       new MiniCssExtractPlugin({
-        filename: 'theme.css'
-      })
-    ]
+        filename: 'theme.css',
+      }),
+    ],
   };
 
   if (!devMode) {
@@ -108,14 +98,14 @@ module.exports = (env, argv) => {
         sourceMap: false,
         uglifyOptions: {
           compress: {
-            drop_console: true
+            drop_console: true,
           },
           output: {
-            comments: keepLicense
-          }
+            comments: keepLicense,
+          },
         },
       }),
-      new OptimizeCSSAssetsPlugin()
+      new OptimizeCSSAssetsPlugin(),
     ];
   }
 

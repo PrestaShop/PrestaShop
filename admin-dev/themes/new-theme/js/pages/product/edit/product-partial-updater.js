@@ -55,6 +55,8 @@ export default class ProductPartialUpdater {
    * ex: new ProductPartialUpdater($productForm, $productFormSubmitButton).watch();
    */
   watch() {
+    // Avoid submitting form when pressing Enter
+    this.$productForm.keypress((e) => e.which !== 13);
     this.$productFormSubmitButton.prop('disabled', true);
     this.initialData = this.getFormDataAsObject();
     this.$productForm.submit(() => this.updatePartialForm());
@@ -231,6 +233,13 @@ export default class ProductPartialUpdater {
       }
 
       serializedForm[formField.name] = value;
+    });
+
+    // File inputs must be handled manually
+    $('input[type="file"]', this.$productForm).each((inputIndex, fileInput) => {
+      $.each($(fileInput)[0].files, (fileIndex, file) => {
+        serializedForm[fileInput.name] = file;
+      });
     });
 
     return serializedForm;

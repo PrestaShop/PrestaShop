@@ -381,7 +381,7 @@ class CategoryCore extends ObjectModel
     }
 
     /**
-     * Deletes current CartRule from the database.
+     * Deletes current Category from the database.
      *
      * @return bool `true` if successfully deleted
      *
@@ -1281,7 +1281,7 @@ class CategoryCore extends ObjectModel
      * Copy products from a category to another.
      *
      * @param int $idOld Source category ID
-     * @param bool $idNew Destination category ID
+     * @param int $idNew Destination category ID
      *
      * @return bool Duplication result
      */
@@ -1489,8 +1489,8 @@ class CategoryCore extends ObjectModel
      *
      * @param int $idLang Language ID
      * @param string $path Path of category
-     * @param bool $objectToCreate a category
-     * @param bool $methodToCreate a category
+     * @param object|bool $objectToCreate a category
+     * @param string|bool $methodToCreate a category
      *
      * @return array Corresponding categories
      */
@@ -2440,5 +2440,16 @@ class CategoryCore extends ObjectModel
 		FROM `' . _DB_PREFIX_ . 'category_shop`
 		WHERE `id_category` = ' . (int) $this->id . '
 		AND `id_shop` = ' . (int) $idShop, false);
+    }
+
+    /**
+     * Indicates whether a category is ROOT for the shop.
+     * The root category is the one with no parent. It's a virtual category.
+     *
+     * @return bool
+     */
+    public function isRootCategory(): bool
+    {
+        return 0 === (int) $this->id_parent;
     }
 }

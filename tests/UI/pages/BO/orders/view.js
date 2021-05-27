@@ -1,24 +1,59 @@
 require('module-alias/register');
 const BOBasePage = require('@pages/BO/BObasePage');
 
+// Needed to create customer in orders page
+const addAddressPage = require('@pages/BO/customers/addresses/add');
+
+/**
+ * Add order page, contains functions that can be used on view/edit order page
+ * @class
+ * @extends BOBasePage
+ */
 class Order extends BOBasePage {
+  /**
+   * @constructs
+   * Setting up texts and selectors to use on view/edit order page
+   */
   constructor() {
     super();
 
     this.pageTitle = 'Order';
     this.partialRefundValidationMessage = 'A partial refund was successfully created.';
+    this.successfulAddProductMessage = 'The product was successfully added.';
+    this.successfulDeleteProductMessage = 'The product was successfully removed.';
+    this.errorMinimumQuantityMessage = 'Minimum quantity of "3" must be added';
+    this.errorAddSameProduct = 'This product is already in your order, please edit the quantity instead.';
 
     // Customer card
     this.customerInfoBlock = '#customerInfo';
     this.ViewAllDetailsLink = '#viewFullDetails a';
-    this.customerEmailLink = '#customerEmail';
+    this.customerEmailLink = '#customerEmail a';
     this.validatedOrders = '#validatedOrders span.badge';
     this.shippingAddressBlock = '#addressShipping';
+    this.shippingAddressToolTipLink = `${this.shippingAddressBlock} .tooltip-link`;
+    this.editShippingAddressButton = '#js-delivery-address-edit-btn';
+    this.selectAnotherShippingAddressButton = `${this.shippingAddressBlock} .js-update-customer-address-modal-btn`;
+    this.changeOrderAddressSelect = '#change_order_address_new_address_id';
+    this.submitAnotherAddressButton = 'form[name="change_order_address"] .modal-footer button[type="submit"]';
+    this.editAddressIframe = 'iframe.fancybox-iframe';
     this.invoiceAddressBlock = '#addressInvoice';
+    this.invoiceAddressToolTipLink = `${this.invoiceAddressBlock} .tooltip-link`;
+    this.editInvoiceAddressButton = '#js-invoice-address-edit-btn';
+    this.selectAnotherInvoiceAddressButton = `${this.invoiceAddressBlock} .js-update-customer-address-modal-btn`;
     this.privateNoteDiv = '#privateNote';
     this.privateNoteTextarea = '#private_note_note';
     this.addNewPrivateNoteLink = '#privateNote a.js-private-note-toggle-btn';
     this.privateNoteSaveButton = `${this.privateNoteDiv} .js-private-note-btn`;
+
+    // Products block
+    this.productsCountSpan = '#orderProductsPanelCount';
+    this.orderProductsTableProductName = row => `${this.orderProductsTableNameColumn(row)} p.productName`;
+    this.orderProductsTableProductBasePrice = row => `${this.orderProductsRowTable(row)} td.cellProductUnitPrice`;
+    this.orderProductsTableProductQuantity = row => `${this.orderProductsRowTable(row)} td.cellProductQuantity`;
+    this.orderProductsTableProductAvailable = row => `${this.orderProductsRowTable(row)}
+     td.cellProductAvailableQuantity`;
+    this.orderProductsTableProductPrice = row => `${this.orderProductsRowTable(row)} td.cellProductTotalPrice`;
+    this.deleteProductButton = row => `${this.orderProductsRowTable(row)} button[data-original-title='Delete']`;
 
     // Order card
     this.orderProductsTable = '#orderProductsTable';
@@ -29,10 +64,25 @@ class Order extends BOBasePage {
     this.productQuantitySpan = row => `${this.orderProductsRowTable(row)} td.cellProductQuantity span`;
     this.orderProductsEditRowTable = `${this.orderProductsTable} tbody tr.editProductRow`;
     this.editProductQuantityInput = `${this.orderProductsEditRowTable} input.editProductQuantity`;
+    this.editProductPriceInput = `${this.orderProductsEditRowTable} input.editProductPriceTaxIncl`;
     this.UpdateProductButton = `${this.orderProductsEditRowTable} button.productEditSaveBtn`;
     this.partialRefundButton = 'button.partial-refund-display';
     this.orderTotalPriceSpan = '#orderTotal';
     this.returnProductsButton = '#order-view-page button.return-product-display';
+    this.addProductTableRow = '#addProductTableRow';
+    this.addProductButton = '#addProductBtn';
+    this.addProductRowSearch = '#add_product_row_search';
+    this.addProductRowQuantity = '#add_product_row_quantity';
+    this.addProductRowStockLocation = '#addProductLocation';
+    this.addProductAvailable = '#addProductAvailable';
+    this.addProductAddButton = '#add_product_row_add';
+    this.addProductCancelButton = '#add_product_row_cancel';
+
+    // Pagination selectors
+    this.paginationLimitSelect = '#orderProductsTablePaginationNumberSelector';
+    this.paginationLabel = '#orderProductsNavPagination .page-item.active';
+    this.paginationNextLink = '#orderProductsTablePaginationNext';
+    this.paginationPreviousLink = '#orderProductsTablePaginationPrev';
 
     // Status card
     this.orderStatusesSelect = '#update_order_status_action_input';
@@ -58,8 +108,8 @@ class Order extends BOBasePage {
 
   /**
    * Get shipping address from customer card
-   * @param page
-   * @return {Promise<string>}
+   * @param page {Page} Browser tab
+   * @returns {Promise<string>}
    */
   getShippingAddress(page) {
     return this.getTextContent(page, this.shippingAddressBlock);
@@ -67,8 +117,8 @@ class Order extends BOBasePage {
 
   /**
    * Get invoice address from customer card
-   * @param page
-   * @return {Promise<string>}
+   * @param page {Page} Browser tab
+   * @returns {Promise<string>}
    */
   getInvoiceAddress(page) {
     return this.getTextContent(page, this.invoiceAddressBlock);
@@ -76,23 +126,23 @@ class Order extends BOBasePage {
 
   /**
    * Get product name from products table
-   * @param page
-   * @param row
-   * @return {Promise<string>}
+   * @param page {Page} Browser tab
+   * @param row {number} Product row on table
+   * @returns {Promise<string>}
    */
   getProductNameFromTable(page, row) {
-    return this.getTextContent(page, this.orderProductsTableNameNameParagraph(row));
+    return this.getTextContent(page, this.orderProductsTableProductName(row));
   }
 
   /**
    * Modify the product quantity
-   * @param page
-   * @param row
-   * @param quantity
+   * @param page {Page} Browser tab
+   * @param row {number} Product row on table
+   * @param quantity {number} Quantity to edit
    * @returns {Promise<number>}
    */
   async modifyProductQuantity(page, row, quantity) {
-    this.dialogListener(page);
+    await this.dialogListener(page);
     await Promise.all([
       page.click(this.editProductButton(row)),
       this.waitForVisibleSelector(page, this.editProductQuantityInput),
@@ -107,9 +157,47 @@ class Order extends BOBasePage {
   }
 
   /**
+   * Modify product price
+   * @param page {Page} Browser tab
+   * @param row {number} Product row on table
+   * @param price {float} Price to edit
+   * @returns {Promise<void>}
+   */
+  async modifyProductPrice(page, row, price) {
+    this.dialogListener(page);
+    await Promise.all([
+      page.click(this.editProductButton(row)),
+      this.waitForVisibleSelector(page, this.editProductPriceInput),
+    ]);
+    await this.setValue(page, this.editProductPriceInput, price);
+    await Promise.all([
+      page.click(this.UpdateProductButton),
+      this.waitForHiddenSelector(page, this.editProductPriceInput),
+    ]);
+
+    await page.waitForTimeout(1000);
+    await Promise.all([
+      this.waitForVisibleSelector(page, this.customerInfoBlock),
+      this.waitForVisibleSelector(page, this.orderProductsTableProductBasePrice(row)),
+    ]);
+  }
+
+  /**
+   * Delete product
+   * @param page {Page} Browser tab
+   * @param row {number} Product row on table
+   * @returns {Promise<string>}
+   */
+  async deleteProduct(page, row) {
+    await this.dialogListener(page);
+    await this.waitForSelectorAndClick(page, this.deleteProductButton(row));
+    return this.getGrowlMessageContent(page);
+  }
+
+  /**
    * Modify the order status
-   * @param page
-   * @param status
+   * @param page {Page} Browser tab
+   * @param status {string} Status to edit
    * @returns {Promise<string>}
    */
   async modifyOrderStatus(page, status) {
@@ -125,8 +213,8 @@ class Order extends BOBasePage {
 
   /**
    * Get order status
-   * @param page
-   * @return {Promise<string>}
+   * @param page {Page} Browser tab
+   * @returns {Promise<string>}
    */
   async getOrderStatus(page) {
     return this.getTextContent(page, `${this.orderStatusesSelect} option[selected='selected']`, false);
@@ -134,8 +222,8 @@ class Order extends BOBasePage {
 
   /**
    * Does status exist
-   * @param page
-   * @param statusName
+   * @param page {Page} Browser tab
+   * @param statusName {string} Status to check
    * @returns {Promise<boolean>}
    */
   async doesStatusExist(page, statusName) {
@@ -154,8 +242,8 @@ class Order extends BOBasePage {
 
   /**
    * Get total price from products tab
-   * @param page
-   * @return {Promise<number>}
+   * @param page {Page} Browser tab
+   * @returns {Promise<number>}
    */
   getOrderTotalPrice(page) {
     return this.getPriceFromText(page, this.orderTotalPriceSpan);
@@ -163,8 +251,8 @@ class Order extends BOBasePage {
 
   /**
    * Get document name
-   * @param page
-   * @param rowChild
+   * @param page {Page} Browser tab
+   * @param rowChild {number} Document row on table
    * @returns {Promise<string>}
    */
   async getDocumentName(page, rowChild = 1) {
@@ -175,8 +263,8 @@ class Order extends BOBasePage {
 
   /**
    * Go to documents tab
-   * @param page
-   * @return {Promise<void>}
+   * @param page {Page} Browser tab
+   * @returns {Promise<void>}
    */
   async goToDocumentsTab(page) {
     await Promise.all([
@@ -187,9 +275,9 @@ class Order extends BOBasePage {
 
   /**
    * Get file name
-   * @param page
-   * @param rowChild
-   * @returns fileName
+   * @param page {Page} Browser tab
+   * @param rowChild {number} Document row on table
+   * @returns {Promise<string>}
    */
   async getFileName(page, rowChild = 1) {
     await this.goToDocumentsTab(page);
@@ -201,27 +289,17 @@ class Order extends BOBasePage {
 
   /**
    * Download a document in document tab
-   * @param page
-   * @param row
-   * @return {Promise<*>}
+   * @param page {Page} Browser tab
+   * @param row {number} Document row on table
+   * @return {Promise<string>}
    */
-  async downloadDocument(page, row) {
-    /* eslint-disable no-return-assign, no-param-reassign */
-    // Delete the target because a new tab is opened when downloading the file
-    await page.$eval(this.documentNumberLink(row), el => el.target = '');
-
-    const [download] = await Promise.all([
-      page.waitForEvent('download'),
-      page.click(this.documentNumberLink(row)),
-    ]);
-
-    return download.path();
-    /* eslint-enable no-return-assign, no-param-reassign */
+  downloadDocument(page, row) {
+    return this.clickAndWaitForDownload(page, this.documentNumberLink(row));
   }
 
   /**
    * Download invoice
-   * @param page
+   * @param page {Page} Browser tab
    * @returns {Promise<void>}
    */
   async downloadInvoice(page) {
@@ -232,7 +310,7 @@ class Order extends BOBasePage {
 
   /**
    * Click on partial refund button
-   * @param page
+   * @param page {Page} Browser tab
    * @returns {Promise<void>}
    */
   async clickOnPartialRefund(page) {
@@ -242,11 +320,11 @@ class Order extends BOBasePage {
 
   /**
    * Add partial refund product
-   * @param page
-   * @param productRow
-   * @param quantity
-   * @param amount
-   * @param shipping
+   * @param page {Page} Browser tab
+   * @param productRow {number} Product row on table
+   * @param quantity {number} Quantity value to set
+   * @param amount {number} Amount value to set
+   * @param shipping {number} Shipping cost to set
    * @returns {Promise<string>}
    */
   async addPartialRefundProduct(page, productRow, quantity = 0, amount = 0, shipping = 0) {
@@ -263,7 +341,7 @@ class Order extends BOBasePage {
 
   /**
    * Download delivery slip
-   * @param page
+   * @param page {Page} Browser tab
    * @returns {Promise<*>}
    */
   async downloadDeliverySlip(page) {
@@ -277,7 +355,7 @@ class Order extends BOBasePage {
 
   /**
    * Is return products button visible
-   * @param page
+   * @param page {Page} Browser tab
    * @returns {Promise<boolean>}
    */
   isReturnProductsButtonVisible(page) {
@@ -286,7 +364,7 @@ class Order extends BOBasePage {
 
   /**
    * Go to view full details page
-   * @param page
+   * @param page {Page} Browser tab
    * @returns {Promise<void>}
    */
   async goToViewFullDetails(page) {
@@ -295,7 +373,7 @@ class Order extends BOBasePage {
 
   /**
    * Get customer information
-   * @param page
+   * @param page {Page} Browser tab
    * @returns {Promise<string>}
    */
   getCustomerInfoBlock(page) {
@@ -304,16 +382,16 @@ class Order extends BOBasePage {
 
   /**
    * Get customer email
-   * @param page
+   * @param page {Page} Browser tab
    * @returns {Promise<string>}
    */
   getCustomerEmail(page) {
-    return this.getTextContent(page, this.customerEmailLink);
+    return this.getAttributeContent(page, this.customerEmailLink, 'href');
   }
 
   /**
    * Get validated orders number
-   * @param page
+   * @param page {Page} Browser tab
    * @returns {Promise<number>}
    */
   getValidatedOrdersNumber(page) {
@@ -321,8 +399,88 @@ class Order extends BOBasePage {
   }
 
   /**
+   * Edit existing shipping address
+   * @param page {Page} Browser tab
+   * @param addressData {object} Shipping address data to edit
+   * @returns {Promise<void>}
+   */
+  async editExistingShippingAddress(page, addressData) {
+    await this.waitForSelectorAndClick(page, this.shippingAddressToolTipLink);
+    await this.waitForSelectorAndClick(page, this.editShippingAddressButton);
+
+    await this.waitForVisibleSelector(page, this.editAddressIframe);
+
+    const addressFrame = await page.frame({url: new RegExp('sell/addresses/order', 'gmi')});
+
+    await addAddressPage.createEditAddress(addressFrame, addressData, false);
+
+    await Promise.all([
+      addressFrame.click(addAddressPage.saveAddressButton),
+      page.waitForSelector(this.editAddressIframe, {state: 'hidden'}),
+    ]);
+
+    return this.getShippingAddress(page);
+  }
+
+  /**
+   * Select another shipping address
+   * @param page {Page} Browser tab
+   * @param address {string} Shipping address to select
+   * @returns {Promise<string>}
+   */
+  async selectAnotherShippingAddress(page, address) {
+    await this.waitForSelectorAndClick(page, this.shippingAddressToolTipLink);
+    await this.waitForSelectorAndClick(page, this.selectAnotherShippingAddressButton);
+
+    await this.selectByVisibleText(page, this.changeOrderAddressSelect, address);
+    await this.waitForSelectorAndClick(page, this.submitAnotherAddressButton);
+
+    return this.getAlertSuccessBlockParagraphContent(page);
+  }
+
+  /**
+   * Edit existing shipping address
+   * @param page {Page} Browser tab
+   * @param addressData {object} Invoice address data to edit
+   * @returns {Promise<void>}
+   */
+  async editExistingInvoiceAddress(page, addressData) {
+    await this.waitForSelectorAndClick(page, this.invoiceAddressToolTipLink);
+    await this.waitForSelectorAndClick(page, this.editInvoiceAddressButton);
+
+    await this.waitForVisibleSelector(page, this.editAddressIframe);
+
+    const addressFrame = await page.frame({url: new RegExp('sell/addresses/order', 'gmi')});
+
+    await addAddressPage.createEditAddress(addressFrame, addressData, false);
+
+    await Promise.all([
+      addressFrame.click(addAddressPage.saveAddressButton),
+      page.waitForSelector(this.editAddressIframe, {state: 'hidden'}),
+    ]);
+
+    return this.getInvoiceAddress(page);
+  }
+
+  /**
+   * Select another shipping address
+   * @param page {Page} Browser tab
+   * @param address {string} Invoice address to select
+   * @returns {Promise<string>}
+   */
+  async selectAnotherInvoiceAddress(page, address) {
+    await this.waitForSelectorAndClick(page, this.invoiceAddressToolTipLink);
+    await this.waitForSelectorAndClick(page, this.selectAnotherInvoiceAddressButton);
+
+    await this.selectByVisibleText(page, this.changeOrderAddressSelect, address);
+    await this.waitForSelectorAndClick(page, this.submitAnotherAddressButton);
+
+    return this.getAlertSuccessBlockParagraphContent(page);
+  }
+
+  /**
    * Is private note textarea visible
-   * @param page
+   * @param page {Page} Browser tab
    * @returns {Promise<boolean>}
    */
   isPrivateNoteTextareaVisible(page) {
@@ -331,7 +489,7 @@ class Order extends BOBasePage {
 
   /**
    * Click on add new private note link
-   * @param page
+   * @param page {Page} Browser tab
    * @returns {Promise<void>}
    */
   async clickAddNewPrivateNote(page) {
@@ -341,8 +499,8 @@ class Order extends BOBasePage {
 
   /**
    * Set private note
-   * @param page
-   * @param note
+   * @param page {Page} Browser tab
+   * @param note {string} Private note to set
    * @returns {Promise<string>}
    */
   async setPrivateNote(page, note) {
@@ -354,11 +512,152 @@ class Order extends BOBasePage {
 
   /**
    * Get private note content
-   * @param page
+   * @param page {Page} Browser tab
    * @returns {Promise<string>}
    */
   getPrivateNoteContent(page) {
     return this.getTextContent(page, this.privateNoteTextarea);
+  }
+
+  /**
+   * Get products number
+   * @param page {Page} Browser tab
+   * @returns {Promise<number>}
+   */
+  getProductsNumber(page) {
+    return this.getNumberFromText(page, this.productsCountSpan);
+  }
+
+  /**
+   * Search product
+   * @param page {Page} Browser tab
+   * @param name {string} Product name to search
+   * @returns {Promise<void>}
+   */
+  async searchProduct(page, name) {
+    await this.waitForSelectorAndClick(page, this.addProductButton);
+    await this.setValue(page, this.addProductRowSearch, name);
+    await this.waitForSelectorAndClick(page, `${this.addProductTableRow} a`);
+  }
+
+  /**
+   * Get searched product details
+   * @param page {Page} Browser tab
+   * @returns {Promise<[]>}
+   */
+  async getSearchedProductDetails(page) {
+    return {
+      stockLocation: await this.getTextContent(page, this.addProductRowStockLocation),
+      available: parseInt(await this.getTextContent(page, this.addProductAvailable), 10),
+    };
+  }
+
+  /**
+   * Add product to cart
+   * @param page {Page} Browser tab
+   * @param quantity {number} Product quantity to add
+   * @returns {Promise<string>}
+   */
+  async addProductToCart(page, quantity = 0) {
+    await this.closeGrowlMessage(page);
+    if (quantity !== 0) {
+      await this.addQuantity(page, quantity);
+    }
+    await this.waitForSelectorAndClick(page, this.addProductAddButton, 1000);
+    return this.getGrowlMessageContent(page);
+  }
+
+  /**
+   * add product quantity
+   * @param page {Page} Browser tab
+   * @param quantity {number} Product quantity to add
+   * @returns {Promise<void>}
+   */
+  async addQuantity(page, quantity) {
+    await this.setValue(page, this.addProductRowQuantity, quantity);
+  }
+
+  /**
+   * Cancel add product
+   * @param page {Page} Browser tab
+   * @returns {Promise<void>}
+   */
+  async cancelAddProductToCart(page) {
+    await this.waitForSelectorAndClick(page, this.addProductCancelButton);
+  }
+
+  /**
+   * Is button disabled
+   * @param page {Page} Browser tab
+   * @returns {Promise<boolean>}
+   */
+  isAddButtonDisabled(page) {
+    return this.elementVisible(page, `${this.addProductAddButton},disabled`, 1000);
+  }
+
+  /**
+   * Get product details
+   * @param page {Page} Browser tab
+   * @param row {number} Product row on table
+   * @returns {Promise<[]>}
+   */
+  async getProductDetails(page, row) {
+    return {
+      name: await this.getTextContent(page, this.orderProductsTableProductName(row)),
+      basePrice: parseFloat((await this.getTextContent(
+        page,
+        this.orderProductsTableProductBasePrice(row))).replace('€', ''),
+      ),
+      quantity: parseInt(await this.getTextContent(page, this.orderProductsTableProductQuantity(row)), 10),
+      available: parseInt(await this.getTextContent(page, this.orderProductsTableProductAvailable(row)), 10),
+      total: parseFloat((await this.getTextContent(page, this.orderProductsTableProductPrice(row))).replace('€', '')),
+    };
+  }
+
+  // Methods for product list pagination
+  /**
+   * Get pagination label
+   * @param page {Page} Browser tab
+   * @returns {Promise<string>}
+   */
+  async getPaginationLabel(page) {
+    return this.getTextContent(page, this.paginationLabel);
+  }
+
+  /**
+   * Click on next
+   * @param page {Page} Browser tab
+   * @returns {Promise<string>}
+   */
+  async paginationNext(page) {
+    await this.waitForSelectorAndClick(page, this.paginationNextLink);
+
+    return this.getPaginationLabel(page);
+  }
+
+  /**
+   * Click on previous
+   * @param page {Page} Browser tab
+   * @returns {Promise<string>}
+   */
+  async paginationPrevious(page) {
+    await this.scrollTo(page, this.productsCountSpan);
+    await this.waitForSelectorAndClick(page, this.paginationPreviousLink);
+
+    return this.getPaginationLabel(page);
+  }
+
+  /**
+   * Select pagination limit
+   * @param page {Page} Browser tab
+   * @param number {number} Pagination number to select
+   * @returns {Promise<boolean>}
+   */
+  async selectPaginationLimit(page, number) {
+    await this.selectByVisibleText(page, this.paginationLimitSelect, number);
+    await this.waitForVisibleSelector(page, this.orderProductsTableProductName(1));
+
+    return this.elementVisible(page, this.paginationNextLink, 1000);
   }
 }
 

@@ -49,6 +49,7 @@ use PrestaShop\PrestaShop\Core\Domain\Product\Pack\Exception\ProductPackConstrai
 use PrestaShop\PrestaShop\Core\Domain\Product\ProductTaxRulesGroupSettings;
 use PrestaShop\PrestaShop\Core\Domain\Product\Stock\Exception\ProductStockConstraintException;
 use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductId;
+use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductType;
 use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\ShopId;
 use PrestaShop\PrestaShop\Core\Domain\TaxRulesGroup\ValueObject\TaxRulesGroupId;
 use PrestaShop\PrestaShop\Core\Exception\CoreException;
@@ -190,7 +191,8 @@ class ProductRepository extends AbstractObjectModelRepository
         $qb->select('COUNT(id_product) as product_count')
             ->from($this->dbPrefix . 'product')
             ->where('id_product IN (:productIds)')
-            ->setParameter('productIds', $ids, Connection::PARAM_INT_ARRAY);
+            ->setParameter('productIds', $ids, Connection::PARAM_INT_ARRAY)
+        ;
 
         $results = $qb->execute()->fetch();
 
@@ -264,19 +266,21 @@ class ProductRepository extends AbstractObjectModelRepository
 
     /**
      * @param array<int, string> $localizedNames
-     * @param bool $isVirtual
+     * @param string $productType
      *
      * @return Product
      *
      * @throws CannotAddProductException
      */
-    public function create(array $localizedNames, bool $isVirtual): Product
+    public function create(array $localizedNames, string $productType): Product
     {
         $product = new Product();
         $product->active = false;
         $product->id_category_default = $this->defaultCategoryId;
         $product->name = $localizedNames;
-        $product->is_virtual = $isVirtual;
+        $product->is_virtual = ProductType::TYPE_VIRTUAL === $productType;
+        $product->cache_is_pack = ProductType::TYPE_PACK === $productType;
+        $product->product_type = $productType;
 
         $this->productValidator->validateCreation($product);
         $this->addObjectModel($product, CannotAddProductException::class);

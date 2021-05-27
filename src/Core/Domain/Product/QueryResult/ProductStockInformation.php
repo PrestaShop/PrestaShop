@@ -96,8 +96,6 @@ class ProductStockInformation
     private $availableDate;
 
     /**
-     * @param bool $useAdvancedStockManagement
-     * @param bool $dependsOnStock
      * @param int $packStockType
      * @param int $outOfStockType
      * @param int $quantity
@@ -110,8 +108,6 @@ class ProductStockInformation
      * @param DateTimeInterface|null $availableDate
      */
     public function __construct(
-        bool $useAdvancedStockManagement,
-        bool $dependsOnStock,
         int $packStockType,
         int $outOfStockType,
         int $quantity,
@@ -123,8 +119,6 @@ class ProductStockInformation
         string $location,
         ?DateTimeInterface $availableDate
     ) {
-        $this->useAdvancedStockManagement = $useAdvancedStockManagement;
-        $this->dependsOnStock = $dependsOnStock;
         $this->packStockType = $packStockType;
         $this->outOfStockType = $outOfStockType;
         $this->quantity = $quantity;

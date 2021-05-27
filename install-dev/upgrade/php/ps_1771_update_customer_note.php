@@ -38,7 +38,7 @@ function ps_1771_update_customer_note()
     foreach ($notes as $note) {
         $result &= Db::getInstance()->execute(
             'UPDATE ' . _DB_PREFIX_ . 'customer
-            SET note = "' . html_entity_decode($note['note']) . '"
+            SET note = "' . pSQL(html_entity_decode($note['note'])) . '"
             WHERE id_customer = ' . $note['id_customer']
         );
     }

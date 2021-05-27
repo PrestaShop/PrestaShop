@@ -30,11 +30,11 @@ namespace PrestaShop\PrestaShop\Adapter\Product\QueryHandler;
 
 use Customization;
 use DateTime;
-use Pack;
 use PrestaShop\PrestaShop\Adapter\Product\AbstractProductHandler;
 use PrestaShop\PrestaShop\Adapter\Product\Stock\Repository\StockAvailableRepository;
 use PrestaShop\PrestaShop\Adapter\Product\VirtualProduct\Repository\VirtualProductFileRepository;
-use PrestaShop\PrestaShop\Core\Domain\Product\Exception\ProductConstraintException;
+use PrestaShop\PrestaShop\Adapter\Tax\TaxComputer;
+use PrestaShop\PrestaShop\Core\Domain\Country\ValueObject\CountryId;
 use PrestaShop\PrestaShop\Core\Domain\Product\ProductCustomizabilitySettings;
 use PrestaShop\PrestaShop\Core\Domain\Product\Query\GetProductForEditing;
 use PrestaShop\PrestaShop\Core\Domain\Product\QueryHandler\GetProductForEditingHandlerInterface;
@@ -49,10 +49,10 @@ use PrestaShop\PrestaShop\Core\Domain\Product\QueryResult\ProductPricesInformati
 use PrestaShop\PrestaShop\Core\Domain\Product\QueryResult\ProductSeoOptions;
 use PrestaShop\PrestaShop\Core\Domain\Product\QueryResult\ProductShippingInformation;
 use PrestaShop\PrestaShop\Core\Domain\Product\QueryResult\ProductStockInformation;
-use PrestaShop\PrestaShop\Core\Domain\Product\QueryResult\ProductType;
 use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductId;
 use PrestaShop\PrestaShop\Core\Domain\Product\VirtualProductFile\Exception\VirtualProductFileNotFoundException;
 use PrestaShop\PrestaShop\Core\Domain\Product\VirtualProductFile\QueryResult\VirtualProductFileForEditing;
+use PrestaShop\PrestaShop\Core\Domain\TaxRulesGroup\ValueObject\TaxRulesGroupId;
 use PrestaShop\PrestaShop\Core\Util\DateTime\DateTime as DateTimeUtil;
 use PrestaShop\PrestaShop\Core\Util\Number\NumberExtractor;
 use PrestaShop\PrestaShop\Core\Util\Number\NumberExtractorException;
@@ -80,18 +80,34 @@ final class GetProductForEditingHandler extends AbstractProductHandler implement
     private $virtualProductFileRepository;
 
     /**
+     * @var TaxComputer
+     */
+    private $taxComputer;
+
+    /**
+     * @var int
+     */
+    private $countryId;
+
+    /**
      * @param NumberExtractor $numberExtractor
      * @param StockAvailableRepository $stockAvailableRepository
      * @param VirtualProductFileRepository $virtualProductFileRepository
+     * @param TaxComputer $taxComputer
+     * @param int $countryId
      */
     public function __construct(
         NumberExtractor $numberExtractor,
         StockAvailableRepository $stockAvailableRepository,
-        VirtualProductFileRepository $virtualProductFileRepository
+        VirtualProductFileRepository $virtualProductFileRepository,
+        TaxComputer $taxComputer,
+        int $countryId
     ) {
         $this->numberExtractor = $numberExtractor;
         $this->stockAvailableRepository = $stockAvailableRepository;
         $this->virtualProductFileRepository = $virtualProductFileRepository;
+        $this->taxComputer = $taxComputer;
+        $this->countryId = $countryId;
     }
 
     /**
@@ -103,6 +119,7 @@ final class GetProductForEditingHandler extends AbstractProductHandler implement
 
         return new ProductForEditing(
             (int) $product->id,
+            $product->getProductType(),
             $this->getCustomizationOptions($product),
             $this->getBasicInformation($product),
             $this->getCategoriesInformation($product),
@@ -125,7 +142,6 @@ final class GetProductForEditingHandler extends AbstractProductHandler implement
     private function getBasicInformation(Product $product): ProductBasicInformation
     {
         return new ProductBasicInformation(
-            $this->getProductType($product),
             $product->name,
             $product->description,
             $product->description_short,
@@ -153,8 +169,16 @@ final class GetProductForEditingHandler extends AbstractProductHandler implement
      */
     private function getPricesInformation(Product $product): ProductPricesInformation
     {
+        $priceTaxExcluded = $this->numberExtractor->extract($product, 'price');
+        $priceTaxIncluded = $this->taxComputer->computePriceWithTaxes(
+            $priceTaxExcluded,
+            new TaxRulesGroupId((int) $product->id_tax_rules_group),
+            new CountryId($this->countryId)
+        );
+
         return new ProductPricesInformation(
-            $this->numberExtractor->extract($product, 'price'),
+            $priceTaxExcluded,
+            $priceTaxIncluded,
             $this->numberExtractor->extract($product, 'ecotax'),
             (int) $product->id_tax_rules_group,
             (bool) $product->on_sale,
@@ -163,28 +187,6 @@ final class GetProductForEditingHandler extends AbstractProductHandler implement
             (string) $product->unity,
             $this->numberExtractor->extract($product, 'unit_price_ratio')
         );
-    }
-
-    /**
-     * @param Product $product
-     *
-     * @return ProductType
-     *
-     * @throws ProductConstraintException
-     */
-    private function getProductType(Product $product): ProductType
-    {
-        if ($product->is_virtual) {
-            $productTypeValue = ProductType::TYPE_VIRTUAL;
-        } elseif (Pack::isPack($product->id)) {
-            $productTypeValue = ProductType::TYPE_PACK;
-        } elseif ($product->hasCombinations()) {
-            $productTypeValue = ProductType::TYPE_COMBINATION;
-        } else {
-            $productTypeValue = ProductType::TYPE_STANDARD;
-        }
-
-        return new ProductType($productTypeValue);
     }
 
     /**
@@ -329,8 +331,6 @@ final class GetProductForEditingHandler extends AbstractProductHandler implement
         $stockAvailable = $this->stockAvailableRepository->getForProduct(new ProductId($product->id));
 
         return new ProductStockInformation(
-            (bool) $product->advanced_stock_management,
-            (bool) $stockAvailable->depends_on_stock,
             (int) $product->pack_stock_type,
             (int) $stockAvailable->out_of_stock,
             (int) $stockAvailable->quantity,
@@ -351,14 +351,12 @@ final class GetProductForEditingHandler extends AbstractProductHandler implement
      * @param Product $product
      *
      * @return VirtualProductFileForEditing|null
-     *
-     * @throws VirtualProductFileNotFoundException
      */
     private function getVirtualProductFile(Product $product): ?VirtualProductFileForEditing
     {
-        $virtualProductFile = $this->virtualProductFileRepository->findByProductId(new ProductId($product->id));
-
-        if (!$virtualProductFile) {
+        try {
+            $virtualProductFile = $this->virtualProductFileRepository->findByProductId(new ProductId($product->id));
+        } catch (VirtualProductFileNotFoundException $e) {
             return null;
         }
 
@@ -368,7 +366,7 @@ final class GetProductForEditingHandler extends AbstractProductHandler implement
             $virtualProductFile->display_filename,
             (int) $virtualProductFile->nb_days_accessible,
             (int) $virtualProductFile->nb_downloadable,
-            $virtualProductFile->date_expiration === DateTimeUtil::NULL_VALUE ? null : new DateTime($virtualProductFile->date_expiration)
+            $virtualProductFile->date_expiration === DateTimeUtil::NULL_DATETIME ? null : new DateTime($virtualProductFile->date_expiration)
         );
     }
 }

@@ -1,7 +1,16 @@
 require('module-alias/register');
 const ModuleConfiguration = require('@pages/BO/modules/moduleConfiguration');
 
+/**
+ * Module configuration page for module : ps_email_subscription, contains selectors and functions for the page
+ * @class
+ * @extends ModuleConfiguration
+ */
 class PsEmailSubscription extends ModuleConfiguration.constructor {
+  /**
+   * @constructs
+   * Setting up titles and selectors to use on ps email subscription page
+   */
   constructor() {
     super();
 
@@ -18,18 +27,21 @@ class PsEmailSubscription extends ModuleConfiguration.constructor {
 
   /**
    * Get number of newsletter registrations
+   * @param page {Page} Browser tab
    * @returns {Promise<number>}
    */
   async getNumberOfNewsletterRegistration(page) {
     if (await this.elementVisible(page, this.newsletterTableEmptyColumn, 1000)) {
       return 0;
     }
+
     return (await page.$$(this.newsletterTableRows)).length;
   }
 
   /**
    * Get list of emails registered to newsletter
-   * @return {Promise<[]>}
+   * @param page {Page} Browser tab
+   * @return {Promise<Array<string>>}
    */
   async getListOfNewsletterRegistrationEmails(page) {
     const emails = [];

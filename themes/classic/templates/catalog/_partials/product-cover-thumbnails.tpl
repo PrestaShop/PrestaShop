@@ -35,7 +35,6 @@
           {else}
             alt="{$product.name}"
           {/if}
-          itemprop="image"
           loading="lazy"
           width="452"
           height="452"
@@ -70,7 +69,6 @@
               {else}
                 alt="{$product.name}"
               {/if}
-              itemprop="image"
               loading="lazy"
               width="94"
               height="94"

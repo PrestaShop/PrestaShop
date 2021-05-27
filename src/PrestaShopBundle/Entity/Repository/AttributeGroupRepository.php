@@ -26,6 +26,8 @@
 
 namespace PrestaShopBundle\Entity\Repository;
 
+use Doctrine\ORM\Query\Expr\Join;
+
 /**
  * AttributeGroupRepository.
  *
@@ -34,4 +36,40 @@ namespace PrestaShopBundle\Entity\Repository;
  */
 class AttributeGroupRepository extends \Doctrine\ORM\EntityRepository
 {
+    /**
+     * @param bool $withAttributes
+     * @param array $attributeIds
+     *
+     * @return array
+     */
+    public function listOrderedAttributeGroups(bool $withAttributes, array $attributeIds = []): array
+    {
+        $qb = $this
+            ->createQueryBuilder('ag')
+            ->addSelect('ag')
+            ->addSelect('agl')
+            ->innerJoin('ag.attributeGroupLangs', 'agl')
+            ->addOrderBy('ag.position', 'ASC')
+        ;
+
+        if (!empty($attributeIds)) {
+            $qb
+                ->innerJoin('ag.attributes', 'a', Join::WITH, 'a.id IN (:attributeIds)')
+                ->setParameter('attributeIds', $attributeIds)
+            ;
+        } else {
+            $qb->innerJoin('ag.attributes', 'a');
+        }
+
+        if ($withAttributes) {
+            $qb
+                ->innerJoin('a.attributeLangs', 'al')
+                ->addSelect('a')
+                ->addSelect('al')
+                ->addOrderBy('a.position', 'ASC')
+            ;
+        }
+
+        return $qb->getQuery()->getResult();
+    }
 }

@@ -32,14 +32,38 @@ use Currency;
 use PHPUnit\Framework\Assert;
 use PrestaShop\Decimal\DecimalNumber;
 use PrestaShop\PrestaShop\Core\Domain\Product\Combination\Command\RemoveAllAssociatedCombinationSuppliersCommand;
+use PrestaShop\PrestaShop\Core\Domain\Product\Combination\Command\SetCombinationDefaultSupplierCommand;
 use PrestaShop\PrestaShop\Core\Domain\Product\Combination\Command\SetCombinationSuppliersCommand;
 use PrestaShop\PrestaShop\Core\Domain\Product\Combination\Query\GetCombinationSuppliers;
+use PrestaShop\PrestaShop\Core\Domain\Product\Exception\InvalidProductTypeException;
 use PrestaShop\PrestaShop\Core\Domain\Product\Exception\ProductException;
+use PrestaShop\PrestaShop\Core\Domain\Product\Supplier\Exception\DefaultProductSupplierNotAssociatedException;
 use PrestaShop\PrestaShop\Core\Domain\Product\Supplier\QueryResult\ProductSupplierInfo;
 use PrestaShop\PrestaShop\Core\Domain\Product\Supplier\ValueObject\ProductSupplierId;
 
 class UpdateCombinationSuppliersFeatureContext extends AbstractCombinationFeatureContext
 {
+    /**
+     * @When I set combination :combinationReference default supplier to :defaultSupplierReference
+     *
+     * @param string $combinationReference
+     * @param string $defaultSupplierReference
+     */
+    public function updateCombinationDefaultSupplier(string $combinationReference, string $defaultSupplierReference): void
+    {
+        $this->cleanLastException();
+        try {
+            $command = new SetCombinationDefaultSupplierCommand(
+                $this->getSharedStorage()->get($combinationReference),
+                $this->getSharedStorage()->get($defaultSupplierReference)
+            );
+
+            $this->getCommandBus()->handle($command);
+        } catch (DefaultProductSupplierNotAssociatedException | InvalidProductTypeException $e) {
+            $this->setLastException($e);
+        }
+    }
+
     /**
      * @When I set following suppliers for combination ":combinationReference":
      *

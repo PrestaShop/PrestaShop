@@ -930,8 +930,8 @@ class CustomerCore extends ObjectModel
         FROM `' . _DB_PREFIX_ . 'customer` c
         WHERE c.`id_customer` = ' . (int) $this->id);
 
-        $result['last_visit'] = $result2['last_visit'];
-        $result['age'] = ($result3['age'] != date('Y') ? $result3['age'] : '--');
+        $result['last_visit'] = $result2['last_visit'] ?? null;
+        $result['age'] = (isset($result3['age']) && $result3['age'] != date('Y') ? $result3['age'] : '--');
 
         return $result;
     }
@@ -1149,7 +1149,7 @@ class CustomerCore extends ObjectModel
         }
         $ids = Address::getCountryAndState($idAddress);
 
-        return (int) ($ids['id_country'] ? $ids['id_country'] : Configuration::get('PS_COUNTRY_DEFAULT'));
+        return (int) ($ids['id_country'] ?? Configuration::get('PS_COUNTRY_DEFAULT'));
     }
 
     /**

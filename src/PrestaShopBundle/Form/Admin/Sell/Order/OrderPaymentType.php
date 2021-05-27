@@ -102,6 +102,7 @@ class OrderPaymentType extends AbstractType
                 'date_format' => 'YYYY-MM-DD H:m:s',
             ])
             ->add('payment_method', TextType::class, [
+                'empty_data' => '',
                 'data_list' => $this->installedPaymentModulesChoiceProvider->getChoices(),
             ])
             ->add('transaction_id', TextType::class, [

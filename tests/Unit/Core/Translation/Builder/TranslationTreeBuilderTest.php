@@ -30,8 +30,9 @@ namespace Tests\Unit\Core\Translation\Builder;
 use PHPUnit\Framework\TestCase;
 use PrestaShop\PrestaShop\Core\Translation\Builder\TranslationCatalogueBuilder;
 use PrestaShop\PrestaShop\Core\Translation\Builder\TranslationsTreeBuilder;
-use PrestaShop\PrestaShop\Core\Translation\Provider\CatalogueLayersProviderInterface;
-use PrestaShop\PrestaShop\Core\Translation\Provider\CatalogueProviderFactory;
+use PrestaShop\PrestaShop\Core\Translation\Storage\Provider\CatalogueLayersProviderInterface;
+use PrestaShop\PrestaShop\Core\Translation\Storage\Provider\CatalogueProviderFactory;
+use PrestaShop\PrestaShop\Core\Translation\Storage\Provider\Definition\BackofficeProviderDefinition;
 use Symfony\Bundle\FrameworkBundle\Routing\Router;
 use Symfony\Component\Translation\MessageCatalogue;
 
@@ -70,7 +71,7 @@ class TranslationTreeBuilderTest extends TestCase
      */
     private $treeBuilder;
 
-    protected function setUp()
+    protected function setUp(): void
     {
         $provider = $this->createMock(CatalogueLayersProviderInterface::class);
 
@@ -108,14 +109,12 @@ class TranslationTreeBuilderTest extends TestCase
         );
     }
 
-    public function testGetTreeStructure()
+    public function testGetTreeStructure(): void
     {
         $tree = $this->treeBuilder->getTree(
-             TranslationCatalogueBuilder::TYPE_BACK,
+            new BackofficeProviderDefinition(),
             self::LOCALE,
-            [],
-            'theme',
-            'module'
+            []
         );
 
         $this->assertArrayHasKey('tree', $tree);
@@ -143,14 +142,12 @@ class TranslationTreeBuilderTest extends TestCase
         ], array_keys($tree['tree']['children'][0]['children'][0]));
     }
 
-    public function testGetTreeContent()
+    public function testGetTreeContent(): void
     {
         $tree = $this->treeBuilder->getTree(
-            TranslationCatalogueBuilder::TYPE_BACK,
+            new BackofficeProviderDefinition(),
             self::LOCALE,
-            [],
-            'theme',
-            'module'
+            []
         );
 
         $this->assertArrayHasKey('tree', $tree);

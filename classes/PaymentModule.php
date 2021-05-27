@@ -198,9 +198,9 @@ abstract class PaymentModuleCore extends Module
      * @param string $payment_method Payment method (eg. 'Credit card')
      * @param string|null $message Message to attach to order
      * @param array $extra_vars
-     * @param null $currency_special
+     * @param int|null $currency_special
      * @param bool $dont_touch_amount
-     * @param bool $secure_key
+     * @param string|bool $secure_key
      * @param Shop $shop
      *
      * @return bool
@@ -231,7 +231,7 @@ abstract class PaymentModuleCore extends Module
         // The tax cart is loaded before the customer so re-cache the tax calculation method
         $this->context->cart->setTaxCalculationMethod();
 
-        $this->context->language = new Language((int) $this->context->cart->id_lang);
+        $this->context->language = $this->context->cart->getAssociatedLanguage();
         $this->context->shop = ($shop ? $shop : new Shop((int) $this->context->cart->id_shop));
         ShopUrl::resetMainDomainCache();
         $id_currency = $currency_special ? (int) $currency_special : (int) $this->context->cart->id_currency;

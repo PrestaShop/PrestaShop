@@ -75,7 +75,7 @@ abstract class AbstractProductHandler
             }
         } catch (PrestaShopException $e) {
             throw new ProductException(
-                sprintf('Error occurred when trying to get product #%d', $productId),
+                sprintf('Error occurred when trying to get product #%d', $productIdValue),
                 0,
                 $e
             );

@@ -93,11 +93,11 @@ class VirtualProductFileRepository extends AbstractObjectModelRepository
     /**
      * @param ProductId $productId
      *
-     * @return VirtualProductFile|null
+     * @return VirtualProductFile
      *
      * @throws VirtualProductFileNotFoundException
      */
-    public function findByProductId(ProductId $productId): ?VirtualProductFile
+    public function findByProductId(ProductId $productId): VirtualProductFile
     {
         try {
             $id = (int) VirtualProductFile::getIdFromIdProduct($productId->getValue());
@@ -110,7 +110,10 @@ class VirtualProductFileRepository extends AbstractObjectModelRepository
         }
 
         if (!$id) {
-            return null;
+            throw new VirtualProductFileNotFoundException(sprintf(
+                'Cannot find VirtualProduct for product %d',
+                $productId->getValue()
+            ));
         }
 
         return $this->get(new VirtualProductFileId($id));

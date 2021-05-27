@@ -27,14 +27,17 @@ declare(strict_types=1);
 
 namespace PrestaShop\PrestaShop\Core\Translation\Builder;
 
-use Exception;
+use Doctrine\Common\Inflector\Inflector;
 use InvalidArgumentException;
-use PrestaShop\PrestaShop\Core\Exception\FileNotFoundException;
-use PrestaShop\PrestaShop\Core\Translation\DTO\DomainTranslation;
-use PrestaShop\PrestaShop\Core\Translation\DTO\MessageTranslation;
-use PrestaShop\PrestaShop\Core\Translation\DTO\Translations;
+use PrestaShop\PrestaShop\Core\Translation\Builder\Map\Catalogue;
+use PrestaShop\PrestaShop\Core\Translation\Builder\Map\Domain;
+use PrestaShop\PrestaShop\Core\Translation\Builder\Map\Message;
+use PrestaShop\PrestaShop\Core\Translation\Exception\TranslationFilesNotFoundException;
 use PrestaShop\PrestaShop\Core\Translation\Exception\UnexpectedTranslationTypeException;
-use PrestaShop\PrestaShop\Core\Translation\Provider\CatalogueProviderFactory;
+use PrestaShop\PrestaShop\Core\Translation\Storage\Provider\CatalogueProviderFactory;
+use PrestaShop\PrestaShop\Core\Translation\Storage\Provider\Definition\OthersProviderDefinition;
+use PrestaShop\PrestaShop\Core\Translation\Storage\Provider\Definition\ProviderDefinitionInterface;
+use PrestaShop\PrestaShop\Core\Translation\Storage\Provider\Definition\ThemeProviderDefinition;
 
 /**
  * This class provides the catalogue represented as an array.
@@ -45,23 +48,6 @@ use PrestaShop\PrestaShop\Core\Translation\Provider\CatalogueProviderFactory;
  */
 class TranslationCatalogueBuilder
 {
-    public const TYPE_BACK = 'back';
-    public const TYPE_FRONT = 'front';
-    public const TYPE_MAILS = 'mails';
-    public const TYPE_MAILS_BODY = 'mails_body';
-    public const TYPE_OTHERS = 'others';
-    public const TYPE_MODULES = 'modules';
-    public const TYPE_THEMES = 'themes';
-
-    public const ALLOWED_TYPES = [
-        self::TYPE_BACK,
-        self::TYPE_FRONT,
-        self::TYPE_MAILS,
-        self::TYPE_MAILS_BODY,
-        self::TYPE_OTHERS,
-        self::TYPE_MODULES,
-        self::TYPE_THEMES,
-    ];
     /**
      * @var CatalogueProviderFactory
      */
@@ -80,45 +66,48 @@ class TranslationCatalogueBuilder
      * Each domain will have counters (number of items and missing translations) as metadata.
      * 'Normalization' will add extra data.
      *
-     * @param string $type
+     * @param ProviderDefinitionInterface $providerDefinition Translation storage provider configuration
      * @param string $locale
      * @param string $domain
      * @param array $search
-     * @param string|null $theme
-     * @param string|null $module
      *
      * @return array
      *
-     * @throws Exception
+     * @throws TranslationFilesNotFoundException
+     * @throws UnexpectedTranslationTypeException
      */
     public function getDomainCatalogue(
-        string $type,
+        ProviderDefinitionInterface $providerDefinition,
         string $locale,
         string $domain,
-        array $search,
-        ?string $theme,
-        ?string $module
+        array $search
     ): array {
-        $this->validateParameters($type, $locale, $search, $theme, $module, $domain);
+        $this->validateParameters($providerDefinition, $locale, $search, $domain);
+
+        // When building tree, we keep 3 leaves of Domain i.e OneTwoThreeFour will become OneTwoThree_four
+        // see PrestaShop\PrestaShop\Core\Translation\Builder\Map\Domain::mergeTree
+        // When getting messages for a domain, we have to do the reverse operation to match the catalogue domain
+        $catalogueDomain = $domain;
+        if ($catalogueDomain !== OthersProviderDefinition::OTHERS_DOMAIN_NAME) {
+            $catalogueDomain = ucfirst(Inflector::camelize($catalogueDomain));
+        }
 
         $domainTranslation = $this->getRawCatalogue(
-            $type,
+            $providerDefinition,
             $locale,
             $search,
-            $theme,
-            $module,
-            $domain
-        )->getDomainTranslation($domain);
+            $catalogueDomain
+        )->getDomain($catalogueDomain);
 
         if (null === $domainTranslation) {
-            $domainTranslation = new DomainTranslation($domain);
+            $domainTranslation = new Domain($catalogueDomain);
         }
 
         return [
             'info' => [
                 'locale' => $locale,
                 'domain' => $domain,
-                'theme' => $theme,
+                'theme' => $providerDefinition instanceof ThemeProviderDefinition ? $providerDefinition->getThemeName() : null,
                 'total_translations' => $domainTranslation->getTranslationsCount(),
                 'total_missing_translations' => $domainTranslation->getMissingTranslationsCount(),
             ],
@@ -133,29 +122,24 @@ class TranslationCatalogueBuilder
      * User-translated will override file-translated, which will override default catalogue.
      * Each domain will have counters (number of items and missing translations) as metadata.
      *
-     * @param string $type
+     * @param ProviderDefinitionInterface $providerDefinition Translation storage provider configuration
      * @param string $locale
      * @param array $search
-     * @param string|null $theme
-     * @param string|null $module
      *
      * @return array
      *
-     * @throws Exception
+     * @throws TranslationFilesNotFoundException
+     * @throws UnexpectedTranslationTypeException
      */
     public function getCatalogue(
-        string $type,
+        ProviderDefinitionInterface $providerDefinition,
         string $locale,
-        array $search,
-        ?string $theme,
-        ?string $module
+        array $search
     ): array {
         return $this->getRawCatalogue(
-            $type,
+            $providerDefinition,
             $locale,
-            $search,
-            $theme,
-            $module
+            $search
         )->toArray();
     }
 
@@ -166,29 +150,25 @@ class TranslationCatalogueBuilder
      * User-translated will override file-translated, which will override default catalogue.
      * Each domain will have counters (number of items and missing translations) as metadata.
      *
-     * @param string $type
+     * @param ProviderDefinitionInterface $providerDefinition Translation storage provider configuration
      * @param string $locale
      * @param array $search
-     * @param string|null $theme
-     * @param string|null $module
      * @param string|null $domain
      *
-     * @return Translations
+     * @return Catalogue
      *
+     * @throws TranslationFilesNotFoundException
      * @throws UnexpectedTranslationTypeException
-     * @throws FileNotFoundException
      */
     public function getRawCatalogue(
-        string $type,
+        ProviderDefinitionInterface $providerDefinition,
         string $locale,
         array $search,
-        ?string $theme,
-        ?string $module,
         ?string $domain = null
-    ): Translations {
-        $this->validateParameters($type, $locale, $search, $theme, $module);
+    ): Catalogue {
+        $this->validateParameters($providerDefinition, $locale, $search);
 
-        $provider = $this->catalogueProviderFactory->getProvider($type);
+        $provider = $this->catalogueProviderFactory->getProvider($providerDefinition);
 
         $defaultCatalogue = $provider->getDefaultCatalogue($locale);
         if (null === $domain) {
@@ -197,61 +177,53 @@ class TranslationCatalogueBuilder
             $defaultCatalogueMessages = [$domain => $defaultCatalogue->all($domain)];
         }
         if (empty($defaultCatalogueMessages)) {
-            return new Translations();
+            return new Catalogue();
         }
         $fileTranslatedCatalogue = $provider->getFileTranslatedCatalogue($locale);
         $userTranslatedCatalogue = $provider->getUserTranslatedCatalogue($locale);
 
-        $translations = new Translations();
+        $catalogue = new Catalogue();
         foreach ($defaultCatalogueMessages as $domainName => $messages) {
-            $domainTranslation = new DomainTranslation($domainName);
+            $domainName = (string) $domainName;
+            $domainTranslation = new Domain($domainName);
 
             foreach ($messages as $translationKey => $translationValue) {
-                $messageTranslation = new MessageTranslation($translationKey);
+                $translationKey = (string) $translationKey;
+                $message = new Message($translationKey);
                 if ($fileTranslatedCatalogue->defines($translationKey, $domainName)) {
-                    $messageTranslation->setFileTranslation($fileTranslatedCatalogue->get($translationKey, $domainName));
+                    $message->setFileTranslation($fileTranslatedCatalogue->get($translationKey, $domainName));
                 }
                 if ($userTranslatedCatalogue->defines($translationKey, $domainName)) {
-                    $messageTranslation->setUserTranslation($userTranslatedCatalogue->get($translationKey, $domainName));
+                    $message->setUserTranslation($userTranslatedCatalogue->get($translationKey, $domainName));
                 }
                 // if search is empty or is in catalog default|project|user
-                if (empty($search) || $messageTranslation->contains($search)) {
-                    $domainTranslation->addMessageTranslation($messageTranslation);
+                if (empty($search) || $message->contains($search)) {
+                    $domainTranslation->addMessage($message);
                 }
             }
 
-            $translations->addDomainTranslation($domainTranslation);
+            $catalogue->addDomain($domainTranslation);
         }
 
-        return $translations;
+        return $catalogue;
     }
 
     /**
-     * @param string $type
+     * @param ProviderDefinitionInterface $providerDefinition Translation storage provider configuration
      * @param string $locale
      * @param array $search
-     * @param string|null $theme
-     * @param string|null $module
      * @param string|null $domain
      *
      * @throws UnexpectedTranslationTypeException
      */
     private function validateParameters(
-        string $type,
+        ProviderDefinitionInterface $providerDefinition,
         string $locale,
         array $search,
-        ?string $theme,
-        ?string $module,
         ?string $domain = null
     ): void {
-        if (!in_array($type, self::ALLOWED_TYPES)) {
+        if (!in_array($providerDefinition->getType(), ProviderDefinitionInterface::ALLOWED_TYPES)) {
             throw new UnexpectedTranslationTypeException('This \'type\' param is not valid.');
-        }
-        if (self::TYPE_MODULES === $type && empty($module)) {
-            throw new InvalidArgumentException('This \'selected\' param is not valid. Module must be given.');
-        }
-        if (self::TYPE_THEMES === $type && empty($theme)) {
-            throw new InvalidArgumentException('This \'selected\' param is not valid. Theme must be given.');
         }
         if (null !== $domain && empty($domain)) {
             throw new InvalidArgumentException('The given \'domain\' is not valid.');

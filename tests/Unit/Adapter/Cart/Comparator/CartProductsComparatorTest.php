@@ -52,8 +52,9 @@ class CartProductsComparatorTest extends TestCase
     ) {
         $cart = $this->mockCart($initialProducts, $newProducts);
         $comparator = new CartProductsComparator($cart);
+        $comparator->setKnownUpdates($knownUpdatedProducts);
 
-        $modifiedProducts = $comparator->getModifiedProducts($knownUpdatedProducts);
+        $modifiedProducts = $comparator->getModifiedProducts();
         Assert::assertEquals($expectedModifiedProducts, $modifiedProducts);
     }
 
@@ -62,12 +63,12 @@ class CartProductsComparatorTest extends TestCase
         yield [
             // Previous products
             [
-                ['id_product' => 1, 'id_product_attribute' => 0, 'cart_quantity' => 1],
-                ['id_product' => 2, 'id_product_attribute' => 0, 'cart_quantity' => 1],
+                ['id_product' => 1, 'id_product_attribute' => 0, 'id_customization' => 0, 'cart_quantity' => 1],
+                ['id_product' => 2, 'id_product_attribute' => 0, 'id_customization' => 0, 'cart_quantity' => 1],
             ],
             // New products
             [
-                ['id_product' => 1, 'id_product_attribute' => 0, 'cart_quantity' => 1],
+                ['id_product' => 1, 'id_product_attribute' => 0, 'id_customization' => 0, 'cart_quantity' => 1],
             ],
             // Known updates
             [
@@ -81,13 +82,13 @@ class CartProductsComparatorTest extends TestCase
         yield [
             // Previous products
             [
-                ['id_product' => 1, 'id_product_attribute' => 0, 'cart_quantity' => 1],
-                ['id_product' => 2, 'id_product_attribute' => 0, 'cart_quantity' => 1],
+                ['id_product' => 1, 'id_product_attribute' => 0, 'id_customization' => 0, 'cart_quantity' => 1],
+                ['id_product' => 2, 'id_product_attribute' => 0, 'id_customization' => 0, 'cart_quantity' => 1],
             ],
             // New products
             [
-                ['id_product' => 1, 'id_product_attribute' => 0, 'cart_quantity' => 1],
-                ['id_product' => 2, 'id_product_attribute' => 0, 'cart_quantity' => 1],
+                ['id_product' => 1, 'id_product_attribute' => 0, 'id_customization' => 0, 'cart_quantity' => 1],
+                ['id_product' => 2, 'id_product_attribute' => 0, 'id_customization' => 0, 'cart_quantity' => 1],
             ],
             // Known updates
             [
@@ -100,13 +101,13 @@ class CartProductsComparatorTest extends TestCase
         yield [
             // Previous products
             [
-                ['id_product' => 1, 'id_product_attribute' => 0, 'cart_quantity' => 3],
-                ['id_product' => 2, 'id_product_attribute' => 0, 'cart_quantity' => 1],
+                ['id_product' => 1, 'id_product_attribute' => 0, 'id_customization' => 0, 'cart_quantity' => 3],
+                ['id_product' => 2, 'id_product_attribute' => 0, 'id_customization' => 0, 'cart_quantity' => 1],
             ],
             // New products
             [
-                ['id_product' => 1, 'id_product_attribute' => 0, 'cart_quantity' => 1],
-                ['id_product' => 2, 'id_product_attribute' => 0, 'cart_quantity' => 2],
+                ['id_product' => 1, 'id_product_attribute' => 0, 'id_customization' => 0, 'cart_quantity' => 1],
+                ['id_product' => 2, 'id_product_attribute' => 0, 'id_customization' => 0, 'cart_quantity' => 2],
             ],
             // Known updates
             [
@@ -121,14 +122,14 @@ class CartProductsComparatorTest extends TestCase
         yield [
             // Previous products
             [
-                ['id_product' => 1, 'id_product_attribute' => 0, 'cart_quantity' => 3],
-                ['id_product' => 2, 'id_product_attribute' => 0, 'cart_quantity' => 1],
+                ['id_product' => 1, 'id_product_attribute' => 0, 'id_customization' => 0, 'cart_quantity' => 3],
+                ['id_product' => 2, 'id_product_attribute' => 0, 'id_customization' => 0, 'cart_quantity' => 1],
             ],
             // New products
             [
-                ['id_product' => 1, 'id_product_attribute' => 0, 'cart_quantity' => 1],
-                ['id_product' => 2, 'id_product_attribute' => 0, 'cart_quantity' => 2],
-                ['id_product' => 3, 'id_product_attribute' => 0, 'cart_quantity' => 2],
+                ['id_product' => 1, 'id_product_attribute' => 0, 'id_customization' => 0, 'cart_quantity' => 1],
+                ['id_product' => 2, 'id_product_attribute' => 0, 'id_customization' => 0, 'cart_quantity' => 2],
+                ['id_product' => 3, 'id_product_attribute' => 0, 'id_customization' => 0, 'cart_quantity' => 2],
             ],
             // Known updates
             [
@@ -144,18 +145,18 @@ class CartProductsComparatorTest extends TestCase
         yield [
             // Previous products
             [
-                ['id_product' => 1, 'id_product_attribute' => 0, 'cart_quantity' => 3],
-                ['id_product' => 2, 'id_product_attribute' => 0, 'cart_quantity' => 1],
+                ['id_product' => 1, 'id_product_attribute' => 1, 'id_customization' => 0, 'cart_quantity' => 3],
+                ['id_product' => 2, 'id_product_attribute' => 0, 'id_customization' => 0, 'cart_quantity' => 1],
             ],
             // New products
             [
-                ['id_product' => 1, 'id_product_attribute' => 0, 'cart_quantity' => 1],
-                ['id_product' => 2, 'id_product_attribute' => 0, 'cart_quantity' => 2],
-                ['id_product' => 3, 'id_product_attribute' => 0, 'cart_quantity' => 2],
+                ['id_product' => 1, 'id_product_attribute' => 1, 'id_customization' => 0, 'cart_quantity' => 1],
+                ['id_product' => 2, 'id_product_attribute' => 0, 'id_customization' => 0, 'cart_quantity' => 2],
+                ['id_product' => 3, 'id_product_attribute' => 0, 'id_customization' => 0, 'cart_quantity' => 2],
             ],
             // Known updates
             [
-                new CartProductUpdate(1, 0, -2, false),
+                new CartProductUpdate(1, 1, -2, false),
             ],
             // Expected updates
             [
@@ -167,17 +168,17 @@ class CartProductsComparatorTest extends TestCase
         yield [
             // Previous products
             [
-                ['id_product' => 1, 'id_product_attribute' => 0, 'cart_quantity' => 1],
-                ['id_product' => 2, 'id_product_attribute' => 0, 'cart_quantity' => 3],
+                ['id_product' => 1, 'id_product_attribute' => 0, 'id_customization' => 0, 'cart_quantity' => 1],
+                ['id_product' => 2, 'id_product_attribute' => 0, 'id_customization' => 1, 'cart_quantity' => 3],
             ],
             // New products
             [
-                ['id_product' => 1, 'id_product_attribute' => 0, 'cart_quantity' => 1],
-                ['id_product' => 2, 'id_product_attribute' => 0, 'cart_quantity' => 2],
+                ['id_product' => 1, 'id_product_attribute' => 0, 'id_customization' => 0, 'cart_quantity' => 1],
+                ['id_product' => 2, 'id_product_attribute' => 0, 'id_customization' => 1, 'cart_quantity' => 2],
             ],
             // Known updates
             [
-                new CartProductUpdate(2, 0, -1, false),
+                new CartProductUpdate(2, 0, -1, false, 1),
             ],
             // Expected updates
             [
@@ -187,13 +188,13 @@ class CartProductsComparatorTest extends TestCase
         yield [
             // Previous products
             [
-                ['id_product' => 1, 'id_product_attribute' => 0, 'cart_quantity' => 1],
-                ['id_product' => 2, 'id_product_attribute' => 0, 'cart_quantity' => 2],
+                ['id_product' => 1, 'id_product_attribute' => 0, 'id_customization' => 0, 'cart_quantity' => 1],
+                ['id_product' => 2, 'id_product_attribute' => 0, 'id_customization' => 0, 'cart_quantity' => 2],
             ],
             // New products
             [
-                ['id_product' => 1, 'id_product_attribute' => 0, 'cart_quantity' => 1],
-                ['id_product' => 2, 'id_product_attribute' => 0, 'cart_quantity' => 3],
+                ['id_product' => 1, 'id_product_attribute' => 0, 'id_customization' => 0, 'cart_quantity' => 1],
+                ['id_product' => 2, 'id_product_attribute' => 0, 'id_customization' => 0, 'cart_quantity' => 3],
             ],
             // Known updates
             [
@@ -208,18 +209,18 @@ class CartProductsComparatorTest extends TestCase
         yield [
             // Previous products
             [
-                ['id_product' => 1, 'id_product_attribute' => 0, 'cart_quantity' => 1],
-                ['id_product' => 2, 'id_product_attribute' => 0, 'cart_quantity' => 2],
+                ['id_product' => 1, 'id_product_attribute' => 0, 'id_customization' => 0, 'cart_quantity' => 1],
+                ['id_product' => 2, 'id_product_attribute' => 0, 'id_customization' => 0, 'cart_quantity' => 2],
             ],
             // New products
             [
-                ['id_product' => 1, 'id_product_attribute' => 0, 'cart_quantity' => 1],
-                ['id_product' => 2, 'id_product_attribute' => 0, 'cart_quantity' => 2],
-                ['id_product' => 3, 'id_product_attribute' => 0, 'cart_quantity' => 1],
+                ['id_product' => 1, 'id_product_attribute' => 0, 'id_customization' => 0, 'cart_quantity' => 1],
+                ['id_product' => 2, 'id_product_attribute' => 0, 'id_customization' => 0, 'cart_quantity' => 2],
+                ['id_product' => 3, 'id_product_attribute' => 0, 'id_customization' => 1, 'cart_quantity' => 1],
             ],
             // Known updates
             [
-                new CartProductUpdate(3, 0, 1, true),
+                new CartProductUpdate(3, 0, 1, true, 1),
             ],
             // Expected updates
             [
@@ -229,22 +230,22 @@ class CartProductsComparatorTest extends TestCase
         yield [
             // Previous products
             [
-                ['id_product' => 1, 'id_product_attribute' => 0, 'cart_quantity' => 1],
-                ['id_product' => 2, 'id_product_attribute' => 0, 'cart_quantity' => 2],
+                ['id_product' => 1, 'id_product_attribute' => 0, 'id_customization' => 0, 'cart_quantity' => 1],
+                ['id_product' => 2, 'id_product_attribute' => 0, 'id_customization' => 0, 'cart_quantity' => 2],
             ],
             // New products
             [
-                ['id_product' => 1, 'id_product_attribute' => 0, 'cart_quantity' => 1],
-                ['id_product' => 2, 'id_product_attribute' => 0, 'cart_quantity' => 2],
-                ['id_product' => 3, 'id_product_attribute' => 0, 'cart_quantity' => 2],
+                ['id_product' => 1, 'id_product_attribute' => 0, 'id_customization' => 0, 'cart_quantity' => 1],
+                ['id_product' => 2, 'id_product_attribute' => 0, 'id_customization' => 0, 'cart_quantity' => 2],
+                ['id_product' => 3, 'id_product_attribute' => 0, 'id_customization' => 1, 'cart_quantity' => 2],
             ],
             // Known updates
             [
-                new CartProductUpdate(3, 0, 1, true),
+                new CartProductUpdate(3, 0, 1, true, 1),
             ],
             // Expected updates
             [
-                new CartProductUpdate(3, 0, 1, true),
+                new CartProductUpdate(3, 0, 1, true, 1),
             ],
         ];
     }
@@ -265,8 +266,9 @@ class CartProductsComparatorTest extends TestCase
     ) {
         $cart = $this->mockCart($initialProducts, $newProducts);
         $comparator = new CartProductsComparator($cart);
+        $comparator->setKnownUpdates($knownUpdatedProducts);
 
-        $modifiedProducts = $comparator->getAdditionalProducts($knownUpdatedProducts);
+        $modifiedProducts = $comparator->getAdditionalProducts();
         Assert::assertEquals($expectedModifiedProducts, $modifiedProducts);
     }
 
@@ -306,8 +308,9 @@ class CartProductsComparatorTest extends TestCase
     ) {
         $cart = $this->mockCart($initialProducts, $newProducts);
         $comparator = new CartProductsComparator($cart);
+        $comparator->setKnownUpdates($knownUpdatedProducts);
 
-        $modifiedProducts = $comparator->getUpdatedProducts($knownUpdatedProducts);
+        $modifiedProducts = $comparator->getUpdatedProducts();
         Assert::assertEquals($expectedModifiedProducts, $modifiedProducts);
     }
 

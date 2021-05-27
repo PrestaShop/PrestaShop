@@ -30,9 +30,14 @@ namespace PrestaShop\PrestaShop\Adapter\Product\Combination\QueryHandler;
 
 use Combination;
 use DateTime;
-use PrestaShop\Decimal\DecimalNumber;
+use PrestaShop\PrestaShop\Adapter\Attribute\Repository\AttributeRepository;
 use PrestaShop\PrestaShop\Adapter\Product\Combination\Repository\CombinationRepository;
+use PrestaShop\PrestaShop\Adapter\Product\Image\Repository\ProductImageRepository;
+use PrestaShop\PrestaShop\Adapter\Product\Repository\ProductRepository;
 use PrestaShop\PrestaShop\Adapter\Product\Stock\Repository\StockAvailableRepository;
+use PrestaShop\PrestaShop\Adapter\Tax\TaxComputer;
+use PrestaShop\PrestaShop\Core\Domain\Country\ValueObject\CountryId;
+use PrestaShop\PrestaShop\Core\Domain\Language\ValueObject\LanguageId;
 use PrestaShop\PrestaShop\Core\Domain\Product\Combination\Query\GetCombinationForEditing;
 use PrestaShop\PrestaShop\Core\Domain\Product\Combination\QueryHandler\GetCombinationForEditingHandlerInterface;
 use PrestaShop\PrestaShop\Core\Domain\Product\Combination\QueryResult\CombinationDetails;
@@ -40,7 +45,12 @@ use PrestaShop\PrestaShop\Core\Domain\Product\Combination\QueryResult\Combinatio
 use PrestaShop\PrestaShop\Core\Domain\Product\Combination\QueryResult\CombinationPrices;
 use PrestaShop\PrestaShop\Core\Domain\Product\Combination\QueryResult\CombinationStock;
 use PrestaShop\PrestaShop\Core\Domain\Product\Combination\ValueObject\CombinationId;
+use PrestaShop\PrestaShop\Core\Domain\Product\Image\ValueObject\ImageId;
+use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductId;
+use PrestaShop\PrestaShop\Core\Domain\TaxRulesGroup\ValueObject\TaxRulesGroupId;
 use PrestaShop\PrestaShop\Core\Util\DateTime\DateTime as DateTimeUtil;
+use PrestaShop\PrestaShop\Core\Util\Number\NumberExtractor;
+use Product;
 
 /**
  * Handles @see GetCombinationForEditing query using legacy object model
@@ -58,15 +68,71 @@ final class GetCombinationForEditingHandler implements GetCombinationForEditingH
     private $stockAvailableRepository;
 
     /**
+     * @var AttributeRepository
+     */
+    private $attributeRepository;
+
+    /**
+     * @var ProductRepository
+     */
+    private $productRepository;
+
+    /**
+     * @var ProductImageRepository
+     */
+    private $productImageRepository;
+
+    /**
+     * @var int
+     */
+    private $contextLanguageId;
+
+    /**
+     * @var NumberExtractor
+     */
+    private $numberExtractor;
+
+    /**
+     * @var TaxComputer
+     */
+    private $taxComputer;
+
+    /**
+     * @var int
+     */
+    private $countryId;
+
+    /**
      * @param CombinationRepository $combinationRepository
      * @param StockAvailableRepository $stockAvailableRepository
+     * @param AttributeRepository $attributeRepository
+     * @param ProductRepository $productRepository
+     * @param ProductImageRepository $productImageRepository
+     * @param NumberExtractor $numberExtractor
+     * @param TaxComputer $taxComputer
+     * @param int $contextLanguageId
+     * @param int $countryId
      */
     public function __construct(
         CombinationRepository $combinationRepository,
-        StockAvailableRepository $stockAvailableRepository
+        StockAvailableRepository $stockAvailableRepository,
+        AttributeRepository $attributeRepository,
+        ProductRepository $productRepository,
+        ProductImageRepository $productImageRepository,
+        NumberExtractor $numberExtractor,
+        TaxComputer $taxComputer,
+        int $contextLanguageId,
+        int $countryId
     ) {
         $this->combinationRepository = $combinationRepository;
         $this->stockAvailableRepository = $stockAvailableRepository;
+        $this->attributeRepository = $attributeRepository;
+        $this->productRepository = $productRepository;
+        $this->productImageRepository = $productImageRepository;
+        $this->numberExtractor = $numberExtractor;
+        $this->taxComputer = $taxComputer;
+        $this->contextLanguageId = $contextLanguageId;
+        $this->countryId = $countryId;
     }
 
     /**
@@ -75,12 +141,40 @@ final class GetCombinationForEditingHandler implements GetCombinationForEditingH
     public function handle(GetCombinationForEditing $query): CombinationForEditing
     {
         $combination = $this->combinationRepository->get($query->getCombinationId());
+        $productId = new ProductId((int) $combination->id_product);
+        $product = $this->productRepository->get($productId);
 
         return new CombinationForEditing(
+            $query->getCombinationId()->getValue(),
+            $productId->getValue(),
+            $this->getCombinationName($query->getCombinationId()),
             $this->getDetails($combination),
-            $this->getPrices($combination),
-            $this->getStock($combination)
+            $this->getPrices($combination, $product),
+            $this->getStock($combination),
+            $this->getImages($combination)
         );
+    }
+
+    /**
+     * @param CombinationId $combinationId
+     *
+     * @return string
+     */
+    private function getCombinationName(CombinationId $combinationId): string
+    {
+        $attributesInformation = $this->attributeRepository->getAttributesInfoByCombinationIds(
+            [$combinationId->getValue()],
+            new LanguageId($this->contextLanguageId)
+        );
+        $attributes = $attributesInformation[$combinationId->getValue()];
+
+        return implode(', ', array_map(function ($attribute) {
+            return sprintf(
+                '%s - %s',
+                $attribute['attribute_group_name'],
+                $attribute['attribute_name']
+            );
+        }, $attributes));
     }
 
     /**
@@ -96,22 +190,31 @@ final class GetCombinationForEditingHandler implements GetCombinationForEditingH
             $combination->mpn,
             $combination->reference,
             $combination->upc,
-            new DecimalNumber($combination->weight)
+            $this->numberExtractor->extract($combination, 'weight')
         );
     }
 
     /**
      * @param Combination $combination
+     * @param Product $product
      *
      * @return CombinationPrices
      */
-    private function getPrices(Combination $combination): CombinationPrices
+    private function getPrices(Combination $combination, Product $product): CombinationPrices
     {
+        $priceTaxExcluded = $this->numberExtractor->extract($combination, 'price');
+        $priceTaxIncluded = $this->taxComputer->computePriceWithTaxes(
+            $priceTaxExcluded,
+            new TaxRulesGroupId((int) $product->id_tax_rules_group),
+            new CountryId($this->countryId)
+        );
+
         return new CombinationPrices(
-            new DecimalNumber($combination->ecotax),
-            new DecimalNumber($combination->price),
-            new DecimalNumber($combination->unit_price_impact),
-            new DecimalNumber($combination->wholesale_price)
+            $this->numberExtractor->extract($combination, 'ecotax'),
+            $priceTaxExcluded,
+            $priceTaxIncluded,
+            $this->numberExtractor->extract($combination, 'unit_price_impact'),
+            $this->numberExtractor->extract($combination, 'wholesale_price')
         );
     }
 
@@ -132,5 +235,23 @@ final class GetCombinationForEditingHandler implements GetCombinationForEditingH
             $stockAvailable->location,
             DateTimeUtil::NULL_DATE === $combination->available_date ? null : new DateTime($combination->available_date)
         );
+    }
+
+    /**
+     * @param Combination $combination
+     *
+     * @return int[]
+     */
+    private function getImages(Combination $combination): array
+    {
+        $combinationId = (int) $combination->id;
+        $combinationImageIds = $this->productImageRepository->getImagesIdsForCombinations([$combinationId]);
+        if (empty($combinationImageIds[$combinationId])) {
+            return [];
+        }
+
+        return array_map(function (ImageId $imageId) {
+            return $imageId->getValue();
+        }, $combinationImageIds[$combinationId]);
     }
 }

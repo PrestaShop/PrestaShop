@@ -16,7 +16,7 @@ Feature: Update product categories from Back Office (BO)
   Scenario: I assign product to categories
     Given I add product "product1" with following information:
       | name[en-US] | eastern european tracksuit |
-      | is_virtual  | false                      |
+      | type        | standard                   |
     And product "product1" should be assigned to default category
     Then product product1 should be assigned to following categories:
       | categories       | [home] |
@@ -31,7 +31,7 @@ Feature: Update product categories from Back Office (BO)
   Scenario: I assign product to disabled categories
     Given I add product "product2" with following information:
       | name[en-US] | ring of wealth |
-      | is_virtual  | false          |
+      | type        | standard       |
     And I disable category "women"
     And I disable category "accessories"
     When I assign product product2 to following categories:
@@ -55,7 +55,7 @@ Feature: Update product categories from Back Office (BO)
   Scenario: I assign default category which is not in the list of categories
     Given I add product "product3" with following information:
       | name[en-US] | golden bracelet |
-      | is_virtual  | false           |
+      | type        | standard        |
     And product product3 should be assigned to following categories:
       | categories       | [home] |
       | default category | home   |

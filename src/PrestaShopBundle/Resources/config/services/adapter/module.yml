@@ -81,3 +81,6 @@ services:
 
     prestashop.adapter.legacy.module:
         class: PrestaShop\PrestaShop\Adapter\Module\Module
+
+    prestashop.adapter.module.repository.module_repository:
+        class: 'PrestaShop\PrestaShop\Adapter\Module\Repository\ModuleRepository'

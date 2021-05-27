@@ -27,7 +27,6 @@ declare(strict_types=1);
 
 namespace PrestaShop\PrestaShop\Adapter\Product\Combination\CommandHandler;
 
-use PrestaShop\PrestaShop\Adapter\Product\Combination\Repository\CombinationRepository;
 use PrestaShop\PrestaShop\Adapter\Product\Update\ProductSupplierUpdater;
 use PrestaShop\PrestaShop\Core\Domain\Product\Combination\Command\RemoveAllAssociatedCombinationSuppliersCommand;
 use PrestaShop\PrestaShop\Core\Domain\Product\Combination\CommandHandler\RemoveAllAssociatedCombinationSuppliersHandlerInterface;
@@ -38,25 +37,17 @@ use PrestaShop\PrestaShop\Core\Domain\Product\Combination\CommandHandler\RemoveA
 final class RemoveAllAssociatedCombinationSuppliersHandler implements RemoveAllAssociatedCombinationSuppliersHandlerInterface
 {
     /**
-     * @var CombinationRepository
-     */
-    private $combinationRepository;
-
-    /**
      * @var ProductSupplierUpdater
      */
     private $productSupplierUpdater;
 
     /**
-     * @param CombinationRepository $combinationRepository
      * @param ProductSupplierUpdater $productSupplierUpdater
      */
     public function __construct(
-        CombinationRepository $combinationRepository,
         ProductSupplierUpdater $productSupplierUpdater
     ) {
         $this->productSupplierUpdater = $productSupplierUpdater;
-        $this->combinationRepository = $combinationRepository;
     }
 
     /**

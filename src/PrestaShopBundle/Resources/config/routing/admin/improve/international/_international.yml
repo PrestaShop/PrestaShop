@@ -29,3 +29,7 @@ _state:
 _tax_rules_groups:
   resource: "tax_rules_groups.yml"
   prefix: /tax_rules_groups/
+  
+_zone:
+  resource: "zone.yml"
+  prefix: /zones/

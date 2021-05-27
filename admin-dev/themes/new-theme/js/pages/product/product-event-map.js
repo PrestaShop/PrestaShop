@@ -24,9 +24,30 @@
  */
 
 export default {
+  productModelUpdated: 'productModelUpdated',
+  updatedProductModel: 'updatedProductModel',
+  updatedProductField: 'updatedProductField',
   updateSubmitButtonState: 'updateSubmitButtonState',
   customizations: {
     rowRemoved: 'customizationRowRemoved',
     rowAdded: 'customizationRowAdded',
+  },
+  dropzone: {
+    addedFile: 'addedfile',
+    error: 'error',
+    success: 'success',
+    languageSelected: 'languageSelected',
+    photoswipe: {
+      destroy: 'destroy',
+      closeGallery: 'closeGallery',
+    },
+  },
+  combinations: {
+    refreshPage: 'refreshPage',
+    refreshCombinationList: 'refreshCombinationList',
+    updateAttributeGroups: 'updateAttributeGroups',
+    combinationGeneratorReady: 'combinationGeneratorReady',
+    openCombinationsGenerator: 'openCombinationsGenerator',
+    clearFilters: 'clearFilters',
   },
 };

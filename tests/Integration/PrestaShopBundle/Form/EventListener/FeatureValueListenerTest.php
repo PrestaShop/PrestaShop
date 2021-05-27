@@ -34,14 +34,12 @@ use PrestaShop\PrestaShop\Core\Form\ConfigurableFormChoiceProviderInterface;
 use PrestaShopBundle\Form\Admin\Sell\Product\EventListener\FeatureValueListener;
 use PrestaShopBundle\Form\Admin\Type\CommonAbstractType;
 use PrestaShopBundle\Form\FormCloner;
-use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\FormBuilderInterface;
-use Symfony\Component\Form\FormEvent;
 use Symfony\Component\Form\FormEvents;
 use Symfony\Component\Form\FormInterface;
 
-class FeatureValueListenerTest extends KernelTestCase
+class FeatureValueListenerTest extends FormListenerTestCase
 {
     /**
      * @var FormCloner
@@ -54,7 +52,6 @@ class FeatureValueListenerTest extends KernelTestCase
     protected function setUp()
     {
         parent::setUp();
-        self::bootKernel();
         $this->formCloner = new FormCloner();
     }
 
@@ -82,7 +79,7 @@ class FeatureValueListenerTest extends KernelTestCase
         $providerMock = $this->createChoiceProviderMock($choices, $expectedFilters);
         $listener = new FeatureValueListener($providerMock, $this->formCloner);
 
-        $form = $this->createForm(SimpleFormTest::class);
+        $form = $this->createForm(SimpleFeaturesFormTest::class);
         $this->assertFormChoices($form, []);
 
         $eventMock = $this->createEventMock($formData, $form);
@@ -262,41 +259,9 @@ class FeatureValueListenerTest extends KernelTestCase
 
         return $providerMock;
     }
-
-    /**
-     * @param array $data
-     * @param FormInterface $form
-     *
-     * @return MockObject|FormEvent
-     */
-    private function createEventMock(array $data, FormInterface $form)
-    {
-        $eventMock = $this->getMockBuilder(FormEvent::class)
-            ->disableOriginalConstructor()
-            ->setMethods(['getData', 'getForm'])
-            ->getMock()
-        ;
-
-        $eventMock->expects($this->once())->method('getData')->willReturn($data);
-        $eventMock->expects($this->once())->method('getForm')->willReturn($form);
-
-        return $eventMock;
-    }
-
-    /**
-     * @param string $type
-     * @param array $options
-     * @param null $data
-     *
-     * @return FormInterface
-     */
-    private function createForm(string $type, array $options = [], $data = null): FormInterface
-    {
-        return self::$kernel->getContainer()->get('form.factory')->create($type, $data, $options);
-    }
 }
 
-class SimpleFormTest extends CommonAbstractType
+class SimpleFeaturesFormTest extends CommonAbstractType
 {
     public function buildForm(FormBuilderInterface $builder, array $options)
     {

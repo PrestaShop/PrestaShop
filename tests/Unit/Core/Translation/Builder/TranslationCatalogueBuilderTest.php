@@ -30,13 +30,13 @@ namespace Tests\Unit\Core\Translation\Builder;
 use Exception;
 use InvalidArgumentException;
 use PHPUnit\Framework\TestCase;
+use PrestaShop\PrestaShop\Core\Translation\Builder\Map\Catalogue;
 use PrestaShop\PrestaShop\Core\Translation\Builder\TranslationCatalogueBuilder;
-use PrestaShop\PrestaShop\Core\Translation\DTO\Translations;
-use PrestaShop\PrestaShop\Core\Translation\Exception\UnexpectedTranslationTypeException;
-use PrestaShop\PrestaShop\Core\Translation\Provider\CatalogueLayersProviderInterface;
-use PrestaShop\PrestaShop\Core\Translation\Provider\CatalogueProviderFactory;
-use PrestaShop\PrestaShop\Core\Translation\Provider\DefaultCatalogueProvider;
-use PrestaShop\PrestaShop\Core\Translation\Provider\FileTranslatedCatalogueProvider;
+use PrestaShop\PrestaShop\Core\Translation\Storage\Provider\CatalogueLayersProviderInterface;
+use PrestaShop\PrestaShop\Core\Translation\Storage\Provider\CatalogueProviderFactory;
+use PrestaShop\PrestaShop\Core\Translation\Storage\Provider\Definition\BackofficeProviderDefinition;
+use PrestaShop\PrestaShop\Core\Translation\Storage\Provider\Finder\DefaultCatalogueFinder;
+use PrestaShop\PrestaShop\Core\Translation\Storage\Provider\Finder\FileTranslatedCatalogueFinder;
 use Symfony\Component\Translation\MessageCatalogue;
 
 class TranslationCatalogueBuilderTest extends TestCase
@@ -75,7 +75,7 @@ class TranslationCatalogueBuilderTest extends TestCase
      */
     private $translationCatalogueBuilder;
 
-    protected function setUp()
+    protected function setUp(): void
     {
         $provider = $this->createMock(CatalogueLayersProviderInterface::class);
 
@@ -107,74 +107,31 @@ class TranslationCatalogueBuilderTest extends TestCase
         $this->translationCatalogueBuilder = new TranslationCatalogueBuilder($providerFactory);
     }
 
-    public function testGetDomainCatalogueFailsWhenGivenWrongType()
-    {
-        $this->expectException(UnexpectedTranslationTypeException::class);
-        $this->translationCatalogueBuilder->getDomainCatalogue(
-            'toto',
-            'en',
-            'domain',
-            [],
-            'theme',
-            'module'
-        );
-    }
-
-    public function testGetDomainCatalogueFailsWhenDomainIsEmpty()
+    public function testGetDomainCatalogueFailsWhenDomainIsEmpty(): void
     {
         $this->expectException(InvalidArgumentException::class);
         $this->translationCatalogueBuilder->getDomainCatalogue(
-            TranslationCatalogueBuilder::TYPE_BACK,
+            new BackofficeProviderDefinition(),
             'en',
             '',
-            [],
-            'theme',
-            'module'
+            []
         );
     }
 
-    public function testGetDomainCatalogueFailsWhenTypeIsThemeButEmptyTheme()
-    {
-        $this->expectException(Exception::class);
-        $this->translationCatalogueBuilder->getDomainCatalogue(
-            TranslationCatalogueBuilder::TYPE_THEMES,
-            'en',
-            'domain',
-            [],
-            '',
-            'module'
-        );
-    }
-
-    public function testGetDomainCatalogueFailsWhenTypeIsModuleButEmptyModule()
-    {
-        $this->expectException(Exception::class);
-        $this->translationCatalogueBuilder->getDomainCatalogue(
-            TranslationCatalogueBuilder::TYPE_MODULES,
-            'en',
-            'domain',
-            [],
-            'theme',
-            ''
-        );
-    }
-
-    public function testGetDomainCatalogueWithNonExistentDomain()
+    public function testGetDomainCatalogueWithNonExistentDomain(): void
     {
         $catalogue = $this->translationCatalogueBuilder->getDomainCatalogue(
-            TranslationCatalogueBuilder::TYPE_THEMES,
+            new BackofficeProviderDefinition(),
             'en',
             'SomeFakeDomain',
-            [],
-            'theme',
-            'module'
+            []
         );
 
         $this->assertSame([
             'info' => [
                 'locale' => 'en',
                 'domain' => 'SomeFakeDomain',
-                'theme' => 'theme',
+                'theme' => null,
                 'total_translations' => 0,
                 'total_missing_translations' => 0,
             ],
@@ -197,12 +154,10 @@ class TranslationCatalogueBuilderTest extends TestCase
         array $expectedArrayCatalogue
     ) {
         $catalogue = $translationCatalogueBuilder->getDomainCatalogue(
-            $parameters['type'],
+            $parameters['providerDefinition'],
             $parameters['locale'],
             $parameters['domain'],
-            $parameters['search'],
-            $parameters['theme'],
-            $parameters['module']
+            $parameters['search']
         );
 
         $this->assertSame($expectedArrayCatalogue, $catalogue);
@@ -219,16 +174,14 @@ class TranslationCatalogueBuilderTest extends TestCase
     /**
      * In this test we search for one word and it returns result in one message, one domain.
      */
-    public function testGetDomainCatalogueWithOneWordSearch()
+    public function testGetDomainCatalogueWithOneWordSearch(): void
     {
         // Search single word
         $catalogue = $this->translationCatalogueBuilder->getDomainCatalogue(
-            TranslationCatalogueBuilder::TYPE_BACK,
+            new BackofficeProviderDefinition(),
             'en',
             'AdminSecondDomain',
-            ['First'],
-            'theme',
-            'module'
+            ['First']
         );
 
         $this->assertCount(1, $catalogue['data']);
@@ -252,16 +205,14 @@ class TranslationCatalogueBuilderTest extends TestCase
      * In this test, we search for multiple words in one term.
      * We also test that if the search doesn't match the message case, it will be found anyway.
      */
-    public function testGetDomainCatalogueWithCaseInsensitiveSearchTerms()
+    public function testGetDomainCatalogueWithCaseInsensitiveSearchTerms(): void
     {
         // Search multiple words and case insensitive
         $catalogue = $this->translationCatalogueBuilder->getDomainCatalogue(
-            TranslationCatalogueBuilder::TYPE_BACK,
+            new BackofficeProviderDefinition(),
             'en',
             'AdminSecondDomain',
-            ['fIrst wORDING'],
-            'theme',
-            'module'
+            ['fIrst wORDING']
         );
 
         $this->assertCount(1, $catalogue['data']);
@@ -284,16 +235,14 @@ class TranslationCatalogueBuilderTest extends TestCase
     /**
      * In this test, we expect that searching a word which match multiple messages will return all the matching messages.
      */
-    public function testGetDomainCatalogueWithMultipleResultsSearch()
+    public function testGetDomainCatalogueWithMultipleResultsSearch(): void
     {
         // Search with multiple results
         $catalogue = $this->translationCatalogueBuilder->getDomainCatalogue(
-            TranslationCatalogueBuilder::TYPE_BACK,
+            new BackofficeProviderDefinition(),
             'en',
             'AdminSecondDomain',
-            ['Domain'],
-            'theme',
-            'module'
+            ['Domain']
         );
 
         $this->assertCount(2, $catalogue['data']);
@@ -327,19 +276,17 @@ class TranslationCatalogueBuilderTest extends TestCase
     /**
      * In this test, we search multiple words. If a message contains any of these words, it will be returned.
      */
-    public function testGetDomainCatalogueWithMultipleWordsSearch()
+    public function testGetDomainCatalogueWithMultipleWordsSearch(): void
     {
         // Search with multiple words
         $catalogue = $this->translationCatalogueBuilder->getDomainCatalogue(
-            TranslationCatalogueBuilder::TYPE_BACK,
+            new BackofficeProviderDefinition(),
             'en',
             'AdminSecondDomain',
             [
                 'Domain',
                 'Second',
-            ],
-            'theme',
-            'module'
+            ]
         );
 
         $this->assertCount(2, $catalogue['data']);
@@ -374,16 +321,14 @@ class TranslationCatalogueBuilderTest extends TestCase
      * In this test, we search a term that exists in no message.
      * Doing this we also test that the words are not taken individually but all the term is search.
      */
-    public function testGetDomainCatalogueWithNoResultSearch()
+    public function testGetDomainCatalogueWithNoResultSearch(): void
     {
         // Search no result
         $catalogue = $this->translationCatalogueBuilder->getDomainCatalogue(
-            TranslationCatalogueBuilder::TYPE_BACK,
+            new BackofficeProviderDefinition(),
             'en',
             'AdminFirstDomain',
-            ['Second Domain'],
-            'theme',
-            'module'
+            ['Second Domain']
         );
 
         $this->assertCount(0, $catalogue['data']);
@@ -392,14 +337,12 @@ class TranslationCatalogueBuilderTest extends TestCase
         $this->assertSame(0, $catalogue['info']['total_missing_translations']);
     }
 
-    public function testGetCatalogueStructure()
+    public function testGetCatalogueStructure(): void
     {
         $messages = $this->translationCatalogueBuilder->getCatalogue(
-            TranslationCatalogueBuilder::TYPE_BACK,
+            new BackofficeProviderDefinition(),
             self::LOCALE,
-            [],
-            'theme',
-            'module'
+            []
         );
         $this->assertIsArray($messages);
 
@@ -408,23 +351,21 @@ class TranslationCatalogueBuilderTest extends TestCase
         $this->assertArrayHasKey('AdminSecondDomain', $messages);
 
         $this->assertCount(3, $messages['AdminFirstDomain']);
-        $this->assertArrayHasKey(Translations::METADATA_KEY_NAME, $messages['AdminFirstDomain']);
-        $this->assertArrayHasKey('count', $messages['AdminFirstDomain'][Translations::METADATA_KEY_NAME]);
-        $this->assertArrayHasKey('missing_translations', $messages['AdminFirstDomain'][Translations::METADATA_KEY_NAME]);
+        $this->assertArrayHasKey(Catalogue::METADATA_KEY_NAME, $messages['AdminFirstDomain']);
+        $this->assertArrayHasKey('count', $messages['AdminFirstDomain'][Catalogue::METADATA_KEY_NAME]);
+        $this->assertArrayHasKey('missing_translations', $messages['AdminFirstDomain'][Catalogue::METADATA_KEY_NAME]);
         $this->assertArrayHasKey('First Domain First Wording', $messages['AdminFirstDomain']);
         $this->assertArrayHasKey('default', $messages['AdminFirstDomain']['First Domain First Wording']);
         $this->assertArrayHasKey('project', $messages['AdminFirstDomain']['First Domain First Wording']);
         $this->assertArrayHasKey('user', $messages['AdminFirstDomain']['First Domain First Wording']);
     }
 
-    public function testGetCatalogue()
+    public function testGetCatalogue(): void
     {
         $messages = $this->translationCatalogueBuilder->getCatalogue(
-            TranslationCatalogueBuilder::TYPE_BACK,
+            new BackofficeProviderDefinition(),
             self::LOCALE,
-            [],
-            'theme',
-            'module'
+            []
         );
         $this->assertIsArray($messages);
 
@@ -437,7 +378,7 @@ class TranslationCatalogueBuilderTest extends TestCase
         $this->assertSame([
             'count' => 2,
             'missing_translations' => 0,
-        ], $messages['AdminFirstDomain'][Translations::METADATA_KEY_NAME]);
+        ], $messages['AdminFirstDomain'][Catalogue::METADATA_KEY_NAME]);
 
         $this->assertSame([
             'default' => 'First Domain First Wording',
@@ -453,7 +394,7 @@ class TranslationCatalogueBuilderTest extends TestCase
         $this->assertSame([
             'count' => 2,
             'missing_translations' => 1,
-        ], $messages['AdminSecondDomain'][Translations::METADATA_KEY_NAME]);
+        ], $messages['AdminSecondDomain'][Catalogue::METADATA_KEY_NAME]);
 
         $this->assertSame([
             'default' => 'Second Domain First Wording',
@@ -482,7 +423,7 @@ class TranslationCatalogueBuilderTest extends TestCase
         array $defaultTranslations,
         array $fileTranslatedTranslations,
         array $userTranslatedTranslations
-    ) {
+    ): TranslationCatalogueBuilder {
         $provider = $this->createMock(CatalogueLayersProviderInterface::class);
 
         // Build Default catalogue
@@ -524,18 +465,16 @@ class TranslationCatalogueBuilderTest extends TestCase
         return [
             $translationCatalogueBuilder,
             [
-                'type' => TranslationCatalogueBuilder::TYPE_BACK,
+                'providerDefinition' => new BackofficeProviderDefinition(),
                 'locale' => 'en',
                 'domain' => 'AdminSecondDomain',
                 'search' => [],
-                'theme' => 'theme',
-                'module' => 'module',
             ],
             [
                 'info' => [
                     'locale' => 'en',
                     'domain' => 'AdminSecondDomain',
-                    'theme' => 'theme',
+                    'theme' => null,
                     'total_translations' => 2,
                     'total_missing_translations' => 1,
                 ],
@@ -568,10 +507,10 @@ class TranslationCatalogueBuilderTest extends TestCase
     private function getDomainCatalogueStructureRealData(): array
     {
         $translationsCatalogueDirectory = __DIR__ . '/../Resources/';
-        $defaultTranslations = (new DefaultCatalogueProvider($translationsCatalogueDirectory, ['#^Admin[A-Z]#']))
+        $defaultTranslations = (new DefaultCatalogueFinder($translationsCatalogueDirectory, ['#^Admin[A-Z]#']))
             ->getCatalogue(self::LOCALE)->all();
 
-        $fileTranslatedTranslations = (new FileTranslatedCatalogueProvider($translationsCatalogueDirectory, ['#^Admin[A-Z]#']))
+        $fileTranslatedTranslations = (new FileTranslatedCatalogueFinder($translationsCatalogueDirectory, ['#^Admin[A-Z]#']))
             ->getCatalogue(self::LOCALE)->all();
 
         $translationCatalogueBuilder = $this->buildCatalogueProviderFromCatalogues(
@@ -583,18 +522,16 @@ class TranslationCatalogueBuilderTest extends TestCase
         return [
             $translationCatalogueBuilder,
             [
-                'type' => TranslationCatalogueBuilder::TYPE_BACK,
+                'providerDefinition' => new BackofficeProviderDefinition(),
                 'locale' => 'en',
                 'domain' => 'AdminCatalogFeature',
                 'search' => ['Delivery'],
-                'theme' => 'theme',
-                'module' => 'module',
             ],
             [
                 'info' => [
                     'locale' => 'en',
                     'domain' => 'AdminCatalogFeature',
-                    'theme' => 'theme',
+                    'theme' => null,
                     'total_translations' => 5,
                     'total_missing_translations' => 0,
                 ],

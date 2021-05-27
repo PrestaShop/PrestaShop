@@ -39,13 +39,16 @@ use PrestaShop\PrestaShop\Core\Domain\Category\Exception\CannotAddCategoryExcept
 use PrestaShop\PrestaShop\Core\Domain\Category\Exception\CannotDeleteImageException;
 use PrestaShop\PrestaShop\Core\Domain\Category\Exception\CannotDeleteRootCategoryForShopException;
 use PrestaShop\PrestaShop\Core\Domain\Category\Exception\CannotEditCategoryException;
+use PrestaShop\PrestaShop\Core\Domain\Category\Exception\CannotEditRootCategoryException;
 use PrestaShop\PrestaShop\Core\Domain\Category\Exception\CannotUpdateCategoryStatusException;
 use PrestaShop\PrestaShop\Core\Domain\Category\Exception\CategoryConstraintException;
 use PrestaShop\PrestaShop\Core\Domain\Category\Exception\CategoryException;
 use PrestaShop\PrestaShop\Core\Domain\Category\Exception\CategoryNotFoundException;
 use PrestaShop\PrestaShop\Core\Domain\Category\Exception\MenuThumbnailsLimitException;
+use PrestaShop\PrestaShop\Core\Domain\Category\Query\GetCategoriesTree;
 use PrestaShop\PrestaShop\Core\Domain\Category\Query\GetCategoryForEditing;
 use PrestaShop\PrestaShop\Core\Domain\Category\Query\GetCategoryIsEnabled;
+use PrestaShop\PrestaShop\Core\Domain\Category\QueryResult\CategoryForTree;
 use PrestaShop\PrestaShop\Core\Domain\Category\QueryResult\EditableCategory;
 use PrestaShop\PrestaShop\Core\Domain\Category\ValueObject\MenuThumbnailId;
 use PrestaShop\PrestaShop\Core\Domain\ShowcaseCard\Query\GetShowcaseCardIsClosed;
@@ -53,7 +56,6 @@ use PrestaShop\PrestaShop\Core\Domain\ShowcaseCard\ValueObject\ShowcaseCard;
 use PrestaShop\PrestaShop\Core\Grid\Definition\Factory\CategoryGridDefinitionFactory;
 use PrestaShop\PrestaShop\Core\Search\Filters\CategoryFilters;
 use PrestaShopBundle\Component\CsvResponse;
-use PrestaShopBundle\Controller\Admin\CommonController;
 use PrestaShopBundle\Controller\Admin\FrameworkBundleAdminController;
 use PrestaShopBundle\Form\Admin\Sell\Category\DeleteCategoriesType;
 use PrestaShopBundle\Security\Annotation\AdminSecurity;
@@ -342,7 +344,7 @@ class CategoryController extends FrameworkBundleAdminController
             if (!$editableCategory->isRootCategory()) {
                 return $this->redirectToRoute('admin_categories_edit', ['categoryId' => $categoryId]);
             }
-        } catch (CategoryNotFoundException $e) {
+        } catch (CannotEditRootCategoryException | CategoryNotFoundException $e) {
             $this->addFlash('error', $this->getErrorMessageForException($e, $this->getErrorMessages()));
 
             return $this->redirectToRoute('admin_categories_index');
@@ -757,6 +759,48 @@ class CategoryController extends FrameworkBundleAdminController
     }
 
     /**
+     * @AdminSecurity("is_granted('read', request.get('_legacy_controller')) || is_granted('create', 'AdminProducts')")
+     *
+     * @param Request $request
+     *
+     * @return JsonResponse
+     */
+    public function getCategoriesTreeAction(Request $request): JsonResponse
+    {
+        $langId = $request->query->getInt('langId') ?: (int) $this->getContextLangId();
+        $categoriesTree = $this->getQueryBus()->handle(new GetCategoriesTree($langId));
+
+        return $this->json($this->formatCategoriesTreeForPresentation($categoriesTree, $langId));
+    }
+
+    /**
+     * @param CategoryForTree[] $categoriesTree
+     * @param int $langId
+     *
+     * @return array
+     */
+    private function formatCategoriesTreeForPresentation(array $categoriesTree, int $langId): array
+    {
+        if (empty($categoriesTree)) {
+            return [];
+        }
+
+        $formattedCategories = [];
+        foreach ($categoriesTree as $categoryForTree) {
+            $children = $this->formatCategoriesTreeForPresentation($categoryForTree->getChildren(), $langId);
+
+            $names = $categoryForTree->getLocalizedNames();
+            $formattedCategories[] = [
+                'id' => $categoryForTree->getCategoryId(),
+                'name' => $names[$langId] ?? reset($names),
+                'children' => $children,
+            ];
+        }
+
+        return $formattedCategories;
+    }
+
+    /**
      * @param Request $request
      *
      * @return array
@@ -811,6 +855,10 @@ class CategoryController extends FrameworkBundleAdminController
             ),
             CannotAddCategoryException::class => $this->trans(
                 'An error occurred while creating the category.',
+                'Admin.Catalog.Notification'
+            ),
+            CannotEditRootCategoryException::class => $this->trans(
+                'The root category of a shop cannot be edited.',
                 'Admin.Catalog.Notification'
             ),
             CannotEditCategoryException::class => $this->trans(

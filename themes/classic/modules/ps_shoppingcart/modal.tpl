@@ -42,7 +42,6 @@
                     data-full-size-image-url="{$product.default_image.large.url}"
                     title="{$product.default_image.legend}"
                     alt="{$product.default_image.legend}"
-                    itemprop="image"
                     loading="lazy"
                     class="product-image"
                   >

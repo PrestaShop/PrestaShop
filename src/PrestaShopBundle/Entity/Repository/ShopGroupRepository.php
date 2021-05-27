@@ -34,4 +34,22 @@ namespace PrestaShopBundle\Entity\Repository;
  */
 class ShopGroupRepository extends \Doctrine\ORM\EntityRepository
 {
+    /**
+     * Get a list of shop groups for a given search term
+     *
+     * @param string $searchTerm
+     *
+     * @return array
+     */
+    public function findBySearchTerm(string $searchTerm): array
+    {
+        $qb = $this->createQueryBuilder('sg')
+            ->select('sg')
+            ->where('sg.active = true')
+            ->andWhere('sg.deleted = false')
+            ->andWhere('LOWER(sg.name) LIKE :searchTerm')
+            ->setParameter('searchTerm', '%' . strtolower($searchTerm) . '%');
+
+        return $qb->getQuery()->getResult();
+    }
 }

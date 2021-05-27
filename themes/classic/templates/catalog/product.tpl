@@ -26,10 +26,6 @@
 
 {block name='head' append}
   <meta property="og:type" content="product">
-  <meta property="og:url" content="{$urls.current_url}">
-  <meta property="og:title" content="{$page.meta.title}">
-  <meta property="og:site_name" content="{$shop.name}">
-  <meta property="og:description" content="{$page.meta.description}">
   {if $product.cover}
     <meta property="og:image" content="{$product.cover.large.url}">
   {/if}
@@ -46,10 +42,14 @@
   {/if}
 {/block}
 
+{block name='head_microdata_special'}
+  {include file='_partials/microdata/product-jsonld.tpl'}
+{/block}
+
 {block name='content'}
 
-  <section id="main" itemscope itemtype="https://schema.org/Product">
-    <meta itemprop="url" content="{$product.url}">
+  <section id="main">
+    <meta content="{$product.url}">
 
     <div class="row product-container js-product-container">
       <div class="col-md-6">
@@ -73,7 +73,7 @@
         <div class="col-md-6">
           {block name='page_header_container'}
             {block name='page_header'}
-              <h1 class="h1" itemprop="name">{block name='page_title'}{$product.name}{/block}</h1>
+              <h1 class="h1">{block name='page_title'}{$product.name}{/block}</h1>
             {/block}
           {/block}
           {block name='product_prices'}
@@ -82,7 +82,7 @@
 
           <div class="product-information">
             {block name='product_description_short'}
-              <div id="product-description-short-{$product.id}" class="product-description" itemprop="description">{$product.description_short nofilter}</div>
+              <div id="product-description-short-{$product.id}" class="product-description">{$product.description_short nofilter}</div>
             {/block}
 
             {if $product.is_customizable && count($product.customizations.fields)}
@@ -229,7 +229,7 @@
       {if $accessories}
         <section class="product-accessories clearfix">
           <p class="h5 text-uppercase">{l s='You might also like' d='Shop.Theme.Catalog'}</p>
-          <div class="products" itemscope itemtype="https://schema.org/ItemList">
+          <div class="products">
             {foreach from=$accessories item="product_accessory" key="position"}
               {block name='product_miniature'}
                 {include file='catalog/_partials/miniatures/product.tpl' product=$product_accessory position=$position}

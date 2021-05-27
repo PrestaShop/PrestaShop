@@ -27,6 +27,7 @@
 namespace Tests\Integration\Behaviour\Features\Context\Configuration;
 
 use Configuration;
+use Tests\Integration\Behaviour\Features\Context\SharedStorage;
 use Tests\Integration\Behaviour\Features\Context\Util\PrimitiveUtils;
 use Tools;
 
@@ -35,10 +36,13 @@ class CommonConfigurationFeatureContext extends AbstractConfigurationFeatureCont
     /**
      * @Given /^shop configuration for "(.+)" is set to (.+)$/
      */
-    public function shopConfigurationOfIsSetTo($index, $value)
+    public function shopConfigurationOfIsSetTo(string $index, $value): void
     {
-        if ($index == 'PS_PRICE_ROUND_MODE') {
+        if ($index === 'PS_PRICE_ROUND_MODE') {
             Tools::$round_mode = null;
+        }
+        if ($index === 'PS_ECOTAX_TAX_RULES_GROUP_ID') {
+            $value = (int) SharedStorage::getStorage()->get($value);
         }
         $this->setConfiguration($index, $value);
     }
@@ -46,7 +50,7 @@ class CommonConfigurationFeatureContext extends AbstractConfigurationFeatureCont
     /**
      * @Given /^order out of stock products is allowed$/
      */
-    public function allowOrderOutOfStock()
+    public function allowOrderOutOfStock(): void
     {
         $this->setConfiguration('PS_ORDER_OUT_OF_STOCK', 1);
     }
@@ -54,7 +58,7 @@ class CommonConfigurationFeatureContext extends AbstractConfigurationFeatureCont
     /**
      * @Given /^shipping handling fees are set to (\d+\.\d+)$/
      */
-    public function setShippingHandlingFees($value)
+    public function setShippingHandlingFees($value): void
     {
         $this->setConfiguration('PS_SHIPPING_HANDLING', $value);
     }

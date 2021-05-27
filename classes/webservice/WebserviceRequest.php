@@ -45,9 +45,9 @@ class WebserviceRequestCore
     protected $_outputEnabled = true;
 
     /**
-     * Set if the management is specific or if it is classic (entity management).
+     * Set if the management is specific or if it is classic (entity management)
      *
-     * @var WebserviceSpecificManagementImages|WebserviceSpecificManagementSearch|false
+     * @var WebserviceSpecificManagementImages|WebserviceSpecificManagementSearch|WebserviceSpecificManagementAttachments|false
      */
     protected $objectSpecificManagement = false;
 
@@ -273,6 +273,7 @@ class WebserviceRequestCore
     {
         $resources = [
             'addresses' => ['description' => 'The Customer, Brand and Customer addresses', 'class' => 'Address'],
+            'attachments' => ['description' => 'The product Attachments', 'class' => 'Attachment', 'specific_management' => true],
             'carriers' => ['description' => 'The Carriers', 'class' => 'Carrier'],
             'carts' => ['description' => 'Customer\'s carts', 'class' => 'Cart'],
             'cart_rules' => ['description' => 'Cart rules management', 'class' => 'CartRule'],
@@ -590,7 +591,7 @@ class WebserviceRequestCore
                     if (!class_exists($specificObjectName)) {
                         $this->setError(501, sprintf('The specific management class is not implemented for the "%s" entity.', $this->urlSegment[0]), 124);
                     } else {
-                        $this->objectSpecificManagement = new $specificObjectName();
+                        $this->setObjectSpecificManagement(new $specificObjectName());
                         $this->objectSpecificManagement->setObjectOutput($this->objOutput)
                             ->setWsObject($this);
 
@@ -1412,7 +1413,7 @@ class WebserviceRequestCore
      *
      * @return bool
      */
-    protected function executeEntityPost()
+    public function executeEntityPost()
     {
         return $this->saveEntityFromXml(201);
     }
@@ -1422,7 +1423,7 @@ class WebserviceRequestCore
      *
      * @return bool
      */
-    protected function executeEntityPut()
+    public function executeEntityPut()
     {
         return $this->saveEntityFromXml(200);
     }
@@ -1432,7 +1433,7 @@ class WebserviceRequestCore
      *
      * @return bool
      */
-    protected function executeEntityDelete()
+    public function executeEntityDelete()
     {
         $objects = [];
         $arr_avoid_id = [];
@@ -1890,5 +1891,15 @@ class WebserviceRequestCore
         ksort($retarr);
 
         return $retarr;
+    }
+
+    /**
+     * Set Object Specific Management
+     *
+     * @param mixed $objectSpecificManagement
+     */
+    public function setObjectSpecificManagement($objectSpecificManagement)
+    {
+        $this->objectSpecificManagement = $objectSpecificManagement;
     }
 }

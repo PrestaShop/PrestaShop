@@ -32,7 +32,8 @@ const {smtpServer, smtpPort} = global.maildevConfig;
 const testMailSubject = 'Test message -- Prestashop';
 const resetPasswordMailSubject = 'Password query confirmation';
 
-const mailListener = mailHelper.createMailListener();
+// mailListener
+let mailListener;
 
 
 /*
@@ -44,11 +45,13 @@ Go to login page in FO
 Use password reminder
  */
 
-describe('Password reminder', async () => {
+describe('FO Password reminder', async () => {
   // before and after functions
   before(async function () {
     browserContext = await helper.createBrowserContext(this.browser);
     page = await helper.newTab(browserContext);
+
+    mailListener = mailHelper.createMailListener();
     mailHelper.startListener(mailListener);
     // Handle every new email
     mailListener.on('new', (email) => {

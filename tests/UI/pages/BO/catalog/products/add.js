@@ -18,7 +18,8 @@ class AddProduct extends BOBasePage {
     this.productNameInput = '#form_step1_name_1';
     this.productImageDropZoneDiv = '#product-images-dropzone';
     this.productTypeSelect = '#form_step1_type_product';
-    this.openFileManagerDiv = '.disabled.openfilemanager.dz-clickable';
+    this.openFileManagerDiv = `${this.productImageDropZoneDiv} .disabled.openfilemanager.dz-clickable`;
+    this.imagePreviewBlock = `${this.productImageDropZoneDiv} > div.dz-complete.dz-image-preview`;
     this.productWithCombinationsInput = '#show_variations_selector div:nth-of-type(2) input';
     this.productReferenceInput = '#form_step6_reference';
     this.productQuantityInput = '#form_step1_qty_0_shortcut';
@@ -60,6 +61,14 @@ class AddProduct extends BOBasePage {
     this.productCombinationsBulkForm = '#combinations-bulk-form';
     this.productCombinationsBulkFormTitle = `${this.productCombinationsBulkForm} p[aria-controls]`;
     this.bulkCombinationsContainer = '#bulk-combinations-container';
+    // Selector of step 3 : Quantities
+    this.quantityInput = '#form_step3_qty_0';
+    this.minimumQuantityInput = '#form_step3_minimal_quantity';
+    this.stockLocationInput = '#form_step3_location';
+    this.lowStockLevelInput = '#form_step3_low_stock_threshold';
+    this.behaviourOutOfStockInput = id => `#form_step3_out_of_stock_${id}`;
+    this.labelWhenInStockInput = '#form_step3_available_now_1';
+    this.labelWhenOutOfStock = '#form_step3_available_later_1';
     // Selector of Step 5 : SEO
     this.resetUrlButton = '#seo-url-regenerate';
     this.friendlyUrlInput = '#form_step5_link_rewrite_1';
@@ -88,6 +97,36 @@ class AddProduct extends BOBasePage {
   }
 
   /**
+   * Get Number of images to set on the product
+   * @param page {Page} Browser tab
+   * @returns {Promise<number>}
+   */
+  async getNumberOfImages(page) {
+    return (await page.$$(this.imagePreviewBlock)).length;
+  }
+
+  /**
+   * Add product images
+   * @param page {Page} Browser tab
+   * @param imagesPaths {Array<string|null>} Paths of the images to add to the product
+   * @returns {Promise<void>}
+   */
+  async addProductImages(page, imagesPaths = []) {
+    const filteredImagePaths = imagesPaths.filter(el => el !== null);
+
+    if (filteredImagePaths !== null && filteredImagePaths.length !== 0) {
+      const numberOfImages = await this.getNumberOfImages(page);
+      await this.uploadOnFileChooser(
+        page,
+        numberOfImages === 0 ? this.productImageDropZoneDiv : this.openFileManagerDiv,
+        filteredImagePaths,
+      );
+
+      await this.waitForVisibleSelector(page, this.imagePreviewBlock);
+    }
+  }
+
+  /**
    * Set Name, type of product, Reference, price ATI, description and short description
    * @param page
    * @param productData
@@ -95,12 +134,10 @@ class AddProduct extends BOBasePage {
    */
   async setBasicSetting(page, productData) {
     await this.setValue(page, this.productNameInput, productData.name);
-    if (productData.coverImage !== null) {
-      await this.uploadFilePath(page, this.productImageDropZoneDiv, productData.coverImage);
-    }
-    if (productData.thumbImage !== null) {
-      await this.uploadFilePath(page, this.openFileManagerDiv, productData.thumbImage);
-    }
+
+    // Set product images
+    await this.addProductImages(page, [productData.coverImage, productData.thumbImage]);
+
     await this.setValueOnTinymceInput(page, this.productDescriptionIframe, productData.description);
     await this.setValueOnTinymceInput(page, this.productShortDescriptionIframe, productData.summary);
     await this.selectByVisibleText(page, this.productTypeSelect, productData.type);
@@ -133,11 +170,8 @@ class AddProduct extends BOBasePage {
    * @returns {Promise<string>}
    */
   async saveProduct(page) {
-    const [growlTextMessage] = await Promise.all([
-      this.getGrowlMessageContent(page),
-      page.click(this.saveProductButton),
-    ]);
-
+    await page.click(this.saveProductButton);
+    const growlTextMessage = await this.getGrowlMessageContent(page, 30000);
     await this.closeGrowlMessage(page);
 
     return growlTextMessage;
@@ -151,10 +185,12 @@ class AddProduct extends BOBasePage {
    */
   async createEditBasicProduct(page, productData) {
     await this.setBasicSetting(page, productData);
-    await this.setProductStatus(page, productData.status);
+
     if (productData.type === 'Pack of products') {
       await this.addPackOfProducts(page, productData.pack);
     }
+
+    await this.setProductStatus(page, productData.status);
     return this.saveProduct(page);
   }
 
@@ -230,6 +266,9 @@ class AddProduct extends BOBasePage {
     await page.type(this.productCombinationBulkQuantityInput, quantity.toString());
     await this.scrollTo(page, this.applyOnCombinationsButton);
     await page.click(this.applyOnCombinationsButton);
+
+    // Close growl message
+    await this.closeGrowlMessage(page);
   }
 
   /**
@@ -309,10 +348,8 @@ class AddProduct extends BOBasePage {
         this.waitForVisibleSelector(page, this.modalDialog),
       ]);
       await page.waitForTimeout(250);
-      await Promise.all([
-        page.click(this.modalDialogYesButton),
-        this.waitForSelectorAndClick(page, this.growlCloseButton),
-      ]);
+      await page.click(this.modalDialogYesButton);
+      await this.closeGrowlMessage(page);
     }
   }
 
@@ -375,10 +412,10 @@ class AddProduct extends BOBasePage {
 
     // Apply specific price
     await this.scrollTo(page, this.applyButton);
-    const [growlMessageText] = await Promise.all([
-      this.getGrowlMessageContent(page),
-      page.click(this.applyButton),
-    ]);
+    await page.click(this.applyButton);
+
+    // Get growl message
+    const growlMessageText = await this.getGrowlMessageContent(page, 30000);
 
     await this.closeGrowlMessage(page);
     await this.goToFormStep(page, 1);
@@ -447,6 +484,68 @@ class AddProduct extends BOBasePage {
    */
   getProductName(page) {
     return this.getAttributeContent(page, this.productNameInput, 'value');
+  }
+
+  /**
+   * Set quantities settings
+   * @param page
+   * @param product
+   * @returns {Promise<void>}
+   */
+  async setQuantitiesSettings(page, product) {
+    let columnSelector;
+    // Go to Quantities tab
+    await this.goToFormStep(page, 3);
+    // Set Quantities form
+    await this.setValue(page, this.quantityInput, product.quantity);
+    await this.setValue(page, this.minimumQuantityInput, product.minimumQuantity);
+    // Set Stock form
+    await this.setValue(page, this.stockLocationInput, product.stockLocation);
+    await this.setValue(page, this.lowStockLevelInput, product.lowStockLevel);
+
+    // Set Availability preferences form
+    switch (product.behaviourOutOfStock) {
+      case 'Deny orders':
+        columnSelector = this.behaviourOutOfStockInput(0);
+        break;
+
+      case 'Allow orders':
+        columnSelector = this.behaviourOutOfStockInput(1);
+        break;
+
+      case 'Default behavior':
+        columnSelector = this.behaviourOutOfStockInput(2);
+        break;
+
+      default:
+        throw new Error(`Column ${product.behaviourOutOfStock} was not found`);
+    }
+
+    await page.$eval(columnSelector, el => el.click());
+
+    // Set value on label In and out of stock inputs
+    await this.scrollTo(page, this.labelWhenInStockInput);
+    await this.setValue(page, this.labelWhenInStockInput, product.labelWhenInStock);
+    await this.setValue(page, this.labelWhenOutOfStock, product.LabelWhenOutOfStock);
+  }
+
+  /**
+   * Set product
+   * @param page
+   * @param productData
+   * @returns {Promise<string>}
+   */
+  async setProduct(page, productData) {
+    await this.setBasicSetting(page, productData);
+    if (productData.type === 'Pack of products') {
+      await this.addPackOfProducts(page, productData.pack);
+    }
+    if (productData.productHasCombinations) {
+      await this.setCombinationsInProduct(page, productData);
+    }
+    await this.setProductStatus(page, productData.status);
+    await this.setQuantitiesSettings(page, productData);
+    return this.saveProduct(page);
   }
 }
 

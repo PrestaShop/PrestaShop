@@ -17,7 +17,7 @@ Feature: Update product stock from Back Office (BO)
   Scenario: I check default stock values
     When I add product "product1" with following information:
       | name[en-US] | Presta camera |
-      | is_virtual  | false         |
+      | type        | standard      |
     Then product "product1" should have following stock information:
       | pack_stock_type               | default |
       | out_of_stock_type             | default |
@@ -31,7 +31,7 @@ Feature: Update product stock from Back Office (BO)
   Scenario: I check default stock values for virtual product
     When I add product "product1" with following information:
       | name[en-US] | Presta camera |
-      | is_virtual  | true          |
+      | type        | virtual       |
     Then product "product1" should have following stock information:
       | pack_stock_type               | default   |
       | out_of_stock_type             | available |
@@ -45,11 +45,11 @@ Feature: Update product stock from Back Office (BO)
   Scenario: I update product pack stock type
     Given I add product "productPack1" with following information:
       | name[en-US] | weird sunglasses box |
-      | is_virtual  | false                |
-    And product "productPack1" type should be standard
+      | type        | pack                 |
+    And product "productPack1" type should be pack
     And I add product "product2" with following information:
       | name[en-US] | shady sunglasses |
-      | is_virtual  | false            |
+      | type        | standard         |
     And product "product2" type should be standard
     When I update pack "productPack1" with following product quantities:
       | product  | quantity |
@@ -81,7 +81,7 @@ Feature: Update product stock from Back Office (BO)
   Scenario: I update product out of stock
     Given I add product "product1" with following information:
       | name[en-US] | Presta camera |
-      | is_virtual  | false         |
+      | type        | standard      |
     And product "product1" should have following stock information:
       | out_of_stock_type | default |
     When I update product "product1" stock with following information:
@@ -102,15 +102,15 @@ Feature: Update product stock from Back Office (BO)
 
   Scenario: Virtual product is available out of stock by default
     Given I add product "product1" with following information:
-      | name[en-US] | eBook |
-      | is_virtual  | true  |
+      | name[en-US] | eBook   |
+      | type        | virtual |
     Then product "product1" should have following stock information:
       | out_of_stock_type | available |
 
   Scenario: I update product quantity
     Given I add product "product1" with following information:
       | name[en-US] | Presta camera |
-      | is_virtual  | false         |
+      | type        | standard      |
     And product "product1" should have following stock information:
       | quantity | 0 |
     When I update product "product1" stock with following information:
@@ -128,7 +128,7 @@ Feature: Update product stock from Back Office (BO)
     Given language "french" with locale "fr-FR" exists
     Given I add product "product1" with following information:
       | name[en-US] | Presta camera |
-      | is_virtual  | false         |
+      | type        | standard      |
     And product "product1" should have following stock information:
       | minimal_quantity    | 1     |
       | location            |       |
@@ -195,7 +195,7 @@ Feature: Update product stock from Back Office (BO)
   Scenario: When I use invalid values update is not authorized
     Given I add product "product1" with following information:
       | name[en-US] | Presta camera |
-      | is_virtual  | false         |
+      | type        | standard      |
     And product "product1" should have following stock information:
       | quantity            | 0     |
       | minimal_quantity    | 1     |
