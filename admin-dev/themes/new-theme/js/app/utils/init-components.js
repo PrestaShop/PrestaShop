@@ -37,6 +37,17 @@ import TextWithLengthCounter from '@components/form/text-with-length-counter';
 import PreviewOpener from '@components/form/preview-opener';
 import MultistoreConfigField from '@js/components/form/multistore-config-field.js';
 import {EventEmitter} from '@components/event-emitter';
+import GridComponent from '@components/grid/grid';
+
+// Grid extensions
+import FiltersResetExtension from '@components/grid/extension/filters-reset-extension';
+
+const Grid = {
+  instance: GridComponent,
+  extension: {
+    FiltersResetExtension
+  }
+}
 
 const initPrestashopComponents = () => {
   window.prestashop = {...window.prestashop};
@@ -93,6 +104,7 @@ const initPrestashopComponents = () => {
     TextWithLengthCounter,
     MultistoreConfigField,
     PreviewOpener,
+    Grid
   };
 };
 export default initPrestashopComponents;
