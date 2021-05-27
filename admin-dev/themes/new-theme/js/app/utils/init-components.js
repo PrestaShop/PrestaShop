@@ -45,9 +45,9 @@ import FiltersResetExtension from '@components/grid/extension/filters-reset-exte
 const Grid = {
   instance: GridComponent,
   extension: {
-    FiltersResetExtension
-  }
-}
+    FiltersResetExtension,
+  },
+};
 
 const initPrestashopComponents = () => {
   window.prestashop = {...window.prestashop};
@@ -104,7 +104,7 @@ const initPrestashopComponents = () => {
     TextWithLengthCounter,
     MultistoreConfigField,
     PreviewOpener,
-    Grid
+    Grid,
   };
 };
 export default initPrestashopComponents;
