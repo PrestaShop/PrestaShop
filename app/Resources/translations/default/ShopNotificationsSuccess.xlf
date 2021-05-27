@@ -15,7 +15,7 @@
       <trans-unit id="2e3e7c5849ac5eefe1cc6c4c73f182af">
         <source>Address successfully deleted!</source>
         <target>Address successfully deleted!</target>
-        <note>Line: 94</note>
+        <note>Line: 106</note>
       </trans-unit>
     </body>
   </file>
@@ -33,7 +33,7 @@
       <trans-unit id="228289d31b9bf52373066156f9b0190e">
         <source>Your guest account has been successfully transformed into a customer account. You can now log in as a registered shopper.</source>
         <target>Your guest account has been successfully transformed into a customer account. You can now log in as a registered shopper.</target>
-        <note>Line: 102</note>
+        <note>Line: 92</note>
       </trans-unit>
     </body>
   </file>

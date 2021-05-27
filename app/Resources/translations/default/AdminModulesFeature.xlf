@@ -140,17 +140,26 @@ Comment: Set the modules categories</note>
       <trans-unit id="f388bc3eaa4b9f72756a75693a12559d">
         <source>Installed modules</source>
         <target>Installed modules</target>
-        <note>Line: 1372</note>
-      </trans-unit>
-      <trans-unit id="013ac1b8ec44696f5003867a8b64d469">
-        <source>Disabled modules</source>
-        <target>Disabled modules</target>
-        <note>Line: 1384</note>
+        <note>Line: 1334</note>
       </trans-unit>
       <trans-unit id="c472f22a7459a000f0177a23fdc4212b">
         <source>This module is Untrusted for your country</source>
         <target>This module is Untrusted for your country</target>
-        <note>Line: 1472</note>
+        <note>Line: 1434</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="modules/blockreassurance/views/templates/admin/addons-suggestion.tpl" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="25131b831e5832d70365d17471b6326d">
+        <source>Discover all modules</source>
+        <target>Discover all modules</target>
+        <note>Line: 45</note>
+      </trans-unit>
+      <trans-unit id="31edfec531c02c0cfe522ed5ca726e2f">
+        <source>Want to go further?</source>
+        <target>Want to go further?</target>
+        <note>Line: 31</note>
       </trans-unit>
     </body>
   </file>
@@ -189,16 +198,6 @@ File: modules/ps_buybuttonlite/ps_buybuttonlite.php:167</note>
   </file>
   <file original="modules/watermark/views/templates/admin/addons-suggestion.tpl" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
-      <trans-unit id="25131b831e5832d70365d17471b6326d">
-        <source>Discover all modules</source>
-        <target>Discover all modules</target>
-        <note>Line: 45</note>
-      </trans-unit>
-      <trans-unit id="31edfec531c02c0cfe522ed5ca726e2f">
-        <source>Want to go further?</source>
-        <target>Want to go further?</target>
-        <note>Line: 31</note>
-      </trans-unit>
       <trans-unit id="7c6a169b9017895a118d7cb18b7b788e">
         <source>To go further:</source>
         <target>To go further:</target>
@@ -235,17 +234,17 @@ File: modules/ps_buybuttonlite/ps_buybuttonlite.php:167</note>
       <trans-unit id="8b1a3613ac33a07ab788b2656755110c">
         <source>Enable Mobile</source>
         <target>Enable Mobile</target>
-        <note>Line: 125</note>
+        <note>Line: 124</note>
       </trans-unit>
       <trans-unit id="038bd38b5172a9ba90468070bdc4d4f3">
         <source>Disable Mobile</source>
         <target>Disable Mobile</target>
-        <note>Line: 126</note>
+        <note>Line: 125</note>
       </trans-unit>
       <trans-unit id="e699cbe9208f8353248889781f83d636">
         <source>Module manager</source>
         <target>Module manager</target>
-        <note>Line: 135</note>
+        <note>Line: 134</note>
       </trans-unit>
     </body>
   </file>
@@ -314,6 +313,15 @@ File: modules/ps_buybuttonlite/ps_buybuttonlite.php:167</note>
       </trans-unit>
     </body>
   </file>
+  <file original="src/PrestaShopBundle/Resources/views/Admin/Module/Includes/dropdown_categories.html.twig" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="042be00d927cff11fd00361b3dda1817">
+        <source>Recently used</source>
+        <target>Recently used</target>
+        <note>Line: 45</note>
+      </trans-unit>
+    </body>
+  </file>
   <file original="src/PrestaShopBundle/Resources/views/Admin/Module/Includes/dropdown_categories_catalog.html.twig" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
       <trans-unit id="a6a2a55bea8760389dfca77132905b7c">
@@ -321,14 +329,24 @@ File: modules/ps_buybuttonlite/ps_buybuttonlite.php:167</note>
         <target>All Categories</target>
         <note>Line: 39</note>
       </trans-unit>
+      <trans-unit id="62f5d708d6ad1fa1ddd9429a65cccbea">
+        <source>All categories</source>
+        <target>All categories</target>
+        <note>Line: 37</note>
+      </trans-unit>
     </body>
   </file>
   <file original="src/PrestaShopBundle/Resources/views/Admin/Module/Includes/dropdown_status.html.twig" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
+      <trans-unit id="013ac1b8ec44696f5003867a8b64d469">
+        <source>Disabled modules</source>
+        <target>Disabled modules</target>
+        <note>Line: 41</note>
+      </trans-unit>
       <trans-unit id="8a8efaec2f6f2bc692ad99b34e2070c9">
         <source>Show all modules</source>
         <target>Show all modules</target>
-        <note>Line: 35</note>
+        <note>Line: 33</note>
       </trans-unit>
       <trans-unit id="dfe6e46e2d3e3ba76b5d9aee197c0747">
         <source>Enabled Modules</source>
@@ -339,6 +357,11 @@ File: modules/ps_buybuttonlite/ps_buybuttonlite.php:167</note>
         <source>Disabled Modules</source>
         <target>Disabled Modules</target>
         <note>Line: 45</note>
+      </trans-unit>
+      <trans-unit id="1709968c9b0b6fca0c6701999abb377f">
+        <source>Enabled modules</source>
+        <target>Enabled modules</target>
+        <note>Line: 37</note>
       </trans-unit>
     </body>
   </file>
@@ -495,7 +518,7 @@ File: modules/ps_buybuttonlite/ps_buybuttonlite.php:167</note>
       <trans-unit id="b24ce0cd392a5b0b8dedc66c25213594">
         <source>Free</source>
         <target>Free</target>
-        <note>Line: 190</note>
+        <note>Line: 209</note>
       </trans-unit>
       <trans-unit id="bc3b3665bd89d8eb6e3c7b0789fa98c5">
         <source>v%version% by %author%</source>
@@ -532,6 +555,46 @@ File: modules/ps_buybuttonlite/ps_buybuttonlite.php:167</note>
         <target>Changelog</target>
         <note>Line: 105</note>
       </trans-unit>
+      <trans-unit id="a8fc81349d4f60335fc2f2d2dea6fb0c">
+        <source>Multistore compatibility:</source>
+        <target>Multistore compatibility:</target>
+        <note>Line: 123</note>
+      </trans-unit>
+      <trans-unit id="9e3af2cc76136602790d15926c0406d2">
+        <source>This module is compatible with the multistore feature. It can be either:</source>
+        <target>This module is compatible with the multistore feature. It can be either:</target>
+        <note>Line: 125</note>
+      </trans-unit>
+      <trans-unit id="e773cb7097fe5225bf11e922d97d8303">
+        <source>configured differently from one store to another;</source>
+        <target>configured differently from one store to another;</target>
+        <note>Line: 127</note>
+      </trans-unit>
+      <trans-unit id="524101c07f4d47a32a671461793b9aae">
+        <source>configured quickly in the same way on all stores thanks to the all shops context or to the group of shops;</source>
+        <target>configured quickly in the same way on all stores thanks to the all shops context or to the group of shops;</target>
+        <note>Line: 128</note>
+      </trans-unit>
+      <trans-unit id="e3e84332925aea492b9fa58f047cab00">
+        <source>or even activated for one store and deactivated for another.</source>
+        <target>or even activated for one store and deactivated for another.</target>
+        <note>Line: 129</note>
+      </trans-unit>
+      <trans-unit id="e1257f9e396ab15c8e76d6d87bf30418">
+        <source>This module is partially compatible with the multistore feature. Some of its options might not be available.</source>
+        <target>This module is partially compatible with the multistore feature. Some of its options might not be available.</target>
+        <note>Line: 132</note>
+      </trans-unit>
+      <trans-unit id="d75acf5ccb6af024e45402c80c5901f5">
+        <source>This module is not compatible with the multistore feature because it would not be useful.</source>
+        <target>This module is not compatible with the multistore feature because it would not be useful.</target>
+        <note>Line: 134</note>
+      </trans-unit>
+      <trans-unit id="a608f1d4854481318e94f1c9f57262fc">
+        <source>This module is not compatible with the multistore feature. It means that its configuration applies for all stores.</source>
+        <target>This module is not compatible with the multistore feature. It means that its configuration applies for all stores.</target>
+        <note>Line: 136</note>
+      </trans-unit>
     </body>
   </file>
   <file original="src/PrestaShopBundle/Resources/views/Admin/Module/Includes/sorting.html.twig" source-language="en-US" target-language="en" datatype="plaintext">
@@ -544,22 +607,22 @@ File: modules/ps_buybuttonlite/ps_buybuttonlite.php:167</note>
       <trans-unit id="6ff9dd0d34f65181173c1e4bc39939de">
         <source>Selection</source>
         <target>Selection</target>
-        <note>Line: 31</note>
+        <note>Line: 30</note>
       </trans-unit>
       <trans-unit id="3d7c1883e8f497290c2aafa2086f49ff">
         <source>Increasing Price</source>
         <target>Increasing Price</target>
-        <note>Line: 41</note>
+        <note>Line: 38</note>
       </trans-unit>
       <trans-unit id="8e7cce37e14aea45d6d88e8c4aaa1b98">
         <source>Decreasing Price</source>
         <target>Decreasing Price</target>
-        <note>Line: 42</note>
+        <note>Line: 39</note>
       </trans-unit>
       <trans-unit id="e22269bb51f9f2394e148716babbafbb">
         <source>Popularity</source>
         <target>Popularity</target>
-        <note>Line: 43</note>
+        <note>Line: 40</note>
       </trans-unit>
     </body>
   </file>
@@ -573,7 +636,7 @@ File: modules/ps_buybuttonlite/ps_buybuttonlite.php:167</note>
       <trans-unit id="1f39a37212f03c5976e447cb62975024">
         <source>Modules to configure</source>
         <target>Modules to configure</target>
-        <note>Line: 40</note>
+        <note>Line: 39</note>
       </trans-unit>
     </body>
   </file>
@@ -651,12 +714,12 @@ File: src/PrestaShopBundle/Resources/views/Admin/Module/manage.html.twig:4</note
       <trans-unit id="0c81f6a8e4b7b1d0a812d7285289f17d">
         <source>Modules to update</source>
         <target>Modules to update</target>
-        <note>Line: 40</note>
+        <note>Line: 39</note>
       </trans-unit>
       <trans-unit id="910144fc8b8d5c1d2cb59cbe5c04a01b">
         <source>Upgrade All</source>
         <target>Upgrade All</target>
-        <note>Line: 44</note>
+        <note>Line: 42</note>
       </trans-unit>
     </body>
   </file>
