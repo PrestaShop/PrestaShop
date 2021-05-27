@@ -193,7 +193,7 @@ class AdminSuppliersControllerCore extends AdminController
                 ],
                 [
                     'type' => 'text',
-                    'label' => $this->trans('Zip/postal code', [], 'Admin.Global'),
+                    'label' => $this->trans('Zip/Postal code', [], 'Admin.Global'),
                     'name' => 'postcode',
                     'required' => in_array('postcode', $required_fields),
                     'maxlength' => 12,
