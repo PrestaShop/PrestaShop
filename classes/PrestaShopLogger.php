@@ -158,9 +158,12 @@ class PrestaShopLoggerCore extends ObjectModel
             $log->id_employee = (int) $idEmployee;
         }
 
-        if (!empty($objectType) && !empty($objectId)) {
-            $log->object_type = pSQL($objectType);
-            $log->object_id = (int) $objectId;
+        if (!empty($object_type)) {
+            $log->object_type = pSQL($object_type);
+        }
+
+        if (!empty($object_id)) {
+            $log->object_id = (int)$object_id;
         }
 
         $log->id_lang = (int) $context->language->id ?? null;
