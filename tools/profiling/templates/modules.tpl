@@ -22,7 +22,7 @@
  * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  *}
-<div class="col-4">
+<div class="col-5">
   <table class="table table-condensed">
     <thead>
       <tr>
@@ -33,19 +33,35 @@
     </thead>
 
     <tbody>
-      {foreach $modules.perfs as $modulePerfs}
+      {foreach $modules.perfs as $moduleName => $perfs}
         <tr>
           <td>
-            {$modulePerfs['module']}
+            <a href="javascript:void(0);" onclick="$('.{$moduleName}_modules_details').toggle();">{$moduleName}</a>
+            </td>
+            
           </td>
           <td>
-            {load_time data=$modulePerfs['time']}
+            {load_time data=$perfs['total_time']}
           </td>
           <td>
-            {memory data=$modulePerfs['memory']}
+            {memory data=$perfs['total_memory']}
           </td>
         </tr>
+        {foreach $perfs['details'] as $perfs}
+          <tr class="{$moduleName}_modules_details" style="background-color:#EFEFEF;display:none">
+            <td>
+              {$perfs['method']}
+            </td>
+            <td>
+              {load_time data=$perfs['time']}
+            </td>
+            <td>
+              {memory data=$perfs['memory']}
+            </td>
+          </tr>
+        {/foreach}
       {/foreach}
+      
     </tbody>
 
     <tfoot>
