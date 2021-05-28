@@ -46,9 +46,10 @@ const clearNumberInputValue = (event, selector) => {
   }
 
   let value = event.target.value;
-
-
-  event.target.value = transform(value);
+  // Start to transform when there is more than one character
+  if (value.length > 1) {
+    event.target.value = transform(value);
+  }
 };
 
 /**
