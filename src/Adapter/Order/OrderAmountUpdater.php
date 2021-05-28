@@ -457,8 +457,8 @@ class OrderAmountUpdater
                     $orderCartRule->value_tax_excl = Tools::ps_round($cartRuleData->getDiscountApplied()->getTaxExcluded(), $computingPrecision);
 
                     if ($orderCartRule->free_shipping && !$this->getOrderConfiguration('PS_ORDER_RECALCULATE_SHIPPING', $order)) {
-                        $orderCartRule->value = $orderCartRule->value - $cart->getTotalShippingCost() + $order->total_shipping;
-                        $orderCartRule->value_tax_excl = $orderCartRule->value_tax_excl - $cart->getTotalShippingCost(null, false) + $order->total_shipping_tax_excl;
+                        $orderCartRule->value = $orderCartRule->value - $calculator->getFees()->getInitialShippingFees()->getTaxIncluded() + $order->total_shipping;
+                        $orderCartRule->value_tax_excl = $orderCartRule->value_tax_excl - $calculator->getFees()->getInitialShippingFees()->getTaxExcluded() + $order->total_shipping_tax_excl;
                     }
 
                     $orderCartRule->save();
