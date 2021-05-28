@@ -309,13 +309,7 @@ class OrderAmountUpdater
         $order->total_shipping_tax_incl = $cart->getOrderTotal(true, Cart::ONLY_SHIPPING, $orderProducts, $carrierId, false, $this->keepOrderPrices);
 
         if (!$this->getOrderConfiguration('PS_ORDER_RECALCULATE_SHIPPING', $order)) {
-            $freeShipping = false;
-            foreach ($order->getCartRules() as $cartRule) {
-                if ($cartRule['free_shipping']) {
-                    $freeShipping = true;
-                    break;
-                }
-            }
+            $freeShipping = $this->isFreeShipping($order);
 
             if ($freeShipping) {
                 $order->total_discounts = $order->total_discounts - $order->total_shipping_tax_incl + $totalShippingTaxIncluded;
@@ -570,13 +564,7 @@ class OrderAmountUpdater
             $invoice->total_shipping_tax_incl = $cart->getOrderTotal(true, Cart::ONLY_SHIPPING, $currentInvoiceProducts, $carrierId, false, $this->keepOrderPrices);
 
             if (!$this->getOrderConfiguration('PS_ORDER_RECALCULATE_SHIPPING', $order)) {
-                $freeShipping = false;
-                foreach ($order->getCartRules() as $cartRule) {
-                    if ($cartRule['free_shipping']) {
-                        $freeShipping = true;
-                        break;
-                    }
-                }
+                $freeShipping = $this->isFreeShipping($order);
 
                 if ($freeShipping) {
                     $invoice->total_discount_tax_excl = $invoice->total_discount_tax_excl - $invoice->total_shipping_tax_excl + $totalShippingTaxExcluded;
@@ -598,6 +586,22 @@ class OrderAmountUpdater
                 throw new OrderException('Could not update order invoice in database.');
             }
         }
+    }
+
+    /**
+     * @param Order $order
+     *
+     * @return bool
+     */
+    protected function isFreeShipping(Order $order)
+    {
+        foreach ($order->getCartRules() as $cartRule) {
+            if ($cartRule['free_shipping']) {
+                return true;
+            }
+        }
+
+        return false;
     }
 
     /**
