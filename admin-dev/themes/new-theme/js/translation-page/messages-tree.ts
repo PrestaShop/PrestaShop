@@ -23,8 +23,8 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
 
-export default function () {
-  function updateVisibilityIcons(domainActions) {
+export default function (): void {
+  function updateVisibilityIcons(domainActions: JQuery) {
     const visibilityOffIcon = domainActions.find('.visibility-off');
     const visibilityOnIcon = domainActions.find('.visibility-on');
     const showMessagesButton = domainActions.find('.btn-show-messages');
@@ -44,19 +44,27 @@ export default function () {
     }
   }
 
-  function updateMissingTranslationsWarning(domainActions) {
+  function updateMissingTranslationsWarning(domainActions: JQuery) {
     const subdomain = domainActions.parent().next('.subdomains');
     const missingTranslations = subdomain.find('[data-missing-translations]');
     let totalMissingTranslations = 0;
 
     $(missingTranslations).each((index, element) => {
-      totalMissingTranslations += parseInt($(element).attr('data-missing-translations'), 10);
+      totalMissingTranslations += parseInt(
+        <string>$(element).attr('data-missing-translations'),
+        10,
+      );
     });
 
     if (totalMissingTranslations > 0) {
-      const missingTranslationsWarning = domainActions.find('.missing-translations');
+      const missingTranslationsWarning = domainActions.find(
+        '.missing-translations',
+      );
       let warningMessage = missingTranslationsWarning.text();
-      warningMessage = warningMessage.replace('%d', totalMissingTranslations);
+      warningMessage = warningMessage.replace(
+        '%d',
+        <string>(<unknown>totalMissingTranslations),
+      );
       missingTranslationsWarning.text(warningMessage);
       missingTranslationsWarning.removeClass('hide');
     }
@@ -69,7 +77,9 @@ export default function () {
   $('.domain-first-part').each((index, domainToggler) => {
     const domainActions = $(domainToggler).find('.domain-actions');
 
-    allDomainsMissingTranslations += updateMissingTranslationsWarning(domainActions);
+    allDomainsMissingTranslations += updateMissingTranslationsWarning(
+      domainActions,
+    );
 
     $(domainToggler).click((event) => {
       let domainTitle;
@@ -92,17 +102,27 @@ export default function () {
   });
 
   (function defineTranslations(totalTranslations, totalRemainingTranslations) {
-    const totalTranslationsTemplate = $('.summary .total-translations').attr('data-template');
-    const remainingTranslationsTemplate = $('.summary .total-remaining-translations').attr('data-template');
+    const totalTranslationsTemplate = $('.summary .total-translations').attr(
+      'data-template',
+    );
+    const remainingTranslationsTemplate = <string>(
+      $('.summary .total-remaining-translations').attr('data-template')
+    );
 
     if (totalRemainingTranslations > 0) {
-      const remainingTranslationsMessage = remainingTranslationsTemplate.replace('%d', totalRemainingTranslations);
+      const remainingTranslationsMessage = remainingTranslationsTemplate.replace(
+        '%d',
+        <string>(<unknown>totalRemainingTranslations),
+      );
       $('.total-remaining-translations').text(remainingTranslationsMessage);
       $('.summary .separator').removeClass('hide');
     }
 
     if (totalTranslationsTemplate) {
-      const totalTranslationsMessages = totalTranslationsTemplate.replace('%d', totalTranslations);
+      const totalTranslationsMessages = totalTranslationsTemplate.replace(
+        '%d',
+        <string>(<unknown>totalTranslations),
+      );
       $('.summary .total-translations').text(totalTranslationsMessages);
     }
   }($('#jetsContent form').length, allDomainsMissingTranslations));

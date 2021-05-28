@@ -22,17 +22,19 @@
  * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
+// @ts-ignore-next-line
 import Jets from 'jets/jets';
 
-export default function () {
+export default function (): Jets | boolean {
   $(() => {
     const searchSelector = '.search-translation';
     $(`${searchSelector} form`).submit((event) => {
       event.preventDefault();
 
       $('#jetsContent form').addClass('hide');
+      const $jetsSearch = <string>$('#jetsSearch').val();
 
-      const keywords = $('#jetsSearch').val().toLowerCase();
+      const keywords = $jetsSearch?.toLowerCase();
       const jetsSelector = `#jetsContent > [data-jets*="${keywords}"]`;
 
       if ($(jetsSelector).length === 0) {
@@ -46,7 +48,10 @@ export default function () {
       }
 
       if ($(jetsSelector).length) {
-        $('.js-results').show().addClass('card').find('h2')
+        $('.js-results')
+          .show()
+          .addClass('card')
+          .find('h2')
           .removeClass('hide');
       }
 
@@ -68,9 +73,12 @@ export default function () {
       searchTag: '#jetsSearch',
       contentTag: '#jetsContent',
       callSearchManually: true,
-      manualContentHandling(tag) {
+      manualContentHandling(tag: HTMLElement) {
         // Search for translation keys and translation values
-        return $(tag).find('.verbatim')[0].innerText + $(tag).find('textarea')[0].value;
+        return (
+          $(tag).find('.verbatim')[0].innerText
+          + $(tag).find('textarea')[0].value
+        );
       },
     });
   }

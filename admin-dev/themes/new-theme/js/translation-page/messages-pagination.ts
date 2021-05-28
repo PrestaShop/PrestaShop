@@ -24,11 +24,16 @@
  */
 import MultiPagination from './multi-pagination';
 
-export default function () {
-  const fixedOffset = $('.header-toolbar').height() + $('.main-header').height();
+export default function (): void {
+  const $headerToolbar = $('.header-toolbar');
+  const $mainHeader = $('.header-toolbar');
+
+  const fixedOffset = $headerToolbar && $mainHeader
+    ? <number>$headerToolbar.height() + <number>$mainHeader.height()
+    : 0;
   const MAX_PAGINATION = 20;
 
-  const addPageLinksToNavigationBar = (nav) => {
+  const addPageLinksToNavigationBar = (nav: HTMLElement) => {
     const pageTemplate = $(nav).find('.tpl');
     pageTemplate.removeClass('tpl');
 
@@ -39,7 +44,9 @@ export default function () {
     let pageIndex;
     let pageLink;
     let pageLinkAnchor;
-    const totalPages = $(nav).parents('.translation-domains').find('.page').length;
+    const totalPages = $(nav)
+      .parents('.translation-domains')
+      .find('.page').length;
 
     if (totalPages === 1) {
       return $('.pagination').addClass('hide');
@@ -54,9 +61,11 @@ export default function () {
       pageLink = pageLinkTemplate.clone();
       pageLink.attr('data-page-index', pageIndex);
       pageLinkAnchor = pageLink.find('a');
-      pageLinkAnchor.html(pageIndex);
+      pageLinkAnchor.html(<string>(<unknown>pageIndex));
 
-      $(nav).find('.pagination').append(pageLink);
+      $(nav)
+        .find('.pagination')
+        .append(pageLink);
     }
 
     return true;
@@ -65,13 +74,18 @@ export default function () {
   // Fix internal navigation to anchors
   // by adding offset of fixed header height
   // @See also http://stackoverflow.com/a/13067009/282073
-  const scrollToPreviousPaginationBar = (paginationBar) => {
+  const scrollToPreviousPaginationBar = (paginationBar: HTMLElement) => {
     const paginationBarTop = paginationBar.getBoundingClientRect().top;
-    window.scrollTo(window.pageXOffset, window.pageYOffset + paginationBarTop - fixedOffset);
+    window.scrollTo(
+      window.pageXOffset,
+      window.pageYOffset + paginationBarTop - fixedOffset,
+    );
   };
 
   $('.translation-domain .go-to-pagination-bar').click((event) => {
-    const paginationBar = $(event.target).parents('.translation-domain').find('.pagination')[0];
+    const paginationBar = $(event.target)
+      .parents('.translation-domain')
+      .find('.pagination')[0];
     scrollToPreviousPaginationBar(paginationBar);
 
     return false;
@@ -80,47 +94,61 @@ export default function () {
   $('.translation-domains nav').each((navIndex, nav) => {
     addPageLinksToNavigationBar(nav);
 
-    const hideActivePageInDomain = (domain) => {
+    const hideActivePageInDomain = (domain: JQuery) => {
       const page = domain.find('.page[data-status=active]');
       $(page).addClass('hide');
       $(page).attr('data-status', 'inactive');
     };
 
-    const showPageInDomain = (pageIndex, domain) => {
+    const showPageInDomain = (pageIndex: string, domain: JQuery) => {
       const targetPage = domain.find(`.page[data-page-index=${pageIndex}]`);
       $(targetPage).removeClass('hide');
       $(targetPage).attr('data-status', 'active');
     };
 
-    $(nav).find('.page-link').click((event) => {
-      const paginationBar = $(event.target).parents('.pagination')[0];
-      scrollToPreviousPaginationBar(paginationBar);
-    });
+    $(nav)
+      .find('.page-link')
+      .click((event) => {
+        const paginationBar = $(event.target).parents('.pagination')[0];
+        scrollToPreviousPaginationBar(paginationBar);
+      });
 
-    $(nav).find('.page-item').click((event) => {
-      const pageLink = $(event.target);
-      const domain = pageLink.parents('.translation-domains').find('.translation-forms');
-      const pageItem = pageLink.parent();
-      const pageIndex = pageItem.data('page-index');
+    $(nav)
+      .find('.page-item')
+      .click((event) => {
+        const pageLink = $(event.target);
+        const domain = pageLink
+          .parents('.translation-domains')
+          .find('.translation-forms');
+        const pageItem = pageLink.parent();
+        const pageIndex = pageItem.data('page-index');
 
-      $(`[data-page-index=${pageIndex}]`).addClass('active');
-      $(`[data-page-index=${pageIndex}]`).siblings().removeClass('active');
+        $(`[data-page-index=${pageIndex}]`).addClass('active');
+        $(`[data-page-index=${pageIndex}]`)
+          .siblings()
+          .removeClass('active');
 
-      pageItem.parent().find('.active').removeClass('active');
-      pageItem.addClass('active');
+        pageItem
+          .parent()
+          .find('.active')
+          .removeClass('active');
+        pageItem.addClass('active');
 
-      hideActivePageInDomain(domain);
-      showPageInDomain(pageIndex, domain);
+        hideActivePageInDomain(domain);
+        showPageInDomain(pageIndex, domain);
 
-      return false;
-    });
+        return false;
+      });
   });
 
   if ($('.translation-domains').find('.page').length > MAX_PAGINATION) {
     $('.page-item.hide').removeClass('hide');
     $('.pagination').each((index, pagination) => {
       const lastItem = $(pagination).find('.page-item:last-child');
-      $(pagination).find('.js-next-arrow').insertAfter(lastItem).removeClass('hide');
+      $(pagination)
+        .find('.js-next-arrow')
+        .insertAfter(lastItem)
+        .removeClass('hide');
       MultiPagination($(pagination));
     });
   }
