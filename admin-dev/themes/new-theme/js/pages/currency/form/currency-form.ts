@@ -28,16 +28,53 @@ import VueResource from 'vue-resource';
 import {showGrowl} from '@app/utils/growl';
 import ConfirmModal from '@components/modal';
 import ReplaceFormatter from '@vue/plugins/vue-i18n/replace-formatter';
+// @ts-ignore-next-line
 import CurrencyFormatter from './components/CurrencyFormatter.vue';
 
 Vue.use(VueResource);
 Vue.use(VueI18n);
 
 export default class CurrencyForm {
+  map: Record<string, any>;
+
+  $currencyForm: JQuery;
+
+  $currencyFormFooter: JQuery;
+
+  apiReferenceUrl: string;
+
+  referenceCurrencyResource: any;
+
+  originalLanguages: any;
+
+  translations: Record<string, any>;
+
+  $currencySelector: JQuery;
+
+  $isUnofficialCheckbox: JQuery;
+
+  $isoCodeInput: JQuery;
+
+  $exchangeRateInput: JQuery;
+
+  $precisionInput: JQuery;
+
+  $resetDefaultSettingsButton: JQuery;
+
+  currencyFormatterId: string;
+
+  $loadingDataModal: JQuery;
+
+  hideModal: boolean;
+
+  state: Record<string, any>;
+
+  currencyFormatter: any;
+
   /**
    * @param {object} currencyFormMap - Page map
    */
-  constructor(currencyFormMap) {
+  constructor(currencyFormMap: Record<string, any>) {
     this.map = currencyFormMap;
     this.$currencyForm = $(this.map.currencyForm);
     this.$currencyFormFooter = $(this.map.currencyFormFooter);
@@ -54,28 +91,30 @@ export default class CurrencyForm {
     this.$loadingDataModal = $(this.map.loadingDataModal);
     this.currencyFormatterId = this.map.currencyFormatter.replace('#', '');
     this.hideModal = true;
+    this.currencyFormatter = null;
     this.$loadingDataModal.on('shown.bs.modal', () => {
       if (this.hideModal) {
         this.$loadingDataModal.modal('hide');
       }
     });
+    this.state = {};
   }
 
-  init() {
+  init(): void {
     this.initListeners();
     this.initFields();
     this.initState();
     this.initCurrencyFormatter();
   }
 
-  initState() {
+  initState(): void {
     this.state = {
       currencyData: this.getCurrencyDataFromForm(),
       languages: [...this.originalLanguages],
     };
   }
 
-  initCurrencyFormatter() {
+  initCurrencyFormatter(): void {
     // Customizer only present when languages data are present (for installed currencies only)
     if (!this.originalLanguages.length) {
       return;
@@ -87,7 +126,9 @@ export default class CurrencyForm {
       messages: {en: this.translations},
     });
 
-    $(`<div id="${this.currencyFormatterId}"></div>`).insertBefore(this.$currencyFormFooter);
+    $(`<div id="${this.currencyFormatterId}"></div>`).insertBefore(
+      this.$currencyFormFooter,
+    );
     this.currencyFormatter = new Vue({
       el: this.map.currencyFormatter,
       i18n,
@@ -100,19 +141,27 @@ export default class CurrencyForm {
       </currency-formatter>`,
     });
 
-    this.currencyFormatter.$watch('currencyData', () => {
-      // We use the state value directly since the object is shared with the Vue component and already updated
-      this.fillCurrencyCustomData(this.state.currencyData);
-    }, {deep: true, immediate: true});
+    this.currencyFormatter.$watch(
+      'currencyData',
+      () => {
+        // We use the state value directly since the object is shared with the Vue component and already updated
+        this.fillCurrencyCustomData(this.state.currencyData);
+      },
+      {deep: true, immediate: true},
+    );
   }
 
-  initListeners() {
+  initListeners(): void {
     this.$currencySelector.change(this.onCurrencySelectorChange.bind(this));
-    this.$isUnofficialCheckbox.change(this.onIsUnofficialCheckboxChange.bind(this));
-    this.$resetDefaultSettingsButton.click(this.onResetDefaultSettingsClick.bind(this));
+    this.$isUnofficialCheckbox.change(
+      this.onIsUnofficialCheckboxChange.bind(this),
+    );
+    this.$resetDefaultSettingsButton.click(
+      this.onResetDefaultSettingsClick.bind(this),
+    );
   }
 
-  initFields() {
+  initFields(): void {
     if (!this.isUnofficialCurrency()) {
       this.$isUnofficialCheckbox.prop('checked', false);
       this.$isoCodeInput.prop('readonly', true);
@@ -122,7 +171,7 @@ export default class CurrencyForm {
     }
   }
 
-  onCurrencySelectorChange() {
+  onCurrencySelectorChange(): void {
     const selectedISOCode = this.$currencySelector.val();
 
     if (selectedISOCode !== '') {
@@ -135,7 +184,7 @@ export default class CurrencyForm {
     }
   }
 
-  isUnofficialCurrency() {
+  isUnofficialCurrency(): boolean {
     if (this.$isUnofficialCheckbox.prop('type') === 'hidden') {
       return this.$isUnofficialCheckbox.attr('value') === '1';
     }
@@ -143,7 +192,7 @@ export default class CurrencyForm {
     return this.$isUnofficialCheckbox.prop('checked');
   }
 
-  onIsUnofficialCheckboxChange() {
+  onIsUnofficialCheckboxChange(): void {
     if (this.isUnofficialCurrency()) {
       this.$currencySelector.val('');
       this.$isoCodeInput.prop('readonly', false);
@@ -152,28 +201,31 @@ export default class CurrencyForm {
     }
   }
 
-  async onResetDefaultSettingsClick() {
+  async onResetDefaultSettingsClick(): Promise<void> {
     await this.resetCurrencyData(this.$isoCodeInput.val());
   }
 
-  showResetDefaultSettingsConfirmModal() {
+  showResetDefaultSettingsConfirmModal(): void {
     const confirmTitle = this.translations['modal.restore.title'];
     const confirmMessage = this.translations['modal.restore.body'];
     const confirmButtonLabel = this.translations['modal.restore.apply'];
     const closeButtonLabel = this.translations['modal.restore.cancel'];
 
-    const modal = new ConfirmModal({
-      id: 'currency_restore_default_settings',
-      confirmTitle,
-      confirmMessage,
-      confirmButtonLabel,
-      closeButtonLabel,
-    }, () => this.onResetDefaultSettingsClick());
+    const modal = new (ConfirmModal as any)(
+      {
+        id: 'currency_restore_default_settings',
+        confirmTitle,
+        confirmMessage,
+        confirmButtonLabel,
+        closeButtonLabel,
+      },
+      () => this.onResetDefaultSettingsClick(),
+    );
 
     modal.show();
   }
 
-  async resetCurrencyData(selectedISOCode) {
+  async resetCurrencyData(selectedISOCode: string): Promise<void> {
     this.$loadingDataModal.modal('show');
     this.$resetDefaultSettingsButton.addClass('spinner');
 
@@ -181,13 +233,17 @@ export default class CurrencyForm {
     this.fillCurrencyData(this.state.currencyData);
 
     // Reset languages
-    this.originalLanguages.forEach((language) => {
+    this.originalLanguages.forEach((language: Record<string, any>) => {
       // Use language data (which contain the reference) to reset
       // price specification data (which contain the custom values)
       const patterns = language.currencyPattern.split(';');
+      /* eslint-disable */
+
       language.priceSpecification.positivePattern = patterns[0];
-      language.priceSpecification.negativePattern = patterns.length > 1 ? patterns[1] : `-${patterns[0]}`;
+      language.priceSpecification.negativePattern =
+        patterns.length > 1 ? patterns[1] : `-${patterns[0]}`;
       language.priceSpecification.currencySymbol = language.currencySymbol;
+      /* eslint-enable */
     });
     this.state.languages = [...this.originalLanguages];
 
@@ -196,19 +252,26 @@ export default class CurrencyForm {
     this.$resetDefaultSettingsButton.removeClass('spinner');
   }
 
-  async fetchCurrency(currencyIsoCode) {
-    let currencyData = null;
+  async fetchCurrency(currencyIsoCode: string): Promise<void> {
+    let currencyData: Record<string, any> | null = null;
 
     if (currencyIsoCode) {
-      await this.referenceCurrencyResource.get({id: currencyIsoCode}).then((response) => {
-        currencyData = response.body;
-      }, (errorResponse) => {
-        if (errorResponse.body && errorResponse.body.error) {
-          showGrowl('error', errorResponse.body.error, 3000);
-        } else {
-          showGrowl('error', `Can not find CLDR data for currency ${currencyIsoCode}`, 3000);
-        }
-      });
+      await this.referenceCurrencyResource.get({id: currencyIsoCode}).then(
+        (response: Record<string, any>) => {
+          currencyData = response.body;
+        },
+        (errorResponse: Record<string, any>) => {
+          if (errorResponse.body && errorResponse.body.error) {
+            showGrowl('error', errorResponse.body.error, 3000);
+          } else {
+            showGrowl(
+              'error',
+              `Can not find CLDR data for currency ${currencyIsoCode}`,
+              3000,
+            );
+          }
+        },
+      );
     }
 
     if (currencyData && currencyData.transformations === undefined) {
@@ -262,7 +325,9 @@ export default class CurrencyForm {
     this.originalLanguages.forEach((lang) => {
       currencyData.names[lang.id] = $(this.map.namesInput(lang.id)).val();
       currencyData.symbols[lang.id] = $(this.map.symbolsInput(lang.id)).val();
-      currencyData.transformations[lang.id] = $(this.map.transformationsInput(lang.id)).val();
+      currencyData.transformations[lang.id] = $(
+        this.map.transformationsInput(lang.id),
+      ).val();
     });
 
     return currencyData;

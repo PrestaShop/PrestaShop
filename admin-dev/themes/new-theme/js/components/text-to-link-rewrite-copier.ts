@@ -28,7 +28,7 @@ const {$} = window;
 interface TextToLinkParams {
   sourceElementSelector: string;
   destinationElementSelector: string;
-  options: Record<string, string>;
+  options?: Record<string, string>;
 }
 
 /**

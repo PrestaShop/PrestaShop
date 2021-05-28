@@ -23,22 +23,33 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
 
-import PriceFieldAvailabilityHandler
-  from './price-field-availability-handler';
-
-import IncludeTaxFieldVisibilityHandler
-  from './include-tax-field-visibility-handler';
-import CatalogPriceRuleFormMap from './catalog-price-rule-form-map';
-
 const {$} = window;
 
-$(() => {
-  new PriceFieldAvailabilityHandler(
-    CatalogPriceRuleFormMap.initialPrice,
-    CatalogPriceRuleFormMap.price,
-  );
-  new IncludeTaxFieldVisibilityHandler(
-    CatalogPriceRuleFormMap.reductionType,
-    CatalogPriceRuleFormMap.includeTax,
-  );
-});
+/**
+ * Shows/hides 'include_tax' field depending from 'reduction_type' field value
+ */
+export default class IncludeTaxFieldVisibilityHandler {
+  $sourceSelector: JQuery;
+
+  $targetSelector: JQuery;
+
+  constructor(sourceSelector: string, targetSelector: string) {
+    this.$sourceSelector = $(sourceSelector);
+    this.$targetSelector = $(targetSelector);
+    this.handle();
+    this.$sourceSelector.on('change', () => this.handle());
+  }
+
+  /**
+   * When source value is 'percentage', target field is shown, else hidden
+   *
+   * @private
+   */
+  private handle(): void {
+    if (this.$sourceSelector.val() === 'percentage') {
+      this.$targetSelector.fadeOut();
+    } else {
+      this.$targetSelector.fadeIn();
+    }
+  }
+}

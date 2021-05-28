@@ -26,28 +26,28 @@
 const {$} = window;
 
 /**
- * Shows/hides 'include_tax' field depending from 'reduction_type' field value
+ * Enables/disables 'price' field depending from 'leave_initial_price' field checkbox value
  */
-export default class IncludeTaxFieldVisibilityHandler {
-  constructor(sourceSelector, targetSelector) {
-    this.$sourceSelector = $(sourceSelector);
+export default class PriceFieldAvailabilityHandler {
+  $sourceSelector: JQuery;
+
+  $targetSelector: JQuery;
+
+  constructor(checkboxSelector: string, targetSelector: string) {
+    this.$sourceSelector = $(checkboxSelector);
     this.$targetSelector = $(targetSelector);
     this.handle();
     this.$sourceSelector.on('change', () => this.handle());
-
-    return {};
   }
 
   /**
-   * When source value is 'percentage', target field is shown, else hidden
+   * When checkbox value is 1, target field is disabled, else enabled
    *
    * @private
    */
-  handle() {
-    if (this.$sourceSelector.val() === 'percentage') {
-      this.$targetSelector.fadeOut();
-    } else {
-      this.$targetSelector.fadeIn();
-    }
+  private handle(): void {
+    const checkboxVal = this.$sourceSelector.is(':checked');
+
+    this.$targetSelector.prop('disabled', checkboxVal);
   }
 }

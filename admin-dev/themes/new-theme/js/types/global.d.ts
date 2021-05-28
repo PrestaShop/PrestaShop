@@ -15,6 +15,9 @@ interface Window {
   tokenAdminOrders: string;
   tokenAdminCustomers: string;
   tokenAdminCustomerThreads: string;
+  // eslint-disable-next-line
+  translate_javascripts: Record<string, any>;
+  modalConfirmation: any;
 }
 
 interface TypeaheadDatasetConfig {
@@ -40,6 +43,7 @@ interface JQuery {
   passy: any;
   tokenfield: any;
   clickableDropdown: () => void;
+  datetimepicker: any;
 }
 /* eslint-disable */
 
@@ -65,6 +69,8 @@ interface AjaxResponse {
 
 interface PrestashopWindow {
   customRoutes: unknown;
+  component: any;
+  instance: any;
 }
 
 interface RegExpPositions extends RegExpExecArray {

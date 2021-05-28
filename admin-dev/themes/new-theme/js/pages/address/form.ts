@@ -32,14 +32,11 @@ import addressFormMap from './address-form-map';
 const {$} = window;
 
 $(document).ready(() => {
-  new AutocompleteWithEmail(
-    addressFormMap.addressEmailInput,
-    {
-      firstName: addressFormMap.addressFirstnameInput,
-      lastName: addressFormMap.addressLastnameInput,
-      company: addressFormMap.addressCompanyInput,
-    },
-  );
+  new AutocompleteWithEmail(addressFormMap.addressEmailInput, {
+    firstName: addressFormMap.addressFirstnameInput,
+    lastName: addressFormMap.addressLastnameInput,
+    company: addressFormMap.addressCompanyInput,
+  });
   new CountryStateSelectionToggler(
     addressFormMap.addressCountrySelect,
     addressFormMap.addressStateSelect,

@@ -24,9 +24,9 @@
  */
 const path = require('path');
 const webpack = require('webpack');
-const {CleanWebpackPlugin} = require('clean-webpack-plugin');
+const { CleanWebpackPlugin } = require('clean-webpack-plugin');
 const CopyPlugin = require('copy-webpack-plugin');
-const {VueLoaderPlugin} = require('vue-loader');
+const { VueLoaderPlugin } = require('vue-loader');
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 const FixStyleOnlyEntriesPlugin = require('webpack-fix-style-only-entries');
 const bourbon = require('bourbon');
@@ -56,9 +56,9 @@ module.exports = {
     currency: './js/pages/currency',
     currency_form: './js/pages/currency/form',
     customer: './js/pages/customer',
-    customer_address_form: './js/pages/address/form.js',
+    customer_address_form: './js/pages/address/form',
     customer_outstanding: './js/pages/outstanding',
-    customer_thread_view: './js/pages/customer-thread/view.js',
+    customer_thread_view: './js/pages/customer-thread/view',
     email: './js/pages/email',
     employee: './js/pages/employee/index',
     employee_form: './js/pages/employee/form',
@@ -73,18 +73,18 @@ module.exports = {
     language: './js/pages/language',
     localization: './js/pages/localization',
     logs: './js/pages/logs',
-    main: './js/theme.js',
+    main: './js/theme',
     maintenance: './js/pages/maintenance',
     manufacturer: './js/pages/manufacturer',
     manufacturer_address_form:
-      './js/pages/manufacturer/manufacturer_address_form.js',
+      './js/pages/manufacturer/manufacturer_address_form',
     merchandise_return: './js/pages/merchandise-return',
     meta: './js/pages/meta',
     module: './js/pages/module',
     module_card: './js/app/pages/module-card',
     monitoring: './js/pages/monitoring',
     order: './js/pages/order',
-    order_create: './js/pages/order/create.js',
+    order_create: './js/pages/order/create',
     order_delivery: './js/pages/order/delivery',
     order_message_form: './js/pages/order_message/form',
     order_message: './js/pages/order_message',
@@ -92,7 +92,7 @@ module.exports = {
     order_states_form: './js/pages/order-states/form',
     order_states: './js/pages/order-states',
     order_return_states_form: './js/pages/order-return-states/form',
-    order_view: './js/pages/order/view.js',
+    order_view: './js/pages/order/view',
     payment_preferences: './js/pages/payment-preferences',
     product_edit: './js/pages/product/edit',
     combination_edit: './js/pages/product/combination/edit',
@@ -103,7 +103,7 @@ module.exports = {
     sql_manager: './js/pages/sql-manager',
     stock: './js/app/pages/stock',
     supplier: './js/pages/supplier',
-    supplier_form: './js/pages/supplier/supplier-form.js',
+    supplier_form: './js/pages/supplier/supplier-form',
     tax: './js/pages/tax',
     tax_rules_group: './js/pages/tax-rules-group',
     themes: './js/pages/themes',
@@ -151,7 +151,7 @@ module.exports = {
           {
             loader: 'babel-loader',
             options: {
-              presets: [['env', {useBuiltIns: 'usage', modules: false}]],
+              presets: [['env', { useBuiltIns: 'usage', modules: false }]],
               plugins: ['transform-object-rest-spread', 'transform-runtime'],
             },
           },
@@ -348,14 +348,14 @@ module.exports = {
     new CleanWebpackPlugin({
       cleanOnceBeforeBuildPatterns: ['!theme.rtlfix'],
     }),
-    new MiniCssExtractPlugin({filename: '[name].css'}),
+    new MiniCssExtractPlugin({ filename: '[name].css' }),
     new webpack.ProvidePlugin({
       moment: 'moment', // needed for bootstrap datetime picker
       $: 'jquery', // needed for jquery-ui
       jQuery: 'jquery',
     }),
     new CopyPlugin({
-      patterns: [{from: 'static'}],
+      patterns: [{ from: 'static' }],
     }),
     new VueLoaderPlugin(),
   ],

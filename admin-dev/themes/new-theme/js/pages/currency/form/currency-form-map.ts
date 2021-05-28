@@ -23,25 +23,22 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
 
-import Grid from '../../components/grid/grid';
-import SortingExtension from '../../components/grid/extension/sorting-extension';
-import FiltersResetExtension from '../../components/grid/extension/filters-reset-extension';
-import ReloadListActionExtension from '../../components/grid/extension/reload-list-extension';
-import ExportToSqlManagerExtension from '../../components/grid/extension/export-to-sql-manager-extension';
-import TranslatableInput from '../../components/translatable-input';
-import FiltersSubmitButtonEnablerExtension
-  from '../../components/grid/extension/filters-submit-button-enabler-extension';
-
-const {$} = window;
-
-$(() => {
-  const creditSlipGrid = new Grid('credit_slip');
-
-  creditSlipGrid.addExtension(new ExportToSqlManagerExtension());
-  creditSlipGrid.addExtension(new ReloadListActionExtension());
-  creditSlipGrid.addExtension(new SortingExtension());
-  creditSlipGrid.addExtension(new FiltersResetExtension());
-  creditSlipGrid.addExtension(new FiltersSubmitButtonEnablerExtension());
-
-  new TranslatableInput();
-});
+/**
+ * Defines all selectors that are used in currency add/edit form.
+ */
+export default {
+  currencyForm: '#currency_form',
+  currencyFormFooter: '#currency_form .card .card-footer',
+  currencySelector: '#currency_selected_iso_code',
+  isUnofficialCheckbox: '#currency_unofficial',
+  namesInput: (langId: string): string => `#currency_names_${langId}`,
+  symbolsInput: (langId: string): string => `#currency_symbols_${langId}`,
+  transformationsInput: (langId: string): string => `#currency_transformations_${langId}`,
+  isoCodeInput: '#currency_iso_code',
+  exchangeRateInput: '#currency_exchange_rate',
+  resetDefaultSettingsInput: '#currency_reset_default_settings',
+  loadingDataModal: '#currency_loading_data_modal',
+  precisionInput: '#currency_precision',
+  shopAssociationTree: '#currency_shop_association',
+  currencyFormatter: '#currency_formatter',
+};

@@ -41,7 +41,7 @@ class TranslatableInput {
 
   selectedLocale: string;
 
-  constructor(options: Record<string, any>) {
+  constructor(options: Record<string, any> = {}) {
     const opts = options || {};
 
     this.localeItemSelector = opts.localeItemSelector || '.js-locale-item';
