@@ -32,6 +32,7 @@ import CustomizationsManager from '@pages/product/edit/customizations-manager';
 import FeatureValuesManager from '@pages/product/edit/feature-values-manager';
 import ProductFooterManager from '@pages/product/edit/product-footer-manager';
 import ProductFormModel from '@pages/product/edit/product-form-model';
+import ProductModulesManager from '@pages/product/edit/product-modules-manager';
 import ProductPartialUpdater from '@pages/product/edit/product-partial-updater';
 import ProductSEOManager from '@pages/product/edit/product-seo-manager';
 import ProductSuppliersManager from '@pages/product/edit/product-suppliers-manager';
@@ -77,6 +78,7 @@ $(() => {
   new ProductTypeManager($(ProductMap.productTypeSelector), $productForm);
   new CategoriesManager(eventEmitter);
   new ProductFooterManager();
+  new ProductModulesManager();
 
   const $productFormSubmitButton = $(ProductMap.productFormSubmitButton);
   new ProductPartialUpdater(
