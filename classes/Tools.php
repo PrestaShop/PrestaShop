@@ -3118,7 +3118,7 @@ exit;
      * Use json_encode instead
      * Convert an array to json string
      *
-     * @param array $data
+     * @param mixed $data
      * @param int $depth
      * @param int $options
      *

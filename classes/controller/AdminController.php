@@ -250,6 +250,9 @@ class AdminControllerCore extends Controller
     /** @var bool */
     private $allowAnonymous = false;
 
+    /** @var string */
+    public $override_folder;
+
     /** @var int DELETE access level */
     const LEVEL_DELETE = 4;
 
