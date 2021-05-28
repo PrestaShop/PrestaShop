@@ -4,9 +4,28 @@ parameters:
     - .github/workflows/phpstan/autoload.php
   paths:
     - admin-dev
+    - app
+    - bin
+    - cache
+    # - classes
+    # - config
+    # - controllers
+    - docs
+    - download
+    - img
+    # - install-dev
+    # - js
+    - localization
+    - mails
+    # - modules
     - override
+    - pdf
     - src
+    # - tests
+    - themes
     - tools
+    - translations
+    - upload
     - webservice
   excludePaths:
     - admin-dev/filemanager
