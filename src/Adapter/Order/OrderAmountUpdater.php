@@ -322,11 +322,9 @@ class OrderAmountUpdater
             $order->total_shipping_tax_excl = $totalShippingTaxExcluded;
 
             if (!$freeShipping) {
-                $shippingDiffTaxIncluded = $order->total_shipping_tax_incl - $totalShippingTaxIncluded;
-                $shippingDiffTaxExcluded = $order->total_shipping_tax_excl - $totalShippingTaxExcluded;
-                $order->total_paid -= $shippingDiffTaxIncluded;
-                $order->total_paid_tax_incl -= $shippingDiffTaxIncluded;
-                $order->total_paid_tax_excl -= $shippingDiffTaxExcluded;
+                $order->total_paid -= ($order->total_shipping_tax_incl - $totalShippingTaxIncluded);
+                $order->total_paid_tax_incl -= ($order->total_shipping_tax_incl - $totalShippingTaxIncluded);
+                $order->total_paid_tax_excl -= ($order->total_shipping_tax_excl - $totalShippingTaxExcluded);
             }
         }
     }
@@ -575,10 +573,8 @@ class OrderAmountUpdater
                 $invoice->total_shipping_tax_excl = $totalShippingTaxExcluded;
 
                 if (!$freeShipping) {
-                    $shippingDiffTaxIncluded = $invoice->total_shipping_tax_incl - $totalShippingTaxIncluded;
-                    $shippingDiffTaxExcluded = $invoice->total_shipping_tax_excl - $totalShippingTaxExcluded;
-                    $invoice->total_paid_tax_incl -= $shippingDiffTaxIncluded;
-                    $invoice->total_paid_tax_excl -= $shippingDiffTaxExcluded;
+                    $invoice->total_paid_tax_incl -= ($invoice->total_shipping_tax_incl - $totalShippingTaxIncluded);
+                    $invoice->total_paid_tax_excl -= ($invoice->total_shipping_tax_excl - $totalShippingTaxExcluded);
                 }
             }
 
@@ -593,7 +589,7 @@ class OrderAmountUpdater
      *
      * @return bool
      */
-    protected function isFreeShipping(Order $order)
+    protected function isFreeShipping(Order $order): bool
     {
         foreach ($order->getCartRules() as $cartRule) {
             if ($cartRule['free_shipping']) {
