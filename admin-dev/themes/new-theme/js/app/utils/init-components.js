@@ -38,14 +38,47 @@ import PreviewOpener from '@components/form/preview-opener';
 import MultistoreConfigField from '@js/components/form/multistore-config-field.js';
 import {EventEmitter} from '@components/event-emitter';
 import GridComponent from '@components/grid/grid';
+import Router from '@components/router';
 
 // Grid extensions
-import FiltersResetExtension from '@components/grid/extension/filters-reset-extension';
+import AsyncToggleColumnExtension from '@components/grid/extension/column/common/async-toggle-column-extension';
+import BulkActionCheckboxExtension from '@components/grid/extension/bulk-action-checkbox-extension';
+import BulkOpenTabsExtension from '@components/grid/extension/bulk-open-tabs-extension';
+import ChoiceExtension from '@components/grid/extension/choice-extension';
+import ColumnTogglingExtension from '@components/grid/extension/column-toggling-extension';
+import ExportToSqlManagerExtension from '@components/grid/extension/export-to-sql-manager-extension';
+import FiltersResetExtension from '@components/grid/extension/filters-reset-extension.js';
+import FiltersSubmitButtonEnablerExtension from '@components/grid/extension/filters-submit-button-enabler-extension';
+import LinkRowActionExtension from '@components/grid/extension/link-row-action-extension';
+import ModalFormSubmitExtension from '@components/grid/extension/modal-form-submit-extension';
+import PositionExtension from '@components/grid/extension/position-extension';
+import PreviewExtension from '@components/grid/extension/preview-extension';
+import ReloadListExtension from '@components/grid/extension/reload-list-extension';
+import SortingExtension from '@components/grid/extension/sorting-extension';
+import SubmitBulkActionExtension from '@components/grid/extension/submit-bulk-action-extension';
+import SubmitGridActionExtension from '@components/grid/extension/submit-grid-action-extension';
+import SubmitRowActionExtension from '@components/grid/extension/action/row/submit-row-action-extension';
 
 const Grid = {
-  instance: GridComponent,
+  core: GridComponent,
   extension: {
+    AsyncToggleColumnExtension,
+    BulkActionCheckboxExtension,
+    BulkOpenTabsExtension,
+    ChoiceExtension,
+    ColumnTogglingExtension,
+    ExportToSqlManagerExtension,
     FiltersResetExtension,
+    FiltersSubmitButtonEnablerExtension,
+    LinkRowActionExtension,
+    ModalFormSubmitExtension,
+    PositionExtension,
+    PreviewExtension,
+    ReloadListExtension,
+    SortingExtension,
+    SubmitBulkActionExtension,
+    SubmitGridActionExtension,
+    SubmitRowActionExtension,
   },
 };
 
@@ -105,6 +138,7 @@ const initPrestashopComponents = () => {
     MultistoreConfigField,
     PreviewOpener,
     Grid,
+    Router,
   };
 };
 export default initPrestashopComponents;
