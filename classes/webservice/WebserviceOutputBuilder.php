@@ -503,7 +503,7 @@ class WebserviceOutputBuilderCore
         }
         $output .= $this->setIndent($depth) . $this->objectRender->renderNodeHeader($ws_params['objectNodeName'], $ws_params);
 
-        if ($object->id != 0) {
+        if (!empty($object->id)) {
             // This to add virtual Fields for a particular entity.
             $virtual_fields = $this->addVirtualFields($ws_params['objectsNodeName'], $object);
             if (!empty($virtual_fields)) {
