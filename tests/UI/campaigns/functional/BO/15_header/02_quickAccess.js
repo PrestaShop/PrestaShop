@@ -14,7 +14,8 @@ const newCategoryPage = require('@pages/BO/catalog/categories/add');
 const newProductPage = require('@pages/BO/catalog/products/add');
 const newVoucherPage = require('@pages/BO/catalog/discounts/add');
 const ordersPage = require('@pages/BO/orders');
-const quickAccessPage = require('@pages/BO/orders');
+const quickAccessPage = require('@pages/BO/quickAccess');
+const addNewQuickAccessPage = require('@pages/BO/quickAccess/add');
 
 // Import test context
 const testContext = require('@utils/testContext');
@@ -24,7 +25,9 @@ const baseContext = 'functional_BO_header_quickAccess';
 let browserContext;
 let page;
 
-describe('Quick access links', async () => {
+const quickAccessLinkData = {name: 'New customer', url: 'index.php/sell/customers/new', openNewWindow: false};
+
+describe('Header : Quick access links', async () => {
   // before and after functions
   before(async function () {
     browserContext = await helper.createBrowserContext(this.browser);
@@ -47,7 +50,7 @@ describe('Quick access links', async () => {
     {args: {pageName: 'Orders', idLink: 6, pageTitle: ordersPage.pageTitle}},
     {args: {pageName: 'New voucher', idLink: 5, pageTitle: newVoucherPage.pageTitle}},
   ].forEach((test, index) => {
-    it(`should check '${test.args.pageName}' link from quick access`, async function () {
+    it(`should check '${test.args.pageName}' link from Quick access`, async function () {
       await testContext.addContextItem(this, 'testIdentifier', `checkLink${index}`, baseContext);
 
       await dashboardPage.quickAccessToPage(page, test.args.idLink);
@@ -57,7 +60,7 @@ describe('Quick access links', async () => {
     });
   });
 
-  it('should remove the last link \'New voucher\' from quick access', async function () {
+  it('should remove the last link \'New voucher\' from Quick access', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'removeLinkFromQuickAccess', baseContext);
 
     const validationMessage = await dashboardPage.removeLinkFromQuickAccess(page);
@@ -71,5 +74,30 @@ describe('Quick access links', async () => {
 
     const validationMessage = await dashboardPage.addCurrentPageToQuickAccess(page, 'New voucher');
     await expect(validationMessage).to.contains(dashboardPage.successfulUpdateMessage);
+  });
+
+  it('should go to \'Manage quick access\' page', async function () {
+    await testContext.addContextItem(this, 'testIdentifier', 'goToManageQuickAccessPage', baseContext);
+
+    await dashboardPage.manageQuickAccess(page);
+
+    const pageTitle = await quickAccessPage.getPageTitle(page);
+    await expect(pageTitle).to.contains(quickAccessPage.pageTitle);
+  });
+
+  it('should go to \'Add new quick access\' page', async function () {
+    await testContext.addContextItem(this, 'testIdentifier', 'goToAddQuickAccessPage', baseContext);
+
+    await quickAccessPage.goToAddNewQuickAccessPage(page);
+
+    const pageTitle = await addNewQuickAccessPage.getPageTitle(page);
+    await expect(pageTitle).to.contains(addNewQuickAccessPage.pageTitle);
+  });
+
+  it('should create new quick access link', async function () {
+    await testContext.addContextItem(this, 'testIdentifier', 'createQuickAccessLink', baseContext);
+
+    const validationMessage = await addNewQuickAccessPage.setQuickAccessLink(page, quickAccessLinkData);
+    await expect(validationMessage).to.contains(addNewQuickAccessPage.successfulCreationMessage);
   });
 });
