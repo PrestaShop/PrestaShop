@@ -29,8 +29,12 @@ class BOBasePage extends CommonPage {
     this.headerQuickDiv = '#header_quick';
     this.quickAccessDropdownToggle = '#quick_select';
     this.quickAccessContainer = '#quick-access-container';
-    this.quickAccessLink = idLink => `${this.headerQuickDiv} li:nth-child(${idLink}) a, ${this.quickAccessContainer} a:nth-child(${idLink})`;
-    this.quickAccessRemoveLink = `${this.headerQuickDiv} li a[data-method='remove'], ${this.quickAccessContainer} a[data-method='remove']`;
+    this.quickAccessLink = idLink => `${this.headerQuickDiv} li:nth-child(${idLink}) a,
+    ${this.quickAccessContainer} a:nth-child(${idLink})`;
+    this.quickAccessRemoveLink = `${this.headerQuickDiv} li a[data-method='remove'],
+    ${this.quickAccessContainer} a[data-method='remove']`;
+    this.manageYourQuickAccessLink = `${this.quickAccessContainer} a[href*='controller=AdminQuickAccesses'],
+    ${this.headerQuickDiv} a[href*='controller=AdminQuickAccesses']`;
 
     // Header links
     this.helpButton = '#product_form_open_help';
@@ -237,7 +241,7 @@ class BOBasePage extends CommonPage {
    */
   async manageQuickAccess(page) {
     await this.waitForSelectorAndClick(page, this.quickAccessDropdownToggle);
-    await this.waitForSelectorAndClick(page, this.quickAccessLink(9));
+    await this.waitForSelectorAndClick(page, this.manageYourQuickAccessLink);
   }
 
   /**

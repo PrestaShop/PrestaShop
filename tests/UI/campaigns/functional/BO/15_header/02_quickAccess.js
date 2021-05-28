@@ -80,6 +80,8 @@ describe('Header : Quick access links', async () => {
   it('should go to \'Manage quick access\' page', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'goToManageQuickAccessPageToCreateLink', baseContext);
 
+    await newVoucherPage.reloadPage(page);
+
     await newVoucherPage.manageQuickAccess(page);
 
     const pageTitle = await quickAccessPage.getPageTitle(page);
@@ -111,13 +113,6 @@ describe('Header : Quick access links', async () => {
     await expect(pageTitle).to.contains(newCustomerPage.pageTitleCreate);
   });
 
-  it('should remove the last link \'New voucher\' from Quick access', async function () {
-    await testContext.addContextItem(this, 'testIdentifier', 'removeLinkFromQuickAccess', baseContext);
-
-    const validationMessage = await newCustomerPage.removeLinkFromQuickAccess(page);
-    await expect(validationMessage).to.contains(newCustomerPage.updateSuccessfullMessage);
-  });
-
   it('should go to \'Manage quick access\' page', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'goToManageQuickAccessPageToDeleteLink', baseContext);
 
@@ -125,5 +120,21 @@ describe('Header : Quick access links', async () => {
 
     const pageTitle = await quickAccessPage.getPageTitle(page);
     await expect(pageTitle).to.contains(quickAccessPage.pageTitle);
+  });
+
+  it('should filter quick access table by link name', async function () {
+    await testContext.addContextItem(this, 'testIdentifier', 'searchByName', baseContext);
+
+    await quickAccessPage.filterTable(page, 'input', 'name', quickAccessLinkData.name);
+
+    const textColumn = await quickAccessPage.getTextColumn(page, 1, 'name');
+    await expect(textColumn).to.contains(quickAccessLinkData.name);
+  });
+
+  it('should delete the created quick access link by bulk actions', async function () {
+    await testContext.addContextItem(this, 'testIdentifier', 'deleteByBulkActions', baseContext);
+
+    const textColumn = await quickAccessPage.bulkDeleteQuickAccessLink(page);
+    await expect(textColumn).to.be.contains(quickAccessPage.successfulMultiDeleteMessage);
   });
 });

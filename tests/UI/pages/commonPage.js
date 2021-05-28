@@ -215,7 +215,7 @@ class CommonPage {
   async dialogListener(page, accept = true, text = '') {
     page.once('dialog', (dialog) => {
       if (accept && text === '') dialog.accept();
-      else if (text !== '') dialog.accept( text);
+      else if (text !== '') dialog.accept(text);
       else dialog.dismiss();
     });
   }
