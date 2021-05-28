@@ -167,7 +167,8 @@ class BOBasePage extends CommonPage {
     this.onboardingStopButton = 'a.onboarding-button-stop';
 
     // Growls
-    this.growlDefaultDiv = '#growls-default, #growls';
+    this.growlDiv = '#growls';
+    this.growlDefaultDiv = '#growls-default';
     this.growlMessageBlock = `${this.growlDefaultDiv} .growl-message`;
     this.growlCloseButton = `${this.growlDefaultDiv} .growl-close`;
 
@@ -217,7 +218,7 @@ class BOBasePage extends CommonPage {
     await this.waitForSelectorAndClick(page, this.quickAccessDropdownToggle);
     await this.waitForSelectorAndClick(page, this.quickAccessRemoveLink);
 
-    return this.getGrowlMessageContent(page);
+    return page.textContent(this.growlDiv);
   }
 
   /**
@@ -231,7 +232,7 @@ class BOBasePage extends CommonPage {
     await this.waitForSelectorAndClick(page, this.quickAccessDropdownToggle);
     await this.waitForSelectorAndClick(page, this.quickAccessLink(7));
 
-    return this.getGrowlMessageContent(page);
+    return page.textContent(this.growlDiv);
   }
 
   /**
