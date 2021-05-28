@@ -38,7 +38,7 @@
 {% block content %}
   {% set productType = productForm.vars.product_type %}
   {% set productId = productForm.vars.product_id %}
-  {% set extraHooks = renderhooksarray('displayAdminProductsExtra', { 'id_product': productId }) %}
+  {% set extraModulesHooks = renderhooksarray('displayAdminProductsExtra', { 'id_product': productId }) %}
 
   {{ form_start(productForm, {'attr': {
     'class': 'form-horizontal product-page product-page-v2 row justify-content-md-center', 'novalidate': 'novalidate',
@@ -73,7 +73,7 @@
       {{ include('@PrestaShop/Admin/Sell/Catalog/Product/Blocks/tabs.html.twig', {
         'productForm': productForm,
         'productType': productType,
-        'extraHooks': extraHooks
+        'extraModulesHooks': extraModulesHooks
       }) }}
     {% endblock %}
 
@@ -123,9 +123,9 @@
       {% endblock %}
 
       {% block product_extra_tab %}
-        {{ include('@PrestaShop/Admin/Sell/Catalog/Product/Tabs/hooks.html.twig', {
+        {{ include('@PrestaShop/Admin/Sell/Catalog/Product/Tabs/modules.html.twig', {
           'productForm': productForm,
-          'extraHooks': extraHooks,
+          'extraModulesHooks': extraModulesHooks,
         }) }}
       {% endblock %}
     </div>
