@@ -1078,7 +1078,7 @@ class FrontControllerCore extends Controller
             'inline' => false,
             'server' => 'local',
             'version' => null,
-            'needRtl' => true
+            'needRtl' => true,
         ];
         $params = array_merge($default_params, $params);
 
