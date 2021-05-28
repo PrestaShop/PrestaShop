@@ -23,9 +23,9 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
 
-import {EventEmitter} from './event-emitter';
+import { EventEmitter } from './event-emitter';
 
-const {$} = window;
+const { $ } = window;
 
 /**
  * This class is used to automatically toggle translated inputs (displayed with one
@@ -41,7 +41,7 @@ class TranslatableInput {
 
   selectedLocale: string;
 
-  constructor(options: Record<string, any>) {
+  constructor(options: Record<string, any> = {}) {
     const opts = options || {};
 
     this.localeItemSelector = opts.localeItemSelector || '.js-locale-item';
@@ -52,7 +52,7 @@ class TranslatableInput {
     $('body').on(
       'click',
       this.localeItemSelector,
-      this.toggleLanguage.bind(this),
+      this.toggleLanguage.bind(this)
     );
     EventEmitter.on('languageSelected', this.toggleInputs.bind(this));
   }
@@ -95,7 +95,7 @@ class TranslatableInput {
    * @private
    */
   toggleInputs(event: Record<string, any>): void {
-    const {form} = event;
+    const { form } = event;
     this.selectedLocale = event.selectedLocale;
     const localeButton = form.find(this.localeButtonSelector);
     const changeLanguageUrl = localeButton.data('change-language-url');
@@ -121,7 +121,7 @@ class TranslatableInput {
    */
   private saveSelectedLanguage(
     changeLanguageUrl: string,
-    selectedLocale: string,
+    selectedLocale: string
   ): void {
     $.post({
       url: changeLanguageUrl,

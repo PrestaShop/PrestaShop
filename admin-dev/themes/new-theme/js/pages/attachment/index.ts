@@ -24,27 +24,29 @@
  */
 
 import Grid from '@components/grid/grid';
-import SortingExtension from '@components/grid/extension/sorting-extension';
 import FiltersResetExtension from '@components/grid/extension/filters-reset-extension';
-import ReloadListActionExtension from '@components/grid/extension/reload-list-extension';
-import SubmitRowActionExtension from '@components/grid/extension/action/row/submit-row-action-extension';
-import SubmitBulkExtension from '@components/grid/extension/submit-bulk-action-extension';
-import BulkActionCheckboxExtension from '@components/grid/extension/bulk-action-checkbox-extension';
+import SortingExtension from '@components/grid/extension/sorting-extension';
 import ExportToSqlManagerExtension from '@components/grid/extension/export-to-sql-manager-extension';
-import FiltersSubmitButtonEnablerExtension
-  from '@components/grid/extension/filters-submit-button-enabler-extension';
+import ReloadListExtension from '@components/grid/extension/reload-list-extension';
+import BulkActionCheckboxExtension from '@components/grid/extension/bulk-action-checkbox-extension';
+import SubmitBulkExtension from '@components/grid/extension/submit-bulk-action-extension';
+import SubmitRowActionExtension from '@components/grid/extension/action/row/submit-row-action-extension';
+import LinkRowActionExtension from '@components/grid/extension/link-row-action-extension';
+import TranslatableInput from '@components/translatable-input';
 
-const {$} = window;
+const { $ } = window;
 
 $(() => {
-  const priceRuleGrid = new Grid('catalog_price_rule');
+  const attachmentGrid = new Grid('attachment');
 
-  priceRuleGrid.addExtension(new ExportToSqlManagerExtension());
-  priceRuleGrid.addExtension(new ReloadListActionExtension());
-  priceRuleGrid.addExtension(new SortingExtension());
-  priceRuleGrid.addExtension(new FiltersResetExtension());
-  priceRuleGrid.addExtension(new SubmitRowActionExtension());
-  priceRuleGrid.addExtension(new SubmitBulkExtension());
-  priceRuleGrid.addExtension(new BulkActionCheckboxExtension());
-  priceRuleGrid.addExtension(new FiltersSubmitButtonEnablerExtension());
+  attachmentGrid.addExtension(new FiltersResetExtension());
+  attachmentGrid.addExtension(new SortingExtension());
+  attachmentGrid.addExtension(new ExportToSqlManagerExtension());
+  attachmentGrid.addExtension(new ReloadListExtension());
+  attachmentGrid.addExtension(new BulkActionCheckboxExtension());
+  attachmentGrid.addExtension(new SubmitBulkExtension());
+  attachmentGrid.addExtension(new SubmitRowActionExtension());
+  attachmentGrid.addExtension(new LinkRowActionExtension());
+
+  new TranslatableInput();
 });

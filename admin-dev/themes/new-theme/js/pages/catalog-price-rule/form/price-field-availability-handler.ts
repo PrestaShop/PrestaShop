@@ -23,22 +23,31 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
 
-import PriceFieldAvailabilityHandler
-  from './price-field-availability-handler';
+const { $ } = window;
 
-import IncludeTaxFieldVisibilityHandler
-  from './include-tax-field-visibility-handler';
-import CatalogPriceRuleFormMap from './catalog-price-rule-form-map';
+/**
+ * Enables/disables 'price' field depending from 'leave_initial_price' field checkbox value
+ */
+export default class PriceFieldAvailabilityHandler {
+  $sourceSelector: JQuery;
 
-const {$} = window;
+  $targetSelector: JQuery;
 
-$(() => {
-  new PriceFieldAvailabilityHandler(
-    CatalogPriceRuleFormMap.initialPrice,
-    CatalogPriceRuleFormMap.price,
-  );
-  new IncludeTaxFieldVisibilityHandler(
-    CatalogPriceRuleFormMap.reductionType,
-    CatalogPriceRuleFormMap.includeTax,
-  );
-});
+  constructor(checkboxSelector: string, targetSelector: string) {
+    this.$sourceSelector = $(checkboxSelector);
+    this.$targetSelector = $(targetSelector);
+    this.handle();
+    this.$sourceSelector.on('change', () => this.handle());
+  }
+
+  /**
+   * When checkbox value is 1, target field is disabled, else enabled
+   *
+   * @private
+   */
+  private handle(): void {
+    const checkboxVal = this.$sourceSelector.is(':checked');
+
+    this.$targetSelector.prop('disabled', checkboxVal);
+  }
+}

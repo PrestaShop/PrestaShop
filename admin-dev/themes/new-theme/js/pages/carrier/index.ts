@@ -34,19 +34,18 @@ import SubmitRowActionExtension from '@components/grid/extension/action/row/subm
 import SubmitBulkExtension from '@components/grid/extension/submit-bulk-action-extension';
 import BulkActionCheckboxExtension from '@components/grid/extension/bulk-action-checkbox-extension';
 import ExportToSqlManagerExtension from '@components/grid/extension/export-to-sql-manager-extension';
-import FiltersSubmitButtonEnablerExtension
-  from '@components/grid/extension/filters-submit-button-enabler-extension';
+import FiltersSubmitButtonEnablerExtension from '@components/grid/extension/filters-submit-button-enabler-extension';
 import LinkRowActionExtension from '@components/grid/extension/link-row-action-extension';
 import PositionExtension from '@components/grid/extension/position-extension';
 
-const {$} = window;
+const { $ } = window;
 
 $(() => {
   const carrierGrid = new Grid('carrier');
 
   carrierGrid.addExtension(new SortingExtension());
   carrierGrid.addExtension(new ReloadListActionExtension());
-  carrierGrid.addExtension(new PositionExtension());
+  carrierGrid.addExtension(new PositionExtension(carrierGrid));
   carrierGrid.addExtension(new FiltersSubmitButtonEnablerExtension());
   carrierGrid.addExtension(new FiltersResetExtension());
   carrierGrid.addExtension(new ExportToSqlManagerExtension());

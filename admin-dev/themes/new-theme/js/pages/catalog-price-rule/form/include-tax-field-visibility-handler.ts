@@ -23,29 +23,33 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
 
-const {$} = window;
+const { $ } = window;
 
 /**
- * Enables/disables 'price' field depending from 'leave_initial_price' field checkbox value
+ * Shows/hides 'include_tax' field depending from 'reduction_type' field value
  */
-export default class PriceFieldAvailabilityHandler {
-  constructor(checkboxSelector, targetSelector) {
-    this.$sourceSelector = $(checkboxSelector);
+export default class IncludeTaxFieldVisibilityHandler {
+  $sourceSelector: JQuery;
+
+  $targetSelector: JQuery;
+
+  constructor(sourceSelector: string, targetSelector: string) {
+    this.$sourceSelector = $(sourceSelector);
     this.$targetSelector = $(targetSelector);
     this.handle();
     this.$sourceSelector.on('change', () => this.handle());
-
-    return {};
   }
 
   /**
-   * When checkbox value is 1, target field is disabled, else enabled
+   * When source value is 'percentage', target field is shown, else hidden
    *
    * @private
    */
-  handle() {
-    const checkboxVal = this.$sourceSelector.is(':checked');
-
-    this.$targetSelector.prop('disabled', checkboxVal);
+  private handle(): void {
+    if (this.$sourceSelector.val() === 'percentage') {
+      this.$targetSelector.fadeOut();
+    } else {
+      this.$targetSelector.fadeIn();
+    }
   }
 }

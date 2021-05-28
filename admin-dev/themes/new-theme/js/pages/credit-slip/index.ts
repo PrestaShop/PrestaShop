@@ -29,10 +29,9 @@ import FiltersResetExtension from '../../components/grid/extension/filters-reset
 import ReloadListActionExtension from '../../components/grid/extension/reload-list-extension';
 import ExportToSqlManagerExtension from '../../components/grid/extension/export-to-sql-manager-extension';
 import TranslatableInput from '../../components/translatable-input';
-import FiltersSubmitButtonEnablerExtension
-  from '../../components/grid/extension/filters-submit-button-enabler-extension';
+import FiltersSubmitButtonEnablerExtension from '../../components/grid/extension/filters-submit-button-enabler-extension';
 
-const {$} = window;
+const { $ } = window;
 
 $(() => {
   const creditSlipGrid = new Grid('credit_slip');

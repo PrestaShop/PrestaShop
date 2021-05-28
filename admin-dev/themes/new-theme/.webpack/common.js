@@ -33,7 +33,7 @@ const bourbon = require('bourbon');
 
 module.exports = {
   externals: {
-    jquery: 'jQuery',
+    jquery: 'jQuery'
   },
   entry: {
     address: './js/pages/address',
@@ -56,9 +56,9 @@ module.exports = {
     currency: './js/pages/currency',
     currency_form: './js/pages/currency/form',
     customer: './js/pages/customer',
-    customer_address_form: './js/pages/address/form.js',
+    customer_address_form: './js/pages/address/form',
     customer_outstanding: './js/pages/outstanding',
-    customer_thread_view: './js/pages/customer-thread/view.js',
+    customer_thread_view: './js/pages/customer-thread/view',
     email: './js/pages/email',
     employee: './js/pages/employee/index',
     employee_form: './js/pages/employee/form',
@@ -73,17 +73,17 @@ module.exports = {
     language: './js/pages/language',
     localization: './js/pages/localization',
     logs: './js/pages/logs',
-    main: './js/theme.js',
+    main: './js/theme',
     maintenance: './js/pages/maintenance',
     manufacturer: './js/pages/manufacturer',
-    manufacturer_address_form: './js/pages/manufacturer/manufacturer_address_form.js',
+    manufacturer_address_form: './js/pages/manufacturer/manufacturer_address_form',
     merchandise_return: './js/pages/merchandise-return',
     meta: './js/pages/meta',
     module: './js/pages/module',
     module_card: './js/app/pages/module-card',
     monitoring: './js/pages/monitoring',
     order: './js/pages/order',
-    order_create: './js/pages/order/create.js',
+    order_create: './js/pages/order/create',
     order_delivery: './js/pages/order/delivery',
     order_message_form: './js/pages/order_message/form',
     order_message: './js/pages/order_message',
@@ -91,7 +91,7 @@ module.exports = {
     order_states_form: './js/pages/order-states/form',
     order_states: './js/pages/order-states',
     order_return_states_form: './js/pages/order-return-states/form',
-    order_view: './js/pages/order/view.js',
+    order_view: './js/pages/order/view',
     payment_preferences: './js/pages/payment-preferences',
     product_edit: './js/pages/product/edit',
     combination_edit: './js/pages/product/combination/edit',
@@ -101,7 +101,7 @@ module.exports = {
     sql_manager: './js/pages/sql-manager',
     stock: './js/app/pages/stock',
     supplier: './js/pages/supplier',
-    supplier_form: './js/pages/supplier/supplier-form.js',
+    supplier_form: './js/pages/supplier/supplier-form',
     tax: './js/pages/tax',
     tax_rules_group: './js/pages/tax-rules-group',
     themes: './js/pages/themes',
@@ -115,7 +115,7 @@ module.exports = {
     orders: './scss/pages/orders/orders.scss',
     product: './scss/pages/product/product_page.scss',
     product_catalog: './scss/pages/product/products_catalog.scss',
-    stock_page: './scss/pages/stock/stock_page.scss',
+    stock_page: './scss/pages/stock/stock_page.scss'
   },
   output: {
     path: path.resolve(__dirname, '../public'),
@@ -124,7 +124,7 @@ module.exports = {
     library: '[name]',
 
     sourceMapFilename: '[name].[hash:8].map',
-    chunkFilename: '[id].[hash:8].js',
+    chunkFilename: '[id].[hash:8].js'
   },
   resolve: {
     extensions: ['.ts', '.js', '.vue', '.json'],
@@ -137,8 +137,8 @@ module.exports = {
       '@scss': path.resolve(__dirname, '../scss'),
       '@node_modules': path.resolve(__dirname, '../node_modules'),
       '@vue': path.resolve(__dirname, '../js/vue'),
-      '@PSTypes': path.resolve(__dirname, '../js/types'),
-    },
+      '@PSTypes': path.resolve(__dirname, '../js/types')
+    }
   },
   module: {
     rules: [
@@ -150,73 +150,73 @@ module.exports = {
             loader: 'babel-loader',
             options: {
               presets: [['env', {useBuiltIns: 'usage', modules: false}]],
-              plugins: ['transform-object-rest-spread', 'transform-runtime'],
-            },
-          },
-        ],
+              plugins: ['transform-object-rest-spread', 'transform-runtime']
+            }
+          }
+        ]
       },
       {
         test: /\.ts?$/,
         use: 'ts-loader',
-        exclude: /node_modules/,
+        exclude: /node_modules/
       },
       {
         test: /jquery-ui\.js/,
-        use: 'imports-loader?define=>false&this=>window',
+        use: 'imports-loader?define=>false&this=>window'
       },
       {
         test: /jquery\.magnific-popup\.js/,
-        use: 'imports-loader?define=>false&exports=>false&this=>window',
+        use: 'imports-loader?define=>false&exports=>false&this=>window'
       },
       {
         test: /bloodhound\.min\.js/,
         use: [
           {
             loader: 'expose-loader',
-            query: 'Bloodhound',
-          },
-        ],
+            query: 'Bloodhound'
+          }
+        ]
       },
       {
         test: /dropzone\/dist\/dropzone\.js/,
-        loader: 'imports-loader?this=>window&module=>null',
+        loader: 'imports-loader?this=>window&module=>null'
       },
       {
         test: require.resolve('moment'),
-        loader: 'imports-loader?define=>false&this=>window',
+        loader: 'imports-loader?define=>false&this=>window'
       },
       {
         test: /typeahead\.jquery\.js/,
-        loader: 'imports-loader?define=>false&exports=>false&this=>window',
+        loader: 'imports-loader?define=>false&exports=>false&this=>window'
       },
       {
         test: /bootstrap-tokenfield\.js/,
-        loader: 'imports-loader?define=>false&exports=>false&this=>window',
+        loader: 'imports-loader?define=>false&exports=>false&this=>window'
       },
       {
         test: /bootstrap-datetimepicker\.js/,
-        loader: 'imports-loader?define=>false&exports=>false&this=>window',
+        loader: 'imports-loader?define=>false&exports=>false&this=>window'
       },
       {
         test: /bootstrap-colorpicker\.js/,
-        loader: 'imports-loader?define=>false&exports=>false&this=>window',
+        loader: 'imports-loader?define=>false&exports=>false&this=>window'
       },
       {
         test: /jwerty\/jwerty\.js/,
-        loader: 'imports-loader?this=>window&module=>false',
+        loader: 'imports-loader?this=>window&module=>false'
       },
       {
         test: /\.vue$/,
-        loader: 'vue-loader',
+        loader: 'vue-loader'
       },
       {
         test: /\.css$/,
         use: [
           {
-            loader: MiniCssExtractPlugin.loader,
+            loader: MiniCssExtractPlugin.loader
           },
-          'css-loader',
-        ],
+          'css-loader'
+        ]
       },
       {
         test: /\.scss$/,
@@ -227,50 +227,50 @@ module.exports = {
           {
             loader: 'css-loader',
             options: {
-              sourceMap: true,
-            },
+              sourceMap: true
+            }
           },
           {
             loader: 'postcss-loader',
             options: {
-              sourceMap: true,
-            },
+              sourceMap: true
+            }
           },
           {
             loader: 'sass-loader',
             options: {
               sourceMap: true,
               sassOptions: {
-                includePaths: [bourbon.includePaths],
-              },
-            },
-          },
-        ],
+                includePaths: [bourbon.includePaths]
+              }
+            }
+          }
+        ]
       },
       {
         test: /\.scss$/,
         include: /js/,
-        use: ['vue-style-loader', 'css-loader', 'sass-loader'],
+        use: ['vue-style-loader', 'css-loader', 'sass-loader']
       },
       // FILES
       {
         test: /.(jpg|png|woff2?|eot|otf|ttf|svg|gif)$/,
-        loader: 'file-loader?name=[hash].[ext]',
-      },
-    ],
+        loader: 'file-loader?name=[hash].[ext]'
+      }
+    ]
   },
   plugins: [
     new FixStyleOnlyEntriesPlugin(),
     new CleanWebpackPlugin({
-      cleanOnceBeforeBuildPatterns: ['!theme.rtlfix'],
+      cleanOnceBeforeBuildPatterns: ['!theme.rtlfix']
     }),
     new MiniCssExtractPlugin({filename: '[name].css'}),
     new webpack.ProvidePlugin({
       moment: 'moment', // needed for bootstrap datetime picker
       $: 'jquery', // needed for jquery-ui
-      jQuery: 'jquery',
+      jQuery: 'jquery'
     }),
     new CopyPlugin([{from: 'static'}]),
-    new VueLoaderPlugin(),
-  ],
+    new VueLoaderPlugin()
+  ]
 };

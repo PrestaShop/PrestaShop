@@ -26,7 +26,7 @@
 const {$} = window;
 
 export default class AutocompleteWithEmail {
-  constructor(emailInputSelector, map = []) {
+  constructor(emailInputSelector, map = {}) {
     this.map = map;
     this.$emailInput = $(emailInputSelector);
     this.$emailInput.on('change', () => this.change());
@@ -37,18 +37,20 @@ export default class AutocompleteWithEmail {
       url: this.$emailInput.data('customer-information-url'),
       dataType: 'json',
       data: {
-        email: this.$emailInput.val(),
-      },
-    }).then((response) => {
-      Object.keys(this.map).forEach((key) => {
-        if (response[key] !== undefined) {
-          $(this.map[key]).val(response[key]);
+        email: this.$emailInput.val()
+      }
+    })
+      .then(response => {
+        Object.keys(this.map).forEach(key => {
+          if (response[key] !== undefined) {
+            $(this.map[key]).val(response[key]);
+          }
+        });
+      })
+      .catch(response => {
+        if (typeof response.responseJSON !== 'undefined') {
+          window.showErrorMessage(response.responseJSON.message);
         }
       });
-    }).catch((response) => {
-      if (typeof response.responseJSON !== 'undefined') {
-        window.showErrorMessage(response.responseJSON.message);
-      }
-    });
   }
 }
