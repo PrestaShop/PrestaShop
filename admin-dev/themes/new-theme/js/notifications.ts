@@ -24,7 +24,7 @@
  */
 import Router from '@components/router';
 
-const refreshNotifications = function () {
+const refreshNotifications = function (): void {
   let timer = null;
   const router = new Router();
 
@@ -42,8 +42,16 @@ const refreshNotifications = function () {
         const nbCustomerMessages = parseInt(json.customer_message.total, 10);
         const notificationsTotal = nbOrders + nbCustomers + nbCustomerMessages;
 
-        fillTpl(json.order.results, $('#orders-notifications'), $('#order-notification-template').html());
-        fillTpl(json.customer.results, $('#customers-notifications'), $('#customer-notification-template').html());
+        fillTpl(
+          json.order.results,
+          $('#orders-notifications'),
+          $('#order-notification-template').html(),
+        );
+        fillTpl(
+          json.customer.results,
+          $('#customers-notifications'),
+          $('#customer-notification-template').html(),
+        );
         fillTpl(
           json.customer_message.results,
           $('#messages-notifications'),
@@ -54,7 +62,9 @@ const refreshNotifications = function () {
         setNotificationsNumber('_nb_new_customers_', nbCustomers);
         setNotificationsNumber('_nb_new_messages_', nbCustomerMessages);
         if (notificationsTotal) {
-          $('#notifications-total').removeClass('hide').html(notificationsTotal);
+          $('#notifications-total')
+            .removeClass('hide')
+            .html(<string>(<unknown>notificationsTotal));
         } else if (!$('#notifications-total').hasClass('hide')) {
           $('#notifications-total').addClass('hide');
         }
@@ -63,10 +73,14 @@ const refreshNotifications = function () {
     },
   });
 
-  clearTimeout(timer);
+  clearTimeout(<any>timer);
 };
 
-let fillTpl = function (results, eltAppendTo, tpl) {
+let fillTpl = function (
+  results: Record<string, any>,
+  eltAppendTo: JQuery,
+  tpl: string,
+) {
   eltAppendTo.children('.notification-elements').empty();
   if (results.length === 0) {
     eltAppendTo.addClass('empty');
@@ -81,24 +95,43 @@ let fillTpl = function (results, eltAppendTo, tpl) {
 
     /* eslint-disable max-len */
     eltAppendTo.children('.notification-elements').append(
-      tpl.replace(/_id_order_/g, parseInt(value.id_order, 10))
+      tpl
+        .replace(/_id_order_/g, <string>(<unknown>parseInt(value.id_order, 10)))
         .replace(/_customer_name_/g, value.customer_name)
         .replace(/_iso_code_/g, value.iso_code)
-        .replace(/_carrier_/g, (value.carrier !== '' ? ` - ${value.carrier}` : ''))
+        .replace(
+          /_carrier_/g,
+          value.carrier !== '' ? ` - ${value.carrier}` : '',
+        )
         .replace(/_total_paid_/g, value.total_paid)
-        .replace(/_id_customer_/g, parseInt(value.id_customer, 10))
-        .replace(/_company_/g, (value.company !== '' ? ` (${value.company}) ` : ''))
+        .replace(
+          /_id_customer_/g,
+          <string>(<unknown>parseInt(value.id_customer, 10)),
+        )
+        .replace(
+          /_company_/g,
+          value.company !== '' ? ` (${value.company}) ` : '',
+        )
         .replace(/_date_add_/g, value.date_add)
         .replace(/_status_/g, value.status)
-        .replace(/order_url/g, `${window.baseAdminDir}index.php?tab=AdminOrders&token=${window.tokenAdminOrders}&vieworder&id_order=${value.id_order}`)
-        .replace(/customer_url/g, `${window.baseAdminDir}index.php?tab=AdminCustomers&token=${window.tokenAdminCustomers}&viewcustomer&id_customer=${value.id_customer}`)
-        .replace(/message_url/g, `${window.baseAdminDir}index.php?tab=AdminCustomerThreads&token=${window.tokenAdminCustomerThreads}&viewcustomer_thread&id_customer_thread=${value.id_customer_thread}`),
+        .replace(
+          /order_url/g,
+          `${window.baseAdminDir}index.php?tab=AdminOrders&token=${window.tokenAdminOrders}&vieworder&id_order=${value.id_order}`,
+        )
+        .replace(
+          /customer_url/g,
+          `${window.baseAdminDir}index.php?tab=AdminCustomers&token=${window.tokenAdminCustomers}&viewcustomer&id_customer=${value.id_customer}`,
+        )
+        .replace(
+          /message_url/g,
+          `${window.baseAdminDir}index.php?tab=AdminCustomerThreads&token=${window.tokenAdminCustomerThreads}&viewcustomer_thread&id_customer_thread=${value.id_customer_thread}`,
+        ),
     );
     /* eslint-ensable max-len */
   });
 };
 
-let setNotificationsNumber = function (id, number) {
+let setNotificationsNumber = function (id: string, number: number): void {
   if (number > 0) {
     $(`#${id}`).text(` (${number})`);
   } else {
