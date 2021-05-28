@@ -9,6 +9,7 @@ interface Window {
   str2url: any;
   prestaShopUiKit: any;
 }
+
 interface TypeaheadDatasetConfig {
   display: string | ((text: string) => void);
   value: string;

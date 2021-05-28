@@ -22,27 +22,33 @@
  * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
+// @ts-ignore-next-line
+import Jets from 'jets/jets';
 
-export default function (search) {
+export default function (search: Jets): void {
   $('.reset-translation-value').each((buttonIndex, button) => {
     const $editTranslationForm = $(button).parents('form');
-    const defaultTranslationValue = $editTranslationForm.find('*[name=default]').val();
+    const defaultTranslationValue = $editTranslationForm
+      .find('*[name=default]')
+      .val();
 
     $(button).click(() => {
-      $editTranslationForm.find('*[name=translation_value]').val(defaultTranslationValue);
+      $editTranslationForm
+        .find('*[name=translation_value]')
+        .val(<string>defaultTranslationValue);
       $editTranslationForm.submit();
     });
   });
 
-  const showFlashMessageOnEdit = (form) => {
+  const showFlashMessageOnEdit = (form: HTMLElement) => {
     $(form).submit((event) => {
       event.preventDefault();
 
       const $editTranslationForm = $(event.target);
       const url = $editTranslationForm.attr('action');
 
-      $.post(url, $editTranslationForm.serialize(), (response) => {
-        let flashMessage;
+      $.post(<string>url, $editTranslationForm.serialize(), (response) => {
+        let flashMessage: JQuery;
 
         if (response.successful_update) {
           flashMessage = $editTranslationForm.find('.alert-info');
@@ -50,8 +56,12 @@ export default function (search) {
           // Propagate edition
           const hash = $editTranslationForm.data('hash');
           const $editTranslationForms = $(`[data-hash=${hash}]`);
-          const $translationValueFields = $($editTranslationForms.find('textarea'));
-          $translationValueFields.val($editTranslationForm.find('textarea').val());
+          const $translationValueFields = $(
+            $editTranslationForms.find('textarea'),
+          );
+          $translationValueFields.val(
+            <string>$editTranslationForm.find('textarea').val(),
+          );
 
           // Refresh search index
           $editTranslationForms.removeAttr('data-jets');

@@ -23,42 +23,52 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
 
-export default function (callback) {
+export default function (callback: () => void): void {
   const buttonSuffix = 'translation-messages';
   const hideClass = 'hide';
 
-  function hideCurrentTranslationForms(formsContainer) {
+  function hideCurrentTranslationForms(formsContainer: JQuery) {
     const currentTranslationForms = formsContainer.find('.translation-forms');
 
     if (currentTranslationForms.length > 0) {
-      const hiddenFormsContainer = $(`[data-parent-of="${currentTranslationForms.attr('id')}"]`);
+      const hiddenFormsContainer = $(
+        `[data-parent-of="${currentTranslationForms.attr('id')}"]`,
+      );
       currentTranslationForms.find('form').addClass(hideClass);
       hiddenFormsContainer.append(currentTranslationForms);
     }
   }
 
-  function hideCurrentNavigationBar(navigationContainer) {
+  function hideCurrentNavigationBar(navigationContainer: JQuery) {
     const currentNavigationBar = navigationContainer.find('nav');
 
     if (currentNavigationBar.length > 0) {
       const navIdentifier = currentNavigationBar.attr('data-navigation-of');
-      const hiddenNavigationBarContainer = $(`[data-navigation-parent-of="${navIdentifier}"]`);
+      const hiddenNavigationBarContainer = $(
+        `[data-navigation-parent-of="${navIdentifier}"]`,
+      );
       currentNavigationBar.addClass(hideClass);
       hiddenNavigationBarContainer.append(currentNavigationBar);
     }
   }
 
-  function highlightDomainFirstPart(showTranslationsFormButton) {
+  function highlightDomainFirstPart(showTranslationsFormButton: JQuery) {
     $('.domain-first-part').removeClass('active');
-    const domainFirstPart = $($(showTranslationsFormButton.parents('.subdomains')[0])
-      .prevAll()
-      .filter('.domain-first-part'))[0];
+    const domainFirstPart = $(
+      $(showTranslationsFormButton.parents('.subdomains')[0])
+        .prevAll()
+        .filter('.domain-first-part'),
+    )[0];
     $(domainFirstPart).addClass('active');
   }
 
-  function updateDomainTitle(editTranslationForms) {
-    const domainPart = editTranslationForms.parents('.translation-domain').prev();
-    const missingTranslationWarning = domainPart.find('.missing-translations-short-message');
+  function updateDomainTitle(editTranslationForms: JQuery) {
+    const domainPart = editTranslationForms
+      .parents('.translation-domain')
+      .prev();
+    const missingTranslationWarning = domainPart.find(
+      '.missing-translations-short-message',
+    );
     const warningPlaceholder = $('#domain .missing-translations');
     const totalPlaceholder = $('#domain .total-expressions');
     const separator = $('#domain .separator');
@@ -74,25 +84,40 @@ export default function (callback) {
 
     const domain = $('#domain .name');
     const title = editTranslationForms.attr('data-domain');
-    domain.text(title);
+    domain.text(<string>title);
   }
 
-  function updateMissingTranslationsMessages(title) {
-    const missingTranslationsMessage = title.find('.missing-translations-long-message');
+  function updateMissingTranslationsMessages(title: JQuery) {
+    const missingTranslationsMessage = title.find(
+      '.missing-translations-long-message',
+    );
 
     if (missingTranslationsMessage.text().length > 0) {
-      $('.translation-domains .missing-translations-paragraph').text(missingTranslationsMessage.text());
+      $('.translation-domains .missing-translations-paragraph').text(
+        missingTranslationsMessage.text(),
+      );
     } else {
       $('.translation-domains .missing-translations-paragraph').text('');
     }
   }
 
-  function updateNavigationBar(translationDomain, editTranslationForms) {
+  function updateNavigationBar(
+    translationDomain: JQuery,
+    editTranslationForms: JQuery,
+  ) {
     const navigationContainer = $('.navbar-container:first');
     const navigation = translationDomain.find('nav');
 
-    navigation.parent().attr('data-navigation-parent-of', editTranslationForms.attr('id'));
-    navigation.attr('data-navigation-of', editTranslationForms.attr('id'));
+    navigation
+      .parent()
+      .attr(
+        'data-navigation-parent-of',
+        <string>editTranslationForms.attr('id'),
+      );
+    navigation.attr(
+      'data-navigation-of',
+      <string>editTranslationForms.attr('id'),
+    );
 
     hideCurrentNavigationBar(navigationContainer);
 
@@ -103,7 +128,10 @@ export default function (callback) {
     $('.forms-container').after(navigationContainer.clone());
   }
 
-  function updateEditTranslationForms(formsContainer, editTranslationForms) {
+  function updateEditTranslationForms(
+    formsContainer: JQuery,
+    editTranslationForms: JQuery,
+  ) {
     hideCurrentTranslationForms(formsContainer);
 
     formsContainer.append(editTranslationForms);
@@ -116,7 +144,9 @@ export default function (callback) {
         const showTranslationsFormButton = $(event.target);
 
         const translationDomain = showTranslationsFormButton.parent();
-        const editTranslationForms = translationDomain.find('.translation-forms');
+        const editTranslationForms = translationDomain.find(
+          '.translation-forms',
+        );
         const formsContainer = $('.forms-container');
 
         if (editTranslationForms.length === 0) {
@@ -135,21 +165,25 @@ export default function (callback) {
       });
     });
 
-    $('.domain-part .delegate-toggle-messages').each((togglerIndex, toggler) => {
-      $(toggler).click((event) => {
-        let title = $(event.target);
+    $('.domain-part .delegate-toggle-messages').each(
+      (togglerIndex, toggler) => {
+        $(toggler).click((event) => {
+          let title = $(event.target);
 
-        if (!$(event.target).hasClass('domain-part')) {
-          title = $(event.target).parent();
-        }
+          if (!$(event.target).hasClass('domain-part')) {
+            title = $(event.target).parent();
+          }
 
-        updateMissingTranslationsMessages(title);
+          updateMissingTranslationsMessages(title);
 
-        const translationDomain = title.next();
-        const showMessagesButton = translationDomain.find(`.show-${buttonSuffix}`);
+          const translationDomain = title.next();
+          const showMessagesButton = translationDomain.find(
+            `.show-${buttonSuffix}`,
+          );
 
-        showMessagesButton.click();
-      });
-    });
+          showMessagesButton.click();
+        });
+      },
+    );
   })();
 }
