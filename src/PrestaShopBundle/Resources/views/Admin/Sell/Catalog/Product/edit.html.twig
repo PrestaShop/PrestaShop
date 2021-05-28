@@ -41,7 +41,7 @@
   {% set extraModulesHooks = renderhooksarray('displayAdminProductsExtra', { 'id_product': productId }) %}
 
   <div class="header-toolbar d-print-none">
-    {{ multistoreHeader()|raw }}
+    {{ multistoreHeader() }}
   </div>
 
   {{ form_start(productForm, {'attr': {
