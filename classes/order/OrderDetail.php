@@ -65,7 +65,7 @@ class OrderDetailCore extends ObjectModel
     public $product_quantity_reinjected;
 
     /**
-     * @deprecated Use unit_price_tax_excl instead
+     * @deprecated since 1.5 Use unit_price_tax_excl instead
      *
      * @var float Without taxes, includes ecotax
      */
