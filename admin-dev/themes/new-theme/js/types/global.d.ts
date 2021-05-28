@@ -8,6 +8,13 @@ interface Window {
   moduleURLs: Record<string, any>;
   str2url: any;
   prestaShopUiKit: any;
+  // eslint-disable-next-line
+  update_success_msg: string;
+  adminNotificationPushLink: string;
+  baseAdminDir: string;
+  tokenAdminOrders: string;
+  tokenAdminCustomers: string;
+  tokenAdminCustomerThreads: string;
 }
 
 interface TypeaheadDatasetConfig {
@@ -32,12 +39,15 @@ interface JQuery {
   tableDnD(params: unknown): void;
   passy: any;
   tokenfield: any;
+  clickableDropdown: () => void;
 }
 /* eslint-disable */
 
 interface JQueryStatic {
   tableDnD: TableDnD;
   passy: any;
+  tokenfield: any;
+  clickableDropdown: () => void;
 }
 
 interface TableDnD {

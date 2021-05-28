@@ -22,7 +22,7 @@
  * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
-import refreshNotifications from '@js/notifications.js';
+import refreshNotifications from '@js/notifications';
 
 const {$} = window;
 
@@ -38,7 +38,7 @@ export default class Header {
     });
   }
 
-  initQuickAccess() {
+  initQuickAccess(): void {
     $('.js-quick-link').on('click', (e) => {
       e.preventDefault();
 
@@ -102,7 +102,7 @@ export default class Header {
     });
   }
 
-  initMultiStores() {
+  initMultiStores(): void {
     $('.js-link').on('click', (e) => {
       window.open(
         $(e.target)
@@ -113,7 +113,7 @@ export default class Header {
     });
   }
 
-  initNotificationsToggle() {
+  initNotificationsToggle(): void {
     $('.notification.dropdown-toggle').on('click', () => {
       if (!$('.mobile-nav').hasClass('expanded')) {
         this.updateEmployeeNotifications();
@@ -138,7 +138,7 @@ export default class Header {
     });
   }
 
-  initSearch() {
+  initSearch(): void {
     $('.js-items-list').on('click', (e) => {
       $('.js-form-search').attr('placeholder', $(e.target).data('placeholder'));
       $('.js-search-type').val($(e.target).data('value'));
@@ -146,7 +146,7 @@ export default class Header {
     });
   }
 
-  updateEmployeeNotifications() {
+  updateEmployeeNotifications(): void {
     $.post(window.adminNotificationPushLink, {
       type: $('.notification-center .nav-link.active').attr('data-type'),
     });
@@ -155,7 +155,7 @@ export default class Header {
   /**
    * Updates the offset of the content div in whenever the header changes size
    */
-  initContentDivOffset() {
+  initContentDivOffset(): void {
     const onToolbarResize = function () {
       const toolbar = $('.header-toolbar').last();
       const header = $('.main-header');
@@ -163,7 +163,10 @@ export default class Header {
       const spacing = 15;
 
       if (toolbar.length && header.length && content.length) {
-        content.css('padding-top', toolbar.outerHeight() + header.outerHeight() + spacing);
+        content.css(
+          'padding-top',
+          <number>toolbar.outerHeight() + <number>header.outerHeight() + spacing,
+        );
       }
     };
 
