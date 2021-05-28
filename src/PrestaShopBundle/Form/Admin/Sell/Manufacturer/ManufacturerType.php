@@ -81,7 +81,7 @@ class ManufacturerType extends TranslatorAwareType
                 'constraints' => [
                     new NotBlank([
                         'message' => $this->trans(
-                            'This field cannot be empty', 'Admin.Notifications.Error'
+                            'This field cannot be empty.', 'Admin.Notifications.Error'
                         ),
                     ]),
                     new Length([
@@ -204,7 +204,7 @@ class ManufacturerType extends TranslatorAwareType
                 'constraints' => [
                     new NotBlank([
                         'message' => $this->trans(
-                            'This field cannot be empty', 'Admin.Notifications.Error'
+                            'This field cannot be empty.', 'Admin.Notifications.Error'
                         ),
                     ]),
                 ],

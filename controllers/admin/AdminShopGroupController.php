@@ -218,7 +218,7 @@ class AdminShopGroupControllerCore extends AdminController
                 ],
                 [
                     'type' => 'switch',
-                    'label' => $this->trans('Share available quantities to sell', [], 'Admin.Advparameters.Feature'),
+                    'label' => $this->trans('Share available quantities for sale', [], 'Admin.Advparameters.Feature'),
                     'name' => 'share_stock',
                     'required' => true,
                     'class' => 't',

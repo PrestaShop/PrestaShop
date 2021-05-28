@@ -580,11 +580,11 @@ class CurrencyController extends FrameworkBundleAdminController
                     'Admin.International.Notification'
                 ),
                 CurrencyConstraintException::EMPTY_BULK_TOGGLE => $this->trans(
-                    'You must select at least one element to perform a bulk action.',
+                    'You must select at least one item to perform a bulk action.',
                     'Admin.Notifications.Error'
                 ),
                 CurrencyConstraintException::EMPTY_BULK_DELETE => $this->trans(
-                    'You must select at least one element to perform a bulk action.',
+                    'You must select at least one item to perform a bulk action.',
                     'Admin.Notifications.Error'
                 ),
             ],
