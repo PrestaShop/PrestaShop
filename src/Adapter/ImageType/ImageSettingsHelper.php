@@ -113,7 +113,7 @@ class ImageSettingsHelper implements ImageSettingsHelperInterface
         if (!is_dir($this->productImagesDir)) {
             return false;
         }
-        
+
         $displayMove = false;
 
         if ($dh = opendir($this->productImagesDir)) {
