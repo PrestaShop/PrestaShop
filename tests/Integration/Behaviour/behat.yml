@@ -552,3 +552,10 @@ default:
           contexts:
             - Tests\Integration\Behaviour\Features\Context\CommonFeatureContext
             - Tests\Integration\Behaviour\Features\Context\Domain\CustomerServiceFeatureContext
+
+        image_type:
+            paths:
+                - "%paths.base%/Features/Scenario/ImageType"
+            contexts:
+                - Tests\Integration\Behaviour\Features\Context\CommonFeatureContext
+                - Tests\Integration\Behaviour\Features\Context\Domain\ImageTypeFeatureContext
