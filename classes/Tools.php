@@ -1080,8 +1080,16 @@ class ToolsCore
         return html_entity_decode((string) $string, ENT_QUOTES, 'utf-8');
     }
 
+    /**
+     * @deprecated Since 1.7.9.0.
+     */
     public static function safePostVars()
     {
+        @trigger_error(
+            'Tools::safePostVars() is deprecated since version 1.7.9.0. ',
+            E_USER_DEPRECATED
+        );
+
         if (!isset($_POST) || !is_array($_POST)) {
             $_POST = [];
         } else {
