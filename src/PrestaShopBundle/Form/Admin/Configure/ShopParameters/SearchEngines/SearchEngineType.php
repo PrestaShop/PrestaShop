@@ -32,6 +32,7 @@ use PrestaShop\PrestaShop\Core\ConstraintValidator\Constraints\TypedRegex;
 use PrestaShopBundle\Form\Admin\Type\TranslatorAwareType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
+use Symfony\Component\Validator\Constraints\Length;
 use Symfony\Component\Validator\Constraints\NotBlank;
 
 /**
@@ -47,9 +48,6 @@ class SearchEngineType extends TranslatorAwareType
         $builder
             ->add('server', TextType::class, [
                 'label' => $this->trans('Server', 'Admin.Shopparameters.Feature'),
-                'attr' => [
-                    'size' => 20,
-                ],
                 'constraints' => [
                     new NotBlank([
                         'message' => $this->trans('This field cannot be empty.', 'Admin.Notifications.Error'),
@@ -57,19 +55,32 @@ class SearchEngineType extends TranslatorAwareType
                     new TypedRegex([
                         'type' => 'url',
                     ]),
+                    new Length([
+                        'max' => 64,
+                        'maxMessage' => $this->trans(
+                            'This field cannot be longer than %limit% characters',
+                            'Admin.Notifications.Error',
+                            ['%limit%' => 64]
+                        ),
+                    ]),
                 ],
             ])
             ->add('query_key', TextType::class, [
                 'label' => $this->trans('$_GET variable', 'Admin.Shopparameters.Feature'),
-                'attr' => [
-                    'size' => 40,
-                ],
                 'constraints' => [
                     new NotBlank([
                         'message' => $this->trans('This field cannot be empty.', 'Admin.Notifications.Error'),
                     ]),
                     new TypedRegex([
                         'type' => 'module_name',
+                    ]),
+                    new Length([
+                        'max' => 16,
+                        'maxMessage' => $this->trans(
+                            'This field cannot be longer than %limit% characters',
+                            'Admin.Notifications.Error',
+                            ['%limit%' => 16]
+                        ),
                     ]),
                 ],
             ]);
