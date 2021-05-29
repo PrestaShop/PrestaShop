@@ -115,6 +115,7 @@ class ImageTypeGridDefinitionFactory extends AbstractGridDefinitionFactory
                     ->setName($this->trans('Products', [], 'Admin.Global'))
                     ->setOptions([
                         'field' => 'products',
+                        'clickable' => true,
                     ])
             )
             ->add(
@@ -122,6 +123,7 @@ class ImageTypeGridDefinitionFactory extends AbstractGridDefinitionFactory
                     ->setName($this->trans('Categories', [], 'Admin.Global'))
                     ->setOptions([
                         'field' => 'categories',
+                        'clickable' => true,
                     ])
             )
             ->add(
@@ -129,6 +131,7 @@ class ImageTypeGridDefinitionFactory extends AbstractGridDefinitionFactory
                     ->setName($this->trans('Brands', [], 'Admin.Global'))
                     ->setOptions([
                         'field' => 'manufacturers',
+                        'clickable' => true,
                     ])
             )
             ->add(
@@ -136,6 +139,7 @@ class ImageTypeGridDefinitionFactory extends AbstractGridDefinitionFactory
                     ->setName($this->trans('Suppliers', [], 'Admin.Global'))
                     ->setOptions([
                         'field' => 'suppliers',
+                        'clickable' => true,
                     ])
             )
             ->add(
@@ -143,6 +147,7 @@ class ImageTypeGridDefinitionFactory extends AbstractGridDefinitionFactory
                     ->setName($this->trans('Stores', [], 'Admin.Global'))
                     ->setOptions([
                         'field' => 'stores',
+                        'clickable' => true,
                     ])
             )
             ->add(
