@@ -30,6 +30,7 @@ namespace PrestaShop\PrestaShop\Core\Grid\Query;
 
 use Doctrine\DBAL\Connection;
 use Doctrine\DBAL\Query\QueryBuilder;
+use PrestaShop\PrestaShop\Core\Grid\Search\SearchCriteria;
 use PrestaShop\PrestaShop\Core\Grid\Search\SearchCriteriaInterface;
 
 final class SearchEngineQueryBuilder extends AbstractDoctrineQueryBuilder
@@ -61,6 +62,17 @@ final class SearchEngineQueryBuilder extends AbstractDoctrineQueryBuilder
     {
         $qb = $this->getSearchEngineQueryBuilder($searchCriteria->getFilters())
             ->select('se.id_search_engine, se.server, se.getvar');
+
+        // Create new search criteria if filter is query_key
+        if ($searchCriteria->getOrderBy() === 'query_key') {
+            $searchCriteria = new SearchCriteria(
+                $searchCriteria->getFilters(),
+                'getvar',
+                $searchCriteria->getOrderWay(),
+                $searchCriteria->getOffset(),
+                $searchCriteria->getLimit()
+            );
+        }
 
         $this->searchCriteriaApplicator
             ->applyPagination($searchCriteria, $qb)
