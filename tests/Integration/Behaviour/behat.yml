@@ -305,3 +305,9 @@ default:
                 - Tests\Integration\Behaviour\Features\Context\Domain\AttributeGroupFeatureContext
                 - Tests\Integration\Behaviour\Features\Context\Domain\AttributeFeatureContext
                 - Tests\Integration\Behaviour\Features\Context\Domain\ShopFeatureContext
+        image_type:
+            paths:
+                - %paths.base%/Features/Scenario/ImageType
+            contexts:
+                - Tests\Integration\Behaviour\Features\Context\CommonFeatureContext
+                - Tests\Integration\Behaviour\Features\Context\Domain\ImageTypeFeatureContext
