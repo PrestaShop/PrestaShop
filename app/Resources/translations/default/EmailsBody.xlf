@@ -601,20 +601,20 @@
         <target>As appreciation for your loyalty, we want to give you a discount of [1]{amount}%[/1] valid on your next order! This offer is valid for [1]{days}[/1] days, so do not waste a moment!</target>
         <note>Line: 30</note>
       </trans-unit>
-    </body>
-  </file>
-  <file original="mails/themes/classic/modules/ps_reminder/followup_4.html.twig" source-language="en-US" target-language="en" datatype="plaintext">
-    <body>
       <trans-unit id="42578524d7fb1953f903bcc5160495ea">
         <source>Here is your coupon:</source>
         <target>Here is your coupon:</target>
-        <note>Line: 51</note>
+        <note>Line: 31</note>
       </trans-unit>
       <trans-unit id="24986b852e72fcfba407bd807f790abd">
         <source>Enter this code in your shopping cart to get your discount.</source>
         <target>Enter this code in your shopping cart to get your discount.</target>
-        <note>Line: 52</note>
+        <note>Line: 32</note>
       </trans-unit>
+    </body>
+  </file>
+  <file original="mails/themes/classic/modules/ps_reminder/followup_4.html.twig" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
       <trans-unit id="7ed5b90c2f87440a6e83fc35dca83242">
         <source>You are one of our best customers, however you have not placed an order in {days_threshold} days.</source>
         <target>You are one of our best customers, however you have not placed an order in {days_threshold} days.</target>
@@ -988,6 +988,11 @@
         <target>Here is your identification information on [1]{shop_name}[/1]</target>
         <note>Line: 242</note>
       </trans-unit>
+      <trans-unit id="2df994fe4798f819768c87824ec15ced">
+        <source>Email address:</source>
+        <target>Email address:</target>
+        <note>Line: 259</note>
+      </trans-unit>
     </body>
   </file>
   <file original="mails/themes/modern/core/forward_msg.html.twig" source-language="en-US" target-language="en" datatype="plaintext">
@@ -1025,11 +1030,6 @@
         <source>You can access your customer account on our shop:</source>
         <target>You can access your customer account on our shop:</target>
         <note>Line: 309</note>
-      </trans-unit>
-      <trans-unit id="2df994fe4798f819768c87824ec15ced">
-        <source>Email address:</source>
-        <target>Email address:</target>
-        <note>Line: 247</note>
       </trans-unit>
       <trans-unit id="016878df57341f82e0702d9259bfb7d8">
         <source>Guest to customer</source>
@@ -1088,6 +1088,11 @@
         <source>Your order with the reference [1]{order_name}[/1] is on its way.</source>
         <target>Your order with the reference [1]{order_name}[/1] is on its way.</target>
         <note>Line: 247</note>
+      </trans-unit>
+      <trans-unit id="0d2b8d4d6cdd2cc0b8da74fdb143654b">
+        <source><![CDATA[Follow your order and download your invoice on our shop, go to the <a href="{history_url}" target="_blank">%order_history_label%</a> section of your customer account.]]></source>
+        <target><![CDATA[Follow your order and download your invoice on our shop, go to the <a href="{history_url}" target="_blank">%order_history_label%</a> section of your customer account.]]></target>
+        <note>Line: 313</note>
       </trans-unit>
     </body>
   </file>
@@ -1250,11 +1255,6 @@
         <source>Unfortunately, one or more items are currently out of stock and this may cause a slight delay for delivery. Please accept our apologies for this inconvenience and be sure we are doing our best to correct the situation.</source>
         <target>Unfortunately, one or more items are currently out of stock and this may cause a slight delay for delivery. Please accept our apologies for this inconvenience and be sure we are doing our best to correct the situation.</target>
         <note>Line: 249</note>
-      </trans-unit>
-      <trans-unit id="0d2b8d4d6cdd2cc0b8da74fdb143654b">
-        <source><![CDATA[Follow your order and download your invoice on our shop, go to the <a href="{history_url}" target="_blank">%order_history_label%</a> section of your customer account.]]></source>
-        <target><![CDATA[Follow your order and download your invoice on our shop, go to the <a href="{history_url}" target="_blank">%order_history_label%</a> section of your customer account.]]></target>
-        <note>Line: 310</note>
       </trans-unit>
     </body>
   </file>
@@ -1445,11 +1445,6 @@
   </file>
   <file original="mails/themes/modern/core/voucher.html.twig" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
-      <trans-unit id="bba6345ca09bf0e21cb502bc6d960cde">
-        <source>In order to use it, just copy/paste this code during check out.</source>
-        <target>In order to use it, just copy/paste this code during check out.</target>
-        <note>Line: 251</note>
-      </trans-unit>
       <trans-unit id="be686376cddb23d0227444ccc3c4b5b7">
         <source>Voucher</source>
         <target>Voucher</target>
@@ -1474,6 +1469,11 @@
   </file>
   <file original="mails/themes/modern/core/voucher_new.html.twig" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
+      <trans-unit id="bba6345ca09bf0e21cb502bc6d960cde">
+        <source>In order to use it, just copy/paste this code during check out.</source>
+        <target>In order to use it, just copy/paste this code during check out.</target>
+        <note>Line: 247</note>
+      </trans-unit>
       <trans-unit id="0b04d9ad5743989471141ab21edd64fd">
         <source>Voucher new</source>
         <target>Voucher new</target>
@@ -1627,6 +1627,11 @@
         <target>Carrier</target>
         <note>Line: 429</note>
       </trans-unit>
+      <trans-unit id="1a81759353d36dbd31059fc261af0aa2">
+        <source>Congratulations!</source>
+        <target>Congratulations!</target>
+        <note>Line: 43</note>
+      </trans-unit>
     </body>
   </file>
   <file original="mails/themes/modern/modules/ps_emailalerts/order_changed.html.twig" source-language="en-US" target-language="en" datatype="plaintext">
@@ -1660,6 +1665,11 @@
         <source><![CDATA[If you have a guest account, you can follow your order via the <a href="{guest_tracking_url}" target="_blank">%guest_tracking_label%</a> section on our shop.]]></source>
         <target><![CDATA[If you have a guest account, you can follow your order via the <a href="{guest_tracking_url}" target="_blank">%guest_tracking_label%</a> section on our shop.]]></target>
         <note>Line: 308</note>
+      </trans-unit>
+      <trans-unit id="31ee1241ee08294dfc2ca85698fda2a1">
+        <source>Hi {firstname} {lastname},</source>
+        <target>Hi {firstname} {lastname},</target>
+        <note>Line: 43</note>
       </trans-unit>
     </body>
   </file>
@@ -1842,6 +1852,21 @@
         <target>Follow up 3</target>
         <note>Line: 3</note>
       </trans-unit>
+      <trans-unit id="18df3f8153de940176206b06a3610f80">
+        <source>We are pleased to offer you a discount of [1]{amount}%[/1] off your next order. And this offer is valid for [1]{days}[/1] days, so do not wait any longer!</source>
+        <target>We are pleased to offer you a discount of [1]{amount}%[/1] off your next order. And this offer is valid for [1]{days}[/1] days, so do not wait any longer!</target>
+        <note>Line: 184</note>
+      </trans-unit>
+      <trans-unit id="5416511766be8537f357142a81ccd7a7">
+        <source>Here is your VOUCHER CODE:</source>
+        <target>Here is your VOUCHER CODE:</target>
+        <note>Line: 189</note>
+      </trans-unit>
+      <trans-unit id="ececa54d96395d3afa79cdce8e7e0bd6">
+        <source>Enter this code in your shopping cart to get the discount.</source>
+        <target>Enter this code in your shopping cart to get the discount.</target>
+        <note>Line: 194</note>
+      </trans-unit>
     </body>
   </file>
   <file original="mails/themes/modern/modules/ps_reminder/followup_4.html.twig" source-language="en-US" target-language="en" datatype="plaintext">
@@ -1850,21 +1875,6 @@
         <source>Your cart has been saved, you can resume your order by visiting our shop:</source>
         <target>Your cart has been saved, you can resume your order by visiting our shop:</target>
         <note>Line: 247</note>
-      </trans-unit>
-      <trans-unit id="18df3f8153de940176206b06a3610f80">
-        <source>We are pleased to offer you a discount of [1]{amount}%[/1] off your next order. And this offer is valid for [1]{days}[/1] days, so do not wait any longer!</source>
-        <target>We are pleased to offer you a discount of [1]{amount}%[/1] off your next order. And this offer is valid for [1]{days}[/1] days, so do not wait any longer!</target>
-        <note>Line: 252</note>
-      </trans-unit>
-      <trans-unit id="5416511766be8537f357142a81ccd7a7">
-        <source>Here is your VOUCHER CODE:</source>
-        <target>Here is your VOUCHER CODE:</target>
-        <note>Line: 317</note>
-      </trans-unit>
-      <trans-unit id="ececa54d96395d3afa79cdce8e7e0bd6">
-        <source>Enter this code in your shopping cart to get the discount.</source>
-        <target>Enter this code in your shopping cart to get the discount.</target>
-        <note>Line: 322</note>
       </trans-unit>
       <trans-unit id="a5672f20db3e09abb35f909cf56f3b23">
         <source>Follow up 4</source>
@@ -1885,11 +1895,6 @@
   </file>
   <file original="mails/themes/modern/modules/referralprogram/referralprogram-congratulations.html.twig" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
-      <trans-unit id="1a81759353d36dbd31059fc261af0aa2">
-        <source>Congratulations!</source>
-        <target>Congratulations!</target>
-        <note>Line: 43</note>
-      </trans-unit>
       <trans-unit id="0920dd6cc2680f2a960c59f757d5184d">
         <source><![CDATA[Your referred friend [1]{sponsored_firstname}[/1] [1]{sponsored_lastname}[/1] has placed his/her first order on <a href="{shop_url}">{shop_name}</a>!]]></source>
         <target><![CDATA[Your referred friend [1]{sponsored_firstname}[/1] [1]{sponsored_lastname}[/1] has placed his/her first order on <a href="{shop_url}">{shop_name}</a>!]]></target>
@@ -1953,11 +1958,6 @@
   </file>
   <file original="mails/themes/modern/modules/referralprogram/referralprogram-voucher.html.twig" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
-      <trans-unit id="31ee1241ee08294dfc2ca85698fda2a1">
-        <source>Hi {firstname} {lastname},</source>
-        <target>Hi {firstname} {lastname},</target>
-        <note>Line: 43</note>
-      </trans-unit>
       <trans-unit id="f4f614c22d9d2cbd0f9aa08cd59600d2">
         <source>Simply copy/paste this code during the payment process for your next order.</source>
         <target>Simply copy/paste this code during the payment process for your next order.</target>

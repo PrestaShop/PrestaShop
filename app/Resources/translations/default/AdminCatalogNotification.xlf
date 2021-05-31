@@ -245,6 +245,11 @@
         <target>Invalid voucher.</target>
         <note>Line: 641</note>
       </trans-unit>
+      <trans-unit id="2cb44aa56605e05e0b912131875edcb7">
+        <source>There are not enough products in stock.</source>
+        <target>There are not enough products in stock.</target>
+        <note>Line: 479</note>
+      </trans-unit>
     </body>
   </file>
   <file original="controllers/admin/AdminCategoriesController.php" source-language="en-US" target-language="en" datatype="plaintext">
@@ -513,6 +518,46 @@
         <target>Error while creating additional image</target>
         <note>Line: 2837</note>
       </trans-unit>
+      <trans-unit id="162c051f703406dd4fab3fde66296a6e">
+        <source>Submitted reduction value (0-100) is out-of-range</source>
+        <target>Submitted reduction value (0-100) is out-of-range</target>
+        <note>Line: 994</note>
+      </trans-unit>
+      <trans-unit id="9f0a59f1609218c049435abd2351bd84">
+        <source>An error occurred while updating the specific price.</source>
+        <target>An error occurred while updating the specific price.</target>
+        <note>Line: 1012</note>
+      </trans-unit>
+      <trans-unit id="22385bf735f96dbe1a4778d0b0d5345d">
+        <source>No reduction value has been submitted</source>
+        <target>No reduction value has been submitted</target>
+        <note>Line: 990</note>
+      </trans-unit>
+      <trans-unit id="184a2ae304c9a05459cca0cbf8755b3a">
+        <source>The specific price ID is invalid.</source>
+        <target>The specific price ID is invalid.</target>
+        <note>Line: 1022</note>
+      </trans-unit>
+      <trans-unit id="0f8b5843f1391991d17f744ce9771e98">
+        <source>An error occurred while attempting to delete the specific price.</source>
+        <target>An error occurred while attempting to delete the specific price.</target>
+        <note>Line: 1026</note>
+      </trans-unit>
+      <trans-unit id="99a6e6a05b8d706aeddf480c7e492949">
+        <source>Invalid description for %s language</source>
+        <target>Invalid description for %s language</target>
+        <note>Line: 441</note>
+      </trans-unit>
+      <trans-unit id="f19434225ce7712f091bcfc109413732">
+        <source>An attachment name is required.</source>
+        <target>An attachment name is required.</target>
+        <note>Line: 446</note>
+      </trans-unit>
+      <trans-unit id="34a22d134d958abd17afd6e6cd8b79e2">
+        <source>This attachment was unable to be loaded into the database.</source>
+        <target>This attachment was unable to be loaded into the database.</target>
+        <note>Line: 497</note>
+      </trans-unit>
     </body>
   </file>
   <file original="controllers/admin/AdminSuppliersController.php" source-language="en-US" target-language="en" datatype="plaintext">
@@ -526,6 +571,11 @@
         <source>The address is not correct. Please make sure all of the required fields are completed.</source>
         <target>The address is not correct. Please make sure all of the required fields are completed.</target>
         <note>Line: 519</note>
+      </trans-unit>
+      <trans-unit id="925c714b657d85c49a9718ef792fcb95">
+        <source>It is not possible to delete a supplier if there are pending supplier orders.</source>
+        <target>It is not possible to delete a supplier if there are pending supplier orders.</target>
+        <note>Line: 534</note>
       </trans-unit>
     </body>
   </file>
@@ -616,31 +666,6 @@
   </file>
   <file original="src/Adapter/Product/AdminProductWrapper.php" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
-      <trans-unit id="162c051f703406dd4fab3fde66296a6e">
-        <source>Submitted reduction value (0-100) is out-of-range</source>
-        <target>Submitted reduction value (0-100) is out-of-range</target>
-        <note>Line: 299</note>
-      </trans-unit>
-      <trans-unit id="9f0a59f1609218c049435abd2351bd84">
-        <source>An error occurred while updating the specific price.</source>
-        <target>An error occurred while updating the specific price.</target>
-        <note>Line: 351</note>
-      </trans-unit>
-      <trans-unit id="22385bf735f96dbe1a4778d0b0d5345d">
-        <source>No reduction value has been submitted</source>
-        <target>No reduction value has been submitted</target>
-        <note>Line: 295</note>
-      </trans-unit>
-      <trans-unit id="184a2ae304c9a05459cca0cbf8755b3a">
-        <source>The specific price ID is invalid.</source>
-        <target>The specific price ID is invalid.</target>
-        <note>Line: 549</note>
-      </trans-unit>
-      <trans-unit id="0f8b5843f1391991d17f744ce9771e98">
-        <source>An error occurred while attempting to delete the specific price.</source>
-        <target>An error occurred while attempting to delete the specific price.</target>
-        <note>Line: 553</note>
-      </trans-unit>
       <trans-unit id="c7e56badecce297feefe2a9b50a68794">
         <source>Invalid date range</source>
         <target>Invalid date range</target>
@@ -757,21 +782,6 @@
         <target>Upload error. Please check your server configurations for the maximum upload size allowed.</target>
         <note>Line: 275</note>
       </trans-unit>
-      <trans-unit id="99a6e6a05b8d706aeddf480c7e492949">
-        <source>Invalid description for %s language</source>
-        <target>Invalid description for %s language</target>
-        <note>Line: 291</note>
-      </trans-unit>
-      <trans-unit id="f19434225ce7712f091bcfc109413732">
-        <source>An attachment name is required.</source>
-        <target>An attachment name is required.</target>
-        <note>Line: 279</note>
-      </trans-unit>
-      <trans-unit id="34a22d134d958abd17afd6e6cd8b79e2">
-        <source>This attachment was unable to be loaded into the database.</source>
-        <target>This attachment was unable to be loaded into the database.</target>
-        <note>Line: 311</note>
-      </trans-unit>
     </body>
   </file>
   <file original="src/PrestaShopBundle/Controller/Admin/Sell/Catalog/CategoryController.php" source-language="en-US" target-language="en" datatype="plaintext">
@@ -833,11 +843,6 @@
         <target>Unable to resize one or more of your pictures.</target>
         <note>Line: 496</note>
       </trans-unit>
-      <trans-unit id="925c714b657d85c49a9718ef792fcb95">
-        <source>It is not possible to delete a supplier if there are pending supplier orders.</source>
-        <target>It is not possible to delete a supplier if there are pending supplier orders.</target>
-        <note>Line: 475</note>
-      </trans-unit>
       <trans-unit id="3aff310e32cb7bb2d1affd97920c9f4b">
         <source><![CDATA[The display of your suppliers is enabled on your store. Go to %sShop Parameters > General%s to edit settings.]]></source>
         <target><![CDATA[The display of your suppliers is enabled on your store. Go to %sShop Parameters > General%s to edit settings.]]></target>
@@ -852,11 +857,6 @@
   </file>
   <file original="src/PrestaShopBundle/Controller/Admin/Sell/Order/CartController.php" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
-      <trans-unit id="2cb44aa56605e05e0b912131875edcb7">
-        <source>There are not enough products in stock.</source>
-        <target>There are not enough products in stock.</target>
-        <note>Line: 599</note>
-      </trans-unit>
       <trans-unit id="891d308560a0cca2452fd2f482dded8c">
         <source><![CDATA[Product customization could not be found. Go to Catalog > Products to customize the product.]]></source>
         <target><![CDATA[Product customization could not be found. Go to Catalog > Products to customize the product.]]></target>
@@ -948,12 +948,12 @@
       </trans-unit>
     </body>
   </file>
-  <file original="src/PrestaShopBundle/Resources/views/Admin/Product/CatalogPage/Lists/list.html.twig" source-language="en-US" target-language="en" datatype="plaintext">
+  <file original="src/PrestaShopBundle/Resources/views/Admin/Product/CatalogPage/Lists/list_quicknav.html.twig" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
       <trans-unit id="1aa1527fa7dfdbe44acb4be33af88e4c">
         <source>There is no result for this search. Update your filters to view other products.</source>
         <target>There is no result for this search. Update your filters to view other products.</target>
-        <note>Line: 153</note>
+        <note>Line: 78</note>
       </trans-unit>
     </body>
   </file>
@@ -1135,17 +1135,13 @@
       </trans-unit>
     </body>
   </file>
-  <file original="src/PrestaShopBundle/Resources/views/Admin/Sell/Catalog/Categories/Blocks/delete_block.html.twig" source-language="en-US" target-language="en" datatype="plaintext">
+  <file original="src/PrestaShopBundle/Resources/views/Admin/Sell/Catalog/Categories/Blocks/delete_categories_modal.html.twig" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
       <trans-unit id="4f11b2e8a220dab912231e74a3dfea5d">
         <source>What do you want to do with the products associated with this category?</source>
         <target>What do you want to do with the products associated with this category?</target>
-        <note>Line: 31</note>
+        <note>Line: 28</note>
       </trans-unit>
-    </body>
-  </file>
-  <file original="src/PrestaShopBundle/Resources/views/Admin/Sell/Catalog/Categories/Blocks/delete_categories_modal.html.twig" source-language="en-US" target-language="en" datatype="plaintext">
-    <body>
       <trans-unit id="332a0777d848606eb5f63149d0bb1105">
         <source>Note that if they have another category, your products will logically remain associated with it.</source>
         <target>Note that if they have another category, your products will logically remain associated with it.</target>
@@ -1198,12 +1194,12 @@
       </trans-unit>
     </body>
   </file>
-  <file original="src/PrestaShopBundle/Resources/views/Admin/TwigTemplateForm/prestashop_ui_kit_base.html.twig" source-language="en-US" target-language="en" datatype="plaintext">
+  <file original="src/PrestaShopBundle/Resources/views/Admin/TwigTemplateForm/bootstrap_4_layout.html.twig" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
       <trans-unit id="b385b71f1d14c0afa6d7ca6cb18927b3">
         <source>There is no attachment yet.</source>
         <target>There is no attachment yet.</target>
-        <note>Line: 559</note>
+        <note>Line: 409</note>
       </trans-unit>
     </body>
   </file>

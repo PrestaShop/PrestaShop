@@ -1,20 +1,20 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <xliff xmlns="urn:oasis:names:tc:xliff:document:1.2" version="1.2">
-  <file original="admin-dev/themes/default/template/controllers/access/helpers/form/form.tpl" source-language="en-US" target-language="en" datatype="plaintext">
-    <body>
-      <trans-unit id="151648106e4bf98297882ea2ea1c4b0e">
-        <source>Update successful</source>
-        <target>Update successful</target>
-        <note>Line: 228</note>
-      </trans-unit>
-    </body>
-  </file>
   <file original="admin-dev/themes/default/template/header.tpl" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
       <trans-unit id="b4a34d3f58b039e7685c2e39b5413757">
         <source>Successful update.</source>
         <target>Successful update.</target>
         <note>Line: 83</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="admin-dev/themes/new-theme/template/header.tpl" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="151648106e4bf98297882ea2ea1c4b0e">
+        <source>Update successful</source>
+        <target>Update successful</target>
+        <note>Line: 76</note>
       </trans-unit>
     </body>
   </file>
@@ -85,21 +85,21 @@
       </trans-unit>
     </body>
   </file>
-  <file original="modules/ps_checkpayment/ps_checkpayment.php" source-language="en-US" target-language="en" datatype="plaintext">
+  <file original="modules/ps_emailsubscription/ps_emailsubscription.php" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
       <trans-unit id="c888438d14855d7d96a2724ee9c306bd">
         <source>Settings updated</source>
         <target>Settings updated</target>
-        <note>Line: 116</note>
+        <note>Line: 207</note>
       </trans-unit>
     </body>
   </file>
-  <file original="modules/ps_crossselling/ps_crossselling.php" source-language="en-US" target-language="en" datatype="plaintext">
+  <file original="modules/ps_featuredproducts/ps_featuredproducts.php" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
       <trans-unit id="efc226b17e0532afff43be870bff0de7">
         <source>The settings have been updated.</source>
         <target>The settings have been updated.</target>
-        <note>Line: 99</note>
+        <note>Line: 152</note>
       </trans-unit>
     </body>
   </file>
@@ -112,12 +112,44 @@
       </trans-unit>
     </body>
   </file>
+  <file original="modules/ps_linklist/src/Controller/Admin/Improve/Design/LinkBlockController.php" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="149cd107b688af7a007e739fd51ac919">
+        <source>Successful deletion.</source>
+        <target>Successful deletion.</target>
+        <note>Line: 179</note>
+      </trans-unit>
+    </body>
+  </file>
   <file original="src/Adapter/Product/AdminProductWrapper.php" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
       <trans-unit id="7173e38e8a10ed379625687638ddfe74">
         <source>Successful deletion</source>
         <target>Successful deletion</target>
         <note>Line: 566</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="src/PrestaShopBundle/Controller/Admin/Configure/AdvancedParameters/EmailController.php" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="6483df61619946ebf2427ba360df7ce5">
+        <source>The settings have been successfully updated.</source>
+        <target>The settings have been successfully updated.</target>
+        <note>Line: 138</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="src/PrestaShopBundle/Controller/Admin/Configure/AdvancedParameters/WebserviceController.php" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="fb52feac670f0252be93737558eebdb7">
+        <source>Successful creation.</source>
+        <target>Successful creation.</target>
+        <note>Line: 102</note>
+      </trans-unit>
+      <trans-unit id="1802a23025825ae791c1eea0118ee5f0">
+        <source>The status has been successfully updated.</source>
+        <target>The status has been successfully updated.</target>
+        <note>Line: 301</note>
       </trans-unit>
     </body>
   </file>
@@ -152,39 +184,10 @@
         <target>Your theme has been correctly exported: %path%</target>
         <note>Line: 187</note>
       </trans-unit>
-      <trans-unit id="6483df61619946ebf2427ba360df7ce5">
-        <source>The settings have been successfully updated.</source>
-        <target>The settings have been successfully updated.</target>
-        <note>Line: 149</note>
-      </trans-unit>
-    </body>
-  </file>
-  <file original="src/PrestaShopBundle/Controller/Admin/Improve/International/LanguageController.php" source-language="en-US" target-language="en" datatype="plaintext">
-    <body>
-      <trans-unit id="fb52feac670f0252be93737558eebdb7">
-        <source>Successful creation.</source>
-        <target>Successful creation.</target>
-        <note>Line: 131</note>
-      </trans-unit>
-      <trans-unit id="149cd107b688af7a007e739fd51ac919">
-        <source>Successful deletion.</source>
-        <target>Successful deletion.</target>
-        <note>Line: 220</note>
-      </trans-unit>
     </body>
   </file>
   <file original="src/PrestaShopBundle/Controller/Admin/Improve/International/ZoneController.php" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
-      <trans-unit id="1802a23025825ae791c1eea0118ee5f0">
-        <source>The status has been successfully updated.</source>
-        <target>The status has been successfully updated.</target>
-        <note>Line: 307</note>
-      </trans-unit>
-      <trans-unit id="02d5b938505dcda41a52ef3abcbd354a">
-        <source>The selection has been successfully deleted.</source>
-        <target>The selection has been successfully deleted.</target>
-        <note>Line: 275</note>
-      </trans-unit>
       <trans-unit id="4f29bc7b6f8b0da95b46defd28f72618">
         <source>Successful creation</source>
         <target>Successful creation</target>
@@ -216,6 +219,15 @@
         <source>Comment successfully added.</source>
         <target>Comment successfully added.</target>
         <note>Line: 1276</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="src/PrestaShopBundle/Form/Admin/Sell/Product/Image/ImageDropzoneType.php" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="02d5b938505dcda41a52ef3abcbd354a">
+        <source>The selection has been successfully deleted.</source>
+        <target>The selection has been successfully deleted.</target>
+        <note>Line: 80</note>
       </trans-unit>
     </body>
   </file>

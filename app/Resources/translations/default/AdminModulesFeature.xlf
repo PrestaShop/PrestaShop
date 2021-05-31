@@ -257,12 +257,12 @@ File: modules/ps_buybuttonlite/ps_buybuttonlite.php:167</note>
       </trans-unit>
     </body>
   </file>
-  <file original="src/PrestaShopBundle/Resources/views/Admin/Improve/Payment/PaymentMethods/Blocks/payment_modules_list.html.twig" source-language="en-US" target-language="en" datatype="plaintext">
+  <file original="src/PrestaShopBundle/Resources/views/Admin/Configure/AdvancedParameters/Blocks/import_file_history.html.twig" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
-      <trans-unit id="2693dd71600631eed47725291fe5da19">
-        <source>v%version% - by %author%</source>
-        <target>v%version% - by %author%</target>
-        <note>Line: 41</note>
+      <trans-unit id="90406afefae30826692e7f7480f7467c">
+        <source>Toggle Dropdown</source>
+        <target>Toggle Dropdown</target>
+        <note>Line: 86</note>
       </trans-unit>
     </body>
   </file>
@@ -272,11 +272,6 @@ File: modules/ps_buybuttonlite/ps_buybuttonlite.php:167</note>
         <source>Discover</source>
         <target>Discover</target>
         <note>Line: 37</note>
-      </trans-unit>
-      <trans-unit id="90406afefae30826692e7f7480f7467c">
-        <source>Toggle Dropdown</source>
-        <target>Toggle Dropdown</target>
-        <note>Line: 53</note>
       </trans-unit>
     </body>
   </file>
@@ -301,6 +296,11 @@ File: modules/ps_buybuttonlite/ps_buybuttonlite.php:167</note>
   </file>
   <file original="src/PrestaShopBundle/Resources/views/Admin/Module/Includes/card_list.html.twig" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
+      <trans-unit id="2693dd71600631eed47725291fe5da19">
+        <source>v%version% - by %author%</source>
+        <target>v%version% - by %author%</target>
+        <note>Line: 78</note>
+      </trans-unit>
       <trans-unit id="decbe415d8accca7c2c16d48a79ee934">
         <source>Read More</source>
         <target>Read More</target>
@@ -320,6 +320,11 @@ File: modules/ps_buybuttonlite/ps_buybuttonlite.php:167</note>
         <target>Recently used</target>
         <note>Line: 45</note>
       </trans-unit>
+      <trans-unit id="62f5d708d6ad1fa1ddd9429a65cccbea">
+        <source>All categories</source>
+        <target>All categories</target>
+        <note>Line: 37</note>
+      </trans-unit>
     </body>
   </file>
   <file original="src/PrestaShopBundle/Resources/views/Admin/Module/Includes/dropdown_categories_catalog.html.twig" source-language="en-US" target-language="en" datatype="plaintext">
@@ -328,11 +333,6 @@ File: modules/ps_buybuttonlite/ps_buybuttonlite.php:167</note>
         <source>All Categories</source>
         <target>All Categories</target>
         <note>Line: 39</note>
-      </trans-unit>
-      <trans-unit id="62f5d708d6ad1fa1ddd9429a65cccbea">
-        <source>All categories</source>
-        <target>All categories</target>
-        <note>Line: 37</note>
       </trans-unit>
     </body>
   </file>
@@ -449,6 +449,11 @@ File: modules/ps_buybuttonlite/ps_buybuttonlite.php:167</note>
         <target>Yes, reset it</target>
         <note>Line: 115</note>
       </trans-unit>
+      <trans-unit id="27788383c9407ea06c2c275ee21c86c5">
+        <source>Optional: delete module folder after uninstall.</source>
+        <target>Optional: delete module folder after uninstall.</target>
+        <note>Line: 66</note>
+      </trans-unit>
     </body>
   </file>
   <file original="src/PrestaShopBundle/Resources/views/Admin/Module/Includes/modal_confirm_bulk_action.html.twig" source-language="en-US" target-language="en" datatype="plaintext">
@@ -462,11 +467,6 @@ File: modules/ps_buybuttonlite/ps_buybuttonlite.php:167</note>
         <source>Yes, I want to do it</source>
         <target>Yes, I want to do it</target>
         <note>Line: 53</note>
-      </trans-unit>
-      <trans-unit id="27788383c9407ea06c2c275ee21c86c5">
-        <source>Optional: delete module folder after uninstall.</source>
-        <target>Optional: delete module folder after uninstall.</target>
-        <note>Line: 45</note>
       </trans-unit>
     </body>
   </file>

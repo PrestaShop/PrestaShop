@@ -378,6 +378,16 @@
         <target>Upload an icon from your computer (File type: .gif, suggested size: 16x16).</target>
         <note>Line: 305</note>
       </trans-unit>
+      <trans-unit id="f0fe1aebeace842330fb048126151e06">
+        <source>Only letters, numbers and underscores ("_") are allowed.</source>
+        <target>Only letters, numbers and underscores ("_") are allowed.</target>
+        <note>Line: 424</note>
+      </trans-unit>
+      <trans-unit id="3d034f43e44ee495a11005507185a0a0">
+        <source>Email template for both .html and .txt.</source>
+        <target>Email template for both .html and .txt.</target>
+        <note>Line: 425</note>
+      </trans-unit>
     </body>
   </file>
   <file original="controllers/admin/AdminStoresController.php" source-language="en-US" target-language="en" datatype="plaintext">
@@ -605,20 +615,6 @@
         <source>Suggest recycled packaging to customer.</source>
         <target>Suggest recycled packaging to customer.</target>
         <note>Line: 103</note>
-      </trans-unit>
-    </body>
-  </file>
-  <file original="src/PrestaShopBundle/Form/Admin/Configure/ShopParameters/OrderStates/OrderStateType.php" source-language="en-US" target-language="en" datatype="plaintext">
-    <body>
-      <trans-unit id="f0fe1aebeace842330fb048126151e06">
-        <source>Only letters, numbers and underscores ("_") are allowed.</source>
-        <target>Only letters, numbers and underscores ("_") are allowed.</target>
-        <note>Line: 201</note>
-      </trans-unit>
-      <trans-unit id="3d034f43e44ee495a11005507185a0a0">
-        <source>Email template for both .html and .txt.</source>
-        <target>Email template for both .html and .txt.</target>
-        <note>Line: 202</note>
       </trans-unit>
     </body>
   </file>

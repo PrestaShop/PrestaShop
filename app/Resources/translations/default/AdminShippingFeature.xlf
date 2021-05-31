@@ -304,14 +304,10 @@
         <target>Disable carrier</target>
         <note>Line: 339</note>
       </trans-unit>
-    </body>
-  </file>
-  <file original="src/Core/Grid/Definition/Factory/CarrierGridDefinitionFactory.php" source-language="en-US" target-language="en" datatype="plaintext">
-    <body>
       <trans-unit id="8f497c1a3d15af9e0c215019f26b887d">
         <source>Delay</source>
         <target>Delay</target>
-        <note>Line: 112</note>
+        <note>Line: 84</note>
       </trans-unit>
     </body>
   </file>
@@ -324,17 +320,17 @@
       </trans-unit>
     </body>
   </file>
-  <file original="src/PrestaShopBundle/Form/Admin/Improve/Shipping/Preferences/HandlingType.php" source-language="en-US" target-language="en" datatype="plaintext">
+  <file original="src/PrestaShopBundle/Form/Admin/Improve/Shipping/Preferences/PreferencesFormDataProvider.php" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
       <trans-unit id="1d8ca7f442e6d4ad3da5cb61b84284fc">
         <source>Handling charges</source>
         <target>Handling charges</target>
-        <note>Line: 81</note>
+        <note>Line: 106</note>
       </trans-unit>
       <trans-unit id="c9722f74f95451816de0f8ca3259ae44">
         <source>Free shipping starts at</source>
         <target>Free shipping starts at</target>
-        <note>Line: 103</note>
+        <note>Line: 114</note>
       </trans-unit>
     </body>
   </file>
@@ -391,14 +387,10 @@
         <target>Carrier</target>
         <note>Line: 44</note>
       </trans-unit>
-    </body>
-  </file>
-  <file original="src/PrestaShopBundle/Resources/views/Admin/Sell/Order/Order/preview.html.twig" source-language="en-US" target-language="en" datatype="plaintext">
-    <body>
       <trans-unit id="5068c162a60b5859f973f701333f45c5">
         <source>Tracking number</source>
         <target>Tracking number</target>
-        <note>Line: 48</note>
+        <note>Line: 47</note>
       </trans-unit>
     </body>
   </file>

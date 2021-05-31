@@ -17,6 +17,36 @@
         <note>Line: 1066
 Comment: Special case for Product : either one or the other. Not both.</note>
       </trans-unit>
+      <trans-unit id="11cd708df7411da4546d8580356e711a">
+        <source>Ignore this field if you don't use the Multistore tool. If you leave this field empty, the default shop will be used.</source>
+        <target>Ignore this field if you don't use the Multistore tool. If you leave this field empty, the default shop will be used.</target>
+        <note>Line: 536</note>
+      </trans-unit>
+      <trans-unit id="4bc14a0f722453ba235bc3fb52d95ffb">
+        <source>A category root is where a category tree can begin. This is used with multistore.</source>
+        <target>A category root is where a category tree can begin. This is used with multistore.</target>
+        <note>Line: 210</note>
+      </trans-unit>
+      <trans-unit id="5702db29cfdd93934ed330edb201ecf3">
+        <source>Enable Advanced Stock Management on product (0 = No, 1 = Yes)</source>
+        <target>Enable Advanced Stock Management on product (0 = No, 1 = Yes)</target>
+        <note>Line: 167</note>
+      </trans-unit>
+      <trans-unit id="2d743ae4c74db2a22d79e1e950e719e5">
+        <source>0 = Use quantity set in product, 1 = Use quantity from warehouse.</source>
+        <target>0 = Use quantity set in product, 1 = Use quantity from warehouse.</target>
+        <note>Line: 333</note>
+      </trans-unit>
+      <trans-unit id="aaf88088b0ac3f2992888fdfe00b5d76">
+        <source>ID of the warehouse to set as storage.</source>
+        <target>ID of the warehouse to set as storage.</target>
+        <note>Line: 337</note>
+      </trans-unit>
+      <trans-unit id="7506b41cf1aa65b2663b038e465c0d6d">
+        <source>Enable Advanced Stock Management on product (0 = No, 1 = Yes).</source>
+        <target>Enable Advanced Stock Management on product (0 = No, 1 = Yes).</target>
+        <note>Line: 329</note>
+      </trans-unit>
     </body>
   </file>
   <file original="controllers/admin/AdminShopController.php" source-language="en-US" target-language="en" datatype="plaintext">
@@ -118,48 +148,6 @@ Comment: Special case for Product : either one or the other. Not both.</note>
         <source>Warning: URL rewriting (e.g. mod_rewrite for Apache) seems to be disabled. If your Virtual URL doesn't work, please check with your hosting provider on how to activate URL rewriting.</source>
         <target>Warning: URL rewriting (e.g. mod_rewrite for Apache) seems to be disabled. If your Virtual URL doesn't work, please check with your hosting provider on how to activate URL rewriting.</target>
         <note>Line: 259</note>
-      </trans-unit>
-    </body>
-  </file>
-  <file original="src/Core/Import/EntityField/Provider/CategoryFieldsProvider.php" source-language="en-US" target-language="en" datatype="plaintext">
-    <body>
-      <trans-unit id="11cd708df7411da4546d8580356e711a">
-        <source>Ignore this field if you don't use the Multistore tool. If you leave this field empty, the default shop will be used.</source>
-        <target>Ignore this field if you don't use the Multistore tool. If you leave this field empty, the default shop will be used.</target>
-        <note>Line: 75</note>
-      </trans-unit>
-      <trans-unit id="4bc14a0f722453ba235bc3fb52d95ffb">
-        <source>A category root is where a category tree can begin. This is used with multistore.</source>
-        <target>A category root is where a category tree can begin. This is used with multistore.</target>
-        <note>Line: 64</note>
-      </trans-unit>
-    </body>
-  </file>
-  <file original="src/Core/Import/EntityField/Provider/CombinationFieldsProvider.php" source-language="en-US" target-language="en" datatype="plaintext">
-    <body>
-      <trans-unit id="5702db29cfdd93934ed330edb201ecf3">
-        <source>Enable Advanced Stock Management on product (0 = No, 1 = Yes)</source>
-        <target>Enable Advanced Stock Management on product (0 = No, 1 = Yes)</target>
-        <note>Line: 90</note>
-      </trans-unit>
-    </body>
-  </file>
-  <file original="src/Core/Import/EntityField/Provider/ProductFieldsProvider.php" source-language="en-US" target-language="en" datatype="plaintext">
-    <body>
-      <trans-unit id="2d743ae4c74db2a22d79e1e950e719e5">
-        <source>0 = Use quantity set in product, 1 = Use quantity from warehouse.</source>
-        <target>0 = Use quantity set in product, 1 = Use quantity from warehouse.</target>
-        <note>Line: 163</note>
-      </trans-unit>
-      <trans-unit id="aaf88088b0ac3f2992888fdfe00b5d76">
-        <source>ID of the warehouse to set as storage.</source>
-        <target>ID of the warehouse to set as storage.</target>
-        <note>Line: 171</note>
-      </trans-unit>
-      <trans-unit id="7506b41cf1aa65b2663b038e465c0d6d">
-        <source>Enable Advanced Stock Management on product (0 = No, 1 = Yes).</source>
-        <target>Enable Advanced Stock Management on product (0 = No, 1 = Yes).</target>
-        <note>Line: 155</note>
       </trans-unit>
     </body>
   </file>
@@ -414,30 +402,6 @@ Comment: Special case for Product : either one or the other. Not both.</note>
       </trans-unit>
     </body>
   </file>
-  <file original="src/PrestaShopBundle/Resources/views/Admin/Common/Grid/Columns/Content/severity_level.html.twig" source-language="en-US" target-language="en" datatype="plaintext">
-    <body>
-      <trans-unit id="b80c52e7f679fba3c2837b42705fe779">
-        <source>Informative only</source>
-        <target>Informative only</target>
-        <note>Line: 31</note>
-      </trans-unit>
-      <trans-unit id="0eaadb4fcb48a0a0ed7bc9868be9fbaa">
-        <source>Warning</source>
-        <target>Warning</target>
-        <note>Line: 34</note>
-      </trans-unit>
-      <trans-unit id="902b0d55fddef6f8d651fe1035b7d4bd">
-        <source>Error</source>
-        <target>Error</target>
-        <note>Line: 37</note>
-      </trans-unit>
-      <trans-unit id="4a378407770df6a42474ec5db9f54740">
-        <source>Major issue (crash)!</source>
-        <target>Major issue (crash)!</target>
-        <note>Line: 40</note>
-      </trans-unit>
-    </body>
-  </file>
   <file original="src/PrestaShopBundle/Resources/views/Admin/Configure/AdvancedParameters/Backup/Blocks/backup_info.html.twig" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
       <trans-unit id="20fbc8f64351875f498d7d6f8c91810b">
@@ -621,6 +585,26 @@ Comment: Special case for Product : either one or the other. Not both.</note>
   </file>
   <file original="src/PrestaShopBundle/Resources/views/Admin/Configure/AdvancedParameters/LogsPage/Blocks/severity_levels.html.twig" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
+      <trans-unit id="b80c52e7f679fba3c2837b42705fe779">
+        <source>Informative only</source>
+        <target>Informative only</target>
+        <note>Line: 37</note>
+      </trans-unit>
+      <trans-unit id="0eaadb4fcb48a0a0ed7bc9868be9fbaa">
+        <source>Warning</source>
+        <target>Warning</target>
+        <note>Line: 42</note>
+      </trans-unit>
+      <trans-unit id="902b0d55fddef6f8d651fe1035b7d4bd">
+        <source>Error</source>
+        <target>Error</target>
+        <note>Line: 47</note>
+      </trans-unit>
+      <trans-unit id="4a378407770df6a42474ec5db9f54740">
+        <source>Major issue (crash)!</source>
+        <target>Major issue (crash)!</target>
+        <note>Line: 52</note>
+      </trans-unit>
       <trans-unit id="3979bb684920e9e9dc86e266f93d8c87">
         <source>Severity levels</source>
         <target>Severity levels</target>

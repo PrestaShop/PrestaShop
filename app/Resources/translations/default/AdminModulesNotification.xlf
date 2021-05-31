@@ -419,6 +419,21 @@
         <target>Please select a module to unhook.</target>
         <note>Line: 221</note>
       </trans-unit>
+      <trans-unit id="1c1824ce21df05df8689641c516c9d75">
+        <source>This module cannot be loaded.</source>
+        <target>This module cannot be loaded.</target>
+        <note>Line: 230</note>
+      </trans-unit>
+      <trans-unit id="0c01b89a049f95e9eb10cfeb2a2901f0">
+        <source>Hook cannot be loaded.</source>
+        <target>Hook cannot be loaded.</target>
+        <note>Line: 232</note>
+      </trans-unit>
+      <trans-unit id="c40924509e257aa0e73ccc576bd6b953">
+        <source>An error occurred while deleting the module from its hook.</source>
+        <target>An error occurred while deleting the module from its hook.</target>
+        <note>Line: 235</note>
+      </trans-unit>
     </body>
   </file>
   <file original="modules/ps_faviconnotificationbo/ps_faviconnotificationbo.php" source-language="en-US" target-language="en" datatype="plaintext">
@@ -650,21 +665,6 @@ Comment: Confirm uninstall</note>
   </file>
   <file original="src/PrestaShopBundle/Controller/Admin/Improve/Design/PositionsController.php" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
-      <trans-unit id="1c1824ce21df05df8689641c516c9d75">
-        <source>This module cannot be loaded.</source>
-        <target>This module cannot be loaded.</target>
-        <note>Line: 175</note>
-      </trans-unit>
-      <trans-unit id="0c01b89a049f95e9eb10cfeb2a2901f0">
-        <source>Hook cannot be loaded.</source>
-        <target>Hook cannot be loaded.</target>
-        <note>Line: 184</note>
-      </trans-unit>
-      <trans-unit id="c40924509e257aa0e73ccc576bd6b953">
-        <source>An error occurred while deleting the module from its hook.</source>
-        <target>An error occurred while deleting the module from its hook.</target>
-        <note>Line: 193</note>
-      </trans-unit>
       <trans-unit id="80e868e8d753c3ec4066aab283e66cbc">
         <source>The module was successfully removed from the hook.</source>
         <target>The module was successfully removed from the hook.</target>

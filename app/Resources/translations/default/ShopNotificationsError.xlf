@@ -111,6 +111,11 @@
         <target>Password must be between 5 and 72 characters long</target>
         <note>Line: 147</note>
       </trans-unit>
+      <trans-unit id="0e2338b37ab3dfeed544e8233b53d4e0">
+        <source>The %1$s field is too long (%2$d chars max).</source>
+        <target>The %1$s field is too long (%2$d chars max).</target>
+        <note>Line: 202</note>
+      </trans-unit>
     </body>
   </file>
   <file original="classes/form/CustomerLoginForm.php" source-language="en-US" target-language="en" datatype="plaintext">
@@ -162,11 +167,6 @@
         <source>is invalid.</source>
         <target>is invalid.</target>
         <note>Line: 345</note>
-      </trans-unit>
-      <trans-unit id="0e2338b37ab3dfeed544e8233b53d4e0">
-        <source>The %1$s field is too long (%2$d chars max).</source>
-        <target>The %1$s field is too long (%2$d chars max).</target>
-        <note>Line: 314</note>
       </trans-unit>
     </body>
   </file>
@@ -395,11 +395,6 @@
         <target>This order cannot be returned</target>
         <note>Line: 180</note>
       </trans-unit>
-      <trans-unit id="3dc245110e1f3601860c20299d97c01d">
-        <source>The message cannot be blank.</source>
-        <target>The message cannot be blank.</target>
-        <note>Line: 53</note>
-      </trans-unit>
     </body>
   </file>
   <file original="controllers/front/OrderFollowController.php" source-language="en-US" target-language="en" datatype="plaintext">
@@ -453,11 +448,6 @@
         <target>An error occurred with your account, which prevents us from updating the new password. Please report this issue using the contact form.</target>
         <note>Line: 219</note>
       </trans-unit>
-      <trans-unit id="e267e2be02cf3e29f4ba53b5d97cf78a">
-        <source>Invalid email address.</source>
-        <target>Invalid email address.</target>
-        <note>Line: 66</note>
-      </trans-unit>
       <trans-unit id="375dee52ced3330cd3496340b32098ca">
         <source>The password is missing: please enter your new password.</source>
         <target>The password is missing: please enter your new password.</target>
@@ -496,11 +486,6 @@
   </file>
   <file original="controllers/front/PdfOrderReturnController.php" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
-      <trans-unit id="b430bfb9e8ec89ded934087889c2e845">
-        <source>Order return not found.</source>
-        <target>Order return not found.</target>
-        <note>Line: 47</note>
-      </trans-unit>
       <trans-unit id="b55e152dc0683c3d315b6baabb98495d">
         <source>Order return not confirmed.</source>
         <target>Order return not confirmed.</target>
@@ -508,13 +493,17 @@
       </trans-unit>
     </body>
   </file>
+  <file original="controllers/front/PdfOrderSlipController.php" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="b430bfb9e8ec89ded934087889c2e845">
+        <source>Order return not found.</source>
+        <target>Order return not found.</target>
+        <note>Line: 47</note>
+      </trans-unit>
+    </body>
+  </file>
   <file original="controllers/front/ProductController.php" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
-      <trans-unit id="dd6b089a49908d671c3e9cc8dc5899ae">
-        <source>Invalid message</source>
-        <target>Invalid message</target>
-        <note>Line: 911</note>
-      </trans-unit>
       <trans-unit id="91e6cde963af2000218553722fc7a093">
         <source>This product is no longer available.</source>
         <target>This product is no longer available.</target>
@@ -557,6 +546,29 @@
         <source>This category does not exist.</source>
         <target>This category does not exist.</target>
         <note>Line: 94</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="modules/contactform/contactform.php" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="3dc245110e1f3601860c20299d97c01d">
+        <source>The message cannot be blank.</source>
+        <target>The message cannot be blank.</target>
+        <note>Line: 450</note>
+      </trans-unit>
+      <trans-unit id="dd6b089a49908d671c3e9cc8dc5899ae">
+        <source>Invalid message</source>
+        <target>Invalid message</target>
+        <note>Line: 456</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="modules/ps_emailsubscription/ps_emailsubscription.php" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="e267e2be02cf3e29f4ba53b5d97cf78a">
+        <source>Invalid email address.</source>
+        <target>Invalid email address.</target>
+        <note>Line: 420</note>
       </trans-unit>
     </body>
   </file>

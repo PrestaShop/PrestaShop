@@ -299,6 +299,16 @@ File: admin-dev/themes/default/template/controllers/categories/helpers/form/form
         <target>Mobile phone number for this supplier.</target>
         <note>Line: 176</note>
       </trans-unit>
+      <trans-unit id="afd7431f75b5801226c9ee37acc1a504">
+        <source>Will appear in the list of suppliers.</source>
+        <target>Will appear in the list of suppliers.</target>
+        <note>Line: 156</note>
+      </trans-unit>
+      <trans-unit id="e865605842d16d0d11c266c731e00507">
+        <source>Upload a supplier logo from your computer.</source>
+        <target>Upload a supplier logo from your computer.</target>
+        <note>Line: 249</note>
+      </trans-unit>
     </body>
   </file>
   <file original="src/PrestaShopBundle/Controller/Admin/ProductController.php" source-language="en-US" target-language="en" datatype="plaintext">
@@ -493,20 +503,6 @@ File: admin-dev/themes/default/template/controllers/categories/helpers/form/form
         <source>This description will appear in search engines. It should be a single sentence, shorter than 160 characters (including spaces).</source>
         <target>This description will appear in search engines. It should be a single sentence, shorter than 160 characters (including spaces).</target>
         <note>Line: 119</note>
-      </trans-unit>
-    </body>
-  </file>
-  <file original="src/PrestaShopBundle/Form/Admin/Sell/Supplier/SupplierType.php" source-language="en-US" target-language="en" datatype="plaintext">
-    <body>
-      <trans-unit id="afd7431f75b5801226c9ee37acc1a504">
-        <source>Will appear in the list of suppliers.</source>
-        <target>Will appear in the list of suppliers.</target>
-        <note>Line: 150</note>
-      </trans-unit>
-      <trans-unit id="e865605842d16d0d11c266c731e00507">
-        <source>Upload a supplier logo from your computer.</source>
-        <target>Upload a supplier logo from your computer.</target>
-        <note>Line: 272</note>
       </trans-unit>
     </body>
   </file>

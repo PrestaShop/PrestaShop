@@ -154,6 +154,15 @@
       </trans-unit>
     </body>
   </file>
+  <file original="controllers/admin/AdminStatusesController.php" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="e8be55bf3a30501aef09d2e74de97976">
+        <source>This name already exists.</source>
+        <target>This name already exists.</target>
+        <note>Line: 630</note>
+      </trans-unit>
+    </body>
+  </file>
   <file original="controllers/admin/AdminThemesController.php" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
       <trans-unit id="6e9550e40cc317663fbe81e759d098e8">
@@ -249,15 +258,6 @@
         <source><![CDATA[Your theme has been correctly reset to its default settings. You may want to regenerate your images. See the Improve > Design > Images Settings screen for the '%regenerate_label%' button.]]></source>
         <target><![CDATA[Your theme has been correctly reset to its default settings. You may want to regenerate your images. See the Improve > Design > Images Settings screen for the '%regenerate_label%' button.]]></target>
         <note>Line: 388</note>
-      </trans-unit>
-    </body>
-  </file>
-  <file original="src/PrestaShopBundle/Form/Admin/Configure/AdvancedParameters/Import/ImportDataConfigurationFormDataProvider.php" source-language="en-US" target-language="en" datatype="plaintext">
-    <body>
-      <trans-unit id="e8be55bf3a30501aef09d2e74de97976">
-        <source>This name already exists.</source>
-        <target>This name already exists.</target>
-        <note>Line: 144</note>
       </trans-unit>
     </body>
   </file>

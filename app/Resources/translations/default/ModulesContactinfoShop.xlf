@@ -7,6 +7,11 @@
         <target>Contact us</target>
         <note>Line: 26</note>
       </trans-unit>
+      <trans-unit id="c6359db4a43cb7267a84b389229fd073">
+        <source>Call us: [1]%phone%[/1]</source>
+        <target>Call us: [1]%phone%[/1]</target>
+        <note>Line: 29</note>
+      </trans-unit>
     </body>
   </file>
   <file original="modules/ps_contactinfo/ps_contactinfo-rich.tpl" source-language="en-US" target-language="en" datatype="plaintext">
@@ -25,11 +30,6 @@
         <source>Email us: [1]%email%[/1]</source>
         <target>Email us: [1]%email%[/1]</target>
         <note>Line: 57</note>
-      </trans-unit>
-      <trans-unit id="c6359db4a43cb7267a84b389229fd073">
-        <source>Call us: [1]%phone%[/1]</source>
-        <target>Call us: [1]%phone%[/1]</target>
-        <note>Line: 32</note>
       </trans-unit>
     </body>
   </file>

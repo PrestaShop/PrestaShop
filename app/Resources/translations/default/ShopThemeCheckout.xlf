@@ -118,26 +118,6 @@
   </file>
   <file original="src/Adapter/Presenter/Cart/CartPresenter.php" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
-      <trans-unit id="b24ce0cd392a5b0b8dedc66c25213594">
-        <source>Free</source>
-        <target>Free</target>
-        <note>Line: 534</note>
-      </trans-unit>
-      <trans-unit id="96b0141273eabab320119c467cdcaf17">
-        <source>Total</source>
-        <target>Total</target>
-        <note>Line: 401</note>
-      </trans-unit>
-      <trans-unit id="2194aaec8cc7086ab0e93f74547e5f53">
-        <source>Subtotal</source>
-        <target>Subtotal</target>
-        <note>Line: 342</note>
-      </trans-unit>
-      <trans-unit id="484f5a79672cebe198ebdde45a1d672f">
-        <source>Gift wrapping</source>
-        <target>Gift wrapping</target>
-        <note>Line: 365</note>
-      </trans-unit>
       <trans-unit id="ea9cf7e47ff33b2be14e6dd07cbcefc6">
         <source>Shipping</source>
         <target>Shipping</target>
@@ -152,16 +132,6 @@
         <source>Taxes</source>
         <target>Taxes</target>
         <note>Line: 392</note>
-      </trans-unit>
-      <trans-unit id="adc852563bca51fb6b10c7905010406d">
-        <source>Total (tax incl.)</source>
-        <target>Total (tax incl.)</target>
-        <note>Line: 409</note>
-      </trans-unit>
-      <trans-unit id="8faf99e02e4d0ccb4dd933404f87a4ea">
-        <source>Total (tax excl.)</source>
-        <target>Total (tax excl.)</target>
-        <note>Line: 415</note>
       </trans-unit>
       <trans-unit id="7e0eb131cbb6280fe2b38edf92a3bcc5">
         <source>1 item</source>
@@ -187,6 +157,21 @@
   </file>
   <file original="src/Adapter/Presenter/Order/OrderLazyArray.php" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
+      <trans-unit id="96b0141273eabab320119c467cdcaf17">
+        <source>Total</source>
+        <target>Total</target>
+        <note>Line: 242</note>
+      </trans-unit>
+      <trans-unit id="adc852563bca51fb6b10c7905010406d">
+        <source>Total (tax incl.)</source>
+        <target>Total (tax incl.)</target>
+        <note>Line: 259</note>
+      </trans-unit>
+      <trans-unit id="8faf99e02e4d0ccb4dd933404f87a4ea">
+        <source>Total (tax excl.)</source>
+        <target>Total (tax excl.)</target>
+        <note>Line: 269</note>
+      </trans-unit>
       <trans-unit id="ea067eb37801c5aab1a1c685eb97d601">
         <source>Total paid</source>
         <target>Total paid</target>
@@ -196,6 +181,21 @@
   </file>
   <file original="src/Adapter/Presenter/Order/OrderSubtotalLazyArray.php" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
+      <trans-unit id="b24ce0cd392a5b0b8dedc66c25213594">
+        <source>Free</source>
+        <target>Free</target>
+        <note>Line: 145</note>
+      </trans-unit>
+      <trans-unit id="2194aaec8cc7086ab0e93f74547e5f53">
+        <source>Subtotal</source>
+        <target>Subtotal</target>
+        <note>Line: 86</note>
+      </trans-unit>
+      <trans-unit id="484f5a79672cebe198ebdde45a1d672f">
+        <source>Gift wrapping</source>
+        <target>Gift wrapping</target>
+        <note>Line: 200</note>
+      </trans-unit>
       <trans-unit id="104d9898c04874d0fbac36e125fa1369">
         <source>Discount</source>
         <target>Discount</target>

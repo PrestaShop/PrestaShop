@@ -25,11 +25,6 @@
   </file>
   <file original="classes/lang/KeysReference/TabLang.php" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
-      <trans-unit id="27ce7f8b5623b2e2df568d64cf051607">
-        <source>Stock</source>
-        <target>Stock</target>
-        <note>Line: 119</note>
-      </trans-unit>
       <trans-unit id="3068c5a98c003498f1fec0c489212e8b">
         <source>Sell</source>
         <target>Sell</target>
@@ -413,6 +408,15 @@ Comment: subtab</note>
       </trans-unit>
     </body>
   </file>
+  <file original="install-dev/upgrade/php/add_new_status_stock.php" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="27ce7f8b5623b2e2df568d64cf051607">
+        <source>Stock</source>
+        <target>Stock</target>
+        <note>Line: 52</note>
+      </trans-unit>
+    </body>
+  </file>
   <file original="src/Core/Grid/Definition/Factory/AttachmentGridDefinitionFactory.php" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
       <trans-unit id="91f3a2c0e4424c87689525da44c4db11">
@@ -616,6 +620,15 @@ Comment: subtab</note>
       </trans-unit>
     </body>
   </file>
+  <file original="src/PrestaShopBundle/Controller/Admin/Configure/ShopParameters/PreferencesController.php" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="d0834fcec6337785ee749c8f5464f6f6">
+        <source>Preferences</source>
+        <target>Preferences</target>
+        <note>Line: 115</note>
+      </trans-unit>
+    </body>
+  </file>
   <file original="src/PrestaShopBundle/Controller/Admin/Configure/ShopParameters/ProductPreferencesController.php" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
       <trans-unit id="3821c92eff2643b0d1ccdce26d2e8e48">
@@ -697,15 +710,6 @@ Comment: subtab</note>
       </trans-unit>
     </body>
   </file>
-  <file original="src/PrestaShopBundle/Controller/Admin/Improve/Shipping/PreferencesController.php" source-language="en-US" target-language="en" datatype="plaintext">
-    <body>
-      <trans-unit id="d0834fcec6337785ee749c8f5464f6f6">
-        <source>Preferences</source>
-        <target>Preferences</target>
-        <note>Line: 159</note>
-      </trans-unit>
-    </body>
-  </file>
   <file original="src/PrestaShopBundle/Controller/Admin/Sell/CustomerService/OrderMessageController.php" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
       <trans-unit id="127458a6096e6f3224228922cfd45c49">
@@ -721,15 +725,6 @@ Comment: subtab</note>
         <source>Delivery Slips</source>
         <target>Delivery Slips</target>
         <note>Line: 78</note>
-      </trans-unit>
-    </body>
-  </file>
-  <file original="src/PrestaShopBundle/Controller/Admin/TranslationsController.php" source-language="en-US" target-language="en" datatype="plaintext">
-    <body>
-      <trans-unit id="0b8d92bc19b720bb1065649535463409">
-        <source>Translations</source>
-        <target>Translations</target>
-        <note>Line: 111</note>
       </trans-unit>
     </body>
   </file>
@@ -780,6 +775,11 @@ Comment: subtab</note>
   </file>
   <file original="src/PrestaShopBundle/Translation/Api/InternationalApi.php" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
+      <trans-unit id="0b8d92bc19b720bb1065649535463409">
+        <source>Translations</source>
+        <target>Translations</target>
+        <note>Line: 51</note>
+      </trans-unit>
       <trans-unit id="8189ecf686157db0c0274c1f49373318">
         <source>International</source>
         <target>International</target>
