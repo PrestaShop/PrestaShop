@@ -24,6 +24,8 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
 
+declare(strict_types=1);
+
 namespace PrestaShop\PrestaShop\Core\Domain\Product\SpecificPrice\Command;
 
 use PrestaShop\PrestaShop\Core\Domain\Cart\ValueObject\CartId;
@@ -83,9 +85,13 @@ class DeleteSpecificPriceByCartProductCommand
 
     /**
      * @param int $productAttributeId
+     *
+     * @return DeleteSpecificPriceByCartProductCommand
      */
-    public function setProductAttributeId(int $productAttributeId): void
+    public function setProductAttributeId(int $productAttributeId): self
     {
         $this->productAttributeId = $productAttributeId;
+
+        return $this;
     }
 }
