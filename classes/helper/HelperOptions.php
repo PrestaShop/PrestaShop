@@ -31,6 +31,9 @@ class HelperOptionsCore extends Helper
 {
     public $required = false;
 
+    /** @var int */
+    public $id;
+
     public function __construct()
     {
         $this->base_folder = 'helpers/options/';
@@ -287,7 +290,9 @@ class HelperOptionsCore extends Helper
     public function displayOptionTypePrice($key, $field, $value)
     {
         echo $this->context->currency->getSign('left');
-        $this->displayOptionTypeText($key, $field, $value);
+        if (method_exists($this, 'displayOptionTypeText')) {
+            $this->displayOptionTypeText($key, $field, $value);
+        }
         echo $this->context->currency->getSign('right') . ' ' . $this->l('(tax excl.)', 'Helper');
     }
 

@@ -201,7 +201,7 @@ class StockAvailableCore extends ObjectModel
 
                 // if it's a simple product
                 if (empty($ids_product_attribute)) {
-                    $allowed_warehouse_for_product = WareHouse::getProductWarehouseList((int) $id_product, 0, (int) $id_shop);
+                    $allowed_warehouse_for_product = Warehouse::getProductWarehouseList((int) $id_product, 0, (int) $id_shop);
                     $allowed_warehouse_for_product_clean = [];
                     foreach ($allowed_warehouse_for_product as $warehouse) {
                         $allowed_warehouse_for_product_clean[] = (int) $warehouse['id_warehouse'];
@@ -225,7 +225,7 @@ class StockAvailableCore extends ObjectModel
                 } else {
                     // else this product has attributes, hence loops on $ids_product_attribute
                     foreach ($ids_product_attribute as $id_product_attribute) {
-                        $allowed_warehouse_for_combination = WareHouse::getProductWarehouseList((int) $id_product, (int) $id_product_attribute, (int) $id_shop);
+                        $allowed_warehouse_for_combination = Warehouse::getProductWarehouseList((int) $id_product, (int) $id_product_attribute, (int) $id_shop);
                         $allowed_warehouse_for_combination_clean = [];
                         foreach ($allowed_warehouse_for_combination as $warehouse) {
                             $allowed_warehouse_for_combination_clean[] = (int) $warehouse['id_warehouse'];
@@ -651,7 +651,7 @@ class StockAvailableCore extends ObjectModel
             return false;
         }
 
-        if (Shop::getContext() == SHOP::CONTEXT_SHOP) {
+        if (Shop::getContext() == Shop::CONTEXT_SHOP) {
             if (Shop::getContextShopGroup()->share_stock == 1) {
                 $pa_sql = '';
                 if ($id_product_attribute !== null) {
@@ -664,7 +664,7 @@ class StockAvailableCore extends ObjectModel
                 if ((int) Db::getInstance()->getValue('SELECT COUNT(*)
 						FROM ' . _DB_PREFIX_ . 'product' . $pa_sql . '_shop
 						WHERE id_product' . $pa_sql . '=' . (int) $id_product_attribute_sql . '
-							AND id_shop IN (' . implode(',', array_map('intval', Shop::getContextListShopID(SHOP::SHARE_STOCK))) . ')')) {
+							AND id_shop IN (' . implode(',', array_map('intval', Shop::getContextListShopID(Shop::SHARE_STOCK))) . ')')) {
                     return true;
                 }
             }

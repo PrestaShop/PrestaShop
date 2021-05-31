@@ -139,9 +139,6 @@ class AdminControllerCore extends Controller
     /** @var array|false */
     public $fields_value = false;
 
-    /** @var array Errors displayed after post processing */
-    public $errors = [];
-
     /** @var bool Define if the header of the list contains filter and sorting links or not */
     protected $list_simple_header;
 
@@ -420,6 +417,21 @@ class AdminControllerCore extends Controller
 
     /** @var array */
     protected $translationsTab = [];
+
+    /**
+     * @var string
+     */
+    public $bo_css;
+
+    /**
+     * @var array
+     */
+    public $_error;
+
+    /**
+     * @var int
+     */
+    public $_lang;
 
     public function __construct($forceControllerName = '', $default_theme_name = 'default')
     {
@@ -3720,28 +3732,6 @@ class AdminControllerCore extends Controller
 
         /* Overload this method for custom checking */
         $this->_childValidation();
-
-        /* Checking for multilingual fields validity */
-        if (isset($rules['validateLang']) && is_array($rules['validateLang'])) {
-            foreach ($rules['validateLang'] as $field_lang => $function) {
-                foreach ($languages as $language) {
-                    if (($value = Tools::getValue($field_lang . '_' . $language['id_lang'])) !== false && !empty($value)) {
-                        if (Tools::strtolower($function) == 'iscleanhtml' && Configuration::get('PS_ALLOW_HTML_IFRAME')) {
-                            $res = Validate::$function($value, true);
-                        } else {
-                            $res = Validate::$function($value);
-                        }
-                        if (!$res) {
-                            $this->errors[$field_lang . '_' . $language['id_lang']] = $this->trans(
-                                'The %field_name% field (%lang%) is invalid.',
-                                ['%field_name%' => call_user_func([$class_name, 'displayFieldName'], $field_lang, $class_name), '%lang%' => $language['name']],
-                                'Admin.Notifications.Error'
-                            );
-                        }
-                    }
-                }
-            }
-        }
     }
 
     /**

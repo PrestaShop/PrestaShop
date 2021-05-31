@@ -30,6 +30,16 @@ class CheckoutPaymentStepCore extends AbstractCheckoutStep
     protected $template = 'checkout/_partials/steps/payment.tpl';
     private $selected_payment_option;
 
+    /**
+     * @var ConditionsToApproveFinder
+     */
+    public $conditionsToApproveFinder;
+
+    /**
+     * @var PaymentOptionsFinder
+     */
+    public $paymentOptionsFinder;
+
     public function __construct(
         Context $context,
         TranslatorInterface $translator,

@@ -37,7 +37,7 @@ class ObjectPresenter implements PresenterInterface
     /**
      * @param ObjectModel $object
      *
-     * @return array
+     * @return array<string, mixed>
      *
      * @throws Exception
      */
