@@ -31,10 +31,14 @@
  */
 class SmartyResourceModuleCore extends Smarty_Resource_Custom
 {
-    public function __construct(array $paths, $isAdmin = false)
+    /**
+     * @var array<string>
+     */
+    public $paths;
+
+    public function __construct(array $paths)
     {
         $this->paths = $paths;
-        $this->isAdmin = $isAdmin;
     }
 
     /**
