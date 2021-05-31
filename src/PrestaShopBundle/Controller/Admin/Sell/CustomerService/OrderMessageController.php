@@ -257,7 +257,7 @@ class OrderMessageController extends FrameworkBundleAdminController
             ),
             OrderMessageNameAlreadyUsedException::class => $this->trans(
                 'An order message with the same name already exists in %s.',
-                'Admin.OrdersCustomers.Notification',
+                'Admin.Orderscustomers.Notification',
                 [
                     $language,
                 ]
