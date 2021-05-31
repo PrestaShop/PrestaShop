@@ -311,7 +311,7 @@ class Install extends AbstractInstall
             return false;
         }
 
-        return $this->generateSf2ProductionEnv();
+        return $this->updateSchema();
     }
 
     /**
@@ -321,7 +321,7 @@ class Install extends AbstractInstall
      *
      * @return bool
      */
-    public function generateSf2ProductionEnv()
+    public function updateSchema()
     {
         $schemaUpgrade = new UpgradeDatabase();
         $schemaUpgrade->addDoctrineSchemaUpdate();
