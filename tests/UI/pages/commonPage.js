@@ -210,6 +210,7 @@ class CommonPage {
    * To accept or dismiss a javascript dialog
    * @param page {Page} Browser tab
    * @param accept {boolean} True to accept the dialog, false to dismiss
+   * @param text {string} Text to set on dialog input
    * @return {Promise<void>}
    */
   async dialogListener(page, accept = true, text = '') {
