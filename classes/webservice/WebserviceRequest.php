@@ -207,6 +207,11 @@ class WebserviceRequestCore
     public static $ws_current_classname;
 
     /**
+     * @var array
+     */
+    public $params;
+
+    /**
      * @var array the list of shop ids, can be empty
      */
     public static $shopIDs = [];

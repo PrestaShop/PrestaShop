@@ -132,6 +132,18 @@ class HelperListCore extends Helper
     private $linkBuilderFactory;
 
     /**
+     * @var string
+     */
+    public $shopLinkType;
+
+    /**
+     * @var string Image type
+     */
+    public $imageType;
+
+    public $list_id;
+
+    /**
      * You can use $controllerMapping to add entity/controller mapping in order to have migrated links
      * in a legacy list (this requires to have correctly set the _legacy_link in the routing of course)
      *
