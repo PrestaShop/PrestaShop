@@ -26,7 +26,6 @@
 
 namespace PrestaShop\PrestaShop\Core\Domain\SpecificPrice\CommandHandler;
 
-use PrestaShop\PrestaShop\Core\Domain\Product\SpecificPrice\CommandHandler\DeleteSpecificPriceByCartProductHandlerInterface as DeleteProductSpecificPriceByCartProductHandlerInterface;
 use PrestaShop\PrestaShop\Core\Domain\SpecificPrice\Command\DeleteSpecificPriceByCartProductCommand;
 
 @trigger_error(
@@ -39,7 +38,6 @@ use PrestaShop\PrestaShop\Core\Domain\SpecificPrice\Command\DeleteSpecificPriceB
 
 /**
  * @deprecated since 1.7.9.0 and will be removed in the next major version.
- * @see DeleteProductSpecificPriceByCartProductHandlerInterface
  */
 interface DeleteSpecificPriceByCartProductHandlerInterface
 {

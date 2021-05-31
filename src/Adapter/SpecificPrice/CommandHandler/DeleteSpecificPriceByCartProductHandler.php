@@ -28,7 +28,6 @@ declare(strict_types=1);
 
 namespace PrestaShop\PrestaShop\Adapter\SpecificPrice\CommandHandler;
 
-use PrestaShop\PrestaShop\Adapter\Product\SpecificPrice\CommandHandler\DeleteSpecificPriceByCartProductHandler as DeleteProductSpecificPriceByCartProductHandler;
 use PrestaShop\PrestaShop\Core\Domain\SpecificPrice\Command\DeleteSpecificPriceByCartProductCommand;
 use PrestaShop\PrestaShop\Core\Domain\SpecificPrice\CommandHandler\DeleteSpecificPriceByCartProductHandlerInterface;
 use PrestaShop\PrestaShop\Core\Domain\SpecificPrice\Exception\SpecificPriceException;
@@ -45,7 +44,6 @@ use SpecificPrice;
 
 /**
  * @deprecated since 1.7.9.0 and will be removed in the next major version.
- * @see DeleteProductSpecificPriceByCartProductHandler
  */
 final class DeleteSpecificPriceByCartProductHandler implements DeleteSpecificPriceByCartProductHandlerInterface
 {
