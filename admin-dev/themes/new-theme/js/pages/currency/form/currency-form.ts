@@ -252,8 +252,8 @@ export default class CurrencyForm {
     this.$resetDefaultSettingsButton.removeClass('spinner');
   }
 
-  async fetchCurrency(currencyIsoCode: string): Promise<void> {
-    let currencyData: Record<string, any> | null = null;
+  async fetchCurrency(currencyIsoCode: string): Promise<Record<string, any>> {
+    let currencyData: Record<string, any> = {};
 
     if (currencyIsoCode) {
       await this.referenceCurrencyResource.get({id: currencyIsoCode}).then(
@@ -284,7 +284,9 @@ export default class CurrencyForm {
     return currencyData;
   }
 
-  fillCurrencyData(currencyData) {
+  fillCurrencyData(
+    currencyData: Record<string, any>,
+  ): void | Record<string, any> {
     if (!currencyData) {
       return;
     }
@@ -300,7 +302,7 @@ export default class CurrencyForm {
     this.$precisionInput.val(currencyData.precision);
   }
 
-  fillCurrencyCustomData(currencyData) {
+  fillCurrencyCustomData(currencyData: Record<string, any>): void {
     Object.keys(currencyData.symbols).forEach((langId) => {
       const langSymbolSelector = this.map.symbolsInput(langId);
       $(langSymbolSelector).val(currencyData.symbols[langId]);
@@ -312,8 +314,8 @@ export default class CurrencyForm {
     });
   }
 
-  getCurrencyDataFromForm() {
-    const currencyData = {
+  getCurrencyDataFromForm(): Record<string, any> {
+    const currencyData: Record<string, any> = {
       names: {},
       symbols: {},
       transformations: {},
@@ -322,8 +324,10 @@ export default class CurrencyForm {
       precision: this.$precisionInput.val(),
     };
 
-    this.originalLanguages.forEach((lang) => {
-      currencyData.names[lang.id] = $(this.map.namesInput(lang.id)).val();
+    this.originalLanguages.forEach((lang: Record<string, any>) => {
+      currencyData.names[<string>lang.id] = $(
+        this.map.namesInput(lang.id),
+      ).val();
       currencyData.symbols[lang.id] = $(this.map.symbolsInput(lang.id)).val();
       currencyData.transformations[lang.id] = $(
         this.map.transformationsInput(lang.id),
