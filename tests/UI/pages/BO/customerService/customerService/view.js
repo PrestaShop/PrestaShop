@@ -20,7 +20,8 @@ class ViewCustomer extends BOBasePage {
     this.threadBadge = 'span.badge';
     this.statusButton = id => `button[name='setstatus'][value='${id}']`;
     this.messageDiv = '#content div.message-item-initial';
-    this.yourAnswerForm = '#content div.row div:nth-child(5) form';
+    this.yourAnswerFormTitle = '#reply-form-title';
+    this.yourAnswerFormTextarea = '#reply_message';
     this.ordersAndMessagesForm = '#content div.row div:nth-child(6)';
   }
 
@@ -49,12 +50,21 @@ class ViewCustomer extends BOBasePage {
 
   // Your answer form
   /**
+   * Get your answer form title
+   * @param page {Page} Browser tab
+   * @returns {Promise<string>}
+   */
+  getYourAnswerFormTitle(page) {
+    return this.getTextContent(page, this.yourAnswerFormTitle);
+  }
+
+  /**
    * Get your answer form content
    * @param page {Page} Browser tab
    * @returns {Promise<string>}
    */
-  getYourAnswerContent(page) {
-    return this.getTextContent(page, this.yourAnswerForm);
+  getYourAnswerFormContent(page) {
+    return this.getTextContent(page, this.yourAnswerFormTextarea);
   }
 
   // Orders and messages timeline form
