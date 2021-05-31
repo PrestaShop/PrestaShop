@@ -25,47 +25,51 @@
  */
 declare(strict_types=1);
 
-namespace PrestaShop\PrestaShop\Core\Domain\Product\SpecificPrice\ValueObject;
+namespace Tests\Unit\Core\Domain\Product\SpecificPrice\ValueObject;
 
+use Generator;
+use PHPUnit\Framework\Assert;
+use PHPUnit\Framework\TestCase;
 use PrestaShop\PrestaShop\Core\Domain\Product\SpecificPrice\Exception\SpecificPriceConstraintException;
+use PrestaShop\PrestaShop\Core\Domain\Product\SpecificPrice\ValueObject\SpecificPriceId;
 
-class SpecificPriceId
+class SpecificPriceIdTest extends TestCase
 {
     /**
-     * @var int
-     */
-    private $specificPriceId;
-
-    /**
-     * @param int $specificPriceId
-     *
-     * @throws SpecificPriceConstraintException
-     */
-    public function __construct(int $specificPriceId)
-    {
-        $this->assertIsGreaterThanZero($specificPriceId);
-        $this->specificPriceId = $specificPriceId;
-    }
-
-    /**
-     * @return int
-     */
-    public function getValue(): int
-    {
-        return $this->specificPriceId;
-    }
-
-    /**
-     * Validates that the value is greater than zero
+     * @dataProvider getValidValues
      *
      * @param int $value
-     *
-     * @throws SpecificPriceConstraintException
      */
-    private function assertIsGreaterThanZero(int $value): void
+    public function testItIsSuccessfullyConstructed(int $value): void
     {
-        if (0 >= $value) {
-            throw new SpecificPriceConstraintException(sprintf('Invalid specific price id "%s".', $value), SpecificPriceConstraintException::INVALID_ID);
-        }
+        $specificPriceId = new SpecificPriceId($value);
+
+        Assert::assertSame($value, $specificPriceId->getValue());
+    }
+
+    /**
+     * @dataProvider getInvalidValues
+     *
+     * @param int $value
+     */
+    public function testItThrowsExceptionWhenInvalidValueIsProvided(int $value): void
+    {
+        $this->expectException(SpecificPriceConstraintException::class);
+
+        new SpecificPriceId($value);
+    }
+
+    public function getValidValues(): Generator
+    {
+        yield [1];
+        yield [10];
+        yield [5000000001];
+    }
+
+    public function getInvalidValues(): Generator
+    {
+        yield [0];
+        yield [-1];
+        yield [-999];
     }
 }
