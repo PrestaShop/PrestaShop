@@ -32,8 +32,16 @@ use PrestaShop\PrestaShop\Core\Domain\Cart\ValueObject\CartId;
 use PrestaShop\PrestaShop\Core\Domain\Product\SpecificPrice\Command\DeleteSpecificPriceByCartProductCommand as DeleteProductSpecificPriceByCartProductCommand;
 use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductId;
 
+@trigger_error(
+    sprintf(
+        '%s is deprecated since version 1.7.9.0 and will be removed in the next major version.',
+        DeleteSpecificPriceByCartProductCommand::class
+    ),
+    E_USER_DEPRECATED
+);
+
 /**
- * @deprecated since 1.7.9.0
+ * @deprecated since 1.7.9.0 and will be removed in the next major version.
  * @see DeleteProductSpecificPriceByCartProductCommand
  */
 class DeleteSpecificPriceByCartProductCommand

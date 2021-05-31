@@ -29,8 +29,16 @@ namespace PrestaShop\PrestaShop\Core\Domain\SpecificPrice\Exception;
 use DomainException;
 use PrestaShop\PrestaShop\Core\Domain\Product\SpecificPrice\Exception\SpecificPriceException as ProductSpecificPriceException;
 
+@trigger_error(
+    sprintf(
+        '%s is deprecated since version 1.7.9.0 and will be removed in the next major version.',
+        SpecificPriceException::class
+    ),
+    E_USER_DEPRECATED
+);
+
 /**
- * @deprecated since 1.7.9.0
+ * @deprecated since 1.7.9.0 and will be removed in the next major version.
  * @see ProductSpecificPriceException
  */
 class SpecificPriceException extends DomainException

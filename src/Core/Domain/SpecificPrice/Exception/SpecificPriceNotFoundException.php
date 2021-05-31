@@ -30,8 +30,16 @@ namespace PrestaShop\PrestaShop\Core\Domain\SpecificPrice\Exception;
 
 use PrestaShop\PrestaShop\Core\Domain\Product\SpecificPrice\Exception\SpecificPriceNotFoundException as ProductSpecificPriceNotFoundException;
 
+@trigger_error(
+    sprintf(
+        '%s is deprecated since version 1.7.9.0 and will be removed in the next major version.',
+        SpecificPriceNotFoundException::class
+    ),
+    E_USER_DEPRECATED
+);
+
 /**
- * @deprecated since 1.7.9.0
+ * @deprecated since 1.7.9.0 and will be removed in the next major version.
  * @see ProductSpecificPriceNotFoundException
  */
 class SpecificPriceNotFoundException extends SpecificPriceException
