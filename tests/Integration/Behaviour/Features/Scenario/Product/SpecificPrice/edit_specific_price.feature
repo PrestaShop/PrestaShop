@@ -54,7 +54,7 @@ Feature: Edit existing Specific Price from Back Office (BO).
       | from                  |        |
       | to                    |        |
 
-  Scenario: I edit specific price price and tax
+  Scenario: I edit specific price tax, price and quantity
     Given specific price price1 should have following details:
       | specific price detail | value  |
       | reduction type        | amount |
@@ -65,18 +65,24 @@ Feature: Edit existing Specific Price from Back Office (BO).
       | from                  |        |
       | to                    |        |
     When I edit specific price "price1" with following details:
-      | includes tax | false |
-      | price        | 50    |
+      | includes tax  | false |
+      | price         | 50    |
+      | from quantity | 3     |
     Then specific price price1 should have following details:
       | specific price detail | value  |
       | reduction type        | amount |
       | reduction value       | 12.56  |
       | includes tax          | false  |
       | price                 | 50     |
-      | from quantity         | 1      |
+      | from quantity         | 3      |
       | from                  |        |
       | to                    |        |
     When I edit specific price "price1" with following details:
+      | price         | 45.78 |
+      | includes tax  | true  |
+      | from quantity | 1     |
+    Then specific price price1 should have following details:
+      | specific price detail | value  |
       | includes tax          | true   |
       | price                 | 45.78  |
       | specific price detail | value  |
@@ -148,3 +154,27 @@ Feature: Edit existing Specific Price from Back Office (BO).
       | country               |        |
       | group                 |        |
       | customer              |        |
+
+  Scenario: I edit specific price relations
+    Given specific price price1 should have following details:
+      | specific price detail | value  |
+      | reduction type        | amount |
+      | reduction value       | 12.56  |
+      | includes tax          | true   |
+      | price                 | 45.78  |
+      | from quantity         | 1      |
+      | from                  |        |
+      | to                    |        |
+    When I edit specific price "price1" with following details:
+      | from | 2021-01-01 10:00:00 |
+      | to   | 2021-01-01 11:00:00 |
+    Then specific price price1 should have following details:
+      | specific price detail | value               |
+      | reduction type        | amount              |
+      | reduction value       | 12.56               |
+      | includes tax          | true                |
+      | price                 | 45.78               |
+      | from quantity         | 1                   |
+      | from                  | 2021-01-01 10:00:00 |
+      | to                    | 2021-01-01 11:00:00 |
+# @todo: it is impossible to reset date ranges to 0000-00-00. Need to discuss it. See reminder in EditProductSpecificPriceCommand
