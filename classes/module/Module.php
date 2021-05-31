@@ -417,7 +417,9 @@ abstract class ModuleCore implements ModuleInterface
         $result = Db::getInstance()->insert($this->table, ['name' => $this->name, 'active' => 1, 'version' => $this->version]);
         if (!$result) {
             $this->_errors[] = Context::getContext()->getTranslator()->trans('Technical error: PrestaShop could not install this module.', [], 'Admin.Modules.Notification');
-            $this->uninstallTabs();
+            if (method_exists($this, 'uninstallTabs')) {
+                $this->uninstallTabs();
+            }
             $this->uninstallOverrides();
 
             return false;
@@ -2144,8 +2146,6 @@ abstract class ModuleCore implements ModuleInterface
         // Close div openned previously
         $output .= '</div></div>';
 
-        $this->error = true;
-
         return $output;
     }
 
@@ -2915,15 +2915,6 @@ abstract class ModuleCore implements ModuleInterface
      */
     public function getPosition($id_hook)
     {
-        if (isset(Hook::$preloadModulesFromHooks)) {
-            if (isset(Hook::$preloadModulesFromHooks[$id_hook])) {
-                if (isset(Hook::$preloadModulesFromHooks[$id_hook]['module_position'][$this->id])) {
-                    return Hook::$preloadModulesFromHooks[$id_hook]['module_position'][$this->id];
-                } else {
-                    return 0;
-                }
-            }
-        }
         $result = Db::getInstance()->getRow('
             SELECT `position`
             FROM `' . _DB_PREFIX_ . 'hook_module`

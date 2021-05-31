@@ -342,7 +342,7 @@ class OrderCore extends ObjectModel
      */
     public function deleteProduct($order, $order_detail, $quantity)
     {
-        if (!(int) $this->getCurrentState() || !validate::isLoadedObject($order_detail)) {
+        if (!(int) $this->getCurrentState() || !Validate::isLoadedObject($order_detail)) {
             return false;
         }
 
@@ -817,7 +817,7 @@ class OrderCore extends ObjectModel
     {
         Tools::displayAsDeprecated('Use Order::getCartRules() instead');
 
-        return Order::getCartRules();
+        return self::getCartRules();
     }
 
     public function getCartRules()
@@ -1216,7 +1216,7 @@ class OrderCore extends ObjectModel
     {
         Tools::displayAsDeprecated('Use Order::addCartRule($id_cart_rule, $name, array(\'tax_incl\' => $value, \'tax_excl\' => \'0.00\')) instead');
 
-        return Order::addCartRule($id_cart_rule, $name, ['tax_incl' => $value, 'tax_excl' => '0.00']);
+        return self::addCartRule($id_cart_rule, $name, ['tax_incl' => $value, 'tax_excl' => '0.00']);
     }
 
     /**
@@ -1495,7 +1495,7 @@ class OrderCore extends ObjectModel
             return false;
         }
 
-        $id_shop = shop::getTotalShops() > 1 ? $id_shop : null;
+        $id_shop = Shop::getTotalShops() > 1 ? $id_shop : null;
 
         $number = Configuration::get('PS_DELIVERY_NUMBER', null, null, $id_shop);
         // If delivery slip start number has been set, you clean the value of this configuration

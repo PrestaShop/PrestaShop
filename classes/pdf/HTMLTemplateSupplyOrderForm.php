@@ -73,8 +73,6 @@ class HTMLTemplateSupplyOrderFormCore extends HTMLTemplate
         $this->date = Tools::displayDate($supply_order->date_add);
 
         $this->title = Context::getContext()->getTranslator()->trans('Supply order form', [], 'Shop.Pdf');
-
-        $this->shop = new Shop((int) $this->order->id_shop);
     }
 
     /**
@@ -210,7 +208,6 @@ class HTMLTemplateSupplyOrderFormCore extends HTMLTemplate
      */
     public function getFooter()
     {
-        $this->address = $this->address_warehouse;
         $free_text = [];
         $free_text[] = Context::getContext()->getTranslator()->trans('TE: Tax excluded', [], 'Shop.Pdf');
         $free_text[] = Context::getContext()->getTranslator()->trans('TI: Tax included', [], 'Shop.Pdf');
