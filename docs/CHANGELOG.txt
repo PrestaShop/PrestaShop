@@ -234,6 +234,7 @@ Release Notes for PrestaShop 1.7
     - #24580: Fix  the alignment  columns  Features and Attributes (by @okom3pom)
     - #24572: Fix npm vulnerabilities and update webpack everywhere except classic (by @NeOMakinG)
     - #24596: Fix primary buttons not being inline on Theme & Logo > Pages configurations (by @NeOMakinG)
+    - #24576: BO - New Order - Empty gift message is not a null value (by @Progi1984)
     - #24355: Fix Multistore dropdown in current group context (by @matthieu-rolland)
     - #24632: Wrong get and set data for employee options configuration (by @PierreRambaud)
     - #24573: Fix title layout on order view page (by @NeOMakinG)
@@ -1078,6 +1079,7 @@ Release Notes for PrestaShop 1.7
     - #19282: Add Swahili language (by @Progi1984)
     - #16349: Copy Croatian tax rates in EU localization packs (by @ziegenberg)
   - Bug fix:
+    - #24723: Fix domain wordings (by @jolelievre)
     - #19564: Update all_languages.json (by @juraj1000)
   - Refactoring:
     - #19599: Wrong call prefix for Congo (CG/CD) (by @kerin444)
