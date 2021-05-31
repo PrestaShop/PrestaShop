@@ -297,7 +297,9 @@ class SpecificPriceFormHandler {
    * @private
    */
   private submitEditPriceForm(): void {
-    const baseUrl = $('#edit-specific-price-modal-form').attr('data-action');
+    const baseUrl = <string>(
+      $('#edit-specific-price-modal-form').attr('data-action')
+    );
     const specificPriceId = $('#edit-specific-price-modal-form').data(
       'specificPriceId',
     );
@@ -537,7 +539,7 @@ class SpecificPriceFormHandler {
    *
    * @private
    */
-  insertEditSpecificPriceFormIntoModal(form): void {
+  insertEditSpecificPriceFormIntoModal(form: HTMLElement): void {
     const formLocationHolder = $('#edit-specific-price-modal-form');
 
     formLocationHolder.empty();
