@@ -25,7 +25,7 @@
 import Vue from 'vue';
 import VueI18n from 'vue-i18n';
 import VueResource from 'vue-resource';
-import { showGrowl } from '@app/utils/growl';
+import {showGrowl} from '@app/utils/growl';
 import ConfirmModal from '@components/modal';
 import ReplaceFormatter from '@vue/plugins/vue-i18n/replace-formatter';
 // @ts-ignore-next-line
@@ -123,16 +123,16 @@ export default class CurrencyForm {
     const i18n = new VueI18n({
       locale: 'en',
       formatter: new ReplaceFormatter(),
-      messages: { en: this.translations },
+      messages: {en: this.translations},
     });
 
     $(`<div id="${this.currencyFormatterId}"></div>`).insertBefore(
-      this.$currencyFormFooter
+      this.$currencyFormFooter,
     );
     this.currencyFormatter = new Vue({
       el: this.map.currencyFormatter,
       i18n,
-      components: { CurrencyFormatter },
+      components: {CurrencyFormatter},
       data: this.state,
       template: `<currency-formatter
         id="${this.currencyFormatterId}"
@@ -147,17 +147,17 @@ export default class CurrencyForm {
         // We use the state value directly since the object is shared with the Vue component and already updated
         this.fillCurrencyCustomData(this.state.currencyData);
       },
-      { deep: true, immediate: true }
+      {deep: true, immediate: true},
     );
   }
 
   initListeners(): void {
     this.$currencySelector.change(this.onCurrencySelectorChange.bind(this));
     this.$isUnofficialCheckbox.change(
-      this.onIsUnofficialCheckboxChange.bind(this)
+      this.onIsUnofficialCheckboxChange.bind(this),
     );
     this.$resetDefaultSettingsButton.click(
-      this.onResetDefaultSettingsClick.bind(this)
+      this.onResetDefaultSettingsClick.bind(this),
     );
   }
 
@@ -219,7 +219,7 @@ export default class CurrencyForm {
         confirmButtonLabel,
         closeButtonLabel,
       },
-      () => this.onResetDefaultSettingsClick()
+      () => this.onResetDefaultSettingsClick(),
     );
 
     modal.show();
@@ -252,11 +252,11 @@ export default class CurrencyForm {
     this.$resetDefaultSettingsButton.removeClass('spinner');
   }
 
-  async fetchCurrency(currencyIsoCode: string): Promise<void> {
-    let currencyData: Record<string, any> | null = null;
+  async fetchCurrency(currencyIsoCode: string): Promise<Record<string, any>> {
+    let currencyData: Record<string, any> = {};
 
     if (currencyIsoCode) {
-      await this.referenceCurrencyResource.get({ id: currencyIsoCode }).then(
+      await this.referenceCurrencyResource.get({id: currencyIsoCode}).then(
         (response: Record<string, any>) => {
           currencyData = response.body;
         },
@@ -267,10 +267,10 @@ export default class CurrencyForm {
             showGrowl(
               'error',
               `Can not find CLDR data for currency ${currencyIsoCode}`,
-              3000
+              3000,
             );
           }
-        }
+        },
       );
     }
 
@@ -284,7 +284,9 @@ export default class CurrencyForm {
     return currencyData;
   }
 
-  fillCurrencyData(currencyData) {
+  fillCurrencyData(
+    currencyData: Record<string, any>,
+  ): void | Record<string, any> {
     if (!currencyData) {
       return;
     }
@@ -300,7 +302,7 @@ export default class CurrencyForm {
     this.$precisionInput.val(currencyData.precision);
   }
 
-  fillCurrencyCustomData(currencyData) {
+  fillCurrencyCustomData(currencyData: Record<string, any>): void {
     Object.keys(currencyData.symbols).forEach((langId) => {
       const langSymbolSelector = this.map.symbolsInput(langId);
       $(langSymbolSelector).val(currencyData.symbols[langId]);
@@ -312,8 +314,8 @@ export default class CurrencyForm {
     });
   }
 
-  getCurrencyDataFromForm() {
-    const currencyData = {
+  getCurrencyDataFromForm(): Record<string, any> {
+    const currencyData: Record<string, any> = {
       names: {},
       symbols: {},
       transformations: {},
@@ -322,11 +324,13 @@ export default class CurrencyForm {
       precision: this.$precisionInput.val(),
     };
 
-    this.originalLanguages.forEach((lang) => {
-      currencyData.names[lang.id] = $(this.map.namesInput(lang.id)).val();
+    this.originalLanguages.forEach((lang: Record<string, any>) => {
+      currencyData.names[<string>lang.id] = $(
+        this.map.namesInput(lang.id),
+      ).val();
       currencyData.symbols[lang.id] = $(this.map.symbolsInput(lang.id)).val();
       currencyData.transformations[lang.id] = $(
-        this.map.transformationsInput(lang.id)
+        this.map.transformationsInput(lang.id),
       ).val();
     });
 

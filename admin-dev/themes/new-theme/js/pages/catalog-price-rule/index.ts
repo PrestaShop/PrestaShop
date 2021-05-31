@@ -33,7 +33,7 @@ import BulkActionCheckboxExtension from '@components/grid/extension/bulk-action-
 import ExportToSqlManagerExtension from '@components/grid/extension/export-to-sql-manager-extension';
 import FiltersSubmitButtonEnablerExtension from '@components/grid/extension/filters-submit-button-enabler-extension';
 
-const { $ } = window;
+const {$} = window;
 
 $(() => {
   const priceRuleGrid = new Grid('catalog_price_rule');

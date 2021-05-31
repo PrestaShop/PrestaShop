@@ -25,32 +25,31 @@
 
 const {$} = window;
 
-export default class AutocompleteWithEmail {
-  constructor(emailInputSelector, map = {}) {
-    this.map = map;
-    this.$emailInput = $(emailInputSelector);
-    this.$emailInput.on('change', () => this.change());
-  }
+/**
+ * In Add/Edit page of Webservice key there is permissions table input (permissons as columns / resources as rows).
+ * There is "All" column and once resource is checked under this column
+ * every other permission column should be auto-selected for that resource.
+ */
+export default class PermissionsRowSelector {
+  constructor() {
+    // when checkbox in "All" column is checked
+    $('input[id^="webservice_key_permissions_all"]').on(
+      'change',
+      (event: JQueryEventObject) => {
+        const $checkedBox = $(event.currentTarget);
 
-  change() {
-    $.get({
-      url: this.$emailInput.data('customer-information-url'),
-      dataType: 'json',
-      data: {
-        email: this.$emailInput.val(),
+        const isChecked = $checkedBox.is(':checked');
+
+        // for each input in same row we need to toggle its value
+        $checkedBox
+          .closest('tr')
+          .find(`input:not(input[id="${$checkedBox.attr('id')}"])`)
+          .each((i, input) => {
+            $(input).prop('checked', isChecked);
+          });
       },
-    })
-      .then((response) => {
-        Object.keys(this.map).forEach((key) => {
-          if (response[key] !== undefined) {
-            $(this.map[key]).val(response[key]);
-          }
-        });
-      })
-      .catch((response) => {
-        if (typeof response.responseJSON !== 'undefined') {
-          window.showErrorMessage(response.responseJSON.message);
-        }
-      });
+    );
+
+    return {};
   }
 }

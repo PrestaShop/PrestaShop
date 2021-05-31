@@ -25,32 +25,38 @@
 
 const {$} = window;
 
-export default class AutocompleteWithEmail {
-  constructor(emailInputSelector, map = {}) {
-    this.map = map;
-    this.$emailInput = $(emailInputSelector);
-    this.$emailInput.on('change', () => this.change());
+/**
+ * Handles "Reset to defaults" action submitting on button click.
+ */
+export default class ResetThemeLayoutsHandler {
+  constructor() {
+    $(document).on(
+      'click',
+      '.js-reset-theme-layouts-btn',
+      (e: JQueryEventObject) => this.handleResetting(e),
+    );
   }
 
-  change() {
-    $.get({
-      url: this.$emailInput.data('customer-information-url'),
-      dataType: 'json',
-      data: {
-        email: this.$emailInput.val(),
-      },
-    })
-      .then((response) => {
-        Object.keys(this.map).forEach((key) => {
-          if (response[key] !== undefined) {
-            $(this.map[key]).val(response[key]);
-          }
-        });
-      })
-      .catch((response) => {
-        if (typeof response.responseJSON !== 'undefined') {
-          window.showErrorMessage(response.responseJSON.message);
-        }
-      });
+  /**
+   * @param {Event} event
+   *
+   * @private
+   */
+  private handleResetting(event: JQueryEventObject): void {
+    const $btn = $(event.currentTarget);
+
+    const $form = $('<form>', {
+      action: $btn.data('submit-url'),
+      method: 'POST',
+    }).append(
+      $('<input>', {
+        name: 'token',
+        value: $btn.data('csrf-token'),
+        type: 'hidden',
+      }),
+    );
+
+    $form.appendTo('body');
+    $form.submit();
   }
 }

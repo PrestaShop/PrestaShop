@@ -25,32 +25,46 @@
 
 const {$} = window;
 
-export default class AutocompleteWithEmail {
-  constructor(emailInputSelector, map = {}) {
-    this.map = map;
-    this.$emailInput = $(emailInputSelector);
-    this.$emailInput.on('change', () => this.change());
+/**
+ * This handler displays use theme modal and handles the submit form logic.
+ */
+export default class UseThemeHandler {
+  constructor() {
+    $(document).on(
+      'click',
+      '.js-display-use-theme-modal',
+      (e: JQueryEventObject) => this.displayUseThemeModal(e),
+    );
   }
 
-  change() {
-    $.get({
-      url: this.$emailInput.data('customer-information-url'),
-      dataType: 'json',
-      data: {
-        email: this.$emailInput.val(),
-      },
-    })
-      .then((response) => {
-        Object.keys(this.map).forEach((key) => {
-          if (response[key] !== undefined) {
-            $(this.map[key]).val(response[key]);
-          }
-        });
-      })
-      .catch((response) => {
-        if (typeof response.responseJSON !== 'undefined') {
-          window.showErrorMessage(response.responseJSON.message);
-        }
-      });
+  /**
+   * Displays modal with its own event handling.
+   *
+   * @param e
+   * @private
+   */
+  private displayUseThemeModal(e: JQueryEventObject): void {
+    const $modal = $('#use_theme_modal');
+
+    $modal.modal('show');
+
+    this.submitForm($modal, e);
+  }
+
+  /**
+   * Submits form by adding click event listener for modal and calling original form event.
+   *
+   * @param $modal
+   * @param originalButtonEvent
+   *
+   * @private
+   */
+  private submitForm($modal: JQuery, originalButtonEvent: JQueryEventObject) {
+    const $formButton = $(originalButtonEvent.currentTarget);
+
+    $modal.on('click', '.js-submit-use-theme', () => {
+      const $form = $formButton.closest('form');
+      $form.submit();
+    });
   }
 }

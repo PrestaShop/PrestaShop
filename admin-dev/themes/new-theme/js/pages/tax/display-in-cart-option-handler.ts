@@ -25,32 +25,25 @@
 
 const {$} = window;
 
-export default class AutocompleteWithEmail {
-  constructor(emailInputSelector, map = {}) {
-    this.map = map;
-    this.$emailInput = $(emailInputSelector);
-    this.$emailInput.on('change', () => this.change());
+/**
+ * Responsible for 'display tax in cart' option presentation.
+ */
+export default class DisplayInCartOptionHandler {
+  constructor() {
+    this.handle();
+
+    $('.js-enable-tax').on('change', () => this.handle());
   }
 
-  change() {
-    $.get({
-      url: this.$emailInput.data('customer-information-url'),
-      dataType: 'json',
-      data: {
-        email: this.$emailInput.val(),
-      },
-    })
-      .then((response) => {
-        Object.keys(this.map).forEach((key) => {
-          if (response[key] !== undefined) {
-            $(this.map[key]).val(response[key]);
-          }
-        });
-      })
-      .catch((response) => {
-        if (typeof response.responseJSON !== 'undefined') {
-          window.showErrorMessage(response.responseJSON.message);
-        }
-      });
+  /**
+   * If tax is disabled, then display tax in shopping cart option must be disabled.
+   *
+   * @private
+   */
+  private handle(): void {
+    const enabledVal = $('.js-enable-tax:checked').val();
+    const isTaxEnabled = parseInt(<string>enabledVal, 10);
+
+    $('.js-display-in-cart').prop('disabled', !isTaxEnabled);
   }
 }

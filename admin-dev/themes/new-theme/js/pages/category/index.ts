@@ -48,7 +48,7 @@ import ShowcaseCardCloseExtension from '@components/showcase-card/extension/show
 import TextWithRecommendedLengthCounter from '@components/form/text-with-recommended-length-counter';
 import Serp from '@app/utils/serp/index';
 
-const { $ } = window;
+const {$} = window;
 
 $(() => {
   const categoriesGrid = new Grid('category');
@@ -103,7 +103,7 @@ $(() => {
       multiLanguageInput: `${translatorInput.localeInputSelector}:not(.d-none)`,
       multiLanguageItem: translatorInput.localeItemSelector,
     },
-    $('#serp-app').data('category-url')
+    $('#serp-app').data('category-url'),
   );
 
   new FormSubmitButton();

@@ -23,34 +23,29 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
 
+import ConfirmModal from '@components/modal';
+
 const {$} = window;
 
-export default class AutocompleteWithEmail {
-  constructor(emailInputSelector, map = {}) {
-    this.map = map;
-    this.$emailInput = $(emailInputSelector);
-    this.$emailInput.on('change', () => this.change());
-  }
+$(() => {
+  const $submitButton = $('#submit-btn-feature-flag');
+  const $form = $('#feature-flag-form');
 
-  change() {
-    $.get({
-      url: this.$emailInput.data('customer-information-url'),
-      dataType: 'json',
-      data: {
-        email: this.$emailInput.val(),
+  $submitButton.on('click', (event) => {
+    event.preventDefault();
+
+    const modal = new (ConfirmModal as any)(
+      {
+        id: 'modal-confirm-submit-feature-flag',
+        confirmTitle: $submitButton.data('modal-title'),
+        confirmMessage: $submitButton.data('modal-message'),
+        confirmButtonLabel: $submitButton.data('modal-apply'),
+        closeButtonLabel: $submitButton.data('modal-cancel'),
       },
-    })
-      .then((response) => {
-        Object.keys(this.map).forEach((key) => {
-          if (response[key] !== undefined) {
-            $(this.map[key]).val(response[key]);
-          }
-        });
-      })
-      .catch((response) => {
-        if (typeof response.responseJSON !== 'undefined') {
-          window.showErrorMessage(response.responseJSON.message);
-        }
-      });
-  }
-}
+      () => {
+        $form.submit();
+      },
+    );
+    modal.show();
+  });
+});

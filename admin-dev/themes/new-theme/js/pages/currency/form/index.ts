@@ -23,34 +23,17 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
 
+import currencyFormMap from './currency-form-map';
+import CurrencyForm from './currency-form';
+
 const {$} = window;
 
-export default class AutocompleteWithEmail {
-  constructor(emailInputSelector, map = {}) {
-    this.map = map;
-    this.$emailInput = $(emailInputSelector);
-    this.$emailInput.on('change', () => this.change());
-  }
-
-  change() {
-    $.get({
-      url: this.$emailInput.data('customer-information-url'),
-      dataType: 'json',
-      data: {
-        email: this.$emailInput.val(),
-      },
-    })
-      .then((response) => {
-        Object.keys(this.map).forEach((key) => {
-          if (response[key] !== undefined) {
-            $(this.map[key]).val(response[key]);
-          }
-        });
-      })
-      .catch((response) => {
-        if (typeof response.responseJSON !== 'undefined') {
-          window.showErrorMessage(response.responseJSON.message);
-        }
-      });
-  }
-}
+$(() => {
+  window.prestashop.component.initComponents(['TranslatableInput']);
+  const choiceTree = new window.prestashop.component.ChoiceTree(
+    currencyFormMap.shopAssociationTree,
+  );
+  choiceTree.enableAutoCheckChildren();
+  const currencyForm = new CurrencyForm(currencyFormMap);
+  currencyForm.init();
+});

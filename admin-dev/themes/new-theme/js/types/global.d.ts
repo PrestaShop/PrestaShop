@@ -44,6 +44,9 @@ interface JQuery {
   tokenfield: any;
   clickableDropdown: () => void;
   datetimepicker: any;
+  select2: any;
+  sortable: any;
+  fancybox: any;
 }
 /* eslint-disable */
 
@@ -52,6 +55,10 @@ interface JQueryStatic {
   passy: any;
   tokenfield: any;
   clickableDropdown: () => void;
+  datetimepicker: any;
+  select2: any;
+  sortable: any;
+  fancybox: any;
 }
 
 interface TableDnD {
@@ -65,6 +72,7 @@ interface AjaxError {
 
 interface AjaxResponse {
   message: string;
+  responseJSON?: AjaxResponse;
 }
 
 interface PrestashopWindow {

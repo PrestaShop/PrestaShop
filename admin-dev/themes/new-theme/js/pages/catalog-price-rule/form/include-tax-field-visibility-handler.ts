@@ -23,7 +23,7 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
 
-const { $ } = window;
+const {$} = window;
 
 /**
  * Shows/hides 'include_tax' field depending from 'reduction_type' field value

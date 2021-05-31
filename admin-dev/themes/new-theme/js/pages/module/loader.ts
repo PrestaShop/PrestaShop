@@ -25,32 +25,52 @@
 
 const {$} = window;
 
-export default class AutocompleteWithEmail {
-  constructor(emailInputSelector, map = {}) {
-    this.map = map;
-    this.$emailInput = $(emailInputSelector);
-    this.$emailInput.on('change', () => this.change());
+/**
+ * Module Admin Page Loader.
+ * @constructor
+ */
+class ModuleLoader {
+  constructor() {
+    ModuleLoader.handleImport();
+    ModuleLoader.handleEvents();
   }
 
-  change() {
-    $.get({
-      url: this.$emailInput.data('customer-information-url'),
-      dataType: 'json',
-      data: {
-        email: this.$emailInput.val(),
-      },
-    })
-      .then((response) => {
-        Object.keys(this.map).forEach((key) => {
-          if (response[key] !== undefined) {
-            $(this.map[key]).val(response[key]);
-          }
+  static handleImport(): void {
+    const moduleImport = $('#module-import');
+    moduleImport.click(() => {
+      // @ts-ignore
+      moduleImport.addClass('onclick', 250, validate);
+    });
+
+    function validate() {
+      setTimeout(() => {
+        moduleImport.removeClass('onclick');
+        // @ts-ignore
+        moduleImport.addClass('validate', 450, callback);
+      }, 2250);
+    }
+    function callback() {
+      setTimeout(() => {
+        moduleImport.removeClass('validate');
+      }, 1250);
+    }
+  }
+
+  static handleEvents(): void {
+    $('body').on(
+      'click',
+      'a.module-read-more-grid-btn, a.module-read-more-list-btn',
+      (event) => {
+        event.preventDefault();
+        const modulePoppin = $(event.target).data('target');
+
+        $.get(event.target.href, (data) => {
+          $(modulePoppin).html(data);
+          $(modulePoppin).modal();
         });
-      })
-      .catch((response) => {
-        if (typeof response.responseJSON !== 'undefined') {
-          window.showErrorMessage(response.responseJSON.message);
-        }
-      });
+      },
+    );
   }
 }
+
+export default ModuleLoader;

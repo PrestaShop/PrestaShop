@@ -23,7 +23,7 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
 
-const { $ } = window;
+const {$} = window;
 
 interface TextToLinkParams {
   sourceElementSelector: string;
@@ -66,11 +66,11 @@ interface TextToLinkParams {
 const textToLinkRewriteCopier = ({
   sourceElementSelector,
   destinationElementSelector,
-  options = { eventName: 'input' },
+  options = {eventName: 'input'},
 }: TextToLinkParams): void => {
   $(document).on(options.eventName, `${sourceElementSelector}`, (event) => {
     $(destinationElementSelector).val(
-      window.str2url($(event.currentTarget).val(), 'UTF-8')
+      window.str2url($(event.currentTarget).val(), 'UTF-8'),
     );
   });
 };

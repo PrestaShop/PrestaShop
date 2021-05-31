@@ -25,32 +25,33 @@
 
 const {$} = window;
 
-export default class AutocompleteWithEmail {
-  constructor(emailInputSelector, map = {}) {
-    this.map = map;
-    this.$emailInput = $(emailInputSelector);
-    this.$emailInput.on('change', () => this.change());
+class CatalogModeOptionHandler {
+  pageMap: Record<string, any>;
+
+  constructor(pageMap: Record<string, any>) {
+    this.pageMap = {
+      catalogModeField: 'input[name="general[catalog_mode]"]',
+      selectedCatalogModeField: 'input[name="general[catalog_mode]"]:checked',
+      catalogModeOptions: '.catalog-mode-option',
+      ...pageMap,
+    };
+    this.handle(0);
+
+    $(this.pageMap.catalogModeField).on('change', () => this.handle(600));
   }
 
-  change() {
-    $.get({
-      url: this.$emailInput.data('customer-information-url'),
-      dataType: 'json',
-      data: {
-        email: this.$emailInput.val(),
-      },
-    })
-      .then((response) => {
-        Object.keys(this.map).forEach((key) => {
-          if (response[key] !== undefined) {
-            $(this.map[key]).val(response[key]);
-          }
-        });
-      })
-      .catch((response) => {
-        if (typeof response.responseJSON !== 'undefined') {
-          window.showErrorMessage(response.responseJSON.message);
-        }
-      });
+  handle(fadeLength: number): void {
+    const catalogModeVal = $(this.pageMap.selectedCatalogModeField).val();
+    const catalogModeEnabled = parseInt(<string>catalogModeVal, 10);
+
+    const catalogOptions = $(this.pageMap.catalogModeOptions);
+
+    if (catalogModeEnabled) {
+      catalogOptions.show(fadeLength);
+    } else {
+      catalogOptions.hide(fadeLength / 2);
+    }
   }
 }
+
+export default CatalogModeOptionHandler;

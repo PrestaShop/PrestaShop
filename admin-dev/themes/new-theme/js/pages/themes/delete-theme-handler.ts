@@ -25,32 +25,46 @@
 
 const {$} = window;
 
-export default class AutocompleteWithEmail {
-  constructor(emailInputSelector, map = {}) {
-    this.map = map;
-    this.$emailInput = $(emailInputSelector);
-    this.$emailInput.on('change', () => this.change());
+/**
+ * This handler displays delete theme modal and handles the submit action.
+ */
+export default class DeleteThemeHandler {
+  constructor() {
+    $(document).on('click', '.js-display-delete-theme-modal', (e) => this.displayDeleteThemeModal(e),
+    );
   }
 
-  change() {
-    $.get({
-      url: this.$emailInput.data('customer-information-url'),
-      dataType: 'json',
-      data: {
-        email: this.$emailInput.val(),
-      },
-    })
-      .then((response) => {
-        Object.keys(this.map).forEach((key) => {
-          if (response[key] !== undefined) {
-            $(this.map[key]).val(response[key]);
-          }
-        });
-      })
-      .catch((response) => {
-        if (typeof response.responseJSON !== 'undefined') {
-          window.showErrorMessage(response.responseJSON.message);
-        }
-      });
+  /**
+   * Displays modal with its own event handling.
+   *
+   * @param e
+   * @private
+   */
+  private displayDeleteThemeModal(e: JQueryEventObject): void {
+    const $modal = $('#delete_theme_modal');
+
+    $modal.modal('show');
+
+    this.submitForm($modal, e);
+  }
+
+  /**
+   * Submits form by adding click event listener for modal and calling original form event.
+   *
+   * @param $modal
+   * @param originalButtonEvent
+   *
+   * @private
+   */
+  private submitForm(
+    $modal: JQuery,
+    originalButtonEvent: JQueryEventObject,
+  ): void {
+    const $formButton = $(originalButtonEvent.currentTarget);
+
+    $modal.on('click', '.js-submit-delete-theme', () => {
+      const $form = $formButton.closest('form');
+      $form.submit();
+    });
   }
 }

@@ -23,34 +23,19 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
 
+import Grid from '../../components/grid/grid';
+import SortingExtension from '../../components/grid/extension/sorting-extension';
+import FiltersResetExtension from '../../components/grid/extension/filters-reset-extension';
+import FiltersSubmitButtonEnablerExtension from '../../components/grid/extension/filters-submit-button-enabler-extension';
+import TranslatableInput from '../../components/translatable-input';
+
 const {$} = window;
 
-export default class AutocompleteWithEmail {
-  constructor(emailInputSelector, map = {}) {
-    this.map = map;
-    this.$emailInput = $(emailInputSelector);
-    this.$emailInput.on('change', () => this.change());
-  }
+$(() => {
+  const grid = new Grid('merchandise_return');
+  grid.addExtension(new SortingExtension());
+  grid.addExtension(new FiltersResetExtension());
+  grid.addExtension(new FiltersSubmitButtonEnablerExtension());
 
-  change() {
-    $.get({
-      url: this.$emailInput.data('customer-information-url'),
-      dataType: 'json',
-      data: {
-        email: this.$emailInput.val(),
-      },
-    })
-      .then((response) => {
-        Object.keys(this.map).forEach((key) => {
-          if (response[key] !== undefined) {
-            $(this.map[key]).val(response[key]);
-          }
-        });
-      })
-      .catch((response) => {
-        if (typeof response.responseJSON !== 'undefined') {
-          window.showErrorMessage(response.responseJSON.message);
-        }
-      });
-  }
-}
+  new TranslatableInput();
+});

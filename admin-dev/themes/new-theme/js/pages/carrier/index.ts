@@ -38,7 +38,7 @@ import FiltersSubmitButtonEnablerExtension from '@components/grid/extension/filt
 import LinkRowActionExtension from '@components/grid/extension/link-row-action-extension';
 import PositionExtension from '@components/grid/extension/position-extension';
 
-const { $ } = window;
+const {$} = window;
 
 $(() => {
   const carrierGrid = new Grid('carrier');

@@ -23,34 +23,30 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
 
-const {$} = window;
+/**
+ * Checks if correct addresses are selected.
+ * There is a case when options list cannot contain cart addresses 'selected' values
+ *  because those are outdated in db (e.g. deleted after cart creation or country is disabled)
+ *
+ * @param {Array} addresses
+ *
+ * @returns {boolean}
+ */
+export const ValidateAddresses = (addresses: Record<string, any>): boolean => {
+  let deliveryValid = false;
+  let invoiceValid = false;
 
-export default class AutocompleteWithEmail {
-  constructor(emailInputSelector, map = {}) {
-    this.map = map;
-    this.$emailInput = $(emailInputSelector);
-    this.$emailInput.on('change', () => this.change());
-  }
+  addresses.forEach((address: Record<string, any>) => {
+    if (address.delivery) {
+      deliveryValid = true;
+    }
 
-  change() {
-    $.get({
-      url: this.$emailInput.data('customer-information-url'),
-      dataType: 'json',
-      data: {
-        email: this.$emailInput.val(),
-      },
-    })
-      .then((response) => {
-        Object.keys(this.map).forEach((key) => {
-          if (response[key] !== undefined) {
-            $(this.map[key]).val(response[key]);
-          }
-        });
-      })
-      .catch((response) => {
-        if (typeof response.responseJSON !== 'undefined') {
-          window.showErrorMessage(response.responseJSON.message);
-        }
-      });
-  }
-}
+    if (address.invoice) {
+      invoiceValid = true;
+    }
+  });
+
+  return deliveryValid && invoiceValid;
+};
+
+export default ValidateAddresses;

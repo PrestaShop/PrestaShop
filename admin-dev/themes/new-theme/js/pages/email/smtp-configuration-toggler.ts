@@ -25,32 +25,31 @@
 
 const {$} = window;
 
-export default class AutocompleteWithEmail {
-  constructor(emailInputSelector, map = {}) {
-    this.map = map;
-    this.$emailInput = $(emailInputSelector);
-    this.$emailInput.on('change', () => this.change());
+/**
+ * Class SmtpConfigurationToggler is responsible for showing/hiding SMTP configuration form
+ */
+class SmtpConfigurationToggler {
+  constructor() {
+    $('.js-email-method').on('change', 'input[type="radio"]', (event) => {
+      const mailMethod = Number($(event.currentTarget).val());
+
+      $('.js-smtp-configuration').toggleClass(
+        'd-none',
+        this.getSmtpMailMethodOption() !== mailMethod,
+      );
+    });
   }
 
-  change() {
-    $.get({
-      url: this.$emailInput.data('customer-information-url'),
-      dataType: 'json',
-      data: {
-        email: this.$emailInput.val(),
-      },
-    })
-      .then((response) => {
-        Object.keys(this.map).forEach((key) => {
-          if (response[key] !== undefined) {
-            $(this.map[key]).val(response[key]);
-          }
-        });
-      })
-      .catch((response) => {
-        if (typeof response.responseJSON !== 'undefined') {
-          window.showErrorMessage(response.responseJSON.message);
-        }
-      });
+  /**
+   * Get SMTP mail option value
+   *
+   * @private
+   *
+   * @returns {Number}
+   */
+  private getSmtpMailMethodOption(): number {
+    return $('.js-email-method').data('smtp-mail-method');
   }
 }
+
+export default SmtpConfigurationToggler;

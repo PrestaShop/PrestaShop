@@ -23,34 +23,25 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
 
+import CustomerThreadViewPageMap from './customer-thread-view-page-map';
+
 const {$} = window;
 
-export default class AutocompleteWithEmail {
-  constructor(emailInputSelector, map = {}) {
-    this.map = map;
-    this.$emailInput = $(emailInputSelector);
-    this.$emailInput.on('change', () => this.change());
-  }
+$(() => {
+  $(CustomerThreadViewPageMap.forwardEmployeeInput).on('change', (event) => {
+    const $someoneElseEmailInput = $(
+      CustomerThreadViewPageMap.forwardSomeoneElseEmailInput,
+    );
+    const $someElseEmailFormGroup = $someoneElseEmailInput.closest(
+      '.form-group',
+    );
 
-  change() {
-    $.get({
-      url: this.$emailInput.data('customer-information-url'),
-      dataType: 'json',
-      data: {
-        email: this.$emailInput.val(),
-      },
-    })
-      .then((response) => {
-        Object.keys(this.map).forEach((key) => {
-          if (response[key] !== undefined) {
-            $(this.map[key]).val(response[key]);
-          }
-        });
-      })
-      .catch((response) => {
-        if (typeof response.responseJSON !== 'undefined') {
-          window.showErrorMessage(response.responseJSON.message);
-        }
-      });
-  }
-}
+    const employeeId = $(event.currentTarget).val();
+
+    if (parseInt(<string>employeeId, 10) === 0) {
+      $someElseEmailFormGroup.removeClass('d-none');
+    } else {
+      $someElseEmailFormGroup.addClass('d-none');
+    }
+  });
+});

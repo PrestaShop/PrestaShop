@@ -23,7 +23,7 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
 
-const { $ } = window;
+const {$} = window;
 
 class SpecificPriceFormHandler {
   prefixCreateForm: string;
@@ -76,7 +76,7 @@ class SpecificPriceFormHandler {
       }
 
       const specificPricesList = this.renderSpecificPricesListingAsHtml(
-        specificPrices
+        specificPrices,
       );
 
       tbody.append(specificPricesList);
@@ -91,7 +91,7 @@ class SpecificPriceFormHandler {
    * @private
    */
   private renderSpecificPricesListingAsHtml(
-    specificPrices: Record<string, any>
+    specificPrices: Record<string, any>,
   ): string {
     let specificPricesList = '';
     const $specificPricesListElement = $('#js-specific-price-list');
@@ -105,7 +105,7 @@ class SpecificPriceFormHandler {
       if (deleteAttr) {
         const deleteUrl = deleteAttr.replace(
           /delete\/\d+/,
-          `delete/${specificPrice.id_specific_price}`
+          `delete/${specificPrice.id_specific_price}`,
         );
         row = self.renderSpecificPriceRow(specificPrice, deleteUrl);
       }
@@ -126,7 +126,7 @@ class SpecificPriceFormHandler {
    */
   private renderSpecificPriceRow(
     specificPrice: Record<string, any>,
-    deleteUrl: string
+    deleteUrl: string,
   ): string {
     const specificPriceId = specificPrice.id_specific_price;
 
@@ -168,20 +168,16 @@ class SpecificPriceFormHandler {
       $('#specific_price_form').collapse('hide');
     });
 
-    $('#specific_price_form .js-save').on('click', () =>
-      this.submitCreatePriceForm()
+    $('#specific_price_form .js-save').on('click', () => this.submitCreatePriceForm(),
     );
 
-    $('#js-open-create-specific-price-form').on('click', () =>
-      this.loadAndFillOptionsForSelectCombinationInput(usePrefixForCreate)
+    $('#js-open-create-specific-price-form').on('click', () => this.loadAndFillOptionsForSelectCombinationInput(usePrefixForCreate),
     );
 
-    $(`${selectorPrefix}leave_bprice`).on('click', () =>
-      this.enableSpecificPriceFieldIfEligible(usePrefixForCreate)
+    $(`${selectorPrefix}leave_bprice`).on('click', () => this.enableSpecificPriceFieldIfEligible(usePrefixForCreate),
     );
 
-    $(`${selectorPrefix}sp_reduction_type`).on('change', () =>
-      this.enableSpecificPriceTaxFieldIfEligible(usePrefixForCreate)
+    $(`${selectorPrefix}sp_reduction_type`).on('change', () => this.enableSpecificPriceTaxFieldIfEligible(usePrefixForCreate),
     );
   }
 
@@ -192,8 +188,7 @@ class SpecificPriceFormHandler {
     const usePrefixForCreate = false;
     const selectorPrefix = this.getPrefixSelector(usePrefixForCreate);
 
-    $('#form_modal_cancel').click(() =>
-      this.closeEditPriceModalAndRemoveForm()
+    $('#form_modal_cancel').click(() => this.closeEditPriceModalAndRemoveForm(),
     );
     $('#form_modal_close').click(() => this.closeEditPriceModalAndRemoveForm());
 
@@ -201,12 +196,10 @@ class SpecificPriceFormHandler {
 
     this.loadAndFillOptionsForSelectCombinationInput(usePrefixForCreate);
 
-    $(`${selectorPrefix}leave_bprice`).on('click', () =>
-      this.enableSpecificPriceFieldIfEligible(usePrefixForCreate)
+    $(`${selectorPrefix}leave_bprice`).on('click', () => this.enableSpecificPriceFieldIfEligible(usePrefixForCreate),
     );
 
-    $(`${selectorPrefix}sp_reduction_type`).on('change', () =>
-      this.enableSpecificPriceTaxFieldIfEligible(usePrefixForCreate)
+    $(`${selectorPrefix}sp_reduction_type`).on('change', () => this.enableSpecificPriceTaxFieldIfEligible(usePrefixForCreate),
     );
 
     this.reinitializeDatePickers();
@@ -219,7 +212,7 @@ class SpecificPriceFormHandler {
    * @private
    */
   private reinitializeDatePickers() {
-    $('.datepicker input').datetimepicker({ format: 'YYYY-MM-DD' });
+    $('.datepicker input').datetimepicker({format: 'YYYY-MM-DD'});
   }
 
   /**
@@ -273,7 +266,7 @@ class SpecificPriceFormHandler {
   private submitCreatePriceForm(): void {
     const url = $('#specific_price_form').attr('data-action');
     const data = $(
-      '#specific_price_form input, #specific_price_form select, #form_id_product'
+      '#specific_price_form input, #specific_price_form select, #form_id_product',
     ).serialize();
 
     $('#specific_price_form .js-save').attr('disabled', 'disabled');
@@ -285,7 +278,7 @@ class SpecificPriceFormHandler {
     })
       .done(() => {
         window.showSuccessMessage(
-          window.translate_javascripts['Form update success']
+          window.translate_javascripts['Form update success'],
         );
         this.resetCreatePriceFormDefaultValues();
         $('#specific_price_form').collapse('hide');
@@ -306,13 +299,13 @@ class SpecificPriceFormHandler {
   private submitEditPriceForm(): void {
     const baseUrl = $('#edit-specific-price-modal-form').attr('data-action');
     const specificPriceId = $('#edit-specific-price-modal-form').data(
-      'specificPriceId'
+      'specificPriceId',
     );
     const url = baseUrl.replace(/update\/\d+/, `update/${specificPriceId}`);
 
     /* eslint-disable-next-line max-len */
     const data = $(
-      '#edit-specific-price-modal-form input, #edit-specific-price-modal-form select, #form_id_product'
+      '#edit-specific-price-modal-form input, #edit-specific-price-modal-form select, #form_id_product',
     ).serialize();
 
     $('#edit-specific-price-modal-form .js-save').attr('disabled', 'disabled');
@@ -324,7 +317,7 @@ class SpecificPriceFormHandler {
     })
       .done(() => {
         window.showSuccessMessage(
-          window.translate_javascripts['Form update success']
+          window.translate_javascripts['Form update success'],
         );
         this.closeEditPriceModalAndRemoveForm();
         this.loadAndDisplayExistingSpecificPricesList();
@@ -368,7 +361,7 @@ class SpecificPriceFormHandler {
                 $(clickedLink).removeAttr('disabled');
               });
           },
-        }
+        },
       )
       .show();
   }
@@ -403,7 +396,7 @@ class SpecificPriceFormHandler {
    * @private
    */
   private loadAndFillOptionsForSelectCombinationInput(
-    usePrefixForCreate: boolean
+    usePrefixForCreate: boolean,
   ): void {
     const selectorPrefix = this.getPrefixSelector(usePrefixForCreate);
     const inputField = $(`${selectorPrefix}sp_id_product_attribute`);
@@ -411,7 +404,7 @@ class SpecificPriceFormHandler {
 
     const url = action.replace(
       /product-combinations\/\d+/,
-      `product-combinations/${this.getProductId()}`
+      `product-combinations/${this.getProductId()}`,
     );
 
     $.ajax({
@@ -423,7 +416,7 @@ class SpecificPriceFormHandler {
 
       $.each(combinations, (index, combination) => {
         inputField.append(
-          `<option value="${combination.id}">${combination.name}</option>`
+          `<option value="${combination.id}">${combination.name}</option>`,
         );
       });
 
@@ -439,7 +432,7 @@ class SpecificPriceFormHandler {
    * @private
    */
   private enableSpecificPriceTaxFieldIfEligible(
-    usePrefixForCreate: boolean
+    usePrefixForCreate: boolean,
   ): void {
     const selectorPrefix = this.getPrefixSelector(usePrefixForCreate);
 
@@ -486,7 +479,7 @@ class SpecificPriceFormHandler {
    * @private
    */
   private enableSpecificPriceFieldIfEligible(
-    usePrefixForCreate: boolean
+    usePrefixForCreate: boolean,
   ): void {
     const selectorPrefix = this.getPrefixSelector(usePrefixForCreate);
 
@@ -518,7 +511,7 @@ class SpecificPriceFormHandler {
         this.insertEditSpecificPriceFormIntoModal(response);
         $('#edit-specific-price-modal-form').data(
           'specificPriceId',
-          specificPriceId
+          specificPriceId,
         );
         this.configureEditPriceFormInsideModalBehavior();
       })

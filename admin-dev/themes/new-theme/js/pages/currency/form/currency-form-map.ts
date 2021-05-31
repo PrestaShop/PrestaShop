@@ -33,8 +33,7 @@ export default {
   isUnofficialCheckbox: '#currency_unofficial',
   namesInput: (langId: string): string => `#currency_names_${langId}`,
   symbolsInput: (langId: string): string => `#currency_symbols_${langId}`,
-  transformationsInput: (langId: string): string =>
-    `#currency_transformations_${langId}`,
+  transformationsInput: (langId: string): string => `#currency_transformations_${langId}`,
   isoCodeInput: '#currency_iso_code',
   exchangeRateInput: '#currency_exchange_rate',
   resetDefaultSettingsInput: '#currency_reset_default_settings',

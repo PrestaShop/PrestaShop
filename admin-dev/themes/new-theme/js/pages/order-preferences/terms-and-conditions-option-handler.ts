@@ -25,32 +25,29 @@
 
 const {$} = window;
 
-export default class AutocompleteWithEmail {
-  constructor(emailInputSelector, map = {}) {
-    this.map = map;
-    this.$emailInput = $(emailInputSelector);
-    this.$emailInput.on('change', () => this.change());
+class TermsAndConditionsOptionHandler {
+  constructor() {
+    this.handle();
+
+    $('input[name="general[enable_tos]"]').on('change', () => this.handle());
   }
 
-  change() {
-    $.get({
-      url: this.$emailInput.data('customer-information-url'),
-      dataType: 'json',
-      data: {
-        email: this.$emailInput.val(),
-      },
-    })
-      .then((response) => {
-        Object.keys(this.map).forEach((key) => {
-          if (response[key] !== undefined) {
-            $(this.map[key]).val(response[key]);
-          }
-        });
-      })
-      .catch((response) => {
-        if (typeof response.responseJSON !== 'undefined') {
-          window.showErrorMessage(response.responseJSON.message);
-        }
-      });
+  handle(): void {
+    const tosEnabledVal = $('input[name="general[enable_tos]"]:checked').val();
+    const isTosEnabled = parseInt(<string>tosEnabledVal, 10);
+
+    this.handleTermsAndConditionsCmsSelect(isTosEnabled);
+  }
+
+  /**
+   * If terms and conditions option is disabled, then terms and conditions
+   * cms select must be disabled.
+   *
+   * @param {int} isTosEnabled
+   */
+  handleTermsAndConditionsCmsSelect(isTosEnabled: number): void {
+    $('#form_general_tos_cms_id').prop('disabled', !isTosEnabled);
   }
 }
+
+export default TermsAndConditionsOptionHandler;

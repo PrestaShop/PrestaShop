@@ -25,32 +25,44 @@
 
 const {$} = window;
 
-export default class AutocompleteWithEmail {
-  constructor(emailInputSelector, map = {}) {
-    this.map = map;
-    this.$emailInput = $(emailInputSelector);
-    this.$emailInput.on('change', () => this.change());
+class HookStatusHandler {
+  $hookStatus: JQuery;
+
+  $modulePositionsForm: JQuery;
+
+  constructor() {
+    const self = this;
+    this.$hookStatus = $('.hook-switch-action');
+    this.$modulePositionsForm = $('#module-positions-form');
+
+    this.$hookStatus.on('change', function (e) {
+      e.stopImmediatePropagation();
+      self.toogleHookStatus($(this));
+    });
   }
 
-  change() {
-    $.get({
-      url: this.$emailInput.data('customer-information-url'),
-      dataType: 'json',
-      data: {
-        email: this.$emailInput.val(),
-      },
-    })
-      .then((response) => {
-        Object.keys(this.map).forEach((key) => {
-          if (response[key] !== undefined) {
-            $(this.map[key]).val(response[key]);
-          }
-        });
-      })
-      .catch((response) => {
-        if (typeof response.responseJSON !== 'undefined') {
-          window.showErrorMessage(response.responseJSON.message);
+  /**
+   * Toogle hooks status
+   */
+  toogleHookStatus($hookElement: JQuery): void {
+    $.ajax({
+      type: 'POST',
+      headers: {'cache-control': 'no-cache'},
+      url: this.$modulePositionsForm.data('togglestatus-url'),
+      data: {hookId: $hookElement.data('hook-id')},
+      success(data) {
+        if (data.status) {
+          window.showSuccessMessage(data.message);
+          const $hookModulesList = $hookElement
+            .closest('.hook-panel')
+            .find('.module-list, .module-list-disabled');
+          $hookModulesList.fadeTo(500, data.hook_status ? 1 : 0.5);
+        } else {
+          window.showErrorMessage(data.message);
         }
-      });
+      },
+    });
   }
 }
+
+export default HookStatusHandler;

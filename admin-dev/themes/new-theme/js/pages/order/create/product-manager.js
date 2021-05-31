@@ -54,8 +54,11 @@ export default class ProductManager {
       removeProductFromCart: (cartId, product) => this.cartEditor.removeProductFromCart(cartId, product),
       /* eslint-disable-next-line max-len */
       changeProductPrice: (cartId, customerId, updatedProduct) => this.cartEditor.changeProductPrice(cartId, customerId, updatedProduct),
-      changeProductQty: (cartId, updatedProduct) => this.cartEditor.changeProductQty(cartId, updatedProduct),
     };
+  }
+
+  changeProductQty(cartId: number, updatedProduct: Record<string, any>): void {
+    this.cartEditor.changeProductQty(cartId, updatedProduct);
   }
 
   /**
