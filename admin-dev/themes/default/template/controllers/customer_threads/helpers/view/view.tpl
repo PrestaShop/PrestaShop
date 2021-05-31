@@ -124,7 +124,7 @@
 </div>
 
 {if count($timeline_items)}
-<div class="panel">
+<div class="panel" id="orders-and-messages-block">
 	<h3>
 		<i class="icon-clock-o"></i>
 		{l s="Orders and messages timeline" d='Admin.Orderscustomers.Feature'}

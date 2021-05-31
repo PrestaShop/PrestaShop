@@ -22,7 +22,7 @@ class ViewCustomer extends BOBasePage {
     this.messageDiv = '#content div.message-item-initial';
     this.yourAnswerFormTitle = '#reply-form-title';
     this.yourAnswerFormTextarea = '#reply_message';
-    this.ordersAndMessagesForm = '#content div.row div:nth-child(6)';
+    this.ordersAndMessagesBlock = '#orders-and-messages-block';
   }
 
   /*
@@ -74,7 +74,7 @@ class ViewCustomer extends BOBasePage {
    * @returns {Promise<string>}
    */
   getOrdersAndMessagesTimeline(page) {
-    return this.getTextContent(page, this.ordersAndMessagesForm);
+    return this.getTextContent(page, this.ordersAndMessagesBlock);
   }
 
   /**
