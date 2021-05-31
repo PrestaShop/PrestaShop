@@ -52,10 +52,10 @@ final class DeleteSpecificPriceByCartProductHandler implements DeleteSpecificPri
 
         try {
             if (false === SpecificPrice::deleteByIdCart($cartIdValue, $productIdValue, $productAttributeId)) {
-                throw new SpecificPriceException(sprintf('Failed to delete specific price for cart #%s product #%s', $cartIdValue, $productIdValue));
+                throw new SpecificPriceException(sprintf('Failed to delete specific price for cart #%d product #%d', $cartIdValue, $productIdValue));
             }
         } catch (PrestaShopException $e) {
-            throw new SpecificPriceException(sprintf('An error occurred when trying to delete specific price for cart #%s product #%s', $cartIdValue, $productIdValue));
+            throw new SpecificPriceException(sprintf('An error occurred when trying to delete specific price for cart #%d product #%d', $cartIdValue, $productIdValue));
         }
     }
 }
