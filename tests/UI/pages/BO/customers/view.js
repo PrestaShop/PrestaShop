@@ -70,7 +70,7 @@ class ViewCustomer extends BOBasePage {
   /**
    * Get number of element from title
    * @param page {Page} Browser tab
-   * @param cardTitle {string} Value of card title to get number of element
+   * @param cardTitle {string} Value of card title to get number of elements
    * @returns {Promise<string>}
    */
   getNumberOfElementFromTitle(page, cardTitle) {

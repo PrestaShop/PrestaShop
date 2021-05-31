@@ -286,7 +286,7 @@ class Customers extends BOBasePage {
   /**
    * Get content from all rows
    * @param page {Page} Browser tab
-   * @param column {string} Column nam to get all rows content
+   * @param column {string} Column name to get all rows content
    * @return {Promise<[]>}
    */
   async getAllRowsColumnContent(page, column) {
