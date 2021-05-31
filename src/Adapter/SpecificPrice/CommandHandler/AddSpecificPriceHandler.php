@@ -69,7 +69,7 @@ final class AddSpecificPriceHandler extends AbstractSpecificPriceHandler impleme
             throw new SpecificPriceException('An error occurred when trying to add new specific price');
         }
 
-        return new SpecificPriceId($specificPrice->id);
+        return new SpecificPriceId((int) $specificPrice->id);
     }
 
     /**
