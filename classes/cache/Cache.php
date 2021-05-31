@@ -181,7 +181,9 @@ abstract class CacheCore
     {
         if (!self::$instance) {
             $caching_system = _PS_CACHING_SYSTEM_;
-            self::$instance = new $caching_system();
+            if (class_exists($caching_system)) {
+                self::$instance = new $caching_system();
+            }
         }
 
         return self::$instance;

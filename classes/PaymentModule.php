@@ -531,7 +531,7 @@ abstract class PaymentModuleCore extends Module
                         $customer_message->private = 0;
 
                         if (!$customer_message->add()) {
-                            $this->errors[] = $this->trans('An error occurred while saving message', [], 'Admin.Payment.Notification');
+                            $this->_errors[] = $this->trans('An error occurred while saving message', [], 'Admin.Payment.Notification');
                         }
                     }
 
@@ -898,10 +898,6 @@ abstract class PaymentModuleCore extends Module
 
     public static function preCall($module_name)
     {
-        if (!parent::preCall($module_name)) {
-            return false;
-        }
-
         if (($module_instance = Module::getInstanceByName($module_name))) {
             /** @var PaymentModule $module_instance */
             if (!$module_instance->currencies || ($module_instance->currencies && count(Currency::checkPaymentCurrencies($module_instance->id)))) {

@@ -50,7 +50,7 @@ class UploaderCore
     {
         $this->setName($name);
         $this->setCheckFileSize(true);
-        $this->files = [];
+        $this->_files = [];
     }
 
     /**
@@ -249,13 +249,13 @@ class UploaderCore
                     'error' => $upload['error'][$index],
                 ];
 
-                $this->files[] = $this->upload($tmp[$index], $dest);
+                $this->_files[] = $this->upload($tmp[$index], $dest);
             }
         } elseif ($upload) {
-            $this->files[] = $this->upload($upload, $dest);
+            $this->_files[] = $this->upload($upload, $dest);
         }
 
-        return $this->files;
+        return $this->_files;
     }
 
     /**

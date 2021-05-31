@@ -16,6 +16,8 @@ require_once _PS_ROOT_DIR_ . '/config/bootstrap.php';
 require_once _PS_ROOT_DIR_ . '/install-dev/classes/exception.php';
 require_once _PS_ROOT_DIR_ . '/install-dev/classes/session.php';
 require_once _PS_ROOT_DIR_ . '/var/SymfonyRequirements.php';
+require_once _PS_ROOT_DIR_ . '/admin-dev/functions.php';
+require_once _PS_ROOT_DIR_ . '/vendor/paragonie/random_compat/lib/byte_safe_strings.php';
 include_once _PS_TOOL_DIR_ . 'profiling/Profiler.php';
 include_once _PS_TOOL_DIR_ . 'profiling/Controller.php';
 include_once _PS_TOOL_DIR_ . 'profiling/ObjectModel.php';
