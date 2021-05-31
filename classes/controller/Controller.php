@@ -162,6 +162,16 @@ abstract class ControllerCore
     abstract public function viewAccess();
 
     /**
+     * Errors displayed after post processing
+     *
+     * @var array<string>
+     */
+    public $errors = [];
+
+    /** @var string */
+    public $layout;
+
+    /**
      * Initialize the page.
      *
      * @throws Exception

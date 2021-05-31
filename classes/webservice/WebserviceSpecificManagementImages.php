@@ -1015,7 +1015,7 @@ class WebserviceSpecificManagementImagesCore implements WebserviceSpecificManage
                     $product_picture_width = (int) Configuration::get('PS_PRODUCT_PICTURE_WIDTH');
                     $product_picture_height = (int) Configuration::get('PS_PRODUCT_PICTURE_HEIGHT');
                     if (!ImageManager::resize($new_path, $new_path . '_small', $product_picture_width, $product_picture_height)) {
-                        $this->errors[] = Context::getContext()->getTranslator()->trans('An error occurred while uploading the image.', [], 'Admin.Notifications.Error');
+                        $this->getWsObject()->errors[] = Context::getContext()->getTranslator()->trans('An error occurred while uploading the image.', [], 'Admin.Notifications.Error');
                     }
                 }
 
@@ -1168,7 +1168,7 @@ class WebserviceSpecificManagementImagesCore implements WebserviceSpecificManage
                             $images_types = ImageType::getImagesTypes('products');
                             foreach ($images_types as $imageType) {
                                 if (!ImageManager::resize($tmp_name, _PS_PROD_IMG_DIR_ . $image->getExistingImgPath() . '-' . stripslashes($imageType['name']) . '.' . $image->image_format, $imageType['width'], $imageType['height'], $image->image_format)) {
-                                    $this->_errors[] = Context::getContext()->getTranslator()->trans('An error occurred while copying this image: %s', [stripslashes($imageType['name'])], 'Admin.Notifications.Error');
+                                    $this->getWsObject()->errors[] = Context::getContext()->getTranslator()->trans('An error occurred while copying this image: %s', [stripslashes($imageType['name'])], 'Admin.Notifications.Error');
                                 }
                             }
                         }
@@ -1190,7 +1190,7 @@ class WebserviceSpecificManagementImagesCore implements WebserviceSpecificManage
                         $images_types = ImageType::getImagesTypes($this->imageType);
                         foreach ($images_types as $imageType) {
                             if (!ImageManager::resize($tmp_name, $parent_path . $this->wsObject->urlSegment[2] . '-' . stripslashes($imageType['name']) . '.jpg', $imageType['width'], $imageType['height'])) {
-                                $this->_errors[] = Context::getContext()->getTranslator()->trans('An error occurred while copying this image: %s', [stripslashes($imageType['name'])], 'Admin.Notifications.Error');
+                                $this->getWsObject()->errors[] = Context::getContext()->getTranslator()->trans('An error occurred while copying this image: %s', [stripslashes($imageType['name'])], 'Admin.Notifications.Error');
                             }
                         }
                         @unlink(_PS_TMP_IMG_DIR_ . $tmp_name);

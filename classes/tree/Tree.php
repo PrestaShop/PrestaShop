@@ -101,7 +101,7 @@ class TreeCore
 
     public function getAttribute($name)
     {
-        return $this->hasAttribute($name) ? $this->_attributes[$name] : null;
+        return $this->_attributes[$name] ?? null;
     }
 
     public function setAttributes($value)
