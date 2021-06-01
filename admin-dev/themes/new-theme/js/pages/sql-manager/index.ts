@@ -33,10 +33,9 @@ import SubmitBulkExtension from '@components/grid/extension/submit-bulk-action-e
 import SubmitGridExtension from '@components/grid/extension/submit-grid-action-extension';
 import SubmitRowActionExtension from '@components/grid/extension/action/row/submit-row-action-extension';
 import LinkRowActionExtension from '@components/grid/extension/link-row-action-extension';
-import FiltersSubmitButtonEnablerExtension
-  from '@components/grid/extension/filters-submit-button-enabler-extension';
+import FiltersSubmitButtonEnablerExtension from '@components/grid/extension/filters-submit-button-enabler-extension';
 
-const {$} = window;
+const { $ } = window;
 
 class SqlManagerPage {
   constructor() {
@@ -52,9 +51,15 @@ class SqlManagerPage {
     requestSqlGrid.addExtension(new BulkActionCheckboxExtension());
     requestSqlGrid.addExtension(new FiltersSubmitButtonEnablerExtension());
 
-    $(document).on('change', '.js-db-tables-select', () => this.reloadDbTableColumns());
-    $(document).on('click', '.js-add-db-table-to-query-btn', (event) => this.addDbTableToQuery(event));
-    $(document).on('click', '.js-add-db-table-column-to-query-btn', (event) => this.addDbTableColumnToQuery(event));
+    $(document).on('change', '.js-db-tables-select', () =>
+      this.reloadDbTableColumns()
+    );
+    $(document).on('click', '.js-add-db-table-to-query-btn', (event) =>
+      this.addDbTableToQuery(event)
+    );
+    $(document).on('click', '.js-add-db-table-column-to-query-btn', (event) =>
+      this.addDbTableColumnToQuery(event)
+    );
   }
 
   /**
@@ -64,30 +69,34 @@ class SqlManagerPage {
     const $selectedOption = $('.js-db-tables-select').find('option:selected');
     const $table = $('.js-table-columns');
 
-    $.ajax($selectedOption.data('table-columns-url'))
-      .then((response) => {
-        $('.js-table-alert').addClass('d-none');
+    $.ajax($selectedOption.data('table-columns-url')).then((response) => {
+      $('.js-table-alert').addClass('d-none');
 
-        const {columns} = response;
+      const { columns } = response;
 
-        $table.removeClass('d-none');
-        $table.find('tbody').empty();
+      $table.removeClass('d-none');
+      $table.find('tbody').empty();
 
-        columns.forEach((column) => {
-          const $row = $('<tr>')
-            .append($('<td>').html(column.name))
-            .append($('<td>').html(column.type))
-            .append($('<td>').addClass('text-right')
-              .append($('<button>')
-                .addClass('btn btn-sm btn-outline-secondary js-add-db-table-column-to-query-btn')
-                .attr('data-column', column.name)
-                .html($table.data('action-btn')),
-              ),
-            );
+      columns.forEach((column: Record<string, any>) => {
+        const $row = $('<tr>')
+          .append($('<td>').html(column.name))
+          .append($('<td>').html(column.type))
+          .append(
+            $('<td>')
+              .addClass('text-right')
+              .append(
+                $('<button>')
+                  .addClass(
+                    'btn btn-sm btn-outline-secondary js-add-db-table-column-to-query-btn'
+                  )
+                  .attr('data-column', column.name)
+                  .html($table.data('action-btn'))
+              )
+          );
 
-          $table.find('tbody').append($row);
-        });
+        $table.find('tbody').append($row);
       });
+    });
   }
 
   /**
@@ -95,7 +104,7 @@ class SqlManagerPage {
    *
    * @param event
    */
-  addDbTableToQuery(event) {
+  addDbTableToQuery(event: JQueryEventObject): void {
     const $selectedOption = $('.js-db-tables-select').find('option:selected');
 
     if ($selectedOption.length === 0) {
@@ -104,7 +113,7 @@ class SqlManagerPage {
       return;
     }
 
-    this.addToQuery($selectedOption.val());
+    this.addToQuery(<string>$selectedOption.val());
   }
 
   /**
@@ -112,7 +121,7 @@ class SqlManagerPage {
    *
    * @param event
    */
-  addDbTableColumnToQuery(event) {
+  addDbTableColumnToQuery(event: JQueryEventObject): void {
     this.addToQuery($(event.target).data('column'));
   }
 
@@ -121,7 +130,7 @@ class SqlManagerPage {
    *
    * @param {String} data
    */
-  addToQuery(data) {
+  addToQuery(data: string): void {
     const $queryInput = $('#sql_request_sql');
     $queryInput.val(`${$queryInput.val()} ${data}`);
   }

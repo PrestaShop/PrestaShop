@@ -32,6 +32,14 @@ import employeeFormMap from './employee-form-map';
  * Class responsible for javascript actions in employee add/edit page.
  */
 export default class EmployeeForm {
+  shopChoiceTreeSelector: string;
+
+  shopChoiceTree: ChoiceTree;
+
+  employeeProfileSelector: string;
+
+  tabsDropdownSelector: string;
+
   constructor() {
     this.shopChoiceTreeSelector = employeeFormMap.shopChoiceTree;
     this.shopChoiceTree = new ChoiceTree(this.shopChoiceTreeSelector);
@@ -42,7 +50,7 @@ export default class EmployeeForm {
 
     new AddonsConnector(
       employeeFormMap.addonsConnectForm,
-      employeeFormMap.addonsLoginButton,
+      employeeFormMap.addonsLoginButton
     );
 
     new ChangePasswordControl(
@@ -54,13 +62,11 @@ export default class EmployeeForm {
       employeeFormMap.newPasswordInput,
       employeeFormMap.confirmNewPasswordInput,
       employeeFormMap.generatedPasswordDisplayInput,
-      employeeFormMap.passwordStrengthFeedbackContainer,
+      employeeFormMap.passwordStrengthFeedbackContainer
     );
 
     this.initEvents();
     this.toggleShopTree();
-
-    return {};
   }
 
   /**
@@ -68,11 +74,13 @@ export default class EmployeeForm {
    *
    * @private
    */
-  initEvents() {
+  private initEvents(): void {
     const $employeeProfilesDropdown = $(this.employeeProfileSelector);
     const getTabsUrl = $employeeProfilesDropdown.data('get-tabs-url');
 
-    $(document).on('change', this.employeeProfileSelector, () => this.toggleShopTree());
+    $(document).on('change', this.employeeProfileSelector, () =>
+      this.toggleShopTree()
+    );
 
     // Reload tabs dropdown when employee profile is changed.
     $(document).on('change', this.employeeProfileSelector, (event) => {
@@ -84,7 +92,7 @@ export default class EmployeeForm {
         (tabs) => {
           this.reloadTabsDropdown(tabs);
         },
-        'json',
+        'json'
       );
     });
   }
@@ -96,7 +104,7 @@ export default class EmployeeForm {
    *
    * @private
    */
-  reloadTabsDropdown(accessibleTabs) {
+  private reloadTabsDropdown(accessibleTabs: HTMLElement): void {
     const $tabsDropdown = $(this.tabsDropdownSelector);
 
     $tabsDropdown.empty();
@@ -111,7 +119,8 @@ export default class EmployeeForm {
             $optgroup.append(
               this.createOption(
                 accessibleTab.children[childKey].name,
-                accessibleTab.children[childKey].id_tab),
+                accessibleTab.children[childKey].id_tab
+              )
             );
           }
         });
@@ -120,10 +129,7 @@ export default class EmployeeForm {
       } else if (accessibleTab.name) {
         // If tab doesn't have children - create an option.
         $tabsDropdown.append(
-          this.createOption(
-            accessibleTab.name,
-            accessibleTab.id_tab,
-          ),
+          this.createOption(accessibleTab.name, accessibleTab.id_tab)
         );
       }
     });
@@ -134,12 +140,15 @@ export default class EmployeeForm {
    *
    * @private
    */
-  toggleShopTree() {
+  private toggleShopTree(): void {
     const $employeeProfileDropdown = $(this.employeeProfileSelector);
     const superAdminProfileId = $employeeProfileDropdown.data('admin-profile');
     $(this.shopChoiceTreeSelector)
       .closest('.form-group')
-      .toggleClass('d-none', $employeeProfileDropdown.val() === superAdminProfileId);
+      .toggleClass(
+        'd-none',
+        $employeeProfileDropdown.val() === superAdminProfileId
+      );
   }
 
   /**
@@ -151,7 +160,7 @@ export default class EmployeeForm {
    *
    * @private
    */
-  createOptionGroup(name) {
+  private createOptionGroup(name: string): JQuery {
     return $(`<optgroup label="${name}">`);
   }
 
@@ -165,7 +174,7 @@ export default class EmployeeForm {
    *
    * @private
    */
-  createOption(name, value) {
+  private createOption(name: string, value: string): JQuery {
     return $(`<option value="${value}">${name}</option>`);
   }
 }

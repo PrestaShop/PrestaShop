@@ -39,6 +39,8 @@ export default class ImportBatchSizeCalculator {
 
   importStartTime: number;
 
+  actualExecutionTime: number;
+
   constructor() {
     // Target execution time in milliseconds.
     this.targetExecutionTime = 5000;
@@ -69,7 +71,7 @@ export default class ImportBatchSizeCalculator {
    * Must be executed after the import operation finishes,
    * to be able to calculate the import batch size later on.
    */
-  markImportEnd() {
+  markImportEnd(): void {
     this.actualExecutionTime = new Date().getTime() - this.importStartTime;
   }
 
@@ -79,10 +81,10 @@ export default class ImportBatchSizeCalculator {
    * @returns {number}
    * @private
    */
-  calculateAcceleration() {
+  private calculateAcceleration(): number {
     return Math.min(
       this.maxAcceleration,
-      this.targetExecutionTime / this.actualExecutionTime,
+      this.targetExecutionTime / this.actualExecutionTime
     );
   }
 
@@ -94,7 +96,7 @@ export default class ImportBatchSizeCalculator {
    *
    * @returns {number} recommended import batch size
    */
-  calculateBatchSize(currentBatchSize, maxBatchSize = 0) {
+  calculateBatchSize(currentBatchSize: number, maxBatchSize = 0): number {
     if (!this.importStartTime) {
       throw new Error('Import start is not marked.');
     }
@@ -107,7 +109,7 @@ export default class ImportBatchSizeCalculator {
       this.maxBatchSize,
       Math.max(
         this.minBatchSize,
-        Math.floor(currentBatchSize * this.calculateAcceleration()),
+        Math.floor(currentBatchSize * this.calculateAcceleration())
       ),
     ];
 
