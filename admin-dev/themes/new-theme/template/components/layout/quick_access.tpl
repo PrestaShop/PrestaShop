@@ -13,7 +13,7 @@
     {/foreach}
     <div class="dropdown-divider"></div>
     {if isset($matchQuickLink)}
-      <a
+      <a id="quick_remove"
         class="dropdown-item js-quick-link"
         href="#"
         data-method="remove"
@@ -29,7 +29,7 @@
         {l s='Remove from Quick Access' d='Admin.Navigation.Header'}
       </a>
     {else}
-      <a
+      <a id="quick_add"
         class="dropdown-item js-quick-link"
         href="#"
         data-rand="{1|rand:200}"
@@ -44,7 +44,7 @@
         {l s='Add current page to Quick Access'  d='Admin.Actions'}
       </a>
     {/if}
-    <a class="dropdown-item" href="{$link->getAdminLink("AdminQuickAccesses")|addslashes}">
+    <a id="quick_manage" class="dropdown-item" href="{$link->getAdminLink("AdminQuickAccesses")|addslashes}">
       <i class="material-icons">settings</i>
       {l s='Manage your quick accesses' d='Admin.Navigation.Header'}
     </a>

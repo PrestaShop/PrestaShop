@@ -31,10 +31,9 @@ class BOBasePage extends CommonPage {
     this.quickAccessContainer = '#quick-access-container';
     this.quickAccessLink = idLink => `${this.headerQuickDiv} li:nth-child(${idLink}) a,
     ${this.quickAccessContainer} a:nth-child(${idLink})`;
-    this.quickAccessRemoveLink = `${this.headerQuickDiv} li a[data-method='remove'],
-    ${this.quickAccessContainer} a[data-method='remove']`;
-    this.manageYourQuickAccessLink = `${this.quickAccessContainer} a[href*='controller=AdminQuickAccesses'],
-    ${this.headerQuickDiv} a[href*='controller=AdminQuickAccesses']`;
+    this.quickAddCurrentLink = '#quick_add';
+    this.quickAccessRemoveLink = '#quick_remove';
+    this.manageYourQuickAccessLink = '#quick_manage';
 
     // Header links
     this.helpButton = '#product_form_open_help';
@@ -230,7 +229,7 @@ class BOBasePage extends CommonPage {
   async addCurrentPageToQuickAccess(page, pageName) {
     await this.dialogListener(page, true, pageName);
     await this.waitForSelectorAndClick(page, this.quickAccessDropdownToggle);
-    await this.waitForSelectorAndClick(page, this.quickAccessLink(7));
+    await this.waitForSelectorAndClick(page, this.quickAddCurrentLink);
 
     return page.textContent(this.growlDiv);
   }
