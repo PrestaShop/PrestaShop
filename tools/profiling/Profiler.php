@@ -65,7 +65,6 @@ class Profiler
 
     /** @var float */
     protected $startTime = 0;
-    protected $totalCacheSize = 0;
 
     /** @var int */
     protected $totalCacheSize = 0;

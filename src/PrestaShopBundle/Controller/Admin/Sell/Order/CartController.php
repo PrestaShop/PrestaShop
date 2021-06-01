@@ -276,8 +276,8 @@ class CartController extends FrameworkBundleAdminController
             $this->getCommandBus()->handle(new UpdateCartDeliverySettingsCommand(
                 $cartId,
                 $request->request->getBoolean('freeShipping'),
-                ($giftSettingsEnabled ? $request->request->getBoolean('isAGift', null) : null),
-                ($recycledPackagingEnabled ? $request->request->getBoolean('useRecycledPackaging', null) : null),
+                ($giftSettingsEnabled ? $request->request->getBoolean('isAGift', false) : null),
+                ($recycledPackagingEnabled ? $request->request->getBoolean('useRecycledPackaging', false) : null),
                 $request->request->get('giftMessage', null)
             ));
 
