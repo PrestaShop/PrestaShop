@@ -324,7 +324,7 @@
   }
 
   #order-view-page {
-    .table {
+    .table:not(.discountList) {
       display: block;
     }
 

@@ -145,12 +145,12 @@ export default class ProductManager {
     };
 
     // on success
-    EventEmitter.on(eventMap.productQtyChanged, (cartInfo) => {
+    EventEmitter.on(eventMap.productQtyChanged, (data) => {
       this.productRenderer.cleanCartBlockAlerts();
-      this.updateStockOnQtyChange(cartInfo.product);
+      this.updateStockOnQtyChange(data.product);
 
       $(createOrderMap.createOrderButton).prop('disabled', false);
-      EventEmitter.emit(eventMap.cartLoaded, cartInfo);
+      EventEmitter.emit(eventMap.cartLoaded, data.cartInfo);
 
       enableQtyInputs();
     });

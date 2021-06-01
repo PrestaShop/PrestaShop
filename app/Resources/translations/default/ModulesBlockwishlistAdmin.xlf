@@ -5,12 +5,12 @@
       <trans-unit id="641254d77e7a473aa5910574f3f9453c">
         <source>Wishlist</source>
         <target>Wishlist</target>
-        <note>Line: 75</note>
+        <note>Line: 78</note>
       </trans-unit>
       <trans-unit id="df5e3f6daca5e1aa63c0ad63caf9be06">
         <source>Adds a block containing the customer's wishlists.</source>
         <target>Adds a block containing the customer's wishlists.</target>
-        <note>Line: 76</note>
+        <note>Line: 79</note>
       </trans-unit>
     </body>
   </file>
@@ -19,17 +19,17 @@
       <trans-unit id="7ec9cceb94985909c6994e95c31c1aa8">
         <source>My wishlists</source>
         <target>My wishlists</target>
-        <note>Line: 109</note>
+        <note>Line: 108</note>
       </trans-unit>
       <trans-unit id="9ae79c1fccd231ac7fbbf3235dbf6326">
         <source>My wishlist</source>
         <target>My wishlist</target>
-        <note>Line: 110</note>
+        <note>Line: 109</note>
       </trans-unit>
       <trans-unit id="7d7f5ad872e3fb9328bce15bad9c2cd5">
         <source>Create new list</source>
         <target>Create new list</target>
-        <note>Line: 111</note>
+        <note>Line: 110</note>
       </trans-unit>
     </body>
   </file>
@@ -57,22 +57,27 @@
       <trans-unit id="3adbdb3ac060038aa0e6e6c138ef9873">
         <source>Category</source>
         <target>Category</target>
-        <note>Line: 73</note>
+        <note>Line: 79</note>
       </trans-unit>
       <trans-unit id="e192956d901dff59c35fd2c477ed28d6">
         <source>Price (tax excl.)</source>
         <target>Price (tax excl.)</target>
-        <note>Line: 79</note>
+        <note>Line: 85</note>
       </trans-unit>
       <trans-unit id="07682d2c509f6990f4d7c963027e097d">
         <source>Available Qty</source>
         <target>Available Qty</target>
-        <note>Line: 85</note>
+        <note>Line: 91</note>
       </trans-unit>
       <trans-unit id="d311128c6b9f34f85e6b0e29bcbcd165">
         <source>Conversion rate</source>
         <target>Conversion rate</target>
-        <note>Line: 91</note>
+        <note>Line: 97</note>
+      </trans-unit>
+      <trans-unit id="47ac923d219501859fb68fed8c8db77b">
+        <source>Combination</source>
+        <target>Combination</target>
+        <note>Line: 73</note>
       </trans-unit>
     </body>
   </file>
@@ -122,12 +127,17 @@
       <trans-unit id="64b6d93d6e0875e2ecd74d1c7bc639cd">
         <source>Top 10 most added products</source>
         <target>Top 10 most added products</target>
-        <note>Line: 26</note>
+        <note>Line: 34</note>
       </trans-unit>
       <trans-unit id="63a6a88c066880c5ac42394a22803ca6">
         <source>Refresh</source>
         <target>Refresh</target>
-        <note>Line: 40</note>
+        <note>Line: 48</note>
+      </trans-unit>
+      <trans-unit id="53631b7bf03eeb02267cf90f057ce96f">
+        <source>You need to choose a specific shop to display the top 10 most added products</source>
+        <target>You need to choose a specific shop to display the top 10 most added products</target>
+        <note>Line: 25</note>
       </trans-unit>
     </body>
   </file>

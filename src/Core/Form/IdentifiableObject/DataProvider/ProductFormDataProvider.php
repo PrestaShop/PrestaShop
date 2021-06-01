@@ -66,18 +66,26 @@ final class ProductFormDataProvider implements FormDataProviderInterface
     private $mostUsedTaxRulesGroupId;
 
     /**
+     * @var int
+     */
+    private $defaultCategoryId;
+
+    /**
      * @param CommandBusInterface $queryBus
      * @param bool $defaultProductActivation
      * @param int $mostUsedTaxRulesGroupId
+     * @param int $defaultCategoryId
      */
     public function __construct(
         CommandBusInterface $queryBus,
         bool $defaultProductActivation,
-        int $mostUsedTaxRulesGroupId
+        int $mostUsedTaxRulesGroupId,
+        int $defaultCategoryId
     ) {
         $this->queryBus = $queryBus;
         $this->defaultProductActivation = $defaultProductActivation;
         $this->mostUsedTaxRulesGroupId = $mostUsedTaxRulesGroupId;
+        $this->defaultCategoryId = $defaultCategoryId;
     }
 
     /**
@@ -98,6 +106,7 @@ final class ProductFormDataProvider implements FormDataProviderInterface
             'seo' => $this->extractSEOData($productForEditing),
             'shipping' => $this->extractShippingData($productForEditing),
             'options' => $this->extractOptionsData($productForEditing),
+            'categories' => $this->extractCategoriesData($productForEditing),
             'footer' => [
                 'active' => $productForEditing->getOptions()->isActive(),
             ],
@@ -151,6 +160,14 @@ final class ProductFormDataProvider implements FormDataProviderInterface
                 ],
                 'condition' => ProductCondition::NEW,
             ],
+            'categories' => [
+                'product_categories' => [
+                    $this->defaultCategoryId => [
+                        'is_associated' => true,
+                        'is_default' => true,
+                    ],
+                ],
+            ],
             'footer' => [
                 'active' => $this->defaultProductActivation,
             ],
@@ -178,6 +195,27 @@ final class ProductFormDataProvider implements FormDataProviderInterface
         ];
 
         return $productData;
+    }
+
+    /**
+     * @param ProductForEditing $productForEditing
+     *
+     * @return array
+     */
+    private function extractCategoriesData(ProductForEditing $productForEditing): array
+    {
+        $categoriesInformation = $productForEditing->getCategoriesInformation();
+        $categories = [];
+        foreach ($categoriesInformation->getCategoryIds() as $categoryId) {
+            $categories[$categoryId] = [
+                'is_associated' => true,
+                'is_default' => $categoryId === $categoriesInformation->getDefaultCategoryId(),
+            ];
+        }
+
+        return [
+            'product_categories' => $categories,
+        ];
     }
 
     /**
