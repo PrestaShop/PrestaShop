@@ -30,8 +30,6 @@ use Context;
 use Doctrine\DBAL\DBALException;
 use PrestaShopBundle\Install\DatabaseDump;
 use PrestaShopBundle\Install\Install;
-use PrestaShopBundle\Service\Database\Upgrade as UpgradeDatabase;
-use Symfony\Component\Process\Process;
 use Tests\Resources\ResourceResetter;
 use Tab;
 
