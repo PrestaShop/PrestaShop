@@ -920,6 +920,28 @@ class Install extends AbstractInstall
 
         Module::updateTranslationsAfterInstall(false);
 
+        $result = $this->executeEvent($modules, 'install', 'Cannot install module "%module%"');
+        if ($result === false) {
+            return false;
+        }
+
+        Module::updateTranslationsAfterInstall(true);
+        EntityLanguage::updateModulesTranslations($modules);
+
+        return true;
+    }
+
+    public function postInstall(): bool
+    {
+        return $this->executeEvent(
+            $this->getModulesList(),
+            'postInstall',
+            'Cannot execute post install on module "%module%"'
+        );
+    }
+
+    protected function executeEvent(array $modules, string $event, string $errorMessage): bool
+    {
         $moduleManagerBuilder = ModuleManagerBuilder::getInstance();
         $moduleManager = $moduleManagerBuilder->build();
 
@@ -928,29 +950,34 @@ class Install extends AbstractInstall
             $moduleException = null;
 
             try {
-                $moduleInstalled = $moduleManager->install($module_name);
+                $moduleEventIsExecuted = $moduleManager->{$event}($module_name);
             } catch (PrestaShopException $e) {
-                $moduleInstalled = false;
+                $moduleEventIsExecuted = false;
                 $moduleException = $e->getMessage();
             }
 
-            if (!$moduleInstalled) {
-                $module_errors = [$this->translator->trans('Cannot install module "%module%"', ['%module%' => $module_name], 'Install')];
+            if (!$moduleEventIsExecuted) {
+                $moduleErrors = [
+                    $this->translator->trans(
+                        $errorMessage,
+                        ['%module%' => $module_name],
+                        'Install'
+                    )
+                ];
+
                 if (null !== $moduleException) {
-                    $module_errors[] = $moduleException;
+                    $moduleErrors[] = $moduleException;
                 }
-                $errors[$module_name] = $module_errors;
+
+                $errors[$module_name] = $moduleErrors;
             }
         }
 
-        if ($errors) {
+        if (count($errors) > 0) {
             $this->setError($errors);
 
             return false;
         }
-
-        Module::updateTranslationsAfterInstall(true);
-        EntityLanguage::updateModulesTranslations($modules);
 
         return true;
     }
@@ -1086,41 +1113,5 @@ class Install extends AbstractInstall
                 $db->execute('SET SESSION auto_increment_increment = ' . (int) $backupAiIncrement, false);
             }
         }
-    }
-
-    public function postInstall(): bool
-    {
-        $modules = $this->getModulesList();
-
-        $moduleManagerBuilder = ModuleManagerBuilder::getInstance();
-        $moduleManager = $moduleManagerBuilder->build();
-
-        $errors = [];
-        foreach ($modules as $module_name) {
-            $moduleException = null;
-
-            try {
-                $modulePostInstall = $moduleManager->postInstall($module_name);
-            } catch (PrestaShopException $e) {
-                $modulePostInstall = false;
-                $moduleException = $e->getMessage();
-            }
-
-            if (!$modulePostInstall) {
-                $module_errors = [$this->translator->trans('Cannot execute post install on module "%module%"', ['%module%' => $module_name], 'Install')];
-                if (null !== $moduleException) {
-                    $module_errors[] = $moduleException;
-                }
-                $errors[$module_name] = $module_errors;
-            }
-        }
-
-        if ($errors) {
-            $this->setError($errors);
-
-            return false;
-        }
-
-        return true;
     }
 }

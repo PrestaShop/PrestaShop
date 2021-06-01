@@ -326,7 +326,7 @@ class ModuleManager implements AddonManagerInterface
         }
 
         $module = $this->moduleRepository->getModule($moduleName);
-        /** @var Module */
+        /** @var Module $module */
         $result = $module->onPostInstall();
 
         $this->checkAndClearCache($result);
