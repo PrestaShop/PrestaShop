@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "59789cac67e25b35069b440c08f670f2",
+    "content-hash": "d698ef2f1842f6818749a2ee8ee00d1a",
     "packages": [
         {
             "name": "beberlei/doctrineextensions",
@@ -4937,16 +4937,16 @@
         },
         {
             "name": "prestashop/ps_linklist",
-            "version": "v3.2.0",
+            "version": "v4.0.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/PrestaShop/ps_linklist.git",
-                "reference": "4abf07d4ee2b007df78849fc9475c2dcab087a69"
+                "reference": "3072601605c569e7aa3565a6d57e7bae56428b00"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/PrestaShop/ps_linklist/zipball/4abf07d4ee2b007df78849fc9475c2dcab087a69",
-                "reference": "4abf07d4ee2b007df78849fc9475c2dcab087a69",
+                "url": "https://api.github.com/repos/PrestaShop/ps_linklist/zipball/3072601605c569e7aa3565a6d57e7bae56428b00",
+                "reference": "3072601605c569e7aa3565a6d57e7bae56428b00",
                 "shasum": ""
             },
             "require": {
@@ -4978,10 +4978,9 @@
             "description": "PrestaShop - Link list",
             "homepage": "https://github.com/PrestaShop/ps_linklist",
             "support": {
-                "issues": "https://github.com/PrestaShop/ps_linklist/issues",
-                "source": "https://github.com/PrestaShop/ps_linklist/tree/master"
+                "source": "https://github.com/PrestaShop/ps_linklist/tree/v4.0.0"
             },
-            "time": "2020-07-10T07:10:55+00:00"
+            "time": "2021-02-11T15:55:29+00:00"
         },
         {
             "name": "prestashop/ps_mainmenu",
