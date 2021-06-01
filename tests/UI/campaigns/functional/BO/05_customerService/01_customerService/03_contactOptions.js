@@ -143,8 +143,8 @@ describe('Contact options', async () => {
     it('should check your answer form', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'checkYourAnswerForm', baseContext);
 
-      const text = await viewPage.getYourAnswerContent(page);
-      expect(text).to.contains('test');
+      const formContent = await viewPage.getYourAnswerFormContent(page);
+      expect(formContent).to.contains('test');
     });
 
     it('should go to customer service page', async function () {
