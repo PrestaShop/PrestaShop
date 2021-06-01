@@ -26,17 +26,25 @@
 import createOrderMap from '@pages/order/create/create-order-map';
 import Router from '@components/router';
 import eventMap from '@pages/order/create/event-map';
-import {EventEmitter} from '@components/event-emitter';
+import { EventEmitter } from '@components/event-emitter';
 
-const {$} = window;
+const { $ } = window;
 
 /**
  * Responsible for customer information rendering
  */
 export default class CustomerRenderer {
+  $container: JQuery;
+
+  $customerSearchResultBlock: JQuery;
+
+  router: Router;
+
   constructor() {
     this.$container = $(createOrderMap.customerSearchBlock);
-    this.$customerSearchResultBlock = $(createOrderMap.customerSearchResultsBlock);
+    this.$customerSearchResultBlock = $(
+      createOrderMap.customerSearchResultsBlock
+    );
     this.router = new Router();
   }
 
@@ -45,7 +53,7 @@ export default class CustomerRenderer {
    *
    * @param foundCustomers
    */
-  renderSearchResults(foundCustomers) {
+  renderSearchResults(foundCustomers: Record<string, any>): void {
     if (foundCustomers.length === 0) {
       EventEmitter.emit(eventMap.customersNotFound);
 
@@ -58,7 +66,10 @@ export default class CustomerRenderer {
         firstName: customerResult.firstname,
         lastName: customerResult.lastname,
         email: customerResult.email,
-        birthday: customerResult.birthday !== '0000-00-00' ? customerResult.birthday : ' ',
+        birthday:
+          customerResult.birthday !== '0000-00-00'
+            ? customerResult.birthday
+            : ' ',
       };
 
       this.renderFoundCustomer(customer);
@@ -77,7 +88,7 @@ export default class CustomerRenderer {
    *
    * @param $targetedBtn
    */
-  displaySelectedCustomerBlock($targetedBtn) {
+  displaySelectedCustomerBlock($targetedBtn: JQuery): void {
     this.showCheckoutHistoryBlock();
 
     $targetedBtn.addClass('d-none');
@@ -88,7 +99,8 @@ export default class CustomerRenderer {
     $customerCard.find(createOrderMap.changeCustomerBtn).removeClass('d-none');
 
     this.$container.find(createOrderMap.customerSearchRow).addClass('d-none');
-    this.$container.find(createOrderMap.notSelectedCustomerSearchResults)
+    this.$container
+      .find(createOrderMap.notSelectedCustomerSearchResults)
       .closest(createOrderMap.customerSearchResultColumn)
       .remove();
 
@@ -101,14 +113,16 @@ export default class CustomerRenderer {
   /**
    * Shows customer search block
    */
-  showCustomerSearch() {
-    this.$container.find(createOrderMap.customerSearchRow).removeClass('d-none');
+  showCustomerSearch(): void {
+    this.$container
+      .find(createOrderMap.customerSearchRow)
+      .removeClass('d-none');
   }
 
   /**
    * Empty the cart list and display a loading message.
    */
-  showLoadingCarts() {
+  showLoadingCarts(): void {
     const $cartsTable = $(createOrderMap.customerCartsTable);
     $cartsTable.find('tbody').empty();
     this.renderLoading($cartsTable);
@@ -120,9 +134,11 @@ export default class CustomerRenderer {
    * @param {Array} carts
    * @param {Int} currentCartId
    */
-  renderCarts(carts, currentCartId) {
+  renderCarts(carts: Record<string, any>, currentCartId: string): void {
     const $cartsTable = $(createOrderMap.customerCartsTable);
-    const $cartsTableRowTemplate = $($(createOrderMap.customerCartsTableRowTemplate).html());
+    const $cartsTableRowTemplate = $(
+      $(createOrderMap.customerCartsTableRowTemplate).html()
+    );
 
     $cartsTable.find('tbody').empty();
     this.showCheckoutHistoryBlock();
@@ -149,10 +165,12 @@ export default class CustomerRenderer {
         this.router.generate('admin_carts_view', {
           cartId: cart.cartId,
           liteDisplaying: 1,
-        }),
+        })
       );
 
-      $cartsTableRow.find(createOrderMap.useCartBtn).data('cart-id', cart.cartId);
+      $cartsTableRow
+        .find(createOrderMap.useCartBtn)
+        .data('cart-id', cart.cartId);
 
       $cartsTable.find('thead').removeClass('d-none');
       $cartsTable.find('tbody').append($cartsTableRow);
@@ -169,7 +187,7 @@ export default class CustomerRenderer {
   /**
    * Empty the order list and display a loading message.
    */
-  showLoadingOrders() {
+  showLoadingOrders(): void {
     const $ordersTable = $(createOrderMap.customerOrdersTable);
     $ordersTable.find('tbody').empty();
     this.renderLoading($ordersTable);
@@ -180,9 +198,11 @@ export default class CustomerRenderer {
    *
    * @param {Array} orders
    */
-  renderOrders(orders) {
+  renderOrders(orders: Record<string, any>): void {
     const $ordersTable = $(createOrderMap.customerOrdersTable);
-    const $rowTemplate = $($(createOrderMap.customerOrdersTableRowTemplate).html());
+    const $rowTemplate = $(
+      $(createOrderMap.customerOrdersTableRowTemplate).html()
+    );
 
     $ordersTable.find('tbody').empty();
     this.showCheckoutHistoryBlock();
@@ -200,19 +220,25 @@ export default class CustomerRenderer {
 
       $template.find(createOrderMap.orderIdField).text(order.orderId);
       $template.find(createOrderMap.orderDateField).text(order.orderPlacedDate);
-      $template.find(createOrderMap.orderProductsField).text(order.orderProductsCount);
+      $template
+        .find(createOrderMap.orderProductsField)
+        .text(order.orderProductsCount);
       $template.find(createOrderMap.orderTotalField).text(order.totalPaid);
-      $template.find(createOrderMap.orderPaymentMethod).text(order.paymentMethodName);
+      $template
+        .find(createOrderMap.orderPaymentMethod)
+        .text(order.paymentMethodName);
       $template.find(createOrderMap.orderStatusField).text(order.orderStatus);
       $template.find(createOrderMap.orderDetailsBtn).prop(
         'href',
         this.router.generate('admin_orders_view', {
           orderId: order.orderId,
           liteDisplaying: 1,
-        }),
+        })
       );
 
-      $template.find(createOrderMap.useOrderBtn).data('order-id', order.orderId);
+      $template
+        .find(createOrderMap.useOrderBtn)
+        .data('order-id', order.orderId);
 
       $ordersTable.find('thead').removeClass('d-none');
       $ordersTable.find('tbody').append($template);
@@ -229,35 +255,35 @@ export default class CustomerRenderer {
   /**
    * Shows empty result when customer is not found
    */
-  showNotFoundCustomers() {
+  showNotFoundCustomers(): void {
     $(createOrderMap.customerSearchEmptyResultWarning).removeClass('d-none');
   }
 
   /**
    * Hides not found customers warning
    */
-  hideNotFoundCustomers() {
+  hideNotFoundCustomers(): void {
     $(createOrderMap.customerSearchEmptyResultWarning).addClass('d-none');
   }
 
   /**
    * Hides checkout history block where carts and orders are rendered
    */
-  hideCheckoutHistoryBlock() {
+  hideCheckoutHistoryBlock(): void {
     $(createOrderMap.customerCheckoutHistory).addClass('d-none');
   }
 
   /**
    * Shows searching customers notice during request
    */
-  showSearchingCustomers() {
+  showSearchingCustomers(): void {
     $(createOrderMap.customerSearchLoadingNotice).removeClass('d-none');
   }
 
   /**
    * Hide searching notice
    */
-  hideSearchingCustomers() {
+  hideSearchingCustomers(): void {
     $(createOrderMap.customerSearchLoadingNotice).addClass('d-none');
   }
 
@@ -268,8 +294,10 @@ export default class CustomerRenderer {
    *
    * @private
    */
-  renderEmptyList($table) {
-    const $emptyTableRow = $($(createOrderMap.emptyListRowTemplate).html()).clone();
+  private renderEmptyList($table: JQuery): void {
+    const $emptyTableRow = $(
+      $(createOrderMap.emptyListRowTemplate).html()
+    ).clone();
     $table.find('tbody').append($emptyTableRow);
   }
 
@@ -280,15 +308,17 @@ export default class CustomerRenderer {
    *
    * @private
    */
-  renderLoading($table) {
-    const $emptyTableRow = $($(createOrderMap.loadingListRowTemplate).html()).clone();
+  private renderLoading($table: JQuery): void {
+    const $emptyTableRow = $(
+      $(createOrderMap.loadingListRowTemplate).html()
+    ).clone();
     $table.find('tbody').append($emptyTableRow);
   }
 
   /**
    * Removes empty list row in case it was rendered
    */
-  removeEmptyListRowFromTable($table) {
+  removeEmptyListRowFromTable($table: JQuery): void {
     $table.find(createOrderMap.emptyListRow).remove();
   }
 
@@ -301,23 +331,33 @@ export default class CustomerRenderer {
    *
    * @private
    */
-  renderFoundCustomer(customer) {
+  private renderFoundCustomer(customer: Record<string, any>): JQuery {
     this.hideNotFoundCustomers();
 
-    const $customerSearchResultTemplate = $($(createOrderMap.customerSearchResultTemplate).html());
+    const $customerSearchResultTemplate = $(
+      $(createOrderMap.customerSearchResultTemplate).html()
+    );
     const $template = $customerSearchResultTemplate.clone();
 
-    $template.find(createOrderMap.customerSearchResultName).text(`${customer.firstName} ${customer.lastName}`);
-    $template.find(createOrderMap.customerSearchResultEmail).text(customer.email);
+    $template
+      .find(createOrderMap.customerSearchResultName)
+      .text(`${customer.firstName} ${customer.lastName}`);
+    $template
+      .find(createOrderMap.customerSearchResultEmail)
+      .text(customer.email);
     $template.find(createOrderMap.customerSearchResultId).text(customer.id);
-    $template.find(createOrderMap.customerSearchResultBirthday).text(customer.birthday);
-    $template.find(createOrderMap.chooseCustomerBtn).data('customer-id', customer.id);
+    $template
+      .find(createOrderMap.customerSearchResultBirthday)
+      .text(customer.birthday);
+    $template
+      .find(createOrderMap.chooseCustomerBtn)
+      .data('customer-id', customer.id);
     $template.find(createOrderMap.customerDetailsBtn).prop(
       'href',
       this.router.generate('admin_customers_view', {
         customerId: customer.id,
         liteDisplaying: 1,
-      }),
+      })
     );
 
     return this.$customerSearchResultBlock.append($template);
@@ -328,14 +368,14 @@ export default class CustomerRenderer {
    *
    * @private
    */
-  showCheckoutHistoryBlock() {
+  private showCheckoutHistoryBlock(): void {
     $(createOrderMap.customerCheckoutHistory).removeClass('d-none');
   }
 
   /**
    * Clears shown customers
    */
-  clearShownCustomers() {
+  clearShownCustomers(): void {
     this.$customerSearchResultBlock.empty();
   }
 }
