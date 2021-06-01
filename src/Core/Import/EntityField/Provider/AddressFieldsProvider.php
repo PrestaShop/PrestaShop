@@ -66,7 +66,7 @@ final class AddressFieldsProvider implements EntityFieldsProviderInterface
             new EntityField('firstname', $this->trans('First name', 'Admin.Global'), '', true),
             new EntityField('address1', $this->trans('Address', 'Admin.Global'), '', true),
             new EntityField('address2', $this->trans('Address (2)', 'Admin.Global')),
-            new EntityField('postcode', $this->trans('Zip/postal code', 'Admin.Global'), '', true),
+            new EntityField('postcode', $this->trans('Zip/Postal code', 'Admin.Global'), '', true),
             new EntityField('city', $this->trans('City', 'Admin.Global'), '', true),
             new EntityField('country', $this->trans('Country', 'Admin.Global'), '', true),
             new EntityField('state', $this->trans('State', 'Admin.Global')),

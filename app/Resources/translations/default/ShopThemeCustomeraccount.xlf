@@ -223,7 +223,7 @@ File: themes/StarterTheme/templates/customer/my-account.tpl:34</note>
       <trans-unit id="92dbb751eb9457441af82a53f3cfae54">
         <source>For example: QIIXJXNUI or QIIXJXNUI#1</source>
         <target>For example: QIIXJXNUI or QIIXJXNUI#1</target>
-        <note>Line: 52</note>
+        <note>Line: 54</note>
       </trans-unit>
     </body>
   </file>
@@ -237,22 +237,22 @@ File: themes/StarterTheme/templates/customer/my-account.tpl:34</note>
       <trans-unit id="109636f722b8fccc95d072b2760a6282">
         <source>Transform your guest account into a customer account and enjoy:</source>
         <target>Transform your guest account into a customer account and enjoy:</target>
-        <note>Line: 42</note>
+        <note>Line: 43</note>
       </trans-unit>
       <trans-unit id="7a8fe8aaa64e691d82f429d39e0df3a5">
         <source>Personalized and secure access</source>
         <target>Personalized and secure access</target>
-        <note>Line: 44</note>
+        <note>Line: 45</note>
       </trans-unit>
       <trans-unit id="93aef17b1541efc1c3f8bd6679972096">
         <source>Fast and easy checkout</source>
         <target>Fast and easy checkout</target>
-        <note>Line: 45</note>
+        <note>Line: 46</note>
       </trans-unit>
       <trans-unit id="1f1015bbef5f42d858e8486397ad8f3e">
         <source>Easier merchandise return</source>
         <target>Easier merchandise return</target>
-        <note>Line: 46</note>
+        <note>Line: 47</note>
       </trans-unit>
     </body>
   </file>

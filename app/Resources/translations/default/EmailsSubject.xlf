@@ -5,7 +5,7 @@
       <trans-unit id="32e8a8d9ed872f16d6dae0dc5fd4bb71">
         <source>Your guest account has been transformed into a customer account</source>
         <target>Your guest account has been transformed into a customer account</target>
-        <note>Line: 1144</note>
+        <note>Line: 1219</note>
       </trans-unit>
     </body>
   </file>
@@ -14,12 +14,12 @@
       <trans-unit id="fca7e8d1c86db11246e429e40aa10c81">
         <source>New voucher for your order %s</source>
         <target>New voucher for your order %s</target>
-        <note>Line: 1206</note>
+        <note>Line: 1212</note>
       </trans-unit>
       <trans-unit id="fb077ecba55e5552916bde26d8b9e794">
         <source>Order confirmation</source>
         <target>Order confirmation</target>
-        <note>Line: 672</note>
+        <note>Line: 677</note>
       </trans-unit>
     </body>
   </file>
@@ -28,7 +28,7 @@
       <trans-unit id="caedcb9e2005bf6e522cf4536a1885bd">
         <source>Log: You have a new alert from your shop</source>
         <target>Log: You have a new alert from your shop</target>
-        <note>Line: 93</note>
+        <note>Line: 119</note>
       </trans-unit>
     </body>
   </file>
@@ -46,7 +46,7 @@
       <trans-unit id="87405e011a2c4166bb685336827fbe81">
         <source>Package in transit</source>
         <target>Package in transit</target>
-        <note>Line: 149</note>
+        <note>Line: 150</note>
       </trans-unit>
     </body>
   </file>
@@ -143,7 +143,7 @@
       <trans-unit id="cad374f43e79ca774b2e8e00dcd8b842">
         <source>Process the payment of your order</source>
         <target>Process the payment of your order</target>
-        <note>Line: 66</note>
+        <note>Line: 65</note>
       </trans-unit>
     </body>
   </file>
@@ -152,7 +152,7 @@
       <trans-unit id="abe01af80b6bc9f1fa34feaa068336b2">
         <source>New message regarding your order</source>
         <target>New message regarding your order</target>
-        <note>Line: 247</note>
+        <note>Line: 246</note>
       </trans-unit>
     </body>
   </file>
@@ -179,7 +179,7 @@
       <trans-unit id="10e7889bf2e6fd95e25936d2c11e92be">
         <source>New credit slip regarding your order</source>
         <target>New credit slip regarding your order</target>
-        <note>Line: 132</note>
+        <note>Line: 131</note>
       </trans-unit>
     </body>
   </file>

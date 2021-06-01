@@ -21,6 +21,7 @@ class MerchandiseReturns extends BOBasePage {
     // Options
     this.generalForm = '#order_return_fieldset_general';
     this.enableOrderReturnLabel = toggle => `${this.generalForm} #PS_ORDER_RETURN_${toggle}`;
+    this.returnsPrefixInput = '#conf_id_PS_RETURN_PREFIX input[name=\'PS_RETURN_PREFIX_1\']';
     this.saveButton = `${this.generalForm} button[name='submitOptionsorder_return']`;
   }
 
@@ -36,6 +37,18 @@ class MerchandiseReturns extends BOBasePage {
    */
   async setOrderReturnStatus(page, status = true) {
     await page.check(this.enableOrderReturnLabel(status ? 'on' : 'off'));
+    await this.clickAndWaitForNavigation(page, this.saveButton);
+    return this.getTextContent(page, this.alertSuccessBlock);
+  }
+
+  /**
+   * Update returns prefix
+   * @param page {Page} Browser tab
+   * @param prefix {string} Value of prefix to set on return prefix input
+   * @returns {Promise<string>}
+   */
+  async setReturnsPrefix(page, prefix) {
+    await this.setValue(page, this.returnsPrefixInput, prefix);
     await this.clickAndWaitForNavigation(page, this.saveButton);
     return this.getTextContent(page, this.alertSuccessBlock);
   }

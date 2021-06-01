@@ -73,6 +73,7 @@ services:
         class: PrestaShop\PrestaShop\Adapter\Product\QueryHandler\GetProductForEditingHandler
         arguments:
             - '@prestashop.core.util.number.number_extractor'
+            - '@prestashop.adapter.product.repository.product_repository'
             - '@prestashop.adapter.product.stock.repository.stock_available_repository'
             - '@prestashop.adapter.product.virtual_product.repository.virtual_product_file_repository'
             - '@prestashop.adapter.tax.tax_computer'

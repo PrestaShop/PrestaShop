@@ -67,6 +67,8 @@ module.exports = {
       files: ['*.vue'],
       rules: {
         indent: 0,
+        'vue/no-mutating-props': 0,
+        'vue/no-template-shadow': 0,
       },
     },
   ],

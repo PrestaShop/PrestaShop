@@ -30,7 +30,7 @@ use PHPUnit\Framework\TestCase;
 use PrestaShop\PrestaShop\Core\Form\IdentifiableObject\Builder\FormBuilder;
 use PrestaShop\PrestaShop\Core\Form\IdentifiableObject\Builder\FormBuilderInterface;
 use PrestaShop\PrestaShop\Core\Form\IdentifiableObject\DataProvider\FormDataProviderInterface;
-use PrestaShop\PrestaShop\Core\Form\IdentifiableObject\OptionProvider\FormOptionProviderInterface;
+use PrestaShop\PrestaShop\Core\Form\IdentifiableObject\OptionProvider\FormOptionsProviderInterface;
 use PrestaShop\PrestaShop\Core\Hook\HookDispatcherInterface;
 use Symfony\Component\Form\FormBuilderInterface as SymfonyFormBuilderInterface;
 use Symfony\Component\Form\FormFactoryInterface;
@@ -229,11 +229,11 @@ class FormBuilderTest extends TestCase
     /**
      * @param array $options
      *
-     * @return FormOptionProviderInterface
+     * @return FormOptionsProviderInterface
      */
-    private function createDefaultOptionProviderMock(array $options): FormOptionProviderInterface
+    private function createDefaultOptionProviderMock(array $options): FormOptionsProviderInterface
     {
-        $optionProviderMock = $this->createMock(FormOptionProviderInterface::class);
+        $optionProviderMock = $this->createMock(FormOptionsProviderInterface::class);
         $optionProviderMock
             ->expects($this->once())
             ->method('getDefaultOptions')
@@ -249,11 +249,11 @@ class FormBuilderTest extends TestCase
     /**
      * @param array $options
      *
-     * @return FormOptionProviderInterface
+     * @return FormOptionsProviderInterface
      */
-    private function createOptionProviderMock(array $options): FormOptionProviderInterface
+    private function createOptionProviderMock(array $options): FormOptionsProviderInterface
     {
-        $optionProviderMock = $this->createMock(FormOptionProviderInterface::class);
+        $optionProviderMock = $this->createMock(FormOptionsProviderInterface::class);
         $optionProviderMock
             ->expects($this->once())
             ->method('getOptions')

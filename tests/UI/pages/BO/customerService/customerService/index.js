@@ -15,6 +15,7 @@ class CustomerService extends BOBasePage {
     super();
 
     this.pageTitle = 'Customer Service •';
+    this.successfulUpdateMessage = 'The settings have been successfully updated.';
 
     // Form selectors
     this.gridForm = '#form-customer_thread';
@@ -55,6 +56,12 @@ class CustomerService extends BOBasePage {
 
     // Delete message success text
     this.deleteMessageSuccessAlertText = 'Successful deletion.';
+
+    // Contact options selectors
+    this.contactOptionForm = '#customer_thread_fieldset_contact';
+    this.allowFileUploadingToggleInput = toggle => `#PS_CUSTOMER_SERVICE_FILE_UPLOAD_${toggle}`;
+    this.defaultMessageTextarea = '#PS_CUSTOMER_SERVICE_SIGNATURE_1 textarea';
+    this.contactOptionSaveButton = `${this.contactOptionForm} button[name='submitOptionscustomer_thread']`;
   }
 
   /* Header Methods */
@@ -227,6 +234,32 @@ class CustomerService extends BOBasePage {
     await this.clickAndWaitForNavigation(page, this.deleteModalButtonYes);
 
     // Get successful message
+    return this.getAlertSuccessBlockContent(page);
+  }
+
+  /**
+   * Enable/Disable allow file uploading
+   * @param page {Page} Browser tab
+   * @param toEnable {boolean} True if we need to enable allow file uploading
+   * @returns {Promise<string>}
+   */
+  async allowFileUploading(page, toEnable = true) {
+    await page.check(this.allowFileUploadingToggleInput(toEnable ? 'on' : 'off'));
+    await this.clickAndWaitForNavigation(page, this.contactOptionSaveButton);
+
+    return this.getAlertSuccessBlockContent(page);
+  }
+
+  /**
+   * Set default message
+   * @param page {Page} Browser tab
+   * @param message {string} Value to set on message textarea
+   * @returns {Promise<string>}
+   */
+  async setDefaultMessage(page, message) {
+    await page.fill(this.defaultMessageTextarea, message);
+    await this.clickAndWaitForNavigation(page, this.contactOptionSaveButton);
+
     return this.getAlertSuccessBlockContent(page);
   }
 }

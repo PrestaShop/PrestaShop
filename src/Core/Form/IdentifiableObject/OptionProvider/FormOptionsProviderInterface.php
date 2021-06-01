@@ -29,7 +29,7 @@ namespace PrestaShop\PrestaShop\Core\Form\IdentifiableObject\OptionProvider;
 /**
  * Interface for services that provide options for identifiable object forms.
  */
-interface FormOptionProviderInterface
+interface FormOptionsProviderInterface
 {
     /**
      * Get form options for given object with given id.

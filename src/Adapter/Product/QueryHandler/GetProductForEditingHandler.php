@@ -30,7 +30,7 @@ namespace PrestaShop\PrestaShop\Adapter\Product\QueryHandler;
 
 use Customization;
 use DateTime;
-use PrestaShop\PrestaShop\Adapter\Product\AbstractProductHandler;
+use PrestaShop\PrestaShop\Adapter\Product\Repository\ProductRepository;
 use PrestaShop\PrestaShop\Adapter\Product\Stock\Repository\StockAvailableRepository;
 use PrestaShop\PrestaShop\Adapter\Product\VirtualProduct\Repository\VirtualProductFileRepository;
 use PrestaShop\PrestaShop\Adapter\Tax\TaxComputer;
@@ -62,12 +62,17 @@ use Tag;
 /**
  * Handles the query GetEditableProduct using legacy ObjectModel
  */
-final class GetProductForEditingHandler extends AbstractProductHandler implements GetProductForEditingHandlerInterface
+final class GetProductForEditingHandler implements GetProductForEditingHandlerInterface
 {
     /**
      * @var NumberExtractor
      */
     private $numberExtractor;
+
+    /**
+     * @var ProductRepository
+     */
+    private $productRepository;
 
     /**
      * @var StockAvailableRepository
@@ -91,6 +96,7 @@ final class GetProductForEditingHandler extends AbstractProductHandler implement
 
     /**
      * @param NumberExtractor $numberExtractor
+     * @param ProductRepository $productRepository
      * @param StockAvailableRepository $stockAvailableRepository
      * @param VirtualProductFileRepository $virtualProductFileRepository
      * @param TaxComputer $taxComputer
@@ -98,6 +104,7 @@ final class GetProductForEditingHandler extends AbstractProductHandler implement
      */
     public function __construct(
         NumberExtractor $numberExtractor,
+        ProductRepository $productRepository,
         StockAvailableRepository $stockAvailableRepository,
         VirtualProductFileRepository $virtualProductFileRepository,
         TaxComputer $taxComputer,
@@ -108,6 +115,7 @@ final class GetProductForEditingHandler extends AbstractProductHandler implement
         $this->virtualProductFileRepository = $virtualProductFileRepository;
         $this->taxComputer = $taxComputer;
         $this->countryId = $countryId;
+        $this->productRepository = $productRepository;
     }
 
     /**
@@ -115,7 +123,7 @@ final class GetProductForEditingHandler extends AbstractProductHandler implement
      */
     public function handle(GetProductForEditing $query): ProductForEditing
     {
-        $product = $this->getProduct($query->getProductId());
+        $product = $this->productRepository->get($query->getProductId());
 
         return new ProductForEditing(
             (int) $product->id,
