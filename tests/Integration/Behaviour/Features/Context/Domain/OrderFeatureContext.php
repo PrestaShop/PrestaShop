@@ -28,12 +28,16 @@ declare(strict_types=1);
 
 namespace Tests\Integration\Behaviour\Features\Context\Domain;
 
+use Address;
 use AdminController;
+use Behat\Gherkin\Node\PyStringNode;
 use Behat\Gherkin\Node\TableNode;
 use Cart;
+use Configuration;
 use Context;
 use FrontController;
 use Order;
+use OrderInvoice;
 use OrderState;
 use PHPUnit\Framework\Assert as Assert;
 use PrestaShop\PrestaShop\Core\Domain\Cart\ValueObject\CartId;
@@ -43,7 +47,11 @@ use PrestaShop\PrestaShop\Core\Domain\Order\Command\AddOrderFromBackOfficeComman
 use PrestaShop\PrestaShop\Core\Domain\Order\Command\BulkChangeOrderStatusCommand;
 use PrestaShop\PrestaShop\Core\Domain\Order\Command\DeleteCartRuleFromOrderCommand;
 use PrestaShop\PrestaShop\Core\Domain\Order\Command\DuplicateOrderCartCommand;
+use PrestaShop\PrestaShop\Core\Domain\Order\Command\SetInternalOrderNoteCommand;
 use PrestaShop\PrestaShop\Core\Domain\Order\Command\UpdateOrderStatusCommand;
+use PrestaShop\PrestaShop\Core\Domain\Order\Exception\CannotFindProductInOrderException;
+use PrestaShop\PrestaShop\Core\Domain\Order\Exception\DuplicateProductInOrderException;
+use PrestaShop\PrestaShop\Core\Domain\Order\Exception\DuplicateProductInOrderInvoiceException;
 use PrestaShop\PrestaShop\Core\Domain\Order\Exception\InvalidProductQuantityException;
 use PrestaShop\PrestaShop\Core\Domain\Order\Exception\OrderException;
 use PrestaShop\PrestaShop\Core\Domain\Order\Exception\OrderNotFoundException;
@@ -52,10 +60,15 @@ use PrestaShop\PrestaShop\Core\Domain\Order\Product\Command\AddProductToOrderCom
 use PrestaShop\PrestaShop\Core\Domain\Order\Product\Command\DeleteProductFromOrderCommand;
 use PrestaShop\PrestaShop\Core\Domain\Order\Product\Command\UpdateProductInOrderCommand;
 use PrestaShop\PrestaShop\Core\Domain\Order\Query\GetOrderForViewing;
+use PrestaShop\PrestaShop\Core\Domain\Order\Query\GetOrderPreview;
 use PrestaShop\PrestaShop\Core\Domain\Order\QueryResult\OrderDiscountForViewing;
 use PrestaShop\PrestaShop\Core\Domain\Order\QueryResult\OrderForViewing;
 use PrestaShop\PrestaShop\Core\Domain\Order\QueryResult\OrderInvoiceAddressForViewing;
+use PrestaShop\PrestaShop\Core\Domain\Order\QueryResult\OrderPreview;
+use PrestaShop\PrestaShop\Core\Domain\Order\QueryResult\OrderPreviewInvoiceDetails;
+use PrestaShop\PrestaShop\Core\Domain\Order\QueryResult\OrderPreviewShippingDetails;
 use PrestaShop\PrestaShop\Core\Domain\Order\QueryResult\OrderProductForViewing;
+use PrestaShop\PrestaShop\Core\Domain\Order\QueryResult\OrderShippingAddressForViewing;
 use PrestaShop\PrestaShop\Core\Domain\Order\ValueObject\OrderId;
 use PrestaShop\PrestaShop\Core\Domain\Product\Exception\ProductOutOfStockException;
 use PrestaShop\PrestaShop\Core\Domain\Product\Query\SearchProducts;
@@ -64,8 +77,11 @@ use PrestaShop\PrestaShop\Core\Form\ChoiceProvider\OrderStateByIdChoiceProvider;
 use PrestaShopCollection;
 use Product;
 use RuntimeException;
+use SpecificPrice;
 use stdClass;
 use Tax;
+use TaxCalculator;
+use TaxManagerFactory;
 use Tests\Integration\Behaviour\Features\Context\CommonFeatureContext;
 use Tests\Integration\Behaviour\Features\Context\SharedStorage;
 use Tests\Integration\Behaviour\Features\Context\Util\PrimitiveUtils;
@@ -157,6 +173,7 @@ class OrderFeatureContext extends AbstractDomainFeatureContext
 
     /**
      * @When I add products to order :orderReference with new invoice and the following products details:
+     * @When I add products to order :orderReference without invoice and the following products details:
      *
      * @param string $orderReference
      * @param TableNode $table
@@ -164,32 +181,40 @@ class OrderFeatureContext extends AbstractDomainFeatureContext
     public function addProductsToOrderWithNewInvoiceAndTheFollowingDetails(string $orderReference, TableNode $table)
     {
         $orderId = SharedStorage::getStorage()->get($orderReference);
-
         $data = $table->getRowsHash();
+
         $productName = $data['name'];
         $product = $this->getProductByName($productName);
-        $productId = $product->getProductId();
-        if (isset($data['combination'])) {
-            $combinationId = $this->getProductCombinationId($product, $data['combination']);
-        } else {
-            $combinationId = 0;
+        $productId = (int) $product->getProductId();
+
+        $combinationId = isset($data['combination']) ? $this->getProductCombinationId($product, $data['combination']) : 0;
+
+        if (empty($data['price_tax_incl'])) {
+            $taxCalculator = $this->getProductTaxCalculator((int) $orderId, $productId);
+            $data['price_tax_incl'] = !empty($taxCalculator) ? (string) $taxCalculator->addTaxes($data['price']) : $data['price'];
         }
 
         try {
+            $hasFreeShipping = null;
+            if (isset($data['free_shipping'])) {
+                $hasFreeShipping = PrimitiveUtils::castStringBooleanIntoBoolean($data['free_shipping']);
+            }
             $this->getCommandBus()->handle(
                 AddProductToOrderCommand::withNewInvoice(
                     $orderId,
                     $productId,
                     $combinationId,
-                    $data['price'],
+                    $data['price_tax_incl'],
                     $data['price'],
                     (int) $data['amount'],
-                    PrimitiveUtils::castStringBooleanIntoBoolean($data['free_shipping'] ?? false)
+                    $hasFreeShipping
                 )
             );
         } catch (InvalidProductQuantityException $e) {
             $this->setLastException($e);
         } catch (ProductOutOfStockException $e) {
+            $this->setLastException($e);
+        } catch (DuplicateProductInOrderException $e) {
             $this->setLastException($e);
         }
     }
@@ -236,36 +261,165 @@ class OrderFeatureContext extends AbstractDomainFeatureContext
     }
 
     /**
-     * @When I add products to order :orderReference to last invoice and the following products details:
+     * @When /^I add products to order "(.+)" to the (.+) invoice and the following products details:$/
      *
      * @param string $orderReference
+     * @param string $invoicePosition
      * @param TableNode $table
      */
-    public function addProductsToOrderWithExistingInvoiceAndTheFollowingDetails(string $orderReference, TableNode $table)
+    public function addProductsToOrderWithExistingInvoiceAndTheFollowingDetails(string $orderReference, string $invoicePosition, TableNode $table)
     {
         $orderId = SharedStorage::getStorage()->get($orderReference);
         $order = new Order($orderId);
-        $invoicesCollection = $order->getInvoicesCollection();
-        $lastInvoice = $invoicesCollection->getLast();
+        $orderInvoice = $this->getInvoiceFromOrder($order, $invoicePosition);
 
         $data = $table->getRowsHash();
         $productName = $data['name'];
-        $productId = $this->getProductIdByName($productName);
+        $product = $this->getProductByName($productName);
 
+        if (isset($data['combination'])) {
+            $combinationId = $this->getProductCombinationId($product, $data['combination']);
+        } else {
+            $combinationId = 0;
+        }
+
+        if (empty($data['price_tax_incl'])) {
+            $taxCalculator = $this->getProductTaxCalculator((int) $orderId, $product->getProductId());
+            $data['price_tax_incl'] = !empty($taxCalculator) ? (string) $taxCalculator->addTaxes($data['price']) : $data['price'];
+        }
+
+        $this->cleanLastException();
         try {
             $this->getCommandBus()->handle(
                 AddProductToOrderCommand::toExistingInvoice(
                     (int) $orderId,
-                    (int) $lastInvoice->id,
-                    (int) $productId,
-                    0,
-                    $data['price'],
+                    (int) $orderInvoice->id,
+                    (int) $product->getProductId(),
+                    (int) $combinationId,
+                    $data['price_tax_incl'],
                     $data['price'],
                     (int) $data['amount']
                 )
             );
         } catch (InvalidProductQuantityException $e) {
             $this->setLastException($e);
+        } catch (DuplicateProductInOrderException $e) {
+            $this->setLastException($e);
+        }
+    }
+
+    /**
+     * @Then the :invoicePosition invoice from order :orderReference should have following details:
+     *
+     * @param string $invoicePosition
+     * @param string $orderReference
+     * @param TableNode $table
+     */
+    public function checkInvoiceDetails(string $invoicePosition, string $orderReference, TableNode $table)
+    {
+        $orderId = SharedStorage::getStorage()->get($orderReference);
+        $invoiceData = $table->getRowsHash();
+
+        $order = new Order($orderId);
+        $orderInvoice = $this->getInvoiceFromOrder($order, $invoicePosition);
+
+        foreach ($invoiceData as $invoiceField => $invoiceValue) {
+            Assert::assertEquals(
+                (float) $invoiceValue,
+                $orderInvoice->{$invoiceField},
+                sprintf(
+                    'Invalid order invoice field %s, expected %s instead of %s',
+                    $invoiceField,
+                    $invoiceValue,
+                    $orderInvoice->{$invoiceField}
+                )
+            );
+        }
+    }
+
+    /**
+     * @Then the :invoicePosition invoice from order :orderReference should have following shipping tax details:
+     *
+     * @param string $invoicePosition
+     * @param string $orderReference
+     * @param TableNode $table
+     */
+    public function checkInvoiceShippingTaxDetails(string $invoicePosition, string $orderReference, TableNode $table)
+    {
+        $orderId = SharedStorage::getStorage()->get($orderReference);
+        $invoiceShippingData = $table->getColumnsHash();
+
+        $order = new Order($orderId);
+        $orderInvoice = $this->getInvoiceFromOrder($order, $invoicePosition);
+        $invoiceShippingTaxDetails = $orderInvoice->getShippingTaxesBreakdown($order);
+
+        Assert::assertLessThanOrEqual(
+            count($invoiceShippingTaxDetails),
+            count($invoiceShippingData),
+            sprintf(
+                'Invalid number of tax details, expected at least %d instead of %d',
+                count($invoiceShippingData),
+                count($invoiceShippingTaxDetails)
+            )
+        );
+
+        foreach ($invoiceShippingData as $invoiceShippingIndex => $invoiceShippingDetails) {
+            $shippingTaxDetails = $invoiceShippingTaxDetails[$invoiceShippingIndex];
+            foreach ($invoiceShippingDetails as $shippingField => $shippingValue) {
+                Assert::assertEquals(
+                    (float) $shippingValue,
+                    (float) $shippingTaxDetails[$shippingField],
+                    sprintf(
+                        'Invalid order tax field %s, expected %s instead of %s',
+                        $shippingField,
+                        $shippingValue,
+                        (float) $shippingTaxDetails[$shippingField]
+                    )
+                );
+            }
+        }
+    }
+
+    /**
+     * @Then the :invoicePosition invoice from order :orderReference should have following product tax details:
+     *
+     * @param string $invoicePosition
+     * @param string $orderReference
+     * @param TableNode $table
+     */
+    public function checkInvoiceProductTaxDetails(string $invoicePosition, string $orderReference, TableNode $table)
+    {
+        $orderId = SharedStorage::getStorage()->get($orderReference);
+        $invoiceProductData = $table->getColumnsHash();
+
+        $order = new Order($orderId);
+        $orderInvoice = $this->getInvoiceFromOrder($order, $invoicePosition);
+        $invoiceProductTaxDetails = array_values($orderInvoice->getProductTaxesBreakdown($order));
+
+        Assert::assertLessThanOrEqual(
+            count($invoiceProductTaxDetails),
+            count($invoiceProductData),
+            sprintf(
+                'Invalid number of product tax details, expected at least %d instead of %d',
+                count($invoiceProductData),
+                count($invoiceProductTaxDetails)
+            )
+        );
+
+        foreach ($invoiceProductData as $invoiceProductIndex => $invoiceProductDetails) {
+            $productTaxDetails = $invoiceProductTaxDetails[$invoiceProductIndex];
+            foreach ($invoiceProductDetails as $taxField => $taxValue) {
+                Assert::assertEquals(
+                    (float) $taxValue,
+                    (float) $productTaxDetails[$taxField],
+                    sprintf(
+                        'Invalid order tax field %s, expected %s instead of %s',
+                        $taxField,
+                        $taxValue,
+                        (float) $productTaxDetails[$taxField]
+                    )
+                );
+            }
         }
     }
 
@@ -381,7 +535,7 @@ class OrderFeatureContext extends AbstractDomainFeatureContext
     }
 
     /**
-     * @Then order :orderReference should have :expectedCount invoices
+     * @Then order :orderReference should have :expectedCount invoice(s)
      */
     public function checkOrderInvoicesCount(string $orderReference, int $expectedCount)
     {
@@ -416,6 +570,24 @@ class OrderFeatureContext extends AbstractDomainFeatureContext
     }
 
     /**
+     * @When I edit product :productName in :invoicePosition invoice from order :orderReference with following products details:
+     *
+     * @param string $productName
+     * @param string $orderReference
+     * @param TableNode $table
+     */
+    public function editProductsFromInvoiceWithFollowingDetails(string $productName, string $orderReference, string $invoicePosition, TableNode $table)
+    {
+        $orderId = SharedStorage::getStorage()->get($orderReference);
+        $order = new Order($orderId);
+        $invoice = $this->getInvoiceFromOrder($order, $invoicePosition);
+        $productOrderDetail = $this->getOrderDetailFromOrder($productName, $orderReference, null, $invoice->id);
+        $data = $table->getRowsHash();
+
+        $this->updateProductInOrder($orderId, $productOrderDetail, $data);
+    }
+
+    /**
      * @When I edit combination :combinationName of product :productName to order :orderReference with following products details:
      *
      * @param string $combinationName
@@ -433,6 +605,31 @@ class OrderFeatureContext extends AbstractDomainFeatureContext
     }
 
     /**
+     * @param Order $order
+     * @param string $invoicePosition
+     *
+     * @return OrderInvoice
+     */
+    private function getInvoiceFromOrder(Order $order, string $invoicePosition)
+    {
+        $invoicesCollection = $order->getInvoicesCollection();
+        Assert::assertGreaterThanOrEqual(1, $invoicesCollection->count());
+
+        $invoiceIndexes = [
+            'first' => 0,
+            'second' => 1,
+            'third' => 2,
+            'fourth' => 3,
+            'last' => $invoicesCollection->count() - 1,
+        ];
+        if (!isset($invoiceIndexes[$invoicePosition])) {
+            throw new RuntimeException(sprintf('Cannot interpret this invoice position %s', $invoicePosition));
+        }
+
+        return $invoicesCollection->offsetGet($invoiceIndexes[$invoicePosition]);
+    }
+
+    /**
      * @param int $orderId
      * @param array $productOrderDetail
      * @param array $data
@@ -441,19 +638,37 @@ class OrderFeatureContext extends AbstractDomainFeatureContext
      */
     private function updateProductInOrder(int $orderId, array $productOrderDetail, array $data)
     {
+        $invoiceId = null;
+        if (isset($data['invoice'])) {
+            $order = new Order($orderId);
+            $invoice = $this->getInvoiceFromOrder($order, $data['invoice']);
+            $invoiceId = (int) $invoice->id;
+        }
+
+        // If tax included price is not given, it is calculated
+        if (!isset($data['price_tax_incl'])) {
+            $taxCalculator = $this->getProductTaxCalculator($orderId, (int) $productOrderDetail['product_id']);
+            $data['price_tax_incl'] = !empty($taxCalculator) ? (string) $taxCalculator->addTaxes($data['price']) : $data['price'];
+        }
+
         try {
             $this->getCommandBus()->handle(
                 new UpdateProductInOrderCommand(
                     (int) $orderId,
                     (int) $productOrderDetail['id_order_detail'],
+                    $data['price_tax_incl'],
                     $data['price'],
-                    $data['price'],
-                    (int) $data['amount']
+                    (int) $data['amount'],
+                    $invoiceId
                 )
             );
         } catch (InvalidProductQuantityException $e) {
             $this->setLastException($e);
         } catch (ProductOutOfStockException $e) {
+            $this->setLastException($e);
+        } catch (DuplicateProductInOrderInvoiceException $e) {
+            $this->setLastException($e);
+        } catch (CannotFindProductInOrderException $e) {
             $this->setLastException($e);
         }
     }
@@ -464,6 +679,14 @@ class OrderFeatureContext extends AbstractDomainFeatureContext
     public function assertLastErrorIsNegativeProductQuantity()
     {
         $this->assertLastErrorIs(InvalidProductQuantityException::class);
+    }
+
+    /**
+     * @Then I should get error that adding duplicate product is forbidden
+     */
+    public function assertDuplicateProductIsForbidden()
+    {
+        $this->assertLastErrorIs(DuplicateProductInOrderException::class);
     }
 
     /**
@@ -542,6 +765,26 @@ class OrderFeatureContext extends AbstractDomainFeatureContext
     }
 
     /**
+     * @Then order :orderReference has :statusNb status(es) in history
+     *
+     * @param string $orderReference
+     * @param int $statusNb
+     *
+     * @throws RuntimeException
+     */
+    public function countOrderStatus(string $orderReference, int $statusNb)
+    {
+        $orderId = SharedStorage::getStorage()->get($orderReference);
+
+        /** @var OrderForViewing $orderForViewing */
+        $orderForViewing = $this->getQueryBus()->handle(new GetOrderForViewing($orderId));
+        $actualStatusNb = count($orderForViewing->getHistory()->getStatuses());
+        if ($statusNb !== $actualStatusNb) {
+            throw new RuntimeException(sprintf('Incorrect number of statuses in history expected %d but got %d instead', $statusNb, $actualStatusNb));
+        }
+    }
+
+    /**
      * @When I update order :orderReference status to :status
      *
      * @param string $orderReference
@@ -585,7 +828,7 @@ class OrderFeatureContext extends AbstractDomainFeatureContext
         }
 
         if ($totalQuantity !== $quantity) {
-            throw new RuntimeException(sprintf('Order should have "%d" products, but has "%d".', $totalQuantity, $quantity));
+            throw new RuntimeException(sprintf('Order should have "%d" products, but has "%d".', $quantity, $totalQuantity));
         }
     }
 
@@ -603,6 +846,22 @@ class OrderFeatureContext extends AbstractDomainFeatureContext
         if (null === $discount) {
             throw new RuntimeException('Order should have free shipping.');
         }
+    }
+
+    /**
+     * @Then order :reference should be a gift with message :message
+     *
+     * @param string $reference
+     * @param string $message
+     */
+    public function createdOrderShouldBeAGift(string $reference, string $message)
+    {
+        $orderId = SharedStorage::getStorage()->get($reference);
+
+        /** @var OrderForViewing $orderForViewing */
+        $orderForViewing = $this->getQueryBus()->handle(new GetOrderForViewing($orderId));
+        Assert::assertTrue($orderForViewing->getShipping()->isGiftWrapping());
+        Assert::assertEquals($message, $orderForViewing->getShipping()->getGiftMessage());
     }
 
     /**
@@ -684,6 +943,33 @@ class OrderFeatureContext extends AbstractDomainFeatureContext
      */
     public function orderContainsProductWithReference(string $orderReference, int $quantity, string $productName, ?string $combinationName = null)
     {
+        $this->assertProductCounts($orderReference, $quantity, $productName, $combinationName);
+    }
+
+    /**
+     * @Then the :invoicePosition invoice from order :orderReference should contain :quantity product(s) :productName
+     * @Then the :invoicePosition invoice from order :orderReference should contain :quantity combination(s) :combinationName of product :productName
+     *
+     * @param string $invoicePosition
+     * @param string $orderReference
+     * @param int $quantity
+     * @param string $productName
+     * @param string|null $combinationName
+     */
+    public function orderInvoiceContainsProductWithReference(string $invoicePosition, string $orderReference, int $quantity, string $productName, ?string $combinationName = null)
+    {
+        $this->assertProductCounts($orderReference, $quantity, $productName, $combinationName, $invoicePosition);
+    }
+
+    /**
+     * @param string $orderReference
+     * @param int $quantity
+     * @param string $productName
+     * @param string|null $combinationName
+     * @param string|null $invoicePosition
+     */
+    private function assertProductCounts(string $orderReference, int $quantity, string $productName, ?string $combinationName = null, ?string $invoicePosition = null)
+    {
         $orderId = SharedStorage::getStorage()->get($orderReference);
 
         $product = $this->getProductByName($productName);
@@ -695,10 +981,17 @@ class OrderFeatureContext extends AbstractDomainFeatureContext
         /** @var OrderProductForViewing[] $orderProducts */
         $orderProducts = $orderForViewing->getProducts()->getProducts();
 
+        $orderInvoice = null;
+        if (null !== $invoicePosition) {
+            $order = new Order($orderId);
+            $orderInvoice = $this->getInvoiceFromOrder($order, $invoicePosition);
+        }
+
         $productQuantity = 0;
         foreach ($orderProducts as $orderProduct) {
             if ($orderProduct->getId() === $productId
-                && (null === $combinationId || $orderProduct->getCombinationId() === $combinationId)) {
+                && (null === $combinationId || $orderProduct->getCombinationId() === $combinationId)
+                && (null === $orderInvoice || $orderProduct->getOrderInvoiceId() === (int) $orderInvoice->id)) {
                 $productQuantity += $orderProduct->getQuantity();
             }
         }
@@ -709,6 +1002,39 @@ class OrderFeatureContext extends AbstractDomainFeatureContext
         throw new RuntimeException(
             sprintf(
                 'Order was expected to have "%d" products "%s" in it. Instead got "%d"',
+                $quantity,
+                $productName,
+                $productQuantity
+            )
+        );
+    }
+
+    /**
+     * @Then cart of order :orderReference should contain :quantity product(s) :productName
+     *
+     * @param string $orderReference
+     * @param int $quantity
+     * @param string $productName
+     * @param string|null $combinationName
+     */
+    public function cartOrderContainsProductWithReference(string $orderReference, int $quantity, string $productName, ?string $combinationName = null)
+    {
+        $orderId = SharedStorage::getStorage()->get($orderReference);
+        $order = new Order($orderId);
+        $cart = new Cart($order->id_cart);
+
+        $product = $this->getProductByName($productName);
+        $productId = $product->getProductId();
+        $combinationId = null !== $combinationName ? $this->getProductCombinationId($product, $combinationName) : 0;
+
+        $cartQuantities = $cart->getProductQuantity($productId, $combinationId);
+        $productQuantity = (int) $cartQuantities['quantity'];
+        if ($productQuantity === $quantity) {
+            return;
+        }
+        throw new RuntimeException(
+            sprintf(
+                'Cart of order was expected to have "%d" products "%s" in it. Instead got "%d"',
                 $quantity,
                 $productName,
                 $productQuantity
@@ -767,6 +1093,35 @@ class OrderFeatureContext extends AbstractDomainFeatureContext
     }
 
     /**
+     * @Then the product :productName in the :invoicePosition invoice from the order :orderReference should have the following details:
+     *
+     * @param string $orderReference
+     * @param string $productName
+     */
+    public function checkProductDetailsInInvoiceWithReference(string $productName, string $invoicePosition, string $orderReference, TableNode $table)
+    {
+        $orderId = SharedStorage::getStorage()->get($orderReference);
+        $order = new Order($orderId);
+        $orderInvoice = $this->getInvoiceFromOrder($order, $invoicePosition);
+
+        $productOrderDetail = $this->getOrderDetailFromOrder($productName, $orderReference, null, $orderInvoice->id);
+        $expectedDetails = $table->getRowsHash();
+        foreach ($expectedDetails as $detailName => $expectedDetailValue) {
+            Assert::assertEquals(
+                (float) $expectedDetailValue,
+                $productOrderDetail[$detailName],
+                sprintf(
+                    'Invalid product detail field %s for product %s, expected %s instead of %s',
+                    $detailName,
+                    $productName,
+                    $expectedDetailValue,
+                    $productOrderDetail[$detailName]
+                )
+            );
+        }
+    }
+
+    /**
      * @Then /^I watch the stock of product "(.+)"$/
      *
      * This statement must be called to store an initial stock for a product which then
@@ -783,6 +1138,7 @@ class OrderFeatureContext extends AbstractDomainFeatureContext
 
     /**
      * @Then /^there are ([\-\d]+) (less|more) "(.+)" in stock$/
+     * @Then /^there is ([\-\d]+) (less|more) "(.+)" in stock$/
      *
      * @param int $productDifference
      * @param string $factor
@@ -849,7 +1205,7 @@ class OrderFeatureContext extends AbstractDomainFeatureContext
      * @param string $orderReference
      * @param TableNode $data
      */
-    public function addAmountTypeCartRuleToOrder(string $orderReference, TableNode $table)
+    public function addCartRuleToOrder(string $orderReference, TableNode $table)
     {
         $orderId = SharedStorage::getStorage()->get($orderReference);
         $data = $table->getRowsHash();
@@ -859,7 +1215,7 @@ class OrderFeatureContext extends AbstractDomainFeatureContext
                 $orderId,
                 $data['name'],
                 $data['type'],
-                $data['value']
+                $data['value'] ?? null
             ));
         } catch (InvalidCartRuleDiscountValueException $e) {
             $this->setLastException($e);
@@ -867,29 +1223,38 @@ class OrderFeatureContext extends AbstractDomainFeatureContext
     }
 
     /**
-     * @When I add discount to order :orderReference on last invoice and following details:
+     * @When I add discount to order :orderReference on :invoicePosition invoice and following details:
      *
      * @param string $orderReference
+     * @param string $invoicePosition
      * @param TableNode $table
      *
      * @throws \PrestaShopDatabaseException
      * @throws \PrestaShopException
      */
-    public function addAmountTypeCartRuleAndUpdateSingleInvoice(string $orderReference, TableNode $table)
+    public function addCartRuleAndUpdateSingleInvoice(string $orderReference, string $invoicePosition, TableNode $table)
     {
         $orderId = SharedStorage::getStorage()->get($orderReference);
         $data = $table->getRowsHash();
 
-        $invoices = $this->getOrderInvoices($orderId);
-        Assert::assertGreaterThanOrEqual(1, $invoices->count());
+        $order = new Order($orderId);
+        $orderInvoice = $this->getInvoiceFromOrder($order, $invoicePosition);
 
         $this->getQueryBus()->handle(new AddCartRuleToOrderCommand(
             $orderId,
             $data['name'],
             $data['type'],
-            $data['value'],
-            (int) $invoices->getLast()->id
+            $data['value'] ?? null,
+            (int) $orderInvoice->id
         ));
+    }
+
+    /**
+     * @Then I should get error that adding duplicate product in invoice is forbidden
+     */
+    public function assertDuplicateProductInInvoiceIsForbidden()
+    {
+        $this->assertLastErrorIs(DuplicateProductInOrderInvoiceException::class);
     }
 
     /**
@@ -937,7 +1302,7 @@ class OrderFeatureContext extends AbstractDomainFeatureContext
     }
 
     /**
-     * @Then last invoice for order :orderReference should have following prices:
+     * @Then the last invoice for order :orderReference should have following prices:
      */
     public function assertLastInvoicePrices(string $orderReference, TableNode $table)
     {
@@ -955,6 +1320,33 @@ class OrderFeatureContext extends AbstractDomainFeatureContext
         Assert::assertEquals((float) $data['shipping tax included'], $invoice->total_shipping_tax_incl);
         Assert::assertEquals((float) $data['total paid tax excluded'], $invoice->total_paid_tax_excl);
         Assert::assertEquals((float) $data['total paid tax included'], $invoice->total_paid_tax_incl);
+    }
+
+    /**
+     * @When /^I change order "(.*)" note to "(.*)"$/
+     *
+     * @param string $orderReference
+     * @param string $internalNote
+     */
+    public function changeOrderInternalNoteTo(string $orderReference, string $internalNote)
+    {
+        $orderId = SharedStorage::getStorage()->get($orderReference);
+        $this->getCommandBus()->handle(new SetInternalOrderNoteCommand($orderId, $internalNote));
+    }
+
+    /**
+     * @Then /^order "(.*)" note should be "(.*)"$/
+     *
+     * @param string $orderReference
+     * @param string $internalNote
+     */
+    public function internalNoteShouldBe(string $orderReference, string $internalNote)
+    {
+        $orderId = SharedStorage::getStorage()->get($orderReference);
+        /** @var OrderForViewing $orderForViewing */
+        $orderForViewing = $this->getQueryBus()->handle(new GetOrderForViewing($orderId));
+        $expectedInternalNote = $orderForViewing->getNote();
+        Assert::assertSame($expectedInternalNote, $internalNote);
     }
 
     /**
@@ -991,11 +1383,151 @@ class OrderFeatureContext extends AbstractDomainFeatureContext
     }
 
     /**
+     * @Then product :productName in order :orderReference should have no specific price
+     *
+     * @param string $productName
+     * @param string $orderReference
+     */
+    public function assertNoSpecificPrice(string $productName, string $orderReference)
+    {
+        $productId = $this->getProductIdByName($productName);
+        // @todo: maybe manage combination as well
+        $combinationId = 0;
+        $orderId = $this->getSharedStorage()->get($orderReference);
+
+        $specificPriceId = $this->getSpecificPriceId($productId, $combinationId, $orderId);
+        Assert::assertNull(
+            $specificPriceId,
+            sprintf(
+                'Product %s from order %s should have no specific price',
+                $productName,
+                $orderReference
+            )
+        );
+    }
+
+    /**
+     * @Then /^product "(.*)" in order "(.*)" should have specific price (\d+\.\d+)$/
+     *
+     * @param string $productName
+     * @param string $orderReference
+     * @param float $expectedPrice
+     */
+    public function assertSpecificPrice(string $productName, string $orderReference, float $expectedPrice)
+    {
+        $productId = $this->getProductIdByName($productName);
+        // @todo: maybe manage combination as well
+        $combinationId = 0;
+        $orderId = $this->getSharedStorage()->get($orderReference);
+
+        $specificPriceId = $this->getSpecificPriceId($productId, $combinationId, $orderId);
+        Assert::assertNotNull(
+            $specificPriceId,
+            sprintf(
+                'Product %s from order %s should have specific price',
+                $productName,
+                $orderReference
+            )
+        );
+
+        $specificPrice = new SpecificPrice($specificPriceId);
+        Assert::assertEquals(
+            $expectedPrice,
+            $specificPrice->price
+        );
+        Assert::assertEquals('amount', $specificPrice->reduction_type);
+        Assert::assertTrue((bool) $specificPrice->reduction_tax);
+    }
+
+    /**
+     * @Then order :orderReference preview shipping address should have the following details:
+     */
+    public function getOrderPreviewShippingAddress(string $orderReference, TableNode $table): void
+    {
+        $orderId = $this->getSharedStorage()->get($orderReference);
+        $orderPreview = $this->getQueryBus()->handle(new GetOrderPreview($orderId));
+        $shippingAddress = $orderPreview->getShippingDetails();
+
+        $address = [
+            'firstName' => $shippingAddress->getFirstName(),
+            'lastName' => $shippingAddress->getLastName(),
+            'company' => $shippingAddress->getCompany(),
+            'vatNumber' => $shippingAddress->getVatNumber(),
+            'address1' => $shippingAddress->getAddress1(),
+            'address2' => $shippingAddress->getAddress2(),
+            'city' => $shippingAddress->getCity(),
+            'postalCode' => $shippingAddress->getPostalCode(),
+            'stateName' => $shippingAddress->getStateName(),
+            'country' => $shippingAddress->getCountry(),
+            'phone' => $shippingAddress->getPhone(),
+            'carrierName' => $shippingAddress->getCarrierName(),
+            'trackingNumber' => $shippingAddress->getTrackingNumber(),
+            'trackingUrl' => $shippingAddress->getTrackingUrl(),
+        ];
+
+        $expectedDetails = $table->getRowsHash();
+        foreach ($expectedDetails as $key => $value) {
+            Assert::assertEquals(
+                $value,
+                $address[$key]
+            );
+        }
+    }
+
+    /**
+     * @Then /^the order "(.+)" preview has the following formatted (shipping|invoice) address$/
+     */
+    public function getOrderPreviewFormattedAddress(
+        string $orderReference,
+        string $addressType,
+        PyStringNode $pyStringNode
+    ): void {
+        $orderId = $this->getSharedStorage()->get($orderReference);
+        /** @var OrderPreview $orderPreview */
+        $orderPreview = $this->getQueryBus()->handle(new GetOrderPreview($orderId));
+
+        if ($addressType == 'shipping') {
+            $address = $orderPreview->getShippingAddressFormatted();
+        } elseif ($addressType == 'invoice') {
+            $address = $orderPreview->getInvoiceAddressFormatted();
+        }
+
+        Assert::assertEquals(
+            $address,
+            $pyStringNode->getRaw(),
+            sprintf(
+                'Invalid formatted address for preview order %s, expected %s instead of %s',
+                $orderReference,
+                $address,
+                $pyStringNode->getRaw()
+            )
+        );
+    }
+
+    /**
+     * @param int $productId
+     * @param int $combinationId
+     * @param int $orderId
+     *
+     * @return int|null
+     */
+    private function getSpecificPriceId(int $productId, int $combinationId, int $orderId): ?int
+    {
+        $order = new Order($orderId);
+
+        $specificPriceId = $order->getProductSpecificPriceId($productId, $combinationId);
+
+        return $specificPriceId ? (int) $specificPriceId : null;
+    }
+
+    /**
      * @param string $productName
      *
-     * @return int
+     * @throws RuntimeException
+     *
+     * @return FoundProduct
      */
-    private function getProductByName(string $productName)
+    private function getProductByName(string $productName): FoundProduct
     {
         $products = $this->getQueryBus()->handle(new SearchProducts($productName, 1, Context::getContext()->currency->iso_code));
 
@@ -1118,11 +1650,16 @@ class OrderFeatureContext extends AbstractDomainFeatureContext
      * @param string $productName
      * @param string $orderReference
      * @param string|null $combinationName
+     * @param int|null $orderInvoiceId
      *
      * @return array
      */
-    private function getOrderDetailFromOrder(string $productName, string $orderReference, string $combinationName = null): array
-    {
+    private function getOrderDetailFromOrder(
+        string $productName,
+        string $orderReference,
+        ?string $combinationName = null,
+        ?int $orderInvoiceId = null
+    ): array {
         $product = $this->getProductByName($productName);
         $productId = $product->getProductId();
         $combinationId = null !== $combinationName ? $this->getProductCombinationId($product, $combinationName) : null;
@@ -1131,7 +1668,8 @@ class OrderFeatureContext extends AbstractDomainFeatureContext
         $productOrderDetail = null;
         foreach ($orderDetails as $orderDetail) {
             if ((int) $orderDetail['product_id'] === $productId
-                && (null === $combinationId || (int) $orderDetail['product_attribute_id'] === $combinationId)) {
+                && (null === $combinationId || (int) $orderDetail['product_attribute_id'] === $combinationId)
+                && (null === $orderInvoiceId || (int) $orderDetail['id_order_invoice'] === $orderInvoiceId)) {
                 $productOrderDetail = $orderDetail;
                 break;
             }
@@ -1220,5 +1758,333 @@ class OrderFeatureContext extends AbstractDomainFeatureContext
         }
 
         return null;
+    }
+
+    /**
+     * @When I delete product :productReference from catalogue
+     *
+     * @param string $productReference
+     */
+    public function removeProductFromCatalogue(string $productReference)
+    {
+        $foundProduct = $this->getProductByName($productReference);
+        $product = new Product($foundProduct->getProductId());
+        $product->delete();
+    }
+
+    /**
+     * @When I update deleted product :productReference in order :orderReference
+     *
+     * @param string $productReference
+     * @param string $orderReference
+     */
+    public function tryUpdatingProductDeletedFromCatalogue(string $productReference, string $orderReference)
+    {
+        // get order detail
+        $orderId = SharedStorage::getStorage()->get($orderReference);
+        $order = new Order($orderId);
+        $orderDetailList = $order->getOrderDetailList();
+
+        foreach ($orderDetailList as $orderDetail) {
+            if ($orderDetail['product_name'] === $productReference) {
+                $productOrderDetail = $orderDetail;
+                break;
+            }
+        }
+
+        if (!isset($productOrderDetail)) {
+            throw new RuntimeException(sprintf('Product %s has not been found in order %s', $productReference, $orderReference));
+        }
+
+        // update product price/quantity in order
+        $this->updateProductInOrder($orderId, $productOrderDetail, ['price' => '10', 'amount' => '3']);
+    }
+
+    /**
+     * @Then I should get error that the product being edited was not found
+     */
+    public function assertLastErrorIsRefundQuantityTooHigh()
+    {
+        $this->assertLastErrorIs(
+            CannotFindProductInOrderException::class
+        );
+    }
+
+    /**
+     * @param int $orderId
+     * @param int $productId
+     *
+     * @return TaxCalculator
+     *
+     * @throws \PrestaShopDatabaseException
+     * @throws \PrestaShopException
+     */
+    private function getProductTaxCalculator(int $orderId, int $productId): TaxCalculator
+    {
+        $order = new Order($orderId);
+        $taxAddress = new Address($order->{Configuration::get('PS_TAX_ADDRESS_TYPE', null, null, $order->id_shop)});
+        $taxManager = TaxManagerFactory::getManager($taxAddress, Product::getIdTaxRulesGroupByIdProduct((int) $productId, Context::getContext()));
+
+        return $taxManager->getTaxCalculator();
+    }
+
+    /**
+     * @Then product :productReference in order :orderReference has following prices for viewing in BO:
+     *
+     * @param string $orderReference
+     * @param TableNode $table
+     */
+    public function checkOrderForViewingWithReference(string $productReference, string $orderReference, TableNode $table): void
+    {
+        $orderId = SharedStorage::getStorage()->get($orderReference);
+        $productId = $this->getProductIdByName($productReference);
+        $orderForViewing = $this->getQueryBus()->handle(new GetOrderForViewing($orderId));
+
+        $productList = $orderForViewing->getProducts()->getProducts();
+        $expectedDetails = $table->getRowsHash();
+        foreach ($productList as $product) {
+            if ($product->getId() == $productId) {
+                Assert::assertEquals(
+                    $expectedDetails['unit_price_tax_excl_raw'],
+                    $product->getUnitPriceTaxExclRaw()
+                );
+                Assert::assertEquals(
+                    $expectedDetails['unit_price_tax_incl_raw'],
+                    $product->getUnitPriceTaxInclRaw()
+                );
+                Assert::assertEquals(
+                    $expectedDetails['unit_price'],
+                    $product->getUnitPrice()
+                );
+                Assert::assertEquals(
+                    $expectedDetails['total_price'],
+                    $product->getTotalPrice()
+                );
+            }
+        }
+    }
+
+    /**
+     * @Then I should get no order error
+     */
+    public function assertNoOrderError()
+    {
+        $this->assertLastErrorIsNull();
+    }
+
+    /**
+     * @Then /^the order "(.+)" has following (shipping|invoice) address$/
+     *
+     * @param string $orderReference
+     * @param string $addressType
+     * @param TableNode $table
+     */
+    public function orderCheckAddress(string $orderReference, string $addressType, TableNode $table)
+    {
+        $orderId = SharedStorage::getStorage()->get($orderReference);
+        /** @var OrderForViewing $orderForViewing */
+        $orderForViewing = $this->getQueryBus()->handle(new GetOrderForViewing($orderId));
+
+        if ($addressType == 'shipping') {
+            /** @var OrderShippingAddressForViewing $address */
+            $address = $orderForViewing->getShippingAddress();
+        } elseif ($addressType == 'invoice') {
+            /** @var OrderInvoiceAddressForViewing $address */
+            $address = $orderForViewing->getInvoiceAddress();
+        }
+
+        $expectedDetails = $table->getRowsHash();
+        $arrayActual = [
+            'Address' => $address->getAddress1(),
+            'City' => $address->getCityName(),
+            'Country' => $address->getCountryName(),
+            'DNI' => $address->getDni(),
+            'Fullname' => $address->getFullName(),
+            'Postal code' => $address->getPostCode(),
+        ];
+        foreach ($expectedDetails as $detailName => $expectedDetailValue) {
+            if (!array_key_exists($detailName, $arrayActual)) {
+                throw new RuntimeException(sprintf('Invalid check for address field %s', $detailName));
+            }
+
+            Assert::assertEquals(
+                $expectedDetailValue,
+                $arrayActual[$detailName],
+                sprintf(
+                    'Invalid address field %s for order %s, expected %s instead of %s',
+                    $detailName,
+                    $orderReference,
+                    $expectedDetailValue,
+                    $arrayActual[$detailName]
+                )
+            );
+        }
+    }
+
+    /**
+     * @Then /^the order "(.+)" has the following formatted (shipping|invoice) address$/
+     *
+     * @param string $orderReference
+     * @param string $addressType
+     * @param PyStringNode $pyStringNode
+     */
+    public function orderCheckAddressFormatted(string $orderReference, string $addressType, PyStringNode $pyStringNode): void
+    {
+        $orderId = SharedStorage::getStorage()->get($orderReference);
+        /** @var OrderForViewing $orderForViewing */
+        $orderForViewing = $this->getQueryBus()->handle(new GetOrderForViewing($orderId));
+
+        if ($addressType == 'shipping') {
+            /** @var OrderShippingAddressForViewing $address */
+            $address = $orderForViewing->getShippingAddressFormatted();
+        } elseif ($addressType == 'invoice') {
+            /** @var OrderInvoiceAddressForViewing $address */
+            $address = $orderForViewing->getInvoiceAddressFormatted();
+        }
+
+        Assert::assertEquals(
+            $address,
+            $pyStringNode->getRaw(),
+            sprintf(
+                'Invalid formatted address for order %s, expected %s instead of %s',
+                $orderReference,
+                $address,
+                $pyStringNode->getRaw()
+            )
+        );
+    }
+
+    /**
+     * @Then /^the preview order "(.+)" has following (shipping|invoice) address$/
+     * @Then /^the preview order "(.+)" has following (shipping) details$/
+     *
+     * @param string $orderReference
+     * @param string $addressType
+     * @param TableNode $table
+     */
+    public function previewOrderCheckAddress(string $orderReference, string $addressType, TableNode $table)
+    {
+        $orderId = SharedStorage::getStorage()->get($orderReference);
+        /** @var OrderPreview $orderPreview */
+        $orderPreview = $this->getQueryBus()->handle(new GetOrderPreview($orderId));
+        switch ($addressType) {
+            case 'shipping':
+                /** @var OrderPreviewShippingDetails $address */
+                $address = $orderPreview->getShippingDetails();
+                break;
+            case 'invoice':
+                /** @var OrderPreviewInvoiceDetails $address */
+                $address = $orderPreview->getInvoiceDetails();
+                break;
+            default:
+                throw new RuntimeException('Address Type is invalid');
+        }
+
+        $expectedDetails = $table->getRowsHash();
+        $arrayActual = [
+            'Address' => $address->getAddress1(),
+            'City' => $address->getCity(),
+            'Country' => $address->getCountry(),
+            'DNI' => $address->getDni(),
+            'Fullname' => $address->getFirstName() . ' ' . $address->getLastname(),
+            'Postal code' => $address->getPostalCode(),
+        ];
+        if ('shipping' === $addressType) {
+            $arrayActual += [
+                'Tracking number' => $address->getTrackingNumber(),
+                'Tracking URL' => $address->getTrackingUrl(),
+            ];
+        }
+        foreach ($expectedDetails as $detailName => $expectedDetailValue) {
+            if (!array_key_exists($detailName, $arrayActual)) {
+                throw new RuntimeException(sprintf('Invalid check for address field %s', $detailName));
+            }
+
+            Assert::assertEquals(
+                $expectedDetailValue,
+                $arrayActual[$detailName],
+                sprintf(
+                    'Invalid address field %s for order %s, expected %s instead of %s',
+                    $detailName,
+                    $orderReference,
+                    $expectedDetailValue,
+                    $arrayActual[$detailName]
+                )
+            );
+        }
+    }
+
+    /**
+     * @Then /^the order "(.+)" should have (\d+) document(s?)$/
+     *
+     * @param string $orderReference
+     * @param int $numDocuments
+     */
+    public function orderHasNumDocuments(string $orderReference, int $numDocuments): void
+    {
+        $orderId = SharedStorage::getStorage()->get($orderReference);
+        /** @var OrderForViewing $orderForViewing */
+        $orderForViewing = $this->getQueryBus()->handle(new GetOrderForViewing($orderId));
+
+        Assert::assertEquals(
+            $numDocuments,
+            count($orderForViewing->getDocuments()->getDocuments()),
+            sprintf(
+                'Invalid number of order documents, expected %s but got %s instead',
+                $numDocuments,
+                count($orderForViewing->getDocuments()->getDocuments())
+            )
+        );
+    }
+
+    /**
+     * @Then /^the order "(.+)" should have following documents:$/
+     *
+     * @param string $orderReference
+     * @param TableNode $table
+     */
+    public function orderHasFollowingDocuments(string $orderReference, TableNode $table): void
+    {
+        $orderId = SharedStorage::getStorage()->get($orderReference);
+        /** @var OrderForViewing $orderForViewing */
+        $orderForViewing = $this->getQueryBus()->handle(new GetOrderForViewing($orderId));
+
+        $expectedDetails = $table->getHash();
+        foreach ($expectedDetails as $expectedDetail) {
+            $hasDocument = $document = false;
+            foreach ($orderForViewing->getDocuments()->getDocuments() as $document) {
+                if ($expectedDetail['referenceNumber'] === $document->getReferenceNumber()) {
+                    $hasDocument = true;
+                    break;
+                }
+            }
+            if (!$hasDocument) {
+                throw new RuntimeException(sprintf(
+                    'Document not found : %s',
+                    $expectedDetail['referenceNumber']
+                ));
+            }
+
+            Assert::assertEquals(
+                $expectedDetail['type'],
+                $document->getType(),
+                sprintf(
+                    'Invalid document type for order %s, expected %s instead of %s',
+                    $orderReference,
+                    $expectedDetail['type'],
+                    $document->getType()
+                )
+            );
+            Assert::assertEquals(
+                $expectedDetail['amount'],
+                $document->getAmount(),
+                sprintf(
+                    'Invalid document type for order %s, expected %s instead of %s',
+                    $orderReference,
+                    $expectedDetail['amount'],
+                    $document->getAmount()
+                )
+            );
+        }
     }
 }

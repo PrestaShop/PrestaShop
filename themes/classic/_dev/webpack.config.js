@@ -24,24 +24,21 @@
  */
 const webpack = require('webpack');
 const path = require('path');
-const ExtractTextPlugin = require("extract-text-webpack-plugin");
+const ExtractTextPlugin = require('extract-text-webpack-plugin');
 
 let config = {
   entry: {
-    main: [
-      './js/theme.js',
-      './css/theme.scss'
-    ]
+    main: ['./js/theme.js', './css/theme.scss'],
   },
   output: {
     path: path.resolve(__dirname, '../assets/js'),
-    filename: 'theme.js'
+    filename: 'theme.js',
   },
   module: {
     rules: [
       {
         test: /\.js/,
-        loader: 'babel-loader'
+        loader: 'babel-loader',
       },
       {
         test: /\.scss$/,
@@ -51,39 +48,37 @@ let config = {
             {
               loader: 'css-loader',
               options: {
-                minimize: true
-              }
+                minimize: true,
+              },
             },
             'postcss-loader',
-            'sass-loader'
-          ]
-        })
+            'sass-loader',
+          ],
+        }),
       },
       {
-        test: /.(png|woff(2)?|eot|ttf|svg|gif)(\?[a-z0-9=\.]+)?$/,
+        test: /.(png|woff(2)?|eot|otf|ttf|svg|gif)(\?[a-z0-9=\.]+)?$/,
         use: [
           {
             loader: 'file-loader',
             options: {
-              name: '../css/[hash].[ext]'
-            }
-          }
-        ]
+              name: '../css/[hash].[ext]',
+            },
+          },
+        ],
       },
       {
-        test : /\.css$/,
-        use: ['style-loader', 'css-loader', 'postcss-loader']
-      }
-    ]
+        test: /\.css$/,
+        use: ['style-loader', 'css-loader', 'postcss-loader'],
+      },
+    ],
   },
   externals: {
     prestashop: 'prestashop',
     $: '$',
-    jquery: 'jQuery'
+    jquery: 'jQuery',
   },
-  plugins: [
-    new ExtractTextPlugin(path.join('..', 'css', 'theme.css'))
-  ]
+  plugins: [new ExtractTextPlugin(path.join('..', 'css', 'theme.css'))],
 };
 
 if (process.env.NODE_ENV === 'production') {
@@ -96,12 +91,12 @@ if (process.env.NODE_ENV === 'production') {
         booleans: true,
         if_return: true,
         join_vars: true,
-        drop_console: true
+        drop_console: true,
       },
       output: {
-        comments: false
+        comments: false,
       },
-      minimize: true
+      minimize: true,
     })
   );
 }

@@ -111,9 +111,11 @@ class WebserviceOutputXMLCore implements WebserviceOutputInterface
                     }
                 }
                 $node_content .= '<language id="' . $language . '"' . $more_attr . '>';
-                if (isset($field['value']) && is_array($field['value']) && isset($field['value'][$language])) {
-                    $node_content .= '<![CDATA[' . $field['value'][$language] . ']]>';
+                $node_content .= '<![CDATA[';
+                if (isset($field['value'][$language])) {
+                    $node_content .= $field['value'][$language];
                 }
+                $node_content .= ']]>';
                 $node_content .= '</language>';
             }
         } else {

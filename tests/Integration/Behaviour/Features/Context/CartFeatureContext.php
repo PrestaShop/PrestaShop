@@ -129,7 +129,7 @@ class CartFeatureContext extends AbstractPrestaShopFeatureContext
     /**
      * @Then /^my cart total should be (precisely )?(\d+\.\d+) tax included$/
      */
-    public function totalCartWithTaxtShouldBe($precisely, $expectedTotal)
+    public function totalCartWithTaxShouldBe($precisely, $expectedTotal)
     {
         $this->expectsTotal($expectedTotal, 'v2', true, !empty($precisely));
     }
@@ -137,7 +137,7 @@ class CartFeatureContext extends AbstractPrestaShopFeatureContext
     /**
      * @Then /^my cart total using previous calculation method should be (precisely )?(\d+\.\d+) tax included$/
      */
-    public function totalCartWithTaxtOnPreviousCaclculationMethodShouldBe($precisely, $expectedTotal)
+    public function totalCartWithTaxOnPreviousCaclculationMethodShouldBe($precisely, $expectedTotal)
     {
         $this->expectsTotal($expectedTotal, 'v1', true, !empty($precisely));
     }

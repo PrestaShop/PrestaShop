@@ -107,21 +107,25 @@ class PaymentModulePreferencesType extends TranslatorAwareType
                 'label' => $this->trans('Currency restrictions', 'Admin.Payment.Feature'),
                 'choices' => $this->getCurrencyChoices(),
                 'multiple_choices' => $this->getCurrencyChoicesForPaymentModules(),
+                'headers_fixed' => true,
             ])
             ->add('country_restrictions', MaterialMultipleChoiceTableType::class, [
                 'label' => $this->trans('Country restrictions', 'Admin.Payment.Feature'),
                 'choices' => $this->countryChoices,
                 'multiple_choices' => $this->getCountryChoicesForPaymentModules(),
+                'headers_fixed' => true,
             ])
             ->add('group_restrictions', MaterialMultipleChoiceTableType::class, [
                 'label' => $this->trans('Group restrictions', 'Admin.Payment.Feature'),
                 'choices' => $this->groupChoices,
                 'multiple_choices' => $this->getGroupChoicesForPaymentModules(),
+                'headers_fixed' => true,
             ])
             ->add('carrier_restrictions', MaterialMultipleChoiceTableType::class, [
                 'label' => $this->trans('Carrier restrictions', 'Admin.Payment.Feature'),
                 'choices' => $this->carrierChoices,
                 'multiple_choices' => $this->getCarrierChoicesForPaymentModules(),
+                'headers_fixed' => true,
             ]);
     }
 

@@ -15,7 +15,7 @@ admin_categories_search:
     path: /search
     methods: [POST]
     defaults:
-        _controller: PrestaShopBundle:Admin/Sell/Catalog/Category:searchGrid
+        _controller: PrestaShopBundle:Admin\Common:searchGrid
         _legacy_controller: AdminCategories
         _legacy_link: AdminCategories:submitFiltercategory
         gridDefinitionFactoryServiceId: prestashop.core.grid.definition.factory.category
@@ -147,3 +147,10 @@ admin_categories_update_position:
         _controller: PrestaShopBundle:Admin\Sell\Catalog\Category:updatePosition
         _legacy_controller: AdminCategories
         _legacy_link: AdminCategories:updatePositions
+
+admin_categories_get_categories_tree:
+    path: /tree
+    methods: [GET]
+    defaults:
+        _controller: PrestaShopBundle:Admin\Sell\Catalog\Category:getCategoriesTree
+        _legacy_controller: AdminCategories

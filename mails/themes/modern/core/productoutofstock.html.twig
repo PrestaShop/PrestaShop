@@ -44,7 +44,6 @@
                                       </td>
                                     </tr>
                                     <!-- TITLE ENDING -->
-                                    <!-- BORDER BEGINING -->
                                   </table>
                                 </td>
                               </tr>
@@ -138,6 +137,71 @@
             </tr>
           <![endif]-->
               <!-- BORDER ENDING -->
+              <!-- SUBTITLE BEGINING -->
+              <!--[if mso | IE]>
+            <tr>
+              <td
+                 class="" width="604px"
+              >
+          
+      <table
+         align="center" border="0" cellpadding="0" cellspacing="0" class="" style="width:604px;" width="604"
+      >
+        <tr>
+          <td style="line-height:0px;font-size:0px;mso-line-height-rule:exactly;">
+      <![endif]-->
+              <div style="margin:0px auto;max-width:604px;">
+                <table align="center" border="0" cellpadding="0" cellspacing="0" role="presentation" style="width:100%;">
+                  <tbody>
+                    <tr>
+                      <td style="direction:ltr;font-size:0px;padding:0 25px 0;text-align:center;">
+                        <!--[if mso | IE]>
+                  <table role="presentation" border="0" cellpadding="0" cellspacing="0">
+                
+        <tr>
+      
+            <td
+               class="" style="vertical-align:top;width:554px;"
+            >
+          <![endif]-->
+                        <div class="mj-column-per-100 mj-outlook-group-fix" style="font-size:0px;text-align:left;direction:ltr;display:inline-block;vertical-align:top;width:100%;">
+                          <table border="0" cellpadding="0" cellspacing="0" role="presentation" width="100%">
+                            <tbody>
+                              <tr>
+                                <td style="vertical-align:top;padding:0;">
+                                  <table border="0" cellpadding="0" cellspacing="0" role="presentation" style="" width="100%">
+                                    <tr>
+                                      <td align="left" style="font-size:0px;padding:10px 25px;padding-top:0px;padding-bottom:0px;word-break:break-word;">
+                                        <div style="font-family:Open sans, arial, sans-serif;font-size:16px;font-weight:600;line-height:25px;text-align:left;color:#363A41;">{{ '{product} is almost out of stock.'|trans({}, 'Emails.Body', locale)|raw }}</div>
+                                      </td>
+                                    </tr>
+                                  </table>
+                                </td>
+                              </tr>
+                            </tbody>
+                          </table>
+                        </div>
+                        <!--[if mso | IE]>
+            </td>
+          
+        </tr>
+      
+                  </table>
+                <![endif]-->
+                      </td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+              <!--[if mso | IE]>
+          </td>
+        </tr>
+      </table>
+      
+              </td>
+            </tr>
+          <![endif]-->
+              <!-- SUBTITLE ENDING -->
               <!-- BOX BEGINING -->
               <!--[if mso | IE]>
             <tr>
@@ -173,16 +237,16 @@
                                   <table border="0" cellpadding="0" cellspacing="0" role="presentation" style="" width="100%">
                                     <tr>
                                       <td align="left" style="font-size:0px;padding:10px 25px;word-break:break-word;">
-                                        <div style="font-family:Open sans, arial, sans-serif;font-size:14px;line-height:25px;text-align:left;color:#363A41;">{{ 'There are now less than [1]{last_qty}[/1] of [1]{product}[/1] in stock.'|trans({'[1]': '<span class="label">', '[/1]': '</span>'}, 'Emails.Body', locale)|raw }}</div>
+                                        <div style="font-family:Open sans, arial, sans-serif;font-size:14px;line-height:25px;text-align:left;color:#363A41;">{{ 'There are now less than [1]{last_qty}[/1] items in stock.'|trans({'[1]': '<span class="label">', '[/1]': '</span>'}, 'Emails.Body', locale)|raw }}</div>
                                       </td>
                                     </tr>
                                     <tr>
-                                      <td align="left" style="font-size:0px;padding:10px 25px;word-break:break-word;">
-                                        <div style="font-family:Open sans, arial, sans-serif;font-size:14px;line-height:25px;text-align:left;color:#363A41;"><span style="font-weight:700;font-size:16px">{{ 'Remaining stock:'|trans({}, 'Emails.Body', locale)|raw }}</span> {qty}</div>
+                                      <td align="left" style="font-size:0px;padding:10px 25px;padding-top:0;word-break:break-word;">
+                                        <div style="font-family:Open sans, arial, sans-serif;font-size:14px;line-height:25px;text-align:left;color:#363A41;"><span class="warning">{{ 'Remaining stock:'|trans({}, 'Emails.Body', locale)|raw }}</span> {qty}</div>
                                       </td>
                                     </tr>
                                     <tr>
-                                      <td align="left" style="font-size:0px;padding:10px 25px;word-break:break-word;">
+                                      <td align="left" style="font-size:0px;padding:10px 25px;padding-top:0;word-break:break-word;">
                                         <div style="font-family:Open sans, arial, sans-serif;font-size:14px;line-height:25px;text-align:left;color:#363A41;">{{ 'Replenish your inventory, go to the [1]Catalog > Stocks[/1] section of your back office to manage your stock.'|trans({'[1]': '<span class="label">', '[/1]': '</span>'}, 'Emails.Body', locale)|raw }}</div>
                                       </td>
                                     </tr>

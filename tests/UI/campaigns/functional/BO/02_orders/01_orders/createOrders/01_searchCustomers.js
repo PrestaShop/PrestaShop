@@ -13,7 +13,7 @@ const addCustomerPage = require('@pages/BO/customers/add');
 const loginCommon = require('@commonTests/loginBO');
 
 // Import data
-const {DefaultAccount} = require('@data/demo/customer');
+const {DefaultCustomer} = require('@data/demo/customer');
 const CustomerFaker = require('@data/faker/customer');
 
 const nonExistentCustomer = new CustomerFaker();
@@ -22,7 +22,7 @@ const disabledCustomer = new CustomerFaker({enabled: false});
 // Import test context
 const testContext = require('@utils/testContext');
 
-const baseContext = 'functional_BO_orders_orders_createOrders/searchCustomers';
+const baseContext = 'functional_BO_orders_orders_createOrders_searchCustomers';
 
 // Import expect from chai
 const {expect} = require('chai');
@@ -128,9 +128,9 @@ describe('Search for customers in create order page', async () => {
     it('should search for existent customer and check customer card', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'checkExistentCustomerCard', baseContext);
 
-      await addOrderPage.searchCustomer(page, DefaultAccount.email);
+      await addOrderPage.searchCustomer(page, DefaultCustomer.email);
       const customerName = await addOrderPage.getCustomerNameFromResult(page, 1);
-      await expect(customerName).to.contains(`${DefaultAccount.firstName} ${DefaultAccount.lastName}`);
+      await expect(customerName).to.contains(`${DefaultCustomer.firstName} ${DefaultCustomer.lastName}`);
     });
   });
 

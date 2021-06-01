@@ -203,9 +203,8 @@ abstract class AbstractLazyArray implements Iterator, ArrayAccess, Countable, Js
      * The properties are provided as an array. But callers checking the type of this class (is_object === true)
      * think they must use the object syntax.
      *
-     * @param mixed $offset
+     * @param mixed $name
      * @param mixed $value
-     * @param bool $force if set, allow override of an existing method
      *
      * @throws RuntimeException
      */
@@ -218,8 +217,7 @@ abstract class AbstractLazyArray implements Iterator, ArrayAccess, Countable, Js
      * The properties are provided as an array. But callers checking the type of this class (is_object === true)
      * think they must use the object syntax.
      *
-     * @param mixed $offset
-     * @param bool $force if set, allow unset of an existing method
+     * @param mixed $name
      *
      * @throws RuntimeException
      */

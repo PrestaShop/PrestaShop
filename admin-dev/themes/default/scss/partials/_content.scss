@@ -1,0 +1,386 @@
+html,
+body {
+  height: 100%;
+  min-height: 100%;
+}
+
+body {
+  font-family: $font-family-base;
+  font-size: $font-size-base;
+  font-weight: 400;
+  line-height: $line-height-base;
+  color: $text-color;
+  background-color: $body-bg;
+  -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
+
+  &.mobile {
+    #content.bootstrap {
+      @media (max-width: $screen-lg) {
+        padding-left: $paddingLeftMobile;
+      }
+
+      .page-head {
+        h2.page-title {
+          padding-left: $paddingLeftMobile;
+        }
+
+        h4.page-subtitle {
+          @include left($paddingLeftMobile);
+        }
+
+        ul.page-breadcrumb {
+          display: none;
+        }
+      }
+    }
+  }
+}
+
+#main {
+  z-index: 10;
+  width: 100%;
+  padding: 36px 0 60px;
+  @include margin(0, 0, -50px, 0);
+  @include float(left);
+}
+
+#content.bootstrap {
+  padding: 105px 10px 0 225px;
+
+  input,
+  button,
+  textarea,
+  select {
+    font-family: $font-family-mono;
+  }
+
+  &.with-tabs {
+    padding-top: 160px;
+  }
+  @include transition-property(margin);
+  @include transition-duration(0.4s);
+  @include transition-timing-function(ease-out);
+
+  .panel {
+    position: relative;
+    padding: 20px;
+    margin-bottom: 20px;
+    background-color: #fff;
+    border: 1px solid $card-border-color;
+    @include border-radius(5px);
+    @include box-shadow(0 0 4px 0 rgba(0, 0, 0, 0.06));
+
+    > h3 {
+      padding: 10px;
+    }
+
+    &.panel-highlighted {
+      border-color: $brand-primary !important;
+      @include box-shadow(rgba($brand-primary,0.15) 0 0 0 6px inset !important);
+    }
+
+    .panel-heading {
+      padding: 10px;
+      font-family: $headings-font-family;
+      font-size: 16px;
+      font-weight: 600;
+      color: $main-color;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+
+      > .btn-group {
+        margin-top: -7px;
+
+        .btn-default {
+          @extend .btn-default;
+
+          i {
+            // stylelint-disable-next-line
+            margin-right: 0 !important;
+          }
+        }
+      }
+
+      .btn {
+        padding: 2px 6px !important;
+      }
+
+      a.btn {
+        position: relative;
+        top: 2px;
+        font-family: $font-family-sans-serif;
+        text-transform: none;
+      }
+
+      > i {
+        margin-top: -2px;
+        margin-right: 5px;
+        font-size: 20px;
+        color: $card-icon-color;
+        vertical-align: middle;
+      }
+    }
+
+    .panel {
+      border: solid 1px #ddd;
+    }
+
+    .panel.tab-content {
+      @include border-radius(0 0 3px 3px);
+    }
+  }
+
+  h3:not(.modal-title),
+  .panel-heading {
+    font-size: 16px;
+    font-weight: 600;
+    line-height: 1.5rem;
+    background-color: #fafbfc;
+    border: none;
+    border-bottom: 1px solid #dbe6e9;
+    @include margin(-20px, -20px, 15px, -20px);
+
+    i,
+    a {
+      color: contrasted($bg-panel-heading-color);
+    }
+
+    .badge {
+      padding: 0 10px;
+      font-size: 1.1em;
+      font-weight: 700;
+      line-height: 1.2em;
+      color: $gray;
+      background-color: #fff;
+      border: solid 1px lighten($gray-light, 25%);
+      @include margin-left(0.4em);
+      @include border-radius(20px);
+
+      a {
+        display: block;
+        font-size: 0.8em;
+      }
+    }
+
+    .panel-heading-action {
+      position: absolute;
+      top: 6px;
+      line-height: 0;
+      @include right(7px);
+
+      .btn {
+        padding: 4px 8px !important;
+      }
+
+      .btn-group {
+        position: absolute;
+        top: -2px;
+        white-space: nowrap;
+        @include right(2px);
+
+        a.btn {
+          float: none;
+        }
+      }
+
+      > a.btn {
+        position: absolute;
+        top: 7px;
+        @include right(6px);
+      }
+
+      a.list-toolbar-btn {
+        color: #ccc;
+        @include float(left);
+
+        &:hover {
+          color: $brand-primary;
+          text-decoration: none;
+        }
+
+        i {
+          font-size: 18px;
+          line-height: 30px;
+          text-align: center;
+        }
+      }
+    }
+  }
+
+  .panel-danger .panel-heading {
+    background-color: $badge-notif-color !important;
+  }
+
+  form .alert {
+    clear: both;
+  }
+
+  .mobile & {
+    padding: 140px 5px 0;
+    @include margin-left(0!important);
+  }
+
+  .help-block {
+    font-style: italic;
+  }
+
+  .nav.nav-tabs li.active a {
+    z-index: 99;
+  }
+
+  .breadcrumb {
+    background-color: #fff;
+    border: solid 1px darken($bg-content-color, 10%);
+  }
+
+  .panel.panel-sm {
+    padding: 8px !important;
+
+    .panel-heading {
+      margin: -8px -8px 10px;
+      font-size: 13px;
+
+      @include ltr () {
+        padding-left: 8px;
+      }
+
+      @include rtl () {
+        padding-right: 8px;
+      }
+    }
+
+    .form-group {
+      margin-bottom: 8px;
+    }
+  }
+}
+
+.data-focus {
+  &.data-focus-primary {
+    color: #fff;
+    background-color: $brand-primary;
+    @include border-radius(10px);
+  }
+}
+
+#customer_part {
+  .customerCard {
+    &.selected-customer .panel {
+      color: $brand-success;
+      border: solid 2px $brand-success;
+    }
+  }
+}
+
+body.display-modal {
+  #content,
+  #main {
+    padding: 0;
+    margin: 0;
+    background: #f8f8f8;
+  }
+}
+
+.bootstrap {
+  input[type="text"],
+  input[type="search"],
+  input[type="password"],
+  textarea,
+  select {
+    @extend .form-control;
+  }
+
+  .modal {
+    .alert {
+      h3 {
+        margin-top: 0;
+      }
+    }
+  }
+
+  .modal-footer {
+    .alert {
+      text-align: left;
+    }
+    //todo: remove temp fix for bootstrap RC1 -> final
+  }
+
+  .panel {
+    .panel-footer {
+      margin: 15px -20px -20px;
+      overflow: auto;
+      background-color: #fcfdfe;
+      border-color: #eee;
+
+      .btn.pull-right:not(:first-child) {
+        @include margin-right(5px);
+      }
+
+      .btn {
+        padding: 8px 16px;
+        font-size: 14px;
+        font-weight: 600;
+        line-height: 1.5;
+
+        i {
+          display: none;
+        }
+
+        &.pull-right {
+          @extend .btn-primary;
+          // stylelint-disable-next-line
+          text-transform: none !important;
+        }
+      }
+    }
+  }
+}
+
+#header {
+  .panel-footer {
+    height: 40px !important;
+    margin: 15px 0 0 !important;
+  }
+}
+
+#main.helpOpen {
+  width: 70%;
+  @media (max-width: $screen-lg) {
+    width: 100%;
+  }
+}
+
+#help-container {
+  position: relative;
+  box-sizing: border-box;
+  float: right;
+  width: 30%;
+  padding: 0;
+  margin: 0;
+  margin-top: 181px;
+  margin-bottom: 50px;
+  overflow-x: hidden;
+  background-color: #fff;
+
+  @media (max-width: $screen-lg) {
+    display: none;
+  }
+}
+
+.page-topbar {
+  #help-container {
+    margin-top: 140px;
+  }
+}
+
+.page-sidebar-closed {
+  &:not(.mobile) {
+    #content {
+      padding-left: $paddingLeftPageClosed;
+
+      .page-head {
+        padding-left: $paddingLeftPageClosed - 0.9375rem;
+      }
+    }
+  }
+}

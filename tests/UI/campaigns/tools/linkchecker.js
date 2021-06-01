@@ -52,12 +52,6 @@ describe('Crawl every page for defects and issues', async () => {
       'Accept-Language': 'fr-FR',
     });
 
-    // Intercepts requests
-    await page.setRequestInterception(true);
-    await page.on('request', (request) => {
-      request.continue();
-    });
-
     // Intercepts responses
     await page.on('response', (response) => {
       checkResponseStatus(

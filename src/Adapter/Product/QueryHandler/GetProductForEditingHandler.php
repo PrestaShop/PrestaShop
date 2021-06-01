@@ -24,12 +24,17 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
 
+declare(strict_types=1);
+
 namespace PrestaShop\PrestaShop\Adapter\Product\QueryHandler;
 
 use Customization;
-use Pack;
+use DateTime;
 use PrestaShop\PrestaShop\Adapter\Product\AbstractProductHandler;
-use PrestaShop\PrestaShop\Core\Domain\Product\Exception\ProductConstraintException;
+use PrestaShop\PrestaShop\Adapter\Product\Stock\Repository\StockAvailableRepository;
+use PrestaShop\PrestaShop\Adapter\Product\VirtualProduct\Repository\VirtualProductFileRepository;
+use PrestaShop\PrestaShop\Adapter\Tax\TaxComputer;
+use PrestaShop\PrestaShop\Core\Domain\Country\ValueObject\CountryId;
 use PrestaShop\PrestaShop\Core\Domain\Product\ProductCustomizabilitySettings;
 use PrestaShop\PrestaShop\Core\Domain\Product\Query\GetProductForEditing;
 use PrestaShop\PrestaShop\Core\Domain\Product\QueryHandler\GetProductForEditingHandlerInterface;
@@ -37,26 +42,27 @@ use PrestaShop\PrestaShop\Core\Domain\Product\QueryResult\LocalizedTags;
 use PrestaShop\PrestaShop\Core\Domain\Product\QueryResult\ProductBasicInformation;
 use PrestaShop\PrestaShop\Core\Domain\Product\QueryResult\ProductCategoriesInformation;
 use PrestaShop\PrestaShop\Core\Domain\Product\QueryResult\ProductCustomizationOptions;
+use PrestaShop\PrestaShop\Core\Domain\Product\QueryResult\ProductDetails;
 use PrestaShop\PrestaShop\Core\Domain\Product\QueryResult\ProductForEditing;
 use PrestaShop\PrestaShop\Core\Domain\Product\QueryResult\ProductOptions;
 use PrestaShop\PrestaShop\Core\Domain\Product\QueryResult\ProductPricesInformation;
+use PrestaShop\PrestaShop\Core\Domain\Product\QueryResult\ProductSeoOptions;
 use PrestaShop\PrestaShop\Core\Domain\Product\QueryResult\ProductShippingInformation;
-use PrestaShop\PrestaShop\Core\Domain\Product\QueryResult\ProductSupplierOption;
-use PrestaShop\PrestaShop\Core\Domain\Product\QueryResult\ProductSupplierOptions;
-use PrestaShop\PrestaShop\Core\Domain\Product\QueryResult\ProductType;
-use PrestaShop\PrestaShop\Core\Domain\Product\Supplier\Query\GetProductSuppliersForEditing;
-use PrestaShop\PrestaShop\Core\Domain\Product\Supplier\QueryHandler\GetProductSuppliersForEditingHandlerInterface;
-use PrestaShop\PrestaShop\Core\Domain\Product\Supplier\QueryResult\ProductSupplierForEditing;
+use PrestaShop\PrestaShop\Core\Domain\Product\QueryResult\ProductStockInformation;
+use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductId;
+use PrestaShop\PrestaShop\Core\Domain\Product\VirtualProductFile\Exception\VirtualProductFileNotFoundException;
+use PrestaShop\PrestaShop\Core\Domain\Product\VirtualProductFile\QueryResult\VirtualProductFileForEditing;
+use PrestaShop\PrestaShop\Core\Domain\TaxRulesGroup\ValueObject\TaxRulesGroupId;
+use PrestaShop\PrestaShop\Core\Util\DateTime\DateTime as DateTimeUtil;
 use PrestaShop\PrestaShop\Core\Util\Number\NumberExtractor;
 use PrestaShop\PrestaShop\Core\Util\Number\NumberExtractorException;
 use Product;
-use Supplier;
 use Tag;
 
 /**
  * Handles the query GetEditableProduct using legacy ObjectModel
  */
-class GetProductForEditingHandler extends AbstractProductHandler implements GetProductForEditingHandlerInterface
+final class GetProductForEditingHandler extends AbstractProductHandler implements GetProductForEditingHandlerInterface
 {
     /**
      * @var NumberExtractor
@@ -64,20 +70,44 @@ class GetProductForEditingHandler extends AbstractProductHandler implements GetP
     private $numberExtractor;
 
     /**
-     * @var GetProductSuppliersForEditingHandlerInterface
+     * @var StockAvailableRepository
      */
-    private $getProductSuppliersForEditingHandler;
+    private $stockAvailableRepository;
+
+    /**
+     * @var VirtualProductFileRepository
+     */
+    private $virtualProductFileRepository;
+
+    /**
+     * @var TaxComputer
+     */
+    private $taxComputer;
+
+    /**
+     * @var int
+     */
+    private $countryId;
 
     /**
      * @param NumberExtractor $numberExtractor
-     * @param GetProductSuppliersForEditingHandlerInterface $getProductSuppliersForEditingHandler
+     * @param StockAvailableRepository $stockAvailableRepository
+     * @param VirtualProductFileRepository $virtualProductFileRepository
+     * @param TaxComputer $taxComputer
+     * @param int $countryId
      */
     public function __construct(
         NumberExtractor $numberExtractor,
-        GetProductSuppliersForEditingHandlerInterface $getProductSuppliersForEditingHandler
+        StockAvailableRepository $stockAvailableRepository,
+        VirtualProductFileRepository $virtualProductFileRepository,
+        TaxComputer $taxComputer,
+        int $countryId
     ) {
         $this->numberExtractor = $numberExtractor;
-        $this->getProductSuppliersForEditingHandler = $getProductSuppliersForEditingHandler;
+        $this->stockAvailableRepository = $stockAvailableRepository;
+        $this->virtualProductFileRepository = $virtualProductFileRepository;
+        $this->taxComputer = $taxComputer;
+        $this->countryId = $countryId;
     }
 
     /**
@@ -89,14 +119,18 @@ class GetProductForEditingHandler extends AbstractProductHandler implements GetP
 
         return new ProductForEditing(
             (int) $product->id,
-            (bool) $product->active,
+            $product->getProductType(),
             $this->getCustomizationOptions($product),
             $this->getBasicInformation($product),
             $this->getCategoriesInformation($product),
             $this->getPricesInformation($product),
             $this->getOptions($product),
+            $this->getDetails($product),
             $this->getShippingInformation($product),
-            $this->getSupplierOptions($product)
+            $this->getSeoOptions($product),
+            $product->getAssociatedAttachmentIds(),
+            $this->getProductStockInformation($product),
+            $this->getVirtualProductFile($product)
         );
     }
 
@@ -108,10 +142,10 @@ class GetProductForEditingHandler extends AbstractProductHandler implements GetP
     private function getBasicInformation(Product $product): ProductBasicInformation
     {
         return new ProductBasicInformation(
-            $this->getProductType($product),
             $product->name,
             $product->description,
-            $product->description_short
+            $product->description_short,
+            $this->getLocalizedTagsList((int) $product->id)
         );
     }
 
@@ -135,8 +169,16 @@ class GetProductForEditingHandler extends AbstractProductHandler implements GetP
      */
     private function getPricesInformation(Product $product): ProductPricesInformation
     {
+        $priceTaxExcluded = $this->numberExtractor->extract($product, 'price');
+        $priceTaxIncluded = $this->taxComputer->computePriceWithTaxes(
+            $priceTaxExcluded,
+            new TaxRulesGroupId((int) $product->id_tax_rules_group),
+            new CountryId($this->countryId)
+        );
+
         return new ProductPricesInformation(
-            $this->numberExtractor->extract($product, 'price'),
+            $priceTaxExcluded,
+            $priceTaxIncluded,
             $this->numberExtractor->extract($product, 'ecotax'),
             (int) $product->id_tax_rules_group,
             (bool) $product->on_sale,
@@ -150,39 +192,30 @@ class GetProductForEditingHandler extends AbstractProductHandler implements GetP
     /**
      * @param Product $product
      *
-     * @return ProductType
-     *
-     * @throws ProductConstraintException
-     */
-    private function getProductType(Product $product): ProductType
-    {
-        if ($product->is_virtual) {
-            $productTypeValue = ProductType::TYPE_VIRTUAL;
-        } elseif (Pack::isPack($product->id)) {
-            $productTypeValue = ProductType::TYPE_PACK;
-        } elseif ($product->hasCombinations()) {
-            $productTypeValue = ProductType::TYPE_COMBINATION;
-        } else {
-            $productTypeValue = ProductType::TYPE_STANDARD;
-        }
-
-        return new ProductType($productTypeValue);
-    }
-
-    /**
-     * @param Product $product
-     *
      * @return ProductOptions
      */
     private function getOptions(Product $product): ProductOptions
     {
         return new ProductOptions(
+            (bool) $product->active,
             $product->visibility,
             (bool) $product->available_for_order,
             (bool) $product->online_only,
             (bool) $product->show_price,
-            $this->getLocalizedTagsList((int) $product->id),
             $product->condition,
+            (bool) $product->show_condition,
+            (int) $product->id_manufacturer
+        );
+    }
+
+    /**
+     * @param Product $product
+     *
+     * @return ProductDetails
+     */
+    private function getDetails(Product $product): ProductDetails
+    {
+        return new ProductDetails(
             $product->isbn,
             $product->upc,
             $product->ean13,
@@ -200,7 +233,7 @@ class GetProductForEditingHandler extends AbstractProductHandler implements GetP
      */
     private function getShippingInformation(Product $product): ProductShippingInformation
     {
-        $carrierReferences = array_map(function ($carrier) {
+        $carrierReferences = array_map(function ($carrier): int {
             return (int) $carrier['id_reference'];
         }, $product->getCarriers());
 
@@ -255,67 +288,85 @@ class GetProductForEditingHandler extends AbstractProductHandler implements GetP
 
         switch ((int) $product->customizable) {
             case ProductCustomizabilitySettings::ALLOWS_CUSTOMIZATION:
-                return ProductCustomizationOptions::createAllowsCustomization($textFieldsCount, $fileFieldsCount);
+                $options = ProductCustomizationOptions::createAllowsCustomization($textFieldsCount, $fileFieldsCount);
                 break;
             case ProductCustomizabilitySettings::REQUIRES_CUSTOMIZATION:
-                return ProductCustomizationOptions::createRequiresCustomization($textFieldsCount, $fileFieldsCount);
+                $options = ProductCustomizationOptions::createRequiresCustomization($textFieldsCount, $fileFieldsCount);
                 break;
             default:
-                return ProductCustomizationOptions::createNotCustomizable();
+                $options = ProductCustomizationOptions::createNotCustomizable();
         }
+
+        return $options;
     }
 
     /**
      * @param Product $product
      *
-     * @return ProductSupplierOptions
+     * @return ProductSeoOptions
      */
-    private function getSupplierOptions(Product $product): ProductSupplierOptions
+    private function getSeoOptions(Product $product): ProductSeoOptions
     {
-        $productSuppliersForEditing = $this->getProductSuppliersForEditingHandler->handle(new GetProductSuppliersForEditing((int) $product->id));
-        $supplierOptions = [];
-
-        $processedSuppliers = [];
-        foreach ($productSuppliersForEditing as $productSupplierForEditing) {
-            $supplierId = $productSupplierForEditing->getSupplierId();
-
-            if (in_array($supplierId, $processedSuppliers)) {
-                continue;
-            }
-
-            $supplierOptions[] = new ProductSupplierOption(
-                Supplier::getNameById($supplierId),
-                $supplierId,
-                $this->filterProductSuppliersBySupplier($supplierId, $productSuppliersForEditing)
-            );
-            $processedSuppliers[] = $supplierId;
-        }
-
-        return new ProductSupplierOptions(
-            (int) $product->id_supplier,
-            $product->supplier_reference,
-            $supplierOptions
+        return new ProductSeoOptions(
+            $product->meta_title,
+            $product->meta_description,
+            $product->link_rewrite,
+            $product->redirect_type,
+            (int) $product->id_type_redirected
         );
     }
 
     /**
-     * Gets EditableProductSuppliers list for its supplier
+     * Returns the product stock infos, it's important that the Product is fetched with stock data
      *
-     * @param int $supplierId
-     * @param ProductSupplierForEditing[] $productSuppliersForEditing
+     * @param Product $product
      *
-     * @return ProductSupplierForEditing[]
+     * @return ProductStockInformation
      */
-    private function filterProductSuppliersBySupplier(int $supplierId, array $productSuppliersForEditing): array
+    private function getProductStockInformation(Product $product): ProductStockInformation
     {
-        $productSuppliersBySupplier = [];
+        //@todo: In theory StockAvailable is created for each product when Product::add is called,
+        //  but we should explore some multishop edgecases
+        //  (like shop ids might be missing and foreach loop won't start resulting in a missing StockAvailable for product)
+        $stockAvailable = $this->stockAvailableRepository->getForProduct(new ProductId($product->id));
 
-        foreach ($productSuppliersForEditing as $productSupplierForEditing) {
-            if ($productSupplierForEditing->getSupplierId() === $supplierId) {
-                $productSuppliersBySupplier[] = $productSupplierForEditing;
-            }
+        return new ProductStockInformation(
+            (int) $product->pack_stock_type,
+            (int) $stockAvailable->out_of_stock,
+            (int) $stockAvailable->quantity,
+            (int) $product->minimal_quantity,
+            (int) $product->low_stock_threshold,
+            (bool) $product->low_stock_alert,
+            $product->available_now,
+            $product->available_later,
+            $stockAvailable->location,
+            DateTimeUtil::NULL_DATE === $product->available_date ? null : new DateTime($product->available_date)
+        );
+    }
+
+    /**
+     * Get virtual product file
+     * Legacy object ProductDownload is referred as VirtualProductFile in Core
+     *
+     * @param Product $product
+     *
+     * @return VirtualProductFileForEditing|null
+     */
+    private function getVirtualProductFile(Product $product): ?VirtualProductFileForEditing
+    {
+        try {
+            $virtualProductFile = $this->virtualProductFileRepository->findByProductId(new ProductId($product->id));
+        } catch (VirtualProductFileNotFoundException $e) {
+            return null;
         }
 
-        return $productSuppliersBySupplier;
+        return new VirtualProductFileForEditing(
+            (int) $virtualProductFile->id,
+            $virtualProductFile->filename,
+            $virtualProductFile->display_filename,
+            (int) $virtualProductFile->nb_days_accessible,
+            (int) $virtualProductFile->nb_downloadable,
+            $virtualProductFile->date_expiration === DateTimeUtil::NULL_DATETIME ? null : new DateTime($virtualProductFile->date_expiration)
+        );
     }
 }

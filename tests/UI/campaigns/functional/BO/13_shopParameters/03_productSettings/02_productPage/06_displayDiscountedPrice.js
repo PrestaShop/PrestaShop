@@ -85,7 +85,7 @@ describe('Enable/Disable display discounted price', async () => {
     const pageTitle = await addCatalogPriceRulePage.getPageTitle(page);
     await expect(pageTitle).to.contains(addCatalogPriceRulePage.pageTitle);
 
-    const validationMessage = await addCatalogPriceRulePage.createEditCatalogPriceRule(page, priceRuleData);
+    const validationMessage = await addCatalogPriceRulePage.setCatalogPriceRule(page, priceRuleData);
     await expect(validationMessage).to.contains(catalogPriceRulesPage.successfulCreationMessage);
   });
 

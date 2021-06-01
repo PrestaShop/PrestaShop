@@ -32,6 +32,8 @@ use Symfony\Component\Finder\Finder;
 /**
  * Before booting the PrestaShop application in Symfony context,
  * we register every installed modules.
+ *
+ * @deprecated Since 1.7.8. Use \PrestaShop\PrestaShop\Adapter\Module\Repository\ModuleRepository instead
  */
 final class ModuleRepository
 {
@@ -84,7 +86,7 @@ final class ModuleRepository
     {
         if (null === $this->activeModulesPaths) {
             $this->activeModulesPaths = [];
-            $modulesFiles = Finder::create()->directories()->in(__DIR__ . '/../../../modules')->depth(0);
+            $modulesFiles = Finder::create()->directories()->in(_PS_MODULE_DIR_)->depth(0);
             $activeModules = $this->getActiveModules();
 
             foreach ($modulesFiles as $moduleFile) {

@@ -278,7 +278,7 @@ abstract class DbCore
 
         // Add here your slave(s) server(s) in this file
         if (file_exists(_PS_ROOT_DIR_ . '/config/db_slave_server.inc.php')) {
-            self::$_servers = array_merge(self::$_servers, require(_PS_ROOT_DIR_ . '/config/db_slave_server.inc.php'));
+            self::$_servers = array_merge(self::$_servers, require (_PS_ROOT_DIR_ . '/config/db_slave_server.inc.php'));
         }
 
         self::$_slave_servers_loaded = true;
@@ -778,6 +778,7 @@ abstract class DbCore
      *
      * @param string $string SQL data which will be injected into SQL query
      * @param bool $html_ok Does data contain HTML code ? (optional)
+     * @param bool $bq_sql Escape backticks
      *
      * @return string Sanitized data
      */

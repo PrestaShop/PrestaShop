@@ -39,6 +39,19 @@
         'label': 'Name'|trans({}, 'Admin.Global')
       }) }}
 
+      {{ ps.form_group_row(profileForm.avatarUrl, {}, {
+        'label': 'Avatar'|trans({}, 'Admin.Global')
+      }) }}
+
+      {% if avatarUrl|default('') is not empty %}
+      <div class="form-group row">
+        <label class="form-control-label"></label>
+        <div class="col-sm">
+          <img class="img-thumbnail clickable-avatar" src="{{ avatarUrl }}" alt="">
+        </div>
+      </div>
+      {% endif %}
+
       {% block profile_form_rest %}
         {{ form_rest(profileForm) }}
       {% endblock %}

@@ -115,7 +115,6 @@ export default class CartRulesRenderer {
     this.$searchResultBox.html($template);
   }
 
-
   /**
    * Empties cart rule search results block
    *
@@ -138,6 +137,7 @@ export default class CartRulesRenderer {
       const $template = $cartRuleTemplate.clone();
 
       let cartRuleName = cartRule.name;
+
       if (cartRule.code !== '') {
         cartRuleName = `${cartRule.name} - ${cartRule.code}`;
       }

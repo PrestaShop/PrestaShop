@@ -1,0 +1,78 @@
+# @todo: what should be proper naming for this? can it be indexAction even though it returns only json?
+admin_products_combinations:
+    path: /{productId}/combinations
+    methods: [GET]
+    options:
+        expose: true
+    defaults:
+        _controller: PrestaShopBundle:Admin/Sell/Catalog/Product/Combination:getList
+        _legacy_controller: AdminProducts
+
+admin_products_combinations_ids:
+    path: /{productId}/combinations/ids
+    methods: [GET]
+    options:
+        expose: true
+    defaults:
+        _controller: PrestaShopBundle:Admin/Sell/Catalog/Product/Combination:getListIds
+        _legacy_controller: AdminProducts
+
+admin_products_combinations_update_combination_from_listing:
+    path: /combinations/{combinationId}/update-combination-from-listing
+    methods: [PATCH]
+    options:
+        expose: true
+    defaults:
+        _controller: PrestaShopBundle:Admin/Sell/Catalog/Product/Combination:updateCombinationFromListing
+        _legacy_controller: AdminProducts
+    requirements:
+        combinationId: \d+
+
+admin_products_combinations_edit_combination:
+    path: /combinations/{combinationId}/edit
+    methods: [GET, POST]
+    options:
+        expose: true
+    defaults:
+        _controller: PrestaShopBundle:Admin/Sell/Catalog/Product/Combination:edit
+        _legacy_controller: AdminProducts
+    requirements:
+        combinationId: \d+
+
+admin_products_combinations_remove_combination:
+    path: /combinations/{combinationId}/remove
+    methods: [DELETE]
+    options:
+        expose: true
+    defaults:
+        _controller: PrestaShopBundle:Admin/Sell/Catalog/Product/Combination:remove
+        _legacy_controller: AdminProducts
+    requirements:
+        combinationId: \d+
+
+admin_products_attribute_groups:
+    path: /{productId}/attribute-groups
+    methods: [GET]
+    options:
+        expose: true
+    defaults:
+        _controller: PrestaShopBundle:Admin/Sell/Catalog/Product/Combination:getAttributeGroups
+        _legacy_controller: AdminProducts
+
+admin_all_attribute_groups:
+    path: /all-attribute-groups
+    methods: [GET]
+    options:
+        expose: true
+    defaults:
+        _controller: PrestaShopBundle:Admin/Sell/Catalog/Product/Combination:getAllAttributeGroups
+        _legacy_controller: AdminProducts
+
+admin_products_combinations_generate:
+    path: /generate-combinations/{productId}
+    methods: [POST]
+    options:
+        expose: true
+    defaults:
+        _controller: PrestaShopBundle:Admin/Sell/Catalog/Product/Combination:generateCombinations
+        _legacy_controller: AdminProducts

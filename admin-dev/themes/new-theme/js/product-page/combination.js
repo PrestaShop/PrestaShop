@@ -3,6 +3,7 @@ const {$} = window;
 export default function () {
   $(document).ready(() => {
     const $jsCombinationsList = $('.js-combinations-list');
+
     // If we are not on the product page, return
     if ($jsCombinationsList.length === 0) {
       return;
@@ -15,7 +16,6 @@ export default function () {
     const idsCount = idsProductAttribute.length;
     const step = 50;
     let currentCount = 0;
-
 
     $.get(refreshImagesUrl).then((response) => {
       if (idsCount !== 0) {
@@ -62,11 +62,13 @@ export default function () {
 
     const getCombinations = (combinationsImages) => {
       const $jsCombinationsBulkForm = $('#combinations-bulk-form');
+
       if (!$jsCombinationsBulkForm.hasClass('inactive')) {
         $jsCombinationsBulkForm.addClass('inactive');
       }
 
       const $combinationsUrl = getCombinationsUrl();
+
       if ($combinationsUrl === false) {
         return;
       }
@@ -89,6 +91,7 @@ export default function () {
      */
     const getCombinationsUrl = () => {
       const $numbers = idsProductAttribute.slice(currentCount, currentCount + step).join('-');
+
       if ($numbers.length === 0) {
         return false;
       }
@@ -104,6 +107,7 @@ export default function () {
 
   const activateCombinationsBulk = () => {
     const $jsCombinationsBulkForm = $('#combinations-bulk-form');
+
     if ($jsCombinationsBulkForm.hasClass('inactive')) {
       $jsCombinationsBulkForm.removeClass('inactive');
       $('#loading-attribute').fadeOut(1000).remove();
@@ -160,6 +164,7 @@ export default function () {
 
       /** get first selected image */
       const defaultImageElem = $(elem).find('.product-combination-image input:checked:first');
+
       if (defaultImageElem.length === 1) {
         defaultImageUrl = defaultImageElem.parent().find('img').attr('src');
       }
@@ -188,7 +193,6 @@ export default function () {
           .then((combinationsImages) => {
             refreshImagesCombination(combinationsImages, response.ids_product_attribute);
           });
-
 
         /** initialize form */
         $('input.attribute-generator').remove();

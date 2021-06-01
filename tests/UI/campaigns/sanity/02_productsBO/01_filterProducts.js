@@ -39,6 +39,7 @@ describe('Filter in Products Page', async () => {
   it('should go to Products page', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'goToProductsPage', baseContext);
 
+    await dashboardPage.closeOnboardingModal(page, 3000);
     await dashboardPage.goToSubMenu(
       page,
       dashboardPage.catalogParentLink,
@@ -62,9 +63,9 @@ describe('Filter in Products Page', async () => {
     // Check that prices have correct tax values
     for (let i = 1; i <= numberOfProducts && i <= numberOfProductsOnPage; i++) {
       const productPrice = await productsPage.getProductPriceFromList(page, i);
-      const productPriceTTC = await productsPage.getProductPriceFromList(page, i, true);
+      const productPriceATI = await productsPage.getProductPriceFromList(page, i, true);
       const conversionRate = (100 + parseInt(DefaultFrTax.rate, 10)) / 100;
-      await expect(parseFloat(productPrice)).to.equal(parseFloat((productPriceTTC / conversionRate).toFixed(2)));
+      await expect(parseFloat(productPrice)).to.equal(parseFloat((productPriceATI / conversionRate).toFixed(2)));
     }
   });
 
@@ -92,6 +93,7 @@ describe('Filter in Products Page', async () => {
       await testContext.addContextItem(this, 'testIdentifier', `resetFilters_${test.args.identifier}`, baseContext);
 
       let numberOfProductsAfterReset;
+
       if (test.args.filterBy === 'category') {
         await productsPage.resetFilterCategory(page);
         numberOfProductsAfterReset = await productsPage.getNumberOfProductsFromList(page);

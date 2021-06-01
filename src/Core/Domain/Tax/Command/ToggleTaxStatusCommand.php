@@ -46,8 +46,8 @@ class ToggleTaxStatusCommand
     private $taxId;
 
     /**
-     * @param string $expectedStatus
      * @param int $taxId
+     * @param bool $expectedStatus
      *
      * @throws TaxException
      */
@@ -77,7 +77,7 @@ class ToggleTaxStatusCommand
     /**
      * Validates that value is of type boolean
      *
-     * @param $value
+     * @param mixed $value
      *
      * @throws TaxConstraintException
      */

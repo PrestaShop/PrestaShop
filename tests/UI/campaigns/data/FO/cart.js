@@ -3,13 +3,13 @@ module.exports = {
     firstProduct: {
       name: 'Hummingbird printed t-shirt',
       quantity: 1,
-      price: '€22.94',
+      price: 22.94,
     },
     secondProduct: {
       name: 'Hummingbird printed sweater',
       quantity: 1,
-      price: '€34.46',
+      price: 34.46,
     },
-    cartTotalTTC: 57.41,
+    cartTotalATI: 57.41,
   },
 };

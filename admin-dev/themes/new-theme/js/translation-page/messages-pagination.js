@@ -48,6 +48,7 @@ export default function () {
     $('.pagination').removeClass('hide');
 
     let i;
+
     for (i = 1; i < totalPages; i += 1) {
       pageIndex = i + 1;
       pageLink = pageLinkTemplate.clone();
@@ -71,7 +72,7 @@ export default function () {
 
   $('.translation-domain .go-to-pagination-bar').click((event) => {
     const paginationBar = $(event.target).parents('.translation-domain').find('.pagination')[0];
-    scrollToPreviousPaginationBar(paginationBar, event.target);
+    scrollToPreviousPaginationBar(paginationBar);
 
     return false;
   });
@@ -93,7 +94,7 @@ export default function () {
 
     $(nav).find('.page-link').click((event) => {
       const paginationBar = $(event.target).parents('.pagination')[0];
-      scrollToPreviousPaginationBar(paginationBar, event.target);
+      scrollToPreviousPaginationBar(paginationBar);
     });
 
     $(nav).find('.page-item').click((event) => {

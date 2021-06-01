@@ -49,43 +49,34 @@ class CustomizationField
     private $required;
 
     /**
-     * @var int|null
-     */
-    private $customizationFieldId;
-
-    /**
      * @var bool
      */
     private $addedByModule;
 
     /**
+     * @var int|null
+     */
+    private $customizationFieldId;
+
+    /**
      * @param int $type
      * @param string[] $localizedNames
      * @param bool $required
-     * @param int|null $customizationFieldId
      * @param bool $addedByModule
-     * @todo: require all fields except the id.
+     * @param int|null $customizationFieldId If provided, means that its existing CustomizationField and should be updated
      */
     public function __construct(
         int $type,
         array $localizedNames,
         bool $required,
-        ?int $customizationFieldId = null,
-        bool $addedByModule = false
+        bool $addedByModule = false,
+        ?int $customizationFieldId = null
     ) {
         $this->type = $type;
         $this->localizedNames = $localizedNames;
         $this->required = $required;
-        $this->customizationFieldId = $customizationFieldId ?? null;
         $this->addedByModule = $addedByModule;
-    }
-
-    /**
-     * @return int|null
-     */
-    public function getCustomizationFieldId(): ?int
-    {
-        return $this->customizationFieldId;
+        $this->customizationFieldId = $customizationFieldId ?? null;
     }
 
     /**
@@ -118,5 +109,13 @@ class CustomizationField
     public function isAddedByModule(): bool
     {
         return $this->addedByModule;
+    }
+
+    /**
+     * @return int|null
+     */
+    public function getCustomizationFieldId(): ?int
+    {
+        return $this->customizationFieldId;
     }
 }

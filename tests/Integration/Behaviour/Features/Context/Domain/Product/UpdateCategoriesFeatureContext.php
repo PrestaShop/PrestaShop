@@ -29,8 +29,10 @@ declare(strict_types=1);
 namespace Tests\Integration\Behaviour\Features\Context\Domain\Product;
 
 use Behat\Gherkin\Node\TableNode;
+use Cache;
 use PHPUnit\Framework\Assert;
-use PrestaShop\PrestaShop\Core\Domain\Product\Command\UpdateProductCategoriesCommand;
+use PrestaShop\PrestaShop\Core\Domain\Product\Command\RemoveAllAssociatedProductCategoriesCommand;
+use PrestaShop\PrestaShop\Core\Domain\Product\Command\SetAssociatedProductCategoriesCommand;
 use PrestaShop\PrestaShop\Core\Domain\Product\Exception\CannotUpdateProductException;
 use PrestaShop\PrestaShop\Core\Domain\Product\Exception\ProductException;
 use RuntimeException;
@@ -82,8 +84,10 @@ class UpdateCategoriesFeatureContext extends AbstractProductFeatureContext
      */
     public function assertProductCategories(string $productReference, TableNode $table)
     {
+        Cache::clear();
         $data = $table->getRowsHash();
         $productForEditing = $actualCategoryIds = $this->getProductForEditing($productReference);
+
         $actualCategoryIds = $productForEditing->getCategoriesInformation()->getCategoryIds();
         sort($actualCategoryIds);
 
@@ -97,7 +101,21 @@ class UpdateCategoriesFeatureContext extends AbstractProductFeatureContext
         $actualDefaultCategoryId = $productForEditing->getCategoriesInformation()->getDefaultCategoryId();
 
         Assert::assertEquals($expectedDefaultCategoryId, $actualDefaultCategoryId, 'Unexpected default category assigned to product');
-        Assert::assertEquals($actualCategoryIds, $expectedCategoryIds, 'Unexpected categories assigned to product');
+        Assert::assertEquals($expectedCategoryIds, $actualCategoryIds, 'Unexpected categories assigned to product');
+    }
+
+    /**
+     * @When I delete all categories from product :productReference
+     *
+     * @param string $productReference
+     */
+    public function deleteAllProductCategoriesExceptDefault(string $productReference)
+    {
+        try {
+            $this->getCommandBus()->handle(new RemoveAllAssociatedProductCategoriesCommand($this->getSharedStorage()->get($productReference)));
+        } catch (ProductException $e) {
+            $this->setLastException($e);
+        }
     }
 
     /**
@@ -146,7 +164,7 @@ class UpdateCategoriesFeatureContext extends AbstractProductFeatureContext
     private function assignProductToCategories(int $productId, int $defaultCategoryId, array $categoryIds): void
     {
         try {
-            $this->getCommandBus()->handle(new UpdateProductCategoriesCommand(
+            $this->getCommandBus()->handle(new SetAssociatedProductCategoriesCommand(
                 $productId,
                 $defaultCategoryId,
                 $categoryIds

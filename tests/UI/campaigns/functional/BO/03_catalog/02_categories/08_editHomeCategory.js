@@ -30,6 +30,9 @@ describe('Edit home category', async () => {
   before(async function () {
     browserContext = await helper.createBrowserContext(this.browser);
     page = await helper.newTab(browserContext);
+
+    // Create category image
+    await files.generateImage(`${editCategoryData.name}.jpg`);
   });
 
   after(async () => {

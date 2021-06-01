@@ -34,10 +34,13 @@ use Symfony\Component\HttpFoundation\ParameterBag;
  */
 class Filters extends ParameterBag implements SearchCriteriaInterface
 {
-    const LIST_LIMIT = 10;
+    public const LIST_LIMIT = 10;
 
     /** @var string */
     protected $filterId = '';
+
+    /** @var bool */
+    protected $needsToBePersisted = true;
 
     /**
      * @param array $filters
@@ -92,7 +95,7 @@ class Filters extends ParameterBag implements SearchCriteriaInterface
      */
     public function getOffset()
     {
-        return $this->get('offset');
+        return $this->getInt('offset') ?: null;
     }
 
     /**
@@ -100,7 +103,7 @@ class Filters extends ParameterBag implements SearchCriteriaInterface
      */
     public function getLimit()
     {
-        return $this->get('limit');
+        return $this->getInt('limit') ?: null;
     }
 
     /**
@@ -136,6 +139,26 @@ class Filters extends ParameterBag implements SearchCriteriaInterface
     public function setFilterId($filterId)
     {
         $this->filterId = $filterId;
+
+        return $this;
+    }
+
+    /**
+     * @return bool
+     */
+    public function needsToBePersisted(): bool
+    {
+        return $this->needsToBePersisted;
+    }
+
+    /**
+     * @param bool $needsToBePersisted
+     *
+     * @return static
+     */
+    public function setNeedsToBePersisted(bool $needsToBePersisted): self
+    {
+        $this->needsToBePersisted = $needsToBePersisted;
 
         return $this;
     }

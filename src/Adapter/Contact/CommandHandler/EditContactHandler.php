@@ -36,7 +36,6 @@ use PrestaShop\PrestaShop\Core\Domain\Contact\Exception\CannotUpdateContactExcep
 use PrestaShop\PrestaShop\Core\Domain\Contact\Exception\ContactConstraintException;
 use PrestaShop\PrestaShop\Core\Domain\Contact\Exception\ContactException;
 use PrestaShop\PrestaShop\Core\Domain\Contact\Exception\ContactNotFoundException;
-use PrestaShop\PrestaShop\Core\Domain\Contact\ValueObject\ContactId;
 use PrestaShopDatabaseException;
 use PrestaShopException;
 use Symfony\Component\Validator\Validator\ValidatorInterface;

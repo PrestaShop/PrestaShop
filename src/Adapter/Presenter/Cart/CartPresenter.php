@@ -34,11 +34,14 @@ use Country;
 use Hook;
 use PrestaShop\PrestaShop\Adapter\Image\ImageRetriever;
 use PrestaShop\PrestaShop\Adapter\Presenter\PresenterInterface;
+use PrestaShop\PrestaShop\Adapter\Presenter\Product\ProductLazyArray;
+use PrestaShop\PrestaShop\Adapter\Presenter\Product\ProductListingLazyArray;
 use PrestaShop\PrestaShop\Adapter\Presenter\Product\ProductListingPresenter;
 use PrestaShop\PrestaShop\Adapter\Product\PriceFormatter;
 use PrestaShop\PrestaShop\Adapter\Product\ProductColorsRetriever;
 use PrestaShop\PrestaShop\Core\Product\ProductPresentationSettings;
 use Product;
+use ProductAssembler;
 use Symfony\Component\Translation\TranslatorInterface;
 use TaxConfiguration;
 use Tools;
@@ -70,6 +73,16 @@ class CartPresenter implements PresenterInterface
      */
     private $taxConfiguration;
 
+    /**
+     * @var ProductPresentationSettings
+     */
+    protected $settings;
+
+    /**
+     * @var ProductAssembler
+     */
+    protected $productAssembler;
+
     public function __construct()
     {
         $context = Context::getContext();
@@ -91,18 +104,12 @@ class CartPresenter implements PresenterInterface
     /**
      * @param array $rawProduct
      *
-     * @return \PrestaShop\PrestaShop\Adapter\Presenter\Product\ProductLazyArray|\PrestaShop\PrestaShop\Adapter\Presenter\Product\ProductListingLazyArray
+     * @return ProductLazyArray|ProductListingLazyArray
      */
     private function presentProduct(array $rawProduct)
     {
-        $settings = new ProductPresentationSettings();
-
-        $settings->catalog_mode = Configuration::isCatalogMode();
-        $settings->catalog_mode_with_prices = (int) Configuration::get('PS_CATALOG_MODE_WITH_PRICES');
-        $settings->include_taxes = $this->includeTaxes();
-        $settings->allow_add_variant_to_cart_from_listing = (int) Configuration::get('PS_ATTRIBUTE_CATEGORY_DISPLAY');
-        $settings->stock_management_enabled = Configuration::get('PS_STOCK_MANAGEMENT');
-        $settings->showPrices = Configuration::showPrices();
+        $assembledProduct = $this->getProductAssembler()->assembleProduct($rawProduct);
+        $rawProduct = array_merge($assembledProduct, $rawProduct);
 
         if (isset($rawProduct['attributes']) && is_string($rawProduct['attributes'])) {
             $rawProduct['attributes'] = $this->getAttributesArrayFromString($rawProduct['attributes']);
@@ -173,7 +180,7 @@ class CartPresenter implements PresenterInterface
         );
 
         return $presenter->present(
-            $settings,
+            $this->getSettings(),
             $rawProduct,
             Context::getContext()->language
         );
@@ -515,7 +522,7 @@ class CartPresenter implements PresenterInterface
             $defaultCountry = null;
 
             if (isset(Context::getContext()->cookie->id_country)) {
-                $defaultCountry = new Country(Context::getContext()->cookie->id_country);
+                $defaultCountry = new Country((int) Context::getContext()->cookie->id_country);
             }
 
             $deliveryOptionList = $cart->getDeliveryOptionList($defaultCountry);
@@ -548,6 +555,7 @@ class CartPresenter implements PresenterInterface
             $vouchers[$cartVoucher['id_cart_rule']]['code'] = $cartVoucher['code'];
             $vouchers[$cartVoucher['id_cart_rule']]['reduction_percent'] = $cartVoucher['reduction_percent'];
             $vouchers[$cartVoucher['id_cart_rule']]['reduction_currency'] = $cartVoucher['reduction_currency'];
+            $vouchers[$cartVoucher['id_cart_rule']]['free_shipping'] = (bool) $cartVoucher['free_shipping'];
 
             // Voucher reduction depending of the cart tax rule
             // if $cartHasTax & voucher is tax excluded, set amount voucher to tax included
@@ -576,19 +584,6 @@ class CartPresenter implements PresenterInterface
             } else {
                 $freeShippingOnly = false;
                 $totalCartVoucherReduction = $this->includeTaxes() ? $cartVoucher['value_real'] : $cartVoucher['value_tax_exc'];
-                $currencyFrom = new \Currency($cartVoucher['reduction_currency']);
-                $currencyTo = new \Currency($cart->id_currency);
-                if ($currencyFrom->conversion_rate == 0) {
-                    $totalCartVoucherReduction = 0;
-                } else {
-                    // convert to default currency
-                    $defaultCurrencyId = (int) Configuration::get('PS_CURRENCY_DEFAULT');
-                    $totalCartVoucherReduction /= $currencyFrom->conversion_rate;
-                    if ($defaultCurrencyId == $currencyTo->id) {
-                        // convert to destination currency
-                        $totalCartVoucherReduction *= $currencyTo->conversion_rate;
-                    }
-                }
             }
 
             // when a voucher has only a shipping reduction, the value displayed must be "Free Shipping"
@@ -599,7 +594,7 @@ class CartPresenter implements PresenterInterface
                     'Admin.Shipping.Feature'
                 );
             } else {
-                $cartVoucher['reduction_formatted'] = '-' . $this->priceFormatter->convertAndFormat($totalCartVoucherReduction);
+                $cartVoucher['reduction_formatted'] = '-' . $this->priceFormatter->format($totalCartVoucherReduction);
             }
             $vouchers[$cartVoucher['id_cart_rule']]['reduction_formatted'] = $cartVoucher['reduction_formatted'];
             $vouchers[$cartVoucher['id_cart_rule']]['delete_url'] = $this->link->getPageLink(
@@ -684,5 +679,31 @@ class CartPresenter implements PresenterInterface
         }
 
         return $attributesArray;
+    }
+
+    protected function getSettings(): ProductPresentationSettings
+    {
+        if ($this->settings === null) {
+            $this->settings = new ProductPresentationSettings();
+
+            $this->settings->catalog_mode = Configuration::isCatalogMode();
+            $this->settings->catalog_mode_with_prices = (int) Configuration::get('PS_CATALOG_MODE_WITH_PRICES');
+            $this->settings->include_taxes = $this->includeTaxes();
+            $this->settings->allow_add_variant_to_cart_from_listing = (int) Configuration::get('PS_ATTRIBUTE_CATEGORY_DISPLAY');
+            $this->settings->stock_management_enabled = Configuration::get('PS_STOCK_MANAGEMENT');
+            $this->settings->showPrices = Configuration::showPrices();
+            $this->settings->showLabelOOSListingPages = (bool) Configuration::get('PS_SHOW_LABEL_OOS_LISTING_PAGES');
+        }
+
+        return $this->settings;
+    }
+
+    protected function getProductAssembler(): ProductAssembler
+    {
+        if ($this->productAssembler === null) {
+            $this->productAssembler = new ProductAssembler(Context::getContext());
+        }
+
+        return $this->productAssembler;
     }
 }

@@ -121,6 +121,7 @@ export default class OrderProductCancel {
       const $parentCell = $productQuantityInput.parents(OrderViewPageMap.cancelProduct.table.cell);
       const $productAmount = $parentCell.find(OrderViewPageMap.cancelProduct.inputs.amount);
       const productQuantity = parseInt($productQuantityInput.val(), 10);
+
       if (productQuantity <= 0) {
         $productAmount.val(0);
         this.updateVoucherRefund();
@@ -155,6 +156,7 @@ export default class OrderProductCancel {
       const productQuantityInput = $parentCell.find(OrderViewPageMap.cancelProduct.inputs.quantity);
       const refundableQuantity = parseInt(productQuantityInput.data('quantityRefundable'), 10);
       const productQuantity = parseInt(productQuantityInput.val(), 10);
+
       if (!$productCheckbox.is(':checked')) {
         productQuantityInput.val(0);
       } else if (Number.isNaN(productQuantity) || productQuantity === 0) {
@@ -168,6 +170,7 @@ export default class OrderProductCancel {
     const $parentCell = $productQuantityInput.parents(OrderViewPageMap.cancelProduct.table.cell);
     const $productAmount = $parentCell.find(OrderViewPageMap.cancelProduct.inputs.amount);
     const productQuantity = parseInt($productQuantityInput.val(), 10);
+
     if (productQuantity <= 0) {
       $productAmount.val(0);
 
@@ -181,6 +184,7 @@ export default class OrderProductCancel {
       ? productUnitPrice * productQuantity
       : amountRefundable;
     const amountValue = parseFloat($productAmount.val());
+
     if ($productAmount.val() === '' || amountValue === 0 || amountValue > guessedAmount) {
       $productAmount.val(guessedAmount);
     }

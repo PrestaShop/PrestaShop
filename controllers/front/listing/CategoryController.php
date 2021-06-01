@@ -45,13 +45,14 @@ class CategoryControllerCore extends ProductListingFrontController
     {
         if (Validate::isLoadedObject($this->category)) {
             parent::canonicalRedirection($this->context->link->getCategoryLink($this->category));
-        } elseif ($canonicalURL) {
-            parent::canonicalRedirection($canonicalURL);
         }
     }
 
     public function getCanonicalURL()
     {
+        if (!Validate::isLoadedObject($this->category)) {
+            return '';
+        }
         $canonicalUrl = $this->context->link->getCategoryLink($this->category);
         $parsedUrl = parse_url($canonicalUrl);
         if (isset($parsedUrl['query'])) {
@@ -85,13 +86,16 @@ class CategoryControllerCore extends ProductListingFrontController
             $this->context->language->id
         );
 
-        if (!Validate::isLoadedObject($this->category) || !$this->category->active) {
-            Tools::redirect('pagenotfound');
-        }
-
         parent::init();
 
-        if (!$this->category->checkAccess($this->context->customer->id)) {
+        if (!Validate::isLoadedObject($this->category) || !$this->category->active) {
+            header('HTTP/1.1 404 Not Found');
+            header('Status: 404 Not Found');
+            $this->errors[] = $this->trans('This category does not exist.', [], 'Shop.Notifications.Error');
+            $this->setTemplate('errors/404');
+
+            return;
+        } elseif (!$this->category->checkAccess($this->context->customer->id)) {
             header('HTTP/1.1 403 Forbidden');
             header('Status: 403 Forbidden');
             $this->errors[] = $this->trans('You do not have access to this category.', [], 'Shop.Notifications.Error');
@@ -129,7 +133,11 @@ class CategoryControllerCore extends ProductListingFrontController
     {
         parent::initContent();
 
-        if ($this->category->checkAccess($this->context->customer->id)) {
+        if (
+            Validate::isLoadedObject($this->category)
+            && $this->category->active
+            && $this->category->checkAccess($this->context->customer->id)
+        ) {
             $this->doProductSearch(
                 'catalog/listing/category',
                 [
@@ -228,13 +236,19 @@ class CategoryControllerCore extends ProductListingFrontController
         $breadcrumb = parent::getBreadcrumbLinks();
 
         foreach ($this->category->getAllParents() as $category) {
-            if ($category->id_parent != 0 && !$category->is_root_category) {
-                $breadcrumb['links'][] = $this->getCategoryPath($category);
+            if ($category->id_parent != 0 && !$category->is_root_category && $category->active) {
+                $breadcrumb['links'][] = [
+                    'title' => $category->name,
+                    'url' => $this->context->link->getCategoryLink($category),
+                ];
             }
         }
 
-        if ($this->category->id_parent != 0 && !$this->category->is_root_category) {
-            $breadcrumb['links'][] = $this->getCategoryPath($this->category);
+        if ($this->category->id_parent != 0 && !$this->category->is_root_category && $category->active) {
+            $breadcrumb['links'][] = [
+                'title' => $this->category->name,
+                'url' => $this->context->link->getCategoryLink($this->category),
+            ];
         }
 
         return $breadcrumb;

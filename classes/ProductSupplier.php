@@ -143,7 +143,7 @@ class ProductSupplierCore extends ObjectModel
      * @param int $idSupplier Supplier ID
      * @param bool $withCurrency Optional With currency
      *
-     * @return array
+     * @return string
      */
     public static function getProductSupplierPrice($idProduct, $idProductAttribute, $idSupplier, $withCurrency = false)
     {
@@ -179,7 +179,7 @@ class ProductSupplierCore extends ObjectModel
      * @param int $idProductAttribute
      * @param int $idSupplier
      *
-     * @return array
+     * @return int
      */
     public static function getIdByProductAndSupplier($idProduct, $idProductAttribute, $idSupplier)
     {
@@ -200,7 +200,7 @@ class ProductSupplierCore extends ObjectModel
      * For a given product, retrieves its suppliers.
      *
      * @param int $idProduct
-     * @param int $groupBySupplier
+     * @param bool $groupBySupplier
      *
      * @return PrestaShopCollection Collection of ProductSupplier
      */

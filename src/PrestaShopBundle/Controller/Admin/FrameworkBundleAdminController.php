@@ -29,12 +29,10 @@ namespace PrestaShopBundle\Controller\Admin;
 use Exception;
 use PrestaShop\PrestaShop\Adapter\Configuration;
 use PrestaShop\PrestaShop\Adapter\Shop\Context;
-use PrestaShop\PrestaShop\Core\ConfigurationInterface;
 use PrestaShop\PrestaShop\Core\Grid\GridInterface;
 use PrestaShop\PrestaShop\Core\Localization\Locale;
 use PrestaShop\PrestaShop\Core\Localization\Locale\Repository as LocaleRepository;
 use PrestaShop\PrestaShop\Core\Module\Exception\ModuleErrorInterface;
-use PrestaShop\PrestaShop\Core\Search\Filters;
 use PrestaShopBundle\Security\Voter\PageVoter;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
@@ -43,7 +41,6 @@ use Symfony\Component\Form\FormError;
 use Symfony\Component\Form\FormInterface;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\RedirectResponse;
-use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 
 /**
@@ -51,10 +48,10 @@ use Symfony\Component\HttpFoundation\Response;
  */
 class FrameworkBundleAdminController extends Controller
 {
-    const PRESTASHOP_CORE_CONTROLLERS_TAG = 'prestashop.core.controllers';
+    public const PRESTASHOP_CORE_CONTROLLERS_TAG = 'prestashop.core.controllers';
 
     /**
-     * @var ConfigurationInterface
+     * @var Configuration
      */
     protected $configuration;
 
@@ -89,13 +86,13 @@ class FrameworkBundleAdminController extends Controller
      *
      * Parse all errors mapped by id html field
      *
-     * @param Form $form
+     * @param FormInterface $form
      *
-     * @return array[array[string]] Errors
+     * @return array<array<string>> Errors
      *
      * @throws \Symfony\Component\Translation\Exception\InvalidArgumentException
      */
-    public function getFormErrorsForJS(Form $form)
+    public function getFormErrorsForJS(FormInterface $form)
     {
         $errors = [];
 
@@ -223,7 +220,7 @@ class FrameworkBundleAdminController extends Controller
     }
 
     /**
-     * @param $lang
+     * @param string $lang
      *
      * @return mixed
      */
@@ -323,8 +320,8 @@ class FrameworkBundleAdminController extends Controller
     /**
      * Check if the connected user is granted to actions on a specific object.
      *
-     * @param $action
-     * @param $object
+     * @param string $action
+     * @param string $object
      * @param string $suffix
      *
      * @return bool
@@ -347,7 +344,7 @@ class FrameworkBundleAdminController extends Controller
     /**
      * Display a message about permissions failure according to an action.
      *
-     * @param $action
+     * @param string $action
      * @param string $suffix
      *
      * @return string
@@ -527,23 +524,5 @@ class FrameworkBundleAdminController extends Controller
             $exceptionCode,
             $e->getMessage()
         );
-    }
-
-    /**
-     * @param Request $request
-     *
-     * @return Filters
-     */
-    protected function buildFiltersParamsByRequest(Request $request, Filters $filters)
-    {
-        $filtersParams = is_array($request->query->get($filters->getFilterId())) ?
-            array_merge($filters::getDefaults(), $request->query->get($filters->getFilterId())) :
-            $filters::getDefaults()
-        ;
-        foreach (array_keys($filters::getDefaults()) as $key) {
-            $filters->set($key, $filtersParams[$key]);
-        }
-
-        return $filters;
     }
 }

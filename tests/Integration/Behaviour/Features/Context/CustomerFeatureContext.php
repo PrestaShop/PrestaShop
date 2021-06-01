@@ -54,8 +54,10 @@ class CustomerFeatureContext extends AbstractPrestaShopFeatureContext
         $customer->lastname = 'fake';
         $customer->passwd = 'fakefake';
         $customer->email = $customerEmail;
+        $customer->id_shop = Context::getContext()->shop->id;
         $customer->add();
         $this->customers[$customerName] = $customer;
+        SharedStorage::getStorage()->set($customerName, $customer->id);
     }
 
     /**
@@ -70,7 +72,7 @@ class CustomerFeatureContext extends AbstractPrestaShopFeatureContext
             throw new Exception(sprintf('Customer with email "%s" does not exist.', $customerEmail));
         }
 
-        SharedStorage::getStorage()->set($reference, $customer);
+        SharedStorage::getStorage()->set($reference, $customer->id);
     }
 
     /**
@@ -78,7 +80,7 @@ class CustomerFeatureContext extends AbstractPrestaShopFeatureContext
      */
     public function customerHasAddressInCountry($reference, $isoCode)
     {
-        $customer = SharedStorage::getStorage()->get($reference);
+        $customer = $this->getCustomerByReference($reference);
         $customerAddresses = $customer->getAddresses((int) Configuration::get('PS_LANG_DEFAULT'));
 
         foreach ($customerAddresses as $address) {
@@ -90,6 +92,26 @@ class CustomerFeatureContext extends AbstractPrestaShopFeatureContext
         }
 
         throw new RuntimeException(sprintf('Customer does not have address in "%s" country', $isoCode));
+    }
+
+    /**
+     * @Given /^the customer "(.+)" has SIRET "(.+)"$/
+     */
+    public function customerHasSIRET(string $reference, string $siret): void
+    {
+        $customer = $this->getCustomerByReference($reference);
+        $customer->siret = $siret;
+        $customer->save();
+    }
+
+    /**
+     * @Given /^the customer "(.+)" has APE "(.+)"$/
+     */
+    public function customerHasAPE(string $reference, string $ape): void
+    {
+        $customer = $this->getCustomerByReference($reference);
+        $customer->ape = $ape;
+        $customer->save();
     }
 
     /**
@@ -106,8 +128,7 @@ class CustomerFeatureContext extends AbstractPrestaShopFeatureContext
      */
     public function assertPrivateNoteIsNotSetAboutCustomer($reference)
     {
-        /** @var Customer $customer */
-        $customer = SharedStorage::getStorage()->get($reference);
+        $customer = $this->getCustomerByReference($reference);
 
         if ($customer->note) {
             throw new RuntimeException(sprintf('It was expected that customer "%s" should not have private note.', $reference));
@@ -119,8 +140,7 @@ class CustomerFeatureContext extends AbstractPrestaShopFeatureContext
      */
     public function assertPrivateNoteAboutCustomer($reference, $privateNote)
     {
-        /** @var Customer $customer */
-        $customer = SharedStorage::getStorage()->get($reference);
+        $customer = $this->getCustomerByReference($reference);
 
         if ($customer->note !== $privateNote) {
             throw new RuntimeException(sprintf('It was expected that customer "%s" private note should be "%s", but actually is "%s".', $reference, $privateNote, $customer->note));
@@ -132,8 +152,7 @@ class CustomerFeatureContext extends AbstractPrestaShopFeatureContext
      */
     public function checkCustomerHasVoucher(string $reference, float $voucherAmount)
     {
-        /** @var Customer $customer */
-        $customer = SharedStorage::getStorage()->get($reference);
+        $customer = $this->getCustomerByReference($reference);
         $cartRules = CartRule::getCustomerCartRules((int) Configuration::get('PS_LANG_DEFAULT'), $customer->id, true, false);
         if (empty($cartRules)) {
             throw new RuntimeException('Cannot find any cart rules for customer');
@@ -172,5 +191,17 @@ class CustomerFeatureContext extends AbstractPrestaShopFeatureContext
             $customer->delete();
         }
         $this->customers = [];
+    }
+
+    /**
+     * @param string $customerReference
+     *
+     * @return Customer
+     */
+    private function getCustomerByReference(string $customerReference): Customer
+    {
+        $customerId = SharedStorage::getStorage()->get($customerReference);
+
+        return new Customer($customerId);
     }
 }

@@ -51,7 +51,7 @@ describe('Edit translation', async () => {
   it('should choose the translation to modify', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'modifyTranslation', baseContext);
 
-    await translationsPage.modifyTranslation(page, 'Themes translations', 'classic', Languages.french.name);
+    await translationsPage.modifyTranslation(page, 'Front office Translations', 'classic', Languages.french.name);
     const pageTitle = await translationsPage.getPageTitle(page);
     await expect(pageTitle).to.contains(translationsPage.pageTitle);
   });
@@ -99,7 +99,7 @@ describe('Edit translation', async () => {
   });
 
   it('should go to FO page and change the language to French', async function () {
-    await testContext.addContextItem(this, 'testIdentifier', 'goToFO', baseContext);
+    await testContext.addContextItem(this, 'testIdentifier', 'goToFoAfterReset', baseContext);
 
     await homePage.goToFo(page);
     await homePage.changeLanguage(page, 'fr');
@@ -109,7 +109,7 @@ describe('Edit translation', async () => {
   });
 
   it('should check the translation', async function () {
-    await testContext.addContextItem(this, 'testIdentifier', 'checkTranslation', baseContext);
+    await testContext.addContextItem(this, 'testIdentifier', 'checkTranslationAfterReset', baseContext);
 
     const title = await homePage.getPopularProductTitle(page);
     await expect(title).to.equal('Produits populaires');

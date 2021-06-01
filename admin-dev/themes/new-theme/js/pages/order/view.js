@@ -58,6 +58,7 @@ $(() => {
 
   handlePaymentDetailsToggle();
   handlePrivateNoteChange();
+  handleOrderNoteChange();
   handleUpdateOrderStatusButton();
 
   new InvoiceNoteManager();
@@ -67,6 +68,11 @@ $(() => {
   $(OrderViewPageMap.privateNoteToggleBtn).on('click', (event) => {
     event.preventDefault();
     togglePrivateNoteBlock();
+  });
+
+  $(OrderViewPageMap.orderNoteToggleBtn).on('click', (event) => {
+    event.preventDefault();
+    toggleOrderNoteBlock();
   });
 
   $(OrderViewPageMap.printOrderViewPageButton).on('click', () => {
@@ -121,6 +127,26 @@ $(() => {
     });
   }
 
+  function toggleOrderNoteBlock() {
+    const $block = $(OrderViewPageMap.orderNoteBlock);
+    const $btn = $(OrderViewPageMap.orderNoteToggleBtn);
+    const isNoteOpened = $btn.hasClass('is-opened');
+
+    $btn.toggleClass('is-opened', !isNoteOpened);
+    $block.toggleClass('d-none', isNoteOpened);
+
+    const $icon = $btn.find('.material-icons');
+    $icon.text(isNoteOpened ? 'add' : 'remove');
+  }
+
+  function handleOrderNoteChange() {
+    const $submitBtn = $(OrderViewPageMap.orderNoteSubmitBtn);
+
+    $(OrderViewPageMap.orderNoteInput).on('input', () => {
+      $submitBtn.prop('disabled', false);
+    });
+  }
+
   function initAddCartRuleFormHandler() {
     const $modal = $(OrderViewPageMap.addCartRuleModal);
     const $form = $modal.find('form');
@@ -129,9 +155,17 @@ $(() => {
     const $valueInput = $form.find(OrderViewPageMap.addCartRuleValueInput);
     const $valueFormGroup = $valueInput.closest('.form-group');
 
+    $modal.on('shown.bs.modal', () => {
+      $(OrderViewPageMap.addCartRuleSubmit).attr('disabled', true);
+    });
+
+    $form.find(OrderViewPageMap.addCartRuleNameInput).on('keyup', (event) => {
+      const cartRuleName = $(event.currentTarget).val();
+      $(OrderViewPageMap.addCartRuleSubmit).attr('disabled', cartRuleName.trim().length === 0);
+    });
+
     $form.find(OrderViewPageMap.addCartRuleApplyOnAllInvoicesCheckbox).on('change', (event) => {
       const isChecked = $(event.currentTarget).is(':checked');
-
       $invoiceSelect.attr('disabled', isChecked);
     });
 

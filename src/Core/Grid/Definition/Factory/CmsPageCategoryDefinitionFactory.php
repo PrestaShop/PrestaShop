@@ -57,7 +57,7 @@ final class CmsPageCategoryDefinitionFactory extends AbstractFilterableGridDefin
     use BulkDeleteActionTrait;
     use DeleteActionTrait;
 
-    const GRID_ID = 'cms_page_category';
+    public const GRID_ID = 'cms_page_category';
 
     /**
      * @var int

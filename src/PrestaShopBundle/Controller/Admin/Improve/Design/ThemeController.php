@@ -84,10 +84,12 @@ class ThemeController extends AbstractAdminController
     {
         $isHostMode = $this->get('prestashop.adapter.hosting_information')->isHostMode();
         $isoCode = strtoupper($this->get('prestashop.adapter.legacy.context')->getLanguage()->iso_code);
+        $languagesAddons = ['de', 'en', 'es', 'fr', 'it', 'nl', 'pl', 'pt', 'ru'];
+        $languageAddons = in_array(strtolower($isoCode), $languagesAddons) ? strtolower($isoCode) : 'en';
 
         $themeCatalogUrl = sprintf(
             '%s?%s',
-            'https://addons.prestashop.com/en/3-templates-prestashop',
+            'https://addons.prestashop.com/' . $languageAddons . '/3-templates-prestashop',
             http_build_query([
                 'utm_source' => 'back-office',
                 'utm_medium' => 'theme-button',
@@ -492,6 +494,20 @@ class ThemeController extends AbstractAdminController
                     '%theme_name%' => $e instanceof ImportedThemeAlreadyExistsException ? $e->getThemeName()->getValue() : '',
                 ]
             ),
+            ThemeConstraintException::class => [
+                ThemeConstraintException::RESTRICTED_ONLY_FOR_SINGLE_SHOP => $this->trans(
+                        'Themes can only be changed in single store context.', 'Admin.Notifications.Error'
+                ),
+                ThemeConstraintException::MISSING_CONFIGURATION_FILE => $this->trans(
+                        'Missing configuration file', 'Admin.Notifications.Error'
+                ),
+                ThemeConstraintException::INVALID_CONFIGURATION => $this->trans(
+                        'Invalid configuration', 'Admin.Notifications.Error'
+                ),
+                ThemeConstraintException::INVALID_DATA => $this->trans(
+                        'Invalid data', 'Admin.Notifications.Error'
+                ),
+            ],
         ];
     }
 

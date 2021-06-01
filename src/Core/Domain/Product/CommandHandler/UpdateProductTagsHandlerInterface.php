@@ -26,7 +26,7 @@
 
 namespace PrestaShop\PrestaShop\Core\Domain\Product\CommandHandler;
 
-use PrestaShop\PrestaShop\Core\Domain\Product\Command\UpdateProductTagsCommand;
+use PrestaShop\PrestaShop\Core\Domain\Product\Command\SetProductTagsCommand;
 
 /**
  * Defines contract for UpdateProductTagsHandler
@@ -34,7 +34,7 @@ use PrestaShop\PrestaShop\Core\Domain\Product\Command\UpdateProductTagsCommand;
 interface UpdateProductTagsHandlerInterface
 {
     /**
-     * @param UpdateProductTagsCommand $command
+     * @param SetProductTagsCommand $command
      */
-    public function handle(UpdateProductTagsCommand $command): void;
+    public function handle(SetProductTagsCommand $command): void;
 }

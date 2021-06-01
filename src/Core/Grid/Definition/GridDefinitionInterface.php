@@ -28,7 +28,9 @@ namespace PrestaShop\PrestaShop\Core\Grid\Definition;
 
 use PrestaShop\PrestaShop\Core\Grid\Action\Bulk\BulkActionCollectionInterface;
 use PrestaShop\PrestaShop\Core\Grid\Action\GridActionCollectionInterface;
+use PrestaShop\PrestaShop\Core\Grid\Action\ViewOptionsCollectionInterface;
 use PrestaShop\PrestaShop\Core\Grid\Column\ColumnCollectionInterface;
+use PrestaShop\PrestaShop\Core\Grid\Column\ColumnInterface;
 use PrestaShop\PrestaShop\Core\Grid\Filter\FilterCollectionInterface;
 
 /**
@@ -58,6 +60,13 @@ interface GridDefinitionInterface
     public function getColumns();
 
     /**
+     * @param string $id
+     *
+     * @return ColumnInterface
+     */
+    public function getColumnById(string $id): ColumnInterface;
+
+    /**
      * @return BulkActionCollectionInterface
      */
     public function getBulkActions();
@@ -68,6 +77,11 @@ interface GridDefinitionInterface
      * @return GridActionCollectionInterface
      */
     public function getGridActions();
+
+    /**
+     * @return ViewOptionsCollectionInterface
+     */
+    public function getViewOptions();
 
     /**
      * Get filters.

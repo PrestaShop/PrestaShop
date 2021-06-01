@@ -39,6 +39,7 @@ export default class OrderProductManager {
 
     const $btn = $(event.currentTarget);
     const confirmed = window.confirm($btn.data('deleteMessage'));
+
     if (!confirmed) {
       return;
     }

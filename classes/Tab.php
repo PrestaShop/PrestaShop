@@ -29,7 +29,7 @@
  */
 class TabCore extends ObjectModel
 {
-    /** @var string Displayed name */
+    /** @var string|array<int, string> Displayed name */
     public $name;
 
     /** @var string Class and file name */
@@ -58,6 +58,12 @@ class TabCore extends ObjectModel
     /** @var string Icon font */
     public $icon;
 
+    /** @var string|null Wording to use for the display name */
+    public $wording;
+
+    /** @var string|null Wording domain to use for the display name */
+    public $wording_domain;
+
     /**
      * @deprecated Since 1.7.7
      */
@@ -80,6 +86,8 @@ class TabCore extends ObjectModel
             'enabled' => ['type' => self::TYPE_BOOL, 'validate' => 'isBool'],
             'hide_host_mode' => ['type' => self::TYPE_BOOL, 'validate' => 'isBool'],
             'icon' => ['type' => self::TYPE_STRING, 'size' => 64],
+            'wording' => ['type' => self::TYPE_STRING, 'validate' => 'isString', 'allow_null' => true, 'size' => 255],
+            'wording_domain' => ['type' => self::TYPE_STRING, 'validate' => 'isString', 'allow_null' => true, 'size' => 255],
             /* Lang fields */
             'name' => ['type' => self::TYPE_STRING, 'lang' => true, 'required' => true, 'validate' => 'isTabName', 'size' => 64],
         ],
@@ -193,6 +201,14 @@ class TabCore extends ObjectModel
         }
 
         return false;
+    }
+
+    /**
+     * reset static cache (eg unit testing purpose).
+     */
+    public static function resetStaticCache()
+    {
+        self::$_getIdFromClassName = null;
     }
 
     /**
@@ -620,7 +636,7 @@ class TabCore extends ObjectModel
     {
         $adminTab = Tab::getTab((int) Context::getContext()->language->id, $idTab);
         $tabs[] = $adminTab;
-        if ($adminTab['id_parent'] > 0) {
+        if (!empty($adminTab['id_parent'])) {
             $tabs = Tab::recursiveTab($adminTab['id_parent'], $tabs);
         }
 
@@ -688,11 +704,12 @@ class TabCore extends ObjectModel
     public static function getTabModulesList($idTab)
     {
         $modulesList = ['default_list' => [], 'slider_list' => []];
-        $xmlTabModulesList = false;
 
-        if (file_exists(_PS_ROOT_DIR_ . Module::CACHE_FILE_TAB_MODULES_LIST)) {
-            $xmlTabModulesList = @simplexml_load_file(_PS_ROOT_DIR_ . Module::CACHE_FILE_TAB_MODULES_LIST);
+        if (!Tools::isFileFresh(Module::CACHE_FILE_TAB_MODULES_LIST, Tools::CACHE_LIFETIME_SECONDS)) {
+            Tools::refreshFile(Module::CACHE_FILE_TAB_MODULES_LIST, _PS_TAB_MODULE_LIST_URL_);
         }
+
+        $xmlTabModulesList = @simplexml_load_file(_PS_ROOT_DIR_ . Module::CACHE_FILE_TAB_MODULES_LIST);
 
         $className = null;
         $displayType = 'default_list';

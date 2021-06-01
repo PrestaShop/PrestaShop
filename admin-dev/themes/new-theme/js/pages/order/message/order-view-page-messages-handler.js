@@ -68,6 +68,7 @@ export default class OrderViewPageMessagesHandler {
       }
 
       $orderMessage.val(message);
+      $orderMessage.trigger('input');
     });
   }
 

@@ -11,7 +11,7 @@ services:
             'Twig': '/Admin/TwigTemplateForm'
             'AdvancedParameters': '/Admin/Configure/AdvancedParameters'
             'ShopParameters': '/Admin/Configure/ShopParameters'
-          - '@=service("prestashop.module_kernel.repository").getActiveModulesPaths()'
+          - '@=service("prestashop.adapter.module.repository.module_repository").getActiveModulesPaths()'
         tags:
           - { name: twig.loader, priority: 1}
 

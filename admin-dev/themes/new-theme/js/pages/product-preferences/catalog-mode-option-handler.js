@@ -43,6 +43,7 @@ class CatalogModeOptionHandler {
     const catalogModeEnabled = parseInt(catalogModeVal, 10);
 
     const catalogOptions = $(this.pageMap.catalogModeOptions);
+
     if (catalogModeEnabled) {
       catalogOptions.show(fadeLength);
     } else {

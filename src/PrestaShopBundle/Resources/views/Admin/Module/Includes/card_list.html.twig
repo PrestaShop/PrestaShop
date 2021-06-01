@@ -94,15 +94,17 @@
           {% endblock %}
         </div>
         <div class="col-sm-12 col-md-12 col-lg-3 text-md-right">
-          {% if requireBulkActions is defined and requireBulkActions == true %}
-            <div class="module-checkbox-bulk-list md-checkbox">
-              <label>
-                <input type="checkbox" data-name="{{ module.attributes.displayName }}" data-tech-name="{{module.attributes.name}}" />
-                <i class="md-checkbox-control"></i>
-              </label>
-            </div>
-          {% endif %}
-          {% include '@PrestaShop/Admin/Module/Includes/action_menu.html.twig' with { 'module': module } %}
+          {% block module_actions %}
+            {% if requireBulkActions is defined and requireBulkActions == true %}
+              <div class="module-checkbox-bulk-list md-checkbox">
+                <label>
+                  <input type="checkbox" data-name="{{ module.attributes.displayName }}" data-tech-name="{{module.attributes.name}}" />
+                  <i class="md-checkbox-control"></i>
+                </label>
+              </div>
+            {% endif %}
+            {% include '@PrestaShop/Admin/Module/Includes/action_menu.html.twig' with { 'module': module } %}
+          {% endblock %}
         </div>
         {% include '@PrestaShop/Admin/Module/Includes/modal_read_more.html.twig' with { 'module': module, 'additionalModalSuffix': additionalModalSuffix|default('') } %}
         {% include '@PrestaShop/Admin/Module/Includes/modal_confirm.html.twig' with { 'module': module } %}

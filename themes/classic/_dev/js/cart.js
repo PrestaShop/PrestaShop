@@ -5,7 +5,7 @@ prestashop.cart = prestashop.cart || {};
 
 prestashop.cart.active_inputs = null;
 
-let spinnerSelector = 'input[name="product-quantity-spin"]';
+const spinnerSelector = 'input[name="product-quantity-spin"]';
 let hasError = false;
 let isUpdateOperation = false;
 let errorMsg = '';
@@ -14,7 +14,7 @@ let errorMsg = '';
  * Attach Bootstrap TouchSpin event handlers
  */
 function createSpin() {
-  $.each($(spinnerSelector), function (index, spinner) {
+  $.each($(spinnerSelector), (index, spinner) => {
     $(spinner).TouchSpin({
       verticalbuttons: true,
       verticalupclass: 'material-icons touchspin-up',
@@ -25,6 +25,8 @@ function createSpin() {
       max: 1000000,
     });
   });
+
+  $(prestashop.themeSelectors.touchspin).off('touchstart.touchspin');
 
   CheckUpdateQuantityOperations.switchErrorStat();
 }
@@ -54,7 +56,7 @@ $(document).ready(() => {
   }
 
   function findCartLineProductQuantityInput($target) {
-    var $input = $target.parents('.bootstrap-touchspin').find(productLineInCartSelector);
+    const $input = $target.parents('.bootstrap-touchspin').find(productLineInCartSelector);
 
     if ($input.is(':focus')) {
       return null;
@@ -64,19 +66,19 @@ $(document).ready(() => {
   }
 
   function camelize(subject) {
-    let actionTypeParts = subject.split('-');
+    const actionTypeParts = subject.split('-');
     let i;
     let part;
     let camelizedSubject = '';
 
-    for (i = 0; i < actionTypeParts.length; i++) {
+    for (i = 0; i < actionTypeParts.length; i += 1) {
       part = actionTypeParts[i];
 
-      if (0 !== i) {
+      if (i !== 0) {
         part = part.substring(0, 1).toUpperCase() + part.substring(1);
       }
 
-      camelizedSubject = camelizedSubject + part;
+      camelizedSubject += part;
     }
 
     return camelizedSubject;
@@ -90,12 +92,14 @@ $(document).ready(() => {
       };
     }
 
-    let $input = findCartLineProductQuantityInput($target);
+    const $input = findCartLineProductQuantityInput($target);
+
     if (!$input) {
-      return;
+      return false;
     }
 
     let cartAction = {};
+
     if (shouldIncreaseProductQuantity(namespace)) {
       cartAction = {
         url: $input.data('up-url'),
@@ -111,31 +115,28 @@ $(document).ready(() => {
     return cartAction;
   }
 
-  let abortPreviousRequests = () => {
-    var promise;
+  const abortPreviousRequests = () => {
+    let promise;
     while (promises.length > 0) {
       promise = promises.pop();
       promise.abort();
     }
   };
 
-  var getTouchSpinInput = ($button) => {
-    return $($button.parents('.bootstrap-touchspin').find('input'));
-  };
+  const getTouchSpinInput = ($button) => $($button.parents('.bootstrap-touchspin').find('input'));
 
-  var handleCartAction = (event) => {
+  const handleCartAction = (event) => {
     event.preventDefault();
 
-    let $target = $(event.currentTarget);
-    let dataset = event.currentTarget.dataset;
-
-    let cartAction = parseCartAction($target, event.namespace);
-    let requestData = {
+    const $target = $(event.currentTarget);
+    const {dataset} = event.currentTarget;
+    const cartAction = parseCartAction($target, event.namespace);
+    const requestData = {
       ajax: '1',
       action: 'update',
     };
 
-    if (typeof cartAction === 'undefined') {
+    if (!cartAction) {
       return;
     }
 
@@ -145,25 +146,25 @@ $(document).ready(() => {
       method: 'POST',
       data: requestData,
       dataType: 'json',
-      beforeSend: function (jqXHR) {
+      beforeSend(jqXHR) {
         promises.push(jqXHR);
       },
     })
-      .then(function (resp) {
+      .then((resp) => {
         CheckUpdateQuantityOperations.checkUpdateOpertation(resp);
-        var $quantityInput = getTouchSpinInput($target);
+        const $quantityInput = getTouchSpinInput($target);
         $quantityInput.val(resp.quantity);
 
         // Refresh cart preview
         prestashop.emit('updateCart', {
           reason: dataset,
-          resp: resp,
+          resp,
         });
       })
       .fail((resp) => {
         prestashop.emit('handleError', {
           eventType: 'updateProductInCart',
-          resp: resp,
+          resp,
           cartAction: cartAction.type,
         });
       });
@@ -182,16 +183,18 @@ $(document).ready(() => {
       method: 'POST',
       data: requestData,
       dataType: 'json',
-      beforeSend: function (jqXHR) {
+      beforeSend(jqXHR) {
         promises.push(jqXHR);
       },
     })
-      .then(function (resp) {
+      .then((resp) => {
         CheckUpdateQuantityOperations.checkUpdateOpertation(resp);
         $target.val(resp.quantity);
 
-        var dataset;
+        let dataset;
+
         if ($target && $target.dataset) {
+          // eslint-disable-next-line
           dataset = $target.dataset;
         } else {
           dataset = resp;
@@ -200,13 +203,13 @@ $(document).ready(() => {
         // Refresh cart preview
         prestashop.emit('updateCart', {
           reason: dataset,
-          resp: resp,
+          resp,
         });
       })
       .fail((resp) => {
         prestashop.emit('handleError', {
           eventType: 'updateProductQuantityInCart',
-          resp: resp,
+          resp,
         });
       });
   }
@@ -231,13 +234,15 @@ $(document).ready(() => {
 
     // There should be a valid product quantity in cart
     const targetValue = $target.val();
-    if (targetValue != parseInt(targetValue) || targetValue < 0 || isNaN(targetValue)) {
+    /* eslint-disable */
+    if (targetValue != parseInt(targetValue, 10) || targetValue < 0 || isNaN(targetValue)) {
       $target.val(baseValue);
       return;
     }
-
+    /* eslint-enable */
     // There should be a new product quantity in cart
     const qty = targetValue - baseValue;
+
     if (qty === 0) {
       return;
     }
@@ -255,6 +260,8 @@ $(document).ready(() => {
     }
 
     updateProductQuantityInCart(event);
+
+    return false;
   });
 
   const $timeoutEffect = 400;
@@ -295,15 +302,14 @@ const CheckUpdateQuantityOperations = {
      * if hasError is true, quantity was not updated : we don't disable checkout button
      */
     const $checkoutBtn = $('.checkout a');
-    if ($('#notifications article.alert-danger').length || ('' !== errorMsg && !hasError)) {
+
+    if ($('#notifications article.alert-danger').length || (errorMsg !== '' && !hasError)) {
       $checkoutBtn.addClass('disabled');
     }
 
-    if ('' !== errorMsg) {
-      let strError =
-        ' <article class="alert alert-danger" role="alert" data-alert="danger"><ul><li>' +
-        errorMsg +
-        '</li></ul></article>';
+    if (errorMsg !== '') {
+      // eslint-disable-next-line
+      const strError = ` <article class="alert alert-danger" role="alert" data-alert="danger"><ul><li>${errorMsg}</li></ul></article>`;
       $('#notifications .container').html(strError);
       errorMsg = '';
       isUpdateOperation = false;
@@ -323,8 +329,10 @@ const CheckUpdateQuantityOperations = {
      * resp.hasError can be not defined but resp.errors not empty: quantity is updated but order cannot be placed
      * when resp.hasError=true, quantity is not updated
      */
+    // eslint-disable-next-line
     hasError = resp.hasOwnProperty('hasError');
-    let errors = resp.errors || '';
+    const errors = resp.errors || '';
+
     // 1.7.2.x returns errors as string, 1.7.3.x returns array
     if (errors instanceof Array) {
       errorMsg = errors.join(' ');

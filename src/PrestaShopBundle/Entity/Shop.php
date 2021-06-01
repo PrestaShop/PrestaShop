@@ -26,6 +26,7 @@
 
 namespace PrestaShopBundle\Entity;
 
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
@@ -59,6 +60,13 @@ class Shop
     private $name;
 
     /**
+     * @var string
+     *
+     *  @ORM\Column(name="color", type="string", length=50)
+     */
+    private $color;
+
+    /**
      * @var int
      *
      * @ORM\Column(name="id_category", type="integer")
@@ -85,6 +93,14 @@ class Shop
      * @ORM\Column(name="deleted", type="boolean")
      */
     private $deleted;
+
+    /**
+     * @var Collection
+     *
+     * One group shop has many shops. This is the inverse side.
+     * @ORM\OneToMany(targetEntity="PrestaShopBundle\Entity\ShopUrl", mappedBy="shop")
+     */
+    private $shopUrls;
 
     /**
      * Get id.
@@ -118,6 +134,26 @@ class Shop
     public function getName()
     {
         return $this->name;
+    }
+
+    /**
+     * @param string $color
+     *
+     * @return Shop
+     */
+    public function setColor(string $color): Shop
+    {
+        $this->color = $color;
+
+        return $this;
+    }
+
+    /**
+     * @return string
+     */
+    public function getColor(): ?string
+    {
+        return $this->color;
     }
 
     /**
@@ -238,5 +274,27 @@ class Shop
     public function getShopGroup()
     {
         return $this->shopGroup;
+    }
+
+    /**
+     * @return Collection
+     */
+    public function getShopUrls(): Collection
+    {
+        return $this->shopUrls;
+    }
+
+    /**
+     * @return bool
+     */
+    public function hasMainUrl(): bool
+    {
+        foreach ($this->shopUrls as $shopUrl) {
+            if ($shopUrl->getActive() && $shopUrl->getMain()) {
+                return true;
+            }
+        }
+
+        return false;
     }
 }

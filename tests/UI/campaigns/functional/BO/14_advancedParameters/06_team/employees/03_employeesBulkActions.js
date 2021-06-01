@@ -118,15 +118,15 @@ describe('Create Employees, Then disable / Enable and Delete with Bulk actions',
     });
 
     const statuses = [
-      {args: {status: 'disable', enable: false}, expected: 'clear'},
-      {args: {status: 'enable', enable: true}, expected: 'check'},
+      {args: {status: 'disable', enable: false}},
+      {args: {status: 'enable', enable: true}},
     ];
 
     statuses.forEach((employeeStatus) => {
       it(`should ${employeeStatus.args.status} employees with Bulk Actions and check Result`, async function () {
         await testContext.addContextItem(this, 'testIdentifier', `${employeeStatus.args.status}Employee`, baseContext);
 
-        const disableTextResult = await employeesPage.changeEnabledColumnBulkActions(
+        const disableTextResult = await employeesPage.bulkSetStatus(
           page,
           employeeStatus.args.enable,
         );
@@ -136,8 +136,8 @@ describe('Create Employees, Then disable / Enable and Delete with Bulk actions',
         const numberOfEmployeesInGrid = await employeesPage.getNumberOfElementInGrid(page);
 
         for (let i = 1; i <= numberOfEmployeesInGrid; i++) {
-          const textColumn = await employeesPage.getTextColumnFromTable(page, i, 'active');
-          await expect(textColumn).to.contains(employeeStatus.expected);
+          const textColumn = await employeesPage.getStatus(page, i);
+          await expect(textColumn).to.equal(employeeStatus.args.enable);
         }
       });
     });

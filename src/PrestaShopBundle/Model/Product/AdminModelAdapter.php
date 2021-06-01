@@ -56,7 +56,7 @@ class AdminModelAdapter extends \PrestaShopBundle\Model\AdminModelAdapter
     private $contextShop;
     /** @var AdminProductWrapper */
     private $adminProductWrapper;
-    /** @var array */
+    /** @var array<int|array> */
     private $locales;
     /** @var string */
     private $defaultLocale;
@@ -338,6 +338,9 @@ class AdminModelAdapter extends \PrestaShopBundle\Model\AdminModelAdapter
             );
             $form_data['combinations'][$k]['attribute_unity'] = abs(
                 $this->floatParser->fromString($combination['attribute_unity'])
+            );
+            $form_data['combinations'][$k]['attribute_quantity'] = abs(
+                $this->floatParser->fromString($combination['attribute_quantity'])
             );
         }
 

@@ -23,73 +23,93 @@
  * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
-
 declare(strict_types=1);
 
 namespace PrestaShop\PrestaShop\Adapter\Product;
 
-use PrestaShop\PrestaShop\Core\Domain\Product\Supplier\Exception\ProductSupplierConstraintException;
-use PrestaShop\PrestaShop\Core\Domain\Product\Supplier\Exception\ProductSupplierException;
-use PrestaShop\PrestaShop\Core\Domain\Product\Supplier\Exception\ProductSupplierNotFoundException;
-use PrestaShop\PrestaShop\Core\Domain\Product\Supplier\ValueObject\ProductSupplierId;
-use PrestaShopException;
+use PrestaShop\PrestaShop\Adapter\Product\Repository\ProductSupplierRepository;
+use PrestaShop\PrestaShop\Core\Domain\Product\Combination\ValueObject\CombinationId;
+use PrestaShop\PrestaShop\Core\Domain\Product\Supplier\ProductSupplier as ProductSupplierDTO;
+use PrestaShop\PrestaShop\Core\Domain\Product\Supplier\QueryResult\ProductSupplierForEditing;
+use PrestaShop\PrestaShop\Core\Domain\Product\Supplier\QueryResult\ProductSupplierInfo;
+use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductId;
 use ProductSupplier;
 
 /**
- * Provides reusable methods for product supplier handlers
+ * Holds reusable methods for ProductSupplier related query/command handlers
  */
-abstract class AbstractProductSupplierHandler extends AbstractProductHandler
+abstract class AbstractProductSupplierHandler
 {
     /**
-     * @param ProductSupplierId $productSupplierId
-     *
-     * @return ProductSupplier
+     * @var ProductSupplierRepository
      */
-    protected function getProductSupplier(ProductSupplierId $productSupplierId): ProductSupplier
-    {
-        $productSupplierIdValue = $productSupplierId->getValue();
+    protected $productSupplierRepository;
 
-        try {
-            $productSupplier = new ProductSupplier($productSupplierIdValue);
-
-            if ((int) $productSupplier->id !== $productSupplierIdValue) {
-                throw new ProductSupplierNotFoundException(sprintf(
-                    'Product supplier #%d was not found',
-                    $productSupplierIdValue
-                ));
-            }
-        } catch (PrestaShopException $e) {
-            throw new ProductSupplierException(
-                sprintf('Error occurred when trying to get product supplier #%d', $productSupplierIdValue),
-                0,
-                $e
-            );
-        }
-
-        return $productSupplier;
+    /**
+     * @param ProductSupplierRepository $productSupplierRepository
+     */
+    public function __construct(
+        ProductSupplierRepository $productSupplierRepository
+    ) {
+        $this->productSupplierRepository = $productSupplierRepository;
     }
 
     /**
-     * @param ProductSupplier $productSupplier
-     * @param string $field
-     * @param int $errorCode
+     * @param ProductId $productId
+     * @param CombinationId|null $combinationId
+     *
+     * @return array<int, ProductSupplierInfo>
      */
-    protected function validateProductSupplierFields(ProductSupplier $productSupplier): void
+    protected function getProductSuppliersInfo(ProductId $productId, ?CombinationId $combinationId = null): array
     {
-        $fieldsErrorMap = [
-            ProductSupplierConstraintException::INVALID_REFERENCE => 'product_supplier_reference',
-            ProductSupplierConstraintException::INVALID_PRICE => 'product_supplier_price_te',
-        ];
+        $productSuppliersInfo = $this->productSupplierRepository->getProductSuppliersInfo($productId, $combinationId);
 
-        foreach ($fieldsErrorMap as $errorCode => $field) {
-            $value = $productSupplier->{$field};
+        $suppliersInfo = [];
+        foreach ($productSuppliersInfo as $productSupplierInfo) {
+            $supplierId = (int) $productSupplierInfo['id_supplier'];
 
-            if (true !== $productSupplier->validateField($field, $value)) {
-                throw new ProductSupplierConstraintException(
-                    sprintf('Invalid product supplier "%s" value. Got "%s"', $field, var_export($value, true)),
-                    $errorCode
-                );
-            }
+            $suppliersInfo[] = new ProductSupplierInfo(
+                $productSupplierInfo['name'],
+                $supplierId,
+                new ProductSupplierForEditing(
+                    (int) $productSupplierInfo['id_product_supplier'],
+                    (int) $productSupplierInfo['id_product'],
+                    (int) $productSupplierInfo['id_supplier'],
+                    $productSupplierInfo['product_supplier_reference'],
+                    $productSupplierInfo['product_supplier_price_te'],
+                    (int) $productSupplierInfo['id_currency'],
+                    (int) $productSupplierInfo['id_product_attribute']
+                )
+            );
         }
+
+        return $suppliersInfo;
+    }
+
+    /**
+     * Loads ProductSupplier object model with data from DTO.
+     *
+     * @param ProductId $productId
+     * @param ProductSupplierDTO $productSupplierDTO
+     * @param CombinationId|null $combinationId
+     *
+     * @return ProductSupplier
+     */
+    protected function loadEntityFromDTO(ProductId $productId, ProductSupplierDTO $productSupplierDTO, ?CombinationId $combinationId = null): ProductSupplier
+    {
+        if ($productSupplierDTO->getProductSupplierId()) {
+            $productSupplier = $this->productSupplierRepository->get($productSupplierDTO->getProductSupplierId());
+        } else {
+            $productSupplier = new ProductSupplier();
+        }
+
+        $productSupplier->id_product = $productId->getValue();
+        $productSupplier->id_product_attribute = $combinationId ? $combinationId->getValue() : CombinationId::NO_COMBINATION;
+        $productSupplier->id_supplier = $productSupplierDTO->getSupplierId()->getValue();
+        $productSupplier->id_currency = $productSupplierDTO->getCurrencyId()->getValue();
+        $productSupplier->product_supplier_reference = $productSupplierDTO->getReference();
+        $productSupplier->product_supplier_price_te = $productSupplierDTO->getPriceTaxExcluded();
+
+        return $productSupplier;
     }
 }

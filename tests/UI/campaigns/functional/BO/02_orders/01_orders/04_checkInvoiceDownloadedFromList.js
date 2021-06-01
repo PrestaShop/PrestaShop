@@ -20,7 +20,7 @@ const orderConfirmationPage = require('@pages/FO/checkout/orderConfirmation');
 
 // Importing data
 const {PaymentMethods} = require('@data/demo/paymentMethods');
-const {DefaultAccount} = require('@data/demo/customer');
+const {DefaultCustomer} = require('@data/demo/customer');
 
 // Test context imports
 const testContext = require('@utils/testContext');
@@ -51,7 +51,7 @@ describe('Check invoice downloaded from list', async () => {
 
   describe('Create order in FO', async () => {
     it('should go to FO page', async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'goToFO', baseContext);
+      await testContext.addContextItem(this, 'testIdentifier', 'goToFoToOrder', baseContext);
 
       await homePage.goToFo(page);
       await homePage.changeLanguage(page, 'en');
@@ -61,7 +61,7 @@ describe('Check invoice downloaded from list', async () => {
     });
 
     it('should go to login page', async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'goToLoginPageFO', baseContext);
+      await testContext.addContextItem(this, 'testIdentifier', 'goToLoginPageFoToOrder', baseContext);
 
       await homePage.goToLoginPage(page);
       const pageTitle = await foLoginPage.getPageTitle(page);
@@ -69,9 +69,9 @@ describe('Check invoice downloaded from list', async () => {
     });
 
     it('should sign in with default customer', async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'sighInFO', baseContext);
+      await testContext.addContextItem(this, 'testIdentifier', 'sighInFoToOrder', baseContext);
 
-      await foLoginPage.customerLogin(page, DefaultAccount);
+      await foLoginPage.customerLogin(page, DefaultCustomer);
       const isCustomerConnected = await foLoginPage.isCustomerConnected(page);
       await expect(isCustomerConnected, 'Customer is not connected').to.be.true;
     });
@@ -178,7 +178,7 @@ describe('Check invoice downloaded from list', async () => {
 
   describe('Check order status in FO ', async () => {
     it('should go to FO page', async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'goToFO', baseContext);
+      await testContext.addContextItem(this, 'testIdentifier', 'goToFoToCheckStatus', baseContext);
 
       await homePage.goToFo(page);
       await homePage.changeLanguage(page, 'en');
@@ -188,7 +188,7 @@ describe('Check invoice downloaded from list', async () => {
     });
 
     it('should go to login page', async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'goToLoginPageFO', baseContext);
+      await testContext.addContextItem(this, 'testIdentifier', 'goToLoginPageFoToCheckStatus', baseContext);
 
       await homePage.goToLoginPage(page);
       const pageTitle = await foLoginPage.getPageTitle(page);
@@ -196,9 +196,9 @@ describe('Check invoice downloaded from list', async () => {
     });
 
     it('should sign in with default customer', async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'sighInFO', baseContext);
+      await testContext.addContextItem(this, 'testIdentifier', 'sighInFoToCheckStatus', baseContext);
 
-      await foLoginPage.customerLogin(page, DefaultAccount);
+      await foLoginPage.customerLogin(page, DefaultCustomer);
       const isCustomerConnected = await foLoginPage.isCustomerConnected(page);
       await expect(isCustomerConnected, 'Customer is not connected').to.be.true;
     });
@@ -206,13 +206,14 @@ describe('Check invoice downloaded from list', async () => {
     it('should go to orders history page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'goToOrderHistoryPage', baseContext);
 
+      await homePage.goToMyAccountPage(page);
       await foMyAccountPage.goToHistoryAndDetailsPage(page);
       const pageTitle = await foOrderHistoryPage.getPageTitle(page);
       await expect(pageTitle, 'Fail to open order history page').to.contains(foOrderHistoryPage.pageTitle);
     });
 
     it('should check last order status in FO', async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'sighInFO', baseContext);
+      await testContext.addContextItem(this, 'testIdentifier', 'checkLastOrderStatus', baseContext);
 
       const orderStatusFO = await foOrderHistoryPage.getOrderStatus(page, 1);
       await expect(orderStatusFO, 'Order status is not correct').to.equal(Statuses.paymentAccepted.status);

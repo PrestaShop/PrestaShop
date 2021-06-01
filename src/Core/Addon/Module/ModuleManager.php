@@ -253,7 +253,7 @@ class ModuleManager implements AddonManagerInterface
     /**
      * @param Module $installedProduct
      *
-     * @return array
+     * @return string|array
      */
     protected function getModuleInstallationWarnings(Module $installedProduct)
     {
@@ -341,7 +341,7 @@ class ModuleManager implements AddonManagerInterface
         $result = $module->onUninstall();
 
         if ($result && $this->actionParams->get('deletion', false)) {
-            $result = $result && $this->removeModuleFromDisk($name);
+            $result = $this->removeModuleFromDisk($name);
         }
 
         $this->checkAndClearCache($result);
@@ -354,7 +354,7 @@ class ModuleManager implements AddonManagerInterface
      * Download new files from source, backup old files, replace files with new ones
      * and execute all necessary migration scripts form current version to the new one.
      *
-     * @param Addon $name the theme you want to upgrade
+     * @param string $name the theme you want to upgrade
      * @param string $version the version you want to up upgrade to
      * @param string $source if the upgrade is not coming from addons, you need to specify the path to the zipball
      *
@@ -655,7 +655,7 @@ class ModuleManager implements AddonManagerInterface
      * This function is a refacto of the event dispatching.
      *
      * @param string $event
-     * @param \PrestaShop\PrestaShop\Core\Addon\Module\Module $module
+     * @param Module $module
      */
     private function dispatch($event, $module)
     {

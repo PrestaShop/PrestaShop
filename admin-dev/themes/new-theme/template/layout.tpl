@@ -35,7 +35,7 @@
              data-toggle="pstooltip"
              data-placement="bottom"
              data-html="true"
-             title="<p class='text-left'><strong>{l s='Your shop is in debug mode.' d='Admin.Navigation.Notification'}</strong></p><p class='text-left'>{l s='All the PHP errors and messages are displayed. When you no longer need it, [1]turn off[/1] this mode.' html=true sprintf=['[1]' => '<strong>', '[/1]' => '</strong>'] d='Admin.Navigation.Notification'}</p>"
+             title="<p class=&quot;text-left&quot;><strong>{l s='Your shop is in debug mode.' d='Admin.Navigation.Notification'}</strong></p><p class=&quot;text-left&quot;>{l s='All the PHP errors and messages are displayed. When you no longer need it, [1]turn off[/1] this mode.' html=true sprintf=['[1]' => '<strong>', '[/1]' => '</strong>'] d='Admin.Navigation.Notification'}</p>"
              href="{$link->getAdminLink('AdminPerformance')|escape:'html':'UTF-8'}"
           >
             <i class="material-icons">bug_report</i>
@@ -51,7 +51,7 @@
              data-toggle="pstooltip"
              data-placement="bottom"
              data-html="true"
-             title="<p class='text-left'><strong>{l s='Your shop is in maintenance.' d='Admin.Navigation.Notification'}</strong></p><p class='text-left'>{l s='Your visitors and customers cannot access your shop while in maintenance mode.%s To manage the maintenance settings, go to Shop Parameters > Maintenance tab.' sprintf=['<br />'] d='Admin.Navigation.Notification'}</p>" href="{$link->getAdminLink('AdminMaintenance')|escape:'html':'UTF-8'}"
+             title="<p class=&quot;text-left&quot;><strong>{l s='Your shop is in maintenance.' d='Admin.Navigation.Notification'}</strong></p><p class=&quot;text-left&quot;>{l s='Your visitors and customers cannot access your shop while in maintenance mode.%s To manage the maintenance settings, go to Shop Parameters > Maintenance tab.' sprintf=['<br />'] d='Admin.Navigation.Notification'}</p>" href="{$link->getAdminLink('AdminMaintenance')|escape:'html':'UTF-8'}"
           >
             <i class="material-icons">build</i>
             <span>{l s='Maintenance mode' d='Admin.Navigation.Header'}</span>
@@ -59,10 +59,11 @@
         </div>
       {/if}
 
-      <div class="component" id="header-shop-list-container">
-        {include file="components/layout/shop_list.tpl"}
-      </div>
-
+      {if !isset($hideLegacyStoreContextSelector) || !$hideLegacyStoreContextSelector}
+        <div class="component" id="header-shop-list-container">
+          {include file="components/layout/shop_list.tpl"}
+        </div>
+      {/if}
       {if $show_new_orders || $show_new_customers || $show_new_messages}
         <div class="component header-right-component" id="header-notifications-container">
           {include file="components/layout/notifications_center.tpl"}

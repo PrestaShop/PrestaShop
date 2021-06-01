@@ -33,9 +33,9 @@
 <div id="dashboard">
 	<div class="row">
 		<div class="col-lg-12">
-{if $warning}
-			<div class="alert alert-warning">{$warning}</div>
-{/if}
+      {if $warning}
+        <div class="alert alert-warning">{$warning}</div>
+      {/if}
 			<div id="calendar" class="panel">
 				<form action="{$action|escape}" method="post" id="calendar_form" name="calendar_form" class="form-inline">
 					<div class="btn-group">

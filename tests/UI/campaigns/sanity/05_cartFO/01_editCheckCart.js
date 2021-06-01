@@ -15,7 +15,7 @@ const CartData = require('@data/FO/cart');
 
 let browserContext;
 let page;
-let totalTTC = 0;
+let totalATI = 0;
 let itemsNumber = 0;
 
 /*
@@ -103,11 +103,11 @@ describe('Check Cart in FO', async () => {
     ]);
   });
 
-  it('should get the Total TTC', async function () {
-    await testContext.addContextItem(this, 'testIdentifier', 'checkTotalTTC', baseContext);
-    // getNumberFromText is used to get the Total TTC price
-    totalTTC = await cartPage.getPriceFromText(page, cartPage.cartTotalTTC);
-    await expect(totalTTC).to.be.equal(CartData.customCartData.cartTotalTTC);
+  it('should get the ATI price', async function () {
+    await testContext.addContextItem(this, 'testIdentifier', 'checkTotalATI', baseContext);
+    // getNumberFromText is used to get the price ATI
+    totalATI = await cartPage.getATIPrice(page);
+    await expect(totalATI).to.be.equal(CartData.customCartData.cartTotalATI);
   });
 
   it('should get the product number and check that is equal to 2', async function () {
@@ -120,9 +120,9 @@ describe('Check Cart in FO', async () => {
   it('should edit the quantity of the first product ordered', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'editProductQuantity1', baseContext);
     await cartPage.editProductQuantity(page, '1', '3');
-    // getNumberFromText is used to get the new Total TTC price
-    const totalPrice = await cartPage.getPriceFromText(page, cartPage.cartTotalTTC, 2000);
-    await expect(totalPrice).to.be.above(totalTTC);
+    // getNumberFromText is used to get the new price ATI
+    const totalPrice = await cartPage.getATIPrice(page);
+    await expect(totalPrice).to.be.above(totalATI);
     // getNumberFromText is used to get the new products number
     const productsNumber = await cartPage.getNumberFromText(page, cartPage.itemsNumber);
     await expect(productsNumber).to.be.above(itemsNumber);
@@ -131,9 +131,9 @@ describe('Check Cart in FO', async () => {
   it('should edit the quantity of the second product ordered', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'editProductQuantity2', baseContext);
     await cartPage.editProductQuantity(page, '2', '2');
-    // getNumberFromText is used to get the new Total TTC price
-    const totalPrice = await cartPage.getPriceFromText(page, cartPage.cartTotalTTC, 2000);
-    await expect(totalPrice).to.be.above(totalTTC);
+    // getNumberFromText is used to get the new price ATI
+    const totalPrice = await cartPage.getATIPrice(page);
+    await expect(totalPrice).to.be.above(totalATI);
     // getNumberFromText is used to get the new products number
     const productsNumber = await cartPage.getNumberFromText(page, cartPage.itemsNumber);
     await expect(productsNumber).to.be.above(itemsNumber);

@@ -23,6 +23,9 @@
  * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
+
+use PrestaShop\PrestaShop\Core\Session\SessionHandler;
+
 $currentDir = dirname(__FILE__);
 
 /* Custom defines made by users */
@@ -79,9 +82,12 @@ if (is_file(_PS_CUSTOM_CONFIG_FILE_)) {
 }
 
 if (_PS_DEBUG_PROFILING_) {
+    include_once _PS_TOOL_DIR_ . 'profiling/Profiler.php';
     include_once _PS_TOOL_DIR_ . 'profiling/Controller.php';
     include_once _PS_TOOL_DIR_ . 'profiling/ObjectModel.php';
     include_once _PS_TOOL_DIR_ . 'profiling/Db.php';
+    include_once _PS_TOOL_DIR_ . 'profiling/Hook.php';
+    include_once _PS_TOOL_DIR_ . 'profiling/Module.php';
     include_once _PS_TOOL_DIR_ . 'profiling/Tools.php';
 }
 
@@ -168,20 +174,32 @@ if ($cookie_lifetime > 0) {
     $cookie_lifetime = time() + (max($cookie_lifetime, 1) * 3600);
 }
 
+$force_ssl = Configuration::get('PS_SSL_ENABLED') && Configuration::get('PS_SSL_ENABLED_EVERYWHERE');
 if (defined('_PS_ADMIN_DIR_')) {
-    $cookie = new Cookie('psAdmin', '', $cookie_lifetime);
+    $cookie = new Cookie('psAdmin', '', $cookie_lifetime, null, false, $force_ssl);
 } else {
-    $force_ssl = Configuration::get('PS_SSL_ENABLED') && Configuration::get('PS_SSL_ENABLED_EVERYWHERE');
+    $domains = null;
     if ($context->shop->getGroup()->share_order) {
         $cookie = new Cookie('ps-sg' . $context->shop->getGroup()->id, '', $cookie_lifetime, $context->shop->getUrlsSharedCart(), false, $force_ssl);
     } else {
-        $domains = null;
         if ($context->shop->domain != $context->shop->domain_ssl) {
             $domains = array($context->shop->domain_ssl, $context->shop->domain);
         }
 
         $cookie = new Cookie('ps-s' . $context->shop->id, '', $cookie_lifetime, $domains, false, $force_ssl);
     }
+}
+
+if (PHP_SAPI !== 'cli') {
+    $sessionHandler = new SessionHandler(
+        $cookie_lifetime,
+        $force_ssl,
+        Configuration::get('PS_COOKIE_SAMESITE'),
+        Context::getContext()->shop->physical_uri
+    );
+    $sessionHandler->init();
+
+    $context->session = $sessionHandler->getSession();
 }
 
 $context->cookie = $cookie;
@@ -203,9 +221,10 @@ if (defined('_PS_ADMIN_DIR_')) {
 if (isset($cookie->id_lang) && $cookie->id_lang) {
     $language = new Language($cookie->id_lang);
 }
-if (!isset($language) || !Validate::isLoadedObject($language)) {
+if (!isset($language) || !Validate::isLoadedObject($language) || !$language->isAssociatedToShop()) {
     $language = new Language(Configuration::get('PS_LANG_DEFAULT'));
 }
+
 $context->language = $language;
 
 /* Get smarty */

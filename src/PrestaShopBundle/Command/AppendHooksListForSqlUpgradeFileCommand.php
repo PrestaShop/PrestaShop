@@ -73,7 +73,7 @@ class AppendHooksListForSqlUpgradeFileCommand extends ContainerAwareCommand
         if (!in_array($container->getParameter('kernel.environment'), ['dev', 'test'])) {
             $io->warning('Dev or test environment is required to fully list all the hooks');
 
-            return;
+            return 1;
         }
 
         $hookNames = $this->getHookNames();
@@ -82,7 +82,7 @@ class AppendHooksListForSqlUpgradeFileCommand extends ContainerAwareCommand
         if (empty($hookNames)) {
             $io->note('No hooks found.');
 
-            return;
+            return 0;
         }
 
         $hookDescriptions = $this->getHookDescriptions($hookNames);
@@ -92,7 +92,10 @@ class AppendHooksListForSqlUpgradeFileCommand extends ContainerAwareCommand
         } catch (FileNotFoundException $exception) {
             $io->error($exception->getMessage());
 
-            return;
+            return 1;
+        }
+        if (empty($sqlUpgradeFile)) {
+            return 1;
         }
 
         $sqlInsertStatement = $this->getSqlInsertStatement($hookDescriptions);
@@ -106,6 +109,8 @@ class AppendHooksListForSqlUpgradeFileCommand extends ContainerAwareCommand
                 $sqlUpgradeFile->getFileInfo()->getPathName()
             )
         );
+
+        return 0;
     }
 
     /**
@@ -160,7 +165,7 @@ class AppendHooksListForSqlUpgradeFileCommand extends ContainerAwareCommand
      *
      * @param string $version
      *
-     * @return SplFileInfo
+     * @return SplFileInfo|null
      */
     private function getSqlUpgradeFileByPrestaShopVersion($version)
     {

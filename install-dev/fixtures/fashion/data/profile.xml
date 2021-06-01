@@ -2,8 +2,14 @@
 <entity_profile>
   <fields id="name" class="Profile" sql="a.id_profile &gt; 1"/>
   <entities>
-    <profile id="Logistician"/>
-    <profile id="Translator"/>
-    <profile id="Salesman"/>
+    <profile id="Logistician">
+      <name>Logistician</name>
+    </profile>
+    <profile id="Translator">
+      <name>Translator</name>
+    </profile>
+    <profile id="Salesman">
+      <name>Salesman</name>
+    </profile>
   </entities>
 </entity_profile>

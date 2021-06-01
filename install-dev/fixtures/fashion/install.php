@@ -45,7 +45,7 @@ class InstallFixturesFashion extends XmlLoader
     }
 
     /**
-     * @{inheritdoc}
+     * {@inheritdoc}
      */
     public function populateFromXmlFiles()
     {
@@ -59,6 +59,13 @@ class InstallFixturesFashion extends XmlLoader
         $this->storeId('tax_rules_group', 'default_tax_rule_group', $taxRulesGroupId);
 
         parent::populateFromXmlFiles();
+
+        Db::getInstance()->execute(
+            'UPDATE ' . _DB_PREFIX_ . 'country SET active = 1 ' .
+            'WHERE id_country IN (' .
+            '  SELECT id_country FROM ' . _DB_PREFIX_ . 'address' .
+            ')'
+        );
 
         /**
          * Refresh facetedsearch cache

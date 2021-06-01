@@ -40,7 +40,7 @@
               <div id="product-images-dropzone" class="panel dropzone ui-sortable col-md-12"
                   url-upload="{{ path('admin_product_image_upload', {'idProduct': productId}) }}"
                   url-position="{{ path('admin_product_image_positions') }}"
-                  data-max-size="{{ 'PS_LIMIT_UPLOAD_IMAGE_VALUE'|configuration }}"
+                  data-max-size="{{ configuration('PS_LIMIT_UPLOAD_IMAGE_VALUE') }}"
               >
                 <div id="product-images-dropzone-error" class="text-danger"></div>
                 <div class="dz-default dz-message openfilemanager">
@@ -186,7 +186,7 @@
                     </div>
                   </div>
 
-                  {% if 'PS_STOCK_MANAGEMENT'|configuration %}
+                  {% if configuration('PS_STOCK_MANAGEMENT') %}
                     <div class="form-group mb-4" id="product_qty_0_shortcut_div">
                       <h2>
                         {{ "Quantity"|trans({}, 'Admin.Catalog.Feature') }}

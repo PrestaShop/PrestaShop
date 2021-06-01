@@ -148,6 +148,7 @@
       physical() {
         const productAvailableQty = Number(this.product.product_available_quantity);
         const productReservedQty = Number(this.product.product_reserved_quantity);
+
         return productAvailableQty + productReservedQty;
       },
       lowStock() {
@@ -193,6 +194,7 @@
     mounted() {
       EventBus.$on('toggleProductsCheck', (checked) => {
         const ref = this.id;
+
         if (this.$refs[ref]) {
           this.$refs[ref].checked = checked;
         }

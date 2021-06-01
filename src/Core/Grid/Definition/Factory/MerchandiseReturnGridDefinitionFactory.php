@@ -42,7 +42,7 @@ use Symfony\Component\Form\Extension\Core\Type\TextType;
  */
 final class MerchandiseReturnGridDefinitionFactory extends AbstractFilterableGridDefinitionFactory
 {
-    const GRID_ID = 'merchandise_return';
+    public const GRID_ID = 'merchandise_return';
 
     /**
      * {@inheritdoc}

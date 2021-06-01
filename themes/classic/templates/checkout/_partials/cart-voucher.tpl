@@ -25,7 +25,7 @@
 {if $cart.vouchers.allowed}
   {block name='cart_voucher'}
     <div class="block-promo">
-      <div class="cart-voucher">
+      <div class="cart-voucher js-cart-voucher">
         {if $cart.vouchers.added}
           {block name='cart_voucher_list'}
             <ul class="promo-name card-block">

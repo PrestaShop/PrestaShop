@@ -133,6 +133,8 @@ Feature: Order from Back Office (BO)
     Then the available stock for product "Test Product Max Stock" should be 0
     And order "bo_order1" should have 102 products in total
     And order "bo_order1" should contain 100 products "Test Product Max Stock"
+    # Change status to paid so an invoice is created, thus allowing to add the product again on new invoice
+    Given I update order "bo_order1" status to "Payment accepted"
     When I add products to order "bo_order1" with new invoice and the following products details:
       | name          | Test Product Max Stock  |
       | amount        | 1                       |
@@ -152,6 +154,8 @@ Feature: Order from Back Office (BO)
     Then the available stock for product "Test Product Max Stock" should be 20
     And order "bo_order1" should have 82 products in total
     And order "bo_order1" should contain 80 products "Test Product Max Stock"
+    # Change status to paid so an invoice is created, thus allowing to add the product again on new invoice
+    Given I update order "bo_order1" status to "Payment accepted"
     When I add products to order "bo_order1" with new invoice and the following products details:
       | name          | Test Product Max Stock  |
       | amount        | 20                      |
@@ -190,6 +194,8 @@ Feature: Order from Back Office (BO)
     And the available stock for product "Test Product Max Stock" should be 150
     And order "bo_order1" should have 152 products in total
     And order "bo_order1" should contain 150 combinations "whiteM" of product "Test Product Max Stock"
+    # Change status to paid so an invoice is created, thus allowing to add the product again on new invoice
+    Given I update order "bo_order1" status to "Payment accepted"
     When I add products to order "bo_order1" with new invoice and the following products details:
       | name          | Test Product Max Stock  |
       | combination   | whiteM                  |
@@ -221,6 +227,8 @@ Feature: Order from Back Office (BO)
     And the available stock for product "Test Product Max Stock" should be 120
     And order "bo_order1" should have 82 products in total
     And order "bo_order1" should contain 80 combinations "whiteM" of product "Test Product Max Stock"
+    # Change status to paid so an invoice is created, thus allowing to add the product again on new invoice
+    Given I update order "bo_order1" status to "Payment accepted"
     When I add products to order "bo_order1" with new invoice and the following products details:
       | name          | Test Product Max Stock  |
       | combination   | whiteM                  |
@@ -242,6 +250,8 @@ Feature: Order from Back Office (BO)
     Then the available stock for product "Test Product Max Stock" should be 99
     And order "bo_order1" should have 3 products in total
     And order "bo_order1" should contain 1 products "Test Product Max Stock"
+    # Change status to paid so an invoice is created, thus allowing to add the product again on new invoice
+    Given I update order "bo_order1" status to "Payment accepted"
     When I add products to order "bo_order1" with new invoice and the following products details:
       | name          | Test Product Max Stock  |
       | amount        | 99                      |
@@ -277,6 +287,8 @@ Feature: Order from Back Office (BO)
     And the available stock for product "Test Product Max Stock" should be 299
     And order "bo_order1" should have 3 products in total
     And order "bo_order1" should contain 1 combinations "whiteM" of product "Test Product Max Stock"
+    # Change status to paid so an invoice is created, thus allowing to add the product again on new invoice
+    Given I update order "bo_order1" status to "Payment accepted"
     When I add products to order "bo_order1" with new invoice and the following products details:
       | name          | Test Product Max Stock  |
       | combination   | whiteM                  |

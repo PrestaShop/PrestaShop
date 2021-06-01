@@ -24,7 +24,7 @@ let browserContext;
 let page;
 
 const createLanguageData = new LanguageFaker({isoCode: 'de'});
-const editLanguageData = new LanguageFaker({isoCode: 'nl', status: false});
+const editLanguageData = new LanguageFaker({isoCode: 'nl', enabled: false});
 let numberOfLanguages = 0;
 
 /*
@@ -39,6 +39,14 @@ describe('CRUD language', async () => {
   before(async function () {
     browserContext = await helper.createBrowserContext(this.browser);
     page = await helper.newTab(browserContext);
+
+    // Create images
+    await Promise.all([
+      files.generateImage(createLanguageData.flag),
+      files.generateImage(createLanguageData.noPicture),
+      files.generateImage(editLanguageData.flag),
+      files.generateImage(editLanguageData.noPicture),
+    ]);
   });
 
   after(async () => {

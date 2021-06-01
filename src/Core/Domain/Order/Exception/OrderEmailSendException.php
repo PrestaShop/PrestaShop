@@ -34,10 +34,10 @@ class OrderEmailSendException extends OrderException
     /**
      * When order email resending failed
      */
-    const FAILED_RESEND = 1;
+    public const FAILED_RESEND = 1;
 
     /**
      * When order process email sending failed
      */
-    const FAILED_SEND_PROCESS_ORDER = 2;
+    public const FAILED_SEND_PROCESS_ORDER = 2;
 }

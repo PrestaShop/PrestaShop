@@ -62,7 +62,7 @@ class CurrencyFeatureContext extends AbstractDomainFeatureContext
     {
         $defaultLangId = Configuration::get('PS_LANG_DEFAULT');
 
-        $data = $node->getRowsHash();
+        $data = $this->localizeByRows($node);
         /** @var \Shop $shop */
         $shop = SharedStorage::getStorage()->get($data['shop_association']);
 
@@ -93,7 +93,7 @@ class CurrencyFeatureContext extends AbstractDomainFeatureContext
         }
 
         if (isset($data['transformations'])) {
-            $command->setLocalizedTransformations($this->parseLocalizedArray($data['transformations']));
+            $command->setLocalizedTransformations($data['transformations']);
         }
 
         $command->setShopIds([
@@ -117,7 +117,7 @@ class CurrencyFeatureContext extends AbstractDomainFeatureContext
     {
         $defaultLangId = Configuration::get('PS_LANG_DEFAULT');
 
-        $data = $node->getRowsHash();
+        $data = $this->localizeByRows($node);
         /** @var Currency $currency */
         $currency = SharedStorage::getStorage()->get($reference);
 
@@ -155,7 +155,7 @@ class CurrencyFeatureContext extends AbstractDomainFeatureContext
         }
 
         if (isset($data['transformations'])) {
-            $command->setLocalizedTransformations($this->parseLocalizedArray($data['transformations']));
+            $command->setLocalizedTransformations($data['transformations']);
         }
 
         try {
@@ -222,10 +222,10 @@ class CurrencyFeatureContext extends AbstractDomainFeatureContext
             'symbols' => $this->currencyData->getSymbols(),
             'patterns' => $this->currencyData->getPatterns(),
         ];
-        $expectedData = $node->getRowsHash();
-        $expectedData['names'] = $this->parseLocalizedArray($expectedData['names']);
-        $expectedData['symbols'] = $this->parseLocalizedArray($expectedData['symbols']);
-        $expectedData['patterns'] = $this->parseLocalizedArray($expectedData['patterns']);
+        $expectedData = $this->localizeByRows($node);
+        $expectedData['names'] = $expectedData['names'];
+        $expectedData['symbols'] = $expectedData['symbols'];
+        $expectedData['patterns'] = $expectedData['patterns'];
 
         foreach ($expectedData as $key => $expectedValue) {
             if ($expectedValue === 'null') {
@@ -263,6 +263,14 @@ class CurrencyFeatureContext extends AbstractDomainFeatureContext
     }
 
     /**
+     * @Then /^I should get error that currency name is invalid$/
+     */
+    public function assertLastErrorIsInvalidCurrencyName()
+    {
+        $this->assertLastErrorIs(CurrencyConstraintException::class, CurrencyConstraintException::INVALID_NAME);
+    }
+
+    /**
      * @Then I should get error that currency already exists
      */
     public function assertLastErrorIsCurrencyAlreadyExists()
@@ -276,13 +284,5 @@ class CurrencyFeatureContext extends AbstractDomainFeatureContext
     public function assertLastErrorIsNotFound()
     {
         $this->assertLastErrorIs(CurrencyNotFoundException::class);
-    }
-
-    /**
-     * @Then I should get no currency error
-     */
-    public function assertNoCurrencyError()
-    {
-        $this->assertLastErrorIsNull();
     }
 }

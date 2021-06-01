@@ -1,0 +1,97 @@
+.adminpayment {
+  .card {
+    .module-item-list {
+      .module-item-wrapper-list {
+        @include media-breakpoint-down(sm) {
+          position: relative;
+          padding-left: 5rem;
+
+          ul {
+            padding-left: 0;
+          }
+        }
+
+        > div {
+          &:first-of-type {
+            @include media-breakpoint-down(sm) {
+              position: absolute;
+              top: 1rem;
+              left: 0.5rem;
+              width: auto;
+            }
+          }
+
+          &:last-of-type {
+            @include media-breakpoint-down(sm) {
+              // stylelint-disable-next-line
+              margin-top: 1rem !important;
+            }
+          }
+        }
+      }
+    }
+
+    #modules_list_container_content {
+      .tab-pane {
+        @include media-breakpoint-down(sm) {
+          // stylelint-disable-next-line
+          overflow: scroll;
+        }
+      }
+    }
+
+    .tab-content {
+      @include media-breakpoint-down(sm) {
+        padding: 0 0.5rem;
+      }
+    }
+
+    .tab-pane {
+      @include media-breakpoint-down(sm) {
+        .table {
+          tr {
+            position: relative;
+            display: flex;
+            flex-wrap: wrap;
+            width: 100%;
+            min-width: 12rem;
+            padding: 1rem 0;
+            padding-left: 4.375rem;
+
+            &:not(:last-child) {
+              border-bottom: 1px solid $gray-light;
+            }
+
+            td {
+              padding: 0;
+              border: none;
+
+              &:first-child {
+                position: absolute;
+                left: 0;
+              }
+
+              &:last-child {
+                .btn-group {
+                  margin-top: 0;
+                }
+              }
+            }
+
+            .module_name {
+              .text-muted {
+                display: block;
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+
+  .alert-block {
+    @include media-breakpoint-down(sm) {
+      padding: 0;
+    }
+  }
+}

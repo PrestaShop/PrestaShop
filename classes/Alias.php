@@ -164,7 +164,7 @@ class AliasCore extends ObjectModel
         $sql->select('a.`id_alias`');
         $sql->from('alias', 'a');
         $sql->where('a.`id_alias` = ' . (int) $idAlias);
-        $row = Db::getInstance(_PS_USE_SQL_SLAVE_)->getRow($sql);
+        $row = Db::getInstance(_PS_USE_SQL_SLAVE_)->getRow($sql, false);
 
         return isset($row['id_alias']);
     }

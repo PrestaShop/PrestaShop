@@ -27,7 +27,7 @@
 namespace PrestaShop\PrestaShop\Core\Domain\Order\Payment\Command;
 
 use DateTimeImmutable;
-use PrestaShop\Decimal\Number;
+use PrestaShop\Decimal\DecimalNumber;
 use PrestaShop\PrestaShop\Core\Domain\Currency\ValueObject\CurrencyId;
 use PrestaShop\PrestaShop\Core\Domain\Order\Exception\NegativePaymentAmountException;
 use PrestaShop\PrestaShop\Core\Domain\Order\Exception\OrderConstraintException;
@@ -38,6 +38,16 @@ use PrestaShop\PrestaShop\Core\Domain\Order\ValueObject\OrderId;
  */
 class AddPaymentCommand
 {
+    /**
+     * @var string
+     */
+    public const INVALID_CHARACTERS_NAME = '<>={}';
+
+    /**
+     * @var string
+     */
+    private const PATTERN_PAYMENT_METHOD_NAME = '/^[^' . self::INVALID_CHARACTERS_NAME . ']*$/u';
+
     /**
      * @var OrderId
      */
@@ -54,7 +64,7 @@ class AddPaymentCommand
     private $paymentMethod;
 
     /**
-     * @var Number
+     * @var DecimalNumber
      */
     private $paymentAmount;
 
@@ -91,7 +101,7 @@ class AddPaymentCommand
         ?int $orderInvoiceId = null,
         ?string $transactionId = null
     ) {
-        $amount = new Number($paymentAmount);
+        $amount = new DecimalNumber($paymentAmount);
         $this->assertAmountIsPositive($amount);
         $this->assertPaymentMethodIsGenericName($paymentMethod);
 
@@ -129,7 +139,7 @@ class AddPaymentCommand
     }
 
     /**
-     * @return Number
+     * @return DecimalNumber
      */
     public function getPaymentAmount()
     {
@@ -162,12 +172,15 @@ class AddPaymentCommand
      */
     private function assertPaymentMethodIsGenericName($paymentMethod)
     {
-        if (empty($paymentMethod) || !preg_match('/^[^<>={}]*$/u', $paymentMethod)) {
-            throw new OrderConstraintException('The selected payment method is invalid.');
+        if (empty($paymentMethod) || !preg_match(self::PATTERN_PAYMENT_METHOD_NAME, $paymentMethod)) {
+            throw new OrderConstraintException(
+                'The selected payment method is invalid.',
+                OrderConstraintException::INVALID_PAYMENT_METHOD
+            );
         }
     }
 
-    private function assertAmountIsPositive(Number $amount)
+    private function assertAmountIsPositive(DecimalNumber $amount)
     {
         if ($amount->isNegative()) {
             throw new NegativePaymentAmountException('The amount should be greater than 0.');

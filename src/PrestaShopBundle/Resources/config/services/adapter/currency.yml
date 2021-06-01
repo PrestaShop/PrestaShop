@@ -121,3 +121,6 @@ services:
         - '@=service("prestashop.core.admin.lang.repository").findAll()'
       tags:
         - { name: 'tactician.handler', command: 'PrestaShop\PrestaShop\Core\Domain\Currency\Query\GetReferenceCurrency' }
+
+    prestashop.adapter.currency.repository.currency_repository:
+        class: 'PrestaShop\PrestaShop\Adapter\Currency\Repository\CurrencyRepository'

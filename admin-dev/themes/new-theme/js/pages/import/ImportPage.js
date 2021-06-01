@@ -48,6 +48,7 @@ export default class ImportPage {
   handleSubmit() {
     $('.js-import-form').on('submit', function () {
       const $this = $(this);
+
       if ($this.find('input[name="truncate"]:checked').val() === '1') {
         /* eslint-disable-next-line max-len */
         return window.confirm(`${$this.data('delete-confirm-message')} ${$.trim($('#entity > option:selected').text().toLowerCase())}?`);
@@ -62,6 +63,7 @@ export default class ImportPage {
    */
   toggleSelectedFile() {
     const selectFilename = $('#csv').val();
+
     if (selectFilename.length > 0) {
       this.showImportFileAlert(selectFilename);
       this.hideFileUploadBlock();
@@ -209,6 +211,7 @@ export default class ImportPage {
     const uploadedFile = $input.prop('files')[0];
 
     const maxUploadSize = $input.data('max-file-upload-size');
+
     if (maxUploadSize < uploadedFile.size) {
       this.showImportFileError(uploadedFile.name, uploadedFile.size, 'File is too large');
       return;

@@ -26,10 +26,13 @@
 
 namespace LegacyTests\PrestaShopBundle\Utils;
 
+use Context;
 use Doctrine\DBAL\DBALException;
 use PrestaShopBundle\Install\DatabaseDump;
 use PrestaShopBundle\Install\Install;
 use Symfony\Component\Process\Process;
+use Tests\Resources\ResourceResetter;
+use Tab;
 
 class DatabaseCreator
 {
@@ -41,10 +44,11 @@ class DatabaseCreator
         define('_PS_IN_TEST_', true);
         define('__PS_BASE_URI__', '/');
         define('_PS_ROOT_DIR_', __DIR__ . '/../../..');
-        define('_PS_MODULE_DIR_', _PS_ROOT_DIR_ . '/tests-legacy/resources/modules/');
+        define('_PS_MODULE_DIR_', _PS_ROOT_DIR_ . '/modules/');
         require_once __DIR__ . '/../../../install-dev/init.php';
 
         $install = new Install();
+        $install->setTranslator(Context::getContext()->getTranslatorFromLocale('en'));
         \DbPDOCore::createDatabase(_DB_SERVER_, _DB_USER_, _DB_PASSWD_, _DB_NAME_, false);
         $install->clearDatabase(false);
         if (!$install->installDatabase(true)) {
@@ -66,10 +70,15 @@ class DatabaseCreator
             'configuration_agrement' => true,
         ));
         $install->installFixtures();
+        Tab::resetStaticCache();
         $install->installTheme();
         $install->installModules();
 
         DatabaseDump::create();
+
+        $resourceResetter = new ResourceResetter();
+        $resourceResetter->backupImages();
+        $resourceResetter->backupDownloads();
     }
 
     /**

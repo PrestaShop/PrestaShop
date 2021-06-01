@@ -160,6 +160,12 @@ class Datas
             'default' => 1,
             'help' => 'enable rewrite engine for PrestaShop',
         ),
+        'fixtures' => array(
+            'name' => 'fixtures',
+            'default' => '1',
+            'validate' => 'isInt',
+            'help' => 'enable fixtures installation',
+        ),
     );
 
     protected $datas = array();

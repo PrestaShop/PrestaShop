@@ -29,10 +29,10 @@ declare(strict_types=1);
 namespace PrestaShop\PrestaShop\Adapter\Product\CommandHandler;
 
 use PrestaShop\PrestaShop\Adapter\Product\AbstractProductHandler;
+use PrestaShop\PrestaShop\Adapter\Product\Repository\ProductRepository;
 use PrestaShop\PrestaShop\Core\Domain\Product\Command\UpdateProductShippingCommand;
 use PrestaShop\PrestaShop\Core\Domain\Product\CommandHandler\UpdateProductShippingHandlerInterface;
 use PrestaShop\PrestaShop\Core\Domain\Product\Exception\CannotUpdateProductException;
-use PrestaShop\PrestaShop\Core\Domain\Product\Exception\ProductConstraintException;
 use Product;
 
 /**
@@ -41,79 +41,88 @@ use Product;
 final class UpdateProductShippingHandler extends AbstractProductHandler implements UpdateProductShippingHandlerInterface
 {
     /**
+     * @var ProductRepository
+     */
+    private $productRepository;
+
+    /**
+     * @param ProductRepository $productRepository
+     */
+    public function __construct(
+        ProductRepository $productRepository
+    ) {
+        $this->productRepository = $productRepository;
+    }
+
+    /**
      * {@inheritdoc}
      */
     public function handle(UpdateProductShippingCommand $command): void
     {
-        $product = $this->getProduct($command->getProductId());
-        $this->fillUpdatableFieldsWithCommandData($product, $command);
+        $product = $this->productRepository->get($command->getProductId());
+        $updatableProperties = $this->fillUpdatableProperties($product, $command);
 
-        $this->performUpdate($product, CannotUpdateProductException::FAILED_UPDATE_SHIPPING_OPTIONS);
+        $this->productRepository->partialUpdate(
+            $product,
+            $updatableProperties,
+            CannotUpdateProductException::FAILED_UPDATE_SHIPPING_OPTIONS
+        );
     }
 
     /**
      * @param Product $product
      * @param UpdateProductShippingCommand $command
+     *
+     * @return string[] updatable properties
      */
-    private function fillUpdatableFieldsWithCommandData(Product $product, UpdateProductShippingCommand $command): void
+    private function fillUpdatableProperties(Product $product, UpdateProductShippingCommand $command): array
     {
+        $updatableProperties = [];
+
         if (null !== $command->getWidth()) {
             $product->width = (string) $command->getWidth();
-            $this->validateField($product, 'width', ProductConstraintException::INVALID_WIDTH);
-            $this->fieldsToUpdate['width'] = true;
+            $updatableProperties[] = 'width';
         }
 
         if (null !== $command->getHeight()) {
             $product->height = (string) $command->getHeight();
-            $this->validateField($product, 'height', ProductConstraintException::INVALID_HEIGHT);
-            $this->fieldsToUpdate['height'] = true;
+            $updatableProperties[] = 'height';
         }
 
         if (null !== $command->getDepth()) {
             $product->depth = (string) $command->getDepth();
-            $this->validateField($product, 'depth', ProductConstraintException::INVALID_DEPTH);
-            $this->fieldsToUpdate['depth'] = true;
+            $updatableProperties[] = 'depth';
         }
 
         if (null !== $command->getWeight()) {
             $product->weight = (string) $command->getWeight();
-            $this->validateField($product, 'weight', ProductConstraintException::INVALID_WEIGHT);
-            $this->fieldsToUpdate['weight'] = true;
+            $updatableProperties[] = 'weight';
         }
 
         if (null !== $command->getAdditionalShippingCost()) {
             $product->additional_shipping_cost = (string) $command->getAdditionalShippingCost();
-            $this->validateField($product, 'additional_shipping_cost', ProductConstraintException::INVALID_ADDITIONAL_SHIPPING_COST);
-            $this->fieldsToUpdate['additional_shipping_cost'] = true;
+            $updatableProperties[] = 'additional_shipping_cost';
         }
 
         if (null !== $command->getCarrierReferences()) {
             $product->setCarriers($command->getCarrierReferences());
         }
 
-        if (null !== $command->getDeliveryTimeNotesType()) {
-            $product->additional_delivery_times = $command->getDeliveryTimeNotesType()->getValue();
-            $this->fieldsToUpdate['additional_delivery_times'] = true;
+        if (null !== $command->getDeliveryTimeNoteType()) {
+            $product->additional_delivery_times = $command->getDeliveryTimeNoteType()->getValue();
+            $updatableProperties[] = 'additional_delivery_times';
         }
 
         if (null !== $command->getLocalizedDeliveryTimeInStockNotes()) {
             $product->delivery_in_stock = $command->getLocalizedDeliveryTimeInStockNotes();
-            $this->validateLocalizedField(
-                $product,
-                'delivery_in_stock',
-                ProductConstraintException::INVALID_DELIVERY_TIME_IN_STOCK_NOTES
-            );
-            $this->fieldsToUpdate['delivery_in_stock'] = true;
+            $updatableProperties['delivery_in_stock'] = array_keys($command->getLocalizedDeliveryTimeInStockNotes());
         }
 
         if (null !== $command->getLocalizedDeliveryTimeOutOfStockNotes()) {
             $product->delivery_out_stock = $command->getLocalizedDeliveryTimeOutOfStockNotes();
-            $this->validateLocalizedField(
-                $product,
-                'delivery_out_stock',
-                ProductConstraintException::INVALID_DELIVERY_TIME_OUT_OF_STOCK_NOTES
-            );
-            $this->fieldsToUpdate['delivery_out_stock'] = true;
+            $updatableProperties['delivery_out_stock'] = array_keys($command->getLocalizedDeliveryTimeOutOfStockNotes());
         }
+
+        return $updatableProperties;
     }
 }

@@ -79,7 +79,7 @@ final class BackUrlRedirectResponseListener
         $backUrl = $this->backUrlProvider->getBackUrl($currentRequest);
 
         if ($backUrl && !$this->isRequestUrlEqualToResponseUrl($currentRequest, $originalResponse)) {
-            $backUrlResponse = $originalResponse->setTargetUrl(urldecode($backUrl));
+            $backUrlResponse = $originalResponse->setTargetUrl($backUrl);
             $event->setResponse($backUrlResponse);
         }
     }

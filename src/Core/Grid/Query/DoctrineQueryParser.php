@@ -52,7 +52,7 @@ final class DoctrineQueryParser implements QueryParserInterface
     /**
      * @param mixed $value the parameter value
      *
-     * @return string the partial raw parameter
+     * @return string|float|int the partial raw parameter
      *
      * @throws UnsupportedParameterException
      */

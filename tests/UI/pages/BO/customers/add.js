@@ -17,8 +17,8 @@ class AddCustomer extends BOBasePage {
     this.yearOfBirthSelect = 'select#customer_birthday_year';
     this.monthOfBirthSelect = 'select#customer_birthday_month';
     this.dayOfBirthSelect = 'select#customer_birthday_day';
-    this.enabledSwitchLabel = id => `label[for='customer_is_enabled_${id}']`;
-    this.partnerOffersSwitchLabel = id => `label[for='customer_is_partner_offers_subscribed_${id}']`;
+    this.statusToggleInput = toggle => `#customer_is_enabled_${toggle}`;
+    this.partnerOffersToggleInput = toggle => `#customer_is_partner_offers_subscribed_${toggle}`;
     this.groupAccessCheckbox = id => `#customer_group_ids_${id}`;
     this.selectAllGroupAccessCheckbox = 'input.js-choice-table-select-all';
     this.defaultCustomerGroupSelect = 'select#customer_default_group_id';
@@ -33,10 +33,18 @@ class AddCustomer extends BOBasePage {
    * Fill form for add/edit customer
    * @param page
    * @param customerData
-   * @return {Promise<string>}
+   * @return {Promise<void>}
    */
-  async createEditCustomer(page, customerData) {
-    await page.click(this.socialTitleInput(customerData.socialTitle === 'Mr.' ? 0 : 1));
+  async fillCustomerForm(page, customerData) {
+    // Click on label for social input
+    const socialTitleElement = await this.getParentElement(
+      page,
+      this.socialTitleInput(customerData.socialTitle === 'Mr.' ? 0 : 1),
+    );
+
+    await socialTitleElement.click();
+
+    // Fill form
     await this.setValue(page, this.firstNameInput, customerData.firstName);
     await this.setValue(page, this.lastNameInput, customerData.lastName);
     await this.setValue(page, this.emailInput, customerData.email);
@@ -44,13 +52,26 @@ class AddCustomer extends BOBasePage {
     await page.selectOption(this.yearOfBirthSelect, customerData.yearOfBirth);
     await page.selectOption(this.monthOfBirthSelect, customerData.monthOfBirth);
     await page.selectOption(this.dayOfBirthSelect, customerData.dayOfBirth);
-    await page.click(this.enabledSwitchLabel(customerData.enabled ? 1 : 0));
-    await page.click(this.partnerOffersSwitchLabel(customerData.partnerOffers ? 1 : 0));
+    await page.check(this.statusToggleInput(customerData.enabled ? 1 : 0));
+    await page.check(this.partnerOffersToggleInput(customerData.partnerOffers ? 1 : 0));
     await this.setCustomerGroupAccess(page, customerData.defaultCustomerGroup);
     await this.selectByVisibleText(page, this.defaultCustomerGroupSelect, customerData.defaultCustomerGroup);
+  }
+
+
+  /**
+   * Fill form for add/edit customer and get successful message after saving
+   * @param page
+   * @param customerData
+   * @return {Promise<string>}
+   */
+  async createEditCustomer(page, customerData) {
+    // Fill form
+    await this.fillCustomerForm(page, customerData);
+
     // Save Customer
     await this.clickAndWaitForNavigation(page, this.saveCustomerButton);
-    return this.getTextContent(page, this.alertSuccessBlockParagraph);
+    return this.getAlertSuccessBlockParagraphContent(page);
   }
 
   /**

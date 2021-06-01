@@ -289,6 +289,31 @@ class ManufacturerFeatureContext extends AbstractDomainFeatureContext
     }
 
     /**
+     * @Then I should get error that manufacturer does not exist
+     */
+    public function assertManufacturerDoesNotExistError()
+    {
+        $this->assertLastErrorIs(ManufacturerNotFoundException::class);
+    }
+
+    /**
+     * @Given manufacturer :manufacturerReference named :name exists
+     *
+     * @param string $name
+     * @param string $manufacturerReference
+     */
+    public function assertManufacturerExistsByName(string $name, string $manufacturerReference): void
+    {
+        if ($manufacturerId = Manufacturer::getIdByName($name)) {
+            $this->getSharedStorage()->set($manufacturerReference, $manufacturerId);
+
+            return;
+        }
+
+        throw new RuntimeException(sprintf('Manufacturer %s named "%s" does not exist', $manufacturerReference, $name));
+    }
+
+    /**
      * @param $reference
      * @param array $data
      */

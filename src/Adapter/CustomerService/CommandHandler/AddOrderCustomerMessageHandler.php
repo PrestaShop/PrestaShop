@@ -30,7 +30,6 @@ use Configuration;
 use Customer;
 use CustomerMessage;
 use CustomerThread;
-use Language;
 use Mail;
 use Order;
 use PrestaShop\PrestaShop\Core\ConstraintValidator\Constraints\CleanHtml;
@@ -228,10 +227,10 @@ final class AddOrderCustomerMessageHandler implements AddOrderCustomerMessageHan
         $message = $command->getMessage();
 
         if (Configuration::get('PS_MAIL_TYPE', null, null, $order->id_shop) != Mail::TYPE_TEXT) {
-            $message = Tools::nl2br($command->getMessage());
+            $message = Tools::nl2br(Tools::htmlentitiesUTF8($command->getMessage()));
         }
 
-        $orderLanguage = new Language((int) $order->id_lang);
+        $orderLanguage = $order->getAssociatedLanguage();
         $varsTpl = [
             '{lastname}' => $customer->lastname,
             '{firstname}' => $customer->firstname,
@@ -241,7 +240,7 @@ final class AddOrderCustomerMessageHandler implements AddOrderCustomerMessageHan
         ];
 
         return Mail::Send(
-            (int) $order->id_lang,
+            (int) $orderLanguage->getId(),
             'order_merchant_comment',
             $this->translator->trans(
                 'New message regarding your order',

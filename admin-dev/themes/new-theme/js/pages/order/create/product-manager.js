@@ -64,10 +64,8 @@ export default class ProductManager {
    * @private
    */
   initListeners() {
-    $(createOrderMap.productSelect).on('change', (e) => this.initProductSelect(e),
-    );
-    $(createOrderMap.combinationsSelect).on('change', (e) => this.initCombinationSelect(e),
-    );
+    $(createOrderMap.productSelect).on('change', (e) => this.initProductSelect(e));
+    $(createOrderMap.combinationsSelect).on('change', (e) => this.initCombinationSelect(e));
 
     this.onProductSearch();
     this.onAddProductToCart();
@@ -138,16 +136,30 @@ export default class ProductManager {
    * @private
    */
   onProductQtyChange() {
+    const enableQtyInputs = () => {
+      const inputsQty = document.querySelectorAll(createOrderMap.listedProductQtyInput);
+
+      inputsQty.forEach((inputQty) => {
+        inputQty.disabled = false;
+      });
+    };
+
     // on success
-    EventEmitter.on(eventMap.productQtyChanged, (data) => {
+    EventEmitter.on(eventMap.productQtyChanged, (cartInfo) => {
       this.productRenderer.cleanCartBlockAlerts();
-      this.updateStockOnQtyChange(data.product);
-      EventEmitter.emit(eventMap.cartLoaded, data.cartInfo);
+      this.updateStockOnQtyChange(cartInfo.product);
+
+      $(createOrderMap.createOrderButton).prop('disabled', false);
+      EventEmitter.emit(eventMap.cartLoaded, cartInfo);
+
+      enableQtyInputs();
     });
 
     // on failure
     EventEmitter.on(eventMap.productQtyChangeFailed, (e) => {
       this.productRenderer.renderCartBlockErrorAlert(e.responseJSON.message);
+      $(createOrderMap.createOrderButton).prop('disabled', true);
+      enableQtyInputs();
     });
   }
 
@@ -202,19 +214,11 @@ export default class ProductManager {
       search_phrase: searchPhrase,
     };
 
-    if (
-      $(createOrderMap.cartCurrencySelect).data('selectedCurrencyId')
-      !== undefined
-    ) {
-      params.currency_id = $(createOrderMap.cartCurrencySelect).data(
-        'selectedCurrencyId',
-      );
+    if ($(createOrderMap.cartCurrencySelect).data('selectedCurrencyId') !== undefined) {
+      params.currency_id = $(createOrderMap.cartCurrencySelect).data('selectedCurrencyId');
     }
 
-    const $searchRequest = $.get(
-      this.router.generate('admin_products_search'),
-      params,
-    );
+    const $searchRequest = $.get(this.router.generate('admin_orders_products_search'), params);
     this.activeSearchRequest = $searchRequest;
 
     $searchRequest
@@ -253,9 +257,8 @@ export default class ProductManager {
   selectProduct(productId) {
     this.unsetCombination();
 
-    const selectedProduct = Object.values(this.products).find(
-      (product) => product.productId === productId,
-    );
+    const selectedProduct = Object.values(this.products).find((product) => product.productId === productId);
+
     if (selectedProduct) {
       this.selectedProduct = selectedProduct;
     }
@@ -280,7 +283,12 @@ export default class ProductManager {
     const combination = this.selectedProduct.combinations[combinationId];
 
     this.selectedCombinationId = combinationId;
-    this.productRenderer.renderStock(combination.stock);
+    this.productRenderer.renderStock(
+      $(createOrderMap.inStockCounter),
+      $(createOrderMap.quantityInput),
+      combination.stock,
+      this.selectedProduct.availableOutOfStock || combination.stock <= 0,
+    );
 
     return combination;
   }
@@ -311,12 +319,8 @@ export default class ProductManager {
    * @private
    */
   getProductData() {
-    const $fileInputs = $(createOrderMap.productCustomizationContainer).find(
-      'input[type="file"]',
-    );
-    const formData = new FormData(
-      document.querySelector(createOrderMap.productAddForm),
-    );
+    const $fileInputs = $(createOrderMap.productCustomizationContainer).find('input[type="file"]');
+    const formData = new FormData(document.querySelector(createOrderMap.productAddForm));
     const fileSizes = {};
 
     // adds key value pairs {input name: file size} of each file in separate object
@@ -383,6 +387,7 @@ export default class ProductManager {
 
     for (let i = 0; i < productKeys.length; i += 1) {
       if (productValues[i].productId === productId) {
+        const $template = this.productRenderer.cloneProductTemplate(productValues[i]);
         // Update the stock value  in products object
         productValues[i].stock += qty;
 
@@ -394,9 +399,19 @@ export default class ProductManager {
         // Render the new stock value
         if (this.selectedProduct.productId === productId) {
           if (this.selectedProduct.combinations.length === 0) {
-            this.productRenderer.renderStock(productValues[i].stock);
+            this.productRenderer.renderStock(
+              $template.find(createOrderMap.listedProductQtyStock),
+              $template.find(createOrderMap.listedProductQtyInput),
+              productValues[i].stock,
+              productValues[i].availableOutOfStock || productValues[i].availableStock <= 0,
+            );
           } else if (attributeId && Number(this.selectedCombinationId) === Number(attributeId)) {
-            this.productRenderer.renderStock(productValues[i].combinations[attributeId].stock);
+            this.productRenderer.renderStock(
+              $template.find(createOrderMap.listedProductQtyStock),
+              $template.find(createOrderMap.listedProductQtyInput),
+              productValues[i].combinations[attributeId].stock,
+              productValues[i].availableOutOfStock || productValues[i].availableStock <= 0,
+            );
           }
         }
         break;

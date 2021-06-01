@@ -38,7 +38,9 @@ use Tools;
  */
 class LogoUploader
 {
-    /** @var $shop the shop */
+    /**
+     * @var Shop
+     */
     private $shop;
 
     /**
@@ -53,7 +55,11 @@ class LogoUploader
 
     public function updateHeader()
     {
-        $this->update('PS_LOGO', 'logo');
+        if ($this->update('PS_LOGO', 'logo')) {
+            list($width, $height) = getimagesize(_PS_IMG_DIR_ . Configuration::get('PS_LOGO'));
+            Configuration::updateValue('SHOP_LOGO_HEIGHT', (int) round($height));
+            Configuration::updateValue('SHOP_LOGO_WIDTH', (int) round($width));
+        }
     }
 
     public function updateMail()
@@ -82,9 +88,9 @@ class LogoUploader
     /**
      * Generic function which allows logo upload.
      *
-     * @param $fieldName
-     * @param $logoPrefix
-     * @param $files[] the array of files to avoid use $_POST
+     * @param string $fieldName
+     * @param string $logoPrefix
+     * @param array<string,array<string,string>> $files[] the array of files to avoid use $_POST
      *
      * @return bool
      *
@@ -177,14 +183,17 @@ class LogoUploader
         return !count($this->errors);
     }
 
+    /**
+     * @param string $logoPrefix
+     * @param string $fileExtension
+     *
+     * @return string
+     */
     private function getLogoName($logoPrefix, $fileExtension)
     {
         $shopId = $this->shop->id;
-        $shopName = $this->shop->name;
 
-        $logoName = Tools::link_rewrite($shopName)
-            . '-'
-            . $logoPrefix
+        $logoName = $logoPrefix
             . '-'
             . (int) Configuration::get('PS_IMG_UPDATE_TIME')
             . (int) $shopId . $fileExtension;
@@ -193,9 +202,7 @@ class LogoUploader
             || $shopId == 0
             || Shop::isFeatureActive() == false
         ) {
-            $logoName = Tools::link_rewrite($shopName)
-                . '-'
-                . $logoPrefix . '-' . (int) Configuration::get('PS_IMG_UPDATE_TIME') . $fileExtension;
+            $logoName = $logoPrefix . '-' . (int) Configuration::get('PS_IMG_UPDATE_TIME') . $fileExtension;
         }
 
         return $logoName;

@@ -25,12 +25,21 @@
 export const showGrowl = (type, message, durationTime) => {
   const duration = undefined !== durationTime ? durationTime : 2000;
 
-  window.$.growl[type]({
-    title: '',
-    size: 'large',
-    message,
-    duration,
-  });
+  if (type === 'success') {
+    window.$.growl({
+      title: '',
+      size: 'large',
+      message,
+      duration,
+    });
+  } else {
+    window.$.growl[type]({
+      title: '',
+      size: 'large',
+      message,
+      duration,
+    });
+  }
 };
 
 export default showGrowl;

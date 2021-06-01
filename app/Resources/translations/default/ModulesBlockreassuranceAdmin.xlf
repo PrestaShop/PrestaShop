@@ -56,32 +56,37 @@ Comment: Confirm uninstall</note>
       <trans-unit id="a596edf2f0e5ae9c2372c93e1c8fcc24">
         <source>Block updated</source>
         <target>Block updated</target>
-        <note>Line: 554</note>
+        <note>Line: 540</note>
       </trans-unit>
       <trans-unit id="f2f5589389027c1c6d63d2cec51afde5">
         <source>Oops... looks like an error occurred</source>
         <target>Oops... looks like an error occurred</target>
-        <note>Line: 555</note>
+        <note>Line: 541</note>
       </trans-unit>
       <trans-unit id="da755c5b9609e21d2f7c0e542fa02cf0">
         <source>Configuration updated successfully!</source>
         <target>Configuration updated successfully!</target>
-        <note>Line: 557</note>
+        <note>Line: 543</note>
       </trans-unit>
       <trans-unit id="81f6a0f1aaedeb8d2c35617f53c90aaa">
         <source>Position changed successfully!</source>
         <target>Position changed successfully!</target>
-        <note>Line: 558</note>
+        <note>Line: 544</note>
       </trans-unit>
       <trans-unit id="939d7906a02e747900bc9a6e06109e06">
         <source>An error occurred when switching position</source>
         <target>An error occurred when switching position</target>
-        <note>Line: 559</note>
+        <note>Line: 545</note>
       </trans-unit>
       <trans-unit id="70b2e27535936ea2fa3ce0c4304c79e8">
         <source>Customer Reassurance</source>
         <target>Customer Reassurance</target>
         <note>Line: 115</note>
+      </trans-unit>
+      <trans-unit id="061843bf9a4b68c61f7e089864b1fe9e">
+        <source>An error occurred when removing block</source>
+        <target>An error occurred when removing block</target>
+        <note>Line: 547</note>
       </trans-unit>
     </body>
   </file>
@@ -201,6 +206,11 @@ Comment: Confirm uninstall</note>
         <target>Choose SVG for best customization. Other accepted file formats: jpg, png, gif</target>
         <note>Line: 55</note>
       </trans-unit>
+      <trans-unit id="a9578a2a3ded5e3632f575d897087492">
+        <source>Choose SVG for better customization. Other allowed formats are: .gif, .jpg, .png</source>
+        <target>Choose SVG for better customization. Other allowed formats are: .gif, .jpg, .png</target>
+        <note>Line: 55</note>
+      </trans-unit>
     </body>
   </file>
   <file original="modules/blockreassurance/views/templates/admin/tabs/content/config_elements/language.tpl" source-language="en-US" target-language="en" datatype="plaintext">
@@ -274,22 +284,22 @@ Comment: Confirm uninstall</note>
       <trans-unit id="6f048a3dd9fc703eca6c05c7cdfb90ec">
         <source>Url link</source>
         <target>Url link</target>
-        <note>Line: 69</note>
+        <note>Line: 68</note>
       </trans-unit>
       <trans-unit id="cb456215c3333db0551bd0788bc258c7">
         <source>Activated</source>
         <target>Activated</target>
-        <note>Line: 84</note>
+        <note>Line: 83</note>
       </trans-unit>
       <trans-unit id="43c7582c40594c3fe32a6634ef9dcb07">
         <source>Deactivated</source>
         <target>Deactivated</target>
-        <note>Line: 85</note>
+        <note>Line: 84</note>
       </trans-unit>
       <trans-unit id="4aa4ae23dfbd6b0941b3749079107b48">
         <source>We recommend 3 blocks at maximum.</source>
         <target>We recommend 3 blocks at maximum.</target>
-        <note>Line: 101</note>
+        <note>Line: 104</note>
       </trans-unit>
     </body>
   </file>

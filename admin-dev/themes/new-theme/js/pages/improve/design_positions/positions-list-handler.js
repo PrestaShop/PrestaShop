@@ -48,7 +48,7 @@ class PositionsListHandler {
     self.handleList();
     self.handleSortable();
 
-    $('input[name="form[general][enable_tos]"]').on('change', () => self.handle());
+    $('input[name="general[enable_tos]"]').on('change', () => self.handle());
   }
 
   /**
@@ -116,6 +116,7 @@ class PositionsListHandler {
 
     self.$hookSearch.on('keypress', (e) => {
       const keyCode = e.keyCode || e.which;
+
       return keyCode !== 13;
     });
 

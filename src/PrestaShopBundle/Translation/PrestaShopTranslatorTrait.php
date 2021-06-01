@@ -54,6 +54,10 @@ trait PrestaShopTranslatorTrait
             unset($parameters['legacy']);
         }
 
+        if (empty($locale)) {
+            $locale = null;
+        }
+
         $translated = parent::trans($id, [], $this->normalizeDomain($domain), $locale);
 
         // @todo to remove after the legacy translation system has ben phased out
@@ -135,7 +139,7 @@ trait PrestaShopTranslatorTrait
      *
      * @return bool
      */
-    final private function isSprintfString($string)
+    private function isSprintfString($string)
     {
         return (bool) preg_match_all(static::$regexSprintfParams, $string)
             && !(bool) preg_match_all(static::$regexClassicParams, $string);

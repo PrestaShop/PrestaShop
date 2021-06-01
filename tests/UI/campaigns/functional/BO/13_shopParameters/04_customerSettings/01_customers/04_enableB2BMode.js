@@ -12,6 +12,7 @@ const customerSettingsPage = require('@pages/BO/shopParameters/customerSettings'
 const {options} = require('@pages/BO/shopParameters/customerSettings/options');
 const foHomePage = require('@pages/FO/home');
 const loginFOPage = require('@pages/FO/login');
+const foCreateAccountPage = require('@pages/FO/myAccount/add');
 
 // Import test context
 const testContext = require('@utils/testContext');
@@ -87,11 +88,11 @@ describe('Enable B2B mode', async () => {
       await loginFOPage.goToCreateAccountPage(page);
 
       // Check B2B mode
-      const isCompanyInputVisible = await loginFOPage.isCompanyInputVisible(page);
+      const isCompanyInputVisible = await foCreateAccountPage.isCompanyInputVisible(page);
       await expect(isCompanyInputVisible).to.be.equal(test.args.enable);
 
       // Go back to BO
-      page = await loginFOPage.closePage(browserContext, page, 0);
+      page = await foCreateAccountPage.closePage(browserContext, page, 0);
     });
   });
 });

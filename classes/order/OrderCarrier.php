@@ -85,8 +85,9 @@ class OrderCarrierCore extends ObjectModel
      */
     public function sendInTransitEmail($order)
     {
+        $orderLanguageId = (int) $order->getAssociatedLanguage()->getId();
         $customer = new Customer((int) $order->id_customer);
-        $carrier = new Carrier((int) $order->id_carrier, $order->id_lang);
+        $carrier = new Carrier((int) $order->id_carrier, $orderLanguageId);
         $address = new Address((int) $order->id_address_delivery);
 
         if (!Validate::isLoadedObject($customer)) {
@@ -107,26 +108,26 @@ class OrderCarrierCore extends ObjectModel
             $prod_obj = new Product((int) $product['product_id']);
 
             //try to get the first image for the purchased combination
-            $img = $prod_obj->getCombinationImages($order->id_lang);
-            $link_rewrite = $prod_obj->link_rewrite[$order->id_lang];
-            $combination_img = $img[$product['product_attribute_id']][0]['id_image'];
+            $img = $prod_obj->getCombinationImages($orderLanguageId);
+            $link_rewrite = $prod_obj->link_rewrite[$orderLanguageId];
+            $combination_img = $img[$product['product_attribute_id']][0]['id_image'] ?? null;
             if ($combination_img != null) {
                 $img_url = $link->getImageLink($link_rewrite, $combination_img, 'large_default');
             } else {
                 //if there is no combination image, then get the product cover instead
                 $img = $prod_obj->getCover($prod_obj->id);
-                $img_url = $link->getImageLink($link_rewrite, $img['id_image']);
+                $img_url = !empty($img['id_image']) ? $link->getImageLink($link_rewrite, $img['id_image']) : '';
             }
             $prod_url = $prod_obj->getLink();
 
-            $metadata .= "\n" . '<div itemprop="itemShipped" itemscope itemtype="http://schema.org/Product">';
+            $metadata .= "\n" . '<div itemprop="itemShipped" itemscope itemtype="https://schema.org/Product">';
             $metadata .= "\n" . '   <meta itemprop="name" content="' . htmlspecialchars($product['product_name']) . '"/>';
             $metadata .= "\n" . '   <link itemprop="image" href="' . $img_url . '"/>';
             $metadata .= "\n" . '   <link itemprop="url" href="' . $prod_url . '"/>';
             $metadata .= "\n" . '</div>';
         }
 
-        $orderLanguage = new Language((int) $order->id_lang);
+        $orderLanguage = new Language((int) $orderLanguageId);
         $templateVars = [
             '{followup}' => str_replace('@', $this->tracking_number, $carrier->url),
             '{firstname}' => $customer->firstname,
@@ -143,7 +144,7 @@ class OrderCarrierCore extends ObjectModel
         ];
 
         if (@Mail::Send(
-            (int) $order->id_lang,
+            $orderLanguageId,
             'in_transit',
             $this->trans(
                 'Package in transit',

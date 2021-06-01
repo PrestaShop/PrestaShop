@@ -54,7 +54,7 @@ class AdminProductDataUpdater implements ProductInterface
     /**
      * Constructor. HookDispatcher is injected by Sf container.
      *
-     * @param HookDispatcher $hookDispatcher
+     * @param HookDispatcherInterface $hookDispatcher
      */
     public function __construct(HookDispatcherInterface $hookDispatcher)
     {
@@ -80,7 +80,7 @@ class AdminProductDataUpdater implements ProductInterface
 
                 continue;
             }
-            $product->active = ($activate ? 1 : 0);
+            $product->active = (bool) $activate;
             $product->update();
             if (in_array($product->visibility, ['both', 'search']) && Configuration::get('PS_SEARCH_INDEXATION')) {
                 Search::indexation(false, $product->id);
@@ -156,7 +156,7 @@ class AdminProductDataUpdater implements ProductInterface
         // Hooks: will trigger actionProductDelete
         $result = $product->delete();
 
-        if ($result === 0) {
+        if ($result === false) {
             throw new UpdateProductException('Cannot delete the requested product.', 5007);
         }
 
@@ -195,8 +195,8 @@ class AdminProductDataUpdater implements ProductInterface
             $product->id_product
         );
 
-        $product->indexed = 0;
-        $product->active = 0;
+        $product->indexed = false;
+        $product->active = false;
 
         // change product name to prefix it
         foreach ($product->name as $langKey => $oldName) {

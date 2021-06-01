@@ -26,21 +26,22 @@
 
 namespace PrestaShopBundle\Form\Admin\Type;
 
-use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
+use Symfony\Component\Form\FormError;
 use Symfony\Component\Form\FormErrorIterator;
 use Symfony\Component\Form\FormInterface;
 use Symfony\Component\Form\FormView;
 use Symfony\Component\OptionsResolver\Options;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
+use Symfony\Component\Translation\TranslatorInterface;
 
 /**
  * Class TranslatableType adds translatable inputs with custom inner type to forms.
  * Language selection uses a dropdown.
  */
-class TranslatableType extends AbstractType
+class TranslatableType extends TranslatorAwareType
 {
     /**
      * @var array List of enabled locales
@@ -63,7 +64,7 @@ class TranslatableType extends AbstractType
     private $saveFormLocaleChoice;
 
     /**
-     * @var string default form language ID
+     * @var int default form language ID
      */
     private $defaultFormLanguageId;
 
@@ -73,6 +74,8 @@ class TranslatableType extends AbstractType
     private $defaultShopLanguageId;
 
     /**
+     * @param TranslatorInterface $translator
+     * @param array $locales
      * @param array $availableLocales
      * @param UrlGeneratorInterface $urlGenerator
      * @param bool $saveFormLocaleChoice
@@ -80,12 +83,15 @@ class TranslatableType extends AbstractType
      * @param int $defaultShopLanguageId
      */
     public function __construct(
+        TranslatorInterface $translator,
+        array $locales,
         array $availableLocales,
         UrlGeneratorInterface $urlGenerator,
         $saveFormLocaleChoice,
         $defaultFormLanguageId,
         $defaultShopLanguageId
     ) {
+        parent::__construct($translator, $locales);
         $this->enabledLocales = $this->filterEnableLocales($availableLocales);
         $this->availableLocales = $availableLocales;
         $this->urlGenerator = $urlGenerator;
@@ -116,6 +122,27 @@ class TranslatableType extends AbstractType
      */
     public function buildView(FormView $view, FormInterface $form, array $options)
     {
+        $errors = iterator_to_array($view->vars['errors']);
+
+        $errorsByLocale = $this->getErrorsByLocale($view, $form, $options['locales']);
+
+        if ($errorsByLocale !== null) {
+            foreach ($errorsByLocale as $errorByLocale) {
+                /** Needs to be translated */
+                $modifiedErrorMessage = $this->trans(
+                    '%error_message% - Language: %language_name%',
+                    'Admin.Notifications.Error',
+                    [
+                        '%error_message%' => $errorByLocale['error_message'],
+                        '%language_name%' => $errorByLocale['locale_name'],
+                    ]
+                );
+                $errors[] = new FormError($modifiedErrorMessage);
+            }
+        }
+
+        $varsForm = $view->vars['errors']->getForm();
+        $view->vars['errors'] = new FormErrorIterator($varsForm, $errors);
         $view->vars['locales'] = $options['locales'];
         $view->vars['default_locale'] = $this->getDefaultLocale($options['locales']);
         $view->vars['hide_locales'] = 1 >= count($options['locales']);
@@ -126,7 +153,13 @@ class TranslatableType extends AbstractType
             );
         }
 
-        $this->setErrorsByLocale($view, $form, $options['locales']);
+        if (!empty($options['use_tabs'])) {
+            $view->vars['use_tabs'] = true;
+        } elseif (!empty($options['use_dropdown'])) {
+            $view->vars['use_tabs'] = false;
+        } else {
+            $view->vars['use_tabs'] = ($options['type'] === FormattedTextareaType::class);
+        }
     }
 
     /**
@@ -145,12 +178,18 @@ class TranslatableType extends AbstractType
                     $this->availableLocales
                 ;
             },
+            // These two options allow to override the default choice of the component between tab and dropdown (by
+            // default it is based on input type being a textarea)
+            'use_tabs' => null,
+            'use_dropdown' => null,
         ]);
 
         $resolver->setAllowedTypes('locales', 'array');
         $resolver->setAllowedTypes('options', 'array');
         $resolver->setAllowedTypes('type', 'string');
         $resolver->setAllowedTypes('error_bubbling', 'bool');
+        $resolver->setAllowedTypes('use_tabs', ['null', 'bool']);
+        $resolver->setAllowedTypes('use_dropdown', ['null', 'bool']);
     }
 
     /**
@@ -168,17 +207,19 @@ class TranslatableType extends AbstractType
      * @param FormView $view
      * @param FormInterface $form
      * @param array $locales
+     *
+     * @return array|null
      */
-    private function setErrorsByLocale(FormView $view, FormInterface $form, array $locales)
+    private function getErrorsByLocale(FormView $view, FormInterface $form, array $locales)
     {
         if (count($locales) <= 1) {
-            return;
+            return null;
         }
 
         $formErrors = $form->getErrors(true);
 
         if (empty($formErrors)) {
-            return;
+            return null;
         }
 
         if (1 === count($formErrors)) {
@@ -188,11 +229,11 @@ class TranslatableType extends AbstractType
                 $locales
             );
 
-            if (null !== $errorByLocale) {
-                $view->vars['error_by_locale'] = $errorByLocale;
+            if (!$errorByLocale) {
+                return null;
             }
 
-            return;
+            return [$errorByLocale];
         }
 
         $errorsByLocale = $this->getTranslatableErrors(
@@ -201,9 +242,7 @@ class TranslatableType extends AbstractType
             $locales
         );
 
-        if (null !== $errorsByLocale) {
-            $view->vars['errors_by_locale'] = $errorsByLocale;
-        }
+        return $errorsByLocale;
     }
 
     /**
@@ -227,12 +266,6 @@ class TranslatableType extends AbstractType
         $iteration = 0;
 
         foreach ($form as $formItem) {
-            if (0 === $iteration) {
-                ++$iteration;
-
-                continue;
-            }
-
             if ($this->doesErrorFormAndCurrentFormMatches($formError->getOrigin(), $formItem)) {
                 $nonDefaultLanguageFormKey = $iteration;
 
@@ -274,7 +307,7 @@ class TranslatableType extends AbstractType
             if ($doesLocaleExistForInvalidForm) {
                 foreach ($formErrors as $formError) {
                     if ($this->doesErrorFormAndCurrentFormMatches($formError->getOrigin(), $formItem)) {
-                        $errorsByLocale[$locales[$iteration]['iso_code']] = [
+                        $errorsByLocale[] = [
                             'locale_name' => $locales[$iteration]['name'],
                             'error_message' => $formError->getMessage(),
                         ];

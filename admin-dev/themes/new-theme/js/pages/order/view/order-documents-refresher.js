@@ -36,7 +36,7 @@ export default class OrderDocumentsRefresher {
   }
 
   refresh(orderId) {
-    $.ajax(this.router.generate('admin_orders_get_documents', {orderId}))
+    $.getJSON(this.router.generate('admin_orders_get_documents', {orderId}))
       .then((response) => {
         $(OrderViewPageMap.orderDocumentsTabCount).text(response.total);
         $(OrderViewPageMap.orderDocumentsTabBody).html(response.html);

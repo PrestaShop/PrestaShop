@@ -27,7 +27,7 @@
 namespace Tests\Unit\Core\Domain\CartRule\ValueObject\CartRuleAction;
 
 use PHPUnit\Framework\TestCase;
-use PrestaShop\Decimal\Number;
+use PrestaShop\Decimal\DecimalNumber;
 use PrestaShop\PrestaShop\Core\Domain\CartRule\Exception\CartRuleConstraintException;
 use PrestaShop\PrestaShop\Core\Domain\CartRule\ValueObject\CartRuleAction\AmountDiscountAction;
 use PrestaShop\PrestaShop\Core\Domain\CartRule\ValueObject\CartRuleAction\CartRuleActionBuilder;
@@ -54,7 +54,7 @@ class CartRuleActionBuilderTest extends TestCase
         (new CartRuleActionBuilder())
             ->setAmountDiscount(
                 new MoneyAmountCondition(
-                    new Money(new Number('0'), new CurrencyId(1)),
+                    new Money(new DecimalNumber('0'), new CurrencyId(1)),
                     true
                 )
             )
@@ -75,7 +75,7 @@ class CartRuleActionBuilderTest extends TestCase
         $action = (new CartRuleActionBuilder())
             ->setAmountDiscount(
                 new MoneyAmountCondition(
-                    new Money(new Number('10'), new CurrencyId(1)),
+                    new Money(new DecimalNumber('10'), new CurrencyId(1)),
                     true
                 )
             )
@@ -142,7 +142,7 @@ class CartRuleActionBuilderTest extends TestCase
     public function validActionsProvider()
     {
         $moneyAmount = new MoneyAmountCondition(
-            new Money(new Number('100'), new CurrencyId(1)),
+            new Money(new DecimalNumber('100'), new CurrencyId(1)),
             true
         );
         $percentage = new PercentageDiscount(30.5, true);

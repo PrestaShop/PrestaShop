@@ -74,7 +74,7 @@
 	$('#tag_form').submit(function()
 	{
 		$('#select_right option').each(function(i){
-			$(this).attr("selected", "selected");
+			$(this).prop('selected', 'selected');
 		});
 	});
 	</script>

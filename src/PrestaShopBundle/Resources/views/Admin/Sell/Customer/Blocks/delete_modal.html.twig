@@ -36,18 +36,19 @@
   {% block content %}
     <div class="modal-body">
       <p>{{ 'There are two ways of deleting a customer. Please choose your preferred method.'|trans({}, 'Admin.Orderscustomers.Notification') }}</p>
+      {% block delete_customers_form %}
+        {{ form_start(deleteCustomersForm, {'action': path('admin_customers_index'), 'method': 'post'}) }}
 
-      {{ form_start(deleteCustomersForm, {'action': path('admin_customers_index'), 'method': 'post'}) }}
+        <div class="form-group mb-0">
+          {{ form_widget(deleteCustomersForm.delete_method) }}
+        </div>
 
-      <div class="form-group mb-0">
-        {{ form_widget(deleteCustomersForm.delete_method) }}
-      </div>
+        <div class="d-none">
+          {{ form_widget(deleteCustomersForm.customers_to_delete) }}
+        </div>
 
-      <div class="d-none">
-        {{ form_widget(deleteCustomersForm.customers_to_delete) }}
-      </div>
-
-      {{ form_end(deleteCustomersForm) }}
+        {{ form_end(deleteCustomersForm) }}
+      {% endblock %}
     </div>
   {% endblock %}
 {% endembed %}

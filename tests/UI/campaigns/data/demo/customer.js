@@ -1,5 +1,5 @@
 module.exports = {
-  DefaultAccount: {
+  DefaultCustomer: {
     id: '2',
     socialTitle: 'Mr.',
     firstName: 'John',

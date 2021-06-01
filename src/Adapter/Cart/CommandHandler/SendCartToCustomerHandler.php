@@ -29,7 +29,6 @@ namespace PrestaShop\PrestaShop\Adapter\Cart\CommandHandler;
 use Cart;
 use Context;
 use Customer;
-use Language;
 use Mail;
 use PrestaShop\PrestaShop\Core\Domain\Cart\Command\SendCartToCustomerCommand;
 use PrestaShop\PrestaShop\Core\Domain\Cart\CommandHandler\SendCartToCustomerHanlderInterface;
@@ -57,10 +56,10 @@ final class SendCartToCustomerHandler implements SendCartToCustomerHanlderInterf
             '{lastname}' => $customer->lastname,
         ];
 
-        $cartLanguage = new Language((int) $cart->id_lang);
+        $cartLanguage = $cart->getAssociatedLanguage();
 
         $emailWasSent = Mail::send(
-            (int) $cart->id_lang,
+            (int) $cartLanguage->getId(),
             'backoffice_order',
             Context::getContext()->getTranslator()->trans(
                 'Process the payment of your order',
@@ -131,7 +130,7 @@ final class SendCartToCustomerHandler implements SendCartToCustomerHanlderInterf
         return Context::getContext()->link->getPageLink(
             'order',
             false,
-            (int) $cart->id_lang,
+            (int) $cart->getAssociatedLanguage()->getId(),
             [
                 'step' => 3,
                 'recover_cart' => $cart->id,

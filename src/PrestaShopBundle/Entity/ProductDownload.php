@@ -160,7 +160,7 @@ class ProductDownload
     /**
      * Date until the product can be downloaded.
      *
-     * @return string
+     * @return DateTime
      */
     public function getDateExpiration()
     {

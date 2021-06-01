@@ -30,6 +30,8 @@ import {EventEmitter} from '@components/event-emitter';
 import OrderDiscountsRefresher from '@pages/order/view/order-discounts-refresher';
 import OrderProductRenderer from '@pages/order/view/order-product-renderer';
 import OrderPricesRefresher from '@pages/order/view/order-prices-refresher';
+import OrderPaymentsRefresher from '@pages/order/view/order-payments-refresher';
+import OrderShippingRefresher from '@pages/order/view/order-shipping-refresher';
 import Router from '@components/router';
 import OrderInvoicesRefresher from './order-invoices-refresher';
 import OrderProductCancel from './order-product-cancel';
@@ -43,6 +45,8 @@ export default class OrderViewPage {
     this.orderProductManager = new OrderProductManager();
     this.orderProductRenderer = new OrderProductRenderer();
     this.orderPricesRefresher = new OrderPricesRefresher();
+    this.orderPaymentsRefresher = new OrderPaymentsRefresher();
+    this.orderShippingRefresher = new OrderShippingRefresher();
     this.orderDocumentsRefresher = new OrderDocumentsRefresher();
     this.orderInvoicesRefresher = new OrderInvoicesRefresher();
     this.orderProductCancel = new OrderProductCancel();
@@ -63,39 +67,18 @@ export default class OrderViewPage {
     });
 
     EventEmitter.on(OrderViewEventMap.productDeletedFromOrder, (event) => {
-      // Remove the row
-      const $row = $(OrderViewPageMap.productsTableRow(event.oldOrderDetailId));
-      const $next = $row.next();
-      $row.remove();
-      if ($next.hasClass('order-product-customization')) {
-        $next.remove();
-      }
-
-      const $tablePagination = $(OrderViewPageMap.productsTablePagination);
-      const numPages = $tablePagination.data('numPages');
-      const numRowsPerPage = $tablePagination.data('numPerPage');
-      const numRows = $(OrderViewPageMap.productsTable).find('tr[id^="orderProduct_"]:not(.d-none)').length;
-      let currentPage = parseInt($(OrderViewPageMap.productsTablePaginationActive).html(), 10);
-      const numProducts = parseInt($(OrderViewPageMap.productsCount).html(), 10);
-      if ((numProducts - 1) % numRowsPerPage === 0) {
-        this.orderProductRenderer.paginationRemovePage(numPages);
-      }
-      if (numRows === 1 && currentPage === numPages) {
-        currentPage -= 1;
-      }
-      EventEmitter.emit(OrderViewEventMap.productListPaginated, {
-        numPage: currentPage,
-      });
-
-      this.orderProductRenderer.updateNumProducts(numProducts - 1);
       this.orderPricesRefresher.refresh(event.orderId);
+      this.orderPaymentsRefresher.refresh(event.orderId);
+      this.refreshProductsList(event.orderId);
       this.orderDiscountsRefresher.refresh(event.orderId);
       this.orderDocumentsRefresher.refresh(event.orderId);
+      this.orderShippingRefresher.refresh(event.orderId);
     });
 
     EventEmitter.on(OrderViewEventMap.productEditionCanceled, (event) => {
       this.orderProductRenderer.resetEditRow(event.orderDetailId);
       const editRowsLeft = $(OrderViewPageMap.productEditRow).not(OrderViewPageMap.productEditRowTemplate).length;
+
       if (editRowsLeft > 0) {
         return;
       }
@@ -103,20 +86,21 @@ export default class OrderViewPage {
     });
 
     EventEmitter.on(OrderViewEventMap.productUpdated, (event) => {
-      this.orderProductRenderer.addOrUpdateProductToList(
-        $(OrderViewPageMap.productsTableRow(event.orderDetailId)),
-        event.newRow,
-      );
       this.orderProductRenderer.resetEditRow(event.orderDetailId);
       this.orderPricesRefresher.refresh(event.orderId);
+      this.orderPricesRefresher.refreshProductPrices(event.orderId);
+      this.refreshProductsList(event.orderId);
+      this.orderPaymentsRefresher.refresh(event.orderId);
       this.orderDiscountsRefresher.refresh(event.orderId);
       this.orderInvoicesRefresher.refresh(event.orderId);
       this.orderDocumentsRefresher.refresh(event.orderId);
+      this.orderShippingRefresher.refresh(event.orderId);
       this.listenForProductDelete();
       this.listenForProductEdit();
       this.resetToolTips();
 
       const editRowsLeft = $(OrderViewPageMap.productEditRow).not(OrderViewPageMap.productEditRowTemplate).length;
+
       if (editRowsLeft > 0) {
         return;
       }
@@ -124,36 +108,15 @@ export default class OrderViewPage {
     });
 
     EventEmitter.on(OrderViewEventMap.productAddedToOrder, (event) => {
-      const $tablePagination = $(OrderViewPageMap.productsTablePagination);
-      const numRowsPerPage = $tablePagination.data('numPerPage');
-      const numProducts = parseInt($(OrderViewPageMap.productsCount).html(), 10);
-
-      this.orderProductRenderer.addOrUpdateProductToList(
-        $(`#${$(event.newRow).find('tr').attr('id')}`),
-        event.newRow,
-      );
-      this.listenForProductDelete();
-      this.listenForProductEdit();
-      this.resetToolTips();
-
-      if ($(OrderViewPageMap.productsTable).find('tr[id^="orderProduct_"]:not(.d-none)').length >= numRowsPerPage) {
-        // Update pagination
-        let numPages = $tablePagination.data('numPages');
-        if (numProducts % numRowsPerPage === 0) {
-          numPages += 1;
-          this.orderProductRenderer.paginationAddPage(numPages);
-        }
-        // Move to last page
-        EventEmitter.emit(OrderViewEventMap.productListPaginated, {
-          numPage: numPages,
-        });
-      }
-      this.orderProductRenderer.updateNumProducts(numProducts + 1);
       this.orderProductRenderer.resetAddRow();
+      this.orderPricesRefresher.refreshProductPrices(event.orderId);
       this.orderPricesRefresher.refresh(event.orderId);
+      this.refreshProductsList(event.orderId);
+      this.orderPaymentsRefresher.refresh(event.orderId);
       this.orderDiscountsRefresher.refresh(event.orderId);
       this.orderInvoicesRefresher.refresh(event.orderId);
       this.orderDocumentsRefresher.refresh(event.orderId);
+      this.orderShippingRefresher.refresh(event.orderId);
       this.orderProductRenderer.moveProductPanelToOriginalPosition();
     });
   }
@@ -165,12 +128,12 @@ export default class OrderViewPage {
   }
 
   resetToolTips() {
-    $(OrderViewPageMap.productEditBtn).pstooltip();
+    $(OrderViewPageMap.productEditButtons).pstooltip();
     $(OrderViewPageMap.productDeleteBtn).pstooltip();
   }
 
   listenForProductEdit() {
-    $(OrderViewPageMap.productEditBtn).off('click').on('click', (event) => {
+    $(OrderViewPageMap.productEditButtons).off('click').on('click', (event) => {
       const $btn = $(event.currentTarget);
       this.orderProductRenderer.moveProductsPanelToModificationPosition();
       this.orderProductRenderer.editProductFromList(
@@ -246,6 +209,7 @@ export default class OrderViewPage {
     $(OrderViewPageMap.productsTablePaginationNext).on('click', (event) => {
       event.preventDefault();
       const $btn = $(event.currentTarget);
+
       if ($btn.hasClass('disabled')) {
         return;
       }
@@ -257,6 +221,7 @@ export default class OrderViewPage {
     $(OrderViewPageMap.productsTablePaginationPrev).on('click', (event) => {
       event.preventDefault();
       const $btn = $(event.currentTarget);
+
       if ($btn.hasClass('disabled')) {
         return;
       }
@@ -330,5 +295,74 @@ export default class OrderViewPage {
 
   getActivePage() {
     return $(OrderViewPageMap.productsTablePagination).find('.active span').get(0);
+  }
+
+  refreshProductsList(orderId) {
+    $(OrderViewPageMap.refreshProductsListLoadingSpinner).show();
+
+    const $tablePagination = $(OrderViewPageMap.productsTablePagination);
+    const numRowsPerPage = $tablePagination.data('numPerPage');
+    const initialNumProducts = $(OrderViewPageMap.productsTableRows).length;
+    const currentPage = parseInt($(OrderViewPageMap.productsTablePaginationActive).html(), 10);
+
+    $.ajax(this.router.generate('admin_orders_get_products', {orderId}))
+      .done((response) => {
+        // Delete previous product lines
+        $(OrderViewPageMap.productsTable).find(OrderViewPageMap.productsTableRows).remove();
+        $(OrderViewPageMap.productsTableCustomizationRows).remove();
+
+        $(`${OrderViewPageMap.productsTable} tbody`).prepend(response);
+
+        $(OrderViewPageMap.refreshProductsListLoadingSpinner).hide();
+
+        const newNumProducts = $(OrderViewPageMap.productsTableRows).length;
+        const newPagesNum = Math.ceil(newNumProducts / numRowsPerPage);
+
+        this.orderProductRenderer.updateNumProducts(newNumProducts);
+        this.orderProductRenderer.updatePaginationControls();
+
+        let numPage = 1;
+        let message = '';
+
+        // Display alert
+        if (initialNumProducts > newNumProducts) { // product deleted
+          message = (initialNumProducts - newNumProducts === 1)
+            ? window.translate_javascripts['The product was successfully removed.']
+            : window.translate_javascripts['[1] products were successfully removed.']
+              .replace('[1]', (initialNumProducts - newNumProducts));
+
+          // Set target page to the page of the deleted item
+          numPage = (newPagesNum === 1) ? 1 : currentPage;
+        } else if (initialNumProducts < newNumProducts) { // product added
+          message = (newNumProducts - initialNumProducts === 1)
+            ? window.translate_javascripts['The product was successfully added.']
+            : window.translate_javascripts['[1] products were successfully added.']
+              .replace('[1]', (newNumProducts - initialNumProducts));
+
+          // Move to first page to see the added product
+          numPage = 1;
+        }
+
+        if (message !== '') {
+          $.growl.notice({
+            title: '',
+            message,
+          });
+        }
+
+        // Move to page of the modified item
+        EventEmitter.emit(OrderViewEventMap.productListPaginated, {
+          numPage,
+        });
+
+        // Bind hover on product rows buttons
+        this.resetToolTips();
+      })
+      .fail(() => {
+        $.growl.error({
+          title: '',
+          message: 'Failed to reload the products list. Please reload the page',
+        });
+      });
   }
 }

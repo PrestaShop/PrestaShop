@@ -26,6 +26,7 @@
 
 function add_new_status_stock()
 {
+    Language::resetCache();
     $translator = Context::getContext()->getTranslator();
     $languages  = Language::getLanguages();
 

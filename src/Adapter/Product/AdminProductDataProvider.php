@@ -364,7 +364,7 @@ class AdminProductDataProvider extends AbstractAdminQueryBuilder implements Prod
         $total = $total[0]['FOUND_ROWS()'];
 
         // post treatment
-        $currency = new Currency(Configuration::get('PS_CURRENCY_DEFAULT'));
+        $currency = new Currency((int) Configuration::get('PS_CURRENCY_DEFAULT'));
         $localeCldr = Tools::getContextLocale(Context::getContext());
 
         foreach ($products as &$product) {
@@ -428,7 +428,7 @@ class AdminProductDataProvider extends AbstractAdminQueryBuilder implements Prod
      *
      * @param string[] $coreParameters The new Core route parameters
      *
-     * @return string[] The URL parameters for Legacy URL (GETs)
+     * @return array<string, int|string> The URL parameters for Legacy URL (GETs)
      */
     public function mapLegacyParametersProductForm($coreParameters = [])
     {

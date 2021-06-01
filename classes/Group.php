@@ -27,7 +27,7 @@ class GroupCore extends ObjectModel
 {
     public $id;
 
-    /** @var string Lastname */
+    /** @var string|array<int, string> */
     public $name;
 
     /** @var string Reduction */
@@ -37,7 +37,7 @@ class GroupCore extends ObjectModel
     public $price_display_method;
 
     /** @var bool Show prices */
-    public $show_prices = 1;
+    public $show_prices = true;
 
     /** @var string Object creation date */
     public $date_add;
@@ -72,6 +72,9 @@ class GroupCore extends ObjectModel
     protected static $ps_customer_group = null;
 
     protected $webserviceParameters = [];
+
+    public const PRICE_DISPLAY_METHOD_TAX_INCL = 0;
+    public const PRICE_DISPLAY_METHOD_TAX_EXCL = 1;
 
     public function __construct($id = null, $id_lang = null, $id_shop = null)
     {

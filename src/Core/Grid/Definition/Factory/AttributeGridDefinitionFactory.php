@@ -55,7 +55,7 @@ final class AttributeGridDefinitionFactory extends AbstractFilterableGridDefinit
 {
     use DeleteActionTrait;
 
-    const GRID_ID = 'attribute';
+    public const GRID_ID = 'attribute';
 
     /**
      * @var int

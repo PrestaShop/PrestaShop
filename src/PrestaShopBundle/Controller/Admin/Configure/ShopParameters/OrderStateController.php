@@ -66,9 +66,7 @@ class OrderStateController extends FrameworkBundleAdminController
         $orderStatesGrid = $orderStatesGridFactory->getGrid($orderStatesFilters);
 
         $orderReturnStatesGridFactory = $this->get('prestashop.core.grid.factory.order_return_states');
-        $orderReturnStatesGrid = $orderReturnStatesGridFactory->getGrid(
-            $this->buildFiltersParamsByRequest($request, $orderReturnStatesFilters)
-        );
+        $orderReturnStatesGrid = $orderReturnStatesGridFactory->getGrid($orderReturnStatesFilters);
 
         return $this->render('@PrestaShop/Admin/Configure/ShopParameters/OrderStates/index.html.twig', [
             'help_link' => $this->generateSidebarLink($request->attributes->get('_legacy_controller')),

@@ -29,7 +29,7 @@ namespace PrestaShop\PrestaShop\Core\Grid\Action;
 use Iterator;
 
 /**
- * Interface PanelActionCollectionInterface defines contract for grid action collection.
+ * Interface GridActionCollectionInterface defines contract for grid action collection.
  */
 interface GridActionCollectionInterface extends Iterator
 {

@@ -33,7 +33,7 @@ function add_missing_rewrite_value()
 	WHERE ml.`url_rewrite` = \'\'
 	AND m.`page` != "index"
 	');
-    if (count($pages) && is_array($pages)) {
+    if (is_array($pages) && count($pages)) {
         foreach ($pages as $page) {
             Db::getInstance()->execute('
 			UPDATE `'._DB_PREFIX_.'meta_lang`

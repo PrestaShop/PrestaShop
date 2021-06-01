@@ -88,8 +88,8 @@ class ModuleZipManager
     {
         $this->initSource($source);
 
-        if ($this->getSource($source)->getName($source) !== null) {
-            return $this->getSource($source)->getName($source);
+        if ($this->getSource($source)->getName() !== null) {
+            return $this->getSource($source)->getName();
         }
 
         if (!file_exists($source)) {
@@ -98,7 +98,7 @@ class ModuleZipManager
 
         $sandboxPath = $this->getSandboxPath($source);
         $zip = new ZipArchive();
-        if ($zip->open($source) === false || !$zip->extractTo($sandboxPath) || !$zip->close()) {
+        if ($zip->open($source) !== true || !$zip->extractTo($sandboxPath) || !$zip->close()) {
             throw new Exception($this->translator->trans('Cannot extract module in %path% to get its name. %error%', ['%path%' => $sandboxPath, '%error%' => $zip->getStatusString()], 'Admin.Modules.Notification'));
         }
 
@@ -172,9 +172,9 @@ class ModuleZipManager
     }
 
     /**
-     * @param $source
+     * @param string $source
      *
-     * @return string|null
+     * @return string
      */
     private function getSandboxPath($source)
     {

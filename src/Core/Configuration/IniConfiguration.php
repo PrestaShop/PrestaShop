@@ -57,7 +57,7 @@ class IniConfiguration
     /**
      * Convert a numeric value to bytes.
      *
-     * @param int $value
+     * @param string $value
      *
      * @return int
      */

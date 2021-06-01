@@ -25,6 +25,13 @@ require_once _PS_ROOT_DIR_ . '/config/bootstrap.php';
 require_once _PS_ROOT_DIR_ . '/install-dev/classes/exception.php';
 require_once _PS_ROOT_DIR_ . '/install-dev/classes/session.php';
 require_once _PS_ROOT_DIR_ . '/var/SymfonyRequirements.php';
+include_once _PS_TOOL_DIR_ . 'profiling/Profiler.php';
+include_once _PS_TOOL_DIR_ . 'profiling/Controller.php';
+include_once _PS_TOOL_DIR_ . 'profiling/ObjectModel.php';
+include_once _PS_TOOL_DIR_ . 'profiling/Db.php';
+include_once _PS_TOOL_DIR_ . 'profiling/Hook.php';
+include_once _PS_TOOL_DIR_ . 'profiling/Module.php';
+include_once _PS_TOOL_DIR_ . 'profiling/Tools.php';
 
 // Make sure loader php-parser is coming from php stan composer
 
@@ -75,6 +82,9 @@ $constantsToDefine = [
     '_PARENT_THEME_NAME_' => 'string',
     '__PS_BASE_URI__' => 'string',
     '_PS_API_URL_' => 'string',
+    '_PS_CACHE_ENABLED_' => 'int',
+    '_PS_CACHING_SYSTEM_' => 'string',
+    '_PS_CREATION_DATE_' => 'string',
     '_PS_INSTALL_PATH_' => 'string',
     '_PS_INSTALL_DATA_PATH_' => 'string',
     '_PS_INSTALL_LANGS_PATH_' => 'string',

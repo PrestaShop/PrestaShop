@@ -36,11 +36,11 @@ use Symfony\Component\Process\Exception\LogicException;
  */
 abstract class AbstractAdminQueryBuilder
 {
-    const FILTERING_LIKE_BOTH = 'LIKE \'%%%s%%\'';
-    const FILTERING_LIKE_LEFT = 'LIKE \'%%%s\'';
-    const FILTERING_LIKE_RIGHT = 'LIKE \'%s%%\'';
-    const FILTERING_EQUAL_NUMERIC = '= %s';
-    const FILTERING_EQUAL_STRING = '= \'%s\'';
+    public const FILTERING_LIKE_BOTH = 'LIKE \'%%%s%%\'';
+    public const FILTERING_LIKE_LEFT = 'LIKE \'%%%s\'';
+    public const FILTERING_LIKE_RIGHT = 'LIKE \'%s%%\'';
+    public const FILTERING_EQUAL_NUMERIC = '= %s';
+    public const FILTERING_EQUAL_STRING = '= \'%s\'';
 
     /**
      * @var string|null
@@ -117,11 +117,11 @@ abstract class AbstractAdminQueryBuilder
      * Format example for $order:
      * $order = array('name ASC', 'id_product DESC');
      *
-     * @param array[array[mixed]] $select
-     * @param array[mixed] $table
-     * @param array[mixed] $where
-     * @param array[string] $groupBy
-     * @param array[string] $order
+     * @param array<string,array<string,string>|string> $select
+     * @param array<mixed> $table
+     * @param array<mixed> $where
+     * @param array<string> $groupBy
+     * @param array<string> $order
      * @param string $limit
      *
      * @throws LogicException if SQL elements cannot be joined
@@ -135,7 +135,7 @@ abstract class AbstractAdminQueryBuilder
         // SELECT
         $s = [];
         foreach ($select as $alias => $field) {
-            $a = is_string($alias) ? ' AS `' . $alias . '`' : '';
+            $a = ' AS `' . $alias . '`';
             if (is_array($field)) {
                 if (isset($field['table'])) {
                     $s[] = ' ' . $field['table'] . '.`' . $field['field'] . '` ' . $a;

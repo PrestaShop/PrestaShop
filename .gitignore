@@ -61,6 +61,8 @@ npm-debug.log.*
 !/img/m/index.php
 !/img/os/index.php
 !/img/p/index.php
+!/img/pr/index.php
+!/img/pr/default.jpg
 !/img/s/index.php
 !/img/scenes
 !/img/st/index.php
@@ -75,7 +77,6 @@ npm-debug.log.*
 
 /vendor/*
 /docs/phpdoc-sf/
-/composer.lock
 *.hot-update.js
 *.hot-update.json
 
@@ -83,6 +84,42 @@ tests-legacy/resources/modules/followup/
 tests-legacy/resources/modules/ps_emailalerts/
 tests-legacy/resources/modules/ps_emailsubscription/mails/
 tests-legacy/resources/modules/referralprogram/
+
+# themes listed in the modules_to_hook section of the theme.yml
+tests-legacy/resources/modules/blockreassurance
+tests-legacy/resources/modules/ps_contactinfo
+tests-legacy/resources/modules/ps_languageselector
+tests-legacy/resources/modules/ps_currencyselector
+tests-legacy/resources/modules/ps_customersignin
+tests-legacy/resources/modules/ps_shoppingcart
+tests-legacy/resources/modules/ps_mainmenu
+tests-legacy/resources/modules/ps_searchbar
+tests-legacy/resources/modules/ps_imageslider
+tests-legacy/resources/modules/ps_customtext
+tests-legacy/resources/modules/ps_socialfollow
+tests-legacy/resources/modules/ps_linklist
+tests-legacy/resources/modules/ps_customeraccountlinks
+tests-legacy/resources/modules/ps_categorytree
+tests-legacy/resources/modules/ps_facetedsearch
+tests-legacy/resources/modules/ps_sharebuttons
+
+# Installed with test data maybe via API push
+tests-legacy/resources/modules/ps_reminder
+
+tests/Resources/img/l/*
+!tests/Resources/img/l/.gitkeep
+tests/Resources/img/p/*
+!tests/Resources/img/p/.gitkeep
+tests/Resources/img/os/*
+!tests/Resources/img/os/.gitkeep
+tests/Resources/img/genders/*
+!tests/Resources/img/genders/.gitkeep
+tests/Resources/img/c/*
+!tests/Resources/img/c/.gitkeep
+tests/Resources/img/tmp/*
+tests/Resources/img/tmp/.gitkeep
+!tests/Resources/download/.gitkeep
+tests/Resources/download/*
 
 /admin-dev/autoupgrade/*
 !/admin-dev/autoupgrade/index.php
@@ -302,8 +339,7 @@ crashlytics.properties
 crashlytics-build.properties
 
 ### NetBeans ###
-nbproject/private/
-/build/
+nbproject/
 nbbuild/
 dist/
 nbdist/

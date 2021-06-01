@@ -32,9 +32,6 @@ import SubmitBulkActionExtension from '../../components/grid/extension/submit-bu
 import SortingExtension from '../../components/grid/extension/sorting-extension';
 import SubmitRowActionExtension from '../../components/grid/extension/action/row/submit-row-action-extension';
 import ColumnTogglingExtension from '../../components/grid/extension/column-toggling-extension';
-import ChoiceTree from '../../components/form/choice-tree';
-import GeneratableInput from '../../components/generatable-input';
-import MultipleChoiceTable from '../../components/multiple-choice-table';
 import PermissionsRowSelector from './permissions-row-selector';
 import LinkRowActionExtension from '../../components/grid/extension/link-row-action-extension';
 
@@ -54,14 +51,10 @@ $(() => {
   webserviceGrid.addExtension(new LinkRowActionExtension());
 
   // needed for shop association input in form
-  new ChoiceTree('#webservice_key_shop_association').enableAutoCheckChildren();
-
-  // needed for permissions input in form
-  new MultipleChoiceTable();
-
+  new window.prestashop.component.ChoiceTree('#webservice_key_shop_association').enableAutoCheckChildren();
+  window.prestashop.component.initComponents(['MultipleChoiceTable', 'GeneratableInput']);
   // needed for key input in form
-  const generatableInput = new GeneratableInput();
-  generatableInput.attachOn('.js-generator-btn');
+  window.prestashop.instance.generatableInput.attachOn('.js-generator-btn');
 
   new PermissionsRowSelector();
 });

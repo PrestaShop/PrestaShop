@@ -43,7 +43,7 @@ class Fees
     protected $shippingFees;
 
     /**
-     * @var AmountImmutable
+     * @var AmountImmutable|null
      */
     protected $finalShippingFees;
 
@@ -64,9 +64,18 @@ class Fees
      */
     protected $isProcessed = false;
 
-    public function __construct()
+    /**
+     * @var int|null
+     */
+    protected $orderId;
+
+    /**
+     * @param int|null $orderId
+     */
+    public function __construct(?int $orderId = null)
     {
         $this->shippingFees = new AmountImmutable();
+        $this->orderId = $orderId;
     }
 
     /**
@@ -93,13 +102,17 @@ class Fees
                     (int) $id_carrier,
                     true,
                     null,
-                    $products
+                    $products,
+                    null,
+                    null !== $this->orderId
                 ),
                 $cart->getPackageShippingCost(
                     (int) $id_carrier,
                     false,
                     null,
-                    $products
+                    $products,
+                    null,
+                    null !== $this->orderId
                 )
             );
         }
@@ -151,7 +164,7 @@ class Fees
     }
 
     /**
-     * @return AmountImmutable
+     * @return AmountImmutable|null
      */
     public function getFinalShippingFees()
     {

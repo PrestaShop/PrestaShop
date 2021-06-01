@@ -132,9 +132,16 @@ class CmsPageFeatureContext extends AbstractDomainFeatureContext
         if (isset($data['active'])) {
             $command->setIsDisplayed(PrimitiveUtils::castStringBooleanIntoBoolean($data['active']));
         }
+        if (isset($data['id_cms_category'])) {
+            $command->setCmsPageCategoryId((int) $data['id_cms_category']);
+        }
 
-        $this->getCommandBus()->handle($command);
-        SharedStorage::getStorage()->set($cmsPageReference, new CMS($cmsId));
+        try {
+            $this->getCommandBus()->handle($command);
+            SharedStorage::getStorage()->set($cmsPageReference, new CMS($cmsId));
+        } catch (Exception $e) {
+            $this->latestException = $e;
+        }
     }
 
     /**

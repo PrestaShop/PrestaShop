@@ -115,7 +115,7 @@
       <i class="material-icons js-mobile-menu">menu</i>
 
       {* Logo *}
-      <a id="header_logo" href="{$default_tab_link|escape:'html':'UTF-8'}"></a>
+      <a id="header_logo" href="{$default_tab_link|escape:'html':'UTF-8'}" aria-label="{l s='PrestaShop Logo' d='Admin.Navigation.Header'}"></a>
       <span id="shop_version">{$ps_version}</span>
 
       {* Quick access *}
@@ -218,16 +218,16 @@
 
       {if isset($debug_mode) && $debug_mode == true}
       <div class="component hide-mobile-sm">
-          <a class="shop-state label-tooltip" id="debug-mode"
-             data-toggle="tooltip"
-             data-placement="bottom"
-             data-html="true"
-             title="<p class='text-left'><strong>{l s='Your shop is in debug mode.' d='Admin.Navigation.Notification'}</strong></p><p class='text-left'>{l s='All the PHP errors and messages are displayed. When you no longer need it, [1]turn off[/1] this mode.' html=true sprintf=['[1]' => '<strong>', '[/1]' => '</strong>'] d='Admin.Navigation.Notification'}</p>"
+        <a class="shop-state label-tooltip" id="debug-mode"
+           data-toggle="tooltip"
+           data-placement="bottom"
+           data-html="true"
+           title="<p class=&quot;text-left&quot;><strong>{l s='Your shop is in debug mode.' d='Admin.Navigation.Notification'}</strong></p><p class=&quot;text-left&quot;>{l s='All the PHP errors and messages are displayed. When you no longer need it, [1]turn off[/1] this mode.' html=true sprintf=['[1]' => '<strong>', '[/1]' => '</strong>'] d='Admin.Navigation.Notification'}</p>"
              href="{$link->getAdminLink('AdminPerformance')|escape:'html':'UTF-8'}"
           >
-            <i class="material-icons">bug_report</i>
-            <span>{l s='Debug mode' d='Admin.Navigation.Header'}</span>
-          </a>
+          <i class="material-icons">bug_report</i>
+          <span>{l s='Debug mode' d='Admin.Navigation.Header'}</span>
+        </a>
       </div>
       {/if}
 
@@ -238,7 +238,7 @@
            data-toggle="tooltip"
            data-placement="bottom"
            data-html="true"
-           title="<p class='text-left text-nowrap'><strong>{l s='Your shop is in maintenance.' d='Admin.Navigation.Notification'}</strong></p><p class='text-left'>{l s='Your visitors and customers cannot access your shop while in maintenance mode.%s To manage the maintenance settings, go to Shop Parameters > Maintenance tab.' sprintf=['<br />'] d='Admin.Navigation.Notification'}</p>"
+           title="<p class=&quot;text-left text-nowrap&quot;><strong>{l s='Your shop is in maintenance.' d='Admin.Navigation.Notification'}</strong></p><p class=&quot;text-left&quot;>{l s='Your visitors and customers cannot access your shop while in maintenance mode.%s To manage the maintenance settings, go to Shop Parameters > Maintenance tab.' sprintf=['<br />'] d='Admin.Navigation.Notification'}</p>"
         >
           <i class="material-icons">build</i>
           <span>{l s='Maintenance mode' d='Admin.Navigation.Header'}</span>
@@ -259,13 +259,13 @@
               <ul id="header_shop" class="shop-state">
                 <li class="dropdown">
                   <i class="material-icons">visibility</i>
-                  {$shop_list}
+                  <span>{$shop_list}</span>
                 </li>
               </ul>
             {else}
               <a id="header_shopname" class="shop-state" href="{$base_url|escape:'html':'UTF-8'}" target="_blank">
                 <i class="material-icons">visibility</i>
-                {l s='View my shop' d='Admin.Navigation.Header'}
+                <span>{l s='View my shop' d='Admin.Navigation.Header'}</span>
               </a>
             {/if}
           </li>
@@ -288,19 +288,19 @@
                   {$active = "active"}
                   {if $show_new_orders}
                     <li class="nav-item {$active}">
-                      <a class="nav-link" data-toggle="tab" data-type="order" href="#orders-notifications" role="tab" id="orders-tab">{l s='Latest orders' d='Admin.Navigation.Header'}<span id="orders_notif_value"></span></a>
+                      <a class="nav-link" data-toggle="tab" data-type="order" href="#orders-notifications" role="tab" id="orders-tab">{l s='Orders' d='Admin.Navigation.Header'}<span id="orders_notif_value" class="notif-counter"></span></a>
                     </li>
                     {$active = ""}
                   {/if}
                   {if $show_new_customers}
                     <li class="nav-item {$active}">
-                      <a class="nav-link" data-toggle="tab" data-type="customer" href="#customers-notifications" role="tab" id="customers-tab">{l s='New customers' d='Admin.Navigation.Header'}<span id="customers_notif_value"></span></a>
+                      <a class="nav-link" data-toggle="tab" data-type="customer" href="#customers-notifications" role="tab" id="customers-tab">{l s='Customers' d='Admin.Navigation.Header'}<span id="customers_notif_value" class="notif-counter"></span></a>
                     </li>
                     {$active = ""}
                   {/if}
                   {if $show_new_messages}
                     <li class="nav-item {$active}">
-                      <a class="nav-link" data-toggle="tab" data-type="customer_message" href="#messages-notifications" role="tab" id="messages-tab">{l s='Messages' d='Admin.Global'}<span id="customer_messages_notif_value"></span></a>
+                      <a class="nav-link" data-toggle="tab" data-type="customer_message" href="#messages-notifications" role="tab" id="messages-tab">{l s='Messages' d='Admin.Global'}<span id="customer_messages_notif_value" class="notif-counter"></span></a>
                     </li>
                     {$active = ""}
                   {/if}
@@ -348,7 +348,7 @@
 
       {* Employee *}
       <ul id="header_employee_box" class="component">
-        <li id="employee_infos" class="dropdown hidden-xs">
+        <li id="employee_infos" class="dropdown">
           <a href="{$link->getAdminLink('AdminEmployees', true, [], ['id_employee' => $employee->id|intval, 'updateemployee' => 1])|escape:'html':'UTF-8'}"
              class="employee_name dropdown-toggle"
              data-toggle="dropdown"
@@ -362,7 +362,7 @@
               </span>
             </li>
             <li class="text-left text-nowrap username" data-mobile="true" data-from="employee_links" data-target="menu">{l s='Welcome back %name%' sprintf=['%name%' => $employee->firstname] d='Admin.Navigation.Header'}</li>
-            <li class="employee-wrapper-profile"><a class="admin-link" href="{$link->getAdminLink('AdminEmployees', true, [], ['id_employee' => $employee->id|intval, 'updateemployee' => 1])|escape:'html':'UTF-8'}"><i class="material-icons">settings</i> {l s='Your profile' d='Admin.Navigation.Header'}</a></li>
+            <li class="employee-wrapper-profile"><a class="admin-link" href="{$link->getAdminLink('AdminEmployees', true, [], ['id_employee' => $employee->id|intval, 'updateemployee' => 1])|escape:'html':'UTF-8'}"><i class="material-icons">edit</i> {l s='Your profile' d='Admin.Navigation.Header'}</a></li>
             <li class="divider"></li>
             <li><a href="{l s='https://www.prestashop.com/en/resources/documentations?utm_source=back-office&utm_medium=profile&utm_campaign=resources-en&utm_content=download17
 ' d='Admin.Navigation.Header'}" target="_blank"><i class="material-icons">book</i> {l s='Resources' d='Admin.Navigation.Header'}</a></li>
@@ -400,8 +400,7 @@
       </div>
 {/if}
 
-      {hook h='displayAdminAfterHeader'}
-
+{hook h='displayAdminAfterHeader'}
 
 {* end display_header*}
 

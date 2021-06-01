@@ -26,7 +26,7 @@
 
 namespace PrestaShop\PrestaShop\Core\ConstraintValidator;
 
-use PrestaShop\PrestaShop\Core\Country\CountryZipCodeRequirements;
+use PrestaShop\PrestaShop\Core\ConstraintValidator\Constraints\AddressZipCode;
 use PrestaShop\PrestaShop\Core\Country\CountryZipCodeRequirementsProviderInterface;
 use PrestaShop\PrestaShop\Core\Domain\Country\Exception\CountryConstraintException;
 use PrestaShop\PrestaShop\Core\Domain\Country\ValueObject\CountryId;
@@ -70,9 +70,11 @@ final class AddressZipCodeValidator extends ConstraintValidator
      */
     public function validate($value, Constraint $constraint)
     {
+        if (!($constraint instanceof AddressZipCode)) {
+            return;
+        }
         $countryId = (int) $constraint->id_country;
 
-        /** @var CountryZipCodeRequirements $requirements */
         $requirements = $this->requirementsProvider->getCountryZipCodeRequirements(new CountryId($countryId));
 
         if ($requirements->isRequired() || $constraint->required) {

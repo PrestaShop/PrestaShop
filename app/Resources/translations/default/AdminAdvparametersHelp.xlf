@@ -319,6 +319,16 @@ Comment: Special case for Product : either one or the other. Not both.</note>
         <target>Click on the "Go" button and please wait patiently for the import process to conclude. This may take several minutes.</target>
         <note>Line: 50</note>
       </trans-unit>
+      <trans-unit id="2e516ba34e888923fa0f76e5dad9e24a">
+        <source>Click on the "%phpmyadmin_browse_label%" button and select the backup file from your hard drive.</source>
+        <target>Click on the "%phpmyadmin_browse_label%" button and select the backup file from your hard drive.</target>
+        <note>Line: 45</note>
+      </trans-unit>
+      <trans-unit id="4a67f50a5bcc2387568637556809af28">
+        <source>Click on the "%phpmyadmin_go_label%" button and please wait patiently for the import process to conclude. This may take several minutes.</source>
+        <target>Click on the "%phpmyadmin_go_label%" button and please wait patiently for the import process to conclude. This may take several minutes.</target>
+        <note>Line: 50</note>
+      </trans-unit>
     </body>
   </file>
   <file original="src/PrestaShopBundle/Resources/views/Admin/Configure/AdvancedParameters/Backup/Blocks/options.html.twig" source-language="en-US" target-language="en" datatype="plaintext">
@@ -514,6 +524,26 @@ Comment: Special case for Product : either one or the other. Not both.</note>
       <trans-unit id="29147406190a86209d5f4b3080cc7fa9">
         <source>You can also export the query results as a CSV file by clicking on the Export button</source>
         <target>You can also export the query results as a CSV file by clicking on the Export button</target>
+        <note>Line: 39</note>
+      </trans-unit>
+      <trans-unit id="bd98e6133da373d5d4d0241cae2e5df5">
+        <source>Click "%add_new_label%".</source>
+        <target>Click "%add_new_label%".</target>
+        <note>Line: 36</note>
+      </trans-unit>
+      <trans-unit id="6fe4a9d3d016ffb7ac0c79b9b34f759b">
+        <source>Fill in the fields and click "%save_label%".</source>
+        <target>Fill in the fields and click "%save_label%".</target>
+        <note>Line: 37</note>
+      </trans-unit>
+      <trans-unit id="b6244b10c31060f4136acddff13a2729">
+        <source>You can then view the query results by clicking on the "%view_label%" action in the dropdown menu</source>
+        <target>You can then view the query results by clicking on the "%view_label%" action in the dropdown menu</target>
+        <note>Line: 38</note>
+      </trans-unit>
+      <trans-unit id="09fac4ee316f450e3defd79540c2d9fe">
+        <source>You can also export the query results as a CSV file by clicking on the "%export_label%" button</source>
+        <target>You can also export the query results as a CSV file by clicking on the "%export_label%" button</target>
         <note>Line: 39</note>
       </trans-unit>
     </body>

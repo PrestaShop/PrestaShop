@@ -31,30 +31,10 @@
   </div>
 
   <div class="card-body">
-    {% if orderForViewing.payments.amountToPay and orderForViewing.payments.paidAmount %}
-      <div class="alert alert-danger mb-0" role="alert">
-        <p class="alert-text">
-          {{ 'Warning'|trans({}, 'Admin.Global') }}
-          <strong>{{ orderForViewing.payments.paidAmount }}</strong>
-          {{ 'paid instead of'|trans({}, 'Admin.Orderscustomers.Notification') }}
-          <strong>{{ orderForViewing.payments.amountToPay }}</strong>
-
-          {% if orderForViewing.linkedOrders.linkedOrders is not empty %}
-            {% if orderForViewing.linkedOrders.linkedOrders|length == 1 %}
-              <br/>{{ 'This warning also concerns order:'|trans({}, 'Admin.Orderscustomers.Notification') }}
-            {% else %}
-              <br/>{{ 'This warning also concerns the following orders:'|trans({}, 'Admin.Orderscustomers.Notification') }}
-            {% endif %}
-
-            {% for linkedOrder in orderForViewing.linkedOrders.linkedOrders %}
-              <a target="_blank" rel="noopener noreferrer" href="{{ path('admin_orders_view', {'orderId': linkedOrder.orderId}) }}">
-                #{{ linkedOrder.orderId }}
-              </a>
-            {% endfor %}
-          {% endif %}
-        </p>
-      </div>
-    {% endif %}
+    {% include '@PrestaShop/Admin/Sell/Order/Order/Blocks/View/payments_alert.html.twig' with {
+        'payments': orderForViewing.payments,
+        'linkedOrders': orderForViewing.linkedOrders
+    } %}
 
     <table class="table">
       <thead>

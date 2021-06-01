@@ -34,30 +34,30 @@ final class AddressSettings
     /**
      * Maximum allowed length of symbols for 'firstname' and 'lastname' fields
      */
-    const MAX_NAME_LENGTH = 255;
+    public const MAX_NAME_LENGTH = 255;
 
     /**
      * Maximum allowed length of symbols for phone number (both phone and mobile_phone)
      */
-    const MAX_PHONE_LENGTH = 32;
+    public const MAX_PHONE_LENGTH = 32;
 
     /**
      * Maximum allowed length of symbols for address
      */
-    const MAX_ADDRESS_LENGTH = 128;
+    public const MAX_ADDRESS_LENGTH = 128;
 
     /**
      * Maximum allowed length of symbols for post code
      */
-    const MAX_POST_CODE_LENGTH = 12;
+    public const MAX_POST_CODE_LENGTH = 12;
 
     /**
      * Maximum allowed length of symbols for city name
      */
-    const MAX_CITY_NAME_LENGTH = 64;
+    public const MAX_CITY_NAME_LENGTH = 64;
 
     /**
      * Maximum allowed length of symbols for field named 'other'
      */
-    const MAX_OTHER_LENGTH = 300;
+    public const MAX_OTHER_LENGTH = 300;
 }

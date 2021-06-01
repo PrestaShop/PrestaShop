@@ -120,7 +120,9 @@ class SearchProvider extends AbstractProvider implements UseDefaultCatalogueInte
     }
 
     /**
-     * {@inheritdoc}
+     * @return MessageCatalogue|MessageCatalogueInterface
+     *
+     * @throws FileNotFoundException
      */
     public function getXliffCatalogue()
     {

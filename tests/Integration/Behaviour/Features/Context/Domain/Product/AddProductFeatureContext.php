@@ -31,7 +31,7 @@ namespace Tests\Integration\Behaviour\Features\Context\Domain\Product;
 use Behat\Gherkin\Node\TableNode;
 use PrestaShop\PrestaShop\Core\Domain\Product\Command\AddProductCommand;
 use PrestaShop\PrestaShop\Core\Domain\Product\Exception\ProductException;
-use Tests\Integration\Behaviour\Features\Context\Util\PrimitiveUtils;
+use Product;
 
 class AddProductFeatureContext extends AbstractProductFeatureContext
 {
@@ -43,17 +43,20 @@ class AddProductFeatureContext extends AbstractProductFeatureContext
      */
     public function addProduct(string $productReference, TableNode $table): void
     {
-        $data = $table->getRowsHash();
+        $data = $this->localizeByRows($table);
 
         try {
             $productId = $this->getCommandBus()->handle(new AddProductCommand(
-                $this->parseLocalizedArray($data['name']),
-                PrimitiveUtils::castStringBooleanIntoBoolean($data['is_virtual'])
+                $data['name'],
+                $data['type']
             ));
 
             $this->getSharedStorage()->set($productReference, $productId->getValue());
         } catch (ProductException $e) {
             $this->setLastException($e);
         }
+        // Fix issue related to modules hooked on `actionProductSave` and calling `Product::priceCalculation()`
+        // leading to cache issues later
+        Product::resetStaticCache();
     }
 }

@@ -1,0 +1,97 @@
+.tree-panel-heading-controls {
+  padding: 5px;
+  margin: -20px -20px 20px;
+  font-size: 1.1em;
+  line-height: 2.2em;
+  color: $brand-primary;
+  border-bottom: solid 1px #dfdfdf;
+
+  i {
+    font-size: $icon-size-base;
+  }
+}
+
+.tree {
+  list-style: none;
+  @include padding(0, 0, 0, 20px);
+
+  input {
+    margin-right: 4px;
+    line-height: normal;
+    vertical-align: baseline;
+  }
+
+  i {
+    font-size: $icon-size-base;
+  }
+
+  .tree-item-name,
+  .tree-folder-name {
+    padding: 2px 5px;
+    @include border-radius(4px);
+
+    label {
+      font-weight: 400;
+    }
+
+    &:hover {
+      cursor: pointer;
+      background-color: #eee;
+    }
+  }
+
+  .tree-selected {
+    color: #fff;
+    background-color: $brand-primary;
+
+    &:hover {
+      background-color: darken($brand-primary, 5%);
+    }
+
+    i.tree-dot {
+      background-color: #fff;
+    }
+  }
+
+  i.tree-dot {
+    position: relative;
+    display: inline-block;
+    width: 6px;
+    height: 6px;
+    margin: 0 4px;
+    background-color: #ccc;
+    @include border-radius(6px);
+  }
+
+  .tree-item-disable,
+  .tree-folder-name-disable {
+    color: #ccc;
+
+    &:hover {
+      color: #ccc;
+      background-color: none;
+    }
+  }
+}
+
+.tree-actions {
+  display: inline-block;
+
+  .twitter-typeahead {
+    @include padding(0,0,0,4px);
+    position: relative;
+    top: 1px;
+  }
+
+  .tt-hint {
+    // stylelint-disable-next-line
+    left: 4px !important;
+    color: #ccc;
+  }
+}
+
+.tree-panel-label-title {
+  margin: 0;
+  font-weight: 400;
+  @include padding(0, 0, 0, 8px);
+}

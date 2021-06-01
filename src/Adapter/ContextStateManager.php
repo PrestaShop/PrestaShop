@@ -34,6 +34,7 @@ use Country;
 use Currency;
 use Customer;
 use Language;
+use Shop;
 
 /**
  * Allows manipulating context state.
@@ -45,22 +46,40 @@ use Language;
  */
 final class ContextStateManager
 {
-    /**
-     * @var Context
-     */
-    private $context;
+    private const MANAGED_FIELDS = [
+        'cart',
+        'country',
+        'currency',
+        'language',
+        'customer',
+        'shop',
+        'shopContext',
+    ];
 
     /**
-     * @var array
+     * @var LegacyContext
      */
-    private $savedContextFields = [];
+    private $legacyContext;
 
     /**
-     * @param Context $context
+     * @var array|null
      */
-    public function __construct(Context $context)
+    private $contextFieldsStack = null;
+
+    /**
+     * @param LegacyContext $legacyContext
+     */
+    public function __construct(LegacyContext $legacyContext)
     {
-        $this->context = $context;
+        $this->legacyContext = $legacyContext;
+    }
+
+    /**
+     * @return Context
+     */
+    public function getContext(): Context
+    {
+        return $this->legacyContext->getContext();
     }
 
     /**
@@ -73,7 +92,7 @@ final class ContextStateManager
     public function setCart(?Cart $cart): self
     {
         $this->saveContextField('cart');
-        $this->context->cart = $cart;
+        $this->getContext()->cart = $cart;
 
         return $this;
     }
@@ -88,7 +107,7 @@ final class ContextStateManager
     public function setCountry(?Country $country): self
     {
         $this->saveContextField('country');
-        $this->context->country = $country;
+        $this->getContext()->country = $country;
 
         return $this;
     }
@@ -103,7 +122,7 @@ final class ContextStateManager
     public function setCurrency(?Currency $currency): self
     {
         $this->saveContextField('currency');
-        $this->context->currency = $currency;
+        $this->getContext()->currency = $currency;
 
         return $this;
     }
@@ -118,7 +137,7 @@ final class ContextStateManager
     public function setLanguage(?Language $language): self
     {
         $this->saveContextField('language');
-        $this->context->language = $language;
+        $this->getContext()->language = $language;
 
         return $this;
     }
@@ -133,7 +152,25 @@ final class ContextStateManager
     public function setCustomer(?Customer $customer): self
     {
         $this->saveContextField('customer');
-        $this->context->customer = $customer;
+        $this->getContext()->customer = $customer;
+
+        return $this;
+    }
+
+    /**
+     * Sets context shop and saves previous value
+     *
+     * @param Shop $shop
+     *
+     * @return $this
+     *
+     * @throws \PrestaShopException
+     */
+    public function setShop(Shop $shop): self
+    {
+        $this->saveContextField('shop');
+        $this->getContext()->shop = $shop;
+        Shop::setContext(Shop::CONTEXT_SHOP, $shop->id);
 
         return $this;
     }
@@ -143,13 +180,55 @@ final class ContextStateManager
      *
      * @return self
      */
-    public function restoreContext(): self
+    public function restorePreviousContext(): self
     {
-        foreach ($this->savedContextFields as $fieldName => $contextValue) {
+        $stackFields = array_keys($this->contextFieldsStack[$this->getCurrentStashIndex()]);
+        foreach ($stackFields as $fieldName) {
             $this->restoreContextField($fieldName);
         }
+        $this->removeLastSavedContext();
 
         return $this;
+    }
+
+    /**
+     * Saves the current overridden fields in the context, allowing you to set new values to the
+     * current Context. Next time you call restorePreviousContext the context will be refilled with
+     * the values that were saved during this call.
+     *
+     * This is useful if several services use the ContextStateManager, this way if every service
+     * saved the context before modifying it there is no risk of removing previous modifications
+     * when you restore the context, because the different states have been stacked.
+     *
+     * @return $this
+     */
+    public function saveCurrentContext(): self
+    {
+        // No context field has been overridden yet so no need to save/stack it
+        if (null === $this->contextFieldsStack) {
+            return $this;
+        }
+
+        // Saves all the fields that have not been overridden
+        foreach (self::MANAGED_FIELDS as $contextField) {
+            $this->saveContextField($contextField);
+        }
+
+        // Add a new empty layer
+        $this->contextFieldsStack[] = [];
+
+        return $this;
+    }
+
+    /**
+     * Return the stack of modified fields
+     * If it's null, no context field has been overridden
+     *
+     * @return array|null
+     */
+    public function getContextFieldsStack(): ?array
+    {
+        return $this->contextFieldsStack;
     }
 
     /**
@@ -159,9 +238,15 @@ final class ContextStateManager
      */
     private function saveContextField(string $fieldName)
     {
+        $currentStashIndex = $this->getCurrentStashIndex();
         // NOTE: array_key_exists important here, isset cannot be used because it would not detect if null is stored
-        if (!array_key_exists($fieldName, $this->savedContextFields)) {
-            $this->savedContextFields[$fieldName] = $this->context->$fieldName;
+        if (!array_key_exists($fieldName, $this->contextFieldsStack[$currentStashIndex])) {
+            if ('shop' === $fieldName) {
+                $this->contextFieldsStack[$currentStashIndex]['shop'] = $this->getContext()->$fieldName;
+                $this->contextFieldsStack[$currentStashIndex]['shopContext'] = Shop::getContext();
+            } else {
+                $this->contextFieldsStack[$currentStashIndex][$fieldName] = $this->getContext()->$fieldName;
+            }
         }
     }
 
@@ -172,10 +257,60 @@ final class ContextStateManager
      */
     private function restoreContextField(string $fieldName): void
     {
+        $currentStashIndex = $this->getCurrentStashIndex();
         // NOTE: array_key_exists important here, isset cannot be used because it would not detect if null is stored
-        if (array_key_exists($fieldName, $this->savedContextFields)) {
-            $this->context->$fieldName = $this->savedContextFields[$fieldName];
-            unset($this->savedContextFields[$fieldName]);
+        if (array_key_exists($fieldName, $this->contextFieldsStack[$currentStashIndex])) {
+            if ('shop' === $fieldName) {
+                $this->restoreShopContext($currentStashIndex);
+            }
+            $this->getContext()->$fieldName = $this->contextFieldsStack[$currentStashIndex][$fieldName];
+            unset($this->contextFieldsStack[$currentStashIndex][$fieldName]);
+        }
+    }
+
+    /**
+     * Returns the index of the current stack
+     *
+     * @return int
+     */
+    private function getCurrentStashIndex(): int
+    {
+        // If this is the first time the index is needed we need to init the stack
+        if (null === $this->contextFieldsStack) {
+            $this->contextFieldsStack = [[]];
+        }
+
+        return array_key_last($this->contextFieldsStack);
+    }
+
+    /**
+     * Restore the ShopContext, this is used when Shop has been overridden, we need to
+     * restore context->shop of course But also the static fields in Shop class
+     *
+     * @param int $currentStashIndex
+     */
+    private function restoreShopContext(int $currentStashIndex): void
+    {
+        $shop = $this->contextFieldsStack[$currentStashIndex]['shop'];
+        $shopId = $shop instanceof Shop ? $shop->id : null;
+        $shopContext = $this->contextFieldsStack[$currentStashIndex]['shopContext'];
+        if (null !== $shopContext) {
+            Shop::setContext($shopContext, $shopId);
+        }
+        unset($this->contextFieldsStack[$currentStashIndex]['shopContext']);
+    }
+
+    /**
+     * Removes the last saved stashed context, in case this method is called too many times
+     * we always keep one layer available
+     */
+    private function removeLastSavedContext(): void
+    {
+        array_pop($this->contextFieldsStack);
+
+        // When all layers have been popped we restore the initial null value
+        if (empty($this->contextFieldsStack)) {
+            $this->contextFieldsStack = null;
         }
     }
 }

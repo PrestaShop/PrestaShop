@@ -43,6 +43,7 @@ export default function (paginationContainer) {
     current = paginationContainer.find('.page-item.active').data('page-index');
     event.preventDefault();
     const direction = $(event.currentTarget).data('direction');
+
     if (
       direction === 'prev'
       && !$(event.currentTarget).parent().next().hasClass('active')

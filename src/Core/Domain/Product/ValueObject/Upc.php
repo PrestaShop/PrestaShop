@@ -38,12 +38,12 @@ class Upc
     /**
      * Valid upc regex pattern
      */
-    const VALID_PATTERN = '/^[0-9]{0,12}$/';
+    public const VALID_PATTERN = '/^[0-9]{0,12}$/';
 
     /**
      * Maximum allowed symbols
      */
-    const MAX_LENGTH = 12;
+    public const MAX_LENGTH = 12;
     /**
      * @var string
      */

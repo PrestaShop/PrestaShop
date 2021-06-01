@@ -29,10 +29,10 @@
  */
 class DateRangeCore extends ObjectModel
 {
-    /** @var string $time_start */
+    /** @var string */
     public $time_start;
 
-    /** @var string $time_end */
+    /** @var string */
     public $time_end;
 
     /**

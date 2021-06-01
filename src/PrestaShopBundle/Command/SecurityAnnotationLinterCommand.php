@@ -42,8 +42,8 @@ use Symfony\Component\Routing\Route;
  */
 final class SecurityAnnotationLinterCommand extends ContainerAwareCommand
 {
-    const ACTION_LIST_ALL = 'list';
-    const ACTION_FIND_MISSING = 'find-missing';
+    public const ACTION_LIST_ALL = 'list';
+    public const ACTION_FIND_MISSING = 'find-missing';
 
     /**
      * @param string $expression
@@ -120,6 +120,8 @@ final class SecurityAnnotationLinterCommand extends ContainerAwareCommand
             default:
                 throw new \RuntimeException(sprintf('Unknown action %s', $actionToPerform));
         }
+
+        return 0;
     }
 
     /**

@@ -182,6 +182,7 @@ export default class Importer {
       },
       error: (XMLHttpRequest, textStatus) => {
         let txt = textStatus;
+
         if (txt === 'parsererror') {
           txt = 'Technical error: Unexpected response returned by server. Import stopped.';
         }

@@ -33,10 +33,11 @@
 {% form_theme cachingForm 'PrestaShopBundle:Admin/TwigTemplateForm:prestashop_ui_kit.html.twig' %}
 
 {% block content %}
+  {% if multistoreIsUsed %}{{ ps.infotip(multistoreInfoTip, true) }}{% endif %}
   {{ form_start(smartyForm, {attr : {class: 'form'}, action: path('admin_performance_smarty_save') }) }}
     <div class="row justify-content-center">
       {% block perfs_form_smarty_cache %}
-        <div class="col-xl-10">
+        <div class="col">
           <div class="card">
             <h3 class="card-header">
               <i class="material-icons">business_center</i> {{ 'Smarty'|trans }}
@@ -62,7 +63,7 @@
   {{ form_start(debugModeForm, {attr : {class: 'form'}, action: path('admin_performance_debug_mode_save') }) }}
     <div class="row justify-content-center">
       {% block perfs_form_debug_mode %}
-        <div class="col-xl-10">
+        <div class="col">
           <div class="card">
             <h3 class="card-header">
               <i class="material-icons">bug_report</i> {{ 'Debug mode'|trans }}
@@ -88,20 +89,24 @@
   {{ form_start(optionalFeaturesForm, {attr : {class: 'form'}, action: path('admin_performance_optional_features_save') }) }}
     <div class="row justify-content-center">
       {% block perfs_form_optional_features %}
-        <div class="col-xl-10">
+        <div class="col">
           <div class="card" id="optional_features">
             <h3 class="card-header">
               <i class="material-icons">extension</i> {{ 'Optional features'|trans }}
+
+              <span
+                class="help-box"
+                data-container="body"
+                data-toggle="popover"
+                data-trigger="hover"
+                data-placement="right"
+                data-content="{{ 'Some features can be disabled in order to improve performance.'|trans({}, 'Admin.Advparameters.Help') }}"
+                title=""
+              >
+              </span>
             </h3>
             <div class="card-block row">
               <div class="card-text">
-
-                <div class="row">
-                  <div class="col">
-                    {{ ps.infotip('Some features can be disabled in order to improve performance.'|trans({}, 'Admin.Advparameters.Help')) }}
-                  </div>
-                </div>
-
                 {% block perfs_form_optional_features_form %}
                   {{ form_widget(optionalFeaturesForm) }}
                 {% endblock %}
@@ -121,19 +126,25 @@
   {{ form_start(combineCompressCacheForm, {attr : {class: 'form'}, action: path('admin_performance_combine_compress_cache_save') }) }}
     <div class="row justify-content-center">
       {% block perfs_form_ccc %}
-        <div class="col-xl-10">
+        <div class="col">
           <div class="card">
             <h3 class="card-header">
               <i class="material-icons">zoom_out_map</i> {{ 'CCC (Combine, Compress and Cache)'|trans }}
+
+
+            <span
+              class="help-box"
+              data-container="body"
+              data-toggle="popover"
+              data-trigger="hover"
+              data-placement="right"
+              data-content="{{ 'CCC allows you to reduce the loading time of your page. With these settings you will gain performance without even touching the code of your theme. Make sure, however, that your theme is compatible with PrestaShop 1.7+. Otherwise, CCC will cause problems.'|trans({}, 'Admin.Advparameters.Help') }}"
+              title=""
+            >
+            </span>
             </h3>
             <div class="card-block row">
               <div class="card-text">
-                <div class="row">
-                  <div class="col">
-                    {{ ps.infotip('CCC allows you to reduce the loading time of your page. With these settings you will gain performance without even touching the code of your theme. Make sure, however, that your theme is compatible with PrestaShop 1.7+. Otherwise, CCC will cause problems.'|trans({}, 'Admin.Advparameters.Help')) }}
-                  </div>
-                </div>
-
                 {% block perfs_form_ccc_form %}
                   {{ form_widget(combineCompressCacheForm) }}
                 {% endblock %}
@@ -153,19 +164,24 @@
   {{ form_start(mediaServersForm, {attr : {class: 'form'}, action: path('admin_performance_media_servers_save') }) }}
     <div class="row justify-content-center">
       {% block perfs_form_media_servers %}
-        <div class="col-xl-10">
+        <div class="col">
           <div class="card">
             <h3 class="card-header">
               <i class="material-icons">link</i> {{ 'Media servers (use only with CCC)'|trans }}
+
+              <span
+                class="help-box"
+                data-container="body"
+                data-toggle="popover"
+                data-trigger="hover"
+                data-placement="right"
+                data-content="{{ 'You must enter another domain, or subdomain, in order to use cookieless static content.'|trans({}, 'Admin.Advparameters.Feature') }}"
+                title=""
+              >
+              </span>
             </h3>
             <div class="card-block row">
               <div class="card-text">
-                <div class="row">
-                  <div class="col">
-                    {{ ps.infotip('You must enter another domain, or subdomain, in order to use cookieless static content.'|trans({}, 'Admin.Advparameters.Feature')) }}
-                  </div>
-                </div>
-
                 {% block perfs_form_media_servers_form %}
                   {{ form_widget(mediaServersForm) }}
                 {% endblock %}
@@ -185,7 +201,7 @@
   {{ form_start(cachingForm, {attr : {class: 'form'}, action: path('admin_performance_caching_save') }) }}
     <div class="row justify-content-center">
       {% block perfs_form_caching %}
-        <div class="col-xl-10">
+        <div class="col">
           <div class="card">
             <h3 class="card-header">
               <i class="material-icons">link</i> {{ 'Caching'|trans }}

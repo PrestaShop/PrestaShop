@@ -83,8 +83,7 @@
     >
       <span role="columnheader">{{ title }}</span>
       <span role="button" class="ps-sort" aria-label="{{ 'Sort by'|trans({}, 'Admin.Actions') }}"></span>
-    </div>
-  </th>
+  </div>
 {% endmacro %}
 
 {# Show link to import file sample #}
@@ -142,11 +141,6 @@
     {% endfor %}
 
     {#iterating over child errors because errors can be nested#}
-    {% for child in form.children %}
-      {% for error in child.vars.errors %}
-        {% set errors = errors|merge([error.message]) %}
-      {% endfor %}
-    {% endfor %}
   {% endif %}
 
   {% if errors|length > 0 %}
@@ -278,6 +272,10 @@
           <span class="text-danger">*</span>
         {% endif %}
         {{ extraVars.label }}
+
+        {% if form.vars.label_attr and form.vars.label_attr['popover'] %}
+          {{ include('@Common/HelpBox/helpbox.html.twig', {'content': form.vars.label_attr['popover']}) }}
+        {% endif %}
       </label>
     {% endif %}
 

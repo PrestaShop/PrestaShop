@@ -44,7 +44,7 @@ final class PerformanceFormHandler
     private $formFactory;
 
     /**
-     * @param CombinationFeature
+     * @var CombinationFeature
      */
     private $combinationFeature;
 

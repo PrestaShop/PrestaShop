@@ -34,7 +34,7 @@ export default class OrderInvoicesRefresher {
   }
 
   refresh(orderId) {
-    $.ajax(this.router.generate('admin_orders_get_invoices', {orderId}))
+    $.getJSON(this.router.generate('admin_orders_get_invoices', {orderId}))
       .then((response) => {
         if (!response || !response.invoices || Object.keys(response.invoices).length <= 0) {
           return;

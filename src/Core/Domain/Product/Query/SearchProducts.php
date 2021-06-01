@@ -28,6 +28,8 @@ namespace PrestaShop\PrestaShop\Core\Domain\Product\Query;
 
 use PrestaShop\PrestaShop\Core\Domain\Currency\Exception\CurrencyConstraintException;
 use PrestaShop\PrestaShop\Core\Domain\Currency\ValueObject\AlphaIsoCode;
+use PrestaShop\PrestaShop\Core\Domain\Order\Exception\OrderException;
+use PrestaShop\PrestaShop\Core\Domain\Order\ValueObject\OrderId;
 use PrestaShop\PrestaShop\Core\Domain\Product\Exception\ProductException;
 
 /**
@@ -51,19 +53,32 @@ class SearchProducts
     private $alphaIsoCode;
 
     /**
+     * @var OrderId|null
+     */
+    private $orderId;
+
+    /**
      * @param string $phrase
      * @param int $resultsLimit
      * @param string $isoCode
+     * @param int|null $orderId
      *
      * @throws ProductException
      * @throws CurrencyConstraintException
      */
-    public function __construct(string $phrase, int $resultsLimit, string $isoCode)
-    {
+    public function __construct(
+        string $phrase,
+        int $resultsLimit,
+        string $isoCode,
+        ?int $orderId = null
+    ) {
         $this->assertIsNotEmptyString($phrase);
         $this->phrase = $phrase;
         $this->resultsLimit = $resultsLimit;
         $this->alphaIsoCode = new AlphaIsoCode($isoCode);
+        if (null !== $orderId) {
+            $this->setOrderId($orderId);
+        }
     }
 
     /**
@@ -88,6 +103,24 @@ class SearchProducts
     public function getResultsLimit(): int
     {
         return $this->resultsLimit;
+    }
+
+    /**
+     * @return OrderId|null
+     */
+    public function getOrderId(): ?OrderId
+    {
+        return $this->orderId;
+    }
+
+    /**
+     * @param int $orderId
+     *
+     * @throws OrderException
+     */
+    private function setOrderId(int $orderId): void
+    {
+        $this->orderId = new OrderId($orderId);
     }
 
     /**

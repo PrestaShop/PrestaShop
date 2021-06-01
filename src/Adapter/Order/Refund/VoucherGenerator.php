@@ -106,8 +106,8 @@ class VoucherGenerator
         $now = time();
         $cartRule->date_from = date('Y-m-d H:i:s', $now);
         $cartRule->date_to = date('Y-m-d H:i:s', strtotime('+1 year'));
-        $cartRule->partial_use = 1;
-        $cartRule->active = 1;
+        $cartRule->partial_use = true;
+        $cartRule->active = true;
 
         $cartRule->reduction_amount = $voucherAmount;
         $cartRule->reduction_tax = $isTaxIncluded;
@@ -141,10 +141,10 @@ class VoucherGenerator
         ];
 
         // @todo: use private method to send mail and later a decoupled mail sender
-        $orderLanguage = new Language((int) $order->id_lang);
+        $orderLanguage = $order->getAssociatedLanguage();
 
         @Mail::Send(
-            (int) $order->id_lang,
+            (int) $orderLanguage->getId(),
             'voucher',
             $this->translator->trans(
                 'New voucher for your order #%s',

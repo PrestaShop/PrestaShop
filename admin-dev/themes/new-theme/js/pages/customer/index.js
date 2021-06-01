@@ -32,6 +32,7 @@ import SortingExtension from '@components/grid/extension/sorting-extension';
 import BulkActionCheckboxExtension from '@components/grid/extension/bulk-action-checkbox-extension';
 import SubmitBulkExtension from '@components/grid/extension/submit-bulk-action-extension';
 import SubmitGridExtension from '@components/grid/extension/submit-grid-action-extension';
+import SubmitRowActionExtension from '@components/grid/extension/action/row/submit-row-action-extension';
 import LinkRowActionExtension from '@components/grid/extension/link-row-action-extension';
 import LinkableItem from '@components/linkable-item';
 import ChoiceTable from '@components/choice-table';
@@ -62,6 +63,14 @@ $(() => {
   customerGrid.addExtension(new DeleteCustomersBulkActionExtension());
   customerGrid.addExtension(new DeleteCustomerRowActionExtension());
   customerGrid.addExtension(new FiltersSubmitButtonEnablerExtension());
+
+  const customerDiscountsGrid = new Grid('customer_discount');
+  customerDiscountsGrid.addExtension(new SubmitRowActionExtension());
+  customerDiscountsGrid.addExtension(new LinkRowActionExtension());
+
+  const customerAddressesGrid = new Grid('customer_address');
+  customerAddressesGrid.addExtension(new SubmitRowActionExtension());
+  customerAddressesGrid.addExtension(new LinkRowActionExtension());
 
   const showcaseCard = new ShowcaseCard('customersShowcaseCard');
   showcaseCard.addExtension(new ShowcaseCardCloseExtension());

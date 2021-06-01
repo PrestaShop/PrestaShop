@@ -21,6 +21,7 @@ class AddAddress extends BOBasePage {
     this.customerSecondAddressInput = '#customer_address_address2';
     this.customerAddressCityInput = '#customer_address_city';
     this.customerAddressCountrySelect = '#customer_address_id_country';
+    this.customerAddressCountryOption = `${this.customerAddressCountrySelect} option`;
     this.customerAddressPhoneInput = '#customer_address_phone';
     this.customerAddressOtherInput = '#customer_address_other';
     this.saveAddressButton = '#save-button';
@@ -36,7 +37,7 @@ class AddAddress extends BOBasePage {
    * @param addressData
    * @returns {Promise<string>}
    */
-  async createEditAddress(page, addressData) {
+  async createEditAddress(page, addressData, save = true) {
     if (await this.elementVisible(page, this.customerEmailInput, 2000)) {
       await this.setValue(page, this.customerEmailInput, addressData.email);
     }
@@ -53,9 +54,32 @@ class AddAddress extends BOBasePage {
     await this.selectByVisibleText(page, this.customerAddressCountrySelect, addressData.country);
     await this.setValue(page, this.customerAddressPhoneInput, addressData.phone);
     await this.setValue(page, this.customerAddressOtherInput, addressData.other);
+
     // Save address
+    if (save) {
+      return this.saveAddress(page);
+    }
+
+    return null;
+  }
+
+  /**
+   * Save address
+   * @param page
+   * @returns {Promise<string>}
+   */
+  async saveAddress(page) {
     await this.clickAndWaitForNavigation(page, this.saveAddressButton);
-    return this.getTextContent(page, this.alertSuccessBlockParagraph);
+    return this.getAlertSuccessBlockParagraphContent(page);
+  }
+
+  /**
+   * Get selected country by default in form
+   * @param page
+   * @return {Promise<string>}
+   */
+  getSelectedCountry(page) {
+    return this.getTextContent(page, `${this.customerAddressCountryOption}[selected]`, false);
   }
 }
 

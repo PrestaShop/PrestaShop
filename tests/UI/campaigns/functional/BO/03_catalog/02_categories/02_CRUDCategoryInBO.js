@@ -38,6 +38,13 @@ describe('Create, Read, Update and Delete Category', async () => {
   before(async function () {
     browserContext = await helper.createBrowserContext(this.browser);
     page = await helper.newTab(browserContext);
+
+    // Create categories images
+    await Promise.all([
+      files.generateImage(`${createCategoryData.name}.jpg`),
+      files.generateImage(`${createSubCategoryData.name}.jpg`),
+      files.generateImage(`${editCategoryData.name}.jpg`),
+    ]);
   });
 
   after(async () => {
@@ -131,7 +138,7 @@ describe('Create, Read, Update and Delete Category', async () => {
         await foHomePage.changeLanguage(page, 'en');
 
         // Go to sitemap page
-        await foHomePage.goToSitemapPage(page);
+        await foHomePage.goToFooterLink(page, 'Sitemap');
         const pageTitle = await siteMapPage.getPageTitle(page);
         await expect(pageTitle).to.equal(siteMapPage.pageTitle);
 
@@ -196,7 +203,7 @@ describe('Create, Read, Update and Delete Category', async () => {
         await foHomePage.changeLanguage(page, 'en');
 
         // Go to sitemap page
-        await foHomePage.goToSitemapPage(page);
+        await foHomePage.goToFooterLink(page, 'Sitemap');
         const pageTitle = await siteMapPage.getPageTitle(page);
         await expect(pageTitle).to.equal(siteMapPage.pageTitle);
 
@@ -343,7 +350,7 @@ describe('Create, Read, Update and Delete Category', async () => {
       await foHomePage.changeLanguage(page, 'en');
 
       // Go to sitemap page
-      await foHomePage.goToSiteMapPage(page);
+      await foHomePage.goToFooterLink(page, 'Sitemap');
       const pageTitle = await siteMapPage.getPageTitle(page);
       await expect(pageTitle).to.equal(siteMapPage.pageTitle);
 

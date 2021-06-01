@@ -29,6 +29,7 @@ IpInput.addRemoteAddr = (event) => {
   const input = $(event.target).prev('input');
   const inputValue = input.val() || '';
   const ip = event.target.dataset.ip || '';
+
   if (inputValue.length > 0) {
     if (input.val().indexOf(ip) < 0) {
       input.val(`${input.val()},${ip}`);

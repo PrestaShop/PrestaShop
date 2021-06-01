@@ -13,7 +13,7 @@
       line-height: normal;
       color: #4a4a4a;
       text-align: center;
-      letter-spacing: -.01875rem;
+      letter-spacing: -0.01875rem;
     }
 
     .tab-content {
@@ -27,13 +27,13 @@
     .logo-card-description {
       height: 34px;
       margin-top: 20px;
-      font-size: .75rem;
+      font-size: 0.75rem;
       font-style: normal;
       font-weight: 400;
       font-stretch: normal;
       line-height: normal;
       color: #6c868e;
-      letter-spacing: -.0125rem;
+      letter-spacing: -0.0125rem;
     }
 
     .logo-image-container {
@@ -55,13 +55,13 @@
         width: 2.41875rem;
         height: 2.41875rem;
         border: 1px solid transparent;
-        box-shadow: 0 0 6px 0 rgba(0, 0, 0, .3);
+        box-shadow: 0 0 6px 0 rgba(0, 0, 0, 0.3);
       }
     }
   }
 
   .logo-card:not(:last-child) {
-    border-right: .0625rem solid #dedede;
+    border-right: 0.0625rem solid #dedede;
   }
 
   .nav-pills {

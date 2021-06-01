@@ -26,6 +26,7 @@
 
 namespace PrestaShop\PrestaShop\Core\Search\Filters;
 
+use PrestaShop\PrestaShop\Core\Grid\Definition\Factory\LogGridDefinitionFactory;
 use PrestaShop\PrestaShop\Core\Search\Filters;
 
 /**
@@ -34,6 +35,9 @@ use PrestaShop\PrestaShop\Core\Search\Filters;
  */
 final class LogsFilters extends Filters
 {
+    /** @var string */
+    protected $filterId = LogGridDefinitionFactory::GRID_ID;
+
     /**
      * {@inheritdoc}
      */

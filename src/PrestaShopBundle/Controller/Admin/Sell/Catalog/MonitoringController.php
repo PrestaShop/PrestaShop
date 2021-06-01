@@ -26,6 +26,8 @@
 
 namespace PrestaShopBundle\Controller\Admin\Sell\Catalog;
 
+use Exception;
+use PrestaShop\PrestaShop\Core\Domain\Product\Command\BulkDeleteProductCommand;
 use PrestaShop\PrestaShop\Core\Domain\ShowcaseCard\Query\GetShowcaseCardIsClosed;
 use PrestaShop\PrestaShop\Core\Domain\ShowcaseCard\ValueObject\ShowcaseCard;
 use PrestaShop\PrestaShop\Core\Grid\Definition\Factory\Monitoring\DisabledProductGridDefinitionFactory;
@@ -134,6 +136,58 @@ class MonitoringController extends FrameworkBundleAdminController
             $gridIdentifiers['grid_id'],
             'admin_monitorings_index'
         );
+    }
+
+    /**
+     * Delete monitoring items in bulk action.
+     *
+     * @AdminSecurity(
+     *     "is_granted('delete', request.get('_legacy_controller'))",
+     *     redirectRoute="admin_monitorings_index",
+     *     message="You do not have permission to delete this."
+     * )
+     *
+     * @param Request $request
+     *
+     * @return RedirectResponse
+     */
+    public function deleteBulkAction(Request $request): RedirectResponse
+    {
+        $gridIdentifiers = $this->identifySearchableGrid($request);
+        $productIds = $this->getBulkProductsFromRequest($request, $gridIdentifiers);
+
+        try {
+            $this->getCommandBus()->handle(new BulkDeleteProductCommand($productIds));
+            $this->addFlash(
+                'success',
+                $this->trans('Successful deletion.', 'Admin.Notifications.Success')
+            );
+        } catch (Exception $e) {
+            $this->addFlash('error', $this->getErrorMessageForException($e, [$e->getMessage()]));
+        }
+
+        return $this->redirectToRoute('admin_monitorings_index');
+    }
+
+    /**
+     * @param Request $request
+     * @param array $gridIdentifiers
+     *
+     * @return array
+     */
+    private function getBulkProductsFromRequest(Request $request, array $gridIdentifiers): array
+    {
+        $productIds = $request->request->get(sprintf('%s_%s', $gridIdentifiers['grid_id'], 'monitoring_products_bulk'));
+
+        if (!is_array($productIds)) {
+            return [];
+        }
+
+        foreach ($productIds as $i => $productId) {
+            $productIds[$i] = (int) $productId;
+        }
+
+        return $productIds;
     }
 
     /**

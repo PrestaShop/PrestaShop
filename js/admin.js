@@ -362,8 +362,11 @@ function gencode(size)
   getE('code').value = '';
   /* There are no O/0 in the codes in order to avoid confusion */
   var chars = "123456789ABCDEFGHIJKLMNPQRSTUVWXYZ";
-  for (var i = 1; i <= size; ++i)
+  for (var i = 1; i <= size; ++i) {
     getE('code').value += chars.charAt(Math.floor(Math.random() * chars.length));
+  }
+
+  getE('cart-rules-highlight').style.display = '';
 }
 
 var tpl_viewing_window = null;
@@ -1563,25 +1566,6 @@ function checkLangPack(token){
 }
 
 function redirect(new_page) { window.location = new_page; }
-
-function saveCustomerNote() {
-  var $customerNoteForm = $('#customer_note');
-  var noteContent = $('#noteContent').val();
-
-  $.ajax({
-    type: "POST",
-    url: $customerNoteForm.attr('action'),
-    data: {
-      'private_note': {
-        'note': noteContent
-      }
-    },
-    async : true,
-    success: function(r) {
-      showSuccessMessage(r.message);
-    }
-  });
-}
 
 function isCleanHtml(content)
 {

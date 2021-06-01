@@ -38,7 +38,7 @@ use PrestaShop\PrestaShop\Core\Domain\Cart\ValueObject\CartId;
  */
 class EditCartAddressCommand extends AbstractEditAddressCommand
 {
-    const ALLOWED_ADDRESS_TYPES = [
+    public const ALLOWED_ADDRESS_TYPES = [
         CartAddressType::INVOICE_ADDRESS_TYPE,
         CartAddressType::DELIVERY_ADDRESS_TYPE,
     ];
@@ -49,7 +49,7 @@ class EditCartAddressCommand extends AbstractEditAddressCommand
     private $cartId;
 
     /**
-     * @var
+     * @var string
      */
     private $addressType;
 

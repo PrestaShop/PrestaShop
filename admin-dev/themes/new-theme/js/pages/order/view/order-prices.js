@@ -26,19 +26,23 @@
 export default class OrderPrices {
   calculateTaxExcluded(taxIncluded, taxRatePerCent, currencyPrecision) {
     let priceTaxIncl = parseFloat(taxIncluded);
+
     if (priceTaxIncl < 0 || Number.isNaN(priceTaxIncl)) {
       priceTaxIncl = 0;
     }
     const taxRate = taxRatePerCent / 100 + 1;
+
     return window.ps_round(priceTaxIncl / taxRate, currencyPrecision);
   }
 
   calculateTaxIncluded(taxExcluded, taxRatePerCent, currencyPrecision) {
     let priceTaxExcl = parseFloat(taxExcluded);
+
     if (priceTaxExcl < 0 || Number.isNaN(priceTaxExcl)) {
       priceTaxExcl = 0;
     }
     const taxRate = taxRatePerCent / 100 + 1;
+
     return window.ps_round(priceTaxExcl * taxRate, currencyPrecision);
   }
 

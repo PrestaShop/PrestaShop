@@ -50,7 +50,7 @@ class ProductPrice extends CommonAbstractType
 {
     // When the form is used to create, the product does not yet exists
     // however the ID is required for some fields so we use a default one:
-    const DEFAULT_PRODUCT_ID_FOR_FORM_CREATION = 1;
+    public const DEFAULT_PRODUCT_ID_FOR_FORM_CREATION = 1;
 
     /**
      * @var Configuration
@@ -159,7 +159,7 @@ class ProductPrice extends CommonAbstractType
             FormType\MoneyType::class,
             [
                 'required' => false,
-                'label' => $this->translator->trans('Price (tax excl.)', [], 'Admin.Catalog.Feature'),
+                'label' => $this->translator->trans('Retail price (tax excl.)', [], 'Admin.Catalog.Feature'),
                 'attr' => ['data-display-price-precision' => self::PRESTASHOP_DECIMALS],
                 'currency' => $this->currency->iso_code,
                 'constraints' => [
@@ -174,7 +174,7 @@ class ProductPrice extends CommonAbstractType
                 [
                     'required' => false,
                     'mapped' => false,
-                    'label' => $this->translator->trans('Price (tax incl.)', [], 'Admin.Catalog.Feature'),
+                    'label' => $this->translator->trans('Retail price (tax incl.)', [], 'Admin.Catalog.Feature'),
                     'currency' => $this->currency->iso_code,
                 ]
             )
@@ -228,7 +228,7 @@ class ProductPrice extends CommonAbstractType
                 FormType\MoneyType::class,
                 [
                     'required' => false,
-                    'label' => $this->translator->trans('Price (tax excl.)', [], 'Admin.Catalog.Feature'),
+                    'label' => $this->translator->trans('Cost price (tax excl.)', [], 'Admin.Catalog.Feature'),
                     'currency' => $this->currency->iso_code,
                 ]
             )
@@ -237,7 +237,7 @@ class ProductPrice extends CommonAbstractType
                 FormType\MoneyType::class,
                 [
                     'required' => false,
-                    'label' => $this->translator->trans('Price per unit (tax excl.)', [], 'Admin.Catalog.Feature'),
+                    'label' => $this->translator->trans('Retail price per unit (tax excl.)', [], 'Admin.Catalog.Feature'),
                     'currency' => $this->currency->iso_code,
                 ]
             )

@@ -32,6 +32,7 @@ use Configuration;
 use Exception;
 use LegacyTests\Unit\Core\Cart\CartToOrder\PaymentModuleFake;
 use Order;
+use OrderCarrier;
 use OrderCartRule;
 use PHPUnit\Framework\Assert as Assert;
 use RuntimeException;
@@ -175,6 +176,109 @@ class OrderFeatureContext extends AbstractPrestaShopFeatureContext
                     $order->{$orderField}
                 )
             );
+        }
+    }
+
+    /**
+     * @Then order :reference should have following tax details:
+     */
+    public function checkOrderTaxDetails(string $orderReference, TableNode $table)
+    {
+        $orderId = SharedStorage::getStorage()->get($orderReference);
+        $taxDetailsData = $table->getColumnsHash();
+
+        $order = new Order($orderId);
+        $orderProductsTaxDetails = $order->getProductTaxesDetails();
+        // Check that the number of rows match
+        Assert::assertLessThanOrEqual(
+            count($orderProductsTaxDetails),
+            count($taxDetailsData),
+            sprintf(
+                'Invalid number of tax details, expected at least %d instead of %d',
+                count($taxDetailsData),
+                count($orderProductsTaxDetails)
+            )
+        );
+
+        foreach ($taxDetailsData as $taxDetailsIndex => $expectedTaxDetails) {
+            $productsTaxDetails = $orderProductsTaxDetails[$taxDetailsIndex];
+            foreach ($expectedTaxDetails as $taxField => $taxValue) {
+                Assert::assertEquals(
+                    (float) $taxValue,
+                    (float) $productsTaxDetails[$taxField],
+                    sprintf(
+                        'Invalid order tax field %s, expected %s instead of %s',
+                        $taxField,
+                        $taxValue,
+                        (float) $productsTaxDetails[$taxField]
+                    )
+                );
+            }
+        }
+    }
+
+    /**
+     * @Then order :reference should have no tax details
+     */
+    public function checkOrderHasNoTaxDetails(string $orderReference)
+    {
+        $orderId = SharedStorage::getStorage()->get($orderReference);
+
+        $order = new Order($orderId);
+        $orderProductsTaxDetails = $order->getProductTaxesDetails();
+        Assert::assertEmpty($orderProductsTaxDetails, 'The order should have no tax details');
+    }
+
+    /**
+     * @Then order :reference carrier should have following details:
+     */
+    public function checkOrderCarrierDetails(string $orderReference, TableNode $table)
+    {
+        $orderId = SharedStorage::getStorage()->get($orderReference);
+        $orderCarrierData = $table->getRowsHash();
+
+        $order = new Order($orderId);
+        $orderCarrier = new OrderCarrier($order->getIdOrderCarrier());
+        foreach ($orderCarrierData as $orderCarrierField => $orderCarrierValue) {
+            Assert::assertEquals(
+                (float) $orderCarrierValue,
+                $orderCarrier->{$orderCarrierField},
+                sprintf(
+                    'Invalid order carrier field %s, expected %s instead of %s',
+                    $orderCarrierField,
+                    $orderCarrierValue,
+                    $orderCarrier->{$orderCarrierField}
+                )
+            );
+        }
+    }
+
+    /**
+     * @Then order :reference should have :carrierReference as a carrier
+     *
+     * @param string $orderReference
+     * @param string $carrierReference
+     */
+    public function checkOrderCarrier(string $orderReference, string $carrierReference)
+    {
+        $orderId = SharedStorage::getStorage()->get($orderReference);
+        $carrierId = (int) SharedStorage::getStorage()->get($carrierReference);
+        $order = new Order($orderId);
+
+        if ((int) $order->id_carrier === 0) {
+            throw new RuntimeException(sprintf(
+                'Order %s has no carrier defined',
+                $orderReference
+            ));
+        }
+        if ((int) $order->id_carrier !== $carrierId) {
+            throw new RuntimeException(sprintf(
+                'Order %s should have %s as a carrier, expected id_carrier to be %d but is %d instead',
+                $orderReference,
+                $carrierReference,
+                $carrierId,
+                (int) $order->id_carrier
+            ));
         }
     }
 

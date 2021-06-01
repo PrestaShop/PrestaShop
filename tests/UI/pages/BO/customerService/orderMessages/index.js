@@ -1,7 +1,16 @@
 require('module-alias/register');
 const BOBasePage = require('@pages/BO/BObasePage');
 
+/**
+ * Order messages listing page, contains selectors and functions for the page
+ * @class
+ * @extends BOBasePage
+ */
 class OrderMessages extends BOBasePage {
+  /**
+   * @constructs
+   * Setting up titles and selectors to use on order messages listing page
+   */
   constructor() {
     super();
 
@@ -50,7 +59,7 @@ class OrderMessages extends BOBasePage {
   /* Header Methods */
   /**
    * Go to new order message page
-   * @param page
+   * @param page {Page} Browser tab
    * @return {Promise<void>}
    */
   async goToAddNewOrderMessagePage(page) {
@@ -61,7 +70,7 @@ class OrderMessages extends BOBasePage {
   /* Reset Methods */
   /**
    * Reset filters in table
-   * @param page
+   * @param page {Page} Browser tab
    * @return {Promise<void>}
    */
   async resetFilter(page) {
@@ -72,7 +81,7 @@ class OrderMessages extends BOBasePage {
 
   /**
    * get number of elements in grid
-   * @param page
+   * @param page {Page} Browser tab
    * @returns {Promise<number>}
    */
   async getNumberOfElementInGrid(page) {
@@ -81,7 +90,7 @@ class OrderMessages extends BOBasePage {
 
   /**
    * Reset Filter And get number of elements in list
-   * @param page
+   * @param page {Page} Browser tab
    * @returns {Promise<number>}
    */
   async resetAndGetNumberOfLines(page) {
@@ -92,9 +101,9 @@ class OrderMessages extends BOBasePage {
   /* filter Methods */
   /**
    * Filter Table
-   * @param page
-   * @param filterBy, which column
-   * @param value, value to put in filter
+   * @param page {Page} Browser tab
+   * @param filterBy {string} Column to filter with
+   * @param value {string/number} Value to put in filter
    * @return {Promise<void>}
    */
   async filterTable(page, filterBy, value) {
@@ -105,8 +114,8 @@ class OrderMessages extends BOBasePage {
   /* Column Methods */
   /**
    * Edit order message
-   * @param page
-   * @param row
+   * @param page {Page} Browser tab
+   * @param row {number} Row to click on
    * @return {Promise<void>}
    */
   async gotoEditOrderMessage(page, row = 1) {
@@ -115,12 +124,11 @@ class OrderMessages extends BOBasePage {
 
   /**
    * Delete Row in table
-   * @param page
-   * @param row, row to delete
+   * @param page {Page} Browser tab
+   * @param row {number} Row to delete
    * @returns {Promise<string>}
    */
   async deleteOrderMessage(page, row = 1) {
-    this.dialogListener(page, true);
     await Promise.all([
       page.click(this.dropdownToggleButton(row)),
       this.waitForVisibleSelector(
@@ -128,15 +136,23 @@ class OrderMessages extends BOBasePage {
         `${this.dropdownToggleButton(row)}[aria-expanded='true']`,
       ),
     ]);
-    await this.clickAndWaitForNavigation(page, this.deleteRowLink(row));
-    return this.getTextContent(page, this.alertSuccessBlockParagraph);
+
+    // Click on delete and wait for modal
+    await Promise.all([
+      page.click(this.deleteRowLink(row)),
+      this.waitForVisibleSelector(page, `${this.confirmDeleteModal}.show`),
+    ]);
+
+    // Confirm delete in modal
+    await this.confirmDeleteOrderMessages(page);
+    return this.getAlertSuccessBlockParagraphContent(page);
   }
 
   /**
    * Get text from a column
-   * @param page
-   * @param row, row in table
-   * @param column, which column
+   * @param page {Page} Browser tab
+   * @param row {number} Row to delete
+   * @param column {string} which column to get text from
    * @returns {Promise<string>}
    */
   async getTextColumnFromTable(page, row, column) {
@@ -146,7 +162,7 @@ class OrderMessages extends BOBasePage {
   /* Bulk Actions Methods */
   /**
    * Delete with bulk actions
-   * @param page
+   * @param page {Page} Browser tab
    * @returns {Promise<string>}
    */
   async deleteWithBulkActions(page) {
@@ -167,12 +183,12 @@ class OrderMessages extends BOBasePage {
     ]);
     // Click on delete and wait for modal
     await this.confirmDeleteOrderMessages(page);
-    return this.getTextContent(page, this.alertSuccessBlockParagraph);
+    return this.getAlertSuccessBlockParagraphContent(page);
   }
 
   /**
    * Confirm delete in modal
-   * @param page
+   * @param page {Page} Browser tab
    * @return {Promise<void>}
    */
   async confirmDeleteOrderMessages(page) {
@@ -182,7 +198,7 @@ class OrderMessages extends BOBasePage {
   /* Pagination methods */
   /**
    * Get pagination label
-   * @param page
+   * @param page {Page} Browser tab
    * @returns {Promise<string>}
    */
   getPaginationLabel(page) {
@@ -191,8 +207,8 @@ class OrderMessages extends BOBasePage {
 
   /**
    * Select pagination limit
-   * @param page
-   * @param number
+   * @param page {Page} Browser tab
+   * @param number {number} Pagination value to select
    * @returns {Promise<string>}
    */
   async selectPaginationLimit(page, number) {
@@ -202,7 +218,7 @@ class OrderMessages extends BOBasePage {
 
   /**
    * Click on next
-   * @param page
+   * @param page {Page} Browser tab
    * @returns {Promise<string>}
    */
   async paginationNext(page) {
@@ -212,7 +228,7 @@ class OrderMessages extends BOBasePage {
 
   /**
    * Click on previous
-   * @param page
+   * @param page {Page} Browser tab
    * @returns {Promise<string>}
    */
   async paginationPrevious(page) {
@@ -223,39 +239,40 @@ class OrderMessages extends BOBasePage {
   // Sort methods
   /**
    * Get content from all rows
-   * @param page
-   * @param column
+   * @param page {Page} Browser tab
+   * @param column {string} Column to get text from
    * @return {Promise<[]>}
    */
   async getAllRowsColumnContent(page, column) {
     const rowsNumber = await this.getNumberOfElementInGrid(page);
     const allRowsContentTable = [];
+
     for (let i = 1; i <= rowsNumber; i++) {
-      let rowContent = await this.getTextContent(page, this.tableColumn(i, column));
-      if (column === 'active') {
-        rowContent = await this.getToggleColumnValue(page, i).toString();
-      }
+      const rowContent = await this.getTextContent(page, this.tableColumn(i, column));
       await allRowsContentTable.push(rowContent);
     }
+
     return allRowsContentTable;
   }
 
   /**
    * Sort table
-   * @param page
-   * @param sortBy, column to sort with
-   * @param sortDirection, asc or desc
+   * @param page {Page} Browser tab
+   * @param sortBy {string} Column to sort with
+   * @param sortDirection {string} Sort direction "asc"/"desc
    * @return {Promise<void>}
    */
   async sortTable(page, sortBy, sortDirection = 'asc') {
     const sortColumnDiv = `${this.sortColumnDiv(sortBy)}[data-sort-direction='${sortDirection}']`;
     const sortColumnSpanButton = this.sortColumnSpanButton(sortBy);
+
     let i = 0;
-    while (await this.elementNotVisible(page, sortColumnDiv, 1000) && i < 2) {
+    while (await this.elementNotVisible(page, sortColumnDiv, 2000) && i < 2) {
       await this.clickAndWaitForNavigation(page, sortColumnSpanButton);
       i += 1;
     }
-    await this.waitForVisibleSelector(page, sortColumnDiv);
+
+    await this.waitForVisibleSelector(page, sortColumnDiv, 20000);
   }
 }
 

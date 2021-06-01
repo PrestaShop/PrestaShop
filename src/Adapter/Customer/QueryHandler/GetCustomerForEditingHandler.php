@@ -62,7 +62,7 @@ final class GetCustomerForEditingHandler implements GetCustomerForEditingHandler
 
         return new EditableCustomer(
             $customerId,
-            $customer->id_gender,
+            (int) $customer->id_gender,
             new FirstName($customer->firstname),
             new LastName($customer->lastname),
             new Email($customer->email),

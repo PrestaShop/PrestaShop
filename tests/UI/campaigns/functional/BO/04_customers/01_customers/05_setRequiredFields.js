@@ -11,6 +11,7 @@ const dashboardPage = require('@pages/BO/dashboard');
 const customersPage = require('@pages/BO/customers');
 const foLoginPage = require('@pages/FO/login');
 const foHomePage = require('@pages/FO/home');
+const foCreateAccountPage = require('@pages/FO/myAccount/add');
 
 // Import test context
 const testContext = require('@utils/testContext');
@@ -83,11 +84,11 @@ describe('Set required fields for customers', async () => {
       await foLoginPage.goToCreateAccountPage(page);
 
       // Check partner offer required
-      const isPartnerOfferRequired = await foLoginPage.isPartnerOfferRequired(page);
+      const isPartnerOfferRequired = await foCreateAccountPage.isPartnerOfferRequired(page);
       await expect(isPartnerOfferRequired).to.be.equal(test.args.exist);
 
       // Go back to BO
-      page = await foLoginPage.closePage(browserContext, page, 0);
+      page = await foCreateAccountPage.closePage(browserContext, page, 0);
     });
   });
 });

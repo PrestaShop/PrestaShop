@@ -29,25 +29,25 @@
  */
 class ConnectionCore extends ObjectModel
 {
-    /** @var int $id_guest */
+    /** @var int */
     public $id_guest;
 
-    /** @var int $id_page */
+    /** @var int */
     public $id_page;
 
-    /** @var string $ip_address */
+    /** @var string */
     public $ip_address;
 
-    /** @var string $http_referer */
+    /** @var string */
     public $http_referer;
 
-    /** @var int $id_shop */
+    /** @var int */
     public $id_shop;
 
-    /** @var int $id_shop_group */
+    /** @var int */
     public $id_shop_group;
 
-    /** @var string $date_add */
+    /** @var string */
     public $date_add;
 
     /**
@@ -152,7 +152,7 @@ class ConnectionCore extends ObjectModel
 					' . Shop::addSqlRestriction(Shop::SHARE_CUSTOMER) . '
 				ORDER BY `date_add` DESC';
         $result = Db::getInstance()->getRow($sql, false);
-        if (!$result['id_guest'] && (int) $cookie->id_guest) {
+        if (empty($result['id_guest']) && (int) $cookie->id_guest) {
             // The old connections details are removed from the database in order to spare some memory
             Connection::cleanConnectionsPages();
 

@@ -31,12 +31,6 @@ FROM `PREFIX_customization_field_lang` entity
 LEFT JOIN `PREFIX_customization_field_lang` entity2 ON `entity2`.`id_shop` = 1 AND `entity`.`id_customization_field` = `entity2`.`id_customization_field`
 WHERE `entity2`.`id_shop` IS NULL;
 
-INSERT INTO `PREFIX_info_lang` SELECT
-`entity`.`id_info`, 1, `entity`.`id_lang`, `entity`.`text`
-FROM `PREFIX_info_lang` entity
-LEFT JOIN `PREFIX_info_lang` entity2 ON `entity2`.`id_shop` = 1 AND `entity`.`id_info` = `entity2`.`id_info`
-WHERE `entity2`.`id_shop` IS NULL;
-
 INSERT INTO `PREFIX_meta_lang` SELECT
 `entity`.`id_meta`, 1, `entity`.`id_lang`, `entity`.title, `entity`.`description`, `entity`.`keywords`, `entity`.`url_rewrite`
 FROM `PREFIX_meta_lang` entity

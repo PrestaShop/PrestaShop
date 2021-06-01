@@ -26,6 +26,12 @@ services:
         tags:
           - { name: controller.argument_value_resolver, priority: 51 }
 
+    prestashop.core.search.builder.typed:
+        class: 'PrestaShop\PrestaShop\Core\Search\Builder\TypedFiltersBuilder'
+        arguments:
+            - '@prestashop.core.search.builder.class'
+            - !tagged core.typed_filters_builder
+
     prestashop.core.search.builder.class:
         class: 'PrestaShop\PrestaShop\Core\Search\Builder\ClassFiltersBuilder'
 
@@ -55,8 +61,13 @@ services:
         class: 'PrestaShop\PrestaShop\Core\Search\Builder\ChainedFiltersBuilder'
         arguments:
           -
-            - '@prestashop.core.search.builder.class'
+            - '@prestashop.core.search.builder.typed'
             - '@prestashop.core.search.builder.repository'
             - '@prestashop.core.search.builder.request'
             - '@prestashop.core.search.builder.event'
             - '@prestashop.core.search.builder.persist'
+
+    # Typed builders (they will be automatically added to TypeFiltersBuilder thanks to their tag)
+    prestashop.core.search.builder.typed_builder.product_combination_filters_builder:
+        class: 'PrestaShop\PrestaShop\Core\Search\Builder\TypedBuilder\ProductCombinationFiltersBuilder'
+        tags: ['core.typed_filters_builder']

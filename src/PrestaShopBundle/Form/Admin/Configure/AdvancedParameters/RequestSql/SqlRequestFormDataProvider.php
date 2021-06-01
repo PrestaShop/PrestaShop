@@ -38,8 +38,18 @@ use PrestaShop\PrestaShop\Core\Domain\SqlManagement\Exception\SqlRequestNotFound
 use PrestaShop\PrestaShop\Core\Domain\SqlManagement\Query\GetSqlRequestForEditing;
 use PrestaShop\PrestaShop\Core\Domain\SqlManagement\ValueObject\SqlRequestId;
 
+@trigger_error(
+    sprintf(
+        '%s is deprecated since version 1.7.7.5 and will be removed in the next major version.',
+        SqlRequestFormDataProvider::class
+    ),
+    E_USER_DEPRECATED
+);
+
 /**
  * Class RequestSqlFormDataProvider is responsible for getting/saving RequestSql form data.
+ *
+ * @deprecated Since 1.7.7.5 and will be removed in the next major.
  */
 class SqlRequestFormDataProvider
 {
@@ -146,7 +156,7 @@ class SqlRequestFormDataProvider
     /**
      * Transform exception into translatable errors.
      *
-     * @param SqlRequestException $e
+     * @param SqlRequestConstraintException|SqlRequestException $e
      *
      * @return array Errors
      */
@@ -154,7 +164,7 @@ class SqlRequestFormDataProvider
     {
         $exceptionType = get_class($e);
 
-        if (SqlRequestConstraintException::class === $exceptionType) {
+        if ($e instanceof SqlRequestConstraintException) {
             return $this->getConstraintError($e);
         }
 

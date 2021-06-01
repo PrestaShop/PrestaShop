@@ -55,7 +55,7 @@ class HelperListCore extends Helper
     /** @var string ORDER BY clause determined by field/arrows in list header */
     public $orderBy;
 
-    /** @var string Default ORDER BY clause when $orderBy is not defined */
+    /** @var string Default ORDER BY clause when `$orderBy` is not defined */
     public $_defaultOrderBy = false;
 
     /** @var array : list of vars for button delete */
@@ -68,7 +68,7 @@ class HelperListCore extends Helper
 
     protected $deleted = 0;
 
-    /** @var array $cache_lang use to cache texts in current language */
+    /** @var array use to cache texts in current language */
     public static $cache_lang = [];
 
     public $is_cms = false;
@@ -702,9 +702,11 @@ class HelperListCore extends Helper
                     if (is_string($value)) {
                         $value = json_decode($value, true);
                     }
-                    if (!Validate::isCleanHtml($value[0]) || !Validate::isCleanHtml($value[1])) {
+
+                    if (!isset($value[0]) || !isset($value[1]) || !Validate::isCleanHtml($value[0]) || !Validate::isCleanHtml($value[1])) {
                         $value = '';
                     }
+
                     $name = $this->list_id . 'Filter_' . (isset($params['filter_key']) ? $params['filter_key'] : $key);
                     $name_id = str_replace('!', '__', $name);
 
