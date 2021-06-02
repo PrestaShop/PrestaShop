@@ -25,24 +25,70 @@
 
 import Router from '@components/router';
 import OrderViewPageMap from '@pages/order/OrderViewPageMap';
-import {EventEmitter} from '@components/event-emitter';
+import { EventEmitter } from '@components/event-emitter';
 import OrderViewEventMap from '@pages/order/view/order-view-event-map';
 import OrderPrices from '@pages/order/view/order-prices';
 import OrderProductRenderer from '@pages/order/view/order-product-renderer';
 import ConfirmModal from '@components/modal';
 import OrderPricesRefresher from '@pages/order/view/order-prices-refresher';
 
-const {$} = window;
+const { $ } = window;
 
 export default class OrderProductAdd {
+  router: Router;
+
+  productAddActionBtn: JQuery;
+
+  productIdInput: JQuery;
+
+  combinationsBlock: JQuery;
+
+  combinationsSelect: JQuery;
+
+  priceTaxIncludedInput: JQuery;
+
+  priceTaxExcludedInput: JQuery;
+
+  taxRateInput: JQuery;
+
+  quantityInput: JQuery;
+
+  availableText: JQuery;
+
+  locationText: JQuery;
+
+  totalPriceText: JQuery;
+
+  invoiceSelect: JQuery;
+
+  freeShippingSelect: JQuery;
+
+  productAddMenuBtn: JQuery;
+
+  available: number | null;
+
+  product: Record<string, any>;
+
+  currencyPrecision: number;
+
+  priceTaxCalculator: OrderPrices;
+
+  orderProductRenderer: OrderProductRenderer;
+
+  orderPricesRefresher: OrderPricesRefresher;
+
   constructor() {
     this.router = new Router();
     this.productAddActionBtn = $(OrderViewPageMap.productAddActionBtn);
     this.productIdInput = $(OrderViewPageMap.productAddIdInput);
     this.combinationsBlock = $(OrderViewPageMap.productAddCombinationsBlock);
     this.combinationsSelect = $(OrderViewPageMap.productAddCombinationsSelect);
-    this.priceTaxIncludedInput = $(OrderViewPageMap.productAddPriceTaxInclInput);
-    this.priceTaxExcludedInput = $(OrderViewPageMap.productAddPriceTaxExclInput);
+    this.priceTaxIncludedInput = $(
+      OrderViewPageMap.productAddPriceTaxInclInput
+    );
+    this.priceTaxExcludedInput = $(
+      OrderViewPageMap.productAddPriceTaxExclInput
+    );
     this.taxRateInput = $(OrderViewPageMap.productAddTaxRateInput);
     this.quantityInput = $(OrderViewPageMap.productAddQuantityInput);
     this.availableText = $(OrderViewPageMap.productAddAvailableText);
@@ -54,21 +100,23 @@ export default class OrderProductAdd {
     this.available = null;
     this.setupListener();
     this.product = {};
-    this.currencyPrecision = $(OrderViewPageMap.productsTable).data('currencyPrecision');
+    this.currencyPrecision = $(OrderViewPageMap.productsTable).data(
+      'currencyPrecision'
+    );
     this.priceTaxCalculator = new OrderPrices();
     this.orderProductRenderer = new OrderProductRenderer();
     this.orderPricesRefresher = new OrderPricesRefresher();
   }
 
-  setupListener() {
+  setupListener(): void {
     this.combinationsSelect.on('change', (event) => {
       this.priceTaxExcludedInput.val(
         window.ps_round(
           $(event.currentTarget)
             .find(':selected')
             .data('priceTaxExcluded'),
-          this.currencyPrecision,
-        ),
+          this.currencyPrecision
+        )
       );
 
       this.priceTaxIncludedInput.val(
@@ -76,14 +124,14 @@ export default class OrderProductAdd {
           $(event.currentTarget)
             .find(':selected')
             .data('priceTaxIncluded'),
-          this.currencyPrecision,
-        ),
+          this.currencyPrecision
+        )
       );
 
       this.locationText.html(
         $(event.currentTarget)
           .find(':selected')
-          .data('location'),
+          .data('location')
       );
 
       this.available = $(event.currentTarget)
@@ -91,23 +139,45 @@ export default class OrderProductAdd {
         .data('stock');
 
       this.quantityInput.trigger('change');
-      this.orderProductRenderer.toggleColumn(OrderViewPageMap.productsCellLocation);
+      this.orderProductRenderer.toggleColumn(
+        OrderViewPageMap.productsCellLocation
+      );
     });
 
-    this.quantityInput.on('change keyup', (event) => {
+    this.quantityInput.on('change keyup', (event: JQueryEventObject) => {
       if (this.available !== null) {
-        const newQuantity = Number(event.target.value);
+        const input = <HTMLInputElement>event.target;
+        const newQuantity = Number(input.value);
         const remainingAvailable = this.available - newQuantity;
-        const availableOutOfStock = this.availableText.data('availableOutOfStock');
+        const availableOutOfStock = this.availableText.data(
+          'availableOutOfStock'
+        );
         this.availableText.text(remainingAvailable);
-        this.availableText.toggleClass('text-danger font-weight-bold', remainingAvailable < 0);
-        const disableAddActionBtn = newQuantity <= 0 || (remainingAvailable < 0 && !availableOutOfStock);
+        this.availableText.toggleClass(
+          'text-danger font-weight-bold',
+          remainingAvailable < 0
+        );
+        const disableAddActionBtn =
+          newQuantity <= 0 || (remainingAvailable < 0 && !availableOutOfStock);
         this.productAddActionBtn.prop('disabled', disableAddActionBtn);
-        this.invoiceSelect.prop('disabled', !availableOutOfStock && remainingAvailable < 0);
+        this.invoiceSelect.prop(
+          'disabled',
+          !availableOutOfStock && remainingAvailable < 0
+        );
 
-        const taxIncluded = parseFloat(this.priceTaxIncludedInput.val());
+        const taxIncluded = parseFloat(
+          <string>this.priceTaxIncludedInput.val()
+        );
         this.totalPriceText.html(
-          this.priceTaxCalculator.calculateTotalPrice(newQuantity, taxIncluded, this.currencyPrecision),
+          <string>(
+            (<unknown>(
+              this.priceTaxCalculator.calculateTotalPrice(
+                newQuantity,
+                taxIncluded,
+                this.currencyPrecision
+              )
+            ))
+          )
         );
       }
     });
@@ -118,71 +188,107 @@ export default class OrderProductAdd {
     });
 
     this.priceTaxIncludedInput.on('change keyup', (event) => {
-      const taxIncluded = parseFloat(event.target.value);
+      const input = <HTMLInputElement>event.target;
+      const taxIncluded = parseFloat(input.value);
       const taxExcluded = this.priceTaxCalculator.calculateTaxExcluded(
         taxIncluded,
-        this.taxRateInput.val(),
-        this.currencyPrecision,
+        <number>this.taxRateInput.val(),
+        this.currencyPrecision
       );
-      const quantity = parseInt(this.quantityInput.val(), 10);
+      const quantity = parseInt(<string>this.quantityInput.val(), 10);
 
       this.priceTaxExcludedInput.val(taxExcluded);
       this.totalPriceText.html(
-        this.priceTaxCalculator.calculateTotalPrice(quantity, taxIncluded, this.currencyPrecision),
+        <string>(
+          (<unknown>(
+            this.priceTaxCalculator.calculateTotalPrice(
+              quantity,
+              taxIncluded,
+              this.currencyPrecision
+            )
+          ))
+        )
       );
     });
 
     this.priceTaxExcludedInput.on('change keyup', (event) => {
-      const taxExcluded = parseFloat(event.target.value);
+      const input = <HTMLInputElement>event.target;
+      const taxExcluded = parseFloat(input.value);
       const taxIncluded = this.priceTaxCalculator.calculateTaxIncluded(
         taxExcluded,
-        this.taxRateInput.val(),
-        this.currencyPrecision,
+        <number>this.taxRateInput.val(),
+        this.currencyPrecision
       );
-      const quantity = parseInt(this.quantityInput.val(), 10);
+      const quantity = parseInt(<string>this.quantityInput.val(), 10);
 
       this.priceTaxIncludedInput.val(taxIncluded);
       this.totalPriceText.html(
-        this.priceTaxCalculator.calculateTotalPrice(quantity, taxIncluded, this.currencyPrecision),
+        <string>(
+          (<unknown>(
+            this.priceTaxCalculator.calculateTotalPrice(
+              quantity,
+              taxIncluded,
+              this.currencyPrecision
+            )
+          ))
+        )
       );
     });
 
-    this.productAddActionBtn.on('click', (event) => this.confirmNewInvoice(event));
-    this.invoiceSelect.on('change', () => this.orderProductRenderer.toggleProductAddNewInvoiceInfo());
+    this.productAddActionBtn.on('click', (event: JQueryEventObject) =>
+      this.confirmNewInvoice(event)
+    );
+    this.invoiceSelect.on('change', () =>
+      this.orderProductRenderer.toggleProductAddNewInvoiceInfo()
+    );
   }
 
-  setProduct(product) {
-    this.productIdInput.val(product.productId).trigger('change');
-    this.priceTaxExcludedInput.val(window.ps_round(product.priceTaxExcl, this.currencyPrecision));
-    this.priceTaxIncludedInput.val(window.ps_round(product.priceTaxIncl, this.currencyPrecision));
-    this.taxRateInput.val(product.taxRate);
-    this.locationText.html(product.location);
-    this.available = product.stock;
-    this.availableText.data('availableOutOfStock', product.availableOutOfStock);
-    this.quantityInput.val(1);
-    this.quantityInput.trigger('change');
-    this.setCombinations(product.combinations);
-    this.orderProductRenderer.toggleColumn(OrderViewPageMap.productsCellLocation);
+  setProduct(product: Record<string, any> | undefined): void {
+    if (product) {
+      this.productIdInput.val(product.productId).trigger('change');
+      this.priceTaxExcludedInput.val(
+        window.ps_round(product.priceTaxExcl, this.currencyPrecision)
+      );
+      this.priceTaxIncludedInput.val(
+        window.ps_round(product.priceTaxIncl, this.currencyPrecision)
+      );
+      this.taxRateInput.val(product.taxRate);
+      this.locationText.html(product.location);
+      this.available = product.stock;
+      this.availableText.data(
+        'availableOutOfStock',
+        product.availableOutOfStock
+      );
+      this.quantityInput.val(1);
+      this.quantityInput.trigger('change');
+      this.setCombinations(product.combinations);
+      this.orderProductRenderer.toggleColumn(
+        OrderViewPageMap.productsCellLocation
+      );
+    }
   }
 
-  setCombinations(combinations) {
+  setCombinations(combinations: Record<string, any>): void {
     this.combinationsSelect.empty();
 
     Object.values(combinations).forEach((val) => {
       this.combinationsSelect.append(
         /* eslint-disable-next-line max-len */
-        `<option value="${val.attributeCombinationId}" data-price-tax-excluded="${val.priceTaxExcluded}" data-price-tax-included="${val.priceTaxIncluded}" data-stock="${val.stock}" data-location="${val.location}">${val.attribute}</option>`,
+        `<option value="${val.attributeCombinationId}" data-price-tax-excluded="${val.priceTaxExcluded}" data-price-tax-included="${val.priceTaxIncluded}" data-stock="${val.stock}" data-location="${val.location}">${val.attribute}</option>`
       );
     });
 
-    this.combinationsBlock.toggleClass('d-none', Object.keys(combinations).length === 0);
+    this.combinationsBlock.toggleClass(
+      'd-none',
+      Object.keys(combinations).length === 0
+    );
 
     if (Object.keys(combinations).length > 0) {
       this.combinationsSelect.trigger('change');
     }
   }
 
-  addProduct(orderId) {
+  addProduct(orderId: number): void {
     this.productAddActionBtn.prop('disabled', true);
     this.invoiceSelect.prop('disabled', true);
     this.combinationsSelect.prop('disabled', true);
@@ -198,7 +304,7 @@ export default class OrderProductAdd {
     };
 
     $.ajax({
-      url: this.router.generate('admin_orders_add_product', {orderId}),
+      url: this.router.generate('admin_orders_add_product', { orderId }),
       method: 'POST',
       data: params,
     }).then(
@@ -215,19 +321,19 @@ export default class OrderProductAdd {
         this.combinationsSelect.prop('disabled', false);
 
         if (response.responseJSON && response.responseJSON.message) {
-          $.growl.error({message: response.responseJSON.message});
+          $.growl.error({ message: response.responseJSON.message });
         }
-      },
+      }
     );
   }
 
-  confirmNewInvoice(event) {
-    const invoiceId = parseInt(this.invoiceSelect.val(), 10);
+  confirmNewInvoice(event: JQueryEventObject): void {
+    const invoiceId = parseInt(<string>this.invoiceSelect.val(), 10);
     const orderId = $(event.currentTarget).data('orderId');
 
     // Explicit 0 value is used when we the user selected New Invoice
     if (invoiceId === 0) {
-      const modal = new ConfirmModal(
+      const modal = new (ConfirmModal as any)(
         {
           id: 'modal-confirm-new-invoice',
           confirmTitle: this.invoiceSelect.data('modal-title'),
@@ -237,9 +343,11 @@ export default class OrderProductAdd {
         },
         () => {
           this.confirmNewPrice(orderId, invoiceId);
-        },
+        }
       );
       modal.show();
+
+      // eslint-disable-next-line
     } else if (!isNaN(invoiceId)) {
       // If id is not 0 nor NaN a specific invoice was selected
       this.confirmNewPrice(orderId, invoiceId);
@@ -249,18 +357,19 @@ export default class OrderProductAdd {
     }
   }
 
-  confirmNewPrice(orderId, invoiceId) {
+  confirmNewPrice(orderId: number, invoiceId: number): void {
     const combinationValue = $(':selected', this.combinationsSelect).val();
-    const combinationId = typeof combinationValue === 'undefined' ? 0 : combinationValue;
+    const combinationId =
+      typeof combinationValue === 'undefined' ? 0 : combinationValue;
     const productPriceMatch = this.orderPricesRefresher.checkOtherProductPricesMatch(
-      this.priceTaxIncludedInput.val(),
-      this.productIdInput.val(),
-      combinationId,
-      invoiceId,
+      <number>this.priceTaxIncludedInput.val(),
+      <number>this.productIdInput.val(),
+      <number>combinationId,
+      invoiceId
     );
 
     if (productPriceMatch === 'invoice') {
-      const modalEditPrice = new ConfirmModal(
+      const modalEditPrice = new (ConfirmModal as any)(
         {
           id: 'modal-confirm-new-price',
           confirmTitle: this.invoiceSelect.data('modal-edit-price-title'),
@@ -270,7 +379,7 @@ export default class OrderProductAdd {
         },
         () => {
           this.addProduct(orderId);
-        },
+        }
       );
       modalEditPrice.show();
     } else {

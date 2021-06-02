@@ -24,43 +24,29 @@
  */
 
 import Router from '@components/router';
-import {EventEmitter} from '@components/event-emitter';
-import OrderViewEventMap from '@pages/order/view/order-view-event-map';
+import OrderViewPageMap from '@pages/order/OrderViewPageMap';
 
 const {$} = window;
 
-export default class OrderProductManager {
+export default class OrderPaymentsRefresher {
+  router: Router;
+
   constructor() {
     this.router = new Router();
   }
 
-  handleDeleteProductEvent(event) {
-    event.preventDefault();
-
-    const $btn = $(event.currentTarget);
-    const confirmed = window.confirm($btn.data('deleteMessage'));
-
-    if (!confirmed) {
-      return;
-    }
-
-    $btn.pstooltip('dispose');
-    $btn.prop('disabled', true);
-    this.deleteProduct($btn.data('orderId'), $btn.data('orderDetailId'));
-  }
-
-  deleteProduct(orderId, orderDetailId) {
-    $.ajax(this.router.generate('admin_orders_delete_product', {orderId, orderDetailId}), {
-      method: 'POST',
-    }).then(() => {
-      EventEmitter.emit(OrderViewEventMap.productDeletedFromOrder, {
-        oldOrderDetailId: orderDetailId,
-        orderId,
-      });
-    }, (response) => {
-      if (response.message) {
-        $.growl.error({message: response.message});
-      }
-    });
+  refresh(orderId: number): void {
+    $.ajax(this.router.generate('admin_orders_get_payments', {orderId}))
+      .then(
+        (response) => {
+          $(OrderViewPageMap.viewOrderPaymentsAlert).remove();
+          $(`${OrderViewPageMap.viewOrderPaymentsBlock} .card-body`).prepend(response);
+        },
+        (response) => {
+          if (response.responseJSON && response.responseJSON.message) {
+            $.growl.error({message: response.responseJSON.message});
+          }
+        },
+      );
   }
 }

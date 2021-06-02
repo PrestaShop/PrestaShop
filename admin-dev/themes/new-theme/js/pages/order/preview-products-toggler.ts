@@ -23,21 +23,39 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
 
-import Router from '@components/router';
-import OrderViewPageMap from '@pages/order/OrderViewPageMap';
-
 const {$} = window;
 
-export default class OrderShippingRefresher {
-  constructor() {
-    this.router = new Router();
-  }
+/**
+ * Toggles hidden products in order preview block.
+ *
+ * @param {jQuery} $gridContainer
+ */
+export default function previewProductsToggler($row: JQuery): void {
+  toggleStockLocationColumn($row);
+  $row.on('click', '.js-preview-more-products-btn', (event: JQueryEventObject) => {
+    event.preventDefault();
 
-  refresh(orderId) {
-    $.getJSON(this.router.generate('admin_orders_get_shipping', {orderId}))
-      .then((response) => {
-        $(OrderViewPageMap.orderShippingTabCount).text(response.total);
-        $(OrderViewPageMap.orderShippingTabBody).html(response.html);
-      });
-  }
+    const $btn = $(event.currentTarget);
+    const $hiddenProducts = $btn.closest('tbody').find('.js-product-preview-more');
+
+    $hiddenProducts.removeClass('d-none');
+    $btn.closest('tr').remove();
+    toggleStockLocationColumn($row);
+  });
+}
+
+function toggleStockLocationColumn($container: JQuery): void {
+  let showColumn = false;
+  $(
+    '.js-cell-product-stock-location',
+    // eslint-disable-next-line
+    $container.find('tr:not(.d-none)')).filter('td').each((index, element) => {
+    if ($(element).html().trim() !== '') {
+      showColumn = true;
+      return false;
+    }
+  },
+  );
+
+  $('.js-cell-product-stock-location', $container).toggle(showColumn);
 }

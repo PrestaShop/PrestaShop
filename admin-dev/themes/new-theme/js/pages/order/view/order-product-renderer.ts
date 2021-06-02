@@ -27,40 +27,42 @@ import OrderViewPageMap from '@pages/order/OrderViewPageMap';
 import OrderProductEdit from '@pages/order/view/order-product-edit';
 import Router from '@components/router';
 
-const {$} = window;
+const { $ } = window;
 
 export default class OrderProductRenderer {
+  router: Router;
+
   constructor() {
     this.router = new Router();
   }
 
-  addOrUpdateProductToList($productRow, newRow) {
+  addOrUpdateProductToList($productRow: JQuery, newRow: HTMLElement): void {
     if ($productRow.length > 0) {
       $productRow.html($(newRow).html());
     } else {
       $(OrderViewPageMap.productAddRow).before(
         $(newRow)
           .hide()
-          .fadeIn(),
+          .fadeIn()
       );
     }
   }
 
-  updateNumProducts(numProducts) {
-    $(OrderViewPageMap.productsCount).html(numProducts);
+  updateNumProducts(numProducts: number): void {
+    $(OrderViewPageMap.productsCount).html(<string>(<unknown>numProducts));
   }
 
   editProductFromList(
-    orderDetailId,
-    quantity,
-    priceTaxIncl,
-    priceTaxExcl,
-    taxRate,
-    location,
-    availableQuantity,
-    availableOutOfStock,
-    orderInvoiceId,
-  ) {
+    orderDetailId: number,
+    quantity: number,
+    priceTaxIncl: boolean,
+    priceTaxExcl: boolean,
+    taxRate: number,
+    location: number,
+    availableQuantity: number,
+    availableOutOfStock: boolean,
+    orderInvoiceId: number
+  ): void {
     const $orderEdit = new OrderProductEdit(orderDetailId);
     $orderEdit.displayProduct({
       price_tax_excl: priceTaxExcl,
@@ -76,26 +78,26 @@ export default class OrderProductRenderer {
     $(OrderViewPageMap.productAddRow).addClass('d-none');
   }
 
-  moveProductsPanelToModificationPosition(scrollTarget = 'body') {
+  moveProductsPanelToModificationPosition(scrollTarget = 'body'): void {
     $(OrderViewPageMap.productActionBtn).addClass('d-none');
     $(
-      `${OrderViewPageMap.productAddActionBtn}, ${OrderViewPageMap.productAddRow}`,
+      `${OrderViewPageMap.productAddActionBtn}, ${OrderViewPageMap.productAddRow}`
     ).removeClass('d-none');
     this.moveProductPanelToTop(scrollTarget);
   }
 
-  moveProductsPanelToRefundPosition() {
+  moveProductsPanelToRefundPosition(): void {
     this.resetAllEditRows();
     $(
       /* eslint-disable-next-line max-len */
-      `${OrderViewPageMap.productAddActionBtn}, ${OrderViewPageMap.productAddRow}, ${OrderViewPageMap.productActionBtn}`,
+      `${OrderViewPageMap.productAddActionBtn}, ${OrderViewPageMap.productAddRow}, ${OrderViewPageMap.productActionBtn}`
     ).addClass('d-none');
     this.moveProductPanelToTop();
   }
 
-  moveProductPanelToTop(scrollTarget = 'body') {
+  moveProductPanelToTop(scrollTarget = 'body'): void {
     const $modificationPosition = $(
-      OrderViewPageMap.productModificationPosition,
+      OrderViewPageMap.productModificationPosition
     );
 
     if ($modificationPosition.find(OrderViewPageMap.productsPanel).length > 0) {
@@ -112,16 +114,21 @@ export default class OrderProductRenderer {
 
     // Show all rows, hide pagination controls
     const $rows = $(OrderViewPageMap.productsTable).find(
-      'tr[id^="orderProduct_"]',
+      'tr[id^="orderProduct_"]'
     );
     $rows.removeClass('d-none');
     $(OrderViewPageMap.productsPagination).addClass('d-none');
 
-    const scrollValue = $(scrollTarget).offset().top - $('.header-toolbar').height() - 100;
-    $('html,body').animate({scrollTop: scrollValue}, 'slow');
+    const target = $(scrollTarget).offset();
+    const headerBarHeight = $('.header-toolbar').height();
+
+    if (target && headerBarHeight) {
+      const scrollValue = target.top - headerBarHeight - 100;
+      $('html,body').animate({ scrollTop: scrollValue }, 'slow');
+    }
   }
 
-  moveProductPanelToOriginalPosition() {
+  moveProductPanelToOriginalPosition(): void {
     $(OrderViewPageMap.productAddNewInvoiceInfo).addClass('d-none');
     $(OrderViewPageMap.productModificationPosition)
       .closest('.row')
@@ -134,14 +141,14 @@ export default class OrderProductRenderer {
     $(OrderViewPageMap.productsPagination).removeClass('d-none');
     $(OrderViewPageMap.productActionBtn).removeClass('d-none');
     $(
-      `${OrderViewPageMap.productAddActionBtn}, ${OrderViewPageMap.productAddRow}`,
+      `${OrderViewPageMap.productAddActionBtn}, ${OrderViewPageMap.productAddRow}`
     ).addClass('d-none');
 
     // Restore pagination
     this.paginate(1);
   }
 
-  resetAddRow() {
+  resetAddRow(): void {
     $(OrderViewPageMap.productAddIdInput).val('');
     $(OrderViewPageMap.productSearchInput).val('');
     $(OrderViewPageMap.productAddCombinationsBlock).addClass('d-none');
@@ -156,27 +163,27 @@ export default class OrderProductRenderer {
     $(OrderViewPageMap.productAddActionBtn).prop('disabled', true);
   }
 
-  resetAllEditRows() {
+  resetAllEditRows(): void {
     $(OrderViewPageMap.productEditButtons).each((key, editButton) => {
       this.resetEditRow($(editButton).data('orderDetailId'));
     });
   }
 
-  resetEditRow(orderProductId) {
+  resetEditRow(orderProductId: string): void {
     const $productRow = $(OrderViewPageMap.productsTableRow(orderProductId));
     const $productEditRow = $(
-      OrderViewPageMap.productsTableRowEdited(orderProductId),
+      OrderViewPageMap.productsTableRowEdited(orderProductId)
     );
     $productEditRow.remove();
     $productRow.removeClass('d-none');
   }
 
-  paginate(originalNumPage) {
+  paginate(originalNumPage: number): void {
     const $rows = $(OrderViewPageMap.productsTable).find(
-      'tr[id^="orderProduct_"]',
+      'tr[id^="orderProduct_"]'
     );
     const $customizationRows = $(
-      OrderViewPageMap.productsTableCustomizationRows,
+      OrderViewPageMap.productsTableCustomizationRows
     );
     const $tablePagination = $(OrderViewPageMap.productsTablePagination);
     const numRowsPerPage = parseInt($tablePagination.data('numPerPage'), 10);
@@ -196,7 +203,7 @@ export default class OrderProductRenderer {
       $($rows[i]).removeClass('d-none');
     }
 
-    $customizationRows.each(function () {
+    $customizationRows.each(function() {
       if (
         !$(this)
           .prev()
@@ -216,10 +223,11 @@ export default class OrderProductRenderer {
     this.toggleColumn(OrderViewPageMap.productsCellRefundedDisplayed);
   }
 
-  paginateUpdateControls(numPage) {
+  paginateUpdateControls(numPage: number): void {
     // Why 3 ? Next & Prev & Template
-    const totalPage = $(OrderViewPageMap.productsTablePagination).find('li.page-item').length
-      - 3;
+    const totalPage =
+      $(OrderViewPageMap.productsTablePagination).find('li.page-item').length -
+      3;
     $(OrderViewPageMap.productsTablePagination)
       .find('.active')
       .removeClass('active');
@@ -237,40 +245,44 @@ export default class OrderProductRenderer {
     this.togglePaginationControls();
   }
 
-  updateNumPerPage(numPerPage) {
+  updateNumPerPage(numPerPage: number): void {
     $(OrderViewPageMap.productsTablePagination).data('numPerPage', numPerPage);
     this.updatePaginationControls();
   }
 
-  togglePaginationControls() {
+  togglePaginationControls(): void {
     // Why 3 ? Next & Prev & Template
-    const totalPage = $(OrderViewPageMap.productsTablePagination).find('li.page-item').length
-      - 3;
+    const totalPage =
+      $(OrderViewPageMap.productsTablePagination).find('li.page-item').length -
+      3;
     $(OrderViewPageMap.productsNavPagination).toggleClass(
       'd-none',
-      totalPage <= 1,
+      totalPage <= 1
     );
   }
 
-  toggleProductAddNewInvoiceInfo() {
+  toggleProductAddNewInvoiceInfo(): void {
     $(OrderViewPageMap.productAddNewInvoiceInfo).toggleClass(
       'd-none',
-      parseInt($(OrderViewPageMap.productAddInvoiceSelect).val(), 10) !== 0,
+      parseInt(
+        <string>$(OrderViewPageMap.productAddInvoiceSelect).val(),
+        10
+      ) !== 0
     );
   }
 
-  toggleColumn(target, forceDisplay = null) {
-    let isColumnDisplayed = false;
+  toggleColumn(target: string, forceDisplay = null): void {
+    let isColumnDisplayed: boolean | null = false;
 
     if (forceDisplay === null) {
       $(target)
         .filter('td')
-        .each(function () {
+        // eslint-disable-next-line
+        .each(function() {
           if ($(this).html() !== '') {
             isColumnDisplayed = true;
             return false;
           }
-          return true;
         });
     } else {
       isColumnDisplayed = forceDisplay;
@@ -278,25 +290,33 @@ export default class OrderProductRenderer {
     $(target).toggleClass('d-none', !isColumnDisplayed);
   }
 
-  updatePaginationControls() {
+  updatePaginationControls(): void {
     const $tablePagination = $(OrderViewPageMap.productsTablePagination);
     const numPerPage = $tablePagination.data('numPerPage');
-    const $rows = $(OrderViewPageMap.productsTable).find('tr[id^="orderProduct_"]');
+    const $rows = $(OrderViewPageMap.productsTable).find(
+      'tr[id^="orderProduct_"]'
+    );
     const numPages = Math.ceil($rows.length / numPerPage);
 
     // Update table data fields
     $tablePagination.data('numPages', numPages);
 
     // Clean all page links, reinsert the removed template
-    const $linkPaginationTemplate = $(OrderViewPageMap.productsTablePaginationTemplate);
-    $(OrderViewPageMap.productsTablePagination).find('li:has(> [data-page])').remove();
-    $(OrderViewPageMap.productsTablePaginationNext).before($linkPaginationTemplate);
+    const $linkPaginationTemplate = $(
+      OrderViewPageMap.productsTablePaginationTemplate
+    );
+    $(OrderViewPageMap.productsTablePagination)
+      .find('li:has(> [data-page])')
+      .remove();
+    $(OrderViewPageMap.productsTablePaginationNext).before(
+      $linkPaginationTemplate
+    );
 
     // Add appropriate pages
     for (let i = 1; i <= numPages; i += 1) {
       const $linkPagination = $linkPaginationTemplate.clone();
       $linkPagination.find('span').attr('data-page', i);
-      $linkPagination.find('span').html(i);
+      $linkPagination.find('span').html(<string>(<unknown>i));
       $linkPaginationTemplate.before($linkPagination.removeClass('d-none'));
     }
 

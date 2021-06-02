@@ -30,6 +30,7 @@ import NumberSymbol from '@app/cldr/number-symbol';
 import PriceSpecification from '@app/cldr/specifications/price';
 import NumberSpecification from '@app/cldr/specifications/number';
 
+// eslint-disable-next-line
 const escapeRE = require('lodash.escaperegexp');
 
 const CURRENCY_SYMBOL_PLACEHOLDER = '¤';
@@ -40,11 +41,13 @@ const PERCENT_SYMBOL_PLACEHOLDER = '%';
 const PLUS_SIGN_PLACEHOLDER = '+';
 
 class NumberFormatter {
+  numberSpecification: Record<string, any>;
+
   /**
    * @param NumberSpecification specification Number specification to be used
    *   (can be a number spec, a price spec, a percentage spec)
    */
-  constructor(specification) {
+  constructor(specification: Record<string, any>) {
     this.numberSpecification = specification;
   }
 
@@ -58,7 +61,7 @@ class NumberFormatter {
    * @return string The formatted number
    *                You should use this this value for display, without modifying it
    */
-  format(number, specification) {
+  format(number: number, specification?: Record<string, any>): string {
     if (specification !== undefined) {
       this.numberSpecification = specification;
     }
@@ -70,7 +73,7 @@ class NumberFormatter {
     const num = Math.abs(number).toFixed(this.numberSpecification.getMaxFractionDigits());
 
     let [majorDigits, minorDigits] = this.extractMajorMinorDigits(num);
-    majorDigits = this.splitMajorGroups(majorDigits);
+    majorDigits = <string> this.splitMajorGroups(majorDigits);
     minorDigits = this.adjustMinorDigitsZeroes(minorDigits);
 
     // Assemble the final number
@@ -104,7 +107,7 @@ class NumberFormatter {
    *
    * @return string[]
    */
-  extractMajorMinorDigits(number) {
+  extractMajorMinorDigits(number: string): Array<string> {
     // Get the number's major and minor digits.
     const result = number.toString().split('.');
     const majorDigits = result[0];
@@ -123,7 +126,7 @@ class NumberFormatter {
    *
    * @return string The grouped major digits
    */
-  splitMajorGroups(digit) {
+  splitMajorGroups(digit: string): Array<string> | string {
     if (!this.numberSpecification.isGroupingUsed()) {
       return digit;
     }
@@ -140,7 +143,7 @@ class NumberFormatter {
 
     // Reverse back the digits and the groups
     groups = groups.reverse();
-    const newGroups = [];
+    const newGroups: Array<string> = [];
     groups.forEach((group) => {
       newGroups.push(group.reverse().join(''));
     });
@@ -156,7 +159,7 @@ class NumberFormatter {
    *
    * @return string The adjusted minor digits
    */
-  adjustMinorDigitsZeroes(minorDigits) {
+  adjustMinorDigitsZeroes(minorDigits: string): string {
     let digit = minorDigits;
 
     if (digit.length > this.numberSpecification.getMaxFractionDigits()) {
@@ -185,7 +188,7 @@ class NumberFormatter {
    *
    * @return string The CLDR formatting pattern
    */
-  getCldrPattern(isNegative) {
+  getCldrPattern(isNegative: boolean): string {
     if (isNegative) {
       return this.numberSpecification.getNegativePattern();
     }
@@ -202,10 +205,10 @@ class NumberFormatter {
    * @return string
    *                The number with replaced symbols
    */
-  replaceSymbols(number) {
+  replaceSymbols(number: string): string {
     const symbols = this.numberSpecification.getSymbol();
 
-    const map = {};
+    const map: Record<string, any> = {};
     map[DECIMAL_SEPARATOR_PLACEHOLDER] = symbols.getDecimal();
     map[GROUP_SEPARATOR_PLACEHOLDER] = symbols.getGroup();
     map[MINUS_SIGN_PLACEHOLDER] = symbols.getMinusSign();
@@ -226,11 +229,11 @@ class NumberFormatter {
    *
    * @return string
    */
-  strtr(str, pairs) {
+  strtr(str: string, pairs: Record<string, any>): string {
     const substrs = Object.keys(pairs).map(escapeRE);
 
     return str.split(RegExp(`(${substrs.join('|')})`))
-      .map((part) => pairs[part] || part)
+      .map((part: string) => pairs[part] || part)
       .join('');
   }
 
@@ -253,7 +256,7 @@ class NumberFormatter {
    *
    * @return string
    */
-  addPlaceholders(formattedNumber, pattern) {
+  addPlaceholders(formattedNumber: string, pattern: string): string {
     /*
      * Regex groups explanation:
      * #          : literal "#" character. Once.
@@ -276,7 +279,7 @@ class NumberFormatter {
    *
    * @return mixed
    */
-  performSpecificReplacements(formattedNumber) {
+  performSpecificReplacements(formattedNumber: string): string {
     if (this.numberSpecification instanceof PriceSpecification) {
       return formattedNumber
         .split(CURRENCY_SYMBOL_PLACEHOLDER)
@@ -286,12 +289,14 @@ class NumberFormatter {
     return formattedNumber;
   }
 
-  static build(specifications) {
+  static build(specifications: Record<string, any>): NumberFormatter {
     let symbol;
 
     if (undefined !== specifications.numberSymbols) {
+      // @ts-ignore-next-line
       symbol = new NumberSymbol(...specifications.numberSymbols);
     } else {
+      // @ts-ignore-next-line
       symbol = new NumberSymbol(...specifications.symbol);
     }
 

@@ -23,30 +23,28 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
 
-export default class OrderPrices {
-  calculateTaxExcluded(taxIncluded, taxRatePerCent, currencyPrecision) {
-    let priceTaxIncl = parseFloat(taxIncluded);
+import Router from '@components/router';
+import OrderViewPageMap from '@pages/order/OrderViewPageMap';
+import InvoiceNoteManager from '../invoice-note-manager';
 
-    if (priceTaxIncl < 0 || Number.isNaN(priceTaxIncl)) {
-      priceTaxIncl = 0;
-    }
-    const taxRate = taxRatePerCent / 100 + 1;
+const {$} = window;
 
-    return window.ps_round(priceTaxIncl / taxRate, currencyPrecision);
+export default class OrderDocumentsRefresher {
+  router: Router;
+
+  invoiceNoteManager: InvoiceNoteManager;
+
+  constructor() {
+    this.router = new Router();
+    this.invoiceNoteManager = new InvoiceNoteManager();
   }
 
-  calculateTaxIncluded(taxExcluded, taxRatePerCent, currencyPrecision) {
-    let priceTaxExcl = parseFloat(taxExcluded);
-
-    if (priceTaxExcl < 0 || Number.isNaN(priceTaxExcl)) {
-      priceTaxExcl = 0;
-    }
-    const taxRate = taxRatePerCent / 100 + 1;
-
-    return window.ps_round(priceTaxExcl * taxRate, currencyPrecision);
-  }
-
-  calculateTotalPrice(quantity, unitPrice, currencyPrecision) {
-    return window.ps_round(unitPrice * quantity, currencyPrecision);
+  refresh(orderId: number): void {
+    $.getJSON(this.router.generate('admin_orders_get_documents', {orderId}))
+      .then((response) => {
+        $(OrderViewPageMap.orderDocumentsTabCount).text(response.total);
+        $(OrderViewPageMap.orderDocumentsTabBody).html(response.html);
+        this.invoiceNoteManager.setupListeners();
+      });
   }
 }

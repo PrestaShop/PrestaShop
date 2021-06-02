@@ -23,28 +23,30 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
 
-import Router from '@components/router';
-import OrderViewPageMap from '@pages/order/OrderViewPageMap';
+export default class OrderPrices {
+  calculateTaxExcluded(taxIncluded: number, taxRatePerCent: number, currencyPrecision: number): number {
+    let priceTaxIncl = taxIncluded;
 
-const {$} = window;
+    if (priceTaxIncl < 0 || Number.isNaN(priceTaxIncl)) {
+      priceTaxIncl = 0;
+    }
+    const taxRate = taxRatePerCent / 100 + 1;
 
-export default class OrderPaymentsRefresher {
-  constructor() {
-    this.router = new Router();
+    return window.ps_round(priceTaxIncl / taxRate, currencyPrecision);
   }
 
-  refresh(orderId) {
-    $.ajax(this.router.generate('admin_orders_get_payments', {orderId}))
-      .then(
-        (response) => {
-          $(OrderViewPageMap.viewOrderPaymentsAlert).remove();
-          $(`${OrderViewPageMap.viewOrderPaymentsBlock} .card-body`).prepend(response);
-        },
-        (response) => {
-          if (response.responseJSON && response.responseJSON.message) {
-            $.growl.error({message: response.responseJSON.message});
-          }
-        },
-      );
+  calculateTaxIncluded(taxExcluded: number, taxRatePerCent: number, currencyPrecision: number): number {
+    let priceTaxExcl = taxExcluded;
+
+    if (priceTaxExcl < 0 || Number.isNaN(priceTaxExcl)) {
+      priceTaxExcl = 0;
+    }
+    const taxRate = taxRatePerCent / 100 + 1;
+
+    return window.ps_round(priceTaxExcl * taxRate, currencyPrecision);
+  }
+
+  calculateTotalPrice(quantity: number, unitPrice: number, currencyPrecision: number): number {
+    return window.ps_round(unitPrice * quantity, currencyPrecision);
   }
 }

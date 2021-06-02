@@ -50,7 +50,7 @@ export default class EmployeeForm {
 
     new AddonsConnector(
       employeeFormMap.addonsConnectForm,
-      employeeFormMap.addonsLoginButton
+      employeeFormMap.addonsLoginButton,
     );
 
     new ChangePasswordControl(
@@ -62,7 +62,7 @@ export default class EmployeeForm {
       employeeFormMap.newPasswordInput,
       employeeFormMap.confirmNewPasswordInput,
       employeeFormMap.generatedPasswordDisplayInput,
-      employeeFormMap.passwordStrengthFeedbackContainer
+      employeeFormMap.passwordStrengthFeedbackContainer,
     );
 
     this.initEvents();
@@ -78,8 +78,7 @@ export default class EmployeeForm {
     const $employeeProfilesDropdown = $(this.employeeProfileSelector);
     const getTabsUrl = $employeeProfilesDropdown.data('get-tabs-url');
 
-    $(document).on('change', this.employeeProfileSelector, () =>
-      this.toggleShopTree()
+    $(document).on('change', this.employeeProfileSelector, () => this.toggleShopTree(),
     );
 
     // Reload tabs dropdown when employee profile is changed.
@@ -92,7 +91,7 @@ export default class EmployeeForm {
         (tabs) => {
           this.reloadTabsDropdown(tabs);
         },
-        'json'
+        'json',
       );
     });
   }
@@ -119,8 +118,8 @@ export default class EmployeeForm {
             $optgroup.append(
               this.createOption(
                 accessibleTab.children[childKey].name,
-                accessibleTab.children[childKey].id_tab
-              )
+                accessibleTab.children[childKey].id_tab,
+              ),
             );
           }
         });
@@ -129,7 +128,7 @@ export default class EmployeeForm {
       } else if (accessibleTab.name) {
         // If tab doesn't have children - create an option.
         $tabsDropdown.append(
-          this.createOption(accessibleTab.name, accessibleTab.id_tab)
+          this.createOption(accessibleTab.name, accessibleTab.id_tab),
         );
       }
     });
@@ -147,7 +146,7 @@ export default class EmployeeForm {
       .closest('.form-group')
       .toggleClass(
         'd-none',
-        $employeeProfileDropdown.val() === superAdminProfileId
+        $employeeProfileDropdown.val() === superAdminProfileId,
       );
   }
 

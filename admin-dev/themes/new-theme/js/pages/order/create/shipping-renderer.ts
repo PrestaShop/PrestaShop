@@ -27,10 +27,22 @@ import createOrderMap from './create-order-map';
 
 const {$} = window;
 
+interface DeliveryOption {
+  value: string;
+  text: string;
+  selected?: string;
+}
+
 /**
  * Manipulates UI of Shipping block in Order creation page
  */
 export default class ShippingRenderer {
+  $container: JQuery;
+
+  $form: JQuery;
+
+  $noCarrierBlock: JQuery;
+
   constructor() {
     this.$container = $(createOrderMap.shippingBlock);
     this.$form = $(createOrderMap.shippingForm);
@@ -41,7 +53,7 @@ export default class ShippingRenderer {
    * @param {Object} shipping
    * @param {Boolean} emptyCart
    */
-  render(shipping, emptyCart) {
+  render(shipping: Record<string, any>, emptyCart: boolean): void {
     if (emptyCart) {
       this.hideContainer();
     } else if (shipping !== null) {
@@ -58,7 +70,7 @@ export default class ShippingRenderer {
    *
    * @private
    */
-  displayForm(shipping) {
+  private displayForm(shipping: Record<string, any>): void {
     this.hideNoCarrierBlock();
     this.renderDeliveryOptions(shipping.deliveryOptions, shipping.selectedCarrierId);
     this.renderTotalShipping(shipping.shippingPrice);
@@ -77,12 +89,14 @@ export default class ShippingRenderer {
    *
    * @private
    */
-  renderFreeShippingSwitch(isFreeShipping) {
+  private renderFreeShippingSwitch(isFreeShipping: boolean): void {
     $(createOrderMap.freeShippingSwitch).each((key, input) => {
-      if (input.value === '1') {
-        input.checked = isFreeShipping;
+      const switchInput = <HTMLInputElement>input;
+
+      if (switchInput.value === '1') {
+        switchInput.checked = isFreeShipping;
       } else {
-        input.checked = !isFreeShipping;
+        switchInput.checked = !isFreeShipping;
       }
     });
   }
@@ -92,12 +106,14 @@ export default class ShippingRenderer {
    *
    * @private
    */
-  renderRecycledPackagingSwitch(useRecycledPackaging) {
+  private renderRecycledPackagingSwitch(useRecycledPackaging: boolean): void {
     $(createOrderMap.recycledPackagingSwitch).each((key, input) => {
-      if (input.value === '1') {
-        input.checked = useRecycledPackaging;
+      const switchInput = <HTMLInputElement>input;
+
+      if (switchInput.value === '1') {
+        switchInput.checked = useRecycledPackaging;
       } else {
-        input.checked = !useRecycledPackaging;
+        switchInput.checked = !useRecycledPackaging;
       }
     });
   }
@@ -107,12 +123,14 @@ export default class ShippingRenderer {
    *
    * @private
    */
-  renderGiftSwitch(isAGift) {
+  private renderGiftSwitch(isAGift: boolean): void {
     $(createOrderMap.isAGiftSwitch).each((key, input) => {
-      if (input.value === '1') {
-        input.checked = isAGift;
+      const switchInput = <HTMLInputElement>input;
+
+      if (switchInput.value === '1') {
+        switchInput.checked = isAGift;
       } else {
-        input.checked = !isAGift;
+        switchInput.checked = !isAGift;
       }
     });
   }
@@ -122,7 +140,7 @@ export default class ShippingRenderer {
    *
    * @private
    */
-  renderGiftMessageField(giftMessage) {
+  private renderGiftMessageField(giftMessage: string): void {
     $(createOrderMap.giftMessageField).val(giftMessage);
   }
 
@@ -131,7 +149,7 @@ export default class ShippingRenderer {
    *
    * @private
    */
-  displayNoCarriersWarning() {
+  private displayNoCarriersWarning(): void {
     this.showContainer();
     this.hideForm();
     this.showNoCarrierBlock();
@@ -145,12 +163,12 @@ export default class ShippingRenderer {
    *
    * @private
    */
-  renderDeliveryOptions(deliveryOptions, selectedVal) {
+  private renderDeliveryOptions(deliveryOptions: Record<string, any>, selectedVal: any): void {
     const $deliveryOptionSelect = $(createOrderMap.deliveryOptionSelect);
     $deliveryOptionSelect.empty();
 
-    Object.values(deliveryOptions).forEach((option) => {
-      const deliveryOption = {
+    Object.values(deliveryOptions).forEach((option: Record<string, any>) => {
+      const deliveryOption: DeliveryOption = {
         value: option.carrierId,
         text: `${option.carrierName} - ${option.carrierDelay}`,
       };
@@ -170,7 +188,7 @@ export default class ShippingRenderer {
    *
    * @private
    */
-  renderTotalShipping(shippingPrice) {
+  private renderTotalShipping(shippingPrice: JQuery): void {
     const $totalShippingField = $(createOrderMap.totalShippingField);
     $totalShippingField.empty();
 
@@ -182,7 +200,7 @@ export default class ShippingRenderer {
    *
    * @private
    */
-  showContainer() {
+  private showContainer(): void {
     this.$container.removeClass('d-none');
   }
 
@@ -191,7 +209,7 @@ export default class ShippingRenderer {
    *
    * @private
    */
-  hideContainer() {
+  private hideContainer(): void {
     this.$container.addClass('d-none');
   }
 
@@ -200,7 +218,7 @@ export default class ShippingRenderer {
    *
    * @private
    */
-  showForm() {
+  private showForm(): void {
     this.$form.removeClass('d-none');
   }
 
@@ -209,7 +227,7 @@ export default class ShippingRenderer {
    *
    * @private
    */
-  hideForm() {
+  private hideForm(): void {
     this.$form.addClass('d-none');
   }
 
@@ -218,7 +236,7 @@ export default class ShippingRenderer {
    *
    * @private
    */
-  showNoCarrierBlock() {
+  private showNoCarrierBlock(): void {
     this.$noCarrierBlock.removeClass('d-none');
   }
 
@@ -227,7 +245,7 @@ export default class ShippingRenderer {
    *
    * @private
    */
-  hideNoCarrierBlock() {
+  private hideNoCarrierBlock(): void {
     this.$noCarrierBlock.addClass('d-none');
   }
 }

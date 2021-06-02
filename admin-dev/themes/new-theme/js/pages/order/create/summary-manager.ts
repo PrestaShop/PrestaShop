@@ -34,14 +34,14 @@ const {$} = window;
  * Manages summary block
  */
 export default class SummaryManager {
+  router: Router;
+
+  summaryRenderer: SummaryRenderer;
+
   constructor() {
     this.router = new Router();
     this.summaryRenderer = new SummaryRenderer();
     this.initListeners();
-
-    return {
-      sendProcessOrderEmail: (cartId) => this.sendProcessOrderEmail(cartId),
-    };
   }
 
   /**
@@ -49,7 +49,7 @@ export default class SummaryManager {
    *
    * @private
    */
-  initListeners() {
+  private initListeners(): void {
     this.onProcessOrderEmailError();
     this.onProcessOrderEmailSuccess();
   }
@@ -59,7 +59,7 @@ export default class SummaryManager {
    *
    * @private
    */
-  onProcessOrderEmailSuccess() {
+  private onProcessOrderEmailSuccess(): void {
     EventEmitter.on(eventMap.processOrderEmailSent, (response) => {
       this.summaryRenderer.cleanAlerts();
       this.summaryRenderer.renderSuccessMessage(response.message);
@@ -71,7 +71,7 @@ export default class SummaryManager {
    *
    * @private
    */
-  onProcessOrderEmailError() {
+  private onProcessOrderEmailError(): void {
     EventEmitter.on(eventMap.processOrderEmailFailed, (response) => {
       this.summaryRenderer.cleanAlerts();
       this.summaryRenderer.renderErrorMessage(response.responseJSON.message);
@@ -83,11 +83,14 @@ export default class SummaryManager {
    *
    * @param {Number} cartId
    */
-  sendProcessOrderEmail(cartId) {
+  sendProcessOrderEmail(cartId: number): void {
     $.post(this.router.generate('admin_orders_send_process_order_email'), {
       cartId,
-    }).then((response) => EventEmitter.emit(eventMap.processOrderEmailSent, response)).catch((e) => {
-      EventEmitter.emit(eventMap.processOrderEmailFailed, e);
-    });
+    })
+      .then((response) => EventEmitter.emit(eventMap.processOrderEmailSent, response),
+      )
+      .catch((e) => {
+        EventEmitter.emit(eventMap.processOrderEmailFailed, e);
+      });
   }
 }

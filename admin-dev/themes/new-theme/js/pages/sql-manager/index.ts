@@ -35,7 +35,7 @@ import SubmitRowActionExtension from '@components/grid/extension/action/row/subm
 import LinkRowActionExtension from '@components/grid/extension/link-row-action-extension';
 import FiltersSubmitButtonEnablerExtension from '@components/grid/extension/filters-submit-button-enabler-extension';
 
-const { $ } = window;
+const {$} = window;
 
 class SqlManagerPage {
   constructor() {
@@ -51,15 +51,13 @@ class SqlManagerPage {
     requestSqlGrid.addExtension(new BulkActionCheckboxExtension());
     requestSqlGrid.addExtension(new FiltersSubmitButtonEnablerExtension());
 
-    $(document).on('change', '.js-db-tables-select', () =>
-      this.reloadDbTableColumns()
+    $(document).on('change', '.js-db-tables-select', () => this.reloadDbTableColumns(),
     );
-    $(document).on('click', '.js-add-db-table-to-query-btn', (event) =>
-      this.addDbTableToQuery(event)
+    $(document).on('click', '.js-add-db-table-to-query-btn', (event: JQueryEventObject) => this.addDbTableToQuery(event),
     );
-    $(document).on('click', '.js-add-db-table-column-to-query-btn', (event) =>
-      this.addDbTableColumnToQuery(event)
-    );
+    $(document).on('click', '.js-add-db-table-column-to-query-btn', (event: JQueryEventObject) => {
+      this.addDbTableColumnToQuery(event);
+    });
   }
 
   /**
@@ -72,7 +70,7 @@ class SqlManagerPage {
     $.ajax($selectedOption.data('table-columns-url')).then((response) => {
       $('.js-table-alert').addClass('d-none');
 
-      const { columns } = response;
+      const {columns} = response;
 
       $table.removeClass('d-none');
       $table.find('tbody').empty();
@@ -87,11 +85,11 @@ class SqlManagerPage {
               .append(
                 $('<button>')
                   .addClass(
-                    'btn btn-sm btn-outline-secondary js-add-db-table-column-to-query-btn'
+                    'btn btn-sm btn-outline-secondary js-add-db-table-column-to-query-btn',
                   )
                   .attr('data-column', column.name)
-                  .html($table.data('action-btn'))
-              )
+                  .html($table.data('action-btn')),
+              ),
           );
 
         $table.find('tbody').append($row);

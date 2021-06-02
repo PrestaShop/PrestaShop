@@ -156,7 +156,7 @@ export default class CustomerManager {
    *
    * @param currentCartId
    */
-  loadCustomerCarts(currentCartId: number): void {
+  loadCustomerCarts(currentCartId: string): void {
     const {customerId} = this;
 
     this.customerRenderer.showLoadingCarts();
@@ -199,9 +199,8 @@ export default class CustomerManager {
   /**
    * Searches for customers
    *
-   * @private
    */
-  private search(searchPhrase: string): void {
+  search(searchPhrase: string): void {
     if (searchPhrase.length === 0) {
       return;
     }
