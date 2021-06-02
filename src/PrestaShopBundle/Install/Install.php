@@ -311,22 +311,18 @@ class Install extends AbstractInstall
             return false;
         }
 
-        return $this->generateSf2ProductionEnv();
+        return $this->updateSchema();
     }
 
     /**
-     * Pass SF2 to production
      * cache:clear
      * assetic:dump
      * doctrine:schema:update.
      *
      * @return bool
      */
-    public function generateSf2ProductionEnv()
+    public function updateSchema()
     {
-        if (defined('_PS_IN_TEST_')) {
-            return true;
-        }
         $schemaUpgrade = new UpgradeDatabase();
         $schemaUpgrade->addDoctrineSchemaUpdate();
         $output = $schemaUpgrade->execute();
