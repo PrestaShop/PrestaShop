@@ -1725,3 +1725,10 @@ services:
             - '@translator'
         tags:
             - { name: form.type }
+
+    form.type.sell.product.options.product_attachment_type:
+        class: 'PrestaShopBundle\Form\Admin\Sell\Product\Options\ProductAttachmentType'
+        parent: 'form.type.translatable.aware'
+        public: true
+        tags:
+            - { name: form.type }
