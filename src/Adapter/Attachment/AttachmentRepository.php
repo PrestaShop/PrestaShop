@@ -87,7 +87,7 @@ class AttachmentRepository extends AbstractObjectModelRepository
     /**
      * @param ProductId $productId
      *
-     * @return array<int, string|array<int, string>>
+     * @return array<int, array<string, string|array<int, string>>>
      */
     public function getAllByProduct(ProductId $productId): array
     {
