@@ -179,4 +179,11 @@ export default {
     expandAllButton: '#categories-tree-expand',
     reduceAllButton: '#categories-tree-reduce',
   },
+  attachments: {
+    attachmentsContainer: '#js-attachments-container',
+    attachmentsCollection: '#js-attachments-container .js-attachments-collection',
+    collectionRow: {
+      attachmentIdInput: (rowIndex) => `product_options_attached_files_attachment_ids_${rowIndex}`,
+    }
+  },
 };
