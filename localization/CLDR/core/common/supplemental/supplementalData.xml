@@ -4731,7 +4731,7 @@ XXX Code for transations where no currency is involved
 		<weekendEnd day="fri" territories="AF IR"/>
 		<weekendEnd day="sat" territories="AE BH DZ EG IL IQ JO KW LY OM QA SA SD SY YE"/>
 		<weekendEnd day="sun" territories="001"/>
-		
+
 		<weekOfPreference ordering="weekOfYear" locales="und"/>
 		<weekOfPreference ordering="weekOfYear weekOfMonth" locales="am az bs cs cy da el et hi ky lt mk sk ta th"/>
 		<weekOfPreference ordering="weekOfYear weekOfMonth weekOfInterval" locales="is mn no sv vi"/>
@@ -5257,6 +5257,7 @@ XXX Code for transations where no currency is involved
 		<currencyCodes type="BTN" numeric="64"/>
 		<currencyCodes type="BWP" numeric="72"/>
 		<currencyCodes type="BYR" numeric="974"/>
+		<currencyCodes type="BYN" numeric="933"/>
 		<currencyCodes type="BZD" numeric="84"/>
 		<currencyCodes type="CAD" numeric="124"/>
 		<currencyCodes type="CDF" numeric="976"/>
