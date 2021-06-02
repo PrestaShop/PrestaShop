@@ -67,8 +67,7 @@ define('_MAIL_DIR_', __PS_BASE_URI__.'mails/');
 define('_MODULE_DIR_', __PS_BASE_URI__.'modules/');
 
 /* Define API URLs if not defined before */
-Tools::safeDefine('_PS_API_DOMAIN_', 'api.prestashop.com');
-Tools::safeDefine('_PS_API_URL_', 'http://'._PS_API_DOMAIN_);
+Tools::safeDefine('_PS_API_URL_', 'https://api.prestashop.com');
 /** @deprecated Since 1.7.7 */
 Tools::safeDefine('_PS_TAB_MODULE_LIST_URL_', '');
 /** @deprecated Since 1.7.7 */

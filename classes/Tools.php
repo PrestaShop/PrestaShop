@@ -3958,7 +3958,7 @@ exit;
 
         $post_data = http_build_query($post_query_data);
 
-        $end_point = 'api.addons.prestashop.com';
+        $endpoint = 'https://api.addons.prestashop.com/';
 
         switch ($request) {
             case 'native':
@@ -4035,7 +4035,7 @@ exit;
             ],
         ]);
 
-        if ($content = Tools::file_get_contents('https://' . $end_point, false, $context)) {
+        if ($content = Tools::file_get_contents($endpoint, false, $context)) {
             return $content;
         }
 
