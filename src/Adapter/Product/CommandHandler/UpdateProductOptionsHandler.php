@@ -71,6 +71,9 @@ final class UpdateProductOptionsHandler implements UpdateProductOptionsHandlerIn
         $updatableProperties = $this->fillUpdatableProperties($product, $command);
 
         $this->productRepository->partialUpdate($product, $updatableProperties, CannotUpdateProductException::FAILED_UPDATE_OPTIONS);
+        if (true === $command->isActive()) {
+            $this->productIndexationUpdater->updateIndexation($product->id);
+        }
     }
 
     /**
