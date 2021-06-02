@@ -34,11 +34,6 @@ use Symfony\Component\Form\FormBuilderInterface;
 class FormBuilderModifier
 {
     /**
-     * @var FormBuilderInterface
-     */
-    private $formBuilder;
-
-    /**
      * @param FormBuilderInterface $formBuilder
      * @param string $targetFieldName
      * @param string|FormBuilderInterface $newChild
@@ -47,14 +42,13 @@ class FormBuilderModifier
      */
     public function addAfter(FormBuilderInterface $formBuilder, string $targetFieldName, $newChild, ?string $type = null, array $options = []): void
     {
-        $this->formBuilder = $formBuilder;
-        $this->assertFieldExists($targetFieldName);
-        $formChildren = $this->cleanAllChildren();
+        $this->assertFieldExists($formBuilder, $targetFieldName);
+        $formChildren = $this->cleanAllChildren($formBuilder);
 
         foreach ($formChildren as $childName => $formType) {
-            $this->formBuilder->add($formType);
+            $formBuilder->add($formType);
             if ($childName === $targetFieldName) {
-                $this->formBuilder->add($newChild, $type, $options);
+                $formBuilder->add($newChild, $type, $options);
             }
         }
     }
@@ -68,40 +62,42 @@ class FormBuilderModifier
      */
     public function addBefore(FormBuilderInterface $formBuilder, string $targetFieldName, $newChild, ?string $type = null, array $options = []): void
     {
-        $this->formBuilder = $formBuilder;
-        $this->assertFieldExists($targetFieldName);
-        $formChildren = $this->cleanAllChildren();
+        $this->assertFieldExists($formBuilder, $targetFieldName);
+        $formChildren = $this->cleanAllChildren($formBuilder);
 
         foreach ($formChildren as $childName => $formType) {
             if ($childName === $targetFieldName) {
-                $this->formBuilder->add($newChild, $type, $options);
+                $formBuilder->add($newChild, $type, $options);
             }
-            $this->formBuilder->add($formType);
+            $formBuilder->add($formType);
         }
     }
 
     /**
+     * @param FormBuilderInterface $formBuilder
+     *
      * @return array
      */
-    private function cleanAllChildren(): array
+    private function cleanAllChildren(FormBuilderInterface $formBuilder): array
     {
         $formTypes = [];
-        foreach ($this->formBuilder->all() as $formType) {
+        foreach ($formBuilder->all() as $formType) {
             $typeName = $formType->getName();
             // collect all the form child into local variable and remove them from
             $formTypes[$typeName] = $formType;
-            $this->formBuilder->remove($typeName);
+            $formBuilder->remove($typeName);
         }
 
         return $formTypes;
     }
 
     /**
+     * @param FormBuilderInterface $formBuilder
      * @param string $name
      */
-    private function assertFieldExists(string $name): void
+    private function assertFieldExists(FormBuilderInterface $formBuilder, string $name): void
     {
-        if ($this->formBuilder->has($name)) {
+        if ($formBuilder->has($name)) {
             return;
         }
 
@@ -109,7 +105,7 @@ class FormBuilderModifier
             sprintf(
                 'Form field "%s" does not exist in "%s" form',
                 $name,
-                $this->formBuilder->getName()
+                $formBuilder->getName()
             )
         );
     }
