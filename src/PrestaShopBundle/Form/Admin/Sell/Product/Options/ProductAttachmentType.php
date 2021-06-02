@@ -45,12 +45,13 @@ class ProductAttachmentType extends TranslatorAwareType
                 'allow_delete' => true,
                 'prototype_name' => '__ATTACHMENT_INDEX__',
             ])
-            ->add('new_attachment', AttachmentType::class, [
-                'label' => false,
-                'attr' => [
-                    'class' => 'd-none',
-                ],
-            ])
+    //@todo: commented out due to required fields constraints.
+//            ->add('new_attachment', AttachmentType::class, [
+//                'label' => false,
+//                'attr' => [
+//                    'class' => 'd-none',
+//                ],
+//            ])
             ->add('add_attachment_btn', IconButtonType::class, [
                 'label' => $this->trans('Attach a new file', 'Admin.Catalog.Feature'),
                 'icon' => 'add_circle',

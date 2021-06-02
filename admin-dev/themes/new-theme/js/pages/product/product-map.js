@@ -197,4 +197,11 @@ export default {
     moduleContents: '.module-contents .module-render-container',
     moduleContent: (moduleId) => `.module-contents .module-render-container.${moduleId}`,
   },
+  attachments: {
+    attachmentsContainer: '#js-attachments-container',
+    attachmentsCollection: '#js-attachments-container .js-attachments-collection',
+    collectionRow: {
+      attachmentIdInput: (rowIndex) => `product_options_attached_files_attachment_ids_${rowIndex}`,
+    }
+  },
 };
