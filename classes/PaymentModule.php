@@ -735,7 +735,7 @@ abstract class PaymentModuleCore extends Module
                 'order' => $order,
                 'customer' => $this->context->customer,
                 'currency' => $this->context->currency,
-                'orderStatus' => new OrderState($order->current_state)
+                'orderStatus' => new OrderState($order->current_state),
             ]);
             return true;
         } else {
