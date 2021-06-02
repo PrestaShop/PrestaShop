@@ -307,7 +307,7 @@ class ProductController extends FrameworkBundleAdminController
             ];
         }
 
-        return $this->json($attachmentsData);
+        return $this->json(['productAttachments' => $attachmentsData]);
     }
 
     /**
