@@ -32,6 +32,13 @@ import Router from '@components/router';
 
 const {$} = window;
 
+/* eslint-disable */
+interface SearchParams {
+  currency_id?: string;
+  search_phrase: string;
+}
+/* eslint-enable */
+
 /**
  * Product component Object for "Create order" page
  */
@@ -238,9 +245,8 @@ export default class ProductManager {
       this.activeSearchRequest.abort();
     }
 
-    const params = {
+    const params: SearchParams = {
       search_phrase: searchPhrase,
-      currency_id: null,
     };
 
     if (
@@ -322,7 +328,9 @@ export default class ProductManager {
    *
    * @private
    */
-  private selectCombination(combinationId: number | string): Record<string, any> {
+  private selectCombination(
+    combinationId: number | string,
+  ): Record<string, any> {
     const combination = this.selectedProduct?.combinations[combinationId];
 
     this.selectedCombinationId = combinationId;
