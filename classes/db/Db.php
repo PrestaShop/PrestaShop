@@ -694,7 +694,8 @@ abstract class DbCore
             $sql = $sql->build();
         }
 
-        if (false === $result = $this->getRow($sql, $use_cache)) {
+        $result = $this->getRow($sql, $use_cache);
+        if (false === $result) {
             return false;
         }
 
