@@ -33,6 +33,22 @@ const {$} = window;
  * manages all product cancel actions, that includes all refund operations
  */
 export default class OrderProductCancel {
+  router: Router;
+
+  cancelProductForm: JQuery;
+
+  orderId: string;
+
+  orderDelivered: boolean;
+
+  isTaxIncluded: boolean;
+
+  discountsAmount: number;
+
+  currencyFormatter: NumberFormatter;
+
+  useAmountInputs: boolean;
+
   constructor() {
     this.router = new Router();
     this.cancelProductForm = $(OrderViewPageMap.cancelProduct.form);
@@ -47,7 +63,7 @@ export default class OrderProductCancel {
     this.listenForInputs();
   }
 
-  showPartialRefund() {
+  showPartialRefund(): void {
     // Always start by hiding elements then show the others, since some elements are common
     this.hideCancelElements();
     $(OrderViewPageMap.cancelProduct.toggle.partialRefund).show();
@@ -61,7 +77,7 @@ export default class OrderProductCancel {
     );
   }
 
-  showStandardRefund() {
+  showStandardRefund(): void {
     // Always start by hiding elements then show the others, since some elements are common
     this.hideCancelElements();
     $(OrderViewPageMap.cancelProduct.toggle.standardRefund).show();
@@ -75,7 +91,7 @@ export default class OrderProductCancel {
     );
   }
 
-  showReturnProduct() {
+  showReturnProduct(): void {
     // Always start by hiding elements then show the others, since some elements are common
     this.hideCancelElements();
     $(OrderViewPageMap.cancelProduct.toggle.returnProduct).show();
@@ -89,19 +105,19 @@ export default class OrderProductCancel {
     );
   }
 
-  hideRefund() {
+  hideRefund(): void {
     this.hideCancelElements();
     $(OrderViewPageMap.cancelProduct.table.actions).show();
   }
 
-  hideCancelElements() {
+  hideCancelElements(): void {
     $(OrderViewPageMap.cancelProduct.toggle.standardRefund).hide();
     $(OrderViewPageMap.cancelProduct.toggle.partialRefund).hide();
     $(OrderViewPageMap.cancelProduct.toggle.returnProduct).hide();
     $(OrderViewPageMap.cancelProduct.table.actions).hide();
   }
 
-  initForm(actionName, formAction, formClass) {
+  initForm(actionName: string, formAction: string, formClass: string): void {
     this.updateVoucherRefund();
 
     this.cancelProductForm.prop('action', formAction);
@@ -115,12 +131,12 @@ export default class OrderProductCancel {
     $(OrderViewPageMap.cancelProduct.checkboxes.voucher).prop('checked', false);
   }
 
-  listenForInputs() {
+  listenForInputs(): void {
     $(document).on('change', OrderViewPageMap.cancelProduct.inputs.quantity, (event) => {
       const $productQuantityInput = $(event.target);
       const $parentCell = $productQuantityInput.parents(OrderViewPageMap.cancelProduct.table.cell);
       const $productAmount = $parentCell.find(OrderViewPageMap.cancelProduct.inputs.amount);
-      const productQuantity = parseInt($productQuantityInput.val(), 10);
+      const productQuantity = parseInt(<string>$productQuantityInput.val(), 10);
 
       if (productQuantity <= 0) {
         $productAmount.val(0);
@@ -134,7 +150,7 @@ export default class OrderProductCancel {
       const guessedAmount = productUnitPrice * productQuantity < amountRefundable
         ? productUnitPrice * productQuantity
         : amountRefundable;
-      const amountValue = parseFloat($productAmount.val());
+      const amountValue = parseFloat(<string>$productAmount.val());
 
       if (this.useAmountInputs) {
         this.updateAmountInput($productQuantityInput);
@@ -155,7 +171,7 @@ export default class OrderProductCancel {
       const $parentCell = $productCheckbox.parents(OrderViewPageMap.cancelProduct.table.cell);
       const productQuantityInput = $parentCell.find(OrderViewPageMap.cancelProduct.inputs.quantity);
       const refundableQuantity = parseInt(productQuantityInput.data('quantityRefundable'), 10);
-      const productQuantity = parseInt(productQuantityInput.val(), 10);
+      const productQuantity = parseInt(<string>productQuantityInput.val(), 10);
 
       if (!$productCheckbox.is(':checked')) {
         productQuantityInput.val(0);
@@ -166,10 +182,10 @@ export default class OrderProductCancel {
     });
   }
 
-  updateAmountInput($productQuantityInput) {
+  updateAmountInput($productQuantityInput: JQuery): void {
     const $parentCell = $productQuantityInput.parents(OrderViewPageMap.cancelProduct.table.cell);
     const $productAmount = $parentCell.find(OrderViewPageMap.cancelProduct.inputs.amount);
-    const productQuantity = parseInt($productQuantityInput.val(), 10);
+    const productQuantity = parseInt(<string>$productQuantityInput.val(), 10);
 
     if (productQuantity <= 0) {
       $productAmount.val(0);
@@ -183,19 +199,20 @@ export default class OrderProductCancel {
     const guessedAmount = productUnitPrice * productQuantity < amountRefundable
       ? productUnitPrice * productQuantity
       : amountRefundable;
-    const amountValue = parseFloat($productAmount.val());
+    const amountValue = parseFloat(<string>$productAmount.val());
 
     if ($productAmount.val() === '' || amountValue === 0 || amountValue > guessedAmount) {
       $productAmount.val(guessedAmount);
     }
   }
 
-  getRefundAmount() {
+  getRefundAmount(): number {
     let totalAmount = 0;
 
     if (this.useAmountInputs) {
       $(OrderViewPageMap.cancelProduct.inputs.amount).each((index, amount) => {
-        const floatValue = parseFloat(amount.value);
+        const input = <HTMLInputElement>amount;
+        const floatValue = parseFloat(input.value);
         totalAmount += !Number.isNaN(floatValue) ? floatValue : 0;
       });
     } else {
@@ -203,7 +220,7 @@ export default class OrderProductCancel {
         const $quantityInput = $(quantity);
         const priceFieldName = this.isTaxIncluded ? 'productPriceTaxIncl' : 'productPriceTaxExcl';
         const productUnitPrice = parseFloat($quantityInput.data(priceFieldName));
-        const productQuantity = parseInt($quantityInput.val(), 10);
+        const productQuantity = parseInt(<string>$quantityInput.val(), 10);
         totalAmount += productQuantity * productUnitPrice;
       });
     }
@@ -211,7 +228,7 @@ export default class OrderProductCancel {
     return totalAmount;
   }
 
-  updateVoucherRefund() {
+  updateVoucherRefund(): void {
     const refundAmount = this.getRefundAmount();
 
     this.updateVoucherRefundTypeLabel(
@@ -243,17 +260,20 @@ export default class OrderProductCancel {
     }
   }
 
-  updateVoucherRefundTypeLabel($input, refundAmount) {
+  updateVoucherRefundTypeLabel($input: JQuery, refundAmount: number): void {
     const defaultLabel = $input.data('defaultLabel');
     const $label = $input.parents('label');
     const formattedAmount = this.currencyFormatter.format(refundAmount);
+    const lastChild = $label?.get(0)?.lastChild;
 
     // Change the ending text part only to avoid removing the input (the EOL is on purpose for better display)
-    $label.get(0).lastChild.nodeValue = `
-    ${defaultLabel} ${formattedAmount}`;
+    if (lastChild) {
+      lastChild.nodeValue = `
+      ${defaultLabel} ${formattedAmount}`;
+    }
   }
 
-  showCancelProductForm() {
+  showCancelProductForm(): void {
     const cancelProductRoute = this.router.generate('admin_orders_cancellation', {orderId: this.orderId});
     this.initForm(
       $(OrderViewPageMap.cancelProduct.buttons.save).data('cancelLabel'),

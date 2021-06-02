@@ -26,9 +26,9 @@
 import createOrderMap from '@pages/order/create/create-order-map';
 import Router from '@components/router';
 import eventMap from '@pages/order/create/event-map';
-import { EventEmitter } from '@components/event-emitter';
+import {EventEmitter} from '@components/event-emitter';
 
-const { $ } = window;
+const {$} = window;
 
 /**
  * Responsible for customer information rendering
@@ -43,7 +43,7 @@ export default class CustomerRenderer {
   constructor() {
     this.$container = $(createOrderMap.customerSearchBlock);
     this.$customerSearchResultBlock = $(
-      createOrderMap.customerSearchResultsBlock
+      createOrderMap.customerSearchResultsBlock,
     );
     this.router = new Router();
   }
@@ -137,7 +137,7 @@ export default class CustomerRenderer {
   renderCarts(carts: Record<string, any>, currentCartId: string): void {
     const $cartsTable = $(createOrderMap.customerCartsTable);
     const $cartsTableRowTemplate = $(
-      $(createOrderMap.customerCartsTableRowTemplate).html()
+      $(createOrderMap.customerCartsTableRowTemplate).html(),
     );
 
     $cartsTable.find('tbody').empty();
@@ -165,7 +165,7 @@ export default class CustomerRenderer {
         this.router.generate('admin_carts_view', {
           cartId: cart.cartId,
           liteDisplaying: 1,
-        })
+        }),
       );
 
       $cartsTableRow
@@ -201,7 +201,7 @@ export default class CustomerRenderer {
   renderOrders(orders: Record<string, any>): void {
     const $ordersTable = $(createOrderMap.customerOrdersTable);
     const $rowTemplate = $(
-      $(createOrderMap.customerOrdersTableRowTemplate).html()
+      $(createOrderMap.customerOrdersTableRowTemplate).html(),
     );
 
     $ordersTable.find('tbody').empty();
@@ -233,7 +233,7 @@ export default class CustomerRenderer {
         this.router.generate('admin_orders_view', {
           orderId: order.orderId,
           liteDisplaying: 1,
-        })
+        }),
       );
 
       $template
@@ -296,7 +296,7 @@ export default class CustomerRenderer {
    */
   private renderEmptyList($table: JQuery): void {
     const $emptyTableRow = $(
-      $(createOrderMap.emptyListRowTemplate).html()
+      $(createOrderMap.emptyListRowTemplate).html(),
     ).clone();
     $table.find('tbody').append($emptyTableRow);
   }
@@ -310,7 +310,7 @@ export default class CustomerRenderer {
    */
   private renderLoading($table: JQuery): void {
     const $emptyTableRow = $(
-      $(createOrderMap.loadingListRowTemplate).html()
+      $(createOrderMap.loadingListRowTemplate).html(),
     ).clone();
     $table.find('tbody').append($emptyTableRow);
   }
@@ -335,7 +335,7 @@ export default class CustomerRenderer {
     this.hideNotFoundCustomers();
 
     const $customerSearchResultTemplate = $(
-      $(createOrderMap.customerSearchResultTemplate).html()
+      $(createOrderMap.customerSearchResultTemplate).html(),
     );
     const $template = $customerSearchResultTemplate.clone();
 
@@ -357,7 +357,7 @@ export default class CustomerRenderer {
       this.router.generate('admin_customers_view', {
         customerId: customer.id,
         liteDisplaying: 1,
-      })
+      }),
     );
 
     return this.$customerSearchResultBlock.append($template);

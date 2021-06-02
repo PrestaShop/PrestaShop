@@ -29,11 +29,13 @@ import OrderViewPageMap from '@pages/order/OrderViewPageMap';
 const {$} = window;
 
 export default class OrderDiscountsRefresher {
+  router: Router;
+
   constructor() {
     this.router = new Router();
   }
 
-  refresh(orderId) {
+  refresh(orderId: number): void {
     $.ajax(this.router.generate('admin_orders_get_discounts', {orderId}))
       .then((response) => {
         $(OrderViewPageMap.productDiscountList.list).replaceWith(response);

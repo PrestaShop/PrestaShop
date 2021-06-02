@@ -18,6 +18,8 @@ interface Window {
   // eslint-disable-next-line
   translate_javascripts: Record<string, any>;
   modalConfirmation: any;
+  // eslint-disable-next-line
+  ps_round: any;
 }
 
 interface TypeaheadDatasetConfig {
@@ -47,6 +49,8 @@ interface JQuery {
   select2: any;
   sortable: any;
   fancybox: any;
+  growl: any;
+  pstooltip: any;
 }
 /* eslint-disable */
 
@@ -59,6 +63,8 @@ interface JQueryStatic {
   select2: any;
   sortable: any;
   fancybox: any;
+  growl: any;
+  pstooltip: any;
 }
 
 interface TableDnD {

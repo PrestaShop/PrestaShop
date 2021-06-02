@@ -26,43 +26,17 @@ import OrderViewPageMap from './OrderViewPageMap';
 
 const {$} = window;
 
-/**
- * Manages adding/editing note for invoice documents.
- */
-export default class InvoiceNoteManager {
+export default class OrderShippingManager {
   constructor() {
-    this.setupListeners();
+    this.initOrderShippingUpdateEventHandler();
   }
 
-  setupListeners() {
-    this.initShowNoteFormEventHandler();
-    this.initCloseNoteFormEventHandler();
-    this.initEnterPaymentEventHandler();
-  }
-
-  initShowNoteFormEventHandler() {
-    $('.js-open-invoice-note-btn').on('click', (event) => {
-      event.preventDefault();
+  initOrderShippingUpdateEventHandler(): void {
+    $(OrderViewPageMap.mainDiv).on('click', OrderViewPageMap.showOrderShippingUpdateModalBtn, (event) => {
       const $btn = $(event.currentTarget);
-      const $noteRow = $btn.closest('tr').next();
 
-      $noteRow.removeClass('d-none');
-    });
-  }
-
-  initCloseNoteFormEventHandler() {
-    $('.js-cancel-invoice-note-btn').on('click', (event) => {
-      $(event.currentTarget).closest('tr').addClass('d-none');
-    });
-  }
-
-  initEnterPaymentEventHandler() {
-    $('.js-enter-payment-btn').on('click', (event) => {
-      const $btn = $(event.currentTarget);
-      const paymentAmount = $btn.data('payment-amount');
-
-      $(OrderViewPageMap.viewOrderPaymentsBlock).get(0).scrollIntoView({behavior: 'smooth'});
-      $(OrderViewPageMap.orderPaymentFormAmountInput).val(paymentAmount);
+      $(OrderViewPageMap.updateOrderShippingTrackingNumberInput).val($btn.data('order-tracking-number'));
+      $(OrderViewPageMap.updateOrderShippingCurrentOrderCarrierIdInput).val($btn.data('order-carrier-id'));
     });
   }
 }

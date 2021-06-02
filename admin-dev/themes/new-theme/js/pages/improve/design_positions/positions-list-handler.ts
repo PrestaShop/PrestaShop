@@ -72,7 +72,10 @@ class PositionsListHandler {
     this.handleList();
     this.handleSortable();
 
-    $('input[name="general[enable_tos]"]').on('change', () => this.handle());
+    $('input[name="general[enable_tos]"]').on('change', () => {
+      this.handleList();
+      this.handleSortable();
+    });
   }
 
   /**

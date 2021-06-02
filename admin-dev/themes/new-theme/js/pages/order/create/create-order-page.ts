@@ -25,6 +25,7 @@
 
 import Router from '@components/router';
 import {EventEmitter} from '@components/event-emitter';
+// @ts-ignore-next-line
 import _ from 'lodash';
 import createOrderMap from './create-order-map';
 import CustomerManager from './customer-manager';
@@ -170,17 +171,17 @@ export default class CreateOrderPage {
    * @private
    */
   private initListeners(): void {
-    this.$container.on('input', createOrderMap.customerSearchInput, (e) => this.initCustomerSearch(e),
+    this.$container.on('input', createOrderMap.customerSearchInput, (e: JQueryEventObject) => this.initCustomerSearch(e),
     );
-    this.$container.on('click', createOrderMap.chooseCustomerBtn, (e) => this.initCustomerSelect(e),
+    this.$container.on('click', createOrderMap.chooseCustomerBtn, (e: JQueryEventObject) => this.initCustomerSelect(e),
     );
-    this.$container.on('click', createOrderMap.useCartBtn, (e) => this.initCartSelect(e),
+    this.$container.on('click', createOrderMap.useCartBtn, (e: JQueryEventObject) => this.initCartSelect(e),
     );
-    this.$container.on('click', createOrderMap.useOrderBtn, (e) => this.initDuplicateOrderCart(e),
+    this.$container.on('click', createOrderMap.useOrderBtn, (e: JQueryEventObject) => this.initDuplicateOrderCart(e),
     );
-    this.$container.on('input', createOrderMap.productSearch, (e) => this.initProductSearch(e),
+    this.$container.on('input', createOrderMap.productSearch, (e: JQueryEventObject) => this.initProductSearch(e),
     );
-    this.$container.on('input', createOrderMap.cartRuleSearchInput, (e) => this.initCartRuleSearch(e),
+    this.$container.on('input', createOrderMap.cartRuleSearchInput, (e: JQueryEventObject) => this.initCartRuleSearch(e),
     );
     this.$container.on('blur', createOrderMap.cartRuleSearchInput, () => this.cartRuleManager.stopSearching(),
     );
@@ -243,11 +244,13 @@ export default class CreateOrderPage {
     ),
     );
 
-    this.$container.on('change', createOrderMap.freeShippingSwitch, () => this.cartEditor.updateDeliveryOptions(<number> this.cartId),
-    );
+    this.$container.on('change', createOrderMap.freeShippingSwitch, () => {
+      this.cartEditor.updateDeliveryOptions(<number> this.cartId);
+    });
 
-    this.$container.on('change', createOrderMap.recycledPackagingSwitch, () => this.cartEditor.updateDeliveryOptions(<number> this.cartId),
-    );
+    this.$container.on('change', createOrderMap.recycledPackagingSwitch, () => {
+      this.cartEditor.updateDeliveryOptions(<number> this.cartId);
+    });
 
     this.$container.on('change', createOrderMap.isAGiftSwitch, () => this.cartEditor.updateDeliveryOptions(<number> this.cartId),
     );
@@ -270,6 +273,7 @@ export default class CreateOrderPage {
     ),
     );
 
+    // eslint-disable-next-line
     this.$container.on('click', createOrderMap.sendProcessOrderEmailBtn, () => this.summaryManager.sendProcessOrderEmail(<number> this.cartId),
     );
 
@@ -316,7 +320,7 @@ export default class CreateOrderPage {
       ) {
         this.changeCartAddresses();
       }
-      this.customerManager.loadCustomerCarts(this.cartId);
+      this.customerManager.loadCustomerCarts(<string><unknown> this.cartId);
       this.customerManager.loadCustomerOrders();
     });
   }
@@ -445,7 +449,7 @@ export default class CreateOrderPage {
   private initCustomerSearch(event: JQueryEventObject) {
     clearTimeout(<number> this.timeoutId);
     this.timeoutId = setTimeout(
-      () => this.customerManager.search($(event.currentTarget).val()),
+      () => this.customerManager.search(<string>$(event.currentTarget).val()),
       300,
     );
   }
@@ -548,7 +552,7 @@ export default class CreateOrderPage {
     clearTimeout(<ReturnType<typeof setTimeout>> this.timeoutId);
 
     this.timeoutId = setTimeout(
-      () => this.productManager.search(searchPhrase),
+      () => this.productManager.search(<string>searchPhrase),
       300,
     );
   }
@@ -574,7 +578,7 @@ export default class CreateOrderPage {
       qtyToRemove: productQty,
     };
 
-    this.productManager.removeProductFromCart(this.cartId, product);
+    this.productManager.removeProductFromCart(<number> this.cartId, product);
   }
 
   /**
@@ -592,8 +596,8 @@ export default class CreateOrderPage {
       price: $(event.currentTarget).val(),
     };
     this.productManager.changeProductPrice(
-      this.cartId,
-      this.customerId,
+      <number> this.cartId,
+      <number> this.customerId,
       product,
     );
   }
@@ -620,7 +624,7 @@ export default class CreateOrderPage {
       && typeof product.attributeId !== 'undefined'
       && product.attributeId !== null
     ) {
-      this.productManager.changeProductQty(this.cartId, product);
+      this.productManager.changeProductQty(<number> this.cartId, product);
     } else {
       const inputsQty = <NodeListOf<HTMLInputElement>>(
         document.querySelectorAll(createOrderMap.listedProductQtyInput)
@@ -700,10 +704,8 @@ export default class CreateOrderPage {
    * Refresh addresses list
    *
    * @param {boolean} refreshCartAddresses optional
-   *
-   * @private
    */
-  private refreshAddressesList(refreshCartAddresses: boolean) {
+  refreshAddressesList(refreshCartAddresses: boolean): void {
     const cartId = $(createOrderMap.cartBlock).data('cartId');
     $.get(this.router.generate('admin_carts_info', {cartId}))
       .then((cartInfo) => {
@@ -716,6 +718,10 @@ export default class CreateOrderPage {
       .catch((e: Record<string, any>) => {
         window.showErrorMessage(e.responseJSON.message);
       });
+  }
+
+  search(string: string): void {
+    this.customerManager.search(string);
   }
 
   /**

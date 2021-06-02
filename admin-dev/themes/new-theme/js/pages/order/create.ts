@@ -25,13 +25,13 @@
 import CreateOrderPage from './create/create-order-page';
 
 const {$} = window;
-let orderPageManager = null;
+let orderPageManager: CreateOrderPage | null = null;
 
 /**
  * proxy to allow other scripts within the page to trigger the search
  * @param string
  */
-function searchCustomerByString(string) {
+function searchCustomerByString(string: string): void {
   if (orderPageManager !== null) {
     orderPageManager.search(string);
   } else {
@@ -42,7 +42,7 @@ function searchCustomerByString(string) {
 /**
  * proxy to allow other scripts within the page to refresh addresses list
  */
-function refreshAddressesList(refreshCartAddresses) {
+function refreshAddressesList(refreshCartAddresses: boolean): void {
   if (orderPageManager !== null) {
     orderPageManager.refreshAddressesList(refreshCartAddresses);
   } else {
@@ -53,7 +53,7 @@ function refreshAddressesList(refreshCartAddresses) {
 /**
  * proxy to allow other scripts within the Create Order page to refresh cart
  */
-function refreshCart() {
+function refreshCart(): void {
   if (orderPageManager === null) {
     console.log('Error: Could not refresh addresses list as orderPageManager is null');
     return;

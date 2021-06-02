@@ -31,14 +31,21 @@ const {$} = window;
  * All actions for order view page messages are registered in this class.
  */
 export default class OrderViewPageMessagesHandler {
+  $orderMessageChangeWarning: JQuery;
+
+  $messagesContainer: JQuery;
+
   constructor() {
     this.$orderMessageChangeWarning = $(OrderViewPageMap.orderMessageChangeWarning);
     this.$messagesContainer = $(OrderViewPageMap.orderMessagesContainer);
+  }
 
-    return {
-      listenForPredefinedMessageSelection: () => this.handlePredefinedMessageSelection(),
-      listenForFullMessagesOpen: () => this.onFullMessagesOpen(),
-    };
+  listenForPredefinedMessageSelection(): void {
+    this.handlePredefinedMessageSelection();
+  }
+
+  listenForFullMessagesOpen(): void {
+    this.onFullMessagesOpen();
   }
 
   /**
@@ -46,7 +53,7 @@ export default class OrderViewPageMessagesHandler {
    *
    * @private
    */
-  handlePredefinedMessageSelection() {
+  private handlePredefinedMessageSelection(): void {
     $(document).on('change', OrderViewPageMap.orderMessageNameSelect, (e) => {
       const $currentItem = $(e.currentTarget);
       const valueId = $currentItem.val();
@@ -57,7 +64,8 @@ export default class OrderViewPageMessagesHandler {
 
       const message = this.$messagesContainer.find(`div[data-id=${valueId}]`).text().trim();
       const $orderMessage = $(OrderViewPageMap.orderMessage);
-      const isSameMessage = $orderMessage.val().trim() === message;
+      const orderMessageValue = <string>$orderMessage.val();
+      const isSameMessage = orderMessageValue?.trim() === message;
 
       if (isSameMessage) {
         return;
@@ -77,7 +85,7 @@ export default class OrderViewPageMessagesHandler {
    *
    * @private
    */
-  onFullMessagesOpen() {
+  private onFullMessagesOpen(): void {
     $(document).on('click', OrderViewPageMap.openAllMessagesBtn, () => this.scrollToMsgListBottom());
   }
 
@@ -86,13 +94,13 @@ export default class OrderViewPageMessagesHandler {
    *
    * @private
    */
-  scrollToMsgListBottom() {
+  private scrollToMsgListBottom(): void {
     const $msgModal = $(OrderViewPageMap.allMessagesModal);
     const msgList = document.querySelector(OrderViewPageMap.allMessagesList);
 
     const classCheckInterval = window.setInterval(() => {
-      if ($msgModal.hasClass('show')) {
-        msgList.scrollTop = msgList.scrollHeight;
+      if ($msgModal.hasClass('show') && msgList) {
+        msgList.scrollTop = <number>msgList?.scrollHeight;
         clearInterval(classCheckInterval);
       }
     }, 10);

@@ -29,11 +29,13 @@ import OrderViewPageMap from '@pages/order/OrderViewPageMap';
 const {$} = window;
 
 export default class OrderInvoicesRefresher {
+  router: Router;
+
   constructor() {
     this.router = new Router();
   }
 
-  refresh(orderId) {
+  refresh(orderId: number): void {
     $.getJSON(this.router.generate('admin_orders_get_invoices', {orderId}))
       .then((response) => {
         if (!response || !response.invoices || Object.keys(response.invoices).length <= 0) {
@@ -60,7 +62,11 @@ export default class OrderInvoicesRefresher {
           $addDiscountInvoiceSelect.append(`<option value="${invoiceId}">${invoiceName}</option>`);
         });
 
-        document.querySelector(OrderViewPageMap.productAddInvoiceSelect).selectedIndex = 0;
+        const productAddSelect = <HTMLSelectElement>document.querySelector(OrderViewPageMap.productAddInvoiceSelect);
+
+        if (productAddSelect) {
+          productAddSelect.selectedIndex = 0;
+        }
       });
   }
 }

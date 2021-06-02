@@ -79,7 +79,7 @@ export default class CurrencyForm {
     this.$currencyForm = $(this.map.currencyForm);
     this.$currencyFormFooter = $(this.map.currencyFormFooter);
     this.apiReferenceUrl = this.$currencyForm.data('reference-url');
-    this.referenceCurrencyResource = Vue.resource(this.apiReferenceUrl);
+    this.referenceCurrencyResource = (Vue as any).resource(this.apiReferenceUrl);
     this.originalLanguages = this.$currencyForm.data('languages');
     this.translations = this.$currencyForm.data('translations');
     this.$currencySelector = $(this.map.currencySelector);
@@ -177,7 +177,7 @@ export default class CurrencyForm {
     if (selectedISOCode !== '') {
       this.$isUnofficialCheckbox.prop('checked', false);
       this.$isoCodeInput.prop('readonly', true);
-      this.resetCurrencyData(selectedISOCode);
+      this.resetCurrencyData(<string>selectedISOCode);
     } else {
       this.$isUnofficialCheckbox.prop('checked', true);
       this.$isoCodeInput.prop('readonly', false);
@@ -202,7 +202,7 @@ export default class CurrencyForm {
   }
 
   async onResetDefaultSettingsClick(): Promise<void> {
-    await this.resetCurrencyData(this.$isoCodeInput.val());
+    await this.resetCurrencyData(<string> this.$isoCodeInput.val());
   }
 
   showResetDefaultSettingsConfirmModal(): void {

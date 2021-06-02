@@ -29,11 +29,13 @@ import OrderViewPageMap from '@pages/order/OrderViewPageMap';
 const {$} = window;
 
 export default class OrderPricesRefresher {
+  router: Router;
+
   constructor() {
     this.router = new Router();
   }
 
-  refresh(orderId) {
+  refresh(orderId: number): void {
     $.getJSON(this.router.generate('admin_orders_get_prices', {orderId})).then((response) => {
       $(OrderViewPageMap.orderTotal).text(response.orderTotalFormatted);
       $(OrderViewPageMap.orderDiscountsTotal).text(`-${response.discountsAmountFormatted}`);
@@ -45,9 +47,9 @@ export default class OrderPricesRefresher {
     });
   }
 
-  refreshProductPrices(orderId) {
+  refreshProductPrices(orderId: number): void {
     $.getJSON(this.router.generate('admin_orders_product_prices', {orderId})).then((productPricesList) => {
-      productPricesList.forEach((productPrices) => {
+      productPricesList.forEach((productPrices: Record<string, any>) => {
         const orderProductTrId = OrderViewPageMap.productsTableRow(productPrices.orderDetailId);
         let $quantity = $(productPrices.quantity);
 
@@ -70,7 +72,13 @@ export default class OrderPricesRefresher {
     });
   }
 
-  checkOtherProductPricesMatch(givenPrice, productId, combinationId, invoiceId, orderDetailId) {
+  checkOtherProductPricesMatch(
+    givenPrice: number,
+    productId: number,
+    combinationId: number,
+    invoiceId: number,
+    orderDetailId?: number,
+  ): void | boolean {
     const productRows = document.querySelectorAll('tr.cellProduct');
     // We convert the expected values into int/float to avoid a type mismatch that would be wrongly interpreted
     const expectedProductId = Number(productId);

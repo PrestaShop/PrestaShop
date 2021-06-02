@@ -171,8 +171,8 @@ class SpecificPriceFormHandler {
     $('#specific_price_form .js-save').on('click', () => this.submitCreatePriceForm(),
     );
 
-    $('#js-open-create-specific-price-form').on('click', () => this.loadAndFillOptionsForSelectCombinationInput(usePrefixForCreate),
-    );
+    // eslint-disable-next-line
+    $('#js-open-create-specific-price-form').on('click', () => this.loadAndFillOptionsForSelectCombinationInput(usePrefixForCreate));
 
     $(`${selectorPrefix}leave_bprice`).on('click', () => this.enableSpecificPriceFieldIfEligible(usePrefixForCreate),
     );

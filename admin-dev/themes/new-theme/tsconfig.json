@@ -18,6 +18,10 @@
       "@node_modules/*": ["node_modules/*"],
       "@vue/*": ["js/vue/*"],
       "@PSTypes/*": ["js/types/*"]
-    }
+    },
+    "typeRoots": [
+      "js/types",
+      "node_modules/@types"
+    ]
   }
 }

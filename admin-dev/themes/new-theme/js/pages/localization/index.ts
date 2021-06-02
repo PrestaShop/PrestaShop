@@ -23,8 +23,6 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
 
-const {$} = window;
-
 $(() => {
   // show warning message when currency is changed
   $('#form_configuration_default_currency').on('change', function () {

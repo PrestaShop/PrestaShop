@@ -32,6 +32,26 @@ const {$} = window;
  * Responsible for summary block rendering
  */
 export default class SummaryRenderer {
+  $totalProducts: JQuery;
+
+  $totalDiscount: JQuery;
+
+  $totalShipping: JQuery;
+
+  $summaryTotalShipping: JQuery;
+
+  $totalTaxes: JQuery;
+
+  $totalWithoutTax: JQuery;
+
+  $totalWithTax: JQuery;
+
+  $placeOrderCartIdField: JQuery;
+
+  $orderMessageField: JQuery;
+
+  $processOrderLink: JQuery;
+
   constructor() {
     this.$totalProducts = $(createOrderMap.summaryTotalProducts);
     this.$totalDiscount = $(createOrderMap.summaryTotalDiscount);
@@ -50,7 +70,7 @@ export default class SummaryRenderer {
    *
    * @param {Object} cartInfo
    */
-  render(cartInfo) {
+  render(cartInfo: Record<string, any>): void {
     this.cleanSummary();
     const noProducts = cartInfo.products.length === 0;
     const noShippingOptions = cartInfo.shipping === null;
@@ -81,7 +101,7 @@ export default class SummaryRenderer {
    *
    * @param message
    */
-  renderSuccessMessage(message) {
+  renderSuccessMessage(message: string): void {
     $(createOrderMap.summarySuccessAlertText).text(message);
     this.showSummarySuccessAlertBlock();
   }
@@ -91,7 +111,7 @@ export default class SummaryRenderer {
    *
    * @param message
    */
-  renderErrorMessage(message) {
+  renderErrorMessage(message: string): void {
     $(createOrderMap.summaryErrorAlertText).text(message);
     this.showSummaryErrorAlertBlock();
   }
@@ -99,7 +119,7 @@ export default class SummaryRenderer {
   /**
    * Cleans content of success/error summary alerts and hides them
    */
-  cleanAlerts() {
+  cleanAlerts(): void {
     $(createOrderMap.summarySuccessAlertText).text('');
     $(createOrderMap.summaryErrorAlertText).text('');
     this.hideSummarySuccessAlertBlock();
@@ -111,7 +131,7 @@ export default class SummaryRenderer {
    *
    * @private
    */
-  showSummaryBlock() {
+  private showSummaryBlock(): void {
     $(createOrderMap.summaryBlock).removeClass('d-none');
   }
 
@@ -120,7 +140,7 @@ export default class SummaryRenderer {
    *
    * @private
    */
-  hideSummaryBlock() {
+  private hideSummaryBlock(): void {
     $(createOrderMap.summaryBlock).addClass('d-none');
   }
 
@@ -129,7 +149,7 @@ export default class SummaryRenderer {
    *
    * @private
    */
-  showSummaryErrorAlertBlock() {
+  private showSummaryErrorAlertBlock(): void {
     $(createOrderMap.summaryErrorAlertBlock).removeClass('d-none');
   }
 
@@ -138,7 +158,7 @@ export default class SummaryRenderer {
    *
    * @private
    */
-  hideSummaryErrorAlertBlock() {
+  private hideSummaryErrorAlertBlock(): void {
     $(createOrderMap.summaryErrorAlertBlock).addClass('d-none');
   }
 
@@ -147,7 +167,7 @@ export default class SummaryRenderer {
    *
    * @private
    */
-  showSummarySuccessAlertBlock() {
+  private showSummarySuccessAlertBlock(): void {
     $(createOrderMap.summarySuccessAlertBlock).removeClass('d-none');
   }
 
@@ -156,14 +176,14 @@ export default class SummaryRenderer {
    *
    * @private
    */
-  hideSummarySuccessAlertBlock() {
+  private hideSummarySuccessAlertBlock(): void {
     $(createOrderMap.summarySuccessAlertBlock).addClass('d-none');
   }
 
   /**
    * Empties cart summary fields
    */
-  cleanSummary() {
+  cleanSummary(): void {
     this.$totalProducts.empty();
     this.$totalDiscount.empty();
     this.$totalShipping.empty();

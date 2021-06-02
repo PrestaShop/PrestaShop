@@ -54,7 +54,7 @@ $(() => {
   orderViewPage.listenForCancelProduct();
 
   orderAddAutocomplete.listenForSearch();
-  orderAddAutocomplete.onItemClickedCallback = (product) => orderAdd.setProduct(product);
+  orderAddAutocomplete.onItemClickedCallback = (product: Record<string, any> | undefined): void => orderAdd.setProduct(product);
 
   handlePaymentDetailsToggle();
   handlePrivateNoteChange();
@@ -156,17 +156,17 @@ $(() => {
     const $valueFormGroup = $valueInput.closest('.form-group');
 
     $modal.on('shown.bs.modal', () => {
-      $(OrderViewPageMap.addCartRuleSubmit).attr('disabled', true);
+      $(OrderViewPageMap.addCartRuleSubmit).attr('disabled', 'true');
     });
 
     $form.find(OrderViewPageMap.addCartRuleNameInput).on('keyup', (event) => {
-      const cartRuleName = $(event.currentTarget).val();
-      $(OrderViewPageMap.addCartRuleSubmit).attr('disabled', cartRuleName.trim().length === 0);
+      const cartRuleName = <string>$(event.currentTarget).val();
+      $(OrderViewPageMap.addCartRuleSubmit).attr('disabled', cartRuleName.trim().length === 0 ? 'true' : 'false');
     });
 
     $form.find(OrderViewPageMap.addCartRuleApplyOnAllInvoicesCheckbox).on('change', (event) => {
       const isChecked = $(event.currentTarget).is(':checked');
-      $invoiceSelect.attr('disabled', isChecked);
+      $invoiceSelect.attr('disabled', <string><unknown>isChecked);
     });
 
     $form.find(OrderViewPageMap.addCartRuleTypeSelect).on('change', (event) => {
@@ -186,10 +186,10 @@ $(() => {
 
       if (selectedCartRuleType === DISCOUNT_TYPE_FREE_SHIPPING) {
         $valueFormGroup.addClass('d-none');
-        $valueInput.attr('disabled', true);
+        $valueInput.attr('disabled', 'true');
       } else {
         $valueFormGroup.removeClass('d-none');
-        $valueInput.attr('disabled', false);
+        $valueInput.attr('disabled', 'false');
       }
     });
   }
@@ -206,7 +206,7 @@ $(() => {
       $wrapper.css('background-color', $option.data('background-color'));
       $wrapper.toggleClass('is-bright', $option.data('is-bright') !== undefined);
 
-      $btn.prop('disabled', parseInt(selectedOrderStatusId, 10) === $btn.data('orderStatusId'));
+      $btn.prop('disabled', parseInt(<string>selectedOrderStatusId, 10) === $btn.data('orderStatusId'));
     });
   }
 

@@ -24,23 +24,45 @@
  */
 
 import Router from '@components/router';
-import OrderViewPageMap from '@pages/order/OrderViewPageMap';
-import InvoiceNoteManager from '../invoice-note-manager';
+import {EventEmitter} from '@components/event-emitter';
+import OrderViewEventMap from '@pages/order/view/order-view-event-map';
 
 const {$} = window;
 
-export default class OrderDocumentsRefresher {
+export default class OrderProductManager {
+  router: Router;
+
   constructor() {
     this.router = new Router();
-    this.invoiceNoteManager = new InvoiceNoteManager();
   }
 
-  refresh(orderId) {
-    $.getJSON(this.router.generate('admin_orders_get_documents', {orderId}))
-      .then((response) => {
-        $(OrderViewPageMap.orderDocumentsTabCount).text(response.total);
-        $(OrderViewPageMap.orderDocumentsTabBody).html(response.html);
-        this.invoiceNoteManager.setupListeners();
+  handleDeleteProductEvent(event: JQueryEventObject): void {
+    event.preventDefault();
+
+    const $btn = $(event.currentTarget);
+    const confirmed = window.confirm($btn.data('deleteMessage'));
+
+    if (!confirmed) {
+      return;
+    }
+
+    $btn.pstooltip('dispose');
+    $btn.prop('disabled', true);
+    this.deleteProduct($btn.data('orderId'), $btn.data('orderDetailId'));
+  }
+
+  deleteProduct(orderId: number, orderDetailId: number): void {
+    $.ajax(this.router.generate('admin_orders_delete_product', {orderId, orderDetailId}), {
+      method: 'POST',
+    }).then(() => {
+      EventEmitter.emit(OrderViewEventMap.productDeletedFromOrder, {
+        oldOrderDetailId: orderDetailId,
+        orderId,
       });
+    }, (response: Record<string, any>) => {
+      if (response.message) {
+        $.growl.error({message: response.message});
+      }
+    });
   }
 }

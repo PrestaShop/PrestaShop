@@ -26,4 +26,10 @@
 // jQuery is not available in this page
 // so we use plain JS to to listen on button click
 // which then goes back in browser history
-(() => document.querySelector('.js-go-back-btn').addEventListener('click', () => window.history.back()))();
+(() => {
+  const backBtn = document.querySelector('.js-go-back-btn');
+
+  if (backBtn) {
+    backBtn.addEventListener('click', () => window.history.back());
+  }
+})();

@@ -61,7 +61,7 @@ export default class ExchangeRatesUpdateScheduler {
         if (!response.status) {
           window.showErrorMessage(response.message);
           this.changeTextByCurrentSwitchValue(
-            <number>$liveExchangeRatesSwitch.val(),
+            <string>$liveExchangeRatesSwitch.val(),
           );
 
           return;
@@ -69,20 +69,20 @@ export default class ExchangeRatesUpdateScheduler {
 
         window.showSuccessMessage(response.message);
         this.changeTextByCurrentSwitchValue(
-          <number>$liveExchangeRatesSwitch.val(),
+          <string>$liveExchangeRatesSwitch.val(),
         );
       })
       .fail((response: AjaxResponse) => {
         if (typeof response.responseJSON !== 'undefined') {
           window.showErrorMessage(response.responseJSON.message);
           this.changeTextByCurrentSwitchValue(
-            <number>$liveExchangeRatesSwitch.val(),
+            <string>$liveExchangeRatesSwitch.val(),
           );
         }
       });
   }
 
-  changeTextByCurrentSwitchValue(switchValue: number): void {
+  changeTextByCurrentSwitchValue(switchValue: string): void {
     const valueParsed = parseInt(switchValue, 10);
     $('.js-exchange-rate-text-when-disabled').toggleClass(
       'd-none',

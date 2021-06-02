@@ -25,6 +25,28 @@
 import LocalizationException from '@app/cldr/exception/localization';
 
 class NumberSymbol {
+  decimal: string;
+
+  group: string;
+
+  list: string;
+
+  percentSign: string;
+
+  minusSign: string;
+
+  plusSign: string;
+
+  exponential: string;
+
+  superscriptingExponent: string;
+
+  perMille: string;
+
+  infinity: string;
+
+  nan: string;
+
   /**
    * NumberSymbolList constructor.
    *
@@ -43,17 +65,17 @@ class NumberSymbol {
    * @throws LocalizationException
    */
   constructor(
-    decimal,
-    group,
-    list,
-    percentSign,
-    minusSign,
-    plusSign,
-    exponential,
-    superscriptingExponent,
-    perMille,
-    infinity,
-    nan,
+    decimal: string,
+    group: string,
+    list: string,
+    percentSign: string,
+    minusSign: string,
+    plusSign: string,
+    exponential: string,
+    superscriptingExponent: string,
+    perMille: string,
+    infinity: string,
+    nan: string,
   ) {
     this.decimal = decimal;
     this.group = group;
@@ -75,7 +97,7 @@ class NumberSymbol {
    *
    * @return string
    */
-  getDecimal() {
+  getDecimal(): string {
     return this.decimal;
   }
 
@@ -84,7 +106,7 @@ class NumberSymbol {
    *
    * @return string
    */
-  getGroup() {
+  getGroup(): string {
     return this.group;
   }
 
@@ -93,7 +115,7 @@ class NumberSymbol {
    *
    * @return string
    */
-  getList() {
+  getList(): string {
     return this.list;
   }
 
@@ -102,7 +124,7 @@ class NumberSymbol {
    *
    * @return string
    */
-  getPercentSign() {
+  getPercentSign(): string {
     return this.percentSign;
   }
 
@@ -111,7 +133,7 @@ class NumberSymbol {
    *
    * @return string
    */
-  getMinusSign() {
+  getMinusSign(): string {
     return this.minusSign;
   }
 
@@ -120,7 +142,7 @@ class NumberSymbol {
    *
    * @return string
    */
-  getPlusSign() {
+  getPlusSign(): string {
     return this.plusSign;
   }
 
@@ -129,7 +151,7 @@ class NumberSymbol {
    *
    * @return string
    */
-  getExponential() {
+  getExponential(): string {
     return this.exponential;
   }
 
@@ -138,7 +160,7 @@ class NumberSymbol {
    *
    * @return string
    */
-  getSuperscriptingExponent() {
+  getSuperscriptingExponent(): string {
     return this.superscriptingExponent;
   }
 
@@ -149,7 +171,7 @@ class NumberSymbol {
    *
    * @return string
    */
-  getPerMille() {
+  getPerMille(): string {
     return this.perMille;
   }
 
@@ -160,7 +182,7 @@ class NumberSymbol {
    *
    * @return string
    */
-  getInfinity() {
+  getInfinity(): string {
     return this.infinity;
   }
 
@@ -169,7 +191,7 @@ class NumberSymbol {
    *
    * @return string
    */
-  getNan() {
+  getNan(): string {
     return this.nan;
   }
 
@@ -178,7 +200,7 @@ class NumberSymbol {
    *
    * @throws LocalizationException
    */
-  validateData() {
+  validateData(): void {
     if (!this.decimal || typeof this.decimal !== 'string') {
       throw new LocalizationException('Invalid decimal');
     }

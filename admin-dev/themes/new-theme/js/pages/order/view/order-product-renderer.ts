@@ -30,11 +30,13 @@ import Router from '@components/router';
 const {$} = window;
 
 export default class OrderProductRenderer {
+  router: Router;
+
   constructor() {
     this.router = new Router();
   }
 
-  addOrUpdateProductToList($productRow, newRow) {
+  addOrUpdateProductToList($productRow: JQuery, newRow: HTMLElement): void {
     if ($productRow.length > 0) {
       $productRow.html($(newRow).html());
     } else {
@@ -46,21 +48,21 @@ export default class OrderProductRenderer {
     }
   }
 
-  updateNumProducts(numProducts) {
-    $(OrderViewPageMap.productsCount).html(numProducts);
+  updateNumProducts(numProducts: number): void {
+    $(OrderViewPageMap.productsCount).html(<string><unknown>numProducts);
   }
 
   editProductFromList(
-    orderDetailId,
-    quantity,
-    priceTaxIncl,
-    priceTaxExcl,
-    taxRate,
-    location,
-    availableQuantity,
-    availableOutOfStock,
-    orderInvoiceId,
-  ) {
+    orderDetailId: number,
+    quantity: number,
+    priceTaxIncl: boolean,
+    priceTaxExcl: boolean,
+    taxRate: number,
+    location: number,
+    availableQuantity: number,
+    availableOutOfStock: boolean,
+    orderInvoiceId: number,
+  ): void {
     const $orderEdit = new OrderProductEdit(orderDetailId);
     $orderEdit.displayProduct({
       price_tax_excl: priceTaxExcl,
@@ -76,7 +78,7 @@ export default class OrderProductRenderer {
     $(OrderViewPageMap.productAddRow).addClass('d-none');
   }
 
-  moveProductsPanelToModificationPosition(scrollTarget = 'body') {
+  moveProductsPanelToModificationPosition(scrollTarget = 'body'): void {
     $(OrderViewPageMap.productActionBtn).addClass('d-none');
     $(
       `${OrderViewPageMap.productAddActionBtn}, ${OrderViewPageMap.productAddRow}`,
@@ -84,7 +86,7 @@ export default class OrderProductRenderer {
     this.moveProductPanelToTop(scrollTarget);
   }
 
-  moveProductsPanelToRefundPosition() {
+  moveProductsPanelToRefundPosition(): void {
     this.resetAllEditRows();
     $(
       /* eslint-disable-next-line max-len */
@@ -93,7 +95,7 @@ export default class OrderProductRenderer {
     this.moveProductPanelToTop();
   }
 
-  moveProductPanelToTop(scrollTarget = 'body') {
+  moveProductPanelToTop(scrollTarget = 'body'): void {
     const $modificationPosition = $(
       OrderViewPageMap.productModificationPosition,
     );
@@ -117,11 +119,16 @@ export default class OrderProductRenderer {
     $rows.removeClass('d-none');
     $(OrderViewPageMap.productsPagination).addClass('d-none');
 
-    const scrollValue = $(scrollTarget).offset().top - $('.header-toolbar').height() - 100;
-    $('html,body').animate({scrollTop: scrollValue}, 'slow');
+    const target = $(scrollTarget).offset();
+    const headerBarHeight = $('.header-toolbar').height();
+
+    if (target && headerBarHeight) {
+      const scrollValue = target.top - headerBarHeight - 100;
+      $('html,body').animate({scrollTop: scrollValue}, 'slow');
+    }
   }
 
-  moveProductPanelToOriginalPosition() {
+  moveProductPanelToOriginalPosition(): void {
     $(OrderViewPageMap.productAddNewInvoiceInfo).addClass('d-none');
     $(OrderViewPageMap.productModificationPosition)
       .closest('.row')
@@ -141,7 +148,7 @@ export default class OrderProductRenderer {
     this.paginate(1);
   }
 
-  resetAddRow() {
+  resetAddRow(): void {
     $(OrderViewPageMap.productAddIdInput).val('');
     $(OrderViewPageMap.productSearchInput).val('');
     $(OrderViewPageMap.productAddCombinationsBlock).addClass('d-none');
@@ -156,13 +163,13 @@ export default class OrderProductRenderer {
     $(OrderViewPageMap.productAddActionBtn).prop('disabled', true);
   }
 
-  resetAllEditRows() {
+  resetAllEditRows(): void {
     $(OrderViewPageMap.productEditButtons).each((key, editButton) => {
       this.resetEditRow($(editButton).data('orderDetailId'));
     });
   }
 
-  resetEditRow(orderProductId) {
+  resetEditRow(orderProductId: string): void {
     const $productRow = $(OrderViewPageMap.productsTableRow(orderProductId));
     const $productEditRow = $(
       OrderViewPageMap.productsTableRowEdited(orderProductId),
@@ -171,7 +178,7 @@ export default class OrderProductRenderer {
     $productRow.removeClass('d-none');
   }
 
-  paginate(originalNumPage) {
+  paginate(originalNumPage: number): void {
     const $rows = $(OrderViewPageMap.productsTable).find(
       'tr[id^="orderProduct_"]',
     );
@@ -216,7 +223,7 @@ export default class OrderProductRenderer {
     this.toggleColumn(OrderViewPageMap.productsCellRefundedDisplayed);
   }
 
-  paginateUpdateControls(numPage) {
+  paginateUpdateControls(numPage: number): void {
     // Why 3 ? Next & Prev & Template
     const totalPage = $(OrderViewPageMap.productsTablePagination).find('li.page-item').length
       - 3;
@@ -237,12 +244,12 @@ export default class OrderProductRenderer {
     this.togglePaginationControls();
   }
 
-  updateNumPerPage(numPerPage) {
+  updateNumPerPage(numPerPage: number): void {
     $(OrderViewPageMap.productsTablePagination).data('numPerPage', numPerPage);
     this.updatePaginationControls();
   }
 
-  togglePaginationControls() {
+  togglePaginationControls(): void {
     // Why 3 ? Next & Prev & Template
     const totalPage = $(OrderViewPageMap.productsTablePagination).find('li.page-item').length
       - 3;
@@ -252,25 +259,25 @@ export default class OrderProductRenderer {
     );
   }
 
-  toggleProductAddNewInvoiceInfo() {
+  toggleProductAddNewInvoiceInfo(): void {
     $(OrderViewPageMap.productAddNewInvoiceInfo).toggleClass(
       'd-none',
-      parseInt($(OrderViewPageMap.productAddInvoiceSelect).val(), 10) === 0,
+      parseInt(<string>$(OrderViewPageMap.productAddInvoiceSelect).val(), 10) === 0,
     );
   }
 
-  toggleColumn(target, forceDisplay = null) {
-    let isColumnDisplayed = false;
+  toggleColumn(target: string, forceDisplay = null): void {
+    let isColumnDisplayed: boolean | null = false;
 
     if (forceDisplay === null) {
       $(target)
         .filter('td')
+        // eslint-disable-next-line
         .each(function () {
           if ($(this).html() !== '') {
             isColumnDisplayed = true;
             return false;
           }
-          return true;
         });
     } else {
       isColumnDisplayed = forceDisplay;
@@ -278,7 +285,7 @@ export default class OrderProductRenderer {
     $(target).toggleClass('d-none', !isColumnDisplayed);
   }
 
-  updatePaginationControls() {
+  updatePaginationControls(): void {
     const $tablePagination = $(OrderViewPageMap.productsTablePagination);
     const numPerPage = $tablePagination.data('numPerPage');
     const $rows = $(OrderViewPageMap.productsTable).find('tr[id^="orderProduct_"]');
@@ -296,7 +303,7 @@ export default class OrderProductRenderer {
     for (let i = 1; i <= numPages; i += 1) {
       const $linkPagination = $linkPaginationTemplate.clone();
       $linkPagination.find('span').attr('data-page', i);
-      $linkPagination.find('span').html(i);
+      $linkPagination.find('span').html(<string><unknown>i);
       $linkPaginationTemplate.before($linkPagination.removeClass('d-none'));
     }
 

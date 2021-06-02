@@ -28,6 +28,8 @@ import createOrderMap from './create-order-map';
 const {$} = window;
 
 export default class ProductRenderer {
+  $productsTable: JQuery;
+
   constructor() {
     this.$productsTable = $(createOrderMap.productsTable);
   }
@@ -37,7 +39,7 @@ export default class ProductRenderer {
    *
    * @param products
    */
-  renderList(products) {
+  renderList(products: Record<string, any>): void {
     this.cleanProductsList();
 
     if (products.length === 0) {
@@ -100,11 +102,11 @@ export default class ProductRenderer {
    *
    * @private
    */
-  renderListedProductCustomization(customization, $productRowTemplate) {
+  private renderListedProductCustomization(customization: Record<string, any>, $productRowTemplate: JQuery): void {
     const $customizedTextTemplate = $($(createOrderMap.listedProductCustomizedTextTemplate).html());
     const $customizedFileTemplate = $($(createOrderMap.listedProductCustomizedFileTemplate).html());
 
-    Object.values(customization.customizationFieldsData).forEach((customizedData) => {
+    Object.values(customization.customizationFieldsData).forEach((customizedData: any) => {
       let $customizationTemplate = $customizedTextTemplate.clone();
 
       if (customizedData.type === createOrderMap.productCustomizationFieldTypeFile) {
@@ -122,7 +124,7 @@ export default class ProductRenderer {
     });
   }
 
-  renderSearching() {
+  renderSearching(): void {
     this.reset();
     this.toggleSearchingNotice(true);
   }
@@ -132,7 +134,7 @@ export default class ProductRenderer {
    *
    * @param foundProducts
    */
-  renderSearchResults(foundProducts) {
+  renderSearchResults(foundProducts: Record<string, any>): void {
     this.cleanSearchResults();
     this.toggleSearchingNotice(false);
     if (foundProducts.length === 0) {
@@ -149,7 +151,7 @@ export default class ProductRenderer {
     this.showResultBlock();
   }
 
-  reset() {
+  reset(): void {
     this.cleanSearchResults();
     this.hideTaxWarning();
     this.hideResultBlock();
@@ -161,7 +163,7 @@ export default class ProductRenderer {
    *
    * @param {object} product
    */
-  renderProductMetadata(product) {
+  renderProductMetadata(product: Record<string, any>): void {
     this.renderStock(
       $(createOrderMap.inStockCounter),
       $(createOrderMap.quantityInput),
@@ -180,7 +182,7 @@ export default class ProductRenderer {
    * @param {number} stock Available stock for the product
    * @param {boolean} infiniteMax If the product order has no limits
    */
-  renderStock(inputStockCounter, inputQuantity, stock, infiniteMax) {
+  renderStock(inputStockCounter: JQuery, inputQuantity: JQuery, stock: number, infiniteMax: number): void {
     inputStockCounter.text(stock);
 
     if (!infiniteMax) {
@@ -193,9 +195,8 @@ export default class ProductRenderer {
   /**
    * @param product
    *
-   * @private
    */
-  cloneProductTemplate(product) {
+  cloneProductTemplate(product: Record<string, any>): JQuery {
     return product.gift === true
       ? $($(createOrderMap.productsTableGiftRowTemplate).html()).clone()
       : $($(createOrderMap.productsTableRowTemplate).html()).clone();
@@ -208,7 +209,7 @@ export default class ProductRenderer {
    *
    * @private
    */
-  renderFoundProducts(foundProducts) {
+  private renderFoundProducts(foundProducts: Record<string, any>): void {
     Object.values(foundProducts).forEach((product) => {
       let {name} = product;
 
@@ -225,7 +226,7 @@ export default class ProductRenderer {
    *
    * @private
    */
-  cleanSearchResults() {
+  private cleanSearchResults(): void {
     $(createOrderMap.productSelect).empty();
     $(createOrderMap.combinationsSelect).empty();
     $(createOrderMap.quantityInput).empty();
@@ -238,7 +239,7 @@ export default class ProductRenderer {
    *
    * @private
    */
-  renderCombinations(combinations) {
+  private renderCombinations(combinations: Record<string, any>): void {
     this.cleanCombinations();
 
     if (combinations.length === 0) {
@@ -266,7 +267,7 @@ export default class ProductRenderer {
    *
    * @private
    */
-  renderCustomizations(customizationFields) {
+  private renderCustomizations(customizationFields: Record<string, any>): void {
     // represents customization field type "file".
     const fieldTypeFile = createOrderMap.productCustomizationFieldTypeFile;
     // represents customization field type "text".
@@ -292,10 +293,14 @@ export default class ProductRenderer {
       const $template = templateTypeMap[customField.type].clone();
 
       if (customField.type === fieldTypeFile) {
-        $template.on('change', (e) => {
-          const fileName = e.target.files[0].name;
+        $template.on('change', (e: JQueryEventObject) => {
+          const target = <HTMLInputElement>e.target;
 
-          $(e.target).next('.custom-file-label').html(fileName);
+          if (target.files) {
+            const fileName = target.files[0].name;
+
+            $(target).next('.custom-file-label').html(fileName);
+          }
         });
       }
 
@@ -323,7 +328,7 @@ export default class ProductRenderer {
    *
    * @param message
    */
-  renderCartBlockErrorAlert(message) {
+  renderCartBlockErrorAlert(message: string): void {
     $(createOrderMap.cartErrorAlertText).text(message);
     this.showCartBlockError();
   }
@@ -331,7 +336,7 @@ export default class ProductRenderer {
   /**
    * Cleans cart block alerts content and hides them
    */
-  cleanCartBlockAlerts() {
+  cleanCartBlockAlerts(): void {
     $(createOrderMap.cartErrorAlertText).text('');
     this.hideCartBlockError();
   }
@@ -341,7 +346,7 @@ export default class ProductRenderer {
    *
    * @private
    */
-  showCartBlockError() {
+  private showCartBlockError(): void {
     $(createOrderMap.cartErrorAlertBlock).removeClass('d-none');
   }
 
@@ -350,7 +355,7 @@ export default class ProductRenderer {
    *
    * @private
    */
-  hideCartBlockError() {
+  private hideCartBlockError(): void {
     $(createOrderMap.cartErrorAlertBlock).addClass('d-none');
   }
 
@@ -359,7 +364,7 @@ export default class ProductRenderer {
    *
    * @private
    */
-  showCustomizations() {
+  private showCustomizations(): void {
     $(createOrderMap.productCustomizationContainer).removeClass('d-none');
   }
 
@@ -368,7 +373,7 @@ export default class ProductRenderer {
    *
    * @private
    */
-  hideCustomizations() {
+  private hideCustomizations(): void {
     $(createOrderMap.productCustomizationContainer).addClass('d-none');
   }
 
@@ -377,7 +382,7 @@ export default class ProductRenderer {
    *
    * @private
    */
-  cleanCustomizations() {
+  private cleanCustomizations(): void {
     $(createOrderMap.productCustomFieldsContainer).empty();
   }
 
@@ -386,7 +391,7 @@ export default class ProductRenderer {
    *
    * @private
    */
-  showResultBlock() {
+  private showResultBlock(): void {
     $(createOrderMap.productResultBlock).removeClass('d-none');
   }
 
@@ -395,7 +400,7 @@ export default class ProductRenderer {
    *
    * @private
    */
-  hideResultBlock() {
+  private hideResultBlock(): void {
     $(createOrderMap.productResultBlock).addClass('d-none');
   }
 
@@ -404,7 +409,7 @@ export default class ProductRenderer {
    *
    * @private
    */
-  showProductsList() {
+  private showProductsList(): void {
     this.$productsTable.removeClass('d-none');
   }
 
@@ -413,7 +418,7 @@ export default class ProductRenderer {
    *
    * @private
    */
-  hideProductsList() {
+  private hideProductsList(): void {
     this.$productsTable.addClass('d-none');
   }
 
@@ -422,7 +427,7 @@ export default class ProductRenderer {
    *
    * @private
    */
-  cleanProductsList() {
+  private cleanProductsList(): void {
     this.$productsTable.find('tbody').empty();
   }
 
@@ -431,7 +436,7 @@ export default class ProductRenderer {
    *
    * @private
    */
-  cleanCombinations() {
+  private cleanCombinations(): void {
     $(createOrderMap.combinationsSelect).empty();
   }
 
@@ -440,7 +445,7 @@ export default class ProductRenderer {
    *
    * @private
    */
-  showCombinations() {
+  private showCombinations(): void {
     $(createOrderMap.combinationsRow).removeClass('d-none');
   }
 
@@ -449,7 +454,7 @@ export default class ProductRenderer {
    *
    * @private
    */
-  hideCombinations() {
+  private hideCombinations(): void {
     $(createOrderMap.combinationsRow).addClass('d-none');
   }
 
@@ -458,7 +463,7 @@ export default class ProductRenderer {
    *
    * @private
    */
-  showTaxWarning() {
+  private showTaxWarning(): void {
     $(createOrderMap.productTaxWarning).removeClass('d-none');
   }
 
@@ -467,7 +472,7 @@ export default class ProductRenderer {
    *
    * @private
    */
-  hideTaxWarning() {
+  private hideTaxWarning(): void {
     $(createOrderMap.productTaxWarning).addClass('d-none');
   }
 
@@ -476,7 +481,7 @@ export default class ProductRenderer {
    *
    * @private
    */
-  showNotFound() {
+  private showNotFound(): void {
     $(createOrderMap.noProductsFoundWarning).removeClass('d-none');
   }
 
@@ -485,7 +490,7 @@ export default class ProductRenderer {
    *
    * @private
    */
-  hideNotFound() {
+  private hideNotFound(): void {
     $(createOrderMap.noProductsFoundWarning).addClass('d-none');
   }
 
@@ -494,7 +499,7 @@ export default class ProductRenderer {
    *
    * @private
    */
-  toggleSearchingNotice(visible) {
+  private toggleSearchingNotice(visible: boolean): void {
     $(createOrderMap.searchingProductsNotice).toggleClass('d-none', !visible);
   }
 }

@@ -84,7 +84,7 @@ export default class ImportBatchSizeCalculator {
   private calculateAcceleration(): number {
     return Math.min(
       this.maxAcceleration,
-      this.targetExecutionTime / this.actualExecutionTime
+      this.targetExecutionTime / this.actualExecutionTime,
     );
   }
 
@@ -109,7 +109,7 @@ export default class ImportBatchSizeCalculator {
       this.maxBatchSize,
       Math.max(
         this.minBatchSize,
-        Math.floor(currentBatchSize * this.calculateAcceleration())
+        Math.floor(currentBatchSize * this.calculateAcceleration()),
       ),
     ];
 

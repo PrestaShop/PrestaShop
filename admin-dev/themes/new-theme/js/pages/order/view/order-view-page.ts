@@ -40,6 +40,26 @@ import OrderDocumentsRefresher from './order-documents-refresher';
 const {$} = window;
 
 export default class OrderViewPage {
+  orderDiscountsRefresher: OrderDiscountsRefresher;
+
+  orderProductManager: OrderProductManager;
+
+  orderProductRenderer: OrderProductRenderer;
+
+  orderPricesRefresher: OrderPricesRefresher;
+
+  orderPaymentsRefresher: OrderPaymentsRefresher;
+
+  orderShippingRefresher: OrderShippingRefresher;
+
+  orderDocumentsRefresher: OrderDocumentsRefresher;
+
+  orderInvoicesRefresher: OrderInvoicesRefresher;
+
+  orderProductCancel: OrderProductCancel;
+
+  router: Router;
+
   constructor() {
     this.orderDiscountsRefresher = new OrderDiscountsRefresher();
     this.orderProductManager = new OrderProductManager();
@@ -54,7 +74,7 @@ export default class OrderViewPage {
     this.listenToEvents();
   }
 
-  listenToEvents() {
+  listenToEvents(): void {
     $(OrderViewPageMap.invoiceAddressEditBtn).fancybox({
       type: 'iframe',
       width: '90%',
@@ -121,18 +141,18 @@ export default class OrderViewPage {
     });
   }
 
-  listenForProductDelete() {
+  listenForProductDelete(): void {
     $(OrderViewPageMap.productDeleteBtn)
       .off('click')
-      .on('click', (event) => this.orderProductManager.handleDeleteProductEvent(event));
+      .on('click', (event: JQueryEventObject) => this.orderProductManager.handleDeleteProductEvent(event));
   }
 
-  resetToolTips() {
+  resetToolTips(): void {
     $(OrderViewPageMap.productEditButtons).pstooltip();
     $(OrderViewPageMap.productDeleteBtn).pstooltip();
   }
 
-  listenForProductEdit() {
+  listenForProductEdit(): void {
     $(OrderViewPageMap.productEditButtons).off('click').on('click', (event) => {
       const $btn = $(event.currentTarget);
       this.orderProductRenderer.moveProductsPanelToModificationPosition();
@@ -150,12 +170,12 @@ export default class OrderViewPage {
     });
   }
 
-  listenForProductPack() {
-    $(OrderViewPageMap.productPackModal.modal).on('show.bs.modal', (event) => {
+  listenForProductPack(): void {
+    $(OrderViewPageMap.productPackModal.modal).on('show.bs.modal', (event: JQueryEventObject) => {
       const button = $(event.relatedTarget);
       const packItems = button.data('packItems');
       $(OrderViewPageMap.productPackModal.rows).remove();
-      packItems.forEach((item) => {
+      packItems.forEach((item: Record<string, any>) => {
         const $item = $(OrderViewPageMap.productPackModal.template).clone();
         $item.attr('id', `productpack_${item.id}`).removeClass('d-none');
         $item.find(OrderViewPageMap.productPackModal.product.img).attr('src', item.imagePath);
@@ -185,7 +205,7 @@ export default class OrderViewPage {
     });
   }
 
-  listenForProductAdd() {
+  listenForProductAdd(): void {
     $(OrderViewPageMap.productAddBtn).on(
       'click',
       () => {
@@ -198,7 +218,7 @@ export default class OrderViewPage {
     );
   }
 
-  listenForProductPagination() {
+  listenForProductPagination(): void {
     $(OrderViewPageMap.productsTablePagination).on('click', OrderViewPageMap.productsTablePaginationLink, (event) => {
       event.preventDefault();
       const $btn = $(event.currentTarget);
@@ -233,7 +253,7 @@ export default class OrderViewPage {
     $(OrderViewPageMap.productsTablePaginationNumberSelector).on('change', (event) => {
       event.preventDefault();
       const $select = $(event.currentTarget);
-      const numPerPage = parseInt($select.val(), 10);
+      const numPerPage = parseInt(<string>$select.val(), 10);
       EventEmitter.emit(OrderViewEventMap.productListNumberPerPage, {
         numPerPage,
       });
@@ -264,7 +284,7 @@ export default class OrderViewPage {
     });
   }
 
-  listenForRefund() {
+  listenForRefund(): void {
     $(OrderViewPageMap.cancelProduct.buttons.partialRefund).on('click', () => {
       this.orderProductRenderer.moveProductsPanelToRefundPosition();
       this.orderProductCancel.showPartialRefund();
@@ -286,18 +306,18 @@ export default class OrderViewPage {
     });
   }
 
-  listenForCancelProduct() {
+  listenForCancelProduct(): void {
     $(OrderViewPageMap.cancelProduct.buttons.cancelProducts).on('click', () => {
       this.orderProductRenderer.moveProductsPanelToRefundPosition();
       this.orderProductCancel.showCancelProductForm();
     });
   }
 
-  getActivePage() {
+  getActivePage(): HTMLElement {
     return $(OrderViewPageMap.productsTablePagination).find('.active span').get(0);
   }
 
-  refreshProductsList(orderId) {
+  refreshProductsList(orderId: number): void {
     $(OrderViewPageMap.refreshProductsListLoadingSpinner).show();
 
     const $tablePagination = $(OrderViewPageMap.productsTablePagination);
