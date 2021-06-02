@@ -100,9 +100,6 @@ export default class EntitySearchInput {
           return `<div class="search-suggestion">${entityImage}${entity.name}</div>`;
         },
       },
-      onClose: (event) => {
-        this.onSelectionClose(event);
-      },
       /* eslint-disable-next-line no-unused-vars */
       onSelect: (selectedItem, event) => {
         // When limit is one we cannot select additional elements so we replace them instead
@@ -150,15 +147,6 @@ export default class EntitySearchInput {
         },
       },
     });
-  }
-
-  /**
-   * When an item is selected we empty the input search, since the selected data is stored in hidden inputs anyway
-   *
-   * @param event
-   */
-  onSelectionClose(event) {
-    $(event.target).val('');
   }
 
   /**
