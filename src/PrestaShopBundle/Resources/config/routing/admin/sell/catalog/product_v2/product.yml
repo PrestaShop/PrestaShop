@@ -36,3 +36,14 @@ admin_products_v2_download_virtual_product_file:
         _legacy_controller: AdminProducts
     requirements:
         virtualProductFileId: \d+
+
+admin_products_v2_get_attachments:
+    path: /{productId}/attachments
+    methods: [GET]
+    defaults:
+        _controller: PrestaShopBundle:Admin/Sell/Catalog/Product/Product:getAttachments
+        _legacy_controller: AdminProducts
+    requirements:
+        virtualProductFileId: \d+
+    options:
+        expose: true
