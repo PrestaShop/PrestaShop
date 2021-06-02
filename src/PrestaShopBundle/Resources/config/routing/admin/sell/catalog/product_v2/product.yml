@@ -57,7 +57,7 @@ admin_products_v2_delete:
     path: /{productId}/delete
     methods: [POST, DELETE]
     defaults:
-        _controller: PrestaShopBundle:Admin/Sell/Catalog/Product/Product:delete
+        _controller: PrestaShopBundle\Admin\Sell\Catalog\Product\ProductController::deleteAction
         _legacy_controller: AdminProducts
         _legacy_link:
             - AdminProducts:delete
@@ -65,3 +65,14 @@ admin_products_v2_delete:
             id_product: productId
     requirements:
         productId: \d+
+
+admin_products_v2_get_attachments:
+    path: /{productId}/attachments
+    methods: [GET]
+    defaults:
+        _controller: PrestaShopBundle\Admin\Sell\Catalog\Product\ProductController::getAttachmentsAction
+        _legacy_controller: AdminProducts
+    requirements:
+        virtualProductFileId: \d+
+    options:
+        expose: true
