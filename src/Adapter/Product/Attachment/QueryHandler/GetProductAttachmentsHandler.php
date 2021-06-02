@@ -27,6 +27,7 @@ declare(strict_types=1);
 
 namespace PrestaShop\PrestaShop\Adapter\Product\Attachment\QueryHandler;
 
+use PrestaShop\PrestaShop\Adapter\Attachment\AttachmentRepository;
 use PrestaShop\PrestaShop\Core\Domain\Product\Attachment\Query\GetProductAttachments;
 use PrestaShop\PrestaShop\Core\Domain\Product\Attachment\QueryHandler\GetProductAttachmentsHandlerInterface;
 
@@ -36,10 +37,23 @@ use PrestaShop\PrestaShop\Core\Domain\Product\Attachment\QueryHandler\GetProduct
 final class GetProductAttachmentsHandler implements GetProductAttachmentsHandlerInterface
 {
     /**
+     * @var AttachmentRepository
+     */
+    private $attachmentRepository;
+
+    /**
+     * @param AttachmentRepository $attachmentRepository
+     */
+    public function __construct(
+        AttachmentRepository $attachmentRepository
+    ) {
+        $this->attachmentRepository = $attachmentRepository;
+    }
+    /**
      * {@inheritDoc}
      */
     public function handle(GetProductAttachments $query): array
     {
-        // TODO: Implement handle() method.
+        return $this->attachmentRepository->getAllByProduct($query->getProductId());
     }
 }
