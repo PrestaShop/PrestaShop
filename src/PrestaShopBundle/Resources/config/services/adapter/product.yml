@@ -130,6 +130,7 @@ services:
         arguments:
             - '@prestashop.adapter.product.repository.product_repository'
             - '@prestashop.adapter.manufacturer.repository.manufacturer_repository'
+            - '@prestashop.adapter.product.update.product_indexation_updater'
         tags:
             - name: tactician.handler
               command: PrestaShop\PrestaShop\Core\Domain\Product\Command\UpdateProductOptionsCommand
@@ -379,3 +380,6 @@ services:
         tags:
             - name: tactician.handler
               command: PrestaShop\PrestaShop\Core\Domain\Product\Command\UpdateProductTypeCommand
+
+    prestashop.adapter.product.update.product_indexation_updater:
+        class: PrestaShop\PrestaShop\Adapter\Product\Update\ProductIndexationUpdater
