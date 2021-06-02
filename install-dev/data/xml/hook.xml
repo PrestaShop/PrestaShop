@@ -11,6 +11,11 @@
       <title>New orders</title>
       <description/>
     </hook>
+    <hook id="actionValidateOrderAfter">
+      <name>actionValidateOrderAfter</name>
+      <title>New orders</title>
+      <description>This hook is called after the complete creation of an order</description>
+    </hook>
     <hook id="displayMaintenance">
       <name>displayMaintenance</name>
       <title>Maintenance Page</title>
