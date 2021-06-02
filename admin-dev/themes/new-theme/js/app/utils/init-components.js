@@ -37,7 +37,7 @@ import TextWithLengthCounter from '@components/form/text-with-length-counter';
 import PreviewOpener from '@components/form/preview-opener';
 import MultistoreConfigField from '@js/components/form/multistore-config-field.js';
 import {EventEmitter} from '@components/event-emitter';
-import GridComponent from '@components/grid/grid';
+import Grid from '@components/grid/grid';
 import Router from '@components/router';
 
 // Grid extensions
@@ -59,27 +59,24 @@ import SubmitBulkActionExtension from '@components/grid/extension/submit-bulk-ac
 import SubmitGridActionExtension from '@components/grid/extension/submit-grid-action-extension';
 import SubmitRowActionExtension from '@components/grid/extension/action/row/submit-row-action-extension';
 
-const Grid = {
-  core: GridComponent,
-  extension: {
-    AsyncToggleColumnExtension,
-    BulkActionCheckboxExtension,
-    BulkOpenTabsExtension,
-    ChoiceExtension,
-    ColumnTogglingExtension,
-    ExportToSqlManagerExtension,
-    FiltersResetExtension,
-    FiltersSubmitButtonEnablerExtension,
-    LinkRowActionExtension,
-    ModalFormSubmitExtension,
-    PositionExtension,
-    PreviewExtension,
-    ReloadListExtension,
-    SortingExtension,
-    SubmitBulkActionExtension,
-    SubmitGridActionExtension,
-    SubmitRowActionExtension,
-  },
+const GridExtensions = {
+  AsyncToggleColumnExtension,
+  BulkActionCheckboxExtension,
+  BulkOpenTabsExtension,
+  ChoiceExtension,
+  ColumnTogglingExtension,
+  ExportToSqlManagerExtension,
+  FiltersResetExtension,
+  FiltersSubmitButtonEnablerExtension,
+  LinkRowActionExtension,
+  ModalFormSubmitExtension,
+  PositionExtension,
+  PreviewExtension,
+  ReloadListExtension,
+  SortingExtension,
+  SubmitBulkActionExtension,
+  SubmitGridActionExtension,
+  SubmitRowActionExtension,
 };
 
 const initPrestashopComponents = () => {
@@ -138,6 +135,7 @@ const initPrestashopComponents = () => {
     MultistoreConfigField,
     PreviewOpener,
     Grid,
+    GridExtensions,
     Router,
   };
 };
