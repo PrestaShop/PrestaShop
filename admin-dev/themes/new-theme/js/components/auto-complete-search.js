@@ -40,6 +40,16 @@ export default class AutoCompleteSearch {
       highlight: true,
       cache: false,
       hint: false,
+      /* eslint-disable-next-line no-unused-vars */
+      onSelect(selectedItem, event, searchInput) {
+        searchInput.typeahead('val', selectedItem[this.dataSetConfig.value]);
+        return true;
+      },
+      /* eslint-disable-next-line no-unused-vars */
+      onClose(event, searchInput) {
+        searchInput.typeahead('val', '');
+        return true;
+      },
       ...inputConfig,
     };
 
@@ -49,13 +59,6 @@ export default class AutoCompleteSearch {
       value: 'id', // Which field of the object from the list is used for value (can be a string or a callback)
       limit: 20, // Limit the number of displayed suggestion
       dataLimit: 0, // How many elements can be selected max
-      /* eslint-disable-next-line no-unused-vars */
-      onSelect(selectedItem, event) {
-        return true;
-      },
-      /* eslint-disable-next-line no-unused-vars */
-      onClose(event) {
-      },
       ...inputConfig,
     };
 
@@ -68,7 +71,7 @@ export default class AutoCompleteSearch {
         let displaySuggestion = item;
 
         if (typeof this.dataSetConfig.display === 'function') {
-          this.dataSetConfig.display(item);
+          displaySuggestion = this.dataSetConfig.display(item);
         } else if (Object.prototype.hasOwnProperty.call(item, this.dataSetConfig.display)) {
           displaySuggestion = item[this.dataSetConfig.display];
         }
