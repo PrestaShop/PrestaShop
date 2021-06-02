@@ -806,7 +806,7 @@ class CurrencyCore extends ObjectModel
      * @param int $idModule Module ID
      * @param int|null $idShop Shop ID
      *
-     * @return array|false|mysqli_result|PDOStatement|resource|null
+     * @return array|false|PDOStatement|null
      */
     public static function getPaymentCurrencies($idModule, $idShop = null)
     {

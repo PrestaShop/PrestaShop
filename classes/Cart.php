@@ -474,7 +474,7 @@ class CartCore extends ObjectModel
      * @param bool $autoAdd automaticaly adds cart ruls without code to cart
      * @param bool $useOrderPrices
      *
-     * @return array|false|mysqli_result|PDOStatement|resource|null Database result
+     * @return array|false|PDOStatement|null Database result
      */
     public function getCartRules($filter = CartRule::FILTER_ACTION_ALL, $autoAdd = true, $useOrderPrices = false)
     {
@@ -4413,7 +4413,7 @@ class CartCore extends ObjectModel
      * @param int $id_customer Customer ID
      * @param bool $with_order Only return Carts that have been converted into an Order
      *
-     * @return array|false|mysqli_result|PDOStatement|resource|null DB result
+     * @return array|false|PDOStatement|null DB result
      */
     public static function getCustomerCarts($id_customer, $with_order = true)
     {
@@ -4585,7 +4585,7 @@ class CartCore extends ObjectModel
     /**
      * Get Cart rows from DB for the webservice.
      *
-     * @return array|false|mysqli_result|PDOStatement|resource|null DB result
+     * @return array|false|PDOStatement|null DB result
      */
     public function getWsCartRows()
     {

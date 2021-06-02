@@ -665,7 +665,7 @@ class CategoryCore extends ObjectModel
      * @param string $limit Set the limit
      *                      Both the offset and limit can be given
      *
-     * @return array|false|mysqli_result|PDOStatement|resource|null Array with `id_category` and `name`
+     * @return array|false|PDOStatement|null Array with `id_category` and `name`
      */
     public static function getAllCategoriesName(
         $idRootCategory = null,
@@ -824,7 +824,7 @@ class CategoryCore extends ObjectModel
      *
      * @param int $idLang Language ID
      *
-     * @return array|false|mysqli_result|PDOStatement|resource|null
+     * @return array|false|PDOStatement|null
      */
     public static function getSimpleCategories($idLang)
     {
@@ -845,7 +845,7 @@ class CategoryCore extends ObjectModel
      *
      * @param int $idLang Language ID
      *
-     * @return array|false|mysqli_result|PDOStatement|resource|null
+     * @return array|false|PDOStatement|null
      */
     public static function getSimpleCategoriesWithParentInfos($idLang)
     {
@@ -1921,7 +1921,7 @@ class CategoryCore extends ObjectModel
      *
      * @param $idCategory
      *
-     * @return array|false|mysqli_result|PDOStatement|resource|null
+     * @return array|false|PDOStatement|null
      *
      * @since 1.7.0
      */
@@ -2016,7 +2016,7 @@ class CategoryCore extends ObjectModel
     /**
      * Get Children for the webservice.
      *
-     * @return array|false|mysqli_result|PDOStatement|resource|null
+     * @return array|false|PDOStatement|null
      */
     public function getChildrenWs()
     {
@@ -2032,7 +2032,7 @@ class CategoryCore extends ObjectModel
     /**
      * Get Products for webservice.
      *
-     * @return array|false|mysqli_result|PDOStatement|resource|null
+     * @return array|false|PDOStatement|null
      */
     public function getProductsWs()
     {
@@ -2202,7 +2202,7 @@ class CategoryCore extends ObjectModel
      * @param int|null $idLang Language ID
      * @param bool $active Whether the root Category must be active
      *
-     * @return array|false|mysqli_result|PDOStatement|resource|null Root Categories
+     * @return array|false|PDOStatement|null Root Categories
      */
     public static function getRootCategories($idLang = null, $active = true)
     {
@@ -2221,7 +2221,7 @@ class CategoryCore extends ObjectModel
     /**
      * Get Categories without parent.
      *
-     * @return array|false|mysqli_result|PDOStatement|resource|null Categories without parent
+     * @return array|false|PDOStatement|null Categories without parent
      */
     public static function getCategoriesWithoutParent()
     {
@@ -2336,7 +2336,7 @@ class CategoryCore extends ObjectModel
      *
      * @param int $idCategory Category ID
      *
-     * @return array|false|mysqli_result|PDOStatement|resource|null Array with Shop IDs
+     * @return array|false|PDOStatement|null Array with Shop IDs
      */
     public static function getShopsByCategory($idCategory)
     {

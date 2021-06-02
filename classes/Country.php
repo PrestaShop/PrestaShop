@@ -357,7 +357,7 @@ class CountryCore extends ObjectModel
      * @param int $idZone Zone ID
      * @param int $idLang Language ID
      *
-     * @return array|false|mysqli_result|PDOStatement|resource|null
+     * @return array|false|PDOStatement|null
      */
     public static function getCountriesByZoneId($idZone, $idLang)
     {

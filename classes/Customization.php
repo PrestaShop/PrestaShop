@@ -335,7 +335,7 @@ class CustomizationCore extends ObjectModel
      * Get customized text fields
      * (for webservice).
      *
-     * @return array|false|mysqli_result|PDOStatement|resource|null
+     * @return array|false|PDOStatement|null
      */
     public function getWsCustomizedDataTextFields()
     {
@@ -356,7 +356,7 @@ class CustomizationCore extends ObjectModel
      * Get customized images data
      * (for webservice).
      *
-     * @return array|false|mysqli_result|PDOStatement|resource|null
+     * @return array|false|PDOStatement|null
      */
     public function getWsCustomizedDataImages()
     {

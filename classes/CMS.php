@@ -167,7 +167,7 @@ class CMSCore extends ObjectModel
      * @param bool $idBlock
      * @param bool $active
      *
-     * @return array|false|mysqli_result|PDOStatement|resource|null
+     * @return array|false|PDOStatement|null
      */
     public static function listCms($idLang = null, $idBlock = false, $active = true)
     {
@@ -278,7 +278,7 @@ class CMSCore extends ObjectModel
      * @param bool $active
      * @param null $idShop
      *
-     * @return array|false|mysqli_result|PDOStatement|resource|null
+     * @return array|false|PDOStatement|null
      */
     public static function getCMSPages($idLang = null, $idCmsCategory = null, $active = true, $idShop = null)
     {
@@ -314,7 +314,7 @@ class CMSCore extends ObjectModel
     /**
      * @param $idCms
      *
-     * @return array|false|mysqli_result|PDOStatement|resource|null
+     * @return array|false|PDOStatement|null
      */
     public static function getUrlRewriteInformations($idCms)
     {

@@ -158,7 +158,7 @@ class AttachmentCore extends ObjectModel
      * @param int $idProduct Product ID
      * @param bool $include Whether the attachments are included or excluded from the Product ID
      *
-     * @return array|false|mysqli_result|PDOStatement|resource|null Database query result
+     * @return array|false|PDOStatement|null Database query result
      */
     public static function getAttachments($idLang, $idProduct, $include = true)
     {

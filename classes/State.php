@@ -206,7 +206,7 @@ class StateCore extends ObjectModel
      * @param string $orderBy order by field
      * @param string $sort sort key (ASC or DESC)
      *
-     * @return array|false|mysqli_result|PDOStatement|resource|null
+     * @return array|false|PDOStatement|null
      */
     public static function getStatesByIdCountry($idCountry, $active = false, $orderBy = null, $sort = 'ASC')
     {

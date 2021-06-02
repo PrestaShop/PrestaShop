@@ -143,7 +143,7 @@ class MetaCore extends ObjectModel
     /**
      * Get all Metas.
      *
-     * @return array|false|mysqli_result|PDOStatement|resource|null
+     * @return array|false|PDOStatement|null
      */
     public static function getMetas()
     {
@@ -155,7 +155,7 @@ class MetaCore extends ObjectModel
      *
      * @param int $idLang Language ID
      *
-     * @return array|false|mysqli_result|PDOStatement|resource|null
+     * @return array|false|PDOStatement|null
      */
     public static function getMetasByIdLang($idLang)
     {
@@ -195,7 +195,7 @@ class MetaCore extends ObjectModel
      *
      * @param int $idLang
      *
-     * @return array|false|mysqli_result|PDOStatement|resource|null
+     * @return array|false|PDOStatement|null
      */
     public static function getAllMeta($idLang)
     {

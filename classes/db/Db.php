@@ -55,10 +55,10 @@ abstract class DbCore
     /** @var bool */
     protected $is_cache_enabled;
 
-    /** @var PDO|mysqli|resource Resource link */
+    /** @var PDO Database driver */
     protected $link;
 
-    /** @var PDOStatement|mysqli_result|resource|bool SQL cached result */
+    /** @var PDOStatement|bool SQL cached result */
     protected $result;
 
     /** @var array List of DB instances */
@@ -96,7 +96,7 @@ abstract class DbCore
     /**
      * Opens a database connection.
      *
-     * @return PDO|mysqli|resource
+     * @return PDO
      */
     abstract public function connect();
 
@@ -106,11 +106,11 @@ abstract class DbCore
     abstract public function disconnect();
 
     /**
-     * Execute a query and get result resource.
+     * Execute a query and get result object.
      *
      * @param string $sql
      *
-     * @return PDOStatement|mysqli_result|resource|bool
+     * @return PDOStatement|bool
      */
     abstract protected function _query($sql);
 
@@ -140,7 +140,7 @@ abstract class DbCore
     /**
      * Get next row for a query which does not return an array.
      *
-     * @param PDOStatement|mysqli_result|resource|bool $result
+     * @param PDOStatement|bool $result
      *
      * @return array|object|false|null
      */
@@ -149,7 +149,7 @@ abstract class DbCore
     /**
      * Get all rows for a query which return an array.
      *
-     * @param PDOStatement|mysqli_result|resource|bool|null $result
+     * @param PDOStatement|bool|null $result
      *
      * @return array
      */
@@ -291,18 +291,11 @@ abstract class DbCore
      */
     public static function getClass()
     {
-        $class = '';
-        if (PHP_VERSION_ID >= 50200 && extension_loaded('pdo_mysql')) {
-            $class = 'DbPDO';
-        } elseif (extension_loaded('mysqli')) {
-            $class = 'DbMySQLi';
+        if (extension_loaded('pdo_mysql')) {
+            return DbPDO::class;
         }
 
-        if (empty($class)) {
-            throw new PrestaShopException('Cannot select any valid SQL engine.');
-        }
-
-        return $class;
+        throw new PrestaShopException('Cannot select any valid SQL engine.');
     }
 
     /**
@@ -359,11 +352,11 @@ abstract class DbCore
     }
 
     /**
-     * Execute a query and get result resource.
+     * Execute a query and get result object.
      *
      * @param string|DbQuery $sql
      *
-     * @return bool|mysqli_result|PDOStatement|resource
+     * @return bool|PDOStatement
      *
      * @throws PrestaShopDatabaseException
      */
@@ -578,7 +571,7 @@ abstract class DbCore
      * @param bool $array Return an array instead of a result object (deprecated since 1.5.0.1, use query method instead)
      * @param bool $use_cache
      *
-     * @return array|false|mysqli_result|PDOStatement|resource|null
+     * @return array|false|null
      *
      * @throws PrestaShopDatabaseException
      */
@@ -726,7 +719,7 @@ abstract class DbCore
      * @param string|DbQuery $sql
      * @param bool $use_cache
      *
-     * @return bool|mysqli_result|PDOStatement|resource
+     * @return bool|PDOStatement
      *
      * @throws PrestaShopDatabaseException
      */
@@ -884,7 +877,7 @@ abstract class DbCore
     /**
      * Get used link instance.
      *
-     * @return PDO|mysqli|resource Resource
+     * @return PDO Database driver
      */
     public function getLink()
     {

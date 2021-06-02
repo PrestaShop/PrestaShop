@@ -497,7 +497,7 @@ class EmployeeCore extends ObjectModel
     /**
      * Get favorite Module list.
      *
-     * @return array|false|mysqli_result|PDOStatement|resource|null
+     * @return array|false|PDOStatement|null
      */
     public function favoriteModulesList()
     {
@@ -569,7 +569,7 @@ class EmployeeCore extends ObjectModel
      * @param int $idProfile Profile ID
      * @param bool $activeOnly Only active Employees
      *
-     * @return array|false|mysqli_result|PDOStatement|resource|null
+     * @return array|false|PDOStatement|null
      */
     public static function getEmployeesByProfile($idProfile, $activeOnly = false)
     {

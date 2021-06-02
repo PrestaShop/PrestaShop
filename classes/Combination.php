@@ -342,7 +342,7 @@ class CombinationCore extends ObjectModel
     }
 
     /**
-     * @return array|false|mysqli_result|PDOStatement|resource|null
+     * @return array|false|PDOStatement|null
      */
     public function getWsProductOptionValues()
     {
@@ -356,7 +356,7 @@ class CombinationCore extends ObjectModel
     }
 
     /**
-     * @return array|false|mysqli_result|PDOStatement|resource|null
+     * @return array|false|PDOStatement|null
      */
     public function getWsImages()
     {
@@ -418,7 +418,7 @@ class CombinationCore extends ObjectModel
     /**
      * @param $idLang
      *
-     * @return array|false|mysqli_result|PDOStatement|resource|null
+     * @return array|false|PDOStatement|null
      */
     public function getAttributesName($idLang)
     {
@@ -511,7 +511,7 @@ class CombinationCore extends ObjectModel
     }
 
     /**
-     * @return array|false|mysqli_result|PDOStatement|resource|null
+     * @return array|false|PDOStatement|null
      */
     public function getColorsAttributes()
     {

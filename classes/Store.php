@@ -139,7 +139,7 @@ class StoreCore extends ObjectModel
      *
      * @param $idLang
      *
-     * @return array|false|mysqli_result|PDOStatement|resource|null
+     * @return array|false|PDOStatement|null
      */
     public static function getStores($idLang)
     {
