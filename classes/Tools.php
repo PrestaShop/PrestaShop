@@ -1086,7 +1086,7 @@ class ToolsCore
     public static function safePostVars()
     {
         @trigger_error(
-            'Tools::safePostVars() is deprecated since version 1.7.9.0. ',
+            'Tools::safePostVars() is deprecated since version 1.7.9.0.',
             E_USER_DEPRECATED
         );
 
