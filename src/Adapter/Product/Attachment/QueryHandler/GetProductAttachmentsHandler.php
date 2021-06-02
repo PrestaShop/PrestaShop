@@ -30,6 +30,7 @@ namespace PrestaShop\PrestaShop\Adapter\Product\Attachment\QueryHandler;
 use PrestaShop\PrestaShop\Adapter\Attachment\AttachmentRepository;
 use PrestaShop\PrestaShop\Core\Domain\Product\Attachment\Query\GetProductAttachments;
 use PrestaShop\PrestaShop\Core\Domain\Product\Attachment\QueryHandler\GetProductAttachmentsHandlerInterface;
+use PrestaShop\PrestaShop\Core\Domain\Product\Attachment\QueryResult\ProductAttachment;
 
 /**
  * Handles @see GetProductAttachments query using legacy object model
@@ -54,6 +55,18 @@ final class GetProductAttachmentsHandler implements GetProductAttachmentsHandler
      */
     public function handle(GetProductAttachments $query): array
     {
-        return $this->attachmentRepository->getAllByProduct($query->getProductId());
+        $attachments = $this->attachmentRepository->getAllByProduct($query->getProductId());
+
+        $productAttachments = [];
+        foreach ($attachments as $attachment) {
+            $productAttachments[] = new ProductAttachment(
+                (int) $attachment['id_attachment'],
+                $attachment['name'],
+                $attachment['file_name'],
+                $attachment['mime']
+            );
+        }
+
+        return $productAttachments;
     }
 }
