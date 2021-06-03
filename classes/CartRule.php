@@ -408,9 +408,7 @@ class CartRuleCore extends ObjectModel
         $free_shipping_only = false,
         $highlight_only = false
     ) {
-        if (!CartRule::isFeatureActive()
-            || !CartRule::haveCartRuleToday($id_customer)
-        ) {
+        if ($active && (!CartRule::isFeatureActive() || !CartRule::haveCartRuleToday($id_customer))) {
             return [];
         }
 
