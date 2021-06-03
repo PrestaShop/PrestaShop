@@ -149,11 +149,11 @@ describe('Create 100% discount with free shipping discount code', async () => {
         await expect(pageTitle).to.contains(orderSettingsPage.pageTitle);
       });
 
-      it('Should change the terms and conditions back to disabled', async () => {
+      it('should change the terms and conditions back to disabled', async function () {
         await testContext.addContextItem(
           this,
           'testIdentifier',
-          'dissableTermAndConditions',
+          'disableTermAndConditions',
           baseContext,
         );
 
@@ -289,7 +289,7 @@ describe('Create 100% discount with free shipping discount code', async () => {
       await expect(noPaymentNeededText).to.contains(checkoutPage.noPaymentNeededText);
     });
 
-    it('complete order button should be enabled', async function () {
+    it('should check that complete order button is enabled', async function () {
       await testContext.addContextItem(
         this,
         'testIdentifier',
@@ -388,7 +388,7 @@ describe('Create 100% discount with free shipping discount code', async () => {
         await testContext.addContextItem(
           this,
           'testIdentifier',
-          'goToOrderSettingsPage',
+          'goToOrderSettingsPageToReset',
           baseContext,
         );
 
@@ -401,6 +401,7 @@ describe('Create 100% discount with free shipping discount code', async () => {
         const pageTitle = await orderSettingsPage.getPageTitle(page);
         await expect(pageTitle).to.contains(orderSettingsPage.pageTitle);
       });
+
       it('Should change the terms and conditions back to enabled', async () => {
         const result = await orderSettingsPage.setTermsOfService(
           page,
