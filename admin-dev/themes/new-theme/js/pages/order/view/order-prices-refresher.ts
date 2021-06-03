@@ -26,7 +26,7 @@
 import Router from '@components/router';
 import OrderViewPageMap from '@pages/order/OrderViewPageMap';
 
-const { $ } = window;
+const {$} = window;
 
 export default class OrderPricesRefresher {
   router: Router;
@@ -37,25 +37,25 @@ export default class OrderPricesRefresher {
 
   refresh(orderId: number): void {
     $.getJSON(
-      this.router.generate('admin_orders_get_prices', { orderId })
+      this.router.generate('admin_orders_get_prices', {orderId}),
     ).then((response) => {
       $(OrderViewPageMap.orderTotal).text(response.orderTotalFormatted);
       $(OrderViewPageMap.orderDiscountsTotal).text(
-        `-${response.discountsAmountFormatted}`
+        `-${response.discountsAmountFormatted}`,
       );
       $(OrderViewPageMap.orderDiscountsTotalContainer).toggleClass(
         'd-none',
-        !response.discountsAmountDisplayed
+        !response.discountsAmountDisplayed,
       );
       $(OrderViewPageMap.orderProductsTotal).text(
-        response.productsTotalFormatted
+        response.productsTotalFormatted,
       );
       $(OrderViewPageMap.orderShippingTotal).text(
-        response.shippingTotalFormatted
+        response.shippingTotalFormatted,
       );
       $(OrderViewPageMap.orderShippingTotalContainer).toggleClass(
         'd-none',
-        !response.shippingTotalDisplayed
+        !response.shippingTotalDisplayed,
       );
       $(OrderViewPageMap.orderTaxesTotal).text(response.taxesTotalFormatted);
     });
@@ -63,45 +63,45 @@ export default class OrderPricesRefresher {
 
   refreshProductPrices(orderId: number): void {
     $.getJSON(
-      this.router.generate('admin_orders_product_prices', { orderId })
+      this.router.generate('admin_orders_product_prices', {orderId}),
     ).then((productPricesList) => {
       productPricesList.forEach((productPrices: Record<string, any>) => {
         const orderProductTrId = OrderViewPageMap.productsTableRow(
-          productPrices.orderDetailId
+          productPrices.orderDetailId,
         );
         let $quantity = $(productPrices.quantity);
 
         if (productPrices.quantity > 1) {
           $quantity = $quantity.wrap(
-            '<span class="badge badge-secondary rounded-circle"></span>'
+            '<span class="badge badge-secondary rounded-circle"></span>',
           );
         }
 
         $(`${orderProductTrId} ${OrderViewPageMap.productEditUnitPrice}`).text(
-          productPrices.unitPrice
+          productPrices.unitPrice,
         );
         $(`${orderProductTrId} ${OrderViewPageMap.productEditQuantity}`).html(
-          $quantity.html()
+          $quantity.html(),
         );
         $(
-          `${orderProductTrId} ${OrderViewPageMap.productEditAvailableQuantity}`
+          `${orderProductTrId} ${OrderViewPageMap.productEditAvailableQuantity}`,
         ).text(productPrices.availableQuantity);
         $(`${orderProductTrId} ${OrderViewPageMap.productEditTotalPrice}`).text(
-          productPrices.totalPrice
+          productPrices.totalPrice,
         );
 
         // update order row price values
         const productEditButton = $(
-          OrderViewPageMap.productEditBtn(productPrices.orderDetailId)
+          OrderViewPageMap.productEditBtn(productPrices.orderDetailId),
         );
 
         productEditButton.data(
           'product-price-tax-incl',
-          productPrices.unitPriceTaxInclRaw
+          productPrices.unitPriceTaxInclRaw,
         );
         productEditButton.data(
           'product-price-tax-excl',
-          productPrices.unitPriceTaxExclRaw
+          productPrices.unitPriceTaxExclRaw,
         );
         productEditButton.data('product-quantity', productPrices.quantity);
       });
@@ -121,8 +121,8 @@ export default class OrderPricesRefresher {
     productId: number,
     combinationId: number,
     invoiceId: number,
-    orderDetailId?: number
-  ): void | string {
+    orderDetailId?: number,
+  ): null | string {
     const productRows = document.querySelectorAll('tr.cellProduct');
     // We convert the expected values into int/float to avoid a type mismatch that would be wrongly interpreted
     const expectedProductId = Number(productId);
@@ -140,33 +140,33 @@ export default class OrderPricesRefresher {
       }
 
       const productEditBtn = $(
-        `#${productRowId} ${OrderViewPageMap.productEditButtons}`
+        `#${productRowId} ${OrderViewPageMap.productEditButtons}`,
       );
       const currentOrderInvoiceId = Number(
-        productEditBtn.data('order-invoice-id')
+        productEditBtn.data('order-invoice-id'),
       );
 
       const currentProductId = Number(productEditBtn.data('product-id'));
       const currentCombinationId = Number(
-        productEditBtn.data('combination-id')
+        productEditBtn.data('combination-id'),
       );
 
       if (
-        currentProductId !== expectedProductId ||
-        currentCombinationId !== expectedCombinationId
+        currentProductId !== expectedProductId
+        || currentCombinationId !== expectedCombinationId
       ) {
         return;
       }
 
       if (
-        expectedGivenPrice !==
-        Number(productEditBtn.data('product-price-tax-incl'))
+        expectedGivenPrice
+        !== Number(productEditBtn.data('product-price-tax-incl'))
       ) {
         if (
-          invoiceId === '' ||
-          (invoiceId &&
-            currentOrderInvoiceId &&
-            invoiceId === currentOrderInvoiceId)
+          invoiceId === ''
+          || (invoiceId
+            && currentOrderInvoiceId
+            && invoiceId === currentOrderInvoiceId)
         ) {
           unmatchingProductPriceExists = true;
         } else {
@@ -178,8 +178,11 @@ export default class OrderPricesRefresher {
     if (unmatchingInvoicePriceExists) {
       return 'invoice';
     }
+
     if (unmatchingProductPriceExists) {
       return 'product';
     }
+
+    return null;
   }
 }

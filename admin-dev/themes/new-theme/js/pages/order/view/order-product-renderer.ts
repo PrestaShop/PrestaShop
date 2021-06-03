@@ -27,7 +27,7 @@ import OrderViewPageMap from '@pages/order/OrderViewPageMap';
 import OrderProductEdit from '@pages/order/view/order-product-edit';
 import Router from '@components/router';
 
-const { $ } = window;
+const {$} = window;
 
 export default class OrderProductRenderer {
   router: Router;
@@ -43,7 +43,7 @@ export default class OrderProductRenderer {
       $(OrderViewPageMap.productAddRow).before(
         $(newRow)
           .hide()
-          .fadeIn()
+          .fadeIn(),
       );
     }
   }
@@ -61,7 +61,7 @@ export default class OrderProductRenderer {
     location: number,
     availableQuantity: number,
     availableOutOfStock: boolean,
-    orderInvoiceId: number
+    orderInvoiceId: number,
   ): void {
     const $orderEdit = new OrderProductEdit(orderDetailId);
     $orderEdit.displayProduct({
@@ -81,7 +81,7 @@ export default class OrderProductRenderer {
   moveProductsPanelToModificationPosition(scrollTarget = 'body'): void {
     $(OrderViewPageMap.productActionBtn).addClass('d-none');
     $(
-      `${OrderViewPageMap.productAddActionBtn}, ${OrderViewPageMap.productAddRow}`
+      `${OrderViewPageMap.productAddActionBtn}, ${OrderViewPageMap.productAddRow}`,
     ).removeClass('d-none');
     this.moveProductPanelToTop(scrollTarget);
   }
@@ -90,14 +90,14 @@ export default class OrderProductRenderer {
     this.resetAllEditRows();
     $(
       /* eslint-disable-next-line max-len */
-      `${OrderViewPageMap.productAddActionBtn}, ${OrderViewPageMap.productAddRow}, ${OrderViewPageMap.productActionBtn}`
+      `${OrderViewPageMap.productAddActionBtn}, ${OrderViewPageMap.productAddRow}, ${OrderViewPageMap.productActionBtn}`,
     ).addClass('d-none');
     this.moveProductPanelToTop();
   }
 
   moveProductPanelToTop(scrollTarget = 'body'): void {
     const $modificationPosition = $(
-      OrderViewPageMap.productModificationPosition
+      OrderViewPageMap.productModificationPosition,
     );
 
     if ($modificationPosition.find(OrderViewPageMap.productsPanel).length > 0) {
@@ -114,7 +114,7 @@ export default class OrderProductRenderer {
 
     // Show all rows, hide pagination controls
     const $rows = $(OrderViewPageMap.productsTable).find(
-      'tr[id^="orderProduct_"]'
+      'tr[id^="orderProduct_"]',
     );
     $rows.removeClass('d-none');
     $(OrderViewPageMap.productsPagination).addClass('d-none');
@@ -124,7 +124,7 @@ export default class OrderProductRenderer {
 
     if (target && headerBarHeight) {
       const scrollValue = target.top - headerBarHeight - 100;
-      $('html,body').animate({ scrollTop: scrollValue }, 'slow');
+      $('html,body').animate({scrollTop: scrollValue}, 'slow');
     }
   }
 
@@ -141,7 +141,7 @@ export default class OrderProductRenderer {
     $(OrderViewPageMap.productsPagination).removeClass('d-none');
     $(OrderViewPageMap.productActionBtn).removeClass('d-none');
     $(
-      `${OrderViewPageMap.productAddActionBtn}, ${OrderViewPageMap.productAddRow}`
+      `${OrderViewPageMap.productAddActionBtn}, ${OrderViewPageMap.productAddRow}`,
     ).addClass('d-none');
 
     // Restore pagination
@@ -172,7 +172,7 @@ export default class OrderProductRenderer {
   resetEditRow(orderProductId: string): void {
     const $productRow = $(OrderViewPageMap.productsTableRow(orderProductId));
     const $productEditRow = $(
-      OrderViewPageMap.productsTableRowEdited(orderProductId)
+      OrderViewPageMap.productsTableRowEdited(orderProductId),
     );
     $productEditRow.remove();
     $productRow.removeClass('d-none');
@@ -180,10 +180,10 @@ export default class OrderProductRenderer {
 
   paginate(originalNumPage: number): void {
     const $rows = $(OrderViewPageMap.productsTable).find(
-      'tr[id^="orderProduct_"]'
+      'tr[id^="orderProduct_"]',
     );
     const $customizationRows = $(
-      OrderViewPageMap.productsTableCustomizationRows
+      OrderViewPageMap.productsTableCustomizationRows,
     );
     const $tablePagination = $(OrderViewPageMap.productsTablePagination);
     const numRowsPerPage = parseInt($tablePagination.data('numPerPage'), 10);
@@ -203,7 +203,7 @@ export default class OrderProductRenderer {
       $($rows[i]).removeClass('d-none');
     }
 
-    $customizationRows.each(function() {
+    $customizationRows.each(function () {
       if (
         !$(this)
           .prev()
@@ -225,9 +225,8 @@ export default class OrderProductRenderer {
 
   paginateUpdateControls(numPage: number): void {
     // Why 3 ? Next & Prev & Template
-    const totalPage =
-      $(OrderViewPageMap.productsTablePagination).find('li.page-item').length -
-      3;
+    const totalPage = $(OrderViewPageMap.productsTablePagination).find('li.page-item').length
+      - 3;
     $(OrderViewPageMap.productsTablePagination)
       .find('.active')
       .removeClass('active');
@@ -252,12 +251,11 @@ export default class OrderProductRenderer {
 
   togglePaginationControls(): void {
     // Why 3 ? Next & Prev & Template
-    const totalPage =
-      $(OrderViewPageMap.productsTablePagination).find('li.page-item').length -
-      3;
+    const totalPage = $(OrderViewPageMap.productsTablePagination).find('li.page-item').length
+      - 3;
     $(OrderViewPageMap.productsNavPagination).toggleClass(
       'd-none',
-      totalPage <= 1
+      totalPage <= 1,
     );
   }
 
@@ -266,8 +264,8 @@ export default class OrderProductRenderer {
       'd-none',
       parseInt(
         <string>$(OrderViewPageMap.productAddInvoiceSelect).val(),
-        10
-      ) !== 0
+        10,
+      ) !== 0,
     );
   }
 
@@ -294,7 +292,7 @@ export default class OrderProductRenderer {
     const $tablePagination = $(OrderViewPageMap.productsTablePagination);
     const numPerPage = $tablePagination.data('numPerPage');
     const $rows = $(OrderViewPageMap.productsTable).find(
-      'tr[id^="orderProduct_"]'
+      'tr[id^="orderProduct_"]',
     );
     const numPages = Math.ceil($rows.length / numPerPage);
 
@@ -303,13 +301,13 @@ export default class OrderProductRenderer {
 
     // Clean all page links, reinsert the removed template
     const $linkPaginationTemplate = $(
-      OrderViewPageMap.productsTablePaginationTemplate
+      OrderViewPageMap.productsTablePaginationTemplate,
     );
     $(OrderViewPageMap.productsTablePagination)
       .find('li:has(> [data-page])')
       .remove();
     $(OrderViewPageMap.productsTablePaginationNext).before(
-      $linkPaginationTemplate
+      $linkPaginationTemplate,
     );
 
     // Add appropriate pages

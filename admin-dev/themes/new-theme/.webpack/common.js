@@ -24,9 +24,9 @@
  */
 const path = require('path');
 const webpack = require('webpack');
-const { CleanWebpackPlugin } = require('clean-webpack-plugin');
+const {CleanWebpackPlugin} = require('clean-webpack-plugin');
 const CopyPlugin = require('copy-webpack-plugin');
-const { VueLoaderPlugin } = require('vue-loader');
+const {VueLoaderPlugin} = require('vue-loader');
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 const FixStyleOnlyEntriesPlugin = require('webpack-fix-style-only-entries');
 const bourbon = require('bourbon');
@@ -151,7 +151,7 @@ module.exports = {
           {
             loader: 'babel-loader',
             options: {
-              presets: [['env', { useBuiltIns: 'usage', modules: false }]],
+              presets: [['env', {useBuiltIns: 'usage', modules: false}]],
               plugins: ['transform-object-rest-spread', 'transform-runtime'],
             },
           },
@@ -348,14 +348,14 @@ module.exports = {
     new CleanWebpackPlugin({
       cleanOnceBeforeBuildPatterns: ['!theme.rtlfix'],
     }),
-    new MiniCssExtractPlugin({ filename: '[name].css' }),
+    new MiniCssExtractPlugin({filename: '[name].css'}),
     new webpack.ProvidePlugin({
       moment: 'moment', // needed for bootstrap datetime picker
       $: 'jquery', // needed for jquery-ui
       jQuery: 'jquery',
     }),
     new CopyPlugin({
-      patterns: [{ from: 'static' }],
+      patterns: [{from: 'static'}],
     }),
     new VueLoaderPlugin(),
   ],
