@@ -20,6 +20,9 @@ class BOBasePage extends CommonPage {
     this.successfulDeleteMessage = 'Successful deletion.';
     this.successfulMultiDeleteMessage = 'The selection has been successfully deleted.';
 
+    // Access denied message
+    this.accessDeniedMessage = 'Access denied';
+
     // top navbar
     this.userProfileIconNonMigratedPages = '#employee_infos';
     this.userProfileIcon = '#header_infos #header-employee-container';
@@ -152,6 +155,8 @@ class BOBasePage extends CommonPage {
     this.logsLink = '#subtab-AdminLogs';
     // Multistore
     this.multistoreLink = '#subtab-AdminShopGroup';
+    // Deprecated tab used for regression test
+    this.menuTabLink = '#subtab-AdminTabs';
 
     // welcome module
     this.onboardingCloseButton = 'button.onboarding-button-shut-down';
@@ -183,6 +188,10 @@ class BOBasePage extends CommonPage {
     // Sidebar
     this.rightSidebar = '#right-sidebar';
     this.helpDocumentURL = `${this.rightSidebar} div.quicknav-scroller._fullspace object`;
+
+    // Invalid token block
+    this.invalidTokenContinuelink = 'a.btn-continue';
+    this.invalidTokenCancellink = 'a.btn-cancel';
   }
 
   /*
@@ -399,6 +408,23 @@ class BOBasePage extends CommonPage {
    */
   getAlertInfoBlockParagraphContent(page) {
     return this.getTextContent(page, this.alertInfoBlockParagraph);
+  }
+
+  /**
+   * Navigate to Bo page without token
+   * @param page {Page} Browser tab
+   * @param url {string} Url to BO page
+   * @param continueToPage {boolean} True to continue false to cancel and return to dashboard page
+   * @returns {Promise<void>}
+   */
+  async navigateToPageWithInvalidToken(page, url, continueToPage = true) {
+    await this.goTo(page, url);
+    await this.waitForVisibleSelector(page, this.invalidTokenContinuelink);
+
+    await this.clickAndWaitForNavigation(
+      page,
+      continueToPage ? this.invalidTokenContinuelink : this.invalidTokenCancellink,
+    );
   }
 }
 
