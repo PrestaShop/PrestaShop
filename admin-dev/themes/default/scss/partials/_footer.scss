@@ -127,21 +127,3 @@ a.link-social {
     background-color: #000;
   }
 }
-
-.status-page-dot {
-  &.operational {
-    color: #2ecc71 !important;
-  }
-
-  &.degraded_performance {
-    color: #f1c40f !important;
-  }
-
-  &.partial_outage {
-    color: #e67e22 !important;
-  }
-
-  &.major_outage {
-    color: #e74c3c !important;
-  }
-}
