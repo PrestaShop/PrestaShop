@@ -344,6 +344,13 @@ class AdminShopGroupControllerCore extends AdminController
         return parent::postProcess();
     }
 
+    public function beforeUpdateOptions()
+    {        
+        if (!(new Shop((int) Tools::getValue('PS_SHOP_DEFAULT')))->getBaseURL()) {
+            $this->errors[] = $this->trans('You must configure the URL of this store before you can set it as default.', [], 'Admin.Advparameters.Notification');
+        }
+    }
+
     protected function afterAdd($new_shop_group)
     {
         //Reset available quantitites
