@@ -39,8 +39,8 @@ Feature: Order from Back Office (BO)
       | total_shipping_tax_excl  | 7.0    |
       | total_shipping_tax_incl  | 7.42   |
     Given there is a product in the catalog named "Test Product With Percentage Discount" with a price of 16.0 and 100 items in stock
-    And product "Test Product With Percentage Discount" has a specific price named "discount25" with a discount of 25.0 percent from quantity 5
-    Then product "Test Product With Percentage Discount" should have specific price "discount25" with following settings:
+    And product "Test Product With Percentage Discount" has a custom price named "discount25" with a discount of 25.0 percent from quantity 5
+    Then product "Test Product With Percentage Discount" should have custom price "discount25" with following settings:
       | price          | -1         |
       | from_quantity  | 5          |
       | reduction      | 0.25       |
@@ -54,7 +54,7 @@ Feature: Order from Back Office (BO)
     And order "bo_order1" should contain 1 products "Test Product With Percentage Discount"
     And cart of order "bo_order1" should contain 1 products "Test Product With Percentage Discount"
     And the available stock for product "Test Product With Percentage Discount" should be 99
-    And product "Test Product With Percentage Discount" should have specific price "discount25" with following settings:
+    And product "Test Product With Percentage Discount" should have custom price "discount25" with following settings:
       | price          | -1         |
       | from_quantity  | 5          |
       | reduction      | 0.25       |
@@ -100,7 +100,7 @@ Feature: Order from Back Office (BO)
     And order "bo_order1" should contain 6 products "Test Product With Percentage Discount"
     And cart of order "bo_order1" should contain 6 products "Test Product With Percentage Discount"
     And the available stock for product "Test Product With Percentage Discount" should be 94
-    And product "Test Product With Percentage Discount" should have specific price "discount25" with following settings:
+    And product "Test Product With Percentage Discount" should have custom price "discount25" with following settings:
       | price          | -1         |
       | from_quantity  | 5          |
       | reduction      | 0.25       |
@@ -147,7 +147,7 @@ Feature: Order from Back Office (BO)
     And order "bo_order1" should contain 10 products "Test Product With Percentage Discount"
     And cart of order "bo_order1" should contain 10 products "Test Product With Percentage Discount"
     And the available stock for product "Test Product With Percentage Discount" should be 90
-    And product "Test Product With Percentage Discount" should have specific price "discount25" with following settings:
+    And product "Test Product With Percentage Discount" should have custom price "discount25" with following settings:
       | price          | -1         |
       | from_quantity  | 5          |
       | reduction      | 0.25       |
@@ -190,8 +190,8 @@ Feature: Order from Back Office (BO)
       | total_shipping_tax_excl  | 7.0    |
       | total_shipping_tax_incl  | 7.42   |
     Given there is a product in the catalog named "Test Product With Percentage Discount" with a price of 16.0 and 100 items in stock
-    And product "Test Product With Percentage Discount" has a specific price named "discount25" with a discount of 25.0 percent from quantity 5
-    Then product "Test Product With Percentage Discount" should have specific price "discount25" with following settings:
+    And product "Test Product With Percentage Discount" has a custom price named "discount25" with a discount of 25.0 percent from quantity 5
+    Then product "Test Product With Percentage Discount" should have custom price "discount25" with following settings:
       | price          | -1         |
       | from_quantity  | 5          |
       | reduction      | 0.25       |
@@ -205,7 +205,7 @@ Feature: Order from Back Office (BO)
     And order "bo_order1" should contain 1 products "Test Product With Percentage Discount"
     And cart of order "bo_order1" should contain 1 products "Test Product With Percentage Discount"
     And the available stock for product "Test Product With Percentage Discount" should be 99
-    And product "Test Product With Percentage Discount" should have specific price "discount25" with following settings:
+    And product "Test Product With Percentage Discount" should have custom price "discount25" with following settings:
       | price          | -1         |
       | from_quantity  | 5          |
       | reduction      | 0.25       |
@@ -239,7 +239,7 @@ Feature: Order from Back Office (BO)
     And order "bo_order1" should contain 6 products "Test Product With Percentage Discount"
     And cart of order "bo_order1" should contain 6 products "Test Product With Percentage Discount"
     And the available stock for product "Test Product With Percentage Discount" should be 94
-    And product "Test Product With Percentage Discount" should have specific price "discount25" with following settings:
+    And product "Test Product With Percentage Discount" should have custom price "discount25" with following settings:
       | price          | -1         |
       | from_quantity  | 5          |
       | reduction      | 0.25       |
@@ -273,7 +273,7 @@ Feature: Order from Back Office (BO)
     And order "bo_order1" should contain 10 products "Test Product With Percentage Discount"
     And cart of order "bo_order1" should contain 10 products "Test Product With Percentage Discount"
     And the available stock for product "Test Product With Percentage Discount" should be 90
-    And product "Test Product With Percentage Discount" should have specific price "discount25" with following settings:
+    And product "Test Product With Percentage Discount" should have custom price "discount25" with following settings:
       | price          | -1         |
       | from_quantity  | 5          |
       | reduction      | 0.25       |
@@ -324,8 +324,8 @@ Feature: Order from Back Office (BO)
       | combination2 | 100      | Size:M     |
     Then the available stock for combination "combination1" of product "Test Product With Combination and Specific Price" should be 100
     And the available stock for combination "combination2" of product "Test Product With Combination and Specific Price" should be 100
-    And product "Test Product With Combination and Specific Price" has a specific price named "discount25" with a discount of 25.0 percent from quantity 5
-    Then product "Test Product With Combination and Specific Price" should have specific price "discount25" with following settings:
+    And product "Test Product With Combination and Specific Price" has a custom price named "discount25" with a discount of 25.0 percent from quantity 5
+    Then product "Test Product With Combination and Specific Price" should have custom price "discount25" with following settings:
       | price          | -1         |
       | from_quantity  | 5          |
       | reduction      | 0.25       |
@@ -447,8 +447,8 @@ Feature: Order from Back Office (BO)
       | combination2 | 100      | Size:M     |
     Then the available stock for combination "combination1" of product "Test Product With Combination and Specific Price" should be 100
     And the available stock for combination "combination2" of product "Test Product With Combination and Specific Price" should be 100
-    And product "Test Product With Combination and Specific Price" has a specific price named "discount25" with a discount of 25.0 percent from quantity 5
-    Then product "Test Product With Combination and Specific Price" should have specific price "discount25" with following settings:
+    And product "Test Product With Combination and Specific Price" has a custom price named "discount25" with a discount of 25.0 percent from quantity 5
+    Then product "Test Product With Combination and Specific Price" should have custom price "discount25" with following settings:
       | price          | -1         |
       | from_quantity  | 5          |
       | reduction      | 0.25       |

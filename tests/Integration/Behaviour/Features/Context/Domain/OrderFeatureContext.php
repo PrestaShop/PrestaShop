@@ -1369,23 +1369,23 @@ class OrderFeatureContext extends AbstractDomainFeatureContext
     }
 
     /**
-     * @Then product :productName in order :orderReference should have no specific price
+     * @Then product :productName in order :orderReference should have no custom price
      *
      * @param string $productName
      * @param string $orderReference
      */
-    public function assertNoSpecificPrice(string $productName, string $orderReference)
+    public function assertNoCustomPrice(string $productName, string $orderReference)
     {
         $productId = $this->getProductIdByName($productName);
         // @todo: maybe manage combination as well
         $combinationId = 0;
         $orderId = $this->getSharedStorage()->get($orderReference);
 
-        $specificPriceId = $this->getSpecificPriceId($productId, $combinationId, $orderId);
+        $customPriceId = $this->getCustomPriceId($productId, $combinationId, $orderId);
         Assert::assertNull(
-            $specificPriceId,
+            $customPriceId,
             sprintf(
-                'Product %s from order %s should have no specific price',
+                'Product %s from order %s should have no custom price',
                 $productName,
                 $orderReference
             )
@@ -1406,7 +1406,7 @@ class OrderFeatureContext extends AbstractDomainFeatureContext
         $combinationId = 0;
         $orderId = $this->getSharedStorage()->get($orderReference);
 
-        $specificPriceId = $this->getSpecificPriceId($productId, $combinationId, $orderId);
+        $specificPriceId = $this->getCustomPriceId($productId, $combinationId, $orderId);
         Assert::assertNotNull(
             $specificPriceId,
             sprintf(
@@ -1497,13 +1497,13 @@ class OrderFeatureContext extends AbstractDomainFeatureContext
      *
      * @return int|null
      */
-    private function getSpecificPriceId(int $productId, int $combinationId, int $orderId): ?int
+    private function getCustomPriceId(int $productId, int $combinationId, int $orderId): ?int
     {
         $order = new Order($orderId);
 
-        $specificPriceId = $order->getProductSpecificPriceId($productId, $combinationId);
+        $customPriceId = $order->getProductSpecificPriceId($productId, $combinationId);
 
-        return $specificPriceId ? (int) $specificPriceId : null;
+        return $customPriceId ? (int) $customPriceId : null;
     }
 
     /**

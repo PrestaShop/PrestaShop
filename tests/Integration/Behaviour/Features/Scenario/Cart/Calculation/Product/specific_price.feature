@@ -6,7 +6,7 @@ Feature: Cart calculation with only products with specific prices
   Scenario: multiple products in cart, several quantities, one product with specific prices
     Given I have an empty default cart
     Given there is a product in the catalog named "product1" with a price of 19.812 and 1000 items in stock
-    Given product "product1" has a specific price named "specificPrice1" with an amount discount of 3.0
+    Given product "product1" has a custom price named "specificPrice1" with an amount discount of 3.0
     Given there is a product in the catalog named "product2" with a price of 32.388 and 1000 items in stock
     Given there is a product in the catalog named "product3" with a price of 31.188 and 1000 items in stock
     When I add 2 items of product "product2" in my cart

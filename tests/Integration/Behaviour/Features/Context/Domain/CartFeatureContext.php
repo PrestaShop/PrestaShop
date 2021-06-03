@@ -212,19 +212,19 @@ class CartFeatureContext extends AbstractDomainFeatureContext
     }
 
     /**
-     * @Then product :productName in cart :cartReference should have specific price :price
+     * @Then product :productName in cart :cartReference should have custom price :price
      *
      * @param string $productName
      * @param string $cartReference
      * @param float $price
      */
-    public function checkCartProductSpecificPrice(string $productName, string $cartReference, float $price): void
+    public function checkCartProductCustomPrice(string $productName, string $cartReference, float $price): void
     {
         $productId = $this->getProductIdByName($productName);
         $cartId = SharedStorage::getStorage()->get($cartReference);
         $cart = new Cart($cartId);
 
-        $specificPriceId = SpecificPrice::exists(
+        $customPriceId = SpecificPrice::exists(
             $productId,
             0,
             0,
@@ -239,21 +239,21 @@ class CartFeatureContext extends AbstractDomainFeatureContext
             $cartId
         );
 
-        if (!$specificPriceId) {
+        if (!$customPriceId) {
             throw new RuntimeException(sprintf(
-                'Could not find specific price for product %s in car %s',
+                'Could not find custom price for product %s in car %s',
                 $productName,
                 $cartReference
             ));
         }
 
-        $specificPrice = new SpecificPrice($specificPriceId);
+        $customPrice = new SpecificPrice($customPriceId);
         Assert::assertEquals(
             $price,
-            $specificPrice->price
+            $customPrice->price
         );
-        Assert::assertEquals('amount', $specificPrice->reduction_type);
-        Assert::assertTrue((bool) $specificPrice->reduction_tax);
+        Assert::assertEquals('amount', $customPrice->reduction_type);
+        Assert::assertTrue((bool) $customPrice->reduction_tax);
     }
 
     /**

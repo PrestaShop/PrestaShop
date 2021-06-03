@@ -57,7 +57,7 @@ Feature: Cart calculation with cart rules giving gift
     Given I have an empty default cart
     Given shop configuration for "PS_CART_RULE_FEATURE_ACTIVE" is set to 1
     Given there is a product in the catalog named "product1" with a price of 19.812 and 1000 items in stock
-    And product "product1" has a specific price named "discount" with a discount of 20.00 percent
+    And product "product1" has a custom price named "discount" with a discount of 20.00 percent
     Given there is a product in the catalog named "product2" with a price of 11.00 and 1000 items in stock
     Given there is a product in the catalog named "product4" with a price of 35.567 and 1000 items in stock
     Given there is a cart rule named "cartrule13" that applies a percent discount of 10.0% with priority 13, quantity of 1000 and quantity per user 1000
