@@ -281,10 +281,7 @@ describe('Create 100% discount with free shipping discount code', async () => {
         baseContext,
       );
 
-      const noPaymentNeededText = await checkoutPage.getTextContent(
-        page,
-        checkoutPage.noPaymentNeededElement,
-      );
+      const noPaymentNeededText = await checkoutPage.getNoPaymentNeededBlockContent(page);
 
       await expect(noPaymentNeededText).to.contains(checkoutPage.noPaymentNeededText);
     });

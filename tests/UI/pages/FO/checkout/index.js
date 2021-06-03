@@ -146,6 +146,15 @@ class Checkout extends FOBasePage {
   }
 
   /**
+   * Get No payment needed block content
+   * @param page
+   * @returns {string}
+   */
+   getNoPaymentNeededBlockContent(page) {
+    return this.getTextContent(page, this.noPaymentNeededElement);
+  }
+
+  /**
    * Get selected shipping method name
    * @param page {Page} Browser tab
    * @return {Promise<string>}
