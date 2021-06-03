@@ -65,7 +65,7 @@ Feature: Order from Back Office (BO)
       | amount         | 80    |
       | price          | 7.80  |
       | price_tax_incl | 9.438 |
-    Then product "Test Product With Odd Tax" in order "bo_order1" should have no specific price
+    Then product "Test Product With Odd Tax" in order "bo_order1" should have no custom price
     And product "Test Product With Odd Tax" in order "bo_order1" has following details:
       | product_quantity            | 80     |
       | product_price               | 7.80   |
@@ -92,7 +92,7 @@ Feature: Order from Back Office (BO)
       | amount         | 80   |
       | price          | 7.80 |
       | price_tax_incl | 9.44 |
-    Then product "Test Product With Odd Tax" in order "bo_order1" should have no specific price
+    Then product "Test Product With Odd Tax" in order "bo_order1" should have no custom price
     # product_price is computed for backward compatibility which is why it is rounded
     And product "Test Product With Odd Tax" in order "bo_order1" has following details:
       | product_quantity            | 80     |
@@ -264,7 +264,7 @@ Feature: Order from Back Office (BO)
       | total_shipping_tax_excl  | 2.0    |
       | total_shipping_tax_incl  | 2.42   |
     # Edit with values that are not strictly equals, but price tax excluded is not different from the catalog price
-    # so no specific price is computed
+    # so no custom price is computed
     When I edit product "Test Product With Odd Tax" to order "bo_order1" with following products details:
       | amount         | 80   |
       | price          | 7.44 |
