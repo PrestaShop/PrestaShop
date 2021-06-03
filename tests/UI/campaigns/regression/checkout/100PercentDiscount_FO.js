@@ -34,7 +34,7 @@ const percentCartRule = new CartRuleFaker({
   code: 'discount100',
   discountType: 'Percent',
   discountPercent: 100,
-  freeShipping: 'on',
+  freeShipping: true,
 });
 
 const customerData = new CustomerFaker({password: ''});
