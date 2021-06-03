@@ -13,7 +13,6 @@ const menuTabPage = require('@pages/BO/advancedParameters/menuTab');
 // Setup data
 const pageUrl = `${global.BO.URL}index.php?controller=AdminTabs`;
 
-
 // Import test context
 const testContext = require('@utils/testContext');
 
