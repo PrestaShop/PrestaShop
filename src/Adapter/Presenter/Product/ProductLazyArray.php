@@ -538,40 +538,50 @@ class ProductLazyArray extends AbstractLazyArray
     /**
      * @arrayAccess
      *
-     * @return 0|null
+     * @return array|null
      */
     public function getSpecificReferences()
     {
-        if (isset($this->product['attributes']) && !isset($this->product['cart_quantity'])) {
-            $specificReferences = array_slice($this->product['attributes'], 0)[0];
-            //this attributes should not be displayed in FO
-            unset(
-                $specificReferences['id_attribute'],
-                $specificReferences['id_attribute_group'],
-                $specificReferences['name'],
-                $specificReferences['group'],
-                $specificReferences['reference']
-            );
-
-            //if the attribute's references doesn't exist then get the product's references or unset it
-            foreach ($specificReferences as $key => $value) {
-                if (empty($value)) {
-                    $translatedKey = $this->getTranslatedKey($key);
-                    unset($specificReferences[$key]);
-                    if (!empty($this->product[$key])) {
-                        $specificReferences[$translatedKey] = $this->product[$key];
-                    }
-                }
-            }
-
-            if (empty($specificReferences)) {
-                $specificReferences = null;
-            }
-
-            return $specificReferences;
+        if (isset($this->product['cart_quantity'])) {
+            return null;
         }
 
-        return null;
+        // If the product has no combinations then the `specific_references` must be filled in
+        if (isset($this->product['attributes'])) {
+            $specificReferences = array_slice($this->product['attributes'], 0)[0];
+        } else {
+            $specificReferences = [
+                'isbn' => $this->product['isbn'] ?? false,
+                'upc' => $this->product['upc'] ?? false,
+                'ean13' => $this->product['ean13'] ?? false,
+                'mpn' => $this->product['mpn'] ?? false,
+            ];
+        }
+        //this attributes should not be displayed in FO
+        unset(
+            $specificReferences['id_attribute'],
+            $specificReferences['id_attribute_group'],
+            $specificReferences['name'],
+            $specificReferences['group'],
+            $specificReferences['reference']
+        );
+
+        //if the attribute's references doesn't exist then get the product's references or unset it
+        foreach ($specificReferences as $key => $value) {
+            if (empty($value)) {
+                $translatedKey = $this->getTranslatedKey($key);
+                unset($specificReferences[$key]);
+                if (!empty($this->product[$key])) {
+                    $specificReferences[$translatedKey] = $this->product[$key];
+                }
+            }
+        }
+
+        if (empty($specificReferences)) {
+            $specificReferences = null;
+        }
+
+        return $specificReferences;
     }
 
     /**
