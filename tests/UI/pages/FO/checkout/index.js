@@ -25,7 +25,7 @@ class Checkout extends FOBasePage {
     this.termsOfServiceModalDiv = '#modal div.js-modal-content';
     this.paymentConfirmationButton = `${this.paymentStepSection} #payment-confirmation button:not([disabled])`;
     this.shippingValueSpan = '#cart-subtotal-shipping span.value';
-    this.noPaymentNeededElement = `${this.paymentStepSection} div.content > p`;
+    this.noPaymentNeededElement = `${this.paymentStepSection} div.content > p.cart-payment-step-not-needed-info`;
     this.noPaymentNeededText = 'No payment needed for this order';
 
     // Personal information form
