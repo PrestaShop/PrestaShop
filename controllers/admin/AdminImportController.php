@@ -375,7 +375,7 @@ class AdminImportControllerCore extends AdminController
 
             case $this->entities[$this->trans('Customers', [], 'Admin.Global')]:
                 //Overwrite required_fields AS only email is required whereas other entities
-                $this->required_fields = ['email', 'passwd', 'lastname', 'firstname'];
+                $this->required_fields = ['email', 'lastname', 'firstname'];
 
                 $this->available_fields = [
                     'no' => ['label' => $this->trans('Ignore this column', [], 'Admin.Advparameters.Feature')],
@@ -383,7 +383,7 @@ class AdminImportControllerCore extends AdminController
                     'active' => ['label' => $this->trans('Active  (0/1)', [], 'Admin.Advparameters.Feature')],
                     'id_gender' => ['label' => $this->trans('Titles ID (Mr = 1, Ms = 2, else 0)', [], 'Admin.Advparameters.Feature')],
                     'email' => ['label' => $this->trans('Email', [], 'Admin.Global') . '*'],
-                    'passwd' => ['label' => $this->trans('Password', [], 'Admin.Global') . '*'],
+                    'passwd' => ['label' => $this->trans('Password', [], 'Admin.Global')],
                     'birthday' => ['label' => $this->trans('Birth date (yyyy-mm-dd)', [], 'Admin.Advparameters.Feature')],
                     'lastname' => ['label' => $this->trans('Last name', [], 'Admin.Global') . '*'],
                     'firstname' => ['label' => $this->trans('First name', [], 'Admin.Global') . '*'],
@@ -3136,8 +3136,16 @@ class AdminImportControllerCore extends AdminController
 
         AdminImportController::arrayWalk($info, ['AdminImportController', 'fillInfo'], $customer);
 
-        if ($customer->passwd) {
-            $customer->passwd = $this->get('hashing')->hash($customer->passwd, _COOKIE_KEY_);
+        if (!$customer->id) {
+            if (empty($info['passwd'])) {
+                $customer->passwd = $this->get('hashing')->hash(Tools::passwdGen(8, 'RANDOM'), _COOKIE_KEY_);
+            } else {
+                $customer->passwd = $this->get('hashing')->hash($customer->passwd, _COOKIE_KEY_);
+            }
+        } else {
+            if (!empty($info['passwd'])) {
+                $customer->passwd = $this->get('hashing')->hash($customer->passwd, _COOKIE_KEY_);
+            }
         }
 
         $id_shop_list = explode($this->multiple_value_separator, $customer->id_shop);
