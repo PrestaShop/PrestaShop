@@ -589,7 +589,7 @@ class CookieCore
             $session = new CustomerSession($sessionId);
         }
 
-        if (!empty($session->getId())) {
+        if ($session && !empty($session->getId())) {
             return $session;
         }
 
