@@ -29,7 +29,6 @@ declare(strict_types=1);
 namespace Tests\Unit\Adapter\Preferences;
 
 use Cookie;
-use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 use PrestaShop\PrestaShop\Adapter\Configuration;
 use PrestaShop\PrestaShop\Adapter\Preferences\PreferencesConfiguration;
@@ -48,8 +47,14 @@ class PreferencesConfigurationTest extends TestCase
      */
     private $mockConfiguration;
 
+    /**
+     * @var ShopContext
+     */
     private $mockShopConfiguration;
 
+    /**
+     * @var FeatureInterface
+     */
     private $mockMultistoreFeature;
 
     protected function setUp()
@@ -222,9 +227,9 @@ class PreferencesConfigurationTest extends TestCase
     }
 
     /**
-     * @return MockObject
+     * @return ShopContext
      */
-    private function getMockShopConfiguration(): MockObject
+    private function getMockShopConfiguration(): ShopContext
     {
         return $this->getMockBuilder(ShopContext::class)
             ->setMethods(['getContextShopGroup', 'getContextShopID', 'isAllShopContext'])
@@ -232,9 +237,9 @@ class PreferencesConfigurationTest extends TestCase
     }
 
     /**
-     * @return MockObject
+     * @return FeatureInterface
      */
-    private function getMockMultistoreFeature(): MockObject
+    private function getMockMultistoreFeature(): FeatureInterface
     {
         return $this->getMockForAbstractClass(FeatureInterface::class);
     }
