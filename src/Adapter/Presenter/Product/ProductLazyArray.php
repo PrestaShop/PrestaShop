@@ -887,7 +887,7 @@ class ProductLazyArray extends AbstractLazyArray
         $show_availability = $show_price && $settings->stock_management_enabled;
         $this->product['show_availability'] = $show_availability;
 
-        if (!$product['quantity_wanted']) {
+        if (empty($product['quantity_wanted'])) {
             $product['quantity_wanted'] = $this->getQuantityWanted();
         }
 
