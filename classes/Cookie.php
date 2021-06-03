@@ -589,7 +589,7 @@ class CookieCore
             $session = new CustomerSession($sessionId);
         }
 
-        if (isset($session) && !empty($session->getId())) {
+        if (Validate::isLoadedObject($session)) {
             return $session;
         }
 
