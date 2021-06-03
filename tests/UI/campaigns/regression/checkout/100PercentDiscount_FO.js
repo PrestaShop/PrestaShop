@@ -312,11 +312,8 @@ describe('Create 100% discount with free shipping discount code', async () => {
         baseContext,
       );
 
-      // and click on the confirm button should take us to the confirmationpage
-      await checkoutPage.clickAndWaitForNavigation(
-        page,
-        checkoutPage.paymentConfirmationButton,
-      );
+      // complete the order
+      await checkoutPage.orderWithoutPaymentMethod(page);
 
       // Check that we got to order confirmation (probably not necessary)
       const cardTitle = await orderConfirmationPage.getOrderConfirmationCardTitle(

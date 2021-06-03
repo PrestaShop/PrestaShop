@@ -223,6 +223,24 @@ class Checkout extends FOBasePage {
   }
 
   /**
+   * Order when no payment is needed
+   * @param page
+   * @returns {Promise<void>}
+   */
+   async orderWithoutPaymentMethod(page) {
+    // Click on terms of services checkbox if visible
+    if (await this.elementVisible(page, this.conditionToApproveLabel, 500)) {
+      await Promise.all([
+        this.waitForVisibleSelector(page, this.paymentConfirmationButton),
+        page.click(this.conditionToApproveLabel),
+      ]);
+    }
+
+    // Validate the order
+    await this.clickAndWaitForNavigation(page, this.paymentConfirmationButton);
+  }
+
+  /**
    * Check payment method existence
    * @param page {Page} Browser tab
    * @param paymentModuleName {string} The payment module name
