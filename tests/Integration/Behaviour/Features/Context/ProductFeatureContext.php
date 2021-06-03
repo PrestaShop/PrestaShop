@@ -60,7 +60,7 @@ class ProductFeatureContext extends AbstractPrestaShopFeatureContext
     /**
      * @var SpecificPrice[][]
      */
-    protected $specificPrices = [];
+    protected $customPrices = [];
 
     /**
      * @var Customization[]
@@ -496,118 +496,118 @@ class ProductFeatureContext extends AbstractPrestaShopFeatureContext
         $this->checkFixtureExists($this->products, 'Product', $productName);
     }
 
-    /* SPECIFIC PRICE */
+    /* CUSTOM PRICE */
 
     /**
-     * @Given /^product "(.+)" has a specific price named "(.+)" with an amount discount of (\d+\.\d+)$/
+     * @Given /^product "(.+)" has a custom price named "(.+)" with an amount discount of (\d+\.\d+)$/
      */
-    public function productWithNameHasASpecificPriceWithAmountDiscount($productName, $specificPriceName, $specificPriceDiscount)
+    public function productWithNameHasACustomPriceWithAmountDiscount($productName, $customPriceName, $customPriceDiscount)
     {
-        if (isset($this->specificPrices[$productName][$specificPriceName])) {
-            throw new \Exception(sprintf('Product named %s has already a specific price named %s', $productName, $specificPriceName));
+        if (isset($this->customPrices[$productName][$customPriceName])) {
+            throw new \Exception(sprintf('Product named %s has already a custom price named %s', $productName, $customPriceName));
         }
-        $specificPrice = new SpecificPrice();
-        $specificPrice->id_product = $this->getProductWithName($productName)->id;
-        $specificPrice->price = -1;
-        $specificPrice->reduction = $specificPriceDiscount;
-        $specificPrice->reduction_type = 'amount';
-        $specificPrice->from_quantity = 1;
-        $specificPrice->from = '0000-00-00 00:00:00';
-        $specificPrice->to = '0000-00-00 00:00:00';
-        // set required values (no specific rules applied, the price is for everyone)
-        $specificPrice->id_shop = 0;
-        $specificPrice->id_currency = 0;
-        $specificPrice->id_country = 0;
-        $specificPrice->id_group = 0;
-        $specificPrice->id_customer = 0;
-        $specificPrice->add();
-        $this->specificPrices[$productName][$specificPriceName] = $specificPrice;
+        $customPrice = new SpecificPrice();
+        $customPrice->id_product = $this->getProductWithName($productName)->id;
+        $customPrice->price = -1;
+        $customPrice->reduction = $customPriceDiscount;
+        $customPrice->reduction_type = 'amount';
+        $customPrice->from_quantity = 1;
+        $customPrice->from = '0000-00-00 00:00:00';
+        $customPrice->to = '0000-00-00 00:00:00';
+        // set required values (no custom rules applied, the price is for everyone)
+        $customPrice->id_shop = 0;
+        $customPrice->id_currency = 0;
+        $customPrice->id_country = 0;
+        $customPrice->id_group = 0;
+        $customPrice->id_customer = 0;
+        $customPrice->add();
+        $this->customPrices[$productName][$customPriceName] = $customPrice;
     }
 
     /**
-     * @Given /^product "(.+)" has a specific price named "(.+)" with a discount of (\d+\.\d+) percent$/
+     * @Given /^product "(.+)" has a custom price named "(.+)" with a discount of (\d+\.\d+) percent$/
      */
-    public function productWithNameHasASpecificPriceWithPercentageDiscount(string $productName, string $specificPriceName, float $specificPricePercent)
+    public function productWithNameHasACustomPriceWithPercentageDiscount(string $productName, string $customPriceName, float $customPricePercent)
     {
-        if (isset($this->specificPrices[$productName][$specificPriceName])) {
-            throw new \Exception(sprintf('Product named %s has already a specific price named %s', $productName, $specificPriceName));
+        if (isset($this->customPrices[$productName][$customPriceName])) {
+            throw new \Exception(sprintf('Product named %s has already a custom price named %s', $productName, $customPriceName));
         }
-        $specificPrice = new SpecificPrice();
-        $specificPrice->id_product = $this->getProductWithName($productName)->id;
-        $specificPrice->price = -1;
-        $specificPrice->reduction = $specificPricePercent / 100;
-        $specificPrice->reduction_type = 'percentage';
-        $specificPrice->reduction_tax = 1;
-        $specificPrice->from_quantity = 1;
-        $specificPrice->from = '0000-00-00 00:00:00';
-        $specificPrice->to = '0000-00-00 00:00:00';
-        // set required values (no specific rules applied, the price is for everyone)
-        $specificPrice->id_shop = 0;
-        $specificPrice->id_currency = 0;
-        $specificPrice->id_country = 0;
-        $specificPrice->id_group = 0;
-        $specificPrice->id_customer = 0;
-        $specificPrice->add();
-        $this->specificPrices[$productName][$specificPriceName] = $specificPrice;
+        $customPrice = new SpecificPrice();
+        $customPrice->id_product = $this->getProductWithName($productName)->id;
+        $customPrice->price = -1;
+        $customPrice->reduction = $customPricePercent / 100;
+        $customPrice->reduction_type = 'percentage';
+        $customPrice->reduction_tax = 1;
+        $customPrice->from_quantity = 1;
+        $customPrice->from = '0000-00-00 00:00:00';
+        $customPrice->to = '0000-00-00 00:00:00';
+        // set required values (no custom rules applied, the price is for everyone)
+        $customPrice->id_shop = 0;
+        $customPrice->id_currency = 0;
+        $customPrice->id_country = 0;
+        $customPrice->id_group = 0;
+        $customPrice->id_customer = 0;
+        $customPrice->add();
+        $this->customPrices[$productName][$customPriceName] = $customPrice;
     }
 
     /**
-     * @Given /^product "(.+)" has a specific price named "(.+)" with a discount of (\d+\.\d+) percent from quantity (\d+)$/
+     * @Given /^product "(.+)" has a custom price named "(.+)" with a discount of (\d+\.\d+) percent from quantity (\d+)$/
      *
      * @param string $productName
-     * @param string $specificPriceName
-     * @param float $specificPricePercent
+     * @param string $customPriceName
+     * @param float $customPricePercent
      * @param int $quantityThreshold
      */
-    public function productWithNameHasASpecificPriceWithPercentageDiscountFromQuantity(
+    public function productWithNameHasACustomPriceWithPercentageDiscountFromQuantity(
         string $productName,
-        string $specificPriceName,
-        float $specificPricePercent,
+        string $customPriceName,
+        float $customPricePercent,
         int $quantityThreshold
     ): void {
-        if (isset($this->specificPrices[$productName][$specificPriceName])) {
-            throw new \Exception(sprintf('Product named %s has already a specific price named %s', $productName, $specificPriceName));
+        if (isset($this->customPrices[$productName][$customPriceName])) {
+            throw new \Exception(sprintf('Product named %s has already a custom price named %s', $productName, $customPriceName));
         }
-        $specificPrice = new SpecificPrice();
-        $specificPrice->id_product = $this->products[$productName]->id;
-        $specificPrice->price = -1;
-        $specificPrice->reduction = $specificPricePercent / 100;
-        $specificPrice->reduction_type = 'percentage';
-        $specificPrice->reduction_tax = 1;
-        $specificPrice->from_quantity = $quantityThreshold;
-        $specificPrice->from = '0000-00-00 00:00:00';
-        $specificPrice->to = '0000-00-00 00:00:00';
-        // set required values (no specific rules applied, the price is for everyone)
-        $specificPrice->id_shop = 0;
-        $specificPrice->id_currency = 0;
-        $specificPrice->id_country = 0;
-        $specificPrice->id_group = 0;
-        $specificPrice->id_customer = 0;
-        $specificPrice->add();
-        $this->specificPrices[$productName][$specificPriceName] = $specificPrice;
+        $customPrice = new SpecificPrice();
+        $customPrice->id_product = $this->products[$productName]->id;
+        $customPrice->price = -1;
+        $customPrice->reduction = $customPricePercent / 100;
+        $customPrice->reduction_type = 'percentage';
+        $customPrice->reduction_tax = 1;
+        $customPrice->from_quantity = $quantityThreshold;
+        $customPrice->from = '0000-00-00 00:00:00';
+        $customPrice->to = '0000-00-00 00:00:00';
+        // set required values (no custom rules applied, the price is for everyone)
+        $customPrice->id_shop = 0;
+        $customPrice->id_currency = 0;
+        $customPrice->id_country = 0;
+        $customPrice->id_group = 0;
+        $customPrice->id_customer = 0;
+        $customPrice->add();
+        $this->customPrices[$productName][$customPriceName] = $customPrice;
     }
 
     /**
-     * @Then product :productName should have specific price :specificPriceName with following settings:
+     * @Then product :productName should have custom price :customPriceName with following settings:
      */
-    public function assertSpecificPriceSettings(string $productName, string $specificPriceName, TableNode $table)
+    public function assertCustomPriceSettings(string $productName, string $customPriceName, TableNode $table)
     {
-        $specificPrice = $this->specificPrices[$productName][$specificPriceName];
-        $databaseSpecificPrice = new SpecificPrice($specificPrice->id);
+        $customPrice = $this->customPrices[$productName][$customPriceName];
+        $databaseCustomPrice = new SpecificPrice($customPrice->id);
         // Check that it is still in database
-        if ($databaseSpecificPrice->id != $specificPrice->id) {
+        if ($databaseCustomPrice->id != $customPrice->id) {
             throw new RuntimeException(sprintf(
-                'Could not find Specific price %s in database',
-                $specificPriceName
+                'Could not find Custom price %s in database',
+                $customPriceName
             ));
         }
-        $expectedSpecificPriceData = $table->getRowsHash();
+        $expectedCustomPriceData = $table->getRowsHash();
 
-        foreach ($expectedSpecificPriceData as $fieldName => $expectedValue) {
-            $databaseValue = $databaseSpecificPrice->$fieldName;
+        foreach ($expectedCustomPriceData as $fieldName => $expectedValue) {
+            $databaseValue = $databaseCustomPrice->$fieldName;
             if ($databaseValue != $expectedValue) {
                 throw new RuntimeException(sprintf(
-                    'Specific price field %s has value %s but expected %s',
+                    'Custom price field %s has value %s but expected %s',
                     $fieldName,
                     $databaseValue,
                     $expectedValue
@@ -621,23 +621,23 @@ class ProductFeatureContext extends AbstractPrestaShopFeatureContext
      *
      * @AfterScenario
      */
-    public function cleanSpecificPriceFixtures()
+    public function cleanCustomPriceFixtures()
     {
-        foreach ($this->specificPrices as $productName => $specificPrices) {
-            foreach ($specificPrices as $specificPriceName => $specificPrice) {
-                $specificPrice->delete();
+        foreach ($this->customPrices as $productName => $customPrices) {
+            foreach ($customPrices as $customPriceName => $customPrice) {
+                $customPrice->delete();
             }
         }
-        $this->specificPrices = [];
+        $this->customPrices = [];
     }
 
     /**
      * @param $productName
-     * @param $specificPriceName
+     * @param $customPriceName
      */
-    public function checkSpecificPriceWithNameExists($productName, $specificPriceName)
+    public function checkCustomPriceWithNameExists($productName, $customPriceName)
     {
-        $this->checkFixtureExists($this->specificPrices[$productName], 'SpecificPrice', $specificPriceName);
+        $this->checkFixtureExists($this->customPrices[$productName], 'CustomPrice', $customPriceName);
     }
 
     /**

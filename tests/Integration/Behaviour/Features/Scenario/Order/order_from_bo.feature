@@ -155,8 +155,8 @@ Feature: Order from Back Office (BO)
       | total_shipping_tax_excl  | 7.0   |
       | total_shipping_tax_incl  | 7.42  |
 
-  # This test validates the out of stock behaviour and a bug that occured when a specific price had been set
-  Scenario: Add product with specific price without stock, get error, allow out of stock order and retry, it should work (no unicity error)
+  # This test validates the out of stock behaviour and a bug that occured when a custom price had been set
+  Scenario: Add product with custom price without stock, get error, allow out of stock order and retry, it should work (no unicity error)
     Given order with reference "bo_order1" does not contain product "Mug Today is a good day"
     Then order "bo_order1" should have 2 products in total
     Then order "bo_order1" should have 0 invoices
@@ -172,19 +172,19 @@ Feature: Order from Back Office (BO)
       | total_paid_real          | 0.0    |
       | total_shipping_tax_excl  | 7.0    |
       | total_shipping_tax_incl  | 7.42   |
-    Given there is a product in the catalog named "Test Product With Specific Price" with a price of 15.0 and 0 items in stock
+    Given there is a product in the catalog named "Test Product With Custom Price" with a price of 15.0 and 0 items in stock
     When I add products to order "bo_order1" with new invoice and the following products details:
-      | name          | Test Product With Specific Price  |
+      | name          | Test Product With Custom Price  |
       | amount        | 1                                 |
       | price         | 8                                 |
     Then I should get error that product is out of stock
     Given shop configuration for "PS_ORDER_OUT_OF_STOCK" is set to 1
     # Use different price to be sure this one will be used
     When I add products to order "bo_order1" with new invoice and the following products details:
-      | name          | Test Product With Specific Price  |
+      | name          | Test Product With Custom Price  |
       | amount        | 1                                 |
       | price         | 10                                |
-    # This is to avoid regression, previously a specific price was added but not cleared and it caused an unexpected bug
+    # This is to avoid regression, previously a custom price was added but not cleared and it caused an unexpected bug
     Then order "bo_order1" should have 3 products in total
     Then order "bo_order1" should have following details:
       | total_products           | 33.800 |
@@ -319,7 +319,7 @@ Feature: Order from Back Office (BO)
       | total_shipping_tax_excl  | 7.0   |
       | total_shipping_tax_incl  | 7.42  |
     When I remove product "Test Added Product" from order "bo_order1"
-    Then product "Test Added Product" in order "bo_order1" should have no specific price
+    Then product "Test Added Product" in order "bo_order1" should have no custom price
     And order "bo_order1" should have 2 products in total
     And order "bo_order1" should contain 0 product "Test Added Product"
     And cart of order "bo_order1" should contain 0 product "Test Added Product"
@@ -341,7 +341,7 @@ Feature: Order from Back Office (BO)
       | amount        | 3                       |
       | price         | 11.90                   |
     Then order "bo_order1" should contain 3 products "Mug The best is yet to come"
-    And product "Mug The best is yet to come" in order "bo_order1" should have no specific price
+    And product "Mug The best is yet to come" in order "bo_order1" should have no custom price
     And product "Mug The best is yet to come" in order "bo_order1" has following details:
       | product_quantity            | 3      |
       | product_price               | 11.90  |
@@ -592,7 +592,7 @@ Feature: Order from Back Office (BO)
       | price         | 15                 |
     And I generate invoice for "bo_order1" order
     Then order "bo_order1" should contain 2 products "Test Added Product"
-    And product "Test Added Product" in order "bo_order1" should have no specific price
+    And product "Test Added Product" in order "bo_order1" should have no custom price
     And the available stock for product "Test Added Product" should be 98
     And order "bo_order1" should have 4 products in total
     And order "bo_order1" should have 1 invoice
@@ -650,7 +650,7 @@ Feature: Order from Back Office (BO)
       | total_shipping_tax_excl | 7.0   |
       | total_shipping_tax_incl | 7.42  |
     When I remove product "Mug The best is yet to come" from order "bo_order1"
-    Then product "Test Added Product" in order "bo_order1" should have no specific price
+    Then product "Test Added Product" in order "bo_order1" should have no custom price
     And order "bo_order1" should have 0 products in total
     And order "bo_order1" should contain 0 product "Mug The best is yet to come"
     And cart of order "bo_order1" should contain 0 product "Mug The best is yet to come"

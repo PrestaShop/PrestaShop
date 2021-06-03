@@ -39,7 +39,7 @@ Feature: Order from Back Office (BO)
       | amount        | 3                       |
       | price         | 11.90                   |
     Then order "bo_order1" should contain 3 products "Mug The best is yet to come"
-    And product "Mug The best is yet to come" in order "bo_order1" should have no specific price
+    And product "Mug The best is yet to come" in order "bo_order1" should have no custom price
     And product "Mug The best is yet to come" in order "bo_order1" has following details:
       | product_quantity            | 3      |
       | product_price               | 11.90  |
@@ -121,7 +121,7 @@ Feature: Order from Back Office (BO)
       | total_shipping_tax_excl  | 7.0   |
       | total_shipping_tax_incl  | 7.42  |
     When I remove product "Test Added Product" from order "bo_order1"
-    Then product "Test Added Product" in order "bo_order1" should have no specific price
+    Then product "Test Added Product" in order "bo_order1" should have no custom price
     And order "bo_order1" should have 2 products in total
     And order "bo_order1" should contain 0 product "Test Added Product"
     And cart of order "bo_order1" should contain 0 product "Test Added Product"

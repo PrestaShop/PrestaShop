@@ -118,10 +118,10 @@ Feature: Multiple currencies for Order in Back Office (BO)
       | total_shipping_tax_excl  | 70.00   |
       | total_shipping_tax_incl  | 74.20   |
 
-  Scenario: Add cart rule of type 'amount' to an order with secondary currency and a product with specific price
-    Given there is a product in the catalog named "Test Product With Discount and SpecificPrice" with a price of 16.0 and 100 items in stock
-    And product "Test Product With Discount and SpecificPrice" has a specific price named "discount25" with a discount of 25.0 percent
-    And product "Test Product With Discount and SpecificPrice" should have specific price "discount25" with following settings:
+  Scenario: Add cart rule of type 'amount' to an order with secondary currency and a product with custom price
+    Given there is a product in the catalog named "Test Product With Discount and CustomPrice" with a price of 16.0 and 100 items in stock
+    And product "Test Product With Discount and CustomPrice" has a custom price named "discount25" with a discount of 25.0 percent
+    And product "Test Product With Discount and CustomPrice" should have custom price "discount25" with following settings:
       | price          | -1         |
       | from_quantity  | 1          |
       | reduction      | 0.25       |
@@ -129,14 +129,14 @@ Feature: Multiple currencies for Order in Back Office (BO)
       | reduction_tax  | 1          |
     And there is a cart rule named "CartRuleAmountOnSelectedProduct" that applies an amount discount of 1.0 with priority 1, quantity of 100 and quantity per user 100
     And cart rule "CartRuleAmountOnSelectedProduct" has no discount code
-    And cart rule "CartRuleAmountOnSelectedProduct" is restricted to product "Test Product With Discount and SpecificPrice"
+    And cart rule "CartRuleAmountOnSelectedProduct" is restricted to product "Test Product With Discount and CustomPrice"
     When I add products to order "bo_order1" with new invoice and the following products details:
-      | name          | Test Product With Discount and SpecificPrice |
+      | name          | Test Product With Discount and CustomPrice |
       | amount        | 2                                     |
       | price         | 120                                   |
-    Then product "Test Product With Discount and SpecificPrice" in order "bo_order1" should have no specific price
-#    For product "Test Product With Discount and SpecificPrice"
-#    Due to the specific price 25% of €160, the customer have to pay 75% of the product price : €120
+    Then product "Test Product With Discount and CustomPrice" in order "bo_order1" should have no custom price
+#    For product "Test Product With Discount and CustomPrice"
+#    Due to the custom price 25% of €160, the customer have to pay 75% of the product price : €120
 #    We set 120 here to simulate what the user see by default in the BO
     Then order "bo_order1" should have 1 cart rule
     Then order "bo_order1" should have cart rule "CartRuleAmountOnSelectedProduct" with amount "€10.00"
@@ -159,7 +159,7 @@ Feature: Multiple currencies for Order in Back Office (BO)
       | unit_price_tax_excl         | 119.00   |
       | total_price_tax_incl        | 252.28   |
       | total_price_tax_excl        | 238.00   |
-    And product "Test Product With Discount and SpecificPrice" in order "bo_order1" has following details:
+    And product "Test Product With Discount and CustomPrice" in order "bo_order1" has following details:
       | product_quantity            | 2        |
       | original_product_price      | 160.00   |
       | product_price               | 120.00   |
