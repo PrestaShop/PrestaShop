@@ -39,8 +39,8 @@ Feature: Order from Back Office (BO)
       | total_shipping_tax_excl  | 7.0    |
       | total_shipping_tax_incl  | 7.42   |
     Given there is a product in the catalog named "Test Product With Percentage Discount" with a price of 16.0 and 100 items in stock
-    And product "Test Product With Percentage Discount" has a custom price named "discount25" with a discount of 25.0 percent from quantity 5
-    Then product "Test Product With Percentage Discount" should have custom price "discount25" with following settings:
+    And product "Test Product With Percentage Discount" has a specific price named "discount25" with a discount of 25.0 percent from quantity 5
+    Then product "Test Product With Percentage Discount" should have specific price "discount25" with following settings:
       | price          | -1         |
       | from_quantity  | 5          |
       | reduction      | 0.25       |
@@ -54,7 +54,7 @@ Feature: Order from Back Office (BO)
     And order "bo_order1" should contain 1 products "Test Product With Percentage Discount"
     And cart of order "bo_order1" should contain 1 products "Test Product With Percentage Discount"
     And the available stock for product "Test Product With Percentage Discount" should be 99
-    And product "Test Product With Percentage Discount" should have custom price "discount25" with following settings:
+    And product "Test Product With Percentage Discount" should have specific price "discount25" with following settings:
       | price          | -1         |
       | from_quantity  | 5          |
       | reduction      | 0.25       |
@@ -100,7 +100,7 @@ Feature: Order from Back Office (BO)
     And order "bo_order1" should contain 6 products "Test Product With Percentage Discount"
     And cart of order "bo_order1" should contain 6 products "Test Product With Percentage Discount"
     And the available stock for product "Test Product With Percentage Discount" should be 94
-    And product "Test Product With Percentage Discount" should have custom price "discount25" with following settings:
+    And product "Test Product With Percentage Discount" should have specific price "discount25" with following settings:
       | price          | -1         |
       | from_quantity  | 5          |
       | reduction      | 0.25       |
@@ -147,7 +147,7 @@ Feature: Order from Back Office (BO)
     And order "bo_order1" should contain 10 products "Test Product With Percentage Discount"
     And cart of order "bo_order1" should contain 10 products "Test Product With Percentage Discount"
     And the available stock for product "Test Product With Percentage Discount" should be 90
-    And product "Test Product With Percentage Discount" should have custom price "discount25" with following settings:
+    And product "Test Product With Percentage Discount" should have specific price "discount25" with following settings:
       | price          | -1         |
       | from_quantity  | 5          |
       | reduction      | 0.25       |
@@ -190,8 +190,8 @@ Feature: Order from Back Office (BO)
       | total_shipping_tax_excl  | 7.0    |
       | total_shipping_tax_incl  | 7.42   |
     Given there is a product in the catalog named "Test Product With Percentage Discount" with a price of 16.0 and 100 items in stock
-    And product "Test Product With Percentage Discount" has a custom price named "discount25" with a discount of 25.0 percent from quantity 5
-    Then product "Test Product With Percentage Discount" should have custom price "discount25" with following settings:
+    And product "Test Product With Percentage Discount" has a specific price named "discount25" with a discount of 25.0 percent from quantity 5
+    Then product "Test Product With Percentage Discount" should have specific price "discount25" with following settings:
       | price          | -1         |
       | from_quantity  | 5          |
       | reduction      | 0.25       |
@@ -205,7 +205,7 @@ Feature: Order from Back Office (BO)
     And order "bo_order1" should contain 1 products "Test Product With Percentage Discount"
     And cart of order "bo_order1" should contain 1 products "Test Product With Percentage Discount"
     And the available stock for product "Test Product With Percentage Discount" should be 99
-    And product "Test Product With Percentage Discount" should have custom price "discount25" with following settings:
+    And product "Test Product With Percentage Discount" should have specific price "discount25" with following settings:
       | price          | -1         |
       | from_quantity  | 5          |
       | reduction      | 0.25       |
@@ -239,7 +239,7 @@ Feature: Order from Back Office (BO)
     And order "bo_order1" should contain 6 products "Test Product With Percentage Discount"
     And cart of order "bo_order1" should contain 6 products "Test Product With Percentage Discount"
     And the available stock for product "Test Product With Percentage Discount" should be 94
-    And product "Test Product With Percentage Discount" should have custom price "discount25" with following settings:
+    And product "Test Product With Percentage Discount" should have specific price "discount25" with following settings:
       | price          | -1         |
       | from_quantity  | 5          |
       | reduction      | 0.25       |
@@ -273,7 +273,7 @@ Feature: Order from Back Office (BO)
     And order "bo_order1" should contain 10 products "Test Product With Percentage Discount"
     And cart of order "bo_order1" should contain 10 products "Test Product With Percentage Discount"
     And the available stock for product "Test Product With Percentage Discount" should be 90
-    And product "Test Product With Percentage Discount" should have custom price "discount25" with following settings:
+    And product "Test Product With Percentage Discount" should have specific price "discount25" with following settings:
       | price          | -1         |
       | from_quantity  | 5          |
       | reduction      | 0.25       |
@@ -324,8 +324,8 @@ Feature: Order from Back Office (BO)
       | combination2 | 100      | Size:M     |
     Then the available stock for combination "combination1" of product "Test Product With Combination and Specific Price" should be 100
     And the available stock for combination "combination2" of product "Test Product With Combination and Specific Price" should be 100
-    And product "Test Product With Combination and Specific Price" has a custom price named "discount25" with a discount of 25.0 percent from quantity 5
-    Then product "Test Product With Combination and Specific Price" should have custom price "discount25" with following settings:
+    And product "Test Product With Combination and Specific Price" has a specific price named "discount25" with a discount of 25.0 percent from quantity 5
+    Then product "Test Product With Combination and Specific Price" should have specific price "discount25" with following settings:
       | price          | -1         |
       | from_quantity  | 5          |
       | reduction      | 0.25       |
@@ -447,8 +447,8 @@ Feature: Order from Back Office (BO)
       | combination2 | 100      | Size:M     |
     Then the available stock for combination "combination1" of product "Test Product With Combination and Specific Price" should be 100
     And the available stock for combination "combination2" of product "Test Product With Combination and Specific Price" should be 100
-    And product "Test Product With Combination and Specific Price" has a custom price named "discount25" with a discount of 25.0 percent from quantity 5
-    Then product "Test Product With Combination and Specific Price" should have custom price "discount25" with following settings:
+    And product "Test Product With Combination and Specific Price" has a specific price named "discount25" with a discount of 25.0 percent from quantity 5
+    Then product "Test Product With Combination and Specific Price" should have specific price "discount25" with following settings:
       | price          | -1         |
       | from_quantity  | 5          |
       | reduction      | 0.25       |
@@ -545,3 +545,132 @@ Feature: Order from Back Office (BO)
       | total_paid_real          | 0.0     |
       | total_shipping_tax_excl  | 7.0     |
       | total_shipping_tax_incl  | 7.42    |
+
+  Scenario: In an order, adding a product without combination, which has specific price rules with quantity threshold in another invoice, will keep the specific price of the first invoice
+    Given order "bo_order1" should have 2 products in total
+    And order "bo_order1" should have 0 invoices
+    And order "bo_order1" should have 0 cart rule
+    Then order "bo_order1" should have following details:
+      | total_products           | 23.800 |
+      | total_products_wt        | 25.230 |
+      | total_discounts_tax_excl | 0.0    |
+      | total_discounts_tax_incl | 0.0    |
+      | total_paid_tax_excl      | 30.800 |
+      | total_paid_tax_incl      | 32.650 |
+      | total_paid               | 32.650 |
+      | total_paid_real          | 0.0    |
+      | total_shipping_tax_excl  | 7.0    |
+      | total_shipping_tax_incl  | 7.42   |
+    Given there is a product in the catalog named "Test Product With Percentage Discount" with a price of 16.0 and 100 items in stock
+    And product "Test Product With Percentage Discount" has a specific price named "discount25" with a discount of 25.0 percent from quantity 5
+    Then product "Test Product With Percentage Discount" should have specific price "discount25" with following settings:
+      | price          | -1         |
+      | from_quantity  | 5          |
+      | reduction      | 0.25       |
+      | reduction_type | percentage |
+      | reduction_tax  | 1          |
+    When I add products to order "bo_order1" with new invoice and the following products details:
+      | name          | Test Product With Percentage Discount |
+      | amount        | 6                                     |
+      | price         | 16                                    |
+    Then order "bo_order1" should have 8 products in total
+    And order "bo_order1" should contain 6 products "Test Product With Percentage Discount"
+    And cart of order "bo_order1" should contain 6 products "Test Product With Percentage Discount"
+    And the available stock for product "Test Product With Percentage Discount" should be 94
+    And product "Test Product With Percentage Discount" should have specific price "discount25" with following settings:
+      | price          | -1         |
+      | from_quantity  | 5          |
+      | reduction      | 0.25       |
+      | reduction_type | percentage |
+      | reduction_tax  | 1          |
+    # The price set is the price without the discount so it is a specific price
+    Then product "Test Product With Percentage Discount" in order "bo_order1" has following details:
+      | product_quantity            | 6     |
+      | product_price               | 12.00 |
+      | original_product_price      | 16.00 |
+      | unit_price_tax_incl         | 12.72 |
+      | unit_price_tax_excl         | 12.00 |
+      | total_price_tax_incl        | 76.32 |
+      | total_price_tax_excl        | 72.00 |
+    And order "bo_order1" should have following details:
+      | total_products           | 95.800 |
+      | total_products_wt        | 101.55 |
+      | total_discounts_tax_excl | 0.0000 |
+      | total_discounts_tax_incl | 0.0000 |
+      | total_paid_tax_excl      | 102.80 |
+      | total_paid_tax_incl      | 108.97 |
+      | total_paid               | 108.97 |
+      | total_paid_real          | 0.0    |
+      | total_shipping_tax_excl  | 7.0    |
+      | total_shipping_tax_incl  | 7.42   |
+    When I generate invoice for "bo_order1" order
+    And the first invoice from order "bo_order1" should have following details:
+      | total_products              | 95.800   |
+      | total_products_wt           | 101.55   |
+      | total_discount_tax_excl     | 0.0      |
+      | total_discount_tax_incl     | 0.0      |
+      | total_paid_tax_excl         | 102.80   |
+      | total_paid_tax_incl         | 108.97   |
+      | total_shipping_tax_excl     | 7.0      |
+      | total_shipping_tax_incl     | 7.42     |
+    # Add the same product a second time with quantity threshold not reached
+    When I add products to order "bo_order1" with new invoice and the following products details:
+      | name          | Test Product With Percentage Discount |
+      | amount        | 2                                     |
+      | price         | 16                                    |
+    Then order "bo_order1" should have 10 products in total
+    And order "bo_order1" should contain 8 products "Test Product With Percentage Discount"
+    And cart of order "bo_order1" should contain 8 products "Test Product With Percentage Discount"
+    And the available stock for product "Test Product With Percentage Discount" should be 92
+    And product "Test Product With Percentage Discount" should have specific price "discount25" with following settings:
+      | price          | -1         |
+      | from_quantity  | 5          |
+      | reduction      | 0.25       |
+      | reduction_type | percentage |
+      | reduction_tax  | 1          |
+    # The price set is the price without the discount so it is a specific price
+    Then the first orderDetail for product "Test Product With Percentage Discount" in order "bo_order1" has following details:
+      | product_quantity            | 6     |
+      | product_price               | 12.00 |
+      | original_product_price      | 16.00 |
+      | unit_price_tax_incl         | 12.72 |
+      | unit_price_tax_excl         | 12.00 |
+      | total_price_tax_incl        | 76.32 |
+      | total_price_tax_excl        | 72.00 |
+    Then the second orderDetail for product "Test Product With Percentage Discount" in order "bo_order1" has following details:
+      | product_quantity            | 2     |
+      | product_price               | 12.00 |
+      | original_product_price      | 16.00 |
+      | unit_price_tax_incl         | 12.72 |
+      | unit_price_tax_excl         | 12.00 |
+      | total_price_tax_incl        | 25.44 |
+      | total_price_tax_excl        | 24.00 |
+    And order "bo_order1" should have following details:
+      | total_products           | 119.800 |
+      | total_products_wt        | 126.99 |
+      | total_discounts_tax_excl | 0.0000 |
+      | total_discounts_tax_incl | 0.0000 |
+      | total_paid_tax_excl      | 126.80 |
+      | total_paid_tax_incl      | 134.41 |
+      | total_paid               | 134.41 |
+      | total_paid_real          | 0.0    |
+      | total_shipping_tax_excl  | 7.0    |
+      | total_shipping_tax_incl  | 7.42   |
+    And the first invoice from order "bo_order1" should have following details:
+      | total_products              | 95.800   |
+      | total_products_wt           | 101.55   |
+      | total_discount_tax_excl     | 0.0      |
+      | total_discount_tax_incl     | 0.0      |
+      | total_paid_tax_excl         | 102.80   |
+      | total_paid_tax_incl         | 108.97   |
+      | total_shipping_tax_excl     | 7.0      |
+      | total_shipping_tax_incl     | 7.42     |
+    And the second invoice from order "bo_order1" should have following details:
+      | total_products              | 24.000   |
+      | total_products_wt           | 25.44    |
+      | total_discount_tax_excl     | 0.0      |
+      | total_discount_tax_incl     | 0.0      |
+      | total_paid_tax_excl         | 24.000   |
+      | total_paid_tax_incl         | 25.440   |
+      | total_shipping_tax_excl     | 7.0      |
+      | total_shipping_tax_incl     | 7.42     |
