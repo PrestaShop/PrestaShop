@@ -557,7 +557,7 @@ class ProductLazyArray extends AbstractLazyArray
                 $this->product['attributes'][0]['mpn'] = $this->product['mpn'];
             }
         }
-        
+
         if (isset($this->product['attributes']) && !isset($this->product['cart_quantity'])) {
             $specificReferences = array_slice($this->product['attributes'], 0)[0];
             //this attributes should not be displayed in FO
