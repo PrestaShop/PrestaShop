@@ -1280,10 +1280,9 @@ class AdminImportControllerCore extends AdminController
                             }
                         }
                     }
-                    if (in_array($image_type['id_image_type'], $watermark_types)) {
-                        Hook::exec('actionWatermark', ['id_image' => $id_image, 'id_product' => $id_entity]);
-                    }
                 }
+                
+                Hook::exec('actionWatermark', ['id_image' => $id_image, 'id_product' => $id_entity]);
             }
         } else {
             @unlink($orig_tmpfile);
