@@ -1281,7 +1281,7 @@ class AdminImportControllerCore extends AdminController
                         }
                     }
                 }
-                
+
                 Hook::exec('actionWatermark', ['id_image' => $id_image, 'id_product' => $id_entity]);
             }
         } else {
