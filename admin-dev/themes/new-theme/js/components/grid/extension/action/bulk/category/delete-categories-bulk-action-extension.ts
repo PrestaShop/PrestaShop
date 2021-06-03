@@ -23,54 +23,61 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
 
+import {Grid} from '@PSTypes/grid';
+import GridMap from '@components/grid/grid-map';
+
 const {$} = window;
 
 /**
  * Class DeleteCategoriesBulkActionExtension handles submitting of row action
  */
 export default class DeleteCategoriesBulkActionExtension {
-  constructor() {
-    return {
-      extend: (grid) => this.extend(grid),
-    };
-  }
-
   /**
    * Extend grid
    *
    * @param {Grid} grid
    */
-  extend(grid) {
-    grid.getContainer().on('click', '.js-delete-categories-bulk-action', (event) => {
+  extend(grid: Grid): void {
+    grid.getContainer().on('click', GridMap.bulks.deleteCategories, (event) => {
       event.preventDefault();
 
       const submitUrl = $(event.currentTarget).data('categories-delete-url');
 
-      const $deleteCategoriesModal = $(`#${grid.getId()}_grid_delete_categories_modal`);
+      const $deleteCategoriesModal = $(
+        GridMap.bulks.deleteCategoriesModal(grid.getId()),
+      );
       $deleteCategoriesModal.modal('show');
 
-      $deleteCategoriesModal.on('click', '.js-submit-delete-categories', () => {
-        const $checkboxes = grid.getContainer().find('.js-bulk-action-checkbox:checked');
-        const $categoriesToDeleteInputBlock = $('#delete_categories_categories_to_delete');
+      $deleteCategoriesModal.on(
+        'click',
+        GridMap.bulks.submitDeleteCategories,
+        () => {
+          const $checkboxes = grid
+            .getContainer()
+            .find(GridMap.bulks.checkedCheckbox);
+          const $categoriesToDeleteInputBlock = $(
+            GridMap.bulks.categoriesToDelete,
+          );
 
-        $checkboxes.each((i, element) => {
-          const $checkbox = $(element);
+          $checkboxes.each((i, element) => {
+            const $checkbox = $(element);
 
-          const categoryInput = $categoriesToDeleteInputBlock
-            .data('prototype')
-            .replace(/__name__/g, $checkbox.val());
+            const categoryInput = $categoriesToDeleteInputBlock
+              .data('prototype')
+              .replace(/__name__/g, $checkbox.val());
 
-          const $input = $($.parseHTML(categoryInput)[0]);
-          $input.val($checkbox.val());
+            const $input = $($.parseHTML(categoryInput)[0]);
+            $input.val(<string>$checkbox.val());
 
-          $categoriesToDeleteInputBlock.append($input);
-        });
+            $categoriesToDeleteInputBlock.append($input);
+          });
 
-        const $form = $deleteCategoriesModal.find('form');
+          const $form = $deleteCategoriesModal.find('form');
 
-        $form.attr('action', submitUrl);
-        $form.submit();
-      });
+          $form.attr('action', submitUrl);
+          $form.submit();
+        },
+      );
     });
   }
 }

@@ -23,7 +23,9 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
 
+import {Grid} from '@PSTypes/grid';
 import ConfirmModal from '@components/modal';
+import GridMap from '@components/grid/grid-map';
 
 const {$} = window;
 
@@ -31,21 +33,17 @@ const {$} = window;
  * Handles submit of grid actions
  */
 export default class SubmitBulkActionExtension {
-  constructor() {
-    return {
-      extend: (grid) => this.extend(grid),
-    };
-  }
-
   /**
    * Extend grid with bulk action submitting
    *
    * @param {Grid} grid
    */
-  extend(grid) {
-    grid.getContainer().on('click', '.js-bulk-action-submit-btn', (event) => {
-      this.submit(event, grid);
-    });
+  extend(grid: Grid): void {
+    grid
+      .getContainer()
+      .on('click', GridMap.bulks.submitAction, (event: JQueryEventObject) => {
+        this.submit(event, grid);
+      });
   }
 
   /**
@@ -56,7 +54,7 @@ export default class SubmitBulkActionExtension {
    *
    * @private
    */
-  submit(event, grid) {
+  private submit(event: JQueryEventObject, grid: Grid): void {
     const $submitBtn = $(event.currentTarget);
     const confirmMessage = $submitBtn.data('confirm-message');
     const confirmTitle = $submitBtn.data('confirmTitle');
@@ -78,19 +76,27 @@ export default class SubmitBulkActionExtension {
    * @param {string} confirmMessage
    * @param {string} confirmTitle
    */
-  showConfirmModal($submitBtn, grid, confirmMessage, confirmTitle) {
+  private showConfirmModal(
+    $submitBtn: JQuery<Element>,
+    grid: Grid,
+    confirmMessage: string,
+    confirmTitle: string,
+  ): void {
     const confirmButtonLabel = $submitBtn.data('confirmButtonLabel');
     const closeButtonLabel = $submitBtn.data('closeButtonLabel');
     const confirmButtonClass = $submitBtn.data('confirmButtonClass');
 
-    const modal = new ConfirmModal({
-      id: `${grid.getId()}-grid-confirm-modal`,
-      confirmTitle,
-      confirmMessage,
-      confirmButtonLabel,
-      closeButtonLabel,
-      confirmButtonClass,
-    }, () => this.postForm($submitBtn, grid));
+    const modal = new ConfirmModal(
+      {
+        id: GridMap.confirmModal(grid.getId()),
+        confirmTitle,
+        confirmMessage,
+        confirmButtonLabel,
+        closeButtonLabel,
+        confirmButtonClass,
+      },
+      () => this.postForm($submitBtn, grid),
+    );
 
     modal.show();
   }
@@ -99,8 +105,8 @@ export default class SubmitBulkActionExtension {
    * @param {jQuery} $submitBtn
    * @param {Grid} grid
    */
-  postForm($submitBtn, grid) {
-    const $form = $(`#${grid.getId()}_filter_form`);
+  private postForm($submitBtn: JQuery<Element>, grid: Grid): void {
+    const $form = $(GridMap.filterForm(grid.getId()));
 
     $form.attr('action', $submitBtn.data('form-url'));
     $form.attr('method', $submitBtn.data('form-method'));

@@ -23,22 +23,50 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
 
-import resetSearch from '@app/utils/reset_search';
+import {Grid} from '@PSTypes/grid';
+import GridMap from '@components/grid/grid-map';
 
 const {$} = window;
 
 /**
- * Class FiltersResetExtension extends grid with filters resetting
+ * Class ReloadListExtension extends grid with "Column toggling" feature
  */
-export default class FiltersResetExtension {
+export default class ColumnTogglingExtension {
   /**
    * Extend grid
    *
    * @param {Grid} grid
    */
-  extend(grid) {
-    grid.getContainer().on('click', '.js-reset-search', (event) => {
-      resetSearch($(event.currentTarget).data('url'), $(event.currentTarget).data('redirect'));
+  extend(grid: Grid): void {
+    const $table = grid.getContainer().find(GridMap.table);
+    $table.find(GridMap.togglableRow).on('click', (e) => {
+      e.preventDefault();
+      this.toggleValue($(e.delegateTarget));
     });
+  }
+
+  /**
+   * @param {jQuery} row
+   * @private
+   */
+  private toggleValue(row: JQuery) {
+    const toggleUrl = row.data('toggleUrl');
+
+    this.submitAsForm(toggleUrl);
+  }
+
+  /**
+   * Submits request url as form
+   *
+   * @param {string} toggleUrl
+   * @private
+   */
+  private submitAsForm(toggleUrl: string) {
+    const $form = $('<form>', {
+      action: toggleUrl,
+      method: 'POST',
+    }).appendTo('body');
+
+    $form.submit();
   }
 }

@@ -23,6 +23,9 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
 
+import {Grid} from '@PSTypes/grid';
+import GridMap from '@components/grid/grid-map';
+
 const {$} = window;
 
 /**
@@ -34,7 +37,7 @@ export default class LinkRowActionExtension {
    *
    * @param {Grid} grid
    */
-  extend(grid) {
+  extend(grid: Grid): void {
     this.initRowLinks(grid);
     this.initConfirmableActions(grid);
   }
@@ -44,8 +47,8 @@ export default class LinkRowActionExtension {
    *
    * @param {Grid} grid
    */
-  initConfirmableActions(grid) {
-    grid.getContainer().on('click', '.js-link-row-action', (event) => {
+  initConfirmableActions(grid: Grid): void {
+    grid.getContainer().on('click', GridMap.rows.linkRowAction, (event) => {
       const confirmMessage = $(event.currentTarget).data('confirm-message');
 
       if (confirmMessage.length && !window.confirm(confirmMessage)) {
@@ -59,37 +62,44 @@ export default class LinkRowActionExtension {
    *
    * @param {Grid} grid
    */
-  initRowLinks(grid) {
+  initRowLinks(grid: Grid): void {
     $('tr', grid.getContainer()).each(function initEachRow() {
       const $parentRow = $(this);
 
-      $('.js-link-row-action[data-clickable-row=1]:first', $parentRow).each(function propagateFirstLinkAction() {
-        const $rowAction = $(this);
-        const $parentCell = $rowAction.closest('td');
+      $(GridMap.rows.linkRowActionClickableFirst, $parentRow).each(
+        function propagateFirstLinkAction() {
+          const $rowAction = $(this);
+          const $parentCell = $rowAction.closest('td');
 
-        const clickableCells = $('td.clickable', $parentRow).not($parentCell);
-        let isDragging = false;
-        clickableCells.addClass('cursor-pointer').mousedown(() => {
-          $(window).mousemove(() => {
-            isDragging = true;
-            $(window).unbind('mousemove');
+          const clickableCells = $(GridMap.rows.clickableTd, $parentRow).not(
+            $parentCell,
+          );
+          let isDragging = false;
+          clickableCells.addClass('cursor-pointer').mousedown(() => {
+            $(window).mousemove(() => {
+              isDragging = true;
+              $(window).unbind('mousemove');
+            });
           });
-        });
 
-        clickableCells.mouseup(() => {
-          const wasDragging = isDragging;
-          isDragging = false;
-          $(window).unbind('mousemove');
+          clickableCells.mouseup(() => {
+            const wasDragging = isDragging;
+            isDragging = false;
+            $(window).unbind('mousemove');
 
-          if (!wasDragging) {
-            const confirmMessage = $rowAction.data('confirm-message');
+            if (!wasDragging) {
+              const confirmMessage = $rowAction.data('confirm-message');
 
-            if (!confirmMessage.length || window.confirm(confirmMessage)) {
-              document.location = $rowAction.attr('href');
+              if (
+                !confirmMessage.length
+                || (window.confirm(confirmMessage) && $rowAction.attr('href'))
+              ) {
+                document.location.href = <string>$rowAction.attr('href');
+              }
             }
-          }
-        });
-      });
+          });
+        },
+      );
     });
   }
 }

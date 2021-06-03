@@ -23,47 +23,22 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
 
-const {$} = window;
+import {Grid} from '@PSTypes/grid';
+import TableSorting from '@app/utils/table-sorting';
+import GridMap from '@components/grid/grid-map';
 
 /**
- * Class ReloadListExtension extends grid with "Column toggling" feature
+ * Class ReloadListExtension extends grid with "List reload" action
  */
-export default class ColumnTogglingExtension {
+export default class SortingExtension {
   /**
    * Extend grid
    *
    * @param {Grid} grid
    */
-  extend(grid) {
-    const $table = grid.getContainer().find('table.table');
-    $table.find('.ps-togglable-row').on('click', (e) => {
-      e.preventDefault();
-      this.toggleValue($(e.delegateTarget));
-    });
-  }
+  extend(grid: Grid): void {
+    const $sortableTable = grid.getContainer().find(GridMap.table);
 
-  /**
-   * @param {jQuery} row
-   * @private
-   */
-  toggleValue(row) {
-    const toggleUrl = row.data('toggleUrl');
-
-    this.submitAsForm(toggleUrl);
-  }
-
-  /**
-   * Submits request url as form
-   *
-   * @param {string} toggleUrl
-   * @private
-   */
-  submitAsForm(toggleUrl) {
-    const $form = $('<form>', {
-      action: toggleUrl,
-      method: 'POST',
-    }).appendTo('body');
-
-    $form.submit();
+    new TableSorting($sortableTable).attach();
   }
 }

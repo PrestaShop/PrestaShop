@@ -22,6 +22,8 @@
  * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
+import {Grid} from '@PSTypes/grid';
+import GridMap from '@components/grid/grid-map';
 
 const {$} = window;
 
@@ -35,17 +37,21 @@ const {$} = window;
  *
  */
 export default class ChoiceExtension {
+  lockArray: Array<string>;
+
   constructor() {
-    this.locks = [];
+    this.lockArray = [];
   }
 
-  extend(grid) {
-    const $choiceOptionsContainer = grid.getContainer().find('table.table .js-choice-options');
+  extend(grid: Grid): void {
+    const $choiceOptionsContainer = grid
+      .getContainer()
+      .find(GridMap.bulks.choiceOptions);
 
-    $choiceOptionsContainer.find('.js-dropdown-item').on('click', (e) => {
+    $choiceOptionsContainer.find(GridMap.dropdownItem).on('click', (e) => {
       e.preventDefault();
       const $button = $(e.currentTarget);
-      const $parent = $button.closest('.js-choice-options');
+      const $parent = $button.closest(GridMap.bulks.choiceOptions);
       const url = $parent.data('url');
 
       this.submitForm(url, $button);
@@ -58,7 +64,7 @@ export default class ChoiceExtension {
    * @param {jQuery} $button
    * @private
    */
-  submitForm(url, $button) {
+  private submitForm(url: string, $button: JQuery) {
     const selectedStatusId = $button.data('value');
 
     if (this.isLocked(url)) {
@@ -73,7 +79,8 @@ export default class ChoiceExtension {
         name: 'value',
         value: selectedStatusId,
         type: 'hidden',
-      }));
+      }),
+    );
 
     $form.appendTo('body');
     $form.submit();
@@ -89,8 +96,8 @@ export default class ChoiceExtension {
    *
    * @private
    */
-  isLocked(url) {
-    return this.locks.includes(url);
+  private isLocked(url: string): boolean {
+    return this.lockArray.includes(url);
   }
 
   /**
@@ -98,7 +105,7 @@ export default class ChoiceExtension {
    * @param url
    * @private
    */
-  lock(url) {
-    this.locks.push(url);
+  private lock(url: string): void {
+    this.lockArray.push(url);
   }
 }

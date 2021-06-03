@@ -23,11 +23,14 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
 
+// @ts-ignore
 import Routing from 'fos-routing';
+// @ts-ignore
 import routes from '@js/fos_js_routes.json';
 
 const {$} = window;
 
+/* eslint-disable */
 /**
  * Wraps FOSJsRoutingbundle with exposed routes.
  * To expose route add option `expose: true` in .yml routing config
@@ -38,9 +41,9 @@ const {$} = window;
  *    path: /my-path
  *    options:
  *      expose: true
- * `
  * And run `bin/console fos:js-routing:dump --format=json --target=admin-dev/themes/new-theme/js/fos_js_routes.json`
  */
+/* eslint-enable */
 export default class Router {
   constructor() {
     if (window.prestashop && window.prestashop.customRoutes) {
@@ -65,7 +68,7 @@ export default class Router {
    *
    * @returns {String}
    */
-  generate(route, params = {}) {
+  generate(route: string, params: Record<string, unknown> = {}): string {
     const tokenizedParams = Object.assign(params, {
       _token: $(document)
         .find('body')

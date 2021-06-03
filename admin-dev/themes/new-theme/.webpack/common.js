@@ -127,7 +127,7 @@ module.exports = {
     chunkFilename: '[id].[hash:8].js',
   },
   resolve: {
-    extensions: ['.js', '.vue', '.json'],
+    extensions: ['.ts', '.js', '.vue', '.json'],
     alias: {
       vue$: 'vue/dist/vue.common.js',
       '@app': path.resolve(__dirname, '../js/app'),
@@ -137,6 +137,7 @@ module.exports = {
       '@scss': path.resolve(__dirname, '../scss'),
       '@node_modules': path.resolve(__dirname, '../node_modules'),
       '@vue': path.resolve(__dirname, '../js/vue'),
+      '@PSTypes': path.resolve(__dirname, '../js/types'),
     },
   },
   module: {
@@ -153,6 +154,11 @@ module.exports = {
             },
           },
         ],
+      },
+      {
+        test: /\.ts?$/,
+        use: 'ts-loader',
+        exclude: /node_modules/,
       },
       {
         test: /jquery-ui\.js/,

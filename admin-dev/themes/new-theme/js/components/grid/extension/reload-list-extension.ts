@@ -23,46 +23,23 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
 
-const {$} = window;
+import {Grid} from '@PSTypes/grid';
+import GridMap from '@components/grid/grid-map';
 
 /**
- * Class SubmitGridActionExtension handles grid action submits
+ * Class ReloadListExtension extends grid with "List reload" action
  */
-export default class SubmitGridActionExtension {
-  constructor() {
-    return {
-      extend: (grid) => this.extend(grid),
-    };
-  }
-
-  extend(grid) {
-    grid.getHeaderContainer().on('click', '.js-grid-action-submit-btn', (event) => {
-      this.handleSubmit(event, grid);
-    });
-  }
-
+export default class ReloadListExtension {
   /**
-   * Handle grid action submit.
-   * It uses grid form to submit actions.
+   * Extend grid
    *
-   * @param {Event} event
    * @param {Grid} grid
-   *
-   * @private
    */
-  handleSubmit(event, grid) {
-    const $submitBtn = $(event.currentTarget);
-    const confirmMessage = $submitBtn.data('confirm-message');
-
-    if (typeof confirmMessage !== 'undefined' && confirmMessage.length > 0 && !window.confirm(confirmMessage)) {
-      return;
-    }
-
-    const $form = $(`#${grid.getId()}_filter_form`);
-
-    $form.attr('action', $submitBtn.data('url'));
-    $form.attr('method', $submitBtn.data('method'));
-    $form.find(`input[name="${grid.getId()}[_token]"]`).val($submitBtn.data('csrf'));
-    $form.submit();
+  extend(grid: Grid): void {
+    grid
+      .getHeaderContainer()
+      .on('click', GridMap.commonRefreshListAction, () => {
+        window.location.reload();
+      });
   }
 }

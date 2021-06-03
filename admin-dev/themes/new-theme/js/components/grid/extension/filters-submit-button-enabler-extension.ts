@@ -23,6 +23,9 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
 
+import {Grid} from '@PSTypes/grid';
+import GridMap from '@components/grid/grid-map';
+
 /**
  * Responsible for grid filters search and reset button availability when filter inputs changes.
  */
@@ -32,13 +35,13 @@ export default class FiltersSubmitButtonEnablerExtension {
    *
    * @param {Grid} grid
    */
-  extend(grid) {
-    const $filtersRow = grid.getContainer().find('.column-filters');
-    $filtersRow.find('.grid-search-button').prop('disabled', true);
+  extend(grid: Grid): void {
+    const $filtersRow = grid.getContainer().find(GridMap.columnFilters);
+    $filtersRow.find(GridMap.gridSearchButton).prop('disabled', true);
 
-    $filtersRow.find('input:not(.js-bulk-action-select-all), select').on('input dp.change', () => {
-      $filtersRow.find('.grid-search-button').prop('disabled', false);
-      $filtersRow.find('.js-grid-reset-button').prop('hidden', false);
+    $filtersRow.find(GridMap.inputAndSelect).on('input dp.change', () => {
+      $filtersRow.find(GridMap.gridSearchButton).prop('disabled', false);
+      $filtersRow.find(GridMap.gridResetButton).prop('hidden', false);
     });
   }
 }

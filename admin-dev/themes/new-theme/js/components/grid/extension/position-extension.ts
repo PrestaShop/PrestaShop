@@ -23,18 +23,31 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
 
+import {Grid} from '@PSTypes/grid';
+import GridMap from '@components/grid/grid-map';
 import 'tablednd/dist/jquery.tablednd.min';
 
 const {$} = window;
+
+interface RowDatas {
+  rowMarker: string;
+  offset: number;
+}
+
+interface DNDPositions {
+  rowId: string;
+  oldPosition: number;
+  newPosition: number;
+}
 
 /**
  * Class PositionExtension extends Grid with reorderable positions
  */
 export default class PositionExtension {
-  constructor() {
-    return {
-      extend: (grid) => this.extend(grid),
-    };
+  grid: Grid;
+
+  constructor(grid: Grid) {
+    this.grid = grid;
   }
 
   /**
@@ -42,22 +55,32 @@ export default class PositionExtension {
    *
    * @param {Grid} grid
    */
-  extend(grid) {
+  extend(grid: Grid): void {
     this.grid = grid;
     this.addIdsToGridTableRows();
-    grid.getContainer().find('.js-grid-table').tableDnD({
-      onDragClass: 'position-row-while-drag',
-      dragHandle: '.js-drag-handle',
-      onDrop: (table, row) => this.handlePositionChange(row),
-    });
-    grid.getContainer().find('.js-drag-handle').hover(
-      function () {
-        $(this).closest('tr').addClass('hover');
-      },
-      function () {
-        $(this).closest('tr').removeClass('hover');
-      },
-    );
+    grid
+      .getContainer()
+      .find(GridMap.gridTable)
+      .tableDnD({
+        onDragClass: GridMap.onDragClass,
+        dragHandle: GridMap.dragHandler,
+        onDrop: (table: HTMLElement, row: HTMLElement) => this.handlePositionChange(row),
+      });
+    grid
+      .getContainer()
+      .find('.js-drag-handle')
+      .hover(
+        function hover() {
+          $(this)
+            .closest('tr')
+            .addClass('hover');
+        },
+        function stopHover() {
+          $(this)
+            .closest('tr')
+            .removeClass('hover');
+        },
+      );
   }
 
   /**
@@ -67,8 +90,10 @@ export default class PositionExtension {
    *
    * @private
    */
-  handlePositionChange(row) {
-    const $rowPositionContainer = $(row).find(`.js-${this.grid.getId()}-position:first`);
+  private handlePositionChange(row: HTMLElement): void {
+    const $rowPositionContainer = $(row).find(
+      GridMap.gridPositionFirst(this.grid.getId()),
+    );
     const updateUrl = $rowPositionContainer.data('update-url');
     const method = $rowPositionContainer.data('update-method');
     const positions = this.getRowsPositions();
@@ -82,7 +107,7 @@ export default class PositionExtension {
    * @returns {Array}
    * @private
    */
-  getRowsPositions() {
+  private getRowsPositions(): Array<DNDPositions> {
     const tableData = JSON.parse($.tableDnD.jsonize());
     const rowsData = tableData[`${this.grid.getId()}_grid_table`];
     const completeRowsData = [];
@@ -92,8 +117,7 @@ export default class PositionExtension {
     // retrieve dragAndDropOffset offset to have all needed data
     // for positions mapping evolution over time
     for (let i = 0; i < rowsData.length; i += 1) {
-      trData = this.grid.getContainer()
-        .find(`#${rowsData[i]}`);
+      trData = this.grid.getContainer().find(`#${rowsData[i]}`);
 
       completeRowsData.push({
         rowMarker: rowsData[i],
@@ -109,18 +133,19 @@ export default class PositionExtension {
    *
    * @private
    */
-  addIdsToGridTableRows() {
+  private addIdsToGridTableRows(): void {
     let counter = 0;
 
-    this.grid.getContainer()
-      .find(`.js-grid-table .js-${this.grid.getId()}-position`)
+    this.grid
+      .getContainer()
+      .find(GridMap.gridTablePosition(this.grid.getId()))
       .each((index, positionWrapper) => {
         const $positionWrapper = $(positionWrapper);
         const rowId = $positionWrapper.data('id');
         const position = $positionWrapper.data('position');
         const id = `row_${rowId}_${position}`;
         $positionWrapper.closest('tr').attr('id', id);
-        $positionWrapper.closest('td').addClass('js-drag-handle');
+        $positionWrapper.closest('td').addClass(GridMap.dragHandler);
         $positionWrapper.closest('tr').data('dragAndDropOffset', counter);
 
         counter += 1;
@@ -136,7 +161,11 @@ export default class PositionExtension {
    *
    * @private
    */
-  updatePosition(url, params, method) {
+  private updatePosition(
+    url: string,
+    params: Record<string, Array<DNDPositions>>,
+    method: string,
+  ): void {
     const isGetOrPostMethod = ['GET', 'POST'].includes(method);
 
     const $form = $('<form>', {
@@ -170,11 +199,13 @@ export default class PositionExtension {
 
     // This _method param is used by Symfony to simulate DELETE and PUT methods
     if (!isGetOrPostMethod) {
-      $form.append($('<input>', {
-        type: 'hidden',
-        name: '_method',
-        value: method,
-      }));
+      $form.append(
+        $('<input>', {
+          type: 'hidden',
+          name: '_method',
+          value: method,
+        }),
+      );
     }
 
     $form.submit();
@@ -187,14 +218,19 @@ export default class PositionExtension {
    * @returns {Array}
    * @private
    */
-  computeMappingBetweenOldAndNewPositions(rowsData) {
+  private computeMappingBetweenOldAndNewPositions(
+    rowsData: Array<RowDatas>,
+  ): Array<DNDPositions> {
     const regex = /^row_(\d+)_(\d+)$/;
-    const mapping = Array(rowsData.length).fill().map(Object);
+    const mapping = Array(rowsData.length).map(Object);
 
     for (let i = 0; i < rowsData.length; i += 1) {
-      const [, rowId, oldPosition] = regex.exec(rowsData[i].rowMarker);
-      mapping[i].rowId = rowId;
-      mapping[i].oldPosition = parseInt(oldPosition, 10);
+      const regexResult = <RegExpPositions>regex.exec(rowsData[i].rowMarker);
+
+      if (regexResult?.rowId && regexResult?.oldPosition) {
+        mapping[i].rowId = regexResult.rowId;
+        mapping[i].oldPosition = parseInt(regexResult.oldPosition, 10);
+      }
       // This row will have as a new position the old position of the current one
       mapping[rowsData[i].offset].newPosition = mapping[i].oldPosition;
     }

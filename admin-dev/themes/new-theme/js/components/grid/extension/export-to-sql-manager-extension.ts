@@ -23,6 +23,9 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
 
+import {Grid} from '@PSTypes/grid';
+import GridMap from '@components/grid/grid-map';
+
 const {$} = window;
 
 /**
@@ -34,13 +37,13 @@ export default class ExportToSqlManagerExtension {
    *
    * @param {Grid} grid
    */
-  extend(grid) {
-    grid.getHeaderContainer().on('click', '.js-common_show_query-grid-action', () => this.onShowSqlQueryClick(grid));
-    grid.getHeaderContainer().on(
-      'click',
-      '.js-common_export_sql_manager-grid-action',
-      () => this.onExportSqlManagerClick(grid),
-    );
+  extend(grid: Grid): void {
+    grid
+      .getHeaderContainer()
+      .on('click', GridMap.actions.showQuery, () => this.onShowSqlQueryClick(grid));
+    grid
+      .getHeaderContainer()
+      .on('click', GridMap.actions.exportQuery, () => this.onExportSqlManagerClick(grid));
   }
 
   /**
@@ -50,14 +53,14 @@ export default class ExportToSqlManagerExtension {
    *
    * @private
    */
-  onShowSqlQueryClick(grid) {
-    const $sqlManagerForm = $(`#${grid.getId()}_common_show_query_modal_form`);
+  onShowSqlQueryClick(grid: Grid): void {
+    const $sqlManagerForm = $(GridMap.actions.showModalForm(grid.getId()));
     this.fillExportForm($sqlManagerForm, grid);
 
-    const $modal = $(`#${grid.getId()}_grid_common_show_query_modal`);
+    const $modal = $(GridMap.actions.showModalGrid(grid.getId()));
     $modal.modal('show');
 
-    $modal.on('click', '.btn-sql-submit', () => $sqlManagerForm.submit());
+    $modal.on('click', GridMap.sqlSubmit, () => $sqlManagerForm.submit());
   }
 
   /**
@@ -67,8 +70,8 @@ export default class ExportToSqlManagerExtension {
    *
    * @private
    */
-  onExportSqlManagerClick(grid) {
-    const $sqlManagerForm = $(`#${grid.getId()}_common_show_query_modal_form`);
+  private onExportSqlManagerClick(grid: Grid): void {
+    const $sqlManagerForm = $(GridMap.actions.showModalForm(grid.getId()));
 
     this.fillExportForm($sqlManagerForm, grid);
 
@@ -83,11 +86,16 @@ export default class ExportToSqlManagerExtension {
    *
    * @private
    */
-  fillExportForm($sqlManagerForm, grid) {
-    const query = grid.getContainer().find('.js-grid-table').data('query');
+  private fillExportForm($sqlManagerForm: JQuery, grid: Grid) {
+    const query = grid
+      .getContainer()
+      .find(GridMap.gridTable)
+      .data('query');
 
     $sqlManagerForm.find('textarea[name="sql"]').val(query);
-    $sqlManagerForm.find('input[name="name"]').val(this.getNameFromBreadcrumb());
+    $sqlManagerForm
+      .find('input[name="name"]')
+      .val(this.getNameFromBreadcrumb());
   }
 
   /**
@@ -97,8 +105,8 @@ export default class ExportToSqlManagerExtension {
    *
    * @private
    */
-  getNameFromBreadcrumb() {
-    const $breadcrumbs = $('.header-toolbar').find('.breadcrumb-item');
+  private getNameFromBreadcrumb(): string {
+    const $breadcrumbs = $(GridMap.headerToolbar).find(GridMap.breadcrumbItem);
     let name = '';
 
     $breadcrumbs.each((i, item) => {

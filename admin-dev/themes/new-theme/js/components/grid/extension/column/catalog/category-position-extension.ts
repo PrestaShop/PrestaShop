@@ -24,6 +24,8 @@
  */
 
 import 'tablednd/dist/jquery.tablednd.min';
+import {Grid} from '@PSTypes/grid';
+import GridMap from '@components/grid/grid-map';
 
 const {$} = window;
 
@@ -31,10 +33,13 @@ const {$} = window;
  * Class CategoryPositionExtension extends Grid with reorderable category positions
  */
 export default class CategoryPositionExtension {
-  constructor() {
-    return {
-      extend: (grid) => this.extend(grid),
-    };
+  grid: Grid;
+
+  originalPositions: string;
+
+  constructor(grid: Grid) {
+    this.grid = grid;
+    this.originalPositions = '';
   }
 
   /**
@@ -42,19 +47,22 @@ export default class CategoryPositionExtension {
    *
    * @param {Grid} grid
    */
-  extend(grid) {
+  extend(grid: Grid): void {
     this.grid = grid;
 
     this.addIdsToGridTableRows();
 
-    grid.getContainer().find('.js-grid-table').tableDnD({
-      dragHandle: '.js-drag-handle',
-      onDragClass: 'dragging-row',
-      onDragStart: () => {
-        this.originalPositions = decodeURIComponent($.tableDnD.serialize());
-      },
-      onDrop: (table, row) => this.handleCategoryPositionChange(row),
-    });
+    grid
+      .getContainer()
+      .find(GridMap.gridTable)
+      .tableDnD({
+        dragHandle: GridMap.dragHandler,
+        onDragClass: 'dragging-row',
+        onDragStart: () => {
+          this.originalPositions = decodeURIComponent($.tableDnD.serialize());
+        },
+        onDrop: (table: HTMLElement, row: HTMLElement) => this.handleCategoryPositionChange(row),
+      });
   }
 
   /**
@@ -64,22 +72,32 @@ export default class CategoryPositionExtension {
    *
    * @private
    */
-  handleCategoryPositionChange(row) {
+  handleCategoryPositionChange(row: HTMLElement): void {
     const positions = decodeURIComponent($.tableDnD.serialize());
-    const way = (this.originalPositions.indexOf(row.id) < positions.indexOf(row.id)) ? 1 : 0;
+    const way = this.originalPositions.indexOf(row.id) < positions.indexOf(row.id)
+      ? 1
+      : 0;
 
-    const $categoryPositionContainer = $(row).find(`.js-${this.grid.getId()}-position:first`);
+    const $categoryPositionContainer = $(row).find(
+      `.js-${this.grid.getId()}-position:first`,
+    );
 
     const categoryId = $categoryPositionContainer.data('id');
     const categoryParentId = $categoryPositionContainer.data('id-parent');
-    const positionUpdateUrl = $categoryPositionContainer.data('position-update-url');
+    const positionUpdateUrl = $categoryPositionContainer.data(
+      'position-update-url',
+    );
 
-    let params = positions.replace(new RegExp(`${this.grid.getId()}_grid_table`, 'g'), 'positions');
+    let params = positions.replace(
+      new RegExp(GridMap.specificGridTable(this.grid.getId()), 'g'),
+      'positions',
+    );
 
     const queryParams = {
       id_category_parent: categoryParentId,
       id_category_to_move: categoryId,
       way,
+      found_first: 0,
     };
 
     if (positions.indexOf('_0&') !== -1) {
@@ -96,10 +114,11 @@ export default class CategoryPositionExtension {
    *
    * @private
    */
-  addIdsToGridTableRows() {
-    this.grid.getContainer()
-      .find('.js-grid-table')
-      .find(`.js-${this.grid.getId()}-position`)
+  addIdsToGridTableRows(): void {
+    this.grid
+      .getContainer()
+      .find(GridMap.gridTable)
+      .find(GridMap.gridPosition(this.grid.getId()))
       .each((index, positionWrapper) => {
         const $positionWrapper = $(positionWrapper);
 
@@ -118,10 +137,11 @@ export default class CategoryPositionExtension {
    *
    * @private
    */
-  updateCategoryIdsAndPositions() {
-    this.grid.getContainer()
-      .find('.js-grid-table')
-      .find(`.js-${this.grid.getId()}-position`)
+  updateCategoryIdsAndPositions(): void {
+    this.grid
+      .getContainer()
+      .find(GridMap.gridTable)
+      .find(GridMap.gridPosition(this.grid.getId()))
       .each((index, positionWrapper) => {
         const $positionWrapper = $(positionWrapper);
         const $row = $positionWrapper.closest('tr');
@@ -130,9 +150,12 @@ export default class CategoryPositionExtension {
         const newPosition = offset > 0 ? index + offset : index;
 
         const oldId = $row.attr('id');
-        $row.attr('id', oldId.replace(/_[0-9]$/g, `_${newPosition}`));
 
-        $positionWrapper.find('.js-position').text(newPosition + 1);
+        if (oldId) {
+          $row.attr('id', oldId.replace(/_[0-9]$/g, `_${newPosition}`));
+        }
+
+        $positionWrapper.find(GridMap.position).text(newPosition + 1);
         $positionWrapper.data('position', newPosition);
       });
   }
@@ -145,7 +168,7 @@ export default class CategoryPositionExtension {
    *
    * @private
    */
-  updateCategoryPosition(url, params) {
+  updateCategoryPosition(url: string, params: string): void {
     $.post({
       url,
       headers: {

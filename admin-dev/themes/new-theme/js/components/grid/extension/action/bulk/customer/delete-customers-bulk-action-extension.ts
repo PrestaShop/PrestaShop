@@ -22,62 +22,62 @@
  * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
+import {Grid} from '@PSTypes/grid';
+import GridMap from '@components/grid/grid-map';
 
 const {$} = window;
 
 /**
- * Class DeleteCustomerRowActionExtension handles submitting of row action
+ * Handles bulk delete for "Customers" grid.
  */
-export default class DeleteCustomerRowActionExtension {
-  constructor() {
-    return {
-      extend: (grid) => this.extend(grid),
-    };
-  }
-
+export default class DeleteCustomersBulkActionExtension {
   /**
    * Extend grid
    *
    * @param {Grid} grid
    */
-  extend(grid) {
-    grid.getContainer().on('click', '.js-delete-customer-row-action', (event) => {
+  extend(grid: Grid): void {
+    grid.getContainer().on('click', GridMap.bulks.deleteCustomers, (event) => {
       event.preventDefault();
 
-      const $deleteCustomersModal = $(`#${grid.getId()}_grid_delete_customers_modal`);
-      $deleteCustomersModal.modal('show');
+      const submitUrl = $(event.currentTarget).data('customers-delete-url');
 
-      $deleteCustomersModal.on('click', '.js-submit-delete-customers', () => {
-        const $button = $(event.currentTarget);
-        const customerId = $button.data('customer-id');
+      const $modal = $(GridMap.bulks.deleteCustomerModal(grid.getId()));
+      $modal.modal('show');
 
-        this.addCustomerInput(customerId);
+      $modal.on('click', GridMap.bulks.submitDeleteCustomers, () => {
+        const $selectedCustomerCheckboxes = grid
+          .getContainer()
+          .find(GridMap.bulks.checkedCheckbox);
 
-        const $form = $deleteCustomersModal.find('form');
+        $selectedCustomerCheckboxes.each((i, checkbox) => {
+          const $input = $(checkbox);
 
-        $form.attr('action', $button.data('customer-delete-url'));
+          this.addCustomerToDeleteCollectionInput(<number>$input.val());
+        });
+
+        const $form = $modal.find('form');
+
+        $form.attr('action', submitUrl);
         $form.submit();
       });
     });
   }
 
   /**
-   * Adds input for selected customer to delete form
-   *
-   * @param {integer} customerId
+   * Create input with customer id and add it to delete collection input
    *
    * @private
    */
-  addCustomerInput(customerId) {
-    const $customersToDeleteInputBlock = $('#delete_customers_customers_to_delete');
+  private addCustomerToDeleteCollectionInput(customerId: number): void {
+    const $customersInput = $(GridMap.bulks.customersToDelete);
 
-    const customerInput = $customersToDeleteInputBlock
+    const customerInput = $customersInput
       .data('prototype')
-      .replace(/__name__/g, $customersToDeleteInputBlock.children().length);
-
+      .replace(/__name__/g, customerId);
     const $item = $($.parseHTML(customerInput)[0]);
     $item.val(customerId);
 
-    $customersToDeleteInputBlock.append($item);
+    $customersInput.append($item);
   }
 }

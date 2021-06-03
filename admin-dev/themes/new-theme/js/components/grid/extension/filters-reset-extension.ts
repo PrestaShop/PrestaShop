@@ -23,18 +23,27 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
 
+import {Grid} from '@PSTypes/grid';
+import resetSearch from '@app/utils/reset_search';
+import GridMap from '@components/grid/grid-map';
+
+const {$} = window;
+
 /**
- * Class ReloadListExtension extends grid with "List reload" action
+ * Class FiltersResetExtension extends grid with filters resetting
  */
-export default class ReloadListExtension {
+export default class FiltersResetExtension {
   /**
    * Extend grid
    *
    * @param {Grid} grid
    */
-  extend(grid) {
-    grid.getHeaderContainer().on('click', '.js-common_refresh_list-grid-action', () => {
-      window.location.reload();
+  extend(grid: Grid): void {
+    grid.getContainer().on('click', GridMap.resetSearch, (event) => {
+      resetSearch(
+        $(event.currentTarget).data('url'),
+        $(event.currentTarget).data('redirect'),
+      );
     });
   }
 }
