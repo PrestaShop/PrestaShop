@@ -432,7 +432,8 @@ final class GetCustomerForViewingHandler implements GetCustomerForViewingHandler
      */
     private function getCustomerDiscounts(Customer $customer)
     {
-        $discounts = CartRule::getCustomerCartRules($this->contextLangId, $customer->id, false, false);
+        $discounts = CartRule::getAllCustomerCartRules($customer->id);
+
         $customerDiscounts = [];
 
         foreach ($discounts as $discount) {

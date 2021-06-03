@@ -45,7 +45,7 @@ final class CustomerDiscountFilters extends Filters
     public static function getDefaults(): array
     {
         return [
-            'limit' => 50,
+            'limit' => 10,
             'offset' => 0,
             'orderBy' => 'id_cart_rule',
             'sortOrder' => 'asc',
