@@ -245,12 +245,12 @@ class OrderFeatureContext extends AbstractDomainFeatureContext
         foreach ($products as $product) {
             $matches = $product->getId() == $productId;
             if (null !== $combinationName) {
-                $matches &= $product->getCombinationId() == $this->getProductCombinationId(
+                $matches &= $product->getCombinationId() === $this->getProductCombinationId(
                         $this->getProductByName($productReference),
                         $combinationName
                     );
             }
-            if ($matches) {
+            if ((bool) $matches) {
                 $orderDetailId = $product->getOrderDetailId();
                 break;
             }
@@ -578,7 +578,7 @@ class OrderFeatureContext extends AbstractDomainFeatureContext
     public function editProductsToOrderWithFollowingDetails(string $productName, string $orderReference, TableNode $table)
     {
         $orderId = SharedStorage::getStorage()->get($orderReference);
-        $productOrderDetail = $this->getOrderDetailFromOrder($productName, $orderReference);
+        $productOrderDetail = $this->getOrderDetailsFromOrder($productName, $orderReference)[0];
         $data = $table->getRowsHash();
 
         $this->updateProductInOrder($orderId, $productOrderDetail, $data);
@@ -596,7 +596,7 @@ class OrderFeatureContext extends AbstractDomainFeatureContext
         $orderId = SharedStorage::getStorage()->get($orderReference);
         $order = new Order($orderId);
         $invoice = $this->getInvoiceFromOrder($order, $invoicePosition);
-        $productOrderDetail = $this->getOrderDetailFromOrder($productName, $orderReference, null, $invoice->id);
+        $productOrderDetail = $this->getOrderDetailsFromOrder($productName, $orderReference, null, $invoice->id)[0];
         $data = $table->getRowsHash();
 
         $this->updateProductInOrder($orderId, $productOrderDetail, $data);
@@ -613,7 +613,7 @@ class OrderFeatureContext extends AbstractDomainFeatureContext
     public function editCombinationToOrderWithFollowingDetails(string $combinationName, string $productName, string $orderReference, TableNode $table)
     {
         $orderId = SharedStorage::getStorage()->get($orderReference);
-        $productOrderDetail = $this->getOrderDetailFromOrder($productName, $orderReference, $combinationName);
+        $productOrderDetail = $this->getOrderDetailsFromOrder($productName, $orderReference, $combinationName)[0];
         $data = $table->getRowsHash();
 
         $this->updateProductInOrder($orderId, $productOrderDetail, $data);
@@ -1088,7 +1088,40 @@ class OrderFeatureContext extends AbstractDomainFeatureContext
      */
     public function checkProductDetailsWithReference(string $orderReference, string $productName, TableNode $table, ?string $combinationName = null)
     {
-        $productOrderDetail = $this->getOrderDetailFromOrder($productName, $orderReference, $combinationName);
+        $this->checkOrderDetailProductDetailsWithReference('first', $orderReference, $productName, $table, $combinationName);
+    }
+
+    /**
+     * @Then the :orderDetailPosition orderDetail for product :productName in order :orderReference has following details:
+     *
+     * @param string $orderDetailPosition
+     * @param string $orderReference
+     * @param string $productName
+     * @param TableNode $table
+     * @param string|null $combinationName
+     */
+    public function checkSpecificOrderDetailProductDetailsWithReference(string $orderDetailPosition, string $orderReference, string $productName, TableNode $table, ?string $combinationName = null)
+    {
+        $this->checkOrderDetailProductDetailsWithReference($orderDetailPosition, $orderReference, $productName, $table, $combinationName);
+    }
+
+    private function checkOrderDetailProductDetailsWithReference(string $orderDetailPosition, string $orderReference, string $productName, TableNode $table, ?string $combinationName = null)
+    {
+        $productOrderDetails = $this->getOrderDetailsFromOrder($productName, $orderReference, $combinationName);
+        $orderDetailsIndexes = [
+            'first' => 0,
+            'second' => 1,
+            'third' => 2,
+            'fourth' => 3,
+        ];
+
+        if (!isset($orderDetailsIndexes[$orderDetailPosition])) {
+            throw new RuntimeException(sprintf('Cannot interpret this orderDetail position %s', $orderDetailPosition));
+        }
+        $orderDetailIndex = $orderDetailsIndexes[$orderDetailPosition];
+        Assert::assertGreaterThanOrEqual($orderDetailIndex + 1, count($productOrderDetails));
+
+        $productOrderDetail = $productOrderDetails[$orderDetailIndex];
         $expectedDetails = $table->getRowsHash();
         foreach ($expectedDetails as $detailName => $expectedDetailValue) {
             Assert::assertEquals(
@@ -1117,7 +1150,7 @@ class OrderFeatureContext extends AbstractDomainFeatureContext
         $order = new Order($orderId);
         $orderInvoice = $this->getInvoiceFromOrder($order, $invoicePosition);
 
-        $productOrderDetail = $this->getOrderDetailFromOrder($productName, $orderReference, null, $orderInvoice->id);
+        $productOrderDetail = $this->getOrderDetailsFromOrder($productName, $orderReference, null, $orderInvoice->id)[0];
         $expectedDetails = $table->getRowsHash();
         foreach ($expectedDetails as $detailName => $expectedDetailValue) {
             Assert::assertEquals(
@@ -1640,7 +1673,7 @@ class OrderFeatureContext extends AbstractDomainFeatureContext
      *
      * @return array
      */
-    private function getOrderDetailFromOrder(
+    private function getOrderDetailsFromOrder(
         string $productName,
         string $orderReference,
         ?string $combinationName = null,
@@ -1651,21 +1684,20 @@ class OrderFeatureContext extends AbstractDomainFeatureContext
         $combinationId = null !== $combinationName ? $this->getProductCombinationId($product, $combinationName) : null;
         $order = new Order(SharedStorage::getStorage()->get($orderReference));
         $orderDetails = $order->getProducts();
-        $productOrderDetail = null;
+        $productOrderDetails = [];
         foreach ($orderDetails as $orderDetail) {
             if ((int) $orderDetail['product_id'] === $productId
                 && (null === $combinationId || (int) $orderDetail['product_attribute_id'] === $combinationId)
                 && (null === $orderInvoiceId || (int) $orderDetail['id_order_invoice'] === $orderInvoiceId)) {
-                $productOrderDetail = $orderDetail;
-                break;
+                $productOrderDetails[] = $orderDetail;
             }
         }
 
-        if (null === $productOrderDetail) {
+        if (empty($productOrderDetails)) {
             throw new RuntimeException(sprintf('Cannot find product details for product %s in order %s', $productName, $orderReference));
         }
 
-        return $productOrderDetail;
+        return $productOrderDetails;
     }
 
     /**
