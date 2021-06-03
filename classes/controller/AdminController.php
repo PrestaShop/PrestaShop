@@ -3145,7 +3145,7 @@ class AdminControllerCore extends Controller
     }
 
     /**
-     * Get the current objects' list form the database.
+     * Get the current objects' list from the database.
      *
      * @param int $id_lang Language used for display
      * @param string|null $order_by ORDER BY clause
