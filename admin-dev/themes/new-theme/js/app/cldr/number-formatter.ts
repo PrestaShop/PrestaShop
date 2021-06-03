@@ -70,7 +70,9 @@ class NumberFormatter {
      * We need to work on the absolute value first.
      * Then the CLDR pattern will add the sign if relevant (at the end).
      */
-    const num = Math.abs(number).toFixed(this.numberSpecification.getMaxFractionDigits());
+    const num = Math.abs(number).toFixed(
+      this.numberSpecification.getMaxFractionDigits(),
+    );
 
     let [majorDigits, minorDigits] = this.extractMajorMinorDigits(num);
     majorDigits = <string> this.splitMajorGroups(majorDigits);
@@ -111,7 +113,7 @@ class NumberFormatter {
     // Get the number's major and minor digits.
     const result = number.toString().split('.');
     const majorDigits = result[0];
-    const minorDigits = (result[1] === undefined) ? '' : result[1];
+    const minorDigits = result[1] === undefined ? '' : result[1];
 
     return [majorDigits, minorDigits];
   }
@@ -136,9 +138,13 @@ class NumberFormatter {
 
     // Group the major digits.
     let groups = [];
-    groups.push(majorDigits.splice(0, this.numberSpecification.getPrimaryGroupSize()));
+    groups.push(
+      majorDigits.splice(0, this.numberSpecification.getPrimaryGroupSize()),
+    );
     while (majorDigits.length) {
-      groups.push(majorDigits.splice(0, this.numberSpecification.getSecondaryGroupSize()));
+      groups.push(
+        majorDigits.splice(0, this.numberSpecification.getSecondaryGroupSize()),
+      );
     }
 
     // Reverse back the digits and the groups
@@ -232,7 +238,8 @@ class NumberFormatter {
   strtr(str: string, pairs: Record<string, any>): string {
     const substrs = Object.keys(pairs).map(escapeRE);
 
-    return str.split(RegExp(`(${substrs.join('|')})`))
+    return str
+      .split(RegExp(`(${substrs.join('|')})`))
       .map((part: string) => pairs[part] || part)
       .join('');
   }
