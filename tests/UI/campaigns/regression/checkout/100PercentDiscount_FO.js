@@ -399,7 +399,14 @@ describe('Create 100% discount with free shipping discount code', async () => {
         await expect(pageTitle).to.contains(orderSettingsPage.pageTitle);
       });
 
-      it('Should change the terms and conditions back to enabled', async () => {
+      it('should change the terms and conditions back to enabled', async function () {
+        await testContext.addContextItem(
+          this,
+          'testIdentifier',
+          'resetTermsAndConditionsValue',
+          baseContext,
+        );
+
         const result = await orderSettingsPage.setTermsOfService(
           page,
           true,
