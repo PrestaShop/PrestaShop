@@ -135,7 +135,7 @@ class Checkout extends FOBasePage {
    * @param page
    * @returns {string}
    */
-   getNoPaymentNeededBlockContent(page) {
+  getNoPaymentNeededBlockContent(page) {
     return this.getTextContent(page, this.noPaymentNeededElement);
   }
 
@@ -221,7 +221,7 @@ class Checkout extends FOBasePage {
    * @param page
    * @returns {Promise<void>}
    */
-   async orderWithoutPaymentMethod(page) {
+  async orderWithoutPaymentMethod(page) {
     // Click on terms of services checkbox if visible
     if (await this.elementVisible(page, this.conditionToApproveLabel, 500)) {
       await Promise.all([
