@@ -542,6 +542,22 @@ class ProductLazyArray extends AbstractLazyArray
      */
     public function getSpecificReferences()
     {
+        // If the product has no combinations then the `specific_references` must be filled in
+        if (!isset($this->product['attributes'])) {
+            if (isset($this->product['isbn'])) {
+                $this->product['attributes'][0]['isbn'] = $this->product['isbn'];
+            }
+            if (isset($this->product['upc'])) {
+                $this->product['attributes'][0]['upc'] = $this->product['upc'];
+            }
+            if (isset($this->product['ean13'])) {
+                $this->product['attributes'][0]['ean13'] = $this->product['ean13'];
+            }
+            if (isset($this->product['mpn'])) {
+                $this->product['attributes'][0]['mpn'] = $this->product['mpn'];
+            }
+        }
+        
         if (isset($this->product['attributes']) && !isset($this->product['cart_quantity'])) {
             $specificReferences = array_slice($this->product['attributes'], 0)[0];
             //this attributes should not be displayed in FO
