@@ -24,6 +24,7 @@
  */
 import LocalizationException from '@app/cldr/exception/localization';
 import NumberSpecification from '@app/cldr/specifications/number';
+import NumberSymbol from '@app/cldr/number-symbol';
 
 /**
  * Currency display option: symbol notation.
@@ -31,6 +32,10 @@ import NumberSpecification from '@app/cldr/specifications/number';
 const CURRENCY_DISPLAY_SYMBOL = 'symbol';
 
 class PriceSpecification extends NumberSpecification {
+  currencySymbol: string;
+
+  currencyCode: string;
+
   /**
    * Price specification constructor.
    *
@@ -48,16 +53,16 @@ class PriceSpecification extends NumberSpecification {
    * @throws LocalizationException
    */
   constructor(
-    positivePattern,
-    negativePattern,
-    symbol,
-    maxFractionDigits,
-    minFractionDigits,
-    groupingUsed,
-    primaryGroupSize,
-    secondaryGroupSize,
-    currencySymbol,
-    currencyCode,
+    positivePattern: string,
+    negativePattern: string,
+    symbol: NumberSymbol,
+    maxFractionDigits: number,
+    minFractionDigits: number,
+    groupingUsed: boolean,
+    primaryGroupSize: number,
+    secondaryGroupSize: number,
+    currencySymbol: string,
+    currencyCode: string,
   ) {
     super(
       positivePattern,
@@ -86,7 +91,7 @@ class PriceSpecification extends NumberSpecification {
    *
    * @return string
    */
-  static getCurrencyDisplay() {
+  static getCurrencyDisplay(): string {
     return CURRENCY_DISPLAY_SYMBOL;
   }
 
@@ -96,7 +101,7 @@ class PriceSpecification extends NumberSpecification {
    *
    * @return string
    */
-  getCurrencySymbol() {
+  getCurrencySymbol(): string {
     return this.currencySymbol;
   }
 
@@ -106,7 +111,7 @@ class PriceSpecification extends NumberSpecification {
    *
    * @return string
    */
-  getCurrencyCode() {
+  getCurrencyCode(): string {
     return this.currencyCode;
   }
 }

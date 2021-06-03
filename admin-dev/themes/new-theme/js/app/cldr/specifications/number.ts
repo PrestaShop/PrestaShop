@@ -26,6 +26,22 @@ import LocalizationException from '@app/cldr/exception/localization';
 import NumberSymbol from '@app/cldr/number-symbol';
 
 class NumberSpecification {
+  positivePattern: string;
+
+  negativePattern: string;
+
+  symbol: NumberSymbol;
+
+  maxFractionDigits: number;
+
+  minFractionDigits: number;
+
+  groupingUsed: boolean;
+
+  primaryGroupSize: number;
+
+  secondaryGroupSize: number;
+
   /**
    * Number specification constructor.
    *
@@ -41,14 +57,14 @@ class NumberSpecification {
    * @throws LocalizationException
    */
   constructor(
-    positivePattern,
-    negativePattern,
-    symbol,
-    maxFractionDigits,
-    minFractionDigits,
-    groupingUsed,
-    primaryGroupSize,
-    secondaryGroupSize,
+    positivePattern: string,
+    negativePattern: string,
+    symbol: NumberSymbol,
+    maxFractionDigits: number,
+    minFractionDigits: number,
+    groupingUsed: boolean,
+    primaryGroupSize: number,
+    secondaryGroupSize: number,
   ) {
     this.positivePattern = positivePattern;
     this.negativePattern = negativePattern;
@@ -56,7 +72,10 @@ class NumberSpecification {
 
     this.maxFractionDigits = maxFractionDigits;
     // eslint-disable-next-line
-    this.minFractionDigits = maxFractionDigits < minFractionDigits ? maxFractionDigits : minFractionDigits;
+    this.minFractionDigits =
+      maxFractionDigits < minFractionDigits
+        ? maxFractionDigits
+        : minFractionDigits;
 
     this.groupingUsed = groupingUsed;
     this.primaryGroupSize = primaryGroupSize;
@@ -100,7 +119,7 @@ class NumberSpecification {
    *
    * @return NumberSymbol
    */
-  getSymbol() {
+  getSymbol(): NumberSymbol {
     return this.symbol;
   }
 
@@ -111,7 +130,7 @@ class NumberSpecification {
    *
    * @return string
    */
-  getPositivePattern() {
+  getPositivePattern(): string {
     return this.positivePattern;
   }
 
@@ -122,7 +141,7 @@ class NumberSpecification {
    *
    * @return string
    */
-  getNegativePattern() {
+  getNegativePattern(): string {
     return this.negativePattern;
   }
 
@@ -131,7 +150,7 @@ class NumberSpecification {
    *
    * @return int
    */
-  getMaxFractionDigits() {
+  getMaxFractionDigits(): number {
     return this.maxFractionDigits;
   }
 
@@ -140,7 +159,7 @@ class NumberSpecification {
    *
    * @return int
    */
-  getMinFractionDigits() {
+  getMinFractionDigits(): number {
     return this.minFractionDigits;
   }
 
@@ -150,7 +169,7 @@ class NumberSpecification {
    *
    * @return bool
    */
-  isGroupingUsed() {
+  isGroupingUsed(): boolean {
     return this.groupingUsed;
   }
 
@@ -159,7 +178,7 @@ class NumberSpecification {
    *
    * @return int
    */
-  getPrimaryGroupSize() {
+  getPrimaryGroupSize(): number {
     return this.primaryGroupSize;
   }
 
@@ -168,7 +187,7 @@ class NumberSpecification {
    *
    * @return int
    */
-  getSecondaryGroupSize() {
+  getSecondaryGroupSize(): number {
     return this.secondaryGroupSize;
   }
 }

@@ -23,7 +23,11 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
 class LocalizationException {
-  constructor(message) {
+  message: string;
+
+  name: string;
+
+  constructor(message: string) {
     this.message = message;
     this.name = 'LocalizationException';
   }
