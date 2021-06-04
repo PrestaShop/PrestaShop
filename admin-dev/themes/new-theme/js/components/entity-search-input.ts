@@ -27,16 +27,16 @@ import AutoCompleteSearch from '@components/auto-complete-search';
 import Bloodhound from 'typeahead.js';
 
 /**
- * This component is used to search and select an entity, it is uses the AutoSearchComplete
+ * This component is used to search and select one or several entities, it uses the AutoSearchComplete
  * component which displays a list of suggestion based on an API returned response. Then when
  * an element is selected it is added to the selection container and hidden inputs are created to
  * send an array of entity IDs in the form request.
  *
- * This component is used with TypeaheadType forms, and is tightly linked to the content of this
- * twig file src/PrestaShopBundle/Resources/views/Admin/TwigTemplateForm/typeahead.html.twig
+ * This component is used with EntitySearchInputType forms, and is tightly linked to the content of this
+ * twig file src/PrestaShopBundle/Resources/views/Admin/TwigTemplateForm/entity_search_input.html.twig
  *
- * @todo: the component relies on this TypeaheadType because it was the historical type but it would be worth
- * creating a new clean form type with better templating (the tplcollection brings nearly no value as is)
+ * The default content of the collection is an EntityItemType with a simple default template but you can
+ * either override it in a theme or create your own entity type if you need to customize the behaviour.
  */
 export default class EntitySearchInput {
   $entitySearchInputContainer: JQuery;
