@@ -31,7 +31,7 @@ use PrestaShop\PrestaShop\Core\Domain\Manufacturer\Command\AddManufacturerComman
 use PrestaShop\PrestaShop\Core\Domain\Manufacturer\Command\EditManufacturerCommand;
 use PrestaShop\PrestaShop\Core\Domain\Manufacturer\ValueObject\ManufacturerId;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
-use PrestaShop\PrestaShop\Adapter\Image\Uploader\AbstractImageUploader;
+use PrestaShop\PrestaShop\Adapter\Image\Uploader\ManufacturerImageUploader;
 
 /**
  * Handles submitted manufacturer form data
@@ -43,17 +43,17 @@ final class ManufacturerFormDataHandler implements FormDataHandlerInterface
      */
     private $bus;
     /**
-     * @var AbstractImageUploader
+     * @var ManufacturerImageUploader
      */
     private $imageUploader;
 
     /**
      * @param CommandBusInterface $bus
-     * @param AbstractImageUploader $imageUploader
+     * @param ManufacturerImageUploader $imageUploader
      */
     public function __construct(
         CommandBusInterface $bus,
-        AbstractImageUploader $imageUploader
+        ManufacturerImageUploader $imageUploader
     ) {
         $this->bus = $bus;
         $this->imageUploader = $imageUploader;
