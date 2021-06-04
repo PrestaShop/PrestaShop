@@ -66,7 +66,7 @@ class MultistoreExtension extends AbstractTypeExtension
         $resolver->setDefaults(
             [
                 'multistore_dropdown' => false,
-                'multistore_configuration_key' => null
+                'multistore_configuration_key' => null,
             ]
         );
     }
