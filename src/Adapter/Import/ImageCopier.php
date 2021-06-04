@@ -132,10 +132,6 @@ final class ImageCopier
             $parsedUrl['query'] = http_build_query($query_parts);
         }
 
-        if (!function_exists('http_build_url')) {
-            require_once $this->configuration->get('_PS_TOOL_DIR_') . 'http_build_url/http_build_url.php';
-        }
-
         $url = http_build_url('', $parsedUrl);
 
         $origTmpfile = $tmpFile;
