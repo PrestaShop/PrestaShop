@@ -32,6 +32,7 @@ use PrestaShop\PrestaShop\Core\Domain\Manufacturer\Command\EditManufacturerComma
 use PrestaShop\PrestaShop\Core\Domain\Manufacturer\ValueObject\ManufacturerId;
 use PrestaShop\PrestaShop\Core\Image\Uploader\ImageUploaderInterface;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
+use PrestaShop\PrestaShop\Adapter\Image\Uploader\AbstractImageUploader;
 
 /**
  * Handles submitted manufacturer form data
@@ -43,17 +44,17 @@ final class ManufacturerFormDataHandler implements FormDataHandlerInterface
      */
     private $bus;
     /**
-     * @var ImageUploaderInterface
+     * @var AbstractImageUploader
      */
     private $imageUploader;
 
     /**
      * @param CommandBusInterface $bus
-     * @param ImageUploaderInterface $imageUploader
+     * @param AbstractImageUploader $imageUploader
      */
     public function __construct(
         CommandBusInterface $bus,
-        ImageUploaderInterface $imageUploader
+        AbstractImageUploader $imageUploader
     ) {
         $this->bus = $bus;
         $this->imageUploader = $imageUploader;
@@ -68,6 +69,13 @@ final class ManufacturerFormDataHandler implements FormDataHandlerInterface
             $data['shop_association'] = [];
         }
 
+        /** @var UploadedFile $uploadedLogo */
+        $uploadedLogo = $data['logo'];
+
+        if ($uploadedLogo instanceof UploadedFile) {
+            $this->imageUploader->checkImageIsAllowedForUpload($uploadedLogo);
+        }
+
         /** @var ManufacturerId $manufacturerId */
         $manufacturerId = $this->bus->handle(new AddManufacturerCommand(
             $data['name'],
@@ -78,10 +86,7 @@ final class ManufacturerFormDataHandler implements FormDataHandlerInterface
             $data['meta_description'],
             $data['meta_keyword'],
             $data['shop_association']
-        ));
-
-        /** @var UploadedFile $uploadedLogo */
-        $uploadedLogo = $data['logo'];
+        ));   
 
         if ($uploadedLogo instanceof UploadedFile) {
             $this->imageUploader->upload($manufacturerId->getValue(), $uploadedLogo);
