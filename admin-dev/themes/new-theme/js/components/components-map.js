@@ -33,6 +33,17 @@ export default {
     headerButton: '.js-header-multishop-open-modal',
     searchInput: '.js-multishop-modal-search',
     jsScrollbar: '.js-multishop-scrollbar',
-    setContextUrl: (location, urlLetter, itemId) => `${location}&setShopContext=${urlLetter}-${itemId}`,
+    setContextUrl: (location, urlLetter, itemId) => {
+      const setContextParameter = `setShopContext=${urlLetter}-${itemId}`;
+      const url = new URL(location);
+
+      if (url.search === '') {
+        url.search = `?${setContextParameter}`;
+      } else {
+        url.search += `&${setContextParameter}`;
+      }
+
+      return url.toString();
+    },
   },
 };
