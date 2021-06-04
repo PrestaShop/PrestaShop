@@ -73,7 +73,7 @@ export default class DeleteCustomerRowActionExtension {
    * @private
    */
   private addCustomerInput(customerId: number): void {
-    const $customersToDeleteInputBlock = $(GridMap.bulks.categoriesToDelete);
+    const $customersToDeleteInputBlock = $(GridMap.bulks.customersToDelete);
 
     const customerInput = $customersToDeleteInputBlock
       .data('prototype')
