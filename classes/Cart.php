@@ -660,10 +660,10 @@ class CartCore extends ObjectModel
         }
 
         $productsCacheKey = 'Cart::getProducts-'
-            .$id_product.'-'
-            .$id_country.'-'
-            .$fullInfos.'-'
-            .$keepOrderPrices;
+            . $id_product . '-'
+            . $id_country . '-'
+            . $fullInfos . '-'
+            . $keepOrderPrices;
 
         // Product cache must be strictly compared to NULL, or else an empty cart will add dozens of queries
         if (isset(static::$cacheProducts[$productsCacheKey]) && static::$cacheProducts[$productsCacheKey] !== null && !$refresh) {
@@ -796,6 +796,7 @@ class CartCore extends ObjectModel
         if (empty($result)) {
             $this->_products = [];
             static::$cacheProducts[$productsCacheKey] = [];
+
             return [];
         }
 
