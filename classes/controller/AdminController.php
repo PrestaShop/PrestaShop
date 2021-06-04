@@ -3847,7 +3847,7 @@ class AdminControllerCore extends Controller
     {
         /* Classical fields */
         foreach ($_POST as $key => $value) {
-            if (property_exists($object, $key) && $key != 'id_' . $table) {
+            if (array_key_exists($key, get_object_vars($object)) && $key != 'id_' . $table) {
                 /* Do not take care of password field if empty */
                 if ($key == 'passwd' && Tools::getValue('id_' . $table) && empty($value)) {
                     continue;
