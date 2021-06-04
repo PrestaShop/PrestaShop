@@ -30,6 +30,7 @@ namespace PrestaShopBundle\Form\Admin\Sell\Product\SEO;
 
 use PrestaShop\PrestaShop\Adapter\LegacyContext;
 use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\RedirectType;
+use PrestaShopBundle\Form\Admin\Type\EntitySearchInputType;
 use PrestaShopBundle\Form\Admin\Type\TranslatorAwareType;
 use PrestaShopBundle\Form\Admin\Type\TypeaheadProductCollectionType;
 use PrestaShopBundle\Form\FormCloner;
@@ -134,6 +135,24 @@ class RedirectOptionType extends TranslatorAwareType
                     'data-category-search-url' => $entityAttributes['category']['searchUrl'],
                 ],
             ])
+            ->add('new_target', EntitySearchInputType::class, [
+                'required' => false,
+                'limit' => 1,
+                'label' => $entityAttributes[$defaultEntity]['label'],
+                'remote_url' => $entityAttributes[$defaultEntity]['searchUrl'],
+                'placeholder' => $entityAttributes[$defaultEntity]['placeholder'],
+                'help' => $entityAttributes[$defaultEntity]['help'],
+                'attr' => [
+                    'data-product-label' => $entityAttributes['product']['label'],
+                    'data-product-placeholder' => $entityAttributes['product']['placeholder'],
+                    'data-product-search-url' => $entityAttributes['product']['searchUrl'],
+                    'data-product-help' => $entityAttributes['product']['help'],
+                    'data-category-label' => $entityAttributes['category']['label'],
+                    'data-category-placeholder' => $entityAttributes['category']['placeholder'],
+                    'data-category-help' => $entityAttributes['category']['help'],
+                    'data-category-search-url' => $entityAttributes['category']['searchUrl'],
+                ],
+            ])
         ;
 
         // This will transform the target ID from model data into an array adapted for TypeaheadProductCollectionType
@@ -145,7 +164,7 @@ class RedirectOptionType extends TranslatorAwareType
         $builder->addEventListener(FormEvents::PRE_SET_DATA, function (FormEvent $event) use ($entityAttributes) {
             $data = $event->getData();
             $form = $event->getForm();
-            $targetField = $form->get('target');
+            $targetField = $form->get('new_target');
             $targetOptions = $targetField->getConfig()->getOptions();
             $dataType = $data['type'] ?? RedirectType::TYPE_NOT_FOUND;
             switch ($dataType) {
@@ -161,7 +180,6 @@ class RedirectOptionType extends TranslatorAwareType
             }
 
             // Adapt target options
-            $targetOptions['mapping_type'] = $dataEntity;
             $targetOptions['label'] = $entityAttributes[$dataEntity]['label'];
             $targetOptions['placeholder'] = $entityAttributes[$dataEntity]['placeholder'];
             $targetOptions['help'] = $entityAttributes[$dataEntity]['help'];

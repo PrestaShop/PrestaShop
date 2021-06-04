@@ -380,7 +380,7 @@ final class ProductFormDataProvider implements FormDataProviderInterface
     /**
      * @param ProductForEditing $productForEditing
      *
-     * @return array<string, int|string>
+     * @return array<string, int|string|array>
      */
     private function extractRedirectOptionData(ProductForEditing $productForEditing): array
     {
@@ -389,6 +389,7 @@ final class ProductFormDataProvider implements FormDataProviderInterface
         return [
             'type' => $seoOptions->getRedirectType(),
             'target' => $seoOptions->getRedirectTargetId(),
+            'new_target' => $seoOptions->getRedirectTargetId() ? [$seoOptions->getRedirectTargetId()] : [],
         ];
     }
 

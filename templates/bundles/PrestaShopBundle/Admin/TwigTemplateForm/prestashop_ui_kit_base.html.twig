@@ -1192,3 +1192,49 @@
     </p>
   </div>
 {% endblock %}
+
+{% block entity_search_input_widget %}
+  {%- set attr = attr|merge({
+    'data-prototype': form_row(prototype),
+    'data-prototype-name': prototype.vars.name,
+    'data-prototype-image': prototype_image,
+    'data-prototype-value': prototype_value,
+    'data-prototype-display': prototype_display,
+    'data-mapping-value': mapping_value,
+    'data-mapping-image': mapping_image,
+    'data-mapping-display': mapping_display,
+    'data-full-name': form.vars.full_name,
+    'data-remote-url': remote_url|raw,
+    'data-limit': limit
+  }) -%}
+  {%- set attr = attr|merge({'class': (attr.class|default('') ~ ' entity-search-input')|trim }) -%}
+  <div {{ block('widget_attributes') }}>
+    <div class="search search-with-icon">
+      {%- set attr = search_attr|merge({'class': (search_attr.class|default('') ~ ' form-control')|trim }) -%}
+      {%- set id = form.vars.id ~ '_search_input' -%}
+      <input type="text" placeholder="{{ placeholder }}" autocomplete="off" {{ block('widget_attributes') }} />
+    </div>
+    {{- block('form_help') -}}
+    <ul class="entities-list">
+      {{- block('form_rows') -}}
+    </ul>
+  </div>
+{% endblock %}
+
+{% block entity_item_row %}
+  {%- set attr = attr|merge({'class': (attr.class|default('') ~ ' media entity-item')|trim }) -%}
+  <li {{ block('widget_attributes') }}>
+    <div class="media-left">
+      <img class="media-object image" src="{{ item.image|default(form.parent.vars.prototype_image) }}" />
+    </div>
+    <div class="media-body media-middle">
+      <span class="label">
+        {{ item.name|default(form.parent.vars.prototype_display) }}
+      </span>
+      {% if form.parent.vars.allow_delete %}
+      <i class="material-icons delete">clear</i>
+      {% endif %}
+    </div>
+    <input type="hidden" name="{{ form.vars.full_name }}" value="{{ form.vars.value|default(form.parent.vars.prototype_value) }}" />
+  </li>
+{% endblock %}
