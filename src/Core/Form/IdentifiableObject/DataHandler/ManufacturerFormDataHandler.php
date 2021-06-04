@@ -26,12 +26,12 @@
 
 namespace PrestaShop\PrestaShop\Core\Form\IdentifiableObject\DataHandler;
 
+use PrestaShop\PrestaShop\Adapter\Image\Uploader\ManufacturerImageUploader;
 use PrestaShop\PrestaShop\Core\CommandBus\CommandBusInterface;
 use PrestaShop\PrestaShop\Core\Domain\Manufacturer\Command\AddManufacturerCommand;
 use PrestaShop\PrestaShop\Core\Domain\Manufacturer\Command\EditManufacturerCommand;
 use PrestaShop\PrestaShop\Core\Domain\Manufacturer\ValueObject\ManufacturerId;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
-use PrestaShop\PrestaShop\Adapter\Image\Uploader\ManufacturerImageUploader;
 
 /**
  * Handles submitted manufacturer form data
@@ -85,7 +85,7 @@ final class ManufacturerFormDataHandler implements FormDataHandlerInterface
             $data['meta_description'],
             $data['meta_keyword'],
             $data['shop_association']
-        ));   
+        ));
 
         if ($uploadedLogo instanceof UploadedFile) {
             $this->imageUploader->upload($manufacturerId->getValue(), $uploadedLogo);
