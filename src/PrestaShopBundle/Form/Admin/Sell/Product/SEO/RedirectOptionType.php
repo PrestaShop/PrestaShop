@@ -32,10 +32,7 @@ use PrestaShop\PrestaShop\Adapter\LegacyContext;
 use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\RedirectType;
 use PrestaShopBundle\Form\Admin\Type\EntitySearchInputType;
 use PrestaShopBundle\Form\Admin\Type\TranslatorAwareType;
-use PrestaShopBundle\Form\Admin\Type\TypeaheadProductCollectionType;
 use PrestaShopBundle\Form\FormCloner;
-use Symfony\Component\Form\DataTransformerInterface;
-use Symfony\Component\Form\Extension\Core\EventListener\TransformationFailureListener;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\Form\FormEvent;
@@ -57,28 +54,20 @@ class RedirectOptionType extends TranslatorAwareType
     private $router;
 
     /**
-     * @var DataTransformerInterface
-     */
-    private $targetTransformer;
-
-    /**
      * @param TranslatorInterface $translator
      * @param array $locales
      * @param LegacyContext $context
      * @param RouterInterface $router
-     * @param DataTransformerInterface $targetTransformer
      */
     public function __construct(
         TranslatorInterface $translator,
         array $locales,
         LegacyContext $context,
-        RouterInterface $router,
-        DataTransformerInterface $targetTransformer
+        RouterInterface $router
     ) {
         parent::__construct($translator, $locales);
         $this->context = $context;
         $this->router = $router;
-        $this->targetTransformer = $targetTransformer;
     }
 
     /**
@@ -115,27 +104,7 @@ class RedirectOptionType extends TranslatorAwareType
                     $this->trans('Temporary redirection to a product (302)', 'Admin.Catalog.Feature') => RedirectType::TYPE_PRODUCT_TEMPORARY,
                 ],
             ])
-            ->add('target', TypeaheadProductCollectionType::class, [
-                'required' => false,
-                'error_bubbling' => false,
-                'template_collection' => '<span class="label">%s</span>',
-                'limit' => 1,
-                'label' => $entityAttributes[$defaultEntity]['label'],
-                'remote_url' => $entityAttributes[$defaultEntity]['searchUrl'],
-                'placeholder' => $entityAttributes[$defaultEntity]['placeholder'],
-                'help' => $entityAttributes[$defaultEntity]['help'],
-                'attr' => [
-                    'data-product-label' => $entityAttributes['product']['label'],
-                    'data-product-placeholder' => $entityAttributes['product']['placeholder'],
-                    'data-product-search-url' => $entityAttributes['product']['searchUrl'],
-                    'data-product-help' => $entityAttributes['product']['help'],
-                    'data-category-label' => $entityAttributes['category']['label'],
-                    'data-category-placeholder' => $entityAttributes['category']['placeholder'],
-                    'data-category-help' => $entityAttributes['category']['help'],
-                    'data-category-search-url' => $entityAttributes['category']['searchUrl'],
-                ],
-            ])
-            ->add('new_target', EntitySearchInputType::class, [
+            ->add('target', EntitySearchInputType::class, [
                 'required' => false,
                 'limit' => 1,
                 'label' => $entityAttributes[$defaultEntity]['label'],
@@ -155,16 +124,11 @@ class RedirectOptionType extends TranslatorAwareType
             ])
         ;
 
-        // This will transform the target ID from model data into an array adapted for TypeaheadProductCollectionType
-        $builder->get('target')->addModelTransformer($this->targetTransformer);
-        // In case a transformation occurs it will be displayed as an inline error
-        $builder->addEventSubscriber(new TransformationFailureListener($this->getTranslator()));
-
         // Preset the input attributes correctly depending on the data
         $builder->addEventListener(FormEvents::PRE_SET_DATA, function (FormEvent $event) use ($entityAttributes) {
             $data = $event->getData();
             $form = $event->getForm();
-            $targetField = $form->get('new_target');
+            $targetField = $form->get('target');
             $targetOptions = $targetField->getConfig()->getOptions();
             $dataType = $data['type'] ?? RedirectType::TYPE_NOT_FOUND;
             switch ($dataType) {

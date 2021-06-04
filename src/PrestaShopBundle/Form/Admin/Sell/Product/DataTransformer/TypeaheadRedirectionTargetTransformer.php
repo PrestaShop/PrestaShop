@@ -30,6 +30,12 @@ namespace PrestaShopBundle\Form\Admin\Sell\Product\DataTransformer;
 
 use Symfony\Component\Form\DataTransformerInterface;
 
+/**
+ * @deprecated since 1.7.9.0
+ *
+ * This transformer was useful when the form used a TypeAhead form type, with the new EntitySearchInputType
+ * it became useless because the format is more adapted by default and not complex enough to justify a transformer.
+ */
 class TypeaheadRedirectionTargetTransformer implements DataTransformerInterface
 {
     /**
