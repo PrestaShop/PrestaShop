@@ -36,7 +36,7 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
 class EntitySearchInputType extends CollectionType
 {
     /**
-     * @inheritDoc
+     * {@inheritDoc}
      */
     public function configureOptions(OptionsResolver $resolver)
     {
@@ -65,7 +65,7 @@ class EntitySearchInputType extends CollectionType
     }
 
     /**
-     * @inheritDoc
+     * {@inheritDoc}
      */
     public function buildView(FormView $view, FormInterface $form, array $options)
     {

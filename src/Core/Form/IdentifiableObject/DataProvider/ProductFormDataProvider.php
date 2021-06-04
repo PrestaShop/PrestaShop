@@ -388,8 +388,7 @@ final class ProductFormDataProvider implements FormDataProviderInterface
 
         return [
             'type' => $seoOptions->getRedirectType(),
-            'target' => $seoOptions->getRedirectTargetId(),
-            'new_target' => $seoOptions->getRedirectTargetId() ? [$seoOptions->getRedirectTargetId()] : [],
+            'target' => $seoOptions->getRedirectTargetId() ? [$seoOptions->getRedirectTargetId()] : null,
         ];
     }
 
