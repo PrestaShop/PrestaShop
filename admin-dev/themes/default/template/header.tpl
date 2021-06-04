@@ -139,7 +139,7 @@
             <li class="divider"></li>
             {if isset($matchQuickLink)}
               <li>
-                <a id="quick_remove" href="javascript:void(0);" class="ajax-quick-link" data-method="remove"
+                <a id="quick_remove_link" href="javascript:void(0);" class="ajax-quick-link" data-method="remove"
                   data-quicklink-id="{$matchQuickLink}">
                   <i class="material-icons">remove_circle</i>
                   {l s='Remove from QuickAccess' d='Admin.Navigation.Header'}
@@ -147,14 +147,14 @@
               </li>
             {else}
               <li>
-                <a id="quick_add" href="javascript:void(0);" class="ajax-quick-link" data-method="add">
+                <a id="quick_add_link" href="javascript:void(0);" class="ajax-quick-link" data-method="add">
                   <i class="material-icons">add_circle</i>
                   {l s='Add current page to QuickAccess' d='Admin.Navigation.Header'}
                 </a>
               </li>
             {/if}
             <li>
-              <a id="quick_manage" href="{$link->getAdminLink("AdminQuickAccesses")|addslashes}">
+              <a id="quick_manage_link" href="{$link->getAdminLink("AdminQuickAccesses")|addslashes}">
                 <i class="material-icons">settings</i>
                 {l s='Manage quick accesses' d='Admin.Navigation.Header'}
               </a>

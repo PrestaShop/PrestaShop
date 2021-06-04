@@ -31,9 +31,9 @@ class BOBasePage extends CommonPage {
     this.quickAccessContainer = '#quick-access-container';
     this.quickAccessLink = idLink => `${this.headerQuickDiv} li:nth-child(${idLink}) a,
     ${this.quickAccessContainer} a:nth-child(${idLink})`;
-    this.quickAddCurrentLink = '#quick_add';
-    this.quickAccessRemoveLink = '#quick_remove';
-    this.manageYourQuickAccessLink = '#quick_manage';
+    this.quickAddCurrentLink = '#quick_add_link';
+    this.quickAccessRemoveLink = '#quick_remove_link';
+    this.manageYourQuickAccessLink = '#quick_manage_link';
 
     // Header links
     this.helpButton = '#product_form_open_help';
