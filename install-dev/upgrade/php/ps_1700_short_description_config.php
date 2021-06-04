@@ -29,6 +29,8 @@
  */
 function ps_1700_short_description_config()
 {
+    Configuration::loadConfiguration();
+    
     return !Configuration::get('PS_PRODUCT_SHORT_DESC_LIMIT')
         ? Configuration::updateValue('PS_PRODUCT_SHORT_DESC_LIMIT', 800) : true;
 }
