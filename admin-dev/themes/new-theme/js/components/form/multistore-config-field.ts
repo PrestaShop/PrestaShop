@@ -23,6 +23,8 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
 
+import ComponentsMap from '@components/components-map';
+
 const {$} = window;
 
 export default class MultistoreConfigField {
@@ -31,16 +33,16 @@ export default class MultistoreConfigField {
   }
 
   updateMultistoreFieldOnChange(): void {
-    $(document).on('change', '.multistore-checkbox', () => {
+    $(document).on('change', ComponentsMap.multistoreCheckbox, () => {
       const input = $(this)
-        .closest('.form-group')
-        .find(':input:not(.multistore-checkbox)');
+        .closest(ComponentsMap.formGroup)
+        .find(ComponentsMap.inputNotCheckbox);
       const inputContainer = $(this)
-        .closest('.form-group')
-        .find('.input-container');
+        .closest(ComponentsMap.formGroup)
+        .find(ComponentsMap.inputContainer);
       const labelContainer = $(this)
-        .closest('.form-group')
-        .find('.form-control-label');
+        .closest(ComponentsMap.formGroup)
+        .find(ComponentsMap.formControlLabel);
       const isChecked = $(this).is(':checked');
       inputContainer.toggleClass('disabled', !isChecked);
       labelContainer.toggleClass('disabled', !isChecked);
