@@ -101,7 +101,7 @@ class MultistoreCheckboxEnablerTest extends TypeTestCase
 
         // the added multistore checkbox must have the correct `multistore_configuration_key` attribute
         $multistoreFirstFieldCheckboxOptions = $form->get(MultistoreCheckboxEnabler::MULTISTORE_FIELD_PREFIX . 'first_field')->getConfig()->getOptions();
-        $this->assertEquals('TEST_CONFIGURATION_KEY', $multistoreFirstFieldCheckboxOptions['attr']['multistore_configuration_key']);
+        $this->assertEquals('TEST_CONFIGURATION_KEY', $multistoreFirstFieldCheckboxOptions['multistore_configuration_key']);
         $this->assertArrayHasKey('multistore_dropdown', $multistoreFirstFieldCheckboxOptions);
     }
 
