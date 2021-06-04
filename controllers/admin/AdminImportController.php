@@ -3138,7 +3138,7 @@ class AdminImportControllerCore extends AdminController
 
         if (!$customer->id) {
             if (empty($info['passwd'])) {
-                $customer->passwd = $this->get('hashing')->hash(Tools::passwdGen(8, 'RANDOM'), _COOKIE_KEY_);
+                $customer->passwd = $this->get('hashing')->hash(Tools::passwdGen(8, Tools::PASSWORDGEN_FLAG_RANDOM)), _COOKIE_KEY_);
             } else {
                 $customer->passwd = $this->get('hashing')->hash($customer->passwd, _COOKIE_KEY_);
             }
