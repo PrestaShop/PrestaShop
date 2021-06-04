@@ -28,4 +28,15 @@ export default {
       return this.$store.state.translations[key];
     },
   },
+  form: {
+    selectChoice: (language) => `select.translatable_choice[data-language="${language}"]`,
+    selectLanguage: 'select.translatable_choice_language',
+  },
+  currentLength: '.js-current-length',
+  recommendedLengthInput: '.js-recommended-length-input',
+  multistoreCheckbox: '.multistore-checkbox',
+  formGroup: '.form-group',
+  inputNotCheckbox: ':input:not(.multistore-checkbox)',
+  inputContainer: '.input-container',
+  formControlLabel: '.form-control-label',
 };

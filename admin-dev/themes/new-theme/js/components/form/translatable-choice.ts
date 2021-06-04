@@ -23,6 +23,8 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
 
+import ComponentsMap from '@components/components-map';
+
 const {$} = window;
 
 /**
@@ -33,7 +35,7 @@ export default class TranslatableChoice {
     // registers the event which displays the popover
     $(document).on(
       'change',
-      'select.translatable_choice_language',
+      ComponentsMap.form.selectLanguage,
       (event: JQueryEventObject) => {
         this.filterSelect(event);
       },
@@ -49,7 +51,7 @@ export default class TranslatableChoice {
 
     // show all the languages selects
     $formGroup
-      .find(`select.translatable_choice[data-language="${language}"]`)
+      .find(ComponentsMap.form.selectChoice(language))
       .parent()
       .show();
 
@@ -57,7 +59,7 @@ export default class TranslatableChoice {
 
     // Hide all the selects not corresponding to the language selected
     $selects
-      .not(`select.translatable_choice[data-language="${language}"]`)
+      .not(ComponentsMap.form.selectChoice(language))
       .each((index, item) => {
         $(item)
           .parent()

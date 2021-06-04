@@ -23,6 +23,8 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
 
+import ComponentsMap from '@components/components-map';
+
 const {$} = window;
 
 /**
@@ -50,12 +52,12 @@ const {$} = window;
  */
 export default class TextWithRecommendedLengthCounter {
   constructor() {
-    $(document).on('input', '.js-recommended-length-input', (event) => {
+    $(document).on('input', ComponentsMap.recommendedLengthInput, (event) => {
       const $input = $(event.currentTarget);
       const inputVal = <string>$input.val();
 
       $($input.data('recommended-length-counter'))
-        .find('.js-current-length')
+        .find(ComponentsMap.currentLength)
         .text(inputVal.length);
     });
   }
