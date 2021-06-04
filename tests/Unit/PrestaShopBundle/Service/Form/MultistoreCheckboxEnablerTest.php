@@ -123,9 +123,7 @@ class MultistoreCheckboxEnablerTest extends TypeTestCase
                 SwitchType::class,
                 [
                     'required' => true,
-                    'attr' => [
-                        'multistore_configuration_key' => 'TEST_CONFIGURATION_KEY',
-                    ],
+                    'multistore_configuration_key' => 'TEST_CONFIGURATION_KEY',
                 ]
             )
             // second field will not have a multistore checkbox (it doesn't have the `multistore_configuration_key` attribute)
