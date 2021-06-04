@@ -163,7 +163,7 @@ export default class OrderPricesRefresher {
         !== Number(productEditBtn.data('product-price-tax-incl'))
       ) {
         if (
-          invoiceId === ''
+          !invoiceId
           || (invoiceId
             && currentOrderInvoiceId
             && invoiceId === currentOrderInvoiceId)

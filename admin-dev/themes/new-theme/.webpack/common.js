@@ -28,7 +28,7 @@ const {CleanWebpackPlugin} = require('clean-webpack-plugin');
 const CopyPlugin = require('copy-webpack-plugin');
 const {VueLoaderPlugin} = require('vue-loader');
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
-const FixStyleOnlyEntriesPlugin = require('webpack-fix-style-only-entries');
+const RemoveEmptyScriptsPlugin = require('webpack-remove-empty-scripts');
 const bourbon = require('bourbon');
 
 module.exports = {
@@ -76,8 +76,7 @@ module.exports = {
     main: './js/theme',
     maintenance: './js/pages/maintenance',
     manufacturer: './js/pages/manufacturer',
-    manufacturer_address_form:
-      './js/pages/manufacturer/manufacturer_address_form',
+    manufacturer_address_form: './js/pages/manufacturer/manufacturer_address_form',
     merchandise_return: './js/pages/merchandise-return',
     meta: './js/pages/meta',
     module: './js/pages/module',
@@ -344,7 +343,7 @@ module.exports = {
     ],
   },
   plugins: [
-    new FixStyleOnlyEntriesPlugin(),
+    new RemoveEmptyScriptsPlugin(),
     new CleanWebpackPlugin({
       cleanOnceBeforeBuildPatterns: ['!theme.rtlfix'],
     }),
