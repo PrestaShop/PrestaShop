@@ -403,7 +403,7 @@ class OrderController extends FrameworkBundleAdminController
     {
         try {
             /** @var OrderForViewing $orderForViewing */
-            $orderForViewing = $this->getQueryBus()->handle(new GetOrderForViewing($orderId, QuerySorting::DESC));
+            $orderForViewing = $this->getQueryBus()->handle(new GetOrderForViewing($orderId));
         } catch (OrderException $e) {
             $this->addFlash('error', $this->getErrorMessageForException($e, $this->getErrorMessages($e)));
 
@@ -672,7 +672,7 @@ class OrderController extends FrameworkBundleAdminController
     public function addProductAction(int $orderId, Request $request): Response
     {
         /** @var OrderForViewing $orderForViewing */
-        $orderForViewing = $this->getQueryBus()->handle(new GetOrderForViewing($orderId, QuerySorting::DESC));
+        $orderForViewing = $this->getQueryBus()->handle(new GetOrderForViewing($orderId));
 
         $previousProducts = [];
         foreach ($orderForViewing->getProducts()->getProducts() as $orderProductForViewing) {
@@ -719,7 +719,7 @@ class OrderController extends FrameworkBundleAdminController
          * We keep it for now to avoid Breaking Change
          */
         /** @var OrderForViewing $orderForViewing */
-        $orderForViewing = $this->getQueryBus()->handle(new GetOrderForViewing($orderId, QuerySorting::DESC));
+        $orderForViewing = $this->getQueryBus()->handle(new GetOrderForViewing($orderId));
 
         $updatedProducts = [];
         foreach ($orderForViewing->getProducts()->getProducts() as $orderProductForViewing) {
@@ -978,7 +978,7 @@ class OrderController extends FrameworkBundleAdminController
         }
 
         /** @var OrderForViewing $orderForViewing */
-        $orderForViewing = $this->getQueryBus()->handle(new GetOrderForViewing($orderId, QuerySorting::DESC));
+        $orderForViewing = $this->getQueryBus()->handle(new GetOrderForViewing($orderId));
 
         $products = $orderForViewing->getProducts()->getProducts();
         $product = array_reduce($products, function ($result, OrderProductForViewing $item) use ($orderDetailId) {
@@ -1523,7 +1523,7 @@ class OrderController extends FrameworkBundleAdminController
     public function getProductsListAction(int $orderId): Response
     {
         /** @var OrderForViewing $orderForViewing */
-        $orderForViewing = $this->getQueryBus()->handle(new GetOrderForViewing($orderId, QuerySorting::DESC));
+        $orderForViewing = $this->getQueryBus()->handle(new GetOrderForViewing($orderId));
 
         $currencyDataProvider = $this->container->get('prestashop.adapter.data_provider.currency');
         $orderCurrency = $currencyDataProvider->getCurrencyById($orderForViewing->getCurrencyId());
