@@ -148,7 +148,7 @@ export default {
     watchedMetaUrl: '.serp-watched-url:input',
     redirectOption: {
       typeInput: '#product_seo_redirect_option_type',
-      targetInput: '#product_seo_redirect_option_target',
+      targetInput: '#product_seo_redirect_option_new_target',
     },
   },
   jsTabs: '.js-tabs',
