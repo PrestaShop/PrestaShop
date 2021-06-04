@@ -150,6 +150,7 @@ class ProductShipping extends CommonAbstractType
                 'weight',
                 FormType\NumberType::class,
                 [
+                    'scale' => static::PRESTASHOP_WEIGHT_DECIMALS,
                     'required' => false,
                     'label' => $this->translator->trans('Weight', [], 'Admin.Catalog.Feature'),
                     'constraints' => [
