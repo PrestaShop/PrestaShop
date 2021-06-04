@@ -31,7 +31,7 @@ use PrestaShop\PrestaShop\Adapter\Configuration as ShopConfiguration;
 use PrestaShop\PrestaShop\Adapter\Shop\Context as ShopContext;
 use PrestaShop\PrestaShop\Core\Feature\FeatureInterface;
 use PrestaShopBundle\Controller\Admin\MultistoreController;
-use PrestaShopBundle\Form\Admin\Extension\MultistoreDropdownExtension;
+use PrestaShopBundle\Form\Admin\Extension\MultistoreExtension;
 use PrestaShopBundle\Form\Admin\Type\SwitchType;
 use PrestaShopBundle\Service\Form\MultistoreCheckboxEnabler;
 use Symfony\Component\Form\FormInterface;
@@ -111,7 +111,7 @@ class MultistoreCheckboxEnablerTest extends TypeTestCase
     private function getFormToTest(): FormInterface
     {
         $formFactory = Forms::createFormFactoryBuilder()
-            ->addTypeExtension(new MultistoreDropdownExtension())
+            ->addTypeExtension(new MultistoreExtension())
             ->getFormFactory();
 
         $formBuilder = $formFactory->createBuilder();

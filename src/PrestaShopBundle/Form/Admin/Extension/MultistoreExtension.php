@@ -34,7 +34,7 @@ use Symfony\Component\Form\FormInterface;
 use Symfony\Component\Form\FormView;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
-class MultistoreDropdownExtension extends AbstractTypeExtension
+class MultistoreExtension extends AbstractTypeExtension
 {
     /**
      * {@inheritdoc}
