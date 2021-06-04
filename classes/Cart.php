@@ -112,6 +112,7 @@ class CartCore extends ObjectModel
     protected static $cachePackageList = [];
     protected static $cacheDeliveryOptionList = [];
     protected static $cacheMultiAddressDelivery = [];
+    protected static $cacheProducts = [];
 
     /**
      * @see ObjectModel::$definition
@@ -293,6 +294,7 @@ class CartCore extends ObjectModel
         }
 
         $this->_products = null;
+        static::$cacheProducts = [];
         $return = parent::update($nullValues);
         Hook::exec('actionCartSave', ['cart' => $this]);
 
@@ -656,11 +658,18 @@ class CartCore extends ObjectModel
         if (!$this->id) {
             return [];
         }
+
+        $productsCacheKey = 'Cart::getProducts-'
+            .$id_product.'-'
+            .$id_country.'-'
+            .$fullInfos.'-'
+            .$keepOrderPrices;
+
         // Product cache must be strictly compared to NULL, or else an empty cart will add dozens of queries
-        if ($this->_products !== null && !$refresh) {
+        if (isset(static::$cacheProducts[$productsCacheKey]) && static::$cacheProducts[$productsCacheKey] !== null && !$refresh) {
             // Return product row with specified ID if it exists
             if (is_int($id_product)) {
-                foreach ($this->_products as $product) {
+                foreach (static::$cacheProducts[$productsCacheKey] as $product) {
                     if ($product['id_product'] == $id_product) {
                         return [$product];
                     }
@@ -669,7 +678,9 @@ class CartCore extends ObjectModel
                 return [];
             }
 
-            return $this->_products;
+            $this->_products = static::$cacheProducts[$productsCacheKey];
+
+            return static::$cacheProducts[$productsCacheKey];
         }
 
         // Build query
@@ -784,7 +795,7 @@ class CartCore extends ObjectModel
 
         if (empty($result)) {
             $this->_products = [];
-
+            static::$cacheProducts[$productsCacheKey] = [];
             return [];
         }
 
@@ -861,7 +872,9 @@ class CartCore extends ObjectModel
             $this->_products = $result;
         }
 
-        return $this->_products;
+        static::$cacheProducts[$productsCacheKey] = $this->_products;
+
+        return static::$cacheProducts[$productsCacheKey];
     }
 
     /**
@@ -4914,6 +4927,7 @@ class CartCore extends ObjectModel
 
         if ($emptyCache) {
             $this->_products = null;
+            static::$cacheProducts = [];
         }
     }
 
@@ -5185,6 +5199,7 @@ class CartCore extends ObjectModel
     {
         $this->shouldSplitGiftProductsQuantity = true;
         $this->_products = null;
+        static::$cacheProducts = [];
 
         return $this;
     }
@@ -5196,6 +5211,7 @@ class CartCore extends ObjectModel
     {
         $this->shouldSplitGiftProductsQuantity = false;
         $this->_products = null;
+        static::$cacheProducts = [];
 
         return $this;
     }
@@ -5204,6 +5220,7 @@ class CartCore extends ObjectModel
     {
         $this->shouldExcludeGiftsDiscount = true;
         $this->_products = null;
+        static::$cacheProducts = [];
 
         return $this;
     }
@@ -5212,6 +5229,7 @@ class CartCore extends ObjectModel
     {
         $this->shouldExcludeGiftsDiscount = false;
         $this->_products = null;
+        static::$cacheProducts = [];
 
         return $this;
     }
