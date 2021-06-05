@@ -36,6 +36,9 @@ class OrderConfirmationControllerCore extends FrontController
     public $secure_key;
     public $order_presenter;
 
+    /** @var bool */
+    private $isFreeOrder = false;
+
     /**
      * Initialize order confirmation controller.
      *
@@ -58,17 +61,21 @@ class OrderConfirmationControllerCore extends FrontController
         $this->secure_key = Tools::getValue('key', false);
         $order = new Order((int) ($this->id_order));
 
-        if (!$this->id_order || !$this->id_module || !$this->secure_key || empty($this->secure_key)) {
+        if (!$this->id_order || (!$this->isFreeOrder && !$this->id_module) || !$this->secure_key || empty($this->secure_key)) {
             Tools::redirect($redirectLink . (Tools::isSubmit('slowvalidation') ? '&slowvalidation' : ''));
         }
         $this->reference = $order->reference;
         if (!Validate::isLoadedObject($order) || $order->id_customer != $this->context->customer->id || $this->secure_key != $order->secure_key) {
             Tools::redirect($redirectLink);
         }
-        $module = Module::getInstanceById((int) ($this->id_module));
-        if ($order->module != $module->name) {
-            Tools::redirect($redirectLink);
+
+        if (!$this->isFreeOrder) {
+            $module = Module::getInstanceById((int) ($this->id_module));
+            if ($order->module != $module->name) {
+                Tools::redirect($redirectLink);
+            }
         }
+
         $this->order_presenter = new OrderPresenter();
     }
 
@@ -158,6 +165,10 @@ class OrderConfirmationControllerCore extends FrontController
             false,
             $cart->secure_key
         );
+
+        if ($order->currentOrder) {
+            $this->isFreeOrder = true;
+        }
     }
 
     public function getBreadcrumbLinks()
