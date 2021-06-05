@@ -237,6 +237,7 @@ class CartCore extends ObjectModel
         static::$cachePackageList = [];
         static::$cacheDeliveryOptionList = [];
         static::$cacheMultiAddressDelivery = [];
+        static::$cacheProducts = [];
     }
 
     /**
@@ -659,7 +660,7 @@ class CartCore extends ObjectModel
             return [];
         }
 
-        $productsCacheKey = 'Cart::getProducts-'
+        $productsCacheKey = 'Cart::getProducts-' . (int) $this->id
             . $id_product . '-'
             . $id_country . '-'
             . $fullInfos . '-'
