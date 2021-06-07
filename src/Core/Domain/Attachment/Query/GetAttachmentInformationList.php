@@ -32,6 +32,7 @@ use PrestaShop\PrestaShop\Core\Domain\Language\ValueObject\LanguageId;
 
 /**
  * Query providing attachments information
+ *
  * @todo: this possibly should be deprecated. It is not used and product attachments usecase changed, it shouldn't be needed anymore.
  */
 class GetAttachmentInformationList
