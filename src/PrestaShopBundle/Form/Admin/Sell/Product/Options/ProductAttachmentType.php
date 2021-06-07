@@ -27,11 +27,9 @@ declare(strict_types=1);
 
 namespace PrestaShopBundle\Form\Admin\Sell\Product\Options;
 
-use PrestaShopBundle\Form\Admin\Sell\Attachment\AttachmentType;
 use PrestaShopBundle\Form\Admin\Type\IconButtonType;
 use PrestaShopBundle\Form\Admin\Type\TranslatorAwareType;
 use Symfony\Component\Form\Extension\Core\Type\CollectionType;
-use Symfony\Component\Form\Extension\Core\Type\HiddenType;
 use Symfony\Component\Form\FormBuilderInterface;
 
 class ProductAttachmentType extends TranslatorAwareType
@@ -39,21 +37,15 @@ class ProductAttachmentType extends TranslatorAwareType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
-            ->add('attachment_ids', CollectionType::class, [
-                'entry_type' => HiddenType::class,
+            ->add('attached_files', CollectionType::class, [
+                'label' => false,
+                'entry_type' => AttachedFileType::class,
                 'allow_add' => true,
                 'allow_delete' => true,
                 'prototype_name' => '__ATTACHMENT_INDEX__',
             ])
-    //@todo: commented out due to required fields constraints.
-//            ->add('new_attachment', AttachmentType::class, [
-//                'label' => false,
-//                'attr' => [
-//                    'class' => 'd-none',
-//                ],
-//            ])
             ->add('add_attachment_btn', IconButtonType::class, [
-                'label' => $this->trans('Attach a new file', 'Admin.Catalog.Feature'),
+                'label' => $this->trans('Add new file', 'Admin.Catalog.Feature'),
                 'icon' => 'add_circle',
                 'attr' => [
                     'class' => 'btn-outline-secondary add-attachment-btn',
