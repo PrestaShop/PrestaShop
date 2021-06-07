@@ -112,6 +112,8 @@ class CartCore extends ObjectModel
     protected static $cachePackageList = [];
     protected static $cacheDeliveryOptionList = [];
     protected static $cacheMultiAddressDelivery = [];
+
+    /** @var array */
     protected static $cacheProducts = [];
 
     /**
