@@ -58,7 +58,7 @@
             name="{$field.name}"
             {if $field.required}required{/if}
           >
-            <option value disabled selected>{l s='-- please choose --' d='Shop.Forms.Labels'}</option>
+            <option value disabled selected>{l s='Please choose' d='Shop.Forms.Labels'}</option>
             {foreach from=$field.availableValues item="label" key="value"}
               <option value="{$value}" {if $value eq $field.value} selected {/if}>{$label}</option>
             {/foreach}
