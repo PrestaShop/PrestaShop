@@ -35,7 +35,6 @@ use PrestaShop\PrestaShop\Core\Domain\Attachment\Exception\AttachmentNotFoundExc
 use PrestaShop\PrestaShop\Core\Domain\Attachment\ValueObject\AttachmentId;
 use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductId;
 use PrestaShop\PrestaShop\Core\Exception\CoreException;
-use function Doctrine\DBAL\Query\QueryBuilder;
 
 /**
  * Methods to access Attachment data source
