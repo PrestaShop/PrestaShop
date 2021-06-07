@@ -64,6 +64,16 @@ table.grid-ordering-column tr.position-row-while-drag {
   }
 }
 
+.adminmailtheme {
+  .action-type {
+    .text-right {
+      .btn.tooltip-link {
+        justify-content: flex-end;
+      }
+    }
+  }
+}
+
 .btn-group-action {
   a.dropdown-toggle,
   button.dropdown-toggle,
@@ -71,7 +81,7 @@ table.grid-ordering-column tr.position-row-while-drag {
     color: $gray-medium;
 
     &::after {
-      content: "more_vert";
+      content: 'more_vert';
     }
 
     &:hover {
