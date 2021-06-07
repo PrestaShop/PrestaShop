@@ -1,3 +1,4 @@
+<?php
 /**
  * Copyright since 2007 PrestaShop SA and Contributors
  * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
@@ -22,26 +23,31 @@
  * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
+declare(strict_types=1);
 
-import Router from '@components/router';
+namespace PrestaShopBundle\Form\Admin\Sell\Product\Options;
 
-const {$} = window;
+use PrestaShopBundle\Form\Admin\Type\TranslatorAwareType;
+use Symfony\Component\Form\Extension\Core\Type\HiddenType;
+use Symfony\Component\Form\FormBuilderInterface;
 
-export default class AttachmentsService {
-  /**
-   * @param {Number} productId
-   */
-  constructor(productId) {
-    this.productId = productId;
-    this.router = new Router();
-  }
-
-  /**
-   * @returns {Promise}
-   */
-  fetchAttachments() {
-    return $.get(
-      this.router.generate('admin_products_v2_attachments', {productId: this.productId}),
-    );
-  }
+class AttachedFileType extends TranslatorAwareType
+{
+    public function buildForm(FormBuilderInterface $builder, array $options)
+    {
+        $builder
+            ->add('attachment_id', HiddenType::class, [
+                'label' => false,
+            ])
+            ->add('name', HiddenType::class, [
+                'label' => $this->trans('Title', 'Admin.Global'),
+            ])
+            ->add('filename', HiddenType::class, [
+                'label' => $this->trans('File name', 'Admin.Global'),
+            ])
+            ->add('mime_type', HiddenType::class, [
+                'label' => $this->trans('Type', 'Admin.Global'),
+            ])
+        ;
+    }
 }
