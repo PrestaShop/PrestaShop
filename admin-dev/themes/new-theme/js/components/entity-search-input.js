@@ -41,7 +41,7 @@ import Bloodhound from 'typeahead.js';
 export default class EntitySearchInput {
   constructor($entitySearchInputContainer, options) {
     this.$entitySearchInputContainer = $entitySearchInputContainer;
-    this.$entitySearchInput = $('input', this.$entitySearchInputContainer);
+    this.$entitySearchInput = $('.entity-search-input', this.$entitySearchInputContainer);
     this.$selectionContainer = $('.entities-list', this.$entitySearchInputContainer);
 
     this.mappingValue = this.$entitySearchInputContainer.data('mappingValue');
@@ -66,6 +66,11 @@ export default class EntitySearchInput {
     };
     this.buildRemoteSource();
     this.buildAutoCompleteSearch();
+
+    return {
+      setRemoteUrl: (remoteUrl) => this.setRemoteUrl(remoteUrl),
+      setValue: (values) => this.setValue(values),
+    };
   }
 
   /**

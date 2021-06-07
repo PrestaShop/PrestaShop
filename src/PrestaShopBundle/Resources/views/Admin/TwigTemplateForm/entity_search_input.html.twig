@@ -37,23 +37,34 @@
     'data-remote-url': remote_url|raw,
     'data-limit': limit
   }) -%}
-  {%- set attr = attr|merge({'class': (attr.class|default('') ~ ' entity-search-input')|trim }) -%}
+  {%- set attr = attr|merge({'class': (attr.class|default('') ~ ' entity-search-widget')|trim }) -%}
   <div {{ block('widget_attributes') }}>
     <div class="search search-with-icon">
-      {%- set attr = search_attr|merge({'class': (search_attr.class|default('') ~ ' form-control')|trim }) -%}
+      {%- set attr = search_attr|merge({
+        'class': (search_attr.class|default('') ~ ' entity-search-input form-control')|trim,
+        'autocomplete': 'off',
+        'placeholder': placeholder,
+        'type': 'text'
+      }) -%}
       {%- set id = form.vars.id ~ '_search_input' -%}
-      <input type="text" placeholder="{{ placeholder }}" autocomplete="off" {{ block('widget_attributes') }} />
+      <input {{ block('widget_attributes') }} />
     </div>
     {{- block('form_help') -}}
-    <ul class="entities-list">
+    {%- set attr = list_attr|merge({'class': (list_attr.class|default('') ~ ' entities-list')|trim }) -%}
+    {%- set id = form.vars.id ~ '_list' -%}
+    <ul {{ block('widget_attributes') }}>
       {{- block('form_rows') -}}
     </ul>
   </div>
 {% endblock %}
 
 {% block entity_item_row %}
-  {%- set attr = attr|merge({'class': (attr.class|default('') ~ ' media entity-item')|trim }) -%}
-  <li {{ block('widget_attributes') }}>
+  {%- set view_data = form.parent.vars.view_data -%}
+  {%- set item = null -%}
+  {% if view_data[name] is defined %}
+    {%- set item = view_data[name] -%}
+  {% endif %}
+  <li class="media entity-item">
     <div class="media-left">
       <img class="media-object image" src="{{ item.image|default(form.parent.vars.prototype_image) }}" />
     </div>
@@ -65,6 +76,6 @@
         <i class="material-icons delete">clear</i>
       {% endif %}
     </div>
-    <input type="hidden" name="{{ form.vars.full_name }}" value="{{ form.vars.value|default(form.parent.vars.prototype_value) }}" />
+    <input type="hidden" {{ block('widget_attributes') }} value="{{ form.vars.value|default(form.parent.vars.prototype_value) }}" />
   </li>
 {% endblock %}
