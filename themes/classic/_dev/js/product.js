@@ -31,6 +31,7 @@ $(document).ready(() => {
   createInputFile();
   coverImage();
   imageScrollBox();
+  addJsProductTabActiveSelector();
 
   prestashop.on('updatedProduct', (event) => {
     createInputFile();
@@ -156,6 +157,20 @@ $(document).ready(() => {
           event: e,
         });
       }
+    });
+  }
+
+  function addJsProductTabActiveSelector() {
+    const nav = $(prestashop.themeSelectors.product.tabs);
+    nav.on('show.bs.tab', (e) => {
+      const target = $(e.target);
+      target.addClass('js-product-nav-active');
+      $(target.attr('href')).addClass('js-product-tab-active');
+    });
+    nav.on('hide.bs.tab', (e) => {
+      const target = $(e.target);
+      target.removeClass('js-product-nav-active');
+      $(target.attr('href')).removeClass('js-product-tab-active');
     });
   }
 });

@@ -27,6 +27,7 @@ import $ from 'jquery';
 
 prestashop.themeSelectors = {
   product: {
+    tabs: '.tabs .nav-link',
     activeTabs: '.tabs .nav-link.active, .js-product-nav-active',
     imagesModal: '.js-product-images-modal',
     thumb: '.js-thumb',
