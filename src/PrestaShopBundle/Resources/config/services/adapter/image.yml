@@ -38,3 +38,8 @@ services:
         class: 'PrestaShop\PrestaShop\Adapter\Image\ImageValidator'
         arguments:
             - '@=service("prestashop.core.configuration.upload_size_configuration").getMaxUploadSizeInBytes()'
+
+    prestashop.adapter.image.category_image_path_factory:
+        class: 'PrestaShop\PrestaShop\Adapter\Image\ImagePathFactory'
+        arguments:
+            - '@=service("prestashop.adapter.shop.url.category_image_folder_provider").getUrl()'
