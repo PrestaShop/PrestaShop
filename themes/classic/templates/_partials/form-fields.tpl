@@ -31,7 +31,7 @@
 {else}
 
   <div class="form-group row {if !empty($field.errors)}has-error{/if}">
-    <label class="col-md-3 form-control-label{if $field.required} required{/if}" for="{$field.name}">
+    <label class="col-md-3 form-control-label{if $field.required} required{/if}" for="field-{$field.name}">
       {if $field.type !== 'checkbox'}
         {$field.label}
       {/if}
@@ -41,7 +41,7 @@
       {if $field.type === 'select'}
 
         {block name='form_field_item_select'}
-          <select id="{$field.name}" class="form-control form-control-select" name="{$field.name}" {if $field.required}required{/if}>
+          <select id="field-{$field.name}" class="form-control form-control-select" name="{$field.name}" {if $field.required}required{/if}>
             <option value disabled selected>{l s='Please choose' d='Shop.Forms.Labels'}</option>
             {foreach from=$field.availableValues item="label" key="value"}
               <option value="{$value}" {if $value eq $field.value} selected {/if}>{$label}</option>
@@ -100,7 +100,7 @@
       {elseif $field.type === 'date'}
 
         {block name='form_field_item_date'}
-          <input id="{$field.name}" name="{$field.name}" class="form-control" type="date" value="{$field.value}"{if isset($field.availableValues.placeholder)} placeholder="{$field.availableValues.placeholder}"{/if}>
+          <input id="field-{$field.name}" name="{$field.name}" class="form-control" type="date" value="{$field.value}"{if isset($field.availableValues.placeholder)} placeholder="{$field.availableValues.placeholder}"{/if}>
           {if isset($field.availableValues.comment)}
             <span class="form-control-comment">
               {$field.availableValues.comment}
@@ -135,7 +135,7 @@
         {block name='form_field_item_password'}
           <div class="input-group js-parent-focus">
             <input
-              id="{$field.name}"
+              id="field-{$field.name}"
               class="form-control js-child-focus js-visible-password"
               name="{$field.name}"
               title="{l s='At least 5 characters long' d='Shop.Forms.Help'}"
@@ -163,7 +163,7 @@
 
         {block name='form_field_item_other'}
           <input
-            id="{$field.name}"
+            id="field-{$field.name}"
             class="form-control"
             name="{$field.name}"
             type="{$field.type}"
