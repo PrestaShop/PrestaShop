@@ -270,7 +270,7 @@ class MailCore extends ObjectModel
             return false;
         }
 
-        // if bcc is not null, make sure it's a vaild e-mail
+        // if bcc is not null, make sure it's a valid e-mail
         if (null !== $bcc && !is_array($bcc) && !Validate::isEmail($bcc)) {
             self::dieOrLog($die, 'Error: parameter "bcc" is corrupted');
             $bcc = null;
