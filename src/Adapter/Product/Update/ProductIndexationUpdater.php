@@ -29,6 +29,7 @@ declare(strict_types=1);
 namespace PrestaShop\PrestaShop\Adapter\Product\Update;
 
 use PrestaShop\PrestaShop\Adapter\CoreException;
+use PrestaShopException
 use Search;
 
 /**
@@ -46,7 +47,7 @@ class ProductIndexationUpdater
         } catch (PrestaShopException $e) {
             throw new CoreException(
                 sprintf(
-                    'An error occured while trying to update indexation data for product %s.',
+                    'An error occured while trying to update indexation data for product %d.',
                     $productId
                 ),
                 0,
