@@ -347,7 +347,7 @@ class AdminShopGroupControllerCore extends AdminController
     public function beforeUpdateOptions()
     {
         if (!(new Shop((int) Tools::getValue('PS_SHOP_DEFAULT')))->getBaseURL()) {
-            $this->errors[] = $this->trans('You must configure this store's URL before setting it as default.', [], 'Admin.Advparameters.Notification');
+            $this->errors[] = $this->trans('You must configure this store\'s URL before setting it as default.', [], 'Admin.Advparameters.Notification');
         }
     }
 
