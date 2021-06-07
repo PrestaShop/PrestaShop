@@ -1335,7 +1335,10 @@ window.imagesProduct = (function () {
       dropZoneElem.css('height', '');
       const closedHeight = dropZoneElem.outerHeight();
       const realHeight = dropZoneElem[0].scrollHeight;
-      dropZoneElem.css('height', oldHeight);
+
+      if (oldHeight !== '0px') {
+        dropZoneElem.css('height', oldHeight);
+      }
 
       return (realHeight > closedHeight);
     },
