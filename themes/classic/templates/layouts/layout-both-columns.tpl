@@ -23,7 +23,7 @@
  * @license   https://opensource.org/licenses/AFL-3.0 Academic Free License 3.0 (AFL-3.0)
  *}
 <!doctype html>
-<html lang="{$language.language_code|regex_replace:'/-.*/':''}">
+<html lang="{$language_code}">
 
   <head>
     {block name='head'}

@@ -525,6 +525,7 @@ class FrontControllerCore extends Controller
             'currency' => $this->getTemplateVarCurrency(),
             'customer' => $this->getTemplateVarCustomer(),
             'language' => $this->objectPresenter->present($this->context->language),
+            'language_code' => $this->getTemplateVarLanguageCode(),
             'page' => $this->getTemplateVarPage(),
             'shop' => $this->getTemplateVarShop(),
             'urls' => $this->getTemplateVarUrls(),
@@ -1701,6 +1702,11 @@ class FrontControllerCore extends Controller
         ];
 
         return $page;
+    }
+
+    public function getTemplateVarLanguageCode()
+    {
+        return preg_replace('/-.*/', '', $this->context->language->language_code);
     }
 
     public function getBreadcrumb()
