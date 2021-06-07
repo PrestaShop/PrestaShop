@@ -28,7 +28,7 @@ export default {
     deleteCategories: '.js-delete-categories-bulk-action',
     deleteCategoriesModal: (id: string): string => `#${id}_grid_delete_categories_modal`,
     checkedCheckbox: '.js-bulk-action-checkbox:checked',
-    deleteCustomers: '.js-delete-categories-bulk-action',
+    deleteCustomers: '.js-delete-customers-bulk-action',
     deleteCustomerModal: (id: string): string => `#${id}_grid_delete_customers_modal`,
     submitDeleteCategories: '.js-submit-delete-categories',
     submitDeleteCustomers: '.js-submit-delete-customers',
