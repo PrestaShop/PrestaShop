@@ -45,23 +45,44 @@ class EntitySearchInputType extends CollectionType
         $resolver->setDefaults([
             'allow_add' => true,
             'entry_type' => EntityItemType::class,
+            'entity_type' => null,
             'remote_url' => null,
+            // Max number of selectable entities (0 is unlimited)
             'limit' => 0,
+            // Search input attributes (if needed)
             'search_attr' => [],
-            'entities_data' => [],
+            // List container attributes (if needed)
+            'list_attr' => [],
+            // Search input placeholder
             'placeholder' => '',
+            // Placeholders used for prototype (easy to search and replace)
             'prototype_image' => '__image__',
             'prototype_value' => '__value__',
             'prototype_display' => '__display__',
+            // Mapping fields in the view data
             'mapping_value' => 'id',
             'mapping_display' => 'name',
             'mapping_image' => 'image',
+            // View data used to render the selected entities
+            'view_data' => null,
         ]);
-        $resolver->setAllowedTypes('remote_url', ['string', 'null']);
-        $resolver->setAllowedTypes('mapping_value', ['string']);
-        $resolver->setAllowedTypes('limit', ['int']);
         $resolver->setAllowedTypes('search_attr', ['array']);
+        $resolver->setAllowedTypes('list_attr', ['array']);
         $resolver->setAllowedTypes('placeholder', ['string']);
+
+        $resolver->setAllowedTypes('remote_url', ['string', 'null']);
+        $resolver->setAllowedTypes('limit', ['int']);
+        $resolver->setAllowedTypes('entity_type', ['string', 'null']);
+
+        $resolver->setAllowedTypes('prototype_image', ['string']);
+        $resolver->setAllowedTypes('prototype_value', ['string']);
+        $resolver->setAllowedTypes('prototype_display', ['string']);
+
+        $resolver->setAllowedTypes('mapping_value', ['string']);
+        $resolver->setAllowedTypes('mapping_display', ['string']);
+        $resolver->setAllowedTypes('mapping_image', ['string']);
+
+        $resolver->setAllowedTypes('view_data', ['array', 'callable', 'null']);
     }
 
     /**
@@ -74,6 +95,7 @@ class EntitySearchInputType extends CollectionType
             'remote_url' => $options['remote_url'],
             'limit' => $options['limit'],
             'search_attr' => $options['search_attr'],
+            'list_attr' => $options['list_attr'],
             'placeholder' => $options['placeholder'],
             'prototype_image' => $options['prototype_image'],
             'prototype_value' => $options['prototype_value'],
@@ -81,8 +103,15 @@ class EntitySearchInputType extends CollectionType
             'mapping_image' => $options['mapping_image'],
             'mapping_value' => $options['mapping_value'],
             'mapping_display' => $options['mapping_display'],
-            'entities_data' => $options['entities_data'],
         ]);
+
+        if (is_array($options['view_data'])) {
+            $view->vars['view_data'] = $options['view_data'];
+        } elseif (is_callable($options['view_data'])) {
+            $view->vars['view_data'] = $options['view_data']($form->getData(), $options);
+        } else {
+            $view->vars['view_data'] = null;
+        }
     }
 
     /**

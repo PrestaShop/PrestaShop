@@ -57,7 +57,7 @@ export default class EntitySearchInput {
 
   constructor($entitySearchInputContainer: JQuery, options: OptionsObject) {
     this.$entitySearchInputContainer = $entitySearchInputContainer;
-    this.$entitySearchInput = $('input', this.$entitySearchInputContainer);
+    this.$entitySearchInput = $('.entity-search-input', this.$entitySearchInputContainer);
     this.$selectionContainer = $('.entities-list', this.$entitySearchInputContainer);
 
     this.mappingValue = this.$entitySearchInputContainer.data('mappingValue');
@@ -83,6 +83,11 @@ export default class EntitySearchInput {
     this.entityRemoteSource = {};
     this.buildRemoteSource();
     this.buildAutoCompleteSearch();
+
+    return {
+      setRemoteUrl: (remoteUrl) => this.setRemoteUrl(remoteUrl),
+      setValue: (values) => this.setValue(values),
+    };
   }
 
   /**

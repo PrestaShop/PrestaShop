@@ -1034,6 +1034,12 @@ $product-page-padding-bottom: 80px !default;
   .maxLength {
     float: none;
   }
+
+  ul.entities-list {
+    padding: 0;
+    list-style: none;
+    max-width: 100%;
+  }
 }
 
 #external-combination-tab {
@@ -1312,7 +1318,7 @@ $product-page-padding-bottom: 80px !default;
 #related-product,
 #id-product-redirected,
 .redirect-option-widget,
-.entity-search-input {
+.entity-search-widget {
   // list of added related products
   .typeahead-list,
   .entities-list {
@@ -1348,7 +1354,7 @@ $product-page-padding-bottom: 80px !default;
   }
 
   .autocomplete-search,
-  .entity-search-input {
+  .entity-search-widget {
     .search-suggestion {
       img {
         width: 50px;
