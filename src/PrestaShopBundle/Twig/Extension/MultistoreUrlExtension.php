@@ -24,6 +24,8 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
 
+declare(strict_types=1);
+
 namespace PrestaShopBundle\Twig\Extension;
 
 use PrestaShopBundle\Entity\Shop;
@@ -55,7 +57,7 @@ class MultistoreUrlExtension extends AbstractExtension
     /**
      * {@inheritdoc}
      */
-    public function getFunctions()
+    public function getFunctions(): array
     {
         return [
             new SimpleFunction('multistore_url', [$this, 'generateUrl']),
