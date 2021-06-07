@@ -154,7 +154,9 @@ class SEOType extends TranslatorAwareType
                     ],
                 ],
             ])
-            ->add('redirect_option', RedirectOptionType::class)
+            ->add('redirect_option', RedirectOptionType::class, [
+                'redirect_target' => $options['redirect_target'],
+            ])
         ;
     }
 
@@ -211,6 +213,8 @@ class SEOType extends TranslatorAwareType
             'label_tag_name' => 'h2',
             'label_subtitle' => $this->trans('Improve your ranking and how your product page will appear in search engines results.', 'Admin.Catalog.Feature'),
             'required' => false,
+            'redirect_target' => null,
         ]);
+        $resolver->setAllowedTypes('redirect_target', ['null', 'array']);
     }
 }
