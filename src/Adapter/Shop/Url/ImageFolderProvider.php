@@ -31,10 +31,7 @@ namespace PrestaShop\PrestaShop\Adapter\Shop\Url;
 use Link;
 use PrestaShop\PrestaShop\Core\Shop\Url\UrlProviderInterface;
 
-/**
- * @deprecated Since 1.7.9.0 Use ImageFolderProvider instead
- */
-class ProductImageFolderProvider implements UrlProviderInterface
+class ImageFolderProvider implements UrlProviderInterface
 {
     /**
      * @var Link

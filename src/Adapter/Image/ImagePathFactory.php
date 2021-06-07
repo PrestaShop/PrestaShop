@@ -26,45 +26,31 @@
 
 declare(strict_types=1);
 
-namespace PrestaShop\PrestaShop\Adapter\Shop\Url;
+namespace PrestaShop\PrestaShop\Adapter\Image;
 
-use Link;
-use PrestaShop\PrestaShop\Core\Shop\Url\UrlProviderInterface;
-
-/**
- * @deprecated Since 1.7.9.0 Use ImageFolderProvider instead
- */
-class ProductImageFolderProvider implements UrlProviderInterface
+class ImagePathFactory
 {
-    /**
-     * @var Link
-     */
-    private $link;
-
     /**
      * @var string
      */
-    private $imagesRelativeFolder;
+    private $pathToBaseDir;
 
     /**
-     * @param Link $link
-     * @param string $imagesRelativeFolder
+     * @param string $pathToBaseDir
      */
     public function __construct(
-        Link $link,
-        string $imagesRelativeFolder
+        string $pathToBaseDir
     ) {
-        $this->link = $link;
-        $this->imagesRelativeFolder = $imagesRelativeFolder;
+        $this->pathToBaseDir = $pathToBaseDir;
     }
 
     /**
-     * Create a link to product images base folder.
+     * @param int $entityId
      *
      * @return string
      */
-    public function getUrl(): string
+    public function getPath(int $entityId): string
     {
-        return rtrim($this->link->getBaseLink(), '/') . '/' . rtrim($this->imagesRelativeFolder, '/');
+        return sprintf('%s/%s.jpg', $this->pathToBaseDir, $entityId);
     }
 }
