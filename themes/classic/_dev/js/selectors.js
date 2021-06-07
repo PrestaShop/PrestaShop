@@ -28,6 +28,8 @@ import $ from 'jquery';
 prestashop.themeSelectors = {
   product: {
     tabs: '.tabs .nav-link',
+    activeNavClass: 'js-product-nav-active',
+    activeTabClass: 'js-product-tab-active',
     activeTabs: '.tabs .nav-link.active, .js-product-nav-active',
     imagesModal: '.js-product-images-modal',
     thumb: '.js-thumb',
@@ -54,7 +56,7 @@ prestashop.themeSelectors = {
     returnForm: '#order-return-form, .js-order-return-form',
   },
   arrowDown: '.arrow-down, .js-arrow-down',
-  arrowUp: '.arrow-up, .js-arrow-down',
+  arrowUp: '.arrow-up, .js-arrow-up',
   clear: '.clear',
   fileInput: '.js-file-input',
   contentWrapper: '#content-wrapper, .js-content-wrapper',

@@ -164,13 +164,13 @@ $(document).ready(() => {
     const nav = $(prestashop.themeSelectors.product.tabs);
     nav.on('show.bs.tab', (e) => {
       const target = $(e.target);
-      target.addClass('js-product-nav-active');
-      $(target.attr('href')).addClass('js-product-tab-active');
+      target.addClass(prestashop.themeSelectors.product.activeNavClass);
+      $(target.attr('href')).addClass(prestashop.themeSelectors.product.activeTabClass);
     });
     nav.on('hide.bs.tab', (e) => {
       const target = $(e.target);
-      target.removeClass('js-product-nav-active');
-      $(target.attr('href')).removeClass('js-product-tab-active');
+      target.removeClass(prestashop.themeSelectors.product.activeNavClass);
+      $(target.attr('href')).removeClass(prestashop.themeSelectors.product.activeTabClass);
     });
   }
 });
