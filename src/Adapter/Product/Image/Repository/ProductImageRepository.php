@@ -152,6 +152,20 @@ class ProductImageRepository extends AbstractObjectModelRepository
     /**
      * @param ProductId $productId
      *
+     * @return ImageId|null
+     *
+     * @throws CoreException
+     */
+    public function getDefaultImageId(ProductId $productId): ?ImageId
+    {
+        $imagesIds = $this->getImagesIds($productId);
+
+        return !empty($imagesIds) ? reset($imagesIds) : null;
+    }
+
+    /**
+     * @param ProductId $productId
+     *
      * @return Image[]
      *
      * @throws CoreException
