@@ -98,7 +98,7 @@ $(() => {
 
   new FeatureValuesManager(eventEmitter);
   new CustomizationsManager();
-  new AttachmentsManager(productId);
+  new AttachmentsManager();
 
   if (productType !== ProductMap.productType.COMBINATIONS) {
     new ProductSuppliersManager(ProductMap.suppliers.productSuppliers, true);

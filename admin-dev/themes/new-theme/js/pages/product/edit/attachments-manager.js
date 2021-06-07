@@ -24,25 +24,34 @@
  */
 
 import ProductMap from '@pages/product/product-map';
-import AttachmentsService from "@pages/product/services/attachments-service";
 
 const {$} = window;
 
 export default class AttachmentsManager {
-  constructor(productId) {
-    this.attachmentsService = new AttachmentsService(productId);
+  constructor() {
     this.$attachmentsContainer = $(ProductMap.attachments.attachmentsContainer);
     this.$attachmentsCollection = $(ProductMap.attachments.attachmentsCollection);
     this.prototypeTemplate = this.$attachmentsCollection.data('prototype');
     this.prototypeName = this.$attachmentsCollection.data('prototypeName');
-
-    this.init();
+    this.initAddAttachmentIframe();
   }
+
   /**
    * @private
    */
-  async init() {
-    const data = await this.attachmentsService.fetchAttachments();
+  initAddAttachmentIframe() {
+    this.$attachmentsContainer.find(ProductMap.attachments.addAttachmentBtn).fancybox({
+      type: 'iframe',
+      width: '90%',
+      height: '90%',
+    });
+  }
+
+  /**
+   * @private
+   * @todo: use after new file is added
+   */
+  addAttachmentRow() {
     this.$attachmentsCollection.empty();
 
     let rowIndex = 0;

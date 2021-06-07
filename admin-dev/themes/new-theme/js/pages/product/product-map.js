@@ -198,10 +198,14 @@ export default {
     moduleContent: (moduleId) => `.module-contents .module-render-container.${moduleId}`,
   },
   attachments: {
-    attachmentsContainer: '#js-attachments-container',
+    attachmentsContainer: '#product_options_attachments',
     attachmentsCollection: '#js-attachments-container .js-attachments-collection',
+    addAttachmentBtn: '.add-attachment-btn',
     collectionRow: {
-      attachmentIdInput: (rowIndex) => `product_options_attached_files_attachment_ids_${rowIndex}`,
+      attachmentIdInput: (rowIndex) => `product_options_attachments_attached_file_${rowIndex}_attachment_id`,
+      attachmentNameInput: (rowIndex) => `product_options_attachments_attached_file_${rowIndex}_name`,
+      attachmentFilenameInput: (rowIndex) => `product_options_attachments_attached_file_${rowIndex}_filename`,
+      attachmentTypeInput: (rowIndex) => `product_options_attachments_attached_file_${rowIndex}_mime_type`,
     }
   },
 };
