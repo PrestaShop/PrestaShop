@@ -26,7 +26,7 @@
 
 declare(strict_types=1);
 
-namespace Tests\Unit\Core\Form\IdentifiableObject\OptionProvider;
+namespace Tests\Unit\Core\Form\IdentifiableObject\OptionsProvider;
 
 use Generator;
 use PHPStan\Testing\TestCase;
