@@ -121,6 +121,7 @@ class RedirectOptionType extends TranslatorAwareType
                     'data-category-help' => $entityAttributes['category']['help'],
                     'data-category-search-url' => $entityAttributes['category']['searchUrl'],
                 ],
+                'view_data' => $options['redirect_target'],
             ])
         ;
 
@@ -134,20 +135,22 @@ class RedirectOptionType extends TranslatorAwareType
             switch ($dataType) {
                 case RedirectType::TYPE_CATEGORY_PERMANENT:
                 case RedirectType::TYPE_CATEGORY_TEMPORARY:
-                    $dataEntity = 'category';
+                    $entityType = 'category';
                     break;
                 case RedirectType::TYPE_PRODUCT_PERMANENT:
                 case RedirectType::TYPE_PRODUCT_TEMPORARY:
                 default:
-                    $dataEntity = 'product';
+                    $entityType = 'product';
                     break;
             }
 
             // Adapt target options
-            $targetOptions['label'] = $entityAttributes[$dataEntity]['label'];
-            $targetOptions['placeholder'] = $entityAttributes[$dataEntity]['placeholder'];
-            $targetOptions['help'] = $entityAttributes[$dataEntity]['help'];
-            $targetOptions['remote_url'] = $entityAttributes[$dataEntity]['searchUrl'];
+            $targetOptions['entity_type'] = $entityType;
+            $targetOptions['allow_delete'] = $entityType === 'category';
+            $targetOptions['label'] = $entityAttributes[$entityType]['label'];
+            $targetOptions['placeholder'] = $entityAttributes[$entityType]['placeholder'];
+            $targetOptions['help'] = $entityAttributes[$entityType]['help'];
+            $targetOptions['remote_url'] = $entityAttributes[$entityType]['searchUrl'];
             if (RedirectType::TYPE_NOT_FOUND === $dataType) {
                 $targetOptions['row_attr']['class'] = 'd-none';
             }
@@ -175,7 +178,9 @@ class RedirectOptionType extends TranslatorAwareType
                 'class' => 'redirect-option-widget',
             ],
             'alert_message' => $this->getRedirectionAlertMessages(),
+            'redirect_target' => null,
         ]);
+        $resolver->setAllowedTypes('redirect_target', ['null', 'array']);
     }
 
     /**

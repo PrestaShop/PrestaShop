@@ -82,11 +82,13 @@ class ProductFormType extends TranslatorAwareType
             ])
             ->add('shortcuts', ShortcutsType::class)
             ->add('stock', StockType::class, [
-                'virtual_product_file_id' => $options['data']['stock']['virtual_product_file']['virtual_product_file_id'] ?? null,
+                'virtual_product_file_id' => $options['virtual_product_file_id'],
             ])
             ->add('shipping', ShippingType::class)
             ->add('pricing', PricingType::class)
-            ->add('seo', SEOType::class)
+            ->add('seo', SEOType::class, [
+                'redirect_target' => $options['redirect_target'],
+            ])
             ->add('options', OptionsType::class)
             ->add('categories', CategoriesType::class)
             ->add('footer', FooterType::class, [
@@ -128,10 +130,14 @@ class ProductFormType extends TranslatorAwareType
         $resolver->setDefaults([
             'product_id' => null,
             'product_type' => null,
+            'virtual_product_file_id' => null,
+            'redirect_target' => null,
             'allow_extra_fields' => true,
         ]);
         $resolver->setAllowedTypes('product_id', ['null', 'int']);
         $resolver->setAllowedTypes('product_type', ['null', 'string']);
+        $resolver->setAllowedTypes('virtual_product_file_id', ['null', 'int']);
+        $resolver->setAllowedTypes('redirect_target', ['null', 'array']);
     }
 
     /**
