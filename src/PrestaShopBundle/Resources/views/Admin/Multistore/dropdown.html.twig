@@ -37,12 +37,12 @@
         <ul class="multistore-dropdown-group">
           {% for group in groupList %}
           <li class="multistore-dropdown-group-item">
-            <a class="multistore-dropdown-group-name" href="{{ app.request.requestURI ~ '&setShopContext=g-' ~ group.id }}">{{ "Group"|trans({}, 'Admin.Global') ~ ' ' ~ group.name }}</a>
+            <a class="multistore-dropdown-group-name" href="{{ multistore_group_url(group) }}">{{ "Group"|trans({}, 'Admin.Global') ~ ' ' ~ group.name }}</a>
 
             <ul class="multistore-dropdown-shops">
               {% for shop in group.shops %}
                 <li class="multistore-dropdown-shop">
-                  <a class="multistore-dropdown-shop-name{% if shop.hasMainUrl() == false %} multistore-dropdown-no-url">{{ shop.name }}</a>{% else %}" href="{{ app.request.requestURI ~ '&setShopContext=s-' ~ shop.id }}">{{ shop.name }}</a>{% endif %}
+                  <a class="multistore-dropdown-shop-name{% if shop.hasMainUrl() == false %} multistore-dropdown-no-url">{{ shop.name }}</a>{% else %}" href="{{ multistore_shop_url(shop) }}">{{ shop.name }}</a>{% endif %}
                   {% if shopCustomizationChecker.isConfigurationCustomizedForThisShop(configurationKey, shop, isGroupShopContext) == true %}
                     <p class="multistore-dropdown-shop-status multistore-dropdown-shop-status-locked">
                       <i class="material-icons">https</i>

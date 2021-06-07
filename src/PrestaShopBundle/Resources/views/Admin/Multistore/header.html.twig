@@ -99,7 +99,7 @@
                   {% else %}
                     <span class="multishop-modal-color" style="background-color:#25b9d7;"></span>
                   {% endif %}
-                  <a class="multishop-modal-all-name" href="{{ app.request.requestURI ~ '&setShopContext=' }}">
+                  <a class="multishop-modal-all-name" href="{{ multistore_url() }}">
                     <span>{{ "All shops"|trans({}, 'Admin.Global') }}</span>
                   </a>
                 </li>
@@ -110,7 +110,7 @@
                     <i class="material-icons">check</i>
                     <a class="multishop-modal-color"{% if group.color is not empty %} style="background-color: {{group.color}};"{% endif %} href="{{ getAdminLink('AdminShopGroup', true, {'id_shop_group' : group.id, 'updateshop_group' : true}) }}" data-toggle="popover" data-trigger="hover" data-placement="top" data-content="{{ "Edit color"|trans({}, 'Admin.Global') }}" data-original-title="" title=""></a>
                   </span>
-                    <a class="multishop-modal-group-name" href="{{ app.request.requestURI ~ '&setShopContext=g-' ~ group.id }}">{{ "Group"|trans({}, 'Admin.Global') ~ ' ' ~ group.name }}</a>
+                  <a class="multishop-modal-group-name" href="{{ multistore_group_url(group) }}">{{ "Group"|trans({}, 'Admin.Global') ~ ' ' ~ group.name }}</a>
                 </li>
 
                 {% for shop in group.shops %}
@@ -120,7 +120,7 @@
                       <i class="material-icons">check</i>
                       <a class="multishop-modal-color"{% if shop.color is not empty %} style="background-color: {{shop.color}};"{% endif %} href="{{ getAdminLink('AdminShop', true, {'shop_id' : shop.id, 'updateshop' : true}) }}" data-toggle="popover" data-trigger="hover" data-placement="top" data-content="{{ "Edit color"|trans({}, 'Admin.Global') }}" data-original-title="" title=""></a>
                     </span>
-                      <a class="multishop-modal-shop-name{% if shop.hasMainUrl() == false %} multishop-modal-no-url">{{ shop.name }}</a>{% else %}" href="{{ app.request.requestURI ~ '&setShopContext=s-' ~ shop.id }}">{{ shop.name }}</a>{% endif %}
+                    <a class="multishop-modal-shop-name{% if shop.hasMainUrl() == false %} multishop-modal-no-url">{{ shop.name }}</a>{% else %}" href="{{ multistore_shop_url(shop) }}">{{ shop.name }}</a>{% endif %}
                     </div>
                     {% if shop.hasMainUrl() %}
                       <a class="multishop-modal-shop-view" href="{{ link.getBaseLink(shop.id) }}" target="_blank" rel="noreferrer">{{ "View my shop"|trans({}, 'Admin.Navigation.Header') }} <i class="material-icons">visibility</i></a>
