@@ -1504,7 +1504,6 @@ services:
         arguments:
             - "@prestashop.adapter.legacy.context"
             - "@router"
-            - '@form.type.sell.product.data_transformer.typeahead_redirection_target_transformer'
         tags:
             - { name: form.type }
 
