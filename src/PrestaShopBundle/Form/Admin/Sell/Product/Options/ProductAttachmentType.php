@@ -31,9 +31,25 @@ use PrestaShopBundle\Form\Admin\Type\IconButtonType;
 use PrestaShopBundle\Form\Admin\Type\TranslatorAwareType;
 use Symfony\Component\Form\Extension\Core\Type\CollectionType;
 use Symfony\Component\Form\FormBuilderInterface;
+use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
+use Symfony\Component\Translation\TranslatorInterface;
 
 class ProductAttachmentType extends TranslatorAwareType
 {
+    /**
+     * @var UrlGeneratorInterface
+     */
+    private $urlGenerator;
+
+    public function __construct(
+        TranslatorInterface $translator,
+        array $locales,
+        UrlGeneratorInterface $urlGenerator
+    ) {
+        parent::__construct($translator, $locales);
+        $this->urlGenerator = $urlGenerator;
+    }
+
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
@@ -47,8 +63,13 @@ class ProductAttachmentType extends TranslatorAwareType
             ->add('add_attachment_btn', IconButtonType::class, [
                 'label' => $this->trans('Add new file', 'Admin.Catalog.Feature'),
                 'icon' => 'add_circle',
+                'type' => 'link',
                 'attr' => [
                     'class' => 'btn-outline-secondary add-attachment-btn',
+                    'href' => $this->urlGenerator->generate('admin_attachments_create', [
+                        'liteDisplaying' => true,
+                        'submitFormAjax' => true,
+                    ]),
                 ],
             ])
         ;
