@@ -50,6 +50,7 @@ final class GetProductAttachmentsHandler implements GetProductAttachmentsHandler
     ) {
         $this->attachmentRepository = $attachmentRepository;
     }
+
     /**
      * {@inheritDoc}
      */
