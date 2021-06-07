@@ -59,6 +59,7 @@ final class UpdateProductOptionsHandler implements UpdateProductOptionsHandlerIn
     /**
      * @param ProductRepository $productRepository
      * @param ManufacturerRepository $manufacturerRepository
+     * @param ProductIndexationUpdater $productIndexationUpdater
      */
     public function __construct(
         ProductRepository $productRepository,
