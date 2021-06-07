@@ -43,6 +43,7 @@ Feature: Update product options from Back Office (BO)
       | condition           | used         |
       | show_condition      | true         |
       | manufacturer        | studioDesign |
+    And product "product1" should not be indexed
 
   Scenario: I only update product availability for order, leaving other properties unchanged
     Given product "product1" should have following options:
@@ -67,6 +68,7 @@ Feature: Update product options from Back Office (BO)
       | condition           | used         |
       | show_condition      | true         |
       | manufacturer        | studioDesign |
+    And product "product1" should not be indexed
 
   Scenario: I update manufacturer and check the relationship is updated correctly
     Given product "product1" should have following options:
@@ -103,6 +105,7 @@ Feature: Update product options from Back Office (BO)
       | condition           | used    |
       | show_condition      | true    |
       | manufacturer        |         |
+    And product "product1" should not be indexed
 
   Scenario: I update product options providing invalid values
     Given I add product "product2" with following information:
@@ -136,3 +139,39 @@ Feature: Update product options from Back Office (BO)
       | condition           | new   |
       | show_condition      | false |
       | manufacturer        |       |
+    And product "product1" should not be indexed
+
+  Scenario: I update a product's options for a product that sould be indexed
+    Given I add product "product1" with following information:
+      | name[en-US] | Presta camera |
+      | type        | standard      |
+    And product "product1" should have following options:
+      | product option      | value |
+      | active              | false |
+      | visibility          | both  |
+      | available_for_order | true  |
+      | online_only         | false |
+      | show_price          | true  |
+      | condition           | new   |
+      | show_condition      | false |
+      | manufacturer        |       |
+    When I update product "product1" options with following values:
+      | active              | true         |
+      | visibility          | search       |
+      | available_for_order | false        |
+      | online_only         | true         |
+      | show_price          | false        |
+      | condition           | used         |
+      | show_condition      | true         |
+      | manufacturer        | studioDesign |
+    Then product "product1" should have following options:
+      | product option      | value        |
+      | active              | true         |
+      | visibility          | search       |
+      | available_for_order | false        |
+      | online_only         | true         |
+      | show_price          | false        |
+      | condition           | used         |
+      | show_condition      | true         |
+      | manufacturer        | studioDesign |
+    And product "product1" should be indexed
