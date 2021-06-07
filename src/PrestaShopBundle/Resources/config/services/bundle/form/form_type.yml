@@ -1739,3 +1739,10 @@ services:
         public: true
         tags:
             - { name: form.type }
+
+    form.type.sell.product.options.attached_file_type:
+        class: 'PrestaShopBundle\Form\Admin\Sell\Product\Options\AttachedFileType'
+        parent: 'form.type.translatable.aware'
+        public: true
+        tags:
+            - { name: form.type }
