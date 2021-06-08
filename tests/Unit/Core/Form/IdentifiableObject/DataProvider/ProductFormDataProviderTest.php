@@ -37,6 +37,7 @@ use PHPUnit\Framework\TestCase;
 use PrestaShop\Decimal\DecimalNumber;
 use PrestaShop\PrestaShop\Core\CommandBus\CommandBusInterface;
 use PrestaShop\PrestaShop\Core\Domain\Manufacturer\ValueObject\NoManufacturerId;
+use PrestaShop\PrestaShop\Core\Domain\Product\Attachment\QueryResult\ProductAttachment;
 use PrestaShop\PrestaShop\Core\Domain\Product\Customization\Query\GetProductCustomizationFields;
 use PrestaShop\PrestaShop\Core\Domain\Product\Customization\QueryResult\CustomizationField;
 use PrestaShop\PrestaShop\Core\Domain\Product\Customization\ValueObject\CustomizationFieldType;
@@ -79,6 +80,7 @@ class ProductFormDataProviderTest extends TestCase
     private const DEFAULT_CATEGORY_ID = 51;
     private const DEFAULT_VIRTUAL_PRODUCT_FILE_ID = 69;
     private const DEFAULT_QUANTITY = 12;
+    private const CONTEXT_LANG_ID = 1;
 
     public function testGetDefaultData()
     {
@@ -614,6 +616,10 @@ class ProductFormDataProviderTest extends TestCase
             'ean13' => 'ean13_2',
             'mpn' => 'mpn_2',
             'reference' => 'reference_2',
+            'attachments' => [
+                new ProductAttachment(1, $localizedValues, 'test1', 'image/jpeg'),
+                new ProductAttachment(2, [2 => 'russian'], 'test2', 'image/png'),
+            ],
         ];
         $expectedOutputData['footer']['active'] = false;
         $expectedOutputData['options']['visibility']['visibility'] = ProductVisibility::VISIBLE_IN_CATALOG;
@@ -627,6 +633,20 @@ class ProductFormDataProviderTest extends TestCase
         $expectedOutputData['options']['references']['ean_13'] = 'ean13_2';
         $expectedOutputData['options']['references']['mpn'] = 'mpn_2';
         $expectedOutputData['options']['references']['reference'] = 'reference_2';
+        $expectedOutputData['options']['attachments']['attached_files'] = [
+            [
+                'attachment_id' => 1,
+                'name' => 'english',
+                'filename' => 'test1',
+                'mime_type' => 'image/jpeg',
+            ],
+            [
+                'attachment_id' => 2,
+                'name' => 'russian',
+                'filename' => 'test2',
+                'mime_type' => 'image/png',
+            ],
+        ];
 
         $datasets[] = [
             $productData,
@@ -1275,6 +1295,7 @@ class ProductFormDataProviderTest extends TestCase
                 ],
                 'customizations' => [],
                 'suppliers' => [],
+                'attachments' => [],
             ],
             'categories' => [
                 'product_categories' => [
@@ -1315,7 +1336,8 @@ class ProductFormDataProviderTest extends TestCase
             $queryBusMock,
             $activation,
             42,
-            self::HOME_CATEGORY_ID
+            self::HOME_CATEGORY_ID,
+            self::CONTEXT_LANG_ID
         );
     }
 }
