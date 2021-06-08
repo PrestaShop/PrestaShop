@@ -57,7 +57,7 @@ class MultistoreUrlExtensionTest extends TestCase
     public function testItShouldReturnsThreeFunctions(): void
     {
         $extension = new MultistoreUrlExtension(
-            $this->requestStackMock,
+            $this->requestStackMock
         );
 
         $functions = $extension->getFunctions();

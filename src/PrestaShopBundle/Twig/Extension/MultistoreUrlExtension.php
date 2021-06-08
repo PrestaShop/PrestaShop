@@ -69,7 +69,7 @@ class MultistoreUrlExtension extends AbstractExtension
     /**
      * Generate URL from current request for a specific shop group.
      *
-     * @param ShopGroup|null $group
+     * @param int|null $id
      * @param string|null $prefix
      *
      * @return string
