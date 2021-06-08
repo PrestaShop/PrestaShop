@@ -38,11 +38,13 @@ class PrestaShopExceptionCore extends Exception
             throw $this;
         }
 
-        header('HTTP/1.1 500 Internal Server Error');
         if (ToolsCore::isPHPCLI()) {
-            echo get_class($this) . ' in ' . $this->getFile() . ' line ' . $this->getLine() . "\n";
+            echo get_class($this) . ':' . "\n" . $this->getMessage() . "\n"
+                . 'in ' . $this->getFile() . ' line ' . $this->getLine() . "\n";
             echo $this->getTraceAsString() . "\n";
         } elseif (_PS_MODE_DEV_) {
+            header('HTTP/1.1 500 Internal Server Error');
+
             // Display error message
             echo '<style>
                 #psException{font-family: Verdana; font-size: 14px}
@@ -89,6 +91,8 @@ class PrestaShopExceptionCore extends Exception
             echo '</ul>';
             echo '</div>';
         } else {
+            header('HTTP/1.1 500 Internal Server Error');
+
             // If not in mode dev, display an error page
             if (file_exists(_PS_ROOT_DIR_ . '/error500.html')) {
                 echo file_get_contents(_PS_ROOT_DIR_ . '/error500.html');
