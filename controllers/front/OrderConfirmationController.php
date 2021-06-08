@@ -71,7 +71,7 @@ class OrderConfirmationControllerCore extends FrontController
 
         if (!$this->isFreeOrder) {
             $module = Module::getInstanceById((int) $this->id_module);
-            if ($order->module != $module->name) {
+            if ($order->module !== $module->name) {
                 Tools::redirect($redirectLink);
             }
         }
