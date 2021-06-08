@@ -120,6 +120,7 @@ class States extends BOBasePage {
    */
   async resetAndGetNumberOfLines(page) {
     await this.resetFilter(page);
+
     return this.getNumberOfElementInGrid(page);
   }
 

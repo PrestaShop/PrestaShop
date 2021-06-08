@@ -160,6 +160,7 @@ class TaxRules extends BOBasePage {
    */
   async resetAndGetNumberOfLines(page) {
     await this.resetFilter(page);
+
     return this.getNumberOfElementInGrid(page);
   }
 
@@ -199,6 +200,7 @@ class TaxRules extends BOBasePage {
     await this.clickAndWaitForNavigation(page, this.deleteRowLink(row));
     // Confirm delete action
     await this.clickAndWaitForNavigation(page, this.deleteModalButtonYes);
+
     // Get successful message
     return this.getAlertSuccessBlockContent(page);
   }
@@ -324,6 +326,7 @@ class TaxRules extends BOBasePage {
 
     // Click on delete
     await this.clickAndWaitForNavigation(page, this.bulkDeleteLink);
+
     return this.getAlertSuccessBlockContent(page);
   }
 
@@ -354,6 +357,7 @@ class TaxRules extends BOBasePage {
    */
   async getStatus(page, row) {
     await this.waitForVisibleSelector(page, this.tableColumnActive(row), 2000);
+
     return this.elementVisible(page, this.tableColumnCheckIcon(row), 100);
   }
 

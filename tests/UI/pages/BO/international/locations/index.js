@@ -124,6 +124,7 @@ class Zones extends BOBasePage {
    */
   async resetAndGetNumberOfLines(page) {
     await this.resetFilter(page);
+
     return this.getNumberOfElementInGrid(page);
   }
 
@@ -229,6 +230,7 @@ class Zones extends BOBasePage {
       this.waitForVisibleSelector(page, `${this.confirmDeleteModal}.show`),
     ]);
     await this.clickAndWaitForNavigation(page, this.confirmDeleteButton);
+
     return this.getAlertSuccessBlockParagraphContent(page);
   }
 
@@ -284,6 +286,7 @@ class Zones extends BOBasePage {
       this.waitForVisibleSelector(page, `${this.confirmDeleteModal}.show`),
     ]);
     await this.clickAndWaitForNavigation(page, this.confirmDeleteButton);
+
     return this.getAlertSuccessBlockParagraphContent(page);
   }
 
@@ -303,6 +306,7 @@ class Zones extends BOBasePage {
     ]);
     // Click to change status
     await this.clickAndWaitForNavigation(page, wantedStatus ? this.enableSelectionButton : this.disableSelectionButton);
+
     return this.getAlertSuccessBlockParagraphContent(page);
   }
 
@@ -344,6 +348,7 @@ class Zones extends BOBasePage {
    */
   async selectPaginationLimit(page, number) {
     await this.selectByVisibleText(page, this.paginationLimitSelect, number);
+
     return this.getPaginationLabel(page);
   }
 

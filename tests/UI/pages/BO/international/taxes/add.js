@@ -27,6 +27,7 @@ class AddTax extends BOBasePage {
     this.statusToggleInput = toggle => `#tax_is_enabled_${toggle}`;
     this.saveTaxButton = '#save-button';
   }
+
   /*
   Methods
    */
@@ -63,7 +64,9 @@ class AddTax extends BOBasePage {
     await page.check(this.statusToggleInput(taxData.enabled ? 1 : 0));
     // Save Tax
     await this.clickAndWaitForNavigation(page, this.saveTaxButton);
+
     return this.getAlertSuccessBlockParagraphContent(page);
   }
 }
+
 module.exports = new AddTax();

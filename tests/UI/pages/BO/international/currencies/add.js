@@ -73,6 +73,7 @@ class AddCurrency extends BOBasePage {
 
     await page.check(this.statusToggleInput(currencyData.enabled ? 1 : 0));
     await this.clickAndWaitForNavigation(page, this.saveButton);
+
     return this.getAlertSuccessBlockParagraphContent(page);
   }
 
@@ -91,6 +92,7 @@ class AddCurrency extends BOBasePage {
     await this.setValue(page, this.exchangeRateInput, currencyData.exchangeRate.toString());
     await page.check(this.statusToggleInput(currencyData.enabled ? 1 : 0));
     await this.clickAndWaitForNavigation(page, this.saveButton);
+
     return this.getAlertSuccessBlockParagraphContent(page);
   }
 
@@ -103,6 +105,7 @@ class AddCurrency extends BOBasePage {
   async updateExchangeRate(page, value) {
     await this.setValue(page, this.exchangeRateInput, value.toString());
     await this.clickAndWaitForNavigation(page, this.saveButton);
+
     return this.getAlertSuccessBlockParagraphContent(page);
   }
 
@@ -117,6 +120,7 @@ class AddCurrency extends BOBasePage {
 
     // Save new value
     await this.clickAndWaitForNavigation(page, this.saveButton);
+
     return this.getAlertSuccessBlockParagraphContent(page);
   }
 }

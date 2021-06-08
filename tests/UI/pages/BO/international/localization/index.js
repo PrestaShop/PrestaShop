@@ -67,6 +67,7 @@ class Localization extends LocalizationBasePage {
 
     // Import the pack
     await this.clickAndWaitForNavigation(page, this.importButton);
+
     return this.getAlertSuccessBlockParagraphContent(page);
   }
 
@@ -81,6 +82,7 @@ class Localization extends LocalizationBasePage {
     await this.selectByVisibleText(page, this.defaultLanguageSelector, language);
     await page.check(this.languageFromBrowserToggleInput(languageFromBrowser ? 1 : 0));
     await this.clickAndWaitForNavigation(page, this.saveConfigurationFormButton);
+
     return this.getAlertSuccessBlockParagraphContent(page);
   }
 
@@ -94,6 +96,7 @@ class Localization extends LocalizationBasePage {
     this.dialogListener(page);
     await this.selectByVisibleText(page, this.defaultCurrencySelect, currency);
     await this.waitForSelectorAndClick(page, this.saveConfigurationFormButton);
+
     return this.getAlertSuccessBlockParagraphContent(page);
   }
 
@@ -106,7 +109,9 @@ class Localization extends LocalizationBasePage {
   async setDefaultCountry(page, country) {
     await this.selectByVisibleText(page, this.defaultCountrySelect, country);
     await this.clickAndWaitForNavigation(page, this.saveConfigurationFormButton);
+
     return this.getAlertSuccessBlockParagraphContent(page);
   }
 }
+
 module.exports = new Localization();

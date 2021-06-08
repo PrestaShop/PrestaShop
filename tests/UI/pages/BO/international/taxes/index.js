@@ -365,6 +365,7 @@ class Taxes extends BOBasePage {
    */
   async selectPaginationLimit(page, number) {
     await this.selectByVisibleText(page, this.paginationLimitSelect, number);
+
     return this.getPaginationLabel(page);
   }
 
@@ -375,6 +376,7 @@ class Taxes extends BOBasePage {
    */
   async paginationNext(page) {
     await this.clickAndWaitForNavigation(page, this.paginationNextLink);
+
     return this.getPaginationLabel(page);
   }
 
@@ -385,6 +387,7 @@ class Taxes extends BOBasePage {
    */
   async paginationPrevious(page) {
     await this.clickAndWaitForNavigation(page, this.paginationPreviousLink);
+
     return this.getPaginationLabel(page);
   }
 }

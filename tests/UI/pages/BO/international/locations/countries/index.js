@@ -403,6 +403,7 @@ class Countries extends BOBasePage {
   async setCountriesRestrictions(page, toEnable = true) {
     await page.check(this.enableRestrictCountriesToggleLabel(toEnable ? 'on' : 'off'));
     await this.clickAndWaitForNavigation(page, this.saveButton);
+
     return this.getAlertSuccessBlockContent(page);
   }
 }

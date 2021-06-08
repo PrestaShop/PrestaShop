@@ -105,6 +105,7 @@ class Languages extends LocalizationBasePage {
    */
   async resetAndGetNumberOfLines(page) {
     await this.resetFilter(page);
+
     return this.getNumberOfElementInGrid(page);
   }
 
@@ -193,6 +194,7 @@ class Languages extends LocalizationBasePage {
       this.waitForVisibleSelector(page, `${this.confirmDeleteModal}.show`),
     ]);
     await this.confirmDeleteLanguages(page);
+
     return this.getAlertSuccessBlockParagraphContent(page);
   }
 
@@ -252,6 +254,7 @@ class Languages extends LocalizationBasePage {
     ]);
     // Click on delete and wait for modal
     await this.clickAndWaitForNavigation(page, toEnable ? this.bulkActionsEnableButton : this.bulkActionsDisableButton);
+
     return this.getAlertSuccessBlockParagraphContent(page);
   }
 
@@ -277,6 +280,7 @@ class Languages extends LocalizationBasePage {
       this.waitForVisibleSelector(page, `${this.confirmDeleteModal}.show`),
     ]);
     await this.confirmDeleteLanguages(page);
+
     return this.getAlertSuccessBlockParagraphContent(page);
   }
 
