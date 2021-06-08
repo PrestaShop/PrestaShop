@@ -22,6 +22,7 @@
  * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
+import SpecificMap from './selectors-map';
 
 const {$} = window;
 
@@ -57,7 +58,7 @@ class SpecificPriceFormHandler {
    * @private
    */
   private loadAndDisplayExistingSpecificPricesList(): void {
-    const listContainer = $('#js-specific-price-list');
+    const listContainer = $(SpecificMap.priceList);
     const url = listContainer
       .data('listingUrl')
       .replace(/list\/\d+/, `list/${this.getProductId()}`);
@@ -163,21 +164,22 @@ class SpecificPriceFormHandler {
     const usePrefixForCreate = true;
     const selectorPrefix = this.getPrefixSelector(usePrefixForCreate);
 
-    $('#specific_price_form .js-cancel').click(() => {
+    $(SpecificMap.cancel).click(() => {
       this.resetCreatePriceFormDefaultValues();
-      $('#specific_price_form').collapse('hide');
+      $(SpecificMap.priceForm).collapse('hide');
     });
 
-    $('#specific_price_form .js-save').on('click', () => this.submitCreatePriceForm(),
+    $(SpecificMap.save).on('click', () => this.submitCreatePriceForm());
+
+    // eslint-disable-next-line
+    $(SpecificMap.openCreate).on('click', () => this.loadAndFillOptionsForSelectCombinationInput(usePrefixForCreate),
+    );
+
+    $(SpecificMap.leavBPrice(selectorPrefix)).on('click', () => this.enableSpecificPriceFieldIfEligible(usePrefixForCreate),
     );
 
     // eslint-disable-next-line
-    $('#js-open-create-specific-price-form').on('click', () => this.loadAndFillOptionsForSelectCombinationInput(usePrefixForCreate));
-
-    $(`${selectorPrefix}leave_bprice`).on('click', () => this.enableSpecificPriceFieldIfEligible(usePrefixForCreate),
-    );
-
-    $(`${selectorPrefix}sp_reduction_type`).on('change', () => this.enableSpecificPriceTaxFieldIfEligible(usePrefixForCreate),
+    $(SpecificMap.reductionType(selectorPrefix)).on('change', () => this.enableSpecificPriceTaxFieldIfEligible(usePrefixForCreate),
     );
   }
 
@@ -188,11 +190,12 @@ class SpecificPriceFormHandler {
     const usePrefixForCreate = false;
     const selectorPrefix = this.getPrefixSelector(usePrefixForCreate);
 
-    $('#form_modal_cancel').click(() => this.closeEditPriceModalAndRemoveForm(),
+    $(SpecificMap.modalCancel).click(() => this.closeEditPriceModalAndRemoveForm(),
     );
-    $('#form_modal_close').click(() => this.closeEditPriceModalAndRemoveForm());
+    $(SpecificMap.modalClose).click(() => this.closeEditPriceModalAndRemoveForm(),
+    );
 
-    $('#form_modal_save').click(() => this.submitEditPriceForm());
+    $(SpecificMap.modalSave).click(() => this.submitEditPriceForm());
 
     this.loadAndFillOptionsForSelectCombinationInput(usePrefixForCreate);
 

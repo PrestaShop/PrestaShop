@@ -27,6 +27,7 @@ import PerfectScrollbar from 'perfect-scrollbar';
 import 'perfect-scrollbar/css/perfect-scrollbar.css';
 import getAnimationEvent from './app/utils/animations';
 import NavbarTransitionHandler from './components/navbar-transition-handler';
+import GlobalMap from './global-map';
 
 const {$} = window;
 
@@ -49,9 +50,7 @@ export default class NavBar {
         if ($navBarOverflow.length > 0) {
           new PerfectScrollbar('.nav-bar-overflow');
           $navBarOverflow.on('scroll', () => {
-            const $menuItems = $(
-              '.main-menu .link-levelone.has_submenu.ul-open',
-            );
+            const $menuItems = $(GlobalMap.navBar.menuItems);
 
             $($menuItems).each((i, e) => {
               const itemOffsetTop = $(e).position().top;
@@ -75,67 +74,58 @@ export default class NavBar {
           },
         );
 
-        $('.nav-bar li.link-levelone.has_submenu > a').on(
-          'click',
-          function onNavBarClick(e) {
-            e.preventDefault();
-            e.stopPropagation();
+        $(GlobalMap.navBar.menuItemLink).on('click', function onNavBarClick(e) {
+          e.preventDefault();
+          e.stopPropagation();
 
-            NavBarTransitions.toggle();
+          NavBarTransitions.toggle();
 
-            const $submenu = $(this).parent();
-            $(
-              '.nav-bar li.link-levelone.has_submenu a > i.material-icons.sub-tabs-arrow',
-            ).text('keyboard_arrow_down');
-            const onlyClose = $(e.currentTarget)
-              .parent()
-              .hasClass('ul-open');
+          const $submenu = $(this).parent();
+          $(GlobalMap.navBar.menuArrow).text('keyboard_arrow_down');
+          const onlyClose = $(e.currentTarget)
+            .parent()
+            .hasClass('ul-open');
 
-            if ($('body').is('.page-sidebar-closed:not(.mobile)')) {
-              $('.nav-bar li.link-levelone.has_submenu.ul-open').removeClass(
-                'ul-open open submenu-hover',
-              );
-              $(
-                '.nav-bar li.link-levelone.has_submenu.ul-open ul.submenu',
-              ).removeAttr('style');
-            } else {
-              $(
-                '.nav-bar li.link-levelone.has_submenu.ul-open ul.submenu',
-              ).slideUp({
-                complete: function slideUpIsComplete() {
-                  $(this)
-                    .parent()
-                    .removeClass('ul-open open');
-                  $(this).removeAttr('style');
-                },
-              });
-            }
+          if ($('body').is('.page-sidebar-closed:not(.mobile)')) {
+            $(GlobalMap.navBar.levelOneOpenedList).removeClass(
+              'ul-open open submenu-hover',
+            );
+            $(GlobalMap.navBar.levelOneOpenedSubmenu).removeAttr('style');
+          } else {
+            $(GlobalMap.navBar.levelOneOpenedSubmenu).slideUp({
+              complete: function slideUpIsComplete() {
+                $(this)
+                  .parent()
+                  .removeClass('ul-open open');
+                $(this).removeAttr('style');
+              },
+            });
+          }
 
-            if (onlyClose) {
-              return;
-            }
+          if (onlyClose) {
+            return;
+          }
 
-            $submenu.addClass('ul-open');
+          $submenu.addClass('ul-open');
 
-            if ($('body').is('.page-sidebar-closed:not(.mobile)')) {
-              $submenu.addClass('submenu-hover');
-              $submenu.find('ul.submenu').removeAttr('style');
-            } else {
-              $submenu.find('ul.submenu').slideDown({
-                complete: function slideDownIsComplete() {
-                  $submenu.addClass('open');
-                  $(this).removeAttr('style');
-                },
-              });
-            }
-            $submenu
-              .find('i.material-icons.sub-tabs-arrow')
-              .text('keyboard_arrow_up');
+          if ($('body').is('.page-sidebar-closed:not(.mobile)')) {
+            $submenu.addClass('submenu-hover');
+            $submenu.find('ul.submenu').removeAttr('style');
+          } else {
+            $submenu.find('ul.submenu').slideDown({
+              complete: function slideDownIsComplete() {
+                $submenu.addClass('open');
+                $(this).removeAttr('style');
+              },
+            });
+          }
+          $submenu
+            .find('i.material-icons.sub-tabs-arrow')
+            .text('keyboard_arrow_up');
 
-            const itemOffsetTop = $submenu.position().top;
-            $submenu.find('ul.submenu').css('top', itemOffsetTop);
-          },
-        );
+          const itemOffsetTop = $submenu.position().top;
+          $submenu.find('ul.submenu').css('top', itemOffsetTop);
+        });
 
         $navBar.on('click', '.menu-collapse', function onNavBarClick() {
           $('body').toggleClass('page-sidebar-closed');

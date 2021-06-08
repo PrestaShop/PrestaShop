@@ -23,6 +23,7 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
 import Router from '@components/router';
+import GlobalMap from './global-map';
 
 const refreshNotifications = function (): void {
   let timer = null;
@@ -44,29 +45,29 @@ const refreshNotifications = function (): void {
 
         fillTpl(
           json.order.results,
-          $('#orders-notifications'),
-          $('#order-notification-template').html(),
+          $(GlobalMap.notifications.ordersNotifications),
+          $(GlobalMap.notifications.orderNotificationTemplate).html(),
         );
         fillTpl(
           json.customer.results,
-          $('#customers-notifications'),
-          $('#customer-notification-template').html(),
+          $(GlobalMap.notifications.customersNotifications),
+          $(GlobalMap.notifications.customerNotificationTemplate).html(),
         );
         fillTpl(
           json.customer_message.results,
-          $('#messages-notifications'),
-          $('#message-notification-template').html(),
+          $(GlobalMap.notifications.messagesNotifications),
+          $(GlobalMap.notifications.messageNotificationTemplate).html(),
         );
 
         setNotificationsNumber('_nb_new_orders_', nbOrders);
         setNotificationsNumber('_nb_new_customers_', nbCustomers);
         setNotificationsNumber('_nb_new_messages_', nbCustomerMessages);
         if (notificationsTotal) {
-          $('#notifications-total')
+          $(GlobalMap.notifications.total)
             .removeClass('hide')
             .html(<string>(<unknown>notificationsTotal));
         } else if (!$('#notifications-total').hasClass('hide')) {
-          $('#notifications-total').addClass('hide');
+          $(GlobalMap.notifications.total).addClass('hide');
         }
       }
       timer = setTimeout(refreshNotifications, 120000);
@@ -81,7 +82,7 @@ let fillTpl = function (
   eltAppendTo: JQuery,
   tpl: string,
 ) {
-  eltAppendTo.children('.notification-elements').empty();
+  eltAppendTo.children(GlobalMap.notifications.element).empty();
   if (results.length === 0) {
     eltAppendTo.addClass('empty');
     return;
@@ -94,7 +95,7 @@ let fillTpl = function (
     }
 
     /* eslint-disable max-len */
-    eltAppendTo.children('.notification-elements').append(
+    eltAppendTo.children(GlobalMap.notifications.element).append(
       tpl
         .replace(/_id_order_/g, <string>(<unknown>parseInt(value.id_order, 10)))
         .replace(/_customer_name_/g, value.customer_name)
