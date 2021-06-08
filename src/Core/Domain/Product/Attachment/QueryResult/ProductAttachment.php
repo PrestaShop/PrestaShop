@@ -27,12 +27,10 @@ declare(strict_types=1);
 
 namespace PrestaShop\PrestaShop\Core\Domain\Product\Attachment\QueryResult;
 
-use PrestaShop\PrestaShop\Core\Domain\Attachment\ValueObject\AttachmentId;
-
 class ProductAttachment
 {
     /**
-     * @var AttachmentId
+     * @var int
      */
     private $attachmentId;
 
@@ -57,16 +55,16 @@ class ProductAttachment
         string $filename,
         string $mimeType
     ) {
-        $this->attachmentId = new AttachmentId($attachmentId);
+        $this->attachmentId = $attachmentId;
         $this->localizedNames = $localizedNames;
         $this->filename = $filename;
         $this->mimeType = $mimeType;
     }
 
     /**
-     * @return AttachmentId
+     * @return int
      */
-    public function getAttachmentId(): AttachmentId
+    public function getAttachmentId(): int
     {
         return $this->attachmentId;
     }
