@@ -63,7 +63,7 @@ class UpdateAttachmentFeatureContext extends AbstractProductFeatureContext
     public function assertProductAttachments(string $productReference, array $attachmentReferences): void
     {
         $attachmentIds = array_map(function (ProductAttachment $attachment): int {
-            return $attachment->getAttachmentId()->getValue();
+            return $attachment->getAttachmentId();
         }, $this->getProductForEditing($productReference)->getAssociatedAttachments());
 
         Assert::assertEquals(
