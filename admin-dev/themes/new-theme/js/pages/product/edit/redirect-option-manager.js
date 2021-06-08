@@ -24,6 +24,7 @@
  */
 
 import EntitySearchInput from '@components/entity-search-input';
+import ProductEventMap from '@pages/product/product-event-map';
 
 const {$} = window;
 
@@ -37,7 +38,13 @@ const {$} = window;
  * and values of the target.
  */
 export default class RedirectOptionManager {
-  constructor($redirectTypeInput, $redirectTargetInput) {
+  /**
+   * @param {EventEmitter} eventEmitter
+   * @param {jQuery} $redirectTypeInput
+   * @param {jQuery} $redirectTargetInput
+   */
+  constructor(eventEmitter, $redirectTypeInput, $redirectTargetInput) {
+    this.eventEmitter = eventEmitter;
     this.$redirectTypeInput = $redirectTypeInput;
     this.$redirectTargetInput = $redirectTargetInput;
     this.$searchInput = $('.entity-search-input', this.$redirectTargetRow);
@@ -95,7 +102,11 @@ export default class RedirectOptionManager {
   }
 
   buildAutoCompleteSearchInput() {
-    this.entitySearchInput = new EntitySearchInput(this.$redirectTargetInput);
+    this.entitySearchInput = new EntitySearchInput(this.$redirectTargetInput, {
+      onRemovedContent: () => {
+        this.eventEmitter.emit(ProductEventMap.updateSubmitButtonState);
+      },
+    });
   }
 
   showTarget() {
