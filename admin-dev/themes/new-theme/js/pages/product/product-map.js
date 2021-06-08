@@ -200,8 +200,10 @@ export default {
   attachments: {
     attachmentsContainer: '#product_options_attachments',
     attachmentsCollection: '#js-attachments-container .js-attachments-collection',
-    addAttachmentBtn: '.add-attachment-btn',
-    collectionRow: {
+    addAttachmentBtn: '.add-attachment',
+    removeAttachmentBtn: '.remove-attachment',
+    attachedFileRow: '.attached_file_row',
+    tableRow: {
       attachmentIdInput: (rowIndex) => `product_options_attachments_attached_file_${rowIndex}_attachment_id`,
       attachmentNameInput: (rowIndex) => `product_options_attachments_attached_file_${rowIndex}_name`,
       attachmentFilenameInput: (rowIndex) => `product_options_attachments_attached_file_${rowIndex}_filename`,
