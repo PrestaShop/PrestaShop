@@ -127,6 +127,10 @@ export default class EntitySearchInput {
     this.initOption('queryWildcard', inputOptions, '__QUERY__');
     this.initOption('entityItemSelector', inputOptions, 'li.entity-item');
     this.initOption('entityDeleteSelector', inputOptions, '.entity-item-delete');
+
+    // These are configurable callbacks
+    this.initOption('onRemovedContent', inputOptions);
+    this.initOption('onSelectedContent', inputOptions);
   }
 
   /**
@@ -301,7 +305,7 @@ export default class EntitySearchInput {
     const $hiddenInput = $('input[type="hidden"]', $selectedNode);
 
     const $entityDelete = $(this.options.entityDeleteSelector, $selectedNode);
-    $entityDelete.toggle(this.options.allowDelete);
+    $entityDelete.toggle(!!this.options.allowDelete);
 
     this.$selectionContainer.append($selectedNode);
 
