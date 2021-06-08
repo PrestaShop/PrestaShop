@@ -33,6 +33,10 @@
     'data-mapping-value': mapping_value,
     'data-mapping-image': mapping_image,
     'data-mapping-display': mapping_display,
+    'data-remove-modal-title': remove_modal_title,
+    'data-remove-modal-message': remove_modal_message,
+    'data-remove-modal-apply': remove_modal_apply,
+    'data-remove-modal-cancel': remove_modal_cancel,
     'data-full-name': form.vars.full_name,
     'data-remote-url': remote_url|raw,
     'data-limit': limit
@@ -73,7 +77,7 @@
         {{ item.name|default(form.parent.vars.prototype_display) }}
       </span>
       {% if form.parent.vars.allow_delete %}
-        <i class="material-icons delete">clear</i>
+        <i class="material-icons delete entity-item-delete">clear</i>
       {% endif %}
     </div>
     <input type="hidden" {{ block('widget_attributes') }} value="{{ form.vars.value|default(form.parent.vars.prototype_value) }}" />
