@@ -598,6 +598,7 @@
 
       &.openfilemanager {
         border-style: dashed;
+        min-width: 130px;
 
         &:hover {
           border-style: solid;
@@ -683,6 +684,7 @@
     align-items: flex-start;
     justify-content: space-between;
     border-radius: 4px;
+    flex-wrap: wrap;
 
     @include media-breakpoint-down(xs) {
       flex-wrap: wrap;
@@ -694,6 +696,10 @@
         height: 100px;
         min-height: 100px;
         margin: 0.5rem;
+
+        &.openfilemanager {
+          min-width: 100px;
+        }
 
         img {
           max-width: 100%;

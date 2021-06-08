@@ -33,18 +33,9 @@ class ImageSettings extends BOBasePage {
     this.tableBodyColumn = row => `${this.tableBodyRow(row)} td`;
 
     // Columns selectors
-    this.tableColumnId = row => `${this.tableBodyColumn(row)}:nth-child(2)`;
-    this.tableColumnName = row => `${this.tableBodyColumn(row)}:nth-child(3)`;
-    this.tableColumnWidth = row => `${this.tableBodyColumn(row)}:nth-child(4)`;
-    this.tableColumnHeight = row => `${this.tableBodyColumn(row)}:nth-child(5)`;
-    this.tableColumnStatus = (row, columnPos, status) => `${this.tableBodyColumn(row)}:nth-child(${columnPos})`
+    this.tableBodySpecificColumn = (row, columnName) => `${this.tableBodyColumn(row)}.column-${columnName}`;
+    this.tableColumnStatus = (row, columnName, status) => `${this.tableBodySpecificColumn(row, columnName)}`
       + ` span.action-${status}`;
-
-    this.tableColumnProducts = (row, status) => this.tableColumnStatus(row, 6, status);
-    this.tableColumnCategories = (row, status) => this.tableColumnStatus(row, 7, status);
-    this.tableColumnManufacturers = (row, status) => this.tableColumnStatus(row, 8, status);
-    this.tableColumnSuppliers = (row, status) => this.tableColumnStatus(row, 9, status);
-    this.tableColumnStores = (row, status) => this.tableColumnStatus(row, 10, status);
 
     // Sort Selectors
     this.tableHead = `${this.gridTable} thead`;
@@ -156,31 +147,8 @@ class ImageSettings extends BOBasePage {
    * @param columnName
    * @return {Promise<string>}
    */
-  async getTextColumn(page, row, columnName) {
-    let columnSelector;
-
-    switch (columnName) {
-      case 'id_image_type':
-        columnSelector = this.tableColumnId(row);
-        break;
-
-      case 'name':
-        columnSelector = this.tableColumnName(row);
-        break;
-
-      case 'width':
-        columnSelector = this.tableColumnWidth(row);
-        break;
-
-      case 'height':
-        columnSelector = this.tableColumnHeight(row);
-        break;
-
-      default:
-        throw new Error(`Column ${columnName} was not found`);
-    }
-
-    return this.getTextContent(page, columnSelector);
+  getTextColumn(page, row, columnName) {
+    return this.getTextContent(page, this.tableBodySpecificColumn(row, columnName));
   }
 
   /**
@@ -209,34 +177,7 @@ class ImageSettings extends BOBasePage {
    * @return {Promise<boolean>}
    */
   async getImageTypeStatus(page, row, columnName) {
-    let columnSelector;
-
-    switch (columnName) {
-      case 'products':
-        columnSelector = this.tableColumnProducts;
-        break;
-
-      case 'categories':
-        columnSelector = this.tableColumnCategories;
-        break;
-
-      case 'manufacturers':
-        columnSelector = this.tableColumnManufacturers;
-        break;
-
-      case 'suppliers':
-        columnSelector = this.tableColumnSuppliers;
-        break;
-
-      case 'stores':
-        columnSelector = this.tableColumnStores;
-        break;
-
-      default:
-        throw new Error(`Column ${columnName} was not found`);
-    }
-
-    return this.elementVisible(page, columnSelector(row, 'enabled'), 1000);
+    return this.elementVisible(page, this.tableColumnStatus(row, columnName, 'enabled'), 1000);
   }
 
   /**

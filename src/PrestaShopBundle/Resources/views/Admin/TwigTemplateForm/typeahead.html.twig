@@ -118,7 +118,7 @@
                     e.preventDefault();
                     var _this = $(this);
 
-                    modalConfirmation.create(translate_javascripts['Are you sure to delete this?'], null, {
+                    modalConfirmation.create(translate_javascripts['Are you sure you want to delete this item?'], null, {
                         onContinue: function(){
                             _this.closest('li').remove();
                             if(_this.parent().parent().length == 0){
@@ -238,7 +238,7 @@
                 e.preventDefault();
                 var _this = $(this);
 
-                modalConfirmation.create(translate_javascripts['Are you sure to delete this?'], null, {
+                modalConfirmation.create(translate_javascripts['Are you sure you want to delete this item?'], null, {
                     onContinue: function(){
                         _this.closest('li').remove();
                         _this.parent().parent().hide();

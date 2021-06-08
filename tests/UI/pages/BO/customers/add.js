@@ -1,7 +1,16 @@
 require('module-alias/register');
 const BOBasePage = require('@pages/BO/BObasePage');
 
+/**
+ * Add customer page, contains functions that can be used on the page
+ * @class
+ * @extends BOBasePage
+ */
 class AddCustomer extends BOBasePage {
+  /**
+   * @constructs
+   * Setting up texts and selectors to use on add customer page
+   */
   constructor() {
     super();
 
@@ -31,8 +40,8 @@ class AddCustomer extends BOBasePage {
 
   /**
    * Fill form for add/edit customer
-   * @param page
-   * @param customerData
+   * @param page {Page} Browser tab
+   * @param customerData {customerData} Data to set on new customer form
    * @return {Promise<void>}
    */
   async fillCustomerForm(page, customerData) {
@@ -61,8 +70,8 @@ class AddCustomer extends BOBasePage {
 
   /**
    * Fill form for add/edit customer and get successful message after saving
-   * @param page
-   * @param customerData
+   * @param page {Page} Browser tab
+   * @param customerData {customerData} Data to set on new customer form
    * @return {Promise<string>}
    */
   async createEditCustomer(page, customerData) {
@@ -76,8 +85,8 @@ class AddCustomer extends BOBasePage {
 
   /**
    * Set customer group access in form
-   * @param page
-   * @param customerGroup
+   * @param page {Page} Browser tab
+   * @param customerGroup {string} Value to set on customer group input
    * @return {Promise<void>}
    */
   async setCustomerGroupAccess(page, customerGroup) {
@@ -103,9 +112,9 @@ class AddCustomer extends BOBasePage {
   /**
    * @override
    * Select, unselect checkbox
-   * @param page
-   * @param checkboxSelector, selector of checkbox
-   * @param valueWanted, true if we want to select checkBox, else otherwise
+   * @param page {Page} Browser tab
+   * @param checkboxSelector {string} Selector of checkbox
+   * @param valueWanted {boolean} True if we want to select checkBox, else otherwise
    * @return {Promise<void>}
    */
   async changeCheckboxValue(page, checkboxSelector, valueWanted = true) {

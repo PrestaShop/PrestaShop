@@ -591,11 +591,6 @@
                 <wording_domain>Admin.Navigation.Menu</wording_domain>
             </tab>
 
-                <tab id="Tabs" id_parent="Advanced_Parameters" active="1" enabled="1"  hide_host_mode="0" icon="">
-                    <class_name>AdminTabs</class_name>
-                    <wording>Menus</wording>
-                    <wording_domain>Admin.Navigation.Menu</wording_domain>
-                </tab>
                 <tab id="Information" id_parent="Advanced_Parameters" active="1" enabled="1" hide_host_mode="0" icon="">
                     <class_name>AdminInformation</class_name>
                     <wording>Information</wording>
