@@ -26,11 +26,58 @@
 
 {% block collection_widget %}
   <div id="js-attachments-container">
-    {%- set attr = attr|merge({'data-prototype': form_row(prototype), 'data-prototype-name': prototype.vars.name }) -%}
-     {%- set attr = attr|merge({'class': (attr.class|default('') ~ ' js-attachments-collection')|trim }) -%}
-    {#  @todo finish up listing #}
-    <ul {{ block('widget_attributes') }}>
-      {{- block('form_rows') -}}
-    </ul>
+    {%- block attached_file_row -%}
+      <tr class="attached_file_row" id="attached_file_row_{{ form.vars.name }}">
+        {% for child in form.children %}
+          {% set childType = child.vars.block_prefixes.1 %}
+          {% if childType != 'hidden' %}
+            <td>
+              {{ form_widget(child) }}
+              {{ form_errors(child) }}
+            </td>
+          {% elseif child.vars.label is not empty %}
+            <td class="{{ child.vars.name }}">
+              {{ form_widget(child) }}
+              <span class="preview">{% if child.vars.value %}{{ child.vars.value }}{% endif %}</span>
+            </td>
+          {% else %}
+            {{ form_widget(child) }}
+          {% endif %}
+        {% endfor %}
+      </tr>
+    {%- endblock attached_file_row -%}
+
+    {%- block collection_row -%}
+      <div class="form-group product-attachments-collection-row">
+        {{ form_label(form) }}
+        {{- block('form_alert') -}}
+
+        {%- set attr = attr|merge({'data-prototype': form_row(prototype), 'data-prototype-name': prototype.vars.name }) -%}
+        {%- set attr = attr|merge({'class': (attr.class|default('') ~ ' js-attachments-collection')|trim }) -%}
+
+        <div {{ block('widget_attributes') }}>
+          <div class="row">
+            <div class="col-sm">
+              <table class="table">
+                <thead class="thead-default">
+                <tr>
+                  {% for child in prototype.children %}
+                    {# We add column for children that are not hidden type, unless their label is not empty (like attachment name) #}
+                    {% set childType = child.vars.block_prefixes.1 %}
+                    {% if childType != 'hidden' or (child.vars.label is not empty) %}
+                      <th>{{ child.vars.label }}</th>
+                    {% endif %}
+                  {% endfor %}
+                </tr>
+                </thead>
+                <tbody>
+                {{- block('form_rows') -}}
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+      </div>
+    {%- endblock -%}
   </div>
 {% endblock %}
