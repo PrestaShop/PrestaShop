@@ -383,6 +383,7 @@ class CarrierFeatureContext extends AbstractPrestaShopFeatureContext
     {
         $this->checkAddressWithNameExists($addresssName);
         $this->getCurrentCart()->id_address_delivery = $this->addresses[$addresssName]->id;
+        Context::getContext()->country = new Country((int) $this->addresses[$addresssName]->id_country);
     }
 
     /**
