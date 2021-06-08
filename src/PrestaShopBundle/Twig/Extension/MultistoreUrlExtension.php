@@ -69,8 +69,8 @@ class MultistoreUrlExtension extends AbstractExtension
     /**
      * Generate URL from current request for a specific shop group.
      *
-     * @param ?ShopGroup $group
-     * @param ?string $prefix
+     * @param ShopGroup|null $group
+     * @param string|null $prefix
      *
      * @return string
      */
@@ -91,11 +91,11 @@ class MultistoreUrlExtension extends AbstractExtension
     /**
      * Generate URL from current request for a specific shop group.
      *
-     * @param ?ShopGroup $group
+     * @param ShopGroup $group
      *
      * @return string
      */
-    public function generateGroupUrl(?ShopGroup $group = null): string
+    public function generateGroupUrl(ShopGroup $group): string
     {
         return $this->generateUrl($group->getId(), 'g-');
     }
@@ -103,11 +103,11 @@ class MultistoreUrlExtension extends AbstractExtension
     /**
      * Generate URL from current request for a specific shop.
      *
-     * @param ?Shop $shop
+     * @param Shop $shop
      *
      * @return string
      */
-    public function generateShopUrl(?Shop $shop = null): string
+    public function generateShopUrl(Shop $shop = null): string
     {
         return $this->generateUrl($shop->getId(), 's-');
     }
