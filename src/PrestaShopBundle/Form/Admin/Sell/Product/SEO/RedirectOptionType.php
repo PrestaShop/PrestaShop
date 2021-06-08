@@ -111,6 +111,8 @@ class RedirectOptionType extends TranslatorAwareType
                 'remote_url' => $entityAttributes[$defaultEntity]['searchUrl'],
                 'placeholder' => $entityAttributes[$defaultEntity]['placeholder'],
                 'help' => $entityAttributes[$defaultEntity]['help'],
+                // Delete is always allowed by default, js will hide the feature programmatically
+                'allow_delete' => true,
                 'attr' => [
                     'data-product-label' => $entityAttributes['product']['label'],
                     'data-product-placeholder' => $entityAttributes['product']['placeholder'],
@@ -146,7 +148,6 @@ class RedirectOptionType extends TranslatorAwareType
 
             // Adapt target options
             $targetOptions['entity_type'] = $entityType;
-            $targetOptions['allow_delete'] = $entityType === 'category';
             $targetOptions['label'] = $entityAttributes[$entityType]['label'];
             $targetOptions['placeholder'] = $entityAttributes[$entityType]['placeholder'];
             $targetOptions['help'] = $entityAttributes[$entityType]['help'];
