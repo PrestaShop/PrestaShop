@@ -33,7 +33,9 @@
           {% if childType != 'hidden' %}
             <td>
               {{ form_widget(child) }}
-              {{ form_errors(child) }}
+              {% if block(child) %}
+                {{ form_errors(child) }}
+              {% endif %}
             </td>
           {% elseif child.vars.label is not empty %}
             <td class="{{ child.vars.name }}">
