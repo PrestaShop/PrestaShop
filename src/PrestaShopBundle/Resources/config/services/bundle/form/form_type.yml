@@ -1706,3 +1706,11 @@ services:
             - '@prestashop.core.feature_flags.modifier'
         tags:
             - { name: form.type }
+
+    form.type.entity_search_input_type:
+        class: 'PrestaShopBundle\Form\Admin\Type\EntitySearchInputType'
+        public: true
+        arguments:
+            - '@translator'
+        tags:
+            - { name: form.type }
