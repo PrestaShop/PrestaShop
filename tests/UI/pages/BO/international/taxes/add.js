@@ -1,7 +1,16 @@
 require('module-alias/register');
 const BOBasePage = require('@pages/BO/BObasePage');
 
+/**
+ * Add tax page, contains functions that can be used on the page
+ * @class
+ * @extends BOBasePage
+ */
 class AddTax extends BOBasePage {
+  /**
+   * @constructs
+   * Setting up texts and selectors to use on add tax page
+   */
   constructor() {
     super();
 
@@ -24,8 +33,8 @@ class AddTax extends BOBasePage {
 
   /**
    * Change language for input name
-   * @param page
-   * @param lang
+   * @param page {Page} Browser tab
+   * @param lang {string} Value of language to change
    * @return {Promise<void>}
    */
   async changeInputLanguage(page, lang) {
@@ -41,8 +50,8 @@ class AddTax extends BOBasePage {
 
   /**
    * Fill form for add/edit tax
-   * @param page
-   * @param taxData
+   * @param page {Page} Browser tab
+   * @param taxData {taxData} Data to set on new/edit tax page
    * @returns {Promise<string>}
    */
   async createEditTax(page, taxData) {
