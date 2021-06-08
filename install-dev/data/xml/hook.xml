@@ -2895,5 +2895,10 @@
       <title>Modify product identifiable object data after updating it</title>
       <description>This hook allows to modify product identifiable object form data after it was updated</description>
     </hook>
+    <hook id="actionInvoiceFileNameGet">
+      <name>actionInvoiceFileNameGet</name>
+      <title>Get file name for invoice</title>
+      <description>This hook allows to modify the name of PDF invoice</description>
+    </hook>    
   </entities>
 </entity_hook>
