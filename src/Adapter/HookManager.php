@@ -27,6 +27,7 @@
 namespace PrestaShop\PrestaShop\Adapter;
 
 use Hook;
+use PrestaShopException;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
@@ -45,9 +46,15 @@ class HookManager
      * @param bool $use_push Force change to be refreshed on Dashboard widgets
      * @param int $id_shop If specified, hook will be execute the shop with this ID
      *
+<<<<<<< HEAD
      * @throws \PrestaShopException
      *
      * @return string|array|void modules output
+=======
+     * @return string/array modules output
+     * @throws PrestaShopException|CoreException
+     *
+>>>>>>> 501ed160de... Hooks must not swallow exceptions.
      */
     public function exec(
         $hook_name,
@@ -79,7 +86,10 @@ class HookManager
                 return Hook::exec($hook_name, $hook_args, $id_module, $array_return, $check_exceptions, $use_push, $id_shop);
             } catch (\Exception $e) {
                 $logger = ServiceLocator::get('\\PrestaShop\\PrestaShop\\Adapter\\LegacyLogger');
-                $logger->error(sprintf('Exception on hook %s for module %s. %s', $hook_name, $id_module, $e->getMessage()), ['object_type' => 'Module', 'object_id' => $id_module, 'allow_duplicate' => true]);
+                $logger->error(sprintf('Exception on hook %s for module %s. %s', $hook_name, $id_module, $e->getMessage()));
+                if (_PS_MODE_DEV_) {
+                    throw new PrestaShopException($e->getMessage(), $e->getCode(), $e);
+                }
             }
         }
     }
