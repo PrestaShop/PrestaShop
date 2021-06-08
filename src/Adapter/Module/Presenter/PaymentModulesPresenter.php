@@ -26,10 +26,8 @@
 
 namespace PrestaShop\PrestaShop\Adapter\Module\Presenter;
 
-use PrestaShop\PrestaShop\Adapter\Module\ModuleDataProvider;
+use PrestaShop\PrestaShop\Adapter\Module\PaymentModuleListProvider;
 use PrestaShop\PrestaShop\Adapter\Presenter\PresenterInterface;
-use PrestaShop\PrestaShop\Core\Addon\Module\ModuleRepository;
-use PrestaShop\PrestaShop\Core\Module\DataProvider\TabModuleListProviderInterface;
 
 /**
  * Class PaymentModulesPresenter is responsible for presenting payment modules.
@@ -42,41 +40,25 @@ class PaymentModulesPresenter
     public const PAYMENT_METHODS_CONTROLLER = 'AdminPayment';
 
     /**
-     * @var TabModuleListProviderInterface
-     */
-    private $tabModuleListProvider;
-
-    /**
-     * @var ModuleDataProvider
-     */
-    private $moduleDataProvider;
-
-    /**
      * @var PresenterInterface
      */
     private $modulePresenter;
 
     /**
-     * @var ModuleRepository
+     * @var PaymentModuleListProvider
      */
-    private $moduleRepository;
+    private $paymentModuleListProvider;
 
     /**
-     * @param TabModuleListProviderInterface $tabModuleListProvider
-     * @param ModuleDataProvider $moduleDataProvider
      * @param PresenterInterface $modulePresenter
-     * @param ModuleRepository $moduleRepository
+     * @param PaymentModuleListProvider $paymentModuleListProvider
      */
     public function __construct(
-        TabModuleListProviderInterface $tabModuleListProvider,
-        ModuleDataProvider $moduleDataProvider,
         PresenterInterface $modulePresenter,
-        ModuleRepository $moduleRepository
+        PaymentModuleListProvider $paymentModuleListProvider
     ) {
-        $this->tabModuleListProvider = $tabModuleListProvider;
-        $this->moduleDataProvider = $moduleDataProvider;
         $this->modulePresenter = $modulePresenter;
-        $this->moduleRepository = $moduleRepository;
+        $this->paymentModuleListProvider = $paymentModuleListProvider;
     }
 
     /**
@@ -86,23 +68,11 @@ class PaymentModulesPresenter
      */
     public function present()
     {
-        $tabModuleNames = $this->tabModuleListProvider->getTabModules(self::PAYMENT_METHODS_CONTROLLER);
-
-        $installedModules = $this->moduleRepository->getInstalledModules();
-        $installedModuleNames = array_keys($installedModules);
+        $installedModules = $this->paymentModuleListProvider->getPaymentModuleList();
 
         $paymentModulesToDisplay = [];
-        foreach ($tabModuleNames as $moduleName) {
-            if (!in_array($moduleName, $installedModuleNames) ||
-                !$this->moduleDataProvider->can('configure', $moduleName)
-            ) {
-                continue;
-            }
-
-            $installedModule = $installedModules[$moduleName];
-            if ($installedModule->database->get('active')) {
-                $paymentModulesToDisplay[] = $this->modulePresenter->present($installedModule);
-            }
+        foreach ($installedModules as $module) {
+            $paymentModulesToDisplay[] = $this->modulePresenter->present($module);
         }
 
         return $paymentModulesToDisplay;
