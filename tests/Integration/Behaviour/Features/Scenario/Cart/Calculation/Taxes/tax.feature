@@ -28,7 +28,7 @@ Feature: Cart calculation with tax
     Given there is a state named "state1" with iso code "TEST-1" in country "country1" and zone "zone1"
     Given there is an address named "address1" with postcode "1" in state "state1"
     Given there is a tax named "tax1" and rate 4.0%
-    Given there is a tax rule named "taxrule1"in country "country1" and state "state1" where tax "tax1" is applied
+    Given there is a tax rule named "taxrule1" in country "country1" and state "state1" where tax "tax1" is applied
     Given product "product1" belongs to tax group "taxrule1"
     When I add 1 items of product "product1" in my cart
     When I select address "address1" in my cart
@@ -50,7 +50,7 @@ Feature: Cart calculation with tax
     Given there is a state named "state1" with iso code "TEST-1" in country "country1" and zone "zone1"
     Given there is an address named "address1" with postcode "1" in state "state1"
     Given there is a tax named "tax1" and rate 6.0%
-    Given there is a tax rule named "taxrule1"in country "country1" and state "state1" where tax "tax1" is applied
+    Given there is a tax rule named "taxrule1" in country "country1" and state "state1" where tax "tax1" is applied
     Given product "product5" belongs to tax group "taxrule1"
     When I add 1 items of product "product5" in my cart
     When I select address "address1" in my cart
@@ -72,7 +72,7 @@ Feature: Cart calculation with tax
     Given there is a state named "state1" with iso code "TEST-1" in country "country1" and zone "zone1"
     Given there is an address named "address1" with postcode "1" in state "state1"
     Given there is a tax named "tax1" and rate 0.0%
-    Given there is a tax rule named "taxrule1"in country "country1" and state "state1" where tax "tax1" is applied
+    Given there is a tax rule named "taxrule1" in country "country1" and state "state1" where tax "tax1" is applied
     Given product "product5" belongs to tax group "taxrule1"
     When I add 1 items of product "product5" in my cart
     When I select address "address1" in my cart
@@ -94,7 +94,7 @@ Feature: Cart calculation with tax
     Given there is a state named "state1" with iso code "TEST-1" in country "country1" and zone "zone1"
     Given there is an address named "address1" with postcode "1" in state "state1"
     Given there is a tax named "tax1" and rate 4.0%
-    Given there is a tax rule named "taxrule1"in country "country1" and state "state1" where tax "tax1" is applied
+    Given there is a tax rule named "taxrule1" in country "country1" and state "state1" where tax "tax1" is applied
     Given product "product1" belongs to tax group "taxrule1"
     When I add 3 items of product "product1" in my cart
     When I select address "address1" in my cart
@@ -118,13 +118,13 @@ Feature: Cart calculation with tax
     Given there is a state named "state1" with iso code "TEST-1" in country "country1" and zone "zone1"
     Given there is an address named "address1" with postcode "1" in state "state1"
     Given there is a tax named "tax1" and rate 4.0%
-    Given there is a tax rule named "taxrule1"in country "country1" and state "state1" where tax "tax1" is applied
+    Given there is a tax rule named "taxrule1" in country "country1" and state "state1" where tax "tax1" is applied
     Given product "product1" belongs to tax group "taxrule1"
     Given there is a tax named "tax2" and rate 6.0%
-    Given there is a tax rule named "taxrule2"in country "country1" and state "state1" where tax "tax2" is applied
+    Given there is a tax rule named "taxrule2" in country "country1" and state "state1" where tax "tax2" is applied
     Given product "product2" belongs to tax group "taxrule2"
     Given there is a tax named "tax3" and rate 10.0%
-    Given there is a tax rule named "taxrule3"in country "country1" and state "state1" where tax "tax3" is applied
+    Given there is a tax rule named "taxrule3" in country "country1" and state "state1" where tax "tax3" is applied
     Given product "product3" belongs to tax group "taxrule3"
     When I add 3 items of product "product1" in my cart
     When I add 1 items of product "product2" in my cart
@@ -150,13 +150,13 @@ Feature: Cart calculation with tax
     Given there is a state named "state1" with iso code "TEST-1" in country "country1" and zone "zone1"
     Given there is an address named "address1" with postcode "1" in state "state1"
     Given there is a tax named "tax1" and rate 4.0%
-    Given there is a tax rule named "taxrule1"in country "country1" and state "state1" where tax "tax1" is applied
+    Given there is a tax rule named "taxrule1" in country "country1" and state "state1" where tax "tax1" is applied
     Given product "product1" belongs to tax group "taxrule1"
     Given there is a tax named "tax2" and rate 0.0%
-    Given there is a tax rule named "taxrule2"in country "country1" and state "state1" where tax "tax2" is applied
+    Given there is a tax rule named "taxrule2" in country "country1" and state "state1" where tax "tax2" is applied
     Given product "product2" belongs to tax group "taxrule2"
     Given there is a tax named "tax3" and rate 10.0%
-    Given there is a tax rule named "taxrule3"in country "country1" and state "state1" where tax "tax3" is applied
+    Given there is a tax rule named "taxrule3" in country "country1" and state "state1" where tax "tax3" is applied
     Given product "product3" belongs to tax group "taxrule3"
     When I add 3 items of product "product1" in my cart
     When I add 1 items of product "product2" in my cart

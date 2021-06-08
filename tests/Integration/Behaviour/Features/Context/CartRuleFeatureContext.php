@@ -271,6 +271,16 @@ class CartRuleFeatureContext extends AbstractPrestaShopFeatureContext
     }
 
     /**
+     * @Given /^cart rule "(.+)" is restricted on the selection of products$/
+     */
+    public function cartRuleIsRestrictedToSelectionProducts(string $cartRuleName): void
+    {
+        $this->checkCartRuleWithNameExists($cartRuleName);
+        $this->cartRules[$cartRuleName]->reduction_product = -2;
+        $this->cartRules[$cartRuleName]->save();
+    }
+
+    /**
      * @Given /^cart rule "(.+)" is applied on every order$/
      */
     public function cartRuleIsRestrictedToEveryOrder($cartRuleName)
