@@ -29,7 +29,7 @@ declare(strict_types=1);
 namespace PrestaShop\PrestaShop\Adapter\Product\Update;
 
 use PrestaShop\PrestaShop\Adapter\CoreException;
-use PrestaShopException
+use PrestaShopException;
 use Search;
 
 /**
