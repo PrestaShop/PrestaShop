@@ -34,6 +34,10 @@ export default class AttachmentsManager {
     this.prototypeTemplate = this.$attachmentsCollection.data('prototype');
     this.prototypeName = this.$attachmentsCollection.data('prototypeName');
     this.initAddAttachmentIframe();
+
+    this.$attachmentsContainer.on('click', ProductMap.attachments.removeAttachmentBtn, (e) => {
+      this.removeAttachmentRow(e);
+    });
   }
 
   /**
@@ -48,25 +52,35 @@ export default class AttachmentsManager {
   }
 
   /**
+   * @param {Object} event
+   *
    * @private
-   * @todo: use after new file is added
    */
-  addAttachmentRow() {
-    this.$attachmentsCollection.empty();
-
-    let rowIndex = 0;
-    data.productAttachments.forEach((attachment) => {
-      //@todo; add other fields besides id so they can be filled with values
-      // const $row = $(this.getPrototypeRow(rowIndex));
-      // const $attachmentIdInput = $(ProductMap.attachments.collectionRow.attachmentIdInput(rowIndex), $row);
-      const $attachmentIdInput = $(this.getPrototypeRow(rowIndex));
-      $attachmentIdInput.val(attachment.id);
-      // this.$attachmentsCollection.append($row);
-      this.$attachmentsCollection.append($attachmentIdInput);
-
-      rowIndex += 1;
-    });
+  removeAttachmentRow(event) {
+    const $removeButton = $(event.currentTarget);
+    $removeButton.closest(ProductMap.attachments.attachedFileRow).remove();
   }
+
+  // /**
+  //  * @private
+  //  * @todo: use after new file is added
+  //  */
+  // addAttachmentRow() {
+  //   this.$attachmentsCollection.empty();
+  //
+  //   let rowIndex = 0;
+  //   data.productAttachments.forEach((attachment) => {
+  //     //@todo; add other fields besides id so they can be filled with values
+  //     // const $row = $(this.getPrototypeRow(rowIndex));
+  //     // const $attachmentIdInput = $(ProductMap.attachments.collectionRow.attachmentIdInput(rowIndex), $row);
+  //     const $attachmentIdInput = $(this.getPrototypeRow(rowIndex));
+  //     $attachmentIdInput.val(attachment.id);
+  //     // this.$attachmentsCollection.append($row);
+  //     this.$attachmentsCollection.append($attachmentIdInput);
+  //
+  //     rowIndex += 1;
+  //   });
+  // }
 
   /**
    * @param {Number} rowIndex
