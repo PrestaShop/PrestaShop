@@ -1558,6 +1558,7 @@ class AdminProductsControllerCore extends AdminController
         }
 
         if ($res) {
+            Hook::exec('actionProductImageDeleted', ['id_image' => $image->id]);
             $this->jsonConfirmation($this->_conf[7]);
         } else {
             $this->jsonError($this->trans('An error occurred while attempting to delete the product image.', [], 'Admin.Catalog.Notification'));

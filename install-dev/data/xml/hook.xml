@@ -311,6 +311,11 @@
       <title>Watermark</title>
       <description/>
     </hook>
+    <hook id="actionProductImageDeleted">
+      <name>actionProductImageDeleted</name>
+      <title>Product image deleted</title>
+      <description>This hook is called when an image of a product is deleted</description>
+    </hook>
     <hook id="actionProductCancel">
       <name>actionProductCancel</name>
       <title>Product cancelled</title>
