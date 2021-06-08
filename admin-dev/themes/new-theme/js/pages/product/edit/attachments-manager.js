@@ -24,6 +24,7 @@
  */
 
 import ProductMap from '@pages/product/product-map';
+import ProductEventMap from '@pages/product/product-event-map';
 
 const {$} = window;
 
@@ -33,6 +34,7 @@ export default class AttachmentsManager {
     this.$attachmentsCollection = $(ProductMap.attachments.attachmentsCollection);
     this.prototypeTemplate = this.$attachmentsCollection.data('prototype');
     this.prototypeName = this.$attachmentsCollection.data('prototypeName');
+    this.eventEmitter = window.prestashop.instance.eventEmitter;
     this.initAddAttachmentIframe();
 
     this.$attachmentsContainer.on('click', ProductMap.attachments.removeAttachmentBtn, (e) => {
@@ -58,7 +60,11 @@ export default class AttachmentsManager {
    */
   removeAttachmentRow(event) {
     const $removeButton = $(event.currentTarget);
-    $removeButton.closest(ProductMap.attachments.attachedFileRow).remove();
+    const $thisRow = $removeButton.closest(ProductMap.attachments.attachedFileRow);
+    const attachmentId = $thisRow.find(ProductMap.attachments.attachmentIdInputs).val();
+
+    $thisRow.remove();
+    this.eventEmitter.emit(ProductEventMap.attachments.rowRemoved, {attachmentId});
   }
 
   // /**

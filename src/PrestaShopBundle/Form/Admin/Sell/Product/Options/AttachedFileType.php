@@ -39,6 +39,9 @@ class AttachedFileType extends TranslatorAwareType
         $builder
             ->add('attachment_id', HiddenType::class, [
                 'label' => false,
+                'attr' => [
+                    'class' => 'attachment-id-input',
+                ],
             ])
             ->add('name', HiddenType::class, [
                 'label' => $this->trans('Title', 'Admin.Global'),
