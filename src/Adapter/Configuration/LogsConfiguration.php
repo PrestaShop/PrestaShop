@@ -80,7 +80,7 @@ class LogsConfiguration implements DataConfigurationInterface
             $errors = [];
             foreach ($checkEmails as $email) {
                 if (!$this->validate->isEmail($email)) {
-                    $errors[] = $this->translator->trans('Invalid email address.', [], 'Admin.Notifications.Error') . ' ( ' . $email . ' ) ';
+                    $errors[] = $this->translator->trans('Invalid email address %email%.' , ['%email%' => $email], 'Admin.Notifications.Error');
                 }
             }
             if ($errors) {
