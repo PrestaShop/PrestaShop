@@ -196,8 +196,8 @@ describe('Create, filter and check credit slips file', async () => {
         await testContext.addContextItem(this, 'testIdentifier', `checkCreditSlipDocument${index + 1}`, baseContext);
 
         // Get document name
-        const documentName = await viewOrderPage.getDocumentName(page, test.args.documentRow);
-        await expect(documentName).to.be.equal('Credit slip');
+        const documentType = await viewOrderPage.getDocumentType(page, test.args.documentRow);
+        await expect(documentType).to.be.equal('Credit slip');
       });
     });
   });

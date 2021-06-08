@@ -34,7 +34,7 @@ class Order extends BOBasePage {
     this.editShippingAddressButton = '#js-delivery-address-edit-btn';
     this.selectAnotherShippingAddressButton = `${this.shippingAddressBlock} .js-update-customer-address-modal-btn`;
     this.changeOrderAddressSelect = '#change_order_address_new_address_id';
-    this.submitAnotherAddressButton = 'form[name="change_order_address"] .modal-footer button[type="submit"]';
+    this.submitAnotherAddressButton = '#change-address-submit-button';
     this.editAddressIframe = 'iframe.fancybox-iframe';
     this.invoiceAddressBlock = '#addressInvoice';
     this.invoiceAddressToolTipLink = `${this.invoiceAddressBlock} .tooltip-link`;
@@ -53,7 +53,7 @@ class Order extends BOBasePage {
     this.orderProductsTableProductAvailable = row => `${this.orderProductsRowTable(row)}
      td.cellProductAvailableQuantity`;
     this.orderProductsTableProductPrice = row => `${this.orderProductsRowTable(row)} td.cellProductTotalPrice`;
-    this.deleteProductButton = row => `${this.orderProductsRowTable(row)} button[data-original-title='Delete']`;
+    this.deleteProductButton = row => `${this.orderProductsRowTable(row)} button.js-order-product-delete-btn`;
 
     // Order card
     this.orderProductsTable = '#orderProductsTable';
@@ -92,8 +92,8 @@ class Order extends BOBasePage {
     this.documentTab = 'a#orderDocumentsTab';
     this.documentsTableDiv = '#orderDocumentsTabContent';
     this.documentsTableRow = row => `${this.documentsTableDiv} table tbody tr:nth-child(${row})`;
-    this.documentNumberLink = row => `${this.documentsTableRow(row)} td:nth-child(3) a`;
-    this.documentName = row => `${this.documentsTableRow(row)} td:nth-child(2)`;
+    this.documentNumberLink = row => `${this.documentsTableRow(row)} td.documents-table-column-download-link a`;
+    this.documentType = row => `${this.documentsTableRow(row)} td.document-column-type`;
 
     // Refund form
     this.refundProductQuantity = row => `${this.orderProductsRowTable(row)} input[id*='cancel_product_quantity']`;
@@ -255,10 +255,10 @@ class Order extends BOBasePage {
    * @param rowChild {number} Document row on table
    * @returns {Promise<string>}
    */
-  async getDocumentName(page, rowChild = 1) {
+  async getDocumentType(page, rowChild = 1) {
     await this.goToDocumentsTab(page);
 
-    return this.getTextContent(page, this.documentName(rowChild));
+    return this.getTextContent(page, this.documentType(rowChild));
   }
 
   /**

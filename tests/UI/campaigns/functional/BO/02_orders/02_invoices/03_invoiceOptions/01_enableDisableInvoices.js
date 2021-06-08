@@ -229,8 +229,8 @@ describe('Enable invoices', async () => {
     it('should check the invoice document', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'checkInvoiceDocument', baseContext);
 
-      const documentName = await viewOrderPage.getDocumentName(page);
-      await expect(documentName).to.be.equal('Invoice');
+      const documentType = await viewOrderPage.getDocumentType(page);
+      await expect(documentType).to.be.equal('Invoice');
     });
   });
 });
