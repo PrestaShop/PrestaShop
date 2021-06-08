@@ -29,8 +29,6 @@ declare(strict_types=1);
 namespace PrestaShopBundle\Controller\Admin\Sell\Catalog\Product;
 
 use Exception;
-use PrestaShop\PrestaShop\Core\Domain\Product\Attachment\Query\GetProductAttachments;
-use PrestaShop\PrestaShop\Core\Domain\Product\Attachment\QueryResult\ProductAttachment;
 use PrestaShop\PrestaShop\Core\Domain\Product\Exception\ProductConstraintException;
 use PrestaShop\PrestaShop\Core\Domain\Product\FeatureValue\Exception\DuplicateFeatureValueAssociationException;
 use PrestaShop\PrestaShop\Core\Domain\Product\FeatureValue\Exception\InvalidAssociatedFeatureException;
@@ -42,7 +40,6 @@ use PrestaShopBundle\Security\Annotation\AdminSecurity;
 use PrestaShopBundle\Security\Voter\PageVoter;
 use Symfony\Component\Form\FormInterface;
 use Symfony\Component\HttpFoundation\BinaryFileResponse;
-use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\ResponseHeaderBag;
@@ -180,33 +177,6 @@ class ProductController extends FrameworkBundleAdminController
         );
 
         return $response;
-    }
-
-    /**
-     * @AdminSecurity("is_granted(['read'], request.get('_legacy_controller'))")
-     *
-     * @param int $productId
-     *
-     * @return JsonResponse
-     */
-    public function getAttachmentsAction(int $productId): JsonResponse
-    {
-        /** @var ProductAttachment[] $productAttachments */
-        $productAttachments = $this->getQueryBus()->handle(new GetProductAttachments($productId));
-        $contextLangId = $this->getContextLangId();
-
-        $attachmentsData = [];
-        foreach ($productAttachments as $productAttachment) {
-            $localizedNames = $productAttachment->getLocalizedNames();
-            $attachmentsData[] = [
-                'id' => $productAttachment->getAttachmentId()->getValue(),
-                'name' => $localizedNames[$contextLangId] ?? reset($localizedNames),
-                'fileName' => $productAttachment->getFilename(),
-                'mimeType' => $productAttachment->getMimeType(),
-            ];
-        }
-
-        return $this->json(['productAttachments' => $attachmentsData]);
     }
 
     /**
