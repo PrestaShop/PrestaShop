@@ -13,7 +13,7 @@
     </hook>
     <hook id="actionValidateOrderAfter">
       <name>actionValidateOrderAfter</name>
-      <title>New orders</title>
+      <title>After validating an order</title>
       <description>This hook is called after validating an order by core</description>
     </hook>
     <hook id="displayMaintenance">
