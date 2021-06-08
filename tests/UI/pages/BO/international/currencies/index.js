@@ -81,7 +81,7 @@ class Currencies extends LocalizationBasePage {
    * @param page {Page} Browser tab
    * @param filterType {string} Input or select to choose method of filter
    * @param filterBy {string} Column to filter
-   * @param value {string} Value to put in filter
+   * @param value {string} Value to put on filter
    * @return {Promise<void>}
    */
   async filterTable(page, filterType, filterBy, value) {
