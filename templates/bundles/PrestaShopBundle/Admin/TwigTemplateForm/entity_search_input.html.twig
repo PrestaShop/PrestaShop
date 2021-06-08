@@ -39,7 +39,7 @@
     'data-remove-modal-cancel': remove_modal_cancel,
     'data-remote-url': remote_url|raw,
     'data-data-limit': limit,
-    'data-allow-delete': form.vars.allow_delete
+    'data-allow-delete': form.vars.allow_delete ? 1 : 0
   }) -%}
   {%- set attr = attr|merge({'class': (attr.class|default('') ~ ' entity-search-widget')|trim }) -%}
   {# We use widget_container_attributes in this widget because we do not want the name property #}
