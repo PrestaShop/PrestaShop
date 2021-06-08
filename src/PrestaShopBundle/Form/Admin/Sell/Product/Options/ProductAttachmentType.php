@@ -65,7 +65,7 @@ class ProductAttachmentType extends TranslatorAwareType
                 'icon' => 'add_circle',
                 'type' => 'link',
                 'attr' => [
-                    'class' => 'btn-outline-secondary add-attachment-btn',
+                    'class' => 'btn-outline-secondary add-attachment',
                     'href' => $this->urlGenerator->generate('admin_attachments_create', [
                         'liteDisplaying' => true,
                         'submitFormAjax' => true,
