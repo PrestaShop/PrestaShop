@@ -40,9 +40,10 @@ export default class RedirectOptionManager {
   constructor($redirectTypeInput, $redirectTargetInput) {
     this.$redirectTypeInput = $redirectTypeInput;
     this.$redirectTargetInput = $redirectTargetInput;
+    this.$searchInput = $('.entity-search-input', this.$redirectTargetRow);
     this.$redirectTargetRow = this.$redirectTargetInput.closest('.form-group');
-    this.$redirectTargetLabel = $('.form-control-label', this.$redirectTargetRow).first();
-    this.$redirectTargetHint = $('.typeahead-hint', this.$redirectTargetRow);
+    this.$redirectTargetLabel = $('label', this.$redirectTargetRow).first();
+    this.$redirectTargetHint = $('small.form-text', this.$redirectTargetRow);
     this.buildAutoCompleteSearchInput();
     this.watchRedirectType();
   }
@@ -60,25 +61,27 @@ export default class RedirectOptionManager {
         case '301-category':
         case '302-category':
           this.entitySearchInput.setRemoteUrl(this.$redirectTargetInput.data('categorySearchUrl'));
-          this.$redirectTargetInput.prop('placeholder', this.$redirectTargetInput.data('categoryPlaceholder'));
+          this.$searchInput.prop('placeholder', this.$redirectTargetInput.data('categoryPlaceholder'));
           this.$redirectTargetLabel.html(this.$redirectTargetInput.data('categoryLabel'));
           // If previous type was not a category we reset the selected value
           if (this.lastSelectedType !== '301-category' && this.lastSelectedType !== '302-category') {
             this.entitySearchInput.setValue(null);
           }
           this.$redirectTargetHint.html(this.$redirectTargetInput.data('categoryHelp'));
+          this.entitySearchInput.setOption('allowDelete', true);
           this.showTarget();
           break;
         case '301-product':
         case '302-product':
           this.entitySearchInput.setRemoteUrl(this.$redirectTargetInput.data('productSearchUrl'));
-          this.$redirectTargetInput.prop('placeholder', this.$redirectTargetInput.data('productPlaceholder'));
+          this.$searchInput.prop('placeholder', this.$redirectTargetInput.data('productPlaceholder'));
           this.$redirectTargetLabel.html(this.$redirectTargetInput.data('productLabel'));
           // If previous type was not a category we reset the selected value
           if (this.lastSelectedType !== '301-product' && this.lastSelectedType !== '302-product') {
             this.entitySearchInput.setValue(null);
           }
           this.$redirectTargetHint.html(this.$redirectTargetInput.data('productHelp'));
+          this.entitySearchInput.setOption('allowDelete', false);
           this.showTarget();
           break;
         case '404':
