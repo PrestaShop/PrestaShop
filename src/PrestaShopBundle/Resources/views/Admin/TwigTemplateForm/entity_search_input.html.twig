@@ -42,7 +42,8 @@
     'data-allow-delete': form.vars.allow_delete
   }) -%}
   {%- set attr = attr|merge({'class': (attr.class|default('') ~ ' entity-search-widget')|trim }) -%}
-  <div {{ block('widget_attributes') }}>
+  {# We use widget_container_attributes in this widget because we do not want the name property #}
+  <div {{ block('widget_container_attributes') }}>
     <div class="search search-with-icon">
       {%- set attr = search_attr|merge({
         'class': (search_attr.class|default('') ~ ' entity-search-input form-control')|trim,
@@ -51,12 +52,12 @@
         'type': 'text'
       }) -%}
       {%- set id = form.vars.id ~ '_search_input' -%}
-      <input {{ block('widget_attributes') }} />
+      <input {{ block('widget_container_attributes') }} />
     </div>
     {{- block('form_help') -}}
     {%- set attr = list_attr|merge({'class': (list_attr.class|default('') ~ ' entities-list')|trim }) -%}
     {%- set id = form.vars.id ~ '_list' -%}
-    <ul {{ block('widget_attributes') }}>
+    <ul {{ block('widget_container_attributes') }}>
       {{- block('form_rows') -}}
     </ul>
   </div>
