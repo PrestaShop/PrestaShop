@@ -25,7 +25,6 @@
 {% extends 'PrestaShopBundle:Admin/TwigTemplateForm:prestashop_ui_kit_base.html.twig' %}
 
 {% block collection_widget %}
-  <div id="js-attachments-container">
     {%- block attached_file_row -%}
       <tr class="attached_file_row" id="attached_file_row_{{ form.vars.name }}">
         {% for child in form.children %}
@@ -54,8 +53,18 @@
         {{ form_label(form) }}
         {{- block('form_alert') -}}
 
+        <p class="subtitle">{{ 'Select the files (instructions, documentation, recipes, etc.) your customers can directly download on this product page.'|trans({}, 'Admin.Catalog.Feature') }} <br/> {{ 'Need to browse all files? Go to [1]Catalog > Files[/1]'|trans({'[1]':'<a href="'~getAdminLink("AdminAttachments")~'">','[/1]':'</a>'}, 'Admin.Catalog.Feature')|raw }} </p>
+
+        <div id="attachments-empty-state" class="alert alert-info{% if form.vars.data is not empty %} d-none{% endif %}">
+          {# todo: wording? #}
+          <p>{{ 'No files attached to this product'|trans({}, 'Admin.Catalog.Feature') }}</p>
+        </div>
+
         {%- set attr = attr|merge({'data-prototype': form_row(prototype), 'data-prototype-name': prototype.vars.name }) -%}
-        {%- set attr = attr|merge({'class': (attr.class|default('') ~ ' js-attachments-collection')|trim }) -%}
+        {%- set attr = attr|merge({'class': (attr.class|default('') ~ ' attachments-collection')|trim }) -%}
+        {% if form.vars.data is empty %}
+          {% set attr = attr|merge({'class': (attr.class ~ ' d-none')|trim }) %}
+        {% endif %}
 
         <div {{ block('widget_attributes') }}>
           <div class="row">
@@ -81,5 +90,4 @@
         </div>
       </div>
     {%- endblock -%}
-  </div>
 {% endblock %}

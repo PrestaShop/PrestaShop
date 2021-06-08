@@ -35,8 +35,15 @@ export default class AttachmentsManager {
     this.prototypeTemplate = this.$attachmentsCollection.data('prototype');
     this.prototypeName = this.$attachmentsCollection.data('prototypeName');
     this.eventEmitter = window.prestashop.instance.eventEmitter;
-    this.initAddAttachmentIframe();
 
+    this.init();
+  }
+
+  /**
+   * @private
+   */
+  init() {
+    this.initAddAttachmentIframe();
     this.$attachmentsContainer.on('click', ProductMap.attachments.removeAttachmentBtn, (e) => {
       this.removeAttachmentRow(e);
     });
@@ -65,6 +72,25 @@ export default class AttachmentsManager {
 
     $thisRow.remove();
     this.eventEmitter.emit(ProductEventMap.attachments.rowRemoved, {attachmentId});
+    this.refreshState();
+  }
+
+  /**
+   * @private
+   */
+  refreshState() {
+    const $attachmentsCollection = this.$attachmentsCollection;
+    const isEmpty = $attachmentsCollection.find(ProductMap.attachments.attachedFileRow).length === 0;
+
+    const $emptyState = $(ProductMap.attachments.emptyState);
+
+    if (isEmpty) {
+      $emptyState.removeClass('d-none');
+      $attachmentsCollection.addClass('d-none');
+    } else {
+      $emptyState.addClass('d-none');
+      $attachmentsCollection.removeClass('d-none');
+    }
   }
 
   // /**
