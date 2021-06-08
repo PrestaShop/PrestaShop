@@ -29,6 +29,7 @@ declare(strict_types=1);
 namespace Tests\Integration\Behaviour\Features\Context\Domain\Product;
 
 use PHPUnit\Framework\Assert;
+use PrestaShop\PrestaShop\Core\Domain\Product\Attachment\QueryResult\ProductAttachment;
 use PrestaShop\PrestaShop\Core\Domain\Product\Command\AssociateProductAttachmentCommand;
 use PrestaShop\PrestaShop\Core\Domain\Product\Command\RemoveAllAssociatedProductAttachmentsCommand;
 use PrestaShop\PrestaShop\Core\Domain\Product\Command\SetAssociatedProductAttachmentsCommand;
@@ -61,7 +62,9 @@ class UpdateAttachmentFeatureContext extends AbstractProductFeatureContext
      */
     public function assertProductAttachments(string $productReference, array $attachmentReferences): void
     {
-        $attachmentIds = $this->getProductForEditing($productReference)->getAssociatedAttachmentIds();
+        $attachmentIds = array_map(function (ProductAttachment $attachment): int {
+            return $attachment->getAttachmentId()->getValue();
+        }, $this->getProductForEditing($productReference)->getAssociatedAttachments());
 
         Assert::assertEquals(
             count($attachmentIds),
@@ -86,7 +89,7 @@ class UpdateAttachmentFeatureContext extends AbstractProductFeatureContext
     public function assertProductHasNoAttachmentsAssociated(string $productReference)
     {
         Assert::assertEmpty(
-            $this->getProductForEditing($productReference)->getAssociatedAttachmentIds(),
+            $this->getProductForEditing($productReference)->getAssociatedAttachments(),
             'Product "%s" expected to have no attachments associated'
         );
     }
