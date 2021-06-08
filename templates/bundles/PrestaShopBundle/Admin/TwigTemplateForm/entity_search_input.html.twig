@@ -25,7 +25,7 @@
 
 {% block entity_search_input_widget %}
   {%- set attr = attr|merge({
-    'data-prototype': form_row(prototype),
+    'data-prototype-template': form_row(prototype),
     'data-prototype-name': prototype.vars.name,
     'data-prototype-image': prototype_image,
     'data-prototype-value': prototype_value,
@@ -37,9 +37,9 @@
     'data-remove-modal-message': remove_modal_message,
     'data-remove-modal-apply': remove_modal_apply,
     'data-remove-modal-cancel': remove_modal_cancel,
-    'data-full-name': form.vars.full_name,
     'data-remote-url': remote_url|raw,
-    'data-limit': limit
+    'data-data-limit': limit,
+    'data-allow-delete': form.vars.allow_delete
   }) -%}
   {%- set attr = attr|merge({'class': (attr.class|default('') ~ ' entity-search-widget')|trim }) -%}
   <div {{ block('widget_attributes') }}>
@@ -76,9 +76,7 @@
       <span class="label">
         {{ item.name|default(form.parent.vars.prototype_display) }}
       </span>
-      {% if form.parent.vars.allow_delete %}
-        <i class="material-icons delete entity-item-delete">clear</i>
-      {% endif %}
+      <i class="material-icons delete entity-item-delete">clear</i>
     </div>
     <input type="hidden" {{ block('widget_attributes') }} value="{{ form.vars.value|default(form.parent.vars.prototype_value) }}" />
   </li>

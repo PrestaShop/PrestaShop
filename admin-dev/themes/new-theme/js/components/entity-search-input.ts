@@ -57,36 +57,13 @@ export default class EntitySearchInput {
   autoSearch: any;
 
   constructor($entitySearchInputContainer: JQuery, options: OptionsObject) {
+    this.options = {};
     this.$entitySearchInputContainer = $entitySearchInputContainer;
-    this.$entitySearchInput = $('.entity-search-input', this.$entitySearchInputContainer);
-    this.$selectionContainer = $('.entities-list', this.$entitySearchInputContainer);
+    this.buildOptions(options);
 
-    this.mappingValue = this.$entitySearchInputContainer.data('mappingValue');
-    this.mappingDisplay = this.$entitySearchInputContainer.data('mappingDisplay');
-    this.mappingImage = this.$entitySearchInputContainer.data('mappingImage');
+    this.$entitySearchInput = $(this.options.searchInputSelector, this.$entitySearchInputContainer);
+    this.$selectionContainer = $(this.options.listSelector, this.$entitySearchInputContainer);
 
-    this.prototypeTemplate = this.$entitySearchInputContainer.data('prototype');
-    this.prototypeName = this.$entitySearchInputContainer.data('prototypeName');
-    this.prototypeImage = this.$entitySearchInputContainer.data('prototypeImage');
-    this.prototypeValue = this.$entitySearchInputContainer.data('prototypeValue');
-    this.prototypeDisplay = this.$entitySearchInputContainer.data('prototypeDisplay');
-
-    this.searchInputFullName = this.$entitySearchInputContainer.data('fullName');
-    this.dataLimit = this.$entitySearchInputContainer.data('limit');
-    this.remoteUrl = this.$entitySearchInputContainer.data('remoteUrl');
-
-    this.removeModalTitle = this.$entitySearchInputContainer.data('removeModalTitle');
-    this.removeModalMessage = this.$entitySearchInputContainer.data('removeModalMessage');
-    this.removeModalApply = this.$entitySearchInputContainer.data('removeModalApply');
-    this.removeModalCancel = this.$entitySearchInputContainer.data('removeModalCancel');
-
-    const inputOptions = options || {};
-    this.options = {
-      value: 'id',
-      dataLimit: 1,
-      ...inputOptions,
-    };
-    this.entityRemoteSource = {};
     this.buildRemoteSource();
     this.buildAutoCompleteSearch();
     this.buildActions();
@@ -94,6 +71,7 @@ export default class EntitySearchInput {
     return {
       setRemoteUrl: (remoteUrl) => this.setRemoteUrl(remoteUrl),
       setValue: (values) => this.setValue(values),
+      setOption: (optionName, value) => this.setOption(optionName, value),
     };
   }
 
@@ -103,8 +81,8 @@ export default class EntitySearchInput {
    * @param remoteUrl {string}
    */
   setRemoteUrl(remoteUrl: string): void {
-    this.remoteUrl = remoteUrl;
-    this.entityRemoteSource.remote.url = this.remoteUrl;
+    this.options.remoteUrl = remoteUrl;
+    this.entityRemoteSource.remote.url = this.options.remoteUrl;
   }
 
   /**
@@ -124,17 +102,82 @@ export default class EntitySearchInput {
     });
   }
 
+  /**
+   * @param {string} optionName
+   * @param {*} value
+   */
+  setOption(optionName: string, value: any) {
+    this.options[optionName] = value;
+  }
+
+  /**
+   * @param {Object} options
+   */
+  buildOptions(options: OptionsObject) {
+    const inputOptions = options || {};
+    this.initOption('mappingValue', inputOptions, 'id');
+    this.initOption('mappingDisplay', inputOptions, 'name');
+    this.initOption('mappingImage', inputOptions, 'image');
+
+    this.initOption('prototypeTemplate', inputOptions);
+    this.initOption('prototypeName', inputOptions, '__name__');
+    this.initOption('prototypeImage', inputOptions, '__image__');
+    this.initOption('prototypeValue', inputOptions, '__value__');
+    this.initOption('prototypeDisplay', inputOptions, '__display__');
+
+    this.initOption('allowDelete', inputOptions, true);
+    this.initOption('dataLimit', inputOptions, 0);
+    this.initOption('remoteUrl', inputOptions);
+
+    this.initOption('removeModalTitle', inputOptions);
+    this.initOption('removeModalMessage', inputOptions);
+    this.initOption('removeModalApply', inputOptions);
+    this.initOption('removeModalCancel', inputOptions);
+
+    // Most of the previous config are configurable via the EntitySearchInputForm options, the following ones are only
+    // overridable via js config (as long as you use the default template)
+    this.initOption('searchInputSelector', inputOptions, '.entity-search-input');
+    this.initOption('listSelector', inputOptions, '.entities-list');
+    this.initOption('removeModalId', inputOptions, 'modal-confirm-remove-entity');
+    this.initOption('confirmButtonClass', inputOptions, 'btn-danger');
+    this.initOption('queryWildcard', inputOptions, '__QUERY__');
+    this.initOption('entityItemSelector', inputOptions, 'li.entity-item');
+    this.initOption('entityDeleteSelector', inputOptions, '.entity-item-delete');
+  }
+
+  /**
+   * Init the option value, the input config has the more priority. It overrides the data attribute option
+   * (if present), finally a default value is used (if defined).
+   *
+   * @param {string} optionName
+   * @param {Object} inputOptions
+   * @param {*|undefined} defaultOption
+   */
+  initOption(optionName: string, inputOptions: OptionsObject, defaultOption: any = undefined) {
+    if (Object.prototype.hasOwnProperty.call(inputOptions, optionName)) {
+      this.options[optionName] = inputOptions[optionName];
+    } else if (typeof this.$entitySearchInputContainer.data(optionName) !== 'undefined') {
+      this.options[optionName] = this.$entitySearchInputContainer.data(optionName);
+    } else {
+      this.options[optionName] = defaultOption;
+    }
+  }
+
   buildActions() {
-    $(this.$selectionContainer).on('click', '.entity-item-delete', (event) => {
-      const $entity = $(event.target).closest('.entity-item');
+    $(this.$selectionContainer).on('click', this.options.entityDeleteSelector, (event) => {
+      if (!this.options.allowDelete) {
+        return;
+      }
+
+      const $entity = $(event.target).closest(this.options.entityItemSelector);
       const modal = new ConfirmModal(
         {
-          id: 'modal-confirm-remove-entity',
-          confirmTitle: this.removeModalTitle,
-          confirmMessage: this.removeModalMessage,
-          confirmButtonLabel: this.removeModalApply,
-          closeButtonLabel: this.removeModalCancel,
-          confirmButtonClass: 'btn-danger',
+          id: this.options.removeModalId,
+          confirmTitle: this.options.removeModalTitle,
+          confirmMessage: this.options.removeModalMessage,
+          confirmButtonLabel: this.options.removeModalApply,
+          closeButtonLabel: this.options.removeModalCancel,
+          confirmButtonClass: this.options.confirmButtonClass,
           closable: true,
         },
         () => {
@@ -142,6 +185,10 @@ export default class EntitySearchInput {
           $entity.remove();
           $hiddenInput.trigger('change');
           this.$selectionContainer.trigger('change');
+
+          if (typeof this.options.onRemovedContent !== 'undefined') {
+            this.options.onRemovedContent($entity);
+          }
         },
       );
       modal.show();
@@ -154,10 +201,10 @@ export default class EntitySearchInput {
   buildAutoCompleteSearch(): void {
     const autoSearchConfig = {
       source: this.entityRemoteSource,
-      dataLimit: this.dataLimit,
+      dataLimit: this.options.dataLimit,
       value: '',
       templates: {
-        suggestion: (entity: OptionsObject) => {
+        suggestion: (entity: any) => {
           let entityImage;
 
           if (Object.prototype.hasOwnProperty.call(entity, 'image')) {
@@ -168,9 +215,9 @@ export default class EntitySearchInput {
         },
       },
       /* eslint-disable-next-line no-unused-vars */
-      onSelect: (selectedItem: OptionsObject, event: JQueryEventObject) => {
+      onSelect: (selectedItem: any, event: JQueryEventObject) => {
         // When limit is one we cannot select additional elements so we replace them instead
-        if (this.dataLimit === 1) {
+        if (this.options.dataLimit === 1) {
           return this.replaceSelectedItem(selectedItem);
         }
         return this.appendSelectedItem(selectedItem);
@@ -178,8 +225,8 @@ export default class EntitySearchInput {
     };
 
     // Can be used to format value depending on selected item
-    if (this.mappingValue !== undefined) {
-      autoSearchConfig.value = <string> this.mappingValue;
+    if (this.options.mappingValue !== undefined) {
+      autoSearchConfig.value = <string> this.options.mappingValue;
     }
     this.autoSearch = new AutoCompleteSearch(
       this.$entitySearchInput,
@@ -189,14 +236,14 @@ export default class EntitySearchInput {
 
   /**
    * Build the Bloodhound remote source which will call the API. The placeholder to
-   * inject the query search parameter is __QUERY__ (@todo: could be configurable)
+   * inject the query search parameter is __QUERY__
    *
    * @returns {Bloodhound}
    */
   buildRemoteSource(): void {
     const sourceConfig = {
-      mappingValue: this.mappingValue,
-      remoteUrl: this.remoteUrl,
+      mappingValue: this.options.mappingValue,
+      remoteUrl: this.options.remoteUrl,
     };
 
     this.entityRemoteSource = new Bloodhound({
@@ -208,7 +255,7 @@ export default class EntitySearchInput {
       remote: {
         url: sourceConfig.remoteUrl,
         cache: false,
-        wildcard: '__QUERY__',
+        wildcard: this.options.queryWildcard,
         transform(response: any) {
           if (!response) {
             return [];
@@ -233,7 +280,7 @@ export default class EntitySearchInput {
    * @param selectedItem {Object}
    * @returns {boolean}
    */
-  replaceSelectedItem(selectedItem: unknown): boolean {
+  replaceSelectedItem(selectedItem: any): boolean {
     this.clearSelectedItems();
     this.addSelectedContentToContainer(selectedItem);
 
@@ -247,11 +294,11 @@ export default class EntitySearchInput {
    * @param selectedItem {Object}
    * @returns {boolean}
    */
-  appendSelectedItem(selectedItem: unknown): boolean {
+  appendSelectedItem(selectedItem: any): boolean {
     // If collection length is up to limit, return
-    const formIdItem = $('li', this.$selectionContainer);
+    const $entityItems = $(this.options.entityItemSelector, this.$selectionContainer);
 
-    if (this.dataLimit !== 0 && formIdItem.length >= this.dataLimit) {
+    if (this.options.dataLimit !== 0 && $entityItems.length >= this.options.dataLimit) {
       return false;
     }
 
@@ -266,16 +313,24 @@ export default class EntitySearchInput {
    *
    * @param selectedItem {Object}
    */
-  addSelectedContentToContainer(selectedItem: unknown) {
+  addSelectedContentToContainer(selectedItem: any) {
     const newIndex = this.$selectionContainer.children().length;
     const selectedHtml = this.renderSelected(selectedItem, newIndex);
 
     const $selectedNode = $(selectedHtml);
     const $hiddenInput = $('input[type="hidden"]', $selectedNode);
+
+    const $entityDelete = $(this.options.entityDeleteSelector, $selectedNode);
+    $entityDelete.toggle(this.options.allowDelete);
+
     this.$selectionContainer.append($selectedNode);
 
     // Trigger the change so that listeners detect the form data has been modified
     $hiddenInput.trigger('change');
+
+    if (typeof this.options.onSelectedContent !== 'undefined') {
+      this.options.onSelectedContent($selectedNode, selectedItem);
+    }
   }
 
   /**
@@ -287,15 +342,15 @@ export default class EntitySearchInput {
    *
    * @returns {string}
    */
-  renderSelected(entity: unknown, index: int): string {
-    const value = entity[this.mappingValue] || 0;
-    const display = entity[this.mappingDisplay] || '';
-    const image = entity[this.mappingImage] || '';
+  renderSelected(entity: any, index: int): string {
+    const value = entity[this.options.mappingValue] || 0;
+    const display = entity[this.options.mappingDisplay] || '';
+    const image = entity[this.options.mappingImage] || '';
 
-    return this.prototypeTemplate
-      .replace(new RegExp(this.prototypeName, 'g'), index)
-      .replace(new RegExp(this.prototypeValue, 'g'), value)
-      .replace(new RegExp(this.prototypeImage, 'g'), image)
-      .replace(new RegExp(this.prototypeDisplay, 'g'), display);
+    return this.options.prototypeTemplate
+      .replace(new RegExp(this.options.prototypeName, 'g'), index)
+      .replace(new RegExp(this.options.prototypeValue, 'g'), value)
+      .replace(new RegExp(this.options.prototypeImage, 'g'), image)
+      .replace(new RegExp(this.options.prototypeDisplay, 'g'), display);
   }
 }
