@@ -63,7 +63,7 @@ class ImageManagerCore
             return '';
         }
 
-        if (file_exists(_PS_TMP_IMG_DIR_ . $cacheImage) && $regenerate) {
+        if ($regenerate && file_exists(_PS_TMP_IMG_DIR_ . $cacheImage)) {
             @unlink(_PS_TMP_IMG_DIR_ . $cacheImage);
         }
 
