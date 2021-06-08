@@ -50,4 +50,8 @@ export default {
     openCombinationsGenerator: 'openCombinationsGenerator',
     clearFilters: 'clearFilters',
   },
+  attachments: {
+    rowRemoved: 'attachmentsRowRemoved',
+    rowAdded: 'attachmentsRowAdded',
+  },
 };
