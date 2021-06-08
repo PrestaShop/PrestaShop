@@ -55,8 +55,7 @@ class AttachedFileType extends TranslatorAwareType
             ->add('remove', IconButtonType::class, [
                 'icon' => 'delete',
                 'attr' => [
-                    'class' => 'tooltip-link remove-attachment',
-                    'data-toggle' => 'pstooltip',
+                    'class' => 'remove-attachment',
                     'data-original-title' => $this->trans('Remove', 'Admin.Global'),
                 ],
             ])
