@@ -27,6 +27,7 @@ declare(strict_types=1);
 
 namespace PrestaShopBundle\Form\Admin\Sell\Product\Options;
 
+use PrestaShopBundle\Form\Admin\Type\IconButtonType;
 use PrestaShopBundle\Form\Admin\Type\TranslatorAwareType;
 use Symfony\Component\Form\Extension\Core\Type\HiddenType;
 use Symfony\Component\Form\FormBuilderInterface;
@@ -47,6 +48,14 @@ class AttachedFileType extends TranslatorAwareType
             ])
             ->add('mime_type', HiddenType::class, [
                 'label' => $this->trans('Type', 'Admin.Global'),
+            ])
+            ->add('remove', IconButtonType::class, [
+                'icon' => 'delete',
+                'attr' => [
+                    'class' => 'tooltip-link remove-attachment',
+                    'data-toggle' => 'pstooltip',
+                    'data-original-title' => $this->trans('Remove', 'Admin.Global'),
+                ],
             ])
         ;
     }
