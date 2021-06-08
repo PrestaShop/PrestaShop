@@ -125,9 +125,13 @@ describe('View customer service messages', async () => {
   it('should check your answer form', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'checkYourAnswerForm', baseContext);
 
-    const text = await viewPage.getYourAnswerContent(page);
-    expect(text).to.contains(`Your answer to ${contactUsData.emailAddress}`);
-    expect(text).to.contains('Dear Customer, Regards, Customer service Send');
+    // Check that title has email on it
+    const titleContent = await viewPage.getYourAnswerFormTitle(page);
+    expect(titleContent).to.contains(`Your answer to ${contactUsData.emailAddress}`);
+
+    // Check form content
+    const formContent = await viewPage.getYourAnswerFormContent(page);
+    expect(formContent).to.contains('Dear Customer, Regards, Customer service');
   });
 
   it('should check orders and messages timeline', async function () {
