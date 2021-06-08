@@ -93,7 +93,7 @@ class Order extends BOBasePage {
     this.documentsTableDiv = '#orderDocumentsTabContent';
     this.documentsTableRow = row => `${this.documentsTableDiv} table tbody tr:nth-child(${row})`;
     this.documentNumberLink = row => `${this.documentsTableRow(row)} td.documents-table-column-download-link a`;
-    this.documentType = row => `${this.documentsTableRow(row)} td.document-column-type`;
+    this.documentType = row => `${this.documentsTableRow(row)} td.documents-table-column-type`;
 
     // Refund form
     this.refundProductQuantity = row => `${this.orderProductsRowTable(row)} input[id*='cancel_product_quantity']`;
