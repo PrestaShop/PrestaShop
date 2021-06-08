@@ -136,7 +136,7 @@
                 pattern="[0-9]*"
                 value="{$product.quantity}"
                 name="product-quantity-spin"
-                aria-label="{$product.name} {l s='product quantity field' d='Shop.Theme.Checkout'}"
+                aria-label="{l s='%productName% product quantity field' sprintf=['%productName%' => $product.name] d='Shop.Theme.Checkout'}"
               />
             {/if}
           </div>
