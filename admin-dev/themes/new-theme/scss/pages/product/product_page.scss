@@ -1024,9 +1024,9 @@ $product-page-padding-bottom: 80px !default;
 
 .product-page-v2 {
   ul.entities-list {
+    max-width: 100%;
     padding: 0;
     list-style: none;
-    max-width: 100%;
   }
 }
 
