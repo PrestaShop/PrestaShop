@@ -1,7 +1,16 @@
 require('module-alias/register');
 const BOBasePage = require('@pages/BO/BObasePage');
 
+/**
+ * Add currency page, contains functions that can be used on the page
+ * @class
+ * @extends BOBasePage
+ */
 class AddCurrency extends BOBasePage {
+  /**
+   * @constructs
+   * Setting up texts and selectors to use on add currency page
+   */
   constructor() {
     super();
 
@@ -27,8 +36,8 @@ class AddCurrency extends BOBasePage {
 
   /**
    * Add official currency
-   * @param page
-   * @param currencyData, currency to add
+   * @param page {Page} Browser tab
+   * @param currencyData {currencyData} Data to set on add currency form
    * @returns {Promise<string>}, successful text message that appears
    */
   async addOfficialCurrency(page, currencyData) {
@@ -69,8 +78,8 @@ class AddCurrency extends BOBasePage {
 
   /**
    * Create unofficial currency
-   * @param page
-   * @param currencyData
+   * @param page {Page} Browser tab
+   * @param currencyData {currencyData} Data to set on add currency form
    * @returns {Promise<string>}
    */
   async createUnOfficialCurrency(page, currencyData) {
@@ -87,8 +96,8 @@ class AddCurrency extends BOBasePage {
 
   /**
    * Update exchange rate
-   * @param page
-   * @param value
+   * @param page {Page} Browser tab
+   * @param value {string} Value to set on exchange rate input
    * @returns {Promise<string>}
    */
   async updateExchangeRate(page, value) {
@@ -99,8 +108,8 @@ class AddCurrency extends BOBasePage {
 
   /**
    * Set precision for a currency
-   * @param page
-   * @param value
+   * @param page {Page} Browser tab
+   * @param value {number} Value to set on exchange rate input
    * @return {Promise<string>}
    */
   async setCurrencyPrecision(page, value = 2) {
