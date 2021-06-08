@@ -71,21 +71,29 @@ final class ProductFormDataProvider implements FormDataProviderInterface
     private $defaultCategoryId;
 
     /**
+     * @var int
+     */
+    private $contextLangId;
+
+    /**
      * @param CommandBusInterface $queryBus
      * @param bool $defaultProductActivation
      * @param int $mostUsedTaxRulesGroupId
      * @param int $defaultCategoryId
+     * @param int $contextLangId
      */
     public function __construct(
         CommandBusInterface $queryBus,
         bool $defaultProductActivation,
         int $mostUsedTaxRulesGroupId,
-        int $defaultCategoryId
+        int $defaultCategoryId,
+        int $contextLangId
     ) {
         $this->queryBus = $queryBus;
         $this->defaultProductActivation = $defaultProductActivation;
         $this->mostUsedTaxRulesGroupId = $mostUsedTaxRulesGroupId;
         $this->defaultCategoryId = $defaultCategoryId;
+        $this->contextLangId = $contextLangId;
     }
 
     /**
@@ -458,7 +466,31 @@ final class ProductFormDataProvider implements FormDataProviderInterface
             ],
             'customizations' => $this->extractCustomizationsData($productForEditing),
             'suppliers' => $this->extractSuppliersData($productForEditing),
+            'attachments' => $this->extractAttachmentsData($productForEditing),
         ];
+    }
+
+    /**
+     * @param ProductForEditing $productForEditing
+     *
+     * @return array<string, array<int, array<string, mixed>>>
+     */
+    private function extractAttachmentsData(ProductForEditing $productForEditing): array
+    {
+        $productAttachments = $productForEditing->getAssociatedAttachments();
+
+        $attachmentsData = [];
+        foreach ($productAttachments as $productAttachment) {
+            $localizedNames = $productAttachment->getLocalizedNames();
+            $attachmentsData['attached_files'][] = [
+                'attachment_id' => $productAttachment->getAttachmentId(),
+                'name' => $localizedNames[$this->contextLangId] ?? reset($localizedNames),
+                'filename' => $productAttachment->getFilename(),
+                'mime_type' => $productAttachment->getMimeType(),
+            ];
+        }
+
+        return $attachmentsData;
     }
 
     /**
