@@ -24,6 +24,7 @@
  */
 
 import AutoCompleteSearch from '@components/auto-complete-search';
+import ConfirmModal from '@components/modal';
 import Bloodhound from 'typeahead.js';
 
 /**
@@ -74,6 +75,11 @@ export default class EntitySearchInput {
     this.dataLimit = this.$entitySearchInputContainer.data('limit');
     this.remoteUrl = this.$entitySearchInputContainer.data('remoteUrl');
 
+    this.removeModalTitle = this.$entitySearchInputContainer.data('removeModalTitle');
+    this.removeModalMessage = this.$entitySearchInputContainer.data('removeModalMessage');
+    this.removeModalApply = this.$entitySearchInputContainer.data('removeModalApply');
+    this.removeModalCancel = this.$entitySearchInputContainer.data('removeModalCancel');
+
     const inputOptions = options || {};
     this.options = {
       value: 'id',
@@ -83,6 +89,7 @@ export default class EntitySearchInput {
     this.entityRemoteSource = {};
     this.buildRemoteSource();
     this.buildAutoCompleteSearch();
+    this.buildActions();
 
     return {
       setRemoteUrl: (remoteUrl) => this.setRemoteUrl(remoteUrl),
@@ -114,6 +121,30 @@ export default class EntitySearchInput {
 
     values.each((index: number, value: any) => {
       this.appendSelectedItem(value);
+    });
+  }
+
+  buildActions() {
+    $(this.$selectionContainer).on('click', '.entity-item-delete', (event) => {
+      const $entity = $(event.target).closest('.entity-item');
+      const modal = new ConfirmModal(
+        {
+          id: 'modal-confirm-remove-entity',
+          confirmTitle: this.removeModalTitle,
+          confirmMessage: this.removeModalMessage,
+          confirmButtonLabel: this.removeModalApply,
+          closeButtonLabel: this.removeModalCancel,
+          confirmButtonClass: 'btn-danger',
+          closable: true,
+        },
+        () => {
+          const $hiddenInput = $('input[type="hidden"]', $entity);
+          $entity.remove();
+          $hiddenInput.trigger('change');
+          this.$selectionContainer.trigger('change');
+        },
+      );
+      modal.show();
     });
   }
 
@@ -240,7 +271,7 @@ export default class EntitySearchInput {
     const selectedHtml = this.renderSelected(selectedItem, newIndex);
 
     const $selectedNode = $(selectedHtml);
-    const $hiddenInput = $('input', $selectedNode);
+    const $hiddenInput = $('input[type="hidden"]', $selectedNode);
     this.$selectionContainer.append($selectedNode);
 
     // Trigger the change so that listeners detect the form data has been modified

@@ -32,9 +32,23 @@ use Symfony\Component\Form\Extension\Core\Type\CollectionType;
 use Symfony\Component\Form\FormInterface;
 use Symfony\Component\Form\FormView;
 use Symfony\Component\OptionsResolver\OptionsResolver;
+use Symfony\Component\Translation\TranslatorInterface;
 
 class EntitySearchInputType extends CollectionType
 {
+    /**
+     * @var TranslatorInterface
+     */
+    private $translator;
+
+    /**
+     * @param TranslatorInterface $translator
+     */
+    public function __construct(TranslatorInterface $translator)
+    {
+        $this->translator = $translator;
+    }
+
     /**
      * {@inheritDoc}
      */
@@ -43,29 +57,43 @@ class EntitySearchInputType extends CollectionType
         parent::configureOptions($resolver);
 
         $resolver->setDefaults([
+            // These are parameters from collection type which default values are modified
             'allow_add' => true,
             'entry_type' => EntityItemType::class,
+
+            // This is an optional entity type that can be useful to identify which type of entity is searched
             'entity_type' => null,
+            // The remote url is used internally by a javascript component which performs a request when search input is used
             'remote_url' => null,
             // Max number of selectable entities (0 is unlimited)
             'limit' => 0,
-            // Search input attributes (if needed)
+            // Search input attributes (if needed to be customized)
             'search_attr' => [],
-            // List container attributes (if needed)
+            // List container attributes (if needed to be customized)
             'list_attr' => [],
             // Search input placeholder
             'placeholder' => '',
-            // Placeholders used for prototype (easy to search and replace)
+
+            // Placeholders used for prototype (easy to search and replace when the entity is dynamically added by js)
             'prototype_image' => '__image__',
             'prototype_value' => '__value__',
             'prototype_display' => '__display__',
-            // Mapping fields in the view data
+
+            // Mapping fields in the view data (to know which field of the js entity must be used as replacement of the placeholders)
             'mapping_value' => 'id',
             'mapping_display' => 'name',
             'mapping_image' => 'image',
-            // View data used to render the selected entities
+
+            // View data used to render the selected entities (array of entities that must be displayed)
             'view_data' => null,
+
+            // Remove modal wording
+            'remove_modal_title' => $this->trans('Delete item', 'Admin.Notifications.Warning'),
+            'remove_modal_message' => $this->trans('Are you sure you want to delete this item?', 'Admin.Notifications.Warning'),
+            'remove_modal_apply' => $this->trans('Delete', 'Admin.Actions'),
+            'remove_modal_cancel' => $this->trans('Cancel', 'Admin.Actions'),
         ]);
+
         $resolver->setAllowedTypes('search_attr', ['array']);
         $resolver->setAllowedTypes('list_attr', ['array']);
         $resolver->setAllowedTypes('placeholder', ['string']);
@@ -81,6 +109,11 @@ class EntitySearchInputType extends CollectionType
         $resolver->setAllowedTypes('mapping_value', ['string']);
         $resolver->setAllowedTypes('mapping_display', ['string']);
         $resolver->setAllowedTypes('mapping_image', ['string']);
+
+        $resolver->setAllowedTypes('remove_modal_title', ['string']);
+        $resolver->setAllowedTypes('remove_modal_message', ['string']);
+        $resolver->setAllowedTypes('remove_modal_apply', ['string']);
+        $resolver->setAllowedTypes('remove_modal_cancel', ['string']);
 
         $resolver->setAllowedTypes('view_data', ['array', 'callable', 'null']);
     }
@@ -103,6 +136,10 @@ class EntitySearchInputType extends CollectionType
             'mapping_image' => $options['mapping_image'],
             'mapping_value' => $options['mapping_value'],
             'mapping_display' => $options['mapping_display'],
+            'remove_modal_title' => $options['remove_modal_title'],
+            'remove_modal_message' => $options['remove_modal_message'],
+            'remove_modal_apply' => $options['remove_modal_apply'],
+            'remove_modal_cancel' => $options['remove_modal_cancel'],
         ]);
 
         if (is_array($options['view_data'])) {
@@ -122,5 +159,17 @@ class EntitySearchInputType extends CollectionType
     public function getBlockPrefix()
     {
         return 'entity_search_input';
+    }
+
+    /**
+     * @param string $key
+     * @param string $domain
+     * @param array $parameters
+     *
+     * @return string
+     */
+    protected function trans(string $key, string $domain, array $parameters = [])
+    {
+        return $this->translator->trans($key, $parameters, $domain);
     }
 }
