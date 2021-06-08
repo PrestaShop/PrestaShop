@@ -26,16 +26,14 @@
 
 use PrestaShop\PrestaShop\Core\Session\SessionHandler;
 
-$currentDir = dirname(__FILE__);
+require_once __DIR__ . '/../vendor/autoload.php';
 
 /* Custom defines made by users */
-if (is_file($currentDir . '/defines_custom.inc.php')) {
-    include_once $currentDir . '/defines_custom.inc.php';
+if (is_file(__DIR__ . '/defines_custom.inc.php')) {
+    include_once __DIR__ . '/defines_custom.inc.php';
 }
 
-require_once $currentDir . '/defines.inc.php';
-
-require_once _PS_CONFIG_DIR_ . 'autoload.php';
+require_once __DIR__ . '/defines.inc.php';
 
 $start_time = microtime(true);
 
@@ -56,7 +54,7 @@ if (!file_exists(_PS_ROOT_DIR_ . '/app/config/parameters.yml') && !file_exists(_
     Tools::redirectToInstall();
 }
 
-require_once $currentDir . DIRECTORY_SEPARATOR . 'bootstrap.php';
+require_once __DIR__ . '/bootstrap.php';
 
 /*
  * Improve PHP configuration on Windows
@@ -135,7 +133,7 @@ define('_PARENT_THEME_NAME_', $context->shop->theme->get('parent') ?: '');
 define('__PS_BASE_URI__', $context->shop->getBaseURI());
 
 /* Include all defines related to base uri and theme name */
-require_once $currentDir . '/defines_uri.inc.php';
+require_once __DIR__ . '/defines_uri.inc.php';
 
 global $_MODULES;
 $_MODULES = array();
@@ -228,7 +226,7 @@ if (!isset($language) || !Validate::isLoadedObject($language) || !$language->isA
 $context->language = $language;
 
 /* Get smarty */
-require_once $currentDir . '/smarty.config.inc.php';
+require_once __DIR__ . '/smarty.config.inc.php';
 $context->smarty = $smarty;
 
 if (!defined('_PS_ADMIN_DIR_')) {

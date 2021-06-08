@@ -86,8 +86,8 @@ if ((!is_dir(_PS_CORE_DIR_.DIRECTORY_SEPARATOR.'vendor') ||
     die('Error : please install <a href="https://getcomposer.org/">composer</a>. Then run "php composer.phar install"');
 }
 
+require_once _PS_CORE_DIR_.'/vendor/autoload.php';
 require_once _PS_CORE_DIR_.'/config/defines.inc.php';
-require_once _PS_CORE_DIR_.'/config/autoload.php';
 
 if (file_exists(_PS_CORE_DIR_.'/app/config/parameters.php')) {
     require_once _PS_CORE_DIR_.'/config/bootstrap.php';
