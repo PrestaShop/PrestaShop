@@ -32,6 +32,7 @@ use Customization;
 use DateTime;
 use PrestaShop\PrestaShop\Adapter\Product\Image\ProductImagePathFactory;
 use PrestaShop\PrestaShop\Adapter\Product\Image\Repository\ProductImageRepository;
+use PrestaShop\PrestaShop\Adapter\Attachment\AttachmentRepository;
 use PrestaShop\PrestaShop\Adapter\Product\Options\RedirectTargetProvider;
 use PrestaShop\PrestaShop\Adapter\Product\Repository\ProductRepository;
 use PrestaShop\PrestaShop\Adapter\Product\Stock\Repository\StockAvailableRepository;
@@ -39,6 +40,7 @@ use PrestaShop\PrestaShop\Adapter\Product\VirtualProduct\Repository\VirtualProdu
 use PrestaShop\PrestaShop\Adapter\Tax\TaxComputer;
 use PrestaShop\PrestaShop\Core\Domain\Country\ValueObject\CountryId;
 use PrestaShop\PrestaShop\Core\Domain\Product\Image\ValueObject\ImageId;
+use PrestaShop\PrestaShop\Core\Domain\Product\Attachment\QueryResult\ProductAttachment;
 use PrestaShop\PrestaShop\Core\Domain\Product\ProductCustomizabilitySettings;
 use PrestaShop\PrestaShop\Core\Domain\Product\Query\GetProductForEditing;
 use PrestaShop\PrestaShop\Core\Domain\Product\QueryHandler\GetProductForEditingHandlerInterface;
@@ -64,7 +66,7 @@ use Product;
 use Tag;
 
 /**
- * Handles the query GetEditableProduct using legacy ObjectModel
+ * Handles the query @see GetProductForEditing using legacy ObjectModel
  */
 final class GetProductForEditingHandler implements GetProductForEditingHandlerInterface
 {
@@ -114,11 +116,17 @@ final class GetProductForEditingHandler implements GetProductForEditingHandlerIn
     private $productImageUrlFactory;
 
     /**
+     * @var AttachmentRepository
+     */
+    private $attachmentRepository;
+
+    /**
      * @param NumberExtractor $numberExtractor
      * @param ProductRepository $productRepository
      * @param StockAvailableRepository $stockAvailableRepository
      * @param VirtualProductFileRepository $virtualProductFileRepository
      * @param ProductImageRepository $productImageRepository
+     * @param AttachmentRepository $attachmentRepository
      * @param TaxComputer $taxComputer
      * @param int $countryId
      * @param RedirectTargetProvider $targetProvider
@@ -130,6 +138,7 @@ final class GetProductForEditingHandler implements GetProductForEditingHandlerIn
         StockAvailableRepository $stockAvailableRepository,
         VirtualProductFileRepository $virtualProductFileRepository,
         ProductImageRepository $productImageRepository,
+        AttachmentRepository $attachmentRepository,
         TaxComputer $taxComputer,
         int $countryId,
         RedirectTargetProvider $targetProvider,
@@ -141,6 +150,7 @@ final class GetProductForEditingHandler implements GetProductForEditingHandlerIn
         $this->taxComputer = $taxComputer;
         $this->countryId = $countryId;
         $this->productRepository = $productRepository;
+        $this->attachmentRepository = $attachmentRepository;
         $this->targetProvider = $targetProvider;
         $this->productImageRepository = $productImageRepository;
         $this->productImageUrlFactory = $productImageUrlFactory;
@@ -164,11 +174,33 @@ final class GetProductForEditingHandler implements GetProductForEditingHandlerIn
             $this->getDetails($product),
             $this->getShippingInformation($product),
             $this->getSeoOptions($product),
-            $product->getAssociatedAttachmentIds(),
+            $this->getAttachments($query->getProductId()),
             $this->getProductStockInformation($product),
             $this->getVirtualProductFile($product),
             $this->getCover($product)
         );
+    }
+
+    /**
+     * @param ProductId $productId
+     *
+     * @return ProductAttachment[]
+     */
+    private function getAttachments(ProductId $productId): array
+    {
+        $attachments = $this->attachmentRepository->getAllByProduct($productId);
+
+        $productAttachments = [];
+        foreach ($attachments as $attachment) {
+            $productAttachments[] = new ProductAttachment(
+                (int) $attachment['id_attachment'],
+                $attachment['name'],
+                $attachment['file_name'],
+                $attachment['mime']
+            );
+        }
+
+        return $productAttachments;
     }
 
     /**
