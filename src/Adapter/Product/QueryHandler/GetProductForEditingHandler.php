@@ -30,11 +30,13 @@ namespace PrestaShop\PrestaShop\Adapter\Product\QueryHandler;
 
 use Customization;
 use DateTime;
+use PrestaShop\PrestaShop\Adapter\Attachment\AttachmentRepository;
 use PrestaShop\PrestaShop\Adapter\Product\Repository\ProductRepository;
 use PrestaShop\PrestaShop\Adapter\Product\Stock\Repository\StockAvailableRepository;
 use PrestaShop\PrestaShop\Adapter\Product\VirtualProduct\Repository\VirtualProductFileRepository;
 use PrestaShop\PrestaShop\Adapter\Tax\TaxComputer;
 use PrestaShop\PrestaShop\Core\Domain\Country\ValueObject\CountryId;
+use PrestaShop\PrestaShop\Core\Domain\Product\Attachment\QueryResult\ProductAttachment;
 use PrestaShop\PrestaShop\Core\Domain\Product\ProductCustomizabilitySettings;
 use PrestaShop\PrestaShop\Core\Domain\Product\Query\GetProductForEditing;
 use PrestaShop\PrestaShop\Core\Domain\Product\QueryHandler\GetProductForEditingHandlerInterface;
@@ -60,7 +62,7 @@ use Product;
 use Tag;
 
 /**
- * Handles the query GetEditableProduct using legacy ObjectModel
+ * Handles the query @see GetProductForEditing using legacy ObjectModel
  */
 final class GetProductForEditingHandler implements GetProductForEditingHandlerInterface
 {
@@ -95,10 +97,16 @@ final class GetProductForEditingHandler implements GetProductForEditingHandlerIn
     private $countryId;
 
     /**
+     * @var AttachmentRepository
+     */
+    private $attachmentRepository;
+
+    /**
      * @param NumberExtractor $numberExtractor
      * @param ProductRepository $productRepository
      * @param StockAvailableRepository $stockAvailableRepository
      * @param VirtualProductFileRepository $virtualProductFileRepository
+     * @param AttachmentRepository $attachmentRepository
      * @param TaxComputer $taxComputer
      * @param int $countryId
      */
@@ -107,6 +115,7 @@ final class GetProductForEditingHandler implements GetProductForEditingHandlerIn
         ProductRepository $productRepository,
         StockAvailableRepository $stockAvailableRepository,
         VirtualProductFileRepository $virtualProductFileRepository,
+        AttachmentRepository $attachmentRepository,
         TaxComputer $taxComputer,
         int $countryId
     ) {
@@ -116,6 +125,7 @@ final class GetProductForEditingHandler implements GetProductForEditingHandlerIn
         $this->taxComputer = $taxComputer;
         $this->countryId = $countryId;
         $this->productRepository = $productRepository;
+        $this->attachmentRepository = $attachmentRepository;
     }
 
     /**
@@ -136,10 +146,32 @@ final class GetProductForEditingHandler implements GetProductForEditingHandlerIn
             $this->getDetails($product),
             $this->getShippingInformation($product),
             $this->getSeoOptions($product),
-            $product->getAssociatedAttachmentIds(),
+            $this->getAttachments($query->getProductId()),
             $this->getProductStockInformation($product),
             $this->getVirtualProductFile($product)
         );
+    }
+
+    /**
+     * @param ProductId $productId
+     *
+     * @return ProductAttachment[]
+     */
+    private function getAttachments(ProductId $productId): array
+    {
+        $attachments = $this->attachmentRepository->getAllByProduct($productId);
+
+        $productAttachments = [];
+        foreach ($attachments as $attachment) {
+            $productAttachments[] = new ProductAttachment(
+                (int) $attachment['id_attachment'],
+                $attachment['name'],
+                $attachment['file_name'],
+                $attachment['mime']
+            );
+        }
+
+        return $productAttachments;
     }
 
     /**
