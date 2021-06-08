@@ -203,6 +203,7 @@ export default {
     addAttachmentBtn: '.add-attachment',
     removeAttachmentBtn: '.remove-attachment',
     attachedFileRow: '.attached_file_row',
+    attachmentIdInputs: '.attachment-id-input',
     tableRow: {
       attachmentIdInput: (rowIndex) => `product_options_attachments_attached_file_${rowIndex}_attachment_id`,
       attachmentNameInput: (rowIndex) => `product_options_attachments_attached_file_${rowIndex}_name`,
