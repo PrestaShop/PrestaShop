@@ -261,7 +261,7 @@ Feature: Order from Back Office (BO)
       | name          | Mug Today is a good day |
       | amount        | -1                      |
       | price         | 16                      |
-    Then I should get error that product quantity is invalid
+    Then I should get error that product quantity is invalid for order
     Then order "bo_order1" should contain 2 products "Mug Today is a good day"
 
   Scenario: Add product with zero quantity is forbidden
@@ -275,7 +275,7 @@ Feature: Order from Back Office (BO)
       | name          | Mug Today is a good day |
       | amount        | -1                      |
       | price         | 16                      |
-    Then I should get error that product quantity is invalid
+    Then I should get error that product quantity is invalid for order
     Then order "bo_order1" should contain 2 products "Mug Today is a good day"
 
   Scenario: Add product with quantity higher than stock is forbidden
@@ -384,7 +384,7 @@ Feature: Order from Back Office (BO)
     When I edit product "Mug The best is yet to come" to order "bo_order1" with following products details:
       | amount        | 0                       |
       | price         | 12                      |
-    Then I should get error that product quantity is invalid
+    Then I should get error that product quantity is invalid for order
     And order "bo_order1" should contain 2 products "Mug The best is yet to come"
     And product "Mug The best is yet to come" in order "bo_order1" has following details:
       | product_quantity            | 2      |
@@ -409,7 +409,7 @@ Feature: Order from Back Office (BO)
     When I edit product "Mug The best is yet to come" to order "bo_order1" with following products details:
       | amount        | -1                      |
       | price         | 12                      |
-    Then I should get error that product quantity is invalid
+    Then I should get error that product quantity is invalid for order
     And order "bo_order1" should contain 2 products "Mug The best is yet to come"
     And product "Mug The best is yet to come" in order "bo_order1" has following details:
       | product_quantity            | 2      |
@@ -490,7 +490,7 @@ Feature: Order from Back Office (BO)
     Given I create customer "testFirstName" with following details:
       | firstName        | testFirstName                      |
       | lastName         | testLastName                       |
-      | email            | test.davidsonas@invertus.eu        |
+      | email            | test@mailexample.eu                |
       | password         | secret                             |
     When I add new address to customer "testFirstName" with following details:
       | Address alias    | test-address                       |
@@ -503,6 +503,12 @@ Feature: Order from Back Office (BO)
       | Postal code      | 12345                              |
     When I change order "bo_order1" shipping address to "test-address"
     Then order "bo_order1" shipping address should be "test-address"
+
+  Scenario: Change order internal note
+    When I change order "bo_order1" note to "Test note."
+    Then order "bo_order1" note should be "Test note."
+    When I change order "bo_order1" note to ""
+    Then order "bo_order1" note should be ""
 
   Scenario: Edit a product that doesn't exist in catalogue anymore
     When I add products to order "bo_order1" with new invoice and the following products details:
@@ -750,3 +756,19 @@ Feature: Order from Back Office (BO)
     Then order "bo_order-ES" shipping address should be "test-address"
     And order "bo_order-ES" preview shipping address should have the following details:
       | country | United States |
+
+  Scenario: Add same customizable product to an order with new invoice
+    When I create an empty cart "dummy_cart_custo" for customer "testCustomer"
+    And I add 1 customized products with reference "demo_14" with all its customizations to the cart "dummy_cart_custo"
+    And I select "US" address as delivery and invoice address for customer "testCustomer" in cart "dummy_cart_custo"
+    And I add order "bo_order_custo" with the following details:
+      | cart                | dummy_cart_custo         |
+      | message             | test                |
+      | payment module name | dummy_payment       |
+      | status              | Payment accepted    |
+    Then order "bo_order_custo" should have 1 products in total
+    When I add products to order "bo_order_custo" with new invoice and the following products details:
+      | name          | Customizable Mug        |
+      | amount        | 1                       |
+      | price         | 10                      |
+    Then order "bo_order_custo" should have 2 products in total

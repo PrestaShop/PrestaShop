@@ -28,10 +28,25 @@
       <div class="modal-body">
         {assign var=imagesCount value=$product.images|count}
         <figure>
-          <img class="js-modal-product-cover product-cover-modal" width="{$product.default_image.bySize.large_default.width}" src="{$product.default_image.bySize.large_default.url}" alt="{$product.default_image.legend}" title="{$product.default_image.legend}" itemprop="image">
+          {if $product.default_image}
+            <img
+              class="js-modal-product-cover product-cover-modal"
+              width="{$product.default_image.bySize.large_default.width}"
+              src="{$product.default_image.bySize.large_default.url}"
+              {if !empty($product.default_image.legend)}
+                alt="{$product.default_image.legend}"
+                title="{$product.default_image.legend}"
+              {else}
+                alt="{$product.name}"
+              {/if}
+              height="{$product.default_image.bySize.large_default.height}"
+            >
+          {else}
+            <img src="{$urls.no_picture_image.bySize.large_default.url}" loading="lazy" width="{$urls.no_picture_image.bySize.large_default.width}" height="{$urls.no_picture_image.bySize.large_default.height}" />
+          {/if}
           <figcaption class="image-caption">
           {block name='product_description_short'}
-            <div id="product-description-short" itemprop="description">{$product.description_short nofilter}</div>
+            <div id="product-description-short">{$product.description_short nofilter}</div>
           {/block}
         </figcaption>
         </figure>
@@ -40,8 +55,20 @@
             <div class="js-modal-mask mask {if $imagesCount <= 5} nomargin {/if}">
               <ul class="product-images js-modal-product-images">
                 {foreach from=$product.images item=image}
-                  <li class="thumb-container">
-                    <img data-image-large-src="{$image.large.url}" class="thumb js-modal-thumb" src="{$image.medium.url}" alt="{$image.legend}" title="{$image.legend}" width="{$image.medium.width}" itemprop="image">
+                  <li class="thumb-container js-thumb-container">
+                    <img
+                      data-image-large-src="{$image.large.url}"
+                      class="thumb js-modal-thumb"
+                      src="{$image.medium.url}"
+                      {if !empty($image.legend)}
+                        alt="{$image.legend}"
+                        title="{$image.legend}"
+                      {else}
+                        alt="{$product.name}"
+                      {/if}
+                      width="{$image.medium.width}"
+                      height="148"
+                    >
                   </li>
                 {/foreach}
               </ul>

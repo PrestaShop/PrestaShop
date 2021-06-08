@@ -17,15 +17,19 @@
   #order-view-page {
     .order-navigation {
       justify-content: space-between;
+      width: 100%;
+      max-width: 88px;
+      margin-left: 0.8rem;
 
       &-left,
       &-right {
-        margin: 0;
         width: calc(50% - 7px);
+        margin: 0;
 
         a {
           display: block;
-          width: 100%;
+          width: 38px;
+          height: 38px;
         }
       }
 

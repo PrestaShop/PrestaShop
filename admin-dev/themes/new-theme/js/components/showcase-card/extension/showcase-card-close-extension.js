@@ -23,13 +23,12 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
 
-const $ = window.$;
+const {$} = window;
 
 /**
  * Class ShowcaseCardCloseExtension is responsible for providing helper block closing behavior
  */
 export default class ShowcaseCardCloseExtension {
-
   /**
    * Extend helper block.
    *
@@ -50,8 +49,8 @@ export default class ShowcaseCardCloseExtension {
           url,
           {
             close: 1,
-            name: cardName
-          }
+            name: cardName,
+          },
         );
       }
     });

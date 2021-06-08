@@ -30,7 +30,7 @@ use Link;
 use PrestaShop\PrestaShop\Adapter\CMS\Page\CommandHandler\AbstractCmsPageHandler;
 use PrestaShop\PrestaShop\Core\Domain\CmsPage\Exception\CmsPageException;
 use PrestaShop\PrestaShop\Core\Domain\CmsPage\Exception\CmsPageNotFoundException;
-use PrestaShop\PrestaShop\Core\Domain\CmsPage\Query\getCmsPageForEditing;
+use PrestaShop\PrestaShop\Core\Domain\CmsPage\Query\GetCmsPageForEditing;
 use PrestaShop\PrestaShop\Core\Domain\CmsPage\QueryHandler\GetCmsPageForEditingHandlerInterface;
 use PrestaShop\PrestaShop\Core\Domain\CmsPage\QueryResult\EditableCmsPage;
 use PrestaShop\PrestaShop\Core\Domain\CmsPageCategory\Exception\CmsPageCategoryException;
@@ -70,7 +70,7 @@ final class GetCmsPageForEditingHandler extends AbstractCmsPageHandler implement
      * @throws CmsPageCategoryException
      * @throws CmsPageNotFoundException
      */
-    public function handle(getCmsPageForEditing $query)
+    public function handle(GetCmsPageForEditing $query)
     {
         $cmsPageId = $query->getCmsPageId()->getValue();
         $cms = $this->getCmsPageIfExistsById($cmsPageId);

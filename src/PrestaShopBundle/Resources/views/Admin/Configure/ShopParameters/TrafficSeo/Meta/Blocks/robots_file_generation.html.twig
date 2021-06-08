@@ -39,18 +39,22 @@
               <div class="alert-text">
                 {% set defaultDescription = 'Your robots.txt file MUST be in your website\'s root directory and nowhere else (e.g. http://www.example.com/robots.txt).'|trans({}, 'Admin.Shopparameters.Notification') %}
                 {% if isRobotsTextFileValid %}
-                    {{ defaultDescription }} <br>
-                    {{ 'Generate your "robots.txt" file by clicking on the following button (this will erase the old robots.txt file)'|trans({}, 'Admin.Shopparameters.Notification') }}
-                  {% else %}
-                    {{ defaultDescription }} <br>
-                    {{ 'Before you can use this tool, you need to:'|trans({}, 'Admin.Shopparameters.Notification') }} <br>
-                    {{ '1) Create a blank robots.txt file in your root directory.'|trans({}, 'Admin.Shopparameters.Notification') }} <br>
-                    {{ '2) Give it write permissions (CHMOD 666 on Unix system).'|trans({}, 'Admin.Shopparameters.Notification') }}
+                  {{ defaultDescription }} <br>
+                  {{ 'Generate your "robots.txt" file by clicking on the following button (this will erase the old robots.txt file)'|trans({}, 'Admin.Shopparameters.Notification') }}
+                {% else %}
+                  {{ defaultDescription }} <br>
+                  {{ 'Before you can use this tool, you need to:'|trans({}, 'Admin.Shopparameters.Notification') }} <br>
+                  {{ '1) Create a blank robots.txt file in your root directory.'|trans({}, 'Admin.Shopparameters.Notification') }} <br>
+                  {{ '2) Give it write permissions (CHMOD 666 on Unix system).'|trans({}, 'Admin.Shopparameters.Notification') }}
                 {% endif %}
               </div>
             </div>
           </div>
         </div>
+
+        {% block meta_robots_file_form_rest %}
+          {{ form_rest(setUpUrlsForm) }}
+        {% endblock %}
       </div>
     </div>
     <div class="card-footer">
@@ -62,4 +66,3 @@
     </div>
   </div>
 {% endblock %}
-

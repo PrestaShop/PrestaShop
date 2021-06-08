@@ -18,8 +18,8 @@ class Email extends BOBasePage {
 
     // Filters
     this.emailFilterColumnInput = filterBy => `#email_logs_${filterBy}`;
-    this.filterSearchButton = `${this.emailsListForm} button[name='email_logs[actions][search]']`;
-    this.filterResetButton = `${this.emailsListForm} button[name='email_logs[actions][reset]']`;
+    this.filterSearchButton = `${this.emailsListForm} .grid-search-button`;
+    this.filterResetButton = `${this.emailsListForm} .grid-reset-button`;
     this.gridActionButton = '#email_logs-grid-actions-button';
     this.eraseAllButton = '#email_logs_grid_action_delete_all_email_logs';
 
@@ -28,16 +28,27 @@ class Email extends BOBasePage {
     this.tableRows = `${this.tableBody} tr`;
     this.tableRow = row => `${this.tableRows}:nth-child(${row})`;
     this.tableColumn = (row, column) => `${this.tableRow(row)} td.column-${column}`;
-    this.deleteRowLink = row => `${this.tableRow(row)} td.column-actions a[href*='delete']`;
+    this.deleteRowLink = row => `${this.tableRow(row)} td.column-actions a.grid-delete-row-link`;
+    this.confirmDeleteModal = '#email_logs-grid-confirm-modal';
+    this.confirmDeleteButton = `${this.confirmDeleteModal} button.btn-confirm-submit`;
 
     // Bulk Actions
-    this.selectAllRowsLabel = `${this.emailGridPanel} tr.column-filters .md-checkbox i`;
+    this.selectAllRowsLabel = `${this.emailGridPanel} tr.column-filters .grid_bulk_action_select_all`;
     this.bulkActionsToggleButton = `${this.emailGridPanel} button.js-bulk-actions-btn`;
-    this.bulkActionsDeleteButton = '#email_logs_grid_bulk_action_delete_email_logs';
+    this.bulkActionsDeleteButton = '#email_logs_grid_bulk_action_delete_selection';
 
     // Email form
-    this.logEmailsLabel = toggle => `label[for='form_email_config_log_emails_${toggle}']`;
-    this.saveEmailFormButton = 'form[name=\'form\'] button.btn-primary';
+    this.logEmailsToggleInput = toggle => `#form_log_emails_${toggle}`;
+    this.saveEmailFormButton = '#form-log-email-save-button';
+    // Email form Radio buttons
+    this.sendMailParametersRadioButton = '#form_mail_method_0';
+    this.smtpParametersRadioButton = '#form_mail_method_1';
+    // Email form input fields
+    this.smtpServerFormField = '#form_smtp_config_server';
+    this.smtpUsernameFormField = '#form_smtp_config_username';
+    this.smtpPasswordFormField = '#form_smtp_config_password';
+    this.smtpPortFormField = '#form_smtp_config_port';
+    this.smtpEncryptionFormField = '#form_smtp_config_encryption';
 
     // Test your email configuration form
     this.sendTestEmailForm = 'form[name=\'test_email_sending\']';
@@ -157,8 +168,12 @@ class Email extends BOBasePage {
    * @returns {Promise<string>}
    */
   async deleteEmailLog(page, row) {
-    this.dialogListener(page, true);
-    await this.waitForSelectorAndClick(page, this.deleteRowLink(row));
+    // Click on delete and wait for modal
+    await Promise.all([
+      this.waitForSelectorAndClick(page, this.deleteRowLink(row)),
+      this.waitForVisibleSelector(page, `${this.confirmDeleteModal}.show`),
+    ]);
+    await this.clickAndWaitForNavigation(page, this.confirmDeleteButton);
     return this.getAlertSuccessBlockParagraphContent(page);
   }
 
@@ -168,7 +183,6 @@ class Email extends BOBasePage {
    * @returns {Promise<string>}
    */
   async deleteEmailLogsBulkActions(page) {
-    this.dialogListener(page, true);
     // Click on Select All
     await Promise.all([
       page.$eval(this.selectAllRowsLabel, el => el.click()),
@@ -179,8 +193,46 @@ class Email extends BOBasePage {
       page.click(this.bulkActionsToggleButton),
       this.waitForVisibleSelector(page, `${this.bulkActionsToggleButton}[aria-expanded='true']`),
     ]);
-    // Click on delete
-    await this.clickAndWaitForNavigation(page, this.bulkActionsDeleteButton);
+
+    // Bulk delete email logs
+    await Promise.all([
+      this.waitForSelectorAndClick(page, this.bulkActionsDeleteButton),
+      this.waitForVisibleSelector(page, `${this.confirmDeleteModal}.show`),
+    ]);
+    await this.clickAndWaitForNavigation(page, this.confirmDeleteButton);
+    return this.getAlertSuccessBlockParagraphContent(page);
+  }
+
+  /** setup the smtp parameters
+   *
+   * @returns {Promise<void>}
+   */
+  async setupSmtpParameters(page, server, username, pass, port, encryption = 'None') {
+    // Click on smtp radio button
+    await page.click(this.smtpParametersRadioButton);
+    await this.waitForVisibleSelector(page, this.smtpServerFormField);
+    // fill the form field
+    await this.setValue(page, this.smtpServerFormField, server);
+    await this.setValue(page, this.smtpUsernameFormField, username);
+    await this.setValue(page, this.smtpPasswordFormField, pass);
+    await this.setValue(page, this.smtpPortFormField, port);
+    await this.selectByVisibleText(page, this.smtpEncryptionFormField, encryption);
+    // Click on Save button
+    await this.clickAndWaitForNavigation(page, this.saveEmailFormButton);
+    return this.getAlertSuccessBlockParagraphContent(page);
+  }
+
+  /**
+   * Reset the mail parameters to default config
+   * @param page
+   * @returns {Promise<string>}
+   */
+  async resetDefaultParameters(page) {
+    // Click on smtp radio button
+    await page.click(this.sendMailParametersRadioButton);
+    await page.waitForSelector(this.smtpServerFormField, {state: 'hidden'});
+    // Click on Save button
+    await this.clickAndWaitForNavigation(page, this.saveEmailFormButton);
     return this.getAlertSuccessBlockParagraphContent(page);
   }
 
@@ -203,7 +255,7 @@ class Email extends BOBasePage {
    * @returns {Promise<string>}
    */
   async setLogEmails(page, toEnable) {
-    await this.waitForSelectorAndClick(page, this.logEmailsLabel(toEnable ? 1 : 0));
+    await page.check(this.logEmailsToggleInput(toEnable ? 1 : 0));
     await page.$eval(this.saveEmailFormButton, el => el.click());
     await page.waitForNavigation();
     return this.getAlertSuccessBlockParagraphContent(page);

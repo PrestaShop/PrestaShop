@@ -61,6 +61,8 @@ describe('Update default carrier and check it in FO', async () => {
       dashboardPage.shippingPreferencesLink,
     );
 
+    await preferencesPage.closeSfToolBar(page);
+
     const pageTitle = await preferencesPage.getPageTitle(page);
     await expect(pageTitle).to.contains(preferencesPage.pageTitle);
   });

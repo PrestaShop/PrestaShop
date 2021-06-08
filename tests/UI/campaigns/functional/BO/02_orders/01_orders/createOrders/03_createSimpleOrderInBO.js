@@ -104,8 +104,8 @@ describe('Create simple order in BO', async () => {
     await expect(pageTitle).to.contains(addOrderPage.pageTitle);
   });
 
-  describe('Choose create order and check result', async () => {
-    it('should create an order', async function () {
+  describe('Create order and check result', async () => {
+    it('should create te order', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'createOrder', baseContext);
 
       await addOrderPage.createOrder(page, orderToMake);

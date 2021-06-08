@@ -1,0 +1,21 @@
+.admincustomers {
+  #customer_birthday {
+    select {
+      width: 100%;
+    }
+  }
+
+  .customer-personal-informations-card {
+    .col-8 {
+      .badge {
+        display: inline-flex;
+        align-items: center;
+
+        .material-icons {
+          margin-right: 0.2rem;
+          font-size: 1rem;
+        }
+      }
+    }
+  }
+}

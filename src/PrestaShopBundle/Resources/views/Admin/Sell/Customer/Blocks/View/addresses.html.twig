@@ -27,6 +27,7 @@
   <h3 class="card-header">
     <i class="material-icons">location_on</i>
     {{ 'Addresses'|trans({}, 'Admin.Global') }}
+    <span class="badge badge-primary rounded">{{ customerInformation.addressesInformation|length }}</span>
 
     <a href="{{ getAdminLink('AdminAddresses', true, {'id_customer': customerInformation.customerId.value, 'addaddress': 1, 'back': app.request.uri}) }}"
        class="tooltip-link float-right"
@@ -40,77 +41,12 @@
   </h3>
 
   <div class="card-body">
-    {% if customerInformation.addressesInformation is not empty %}
-      <table class="table">
-        <thead>
-          <tr>
-            <th>{{ 'Company'|trans({}, 'Admin.Global') }}</th>
-            <th>{{ 'Name'|trans({}, 'Admin.Global') }}</th>
-            <th>{{ 'Address'|trans({}, 'Admin.Global') }}</th>
-            <th>{{ 'Country'|trans({}, 'Admin.Global') }}</th>
-            <th>{{ 'Phone number(s)'|trans({}, 'Admin.Orderscustomers.Feature') }}</th>
-            <th class="text-right">{{ 'Actions'|trans({}, 'Admin.Global') }}</th>
-          </tr>
-        </thead>
-        <tbody>
-          {% for address in customerInformation.addressesInformation %}
-            {% set addressEditUrl = getAdminLink('AdminAddresses', true, {'id_address': address.addressId, 'updateaddress': 1, 'back': app.request.uri}) %}
-
-            <tr class="customer-address">
-              <td class="customer-address-company js-linkable-item cursor-pointer" data-linkable-href="{{ addressEditUrl }}">{{ address.company }}</td>
-              <td class="customer-address-name js-linkable-item cursor-pointer" data-linkable-href="{{ addressEditUrl }}">{{ address.fullName }}</td>
-              <td class="customer-address-address js-linkable-item cursor-pointer" data-linkable-href="{{ addressEditUrl }}">{{ address.fullAddress }}</td>
-              <td class="customer-address-country js-linkable-item cursor-pointer" data-linkable-href="{{ addressEditUrl }}">{{ address.countryName }}</td>
-              <td class="customer-address-phone-number js-linkable-item cursor-pointer" data-linkable-href="{{ addressEditUrl }}">
-                {% if address.phone %}
-                  {{ address.phone }}
-                  {% if address.phoneMobile is not empty %}
-                    <br> {{ address.phoneMobile }}
-                  {% endif %}
-                {% elseif address.phoneMobile is not empty %}
-                  {{ address.phoneMobile }}
-                {% else %}
-                  --
-                {% endif %}
-              </td>
-              <td class="customer-address-actions text-right">
-                <div class="btn-group-action">
-                  <div class="btn-group">
-                    <a href="{{ addressEditUrl }}"
-                       class="btn tooltip-link dropdown-item"
-                       data-toggle="pstooltip"
-                       data-placement="top"
-                       data-original-title="{{ 'Edit'|trans({}, 'Admin.Actions') }}"
-                    >
-                      <i class="material-icons">edit</i>
-                    </a>
-
-                    <a class="btn btn-link dropdown-toggle dropdown-toggle-dots dropdown-toggle-split"
-                       data-toggle="dropdown"
-                       aria-haspopup="true"
-                       aria-expanded="false"
-                    ></a>
-
-                    <div class="dropdown-menu dropdown-menu-right">
-                      <button type="button"
-                              class="btn tooltip-link dropdown-item js-form-submit-btn"
-                              data-form-confirm-message="{{ 'Delete selected item?'|trans({}, 'Admin.Notifications.Warning') }}"
-                              data-form-submit-url="{{ path('admin_addresses_delete', {'addressId': address.addressId, 'redirectUrl': app.request.uri }) }}"
-                              data-method="DELETE"
-                      >
-                        <i class="material-icons">delete</i>
-                        {{ 'Delete'|trans({}, 'Admin.Actions') }}
-                      </button>
-
-                      {{ renderhook('displayAdminCustomersAddressesItemAction', {'id_address': address.addressId}) }}
-                    </div>
-                  </div>
-                </div>
-              </td>
-            </tr>
-          {% endfor %}
-        </tbody>
-      </table>
+    {% if customerAddressGrid.data.records_total > 0 %}
+      <div class="row">
+        <div class="col">
+          {% include '@PrestaShop/Admin/Common/Grid/grid.html.twig' with {'grid': customerAddressGrid} %}
+        </div>
+      </div>
     {% else %}
       <p class="text-muted text-center mb-0">
         {{ '%firstname% %lastname% has not registered any addresses yet'|trans({'%firstname%': customerInformation.personalInformation.firstName, '%lastname%': customerInformation.personalInformation.lastName}, 'Admin.Orderscustomers.Feature') }}

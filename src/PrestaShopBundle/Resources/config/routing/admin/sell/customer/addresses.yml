@@ -74,7 +74,7 @@ admin_addresses_delete_bulk:
 
 admin_addresses_delete:
   path: /{addressId}/delete
-  methods: [POST]
+  methods: [POST, DELETE]
   defaults:
     _controller: PrestaShopBundle:Admin\Sell\Address\Address:delete
     _legacy_controller: AdminAddresses

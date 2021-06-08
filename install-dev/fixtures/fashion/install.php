@@ -45,7 +45,7 @@ class InstallFixturesFashion extends XmlLoader
     }
 
     /**
-     * @{inheritdoc}
+     * {@inheritdoc}
      */
     public function populateFromXmlFiles()
     {

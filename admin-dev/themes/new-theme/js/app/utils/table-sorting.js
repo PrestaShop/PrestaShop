@@ -23,14 +23,13 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
 
-const $ = global.$;
+const {$} = window;
 
 /**
  * Makes a table sortable by columns.
  * This forces a page reload with more query parameters.
  */
 class TableSorting {
-
   /**
    * @param {jQuery} table
    */
@@ -45,7 +44,7 @@ class TableSorting {
   attach() {
     this.columns.on('click', (e) => {
       const $column = $(e.delegateTarget);
-      this._sortByColumn($column, this._getToggledSortDirection($column));
+      this.sortByColumn($column, this.getToggledSortDirection($column));
     });
   }
 
@@ -56,11 +55,12 @@ class TableSorting {
    */
   sortBy(columnName, direction) {
     const $column = this.columns.is(`[data-sort-col-name="${columnName}"]`);
+
     if (!$column) {
       throw new Error(`Cannot sort by "${columnName}": invalid column`);
     }
 
-    this._sortByColumn($column, direction);
+    this.sortByColumn($column, direction);
   }
 
   /**
@@ -69,8 +69,12 @@ class TableSorting {
    * @param {string} direction "asc" or "desc"
    * @private
    */
-  _sortByColumn(column, direction) {
-    window.location = this._getUrl(column.data('sortColName'), (direction === 'desc') ? 'desc' : 'asc', column.data('sortPrefix'));
+  sortByColumn(column, direction) {
+    window.location = this.getUrl(
+      column.data('sortColName'),
+      (direction === 'desc') ? 'desc' : 'asc',
+      column.data('sortPrefix'),
+    );
   }
 
   /**
@@ -79,7 +83,7 @@ class TableSorting {
    * @return {string}
    * @private
    */
-  _getToggledSortDirection(column) {
+  getToggledSortDirection(column) {
     return column.data('sortDirection') === 'asc' ? 'desc' : 'asc';
   }
 
@@ -91,13 +95,13 @@ class TableSorting {
    * @return {string}
    * @private
    */
-  _getUrl(colName, direction, prefix) {
+  getUrl(colName, direction, prefix) {
     const url = new URL(window.location.href);
     const params = url.searchParams;
 
     if (prefix) {
-      params.set(prefix+'[orderBy]', colName);
-      params.set(prefix+'[sortOrder]', direction);
+      params.set(`${prefix}[orderBy]`, colName);
+      params.set(`${prefix}[sortOrder]`, direction);
     } else {
       params.set('orderBy', colName);
       params.set('sortOrder', direction);

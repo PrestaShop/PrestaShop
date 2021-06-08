@@ -24,7 +24,7 @@
  */
 import $ from 'jquery';
 
-export function psShowHide () {
+export function psShowHide() {
   $('.ps-shown-by-js').show();
   $('.ps-hidden-by-js').hide();
 }
@@ -35,13 +35,10 @@ export function psShowHide () {
  * @returns {string|null|object}
  */
 export function psGetRequestParameter(paramName) {
-  let vars = {};
-  window.location.href.replace(location.hash, '').replace(
-    /[?&]+([^=&]+)=?([^&]*)?/gi,
-    function (m, key, value) {
-      vars[key] = value !== undefined ? value : '';
-    }
-  );
+  const vars = {};
+  window.location.href.replace(location.hash, '').replace(/[?&]+([^=&]+)=?([^&]*)?/gi, (m, key, value) => {
+    vars[key] = value !== undefined ? value : '';
+  });
   if (paramName !== undefined) {
     return vars[paramName] ? vars[paramName] : null;
   }
@@ -55,21 +52,23 @@ export function psGetRequestParameter(paramName) {
  * amount is correctly updated on payment modules
  */
 export function refreshCheckoutPage() {
+  const queryParams = psGetRequestParameter();
+
   // we get the refresh flag : on payment step we need to refresh page to be sure
   // amount is correctly updated on payemnt modules
-  if (psGetRequestParameter('updatedTransaction') !== null) {
+  if (queryParams.updatedTransaction) {
     // this parameter is used to display some info message
     // already set : just refresh page
     window.location.reload();
-  } else {
-    // not set : add it to the url
-    let queryParams = psGetRequestParameter();
-    queryParams['updatedTransaction'] = 1;
-    const joined = [];
-    for (let key in queryParams) {
-      let val = queryParams[key]; // gets the value by looking for the key in the object
-      joined.push(key + "=" + val);
-    }
-    window.location.href = window.location.pathname + "?" + joined.join("&");
+
+    return;
   }
+
+  // not set : add it to the url
+  queryParams.updatedTransaction = 1;
+
+  const joined = Object.entries(queryParams)
+    .map((v) => v.join('='))
+    .join('&');
+  window.location.href = `${window.location.pathname}?${joined}`;
 }

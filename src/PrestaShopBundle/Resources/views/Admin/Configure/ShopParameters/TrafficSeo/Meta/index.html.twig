@@ -33,43 +33,50 @@
     </div>
   </div>
   {% if not isGridDisplayed %}
-      <div class="row">
-        <div class="col-sm">
-          <div class="alert alert-info" role="alert">
-            <div class="alert-text">
-              {{ 'You can only display the page list in a shop context.'|trans({}, 'Admin.Shopparameters.Notification') }}
-            </div>
+    <div class="row">
+      <div class="col-sm">
+        <div class="alert alert-info" role="alert">
+          <div class="alert-text">
+            {{ 'You can only display the page list in a shop context.'|trans({}, 'Admin.Shopparameters.Notification') }}
           </div>
         </div>
       </div>
-    {% else %}
-      <div class="row">
-        <div class="col">
-          {% include '@PrestaShop/Admin/Common/Grid/grid_panel.html.twig' with {'grid': grid} %}
-        </div>
+    </div>
+  {% else %}
+    <div class="row">
+      <div class="col">
+        {% include '@PrestaShop/Admin/Common/Grid/grid_panel.html.twig' with {'grid': grid} %}
       </div>
+    </div>
   {% endif %}
 
   <div class="row justify-content-center">
-      <div class="col">
-        {{ form_start(metaForm, {'action': path('admin_metas_save_options')}) }}
-          {% include '@PrestaShop/Admin/Configure/ShopParameters/TrafficSeo/Meta/Blocks/set_up_urls_configuration.html.twig' %}
-          {% include '@PrestaShop/Admin/Configure/ShopParameters/TrafficSeo/Meta/Blocks/shop_urls_configuration.html.twig' %}
-          {% include '@PrestaShop/Admin/Configure/ShopParameters/TrafficSeo/Meta/Blocks/domain_name_management.html.twig' %}
+    <div class="col">
+      {{ form_start(setUpUrlsForm, {attr : {class: 'form'}, action: path('admin_metas_set_up_urls_save') }) }}
+        {% include '@PrestaShop/Admin/Configure/ShopParameters/TrafficSeo/Meta/Blocks/set_up_urls_configuration.html.twig' %}
+      {{ form_end(setUpUrlsForm) }}
+
+      {{ form_start(shopUrlsForm, {attr : {class: 'form'}, action: path('admin_metas_shop_urls_save') }) }}
+        {% include '@PrestaShop/Admin/Configure/ShopParameters/TrafficSeo/Meta/Blocks/shop_urls_configuration.html.twig' %}
+      {{ form_end(shopUrlsForm) }}
+
+      {% include '@PrestaShop/Admin/Configure/ShopParameters/TrafficSeo/Meta/Blocks/domain_name_management.html.twig' %}
+
+      {% if urlSchemaForm is not empty %}
+        {{ form_start(urlSchemaForm, {attr : {class: 'form'}, action: path('admin_metas_url_schema_save') }) }}
           {% include '@PrestaShop/Admin/Configure/ShopParameters/TrafficSeo/Meta/Blocks/url_schema_configuration.html.twig' %}
-          {% include '@PrestaShop/Admin/Configure/ShopParameters/TrafficSeo/Meta/Blocks/seo_options_configuration.html.twig' %}
+        {{ form_end(urlSchemaForm) }}
+      {% endif %}
 
-          {% block meta_form_rest %}
-            {{ form_rest(metaForm) }}
-          {% endblock %}
+      {{ form_start(seoOptionsForm, {attr : {class: 'form'}, action: path('admin_metas_seo_options_save') }) }}
+        {% include '@PrestaShop/Admin/Configure/ShopParameters/TrafficSeo/Meta/Blocks/seo_options_configuration.html.twig' %}
+      {{ form_end(seoOptionsForm) }}
 
-        {{ form_end(metaForm) }}
 
-        {{ form_start(robotsForm, {'action': path('admin_metas_generate_robots_text_file')}) }}
-          {% include '@PrestaShop/Admin/Configure/ShopParameters/TrafficSeo/Meta/Blocks/robots_file_generation.html.twig' %}
-          {{ form_rest(robotsForm) }}
-        {{ form_end(robotsForm) }}
-      </div>
+      {{ form_start(robotsForm, {'action': path('admin_metas_generate_robots_text_file')}) }}
+        {% include '@PrestaShop/Admin/Configure/ShopParameters/TrafficSeo/Meta/Blocks/robots_file_generation.html.twig' %}
+      {{ form_end(robotsForm) }}
+    </div>
   </div>
 
 {% endblock %}

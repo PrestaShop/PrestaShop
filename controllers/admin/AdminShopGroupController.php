@@ -188,6 +188,15 @@ class AdminShopGroupControllerCore extends AdminController
                     'required' => true,
                 ],
                 [
+                    'type' => 'color',
+                    'label' => $this->trans('Color', [], 'Admin.Catalog.Feature'),
+                    'name' => 'color',
+                    'desc' => [
+                        $this->trans('It will only be applied to this group of shops, each store will keep its individual color.', [], 'Admin.Shopparameters.Feature'),
+                    ],
+                    'hint' => $this->trans('Choose a color with the color picker, or enter an HTML color (e.g. "lightblue", "#CC6600").', [], 'Admin.Catalog.Help'),
+                ],
+                [
                     'type' => 'switch',
                     'label' => $this->trans('Share customers', [], 'Admin.Advparameters.Feature'),
                     'name' => 'share_customer',
@@ -209,7 +218,7 @@ class AdminShopGroupControllerCore extends AdminController
                 ],
                 [
                     'type' => 'switch',
-                    'label' => $this->trans('Share available quantities to sell', [], 'Admin.Advparameters.Feature'),
+                    'label' => $this->trans('Share available quantities for sale', [], 'Admin.Advparameters.Feature'),
                     'name' => 'share_stock',
                     'required' => true,
                     'class' => 't',

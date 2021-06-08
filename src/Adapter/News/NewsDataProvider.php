@@ -32,20 +32,21 @@ use PrestaShop\PrestaShop\Adapter\Configuration;
 use PrestaShop\PrestaShop\Adapter\Country\CountryDataProvider;
 use PrestaShop\PrestaShop\Adapter\Tools;
 use PrestaShop\PrestaShop\Adapter\Validate;
+use stdClass;
 
 /**
  * Provide the news from https://www.prestashop.com/blog/
  */
 class NewsDataProvider
 {
-    const NUM_ARTICLES = 2;
+    public const NUM_ARTICLES = 2;
 
-    const CLOSED_ALLOWED_FAILURES = 3;
-    const CLOSED_TIMEOUT_SECONDS = 3;
+    public const CLOSED_ALLOWED_FAILURES = 3;
+    public const CLOSED_TIMEOUT_SECONDS = 3;
 
-    const OPEN_ALLOWED_FAILURES = 3;
-    const OPEN_TIMEOUT_SECONDS = 3;
-    const OPEN_THRESHOLD_SECONDS = 86400; // 24 hours
+    public const OPEN_ALLOWED_FAILURES = 3;
+    public const OPEN_TIMEOUT_SECONDS = 3;
+    public const OPEN_THRESHOLD_SECONDS = 86400; // 24 hours
 
     /**
      * @var CircuitBreakerInterface
@@ -138,6 +139,7 @@ class NewsDataProvider
             'utm_campaign' => 'back-office-' . $shop_default_iso_country,
         ];
 
+        /** @var stdClass $item */
         foreach ($rss->channel->item as $item) {
             if ($articles_limit == 0) {
                 break;

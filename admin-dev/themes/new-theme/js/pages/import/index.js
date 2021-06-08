@@ -25,7 +25,7 @@
 
 import ImportPage from './ImportPage';
 
-const $ = window.$;
+const {$} = window;
 
 $(() => {
   new ImportPage();

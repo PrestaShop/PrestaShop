@@ -5,7 +5,7 @@
       <trans-unit id="5ea77a701ee37e948810656ccde89075">
         <source>Click here to log in.</source>
         <target>Click here to log in.</target>
-        <note>Line: 812</note>
+        <note>Line: 775</note>
       </trans-unit>
     </body>
   </file>
@@ -42,7 +42,7 @@
       <trans-unit id="677b5abd7f9265257543a0f7258bc477">
         <source>Customize your store with this selection of modules recommended for your shop, based on your country, language and version of PrestaShop. It includes the most popular modules from our Addons marketplace, and free partner modules.</source>
         <target>Customize your store with this selection of modules recommended for your shop, based on your country, language and version of PrestaShop. It includes the most popular modules from our Addons marketplace, and free partner modules.</target>
-        <note>Line: 32</note>
+        <note>Line: 30</note>
       </trans-unit>
     </body>
   </file>
@@ -90,7 +90,7 @@
       <trans-unit id="5117b40edade2ab3a4f738db0542ca03">
         <source>These modules require your attention: you need to take some action to ensure they are fully operational.</source>
         <target>These modules require your attention: you need to take some action to ensure they are fully operational.</target>
-        <note>Line: 41</note>
+        <note>Line: 39</note>
       </trans-unit>
     </body>
   </file>
@@ -99,7 +99,7 @@
       <trans-unit id="94fcfae9285e19b611afe17a8565a394">
         <source>Update these modules to enjoy their latest versions.</source>
         <target>Update these modules to enjoy their latest versions.</target>
-        <note>Line: 41</note>
+        <note>Line: 39</note>
       </trans-unit>
     </body>
   </file>

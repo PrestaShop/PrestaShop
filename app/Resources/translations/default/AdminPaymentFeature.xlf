@@ -5,12 +5,12 @@
       <trans-unit id="3e15057a39314e679d553bd9b6522ec8">
         <source>Customer currency</source>
         <target>Customer currency</target>
-        <note>Line: 254</note>
+        <note>Line: 258</note>
       </trans-unit>
       <trans-unit id="cdf4c2da827655c1ea74209dd683c903">
         <source>Shop default currency</source>
         <target>Shop default currency</target>
-        <note>Line: 255</note>
+        <note>Line: 259</note>
       </trans-unit>
     </body>
   </file>
@@ -19,7 +19,7 @@
       <trans-unit id="c2aa74ac66698f48002031386e2d8776">
         <source>Active payment</source>
         <target>Active payment</target>
-        <note>Line: 35</note>
+        <note>Line: 52</note>
       </trans-unit>
     </body>
   </file>

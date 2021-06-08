@@ -33,7 +33,7 @@
   <tbody>
   {% for discount in discounts %}
     <tr>
-      <td>{{ discount.name }}</td>
+      <td class="discountList-name">{{ discount.name }}</td>
       <td>
         {% if discount.amountRaw.greaterThan(number(0)) %}-{% endif %}
         {{ discount.amountFormatted }}

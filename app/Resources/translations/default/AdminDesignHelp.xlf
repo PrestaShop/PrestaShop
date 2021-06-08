@@ -25,7 +25,7 @@
       <trans-unit id="85cf8b897040b0bc24d97db52d0922ee">
         <source>Select "No" only if your server timed out and you need to resume the regeneration.</source>
         <target>Select "No" only if your server timed out and you need to resume the regeneration.</target>
-        <note>Line: 122</note>
+        <note>Line: 121</note>
       </trans-unit>
     </body>
   </file>
@@ -214,12 +214,31 @@
       <trans-unit id="2acc315907b6b57c444b1885666f5bdd">
         <source>Used in the h1 page tag, and as the default title tag value.</source>
         <target>Used in the h1 page tag, and as the default title tag value.</target>
-        <note>Line: 99</note>
+        <note>Line: 103</note>
       </trans-unit>
       <trans-unit id="27043bc0eeca71692edf6c51fef16ee0">
         <source>Used to override the title tag value. If left blank, the default title value is used.</source>
         <target>Used to override the title tag value. If left blank, the default title value is used.</target>
-        <note>Line: 146</note>
+        <note>Line: 150</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="src/PrestaShopBundle/Form/Admin/Improve/Design/Theme/ImportThemeType.php" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="0d03fc8cc7c22c4ff80c5cda6f56ce8e">
+        <source>Browse your computer files and select the Zip file for your new theme.</source>
+        <target>Browse your computer files and select the Zip file for your new theme.</target>
+        <note>Line: 71</note>
+      </trans-unit>
+      <trans-unit id="f545e8220cd6f37617c495e59695f7f3">
+        <source>Indicate the complete URL to an online Zip file that contains your new theme. For instance, "http://example.com/files/theme.zip".</source>
+        <target>Indicate the complete URL to an online Zip file that contains your new theme. For instance, "http://example.com/files/theme.zip".</target>
+        <note>Line: 83</note>
+      </trans-unit>
+      <trans-unit id="87c309a4d1deb851c8522127c1aeae54">
+        <source>This selector lists the Zip files that you uploaded in the '/themes' folder.</source>
+        <target>This selector lists the Zip files that you uploaded in the '/themes' folder.</target>
+        <note>Line: 91</note>
       </trans-unit>
     </body>
   </file>
@@ -331,25 +350,6 @@ Once you enable the "%generate_rtl_label%" option, any RTL-specific file that yo
       </trans-unit>
     </body>
   </file>
-  <file original="src/PrestaShopBundle/Resources/views/Admin/Improve/Design/Theme/import.html.twig" source-language="en-US" target-language="en" datatype="plaintext">
-    <body>
-      <trans-unit id="0d03fc8cc7c22c4ff80c5cda6f56ce8e">
-        <source>Browse your computer files and select the Zip file for your new theme.</source>
-        <target>Browse your computer files and select the Zip file for your new theme.</target>
-        <note>Line: 59</note>
-      </trans-unit>
-      <trans-unit id="f545e8220cd6f37617c495e59695f7f3">
-        <source>Indicate the complete URL to an online Zip file that contains your new theme. For instance, "http://example.com/files/theme.zip".</source>
-        <target>Indicate the complete URL to an online Zip file that contains your new theme. For instance, "http://example.com/files/theme.zip".</target>
-        <note>Line: 84</note>
-      </trans-unit>
-      <trans-unit id="87c309a4d1deb851c8522127c1aeae54">
-        <source>This selector lists the Zip files that you uploaded in the '/themes' folder.</source>
-        <target>This selector lists the Zip files that you uploaded in the '/themes' folder.</target>
-        <note>Line: 109</note>
-      </trans-unit>
-    </body>
-  </file>
   <file original="src/PrestaShopBundle/Resources/views/Admin/Improve/Design/Theme/index.html.twig" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
       <trans-unit id="6894e313abf58dc29e27e6aef50b2f03">
@@ -369,12 +369,12 @@ Once you enable the "%generate_rtl_label%" option, any RTL-specific file that yo
       <trans-unit id="d97ccb3e617d930d52ffd95e5db2c101">
         <source>If you check a field, change its value, and save, the multistore behavior will not apply to this shop (or group), for this particular parameter.</source>
         <target>If you check a field, change its value, and save, the multistore behavior will not apply to this shop (or group), for this particular parameter.</target>
-        <note>Line: 299</note>
+        <note>Line: 295</note>
       </trans-unit>
       <trans-unit id="a1db50531c5baec8c2b17b2c58790c09">
         <source>You are editing this page for a specific shop or group. Click "%yes_label%" to check all fields, "%no_label%" to uncheck all.</source>
         <target>You are editing this page for a specific shop or group. Click "%yes_label%" to check all fields, "%no_label%" to uncheck all.</target>
-        <note>Line: 298</note>
+        <note>Line: 294</note>
       </trans-unit>
     </body>
   </file>

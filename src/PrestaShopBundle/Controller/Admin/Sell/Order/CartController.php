@@ -278,7 +278,7 @@ class CartController extends FrameworkBundleAdminController
                 $request->request->getBoolean('freeShipping'),
                 ($giftSettingsEnabled ? $request->request->getBoolean('isAGift', null) : null),
                 ($recycledPackagingEnabled ? $request->request->getBoolean('useRecycledPackaging', null) : null),
-                ((!empty($request->request->get('giftMessage', null))) ? $request->request->get('giftMessage', null) : null)
+                $request->request->get('giftMessage', null)
             ));
 
             return $this->json($this->getCartInfo($cartId));
@@ -399,6 +399,7 @@ class CartController extends FrameworkBundleAdminController
         try {
             $deleteSpecificPriceCommand = new DeleteSpecificPriceByCartProductCommand($cartId, $productId);
 
+            // @todo: this shouldn't be used use UpdateProductPriceInCartCommand
             $addSpecificPriceCommand = new AddSpecificPriceCommand(
                 $productId,
                 Reduction::TYPE_AMOUNT,
@@ -601,8 +602,8 @@ class CartController extends FrameworkBundleAdminController
             FileUploadException::class => [
                 UPLOAD_ERR_INI_SIZE => $this->trans(
                     'Max file size allowed is "%s" bytes.', 'Admin.Notifications.Error', [
-                    $iniConfig->getUploadMaxSizeInBytes(),
-                ]),
+                        $iniConfig->getUploadMaxSizeInBytes(),
+                    ]),
                 UPLOAD_ERR_EXTENSION => $this->trans(
                     'Image format not recognized, allowed formats are: .gif, .jpg, .png',
                     'Admin.Notifications.Error'

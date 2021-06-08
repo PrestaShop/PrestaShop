@@ -232,7 +232,7 @@ class WarehouseCore extends ObjectModel
         $query->where('id_warehouse = ' . (int) $id_warehouse);
         $query->where('deleted = 0');
 
-        return Db::getInstance(_PS_USE_SQL_SLAVE_)->getValue($query);
+        return Db::getInstance(_PS_USE_SQL_SLAVE_)->getValue($query, false);
     }
 
     /**

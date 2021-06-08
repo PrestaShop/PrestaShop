@@ -61,6 +61,15 @@ services:
             - '@=service("prestashop.adapter.shop.context").getContextListShopIDUsingCustomerSharingSettings()'
         public: true
 
+    prestashop.core.grid.query_builder.customer_address:
+        class: 'PrestaShop\PrestaShop\Core\Grid\Query\CustomerAddressQueryBuilder'
+        parent: 'prestashop.core.grid.abstract_query_builder'
+        arguments:
+            - '@prestashop.core.query.doctrine_search_criteria_applicator'
+            - "@=service('prestashop.adapter.legacy.context').getContext().language.id"
+            - '@=service("prestashop.adapter.shop.context").getContextListShopIDUsingCustomerSharingSettings()'
+        public: true
+
     prestashop.core.grid.quer_.builder.language:
         class: 'PrestaShop\PrestaShop\Core\Grid\Query\LanguageQueryBuilder'
         parent: 'prestashop.core.grid.abstract_query_builder'
@@ -124,7 +133,7 @@ services:
         parent: 'prestashop.core.grid.abstract_query_builder'
         arguments:
             - '@prestashop.core.query.doctrine_search_criteria_applicator'
-            - "@=service('prestashop.adapter.legacy.context').getContext().shop.id"
+            - "@=service('prestashop.adapter.legacy.context').getContext().employee.id_lang"
         public: true
 
     prestashop.core.grid.query_builder.category:
@@ -209,6 +218,16 @@ services:
             - '@=service("prestashop.adapter.legacy.context").getContext().language.id'
             - "@=service(\"prestashop.adapter.shop.context\").getContextListShopID(parameter('multishop.settings.share_orders'))"
 
+    prestashop.core.grid.query_builder.cart_rule:
+      class: 'PrestaShop\PrestaShop\Core\Grid\Query\CartRuleQueryBuilder'
+      parent: 'prestashop.core.grid.abstract_query_builder'
+      arguments:
+        - '@prestashop.core.query.doctrine_search_criteria_applicator'
+        - '@=service("prestashop.adapter.legacy.context").getContext().language.id'
+        - '@prestashop.adapter.shop.context'
+        - '@prestashop.adapter.feature.multistore'
+      public: true
+
     prestashop.core.grid.query_builder.catalog_price_rule:
         class: 'PrestaShop\PrestaShop\Core\Grid\Query\CatalogPriceRuleQueryBuilder'
         parent: 'prestashop.core.grid.abstract_query_builder'
@@ -289,3 +308,68 @@ services:
         - '@prestashop.core.query.doctrine_search_criteria_applicator'
         - '@=service("prestashop.adapter.shop.context").getContextListShopID()'
       public: true
+
+    prestashop.core.grid.query_builder.order_states:
+      class: 'PrestaShop\PrestaShop\Core\Grid\Query\OrderStatesQueryBuilder'
+      parent: 'prestashop.core.grid.abstract_query_builder'
+      arguments:
+        - '@prestashop.core.query.doctrine_search_criteria_applicator'
+        - "@=service('prestashop.adapter.legacy.context').getContext().language.id"
+        - '@=service("prestashop.adapter.shop.context").getContextListShopIDUsingCustomerSharingSettings()'
+      public: true
+
+    prestashop.core.grid.query_builder.order_return_states:
+      class: 'PrestaShop\PrestaShop\Core\Grid\Query\OrderReturnStatesQueryBuilder'
+      parent: 'prestashop.core.grid.abstract_query_builder'
+      arguments:
+        - '@prestashop.core.query.doctrine_search_criteria_applicator'
+        - "@=service('prestashop.adapter.legacy.context').getContext().language.id"
+        - '@=service("prestashop.adapter.shop.context").getContextListShopIDUsingCustomerSharingSettings()'
+      public: true
+
+    prestashop.core.grid.query_builder.log:
+        class: 'PrestaShop\PrestaShop\Core\Grid\Query\LogQueryBuilder'
+        parent: 'prestashop.core.grid.abstract_query_builder'
+        arguments:
+            - '@prestashop.core.query.doctrine_search_criteria_applicator'
+        public: true
+
+    prestashop.core.grid.query_builder.carrier:
+        class: 'PrestaShop\PrestaShop\Core\Grid\Query\CarrierQueryBuilder'
+        parent: 'prestashop.core.grid.abstract_query_builder'
+        arguments:
+            - '@prestashop.core.query.doctrine_search_criteria_applicator'
+            - "@=service('prestashop.adapter.legacy.context').getContext().language.id"
+            - '@=service("prestashop.adapter.shop.context").getContextListShopIDUsingCustomerSharingSettings()'
+        public: true
+
+    prestashop.core.grid.query_builder.request_sql:
+        class: 'PrestaShop\PrestaShop\Core\Grid\Query\RequestSqlQueryBuilder'
+        parent: 'prestashop.core.grid.abstract_query_builder'
+        arguments:
+            - '@prestashop.core.query.doctrine_search_criteria_applicator'
+        public: true
+
+    prestashop.core.grid.query_builder.outstanding:
+        class: 'PrestaShop\PrestaShop\Core\Grid\Query\OutstandingQueryBuilder'
+        parent: 'prestashop.core.grid.abstract_query_builder'
+        public: true
+        arguments:
+            - '@prestashop.core.query.doctrine_search_criteria_applicator'
+            - '@=service("prestashop.adapter.legacy.context").getContext().language.id'
+            - '@=service("prestashop.adapter.shop.context").getContextListShopID()'
+
+    prestashop.core.grid.query_builder.zone:
+        class: 'PrestaShop\PrestaShop\Core\Grid\Query\ZoneQueryBuilder'
+        parent: 'prestashop.core.grid.abstract_query_builder'
+        public: true
+        arguments:
+            - '@prestashop.core.query.doctrine_search_criteria_applicator'
+            - '@=service("prestashop.adapter.shop.context").getContextListShopId()'
+
+    prestashop.core.grid.query_builder.product_combination:
+        class: 'PrestaShop\PrestaShop\Core\Grid\Query\ProductCombinationQueryBuilder'
+        parent: 'prestashop.core.grid.abstract_query_builder'
+        public: true
+        arguments:
+            - '@prestashop.core.query.doctrine_search_criteria_applicator'

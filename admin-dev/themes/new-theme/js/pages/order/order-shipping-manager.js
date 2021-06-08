@@ -24,15 +24,15 @@
  */
 import OrderViewPageMap from './OrderViewPageMap';
 
-const $ = window.$;
+const {$} = window;
 
 export default class OrderShippingManager {
   constructor() {
-    this._initOrderShippingUpdateEventHandler();
+    this.initOrderShippingUpdateEventHandler();
   }
 
-  _initOrderShippingUpdateEventHandler() {
-    $(OrderViewPageMap.showOrderShippingUpdateModalBtn).on('click', (event) => {
+  initOrderShippingUpdateEventHandler() {
+    $(OrderViewPageMap.mainDiv).on('click', OrderViewPageMap.showOrderShippingUpdateModalBtn, (event) => {
       const $btn = $(event.currentTarget);
 
       $(OrderViewPageMap.updateOrderShippingTrackingNumberInput).val($btn.data('order-tracking-number'));

@@ -53,21 +53,29 @@ final class PositionDefinition implements PositionDefinitionInterface
     private $parentIdField;
 
     /**
+     * @var int
+     */
+    private $firstPosition;
+
+    /**
      * @param string $table
      * @param string $idField
      * @param string $positionField
      * @param string|null $parentIdField
+     * @param int $firstPosition
      */
     public function __construct(
         $table,
         $idField,
         $positionField,
-        $parentIdField = null
+        $parentIdField = null,
+        int $firstPosition = 0
     ) {
         $this->table = $table;
         $this->idField = $idField;
         $this->positionField = $positionField;
         $this->parentIdField = $parentIdField;
+        $this->firstPosition = $firstPosition;
     }
 
     /**
@@ -100,5 +108,13 @@ final class PositionDefinition implements PositionDefinitionInterface
     public function getParentIdField()
     {
         return $this->parentIdField;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getFirstPosition(): int
+    {
+        return $this->firstPosition;
     }
 }

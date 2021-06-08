@@ -26,7 +26,7 @@
 
 namespace PrestaShopBundle\Command;
 
-use PrestaShopBundle\Translation\PrestaShopTranslatorTrait;
+use PrestaShopBundle\Translation\Translator;
 use Symfony\Bundle\FrameworkBundle\Command\ContainerAwareCommand;
 use Symfony\Component\Console\Helper\ProgressBar;
 use Symfony\Component\Console\Input\InputInterface;
@@ -112,9 +112,9 @@ class CheckTranslationDuplicatesCommand extends ContainerAwareCommand
     protected function removeParams($message)
     {
         // Remove PrestaShop arguments %<arg>%
-        $message = preg_replace(PrestaShopTranslatorTrait::$regexClassicParams, '~', $message);
+        $message = preg_replace(Translator::$regexClassicParams, '~', $message);
         // Remove all related sprintf arguments
-        $message = preg_replace(PrestaShopTranslatorTrait::$regexSprintfParams, '~', $message);
+        $message = preg_replace(Translator::$regexSprintfParams, '~', $message);
 
         return $message;
     }

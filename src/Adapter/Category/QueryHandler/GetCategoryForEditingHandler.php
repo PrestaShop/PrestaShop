@@ -31,6 +31,7 @@ use Db;
 use ImageManager;
 use ImageType;
 use PDO;
+use PrestaShop\PrestaShop\Core\Domain\Category\Exception\CannotEditRootCategoryException;
 use PrestaShop\PrestaShop\Core\Domain\Category\Exception\CategoryNotFoundException;
 use PrestaShop\PrestaShop\Core\Domain\Category\Query\GetCategoryForEditing;
 use PrestaShop\PrestaShop\Core\Domain\Category\QueryHandler\GetCategoryForEditingHandlerInterface;
@@ -62,6 +63,7 @@ final class GetCategoryForEditingHandler implements GetCategoryForEditingHandler
      * {@inheritdoc}
      *
      * @throws CategoryNotFoundException
+     * @throws CannotEditRootCategoryException
      */
     public function handle(GetCategoryForEditing $query)
     {
@@ -69,6 +71,10 @@ final class GetCategoryForEditingHandler implements GetCategoryForEditingHandler
 
         if (!$category->id || (!$category->isAssociatedToShop() && Shop::getContext() == Shop::CONTEXT_SHOP)) {
             throw new CategoryNotFoundException($query->getCategoryId(), sprintf('Category with id "%s" was not found', $query->getCategoryId()->getValue()));
+        }
+
+        if ($category->isRootCategory()) {
+            throw new CannotEditRootCategoryException();
         }
 
         /**
@@ -141,7 +147,7 @@ final class GetCategoryForEditingHandler implements GetCategoryForEditingHandler
     /**
      * @param CategoryId $categoryId
      *
-     * @return array
+     * @return array|null
      */
     private function getThumbnailImage(CategoryId $categoryId)
     {

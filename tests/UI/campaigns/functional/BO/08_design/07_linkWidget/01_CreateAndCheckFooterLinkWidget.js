@@ -14,6 +14,7 @@ const foHomePage = require('@pages/FO/home');
 
 // Import data
 const {LinkWidgets} = require('@data/demo/linkWidgets');
+const {hooks} = require('@data/demo/hooks');
 
 // Import test context
 const testContext = require('@utils/testContext');
@@ -75,7 +76,7 @@ describe('Create footer link widget and check it in FO', async () => {
       const textResult = await addLinkWidgetPage.addLinkWidget(page, LinkWidgets.demo_1);
       await expect(textResult).to.equal(linkWidgetsPage.successfulCreationMessage);
 
-      numberOfLinkWidgetInFooter = await linkWidgetsPage.getNumberOfElementInGrid(page, 35);
+      numberOfLinkWidgetInFooter = await linkWidgetsPage.getNumberOfElementInGrid(page, hooks.displayFooter.name);
       await expect(numberOfLinkWidgetInFooter).to.be.above(0);
     });
   });
@@ -110,10 +111,17 @@ describe('Create footer link widget and check it in FO', async () => {
     it('should delete link widget created', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'deleteLinkWidget', baseContext);
 
-      const textResult = await linkWidgetsPage.deleteLinkWidget(page, 35, numberOfLinkWidgetInFooter);
+      const textResult = await linkWidgetsPage.deleteLinkWidget(
+        page,
+        hooks.displayFooter.name,
+        numberOfLinkWidgetInFooter,
+      );
       await expect(textResult).to.equal(linkWidgetsPage.successfulDeleteMessage);
 
-      const numberOfLinkWidgetAfterDelete = await linkWidgetsPage.getNumberOfElementInGrid(page, 35);
+      const numberOfLinkWidgetAfterDelete = await linkWidgetsPage.getNumberOfElementInGrid(
+        page,
+        hooks.displayFooter.name,
+      );
       await expect(numberOfLinkWidgetAfterDelete).to.equal(numberOfLinkWidgetInFooter - 1);
     });
   });

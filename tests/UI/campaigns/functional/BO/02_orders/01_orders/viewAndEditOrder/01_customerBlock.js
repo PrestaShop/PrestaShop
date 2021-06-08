@@ -9,6 +9,11 @@ const loginCommon = require('@commonTests/loginBO');
 // Import pages
 const dashboardPage = require('@pages/BO/dashboard');
 const foHomePage = require('@pages/FO/home');
+const foLoginPage = require('@pages/FO/login');
+const foCreateAccountPage = require('@pages/FO/myAccount/add');
+const foMyAccountPage = require('@pages/FO/myAccount');
+const foAddressesPage = require('@pages/FO/myAccount/addresses');
+const foAddAddressesPage = require('@pages/FO/myAccount/addAddress');
 const foProductPage = require('@pages/FO/product');
 const foCartPage = require('@pages/FO/cart');
 const foCheckoutPage = require('@pages/FO/checkout');
@@ -16,6 +21,7 @@ const foOrderConfirmationPage = require('@pages/FO/checkout/orderConfirmation');
 const ordersPage = require('@pages/BO/orders');
 const viewOrderPage = require('@pages/BO/orders/view');
 const customersPage = require('@pages/BO/customers');
+const addressesPage = require('@pages/BO/customers/addresses');
 const viewCustomerPage = require('@pages/BO/customers/view');
 
 // Import data
@@ -35,13 +41,19 @@ const {expect} = require('chai');
 let browserContext;
 let page;
 
-const customerData = new CustomerFaker({password: ''});
-const addressData = new AddressFaker({country: 'France'});
+const customerData = new CustomerFaker();
+const firstAddressData = new AddressFaker({firstName: 'first', country: 'France'});
+const secondAddressData = new AddressFaker({firstName: 'second', country: 'France'});
+const editShippingAddressData = new AddressFaker({country: 'France'});
+const editInvoiceAddressData = new AddressFaker({country: 'France'});
+
 const privateNote = 'Test private note';
 let customerID = 0;
+let addressID = 0;
 
 /*
-Create order by guest in FO
+Pre-Conditions (Create customer, create 2 addresses for the customer in FO)
+Create order by new customer in FO
 Go to orders page BO and view the created order page
 Check customer block content
 - Customer’s title, name, last name, customer reference
@@ -51,7 +63,7 @@ Check customer block content
 Check that private note is closed by default
 Check that the other customer doesn't have the private note
 */
-describe('Check customer block in view order page', async () => {
+describe('Check and edit customer block in view order page', async () => {
   // before and after functions
   before(async function () {
     browserContext = await helper.createBrowserContext(this.browser);
@@ -72,15 +84,82 @@ describe('Check customer block in view order page', async () => {
     await expect(isHomePage, 'Fail to open FO home page').to.be.true;
   });
 
+  // Pre-Condition - create customer
+  describe('Create new customer', async () => {
+    it('should go to create account page', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'goToCreateAccountPage', baseContext);
+
+      await foHomePage.goToLoginPage(page);
+      await foLoginPage.goToCreateAccountPage(page);
+
+      const pageHeaderTitle = await foCreateAccountPage.getHeaderTitle(page);
+      await expect(pageHeaderTitle).to.equal(foCreateAccountPage.formTitle);
+    });
+
+    it('should create new account', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'createAccount', baseContext);
+
+      await foCreateAccountPage.createAccount(page, customerData);
+
+      const isCustomerConnected = await foHomePage.isCustomerConnected(page);
+      await expect(isCustomerConnected).to.be.true;
+    });
+  });
+
+  // Pre-Condition - Create 2 addresses for the customer
+  describe('Create address', async () => {
+    it('should go to my account page', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'goToAccountPage', baseContext);
+
+      await foHomePage.goToMyAccountPage(page);
+
+      const pageTitle = await foMyAccountPage.getPageTitle(page);
+      await expect(pageTitle).to.equal(foMyAccountPage.pageTitle);
+    });
+
+    it('should go to addresses page', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'goToFOAddressesPage', baseContext);
+
+      await foMyAccountPage.goToAddFirstAddressPage(page);
+
+      const pageHeaderTitle = await foAddressesPage.getPageTitle(page);
+      await expect(pageHeaderTitle).to.equal(foAddressesPage.addressPageTitle);
+    });
+
+    it('should create new address', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'createAddress', baseContext);
+
+      const textResult = await foAddAddressesPage.setAddress(page, firstAddressData);
+      await expect(textResult).to.equal(foAddressesPage.addAddressSuccessfulMessage);
+    });
+
+    it('should go to create address page', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'goToNewAddressPage2', baseContext);
+
+      await foAddressesPage.openNewAddressForm(page);
+
+      const pageHeaderTitle = await foAddAddressesPage.getHeaderTitle(page);
+      await expect(pageHeaderTitle).to.equal(foAddAddressesPage.creationFormTitle);
+    });
+
+    it('should create the second address', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'createAddress2', baseContext);
+
+      const textResult = await foAddAddressesPage.setAddress(page, secondAddressData);
+      await expect(textResult).to.equal(foAddressesPage.addAddressSuccessfulMessage);
+    });
+  });
+
   // 1 - create order
   describe(`Create order by '${customerData.firstName} ${customerData.lastName}' in FO`, async () => {
-    it('should add product to cart and go to checkout page', async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'addProductToCart', baseContext);
+    it('should create an order', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'createOrder', baseContext);
 
-      await foHomePage.goToHomePage(page);
+      // Go to home page
+      await foLoginPage.goToHomePage(page);
 
-      // Go to the fourth product page
-      await foHomePage.goToProductPage(page, 4);
+      // Go to the first product page
+      await foHomePage.goToProductPage(page, 1);
 
       // Add the created product to the cart
       await foProductPage.addProductToTheCart(page);
@@ -88,27 +167,9 @@ describe('Check customer block in view order page', async () => {
       // Proceed to checkout the shopping cart
       await foCartPage.clickOnProceedToCheckout(page);
 
-      // Go to checkout page
-      const isCheckoutPage = await foCheckoutPage.isCheckoutPage(page);
-      await expect(isCheckoutPage).to.be.true;
-    });
-
-    it('should fill guest personal information', async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'setPersonalInformation', baseContext);
-
-      const isStepPersonalInfoCompleted = await foCheckoutPage.setGuestPersonalInformation(page, customerData);
-      await expect(isStepPersonalInfoCompleted, 'Step personal information is not completed').to.be.true;
-    });
-
-    it('should fill address form and go to delivery step', async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'setAddressStep', baseContext);
-
-      const isStepAddressComplete = await foCheckoutPage.setAddress(page, addressData);
+      // Address step - Go to delivery step
+      const isStepAddressComplete = await foCheckoutPage.goToDeliveryStep(page);
       await expect(isStepAddressComplete, 'Step Address is not complete').to.be.true;
-    });
-
-    it('should validate the order', async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'validateOrder', baseContext);
 
       // Delivery step - Go to payment step
       const isStepDeliveryComplete = await foCheckoutPage.goToPaymentStep(page);
@@ -188,6 +249,30 @@ describe('Check customer block in view order page', async () => {
       await expect(customerID).to.be.above(0);
     });
 
+    it('should go to Addresses page', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'goToAddressesPage', baseContext);
+
+      await dashboardPage.goToSubMenu(
+        page,
+        dashboardPage.customersParentLink,
+        dashboardPage.addressesLink,
+      );
+
+      const pageTitle = await addressesPage.getPageTitle(page);
+      await expect(pageTitle).to.contains(addressesPage.pageTitle);
+    });
+
+    it('should get the customer address ID', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'getCustomerAddressID', baseContext);
+
+      await addressesPage.filterAddresses(page, 'input', 'firstname', secondAddressData.firstName);
+
+      const numberOfAddressesAfterFilter = await addressesPage.getNumberOfElementInGrid(page);
+      await expect(numberOfAddressesAfterFilter).to.be.at.most(1);
+
+      addressID = await addressesPage.getTextColumnFromTableAddresses(page, 1, 'id_address');
+    });
+
     it('should go back to Orders page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'goBackToOrdersPage1', baseContext);
 
@@ -227,14 +312,13 @@ describe('Check customer block in view order page', async () => {
       await expect(customerInfo).to.contains(customerData.firstName);
       await expect(customerInfo).to.contains(customerData.lastName);
       await expect(customerInfo).to.contains(customerID.toString());
-      await expect(customerInfo).to.contains('Guest');
     });
 
     it('should check customer email', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'checkCustomerEmail', baseContext);
 
       const customerEmail = await viewOrderPage.getCustomerEmail(page);
-      await expect(customerEmail).to.contains(customerData.email);
+      await expect(customerEmail).to.contains(`mailto:${customerData.email}`);
     });
 
     it('should check validated orders number', async function () {
@@ -244,30 +328,68 @@ describe('Check customer block in view order page', async () => {
       await expect(customerEmail).to.equal(0);
     });
 
-    it('should check order shipping', async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'checkShippingAddress', baseContext);
+    it('should edit existing shipping address and check it', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'editShippingAddress', baseContext);
+
+      const shippingAddress = await viewOrderPage.editExistingShippingAddress(page, editShippingAddressData);
+      await expect(shippingAddress)
+        .to.contain(editShippingAddressData.firstName)
+        .and.to.contain(editShippingAddressData.lastName)
+        .and.to.contain(editShippingAddressData.address)
+        .and.to.contain(editShippingAddressData.postalCode)
+        .and.to.contain(editShippingAddressData.city)
+        .and.to.contain(editShippingAddressData.country);
+    });
+
+    it('should select another shipping address and check it', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'selectAnotherShippingAddress', baseContext);
+
+      const addressToSelect = `${addressID}- ${secondAddressData.address} ${secondAddressData.secondAddress} `
+        + `${secondAddressData.postalCode} ${secondAddressData.city}`;
+
+      const alertMessage = await viewOrderPage.selectAnotherShippingAddress(page, addressToSelect);
+      expect(alertMessage).to.contains(viewOrderPage.successfulUpdateMessage);
 
       const shippingAddress = await viewOrderPage.getShippingAddress(page);
       await expect(shippingAddress)
-        .to.contain(customerData.firstName)
-        .and.to.contain(customerData.lastName)
-        .and.to.contain(addressData.address)
-        .and.to.contain(addressData.postalCode)
-        .and.to.contain(addressData.city)
-        .and.to.contain(addressData.country);
+        .to.contain(secondAddressData.firstName)
+        .and.to.contain(secondAddressData.lastName)
+        .and.to.contain(secondAddressData.address)
+        .and.to.contain(secondAddressData.postalCode)
+        .and.to.contain(secondAddressData.city)
+        .and.to.contain(secondAddressData.country);
     });
 
-    it('should check order invoice', async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'checkInvoiceAddress', baseContext);
+    it('should edit existing invoice address and check it', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'editInvoiceAddress', baseContext);
 
-      const invoiceAddress = await viewOrderPage.getInvoiceAddress(page);
+      const invoiceAddress = await viewOrderPage.editExistingInvoiceAddress(page, editInvoiceAddressData);
       await expect(invoiceAddress)
-        .to.contain(customerData.firstName)
-        .and.to.contain(customerData.lastName)
-        .and.to.contain(addressData.address)
-        .and.to.contain(addressData.postalCode)
-        .and.to.contain(addressData.city)
-        .and.to.contain(addressData.country);
+        .to.contain(editInvoiceAddressData.firstName)
+        .and.to.contain(editInvoiceAddressData.lastName)
+        .and.to.contain(editInvoiceAddressData.address)
+        .and.to.contain(editInvoiceAddressData.postalCode)
+        .and.to.contain(editInvoiceAddressData.city)
+        .and.to.contain(editInvoiceAddressData.country);
+    });
+
+    it('should select another invoice address and check it', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'selectAnotherInvoiceAddress', baseContext);
+
+      const addressToSelect = `${addressID}- ${secondAddressData.address} ${secondAddressData.secondAddress} `
+        + `${secondAddressData.postalCode} ${secondAddressData.city}`;
+
+      const alertMessage = await viewOrderPage.selectAnotherInvoiceAddress(page, addressToSelect);
+      expect(alertMessage).to.contains(viewOrderPage.successfulUpdateMessage);
+
+      const shippingAddress = await viewOrderPage.getInvoiceAddress(page);
+      await expect(shippingAddress)
+        .to.contain(secondAddressData.firstName)
+        .and.to.contain(secondAddressData.lastName)
+        .and.to.contain(secondAddressData.address)
+        .and.to.contain(secondAddressData.postalCode)
+        .and.to.contain(secondAddressData.city)
+        .and.to.contain(secondAddressData.country);
     });
 
     it('should check that private note textarea is not visible', async function () {
@@ -423,7 +545,7 @@ describe('Check customer block in view order page', async () => {
   });
 
   // 4 - Delete the created customer
-  describe(`Delete the customer ${customerData.lastName}`, async () => {
+  describe(`Delete the created customer '${customerData.firstName} ${customerData.lastName}'`, async () => {
     it('should go customers page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'goToCustomersPage', baseContext);
 
@@ -448,7 +570,7 @@ describe('Check customer block in view order page', async () => {
       await expect(textResult).to.contains(customerData.email);
     });
 
-    it('should delete customer and check Result', async function () {
+    it('should delete customer and check result', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'deleteCustomer', baseContext);
 
       const deleteTextResult = await customersPage.deleteCustomer(page, 1);

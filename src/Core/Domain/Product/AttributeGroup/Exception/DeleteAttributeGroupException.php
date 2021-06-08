@@ -34,10 +34,10 @@ class DeleteAttributeGroupException extends AttributeGroupException
     /**
      * When trying to delete single attribute group fails
      */
-    const FAILED_DELETE = 10;
+    public const FAILED_DELETE = 10;
 
     /**
      * When deleting in bulk action fails
      */
-    const FAILED_BULK_DELETE = 20;
+    public const FAILED_BULK_DELETE = 20;
 }

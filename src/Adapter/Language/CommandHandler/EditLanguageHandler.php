@@ -29,6 +29,7 @@ namespace PrestaShop\PrestaShop\Adapter\Language\CommandHandler;
 use Configuration;
 use Db;
 use Language;
+use PrestaShop\PrestaShop\Adapter\Image\ImageValidator;
 use PrestaShop\PrestaShop\Core\Domain\Language\Command\EditLanguageCommand;
 use PrestaShop\PrestaShop\Core\Domain\Language\CommandHandler\EditLanguageHandlerInterface;
 use PrestaShop\PrestaShop\Core\Domain\Language\Exception\CannotDisableDefaultLanguageException;
@@ -44,21 +45,41 @@ use PrestaShop\PrestaShop\Core\Domain\Language\ValueObject\IsoCode;
 final class EditLanguageHandler extends AbstractLanguageHandler implements EditLanguageHandlerInterface
 {
     /**
+     * @var ImageValidator
+     */
+    private $imageValidator;
+
+    public function __construct(ImageValidator $imageValidator)
+    {
+        $this->imageValidator = $imageValidator;
+    }
+
+    /**
      * {@inheritdoc}
      */
     public function handle(EditLanguageCommand $command)
     {
+        if ($command->getNoPictureImagePath()) {
+            $this->imageValidator->assertFileUploadLimits($command->getNoPictureImagePath());
+            $this->imageValidator->assertIsValidImageType($command->getNoPictureImagePath());
+        }
+
+        if ($command->getFlagImagePath()) {
+            $this->imageValidator->assertFileUploadLimits($command->getFlagImagePath());
+            $this->imageValidator->assertIsValidImageType($command->getFlagImagePath());
+        }
+
         $language = $this->getLegacyLanguageObject($command->getLanguageId());
 
         $this->assertLanguageWithIsoCodeDoesNotExist($language, $command);
         $this->assertDefaultLanguageIsNotDisabled($command);
 
-        $this->copyNoPictureIfChanged($language, $command);
         $this->updateEmployeeLanguage($command);
         $this->moveTranslationsIfIsoChanged($language, $command);
 
         $this->updateLanguageWithCommandData($language, $command);
         $this->updateShopAssociationIfChanged($language, $command);
+        $this->copyNoPictureIfChanged($language, $command);
         $this->uploadFlagImageIfChanged($language, $command);
     }
 
@@ -230,9 +251,10 @@ final class EditLanguageHandler extends AbstractLanguageHandler implements EditL
             return;
         }
 
-        if ($language->iso_code === $command->getIsoCode()->getValue()
-            && Language::getIdByIso($command->getIsoCode()->getValue())
+        /* @phpstan-ignore-next-line */
+        if ($language->iso_code === $command->getIsoCode()->getValue() && Language::getIdByIso($command->getIsoCode()->getValue())
         ) {
+            /* @phpstan-ignore-next-line */
             throw new LanguageConstraintException(sprintf('Language with ISO code "%s" already exists', $command->getIsoCode()->getValue()), LanguageConstraintException::INVALID_ISO_CODE);
         }
     }

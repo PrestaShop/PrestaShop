@@ -162,7 +162,7 @@ class CombineCompressCacheConfiguration implements DataConfigurationInterface
     /**
      * Update Cache version of assets if needed.
      *
-     * @param array the configuration
+     * @param array $configuration
      */
     private function updateCachesVersionsIfNeeded(array $configuration)
     {

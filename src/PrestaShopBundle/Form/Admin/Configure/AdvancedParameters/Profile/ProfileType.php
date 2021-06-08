@@ -31,6 +31,7 @@ use PrestaShop\PrestaShop\Core\ConstraintValidator\Constraints\TypedRegex;
 use PrestaShop\PrestaShop\Core\Domain\Profile\ProfileSettings;
 use PrestaShopBundle\Form\Admin\Type\TranslatableType;
 use Symfony\Component\Form\AbstractType;
+use Symfony\Component\Form\Extension\Core\Type\FileType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\Translation\TranslatorInterface;
@@ -76,6 +77,12 @@ class ProfileType extends AbstractType
                             ),
                         ]),
                     ],
+                ],
+            ])
+            ->add('avatarUrl', FileType::class, [
+                'required' => false,
+                'attr' => [
+                    'accept' => 'gif,jpg,jpeg,jpe,png',
                 ],
             ])
         ;

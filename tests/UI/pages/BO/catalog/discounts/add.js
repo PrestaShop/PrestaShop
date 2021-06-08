@@ -22,10 +22,10 @@ class AddCartRule extends BOBasePage {
     this.generateButton = '#cart_rule_informations  a.btn-default';
 
     // Toggle Selectors
-    this.highlightToggle = toggle => `${this.cartRuleForm} label[for='highlight_${toggle}']`;
-    this.partialUseToggle = toggle => `${this.cartRuleForm} label[for='partial_use_${toggle}']`;
+    this.highlightToggle = toggle => `${this.cartRuleForm} #highlight_${toggle}`;
+    this.partialUseToggle = toggle => `${this.cartRuleForm} #partial_use_${toggle}`;
     this.priorityInput = `${this.cartRuleForm} input[name='priority']`;
-    this.statusToggle = toggle => `${this.cartRuleForm} label[for='active_${toggle}']`;
+    this.statusToggle = toggle => `${this.cartRuleForm} #active_${toggle}`;
 
     // Conditions tab
     this.conditionsTabLink = '#cart_rule_link_conditions';
@@ -51,10 +51,10 @@ class AddCartRule extends BOBasePage {
 
     // Actions tab
     this.actionsTabLink = '#cart_rule_link_actions';
-    this.freeShippingToggle = toggle => `${this.cartRuleForm} label[for='free_shipping_${toggle}']`;
+    this.freeShippingToggle = toggle => `${this.cartRuleForm} #free_shipping_${toggle}`;
 
     // Discount percent selectors
-    this.applyDiscountRadioButton = toggle => `${this.cartRuleForm} label[for='apply_discount_${toggle}']`;
+    this.applyDiscountRadioButton = toggle => `${this.cartRuleForm} #apply_discount_${toggle}`;
     this.discountPercentRadioButton = this.applyDiscountRadioButton('percent');
     this.discountPercentInput = '#reduction_percent';
 
@@ -68,9 +68,8 @@ class AddCartRule extends BOBasePage {
     this.discountOffRadioButton = this.applyDiscountRadioButton('off');
 
     // Exclude discount products and free gift selectors
-    this.excludeDiscountProductsToggle = toggle => `${this.cartRuleForm} label`
-      + `[for='reduction_exclude_special_${toggle}']`;
-    this.sendFreeGifToggle = toggle => `${this.cartRuleForm} label[for='free_gift_${toggle}']`;
+    this.excludeDiscountProductsToggle = toggle => `${this.cartRuleForm} #reduction_exclude_special_${toggle}`;
+    this.sendFreeGifToggle = toggle => `${this.cartRuleForm} #free_gift_${toggle}`;
     this.freeGiftFilterInput = '#giftProductFilter';
     this.freeGiftProductSelect = '#gift_product';
     // Form footer selectors
@@ -100,14 +99,14 @@ class AddCartRule extends BOBasePage {
     }
 
     // Set toggles
-    await page.click(this.highlightToggle(cartRuleData.highlight ? 'on' : 'off'));
-    await page.click(this.partialUseToggle(cartRuleData.partialUse ? 'on' : 'off'));
+    await page.check(this.highlightToggle(cartRuleData.highlight ? 'on' : 'off'));
+    await page.check(this.partialUseToggle(cartRuleData.partialUse ? 'on' : 'off'));
 
     // Set priority
     await this.setValue(page, this.priorityInput, cartRuleData.priority);
 
     // Set status
-    await page.click(this.statusToggle(cartRuleData.status ? 'on' : 'off'));
+    await page.check(this.statusToggle(cartRuleData.status ? 'on' : 'off'));
   }
 
   /**
@@ -163,23 +162,23 @@ class AddCartRule extends BOBasePage {
     await page.click(this.actionsTabLink);
 
     // Set free shipping toggle
-    await page.click(this.freeShippingToggle(cartRuleData.freeShipping ? 'on' : 'off'));
+    await page.check(this.freeShippingToggle(cartRuleData.freeShipping ? 'on' : 'off'));
 
     switch (cartRuleData.discountType) {
       case 'Percent':
-        await page.click(this.discountPercentRadioButton);
+        await page.check(this.discountPercentRadioButton);
         await this.setValue(page, this.discountPercentInput, cartRuleData.discountPercent.toString());
-        await page.click(this.excludeDiscountProductsToggle(cartRuleData.excludeDiscountProducts ? 'on' : 'off'));
+        await page.check(this.excludeDiscountProductsToggle(cartRuleData.excludeDiscountProducts ? 'on' : 'off'));
         break;
       case 'Amount':
-        await page.click(this.discountAmountRadioButton);
+        await page.check(this.discountAmountRadioButton);
         await this.setValue(page, this.discountAmountInput, cartRuleData.discountAmount.value.toString());
         await this.selectByVisibleText(page, this.discountAmountCurrencySelect, cartRuleData.discountAmount.currency);
         await this.selectByVisibleText(page, this.discountAmountTaxSelect, cartRuleData.discountAmount.tax);
         break;
       case 'None':
-        await page.click(this.discountOffRadioButton);
-        await page.click(this.excludeDiscountProductsToggle(cartRuleData.excludeDiscountProducts ? 'on' : 'off'));
+        await page.check(this.discountOffRadioButton);
+        await page.check(this.excludeDiscountProductsToggle(cartRuleData.excludeDiscountProducts ? 'on' : 'off'));
         break;
       default:
         // Do nothing for this option
@@ -187,7 +186,7 @@ class AddCartRule extends BOBasePage {
     }
 
     // Set free gift
-    await page.click(this.sendFreeGifToggle(cartRuleData.freeGift ? 'on' : 'off'));
+    await page.check(this.sendFreeGifToggle(cartRuleData.freeGift ? 'on' : 'off'));
 
     if (cartRuleData.freeGift) {
       await this.setValue(page, this.freeGiftFilterInput, cartRuleData.freeGiftProduct.name);

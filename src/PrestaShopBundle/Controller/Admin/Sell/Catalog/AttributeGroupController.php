@@ -33,6 +33,7 @@ use PrestaShop\PrestaShop\Core\Domain\Product\AttributeGroup\Exception\Attribute
 use PrestaShop\PrestaShop\Core\Domain\Product\AttributeGroup\Exception\DeleteAttributeGroupException;
 use PrestaShop\PrestaShop\Core\Domain\ShowcaseCard\Query\GetShowcaseCardIsClosed;
 use PrestaShop\PrestaShop\Core\Domain\ShowcaseCard\ValueObject\ShowcaseCard;
+use PrestaShop\PrestaShop\Core\Exception\TranslatableCoreException;
 use PrestaShop\PrestaShop\Core\Search\Filters\AttributeGroupFilters;
 use PrestaShopBundle\Controller\Admin\FrameworkBundleAdminController;
 use PrestaShopBundle\Security\Annotation\AdminSecurity;
@@ -90,11 +91,11 @@ class AttributeGroupController extends FrameworkBundleAdminController
      *     message="You do not have permission to update this."
      * )
      *
-     * @param $attributeGroupId
+     * @param int $attributeGroupId
      *
      * @return RedirectResponse
      */
-    public function editAction($attributeGroupId)
+    public function editAction(int $attributeGroupId)
     {
         //@todo: implement in antoher pr
         return $this->redirectToRoute('admin_attribute_groups_index');
@@ -107,11 +108,11 @@ class AttributeGroupController extends FrameworkBundleAdminController
      * )
 
      *
-     * @param $attributeGroupId
+     * @param int $attributeGroupId
      *
      * @return RedirectResponse
      */
-    public function exportAction($attributeGroupId)
+    public function exportAction(int $attributeGroupId)
     {
         //@todo: implement in antoher pr
         return $this->redirectToRoute('admin_attribute_groups_index');
@@ -142,9 +143,11 @@ class AttributeGroupController extends FrameworkBundleAdminController
             $updater = $this->get('prestashop.core.grid.position.doctrine_grid_position_updater');
             $updater->update($positionUpdate);
             $this->addFlash('success', $this->trans('Successful update.', 'Admin.Notifications.Success'));
-        } catch (Exception $e) {
+        } catch (TranslatableCoreException $e) {
             $errors = [$e->toArray()];
             $this->flashErrors($errors);
+        } catch (Exception $e) {
+            $this->flashErrors([$e->getMessage()]);
         }
 
         return $this->redirectToRoute('admin_attribute_groups_index');

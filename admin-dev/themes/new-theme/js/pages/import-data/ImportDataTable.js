@@ -23,7 +23,7 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
 
-const $ = window.$;
+const {$} = window;
 
 const $importDataTable = $('.js-import-data-table');
 
@@ -35,8 +35,8 @@ const BACKWARD = 'backward';
 
 export default class ImportDataTable {
   constructor() {
-    this.numberOfColumnsPerPage = this._getNumberOfVisibleColumns();
-    this.totalNumberOfColumns = this._getTotalNumberOfColumns();
+    this.numberOfColumnsPerPage = this.getNumberOfVisibleColumns();
+    this.totalNumberOfColumns = this.getTotalNumberOfColumns();
 
     $('.js-import-next-page').on('click', () => this.importNextPageHandler());
     $('.js-import-previous-page').on('click', () => this.importPreviousPageHandler());
@@ -46,14 +46,14 @@ export default class ImportDataTable {
    * Handle the next page action in import data table.
    */
   importNextPageHandler() {
-    this._importPaginationHandler(FORWARD);
+    this.importPaginationHandler(FORWARD);
   }
 
   /**
    * Handle the previous page action in import data table.
    */
   importPreviousPageHandler() {
-    this._importPaginationHandler(BACKWARD);
+    this.importPaginationHandler(BACKWARD);
   }
 
   /**
@@ -62,7 +62,7 @@ export default class ImportDataTable {
    * @param {string} direction
    * @private
    */
-  _importPaginationHandler(direction) {
+  importPaginationHandler(direction) {
     const $currentPageElements = $importDataTable.find('th:visible,td:visible');
     const $oppositePaginationButton = direction === FORWARD ? $('.js-import-next-page') : $('.js-import-previous-page');
     let lastVisibleColumnFound = false;
@@ -74,48 +74,49 @@ export default class ImportDataTable {
       $tableColumns = $($tableColumns.toArray().reverse());
     }
 
-    for (let index in $tableColumns) {
-      if (isNaN(index)) {
+    /* eslint-disable-next-line */
+    for (const index in $tableColumns) {
+      if (Number.isNaN(index)) {
         // Reached the last column - hide the opposite pagination button
-        this._hide($oppositePaginationButton);
+        this.hide($oppositePaginationButton);
         break;
       }
 
       // Searching for last visible column
       if ($($tableColumns[index]).is(':visible')) {
         lastVisibleColumnFound = true;
+        /* eslint-disable-next-line no-continue */
         continue;
       }
 
       // If last visible column was found - show the column after it
       if (lastVisibleColumnFound) {
         // If going backward, the column index must be counted from the last element
-        let showColumnIndex = direction === BACKWARD ? this.totalNumberOfColumns - 1 - index :  index;
-        this._showTableColumnByIndex(showColumnIndex);
-        numberOfVisibleColumns++;
+        const showColumnIndex = direction === BACKWARD ? this.totalNumberOfColumns - 1 - index : index;
+        this.showTableColumnByIndex(showColumnIndex);
+        numberOfVisibleColumns += 1;
 
         // If number of visible columns per page is already reached - break the loop
         if (numberOfVisibleColumns >= this.numberOfColumnsPerPage) {
-          this._hide($oppositePaginationButton);
+          this.hide($oppositePaginationButton);
           break;
         }
       }
     }
 
     // Hide all the columns from previous page
-    this._hide($currentPageElements);
+    this.hide($currentPageElements);
 
     // If the first column in the table is not visible - show the "previous" pagination arrow
     if (!$importDataTable.find('th:first').is(':visible')) {
-      this._show($('.js-import-previous-page'));
+      this.show($('.js-import-previous-page'));
     }
 
     // If the last column in the table is not visible - show the "next" pagination arrow
     if (!$importDataTable.find('th:last').is(':visible')) {
-      this._show($('.js-import-next-page'));
+      this.show($('.js-import-next-page'));
     }
   }
-
 
   /**
    * Gets the number of currently visible columns in the import data table.
@@ -123,7 +124,7 @@ export default class ImportDataTable {
    * @returns {number}
    * @private
    */
-  _getNumberOfVisibleColumns() {
+  getNumberOfVisibleColumns() {
     return $importDataTable.find('th:visible').length;
   }
 
@@ -133,7 +134,7 @@ export default class ImportDataTable {
    * @returns {number}
    * @private
    */
-  _getTotalNumberOfColumns() {
+  getTotalNumberOfColumns() {
     return $importDataTable.find('th').length;
   }
 
@@ -143,7 +144,7 @@ export default class ImportDataTable {
    * @param $elements
    * @private
    */
-  _hide($elements) {
+  hide($elements) {
     $elements.addClass('d-none');
   }
 
@@ -153,7 +154,7 @@ export default class ImportDataTable {
    * @param $elements
    * @private
    */
-  _show($elements) {
+  show($elements) {
     $elements.removeClass('d-none');
   }
 
@@ -163,11 +164,11 @@ export default class ImportDataTable {
    * @param columnIndex
    * @private
    */
-  _showTableColumnByIndex(columnIndex) {
+  showTableColumnByIndex(columnIndex) {
     // Increasing the index because nth-child calculates from 1 and index starts from 0
-    columnIndex++;
+    const colIndex = columnIndex + 1;
 
-    this._show($importDataTable.find('th:nth-child(' + columnIndex + ')'));
-    this._show($importDataTable.find('tbody > tr').find('td:nth-child(' + columnIndex + ')'));
+    this.show($importDataTable.find(`th:nth-child(${colIndex})`));
+    this.show($importDataTable.find('tbody > tr').find(`td:nth-child(${colIndex})`));
   }
 }

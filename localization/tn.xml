@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
 <localizationPack name="Tunisia">
   <currencies>
-    <currency name="Tunisian Dinar" iso_code="TND" iso_code_num="788" sign="DT" blank="0" conversion_rate="1.000000" format="2" decimals="1"/>
+    <currency name="Tunisian Dinar" iso_code="TND" iso_code_num="788" sign="DT" blank="0" format="2" decimals="1"/>
   </currencies>
   <languages>
     <language iso_code="ar"/>

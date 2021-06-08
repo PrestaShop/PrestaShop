@@ -48,7 +48,7 @@ class GetOrderProductsForViewing
     private $offset;
 
     /**
-     * @var @var null|int
+     * @var int|null
      */
     private $limit;
 

@@ -67,8 +67,20 @@ class AdminSearchControllerCore extends AdminController
         $action = Tools::getValue('action');
         if ($action == 'redirectToProduct') {
             $id_product = (int) Tools::getValue('id_product');
-            $link = $this->context->link->getAdminLink('AdminProducts', false, ['id_product' => $id_product]);
-            Tools::redirectAdmin($link);
+            if (Tools::getIsset('statusproduct')) {
+                $product = new Product($id_product);
+            }
+
+            if (isset($product) && Validate::isLoadedObject($product)) {
+                if ($product->toggleStatus()) {
+                    $this->confirmations[] = $this->trans('The status has been updated successfully.', [], 'Admin.Notifications.Success');
+                } else {
+                    $this->errors[] = $this->trans('An error occurred while updating the status.', [], 'Admin.Notifications.Error');
+                }
+            } else {
+                $link = $this->context->link->getAdminLink('AdminProducts', false, ['id_product' => $id_product]);
+                Tools::redirectAdmin($link);
+            }
         }
 
         /* Handle empty search field */

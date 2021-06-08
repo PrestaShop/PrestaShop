@@ -23,10 +23,12 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
 Modernizr.load([
-	{
-		test: window.matchMedia,
-		nope: [baseAdminDir + "themes/default/js/vendor/matchMedia.js", baseAdminDir + "themes/default/js/vendor/matchMedia.addListener.js"]
-	},
-	baseAdminDir + "themes/default/js/vendor/enquire.min.js",
-	baseAdminDir + "themes/default/js/admin-theme.js",
+  {
+    test: window.matchMedia,
+    nope: [`${baseAdminDir}themes/default/js/vendor/matchMedia.js`, `${baseAdminDir}themes/default/js/vendor/matchMedia.addListener.js`],
+  },
+  `${baseAdminDir}themes/default/js/vendor/enquire.min.js`,
+  `${baseAdminDir}themes/default/js/bundle/utils/animations.js`,
+  `${baseAdminDir}themes/default/js/bundle/components/navbar-transition-handler.js`,
+  `${baseAdminDir}themes/default/js/admin-theme.js`,
 ]);

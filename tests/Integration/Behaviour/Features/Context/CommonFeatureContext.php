@@ -116,6 +116,7 @@ use Tax;
 use TaxManagerFactory;
 use TaxRule;
 use TaxRulesGroup;
+use Tests\Resources\ResourceResetter;
 use WarehouseProductLocation;
 use WebserviceKey;
 use Zone;
@@ -192,6 +193,22 @@ class CommonFeatureContext extends AbstractPrestaShopFeatureContext
     public static function getContainer()
     {
         return static::$kernel->getContainer();
+    }
+
+    /**
+     * @AfterFeature @reset-downloads-after-feature
+     */
+    public static function resetDownloads(): void
+    {
+        (new ResourceResetter())->resetDownloads();
+    }
+
+    /**
+     * @AfterFeature @reset-img-after-feature
+     */
+    public static function resetImgDir(): void
+    {
+        (new ResourceResetter())->resetImages();
     }
 
     /**
@@ -415,5 +432,6 @@ class CommonFeatureContext extends AbstractPrestaShopFeatureContext
         TaxRulesGroup::resetStaticCache();
         WebserviceKey::resetStaticCache();
         SpecificPrice::flushCache();
+        SharedStorage::getStorage()->clean();
     }
 }

@@ -27,13 +27,13 @@
 namespace PrestaShopBundle\Form\Admin\Configure\ShopParameters\TrafficSeo\Meta;
 
 use PrestaShopBundle\Form\Admin\Type\SwitchType;
-use Symfony\Component\Form\AbstractType;
+use PrestaShopBundle\Form\Admin\Type\TranslatorAwareType;
 use Symfony\Component\Form\FormBuilderInterface;
 
 /**
  * SEOOptionsType manages some options for your SEO meta tags (like product title)
  */
-class SEOOptionsType extends AbstractType
+class SEOOptionsType extends TranslatorAwareType
 {
     /**
      * {@inheritdoc}
@@ -41,7 +41,16 @@ class SEOOptionsType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
-            ->add('product_attributes_in_title', SwitchType::class)
+            ->add('product_attributes_in_title', SwitchType::class, [
+                'label' => $this->trans(
+                    'Display attributes in the product meta title',
+                    'Admin.Shopparameters.Feature'
+                ),
+                'help' => $this->trans(
+                    'Enable this option if you want to display your product\'s attributes in its meta title.',
+                    'Admin.Shopparameters.Help'
+                ),
+            ])
         ;
     }
 }

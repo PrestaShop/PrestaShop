@@ -68,7 +68,7 @@ class CustomerAddressFormCore extends AbstractForm
         $this->address = new Address($id_address, $this->language->id);
 
         if ($this->address->id === null) {
-            return Tools::redirect('index.php?controller=404');
+            return Tools::redirect('pagenotfound');
         }
 
         if (!$context->customer->isLogged() && !$context->customer->isGuest()) {
@@ -76,7 +76,7 @@ class CustomerAddressFormCore extends AbstractForm
         }
 
         if ($this->address->id_customer != $context->customer->id) {
-            return Tools::redirect('index.php?controller=404');
+            return Tools::redirect('pagenotfound');
         }
 
         $params = get_object_vars($this->address);

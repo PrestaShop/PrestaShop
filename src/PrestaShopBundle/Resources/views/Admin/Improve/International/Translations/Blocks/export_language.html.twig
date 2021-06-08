@@ -23,53 +23,35 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  *#}
 
+{% form_theme exportCataloguesForm 'PrestaShopBundle:Admin/TwigTemplateForm:prestashop_ui_kit.html.twig' %}
 {% trans_default_domain 'Admin.International.Feature' %}
 
-{{ form_start(exportLanguageForm, {action: path('admin_international_translations_export_theme')}) }}
+{{ form_start(exportCataloguesForm, {action: path('admin_international_translations_export_catalogues')}) }}
 
-<div class="card">
+<div class="card export-translations">
   <h3 class="card-header">
     <i class="material-icons">cloud_upload</i> {{ 'Export a language'|trans }}
+
+    <span
+      class="help-box"
+      data-container="body"
+      data-toggle="popover"
+      data-trigger="hover"
+      data-placement="right"
+      data-content="{{ 'Export data from one language to a file (language pack).'|trans({}, 'Admin.International.Help') }}{{ 'Select which theme you would like to export your translations to.'|trans({}, 'Admin.International.Help') }}"
+      title=""
+    >
+    </span>
   </h3>
   <div class="card-block row">
     <div class="card-text">
-      <div class="row">
-        <div class="col-sm">
-          <div class="alert alert-info" role="alert">
-            <div class="alert-text">
-              {{ 'Export data from one language to a file (language pack).'|trans({}, 'Admin.International.Help') }} <br>
-              {{ 'Select which theme you would like to export your translations to.'|trans({}, 'Admin.International.Help') }}
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <div class="form-group row">
-        <label class="form-control-label">
-          {{ 'Language'|trans({}, 'Admin.Global') }}
-        </label>
-        <div class="col-sm">
-          {{ form_errors(exportLanguageForm.iso_code) }}
-          {{ form_widget(exportLanguageForm.iso_code) }}
-        </div>
-      </div>
-
-      <div class="form-group row">
-        <label class="form-control-label">
-          {{ 'Select your theme'|trans }}
-        </label>
-        <div class="col-sm">
-          {{ form_errors(exportLanguageForm.theme_name) }}
-          {{ form_widget(exportLanguageForm.theme_name) }}
-        </div>
-      </div>
-      {{ form_rest(exportLanguageForm) }}
+      {{ form_rest(exportCataloguesForm) }}
     </div>
   </div>
 
   <div class="card-footer">
     <div class="d-flex justify-content-end">
-      <button class="btn btn-primary">
+      <button class="btn btn-primary" id="form-export-language-button">
         <i class="material-icons">cloud_download</i>
         <span>{{ 'Export'|trans({}, 'Admin.Actions') }}</span>
       </button>
@@ -77,4 +59,4 @@
   </div>
 </div>
 
-{{ form_end(exportLanguageForm) }}
+{{ form_end(exportCataloguesForm) }}

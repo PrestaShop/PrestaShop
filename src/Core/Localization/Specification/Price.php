@@ -39,12 +39,12 @@ class Price extends NumberSpecification
     /**
      * Currency display option: symbol notation.
      */
-    const CURRENCY_DISPLAY_SYMBOL = 'symbol';
+    public const CURRENCY_DISPLAY_SYMBOL = 'symbol';
 
     /**
      * Currency display option: ISO code notation.
      */
-    const CURRENCY_DISPLAY_CODE = 'code';
+    public const CURRENCY_DISPLAY_CODE = 'code';
 
     /**
      * Type of display for currency symbol
@@ -69,29 +69,18 @@ class Price extends NumberSpecification
     /**
      * Price specification constructor.
      *
-     * @param string $positivePattern
-     *                                CLDR formatting pattern for positive amounts
-     * @param string $negativePattern
-     *                                CLDR formatting pattern for negative amounts
-     * @param NumberSymbolList[] $symbols
-     *                                    List of available number symbols lists (NumberSymbolList objects)
+     * @param string $positivePattern CLDR formatting pattern for positive amounts
+     * @param string $negativePattern CLDR formatting pattern for negative amounts
+     * @param NumberSymbolList[] $symbols List of available number symbols lists (NumberSymbolList objects)
      *                                    Each list is indexed by numbering system
-     * @param int $maxFractionDigits
-     *                               Maximum number of digits after decimal separator
-     * @param int $minFractionDigits
-     *                               Minimum number of digits after decimal separator
-     * @param bool $groupingUsed
-     *                           Is digits grouping used ?
-     * @param int $primaryGroupSize
-     *                              Size of primary digits group in the number
-     * @param int $secondaryGroupSize
-     *                                Size of secondary digits group in the number
-     * @param string $currencyDisplay
-     *                                Type of display for currency symbol
-     * @param string $currencySymbol
-     *                               Currency symbol of this price (eg. : €)
-     * @param $currencyCode
-     *  Currency code of this price (e.g.: EUR)
+     * @param int $maxFractionDigits Maximum number of digits after decimal separator
+     * @param int $minFractionDigits Minimum number of digits after decimal separator
+     * @param bool $groupingUsed Is digits grouping used ?
+     * @param int $primaryGroupSize Size of primary digits group in the number
+     * @param int $secondaryGroupSize Size of secondary digits group in the number
+     * @param string $currencyDisplay Type of display for currency symbol
+     * @param string $currencySymbol Currency symbol of this price (eg. : €)
+     * @param string $currencyCode Currency code of this price (e.g.: EUR)
      *
      * @throws LocalizationException
      */
@@ -177,7 +166,7 @@ class Price extends NumberSpecification
      *
      * @return array
      */
-    public function toArray()
+    public function toArray(): array
     {
         return array_merge(
             [

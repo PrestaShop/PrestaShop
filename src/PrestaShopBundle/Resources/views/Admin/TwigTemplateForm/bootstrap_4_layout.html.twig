@@ -25,6 +25,7 @@
 {% use '@PrestaShop/Admin/TwigTemplateForm/form_div_layout.html.twig' %}
 {% use '@PrestaShop/Admin/TwigTemplateForm/typeahead.html.twig' %}
 {% use '@PrestaShop/Admin/TwigTemplateForm/material.html.twig' %}
+{% use '@PrestaShop/Admin/TwigTemplateForm/translatable_choice.html.twig' %}
 
 {# Widgets #}
 
@@ -38,8 +39,6 @@
 {% block textarea_widget -%}
     {% set attr = attr|merge({class: (attr.class|default('') ~ ' form-control')|trim}) %}
     {{- parent() -}}
-
-    {{ block('form_help') }}
 {%- endblock textarea_widget %}
 
 {% block button_widget -%}
@@ -123,6 +122,7 @@
 
 {% block choice_widget_collapsed -%}
     {% set attr = attr|merge({class: (attr.class|default('') ~ ' custom-select')|trim}) %}
+    {%- set attr = attr|merge({'aria-label': '%inputId% input'|trans({'%inputId%': form.vars.id}, 'Admin.Global')}) -%}
     {{- parent() -}}
 {%- endblock %}
 
@@ -164,7 +164,7 @@
     {% if 'radio-inline' in parent_label_class %}
         {{- form_label(form, null, { widget: parent() }) -}}
     {% else -%}
-        <div class="radio">
+        <div class="radio form-check form-check-radio">
             {{- form_label(form, null, { widget: parent() }) -}}
         </div>
     {%- endif %}
@@ -182,7 +182,7 @@
 {%- endblock choice_tree_widget %}
 
 {% block choice_tree_item_widget -%}
-    <li>
+  <li{% if defaultHidden is defined and defaultHidden is same as(true) %} class="more"{% endif %}>
         {% set checked = (form.vars.submitted_values is defined and submitted_values[child.id_category] is defined) ? 'checked="checked"' : '' %}
         {% if multiple -%}
             <div class="checkbox">
@@ -201,7 +201,7 @@
         {%- else -%}
             <div class="radio">
                 <label>
-                    <input type="radio" name="form[{{ form.vars.id }}][tree]" value="{{ child.id_category }}" {{ checked }} class="category">
+                    <input type="radio" name="form[{{ form.vars.id }}][tree]" value="{{ child.id_category }}" {{ checked }} class="category"{% if required %} required{% endif %}>
                     {{ child.name }}
                     {% if defaultCategory is defined %}
                         <input type="radio" value="{{ child.id_category }}" name="ignore" class="default-category" />
@@ -210,7 +210,7 @@
             </div>
         {%- endif %}
         {% if child.children is defined %}
-            <ul>
+            <ul{% if defaultHidden is defined and defaultHidden is same as(true) %} style="display: none;"{% endif %}>
                 {% for item in child.children %}
                     {% set child = item %}
                     {{ block('choice_tree_item_widget') }}
@@ -281,7 +281,7 @@
                 {{ form.vars.default_locale.iso_code }}
             </button>
 
-            <div class="dropdown-menu" aria-labelledby="{{ form.vars.id }}">
+            <div class="dropdown-menu locale-dropdown-menu" aria-labelledby="{{ form.vars.id }}">
                 {% for locale in locales %}
                     <span class="dropdown-item js-locale-item" data-locale="{{ locale.iso_code }}">{{ locale.name }}</span>
                 {% endfor %}
@@ -319,7 +319,7 @@
           {{ form.vars.default_locale.iso_code }}
         </button>
 
-        <div class="dropdown-menu" aria-labelledby="{{ form.vars.id }}">
+        <div class="dropdown-menu locale-dropdown-menu" aria-labelledby="{{ form.vars.id }}">
           {% for locale in locales %}
             <span class="dropdown-item js-locale-item"
                   data-locale="{{ locale.iso_code }}"
@@ -336,6 +336,7 @@
 {% block date_picker_widget %}
   {% spaceless %}
     {%  set attr = attr|merge({'class': ((attr.class|default('') ~ ' datepicker')|trim)}) %}
+    {%- set attr = attr|merge({'aria-label': '%inputId% input'|trans({'%inputId%': form.vars.id}, 'Admin.Global')}) -%}
     <div class="input-group datepicker">
       <input type="text" class="form-control" data-format="{{ date_format }}" {{ block('widget_attributes') }} {% if value is not empty %}value="{{ value }}" {% endif %}/>
       <div class="input-group-append">
@@ -353,6 +354,15 @@
     {{ form_widget(form.to) }}
   {% endspaceless %}
 {% endblock date_range_widget %}
+
+{% block color_picker_widget %}
+  {% spaceless %}
+    {%  set attr = attr|merge({'class': ((attr.class|default('') ~ ' colorpicker')|trim)}) %}
+    <div class="input-group colorpicker">
+      <input type="text" class="form-control" {{ block('widget_attributes') }} {% if value is not empty %}value="{{ value }}" {% endif %}/>
+    </div>
+  {% endspaceless %}
+{% endblock color_picker_widget %}
 
 {% block search_and_reset_widget %}
     {% spaceless %}
@@ -386,7 +396,7 @@
     <span class="ps-switch">
         {% for choice in choices %}
             {% set inputId = id ~'_' ~ choice.value %}
-            <input id="{{inputId}}" {{ block('attributes') }} name="{{ full_name }}" value="{{ choice.value }}" {%- if choice is selectedchoice(value) -%}checked="" {%- endif -%} {%- if disabled -%}disabled="" {%- endif -%} type="radio">
+            <input id="{{inputId}}" {{ block('attributes') }} name="{{ full_name }}" value="{{ choice.value }}" {%- if choice is selectedchoice(value) -%}checked="" {%- endif -%} {%- if disabled -%}disabled="" {%- endif -%} type="radio" aria-label="{{ choice.label|trans({}, choice_translation_domain) }}">
             <label for="{{inputId}}">{{ choice.label|trans({}, choice_translation_domain) }}</label>
         {% endfor %}
         <span class="slide-button"></span>
@@ -466,7 +476,7 @@
           </label>
         </div>
       {% else %}
-      <label{% for attrname, attrvalue in label_attr %} {{ attrname }}="{{ attrvalue }}"{% endfor %}>
+      <label{% for attrname, attrvalue in label_attr %} {{ attrname }}="{{ attrvalue }}{% if attrname is same as("class") %} form-check-label{% endif %}"{% endfor %}{% if label_attr|length <= 0 %} class="form-check-label"{% endif %}>
         {{- widget|raw -}}
         {{- label is not same as(false) ? (translation_domain is same as(false) ? label|raw : label|raw) -}}
       </label>
@@ -592,7 +602,7 @@
 
 {% block material_multiple_choice_table_widget %}
   {% spaceless %}
-    <div class="choice-table table-responsive">
+    <div class="choice-table{% if headers_fixed %}-headers-fixed{% endif %} table-responsive">
       <table class="table">
         <thead>
           <tr>
@@ -644,7 +654,8 @@
 {% endblock material_multiple_choice_table_widget %}
 
 {% block translatable_widget -%}
-  <div class="input-group locale-input-group js-locale-input-group d-flex">
+  {% set formClass = form.vars.attr.class|default('') ~ ' input-group locale-input-group js-locale-input-group d-flex'|trim %}
+  <div class="{{ formClass }}">
     {% for translateField in form %}
       {% set classes = translateField.vars.attr.class|default('') ~ ' js-locale-input'%}
       {% set classes = classes ~ ' js-locale-' ~ translateField.vars.label %}
@@ -669,7 +680,7 @@
         >
           {{ form.vars.default_locale.iso_code }}
         </button>
-        <div class="dropdown-menu" aria-labelledby="{{ form.vars.id }}">
+        <div class="dropdown-menu locale-dropdown-menu" aria-labelledby="{{ form.vars.id }}">
           {% for locale in locales %}
             <span class="dropdown-item js-locale-item" data-locale="{{ locale.iso_code }}">{{ locale.name }}</span>
           {% endfor %}
@@ -806,11 +817,20 @@
   {% endif %}
 {% endblock form_help %}
 
+{% block form_hint %}
+  {% if hint %}
+    <div class="row col-lg hint-box">
+      <div class="alert alert-info">{{ hint|raw }}</div>
+    </div>
+  {% endif %}
+{% endblock form_hint %}
+
 {% block custom_content_widget %}
   {% include template with data %}
 {% endblock %}
 
 {% block text_widget %}
+  {%- set attr = attr|merge({'aria-label': '%inputId% input'|trans({'%inputId%': form.vars.id}, 'Admin.Global')}) -%}
   {% if data_list is not null %}
     {%- set attr = attr|merge({'list': id ~ '_datalist'}) -%}
   {% endif %}
@@ -825,3 +845,19 @@
     </datalist>
   {% endif %}
 {% endblock text_widget %}
+
+{% block submittable_input_widget %}
+  {%- set attr = attr|merge({'class': (attr.class|default('') ~ ' ps-submittable-input-wrapper')|trim}) -%}
+  <div {{ block('widget_attributes') }}>
+    {%- set typeAttr = form.vars.type_attr|merge({
+      'class': (form.vars.type_attr.class|default('') ~ ' submittable-input')|trim,
+      'data-initial-value': value,
+      'value': value,
+    }) -%}
+
+    {{ form_widget(form.value, {'attr': typeAttr}) }}
+    <button type="button" class="check-button d-none">
+      <i class="material-icons">check</i>
+    </button>
+  </div>
+{% endblock submittable_input_widget %}

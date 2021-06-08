@@ -128,6 +128,7 @@ describe('Filter, sort and pagination tax rules', async () => {
 
         for (let row = 1; row <= numberOfLinesAfterFilter; row++) {
           const textColumn = await taxRulesPage.getTextColumnFromTable(page, row, test.args.filterBy);
+
           if (test.expected !== undefined) {
             await expect(textColumn).to.contains(test.expected);
           } else {

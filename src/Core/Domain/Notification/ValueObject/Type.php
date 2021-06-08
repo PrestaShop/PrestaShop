@@ -33,11 +33,11 @@ use PrestaShop\PrestaShop\Core\Domain\Notification\Exception\NotificationExcepti
  */
 class Type
 {
-    const ORDER = 'order';
+    public const ORDER = 'order';
 
-    const CUSTOMER = 'customer';
+    public const CUSTOMER = 'customer';
 
-    const CUSTOMER_MESSAGE = 'customer_message';
+    public const CUSTOMER_MESSAGE = 'customer_message';
 
     /**
      * @var string

@@ -64,22 +64,22 @@ class OrderDetailCore extends ObjectModel
     /** @var int */
     public $product_quantity_reinjected;
 
-    /** @var float */
+    /** @var float Without taxes, includes ecotax */
     public $product_price;
 
     /** @var float */
     public $original_product_price;
 
-    /** @var float */
+    /** @var float With taxes, includes ecotax */
     public $unit_price_tax_incl;
 
-    /** @var float */
+    /** @var float Without taxes, includes ecotax */
     public $unit_price_tax_excl;
 
-    /** @var float */
+    /** @var float With taxes, includes ecotax */
     public $total_price_tax_incl;
 
-    /** @var float */
+    /** @var float Without taxes, includes ecotax */
     public $total_price_tax_excl;
 
     /** @var float */
@@ -492,7 +492,7 @@ class OrderDetailCore extends ObjectModel
 
     public function getTaxList()
     {
-        return self::getTaxList($this->id);
+        return self::getTaxListStatic($this->id);
     }
 
     public static function getTaxListStatic($id_order_detail)
@@ -566,6 +566,8 @@ class OrderDetailCore extends ObjectModel
             $tax_manager = TaxManagerFactory::getManager($this->vat_address, $this->id_tax_rules_group);
             $this->tax_calculator = $tax_manager->getTaxCalculator();
             $this->tax_computation_method = (int) $this->tax_calculator->computation_method;
+            $this->tax_rate = (float) $this->tax_calculator->getTotalRate();
+            $this->tax_name = $this->tax_calculator->getTaxesName();
         }
 
         $this->ecotax_tax_rate = 0;
@@ -628,8 +630,24 @@ class OrderDetailCore extends ObjectModel
         $this->setContext((int) $product['id_shop']);
         Product::getPriceStatic((int) $product['id_product'], true, (int) $product['id_product_attribute'], 6, null, false, true, $product['cart_quantity'], false, (int) $order->id_customer, (int) $order->id_cart, (int) $order->{Configuration::get('PS_TAX_ADDRESS_TYPE')}, $specific_price, true, true, $this->context);
         $this->specificPrice = $specific_price;
-        $this->original_product_price = Product::getPriceStatic($product['id_product'], false, (int) $product['id_product_attribute'], 6, null, false, false, 1, false, null, null, null, $null, true, true, $this->context);
-        $this->product_price = $this->original_product_price;
+        $this->product_price = $this->original_product_price = Product::getPriceStatic(
+            $product['id_product'],
+            false,
+            (int) $product['id_product_attribute'],
+            6,
+            null,
+            false,
+            false,
+            1,
+            false,
+            null,
+            null,
+            null,
+            $null,
+            true,
+            true,
+            $this->context
+        );
         $this->unit_price_tax_incl = (float) $product['price_wt'];
         $this->unit_price_tax_excl = (float) $product['price'];
         $this->total_price_tax_incl = (float) $product['total_wt'];
@@ -718,7 +736,7 @@ class OrderDetailCore extends ObjectModel
         $this->id_customization = $product['id_customization'] ? (int) $product['id_customization'] : 0;
         $this->product_name = $product['name'] .
             ((isset($product['attributes']) && $product['attributes'] != null) ?
-                ' - ' . $product['attributes'] : '');
+                ' (' . $product['attributes'] . ')' : '');
 
         $this->product_quantity = (int) $product['cart_quantity'];
         $this->product_ean13 = empty($product['ean13']) ? null : pSQL($product['ean13']);

@@ -28,25 +28,30 @@ export default class DropDown {
   constructor(el) {
     this.el = el;
   }
+
   init() {
-    this.el.on('show.bs.dropdown', function(e, el) {
+    this.el.on('show.bs.dropdown', (e, el) => {
       if (el) {
-        $(`#${el}`).find('.dropdown-menu').first().stop(true, true).slideDown();
+        $(`#${el}`).find('.dropdown-menu').first().stop(true, true)
+          .slideDown();
       } else {
-        $(e.target).find('.dropdown-menu').first().stop(true, true).slideDown();
+        $(e.target).find('.dropdown-menu').first().stop(true, true)
+          .slideDown();
       }
     });
 
-    this.el.on('hide.bs.dropdown', function(e, el) {
+    this.el.on('hide.bs.dropdown', (e, el) => {
       if (el) {
-        $(`#${el}`).find('.dropdown-menu').first().stop(true, true).slideUp();
+        $(`#${el}`).find('.dropdown-menu').first().stop(true, true)
+          .slideUp();
       } else {
-        $(e.target).find('.dropdown-menu').first().stop(true, true).slideUp();
+        $(e.target).find('.dropdown-menu').first().stop(true, true)
+          .slideUp();
       }
     });
 
-    this.el.find('select.link').each(function(idx, el) {
-      $(el).on('change', function(event) {
+    this.el.find('select.link').each((idx, el) => {
+      $(el).on('change', function () {
         window.location = $(this).val();
       });
     });

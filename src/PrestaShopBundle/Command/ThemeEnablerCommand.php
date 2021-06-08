@@ -39,12 +39,12 @@ final class ThemeEnablerCommand extends ContainerAwareCommand
     /**
      * @var bool using CLI, the user must be allowed to enable themes
      */
-    const USER_ALLOWED_TO_ENABLE = true;
+    public const USER_ALLOWED_TO_ENABLE = true;
 
     /**
      * @var int if the activation of the theme fails, return the right code
      */
-    const RETURN_CODE_FAILED = 1;
+    public const RETURN_CODE_FAILED = 1;
 
     /**
      * {@inheritdoc}
@@ -90,5 +90,7 @@ final class ThemeEnablerCommand extends ContainerAwareCommand
         }
 
         $io->success(sprintf('Theme "%s" enabled with success.', $theme));
+
+        return 0;
     }
 }

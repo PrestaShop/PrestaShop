@@ -1,0 +1,19 @@
+#order-creation-container {
+  .custom-fields-container {
+    max-height: 300px;
+    padding-bottom: 0.9375rem;
+    overflow-y: scroll;
+
+    .custom-file {
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+  }
+
+  #products-table {
+    .js-product-qty-input {
+      margin-top: 22px;
+    }
+  }
+}

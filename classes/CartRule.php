@@ -55,32 +55,73 @@ class CartRuleCore extends ObjectModel
     public $quantity = 1;
     public $quantity_per_user = 1;
     public $priority = 1;
+    /**
+     * @var bool
+     */
     public $partial_use = 1;
     public $code;
     public $minimum_amount;
+    /**
+     * @var bool
+     */
     public $minimum_amount_tax;
     public $minimum_amount_currency;
+    /**
+     * @var bool
+     */
     public $minimum_amount_shipping;
+    /**
+     * @var bool
+     */
     public $country_restriction;
+    /**
+     * @var bool
+     */
     public $carrier_restriction;
+    /**
+     * @var bool
+     */
     public $group_restriction;
+    /**
+     * @var bool
+     */
     public $cart_rule_restriction;
+    /**
+     * @var bool
+     */
     public $product_restriction;
+    /**
+     * @var bool
+     */
     public $shop_restriction;
+    /**
+     * @var bool
+     */
     public $free_shipping;
     public $reduction_percent;
     public $reduction_amount;
-
     /**
      * @var bool is this voucher value tax included (false = tax excluded value)
      */
     public $reduction_tax;
+    /**
+     * @var int
+     */
     public $reduction_currency;
     public $reduction_product;
+    /**
+     * @var bool
+     */
     public $reduction_exclude_special;
     public $gift_product;
     public $gift_product_attribute;
+    /**
+     * @var bool
+     */
     public $highlight;
+    /**
+     * @var bool
+     */
     public $active = 1;
     public $date_add;
     public $date_upd;
@@ -228,7 +269,7 @@ class CartRuleCore extends ObjectModel
         $r &= Db::getInstance()->delete('cart_rule_product_rule_value', 'NOT EXISTS (SELECT 1 FROM `' . _DB_PREFIX_ . 'cart_rule_product_rule`
 			WHERE `' . _DB_PREFIX_ . 'cart_rule_product_rule_value`.`id_product_rule` = `' . _DB_PREFIX_ . 'cart_rule_product_rule`.`id_product_rule`)');
 
-        return $r;
+        return (bool) $r;
     }
 
     /**
@@ -549,7 +590,7 @@ class CartRuleCore extends ObjectModel
         return (bool) Db::getInstance()->getValue('
 		SELECT `id_cart_rule`
 		FROM `' . _DB_PREFIX_ . 'cart_rule`
-		WHERE `code` = \'' . pSQL($code) . '\'');
+		WHERE `code` = \'' . pSQL($code) . '\'', false);
     }
 
     /**
@@ -625,10 +666,12 @@ class CartRuleCore extends ObjectModel
      * @param Context $context Context instance
      * @param bool $alreadyInCart Check if the voucher is already on the cart
      * @param bool $display_error Display error
+     * @param bool $check_carrier
+     * @param bool $useOrderPrices
      *
      * @return bool|mixed|string
      */
-    public function checkValidity(Context $context, $alreadyInCart = false, $display_error = true, $check_carrier = true)
+    public function checkValidity(Context $context, $alreadyInCart = false, $display_error = true, $check_carrier = true, $useOrderPrices = false)
     {
         if (!CartRule::isFeatureActive()) {
             return false;
@@ -772,14 +815,28 @@ class CartRuleCore extends ObjectModel
                 $minimum_amount = Tools::convertPriceFull($minimum_amount, new Currency($this->minimum_amount_currency), Context::getContext()->currency);
             }
 
-            $cartTotal = $cart->getOrderTotal($this->minimum_amount_tax, Cart::ONLY_PRODUCTS);
+            $cartTotal = $cart->getOrderTotal(
+                $this->minimum_amount_tax,
+                Cart::ONLY_PRODUCTS,
+                null,
+                null,
+                false,
+                $useOrderPrices
+            );
             if ($this->minimum_amount_shipping) {
-                $cartTotal += $cart->getOrderTotal($this->minimum_amount_tax, Cart::ONLY_SHIPPING);
+                $cartTotal += $cart->getOrderTotal(
+                    $this->minimum_amount_tax,
+                    Cart::ONLY_SHIPPING,
+                    null,
+                    null,
+                    false,
+                    $useOrderPrices
+                );
             }
             $products = $cart->getProducts();
             $cart_rules = $cart->getCartRules(CartRule::FILTER_ACTION_ALL, false);
 
-            foreach ($cart_rules as &$cart_rule) {
+            foreach ($cart_rules as $cart_rule) {
                 if ($cart_rule['gift_product']) {
                     foreach ($products as $key => &$product) {
                         if (empty($product['is_gift']) && $product['id_product'] == $cart_rule['gift_product'] && $product['id_product_attribute'] == $cart_rule['gift_product_attribute']) {
@@ -1584,8 +1641,9 @@ class CartRuleCore extends ObjectModel
      * Automatically add this CartRule to the Cart.
      *
      * @param Context|null $context Context instance
+     * @param bool $useOrderPrices
      */
-    public static function autoAddToCart(Context $context = null)
+    public static function autoAddToCart(Context $context = null, bool $useOrderPrices = false)
     {
         if ($context === null) {
             $context = Context::getContext();
@@ -1646,8 +1704,8 @@ class CartRuleCore extends ObjectModel
             if ($cart_rules) {
                 foreach ($cart_rules as $cart_rule) {
                     /** @var CartRule $cart_rule */
-                    if ($cart_rule->checkValidity($context, false, false)) {
-                        $context->cart->addCartRule($cart_rule->id);
+                    if ($cart_rule->checkValidity($context, false, false, true, $useOrderPrices)) {
+                        $context->cart->addCartRule($cart_rule->id, $useOrderPrices);
                     }
                 }
             }
@@ -1658,10 +1716,11 @@ class CartRuleCore extends ObjectModel
      * Automatically remove this CartRule from the Cart.
      *
      * @param Context|null $context Context instance
+     * @param bool $useOrderPrice
      *
      * @return array Error messages
      */
-    public static function autoRemoveFromCart(Context $context = null)
+    public static function autoRemoveFromCart(Context $context = null, bool $useOrderPrice = false)
     {
         if (!$context) {
             $context = Context::getContext();
@@ -1671,9 +1730,9 @@ class CartRuleCore extends ObjectModel
         }
 
         static $errors = [];
-        foreach ($context->cart->getCartRules() as $cart_rule) {
-            if ($error = $cart_rule['obj']->checkValidity($context, true)) {
-                $context->cart->removeCartRule($cart_rule['obj']->id);
+        foreach ($context->cart->getCartRules(CartRule::FILTER_ACTION_ALL, true, $useOrderPrice) as $cart_rule) {
+            if ($error = $cart_rule['obj']->checkValidity($context, true, true, true, $useOrderPrice)) {
+                $context->cart->removeCartRule($cart_rule['obj']->id, $useOrderPrice);
                 $context->cart->update();
                 $errors[] = $error;
             }

@@ -25,6 +25,9 @@
  */
 use PrestaShop\PrestaShop\Adapter\SymfonyContainer;
 use PrestaShop\PrestaShop\Core\Addon\Module\ModuleManagerBuilder;
+use PrestaShop\PrestaShop\Core\Domain\Currency\Command\AddCurrencyCommand;
+use PrestaShop\PrestaShop\Core\Domain\Currency\Exception\CurrencyException;
+use PrestaShop\PrestaShop\Core\Domain\Currency\ValueObject\CurrencyId;
 use PrestaShop\PrestaShop\Core\Localization\CLDR\LocaleRepository;
 
 class LocalizationPackCore
@@ -297,7 +300,7 @@ class LocalizationPackCore
                     $tr->id_county = $id_county;
                     $tr->zipcode_from = $zipcode_from;
                     $tr->zipcode_to = $zipcode_to;
-                    $tr->behavior = $behavior;
+                    $tr->behavior = (string) $behavior;
                     $tr->description = '';
                     $tr->id_tax = $assoc_taxes[(string) ($rule_attributes['id_tax'])];
                     $tr->save();
@@ -326,43 +329,32 @@ class LocalizationPackCore
                     continue;
                 }
 
-                /** @var Language $defaultLang */
-                $defaultLang = new Language((int) Configuration::get('PS_LANG_DEFAULT'));
+                $sfContainer = SymfonyContainer::getInstance();
+                $commandBus = $sfContainer->get('prestashop.core.command_bus');
 
-                $currency = $this->getExistingByIsoCodeOrCreate((string) $attributes['iso_code']);
-                $currency->name = (string) $attributes['name'];
-                $currency->iso_code = (string) $attributes['iso_code'];
-                $currency->iso_code_num = (int) $attributes['iso_code_num'];
-                $currency->numeric_iso_code = (string) $attributes['iso_code_num'];
-                $currency->blank = (int) $attributes['blank'];
-                $currency->conversion_rate = 1; // This value will be updated if the store is online
-                $currency->format = (int) $attributes['format'];
-                $currency->decimals = (int) $attributes['decimals'];
-                $currency->active = true;
-                $currency->deleted = false;
-                if (!$currency->validateFields()) {
-                    $this->_errors[] = Context::getContext()->getTranslator()->trans('Invalid currency properties.', [], 'Admin.International.Notification');
+                $command = new AddCurrencyCommand(
+                    (string) $attributes['iso_code'],
+                    (float) 1,
+                    true
+                );
+
+                /* @var CurrencyId $currencyId */
+                try {
+                    $currencyId = $commandBus->handle($command);
+                } catch (CurrencyException $e) {
+                    $this->_errors[] = null;
+                    Context::getContext()->getTranslator()->trans(
+                        'An error occurred while importing the currency: %s',
+                        [(string) ($attributes['name'])],
+                        'Admin.International.Notification'
+                    );
 
                     return false;
                 }
-                if (!Currency::exists($currency->iso_code)) {
-                    if (!$currency->save()) {
-                        $this->_errors[] = Context::getContext()->getTranslator()->trans('An error occurred while importing the currency: %s', [(string) ($attributes['name'])], 'Admin.International.Notification');
 
-                        return false;
-                    }
-                    Cache::clear();
-                    // set default data from CLDR
-                    $this->setCurrencyCldrData($currency, $defaultLang);
+                Cache::clear();
 
-                    // Following is required when installing new currency on existing languages:
-                    // we want to properly update the symbol in each language
-                    $localeRepoCLDR = $this->getCldrLocaleRepository();
-                    $currency->refreshLocalizedCurrencyData(Language::getLanguages(), $localeRepoCLDR);
-                    $currency->save();
-
-                    PaymentModule::addCurrencyPermissions($currency->id);
-                }
+                PaymentModule::addCurrencyPermissions($currencyId->getValue());
             }
 
             $error = Currency::refreshCurrencies();
@@ -395,25 +387,6 @@ class LocalizationPackCore
         $localeRepoCLDR = $container->get('prestashop.core.localization.cldr.locale_repository');
 
         return $localeRepoCLDR;
-    }
-
-    /**
-     * @param Currency $currency
-     * @param Language $defaultLang
-     */
-    protected function setCurrencyCldrData(Currency $currency, Language $defaultLang)
-    {
-        $localeRepoCLDR = $this->getCldrLocaleRepository();
-        $cldrLocale = $localeRepoCLDR->getLocale($defaultLang->getLocale());
-        $cldrCurrency = $cldrLocale->getCurrency($currency->iso_code);
-
-        $symbol = (string) $cldrCurrency->getSymbol();
-        if (empty($symbol)) {
-            $symbol = $currency->iso_code;
-        }
-        $currency->symbol = $symbol;
-        $currency->sign = $symbol;
-        $currency->precision = (int) $cldrCurrency->getDecimalDigits();
     }
 
     /**
@@ -617,27 +590,5 @@ class LocalizationPackCore
     public function getErrors()
     {
         return $this->_errors;
-    }
-
-    /**
-     * Return a currency (that can be soft deleted) if presents in the DB
-     * or a new one if not.
-     *
-     * @param string $isoCode
-     *
-     * @return Currency
-     *
-     * @throws PrestaShopDatabaseException
-     */
-    private function getExistingByIsoCodeOrCreate(string $isoCode): Currency
-    {
-        $currencies = Currency::findAllInstalled();
-        foreach ($currencies as $currency) {
-            if ($currency['iso_code'] === $isoCode) {
-                return new Currency($currency['id_currency']);
-            }
-        }
-
-        return new Currency();
     }
 }

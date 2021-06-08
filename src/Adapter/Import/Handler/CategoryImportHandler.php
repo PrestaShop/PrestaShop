@@ -284,7 +284,7 @@ final class CategoryImportHandler extends AbstractImportHandler
                 $unfriendlyError = $this->configuration->getBoolean('UNFRIENDLY_ERROR');
                 $categoryToCreate = new Category();
                 $categoryToCreate->name = $this->dataFormatter->createMultiLangField($category->parent);
-                $categoryToCreate->active = 1;
+                $categoryToCreate->active = true;
                 $linkRewrite = $this->dataFormatter->createFriendlyUrl(
                     $categoryToCreate->name[$this->languageId]
                 );

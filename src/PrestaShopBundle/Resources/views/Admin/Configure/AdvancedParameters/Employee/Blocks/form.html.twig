@@ -48,30 +48,20 @@
           'label': 'Last name'|trans({}, 'Admin.Global')
         }) }}
 
-        <div class="form-group row">
-          <label class="form-control-label"></label>
-          <div class="col-sm">
-            <a href="https://www.prestashop.com/forums/" target="_blank">
-              <img class="img-thumbnail clickable-avatar" src="{{ avatarUrl }}" alt="">
-            </a>
-          </div>
-        </div>
+        {{ ps.form_group_row(employeeForm.avatarUrl, {}, {
+          'label': 'Avatar'|trans({}, 'Admin.Global')
+        }) }}
 
         <div class="form-group row">
           <label class="form-control-label"></label>
           <div class="col-sm">
-            <div class="alert alert-info" role="alert">
-              <p class="alert-text">
-                {{ 'Your avatar in PrestaShop 1.7.x is your profile picture on %url%. To change your avatar, log in to PrestaShop.com with your email %email% and follow the on-screen instructions.'|trans({}, 'Admin.Advparameters.Help')
-                    |replace({
-                      '%url%': '<a href="https://www.prestashop.com/forums/" class="alert-link" target="_blank">PrestaShop.com</a>',
-                      '%email%': (employeeForm.email.vars.value|escape)
-                    })|raw
-                }}
-              </p>
-            </div>
+            <img class="img-thumbnail clickable-avatar" src="{{ avatarUrl }}" alt="">
           </div>
         </div>
+
+        {{ ps.form_group_row(employeeForm.has_enabled_gravatar, {}, {
+          'label': 'Enable gravatar'|trans({}, 'Admin.Global')
+        }) }}
 
         {{ ps.form_group_row(employeeForm.email, {}, {
           'label': 'Email address'|trans({}, 'Admin.Global')
@@ -201,11 +191,6 @@
           </div>
         {% endif %}
 
-        {{ ps.form_group_row(employeeForm.default_page, {'attr': {'data-minimumResultsForSearch': '7', 'data-toggle': 'select2'}}, {
-          'label': 'Default page'|trans,
-          'help': 'This page will be displayed just after login.'|trans({}, 'Admin.Advparameters.Help')
-        }) }}
-
         {{ ps.form_group_row(employeeForm.language, {}, {
           'label': 'Language'|trans({}, 'Admin.Global')
         }) }}
@@ -233,16 +218,21 @@
           {% endif %}
         {% endif %}
 
+        {{ ps.form_group_row(employeeForm.default_page, {'attr': {'data-minimumResultsForSearch': '7', 'data-toggle': 'select2'}}, {
+          'label': 'Default page'|trans,
+          'help': 'This page will be displayed just after login.'|trans({}, 'Admin.Advparameters.Help')
+        }) }}
+
         {% block employee_form_rest %}
           {{ form_rest(employeeForm) }}
         {% endblock %}
       </div>
     </div>
     <div class="card-footer">
-      <a href="{{ path('admin_employees_index') }}" class="btn btn-outline-secondary">
+      <a href="{{ path('admin_employees_index') }}" class="btn btn-outline-secondary" id="cancel-link">
         {{ 'Cancel'|trans({}, 'Admin.Actions') }}
       </a>
-      <button class="btn btn-primary float-right">
+      <button class="btn btn-primary float-right" id="save-button">
         {{ 'Save'|trans({}, 'Admin.Actions') }}
       </button>
     </div>

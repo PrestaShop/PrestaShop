@@ -31,11 +31,13 @@ namespace PrestaShop\PrestaShop\Core\Domain\CustomerService\QueryResult;
  */
 class CustomerThreadTimeline
 {
-    /** @var CustomerThreadTimelineItem[] */
+    /**
+     * @var CustomerThreadTimelineItem[]
+     */
     private $timelineItems;
 
     /**
-     * @param CustomerThreadTimelineItem[]
+     * @param CustomerThreadTimelineItem[] $timelineItems
      */
     public function __construct(array $timelineItems)
     {

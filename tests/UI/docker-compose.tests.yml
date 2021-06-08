@@ -1,5 +1,11 @@
 version: '3'
 
+networks:
+  default:
+    ipam:
+      config:
+        - subnet: 172.20.0.0/24
+
 services:
   tests:
     build:
@@ -14,7 +20,7 @@ services:
       DB_SERVER: "db"
     depends_on:
       - "prestashop"
-    command: ["/tmp/wait-for-it.sh", "--timeout=720", "--strict", "prestashop-web:80", "--", "/bin/bash"]
+    command: ["/tmp/wait-for-it.sh", "--timeout=1800", "--strict", "prestashop-web:80", "--", "/bin/bash"]
     tty: true
     volumes:
       - .docker:/tmp/docker
@@ -22,4 +28,5 @@ services:
       - ./mochawesome-report:/tests/mochawesome-report
       - /dev/shm:/dev/shm
     networks:
-      - default
+      default:
+        ipv4_address: 172.20.0.4

@@ -22,10 +22,12 @@
  * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  *#}
-<div id="related-content" class="row {{ form.vars.value.data|length == 0 ? 'hide':'' }}">
+<div  id="related-title" class="row">
   <div class="col-md-12">
     <h2>{{ "Related product"|trans({}, 'Admin.Catalog.Feature') }}</h2>
   </div>
+</div>
+<div id="related-content" class="row {{ form.vars.value.data|length == 0 ? 'hide':'' }}">
   <div class="col-xl-8 col-lg-11">
     <fieldset class="form-group">
         {{ form_widget(form) }}

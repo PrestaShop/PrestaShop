@@ -46,11 +46,11 @@ class UpdateProductStatusCommandHandler implements UpdateProductStatusCommandHan
         $product = new Product($productId);
 
         if ($product->id !== $productId) {
-            throw new ProductNotFoundException(sprintf('Product with id "%s" was not found', $productId));
+            throw new ProductNotFoundException(sprintf('Product with id "%d" was not found', $productId));
         }
         if ($product->active != $command->getEnable()) {
             if (!$product->toggleStatus()) {
-                throw new CannotUpdateProductException(sprintf('Cannot update status for product with id "%s"', $productId));
+                throw new CannotUpdateProductException(sprintf('Cannot update status for product with id "%d"', $productId));
             }
         }
     }

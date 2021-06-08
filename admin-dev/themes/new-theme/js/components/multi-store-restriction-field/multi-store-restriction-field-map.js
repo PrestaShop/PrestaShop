@@ -29,4 +29,4 @@
 export default {
   multiStoreRestrictionCheckbox: '.js-multi-store-restriction-checkbox',
   multiStoreRestrictionSwitch: '.js-multi-store-restriction-switch',
-}
+};

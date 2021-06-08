@@ -23,7 +23,7 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
 
-const $ = window.$;
+const {$} = window;
 
 export default class AutocompleteWithEmail {
   constructor(emailInputSelector, map = []) {
@@ -47,7 +47,7 @@ export default class AutocompleteWithEmail {
       });
     }).catch((response) => {
       if (typeof response.responseJSON !== 'undefined') {
-        showErrorMessage(response.responseJSON.message);
+        window.showErrorMessage(response.responseJSON.message);
       }
     });
   }

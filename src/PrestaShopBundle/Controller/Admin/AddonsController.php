@@ -29,6 +29,7 @@ namespace PrestaShopBundle\Controller\Admin;
 use Configuration;
 use Exception;
 use PhpEncryption;
+use PrestaShop\PrestaShop\Core\Addon\Login\Exception\LoginErrorException;
 use Symfony\Component\HttpFoundation\Cookie;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\RedirectResponse;
@@ -58,6 +59,13 @@ class AddonsController extends FrameworkBundleAdminController
 
         try {
             $json = $addonsProvider->request('check_customer', $params);
+            if ($json === null) {
+                throw new LoginErrorException();
+            }
+
+            if (!empty($json->errors)) {
+                throw new LoginErrorException($json->errors->code . ': ' . $json->errors->label);
+            }
 
             Configuration::updateValue('PS_LOGGED_ON_ADDONS', 1);
 
@@ -69,7 +77,9 @@ class AddonsController extends FrameworkBundleAdminController
             $response->headers->setCookie(
                 new Cookie('password_addons', $phpEncryption->encrypt($params['password_addons']))
             );
-            $response->headers->setCookie(new Cookie('is_contributor', (int) $json->is_contributor));
+            $response->headers->setCookie(
+                new Cookie('is_contributor', (int) $json->is_contributor)
+            );
 
             $response->setData(['success' => 1, 'message' => '']);
             $modulesProvider->clearCatalogCache();

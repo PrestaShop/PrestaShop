@@ -97,10 +97,12 @@
               </div>
               <div class="col-2">
                 <input name="product_quantity" id="quantity-input" type="number" min="1" value="1" class="form-control">
-                <small class="form-text">
-                  {{ 'In stock'|trans({}, 'Admin.Orderscustomers.Feature') }}
-                  <span class="js-in-stock-counter"></span>
-                </small>
+                {% if stockManagementEnabled %}
+                  <small class="form-text">
+                    {{ 'In stock'|trans({}, 'Admin.Orderscustomers.Feature') }}
+                    <span class="js-in-stock-counter"></span>
+                  </small>
+                {% endif %}
               </div>
             </div>
             <div class="row mt-3">
@@ -218,11 +220,13 @@
     <td class="js-product-ref"></td>
     <td><input class="form-control js-product-unit-input" type="text"></td>
     <td>
-      <input type="number" min="1" class="form-control js-product-qty-input" style="max-width: 100px;">
-      <small class="form-text">
-        {{ 'In stock'|trans({}, 'Admin.Orderscustomers.Feature') }}
-        <span class="js-product-qty-stock"></span>
-      </small>
+      <input type="number" min="1" class="form-control js-product-qty-input" style="max-width: 100px;{% if not stockManagementEnabled %}margin-top:0px;{% endif %}">
+      {% if stockManagementEnabled %}
+        <small class="form-text">  
+          {{ 'In stock'|trans({}, 'Admin.Orderscustomers.Feature') }}
+          <span class="js-product-qty-stock"></span>
+        </small>
+      {% endif %}
     </td>
     <td class="js-product-total-price"></td>
     <td class="text-right">

@@ -36,7 +36,7 @@
         </button>
       </div>
       <div class="modal-body">
-        {% if not 'PS_ORDER_RECALCULATE_SHIPPING'|configuration %}
+        {% if not configuration('PS_ORDER_RECALCULATE_SHIPPING') %}
           <div class="alert alert-info" role="alert">
             <p class="alert-text">
               {{ 'Please note that carrier change will not recalculate your shipping costs, if you want to change this please visit Shop Parameters > Order Settings'|trans({}, 'Admin.Orderscustomers.Notification') }}

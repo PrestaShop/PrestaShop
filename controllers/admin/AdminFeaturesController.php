@@ -292,7 +292,7 @@ class AdminFeaturesControllerCore extends AdminController
                 break;
 
             case 'view':
-                $bread_extended[] = $this->feature_name[$this->context->employee->id_lang];
+                $bread_extended[] = $this->feature_name[$this->context->employee->id_lang] ?? null;
                 $this->addMetaTitle($bread_extended[count($bread_extended) - 1]);
 
                 break;

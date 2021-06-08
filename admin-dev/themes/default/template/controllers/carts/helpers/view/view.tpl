@@ -119,7 +119,7 @@
 									    <ul style="margin: 0; padding: 0; list-style-type: none;">
 									    {foreach from=$datas key='index' item='data'}
 											    <li style="display: inline; margin: 2px;">
-												    <a href="{$link->getAdminLink('AdminCarts', true, [], ['ajax' => 1, 'action' => 'customizationImage', 'img' => $data.value, 'name' => $order->id|intval|cat:'-file'|cat:$index])}" class="_blank">
+												    <a href="{$link->getAdminLink('AdminCarts', true, [], ['ajax' => 1, 'action' => 'customizationImage', 'img' => $data.value, 'name' => $order->id|intval|cat:'-file'|cat:$index])}" target="_blank" rel="noopener noreferrer nofollow">
 												    <img src="{$pic_dir}{$data.value}_small" alt="" /></a>
 											    </li>
 									    {/foreach}
@@ -220,5 +220,5 @@
 	<div class="row alert alert-warning">
 		{l s='For this particular customer group, prices are displayed as:' d='Admin.Orderscustomers.Notification'} <b>{if $tax_calculation_method == $smarty.const.PS_TAX_EXC}{l s='Tax excluded' d='Admin.Global'}{else}{l s='Tax included' d='Admin.Global'}{/if}</b>
 	</div>
-{/block}
 </div>
+{/block}

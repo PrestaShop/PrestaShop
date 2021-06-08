@@ -24,64 +24,66 @@
  */
 
 // build confirmation modal
+// eslint-disable-next-line
 function confirm_modal(
   heading,
   question,
-  left_button_txt,
-  right_button_txt,
-  left_button_callback,
-  right_button_callback
+  leftButtonText,
+  rightButtonText,
+  leftButtonCallback,
+  rightButtonCallback,
 ) {
   const confirmModal = $(
-    `${'<div class="bootstrap modal hide fade">' +
-      '<div class="modal-dialog">' +
-      '<div class="modal-content">' +
-      '<div class="modal-header">' +
-      '<a class="close" data-dismiss="modal" >&times;</a>' +
-      '<h3>'}${heading}</h3>` +
-      `</div>` +
-      `<div class="modal-body">` +
-      `<p>${question}</p>` +
-      `</div>` +
-      `<div class="modal-footer">` +
-      `<a href="#" id="confirm_modal_left_button" class="btn btn-primary">${left_button_txt}</a>` +
-      `<a href="#" id="confirm_modal_right_button" class="btn btn-primary">${right_button_txt}</a>` +
-      `</div>` +
-      `</div>` +
-      `</div>` +
-      `</div>`
+    `${'<div class="bootstrap modal hide fade">'
+      + '<div class="modal-dialog">'
+      + '<div class="modal-content">'
+      + '<div class="modal-header">'
+      + '<a class="close" data-dismiss="modal" >&times;</a>'
+      + '<h3>'}${heading}</h3>`
+      + '</div>'
+      + '<div class="modal-body">'
+      + `<p>${question}</p>`
+      + '</div>'
+      + '<div class="modal-footer">'
+      + `<a href="#" id="confirm-modal-left-button" class="btn btn-primary">${leftButtonText}</a>`
+      + `<a href="#" id="confirm-modal-right-button" class="btn btn-primary">${rightButtonText}</a>`
+      + '</div>'
+      + '</div>'
+      + '</div>'
+      + '</div>',
   );
-  confirmModal.find('#confirm_modal_left_button').click(() => {
-    left_button_callback();
+  confirmModal.find('#confirm-modal-left-button').click(() => {
+    leftButtonCallback();
     confirmModal.modal('hide');
   });
-  confirmModal.find('#confirm_modal_right_button').click(() => {
-    right_button_callback();
+  confirmModal.find('#confirm-modal-right-button').click(() => {
+    rightButtonCallback();
     confirmModal.modal('hide');
   });
   confirmModal.modal('show');
 }
 
 // build error modal
-/* global error_continue_msg */
+/* global errorContinueMsg */
+// eslint-disable-next-line
 function error_modal(heading, msg) {
   const errorModal = $(
-    `${'<div class="bootstrap modal hide fade">' +
-      '<div class="modal-dialog">' +
-      '<div class="modal-content">' +
-      '<div class="modal-header">' +
-      '<a class="close" data-dismiss="modal" >&times;</a>' +
-      '<h4>'}${heading}</h4>` +
-      `</div>` +
-      `<div class="modal-body">` +
-      `<p>${msg}</p>` +
-      `</div>` +
-      `<div class="modal-footer">` +
-      `<a href="#" id="error_modal_right_button" class="btn btn-default">${error_continue_msg}</a>` +
-      `</div>` +
-      `</div>` +
-      `</div>` +
-      `</div>`
+    `${'<div class="bootstrap modal hide fade">'
+      + '<div class="modal-dialog">'
+      + '<div class="modal-content">'
+      + '<div class="modal-header">'
+      + '<a class="close" data-dismiss="modal" >&times;</a>'
+      + '<h4>'}${heading}</h4>`
+      + '</div>'
+      + '<div class="modal-body">'
+      + `<p>${msg}</p>`
+      + '</div>'
+      + '<div class="modal-footer">'
+      + `<a href="#" id="error_modal_right_button" class="btn btn-default">${errorContinueMsg}</a>`
+      + '</div>'
+      + '</div>'
+      + '</div>'
+      + '</div>',
   );
   errorModal.find('#error_modal_right_button').click(() => {
     errorModal.modal('hide');
@@ -90,11 +92,15 @@ function error_modal(heading, msg) {
 }
 
 // move to hash after clicking on anchored links
+// eslint-disable-next-line
 function scroll_if_anchor(href) {
+  // eslint-disable-next-line
   href = typeof href === 'string' ? href : $(this).attr('href');
   const fromTop = 120;
+
   if (href.indexOf('#') === 0) {
     const $target = $(href);
+
     if ($target.length) {
       $('html, body').animate({scrollTop: $target.offset().top - fromTop});
       if (history && 'pushState' in history) {
@@ -104,8 +110,18 @@ function scroll_if_anchor(href) {
     }
   }
 }
-
 $(document).ready(() => {
+  const $mainMenu = $('.main-menu');
+  const $navBar = $('.nav-bar');
+  const $body = $('body');
+
+  const NavBarTransitions = new NavbarTransitionHandler(
+    $navBar,
+    $mainMenu,
+    getAnimationEvent('transition', 'end'),
+    $body,
+  );
+
   $('.nav-bar-overflow').on('scroll', () => {
     const $menuItems = $('.main-menu .link-levelone.has_submenu.ul-open');
 
@@ -120,17 +136,20 @@ $(document).ready(() => {
   $('.nav-bar')
     .find('.link-levelone')
     .hover(
-      function() {
+      function () {
         $(this).addClass('-hover');
       },
-      function() {
+      function () {
         $(this).removeClass('-hover');
-      }
+      },
     );
 
-  $('.nav-bar li.link-levelone.has_submenu > a').on('click', function(e) {
+  $('.nav-bar li.link-levelone.has_submenu > a').on('click', function (e) {
     e.preventDefault();
     e.stopPropagation();
+
+    NavBarTransitions.toggle();
+
     const $submenu = $(this).parent();
     $('.nav-bar li.link-levelone.has_submenu a > i.material-icons.sub-tabs-arrow').text('keyboard_arrow_down');
     const onlyClose = $(e.currentTarget)
@@ -147,7 +166,7 @@ $(document).ready(() => {
             .parent()
             .removeClass('ul-open open');
           $(this).removeAttr('style');
-        }
+        },
       });
     }
 
@@ -164,7 +183,7 @@ $(document).ready(() => {
         complete() {
           $submenu.addClass('open');
           $(this).removeAttr('style');
-        }
+        },
       });
     }
     $submenu.find('i.material-icons.sub-tabs-arrow').text('keyboard_arrow_up');
@@ -173,8 +192,9 @@ $(document).ready(() => {
     $submenu.find('.submenu').css('top', itemOffsetTop);
   });
 
-  $('.nav-bar').on('click', '.menu-collapse', function() {
+  $('.nav-bar').on('click', '.menu-collapse', function () {
     $('body').toggleClass('page-sidebar-closed');
+    $('.main-menu').toggleClass('sidebar-closed');
 
     if ($('body').hasClass('page-sidebar-closed')) {
       $('nav.nav-bar ul.main-menu > li')
@@ -195,22 +215,22 @@ $(document).ready(() => {
       type: 'post',
       cache: false,
       data: {
-        shouldCollapse: Number($('body').hasClass('page-sidebar-closed'))
-      }
+        shouldCollapse: Number($('body').hasClass('page-sidebar-closed')),
+      },
     });
   });
   addMobileBodyClickListener();
   const MAX_MOBILE_WIDTH = 1023;
 
   if ($(window).width() <= MAX_MOBILE_WIDTH) {
-    mobileNav(MAX_MOBILE_WIDTH);
+    mobileNav();
   }
 
   $(window).on('resize', () => {
     if ($('body').hasClass('mobile') && $(window).width() > MAX_MOBILE_WIDTH) {
       unbuildMobileMenu();
     } else if (!$('body').hasClass('mobile') && $(window).width() <= MAX_MOBILE_WIDTH) {
-      mobileNav(MAX_MOBILE_WIDTH);
+      mobileNav();
     }
   });
 
@@ -243,7 +263,7 @@ $(document).ready(() => {
     const profileLink = $('.profile-link').attr('href');
 
     $('.nav-bar li.link-levelone.has_submenu:not(.open) a > i.material-icons.sub-tabs-arrow').text(
-      'keyboard_arrow_down'
+      'keyboard_arrow_down',
     );
     $('body').addClass('mobile');
     $('.nav-bar')
@@ -255,6 +275,7 @@ $(document).ready(() => {
         .parent()
         .find('.collapse')
         .attr('id');
+
       if (id) {
         $(el)
           .attr('href', `#${id}`)
@@ -264,17 +285,17 @@ $(document).ready(() => {
     $('.main-menu').append(`<li class="link-levelone" data-submenu="">${$logout}</li>`);
     $('.main-menu').prepend(`<li class="link-levelone">${$employee.prop('outerHTML')}</li>`);
     $('.collapse').collapse({
-      toggle: false
+      toggle: false,
     });
     if ($('#employee_links').length === 0) {
       $('.employee_avatar .material-icons, .employee_avatar span').wrap(`<a href="${profileLink}"></a>`);
     }
     $('.js-mobile-menu').on('click', expand);
     $('.js-notifs_dropdown').css({
-      height: window.innerHeight
+      height: window.innerHeight,
     });
 
-    function expand(e) {
+    function expand() {
       if ($('div.notification-center.dropdown').hasClass('open')) {
         return;
       }
@@ -286,8 +307,8 @@ $(document).ready(() => {
             complete() {
               $('.nav-bar, .mobile-layer').removeClass('expanded');
               $('.nav-bar, .mobile-layer').addClass('d-none');
-            }
-          }
+            },
+          },
         );
         $('.mobile-layer').off();
       } else {
@@ -341,7 +362,7 @@ $(document).ready(() => {
         $('.toolbarBox a.btn-help').trigger('click');
       }
     },
-    unmatch() {}
+    unmatch() {},
   });
 
   // bootstrap components init
@@ -366,7 +387,7 @@ $(document).ready(() => {
   });
 
   // search with nav sidebar closed
-  $(document).on('click', '.page-sidebar-closed .searchtab', function() {
+  $(document).on('click', '.page-sidebar-closed .searchtab', function () {
     $(this).addClass('search-expanded');
     $(this)
       .find('#bo_query')
@@ -377,7 +398,7 @@ $(document).ready(() => {
     $('.searchtab').removeClass('search-expanded');
   });
 
-  $('#header_search button').on('click', e => {
+  $('#header_search button').on('click', (e) => {
     e.stopPropagation();
   });
 
@@ -386,16 +407,16 @@ $(document).ready(() => {
     $('.clear_search').removeClass('hide');
   }
 
-  $('.clear_search').on('click', function(e) {
+  $('.clear_search').on('click', function (e) {
     e.stopPropagation();
     e.preventDefault();
     const id = $(this)
       .closest('form')
       .attr('id');
-    $('#' + id + ' #bo_query')
+    $(`#${id} #bo_query`)
       .val('')
       .focus();
-    $('#' + id + ' .clear_search').addClass('hide');
+    $(`#${id} .clear_search`).addClass('hide');
   });
   $('#bo_query').on('keydown', () => {
     if ($('#bo_query').val() !== '') {
@@ -408,7 +429,8 @@ $(document).ready(() => {
     $('#header_search .form-group').removeClass('focus-search');
   });
 
-  $('#header_search #bo_query').on('click', e => {
+  // eslint-disable-next-line
+  $('#header_search #bo_query').on('click', (e) => {
     e.stopPropagation();
     e.preventDefault();
     if ($('body').hasClass('mobile-nav')) {
@@ -418,7 +440,7 @@ $(document).ready(() => {
   });
 
   // select list for search type
-  $('#header_search_options').on('click', 'li a', function(e) {
+  $('#header_search_options').on('click', 'li a', function (e) {
     e.preventDefault();
     $('#header_search_options .search-option').removeClass('active');
     $(this)
@@ -434,7 +456,7 @@ $(document).ready(() => {
 
   // reset form
   /* global header_confirm_reset, body_confirm_reset, left_button_confirm_reset, right_button_confirm_reset */
-  $('.reset_ready').click(function() {
+  $('.reset_ready').click(function () {
     const href = $(this).attr('href');
     confirm_modal(
       header_confirm_reset,
@@ -446,7 +468,7 @@ $(document).ready(() => {
       },
       () => {
         window.location.href = `${href}&keep_data=0`;
-      }
+      },
     );
     return false;
   });
@@ -455,7 +477,7 @@ $(document).ready(() => {
   $('body').on('click', 'a.anchor', scroll_if_anchor);
 
   // manage curency status switcher
-  $('#currencyStatus input').change(function() {
+  $('#currencyStatus input').change(function () {
     const parentZone = $(this)
       .parent()
       .parent()
@@ -463,7 +485,7 @@ $(document).ready(() => {
       .parent();
     parentZone.find('.status').addClass('hide');
 
-    if ($(this).attr('checked') == 'checked') {
+    if ($(this).attr('checked') === 'checked') {
       parentZone.find('.enabled').removeClass('hide');
       $('#currency_form #active').val(1);
     } else {
@@ -472,7 +494,7 @@ $(document).ready(() => {
     }
   });
 
-  $('#currencyCronjobLiveExchangeRate input').change(function() {
+  $('#currencyCronjobLiveExchangeRate input').change(function () {
     let enable = 0;
     const parentZone = $(this)
       .parent()
@@ -481,7 +503,7 @@ $(document).ready(() => {
       .parent();
     parentZone.find('.status').addClass('hide');
 
-    if ($(this).attr('checked') == 'checked') {
+    if ($(this).attr('checked') === 'checked') {
       enable = 1;
       parentZone.find('.enabled').removeClass('hide');
     } else {
@@ -490,19 +512,19 @@ $(document).ready(() => {
     }
 
     $.ajax({
-      url: 'index.php?controller=AdminCurrencies&token=' + token,
+      url: `index.php?controller=AdminCurrencies&token=${token}`,
       cache: false,
-      data: 'ajax=1&action=cronjobLiveExchangeRate&tab=AdminCurrencies&enable=' + enable
+      data: `ajax=1&action=cronjobLiveExchangeRate&tab=AdminCurrencies&enable=${enable}`,
     });
   });
 
   // Order details: show modal to update shipping details
-  $(document).on('click', '.edit_shipping_link', function(e) {
+  $(document).on('click', '.edit_shipping_link', function (e) {
     e.preventDefault();
 
     $('#id_order_carrier').val($(this).data('id-order-carrier'));
     $('#shipping_tracking_number').val($(this).data('tracking-number'));
-    $('#shipping_carrier option[value=' + $(this).data('id-carrier') + ']').prop('selected', true);
+    $(`#shipping_carrier option[value=${$(this).data('id-carrier')}]`).prop('selected', true);
 
     $('#modal-shipping').modal();
   });

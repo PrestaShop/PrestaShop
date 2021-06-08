@@ -387,7 +387,6 @@ class OrderSlipCore extends ObjectModel
             $product['total_price_tax_' . $inc_or_ex_1] = Tools::ps_round($price * $quantity, Context::getContext()->getComputingPrecision());
             $product['total_price_tax_' . $inc_or_ex_2] = Tools::ps_round($product_tax_incl, Context::getContext()->getComputingPrecision());
         }
-
         unset($product);
 
         foreach ($total_products as $key => $price) {

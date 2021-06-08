@@ -24,7 +24,7 @@
  */
 import refreshNotifications from '@js/notifications.js';
 
-const $ = window.$;
+const {$} = window;
 
 export default class Header {
   constructor() {
@@ -42,57 +42,61 @@ export default class Header {
     $('.js-quick-link').on('click', (e) => {
       e.preventDefault();
 
-      let method = $(e.target).data('method');
+      const method = $(e.target).data('method');
       let name = null;
 
       if (method === 'add') {
-        let text = $(e.target).data('prompt-text');
-        let link = $(e.target).data('link');
+        const text = $(e.target).data('prompt-text');
+        const link = $(e.target).data('link');
 
         name = prompt(text, link);
       }
-      if (method === 'add' && name || method === 'remove') {
-        let postLink = $(e.target).data('post-link');
-        let quickLinkId = $(e.target).data('quicklink-id');
-        let rand = $(e.target).data('rand');
-        let url = $(e.target).data('url');
-        let icon = $(e.target).data('icon');
+
+      if ((method === 'add' && name) || method === 'remove') {
+        const postLink = $(e.target).data('post-link');
+        const quickLinkId = $(e.target).data('quicklink-id');
+        const rand = $(e.target).data('rand');
+        const url = $(e.target).data('url');
+        const icon = $(e.target).data('icon');
 
         $.ajax({
           type: 'POST',
           headers: {
-            "cache-control": "no-cache"
+            'cache-control': 'no-cache',
           },
           async: true,
           url: `${postLink}&action=GetUrl&rand=${rand}&ajax=1&method=${method}&id_quick_access=${quickLinkId}`,
           data: {
-            "url": url,
-            "name": name,
-            "icon": icon
+            url,
+            name,
+            icon,
           },
-          dataType: "json",
+          dataType: 'json',
           success: (data) => {
-            var quicklink_list = '';
+            let quicklinkList = '';
             $.each(data, (index) => {
-              if (typeof data[index]['name'] !== 'undefined')
-                quicklink_list += '<li><a href="' + data[index]['link'] + '"><i class="icon-chevron-right"></i> ' + data[index]['name'] + '</a></li>';
+              /* eslint-disable-next-line max-len */
+              if (typeof data[index].name !== 'undefined') quicklinkList += `<li><a href="${data[index].link}&token=${data[index].token}"><i class="icon-chevron-right"></i> ${data[index].name}</a></li>`;
             });
 
-            if (typeof data['has_errors'] !== 'undefined' && data['has_errors'])
+            if (typeof data.has_errors !== 'undefined' && data.has_errors) {
               $.each(data, (index) => {
-                if (typeof data[index] === 'string')
+                if (typeof data[index] === 'string') {
                   $.growl.error({
                     title: '',
-                    message: data[index]
+                    message: data[index],
                   });
+                }
               });
-            else if (quicklink_list) {
-              $('#header_quick ul.dropdown-menu .divider').prevAll().remove();
-              $('#header_quick ul.dropdown-menu').prepend(quicklink_list);
+            } else if (quicklinkList) {
+              $('#header_quick ul.dropdown-menu .divider')
+                .prevAll()
+                .remove();
+              $('#header_quick ul.dropdown-menu').prepend(quicklinkList);
               $(e.target).remove();
               window.showSuccessMessage(window.update_success_msg);
             }
-          }
+          },
         });
       }
     });
@@ -100,23 +104,28 @@ export default class Header {
 
   initMultiStores() {
     $('.js-link').on('click', (e) => {
-      window.open($(e.target).parents('.link').attr('href'), '_blank');
+      window.open(
+        $(e.target)
+          .parents('.link')
+          .attr('href'),
+        '_blank',
+      );
     });
   }
 
   initNotificationsToggle() {
     $('.notification.dropdown-toggle').on('click', () => {
-      if(!$('.mobile-nav').hasClass('expanded')) {
+      if (!$('.mobile-nav').hasClass('expanded')) {
         this.updateEmployeeNotifications();
       }
     });
 
-    $('body').on('click', function (e) {
-      if (!$('div.notification-center.dropdown').is(e.target)
+    $('body').on('click', (e) => {
+      if (
+        !$('div.notification-center.dropdown').is(e.target)
         && $('div.notification-center.dropdown').has(e.target).length === 0
         && $('.open').has(e.target).length === 0
       ) {
-
         if ($('div.notification-center.dropdown').hasClass('open')) {
           $('.mobile-layer').removeClass('expanded');
           refreshNotifications();
@@ -138,20 +147,16 @@ export default class Header {
   }
 
   updateEmployeeNotifications() {
-    $.post(
-      admin_notification_push_link,
-      {
-        "type": $('.notification-center .nav-link.active').attr('data-type')
-      }
-    );
+    $.post(window.adminNotificationPushLink, {
+      type: $('.notification-center .nav-link.active').attr('data-type'),
+    });
   }
 
   /**
    * Updates the offset of the content div in whenever the header changes size
    */
   initContentDivOffset() {
-
-    const onToolbarResize = function() {
+    const onToolbarResize = function () {
       const toolbar = $('.header-toolbar').last();
       const header = $('.main-header');
       const content = $('.content-div');

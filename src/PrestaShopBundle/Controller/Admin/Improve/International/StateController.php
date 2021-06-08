@@ -58,8 +58,8 @@ class StateController extends FrameworkBundleAdminController
             ]);
         } catch (Exception $e) {
             return $this->json([
-                    'message' => $this->getErrorMessageForException($e, []),
-                ],
+                'message' => $this->getErrorMessageForException($e, []),
+            ],
                 Response::HTTP_INTERNAL_SERVER_ERROR
             );
         }

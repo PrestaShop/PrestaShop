@@ -36,10 +36,8 @@
     <div class="col-lg-10">
       <div id="module-short-list-update" class="module-short-list">
         <span class="module-search-result-title module-search-result-wording">{{ '%nbModules% modules to update'|trans({'%nbModules%' : modules|length}, 'Admin.Modules.Feature') }}</span>
-        <span class="help-box" data-toggle="popover"
-          data-title="{{ "Modules to update"|trans({}, 'Admin.Modules.Feature') }}"
-          data-content="{{ "Update these modules to enjoy their latest versions."|trans({}, 'Admin.Modules.Help') }}">
-        </span>
+        {% include '@Common/HelpBox/helpbox.html.twig' with { 'content' : "Update these modules to enjoy their latest versions."|trans({}, 'Admin.Modules.Help'), 'title' : "Modules to update"|trans({}, 'Admin.Modules.Feature') } %}
+
         {% if (modules|length > 1) and (level >= constant('PrestaShopBundle\\Security\\Voter\\PageVoter::LEVEL_UPDATE')) %}
           <a class="btn btn-primary-reverse float-right btn-outline-primary light-button module_action_menu_upgrade_all" href="#" data-confirm_modal="module-modal-confirm-upgrade-all">{{ "Upgrade All"|trans({}, 'Admin.Modules.Feature') }}</a>
         {% endif %}

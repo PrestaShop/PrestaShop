@@ -61,13 +61,13 @@
         </td>
         <td>
           {% if document.type == 'invoice' %}
-            <a class="_blank"
+            <a target="_blank" rel="noopener noreferrer nofollow"
                href="{{ getAdminLink('AdminPdf', true, {'submitAction': 'generateInvoicePDF', 'id_order_invoice': document.id}) }}"
             >
               {{ document.referenceNumber }}
             </a>
           {% elseif document.type == 'delivery_slip' %}
-            <a class="_blank"
+            <a target="_blank" rel="noopener noreferrer nofollow"
                href="{{ getAdminLink('AdminPdf', true, {'submitAction': 'generateDeliverySlipPDF', 'id_order_invoice': document.id}) }}"
             >
               {{ document.referenceNumber }}

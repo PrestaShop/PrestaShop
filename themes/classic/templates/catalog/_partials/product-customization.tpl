@@ -22,7 +22,7 @@
  * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/AFL-3.0 Academic Free License 3.0 (AFL-3.0)
  *}
-<section class="product-customization">
+<section class="product-customization js-product-customization">
   {if !$configuration.is_catalog}
     <div class="card card-block">
       <p class="h4 card-title">{l s='Product customization' d='Shop.Theme.Catalog'}</p>
@@ -45,7 +45,7 @@
                 {elseif $field.type == 'image'}
                   {if $field.is_customized}
                     <br>
-                    <img src="{$field.image.small.url}">
+                    <img src="{$field.image.small.url}" loading="lazy">
                     <a class="remove-image" href="{$field.remove_image_url}" rel="nofollow">{l s='Remove Image' d='Shop.Theme.Actions'}</a>
                   {/if}
                   <span class="custom-file">

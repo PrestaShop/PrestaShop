@@ -408,20 +408,65 @@ class DbMySQLiCore extends Db
             return false;
         }
 
+        $enginesToTest = ['InnoDB', 'MyISAM'];
+        if ($engine !== null) {
+            $enginesToTest = [$engine];
+        }
+
+        foreach ($enginesToTest as $engineToTest) {
+            $result = $link->query('
+            CREATE TABLE `' . $prefix . 'test` (
+                `test` tinyint(1) unsigned NOT NULL
+            ) ENGINE=' . $engineToTest);
+
+            if ($result) {
+                $link->query('DROP TABLE `' . $prefix . 'test`');
+
+                return true;
+            }
+        }
+
+        return $link->error;
+    }
+
+    /**
+     * Tries to connect to the database and select content (checking select privileges).
+     *
+     * @param string $server
+     * @param string $user
+     * @param string $pwd
+     * @param string $db
+     * @param string $prefix
+     * @param string|null $engine Table engine
+     *
+     * @return bool|string True, false or error
+     */
+    public static function checkSelectPrivilege($server, $user, $pwd, $db, $prefix, $engine = null)
+    {
+        $link = @new mysqli($server, $user, $pwd, $db);
+        if (mysqli_connect_error()) {
+            return false;
+        }
+
         if ($engine === null) {
             $engine = 'MyISAM';
         }
 
-        $result = $link->query('
+        // Create a table
+        $link->query('
 		CREATE TABLE `' . $prefix . 'test` (
 			`test` tinyint(1) unsigned NOT NULL
 		) ENGINE=' . $engine);
 
+        // Select content
+        $result = $link->query('SELECT * FROM `' . $prefix . 'test`');
+
+        // Drop the table
+        $link->query('DROP TABLE `' . $prefix . 'test`');
+
         if (!$result) {
             return $link->error;
         }
-
-        $link->query('DROP TABLE `' . $prefix . 'test`');
 
         return true;
     }
@@ -441,25 +486,6 @@ class DbMySQLiCore extends Db
     {
         $link = @new mysqli($server, $user, $pwd);
         $ret = $link->query('SET NAMES utf8mb4');
-        $link->close();
-
-        return $ret;
-    }
-
-    /**
-     * Checks if auto increment value and offset is 1.
-     *
-     * @param string $server
-     * @param string $user
-     * @param string $pwd
-     *
-     * @return bool
-     */
-    public static function checkAutoIncrement($server, $user, $pwd)
-    {
-        $link = @new mysqli($server, $user, $pwd);
-        $ret = (bool) (($result = $link->query('SELECT @@auto_increment_increment as aii')) && ($row = $result->fetch_assoc()) && $row['aii'] == 1);
-        $ret &= (bool) (($result = $link->query('SELECT @@auto_increment_offset as aio')) && ($row = $result->fetch_assoc()) && $row['aio'] == 1);
         $link->close();
 
         return $ret;

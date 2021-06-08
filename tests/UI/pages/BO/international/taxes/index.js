@@ -23,28 +23,28 @@ class Taxes extends BOBasePage {
     this.deleteSelectionButton = `${this.taxesGridPanelDiv} #tax_grid_bulk_action_delete_selection`;
     this.selectAllLabel = `${this.taxesGridPanelDiv} #tax_grid tr.column-filters .md-checkbox i`;
     this.taxesGridTable = `${this.taxesGridPanelDiv} #tax_grid_table`;
-    this.confirmDeleteModal = '#tax_grid_confirm_modal';
+    this.confirmDeleteModal = '#tax-grid-confirm-modal';
     this.confirmDeleteButton = `${this.confirmDeleteModal} button.btn-confirm-submit`;
     // Filters
     this.taxesFilterColumnInput = filterBy => `${this.taxesGridTable} #tax_${filterBy}`;
-    this.resetFilterButton = `${this.taxesGridTable} button[name='tax[actions][reset]']`;
-    this.searchFilterButton = `${this.taxesGridTable} button[name='tax[actions][search]']`;
+    this.resetFilterButton = `${this.taxesGridTable} .grid-reset-button`;
+    this.searchFilterButton = `${this.taxesGridTable} .grid-search-button`;
     this.taxesGridRow = row => `${this.taxesGridTable} tbody tr:nth-child(${row})`;
     this.taxesGridColumn = (row, column) => `${this.taxesGridRow(row)} td.column-${column}`;
+    this.taxesGridStatusColumn = row => `${this.taxesGridColumn(row, 'active')} .ps-switch`;
+    this.taxesGridStatusColumnToggleInput = row => `${this.taxesGridStatusColumn(row)} input`;
     this.taxesGridActionsColumn = row => this.taxesGridColumn(row, 'actions');
-    this.taxesGridColumnEditLink = row => `${this.taxesGridActionsColumn(row)} a[data-original-title='Edit']`;
+    this.taxesGridColumnEditLink = row => `${this.taxesGridActionsColumn(row)} a.grid-edit-row-link`;
     this.taxesGridColumnToggleDropDown = row => `${this.taxesGridActionsColumn(row)} a[data-toggle='dropdown']`;
-    this.taxesGridDeleteLink = row => `${this.taxesGridActionsColumn(row)} a[data-url*='delete']`;
-    this.taxesGridStatusColumn = row => this.taxesGridColumn(row, 'active');
-    this.toggleColumnValidIcon = row => `${this.taxesGridStatusColumn(row)} i.grid-toggler-icon-valid`;
+    this.taxesGridDeleteLink = row => `${this.taxesGridActionsColumn(row)} a.grid-delete-row-link`;
 
     // Form Taxes Options
-    this.enabledTaxSwitchLabel = id => `label[for='form_options_enable_tax_${id}']`;
-    this.displayTaxInCartSwitchLabel = id => `label[for='form_options_display_tax_in_cart_${id}']`;
-    this.taxAddressTypeSelect = '#form_options_tax_address_type';
-    this.useEcoTaxSwitchLabel = id => `label[for='form_options_use_eco_tax_${id}']`;
-    this.ecoTaxSelect = '#form_options_eco_tax_rule_group';
-    this.saveTaxOptionButton = '.card-footer button';
+    this.taxStatusToggleInput = toggle => `#form_enable_tax_${toggle}`;
+    this.displayTaxInCartToggleInput = toggle => `#form_display_tax_in_cart_${toggle}`;
+    this.taxAddressTypeSelect = '#form_tax_address_type';
+    this.useEcoTaxToggleInput = toggle => `#form_use_eco_tax_${toggle}`;
+    this.ecoTaxSelect = '#form_eco_tax_rule_group';
+    this.saveTaxOptionButton = '#form-tax-options-save-button';
 
     // Sort Selectors
     this.tableHead = `${this.taxesGridTable} thead`;
@@ -120,10 +120,18 @@ class Taxes extends BOBasePage {
    * Get toggle column value for a row
    * @param page
    * @param row
-   * @return {Promise<string>}
+   * @return {Promise<boolean>}
    */
   async getStatus(page, row) {
-    return this.elementVisible(page, this.toggleColumnValidIcon(row), 100);
+    // Get value of the check input
+    const inputValue = await this.getAttributeContent(
+      page,
+      `${this.taxesGridStatusColumnToggleInput(row)}:checked`,
+      'value',
+    );
+
+    // Return status=false if value='0' and true otherwise
+    return (inputValue !== '0');
   }
 
   /**
@@ -134,7 +142,6 @@ class Taxes extends BOBasePage {
    * @return {Promise<boolean>}, true if click has been performed
    */
   async setStatus(page, row, valueWanted = true) {
-    await this.waitForVisibleSelector(page, this.taxesGridStatusColumn(row), 2000);
     if (await this.getStatus(page, row) !== valueWanted) {
       await this.clickAndWaitForNavigation(page, this.taxesGridStatusColumn(row));
       return true;
@@ -163,10 +170,12 @@ class Taxes extends BOBasePage {
   async getAllRowsColumnContent(page, column) {
     const rowsNumber = await this.getNumberOfElementInGrid(page);
     const allRowsContentTable = [];
+
     for (let i = 1; i <= rowsNumber; i++) {
       const rowContent = await this.getTextColumnFromTableTaxes(page, i, column);
       await allRowsContentTable.push(rowContent);
     }
+
     return allRowsContentTable;
   }
 
@@ -203,8 +212,13 @@ class Taxes extends BOBasePage {
       page.click(this.taxesGridColumnToggleDropDown(row)),
       this.waitForVisibleSelector(page, `${this.taxesGridColumnToggleDropDown(row)}[aria-expanded='true']`),
     ]);
-    // Click on delete
-    await this.clickAndWaitForNavigation(page, this.taxesGridDeleteLink(row));
+
+    // Click on delete and wait for modal
+    await Promise.all([
+      page.click(this.taxesGridDeleteLink(row)),
+      this.waitForVisibleSelector(page, `${this.confirmDeleteModal}.show`),
+    ]);
+    await this.confirmDeleteTaxes(page);
     return this.getAlertSuccessBlockParagraphContent(page);
   }
 
@@ -271,25 +285,19 @@ class Taxes extends BOBasePage {
    * @returns {Promise<string>}
    */
   async updateTaxOption(page, taxOptionData) {
+    await page.check(this.taxStatusToggleInput(taxOptionData.enabled ? 1 : 0));
     if (taxOptionData.enabled) {
-      await page.click(this.enabledTaxSwitchLabel(1));
-      if (taxOptionData.displayInShoppingCart) {
-        await page.click(this.displayTaxInCartSwitchLabel(1));
-      } else {
-        await page.click(this.displayTaxInCartSwitchLabel(0));
-      }
-    } else {
-      await page.click(this.enabledTaxSwitchLabel(0));
+      await page.check(this.displayTaxInCartToggleInput(taxOptionData.displayInShoppingCart ? 1 : 0));
     }
+
     await this.selectByVisibleText(page, this.taxAddressTypeSelect, taxOptionData.basedOn);
-    if (taxOptionData.useEcoTax) {
-      await page.click(this.useEcoTaxSwitchLabel(1));
-      if (taxOptionData.ecoTax !== undefined) {
-        await this.selectByVisibleText(page, this.ecoTaxSelect, taxOptionData.ecoTax);
-      }
-    } else {
-      await page.click(this.useEcoTaxSwitchLabel(0));
+
+    await page.check(this.useEcoTaxToggleInput(taxOptionData.useEcoTax ? 1 : 0));
+
+    if (taxOptionData.useEcoTax && taxOptionData.ecoTax !== undefined) {
+      await this.selectByVisibleText(page, this.ecoTaxSelect, taxOptionData.ecoTax);
     }
+
     // Click on save tax Option
     await this.clickAndWaitForNavigation(page, this.saveTaxOptionButton);
     return this.getAlertSuccessBlockParagraphContent(page);

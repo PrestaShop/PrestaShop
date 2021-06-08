@@ -30,13 +30,13 @@ class CMSCategoryCore extends ObjectModel
     /** @var int CMSCategory ID */
     public $id_cms_category;
 
-    /** @var string Name */
+    /** @var array<string> Name */
     public $name;
 
     /** @var bool Status for display */
     public $active = 1;
 
-    /** @var string Description */
+    /** @var array<string> Description */
     public $description;
 
     /** @var int Parent CMSCategory ID */
@@ -48,16 +48,16 @@ class CMSCategoryCore extends ObjectModel
     /** @var int Parents number */
     public $level_depth;
 
-    /** @var string string used in rewrited URL */
+    /** @var array<string> string used in rewrited URL */
     public $link_rewrite;
 
-    /** @var string Meta title */
+    /** @var array<string> Meta title */
     public $meta_title;
 
-    /** @var string Meta keywords */
+    /** @var array<string> Meta keywords */
     public $meta_keywords;
 
-    /** @var string Meta description */
+    /** @var array<string> Meta description */
     public $meta_description;
 
     /** @var string Object creation date */
@@ -145,7 +145,7 @@ class CMSCategoryCore extends ObjectModel
         $children = [];
         $subcats = $this->getSubCategories($id_lang, true);
         if (($max_depth == 0 || $currentDepth < $max_depth) && $subcats && count($subcats)) {
-            foreach ($subcats as &$subcat) {
+            foreach ($subcats as $subcat) {
                 if (!$subcat['id_cms_category']) {
                     break;
                 } elseif (!is_array($excluded_ids_array) || !in_array($subcat['id_cms_category'], $excluded_ids_array)) {
@@ -185,7 +185,9 @@ class CMSCategoryCore extends ObjectModel
 				FROM `' . _DB_PREFIX_ . 'cms_category` c
 				' . Shop::addSqlAssociation('cms_category', 'c') . '
 				WHERE c.`id_parent` = ' . (int) $current .
-                    ($active ? ' AND c.`active` = 1' : '');
+                    ($active ? ' AND c.`active` = 1' : '') .
+        ' ORDER BY c.`position`';
+
         $result = Db::getInstance()->executeS($sql);
         foreach ($result as $row) {
             $category['children'][] = CMSCategory::getRecurseCategory($id_lang, $row['id_cms_category'], $active, $links);
@@ -195,9 +197,9 @@ class CMSCategoryCore extends ObjectModel
 				FROM `' . _DB_PREFIX_ . 'cms` c
 				' . Shop::addSqlAssociation('cms', 'c') . '
 				JOIN `' . _DB_PREFIX_ . 'cms_lang` cl ON c.`id_cms` = cl.`id_cms`
-				WHERE `id_cms_category` = ' . (int) $current . ($active ? ' AND c.`active` = 1' : '') . ' 
-				AND cl.`id_shop` = ' . (int) Context::getContext()->shop->id . ' 
-				AND cl.`id_lang` = ' . (int) $id_lang . ' 
+				WHERE `id_cms_category` = ' . (int) $current . ($active ? ' AND c.`active` = 1' : '') . '
+				AND cl.`id_shop` = ' . (int) Context::getContext()->shop->id . '
+				AND cl.`id_lang` = ' . (int) $id_lang . '
 				GROUP BY c.id_cms
 				ORDER BY c.`position`';
 
@@ -394,7 +396,7 @@ class CMSCategoryCore extends ObjectModel
 		WHERE `id_parent` = ' . (int) $this->id . '
 		' . ($active ? 'AND `active` = 1' : '') . '
 		GROUP BY c.`id_cms_category`
-		ORDER BY `name` ASC');
+		ORDER BY `position` ASC');
 
         // Modify SQL result
         foreach ($result as &$row) {

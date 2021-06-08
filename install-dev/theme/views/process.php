@@ -104,25 +104,6 @@ var admin = '<?php echo file_exists('../admin-dev') ? '../admin-dev' : '../admin
 			</p>
 		</div>
 	</div>
-
-	<div class="sharing">
-		<p><?php echo $this->translator->trans('Share your experience with your friends!', array(), 'Install'); ?></p>
-		<button type="button" class="btn-twitter" onclick="psinstall_twitter_click('<?php echo $this->translator->trans('I just built an online store with PrestaShop!', array(), 'Install'); ?> <?php echo $this->translator->trans('Watch this exhilarating experience: http://vimeo.com/89298199', array(), 'Install'); ?>');">
-			<i></i> <?php echo $this->translator->trans('Tweet', array(), 'Install'); ?>
-		</button>
-		<button type="button" class="btn-facebook" onclick="psinstall_facebook_click();">
-			<i></i> <?php echo $this->translator->trans('Share', array(), 'Install'); ?>
-		</button>
-		<button type="button" class="btn-google-plus" onclick="psinstall_google_click();">
-			<i></i> <?php echo $this->translator->trans('Google+', array(), 'Install'); ?>
-		</button>
-		<button type="button" class="btn-pinterest" onclick="psinstall_pinterest_click();">
-			<i></i> <?php echo $this->translator->trans('Pinterest', array(), 'Install'); ?>
-		</button>
-		<button type="button" class="btn-linkedin" onclick="psinstall_linkedin_click();">
-			<i></i> <?php echo $this->translator->trans('LinkedIn', array(), 'Install'); ?>
-		</button>
-	</div>
 </div>
 
 <?php if (@fsockopen('addons.prestashop.com', 80, $errno, $errst, 3)): ?>

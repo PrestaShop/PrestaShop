@@ -26,8 +26,6 @@
 {% extends '@PrestaShop/Admin/layout.html.twig' %}
 {% trans_default_domain 'Admin.International.Feature' %}
 
-{% set geolocationByIpAddressForm, geolocationIpAddressWhitelistForm, geolocationOptionsForm = geolocationForm.geolocation_by_id_address, geolocationForm.geolocation_ip_address_whitelist, geolocationForm.geolocation_options %}
-
 {% block content %}
   {% if not geolocationDatabaseAvailable %}
     <div class="row">
@@ -41,25 +39,26 @@
     </div>
   {% endif %}
 
-  {{ form_start(geolocationForm, {'action': path('admin_geolocation_save_options')}) }}
-    <div class="row justify-content-center">
-      <div class="col-xl-10">
+  <div class="row justify-content-center">
+    <div class="col-xl-12">
+      {{ form_start(geolocationByIpAddressForm, {'action': path('admin_geolocation_by_ip_address_save')}) }}
         {% include '@PrestaShop/Admin/Improve/International/Geolocation/Blocks/geolocation_by_ip_address.html.twig' %}
-      </div>
-
-      <div class="col-xl-10">
-        {% include '@PrestaShop/Admin/Improve/International/Geolocation/Blocks/geolocation_options.html.twig' %}
-      </div>
-
-      <div class="col-xl-10">
-        {% include '@PrestaShop/Admin/Improve/International/Geolocation/Blocks/geolocation_ip_address_whitelist.html.twig' %}
-      </div>
+      {{ form_end(geolocationByIpAddressForm) }}
     </div>
 
-    {% block geolocation_form_rest %}
-      {{ form_rest(geolocationForm) }}
-    {% endblock %}
-  {{ form_end(geolocationForm) }}
+    <div class="col-xl-12">
+      {{ form_start(geolocationOptionsForm, {'action': path('admin_geolocation_options_save')}) }}
+        {% include '@PrestaShop/Admin/Improve/International/Geolocation/Blocks/geolocation_options.html.twig' %}
+      {{ form_end(geolocationOptionsForm) }}
+    </div>
+
+    <div class="col-xl-12">
+      {{ form_start(geolocationIpAddressWhitelistForm, {'action': path('admin_geolocation_whitelist_save')}) }}
+        {% include '@PrestaShop/Admin/Improve/International/Geolocation/Blocks/geolocation_ip_address_whitelist.html.twig' %}
+      {{ form_end(geolocationIpAddressWhitelistForm) }}
+    </div>
+  </div>
+
 {% endblock %}
 
 {% block javascripts %}

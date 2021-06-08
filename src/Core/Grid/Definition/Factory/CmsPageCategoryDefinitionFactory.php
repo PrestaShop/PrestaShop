@@ -31,7 +31,6 @@ use PrestaShop\PrestaShop\Core\Grid\Action\Bulk\Type\SubmitBulkAction;
 use PrestaShop\PrestaShop\Core\Grid\Action\GridActionCollection;
 use PrestaShop\PrestaShop\Core\Grid\Action\Row\RowActionCollection;
 use PrestaShop\PrestaShop\Core\Grid\Action\Row\Type\LinkRowAction;
-use PrestaShop\PrestaShop\Core\Grid\Action\Row\Type\SubmitRowAction;
 use PrestaShop\PrestaShop\Core\Grid\Action\Type\SimpleGridAction;
 use PrestaShop\PrestaShop\Core\Grid\Column\ColumnCollection;
 use PrestaShop\PrestaShop\Core\Grid\Column\Type\Common\ActionColumn;
@@ -47,6 +46,7 @@ use PrestaShop\PrestaShop\Core\Multistore\MultistoreContextCheckerInterface;
 use PrestaShopBundle\Form\Admin\Type\SearchAndResetType;
 use PrestaShopBundle\Form\Admin\Type\YesAndNoChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RequestStack;
 
 /**
@@ -55,8 +55,9 @@ use Symfony\Component\HttpFoundation\RequestStack;
 final class CmsPageCategoryDefinitionFactory extends AbstractFilterableGridDefinitionFactory
 {
     use BulkDeleteActionTrait;
+    use DeleteActionTrait;
 
-    const GRID_ID = 'cms_page_category';
+    public const GRID_ID = 'cms_page_category';
 
     /**
      * @var int
@@ -115,79 +116,72 @@ final class CmsPageCategoryDefinitionFactory extends AbstractFilterableGridDefin
     {
         $columnCollection = (new ColumnCollection())
             ->add((new BulkActionColumn('bulk'))
-                ->setOptions([
-                    'bulk_field' => 'id_cms_category',
-                ])
+            ->setOptions([
+                'bulk_field' => 'id_cms_category',
+            ])
             )
             ->add((new DataColumn('id_cms_category'))
-                ->setName($this->trans('ID', [], 'Admin.Global'))
-                ->setOptions([
-                    'field' => 'id_cms_category',
-                ])
+            ->setName($this->trans('ID', [], 'Admin.Global'))
+            ->setOptions([
+                'field' => 'id_cms_category',
+            ])
             )
             ->add((new LinkColumn('name'))
-                ->setName($this->trans('Name', [], 'Admin.Global'))
-                ->setOptions([
-                    'field' => 'name',
-                    'route' => 'admin_cms_pages_index',
-                    'route_param_name' => 'id_cms_category',
-                    'route_param_field' => 'id_cms_category',
-                ])
+            ->setName($this->trans('Name', [], 'Admin.Global'))
+            ->setOptions([
+                'field' => 'name',
+                'route' => 'admin_cms_pages_index',
+                'route_param_name' => 'id_cms_category',
+                'route_param_field' => 'id_cms_category',
+            ])
             )
             ->add((new DataColumn('description'))
-                ->setName($this->trans('Description', [], 'Admin.Global'))
-                ->setOptions([
-                    'field' => 'description',
-                ])
+            ->setName($this->trans('Description', [], 'Admin.Global'))
+            ->setOptions([
+                'field' => 'description',
+            ])
             )
             ->add((new ToggleColumn('active'))
-                ->setName($this->trans('Displayed', [], 'Admin.Global'))
-                ->setOptions([
-                    'field' => 'active',
-                    'route' => 'admin_cms_pages_category_toggle',
-                    'primary_field' => 'id_cms_category',
-                    'route_param_name' => 'cmsCategoryId',
-                ])
+            ->setName($this->trans('Displayed', [], 'Admin.Global'))
+            ->setOptions([
+                'field' => 'active',
+                'route' => 'admin_cms_pages_category_toggle',
+                'primary_field' => 'id_cms_category',
+                'route_param_name' => 'cmsCategoryId',
+            ])
             )
             ->add((new ActionColumn('actions'))
-                ->setName($this->trans('Actions', [], 'Admin.Global'))
-                ->setOptions([
-                    'actions' => (new RowActionCollection())
-                        ->add((new LinkRowAction('view'))
-                            ->setName($this->trans('View', [], 'Admin.Actions'))
-                            ->setIcon('zoom_in')
-                            ->setOptions([
-                                'route' => 'admin_cms_pages_index',
-                                'route_param_name' => 'id_cms_category',
-                                'route_param_field' => 'id_cms_category',
-                                'clickable_row' => true,
-                            ])
+            ->setName($this->trans('Actions', [], 'Admin.Global'))
+            ->setOptions([
+                'actions' => (new RowActionCollection())
+                    ->add((new LinkRowAction('view'))
+                    ->setName($this->trans('View', [], 'Admin.Actions'))
+                    ->setIcon('zoom_in')
+                    ->setOptions([
+                        'route' => 'admin_cms_pages_index',
+                        'route_param_name' => 'id_cms_category',
+                        'route_param_field' => 'id_cms_category',
+                        'clickable_row' => true,
+                    ])
+                    )
+                    ->add((new LinkRowAction('edit'))
+                    ->setName($this->trans('Edit', [], 'Admin.Actions'))
+                    ->setIcon('edit')
+                    ->setOptions([
+                        'route' => 'admin_cms_pages_category_edit',
+                        'route_param_name' => 'cmsCategoryId',
+                        'route_param_field' => 'id_cms_category',
+                    ])
+                    )
+                    ->add(
+                        $this->buildDeleteAction(
+                            'admin_cms_pages_category_delete',
+                            'cmsCategoryId',
+                            'id_cms_category',
+                            Request::METHOD_DELETE
                         )
-                        ->add((new LinkRowAction('edit'))
-                            ->setName($this->trans('Edit', [], 'Admin.Actions'))
-                            ->setIcon('edit')
-                            ->setOptions([
-                                'route' => 'admin_cms_pages_category_edit',
-                                'route_param_name' => 'cmsCategoryId',
-                                'route_param_field' => 'id_cms_category',
-                            ])
-                        )
-                        ->add((new SubmitRowAction('delete'))
-                            ->setName($this->trans('Delete', [], 'Admin.Actions'))
-                            ->setIcon('delete')
-                            ->setOptions([
-                                'method' => 'DELETE',
-                                'route' => 'admin_cms_pages_category_delete',
-                                'route_param_name' => 'cmsCategoryId',
-                                'route_param_field' => 'id_cms_category',
-                                'confirm_message' => $this->trans(
-                                    'Delete selected item?',
-                                    [],
-                                    'Admin.Notifications.Warning'
-                                ),
-                            ])
-                        ),
-                ])
+                    ),
+            ])
             )
         ;
 
@@ -235,51 +229,51 @@ final class CmsPageCategoryDefinitionFactory extends AbstractFilterableGridDefin
 
         $filterCollection = (new FilterCollection())
             ->add((new Filter('id_cms_category', TextType::class))
-                ->setTypeOptions([
-                    'required' => false,
-                    'attr' => [
-                        'placeholder' => $this->trans('ID', [], 'Admin.Global'),
-                    ],
-                ])
-                ->setAssociatedColumn('id_cms_category')
+            ->setTypeOptions([
+                'required' => false,
+                'attr' => [
+                    'placeholder' => $this->trans('ID', [], 'Admin.Global'),
+                ],
+            ])
+            ->setAssociatedColumn('id_cms_category')
             )
             ->add((new Filter('name', TextType::class))
-                ->setTypeOptions([
-                    'required' => false,
-                    'attr' => [
-                        'placeholder' => $this->trans('Name', [], 'Admin.Global'),
-                    ],
-                ])
-                ->setAssociatedColumn('name')
+            ->setTypeOptions([
+                'required' => false,
+                'attr' => [
+                    'placeholder' => $this->trans('Name', [], 'Admin.Global'),
+                ],
+            ])
+            ->setAssociatedColumn('name')
             )
             ->add((new Filter('description', TextType::class))
-                ->setTypeOptions([
-                    'required' => false,
-                    'attr' => [
-                        'placeholder' => $this->trans('Description', [], 'Admin.Global'),
-                    ],
-                ])
-                ->setAssociatedColumn('description')
+            ->setTypeOptions([
+                'required' => false,
+                'attr' => [
+                    'placeholder' => $this->trans('Description', [], 'Admin.Global'),
+                ],
+            ])
+            ->setAssociatedColumn('description')
             )
             ->add((new Filter('active', YesAndNoChoiceType::class))
-                ->setAssociatedColumn('active')
+            ->setAssociatedColumn('active')
             )
             ->add((new Filter('actions', SearchAndResetType::class))
-                ->setTypeOptions($actionsTypeOptions)
-                ->setAssociatedColumn('actions')
+            ->setTypeOptions($actionsTypeOptions)
+            ->setAssociatedColumn('actions')
             )
         ;
 
         if ($this->isAllShopContextOrShopFeatureIsNotUsed()) {
             $filterCollection
                 ->add((new Filter('position', TextType::class))
-                    ->setTypeOptions([
-                        'required' => false,
-                        'attr' => [
-                            'placeholder' => $this->trans('Position', [], 'Admin.Global'),
-                        ],
-                    ])
-                    ->setAssociatedColumn('position')
+                ->setTypeOptions([
+                    'required' => false,
+                    'attr' => [
+                        'placeholder' => $this->trans('Position', [], 'Admin.Global'),
+                    ],
+                ])
+                ->setAssociatedColumn('position')
                 )
             ;
         }
@@ -294,16 +288,16 @@ final class CmsPageCategoryDefinitionFactory extends AbstractFilterableGridDefin
     {
         return (new BulkActionCollection())
             ->add((new SubmitBulkAction('enable_selection'))
-                ->setName($this->trans('Enable selection', [], 'Admin.Actions'))
-                ->setOptions([
-                    'submit_route' => 'admin_cms_pages_category_bulk_status_enable',
-                ])
+            ->setName($this->trans('Enable selection', [], 'Admin.Actions'))
+            ->setOptions([
+                'submit_route' => 'admin_cms_pages_category_bulk_status_enable',
+            ])
             )
             ->add((new SubmitBulkAction('disable_selection'))
-                ->setName($this->trans('Disable selection', [], 'Admin.Actions'))
-                ->setOptions([
-                    'submit_route' => 'admin_cms_pages_category_bulk_status_disable',
-                ])
+            ->setName($this->trans('Disable selection', [], 'Admin.Actions'))
+            ->setOptions([
+                'submit_route' => 'admin_cms_pages_category_bulk_status_disable',
+            ])
             )
             ->add(
                 $this->buildBulkDeleteAction('admin_cms_pages_category_delete_bulk')
@@ -318,16 +312,16 @@ final class CmsPageCategoryDefinitionFactory extends AbstractFilterableGridDefin
     {
         return (new GridActionCollection())
             ->add((new SimpleGridAction('common_refresh_list'))
-                ->setName($this->trans('Refresh list', [], 'Admin.Advparameters.Feature'))
-                ->setIcon('refresh')
+            ->setName($this->trans('Refresh list', [], 'Admin.Advparameters.Feature'))
+            ->setIcon('refresh')
             )
             ->add((new SimpleGridAction('common_show_query'))
-                ->setName($this->trans('Show SQL query', [], 'Admin.Actions'))
-                ->setIcon('code')
+            ->setName($this->trans('Show SQL query', [], 'Admin.Actions'))
+            ->setIcon('code')
             )
             ->add((new SimpleGridAction('common_export_sql_manager'))
-                ->setName($this->trans('Export to SQL Manager', [], 'Admin.Actions'))
-                ->setIcon('storage')
+            ->setName($this->trans('Export to SQL Manager', [], 'Admin.Actions'))
+            ->setIcon('storage')
             )
         ;
     }

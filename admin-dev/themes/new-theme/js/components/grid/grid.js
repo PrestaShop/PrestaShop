@@ -23,7 +23,7 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
 
-const $ = window.$;
+const {$} = window;
 
 /**
  * Class is responsible for handling Grid events
@@ -36,7 +36,7 @@ export default class Grid {
    */
   constructor(id) {
     this.id = id;
-    this.$container = $('#' + this.id + '_grid');
+    this.$container = $(`#${this.id}_grid`);
   }
 
   /**

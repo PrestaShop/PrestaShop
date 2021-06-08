@@ -369,46 +369,34 @@ class InstallControllerHttp
 
     /**
      * Get link to documentation for this language
-     *
-     * Enter description here ...
      */
     public function getDocumentationLink()
     {
-        /* Link to translated documentation (if available) */
-        return $this->translator->trans('http://doc.prestashop.com/display/PS17/Installing+PrestaShop', array(), 'Install');
+        return 'https://doc.prestashop.com/display/PS17/Installing+PrestaShop';
     }
 
     /**
      * Get link to tutorial video for this language
-     *
-     * Enter description here ...
      */
     public function getTutorialLink()
     {
-        /* Link to localized video tutorial (if available) */
-        return $this->translator->trans('https://www.youtube.com/watch?v=cANFwuJqdgM', array(), 'Install');
+        return 'https://www.youtube.com/watch?v=cANFwuJqdgM';
     }
 
     /**
      * Get link to tailored help for this language
-     *
-     * Enter description here ...
      */
     public function getTailoredHelp()
     {
-        /* Link to support on addons */
-        return $this->translator->trans('https://addons.prestashop.com/en/388-support', array(), 'Install');
+        return 'https://addons.prestashop.com/388-support';
     }
 
     /**
      * Get link to forum for this language
-     *
-     * Enter description here ...
      */
     public function getForumLink()
     {
-        /* Link to localized forum */
-        return $this->translator->trans('http://www.prestashop.com/forums/', array(), 'Install');
+        return 'https://www.prestashop.com/forums/';
     }
 
     /**
@@ -418,22 +406,15 @@ class InstallControllerHttp
      */
     public function getBlogLink()
     {
-        return $this->translator->trans('http://www.prestashop.com/blog/', array(), 'Install');
+        return 'https://www.prestashop.com/blog/';
     }
 
     /**
      * Get link to support for this language
-     *
-     * Enter description here ...
      */
     public function getSupportLink()
     {
-        return $this->translator->trans('https://www.prestashop.com/en/support', array(), 'Install');
-    }
-
-    public function getDocumentationUpgradeLink()
-    {
-        return $this->translator->trans('http://docs.prestashop.com/display/PS16/Updating+PrestaShop', array(), 'Install');
+        return 'https://www.prestashop.com/support';
     }
 
     /**

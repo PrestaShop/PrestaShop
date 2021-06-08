@@ -52,7 +52,7 @@ admin_attributes_edit:
 
 admin_attributes_delete:
   path: /{attributeId}/delete
-  methods: POST
+  methods: [POST, DELETE]
   defaults:
     _controller: 'PrestaShopBundle:Admin/Sell/Catalog/Attribute:delete'
     _legacy_controller: AdminAttributesGroups

@@ -27,6 +27,10 @@
 
 {% set layoutTitle = 'Create order'|trans({}, 'Admin.Orderscustomers.Feature') %}
 
+{% block stylesheets %}
+  <link rel="stylesheet" href="{{ asset('themes/new-theme/public/orders.css') }}" type="text/css" media="all">
+{% endblock %}
+
 {% block content %}
   <div id="order-creation-container">
     <div class="row">

@@ -24,7 +24,7 @@
  */
 
 export default {
-  catalogModeField: 'input[name="form[general][catalog_mode]"]',
-  selectedCatalogModeField: 'input[name="form[general][catalog_mode]"]:checked',
-  catalogModeOptions: '.catalog-mode-option'
+  catalogModeField: 'input[name="general[catalog_mode]"]',
+  selectedCatalogModeField: 'input[name="general[catalog_mode]"]:checked',
+  catalogModeOptions: '.catalog-mode-option',
 };

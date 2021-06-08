@@ -39,7 +39,7 @@ use RequestSql;
  *
  * @internal
  */
-final class AddSqlRequestHandler implements AddSqlRequestHandlerInterface
+final class AddSqlRequestHandler extends AbstractSqlRequestHandler implements AddSqlRequestHandlerInterface
 {
     /**
      * {@inheritdoc}
@@ -49,6 +49,8 @@ final class AddSqlRequestHandler implements AddSqlRequestHandlerInterface
      */
     public function handle(AddSqlRequestCommand $command)
     {
+        $this->assertSqlQueryIsValid($command->getSql());
+
         try {
             $entity = new RequestSql();
             $entity->name = $command->getName();

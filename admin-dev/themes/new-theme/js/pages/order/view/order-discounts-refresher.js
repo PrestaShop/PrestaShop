@@ -26,7 +26,7 @@
 import Router from '@components/router';
 import OrderViewPageMap from '@pages/order/OrderViewPageMap';
 
-const $ = window.$;
+const {$} = window;
 
 export default class OrderDiscountsRefresher {
   constructor() {
@@ -34,7 +34,7 @@ export default class OrderDiscountsRefresher {
   }
 
   refresh(orderId) {
-    $.getJSON(this.router.generate('admin_orders_get_discounts', {orderId}))
+    $.ajax(this.router.generate('admin_orders_get_discounts', {orderId}))
       .then((response) => {
         $(OrderViewPageMap.productDiscountList.list).replaceWith(response);
       });

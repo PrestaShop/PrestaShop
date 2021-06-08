@@ -23,7 +23,7 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
 
-const $ = window.$;
+const {$} = window;
 
 /**
  * Class BulkActionSelectCheckboxExtension
@@ -35,8 +35,8 @@ export default class BulkActionCheckboxExtension {
    * @param {Grid} grid
    */
   extend(grid) {
-    this._handleBulkActionCheckboxSelect(grid);
-    this._handleBulkActionSelectAllCheckbox(grid);
+    this.handleBulkActionCheckboxSelect(grid);
+    this.handleBulkActionSelectAllCheckbox(grid);
   }
 
   /**
@@ -46,15 +46,16 @@ export default class BulkActionCheckboxExtension {
    *
    * @private
    */
-  _handleBulkActionSelectAllCheckbox(grid) {
+  handleBulkActionSelectAllCheckbox(grid) {
     grid.getContainer().on('change', '.js-bulk-action-select-all', (e) => {
       const $checkbox = $(e.currentTarget);
 
       const isChecked = $checkbox.is(':checked');
+
       if (isChecked) {
-        this._enableBulkActionsBtn(grid);
+        this.enableBulkActionsBtn(grid);
       } else {
-        this._disableBulkActionsBtn(grid);
+        this.disableBulkActionsBtn(grid);
       }
 
       grid.getContainer().find('.js-bulk-action-checkbox').prop('checked', isChecked);
@@ -68,14 +69,14 @@ export default class BulkActionCheckboxExtension {
    *
    * @private
    */
-  _handleBulkActionCheckboxSelect(grid) {
+  handleBulkActionCheckboxSelect(grid) {
     grid.getContainer().on('change', '.js-bulk-action-checkbox', () => {
       const checkedRowsCount = grid.getContainer().find('.js-bulk-action-checkbox:checked').length;
 
       if (checkedRowsCount > 0) {
-        this._enableBulkActionsBtn(grid);
+        this.enableBulkActionsBtn(grid);
       } else {
-        this._disableBulkActionsBtn(grid);
+        this.disableBulkActionsBtn(grid);
       }
     });
   }
@@ -87,7 +88,7 @@ export default class BulkActionCheckboxExtension {
    *
    * @private
    */
-  _enableBulkActionsBtn(grid) {
+  enableBulkActionsBtn(grid) {
     grid.getContainer().find('.js-bulk-actions-btn').prop('disabled', false);
   }
 
@@ -98,7 +99,7 @@ export default class BulkActionCheckboxExtension {
    *
    * @private
    */
-  _disableBulkActionsBtn(grid) {
+  disableBulkActionsBtn(grid) {
     grid.getContainer().find('.js-bulk-actions-btn').prop('disabled', true);
   }
 }

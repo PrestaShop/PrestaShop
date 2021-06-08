@@ -44,7 +44,7 @@ use PrestaShop\PrestaShop\Core\Domain\Supplier\QueryResult\EditableSupplier;
 use PrestaShop\PrestaShop\Core\Domain\Supplier\QueryResult\ViewableSupplier;
 use PrestaShop\PrestaShop\Core\Form\IdentifiableObject\Builder\FormBuilderInterface;
 use PrestaShop\PrestaShop\Core\Form\IdentifiableObject\Handler\FormHandlerInterface;
-use PrestaShop\PrestaShop\Core\Image\Uploader\Exception\ImageOptimizationException;
+use PrestaShop\PrestaShop\Core\Image\Exception\ImageOptimizationException;
 use PrestaShop\PrestaShop\Core\Image\Uploader\Exception\ImageUploadException;
 use PrestaShop\PrestaShop\Core\Image\Uploader\Exception\MemoryLimitException;
 use PrestaShop\PrestaShop\Core\Image\Uploader\Exception\UploadedImageConstraintException;
@@ -499,8 +499,8 @@ class SupplierController extends FrameworkBundleAdminController
             UploadedImageConstraintException::class => [
                 UploadedImageConstraintException::EXCEEDED_SIZE => $this->trans(
                     'Maximum image size: %s.', 'Admin.Global', [
-                    $iniConfig->getUploadMaxSizeInBytes(),
-                ]),
+                        $iniConfig->getUploadMaxSizeInBytes(),
+                    ]),
                 UploadedImageConstraintException::UNRECOGNIZED_FORMAT => $this->trans(
                     'Image format not recognized, allowed formats are: .gif, .jpg, .png',
                     'Admin.Notifications.Error'

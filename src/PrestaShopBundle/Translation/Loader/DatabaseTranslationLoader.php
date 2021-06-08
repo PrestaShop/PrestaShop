@@ -28,12 +28,18 @@
 namespace PrestaShopBundle\Translation\Loader;
 
 use Doctrine\ORM\EntityManagerInterface;
+use Doctrine\ORM\EntityRepository;
 use Doctrine\ORM\QueryBuilder;
 use PrestaShopBundle\Entity\Lang;
 use PrestaShopBundle\Entity\Translation;
 use Symfony\Component\Translation\Loader\LoaderInterface;
 use Symfony\Component\Translation\MessageCatalogue;
 
+/**
+ * The user translated catalogue is stored in database.
+ * This class is a helper to build the query for retrieving the translations.
+ * They depend on parameters like locale, theme or domain.
+ */
 class DatabaseTranslationLoader implements LoaderInterface
 {
     /** @var EntityManagerInterface */
@@ -63,13 +69,11 @@ class DatabaseTranslationLoader implements LoaderInterface
         }
 
         if (!array_key_exists($locale, $langs)) {
-            $langs[$locale] = $this->entityManager
-                ->getRepository('PrestaShopBundle:Lang')
-                ->findOneByLocale($locale);
+            $langs[$locale] = $this->entityManager->getRepository('PrestaShopBundle:Lang')->findOneBy(['locale' => $locale]);
         }
 
-        $translationRepository = $this->entityManager
-            ->getRepository('PrestaShopBundle:Translation');
+        /** @var EntityRepository $translationRepository */
+        $translationRepository = $this->entityManager->getRepository('PrestaShopBundle:Translation');
 
         $queryBuilder = $translationRepository->createQueryBuilder('t');
 

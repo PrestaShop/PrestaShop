@@ -23,9 +23,10 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
 import Vue from 'vue';
+import {EventEmitter} from '@components/event-emitter';
 import serp from './serp.vue';
 
-const $ = window.$;
+const {$} = window;
 
 /**
  * Vue component displaying a search page result, Google style.
@@ -41,12 +42,19 @@ class SerpApp {
     }
 
     this.originalUrl = url;
-    this.useMultiLang = selectors.multiLanguageInput !== undefined &&
-                        selectors.multiLanguageItem !== undefined;
+    this.useMultiLang = selectors.multiLanguageInput !== undefined || selectors.multiLanguageField !== undefined;
 
     if (this.useMultiLang) {
-      this.multiLangInputSelector = selectors.multiLanguageInput;
-      this.attachMultiLangEvents(selectors.multiLanguageItem);
+      const possibleSelectors = [];
+
+      if (selectors.multiLanguageInput) {
+        possibleSelectors.push(selectors.multiLanguageInput);
+      }
+      if (selectors.multiLanguageField) {
+        possibleSelectors.push(selectors.multiLanguageField);
+      }
+      this.multiLangSelector = possibleSelectors.join(',');
+      this.attachMultiLangEvents();
     }
 
     this.data = {
@@ -58,7 +66,7 @@ class SerpApp {
     this.vm = new Vue({
       el: selectors.container,
       template: '<serp ref="serp" :url="url" :title="title" :description="description" />',
-      components: { serp },
+      components: {serp},
       data: this.data,
     });
 
@@ -76,6 +84,12 @@ class SerpApp {
         this.checkUrl();
       },
     );
+
+    EventEmitter.on('languageSelected', () => {
+      this.checkTitle();
+      this.checkDesc();
+      this.checkUrl();
+    });
   }
 
   initializeSelectors(selectors) {
@@ -107,19 +121,24 @@ class SerpApp {
   }
 
   setUrl(rewrite) {
+    // We replace two placeholders because there was a typo in the initial one ('friendy' instead of 'friendly')
     this.data.url = this.originalUrl.replace(
       '{friendy-url}',
+      rewrite,
+    );
+    this.data.url = this.data.url.replace(
+      '{friendly-url}',
       rewrite,
     );
   }
 
   checkTitle() {
-    let defaultTitle = this.defaultTitle;
-    let watchedTitle = this.watchedTitle;
+    let {defaultTitle} = this;
+    let {watchedTitle} = this;
 
     if (this.useMultiLang) {
-      watchedTitle = watchedTitle.closest(this.multiLangInputSelector).find('input');
-      defaultTitle = defaultTitle.closest(this.multiLangInputSelector).find('input');
+      watchedTitle = watchedTitle.closest(this.multiLangSelector).find('input');
+      defaultTitle = defaultTitle.closest(this.multiLangSelector).find('input');
     }
 
     const title1 = watchedTitle.length ? watchedTitle.val() : '';
@@ -131,15 +150,15 @@ class SerpApp {
   }
 
   checkDesc() {
-    let watchedDescription = this.watchedDescription;
-    let defaultDescription = this.defaultDescription;
+    let {watchedDescription} = this;
+    let {defaultDescription} = this;
 
     if (this.useMultiLang) {
       watchedDescription = watchedDescription
-        .closest(this.multiLangInputSelector)
+        .closest(this.multiLangSelector)
         .find(this.watchedDescription.is('input') ? 'input' : 'textarea');
       defaultDescription = defaultDescription
-        .closest(this.multiLangInputSelector)
+        .closest(this.multiLangSelector)
         .find(this.defaultDescription.is('input') ? 'input' : 'textarea');
     }
 
@@ -150,9 +169,10 @@ class SerpApp {
   }
 
   checkUrl() {
-    let watchedMetaUrl = this.watchedMetaUrl;
+    let {watchedMetaUrl} = this;
+
     if (this.useMultiLang) {
-      watchedMetaUrl = watchedMetaUrl.closest(this.multiLangInputSelector).find('input');
+      watchedMetaUrl = watchedMetaUrl.closest(this.multiLangSelector).find('input');
     }
 
     this.setUrl(watchedMetaUrl.val());

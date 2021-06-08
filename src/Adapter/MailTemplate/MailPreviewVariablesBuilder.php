@@ -46,13 +46,13 @@ use Tools;
  */
 final class MailPreviewVariablesBuilder
 {
-    const ORDER_CONFIRMATION = 'order_conf';
+    public const ORDER_CONFIRMATION = 'order_conf';
 
-    const DOWNLOAD_PRODUCT = 'download_product';
+    public const DOWNLOAD_PRODUCT = 'download_product';
 
-    const EMAIL_ALERTS_MODULE = 'ps_emailalerts';
-    const NEW_ORDER = 'new_order';
-    const RETURN_SLIP = 'return_slip';
+    public const EMAIL_ALERTS_MODULE = 'ps_emailalerts';
+    public const NEW_ORDER = 'new_order';
+    public const RETURN_SLIP = 'return_slip';
 
     /** @var ConfigurationInterface */
     private $configuration;
@@ -148,7 +148,7 @@ final class MailPreviewVariablesBuilder
     }
 
     /**
-     * @param $id
+     * @param string $id
      * @param array $parameters
      * @param null $domain
      * @param null $local
@@ -359,6 +359,7 @@ final class MailPreviewVariablesBuilder
 
             $productTemplate = [
                 'id_product' => $product['id_product'],
+                'id_product_attribute' => $product['id_product_attribute'],
                 'reference' => $product['reference'],
                 'name' => $product['name'] . (isset($product['attributes']) ? ' - ' . $product['attributes'] : ''),
                 'price' => $this->locale->formatPrice($productPrice * $product['quantity'], $this->context->currency->iso_code),

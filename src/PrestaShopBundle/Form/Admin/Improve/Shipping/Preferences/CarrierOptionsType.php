@@ -80,14 +80,38 @@ class CarrierOptionsType extends TranslatorAwareType
         $builder
             ->add('default_carrier', ChoiceType::class, [
                 'choices' => $carrierChoices,
+                'label' => $this->trans(
+                    'Default carrier',
+                    'Admin.Shipping.Feature'
+                ),
+                'help' => $this->trans(
+                    'Your shop\'s default carrier.',
+                    'Admin.Shipping.Help'
+                ),
             ])
             ->add('carrier_default_order_by', ChoiceType::class, [
                 'choices' => $this->orderByChoices,
                 'choice_translation_domain' => 'Admin.Global',
+                'label' => $this->trans(
+                    'Sort by',
+                    'Admin.Actions'
+                ),
+                'help' => $this->trans(
+                    'This will only be visible in the front office.',
+                    'Admin.Shipping.Help'
+                ),
             ])
             ->add('carrier_default_order_way', ChoiceType::class, [
                 'choices' => $this->orderWayChoices,
                 'choice_translation_domain' => 'Admin.Global',
+                'label' => $this->trans(
+                    'Order by',
+                    'Admin.Actions'
+                ),
+                'help' => $this->trans(
+                    'This will only be visible in the front office.',
+                    'Admin.Shipping.Help'
+                ),
             ]);
     }
 

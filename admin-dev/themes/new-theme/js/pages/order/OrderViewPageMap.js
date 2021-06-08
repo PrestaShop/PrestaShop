@@ -23,6 +23,8 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
 
+/* eslint-disable max-len */
+
 export default {
   mainDiv: '#order-view-page',
   orderPaymentDetailsBtn: '.js-payment-details-btn',
@@ -36,9 +38,11 @@ export default {
   privateNoteSubmitBtn: '.js-private-note-btn',
   addCartRuleModal: '#addOrderDiscountModal',
   addCartRuleInvoiceIdSelect: '#add_order_cart_rule_invoice_id',
+  addCartRuleNameInput: '#add_order_cart_rule_name',
   addCartRuleTypeSelect: '#add_order_cart_rule_type',
   addCartRuleValueInput: '#add_order_cart_rule_value',
   addCartRuleValueUnit: '#add_order_cart_rule_value_unit',
+  addCartRuleSubmit: '#add_order_cart_rule_submit',
   cartRuleHelpText: '.js-cart-rule-value-help',
   updateOrderStatusActionBtn: '#update_order_status_action_btn',
   updateOrderStatusActionInput: '#update_order_status_action_input',
@@ -198,5 +202,9 @@ export default {
     },
   },
   printOrderViewPageButton: '.js-print-order-view-page',
+  orderNoteToggleBtn: '.js-order-notes-toggle-btn',
+  orderNoteBlock: '.js-order-notes-block',
+  orderNoteInput: '#internal_note_note',
+  orderNoteSubmitBtn: '.js-order-notes-btn',
   refreshProductsListLoadingSpinner: '#orderProductsPanel .spinner-order-products-container#orderProductsLoading',
 };

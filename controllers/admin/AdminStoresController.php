@@ -53,7 +53,7 @@ class AdminStoresControllerCore extends AdminController
             'name' => ['title' => $this->trans('Name', [], 'Admin.Global'), 'filter_key' => 'sl!name'],
             'address1' => ['title' => $this->trans('Address', [], 'Admin.Global'), 'filter_key' => 'sl!address1'],
             'city' => ['title' => $this->trans('City', [], 'Admin.Global')],
-            'postcode' => ['title' => $this->trans('Zip/postal code', [], 'Admin.Global')],
+            'postcode' => ['title' => $this->trans('Zip/Postal code', [], 'Admin.Global')],
             'state' => ['title' => $this->trans('State', [], 'Admin.Global'), 'filter_key' => 'st!name'],
             'country' => ['title' => $this->trans('Country', [], 'Admin.Global'), 'filter_key' => 'cl!name'],
             'phone' => ['title' => $this->trans('Phone', [], 'Admin.Global')],
@@ -186,7 +186,7 @@ class AdminStoresControllerCore extends AdminController
                 ],
                 [
                     'type' => 'text',
-                    'label' => $this->trans('Zip/postal code', [], 'Admin.Global'),
+                    'label' => $this->trans('Zip/Postal code', [], 'Admin.Global'),
                     'name' => 'postcode',
                     'required' => in_array('postcode', $required_fields),
                 ],
@@ -260,12 +260,12 @@ class AdminStoresControllerCore extends AdminController
                         [
                             'id' => 'active_on',
                             'value' => 1,
-                            'label' => $this->trans('Enabled', [], 'Admin.Global'),
+                            'label' => $this->trans('Yes', [], 'Admin.Global'),
                         ],
                         [
                             'id' => 'active_off',
                             'value' => 0,
-                            'label' => $this->trans('Disabled', [], 'Admin.Global'),
+                            'label' => $this->trans('No', [], 'Admin.Global'),
                         ],
                     ],
                     'hint' => $this->trans('Whether or not to display this store.', [], 'Admin.Shopparameters.Help'),
@@ -333,7 +333,7 @@ class AdminStoresControllerCore extends AdminController
             $langs = Language::getLanguages(false);
             /* Cleaning fields */
             foreach ($_POST as $kp => $vp) {
-                if (!in_array($kp, ['checkBoxShopGroupAsso_store', 'checkBoxShopAsso_store', 'hours'])) {
+                if (is_string($vp)) {
                     $_POST[$kp] = trim($vp);
                 }
                 if ('hours' === $kp) {
@@ -371,11 +371,11 @@ class AdminStoresControllerCore extends AdminController
             $postcode = Tools::getValue('postcode');
             /* Check zip code format */
             if ($country->zip_code_format && !$country->checkZipCode($postcode)) {
-                $this->errors[] = $this->trans('Your Zip/postal code is incorrect.', [], 'Admin.Notifications.Error') . '<br />' . $this->trans('It must be entered as follows:', [], 'Admin.Notifications.Error') . ' ' . str_replace('C', $country->iso_code, str_replace('N', '0', str_replace('L', 'A', $country->zip_code_format)));
+                $this->errors[] = $this->trans('Your Zip/Postal code is incorrect.', [], 'Admin.Notifications.Error') . '<br />' . $this->trans('It must be entered as follows:', [], 'Admin.Notifications.Error') . ' ' . str_replace('C', $country->iso_code, str_replace('N', '0', str_replace('L', 'A', $country->zip_code_format)));
             } elseif (empty($postcode) && $country->need_zip_code) {
-                $this->errors[] = $this->trans('A Zip/postal code is required.', [], 'Admin.Notifications.Error');
+                $this->errors[] = $this->trans('A Zip/Postal code is required.', [], 'Admin.Notifications.Error');
             } elseif ($postcode && !Validate::isPostCode($postcode)) {
-                $this->errors[] = $this->trans('The Zip/postal code is invalid.', [], 'Admin.Notifications.Error');
+                $this->errors[] = $this->trans('The Zip/Postal code is invalid.', [], 'Admin.Notifications.Error');
             }
             /* Store hours */
             foreach ($langs as $lang) {
@@ -478,7 +478,7 @@ class AdminStoresControllerCore extends AdminController
                 'type' => 'text',
             ],
             'PS_SHOP_CODE' => [
-                'title' => $this->trans('Zip/postal code', [], 'Admin.Global'),
+                'title' => $this->trans('Zip/Postal code', [], 'Admin.Global'),
                 'validation' => 'isGenericName',
                 'type' => 'text',
             ],
@@ -599,6 +599,6 @@ class AdminStoresControllerCore extends AdminController
     {
         $separator = array_fill(0, count($value), ' | ');
 
-        return array_map('implode', $value, $separator);
+        return array_map('implode', $separator, $value);
     }
 }

@@ -1,9 +1,11 @@
+const {hooks} = require('@data/demo/hooks');
+
 module.exports = {
   LinkWidgets: {
     demo_1: {
       name: 'Footer test block',
       frName: 'Footer test block',
-      hook: 'displayFooter',
+      hook: hooks.displayFooter.name,
       contentPages: ['Delivery'],
       productsPages: ['New products'],
       staticPages: ['Contact us'],

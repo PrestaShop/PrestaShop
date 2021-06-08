@@ -39,7 +39,7 @@ use Symfony\Component\HttpFoundation\Response;
  */
 class MaintenanceController extends FrameworkBundleAdminController
 {
-    const CONTROLLER_NAME = 'AdminMaintenance';
+    public const CONTROLLER_NAME = 'AdminMaintenance';
 
     /**
      * @AdminSecurity("is_granted('read', request.get('_legacy_controller'))")
@@ -64,8 +64,7 @@ class MaintenanceController extends FrameworkBundleAdminController
             'enableSidebar' => true,
             'help_link' => $this->generateSidebarLink('AdminMaintenance'),
             'requireFilterStatus' => false,
-            'form' => $form->createView(),
-            'currentIp' => $request->getClientIp(),
+            'generalForm' => $form->createView(),
         ]);
     }
 

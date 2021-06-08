@@ -63,7 +63,7 @@ class DateRangeValidator extends ConstraintValidator
      *
      * @param DateTime $from
      * @param DateTime $to
-     * @param $message
+     * @param string $message
      */
     private function validateRange(DateTime $from, DateTime $to, $message)
     {

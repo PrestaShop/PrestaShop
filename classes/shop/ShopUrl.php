@@ -180,8 +180,10 @@ class ShopUrlCore extends ObjectModel
             FROM ' . _DB_PREFIX_ . 'shop_url
             WHERE main = 1
             AND id_shop = ' . ($id_shop !== null ? (int) $id_shop : (int) Context::getContext()->shop->id));
-            self::$main_domain[(int) $id_shop] = $row['domain'];
-            self::$main_domain_ssl[(int) $id_shop] = $row['domain_ssl'];
+            if (!empty($row)) {
+                self::$main_domain[(int) $id_shop] = $row['domain'];
+                self::$main_domain_ssl[(int) $id_shop] = $row['domain_ssl'];
+            }
         }
     }
 

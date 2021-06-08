@@ -35,7 +35,6 @@ interface ColumnInterface
      * Get unique column id.
      *
      * @return string
-     * @return self
      */
     public function getId();
 
@@ -68,6 +67,13 @@ interface ColumnInterface
      * @return array
      */
     public function getOptions();
+
+    /**
+     * @param string $name
+     *
+     * @return mixed
+     */
+    public function getOption(string $name);
 
     /**
      * Set column options.

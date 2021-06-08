@@ -23,15 +23,16 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
 
-const $ = window.$;
+const {$} = window;
 
 class CatalogModeOptionHandler {
   constructor(pageMap) {
-    this.pageMap = Object.assign({
-      catalogModeField: 'input[name="form[general][catalog_mode]"]',
-      selectedCatalogModeField: 'input[name="form[general][catalog_mode]"]:checked',
-      catalogModeOptions: '.catalog-mode-option'
-    }, pageMap);
+    this.pageMap = {
+      catalogModeField: 'input[name="general[catalog_mode]"]',
+      selectedCatalogModeField: 'input[name="general[catalog_mode]"]:checked',
+      catalogModeOptions: '.catalog-mode-option',
+      ...pageMap,
+    };
     this.handle(0);
 
     $(this.pageMap.catalogModeField).on('change', () => this.handle(600));
@@ -39,9 +40,10 @@ class CatalogModeOptionHandler {
 
   handle(fadeLength) {
     const catalogModeVal = $(this.pageMap.selectedCatalogModeField).val();
-    const catalogModeEnabled = parseInt(catalogModeVal);
+    const catalogModeEnabled = parseInt(catalogModeVal, 10);
 
-    let catalogOptions = $(this.pageMap.catalogModeOptions);
+    const catalogOptions = $(this.pageMap.catalogModeOptions);
+
     if (catalogModeEnabled) {
       catalogOptions.show(fadeLength);
     } else {

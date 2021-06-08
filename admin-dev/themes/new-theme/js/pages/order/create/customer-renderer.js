@@ -52,8 +52,7 @@ export default class CustomerRenderer {
       return;
     }
 
-    for (const customerId in foundCustomers) {
-      const customerResult = foundCustomers[customerId];
+    Object.entries(foundCustomers).forEach(([customerId, customerResult]) => {
       const customer = {
         id: customerId,
         firstName: customerResult.firstname,
@@ -62,14 +61,14 @@ export default class CustomerRenderer {
         birthday: customerResult.birthday !== '0000-00-00' ? customerResult.birthday : ' ',
       };
 
-      this._renderFoundCustomer(customer);
-    }
+      this.renderFoundCustomer(customer);
+    });
 
     // Show customer details in fancy box
     $(createOrderMap.customerDetailsBtn).fancybox({
-      'type': 'iframe',
-      'width': '90%',
-      'height': '90%',
+      type: 'iframe',
+      width: '90%',
+      height: '90%',
     });
   }
 
@@ -91,8 +90,7 @@ export default class CustomerRenderer {
     this.$container.find(createOrderMap.customerSearchRow).addClass('d-none');
     this.$container.find(createOrderMap.notSelectedCustomerSearchResults)
       .closest(createOrderMap.customerSearchResultColumn)
-      .remove()
-    ;
+      .remove();
 
     // Initial display of the customer, the cart is gonna be created then customer's carts
     // and orders are going to be fetched, but we can display the loading messages right now
@@ -128,19 +126,17 @@ export default class CustomerRenderer {
 
     $cartsTable.find('tbody').empty();
     this.showCheckoutHistoryBlock();
-    this._removeEmptyListRowFromTable($cartsTable);
+    this.removeEmptyListRowFromTable($cartsTable);
 
-    for (const key in carts) {
-      const cart = carts[key];
-
+    Object.values(carts).forEach((cart) => {
       // do not render current cart
       if (cart.cartId === currentCartId) {
         // render 'No records found' warn if carts only contain current cart
         if (carts.length === 1) {
-          this._renderEmptyList($cartsTable);
+          this.renderEmptyList($cartsTable);
         }
 
-        continue;
+        return;
       }
 
       const $cartsTableRow = $cartsTableRowTemplate.clone();
@@ -160,13 +156,13 @@ export default class CustomerRenderer {
 
       $cartsTable.find('thead').removeClass('d-none');
       $cartsTable.find('tbody').append($cartsTableRow);
-    }
+    });
 
     // Show cart details in fancy box
     $(createOrderMap.cartDetailsBtn).fancybox({
-      'type': 'iframe',
-      'width': '90%',
-      'height': '90%',
+      type: 'iframe',
+      width: '90%',
+      height: '90%',
     });
   }
 
@@ -190,17 +186,16 @@ export default class CustomerRenderer {
 
     $ordersTable.find('tbody').empty();
     this.showCheckoutHistoryBlock();
-    this._removeEmptyListRowFromTable($ordersTable);
+    this.removeEmptyListRowFromTable($ordersTable);
 
-    //render 'No records found' when list is empty
+    // render 'No records found' when list is empty
     if (orders.length === 0) {
-      this._renderEmptyList($ordersTable);
+      this.renderEmptyList($ordersTable);
 
       return;
     }
 
-    for (const key in Object.keys(orders)) {
-      const order = orders[key];
+    Object.values(orders).forEach((order) => {
       const $template = $rowTemplate.clone();
 
       $template.find(createOrderMap.orderIdField).text(order.orderId);
@@ -213,7 +208,7 @@ export default class CustomerRenderer {
         'href',
         this.router.generate('admin_orders_view', {
           orderId: order.orderId,
-          liteDisplaying: 1
+          liteDisplaying: 1,
         }),
       );
 
@@ -221,13 +216,13 @@ export default class CustomerRenderer {
 
       $ordersTable.find('thead').removeClass('d-none');
       $ordersTable.find('tbody').append($template);
-    }
+    });
 
     // Show order details in fancy box
     $(createOrderMap.orderDetailsBtn).fancybox({
-      'type': 'iframe',
-      'width': '90%',
-      'height': '90%',
+      type: 'iframe',
+      width: '90%',
+      height: '90%',
     });
   }
 
@@ -243,15 +238,6 @@ export default class CustomerRenderer {
    */
   hideNotFoundCustomers() {
     $(createOrderMap.customerSearchEmptyResultWarning).addClass('d-none');
-  }
-
-  /**
-   * Shows checkout history block where carts and orders are rendered
-   *
-   * @private
-   */
-  showCheckoutHistoryBlock() {
-    $(createOrderMap.customerCheckoutHistory).removeClass('d-none');
   }
 
   /**
@@ -282,7 +268,7 @@ export default class CustomerRenderer {
    *
    * @private
    */
-  _renderEmptyList($table) {
+  renderEmptyList($table) {
     const $emptyTableRow = $($(createOrderMap.emptyListRowTemplate).html()).clone();
     $table.find('tbody').append($emptyTableRow);
   }
@@ -302,7 +288,7 @@ export default class CustomerRenderer {
   /**
    * Removes empty list row in case it was rendered
    */
-  _removeEmptyListRowFromTable($table) {
+  removeEmptyListRowFromTable($table) {
     $table.find(createOrderMap.emptyListRow).remove();
   }
 
@@ -315,7 +301,7 @@ export default class CustomerRenderer {
    *
    * @private
    */
-  _renderFoundCustomer(customer) {
+  renderFoundCustomer(customer) {
     this.hideNotFoundCustomers();
 
     const $customerSearchResultTemplate = $($(createOrderMap.customerSearchResultTemplate).html());
@@ -330,11 +316,20 @@ export default class CustomerRenderer {
       'href',
       this.router.generate('admin_customers_view', {
         customerId: customer.id,
-        liteDisplaying: 1
+        liteDisplaying: 1,
       }),
     );
 
     return this.$customerSearchResultBlock.append($template);
+  }
+
+  /**
+   * Shows checkout history block where carts and orders are rendered
+   *
+   * @private
+   */
+  showCheckoutHistoryBlock() {
+    $(createOrderMap.customerCheckoutHistory).removeClass('d-none');
   }
 
   /**

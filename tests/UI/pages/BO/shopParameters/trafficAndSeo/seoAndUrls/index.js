@@ -1,7 +1,16 @@
 require('module-alias/register');
 const BOBasePage = require('@pages/BO/BObasePage');
 
+/**
+ * Seo and urls page, contains selectors and functions for the page
+ * @class
+ * @extends BOBasePage
+ */
 class SeoAndUrls extends BOBasePage {
+  /**
+   * @constructs
+   * Setting up titles and selectors to use on seo and urls page
+   */
   constructor() {
     super();
 
@@ -9,7 +18,7 @@ class SeoAndUrls extends BOBasePage {
 
     // Header selectors
     this.addNewSeoPageLink = '#page-header-desc-configuration-add';
-    this.successfulSettingsUpdateMessage = 'The settings have been successfully updated.';
+    this.successfulSettingsUpdateMessage = 'Update successful';
 
     // Sub tabs selectors
     this.searchEnginesSubTabLink = '#subtab-AdminSearchEngines';
@@ -27,12 +36,12 @@ class SeoAndUrls extends BOBasePage {
     // Bulk Actions
     this.selectAllRowsLabel = `${this.gridPanel} tr.column-filters .md-checkbox i`;
     this.bulkActionsToggleButton = `${this.gridPanel} button.js-bulk-actions-btn`;
-    this.bulkActionsDeleteButton = `${this.gridPanel} #meta_grid_bulk_action_delete_seo_urls`;
+    this.bulkActionsDeleteButton = `${this.gridPanel} #meta_grid_bulk_action_delete_selection`;
 
     // Filters
     this.filterColumn = filterBy => `${this.gridTable} #meta_${filterBy}`;
-    this.filterSearchButton = `${this.gridTable} button[name='meta[actions][search]']`;
-    this.filterResetButton = `${this.gridTable} button[name='meta[actions][reset]']`;
+    this.filterSearchButton = `${this.gridTable} .grid-search-button`;
+    this.filterResetButton = `${this.gridTable} .grid-reset-button`;
 
     // Table rows and columns
     this.tableBody = `${this.gridTable} tbody`;
@@ -42,10 +51,14 @@ class SeoAndUrls extends BOBasePage {
 
     // Actions buttons in Row
     this.actionsColumn = row => `${this.tableRow(row)} td.column-actions`;
-    this.editRowLink = row => `${this.actionsColumn(row)} a[href*='/edit']`;
+    this.editRowLink = row => `${this.actionsColumn(row)} a.grid-edit-row-link`;
     this.dropdownToggleButton = row => `${this.actionsColumn(row)} a.dropdown-toggle`;
     this.dropdownToggleMenu = row => `${this.actionsColumn(row)} div.dropdown-menu`;
-    this.deleteRowLink = row => `${this.dropdownToggleMenu(row)} a[data-url*='/delete']`;
+    this.deleteRowLink = row => `${this.dropdownToggleMenu(row)} a.grid-delete-row-link`;
+
+    // Delete modal
+    this.confirmDeleteModal = '#meta-grid-confirm-modal';
+    this.confirmDeleteButton = `${this.confirmDeleteModal} button.btn-confirm-submit`;
 
     // Pagination selectors
     this.paginationLimitSelect = '#paginator_select_page_limit';
@@ -53,20 +66,21 @@ class SeoAndUrls extends BOBasePage {
     this.paginationNextLink = `${this.gridPanel} #pagination_next_url`;
     this.paginationPreviousLink = `${this.gridPanel} [aria-label='Previous']`;
 
+    // Set up URL form
+    this.friendlyUrlToggleInput = toggle => `#meta_settings_set_up_urls_form_friendly_url_${toggle}`;
+    this.accentedUrlToggleInput = toggle => `#meta_settings_set_up_urls_form_accented_url_${toggle}`;
+    this.saveSeoAndUrlFormButton = '#form-set-up-urls-save-button';
 
-    // Set up URL form selectors
-    this.switchFriendlyUrlLabel = toggle => `label[for='meta_settings_form_set_up_urls_friendly_url_${toggle}']`;
-    this.switchAccentedUrlLabel = toggle => `label[for='meta_settings_form_set_up_urls_accented_url_${toggle}']`;
-    this.saveSeoAndUrlFormButton = '#main-div form:nth-child(1) div:nth-child(1) div.card-footer button';
     // Seo options form
-    this.switchDisplayAttributesLabel = toggle => 'label[for=\'meta_settings_form_seo_options_product'
-      + `_attributes_in_title_${toggle}']`;
-    this.saveSeoOptionsFormButton = '#main-div form:nth-child(1) div:nth-child(4) div.card-footer button';
+    this.displayAttributesToggleInput = toggle => '#meta_settings_seo_options_form_product_attributes_in_title_'
+      + `${toggle}`;
+    this.saveSeoOptionsFormButton = '#meta_settings_seo_options_form_save_button';
   }
 
   /* header methods */
   /**
    * Go to new seo page
+   * @param page {Page} Browser tab
    * @return {Promise<void>}
    */
   async goToNewSeoUrlPage(page) {
@@ -75,7 +89,7 @@ class SeoAndUrls extends BOBasePage {
 
   /**
    * Go to search engines page
-   * @param page
+   * @param page {Page} Browser tab
    * @return {Promise<void>}
    */
   async goToSearchEnginesPage(page) {
@@ -86,13 +100,10 @@ class SeoAndUrls extends BOBasePage {
 
   /**
    * Delete seo pages by bulk actions
-   * @param page
+   * @param page {Page} Browser tab
    * @returns {Promise<string>}
    */
   async bulkDeleteSeoUrlPage(page) {
-    // Confirm delete in js modal
-    this.dialogListener(page, true);
-
     // Click on Select All
     await Promise.all([
       page.$eval(this.selectAllRowsLabel, el => el.click()),
@@ -105,16 +116,23 @@ class SeoAndUrls extends BOBasePage {
       this.waitForVisibleSelector(page, `${this.bulkActionsToggleButton}[aria-expanded='true']`),
     ]);
 
-    await this.clickAndWaitForNavigation(page, this.bulkActionsDeleteButton);
+    // Click on delete and wait for modal
+    await Promise.all([
+      page.click(this.bulkActionsDeleteButton),
+      this.waitForVisibleSelector(page, `${this.confirmDeleteModal}.show`),
+    ]);
+
+    await this.confirmDeleteSeoUrlPage(page);
+
     return this.getAlertSuccessBlockParagraphContent(page);
   }
 
   /* Column methods */
   /**
    * Get text from a column
-   * @param page
-   * @param row, row in table
-   * @param column, which column
+   * @param page {Page} Browser tab
+   * @param row {number} Row on table
+   * @param column {string} Column name of the value to return
    * @returns {Promise<string>}
    */
   async getTextColumnFromTable(page, row, column) {
@@ -123,24 +141,26 @@ class SeoAndUrls extends BOBasePage {
 
   /**
    * Get content from all rows
-   * @param page
-   * @param column
+   * @param page {Page} Browser tab
+   * @param column {string} Column name of the value to return
    * @return {Promise<[]>}
    */
   async getAllRowsColumnContent(page, column) {
     const rowsNumber = await this.getNumberOfElementInGrid(page);
     const allRowsContentTable = [];
+
     for (let row = 1; row <= rowsNumber; row++) {
       const rowContent = await this.getTextColumnFromTable(page, row, column);
       await allRowsContentTable.push(rowContent);
     }
+
     return allRowsContentTable;
   }
 
   /**
    * Go to edit file
-   * @param page
-   * @param row, Which row of the list
+   * @param page {Page} Browser tab
+   * @param row {number} Row on table
    * @return {Promise<void>}
    */
   async goToEditSeoUrlPage(page, row = 1) {
@@ -149,12 +169,11 @@ class SeoAndUrls extends BOBasePage {
 
   /**
    * Delete Row in table
-   * @param page
-   * @param row, row to delete
+   * @param page {Page} Browser tab
+   * @param row {number} Row on table to delete
    * @returns {Promise<string>}
    */
   async deleteSeoUrlPage(page, row = 1) {
-    this.dialogListener(page, true);
     await Promise.all([
       page.click(this.dropdownToggleButton(row)),
       this.waitForVisibleSelector(
@@ -162,16 +181,30 @@ class SeoAndUrls extends BOBasePage {
         `${this.dropdownToggleButton(row)}[aria-expanded='true']`,
       ),
     ]);
-    await this.clickAndWaitForNavigation(page, this.deleteRowLink(row));
+    // Click on delete and wait for modal
+    await Promise.all([
+      page.click(this.deleteRowLink(row)),
+      this.waitForVisibleSelector(page, `${this.confirmDeleteModal}.show`),
+    ]);
+    await this.confirmDeleteSeoUrlPage(page);
     return this.getAlertSuccessBlockParagraphContent(page);
+  }
+
+  /**
+   * Confirm delete with in modal
+   * @param page {Page} Browser tab
+   * @return {Promise<void>}
+   */
+  async confirmDeleteSeoUrlPage(page) {
+    await this.clickAndWaitForNavigation(page, this.confirmDeleteButton);
   }
 
   /* Sort functions */
   /**
    * Sort table by clicking on column name
-   * @param page
-   * @param sortBy, column to sort with
-   * @param sortDirection, asc or desc
+   * @param page {Page} Browser tab
+   * @param sortBy {string} Column to sort with
+   * @param sortDirection {string} Sort direction by asc or desc
    * @return {Promise<void>}
    */
   async sortTable(page, sortBy, sortDirection) {
@@ -190,7 +223,7 @@ class SeoAndUrls extends BOBasePage {
   /* Reset methods */
   /**
    * Reset filters in table
-   * @param page
+   * @param page {Page} Browser tab
    * @return {Promise<void>}
    */
   async resetFilter(page) {
@@ -201,7 +234,7 @@ class SeoAndUrls extends BOBasePage {
 
   /**
    * Get number of elements in grid
-   * @param page
+   * @param page {Page} Browser tab
    * @return {Promise<number>}
    */
   async getNumberOfElementInGrid(page) {
@@ -210,20 +243,21 @@ class SeoAndUrls extends BOBasePage {
 
   /**
    * Reset Filter And get number of elements in list
-   * @param page
+   * @param page {Page} Browser tab
    * @return {Promise<number>}
    */
   async resetAndGetNumberOfLines(page) {
     await this.resetFilter(page);
+
     return this.getNumberOfElementInGrid(page);
   }
 
   /* Filter methods */
   /**
    * Filter Table
-   * @param page
-   * @param filterBy, which column
-   * @param value, value to put in filter
+   * @param page {Page} Browser tab
+   * @param filterBy {string} Column to filter with
+   * @param value {string} value to filter with
    * @return {Promise<void>}
    */
   async filterTable(page, filterBy, value = '') {
@@ -235,7 +269,7 @@ class SeoAndUrls extends BOBasePage {
   /* Pagination methods */
   /**
    * Get pagination label
-   * @param page
+   * @param page {Page} Browser tab
    * @return {Promise<string>}
    */
   getPaginationLabel(page) {
@@ -244,69 +278,75 @@ class SeoAndUrls extends BOBasePage {
 
   /**
    * Select pagination limit
-   * @param page
-   * @param number
+   * @param page {Page} Browser tab
+   * @param number {number} Pagination limit number to select
    * @returns {Promise<string>}
    */
   async selectPaginationLimit(page, number) {
     await this.selectByVisibleText(page, this.paginationLimitSelect, number);
+
     return this.getPaginationLabel(page);
   }
 
   /**
    * Click on next
-   * @param page
+   * @param page Page} Browser tab
    * @returns {Promise<string>}
    */
   async paginationNext(page) {
     await this.clickAndWaitForNavigation(page, this.paginationNextLink);
+
     return this.getPaginationLabel(page);
   }
 
   /**
    * Click on previous
-   * @param page
+   * @param page Page} Browser tab
    * @returns {Promise<string>}
    */
   async paginationPrevious(page) {
     await this.clickAndWaitForNavigation(page, this.paginationPreviousLink);
+
     return this.getPaginationLabel(page);
   }
 
   /* Form methods */
   /**
    * Enable/disable friendly url
-   * @param page
-   * @param toEnable, true to enable and false to disable
+   * @param page {Page} Browser tab
+   * @param toEnable {boolean} True to enable and false to disable
    * @return {Promise<string>}
    */
   async enableDisableFriendlyURL(page, toEnable = true) {
-    await this.waitForSelectorAndClick(page, this.switchFriendlyUrlLabel(toEnable ? 1 : 0));
+    await page.check(this.friendlyUrlToggleInput(toEnable ? 1 : 0));
     await this.clickAndWaitForNavigation(page, this.saveSeoAndUrlFormButton);
+
     return this.getAlertSuccessBlockParagraphContent(page);
   }
 
   /**
    * Enable/disable accented url
-   * @param page
-   * @param toEnable, true to enable and false to disable
+   * @param page {Page} Browser tab
+   * @param toEnable {boolean} True to enable and false to disable
    * @return {Promise<string>}
    */
   async enableDisableAccentedURL(page, toEnable = true) {
-    await this.waitForSelectorAndClick(page, this.switchAccentedUrlLabel(toEnable ? 1 : 0));
+    await page.check(this.accentedUrlToggleInput(toEnable ? 1 : 0));
     await this.clickAndWaitForNavigation(page, this.saveSeoAndUrlFormButton);
+
     return this.getAlertSuccessBlockParagraphContent(page);
   }
 
   /**
    * Enable/Disable attributes in product meta title
-   * @param page
-   * @param toEnable
+   * @param page {Page} Browser tab
+   * @param toEnable {boolean} Tue if we need to enable attributes in product meta title status
    * @return {Promise<string>}
    */
   async setStatusAttributesInProductMetaTitle(page, toEnable = true) {
-    await this.waitForSelectorAndClick(page, this.switchDisplayAttributesLabel(toEnable ? 1 : 0));
+    await page.check(this.displayAttributesToggleInput(toEnable ? 1 : 0));
     await this.clickAndWaitForNavigation(page, this.saveSeoOptionsFormButton);
+
     return this.getAlertSuccessBlockParagraphContent(page);
   }
 }

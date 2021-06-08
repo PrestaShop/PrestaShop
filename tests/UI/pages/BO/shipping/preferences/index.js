@@ -10,14 +10,14 @@ class Preferences extends BOBasePage {
 
     // Handling form selectors
     this.handlingForm = '#handling';
-    this.handlingChargesInput = '#form_handling_shipping_handling_charges';
+    this.handlingChargesInput = '#handling_shipping_handling_charges';
     this.saveHandlingButton = `${this.handlingForm} button`;
 
     // Carrier options selectors
     this.carrierOptionForm = '#carrier-options';
-    this.defaultCarrierSelect = '#form_carrier_options_default_carrier';
-    this.sortBySelect = '#form_carrier_options_carrier_default_order_by';
-    this.orderBySelect = '#form_carrier_options_carrier_default_order_way';
+    this.defaultCarrierSelect = '#carrier-options_default_carrier';
+    this.sortBySelect = '#carrier-options_carrier_default_order_by';
+    this.orderBySelect = '#carrier-options_carrier_default_order_way';
     this.saveCarrierOptionsButton = `${this.carrierOptionForm} button`;
   }
 
@@ -25,8 +25,8 @@ class Preferences extends BOBasePage {
 
   /**
    * Set handling charges button
-   * @param page
-   * @param value
+   * @param page {Page} Browser tab
+   * @param value {String} The handling charges value
    * @returns {Promise<string>}
    */
   async setHandlingCharges(page, value) {
@@ -41,8 +41,8 @@ class Preferences extends BOBasePage {
 
   /**
    * Set default carrier in carrier options form
-   * @param page
-   * @param carrierName
+   * @param page {Page} Browser tab
+   * @param carrierName {String} The carrier name
    * @return {Promise<string>}
    */
   async setDefaultCarrier(page, carrierName) {
@@ -55,9 +55,9 @@ class Preferences extends BOBasePage {
 
   /**
    * Set carriers sort By 'Price' or 'Position' / order by 'Ascending' or 'descending' in carrier options form
-   * @param page
-   * @param sortBy
-   * @param orderBy
+   * @param page {Page} Browser tab
+   * @param sortBy {String} Sort by 'Price' or 'Position'
+   * @param orderBy {String} Order by 'Ascending' or 'Descending'
    * @returns {Promise<string>}
    */
   async setCarrierSortOrderBy(page, sortBy, orderBy = 'Ascending') {

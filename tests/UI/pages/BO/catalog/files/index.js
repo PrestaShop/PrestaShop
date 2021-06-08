@@ -16,8 +16,8 @@ class Files extends BOBasePage {
     this.gridHeaderTitle = `${this.gridPanel} h3.card-header-title`;
     // Filters
     this.filterColumn = filterBy => `${this.gridTable} #attachment_${filterBy}`;
-    this.filterSearchButton = `${this.gridTable} button[name='attachment[actions][search]']`;
-    this.filterResetButton = `${this.gridTable} button[name='attachment[actions][reset]']`;
+    this.filterSearchButton = `${this.gridTable} .grid-search-button`;
+    this.filterResetButton = `${this.gridTable} .grid-reset-button`;
     // Table rows and columns
     this.tableBody = `${this.gridTable} tbody`;
     this.tableRow = row => `${this.tableBody} tr:nth-child(${row})`;
@@ -25,16 +25,16 @@ class Files extends BOBasePage {
     this.tableColumn = (row, column) => `${this.tableRow(row)} td.column-${column}`;
     // Actions buttons in Row
     this.actionsColumn = row => `${this.tableRow(row)} td.column-actions`;
-    this.editRowLink = row => `${this.actionsColumn(row)} a[data-original-title='Edit']`;
+    this.editRowLink = row => `${this.actionsColumn(row)} a.grid-edit-row-link`;
     this.dropdownToggleButton = row => `${this.actionsColumn(row)} a.dropdown-toggle`;
     this.dropdownToggleMenu = row => `${this.actionsColumn(row)} div.dropdown-menu`;
-    this.viewRowLink = row => `${this.dropdownToggleMenu(row)} a[href*='/view']`;
-    this.deleteRowLink = row => `${this.dropdownToggleMenu(row)} a[data-url*='/delete']`;
+    this.viewRowLink = row => `${this.dropdownToggleMenu(row)} a.grid-view-row-link`;
+    this.deleteRowLink = row => `${this.dropdownToggleMenu(row)} a.grid-delete-row-link`;
     // Bulk Actions
-    this.selectAllRowsLabel = `${this.gridPanel} tr.column-filters .md-checkbox i`;
+    this.selectAllRowsLabel = `${this.gridPanel} tr.column-filters .grid_bulk_action_select_all`;
     this.bulkActionsToggleButton = `${this.gridPanel} button.js-bulk-actions-btn`;
     this.bulkActionsDeleteButton = '#attachment_grid_bulk_action_delete_selection';
-    this.confirmDeleteModal = '#attachment_grid_confirm_modal';
+    this.confirmDeleteModal = '#attachment-grid-confirm-modal';
     this.confirmDeleteButton = `${this.confirmDeleteModal} button.btn-confirm-submit`;
     // Sort Selectors
     this.tableHead = `${this.gridTable} thead`;
@@ -70,9 +70,9 @@ class Files extends BOBasePage {
 
   /**
    * View (download) file
-   * @param page
-   * @param row
-   * @return {Promise<void>}
+   * @param page {Page} Browser tab
+   * @param row {number} File row on table
+   * @return {Promise<string>}
    */
   async viewFile(page, row = 1) {
     await Promise.all([
@@ -80,12 +80,7 @@ class Files extends BOBasePage {
       this.waitForVisibleSelector(page, `${this.dropdownToggleButton(row)}[aria-expanded='true']`),
     ]);
 
-    const [download] = await Promise.all([
-      page.waitForEvent('download'), // wait for download to start
-      page.click(this.viewRowLink(row)),
-    ]);
-
-    return download.path();
+    return this.clickAndWaitForDownload(page, this.viewRowLink(row));
   }
 
   /**
@@ -95,7 +90,6 @@ class Files extends BOBasePage {
    * @returns {Promise<string>}
    */
   async deleteFile(page, row = 1) {
-    this.dialogListener(page, true);
     await Promise.all([
       page.click(this.dropdownToggleButton(row)),
       this.waitForVisibleSelector(
@@ -103,7 +97,12 @@ class Files extends BOBasePage {
         `${this.dropdownToggleButton(row)}[aria-expanded='true']`,
       ),
     ]);
-    await this.clickAndWaitForNavigation(page, this.deleteRowLink(row));
+    // Click on delete and wait for modal
+    await Promise.all([
+      page.click(this.deleteRowLink(row)),
+      this.waitForVisibleSelector(page, `${this.confirmDeleteModal}.show`),
+    ]);
+    await this.confirmDeleteFiles(page);
     return this.getAlertSuccessBlockParagraphContent(page);
   }
 
@@ -207,10 +206,12 @@ class Files extends BOBasePage {
   async getAllRowsColumnContent(page, column) {
     const rowsNumber = await this.getNumberOfElementInGrid(page);
     const allRowsContentTable = [];
+
     for (let i = 1; i <= rowsNumber; i++) {
       const rowContent = await this.getTextContent(page, this.tableColumn(i, column));
       await allRowsContentTable.push(rowContent);
     }
+
     return allRowsContentTable;
   }
 

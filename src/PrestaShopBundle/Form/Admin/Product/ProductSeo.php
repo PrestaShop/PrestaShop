@@ -26,6 +26,8 @@
 
 namespace PrestaShopBundle\Form\Admin\Product;
 
+use Language;
+use PrestaShop\PrestaShop\Adapter\LegacyContext;
 use PrestaShop\PrestaShop\Core\Product\ProductInterface;
 use PrestaShopBundle\Form\Admin\Type\CommonAbstractType;
 use PrestaShopBundle\Form\Admin\Type\TranslateType;
@@ -33,21 +35,37 @@ use PrestaShopBundle\Form\Admin\Type\TypeaheadProductCollectionType;
 use Symfony\Component\Form\Extension\Core\Type as FormType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
+use Symfony\Component\Routing\Router;
+use Symfony\Component\Translation\TranslatorInterface;
 
 /**
  * This form class is responsible to generate the product SEO form.
  */
 class ProductSeo extends CommonAbstractType
 {
-    private $translator;
+    /**
+     * @var LegacyContext
+     */
+    public $context;
+    /**
+     * @var array<int|Language>
+     */
     private $locales;
+    /**
+     * @var Router
+     */
     private $router;
+    /**
+     * @var TranslatorInterface
+     */
+    public $translator;
 
     /**
      * Constructor.
      *
-     * @param object $translator
-     * @param object $legacyContext
+     * @param TranslatorInterface $translator
+     * @param LegacyContext $legacyContext
+     * @param Router $router
      */
     public function __construct($translator, $legacyContext, $router)
     {

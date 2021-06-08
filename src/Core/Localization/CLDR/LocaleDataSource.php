@@ -55,7 +55,7 @@ class LocaleDataSource
     /**
      * @param string $localeCode
      *
-     * @return LocaleData
+     * @return LocaleData|null
      */
     public function getLocaleData($localeCode)
     {

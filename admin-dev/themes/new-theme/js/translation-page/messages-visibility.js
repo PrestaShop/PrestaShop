@@ -23,24 +23,26 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
 
-export default function(callback) {
-  var buttonSuffix = 'translation-messages';
-  var hideClass = 'hide';
+export default function (callback) {
+  const buttonSuffix = 'translation-messages';
+  const hideClass = 'hide';
 
   function hideCurrentTranslationForms(formsContainer) {
-    let currentTranslationForms = formsContainer.find('.translation-forms');
+    const currentTranslationForms = formsContainer.find('.translation-forms');
+
     if (currentTranslationForms.length > 0) {
-      let hiddenFormsContainer = $('[data-parent-of="' + currentTranslationForms.attr('id') + '"]');
+      const hiddenFormsContainer = $(`[data-parent-of="${currentTranslationForms.attr('id')}"]`);
       currentTranslationForms.find('form').addClass(hideClass);
       hiddenFormsContainer.append(currentTranslationForms);
     }
   }
 
   function hideCurrentNavigationBar(navigationContainer) {
-    let currentNavigationBar = navigationContainer.find('nav');
+    const currentNavigationBar = navigationContainer.find('nav');
+
     if (currentNavigationBar.length > 0) {
-      let navIdentifier = currentNavigationBar.attr('data-navigation-of');
-      let hiddenNavigationBarContainer = $('[data-navigation-parent-of="' + navIdentifier + '"]');
+      const navIdentifier = currentNavigationBar.attr('data-navigation-of');
+      const hiddenNavigationBarContainer = $(`[data-navigation-parent-of="${navIdentifier}"]`);
       currentNavigationBar.addClass(hideClass);
       hiddenNavigationBarContainer.append(currentNavigationBar);
     }
@@ -48,16 +50,18 @@ export default function(callback) {
 
   function highlightDomainFirstPart(showTranslationsFormButton) {
     $('.domain-first-part').removeClass('active');
-    let domainFirstPart = $($(showTranslationsFormButton.parents('.subdomains')[0]).prevAll().filter('.domain-first-part'))[0];
+    const domainFirstPart = $($(showTranslationsFormButton.parents('.subdomains')[0])
+      .prevAll()
+      .filter('.domain-first-part'))[0];
     $(domainFirstPart).addClass('active');
   }
 
   function updateDomainTitle(editTranslationForms) {
-    let domainPart = editTranslationForms.parents('.translation-domain').prev();
-    let missingTranslationWarning = domainPart.find('.missing-translations-short-message');
-    let warningPlaceholder = $('#domain .missing-translations');
-    let totalPlaceholder = $('#domain .total-expressions');
-    let separator = $('#domain .separator');
+    const domainPart = editTranslationForms.parents('.translation-domain').prev();
+    const missingTranslationWarning = domainPart.find('.missing-translations-short-message');
+    const warningPlaceholder = $('#domain .missing-translations');
+    const totalPlaceholder = $('#domain .total-expressions');
+    const separator = $('#domain .separator');
     totalPlaceholder.text(editTranslationForms.data('total-translations'));
     if (missingTranslationWarning.length > 0) {
       warningPlaceholder.text(missingTranslationWarning.text());
@@ -68,13 +72,14 @@ export default function(callback) {
     }
     separator.first().removeClass('hide');
 
-    let domain = $('#domain .name');
-    let title = editTranslationForms.attr('data-domain');
+    const domain = $('#domain .name');
+    const title = editTranslationForms.attr('data-domain');
     domain.text(title);
   }
 
   function updateMissingTranslationsMessages(title) {
-    let missingTranslationsMessage = title.find('.missing-translations-long-message');
+    const missingTranslationsMessage = title.find('.missing-translations-long-message');
+
     if (missingTranslationsMessage.text().length > 0) {
       $('.translation-domains .missing-translations-paragraph').text(missingTranslationsMessage.text());
     } else {
@@ -83,8 +88,8 @@ export default function(callback) {
   }
 
   function updateNavigationBar(translationDomain, editTranslationForms) {
-    let navigationContainer = $('.navbar-container:first');
-    let navigation = translationDomain.find('nav');
+    const navigationContainer = $('.navbar-container:first');
+    const navigation = translationDomain.find('nav');
 
     navigation.parent().attr('data-navigation-parent-of', editTranslationForms.attr('id'));
     navigation.attr('data-navigation-of', editTranslationForms.attr('id'));
@@ -96,7 +101,6 @@ export default function(callback) {
 
     $('.forms-container + .navbar-container').remove();
     $('.forms-container').after(navigationContainer.clone());
-
   }
 
   function updateEditTranslationForms(formsContainer, editTranslationForms) {
@@ -107,13 +111,13 @@ export default function(callback) {
   }
 
   (() => {
-    $('.show-' + buttonSuffix).each((buttonIndex, button) => {
+    $(`.show-${buttonSuffix}`).each((buttonIndex, button) => {
       $(button).click((event) => {
-        let showTranslationsFormButton = $(event.target);
+        const showTranslationsFormButton = $(event.target);
 
-        let translationDomain = showTranslationsFormButton.parent();
-        let editTranslationForms = translationDomain.find('.translation-forms');
-        let formsContainer = $('.forms-container');
+        const translationDomain = showTranslationsFormButton.parent();
+        const editTranslationForms = translationDomain.find('.translation-forms');
+        const formsContainer = $('.forms-container');
 
         if (editTranslationForms.length === 0) {
           return false;
@@ -127,20 +131,22 @@ export default function(callback) {
         updateEditTranslationForms(formsContainer, editTranslationForms);
 
         callback();
+        return true;
       });
     });
 
     $('.domain-part .delegate-toggle-messages').each((togglerIndex, toggler) => {
       $(toggler).click((event) => {
         let title = $(event.target);
+
         if (!$(event.target).hasClass('domain-part')) {
           title = $(event.target).parent();
         }
 
         updateMissingTranslationsMessages(title);
 
-        let translationDomain = title.next();
-        let showMessagesButton = translationDomain.find('.show-' + buttonSuffix);
+        const translationDomain = title.next();
+        const showMessagesButton = translationDomain.find(`.show-${buttonSuffix}`);
 
         showMessagesButton.click();
       });

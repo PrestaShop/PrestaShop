@@ -23,8 +23,6 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
 
-import TranslatableInput from '@components/translatable-input';
-import TaggableField from '@components/taggable-field';
 import FormSubmitButton from '@components/form-submit-button';
 import Grid from '@components/grid/grid';
 import SortingExtension from '@components/grid/extension/sorting-extension';
@@ -37,12 +35,9 @@ import BulkActionCheckboxExtension from '@components/grid/extension/bulk-action-
 import ExportToSqlManagerExtension from '@components/grid/extension/export-to-sql-manager-extension';
 import FiltersSubmitButtonEnablerExtension
   from '@components/grid/extension/filters-submit-button-enabler-extension';
-import ChoiceTree from '@components/form/choice-tree';
-import TranslatableField from '@components/translatable-field';
-import TinyMCEEditor from '@components/tinymce-editor';
 import LinkRowActionExtension from '@components/grid/extension/link-row-action-extension';
 
-const $ = window.$;
+const {$} = window;
 
 $(() => {
   ['manufacturer', 'manufacturer_address'].forEach((gridName) => {
@@ -59,16 +54,22 @@ $(() => {
     grid.addExtension(new LinkRowActionExtension());
   });
 
-  new TranslatableInput();
-  new TranslatableField();
-  new TinyMCEEditor();
-  new TaggableField({
+  window.prestashop.component.initComponents(
+    [
+      'TranslatableInput',
+      'TranslatableField',
+      'TinyMCEEditor',
+    ],
+  );
+
+  new window.prestashop.component.TaggableField({
     tokenFieldSelector: 'input.js-taggable-field',
     options: {
       createTokensOnBlur: true,
     },
   });
 
+  new window.prestashop.component.ChoiceTree('#manufacturer_shop_association').enableAutoCheckChildren();
+
   new FormSubmitButton();
-  new ChoiceTree('#manufacturer_shop_association').enableAutoCheckChildren();
 });

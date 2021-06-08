@@ -27,15 +27,16 @@
 namespace PrestaShopBundle\Form\Admin\Configure\ShopParameters\TrafficSeo\Meta;
 
 use PrestaShopBundle\Form\Admin\Type\SwitchType;
-use Symfony\Component\Form\AbstractType;
+use PrestaShopBundle\Form\Admin\Type\TranslatorAwareType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\FormBuilderInterface;
+use Symfony\Component\Translation\TranslatorInterface;
 
 /**
  * Class SetUpUrlType is responsible for providing form fields for Set up urls block located in
  * Shop parameters -> Traffic & Seo -> Seo & urls page.
  */
-class SetUpUrlType extends AbstractType
+class SetUpUrlType extends TranslatorAwareType
 {
     /**
      * @var array
@@ -53,20 +54,40 @@ class SetUpUrlType extends AbstractType
     private $isHostMode;
 
     /**
+     * @var bool
+     */
+    private $isModRewriteActive;
+
+    /**
+     * @var bool
+     */
+    private $doesMainShopUrlExist;
+
+    /**
      * SetUpUrlType constructor.
      *
+     * @param TranslatorInterface $translator
+     * @param array $locales
      * @param array $canonicalUrlChoices
      * @param bool $isHtaccessFileWritable
      * @param bool $isHostMode
+     * @param bool $doesMainShopUrlExist
      */
     public function __construct(
+        TranslatorInterface $translator,
+        array $locales,
         array $canonicalUrlChoices,
         $isHtaccessFileWritable,
-        $isHostMode
+        $isHostMode,
+        $isModRewriteActive,
+        $doesMainShopUrlExist
     ) {
+        parent::__construct($translator, $locales);
         $this->canonicalUrlChoices = $canonicalUrlChoices;
         $this->isHtaccessFileWritable = $isHtaccessFileWritable;
+        $this->isModRewriteActive = $isModRewriteActive;
         $this->isHostMode = $isHostMode;
+        $this->doesMainShopUrlExist = $doesMainShopUrlExist;
     }
 
     /**
@@ -74,22 +95,57 @@ class SetUpUrlType extends AbstractType
      */
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
+        $friendlyUrlHelp = $this->trans(
+            'Enable this option only if your server allows URL rewriting (recommended).',
+            'Admin.Shopparameters.Help'
+        );
+
+        if (!$this->isModRewriteActive) {
+            $friendlyUrlHelp .=
+                '<br/>' . $this->trans(
+                'URL rewriting (mod_rewrite) is not active on your server, or it is not possible to check your server configuration. If you want to use Friendly URLs, you must activate this mod.',
+                    'Admin.Shopparameters.Help'
+            );
+        }
+
         $builder
-            ->add('friendly_url', SwitchType::class)
-            ->add('accented_url', SwitchType::class)
+            ->add('friendly_url', SwitchType::class, [
+                'label' => $this->trans('Friendly URL', 'Admin.Global'),
+                'help' => $friendlyUrlHelp,
+            ])
+            ->add('accented_url', SwitchType::class, [
+                'label' => $this->trans('Accented URL', 'Admin.Shopparameters.Feature'),
+                'help' => $this->trans(
+                    'Enable this option if you want to allow accented characters in your friendly URLs. You should only activate this option if you are using non-Latin characters; for all the Latin charsets, your SEO will be better without this option.',
+                    'Admin.Shopparameters.Help'
+                ),
+            ])
             ->add(
                 'canonical_url_redirection',
                 ChoiceType::class,
                 [
                     'choices' => $this->canonicalUrlChoices,
                     'translation_domain' => false,
+                    'label' => $this->trans('Redirect to the canonical URL', 'Admin.Shopparameters.Feature'),
                 ]
             );
 
-        if (!$this->isHostMode && $this->isHtaccessFileWritable) {
+        if (!$this->isHostMode && $this->isHtaccessFileWritable && $this->doesMainShopUrlExist) {
             $builder
-                ->add('disable_apache_multiview', SwitchType::class)
-                ->add('disable_apache_mod_security', SwitchType::class);
+                ->add('disable_apache_multiview', SwitchType::class, [
+                    'label' => $this->trans('Disable Apache\'s MultiViews option', 'Admin.Shopparameters.Feature'),
+                    'help' => $this->trans(
+                        'Enable this option only if you have problems with URL rewriting.',
+                        'Admin.Shopparameters.Help'
+                    ),
+                ])
+                ->add('disable_apache_mod_security', SwitchType::class, [
+                    'label' => $this->trans('Disable Apache\'s mod_security module', 'Admin.Shopparameters.Feature'),
+                    'help' => $this->trans(
+                        'Some of PrestaShop\'s features might not work correctly with a specific configuration of Apache\'s mod_security module. We recommend to turn it off.',
+                        'Admin.Shopparameters.Help'
+                    ),
+                ]);
         }
     }
 }

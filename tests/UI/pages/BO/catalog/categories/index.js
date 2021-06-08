@@ -23,21 +23,21 @@ class Categories extends BOBasePage {
     this.categoriesListTableToggleDropDown = (row, column) => `${this.categoriesListTableColumn(row, column)
     } a[data-toggle='dropdown']`;
     this.categoriesListTableDeleteLink = (row, column) => `${this.categoriesListTableColumn(row, column)
-    } a[data-category-delete-url]`;
+    } a.grid-delete-row-link`;
     this.categoriesListTableViewLink = (row, column) => `${this.categoriesListTableColumn(row, column)
-    } a[data-original-title='View']`;
+    } a.grid-view-row-link`;
     this.categoriesListTableEditLink = (row, column) => `${this.categoriesListTableColumn(row, column)
-    } a[href*='edit']`;
-    this.categoriesListStatusColumn = row => this.categoriesListTableColumn(row, 'active');
-    this.categoriesListColumnValidIcon = row => `${this.categoriesListStatusColumn(row)} i.grid-toggler-icon-valid`;
-    this.categoriesListColumnNotValidIcon = row => `${this.categoriesListStatusColumn(row)
-    } i.grid-toggler-icon-not-valid`;
+    } a.grid-edit-row-link`;
+
+    this.categoriesListColumnStatus = row => `${this.categoriesListTableColumn(row, 'active')} .ps-switch`;
+    this.categoriesListColumnStatusToggleInput = row => `${this.categoriesListColumnStatus(row)} input`;
+
     // Filters
     this.categoryFilterInput = filterBy => `${this.categoriesListForm} #category_${filterBy}`;
-    this.filterSearchButton = `${this.categoriesListForm} button[name='category[actions][search]']`;
-    this.filterResetButton = `${this.categoriesListForm} button[name='category[actions][reset]']`;
+    this.filterSearchButton = `${this.categoriesListForm} .grid-search-button`;
+    this.filterResetButton = `${this.categoriesListForm} .grid-reset-button`;
     // Bulk Actions
-    this.selectAllRowsDiv = `${this.categoriesListForm} tr.column-filters div.md-checkbox`;
+    this.selectAllRowsDiv = `${this.categoriesListForm} tr.column-filters .grid_bulk_action_select_all`;
     this.bulkActionsToggleButton = `${this.categoriesListForm} button.dropdown-toggle`;
     this.bulkActionsEnableButton = `${this.categoriesListForm} #category_grid_bulk_action_enable_selection`;
     this.bulkActionsDisableButton = `${this.categoriesListForm} #category_grid_bulk_action_disable_selection`;
@@ -52,8 +52,8 @@ class Categories extends BOBasePage {
     this.deleteCategoryModalModeInput = id => `${this.deleteCategoryModal} #delete_categories_delete_mode_${id}`;
     // Grid Actions
     this.categoryGridActionsButton = '#category-grid-actions-button';
-    this.gridActionDropDownMenu = 'div.dropdown-menu[aria-labelledby=\'category-grid-actions-button\']';
-    this.gridActionExportLink = `${this.gridActionDropDownMenu} a[href*='/export']`;
+    this.gridActionDropDownMenu = '#category-grid-actions-dropdown-menu';
+    this.gridActionExportLink = '#category-grid-action-export';
     // Pagination selectors
     this.paginationLimitSelect = '#paginator_select_page_limit';
     this.paginationLabel = `${this.categoryGridPanel} .col-form-label`;
@@ -133,7 +133,15 @@ class Categories extends BOBasePage {
    * @return {Promise<boolean>}
    */
   async getStatus(page, row) {
-    return this.elementVisible(page, this.categoriesListColumnValidIcon(row), 500);
+    // Get value of the check input
+    const inputValue = await this.getAttributeContent(
+      page,
+      `${this.categoriesListColumnStatusToggleInput(row)}:checked`,
+      'value',
+    );
+
+    // Return status=false if value='0' and true otherwise
+    return (inputValue !== '0');
   }
 
   /**
@@ -144,17 +152,12 @@ class Categories extends BOBasePage {
    * @return {Promise<boolean>} return true if action is done, false otherwise
    */
   async setStatus(page, row, valueWanted = true) {
-    await this.waitForVisibleSelector(page, this.categoriesListStatusColumn(row), 2000);
     if (await this.getStatus(page, row) !== valueWanted) {
-      await page.click(`${this.categoriesListStatusColumn(row)} i`);
+      await page.click(this.categoriesListColumnStatus(row));
+
       await this.waitForVisibleSelector(
         page,
-        (
-          valueWanted
-            ? this.categoriesListColumnValidIcon(row)
-            : this.categoriesListColumnNotValidIcon(row)
-        ),
-        15000,
+        `${this.categoriesListColumnStatusToggleInput(row)}[value='${valueWanted ? 1 : 0}']:checked`,
       );
 
       return true;
@@ -199,10 +202,12 @@ class Categories extends BOBasePage {
   async getAllRowsColumnContent(page, column) {
     const rowsNumber = await this.getNumberOfElementInGrid(page);
     const allRowsContentTable = [];
+
     for (let i = 1; i <= rowsNumber; i++) {
       const rowContent = await this.getTextColumnFromTableCategories(page, i, column);
       await allRowsContentTable.push(rowContent);
     }
+
     return allRowsContentTable;
   }
 
@@ -270,7 +275,7 @@ class Categories extends BOBasePage {
    * @return {Promise<void>}
    */
   async chooseOptionAndDelete(page, modeID) {
-    await page.click(this.deleteCategoryModalModeInput(modeID));
+    await page.check(this.deleteCategoryModalModeInput(modeID));
     await this.clickAndWaitForNavigation(page, this.deleteCategoryModalDeleteButton);
     await this.waitForVisibleSelector(page, this.alertSuccessBlockParagraph);
   }
@@ -284,7 +289,7 @@ class Categories extends BOBasePage {
   async bulkSetStatus(page, enable = true) {
     // Click on Select All
     await Promise.all([
-      page.$eval(`${this.selectAllRowsDiv} i`, el => el.click()),
+      page.$eval(this.selectAllRowsDiv, el => el.click()),
       this.waitForVisibleSelector(page, `${this.bulkActionsToggleButton}:not([disabled])`),
     ]);
     // Click on Button Bulk actions
@@ -306,7 +311,7 @@ class Categories extends BOBasePage {
   async deleteCategoriesBulkActions(page, modeID = '0') {
     // Click on Select All
     await Promise.all([
-      page.$eval(`${this.selectAllRowsDiv} i`, el => el.click()),
+      page.$eval(this.selectAllRowsDiv, el => el.click()),
       this.waitForVisibleSelector(page, `${this.bulkActionsToggleButton}:not([disabled])`),
     ]);
     // Click on Button Bulk actions
@@ -364,20 +369,21 @@ class Categories extends BOBasePage {
   // Export methods
   /**
    * Click on lint to export categories to a csv file
-   * @param page
-   * @return {Promise<*>}
+   * @param page {Page} Browser tab
+   * @return {Promise<string>}
    */
   async exportDataToCsv(page) {
     await Promise.all([
       page.click(this.categoryGridActionsButton),
       this.waitForVisibleSelector(page, `${this.gridActionDropDownMenu}.show`),
     ]);
-    const [download] = await Promise.all([
-      page.waitForEvent('download'),
-      page.click(this.gridActionExportLink),
+
+    const [downloadPath] = await Promise.all([
+      this.clickAndWaitForDownload(page, this.gridActionExportLink),
       this.waitForHiddenSelector(page, `${this.gridActionDropDownMenu}.show`),
     ]);
-    return download.path();
+
+    return downloadPath;
   }
 
   /**
@@ -388,6 +394,7 @@ class Categories extends BOBasePage {
    */
   async getCategoryInCsvFormat(page, row) {
     const category = await this.getCategoryFromTable(page, row);
+
     return `${category.id};`
       + `${category.name};`
       + `"${category.description}";`
@@ -401,7 +408,7 @@ class Categories extends BOBasePage {
    * @returns {Promise<void>}
    */
   async goToEditHomeCategoryPage(page) {
-    await this.waitForSelectorAndClick(page, this.editHomeCategoryButton);
+    await this.clickAndWaitForNavigation(page, this.editHomeCategoryButton);
   }
 
   /* Pagination methods */

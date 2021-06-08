@@ -50,7 +50,7 @@ class MailVariablesTransformationTest extends TestCase
                 '{firstname}' => 'John',
                 '{lastname}' => 'Doe',
                 'how are you' => 'wasup mate',
-                ],
+            ],
         ];
         $transformedTemplate = $transformation->apply($template, $layoutVariables);
         $this->assertEquals('Hello John Doe wasup mate?', $transformedTemplate);

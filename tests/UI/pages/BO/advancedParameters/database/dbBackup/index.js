@@ -32,13 +32,14 @@ class DbBackup extends BOBasePage {
     this.actionsColumn = row => `${this.tableRow(row)} td.column-actions`;
     this.dropdownToggleButton = row => `${this.actionsColumn(row)} a.dropdown-toggle`;
     this.dropdownToggleMenu = row => `${this.actionsColumn(row)} div.dropdown-menu`;
-    this.deleteRowLink = row => `${this.dropdownToggleMenu(row)} a[data-method='DELETE']`;
+    this.deleteRowLink = row => `${this.dropdownToggleMenu(row)} a.grid-delete-row-link`;
 
     // Bulk Actions
-    this.selectAllRowsLabel = `${this.gridPanel} tr.column-filters .md-checkbox i`;
+    this.selectAllRowsLabel = `${this.gridPanel} tr.column-filters .grid_bulk_action_select_all`;
     this.bulkActionsToggleButton = `${this.gridPanel} button.js-bulk-actions-btn`;
-    this.bulkActionsDeleteButton = `${this.gridPanel} #backup_grid_bulk_action_delete_backups`;
-
+    this.bulkActionsDeleteButton = `${this.gridPanel} #backup_grid_bulk_action_delete_selection`;
+    this.confirmDeleteModal = '#backup-grid-confirm-modal';
+    this.confirmDeleteButton = `${this.confirmDeleteModal} button.btn-confirm-submit`;
 
     // Pagination selectors
     this.paginationLimitSelect = '#paginator_select_page_limit';
@@ -84,15 +85,11 @@ class DbBackup extends BOBasePage {
 
   /**
    * Download backup
-   * @param page
-   * @return {Promise<void>}
+   * @param page {Page} Browser tab
+   * @return {Promise<string>}
    */
-  async downloadDbBackup(page) {
-    const [download] = await Promise.all([
-      page.waitForEvent('download'),
-      await page.click(this.downloadBackupButton),
-    ]);
-    return download.path();
+  downloadDbBackup(page) {
+    return this.clickAndWaitForDownload(page, this.downloadBackupButton);
   }
 
   /**
@@ -102,13 +99,26 @@ class DbBackup extends BOBasePage {
    * @returns {Promise<string>}
    */
   async deleteBackup(page, row) {
-    this.dialogListener(page, true);
     await Promise.all([
       page.click(this.dropdownToggleButton(row)),
       this.waitForVisibleSelector(page, `${this.dropdownToggleButton(row)}[aria-expanded='true']`),
     ]);
-    await this.clickAndWaitForNavigation(page, this.deleteRowLink(row));
+    // Click on delete and wait for modal
+    await Promise.all([
+      page.click(this.deleteRowLink(row)),
+      this.waitForVisibleSelector(page, `${this.confirmDeleteModal}.show`),
+    ]);
+    await this.confirmDeleteDbBackups(page);
     return this.getAlertSuccessBlockParagraphContent(page);
+  }
+
+  /**
+   * Confirm delete with in modal
+   * @param page
+   * @return {Promise<void>}
+   */
+  async confirmDeleteDbBackups(page) {
+    await this.clickAndWaitForNavigation(page, this.confirmDeleteButton);
   }
 
   /**
@@ -117,7 +127,6 @@ class DbBackup extends BOBasePage {
    * @returns {Promise<string>}
    */
   async deleteWithBulkActions(page) {
-    this.dialogListener(page, true);
     // Click on Select All
     await Promise.all([
       page.$eval(this.selectAllRowsLabel, el => el.click()),
@@ -128,8 +137,14 @@ class DbBackup extends BOBasePage {
       page.click(this.bulkActionsToggleButton),
       this.waitForVisibleSelector(page, `${this.bulkActionsToggleButton}[aria-expanded='true']`),
     ]);
+
     // Click on delete and wait for modal
-    await this.clickAndWaitForNavigation(page, this.bulkActionsDeleteButton);
+    await Promise.all([
+      page.click(this.bulkActionsDeleteButton),
+      this.waitForVisibleSelector(page, `${this.confirmDeleteModal}.show`),
+    ]);
+
+    await this.confirmDeleteDbBackups(page);
     return this.getAlertSuccessBlockParagraphContent(page);
   }
 

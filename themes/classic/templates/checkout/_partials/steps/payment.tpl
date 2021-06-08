@@ -30,7 +30,7 @@
                 name="payment-option"
                 type="radio"
                 required
-                {if $selected_payment_option == $option.id || $is_free} checked {/if}
+                {if ($selected_payment_option == $option.id || $is_free) || ($payment_options|@count === 1 && $module_options|@count === 1)} checked {/if}
               >
               <span></span>
             </span>
@@ -48,7 +48,7 @@
             <label for="{$option.id}">
               <span>{$option.call_to_action_text}</span>
               {if $option.logo}
-                <img src="{$option.logo}">
+                <img src="{$option.logo}" loading="lazy">
               {/if}
             </label>
 
@@ -94,7 +94,7 @@
       {l s='By confirming the order, you certify that you have read and agree with all of the conditions below:' d='Shop.Theme.Checkout'}
     </p>
 
-    <form id="conditions-to-approve" method="GET">
+    <form id="conditions-to-approve" class="js-conditions-to-approve" method="GET">
       <ul>
         {foreach from=$conditions_to_approve item="condition" key="condition_name"}
           <li>
@@ -125,9 +125,9 @@
     {include file='checkout/_partials/order-final-summary.tpl'}
   {/if}
 
-  <div id="payment-confirmation">
+  <div id="payment-confirmation" class="js-payment-confirmation">
     <div class="ps-shown-by-js">
-      <button type="submit" {if !$selected_payment_option} disabled {/if} class="btn btn-primary center-block">
+      <button type="submit" class="btn btn-primary center-block{if !$selected_payment_option} disabled{/if}">
         {l s='Place order' d='Shop.Theme.Checkout'}
       </button>
       {if $show_final_summary}
@@ -153,15 +153,4 @@
   </div>
 
   {hook h='displayPaymentByBinaries'}
-
-  <div class="modal fade" id="modal">
-    <div class="modal-dialog" role="document">
-      <div class="modal-content">
-        <button type="button" class="close" data-dismiss="modal" aria-label="{l s='Close' d='Shop.Theme.Global'}">
-          <span aria-hidden="true">&times;</span>
-        </button>
-        <div class="js-modal-content"></div>
-      </div>
-    </div>
-  </div>
 {/block}

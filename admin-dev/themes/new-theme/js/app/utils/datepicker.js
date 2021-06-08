@@ -24,10 +24,11 @@
  */
 import 'url-polyfill';
 
-const $ = global.$;
+const {$} = window;
 
 const replaceDatePicker = () => {
   const datepickerWidget = $('body').find('.bootstrap-datetimepicker-widget:last');
+
   if (datepickerWidget.length <= 0) {
     return;
   }
@@ -66,7 +67,7 @@ const init = function initDatePickers() {
   $.each($datePickers, (i, picker) => {
     $(picker).datetimepicker(
       {
-        locale: global.full_language_code,
+        locale: window.full_language_code,
         format: $(picker).data('format') ? $(picker).data('format') : 'YYYY-MM-DD',
         sideBySide: true,
         icons: {

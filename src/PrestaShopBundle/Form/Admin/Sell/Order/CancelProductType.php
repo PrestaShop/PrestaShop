@@ -26,7 +26,7 @@
 
 namespace PrestaShopBundle\Form\Admin\Sell\Order;
 
-use PrestaShop\Decimal\Number;
+use PrestaShop\Decimal\DecimalNumber;
 use PrestaShop\PrestaShop\Core\Domain\Order\VoucherRefundType;
 use PrestaShopBundle\Form\Admin\Type\TranslatorAwareType;
 use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
@@ -72,7 +72,7 @@ class CancelProductType extends TranslatorAwareType
                     ),
                     'invalid_message' => $this->trans('This field is invalid, it must contain numeric values', 'Admin.Notifications.Error', []),
                     'required' => false,
-                    'data' => (new Number('0'))->toPrecision($precision),
+                    'data' => (new DecimalNumber('0'))->toPrecision($precision),
                 ]);
         }
         $builder
@@ -81,7 +81,7 @@ class CancelProductType extends TranslatorAwareType
                     'label' => $this->trans('Shipping', 'Admin.Catalog.Feature', []),
                     'invalid_message' => $this->trans('The "shipping" field must be a valid number', 'Admin.Orderscustomers.Feature', []),
                     'required' => false,
-                    'data' => (new Number('0'))->toPrecision($precision),
+                    'data' => (new DecimalNumber('0'))->toPrecision($precision),
                 ]
             )
             ->add('shipping', CheckboxType::class,

@@ -18,25 +18,30 @@ class Employees extends BOBasePage {
     this.employeesListForm = '#employee_grid';
     this.employeesListTableRow = row => `${this.employeesListForm} tbody tr:nth-child(${row})`;
     this.employeesListTableColumn = (row, column) => `${this.employeesListTableRow(row)} td.column-${column}`;
+    this.employeesListTableStatusColumn = row => `${this.employeesListTableColumn(row, 'active')} .ps-switch`;
+    this.employeesListTableStatusColumnToggleInput = row => `${this.employeesListTableStatusColumn(row)} input`;
     this.employeesListTableColumnAction = row => this.employeesListTableColumn(row, 'actions');
     this.employeesListTableToggleDropDown = row => `${this.employeesListTableColumnAction(row)
     } a[data-toggle='dropdown']`;
-    this.employeesListTableDeleteLink = row => `${this.employeesListTableColumnAction(row)} a[data-url]`;
-    this.employeesListTableEditLink = row => `${this.employeesListTableColumnAction(row)} a[href*='edit']`;
+    this.employeesListTableDeleteLink = row => `${this.employeesListTableColumnAction(row)} a.grid-delete-row-link`;
+    this.employeesListTableEditLink = row => `${this.employeesListTableColumnAction(row)} a.grid-edit-row-link`;
     this.employeesListColumnValidIcon = row => `${this.employeesListTableColumn(row, 'active')
     } i.grid-toggler-icon-valid`;
     this.employeesListColumnNotValidIcon = row => `${this.employeesListTableColumn(row, 'active')
     } i.grid-toggler-icon-not-valid`;
     // Filters
     this.employeeFilterInput = filterBy => `${this.employeesListForm} #employee_${filterBy}`;
-    this.filterSearchButton = `${this.employeesListForm} button[name='employee[actions][search]']`;
-    this.filterResetButton = `${this.employeesListForm} button[name='employee[actions][reset]']`;
+    this.filterSearchButton = `${this.employeesListForm} .grid-search-button`;
+    this.filterResetButton = `${this.employeesListForm} .grid-reset-button`;
     // Bulk Actions
-    this.selectAllRowsLabel = `${this.employeesListForm} tr.column-filters .md-checkbox i`;
+    this.selectAllRowsLabel = `${this.employeesListForm} tr.column-filters .grid_bulk_action_select_all`;
     this.bulkActionsToggleButton = `${this.employeesListForm} button.dropdown-toggle`;
     this.bulkActionsEnableButton = `${this.employeesListForm} #employee_grid_bulk_action_enable_selection`;
     this.bulkActionsDisableButton = `${this.employeesListForm} #employee_grid_bulk_action_disable_selection`;
     this.bulkActionsDeleteButton = `${this.employeesListForm} #employee_grid_bulk_action_delete_selection`;
+    // Delete modal
+    this.confirmDeleteModal = '#employee-grid-confirm-modal';
+    this.confirmDeleteButton = `${this.confirmDeleteModal} button.btn-confirm-submit`;
     // Sort Selectors
     this.tableHead = `${this.employeeGridPanel} thead`;
     this.sortColumnDiv = column => `${this.tableHead} div.ps-sortable-column[data-sort-col-name='${column}']`;
@@ -52,6 +57,7 @@ class Employees extends BOBasePage {
   Methods
    */
 
+  // Header methods
   /**
    * Go to new Employee page
    * @param page
@@ -144,7 +150,15 @@ class Employees extends BOBasePage {
    * @returns {Promise<boolean>}
    */
   async getStatus(page, row) {
-    return this.elementVisible(page, this.employeesListColumnValidIcon(row), 100);
+    // Get value of the check input
+    const inputValue = await this.getAttributeContent(
+      page,
+      `${this.employeesListTableStatusColumnToggleInput(row)}:checked`,
+      'value',
+    );
+
+    // Return status=false if value='0' and true otherwise
+    return (inputValue !== '0');
   }
 
   /**
@@ -155,15 +169,11 @@ class Employees extends BOBasePage {
    * @returns {Promise<boolean>} return true if action is done, false otherwise
    */
   async setStatus(page, row, valueWanted = true) {
-    await this.waitForVisibleSelector(page, this.employeesListTableColumn(row, 'active'), 2000);
     if (await this.getStatus(page, row) !== valueWanted) {
-      page.click(this.employeesListTableColumn(row, 'active'));
-      await this.waitForVisibleSelector(
-        page,
-        (valueWanted ? this.employeesListColumnValidIcon(row) : this.employeesListColumnNotValidIcon(row)),
-      );
+      await this.clickAndWaitForNavigation(page, this.employeesListTableStatusColumn(row));
       return true;
     }
+
     return false;
   }
 
@@ -174,7 +184,6 @@ class Employees extends BOBasePage {
    * @returns {Promise<string>}
    */
   async deleteEmployee(page, row) {
-    this.dialogListener(page);
     // Click on dropDown
     await Promise.all([
       page.click(this.employeesListTableToggleDropDown(row)),
@@ -183,9 +192,22 @@ class Employees extends BOBasePage {
         `${this.employeesListTableToggleDropDown(row)}[aria-expanded='true']`,
       ),
     ]);
-    // Click on delete
-    await this.clickAndWaitForNavigation(page, this.employeesListTableDeleteLink(row));
+    // Click on delete and wait for modal
+    await Promise.all([
+      page.click(this.employeesListTableDeleteLink(row)),
+      this.waitForVisibleSelector(page, `${this.confirmDeleteModal}.show`),
+    ]);
+    await this.confirmDeleteEmployees(page);
     return this.getAlertSuccessBlockParagraphContent(page);
+  }
+
+  /**
+   * Confirm delete in modal
+   * @param page
+   * @return {Promise<void>}
+   */
+  async confirmDeleteEmployees(page) {
+    await this.clickAndWaitForNavigation(page, this.confirmDeleteButton);
   }
 
   /**
@@ -216,7 +238,6 @@ class Employees extends BOBasePage {
    * @returns {Promise<string>}
    */
   async deleteBulkActions(page) {
-    this.dialogListener(page);
     // Click on Select All
     await Promise.all([
       page.$eval(this.selectAllRowsLabel, el => el.click()),
@@ -227,8 +248,13 @@ class Employees extends BOBasePage {
       page.click(this.bulkActionsToggleButton),
       this.waitForVisibleSelector(page, `${this.bulkActionsToggleButton}[aria-expanded='true']`),
     ]);
+
     // Click on delete and wait for modal
-    await this.clickAndWaitForNavigation(page, this.bulkActionsDeleteButton);
+    await Promise.all([
+      page.click(this.bulkActionsDeleteButton),
+      this.waitForVisibleSelector(page, `${this.confirmDeleteModal}.show`),
+    ]);
+    await this.confirmDeleteEmployees(page);
     return this.getAlertSuccessBlockParagraphContent(page);
   }
 
@@ -242,13 +268,16 @@ class Employees extends BOBasePage {
   async getAllRowsColumnContent(page, column) {
     const rowsNumber = await this.getNumberOfElementInGrid(page);
     const allRowsContentTable = [];
+
     for (let i = 1; i <= rowsNumber; i++) {
       let rowContent = await this.getTextContent(page, this.employeesListTableColumn(i, column));
+
       if (column === 'active') {
         rowContent = await this.getStatus(page, i).toString();
       }
       await allRowsContentTable.push(rowContent);
     }
+
     return allRowsContentTable;
   }
 

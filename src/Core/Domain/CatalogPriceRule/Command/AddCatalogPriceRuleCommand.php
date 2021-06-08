@@ -28,7 +28,7 @@ namespace PrestaShop\PrestaShop\Core\Domain\CatalogPriceRule\Command;
 
 use DateTime;
 use Exception;
-use PrestaShop\Decimal\Number;
+use PrestaShop\Decimal\DecimalNumber;
 use PrestaShop\PrestaShop\Core\Domain\CatalogPriceRule\Exception\CatalogPriceRuleConstraintException;
 use PrestaShop\PrestaShop\Core\Domain\Exception\DomainConstraintException;
 use PrestaShop\PrestaShop\Core\Domain\ValueObject\Reduction;
@@ -79,7 +79,7 @@ class AddCatalogPriceRuleCommand
     private $includeTax;
 
     /**
-     * @var Number
+     * @var DecimalNumber
      */
     private $price;
 
@@ -126,7 +126,7 @@ class AddCatalogPriceRuleCommand
         $this->fromQuantity = $fromQuantity;
         $this->reduction = new Reduction($reductionType, $reductionValue);
         $this->shopId = $shopId;
-        $this->price = new Number((string) $price);
+        $this->price = new DecimalNumber((string) $price);
         $this->includeTax = $includeTax;
     }
 
@@ -187,9 +187,9 @@ class AddCatalogPriceRuleCommand
     }
 
     /**
-     * @return Number
+     * @return DecimalNumber
      */
-    public function getPrice(): Number
+    public function getPrice(): DecimalNumber
     {
         return $this->price;
     }

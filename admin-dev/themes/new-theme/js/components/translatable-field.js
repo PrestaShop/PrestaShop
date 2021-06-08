@@ -25,7 +25,7 @@
 
 import {EventEmitter} from './event-emitter';
 
-const $ = window.$;
+const {$} = window;
 
 /**
  * This class is used to automatically toggle translated fields (displayed with tabs
@@ -34,37 +34,74 @@ const $ = window.$;
  */
 class TranslatableField {
   constructor(options) {
-    options = options || {};
+    const opts = options || {};
 
-    this.localeButtonSelector = options.localeButtonSelector || '.translationsLocales.nav .nav-item a[data-toggle="tab"]';
-    this.localeNavigationSelector = options.localeNavigationSelector || '.translationsLocales.nav';
+    this.localeButtonSelector = opts.localeButtonSelector || '.translationsLocales.nav .nav-item a[data-toggle="tab"]';
+    this.localeNavigationSelector = opts.localeNavigationSelector || '.translationsLocales.nav';
+    this.translationFieldSelector = opts.translationFieldSelector || '.translation-field';
+    this.selectedLocale = $('.nav-item a.active', $(this.localeNavigationSelector)).data('locale');
 
     $('body').on('shown.bs.tab', this.localeButtonSelector, this.toggleLanguage.bind(this));
     EventEmitter.on('languageSelected', this.toggleFields.bind(this));
+
+    return {
+      localeButtonSelector: this.localeButtonSelector,
+      localeNavigationSelector: this.localeNavigationSelector,
+      translationFieldSelector: this.translationFieldSelector,
+
+      /**
+       * @param {jQuery} form
+       */
+      refreshFormInputs: (form) => { this.refreshInputs(form); },
+
+      /**
+       * @returns {string|undefined}
+       */
+      getSelectedLocale: () => this.selectedLocale,
+    };
+  }
+
+  /**
+   * @param form
+   *
+   * @private
+   */
+  refreshInputs(form) {
+    EventEmitter.emit('languageSelected', {
+      selectedLocale: this.selectedLocale,
+      form,
+    });
   }
 
   /**
    * Dispatch event on language selection to update inputs and other components which depend on the locale.
    *
    * @param event
+   *
+   * @private
    */
   toggleLanguage(event) {
     const localeLink = $(event.target);
     const form = localeLink.closest('form');
-    EventEmitter.emit('languageSelected', {selectedLocale: localeLink.data('locale'), form: form});
+    this.selectedLocale = localeLink.data('locale');
+    this.refreshInputs(form);
   }
 
   /**
    * Toggle all transtation fields to the selected locale
    *
    * @param event
+   *
+   * @private
    */
   toggleFields(event) {
+    this.selectedLocale = event.selectedLocale;
     $(this.localeNavigationSelector).each((index, navigation) => {
       const selectedLink = $('.nav-item a.active', navigation);
       const selectedLocale = selectedLink.data('locale');
-      if (event.selectedLocale !== selectedLocale) {
-        $('.nav-item a[data-locale="'+event.selectedLocale+'"]', navigation).tab('show');
+
+      if (this.selectedLocale !== selectedLocale) {
+        $(`.nav-item a[data-locale="${this.selectedLocale}"]`, navigation).tab('show');
       }
     });
   }

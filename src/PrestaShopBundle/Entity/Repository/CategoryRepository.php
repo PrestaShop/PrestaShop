@@ -67,7 +67,7 @@ class CategoryRepository
     /**
      * @param Connection $connection
      * @param ContextAdapter $contextAdapter
-     * @param $tablePrefix
+     * @param string $tablePrefix
      *
      * @throws NotImplementedException
      */
@@ -138,7 +138,7 @@ class CategoryRepository
     }
 
     /**
-     * @param $rows array categories rows
+     * @param array $rows categories rows
      *
      * @return array
      */

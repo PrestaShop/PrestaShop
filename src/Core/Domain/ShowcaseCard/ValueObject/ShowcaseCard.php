@@ -37,42 +37,47 @@ class ShowcaseCard
     /**
      * Card shown in SEO & URLs
      */
-    const SEO_URLS_CARD = 'seo-urls_card';
+    public const SEO_URLS_CARD = 'seo-urls_card';
 
     /**
      * Card shown in Categories
      */
-    const CATEGORIES_CARD = 'categories_card';
+    public const CATEGORIES_CARD = 'categories_card';
 
     /**
      * Card shown in Customers
      */
-    const CUSTOMERS_CARD = 'customers_card';
+    public const CUSTOMERS_CARD = 'customers_card';
 
     /**
      * Card shown in Employees
      */
-    const EMPLOYEES_CARD = 'employees_card';
+    public const EMPLOYEES_CARD = 'employees_card';
 
     /**
      * Card shown in Improve -> Design -> Pages
      */
-    const CMS_PAGES_CARD = 'cms-pages_card';
+    public const CMS_PAGES_CARD = 'cms-pages_card';
 
     /**
      * Card shown in Sell -> Catalog -> Attributes & features -> Attributes
      */
-    const ATTRIBUTES_CARD = 'attributes_card';
+    public const ATTRIBUTES_CARD = 'attributes_card';
 
     /**
      * Card shown in Sell -> Catalog -> Monitoring
      */
-    const MONITORING_CARD = 'monitoring_card';
+    public const MONITORING_CARD = 'monitoring_card';
+
+    /**
+     * Card shown in Improve -> Shipping -> Carriers
+     */
+    const CARRIERS_CARD = 'carriers_card';
 
     /**
      * List of supported card names
      */
-    const SUPPORTED_NAMES = [
+    public const SUPPORTED_NAMES = [
         self::SEO_URLS_CARD => true,
         self::CATEGORIES_CARD => true,
         self::CUSTOMERS_CARD => true,
@@ -80,6 +85,7 @@ class ShowcaseCard
         self::CMS_PAGES_CARD => true,
         self::ATTRIBUTES_CARD => true,
         self::MONITORING_CARD => true,
+        self::CARRIERS_CARD => true,
     ];
 
     /**

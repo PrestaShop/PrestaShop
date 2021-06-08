@@ -43,6 +43,7 @@ use PrestaShopBundle\Security\Annotation\AdminSecurity;
 use PrestaShopBundle\Security\Voter\PageVoter;
 use PrestaShopBundle\Service\DataProvider\Admin\CategoriesProvider;
 use Profile;
+use Symfony\Component\Form\Util\ServerParams;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -54,9 +55,9 @@ use Symfony\Component\Validator\Constraints as Assert;
  */
 class ModuleController extends ModuleAbstractController
 {
-    const CONTROLLER_NAME = 'ADMINMODULESSF';
+    public const CONTROLLER_NAME = 'ADMINMODULESSF';
 
-    const MAX_MODULES_DISPLAYED = 6;
+    public const MAX_MODULES_DISPLAYED = 6;
 
     /**
      * @AdminSecurity("is_granted(['read'], 'ADMINMODULESSF_')")
@@ -89,8 +90,6 @@ class ModuleController extends ModuleAbstractController
      * Controller responsible for displaying "Catalog Module Grid" section of Module management pages with ajax.
      *
      * @AdminSecurity("is_granted(['read'], 'ADMINMODULESSF_')")
-     *
-     * @param Request $request
      *
      * @return Response
      */
@@ -159,11 +158,10 @@ class ModuleController extends ModuleAbstractController
 
         if ($tabModulesList) {
             $tabModulesList = explode(',', $tabModulesList);
-            $modulesListUnsorted = $this->getModulesByInstallation(
-                $tabModulesList,
-                $request->request->get('admin_list_from_source')
-            );
         }
+        $modulesListUnsorted = $this->getModulesByInstallation(
+            $tabModulesList
+        );
 
         $installed = $uninstalled = [];
 
@@ -266,7 +264,7 @@ class ModuleController extends ModuleAbstractController
     /**
      * @AdminSecurity("is_granted(['read'], 'ADMINMODULESSF_')")
      *
-     * @param Request $request
+     * @param int $moduleId
      *
      * @return Response
      */
@@ -371,6 +369,9 @@ class ModuleController extends ModuleAbstractController
             case ModuleAdapter::ACTION_UNINSTALL:
                 $deniedAccess = $this->checkPermission(PageVoter::DELETE);
                 break;
+
+            default:
+                $deniedAccess = null;
         }
 
         if (null !== $deniedAccess) {
@@ -475,8 +476,12 @@ class ModuleController extends ModuleAbstractController
                 ]
             );
 
+            // Get accessed module object
+            $moduleAccessed = $moduleRepository->getModule($module);
+            // Get accessed module DB Id
+            $moduleAccessedId = (int) $moduleAccessed->database->get('id');
             $logger = $this->container->get('logger');
-            $logger->error($response[$module]['msg']);
+            $logger->error($response[$module]['msg'], ['object_type' => 'Module', 'object_id' => $moduleAccessedId]);
         }
 
         if ($response[$module]['status'] === true && $action != 'uninstall') {
@@ -486,7 +491,7 @@ class ModuleController extends ModuleAbstractController
                 '@PrestaShop/Admin/Module/Includes/action_menu.html.twig',
                 [
                     'module' => $this->container->get('prestashop.adapter.presenter.module')
-                    ->presentCollection($modulesProvider->generateAddonsUrls($collection))[0],
+                        ->presentCollection($modulesProvider->generateAddonsUrls($collection))[0],
                     'level' => $this->authorizationLevel(self::CONTROLLER_NAME),
                 ]
             );
@@ -525,11 +530,27 @@ class ModuleController extends ModuleAbstractController
 
         $moduleManager = $this->get('prestashop.module.manager');
         $moduleZipManager = $this->get('prestashop.module.zip.manager');
+        $serverParams = new ServerParams();
+        $moduleName = '';
 
         try {
+            if ($serverParams->hasPostMaxSizeBeenExceeded()) {
+                throw new Exception($this->trans(
+                    'The uploaded file exceeds the post_max_size directive in php.ini',
+                    'Admin.Notifications.Error'
+                ));
+            }
+
             $fileUploaded = $request->files->get('file_uploaded');
             $constraints = [
-                new Assert\NotNull(),
+                new Assert\NotNull(
+                    [
+                        'message' => $this->trans(
+                            'The file is missing.',
+                            'Admin.Notifications.Error'
+                        ),
+                    ]
+                ),
                 new Assert\File(
                     [
                         'maxSize' => ini_get('upload_max_filesize'),
@@ -577,9 +598,9 @@ class ModuleController extends ModuleAbstractController
                     ['%module%' => $moduleName]
                 );
                 $installationResponse['is_configurable'] = (bool) $this->get('prestashop.core.admin.module.repository')
-                                                         ->getModule($moduleName)
-                                                         ->attributes
-                                                         ->get('is_configurable');
+                    ->getModule($moduleName)
+                    ->attributes
+                    ->get('is_configurable');
             } else {
                 $error = $moduleManager->getError($moduleName);
                 $installationResponse['msg'] = $this->trans(
@@ -594,7 +615,7 @@ class ModuleController extends ModuleAbstractController
         } catch (UnconfirmedModuleActionException $e) {
             $collection = AddonsCollection::createFrom([$e->getModule()]);
             $modules = $this->get('prestashop.core.admin.data_provider.module_interface')
-                     ->generateAddonsUrls($collection);
+                ->generateAddonsUrls($collection);
             $installationResponse = [
                 'status' => false,
                 'confirmation_subject' => $e->getSubject(),
@@ -610,14 +631,14 @@ class ModuleController extends ModuleAbstractController
                 ),
             ];
         } catch (Exception $e) {
-            if (isset($moduleName)) {
-                $moduleManager->disable($moduleName);
+            try {
+                if (isset($moduleName)) {
+                    $moduleManager->disable($moduleName);
+                }
+            } catch (Exception $subE) {
             }
 
-            $installationResponse = [
-                'status' => false,
-                'msg' => $e->getMessage(),
-            ];
+            throw $e;
         }
 
         return new JsonResponse($installationResponse);
@@ -767,7 +788,7 @@ class ModuleController extends ModuleAbstractController
      *
      * @param array $pageVoter
      *
-     * @return void|JsonResponse
+     * @return JsonResponse|null
      */
     private function checkPermissions(array $pageVoter)
     {
@@ -783,12 +804,14 @@ class ModuleController extends ModuleAbstractController
                 ]
             );
         }
+
+        return null;
     }
 
     /**
      * @param string $pageVoter
      *
-     * @return JsonResponse
+     * @return JsonResponse|null
      */
     private function checkPermission($pageVoter)
     {
@@ -800,6 +823,8 @@ class ModuleController extends ModuleAbstractController
                 ]
             );
         }
+
+        return null;
     }
 
     /**
@@ -811,14 +836,15 @@ class ModuleController extends ModuleAbstractController
      */
     private function getCategories(AdminModuleDataProvider $modulesProvider, array $modules)
     {
-        /** @var CategoriesProvider */
-        $categories = $this->get('prestashop.categories_provider')->getCategoriesMenu($modules);
+        /** @var CategoriesProvider $categoriesProvider */
+        $categoriesProvider = $this->get('prestashop.categories_provider');
+        $categories = $categoriesProvider->getCategoriesMenu($modules);
 
         foreach ($categories['categories']->subMenu as $category) {
             $collection = AddonsCollection::createFrom($category->modules);
             $modulesProvider->generateAddonsUrls($collection);
             $category->modules = $this->get('prestashop.adapter.presenter.module')
-                               ->presentCollection($category->modules);
+                ->presentCollection($category->modules);
         }
 
         return $categories;

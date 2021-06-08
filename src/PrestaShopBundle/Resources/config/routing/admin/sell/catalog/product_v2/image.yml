@@ -1,0 +1,57 @@
+admin_products_v2_get_images:
+    path: /{productId}/images
+    methods: [GET]
+    defaults:
+        _controller: PrestaShopBundle:Admin/Sell/Catalog/Product/Image:getImages
+        _legacy_controller: AdminProducts
+        _legacy_link:
+            - AdminProducts:getimages
+        _legacy_parameters:
+            id_product: productId
+    options:
+        expose: true
+    requirements:
+        productId: \d+
+
+admin_products_v2_add_image:
+    path: /images/add
+    methods: [POST]
+    defaults:
+        _controller: PrestaShopBundle:Admin/Sell/Catalog/Product/Image:addImage
+        _legacy_controller: AdminProducts
+        _legacy_link:
+            - AdminProducts:addimage
+        _legacy_parameters:
+            id_product: productId
+    options:
+        expose: true
+
+admin_products_v2_update_image:
+    path: /images/{productImageId}/update
+    methods: [PATCH]
+    defaults:
+        _controller: PrestaShopBundle:Admin/Sell/Catalog/Product/Image:updateImage
+        _legacy_controller: AdminProducts
+        _legacy_link:
+            - AdminProducts:editimage
+        _legacy_parameters:
+            id_product_image: productImageId
+    options:
+        expose: true
+    requirements:
+        productImageId: \d+
+
+admin_products_v2_delete_image:
+    path: /images/{productImageId}/delete
+    methods: [POST]
+    defaults:
+        _controller: PrestaShopBundle:Admin/Sell/Catalog/Product/Image:deleteImage
+        _legacy_controller: AdminProducts
+        _legacy_link:
+            - AdminProducts:deleteimage
+        _legacy_parameters:
+            id_product_image: productImageId
+    options:
+        expose: true
+    requirements:
+        productImageId: \d+

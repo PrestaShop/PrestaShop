@@ -18,11 +18,13 @@ class WebService extends BOBasePage {
     this.webserviceListForm = '#webservice_key_grid';
     this.webserviceListTableRow = row => `${this.webserviceListForm} tbody tr:nth-child(${row})`;
     this.webserviceListTableColumn = (row, column) => `${this.webserviceListTableRow(row)} td.column-${column}`;
+    this.webserviceListTableStatusColumn = row => `${this.webserviceListTableColumn(row, 'active')} .ps-switch`;
+    this.webserviceListTableStatusColumnToggleInput = row => `${this.webserviceListTableStatusColumn(row)} input`;
     this.webserviceListTableColumnAction = row => this.webserviceListTableColumn(row, 'actions');
     this.webserviceListTableToggleDropDown = row => `${this.webserviceListTableColumnAction(row)
     } a[data-toggle='dropdown']`;
-    this.webserviceListTableDeleteLink = row => `${this.webserviceListTableColumnAction(row)} a[data-url]`;
-    this.webserviceListTableEditLink = row => `${this.webserviceListTableColumnAction(row)} a[href*='edit']`;
+    this.webserviceListTableDeleteLink = row => `${this.webserviceListTableColumnAction(row)} a.grid-delete-row-link`;
+    this.webserviceListTableEditLink = row => `${this.webserviceListTableColumnAction(row)} a.grid-edit-row-link`;
     this.webserviceListColumnValidIcon = row => `${this.webserviceListTableColumn(row, 'active')
     } i.grid-toggler-icon-valid`;
     this.webserviceListColumnNotValidIcon = row => `${this.webserviceListTableColumn(row, 'active')
@@ -30,8 +32,12 @@ class WebService extends BOBasePage {
 
     // Filters
     this.webserviceFilterInput = filterBy => `${this.webserviceListForm} #webservice_key_${filterBy}`;
-    this.filterSearchButton = `${this.webserviceListForm} button[name='webservice_key[actions][search]']`;
-    this.filterResetButton = `${this.webserviceListForm} button[name='webservice_key[actions][reset]']`;
+    this.filterSearchButton = `${this.webserviceListForm} .grid-search-button`;
+    this.filterResetButton = `${this.webserviceListForm} .grid-reset-button`;
+
+    // Delete modal
+    this.confirmDeleteModal = '#webservice_key-grid-confirm-modal';
+    this.confirmDeleteButton = `${this.confirmDeleteModal} button.btn-confirm-submit`;
 
     // Sort Selectors
     this.tableHead = `${this.webserviceListForm} thead`;
@@ -39,11 +45,13 @@ class WebService extends BOBasePage {
     this.sortColumnSpanButton = column => `${this.sortColumnDiv(column)} span.ps-sort`;
 
     // Bulk Actions
-    this.selectAllRowsDiv = `${this.webserviceListForm} #webservice_key_grid_bulk_action_select_all + i`;
+    this.selectAllRowsDiv = `${this.webserviceListForm} tr.column-filters .grid_bulk_action_select_all`;
     this.bulkActionsToggleButton = `${this.webserviceListForm} button.dropdown-toggle`;
-    this.bulkActionsDeleteButton = `${this.webserviceListForm} #webservice_key_grid_bulk_action_delete_webservice`;
-    this.bulkActionsEnableButton = '#webservice_key_grid_bulk_action_webservice_enable_selection';
-    this.bulkActionsDisableButton = '#webservice_key_grid_bulk_action_webservice_disable_selection';
+    this.bulkActionsDeleteButton = `${this.webserviceListForm} #webservice_key_grid_bulk_action_delete_selection`;
+    this.bulkActionsEnableButton = `${this.webserviceListForm}
+    #webservice_key_grid_bulk_action_webservice_enable_selection`;
+    this.bulkActionsDisableButton = `${this.webserviceListForm}
+    #webservice_key_grid_bulk_action_webservice_disable_selection`;
 
     // Modal Dialog
     this.deleteModal = '#webservice_key-grid-confirm-modal.show';
@@ -141,7 +149,15 @@ class WebService extends BOBasePage {
    * @returns {Promise<boolean>}
    */
   async getStatus(page, row) {
-    return this.elementVisible(page, this.webserviceListColumnValidIcon(row), 100);
+    // Get value of the check input
+    const inputValue = await this.getAttributeContent(
+      page,
+      `${this.webserviceListTableStatusColumnToggleInput(row)}:checked`,
+      'value',
+    );
+
+    // Return status=false if value='0' and true otherwise
+    return (inputValue !== '0');
   }
 
   /**
@@ -152,15 +168,11 @@ class WebService extends BOBasePage {
    * @returns {Promise<boolean>} return true if action is done, false otherwise
    */
   async setStatus(page, row, valueWanted = true) {
-    await this.waitForVisibleSelector(page, this.webserviceListTableColumn(row, 'active'), 2000);
     if (await this.getStatus(page, row) !== valueWanted) {
-      await page.click(this.webserviceListTableColumn(row, 'active'));
-      await this.waitForVisibleSelector(
-        page,
-        (valueWanted ? this.webserviceListColumnValidIcon(row) : this.webserviceListColumnNotValidIcon(row)),
-      );
+      await this.clickAndWaitForNavigation(page, this.webserviceListTableStatusColumn(row));
       return true;
     }
+
     return false;
   }
 
@@ -171,7 +183,6 @@ class WebService extends BOBasePage {
    * @returns {Promise<string>}
    */
   async deleteWebserviceKey(page, row) {
-    this.dialogListener(page);
     // Click on dropDown
     await Promise.all([
       page.click(this.webserviceListTableToggleDropDown(row)),
@@ -181,8 +192,21 @@ class WebService extends BOBasePage {
       ),
     ]);
     // Click on delete
-    await this.clickAndWaitForNavigation(page, this.webserviceListTableDeleteLink(row));
+    await Promise.all([
+      page.click(this.webserviceListTableDeleteLink(row)),
+      this.waitForVisibleSelector(page, `${this.confirmDeleteModal}.show`),
+    ]);
+    await this.confirmDeleteWebService(page);
     return this.getAlertSuccessBlockParagraphContent(page);
+  }
+
+  /**
+   * Confirm delete with in modal
+   * @param page
+   * @return {Promise<void>}
+   */
+  async confirmDeleteWebService(page) {
+    await this.clickAndWaitForNavigation(page, this.confirmDeleteButton);
   }
 
   /**
@@ -200,7 +224,6 @@ class WebService extends BOBasePage {
    * @returns {Promise<string>}
    */
   async deleteWithBulkActions(page) {
-    this.dialogListener(page);
     // Click on Select All
     await Promise.all([
       page.$eval(this.selectAllRowsDiv, el => el.click()),
@@ -213,7 +236,12 @@ class WebService extends BOBasePage {
       this.waitForVisibleSelector(page, `${this.bulkActionsToggleButton}[aria-expanded='true']`),
     ]);
 
-    await this.clickAndWaitForNavigation(page, this.bulkActionsDeleteButton);
+    // Click on delete and wait for modal
+    await Promise.all([
+      page.click(this.bulkActionsDeleteButton),
+      this.waitForVisibleSelector(page, this.deleteModal),
+    ]);
+    await this.confirmDeleteWebService(page, this.modalDeleteButton);
 
     return this.getAlertSuccessBlockParagraphContent(page);
   }
@@ -240,7 +268,6 @@ class WebService extends BOBasePage {
     // Click on enable/Disable and wait for modal
     await this.clickAndWaitForNavigation(page, enable ? this.bulkActionsEnableButton : this.bulkActionsDisableButton);
   }
-
 
   /**
    * Get content from all rows

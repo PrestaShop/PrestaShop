@@ -23,10 +23,10 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
 
-import ProfilesPage from "./ProfilesPage";
+import ProfilesPage from './ProfilesPage';
 
-const $ = window.$;
+const {$} = window;
 
 $(() => {
-  new ProfilesPage;
+  new ProfilesPage();
 });

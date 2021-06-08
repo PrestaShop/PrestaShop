@@ -22,16 +22,33 @@
  * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/AFL-3.0 Academic Free License 3.0 (AFL-3.0)
  *}
-<div class="images-container">
+<div class="images-container js-images-container">
   {block name='product_cover'}
     <div class="product-cover">
       {if $product.default_image}
-        <img class="js-qv-product-cover" src="{$product.default_image.bySize.large_default.url}" alt="{$product.default_image.legend}" title="{$product.default_image.legend}" style="width:100%;" itemprop="image">
+        <img
+          class="js-qv-product-cover"
+          src="{$product.default_image.bySize.large_default.url}"
+          {if !empty($product.default_image.legend)}
+            alt="{$product.default_image.legend}"
+            title="{$product.default_image.legend}"
+          {else}
+            alt="{$product.name}"
+          {/if}
+          loading="lazy"
+          width="452"
+          height="452"
+        >
         <div class="layer hidden-sm-down" data-toggle="modal" data-target="#product-modal">
           <i class="material-icons zoom-in">search</i>
         </div>
       {else}
-        <img src="{$urls.no_picture_image.bySize.large_default.url}" style="width:100%;">
+        <img 
+          src="{$urls.no_picture_image.bySize.large_default.url}"
+          loading="lazy"
+          width="452"
+          height="452"
+        >
       {/if}
     </div>
   {/block}
@@ -40,21 +57,26 @@
     <div class="js-qv-mask mask">
       <ul class="product-images js-qv-product-images">
         {foreach from=$product.images item=image}
-          <li class="thumb-container">
+          <li class="thumb-container js-thumb-container">
             <img
-              class="thumb js-thumb {if $image.id_image == $product.default_image.id_image} selected {/if}"
+              class="thumb js-thumb {if $image.id_image == $product.default_image.id_image} selected js-thumb-selected {/if}"
               data-image-medium-src="{$image.bySize.medium_default.url}"
               data-image-large-src="{$image.bySize.large_default.url}"
               src="{$image.bySize.home_default.url}"
-              alt="{$image.legend}"
-              title="{$image.legend}"
-              width="100"
-              itemprop="image"
+              {if !empty($image.legend)}
+                alt="{$image.legend}"
+                title="{$image.legend}"
+              {else}
+                alt="{$product.name}"
+              {/if}
+              loading="lazy"
+              width="94"
+              height="94"
             >
           </li>
         {/foreach}
       </ul>
     </div>
   {/block}
-{hook h='displayAfterProductThumbs'}
+{hook h='displayAfterProductThumbs' product=$product}
 </div>

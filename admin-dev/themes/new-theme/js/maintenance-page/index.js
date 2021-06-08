@@ -25,12 +25,12 @@
 
 import IpInput from './ip-input';
 
-const $ = window.$;
+const {$} = window;
 
 $(() => {
   // Do not run if we're not on the maintenance page
   if (!window.location.pathname.match('/configure/shop/maintenance\\b')) {
-      return;
+    return;
   }
 
   IpInput.init();

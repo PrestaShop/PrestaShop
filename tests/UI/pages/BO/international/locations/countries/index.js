@@ -66,8 +66,8 @@ class Countries extends BOBasePage {
 
     // Country options selectors
     this.countryForm = '#country_form';
-    this.enableRestrictCountriesToggleLabel = toggle => `${this.countryForm}
-     label[for='PS_RESTRICT_DELIVERED_COUNTRIES_${toggle}']`;
+    this.enableRestrictCountriesToggleLabel = toggle => `${this.countryForm} `
+      + `#PS_RESTRICT_DELIVERED_COUNTRIES_${toggle}`;
     this.saveButton = `${this.countryForm} button[name='submitOptionscountry']`;
   }
 
@@ -172,6 +172,7 @@ class Countries extends BOBasePage {
    */
   async filterTable(page, filterType, filterBy, value) {
     let filterValue = value;
+
     switch (filterType) {
       case 'input':
         await this.setValue(page, this.filterColumn(filterBy), filterValue.toString());
@@ -227,6 +228,7 @@ class Countries extends BOBasePage {
   async getAllRowsColumnContent(page, columnName) {
     const rowsNumber = await this.getNumberOfElementInGrid(page);
     const allRowsContentTable = [];
+
     for (let i = 1; i <= rowsNumber; i++) {
       let rowContent = await this.getTextColumnFromTable(page, i, columnName);
 
@@ -236,6 +238,7 @@ class Countries extends BOBasePage {
 
       await allRowsContentTable.push(rowContent);
     }
+
     return allRowsContentTable;
   }
 

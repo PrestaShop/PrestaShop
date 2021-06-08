@@ -23,7 +23,7 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  *#}
 
-{% import '@PrestaShop/Admin/macros.html.twig' as ps %}
+{% form_theme cmsPageCategoryForm 'PrestaShopBundle:Admin/TwigTemplateForm:prestashop_ui_kit.html.twig' %}
 
 {% block category_form %}
   {{ form_start(cmsPageCategoryForm) }}
@@ -34,53 +34,7 @@
     </div>
     <div class="card-block row">
       <div class="card-text">
-
-        {% set invalidCharactersForCatalogLabel = 'Invalid characters:'|trans({}, 'Admin.Notifications.Info') ~ '<>;=#{}' %}
-        {% set invalidCharactersForNameLabel = 'Invalid characters:'|trans({}, 'Admin.Notifications.Info') ~ '<>={}' %}
-
-        {{ ps.form_group_row(cmsPageCategoryForm.name, {}, {
-          'label': 'Name'|trans({}, 'Admin.Global'),
-          'help': invalidCharactersForCatalogLabel
-        }) }}
-
-        {{ ps.form_group_row(cmsPageCategoryForm.is_displayed, {}, {
-          'label': 'Displayed'|trans({}, 'Admin.Global'),
-        }) }}
-
-        {{ ps.form_group_row(cmsPageCategoryForm.parent_category, {}, {
-          'label': 'Parent category'|trans({}, 'Admin.Design.Feature'),
-        }) }}
-
-        {{ ps.form_group_row(cmsPageCategoryForm.description, {}, {
-          'label': 'Description'|trans({}, 'Admin.Global'),
-        }) }}
-
-        {{ ps.form_group_row(cmsPageCategoryForm.meta_title, {}, {
-          'label': 'Meta title'|trans({}, 'Admin.Global'),
-          'help': invalidCharactersForNameLabel
-        }) }}
-
-        {{ ps.form_group_row(cmsPageCategoryForm.meta_description, {}, {
-          'label': 'Meta description'|trans({}, 'Admin.Global'),
-          'help': invalidCharactersForNameLabel
-        }) }}
-
-        {{ ps.form_group_row(cmsPageCategoryForm.meta_keywords, {}, {
-          'label': 'Meta keywords'|trans({}, 'Admin.Global'),
-          'help': invalidCharactersForNameLabel
-        }) }}
-
-        {{ ps.form_group_row(cmsPageCategoryForm.friendly_url, {}, {
-          'label': 'Friendly URL'|trans({}, 'Admin.Global'),
-          'help': 'Only letters and the minus (-) character are allowed.'|trans({}, 'Admin.Catalog.Help')
-        }) }}
-
-        {% if cmsPageCategoryForm.shop_association is defined %}
-          {{ ps.form_group_row(cmsPageCategoryForm.shop_association, {}, {
-            'label': 'Shop association'|trans({}, 'Admin.Global')
-          }) }}
-        {% endif %}
-
+        {{ form_widget(cmsPageCategoryForm) }}
       </div>
     </div>
 
@@ -91,7 +45,7 @@
         </a>
       </div>
       <div class="d-inline-flex float-right">
-        <button class="btn btn-primary">{{ 'Save'|trans({}, 'Admin.Actions') }}</button>
+        <button class="btn btn-primary" id="save-button">{{ 'Save'|trans({}, 'Admin.Actions') }}</button>
       </div>
     </div>
 

@@ -31,6 +31,7 @@ use Db;
 use PrestaShopBundle\Service\TransitionalBehavior\AdminPagePreferenceInterface;
 use Symfony\Component\HttpFoundation\Session\SessionInterface;
 use Symfony\Component\HttpFoundation\Session\Storage\PhpBridgeSessionStorage;
+use Symfony\Component\Routing\Exception\InvalidParameterException;
 
 /**
  * Adapter to know which page's version to display.
@@ -44,11 +45,16 @@ use Symfony\Component\HttpFoundation\Session\Storage\PhpBridgeSessionStorage;
 class PagePreference implements AdminPagePreferenceInterface
 {
     /**
+     * @var bool
+     */
+    private $isDebug;
+
+    /**
      * @var SessionInterface
      */
     private $session;
 
-    public function __construct(SessionInterface $session)
+    public function __construct(SessionInterface $session, bool $isDebug = _PS_MODE_DEV_)
     {
         if ($session->isStarted()) {
             $this->session = $session;
@@ -56,6 +62,7 @@ class PagePreference implements AdminPagePreferenceInterface
             $sessionClass = get_class($session);
             $this->session = new $sessionClass(new PhpBridgeSessionStorage());
         }
+        $this->isDebug = $isDebug;
     }
 
     /**
@@ -64,7 +71,7 @@ class PagePreference implements AdminPagePreferenceInterface
     public function getTemporaryShouldUseLegacyPage($page)
     {
         if (!$page) {
-            throw new \InvalidParameterException('$page parameter missing');
+            throw new InvalidParameterException('$page parameter missing');
         }
 
         return $this->session->has('should_use_legacy_page_for_' . $page) && $this->session->get('should_use_legacy_page_for_' . $page, 0) == 1;
@@ -76,7 +83,7 @@ class PagePreference implements AdminPagePreferenceInterface
     public function setTemporaryShouldUseLegacyPage($page, $useLegacy)
     {
         if (!$page) {
-            throw new \InvalidParameterException('$page parameter missing');
+            throw new InvalidParameterException('$page parameter missing');
         }
 
         if ((bool) $useLegacy) {
@@ -92,7 +99,7 @@ class PagePreference implements AdminPagePreferenceInterface
     public function getTemporaryShouldAllowUseLegacyPage($page = null)
     {
         // Dev mode: always shown
-        if (_PS_MODE_DEV_) {
+        if ($this->isDebug) {
             return true;
         }
 

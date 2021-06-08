@@ -23,6 +23,7 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  *#}
 
+
 <div class="card customer-personal-informations-card">
   <h3 class="card-header">
     <i class="material-icons">person</i>
@@ -35,7 +36,7 @@
     </a>
 
     <a href="{{ getAdminLink('AdminCustomers', true, {'id_customer': customerInformation.customerId.value, 'updatecustomer': 1, 'back': app.request.uri}) }}"
-       class="tooltip-link float-right"
+       class="tooltip-link float-right edit-link"
        data-toggle="pstooltip"
        title=""
        data-placement="top"
@@ -120,12 +121,12 @@
         {% set isNewsletterSubscribed = customerInformation.personalInformation.subscriptions.newsletterSubscribed %}
         {% set isPartnerOffersSubscribed = customerInformation.personalInformation.subscriptions.partnerOffersSubscribed %}
 
-        <span class="customer-newsletter-subscription-status badge badge-{% if isNewsletterSubscribed %}success{% else %}danger{% endif %} rounded pt-0 pb-0">
+        <span class="customer-newsletter-subscription-status badge badge-{% if isNewsletterSubscribed %}success{% else %}danger{% endif %} rounded">
           <i class="material-icons">{% if isNewsletterSubscribed %}check{% else %}cancel{% endif %}</i>
           {{ 'Newsletter'|trans({}, 'Admin.Global') }}
         </span>
 
-        <span class="customer-partner-offers-status badge badge-{% if isPartnerOffersSubscribed %}success{% else %}danger{% endif %} rounded pt-0 pb-0">
+        <span class="customer-partner-offers-status badge badge-{% if isPartnerOffersSubscribed %}success{% else %}danger{% endif %} rounded">
           <i class="material-icons">{% if isPartnerOffersSubscribed %}check{% else %}cancel{% endif %}</i>
           {{ 'Partner offers'|trans({}, 'Admin.Orderscustomers.Feature') }}
         </span>
@@ -148,7 +149,7 @@
       <div class="col-8">
         {% set isCustomerActive = customerInformation.personalInformation.active %}
 
-        <span class="customer-status badge badge-{% if isCustomerActive %}success{% else %}danger{% endif %} rounded pt-0 pb-0">
+        <span class="customer-status badge badge-{% if isCustomerActive %}success{% else %}danger{% endif %} rounded">
           {% if isCustomerActive %}
             <i class="material-icons">check</i>
             {{ 'Active'|trans({}, 'Admin.Global') }}
@@ -161,6 +162,8 @@
     </div>
 
     {% if customerInformation.personalInformation.guest %}
+      {% form_theme transferGuestAccountForm 'PrestaShopBundle:Admin/TwigTemplateForm:prestashop_ui_kit.html.twig' %}
+
       <div class="customer-guest-status row mb-1">
         <div class="col-4 text-right">
           {{ 'This customer is registered as a Guest.'|trans({}, 'Admin.Orderscustomers.Feature') }}
@@ -170,11 +173,11 @@
             <p>{{ 'A registered customer account using the defined email address already exists. '|trans({}, 'Admin.Orderscustomers.Notification') }}</p>
           {% else %}
             {{ form_start(transferGuestAccountForm, {'action': path('admin_customers_transform_guest_to_customer', {'customerId': customerInformation.customerId.value})}) }}
-              <button class="btn btn-primary btn-sm">
-                {{ 'Transform to a customer account'|trans({}, 'Admin.Orderscustomers.Feature') }}
-              </button>
+            {{ form_widget(transferGuestAccountForm.transfer_guest_account) }}
 
-              <p class="small-text">{{ 'This feature generates a random password before sending an email to your customer.'|trans({}, 'Admin.Orderscustomers.Help') }}</p>
+            <p class="small-text">
+              {{ 'This feature generates a random password before sending an email to your customer.'|trans({}, 'Admin.Orderscustomers.Help') }}
+            </p>
             {{ form_end(transferGuestAccountForm) }}
           {% endif %}
         </div>

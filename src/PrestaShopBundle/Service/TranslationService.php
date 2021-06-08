@@ -27,10 +27,11 @@
 namespace PrestaShopBundle\Service;
 
 use Exception;
+use PrestaShop\PrestaShop\Core\Translation\Storage\Provider\Definition\ProviderDefinitionInterface;
+use PrestaShopBundle\Entity\Lang;
 use PrestaShopBundle\Entity\Translation;
 use PrestaShopBundle\Exception\InvalidLanguageException;
 use PrestaShopBundle\Translation\Constraints\PassVsprintf;
-use PrestaShopBundle\Translation\Provider\UseModuleInterface;
 use Symfony\Component\DependencyInjection\Container;
 use Symfony\Component\Validator\Validation;
 
@@ -56,7 +57,7 @@ class TranslationService
     /**
      * @param string $locale
      *
-     * @return mixed
+     * @return Lang
      *
      * @throws InvalidLanguageException
      */
@@ -64,9 +65,10 @@ class TranslationService
     {
         $doctrine = $this->container->get('doctrine');
 
+        /** @var Lang|null $lang */
         $lang = $doctrine->getManager()->getRepository('PrestaShopBundle:Lang')->findOneByLocale($locale);
 
-        if (!$lang) {
+        if (!$lang instanceof Lang) {
             throw InvalidLanguageException::localeNotFound($locale);
         }
 
@@ -102,9 +104,9 @@ class TranslationService
     }
 
     /**
-     * @param $lang
-     * @param $type
-     * @param $theme
+     * @param string $lang
+     * @param string|null $type
+     * @param string $theme
      * @param null $search
      *
      * @return array|mixed
@@ -128,8 +130,45 @@ class TranslationService
     }
 
     /**
-     * @param $theme
-     * @param $type
+     * Returns the translation domains tree and counters with total of wording and total of missing translations
+     * The tree should look like
+     *  tree => [
+     *      total_translations => int
+     *      total_missing_translations => int
+     *      children => [
+     *          [
+     *              name => string
+     *              full_name => string
+     *              domain_catalog_link => string
+     *              total_translations => int
+     *              total_missing_translations => int
+     *              children => [
+     *                  ...
+     *              ]
+     *          ]
+     *   ]
+     *
+     * @param ProviderDefinitionInterface $providerDefinition
+     * @param string $locale
+     * @param array $search
+     *
+     * @return array
+     *
+     * @throws Exception
+     */
+    public function getTranslationsTree(
+        ProviderDefinitionInterface $providerDefinition,
+        string $locale,
+        array $search
+    ): array {
+        $translationTreeBuilder = $this->container->get('prestashop.translation.builder.translation_tree');
+
+        return $translationTreeBuilder->getTree($providerDefinition, $locale, $search);
+    }
+
+    /**
+     * @param string|null $theme
+     * @param string $type
      *
      * @return bool
      */
@@ -141,113 +180,46 @@ class TranslationService
     /**
      * List translations for a specific domain.
      *
-     * @todo: we need module information here
-     * @todo: we need to improve the Vuejs application to send the information
-     *
-     * @param $locale
-     * @param $domain
-     * @param null $theme
-     * @param null $search
-     * @param null $module
+     * @param ProviderDefinitionInterface $providerDefinition
+     * @param string $locale
+     * @param string $domain
+     * @param array|null $search
      *
      * @return array
+     *
+     * @throws Exception
+     * @todo: we need module information here
+     * @todo: we need to improve the Vuejs application to send the information
      */
-    public function listDomainTranslation($locale, $domain, $theme = null, $search = null, $module = null)
-    {
-        if (!empty($theme) && 'classic' !== $theme) {
-            $translationProvider = $this->container->get('prestashop.translation.theme_provider');
-            $translationProvider->setThemeName($theme);
-        } else {
-            $translationProvider = $this->container->get('prestashop.translation.search_provider');
-            if ($module !== null && $translationProvider instanceof UseModuleInterface) {
-                $translationProvider->setModuleName($module);
-            }
-        }
-        if ('Messages' === $domain) {
-            $domain = 'messages';
-        }
-
-        $translationProvider->setDomain($domain);
-        $translationProvider->setLocale($locale);
+    public function listDomainTranslation(
+        ProviderDefinitionInterface $providerDefinition,
+        string $locale,
+        string $domain,
+        ?array $search = null
+    ): array {
+        $domainCatalogue = $this->container->get('prestashop.translation.builder.translation_catalogue')->getDomainCatalogue(
+            $providerDefinition,
+            $locale,
+            $domain,
+            $search
+        );
 
         $router = $this->container->get('router');
-        $domains = [
-            'info' => [
-                'edit_url' => $router->generate('api_translation_value_edit'),
-                'reset_url' => $router->generate('api_translation_value_reset'),
-            ],
-            'data' => [],
-        ];
-        $treeDomain = preg_split('/(?=[A-Z])/', $domain, -1, PREG_SPLIT_NO_EMPTY);
-        if (!empty($theme) && 'classic' !== $theme) {
-            $defaultCatalog = current($translationProvider->getThemeCatalogue()->all());
-        } else {
-            $defaultCatalog = current($translationProvider->getDefaultCatalogue()->all());
-        }
+        $domainCatalogue['info'] = array_merge($domainCatalogue['info'], [
+            'edit_url' => $router->generate('api_translation_value_edit'),
+            'reset_url' => $router->generate('api_translation_value_reset'),
+        ]);
 
-        $xliffCatalog = current($translationProvider->getXliffCatalogue()->all());
-        $dbCatalog = current($translationProvider->getDatabaseCatalogue($theme)->all());
-
-        foreach ($defaultCatalog as $key => $message) {
-            $data = [
-                'default' => $key,
-                'xliff' => (array_key_exists($key, (array) $xliffCatalog) ? $xliffCatalog[$key] : null),
-                'database' => (array_key_exists($key, (array) $dbCatalog) ? $dbCatalog[$key] : null),
-                'tree_domain' => $treeDomain,
-            ];
-            // if search is empty or is in catalog default|xlf|database
-            if (empty($search) || $this->dataContainsSearchWord($search, $data)) {
-                if (empty($data['xliff']) && empty($data['database'])) {
-                    array_unshift($domains['data'], $data);
-                } else {
-                    $domains['data'][] = $data;
-                }
-            }
-        }
-
-        return $domains;
-    }
-
-    /**
-     * Check if data contains search word.
-     *
-     * @param $search
-     * @param $data
-     *
-     * @return bool
-     */
-    private function dataContainsSearchWord($search, $data)
-    {
-        if (is_string($search)) {
-            $search = strtolower($search);
-
-            return false !== strpos(strtolower($data['default']), $search) ||
-                false !== strpos(strtolower($data['xliff']), $search) ||
-                false !== strpos(strtolower($data['database']), $search);
-        }
-
-        if (is_array($search)) {
-            $contains = true;
-            foreach ($search as $s) {
-                $s = strtolower($s);
-                $contains &= false !== strpos(strtolower($data['default']), $s) ||
-                    false !== strpos(strtolower($data['xliff']), $s) ||
-                    false !== strpos(strtolower($data['database']), $s);
-            }
-
-            return $contains;
-        }
-
-        return false;
+        return $domainCatalogue;
     }
 
     /**
      * Save a translation in database.
      *
-     * @param $lang
-     * @param $domain
-     * @param $key
-     * @param $translationValue
+     * @param Lang $lang
+     * @param string $domain
+     * @param string $key
+     * @param string $translationValue
      * @param null $theme
      *
      * @return bool
@@ -257,18 +229,26 @@ class TranslationService
         $doctrine = $this->container->get('doctrine');
         $entityManager = $doctrine->getManager();
         $logger = $this->container->get('logger');
+        $log_context = ['object_type' => 'Translation'];
 
         if (empty($theme)) {
             $theme = null;
         }
 
-        $translation = $entityManager->getRepository('PrestaShopBundle:Translation')
-            ->findOneBy([
-                'lang' => $lang,
-                'domain' => $domain,
-                'key' => $key,
-                'theme' => $theme,
-            ]);
+        $translation = null;
+
+        try {
+            $translation = $entityManager->getRepository('PrestaShopBundle:Translation')
+                ->createQueryBuilder('t')
+                ->where('t.lang = :lang')->setParameter('lang', $lang)
+                ->andWhere('t.domain = :domain')->setParameter('domain', $domain)
+                ->andWhere('t.key LIKE :key')->setParameter('key', $key)
+                ->andWhere('t.theme = :theme OR t.theme is NULL')->setParameter('theme', $theme)
+                ->getQuery()
+                ->getSingleResult();
+        } catch (Exception $exception) {
+            $logger->error($exception->getMessage(), $log_context);
+        }
 
         if (null === $translation) {
             $translation = new Translation();
@@ -290,7 +270,7 @@ class TranslationService
         $violations = $validator->validate($translation, new PassVsprintf());
         if (0 !== count($violations)) {
             foreach ($violations as $violation) {
-                $logger->error($violation->getMessage());
+                $logger->error($violation->getMessage(), $log_context);
             }
 
             return false;
@@ -304,7 +284,7 @@ class TranslationService
 
             $updatedTranslationSuccessfully = true;
         } catch (Exception $exception) {
-            $logger->error($exception->getMessage());
+            $logger->error($exception->getMessage(), $log_context);
         }
 
         return $updatedTranslationSuccessfully;
@@ -313,9 +293,9 @@ class TranslationService
     /**
      * Reset translation from database.
      *
-     * @param $lang
-     * @param $domain
-     * @param $key
+     * @param Lang $lang
+     * @param string $domain
+     * @param string $key
      * @param null $theme
      *
      * @return bool

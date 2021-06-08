@@ -31,6 +31,9 @@ class JavascriptManagerCore extends AbstractAssetManager
     protected $valid_position = ['head', 'bottom'];
     protected $valid_attribute = ['async', 'defer'];
 
+    /**
+     * @return array
+     */
     protected function getDefaultList()
     {
         $default = [];
@@ -44,6 +47,15 @@ class JavascriptManagerCore extends AbstractAssetManager
         return $default;
     }
 
+    /**
+     * @param $id
+     * @param string $relativePath
+     * @param string $position
+     * @param int $priority
+     * @param bool $inline
+     * @param string $attribute
+     * @param string $server
+     */
     public function register(
         $id,
         $relativePath,
@@ -73,6 +85,15 @@ class JavascriptManagerCore extends AbstractAssetManager
         }
     }
 
+    /**
+     * @param $id
+     * @param string $fullPath
+     * @param string $position
+     * @param int $priority
+     * @param bool $inline
+     * @param string $attribute
+     * @param string $server
+     */
     protected function add($id, $fullPath, $position, $priority, $inline, $attribute, $server)
     {
         $priority = is_int($priority) ? $priority : self::DEFAULT_PRIORITY;
@@ -98,6 +119,9 @@ class JavascriptManagerCore extends AbstractAssetManager
         ];
     }
 
+    /**
+     * @return array
+     */
     public function getList()
     {
         $this->sortList();

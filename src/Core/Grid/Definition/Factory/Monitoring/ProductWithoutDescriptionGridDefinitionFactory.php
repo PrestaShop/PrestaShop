@@ -31,13 +31,13 @@ namespace PrestaShop\PrestaShop\Core\Grid\Definition\Factory\Monitoring;
  */
 final class ProductWithoutDescriptionGridDefinitionFactory extends AbstractProductGridDefinitionFactory
 {
-    const GRID_ID = 'product_without_description';
+    public const GRID_ID = 'product_without_description';
 
     /**
      * {@inheritdoc}
      */
     protected function getName()
     {
-        return $this->trans('List of products without description', [], 'Admin.Catalog.Feature');
+        return $this->trans('List of products without description and summary', [], 'Admin.Catalog.Feature');
     }
 }

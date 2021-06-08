@@ -25,7 +25,7 @@
 
 import createOrderMap from './create-order-map';
 
-const $ = window.$;
+const {$} = window;
 
 /**
  * Renders cart rules (cartRules) block
@@ -44,22 +44,22 @@ export default class CartRulesRenderer {
    * @param {Boolean} emptyCart
    */
   renderCartRulesBlock(cartRules, emptyCart) {
-    this._hideErrorBlock();
+    this.hideErrorBlock();
     // do not render cart rules block at all if cart has no products
     if (emptyCart) {
-      this._hideCartRulesBlock();
+      this.hideCartRulesBlock();
       return;
     }
-    this._showCartRulesBlock();
+    this.showCartRulesBlock();
 
     // do not render cart rules list when there are no cart rules
     if (cartRules.length === 0) {
-      this._hideCartRulesList();
+      this.hideCartRulesList();
 
       return;
     }
 
-    this._renderList(cartRules);
+    this.renderList(cartRules);
   }
 
   /**
@@ -68,15 +68,15 @@ export default class CartRulesRenderer {
    * @param searchResults
    */
   renderSearchResults(searchResults) {
-    this._clearSearchResults();
+    this.clearSearchResults();
 
     if (searchResults.cart_rules.length === 0) {
-      this._renderNotFound();
+      this.renderNotFound();
     } else {
-      this._renderFoundCartRules(searchResults.cart_rules);
+      this.renderFoundCartRules(searchResults.cart_rules);
     }
 
-    this._showResultsDropdown();
+    this.showResultsDropdown();
   }
 
   /**
@@ -86,7 +86,7 @@ export default class CartRulesRenderer {
    */
   displayErrorMessage(message) {
     $(createOrderMap.cartRuleErrorText).text(message);
-    this._showErrorBlock();
+    this.showErrorBlock();
   }
 
   /**
@@ -101,7 +101,7 @@ export default class CartRulesRenderer {
    *
    * @private
    */
-  _showResultsDropdown() {
+  showResultsDropdown() {
     this.$searchResultBox.removeClass('d-none');
   }
 
@@ -110,18 +110,17 @@ export default class CartRulesRenderer {
    *
    * @private
    */
-  _renderNotFound() {
+  renderNotFound() {
     const $template = $($(createOrderMap.cartRulesNotFoundTemplate).html()).clone();
     this.$searchResultBox.html($template);
   }
-
 
   /**
    * Empties cart rule search results block
    *
    * @private
    */
-  _clearSearchResults() {
+  clearSearchResults() {
     this.$searchResultBox.empty();
   }
 
@@ -132,13 +131,13 @@ export default class CartRulesRenderer {
    *
    * @private
    */
-  _renderFoundCartRules(cartRules) {
+  renderFoundCartRules(cartRules) {
     const $cartRuleTemplate = $($(createOrderMap.foundCartRuleTemplate).html());
-    for (const key in cartRules) {
+    Object.values(cartRules).forEach((cartRule) => {
       const $template = $cartRuleTemplate.clone();
-      const cartRule = cartRules[key];
 
       let cartRuleName = cartRule.name;
+
       if (cartRule.code !== '') {
         cartRuleName = `${cartRule.name} - ${cartRule.code}`;
       }
@@ -146,7 +145,7 @@ export default class CartRulesRenderer {
       $template.text(cartRuleName);
       $template.data('cart-rule-id', cartRule.cartRuleId);
       this.$searchResultBox.append($template);
-    }
+    });
   }
 
   /**
@@ -156,12 +155,11 @@ export default class CartRulesRenderer {
    *
    * @private
    */
-  _renderList(cartRules) {
-    this._cleanCartRulesList();
+  renderList(cartRules) {
+    this.cleanCartRulesList();
     const $cartRulesTableRowTemplate = $($(createOrderMap.cartRulesTableRowTemplate).html());
 
-    for (const key in cartRules) {
-      const cartRule = cartRules[key];
+    Object.values(cartRules).forEach((cartRule) => {
       const $template = $cartRulesTableRowTemplate.clone();
 
       $template.find(createOrderMap.cartRuleNameField).text(cartRule.name);
@@ -170,9 +168,9 @@ export default class CartRulesRenderer {
       $template.find(createOrderMap.cartRuleDeleteBtn).data('cart-rule-id', cartRule.cartRuleId);
 
       this.$cartRulesTable.find('tbody').append($template);
-    }
+    });
 
-    this._showCartRulesList();
+    this.showCartRulesList();
   }
 
   /**
@@ -180,7 +178,7 @@ export default class CartRulesRenderer {
    *
    * @private
    */
-  _showErrorBlock() {
+  showErrorBlock() {
     $(createOrderMap.cartRuleErrorBlock).removeClass('d-none');
   }
 
@@ -189,7 +187,7 @@ export default class CartRulesRenderer {
    *
    * @private
    */
-  _hideErrorBlock() {
+  hideErrorBlock() {
     $(createOrderMap.cartRuleErrorBlock).addClass('d-none');
   }
 
@@ -198,7 +196,7 @@ export default class CartRulesRenderer {
    *
    * @private
    */
-  _showCartRulesBlock() {
+  showCartRulesBlock() {
     this.$cartRulesBlock.removeClass('d-none');
   }
 
@@ -207,7 +205,7 @@ export default class CartRulesRenderer {
    *
    * @private
    */
-  _hideCartRulesBlock() {
+  hideCartRulesBlock() {
     this.$cartRulesBlock.addClass('d-none');
   }
 
@@ -216,7 +214,7 @@ export default class CartRulesRenderer {
    *
    * @private
    */
-  _showCartRulesList() {
+  showCartRulesList() {
     this.$cartRulesTable.removeClass('d-none');
   }
 
@@ -225,7 +223,7 @@ export default class CartRulesRenderer {
    *
    * @private
    */
-  _hideCartRulesList() {
+  hideCartRulesList() {
     this.$cartRulesTable.addClass('d-none');
   }
 
@@ -234,7 +232,7 @@ export default class CartRulesRenderer {
    *
    * @private
    */
-  _cleanCartRulesList() {
+  cleanCartRulesList() {
     this.$cartRulesTable.find('tbody').empty();
   }
 }

@@ -23,7 +23,7 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  *#}
 
-{% import '@PrestaShop/Admin/macros.html.twig' as ps %}
+{% form_theme webserviceKeyForm 'PrestaShopBundle:Admin/TwigTemplateForm:prestashop_ui_kit.html.twig' %}
 
 {% block webservice_key_form %}
   {{ form_start(webserviceKeyForm) }}
@@ -33,53 +33,25 @@
     </h3>
     <div class="card-block row">
       <div class="card-text">
-        {{ form_errors(webserviceKeyForm) }}
-
-        {{ ps.form_group_row(webserviceKeyForm.key, {}, {
-          'label': 'Key'|trans({}, 'Admin.Advparameters.Feature'),
-          'help': 'Webservice account key.'|trans({}, 'Admin.Advparameters.Feature')
-        }) }}
-
-        {{ ps.form_group_row(webserviceKeyForm.description, {}, {
-          'label': 'Key description'|trans({}, 'Admin.Advparameters.Feature'),
-          'help': 'Quick description of the key: who it is for, what permissions it has, etc.'|trans({}, 'Admin.Advparameters.Help')
-        }) }}
-
-        {{ ps.form_group_row(webserviceKeyForm.status, {}, {
-          'label': 'Status'|trans({}, 'Admin.Global')
-        }) }}
-
+        {{ form_row(webserviceKeyForm.key) }}
+        {{ form_row(webserviceKeyForm.description) }}
+        {{ form_row(webserviceKeyForm.status) }}
         <div class="form-group row mb-0">
-          <label class="form-control-label"></label>
-          <div class="col-sm mb-0">
-            <div class="alert alert-info" role="alert">
-              <p class="alert-text">{{ 'Set the resource permissions for this key:'|trans({}, 'Admin.Advparameters.Feature') }}</p>
-            </div>
+        <label class="form-control-label"></label>
+        <div class="col-sm mb-0">
+          <div class="alert alert-info" role="alert">
+            <p class="alert-text">{{ 'Set the resource permissions for this key:'|trans({}, 'Admin.Advparameters.Feature') }}</p>
           </div>
         </div>
-
-        {{ ps.form_group_row(webserviceKeyForm.permissions, {
-          'label': 'Resource'|trans({}, 'Admin.Global')
-        }, {
-          'label': 'Permissions'|trans({}, 'Admin.Advparameters.Feature')
-        }) }}
-
-        {% if webserviceKeyForm.shop_association is defined %}
-          {{ ps.form_group_row(webserviceKeyForm.shop_association, {}, {
-            'label': 'Shop association'|trans({}, 'Admin.Global')
-          }) }}
-        {% endif %}
-
-        {% block webservice_key_form_rest %}
-          {{ form_rest(webserviceKeyForm) }}
-        {% endblock %}
+      </div>
+        {{ form_widget(webserviceKeyForm) }}
       </div>
     </div>
     <div class="card-footer">
       <a href="{{ path('admin_webservice_keys_index') }}" class="btn btn-outline-secondary">
         {{ 'Cancel'|trans({}, 'Admin.Actions') }}
       </a>
-      <button class="btn btn-primary float-right">
+      <button class="btn btn-primary float-right" id="save-button">
         {{ 'Save'|trans({}, 'Admin.Actions') }}
       </button>
     </div>

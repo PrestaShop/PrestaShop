@@ -23,7 +23,10 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
 
-const $ = window.$;
+
+import TranslationSettingsMap from './TranslationSettingsMap';
+
+const {$} = window;
 
 /**
  * Back office translations type
@@ -63,99 +66,95 @@ const others = 'others';
 const emailContentBody = 'body';
 
 export default class FormFieldToggle {
-    constructor() {
-        $('.js-translation-type').on('change', this.toggleFields.bind(this));
-        $('.js-email-content-type').on('change', this.toggleEmailFields.bind(this));
+  constructor() {
+    $(TranslationSettingsMap.translationType).on('change', this.toggleFields.bind(this));
+    $(TranslationSettingsMap.emailContentType).on('change', this.toggleEmailFields.bind(this));
 
-        this.toggleFields();
+    this.toggleFields();
+  }
+
+  /**
+   * Toggle dependant translations fields, based on selected translation type
+   */
+  toggleFields() {
+    const selectedOption = $(TranslationSettingsMap.translationType).val();
+    const $modulesFormGroup = $(TranslationSettingsMap.modulesFormGroup);
+    const $emailFormGroup = $(TranslationSettingsMap.emailFormGroup);
+    const $themesFormGroup = $(TranslationSettingsMap.themesFormGroup);
+    const $defaultThemeOption = $themesFormGroup.find(TranslationSettingsMap.defaultThemeOption);
+
+    switch (selectedOption) {
+      case back:
+      case others:
+        this.hide($modulesFormGroup, $emailFormGroup, $themesFormGroup);
+        break;
+
+      case themes:
+        this.show($themesFormGroup);
+        this.hide($modulesFormGroup, $emailFormGroup, $defaultThemeOption);
+        break;
+
+      case modules:
+        this.hide($emailFormGroup, $themesFormGroup);
+        this.show($modulesFormGroup);
+        break;
+
+      case mails:
+        this.hide($modulesFormGroup, $themesFormGroup);
+        this.show($emailFormGroup);
+        break;
+
+      default:
+        break;
     }
 
-    /**
-     * Toggle dependant translations fields, based on selected translation type
-     */
-    toggleFields() {
-        let selectedOption = $('.js-translation-type').val();
-        let $modulesFormGroup = $('.js-module-form-group');
-        let $emailFormGroup = $('.js-email-form-group');
-        let $themesFormGroup = $('.js-theme-form-group');
-        let $themesSelect = $themesFormGroup.find('select');
-        let $noThemeOption = $themesSelect.find('.js-no-theme');
-        let $firstThemeOption = $themesSelect.find('option:not(.js-no-theme):first');
+    this.toggleEmailFields();
+  }
 
-        switch (selectedOption) {
-            case back:
-            case others:
-                this._hide($modulesFormGroup, $emailFormGroup, $themesFormGroup);
-
-                break;
-            case themes:
-                if ($noThemeOption.is(':selected')) {
-                    $themesSelect.val($firstThemeOption.val());
-                }
-
-                this._hide($modulesFormGroup, $emailFormGroup, $noThemeOption);
-                this._show($themesFormGroup);
-
-                break;
-            case modules:
-                this._hide($emailFormGroup, $themesFormGroup);
-                this._show($modulesFormGroup);
-
-                break;
-            case mails:
-                this._hide($modulesFormGroup, $themesFormGroup);
-                this._show($emailFormGroup);
-
-                break;
-        }
-
-        this.toggleEmailFields();
+  /**
+   * Toggles fields, which are related to email translations
+   */
+  toggleEmailFields() {
+    if ($(TranslationSettingsMap.translationType).val() !== mails) {
+      return;
     }
 
-    /**
-     * Toggles fields, which are related to email translations
-     */
-    toggleEmailFields() {
-        if ($('.js-translation-type').val() !== mails) {
-            return;
-        }
+    const selectedEmailContentType = $(TranslationSettingsMap.emailFormGroup).find('select').val();
+    const $themesFormGroup = $(TranslationSettingsMap.themesFormGroup);
+    const $noThemeOption = $themesFormGroup.find(TranslationSettingsMap.noThemeOption);
+    const $defaultThemeOption = $themesFormGroup.find(TranslationSettingsMap.defaultThemeOption);
 
-        let selectedEmailContentType = $('.js-email-form-group').find('select').val();
-        let $themesFormGroup = $('.js-theme-form-group');
-        let $noThemeOption = $themesFormGroup.find('.js-no-theme');
-
-        if (selectedEmailContentType === emailContentBody) {
-            $noThemeOption.prop('selected', true);
-            this._show($noThemeOption, $themesFormGroup);
-        } else {
-            this._hide($noThemeOption, $themesFormGroup);
-        }
+    if (selectedEmailContentType === emailContentBody) {
+      $noThemeOption.prop('selected', true);
+      this.show($noThemeOption, $themesFormGroup, $defaultThemeOption);
+    } else {
+      this.hide($noThemeOption, $themesFormGroup, $defaultThemeOption);
     }
+  }
 
+  /**
+   * Make all given selectors hidden
+   *
+   * @param $selectors
+   * @private
+   */
+  hide(...$selectors) {
+    Object.values($selectors).forEach((el) => {
+      el.addClass('d-none');
+      el.find('select').prop('disabled', 'disabled');
+    });
+  }
 
-    /**
-     * Make all given selectors hidden
-     *
-     * @param $selectors
-     * @private
-     */
-    _hide(...$selectors) {
-        for (let key in $selectors) {
-            $selectors[key].addClass('d-none');
-            $selectors[key].find('select').prop('disabled', 'disabled');
-        }
-    }
-
-    /**
-     * Make all given selectors visible
-     *
-     * @param $selectors
-     * @private
-     */
-    _show(...$selectors) {
-        for (let key in $selectors) {
-            $selectors[key].removeClass('d-none');
-            $selectors[key].find('select').prop('disabled', false);
-        }
-    }
+  /**
+   * Make all given selectors visible
+   *
+   * @param $selectors
+   * @private
+   */
+  show(...$selectors) {
+    Object.values($selectors).forEach((el) => {
+      el.removeClass('d-none');
+      el.find('select').prop('disabled', false);
+    });
+  }
 }

@@ -19,13 +19,18 @@ class Home extends FOBasePage {
     this.totalProducts = '#js-product-list-top .total-products > p';
     this.productPrice = number => `${this.productArticle(number)} span[aria-label="Price"]`;
     this.newFlag = number => `${this.productArticle(number)} .product-flag.new`;
+    this.newsletterFormField = '.block_newsletter [name=email]';
+    this.newsletterSubmitButton = '.block_newsletter [name=submitNewsletter]';
+
+    // Newsletter Subscription alert message
+    this.subscriptionAlertMessage = '.block_newsletter_alert';
 
     // Quick View modal
     this.quickViewModalDiv = 'div[id*=\'quickview-modal\']';
     this.quickViewCloseButton = `${this.quickViewModalDiv} button.close`;
     this.quickViewProductName = `${this.quickViewModalDiv} h1`;
     this.quickViewRegularPrice = `${this.quickViewModalDiv} span.regular-price`;
-    this.quickViewProductPrice = `${this.quickViewModalDiv} div.current-price span[itemprop="price"]`;
+    this.quickViewProductPrice = `${this.quickViewModalDiv} div.current-price span.current-price-value`;
     this.quickViewDiscountPercentage = `${this.quickViewModalDiv} div.current-price span.discount-percentage`;
     this.quickViewTaxShippingDeliveryLabel = `${this.quickViewModalDiv} div.tax-shipping-delivery-label`;
     this.quickViewShortDescription = `${this.quickViewModalDiv} div#product-description-short`;
@@ -54,11 +59,15 @@ class Home extends FOBasePage {
     this.cartModalSubtotalBlock = `${this.cartContentBlock} .subtotal.value`;
     this.cartModalproductTaxInclBlock = `${this.cartContentBlock} .product-total .value`;
     this.cartModalCheckoutLink = `${this.blockCartModalDiv} div.cart-content-btn a`;
+
+    // Newsletter subscription messages
+    this.successSubscriptionMessage = 'You have successfully subscribed to this newsletter.';
+    this.alreadyUsedEmailMessage = 'This email address is already registered.';
   }
 
   /**
    * Check home page
-   * @param page
+   * @param page {Page} Browser tab
    * @returns {Promise<boolean>}
    */
   async isHomePage(page) {
@@ -67,8 +76,8 @@ class Home extends FOBasePage {
 
   /**
    * Go to the product page
-   * @param page
-   * @param id, product id
+   * @param page {Page} Browser tab
+   * @param id {number} Product id
    * @returns {Promise<void>}
    */
   async goToProductPage(page, id) {
@@ -77,8 +86,8 @@ class Home extends FOBasePage {
 
   /**
    * Check product price
-   * @param page
-   * @param id, index of product in list of products
+   * @param page {Page} Browser tab
+   * @param id {number} index of product in list of products
    * @return {Promise<boolean>}
    */
   async isPriceVisible(page, id = 1) {
@@ -87,8 +96,8 @@ class Home extends FOBasePage {
 
   /**
    * Check new flag
-   * @param page
-   * @param id
+   * @param page {Page} Browser tab
+   * @param id {number} Index of product in list of products
    * @returns {Promise<boolean>}
    */
   async isNewFlagVisible(page, id = 1) {
@@ -97,7 +106,7 @@ class Home extends FOBasePage {
 
   /**
    * Go to home category page by clicking on all products
-   * @param page
+   * @param page {Page} Browser tab
    * @return {Promise<void>}
    */
   async goToAllProductsPage(page) {
@@ -106,7 +115,7 @@ class Home extends FOBasePage {
 
   /**
    * Get popular product title
-   * @param page
+   * @param page {Page} Browser tab
    * @returns {Promise<string>}
    */
   getPopularProductTitle(page) {
@@ -116,13 +125,14 @@ class Home extends FOBasePage {
   // Quick view methods
   /**
    * Click on Quick view Product
-   * @param page
-   * @param id, index of product in list of products
+   * @param page {Page} Browser tab
+   * @param id {number} Index of product in list of products
    * @return {Promise<void>}
    */
   async quickViewProduct(page, id) {
     await page.hover(this.productImg(id));
     let displayed = false;
+
     /* eslint-disable no-await-in-loop */
     // Only way to detect if element is displayed is to get value of computed style 'product description' after hover
     // and compare it with value 'block'
@@ -144,9 +154,9 @@ class Home extends FOBasePage {
 
   /**
    * Add product to cart with Quick view
-   * @param page
-   * @param id, index of product in list of products
-   * @param quantity_wanted, quantity to order
+   * @param page {Page} Browser tab
+   * @param id {number} Index of product in list of products
+   * @param quantity_wanted {string} Quantity to order
    * @return {Promise<void>}
    */
   async addProductToCartByQuickView(page, id, quantity_wanted = 1) {
@@ -160,8 +170,8 @@ class Home extends FOBasePage {
 
   /**
    * Change combination and add to cart
-   * @param page
-   * @param combination
+   * @param page {Page} Browser tab
+   * @param combination {object} The combination data (size, color, quantity)
    * @returns {Promise<void>}
    */
   async changeCombinationAndAddToCart(page, combination) {
@@ -173,7 +183,7 @@ class Home extends FOBasePage {
 
   /**
    * Get product details from quick view modal
-   * @param page
+   * @param page {Page} Browser tab
    * @returns {Promise<{discountPercentage: *, thumbImage: *, size: *, color: *, price: *, taxShippingDeliveryLabel: *,
    * regularPrice: *, coverImage: *, name: *, shortDescription: *}>}
    */
@@ -192,7 +202,7 @@ class Home extends FOBasePage {
 
   /**
    * Get product attributes from quick view modal
-   * @param page
+   * @param page {Page} Browser tab
    * @returns {Promise<{size: *, color: *}>}
    */
   async getProductAttributesFromQuickViewModal(page) {
@@ -204,7 +214,7 @@ class Home extends FOBasePage {
 
   /**
    * Close quick view modal
-   * @param page
+   * @param page {Page} Browser tab
    * @returns {Promise<boolean>}
    */
   async closeQuickViewModal(page) {
@@ -215,7 +225,7 @@ class Home extends FOBasePage {
 
   /**
    * Close block cart modal
-   * @param page
+   * @param page {Page} Browser tab
    * @returns {Promise<boolean>}
    */
   async closeBlockCartModal(page) {
@@ -226,9 +236,9 @@ class Home extends FOBasePage {
 
   /**
    * Select product color
-   * @param page
-   * @param id
-   * @param color
+   * @param page {Page} Browser tab
+   * @param id {number} Id of the current product
+   * @param color {string} The color to select
    * @returns {Promise<void>}
    */
   async selectProductColor(page, id, color) {
@@ -254,7 +264,7 @@ class Home extends FOBasePage {
   // Block cart modal methods
   /**
    * Get product details from blockCart modal
-   * @param page
+   * @param page {Page} Browser tab
    * @returns {Promise<{quantity: number, size: *, color: *, price: *, name: *, cartShipping: *, cartSubtotal: *,
    * totalTaxIncl: *, cartProductsCount: number}>}
    */
@@ -272,7 +282,7 @@ class Home extends FOBasePage {
 
   /**
    * Get product attributes from block cart modal
-   * @param page
+   * @param page {Page} Browser tab
    * @returns {Promise<{size: *, color: *}>}
    */
   async getProductAttributesFromBlockCartModal(page) {
@@ -284,7 +294,7 @@ class Home extends FOBasePage {
 
   /**
    * Click on proceed to checkout after adding product to cart (in modal homePage)
-   * @param page
+   * @param page {Page} Browser tab
    * @return {Promise<void>}
    */
   async proceedToCheckout(page) {
@@ -294,11 +304,11 @@ class Home extends FOBasePage {
 
   /**
    * Go to social sharing link
-   * @param page
-   * @param socialSharing
+   * @param page {Page} Browser tab
+   * @param socialSharing {string} The social network name
    * @returns {Promise<void>}
    */
-  async goToSocialSharingLink(page, socialSharing) {
+  async getSocialSharingLink(page, socialSharing) {
     let selector;
     switch (socialSharing) {
       case 'Facebook':
@@ -317,7 +327,21 @@ class Home extends FOBasePage {
         throw new Error(`${socialSharing} was not found`);
     }
 
-    return this.openLinkWithTargetBlank(page, selector, 'body');
+    return this.getAttributeContent(page, selector, 'href');
+  }
+
+  /**
+   * Subscribe to the newsletter from the FO homepage
+   * @param page {Page} Browser tab
+   * @param email {string} Email to set on input
+   *
+   * @returns {Promise<string|TextContent|*>}
+   */
+  async subscribeToNewsletter(page, email) {
+    await this.setValue(page, this.newsletterFormField, email);
+    await this.waitForSelectorAndClick(page, this.newsletterSubmitButton);
+
+    return this.getTextContent(page, this.subscriptionAlertMessage);
   }
 }
 

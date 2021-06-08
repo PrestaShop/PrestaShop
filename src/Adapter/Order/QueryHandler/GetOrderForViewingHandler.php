@@ -41,10 +41,13 @@ use OrderInvoice;
 use OrderPayment;
 use OrderSlip;
 use OrderState;
-use PrestaShop\Decimal\Number;
+use PrestaShop\Decimal\DecimalNumber;
+use PrestaShop\PrestaShop\Adapter\Address\AddressFormatter;
 use PrestaShop\PrestaShop\Adapter\Configuration;
 use PrestaShop\PrestaShop\Adapter\Customer\CustomerDataProvider;
 use PrestaShop\PrestaShop\Adapter\Order\AbstractOrderHandler;
+use PrestaShop\PrestaShop\Core\Address\AddressFormatterInterface;
+use PrestaShop\PrestaShop\Core\Domain\Address\ValueObject\AddressId;
 use PrestaShop\PrestaShop\Core\Domain\Exception\InvalidSortingException;
 use PrestaShop\PrestaShop\Core\Domain\Order\Exception\OrderException;
 use PrestaShop\PrestaShop\Core\Domain\Order\OrderDocumentType;
@@ -79,7 +82,6 @@ use PrestaShop\PrestaShop\Core\Domain\Order\QueryResult\OrderSourcesForViewing;
 use PrestaShop\PrestaShop\Core\Domain\Order\QueryResult\OrderStatusForViewing;
 use PrestaShop\PrestaShop\Core\Domain\Order\ValueObject\OrderId;
 use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\ShopConstraint;
-use PrestaShop\PrestaShop\Core\Image\Parser\ImageTagSourceParserInterface;
 use PrestaShop\PrestaShop\Core\Localization\Exception\LocalizationException;
 use PrestaShop\PrestaShop\Core\Localization\Locale;
 use State;
@@ -130,7 +132,11 @@ final class GetOrderForViewingHandler extends AbstractOrderHandler implements Ge
     private $getOrderProductsForViewingHandler;
 
     /**
-     * @param ImageTagSourceParserInterface $imageTagSourceParser
+     * @var AddressFormatterInterface
+     */
+    private $addressFormatter;
+
+    /**
      * @param TranslatorInterface $translator
      * @param int $contextLanguageId
      * @param Locale $locale
@@ -145,7 +151,8 @@ final class GetOrderForViewingHandler extends AbstractOrderHandler implements Ge
         Context $context,
         CustomerDataProvider $customerDataProvider,
         GetOrderProductsForViewingHandlerInterface $getOrderProductsForViewingHandler,
-        Configuration $configuration
+        Configuration $configuration,
+        AddressFormatterInterface $addressFormatter = null
     ) {
         $this->translator = $translator;
         $this->contextLanguageId = $contextLanguageId;
@@ -155,6 +162,7 @@ final class GetOrderForViewingHandler extends AbstractOrderHandler implements Ge
         $this->customerDataProvider = $customerDataProvider;
         $this->getOrderProductsForViewingHandler = $getOrderProductsForViewingHandler;
         $this->configuration = $configuration;
+        $this->addressFormatter = $addressFormatter ?? new AddressFormatter();
     }
 
     /**
@@ -208,7 +216,10 @@ final class GetOrderForViewingHandler extends AbstractOrderHandler implements Ge
             $this->getOrderPrices($order),
             $this->getOrderDiscounts($order),
             $this->getOrderSources($order),
-            $this->getLinkedOrders($order)
+            $this->getLinkedOrders($order),
+            $this->addressFormatter->format(new AddressId((int) $order->id_address_delivery)),
+            $this->addressFormatter->format(new AddressId((int) $order->id_address_invoice)),
+            (string) $order->note
         );
     }
 
@@ -379,7 +390,6 @@ final class GetOrderForViewingHandler extends AbstractOrderHandler implements Ge
             $amount = null;
             $numericAmount = null;
             $amountMismatch = null;
-            $availableAction = null;
             $isAddPaymentAllowed = false;
 
             if ($document instanceof OrderInvoice) {
@@ -427,11 +437,11 @@ final class GetOrderForViewingHandler extends AbstractOrderHandler implements Ge
                     $document->delivery_number
                 );
                 $amount = $this->locale->formatPrice(
-                    $document->total_shipping_tax_incl,
+                    $document->total_paid_tax_incl,
                     $currency->iso_code
                 );
-                $numericAmount = $document->total_shipping_tax_incl;
-            } elseif (OrderDocumentType::CREDIT_SLIP) {
+                $numericAmount = $document->total_paid_tax_incl;
+            } elseif (OrderDocumentType::CREDIT_SLIP === $type) {
                 $conf = $this->configuration->get('PS_CREDIT_SLIP_PREFIX');
                 $number = sprintf(
                     '%s%06d',
@@ -508,8 +518,8 @@ final class GetOrderForViewingHandler extends AbstractOrderHandler implements Ge
                 $trackingUrl = null;
                 $trackingNumber = $item['tracking_number'];
 
-                if ($item['url'] && $item['tracking_number']) {
-                    $trackingUrl = str_replace('@', $item['tracking_number'], $item['url']);
+                if ($item['url'] && $trackingNumber) {
+                    $trackingUrl = str_replace('@', $trackingNumber, $item['url']);
                 }
 
                 $weight = sprintf('%.3f %s', $item['weight'], $this->configuration->get('PS_WEIGHT_UNIT'));
@@ -722,13 +732,13 @@ final class GetOrderForViewingHandler extends AbstractOrderHandler implements Ge
         $taxesAmount = $order->total_paid_tax_incl - $order->total_paid_tax_excl;
 
         return new OrderPricesForViewing(
-            new Number((string) $productsPrice),
-            new Number((string) $discountsAmount),
-            new Number((string) $wrappingPrice),
-            new Number((string) $shippingPrice),
-            new Number((string) $shippingRefundable),
-            new Number((string) $taxesAmount),
-            new Number((string) $totalAmount),
+            new DecimalNumber((string) $productsPrice),
+            new DecimalNumber((string) $discountsAmount),
+            new DecimalNumber((string) $wrappingPrice),
+            new DecimalNumber((string) $shippingPrice),
+            new DecimalNumber((string) $shippingRefundable),
+            new DecimalNumber((string) $taxesAmount),
+            new DecimalNumber((string) $totalAmount),
             Tools::displayPrice($productsPrice, $currency),
             Tools::displayPrice($discountsAmount, $currency),
             Tools::displayPrice($wrappingPrice, $currency),
@@ -758,7 +768,7 @@ final class GetOrderForViewingHandler extends AbstractOrderHandler implements Ge
             $discountsForViewing[] = new OrderDiscountForViewing(
                 (int) $discount['id_order_cart_rule'],
                 $discount['name'],
-                new Number((string) $discountAmount),
+                new DecimalNumber((string) $discountAmount),
                 Tools::displayPrice($discountAmount, $currency)
             );
         }

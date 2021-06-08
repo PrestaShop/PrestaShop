@@ -27,8 +27,8 @@
 {% import '@PrestaShop/Admin/macros.html.twig' as ps %}
 
 {% block invoices_generate_by_date %}
-  <div class="col-xl-10">
-    {{ form_start(generateByDateForm, {'method': 'POST', 'action': path('admin_order_invoices_generate_by_date')}) }}
+  <div class="col-xl-12">
+    {{ form_start(generateByDateForm, {method: 'POST', action: path('admin_order_invoices_generate_by_date'), attr: {id: 'form-generate-invoices-by-date'}}) }}
     <div class="card">
       <h3 class="card-header">
         <i class="material-icons">date_range</i> {{ 'By date'|trans }}
@@ -54,7 +54,7 @@
       </div>
       <div class="card-footer">
         <div class="d-flex justify-content-end">
-          <button class="btn btn-primary">{{ 'Generate PDF file by date'|trans }}</button>
+          <button class="btn btn-primary" id="generate-pdf-by-date-button">{{ 'Generate PDF file by date'|trans }}</button>
         </div>
       </div>
     </div>

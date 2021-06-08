@@ -177,3 +177,45 @@ services:
     factory: 'prestashop.core.form.identifiable_object.handler.form_handler_factory:create'
     arguments:
       - '@prestashop.core.form.identifiable_object.cancellation_form_data_handler'
+
+  prestashop.core.form.identifiable_object.handler.order_state_form_handler:
+    class: 'PrestaShop\PrestaShop\Core\Form\IdentifiableObject\Handler\FormHandler'
+    factory: 'prestashop.core.form.identifiable_object.handler.form_handler_factory:create'
+    arguments:
+      - '@prestashop.core.form.identifiable_object.data_handler.order_state_form_data_handler'
+
+  prestashop.core.form.identifiable_object.handler.order_return_state_form_handler:
+    class: 'PrestaShop\PrestaShop\Core\Form\IdentifiableObject\Handler\FormHandler'
+    factory: 'prestashop.core.form.identifiable_object.handler.form_handler_factory:create'
+    arguments:
+      - '@prestashop.core.form.identifiable_object.data_handler.order_return_state_form_data_handler'
+
+  prestashop.core.form.identifiable_object.product_form_handler:
+      class: 'PrestaShop\PrestaShop\Core\Form\IdentifiableObject\Handler\FormHandler'
+      factory: 'prestashop.core.form.identifiable_object.handler.form_handler_factory:create'
+      arguments:
+          - '@prestashop.core.form.identifiable_object.data_handler.product_form_data_handler'
+
+  prestashop.core.form.identifiable_object.combination_form_handler:
+      class: 'PrestaShop\PrestaShop\Core\Form\IdentifiableObject\Handler\FormHandler'
+      factory: 'prestashop.core.form.identifiable_object.handler.form_handler_factory:create'
+      arguments:
+          - '@prestashop.core.form.identifiable_object.data_handler.combination_form_data_handler'
+
+  prestashop.core.form.identifiable_object.combination_item_form_handler:
+      class: 'PrestaShop\PrestaShop\Core\Form\IdentifiableObject\Handler\FormHandler'
+      factory: 'prestashop.core.form.identifiable_object.handler.form_handler_factory:create'
+      arguments:
+          - '@prestashop.core.form.identifiable_object.data_handler.combination_item_form_data_handler'
+
+  prestashop.core.form.identifiable_object.product_image_form_handler:
+      class: 'PrestaShop\PrestaShop\Core\Form\IdentifiableObject\Handler\FormHandler'
+      factory: 'prestashop.core.form.identifiable_object.handler.form_handler_factory:create'
+      arguments:
+          - '@prestashop.core.form.identifiable_object.data_handler.product_image_form_data_handler'
+
+  prestashop.core.form.identifiable_object.handler.zone_form_handler:
+    class: 'PrestaShop\PrestaShop\Core\Form\IdentifiableObject\Handler\FormHandler'
+    factory: 'prestashop.core.form.identifiable_object.handler.form_handler_factory:create'
+    arguments:
+      - '@prestashop.core.form.identifiable_object.data_handler.zone_form_data_handler'

@@ -86,7 +86,7 @@ class ReleaseCreator
      *
      * @var array
      */
-    protected $foldersRemoveList = [];
+    protected $foldersRemoveList = ['.docker'];
 
     /**
      * Pattern of files or directories to remove.
@@ -280,6 +280,7 @@ class ReleaseCreator
             ->setupShopVersion()
             ->generateLicensesFile()
             ->runComposerInstall()
+            ->runBuildAssets()
             ->createPackage();
         $endTime = date('H:i:s');
         $this->consoleWriter->displayText(
@@ -513,9 +514,32 @@ class ReleaseCreator
             && composer install --no-dev --optimize-autoloader --no-interaction 2>&1";
         exec($command, $output, $returnCode);
 
-        if ($returnCode != 0) {
+        if ($returnCode !== 0) {
             throw new BuildException('Unable to run composer install.');
         }
+
+        $this->consoleWriter->displayText(" DONE{$this->lineSeparator}", ConsoleWriter::COLOR_GREEN);
+
+        return $this;
+    }
+
+    /**
+     * Build assets.
+     *
+     * @return $this
+     * @throws BuildException
+     */
+    protected function runBuildAssets()
+    {
+        $this->consoleWriter->displayText("Running build assets...", ConsoleWriter::COLOR_YELLOW);
+        $argProjectPath = escapeshellarg($this->tempProjectPath);
+        $command = "cd {$argProjectPath} && make assets 2>&1";
+        exec($command, $output, $returnCode);
+
+        if ($returnCode !== 0) {
+            throw new BuildException('Unable to build assets.');
+        }
+
         $this->consoleWriter->displayText(" DONE{$this->lineSeparator}", ConsoleWriter::COLOR_GREEN);
 
         return $this;

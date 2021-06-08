@@ -22,12 +22,24 @@
  * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
-export function showGrowl(type, message, duration) {
-  duration = undefined !== duration ? duration : 2000;
-  window.$.growl[type]({
-    title: '',
-    size: "large",
-    message: message,
-    duration: duration
-  });
+export const showGrowl = (type, message, durationTime) => {
+  const duration = undefined !== durationTime ? durationTime : 2000;
+
+  if (type === 'success') {
+    window.$.growl({
+      title: '',
+      size: 'large',
+      message,
+      duration,
+    });
+  } else {
+    window.$.growl[type]({
+      title: '',
+      size: 'large',
+      message,
+      duration,
+    });
+  }
 };
+
+export default showGrowl;

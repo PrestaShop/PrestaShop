@@ -23,9 +23,19 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  *-->
 <template>
-  <div class="ps-sortable-column" data-sort-col-name="id_product" :data-sort-is-current="isCurrent" :data-sort-direction="sortDirection" @click="sortToggle">
+  <div
+    class="ps-sortable-column"
+    data-sort-col-name="id_product"
+    :data-sort-is-current="isCurrent"
+    :data-sort-direction="sortDirection"
+    @click="sortToggle"
+  >
     <span role="columnheader"><slot /></span>
-    <span role="button" class="ps-sort" aria-label="Tri"></span>
+    <span
+      role="button"
+      class="ps-sort"
+      aria-label="Tri"
+    />
   </div>
 </template>
 
@@ -33,9 +43,15 @@
   export default {
     props: {
       // column name
-      order: String,
+      order: {
+        type: String,
+        required: true,
+      },
       // indicates the currently sorted column in the table
-      currentSort: String,
+      currentSort: {
+        type: String,
+        required: true,
+      },
     },
     methods: {
       sortToggle() {
@@ -54,4 +70,3 @@
     },
   };
 </script>
-

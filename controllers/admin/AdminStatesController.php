@@ -134,6 +134,15 @@ class AdminStatesControllerCore extends AdminController
 
     public function renderForm()
     {
+        // display multistore information message if multistore is used
+        if ($this->container->get('prestashop.adapter.multistore_feature')->isUsed()) {
+            $this->informations[] = $this->trans(
+                'Note that this feature is available in all shops context only. It will be added to all your stores.',
+                [],
+                'Admin.Notifications.Info'
+            );
+        }
+
         $this->fields_form = [
             'legend' => [
                 'title' => $this->trans('States', [], 'Admin.International.Feature'),
@@ -194,12 +203,12 @@ class AdminStatesControllerCore extends AdminController
                         [
                             'id' => 'active_on',
                             'value' => 1,
-                            'label' => '<img src="../img/admin/enabled.gif" alt="' . $this->trans('Enabled', [], 'Admin.Global') . '" title="' . $this->trans('Enabled', [], 'Admin.Global') . '" />',
+                            'label' => $this->trans('Yes', [], 'Admin.Global'),
                         ],
                         [
                             'id' => 'active_off',
                             'value' => 0,
-                            'label' => '<img src="../img/admin/disabled.gif" alt="' . $this->trans('Disabled', [], 'Admin.Global') . '" title="' . $this->trans('Disabled', [], 'Admin.Global') . '" />',
+                            'label' => $this->trans('No', [], 'Admin.Global'),
                         ],
                     ],
                 ],

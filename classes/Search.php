@@ -334,7 +334,7 @@ class SearchCore
             $scoreArray[] = 'sw.word LIKE \'' . $sql_param_search . '\'';
         }
 
-        if (!count($words)) {
+        if (!count($words) || !count($eligibleProducts2)) {
             return $ajax ? [] : ['total' => 0, 'result' => []];
         }
 
@@ -367,7 +367,8 @@ class SearchCore
             'WHERE c.`active` = 1 ' .
             'AND product_shop.`active` = 1 ' .
             'AND product_shop.`visibility` IN ("both", "search") ' .
-            'AND product_shop.indexed = 1 ' . $sqlGroups,
+            'AND product_shop.indexed = 1 ' .
+            'AND cp.id_product IN (' . implode(',', $eligibleProducts2) . ')' . $sqlGroups,
             true,
             false
         );
@@ -377,22 +378,11 @@ class SearchCore
             $eligibleProducts[] = $row['id_product'];
         }
 
-        $eligibleProducts = array_unique(array_intersect($eligibleProducts, array_unique($eligibleProducts2)));
         if (!count($eligibleProducts)) {
             return $ajax ? [] : ['total' => 0, 'result' => []];
         }
 
-        $product_pool = '';
-        foreach ($eligibleProducts as $id_product) {
-            if ($id_product) {
-                $product_pool .= (int) $id_product . ',';
-            }
-        }
-
-        if (empty($product_pool)) {
-            return $ajax ? [] : ['total' => 0, 'result' => []];
-        }
-        $product_pool = ((strpos($product_pool, ',') === false) ? (' = ' . (int) $product_pool . ' ') : (' IN (' . rtrim($product_pool, ',') . ') '));
+        $product_pool = ' IN (' . implode(',', $eligibleProducts) . ') ';
 
         if ($ajax) {
             $sql = 'SELECT DISTINCT p.id_product, pl.name pname, cl.name cname,
@@ -448,10 +438,19 @@ class SearchCore
 					ON (image_shop.`id_product` = p.`id_product` AND image_shop.cover=1 AND image_shop.id_shop=' . (int) $context->shop->id . ')
 				LEFT JOIN `' . _DB_PREFIX_ . 'image_lang` il ON (image_shop.`id_image` = il.`id_image` AND il.`id_lang` = ' . (int) $id_lang . ')
 				WHERE p.`id_product` ' . $product_pool . '
-				GROUP BY product_shop.id_product
-				' . ($order_by ? 'ORDER BY  ' . $alias . $order_by : '') . ($order_way ? ' ' . $order_way : '') . '
+				GROUP BY product_shop.id_product';
+
+        if ($order_by !== 'price') {
+            $sql .= ($order_by ? ' ORDER BY  ' . $alias . $order_by : '') . ($order_way ? ' ' . $order_way : '') . '
 				LIMIT ' . (int) (($page_number - 1) * $page_size) . ',' . (int) $page_size;
+        }
+
         $result = $db->executeS($sql, true, false);
+
+        if ($order_by === 'price') {
+            Tools::orderbyPrice($result, $order_way);
+            $result = array_slice($result, (int) (($page_number - 1) * $page_size), (int) $page_size);
+        }
 
         $sql = 'SELECT COUNT(*)
 				FROM ' . _DB_PREFIX_ . 'product p
@@ -570,6 +569,10 @@ class SearchCore
                             $sql .= ', pa.ean13 AS pa_ean13';
 
                             break;
+                        case 'pa_isbn':
+                            $sql .= ', pa.isbn AS pa_isbn';
+
+                            break;
                         case 'pa_upc':
                             $sql .= ', pa.upc AS pa_upc';
 
@@ -626,6 +629,10 @@ class SearchCore
                             break;
                         case 'ean13':
                             $sql .= ', p.ean13';
+
+                            break;
+                        case 'isbn':
+                            $sql .= ', p.isbn';
 
                             break;
                         case 'upc':
@@ -765,6 +772,8 @@ class SearchCore
             'pa_supplier_reference' => Configuration::get('PS_SEARCH_WEIGHT_REF'),
             'ean13' => Configuration::get('PS_SEARCH_WEIGHT_REF'),
             'pa_ean13' => Configuration::get('PS_SEARCH_WEIGHT_REF'),
+            'isbn' => Configuration::get('PS_SEARCH_WEIGHT_REF'),
+            'pa_isbn' => Configuration::get('PS_SEARCH_WEIGHT_REF'),
             'upc' => Configuration::get('PS_SEARCH_WEIGHT_REF'),
             'pa_upc' => Configuration::get('PS_SEARCH_WEIGHT_REF'),
             'mpn' => Configuration::get('PS_SEARCH_WEIGHT_REF'),

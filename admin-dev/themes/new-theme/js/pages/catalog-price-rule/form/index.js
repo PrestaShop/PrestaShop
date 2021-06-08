@@ -30,15 +30,15 @@ import IncludeTaxFieldVisibilityHandler
   from './include-tax-field-visibility-handler';
 import CatalogPriceRuleFormMap from './catalog-price-rule-form-map';
 
-const $ = window.$;
+const {$} = window;
 
 $(() => {
   new PriceFieldAvailabilityHandler(
     CatalogPriceRuleFormMap.initialPrice,
-    CatalogPriceRuleFormMap.price
+    CatalogPriceRuleFormMap.price,
   );
   new IncludeTaxFieldVisibilityHandler(
     CatalogPriceRuleFormMap.reductionType,
-    CatalogPriceRuleFormMap.includeTax
+    CatalogPriceRuleFormMap.includeTax,
   );
 });

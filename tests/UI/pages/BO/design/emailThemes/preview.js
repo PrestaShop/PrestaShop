@@ -18,7 +18,7 @@ class PreviewEmailTheme extends BOBasePage {
     this.tableActionColumnDropDownLink = row => `${this.tableActionColumn(row)} .dropdown-toggle`;
     this.tableActionColumnRawHtmlLink = row => `${this.tableActionColumn(row)} .raw-html-link`;
     this.tableActionColumnRawTextLink = row => `${this.tableActionColumn(row)} .raw-text-link`;
-    this.backToConfigurationLink = '.card-footer a';
+    this.backToConfigurationLink = '#back-to-configuration-link';
   }
 
   /* Methods */
@@ -40,7 +40,6 @@ class PreviewEmailTheme extends BOBasePage {
   async goBackToEmailThemesPage(page) {
     await this.clickAndWaitForNavigation(page, this.backToConfigurationLink);
   }
-
 
   /**
    * View raw html

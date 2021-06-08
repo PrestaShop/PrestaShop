@@ -272,6 +272,8 @@ class AddressController extends FrameworkBundleAdminController
         if (!empty($formData['id_customer'])) {
             /** @var CustomerDataProvider $customerDataProvider */
             $customerDataProvider = $this->get('prestashop.adapter.data_provider.customer');
+            /** @todo To Remove when PHPStan is fixed https://github.com/phpstan/phpstan/issues/3700 */
+            /** @phpstan-ignore-next-line */
             $customerId = $formData['id_customer'];
             $customer = $customerDataProvider->getCustomer($customerId);
             $formData['first_name'] = $customer->firstname;
@@ -293,6 +295,10 @@ class AddressController extends FrameworkBundleAdminController
                         '@PrestaShop/Admin/Sell/Address/modal_create_success.html.twig',
                         ['refreshCartAddresses' => 'true']
                     );
+                }
+
+                if ($customerId) {
+                    return $this->redirectToRoute('admin_customers_view', ['customerId' => $customerId]);
                 }
 
                 return $this->redirectToRoute('admin_addresses_index');
@@ -609,7 +615,7 @@ class AddressController extends FrameworkBundleAdminController
                     'An error occurred while deleting this selection.',
                     'Admin.Notifications.Error'
                 ),
-                $e instanceof BulkDeleteAddressException ? $e->getAddressIds() : ''
+                $e instanceof BulkDeleteAddressException ? implode(', ', $e->getAddressIds()) : ''
             ),
             AddressNotFoundException::class => $this->trans(
                 'The object cannot be loaded (or found)',

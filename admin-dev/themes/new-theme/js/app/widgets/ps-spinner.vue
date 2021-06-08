@@ -23,5 +23,5 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  *-->
 <template>
-  <div class="ps-spinner"></div>
+  <div class="ps-spinner" />
 </template>

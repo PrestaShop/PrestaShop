@@ -23,6 +23,7 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  *#}
 
+{% form_theme addUpdateLanguageForm 'PrestaShopBundle:Admin/TwigTemplateForm:prestashop_ui_kit.html.twig' %}
 {% trans_default_domain 'Admin.International.Feature' %}
 
 {{ form_start(addUpdateLanguageForm, {action: path('admin_international_translations_add_update_language')}) }}
@@ -30,29 +31,22 @@
 <div class="card">
   <h3 class="card-header">
     <div class="material-icons">arrow_drop_down_circle</div> {{ 'Add / Update a language'|trans }}
+
+    <span
+      class="help-box"
+      data-container="body"
+      data-toggle="popover"
+      data-trigger="hover"
+      data-placement="right"
+      data-content="{{ 'You can add or update a language directly from the PrestaShop website here.'|trans({}, 'Admin.International.Help') }}"
+      title=""
+    >
+    </span>
   </h3>
 
   <div class="card-block row">
     <div class="card-text">
-      <div class="row">
-        <div class="col-sm">
-          <div class="alert alert-info" role="alert">
-            <div class="alert-text">
-              {{ 'You can add or update a language directly from the PrestaShop website here.'|trans({}, 'Admin.International.Help') }}
-            </div>
-          </div>
-        </div>
-      </div>
-      <div class="form-group row">
-        <label class="form-control-label">
-          {{ 'Please select the language you want to add or update'|trans }}
-        </label>
-        <div class="col-sm">
-          {{ form_errors(addUpdateLanguageForm.iso_localization_pack) }}
-          {{ form_widget(addUpdateLanguageForm.iso_localization_pack, {'attr': {'data-minimumResultsForSearch': '7', 'data-toggle': 'select2'}}) }}
-        </div>
-      </div>
-      {{ form_rest(addUpdateLanguageForm) }}
+      {{ form_widget(addUpdateLanguageForm) }}
     </div>
   </div>
 

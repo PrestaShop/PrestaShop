@@ -54,8 +54,8 @@ class Product extends BOBasePage {
     this.productsListTableColumnPrice = row => `${this.productsListTableRow(row)} td:nth-child(7)`;
     this.productsListTableColumnPriceATI = row => `${this.productsListTableRow(row)} td:nth-child(8)`;
     this.productsListTableColumnQuantity = row => `${this.productsListTableRow(row)} td.product-sav-quantity`;
-    this.productsListTableColumnStatus = row => `${this.productsListTableRow(row)} td:nth-child(10)`;
-    this.productsListTableColumnStatusEnabled = row => `${this.productsListTableColumnStatus(row)} .action-enabled`;
+    this.productsListTableColumnStatus = row => `${this.productsListTableRow(row)} td:nth-child(10) .ps-switch`;
+    this.productsListTableColumnStatusInput = row => `${this.productsListTableColumnStatus(row)} input`;
     // Filter Category
     this.treeCategoriesBloc = '#tree-categories';
     this.filterByCategoriesButton = '#product_catalog_category_tree_filter button';
@@ -160,6 +160,7 @@ class Product extends BOBasePage {
     const selector = withTaxes ? this.productsListTableColumnPriceATI : this.productsListTableColumnPrice;
     const text = await this.getTextContent(page, selector(row));
     const price = /\d+(\.\d+)?/g.exec(text).toString();
+
     return parseFloat(price);
   }
 
@@ -184,6 +185,22 @@ class Product extends BOBasePage {
    */
   async getProductQuantityFromList(page, row) {
     return this.getNumberFromText(page, this.productsListTableColumnQuantity(row));
+  }
+
+  /**
+   * Get Product Status
+   * @param page
+   * @param row
+   * @returns {Promise<boolean>}
+   */
+  async getProductStatusFromList(page, row) {
+    const inputValue = await this.getAttributeContent(
+      page,
+      `${this.productsListTableColumnStatusInput(row)}[checked]`,
+      'value',
+    );
+
+    return inputValue !== '0';
   }
 
   /**
@@ -263,10 +280,12 @@ class Product extends BOBasePage {
   async getAllRowsColumnContent(page, column) {
     const rowsNumber = await this.getNumberOfProductsFromList(page);
     const allRowsContentTable = [];
+
     for (let i = 1; i <= rowsNumber; i++) {
       const rowContent = await this.getTextColumn(page, column, i);
       await allRowsContentTable.push(rowContent);
     }
+
     return allRowsContentTable;
   }
 
@@ -277,6 +296,7 @@ class Product extends BOBasePage {
    */
   async getNumberOfProductsFromList(page) {
     const found = await this.elementVisible(page, this.paginationNextLink, 1000);
+
     // In case we filter products and there is only one page, link next from pagination does not appear
     if (!found) {
       return (await page.$$(this.productRow)).length;
@@ -284,6 +304,7 @@ class Product extends BOBasePage {
 
     const footerText = await this.getTextContent(page, this.productNumberBloc);
     const numberOfProduct = /\d+/g.exec(footerText.match(/out of ([0-9]+)/)).toString();
+
     return parseInt(numberOfProduct, 10);
   }
 
@@ -338,6 +359,7 @@ class Product extends BOBasePage {
       /* eslint-env browser */
       const allCategories = [...await document.querySelectorAll(args.allCategoriesSelector)];
       const category = await allCategories.find(el => el.textContent.includes(args.val));
+
       if (category === undefined) {
         return false;
       }
@@ -360,10 +382,10 @@ class Product extends BOBasePage {
     // Click and wait to be open
     await page.click(this.filterByCategoriesButton);
     await this.waitForVisibleSelector(page, `${this.filterByCategoriesButton}[aria-expanded='true']`);
-    await Promise.all([
-      this.waitForVisibleSelector(page, `${this.filterByCategoriesButton}[aria-expanded='false']`),
-      this.clickAndWaitForNavigation(page, this.filterByCategoriesUnselectButton),
-    ]);
+
+    // Unselect all categories
+    await this.clickAndWaitForNavigation(page, this.filterByCategoriesUnselectButton);
+    await this.waitForVisibleSelector(page, `${this.filterByCategoriesButton}[aria-expanded='false']`);
   }
 
   /**
@@ -501,16 +523,6 @@ class Product extends BOBasePage {
   }
 
   /**
-   * Get Value of column Displayed
-   * @param page
-   * @param row, row in table
-   * @return {Promise<boolean>}
-   */
-  async getProductStatusFromList(page, row) {
-    return this.elementVisible(page, this.productsListTableColumnStatusEnabled(row), 100);
-  }
-
-  /**
    * Quick edit toggle column value
    * @param page
    * @param row, row in table
@@ -518,8 +530,8 @@ class Product extends BOBasePage {
    * @return {Promise<boolean>} return true if action is done, false otherwise
    */
   async setProductStatus(page, row, valueWanted = true) {
-    await this.waitForVisibleSelector(page, this.productsListTableColumnStatus(row), 2000);
     const actualValue = await this.getProductStatusFromList(page, row);
+
     if (actualValue !== valueWanted) {
       await this.clickAndWaitForNavigation(page, this.productsListTableColumnStatus(row));
       return true;

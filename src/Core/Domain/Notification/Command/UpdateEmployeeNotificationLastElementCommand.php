@@ -26,7 +26,7 @@
 
 namespace PrestaShop\PrestaShop\Core\Domain\Notification\Command;
 
-use PrestaShop\PrestaShop\Core\Domain\Notification\Exception\TypeException;
+use PrestaShop\PrestaShop\Core\Domain\Notification\Exception\NotificationException;
 use PrestaShop\PrestaShop\Core\Domain\Notification\ValueObject\Type;
 
 /**
@@ -40,11 +40,9 @@ class UpdateEmployeeNotificationLastElementCommand
     private $type;
 
     /**
-     * UpdateEmployeeNotificationLastElementCommand constructor.
-     *
      * @param string $type
      *
-     * @throws TypeException
+     * @throws NotificationException
      */
     public function __construct(string $type)
     {

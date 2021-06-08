@@ -24,6 +24,10 @@
  *#}
 {% extends '@PrestaShop/Admin/layout.html.twig' %}
 
+{% block stylesheets %}
+  <link rel="stylesheet" href="{{ asset('themes/new-theme/public/stock_page.css') }}" type="text/css" media="all">
+{% endblock %}
+
 {% block content %}
 
     {% if is_shop_context %}
@@ -32,7 +36,7 @@
     {% else %}
         <div class="col-md-12">
             <div class="alert alert-danger" role="alert">
-                <i class="material-icons">info_outline</i><p class="alert-text">{{ 'You can\'t manage your stock in this shop context: select a shop instead of a group of shops.'|trans({}, 'Admin.Catalog.Notification') }}</p>
+                <p class="alert-text">{{ 'You can\'t manage your stock in this shop context: select a shop instead of a group of shops.'|trans({}, 'Admin.Catalog.Notification') }}</p>
             </div>
         </div>
     {% endif %}
