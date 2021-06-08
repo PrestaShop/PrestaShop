@@ -65,6 +65,7 @@ export default class ProductPartialUpdater {
     this.eventEmitter.on(ProductEventMap.updateSubmitButtonState, () => this.updateSubmitButtonState());
 
     this.watchCustomizations();
+    this.watchAttachments();
     this.initFormattedTextarea();
   }
 
@@ -74,6 +75,14 @@ export default class ProductPartialUpdater {
   watchCustomizations() {
     this.eventEmitter.on(ProductEventMap.customizations.rowAdded, () => this.updateSubmitButtonState());
     this.eventEmitter.on(ProductEventMap.customizations.rowRemoved, () => this.updateSubmitButtonState());
+  }
+
+  /**
+   * Watch events specifically related to attachments subform
+   */
+  watchAttachments() {
+    this.eventEmitter.on(ProductEventMap.attachments.rowRemoved, () => this.updateSubmitButtonState());
+    this.eventEmitter.on(ProductEventMap.attachments.rowAdded, () => this.updateSubmitButtonState());
   }
 
   /**
