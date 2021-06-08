@@ -199,10 +199,10 @@ class SpecificPriceFormHandler {
 
     this.loadAndFillOptionsForSelectCombinationInput(usePrefixForCreate);
 
-    $(`${selectorPrefix}leave_bprice`).on('click', () => this.enableSpecificPriceFieldIfEligible(usePrefixForCreate),
+    $(SpecificMap.leavBPrice(selectorPrefix)).on('click', () => this.enableSpecificPriceFieldIfEligible(usePrefixForCreate),
     );
 
-    $(`${selectorPrefix}sp_reduction_type`).on('change', () => this.enableSpecificPriceTaxFieldIfEligible(usePrefixForCreate),
+    $(SpecificMap.reductionType).on('change', () => this.enableSpecificPriceTaxFieldIfEligible(usePrefixForCreate),
     );
 
     this.reinitializeDatePickers();
