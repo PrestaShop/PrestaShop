@@ -23,31 +23,33 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  *#}
 
-<h1 class="d-inline">
-  <strong class="text-muted">#{{ orderForViewing.id }}</strong>
-  <strong>{{ orderForViewing.reference }}</strong>
-</h1>
+<div class="title-content">
+  <h1 class="d-inline">
+    <strong class="text-muted">#{{ orderForViewing.id }}</strong>
+    <strong>{{ orderForViewing.reference }}</strong>
+  </h1>
 
-<p class="lead d-inline">
-  {{ 'from'|trans({}, 'Admin.Global') }}
+  <p class="lead d-inline">
+    {{ 'from'|trans({}, 'Admin.Global') }}
 
-  {% if orderForViewing.customer is not null %}
-    {{ orderForViewing.customer.firstName }}
-    {{ orderForViewing.customer.lastName }}
-  {% else %}
-    {{ 'Deleted customer'|trans({}, 'Admin.Global') }}
-  {% endif %}
-</p>
+    {% if orderForViewing.customer is not null %}
+      {{ orderForViewing.customer.firstName }}
+      {{ orderForViewing.customer.lastName }}
+    {% else %}
+      {{ 'Deleted customer'|trans({}, 'Admin.Global') }}
+    {% endif %}
+  </p>
 
-<span class="badge rounded badge-dark ml-2 mr-2 font-size-100">
+  <span class="badge rounded badge-dark ml-2 mr-2 font-size-100">
     {{ orderForViewing.prices.totalAmountFormatted }}
   </span>
 
-<p class="lead d-inline">
-  {{ orderForViewing.createdAt|date_format_lite }}
-  <span class="text-muted">
+  <p class="lead d-inline">
+    {{ orderForViewing.createdAt|date_format_lite }}
+    <span class="text-muted">
       {{ 'at'|trans({}, 'Admin.Global') }}
 
-    {{ orderForViewing.createdAt|date('H:i:s') }}
+      {{ orderForViewing.createdAt|date('H:i:s') }}
     </span>
-</p>
+  </p>
+</div>

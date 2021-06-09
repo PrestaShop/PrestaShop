@@ -46,7 +46,7 @@ class SmtpConfigurationType extends TranslatorAwareType
             ->add('domain', TextType::class, [
                 'required' => false,
                 'empty_data' => '',
-                'label' => $this->trans('Mail domain name', 'Admin.Advparameters.Feature'),
+                'label' => $this->trans('Email domain name', 'Admin.Advparameters.Feature'),
                 'help' => $this->trans('Fully qualified domain name (keep this field empty if you don\'t know).', 'Admin.Advparameters.Help'),
             ])
             ->add('server', TextType::class, [

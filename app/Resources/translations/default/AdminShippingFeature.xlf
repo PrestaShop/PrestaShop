@@ -224,11 +224,6 @@
   </file>
   <file original="controllers/admin/AdminCarriersController.php" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
-      <trans-unit id="8f497c1a3d15af9e0c215019f26b887d">
-        <source>Delay</source>
-        <target>Delay</target>
-        <note>Line: 84</note>
-      </trans-unit>
       <trans-unit id="b00b85425e74ed2c85dc3119b78ff2c3">
         <source>Free Shipping</source>
         <target>Free Shipping</target>
@@ -311,36 +306,67 @@
       </trans-unit>
     </body>
   </file>
+  <file original="src/Core/Grid/Definition/Factory/CarrierGridDefinitionFactory.php" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="8f497c1a3d15af9e0c215019f26b887d">
+        <source>Delay</source>
+        <target>Delay</target>
+        <note>Line: 112</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="src/PrestaShopBundle/Form/Admin/Improve/Shipping/Preferences/CarrierOptionsType.php" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="bff13ed1cd5b83b03f024f1eb6524337">
+        <source>Default carrier</source>
+        <target>Default carrier</target>
+        <note>Line: 84</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="src/PrestaShopBundle/Form/Admin/Improve/Shipping/Preferences/HandlingType.php" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="1d8ca7f442e6d4ad3da5cb61b84284fc">
+        <source>Handling charges</source>
+        <target>Handling charges</target>
+        <note>Line: 81</note>
+      </trans-unit>
+      <trans-unit id="c9722f74f95451816de0f8ca3259ae44">
+        <source>Free shipping starts at</source>
+        <target>Free shipping starts at</target>
+        <note>Line: 103</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="src/PrestaShopBundle/Resources/views/Admin/Improve/Shipping/Carriers/Blocks/showcase_card.html.twig" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="301cf62d4bf632f3eb6395ec2cb25f78">
+        <source>Manage your carriers</source>
+        <target>Manage your carriers</target>
+        <note>Line: 34</note>
+      </trans-unit>
+      <trans-unit id="47727de83838bb7df93877b04b5efdf7">
+        <source>Create carriers to let your customers choose their best shipping option in terms of delivery dates or fees. Start with editing/deleting the default "My carrier", and add as many options as you need.</source>
+        <target>Create carriers to let your customers choose their best shipping option in terms of delivery dates or fees. Start with editing/deleting the default "My carrier", and add as many options as you need.</target>
+        <note>Line: 35</note>
+      </trans-unit>
+    </body>
+  </file>
   <file original="src/PrestaShopBundle/Resources/views/Admin/Improve/Shipping/Preferences/Blocks/shipping_preferences_carrier_options.html.twig" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
       <trans-unit id="8430a7b1b81635e3df949c2845303303">
         <source>Carrier options</source>
         <target>Carrier options</target>
-        <note>Line: 32</note>
-      </trans-unit>
-      <trans-unit id="bff13ed1cd5b83b03f024f1eb6524337">
-        <source>Default carrier</source>
-        <target>Default carrier</target>
-        <note>Line: 37</note>
+        <note>Line: 34</note>
       </trans-unit>
     </body>
   </file>
   <file original="src/PrestaShopBundle/Resources/views/Admin/Improve/Shipping/Preferences/Blocks/shipping_preferences_handling.html.twig" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
-      <trans-unit id="1d8ca7f442e6d4ad3da5cb61b84284fc">
-        <source>Handling charges</source>
-        <target>Handling charges</target>
-        <note>Line: 52</note>
-      </trans-unit>
-      <trans-unit id="c9722f74f95451816de0f8ca3259ae44">
-        <source>Free shipping starts at</source>
-        <target>Free shipping starts at</target>
-        <note>Line: 68</note>
-      </trans-unit>
       <trans-unit id="2605fbb693837be42d0cd0e701cb5aa3">
         <source>Handling</source>
         <target>Handling</target>
-        <note>Line: 32</note>
+        <note>Line: 34</note>
       </trans-unit>
     </body>
   </file>

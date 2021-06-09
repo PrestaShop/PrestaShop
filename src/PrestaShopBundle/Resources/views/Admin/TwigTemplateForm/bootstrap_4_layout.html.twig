@@ -183,11 +183,11 @@
 
 {% block choice_tree_item_widget -%}
   <li{% if defaultHidden is defined and defaultHidden is same as(true) %} class="more"{% endif %}>
-        {% set checked = (form.vars.submitted_values is defined and submitted_values[child.id_category] is defined) ? 'checked="checked"' : '' %}
+        {% set checked = (form.vars.submitted_values is defined and submitted_values[child.id_category] is defined) %}
         {% if multiple -%}
             <div class="checkbox">
                 <label>
-                    <input type="checkbox" name="{{ form.vars.full_name }}[tree][]" value="{{ child.id_category }}" class="category" {{ checked }}>
+                    <input type="checkbox" name="{{ form.vars.full_name }}[tree][]" value="{{ child.id_category }}"{% if checked %} checked="checked"{% endif %}>
                     {% if child.active is defined and child.active == 0 %}
                         <i>{{ child.name }}</i>
                     {%- else -%}
@@ -200,8 +200,8 @@
             </div>
         {%- else -%}
             <div class="radio">
-                <label>
-                    <input type="radio" name="form[{{ form.vars.id }}][tree]" value="{{ child.id_category }}" {{ checked }} class="category"{% if required %} required{% endif %}>
+              <label>
+                <input type="radio" name="form[{{ form.vars.id }}][tree]" value="{{ child.id_category }}"{% if checked %} checked="checked"{% endif %} class="category"{% if required %} required{% endif %}>
                     {{ child.name }}
                     {% if defaultCategory is defined %}
                         <input type="radio" value="{{ child.id_category }}" name="ignore" class="default-category" />
@@ -335,10 +335,10 @@
 
 {% block date_picker_widget %}
   {% spaceless %}
-    {%  set attr = attr|merge({'class': ((attr.class|default('') ~ ' datepicker')|trim)}) %}
+    {%  set attr = attr|merge({'class': ((attr.class|default('') ~ ' datepicker form-control')|trim)}) %}
     {%- set attr = attr|merge({'aria-label': '%inputId% input'|trans({'%inputId%': form.vars.id}, 'Admin.Global')}) -%}
     <div class="input-group datepicker">
-      <input type="text" class="form-control" data-format="{{ date_format }}" {{ block('widget_attributes') }} {% if value is not empty %}value="{{ value }}" {% endif %}/>
+      <input type="text" data-format="{{ date_format }}" {{ block('widget_attributes') }} {% if value is not empty %}value="{{ value }}" {% endif %}/>
       <div class="input-group-append">
         <div class="input-group-text">
           <i class="material-icons">date_range</i>
@@ -357,9 +357,9 @@
 
 {% block color_picker_widget %}
   {% spaceless %}
-    {%  set attr = attr|merge({'class': ((attr.class|default('') ~ ' colorpicker')|trim)}) %}
+    {%  set attr = attr|merge({'class': ((attr.class|default('') ~ ' form-control colorpicker')|trim)}) %}
     <div class="input-group colorpicker">
-      <input type="text" class="form-control" {{ block('widget_attributes') }} {% if value is not empty %}value="{{ value }}" {% endif %}/>
+      <input type="text" {{ block('widget_attributes') }} {% if value is not empty %}value="{{ value }}" {% endif %}/>
     </div>
   {% endspaceless %}
 {% endblock color_picker_widget %}
@@ -396,7 +396,15 @@
     <span class="ps-switch">
         {% for choice in choices %}
             {% set inputId = id ~'_' ~ choice.value %}
-            <input id="{{inputId}}" {{ block('attributes') }} name="{{ full_name }}" value="{{ choice.value }}" {%- if choice is selectedchoice(value) -%}checked="" {%- endif -%} {%- if disabled -%}disabled="" {%- endif -%} type="radio" aria-label="{{ choice.label|trans({}, choice_translation_domain) }}">
+            <input id="{{inputId}}"
+                {{ block('attributes') }}
+                name="{{ full_name }}"
+                value="{{ choice.value }}"
+                {% if choice is selectedchoice(value) %}checked=""{% endif %}
+                {% if disabled %}disabled=""{% endif %}
+                type="radio"
+                aria-label="{{ choice.label|trans({}, choice_translation_domain) }}"
+                >
             <label for="{{inputId}}">{{ choice.label|trans({}, choice_translation_domain) }}</label>
         {% endfor %}
         <span class="slide-button"></span>

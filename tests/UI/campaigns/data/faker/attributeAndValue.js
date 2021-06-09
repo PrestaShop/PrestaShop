@@ -17,7 +17,7 @@ class AttributeData {
    */
   constructor(attributeToCreate = {}) {
     /** @member {string} Name of the attribute */
-    this.name = attributeToCreate.name || faker.lorem.word();
+    this.name = attributeToCreate.name || `${faker.lorem.word()}${faker.commerce.productMaterial()}`;
 
     /** @member {string} Public name of the attribute */
     this.publicName = attributeToCreate.publicName || this.name;

@@ -255,7 +255,7 @@ export default class OrderProductRenderer {
   toggleProductAddNewInvoiceInfo() {
     $(OrderViewPageMap.productAddNewInvoiceInfo).toggleClass(
       'd-none',
-      parseInt($(OrderViewPageMap.productAddInvoiceSelect).val(), 10) === 0,
+      parseInt($(OrderViewPageMap.productAddInvoiceSelect).val(), 10) !== 0,
     );
   }
 

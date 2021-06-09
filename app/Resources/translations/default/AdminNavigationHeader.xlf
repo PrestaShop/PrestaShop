@@ -87,11 +87,6 @@
         <target>Sign out</target>
         <note>Line: 377</note>
       </trans-unit>
-      <trans-unit id="5dc5aba5187b03594ed0512efb6a8d4f">
-        <source>New customers</source>
-        <target>New customers</target>
-        <note>Line: 297</note>
-      </trans-unit>
       <trans-unit id="60434fac312a307d4f9b9eb03a6c1694">
         <source>Welcome back %name%</source>
         <target>Welcome back %name%</target>
@@ -143,6 +138,21 @@
         <target><![CDATA[https://www.prestashop.com/en/resources/documentations?utm_source=back-office&utm_medium=profile&utm_campaign=resources-en&utm_content=download17
 ]]></target>
         <note>Line: 367</note>
+      </trans-unit>
+      <trans-unit id="e6d0e1c8fc6a4fcf47869df87e04cd88">
+        <source>Customers</source>
+        <target>Customers</target>
+        <note>Line: 297</note>
+      </trans-unit>
+      <trans-unit id="7442e29d7d53e549b78d93c46b8cdcfc">
+        <source>Orders</source>
+        <target>Orders</target>
+        <note>Line: 291</note>
+      </trans-unit>
+      <trans-unit id="db2fb69d784db346e242339e1b41616c">
+        <source>PrestaShop Logo</source>
+        <target>PrestaShop Logo</target>
+        <note>Line: 118</note>
       </trans-unit>
     </body>
   </file>
@@ -235,11 +245,6 @@
         <target>Product name, reference, etc.</target>
         <note>Line: 44</note>
       </trans-unit>
-      <trans-unit id="e6d0e1c8fc6a4fcf47869df87e04cd88">
-        <source>Customers</source>
-        <target>Customers</target>
-        <note>Line: 46</note>
-      </trans-unit>
       <trans-unit id="49ee3087348e8d44e1feda1917443987">
         <source>Name</source>
         <target>Name</target>
@@ -269,6 +274,16 @@
         <source>SEARCH</source>
         <target>SEARCH</target>
         <note>Line: 52</note>
+      </trans-unit>
+      <trans-unit id="f5945546981ef6e50e1fade1b386da04">
+        <source>Search (e.g.: product reference, customer name…)</source>
+        <target>Search (e.g.: product reference, customer name…)</target>
+        <note>Line: 36</note>
+      </trans-unit>
+      <trans-unit id="109c1f5cbe426dd0c8444f47031ff91d">
+        <source>Searchbar</source>
+        <target>Searchbar</target>
+        <note>Line: 36</note>
       </trans-unit>
     </body>
   </file>
@@ -313,11 +328,6 @@
         <target>New voucher</target>
         <note>Line: 30</note>
       </trans-unit>
-      <trans-unit id="7442e29d7d53e549b78d93c46b8cdcfc">
-        <source>Orders</source>
-        <target>Orders</target>
-        <note>Line: 31</note>
-      </trans-unit>
       <trans-unit id="f388bc3eaa4b9f72756a75693a12559d">
         <source>Installed modules</source>
         <target>Installed modules</target>
@@ -356,6 +366,15 @@
         <source>New window</source>
         <target>New window</target>
         <note>Line: 69</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="modules/ps_faviconnotificationbo/controllers/admin/AdminConfigureFaviconBoController.php" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="5dc5aba5187b03594ed0512efb6a8d4f">
+        <source>New customers</source>
+        <target>New customers</target>
+        <note>Line: 43</note>
       </trans-unit>
     </body>
   </file>

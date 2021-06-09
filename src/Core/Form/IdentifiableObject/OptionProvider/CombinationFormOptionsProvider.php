@@ -28,7 +28,7 @@ declare(strict_types=1);
 
 namespace PrestaShop\PrestaShop\Core\Form\IdentifiableObject\OptionProvider;
 
-class CombinationFormOptionsProvider implements FormOptionProviderInterface
+class CombinationFormOptionsProvider implements FormOptionsProviderInterface
 {
     /**
      * {@inheritDoc}

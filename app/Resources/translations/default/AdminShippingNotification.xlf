@@ -110,4 +110,13 @@
       </trans-unit>
     </body>
   </file>
+  <file original="src/PrestaShopBundle/Controller/Admin/Improve/Shipping/CarriersController.php" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="0e8c87584e926658c275b850477aa3ff">
+        <source>An error occurred while updating the free shipping status.</source>
+        <target>An error occurred while updating the free shipping status.</target>
+        <note>Line: 367</note>
+      </trans-unit>
+    </body>
+  </file>
 </xliff>

@@ -57,7 +57,7 @@ trans('Dashboard', 'Admin.Navigation.Menu');
 trans('Database', 'Admin.Navigation.Menu');
 trans('DB Backup', 'Admin.Navigation.Menu');
 trans('Delivery Slips', 'Admin.Navigation.Menu');
-trans('E-mail', 'Admin.Navigation.Menu');
+trans('Email', 'Admin.Navigation.Menu');
 trans('Employees', 'Admin.Navigation.Menu');
 trans('Team', 'Admin.Navigation.Menu');
 trans('Features', 'Admin.Navigation.Menu');

@@ -27,7 +27,7 @@
 namespace PrestaShop\PrestaShop\Core\Form\IdentifiableObject\Builder;
 
 use PrestaShop\PrestaShop\Core\Form\IdentifiableObject\DataProvider\FormDataProviderInterface;
-use PrestaShop\PrestaShop\Core\Form\IdentifiableObject\OptionProvider\FormOptionProviderInterface;
+use PrestaShop\PrestaShop\Core\Form\IdentifiableObject\OptionProvider\FormOptionsProviderInterface;
 use PrestaShop\PrestaShop\Core\Hook\HookDispatcherInterface;
 use Symfony\Component\DependencyInjection\Container;
 use Symfony\Component\Form\FormFactoryInterface;
@@ -59,7 +59,7 @@ final class FormBuilder implements FormBuilderInterface
     private $formType;
 
     /**
-     * @var FormOptionProviderInterface|null
+     * @var FormOptionsProviderInterface|null
      */
     private $optionsProvider;
 
@@ -68,14 +68,14 @@ final class FormBuilder implements FormBuilderInterface
      * @param HookDispatcherInterface $hookDispatcher
      * @param FormDataProviderInterface $dataProvider
      * @param string $formType
-     * @param FormOptionProviderInterface|null $optionsProvider
+     * @param FormOptionsProviderInterface|null $optionsProvider
      */
     public function __construct(
         FormFactoryInterface $formFactory,
         HookDispatcherInterface $hookDispatcher,
         FormDataProviderInterface $dataProvider,
         string $formType,
-        ?FormOptionProviderInterface $optionsProvider = null
+        ?FormOptionsProviderInterface $optionsProvider = null
     ) {
         $this->formFactory = $formFactory;
         $this->hookDispatcher = $hookDispatcher;

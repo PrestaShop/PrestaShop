@@ -38,6 +38,7 @@ module.exports = (env, argv) => {
     ],
     output: {
       path: path.resolve(__dirname, 'public'),
+      publicPath: '',
       filename: 'bundle.js',
     },
     module: {
@@ -105,7 +106,6 @@ module.exports = (env, argv) => {
           },
         },
       }),
-      new OptimizeCSSAssetsPlugin(),
     ];
   }
 

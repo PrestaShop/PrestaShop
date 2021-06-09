@@ -32,8 +32,7 @@ import LinkRowActionExtension from '@components/grid/extension/link-row-action-e
 import SubmitGridExtension from '@components/grid/extension/submit-grid-action-extension';
 import SubmitBulkExtension from '@components/grid/extension/submit-bulk-action-extension';
 import BulkActionCheckboxExtension from '@components/grid/extension/bulk-action-checkbox-extension';
-import FiltersSubmitButtonEnablerExtension
-  from '@components/grid/extension/filters-submit-button-enabler-extension';
+import FiltersSubmitButtonEnablerExtension from '@components/grid/extension/filters-submit-button-enabler-extension';
 import ChoiceExtension from '@components/grid/extension/choice-extension';
 import ModalFormSubmitExtension from '@components/grid/extension/modal-form-submit-extension';
 import PreviewExtension from '@components/grid/extension/preview-extension';
@@ -55,6 +54,6 @@ $(() => {
   orderGrid.addExtension(new FiltersSubmitButtonEnablerExtension());
   orderGrid.addExtension(new ModalFormSubmitExtension());
   orderGrid.addExtension(new ChoiceExtension());
-  orderGrid.addExtension(new PreviewExtension(previewProductsToggler));
+  orderGrid.addExtension(new PreviewExtension(previewProductsToggler, orderGrid));
   orderGrid.addExtension(new BulkOpenTabsExtension());
 });
