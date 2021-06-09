@@ -58,6 +58,11 @@ class CartForOrderCreation
     private $langId;
 
     /**
+     * @var int|null
+     */
+    private $customerId = null;
+
+    /**
      * @var CartRule[]
      */
     private $cartRules;
@@ -86,6 +91,7 @@ class CartForOrderCreation
      * @param CartAddress[] $addresses
      * @param CartSummary $summary
      * @param CartShipping $shipping
+     * @param int|null $customerId
      */
     public function __construct(
         int $cartId,
@@ -95,7 +101,8 @@ class CartForOrderCreation
         array $cartRules,
         array $addresses,
         CartSummary $summary,
-        CartShipping $shipping = null
+        CartShipping $shipping = null,
+        ?int $customerId = null
     ) {
         $this->cartId = $cartId;
         $this->products = $products;
@@ -105,6 +112,7 @@ class CartForOrderCreation
         $this->addresses = $addresses;
         $this->shipping = $shipping;
         $this->summary = $summary;
+        $this->customerId = $customerId;
     }
 
     /**
@@ -129,6 +137,14 @@ class CartForOrderCreation
     public function getCurrencyId(): int
     {
         return $this->currencyId;
+    }
+
+    /**
+     * @return int|null
+     */
+    public function getCustomerId(): ?int
+    {
+        return $this->customerId;
     }
 
     /**

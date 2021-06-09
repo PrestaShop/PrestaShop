@@ -53,6 +53,8 @@ export default class CreateOrderPage {
     this.$container = $(createOrderMap.orderCreationContainer);
 
     this.cartProvider = new CartProvider();
+    this.cartProvider.showLoader = true;
+
     this.customerManager = new CustomerManager();
     this.shippingRenderer = new ShippingRenderer();
     this.addressesRenderer = new AddressesRenderer();
@@ -285,6 +287,9 @@ export default class CreateOrderPage {
       this.renderCartInfo(cartInfo);
       if (cartInfo.addresses.length !== 0 && !ValidateAddresses(cartInfo.addresses)) {
         this.changeCartAddresses();
+      }
+      if (cartInfo.customerId) {
+        $(createOrderMap.customerSearchBlock).hide();
       }
       this.customerManager.loadCustomerCarts(this.cartId);
       this.customerManager.loadCustomerOrders();
