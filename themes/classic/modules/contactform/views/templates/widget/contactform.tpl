@@ -102,7 +102,7 @@
           <label class="col-md-3 form-control-label" for="message">{l s='Message' d='Shop.Forms.Labels'}</label>
           <div class="col-md-9">
             <textarea
-              id="message"
+              id="contactform-message"
               class="form-control"
               name="message"
               placeholder="{l s='How can we help?' d='Shop.Forms.Help'}"
