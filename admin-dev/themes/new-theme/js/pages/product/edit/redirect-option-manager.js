@@ -24,6 +24,8 @@
  */
 
 import EntitySearchInput from '@components/entity-search-input';
+import EntitySearchInputMap from '@components/./entity-search-input-map';
+import ProductMap from '@pages/product/product-map';
 import ProductEventMap from '@pages/product/product-event-map';
 
 const {$} = window;
@@ -40,17 +42,15 @@ const {$} = window;
 export default class RedirectOptionManager {
   /**
    * @param {EventEmitter} eventEmitter
-   * @param {jQuery} $redirectTypeInput
-   * @param {jQuery} $redirectTargetInput
    */
-  constructor(eventEmitter, $redirectTypeInput, $redirectTargetInput) {
+  constructor(eventEmitter) {
     this.eventEmitter = eventEmitter;
-    this.$redirectTypeInput = $redirectTypeInput;
-    this.$redirectTargetInput = $redirectTargetInput;
-    this.$searchInput = $('.entity-search-input', this.$redirectTargetRow);
-    this.$redirectTargetRow = this.$redirectTargetInput.closest('.form-group');
-    this.$redirectTargetLabel = $('label', this.$redirectTargetRow).first();
-    this.$redirectTargetHint = $('small.form-text', this.$redirectTargetRow);
+    this.$redirectTypeInput = $(ProductMap.seo.redirectOption.typeInput);
+    this.$redirectTargetInput = $(ProductMap.seo.redirectOption.targetInput);
+    this.$searchInput = $(EntitySearchInputMap.searchInputSelector, this.$redirectTargetRow);
+    this.$redirectTargetRow = this.$redirectTargetInput.closest(ProductMap.seo.redirectOption.groupSelector);
+    this.$redirectTargetLabel = $(ProductMap.seo.redirectOption.labelSelector, this.$redirectTargetRow).first();
+    this.$redirectTargetHint = $(ProductMap.seo.redirectOption.helpSelector, this.$redirectTargetRow);
     this.buildAutoCompleteSearchInput();
     this.watchRedirectType();
   }
