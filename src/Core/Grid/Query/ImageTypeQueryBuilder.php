@@ -119,7 +119,7 @@ class ImageTypeQueryBuilder extends AbstractDoctrineQueryBuilder
 
             if ('name' === $filterName) {
                 $qb->andWhere('it.name LIKE :' . $filterName);
-                $qb->set($filterName, $filterValue);
+                $qb->set($filterName, '%' . $filterValue . '%');
             }
 
             $qb->andWhere('it.' . $filterName . ' = :' . $filterName);
