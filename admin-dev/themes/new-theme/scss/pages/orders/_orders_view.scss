@@ -574,8 +574,19 @@ input#partial_refund_shipping {
 @media (max-width: 374px) {
   #order-view-page {
     .order-actions {
+      &-print {
+        max-width: 186px;
+
+        button {
+          text-align: left;
+
+          i.material-icons {
+            margin-right: 20px;
+          }
+        }
+      }
+
       &-invoice,
-      &-print,
       &-delivery {
         width: 100%;
         max-width: 286px;
@@ -584,6 +595,12 @@ input#partial_refund_shipping {
           width: 100%;
           max-width: 286px;
           margin: auto;
+        }
+      }
+
+      &-invoice {
+        + .order-actions-print {
+          max-width: 286px;
         }
       }
 
