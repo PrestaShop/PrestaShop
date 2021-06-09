@@ -37,6 +37,8 @@ export default class CartProvider {
   constructor() {
     this.$container = $(createOrderPageMap.orderCreationContainer);
     this.router = new Router();
+    this.showLoader = false;
+    this.loaderSpeed = 200;
   }
 
   /**
@@ -47,9 +49,14 @@ export default class CartProvider {
    * @returns {jqXHR}. Object with cart information in response.
    */
   getCart(cartId) {
+    if (this.showLoader) {
+      this.$container.fadeTo(this.loaderSpeed, 0.2);
+    }
     $.get(this.router.generate('admin_carts_info', {cartId})).then((cartInfo) => {
+     
       EventEmitter.emit(eventMap.cartLoaded, cartInfo);
-    });
+       
+    }).always(() => this.showLoader ? this.$container.fadeTo(this.loaderSpeed, 1) : true);
   }
 
   /**
