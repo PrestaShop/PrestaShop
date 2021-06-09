@@ -2806,8 +2806,9 @@ class AdminTranslationsControllerCore extends AdminController
 
         foreach ($modules_has_mails as $module_name => $module_path) {
             $module_path = rtrim($module_path, '/');
-            $module_mails[$module_name] = $this->getMailFiles($module_path . '/mails/' . $this->lang_selected->iso_code . '/', 'module_mail');
-            $module_mails[$module_name]['subject'] = $core_mails['subject'];
+            $module_locale_mails_path = $module_path . '/mails/' . $this->lang_selected->iso_code . '/';
+            $module_mails[$module_name] = $this->getMailFiles($module_locale_mails_path, 'module_mail');
+            $module_mails[$module_name]['subject'] = $this->getSubjectMailContent($module_locale_mails_path);
             $module_mails[$module_name]['display'] = $this->displayMailContent($module_mails[$module_name], $subject_mail, $this->lang_selected, Tools::strtolower($module_name), $module_name, $module_name);
         }
 
@@ -3329,8 +3330,6 @@ class AdminTranslationsControllerCore extends AdminController
                 $subject_mail_content[$key]['trad'] = htmlentities($subject, ENT_QUOTES, 'UTF-8');
                 $subject_mail_content[$key]['use_sprintf'] = $this->checkIfKeyUseSprintf($key);
             }
-        } else {
-            $this->errors[] = $this->trans('Email subject translation file not found in %path%', ['%path%' => $directory], 'Admin.International.Notification');
         }
 
         return $subject_mail_content;
