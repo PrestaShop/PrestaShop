@@ -57,6 +57,9 @@ export default class AttachmentsManager {
       type: 'iframe',
       width: '90%',
       height: '90%',
+      onUpdate: () => {
+        //@todo: get recently added attachment data and put it in parent element (or local storage?)
+      }
     });
   }
 
