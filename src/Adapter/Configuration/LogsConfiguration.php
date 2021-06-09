@@ -78,10 +78,22 @@ class LogsConfiguration implements DataConfigurationInterface
         if ($this->validateConfiguration($configuration)) {
             $checkEmails = explode(',', $configuration['logs_email_receivers']);
             $errors = [];
+            $invalidEmails = [];
+
             foreach ($checkEmails as $email) {
                 if (!$this->validate->isEmail($email)) {
-                    $errors[] = $this->translator->trans('Invalid email address %email%.', ['%email%' => $email], 'Admin.Notifications.Error');
+                    $invalidEmails[] = $email;
                 }
+            }
+    
+            if (!empty($invalidEmails)) {
+                $nbInvalidEmails = count($invalidEmails);
+                $errors[] = $this->translator->transChoice(
+                    '{1}Invalid email: %invalid_emails%.|Invalid emails: %invalid_emails%.',
+                    $nbInvalidEmails,
+                    ['%invalid_emails%' => implode(',', $invalidEmails)],
+                    'Admin.Notifications.Error'
+                );
             }
             if ($errors) {
                 return $errors;
