@@ -48,9 +48,7 @@ export default class ProductSEOManager {
    */
   init() {
     // Init the product/category search field for redirection target
-    const $redirectTypeInput = $(ProductMap.seo.redirectOption.typeInput);
-    const $redirectTargetInput = $(ProductMap.seo.redirectOption.targetInput);
-    new RedirectOptionManager(this.eventEmitter, $redirectTypeInput, $redirectTargetInput);
+    new RedirectOptionManager(this.eventEmitter);
 
     // Init Serp component to preview Search engine display
     const {translatableInput, translatableField} = window.prestashop.instance;

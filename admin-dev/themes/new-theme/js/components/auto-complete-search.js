@@ -40,12 +40,10 @@ export default class AutoCompleteSearch {
       highlight: true,
       cache: false,
       hint: false,
-      /* eslint-disable-next-line no-unused-vars */
       onSelect(selectedItem, event, searchInput) {
         searchInput.typeahead('val', selectedItem[this.dataSetConfig.value]);
         return true;
       },
-      /* eslint-disable-next-line no-unused-vars */
       onClose(event, searchInput) {
         searchInput.typeahead('val', '');
         return true;

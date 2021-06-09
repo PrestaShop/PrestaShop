@@ -145,6 +145,9 @@ export default {
     redirectOption: {
       typeInput: '#product_seo_redirect_option_type',
       targetInput: '#product_seo_redirect_option_target',
+      groupSelector: '.form-group',
+      labelSelector: 'label',
+      helpSelector: 'small.form-text',
     },
   },
   jsTabs: '.js-tabs',
