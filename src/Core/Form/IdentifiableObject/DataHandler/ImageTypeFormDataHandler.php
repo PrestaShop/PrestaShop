@@ -79,7 +79,7 @@ class ImageTypeFormDataHandler implements FormDataHandlerInterface
     public function update($id, array $data)
     {
         $command = (new EditImageTypeCommand($id))
-            ->setName($data['name'])
+            ->setName((string) $data['name'])
             ->setWidth((int) $data['width'])
             ->setHeight((int) $data['height'])
             ->setProductsEnabled((bool) $data['products'])
