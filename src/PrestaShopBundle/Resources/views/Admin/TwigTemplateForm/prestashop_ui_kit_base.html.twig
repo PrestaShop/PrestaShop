@@ -1085,7 +1085,7 @@
 {%- endblock number_widget -%}
 
 {% block form_help %}
-  {% if help %}
+  {% if help is not null %}
     <small class="form-text">{{ help|raw }}</small>
   {% endif %}
   {% if warning is defined %}
