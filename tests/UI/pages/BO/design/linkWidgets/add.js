@@ -192,6 +192,7 @@ class AddLinkBlock extends BOBasePage {
     await this.addCustomPages(page, linkWidgetData.customPages);
     // Save
     await this.clickAndWaitForNavigation(page, this.saveButton);
+
     return this.getAlertSuccessBlockParagraphContent(page);
   }
 }
