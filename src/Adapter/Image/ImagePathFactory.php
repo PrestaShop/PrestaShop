@@ -41,7 +41,7 @@ class ImagePathFactory
     public function __construct(
         string $pathToBaseDir
     ) {
-        $this->pathToBaseDir = $pathToBaseDir;
+        $this->pathToBaseDir = rtrim($pathToBaseDir, '/');
     }
 
     /**
