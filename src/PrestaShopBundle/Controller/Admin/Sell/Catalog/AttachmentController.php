@@ -101,6 +101,12 @@ class AttachmentController extends FrameworkBundleAdminController
             if ($handlerResult->isSubmitted() && $handlerResult->isValid()) {
                 $this->addFlash('success', $this->trans('Successful creation.', 'Admin.Notifications.Success'));
 
+                if ($request->query->has('submitAndStay')) {
+                    return $this->redirectToRoute('admin_attachments_edit', [
+                        'attachmentId' => $handlerResult->getIdentifiableObjectId(),
+                    ]);
+                }
+
                 return $this->redirectToRoute('admin_attachments_index');
             }
         } catch (Exception $e) {

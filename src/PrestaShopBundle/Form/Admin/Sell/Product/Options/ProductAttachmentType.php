@@ -69,6 +69,7 @@ class ProductAttachmentType extends TranslatorAwareType
                     'href' => $this->urlGenerator->generate('admin_attachments_create', [
                         'liteDisplaying' => true,
                         'submitFormAjax' => true,
+                        'submitAndStay' => true,
                     ]),
                 ],
             ])
