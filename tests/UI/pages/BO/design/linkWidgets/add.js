@@ -1,7 +1,16 @@
 require('module-alias/register');
 const BOBasePage = require('@pages/BO/BObasePage');
 
-class AddLinkWidget extends BOBasePage {
+/**
+ * New link block page, contains functions that can be used on the page
+ * @class
+ * @extends BOBasePage
+ */
+class AddLinkBlock extends BOBasePage {
+  /**
+   * @constructs
+   * Setting up texts and selectors to use on new link block page
+   */
   constructor() {
     super();
 
@@ -24,8 +33,8 @@ class AddLinkWidget extends BOBasePage {
   /* Methods */
   /**
    * Change input name language
-   * @param page
-   * @param lang
+   * @param page {Page} Browser tab
+   * @param lang {string} Value of language to select
    * @return {Promise<void>}
    */
   async changeLanguage(page, lang) {
@@ -41,8 +50,8 @@ class AddLinkWidget extends BOBasePage {
 
   /**
    * Select content pages
-   * @param page
-   * @param contentPages
+   * @param page {Page} Browser tab
+   * @param contentPages {array} List of content pages
    * @return {Promise<void>}
    */
   async selectContentPages(page, contentPages) {
@@ -67,7 +76,7 @@ class AddLinkWidget extends BOBasePage {
           selector = this.cmsPagesCheckbox(4);
           break;
         default:
-          // Do nothing
+        // Do nothing
       }
       await page.$eval(selector, el => el.click());
     }
@@ -76,8 +85,8 @@ class AddLinkWidget extends BOBasePage {
 
   /**
    * Select product pages
-   * @param page
-   * @param productPages
+   * @param page {Page} Browser tab
+   * @param productPages {array} List of product pages
    * @return {Promise<void>}
    */
   async selectProductPages(page, productPages) {
@@ -105,8 +114,8 @@ class AddLinkWidget extends BOBasePage {
 
   /**
    * Select static pages
-   * @param page
-   * @param staticPages
+   * @param page {Page} Browser tab
+   * @param staticPages {array} List of statistic pages
    * @return {Promise<void>}
    */
   async selectStaticPages(page, staticPages) {
@@ -140,8 +149,8 @@ class AddLinkWidget extends BOBasePage {
 
   /**
    * Add custom pages
-   * @param page
-   * @param customPages
+   * @param page {Page} Browser tab
+   * @param customPages {array} List of custom pages
    * @return {Promise<void>}
    */
   async addCustomPages(page, customPages) {
@@ -161,8 +170,8 @@ class AddLinkWidget extends BOBasePage {
 
   /**
    * Add linkWidget
-   * @param page
-   * @param linkWidgetData
+   * @param page {Page} Browser tab
+   * @param linkWidgetData {linkWidgetData} Data of link widget to set on link widget form
    * @return {Promise<string>}
    */
   async addLinkWidget(page, linkWidgetData) {
@@ -187,4 +196,4 @@ class AddLinkWidget extends BOBasePage {
   }
 }
 
-module.exports = new AddLinkWidget();
+module.exports = new AddLinkBlock();
