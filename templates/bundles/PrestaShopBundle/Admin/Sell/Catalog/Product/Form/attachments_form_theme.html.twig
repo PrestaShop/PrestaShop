@@ -56,8 +56,7 @@
         <p class="subtitle">{{ 'Select the files (instructions, documentation, recipes, etc.) your customers can directly download on this product page.'|trans({}, 'Admin.Catalog.Feature') }} <br/> {{ 'Need to browse all files? Go to [1]Catalog > Files[/1]'|trans({'[1]':'<a href="'~getAdminLink("AdminAttachments")~'">','[/1]':'</a>'}, 'Admin.Catalog.Feature')|raw }} </p>
 
         <div id="attachments-empty-state" class="alert alert-info{% if form.vars.data is not empty %} d-none{% endif %}">
-          {# todo: wording? #}
-          <p>{{ 'No files attached to this product'|trans({}, 'Admin.Catalog.Feature') }}</p>
+          <p>{{ 'No files attached'|trans({}, 'Admin.Catalog.Feature') }}</p>
         </div>
 
         {%- set attr = attr|merge({'data-prototype': form_row(prototype), 'data-prototype-name': prototype.vars.name }) -%}
