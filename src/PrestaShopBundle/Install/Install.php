@@ -28,7 +28,6 @@ namespace PrestaShopBundle\Install;
 
 use AppKernel;
 use Language as LanguageLegacy;
-use PrestaShopException;
 use PhpEncryption;
 use PrestaShop\PrestaShop\Adapter\Entity\Cache;
 use PrestaShop\PrestaShop\Adapter\Entity\Cart;
@@ -58,6 +57,7 @@ use PrestaShop\PrestaShop\Core\Addon\Module\ModuleManagerBuilder;
 use PrestaShop\PrestaShop\Core\Addon\Theme\ThemeManagerBuilder;
 use PrestaShopBundle\Cache\LocalizationWarmer;
 use PrestaShopBundle\Service\Database\Upgrade as UpgradeDatabase;
+use PrestaShopException;
 use PrestashopInstallerException;
 use Symfony\Component\Yaml\Yaml;
 
@@ -962,7 +962,7 @@ class Install extends AbstractInstall
                         $errorMessage,
                         ['%module%' => $module_name],
                         'Install'
-                    )
+                    ),
                 ];
 
                 if (null !== $moduleException) {
