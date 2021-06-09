@@ -78,6 +78,12 @@ class ModuleManagerTest extends TestCase
         $this->assertTrue($this->moduleManager->install(self::INSTALLED_MODULE));
     }
 
+    public function testPostInstallSuccessful()
+    {
+        $this->assertFalse($this->moduleManager->postInstall(self::UNINSTALLED_MODULE));
+        $this->assertTrue($this->moduleManager->postInstall(self::INSTALLED_MODULE));
+    }
+
     public function testUninstallSuccessful()
     {
         $this->assertTrue($this->moduleManager->uninstall(self::INSTALLED_MODULE));
@@ -251,6 +257,9 @@ class ModuleManagerTest extends TestCase
             ->getMock();
         $moduleS
             ->method('onInstall')
+            ->willReturn(true);
+        $moduleS
+            ->method('onPostInstall')
             ->willReturn(true);
         $moduleS
             ->method('onUpgrade')
