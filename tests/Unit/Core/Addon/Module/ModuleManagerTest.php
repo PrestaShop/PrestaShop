@@ -222,6 +222,10 @@ class ModuleManagerTest extends TestCase
         $this->moduleProviderS
             ->method('isEnabled')
             ->will($this->returnValueMap($isEnabledValues));
+
+        $this->moduleProviderS
+            ->method('isOnDisk')
+            ->willReturn(true);
     }
 
     private function mockModuleUpdater()
