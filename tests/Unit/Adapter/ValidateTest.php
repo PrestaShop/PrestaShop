@@ -55,7 +55,7 @@ class ValidateTest extends TestCase
      */
     public function testIsOrderWay(int $expected, $input): void
     {
-        self::assertEquals($expected, Validate::isOrderWay($input));
+        self::assertEquals($expected, $this->validate::isOrderWay($input));
     }
 
     public function getIsOrderWay(): iterable
@@ -67,6 +67,35 @@ class ValidateTest extends TestCase
         yield [1, 'DESC'];
         yield [1, 'asc'];
         yield [1, 'desc'];
+    }
+
+    /**
+     * @param bool $expected
+     * @param mixed $value
+     *
+     * @dataProvider isUnsignedIntProvider
+     */
+    public function testIsUnsignedInt(bool $expected, $value): void
+    {
+        self::assertEquals($expected, $this->validate->isUnsignedInt($value));
+    }
+
+    public function isUnsignedIntProvider(): array
+    {
+        return [
+            [true, 1],
+            [true, 666],
+            [true, 0],
+            [true, '234'],
+            [true, '0'],
+            [false, -1],
+            [false, '-1'],
+            [false, false],
+            [false, true],
+            [false, null],
+            [false, 'invalid'],
+            [false, '666invalid'],
+        ];
     }
 
     /**
