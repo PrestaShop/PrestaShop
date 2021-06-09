@@ -27,7 +27,7 @@ class BOBasePage extends CommonPage {
     this.shopVersionBloc = '#shop_version';
     this.headerShopNameLink = '#header_shopname';
     this.quickAccessDropdownToggle = '#quick_select';
-    this.quickAccessLink = idLink => `.dropdown-item:nth-child(${idLink})`;
+    this.quickAccessLink = idLink => `.quick-row-link:nth-child(${idLink})`;
     this.quickAddCurrentLink = '#quick-add-link';
     this.quickAccessRemoveLink = '#quick-remove-link';
     this.manageYourQuickAccessLink = '#quick-manage-link';

@@ -129,7 +129,7 @@
           <ul class="dropdown-menu">
             {if !empty($quick_access)}
               {foreach $quick_access as $quick}
-                <li class="dropdown-item" {if $link->matchQuickLink({$quick.link})}{assign "matchQuickLink" $quick.id_quick_access}class="active"{/if}>
+                <li class="quick-row-link" {if $link->matchQuickLink({$quick.link})}{assign "matchQuickLink" $quick.id_quick_access}class="active"{/if}>
                   <a href="{$quick.link|escape:'html':'UTF-8'}" {if $quick.new_window}target="_blank"{/if}>
                     {$quick.name}
                   </a>
