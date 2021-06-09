@@ -99,7 +99,7 @@
         {/if}
 
         <div class="form-group row">
-          <label class="col-md-3 form-control-label" for="message">{l s='Message' d='Shop.Forms.Labels'}</label>
+          <label class="col-md-3 form-control-label" for="contactform-message">{l s='Message' d='Shop.Forms.Labels'}</label>
           <div class="col-md-9">
             <textarea
               id="contactform-message"
