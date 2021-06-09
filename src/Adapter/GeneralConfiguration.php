@@ -94,7 +94,7 @@ class GeneralConfiguration implements DataConfigurationInterface
         if ($this->validateConfiguration($configuration)) {
             if (!$this->validateSameSite($configuration['cookie_samesite'])) {
                 $errors[] = [
-                    'key' => 'The SameSite=None is only available in Secure mode.',
+                    'key' => 'The SameSite=None is only available in secure mode.',
                     'domain' => 'Admin.Advparameters.Notification',
                     'parameters' => [],
                 ];

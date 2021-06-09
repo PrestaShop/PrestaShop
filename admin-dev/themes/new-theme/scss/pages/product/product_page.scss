@@ -735,6 +735,14 @@ $product-page-padding-bottom: 80px !default;
     overflow: auto;
     white-space: nowrap;
 
+    > .main-category {
+      display: block;
+      margin: 0.2rem 0 0;
+      font-size: 0.625rem;
+      font-weight: 600;
+      text-align: right;
+    }
+
     ul.category-tree {
       display: inline-block;
       min-width: 100%;
@@ -745,7 +753,8 @@ $product-page-padding-bottom: 80px !default;
         font-weight: 600;
       }
 
-      label {
+      label,
+      .category-tree-inputs {
         position: relative;
         width: 100%;
         max-width: 100%;
@@ -756,6 +765,39 @@ $product-page-padding-bottom: 80px !default;
           position: absolute;
           top: 5px;
           right: 3px;
+        }
+
+        .form-check-radio {
+          margin-bottom: 5px;
+        }
+      }
+
+      .category-tree-inputs {
+        display: flex;
+        flex-wrap: nowrap;
+        justify-content: space-between;
+        width: 100%;
+        padding: 0 0 0 1.25rem;
+
+        .form-radio {
+          label {
+            padding: 0;
+          }
+        }
+
+        .md-checkbox {
+          &.disabled {
+            [type="checkbox"] {
+              + .md-checkbox-control {
+                cursor: not-allowed;
+                opacity: 0.5;
+
+                &::before {
+                  cursor: not-allowed;
+                }
+              }
+            }
+          }
         }
       }
 

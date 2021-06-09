@@ -31,7 +31,6 @@ namespace PrestaShop\PrestaShop\Adapter\Product\Combination\QueryHandler;
 use PDO;
 use PrestaShop\Decimal\DecimalNumber;
 use PrestaShop\PrestaShop\Adapter\Attribute\Repository\AttributeRepository;
-use PrestaShop\PrestaShop\Adapter\Product\AbstractProductHandler;
 use PrestaShop\PrestaShop\Adapter\Product\Image\ProductImagePathFactory;
 use PrestaShop\PrestaShop\Adapter\Product\Image\Repository\ProductImageRepository;
 use PrestaShop\PrestaShop\Adapter\Product\Stock\Repository\StockAvailableRepository;
@@ -47,7 +46,7 @@ use PrestaShop\PrestaShop\Core\Search\Filters\ProductCombinationFilters;
 /**
  * Handles @see GetEditableCombinationsList using legacy object model
  */
-final class GetEditableCombinationsListHandler extends AbstractProductHandler implements GetEditableCombinationsListHandlerInterface
+final class GetEditableCombinationsListHandler implements GetEditableCombinationsListHandlerInterface
 {
     /**
      * @var StockAvailableRepository

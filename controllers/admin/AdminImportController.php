@@ -432,7 +432,7 @@ class AdminImportControllerCore extends AdminController
                     'firstname' => ['label' => $this->trans('First name', [], 'Admin.Global') . '*'],
                     'address1' => ['label' => $this->trans('Address', [], 'Admin.Global') . '*'],
                     'address2' => ['label' => $this->trans('Address (2)', [], 'Admin.Global')],
-                    'postcode' => ['label' => $this->trans('Zip/postal code', [], 'Admin.Global') . '*'],
+                    'postcode' => ['label' => $this->trans('Zip/Postal code', [], 'Admin.Global') . '*'],
                     'city' => ['label' => $this->trans('City', [], 'Admin.Global') . '*'],
                     'country' => ['label' => $this->trans('Country', [], 'Admin.Global') . '*'],
                     'state' => ['label' => $this->trans('State', [], 'Admin.Global')],
@@ -519,7 +519,7 @@ class AdminImportControllerCore extends AdminController
                     'name' => ['label' => $this->trans('Name', [], 'Admin.Global')],
                     'address1' => ['label' => $this->trans('Address', [], 'Admin.Global') . '*'],
                     'address2' => ['label' => $this->trans('Address (2)', [], 'Admin.Advparameters.Feature')],
-                    'postcode' => ['label' => $this->trans('Zip/postal code', [], 'Admin.Global')],
+                    'postcode' => ['label' => $this->trans('Zip/Postal code', [], 'Admin.Global')],
                     'state' => ['label' => $this->trans('State', [], 'Admin.Global')],
                     'city' => ['label' => $this->trans('City', [], 'Admin.Global') . '*'],
                     'country' => ['label' => $this->trans('Country', [], 'Admin.Global') . '*'],
@@ -1050,7 +1050,7 @@ class AdminImportControllerCore extends AdminController
      *
      * @param $in_array boolean
      *
-     * @return string or return array
+     * @return string|array
      */
     public function getAvailableFields($in_array = false)
     {
@@ -1222,10 +1222,6 @@ class AdminImportControllerCore extends AdminController
             $query_parts = [];
             parse_str($parced_url['query'], $query_parts);
             $parced_url['query'] = http_build_query($query_parts);
-        }
-
-        if (!function_exists('http_build_url')) {
-            require_once _PS_TOOL_DIR_ . 'http_build_url/http_build_url.php';
         }
 
         $url = http_build_url('', $parced_url);

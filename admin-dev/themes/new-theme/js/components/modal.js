@@ -40,7 +40,7 @@ const {$} = window;
  * @param {Function} cancelCallback
  *
  */
-export default function ConfirmModal(params, confirmCallback, cancelCallback) {
+export default function ConfirmModal(params, confirmCallback, cancelCallback = () => {}) {
   // Construct the modal
   const {id, closable} = params;
   this.modal = Modal(params);

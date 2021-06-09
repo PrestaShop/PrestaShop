@@ -12,7 +12,7 @@ const attributesPage = require('@pages/BO/catalog/attributes');
 const addAttributePage = require('@pages/BO/catalog/attributes/addAttribute');
 
 // Import data
-const {Attribute} = require('@data/faker/attributeAndValue');
+const {AttributeData} = require('@data/faker/attributeAndValue');
 
 // Import test context
 const testContext = require('@utils/testContext');
@@ -76,7 +76,7 @@ describe('Sort and pagination attributes', async () => {
   const creationTests = new Array(17).fill(0, 0, 17);
   describe('Create new attributes in BO', async () => {
     creationTests.forEach((test, index) => {
-      const createAttributeData = new Attribute({name: `todelete${index}`});
+      const createAttributeData = new AttributeData({name: `todelete${index}`});
       it('should go to add new attribute page', async function () {
         await testContext.addContextItem(this, 'testIdentifier', `goToAddNewAttributePage${index}`, baseContext);
 

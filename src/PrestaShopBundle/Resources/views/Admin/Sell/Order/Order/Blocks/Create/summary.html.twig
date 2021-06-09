@@ -102,7 +102,7 @@
           <div class="form-group row mt-4">
             <div class="col-sm offset-sm-4">
               <button class="btn btn-primary" type="submit" id="create-order-button">
-                {{ 'Create the order'|trans({}, 'Admin.Orderscustomers.Feature') }}
+                {{ 'Create order'|trans({}, 'Admin.Orderscustomers.Feature') }}
               </button>
 
               <div class="btn-group">
@@ -128,7 +128,7 @@
                   {{ renderhook('displayAdminOrderCreateExtraButtons') }}
                 </div>
               </div>
-            
+
               {{ form_row(summaryForm.cart_id, {'attr': {'class': 'js-place-order-cart-id'}}) }}
             </div>
           </div>

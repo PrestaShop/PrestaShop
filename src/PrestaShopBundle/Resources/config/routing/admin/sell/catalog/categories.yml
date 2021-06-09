@@ -154,3 +154,5 @@ admin_categories_get_categories_tree:
     defaults:
         _controller: PrestaShopBundle:Admin\Sell\Catalog\Category:getCategoriesTree
         _legacy_controller: AdminCategories
+    options:
+        expose: true

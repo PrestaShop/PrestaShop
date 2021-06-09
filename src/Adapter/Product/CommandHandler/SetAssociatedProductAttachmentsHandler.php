@@ -28,7 +28,6 @@ declare(strict_types=1);
 
 namespace PrestaShop\PrestaShop\Adapter\Product\CommandHandler;
 
-use PrestaShop\PrestaShop\Adapter\Product\AbstractProductHandler;
 use PrestaShop\PrestaShop\Adapter\Product\Update\ProductAttachmentUpdater;
 use PrestaShop\PrestaShop\Core\Domain\Product\Command\SetAssociatedProductAttachmentsCommand;
 use PrestaShop\PrestaShop\Core\Domain\Product\CommandHandler\SetAssociatedProductAttachmentsHandlerInterface;
@@ -36,7 +35,7 @@ use PrestaShop\PrestaShop\Core\Domain\Product\CommandHandler\SetAssociatedProduc
 /**
  * Handles @see SetAssociatedProductAttachmentsCommand using legacy object model
  */
-final class SetAssociatedProductAttachmentsHandler extends AbstractProductHandler implements SetAssociatedProductAttachmentsHandlerInterface
+final class SetAssociatedProductAttachmentsHandler implements SetAssociatedProductAttachmentsHandlerInterface
 {
     /**
      * @var ProductAttachmentUpdater

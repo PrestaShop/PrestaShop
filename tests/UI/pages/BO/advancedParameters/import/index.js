@@ -12,7 +12,7 @@ class Import extends BOBasePage {
 
     // Selectors
     this.alertSuccessBlockParagraph = `${this.alertSuccessBlock} p.alert-text.js-import-file`;
-    this.downloadSampleFileLink = type => `a[href*='import/sample/download/${type}']`;
+    this.downloadSampleFileLink = type => `#download-sample-${type}-file-link`;
     this.fileInputField = '#file';
     this.nextStepButton = 'button[name=submitImportFile]';
     this.importButton = '#import';

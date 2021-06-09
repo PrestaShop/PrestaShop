@@ -5,7 +5,7 @@
       <trans-unit id="c8baafa963dab58836b08b5acdedc07a">
         <source>You cannot place a new order from your country (%s).</source>
         <target>You cannot place a new order from your country (%s).</target>
-        <note>Line: 909</note>
+        <note>Line: 911</note>
       </trans-unit>
     </body>
   </file>
@@ -23,7 +23,7 @@
       <trans-unit id="d22c170769e81d2229b17003553b6d57">
         <source>You cannot return merchandise with a guest account.</source>
         <target>You cannot return merchandise with a guest account.</target>
-        <note>Line: 131</note>
+        <note>Line: 121</note>
       </trans-unit>
     </body>
   </file>
@@ -46,7 +46,7 @@
       <trans-unit id="44a9edeffb86277f007fa90d96689a6d">
         <source>You must wait for confirmation before returning any merchandise.</source>
         <target>You must wait for confirmation before returning any merchandise.</target>
-        <note>Line: 56</note>
+        <note>Line: 57</note>
       </trans-unit>
     </body>
   </file>
@@ -64,7 +64,7 @@
       <trans-unit id="f9ddd507fdf437437efdcb333a0f4ff0">
         <source>This product is not visible to your customers.</source>
         <target>This product is not visible to your customers.</target>
-        <note>Line: 188</note>
+        <note>Line: 210</note>
       </trans-unit>
     </body>
   </file>

@@ -725,7 +725,7 @@ Comment: PS_RETURN_PREFIX on configuration_lang table</note>
       <trans-unit id="4493e821e06072415518bd7ae4077996">
         <source>Shop group</source>
         <target>Shop group</target>
-        <note>Line: 431</note>
+        <note>Line: 441</note>
       </trans-unit>
       <trans-unit id="09059cedfd08d6e8a12417b285a79ffd">
         <source>Root category</source>
@@ -752,114 +752,48 @@ Comment: PS_RETURN_PREFIX on configuration_lang table</note>
         <target>Multistore tree</target>
         <note>Line: 157</note>
       </trans-unit>
+      <trans-unit id="f6b1039cb72d674bc7b90f98c2a982d2">
+        <source>It will only be applied to the multistore header to highlight your shop context.</source>
+        <target>It will only be applied to the multistore header to highlight your shop context.</target>
+        <note>Line: 397</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="controllers/admin/AdminShopGroupController.php" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="fb374d62bc0877340fc4aa056ae01550">
+        <source>It will only be applied to this group of shops, each store will keep its individual color.</source>
+        <target>It will only be applied to this group of shops, each store will keep its individual color.</target>
+        <note>Line: 195</note>
+      </trans-unit>
     </body>
   </file>
   <file original="controllers/admin/AdminStatusesController.php" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
-      <trans-unit id="57297718fdb439175177cf6b196172d1">
-        <source>Order status</source>
-        <target>Order status</target>
-        <note>Line: 276</note>
-      </trans-unit>
       <trans-unit id="817434295a673aed431435658b65d9a7">
         <source>Icon</source>
         <target>Icon</target>
-        <note>Line: 293</note>
-      </trans-unit>
-      <trans-unit id="c9f59be398981c130408612e51464e14">
-        <source>Send email to customer</source>
-        <target>Send email to customer</target>
-        <note>Line: 95</note>
-      </trans-unit>
-      <trans-unit id="13a44cb3c08c1c40a3c5b62152538ee8">
-        <source>Email template</source>
-        <target>Email template</target>
-        <note>Line: 122</note>
+        <note>Line: 303</note>
       </trans-unit>
       <trans-unit id="8b79d8d9315e50cd01d3ce641cdc61bc">
         <source>Edit return status</source>
         <target>Edit return status</target>
-        <note>Line: 190</note>
-      </trans-unit>
-      <trans-unit id="60fd39d495f2a8d0674c236c004e8f21">
-        <source>Add new order status</source>
-        <target>Add new order status</target>
         <note>Line: 200</note>
-      </trans-unit>
-      <trans-unit id="f08b529034b579d49fa94abec7f93af0">
-        <source>Add new order return status</source>
-        <target>Add new order return status</target>
-        <note>Line: 205</note>
-      </trans-unit>
-      <trans-unit id="34499467057e6ded44fd7861eee1893b">
-        <source>Return statuses</source>
-        <target>Return statuses</target>
-        <note>Line: 241</note>
-      </trans-unit>
-      <trans-unit id="69a31da4cb502aa192d07ae4a8f48613">
-        <source>Status name</source>
-        <target>Status name</target>
-        <note>Line: 484</note>
-      </trans-unit>
-      <trans-unit id="cb5feb1b7314637725a2e73bdc9f7295">
-        <source>Color</source>
-        <target>Color</target>
-        <note>Line: 495</note>
-      </trans-unit>
-      <trans-unit id="192b587e5fc71cd5f25a6089c03bff87">
-        <source>Consider the associated order as validated.</source>
-        <target>Consider the associated order as validated.</target>
-        <note>Line: 308</note>
-      </trans-unit>
-      <trans-unit id="6d6c83be0e74d3b3d041cd61fa607ede">
-        <source>Allow a customer to download and view PDF versions of his/her invoices.</source>
-        <target>Allow a customer to download and view PDF versions of his/her invoices.</target>
-        <note>Line: 319</note>
-      </trans-unit>
-      <trans-unit id="9529bbf156fbe6c23b5fbd8b32900f68">
-        <source>Hide this status in all customer orders.</source>
-        <target>Hide this status in all customer orders.</target>
-        <note>Line: 330</note>
-      </trans-unit>
-      <trans-unit id="a8f92721e361eceb4489636d29f56c21">
-        <source>Send an email to the customer when his/her order status has changed.</source>
-        <target>Send an email to the customer when his/her order status has changed.</target>
-        <note>Line: 341</note>
-      </trans-unit>
-      <trans-unit id="05ffab376e5c4a64caa28a1c4bd9fc0d">
-        <source>Attach invoice PDF to email.</source>
-        <target>Attach invoice PDF to email.</target>
-        <note>Line: 352</note>
-      </trans-unit>
-      <trans-unit id="53343ccca7ba90caa497d4c4b40f3ec7">
-        <source>Attach delivery slip PDF to email.</source>
-        <target>Attach delivery slip PDF to email.</target>
-        <note>Line: 363</note>
-      </trans-unit>
-      <trans-unit id="5fe3d2e4d87dccabf5c9c1d81baf995c">
-        <source>Set the order as shipped.</source>
-        <target>Set the order as shipped.</target>
-        <note>Line: 374</note>
-      </trans-unit>
-      <trans-unit id="67a8390e9643cecbac9d149da4242bf5">
-        <source>Set the order as paid.</source>
-        <target>Set the order as paid.</target>
-        <note>Line: 385</note>
       </trans-unit>
       <trans-unit id="a886c3a69907e954c771aae074f24040">
         <source>Show delivery PDF.</source>
         <target>Show delivery PDF.</target>
-        <note>Line: 396</note>
+        <note>Line: 406</note>
       </trans-unit>
       <trans-unit id="278c491bdd8a53618c149c4ac790da34">
         <source>Template</source>
         <target>Template</target>
-        <note>Line: 404</note>
+        <note>Line: 414</note>
       </trans-unit>
       <trans-unit id="dc4e76994fd27117c21f83d09faa0649">
         <source>Return status</source>
         <target>Return status</target>
-        <note>Line: 478</note>
+        <note>Line: 488</note>
       </trans-unit>
     </body>
   </file>
@@ -1003,6 +937,11 @@ Comment: PS_RETURN_PREFIX on configuration_lang table</note>
         <target>Unknown</target>
         <note>Line: 474</note>
       </trans-unit>
+      <trans-unit id="ec0fc0100c4fc1ce4eea230c3dc10360">
+        <source>Undefined</source>
+        <target>Undefined</target>
+        <note>Line: 529</note>
+      </trans-unit>
     </body>
   </file>
   <file original="modules/statslive/statslive.php" source-language="en-US" target-language="en" datatype="plaintext">
@@ -1011,11 +950,6 @@ Comment: PS_RETURN_PREFIX on configuration_lang table</note>
         <source>There are no visitors online.</source>
         <target>There are no visitors online.</target>
         <note>Line: 216</note>
-      </trans-unit>
-      <trans-unit id="ec0fc0100c4fc1ce4eea230c3dc10360">
-        <source>Undefined</source>
-        <target>Undefined</target>
-        <note>Line: 207</note>
       </trans-unit>
     </body>
   </file>
@@ -1035,6 +969,15 @@ Comment: PS_RETURN_PREFIX on configuration_lang table</note>
         <source>301 Moved Permanently (recommended once you have gone live)</source>
         <target>301 Moved Permanently (recommended once you have gone live)</target>
         <note>Line: 71</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="src/Core/Grid/Definition/Factory/OrderStatesGridDefinitionFactory.php" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="c9f59be398981c130408612e51464e14">
+        <source>Send email to customer</source>
+        <target>Send email to customer</target>
+        <note>Line: 91</note>
       </trans-unit>
     </body>
   </file>
@@ -1070,7 +1013,16 @@ Comment: PS_RETURN_PREFIX on configuration_lang table</note>
       <trans-unit id="e1622ba9f41f5b695bddc69e3ceaa204">
         <source>Add a new page</source>
         <target>Add a new page</target>
-        <note>Line: 99</note>
+        <note>Line: 434</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="src/PrestaShopBundle/Form/Admin/Configure/ShopParameters/Contact/ContactType.php" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="a4cd3191fdeea29906a113c78d4c0e26">
+        <source>Save messages?</source>
+        <target>Save messages?</target>
+        <note>Line: 126</note>
       </trans-unit>
     </body>
   </file>
@@ -1079,7 +1031,56 @@ Comment: PS_RETURN_PREFIX on configuration_lang table</note>
       <trans-unit id="640fd0cc0ffa0316ae087652871f4486">
         <source>minutes</source>
         <target>minutes</target>
-        <note>Line: 47</note>
+        <note>Line: 89</note>
+      </trans-unit>
+      <trans-unit id="9ca2e29ab10b2046b32dea40f4e5c232">
+        <source>Password reset delay</source>
+        <target>Password reset delay</target>
+        <note>Line: 68</note>
+      </trans-unit>
+      <trans-unit id="a7ddcecde44eba59d425762fcdeec665">
+        <source>Re-display cart at login</source>
+        <target>Re-display cart at login</target>
+        <note>Line: 48</note>
+      </trans-unit>
+      <trans-unit id="fcae2ef516600f29ac9aa4b084981328">
+        <source>Send an email after registration</source>
+        <target>Send an email after registration</target>
+        <note>Line: 58</note>
+      </trans-unit>
+      <trans-unit id="c760118c537146713521758269a44bd3">
+        <source>Enable B2B mode</source>
+        <target>Enable B2B mode</target>
+        <note>Line: 93</note>
+      </trans-unit>
+      <trans-unit id="dcc6fd9b580a958b3f42488265cb1300">
+        <source>Ask for birth date</source>
+        <target>Ask for birth date</target>
+        <note>Line: 103</note>
+      </trans-unit>
+      <trans-unit id="a5e968e6a3689ca07bbdbecb6b0710ff">
+        <source>Enable partner offers</source>
+        <target>Enable partner offers</target>
+        <note>Line: 113</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="src/PrestaShopBundle/Form/Admin/Configure/ShopParameters/General/MaintenanceType.php" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="daf835712085aaaf81818e7ebfeb66b8">
+        <source>Maintenance IP</source>
+        <target>Maintenance IP</target>
+        <note>Line: 97</note>
+      </trans-unit>
+      <trans-unit id="9278432c5d2aec1ac4f42c23a941af21">
+        <source>Custom maintenance text</source>
+        <target>Custom maintenance text</target>
+        <note>Line: 119</note>
+      </trans-unit>
+      <trans-unit id="26e5c98bfa62fe9b8091bdafe9a7adc6">
+        <source>Enable store</source>
+        <target>Enable store</target>
+        <note>Line: 80</note>
       </trans-unit>
     </body>
   </file>
@@ -1088,47 +1089,102 @@ Comment: PS_RETURN_PREFIX on configuration_lang table</note>
       <trans-unit id="843fbaec27e324378999e09cc665a7f4">
         <source>Round up away from zero, when it is half way there (recommended)</source>
         <target>Round up away from zero, when it is half way there (recommended)</target>
-        <note>Line: 108</note>
+        <note>Line: 150</note>
       </trans-unit>
       <trans-unit id="9d70eb834e3574ca07a1f28083ecba1e">
         <source>Round down towards zero, when it is half way there</source>
         <target>Round down towards zero, when it is half way there</target>
-        <note>Line: 109</note>
+        <note>Line: 151</note>
       </trans-unit>
       <trans-unit id="5f9d1d092dc5658734b8af7187460b32">
         <source>Round towards the next even value</source>
         <target>Round towards the next even value</target>
-        <note>Line: 110</note>
+        <note>Line: 152</note>
       </trans-unit>
       <trans-unit id="8700a0015f3fc1c5d96ccc5140475dc3">
         <source>Round towards the next odd value</source>
         <target>Round towards the next odd value</target>
-        <note>Line: 111</note>
+        <note>Line: 153</note>
       </trans-unit>
       <trans-unit id="6186ae4fe9ec55025a9777dd973e0af2">
         <source>Round up to the nearest value</source>
         <target>Round up to the nearest value</target>
-        <note>Line: 112</note>
+        <note>Line: 154</note>
       </trans-unit>
       <trans-unit id="35853630b5da054ef55e8e02d8df4954">
         <source>Round down to the nearest value</source>
         <target>Round down to the nearest value</target>
-        <note>Line: 113</note>
+        <note>Line: 155</note>
       </trans-unit>
       <trans-unit id="41032c67b9a3d88ff9a824a1f0845513">
         <source>Round on each item</source>
         <target>Round on each item</target>
-        <note>Line: 119</note>
+        <note>Line: 167</note>
       </trans-unit>
       <trans-unit id="a899eacfb98f1740127be5fe16bee5c7">
         <source>Round on each line</source>
         <target>Round on each line</target>
-        <note>Line: 120</note>
+        <note>Line: 168</note>
       </trans-unit>
       <trans-unit id="6d19eb8a9ca35d858824737173ebd011">
         <source>Round on the total</source>
         <target>Round on the total</target>
-        <note>Line: 121</note>
+        <note>Line: 169</note>
+      </trans-unit>
+      <trans-unit id="73369322b5e1145bb2fc2268ce4d31f0">
+        <source>Enable SSL on all pages</source>
+        <target>Enable SSL on all pages</target>
+        <note>Line: 106</note>
+      </trans-unit>
+      <trans-unit id="cd1b98322104dbd61ca6ae0ab16df348">
+        <source>Increase front office security</source>
+        <target>Increase front office security</target>
+        <note>Line: 117</note>
+      </trans-unit>
+      <trans-unit id="913d66c5648cf0317ed371371fe44534">
+        <source>Allow iframes on HTML fields</source>
+        <target>Allow iframes on HTML fields</target>
+        <note>Line: 127</note>
+      </trans-unit>
+      <trans-unit id="06918a784fb394b84de012810120b75c">
+        <source>Use HTMLPurifier Library</source>
+        <target>Use HTMLPurifier Library</target>
+        <note>Line: 137</note>
+      </trans-unit>
+      <trans-unit id="ac2021d3c67ee796d7ab20a466ebd583">
+        <source>Round mode</source>
+        <target>Round mode</target>
+        <note>Line: 157</note>
+      </trans-unit>
+      <trans-unit id="019e96f05f09a70e37792a04e9e78cdc">
+        <source>Round type</source>
+        <target>Round type</target>
+        <note>Line: 171</note>
+      </trans-unit>
+      <trans-unit id="922256753aa354c111471e85d4809ec5">
+        <source>Display best sellers</source>
+        <target>Display best sellers</target>
+        <note>Line: 195</note>
+      </trans-unit>
+      <trans-unit id="43b266c605d67eaa27801cc5dc0b3995">
+        <source>Enable Multistore</source>
+        <target>Enable Multistore</target>
+        <note>Line: 203</note>
+      </trans-unit>
+      <trans-unit id="8d9da6f9870d593e6921d3b728dc0c6b">
+        <source>Main Shop Activity</source>
+        <target>Main Shop Activity</target>
+        <note>Line: 235</note>
+      </trans-unit>
+      <trans-unit id="9fcc7a5ba2d12f5c77290e0bc6457a93">
+        <source>Display suppliers</source>
+        <target>Display suppliers</target>
+        <note>Line: 179</note>
+      </trans-unit>
+      <trans-unit id="9cc328444bdc1b5f54550d04d57138a9">
+        <source>Display brands</source>
+        <target>Display brands</target>
+        <note>Line: 187</note>
       </trans-unit>
     </body>
   </file>
@@ -1200,12 +1256,61 @@ Comment: PS_RETURN_PREFIX on configuration_lang table</note>
       </trans-unit>
     </body>
   </file>
-  <file original="src/PrestaShopBundle/Form/Admin/Configure/ShopParameters/OrderPreferences/OrderPreferencesFormDataProvider.php" source-language="en-US" target-language="en" datatype="plaintext">
+  <file original="src/PrestaShopBundle/Form/Admin/Configure/ShopParameters/OrderPreferences/OrderPreferencesGeneralFormDataProvider.php" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
       <trans-unit id="c6ca929dc4c8193ad6cd154e9e075ac9">
         <source>Minimum purchase total required in order to validate the order</source>
         <target>Minimum purchase total required in order to validate the order</target>
-        <note>Line: 126</note>
+        <note>Line: 106</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="src/PrestaShopBundle/Form/Admin/Configure/ShopParameters/OrderStates/OrderStateType.php" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="192b587e5fc71cd5f25a6089c03bff87">
+        <source>Consider the associated order as validated.</source>
+        <target>Consider the associated order as validated.</target>
+        <note>Line: 137</note>
+      </trans-unit>
+      <trans-unit id="6d6c83be0e74d3b3d041cd61fa607ede">
+        <source>Allow a customer to download and view PDF versions of his/her invoices.</source>
+        <target>Allow a customer to download and view PDF versions of his/her invoices.</target>
+        <note>Line: 144</note>
+      </trans-unit>
+      <trans-unit id="9529bbf156fbe6c23b5fbd8b32900f68">
+        <source>Hide this status in all customer orders.</source>
+        <target>Hide this status in all customer orders.</target>
+        <note>Line: 151</note>
+      </trans-unit>
+      <trans-unit id="a8f92721e361eceb4489636d29f56c21">
+        <source>Send an email to the customer when his/her order status has changed.</source>
+        <target>Send an email to the customer when his/her order status has changed.</target>
+        <note>Line: 158</note>
+      </trans-unit>
+      <trans-unit id="05ffab376e5c4a64caa28a1c4bd9fc0d">
+        <source>Attach invoice PDF to email.</source>
+        <target>Attach invoice PDF to email.</target>
+        <note>Line: 165</note>
+      </trans-unit>
+      <trans-unit id="53343ccca7ba90caa497d4c4b40f3ec7">
+        <source>Attach delivery slip PDF to email.</source>
+        <target>Attach delivery slip PDF to email.</target>
+        <note>Line: 172</note>
+      </trans-unit>
+      <trans-unit id="5fe3d2e4d87dccabf5c9c1d81baf995c">
+        <source>Set the order as shipped.</source>
+        <target>Set the order as shipped.</target>
+        <note>Line: 179</note>
+      </trans-unit>
+      <trans-unit id="67a8390e9643cecbac9d149da4242bf5">
+        <source>Set the order as paid.</source>
+        <target>Set the order as paid.</target>
+        <note>Line: 186</note>
+      </trans-unit>
+      <trans-unit id="ad89dc1e17a54e49190100a943564189">
+        <source>Set the order as in transit.</source>
+        <target>Set the order as in transit.</target>
+        <note>Line: 193</note>
       </trans-unit>
     </body>
   </file>
@@ -1270,19 +1375,24 @@ Comment: PS_RETURN_PREFIX on configuration_lang table</note>
         <target>Decrement both.</target>
         <note>Line: 75</note>
       </trans-unit>
+      <trans-unit id="7afe5d98107dd5ece88fef732a89d8b0">
+        <source>Display out-of-stock label on product listing pages</source>
+        <target>Display out-of-stock label on product listing pages</target>
+        <note>Line: 80</note>
+      </trans-unit>
     </body>
   </file>
-  <file original="src/PrestaShopBundle/Form/Admin/Configure/ShopParameters/TrafficSeo/Meta/MetaSettingsFormDataProvider.php" source-language="en-US" target-language="en" datatype="plaintext">
+  <file original="src/PrestaShopBundle/Form/Admin/Configure/ShopParameters/TrafficSeo/Meta/MetaSettingsUrlSchemaFormDataProvider.php" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
       <trans-unit id="0d2054b7a56db47a97f65e3da632fe8b">
         <source>The route %routeRule% is not valid</source>
         <target>The route %routeRule% is not valid</target>
-        <note>Line: 174</note>
+        <note>Line: 121</note>
       </trans-unit>
       <trans-unit id="c5fe0d77ab52ead15661b37ade6a594b">
         <source>Keyword "{%keyword%}" required for route "%routeName%" (rule: "%routeRule%")</source>
         <target>Keyword "{%keyword%}" required for route "%routeName%" (rule: "%routeRule%")</target>
-        <note>Line: 187</note>
+        <note>Line: 134</note>
       </trans-unit>
     </body>
   </file>
@@ -1300,37 +1410,94 @@ Comment: PS_RETURN_PREFIX on configuration_lang table</note>
       </trans-unit>
     </body>
   </file>
-  <file original="src/PrestaShopBundle/Resources/views/Admin/Configure/ShopParameters/Blocks/customer_preferences_general.html.twig" source-language="en-US" target-language="en" datatype="plaintext">
+  <file original="src/PrestaShopBundle/Form/Admin/Configure/ShopParameters/TrafficSeo/Meta/SEOOptionsType.php" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
-      <trans-unit id="9ca2e29ab10b2046b32dea40f4e5c232">
-        <source>Password reset delay</source>
-        <target>Password reset delay</target>
-        <note>Line: 52</note>
+      <trans-unit id="18a405e3df98774d6fe16c522825ca02">
+        <source>Display attributes in the product meta title</source>
+        <target>Display attributes in the product meta title</target>
+        <note>Line: 46</note>
       </trans-unit>
-      <trans-unit id="a7ddcecde44eba59d425762fcdeec665">
-        <source>Re-display cart at login</source>
-        <target>Re-display cart at login</target>
-        <note>Line: 38</note>
+    </body>
+  </file>
+  <file original="src/PrestaShopBundle/Form/Admin/Configure/ShopParameters/TrafficSeo/Meta/SetUpUrlType.php" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="a7686ea311b65874a504a343c08a4341">
+        <source>Accented URL</source>
+        <target>Accented URL</target>
+        <note>Line: 117</note>
       </trans-unit>
-      <trans-unit id="fcae2ef516600f29ac9aa4b084981328">
-        <source>Send an email after registration</source>
-        <target>Send an email after registration</target>
-        <note>Line: 45</note>
+      <trans-unit id="fb64c58d84a997e89be8de9897f36ecc">
+        <source>Redirect to the canonical URL</source>
+        <target>Redirect to the canonical URL</target>
+        <note>Line: 129</note>
       </trans-unit>
-      <trans-unit id="c760118c537146713521758269a44bd3">
-        <source>Enable B2B mode</source>
-        <target>Enable B2B mode</target>
-        <note>Line: 59</note>
+      <trans-unit id="38bada4e8300d679ea0c293a8658605a">
+        <source>Disable Apache's MultiViews option</source>
+        <target>Disable Apache's MultiViews option</target>
+        <note>Line: 136</note>
       </trans-unit>
-      <trans-unit id="dcc6fd9b580a958b3f42488265cb1300">
-        <source>Ask for birth date</source>
-        <target>Ask for birth date</target>
-        <note>Line: 66</note>
+      <trans-unit id="1260ff0747d4dbe30fcc4d360891205f">
+        <source>Disable Apache's mod_security module</source>
+        <target>Disable Apache's mod_security module</target>
+        <note>Line: 143</note>
       </trans-unit>
-      <trans-unit id="a5e968e6a3689ca07bbdbecb6b0710ff">
-        <source>Enable partner offers</source>
-        <target>Enable partner offers</target>
-        <note>Line: 73</note>
+    </body>
+  </file>
+  <file original="src/PrestaShopBundle/Form/Admin/Configure/ShopParameters/TrafficSeo/Meta/ShopUrlType.php" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="db309cb65c4220d02c0fd13927d315ae">
+        <source>Shop domain</source>
+        <target>Shop domain</target>
+        <note>Line: 87</note>
+      </trans-unit>
+      <trans-unit id="7efeee26d2914e586169f61213741599">
+        <source>SSL domain</source>
+        <target>SSL domain</target>
+        <note>Line: 93</note>
+      </trans-unit>
+      <trans-unit id="c274743f6bf3e3682c41e9ee269913f4">
+        <source>Base URI</source>
+        <target>Base URI</target>
+        <note>Line: 99</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="src/PrestaShopBundle/Form/Admin/Configure/ShopParameters/TrafficSeo/Meta/UrlSchemaType.php" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="5575f8bf467eba7499f22e78db6f3f56">
+        <source>Route to products</source>
+        <target>Route to products</target>
+        <note>Line: 64</note>
+      </trans-unit>
+      <trans-unit id="1092637069f4ebf1bee2b02fd280888b">
+        <source>Route to category</source>
+        <target>Route to category</target>
+        <note>Line: 71</note>
+      </trans-unit>
+      <trans-unit id="08a551b84112995247355daf3b5d72ba">
+        <source>Route to supplier</source>
+        <target>Route to supplier</target>
+        <note>Line: 78</note>
+      </trans-unit>
+      <trans-unit id="1dc5f89ed6e4425ecef2613fda85e5c0">
+        <source>Route to brand</source>
+        <target>Route to brand</target>
+        <note>Line: 85</note>
+      </trans-unit>
+      <trans-unit id="e175934d3418b2070a829183b2bfe294">
+        <source>Route to page</source>
+        <target>Route to page</target>
+        <note>Line: 92</note>
+      </trans-unit>
+      <trans-unit id="01e4fd64862371a0f532b82e302d438d">
+        <source>Route to page category</source>
+        <target>Route to page category</target>
+        <note>Line: 99</note>
+      </trans-unit>
+      <trans-unit id="4b9a9672a96a435f1d15ad934e093104">
+        <source>Route to modules</source>
+        <target>Route to modules</target>
+        <note>Line: 106</note>
       </trans-unit>
     </body>
   </file>
@@ -1339,42 +1506,42 @@ Comment: PS_RETURN_PREFIX on configuration_lang table</note>
       <trans-unit id="f870b8a1af52a144a646db03f6f63f7d">
         <source>Show prices</source>
         <target>Show prices</target>
-        <note>Line: 46</note>
+        <note>Line: 47</note>
       </trans-unit>
       <trans-unit id="eb1cef1202fdc4d7954899fbf9f1734b">
         <source>Number of days for which the product is considered 'new'</source>
         <target>Number of days for which the product is considered 'new'</target>
-        <note>Line: 54</note>
+        <note>Line: 55</note>
       </trans-unit>
       <trans-unit id="9d980493b9016efc42443b1fdae49f33">
         <source>Max size of product summary</source>
         <target>Max size of product summary</target>
-        <note>Line: 62</note>
+        <note>Line: 63</note>
       </trans-unit>
       <trans-unit id="7dbe88f99044a2b7e37ae992b8651be4">
         <source>Products (general)</source>
         <target>Products (general)</target>
-        <note>Line: 33</note>
+        <note>Line: 34</note>
       </trans-unit>
       <trans-unit id="bb98eaca8d91531f4ae177c9d395f1d4">
         <source>Catalog mode</source>
         <target>Catalog mode</target>
-        <note>Line: 38</note>
+        <note>Line: 39</note>
       </trans-unit>
       <trans-unit id="b5069c99813cffc6933c18ab71fd6cd9">
         <source>Quantity discounts based on</source>
         <target>Quantity discounts based on</target>
-        <note>Line: 69</note>
+        <note>Line: 70</note>
       </trans-unit>
       <trans-unit id="52be3e936f99d9746870ca7d356b3f21">
         <source>Force update of friendly URL</source>
         <target>Force update of friendly URL</target>
-        <note>Line: 76</note>
+        <note>Line: 77</note>
       </trans-unit>
       <trans-unit id="8a93e785ac0d7204479e4697cbe8696c">
         <source>Default activation status</source>
         <target>Default activation status</target>
-        <note>Line: 83</note>
+        <note>Line: 84</note>
       </trans-unit>
     </body>
   </file>
@@ -1383,17 +1550,17 @@ Comment: PS_RETURN_PREFIX on configuration_lang table</note>
       <trans-unit id="f8f1f78351c2864c334a80b706a303b2">
         <source>Display remaining quantities when the quantity is lower than</source>
         <target>Display remaining quantities when the quantity is lower than</target>
-        <note>Line: 47</note>
+        <note>Line: 48</note>
       </trans-unit>
       <trans-unit id="eb763a2e313718f33f55e1f0d84df6ee">
         <source>Product page</source>
         <target>Product page</target>
-        <note>Line: 33</note>
+        <note>Line: 34</note>
       </trans-unit>
       <trans-unit id="b58704f2e2e18edc7c903342c2a42dfc">
         <source>Display available quantities on the product page</source>
         <target>Display available quantities on the product page</target>
-        <note>Line: 39</note>
+        <note>Line: 40</note>
       </trans-unit>
       <trans-unit id="a2ab7db4ee7104a693358c0c9d07c6ce">
         <source>Display unavailable product attributes on the product page</source>
@@ -1408,12 +1575,17 @@ Comment: PS_RETURN_PREFIX on configuration_lang table</note>
       <trans-unit id="0a91cf360875af4259f26bc7e2971132">
         <source>Separator of attribute anchor on the product links</source>
         <target>Separator of attribute anchor on the product links</target>
-        <note>Line: 71</note>
+        <note>Line: 70</note>
       </trans-unit>
       <trans-unit id="f7699b3d1af7fe3cdb3a6ff301940fdf">
         <source>Display discounted price</source>
         <target>Display discounted price</target>
-        <note>Line: 80</note>
+        <note>Line: 79</note>
+      </trans-unit>
+      <trans-unit id="b0053aee10f151b68406dff022c1c95b">
+        <source>Display unavailable attributes on the product page</source>
+        <target>Display unavailable attributes on the product page</target>
+        <note>Line: 55</note>
       </trans-unit>
     </body>
   </file>
@@ -1422,22 +1594,22 @@ Comment: PS_RETURN_PREFIX on configuration_lang table</note>
       <trans-unit id="7e1b4ee573c4ef023904fd90eb9ddea7">
         <source>Products per page</source>
         <target>Products per page</target>
-        <note>Line: 38</note>
+        <note>Line: 39</note>
       </trans-unit>
       <trans-unit id="cbb81506a7fe3ef03f7a89c76c52131a">
         <source>Pagination</source>
         <target>Pagination</target>
-        <note>Line: 33</note>
+        <note>Line: 34</note>
       </trans-unit>
       <trans-unit id="e29857ad6c4bbba99614831d7e3e5a3f">
         <source>Default order by</source>
         <target>Default order by</target>
-        <note>Line: 45</note>
+        <note>Line: 46</note>
       </trans-unit>
       <trans-unit id="114a8ec626471fdc120f863a9fb25e4c">
         <source>Default order method</source>
         <target>Default order method</target>
-        <note>Line: 52</note>
+        <note>Line: 53</note>
       </trans-unit>
     </body>
   </file>
@@ -1446,52 +1618,52 @@ Comment: PS_RETURN_PREFIX on configuration_lang table</note>
       <trans-unit id="ff26a60315cd84533d5339ba26617988">
         <source>Products stock</source>
         <target>Products stock</target>
-        <note>Line: 33</note>
+        <note>Line: 34</note>
       </trans-unit>
       <trans-unit id="be6be43cab36ddf8024d237c4a2414f7">
         <source>Allow ordering of out-of-stock products</source>
         <target>Allow ordering of out-of-stock products</target>
-        <note>Line: 38</note>
+        <note>Line: 39</note>
       </trans-unit>
       <trans-unit id="69983ae81c0090a571d3f60aedbd0d46">
         <source>Enable stock management</source>
         <target>Enable stock management</target>
-        <note>Line: 46</note>
+        <note>Line: 47</note>
       </trans-unit>
       <trans-unit id="966c11f36eeb298187639eea581a7522">
         <source>Label of in-stock products</source>
         <target>Label of in-stock products</target>
-        <note>Line: 55</note>
+        <note>Line: 56</note>
       </trans-unit>
       <trans-unit id="3385e522bc49e8f8fcb008788bc1762d">
         <source>Label of out-of-stock products with allowed backorders</source>
         <target>Label of out-of-stock products with allowed backorders</target>
-        <note>Line: 64</note>
+        <note>Line: 65</note>
       </trans-unit>
       <trans-unit id="d79daa535ef1e90b7b1230b501b7b6c6">
         <source>Label of out-of-stock products with denied backorders</source>
         <target>Label of out-of-stock products with denied backorders</target>
-        <note>Line: 73</note>
+        <note>Line: 74</note>
       </trans-unit>
       <trans-unit id="480cb944a0974a27ec0f964de23a18f4">
         <source>Delivery time of in-stock products</source>
         <target>Delivery time of in-stock products</target>
-        <note>Line: 81</note>
+        <note>Line: 82</note>
       </trans-unit>
       <trans-unit id="16a5534d559007de7e8f5b4f17112203">
         <source>Leave empty to disable</source>
         <target>Leave empty to disable</target>
-        <note>Line: 93</note>
+        <note>Line: 94</note>
       </trans-unit>
       <trans-unit id="d8b9fadcb2c1164975877a18731b1f4a">
         <source>Delivery time of out-of-stock products with allowed backorders</source>
         <target>Delivery time of out-of-stock products with allowed backorders</target>
-        <note>Line: 89</note>
+        <note>Line: 90</note>
       </trans-unit>
       <trans-unit id="65055b5469b4ad0c6f799ad782d1ebe5">
         <source>Default pack stock management</source>
         <target>Default pack stock management</target>
-        <note>Line: 97</note>
+        <note>Line: 98</note>
       </trans-unit>
     </body>
   </file>
@@ -1501,11 +1673,6 @@ Comment: PS_RETURN_PREFIX on configuration_lang table</note>
         <source>Contacts</source>
         <target>Contacts</target>
         <note>Line: 33</note>
-      </trans-unit>
-      <trans-unit id="a4cd3191fdeea29906a113c78d4c0e26">
-        <source>Save messages?</source>
-        <target>Save messages?</target>
-        <note>Line: 50</note>
       </trans-unit>
     </body>
   </file>
@@ -1528,7 +1695,62 @@ Comment: PS_RETURN_PREFIX on configuration_lang table</note>
       <trans-unit id="bf3b3ed0e4fd43efff9c26b3d35c6c2f">
         <source>Gift options</source>
         <target>Gift options</target>
+        <note>Line: 34</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="src/PrestaShopBundle/Resources/views/Admin/Configure/ShopParameters/OrderReturnStates/Blocks/form.html.twig" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="69a31da4cb502aa192d07ae4a8f48613">
+        <source>Status name</source>
+        <target>Status name</target>
+        <note>Line: 40</note>
+      </trans-unit>
+      <trans-unit id="cb5feb1b7314637725a2e73bdc9f7295">
+        <source>Color</source>
+        <target>Color</target>
+        <note>Line: 48</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="src/PrestaShopBundle/Resources/views/Admin/Configure/ShopParameters/OrderReturnStates/create.html.twig" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="34499467057e6ded44fd7861eee1893b">
+        <source>Return statuses</source>
+        <target>Return statuses</target>
+        <note>Line: 27</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="src/PrestaShopBundle/Resources/views/Admin/Configure/ShopParameters/OrderStates/Blocks/form.html.twig" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="57297718fdb439175177cf6b196172d1">
+        <source>Order status</source>
+        <target>Order status</target>
         <note>Line: 33</note>
+      </trans-unit>
+      <trans-unit id="13a44cb3c08c1c40a3c5b62152538ee8">
+        <source>Email template</source>
+        <target>Email template</target>
+        <note>Line: 82</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="src/PrestaShopBundle/Resources/views/Admin/Configure/ShopParameters/OrderStates/create.html.twig" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="60fd39d495f2a8d0674c236c004e8f21">
+        <source>Add new order status</source>
+        <target>Add new order status</target>
+        <note>Line: 27</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="src/PrestaShopBundle/Resources/views/Admin/Configure/ShopParameters/OrderStates/index.html.twig" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="f08b529034b579d49fa94abec7f93af0">
+        <source>Add new order return status</source>
+        <target>Add new order return status</target>
+        <note>Line: 36</note>
       </trans-unit>
     </body>
   </file>
@@ -1603,7 +1825,7 @@ Comment: PS_RETURN_PREFIX on configuration_lang table</note>
       <trans-unit id="7959e21ff0b83542251ca0b4e9a62eea">
         <source>Generate robots.txt file</source>
         <target>Generate robots.txt file</target>
-        <note>Line: 59</note>
+        <note>Line: 63</note>
       </trans-unit>
       <trans-unit id="345d6249c20c6319bb09edaaf536744b">
         <source>Robots file generation</source>
@@ -1619,35 +1841,10 @@ Comment: PS_RETURN_PREFIX on configuration_lang table</note>
         <target>SEO options</target>
         <note>Line: 32</note>
       </trans-unit>
-      <trans-unit id="18a405e3df98774d6fe16c522825ca02">
-        <source>Display attributes in the product meta title</source>
-        <target>Display attributes in the product meta title</target>
-        <note>Line: 38</note>
-      </trans-unit>
     </body>
   </file>
   <file original="src/PrestaShopBundle/Resources/views/Admin/Configure/ShopParameters/TrafficSeo/Meta/Blocks/set_up_urls_configuration.html.twig" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
-      <trans-unit id="a7686ea311b65874a504a343c08a4341">
-        <source>Accented URL</source>
-        <target>Accented URL</target>
-        <note>Line: 70</note>
-      </trans-unit>
-      <trans-unit id="fb64c58d84a997e89be8de9897f36ecc">
-        <source>Redirect to the canonical URL</source>
-        <target>Redirect to the canonical URL</target>
-        <note>Line: 78</note>
-      </trans-unit>
-      <trans-unit id="38bada4e8300d679ea0c293a8658605a">
-        <source>Disable Apache's MultiViews option</source>
-        <target>Disable Apache's MultiViews option</target>
-        <note>Line: 87</note>
-      </trans-unit>
-      <trans-unit id="1260ff0747d4dbe30fcc4d360891205f">
-        <source>Disable Apache's mod_security module</source>
-        <target>Disable Apache's mod_security module</target>
-        <note>Line: 97</note>
-      </trans-unit>
       <trans-unit id="3cb0403ba2ec65e9030c1013b5edb42d">
         <source>Set up URLs</source>
         <target>Set up URLs</target>
@@ -1660,22 +1857,7 @@ Comment: PS_RETURN_PREFIX on configuration_lang table</note>
       <trans-unit id="43199543574edd476ab25337ad4a223c">
         <source>Set shop URL</source>
         <target>Set shop URL</target>
-        <note>Line: 32</note>
-      </trans-unit>
-      <trans-unit id="db309cb65c4220d02c0fd13927d315ae">
-        <source>Shop domain</source>
-        <target>Shop domain</target>
-        <note>Line: 73</note>
-      </trans-unit>
-      <trans-unit id="7efeee26d2914e586169f61213741599">
-        <source>SSL domain</source>
-        <target>SSL domain</target>
-        <note>Line: 83</note>
-      </trans-unit>
-      <trans-unit id="c274743f6bf3e3682c41e9ee269913f4">
-        <source>Base URI</source>
-        <target>Base URI</target>
-        <note>Line: 93</note>
+        <note>Line: 31</note>
       </trans-unit>
     </body>
   </file>
@@ -1684,47 +1866,12 @@ Comment: PS_RETURN_PREFIX on configuration_lang table</note>
       <trans-unit id="0d3ed57f8fd83cc2e9cf265a18663c0a">
         <source>Schema of URLs</source>
         <target>Schema of URLs</target>
-        <note>Line: 34</note>
-      </trans-unit>
-      <trans-unit id="5575f8bf467eba7499f22e78db6f3f56">
-        <source>Route to products</source>
-        <target>Route to products</target>
-        <note>Line: 52</note>
-      </trans-unit>
-      <trans-unit id="1092637069f4ebf1bee2b02fd280888b">
-        <source>Route to category</source>
-        <target>Route to category</target>
-        <note>Line: 65</note>
+        <note>Line: 32</note>
       </trans-unit>
       <trans-unit id="e5bcaf8cdb205e965d4ba8fdf0dc898c">
         <source>Route to category which has the "selected_filter" attribute for the "Layered Navigation" (blocklayered) module</source>
         <target>Route to category which has the "selected_filter" attribute for the "Layered Navigation" (blocklayered) module</target>
         <note>Line: 78</note>
-      </trans-unit>
-      <trans-unit id="08a551b84112995247355daf3b5d72ba">
-        <source>Route to supplier</source>
-        <target>Route to supplier</target>
-        <note>Line: 91</note>
-      </trans-unit>
-      <trans-unit id="1dc5f89ed6e4425ecef2613fda85e5c0">
-        <source>Route to brand</source>
-        <target>Route to brand</target>
-        <note>Line: 104</note>
-      </trans-unit>
-      <trans-unit id="e175934d3418b2070a829183b2bfe294">
-        <source>Route to page</source>
-        <target>Route to page</target>
-        <note>Line: 117</note>
-      </trans-unit>
-      <trans-unit id="01e4fd64862371a0f532b82e302d438d">
-        <source>Route to page category</source>
-        <target>Route to page category</target>
-        <note>Line: 130</note>
-      </trans-unit>
-      <trans-unit id="4b9a9672a96a435f1d15ad934e093104">
-        <source>Route to modules</source>
-        <target>Route to modules</target>
-        <note>Line: 143</note>
       </trans-unit>
     </body>
   </file>
@@ -1735,16 +1882,6 @@ Comment: PS_RETURN_PREFIX on configuration_lang table</note>
         <target>Enable Shop</target>
         <note>Line: 43</note>
       </trans-unit>
-      <trans-unit id="daf835712085aaaf81818e7ebfeb66b8">
-        <source>Maintenance IP</source>
-        <target>Maintenance IP</target>
-        <note>Line: 50</note>
-      </trans-unit>
-      <trans-unit id="9278432c5d2aec1ac4f42c23a941af21">
-        <source>Custom maintenance text</source>
-        <target>Custom maintenance text</target>
-        <note>Line: 57</note>
-      </trans-unit>
     </body>
   </file>
   <file original="src/PrestaShopBundle/Resources/views/Admin/Configure/ShopParameters/preferences.html.twig" source-language="en-US" target-language="en" datatype="plaintext">
@@ -1752,37 +1889,7 @@ Comment: PS_RETURN_PREFIX on configuration_lang table</note>
       <trans-unit id="1656072e927c8d3acd24359cbb648bb5">
         <source>Enable SSL</source>
         <target>Enable SSL</target>
-        <note>Line: 46</note>
-      </trans-unit>
-      <trans-unit id="73369322b5e1145bb2fc2268ce4d31f0">
-        <source>Enable SSL on all pages</source>
-        <target>Enable SSL on all pages</target>
-        <note>Line: 66</note>
-      </trans-unit>
-      <trans-unit id="cd1b98322104dbd61ca6ae0ab16df348">
-        <source>Increase front office security</source>
-        <target>Increase front office security</target>
-        <note>Line: 74</note>
-      </trans-unit>
-      <trans-unit id="913d66c5648cf0317ed371371fe44534">
-        <source>Allow iframes on HTML fields</source>
-        <target>Allow iframes on HTML fields</target>
-        <note>Line: 90</note>
-      </trans-unit>
-      <trans-unit id="06918a784fb394b84de012810120b75c">
-        <source>Use HTMLPurifier Library</source>
-        <target>Use HTMLPurifier Library</target>
-        <note>Line: 98</note>
-      </trans-unit>
-      <trans-unit id="ac2021d3c67ee796d7ab20a466ebd583">
-        <source>Round mode</source>
-        <target>Round mode</target>
-        <note>Line: 106</note>
-      </trans-unit>
-      <trans-unit id="019e96f05f09a70e37792a04e9e78cdc">
-        <source>Round type</source>
-        <target>Round type</target>
-        <note>Line: 114</note>
+        <note>Line: 43</note>
       </trans-unit>
       <trans-unit id="0a1e355325f75fe4cc3bf08b0f31f1c2">
         <source>Number of decimals</source>
@@ -1794,35 +1901,10 @@ Comment: PS_RETURN_PREFIX on configuration_lang table</note>
         <target>Display brands and suppliers</target>
         <note>Line: 130</note>
       </trans-unit>
-      <trans-unit id="922256753aa354c111471e85d4809ec5">
-        <source>Display best sellers</source>
-        <target>Display best sellers</target>
-        <note>Line: 138</note>
-      </trans-unit>
-      <trans-unit id="43b266c605d67eaa27801cc5dc0b3995">
-        <source>Enable Multistore</source>
-        <target>Enable Multistore</target>
-        <note>Line: 146</note>
-      </trans-unit>
-      <trans-unit id="8d9da6f9870d593e6921d3b728dc0c6b">
-        <source>Main Shop Activity</source>
-        <target>Main Shop Activity</target>
-        <note>Line: 162</note>
-      </trans-unit>
       <trans-unit id="ab08050bd76be6690d1beff885570dfb">
         <source>Please click here to check if your shop supports HTTPS.</source>
         <target>Please click here to check if your shop supports HTTPS.</target>
-        <note>Line: 59</note>
-      </trans-unit>
-      <trans-unit id="9fcc7a5ba2d12f5c77290e0bc6457a93">
-        <source>Display suppliers</source>
-        <target>Display suppliers</target>
-        <note>Line: 122</note>
-      </trans-unit>
-      <trans-unit id="9cc328444bdc1b5f54550d04d57138a9">
-        <source>Display brands</source>
-        <target>Display brands</target>
-        <note>Line: 130</note>
+        <note>Line: 49</note>
       </trans-unit>
     </body>
   </file>

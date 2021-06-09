@@ -28,7 +28,6 @@ declare(strict_types=1);
 
 namespace PrestaShop\PrestaShop\Adapter\Product\CommandHandler;
 
-use PrestaShop\PrestaShop\Adapter\Product\AbstractProductHandler;
 use PrestaShop\PrestaShop\Adapter\Product\Repository\ProductRepository;
 use PrestaShop\PrestaShop\Core\Domain\Product\Command\UpdateProductShippingCommand;
 use PrestaShop\PrestaShop\Core\Domain\Product\CommandHandler\UpdateProductShippingHandlerInterface;
@@ -38,7 +37,7 @@ use Product;
 /**
  * Handles @var UpdateProductShippingCommand using legacy object model
  */
-final class UpdateProductShippingHandler extends AbstractProductHandler implements UpdateProductShippingHandlerInterface
+final class UpdateProductShippingHandler implements UpdateProductShippingHandlerInterface
 {
     /**
      * @var ProductRepository

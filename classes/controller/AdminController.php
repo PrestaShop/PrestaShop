@@ -250,6 +250,9 @@ class AdminControllerCore extends Controller
     /** @var bool */
     private $allowAnonymous = false;
 
+    /** @var string */
+    public $override_folder;
+
     /** @var int DELETE access level */
     const LEVEL_DELETE = 4;
 
@@ -3142,7 +3145,7 @@ class AdminControllerCore extends Controller
     }
 
     /**
-     * Get the current objects' list form the database.
+     * Get the current objects' list from the database.
      *
      * @param int $id_lang Language used for display
      * @param string|null $order_by ORDER BY clause
@@ -4208,7 +4211,7 @@ class AdminControllerCore extends Controller
                 $this->errors[] = $this->trans('An error occurred while updating the status.', [], 'Admin.Notifications.Error');
             }
         } else {
-            $this->errors[] = $this->trans('You need to select at least one item to use the bulk action.', [], 'Admin.Notifications.Error');
+            $this->errors[] = $this->trans('You must select at least one item to perform a bulk action.', [], 'Admin.Notifications.Error');
         }
 
         return $result;

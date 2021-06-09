@@ -34,6 +34,7 @@ use PrestaShop\PrestaShop\Adapter\Shop\Context;
 use PrestaShop\PrestaShop\Core\Domain\Configuration\ShopConfigurationInterface;
 use PrestaShopBundle\Entity\Shop;
 use PrestaShopBundle\Entity\ShopGroup;
+use PrestaShopBundle\Service\Multistore\CustomizedConfigurationChecker;
 use Symfony\Component\HttpFoundation\Response;
 
 /**
@@ -115,35 +116,124 @@ class MultistoreController extends FrameworkBundleAdminController
      */
     public function configurationDropdown(ShopConfigurationInterface $configuration, string $configurationKey): Response
     {
-        $groupList = $this->entityManager->getRepository(ShopGroup::class)->findBy(['active' => true]);
+        $shopGroups = $this->entityManager->getRepository(ShopGroup::class)->findBy(['active' => true]);
         $shopCustomizationChecker = $this->get('prestashop.multistore.customized_configuration_checker');
-        $isGroupShopContext = $this->multistoreContext->isGroupShopContext();
+
+        if ($this->multistoreContext->isAllShopContext()) {
+            $dropdownData = $this->allShopDropdown($shopCustomizationChecker, $shopGroups, $configurationKey);
+        } else {
+            $dropdownData = $this->groupShopDropdown($shopCustomizationChecker, $shopGroups, $configurationKey);
+        }
+
+        if (!$dropdownData['shouldDisplayDropdown']) {
+            // no dropdown is displayed if no shop overrides this configuration value, so we return an empty response.
+            return new Response();
+        }
+
+        return $this->render('@PrestaShop/Admin/Multistore/dropdown.html.twig', $dropdownData['templateData']);
+    }
+
+    /**
+     * Gathers data for multistore dropdown in group shop context
+     *
+     * @param CustomizedConfigurationChecker $shopCustomizationChecker
+     * @param array $shopGroups
+     * @param string $configurationKey
+     *
+     * @return array
+     */
+    private function groupShopDropdown(CustomizedConfigurationChecker $shopCustomizationChecker, array $shopGroups, string $configurationKey): array
+    {
+        $groupList = [];
         $shouldDisplayDropdown = false;
 
-        foreach ($groupList as $key => $group) {
-            if (count($group->getShops()) === 0) {
-                unset($groupList[$key]);
+        foreach ($shopGroups as $key => $group) {
+            if ($this->shouldIncludeGroupShop($group)) {
+                $groupList[] = $group;
             }
-            if ($this->multistoreContext->isAllShopContext() || $group->getId() === $this->multistoreContext->getContextShopGroup()->id) {
+            if (
+                $group->getId() === $this->multistoreContext->getContextShopGroup()->id
+                && !$shouldDisplayDropdown
+            ) {
                 foreach ($group->getShops() as $shop) {
-                    if ($shopCustomizationChecker->isConfigurationCustomizedForThisShop($configurationKey, $shop, $isGroupShopContext)) {
+                    if ($shopCustomizationChecker->isConfigurationCustomizedForThisShop($configurationKey, $shop, true)) {
                         $shouldDisplayDropdown = true;
-                        break 2;
+                        break;
                     }
                 }
             }
         }
 
-        if (!$shouldDisplayDropdown) {
-            // no dropdown is displayed if no shop overrides this configuration value, so we return an empty response.
-            return new Response();
+        return [
+            'shouldDisplayDropdown' => $shouldDisplayDropdown,
+            'templateData' => [
+                'groupList' => $groupList,
+                'shopCustomizationChecker' => $shopCustomizationChecker,
+                'configurationKey' => $configurationKey,
+                'isGroupShopContext' => true,
+            ],
+        ];
+    }
+
+    /**
+     * Gathers data for multistore dropdown in all shop context
+     *
+     * @param CustomizedConfigurationChecker $shopCustomizationChecker
+     * @param array $shopGroups
+     * @param string $configurationKey
+     *
+     * @return array
+     */
+    private function allShopDropdown(CustomizedConfigurationChecker $shopCustomizationChecker, array $shopGroups, string $configurationKey): array
+    {
+        $groupList = [];
+        $shouldDisplayDropdown = false;
+        foreach ($shopGroups as $key => $group) {
+            if ($this->shouldIncludeGroupShop($group)) {
+                $groupList[] = $group;
+            }
+            if ($shouldDisplayDropdown) {
+                continue;
+            }
+            foreach ($group->getShops() as $shop) {
+                if ($shopCustomizationChecker->isConfigurationCustomizedForThisShop($configurationKey, $shop, false)) {
+                    $shouldDisplayDropdown = true;
+                    break;
+                }
+            }
         }
 
-        return $this->render('@PrestaShop/Admin/Multistore/dropdown.html.twig', [
-            'groupList' => $groupList,
-            'shopCustomizationChecker' => $shopCustomizationChecker,
-            'configurationKey' => $configurationKey,
-            'isGroupShopContext' => $isGroupShopContext,
-        ]);
+        return [
+            'shouldDisplayDropdown' => $shouldDisplayDropdown,
+            'templateData' => [
+                'groupList' => $groupList,
+                'shopCustomizationChecker' => $shopCustomizationChecker,
+                'configurationKey' => $configurationKey,
+                'isGroupShopContext' => false,
+            ],
+        ];
+    }
+
+    /**
+     * @param ShopGroup $group
+     *
+     * @return bool
+     */
+    private function shouldIncludeGroupShop(ShopGroup $group): bool
+    {
+        // group shop is only included if we are in all shop context or in group context when this group is the current context
+        if (count($group->getShops()) > 0
+            && (
+                $this->multistoreContext->isAllShopContext()
+                || (
+                    $this->multistoreContext->isGroupShopContext()
+                    && $group->getId() === $this->multistoreContext->getContextShopGroup()->id
+                )
+            )
+        ) {
+            return true;
+        }
+
+        return false;
     }
 }

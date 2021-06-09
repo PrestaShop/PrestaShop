@@ -149,6 +149,60 @@ class SpecificPriceFormatterTest extends SymfonyIntegrationTestCase
                 'nextQuantity' => -1,
             ),
         );
+
+        $specificPricesWithoutReductionTax = array(
+            0 => array(
+                'id_specific_price' => '10',
+                'id_specific_price_rule' => '0',
+                'id_cart' => '0',
+                'id_product' => '10',
+                'id_shop' => '1',
+                'id_shop_group' => '0',
+                'id_currency' => '0',
+                'id_country' => '0',
+                'id_group' => '0',
+                'id_customer' => '0',
+                'id_product_attribute' => '0',
+                'price' => '8.000000',
+                'from_quantity' => '10',
+                'reduction' => 0,
+                'reduction_tax' => '0',
+                'reduction_type' => 'amount',
+                'from' => '0000-00-00 00:00:00',
+                'to' => '0000-00-00 00:00:00',
+                'score' => '48',
+                'quantity' => '10',
+                'reduction_with_tax' => 0,
+                'nextQuantity' => -1,
+            ),
+        );
+
+        $specificPricesWithoutReductionTaxWithReduction = array(
+            0 => array(
+                'id_specific_price' => '11',
+                'id_specific_price_rule' => '0',
+                'id_cart' => '0',
+                'id_product' => '10',
+                'id_shop' => '1',
+                'id_shop_group' => '0',
+                'id_currency' => '0',
+                'id_country' => '0',
+                'id_group' => '0',
+                'id_customer' => '0',
+                'id_product_attribute' => '0',
+                'price' => '11.350000',
+                'from_quantity' => '3',
+                'reduction' => 2,
+                'reduction_tax' => '0',
+                'reduction_type' => 'amount',
+                'from' => '0000-00-00 00:00:00',
+                'to' => '0000-00-00 00:00:00',
+                'score' => '48',
+                'quantity' => '3',
+                'reduction_with_tax' => 0,
+                'nextQuantity' => -1,
+            ),
+        );
         $currencyEur = array(
             'conversion_rate' => 1.0,
             'sign' => '€',
@@ -242,6 +296,34 @@ class SpecificPriceFormatterTest extends SymfonyIntegrationTestCase
                     array(
                         'discount' => 9.00,
                         'save' => 135.00,
+                    ),
+                ),
+            ),
+            'EUR to EUR, with taxes, without reduction tax' => array(
+                'price' => 12.30,
+                'tax_rate' => 23,
+                'ecotax_amount' => 0,
+                'currency' => $currencyEur,
+                'specific_prices' => $specificPricesWithoutReductionTax,
+                'isTaxIncluded' => true,
+                'expected' => array(
+                    array(
+                        'discount' => 2.46,
+                        'save' => 24.60,
+                    ),
+                ),
+            ),
+            'EUR to EUR, with taxes, without reduction tax, with reduction' => array(
+                'price' => 15.48,
+                'tax_rate' => 20,
+                'ecotax_amount' => 0,
+                'currency' => $currencyEur,
+                'specific_prices' => $specificPricesWithoutReductionTaxWithReduction,
+                'isTaxIncluded' => true,
+                'expected' => array(
+                    array(
+                        'discount' => 4.26,
+                        'save' => 12.78,
                     ),
                 ),
             ),

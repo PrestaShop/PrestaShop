@@ -26,7 +26,7 @@ const path = require('path');
 const webpack = require('webpack');
 const {CleanWebpackPlugin} = require('clean-webpack-plugin');
 const CopyPlugin = require('copy-webpack-plugin');
-const VueLoaderPlugin = require('vue-loader/lib/plugin');
+const {VueLoaderPlugin} = require('vue-loader');
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 const FixStyleOnlyEntriesPlugin = require('webpack-fix-style-only-entries');
 const bourbon = require('bourbon');
@@ -127,7 +127,7 @@ module.exports = {
     chunkFilename: '[id].[hash:8].js',
   },
   resolve: {
-    extensions: ['.js', '.vue', '.json'],
+    extensions: ['.ts', '.js', '.vue', '.json'],
     alias: {
       vue$: 'vue/dist/vue.common.js',
       '@app': path.resolve(__dirname, '../js/app'),
@@ -137,6 +137,7 @@ module.exports = {
       '@scss': path.resolve(__dirname, '../scss'),
       '@node_modules': path.resolve(__dirname, '../node_modules'),
       '@vue': path.resolve(__dirname, '../js/vue'),
+      '@PSTypes': path.resolve(__dirname, '../js/types'),
     },
   },
   module: {
@@ -155,49 +156,133 @@ module.exports = {
         ],
       },
       {
+        test: /\.ts?$/,
+        use: 'ts-loader',
+        exclude: /node_modules/,
+      },
+      {
         test: /jquery-ui\.js/,
-        use: 'imports-loader?define=>false&this=>window',
+        loader: 'imports-loader',
+        options: {
+          wrapper: {
+            thisArg: 'window',
+            args: {
+              define: false,
+            },
+          },
+        },
       },
       {
         test: /jquery\.magnific-popup\.js/,
-        use: 'imports-loader?define=>false&exports=>false&this=>window',
+        loader: 'imports-loader',
+        options: {
+          wrapper: {
+            thisArg: 'window',
+            args: {
+              define: false,
+              exports: false,
+            },
+          },
+        },
       },
       {
         test: /bloodhound\.min\.js/,
         use: [
           {
             loader: 'expose-loader',
-            query: 'Bloodhound',
+            options: {
+              exposes: 'Bloodhound',
+            },
           },
         ],
       },
       {
         test: /dropzone\/dist\/dropzone\.js/,
-        loader: 'imports-loader?this=>window&module=>null',
+        loader: 'imports-loader',
+        options: {
+          wrapper: {
+            thisArg: 'window',
+            args: {
+              module: null,
+            },
+          },
+        },
       },
       {
         test: require.resolve('moment'),
-        loader: 'imports-loader?define=>false&this=>window',
+        loader: 'imports-loader',
+        options: {
+          wrapper: {
+            thisArg: 'window',
+            args: {
+              define: false,
+            },
+          },
+        },
       },
       {
         test: /typeahead\.jquery\.js/,
-        loader: 'imports-loader?define=>false&exports=>false&this=>window',
+        loader: 'imports-loader',
+        options: {
+          wrapper: {
+            thisArg: 'window',
+            args: {
+              define: false,
+              exports: false,
+            },
+          },
+        },
       },
       {
         test: /bootstrap-tokenfield\.js/,
-        loader: 'imports-loader?define=>false&exports=>false&this=>window',
+        loader: 'imports-loader',
+        options: {
+          wrapper: {
+            thisArg: 'window',
+            args: {
+              define: false,
+              exports: false,
+            },
+          },
+        },
       },
       {
         test: /bootstrap-datetimepicker\.js/,
-        loader: 'imports-loader?define=>false&exports=>false&this=>window',
+        loader: 'imports-loader',
+        options: {
+          wrapper: {
+            thisArg: 'window',
+            args: {
+              define: false,
+              exports: false,
+            },
+          },
+        },
       },
       {
         test: /bootstrap-colorpicker\.js/,
-        loader: 'imports-loader?define=>false&exports=>false&this=>window',
+        loader: 'imports-loader',
+        options: {
+          wrapper: {
+            thisArg: 'window',
+            args: {
+              define: false,
+              exports: false,
+            },
+          },
+        },
       },
       {
         test: /jwerty\/jwerty\.js/,
-        loader: 'imports-loader?this=>window&module=>false',
+        loader: 'imports-loader',
+        options: {
+          wrapper: {
+            thisArg: 'window',
+            args: {
+              module: false,
+            },
+          },
+        },
       },
       {
         test: /\.vue$/,
@@ -249,7 +334,10 @@ module.exports = {
       // FILES
       {
         test: /.(jpg|png|woff2?|eot|otf|ttf|svg|gif)$/,
-        loader: 'file-loader?name=[hash].[ext]',
+        loader: 'file-loader',
+        options: {
+          name: '[hash].[ext]',
+        },
       },
     ],
   },
@@ -264,7 +352,9 @@ module.exports = {
       $: 'jquery', // needed for jquery-ui
       jQuery: 'jquery',
     }),
-    new CopyPlugin([{from: 'static'}]),
+    new CopyPlugin({
+      patterns: [{from: 'static'}],
+    }),
     new VueLoaderPlugin(),
   ],
 };

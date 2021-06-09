@@ -26,14 +26,41 @@
 
 namespace PrestaShopBundle\Form\Validator\Constraints;
 
-use PrestaShop\PrestaShop\Adapter\LegacyContext;
+use InvalidArgumentException;
+use PrestaShop\PrestaShop\Adapter\Validate;
+use Symfony\Component\Translation\TranslatorInterface;
 use Symfony\Component\Validator\Constraint;
 use Symfony\Component\Validator\ConstraintValidator;
+use Symfony\Component\Validator\Exception\UnexpectedTypeException;
 
 class TinyMceMaxLengthValidator extends ConstraintValidator
 {
+    /**
+     * @var Validate
+     */
+    private $validateAdapter;
+
+    /**
+     * @var TranslatorInterface
+     */
+    protected $translator;
+
+    public function __construct(Validate $validate, TranslatorInterface $translator)
+    {
+        $this->validateAdapter = $validate;
+        $this->translator = $translator;
+    }
+
     public function validate($value, Constraint $constraint)
     {
+        if (!$constraint instanceof TinyMceMaxLength) {
+            throw new UnexpectedTypeException($constraint, TinyMceMaxLength::class);
+        }
+
+        if (!$this->validateAdapter->isUnsignedInt($constraint->max)) {
+            throw new InvalidArgumentException('Max must be int. Input was: ' . \gettype($constraint->max));
+        }
+
         $replaceArray = [
             "\n",
             "\r",
@@ -41,11 +68,18 @@ class TinyMceMaxLengthValidator extends ConstraintValidator
         ];
         $str = str_replace($replaceArray, [''], strip_tags($value));
 
-        if ($constraint instanceof TinyMceMaxLength && iconv_strlen($str) > $constraint->max) {
-            $this->context->addViolation(
-                (new LegacyContext())->getContext()->getTranslator()->trans('This value is too long. It should have %limit% characters or less.', [], 'Admin.Catalog.Notification'),
-                ['%limit%' => $constraint->max]
+        if (iconv_strlen($str) > $constraint->max) {
+            $message = $constraint->message ?? $this->translator->trans(
+                'This value is too long. It should have %limit% characters or less.',
+                ['%limit%' => $constraint->max],
+                'Admin.Catalog.Notification'
             );
+
+            $this->context->buildViolation($message)
+                ->setParameter('{{ value }}', $this->formatValue($value))
+                ->setCode(TinyMceMaxLength::TOO_LONG_ERROR_CODE)
+                ->addViolation()
+            ;
         }
     }
 }

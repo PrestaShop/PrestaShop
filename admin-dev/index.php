@@ -66,6 +66,7 @@ $apcLoader = new ApcClassLoader(sha1(__FILE__), $loader);
 $loader->unregister();
 $apcLoader->register(true);
 */
+/* @phpstan-ignore-next-line */
 if (_PS_MODE_DEV_) {
     Debug::enable();
 }

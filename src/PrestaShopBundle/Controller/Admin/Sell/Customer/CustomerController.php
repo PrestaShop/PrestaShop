@@ -953,7 +953,7 @@ class CustomerController extends AbstractAdminController
                 ),
             ],
             MissingCustomerRequiredFieldsException::class => $this->trans(
-                'The field %s is required.',
+                'The %s field is required.',
                 'Admin.Notifications.Error',
                 [
                     implode(

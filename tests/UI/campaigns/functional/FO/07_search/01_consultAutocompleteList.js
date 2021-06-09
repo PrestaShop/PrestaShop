@@ -11,6 +11,9 @@ const searchPage = require('@pages/BO/shopParameters/search');
 const homePage = require('@pages/FO/home');
 const searchResultsPage = require('@pages/FO/searchResults');
 
+// Import products demo data
+const {Products} = require('@data/demo/products');
+
 // Import test context
 const testContext = require('@utils/testContext');
 
@@ -18,9 +21,12 @@ const baseContext = 'functional_FO_search_consultAutocompleteList';
 
 let browserContext;
 let page;
-const productName = 'Hummingbird';
-const searchResult = 'Men > Hummingbird printed t-shirtHome Accessories > Hummingbird cushionWomen > '
-  + 'Hummingbird printed sweaterArt > Hummingbird - Vector graphicsStationery > Hummingbird notebook';
+const searchValue = 'Hummingbird printed';
+
+// Search result should contain element who includes the search value
+const searchResults = Object.values(Products)
+  .map(product => product.name)
+  .filter(name => name.includes(searchValue));
 
 /*
 Disable Fuzzy search in BO
@@ -68,14 +74,17 @@ describe('Search product and consult autocomplete list', async () => {
     const isHomePage = await homePage.isHomePage(page);
     await expect(isHomePage).to.be.true;
 
-    const result = await homePage.getAutocompleteSearchResult(page, productName);
-    await expect(result, 'Search result is incorrect!').to.be.equal(searchResult);
+    const result = await homePage.getAutocompleteSearchResult(page, searchValue);
+
+    for (let i = 0; i < searchResults.length; i++) {
+      await expect(result, `Search result should contain ${searchResults[i]}`).to.contain(searchResults[i]);
+    }
   });
 
   it('should search product', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'searchProduct', baseContext);
 
-    await homePage.searchProduct(page, productName);
+    await homePage.searchProduct(page, searchValue);
 
     const pageTitle = await searchResultsPage.getPageTitle(page);
     await expect(pageTitle).to.equal(searchResultsPage.pageTitle);
@@ -85,7 +94,7 @@ describe('Search product and consult autocomplete list', async () => {
     await testContext.addContextItem(this, 'testIdentifier', 'checkProductNumber', baseContext);
 
     const resultNumber = await searchResultsPage.getSearchResultsNumber(page);
-    await expect(resultNumber, 'Product searched number is incorrect!').to.be.equal(5);
+    await expect(resultNumber, 'Product searched number is incorrect!').to.be.equal(searchResults.length);
 
     page = await searchResultsPage.closePage(browserContext, page, 0);
   });

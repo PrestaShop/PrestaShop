@@ -80,7 +80,7 @@
           {/capture}
 
           {include file='errors/not-found.tpl' errorContent=$errorContent}
-        <rdiv>
+        </div>
 
         <div id="js-product-list-bottom"></div>
       {/if}

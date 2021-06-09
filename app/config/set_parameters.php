@@ -50,7 +50,7 @@ if (!defined('_PS_IN_TEST_') && isset($_SERVER['argv'])) {
     }
 }
 
-if ($container instanceof \Symfony\Component\DependencyInjection\Container) {
+if (isset($container) && $container instanceof \Symfony\Component\DependencyInjection\Container) {
     foreach ($parameters['parameters'] as $key => $value) {
         $container->setParameter($key, $value);
     }
