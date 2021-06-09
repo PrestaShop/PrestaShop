@@ -51,7 +51,7 @@
 				success : function(res)
 				{
 					// Replace de body by the new one
-					$('body').html(res.replace(/^.*<body>/, '').replace(/<\/body>.*$/, ''));
+					$('body').html(res.replace(/^.*?<body.*?>/mis, '').replace(/<\/body>.*$/mis, ''));
 				}
 			});
 		});
