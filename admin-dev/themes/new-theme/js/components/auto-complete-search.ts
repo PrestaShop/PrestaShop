@@ -60,6 +60,7 @@ export default class AutoCompleteSearch {
       minLength: 2,
       highlight: true,
       hint: false,
+<<<<<<< HEAD:admin-dev/themes/new-theme/js/components/auto-complete-search.ts
       /* eslint-disable @typescript-eslint/no-unused-vars */
       onSelect(
         selectedItem: unknown,
@@ -74,6 +75,13 @@ export default class AutoCompleteSearch {
         event: Event,
         searchInput: JQuery
       ) {
+=======
+      onSelect(selectedItem, event, searchInput) {
+        searchInput.typeahead('val', selectedItem[this.dataSetConfig.value]);
+        return true;
+      },
+      onClose(event, searchInput) {
+>>>>>>> ddef618d36 (Small refacto of options building in entity search, introduce som selector mapping, fix lint in autocomplete):admin-dev/themes/new-theme/js/components/auto-complete-search.js
         searchInput.typeahead('val', '');
         return true;
       },

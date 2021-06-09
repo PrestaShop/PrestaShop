@@ -24,6 +24,7 @@
  */
 
 import AutoCompleteSearch from '@components/auto-complete-search';
+import EntitySearchInputMap from '@components/./entity-search-input-map';
 import ConfirmModal from '@components/modal';
 import Bloodhound from 'typeahead.js';
 
@@ -46,10 +47,6 @@ export default class EntitySearchInput {
 
   $selectionContainer: JQuery;
 
-  entitySearchInputId: string;
-
-  searchInputFullName: string;
-
   options: OptionsObject;
 
   entityRemoteSource: any;
@@ -71,6 +68,7 @@ export default class EntitySearchInput {
     return {
       setRemoteUrl: (remoteUrl) => this.setRemoteUrl(remoteUrl),
       setValue: (values) => this.setValue(values),
+      getOption: (optionName) => this.options[optionName],
       setOption: (optionName, value) => this.setOption(optionName, value),
     };
   }
@@ -115,38 +113,45 @@ export default class EntitySearchInput {
    */
   buildOptions(options: OptionsObject) {
     const inputOptions = options || {};
-    this.initOption('mappingValue', inputOptions, 'id');
-    this.initOption('mappingDisplay', inputOptions, 'name');
-    this.initOption('mappingImage', inputOptions, 'image');
+    const defaultOptions: OptionsObject = {
+      mappingValue: 'id',
+      mappingDisplay: 'name',
+      mappingImage: 'image',
 
-    this.initOption('prototypeTemplate', inputOptions);
-    this.initOption('prototypeName', inputOptions, '__name__');
-    this.initOption('prototypeImage', inputOptions, '__image__');
-    this.initOption('prototypeValue', inputOptions, '__value__');
-    this.initOption('prototypeDisplay', inputOptions, '__display__');
+      prototypeTemplate: undefined,
+      prototypeName: '__name__',
+      prototypeImage: '__image__',
+      prototypeValue: '__value__',
+      prototypeDisplay: '__display__',
 
-    this.initOption('allowDelete', inputOptions, true);
-    this.initOption('dataLimit', inputOptions, 0);
-    this.initOption('remoteUrl', inputOptions);
+      allowDelete: true,
+      dataLimit: 0,
+      remoteUrl: undefined,
 
-    this.initOption('removeModalTitle', inputOptions);
-    this.initOption('removeModalMessage', inputOptions);
-    this.initOption('removeModalApply', inputOptions);
-    this.initOption('removeModalCancel', inputOptions);
+      removeModalTitle: undefined,
+      removeModalMessage: undefined,
+      removeModalApply: undefined,
+      removeModalCancel: undefined,
 
-    // Most of the previous config are configurable via the EntitySearchInputForm options, the following ones are only
-    // overridable via js config (as long as you use the default template)
-    this.initOption('searchInputSelector', inputOptions, '.entity-search-input');
-    this.initOption('listSelector', inputOptions, '.entities-list');
-    this.initOption('removeModalId', inputOptions, 'modal-confirm-remove-entity');
-    this.initOption('confirmButtonClass', inputOptions, 'btn-danger');
-    this.initOption('queryWildcard', inputOptions, '__QUERY__');
-    this.initOption('entityItemSelector', inputOptions, 'li.entity-item');
-    this.initOption('entityDeleteSelector', inputOptions, '.entity-item-delete');
+      // Most of the previous config are configurable via the EntitySearchInputForm options, the following ones are only
+      // overridable via js config (as long as you use the default template)
+      searchInputSelector: EntitySearchInputMap.searchInputSelector,
+      listSelector: EntitySearchInputMap.listSelector,
+      entityItemSelector: EntitySearchInputMap.entityItemSelector,
+      entityDeleteSelector: EntitySearchInputMap.entityDeleteSelector,
+      removeModalId: 'modal-confirm-remove-entity',
+      confirmButtonClass: 'btn-danger',
+      queryWildcard: '__QUERY__',
 
-    // These are configurable callbacks
-    this.initOption('onRemovedContent', inputOptions);
-    this.initOption('onSelectedContent', inputOptions);
+      // These are configurable callbacks
+      onRemovedContent: undefined,
+      onSelectedContent: undefined,
+    };
+
+    Object.keys(defaultOptions).forEach((optionName) => {
+      // This gets the proper value for each option, respecting the priority: input > data-attribute > default
+      this.initOption(optionName, inputOptions, defaultOptions[optionName]);
+    });
   }
 
   /**
@@ -347,6 +352,9 @@ export default class EntitySearchInput {
    * @returns {string}
    */
   renderSelected(entity: any, index: int): string {
+    // @todo: this part is quite restrictive as it limits to only three field, it should be more dynamic and rely on
+    // a configurable object that would be a hashmap of { entityFieldName: __template_placeholder__ } and loop through
+    // it (the default value would still be composed of, at least, value and display an potentially image but maybe not)
     const value = entity[this.options.mappingValue] || 0;
     const display = entity[this.options.mappingDisplay] || '';
     const image = entity[this.options.mappingImage] || '';
