@@ -1,5 +1,5 @@
 // stylelint-disable-next-line
-@import "@scss/pages/partials/_order-navigation";
+@import '@scss/pages/partials/_order-navigation';
 
 #order-view-page {
   #historyTabContent {
@@ -423,12 +423,6 @@
         }
       }
 
-      > * {
-        &:not(:last-child) {
-          margin-right: 0;
-        }
-      }
-
       a,
       button {
         text-align: left;
@@ -580,12 +574,39 @@ input#partial_refund_shipping {
 @media (max-width: 374px) {
   #order-view-page {
     .order-actions {
-      &-print {
-        max-width: 186px;
+      &-invoice,
+      &-print,
+      &-delivery {
+        width: 100%;
+        max-width: 286px;
+
+        a {
+          width: 100%;
+          max-width: 286px;
+          margin: auto;
+        }
+      }
+
+      .partial-refund-display {
+        width: 185px;
       }
 
       .select-status {
-        max-width: 150px;
+        max-width: 148px;
+      }
+
+      > * {
+        &:not(:last-child) {
+          margin-right: 0;
+        }
+      }
+    }
+
+    .order-product-pagination {
+      label {
+        margin-right: 1rem;
+        /* stylelint-disable-next-line */
+        margin-left: 0 !important;
       }
     }
   }
