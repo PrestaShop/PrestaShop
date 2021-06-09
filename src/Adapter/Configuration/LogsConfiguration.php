@@ -85,7 +85,7 @@ class LogsConfiguration implements DataConfigurationInterface
                     $invalidEmails[] = $email;
                 }
             }
-    
+
             if (!empty($invalidEmails)) {
                 $nbInvalidEmails = count($invalidEmails);
                 $errors[] = $this->translator->transChoice(
