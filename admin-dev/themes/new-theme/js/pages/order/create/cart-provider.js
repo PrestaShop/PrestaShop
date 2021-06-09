@@ -53,10 +53,8 @@ export default class CartProvider {
       this.$container.fadeTo(this.loaderSpeed, 0.2);
     }
     $.get(this.router.generate('admin_carts_info', {cartId})).then((cartInfo) => {
-     
       EventEmitter.emit(eventMap.cartLoaded, cartInfo);
-       
-    }).always(() => this.showLoader ? this.$container.fadeTo(this.loaderSpeed, 1) : true);
+    }).always(() => (this.showLoader ? this.$container.fadeTo(this.loaderSpeed, 1) : true));
   }
 
   /**
