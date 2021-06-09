@@ -102,6 +102,10 @@ class CategoryRepository extends AbstractObjectModelRepository
         ;
 
         $result = $qb->execute()->fetchAll();
+        if (empty($result)) {
+            throw new CategoryNotFoundException($categoryId, 'Cannot find breadcrumb because category does not exist');
+        }
+
         $category = $result[0];
         $categoryName = $category['name'];
 
