@@ -111,11 +111,11 @@ class ValidateTest extends TestCase
 
     /**
      * @param bool $expected
-     * @param string $data
+     * @param mixed $data
      *
      * @dataProvider isStringDataProvider
      */
-    public function testIsString(bool $expected, string $data): void
+    public function testIsString(bool $expected, $data): void
     {
         $this->assertSame($expected, $this->validate->isString($data));
     }
@@ -127,9 +127,9 @@ class ValidateTest extends TestCase
             [true, ' '],
             [true, '666xlkQM'],
             [true, '666'],
-            [true, 'true'],
-            [true, 'false'],
-            [true, 'null'],
+            [false, true],
+            [false, false],
+            [false, null],
         ];
     }
 
