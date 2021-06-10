@@ -96,8 +96,8 @@ describe('Create, filter and check credit slips file', async () => {
       await expect(isCustomerConnected, 'Customer is not connected').to.be.true;
     });
 
-    it('should create an order', async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'createOrder', baseContext);
+    it('should add product to cart', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'addProductToCart', baseContext);
 
       // Go to home page
       await foLoginPage.goToHomePage(page);
@@ -105,11 +105,15 @@ describe('Create, filter and check credit slips file', async () => {
       // Go to the first product page
       await homePage.goToProductPage(page, 1);
 
-      // Add the created product to the cart
-      await productPage.addProductToTheCart(page);
+      // Add the product to the cart
+      await productPage.addProductToTheCart(page, 5);
 
-      // Edit the product quantity
-      await cartPage.editProductQuantity(page, 1, 5);
+      const notificationsNumber = await cartPage.getCartNotificationsNumber(page);
+      await expect(notificationsNumber).to.be.equal(5);
+    });
+
+    it('should go to delivery step', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'createOrder', baseContext);
 
       // Proceed to checkout the shopping cart
       await cartPage.clickOnProceedToCheckout(page);
@@ -117,10 +121,18 @@ describe('Create, filter and check credit slips file', async () => {
       // Address step - Go to delivery step
       const isStepAddressComplete = await checkoutPage.goToDeliveryStep(page);
       await expect(isStepAddressComplete, 'Step Address is not complete').to.be.true;
+    });
+
+    it('should go to payment step', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'goToPaymentStep', baseContext);
 
       // Delivery step - Go to payment step
       const isStepDeliveryComplete = await checkoutPage.goToPaymentStep(page);
       await expect(isStepDeliveryComplete, 'Step Address is not complete').to.be.true;
+    });
+
+    it('should choose payment method and confirm the order', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'confirmOrder', baseContext);
 
       // Payment step - Choose payment step
       await checkoutPage.choosePaymentAndOrder(page, PaymentMethods.wirePayment.moduleName);
@@ -134,6 +146,7 @@ describe('Create, filter and check credit slips file', async () => {
       await testContext.addContextItem(this, 'testIdentifier', 'sighOutFO', baseContext);
 
       await orderConfirmationPage.logout(page);
+
       const isCustomerConnected = await orderConfirmationPage.isCustomerConnected(page);
       await expect(isCustomerConnected, 'Customer is connected').to.be.false;
     });
@@ -144,7 +157,7 @@ describe('Create, filter and check credit slips file', async () => {
       await loginCommon.loginBO(this, page);
     });
 
-    it('should go to the orders page', async function () {
+    it('should go to \'Orders > Orders\' page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'goToOrdersPage', baseContext);
 
       await dashboardPage.goToSubMenu(
@@ -157,10 +170,11 @@ describe('Create, filter and check credit slips file', async () => {
       await expect(pageTitle).to.contains(ordersPage.pageTitle);
     });
 
-    it('should go to the created order page', async function () {
+    it('should go to the last order page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'goToCreatedOrderPage', baseContext);
 
       await ordersPage.goToOrder(page, 1);
+
       const pageTitle = await viewOrderPage.getPageTitle(page);
       await expect(pageTitle).to.contains(viewOrderPage.pageTitle);
     });
@@ -178,17 +192,12 @@ describe('Create, filter and check credit slips file', async () => {
     ];
 
     tests.forEach((test, index) => {
-      it('should add a partial refund', async function () {
+      it(`should create the partial refund n°${index}`, async function () {
         await testContext.addContextItem(this, 'testIdentifier', `addPartialRefund${index + 1}`, baseContext);
 
         await viewOrderPage.clickOnPartialRefund(page);
 
-        const textMessage = await viewOrderPage.addPartialRefundProduct(
-          page,
-          test.args.productID,
-          test.args.quantity,
-        );
-
+        const textMessage = await viewOrderPage.addPartialRefundProduct(page, test.args.productID, test.args.quantity);
         await expect(textMessage).to.contains(viewOrderPage.partialRefundValidationMessage);
       });
 
@@ -289,11 +298,7 @@ describe('Create, filter and check credit slips file', async () => {
       await expect(numberOfCreditSlipsAfterFilter).to.be.at.most(numberOfCreditSlips);
 
       for (let i = 1; i <= numberOfCreditSlipsAfterFilter; i++) {
-        const textColumn = await creditSlipsPage.getTextColumnFromTableCreditSlips(
-          page,
-          i,
-          'date_add',
-        );
+        const textColumn = await creditSlipsPage.getTextColumnFromTableCreditSlips(page, i, 'date_add');
         await expect(textColumn).to.contains(dateTodayToCheck);
       }
     });
@@ -313,7 +318,7 @@ describe('Create, filter and check credit slips file', async () => {
 
   creditSlips.forEach((creditSlip) => {
     describe(`Download the ${creditSlip.args.number} Credit slips and check it`, async () => {
-      it(`should filter by the credit slip id '${creditSlip.args.id}'`, async function () {
+      it(`should filter credit slip by id '${creditSlip.args.id}'`, async function () {
         await testContext.addContextItem(
           this,
           'testIdentifier',
