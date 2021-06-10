@@ -29,6 +29,7 @@ parameters:
     - webservice
   excludePaths:
     - admin-dev/filemanager
+    - admin-dev/themes/new-theme/node_modules
   ignoreErrors:
     - '#^Call to an undefined method Symfony\\Component\\Config\\Definition\\Builder\\NodeDefinition\:\:#'
     - '#^Unsafe usage of new static\(\)\.$#'
