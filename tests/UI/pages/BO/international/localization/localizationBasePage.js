@@ -22,7 +22,7 @@ module.exports = class LocalizationBasePage extends BOBasePage {
   /* Header Methods */
   /**
    * Go to languages page
-   * @param page Browser tab
+   * @param page {Page} Browser tab
    * @return {Promise<void>}
    */
   async goToSubTabLanguages(page) {
