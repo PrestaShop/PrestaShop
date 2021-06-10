@@ -12,7 +12,6 @@ const viewOrderPage = require('@pages/BO/orders/view');
 const loginCommon = require('@commonTests/loginBO');
 
 // Import data
-
 // Customer
 const {DefaultCustomer} = require('@data/demo/customer');
 
@@ -68,7 +67,7 @@ Set order status and save the order
 Check order status from view order page
 Check order total price from view order page
  */
-describe('Create simple order in BO', async () => {
+describe('BO - Orders - Create order : Create simple order in BO', async () => {
   before(async function () {
     browserContext = await helper.createBrowserContext(this.browser);
     page = await helper.newTab(browserContext);
@@ -82,7 +81,7 @@ describe('Create simple order in BO', async () => {
     await loginCommon.loginBO(this, page);
   });
 
-  it('should go to orders page', async function () {
+  it('should go to \'Orders > Orders\' page', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'goToOrdersPage', baseContext);
 
     await dashboardPage.goToSubMenu(
@@ -92,6 +91,7 @@ describe('Create simple order in BO', async () => {
     );
 
     await ordersPage.closeSfToolBar(page);
+
     const pageTitle = await ordersPage.getPageTitle(page);
     await expect(pageTitle).to.contains(ordersPage.pageTitle);
   });
@@ -113,21 +113,21 @@ describe('Create simple order in BO', async () => {
       await expect(pageTitle).to.contain(viewOrderPage.pageTitle);
     });
 
-    it('should check order status after creation', async function () {
+    it('should check order status', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'checkOrderStatus', baseContext);
 
       const orderStatus = await viewOrderPage.getOrderStatus(page);
       await expect(orderStatus).to.equal(orderToMake.orderStatus.status);
     });
 
-    it('should check order total price after creation', async function () {
+    it('should check order total price', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'checkOrderPrice', baseContext);
 
       const totalPrice = await viewOrderPage.getOrderTotalPrice(page);
       await expect(totalPrice).to.equal(orderToMake.totalPrice);
     });
 
-    it('should check order shipping address after creation', async function () {
+    it('should check order shipping address', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'checkShippingAddress', baseContext);
 
       const shippingAddress = await viewOrderPage.getShippingAddress(page);
@@ -140,7 +140,7 @@ describe('Create simple order in BO', async () => {
         .and.to.contain(orderToMake.addressValue.country);
     });
 
-    it('should check order invoice address after creation', async function () {
+    it('should check order invoice address', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'checkInvoiceAddress', baseContext);
 
       const invoiceAddress = await viewOrderPage.getInvoiceAddress(page);

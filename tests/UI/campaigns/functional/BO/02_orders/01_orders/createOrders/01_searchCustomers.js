@@ -35,7 +35,7 @@ Search for non existent customer and check error message
 Search for disabled customer and check error message
 Search for existent customer and check displayed customer card
  */
-describe('Orders - Create order: Search for customers', async () => {
+describe('BO - Orders - Create order: Search for customers from new order page', async () => {
   before(async function () {
     browserContext = await helper.createBrowserContext(this.browser);
     page = await helper.newTab(browserContext);
@@ -156,12 +156,7 @@ describe('Orders - Create order: Search for customers', async () => {
 
       await customersPage.resetFilter(page);
 
-      await customersPage.filterCustomers(
-        page,
-        'input',
-        'email',
-        disabledCustomer.email,
-      );
+      await customersPage.filterCustomers(page, 'input', 'email', disabledCustomer.email);
 
       const textEmail = await customersPage.getTextColumnFromTableCustomers(page, 1, 'email');
       await expect(textEmail).to.contains(disabledCustomer.email);
