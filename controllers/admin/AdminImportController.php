@@ -895,7 +895,7 @@ class AdminImportControllerCore extends AdminController
                 $html .= '<th>
 							<select id="type_value[' . $i . ']"
 								name="type_value[' . $i . ']"
-								class="type_value">
+								class="type_value chosen">
 								' . $this->getTypeValuesOptions($i) . '
 							</select>
 						</th>';
