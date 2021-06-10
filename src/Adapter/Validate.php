@@ -151,11 +151,11 @@ class Validate
     /**
      * Check if $data is a string.
      *
-     * @param string $data Data to validate
+     * @param mixed $data Data to validate
      *
      * @return bool Validity is ok or not
      */
-    public function isString(string $data): bool
+    public function isString($data): bool
     {
         return ValidateLegacy::isString($data);
     }
