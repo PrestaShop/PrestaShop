@@ -964,7 +964,10 @@ class OrderController extends FrameworkBundleAdminController
             ));
             $this->addFlash('success', $this->trans('Successful update.', 'Admin.Notifications.Success'));
         } catch (InvoiceException $e) {
-            $this->addFlash('error', $this->trans('Invalid characters:', 'Admin.Notifications.Info'));
+            $this->addFlash(
+                'error',
+                $this->getErrorMessageForException($e, $this->getErrorMessages($e))
+            );
         }
 
         return $this->redirectToRoute('admin_orders_view', [
