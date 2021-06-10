@@ -113,7 +113,7 @@ describe('Orders - Credit slips : Create, filter and check credit slips file', a
     });
 
     it('should go to delivery step', async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'createOrder', baseContext);
+      await testContext.addContextItem(this, 'testIdentifier', 'goToDeliveryStep', baseContext);
 
       // Proceed to checkout the shopping cart
       await cartPage.clickOnProceedToCheckout(page);

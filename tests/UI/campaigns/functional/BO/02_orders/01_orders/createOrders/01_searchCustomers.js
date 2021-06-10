@@ -137,7 +137,7 @@ describe('BO - Orders - Create order: Search for customers from new order page',
     });
   });
 
-  describe('Delete Customer', async () => {
+  describe('Delete created Customer', async () => {
     it('should go to \'Customers > Customers\' page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'goToCustomersPageToDelete', baseContext);
 

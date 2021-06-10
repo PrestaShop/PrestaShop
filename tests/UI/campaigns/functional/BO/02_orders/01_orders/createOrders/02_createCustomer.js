@@ -27,6 +27,11 @@ const {expect} = require('chai');
 let browserContext;
 let page;
 
+/*
+Go to create order page
+Create customer
+Go to customers page and delete the created customer
+ */
 describe('BO - Orders - Create order : Create customer from new order page', async () => {
   before(async function () {
     browserContext = await helper.createBrowserContext(this.browser);
