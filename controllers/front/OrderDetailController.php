@@ -52,7 +52,7 @@ class OrderDetailControllerCore extends FrontController
             } elseif (empty($msgText)) {
                 $this->errors[] = $this->trans('The message cannot be blank.', [], 'Shop.Notifications.Error');
             }
-            
+
             if (!count($this->errors)) {
                 $order = new Order($idOrder);
                 if (Validate::isLoadedObject($order) && $order->id_customer == $this->context->customer->id) {
