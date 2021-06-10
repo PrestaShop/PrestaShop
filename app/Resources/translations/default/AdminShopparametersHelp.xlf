@@ -430,11 +430,6 @@
         <target>After a customer logs in, you can recall and display the content of his/her last shopping cart.</target>
         <note>Line: 52</note>
       </trans-unit>
-      <trans-unit id="7965d9df4693ebc274169475a901bcd5">
-        <source>Send an email with summary of the account information after registration.</source>
-        <target>Send an email with summary of the account information after registration.</target>
-        <note>Line: 62</note>
-      </trans-unit>
       <trans-unit id="59a84d54ad58aa4bea8aeacd11e47ab2">
         <source>Minimum time required between two requests for a password reset.</source>
         <target>Minimum time required between two requests for a password reset.</target>

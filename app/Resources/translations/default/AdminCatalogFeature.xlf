@@ -1826,11 +1826,6 @@
         <target>Items per page:</target>
         <note>Line: 56</note>
       </trans-unit>
-      <trans-unit id="704b07af60074b997be2729bdaf831bb">
-        <source>Paginator jump to page input</source>
-        <target>Paginator jump to page input</target>
-        <note>Line: 34</note>
-      </trans-unit>
     </body>
   </file>
   <file original="src/PrestaShopBundle/Resources/views/Admin/Common/unavailable-feature.html.twig" source-language="en-US" target-language="en" datatype="plaintext">

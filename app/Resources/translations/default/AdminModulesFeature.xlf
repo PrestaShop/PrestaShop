@@ -590,11 +590,6 @@ File: modules/ps_buybuttonlite/ps_buybuttonlite.php:167</note>
         <target>This module is not compatible with the multistore feature because it would not be useful.</target>
         <note>Line: 134</note>
       </trans-unit>
-      <trans-unit id="a608f1d4854481318e94f1c9f57262fc">
-        <source>This module is not compatible with the multistore feature. It means that its configuration applies for all stores.</source>
-        <target>This module is not compatible with the multistore feature. It means that its configuration applies for all stores.</target>
-        <note>Line: 136</note>
-      </trans-unit>
     </body>
   </file>
   <file original="src/PrestaShopBundle/Resources/views/Admin/Module/Includes/sorting.html.twig" source-language="en-US" target-language="en" datatype="plaintext">

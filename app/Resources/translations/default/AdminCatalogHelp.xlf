@@ -484,11 +484,6 @@ File: admin-dev/themes/default/template/controllers/categories/helpers/form/form
   </file>
   <file original="src/PrestaShopBundle/Form/Admin/Sell/Product/SEO/SEOType.php" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
-      <trans-unit id="0a25f6487fe0805287d588e7a82a5769">
-        <source>Public title for the product page, and for search engines. Leave blank to use the product name. The number of remaining characters is displayed to the left of the field.</source>
-        <target>Public title for the product page, and for search engines. Leave blank to use the product name. The number of remaining characters is displayed to the left of the field.</target>
-        <note>Line: 91</note>
-      </trans-unit>
       <trans-unit id="390348fb4642f64089e6e9ee71f25a7c">
         <source>This description will appear in search engines. It should be a single sentence, shorter than 160 characters (including spaces).</source>
         <target>This description will appear in search engines. It should be a single sentence, shorter than 160 characters (including spaces).</target>
