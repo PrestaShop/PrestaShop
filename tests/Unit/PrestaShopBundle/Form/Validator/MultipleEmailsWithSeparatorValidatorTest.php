@@ -73,8 +73,8 @@ class MultipleEmailsWithSeparatorValidatorTest extends ConstraintValidatorTestCa
     public function testExceptionsInvalidMultipleEmailsWithSeparator(Exception $expectedException, $multipleEmailsWithSeparator): void
     {
         $expectedExceptionClassName = get_class($expectedException);
-        $this->expectException($expectedExceptionClassName);
         $this->expectException(TypeError::class);
+        $this->expectException($expectedExceptionClassName);
         $this->validator->validate(
             $multipleEmailsWithSeparator,
             $this->getConstraintInstance()
