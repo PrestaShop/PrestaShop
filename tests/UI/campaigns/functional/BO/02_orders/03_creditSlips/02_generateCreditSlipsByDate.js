@@ -27,7 +27,6 @@ const testContext = require('@utils/testContext');
 
 const baseContext = 'functional_BO_orders_creditSlips_generateCreditSlipByDate';
 
-
 let browserContext;
 let page;
 
@@ -45,7 +44,7 @@ Create order
 Create credit slip
 Generate credit slip file by date
  */
-describe('Generate Credit slip file by date', async () => {
+describe('Orders - Credit slips : Generate Credit slip file by date', async () => {
   // before and after functions
   before(async function () {
     browserContext = await helper.createBrowserContext(this.browser);
@@ -85,8 +84,8 @@ describe('Generate Credit slip file by date', async () => {
       await expect(isCustomerConnected, 'Customer is not connected').to.be.true;
     });
 
-    it('should create an order', async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'createOrder', baseContext);
+    it('should add product to cart', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'addProductToCart', baseContext);
 
       // Go to home page
       await foLoginPage.goToHomePage(page);
@@ -94,11 +93,15 @@ describe('Generate Credit slip file by date', async () => {
       // Go to the first product page
       await homePage.goToProductPage(page, 1);
 
-      // Add the created product to the cart
-      await productPage.addProductToTheCart(page);
+      // Add the product to the cart
+      await productPage.addProductToTheCart(page, 5);
 
-      // Edit the product quantity
-      await cartPage.editProductQuantity(page, 1, 5);
+      const notificationsNumber = await cartPage.getCartNotificationsNumber(page);
+      await expect(notificationsNumber).to.be.equal(5);
+    });
+
+    it('should go to delivery step', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'createOrder', baseContext);
 
       // Proceed to checkout the shopping cart
       await cartPage.clickOnProceedToCheckout(page);
@@ -106,10 +109,18 @@ describe('Generate Credit slip file by date', async () => {
       // Address step - Go to delivery step
       const isStepAddressComplete = await checkoutPage.goToDeliveryStep(page);
       await expect(isStepAddressComplete, 'Step Address is not complete').to.be.true;
+    });
+
+    it('should go to payment step', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'goToPaymentStep', baseContext);
 
       // Delivery step - Go to payment step
       const isStepDeliveryComplete = await checkoutPage.goToPaymentStep(page);
       await expect(isStepDeliveryComplete, 'Step Address is not complete').to.be.true;
+    });
+
+    it('should choose payment method and confirm the order', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'confirmOrder', baseContext);
 
       // Payment step - Choose payment step
       await checkoutPage.choosePaymentAndOrder(page, PaymentMethods.wirePayment.moduleName);
@@ -133,7 +144,7 @@ describe('Generate Credit slip file by date', async () => {
       await loginCommon.loginBO(this, page);
     });
 
-    it('should go to the orders page', async function () {
+    it('should go to \'Orders > Orders\' page\'', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'goToOrdersPage', baseContext);
 
       await dashboardPage.goToSubMenu(
@@ -146,10 +157,11 @@ describe('Generate Credit slip file by date', async () => {
       await expect(pageTitle).to.contains(ordersPage.pageTitle);
     });
 
-    it('should go to the created order page', async function () {
+    it('should go to the last order page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'goToCreatedOrderPage', baseContext);
 
       await ordersPage.goToOrder(page, 1);
+
       const pageTitle = await viewOrderPage.getPageTitle(page);
       await expect(pageTitle).to.contains(viewOrderPage.pageTitle);
     });
@@ -165,6 +177,7 @@ describe('Generate Credit slip file by date', async () => {
       await testContext.addContextItem(this, 'testIdentifier', 'addPartialRefund', baseContext);
 
       await viewOrderPage.clickOnPartialRefund(page);
+
       const textMessage = await viewOrderPage.addPartialRefundProduct(page, 1, 1);
       await expect(textMessage).to.contains(viewOrderPage.partialRefundValidationMessage);
     });
@@ -208,7 +221,6 @@ describe('Generate Credit slip file by date', async () => {
 
       // Generate credit slip and get error message
       const textMessage = await creditSlipsPage.generatePDFByDateAndFail(page, futureDate, futureDate);
-
       await expect(textMessage).to.equal(creditSlipsPage.errorMessageWhenGenerateFileByDate);
     });
   });

@@ -51,13 +51,13 @@ const dateTodayToCheck = `${month}/${day}/${year}`;
 
 let numberOfCreditSlips = 0;
 
-
 /*
+Create order
 Create 2 credit slips for the same order
 Filter Credit slips table( by ID, Order ID, Date issued From and To)
 Download the 2 credit slip files and check them
  */
-describe('Create, filter and check credit slips file', async () => {
+describe('Orders - Credit slips : Create, filter and check credit slips file', async () => {
   // before and after functions
   before(async function () {
     browserContext = await helper.createBrowserContext(this.browser);
