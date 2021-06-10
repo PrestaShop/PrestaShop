@@ -896,7 +896,7 @@ class Install extends AbstractInstall
     /**
      * Get all modules present on the disk
      */
-    public function getModulesList(): array
+    public function getModulesOnDisk(): array
     {
         $modules = [];
         foreach (scandir(_PS_MODULE_DIR_, SCANDIR_SORT_NONE) as $module) {
@@ -916,11 +916,11 @@ class Install extends AbstractInstall
      */
     public function installModules(): bool
     {
-        $modules = $this->getModulesList();
+        $modules = $this->getModulesOnDisk();
 
         Module::updateTranslationsAfterInstall(false);
 
-        $result = $this->executeEvent($modules, 'install', 'Cannot install module "%module%"');
+        $result = $this->executeAction($modules, 'install', 'Cannot install module "%module%"');
         if ($result === false) {
             return false;
         }
@@ -933,14 +933,14 @@ class Install extends AbstractInstall
 
     public function postInstall(): bool
     {
-        return $this->executeEvent(
-            $this->getModulesList(),
+        return $this->executeAction(
+            $this->getModulesOnDisk(),
             'postInstall',
             'Cannot execute post install on module "%module%"'
         );
     }
 
-    protected function executeEvent(array $modules, string $event, string $errorMessage): bool
+    protected function executeAction(array $modules, string $action, string $errorMessage): bool
     {
         $moduleManagerBuilder = ModuleManagerBuilder::getInstance();
         $moduleManager = $moduleManagerBuilder->build();
@@ -950,13 +950,13 @@ class Install extends AbstractInstall
             $moduleException = null;
 
             try {
-                $moduleEventIsExecuted = $moduleManager->{$event}($module_name);
+                $moduleActionIsExecuted = $moduleManager->{$action}($module_name);
             } catch (PrestaShopException $e) {
-                $moduleEventIsExecuted = false;
+                $moduleActionIsExecuted = false;
                 $moduleException = $e->getMessage();
             }
 
-            if (!$moduleEventIsExecuted) {
+            if (!$moduleActionIsExecuted) {
                 $moduleErrors = [
                     $this->translator->trans(
                         $errorMessage,
