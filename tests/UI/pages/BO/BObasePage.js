@@ -29,6 +29,11 @@ class BOBasePage extends CommonPage {
     this.userProfileLogoutLink = 'a#header_logout';
     this.shopVersionBloc = '#shop_version';
     this.headerShopNameLink = '#header_shopname';
+    this.quickAccessDropdownToggle = '#quick_select';
+    this.quickAccessLink = idLink => `.quick-row-link:nth-child(${idLink})`;
+    this.quickAddCurrentLink = '#quick-add-link';
+    this.quickAccessRemoveLink = '#quick-remove-link';
+    this.manageYourQuickAccessLink = '#quick-manage-link';
 
     // Header links
     this.helpButton = '#product_form_open_help';
@@ -163,6 +168,7 @@ class BOBasePage extends CommonPage {
     this.onboardingStopButton = 'a.onboarding-button-stop';
 
     // Growls
+    this.growlDiv = '#growls';
     this.growlDefaultDiv = '#growls-default';
     this.growlMessageBlock = `${this.growlDefaultDiv} .growl-message`;
     this.growlCloseButton = `${this.growlDefaultDiv} .growl-close`;
@@ -197,6 +203,53 @@ class BOBasePage extends CommonPage {
   /*
   Methods
    */
+  /**
+   * Click on link from Quick access dropdown toggle
+   * @param page {Page} Browser tab
+   * @param linkId {number} Page ID
+   * @returns {Promise<void>}
+   */
+  async quickAccessToPage(page, linkId) {
+    await this.waitForSelectorAndClick(page, this.quickAccessDropdownToggle);
+    await this.clickAndWaitForNavigation(page, this.quickAccessLink(linkId));
+  }
+
+  /**
+   * Remove link from quick access
+   * @param page {Page} Browser tab
+   * @returns {Promise<string>}
+   */
+  async removeLinkFromQuickAccess(page) {
+    await this.waitForSelectorAndClick(page, this.quickAccessDropdownToggle);
+    await this.waitForSelectorAndClick(page, this.quickAccessRemoveLink);
+
+    return page.textContent(this.growlDiv);
+  }
+
+  /**
+   * Add current page to quick access
+   * @param page {Page} Browser tab
+   * @param pageName {string} Page name to add on quick access
+   * @returns {Promise<string>}
+   */
+  async addCurrentPageToQuickAccess(page, pageName) {
+    await this.dialogListener(page, true, pageName);
+    await this.waitForSelectorAndClick(page, this.quickAccessDropdownToggle);
+    await this.waitForSelectorAndClick(page, this.quickAddCurrentLink);
+
+    return page.textContent(this.growlDiv);
+  }
+
+  /**
+   * Click on manage quick access link
+   * @param page {Page} Browser tab
+   * @returns {Promise<void>}
+   */
+  async manageQuickAccess(page) {
+    await this.waitForSelectorAndClick(page, this.quickAccessDropdownToggle);
+    await this.waitForSelectorAndClick(page, this.manageYourQuickAccessLink);
+  }
+
   /**
    * Open a subMenu if closed and click on a sublink
    * @param page {Page} Browser tab
