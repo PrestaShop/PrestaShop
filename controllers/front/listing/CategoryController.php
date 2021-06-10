@@ -36,6 +36,9 @@ class CategoryControllerCore extends ProductListingFrontController
     /** @var bool If set to false, customer cannot view the current category. */
     public $customer_access = true;
 
+    /** @var bool */
+    protected $notFound = false;
+
     /**
      * @var Category
      */
@@ -91,8 +94,8 @@ class CategoryControllerCore extends ProductListingFrontController
         if (!Validate::isLoadedObject($this->category) || !$this->category->active) {
             header('HTTP/1.1 404 Not Found');
             header('Status: 404 Not Found');
-            $this->errors[] = $this->trans('This category does not exist.', [], 'Shop.Notifications.Error');
             $this->setTemplate('errors/404');
+            $this->notFound = true;
 
             return;
         } elseif (!$this->category->checkAccess($this->context->customer->id)) {
@@ -155,7 +158,7 @@ class CategoryControllerCore extends ProductListingFrontController
      */
     public function getLayout()
     {
-        if (!$this->category->checkAccess($this->context->customer->id)) {
+        if (!$this->category->checkAccess($this->context->customer->id) || $this->notFound) {
             return 'layouts/layout-full-width.tpl';
         }
 
@@ -263,10 +266,16 @@ class CategoryControllerCore extends ProductListingFrontController
     {
         $page = parent::getTemplateVarPage();
 
-        $page['body_classes']['category-id-' . $this->category->id] = true;
-        $page['body_classes']['category-' . $this->category->name] = true;
-        $page['body_classes']['category-id-parent-' . $this->category->id_parent] = true;
-        $page['body_classes']['category-depth-level-' . $this->category->level_depth] = true;
+        if ($this->notFound) {
+            $page['page_name'] = 'pagenotfound';
+            $page['body_classes']['pagenotfound'] = true;
+            $page['title'] = $this->trans('The page you are looking for was not found.', [], 'Shop.Theme.Global');
+        } else {
+            $page['body_classes']['category-id-' . $this->category->id] = true;
+            $page['body_classes']['category-' . $this->category->name] = true;
+            $page['body_classes']['category-id-parent-' . $this->category->id_parent] = true;
+            $page['body_classes']['category-depth-level-' . $this->category->level_depth] = true;
+        }
 
         return $page;
     }
