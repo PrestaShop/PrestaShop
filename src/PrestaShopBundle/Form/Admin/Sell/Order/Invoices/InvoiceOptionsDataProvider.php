@@ -39,9 +39,6 @@ use PrestaShopBundle\Form\Exception\InvalidConfigurationDataErrorCollection;
  */
 final class InvoiceOptionsDataProvider implements FormDataProviderInterface
 {
-    public const ERROR_INCORRECT_INVOICE_NUMBER = 'error_incorrect_invoice_number';
-    public const ERROR_CONTAINS_HTML_TAGS = 'error_contains_html_tags';
-
     /**
      * @var DataConfigurationInterface
      */
@@ -91,32 +88,32 @@ final class InvoiceOptionsDataProvider implements FormDataProviderInterface
      *
      * @throws TypeException|DataProviderException
      */
-    private function validate(array $data)
+    private function validate(array $data): void
     {
         $errorCollection = new InvalidConfigurationDataErrorCollection();
 
-        if (isset($data[InvoiceOptionsType::INVOICE_NUMBER])) {
-            $invoiceNumber = $data[InvoiceOptionsType::INVOICE_NUMBER];
+        if (isset($data[InvoiceOptionsType::FIELD_INVOICE_NUMBER])) {
+            $invoiceNumber = $data[InvoiceOptionsType::FIELD_INVOICE_NUMBER];
             if ($invoiceNumber > 0 && $invoiceNumber <= $this->nextInvoiceNumber) {
                 $errorCollection->add(
                     new InvalidConfigurationDataError(
-                        static::ERROR_INCORRECT_INVOICE_NUMBER,
-                        InvoiceOptionsType::INVOICE_NUMBER
+                        InvalidConfigurationDataError::ERROR_INCORRECT_INVOICE_NUMBER,
+                        InvoiceOptionsType::FIELD_INVOICE_NUMBER
                     )
                 );
             }
         }
 
-        if (isset($data[InvoiceOptionsType::INVOICE_PREFIX]) && is_array($data[InvoiceOptionsType::INVOICE_PREFIX])) {
-            $this->validateContainsNoTags($data[InvoiceOptionsType::INVOICE_PREFIX], InvoiceOptionsType::INVOICE_PREFIX, $errorCollection);
+        if (isset($data[InvoiceOptionsType::FIELD_INVOICE_PREFIX]) && is_array($data[InvoiceOptionsType::FIELD_INVOICE_PREFIX])) {
+            $this->validateContainsNoTags($data[InvoiceOptionsType::FIELD_INVOICE_PREFIX], InvoiceOptionsType::FIELD_INVOICE_PREFIX, $errorCollection);
         }
 
-        if (isset($data[InvoiceOptionsType::LEGAL_FREE_TEXT]) && is_array($data[InvoiceOptionsType::LEGAL_FREE_TEXT])) {
-            $this->validateContainsNoTags($data[InvoiceOptionsType::LEGAL_FREE_TEXT], InvoiceOptionsType::LEGAL_FREE_TEXT, $errorCollection);
+        if (isset($data[InvoiceOptionsType::FIELD_LEGAL_FREE_TEXT]) && is_array($data[InvoiceOptionsType::FIELD_LEGAL_FREE_TEXT])) {
+            $this->validateContainsNoTags($data[InvoiceOptionsType::FIELD_LEGAL_FREE_TEXT], InvoiceOptionsType::FIELD_LEGAL_FREE_TEXT, $errorCollection);
         }
 
-        if (isset($data[InvoiceOptionsType::FOOTER_TEXT]) && is_array($data[InvoiceOptionsType::FOOTER_TEXT])) {
-            $this->validateContainsNoTags($data[InvoiceOptionsType::FOOTER_TEXT], InvoiceOptionsType::FOOTER_TEXT, $errorCollection);
+        if (isset($data[InvoiceOptionsType::FIELD_FOOTER_TEXT]) && is_array($data[InvoiceOptionsType::FIELD_FOOTER_TEXT])) {
+            $this->validateContainsNoTags($data[InvoiceOptionsType::FIELD_FOOTER_TEXT], InvoiceOptionsType::FIELD_FOOTER_TEXT, $errorCollection);
         }
 
         if (!$errorCollection->isEmpty()) {
@@ -139,7 +136,7 @@ final class InvoiceOptionsDataProvider implements FormDataProviderInterface
             if ($value !== null && $value !== strip_tags($value)) {
                 $errorCollection->add(
                     new InvalidConfigurationDataError(
-                        static::ERROR_CONTAINS_HTML_TAGS,
+                        InvalidConfigurationDataError::ERROR_CONTAINS_HTML_TAGS,
                         $key,
                         $languageId
                     )

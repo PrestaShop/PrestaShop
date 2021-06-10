@@ -26,6 +26,8 @@
 
 namespace PrestaShopBundle\Controller\Admin\Sell\Order;
 
+use FormInterface;
+use PrestaShop\PrestaShop\Core\Form\FormDataProviderInterface;
 use PrestaShop\PrestaShop\Core\Form\FormHandlerInterface;
 use PrestaShopBundle\Controller\Admin\FrameworkBundleAdminController;
 use PrestaShopBundle\Controller\Exception\FieldNotFoundException;
@@ -41,6 +43,7 @@ use PrestaShopBundle\Form\Exception\InvalidConfigurationDataError;
 use PrestaShopBundle\Form\Exception\InvalidConfigurationDataErrorCollection;
 use PrestaShopBundle\Security\Annotation\AdminSecurity;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
+use Symfony\Component\Form\Form;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 
@@ -132,137 +135,7 @@ class InvoicesController extends FrameworkBundleAdminController
         return $this->redirectToRoute('admin_order_invoices');
     }
 
-    /**
-     * @return array
-     *
-     * @throws FieldNotFoundException
-     *
-     * @var InvalidConfigurationDataErrorCollection
-     */
-    private function getErrorMessages(InvalidConfigurationDataErrorCollection $errors): array
-    {
-        $messages = [];
 
-        foreach ($errors as $error) {
-            $messages[] = $this->getErrorMessage($error);
-        }
-
-        return $messages;
-    }
-
-    /**
-     * @param InvalidConfigurationDataError $error
-     *
-     * @return string
-     *
-     * @throws FieldNotFoundException
-     */
-    private function getErrorMessage(InvalidConfigurationDataError $error): string
-    {
-        switch ($error->getErrorCode()) {
-            case InvoicesByDateDataProvider::ERROR_INVALID_DATE_TO:
-            case InvoicesByDateDataProvider::ERROR_INVALID_DATE_FROM:
-            return $this->trans(
-                    'Invalid "%s" date.',
-                    'Admin.Orderscustomers.Notification',
-                    [
-                        $this->getFieldLabel($error->getFieldName()),
-                    ]
-                );
-            case InvoicesByDateDataProvider::ERROR_NO_INVOICES_FOUND:
-                return $this->trans(
-                    'No invoice has been found for this period.',
-                    'Admin.Orderscustomers.Notification'
-                );
-            case InvoicesByStatusDataProvider::ERROR_NO_ORDER_STATE_SELECTED:
-                return $this->trans(
-                    'You must select at least one order status.',
-                    'Admin.Orderscustomers.Notification'
-                );
-            case InvoiceByStatusFormHandler::ERROR_NO_INVOICES_FOUND_FOR_STATUS:
-                return $this->trans(
-                    'No invoice has been found for this status.',
-                    'Admin.Orderscustomers.Notification'
-                );
-            case InvoiceOptionsDataProvider::ERROR_INCORRECT_INVOICE_NUMBER:
-                return $this->trans(
-                    'Invoice number must be greater than the last invoice number, or 0 if you want to keep the current number.',
-                    'Admin.Orderscustomers.Notification'
-                );
-            case InvoiceOptionsDataProvider::ERROR_CONTAINS_HTML_TAGS:
-                if ($error->getLanguageId()) {
-                    $langRepository = $this->get('prestashop.core.admin.lang.repository');
-                    $lang = $langRepository->findOneBy(['id' => $error->getLanguageId()]);
-
-                    return $this->trans(
-                        'Field "%s" in language "%s" is invalid. Field must not contain HTML tags.',
-                        'Admin.Orderscustomers.Notification',
-                        [
-                            $this->getFieldLabel($error->getFieldName()),
-                            $lang->getName(),
-                        ]
-                    );
-                }
-        }
-
-        return $this->trans(
-            '%s is invalid.',
-            'Admin.Notifications.Error',
-            [
-                $this->getFieldLabel($error->getFieldName()),
-            ]
-        );
-    }
-
-    /**
-     * @param string $fieldName
-     *
-     * @return string
-     *
-     * @throws FieldNotFoundException
-     */
-    private function getFieldLabel(string $fieldName): string
-    {
-        switch ($fieldName) {
-            case GenerateByDateType::FIELD_DATE_FROM:
-                return $this->trans(
-                    'From',
-                    'Admin.Global.Advparameters.Feature'
-                );
-            case GenerateByDateType::FIELD_DATE_TO:
-                return $this->trans(
-                    'To',
-                    'Admin.Global'
-                );
-            case GenerateByStatusType::FIELD_ORDER_STATES:
-                return $this->trans(
-                    'Order statuses',
-                    'Admin.Orderscustomers.Feature'
-                );
-            case InvoiceOptionsType::INVOICE_PREFIX:
-                return $this->trans(
-                    'Invoice prefix',
-                    'Admin.Orderscustomers.Feature'
-                );
-            case InvoiceOptionsType::LEGAL_FREE_TEXT:
-                return $this->trans(
-                    'Legal free text',
-                    'Admin.Orderscustomers.Feature'
-                );
-            case InvoiceOptionsType::FOOTER_TEXT:
-                return $this->trans(
-                    'Footer text',
-                    'Admin.Orderscustomers.Feature'
-                );
-        }
-
-        throw new FieldNotFoundException(
-            sprintf(
-                'Field name for field %s not found',
-                $fieldName
-            )
-        );
-    }
 
     /**
      * Processes the form in a generic way.
@@ -281,13 +154,12 @@ class InvoicesController extends FrameworkBundleAdminController
             try {
                 $formHandler->save($form->getData());
             } catch (DataProviderException $e) {
-                $this->flashErrors($this->getErrorMessages($e->getInvalidConfigurationDataErrors()));
+                $errorMessageFactory = $this->get('form.invalid_configuration_error_message_factory');
+                $this->flashErrors($errorMessageFactory->getErrorMessages($e->getInvalidConfigurationDataErrors(), $form));
 
                 return false;
             }
         }
-
-        return true;
     }
 
     /**
