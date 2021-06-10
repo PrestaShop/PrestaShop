@@ -35,7 +35,7 @@ Search for non existent customer and check error message
 Search for disabled customer and check error message
 Search for existent customer and check displayed customer card
  */
-describe('Search for customers in create order page', async () => {
+describe('Orders - Create order: Search for customers', async () => {
   before(async function () {
     browserContext = await helper.createBrowserContext(this.browser);
     page = await helper.newTab(browserContext);
@@ -50,7 +50,7 @@ describe('Search for customers in create order page', async () => {
   });
 
   describe('Create disabled customer', async () => {
-    it('should go to customers page', async function () {
+    it('should go to \'Customers > Customers\' page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'goToCustomersPage', baseContext);
 
       await dashboardPage.goToSubMenu(
@@ -60,6 +60,7 @@ describe('Search for customers in create order page', async () => {
       );
 
       await customersPage.closeSfToolBar(page);
+
       const pageTitle = await customersPage.getPageTitle(page);
       await expect(pageTitle).to.contains(customersPage.pageTitle);
     });
@@ -81,7 +82,7 @@ describe('Search for customers in create order page', async () => {
   });
 
   describe('Search for customers', () => {
-    it('should go to orders page', async function () {
+    it('should go to \'Orders > Orders\' page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'goToOrdersPage', baseContext);
 
       await dashboardPage.goToSubMenu(
@@ -120,6 +121,7 @@ describe('Search for customers in create order page', async () => {
         await testContext.addContextItem(this, 'testIdentifier', step.testIdentifier, baseContext);
 
         await addOrderPage.searchCustomer(page, step.customer.email);
+
         const errorDisplayed = await addOrderPage.getNoCustomerFoundError(page);
         await expect(errorDisplayed, 'Error is not correct').to.equal(addOrderPage.noCustomerFoundText);
       });
@@ -129,13 +131,14 @@ describe('Search for customers in create order page', async () => {
       await testContext.addContextItem(this, 'testIdentifier', 'checkExistentCustomerCard', baseContext);
 
       await addOrderPage.searchCustomer(page, DefaultCustomer.email);
+
       const customerName = await addOrderPage.getCustomerNameFromResult(page, 1);
       await expect(customerName).to.contains(`${DefaultCustomer.firstName} ${DefaultCustomer.lastName}`);
     });
   });
 
   describe('Delete Customer', async () => {
-    it('should go to customers page', async function () {
+    it('should go to \'Customers > Customers\' page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'goToCustomersPageToDelete', baseContext);
 
       await addOrderPage.goToSubMenu(
