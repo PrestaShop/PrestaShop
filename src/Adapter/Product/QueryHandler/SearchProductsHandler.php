@@ -300,6 +300,13 @@ final class SearchProductsHandler extends AbstractOrderHandler implements Search
             return Product::getPriceStatic($productId, $withTaxes, $productAttributeId, $computingPrecision);
         }
 
+        // If the product already exists in the order, whatever his price, we take the same value
+        foreach ($order->getCartProducts() as $cartProduct) {
+            if ((int) $cartProduct['id_product'] === $productId) {
+                return $withTaxes ? (float) $cartProduct['unit_price_tax_incl'] : (float) $cartProduct['unit_price_tax_excl'];
+            }
+        }
+
         return Product::getPriceStatic(
             $productId,
             $withTaxes,
