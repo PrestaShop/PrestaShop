@@ -11,6 +11,28 @@ Feature: Category Management
       | Displayed            | false            |
       | Parent category      | Home Accessories |
       | Friendly URL         | pc-parts         |
+    And I add new category "category2" with following details:
+      | Name                 | Category 2       |
+      | Displayed            | false            |
+      | Parent category      | Accessories      |
+      | Friendly URL         | category2        |
+    And I add new category "category3" with following details:
+      | Name                 | Category 3       |
+      | Displayed            | false            |
+      | Parent category      | Accessories      |
+      | Friendly URL         | category3        |
+#    And I add new category "category4" with following details:
+#      | Name                 | Category 4       |
+#      | Displayed            | false            |
+#      | Parent category      | Accessories      |
+#      | Friendly URL         | category4        |
+    And I add new category "category5" with following details:
+      | Name                 | Category 5       |
+      | Displayed            | false            |
+      | Parent category      | Home             |
+      | Friendly URL         | category5        |
+
+    And category "accessories" in default language named "Accessories" exists
 
   Scenario: Edit category
     When I edit category "category1" with following details:
@@ -35,6 +57,50 @@ Feature: Category Management
   Scenario: Delete category
     When I delete category "category1" choosing mode "associate_and_disable"
     Then category "category1" does not exist
+
+  Scenario: Delete category choosing mode "associate and disable"
+            Product associated to only this category
+    When I create product "product2" with following information:
+      | name[en-US] | eastern african tracksuit  |
+      | type        | standard                   |
+    And I set product "product2" to following categories:
+      | categories       | [ category2 ]         |
+      | default category | category2             |
+    And I delete category "category2" choosing mode "associate_and_disable"
+    Then category "category2" does not exist
+    And the product product2 should be assigned to following categories:
+      | categories       | [ accessories ]       |
+      | default category | accessories           |
+
+  Scenario: Delete category
+            Product associated to this category and other categories
+            Deleted category is default category
+    When I create product "product3" with following information:
+      | name[en-US] | eastern european tracksuit             |
+      | type        | standard                               |
+    And I set product "product3" to following categories:
+      | categories       | [ category3, category5 ]          |
+      | default category | category3                         |
+    And I delete category "category3" choosing mode "associate_and_disable"
+    Then category "category3" does not exist
+    And the product product3 should be assigned to following categories:
+      | categories       | [ accessories, category5 ]        |
+      | default category | accessories                       |
+
+#  Scenario: Delete category
+#            Product associated to this category and other categories
+#            Deleted category is not default category
+#    When I create product "product4" with following information:
+#      | name[en-US] | eastern asian tracksuit                |
+#      | type        | standard                               |
+#    And I set product "product4" to following categories:
+#      | categories       | [ category4, category5 ]          |
+#      | default category | category5                         |
+#    And I delete category "category4" choosing mode "associate_and_disable"
+#    Then category "category4" does not exist
+#    And the product product4 should be assigned to following categories:
+#      | categories       | [ accessories, category5 ]        |
+#      | default category | category5                         |
 
   Scenario: Bulk delete categories
     When I add new category "category2" with following details:
