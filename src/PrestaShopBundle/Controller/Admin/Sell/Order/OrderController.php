@@ -1884,6 +1884,10 @@ class OrderController extends FrameworkBundleAdminController
                 $e->getMessage(),
                 'Admin.Orderscustomers.Notification'
             ),
+            InvoiceException::class => $this->trans(
+                $e->getMessage(),
+                'Admin.Orderscustomers.Notification'
+            ),
             InvalidAmountException::class => $this->trans(
                 'Only numbers and decimal points (".") are allowed in the amount fields, e.g. 10.50 or 1050.',
                 'Admin.Orderscustomers.Notification'
