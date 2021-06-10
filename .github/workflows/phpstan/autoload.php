@@ -19,8 +19,6 @@ define('_PS_ADMIN_DIR_', _PS_ROOT_DIR_ . '/admin-dev/');
 define('PS_ADMIN_DIR', _PS_ADMIN_DIR_);
 
 requireFileIfItExists(_PS_ROOT_DIR_ . '/tools/smarty/Smarty.class.php');
-require_once _PS_ROOT_DIR_ . '/config/defines.inc.php';
-require_once _PS_ROOT_DIR_ . '/config/autoload.php';
 require_once _PS_ROOT_DIR_ . '/config/bootstrap.php';
 require_once _PS_ROOT_DIR_ . '/install-dev/classes/exception.php';
 require_once _PS_ROOT_DIR_ . '/install-dev/classes/session.php';
