@@ -920,7 +920,16 @@ class Install extends AbstractInstall
 
         Module::updateTranslationsAfterInstall(false);
 
-        $result = $this->executeAction($modules, 'install', 'Cannot install module "%module%"');
+        $result = $this->executeAction(
+            $modules,
+            'install',
+
+            $this->translator->trans(
+                'Cannot install module "%module%"',
+                ['%module%' => '%module%'],
+                'Install'
+            )
+        );
         if ($result === false) {
             return false;
         }
@@ -936,7 +945,11 @@ class Install extends AbstractInstall
         return $this->executeAction(
             $this->getModulesOnDisk(),
             'postInstall',
-            'Cannot execute post install on module "%module%"'
+            $this->translator->trans(
+                'Cannot execute post install on module "%module%"',
+                ['%module%' => '%module%'],
+                'Install'
+            )
         );
     }
 
@@ -958,10 +971,10 @@ class Install extends AbstractInstall
 
             if (!$moduleActionIsExecuted) {
                 $moduleErrors = [
-                    $this->translator->trans(
-                        $errorMessage,
-                        ['%module%' => $module_name],
-                        'Install'
+                    str_replace(
+                        '%module%',
+                        $module_name,
+                        $errorMessage
                     ),
                 ];
 
