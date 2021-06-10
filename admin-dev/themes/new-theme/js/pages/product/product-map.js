@@ -179,4 +179,15 @@ export default {
     expandAllButton: '#categories-tree-expand',
     reduceAllButton: '#categories-tree-reduce',
   },
+  modules: {
+    previewContainer: '.module-render-container.all-modules',
+    previewButton: '.modules-list-button',
+    selectorContainer: '.module-selection',
+    moduleSelector: '.modules-list-select',
+    selectorPreviews: '.module-selection .module-render-container',
+    selectorPreview: (moduleId) => `.module-selection .module-render-container.${moduleId}`,
+    contentContainer: '.module-contents',
+    moduleContents: '.module-contents .module-render-container',
+    moduleContent: (moduleId) => `.module-contents .module-render-container.${moduleId}`,
+  },
 };

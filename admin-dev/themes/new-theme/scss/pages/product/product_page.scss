@@ -986,7 +986,8 @@ $product-page-padding-bottom: 80px !default;
   }
 
   /* Last tab modules selection */
-  #hooks.form-contenttab {
+  #hooks.form-contenttab,
+  #modules-tab {
     .top-logo {
       float: left;
       max-width: 45px;
@@ -1043,6 +1044,12 @@ $product-page-padding-bottom: 80px !default;
         content: "\ea4b";
       }
     }
+  }
+}
+
+.product-page-v2 {
+  .maxLength {
+    float: none;
   }
 }
 
