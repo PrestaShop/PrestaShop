@@ -47,14 +47,11 @@ final class InvoiceOptionsDataProvider implements FormDataProviderInterface
 
     /**
      * @param DataConfigurationInterface $invoiceOptionsConfiguration
-     * @param int $nextInvoiceNumber next available invoice number
      */
     public function __construct(
-        DataConfigurationInterface $invoiceOptionsConfiguration,
-        $nextInvoiceNumber
+        DataConfigurationInterface $invoiceOptionsConfiguration
     ) {
         $this->invoiceOptionsConfiguration = $invoiceOptionsConfiguration;
-        $this->nextInvoiceNumber = $nextInvoiceNumber;
     }
 
     /**
@@ -70,33 +67,6 @@ final class InvoiceOptionsDataProvider implements FormDataProviderInterface
      */
     public function setData(array $data)
     {
-        if ($errors = $this->validate($data)) {
-            return $errors;
-        }
-
         return $this->invoiceOptionsConfiguration->updateConfiguration($data);
-    }
-
-    /**
-     * Perform validations on form data.
-     *
-     * @param array $data
-     *
-     * @return array Array of errors if any
-     */
-    private function validate(array $data)
-    {
-        $errors = [];
-        $invoiceNumber = $data['invoice_number'];
-
-        if ($invoiceNumber > 0 && $invoiceNumber <= $this->nextInvoiceNumber) {
-            $errors[] = [
-                'key' => 'Invalid invoice number.',
-                'domain' => 'Admin.Orderscustomers.Notification',
-                'parameters' => [],
-            ];
-        }
-
-        return $errors;
     }
 }
