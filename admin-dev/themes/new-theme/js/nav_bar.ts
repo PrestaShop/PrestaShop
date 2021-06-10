@@ -160,20 +160,23 @@ export default class NavBar {
 
         addMobileBodyClickListener();
         const MAX_MOBILE_WIDTH = 1023;
+        const windowWidth = <number>$(window).width();
 
-        if (<number>$(window).width() <= MAX_MOBILE_WIDTH) {
+        if (windowWidth <= MAX_MOBILE_WIDTH) {
           this.mobileNav();
         }
 
         $(window).on('resize', () => {
+          const currentWindowWidth = <number>$(window).width();
+
           if (
             $('body').hasClass('mobile')
-            && <number > $(window).width() > MAX_MOBILE_WIDTH
+            && currentWindowWidth > MAX_MOBILE_WIDTH
           ) {
             this.unbuildMobileMenu();
           } else if (
             !$('body').hasClass('mobile')
-            && <number>$(window).width() <= MAX_MOBILE_WIDTH
+            && currentWindowWidth <= MAX_MOBILE_WIDTH
           ) {
             this.mobileNav();
           }

@@ -92,6 +92,6 @@ interface RegExpPositions extends RegExpExecArray {
   oldPosition: string;
 }
 
-type FetchResponse = Record<string, number | string | Record<string, unknown>>;
+type FetchResponse = Record<string, any>;
 
 type OptionsObject = FetchResponse;

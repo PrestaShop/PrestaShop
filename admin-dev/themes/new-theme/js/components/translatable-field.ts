@@ -23,8 +23,8 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
 
-import {EventEmitter} from './event-emitter';
-import ComponentsMap from './components-map';
+import {EventEmitter} from '@components/event-emitter';
+import ComponentsMap from '@components/components-map';
 
 const {$} = window;
 

@@ -132,7 +132,7 @@ export default class AutoCompleteSearch {
     /* eslint-disable */
     this.$searchInput
       .typeahead(this.config, this.dataSetConfig)
-      .bind('typeahead:select', (e: any, selectedItem: unknown) =>
+      .bind('typeahead:select', (e: any, selectedItem: any) =>
         this.dataSetConfig.onSelect(selectedItem, e, this.$searchInput)
       )
       .bind('typeahead:close', (e: any) => {
