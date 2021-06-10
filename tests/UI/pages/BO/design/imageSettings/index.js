@@ -1,7 +1,16 @@
 require('module-alias/register');
 const BOBasePage = require('@pages/BO/BObasePage');
 
+/**
+ * Image settings page, contains functions that can be used on the page
+ * @class
+ * @extends BOBasePage
+ */
 class ImageSettings extends BOBasePage {
+  /**
+   * @constructs
+   * Setting up texts and selectors to use on image settings page
+   */
   constructor() {
     super();
 
@@ -71,7 +80,7 @@ class ImageSettings extends BOBasePage {
   /* Header methods */
   /**
    * Go to new image type page
-   * @param page
+   * @param page {Page} Browser tab
    * @return {Promise<void>}
    */
   async goToNewImageTypePage(page) {
@@ -81,8 +90,8 @@ class ImageSettings extends BOBasePage {
   /* Filter methods */
 
   /**
-   * Get Number of image types
-   * @param page
+   * Get number of image types
+   * @param page {Page} Browser tab
    * @return {Promise<number>}
    */
   getNumberOfElementInGrid(page) {
@@ -91,7 +100,7 @@ class ImageSettings extends BOBasePage {
 
   /**
    * Reset all filters
-   * @param page
+   * @param page {Page} Browser tab
    * @return {Promise<void>}
    */
   async resetFilter(page) {
@@ -103,20 +112,21 @@ class ImageSettings extends BOBasePage {
 
   /**
    * Reset and get number of image types
-   * @param page
+   * @param page {Page} Browser tab
    * @return {Promise<number>}
    */
   async resetAndGetNumberOfLines(page) {
     await this.resetFilter(page);
+
     return this.getNumberOfElementInGrid(page);
   }
 
   /**
    * Filter image types
-   * @param page
-   * @param filterType
-   * @param filterBy
-   * @param value
+   * @param page {Page} Browser tab
+   * @param filterType {string} Input or select to choose method of filter
+   * @param filterBy {string} Column to filter
+   * @param value {string} Value to filter with
    * @return {Promise<void>}
    */
   async filterTable(page, filterType, filterBy, value) {
@@ -142,9 +152,9 @@ class ImageSettings extends BOBasePage {
 
   /**
    * Get text from column in table
-   * @param page
-   * @param row
-   * @param columnName
+   * @param page {Page} Browser tab
+   * @param row {number} Row on table
+   * @param columnName {string} Value of column name to get text column
    * @return {Promise<string>}
    */
   getTextColumn(page, row, columnName) {
@@ -153,8 +163,8 @@ class ImageSettings extends BOBasePage {
 
   /**
    * Get content from all rows
-   * @param page
-   * @param columnName
+   * @param page {Page} Browser tab
+   * @param columnName {string} Value of column name to get all rows column content
    * @return {Promise<[]>}
    */
   async getAllRowsColumnContent(page, columnName) {
@@ -171,9 +181,9 @@ class ImageSettings extends BOBasePage {
 
   /**
    * Get image type status for pages: products, categories, manufacturers, suppliers or stores
-   * @param page
-   * @param row
-   * @param columnName
+   * @param page {Page} Browser tab
+   * @param row {number} Row on table
+   * @param columnName {string} Value of column name to get type status
    * @return {Promise<boolean>}
    */
   async getImageTypeStatus(page, row, columnName) {
@@ -182,8 +192,8 @@ class ImageSettings extends BOBasePage {
 
   /**
    * Go to edit imageType page
-   * @param page
-   * @param row
+   * @param page {Page} Browser tab
+   * @param row {number} Row on table
    * @return {Promise<void>}
    */
   async gotoEditImageTypePage(page, row) {
@@ -192,8 +202,8 @@ class ImageSettings extends BOBasePage {
 
   /**
    * Delete image type from row
-   * @param page
-   * @param row
+   * @param page {Page} Browser tab
+   * @param row {number} Row on table
    * @return {Promise<string>}
    */
   async deleteImageType(page, row) {
@@ -214,7 +224,7 @@ class ImageSettings extends BOBasePage {
   /* Bulk actions methods */
   /**
    * Bulk delete image types
-   * @param page
+   * @param page {Page} Browser tab
    * @return {Promise<string>}
    */
   async bulkDeleteImageTypes(page) {
@@ -247,9 +257,9 @@ class ImageSettings extends BOBasePage {
   /* Sort functions */
   /**
    * Sort table by clicking on column name
-   * @param page
-   * @param sortBy, column to sort with
-   * @param sortDirection, asc or desc
+   * @param page {Page} Browser tab
+   * @param sortBy {string} Column to sort with
+   * @param sortDirection {string} Sort direction asc or desc
    * @return {Promise<void>}
    */
   async sortTable(page, sortBy, sortDirection) {
@@ -283,7 +293,7 @@ class ImageSettings extends BOBasePage {
   /* Pagination methods */
   /**
    * Get pagination label
-   * @param page
+   * @param page {Page} Browser tab
    * @return {Promise<string>}
    */
   getPaginationLabel(page) {
@@ -292,8 +302,8 @@ class ImageSettings extends BOBasePage {
 
   /**
    * Select pagination limit
-   * @param page
-   * @param number
+   * @param page {Page} Browser tab
+   * @param number {number} Value of pagination limit to select
    * @returns {Promise<string>}
    */
   async selectPaginationLimit(page, number) {
@@ -305,7 +315,7 @@ class ImageSettings extends BOBasePage {
 
   /**
    * Click on next
-   * @param page
+   * @param page {Page} Browser tab
    * @returns {Promise<string>}
    */
   async paginationNext(page) {
@@ -316,7 +326,7 @@ class ImageSettings extends BOBasePage {
 
   /**
    * Click on previous
-   * @param page
+   * @param page {Page} Browser tab
    * @returns {Promise<string>}
    */
   async paginationPrevious(page) {
