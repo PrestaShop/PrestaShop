@@ -64,6 +64,16 @@ table.grid-ordering-column tr.position-row-while-drag {
   }
 }
 
+.adminmailtheme {
+  .action-type {
+    .text-right {
+      .btn.tooltip-link {
+        justify-content: flex-end;
+      }
+    }
+  }
+}
+
 .btn-group-action {
   a.dropdown-toggle,
   button.dropdown-toggle,
