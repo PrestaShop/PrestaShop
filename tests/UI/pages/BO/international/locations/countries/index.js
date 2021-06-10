@@ -175,7 +175,7 @@ class Countries extends BOBasePage {
    * Filter table
    * @param page {Page} Browser tab
    * @param filterType {string} Input or select to choose method of filter
-   * @param filterBy {string} Column to filter}
+   * @param filterBy {string} Column to filter
    * @param value {string} Value to filter with
    * @returns {Promise<void>}
    */
