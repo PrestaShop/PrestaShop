@@ -143,7 +143,7 @@ class CustomerFormCore extends AbstractForm
         $passwordField = $this->getField('password');
         if ((!empty($passwordField->getValue()) || $this->passwordRequired)
             && Validate::isPasswd($passwordField->getValue()) === false) {
-            $passwordField->AddError($this->translator->trans(
+            $passwordField->addError($this->translator->trans(
                 'Password must be between 5 and 72 characters long',
                 [],
                 'Shop.Notifications.Error'
@@ -221,7 +221,7 @@ class CustomerFormCore extends AbstractForm
                     $this->passwordRequired
                 );
             } catch (PrestaShopException $e) {
-                $this->errors[] = $this->translator->trans('Could not update your information, please check your data.', [], 'Shop.Notifications.Error');
+                $this->errors[''][] = $this->translator->trans('Could not update your information, please check your data.', [], 'Shop.Notifications.Error');
                 $ok = false;
             }
 
@@ -306,7 +306,7 @@ class CustomerFormCore extends AbstractForm
         }
         $value = $field->getValue();
         if (!empty($value) && false === (bool) Validate::isCustomerName($value)) {
-            $field->AddError($this->translator->trans(
+            $field->addError($this->translator->trans(
                 'Invalid format.',
                 [],
                 'Shop.Forms.Errors'

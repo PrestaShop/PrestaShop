@@ -146,7 +146,7 @@ class CustomerAddressFormCore extends AbstractForm
                 $this->getValue('token')
             );
         } catch (PrestaShopException $e) {
-            $this->errors[] = $this->translator->trans('Could not update your information, please check your data.', [], 'Shop.Notifications.Error');
+            $this->errors[''][] = $this->translator->trans('Could not update your information, please check your data.', [], 'Shop.Notifications.Error');
         }
 
         return false;
@@ -280,7 +280,7 @@ class CustomerAddressFormCore extends AbstractForm
             return false;
         }
         if (!empty($value) && false === (bool) Validate::$validationFunction($value)) {
-            $field->AddError($validationFailMessage);
+            $field->addError($validationFailMessage);
 
             return false;
         }
