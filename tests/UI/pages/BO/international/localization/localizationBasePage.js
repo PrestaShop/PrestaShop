@@ -31,7 +31,7 @@ module.exports = class LocalizationBasePage extends BOBasePage {
 
   /**
    * Go to currencies page
-   * @param page Browser tab
+   * @param page {Page} Browser tab
    * @return {Promise<void>}
    */
   async goToSubTabCurrencies(page) {
