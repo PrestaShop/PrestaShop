@@ -115,7 +115,7 @@ Check product block content:
 - Pagination next and previous
 - Delete product
 */
-describe('Check product block in view order page', async () => {
+describe('BO - Orders - view and edit order : Check product block', async () => {
   // before and after functions
   before(async function () {
     browserContext = await helper.createBrowserContext(this.browser);
@@ -138,7 +138,7 @@ describe('Check product block in view order page', async () => {
 
   // 1 - create order
   describe(`Create order by '${customerData.firstName} ${customerData.lastName}' in FO`, async () => {
-    it('should add product to cart and go to checkout page', async function () {
+    it('should add product to cart', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'addProductToCart', baseContext);
 
       await foHomePage.goToHomePage(page);
@@ -148,6 +148,14 @@ describe('Check product block in view order page', async () => {
 
       // Add the created product to the cart
       await foProductPage.addProductToTheCart(page, productQuantity);
+
+      const notificationsNumber = await foCartPage.getCartNotificationsNumber(page);
+      await expect(notificationsNumber).to.be.equal(5);
+    });
+
+
+    it('should go to checkout step', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'goToCheckoutPage', baseContext);
 
       // Proceed to checkout the shopping cart
       await foCartPage.clickOnProceedToCheckout(page);

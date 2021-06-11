@@ -561,7 +561,7 @@ describe('BO - Orders - view and edit order : Check and edit customer block', as
 
   // 4 - Delete the created customer
   describe(`Delete the created customer '${customerData.firstName} ${customerData.lastName}'`, async () => {
-    it('should go \'Customers > Customers\' page', async function () {
+    it('should go to \'Customers > Customers\' page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'goToCustomersPage', baseContext);
 
       await dashboardPage.goToSubMenu(
