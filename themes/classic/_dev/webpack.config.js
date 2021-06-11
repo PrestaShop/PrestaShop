@@ -74,7 +74,7 @@ let config = {
     jquery: 'jQuery',
   },
   plugins: [
-    new MiniCssExtractPlugin({filename: '[name].css'}),
+    new MiniCssExtractPlugin({filename: path.join('..', 'css', '[name].css')}),
   ]
 };
 
