@@ -2806,9 +2806,8 @@ class AdminTranslationsControllerCore extends AdminController
 
         foreach ($modules_has_mails as $module_name => $module_path) {
             $module_path = rtrim($module_path, '/');
-            $module_locale_mails_path = $module_path . '/mails/' . $this->lang_selected->iso_code . '/';
-            $module_mails[$module_name] = $this->getMailFiles($module_locale_mails_path, 'module_mail');
-            $module_mails[$module_name]['subject'] = $this->getSubjectMailContent($module_locale_mails_path);
+            $module_mails[$module_name] = $this->getMailFiles($module_path . '/mails/' . $this->lang_selected->iso_code . '/', 'module_mail');
+            $module_mails[$module_name]['subject'] = $core_mails['subject'];
             $module_mails[$module_name]['display'] = $this->displayMailContent($module_mails[$module_name], $subject_mail, $this->lang_selected, Tools::strtolower($module_name), $module_name, $module_name);
         }
 
