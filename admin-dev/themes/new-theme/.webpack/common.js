@@ -24,16 +24,16 @@
  */
 const path = require('path');
 const webpack = require('webpack');
-const {CleanWebpackPlugin} = require('clean-webpack-plugin');
+const { CleanWebpackPlugin } = require('clean-webpack-plugin');
 const CopyPlugin = require('copy-webpack-plugin');
-const {VueLoaderPlugin} = require('vue-loader');
+const { VueLoaderPlugin } = require('vue-loader');
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 const FixStyleOnlyEntriesPlugin = require('webpack-fix-style-only-entries');
 const bourbon = require('bourbon');
 
 module.exports = {
   externals: {
-    jquery: 'jQuery',
+    jquery: 'jQuery'
   },
   entry: {
     address: './js/pages/address',
@@ -76,7 +76,8 @@ module.exports = {
     main: './js/theme.js',
     maintenance: './js/pages/maintenance',
     manufacturer: './js/pages/manufacturer',
-    manufacturer_address_form: './js/pages/manufacturer/manufacturer_address_form.js',
+    manufacturer_address_form:
+      './js/pages/manufacturer/manufacturer_address_form.js',
     merchandise_return: './js/pages/merchandise-return',
     meta: './js/pages/meta',
     module: './js/pages/module',
@@ -115,7 +116,7 @@ module.exports = {
     orders: './scss/pages/orders/orders.scss',
     product: './scss/pages/product/product_page.scss',
     product_catalog: './scss/pages/product/products_catalog.scss',
-    stock_page: './scss/pages/stock/stock_page.scss',
+    stock_page: './scss/pages/stock/stock_page.scss'
   },
   output: {
     path: path.resolve(__dirname, '../public'),
@@ -124,7 +125,7 @@ module.exports = {
     library: '[name]',
 
     sourceMapFilename: '[name].[hash:8].map',
-    chunkFilename: '[id].[hash:8].js',
+    chunkFilename: '[id].[hash:8].js'
   },
   resolve: {
     extensions: ['.ts', '.js', '.vue', '.json'],
@@ -137,8 +138,8 @@ module.exports = {
       '@scss': path.resolve(__dirname, '../scss'),
       '@node_modules': path.resolve(__dirname, '../node_modules'),
       '@vue': path.resolve(__dirname, '../js/vue'),
-      '@PSTypes': path.resolve(__dirname, '../js/types'),
-    },
+      '@PSTypes': path.resolve(__dirname, '../js/types')
+    }
   },
   module: {
     rules: [
@@ -149,16 +150,16 @@ module.exports = {
           {
             loader: 'babel-loader',
             options: {
-              presets: [['env', {useBuiltIns: 'usage', modules: false}]],
-              plugins: ['transform-object-rest-spread', 'transform-runtime'],
-            },
-          },
-        ],
+              presets: [['env', { useBuiltIns: 'usage', modules: false }]],
+              plugins: ['transform-object-rest-spread', 'transform-runtime']
+            }
+          }
+        ]
       },
       {
         test: /\.ts?$/,
         use: 'ts-loader',
-        exclude: /node_modules/,
+        exclude: /node_modules/
       },
       {
         test: /jquery-ui\.js/,
@@ -167,10 +168,10 @@ module.exports = {
           wrapper: {
             thisArg: 'window',
             args: {
-              define: false,
-            },
-          },
-        },
+              define: false
+            }
+          }
+        }
       },
       {
         test: /jquery\.magnific-popup\.js/,
@@ -180,10 +181,10 @@ module.exports = {
             thisArg: 'window',
             args: {
               define: false,
-              exports: false,
-            },
-          },
-        },
+              exports: false
+            }
+          }
+        }
       },
       {
         test: /bloodhound\.min\.js/,
@@ -191,10 +192,10 @@ module.exports = {
           {
             loader: 'expose-loader',
             options: {
-              exposes: 'Bloodhound',
-            },
-          },
-        ],
+              exposes: 'Bloodhound'
+            }
+          }
+        ]
       },
       {
         test: /dropzone\/dist\/dropzone\.js/,
@@ -203,10 +204,10 @@ module.exports = {
           wrapper: {
             thisArg: 'window',
             args: {
-              module: null,
-            },
-          },
-        },
+              module: null
+            }
+          }
+        }
       },
       {
         test: require.resolve('moment'),
@@ -215,10 +216,10 @@ module.exports = {
           wrapper: {
             thisArg: 'window',
             args: {
-              define: false,
-            },
-          },
-        },
+              define: false
+            }
+          }
+        }
       },
       {
         test: /typeahead\.jquery\.js/,
@@ -228,10 +229,10 @@ module.exports = {
             thisArg: 'window',
             args: {
               define: false,
-              exports: false,
-            },
-          },
-        },
+              exports: false
+            }
+          }
+        }
       },
       {
         test: /bootstrap-tokenfield\.js/,
@@ -241,10 +242,10 @@ module.exports = {
             thisArg: 'window',
             args: {
               define: false,
-              exports: false,
-            },
-          },
-        },
+              exports: false
+            }
+          }
+        }
       },
       {
         test: /bootstrap-datetimepicker\.js/,
@@ -254,10 +255,10 @@ module.exports = {
             thisArg: 'window',
             args: {
               define: false,
-              exports: false,
-            },
-          },
-        },
+              exports: false
+            }
+          }
+        }
       },
       {
         test: /bootstrap-colorpicker\.js/,
@@ -267,10 +268,10 @@ module.exports = {
             thisArg: 'window',
             args: {
               define: false,
-              exports: false,
-            },
-          },
-        },
+              exports: false
+            }
+          }
+        }
       },
       {
         test: /jwerty\/jwerty\.js/,
@@ -279,23 +280,23 @@ module.exports = {
           wrapper: {
             thisArg: 'window',
             args: {
-              module: false,
-            },
-          },
-        },
+              module: false
+            }
+          }
+        }
       },
       {
         test: /\.vue$/,
-        loader: 'vue-loader',
+        loader: 'vue-loader'
       },
       {
         test: /\.css$/,
         use: [
           {
-            loader: MiniCssExtractPlugin.loader,
+            loader: MiniCssExtractPlugin.loader
           },
-          'css-loader',
-        ],
+          'css-loader'
+        ]
       },
       {
         test: /\.scss$/,
@@ -306,55 +307,55 @@ module.exports = {
           {
             loader: 'css-loader',
             options: {
-              sourceMap: true,
-            },
+              sourceMap: true
+            }
           },
           {
             loader: 'postcss-loader',
             options: {
-              sourceMap: true,
-            },
+              sourceMap: true
+            }
           },
           {
             loader: 'sass-loader',
             options: {
               sourceMap: true,
               sassOptions: {
-                includePaths: [bourbon.includePaths],
-              },
-            },
-          },
-        ],
+                includePaths: bourbon.includePaths
+              }
+            }
+          }
+        ]
       },
       {
         test: /\.scss$/,
         include: /js/,
-        use: ['vue-style-loader', 'css-loader', 'sass-loader'],
+        use: ['vue-style-loader', 'css-loader', 'sass-loader']
       },
       // FILES
       {
         test: /.(jpg|png|woff2?|eot|otf|ttf|svg|gif)$/,
         loader: 'file-loader',
         options: {
-          name: '[hash].[ext]',
-        },
-      },
-    ],
+          name: '[hash].[ext]'
+        }
+      }
+    ]
   },
   plugins: [
     new FixStyleOnlyEntriesPlugin(),
     new CleanWebpackPlugin({
-      cleanOnceBeforeBuildPatterns: ['!theme.rtlfix'],
+      cleanOnceBeforeBuildPatterns: ['!theme.rtlfix']
     }),
-    new MiniCssExtractPlugin({filename: '[name].css'}),
+    new MiniCssExtractPlugin({ filename: '[name].css' }),
     new webpack.ProvidePlugin({
       moment: 'moment', // needed for bootstrap datetime picker
       $: 'jquery', // needed for jquery-ui
-      jQuery: 'jquery',
+      jQuery: 'jquery'
     }),
     new CopyPlugin({
-      patterns: [{from: 'static'}],
+      patterns: [{ from: 'static' }]
     }),
-    new VueLoaderPlugin(),
-  ],
+    new VueLoaderPlugin()
+  ]
 };
