@@ -427,6 +427,12 @@ $product-page-padding-bottom: 80px !default;
     @include border-bottom-radius(0);
     @include transition(width 0.5s ease-out, margin 0.5s ease-out);
 
+    .product-images-dropzone-error {
+      p {
+        margin-bottom: 0;
+      }
+    }
+
     &.col-md-8 {
       min-height: 200px;
       border-right: solid 1px $gray-light;
@@ -586,7 +592,7 @@ $product-page-padding-bottom: 80px !default;
     z-index: 0;
     float: left;
     min-height: 200px;
-    margin: 10px 0 5px 5px;
+    margin: 10px 0 5px;
     cursor: default;
 
     .close {
@@ -604,6 +610,7 @@ $product-page-padding-bottom: 80px !default;
   #product-images-container {
     position: relative;
     display: flex;
+    flex-wrap: wrap;
     width: 100%;
     border: solid 1px $gray-light;
 
