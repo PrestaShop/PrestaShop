@@ -512,7 +512,6 @@ class HTMLTemplateInvoiceCore extends HTMLTemplate
         if (is_string($invoice_file_name) && !empty($invoice_file_name)) {
             return $invoice_file_name;
         }
-
         $format = '%1$s%2$06d';
 
         if (Configuration::get('PS_INVOICE_USE_YEAR')) {
