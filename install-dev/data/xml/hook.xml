@@ -2909,6 +2909,10 @@
       <name>actionFeatureFlagSave</name>
       <title>Modify feature flag form submitted data</title>
       <description>This hook allows to modify the Feature Flag data being submitted through the form after it was saved</description>
+    <hook id="actionInvoiceFileNameSet">
+      <name>actionInvoiceFileNameSet</name>
+      <title>Set file name for PDF invoice</title>
+      <description>This hook allows to modify the name of PDF invoice</description>
     </hook>
   </entities>
 </entity_hook>
