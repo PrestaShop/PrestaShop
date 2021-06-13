@@ -2768,5 +2768,10 @@
       <title>Category footer</title>
       <description>This hook adds new blocks under the products listing in a category/search</description>
     </hook>
+    <hook id="actionInvoiceFileNameSet">
+      <name>actionInvoiceFileNameSet</name>
+      <title>Set file name for PDF invoice</title>
+      <description>This hook allows to modify the name of PDF invoice</description>
+    </hook>
   </entities>
 </entity_hook>

@@ -524,6 +524,18 @@ class HTMLTemplateInvoiceCore extends HTMLTemplate
     {
         $id_lang = Context::getContext()->language->id;
         $id_shop = (int) $this->order->id_shop;
+
+        $invoice_file_name = Hook::exec('actionInvoiceFileNameSet', array(
+            get_class($this->order_invoice) => $this->order_invoice,				
+            'id_lang' => (int) $id_lang,
+            'id_shop' => (int) $id_shop,
+            'number' => (int) $this->order_invoice->number,
+        ));
+
+        if (!empty($invoice_file_name)) {
+            return $invoice_file_name;
+        }
+                
         $format = '%1$s%2$06d';
 
         if (Configuration::get('PS_INVOICE_USE_YEAR')) {
