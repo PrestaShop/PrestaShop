@@ -28,7 +28,6 @@ namespace PrestaShop\PrestaShop\Adapter\Category\CommandHandler;
 
 use PrestaShop\PrestaShop\Core\Domain\Category\ValueObject\CategoryDeleteMode;
 use Product;
-use Shop;
 
 /**
  * Class AbstractDeleteCategoryHandler.
@@ -36,36 +35,16 @@ use Shop;
 abstract class AbstractDeleteCategoryHandler
 {
     /**
-     * Get products that belong to a category
+     * Handle products update after category deletion.
      *
-     * @param int $categoryId
+     * @param array $categoryProducts products that belong to the category before deletion
+     * @param int $parentCategoryId parent category of the category to be deleted
+     * @param CategoryDeleteMode $mode deletion mode
      */
-    protected function getProductsWithoutCategory($categoryId)
+    protected function handleProductsUpdate(array $categoryProducts, $parentCategoryId, CategoryDeleteMode $mode)
     {
-        $productsWithoutCategory = \Db::getInstance()->executeS('
-                    SELECT p.`id_product`
-                    FROM `' . _DB_PREFIX_ . 'product` p
-                    ' . Shop::addSqlAssociation('product', 'p') . '
-                    WHERE EXISTS (
-                        SELECT 1 FROM `' . _DB_PREFIX_ . 'category_product` cp
-                        WHERE cp.`id_product` = p.`id_product`
-                        AND cp.`id_category` = ' . $categoryId . '
-                    )
-                ');
-
-        return $productsWithoutCategory;
-    }
-
-    /**
-     * Handle products category after its deletion.
-     *
-     * @param int $parentCategoryId
-     * @param CategoryDeleteMode $mode
-     */
-    protected function handleProductsUpdate($productsWithoutCategory, $parentCategoryId, CategoryDeleteMode $mode)
-    {
-        foreach ($productsWithoutCategory as $productWithoutCategory) {
-            $product = new Product((int) $productWithoutCategory['id_product']);
+        foreach ($categoryProducts as $categoryProduct) {
+            $product = new Product((int) $categoryProduct['id_product']);
 
             if ($product->id) {
                 if (0 === $parentCategoryId || $mode->shouldRemoveProducts()) {
