@@ -571,9 +571,7 @@ class CartPresenter implements PresenterInterface
 
             $totalCartVoucherReduction = 0;
 
-            if (!$this->cartVoucherHasPercentReduction($cartVoucher)
-                && !$this->cartVoucherHasAmountReduction($cartVoucher)
-                && !$this->cartVoucherHasGiftProductReduction($cartVoucher)) {
+            if ($this->cartVoucherHasFreeShippingOnly($cartVoucher)) {
                 $freeShippingOnly = true;
                 if ($freeShippingAlreadySet) {
                     unset($vouchers[$cartVoucher['id_cart_rule']]);
@@ -619,16 +617,6 @@ class CartPresenter implements PresenterInterface
      *
      * @return bool
      */
-    private function cartVoucherHasFreeShipping($cartVoucher)
-    {
-        return !empty($cartVoucher['free_shipping']);
-    }
-
-    /**
-     * @param array $cartVoucher
-     *
-     * @return bool
-     */
     private function cartVoucherHasPercentReduction($cartVoucher)
     {
         return isset($cartVoucher['reduction_percent'])
@@ -654,6 +642,18 @@ class CartPresenter implements PresenterInterface
     private function cartVoucherHasGiftProductReduction($cartVoucher)
     {
         return !empty($cartVoucher['gift_product']);
+    }
+
+    /**
+     * @param array $cartVoucher
+     *
+     * @return bool
+     */
+    private function cartVoucherHasFreeShippingOnly($cartVoucher)
+    {
+        return !$this->cartVoucherHasPercentReduction($cartVoucher)
+            && !$this->cartVoucherHasAmountReduction($cartVoucher)
+            && !$this->cartVoucherHasGiftProductReduction($cartVoucher);
     }
 
     /**
