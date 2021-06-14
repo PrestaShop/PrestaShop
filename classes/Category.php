@@ -2054,6 +2054,23 @@ class CategoryCore extends ObjectModel
 		ORDER BY `position` ASC');
     }
 
+    /**
+     * Get products of the category that will be deleted
+     */
+    public function getProductsBeforeDeletion(): array
+    {
+        $products = Db::getInstance()->executeS('
+                    SELECT p.`id_product`
+                    FROM `' . _DB_PREFIX_ . 'product` p
+                    ' . Shop::addSqlAssociation('product', 'p') . '
+                    LEFT JOIN `' . _DB_PREFIX_ . 'category_product` cp
+                    ON cp.`id_product` = p.`id_product`
+                    WHERE cp.`id_category` = ' . (int) $this->id . '
+                ');
+
+        return $products;
+    }
+
     /*
         Create the link rewrite if not exists or invalid on category creation
     */
@@ -2462,22 +2479,5 @@ class CategoryCore extends ObjectModel
     public function isRootCategory(): bool
     {
         return 0 === (int) $this->id_parent;
-    }
-
-    /**
-     * Get products of the category that will be deleted
-     */
-    public function getProductsBeforeDeletion(): array
-    {
-        $products = \Db::getInstance()->executeS('
-                    SELECT p.`id_product`
-                    FROM `' . _DB_PREFIX_ . 'product` p
-                    ' . Shop::addSqlAssociation('product', 'p') . '
-                    LEFT JOIN `' . _DB_PREFIX_ . 'category_product` cp
-                    ON cp.`id_product` = p.`id_product`
-                    WHERE cp.`id_category` = ' . (int) $this->id . '
-                ');
-
-        return $products;
     }
 }
