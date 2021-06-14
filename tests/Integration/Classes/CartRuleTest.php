@@ -129,6 +129,30 @@ class CartRuleTest extends TestCase
         $this->assertEquals(3, count($customerCartRules));
     }
 
+    public function testGetAllCartRulesForCustomerWithDedicatedMethodBothEnabledAndDisabledWithOtherCustomerCartRulesAvailable()
+    {
+        $this->createDummyCartRule(false, (int) $this->dummyCustomer->id);
+        $this->createDummyCartRule(true, (int) $this->dummyCustomer->id);
+
+        $differentCustomer = $this->createDummyCustomer();
+        $yetAnotherCustomer = $this->createDummyCustomer();
+
+        // Just to make sure that our CartRule::getAlCustomerCartRules works well
+        $this->createDummyCartRule(false, (int) $differentCustomer->id);
+        $this->createDummyCartRule(true, (int) $yetAnotherCustomer->id);
+
+        $customerCartRules = CartRule::getAllCustomerCartRules(
+            (int) $this->dummyCustomer->id
+        );
+
+        $yetAnotherCustomerCartRules = CartRule::getAllCustomerCartRules(
+            (int) $yetAnotherCustomer->id
+        );
+
+        $this->assertEquals(2, count($customerCartRules));
+        $this->assertEquals(1, count($yetAnotherCustomerCartRules));
+    }
+
     /**
      * @param bool $active
      * @param int $customerId
@@ -167,7 +191,7 @@ class CartRuleTest extends TestCase
         $customer = new Customer();
         $customer->firstname = 'Jenna';
         $customer->lastname = 'Doe';
-        $customer->email = 'pub+jenna@prestashop.com';
+        $customer->email = 'pub+jenna+' . rand(0, 99) . '@prestashop.com';
         $customer->passwd = Tools::hash('prestashop');
         $customer->save();
 
