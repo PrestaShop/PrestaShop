@@ -19,6 +19,8 @@ admin_attachments_filter:
 admin_attachments_create:
   path: /new
   methods: [GET, POST]
+  options:
+    expose: true
   defaults:
     _controller: PrestaShopBundle\Controller\Admin\Sell\Catalog\AttachmentController::createAction
     _legacy_controller: AdminAttachments
