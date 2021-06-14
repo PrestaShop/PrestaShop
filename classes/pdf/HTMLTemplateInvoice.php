@@ -509,7 +509,7 @@ class HTMLTemplateInvoiceCore extends HTMLTemplate
             'number' => (int) $this->order_invoice->number,
         ));
 
-        if (!empty($invoice_file_name)) {
+        if (is_string($invoice_file_name) && !empty($invoice_file_name)) {
             return $invoice_file_name;
         }
                 
