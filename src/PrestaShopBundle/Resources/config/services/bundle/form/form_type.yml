@@ -1700,3 +1700,30 @@ services:
             - '@prestashop.core.feature_flags.modifier'
         tags:
             - { name: form.type }
+
+    form.type.improve.design.image_settings.image_type:
+      class: 'PrestaShopBundle\Form\Admin\Improve\Design\ImageSettings\ImageTypeType'
+      parent: 'form.type.translatable.aware'
+      public: true
+      tags:
+        - { name: form.type }
+
+    form.type.improve.design.image_settings.image_generation_options_type:
+      class: 'PrestaShopBundle\Form\Admin\Improve\Design\ImageSettings\ImageGenerationOptionsType'
+      parent: 'form.type.translatable.aware'
+      public: true
+      arguments:
+        - '@=service("prestashop.adapter.shop.context").isAllShopContext()'
+        - '@=service("prestashop.adapter.multistore_feature").isUsed()'
+      tags:
+        - { name: form.type }
+
+    form.type.improve.design.image_settings.thumbnail_regeneration_type:
+      class: 'PrestaShopBundle\Form\Admin\Improve\Design\ImageSettings\ThumbnailRegenerationType'
+      parent: 'form.type.translatable.aware'
+      public: true
+      arguments:
+        - '@prestashop.core.form.choice_provider.image_type_category'
+        - '@prestashop.core.form.choice_provider.image_type_formats'
+      tags:
+        - { name: form.type }
