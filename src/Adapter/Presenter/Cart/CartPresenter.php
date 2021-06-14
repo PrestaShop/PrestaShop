@@ -617,7 +617,7 @@ class CartPresenter implements PresenterInterface
      *
      * @return bool
      */
-    private function cartVoucherHasPercentReduction($cartVoucher)
+    private function cartVoucherHasPercentReduction(array $cartVoucher): bool
     {
         return isset($cartVoucher['reduction_percent'])
             && $cartVoucher['reduction_percent'] > 0
@@ -629,7 +629,7 @@ class CartPresenter implements PresenterInterface
      *
      * @return bool
      */
-    private function cartVoucherHasAmountReduction($cartVoucher)
+    private function cartVoucherHasAmountReduction(array $cartVoucher): bool
     {
         return isset($cartVoucher['reduction_amount']) && $cartVoucher['reduction_amount'] > 0;
     }
@@ -639,7 +639,7 @@ class CartPresenter implements PresenterInterface
      *
      * @return bool
      */
-    private function cartVoucherHasGiftProductReduction($cartVoucher)
+    private function cartVoucherHasGiftProductReduction(array $cartVoucher): bool
     {
         return !empty($cartVoucher['gift_product']);
     }
@@ -649,7 +649,7 @@ class CartPresenter implements PresenterInterface
      *
      * @return bool
      */
-    private function cartVoucherHasFreeShippingOnly($cartVoucher)
+    private function cartVoucherHasFreeShippingOnly(array $cartVoucher): bool
     {
         return !$this->cartVoucherHasPercentReduction($cartVoucher)
             && !$this->cartVoucherHasAmountReduction($cartVoucher)
