@@ -90,7 +90,7 @@ class CartForOrderCreation
      * @param CartRule[] $cartRules
      * @param CartAddress[] $addresses
      * @param CartSummary $summary
-     * @param CartShipping $shipping
+     * @param CartShipping|null $shipping
      * @param int $customerId
      */
     public function __construct(
@@ -101,7 +101,7 @@ class CartForOrderCreation
         array $cartRules,
         array $addresses,
         CartSummary $summary,
-        CartShipping $shipping = null,
+        ?CartShipping $shipping,
         int $customerId
     ) {
         $this->cartId = $cartId;
