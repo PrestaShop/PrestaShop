@@ -64,6 +64,12 @@ services:
     prestashop.adapter.module.data_provider.tab_module_list:
         class: PrestaShop\PrestaShop\Adapter\Module\TabModuleListProvider
 
+    prestashop.adapter.presenter.module.payment:
+        class: PrestaShop\PrestaShop\Adapter\Presenter\Module\PaymentModulesPresenter
+        arguments:
+            - '@prestashop.adapter.presenter.module'
+            - '@prestashop.adapter.module.payment_module_provider'
+
     prestashop.adapter.module.presenter.payment:
         class: PrestaShop\PrestaShop\Adapter\Module\Presenter\PaymentModulesPresenter
         arguments:
@@ -71,6 +77,7 @@ services:
             - '@prestashop.adapter.data_provider.module'
             - '@prestashop.adapter.presenter.module'
             - '@prestashop.core.admin.module.repository'
+        deprecated: 'The "%service_id% service is deprecated. Use "prestashop.adapter.presenter.module.payment" instead'
 
     prestashop.adapter.module.payment_module_provider:
         class: PrestaShop\PrestaShop\Adapter\Module\PaymentModuleListProvider
