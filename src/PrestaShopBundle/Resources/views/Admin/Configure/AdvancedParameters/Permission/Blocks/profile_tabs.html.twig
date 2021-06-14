@@ -1,5 +1,4 @@
-<?php
-/**
+{#**
  * Copyright since 2007 PrestaShop SA and Contributors
  * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
  *
@@ -22,50 +21,18 @@
  * @author    PrestaShop SA and Contributors <contact@prestashop.com>
  * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
- */
+ *#}
 
-namespace PrestaShop\PrestaShop\Core\Domain\Profile\ValueObject;
-
-use PrestaShop\PrestaShop\Core\Domain\Profile\Exception\ProfileConstraintException;
-
-class ProfileId
-{
-    /**
-     * @var int
-     */
-    private $profileId;
-
-    /**
-     * @param int $profileId
-     *
-     * @throws ProfileConstraintException
-     */
-    public function __construct($profileId)
-    {
-        $this->assertProfileIdIsGreaterThanZero($profileId);
-
-        $this->profileId = (int) $profileId;
-    }
-
-    /**
-     * @return int
-     */
-    public function getValue()
-    {
-        return $this->profileId;
-    }
-
-    /**
-     * @param mixed $profileId
-     *
-     * @throws ProfileConstraintException
-     */
-    private function assertProfileIdIsGreaterThanZero($profileId)
-    {
-        if ((!is_int($profileId) && !ctype_digit($profileId)) || 0 > $profileId) {
-            throw new ProfileConstraintException(
-                sprintf('Invalid profile id %s provided', var_export($profileId, true))
-            );
-        }
-    }
-}
+<div class="list-group" id="profileTabs" role="tablist">
+  {% for profile in configurablePermissions.profiles %}
+    <a class="list-group-item list-group-item-action p-2{% if profile.id == configurablePermissions.employeeProfileId %} active{% endif %}"
+       id="profileListItem_{{ profile.id }}"
+       data-toggle="list"
+       href="#profileTabContent_{{ profile.id }}"
+       role="tab"
+       aria-controls="home"
+    >
+      {{ profile.name }}
+    </a>
+  {% endfor %}
+</div>

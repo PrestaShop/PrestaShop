@@ -24,48 +24,20 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
 
-namespace PrestaShop\PrestaShop\Core\Domain\Profile\ValueObject;
+namespace PrestaShop\PrestaShop\Core\Domain\Profile\Permission\QueryHandler;
 
-use PrestaShop\PrestaShop\Core\Domain\Profile\Exception\ProfileConstraintException;
+use PrestaShop\PrestaShop\Core\Domain\Profile\Permission\Query\GetPermissionsForConfiguration;
+use PrestaShop\PrestaShop\Core\Domain\Profile\Permission\QueryResult\ConfigurablePermissions;
 
-class ProfileId
+/**
+ * Interface for service that gets permissions data for configuration
+ */
+interface GetPermissionsForConfigurationHandlerInterface
 {
     /**
-     * @var int
-     */
-    private $profileId;
-
-    /**
-     * @param int $profileId
+     * @param GetPermissionsForConfiguration $query
      *
-     * @throws ProfileConstraintException
+     * @return ConfigurablePermissions
      */
-    public function __construct($profileId)
-    {
-        $this->assertProfileIdIsGreaterThanZero($profileId);
-
-        $this->profileId = (int) $profileId;
-    }
-
-    /**
-     * @return int
-     */
-    public function getValue()
-    {
-        return $this->profileId;
-    }
-
-    /**
-     * @param mixed $profileId
-     *
-     * @throws ProfileConstraintException
-     */
-    private function assertProfileIdIsGreaterThanZero($profileId)
-    {
-        if ((!is_int($profileId) && !ctype_digit($profileId)) || 0 > $profileId) {
-            throw new ProfileConstraintException(
-                sprintf('Invalid profile id %s provided', var_export($profileId, true))
-            );
-        }
-    }
+    public function handle(GetPermissionsForConfiguration $query): ConfigurablePermissions;
 }

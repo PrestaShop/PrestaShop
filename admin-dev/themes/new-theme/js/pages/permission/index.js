@@ -1,4 +1,3 @@
-<?php
 /**
  * Copyright since 2007 PrestaShop SA and Contributors
  * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
@@ -24,12 +23,26 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
 
-header('Expires: Mon, 26 Jul 1997 05:00:00 GMT');
-header('Last-Modified: '.gmdate('D, d M Y H:i:s').' GMT');
+import PermissionApp from '../../app/pages/permission/index';
 
-header('Cache-Control: no-store, no-cache, must-revalidate');
-header('Cache-Control: post-check=0, pre-check=0', false);
-header('Pragma: no-cache');
+const {$} = window;
 
-header('Location: ../../../../../../../');
-exit;
+$(document).ready(() => {
+  $('.js-permissions-content').each((i, element) => {
+    new PermissionApp(
+      $(element).data('profile-id'),
+      `#profile-content-${$(element).data('profile-id')}`,
+      'tab_id',
+      $(element).data('profile-permissions'),
+      $(element).data('employee-permissions'),
+    );
+
+    new PermissionApp(
+      $(element).data('profile-id'),
+      `#module-content-${$(element).data('profile-id')}`,
+      'id_module',
+      $(element).data('modules-permissions'),
+      $(element).data('employee-modules-permissions'),
+    );
+  });
+});

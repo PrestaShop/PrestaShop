@@ -1,5 +1,4 @@
-<?php
-/**
+<!--**
  * Copyright since 2007 PrestaShop SA and Contributors
  * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
  *
@@ -22,50 +21,30 @@
  * @author    PrestaShop SA and Contributors <contact@prestashop.com>
  * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
- */
+ *-->
+<script>
+  /**
+   * This mixin component will help you to calculate your col size
+   * depending on object size.
+   */
 
-namespace PrestaShop\PrestaShop\Core\Domain\Profile\ValueObject;
+  // Bootstrap row length
+  const ROW_LENGTH = 12;
 
-use PrestaShop\PrestaShop\Core\Domain\Profile\Exception\ProfileConstraintException;
+  export default {
+    methods: {
+      getClasses(object, offsetCondition = true) {
+        const objectLength = Object.keys(object).length;
+        const size = Math.floor(ROW_LENGTH / objectLength);
+        const left = Math.ceil(ROW_LENGTH % objectLength);
+        const classes = [`col-${size}`];
 
-class ProfileId
-{
-    /**
-     * @var int
-     */
-    private $profileId;
-
-    /**
-     * @param int $profileId
-     *
-     * @throws ProfileConstraintException
-     */
-    public function __construct($profileId)
-    {
-        $this->assertProfileIdIsGreaterThanZero($profileId);
-
-        $this->profileId = (int) $profileId;
-    }
-
-    /**
-     * @return int
-     */
-    public function getValue()
-    {
-        return $this->profileId;
-    }
-
-    /**
-     * @param mixed $profileId
-     *
-     * @throws ProfileConstraintException
-     */
-    private function assertProfileIdIsGreaterThanZero($profileId)
-    {
-        if ((!is_int($profileId) && !ctype_digit($profileId)) || 0 > $profileId) {
-            throw new ProfileConstraintException(
-                sprintf('Invalid profile id %s provided', var_export($profileId, true))
-            );
+        if (left !== 0 && offsetCondition) {
+          classes.push(`offset-${left}`);
         }
-    }
-}
+
+        return classes;
+      },
+    },
+  };
+</script>

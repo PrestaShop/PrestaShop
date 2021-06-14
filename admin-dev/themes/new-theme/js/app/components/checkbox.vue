@@ -23,52 +23,70 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  *-->
 <template>
-  <div class="md-checkbox">
+  <div class="md-checkbox md-checkbox-inline">
     <label>
       <input
+        v-if="Array.isArray(checked)"
         type="checkbox"
-        :id="id"
-        v-model="checked"
-        :class="{'indeterminate' : isIndeterminate }"
+        :checked="checked.includes(value)"
+        :class="classes"
+        :disabled="disabled"
+        @change="change"
       >
-      <i class="md-checkbox-control" />
-      <slot name="label" />
+      <input
+        v-else
+        type="checkbox"
+        :checked="checked"
+        :class="classes"
+        :disabled="disabled"
+        @change="$emit('input', $event.target.checked)"
+      >
+
+      <slot>
+        <!-- - Fallback content -->
+        <i class="md-checkbox-control" />
+      </slot>
     </label>
   </div>
 </template>
 
 <script>
-  /**
-   * @deprecated since 1.7.6, use app/components/checkbox.vue instead
-   */
   export default {
+    model: {
+      prop: 'checked',
+      event: 'input',
+    },
     props: {
-      id: {
-        type: String,
-        required: false,
-        default: '',
+      classes: {
+        type: Array,
+        default: () => ([
+          'js-tab-checkbox',
+        ]),
       },
-      model: {
-        type: Object,
-        required: false,
-        default: () => ({}),
+      checked: {
+        required: true,
+        type: [Array, Number, String],
       },
-      isIndeterminate: {
+      disabled: {
         type: Boolean,
         required: false,
         default: false,
       },
-    },
-    watch: {
-      checked(val) {
-        this.$emit('checked', {
-          checked: val,
-          item: this.model,
-        });
+      value: {
+        required: true,
+        type: String,
       },
     },
-    data: () => ({
-      checked: false,
-    }),
+    methods: {
+      change() {
+        if (this.checked.includes(this.value)) {
+          this.checked.splice(this.checked.indexOf(this.value), 1);
+        } else {
+          this.checked.push(this.value);
+        }
+
+        this.$emit('change');
+      },
+    },
   };
 </script>

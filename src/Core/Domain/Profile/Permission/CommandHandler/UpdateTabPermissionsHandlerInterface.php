@@ -24,48 +24,14 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
 
-namespace PrestaShop\PrestaShop\Core\Domain\Profile\ValueObject;
+namespace PrestaShop\PrestaShop\Core\Domain\Profile\Permission\CommandHandler;
 
-use PrestaShop\PrestaShop\Core\Domain\Profile\Exception\ProfileConstraintException;
+use PrestaShop\PrestaShop\Core\Domain\Profile\Permission\Command\UpdateTabPermissionsCommand;
 
-class ProfileId
+interface UpdateTabPermissionsHandlerInterface
 {
     /**
-     * @var int
+     * @param UpdateTabPermissionsCommand $command
      */
-    private $profileId;
-
-    /**
-     * @param int $profileId
-     *
-     * @throws ProfileConstraintException
-     */
-    public function __construct($profileId)
-    {
-        $this->assertProfileIdIsGreaterThanZero($profileId);
-
-        $this->profileId = (int) $profileId;
-    }
-
-    /**
-     * @return int
-     */
-    public function getValue()
-    {
-        return $this->profileId;
-    }
-
-    /**
-     * @param mixed $profileId
-     *
-     * @throws ProfileConstraintException
-     */
-    private function assertProfileIdIsGreaterThanZero($profileId)
-    {
-        if ((!is_int($profileId) && !ctype_digit($profileId)) || 0 > $profileId) {
-            throw new ProfileConstraintException(
-                sprintf('Invalid profile id %s provided', var_export($profileId, true))
-            );
-        }
-    }
+    public function handle(UpdateTabPermissionsCommand $command): void;
 }

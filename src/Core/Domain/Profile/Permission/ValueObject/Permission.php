@@ -24,48 +24,44 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
 
-namespace PrestaShop\PrestaShop\Core\Domain\Profile\ValueObject;
+declare(strict_types=1);
 
-use PrestaShop\PrestaShop\Core\Domain\Profile\Exception\ProfileConstraintException;
+namespace PrestaShop\PrestaShop\Core\Domain\Profile\Permission\ValueObject;
 
-class ProfileId
+class Permission
 {
-    /**
-     * @var int
-     */
-    private $profileId;
+    const VIEW = 'view';
+    const ADD = 'add';
+    const EDIT = 'edit';
+    const DELETE = 'delete';
+    const ALL = 'all';
+
+    const SUPPORTED_PERMISSIONS = [
+        self::VIEW,
+        self::ADD,
+        self::EDIT,
+        self::DELETE,
+        self::ALL,
+    ];
 
     /**
-     * @param int $profileId
-     *
-     * @throws ProfileConstraintException
+     * @var string
      */
-    public function __construct($profileId)
+    private $permission;
+
+    /**
+     * @param string $permission
+     */
+    public function __construct(string $permission)
     {
-        $this->assertProfileIdIsGreaterThanZero($profileId);
-
-        $this->profileId = (int) $profileId;
+        $this->permission = $permission;
     }
 
     /**
-     * @return int
+     * @return string
      */
-    public function getValue()
+    public function getValue(): string
     {
-        return $this->profileId;
-    }
-
-    /**
-     * @param mixed $profileId
-     *
-     * @throws ProfileConstraintException
-     */
-    private function assertProfileIdIsGreaterThanZero($profileId)
-    {
-        if ((!is_int($profileId) && !ctype_digit($profileId)) || 0 > $profileId) {
-            throw new ProfileConstraintException(
-                sprintf('Invalid profile id %s provided', var_export($profileId, true))
-            );
-        }
+        return $this->permission;
     }
 }
