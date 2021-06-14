@@ -76,8 +76,8 @@ UPDATE `PREFIX_product` SET `product_type` = "combinations" WHERE `cache_default
 UPDATE `PREFIX_product` SET `product_type` = "pack" WHERE `cache_is_pack` = 1;
 UPDATE `PREFIX_product` SET `product_type` = "virtual" WHERE `is_virtual` = 1;
 
-ALTER TABLE `ps_shop_group` ADD `color` VARCHAR(32) NULL AFTER `name`;
-ALTER TABLE `ps_shop` ADD `color` VARCHAR(32) NULL AFTER `name`;
+ALTER TABLE `PREFIX_shop_group` ADD `color` VARCHAR(32) NULL AFTER `name`;
+ALTER TABLE `PREFIX_shop` ADD `color` VARCHAR(32) NULL AFTER `name`;
 
 /* PHP:ps_1780_add_feature_flag_tab(); */;
 
@@ -99,4 +99,3 @@ CREATE TABLE IF NOT EXISTS `PREFIX_feature_flag` (
 INSERT INTO `PREFIX_feature_flag` (`name`, `state`, `label_wording`, `label_domain`, `description_wording`, `description_domain`)
 VALUES
 	('product_page_v2', 0, 'Experimental product page', 'Admin.Advparameters.Feature', 'This page is a work in progress. It includes new combination management features and other features under development (virtual products, packs, etc.)', 'Admin.Advparameters.Help');
-
