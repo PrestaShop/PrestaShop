@@ -649,7 +649,7 @@ class CartPresenter implements PresenterInterface
      *
      * @return bool
      */
-    private function cartVoucherHasFreeShippingOnly($cartVoucher)
+    private function cartVoucherHasFreeShippingOnly(array $cartVoucher): bool
     {
         return !$this->cartVoucherHasPercentReduction($cartVoucher)
             && !$this->cartVoucherHasAmountReduction($cartVoucher)
