@@ -80,46 +80,4 @@ class CartForOrderCreationTest extends TestCase
         self::assertSame($mockShipping, $instance->getShipping());
         self::assertSame(4000, $instance->getCustomerId());
     }
-
-    public function testConstructWithoutCustomerId(): void
-    {
-        $mockSummary = $this->createMock(CartSummary::class);
-        $mockShipping = $this->createMock(CartShipping::class);
-        $cartProduct = $this->createMock(CartProduct::class);
-        $cartAddress = $this->createMock(CartAddress::class);
-        $cartRule = $this->createMock(CartRule::class);
-
-        $products = [
-            $cartProduct,
-        ];
-
-        $cartAddresses = [
-            $cartAddress,
-        ];
-
-        $cartRules = [
-            $cartRule,
-        ];
-
-        $instance = new CartForOrderCreation(
-            1000,
-            $products,
-            2000,
-            3000,
-            $cartRules,
-            $cartAddresses,
-            $mockSummary,
-            $mockShipping
-        );
-
-        self::assertSame(1000, $instance->getCartId());
-        self::assertContainsOnlyInstancesOf(CartProduct::class, $instance->getProducts());
-        self::assertSame(2000, $instance->getCurrencyId());
-        self::assertSame(3000, $instance->getLangId());
-        self::assertContainsOnlyInstancesOf(CartRule::class, $instance->getCartRules());
-        self::assertContainsOnlyInstancesOf(CartAddress::class, $instance->getAddresses());
-        self::assertSame($mockSummary, $instance->getSummary());
-        self::assertSame($mockShipping, $instance->getShipping());
-        self::assertNull($instance->getCustomerId());
-    }
 }
