@@ -434,6 +434,7 @@ abstract class DbCore
         $values_stringified = [];
         $first_loop = true;
         $duplicate_key_stringified = '';
+
         foreach ($data as $row_data) {
             $values = [];
             foreach ($row_data as $key => $value) {

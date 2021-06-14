@@ -274,16 +274,29 @@ services:
       public: true
 
     prestashop.core.grid.definition.factory.outstanding:
-        class: 'PrestaShop\PrestaShop\Core\Grid\Definition\Factory\OutstandingGridDefinitionFactory'
-        parent: 'prestashop.core.grid.definition.factory.abstract_grid_definition'
-        arguments:
-            - '@prestashop.adapter.legacy.configuration'
-            - "@=service('prestashop.adapter.legacy.context').getContext().language.id"
-        public: true
+      class: 'PrestaShop\PrestaShop\Core\Grid\Definition\Factory\OutstandingGridDefinitionFactory'
+      parent: 'prestashop.core.grid.definition.factory.abstract_grid_definition'
+      arguments:
+        - '@prestashop.adapter.legacy.configuration'
+        - "@=service('prestashop.adapter.legacy.context').getContext().language.id"
+      public: true
 
     prestashop.core.grid.definition.factory.carrier:
         class: 'PrestaShop\PrestaShop\Core\Grid\Definition\Factory\CarrierGridDefinitionFactory'
         parent: 'prestashop.core.grid.definition.factory.abstract_grid_definition'
+        public: true
+
+    prestashop.core.grid.definition.factory.security.session.employee:
+      class: 'PrestaShop\PrestaShop\Core\Grid\Definition\Factory\Security\Session\EmployeeGridDefinitionFactory'
+      parent: 'prestashop.core.grid.definition.factory.abstract_grid_definition'
+      public: true
+
+    prestashop.core.grid.definition.factory.security.session.customer:
+        class: 'PrestaShop\PrestaShop\Core\Grid\Definition\Factory\Security\Session\CustomerGridDefinitionFactory'
+        parent: 'prestashop.core.grid.definition.factory.abstract_grid_definition'
+        arguments:
+            - "@=service('router').generate('admin_common_reset_search', {'controller': 'security', 'action': 'customersSessions'})"
+            - "@=service('router').generate('admin_security_sessions_customer_search')"
         public: true
 
     prestashop.core.grid.definition.factory.zone:

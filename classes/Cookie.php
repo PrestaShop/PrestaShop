@@ -590,6 +590,9 @@ class CookieCore
         }
 
         if (isset($session) && Validate::isLoadedObject($session)) {
+            // Update session date_upd
+            $session->save();
+
             return $session;
         }
 
