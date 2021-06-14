@@ -1,10 +1,12 @@
 require('module-alias/register');
-// Using chai
-const {expect} = require('chai');
+
+// Helpers to open and close browser
 const helper = require('@utils/helpers');
+
+// Import login steps
 const loginCommon = require('@commonTests/loginBO');
 
-// Importing pages
+// Import pages
 const dashboardPage = require('@pages/BO/dashboard');
 const ordersPage = require('@pages/BO/orders/index');
 const homePage = require('@pages/FO/home');
@@ -14,16 +16,18 @@ const cartPage = require('@pages/FO/cart');
 const checkoutPage = require('@pages/FO/checkout');
 const orderConfirmationPage = require('@pages/FO/checkout/orderConfirmation');
 
-// Importing data
+// Import data
 const {PaymentMethods} = require('@data/demo/paymentMethods');
 const {DefaultCustomer} = require('@data/demo/customer');
 const {Statuses} = require('@data/demo/orderStatuses');
 
-// Test context imports
+// Import test context
 const testContext = require('@utils/testContext');
 
 const baseContext = 'functional_BO_orders_orders_bulkUpdateOrdersStatus';
 
+// Import expect from chai
+const {expect} = require('chai');
 
 let browserContext;
 let page;
@@ -33,7 +37,7 @@ Create 2 orders in FO
 Go to BO and update orders created status by bulk actions
 Check orders new status
  */
-describe('Bulk update orders status', async () => {
+describe('Bo - Orders : Bulk update orders status', async () => {
   // before and after functions
   before(async function () {
     browserContext = await helper.createBrowserContext(this.browser);
@@ -72,8 +76,8 @@ describe('Bulk update orders status', async () => {
     });
 
     ['first', 'second'].forEach((arg, index) => {
-      it(`should create ${arg} order`, async function () {
-        await testContext.addContextItem(this, 'testIdentifier', `createOrder${index + 1}`, baseContext);
+      it('should add product to cart', async function () {
+        await testContext.addContextItem(this, 'testIdentifier', `addProductToCart${index}`, baseContext);
 
         // Go to home page
         await foLoginPage.goToHomePage(page);
@@ -81,8 +85,15 @@ describe('Bulk update orders status', async () => {
         // Go to the first product page
         await homePage.goToProductPage(page, 1);
 
-        // Add the created product to the cart
+        // Add the product to the cart
         await productPage.addProductToTheCart(page);
+
+        const notificationsNumber = await cartPage.getCartNotificationsNumber(page);
+        await expect(notificationsNumber).to.be.equal(1);
+      });
+
+      it('should go to delivery step', async function () {
+        await testContext.addContextItem(this, 'testIdentifier', `goToDeliveryStep${index}`, baseContext);
 
         // Proceed to checkout the shopping cart
         await cartPage.clickOnProceedToCheckout(page);
@@ -90,16 +101,24 @@ describe('Bulk update orders status', async () => {
         // Address step - Go to delivery step
         const isStepAddressComplete = await checkoutPage.goToDeliveryStep(page);
         await expect(isStepAddressComplete, 'Step Address is not complete').to.be.true;
+      });
+
+      it('should go to payment step', async function () {
+        await testContext.addContextItem(this, 'testIdentifier', `goToPaymentStep${index}`, baseContext);
 
         // Delivery step - Go to payment step
         const isStepDeliveryComplete = await checkoutPage.goToPaymentStep(page);
         await expect(isStepDeliveryComplete, 'Step Address is not complete').to.be.true;
+      });
+
+      it(`should choose payment method and confirm the ${arg} order`, async function () {
+        await testContext.addContextItem(this, 'testIdentifier', `confirmOrder${index}`, baseContext);
 
         // Payment step - Choose payment step
         await checkoutPage.choosePaymentAndOrder(page, PaymentMethods.wirePayment.moduleName);
-        const cardTitle = await orderConfirmationPage.getOrderConfirmationCardTitle(page);
 
         // Check the confirmation message
+        const cardTitle = await orderConfirmationPage.getOrderConfirmationCardTitle(page);
         await expect(cardTitle).to.contains(orderConfirmationPage.orderConfirmationCardTitle);
       });
     });
@@ -118,7 +137,7 @@ describe('Bulk update orders status', async () => {
       await loginCommon.loginBO(this, page);
     });
 
-    it('should go to the orders page', async function () {
+    it('should go to \'Orders > Orders\' page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'goToOrdersPage', baseContext);
 
       await dashboardPage.goToSubMenu(
@@ -145,7 +164,7 @@ describe('Bulk update orders status', async () => {
     });
 
     ['first', 'second'].forEach((arg, index) => {
-      it(`should check ${arg} order status`, async function () {
+      it(`should check the ${arg} order status`, async function () {
         await testContext.addContextItem(this, 'testIdentifier', `checkOrderStatus${index + 1}`, baseContext);
 
         const orderStatus = await ordersPage.getTextColumn(page, 'osname', index + 1);

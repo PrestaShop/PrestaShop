@@ -1,8 +1,9 @@
 require('module-alias/register');
 
-// Using chai
-const {expect} = require('chai');
+// Helpers to open and close browser
 const helper = require('@utils/helpers');
+
+// Import login steps
 const loginCommon = require('@commonTests/loginBO');
 
 // Import pages
@@ -14,10 +15,13 @@ const testContext = require('@utils/testContext');
 
 const baseContext = 'functional_BO_orders_orders_sortOrders';
 
+// Import expect from chai
+const {expect} = require('chai');
+
 let browserContext;
 let page;
 
-describe('Sort orders', async () => {
+describe('BO - Orders : Sort orders', async () => {
   // before and after functions
   before(async function () {
     browserContext = await helper.createBrowserContext(this.browser);
@@ -28,12 +32,11 @@ describe('Sort orders', async () => {
     await helper.closeBrowserContext(browserContext);
   });
 
-
   it('should login in BO', async function () {
     await loginCommon.loginBO(this, page);
   });
 
-  it('should go to orders page', async function () {
+  it('should go to \'Orders > Orders\' page', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'goToOrdersPage', baseContext);
 
     await dashboardPage.goToSubMenu(

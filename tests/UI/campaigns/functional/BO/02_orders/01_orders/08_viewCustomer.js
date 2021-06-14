@@ -3,7 +3,7 @@ require('module-alias/register');
 // Helpers to open and close browser
 const helper = require('@utils/helpers');
 
-// Common tests login BO
+// Import login steps
 const loginCommon = require('@commonTests/loginBO');
 
 // Import pages
@@ -22,7 +22,6 @@ const baseContext = 'functional_BO_orders_orders_viewCustomer';
 // Import expect from chai
 const {expect} = require('chai');
 
-
 // Browser and tab
 let browserContext;
 let page;
@@ -33,7 +32,7 @@ Filter by customer name 'J. DOE'
 Click on customer link on grid
 Check that View customer page is displayed
  */
-describe('View customer from orders page', async () => {
+describe('BO - Orders : View customer from orders page', async () => {
   before(async function () {
     browserContext = await helper.createBrowserContext(this.browser);
     page = await helper.newTab(browserContext);
@@ -47,7 +46,7 @@ describe('View customer from orders page', async () => {
     await loginCommon.loginBO(this, page);
   });
 
-  it('should go to orders page', async function () {
+  it('should go to \'Orders > Orders\' page', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'goToOrdersPage', baseContext);
 
     await dashboardPage.goToSubMenu(

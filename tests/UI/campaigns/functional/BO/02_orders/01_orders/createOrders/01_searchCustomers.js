@@ -1,6 +1,10 @@
 require('module-alias/register');
 
+// Helpers to open and close browser
 const helper = require('@utils/helpers');
+
+// Import login steps
+const loginCommon = require('@commonTests/loginBO');
 
 // Import pages
 const dashboardPage = require('@pages/BO/dashboard');
@@ -8,9 +12,6 @@ const ordersPage = require('@pages/BO/orders');
 const addOrderPage = require('@pages/BO/orders/add');
 const customersPage = require('@pages/BO/customers');
 const addCustomerPage = require('@pages/BO/customers/add');
-
-// Import login steps
-const loginCommon = require('@commonTests/loginBO');
 
 // Import data
 const {DefaultCustomer} = require('@data/demo/customer');

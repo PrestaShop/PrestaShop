@@ -3,7 +3,7 @@ require('module-alias/register');
 // Helpers to open and close browser
 const helper = require('@utils/helpers');
 
-// Common tests login BO
+// Import login steps
 const loginCommon = require('@commonTests/loginBO');
 
 // Import pages
@@ -115,7 +115,7 @@ Check product block content:
 - Pagination next and previous
 - Delete product
 */
-describe('Check product block in view order page', async () => {
+describe('BO - Orders - view and edit order : Check product block in view order page', async () => {
   // before and after functions
   before(async function () {
     browserContext = await helper.createBrowserContext(this.browser);
@@ -203,7 +203,7 @@ describe('Check product block in view order page', async () => {
     simpleProduct,
   ].forEach((product, index) => {
     describe(`Create product '${product.name}'`, async () => {
-      it('should go to Products page', async function () {
+      it('should go to \'Catalog > Products\' page', async function () {
         await testContext.addContextItem(this, 'testIdentifier', `goToProductsPage${index}`, baseContext);
 
         await dashboardPage.goToSubMenu(page, dashboardPage.catalogParentLink, dashboardPage.productsLink);
@@ -238,7 +238,7 @@ describe('Check product block in view order page', async () => {
 
   // 3 - Go to view order page
   describe('Go to view order page', async () => {
-    it('should go to Orders page', async function () {
+    it('should go to \'Orders > Orders\' page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'goToOrdersPage', baseContext);
 
       await dashboardPage.goToSubMenu(

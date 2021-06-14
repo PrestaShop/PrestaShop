@@ -3,7 +3,7 @@ require('module-alias/register');
 // Helpers to open and close browser
 const helper = require('@utils/helpers');
 
-// Common tests login BO
+// Import login steps
 const loginCommon = require('@commonTests/loginBO');
 
 // Import pages
@@ -25,9 +25,6 @@ const baseContext = 'functional_BO_orders_orders_viewGuest';
 const CustomerFaker = require('@data/faker/customer');
 const AddressFaker = require('@data/faker/address');
 
-const customerData = new CustomerFaker({password: ''});
-const addressData = new AddressFaker();
-
 const {PaymentMethods} = require('@data/demo/paymentMethods');
 
 // Import expect from chai
@@ -37,13 +34,16 @@ const {expect} = require('chai');
 let browserContext;
 let page;
 
+const customerData = new CustomerFaker({password: ''});
+const addressData = new AddressFaker();
+
 /*
 Go to orders page
 Filter by guest email
 Click on guest link on grid
 Check that View customer(guest) page is displayed
  */
-describe('View guest from orders page', async () => {
+describe('Bo - Orders : View guest from orders page', async () => {
   before(async function () {
     browserContext = await helper.createBrowserContext(this.browser);
     page = await helper.newTab(browserContext);
