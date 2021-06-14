@@ -17,9 +17,6 @@ const addCustomerPage = require('@pages/BO/customers/add');
 const {DefaultCustomer} = require('@data/demo/customer');
 const CustomerFaker = require('@data/faker/customer');
 
-const nonExistentCustomer = new CustomerFaker();
-const disabledCustomer = new CustomerFaker({enabled: false});
-
 // Import test context
 const testContext = require('@utils/testContext');
 
@@ -31,12 +28,17 @@ const {expect} = require('chai');
 let browserContext;
 let page;
 
+const nonExistentCustomer = new CustomerFaker();
+const disabledCustomer = new CustomerFaker({enabled: false});
+
 /*
+Create disabled customer
 Search for non existent customer and check error message
 Search for disabled customer and check error message
 Search for existent customer and check displayed customer card
+Delete created customer
  */
-describe('BO - Orders - Create order: Search for customers from new order page', async () => {
+describe('BO - Orders - Create order : Search for customers from new order page', async () => {
   before(async function () {
     browserContext = await helper.createBrowserContext(this.browser);
     page = await helper.newTab(browserContext);

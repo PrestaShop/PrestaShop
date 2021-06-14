@@ -42,7 +42,6 @@ const orderToMake = {
   },
   paymentMethod: 'Payments by check',
   orderStatus: Statuses.paymentAccepted,
-
   totalPrice: (Products.demo_5.price * 4) * 1.2, // Price tax included
 };
 
@@ -61,11 +60,15 @@ let page;
 Go to create order page
 Search and choose a customer
 Add products to cart
-Choose address for delivery and invoice
+Choose addresses for delivery and invoice
 Choose payment status
 Set order status and save the order
-Check order status from view order page
-Check order total price from view order page
+From view order page check these details :
+- Order status
+- Total price
+- Shipping address
+- Invoice address
+- Products names
  */
 describe('BO - Orders - Create order : Create simple order in BO', async () => {
   before(async function () {
@@ -105,7 +108,7 @@ describe('BO - Orders - Create order : Create simple order in BO', async () => {
   });
 
   describe('Create order and check result', async () => {
-    it('should create te order', async function () {
+    it('should create the order', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'createOrder', baseContext);
 
       await addOrderPage.createOrder(page, orderToMake);

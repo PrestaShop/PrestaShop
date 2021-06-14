@@ -1,5 +1,6 @@
 require('module-alias/register');
 
+// Helpers to open and close browser
 const helper = require('@utils/helpers');
 
 // Import pages
@@ -30,7 +31,7 @@ let page;
 /*
 Go to create order page
 Create customer
-Go to customers page and delete the created customer
+Delete the created customer
  */
 describe('BO - Orders - Create order : Create customer from new order page', async () => {
   before(async function () {
