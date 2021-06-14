@@ -24,6 +24,40 @@ needs please refer to https://devdocs.prestashop.com/ for more information.
 Release Notes for PrestaShop 1.7
 --------------------------------
 ####################################
+#   v1.7.7.5 - (2021-06-01)
+####################################
+
+- Back Office:
+  - Bug fix:
+    - #24679: Fix free shipping cart rule should not be recalculate when PS_ORDER_RECALCULATE_SHIPPING is false (by @atomiix)
+    - #24576: BO - New Order - Empty gift message is not a null value (by @Progi1984)
+    - #24565: Order View - Discount Modal - Disable submit until name is filled (by @Progi1984)
+    - #24579: BO - Order Messages - Avoid message with duplicate name (by @Progi1984)
+    - #24568: BO - Order Preview - Use the tracking number in tracking url (by @Progi1984)
+    - #24427: Fixed wrong price of the delivery slip of the document list (by @Progi1984)
+    - #24217: [BC Break] Restore check when using the SQL manager part (by @PierreRambaud)
+    - #24243: Fix escape in ps_1771_update_customer_note() (by @dali-rajab)
+    - #23138: [BC Break] Fix gift added/removed when editing order (product quantity/shipping address) (by @atomiix)
+    - #24353: Fix module activation checkbox in module configuration pages (by @IcarusSosie)
+    - #24273: Implement Address Format in the View Order Page (by @Progi1984)
+    - #23492: Fixed Ecotax when editing an Order ((Add/Update)ProductToOrder) (by @Progi1984)
+    - #24269: Fix already selected condition group on safari inside catalog price rules (by @NeOMakinG)
+    - #23902: [BC Break] Take customizations into account when performing operations on orders (by @atomiix)
+- Core:
+  - Improvement:
+    - #24717: Update native modules (by @atomiix)
+    - #24329: Bump version to 1.7.7.5 (by @Progi1984)
+  - Bug fix:
+    - #24443: Fix upgrade from 1.6.1.24 on certain installation (by @atomiix)
+- Tests:
+  - Refactoring:
+    - #24578: Fix test Handling charges and backport fixes for product quick view test (by @boubkerbribri)
+    - #24459: Wait For price to be updated on view order page (by @boubkerbribri)
+    - #24455: Remove forgotten function description (by @SD1982)
+    - #24366: Fix hooks tests (Nightly error) (by @boubkerbribri)
+    - #24305: Remove some modules when building docker for tests (by @boubkerbribri)
+
+####################################
 #   v1.7.7.4 - (2021-04-28)
 ####################################
 

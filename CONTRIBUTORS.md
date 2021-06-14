@@ -72,6 +72,7 @@ GitHub contributors:
 - Atef Ben Ali
 - Aude
 - Aurélien Pelletier
+- Aurone local server
 - axi
 - Axome
 - Aylab
@@ -490,6 +491,7 @@ GitHub contributors:
 - Mirko Esposito
 - misthero
 - Mlanawo Mbechezi
+- Mohamed Ali Rajab
 - Moisés Gramary Barbosa
 - Molka DJEMAL
 - moncef102
@@ -613,6 +615,7 @@ GitHub contributors:
 - Rinku Kazeno
 - Robbie Thompson
 - robert
+- Robinson Christmann
 - Rodrigo Laurindo
 - Roja45
 - Rokas
