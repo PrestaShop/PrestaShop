@@ -237,9 +237,6 @@ export default class OrderProductAdd {
         }
       );
       modal.show();
-    } else if (!isNaN(invoiceId)) {
-      // If id is not 0 nor NaN a specific invoice was selected
-      this.confirmNewPrice(orderId, invoiceId);
     } else {
       // Last case is Nan, the selector is not even present, we simply add product and let the BO handle it
       this.addProduct(orderId);
