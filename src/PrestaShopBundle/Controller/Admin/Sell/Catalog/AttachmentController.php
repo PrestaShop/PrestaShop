@@ -107,15 +107,12 @@ class AttachmentController extends FrameworkBundleAdminController
 
                 return $this->redirectToRoute('admin_attachments_index');
             }
+
+            if ($handlerResult->isSubmitted() && !$handlerResult->isValid() && $request->query->has('submitFormAjax')) {
+                return $this->json(['errors' => $this->getFormErrorsForJS($attachmentForm)]);
+            }
         } catch (Exception $e) {
             $this->addFlash('error', $this->getErrorMessageForException($e, $this->getErrorMessages($e)));
-        }
-
-        if ($handlerResult->isSubmitted() && !$handlerResult->isValid()) {
-            if ($request->query->has('submitFormAjax')) {
-                return $this->json([
-                    'errors' => $this->getFormErrorsForJS($attachmentForm)]);
-            }
         }
 
         return $this->render('@PrestaShop/Admin/Sell/Catalog/Attachment/add.html.twig', [

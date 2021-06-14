@@ -62,8 +62,15 @@ export default class AttachmentsManager {
       width: '90%',
       height: '90%',
       afterLoad: () => {
-        $('.fancybox-iframe').contents().find('form').submit((e) => {
-          this.eventEmitter.emit(ProductEventMap.attachments.newAttachmentSubmitted, {e, fancybox: parent.$.fancybox});
+        const form = $('.fancybox-iframe').contents().find('form');
+        const fancybox = parent.$.fancybox;
+
+        form.on('click', '.cancel-btn', () => {
+          fancybox.close();
+        });
+
+        form.submit((e) => {
+          this.eventEmitter.emit(ProductEventMap.attachments.newAttachmentSubmitted, {e, fancybox});
         });
       },
     });
