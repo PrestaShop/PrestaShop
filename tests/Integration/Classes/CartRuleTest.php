@@ -28,27 +28,27 @@ declare(strict_types=1);
 
 namespace Tests\Integration\Classes;
 
-use Tools;
 use CartRule;
 use Customer;
 use PHPUnit\Framework\TestCase;
-use PrestaShopBundle\Install\DatabaseDump;
 use PrestaShop\PrestaShop\Adapter\Configuration;
+use PrestaShopBundle\Install\DatabaseDump;
+use Tools;
 
 class CartRuleTest extends TestCase
 {
     /**
-     * @var Customer $dummyCustomer
+     * @var Customer
      */
     public $dummyCustomer;
 
     /**
-     * @var CartRule $dummyCartRule
+     * @var CartRule
      */
     public $dummyCartRule;
 
     /**
-     * @var Configuration $configuration
+     * @var Configuration
      */
     public $configuration;
 
@@ -130,7 +130,7 @@ class CartRuleTest extends TestCase
     /**
      * @param bool $active
      * @param int $customerId
-     * 
+     *
      * @return CartRule
      */
     public function createDummyCartRule(
@@ -139,9 +139,9 @@ class CartRuleTest extends TestCase
     ) {
         $randomNumber = rand(999, 9999);
         $cart_rule = new CartRule();
-        $cart_rule->code = 'TEST_CART_RULE_'.$randomNumber;
+        $cart_rule->code = 'TEST_CART_RULE_' . $randomNumber;
         $cart_rule->name = [
-            $this->configuration->get('PS_LANG_DEFAULT') => 'Test Cart Rule #'.$randomNumber
+            $this->configuration->get('PS_LANG_DEFAULT') => 'Test Cart Rule #' . $randomNumber,
         ];
         $cart_rule->id_customer = (int) $customerId;
         $cart_rule->free_shipping = true;
