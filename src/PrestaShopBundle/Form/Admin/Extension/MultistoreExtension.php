@@ -34,7 +34,7 @@ use Symfony\Component\Form\FormInterface;
 use Symfony\Component\Form\FormView;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
-class MultistoreDropdownExtension extends AbstractTypeExtension
+class MultistoreExtension extends AbstractTypeExtension
 {
     /**
      * {@inheritdoc}
@@ -52,6 +52,7 @@ class MultistoreDropdownExtension extends AbstractTypeExtension
     public function buildView(FormView $view, FormInterface $form, array $options): void
     {
         parent::buildView($view, $form, $options);
+
         $view->vars = array_replace($view->vars, ['multistore_dropdown' => $options['multistore_dropdown']]);
     }
 
@@ -61,6 +62,12 @@ class MultistoreDropdownExtension extends AbstractTypeExtension
     public function configureOptions(OptionsResolver $resolver): void
     {
         parent::configureOptions($resolver);
-        $resolver->setDefaults(['multistore_dropdown' => false]);
+
+        $resolver->setDefaults(
+            [
+                'multistore_dropdown' => false,
+                'multistore_configuration_key' => null,
+            ]
+        );
     }
 }
