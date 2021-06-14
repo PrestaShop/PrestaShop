@@ -87,8 +87,10 @@ class CartRuleTest extends TestCase
             true
         );
 
-        // We assert 0 because 'active' flag does not work in "getCustomerCartRules"
+        // We assert 0 because 'active' flag does not work in "CartRule::getCustomerCartRules"
         // because of CartRule::isFeatureActive and one additional check
+        // which doesn't not work if we have only 1 customer rule or all of them are disabled
+        // see https://github.com/PrestaShop/PrestaShop/issues/21556 for more details
         $this->assertEquals(0, count($customerCartRules));
     }
 
