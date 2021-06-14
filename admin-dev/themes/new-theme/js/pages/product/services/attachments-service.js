@@ -23,37 +23,26 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
 
+import Router from '@components/router';
+
+const router = new Router();
+const {$} = window;
+
+/**
+ * @param {HTMLElement} form
+ *
+ * @returns {Promise<*|jQuery>}
+ */
+export const createAttachment = async (form) => $.ajax({
+  type: 'POST',
+  url: router.generate('admin_attachments_create', {
+    submitFormAjax: true,
+  }),
+  data: new FormData(form),
+  processData: false,
+  contentType: false,
+});
+
 export default {
-  productModelUpdated: 'productModelUpdated',
-  updatedProductModel: 'updatedProductModel',
-  updatedProductField: 'updatedProductField',
-  updateSubmitButtonState: 'updateSubmitButtonState',
-  customizations: {
-    rowRemoved: 'customizationRowRemoved',
-    rowAdded: 'customizationRowAdded',
-  },
-  dropzone: {
-    addedFile: 'addedfile',
-    error: 'error',
-    success: 'success',
-    languageSelected: 'languageSelected',
-    photoswipe: {
-      destroy: 'destroy',
-      closeGallery: 'closeGallery',
-    },
-  },
-  combinations: {
-    refreshPage: 'refreshPage',
-    refreshCombinationList: 'refreshCombinationList',
-    updateAttributeGroups: 'updateAttributeGroups',
-    combinationGeneratorReady: 'combinationGeneratorReady',
-    openCombinationsGenerator: 'openCombinationsGenerator',
-    clearFilters: 'clearFilters',
-    selectCombination: 'selectCombination',
-  },
-  attachments: {
-    rowRemoved: 'attachmentsRowRemoved',
-    rowAdded: 'attachmentsRowAdded',
-    newAttachmentSubmitted: 'newAttachmentSubmitted',
-  },
+  createAttachment,
 };
