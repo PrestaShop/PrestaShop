@@ -25,6 +25,8 @@
 
 import ProductMap from '@pages/product/product-map';
 import ProductEventMap from '@pages/product/product-event-map';
+import Router from '@components/router';
+import {createAttachment} from '@pages/product/services/attachments-service';
 
 const {$} = window;
 
@@ -35,6 +37,7 @@ export default class AttachmentsManager {
     this.prototypeTemplate = this.$attachmentsCollection.data('prototype');
     this.prototypeName = this.$attachmentsCollection.data('prototypeName');
     this.eventEmitter = window.prestashop.instance.eventEmitter;
+    this.router = new Router();
 
     this.init();
   }
@@ -43,6 +46,7 @@ export default class AttachmentsManager {
    * @private
    */
   init() {
+    this.onAttachmentSubmit();
     this.initAddAttachmentIframe();
     this.$attachmentsContainer.on('click', ProductMap.attachments.removeAttachmentBtn, (e) => {
       this.removeAttachmentRow(e);
@@ -57,9 +61,30 @@ export default class AttachmentsManager {
       type: 'iframe',
       width: '90%',
       height: '90%',
-      onUpdate: () => {
-        //@todo: get recently added attachment data and put it in parent element (or local storage?)
-      }
+      afterLoad: () => {
+        $('.fancybox-iframe').contents().find('form').submit((e) => {
+          this.eventEmitter.emit(ProductEventMap.attachments.newAttachmentSubmitted, {e, fancybox: parent.$.fancybox});
+        });
+      },
+    });
+  }
+
+  onAttachmentSubmit() {
+    this.eventEmitter.on(ProductEventMap.attachments.newAttachmentSubmitted, (eventData) => {
+      const submitEvent = eventData.e;
+      submitEvent.preventDefault();
+
+      createAttachment(submitEvent.currentTarget).then((resp) => {
+        if (resp.errors) {
+          Object.values(resp.errors).forEach(error => {
+            $.growl.error({message: error});
+          });
+
+          return;
+        }
+        //@todo: get attachment by id and render its info in additional row
+        eventData.fancybox.close();
+      });
     });
   }
 
