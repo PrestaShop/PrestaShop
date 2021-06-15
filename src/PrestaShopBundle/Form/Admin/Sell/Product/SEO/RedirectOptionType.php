@@ -33,6 +33,8 @@ use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\RedirectType;
 use PrestaShopBundle\Form\Admin\Type\EntitySearchInputType;
 use PrestaShopBundle\Form\Admin\Type\TranslatorAwareType;
 use PrestaShopBundle\Form\FormCloner;
+use Symfony\Component\Form\DataTransformerInterface;
+use Symfony\Component\Form\Extension\Core\EventListener\TransformationFailureListener;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\Form\FormEvent;
@@ -54,6 +56,11 @@ class RedirectOptionType extends TranslatorAwareType
     private $router;
 
     /**
+     * @var DataTransformerInterface
+     */
+    private $targetTransformer;
+
+    /**
      * @param TranslatorInterface $translator
      * @param array $locales
      * @param LegacyContext $context
@@ -63,11 +70,13 @@ class RedirectOptionType extends TranslatorAwareType
         TranslatorInterface $translator,
         array $locales,
         LegacyContext $context,
-        RouterInterface $router
+        RouterInterface $router,
+        DataTransformerInterface $targetTransformer
     ) {
         parent::__construct($translator, $locales);
         $this->context = $context;
         $this->router = $router;
+        $this->targetTransformer = $targetTransformer;
     }
 
     /**
@@ -111,8 +120,6 @@ class RedirectOptionType extends TranslatorAwareType
                 'remote_url' => $entityAttributes[$defaultEntity]['searchUrl'],
                 'placeholder' => $entityAttributes[$defaultEntity]['placeholder'],
                 'help' => $entityAttributes[$defaultEntity]['help'],
-                // Delete is always allowed by default, js will hide the feature programmatically
-                'allow_delete' => true,
                 'attr' => [
                     'data-product-label' => $entityAttributes['product']['label'],
                     'data-product-placeholder' => $entityAttributes['product']['placeholder'],
@@ -126,6 +133,11 @@ class RedirectOptionType extends TranslatorAwareType
                 'view_data' => $options['redirect_target'],
             ])
         ;
+
+        // This will transform the target ID from model data into an array adapted for EntitySearchInputType
+        $builder->addModelTransformer($this->targetTransformer);
+        // In case a transformation occurs it will be displayed as an inline error
+        $builder->addEventSubscriber(new TransformationFailureListener($this->getTranslator()));
 
         // Preset the input attributes correctly depending on the data
         $builder->addEventListener(FormEvents::PRE_SET_DATA, function (FormEvent $event) use ($entityAttributes) {
