@@ -26,18 +26,18 @@
 {% block entity_search_input_widget %}
   {%- set attr = attr|merge({
     'data-prototype-template': form_row(prototype),
-    'data-prototype-name': prototype.vars.name,
-    'data-prototype-image': prototype_image,
-    'data-prototype-value': prototype_value,
-    'data-prototype-display': prototype_display,
-    'data-mapping-value': mapping_value,
-    'data-mapping-image': mapping_image,
-    'data-mapping-display': mapping_display,
-    'data-remove-modal-title': remove_modal_title,
-    'data-remove-modal-message': remove_modal_message,
-    'data-remove-modal-apply': remove_modal_apply,
-    'data-remove-modal-cancel': remove_modal_cancel,
-    'data-remote-url': remote_url|raw,
+    'data-prototype-name': prototype.vars.name|e('html_attr'),
+    'data-prototype-image': prototype_image|e('html_attr'),
+    'data-prototype-value': prototype_value|e('html_attr'),
+    'data-prototype-display': prototype_display|e('html_attr'),
+    'data-mapping-value': mapping_value|e('html_attr'),
+    'data-mapping-image': mapping_image|e('html_attr'),
+    'data-mapping-display': mapping_display|e('html_attr'),
+    'data-remove-modal-title': remove_modal_title|e('html_attr'),
+    'data-remove-modal-message': remove_modal_message|e('html_attr'),
+    'data-remove-modal-apply': remove_modal_apply|e('html_attr'),
+    'data-remove-modal-cancel': remove_modal_cancel|e('html_attr'),
+    'data-remote-url': remote_url|e('html_attr'),
     'data-data-limit': limit,
     'data-allow-delete': form.vars.allow_delete ? 1 : 0
   }) -%}
@@ -48,7 +48,7 @@
       {%- set attr = search_attr|merge({
         'class': (search_attr.class|default('') ~ ' entity-search-input form-control')|trim,
         'autocomplete': 'off',
-        'placeholder': placeholder,
+        'placeholder': placeholder|e('html_attr'),
         'type': 'text'
       }) -%}
       {%- set id = form.vars.id ~ '_search_input' -%}

@@ -71,7 +71,7 @@ class ProductFormOptionsProviderTest extends TestCase
             $this->getImagePathFactory()
         );
         $options = $provider->getOptions(self::PRODUCT_ID, []);
-        $this->assertTrue(array_key_exists('virtual_product_file_id', $options));
+        $this->assertArrayHasKey('virtual_product_file_id', $options);
         $this->assertEquals(null, $options['virtual_product_file_id']);
 
         $options = $provider->getOptions(self::PRODUCT_ID, [
@@ -81,7 +81,7 @@ class ProductFormOptionsProviderTest extends TestCase
                 ],
             ],
         ]);
-        $this->assertTrue(array_key_exists('virtual_product_file_id', $options));
+        $this->assertArrayHasKey('virtual_product_file_id', $options);
         $this->assertEquals(self::VIRTUAL_PRODUCT_FILE_ID, $options['virtual_product_file_id']);
     }
 
@@ -101,7 +101,7 @@ class ProductFormOptionsProviderTest extends TestCase
         );
 
         $options = $provider->getOptions(self::PRODUCT_ID, $formData);
-        $this->assertTrue(array_key_exists('redirect_target', $options));
+        $this->assertArrayHasKey('redirect_target', $options);
         $this->assertEquals($expectedTarget, $options['redirect_target']);
     }
 

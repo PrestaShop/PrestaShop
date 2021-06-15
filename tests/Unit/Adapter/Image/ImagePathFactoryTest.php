@@ -29,7 +29,6 @@ declare(strict_types=1);
 namespace Tests\Unit\Adapter\Image;
 
 use Generator;
-use PHPUnit\Framework\Assert;
 use PHPUnit\Framework\TestCase;
 use PrestaShop\PrestaShop\Adapter\Image\ImagePathFactory;
 
@@ -43,7 +42,7 @@ class ImagePathFactoryTest extends TestCase
     public function testConstructImagePathFactory(string $pathToBaseDir): void
     {
         $imagePathFactory = new ImagePathFactory($pathToBaseDir);
-        Assert::assertInstanceOf(ImagePathFactory::class, $imagePathFactory);
+        $this->assertInstanceOf(ImagePathFactory::class, $imagePathFactory);
     }
 
     /**
@@ -67,7 +66,7 @@ class ImagePathFactoryTest extends TestCase
     {
         $imagePathFactory = new ImagePathFactory($pathToBaseDir);
 
-        Assert::assertEquals($expected, $imagePathFactory->getPath($entityId));
+        $this->assertEquals($expected, $imagePathFactory->getPath($entityId));
     }
 
     public function getDataForBaseImagePathBuilding(): Generator
