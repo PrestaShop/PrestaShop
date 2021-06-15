@@ -76,7 +76,7 @@ describe('Filter, sort and pagination search engines', async () => {
     const tests = [
       {args: {testIdentifier: 'filterId', filterBy: 'id_search_engine', filterValue: searchEngines.lycos.id}},
       {args: {testIdentifier: 'filterServer', filterBy: 'server', filterValue: searchEngines.google.server}},
-      {args: {testIdentifier: 'filterGetVar', filterBy: 'getvar', filterValue: searchEngines.voila.getVar}},
+      {args: {testIdentifier: 'filterKey', filterBy: 'query_key', filterValue: searchEngines.voila.queryKey}},
     ];
 
     tests.forEach((test) => {
@@ -116,32 +116,32 @@ describe('Filter, sort and pagination search engines', async () => {
     const sortTests = [
       {
         args: {
-          testIdentifier: 'sortByIdDesc', sortBy: 'id_search_engine', sortDirection: 'down', isFloat: true,
+          testIdentifier: 'sortByIdDesc', sortBy: 'id_search_engine', sortDirection: 'desc', isFloat: true,
         },
       },
       {
         args: {
-          testIdentifier: 'sortByServerAsc', sortBy: 'server', sortDirection: 'up',
+          testIdentifier: 'sortByServerAsc', sortBy: 'server', sortDirection: 'asc',
         },
       },
       {
         args: {
-          testIdentifier: 'sortByServerDesc', sortBy: 'server', sortDirection: 'down',
+          testIdentifier: 'sortByServerDesc', sortBy: 'server', sortDirection: 'desc',
         },
       },
       {
         args: {
-          testIdentifier: 'sortByGetVarAsc', sortBy: 'getvar', sortDirection: 'up',
+          testIdentifier: 'sortByQueryKeyAsc', sortBy: 'query_key', sortDirection: 'asc',
         },
       },
       {
         args: {
-          testIdentifier: 'sortByGetVarDesc', sortBy: 'getvar', sortDirection: 'down',
+          testIdentifier: 'sortByQueryKeyDesc', sortBy: 'query_key', sortDirection: 'desc',
         },
       },
       {
         args: {
-          testIdentifier: 'sortByIdAsc', sortBy: 'id_search_engine', sortDirection: 'up', isFloat: true,
+          testIdentifier: 'sortByIdAsc', sortBy: 'id_search_engine', sortDirection: 'asc', isFloat: true,
         },
       },
     ];
@@ -163,7 +163,7 @@ describe('Filter, sort and pagination search engines', async () => {
 
         const expectedResult = await searchEnginesPage.sortArray(nonSortedTable, test.args.isFloat);
 
-        if (test.args.sortDirection === 'up') {
+        if (test.args.sortDirection === 'asc') {
           await expect(sortedTable).to.deep.equal(expectedResult);
         } else {
           await expect(sortedTable).to.deep.equal(expectedResult.reverse());
@@ -177,28 +177,28 @@ describe('Filter, sort and pagination search engines', async () => {
       await testContext.addContextItem(this, 'testIdentifier', 'changeItemNumberTo20', baseContext);
 
       const paginationNumber = await searchEnginesPage.selectPaginationLimit(page, '20');
-      expect(paginationNumber).to.equal('1');
+      expect(paginationNumber).to.contain('(page 1 / 2)');
     });
 
     it('should go to next page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'clickOnNext', baseContext);
 
       const paginationNumber = await searchEnginesPage.paginationNext(page);
-      expect(paginationNumber).to.equal('2');
+      expect(paginationNumber).to.contain('(page 2 / 2)');
     });
 
     it('should go to previous page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'clickOnPrevious', baseContext);
 
       const paginationNumber = await searchEnginesPage.paginationPrevious(page);
-      expect(paginationNumber).to.equal('1');
+      expect(paginationNumber).to.contain('(page 1 / 2)');
     });
 
     it('should change the item number to 50 per page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'changeItemNumberTo50', baseContext);
 
       const paginationNumber = await searchEnginesPage.selectPaginationLimit(page, '50');
-      expect(paginationNumber).to.equal('1');
+      expect(paginationNumber).to.contain('(page 1 / 1)');
     });
   });
 });
