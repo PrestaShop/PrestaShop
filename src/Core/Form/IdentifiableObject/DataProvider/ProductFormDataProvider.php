@@ -380,7 +380,7 @@ final class ProductFormDataProvider implements FormDataProviderInterface
     /**
      * @param ProductForEditing $productForEditing
      *
-     * @return array<string, string|array|null>
+     * @return array<string, int|string|null>
      */
     private function extractRedirectOptionData(ProductForEditing $productForEditing): array
     {
@@ -388,7 +388,9 @@ final class ProductFormDataProvider implements FormDataProviderInterface
 
         return [
             'type' => $seoOptions->getRedirectType(),
-            'target' => $seoOptions->getRedirectTargetId() ? [$seoOptions->getRedirectTargetId()] : null,
+            // It is important to return null when nothing is selected this way the transformer and therefore
+            // the form field have no value to try and display
+            'target' => $seoOptions->getRedirectTargetId() ?: null,
         ];
     }
 
