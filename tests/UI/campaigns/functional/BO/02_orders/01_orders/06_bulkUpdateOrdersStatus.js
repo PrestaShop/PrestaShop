@@ -6,9 +6,11 @@ const helper = require('@utils/helpers');
 // Import login steps
 const loginCommon = require('@commonTests/loginBO');
 
-// Import pages
+// Import BO pages
 const dashboardPage = require('@pages/BO/dashboard');
 const ordersPage = require('@pages/BO/orders/index');
+
+// Import FO pages
 const homePage = require('@pages/FO/home');
 const foLoginPage = require('@pages/FO/login');
 const productPage = require('@pages/FO/product');
@@ -37,7 +39,7 @@ Create 2 orders in FO
 Go to BO and update orders created status by bulk actions
 Check orders new status
  */
-describe('Bo - Orders : Bulk update orders status', async () => {
+describe('BO - Orders : Bulk update orders status', async () => {
   // before and after functions
   before(async function () {
     browserContext = await helper.createBrowserContext(this.browser);

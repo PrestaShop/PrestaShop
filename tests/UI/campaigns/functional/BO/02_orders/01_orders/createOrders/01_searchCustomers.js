@@ -6,7 +6,7 @@ const helper = require('@utils/helpers');
 // Import login steps
 const loginCommon = require('@commonTests/loginBO');
 
-// Import pages
+// Import BO pages
 const dashboardPage = require('@pages/BO/dashboard');
 const ordersPage = require('@pages/BO/orders');
 const addOrderPage = require('@pages/BO/orders/add');

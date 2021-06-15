@@ -6,8 +6,15 @@ const helper = require('@utils/helpers');
 // Common tests login BO
 const loginCommon = require('@commonTests/loginBO');
 
-// Import pages
+// Import BO pages
 const dashboardPage = require('@pages/BO/dashboard');
+const ordersPage = require('@pages/BO/orders');
+const viewOrderPage = require('@pages/BO/orders/view');
+const customersPage = require('@pages/BO/customers');
+const addressesPage = require('@pages/BO/customers/addresses');
+const viewCustomerPage = require('@pages/BO/customers/view');
+
+// Import FO pages
 const foHomePage = require('@pages/FO/home');
 const foLoginPage = require('@pages/FO/login');
 const foCreateAccountPage = require('@pages/FO/myAccount/add');
@@ -18,11 +25,6 @@ const foProductPage = require('@pages/FO/product');
 const foCartPage = require('@pages/FO/cart');
 const foCheckoutPage = require('@pages/FO/checkout');
 const foOrderConfirmationPage = require('@pages/FO/checkout/orderConfirmation');
-const ordersPage = require('@pages/BO/orders');
-const viewOrderPage = require('@pages/BO/orders/view');
-const customersPage = require('@pages/BO/customers');
-const addressesPage = require('@pages/BO/customers/addresses');
-const viewCustomerPage = require('@pages/BO/customers/view');
 
 // Import data
 const CustomerFaker = require('@data/faker/customer');
@@ -165,7 +167,7 @@ describe('BO - Orders - view and edit order : Check and edit customer block', as
       await foProductPage.addProductToTheCart(page);
 
       const notificationsNumber = await foCartPage.getCartNotificationsNumber(page);
-      await expect(notificationsNumber).to.be.equal(5);
+      await expect(notificationsNumber).to.be.equal(1);
     });
 
     it('should go to delivery step', async function () {

@@ -6,10 +6,12 @@ const helper = require('@utils/helpers');
 // Import login steps
 const loginCommon = require('@commonTests/loginBO');
 
-// Import pages
+// Import BO pages
 const dashboardPage = require('@pages/BO/dashboard');
 const ordersPage = require('@pages/BO/orders');
 const viewCustomerPage = require('@pages/BO/customers/view');
+
+// Import BO pages
 const foHomePage = require('@pages/FO/home');
 const foProductPage = require('@pages/FO/product');
 const foCartPage = require('@pages/FO/cart');
@@ -43,7 +45,7 @@ Filter by guest email
 Click on guest link on grid
 Check that View customer(guest) page is displayed
  */
-describe('Bo - Orders : View guest from orders page', async () => {
+describe('BO - Orders : View guest from orders page', async () => {
   before(async function () {
     browserContext = await helper.createBrowserContext(this.browser);
     page = await helper.newTab(browserContext);
@@ -116,7 +118,7 @@ describe('Bo - Orders : View guest from orders page', async () => {
       await loginCommon.loginBO(this, page);
     });
 
-    it('should go to orders page', async function () {
+    it('should go to \'Orders > Orders\' page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'goToOrdersPage', baseContext);
 
       await dashboardPage.goToSubMenu(

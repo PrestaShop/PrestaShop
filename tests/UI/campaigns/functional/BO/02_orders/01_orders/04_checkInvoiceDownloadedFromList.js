@@ -7,10 +7,12 @@ const files = require('@utils/files');
 // Import login steps
 const loginCommon = require('@commonTests/loginBO');
 
-// Import pages
+// Import BO pages
 const dashboardPage = require('@pages/BO/dashboard');
 const ordersPage = require('@pages/BO/orders/index');
 const homePage = require('@pages/FO/home');
+
+// Import FO pages
 const foLoginPage = require('@pages/FO/login');
 const foMyAccountPage = require('@pages/FO/myAccount');
 const foOrderHistoryPage = require('@pages/FO/myAccount/orderHistory');
@@ -37,13 +39,13 @@ let page;
 let filePath;
 
 /*
-Create order in FO with bank wire payment
+Create order in FO, choose payment method bank wire payment
 Go to BO orders page and change order status to 'payment accepted'
 Check invoice creation
 Download invoice from list and check pdf text
 Go to FO and check the new order status
  */
-describe('Bo - orders : Check invoice downloaded from list', async () => {
+describe('BO - orders : Check invoice downloaded from list', async () => {
   // before and after functions
   before(async function () {
     browserContext = await helper.createBrowserContext(this.browser);

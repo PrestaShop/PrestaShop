@@ -1,22 +1,27 @@
 require('module-alias/register');
-// Using chai
-const {expect} = require('chai');
+
+// Helpers to open and close browser
 const helper = require('@utils/helpers');
+
+// Import login steps
 const loginCommon = require('@commonTests/loginBO');
 
-// Importing pages
+// Import pages
 const dashboardPage = require('@pages/BO/dashboard');
 const creditSlipsPage = require('@pages/BO/orders/creditSlips/index');
 const ordersPage = require('@pages/BO/orders/index');
 const viewOrderPage = require('@pages/BO/orders/view');
 
-// Importing data
+// Import data
 const {Statuses} = require('@data/demo/orderStatuses');
 
-// Importing test context
+// Import test context
 const testContext = require('@utils/testContext');
 
 const baseContext = 'functional_BO_orders_creditSlips_creditSlipOptions';
+
+// Import expect from chai
+const {expect} = require('chai');
 
 let browserContext;
 let page;
@@ -31,7 +36,7 @@ Check the credit slip file name
 Delete the slip prefix value
 Check the credit slip file name
  */
-describe('Orders - Credit slips : Credit slip options', async () => {
+describe('BO - Orders - Credit slips : Credit slip options', async () => {
   // before and after functions
   before(async function () {
     browserContext = await helper.createBrowserContext(this.browser);
@@ -135,7 +140,7 @@ describe('Orders - Credit slips : Credit slip options', async () => {
   });
 
   describe('Check that the new prefix does not exist in the credit slip file name', async () => {
-    it('should go to the orders page', async function () {
+    it('should go to \'Orders > Orders\' page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'goToOrdersPageToCheckDeletedPrefix', baseContext);
 
       await creditSlipsPage.goToSubMenu(
@@ -148,7 +153,7 @@ describe('Orders - Credit slips : Credit slip options', async () => {
       await expect(pageTitle).to.contains(ordersPage.pageTitle);
     });
 
-    it('should go to the last order page', async function () {
+    it('should go to the first order page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'goToFirstOrderToCheckDeletedPrefix', baseContext);
 
       await ordersPage.goToOrder(page, 1);

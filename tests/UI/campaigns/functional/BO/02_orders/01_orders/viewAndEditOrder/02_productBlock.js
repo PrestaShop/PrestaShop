@@ -6,22 +6,25 @@ const helper = require('@utils/helpers');
 // Import login steps
 const loginCommon = require('@commonTests/loginBO');
 
-// Import pages
+// Import BO pages
 const dashboardPage = require('@pages/BO/dashboard');
-const foHomePage = require('@pages/FO/home');
-const foProductPage = require('@pages/FO/product');
-const foCartPage = require('@pages/FO/cart');
-const foCheckoutPage = require('@pages/FO/checkout');
-const foOrderConfirmationPage = require('@pages/FO/checkout/orderConfirmation');
 const ordersPage = require('@pages/BO/orders');
 const viewOrderPage = require('@pages/BO/orders/view');
 const productsPage = require('@pages/BO/catalog/products');
 const addProductPage = require('@pages/BO/catalog/products/add');
 const customersPage = require('@pages/BO/customers');
 
+// Import FO pages
+const foHomePage = require('@pages/FO/home');
+const foProductPage = require('@pages/FO/product');
+const foCartPage = require('@pages/FO/cart');
+const foCheckoutPage = require('@pages/FO/checkout');
+const foOrderConfirmationPage = require('@pages/FO/checkout/orderConfirmation');
+
 // Import data
 const CustomerFaker = require('@data/faker/customer');
 const AddressFaker = require('@data/faker/address');
+const ProductFaker = require('@data/faker/product');
 const {PaymentMethods} = require('@data/demo/paymentMethods');
 const {Products} = require('@data/demo/products');
 
@@ -38,7 +41,6 @@ let page;
 
 const customerData = new CustomerFaker({password: ''});
 const addressData = new AddressFaker({country: 'France'});
-const ProductFaker = require('@data/faker/product');
 
 const productOutOfStockAllowed = new ProductFaker({
   name: 'Out of stock allowed',

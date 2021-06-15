@@ -1,8 +1,9 @@
 require('module-alias/register');
 
+// Helpers to open and close browser
 const helper = require('@utils/helpers');
 
-// Import pages
+// Import BO pages
 const dashboardPage = require('@pages/BO/dashboard');
 const ordersPage = require('@pages/BO/orders');
 const addOrderPage = require('@pages/BO/orders/add');
