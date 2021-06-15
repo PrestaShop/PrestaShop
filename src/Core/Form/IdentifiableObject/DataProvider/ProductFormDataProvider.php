@@ -386,11 +386,20 @@ final class ProductFormDataProvider implements FormDataProviderInterface
     {
         $seoOptions = $productForEditing->getProductSeoOptions();
 
+        // It is important to return null when nothing is selected this way the transformer and therefore
+        // the form field have no value to try and display
+        $redirectTarget = null;
+        if (null !== $seoOptions->getRedirectTarget()) {
+            $redirectTarget = [
+                'id' => $seoOptions->getRedirectTarget()->getId(),
+                'name' => $seoOptions->getRedirectTarget()->getName(),
+                'image' => $seoOptions->getRedirectTarget()->getImage(),
+            ];
+        }
+
         return [
             'type' => $seoOptions->getRedirectType(),
-            // It is important to return null when nothing is selected this way the transformer and therefore
-            // the form field have no value to try and display
-            'target' => $seoOptions->getRedirectTargetId() ?: null,
+            'target' => $redirectTarget,
         ];
     }
 

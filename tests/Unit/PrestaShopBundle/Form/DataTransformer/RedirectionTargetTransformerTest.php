@@ -29,6 +29,7 @@ declare(strict_types=1);
 namespace Tests\Unit\PrestaShopBundle\Form\DataTransformer;
 
 use PHPUnit\Framework\TestCase;
+use PrestaShop\PrestaShop\Core\Domain\Product\QueryResult\ProductRedirectTarget;
 use PrestaShopBundle\Form\Admin\Sell\Product\DataTransformer\RedirectionTargetTransformer;
 
 class RedirectionTargetTransformerTest extends TestCase
@@ -126,6 +127,39 @@ class RedirectionTargetTransformerTest extends TestCase
             null,
             null,
         ];
+
+        $redirectTarget = new ProductRedirectTarget(
+            42,
+            ProductRedirectTarget::PRODUCT_TYPE,
+            'Product 1',
+            'path/to/img.jpg'
+        );
+        yield [
+            [
+                'type' => 'product',
+                'target' => $redirectTarget,
+            ],
+            [
+                'type' => 'product',
+                'target' => [$redirectTarget],
+            ],
+        ];
+
+        $targetArray = [
+            'id' => $redirectTarget->getId(),
+            'name' => $redirectTarget->getName(),
+            'image' => $redirectTarget->getImage(),
+        ];
+        yield [
+            [
+                'type' => 'product',
+                'target' => $targetArray,
+            ],
+            [
+                'type' => 'product',
+                'target' => [$targetArray],
+            ],
+        ];
     }
 
     /**
@@ -211,6 +245,39 @@ class RedirectionTargetTransformerTest extends TestCase
         yield [
             null,
             null,
+        ];
+
+        $redirectTarget = new ProductRedirectTarget(
+            42,
+            ProductRedirectTarget::PRODUCT_TYPE,
+            'Product 1',
+            'path/to/img.jpg'
+        );
+        yield [
+            [
+                'type' => 'product',
+                'target' => [$redirectTarget],
+            ],
+            [
+                'type' => 'product',
+                'target' => $redirectTarget,
+            ],
+        ];
+
+        $targetArray = [
+            'id' => $redirectTarget->getId(),
+            'name' => $redirectTarget->getName(),
+            'image' => $redirectTarget->getImage(),
+        ];
+        yield [
+            [
+                'type' => 'product',
+                'target' => [$targetArray],
+            ],
+            [
+                'type' => 'product',
+                'target' => $targetArray,
+            ],
         ];
     }
 }
