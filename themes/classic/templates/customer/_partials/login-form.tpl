@@ -30,7 +30,7 @@
 
   <form id="login-form" action="{block name='login_form_actionurl'}{$action}{/block}" method="post">
 
-    <section>
+    <div>
       {block name='login_form_fields'}
         {foreach from=$formFields item="field"}
           {block name='form_field'}
@@ -43,7 +43,7 @@
           {l s='Forgot your password?' d='Shop.Theme.Customeraccount'}
         </a>
       </div>
-    </section>
+    </div>
 
     {block name='login_form_footer'}
       <footer class="form-footer text-sm-center clearfix">
