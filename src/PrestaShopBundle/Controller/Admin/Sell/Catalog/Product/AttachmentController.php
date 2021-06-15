@@ -25,41 +25,39 @@
  */
 declare(strict_types=1);
 
-namespace PrestaShop\PrestaShop\Adapter\Product\QueryHandler;
+namespace PrestaShopBundle\Controller\Admin\Sell\Catalog\Product;
 
-use PrestaShop\PrestaShop\Adapter\Attachment\AttachmentRepository;
 use PrestaShop\PrestaShop\Core\Domain\Product\Attachment\Query\GetProductAttachmentInfo;
-use PrestaShop\PrestaShop\Core\Domain\Product\Attachment\QueryHandler\GetProductAttachmentInfoHandlerInterface;
 use PrestaShop\PrestaShop\Core\Domain\Product\Attachment\QueryResult\ProductAttachmentInfo;
+use PrestaShopBundle\Controller\Admin\FrameworkBundleAdminController;
+use Symfony\Component\HttpFoundation\JsonResponse;
 
 /**
- * Handles @see GetProductAttachmentInfo query using legacy object model
+ * Responsible for attachments in Product page
  */
-final class GetProductAttachmentInfoHandler implements GetProductAttachmentInfoHandlerInterface
+class AttachmentController extends FrameworkBundleAdminController
 {
-    /**
-     * @var AttachmentRepository
-     */
-    private $attachmentRepository;
+    public function getAttachmentInfo(int $attachmentId): JsonResponse
+    {
+        $attachmentInfo = $this->getQueryBus()->handle(new GetProductAttachmentInfo($attachmentId));
 
-    public function __construct(
-        AttachmentRepository $attachmentRepository
-    ) {
-        $this->attachmentRepository = $attachmentRepository;
+        return $this->json(['attachmentInfo' => $this->presentAttachmentInfo($attachmentInfo)]);
     }
 
     /**
-     * {@inheritdoc}
+     * @param ProductAttachmentInfo $productAttachmentInfo
+     *
+     * @return array<string, mixed>
      */
-    public function handle(GetProductAttachmentInfo $query): ProductAttachmentInfo
+    private function presentAttachmentInfo(ProductAttachmentInfo $productAttachmentInfo): array
     {
-        $attachment = $this->attachmentRepository->get($query->getAttachmentId());
+        $localizedNames = $productAttachmentInfo->getLocalizedNames();
 
-        return new ProductAttachmentInfo(
-            (int) $attachment->id,
-            $attachment->name,
-            $attachment->file_name,
-            $attachment->mime
-        );
+        return [
+            'id' => $productAttachmentInfo->getAttachmentId(),
+            'name' => $localizedNames[$this->getContextLangId()] ?? reset($localizedNames),
+            'filename' => $productAttachmentInfo->getFilename(),
+            'mime' => $productAttachmentInfo->getMimeType(),
+        ];
     }
 }
