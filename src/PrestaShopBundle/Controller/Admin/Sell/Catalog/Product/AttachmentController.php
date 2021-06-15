@@ -30,6 +30,7 @@ namespace PrestaShopBundle\Controller\Admin\Sell\Catalog\Product;
 use PrestaShop\PrestaShop\Core\Domain\Product\Attachment\Query\GetProductAttachmentInfo;
 use PrestaShop\PrestaShop\Core\Domain\Product\Attachment\QueryResult\ProductAttachmentInfo;
 use PrestaShopBundle\Controller\Admin\FrameworkBundleAdminController;
+use PrestaShopBundle\Security\Annotation\AdminSecurity;
 use Symfony\Component\HttpFoundation\JsonResponse;
 
 /**
@@ -37,6 +38,13 @@ use Symfony\Component\HttpFoundation\JsonResponse;
  */
 class AttachmentController extends FrameworkBundleAdminController
 {
+    /**
+     * @AdminSecurity("is_granted(['read'], 'AdminProducts') || is_granted('create', 'AdminAttachments')")
+     *
+     * @param int $attachmentId
+     *
+     * @return JsonResponse
+     */
     public function getAttachmentInfoAction(int $attachmentId): JsonResponse
     {
         $attachmentInfo = $this->getQueryBus()->handle(new GetProductAttachmentInfo($attachmentId));
