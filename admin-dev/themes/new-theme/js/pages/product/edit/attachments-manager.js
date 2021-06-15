@@ -26,7 +26,7 @@
 import ProductMap from '@pages/product/product-map';
 import ProductEventMap from '@pages/product/product-event-map';
 import Router from '@components/router';
-import {createAttachment} from '@pages/product/services/attachments-service';
+import {createAttachment, getAttachmentInfo} from '@pages/product/services/attachments-service';
 
 const {$} = window;
 
@@ -34,11 +34,11 @@ export default class AttachmentsManager {
   constructor() {
     this.$attachmentsContainer = $(ProductMap.attachments.attachmentsContainer);
     this.$attachmentsCollection = $(ProductMap.attachments.attachmentsCollection);
+    this.$attachmentsTableBody = $(ProductMap.attachments.attachmentsTableBody);
     this.prototypeTemplate = this.$attachmentsCollection.data('prototype');
     this.prototypeName = this.$attachmentsCollection.data('prototypeName');
     this.eventEmitter = window.prestashop.instance.eventEmitter;
     this.router = new Router();
-
     this.init();
   }
 
@@ -76,6 +76,9 @@ export default class AttachmentsManager {
     });
   }
 
+  /**
+   * @private
+   */
   onAttachmentSubmit() {
     this.eventEmitter.on(ProductEventMap.attachments.newAttachmentSubmitted, (eventData) => {
       const submitEvent = eventData.e;
@@ -89,8 +92,11 @@ export default class AttachmentsManager {
 
           return;
         }
-        //@todo: get attachment by id and render its info in additional row
         eventData.fancybox.close();
+
+        getAttachmentInfo(resp.attachmentId).then((resp) => {
+          this.addAttachmentRow(resp.attachmentInfo);
+        });
       });
     });
   }
@@ -113,41 +119,38 @@ export default class AttachmentsManager {
   /**
    * @private
    */
-  refreshState() {
-    const $attachmentsCollection = this.$attachmentsCollection;
-    const isEmpty = $attachmentsCollection.find(ProductMap.attachments.attachedFileRow).length === 0;
+  addAttachmentRow(attachmentInfo) {
+    let rowIndex = this.$attachmentsTableBody.find(ProductMap.attachments.attachedFileRow).length;
 
+    const $row = $(this.getPrototypeRow(rowIndex));
+    const $attachmentIdInput = $(ProductMap.attachments.tableRow.attachmentIdInput(rowIndex), $row);
+    const $attachmentNamePreview = $(ProductMap.attachments.tableRow.attachmentNamePreview, $row);
+    const $attachmentFilenamePreview = $(ProductMap.attachments.tableRow.attachmentFilenamePreview, $row);
+    const $attachmentTypePreview = $(ProductMap.attachments.tableRow.attachmentTypePreview, $row);
+    $attachmentIdInput.val(attachmentInfo.id);
+    $attachmentNamePreview.html(attachmentInfo.name);
+    $attachmentFilenamePreview.html(attachmentInfo.filename);
+    $attachmentTypePreview.html(attachmentInfo.mimeType);
+
+    this.$attachmentsTableBody.append($row);
+    this.refreshState();
+  }
+
+  /**
+   * @private
+   */
+  refreshState() {
+    const isEmpty = this.$attachmentsTableBody.find(ProductMap.attachments.attachedFileRow).length === 0;
     const $emptyState = $(ProductMap.attachments.emptyState);
 
     if (isEmpty) {
       $emptyState.removeClass('d-none');
-      $attachmentsCollection.addClass('d-none');
+      this.$attachmentsCollection.addClass('d-none');
     } else {
       $emptyState.addClass('d-none');
-      $attachmentsCollection.removeClass('d-none');
+      this.$attachmentsCollection.removeClass('d-none');
     }
   }
-
-  // /**
-  //  * @private
-  //  * @todo: use after new file is added
-  //  */
-  // addAttachmentRow() {
-  //   this.$attachmentsCollection.empty();
-  //
-  //   let rowIndex = 0;
-  //   data.productAttachments.forEach((attachment) => {
-  //     //@todo; add other fields besides id so they can be filled with values
-  //     // const $row = $(this.getPrototypeRow(rowIndex));
-  //     // const $attachmentIdInput = $(ProductMap.attachments.collectionRow.attachmentIdInput(rowIndex), $row);
-  //     const $attachmentIdInput = $(this.getPrototypeRow(rowIndex));
-  //     $attachmentIdInput.val(attachment.id);
-  //     // this.$attachmentsCollection.append($row);
-  //     this.$attachmentsCollection.append($attachmentIdInput);
-  //
-  //     rowIndex += 1;
-  //   });
-  // }
 
   /**
    * @param {Number} rowIndex
