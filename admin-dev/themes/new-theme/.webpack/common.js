@@ -76,7 +76,8 @@ module.exports = {
     main: './js/theme.js',
     maintenance: './js/pages/maintenance',
     manufacturer: './js/pages/manufacturer',
-    manufacturer_address_form: './js/pages/manufacturer/manufacturer_address_form.js',
+    manufacturer_address_form:
+      './js/pages/manufacturer/manufacturer_address_form.js',
     merchandise_return: './js/pages/merchandise-return',
     meta: './js/pages/meta',
     module: './js/pages/module',
@@ -321,7 +322,7 @@ module.exports = {
             options: {
               sourceMap: true,
               sassOptions: {
-                includePaths: [bourbon.includePaths],
+                includePaths: bourbon.includePaths,
               },
             },
           },
