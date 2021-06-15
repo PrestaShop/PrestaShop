@@ -54,21 +54,10 @@ export default class EntitySearchInput {
     this.buildActions();
 
     return {
-      setRemoteUrl: (remoteUrl) => this.setRemoteUrl(remoteUrl),
-      setValue: (values) => this.setValue(values),
+      setValues: (values) => this.setValues(values),
       getOption: (optionName) => this.options[optionName],
       setOption: (optionName, value) => this.setOption(optionName, value),
     };
-  }
-
-  /**
-   * Change the remote url of the endpoint that returns suggestions.
-   *
-   * @param remoteUrl {string}
-   */
-  setRemoteUrl(remoteUrl) {
-    this.options.remoteUrl = remoteUrl;
-    this.entityRemoteSource.remote.url = this.options.remoteUrl;
   }
 
   /**
@@ -77,7 +66,7 @@ export default class EntitySearchInput {
    *
    * @param values {array}
    */
-  setValue(values) {
+  setValues(values) {
     this.clearSelectedItems();
     if (!values || values.length <= 0) {
       return;
@@ -94,6 +83,11 @@ export default class EntitySearchInput {
    */
   setOption(optionName, value) {
     this.options[optionName] = value;
+
+    // Apply special options to components when needed
+    if (optionName === 'remoteUrl') {
+      this.entityRemoteSource.remote.url = this.options.remoteUrl;
+    }
   }
 
   /**
