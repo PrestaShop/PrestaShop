@@ -648,7 +648,7 @@ class ProductFormDataProviderTest extends TestCase
             'id_type_redirected' => static::DEFAULT_CATEGORY_ID,
         ];
         $expectedOutputData['seo']['redirect_option']['type'] = RedirectType::TYPE_CATEGORY_TEMPORARY;
-        $expectedOutputData['seo']['redirect_option']['target'] = [static::DEFAULT_CATEGORY_ID];
+        $expectedOutputData['seo']['redirect_option']['target'] = static::DEFAULT_CATEGORY_ID;
 
         $datasets[] = [
             $productData,
