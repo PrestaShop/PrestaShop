@@ -57,7 +57,7 @@ class AttachmentController extends FrameworkBundleAdminController
             'id' => $productAttachmentInfo->getAttachmentId(),
             'name' => $localizedNames[$this->getContextLangId()] ?? reset($localizedNames),
             'filename' => $productAttachmentInfo->getFilename(),
-            'mime' => $productAttachmentInfo->getMimeType(),
+            'mimeType' => $productAttachmentInfo->getMimeType(),
         ];
     }
 }

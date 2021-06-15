@@ -43,6 +43,16 @@ export const createAttachment = async (form) => $.ajax({
   contentType: false,
 });
 
+/**
+ * @param attachmentId
+ *
+ * @returns {Promise<*|jQuery>}
+ */
+export const getAttachmentInfo = async (attachmentId) => $.get(
+  router.generate('admin_products_v2_attachments_attachment_info', {attachmentId})
+);
+
 export default {
   createAttachment,
+  getAttachmentInfo,
 };
