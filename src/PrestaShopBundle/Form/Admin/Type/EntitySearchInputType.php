@@ -59,6 +59,7 @@ class EntitySearchInputType extends CollectionType
         $resolver->setDefaults([
             // These are parameters from collection type which default values are modified
             'allow_add' => true,
+            'allow_delete' => true,
             'entry_type' => EntityItemType::class,
 
             // This is an optional entity type that can be useful to identify which type of entity is searched
