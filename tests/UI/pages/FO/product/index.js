@@ -43,6 +43,27 @@ class Product extends FOBasePage {
     this.quantityDiscountValue = `${this.discountTable} td:nth-child(1)`;
     this.unitDiscountColumn = `${this.discountTable} th:nth-child(2)`;
     this.unitDiscountValue = `${this.discountTable} td:nth-child(2)`;
+    // Consult review selectors
+    this.commentCount = '.comments-nb';
+    this.emptyReviewBlock = '#empty-product-comment';
+    this.productReviewList = '#product-comments-list';
+    this.productReviewRows = `${this.productReviewList} div`;
+    this.productReviewRow = row => `${this.productReviewRows}:nth-child(${row})`;
+    this.productReviewTitle = row => `${this.productReviewRow(row)} h4`;
+    this.productReviewContent = row => `${this.productReviewRow(row)} p`;
+    this.productRatingBlock = row => `${this.productReviewRow(row)} .grade-stars`;
+    this.productRatingStar = row => `${this.productReviewRow(row)} .star-on`;
+    // Add review selectors
+    this.emptyReviewAddReviewButton = '#empty-product-comment button';
+    this.notEmptyReviewAddReviewButton = '#product-comments-list-footer button';
+    this.productReviewModal = '#post-product-comment-modal';
+    this.reviewForm = '#post-product-comment-form';
+    this.reviewTitle = `${this.reviewForm} input[name=comment_title]`;
+    this.reviewTextContent = `${this.reviewForm} textarea[name=comment_content]`;
+    this.reviewRating = rating => `.star-full div:nth-child(${rating})`;
+    this.reviewSubmitButton = `${this.reviewForm} button[type=submit]`;
+    this.reviewSentConfirmationModal = '#product-comment-posted-modal';
+    this.closeReviewSentConfirmationModalButton = `${this.reviewSentConfirmationModal} button`;
   }
 
   // Methods
@@ -360,6 +381,62 @@ class Product extends FOBasePage {
    */
   isDeliveryInformationVisible(page) {
     return this.elementVisible(page, this.deliveryInformationSpan, 1000);
+  }
+
+  /**
+   *
+   * @param page {Page} Browser tab
+   * @param productReviewData {ProductReviewData} The content of the product review (title, content, rating)
+   * @returns {Promise<boolean>}
+   */
+  async addProductReview(page, productReviewData) {
+    if (this.getNumberOfComment(page) === 0) {
+      await page.click(this.notEmptyReviewAddReviewButton);
+    } else {
+      await page.click(this.emptyReviewAddReviewButton);
+    }
+    await this.waitForVisibleSelector(page, this.productReviewModal);
+    await this.setValue(page, this.reviewTitle, productReviewData.reviewTitle);
+    await this.setValue(page, this.reviewTextContent, productReviewData.reviewContent);
+    await page.click(this.reviewRating(productReviewData.reviewRating));
+    await page.click(this.reviewSubmitButton);
+    await page.click(this.closeReviewSentConfirmationModalButton);
+    await page.waitForTimeout(2000);
+    return await this.getAttributeContent(page, this.reviewSentConfirmationModal, 'style') === 'display: none;';
+  }
+
+  getNumberOfComment(page) {
+    return this.getNumberFromText(page, this.commentCount);
+  }
+
+  /**
+   *
+   * @param page {Page} browser tab
+   * @param row {Number} the review number in the list
+   * @returns {*}
+   */
+  getReviewTitle(page, row = 1) {
+    return this.getTextContent(page, this.productReviewTitle(row));
+  }
+
+  /**
+   *
+   * @param page {Page} browser tab
+   * @param row {Number} the review number in the list
+   * @returns {*}
+   */
+  getReviewTextContent(page, row = 1) {
+    return this.getTextContent(page, this.productReviewContent(row));
+  }
+
+  /**
+   *
+   * @param page {Page} browser tab
+   * @param row {Number} the review number in the list
+   * @returns {*}
+   */
+  getReviewRating(page, row = 1) {
+    return page.$$eval(this.productRatingStar(row), divs => divs.length);
   }
 }
 
