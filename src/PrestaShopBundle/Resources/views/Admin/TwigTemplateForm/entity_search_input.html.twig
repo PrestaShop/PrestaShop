@@ -24,6 +24,7 @@
  *#}
 
 {% block entity_search_input_widget %}
+  {# We cannot use the escape filter for remote_url or it breaks the url and it is not callable any more #}
   {%- set attr = attr|merge({
     'data-prototype-template': form_row(prototype),
     'data-prototype-name': prototype.vars.name|e('html_attr'),
@@ -37,7 +38,7 @@
     'data-remove-modal-message': remove_modal_message|e('html_attr'),
     'data-remove-modal-apply': remove_modal_apply|e('html_attr'),
     'data-remove-modal-cancel': remove_modal_cancel|e('html_attr'),
-    'data-remote-url': remote_url|e('html_attr'),
+    'data-remote-url': remote_url,
     'data-data-limit': limit,
     'data-allow-delete': form.vars.allow_delete ? 1 : 0
   }) -%}
@@ -48,7 +49,7 @@
       {%- set attr = search_attr|merge({
         'class': (search_attr.class|default('') ~ ' entity-search-input form-control')|trim,
         'autocomplete': 'off',
-        'placeholder': placeholder|e('html_attr'),
+        'placeholder': placeholder,
         'type': 'text'
       }) -%}
       {%- set id = form.vars.id ~ '_search_input' -%}
