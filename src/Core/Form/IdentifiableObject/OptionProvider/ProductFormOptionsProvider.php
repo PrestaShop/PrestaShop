@@ -103,7 +103,7 @@ class ProductFormOptionsProvider implements FormOptionsProviderInterface
     {
         $entities = null;
         if (!empty($data['seo']['redirect_option']['target'])) {
-            $entityId = (int) reset($data['seo']['redirect_option']['target']);
+            $entityId = $data['seo']['redirect_option']['target'];
             $languageId = (int) $this->legacyContext->getLanguage()->id;
 
             $dataType = $data['seo']['redirect_option']['type'] ?? RedirectType::TYPE_NOT_FOUND;
