@@ -10,7 +10,7 @@ $component-name: multishop-modal;
   align-items: flex-start;
   justify-content: center;
   width: 100%;
-  height: 100vh;
+  height: calc(100vh - 78px);
   pointer-events: all;
   background-color: rgba(0, 0, 0, 0.6);
   opacity: 1;
@@ -29,8 +29,9 @@ $component-name: multishop-modal;
   &-dialog {
     width: 100%;
     max-width: 39.375rem;
-    padding: 1.875rem 3.125rem;
-    padding-right: 2.125rem;
+    max-height: 100%;
+    padding: 1.875rem 2.125rem;
+    overflow: auto;
     background: $white;
     border: 1px solid #b7ced3;
     // stylelint-disable
