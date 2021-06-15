@@ -121,18 +121,20 @@ export default class AttachmentsManager {
    */
   addAttachmentRow(attachmentInfo) {
     const rowIndex = this.$attachmentsTableBody.find(ProductMap.attachments.attachedFileRow).length;
-
     const $row = $(this.getPrototypeRow(rowIndex));
+    const attachmentId = attachmentInfo.id;
     const $attachmentIdInput = $(ProductMap.attachments.tableRow.attachmentIdInput(rowIndex), $row);
     const $attachmentNamePreview = $(ProductMap.attachments.tableRow.attachmentNamePreview, $row);
     const $attachmentFilenamePreview = $(ProductMap.attachments.tableRow.attachmentFilenamePreview, $row);
     const $attachmentTypePreview = $(ProductMap.attachments.tableRow.attachmentTypePreview, $row);
-    $attachmentIdInput.val(attachmentInfo.id);
+
+    $attachmentIdInput.val(attachmentId);
     $attachmentNamePreview.html(attachmentInfo.name);
     $attachmentFilenamePreview.html(attachmentInfo.filename);
     $attachmentTypePreview.html(attachmentInfo.mimeType);
 
     this.$attachmentsTableBody.append($row);
+    this.eventEmitter.emit(ProductEventMap.attachments.rowAdded, {attachmentId});
     this.refreshState();
   }
 
