@@ -27,7 +27,7 @@ declare(strict_types=1);
 
 namespace PrestaShop\PrestaShop\Core\Domain\Product\Attachment\QueryResult;
 
-class ProductAttachment
+class ProductAttachmentInfo
 {
     /**
      * @var int
