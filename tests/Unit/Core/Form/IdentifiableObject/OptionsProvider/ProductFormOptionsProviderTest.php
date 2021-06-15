@@ -34,6 +34,7 @@ use PHPUnit\Framework\TestCase;
 use PrestaShop\PrestaShop\Adapter\Category\Repository\CategoryRepository;
 use PrestaShop\PrestaShop\Adapter\Image\ImagePathFactory;
 use PrestaShop\PrestaShop\Adapter\LegacyContext;
+use PrestaShop\PrestaShop\Adapter\Product\Options\RedirectTargetProvider;
 use PrestaShop\PrestaShop\Core\CommandBus\CommandBusInterface;
 use PrestaShop\PrestaShop\Core\Domain\Category\ValueObject\CategoryId;
 use PrestaShop\PrestaShop\Core\Domain\Language\ValueObject\LanguageId;
@@ -52,24 +53,14 @@ class ProductFormOptionsProviderTest extends TestCase
 
     public function testGetDefaultOptions(): void
     {
-        $provider = new ProductFormOptionsProvider(
-            $this->getQueryBusMock(),
-            $this->getCategoryRepository(),
-            $this->getLegacyContext(),
-            $this->getImagePathFactory()
-        );
+        $provider = new ProductFormOptionsProvider($this->getRedirectTargetProvider());
         $defaultOptions = $provider->getDefaultOptions([]);
         $this->assertEquals([], $defaultOptions);
     }
 
     public function testVirtualProductOptions(): void
     {
-        $provider = new ProductFormOptionsProvider(
-            $this->getQueryBusMock(),
-            $this->getCategoryRepository(),
-            $this->getLegacyContext(),
-            $this->getImagePathFactory()
-        );
+        $provider = new ProductFormOptionsProvider($this->getRedirectTargetProvider());
         $options = $provider->getOptions(self::PRODUCT_ID, []);
         $this->assertArrayHasKey('virtual_product_file_id', $options);
         $this->assertEquals(null, $options['virtual_product_file_id']);
@@ -93,12 +84,7 @@ class ProductFormOptionsProviderTest extends TestCase
      */
     public function testRedirectionOptions(?array $mockOptions, array $formData, ?array $expectedTarget): void
     {
-        $provider = new ProductFormOptionsProvider(
-            $this->getQueryBusMock($mockOptions),
-            $this->getCategoryRepository($mockOptions),
-            $this->getLegacyContext($mockOptions),
-            $this->getImagePathFactory($mockOptions)
-        );
+        $provider = new ProductFormOptionsProvider($this->getRedirectTargetProvider($mockOptions));
 
         $options = $provider->getOptions(self::PRODUCT_ID, $formData);
         $this->assertArrayHasKey('redirect_target', $options);
@@ -177,11 +163,11 @@ class ProductFormOptionsProviderTest extends TestCase
             ],
             $formData,
             [
-                new ProductForListing(
-                    self::PRODUCT_TARGET_ID,
-                    $productName,
-                    $productImage
-                ),
+                [
+                    'id' => self::PRODUCT_TARGET_ID,
+                    'name' => $productName,
+                    'image' => $productImage,
+                ],
             ],
         ];
 
@@ -196,13 +182,23 @@ class ProductFormOptionsProviderTest extends TestCase
             ],
             $formData,
             [
-                new ProductForListing(
-                    self::PRODUCT_TARGET_ID,
-                    $productName,
-                    $productImage
-                ),
+                [
+                    'id' => self::PRODUCT_TARGET_ID,
+                    'name' => $productName,
+                    'image' => $productImage,
+                ],
             ],
         ];
+    }
+
+    private function getRedirectTargetProvider(?array $mockOptions = null): RedirectTargetProvider
+    {
+        return new RedirectTargetProvider(
+            $this->getQueryBusMock($mockOptions),
+            $this->getCategoryRepository($mockOptions),
+            $this->getLegacyContext($mockOptions),
+            $this->getImagePathFactory($mockOptions)
+        );
     }
 
     private function getImagePathFactory(?array $mockOptions = null): ImagePathFactory
