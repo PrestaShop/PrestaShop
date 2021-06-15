@@ -103,7 +103,7 @@ class InstallControllerConsoleProcess extends InstallControllerConsole implement
         $this->clearConfigXML() && $this->clearConfigThemes();
         $steps = explode(',', $this->datas->step);
         if (in_array('all', $steps)) {
-            $steps = array('database', 'fixtures', 'theme', 'modules', 'postInstall');
+            $steps = array('database', 'modules', 'theme', 'fixtures', 'postInstall');
         }
 
         if (in_array('database', $steps)) {
@@ -149,7 +149,6 @@ class InstallControllerConsoleProcess extends InstallControllerConsole implement
                 $this->printErrors();
             }
         }
-
 
         if (in_array('theme', $steps)) {
             if (!$this->processInstallTheme()) {
