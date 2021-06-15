@@ -56,7 +56,7 @@ class AttachedFileType extends TranslatorAwareType
                 'icon' => 'delete',
                 'attr' => [
                     'class' => 'remove-attachment',
-                    'data-original-title' => $this->trans('Remove', 'Admin.Global'),
+                    'data-original-title' => $this->trans('Remove', 'Admin.Actions'),
                 ],
             ])
         ;
