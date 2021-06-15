@@ -37,7 +37,7 @@ use Symfony\Component\HttpFoundation\JsonResponse;
  */
 class AttachmentController extends FrameworkBundleAdminController
 {
-    public function getAttachmentInfo(int $attachmentId): JsonResponse
+    public function getAttachmentInfoAction(int $attachmentId): JsonResponse
     {
         $attachmentInfo = $this->getQueryBus()->handle(new GetProductAttachmentInfo($attachmentId));
 
