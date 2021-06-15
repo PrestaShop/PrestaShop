@@ -1,0 +1,9 @@
+admin_products_v2_attachments_attachment_info:
+    path: /attachments/{attachmentId}
+    methods: [GET]
+    defaults:
+        _controller: PrestaShopBundle:Admin/Sell/Catalog/Product/Attachment:getAttachmentInfo
+    requirements:
+        attachmentId: \d+
+    options:
+        expose: true
