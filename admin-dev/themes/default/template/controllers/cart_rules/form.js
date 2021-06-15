@@ -93,7 +93,7 @@ function updateProductRuleShortDescription(item) {
   else $(`#${id2}_match`).val(length);
 }
 
-const restrictions = new Array('country', 'carrier', 'group', 'cart_rule', 'shop');
+window.restrictions = new Array('country', 'carrier', 'group', 'cart_rule', 'shop');
 
 for (i in restrictions) {
   toggleCartRuleFilter($(`#${restrictions[i]}_restriction`));
@@ -333,14 +333,14 @@ $('.tab-row.active').removeClass('active');
 $(`#cart_rule_${currentFormTab}`).show();
 $(`#cart_rule_link_${currentFormTab}`).parent().addClass('active');
 
-const date = new Date();
-let hours = date.getHours();
+window.date = new Date();
+window.hours = date.getHours();
 
 if (hours < 10) hours = `0${hours}`;
-let mins = date.getMinutes();
+window.mins = date.getMinutes();
 
 if (mins < 10) mins = `0${mins}`;
-let secs = date.getSeconds();
+window.secs = date.getSeconds();
 
 if (secs < 10) secs = `0${secs}`;
 
@@ -376,7 +376,7 @@ $('#giftProductFilter').typeWatch({
   callback() { searchProducts(); },
 });
 
-let gift_product_search = $('#giftProductFilter').val();
+window.gift_product_search = $('#giftProductFilter').val();
 function searchProducts() {
   if ($('#giftProductFilter').val() == gift_product_search) return;
   gift_product_search = $('#giftProductFilter').val();

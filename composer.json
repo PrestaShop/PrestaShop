@@ -1,6 +1,6 @@
 {
   "name": "prestashop/prestashop",
-  "description": "PrestaShop offers a free, fully scalable, Open Source e-commerce solution.",
+  "description": "PrestaShop is an Open Source e-commerce platform, committed to providing the best shopping cart experience for both merchants and customers.",
   "type": "project",
   "require": {
     "php": "^7.1.3",

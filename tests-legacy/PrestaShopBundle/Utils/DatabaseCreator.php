@@ -30,7 +30,6 @@ use Context;
 use Doctrine\DBAL\DBALException;
 use PrestaShopBundle\Install\DatabaseDump;
 use PrestaShopBundle\Install\Install;
-use Symfony\Component\Process\Process;
 use Tests\Resources\ResourceResetter;
 use Tab;
 
@@ -56,8 +55,6 @@ class DatabaseCreator
             exit(1);
         }
 
-        $process = new Process(PHP_BINARY . ' bin/console prestashop:schema:update-without-foreign --env=test');
-        $process->run();
         $install->initializeTestContext();
         $install->installDefaultData('test_shop', false, false, false);
         $install->populateDatabase();

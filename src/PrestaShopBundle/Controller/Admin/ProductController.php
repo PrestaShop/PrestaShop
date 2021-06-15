@@ -665,6 +665,7 @@ class ProductController extends FrameworkBundleAdminController
             'drawerModules' => $drawerModules,
             'layoutTitle' => $this->trans('Product', 'Admin.Global'),
             'isProductPageV2Enabled' => ($this->isProductPageV2Enabled()),
+            'isCreationMode' => (int) $product->state === Product::STATE_TEMP,
         ];
     }
 

@@ -8,7 +8,7 @@ const loginCommon = require('@commonTests/loginBO');
 
 // Import pages
 const dashboardPage = require('@pages/BO/dashboard');
-const merchandiseReturnsPage = require('@pages/BO/customerService/merchandiseReturns');
+const boMerchandiseReturnsPage = require('@pages/BO/customerService/merchandiseReturns');
 const ordersPage = require('@pages/BO/orders/index');
 const viewOrderPage = require('@pages/BO/orders/view');
 const homePage = require('@pages/FO/home');
@@ -20,6 +20,7 @@ const checkoutPage = require('@pages/FO/checkout');
 const myAccountPage = require('@pages/FO/myAccount');
 const orderHistoryPage = require('@pages/FO/myAccount/orderHistory');
 const orderDetailsPage = require('@pages/FO/myAccount/orderDetails');
+const foMerchandiseReturnsPage = require('@pages/FO/myAccount/merchandiseReturns');
 
 // Import data
 const {DefaultCustomer} = require('@data/demo/customer');
@@ -29,7 +30,7 @@ const {PaymentMethods} = require('@data/demo/paymentMethods');
 // Import test context
 const testContext = require('@utils/testContext');
 
-const baseContext = 'functional_BO_customerService_orderMessages_activateMerchandiseReturns';
+const baseContext = 'functional_BO_customerService_orderMessages_merchandiseReturnOptions';
 
 let browserContext;
 let page;
@@ -37,12 +38,14 @@ let page;
 /*
 Create order in FO
 Activate/Deactivate merchandise return
+Update returns prefix
 Change the first order status in the list to shipped
 Check the existence of the button return products
 Go to FO>My account>Order history> first order detail in the list
 Check the existence of product return form
+Create a merchandise returns then check the file prefix
  */
-describe('Activate/Deactivate merchandise return', async () => {
+describe('Merchandise return (RMA) options', async () => {
   // before and after functions
   before(async function () {
     browserContext = await helper.createBrowserContext(this.browser);
@@ -128,8 +131,8 @@ describe('Activate/Deactivate merchandise return', async () => {
   });
 
   const tests = [
-    {args: {action: 'activate', enable: true}},
-    {args: {action: 'deactivate', enable: false}},
+    {args: {action: 'activate', enable: true, prefix: '#NE'}},
+    {args: {action: 'deactivate', enable: false, prefix: '#RE'}},
   ];
 
   tests.forEach((test, index) => {
@@ -142,17 +145,24 @@ describe('Activate/Deactivate merchandise return', async () => {
         dashboardPage.merchandiseReturnsLink,
       );
 
-      await merchandiseReturnsPage.closeSfToolBar(page);
+      await boMerchandiseReturnsPage.closeSfToolBar(page);
 
-      const pageTitle = await merchandiseReturnsPage.getPageTitle(page);
-      await expect(pageTitle).to.contains(merchandiseReturnsPage.pageTitle);
+      const pageTitle = await boMerchandiseReturnsPage.getPageTitle(page);
+      await expect(pageTitle).to.contains(boMerchandiseReturnsPage.pageTitle);
     });
 
     it(`should ${test.args.action} merchandise returns`, async function () {
       await testContext.addContextItem(this, 'testIdentifier', `${test.args.action}Returns`, baseContext);
 
-      const result = await merchandiseReturnsPage.setOrderReturnStatus(page, test.args.enable);
-      await expect(result).to.contains(merchandiseReturnsPage.successfulUpdateMessage);
+      const result = await boMerchandiseReturnsPage.setOrderReturnStatus(page, test.args.enable);
+      await expect(result).to.contains(boMerchandiseReturnsPage.successfulUpdateMessage);
+    });
+
+    it('should update Returns prefix', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', `updateReturnPrefix${index}`, baseContext);
+
+      const result = await boMerchandiseReturnsPage.setReturnsPrefix(page, test.args.prefix);
+      await expect(result).to.contains(boMerchandiseReturnsPage.successfulUpdateMessage);
     });
 
     it('should go to orders page', async function () {
@@ -256,6 +266,23 @@ describe('Activate/Deactivate merchandise return', async () => {
       const result = await orderDetailsPage.isOrderReturnFormVisible(page);
       await expect(result).to.equal(test.args.enable);
     });
+    if (test.args.enable) {
+      it('should create a merchandise return', async function () {
+        await testContext.addContextItem(this, 'testIdentifier', 'createMerchandiseReturn', baseContext);
+
+        await orderDetailsPage.requestMerchandiseReturn(page, 'test');
+
+        const pageTitle = await foMerchandiseReturnsPage.getPageTitle(page);
+        await expect(pageTitle).to.contains(foMerchandiseReturnsPage.pageTitle);
+      });
+
+      it('should verify order return prefix', async function () {
+        await testContext.addContextItem(this, 'testIdentifier', 'checkOrderReturnPrefix', baseContext);
+
+        const fileName = await foMerchandiseReturnsPage.getOrderReturnFileName(page);
+        await expect(fileName).to.contains(test.args.prefix);
+      });
+    }
 
     it('should close the FO page and go back to BO', async function () {
       await testContext.addContextItem(this, 'testIdentifier', `closeFoAndGoBackToBO${index}`, baseContext);

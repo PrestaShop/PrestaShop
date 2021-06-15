@@ -40,7 +40,10 @@ use OrderCarrier;
 use OrderCartRule;
 use OrderDetail;
 use PrestaShop\Decimal\Number;
+use PrestaShop\PrestaShop\Adapter\Cart\Comparator\CartProductsComparator;
+use PrestaShop\PrestaShop\Adapter\Cart\Comparator\CartProductUpdate;
 use PrestaShop\PrestaShop\Adapter\ContextStateManager;
+use PrestaShop\PrestaShop\Adapter\Order\Refund\OrderProductRemover;
 use PrestaShop\PrestaShop\Core\Cart\CartRuleData;
 use PrestaShop\PrestaShop\Core\Domain\Configuration\ShopConfigurationInterface;
 use PrestaShop\PrestaShop\Core\Domain\Order\Exception\OrderException;
@@ -71,6 +74,11 @@ class OrderAmountUpdater
     private $orderDetailUpdater;
 
     /**
+     * @var OrderProductRemover
+     */
+    private $orderProductRemover;
+
+    /**
      * @var array
      */
     private $orderConstraints = [];
@@ -84,15 +92,18 @@ class OrderAmountUpdater
      * @param ShopConfigurationInterface $shopConfiguration
      * @param ContextStateManager $contextStateManager
      * @param OrderDetailUpdater $orderDetailUpdater
+     * @param OrderProductRemover $orderProductRemover
      */
     public function __construct(
         ShopConfigurationInterface $shopConfiguration,
         ContextStateManager $contextStateManager,
-        OrderDetailUpdater $orderDetailUpdater
+        OrderDetailUpdater $orderDetailUpdater,
+        OrderProductRemover $orderProductRemover
     ) {
         $this->shopConfiguration = $shopConfiguration;
         $this->contextStateManager = $contextStateManager;
         $this->orderDetailUpdater = $orderDetailUpdater;
+        $this->orderProductRemover = $orderProductRemover;
     }
 
     /**
@@ -128,8 +139,13 @@ class OrderAmountUpdater
             // Update order details (if quantity or product price have been modified)
             $this->updateOrderDetails($order, $cart);
 
+            $productsComparator = new CartProductsComparator($cart);
             // Recalculate cart rules and Fix differences between cart's cartRules and order's cartRules
             $this->updateOrderCartRules($order, $cart, $computingPrecision, $orderInvoiceId);
+
+            // Synchronize modified products with the order
+            $modifiedProducts = $productsComparator->getModifiedProducts();
+            $this->updateOrderModifiedProducts($modifiedProducts, $cart, $order);
 
             // Update order totals
             $this->updateOrderTotals($order, $cart, $computingPrecision);
@@ -146,6 +162,90 @@ class OrderAmountUpdater
         } finally {
             $this->contextStateManager->restorePreviousContext();
         }
+    }
+
+    /**
+     * Synchronizes modified products from the cart with the order
+     *
+     * @param CartProductUpdate[] $modifiedProducts
+     * @param Cart $cart
+     * @param Order $order
+     *
+     * @throws OrderException
+     * @throws PrestaShopDatabaseException
+     * @throws PrestaShopException
+     */
+    private function updateOrderModifiedProducts(array $modifiedProducts, Cart $cart, Order $order): void
+    {
+        $productsToAddToOrder = [];
+        foreach ($modifiedProducts as $modifiedProduct) {
+            $orderProduct = $this->findProductInOrder($modifiedProduct, $order);
+            $cartProduct = $this->findProductInCart($modifiedProduct, $cart);
+            if (null === $cartProduct) {
+                // The product is not in the cart anymore: delete it from the order
+                $orderDetail = new OrderDetail($orderProduct['id_order_detail']);
+                $this->orderProductRemover->deleteProductFromOrder($order, $orderDetail, false);
+            } elseif (null === $orderProduct) {
+                // The product is not in the order but in the cart: add it to the order
+                $productsToAddToOrder[] = $cartProduct;
+            } else {
+                // the product is both in the cart and the order: update its quantity and price with the cart values
+                $orderDetail = new OrderDetail($orderProduct['id_order_detail']);
+                $orderDetail->product_quantity = $cartProduct['cart_quantity'];
+                $this->orderDetailUpdater->updateOrderDetail(
+                    $orderDetail,
+                    $order,
+                    new Number((string) $cartProduct['price_with_reduction_without_tax']),
+                    new Number((string) $cartProduct['price_with_reduction'])
+                );
+            }
+        }
+        if (count($productsToAddToOrder) > 0) {
+            $orderDetail = new OrderDetail();
+            $orderDetail->createList($order, $cart, $order->getCurrentState(), $productsToAddToOrder);
+        }
+    }
+
+    /**
+     * @param CartProductUpdate $productUpdate
+     * @param Cart $cart
+     *
+     * @return array|null
+     */
+    private function findProductInCart(CartProductUpdate $productUpdate, Cart $cart): ?array
+    {
+        $combinationId = null === $productUpdate->getCombinationId()
+            ? 0
+            : $productUpdate->getCombinationId()->getValue();
+        foreach ($cart->getProducts() as $product) {
+            if ((int) $product['id_product'] === $productUpdate->getProductId()->getValue()
+                && (int) $product['id_product_attribute'] === $combinationId) {
+                return $product;
+            }
+        }
+
+        return null;
+    }
+
+    /**
+     * @param CartProductUpdate $productUpdate
+     * @param Order $order
+     *
+     * @return array|null
+     */
+    private function findProductInOrder(CartProductUpdate $productUpdate, Order $order): ?array
+    {
+        $combinationId = null === $productUpdate->getCombinationId()
+            ? 0
+            : $productUpdate->getCombinationId()->getValue();
+        foreach ($order->getProducts() as $product) {
+            if ((int) $product['product_id'] === $productUpdate->getProductId()->getValue()
+                && (int) $product['product_attribute_id'] === $combinationId) {
+                return $product;
+            }
+        }
+
+        return null;
     }
 
     /**
@@ -209,16 +309,23 @@ class OrderAmountUpdater
         $order->total_shipping_tax_incl = $cart->getOrderTotal(true, Cart::ONLY_SHIPPING, $orderProducts, $carrierId, false, $this->keepOrderPrices);
 
         if (!$this->getOrderConfiguration('PS_ORDER_RECALCULATE_SHIPPING', $order)) {
-            $shippingDiffTaxIncluded = $order->total_shipping_tax_incl - $totalShippingTaxIncluded;
-            $shippingDiffTaxExcluded = $order->total_shipping_tax_excl - $totalShippingTaxExcluded;
+            $freeShipping = $this->isFreeShipping($order);
+
+            if ($freeShipping) {
+                $order->total_discounts = $order->total_discounts - $order->total_shipping_tax_incl + $totalShippingTaxIncluded;
+                $order->total_discounts_tax_excl = $order->total_discounts_tax_excl - $order->total_shipping_tax_excl + $totalShippingTaxExcluded;
+                $order->total_discounts_tax_incl = $order->total_discounts_tax_incl - $order->total_shipping_tax_incl + $totalShippingTaxIncluded;
+            }
 
             $order->total_shipping = $totalShippingTaxIncluded;
             $order->total_shipping_tax_incl = $totalShippingTaxIncluded;
             $order->total_shipping_tax_excl = $totalShippingTaxExcluded;
 
-            $order->total_paid -= $shippingDiffTaxIncluded;
-            $order->total_paid_tax_incl -= $shippingDiffTaxIncluded;
-            $order->total_paid_tax_excl -= $shippingDiffTaxExcluded;
+            if (!$freeShipping) {
+                $order->total_paid -= ($order->total_shipping_tax_incl - $totalShippingTaxIncluded);
+                $order->total_paid_tax_incl -= ($order->total_shipping_tax_incl - $totalShippingTaxIncluded);
+                $order->total_paid_tax_excl -= ($order->total_shipping_tax_excl - $totalShippingTaxExcluded);
+            }
         }
     }
 
@@ -326,14 +433,14 @@ class OrderAmountUpdater
         int $computingPrecision,
         ?int $orderInvoiceId
     ): void {
-        CartRule::autoAddToCart();
-        CartRule::autoRemoveFromCart();
+        CartRule::autoAddToCart(null, true);
+        CartRule::autoRemoveFromCart(null, true);
         $carrierId = $order->id_carrier;
 
-        $newCartRules = $cart->getCartRules();
+        $newCartRules = $cart->getCartRules(CartRule::FILTER_ACTION_ALL, false);
         // We need the calculator to compute the discount on the whole products because they can interact with each
         // other so they can't be computed independently, it needs to keep order prices
-        $calculator = $cart->newCalculator($order->getCartProducts(), $newCartRules, $carrierId, $computingPrecision, $this->keepOrderPrices);
+        $calculator = $cart->newCalculator($cart->getProducts(), $newCartRules, $carrierId, $computingPrecision, $this->keepOrderPrices);
         $calculator->processCalculation();
 
         foreach ($order->getCartRules() as $orderCartRuleData) {
@@ -348,6 +455,12 @@ class OrderAmountUpdater
                     $orderCartRule->free_shipping = $cartRule->free_shipping;
                     $orderCartRule->value = Tools::ps_round($cartRuleData->getDiscountApplied()->getTaxIncluded(), $computingPrecision);
                     $orderCartRule->value_tax_excl = Tools::ps_round($cartRuleData->getDiscountApplied()->getTaxExcluded(), $computingPrecision);
+
+                    if ($orderCartRule->free_shipping && !$this->getOrderConfiguration('PS_ORDER_RECALCULATE_SHIPPING', $order)) {
+                        $orderCartRule->value = $orderCartRule->value - $calculator->getFees()->getInitialShippingFees()->getTaxIncluded() + $order->total_shipping;
+                        $orderCartRule->value_tax_excl = $orderCartRule->value_tax_excl - $calculator->getFees()->getInitialShippingFees()->getTaxExcluded() + $order->total_shipping_tax_excl;
+                    }
+
                     $orderCartRule->save();
                     continue 2;
                 }
@@ -449,22 +562,42 @@ class OrderAmountUpdater
             $invoice->total_shipping_tax_incl = $cart->getOrderTotal(true, Cart::ONLY_SHIPPING, $currentInvoiceProducts, $carrierId, false, $this->keepOrderPrices);
 
             if (!$this->getOrderConfiguration('PS_ORDER_RECALCULATE_SHIPPING', $order)) {
-                $shippingDiffTaxIncluded = $invoice->total_shipping_tax_incl - $totalShippingTaxIncluded;
-                $shippingDiffTaxExcluded = $invoice->total_shipping_tax_excl - $totalShippingTaxExcluded;
+                $freeShipping = $this->isFreeShipping($order);
 
-                $invoice->total_shipping = $totalShippingTaxIncluded;
+                if ($freeShipping) {
+                    $invoice->total_discount_tax_excl = $invoice->total_discount_tax_excl - $invoice->total_shipping_tax_excl + $totalShippingTaxExcluded;
+                    $invoice->total_discount_tax_incl = $invoice->total_discount_tax_incl - $invoice->total_shipping_tax_incl + $totalShippingTaxIncluded;
+                }
+
                 $invoice->total_shipping_tax_incl = $totalShippingTaxIncluded;
                 $invoice->total_shipping_tax_excl = $totalShippingTaxExcluded;
 
-                $invoice->total_paid -= $shippingDiffTaxIncluded;
-                $invoice->total_paid_tax_incl -= $shippingDiffTaxIncluded;
-                $invoice->total_paid_tax_excl -= $shippingDiffTaxExcluded;
+                if (!$freeShipping) {
+                    $invoice->total_paid_tax_incl -= ($invoice->total_shipping_tax_incl - $totalShippingTaxIncluded);
+                    $invoice->total_paid_tax_excl -= ($invoice->total_shipping_tax_excl - $totalShippingTaxExcluded);
+                }
             }
 
             if (!$invoice->update()) {
                 throw new OrderException('Could not update order invoice in database.');
             }
         }
+    }
+
+    /**
+     * @param Order $order
+     *
+     * @return bool
+     */
+    protected function isFreeShipping(Order $order): bool
+    {
+        foreach ($order->getCartRules() as $cartRule) {
+            if ($cartRule['free_shipping']) {
+                return true;
+            }
+        }
+
+        return false;
     }
 
     /**

@@ -172,8 +172,8 @@ describe('Generate Credit slip file by date', async () => {
     it('should check the existence of the Credit slip document', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'checkCreditSlipDocumentName', baseContext);
 
-      const documentName = await viewOrderPage.getDocumentName(page, 4);
-      await expect(documentName).to.be.equal(creditSlipDocumentName);
+      const documentType = await viewOrderPage.getDocumentType(page, 4);
+      await expect(documentType).to.be.equal(creditSlipDocumentName);
     });
   });
 

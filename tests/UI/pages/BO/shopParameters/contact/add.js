@@ -1,7 +1,16 @@
 require('module-alias/register');
 const BOBasePage = require('@pages/BO/BObasePage');
 
+/**
+ * Add contact page, contains functions that can be used on the page
+ * @class
+ * @extends BOBasePage
+ */
 class AddContact extends BOBasePage {
+  /**
+   * @constructs
+   * Setting up texts and selectors to use on add contact page
+   */
   constructor() {
     super();
 
@@ -26,8 +35,8 @@ class AddContact extends BOBasePage {
 
   /**
    * Change language for selectors
-   * @param page
-   * @param lang
+   * @param page {Page} Browser tab
+   * @param lang {string} Language to choose
    * @return {Promise<void>}
    */
   async changeLanguageForSelectors(page, lang = 'en') {
@@ -43,8 +52,8 @@ class AddContact extends BOBasePage {
 
   /**
    * Fill form for add/edit contact
-   * @param page
-   * @param contactData
+   * @param page {Page} Browser tab
+   * @param contactData {ContactData} Data to set on contact form
    * @returns {Promise<string>}
    */
   async createEditContact(page, contactData) {

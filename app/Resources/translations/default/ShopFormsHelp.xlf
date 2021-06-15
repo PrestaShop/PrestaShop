@@ -19,7 +19,7 @@
       <trans-unit id="bd9737bd1a3057cd059167a4a19fe6ca">
         <source>Your password must be at least %min% characters long.</source>
         <target>Your password must be at least %min% characters long.</target>
-        <note>Line: 96</note>
+        <note>Line: 86</note>
       </trans-unit>
     </body>
   </file>

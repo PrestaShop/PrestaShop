@@ -64,7 +64,7 @@ describe('Export languages in translations page', async () => {
   ];
 
   tests.forEach((test) => {
-    it(`Export language '${test.args.language.name}' for theme '${test.args.theme}'`, async function () {
+    it(`Export language '${test.args.language.name}'`, async function () {
       await testContext.addContextItem(
         this,
         'testIdentifier',

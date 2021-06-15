@@ -16,19 +16,20 @@ const dashboardPage = require('@pages/BO/dashboard');
 const brandsPage = require('@pages/BO/catalog/brands');
 const addBrandPage = require('@pages/BO/catalog/brands/add');
 const viewBrandPage = require('@pages/BO/catalog/brands/view');
-const addBrandAddressPage = require('@pages/BO/catalog/brands/addresses/add');
+const addBrandAddressPage = require('@pages/BO/catalog/brands/addAddress');
 
 // Import test context
 const testContext = require('@utils/testContext');
 
 const baseContext = 'functional_BO_catalog_brandsAndSuppliers_brands_CRUDBrandAndAddress';
 
-
 let browserContext;
 let page;
 
 let numberOfBrands = 0;
 let numberOfBrandsAddresses = 0;
+const brandsTable = 'manufacturer';
+const addressesTable = 'manufacturer_address';
 
 const createBrandData = new BrandFaker();
 const editBrandData = new BrandFaker();
@@ -64,7 +65,7 @@ describe('Create, Update and Delete Brand and Address', async () => {
   });
 
   // GO to Brands Page
-  it('should go to brands page', async function () {
+  it('should go to \'Catalog > Brands & Suppliers\' page', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'goToBrandsPage', baseContext);
 
     await dashboardPage.goToSubMenu(
@@ -82,10 +83,10 @@ describe('Create, Update and Delete Brand and Address', async () => {
   it('should reset all filters', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'resetFiltersFirst', baseContext);
 
-    numberOfBrands = await brandsPage.resetAndGetNumberOfLines(page, 'manufacturer');
+    numberOfBrands = await brandsPage.resetAndGetNumberOfLines(page, brandsTable);
     await expect(numberOfBrands).to.be.above(0);
 
-    numberOfBrandsAddresses = await brandsPage.resetAndGetNumberOfLines(page, 'manufacturer_address');
+    numberOfBrandsAddresses = await brandsPage.resetAndGetNumberOfLines(page, addressesTable);
     await expect(numberOfBrandsAddresses).to.be.above(0);
   });
 
@@ -95,6 +96,7 @@ describe('Create, Update and Delete Brand and Address', async () => {
       await testContext.addContextItem(this, 'testIdentifier', 'goToAddBrandPage', baseContext);
 
       await brandsPage.goToAddNewBrandPage(page);
+
       const pageTitle = await addBrandPage.getPageTitle(page);
       await expect(pageTitle).to.contains(addBrandPage.pageTitle);
     });
@@ -105,7 +107,7 @@ describe('Create, Update and Delete Brand and Address', async () => {
       const result = await addBrandPage.createEditBrand(page, createBrandData);
       await expect(result).to.equal(brandsPage.successfulCreationMessage);
 
-      const numberOfBrandsAfterCreation = await brandsPage.getNumberOfElementInGrid(page, 'manufacturer');
+      const numberOfBrandsAfterCreation = await brandsPage.getNumberOfElementInGrid(page, brandsTable);
       await expect(numberOfBrandsAfterCreation).to.be.equal(numberOfBrands + 1);
     });
   });
@@ -116,6 +118,7 @@ describe('Create, Update and Delete Brand and Address', async () => {
       await testContext.addContextItem(this, 'testIdentifier', 'goToAddAddressPage', baseContext);
 
       await brandsPage.goToAddNewBrandAddressPage(page);
+
       const pageTitle = await addBrandAddressPage.getPageTitle(page);
       await expect(pageTitle).to.contains(addBrandAddressPage.pageTitle);
     });
@@ -126,15 +129,13 @@ describe('Create, Update and Delete Brand and Address', async () => {
       const result = await addBrandAddressPage.createEditBrandAddress(page, createBrandAddressData);
       await expect(result).to.equal(brandsPage.successfulCreationMessage);
 
-      const numberOfBrandsAddressesAfterCreation = await brandsPage.getNumberOfElementInGrid(
-        page,
-        'manufacturer_address',
-      );
+      const numberOfBrandsAddressesAfterCreation = await brandsPage.getNumberOfElementInGrid(page, addressesTable);
 
       createBrandData.addresses += 1;
       await expect(numberOfBrandsAddressesAfterCreation).to.be.equal(numberOfBrandsAddresses + 1);
     });
   });
+
   // 3 : View Brand and check Address Value in list
   describe('View Brand and check Address Value in list', async () => {
     it('should filter Brand list by name of brand created', async function () {
@@ -142,7 +143,7 @@ describe('Create, Update and Delete Brand and Address', async () => {
 
       await brandsPage.filterBrands(page, 'input', 'name', createBrandData.name);
 
-      const numberOfBrandsAfterFilter = await brandsPage.getNumberOfElementInGrid(page, 'manufacturer');
+      const numberOfBrandsAfterFilter = await brandsPage.getNumberOfElementInGrid(page, brandsTable);
       await expect(numberOfBrandsAfterFilter).to.be.at.most(numberOfBrands);
 
       const textColumn = await brandsPage.getTextColumnFromTableBrands(page, 1, 'name');
@@ -153,6 +154,7 @@ describe('Create, Update and Delete Brand and Address', async () => {
       await testContext.addContextItem(this, 'testIdentifier', 'viewCreatedBrand', baseContext);
 
       await brandsPage.viewBrand(page, 1);
+
       const pageTitle = await viewBrandPage.getPageTitle(page);
       await expect(pageTitle).to.contains(createBrandData.name);
     });
@@ -175,6 +177,7 @@ describe('Create, Update and Delete Brand and Address', async () => {
       await testContext.addContextItem(this, 'testIdentifier', 'goToBrandsPageAfterViewCreatedBrand', baseContext);
 
       await viewBrandPage.goToPreviousPage(page);
+
       const pageTitle = await brandsPage.getPageTitle(page);
       await expect(pageTitle).to.contains(brandsPage.pageTitle);
     });
@@ -182,23 +185,19 @@ describe('Create, Update and Delete Brand and Address', async () => {
     it('should reset brands filters', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'resetAfterViewCreatedBrand', baseContext);
 
-      const numberOfBrandsAfterReset = await brandsPage.resetAndGetNumberOfLines(
-        page,
-        'manufacturer',
-      );
-
+      const numberOfBrandsAfterReset = await brandsPage.resetAndGetNumberOfLines(page, brandsTable);
       await expect(numberOfBrandsAfterReset).to.be.equal(numberOfBrands + 1);
     });
   });
 
-  // 4: Update Brand And Verify Brand in Address List
-  describe('Update Brand And Verify Brand in Address List', async () => {
+  // 4: Update Brand and verify Brand in Addresses list
+  describe('Update Brand and verify Brand in Addresses list', async () => {
     it('should filter Brand list by name of brand created', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'filterToUpdateBrand', baseContext);
 
       await brandsPage.filterBrands(page, 'input', 'name', createBrandData.name);
 
-      const numberOfBrandsAfterFilter = await brandsPage.getNumberOfElementInGrid(page, 'manufacturer');
+      const numberOfBrandsAfterFilter = await brandsPage.getNumberOfElementInGrid(page, brandsTable);
       await expect(numberOfBrandsAfterFilter).to.be.at.most(numberOfBrands);
 
       const textColumn = await brandsPage.getTextColumnFromTableBrands(page, 1, 'name');
@@ -209,6 +208,7 @@ describe('Create, Update and Delete Brand and Address', async () => {
       await testContext.addContextItem(this, 'testIdentifier', 'goToEditBrandPage', baseContext);
 
       await brandsPage.goToEditBrandPage(page, 1);
+
       const pageTitle = await addBrandPage.getPageTitle(page);
       await expect(pageTitle).to.contains(addBrandPage.pageTitleEdit);
     });
@@ -221,7 +221,7 @@ describe('Create, Update and Delete Brand and Address', async () => {
       await expect(result).to.equal(brandsPage.successfulUpdateMessage);
     });
 
-    it('should check the update in Brand Address List', async function () {
+    it('should check the updated Brand in Addresses list', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'checkAddressesListAfterUpdate', baseContext);
 
       await brandsPage.filterAddresses(page, 'input', 'name', editBrandData.name);
@@ -234,15 +234,11 @@ describe('Create, Update and Delete Brand and Address', async () => {
       await testContext.addContextItem(this, 'testIdentifier', 'resetFilterAfterUpdateBrand', baseContext);
 
       // Reset Filter Brands
-      const numberOfBrandsAfterReset = await brandsPage.resetAndGetNumberOfLines(page, 'manufacturer');
+      const numberOfBrandsAfterReset = await brandsPage.resetAndGetNumberOfLines(page, brandsTable);
       await expect(numberOfBrandsAfterReset).to.be.equal(numberOfBrands + 1);
 
       // Reset Filter Brand Address
-      const numberOfBrandsAddressesAfterReset = await brandsPage.resetAndGetNumberOfLines(
-        page,
-        'manufacturer_address',
-      );
-
+      const numberOfBrandsAddressesAfterReset = await brandsPage.resetAndGetNumberOfLines(page, addressesTable);
       await expect(numberOfBrandsAddressesAfterReset).to.be.equal(numberOfBrandsAddresses + 1);
     });
   });
@@ -253,6 +249,7 @@ describe('Create, Update and Delete Brand and Address', async () => {
       await testContext.addContextItem(this, 'testIdentifier', 'filterToUpdateAddress', baseContext);
 
       await brandsPage.filterAddresses(page, 'input', 'name', editBrandData.name);
+
       const textColumn = await brandsPage.getTextColumnFromTableAddresses(page, 1, 'name');
       await expect(textColumn).to.contains(editBrandData.name);
     });
@@ -261,6 +258,7 @@ describe('Create, Update and Delete Brand and Address', async () => {
       await testContext.addContextItem(this, 'testIdentifier', 'goToEditAddressPage', baseContext);
 
       await brandsPage.goToEditBrandAddressPage(page, 1);
+
       const pageTitle = await addBrandPage.getPageTitle(page);
       await expect(pageTitle).to.contains(brandsPage.pageTitle);
     });
@@ -275,11 +273,7 @@ describe('Create, Update and Delete Brand and Address', async () => {
     it('should reset Brand Addresses filters', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'resetAfterUpdateAddress', baseContext);
 
-      const numberOfBrandsAddressesAfterReset = await brandsPage.resetAndGetNumberOfLines(
-        page,
-        'manufacturer_address',
-      );
-
+      const numberOfBrandsAddressesAfterReset = await brandsPage.resetAndGetNumberOfLines(page, addressesTable);
       await expect(numberOfBrandsAddressesAfterReset).to.be.equal(numberOfBrandsAddresses + 1);
     });
   });
@@ -290,7 +284,7 @@ describe('Create, Update and Delete Brand and Address', async () => {
 
       await brandsPage.filterBrands(page, 'input', 'name', editBrandData.name);
 
-      const numberOfBrandsAfterFilter = await brandsPage.getNumberOfElementInGrid(page, 'manufacturer');
+      const numberOfBrandsAfterFilter = await brandsPage.getNumberOfElementInGrid(page, brandsTable);
       await expect(numberOfBrandsAfterFilter).to.be.at.most(numberOfBrands);
 
       const textColumn = await brandsPage.getTextColumnFromTableBrands(page, 1, 'name');
@@ -316,43 +310,45 @@ describe('Create, Update and Delete Brand and Address', async () => {
       await expect(textColumn).to.contains(`${editBrandAddressData.firstName} ${editBrandAddressData.lastName}`);
     });
 
-    it('should return brands Page', async function () {
+    it('should go back to brands Page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'goToBrandsPageAfterViewEditedBrand', baseContext);
 
       await viewBrandPage.goToPreviousPage(page);
+
       const pageTitle = await brandsPage.getPageTitle(page);
       await expect(pageTitle).to.contains(brandsPage.pageTitle);
     });
 
-    it('should reset brands filters', async function () {
+    it('should reset filters', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'resetAfterViewUpdatedBrand', baseContext);
 
-      const numberOfBrandsAfterReset = await brandsPage.resetAndGetNumberOfLines(page, 'manufacturer');
+      const numberOfBrandsAfterReset = await brandsPage.resetAndGetNumberOfLines(page, brandsTable);
       await expect(numberOfBrandsAfterReset).to.be.equal(numberOfBrands + 1);
     });
   });
 
-  // 7 : Delete Brand And Verify that Address has no Brand associated
-  describe('Delete Brand And Verify that Address has no Brand associated', async () => {
+  // 7 : Delete Brand and verify that Address has no Brand associated
+  describe('Delete Brand and verify that Address has no Brand associated', async () => {
     it('should filter Brand list by name of edited brand', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'filterToDeleteBrand', baseContext);
 
       await brandsPage.filterBrands(page, 'input', 'name', editBrandData.name);
-      const numberOfBrandsAfterFilter = await brandsPage.getNumberOfElementInGrid(page, 'manufacturer');
+
+      const numberOfBrandsAfterFilter = await brandsPage.getNumberOfElementInGrid(page, brandsTable);
       await expect(numberOfBrandsAfterFilter).to.be.at.most(numberOfBrands);
 
       const textColumn = await brandsPage.getTextColumnFromTableBrands(page, 1, 'name');
       await expect(textColumn).to.contains(editBrandData.name);
     });
 
-    it('should Delete brand', async function () {
+    it('should delete brand', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'deleteBrand', baseContext);
 
       const result = await brandsPage.deleteBrand(page, '1');
       await expect(result).to.be.equal(brandsPage.successfulDeleteMessage);
     });
 
-    it('should check the delete in Brand Address List', async function () {
+    it('should check that the Brand Address is deleted successfully', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'checkDeletedBrandOnAddressList', baseContext);
 
       await brandsPage.filterAddresses(page, 'input', 'firstname', editBrandAddressData.firstName);
@@ -362,10 +358,10 @@ describe('Create, Update and Delete Brand and Address', async () => {
       await expect(textColumn).to.contains('--');
     });
 
-    it('should reset Brand filters', async function () {
+    it('should reset filters', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'resetBrandsListAfterDelete', baseContext);
 
-      const numberOfBrandsAfterReset = await brandsPage.resetAndGetNumberOfLines(page, 'manufacturer');
+      const numberOfBrandsAfterReset = await brandsPage.resetAndGetNumberOfLines(page, brandsTable);
       await expect(numberOfBrandsAfterReset).to.be.equal(numberOfBrands);
     });
   });
@@ -385,21 +381,17 @@ describe('Create, Update and Delete Brand and Address', async () => {
       await expect(textColumnLastName).to.contains(editBrandAddressData.lastName);
     });
 
-    it('should Delete Brand Address', async function () {
+    it('should delete Brand Address', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'deleteAddress', baseContext);
 
       const result = await brandsPage.deleteBrandAddress(page, '1');
       await expect(result).to.be.equal(brandsPage.successfulDeleteMessage);
     });
 
-    it('should reset Brand Addresses filters', async function () {
+    it('should reset filters', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'resetAddressesListAfterDelete', baseContext);
 
-      const numberOfBrandsAddressesAfterReset = await brandsPage.resetAndGetNumberOfLines(
-        page,
-        'manufacturer_address',
-      );
-
+      const numberOfBrandsAddressesAfterReset = await brandsPage.resetAndGetNumberOfLines(page, addressesTable);
       await expect(numberOfBrandsAddressesAfterReset).to.be.equal(numberOfBrandsAddresses);
     });
   });

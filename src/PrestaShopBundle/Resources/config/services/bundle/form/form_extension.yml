@@ -65,7 +65,7 @@ services:
             - { name: form.type_extension, extended_type: PrestaShopBundle\Form\Admin\Type\MultistoreConfigurationType }
 
     form.extension.multistore_dropdown:
-        class: 'PrestaShopBundle\Form\Admin\Extension\MultistoreDropdownExtension'
+        class: 'PrestaShopBundle\Form\Admin\Extension\MultistoreExtension'
         tags:
             - { name: form.type_extension, extended_type: Symfony\Component\Form\Extension\Core\Type\FormType }
 

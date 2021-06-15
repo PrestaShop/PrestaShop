@@ -122,14 +122,14 @@ describe('Create, update and delete order return status in BO', async () => {
         createOrderReturnStatusData.name,
       );
 
-      const textEmail = await statusesPage.getTextColumn(page, tableName, 1, 'name', 3);
+      const textEmail = await statusesPage.getTextColumn(page, tableName, 1, 'name');
       await expect(textEmail).to.contains(createOrderReturnStatusData.name);
     });
 
     it('should go to edit order return status page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'goToEditOrderReturnStatusPage', baseContext);
 
-      await statusesPage.gotoEditPage(page, tableName, 1);
+      await statusesPage.goToEditPage(page, tableName, 1);
 
       const pageTitle = await addOrderReturnStatusPage.getPageTitle(page);
       await expect(pageTitle).to.contains(addOrderReturnStatusPage.pageTitleEdit);
@@ -161,7 +161,7 @@ describe('Create, update and delete order return status in BO', async () => {
         editOrderStatusData.name,
       );
 
-      const textEmail = await statusesPage.getTextColumn(page, tableName, 1, 'name', 3);
+      const textEmail = await statusesPage.getTextColumn(page, tableName, 1, 'name');
       await expect(textEmail).to.contains(editOrderStatusData.name);
     });
 

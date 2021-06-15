@@ -1,7 +1,16 @@
 require('module-alias/register');
 const BOBasePage = require('@pages/BO/BObasePage');
 
+/**
+ * Addresses page, contains functions that can be used on the page
+ * @class
+ * @extends BOBasePage
+ */
 class Addresses extends BOBasePage {
+  /**
+   * @constructs
+   * Setting up texts and selectors to use on addresses page
+   */
   constructor() {
     super();
 
@@ -11,6 +20,7 @@ class Addresses extends BOBasePage {
     // Selectors
     // Header links
     this.addNewAddressLink = '#page-header-desc-configuration-add[title=\'Add new address\']';
+
     // List of addresses
     this.addressGridPanel = '#address_grid_panel';
     this.addressGridTitle = `${this.addressGridPanel} h3.card-header-title`;
@@ -22,21 +32,26 @@ class Addresses extends BOBasePage {
       + ' a[data-toggle=\'dropdown\']';
     this.addressesListTableDeleteLink = row => `${this.addressesListTableColumnAction(row)} a.grid-delete-row-link`;
     this.addressesListTableEditLink = row => `${this.addressesListTableColumnAction(row)} a.grid-edit-row-link`;
+
     // Filters
     this.addressFilterColumnInput = filterBy => `${this.addressesListForm} #address_${filterBy}`;
     this.filterSearchButton = `${this.addressesListForm} .grid-search-button`;
     this.filterResetButton = `${this.addressesListForm} .grid-reset-button`;
+
     // Bulk Actions
     this.selectAllRowsLabel = `${this.addressesListForm} tr.column-filters .grid_bulk_action_select_all`;
     this.bulkActionsToggleButton = `${this.addressesListForm} button.dropdown-toggle`;
     this.bulkActionsDeleteButton = '#address_grid_bulk_action_delete_selection';
+
     // Modal Dialog
     this.deleteAddressModal = '#address-grid-confirm-modal.show';
     this.deleteAddressModalDeleteButton = `${this.deleteAddressModal} button.btn-confirm-submit`;
+
     // Sort Selectors
     this.tableHead = `${this.addressesListForm} thead`;
     this.sortColumnDiv = column => `${this.tableHead} div.ps-sortable-column[data-sort-col-name='${column}']`;
     this.sortColumnSpanButton = column => `${this.sortColumnDiv(column)} span.ps-sort`;
+
     // Pagination selectors
     this.paginationLimitSelect = '#paginator_select_page_limit';
     this.paginationLabel = `${this.addressGridPanel} .col-form-label`;
@@ -55,7 +70,7 @@ class Addresses extends BOBasePage {
    */
   /**
    * Reset input filters
-   * @param page
+   * @param page {Page} Browser tab
    * @returns {Promise<void>}
    */
   async resetFilter(page) {
@@ -66,7 +81,7 @@ class Addresses extends BOBasePage {
 
   /**
    * Get number of elements in grid
-   * @param page
+   * @param page {Page} Browser tab
    * @returns {Promise<number>}
    */
   async getNumberOfElementInGrid(page) {
@@ -74,8 +89,8 @@ class Addresses extends BOBasePage {
   }
 
   /**
-   * Reset Filter And get number of elements in list
-   * @param page
+   * Reset filter and get number of elements in list
+   * @param page {Page} Browser tab
    * @returns {Promise<number>}
    */
   async resetAndGetNumberOfLines(page) {
@@ -85,10 +100,10 @@ class Addresses extends BOBasePage {
 
   /**
    * Filter list of addresses
-   * @param page
-   * @param filterType, input or select to choose method of filter
-   * @param filterBy, column to filter
-   * @param value, value to filter with
+   * @param page {Page} Browser tab
+   * @param filterType {string} Input or select to choose method of filter
+   * @param filterBy {string} Column to filter
+   * @param value {string} Value to filter with
    * @return {Promise<void>}
    */
   async filterAddresses(page, filterType, filterBy, value = '') {
@@ -100,7 +115,7 @@ class Addresses extends BOBasePage {
         await this.selectByVisibleText(page, this.addressFilterColumnInput(filterBy), value);
         break;
       default:
-        // Do nothing
+      // Do nothing
     }
     // click on search
     await this.clickAndWaitForNavigation(page, this.filterSearchButton);
@@ -108,9 +123,9 @@ class Addresses extends BOBasePage {
 
   /**
    * Get text from a column
-   * @param page
-   * @param row, row in table
-   * @param column, which column
+   * @param page {Page} Browser tab
+   * @param row {number} Row on table
+   * @param column {string} Column to get text value
    * @return {Promise<string>}
    */
   async getTextColumnFromTableAddresses(page, row, column) {
@@ -119,8 +134,8 @@ class Addresses extends BOBasePage {
 
   /**
    * Get content from all rows
-   * @param page
-   * @param column
+   * @param page {Page} Browser tab
+   * @param column {string} Column to get all rows content
    * @return {Promise<[]>}
    */
   async getAllRowsColumnContent(page, column) {
@@ -137,7 +152,7 @@ class Addresses extends BOBasePage {
 
   /**
    * Go to address Page
-   * @param page
+   * @param page {Page} Browser tab
    * @return {Promise<void>}
    */
   async goToAddNewAddressPage(page) {
@@ -146,8 +161,8 @@ class Addresses extends BOBasePage {
 
   /**
    * Go to Edit address page
-   * @param page
-   * @param row, row in table
+   * @param page {Page} Browser tab
+   * @param row {number} Row on table
    * @return {Promise<void>}
    */
   async goToEditAddressPage(page, row) {
@@ -156,8 +171,8 @@ class Addresses extends BOBasePage {
 
   /**
    * Delete address
-   * @param page
-   * @param row
+   * @param page {Page} Browser tab
+   * @param row {number} Row on table
    * @returns {Promise<string>}
    */
   async deleteAddress(page, row) {
@@ -180,7 +195,7 @@ class Addresses extends BOBasePage {
 
   /**
    * Delete all addresses with Bulk Actions
-   * @param page
+   * @param page {Page} Browser tab
    * @return {Promise<string>}
    */
   async deleteAddressesBulkActions(page) {
@@ -206,9 +221,9 @@ class Addresses extends BOBasePage {
   /* Sort functions */
   /**
    * Sort table by clicking on column name
-   * @param page
-   * @param sortBy, column to sort with
-   * @param sortDirection, asc or desc
+   * @param page {Page} Browser tab
+   * @param sortBy {string} Column to sort with
+   * @param sortDirection {string} Sort direction asc or desc
    * @return {Promise<void>}
    */
   async sortTable(page, sortBy, sortDirection) {
@@ -227,7 +242,7 @@ class Addresses extends BOBasePage {
   /* Pagination methods */
   /**
    * Get pagination label
-   * @param page
+   * @param page {Page} Browser tab
    * @return {Promise<string>}
    */
   getPaginationLabel(page) {
@@ -236,8 +251,8 @@ class Addresses extends BOBasePage {
 
   /**
    * Select pagination limit
-   * @param page
-   * @param number
+   * @param page {Page} Browser tab
+   * @param number {number} Number of pagination to select
    * @returns {Promise<string>}
    */
   async selectPaginationLimit(page, number) {
@@ -247,7 +262,7 @@ class Addresses extends BOBasePage {
 
   /**
    * Click on next
-   * @param page
+   * @param page {Page} Browser tab
    * @returns {Promise<string>}
    */
   async paginationNext(page) {
@@ -257,7 +272,7 @@ class Addresses extends BOBasePage {
 
   /**
    * Click on previous
-   * @param page
+   * @param page {Page} Browser tab
    * @returns {Promise<string>}
    */
   async paginationPrevious(page) {
@@ -268,9 +283,9 @@ class Addresses extends BOBasePage {
   // Set required field
   /**
    * Set required fields
-   * @param page
-   * @param id
-   * @param valueWanted
+   * @param page {Page} Browser tab
+   * @param id {number} Id of the checkbox
+   * @param valueWanted {boolean}True if we want to check the checkbox
    * @returns {Promise<string>}
    */
   async setRequiredFields(page, id, valueWanted = true) {

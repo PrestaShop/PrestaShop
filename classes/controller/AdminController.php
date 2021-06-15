@@ -3847,7 +3847,7 @@ class AdminControllerCore extends Controller
     {
         /* Classical fields */
         foreach ($_POST as $key => $value) {
-            if (array_key_exists($key, $object) && $key != 'id_' . $table) {
+            if (array_key_exists($key, get_object_vars($object)) && $key != 'id_' . $table) {
                 /* Do not take care of password field if empty */
                 if ($key == 'passwd' && Tools::getValue('id_' . $table) && empty($value)) {
                     continue;
@@ -4208,7 +4208,7 @@ class AdminControllerCore extends Controller
                 $this->errors[] = $this->trans('An error occurred while updating the status.', [], 'Admin.Notifications.Error');
             }
         } else {
-            $this->errors[] = $this->trans('You need to select at least one item to use the bulk action.', [], 'Admin.Notifications.Error');
+            $this->errors[] = $this->trans('You must select at least one item to perform a bulk action.', [], 'Admin.Notifications.Error');
         }
 
         return $result;

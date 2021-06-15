@@ -38,9 +38,14 @@
 {% block content %}
   {% set productType = productForm.vars.product_type %}
   {% set productId = productForm.vars.product_id %}
+  {% set extraModulesHooks = renderhooksarray('displayAdminProductsExtra', { 'id_product': productId }) %}
+
+  <div class="header-toolbar d-print-none">
+    {{ multistoreHeader() }}
+  </div>
 
   {{ form_start(productForm, {'attr': {
-    'class': 'form-horizontal product-page row justify-content-md-center', 'novalidate': 'novalidate',
+    'class': 'form-horizontal product-page product-page-v2 row justify-content-md-center', 'novalidate': 'novalidate',
     'data-product-id': productId,
     'data-product-type': productType
   }}) }}
@@ -61,7 +66,7 @@
 
   <div class="alert alert-info alert-experimental" role="alert">
     <p class="mb-1">
-      <strong>{{ 'This is the experimental product page.'|trans({}, 'Admin.Catalog.Help') }}</strong>
+      <strong>{{ 'This is the experimental product page.'|trans({}, 'Admin.Catalog.Notification') }}</strong>
     </p>
     <p class="alert-text">
       {{ 'This page benefits from increased performance and includes new features such as a new combination management system. Please note this is a work in progress and some features are not available yet.'|trans({}, 'Admin.Advparameters.Help') }}
@@ -71,7 +76,8 @@
     {% block product_tabs_container %}
       {{ include('@PrestaShop/Admin/Sell/Catalog/Product/Blocks/tabs.html.twig', {
         'productForm': productForm,
-        'productType': productType
+        'productType': productType,
+        'extraModulesHooks': extraModulesHooks
       }) }}
     {% endblock %}
 
@@ -120,7 +126,11 @@
         }) }}
       {% endblock %}
 
-      {% block product_extra_tabs %}
+      {% block product_extra_tab %}
+        {{ include('@PrestaShop/Admin/Sell/Catalog/Product/Tabs/modules.html.twig', {
+          'productForm': productForm,
+          'extraModulesHooks': extraModulesHooks,
+        }) }}
       {% endblock %}
     </div>
   </div>

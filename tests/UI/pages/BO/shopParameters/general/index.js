@@ -1,7 +1,16 @@
 require('module-alias/register');
 const BOBasePage = require('@pages/BO/BObasePage');
 
+/**
+ * General page, contains selectors and functions for the page
+ * @class
+ * @extends BOBasePage
+ */
 class ShopParamsGeneral extends BOBasePage {
+  /**
+   * @constructs
+   * Setting up titles and selectors to use on general page
+   */
   constructor() {
     super();
 
@@ -21,7 +30,7 @@ class ShopParamsGeneral extends BOBasePage {
 
   /**
    * Change Tab to Maintenance in Shop Parameters General Page
-   * @param page
+   * @param page {Page} Browser tab
    * @return {Promise<void>}
    */
   async goToSubTabMaintenance(page) {
@@ -30,8 +39,8 @@ class ShopParamsGeneral extends BOBasePage {
 
   /**
    * Enable/Disable display suppliers
-   * @param page
-   * @param toEnable
+   * @param page {Page} Browser tab
+   * @param toEnable {boolean} Status to set to enable/disable suppliers
    * @returns {Promise<string>}
    */
   async setDisplaySuppliers(page, toEnable = true) {
@@ -42,8 +51,8 @@ class ShopParamsGeneral extends BOBasePage {
 
   /**
    * Enable/Disable display brands
-   * @param page
-   * @param toEnable
+   * @param page {Page} Browser tab
+   * @param toEnable {boolean} Status to set to enable/disable brands
    * @returns {Promise<string>}
    */
   async setDisplayBrands(page, toEnable = true) {
@@ -54,8 +63,8 @@ class ShopParamsGeneral extends BOBasePage {
 
   /**
    * Enable/Disable multi store
-   * @param page
-   * @param toEnable
+   * @param page {Page} Browser tab
+   * @param toEnable {boolean} Status to set to enable/disable multistore
    * @returns {Promise<string>}
    */
   async setMultiStoreStatus(page, toEnable = true) {

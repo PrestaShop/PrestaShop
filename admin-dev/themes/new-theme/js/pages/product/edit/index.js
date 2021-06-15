@@ -26,11 +26,13 @@
 import NavbarHandler from '@components/navbar-handler';
 import ProductMap from '@pages/product/product-map';
 
+import CategoriesManager from '@pages/product/components/categories';
 import CombinationsManager from '@pages/product/edit/combinations-manager';
 import CustomizationsManager from '@pages/product/edit/customizations-manager';
 import FeatureValuesManager from '@pages/product/edit/feature-values-manager';
 import ProductFooterManager from '@pages/product/edit/product-footer-manager';
 import ProductFormModel from '@pages/product/edit/product-form-model';
+import ProductModulesManager from '@pages/product/edit/product-modules-manager';
 import ProductPartialUpdater from '@pages/product/edit/product-partial-updater';
 import ProductSEOManager from '@pages/product/edit/product-seo-manager';
 import ProductSuppliersManager from '@pages/product/edit/product-suppliers-manager';
@@ -58,8 +60,10 @@ $(() => {
   // Responsive navigation tabs
   initTabs();
 
+  const {eventEmitter} = window.prestashop.instance;
+
   // Init product model along with input watching and syncing
-  const productFormModel = new ProductFormModel($productForm, window.prestashop.instance.eventEmitter);
+  const productFormModel = new ProductFormModel($productForm, eventEmitter);
 
   if (productId && productType === ProductMap.productType.COMBINATIONS) {
     // Combinations manager must be initialized BEFORE nav handler, or it won't trigger the pagination if the tab is
@@ -72,11 +76,13 @@ $(() => {
 
   // Product type has strong impact on the page rendering so when it is modified it must be submitted right away
   new ProductTypeManager($(ProductMap.productTypeSelector), $productForm);
+  new CategoriesManager(eventEmitter);
   new ProductFooterManager();
+  new ProductModulesManager();
 
   const $productFormSubmitButton = $(ProductMap.productFormSubmitButton);
   new ProductPartialUpdater(
-    window.prestashop.instance.eventEmitter,
+    eventEmitter,
     $productForm,
     $productFormSubmitButton,
   ).watch();
@@ -89,7 +95,7 @@ $(() => {
   // From here we init component specific to edition
   initDropzone(ProductMap.dropzoneImagesContainer);
 
-  new FeatureValuesManager(window.prestashop.instance.eventEmitter);
+  new FeatureValuesManager(eventEmitter);
   new CustomizationsManager();
 
   if (productType !== ProductMap.productType.COMBINATIONS) {

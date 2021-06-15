@@ -20,12 +20,20 @@ class BOBasePage extends CommonPage {
     this.successfulDeleteMessage = 'Successful deletion.';
     this.successfulMultiDeleteMessage = 'The selection has been successfully deleted.';
 
+    // Access denied message
+    this.accessDeniedMessage = 'Access denied';
+
     // top navbar
     this.userProfileIconNonMigratedPages = '#employee_infos';
     this.userProfileIcon = '#header_infos #header-employee-container';
     this.userProfileLogoutLink = 'a#header_logout';
     this.shopVersionBloc = '#shop_version';
     this.headerShopNameLink = '#header_shopname';
+    this.quickAccessDropdownToggle = '#quick_select';
+    this.quickAccessLink = idLink => `.quick-row-link:nth-child(${idLink})`;
+    this.quickAddCurrentLink = '#quick-add-link';
+    this.quickAccessRemoveLink = '#quick-remove-link';
+    this.manageYourQuickAccessLink = '#quick-manage-link';
 
     // Header links
     this.helpButton = '#product_form_open_help';
@@ -152,12 +160,15 @@ class BOBasePage extends CommonPage {
     this.logsLink = '#subtab-AdminLogs';
     // Multistore
     this.multistoreLink = '#subtab-AdminShopGroup';
+    // Deprecated tab used for regression test
+    this.menuTabLink = '#subtab-AdminTabs';
 
     // welcome module
     this.onboardingCloseButton = 'button.onboarding-button-shut-down';
     this.onboardingStopButton = 'a.onboarding-button-stop';
 
     // Growls
+    this.growlDiv = '#growls';
     this.growlDefaultDiv = '#growls-default';
     this.growlMessageBlock = `${this.growlDefaultDiv} .growl-message`;
     this.growlCloseButton = `${this.growlDefaultDiv} .growl-close`;
@@ -183,11 +194,62 @@ class BOBasePage extends CommonPage {
     // Sidebar
     this.rightSidebar = '#right-sidebar';
     this.helpDocumentURL = `${this.rightSidebar} div.quicknav-scroller._fullspace object`;
+
+    // Invalid token block
+    this.invalidTokenContinuelink = 'a.btn-continue';
+    this.invalidTokenCancellink = 'a.btn-cancel';
   }
 
   /*
   Methods
    */
+  /**
+   * Click on link from Quick access dropdown toggle
+   * @param page {Page} Browser tab
+   * @param linkId {number} Page ID
+   * @returns {Promise<void>}
+   */
+  async quickAccessToPage(page, linkId) {
+    await this.waitForSelectorAndClick(page, this.quickAccessDropdownToggle);
+    await this.clickAndWaitForNavigation(page, this.quickAccessLink(linkId));
+  }
+
+  /**
+   * Remove link from quick access
+   * @param page {Page} Browser tab
+   * @returns {Promise<string>}
+   */
+  async removeLinkFromQuickAccess(page) {
+    await this.waitForSelectorAndClick(page, this.quickAccessDropdownToggle);
+    await this.waitForSelectorAndClick(page, this.quickAccessRemoveLink);
+
+    return page.textContent(this.growlDiv);
+  }
+
+  /**
+   * Add current page to quick access
+   * @param page {Page} Browser tab
+   * @param pageName {string} Page name to add on quick access
+   * @returns {Promise<string>}
+   */
+  async addCurrentPageToQuickAccess(page, pageName) {
+    await this.dialogListener(page, true, pageName);
+    await this.waitForSelectorAndClick(page, this.quickAccessDropdownToggle);
+    await this.waitForSelectorAndClick(page, this.quickAddCurrentLink);
+
+    return page.textContent(this.growlDiv);
+  }
+
+  /**
+   * Click on manage quick access link
+   * @param page {Page} Browser tab
+   * @returns {Promise<void>}
+   */
+  async manageQuickAccess(page) {
+    await this.waitForSelectorAndClick(page, this.quickAccessDropdownToggle);
+    await this.waitForSelectorAndClick(page, this.manageYourQuickAccessLink);
+  }
+
   /**
    * Open a subMenu if closed and click on a sublink
    * @param page {Page} Browser tab
@@ -399,6 +461,23 @@ class BOBasePage extends CommonPage {
    */
   getAlertInfoBlockParagraphContent(page) {
     return this.getTextContent(page, this.alertInfoBlockParagraph);
+  }
+
+  /**
+   * Navigate to Bo page without token
+   * @param page {Page} Browser tab
+   * @param url {string} Url to BO page
+   * @param continueToPage {boolean} True to continue false to cancel and return to dashboard page
+   * @returns {Promise<void>}
+   */
+  async navigateToPageWithInvalidToken(page, url, continueToPage = true) {
+    await this.goTo(page, url);
+    await this.waitForVisibleSelector(page, this.invalidTokenContinuelink);
+
+    await this.clickAndWaitForNavigation(
+      page,
+      continueToPage ? this.invalidTokenContinuelink : this.invalidTokenCancellink,
+    );
   }
 }
 

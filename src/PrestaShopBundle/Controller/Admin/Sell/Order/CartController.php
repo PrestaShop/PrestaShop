@@ -278,7 +278,7 @@ class CartController extends FrameworkBundleAdminController
                 $request->request->getBoolean('freeShipping'),
                 ($giftSettingsEnabled ? $request->request->getBoolean('isAGift', null) : null),
                 ($recycledPackagingEnabled ? $request->request->getBoolean('useRecycledPackaging', null) : null),
-                ((!empty($request->request->get('giftMessage', null))) ? $request->request->get('giftMessage', null) : null)
+                $request->request->get('giftMessage', null)
             ));
 
             return $this->json($this->getCartInfo($cartId));

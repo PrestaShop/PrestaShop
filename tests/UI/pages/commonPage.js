@@ -210,12 +210,18 @@ class CommonPage {
    * To accept or dismiss a javascript dialog
    * @param page {Page} Browser tab
    * @param accept {boolean} True to accept the dialog, false to dismiss
+   * @param text {string} Text to set on dialog input
    * @return {Promise<void>}
    */
-  async dialogListener(page, accept = true) {
+  async dialogListener(page, accept = true, text = '') {
     page.once('dialog', (dialog) => {
-      if (accept) dialog.accept();
-      else dialog.dismiss();
+      if (accept && text === '') {
+        dialog.accept();
+      } else if (text !== '') {
+        dialog.accept(text);
+      } else {
+        dialog.dismiss();
+      }
     });
   }
 
@@ -250,7 +256,7 @@ class CommonPage {
    * Select option in select by visible text
    * @param page {Page} Browser tab
    * @param selector {string} String to locate the select
-   * @param textValue {string} Value to select
+   * @param textValue {string/number} Value to select
    * @returns {Promise<void>}
    */
   async selectByVisibleText(page, selector, textValue) {
@@ -332,6 +338,21 @@ class CommonPage {
   async changeCheckboxValue(page, checkboxSelector, valueWanted = true) {
     if (valueWanted !== (await this.isCheckboxSelected(page, checkboxSelector))) {
       await page.click(checkboxSelector);
+    }
+  }
+
+  /**
+   * Set checkbox value when its hidden
+   * @param page {Page} Browser tab
+   * @param checkboxSelector {string} Selector of the checkbox resolve hidden
+   * @param valueWanted {boolean} Wanted value for the checkbox
+   * @return {Promise<void>}
+   */
+  async setHiddenCheckboxValue(page, checkboxSelector, valueWanted = true) {
+    const checkboxElement = await page.$(checkboxSelector);
+    if (valueWanted !== (await checkboxElement.isChecked())) {
+      const parentElement = await this.getParentElement(page, checkboxSelector);
+      await parentElement.click();
     }
   }
 

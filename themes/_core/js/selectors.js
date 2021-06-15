@@ -95,7 +95,7 @@ prestashop.selectors = {
     detailedTotals: '.cart-detailed-totals, .js-cart-detailed-totals',
     summaryItemsSubtotal: '.cart-summary-items-subtotal, .js-cart-summary-items-subtotal',
     summarySubTotalsContainer: '.cart-summary-subtotals-container, .js-cart-summary-subtotals-container',
-    summaryTotals: '.cart-summary-products, .js-cart-summary-products',
+    summaryTotals: '.cart-summary-totals, .js-cart-summary-totals',
     summaryProducts: '.cart-summary-products, .js-cart-summary-products',
     detailedActions: '.cart-detailed-actions, .js-cart-detailed-actions',
     voucher: '.cart-voucher, .js-cart-voucher',

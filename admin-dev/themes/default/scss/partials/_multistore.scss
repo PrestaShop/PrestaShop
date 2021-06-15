@@ -172,3 +172,20 @@
   border: none;
   @include border-left(3px solid #FBECCB);
 }
+
+@at-root .adminshop .bootstrap {
+  .table-responsive-row {
+    overflow: auto;
+
+    table {
+      max-width: 100%;
+
+      @include media-breakpoint-down(sm) {
+        td::before {
+          overflow: hidden;
+          text-overflow: ellipsis;
+        }
+      }
+    }
+  }
+}

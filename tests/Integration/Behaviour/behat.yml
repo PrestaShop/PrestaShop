@@ -6,6 +6,9 @@ default:
             contexts:
                 - Tests\Integration\Behaviour\Features\Context\CommonFeatureContext
                 - Tests\Integration\Behaviour\Features\Context\SqlManagerFeatureContext
+                - Tests\Integration\Behaviour\Features\Context\Configuration\CommonConfigurationFeatureContext
+                - Tests\Integration\Behaviour\Features\Context\CustomerFeatureContext
+                - Tests\Integration\Behaviour\Features\Context\ShopFeatureContext
         contact:
             paths:
                 - %paths.base%/Features/Scenario/Contact
@@ -186,6 +189,7 @@ default:
                 - Tests\Integration\Behaviour\Features\Context\CommonFeatureContext
                 - Tests\Integration\Behaviour\Features\Context\Domain\OrderMessageContext
                 - Tests\Integration\Behaviour\Features\Context\OrderMessageContext
+                - Tests\Integration\Behaviour\Features\Context\Domain\CommonDomainFeatureContext
         misc:
             paths:
               - %paths.base%/Features/Scenario/Misc

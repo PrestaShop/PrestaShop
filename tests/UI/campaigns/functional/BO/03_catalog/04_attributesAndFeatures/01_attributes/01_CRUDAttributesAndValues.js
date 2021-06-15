@@ -25,16 +25,16 @@ const baseContext = 'functional_BO_catalog_attributesAndFeatures_attributes_CRUD
 const {expect} = require('chai');
 
 // Create data
-const {Attribute, Value} = require('@data/faker/attributeAndValue');
+const {AttributeData, ValueData} = require('@data/faker/attributeAndValue');
 
-const createAttributeData = new Attribute();
-const updateAttributeData = new Attribute();
+const createAttributeData = new AttributeData();
+const updateAttributeData = new AttributeData();
 const valuesToCreate = [
-  new Value({attributeName: createAttributeData.name}),
-  new Value({attributeName: createAttributeData.name}),
+  new ValueData({attributeName: createAttributeData.name}),
+  new ValueData({attributeName: createAttributeData.name}),
 ];
 
-const updateValueData = new Value({attributeName: updateAttributeData.name});
+const updateValueData = new ValueData({attributeName: updateAttributeData.name});
 
 // Browser and tab
 let browserContext;

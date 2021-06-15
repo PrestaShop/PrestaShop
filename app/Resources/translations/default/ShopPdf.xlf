@@ -1,11 +1,20 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <xliff xmlns="urn:oasis:names:tc:xliff:document:1.2" version="1.2">
+  <file original="classes/Cart.php" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="e265492707dd0595fd1f399bb8a2690e">
+        <source>: </source>
+        <target>:</target>
+        <note>Line: 1225</note>
+      </trans-unit>
+    </body>
+  </file>
   <file original="classes/pdf/HTMLTemplateDeliverySlip.php" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
       <trans-unit id="065ab3a28ca4f16f55f103adc7d0226f">
         <source>Delivery</source>
         <target>Delivery</target>
-        <note>Line: 73</note>
+        <note>Line: 80</note>
       </trans-unit>
     </body>
   </file>
@@ -14,12 +23,12 @@
       <trans-unit id="466eadd40b3c10580e3ab4e8061161ce">
         <source>Invoice</source>
         <target>Invoice</target>
-        <note>Line: 75</note>
+        <note>Line: 89</note>
       </trans-unit>
       <trans-unit id="a271cee71f5c411446db4f90676dbc96">
         <source>%taxrate%%space%%</source>
         <target>%taxrate%%space%%</target>
-        <note>Line: 187</note>
+        <note>Line: 201</note>
       </trans-unit>
     </body>
   </file>
@@ -28,7 +37,7 @@
       <trans-unit id="cc894fffb019b528d12951b74d6d2b6e">
         <source>Order return</source>
         <target>Order return</target>
-        <note>Line: 120</note>
+        <note>Line: 127</note>
       </trans-unit>
     </body>
   </file>
@@ -37,7 +46,7 @@
       <trans-unit id="cf3bae95c5f6023d5a10fe415b205a45">
         <source>Credit slip</source>
         <target>Credit slip</target>
-        <note>Line: 73</note>
+        <note>Line: 84</note>
       </trans-unit>
     </body>
   </file>
@@ -46,17 +55,17 @@
       <trans-unit id="f771e4a4df40bf061607fdb8e3f140dc">
         <source>Supply order form</source>
         <target>Supply order form</target>
-        <note>Line: 56</note>
+        <note>Line: 75</note>
       </trans-unit>
       <trans-unit id="37bd15f0a465c1b6e96e516cdeee41fa">
         <source>TE: Tax excluded</source>
         <target>TE: Tax excluded</target>
-        <note>Line: 197</note>
+        <note>Line: 215</note>
       </trans-unit>
       <trans-unit id="8bcc82aa54d3755fffa1f1d4cbd8e95d">
         <source>TI: Tax included</source>
         <target>TI: Tax included</target>
-        <note>Line: 198</note>
+        <note>Line: 216</note>
       </trans-unit>
     </body>
   </file>
@@ -139,22 +148,22 @@
       <trans-unit id="9fec2102dd0b5b29d6cdf9d5614fabf7">
         <source>(Tax excl.)</source>
         <target>(Tax excl.)</target>
-        <note>Line: 39</note>
+        <note>Line: 49</note>
       </trans-unit>
       <trans-unit id="197101c4a1b1fc503dcd6ebee127aa10">
         <source>Unit Price</source>
         <target>Unit Price</target>
-        <note>Line: 37</note>
+        <note>Line: 45</note>
       </trans-unit>
       <trans-unit id="49005859f978fcb0dfddcf676e841245">
         <source>ecotax: %s</source>
         <target>ecotax: %s</target>
-        <note>Line: 91</note>
+        <note>Line: 104</note>
       </trans-unit>
       <trans-unit id="9d5bf15117441a1b52eb1f0808e4aad3">
         <source>Discounts</source>
         <target>Discounts</target>
-        <note>Line: 156</note>
+        <note>Line: 165</note>
       </trans-unit>
     </body>
   </file>
@@ -191,52 +200,52 @@
       <trans-unit id="b602e0d0c6a72053d0a5be60cb2f8126">
         <source>Total Tax</source>
         <target>Total Tax</target>
-        <note>Line: 40</note>
+        <note>Line: 41</note>
       </trans-unit>
       <trans-unit id="ad0d28cdd9113d3ce911bc064b137cde">
         <source>Base price</source>
         <target>Base price</target>
-        <note>Line: 38</note>
+        <note>Line: 39</note>
       </trans-unit>
       <trans-unit id="8a2d7d9c237b2af40f2659aa76f0bd84">
         <source>Exempt of VAT according to section 259B of the General Tax Code.</source>
         <target>Exempt of VAT according to section 259B of the General Tax Code.</target>
-        <note>Line: 29</note>
+        <note>Line: 30</note>
       </trans-unit>
       <trans-unit id="023f66b09075fa1cc29e74bed9f5ac40">
         <source>Tax Detail</source>
         <target>Tax Detail</target>
-        <note>Line: 35</note>
+        <note>Line: 36</note>
       </trans-unit>
       <trans-unit id="068f80c7519d0528fb08e82137a72131">
         <source>Products</source>
         <target>Products</target>
-        <note>Line: 58</note>
+        <note>Line: 59</note>
       </trans-unit>
       <trans-unit id="ea9cf7e47ff33b2be14e6dd07cbcefc6">
         <source>Shipping</source>
         <target>Shipping</target>
-        <note>Line: 60</note>
+        <note>Line: 61</note>
       </trans-unit>
       <trans-unit id="e92cfa244b5eb9025d07522080468445">
         <source>Ecotax</source>
         <target>Ecotax</target>
-        <note>Line: 62</note>
+        <note>Line: 63</note>
       </trans-unit>
       <trans-unit id="ba794350deb07c0c96fe73bd12239059">
         <source>Wrapping</source>
         <target>Wrapping</target>
-        <note>Line: 64</note>
+        <note>Line: 65</note>
       </trans-unit>
       <trans-unit id="8fe77c2601e54f1aaef28cfde997bbad">
         <source>Tax Rate</source>
         <target>Tax Rate</target>
-        <note>Line: 36</note>
+        <note>Line: 37</note>
       </trans-unit>
       <trans-unit id="baf5d10866a7a240830dcf34f29d2d11">
         <source>No taxes</source>
         <target>No taxes</target>
-        <note>Line: 92</note>
+        <note>Line: 93</note>
       </trans-unit>
     </body>
   </file>
@@ -270,12 +279,12 @@
       <trans-unit id="b94cb106eaa958b2ab473da305e57977">
         <source>Total (Tax excl.)</source>
         <target>Total (Tax excl.)</target>
-        <note>Line: 74</note>
+        <note>Line: 75</note>
       </trans-unit>
       <trans-unit id="96b0141273eabab320119c467cdcaf17">
         <source>Total</source>
         <target>Total</target>
-        <note>Line: 92</note>
+        <note>Line: 97</note>
       </trans-unit>
     </body>
   </file>

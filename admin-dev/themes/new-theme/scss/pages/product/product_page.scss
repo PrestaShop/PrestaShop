@@ -427,6 +427,12 @@ $product-page-padding-bottom: 80px !default;
     @include border-bottom-radius(0);
     @include transition(width 0.5s ease-out, margin 0.5s ease-out);
 
+    .product-images-dropzone-error {
+      p {
+        margin-bottom: 0;
+      }
+    }
+
     &.col-md-8 {
       min-height: 200px;
       border-right: solid 1px $gray-light;
@@ -586,7 +592,7 @@ $product-page-padding-bottom: 80px !default;
     z-index: 0;
     float: left;
     min-height: 200px;
-    margin: 10px 0 5px 5px;
+    margin: 10px 0 5px;
     cursor: default;
 
     .close {
@@ -604,6 +610,7 @@ $product-page-padding-bottom: 80px !default;
   #product-images-container {
     position: relative;
     display: flex;
+    flex-wrap: wrap;
     width: 100%;
     border: solid 1px $gray-light;
 
@@ -735,6 +742,14 @@ $product-page-padding-bottom: 80px !default;
     overflow: auto;
     white-space: nowrap;
 
+    > .main-category {
+      display: block;
+      margin: 0.2rem 0 0;
+      font-size: 0.625rem;
+      font-weight: 600;
+      text-align: right;
+    }
+
     ul.category-tree {
       display: inline-block;
       min-width: 100%;
@@ -745,7 +760,8 @@ $product-page-padding-bottom: 80px !default;
         font-weight: 600;
       }
 
-      label {
+      label,
+      .category-tree-inputs {
         position: relative;
         width: 100%;
         max-width: 100%;
@@ -756,6 +772,39 @@ $product-page-padding-bottom: 80px !default;
           position: absolute;
           top: 5px;
           right: 3px;
+        }
+
+        .form-check-radio {
+          margin-bottom: 5px;
+        }
+      }
+
+      .category-tree-inputs {
+        display: flex;
+        flex-wrap: nowrap;
+        justify-content: space-between;
+        width: 100%;
+        padding: 0 0 0 1.25rem;
+
+        .form-radio {
+          label {
+            padding: 0;
+          }
+        }
+
+        .md-checkbox {
+          &.disabled {
+            [type="checkbox"] {
+              + .md-checkbox-control {
+                cursor: not-allowed;
+                opacity: 0.5;
+
+                &::before {
+                  cursor: not-allowed;
+                }
+              }
+            }
+          }
         }
       }
 
@@ -944,7 +993,8 @@ $product-page-padding-bottom: 80px !default;
   }
 
   /* Last tab modules selection */
-  #hooks.form-contenttab {
+  #hooks.form-contenttab,
+  #modules-tab {
     .top-logo {
       float: left;
       max-width: 45px;
@@ -1001,6 +1051,12 @@ $product-page-padding-bottom: 80px !default;
         content: "\ea4b";
       }
     }
+  }
+}
+
+.product-page-v2 {
+  .maxLength {
+    float: none;
   }
 }
 
