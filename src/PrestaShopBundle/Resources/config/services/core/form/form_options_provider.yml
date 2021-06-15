@@ -8,7 +8,4 @@ services:
     prestashop.core.form.identifiable_object.option_provider.product_form_options_provider:
         class: 'PrestaShop\PrestaShop\Core\Form\IdentifiableObject\OptionProvider\ProductFormOptionsProvider'
         arguments:
-            - '@prestashop.core.query_bus'
-            - '@prestashop.adapter.category.repository.category_repository'
-            - '@prestashop.adapter.legacy.context'
-            - '@prestashop.adapter.image.category_image_path_factory'
+            - '@prestashop.adapter.product.options.redirect_target_provider'
