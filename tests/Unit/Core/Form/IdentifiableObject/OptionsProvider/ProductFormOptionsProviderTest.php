@@ -110,7 +110,9 @@ class ProductFormOptionsProviderTest extends TestCase
 
         $breadcrumb = 'Category > Path';
         $categoryImage = 'path/to/c/1.jpg';
-        $formData['seo']['redirect_option']['target'] = self::CATEGORY_TARGET_ID;
+        $formData['seo']['redirect_option']['target'] = [
+            'id' => self::CATEGORY_TARGET_ID,
+        ];
         $formData['seo']['redirect_option']['type'] = RedirectType::TYPE_CATEGORY_PERMANENT;
 
         yield [
@@ -149,7 +151,9 @@ class ProductFormOptionsProviderTest extends TestCase
             ],
         ];
 
-        $formData['seo']['redirect_option']['target'] = self::PRODUCT_TARGET_ID;
+        $formData['seo']['redirect_option']['target'] = [
+            'id' => self::PRODUCT_TARGET_ID,
+        ];
         $formData['seo']['redirect_option']['type'] = RedirectType::TYPE_PRODUCT_PERMANENT;
         $productName = 'Product 1';
         $productImage = '/path/p/45.jpg';

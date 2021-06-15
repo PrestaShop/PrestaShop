@@ -71,10 +71,10 @@ class ProductFormOptionsProvider implements FormOptionsProviderInterface
     private function getRedirectOptions(array $data): array
     {
         $entities = null;
-        if (!empty($data['seo']['redirect_option']['target'])) {
+        if (!empty($data['seo']['redirect_option']['target']['id'])) {
             $redirectTarget = $this->targetProvider->getRedirectTarget(
                 $data['seo']['redirect_option']['type'],
-                (int) $data['seo']['redirect_option']['target']
+                (int) $data['seo']['redirect_option']['target']['id']
             );
 
             $entities = [
