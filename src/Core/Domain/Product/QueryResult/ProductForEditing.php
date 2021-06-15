@@ -28,7 +28,7 @@ declare(strict_types=1);
 
 namespace PrestaShop\PrestaShop\Core\Domain\Product\QueryResult;
 
-use PrestaShop\PrestaShop\Core\Domain\Product\Attachment\QueryResult\ProductAttachment;
+use PrestaShop\PrestaShop\Core\Domain\Product\Attachment\QueryResult\ProductAttachmentInfo;
 use PrestaShop\PrestaShop\Core\Domain\Product\VirtualProductFile\QueryResult\VirtualProductFileForEditing;
 
 /**
@@ -87,7 +87,7 @@ class ProductForEditing
     private $productSeoOptions;
 
     /**
-     * @var ProductAttachment[]
+     * @var ProductAttachmentInfo[]
      */
     private $associatedAttachments;
 
@@ -117,7 +117,7 @@ class ProductForEditing
      * @param ProductDetails $details
      * @param ProductShippingInformation $shippingInformation
      * @param ProductSeoOptions $productSeoOptions
-     * @param ProductAttachment[] $associatedAttachments
+     * @param ProductAttachmentInfo[] $associatedAttachments
      * @param ProductStockInformation $stockInformation
      * @param VirtualProductFileForEditing|null $virtualProductFile
      * @param string $coverThumbnailUrl
@@ -235,7 +235,7 @@ class ProductForEditing
     }
 
     /**
-     * @return ProductAttachment[]
+     * @return ProductAttachmentInfo[]
      */
     public function getAssociatedAttachments(): array
     {

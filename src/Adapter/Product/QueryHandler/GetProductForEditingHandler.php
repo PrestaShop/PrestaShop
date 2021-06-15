@@ -41,6 +41,7 @@ use PrestaShop\PrestaShop\Adapter\Tax\TaxComputer;
 use PrestaShop\PrestaShop\Core\Domain\Country\ValueObject\CountryId;
 use PrestaShop\PrestaShop\Core\Domain\Product\Image\ValueObject\ImageId;
 use PrestaShop\PrestaShop\Core\Domain\Product\Attachment\QueryResult\ProductAttachment;
+use PrestaShop\PrestaShop\Core\Domain\Product\Attachment\QueryResult\ProductAttachmentInfo;
 use PrestaShop\PrestaShop\Core\Domain\Product\ProductCustomizabilitySettings;
 use PrestaShop\PrestaShop\Core\Domain\Product\Query\GetProductForEditing;
 use PrestaShop\PrestaShop\Core\Domain\Product\QueryHandler\GetProductForEditingHandlerInterface;
@@ -184,7 +185,7 @@ final class GetProductForEditingHandler implements GetProductForEditingHandlerIn
     /**
      * @param ProductId $productId
      *
-     * @return ProductAttachment[]
+     * @return ProductAttachmentInfo[]
      */
     private function getAttachments(ProductId $productId): array
     {
@@ -192,7 +193,7 @@ final class GetProductForEditingHandler implements GetProductForEditingHandlerIn
 
         $productAttachments = [];
         foreach ($attachments as $attachment) {
-            $productAttachments[] = new ProductAttachment(
+            $productAttachments[] = new ProductAttachmentInfo(
                 (int) $attachment['id_attachment'],
                 $attachment['name'],
                 $attachment['file_name'],
