@@ -973,7 +973,7 @@ class Install extends AbstractInstall
                     ),
                 ];
 
-                if (null !== $moduleException) {
+                if (!empty($moduleException)) {
                     $moduleErrors[] = $moduleException;
                 }
 
