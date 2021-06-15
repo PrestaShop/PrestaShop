@@ -63,7 +63,7 @@ export default class AttachmentsManager {
       height: '90%',
       afterLoad: () => {
         const form = $('.fancybox-iframe').contents().find('form');
-        const fancybox = parent.$.fancybox;
+        const {fancybox} = parent.$;
 
         form.on('click', '.cancel-btn', () => {
           fancybox.close();
@@ -86,7 +86,7 @@ export default class AttachmentsManager {
 
       createAttachment(submitEvent.currentTarget).then((resp) => {
         if (resp.errors) {
-          Object.values(resp.errors).forEach(error => {
+          Object.values(resp.errors).forEach((error) => {
             $.growl.error({message: error});
           });
 
@@ -94,8 +94,8 @@ export default class AttachmentsManager {
         }
         eventData.fancybox.close();
 
-        getAttachmentInfo(resp.attachmentId).then((resp) => {
-          this.addAttachmentRow(resp.attachmentInfo);
+        getAttachmentInfo(resp.attachmentId).then((response) => {
+          this.addAttachmentRow(response.attachmentInfo);
         });
       });
     });
@@ -120,7 +120,7 @@ export default class AttachmentsManager {
    * @private
    */
   addAttachmentRow(attachmentInfo) {
-    let rowIndex = this.$attachmentsTableBody.find(ProductMap.attachments.attachedFileRow).length;
+    const rowIndex = this.$attachmentsTableBody.find(ProductMap.attachments.attachedFileRow).length;
 
     const $row = $(this.getPrototypeRow(rowIndex));
     const $attachmentIdInput = $(ProductMap.attachments.tableRow.attachmentIdInput(rowIndex), $row);
