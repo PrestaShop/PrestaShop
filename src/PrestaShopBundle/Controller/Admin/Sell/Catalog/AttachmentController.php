@@ -92,18 +92,16 @@ class AttachmentController extends FrameworkBundleAdminController
         );
 
         $attachmentForm = $attachmentFormBuilder->getForm();
-
         $attachmentForm->handleRequest($request);
 
         try {
             $handlerResult = $attachmentFormHandler->handle($attachmentForm);
 
             if ($handlerResult->isSubmitted() && $handlerResult->isValid()) {
-                $this->addFlash('success', $this->trans('Successful creation.', 'Admin.Notifications.Success'));
-
                 if ($request->query->has('submitFormAjax')) {
                     return $this->json(['attachmentId' => $handlerResult->getIdentifiableObjectId()]);
                 }
+                $this->addFlash('success', $this->trans('Successful creation.', 'Admin.Notifications.Success'));
 
                 return $this->redirectToRoute('admin_attachments_index');
             }
