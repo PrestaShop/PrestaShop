@@ -28,14 +28,7 @@ declare(strict_types=1);
 
 namespace PrestaShop\PrestaShop\Core\Form\IdentifiableObject\OptionProvider;
 
-use PrestaShop\PrestaShop\Adapter\Category\Repository\CategoryRepository;
-use PrestaShop\PrestaShop\Adapter\Image\ImagePathFactory;
-use PrestaShop\PrestaShop\Adapter\LegacyContext;
-use PrestaShop\PrestaShop\Core\CommandBus\CommandBusInterface;
-use PrestaShop\PrestaShop\Core\Domain\Category\ValueObject\CategoryId;
-use PrestaShop\PrestaShop\Core\Domain\Language\ValueObject\LanguageId;
-use PrestaShop\PrestaShop\Core\Domain\Product\Query\GetProductsForListing;
-use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\RedirectType;
+use PrestaShop\PrestaShop\Adapter\Product\Options\RedirectTargetProvider;
 
 /**
  * Provide dynamic complex options to the product type (like preview data that depend
@@ -44,41 +37,17 @@ use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\RedirectType;
 class ProductFormOptionsProvider implements FormOptionsProviderInterface
 {
     /**
-     * @var CommandBusInterface
+     * @var RedirectTargetProvider
      */
-    private $queryBus;
+    private $targetProvider;
 
     /**
-     * @var CategoryRepository
-     */
-    private $categoryRepository;
-
-    /**
-     * @var LegacyContext
-     */
-    private $legacyContext;
-
-    /**
-     * @var ImagePathFactory
-     */
-    private $categoryImagePathFactory;
-
-    /**
-     * @param CommandBusInterface $queryBus
-     * @param CategoryRepository $categoryRepository
-     * @param LegacyContext $legacyContext
-     * @param ImagePathFactory $categoryImagePathFactory
+     * @param RedirectTargetProvider $targetProvider
      */
     public function __construct(
-        CommandBusInterface $queryBus,
-        CategoryRepository $categoryRepository,
-        LegacyContext $legacyContext,
-        ImagePathFactory $categoryImagePathFactory
+        RedirectTargetProvider $targetProvider
     ) {
-        $this->queryBus = $queryBus;
-        $this->categoryRepository = $categoryRepository;
-        $this->legacyContext = $legacyContext;
-        $this->categoryImagePathFactory = $categoryImagePathFactory;
+        $this->targetProvider = $targetProvider;
     }
 
     /**
@@ -103,32 +72,18 @@ class ProductFormOptionsProvider implements FormOptionsProviderInterface
     {
         $entities = null;
         if (!empty($data['seo']['redirect_option']['target'])) {
-            $entityId = $data['seo']['redirect_option']['target'];
-            $languageId = (int) $this->legacyContext->getLanguage()->id;
+            $redirectTarget = $this->targetProvider->getRedirectTarget(
+                $data['seo']['redirect_option']['type'],
+                (int) $data['seo']['redirect_option']['target']
+            );
 
-            $dataType = $data['seo']['redirect_option']['type'] ?? RedirectType::TYPE_NOT_FOUND;
-            switch ($dataType) {
-                case RedirectType::TYPE_CATEGORY_PERMANENT:
-                case RedirectType::TYPE_CATEGORY_TEMPORARY:
-                    $entities = [
-                        [
-                            'id' => $entityId,
-                            'name' => $this->categoryRepository->getBreadcrumb(
-                                new CategoryId($entityId),
-                                new LanguageId($languageId)
-                            ),
-                            'image' => $this->categoryImagePathFactory->getPath($entityId),
-                        ],
-                    ];
-                    break;
-                case RedirectType::TYPE_PRODUCT_PERMANENT:
-                case RedirectType::TYPE_PRODUCT_TEMPORARY:
-                    $entities = $this->queryBus->handle(new GetProductsForListing(
-                        [$entityId],
-                        $languageId
-                    ));
-                    break;
-            }
+            $entities = [
+                [
+                    'id' => $redirectTarget->getId(),
+                    'name' => $redirectTarget->getName(),
+                    'image' => $redirectTarget->getImage(),
+                ],
+            ];
         }
 
         return [
