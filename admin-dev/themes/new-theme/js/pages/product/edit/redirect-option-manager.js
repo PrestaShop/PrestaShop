@@ -102,7 +102,22 @@ export default class RedirectOptionManager {
   }
 
   buildAutoCompleteSearchInput() {
+    const redirectType = this.$redirectTypeInput.val();
+    // On first load only allow delete for category target
+    let initialAllowDelete;
+
+    switch (redirectType) {
+      case '301-category':
+      case '302-category':
+        initialAllowDelete = true;
+        break;
+      default:
+        initialAllowDelete = false;
+        break;
+    }
+
     this.entitySearchInput = new EntitySearchInput(this.$redirectTargetInput, {
+      allowDelete: initialAllowDelete,
       onRemovedContent: () => {
         this.eventEmitter.emit(ProductEventMap.updateSubmitButtonState);
       },

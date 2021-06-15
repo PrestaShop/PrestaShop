@@ -173,6 +173,7 @@ export default class EntitySearchInput {
   }
 
   buildActions() {
+    // Always check for click even if it is useless when allowDelete options is false, it can be changed dynamically
     $(this.$selectionContainer).on('click', this.options.entityDeleteSelector, (event) => {
       if (!this.options.allowDelete) {
         return;
@@ -202,6 +203,10 @@ export default class EntitySearchInput {
       );
       modal.show();
     });
+
+    // For now adapt the display based on the allowDelete option
+    const $entityDelete = $(this.options.entityDeleteSelector, this.$selectionContainer);
+    $entityDelete.toggle(!!this.options.allowDelete);
   }
 
   /**
