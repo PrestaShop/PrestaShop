@@ -24,6 +24,7 @@
  */
 
 const combinationListId = '#combination_list';
+const attachmentsBlockId = '#product_options_attachments';
 
 export default {
   productForm: 'form[name=product]',
@@ -198,18 +199,19 @@ export default {
     moduleContent: (moduleId) => `.module-contents .module-render-container.${moduleId}`,
   },
   attachments: {
-    attachmentsContainer: '#product_options_attachments',
+    attachmentsContainer: attachmentsBlockId,
     attachmentsCollection: '.attachments-collection',
+    attachmentsTableBody: '.attachments-collection tbody',
     addAttachmentBtn: '.add-attachment',
     removeAttachmentBtn: '.remove-attachment',
     attachedFileRow: '.attached_file_row',
     attachmentIdInputs: '.attachment-id-input',
     emptyState: '#attachments-empty-state',
     tableRow: {
-      attachmentIdInput: (rowIndex) => `product_options_attachments_attached_file_${rowIndex}_attachment_id`,
-      attachmentNameInput: (rowIndex) => `product_options_attachments_attached_file_${rowIndex}_name`,
-      attachmentFilenameInput: (rowIndex) => `product_options_attachments_attached_file_${rowIndex}_filename`,
-      attachmentTypeInput: (rowIndex) => `product_options_attachments_attached_file_${rowIndex}_mime_type`,
-    }
+      attachmentIdInput: (rowIndex) => `${attachmentsBlockId}_attached_files_${rowIndex}_attachment_id`,
+      attachmentNamePreview: '.name .preview',
+      attachmentFilenamePreview: '.filename .preview',
+      attachmentTypePreview: '.mime_type .preview',
+    },
   },
 };
