@@ -92,4 +92,11 @@ describe('BO - Orders : View customer from orders page', async () => {
     await expect(pageTitle).to
       .contains(`${viewCustomerPage.pageTitle} ${DefaultCustomer.firstName[0]}. ${DefaultCustomer.lastName}`);
   });
+
+  it('should reset all filters', async function () {
+    await testContext.addContextItem(this, 'testIdentifier', 'resetFiltersAfterCheck', baseContext);
+
+    const numberOfOrders = await ordersPage.resetAndGetNumberOfLines(page);
+    await expect(numberOfOrders).to.be.above(0);
+  });
 });
