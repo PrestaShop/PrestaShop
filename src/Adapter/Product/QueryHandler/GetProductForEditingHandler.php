@@ -30,6 +30,7 @@ namespace PrestaShop\PrestaShop\Adapter\Product\QueryHandler;
 
 use Customization;
 use DateTime;
+use PrestaShop\PrestaShop\Adapter\Product\Options\RedirectTargetProvider;
 use PrestaShop\PrestaShop\Adapter\Product\Repository\ProductRepository;
 use PrestaShop\PrestaShop\Adapter\Product\Stock\Repository\StockAvailableRepository;
 use PrestaShop\PrestaShop\Adapter\Product\VirtualProduct\Repository\VirtualProductFileRepository;
@@ -95,12 +96,18 @@ final class GetProductForEditingHandler implements GetProductForEditingHandlerIn
     private $countryId;
 
     /**
+     * @var RedirectTargetProvider
+     */
+    private $targetProvider;
+
+    /**
      * @param NumberExtractor $numberExtractor
      * @param ProductRepository $productRepository
      * @param StockAvailableRepository $stockAvailableRepository
      * @param VirtualProductFileRepository $virtualProductFileRepository
      * @param TaxComputer $taxComputer
      * @param int $countryId
+     * @param RedirectTargetProvider $targetProvider
      */
     public function __construct(
         NumberExtractor $numberExtractor,
@@ -108,7 +115,8 @@ final class GetProductForEditingHandler implements GetProductForEditingHandlerIn
         StockAvailableRepository $stockAvailableRepository,
         VirtualProductFileRepository $virtualProductFileRepository,
         TaxComputer $taxComputer,
-        int $countryId
+        int $countryId,
+        RedirectTargetProvider $targetProvider
     ) {
         $this->numberExtractor = $numberExtractor;
         $this->stockAvailableRepository = $stockAvailableRepository;
@@ -116,6 +124,7 @@ final class GetProductForEditingHandler implements GetProductForEditingHandlerIn
         $this->taxComputer = $taxComputer;
         $this->countryId = $countryId;
         $this->productRepository = $productRepository;
+        $this->targetProvider = $targetProvider;
     }
 
     /**
@@ -315,12 +324,17 @@ final class GetProductForEditingHandler implements GetProductForEditingHandlerIn
      */
     private function getSeoOptions(Product $product): ProductSeoOptions
     {
+        $redirectTarget = $this->targetProvider->getRedirectTarget(
+            $product->redirect_type,
+            (int) $product->id_type_redirected
+        );
+
         return new ProductSeoOptions(
             $product->meta_title,
             $product->meta_description,
             $product->link_rewrite,
             $product->redirect_type,
-            (int) $product->id_type_redirected
+            $redirectTarget
         );
     }
 
