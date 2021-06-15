@@ -166,15 +166,6 @@ describe('Install Prestashop', async () => {
       args:
         {
           step: {
-            name: 'Install addons modules',
-            timeout: 60000,
-          },
-        },
-    },
-    {
-      args:
-        {
-          step: {
             name: 'Install theme',
             timeout: 60000,
           },
@@ -189,7 +180,15 @@ describe('Install Prestashop', async () => {
           },
         },
     },
-
+    {
+      args:
+        {
+          step: {
+            name: 'Post installation scripts',
+            timeout: 60000,
+          },
+        },
+    },
   ];
 
   tests.forEach((test, index) => {
