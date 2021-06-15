@@ -919,7 +919,6 @@ class Install extends AbstractInstall
         $result = $this->executeAction(
             $modules,
             'install',
-
             $this->translator->trans(
                 'Cannot install module "%module%"',
                 ['%module%' => '%module%'],
