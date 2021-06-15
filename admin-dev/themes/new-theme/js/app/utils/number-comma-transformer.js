@@ -29,30 +29,6 @@ const findAllUnwantedCharsExceptTheLatestOne = /(?:(?!^-\d+))[^\d]+(?=.*[^\d])/g
 const findAllUnwantedChars = /(?:(?!^-\d+))([^\d]+)/g;
 
 /**
- * Same explode function as on PHP
- */
-const explode = (string, separator, limit) => {
-  const array = string.split(separator);
-  if (limit !== undefined && array.length >= limit) {
-    array.push(array.splice(limit - 1).join(separator));
-  }
-
-  return array;
-};
-
-const clearNumberInputValue = (event, selector) => {
-  if (!event.target.matches(selector)) {
-    return;
-  }
-
-  let value = event.target.value;
-  // Start to transform when there is more than one character
-  if (value.length > 1) {
-    event.target.value = transform(value);
-  }
-};
-
-/**
  * If there is a dot in the string
  * split the string at the first dot, and
  * replace all unwanted characters.
@@ -61,26 +37,36 @@ const clearNumberInputValue = (event, selector) => {
  * by a dot.
  */
 export const transform = (value) => {
-  if (value.indexOf('.') !== -1) {
-    value = explode(value, '.', 2)
-      .map(num => num.replace(findAllUnwantedChars, ''))
-      .join('.');
-  } else {
-    value = value
-      .replace(findAllUnwantedCharsExceptTheLatestOne, '')
-      .replace(findAllUnwantedChars, '.');
+  let val = value;
+  const unwantedChars = val.match(findAllUnwantedChars);
+  if (unwantedChars.length > 1) {
+    const unique = [...new Set(unwantedChars)];
+    if (unique.length === 1) {
+      return val.replace(findAllUnwantedChars, '');
+    }
   }
 
-  return value;
+  val = val
+    .replace(findAllUnwantedCharsExceptTheLatestOne, '')
+    .replace(findAllUnwantedChars, '.');
+
+  return val;
+};
+
+const clearNumberInputValue = (event, selector) => {
+  if (!event.target.matches(selector)) {
+    return;
+  }
+
+  const value = event.target.value;
+  event.target.value = transform(value);
 };
 
 export default (selector) => {
   document.addEventListener(
-    'keyup',
-    _.debounce(
-      (event) => {
-        clearNumberInputValue(event, selector);
-      },
-      500,
-  ));
+    'change',
+    (event) => {
+      clearNumberInputValue(event, selector);
+    },
+  );
 };
