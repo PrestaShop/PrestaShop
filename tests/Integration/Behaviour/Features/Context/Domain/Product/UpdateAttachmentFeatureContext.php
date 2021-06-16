@@ -29,7 +29,7 @@ declare(strict_types=1);
 namespace Tests\Integration\Behaviour\Features\Context\Domain\Product;
 
 use PHPUnit\Framework\Assert;
-use PrestaShop\PrestaShop\Core\Domain\Product\Attachment\QueryResult\ProductAttachmentInfo;
+use PrestaShop\PrestaShop\Core\Domain\Attachment\QueryResult\AttachmentInfo;
 use PrestaShop\PrestaShop\Core\Domain\Product\Command\AssociateProductAttachmentCommand;
 use PrestaShop\PrestaShop\Core\Domain\Product\Command\RemoveAllAssociatedProductAttachmentsCommand;
 use PrestaShop\PrestaShop\Core\Domain\Product\Command\SetAssociatedProductAttachmentsCommand;
@@ -62,7 +62,7 @@ class UpdateAttachmentFeatureContext extends AbstractProductFeatureContext
      */
     public function assertProductAttachments(string $productReference, array $attachmentReferences): void
     {
-        $attachmentIds = array_map(function (ProductAttachmentInfo $attachment): int {
+        $attachmentIds = array_map(function (AttachmentInfo $attachment): int {
             return $attachment->getAttachmentId();
         }, $this->getProductForEditing($productReference)->getAssociatedAttachments());
 
