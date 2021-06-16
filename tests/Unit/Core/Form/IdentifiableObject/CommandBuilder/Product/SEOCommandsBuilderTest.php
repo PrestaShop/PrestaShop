@@ -146,7 +146,9 @@ class SEOCommandsBuilderTest extends AbstractProductCommandBuilderTest
                 'seo' => [
                     'redirect_option' => [
                         'type' => RedirectType::TYPE_PRODUCT_TEMPORARY,
-                        'target' => 42,
+                        'target' => [
+                            'id' => 42,
+                        ],
                     ],
                 ],
             ],
@@ -160,7 +162,9 @@ class SEOCommandsBuilderTest extends AbstractProductCommandBuilderTest
                 'seo' => [
                     'redirect_option' => [
                         'type' => RedirectType::TYPE_CATEGORY_TEMPORARY,
-                        'target' => 51,
+                        'target' => [
+                            'id' => 51,
+                        ],
                     ],
                 ],
             ],
