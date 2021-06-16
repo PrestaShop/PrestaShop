@@ -7,5 +7,3 @@ services:
 
     prestashop.core.form.identifiable_object.option_provider.product_form_options_provider:
         class: 'PrestaShop\PrestaShop\Core\Form\IdentifiableObject\OptionProvider\ProductFormOptionsProvider'
-        arguments:
-            - '@prestashop.adapter.product.options.redirect_target_provider'

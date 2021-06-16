@@ -156,9 +156,7 @@ class RedirectOptionType extends TranslatorAwareType
                 'class' => 'redirect-option-widget',
             ],
             'alert_message' => $this->getRedirectionAlertMessages(),
-            'redirect_target' => null,
         ]);
-        $resolver->setAllowedTypes('redirect_target', ['null', 'array']);
     }
 
     /**
