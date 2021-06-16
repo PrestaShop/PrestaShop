@@ -1194,3 +1194,17 @@
   </div>
 {% endblock %}
 
+{% block text_preview_widget %}
+  {# This is the hidden input #}
+  {{- block('form_widget_simple') -}}
+  <span class="label text-preview">
+    {# This just outputs the value #}
+    {{ form.vars.value|e('html') }}
+  </span>
+{% endblock %}
+
+{% block image_preview_widget %}
+  {# This is the hidden input #}
+  {{- block('form_widget_simple') -}}
+  <img src="{{ form.vars.value }}" alt="{{ ('Image preview for ' ~ form.vars.name)|trim }}" />
+{% endblock %}
