@@ -21,3 +21,7 @@ _admin_improve_routing:
 _admin_errors:
   resource: "admin/_errors.yml"
   prefix: /errors
+
+_admin_dashboard:
+  resource: "admin/dashboard.yml"
+  prefix: /dashboard
