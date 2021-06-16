@@ -28,7 +28,8 @@ declare(strict_types=1);
 
 namespace PrestaShop\PrestaShop\Core\Translation\Builder\Map;
 
-use Doctrine\Inflector\InflectorFactory;
+use Doctrine\Inflector\Inflector;
+use Doctrine\Inflector\NoopWordInflector;
 
 /**
  * This class is a representation of a Domain catalogue.
@@ -47,6 +48,11 @@ class Domain
      * @var Message[]
      */
     private $messages;
+
+    /**
+     * @var Inflector
+     */
+    private static $inflector;
 
     public function __construct(string $domainName)
     {
@@ -207,7 +213,7 @@ class Domain
      */
     public static function splitDomain(string $domain): array
     {
-        $inflector = InflectorFactory::create()->build();
+        $inflector = self::getInflector();
         // the third component of the domain may have underscores, so we need to limit pieces to 3
         return explode('_', $inflector->tableize($domain), 3);
     }
@@ -235,5 +241,14 @@ class Domain
         }
 
         return $data;
+    }
+
+    private static function getInflector(): Inflector
+    {
+        if (null === self::$inflector) {
+            self::$inflector = new Inflector(new NoopWordInflector(), new NoopWordInflector());
+        }
+
+        return self::$inflector;
     }
 }

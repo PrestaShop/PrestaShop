@@ -27,7 +27,7 @@
 namespace PrestaShopBundle\Translation\View;
 
 use Doctrine\Inflector\Inflector;
-use Doctrine\Inflector\InflectorFactory;
+use Doctrine\Inflector\NoopWordInflector;
 use PrestaShopBundle\Translation\Provider\AbstractProvider;
 use Symfony\Bundle\FrameworkBundle\Routing\Router;
 
@@ -55,7 +55,7 @@ class TreeBuilder
     {
         $this->locale = $locale;
         $this->theme = $theme;
-        $this->inflector = InflectorFactory::create()->build();
+        $this->inflector = new Inflector(new NoopWordInflector(), new NoopWordInflector());
     }
 
     /**

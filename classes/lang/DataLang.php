@@ -25,7 +25,7 @@
  */
 
 use Doctrine\Inflector\Inflector;
-use Doctrine\Inflector\InflectorFactory;
+use Doctrine\Inflector\NoopWordInflector;
 use PrestaShop\PrestaShop\Adapter\SymfonyContainer;
 use PrestaShopBundle\Translation\TranslatorInterface;
 
@@ -77,7 +77,7 @@ class DataLangCore
             $this->translator->getCatalogue($this->locale);
         }
 
-        $this->inflector = InflectorFactory::create()->build();
+        $this->inflector = new Inflector(new NoopWordInflector(), new NoopWordInflector());
     }
 
     /**

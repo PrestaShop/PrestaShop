@@ -28,7 +28,7 @@ declare(strict_types=1);
 namespace PrestaShop\PrestaShop\Core\Translation\Builder;
 
 use Doctrine\Inflector\Inflector;
-use Doctrine\Inflector\InflectorFactory;
+use Doctrine\Inflector\NoopWordInflector;
 use InvalidArgumentException;
 use PrestaShop\PrestaShop\Core\Translation\Builder\Map\Catalogue;
 use PrestaShop\PrestaShop\Core\Translation\Builder\Map\Domain;
@@ -62,7 +62,7 @@ class TranslationCatalogueBuilder
     public function __construct(CatalogueProviderFactory $catalogueProviderFactory)
     {
         $this->catalogueProviderFactory = $catalogueProviderFactory;
-        $this->inflector = InflectorFactory::create()->build();
+        $this->inflector = new Inflector(new NoopWordInflector(), new NoopWordInflector());
     }
 
     /**

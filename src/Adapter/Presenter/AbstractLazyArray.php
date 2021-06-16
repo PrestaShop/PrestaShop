@@ -31,7 +31,7 @@ use ArrayIterator;
 use ArrayObject;
 use Countable;
 use Doctrine\Inflector\Inflector;
-use Doctrine\Inflector\InflectorFactory;
+use Doctrine\Inflector\NoopWordInflector;
 use Iterator;
 use JsonSerializable;
 use ReflectionClass;
@@ -94,7 +94,7 @@ abstract class AbstractLazyArray implements Iterator, ArrayAccess, Countable, Js
      */
     public function __construct()
     {
-        $this->inflector = InflectorFactory::create()->build();
+        $this->inflector = new Inflector(new NoopWordInflector(), new NoopWordInflector());
         $this->arrayAccessList = new ArrayObject();
         $reflectionClass = new ReflectionClass(get_class($this));
         $methods = $reflectionClass->getMethods(ReflectionMethod::IS_PUBLIC);

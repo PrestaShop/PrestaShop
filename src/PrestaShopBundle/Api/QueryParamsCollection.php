@@ -27,7 +27,7 @@
 namespace PrestaShopBundle\Api;
 
 use Doctrine\Inflector\Inflector;
-use Doctrine\Inflector\InflectorFactory;
+use Doctrine\Inflector\NoopWordInflector;
 use PrestaShopBundle\Exception\InvalidPaginationParamsException;
 use Symfony\Component\HttpFoundation\Request;
 
@@ -57,7 +57,7 @@ abstract class QueryParamsCollection
 
     public function __construct()
     {
-        $this->inflector = InflectorFactory::create()->build();
+        $this->inflector = new Inflector(new NoopWordInflector(), new NoopWordInflector());
     }
 
     /**

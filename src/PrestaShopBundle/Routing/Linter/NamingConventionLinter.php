@@ -27,7 +27,7 @@
 namespace PrestaShopBundle\Routing\Linter;
 
 use Doctrine\Inflector\Inflector;
-use Doctrine\Inflector\InflectorFactory;
+use Doctrine\Inflector\NoopWordInflector;
 use PrestaShopBundle\Routing\Linter\Exception\NamingConventionException;
 use Symfony\Bundle\FrameworkBundle\Controller\ControllerNameParser;
 use Symfony\Component\Routing\Route;
@@ -53,7 +53,7 @@ final class NamingConventionLinter implements RouteLinterInterface
     public function __construct(ControllerNameParser $controllerNameParser)
     {
         $this->controllerNameParser = $controllerNameParser;
-        $this->inflector = InflectorFactory::create()->build();
+        $this->inflector = new Inflector(new NoopWordInflector(), new NoopWordInflector());
     }
 
     /**

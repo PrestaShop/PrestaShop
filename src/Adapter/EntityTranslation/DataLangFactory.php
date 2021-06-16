@@ -30,7 +30,7 @@ namespace PrestaShop\PrestaShop\Adapter\EntityTranslation;
 
 use DataLangCore;
 use Doctrine\Inflector\Inflector;
-use Doctrine\Inflector\InflectorFactory;
+use Doctrine\Inflector\NoopWordInflector;
 use PrestaShop\PrestaShop\Adapter\EntityTranslation\Exception\DataLangClassNameNotFoundException;
 use PrestaShopBundle\Translation\TranslatorInterface;
 
@@ -62,7 +62,7 @@ class DataLangFactory
     {
         $this->dbPrefix = $dbPrefix;
         $this->translator = $translator;
-        $this->inflector = InflectorFactory::create()->build();
+        $this->inflector = new Inflector(new NoopWordInflector(), new NoopWordInflector());
     }
 
     /**
