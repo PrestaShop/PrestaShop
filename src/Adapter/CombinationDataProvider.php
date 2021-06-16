@@ -146,7 +146,12 @@ class CombinationDataProvider
             $attribute_unity_price_impact = -1;
         }
 
-        $finalPrice = (new Number((string) $product->price))
+        $productPrice = new Number((string) $product->price);
+        $productEcotax = new Number((string) $product->ecotax);
+        $combinationEcotax = new Number((string) $combination['ecotax_tax_excluded']);
+        $ecotax = $combinationEcotax->equalsZero() ? $productEcotax : $combinationEcotax;
+        $finalPrice = $productPrice
+            ->plus($ecotax)
             ->plus(new Number((string) $combination['price']))
             ->toPrecision(CommonAbstractType::PRESTASHOP_DECIMALS);
 
@@ -162,6 +167,8 @@ class CombinationDataProvider
             'attribute_price' => $combination['price'],
             'attribute_price_display' => $this->locale->formatPrice($combination['price'], $this->context->getContext()->currency->iso_code),
             'final_price' => (string) $finalPrice,
+            'product_price' => (string) $productPrice,
+            'product_ecotax' => (string) $productEcotax,
             'attribute_priceTI' => '',
             'attribute_ecotax' => $combination['ecotax_tax_included'],
             'attribute_weight_impact' => $attribute_weight_impact,
