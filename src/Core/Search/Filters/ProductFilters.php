@@ -23,48 +23,28 @@
  * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
-
 declare(strict_types=1);
 
-namespace PrestaShop\PrestaShop\Core\Grid\Query\Filter;
+namespace PrestaShop\PrestaShop\Core\Search\Filters;
+
+use PrestaShop\PrestaShop\Core\Search\Filters;
 
 /**
- * Stores filters to be applied on SQL query
+ * Gets product grid filters.
  */
-final class SqlFilters
+final class ProductFilters extends Filters
 {
-    public const WHERE_STRICT = 1;
-    public const WHERE_LIKE = 2;
-    public const HAVING_LIKE = 3;
-    public const WHERE_DATE = 4;
-    public const MIN_MAX = 5;
-
-    /** @var array */
-    private $filters = [];
-
     /**
-     * @param string $filterName
-     * @param string $sqlField
-     * @param int $comparison
-     *
-     * @return self
+     * {@inheritdoc}
      */
-    public function addFilter($filterName, $sqlField, $comparison = self::WHERE_STRICT): self
+    public static function getDefaults()
     {
-        $this->filters[] = [
-            'filter_name' => $filterName,
-            'sql_field' => $sqlField,
-            'comparison' => $comparison,
+        return [
+            'limit' => 20,
+            'offset' => 0,
+            'orderBy' => 'id_product',
+            'sortOrder' => 'desc',
+            'filters' => [],
         ];
-
-        return $this;
-    }
-
-    /**
-     * @return array
-     */
-    public function getFilters(): array
-    {
-        return $this->filters;
     }
 }

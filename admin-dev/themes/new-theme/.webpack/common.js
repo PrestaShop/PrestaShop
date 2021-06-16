@@ -96,6 +96,7 @@ module.exports = {
     payment_preferences: './js/pages/payment-preferences',
     product_edit: './js/pages/product/edit',
     combination_edit: './js/pages/product/combination/edit',
+    product_index: './js/pages/product/index',
     product_page: './js/product-page/index',
     product_preferences: './js/pages/product-preferences',
     profiles: './js/pages/profiles',
