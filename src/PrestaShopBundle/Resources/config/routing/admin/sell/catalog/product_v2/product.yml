@@ -4,9 +4,6 @@ _combinations:
 _images:
     resource: 'image.yml'
 
-_attachments:
-    resource: 'attachment.yml'
-
 admin_products_v2_index:
   path: /
   methods: [GET]
