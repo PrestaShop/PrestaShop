@@ -29,21 +29,13 @@
       <tr class="attached_file_row" id="attached_file_row_{{ form.vars.name }}">
         {% for child in form.children %}
           {% set childType = child.vars.block_prefixes.1 %}
-          {% if childType != 'hidden' %}
+            {% if childType == 'hidden'%}
+              {{ form_widget(child) }}
+            {% else %}
             <td>
               {{ form_widget(child) }}
-              {% if block(child) %}
-                {{ form_errors(child) }}
-              {% endif %}
             </td>
-          {% elseif child.vars.label is not empty %}
-            <td class="{{ child.vars.name }}">
-              {{ form_widget(child) }}
-              <span class="preview">{% if child.vars.value %}{{ child.vars.value }}{% endif %}</span>
-            </td>
-          {% else %}
-            {{ form_widget(child) }}
-          {% endif %}
+            {% endif %}
         {% endfor %}
       </tr>
     {%- endblock attached_file_row -%}
