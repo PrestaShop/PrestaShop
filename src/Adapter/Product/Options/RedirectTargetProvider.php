@@ -39,6 +39,9 @@ use PrestaShop\PrestaShop\Core\Domain\Product\QueryResult\ProductRedirectTarget;
 use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductId;
 use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\RedirectType;
 
+/**
+ * Build details on the product target based on the configuration (redirection type and entity id)
+ */
 class RedirectTargetProvider
 {
     /**

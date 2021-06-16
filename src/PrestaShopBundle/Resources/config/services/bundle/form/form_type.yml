@@ -1502,9 +1502,10 @@ services:
         parent: 'form.type.translatable.aware'
         public: true
         arguments:
-            - "@prestashop.adapter.legacy.context"
-            - "@router"
-            - "@form.type.sell.product.data_transformer.redirection_target_transformer"
+            - '@prestashop.adapter.legacy.context'
+            - '@router'
+            - '@form.type.sell.product.data_transformer.redirection_target_transformer'
+            - '@form.type.sell.product.event_listener.redirect_option_listener'
         tags:
             - { name: form.type }
 
@@ -1597,6 +1598,10 @@ services:
 
     form.type.sell.product.event_listener.product_type_listener:
         class: 'PrestaShopBundle\Form\Admin\Sell\Product\EventListener\ProductTypeListener'
+        public: true
+
+    form.type.sell.product.event_listener.redirect_option_listener:
+        class: 'PrestaShopBundle\Form\Admin\Sell\Product\EventListener\RedirectOptionListener'
         public: true
 
     # Combination form types

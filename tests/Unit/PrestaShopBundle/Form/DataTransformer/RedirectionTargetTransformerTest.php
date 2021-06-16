@@ -28,6 +28,7 @@ declare(strict_types=1);
 
 namespace Tests\Unit\PrestaShopBundle\Form\DataTransformer;
 
+use Generator;
 use PHPUnit\Framework\TestCase;
 use PrestaShop\PrestaShop\Core\Domain\Product\QueryResult\ProductRedirectTarget;
 use PrestaShopBundle\Form\Admin\Sell\Product\DataTransformer\RedirectionTargetTransformer;
@@ -37,17 +38,17 @@ class RedirectionTargetTransformerTest extends TestCase
     /**
      * @dataProvider getTransformValues
      *
-     * @param string|int $input
+     * @param array|null $input
      * @param array|null $expectedResult
      */
-    public function testTransform($input, ?array $expectedResult)
+    public function testTransform(?array $input, ?array $expectedResult): void
     {
         $transformer = new RedirectionTargetTransformer();
         $transformed = $transformer->transform($input);
         $this->assertEquals($expectedResult, $transformed);
     }
 
-    public function getTransformValues()
+    public function getTransformValues(): Generator
     {
         yield [
             [
@@ -165,17 +166,17 @@ class RedirectionTargetTransformerTest extends TestCase
     /**
      * @dataProvider getReverseTransformValues
      *
-     * @param mixed $input
+     * @param array|null $input
      * @param array|null $expectedResult
      */
-    public function testReverseTransform($input, ?array $expectedResult)
+    public function testReverseTransform(?array $input, ?array $expectedResult): void
     {
         $transformer = new RedirectionTargetTransformer();
         $transformed = $transformer->reverseTransform($input);
         $this->assertEquals($expectedResult, $transformed);
     }
 
-    public function getReverseTransformValues()
+    public function getReverseTransformValues(): Generator
     {
         yield [
             [
