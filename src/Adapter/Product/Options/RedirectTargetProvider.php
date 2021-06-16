@@ -31,20 +31,19 @@ namespace PrestaShop\PrestaShop\Adapter\Product\Options;
 use PrestaShop\PrestaShop\Adapter\Category\Repository\CategoryRepository;
 use PrestaShop\PrestaShop\Adapter\Image\ImagePathFactory;
 use PrestaShop\PrestaShop\Adapter\LegacyContext;
-use PrestaShop\PrestaShop\Core\CommandBus\CommandBusInterface;
+use PrestaShop\PrestaShop\Adapter\Product\Repository\ProductPreviewRepository;
 use PrestaShop\PrestaShop\Core\Domain\Category\ValueObject\CategoryId;
 use PrestaShop\PrestaShop\Core\Domain\Language\ValueObject\LanguageId;
-use PrestaShop\PrestaShop\Core\Domain\Product\Query\GetProductsForListing;
-use PrestaShop\PrestaShop\Core\Domain\Product\QueryResult\ProductForListing;
 use PrestaShop\PrestaShop\Core\Domain\Product\QueryResult\ProductRedirectTarget;
+use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductId;
 use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\RedirectType;
 
 class RedirectTargetProvider
 {
     /**
-     * @var CommandBusInterface
+     * @var ProductPreviewRepository
      */
-    private $queryBus;
+    private $productPreviewRepository;
 
     /**
      * @var CategoryRepository
@@ -62,18 +61,18 @@ class RedirectTargetProvider
     private $categoryImagePathFactory;
 
     /**
-     * @param CommandBusInterface $queryBus
+     * @param ProductPreviewRepository $productPreviewRepository
      * @param CategoryRepository $categoryRepository
      * @param LegacyContext $legacyContext
      * @param ImagePathFactory $categoryImagePathFactory
      */
     public function __construct(
-        CommandBusInterface $queryBus,
+        ProductPreviewRepository $productPreviewRepository,
         CategoryRepository $categoryRepository,
         LegacyContext $legacyContext,
         ImagePathFactory $categoryImagePathFactory
     ) {
-        $this->queryBus = $queryBus;
+        $this->productPreviewRepository = $productPreviewRepository;
         $this->categoryRepository = $categoryRepository;
         $this->legacyContext = $legacyContext;
         $this->categoryImagePathFactory = $categoryImagePathFactory;
@@ -108,15 +107,10 @@ class RedirectTargetProvider
     private function getProductTarget(int $redirectTargetId): ProductRedirectTarget
     {
         $languageId = (int) $this->legacyContext->getLanguage()->id;
-
-        /** @var ProductForListing[] $products */
-        $products = $this->queryBus->handle(new GetProductsForListing(
-            [$redirectTargetId],
-            $languageId
-        ));
-
-        /** @var ProductForListing $product */
-        $product = reset($products);
+        $product = $this->productPreviewRepository->getPreview(
+            new ProductId($redirectTargetId),
+            new LanguageId($languageId)
+        );
 
         return new ProductRedirectTarget(
             $redirectTargetId,
