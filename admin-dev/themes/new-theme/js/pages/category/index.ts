@@ -68,7 +68,14 @@ $(() => {
   const showcaseCard = new ShowcaseCard('categoriesShowcaseCard');
   showcaseCard.addExtension(new ShowcaseCardCloseExtension());
 
-  window.prestashop.component.initComponents(['TranslatableField', 'TinyMCEEditor', 'TranslatableInput', 'TextWithRecommendedLengthCounter']);
+  window.prestashop.component.initComponents(
+    [
+      'TranslatableField',
+      'TinyMCEEditor',
+      'TranslatableInput',
+      'TextWithRecommendedLengthCounter',
+    ],
+  );
 
   const translatorInput = window.prestashop.instance.translatableInput;
   new ChoiceTable();
