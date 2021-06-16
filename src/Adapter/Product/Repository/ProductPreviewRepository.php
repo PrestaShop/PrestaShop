@@ -26,18 +26,15 @@
 
 declare(strict_types=1);
 
-namespace PrestaShop\PrestaShop\Adapter\Product\QueryHandler;
+namespace PrestaShop\PrestaShop\Adapter\Product\Repository;
 
 use PrestaShop\PrestaShop\Adapter\Product\Image\ProductImagePathFactory;
 use PrestaShop\PrestaShop\Adapter\Product\Image\Repository\ProductImageRepository;
-use PrestaShop\PrestaShop\Adapter\Product\Repository\ProductRepository;
 use PrestaShop\PrestaShop\Core\Domain\Language\ValueObject\LanguageId;
-use PrestaShop\PrestaShop\Core\Domain\Product\Query\GetProductsForListing;
-use PrestaShop\PrestaShop\Core\Domain\Product\QueryHandler\GetProductsForListingHandlerInterface;
 use PrestaShop\PrestaShop\Core\Domain\Product\QueryResult\ProductPreview;
 use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductId;
 
-class GetProductsForListingHandler implements GetProductsForListingHandlerInterface
+class ProductPreviewRepository
 {
     /**
      * @var ProductRepository
@@ -65,25 +62,12 @@ class GetProductsForListingHandler implements GetProductsForListingHandlerInterf
     }
 
     /**
-     * {@inheritDoc}
-     */
-    public function handle(GetProductsForListing $query): array
-    {
-        $productPreviews = [];
-        foreach ($query->getProductIds() as $productId) {
-            $productPreviews[] = $this->formatProductPreview($productId, $query->getLanguageId());
-        }
-
-        return $productPreviews;
-    }
-
-    /**
      * @param ProductId $productId
      * @param LanguageId $languageId
      *
      * @return ProductPreview
      */
-    private function formatProductPreview(ProductId $productId, LanguageId $languageId): ProductPreview
+    public function getPreview(ProductId $productId, LanguageId $languageId): ProductPreview
     {
         $product = $this->productRepository->get($productId);
         $name = $product->name[$languageId->getValue()] ?? reset($product->name);
