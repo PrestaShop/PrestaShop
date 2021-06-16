@@ -139,6 +139,9 @@ class ProductCombination extends CommonAbstractType
                     new Assert\NotBlank(),
                     new Assert\Type(['type' => 'float']),
                 ],
+                'attr' => [
+                    'class' => 'attribute_ecotaxTi',
+                ],
             ])
             ->add('attribute_weight', NumberType::class, [
                 'required' => false,
