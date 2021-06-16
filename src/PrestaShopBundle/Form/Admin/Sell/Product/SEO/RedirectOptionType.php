@@ -30,15 +30,13 @@ namespace PrestaShopBundle\Form\Admin\Sell\Product\SEO;
 
 use PrestaShop\PrestaShop\Adapter\LegacyContext;
 use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\RedirectType;
+use PrestaShopBundle\Form\Admin\Sell\Product\EventListener\RedirectOptionListener;
 use PrestaShopBundle\Form\Admin\Type\EntitySearchInputType;
 use PrestaShopBundle\Form\Admin\Type\TranslatorAwareType;
-use PrestaShopBundle\Form\FormCloner;
 use Symfony\Component\Form\DataTransformerInterface;
 use Symfony\Component\Form\Extension\Core\EventListener\TransformationFailureListener;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\FormBuilderInterface;
-use Symfony\Component\Form\FormEvent;
-use Symfony\Component\Form\FormEvents;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Routing\RouterInterface;
 use Symfony\Component\Translation\TranslatorInterface;
@@ -130,7 +128,6 @@ class RedirectOptionType extends TranslatorAwareType
                     'data-category-help' => $entityAttributes['category']['help'],
                     'data-category-search-url' => $entityAttributes['category']['searchUrl'],
                 ],
-                'view_data' => $options['redirect_target'],
             ])
         ;
 
@@ -140,39 +137,7 @@ class RedirectOptionType extends TranslatorAwareType
         $builder->addEventSubscriber(new TransformationFailureListener($this->getTranslator()));
 
         // Preset the input attributes correctly depending on the data
-        $builder->addEventListener(FormEvents::PRE_SET_DATA, function (FormEvent $event) use ($entityAttributes) {
-            $data = $event->getData();
-            $form = $event->getForm();
-            $targetField = $form->get('target');
-            $targetOptions = $targetField->getConfig()->getOptions();
-            $dataType = $data['type'] ?? RedirectType::TYPE_NOT_FOUND;
-            switch ($dataType) {
-                case RedirectType::TYPE_CATEGORY_PERMANENT:
-                case RedirectType::TYPE_CATEGORY_TEMPORARY:
-                    $entityType = 'category';
-                    break;
-                case RedirectType::TYPE_PRODUCT_PERMANENT:
-                case RedirectType::TYPE_PRODUCT_TEMPORARY:
-                default:
-                    $entityType = 'product';
-                    break;
-            }
-
-            // Adapt target options
-            $targetOptions['entity_type'] = $entityType;
-            $targetOptions['label'] = $entityAttributes[$entityType]['label'];
-            $targetOptions['placeholder'] = $entityAttributes[$entityType]['placeholder'];
-            $targetOptions['help'] = $entityAttributes[$entityType]['help'];
-            $targetOptions['remote_url'] = $entityAttributes[$entityType]['searchUrl'];
-            if (RedirectType::TYPE_NOT_FOUND === $dataType) {
-                $targetOptions['row_attr']['class'] = 'd-none';
-            }
-
-            // Replace existing field with new one with adapted options
-            $cloner = new FormCloner();
-            $clonedForm = $cloner->cloneForm($targetField, $targetOptions);
-            $form->add($clonedForm);
-        });
+        $builder->addEventSubscriber(new RedirectOptionListener());
     }
 
     /**
