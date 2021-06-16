@@ -216,41 +216,45 @@ export default class CombinationsManager {
    * @private
    */
   watchEvents() {
-    this.eventEmitter.on(CombinationEvents.refreshCombinationList, () => this.refreshCombinationList(false),
+    /* eslint-disable */
+    this.eventEmitter.on(CombinationEvents.refreshCombinationList, () =>
+      this.refreshCombinationList(false)
     );
-    this.eventEmitter.on(CombinationEvents.refreshPage, () => this.refreshPage(),
+    this.eventEmitter.on(CombinationEvents.refreshPage, () =>
+      this.refreshPage()
     );
+    /* eslint-disable */
     this.eventEmitter.on(
       CombinationEvents.updateAttributeGroups,
-      (attributeGroups) => {
+      attributeGroups => {
         const currentFilters = this.combinationsService.getFilters();
         currentFilters.attributes = {};
-        Object.keys(attributeGroups).forEach((attributeGroupId) => {
+        Object.keys(attributeGroups).forEach(attributeGroupId => {
           currentFilters.attributes[attributeGroupId] = [];
           const attributes = attributeGroups[attributeGroupId];
-          attributes.forEach((attribute) => {
+          attributes.forEach(attribute => {
             currentFilters.attributes[attributeGroupId].push(attribute.id);
           });
         });
 
         this.combinationsService.setFilters(currentFilters);
         this.paginator.paginate(1);
-      },
+      }
     );
 
     this.eventEmitter.on(CombinationEvents.combinationGeneratorReady, () => {
       const $generateButtons = $(
-        ProductMap.combinations.generateCombinationsButton,
+        ProductMap.combinations.generateCombinationsButton
       );
       $generateButtons.prop('disabled', false);
       $('body').on(
         'click',
         ProductMap.combinations.generateCombinationsButton,
-        (event) => {
+        event => {
           // Stop event or it will be caught by click-outside directive and automatically close the modal
           event.stopImmediatePropagation();
           this.eventEmitter.emit(CombinationEvents.openCombinationsGenerator);
-        },
+        }
       );
     });
   }
@@ -260,10 +264,10 @@ export default class CombinationsManager {
    */
   initSubmittableInputs() {
     const combinationToken = this.getCombinationToken();
-    const {quantityKey} = CombinationsMap.combinationItemForm;
-    const {impactOnPriceKey} = CombinationsMap.combinationItemForm;
-    const {referenceKey} = CombinationsMap.combinationItemForm;
-    const {tokenKey} = CombinationsMap.combinationItemForm;
+    const { quantityKey } = CombinationsMap.combinationItemForm;
+    const { impactOnPriceKey } = CombinationsMap.combinationItemForm;
+    const { referenceKey } = CombinationsMap.combinationItemForm;
+    const { tokenKey } = CombinationsMap.combinationItemForm;
 
     /* eslint-disable */
     new SubmittableInput(CombinationsMap.quantityInputWrapper, input =>
