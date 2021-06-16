@@ -296,6 +296,7 @@ class Brands extends BOBasePage {
       this.waitForVisibleSelector(page, `${this.confirmDeleteModal(tableName)}.show`),
     ]);
     await this.confirmDelete(page, tableName);
+
     return this.getAlertSuccessBlockParagraphContent(page);
   }
 
@@ -341,11 +342,13 @@ class Brands extends BOBasePage {
       page.$eval(this.selectAllRowsLabel('manufacturer'), el => el.click()),
       this.waitForVisibleSelector(page, `${this.bulkActionsToggleButton('manufacturer')}:not([disabled])`, 40000),
     ]);
+
     // Click on Button Bulk actions
     await Promise.all([
       page.click(this.bulkActionsToggleButton('manufacturer')),
       this.waitForVisibleSelector(page, `${this.bulkActionsToggleButton('manufacturer')}[aria-expanded='true']`),
     ]);
+
     // Click on delete and wait for modal
     await this.clickAndWaitForNavigation(page, enable ? this.bulkActionsEnableButton : this.bulkActionsDisableButton);
     return this.getAlertSuccessBlockParagraphContent(page);
@@ -363,11 +366,13 @@ class Brands extends BOBasePage {
       page.$eval(this.selectAllRowsLabel(tableName), el => el.click()),
       this.waitForVisibleSelector(page, `${this.bulkActionsToggleButton(tableName)}:not([disabled])`),
     ]);
+
     // Click on Button Bulk actions
     await Promise.all([
       page.click(this.bulkActionsToggleButton(tableName)),
       this.waitForVisibleSelector(page, `${this.bulkActionsToggleButton(tableName)}[aria-expanded='true']`),
     ]);
+
     // Click on delete and wait for modal
     if (tableName === 'manufacturer') {
       await page.click(this.deleteBrandsButton);
@@ -596,6 +601,7 @@ class Brands extends BOBasePage {
    */
   async selectPaginationLimit(page, tableName, number) {
     await this.selectByVisibleText(page, this.paginationLimitSelect, number);
+
     return this.getPaginationLabel(page, tableName);
   }
 
@@ -607,6 +613,7 @@ class Brands extends BOBasePage {
    */
   async paginationNext(page, tableName) {
     await this.clickAndWaitForNavigation(page, this.paginationNextLink(tableName));
+
     return this.getPaginationLabel(page, tableName);
   }
 
@@ -618,6 +625,7 @@ class Brands extends BOBasePage {
    */
   async paginationPrevious(page, tableName) {
     await this.clickAndWaitForNavigation(page, this.paginationPreviousLink(tableName));
+
     return this.getPaginationLabel(page, tableName);
   }
 }

@@ -54,6 +54,7 @@ class AddBrandAddress extends BOBasePage {
     await this.setValue(page, this.homePhoneInput, brandAddressData.homePhone);
     await this.setValue(page, this.mobilePhoneInput, brandAddressData.mobilePhone);
     await this.setValue(page, this.otherInput, brandAddressData.other);
+
     // Click on Save button and successful message
     await this.clickAndWaitForNavigation(page, this.saveButton);
     return this.getAlertSuccessBlockParagraphContent(page);
