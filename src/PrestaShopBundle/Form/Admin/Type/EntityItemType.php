@@ -31,6 +31,9 @@ namespace PrestaShopBundle\Form\Admin\Type;
 use Symfony\Component\Form\Extension\Core\Type\HiddenType;
 use Symfony\Component\Form\FormBuilderInterface;
 
+/**
+ * Default entry type used by @see EntitySearchInputType
+ */
 class EntityItemType extends CommonAbstractType
 {
     public const ID_PLACEHOLDER = '__id__';

@@ -28,6 +28,9 @@ declare(strict_types=1);
 
 namespace PrestaShop\PrestaShop\Core\Domain\Category\QueryResult;
 
+/**
+ * Minimum data to display a preview of a category
+ */
 class CategoryPreview
 {
     /**

@@ -35,6 +35,11 @@ use PrestaShop\PrestaShop\Core\Domain\Product\Exception\ProductNotFoundException
 use PrestaShop\PrestaShop\Core\Domain\Product\QueryResult\ProductPreview;
 use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductId;
 
+/**
+ * Returns preview data for a product or a list of product
+ *
+ * @todo add function for the list that should be used in the new product search API
+ */
 class ProductPreviewRepository
 {
     /**

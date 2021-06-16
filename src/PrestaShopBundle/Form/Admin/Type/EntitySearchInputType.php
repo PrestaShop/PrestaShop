@@ -160,7 +160,7 @@ class EntitySearchInputType extends CollectionType
      *
      * @return string
      */
-    protected function trans(string $key, string $domain, array $parameters = [])
+    protected function trans(string $key, string $domain, array $parameters = []): string
     {
         return $this->translator->trans($key, $parameters, $domain);
     }

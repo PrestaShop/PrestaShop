@@ -28,6 +28,9 @@ declare(strict_types=1);
 
 namespace PrestaShop\PrestaShop\Core\Domain\Product\QueryResult;
 
+/**
+ * Minimum data to display a preview of a product
+ */
 class ProductPreview
 {
     /**

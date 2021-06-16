@@ -28,6 +28,9 @@ declare(strict_types=1);
 
 namespace PrestaShop\PrestaShop\Core\Domain\Product\QueryResult;
 
+/**
+ * Details about the entity used for product redirection (can be a product or a category)
+ */
 class ProductRedirectTarget
 {
     public const PRODUCT_TYPE = 'product';
@@ -53,6 +56,12 @@ class ProductRedirectTarget
      */
     private $image;
 
+    /**
+     * @param int $id
+     * @param string $type
+     * @param string $name
+     * @param string $image
+     */
     public function __construct(
         int $id,
         string $type,

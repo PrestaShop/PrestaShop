@@ -34,6 +34,10 @@ use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Symfony\Component\Form\FormEvent;
 use Symfony\Component\Form\FormEvents;
 
+/**
+ * Adapts the attribute of target input depending on which type has been selected, this
+ * automatically adapts the label, placeholders and search url for entities.
+ */
 class RedirectOptionListener implements EventSubscriberInterface
 {
     /**
