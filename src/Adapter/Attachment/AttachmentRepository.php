@@ -88,7 +88,7 @@ class AttachmentRepository extends AbstractObjectModelRepository
      *
      * @return array<int, array<string, string|array<int, string>>>
      */
-    public function getAllByProduct(ProductId $productId): array
+    public function getProductAttachments(ProductId $productId): array
     {
         $qb = $this->connection->createQueryBuilder();
         $qb->select('a.*')
