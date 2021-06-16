@@ -50,6 +50,7 @@ use SpecificPrice;
 use SpecificPriceRule;
 use StockAvailable;
 use Symfony\Component\Translation\TranslatorInterface;
+use Tax;
 use Tools;
 use Validate;
 
@@ -139,6 +140,8 @@ class AdminProductWrapper
         }
         if (!isset($combinationValues['attribute_ecotax'])) {
             $combinationValues['attribute_ecotax'] = 0;
+        } else {
+            $combinationValues['attribute_ecotax'] = Tools::ps_round($combinationValues['attribute_ecotax'] / (1 + Tax::getProductEcotaxRate() / 100), 6);
         }
         if ((isset($combinationValues['attribute_default']) && $combinationValues['attribute_default'] == 1)) {
             $product->deleteDefaultAttributes();
