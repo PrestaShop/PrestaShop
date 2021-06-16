@@ -31,6 +31,8 @@ namespace PrestaShop\PrestaShop\Core\Domain\Product\Command;
 use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductId;
 
 /**
+ * @todo: should be moved to Product/Attachments ns along with command-related classes (in Adapter too) accordingly
+ *
  * Removes all product-attachment associations for provided product
  */
 class RemoveAllAssociatedProductAttachmentsCommand

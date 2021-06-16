@@ -33,6 +33,8 @@ use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductId;
 use RuntimeException;
 
 /**
+ * @todo: should be moved to Product/Attachments ns along with command-related classes (in Adapter too) accordingly
+ *
  * Replaces previous product attachments association with the provided one.
  */
 class SetAssociatedProductAttachmentsCommand

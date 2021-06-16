@@ -32,6 +32,8 @@ use PrestaShop\PrestaShop\Core\Domain\Attachment\ValueObject\AttachmentId;
 use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductId;
 
 /**
+ * @todo: should be deprecated as it is not used anymore
+ *
  * Associates product with attachment
  */
 class AssociateProductAttachmentCommand
