@@ -33,7 +33,17 @@ use PrestaShop\PrestaShop\Core\Domain\Attachment\Query\GetAttachmentInformationL
 use PrestaShop\PrestaShop\Core\Domain\Attachment\QueryHandler\GetAttachmentsForListingHandlerInterface;
 use PrestaShop\PrestaShop\Core\Domain\Attachment\QueryResult\AttachmentInformation;
 
+@trigger_error(
+    sprintf(
+        '%s is deprecated since version 1.7.9.0 and will be removed in the next major version.',
+        GetAttachmentInformationListHandler::class
+    ),
+    E_USER_DEPRECATED
+);
+
 /**
+ * @deprecated since 1.7.9.0 and will be removed in the next major version.
+ *
  * Provides list of attachments information
  */
 final class GetAttachmentInformationListHandler implements GetAttachmentsForListingHandlerInterface
