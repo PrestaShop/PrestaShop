@@ -2,7 +2,16 @@ require('module-alias/register');
 // Importing page
 const BOBasePage = require('@pages/BO/BObasePage');
 
-class Product extends BOBasePage {
+/**
+ * Products page, contains functions that can be used on the page
+ * @class
+ * @extends BOBasePage
+ */
+class Products extends BOBasePage {
+  /**
+   * @constructs
+   * Setting up texts and selectors to use on products page
+   */
   constructor() {
     super();
 
@@ -34,6 +43,7 @@ class Product extends BOBasePage {
     this.productBulkDeleteLink = `${this.productBulkDropdownMenu} a[onclick*='delete_all']`;
     this.productBulkEnableLink = `${this.productBulkDropdownMenu} a[onclick*='activate_all']`;
     this.productBulkDisableLink = `${this.productBulkDropdownMenu} a[onclick*='deactivate_all']`;
+
     // Filters input
     this.productFilterIDMinInput = `${this.productListForm} #filter_column_id_product_min`;
     this.productFilterIDMaxInput = `${this.productListForm} #filter_column_id_product_max`;
@@ -45,6 +55,7 @@ class Product extends BOBasePage {
     this.productFilterQuantityMaxInput = `${this.productListForm} #filter_column_sav_quantity_max`;
     this.filterSearchButton = `${this.productListForm} button[name='products_filter_submit']`;
     this.filterResetButton = `${this.productListForm} button[name='products_filter_reset']`;
+
     // Products list
     this.productsListTableRow = row => `${this.productRow}:nth-child(${row})`;
     this.productsListTableColumnID = row => `${this.productsListTableRow(row)}[data-product-id]`;
@@ -56,23 +67,29 @@ class Product extends BOBasePage {
     this.productsListTableColumnQuantity = row => `${this.productsListTableRow(row)} td.product-sav-quantity`;
     this.productsListTableColumnStatus = row => `${this.productsListTableRow(row)} td:nth-child(10) .ps-switch`;
     this.productsListTableColumnStatusInput = row => `${this.productsListTableColumnStatus(row)} input`;
+
     // Filter Category
     this.treeCategoriesBloc = '#tree-categories';
     this.filterByCategoriesButton = '#product_catalog_category_tree_filter button';
     this.filterByCategoriesExpandButton = `${this.treeCategoriesBloc} a#product_catalog_category_tree_filter_expand`;
     this.filterByCategoriesUnselectButton = `${this.treeCategoriesBloc} a#product_catalog_category_tree_filter_reset`;
     this.filterByCategoriesCategoryLabel = `${this.treeCategoriesBloc} label.category-label`;
+
     // HEADER buttons
     this.addProductButton = '#page-header-desc-configuration-add';
+
     // pagination
     this.paginationNextLink = '.page-item.next:not(.disabled) #pagination_next_url';
+
     // Modal Dialog
     this.catalogDeletionModalDialog = '#catalog_deletion_modal div.modal-dialog';
     this.modalDialogDeleteNowButton = `${this.catalogDeletionModalDialog} button[value='confirm']`;
+
     // Sort Selectors
     this.tableHead = `${this.productTable} thead`;
     this.sortColumnDiv = column => `${this.tableHead} div.ps-sortable-column[data-sort-col-name='${column}']`;
     this.sortColumnSpanButton = column => `${this.sortColumnDiv(column)} span.ps-sort`;
+
     // Pagination selectors
     this.paginationLimitSelect = '#paginator_select_page_limit';
     this.paginationLabel = `${this.productListForm} .col-form-label`;
@@ -85,21 +102,21 @@ class Product extends BOBasePage {
    */
   /**
    * Filter products Min - Max
-   * @param page
-   * @param min
-   * @param max
+   * @param page {Page} Browser tab
+   * @param idMin {number} Value of id min to set on filter input
+   * @param idMax {number} Value of id max to set on filter input
    * @return {Promise<void>}
    */
-  async filterIDProducts(page, min, max) {
-    await page.type(this.productFilterIDMinInput, min.toString());
-    await page.type(this.productFilterIDMaxInput, max.toString());
+  async filterIDProducts(page, idMin, idMax) {
+    await page.type(this.productFilterIDMinInput, idMin.toString());
+    await page.type(this.productFilterIDMaxInput, idMax.toString());
     await this.clickAndWaitForNavigation(page, this.filterSearchButton);
   }
 
   /**
    * Get Product ID
-   * @param page
-   * @param row
+   * @param page {Page} Browser tab
+   * @param row {number} Row on table
    * @returns {Promise<string>}
    */
   async getProductIDFromList(page, row) {
@@ -108,8 +125,8 @@ class Product extends BOBasePage {
 
   /**
    * Get Product Name
-   * @param page
-   * @param row
+   * @param page {Page} Browser tab
+   * @param row {number} Row on table
    * @returns {Promise<string>}
    */
   async getProductNameFromList(page, row) {
@@ -118,8 +135,8 @@ class Product extends BOBasePage {
 
   /**
    * Get Product Reference
-   * @param page
-   * @param row
+   * @param page {Page} Browser tab
+   * @param row {number} Row on table
    * @returns {Promise<string>}
    */
   async getProductReferenceFromList(page, row) {
@@ -128,8 +145,8 @@ class Product extends BOBasePage {
 
   /**
    * Get Product Category
-   * @param page
-   * @param row
+   * @param page {Page} Browser tab
+   * @param row {number} Row on table
    * @returns {Promise<string>}
    */
   async getProductCategoryFromList(page, row) {
@@ -138,22 +155,22 @@ class Product extends BOBasePage {
 
   /**
    * Filter price Min - Max
-   * @param page
-   * @param min
-   * @param max
+   * @param page {Page} Browser tab
+   * @param priceMin {float} Value of min price to set on filter input
+   * @param priceMax {float} Value of max price to set on filter input
    * @return {Promise<void>}
    */
-  async filterPriceProducts(page, min, max) {
-    await page.type(this.productFilterPriceMinInput, min.toString());
-    await page.type(this.productFilterPriceMaxInput, max.toString());
+  async filterPriceProducts(page, priceMin, priceMax) {
+    await page.type(this.productFilterPriceMinInput, priceMin.toString());
+    await page.type(this.productFilterPriceMaxInput, priceMax.toString());
     await this.clickAndWaitForNavigation(page, this.filterSearchButton);
   }
 
   /**
    * Get Product Price
-   * @param page
-   * @param row
-   * @param withTaxes
+   * @param page {Page} Browser tab
+   * @param row {number} Row on table
+   * @param withTaxes {boolean} True if we need to get product price with tax, false if not
    * @returns {Promise<number>}
    */
   async getProductPriceFromList(page, row, withTaxes) {
@@ -166,21 +183,21 @@ class Product extends BOBasePage {
 
   /**
    * Filter Quantity Min - Max
-   * @param page
-   * @param min
-   * @param max
+   * @param page {Page} Browser tab
+   * @param quantityMin {number} Value of quantity min to set on input
+   * @param quantityMax {number} Value of quantity max to set on input
    * @return {Promise<void>}
    */
-  async filterQuantityProducts(page, min, max) {
-    await page.type(this.productFilterQuantityMinInput, min.toString());
-    await page.type(this.productFilterQuantityMaxInput, max.toString());
+  async filterQuantityProducts(page, quantityMin, quantityMax) {
+    await page.type(this.productFilterQuantityMinInput, quantityMin.toString());
+    await page.type(this.productFilterQuantityMaxInput, quantityMax.toString());
     await this.clickAndWaitForNavigation(page, this.filterSearchButton);
   }
 
   /**
    * Get Product Quantity
-   * @param page
-   * @param row
+   * @param page {Page} Browser tab
+   * @param row {number} Row on table
    * @returns {Promise<string>}
    */
   async getProductQuantityFromList(page, row) {
@@ -189,8 +206,8 @@ class Product extends BOBasePage {
 
   /**
    * Get Product Status
-   * @param page
-   * @param row
+   * @param page {Page} Browser tab
+   * @param row {number} Row on table
    * @returns {Promise<boolean>}
    */
   async getProductStatusFromList(page, row) {
@@ -205,10 +222,10 @@ class Product extends BOBasePage {
 
   /**
    * Filter products
-   * @param page
-   * @param filterBy
-   * @param value
-   * @param filterType
+   * @param page {Page} Browser tab
+   * @param filterBy {string} Column to filter
+   * @param value {string} Value to put on filter
+   * @param filterType {string} Input or select to choose method of filter
    * @return {Promise<void>}
    */
   async filterProducts(page, filterBy, value = '', filterType = 'input') {
@@ -243,10 +260,10 @@ class Product extends BOBasePage {
   }
 
   /**
-   * Get Text Column
-   * @param page
-   * @param columnName
-   * @param row
+   * Get text column
+   * @param page {Page} Browser tab
+   * @param columnName {string} Column name to get text content
+   * @param row {number} Row on table
    * @returns {Promise<string|number>}
    */
   async getTextColumn(page, columnName, row) {
@@ -260,7 +277,7 @@ class Product extends BOBasePage {
       case 'name_category':
         return this.getProductCategoryFromList(page, row);
       case 'price':
-        return this.getProductPriceFromList(page, row);
+        return this.getProductPriceFromList(page, row, true);
       case 'sav_quantity':
         return this.getProductQuantityFromList(page, row);
       case 'active':
@@ -273,8 +290,8 @@ class Product extends BOBasePage {
 
   /**
    * Get content from all rows
-   * @param page
-   * @param column
+   * @param page {Page} Browser tab
+   * @param column {string} Column name to get all rows text content
    * @return {Promise<[]>}
    */
   async getAllRowsColumnContent(page, column) {
@@ -291,7 +308,7 @@ class Product extends BOBasePage {
 
   /**
    * Get number of products displayed in list
-   * @param page
+   * @param page {Page} Browser tab
    * @returns {Promise<number>}
    */
   async getNumberOfProductsFromList(page) {
@@ -310,7 +327,7 @@ class Product extends BOBasePage {
 
   /**
    * Get number of products displayed on the page
-   * @param page
+   * @param page {Page} Browser tab
    * @returns {Promise<number>}
    */
   async getNumberOfProductsOnPage(page) {
@@ -319,7 +336,7 @@ class Product extends BOBasePage {
 
   /**
    * Reset input filters
-   * @param page
+   * @param page {Page} Browser tab
    * @return {Promise<void>}
    */
   async resetFilter(page) {
@@ -330,22 +347,23 @@ class Product extends BOBasePage {
   }
 
   /**
-   * Reset Filter And get number of elements in list
-   * @param page
+   * Reset filter and get number of elements in list
+   * @param page {Page} Browser tab
    * @returns {Promise<number>}
    */
   async resetAndGetNumberOfLines(page) {
     await this.resetFilter(page);
+
     return this.getNumberOfProductsFromList(page);
   }
 
   /**
    * Filter by Category from Dropdown
-   * @param page
-   * @param value
+   * @param page {Page} Browser tab
+   * @param categoryName {string} Value of category name to set on filter input
    * @return {Promise<void>}
    */
-  async filterProductsByCategory(page, value = 'home') {
+  async filterProductsByCategory(page, categoryName = 'home') {
     // Click and wait to be open
     await page.click(this.filterByCategoriesButton);
     await this.waitForVisibleSelector(page, `${this.filterByCategoriesButton}[aria-expanded='true']`);
@@ -354,7 +372,7 @@ class Product extends BOBasePage {
     await page.click(this.filterByCategoriesExpandButton);
 
     // Choose category to filter with
-    const args = {allCategoriesSelector: this.filterByCategoriesCategoryLabel, val: value};
+    const args = {allCategoriesSelector: this.filterByCategoriesCategoryLabel, val: categoryName};
     const found = await page.evaluate(async (args) => {
       /* eslint-env browser */
       const allCategories = [...await document.querySelectorAll(args.allCategoriesSelector)];
@@ -368,14 +386,14 @@ class Product extends BOBasePage {
     }, args);
 
     if (!found) {
-      throw new Error(`${value} not found as a category`);
+      throw new Error(`${categoryName} not found as a category`);
     }
     await page.waitForNavigation();
   }
 
   /**
-   * Reset DropDown Filter Category
-   * @param page
+   * Reset dropDown Filter Category
+   * @param page {Page} Browser tab
    * @return {Promise<void>}
    */
   async resetFilterCategory(page) {
@@ -389,8 +407,8 @@ class Product extends BOBasePage {
   }
 
   /**
-   * GOTO form Add Product
-   * @param page
+   * Go to form Add Product
+   * @param page {Page} Browser tab
    * @return {Promise<void>}
    */
   async goToAddProductPage(page) {
@@ -399,8 +417,8 @@ class Product extends BOBasePage {
 
   /**
    * GOTO edit product page from row
-   * @param page
-   * @param row
+   * @param page {Page} Browser tab
+   * @param row {number} Row on table
    * @returns {Promise<void>}
    */
   async goToEditProductPage(page, row) {
@@ -409,8 +427,8 @@ class Product extends BOBasePage {
 
   /**
    * Open row dropdown for a product
-   * @param page
-   * @param row
+   * @param page {Page} Browser tab
+   * @param row {number} Row on table
    * @return {Promise<void>}
    */
   async openProductDropdown(page, row) {
@@ -422,8 +440,8 @@ class Product extends BOBasePage {
 
   /**
    * Preview product from list
-   * @param page
-   * @param row
+   * @param page {Page} Browser tab
+   * @param row {number} Row on table
    * @return {Promise<Page>}
    */
   async previewProduct(page, row) {
@@ -436,8 +454,8 @@ class Product extends BOBasePage {
 
   /**
    * Duplicate product
-   * @param page
-   * @param row
+   * @param page {Page} Browser tab
+   * @param row {number} Row on table
    * @return {Promise<string>}
    */
   async duplicateProduct(page, row) {
@@ -452,8 +470,8 @@ class Product extends BOBasePage {
 
   /**
    * Delete product with dropdown Menu
-   * @param page
-   * @param productData
+   * @param page {Page} Browser tab
+   * @param productData {productData} Data to set to filter product
    * @returns {Promise<string>}
    */
   async deleteProduct(page, productData) {
@@ -476,8 +494,8 @@ class Product extends BOBasePage {
   }
 
   /**
-   * Delete All products with Bulk Actions
-   * @param page
+   * Delete all products with Bulk Actions
+   * @param page {Page} Browser tab
    * @returns {Promise<string>}
    */
   async deleteAllProductsWithBulkActions(page) {
@@ -503,8 +521,8 @@ class Product extends BOBasePage {
 
   /**
    * Bulk set status
-   * @param page
-   * @param status
+   * @param page {Page} Browser tab
+   * @param status {boolean} True if we need to bulk enable status, false if not
    * @return {Promise<string>}
    */
   async bulkSetStatus(page, status) {
@@ -524,9 +542,9 @@ class Product extends BOBasePage {
 
   /**
    * Quick edit toggle column value
-   * @param page
-   * @param row, row in table
-   * @param valueWanted, Value wanted in column
+   * @param page {Page} Browser tab
+   * @param row {number} Row on table
+   * @param valueWanted {boolean} True if we want to enable product status, false if not
    * @return {Promise<boolean>} return true if action is done, false otherwise
    */
   async setProductStatus(page, row, valueWanted = true) {
@@ -542,8 +560,8 @@ class Product extends BOBasePage {
 
   /**
    * Go to product page
-   * @param page
-   * @param row
+   * @param page {Page} Browser tab
+   * @param row {number} Row on table
    * @returns {Promise<void>}
    */
   async goToProductPage(page, row = 1) {
@@ -554,9 +572,9 @@ class Product extends BOBasePage {
   /* Sort methods */
   /**
    * Sort table by clicking on column name
-   * @param page
-   * @param sortBy, column to sort with
-   * @param sortDirection, asc or desc
+   * @param page {Page} Browser tab
+   * @param sortBy {string} Column to sort with
+   * @param sortDirection {string} Sort direction asc or desc
    * @return {Promise<void>}
    */
   async sortTable(page, sortBy, sortDirection = 'asc') {
@@ -576,7 +594,7 @@ class Product extends BOBasePage {
   /* Pagination methods */
   /**
    * Get pagination label
-   * @param page
+   * @param page {Page} Browser tab
    * @return {Promise<string>}
    */
   getPaginationLabel(page) {
@@ -585,34 +603,37 @@ class Product extends BOBasePage {
 
   /**
    * Select pagination limit
-   * @param page
-   * @param number
+   * @param page {Page} Browser tab
+   * @param number {number} Value of pagination limit to select
    * @returns {Promise<string>}
    */
   async selectPaginationLimit(page, number) {
     await this.selectByVisibleText(page, this.paginationLimitSelect, number);
+
     return this.getPaginationLabel(page);
   }
 
   /**
    * Click on next
-   * @param page
+   * @param page {Page} Browser tab
    * @returns {Promise<string>}
    */
   async paginationNext(page) {
     await this.clickAndWaitForNavigation(page, this.paginationNextLink);
+
     return this.getPaginationLabel(page);
   }
 
   /**
    * Click on previous
-   * @param page
+   * @param page {Page} Browser tab
    * @returns {Promise<string>}
    */
   async paginationPrevious(page) {
     await this.clickAndWaitForNavigation(page, this.paginationPreviousLink);
+
     return this.getPaginationLabel(page);
   }
 }
 
-module.exports = new Product();
+module.exports = new Products();
