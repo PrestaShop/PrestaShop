@@ -61,6 +61,7 @@ module.exports = {
     customer_address_form: './js/pages/address/form',
     customer_outstanding: './js/pages/outstanding',
     customer_thread_view: './js/pages/customer-thread/view',
+    dashboard: './js/pages/dashboard',
     email: './js/pages/email',
     employee: './js/pages/employee/index',
     employee_form: './js/pages/employee/form',
