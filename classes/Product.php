@@ -2396,6 +2396,10 @@ class ProductCore extends ObjectModel
             } else {
                 $combinations[$key]['quantity'] = Cache::retrieve($cache_key);
             }
+
+            $ecotax = (float) $combinations[$key]['ecotax'] ?? 0;
+            $combinations[$key]['ecotax_tax_excluded'] = $ecotax;
+            $combinations[$key]['ecotax_tax_included'] = Tools::ps_round($ecotax * (1 + Tax::getProductEcotaxRate() / 100), 6);
         }
 
         return $combinations;
@@ -2493,6 +2497,10 @@ class ProductCore extends ObjectModel
             } else {
                 $res[$key]['quantity'] = Cache::retrieve($cache_key);
             }
+
+            $ecotax = (float) $res[$key]['ecotax'] ?? 0;
+            $res[$key]['ecotax_tax_excluded'] = $ecotax;
+            $res[$key]['ecotax_tax_included'] = Tools::ps_round($ecotax * (1 + Tax::getProductEcotaxRate() / 100), 6);
         }
 
         return $res;
