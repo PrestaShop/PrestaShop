@@ -108,15 +108,13 @@ export default class EntitySearchInput {
   buildOptions(options: OptionsObject) {
     const inputOptions = options || {};
     const defaultOptions: OptionsObject = {
-      mappingValue: 'id',
-      mappingDisplay: 'name',
-      mappingImage: 'image',
-
       prototypeTemplate: undefined,
-      prototypeName: '__name__',
-      prototypeImage: '__image__',
-      prototypeValue: '__value__',
-      prototypeDisplay: '__display__',
+      prototypeIndex: '__index__',
+      prototypeMapping: {
+        id: '__id__',
+        name: '__name__',
+        image: '__image__',
+      },
 
       allowDelete: true,
       dataLimit: 0,
@@ -351,17 +349,13 @@ export default class EntitySearchInput {
    * @returns {string}
    */
   renderSelected(entity: any, index: int): string {
-    // @todo: this part is quite restrictive as it limits to only three field, it should be more dynamic and rely on
-    // a configurable object that would be a hashmap of { entityFieldName: __template_placeholder__ } and loop through
-    // it (the default value would still be composed of, at least, value and display an potentially image but maybe not)
-    const value = entity[this.options.mappingValue] || 0;
-    const display = entity[this.options.mappingDisplay] || '';
-    const image = entity[this.options.mappingImage] || '';
+    let template = this.options.prototypeTemplate.replace(new RegExp(this.options.prototypeIndex, 'g'), index);
 
-    return this.options.prototypeTemplate
-      .replace(new RegExp(this.options.prototypeName, 'g'), index)
-      .replace(new RegExp(this.options.prototypeValue, 'g'), value)
-      .replace(new RegExp(this.options.prototypeImage, 'g'), image)
-      .replace(new RegExp(this.options.prototypeDisplay, 'g'), display);
+    Object.keys(this.options.prototypeMapping).forEach((fieldName) => {
+      const fieldValue = entity[fieldName] || '';
+      template = template.replace(new RegExp(this.options.prototypeMapping[fieldName], 'g'), fieldValue);
+    });
+
+    return template;
   }
 }
