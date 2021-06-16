@@ -494,7 +494,7 @@
           const imageElement = document.querySelector(
             DropzoneMap.savedImage(newImage.image_id),
           );
-          imageElement.src = newImage.image_url;
+          imageElement.src = newImage.image_url + '?' + Math.random();
 
           $.growl({message: this.$t('window.imageReplaced')});
           this.buttonLoading = false;
