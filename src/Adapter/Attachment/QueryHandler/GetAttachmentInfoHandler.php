@@ -25,71 +25,41 @@
  */
 declare(strict_types=1);
 
-namespace PrestaShop\PrestaShop\Core\Domain\Product\Attachment\QueryResult;
+namespace PrestaShop\PrestaShop\Adapter\Attachment\QueryHandler;
 
-class ProductAttachmentInfo
+use PrestaShop\PrestaShop\Adapter\Attachment\AttachmentRepository;
+use PrestaShop\PrestaShop\Core\Domain\Attachment\Query\GetAttachmentInfo;
+use PrestaShop\PrestaShop\Core\Domain\Attachment\QueryHandler\GetAttachmentInfoHandlerInterface;
+use PrestaShop\PrestaShop\Core\Domain\Attachment\QueryResult\AttachmentInfo;
+
+/**
+ * Handles @see GetAttachmentInfo query using legacy object model
+ */
+final class GetAttachmentInfoHandler implements GetAttachmentInfoHandlerInterface
 {
     /**
-     * @var int
+     * @var AttachmentRepository
      */
-    private $attachmentId;
-
-    /**
-     * @var array<int, string>
-     */
-    private $localizedNames;
-
-    /**
-     * @var string
-     */
-    private $filename;
-
-    /**
-     * @var string
-     */
-    private $mimeType;
+    private $attachmentRepository;
 
     public function __construct(
-        int $attachmentId,
-        array $localizedNames,
-        string $filename,
-        string $mimeType
+        AttachmentRepository $attachmentRepository
     ) {
-        $this->attachmentId = $attachmentId;
-        $this->localizedNames = $localizedNames;
-        $this->filename = $filename;
-        $this->mimeType = $mimeType;
+        $this->attachmentRepository = $attachmentRepository;
     }
 
     /**
-     * @return int
+     * {@inheritdoc}
      */
-    public function getAttachmentId(): int
+    public function handle(GetAttachmentInfo $query): AttachmentInfo
     {
-        return $this->attachmentId;
-    }
+        $attachment = $this->attachmentRepository->get($query->getAttachmentId());
 
-    /**
-     * @return string[]
-     */
-    public function getLocalizedNames(): array
-    {
-        return $this->localizedNames;
-    }
-
-    /**
-     * @return string
-     */
-    public function getFilename(): string
-    {
-        return $this->filename;
-    }
-
-    /**
-     * @return string
-     */
-    public function getMimeType(): string
-    {
-        return $this->mimeType;
+        return new AttachmentInfo(
+            (int) $attachment->id,
+            $attachment->name,
+            $attachment->file_name,
+            $attachment->mime
+        );
     }
 }

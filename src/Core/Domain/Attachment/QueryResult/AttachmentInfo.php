@@ -25,41 +25,71 @@
  */
 declare(strict_types=1);
 
-namespace PrestaShop\PrestaShop\Adapter\Product\QueryHandler;
+namespace PrestaShop\PrestaShop\Core\Domain\Attachment\QueryResult;
 
-use PrestaShop\PrestaShop\Adapter\Attachment\AttachmentRepository;
-use PrestaShop\PrestaShop\Core\Domain\Product\Attachment\Query\GetProductAttachmentInfo;
-use PrestaShop\PrestaShop\Core\Domain\Product\Attachment\QueryHandler\GetProductAttachmentInfoHandlerInterface;
-use PrestaShop\PrestaShop\Core\Domain\Product\Attachment\QueryResult\ProductAttachmentInfo;
-
-/**
- * Handles @see GetProductAttachmentInfo query using legacy object model
- */
-final class GetProductAttachmentInfoHandler implements GetProductAttachmentInfoHandlerInterface
+class AttachmentInfo
 {
     /**
-     * @var AttachmentRepository
+     * @var int
      */
-    private $attachmentRepository;
+    private $attachmentId;
+
+    /**
+     * @var array<int, string>
+     */
+    private $localizedNames;
+
+    /**
+     * @var string
+     */
+    private $filename;
+
+    /**
+     * @var string
+     */
+    private $mimeType;
 
     public function __construct(
-        AttachmentRepository $attachmentRepository
+        int $attachmentId,
+        array $localizedNames,
+        string $filename,
+        string $mimeType
     ) {
-        $this->attachmentRepository = $attachmentRepository;
+        $this->attachmentId = $attachmentId;
+        $this->localizedNames = $localizedNames;
+        $this->filename = $filename;
+        $this->mimeType = $mimeType;
     }
 
     /**
-     * {@inheritdoc}
+     * @return int
      */
-    public function handle(GetProductAttachmentInfo $query): ProductAttachmentInfo
+    public function getAttachmentId(): int
     {
-        $attachment = $this->attachmentRepository->get($query->getAttachmentId());
+        return $this->attachmentId;
+    }
 
-        return new ProductAttachmentInfo(
-            (int) $attachment->id,
-            $attachment->name,
-            $attachment->file_name,
-            $attachment->mime
-        );
+    /**
+     * @return string[]
+     */
+    public function getLocalizedNames(): array
+    {
+        return $this->localizedNames;
+    }
+
+    /**
+     * @return string
+     */
+    public function getFilename(): string
+    {
+        return $this->filename;
+    }
+
+    /**
+     * @return string
+     */
+    public function getMimeType(): string
+    {
+        return $this->mimeType;
     }
 }

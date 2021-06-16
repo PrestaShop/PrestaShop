@@ -23,21 +23,32 @@
  * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
+declare(strict_types=1);
 
-namespace PrestaShop\PrestaShop\Core\Domain\Product\Attachment\QueryHandler;
+namespace PrestaShop\PrestaShop\Core\Domain\Attachment\Query;
 
-use PrestaShop\PrestaShop\Core\Domain\Product\Attachment\Query\GetProductAttachmentInfo;
-use PrestaShop\PrestaShop\Core\Domain\Product\Attachment\QueryResult\ProductAttachmentInfo;
+use PrestaShop\PrestaShop\Core\Domain\Attachment\ValueObject\AttachmentId;
 
-/**
- * Defines contract to handle @see GetProductAttachmentInfo query
- */
-interface GetProductAttachmentInfoHandlerInterface
+class GetAttachmentInfo
 {
     /**
-     * @param GetProductAttachmentInfo $query
-     *
-     * @return ProductAttachmentInfo
+     * @var AttachmentId
      */
-    public function handle(GetProductAttachmentInfo $query): ProductAttachmentInfo;
+    private $attachmentId;
+
+    /**
+     * @param int $attachmentId
+     */
+    public function __construct(int $attachmentId)
+    {
+        $this->attachmentId = new AttachmentId($attachmentId);
+    }
+
+    /**
+     * @return AttachmentId
+     */
+    public function getAttachmentId(): AttachmentId
+    {
+        return $this->attachmentId;
+    }
 }
