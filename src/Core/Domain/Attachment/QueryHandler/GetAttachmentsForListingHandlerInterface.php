@@ -29,7 +29,16 @@ namespace PrestaShop\PrestaShop\Core\Domain\Attachment\QueryHandler;
 use PrestaShop\PrestaShop\Core\Domain\Attachment\Query\GetAttachmentInformationList;
 use PrestaShop\PrestaShop\Core\Domain\Attachment\QueryResult\AttachmentInformation;
 
+@trigger_error(
+    sprintf(
+        '%s is deprecated since version 1.7.9.0 and will be removed in the next major version.',
+        GetAttachmentsForListingHandlerInterface::class
+    ),
+    E_USER_DEPRECATED
+);
+
 /**
+ * @deprecated since 1.7.9.0 and will be removed in the next major version.
  * Defines contract to handle @see GetAttachmentInformationList query
  */
 interface GetAttachmentsForListingHandlerInterface

@@ -30,10 +30,18 @@ namespace PrestaShop\PrestaShop\Core\Domain\Attachment\Query;
 
 use PrestaShop\PrestaShop\Core\Domain\Language\ValueObject\LanguageId;
 
+@trigger_error(
+    sprintf(
+        '%s is deprecated since version 1.7.9.0 and will be removed in the next major version.',
+        GetAttachmentInformationList::class
+    ),
+    E_USER_DEPRECATED
+);
+
 /**
- * Query providing attachments information
+ * @deprecated since 1.7.9.0 and will be removed in the next major version.
  *
- * @todo: this possibly should be deprecated. It is not used and product attachments usecase changed, it shouldn't be needed anymore.
+ * Query providing attachments information
  */
 class GetAttachmentInformationList
 {
