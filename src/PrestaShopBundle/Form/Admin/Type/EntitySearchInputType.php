@@ -60,6 +60,9 @@ class EntitySearchInputType extends CollectionType
             // These are parameters from collection type which default values are modified
             'allow_add' => true,
             'allow_delete' => true,
+            'prototype_name' => '__entity_index__',
+
+            // Default entry type that matches the default template from the prestashop ui kit form theme
             'entry_type' => EntityItemType::class,
 
             // This is an optional entity type that can be useful to identify which type of entity is searched
@@ -75,18 +78,13 @@ class EntitySearchInputType extends CollectionType
             // Search input placeholder
             'placeholder' => '',
 
-            // Placeholders used for prototype (easy to search and replace when the entity is dynamically added by js)
-            'prototype_image' => '__image__',
-            'prototype_value' => '__value__',
-            'prototype_display' => '__display__',
-
-            // Mapping fields in the view data (to know which field of the js entity must be used as replacement of the placeholders)
-            'mapping_value' => 'id',
-            'mapping_display' => 'name',
-            'mapping_image' => 'image',
-
-            // View data used to render the selected entities (array of entities that must be displayed)
-            'view_data' => null,
+            // This mapping array indicate which field from the entity must be used and what placeholder use to replace
+            // it (the placeholder must be used in the prototype so that the value is in the right place)
+            'prototype_mapping' => [
+                'id' => '__id__',
+                'name' => '__name__',
+                'image' => '__image__',
+            ],
 
             // Remove modal wording
             'remove_modal_title' => $this->trans('Delete item', 'Admin.Notifications.Warning'),
@@ -103,20 +101,12 @@ class EntitySearchInputType extends CollectionType
         $resolver->setAllowedTypes('limit', ['int']);
         $resolver->setAllowedTypes('entity_type', ['string', 'null']);
 
-        $resolver->setAllowedTypes('prototype_image', ['string']);
-        $resolver->setAllowedTypes('prototype_value', ['string']);
-        $resolver->setAllowedTypes('prototype_display', ['string']);
-
-        $resolver->setAllowedTypes('mapping_value', ['string']);
-        $resolver->setAllowedTypes('mapping_display', ['string']);
-        $resolver->setAllowedTypes('mapping_image', ['string']);
+        $resolver->setAllowedTypes('prototype_mapping', ['array']);
 
         $resolver->setAllowedTypes('remove_modal_title', ['string']);
         $resolver->setAllowedTypes('remove_modal_message', ['string']);
         $resolver->setAllowedTypes('remove_modal_apply', ['string']);
         $resolver->setAllowedTypes('remove_modal_cancel', ['string']);
-
-        $resolver->setAllowedTypes('view_data', ['array', 'callable', 'null']);
     }
 
     /**
@@ -131,25 +121,12 @@ class EntitySearchInputType extends CollectionType
             'search_attr' => $options['search_attr'],
             'list_attr' => $options['list_attr'],
             'placeholder' => $options['placeholder'],
-            'prototype_image' => $options['prototype_image'],
-            'prototype_value' => $options['prototype_value'],
-            'prototype_display' => $options['prototype_display'],
-            'mapping_image' => $options['mapping_image'],
-            'mapping_value' => $options['mapping_value'],
-            'mapping_display' => $options['mapping_display'],
+            'prototype_mapping' => $options['prototype_mapping'],
             'remove_modal_title' => $options['remove_modal_title'],
             'remove_modal_message' => $options['remove_modal_message'],
             'remove_modal_apply' => $options['remove_modal_apply'],
             'remove_modal_cancel' => $options['remove_modal_cancel'],
         ]);
-
-        if (is_array($options['view_data'])) {
-            $view->vars['view_data'] = $options['view_data'];
-        } elseif (is_callable($options['view_data'])) {
-            $view->vars['view_data'] = $options['view_data']($form->getData(), $options);
-        } else {
-            $view->vars['view_data'] = null;
-        }
     }
 
     /**
