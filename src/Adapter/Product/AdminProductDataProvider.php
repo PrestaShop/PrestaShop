@@ -376,7 +376,7 @@ class AdminProductDataProvider extends AbstractAdminQueryBuilder implements Prod
                 Context::getContext()->getComputingPrecision(),
                 null,
                 false,
-                false,
+                true, // use specific prices when displaying price with tax in BO product catalog 
                 1,
                 true,
                 null,
