@@ -33,6 +33,7 @@ use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\RedirectType;
 use PrestaShopBundle\Form\Admin\Sell\Product\EventListener\RedirectOptionListener;
 use PrestaShopBundle\Form\Admin\Type\EntitySearchInputType;
 use PrestaShopBundle\Form\Admin\Type\TranslatorAwareType;
+use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Symfony\Component\Form\DataTransformerInterface;
 use Symfony\Component\Form\Extension\Core\EventListener\TransformationFailureListener;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
@@ -59,22 +60,31 @@ class RedirectOptionType extends TranslatorAwareType
     private $targetTransformer;
 
     /**
+     * @var EventSubscriberInterface
+     */
+    private $eventSubscriber;
+
+    /**
      * @param TranslatorInterface $translator
      * @param array $locales
      * @param LegacyContext $context
      * @param RouterInterface $router
+     * @param DataTransformerInterface $targetTransformer
+     * @param EventSubscriberInterface $eventSubscriber
      */
     public function __construct(
         TranslatorInterface $translator,
         array $locales,
         LegacyContext $context,
         RouterInterface $router,
-        DataTransformerInterface $targetTransformer
+        DataTransformerInterface $targetTransformer,
+        EventSubscriberInterface $eventSubscriber
     ) {
         parent::__construct($translator, $locales);
         $this->context = $context;
         $this->router = $router;
         $this->targetTransformer = $targetTransformer;
+        $this->eventSubscriber = $eventSubscriber;
     }
 
     /**
@@ -137,7 +147,7 @@ class RedirectOptionType extends TranslatorAwareType
         $builder->addEventSubscriber(new TransformationFailureListener($this->getTranslator()));
 
         // Preset the input attributes correctly depending on the data
-        $builder->addEventSubscriber(new RedirectOptionListener());
+        $builder->addEventSubscriber($this->eventSubscriber);
     }
 
     /**

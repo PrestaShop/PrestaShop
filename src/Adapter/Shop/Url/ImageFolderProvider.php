@@ -31,6 +31,9 @@ namespace PrestaShop\PrestaShop\Adapter\Shop\Url;
 use Link;
 use PrestaShop\PrestaShop\Core\Shop\Url\UrlProviderInterface;
 
+/**
+ * Returns the base url of an image folder (product, categories, ...)
+ */
 class ImageFolderProvider implements UrlProviderInterface
 {
     /**

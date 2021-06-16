@@ -34,6 +34,11 @@ use PrestaShop\PrestaShop\Core\Domain\Category\QueryResult\CategoryPreview;
 use PrestaShop\PrestaShop\Core\Domain\Category\ValueObject\CategoryId;
 use PrestaShop\PrestaShop\Core\Domain\Language\ValueObject\LanguageId;
 
+/**
+ * Returns preview data for a category or a list of product
+ *
+ * @todo add function for the list that should be used in the new category search API
+ */
 class CategoryPreviewRepository
 {
     public const BREADCRUMB_SEPARATOR = ' > ';
