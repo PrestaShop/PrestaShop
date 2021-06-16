@@ -34,6 +34,20 @@ use Symfony\Component\Form\FormView;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Translation\TranslatorInterface;
 
+/**
+ * This form type is used for a OneToMany (or ManyToMany) association, it allows to search a list of entities
+ * (based on a remote url) and associate it. It is based on the CollectionType form type which provides prototype
+ * features to display a custom template for each associated items.
+ *
+ * A default entry type is provided with this form type @see EntityItemType which is composed of three inputs:
+ *   - id
+ *   - name
+ *   - image
+ *
+ * Thus matches the default mapping of this form type via prototype_mapping, but you can change this entry type
+ * to change the included data, the rendering and/or the mapping. In front the EntitySearchInput js component
+ * will automatically adapt to the new mapping.
+ */
 class EntitySearchInputType extends CollectionType
 {
     /**
@@ -81,9 +95,9 @@ class EntitySearchInputType extends CollectionType
             // This mapping array indicate which field from the entity must be used and what placeholder use to replace
             // it (the placeholder must be used in the prototype so that the value is in the right place)
             'prototype_mapping' => [
-                'id' => '__id__',
-                'name' => '__name__',
-                'image' => '__image__',
+                'id' => EntityItemType::ID_PLACEHOLDER,
+                'name' => EntityItemType::NAME_PLACEHOLDER,
+                'image' => EntityItemType::IMAGE_PLACEHOLDER,
             ],
 
             // Remove modal wording
