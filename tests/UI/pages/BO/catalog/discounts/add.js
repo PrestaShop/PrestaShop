@@ -1,7 +1,16 @@
 require('module-alias/register');
 const BOBasePage = require('@pages/BO/BObasePage');
 
+/**
+ * Add cart rule page, contains functions that can be used on the page
+ * @class
+ * @extends BOBasePage
+ */
 class AddCartRule extends BOBasePage {
+  /**
+   * @constructs
+   * Setting up texts and selectors to use on add cart rule page
+   */
   constructor() {
     super();
 
@@ -72,6 +81,7 @@ class AddCartRule extends BOBasePage {
     this.sendFreeGifToggle = toggle => `${this.cartRuleForm} #free_gift_${toggle}`;
     this.freeGiftFilterInput = '#giftProductFilter';
     this.freeGiftProductSelect = '#gift_product';
+
     // Form footer selectors
     this.saveButton = '#desc-cart_rule-save';
   }
@@ -79,8 +89,8 @@ class AddCartRule extends BOBasePage {
   /* Methods */
   /**
    * Fill form in information tab
-   * @param page
-   * @param cartRuleData
+   * @param page {Page} Browser tab
+   * @param cartRuleData {cartRuleData} Data to set on information form
    * @return {Promise<void>}
    */
   async fillInformationForm(page, cartRuleData) {
@@ -110,9 +120,9 @@ class AddCartRule extends BOBasePage {
   }
 
   /**
-   *
-   * @param page
-   * @param cartRuleData
+   * Fill form in condition tab
+   * @param page {Page} Browser tab
+   * @param cartRuleData {cartRuleData} Data to set on conditions form
    * @return {Promise<void>}
    */
   async fillConditionsForm(page, cartRuleData) {
@@ -153,8 +163,8 @@ class AddCartRule extends BOBasePage {
 
   /**
    * Fill actions tab
-   * @param page
-   * @param cartRuleData
+   * @param page {Page} Browser tab
+   * @param cartRuleData {cartRuleData} Data to set on actions form
    * @return {Promise<void>}
    */
   async fillActionsForm(page, cartRuleData) {
@@ -202,8 +212,8 @@ class AddCartRule extends BOBasePage {
 
   /**
    * Create/edit cart rule
-   * @param page
-   * @param cartRuleData
+   * @param page {Page} Browser tab
+   * @param cartRuleData {cartRuleData} Data to set on add/edit cart rule form
    * @returns {Promise<string>}
    */
   async createEditCartRules(page, cartRuleData) {
