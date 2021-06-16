@@ -132,3 +132,8 @@ services:
           - '@=service("request_stack")'
         tags:
             - { name: twig.extension }
+
+    prestashop.bundle.twig.extension.entity_search_extension:
+        class: 'PrestaShopBundle\Twig\Extension\EntitySearchExtension'
+        tags:
+            - { name: twig.extension }
