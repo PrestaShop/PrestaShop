@@ -66,8 +66,17 @@ services:
 
   prestashop.adapter.attachment.query_handler.get_attachment_information_list_handler:
     class: 'PrestaShop\PrestaShop\Adapter\Attachment\QueryHandler\GetAttachmentInformationListHandler'
+    deprecated: The "%service_id%" service is deprecated since 1.7.9.0 and will be removed in next major version.
     arguments:
       - '@prestashop.adapter.data_provider.attachment'
     tags:
       - name: 'tactician.handler'
         command: 'PrestaShop\PrestaShop\Core\Domain\Attachment\Query\GetAttachmentInformationList'
+
+  prestashop.adapter.attachment.query_handler.get_attachment_info_handler:
+    class: PrestaShop\PrestaShop\Adapter\Attachment\QueryHandler\GetAttachmentInfoHandler
+    arguments:
+      - '@prestashop.adapter.attachment.attachment_repository'
+    tags:
+      - name: tactician.handler
+        command: PrestaShop\PrestaShop\Core\Domain\Attachment\Query\GetAttachmentInfo
