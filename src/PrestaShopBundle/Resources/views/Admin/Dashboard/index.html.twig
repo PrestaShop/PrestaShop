@@ -1,0 +1,93 @@
+{#**
+ * Copyright since 2007 PrestaShop SA and Contributors
+ * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
+ *
+ * NOTICE OF LICENSE
+ *
+ * This source file is subject to the Open Software License (OSL 3.0)
+ * that is bundled with this package in the file LICENSE.md.
+ * It is also available through the world-wide-web at this URL:
+ * https://opensource.org/licenses/OSL-3.0
+ * If you did not receive a copy of the license and are unable to
+ * obtain it through the world-wide-web, please send an email
+ * to license@prestashop.com so we can send you a copy immediately.
+ *
+ * DISCLAIMER
+ *
+ * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
+ * versions in the future. If you wish to customize PrestaShop for your
+ * needs please refer to https://devdocs.prestashop.com/ for more information.
+ *
+ * @author    PrestaShop SA and Contributors <contact@prestashop.com>
+ * @copyright Since 2007 PrestaShop SA and Contributors
+ * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
+ *#}
+
+{% trans_default_domain 'Admin.Dashboard.Feature' %}
+
+{% extends 'PrestaShopBundle:Admin:layout.html.twig' %}
+
+{# Set href here to have ID of button. #}
+{% set layoutHeaderToolbarBtn = {
+  'switch-demo': {
+    'desc': 'Demo mode'|trans,
+    'icon': 'toggle_on',
+    'help': 'This mode displays sample data so you can try your dashboard without real numbers.'|trans({}, 'Admin.Dashboard.Help'),
+    'href': '#'
+  }
+} %}
+
+{% block content %}
+  <div id="dashboard"
+       data-simulation-url="{{ path('admin_dashboard_set_simulation') }}"
+       data-demo-mode="{{ demoMode }}"
+       data-refresh-url="{{ path('admin_dashboard_refresh') }}"
+       data-dashboard-use-push="{{ dashboardUsePush }}"
+       data-not-found="{{ 'No result'|trans({}, 'Messages') }}"
+       data-save-module-options-url="{{ path('admin_dashboard_save_module_options') }}"
+  >
+    <div class="row">
+      <div class="col-lg-12">
+        {% include '@PrestaShop/Admin/Dashboard/Blocks/calendar.html.twig' %}
+      </div>
+    </div>
+
+    <div class="row">
+      <div class="col-md-4 col-lg-3" id="hookDashboardZoneOne">
+        {{ hookDashboardZoneOne|raw }}
+      </div>
+
+      <div class="col-md-8 col-lg-7" id="hookDashboardZoneTwo">
+        {{ hookDashboardZoneTwo|raw }}
+        <div id="dashboard-addons" class="row-margin-bottom">
+          <a
+            href="https://addons.prestashop.com/en/209-dashboards?utm_source=back-office&amp;utm_medium=dashboard&amp;utm_campaign=back-office-{{ langIso|upper }}&amp;utm_content={% if hostMode %}cloud{% else %}download{% endif %}"
+            target="_blank"
+            rel="noopener noreferrer nofollow"
+          >
+            <i class="material-icons">add</i>
+            {{ 'Add more dashboard modules'|trans }}
+          </a>
+        </div>
+      </div>
+
+      <div class="col-md-12 col-lg-2">
+        {% include '@PrestaShop/Admin/Dashboard/Blocks/news.html.twig' %}
+        {% include '@PrestaShop/Admin/Dashboard/Blocks/version.html.twig' %}
+        {% include '@PrestaShop/Admin/Dashboard/Blocks/links.html.twig' %}
+      </div>
+    </div>
+  </div>
+{% endblock %}
+
+{% block extra_stylesheets %}
+  <link href="{{ asset('themes/default/css/vendor/nv.d3.css') }}" rel="stylesheet">
+{% endblock %}
+
+{% block javascripts %}
+  {{ parent() }}
+
+  <script src="{{ asset('themes/new-theme/public/dashboard.bundle.js') }}"></script>
+  <script src="{{ d3JsPath }}"></script>
+  <script src="{{ asset('themes/default/js/vendor/nv.d3.min.js') }}"></script>
+{% endblock %}

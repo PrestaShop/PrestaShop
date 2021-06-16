@@ -1,0 +1,90 @@
+{#**
+ * Copyright since 2007 PrestaShop SA and Contributors
+ * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
+ *
+ * NOTICE OF LICENSE
+ *
+ * This source file is subject to the Open Software License (OSL 3.0)
+ * that is bundled with this package in the file LICENSE.md.
+ * It is also available through the world-wide-web at this URL:
+ * https://opensource.org/licenses/OSL-3.0
+ * If you did not receive a copy of the license and are unable to
+ * obtain it through the world-wide-web, please send an email
+ * to license@prestashop.com so we can send you a copy immediately.
+ *
+ * DISCLAIMER
+ *
+ * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
+ * versions in the future. If you wish to customize PrestaShop for your
+ * needs please refer to https://devdocs.prestashop.com/ for more information.
+ *
+ * @author    PrestaShop SA and Contributors <contact@prestashop.com>
+ * @copyright Since 2007 PrestaShop SA and Contributors
+ * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
+ *#}
+
+{% trans_default_domain 'Admin.Global' %}
+
+<div class="card" id="calendar">
+  <div class="card-block">
+    <form action="{{ path('admin_dashboard_submit_date_range') }}" method="post" id="calendar-form" name="calendar-form" class="container-fluid">
+      <div class="form-inline row">
+        <div class="btn-group flex-wrap">
+          <button type="button" name="submitDateDay" class="btn btn-default submitDateDay{% if preselectDateRange == 'day' %} active{% endif %}">
+            {{ 'Day'|trans }}
+          </button>
+          <button type="button" name="submitDateMonth" class="btn btn-default submitDateMonth{% if preselectDateRange == 'month' or not preselectDateRange %} active{% endif %}">
+            {{ 'Month'|trans }}
+          </button>
+          <button type="button" name="submitDateYear" class="btn btn-default submitDateYear{% if preselectDateRange == 'year' %} active{% endif %}">
+            {{ 'Year'|trans }}
+          </button>
+          <button type="button" name="submitDateDayPrev" class="btn btn-default submitDateDayPrev{% if preselectDateRange == 'prev-day' %} active{% endif %}">
+            {{ 'Day'|trans }}-1
+          </button>
+          <button type="button" name="submitDateMonthPrev" class="btn btn-default submitDateMonthPrev{% if preselectDateRange == 'prev-month' %} active{% endif %}">
+            {{ 'Month'|trans }}-1
+          </button>
+          <button type="button" name="submitDateYearPrev" class="btn btn-default submitDateYearPrev{% if preselectDateRange == 'prev-year' %} active{% endif %}">
+            {{ 'Year'|trans }}-1
+          </button>
+        </div>
+        <input type="hidden" name="datepickerFrom" id="datepickerFrom" value="{{ dateFrom|escape }}">
+        <input type="hidden" name="datepickerTo" id="datepickerTo" value="{{ dateTo|escape }}">
+        <input type="hidden" name="preselectDateRange" value="{{ preselectDateRange|escape }}">
+        <div class="form-group ml-auto">
+          <button id="datepickerExpand" class="btn btn-default" type="button" data-toggle="collapse" data-target="#datepicker">
+            <i class="material-icons">calendar_today</i>
+            <span class="d-none d-sm-inline-block">
+              {{ 'From'|trans }}
+              <strong class="text-info" id="datepicker-from-info">{{ dateFrom|escape }}</strong>
+              {{ 'To'|trans }}
+              <strong class="text-info" id="datepicker-to-info">{{ dateTo|escape }}</strong>
+              <strong class="text-info" id="datepicker-diff-info"></strong>
+            </span>
+            <i class="material-icons">arrow_drop_down</i>
+          </button>
+        </div>
+      </div>
+      <div class="row row-padding-top collapse mt-3" id="datepicker">
+        <div class="col-lg-12">
+          <div class="row">
+            <div class="col-sm-6 col-lg-4 container-fluid">
+              <div class="form-inline">
+                <div class="form-group">
+                  <label for="date-from" class="m-1">{{ 'From'|trans }}</label>
+                  <input type="text" class="form-control m-1" id="date-from">
+                </div>
+
+                <div class="form-group">
+                  <label for="date-to" class="m-1">{{ 'To'|trans }}</label>
+                  <input type="text" class="form-control m-1" id="date-to">
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </form>
+  </div>
+</div>
