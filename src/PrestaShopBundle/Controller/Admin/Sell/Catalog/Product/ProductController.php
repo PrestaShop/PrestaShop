@@ -242,6 +242,10 @@ class ProductController extends FrameworkBundleAdminController
                     'Product price is invalid',
                     'Admin.Notifications.Error'
                 ),
+                ProductConstraintException::INVALID_REDIRECT_TARGET => $this->trans(
+                    'When redirecting towards a product you must select a target product.',
+                    'Admin.Notifications.Error'
+                ),
             ],
             DuplicateFeatureValueAssociationException::class => $this->trans(
                 'You cannot associate the same feature value more than once.',
