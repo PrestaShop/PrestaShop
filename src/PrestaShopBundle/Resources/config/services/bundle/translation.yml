@@ -219,6 +219,7 @@ services:
             - "@prestashop.translation.extractor.smarty.legacy"
             - "@prestashop.translation.extractor.twig"
             - "%modules_dir%"
+            - "%translations_catalogue_extract_excluded_dirs%"
 
     prestashop.translation.legacy_module.extractor:
         class: PrestaShopBundle\Translation\Extractor\LegacyModuleExtractor
