@@ -71,7 +71,7 @@ admin_attachments_delete:
     attachmentId: \d+
 
 admin_attachments_attachment_info:
-    path: /{attachmentId}
+    path: /{attachmentId}/info
     methods: [GET]
     defaults:
         _controller: PrestaShopBundle:Admin/Sell/Catalog/Attachment:getAttachmentInfo
