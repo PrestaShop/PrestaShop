@@ -29,14 +29,32 @@ declare(strict_types=1);
 namespace PrestaShopBundle\Form\Admin\Type;
 
 use Symfony\Component\Form\Extension\Core\Type\HiddenType;
+use Symfony\Component\Form\FormBuilderInterface;
 
-class EntityItemType extends HiddenType
+class EntityItemType extends CommonAbstractType
 {
+    public const ID_PLACEHOLDER = '__id__';
+    public const NAME_PLACEHOLDER = '__name__';
+    public const IMAGE_PLACEHOLDER = '__image__';
+
     /**
-     * {@inheritdoc}
+     * {@inheritDoc}
      */
-    public function getBlockPrefix()
+    public function buildForm(FormBuilderInterface $builder, array $options)
     {
-        return 'entity_item';
+        $builder
+            ->add('id', HiddenType::class, [
+                'label' => false,
+                'default_empty_data' => self::ID_PLACEHOLDER,
+            ])
+            ->add('name', TextPreviewType::class, [
+                'label' => false,
+                'default_empty_data' => self::NAME_PLACEHOLDER,
+            ])
+            ->add('image', ImagePreviewType::class, [
+                'label' => false,
+                'default_empty_data' => self::IMAGE_PLACEHOLDER,
+            ])
+        ;
     }
 }
