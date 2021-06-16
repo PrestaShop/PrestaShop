@@ -58,10 +58,12 @@ var combinations = (function() {
       var finalPriceLabel = tableRow.find('.attribute-finalprice span');
 
       var impactOnPrice = Tools.parseFloatFromString(priceImpactInput.val());
-      var previousImpactOnPrice = Tools.parseFloatFromString(priceImpactInput.attr('value'));
-
-      var currentFinalPrice = Tools.parseFloatFromString(finalPriceLabel.data('price'), true);
-      var finalPrice = currentFinalPrice - previousImpactOnPrice + impactOnPrice;
+      var producEcotax = Number(finalPriceLabel.data('productEcotax'));
+      if (isNaN(producEcotax)) {
+        producEcotax = 0;
+      }
+      var productPrice = Number(finalPriceLabel.data('productPrice'));
+      var finalPrice = productPrice + producEcotax + impactOnPrice;
 
       finalPriceLabel.html(Number(ps_round(finalPrice, 6)).toFixed(6));
   }
@@ -137,12 +139,41 @@ var combinations = (function() {
           }
         }, 'input[id^="combination"][id$="_attribute_price"]')
 
+        .on({
+          // when typing a new ecotax on the form, update it on the final price data attribute
+          'keyup': function () {
+            var attributeId = $(this).closest('.combination-form').attr('data');
+            var finalPriceLabel = getCombinationRow(attributeId).find('.attribute-finalprice span');
+            var combinationEcotax = priceCalculation.getCombinationEcotaxTaxExcluded($(this));
+            if (combinationEcotax <= 0) {
+              combinationEcotax = priceCalculation.getProductEcotaxTaxExcluded();
+            }
+
+            finalPriceLabel.data('productEcotax', combinationEcotax);
+          },
+          // when ecotax on the form is changed, update final price
+          'change': function () {
+            var attributeId = $(this).closest('.combination-form').attr('data');
+            var finalPriceLabel = getCombinationRow(attributeId).find('.attribute-finalprice span');
+            var combinationEcotax = priceCalculation.getCombinationEcotaxTaxExcluded($(this));
+            if (combinationEcotax <= 0) {
+              combinationEcotax = priceCalculation.getProductEcotaxTaxExcluded();
+            }
+
+            finalPriceLabel.data('productEcotax', combinationEcotax);
+
+            updateFinalPrice($(finalPriceLabel.parents('tr')[0]));
+          }
+        }, 'input[id^="combination"][id$="_attribute_ecotax"]')
+
         // when price impact is changed on the row, update it on the form
         .on('change', '.attribute-price input', function() {
           var attributeId = $(this).closest('.combination').attr('data');
           var input = getCombinationForm(attributeId).find('input[id^="combination"][id$="_attribute_price"]');
 
           input.val($(this).val());
+          // Trigger keyup to update form final price
+          input.trigger('keyup');
 
           updateFinalPrice($(this).parent().parent().parent());
         })
