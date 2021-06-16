@@ -1,8 +1,9 @@
 require('module-alias/register');
 
+// Helpers to open and close browser
 const helper = require('@utils/helpers');
 
-// Import pages
+// Import BO pages
 const dashboardPage = require('@pages/BO/dashboard');
 const ordersPage = require('@pages/BO/orders');
 const addOrderPage = require('@pages/BO/orders/add');
@@ -27,8 +28,12 @@ const {expect} = require('chai');
 let browserContext;
 let page;
 
-
-describe('Create customer from create order page', async () => {
+/*
+Go to create order page
+Create customer
+Delete the created customer
+ */
+describe('BO - Orders - Create order : Create customer from new order page', async () => {
   before(async function () {
     browserContext = await helper.createBrowserContext(this.browser);
     page = await helper.newTab(browserContext);
@@ -42,9 +47,8 @@ describe('Create customer from create order page', async () => {
     await loginCommon.loginBO(this, page);
   });
 
-
   describe('Create customer', () => {
-    it('should go to orders page', async function () {
+    it('should go to \'Orders > Orders\' page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'goToOrdersPage', baseContext);
 
       await dashboardPage.goToSubMenu(
@@ -74,7 +78,7 @@ describe('Create customer from create order page', async () => {
   });
 
   describe('Delete Customer', async () => {
-    it('should go to customers page', async function () {
+    it('should go to \'Customers > Customers\' page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'goToCustomersPageToDelete', baseContext);
 
       await addOrderPage.goToSubMenu(

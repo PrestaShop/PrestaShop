@@ -1,32 +1,38 @@
 require('module-alias/register');
-// Using chai
-const {expect} = require('chai');
+
+// Import utils
 const helper = require('@utils/helpers');
-const loginCommon = require('@commonTests/loginBO');
 const files = require('@utils/files');
 
-// Importing pages
+// Import login steps
+const loginCommon = require('@commonTests/loginBO');
+
+// Import BO pages
 const dashboardPage = require('@pages/BO/dashboard');
+const ordersPage = require('@pages/BO/orders/index');
+const viewOrderPage = require('@pages/BO/orders/view');
+const creditSlipsPage = require('@pages/BO/orders/creditSlips/index');
+
+// Import FO pages
 const homePage = require('@pages/FO/home');
 const foLoginPage = require('@pages/FO/login');
 const productPage = require('@pages/FO/product');
 const cartPage = require('@pages/FO/cart');
 const checkoutPage = require('@pages/FO/checkout');
 const orderConfirmationPage = require('@pages/FO/checkout/orderConfirmation');
-const ordersPage = require('@pages/BO/orders/index');
-const viewOrderPage = require('@pages/BO/orders/view');
-const creditSlipsPage = require('@pages/BO/orders/creditSlips/index');
 
-// Importing data
+// Import data
 const {PaymentMethods} = require('@data/demo/paymentMethods');
 const {DefaultCustomer} = require('@data/demo/customer');
 const {Statuses} = require('@data/demo/orderStatuses');
 
-// Importing test context
+// Import test context
 const testContext = require('@utils/testContext');
 
 const baseContext = 'functional_BO_orders_creditSlips_generateCreditSlipByDate';
 
+// Import expect from chai
+const {expect} = require('chai');
 
 let browserContext;
 let page;
@@ -45,7 +51,7 @@ Create order
 Create credit slip
 Generate credit slip file by date
  */
-describe('Generate Credit slip file by date', async () => {
+describe('BO - Orders - Credit slips : Generate Credit slip file by date', async () => {
   // before and after functions
   before(async function () {
     browserContext = await helper.createBrowserContext(this.browser);
@@ -85,8 +91,8 @@ describe('Generate Credit slip file by date', async () => {
       await expect(isCustomerConnected, 'Customer is not connected').to.be.true;
     });
 
-    it('should create an order', async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'createOrder', baseContext);
+    it('should add product to cart', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'addProductToCart', baseContext);
 
       // Go to home page
       await foLoginPage.goToHomePage(page);
@@ -94,11 +100,15 @@ describe('Generate Credit slip file by date', async () => {
       // Go to the first product page
       await homePage.goToProductPage(page, 1);
 
-      // Add the created product to the cart
-      await productPage.addProductToTheCart(page);
+      // Add the product to the cart
+      await productPage.addProductToTheCart(page, 5);
 
-      // Edit the product quantity
-      await cartPage.editProductQuantity(page, 1, 5);
+      const notificationsNumber = await cartPage.getCartNotificationsNumber(page);
+      await expect(notificationsNumber).to.be.equal(5);
+    });
+
+    it('should go to delivery step', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'createOrder', baseContext);
 
       // Proceed to checkout the shopping cart
       await cartPage.clickOnProceedToCheckout(page);
@@ -106,10 +116,18 @@ describe('Generate Credit slip file by date', async () => {
       // Address step - Go to delivery step
       const isStepAddressComplete = await checkoutPage.goToDeliveryStep(page);
       await expect(isStepAddressComplete, 'Step Address is not complete').to.be.true;
+    });
+
+    it('should go to payment step', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'goToPaymentStep', baseContext);
 
       // Delivery step - Go to payment step
       const isStepDeliveryComplete = await checkoutPage.goToPaymentStep(page);
       await expect(isStepDeliveryComplete, 'Step Address is not complete').to.be.true;
+    });
+
+    it('should choose payment method and confirm the order', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'confirmOrder', baseContext);
 
       // Payment step - Choose payment step
       await checkoutPage.choosePaymentAndOrder(page, PaymentMethods.wirePayment.moduleName);
@@ -133,7 +151,7 @@ describe('Generate Credit slip file by date', async () => {
       await loginCommon.loginBO(this, page);
     });
 
-    it('should go to the orders page', async function () {
+    it('should go to \'Orders > Orders\' page\'', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'goToOrdersPage', baseContext);
 
       await dashboardPage.goToSubMenu(
@@ -146,10 +164,11 @@ describe('Generate Credit slip file by date', async () => {
       await expect(pageTitle).to.contains(ordersPage.pageTitle);
     });
 
-    it('should go to the created order page', async function () {
+    it('should go to the first order page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'goToCreatedOrderPage', baseContext);
 
       await ordersPage.goToOrder(page, 1);
+
       const pageTitle = await viewOrderPage.getPageTitle(page);
       await expect(pageTitle).to.contains(viewOrderPage.pageTitle);
     });
@@ -165,6 +184,7 @@ describe('Generate Credit slip file by date', async () => {
       await testContext.addContextItem(this, 'testIdentifier', 'addPartialRefund', baseContext);
 
       await viewOrderPage.clickOnPartialRefund(page);
+
       const textMessage = await viewOrderPage.addPartialRefundProduct(page, 1, 1);
       await expect(textMessage).to.contains(viewOrderPage.partialRefundValidationMessage);
     });
@@ -208,7 +228,6 @@ describe('Generate Credit slip file by date', async () => {
 
       // Generate credit slip and get error message
       const textMessage = await creditSlipsPage.generatePDFByDateAndFail(page, futureDate, futureDate);
-
       await expect(textMessage).to.equal(creditSlipsPage.errorMessageWhenGenerateFileByDate);
     });
   });
