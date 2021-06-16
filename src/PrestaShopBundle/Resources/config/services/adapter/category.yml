@@ -118,6 +118,12 @@ services:
         - '@doctrine.dbal.default_connection'
         - '%database_prefix%'
 
+  prestashop.adapter.category.repository.category_preview_repository:
+    class: PrestaShop\PrestaShop\Adapter\Category\Repository\CategoryPreviewRepository
+    arguments:
+        - '@prestashop.adapter.category.repository.category_repository'
+        - '@prestashop.adapter.image.category_image_path_factory'
+
   prestashop.adapter.category.query_handler.get_categories_tree_handler:
     class: PrestaShop\PrestaShop\Adapter\Category\QueryHandler\GetCategoriesTreeHandler
     arguments:
