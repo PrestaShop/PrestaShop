@@ -33,7 +33,6 @@ use PrestaShop\PrestaShop\Core\Domain\Attachment\Configuration\AttachmentConstra
 use PrestaShopBundle\Form\Admin\Type\TranslatableType;
 use PrestaShopBundle\Form\Admin\Type\TranslatorAwareType;
 use Symfony\Component\Form\Extension\Core\Type\FileType;
-use Symfony\Component\Form\Extension\Core\Type\HiddenType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\Validator\Constraints\Length;
@@ -55,7 +54,6 @@ class AttachmentType extends TranslatorAwareType
             $required = false;
         }
         $builder
-            ->add('attachment_id', HiddenType::class)
             ->add('name', TranslatableType::class, [
                 'type' => TextType::class,
                 'required' => true,

@@ -28,6 +28,7 @@ declare(strict_types=1);
 namespace PrestaShopBundle\Form\Admin\Sell\Product\Options;
 
 use PrestaShopBundle\Form\Admin\Type\IconButtonType;
+use PrestaShopBundle\Form\Admin\Type\PreviewType;
 use PrestaShopBundle\Form\Admin\Type\TranslatorAwareType;
 use Symfony\Component\Form\Extension\Core\Type\HiddenType;
 use Symfony\Component\Form\FormBuilderInterface;
@@ -43,13 +44,13 @@ class AttachedFileType extends TranslatorAwareType
                     'class' => 'attachment-id-input',
                 ],
             ])
-            ->add('name', HiddenType::class, [
+            ->add('name', PreviewType::class, [
                 'label' => $this->trans('Title', 'Admin.Global'),
             ])
-            ->add('filename', HiddenType::class, [
+            ->add('filename', PreviewType::class, [
                 'label' => $this->trans('File name', 'Admin.Global'),
             ])
-            ->add('mime_type', HiddenType::class, [
+            ->add('mime_type', PreviewType::class, [
                 'label' => $this->trans('Type', 'Admin.Global'),
             ])
             ->add('remove', IconButtonType::class, [
