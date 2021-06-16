@@ -31,6 +31,7 @@ namespace PrestaShop\PrestaShop\Adapter\Product\Repository;
 use PrestaShop\PrestaShop\Adapter\Product\Image\ProductImagePathFactory;
 use PrestaShop\PrestaShop\Adapter\Product\Image\Repository\ProductImageRepository;
 use PrestaShop\PrestaShop\Core\Domain\Language\ValueObject\LanguageId;
+use PrestaShop\PrestaShop\Core\Domain\Product\Exception\ProductNotFoundException;
 use PrestaShop\PrestaShop\Core\Domain\Product\QueryResult\ProductPreview;
 use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductId;
 
@@ -66,6 +67,8 @@ class ProductPreviewRepository
      * @param LanguageId $languageId
      *
      * @return ProductPreview
+     *
+     * @throws ProductNotFoundException
      */
     public function getPreview(ProductId $productId, LanguageId $languageId): ProductPreview
     {

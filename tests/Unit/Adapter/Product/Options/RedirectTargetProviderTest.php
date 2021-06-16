@@ -31,11 +31,11 @@ namespace Tests\Unit\Adapter\Product\Options;
 use Generator;
 use Language;
 use PHPUnit\Framework\TestCase;
-use PrestaShop\PrestaShop\Adapter\Category\Repository\CategoryRepository;
-use PrestaShop\PrestaShop\Adapter\Image\ImagePathFactory;
+use PrestaShop\PrestaShop\Adapter\Category\Repository\CategoryPreviewRepository;
 use PrestaShop\PrestaShop\Adapter\LegacyContext;
 use PrestaShop\PrestaShop\Adapter\Product\Options\RedirectTargetProvider;
 use PrestaShop\PrestaShop\Adapter\Product\Repository\ProductPreviewRepository;
+use PrestaShop\PrestaShop\Core\Domain\Category\QueryResult\CategoryPreview;
 use PrestaShop\PrestaShop\Core\Domain\Category\ValueObject\CategoryId;
 use PrestaShop\PrestaShop\Core\Domain\Language\ValueObject\LanguageId;
 use PrestaShop\PrestaShop\Core\Domain\Product\QueryResult\ProductPreview;
@@ -61,9 +61,8 @@ class RedirectTargetProviderTest extends TestCase
     {
         $provider = new RedirectTargetProvider(
             $this->getProductPreviewRepositoryMock($mockOptions),
-            $this->getCategoryRepository($mockOptions),
-            $this->getLegacyContext($mockOptions),
-            $this->getImagePathFactory($mockOptions)
+            $this->getCategoryPreviewRepository($mockOptions),
+            $this->getLegacyContext($mockOptions)
         );
 
         $redirectTarget = $provider->getRedirectTarget($redirectType, $redirectTargetId);
@@ -160,30 +159,6 @@ class RedirectTargetProviderTest extends TestCase
         ];
     }
 
-    private function getImagePathFactory(?array $mockOptions = null): ImagePathFactory
-    {
-        $imagePathFactory = $this
-            ->getMockBuilder(ImagePathFactory::class)
-            ->disableOriginalConstructor()
-            ->getMock()
-        ;
-        $categoryImage = $mockOptions['category_image'] ?? null;
-        if ($categoryImage) {
-            $imagePathFactory
-                ->expects($this->once())
-                ->method('getPath')
-                ->willReturn($categoryImage)
-            ;
-        } else {
-            $imagePathFactory
-                ->expects($this->never())
-                ->method('getPath')
-            ;
-        }
-
-        return $imagePathFactory;
-    }
-
     private function getLegacyContext(?array $mockOptions = null): LegacyContext
     {
         $legacyContext = $this
@@ -216,10 +191,10 @@ class RedirectTargetProviderTest extends TestCase
         return $legacyContext;
     }
 
-    private function getCategoryRepository(?array $mockOptions = null): CategoryRepository
+    private function getCategoryPreviewRepository(?array $mockOptions = null): CategoryPreviewRepository
     {
-        $categoryRepository = $this
-            ->getMockBuilder(CategoryRepository::class)
+        $categoryPreviewRepository = $this
+            ->getMockBuilder(CategoryPreviewRepository::class)
             ->disableOriginalConstructor()
             ->getMock()
         ;
@@ -227,10 +202,11 @@ class RedirectTargetProviderTest extends TestCase
         $languageId = $mockOptions['language_id'] ?? null;
         $categoryId = $mockOptions['category_id'] ?? null;
         $breadcrumb = $mockOptions['breadcrumb'] ?? '';
+        $categoryImage = $mockOptions['category_image'] ?? null;
         if ($languageId && $categoryId) {
-            $categoryRepository
+            $categoryPreviewRepository
                 ->expects($this->once())
-                ->method('getBreadcrumb')
+                ->method('getPreview')
                 ->with(
                     $this->callback(function ($categoryParam) use ($categoryId) {
                         $this->assertInstanceOf(CategoryId::class, $categoryParam);
@@ -245,16 +221,21 @@ class RedirectTargetProviderTest extends TestCase
                         return true;
                     })
                 )
-                ->willReturn($breadcrumb)
+                ->willReturn(new CategoryPreview(
+                    $categoryId,
+                    $breadcrumb,
+                    $breadcrumb,
+                    $categoryImage
+                ))
             ;
         } else {
-            $categoryRepository
+            $categoryPreviewRepository
                 ->expects($this->never())
-                ->method('getBreadcrumb')
+                ->method('getPreview')
             ;
         }
 
-        return $categoryRepository;
+        return $categoryPreviewRepository;
     }
 
     private function getProductPreviewRepositoryMock(?array $mockOptions = null): ProductPreviewRepository

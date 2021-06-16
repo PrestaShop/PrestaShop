@@ -85,10 +85,11 @@ class CategoryRepository extends AbstractObjectModelRepository
     /**
      * @param CategoryId $categoryId
      * @param LanguageId $languageId
+     * @param string $separator
      *
      * @return string
      */
-    public function getBreadcrumb(CategoryId $categoryId, LanguageId $languageId): string
+    public function getBreadcrumb(CategoryId $categoryId, LanguageId $languageId, string $separator = ' > '): string
     {
         $qb = $this->connection->createQueryBuilder();
         $qb
@@ -132,6 +133,6 @@ class CategoryRepository extends AbstractObjectModelRepository
         }
         $parentNames[] = $categoryName;
 
-        return implode(' > ', $parentNames);
+        return implode($separator, $parentNames);
     }
 }

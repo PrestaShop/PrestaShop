@@ -28,12 +28,13 @@ declare(strict_types=1);
 
 namespace PrestaShop\PrestaShop\Adapter\Product\Options;
 
-use PrestaShop\PrestaShop\Adapter\Category\Repository\CategoryRepository;
-use PrestaShop\PrestaShop\Adapter\Image\ImagePathFactory;
+use PrestaShop\PrestaShop\Adapter\Category\Repository\CategoryPreviewRepository;
 use PrestaShop\PrestaShop\Adapter\LegacyContext;
 use PrestaShop\PrestaShop\Adapter\Product\Repository\ProductPreviewRepository;
+use PrestaShop\PrestaShop\Core\Domain\Category\Exception\CategoryNotFoundException;
 use PrestaShop\PrestaShop\Core\Domain\Category\ValueObject\CategoryId;
 use PrestaShop\PrestaShop\Core\Domain\Language\ValueObject\LanguageId;
+use PrestaShop\PrestaShop\Core\Domain\Product\Exception\ProductNotFoundException;
 use PrestaShop\PrestaShop\Core\Domain\Product\QueryResult\ProductRedirectTarget;
 use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductId;
 use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\RedirectType;
@@ -46,9 +47,9 @@ class RedirectTargetProvider
     private $productPreviewRepository;
 
     /**
-     * @var CategoryRepository
+     * @var CategoryPreviewRepository
      */
-    private $categoryRepository;
+    private $categoryPreviewRepository;
 
     /**
      * @var LegacyContext
@@ -56,26 +57,18 @@ class RedirectTargetProvider
     private $legacyContext;
 
     /**
-     * @var ImagePathFactory
-     */
-    private $categoryImagePathFactory;
-
-    /**
      * @param ProductPreviewRepository $productPreviewRepository
-     * @param CategoryRepository $categoryRepository
+     * @param CategoryPreviewRepository $categoryPreviewRepository
      * @param LegacyContext $legacyContext
-     * @param ImagePathFactory $categoryImagePathFactory
      */
     public function __construct(
         ProductPreviewRepository $productPreviewRepository,
-        CategoryRepository $categoryRepository,
-        LegacyContext $legacyContext,
-        ImagePathFactory $categoryImagePathFactory
+        CategoryPreviewRepository $categoryPreviewRepository,
+        LegacyContext $legacyContext
     ) {
         $this->productPreviewRepository = $productPreviewRepository;
-        $this->categoryRepository = $categoryRepository;
+        $this->categoryPreviewRepository = $categoryPreviewRepository;
         $this->legacyContext = $legacyContext;
-        $this->categoryImagePathFactory = $categoryImagePathFactory;
     }
 
     /**
@@ -83,6 +76,9 @@ class RedirectTargetProvider
      * @param int $redirectTargetId
      *
      * @return ProductRedirectTarget|null
+     *
+     * @throws CategoryNotFoundException
+     * @throws ProductNotFoundException
      */
     public function getRedirectTarget(
         string $redirectType,
@@ -104,6 +100,13 @@ class RedirectTargetProvider
         }
     }
 
+    /**
+     * @param int $redirectTargetId
+     *
+     * @return ProductRedirectTarget
+     *
+     * @throws ProductNotFoundException
+     */
     private function getProductTarget(int $redirectTargetId): ProductRedirectTarget
     {
         $languageId = (int) $this->legacyContext->getLanguage()->id;
@@ -120,18 +123,26 @@ class RedirectTargetProvider
         );
     }
 
+    /**
+     * @param int $redirectTargetId
+     *
+     * @return ProductRedirectTarget
+     *
+     * @throws CategoryNotFoundException
+     */
     private function getCategoryTarget(int $redirectTargetId): ProductRedirectTarget
     {
         $languageId = (int) $this->legacyContext->getLanguage()->id;
+        $category = $this->categoryPreviewRepository->getPreview(
+            new CategoryId($redirectTargetId),
+            new LanguageId($languageId)
+        );
 
         return new ProductRedirectTarget(
             $redirectTargetId,
             ProductRedirectTarget::CATEGORY_TYPE,
-            $this->categoryRepository->getBreadcrumb(
-                new CategoryId($redirectTargetId),
-                new LanguageId($languageId)
-            ),
-            $this->categoryImagePathFactory->getPath($redirectTargetId)
+            $category->getBreadcrumb(),
+            $category->getImage()
         );
     }
 }
