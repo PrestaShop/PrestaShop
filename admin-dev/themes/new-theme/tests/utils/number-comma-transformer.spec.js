@@ -28,6 +28,8 @@ import {transform} from '../../js/app/utils/number-comma-transformer';
 describe('NumberCommaTransformer', () => {
   describe('transform', () => {
     const assertions = [
+      ['12', '12'],
+      ['-12', '-12'],
       ['-12,20', '-12.20'],
       ['-12,,20', '-12.20'],
       ['-----12,20', '12.20'],
