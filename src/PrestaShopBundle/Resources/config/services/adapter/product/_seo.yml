@@ -5,7 +5,7 @@ services:
     prestashop.adapter.product.options.redirect_target_provider:
         class: PrestaShop\PrestaShop\Adapter\Product\Options\RedirectTargetProvider
         arguments:
-            - '@prestashop.core.query_bus'
+            - '@prestashop.adapter.product.repository.product_preview_repository'
             - '@prestashop.adapter.category.repository.category_repository'
             - '@prestashop.adapter.legacy.context'
             - '@prestashop.adapter.image.category_image_path_factory'

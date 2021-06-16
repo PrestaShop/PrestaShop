@@ -27,14 +27,14 @@
 namespace PrestaShop\PrestaShop\Core\Domain\Product\QueryHandler;
 
 use PrestaShop\PrestaShop\Core\Domain\Product\Query\GetProductsForListing;
-use PrestaShop\PrestaShop\Core\Domain\Product\QueryResult\ProductForListing;
+use PrestaShop\PrestaShop\Core\Domain\Product\QueryResult\ProductPreview;
 
 interface GetProductsForListingHandlerInterface
 {
     /**
      * @param GetProductsForListing $query
      *
-     * @return ProductForListing[]
+     * @return ProductPreview[]
      */
     public function handle(GetProductsForListing $query): array;
 }
