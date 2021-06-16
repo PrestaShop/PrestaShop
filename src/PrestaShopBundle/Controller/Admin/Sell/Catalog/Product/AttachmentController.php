@@ -27,8 +27,8 @@ declare(strict_types=1);
 
 namespace PrestaShopBundle\Controller\Admin\Sell\Catalog\Product;
 
-use PrestaShop\PrestaShop\Core\Domain\Product\Attachment\Query\GetProductAttachmentInfo;
-use PrestaShop\PrestaShop\Core\Domain\Product\Attachment\QueryResult\ProductAttachmentInfo;
+use PrestaShop\PrestaShop\Core\Domain\Attachment\Query\GetAttachmentInfo;
+use PrestaShop\PrestaShop\Core\Domain\Attachment\QueryResult\AttachmentInfo;
 use PrestaShopBundle\Controller\Admin\FrameworkBundleAdminController;
 use PrestaShopBundle\Security\Annotation\AdminSecurity;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -47,17 +47,17 @@ class AttachmentController extends FrameworkBundleAdminController
      */
     public function getAttachmentInfoAction(int $attachmentId): JsonResponse
     {
-        $attachmentInfo = $this->getQueryBus()->handle(new GetProductAttachmentInfo($attachmentId));
+        $attachmentInfo = $this->getQueryBus()->handle(new GetAttachmentInfo($attachmentId));
 
         return $this->json(['attachmentInfo' => $this->presentAttachmentInfo($attachmentInfo)]);
     }
 
     /**
-     * @param ProductAttachmentInfo $productAttachmentInfo
+     * @param AttachmentInfo $productAttachmentInfo
      *
      * @return array<string, mixed>
      */
-    private function presentAttachmentInfo(ProductAttachmentInfo $productAttachmentInfo): array
+    private function presentAttachmentInfo(AttachmentInfo $productAttachmentInfo): array
     {
         $localizedNames = $productAttachmentInfo->getLocalizedNames();
 
