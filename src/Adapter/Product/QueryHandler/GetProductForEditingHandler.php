@@ -168,11 +168,11 @@ final class GetProductForEditingHandler implements GetProductForEditingHandlerIn
      */
     private function getAttachments(ProductId $productId): array
     {
-        $attachments = $this->attachmentRepository->getAllByProduct($productId);
+        $attachments = $this->attachmentRepository->getProductAttachments($productId);
 
-        $productAttachments = [];
+        $attachmentsInfo = [];
         foreach ($attachments as $attachment) {
-            $productAttachments[] = new AttachmentInfo(
+            $attachmentsInfo[] = new AttachmentInfo(
                 (int) $attachment['id_attachment'],
                 $attachment['name'],
                 $attachment['file_name'],
@@ -180,7 +180,7 @@ final class GetProductForEditingHandler implements GetProductForEditingHandlerIn
             );
         }
 
-        return $productAttachments;
+        return $attachmentsInfo;
     }
 
     /**
