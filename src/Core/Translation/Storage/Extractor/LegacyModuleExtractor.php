@@ -28,8 +28,8 @@ declare(strict_types=1);
 
 namespace PrestaShop\PrestaShop\Core\Translation\Storage\Extractor;
 
+use PrestaShop\TranslationToolsBundle\Translation\Extractor\ExtractorInterface;
 use PrestaShop\TranslationToolsBundle\Translation\Helper\DomainHelper;
-use Symfony\Component\Translation\Extractor\ExtractorInterface;
 use Symfony\Component\Translation\MessageCatalogue;
 
 /**
@@ -57,23 +57,30 @@ final class LegacyModuleExtractor implements LegacyModuleExtractorInterface
      * @var string the "modules" directory path
      */
     private $modulesDirectory;
+    /**
+     * @var array
+     */
+    private $catalogueExtractExcludedDirectories;
 
     /**
      * @param ExtractorInterface $phpExtractor
      * @param ExtractorInterface $smartyExtractor
      * @param ExtractorInterface $twigExtractor
      * @param string $modulesDirectory
+     * @param array $catalogueExtractExcludedDirectories
      */
     public function __construct(
         ExtractorInterface $phpExtractor,
         ExtractorInterface $smartyExtractor,
         ExtractorInterface $twigExtractor,
-        string $modulesDirectory
+        string $modulesDirectory,
+        array $catalogueExtractExcludedDirectories
     ) {
         $this->phpExtractor = $phpExtractor;
         $this->smartyExtractor = $smartyExtractor;
         $this->twigExtractor = $twigExtractor;
         $this->modulesDirectory = $modulesDirectory;
+        $this->catalogueExtractExcludedDirectories = $catalogueExtractExcludedDirectories;
     }
 
     /**
@@ -85,11 +92,11 @@ final class LegacyModuleExtractor implements LegacyModuleExtractorInterface
     {
         $extractedCatalogue = new MessageCatalogue($locale);
 
-        $this->phpExtractor->extract($this->modulesDirectory . '/' . $moduleName, $extractedCatalogue);
+        $this->phpExtractor->extract($this->modulesDirectory . '/' . $moduleName, $extractedCatalogue, $this->catalogueExtractExcludedDirectories);
         $extractedCatalogue = $this->postprocessPhpCatalogue($extractedCatalogue, $moduleName);
 
-        $this->smartyExtractor->extract($this->modulesDirectory . '/' . $moduleName, $extractedCatalogue);
-        $this->twigExtractor->extract($this->modulesDirectory . '/' . $moduleName, $extractedCatalogue);
+        $this->smartyExtractor->extract($this->modulesDirectory . '/' . $moduleName, $extractedCatalogue, $this->catalogueExtractExcludedDirectories);
+        $this->twigExtractor->extract($this->modulesDirectory . '/' . $moduleName, $extractedCatalogue, $this->catalogueExtractExcludedDirectories);
 
         return $extractedCatalogue;
     }
