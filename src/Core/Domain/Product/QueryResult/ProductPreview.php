@@ -28,7 +28,7 @@ declare(strict_types=1);
 
 namespace PrestaShop\PrestaShop\Core\Domain\Product\QueryResult;
 
-class ProductForListing
+class ProductPreview
 {
     /**
      * @var int

@@ -35,11 +35,11 @@ use PrestaShop\PrestaShop\Adapter\Category\Repository\CategoryRepository;
 use PrestaShop\PrestaShop\Adapter\Image\ImagePathFactory;
 use PrestaShop\PrestaShop\Adapter\LegacyContext;
 use PrestaShop\PrestaShop\Adapter\Product\Options\RedirectTargetProvider;
-use PrestaShop\PrestaShop\Core\CommandBus\CommandBusInterface;
+use PrestaShop\PrestaShop\Adapter\Product\Repository\ProductPreviewRepository;
 use PrestaShop\PrestaShop\Core\Domain\Category\ValueObject\CategoryId;
 use PrestaShop\PrestaShop\Core\Domain\Language\ValueObject\LanguageId;
-use PrestaShop\PrestaShop\Core\Domain\Product\Query\GetProductsForListing;
-use PrestaShop\PrestaShop\Core\Domain\Product\QueryResult\ProductForListing;
+use PrestaShop\PrestaShop\Core\Domain\Product\QueryResult\ProductPreview;
+use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductId;
 use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\RedirectType;
 use PrestaShop\PrestaShop\Core\Form\IdentifiableObject\OptionProvider\ProductFormOptionsProvider;
 
@@ -198,7 +198,7 @@ class ProductFormOptionsProviderTest extends TestCase
     private function getRedirectTargetProvider(?array $mockOptions = null): RedirectTargetProvider
     {
         return new RedirectTargetProvider(
-            $this->getQueryBusMock($mockOptions),
+            $this->getProductPreviewRepositoryMock($mockOptions),
             $this->getCategoryRepository($mockOptions),
             $this->getLegacyContext($mockOptions),
             $this->getImagePathFactory($mockOptions)
@@ -302,10 +302,10 @@ class ProductFormOptionsProviderTest extends TestCase
         return $categoryRepository;
     }
 
-    private function getQueryBusMock(?array $mockOptions = null): CommandBusInterface
+    private function getProductPreviewRepositoryMock(?array $mockOptions = null): ProductPreviewRepository
     {
-        $queryBus = $this
-            ->getMockBuilder(CommandBusInterface::class)
+        $productPreviewRepository = $this
+            ->getMockBuilder(ProductPreviewRepository::class)
             ->disableOriginalConstructor()
             ->getMock()
         ;
@@ -315,34 +315,35 @@ class ProductFormOptionsProviderTest extends TestCase
         $productName = $mockOptions['product_name'] ?? null;
         $productImage = $mockOptions['product_image'] ?? null;
         if ($productId) {
-            $queryBus
+            $productPreviewRepository
                 ->expects($this->once())
-                ->method('handle')
-                ->with($this->callback(function ($query) use ($productId, $languageId) {
-                    $this->assertInstanceOf(GetProductsForListing::class, $query);
-                    $productIds = $query->getProductIds();
-                    $this->assertEquals(1, count($productIds));
+                ->method('getPreview')
+                ->with(
+                    $this->callback(function ($productIdVO) use ($productId) {
+                        $this->assertInstanceOf(ProductId::class, $productIdVO);
+                        $this->assertEquals($productId, $productIdVO->getValue());
 
-                    $productVO = reset($productIds);
-                    $this->assertEquals($productId, $productVO->getValue());
-                    $this->assertEquals($languageId, $query->getLanguageId()->getValue());
+                        return true;
+                    }),
+                    $this->callback(function ($languageIdVO) use ($languageId) {
+                        $this->assertInstanceOf(LanguageId::class, $languageIdVO);
+                        $this->assertEquals($languageId, $languageIdVO->getValue());
 
-                    return true;
-                }))
-                ->willReturn([
-                    new ProductForListing(
-                        $productId,
-                        $productName,
-                        $productImage
-                    ),
-                ]);
+                        return true;
+                    })
+                )
+                ->willReturn(new ProductPreview(
+                    $productId,
+                    $productName,
+                    $productImage
+                ));
         } else {
-            $queryBus
+            $productPreviewRepository
                 ->expects($this->never())
-                ->method('handle')
+                ->method('getPreview')
             ;
         }
 
-        return $queryBus;
+        return $productPreviewRepository;
     }
 }
