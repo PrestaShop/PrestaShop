@@ -28,8 +28,6 @@ declare(strict_types=1);
 
 namespace PrestaShop\PrestaShop\Core\Form\IdentifiableObject\OptionProvider;
 
-use PrestaShop\PrestaShop\Adapter\Product\Options\RedirectTargetProvider;
-
 /**
  * Provide dynamic complex options to the product type (like preview data that depend
  * on product current data).
@@ -37,57 +35,12 @@ use PrestaShop\PrestaShop\Adapter\Product\Options\RedirectTargetProvider;
 class ProductFormOptionsProvider implements FormOptionsProviderInterface
 {
     /**
-     * @var RedirectTargetProvider
-     */
-    private $targetProvider;
-
-    /**
-     * @param RedirectTargetProvider $targetProvider
-     */
-    public function __construct(
-        RedirectTargetProvider $targetProvider
-    ) {
-        $this->targetProvider = $targetProvider;
-    }
-
-    /**
      * {@inheritDoc}
      */
     public function getOptions(int $id, array $data): array
     {
-        return array_merge(
-            [
-                'virtual_product_file_id' => $data['stock']['virtual_product_file']['virtual_product_file_id'] ?? null,
-            ],
-            $this->getRedirectOptions($data)
-        );
-    }
-
-    /**
-     * @param array $data
-     *
-     * @return array
-     */
-    private function getRedirectOptions(array $data): array
-    {
-        $entities = null;
-        if (!empty($data['seo']['redirect_option']['target']['id'])) {
-            $redirectTarget = $this->targetProvider->getRedirectTarget(
-                $data['seo']['redirect_option']['type'],
-                (int) $data['seo']['redirect_option']['target']['id']
-            );
-
-            $entities = [
-                [
-                    'id' => $redirectTarget->getId(),
-                    'name' => $redirectTarget->getName(),
-                    'image' => $redirectTarget->getImage(),
-                ],
-            ];
-        }
-
         return [
-            'redirect_target' => $entities,
+            'virtual_product_file_id' => $data['stock']['virtual_product_file']['virtual_product_file_id'] ?? null,
         ];
     }
 
