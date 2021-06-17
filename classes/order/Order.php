@@ -1789,6 +1789,7 @@ class OrderCore extends ObjectModel
      */
     public static function generateReference()
     {
+// *        
         return strtoupper(Tools::passwdGen(9, 'NO_NUMERIC'));
     }
 
