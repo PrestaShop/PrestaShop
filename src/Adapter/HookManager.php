@@ -81,7 +81,7 @@ class HookManager
             } catch (\Exception $e) {
                 $logger = ServiceLocator::get('\\PrestaShop\\PrestaShop\\Adapter\\LegacyLogger');
                 $logger->error(sprintf('Exception on hook %s for module %s. %s', $hook_name, $id_module, $e->getMessage()), ['object_type' => 'Module', 'object_id' => $id_module, 'allow_duplicate' => true]);
-                if (_PS_MODE_DEV_) { // @phpstan-ignore-line
+                if ((new Environment())->isDebug()) {
                     throw new CoreException($e->getMessage(), $e->getCode(), $e);
                 }
             }
