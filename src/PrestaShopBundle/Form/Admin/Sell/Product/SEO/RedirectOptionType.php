@@ -30,7 +30,6 @@ namespace PrestaShopBundle\Form\Admin\Sell\Product\SEO;
 
 use PrestaShop\PrestaShop\Adapter\LegacyContext;
 use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\RedirectType;
-use PrestaShopBundle\Form\Admin\Sell\Product\EventListener\RedirectOptionListener;
 use PrestaShopBundle\Form\Admin\Type\EntitySearchInputType;
 use PrestaShopBundle\Form\Admin\Type\TranslatorAwareType;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;

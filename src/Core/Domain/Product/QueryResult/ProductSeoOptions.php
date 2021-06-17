@@ -28,6 +28,8 @@ declare(strict_types=1);
 
 namespace PrestaShop\PrestaShop\Core\Domain\Product\QueryResult;
 
+use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\RedirectTarget;
+
 /**
  * Transfers data about Product SEO options
  */
@@ -116,7 +118,7 @@ class ProductSeoOptions
      */
     public function getRedirectTargetId(): int
     {
-        return null !== $this->redirectTarget ? $this->redirectTarget->getId() : 0;
+        return null !== $this->redirectTarget ? $this->redirectTarget->getId() : RedirectTarget::NO_TARGET;
     }
 
     /**
