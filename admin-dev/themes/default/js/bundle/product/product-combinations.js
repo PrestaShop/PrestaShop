@@ -14,6 +14,7 @@ var combinations = (function() {
     modalConfirmation.create(translate_javascripts['Are you sure to delete this?'], null, {
       onContinue: function() {
 
+        // We need this because there is a specific data="smthg" attribute so we can't use data() function
         var attributeId = elem.attr('data');
         $.ajax({
           type: 'DELETE',
@@ -55,6 +56,7 @@ var combinations = (function() {
           throw new Error('Structure of table has changed, this function needs to be updated.');
       }
 
+    // We need this because there is a specific data="smthg" attribute so we can't use data() function
       var attributeId = tableRow.attr('data');
 
       // Get combination final price value from combination form

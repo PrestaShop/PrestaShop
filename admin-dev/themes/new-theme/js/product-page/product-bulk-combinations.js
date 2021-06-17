@@ -178,6 +178,7 @@ export default function() {
     'syncToPricingTab': function syncToPricingTab() {
       $('tr.combination').toArray().forEach((item) => {
         var tableRow = $('#'+item.id);
+        // We need this because there is a specific data="smthg" attribute so we can't use data() function
         var attributeId = tableRow.attr('data');
 
         // Get combination final price value from combination form

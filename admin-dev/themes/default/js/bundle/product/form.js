@@ -1550,8 +1550,9 @@ var priceCalculation = (function() {
   var ecoTaxRate = Number(ecoTaxElem.attr('data-eco-tax-rate'));
   if (isNaN(ecoTaxRate)) {
     ecoTaxRate = 0;
+  } else {
+    ecoTaxRate = ecoTaxRate / 100;
   }
-  ecoTaxRate = ecoTaxRate / 100;
 
   /**
    * Add taxes to a price
@@ -1630,13 +1631,10 @@ var priceCalculation = (function() {
   function getEcotaxTaxExcluded() {
     var ecoTax = Tools.parseFloatFromString(ecoTaxElem.val());
 
-    if (isNaN(ecoTax)) {
-      ecoTax = 0;
+    if (isNaN(ecoTax) || ecoTax === 0) {
+      return 0;
     }
 
-    if (ecoTax === 0) {
-      return ecoTax;
-    }
     return ps_round(ecoTax / (1 + ecoTaxRate), displayPricePrecision);
   }
 
