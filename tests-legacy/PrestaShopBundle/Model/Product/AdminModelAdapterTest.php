@@ -147,6 +147,8 @@ class AdminModelAdapterTest extends KernelTestCase
             "wholesale_price" => "0.000000",
             "price" => "0.000000",
             "ecotax" => "0.000000",
+            "ecotax_tax_excluded" => "0.000000",
+            "ecotax_tax_included" => "0.000000",
             "quantity" => 300,
             "weight" => "0.000000",
             "unit_price_impact" => "0.000000",
