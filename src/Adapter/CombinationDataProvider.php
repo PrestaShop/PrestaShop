@@ -167,9 +167,8 @@ class CombinationDataProvider
             'attribute_price' => $combination['price'],
             'attribute_price_display' => $this->locale->formatPrice($combination['price'], $this->context->getContext()->currency->iso_code),
             'final_price' => (string) $finalPrice,
-            'product_price' => (string) $productPrice,
-            'product_ecotax' => (string) $productEcotax,
             'attribute_priceTI' => '',
+            // The value is displayed with tax included
             'attribute_ecotax' => $combination['ecotax_tax_included'],
             'attribute_weight_impact' => $attribute_weight_impact,
             'attribute_weight' => $combination['weight'],
