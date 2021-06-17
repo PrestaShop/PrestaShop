@@ -47,7 +47,7 @@ class Product extends FOBasePage {
     this.commentCount = '.comments-nb';
     this.emptyReviewBlock = '#empty-product-comment';
     this.productReviewList = '#product-comments-list';
-    this.productReviewRows = `${this.productReviewList} div`;
+    this.productReviewRows = `${this.productReviewList} div.product-comment-list-item.row`;
     this.productReviewRow = row => `${this.productReviewRows}:nth-child(${row})`;
     this.productReviewTitle = row => `${this.productReviewRow(row)} h4`;
     this.productReviewContent = row => `${this.productReviewRow(row)} p`;
