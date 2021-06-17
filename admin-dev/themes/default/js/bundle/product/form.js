@@ -1615,7 +1615,6 @@ var priceCalculation = (function() {
    * @return {Number}
    */
   function getEcotaxTaxIncluded() {
-    var displayPrecision = 6;
     var ecoTax = Tools.parseFloatFromString(ecoTaxElem.val());
 
     if (isNaN(ecoTax)) {
@@ -1625,11 +1624,10 @@ var priceCalculation = (function() {
     if (ecoTax === 0) {
       return ecoTax;
     }
-    return ps_round(ecoTax, displayPrecision);
+    return ps_round(ecoTax, displayPricePrecision);
   }
 
   function getEcotaxTaxExcluded() {
-    var displayPrecision = 6;
     var ecoTax = Tools.parseFloatFromString(ecoTaxElem.val());
 
     if (isNaN(ecoTax)) {
@@ -1639,10 +1637,18 @@ var priceCalculation = (function() {
     if (ecoTax === 0) {
       return ecoTax;
     }
-    return ps_round(ecoTax / (1 + ecoTaxRate), displayPrecision);
+    return ps_round(ecoTax / (1 + ecoTaxRate), displayPricePrecision);
   }
 
   return {
+
+    getProductBasePrice: function() {
+      return Tools.parseFloatFromString(priceHTElem.val());
+    },
+
+    getDisplayPricePrecision: function() {
+      return displayPricePrecision;
+    },
 
     init: function () {
       /** on update tax recalculate tax include price */
@@ -1756,7 +1762,7 @@ var priceCalculation = (function() {
      * Calculates the price with taxes and updates the elements containing it
      */
     taxInclude: function () {
-      var newPrice = truncateDecimals(this.addCurrentTax(this.normalizePrice(priceHTElem.val())), 6);
+      var newPrice = truncateDecimals(this.addCurrentTax(this.normalizePrice(priceHTElem.val())), displayPricePrecision);
 
       priceTTCElem.val(newPrice).change();
       priceTTCShorcutElem.val(newPrice).change();
@@ -1778,7 +1784,7 @@ var priceCalculation = (function() {
      * Calculates the price without taxes and updates the elements containing it
      */
     taxExclude: function () {
-      var newPrice = truncateDecimals(this.removeCurrentTax(this.normalizePrice(priceTTCElem.val())), 6);
+      var newPrice = truncateDecimals(this.removeCurrentTax(this.normalizePrice(priceTTCElem.val())), displayPricePrecision);
 
       priceHTElem.val(newPrice).change();
       priceHTShortcutElem.val(newPrice).change();
@@ -1805,8 +1811,8 @@ var priceCalculation = (function() {
       if (!isNaN(impactPriceTE)) {
         var rates = this.getRates();
         var computation_method = taxElem.find('option:selected').attr('data-computation-method');
-        impactPriceTI = ps_round(addTaxes(impactPriceTE, rates, computation_method), 6);
-        impactPriceTI = truncateDecimals(impactPriceTI, 6);
+        impactPriceTI = ps_round(addTaxes(impactPriceTE, rates, computation_method), displayPricePrecision);
+        impactPriceTI = truncateDecimals(impactPriceTI, displayPricePrecision);
       }
 
       var priceTIInput = obj.closest('div[id^="combination_form_"]').find('input.attribute_priceTI');
@@ -1830,9 +1836,10 @@ var priceCalculation = (function() {
       }
 
       var finalPriceContainer = obj.closest('div[id^="combination_form_"]').find('.final-price');
-      var productPriceTE = Number(finalPriceContainer.data('productPrice'));
+      var productPriceTE = priceCalculation.getProductBasePrice();
       var finalPriceTE = productPriceTE + impactPriceTE + ecotaxTE;
-      finalPriceTE = truncateDecimals(finalPriceTE, 6);
+      finalPriceTE = ps_round(finalPriceTE, displayPricePrecision);
+      finalPriceTE = truncateDecimals(finalPriceTE, displayPricePrecision);
 
       finalPriceContainer.html(finalPriceTE);
       finalPriceContainer.data('price', finalPriceTE);
@@ -1845,7 +1852,7 @@ var priceCalculation = (function() {
     impactPricesForEcotax: function (obj) {
       var finalPriceContainer = obj.closest('div[id^="combination_form_"]').find('.final-price');
       var currentFinalPriceTE = Number(finalPriceContainer.data('price'));
-      var productPrice = Number(finalPriceContainer.data('productPrice'));
+      var productPrice = priceCalculation.getProductBasePrice();
       var ecotaxTE = this.getCombinationEcotaxTaxExcluded(obj);
       // If no ecotax for combination use the product's one
       if (ecotaxTE <= 0) {
@@ -1854,6 +1861,9 @@ var priceCalculation = (function() {
 
       // Compute impact price tax excluded then update the price tax included
       var impactPriceTE = currentFinalPriceTE - ecotaxTE - productPrice;
+      impactPriceTE = ps_round(impactPriceTE, displayPricePrecision);
+      impactPriceTE = truncateDecimals(impactPriceTE, displayPricePrecision);
+
       var impactPriceTEInput = obj.closest('div[id^="combination_form_"]').find('input.attribute_priceTE');
       impactPriceTEInput
         .val(impactPriceTE)
@@ -1868,20 +1878,20 @@ var priceCalculation = (function() {
      * @param {jQuery} obj
      */
     impactTaxExclude: function (obj) {
-      var priceTIInput = obj.closest('div[id^="combination_form_"]').find('input.attribute_priceTI');
-      var priceTI = Tools.parseFloatFromString(priceTIInput.val());
+      var impactPriceTIInput = obj.closest('div[id^="combination_form_"]').find('input.attribute_priceTI');
+      var impactPriceTI = Tools.parseFloatFromString(impactPriceTIInput.val());
       var impactPriceTEInput = obj.closest('div[id^="combination_form_"]').find('input.attribute_priceTE');
-      var priceTE = 0;
+      var impactPriceTE = 0;
 
-      if (!isNaN(priceTI)) {
+      if (!isNaN(impactPriceTE)) {
         var rates = this.getRates();
         var computation_method = taxElem.find('option:selected').attr('data-computation-method');
-        priceTE = removeTaxes(ps_round(priceTI, displayPricePrecision), rates, computation_method);
-        priceTE = truncateDecimals(priceTE, 6);
+        impactPriceTE = ps_round(removeTaxes(impactPriceTI, rates, computation_method), displayPricePrecision);
+        impactPriceTE = truncateDecimals(impactPriceTE, displayPricePrecision);
       }
 
       impactPriceTEInput
-        .val(priceTE)
+        .val(impactPriceTE)
         .trigger('change')
       ;
     },
@@ -1894,7 +1904,6 @@ var priceCalculation = (function() {
     getCombinationEcotaxTaxExcluded(obj) {
       var ecotaxTIInput = obj.closest('div[id^="combination_form_"]').find('input.attribute_ecotaxTi');
 
-      var displayPrecision = 6;
       var ecoTaxTI = Tools.parseFloatFromString(ecotaxTIInput.val());
       if (isNaN(ecoTaxTI)) {
         ecoTaxTI = 0;
@@ -1903,7 +1912,7 @@ var priceCalculation = (function() {
       if (ecoTaxTI === 0) {
         return 0;
       }
-      return ps_round(ecoTaxTI / (1 + ecoTaxRate), displayPrecision);
+      return ps_round(ecoTaxTI / (1 + ecoTaxRate), displayPricePrecision);
     },
 
     /**
@@ -1911,7 +1920,6 @@ var priceCalculation = (function() {
      */
     getProductEcotaxTaxExcluded: function() {
       var ecoTaxElem = $('#form_step2_ecotax');
-      var displayPrecision = 6;
       var ecoTax = Tools.parseFloatFromString(ecoTaxElem.val());
 
       if (isNaN(ecoTax)) {
@@ -1928,7 +1936,7 @@ var priceCalculation = (function() {
       }
       ecoTaxRate = ecoTaxRate / 100;
 
-      return ps_round(ecoTax / (1 + ecoTaxRate), displayPrecision);
+      return ps_round(ecoTax / (1 + ecoTaxRate), displayPricePrecision);
     },
 
     /**
