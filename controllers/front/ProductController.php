@@ -1033,8 +1033,7 @@ class ProductControllerCore extends ProductPresentingFrontControllerCore
         $product['quantity_wanted'] = $this->getRequiredQuantity($product);
         $product['extraContent'] = $extraContentFinder->addParams(['product' => $this->product])->present();
 
-        $productEcotax = $this->getProductEcotax($product);
-        $product['ecotax'] = Tools::convertPrice($productEcotax, $this->context->currency, true, $this->context);
+        $product['ecotax'] = Tools::convertPrice($this->getProductEcotax($product), $this->context->currency, true, $this->context);
 
         $product_full = Product::getProductProperties($this->context->language->id, $product, $this->context);
 
@@ -1099,11 +1098,11 @@ class ProductControllerCore extends ProductPresentingFrontControllerCore
     }
 
     /**
-     * @param $product
+     * @param array $product
      *
      * @return float
      */
-    protected function getProductEcotax($product): float
+    protected function getProductEcotax(array $product): float
     {
         $ecotax = $product['ecotax'];
 
@@ -1111,6 +1110,12 @@ class ProductControllerCore extends ProductPresentingFrontControllerCore
             $combination = $this->findProductCombinationById($product['id_product_attribute']);
             if (isset($combination['ecotax']) && $combination['ecotax'] > 0) {
                 $ecotax = $combination['ecotax'];
+            }
+        }
+        if ($ecotax) {
+            $useTax = !Tax::excludeTaxeOption();
+            if ($useTax) {
+                $ecotax *= (1 + Tax::getProductEcotaxRate() / 100);
             }
         }
 
