@@ -116,7 +116,7 @@ class CartRuleTest extends TestCase
         $this->assertEquals(1, count($customerCartRules));
     }
 
-    public function testGetAllCartRulesForCustomerWithDedicatedMethodBothEnabledAndDisabled()
+    public function testGetAllCartRulesForCustomerWithDedicatedMethodBothEnabledAndDisabled(): void
     {
         $this->createDummyCartRule(false, (int) $this->dummyCustomer->id);
         $this->createDummyCartRule(true, (int) $this->dummyCustomer->id);
@@ -129,7 +129,7 @@ class CartRuleTest extends TestCase
         $this->assertEquals(3, count($customerCartRules));
     }
 
-    public function testGetAllCartRulesForCustomerWithDedicatedMethodBothEnabledAndDisabledWithOtherCustomerCartRulesAvailable()
+    public function testGetAllCartRulesForCustomerWithDedicatedMethodBothEnabledAndDisabledWithOtherCustomerCartRulesAvailable(): void
     {
         $this->createDummyCartRule(false, (int) $this->dummyCustomer->id);
         $this->createDummyCartRule(true, (int) $this->dummyCustomer->id);
@@ -160,16 +160,16 @@ class CartRuleTest extends TestCase
      * @return CartRule
      */
     public function createDummyCartRule(
-        bool $active = true,
+        bool $active,
         int $customerId
-    ) {
+    ): CartRule {
         $randomNumber = rand(999, 9999);
         $cart_rule = new CartRule();
         $cart_rule->code = 'TEST_CART_RULE_' . $randomNumber;
         $cart_rule->name = [
             $this->configuration->get('PS_LANG_DEFAULT') => 'Test Cart Rule #' . $randomNumber,
         ];
-        $cart_rule->id_customer = (int) $customerId;
+        $cart_rule->id_customer = $customerId;
         $cart_rule->free_shipping = true;
         $cart_rule->quantity = 1;
         $cart_rule->quantity_per_user = 1;
