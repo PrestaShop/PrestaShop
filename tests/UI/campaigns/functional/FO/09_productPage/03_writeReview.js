@@ -170,6 +170,7 @@ describe('FO write a review', async () => {
 
       const moduleConfigurationPageSubtitle = await moduleConfigurationPage.getPageSubtitle(page);
       await expect(moduleConfigurationPageSubtitle).to.contains(moduleName);
+      console.log(await productcommentsModulePage.getTableReviewCount(page, "waiting-approval"));
     });
   });
 
@@ -177,17 +178,17 @@ describe('FO write a review', async () => {
     it('should check if review is in waiting for approval table', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'checkIfReviewInWaitingApproval', baseContext);
 
-      const waitingApprovalReviewData = await productcommentsModulePage.getReviewDataFromTable(page, 'waiting');
+      const tableData = await productcommentsModulePage.getReviewDataFromTable(page, 'waiting-approval');
 
-      await expect(waitingApprovalReviewData.title).to.contains(productReviewData.reviewTitle);
-      await expect(waitingApprovalReviewData.content).to.contains(productReviewData.reviewContent);
-      await expect(waitingApprovalReviewData.rating).to.contains(productReviewData.reviewRating);
+      await expect(tableData.title).to.contains(productReviewData.reviewTitle);
+      await expect(tableData.content).to.contains(productReviewData.reviewContent);
+      await expect(tableData.rating).to.contains(productReviewData.reviewRating);
     });
 
     it('should approve review', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'approveReview', baseContext);
 
-      await productcommentsModulePage.approveReview(page)
+      await productcommentsModulePage.approveReview(page);
     });
   });
 
