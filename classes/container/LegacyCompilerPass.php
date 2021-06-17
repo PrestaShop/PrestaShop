@@ -24,6 +24,10 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
 use PrestaShop\PrestaShop\Adapter\Configuration;
+use Symfony\Component\Cache\Adapter\AbstractAdapter;
+use Symfony\Component\Cache\Adapter\ApcuAdapter;
+use Symfony\Component\Cache\Adapter\ArrayAdapter;
+use Symfony\Component\Cache\Adapter\MemcachedAdapter;
 use Symfony\Component\DependencyInjection\Compiler\CompilerPassInterface;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Definition;
@@ -39,13 +43,30 @@ class LegacyCompilerPass implements CompilerPassInterface
     {
         $context = Context::getContext();
 
-        $this->buildSyntheticDefinitions([
+        $definitions = [
             'configuration',
             'context',
             'db',
             'shop',
             'employee',
-        ], $container);
+        ];
+
+        $cacheDriver = $container->getParameter('cache.driver');
+
+        if ($cacheDriver === 'apcu') {
+            $definitions[] = 'apcu';
+            $container->set('apcu', new ApcuAdapter());
+        } else if ($cacheDriver === 'memcached') {
+            $definitions[] = 'memcached';
+            $container->set('memcached', new MemcachedAdapter(
+                AbstractAdapter::createConnection('memcached://localhost', ['lazy' => true])
+            ));
+        } else {
+            $definitions[] = 'array';
+            $container->set('array', new ArrayAdapter());
+        }
+
+        $this->buildSyntheticDefinitions($definitions, $container);
 
         $container->set('context', $context);
         $container->set('configuration', new Configuration());
