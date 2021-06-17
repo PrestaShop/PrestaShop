@@ -1795,8 +1795,8 @@ var priceCalculation = (function() {
      * @param {jQuery} obj
      */
     impactTaxInclude: function (obj) {
-      var priceTEInput = obj.closest('div[id^="combination_form_"]').find('input.attribute_priceTE');
-      var impactPriceTE = Number(Tools.parseFloatFromString(priceTEInput.val()));
+      var impactPriceTEInput = obj.closest('div[id^="combination_form_"]').find('input.attribute_priceTE');
+      var impactPriceTE = Number(Tools.parseFloatFromString(impactPriceTEInput.val()));
 
       this.updateImpactTI(impactPriceTE, obj);
     },
@@ -1815,8 +1815,8 @@ var priceCalculation = (function() {
         impactPriceTI = truncateDecimals(impactPriceTI, displayPricePrecision);
       }
 
-      var priceTIInput = obj.closest('div[id^="combination_form_"]').find('input.attribute_priceTI');
-      priceTIInput
+      var impactPriceTIInput = obj.closest('div[id^="combination_form_"]').find('input.attribute_priceTI');
+      impactPriceTIInput
         .val(impactPriceTI)
         .trigger('change')
       ;
@@ -1902,6 +1902,20 @@ var priceCalculation = (function() {
      * @return {Number}
      */
     getCombinationEcotaxTaxExcluded(obj) {
+      var ecoTaxTI = priceCalculation.getCombinationEcotaxTaxIncluded(obj);
+      if (ecoTaxTI === 0) {
+        return 0;
+      }
+
+      return ps_round(ecoTaxTI / (1 + ecoTaxRate), displayPricePrecision);
+    },
+
+    /**
+     * @param {jQuery} obj
+     *
+     * @return {Number}
+     */
+    getCombinationEcotaxTaxIncluded(obj) {
       var ecotaxTIInput = obj.closest('div[id^="combination_form_"]').find('input.attribute_ecotaxTi');
 
       var ecoTaxTI = Tools.parseFloatFromString(ecotaxTIInput.val());
@@ -1909,16 +1923,60 @@ var priceCalculation = (function() {
         ecoTaxTI = 0;
       }
 
-      if (ecoTaxTI === 0) {
-        return 0;
+      return ecoTaxTI;
+    },
+
+    /**
+     * @param {int} attributeId
+     * @returns {Number}
+     */
+    getCombinationEcotaxTaxIncludedById(attributeId) {
+      var formFinalPriceLabel = $('#combination_form_' + attributeId).find('span.final-price');
+
+      return priceCalculation.getCombinationEcotaxTaxIncluded(formFinalPriceLabel);
+    },
+
+    /**
+     * @param {int} attributeId
+     *
+     * @returns {Number}
+     */
+    getCombinationFinalPriceTaxExcludedById(attributeId) {
+      var combinationForm = $('#combination_form_' + attributeId);
+      var formFinalPriceLabel = combinationForm.find('span.final-price');
+      var combinationEcotaxTE = priceCalculation.getCombinationEcotaxTaxExcluded(formFinalPriceLabel);
+      if (combinationEcotaxTE <= 0) {
+        combinationEcotaxTE = priceCalculation.getProductEcotaxTaxExcluded();
       }
-      return ps_round(ecoTaxTI / (1 + ecoTaxRate), displayPricePrecision);
+
+      var impactPriceTEInput = combinationForm.find('.attribute_priceTE');
+      var impactPriceTE = Tools.parseFloatFromString(impactPriceTEInput.val());
+
+      // Compute final price and update field
+      var productPrice = priceCalculation.getProductBasePrice();
+      var finalPrice = productPrice + combinationEcotaxTE + impactPriceTE;
+      finalPrice = ps_round(finalPrice, displayPricePrecision);
+      finalPrice = truncateDecimals(finalPrice, displayPricePrecision);
+
+      return finalPrice;
     },
 
     /**
      * @return {Number}
      */
     getProductEcotaxTaxExcluded: function() {
+      var ecoTax = priceCalculation.getProductEcotaxTaxIncluded();
+      if (ecoTax === 0) {
+        return ecoTax;
+      }
+
+      return ps_round(ecoTax / (1 + ecoTaxRate), displayPricePrecision);
+    },
+
+    /**
+     * @return {Number}
+     */
+    getProductEcotaxTaxIncluded: function() {
       var ecoTaxElem = $('#form_step2_ecotax');
       var ecoTax = Tools.parseFloatFromString(ecoTaxElem.val());
 
@@ -1926,17 +1984,7 @@ var priceCalculation = (function() {
         ecoTax = 0;
       }
 
-      if (ecoTax === 0) {
-        return ecoTax;
-      }
-
-      var ecoTaxRate = Number(ecoTaxElem.attr('data-eco-tax-rate'));
-      if (isNaN(ecoTaxRate)) {
-        ecoTaxRate = 0;
-      }
-      ecoTaxRate = ecoTaxRate / 100;
-
-      return ps_round(ecoTax / (1 + ecoTaxRate), displayPricePrecision);
+      return ecoTax;
     },
 
     /**

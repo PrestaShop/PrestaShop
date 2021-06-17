@@ -32,6 +32,7 @@ use PrestaShop\PrestaShop\Adapter\Product\ProductDataProvider;
 use PrestaShop\PrestaShop\Core\Localization\Locale;
 use PrestaShopBundle\Form\Admin\Type\CommonAbstractType;
 use Product;
+use Tax;
 
 /**
  * This class will provide data from DB / ORM about product combination.
@@ -148,12 +149,14 @@ class CombinationDataProvider
 
         $productPrice = new Number((string) $product->price);
         $productEcotax = new Number((string) $product->ecotax);
+        $productEcotaxIncluded = $productEcotax->times(new Number((string) (1 + (Tax::getProductEcotaxRate() / 100))));
         $combinationEcotax = new Number((string) $combination['ecotax_tax_excluded']);
         $ecotax = $combinationEcotax->equalsZero() ? $productEcotax : $combinationEcotax;
         $finalPrice = $productPrice
             ->plus($ecotax)
             ->plus(new Number((string) $combination['price']))
             ->toPrecision(CommonAbstractType::PRESTASHOP_DECIMALS);
+
 
         return [
             'id_product_attribute' => $combination['id_product_attribute'],
@@ -169,6 +172,7 @@ class CombinationDataProvider
             'final_price' => (string) $finalPrice,
             'attribute_priceTI' => '',
             // The value is displayed with tax included
+            'product_ecotax' => (string) $productEcotaxIncluded,
             'attribute_ecotax' => $combination['ecotax_tax_included'],
             'attribute_weight_impact' => $attribute_weight_impact,
             'attribute_weight' => $combination['weight'],
