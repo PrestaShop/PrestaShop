@@ -131,6 +131,7 @@ services:
             - '@prestashop.adapter.product.repository.product_repository'
             - '@prestashop.adapter.manufacturer.repository.manufacturer_repository'
             - '@prestashop.adapter.product.update.product_indexation_updater'
+            - '@prestashop.adapter.legacy.configuration'
         tags:
             - name: tactician.handler
               command: PrestaShop\PrestaShop\Core\Domain\Product\Command\UpdateProductOptionsCommand
