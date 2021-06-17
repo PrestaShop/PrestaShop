@@ -11,6 +11,7 @@ export default function() {
   var finalPriceIT = $('#form_step2_price_ttc');
   var finalPriceBasics = $('#form_step1_price_shortcut');
   var finalPriceBasicsIT = $('#form_step1_price_ttc_shortcut');
+  var ecotaxTI = $('#form_step2_ecotax');
   var impactOnPriceSelector = 'input.attribute_priceTE';
   var finalPriceSelector = '.attribute-finalprice span';
 
@@ -47,6 +48,10 @@ export default function() {
       });
 
       finalPriceBasicsIT.on('blur', () => {
+        this.syncToPricingTab();
+      });
+
+      ecotaxTI.on('blur', () => {
         this.syncToPricingTab();
       });
 
@@ -171,17 +176,24 @@ export default function() {
       globalProductSubmitButton.submit();
     },
     'syncToPricingTab': function syncToPricingTab() {
-      var newPrice = finalPrice.val();
       $('tr.combination').toArray().forEach((item) => {
-        var jQueryRow = $('#'+item.id);
-        var jQueryFinalPriceEl = jQueryRow.find(finalPriceSelector);
-        var impactOnPriceEl = jQueryRow.find(impactOnPriceSelector);
-        var impactOnPrice = impactOnPriceEl.val();
+        var tableRow = $('#'+item.id);
+        var attributeId = tableRow.attr('data');
 
-        jQueryFinalPriceEl.data('price', newPrice);
-        // calculate new price
-        var newFinalPrice = new Number(newPrice) + new Number(impactOnPrice);
-        jQueryFinalPriceEl.text(ps_round(newFinalPrice, 6));
+        // Get combination final price value from combination form
+        var finalPrice = priceCalculation.getCombinationFinalPriceTaxExcludedById(attributeId);
+        var finalPriceLabel = tableRow.find('.attribute-finalprice span.final-price');
+        finalPriceLabel.html(finalPrice);
+
+        // Update ecotax preview (tax included)
+        var combinationEcotaxTI = priceCalculation.getCombinationEcotaxTaxIncludedById(attributeId);
+        if (combinationEcotaxTI === 0) {
+          combinationEcotaxTI = priceCalculation.getProductEcotaxTaxIncluded();
+        }
+        var ecoTaxLabel = tableRow.find('.attribute-finalprice span.attribute-ecotax');
+        ecoTaxLabel.html(Number(ps_round(combinationEcotaxTI, 2)).toFixed(2)); // 2 digits for short
+        var ecoTaxPreview = tableRow.find('.attribute-finalprice .attribute-ecotax-preview');
+        ecoTaxPreview.toggleClass('d-none', Number(combinationEcotaxTI) === 0);
       });
     }
   };
