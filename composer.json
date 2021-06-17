@@ -109,7 +109,7 @@
         "prestashop/statssales": "^2",
         "prestashop/statssearch": "^2",
         "prestashop/statsstock": "^2",
-        "prestashop/translationtools-bundle": "^5.0",
+        "prestashop/translationtools-bundle": "dev-exclude-directories",
         "prestashop/welcome": "^6",
         "sensio/framework-extra-bundle": "^5.1",
         "shudrum/array-finder": "^1.1.0",
@@ -179,6 +179,11 @@
         {
             "type": "vcs",
             "url": "https://github.com/PrestaShop/php-cssjanus",
+            "canonical": false
+        },
+        {
+            "type": "vcs",
+            "url": "https://github.com/sowbiba/TranslationToolsBundle",
             "canonical": false
         }
     ],

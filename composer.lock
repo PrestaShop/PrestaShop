@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "e15ae18c0acb959a50a67bfe7d03406b",
+    "content-hash": "f56bd9e8894249d7fb2e0f4dfd08f915",
     "packages": [
         {
             "name": "beberlei/doctrineextensions",
@@ -7191,22 +7191,22 @@
         },
         {
             "name": "prestashop/translationtools-bundle",
-            "version": "v5.0.0",
+            "version": "dev-exclude-directories",
             "source": {
                 "type": "git",
-                "url": "https://github.com/PrestaShop/TranslationToolsBundle.git",
-                "reference": "42d31c8e3d0e1faf090dd097dfedf6c437694a92"
+                "url": "https://github.com/sowbiba/TranslationToolsBundle.git",
+                "reference": "374a4a309023ff37e0c98e792c9c37ee4e4b648b"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/PrestaShop/TranslationToolsBundle/zipball/42d31c8e3d0e1faf090dd097dfedf6c437694a92",
-                "reference": "42d31c8e3d0e1faf090dd097dfedf6c437694a92",
+                "url": "https://api.github.com/repos/sowbiba/TranslationToolsBundle/zipball/374a4a309023ff37e0c98e792c9c37ee4e4b648b",
+                "reference": "374a4a309023ff37e0c98e792c9c37ee4e4b648b",
                 "shasum": ""
             },
             "require": {
                 "friendsofphp/php-cs-fixer": "^2.18",
                 "nikic/php-parser": "^4",
-                "php": ">=7.2",
+                "php": ">=7.2.5",
                 "smarty/smarty": "^3.1",
                 "symfony/twig-bridge": "^3.4 || ^4.4 || ^5.0",
                 "twig/twig": "^1.38 || ^2.7 || ^3.0"
@@ -7215,7 +7215,9 @@
                 "doctrine/common": "^2.10.0",
                 "phpunit/phpunit": "^7.5 || ^8.5",
                 "symfony/framework-bundle": "^3.4 || ^4.4 || ^5.0",
-                "symfony/translation": "^3.4 || ^4.4 || ^5.0"
+                "symfony/symfony": "^4",
+                "symfony/translation": "^3.4 || ^4.4 || ^5.0",
+                "symfony/twig-bundle": "^4"
             },
             "type": "bundle",
             "autoload": {
@@ -7223,7 +7225,6 @@
                     "PrestaShop\\TranslationToolsBundle\\": ""
                 }
             },
-            "notification-url": "https://packagist.org/downloads/",
             "license": [
                 "MIT"
             ],
@@ -7234,7 +7235,7 @@
                 },
                 {
                     "name": "PrestaShop Community",
-                    "homepage": "http://contributors.prestashop.com/"
+                    "homepage": "https://contributors.prestashop.com/"
                 }
             ],
             "description": "Translation tools for PrestaShop",
@@ -7244,10 +7245,9 @@
                 "translation"
             ],
             "support": {
-                "issues": "https://github.com/PrestaShop/TranslationToolsBundle/issues",
-                "source": "https://github.com/PrestaShop/TranslationToolsBundle/tree/v5.0.0"
+                "source": "https://github.com/sowbiba/TranslationToolsBundle/tree/exclude-directories"
             },
-            "time": "2021-07-22T12:25:06+00:00"
+            "time": "2021-08-24T12:27:46+00:00"
         },
         {
             "name": "prestashop/welcome",
@@ -12377,6 +12377,7 @@
     "minimum-stability": "dev",
     "stability-flags": {
         "cssjanus/cssjanus": 20,
+        "prestashop/translationtools-bundle": 20,
         "phake/phake": 0
     },
     "prefer-stable": true,
