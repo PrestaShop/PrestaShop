@@ -65,6 +65,7 @@
       padding-left: 1px;
       margin-bottom: -2px;
       overflow: auto;
+      overflow-y: hidden;
 
       .nav-item {
         flex-shrink: 0;
@@ -347,7 +348,6 @@
             display: table;
           }
         }
-
 
         &-head {
           &-invoice {
