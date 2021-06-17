@@ -24,6 +24,8 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
 
+declare(strict_types=1);
+
 namespace PrestaShopBundle\DependencyInjection;
 
 use Symfony\Component\Cache\Adapter\AbstractAdapter;
@@ -45,8 +47,8 @@ class CacheAdapterFactory
             return new MemcachedAdapter(
                 AbstractAdapter::createConnection('memcached://localhost', ['lazy' => true])
             );
-        } else {
-            return new ArrayAdapter();
         }
+
+        return new ArrayAdapter();
     }
 }

@@ -24,6 +24,8 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
 
+declare(strict_types=1);
+
 namespace Tests\Unit\PrestaShopBundle\DependencyInjection;
 
 use PHPUnit\Framework\TestCase;
@@ -39,7 +41,7 @@ class CacheAdapterFactoryTest extends TestCase
      */
     private $cacheAdapterFactory;
 
-    public function setUp()
+    public function setUp(): void
     {
         $this->cacheAdapterFactory = new CacheAdapterFactory();
     }
