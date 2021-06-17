@@ -80,11 +80,15 @@ class ProductPreviewRepository
         $product = $this->productRepository->get($productId);
         $name = $product->name[$languageId->getValue()] ?? reset($product->name);
         $imageId = $this->productImageRepository->getDefaultImageId($productId);
+        $imagePath = $imageId ?
+            $this->productImagePathFactory->getPath($imageId) :
+            $this->productImagePathFactory->getNoImagePath(ProductImagePathFactory::IMAGE_TYPE_SMALL_DEFAULT)
+        ;
 
         return new ProductPreview(
             $productId->getValue(),
             $name,
-            $this->productImagePathFactory->getPath($imageId)
+            $imagePath
         );
     }
 }
