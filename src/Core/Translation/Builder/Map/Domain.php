@@ -28,7 +28,6 @@ declare(strict_types=1);
 
 namespace PrestaShop\PrestaShop\Core\Translation\Builder\Map;
 
-
 use PrestaShop\PrestaShop\Core\Util\Inflector;
 
 /**
