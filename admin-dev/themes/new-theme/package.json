@@ -4,7 +4,7 @@
   "description": "",
   "private": "true",
   "scripts": {
-    "test": "NODE_ENV=test ./node_modules/.bin/mocha --require babel-register --reporter spec \"tests/**/*.spec.js\"",
+    "test": "NODE_ENV=test ./node_modules/.bin/mocha --require ts-node/register --require tsconfig-paths/register --reporter spec \"tests/**/*.spec.js\"",
     "build": "webpack --progress --stats-error-details",
     "dev": "webpack --progress --watch --mode=development",
     "watch": "npm run dev",
@@ -99,6 +99,8 @@
     "stylelint": "^13.13.1",
     "stylelint-config-prestashop": "^1.0.5",
     "ts-loader": "^8.0.16",
+    "ts-node": "^10.0.0",
+    "tsconfig-paths": "^3.9.0",
     "typescript": "^4.1.4",
     "uglify-save-license": "^0.4.1",
     "uglifyjs-webpack-plugin": "^2.2.0",
@@ -110,6 +112,8 @@
     "webpack-remove-empty-scripts": "^0.7.1"
   },
   "babel": {
-    "presets": ["env"]
+    "presets": [
+      "env"
+    ]
   }
 }

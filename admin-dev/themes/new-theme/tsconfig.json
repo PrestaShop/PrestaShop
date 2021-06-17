@@ -19,9 +19,11 @@
       "@vue/*": ["js/vue/*"],
       "@PSTypes/*": ["js/types/*"]
     },
-    "typeRoots": [
-      "js/types",
-      "node_modules/@types"
-    ]
+    "typeRoots": ["js/types", "node_modules/@types"]
+  },
+  "ts-node": {
+    "compilerOptions": {
+      "module": "commonjs"
+    }
   }
 }
