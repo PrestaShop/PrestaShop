@@ -157,7 +157,6 @@ class CombinationDataProvider
             ->plus(new Number((string) $combination['price']))
             ->toPrecision(CommonAbstractType::PRESTASHOP_DECIMALS);
 
-
         return [
             'id_product_attribute' => $combination['id_product_attribute'],
             'attribute_reference' => $combination['reference'],
