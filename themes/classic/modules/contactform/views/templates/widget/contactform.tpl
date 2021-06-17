@@ -24,7 +24,6 @@
  *}
 <section class="contact-form">
   <form action="{$urls.pages.contact}" method="post" {if $contact.allow_file_upload}enctype="multipart/form-data"{/if}>
-
     {if $notifications}
       <div class="col-xs-12 alert {if $notifications.nw_error}alert-danger{else}alert-success{/if}">
         <ul>
@@ -45,9 +44,9 @@
         </div>
 
         <div class="form-group row">
-          <label class="col-md-3 form-control-label">{l s='Subject' d='Shop.Forms.Labels'}</label>
+          <label class="col-md-3 form-control-label" for="id_contact">{l s='Subject' d='Shop.Forms.Labels'}</label>
           <div class="col-md-6">
-            <select name="id_contact" class="form-control form-control-select">
+            <select name="id_contact" id="id_contact" class="form-control form-control-select">
               {foreach from=$contact.contacts item=contact_elt}
                 <option value="{$contact_elt.id_contact}">{$contact_elt.name}</option>
               {/foreach}
