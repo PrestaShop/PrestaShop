@@ -35,13 +35,7 @@
         </div>
     </td>
     <td class="attribute-finalprice text-sm-right">
-      <span
-        data-price="{{ form.vars.value.final_price }}"
-        data-product-price="{{ form.vars.value.product_price }}"
-        data-product-ecotax="{{ form.vars.value.product_ecotax }}"
-        data-uniqid="{{ form.vars.value.id_product_attribute }}">
-        {{ form.vars.value.final_price }}
-      </span> {{ default_currency }}
+      <span data-price="{{ form.vars.value.final_price }}" data-uniqid="{{ form.vars.value.id_product_attribute }}">{{ form.vars.value.final_price }}</span> {{ default_currency }}
     </td>
     {% if 'PS_STOCK_MANAGEMENT'|configuration %}
       <td class="attribute-quantity">
@@ -167,16 +161,7 @@
                         </fieldset>
                     </div>
                     <div class="col-md-3">
-                      <small class="form-control-label vcenter">{{ "Final retail price (tax excl.) will be"|trans({}, 'Admin.Catalog.Feature') }}
-                        <span
-                          class="final-price"
-                          data-price="{{ form.vars.value.final_price }}"
-                          data-product-price="{{ form.vars.value.product_price }}"
-                          data-product-ecotax="{{ form.vars.value.product_ecotax }}"
-                          data-uniqid="{{ form.vars.value.id_product_attribute }}">
-                          {{ form.vars.value.final_price }}
-                        </span> {{ default_currency }}
-                      </small>
+                      <small class="form-control-label vcenter">{{ "Final retail price (tax excl.) will be"|trans({}, 'Admin.Catalog.Feature') }} <span class="final-price" data-price="{{ form.vars.value.final_price }}" data-uniqid="{{ form.vars.value.id_product_attribute }}">{{ form.vars.value.final_price }}</span> {{ default_currency }}</small>
                     </div>
                 </div>
                 <div class="row">
