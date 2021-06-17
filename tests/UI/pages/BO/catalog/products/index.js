@@ -277,7 +277,7 @@ class Products extends BOBasePage {
       case 'name_category':
         return this.getProductCategoryFromList(page, row);
       case 'price':
-        return this.getProductPriceFromList(page, row, true);
+        return this.getProductPriceFromList(page, row, false);
       case 'sav_quantity':
         return this.getProductQuantityFromList(page, row);
       case 'active':
