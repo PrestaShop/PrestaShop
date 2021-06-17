@@ -28,6 +28,7 @@ declare(strict_types=1);
 
 namespace Tests\Integration\PrestaShopBundle\Controller;
 
+use http\Exception\InvalidArgumentException;
 use PrestaShop\PrestaShop\Core\Exception\TypeException;
 use Symfony\Bundle\FrameworkBundle\Client;
 use Symfony\Bundle\FrameworkBundle\Routing\Router;
@@ -172,6 +173,7 @@ abstract class GridControllerTestCase extends WebTestCase
         $crawler = $this->client->request('GET', $createEntityUrl);
 
         $submitButton = $crawler->selectButton($this->saveButtonId);
+        /** If you get "InvalidArgumentException: The current node list is empty" error here it means save button was not found */
         $entityForm = $submitButton->form();
 
         $entityForm = $this->formFiller->fillForm($entityForm, $this->getCreateEntityFormModifications());
