@@ -55,20 +55,20 @@ var combinations = (function() {
           throw new Error('Structure of table has changed, this function needs to be updated.');
       }
 
-      // Get ecotax value from combination form
       var attributeId = tableRow.attr('data');
-      var finalPrice = priceCalculation.getCombinationFinalPriceTaxExcludedById(attributeId);
 
+      // Get combination final price value from combination form
+      var finalPrice = priceCalculation.getCombinationFinalPriceTaxExcludedById(attributeId);
       var finalPriceLabel = tableRow.find('.attribute-finalprice span.final-price');
       finalPriceLabel.html(finalPrice);
 
       // Update ecotax preview (tax included)
       var combinationEcotaxTI = priceCalculation.getCombinationEcotaxTaxIncludedById(attributeId);
-
-      // We use 2 digits precision to keep the preview short
+      if (combinationEcotaxTI === 0) {
+        combinationEcotaxTI = priceCalculation.getProductEcotaxTaxIncluded();
+      }
       var ecoTaxLabel = tableRow.find('.attribute-finalprice span.attribute-ecotax');
-      ecoTaxLabel.html(Number(ps_round(combinationEcotaxTI, 2)).toFixed(2));
-
+      ecoTaxLabel.html(Number(ps_round(combinationEcotaxTI, 2)).toFixed(2)); // 2 digits for short
       var ecoTaxPreview = tableRow.find('.attribute-finalprice .attribute-ecotax-preview');
       ecoTaxPreview.toggleClass('d-none', Number(combinationEcotaxTI) === 0);
   }
