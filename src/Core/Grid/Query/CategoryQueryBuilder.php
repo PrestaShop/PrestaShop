@@ -107,6 +107,12 @@ final class CategoryQueryBuilder extends AbstractDoctrineQueryBuilder
         $qb = $this->getQueryBuilder($searchCriteria->getFilters());
         $qb->select('c.id_category, c.id_parent, c.active, cl.name, cl.description, cs.position');
         $qb->addSelect('COUNT(cp.`id_product`) AS `products_count`');
+        $qb->leftJoin(
+            'c',
+            $this->dbPrefix . 'category_product',
+            'cp',
+            'c.`id_category` = cp.`id_category`'
+        );
         $qb->groupBy('cp.`id_category`');
 
         $this->searchCriteriaApplicator
@@ -158,13 +164,6 @@ final class CategoryQueryBuilder extends AbstractDoctrineQueryBuilder
             $this->multistoreContextChecker->isSingleShopContext() ?
                 'c.id_category = cs.id_category AND cs.id_shop = :context_shop_id' :
                 'c.id_category = cs.id_category AND cs.id_shop = c.id_shop_default'
-        );
-
-        $qb->leftJoin(
-            'c',
-            $this->dbPrefix . 'category_product',
-            'cp',
-            'c.`id_category` = cp.`id_category`'
         );
 
         foreach ($filters as $filterName => $filterValue) {
