@@ -56,6 +56,7 @@ use PrestaShop\PrestaShop\Core\Domain\Cart\Query\GetCartForOrderCreation;
 use PrestaShop\PrestaShop\Core\Domain\Cart\QueryResult\CartForOrderCreation;
 use PrestaShop\PrestaShop\Core\Domain\Cart\ValueObject\CartId;
 use PrestaShop\PrestaShop\Core\Domain\Product\Customization\ValueObject\CustomizationId;
+use PrestaShop\PrestaShop\Core\Domain\Product\Exception\PackOutOfStockException;
 use PrestaShop\PrestaShop\Core\Domain\Product\Exception\ProductCustomizationNotFoundException;
 use PrestaShop\PrestaShop\Core\Domain\Product\Query\SearchProducts;
 use PrestaShop\PrestaShop\Core\Domain\Product\QueryResult\FoundProduct;
@@ -281,6 +282,8 @@ class CartFeatureContext extends AbstractDomainFeatureContext
             Cart::resetStaticCache();
         } catch (MinimalQuantityException $e) {
             $this->lastException = $e;
+        } catch (PackOutOfStockException $e) {
+            $this->lastException = $e;
         }
     }
 
@@ -384,7 +387,7 @@ class CartFeatureContext extends AbstractDomainFeatureContext
 
     /**
      * @When I select :countryIsoCode address as delivery and invoice address for customer :customerReference in cart :cartReference
-     * @Given cart :cartReference delivery and invoice address country for customer :customeReferenceis is :countryIsoCode
+     * @Given cart :cartReference delivery and invoice address country for customer :customerReference is :countryIsoCode
      *
      * @param string $countryIsoCode
      * @param string $customerReference
@@ -975,12 +978,20 @@ class CartFeatureContext extends AbstractDomainFeatureContext
     /**
      * @Then I should get error that carrier is invalid
      */
-    public function assertLastErrorIsInvalidCarrier()
+    public function assertLastErrorIsInvalidCarrier(): void
     {
         $this->assertLastErrorIs(
             CartConstraintException::class,
             CartConstraintException::INVALID_CARRIER
         );
+    }
+
+    /**
+     * @Then I should get an error that you have the maximum quantity available for this pack
+     */
+    public function assertLastErrorMaxQuantityAvailableForThisProduct(): void
+    {
+        $this->assertLastErrorIs(PackOutOfStockException::class);
     }
 
     /**
