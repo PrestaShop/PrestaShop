@@ -50,7 +50,7 @@ class ProductControllerTest extends GridControllerTestCase
         $this->testEntityName = 'product';
         $this->deleteEntityRoute = 'admin_products_v2_delete';
         $this->formHandlerServiceId = 'prestashop.core.form.identifiable_object.product_form_handler';
-        $this->saveButtonId = 'product_save';
+        $this->saveButtonId = 'product_footer_save';
     }
 
     public function setUp(): void
@@ -172,14 +172,13 @@ class ProductControllerTest extends GridControllerTestCase
         $testEntity = $this->getTestEntity();
 
         return [
-            'product[basic][name][1]' => $testEntity->name,
+            'product[header][name][1]' => $testEntity->name,
             'product[shortcuts][stock][quantity]' => $testEntity->quantity,
-            'product[stock][quantity]' => $testEntity->quantity,
-            'product[stock][minimal_quantity]' => 0,
+            'product[stock][quantities][quantity]' => $testEntity->quantity,
             'product[shipping][additional_shipping_cost]' => 0,
-            'product[price][price_tax_excluded]' => $testEntity->price,
-            'product[shortcuts][price][price_tax_excluded]' => $testEntity->price,
-            'product[shortcuts][price][price_tax_included]' => $testEntity->price,
+            'product[pricing][retail_price][price_tax_excluded]' => $testEntity->price,
+            'product[shortcuts][retail_price][price_tax_excluded]' => $testEntity->price,
+            'product[shortcuts][retail_price][price_tax_included]' => $testEntity->price,
         ];
     }
 }
