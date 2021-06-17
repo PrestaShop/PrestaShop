@@ -175,3 +175,39 @@ Feature: Update product options from Back Office (BO)
       | show_condition      | true         |
       | manufacturer        | studioDesign |
     And product "product1" should be indexed
+
+  Scenario: I update a product's options for an indexable product when indexation feature is disabled
+    Given I add product "product1" with following information:
+      | name[en-US] | Presta camera |
+      | type        | standard      |
+    And product "product1" should have following options:
+      | product option      | value |
+      | active              | false |
+      | visibility          | both  |
+      | available_for_order | true  |
+      | online_only         | false |
+      | show_price          | true  |
+      | condition           | new   |
+      | show_condition      | false |
+      | manufacturer        |       |
+    And search indexation feature is disabled
+    When I update product "product1" options with following values:
+      | active              | true         |
+      | visibility          | search       |
+      | available_for_order | false        |
+      | online_only         | true         |
+      | show_price          | false        |
+      | condition           | used         |
+      | show_condition      | true         |
+      | manufacturer        | studioDesign |
+    Then product "product1" should have following options:
+      | product option      | value        |
+      | active              | true         |
+      | visibility          | search       |
+      | available_for_order | false        |
+      | online_only         | true         |
+      | show_price          | false        |
+      | condition           | used         |
+      | show_condition      | true         |
+      | manufacturer        | studioDesign |
+    And product "product1" should not be indexed
