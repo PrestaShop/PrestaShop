@@ -51,7 +51,10 @@ class CacheAdapterFactoryTest extends TestCase
      */
     public function testReturnValue(string $driver, string $expectedClass): void
     {
-        if ($driver === 'apcu' && !ApcuAdapter::isSupported()) {
+        if (
+            $driver === 'apcu' && !ApcuAdapter::isSupported()
+            || $driver === 'memcached' && !MemcachedAdapter::isSupported()
+        ) {
             $this->markTestSkipped('apcu is not supported');
         }
         $this->assertTrue($this->cacheAdapterFactory->getCacheAdapter($driver) instanceof $expectedClass);
