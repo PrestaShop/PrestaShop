@@ -29,9 +29,8 @@ declare(strict_types=1);
 namespace PrestaShop\PrestaShop\Adapter\EntityTranslation;
 
 use DataLangCore;
-use Doctrine\Inflector\Inflector;
-use Doctrine\Inflector\InflectorFactory;
 use PrestaShop\PrestaShop\Adapter\EntityTranslation\Exception\DataLangClassNameNotFoundException;
+use PrestaShop\PrestaShop\Core\Util\Inflector;
 use PrestaShopBundle\Translation\TranslatorInterface;
 
 /**
@@ -50,11 +49,6 @@ class DataLangFactory
     private $translator;
 
     /**
-     * @var Inflector
-     */
-    private $inflector;
-
-    /**
      * @param string $dbPrefix
      * @param TranslatorInterface $translator
      */
@@ -62,7 +56,6 @@ class DataLangFactory
     {
         $this->dbPrefix = $dbPrefix;
         $this->translator = $translator;
-        $this->inflector = InflectorFactory::create()->build();
     }
 
     /**
@@ -77,7 +70,7 @@ class DataLangFactory
         $tableName = $this->removeDbPrefixIfPresent($tableName);
         $tableName = $this->ensureLangSuffix($tableName);
 
-        return $this->inflector->classify($tableName);
+        return Inflector::getInflector()->classify($tableName);
     }
 
     /**

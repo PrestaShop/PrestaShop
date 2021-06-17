@@ -26,8 +26,7 @@
 
 namespace PrestaShopBundle\Routing\Linter;
 
-use Doctrine\Inflector\Inflector;
-use Doctrine\Inflector\InflectorFactory;
+use PrestaShop\PrestaShop\Core\Util\Inflector;
 use PrestaShopBundle\Routing\Linter\Exception\NamingConventionException;
 use Symfony\Bundle\FrameworkBundle\Controller\ControllerNameParser;
 use Symfony\Component\Routing\Route;
@@ -43,17 +42,11 @@ final class NamingConventionLinter implements RouteLinterInterface
     private $controllerNameParser;
 
     /**
-     * @var Inflector
-     */
-    private $inflector;
-
-    /**
      * @param ControllerNameParser $controllerNameParser
      */
     public function __construct(ControllerNameParser $controllerNameParser)
     {
         $this->controllerNameParser = $controllerNameParser;
-        $this->inflector = InflectorFactory::create()->build();
     }
 
     /**
@@ -63,13 +56,13 @@ final class NamingConventionLinter implements RouteLinterInterface
     {
         $controllerAndMethodName = $this->getControllerAndMethodName($route);
 
-        $pluralizedController = $this->inflector->tableize(
-            $this->inflector->pluralize($controllerAndMethodName['controller'])
+        $pluralizedController = Inflector::getInflector()->tableize(
+            Inflector::getInflector()->pluralize($controllerAndMethodName['controller'])
         );
 
         $expectedRouteName = strtr('admin_{resources}_{action}', [
             '{resources}' => $pluralizedController,
-            '{action}' => $this->inflector->tableize($controllerAndMethodName['method']),
+            '{action}' => Inflector::getInflector()->tableize($controllerAndMethodName['method']),
         ]);
 
         if ($routeName !== $expectedRouteName) {

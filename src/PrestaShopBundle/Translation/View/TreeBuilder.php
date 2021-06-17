@@ -26,8 +26,7 @@
 
 namespace PrestaShopBundle\Translation\View;
 
-use Doctrine\Inflector\Inflector;
-use Doctrine\Inflector\InflectorFactory;
+use PrestaShop\PrestaShop\Core\Util\Inflector;
 use PrestaShopBundle\Translation\Provider\AbstractProvider;
 use Symfony\Bundle\FrameworkBundle\Routing\Router;
 
@@ -43,11 +42,6 @@ class TreeBuilder
     private $theme;
 
     /**
-     * @var Inflector
-     */
-    private $inflector;
-
-    /**
      * @param string $locale
      * @param string|null $theme
      */
@@ -55,7 +49,6 @@ class TreeBuilder
     {
         $this->locale = $locale;
         $this->theme = $theme;
-        $this->inflector = InflectorFactory::create()->build();
     }
 
     /**
@@ -153,7 +146,7 @@ class TreeBuilder
         $translationsTree = [];
 
         foreach ($catalogue as $domain => $messages) {
-            $tableisedDomain = $this->inflector->tableize($domain);
+            $tableisedDomain = Inflector::getInflector()->tableize($domain);
             // the third component of the domain may have underscores, so we need to limit pieces to 3
             $parts = explode('_', $tableisedDomain, 3);
             /** @var array $subtree */

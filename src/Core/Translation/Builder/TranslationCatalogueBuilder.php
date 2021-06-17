@@ -27,8 +27,6 @@ declare(strict_types=1);
 
 namespace PrestaShop\PrestaShop\Core\Translation\Builder;
 
-use Doctrine\Inflector\Inflector;
-use Doctrine\Inflector\InflectorFactory;
 use InvalidArgumentException;
 use PrestaShop\PrestaShop\Core\Translation\Builder\Map\Catalogue;
 use PrestaShop\PrestaShop\Core\Translation\Builder\Map\Domain;
@@ -39,6 +37,7 @@ use PrestaShop\PrestaShop\Core\Translation\Storage\Provider\CatalogueProviderFac
 use PrestaShop\PrestaShop\Core\Translation\Storage\Provider\Definition\OthersProviderDefinition;
 use PrestaShop\PrestaShop\Core\Translation\Storage\Provider\Definition\ProviderDefinitionInterface;
 use PrestaShop\PrestaShop\Core\Translation\Storage\Provider\Definition\ThemeProviderDefinition;
+use PrestaShop\PrestaShop\Core\Util\Inflector;
 
 /**
  * This class provides the catalogue represented as an array.
@@ -54,15 +53,9 @@ class TranslationCatalogueBuilder
      */
     private $catalogueProviderFactory;
 
-    /**
-     * @var Inflector
-     */
-    private $inflector;
-
     public function __construct(CatalogueProviderFactory $catalogueProviderFactory)
     {
         $this->catalogueProviderFactory = $catalogueProviderFactory;
-        $this->inflector = InflectorFactory::create()->build();
     }
 
     /**
@@ -96,7 +89,7 @@ class TranslationCatalogueBuilder
         // When getting messages for a domain, we have to do the reverse operation to match the catalogue domain
         $catalogueDomain = $domain;
         if ($catalogueDomain !== OthersProviderDefinition::OTHERS_DOMAIN_NAME) {
-            $catalogueDomain = ucfirst($this->inflector->camelize($catalogueDomain));
+            $catalogueDomain = ucfirst(Inflector::getInflector()->camelize($catalogueDomain));
         }
 
         $domainTranslation = $this->getRawCatalogue(

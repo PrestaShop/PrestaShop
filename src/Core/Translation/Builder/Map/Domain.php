@@ -28,8 +28,8 @@ declare(strict_types=1);
 
 namespace PrestaShop\PrestaShop\Core\Translation\Builder\Map;
 
-use Doctrine\Inflector\Inflector;
-use Doctrine\Inflector\InflectorFactory;
+
+use PrestaShop\PrestaShop\Core\Util\Inflector;
 
 /**
  * This class is a representation of a Domain catalogue.
@@ -48,11 +48,6 @@ class Domain
      * @var Message[]
      */
     private $messages;
-
-    /**
-     * @var Inflector
-     */
-    private static $inflector;
 
     public function __construct(string $domainName)
     {
@@ -213,9 +208,8 @@ class Domain
      */
     public static function splitDomain(string $domain): array
     {
-        $inflector = static::getInflector();
         // the third component of the domain may have underscores, so we need to limit pieces to 3
-        return explode('_', $inflector->tableize($domain), 3);
+        return explode('_', Inflector::getInflector()->tableize($domain), 3);
     }
 
     /**
@@ -241,14 +235,5 @@ class Domain
         }
 
         return $data;
-    }
-
-    private static function getInflector(): Inflector
-    {
-        if (null === static::$inflector) {
-            static::$inflector = InflectorFactory::create()->build();
-        }
-
-        return static::$inflector;
     }
 }
