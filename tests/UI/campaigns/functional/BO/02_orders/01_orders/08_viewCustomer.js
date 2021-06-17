@@ -93,6 +93,19 @@ describe('BO - Orders : View customer from orders page', async () => {
       .contains(`${viewCustomerPage.pageTitle} ${DefaultCustomer.firstName[0]}. ${DefaultCustomer.lastName}`);
   });
 
+  it('should go back to \'Orders > Orders\' page', async function () {
+    await testContext.addContextItem(this, 'testIdentifier', 'goBackToOrdersPageToResetFilter', baseContext);
+
+    await dashboardPage.goToSubMenu(
+      page,
+      dashboardPage.ordersParentLink,
+      dashboardPage.ordersLink,
+    );
+
+    const pageTitle = await ordersPage.getPageTitle(page);
+    await expect(pageTitle).to.contains(ordersPage.pageTitle);
+  });
+
   it('should reset all filters', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'resetFiltersAfterCheck', baseContext);
 
