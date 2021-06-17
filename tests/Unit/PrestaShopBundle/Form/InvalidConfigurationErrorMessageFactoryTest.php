@@ -31,8 +31,8 @@ namespace Tests\Unit\PrestaShopBundle\Form;
 use PHPUnit\Framework\TestCase;
 use PrestaShopBundle\Entity\Lang;
 use PrestaShopBundle\Entity\Repository\LangRepository;
-use PrestaShopBundle\Form\Exception\InvalidConfigurationDataError;
 use PrestaShopBundle\Form\ErrorMessage\InvalidConfigurationErrorMessageFactory;
+use PrestaShopBundle\Form\Exception\InvalidConfigurationDataError;
 use ReflectionClass;
 use Symfony\Component\Translation\Translator;
 
