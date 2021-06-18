@@ -43,7 +43,8 @@ $(document).ready(function() {
     let textarea = $('#' + id);
     let counter = textarea.attr('counter');
     let counter_type = textarea.attr('counter_type');
-    let max = tinyMCE.activeEditor.getContent().length;
+    const editor = window.tinyMCE.get(id);
+    const max = editor.getBody() ? editor.getBody().textContent.length : 0;
 
     textarea
       .parent()
