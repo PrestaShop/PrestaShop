@@ -286,8 +286,12 @@ class ProductController extends FrameworkBundleAdminController
         $this->addFlash(
             'error',
             $this->trans(
-                'The new experimental product page is disabled when multistore is used, because multistore is not properly implemented yet.',
-                'Admin.Catalog.Notification'
+                'This page is not yet compatible with the multistore feature. To access the page, please %sdisable the multistore feature%s.',
+                'Admin.Notifications.Info',
+                [
+                    sprintf('<a href="%s">', $this->get('router')->generate('admin_preferences')),
+                    '</a>',
+                ]
             )
         );
     }
