@@ -35,7 +35,6 @@
             aria-labelledby="modalTitle"
             aria-describedby="modalDescription"
             v-click-outside="close"
-            @click.prevent.stop="preventClose"
           >
             <header
               class="modal-header"
@@ -155,9 +154,6 @@
       },
       confirm() {
         this.$emit('confirm');
-      },
-      preventClose() {
-        event.stopPropagation();
       },
     },
   };
