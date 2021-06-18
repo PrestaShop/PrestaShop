@@ -32,6 +32,10 @@ use Symfony\Component\Validator\ConstraintValidator;
 
 class TinyMceMaxLengthValidator extends ConstraintValidator
 {
+    /**
+     * @param mixed $value
+     * @param TinyMceMaxLength $constraint
+     */
     public function validate($value, Constraint $constraint)
     {
         $replaceArray = [
@@ -40,8 +44,9 @@ class TinyMceMaxLengthValidator extends ConstraintValidator
             "\n\r",
         ];
         $str = str_replace($replaceArray, [''], strip_tags($value));
+        $length = iconv_strlen($str);
 
-        if ($constraint instanceof TinyMceMaxLength && iconv_strlen($str) > $constraint->max) {
+        if ($length > $constraint->max) {
             $this->context->addViolation(
                 (new LegacyContext())->getContext()->getTranslator()->trans('This value is too long. It should have %limit% characters or less.', [], 'Admin.Catalog.Notification'),
                 ['%limit%' => $constraint->max]
