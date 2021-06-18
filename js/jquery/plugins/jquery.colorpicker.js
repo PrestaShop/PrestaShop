@@ -43,7 +43,7 @@
     });
     
     $(document).ready(function() {
-      $.fn.mColorPicker.setTextColor($('.mColorPicker'));
+     $.fn.mColorPicker.setTextColor($(this));
     });
 
     $(document).on('click', '.mColorPickerTrigger', function () {
