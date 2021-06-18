@@ -63,6 +63,7 @@ services:
 
     prestashop.adapter.module.data_provider.tab_module_list:
         class: PrestaShop\PrestaShop\Adapter\Module\TabModuleListProvider
+        deprecated: 'The "%service_id%" service is deprecated since 1.7.8.0 and will be removed in next major.'
 
     prestashop.adapter.presenter.module.payment:
         class: PrestaShop\PrestaShop\Adapter\Presenter\Module\PaymentModulesPresenter
