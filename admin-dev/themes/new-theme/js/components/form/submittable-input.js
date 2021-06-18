@@ -63,9 +63,13 @@ export default class SubmittableInput {
     $(document).on('input blur', inputs, (e) => {
       this.refreshButtonState(e.currentTarget);
     });
-    $(document).on('click', `${this.wrapperSelector} ${this.buttonSelector}`, function () {
-      that.submitInput(this);
-    });
+    $(document).on(
+      'click',
+      `${this.wrapperSelector} ${this.buttonSelector}`,
+      function () {
+        that.submitInput(this);
+      },
+    );
     $(document).on('keyup', inputs, (e) => {
       if (e.keyCode === 13) {
         e.preventDefault();
@@ -171,7 +175,7 @@ export default class SubmittableInput {
   toggleError(button, error) {
     const input = this.findInput(button);
 
-    $(input).toggleClass('is-invalid', !error);
+    $(input).toggleClass('is-invalid', error);
   }
 
   /**
