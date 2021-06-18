@@ -184,6 +184,11 @@ class ProductInformation extends CommonAbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $is_stock_management = $this->configuration->get('PS_STOCK_MANAGEMENT');
+        $shortDescriptionLimit = (int) $this->configuration->get('PS_PRODUCT_SHORT_DESC_LIMIT');
+        if ($shortDescriptionLimit <= 0) {
+            $shortDescriptionLimit = 800;
+        }
+
         $builder->add('type_product', FormType\ChoiceType::class, [
             'choices' => [
                 $this->translator->trans('Standard product', [], 'Admin.Catalog.Feature') => 0,
@@ -254,11 +259,11 @@ class ProductInformation extends CommonAbstractType
                     'attr' => [
                         'class' => 'autoload_rte',
                         'placeholder' => $this->translator->trans('The summary is a short sentence describing your product.<br />It will appears at the top of your shop\'s product page, in product lists, and in search engines\' results page (so it\'s important for SEO). To give more details about your product, use the "Description" tab.', [], 'Admin.Catalog.Help'),
-                        'counter' => (int) $this->configuration->get('PS_PRODUCT_SHORT_DESC_LIMIT') <= 0 ? 800 : (int) $this->configuration->get('PS_PRODUCT_SHORT_DESC_LIMIT'),
+                        'counter' => $shortDescriptionLimit,
                     ],
                     'constraints' => [
                         new TinyMceMaxLength([
-                            'max' => (int) $this->configuration->get('PS_PRODUCT_SHORT_DESC_LIMIT') <= 0 ? 800 : (int) $this->configuration->get('PS_PRODUCT_SHORT_DESC_LIMIT'),
+                            'max' => $shortDescriptionLimit,
                         ]),
                     ],
                     'required' => false,
