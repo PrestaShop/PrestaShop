@@ -101,6 +101,15 @@
       </trans-unit>
     </body>
   </file>
+  <file original="src/PrestaShopBundle/Resources/views/Admin/Improve/Payment/Preferences/payment_preferences.html.twig" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="178a5f69a18bd94dc2bbafbd074be1f2">
+        <source>Note that this page is available in a single shop context only. Switch context to work on it.</source>
+        <target>Note that this page is available in a single shop context only. Switch context to work on it.</target>
+        <note>Line: 35</note>
+      </trans-unit>
+    </body>
+  </file>
   <file original="src/PrestaShopBundle/Resources/views/Admin/Sell/Catalog/Categories/Blocks/form.html.twig" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
       <trans-unit id="6252c0f2c2ed83b7b06dfca86d4650bb">
