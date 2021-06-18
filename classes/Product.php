@@ -2382,6 +2382,7 @@ class ProductCore extends ObjectModel
             $combinations[$k]['attribute_designation'] = $row['attribute_designation'];
         }
 
+        $computingPrecision = Context::getContext()->getComputingPrecision();
         //Get quantity of each variations
         foreach ($combinations as $key => $row) {
             $cache_key = $row['id_product'] . '_' . $row['id_product_attribute'] . '_quantity';
@@ -2399,7 +2400,7 @@ class ProductCore extends ObjectModel
 
             $ecotax = (float) $combinations[$key]['ecotax'] ?? 0;
             $combinations[$key]['ecotax_tax_excluded'] = $ecotax;
-            $combinations[$key]['ecotax_tax_included'] = Tools::ps_round($ecotax * (1 + Tax::getProductEcotaxRate() / 100), 6);
+            $combinations[$key]['ecotax_tax_included'] = Tools::ps_round($ecotax * (1 + Tax::getProductEcotaxRate() / 100), $computingPrecision);
         }
 
         return $combinations;
@@ -2483,6 +2484,7 @@ class ProductCore extends ObjectModel
 
         $res = Db::getInstance()->executeS($sql);
 
+        $computingPrecision = Context::getContext()->getComputingPrecision();
         //Get quantity of each variations
         foreach ($res as $key => $row) {
             $cache_key = $row['id_product'] . '_' . $row['id_product_attribute'] . '_quantity';
@@ -2500,7 +2502,7 @@ class ProductCore extends ObjectModel
 
             $ecotax = (float) $res[$key]['ecotax'] ?? 0;
             $res[$key]['ecotax_tax_excluded'] = $ecotax;
-            $res[$key]['ecotax_tax_included'] = Tools::ps_round($ecotax * (1 + Tax::getProductEcotaxRate() / 100), 6);
+            $res[$key]['ecotax_tax_included'] = Tools::ps_round($ecotax * (1 + Tax::getProductEcotaxRate() / 100), $computingPrecision);
         }
 
         return $res;
