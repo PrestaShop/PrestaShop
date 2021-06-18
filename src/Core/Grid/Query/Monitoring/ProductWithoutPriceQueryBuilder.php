@@ -71,7 +71,7 @@ final class ProductWithoutPriceQueryBuilder extends AbstractProductQueryBuilder
         $qb = $this->getProductsCommonQueryBuilder($searchCriteria);
 
         $specPriceSubQuery = $this->connection->createQueryBuilder()
-            ->select(1)
+            ->select('1')
             ->from($this->dbPrefix . 'specific_price', 'sp')
             ->andWhere('p.id_product = sp.id_product');
 

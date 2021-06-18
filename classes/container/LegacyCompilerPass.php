@@ -24,6 +24,7 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
 use PrestaShop\PrestaShop\Adapter\Configuration;
+use PrestaShopBundle\DependencyInjection\CacheAdapterFactory;
 use Symfony\Component\DependencyInjection\Compiler\CompilerPassInterface;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Definition;
@@ -39,13 +40,20 @@ class LegacyCompilerPass implements CompilerPassInterface
     {
         $context = Context::getContext();
 
-        $this->buildSyntheticDefinitions([
+        $definitions = [
             'configuration',
             'context',
             'db',
             'shop',
             'employee',
-        ], $container);
+        ];
+
+        $cacheFactory = new CacheAdapterFactory();
+        $cacheDriver = $container->getParameter('cache.driver');
+        $definitions[] = $cacheDriver;
+        $container->set($cacheDriver, $cacheFactory->getCacheAdapter($cacheDriver));
+
+        $this->buildSyntheticDefinitions($definitions, $container);
 
         $container->set('context', $context);
         $container->set('configuration', new Configuration());

@@ -24,30 +24,24 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
 
-namespace LegacyTests\PrestaShopBundle\Mock;
+namespace PrestaShop\PrestaShop\Core\Util;
 
-use PrestaShop\PrestaShop\Adapter\LegacyContext;
-use Symfony\Component\HttpKernel\Event\GetResponseEvent;
-use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
+use Doctrine\Inflector\Inflector as DoctrineInflector;
+use Doctrine\Inflector\InflectorFactory;
 
 /**
- * Admin Middleware security
+ * Utility class to get an Inflector as singleton
  */
-class AdapterSecurityAdminMock
+class Inflector
 {
-    public function __construct(LegacyContext $context, TokenStorageInterface $securityTokenStorage)
-    {
-    }
+    private static $inflector;
 
-    /**
-     * Check if employee is logged in
-     * If not loggedin in, redirect to admin home page
-     *
-     * @param GetResponseEvent $event
-     *
-     * @return bool or redirect
-     */
-    public function onKernelRequest(GetResponseEvent $event)
+    public static function getInflector(): DoctrineInflector
     {
+        if (null === static::$inflector) {
+            static::$inflector = InflectorFactory::create()->build();
+        }
+
+        return static::$inflector;
     }
 }

@@ -40,36 +40,12 @@ use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorage;
 class SurvivalTest extends WebTestCase
 {
     /**
-     * @var TokenStorage
-     */
-    private $tokenStorage;
-
-    /**
      * {@inheritdoc}
      */
     public static function setUpBeforeClass()
     {
         // Do not reset the Database.
     }
-
-    /**
-     * {@inheritdoc}
-     */
-    protected function setUp()
-    {
-        parent::setUp();
-        $this->tokenStorage = self::$kernel->getContainer()->get('security.token_storage');
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    protected function tearDown()
-    {
-        self::$kernel->getContainer()->set('security.token_storage', $this->tokenStorage);
-        parent::tearDown();
-    }
-
     /**
      * @dataProvider getDataProvider
      *
@@ -193,47 +169,7 @@ class SurvivalTest extends WebTestCase
      */
     private function logIn()
     {
-        $loggedEmployeeData = new \stdClass();
-        $loggedEmployeeData->email = 'demo@prestashop.com';
-        $loggedEmployeeData->id = 1;
-        $loggedEmployeeData->passwd = '';
-        $loggedEmployeeMock = new LoggedEmployee($loggedEmployeeData);
-
-        $tokenMock = $this
-            ->getMockBuilder(AbstractToken::class)
-            ->setMethods([
-                'getUser',
-                'getRoles',
-                'isAuthenticated',
-            ])
-            ->getMockForAbstractClass();
-
-        $tokenMock->expects($this->any())
-            ->method('getUser')
-            ->willReturn($loggedEmployeeMock);
-
-        $tokenMock->expects($this->any())
-            ->method('getRoles')
-            ->willReturn([]);
-
-        $tokenMock->expects($this->any())
-            ->method('isAuthenticated')
-            ->willReturn(true);
-
-        $tokenStorageMock = $this->getMockBuilder(TokenStorage::class)
-            ->setMethods([
-                'getToken',
-            ])
-            ->disableAutoload()
-            ->disableOriginalConstructor()
-            ->getMock();
-
-        $tokenStorageMock->method('getToken')
-            ->willReturn($tokenMock);
-
         $container = self::$kernel->getContainer();
-        $container->set('security.token_storage', $tokenStorageMock);
-
         $cookie = new Cookie('psAdmin', '', 3600);
         $container->get('prestashop.adapter.legacy.context')->getContext()->cookie = $cookie;
     }

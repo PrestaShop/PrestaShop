@@ -126,7 +126,7 @@ class MailTemplateTwigRenderer implements MailTemplateRendererInterface
         } else {
             $layoutPath = !empty($layout->getTxtPath()) ? $layout->getTxtPath() : $layout->getHtmlPath();
         }
-        if (!file_exists($layoutPath)) {
+        if (!$this->engine->exists($layoutPath)) {
             throw new FileNotFoundException(sprintf('Could not find layout file: %s', $layoutPath));
         }
 

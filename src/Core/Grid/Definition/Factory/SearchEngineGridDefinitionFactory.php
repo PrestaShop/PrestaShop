@@ -52,13 +52,13 @@ use Symfony\Component\Form\Extension\Core\Type\TextType;
  */
 final class SearchEngineGridDefinitionFactory extends AbstractFilterableGridDefinitionFactory
 {
+    use BulkDeleteActionTrait;
+    use DeleteActionTrait;
+
     /**
      * @var string
      */
     public const GRID_ID = 'search_engine';
-
-    use BulkDeleteActionTrait;
-    use DeleteActionTrait;
 
     /**
      * {@inheritdoc}

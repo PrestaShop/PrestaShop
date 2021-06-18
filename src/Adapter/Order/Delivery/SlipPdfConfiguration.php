@@ -78,6 +78,10 @@ final class SlipPdfConfiguration implements DataConfigurationInterface
                 ];
             }
 
+            if (!empty($errors)) {
+                return $errors;
+            }
+
             if (empty(Invoice::getByDeliveryDateInterval($configuration['date_from'], $configuration['date_to']))) {
                 $errors[] = [
                     'key' => 'No delivery slip was found for this period.',

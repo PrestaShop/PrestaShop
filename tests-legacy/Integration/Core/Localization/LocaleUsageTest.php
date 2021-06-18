@@ -67,7 +67,7 @@ class LocaleUsageTest extends SymfonyIntegrationTestCase
             self::$firstInitDone = true;
         }
 
-        $this->localeRepository = $this->container->get(self::SERVICE_LOCALE_REPOSITORY);
+        $this->localeRepository = self::$container->get(self::SERVICE_LOCALE_REPOSITORY);
     }
 
     protected function clearCache()

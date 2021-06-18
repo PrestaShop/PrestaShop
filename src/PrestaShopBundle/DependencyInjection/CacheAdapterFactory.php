@@ -1,5 +1,4 @@
 <?php
-
 /**
  * Copyright since 2007 PrestaShop SA and Contributors
  * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
@@ -25,24 +24,31 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
 
-namespace PrestaShopBundle\Cache\Factory;
+declare(strict_types=1);
 
-use GuzzleHttp\Message\Request;
-use GuzzleHttp\Subscriber\Cache\CacheStorageInterface;
-use GuzzleHttp\Subscriber\Cache\CacheSubscriber;
+namespace PrestaShopBundle\DependencyInjection;
+
+use Symfony\Component\Cache\Adapter\AbstractAdapter;
+use Symfony\Component\Cache\Adapter\AdapterInterface;
+use Symfony\Component\Cache\Adapter\ApcuAdapter;
+use Symfony\Component\Cache\Adapter\ArrayAdapter;
+use Symfony\Component\Cache\Adapter\MemcachedAdapter;
 
 /**
- * Instanciate a CacheSubscriber for Guzzle
+ * Class CacheAdapterFactory responsible for returning the right Cache adapter for the associated driver
  */
-final class CacheSubscriberFactory
+class CacheAdapterFactory
 {
-    /**
-     * @param CacheStorageInterface $storage
-     *
-     * @return CacheSubscriber
-     */
-    public function create(CacheStorageInterface $storage)
+    public function getCacheAdapter(string $driver): AdapterInterface
     {
-        return new CacheSubscriber($storage, function (Request $request) { return true; });
+        if ($driver === 'apcu') {
+            return new ApcuAdapter();
+        } elseif ($driver === 'memcached') {
+            return new MemcachedAdapter(
+                AbstractAdapter::createConnection('memcached://localhost', ['lazy' => true])
+            );
+        }
+
+        return new ArrayAdapter();
     }
 }
