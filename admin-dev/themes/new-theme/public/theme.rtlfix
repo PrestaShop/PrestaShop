@@ -75,3 +75,10 @@
 .adminorders .dropdown-menu {
   right: inherit;
 }
+
+
+/* Footer position on RTL */
+.adminproducts .product-page .product-footer {
+  right: 13.13rem;
+  left: 0;
+}
