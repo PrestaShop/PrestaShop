@@ -24,52 +24,41 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
 
-namespace PrestaShopBundle\Form\Admin\Type;
+declare(strict_types=1);
 
-use Symfony\Component\Form\AbstractType;
+namespace PrestaShopBundle\Form\Admin\Extension;
+
+use Symfony\Component\Form\AbstractTypeExtension;
 use Symfony\Component\Form\Extension\Core\Type\NumberType;
-use Symfony\Component\Form\FormInterface;
-use Symfony\Component\Form\FormView;
+use Symfony\Component\OptionsResolver\Options;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
-class TextWithUnitType extends AbstractType
+class CommaTransformerExtension extends AbstractTypeExtension
 {
     /**
      * {@inheritdoc}
      */
-    public function getParent()
+    public function getExtendedType(): string
     {
         return NumberType::class;
     }
 
     /**
-     * {@inheritdoc}
+     * @param OptionsResolver $resolver
      */
-    public function configureOptions(OptionsResolver $resolver)
+    public function configureOptions(OptionsResolver $resolver): void
     {
-        $resolver->setDefaults([
-            'widget' => 'single_text',
-            'unit' => 'unit',
-        ]);
-    }
+        parent::configureOptions($resolver);
 
-    /**
-     * {@inheritdoc}
-     */
-    public function buildView(FormView $view, FormInterface $form, array $options)
-    {
-        parent::buildView($view, $form, $options);
+        $resolver->setNormalizer('attr', function (Options $options, $value) {
+            $classes = 'js-comma-transformer';
+            if (!empty($value['class'])) {
+                $classes .= ' ' . $value['class'];
+            }
 
-        $view->vars = array_merge($view->vars, [
-            'unit' => $options['unit'],
-        ]);
-    }
+            $value['class'] = $classes;
 
-    /**
-     * {@inheritdoc}
-     */
-    public function getBlockPrefix()
-    {
-        return 'text_with_unit';
+            return $value;
+        });
     }
 }
