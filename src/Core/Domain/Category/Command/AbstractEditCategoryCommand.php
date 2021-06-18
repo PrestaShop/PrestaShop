@@ -295,7 +295,7 @@ class AbstractEditCategoryCommand
      */
     public function setAssociatedShopIds(array $associatedShopIds): self
     {
-        $this->associatedShopIds = $associatedShopIds;
+        $this->associatedShopIds = array_map('intval', $associatedShopIds);
 
         return $this;
     }
