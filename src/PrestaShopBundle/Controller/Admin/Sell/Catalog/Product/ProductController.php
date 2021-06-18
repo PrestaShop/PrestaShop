@@ -80,6 +80,11 @@ class ProductController extends FrameworkBundleAdminController
 
             return $this->redirectToRoute('admin_product_new');
         }
+        if ($this->get('prestashop.adapter.multistore_feature')->isUsed()) {
+            $this->addFlashMessageNotMultistoreCompatible();
+
+            return $this->render('@PrestaShop/Admin/Sell/Catalog/Product/disabled.html.twig');
+        }
 
         $productForm = $this->getProductFormBuilder()->getForm();
 
@@ -272,6 +277,17 @@ class ProductController extends FrameworkBundleAdminController
                     sprintf('<a href="%s">', $this->get('router')->generate('admin_feature_flags_index')),
                     '</a>',
                 ]
+            )
+        );
+    }
+
+    private function addFlashMessageNotMultistoreCompatible(): void
+    {
+        $this->addFlash(
+            'error',
+            $this->trans(
+                'The new experimental product page is disabled when multistore is used, because multistore is not properly implemented yet.',
+                'Admin.Catalog.Notification'
             )
         );
     }
