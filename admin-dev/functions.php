@@ -239,25 +239,6 @@ function checkPSVersion()
 }
 
 /**
- * @deprecated 1.5.4.1 Use Translate::getAdminTranslation($string) instead
- * @param string $string
- * @return string
- */
-function translate($string)
-{
-    Tools::displayAsDeprecated();
-
-    global $_LANGADM;
-    if (!is_array($_LANGADM)) {
-        return str_replace('"', '&quot;', $string);
-    }
-    $key = md5(str_replace('\'', '\\\'', $string));
-    $str = (array_key_exists('index'.$key, $_LANGADM)) ? $_LANGADM['index'.$key] : ((array_key_exists('index'.$key, $_LANGADM)) ? $_LANGADM['index'.$key] : $string);
-
-    return str_replace('"', '&quot;', stripslashes($str));
-}
-
-/**
  * Returns a new Tab object
  *
  * @param string $tab class name
