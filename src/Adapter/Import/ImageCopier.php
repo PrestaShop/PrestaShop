@@ -200,16 +200,15 @@ final class ImageCopier
                             }
                         }
                     }
-                    if (in_array($imageType['id_image_type'], $watermarkTypes)) {
-                        $this->hookDispatcher->dispatchWithParameters(
-                            'actionWatermark',
-                            [
-                                'id_image' => $imageId,
-                                'id_product' => $entityId,
-                            ]
-                        );
-                    }
                 }
+
+                $this->hookDispatcher->dispatchWithParameters(
+                    'actionWatermark',
+                    [
+                        'id_image' => $imageId,
+                        'id_product' => $entityId,
+                    ]
+                );
             }
         } else {
             @unlink($origTmpfile);
