@@ -34,42 +34,41 @@
     <div class="alert alert-danger d-none" id="js-summary-error-block">
       <div class="alert-text"></div>
     </div>
-    <div class="row">
-      <div class="col">
+
         <div class="card">
           <div class="card-body">
             <div class="row">
-              <div class="col text-center">
+              <div class="col-6 col-md-4 col-xl-2 mb-2 mb-xl-0 text-center">
                 <p class="mb-0 text-muted">
                   <strong>{{ 'Total products'|trans({}, 'Admin.Orderscustomers.Feature') }}</strong>
                 </p>
                 <strong class="js-total-products"></strong>
               </div>
-              <div class="col text-center">
+              <div class="col-6 col-md-4 col-xl-2 mb-2 mb-xl-0 text-center">
                 <p class="mb-0 text-muted">
                   <strong>{{ 'Total vouchers (Tax excl.)'|trans({}, 'Admin.Orderscustomers.Feature') }}</strong>
                 </p>
                 <strong class="js-total-discounts"></strong>
               </div>
-              <div class="col text-center">
+              <div class="col-6 col-md-4 col-xl-2 mb-2 mb-xl-0 text-center">
                 <p class="mb-0 text-muted">
                   <strong>{{ 'Total shipping (Tax excl.)'|trans({}, 'Admin.Orderscustomers.Feature') }}</strong>
                 </p>
                 <strong class="js-total-shipping"></strong>
               </div>
-              <div class="col text-center">
+              <div class="col-6 col-md-4 col-xl-2 mb-2 mb-md-0 text-center">
                 <p class="mb-0 text-muted">
                   <strong>{{ 'Total taxes'|trans({}, 'Admin.Orderscustomers.Feature') }}</strong>
                 </p>
                 <strong class="js-total-taxes"></strong>
               </div>
-              <div class="col text-center">
+              <div class="col-6 col-md-4 col-xl-2 mb-2 mb-md-0 text-center">
                 <p class="mb-0 text-muted">
                   <strong>{{ 'Total (Tax excl.)'|trans({}, 'Admin.Orderscustomers.Feature') }}</strong>
                 </p>
                 <strong class="js-total-without-tax"></strong>
               </div>
-              <div class="col text-center">
+              <div class="col-6 col-md-4 col-xl-2 mb-2 mb-md-0 text-center">
                 <p class="mb-0 text-muted">
                   <strong>{{ 'Total (Tax incl.)'|trans({}, 'Admin.Orderscustomers.Feature') }}</strong>
                 </p>
@@ -78,12 +77,10 @@
             </div>
           </div>
         </div>
-      </div>
-    </div>
+
 
     {{ form_start(summaryForm, {'action': path('admin_orders_place')}) }}
-      <div class="row mt-3">
-        <div class="col col-11">
+      <div class="mt-3">
 
           <div id="js-order-message-wrap">
             {{ ps.form_group_row(summaryForm.order_message, {}, {
@@ -100,12 +97,12 @@
           }) }}
 
           <div class="form-group row mt-4">
-            <div class="col-sm offset-sm-4">
+            <div class="col offset-sm-4 py-1">
               <button class="btn btn-primary" type="submit" id="create-order-button">
                 {{ 'Create order'|trans({}, 'Admin.Orderscustomers.Feature') }}
               </button>
 
-              <div class="btn-group">
+              <div class="btn-group py-1">
                 <button
                   class="btn btn-outline-primary dropdown-toggle"
                   type="button"
@@ -132,7 +129,8 @@
               {{ form_row(summaryForm.cart_id, {'attr': {'class': 'js-place-order-cart-id'}}) }}
             </div>
           </div>
-        </div>
+
+
       </div>
     {{ form_end(summaryForm) }}
 
