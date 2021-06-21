@@ -29,8 +29,8 @@
       {l
         s='Call us: [1]%phone%[/1]'
         sprintf=[
-          '[1]' => '<span>',
-          '[/1]' => '</span>',
+          '[1]' => "<a href='{$contact_infos['phone']}'>",
+          '[/1]' => '</a>',
           '%phone%' => $contact_infos.phone
         ]
         d='Shop.Theme.Global'
