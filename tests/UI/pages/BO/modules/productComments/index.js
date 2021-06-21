@@ -22,16 +22,12 @@ class ProductComments extends ModuleConfiguration.constructor {
     this.reviewsTableRow = (table, row) => `${this.reviewsTableRows(table)}:nth-child(${row})`;
     this.reviewsTableColumn = (table, row, column) => `${this.reviewsTableRow(table, row)} td.product-comment-${column}`;
     // Buttons Selectors
+    this.deleteReviewButton = (table, row) => `${this.reviewsTableRow(table, row)} .btn-group [title='Delete']`;
+    this.toggleDropdownButton = (table, row) => `${this.reviewsTableRow(table, row)} button.dropdown-toggle`;
     // "Waiting for approval" buttons selectors
     this.approveWaitingReviewButton = (table, row) => `${this.reviewsTableRow(table, row)} a.btn-success`;
-    this.waitingApprovalToggleDropdownButton = (table, row) => `${this.reviewsTableRow(table, row)} button.dropdown-toggle`;
-    this.waitingApprovalReviewDeleteButton = (table, row) => `${this.reviewsTableRow(table, row)} a.delete`;
     // "Reported reviews" buttons selectors
-    this.reportedReviewToggleDropdownButton = (table, row) => `${this.reviewsTableRow(table, row)} button.dropdown-toggle`;
-    this.reportedReviewDeleteButton = (table, row) => `${this.reviewsTableRow(table, row)} .btn-group a`;
     this.confirmNotAbusiveReviewButton = (table, row) => `${this.reviewsTableRow(table, row)} .dropdown-toggle a`;
-    // "Approved review" button selectors
-    this.approvedReviewDeleteButton = (table, row) => `${this.reviewsTableRow(table, row)} .btn-group a`;
     // Delete review confirmation modal selectors
     this.confirmReviewDeletionButton = '#popup_ok';
   }
@@ -55,29 +51,15 @@ class ProductComments extends ModuleConfiguration.constructor {
   }
 
   /**
-   * Open row dropdown for a product review
+   *
    * @param page {Page} Browser tab
    * @param table {String} The review table (2 options available: 'waiting-approval', 'reported')
    * @param row {Number} The review row
-   * @return {Promise<void>}
+   * @returns {Promise<void>}
    */
   async openProductReviewDropdown(page, table, row = 1) {
-    switch (table) {
-      case 'waiting-approval':
-        await Promise.all([
-          this.waitForVisibleSelector(page, this.waitingApprovalToggleDropdownButton(table, row)),
-          page.click(this.waitingApprovalToggleDropdownButton(table, row)),
-        ]);
-        break;
-      case 'reported':
-        await Promise.all([
-          this.waitForVisibleSelector(page, this.reportedReviewToggleDropdownButton(table, row)),
-          page.click(this.reportedReviewToggleDropdownButton(table, row)),
-        ]);
-        break;
-      default:
-      // Do nothing
-    }
+    await this.waitForVisibleSelector(page, this.toggleDropdownButton(table, row));
+    await page.click(this.toggleDropdownButton(table, row));
   }
 
   /**
@@ -109,54 +91,46 @@ class ProductComments extends ModuleConfiguration.constructor {
 
  /**
   *
-  * @param page
-  * @param table
-  * @param row
+  * @param page {Page} Browser tab
+  * @param table {String} The reviews table (the table is set by default)
+  * @param row {Number} The review row
   * @returns {Promise<void>}
   */
  async approveReview(page, table = "waiting-approval", row = 1) {
    await page.click(this.approveWaitingReviewButton(table, row));
  }
+
  /**
   *
-  * @param page
-  * @param table
-  * @param row
+  * @param page {Page} Browser tab
+  * @param table {String} The reviews table (available options: 'waiting-approval', 'reported', 'deleted'
+  * @param row {Number} The review row
   * @returns {Promise<void>}
   */
  async deleteReview(page, table, row = 1) {
-   switch (table) {
-     case 'waiting-approval':
-       await this.openProductReviewDropdown(page, 'waiting-approval', row);
-       await page.click(this.waitingApprovalReviewDeleteButton(table, row));
-       await this.waitForVisibleSelector(page, this.confirmReviewDeletionButton);
-       await page.click(this.confirmReviewDeletionButton);
-       break;
-     case 'reported':
-       await page.click(this.reportedReviewDeleteButton(table, row));
-       await this.waitForVisibleSelector(page, this.confirmReviewDeletionButton);
-       await page.click(this.confirmReviewDeletionButton);
-       break;
-     case 'approved':
-       await page.click(this.approvedReviewDeleteButton(table, row));
-       await this.waitForVisibleSelector(page, this.confirmReviewDeletionButton);
-       await page.click(this.confirmReviewDeletionButton);
-       break;
-     default:
-     // Do nothing
+   if (table === 'waiting-approval') {
+     await this.openProductReviewDropdown(page, table, row);
+     await page.click(this.deleteReviewButton(table, row));
+     await this.waitForVisibleSelector(page, this.confirmReviewDeletionButton);
+     await page.click(this.confirmReviewDeletionButton);
+   }
+   else {
+     await page.click(this.deleteReviewButton(table, row));
+     await this.waitForVisibleSelector(page, this.confirmReviewDeletionButton);
+     await page.click(this.confirmReviewDeletionButton);
    }
  }
 
  /**
   *
-  * @param page
-  * @param row
+  * @param page {Page} Browser tab
+  * @param row {Number} The review row
   * @returns {Promise<void>}
   */
  async confirmNotAbusiveReview(page, row = 1) {
    await this.openProductReviewDropdown(page, 'reported', row);
    await this.waitForVisibleSelector(page, this.confirmNotAbusiveReviewButton(row));
-   page.click(this.confirmNotAbusiveReviewButton(row));
+   await page.click(this.confirmNotAbusiveReviewButton(row));
  }
 }
 
