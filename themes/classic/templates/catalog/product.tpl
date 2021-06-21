@@ -119,6 +119,12 @@
                     {include file='catalog/_partials/product-discounts.tpl'}
                   {/block}
 
+                  {block name='product_availability'}
+                    {include file="{_PS_PARENT_THEME_URI_}_partials/product-availability.tpl" type="success" label="Only 10 products in stock - Delivery under 48 hours"}
+                    {include file="{_PS_PARENT_THEME_URI_}_partials/product-availability.tpl" label="Temporarily out of stock - Delivery under 72 hours"}
+                    {include file="{_PS_PARENT_THEME_URI_}_partials/product-availability.tpl" type="error" label="Out of stock"}
+                  {/block}
+
                   {block name='product_add_to_cart'}
                     {include file='catalog/_partials/product-add-to-cart.tpl'}
                   {/block}

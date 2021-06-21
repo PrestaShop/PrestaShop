@@ -1,0 +1,32 @@
+$component-name: product-availability;
+
+.#{$component-name} {
+  margin-bottom: 1rem;
+  font-size: 1rem;
+  font-weight: 400;
+  color: $warning;
+
+  i {
+    margin-right: 0.25rem;
+    font-size: 1.25rem;
+    color: $warning;
+  }
+
+  &--success {
+    &,
+    i {
+      color: $brand-success;
+    }
+  }
+
+  &--error {
+    &,
+    i {
+      color: $brand-danger;
+    }
+  }
+
+  & &-label {
+    vertical-align: middle;
+  }
+}
