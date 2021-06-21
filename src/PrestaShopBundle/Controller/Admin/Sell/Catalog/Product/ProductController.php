@@ -81,17 +81,7 @@ class ProductController extends FrameworkBundleAdminController
             return $this->redirectToRoute('admin_product_new');
         }
         if ($this->get('prestashop.adapter.multistore_feature')->isUsed()) {
-            return $this->render('@PrestaShop/Admin/Sell/Catalog/Product/disabled.html.twig', [
-                'errorMessage' => $this->trans(
-                    'This page is not yet compatible with the multistore feature. To access the page, please [1]disable the multistore feature[/1].',
-                    'Admin.Notifications.Info',
-                    [
-                        '[1]' => sprintf('<a href="%s">', $this->get('router')->generate('admin_preferences')),
-                        '[/1]' => '</a>',
-                    ]
-                ),
-                'standardPageUrl' => $this->generateUrl('admin_product_new'),
-            ]);
+            return $this->renderDisableMultistorePage();
         }
 
         $productForm = $this->getProductFormBuilder()->getForm();
@@ -130,17 +120,7 @@ class ProductController extends FrameworkBundleAdminController
         }
 
         if ($this->get('prestashop.adapter.multistore_feature')->isUsed()) {
-            return $this->render('@PrestaShop/Admin/Sell/Catalog/Product/disabled.html.twig', [
-                'errorMessage' => $this->trans(
-                    'This page is not yet compatible with the multistore feature. To access the page, please [1]disable the multistore feature[/1].',
-                    'Admin.Notifications.Info',
-                    [
-                        '[1]' => sprintf('<a href="%s">', $this->get('router')->generate('admin_preferences')),
-                        '[/1]' => '</a>',
-                    ]
-                ),
-                'standardPageUrl' => $this->generateUrl('admin_product_form', ['id' => $productId]),
-            ]);
+            return $this->renderDisableMultistorePage($productId);
         }
 
         $productForm = $this->getProductFormBuilder()->getFormFor($productId, [], [
@@ -301,5 +281,28 @@ class ProductController extends FrameworkBundleAdminController
                 ]
             )
         );
+    }
+
+    /**
+     * @param int|null $productId
+     *
+     * @return Response
+     */
+    private function renderDisableMultistorePage(int $productId = null): Response
+    {
+        return $this->render('@PrestaShop/Admin/Sell/Catalog/Product/disabled.html.twig', [
+            'errorMessage' => $this->trans(
+                'This page is not yet compatible with the multistore feature. To access the page, please [1]disable the multistore feature[/1].',
+                'Admin.Notifications.Info',
+                [
+                    '[1]' => sprintf('<a href="%s">', $this->get('router')->generate('admin_preferences')),
+                    '[/1]' => '</a>',
+                ]
+            ),
+            'standardPageUrl' => $this->generateUrl(
+                !empty($productId) ? 'admin_product_form' : 'admin_product_new',
+                !empty($productId) ? ['id' => $productId] : []
+            ),
+        ]);
     }
 }
