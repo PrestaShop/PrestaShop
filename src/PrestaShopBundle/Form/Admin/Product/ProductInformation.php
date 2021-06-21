@@ -34,6 +34,7 @@ use PrestaShop\PrestaShop\Adapter\Feature\FeatureDataProvider;
 use PrestaShop\PrestaShop\Adapter\LegacyContext;
 use PrestaShop\PrestaShop\Adapter\Manufacturer\ManufacturerDataProvider;
 use PrestaShop\PrestaShop\Adapter\Product\ProductDataProvider;
+use PrestaShop\PrestaShop\Core\Domain\Product\ProductSettings;
 use PrestaShopBundle\Form\Admin\Category\SimpleCategory;
 use PrestaShopBundle\Form\Admin\Feature\ProductFeature;
 use PrestaShopBundle\Form\Admin\Type\ChoiceCategoriesTreeType;
@@ -186,7 +187,7 @@ class ProductInformation extends CommonAbstractType
         $is_stock_management = $this->configuration->get('PS_STOCK_MANAGEMENT');
         $shortDescriptionLimit = (int) $this->configuration->get('PS_PRODUCT_SHORT_DESC_LIMIT');
         if ($shortDescriptionLimit <= 0) {
-            $shortDescriptionLimit = 800;
+            $shortDescriptionLimit = ProductSettings::MAX_DESCRIPTION_SHORT_LENGTH;
         }
 
         $builder->add('type_product', FormType\ChoiceType::class, [
