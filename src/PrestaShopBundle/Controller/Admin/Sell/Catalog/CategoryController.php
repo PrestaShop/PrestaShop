@@ -26,6 +26,7 @@
 
 namespace PrestaShopBundle\Controller\Admin\Sell\Catalog;
 
+use Category;
 use Exception;
 use PrestaShop\PrestaShop\Core\Domain\Category\Command\BulkDeleteCategoriesCommand;
 use PrestaShop\PrestaShop\Core\Domain\Category\Command\BulkDisableCategoriesCommand;
@@ -88,7 +89,7 @@ class CategoryController extends FrameworkBundleAdminController
     {
         $categoriesKpiFactory = $this->get('prestashop.core.kpi_row.factory.categories');
 
-        $currentCategoryId = $filters->getFilters()['id_category_parent'];
+        $currentCategoryId = (int) $filters->getFilters()['id_category_parent'];
         $categoryViewDataProvider = $this->get('prestashop.adapter.category.category_view_data_provider');
         $categoryViewData = $categoryViewDataProvider->getViewData($currentCategoryId);
 
@@ -100,7 +101,7 @@ class CategoryController extends FrameworkBundleAdminController
         $categoryGridFactory = $this->get('prestashop.core.grid.factory.category_decorator');
         $categoryGrid = $categoryGridFactory->getGrid($filters);
 
-        $deleteCategoriesForm = $this->createForm(DeleteCategoriesType::class, ['categories_to_delete_parent' => (int) $currentCategoryId], []);
+        $deleteCategoriesForm = $this->createForm(DeleteCategoriesType::class, ['categories_to_delete_parent' => $currentCategoryId], []);
 
         $showcaseCardIsClosed = $this->getQueryBus()->handle(
             new GetShowcaseCardIsClosed((int) $this->getContext()->employee->id, ShowcaseCard::CATEGORIES_CARD)
@@ -111,7 +112,7 @@ class CategoryController extends FrameworkBundleAdminController
             'enableSidebar' => true,
             'categoriesGrid' => $this->presentGrid($categoryGrid),
             'categoriesKpi' => $categoriesKpiFactory->build(),
-            'layoutHeaderToolbarBtn' => $this->getCategoryToolbarButtons($request),
+            'layoutHeaderToolbarBtn' => $this->getCategoryToolbarButtons($request, $currentCategoryId),
             'currentCategoryView' => $categoryViewData,
             'deleteCategoriesForm' => $deleteCategoriesForm->createView(),
             'isSingleShopContext' => $this->get('prestashop.adapter.shop.context')->isSingleShopContext(),
@@ -802,10 +803,11 @@ class CategoryController extends FrameworkBundleAdminController
 
     /**
      * @param Request $request
+     * @param int $categoryId
      *
      * @return array
      */
-    private function getCategoryToolbarButtons(Request $request)
+    private function getCategoryToolbarButtons(Request $request, int $categoryId): array
     {
         $toolbarButtons = [];
 
@@ -817,16 +819,22 @@ class CategoryController extends FrameworkBundleAdminController
             ];
         }
 
-        $categoryId = $request->attributes->get('categoryId');
+        if ($categoryId === 0) {
+            $categoryId = $request->attributes->get('categoryId');
+        }
         if (empty($categoryId)) {
             $categoryId = $this->configuration->getInt('PS_HOME_CATEGORY');
         }
 
-        $toolbarButtons['add'] = [
-            'href' => $this->generateUrl('admin_categories_create', ['id_parent' => $categoryId]),
-            'desc' => $this->trans('Add new category', 'Admin.Catalog.Feature'),
-            'icon' => 'add_circle_outline',
-        ];
+        // Display the button "Add new category" if the current category is not a root category
+        $category = new Category($categoryId);
+        if (!$category->isRootCategory()) {
+            $toolbarButtons['add'] = [
+                'href' => $this->generateUrl('admin_categories_create', ['id_parent' => $categoryId]),
+                'desc' => $this->trans('Add new category', 'Admin.Catalog.Feature'),
+                'icon' => 'add_circle_outline',
+            ];
+        }
 
         return $toolbarButtons;
     }
