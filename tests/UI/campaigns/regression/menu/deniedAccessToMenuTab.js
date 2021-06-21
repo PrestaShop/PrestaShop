@@ -41,7 +41,7 @@ describe('Regression : Access to Menu tab is denied with neither left menu and U
 
     const isMenuTabVisible = await dashboardPage.isSubmenuVisible(
       page,
-      dashboardPage.ordersParentLink,
+      dashboardPage.advancedParametersLink,
       dashboardPage.menuTabLink,
     );
 
