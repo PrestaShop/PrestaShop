@@ -14,7 +14,7 @@ class ContactUs extends FOBasePage {
     // Form selectors
     this.subjectSelect = '#content select[name=\'id_contact\']';
     this.emailAddressInput = '#content input[name=\'from\']';
-    this.attachmentLabel = '#filestyle-0';
+    this.attachmentLabel = '#file-upload';
     this.orderReferenceSelect = 'select[name=id_order]';
     this.messageTextarea = '#content textarea[name=\'message\']';
     this.sendButton = '#content input[name=\'submitMessage\']';
