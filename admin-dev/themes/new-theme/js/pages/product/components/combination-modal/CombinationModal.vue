@@ -230,7 +230,11 @@
         );
 
         iframeInputs.forEach((input) => {
-          input.addEventListener('keyup change', () => {
+          input.addEventListener('keyup', () => {
+            this.isFormUpdated = true;
+          });
+
+          input.addEventListener('change', () => {
             this.isFormUpdated = true;
           });
         });
