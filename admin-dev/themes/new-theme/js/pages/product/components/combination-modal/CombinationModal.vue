@@ -237,6 +237,10 @@
           input.addEventListener('change', () => {
             this.isFormUpdated = true;
           });
+
+          window.document.addEventListener('datepickerChange', () => {
+            this.isFormUpdated = true;
+          });
         });
       },
       applyIframeStyling() {

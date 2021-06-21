@@ -27,13 +27,13 @@
 {% block _combination_form_images_widget %}
   <div class="combination-images-selector">
     {%- for child in form %}
-      <div class="combination-image-choice{% if child.vars.checked %} selected{% endif %}">
+      <label class="combination-image-choice{% if child.vars.checked %} selected{% endif %}">
         <img src="{{ child.vars.attr['data-image-url'] }}" />
         {{- form_widget(child, {
           parent_label_class: label_attr.class|default(''),
           translation_domain: choice_translation_domain,
         }) -}}
-      </div>
+      </label>
     {% endfor -%}
   </div>
 {% endblock %}
