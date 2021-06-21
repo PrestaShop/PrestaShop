@@ -29,4 +29,9 @@ $component-name: product-availability;
   & &-label {
     vertical-align: middle;
   }
+
+  & &-options {
+    padding-left: 1.75rem;
+    font-size: 0.75rem;
+  }
 }
