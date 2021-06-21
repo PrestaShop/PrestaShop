@@ -26,12 +26,23 @@
 
 namespace PrestaShopBundle\Form\Validator\Constraints;
 
-use PrestaShop\PrestaShop\Adapter\LegacyContext;
+use PrestaShopBundle\Translation\TranslatorInterface;
 use Symfony\Component\Validator\Constraint;
 use Symfony\Component\Validator\ConstraintValidator;
 
 class TinyMceMaxLengthValidator extends ConstraintValidator
 {
+    /** @var TranslatorInterface */
+    private $translator;
+
+    /**
+     * @param TranslatorInterface $translator
+     */
+    public function __construct(TranslatorInterface $translator)
+    {
+        $this->translator = $translator;
+    }
+
     /**
      * @param mixed $value
      * @param TinyMceMaxLength $constraint
@@ -48,7 +59,7 @@ class TinyMceMaxLengthValidator extends ConstraintValidator
 
         if ($length > $constraint->max) {
             $this->context->addViolation(
-                (new LegacyContext())->getContext()->getTranslator()->trans('This value is too long. It should have %limit% characters or less.', [], 'Admin.Catalog.Notification'),
+                $this->translator->trans('This value is too long. It should have %limit% characters or less.', [], 'Admin.Catalog.Notification'),
                 ['%limit%' => $constraint->max]
             );
         }
