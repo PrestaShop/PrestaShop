@@ -40,5 +40,11 @@
     <span class="product-availability-label">
       {$label}
     </span>
+
+    {if isset($hasOptions) && $hasOptions}
+      <p class="product-availability-options">
+        {l s='Other options available' d='Shop.Theme.Global'}
+      </p>
+    {/if}
   </div>  
 {/block}
