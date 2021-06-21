@@ -21,7 +21,7 @@ class ProductComments extends ModuleConfiguration.constructor {
     this.reviewsTableRows = table => `${this.reviewsTableBody(table)} tr`;
     this.reviewsTableRow = (table, row) => `${this.reviewsTableRows(table)}:nth-child(${row})`;
     this.reviewsTableColumn = (table, row, column) => `${this.reviewsTableRow(table, row)}`
-      + `td.product-comment-${column}`;
+      + ` td.product-comment-${column}`;
     // Buttons Selectors
     this.deleteReviewButton = (table, row) => `${this.reviewsTableRow(table, row)} .btn-group [title='Delete']`;
     this.toggleDropdownButton = (table, row) => `${this.reviewsTableRow(table, row)} button.dropdown-toggle`;
@@ -67,15 +67,7 @@ class ProductComments extends ModuleConfiguration.constructor {
    * @param page {Page} The browser tab
    * @param table {String} The review table (3 options available: 'waiting-approval', 'reported', 'approved')
    * @param row {Number} The review row (default is set to 1)
-   * @returns {Promise
-   * <{date: string,
-   * product: string,
-   * author: string,
-   * rating: string,
-   * id: string,
-   * title: string,
-   * content: string}>
-   * }
+   * @returns {Promise<{Object}>}
    */
   async getReviewDataFromTable(page, table, row = 1) {
     return {
@@ -101,23 +93,38 @@ class ProductComments extends ModuleConfiguration.constructor {
   }
 
   /**
-  *
-  * @param page {Page} Browser tab
-  * @param table {String} The reviews table (available options: 'waiting-approval', 'reported', 'deleted'
-  * @param row {Number} The review row
-  * @returns {Promise<void>}
-  */
+   *
+   * @param page {Page} Browser tab
+   * @param table {String} The reviews table
+   * @param row {Number} The review row
+   * @returns {Promise<void>}
+   */
   async deleteReview(page, table, row = 1) {
-    if (table === 'waiting-approval') {
-      await this.openProductReviewDropdown(page, table, row);
-      await page.click(this.deleteReviewButton(table, row));
-      await this.waitForVisibleSelector(page, this.confirmReviewDeletionButton);
-      await page.click(this.confirmReviewDeletionButton);
-    } else {
-      await page.click(this.deleteReviewButton(table, row));
-      await this.waitForVisibleSelector(page, this.confirmReviewDeletionButton);
-      await page.click(this.confirmReviewDeletionButton);
-    }
+    await page.click(this.deleteReviewButton(table, row));
+    await this.waitForVisibleSelector(page, this.confirmReviewDeletionButton);
+    await this.clickAndWaitForNavigation(page, this.confirmReviewDeletionButton);
+  }
+
+  /**
+   *
+   * @param page {Page} Browser tab
+   * @param row {Number} The review row
+   * @returns {Promise<void>}
+   */
+  async deleteWaitingApprovalReview(page, row = 1) {
+    // Need to open dropdown before delete
+    await this.openProductReviewDropdown(page, 'waiting-approval', row);
+    await this.deleteReview(page, 'waiting-approval', row);
+  }
+
+  /**
+   *
+   * @param page {Page} Browser tab
+   * @param row {Number} The review row
+   * @returns {Promise<void>}
+   */
+  async deleteReportedReview(page, row = 1) {
+    await this.deleteReview(page, 'reported', row);
   }
 
   /**
