@@ -35,7 +35,6 @@ ALTER TABLE `PREFIX_employee` ADD `has_enabled_gravatar` TINYINT UNSIGNED DEFAUL
 
 INSERT INTO `PREFIX_configuration` (`name`, `value`, `date_add`, `date_upd`) VALUES
     ('PS_COOKIE_SAMESITE', 'Lax', NOW(), NOW()),
-    ('PS_SHOW_LABEL_OOS_LISTING_PAGES', '1', NOW(), NOW()),
     ('ADDONS_API_MODULE_CHANNEL', 'stable', NOW(), NOW())
 ;
 

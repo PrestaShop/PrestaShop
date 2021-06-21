@@ -692,7 +692,6 @@ class CartPresenter implements PresenterInterface
             $this->settings->allow_add_variant_to_cart_from_listing = (int) Configuration::get('PS_ATTRIBUTE_CATEGORY_DISPLAY');
             $this->settings->stock_management_enabled = Configuration::get('PS_STOCK_MANAGEMENT');
             $this->settings->showPrices = Configuration::showPrices();
-            $this->settings->showLabelOOSListingPages = (bool) Configuration::get('PS_SHOW_LABEL_OOS_LISTING_PAGES');
         }
 
         return $this->settings;

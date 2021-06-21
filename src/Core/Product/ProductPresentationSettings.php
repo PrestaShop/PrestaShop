@@ -36,10 +36,6 @@ class ProductPresentationSettings
     public $stock_management_enabled;
     public $showPrices;
     public $lastRemainingItems;
-    /**
-     * @var bool|null
-     */
-    public $showLabelOOSListingPages;
 
     public function shouldShowPrice()
     {
