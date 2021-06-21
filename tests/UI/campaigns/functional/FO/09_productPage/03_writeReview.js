@@ -116,7 +116,7 @@ describe('FO write a review', async () => {
       await testContext.addContextItem(this, 'testIdentifier', 'getFoCommentCount', baseContext);
 
       foCommentCount = await productPage.getNumberOfComment(page);
-      // TODO need assertion here ...
+      await expect(foCommentCount).to.be.at.least(0);
     });
 
     it('should add a product review', async function () {
