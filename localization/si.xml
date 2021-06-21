@@ -29,13 +29,14 @@
     <tax id="20" name="PVM LT 21%" rate="21" auto-generated="1" from-eu-tax-group="virtual"/>
     <tax id="21" name="TVA LU 17%" rate="17" auto-generated="1" from-eu-tax-group="virtual"/>
     <tax id="22" name="PVN LV 21%" rate="21" auto-generated="1" from-eu-tax-group="virtual"/>
-    <tax id="23" name="VAT MT 18%" rate="18" auto-generated="1" from-eu-tax-group="virtual"/>
-    <tax id="24" name="BTW NL 21%" rate="21" auto-generated="1" from-eu-tax-group="virtual"/>
-    <tax id="25" name="PTU PL 23%" rate="23" auto-generated="1" from-eu-tax-group="virtual"/>
-    <tax id="26" name="IVA PT 23%" rate="23" auto-generated="1" from-eu-tax-group="virtual"/>
-    <tax id="27" name="TVA RO 19%" rate="19" auto-generated="1" from-eu-tax-group="virtual"/>
-    <tax id="28" name="Moms SE 25%" rate="25" auto-generated="1" from-eu-tax-group="virtual"/>
-    <tax id="29" name="DPH SK 20%" rate="20" auto-generated="1" from-eu-tax-group="virtual"/>
+    <tax id="23" name="TVA MC 20%" rate="20" auto-generated="1" from-eu-tax-group="virtual"/>
+    <tax id="24" name="VAT MT 18%" rate="18" auto-generated="1" from-eu-tax-group="virtual"/>
+    <tax id="25" name="BTW NL 21%" rate="21" auto-generated="1" from-eu-tax-group="virtual"/>
+    <tax id="26" name="PTU PL 23%" rate="23" auto-generated="1" from-eu-tax-group="virtual"/>
+    <tax id="27" name="IVA PT 23%" rate="23" auto-generated="1" from-eu-tax-group="virtual"/>
+    <tax id="28" name="TVA RO 19%" rate="19" auto-generated="1" from-eu-tax-group="virtual"/>
+    <tax id="29" name="Moms SE 25%" rate="25" auto-generated="1" from-eu-tax-group="virtual"/>
+    <tax id="30" name="DPH SK 20%" rate="20" auto-generated="1" from-eu-tax-group="virtual"/>
     <taxRulesGroup name="SI Standard Rate (22%)">
       <taxRule iso_code_country="be" id_tax="1"/>
       <taxRule iso_code_country="bg" id_tax="1"/>
@@ -47,6 +48,7 @@
       <taxRule iso_code_country="hr" id_tax="1"/>
       <taxRule iso_code_country="es" id_tax="1"/>
       <taxRule iso_code_country="fr" id_tax="1"/>
+      <taxRule iso_code_country="mc" id_tax="1"/>
       <taxRule iso_code_country="ie" id_tax="1"/>
       <taxRule iso_code_country="it" id_tax="1"/>
       <taxRule iso_code_country="cy" id_tax="1"/>
@@ -77,6 +79,7 @@
       <taxRule iso_code_country="hr" id_tax="2"/>
       <taxRule iso_code_country="es" id_tax="2"/>
       <taxRule iso_code_country="fr" id_tax="2"/>
+      <taxRule iso_code_country="mc" id_tax="2"/>
       <taxRule iso_code_country="ie" id_tax="2"/>
       <taxRule iso_code_country="it" id_tax="2"/>
       <taxRule iso_code_country="cy" id_tax="2"/>
@@ -107,6 +110,7 @@
       <taxRule iso_code_country="hr" id_tax="2"/>
       <taxRule iso_code_country="es" id_tax="2"/>
       <taxRule iso_code_country="fr" id_tax="2"/>
+      <taxRule iso_code_country="mc" id_tax="2"/>
       <taxRule iso_code_country="ie" id_tax="2"/>
       <taxRule iso_code_country="it" id_tax="2"/>
       <taxRule iso_code_country="cy" id_tax="2"/>
@@ -137,6 +141,7 @@
       <taxRule iso_code_country="hr" id_tax="2"/>
       <taxRule iso_code_country="es" id_tax="2"/>
       <taxRule iso_code_country="fr" id_tax="2"/>
+      <taxRule iso_code_country="mc" id_tax="2"/>
       <taxRule iso_code_country="ie" id_tax="2"/>
       <taxRule iso_code_country="it" id_tax="2"/>
       <taxRule iso_code_country="cy" id_tax="2"/>
@@ -178,13 +183,14 @@
       <taxRule iso_code_country="lt" id_tax="20"/>
       <taxRule iso_code_country="lu" id_tax="21"/>
       <taxRule iso_code_country="lv" id_tax="22"/>
-      <taxRule iso_code_country="mt" id_tax="23"/>
-      <taxRule iso_code_country="nl" id_tax="24"/>
-      <taxRule iso_code_country="pl" id_tax="25"/>
-      <taxRule iso_code_country="pt" id_tax="26"/>
-      <taxRule iso_code_country="ro" id_tax="27"/>
-      <taxRule iso_code_country="se" id_tax="28"/>
-      <taxRule iso_code_country="sk" id_tax="29"/>
+      <taxRule iso_code_country="mc" id_tax="23"/>
+      <taxRule iso_code_country="mt" id_tax="24"/>
+      <taxRule iso_code_country="nl" id_tax="25"/>
+      <taxRule iso_code_country="pl" id_tax="26"/>
+      <taxRule iso_code_country="pt" id_tax="27"/>
+      <taxRule iso_code_country="ro" id_tax="28"/>
+      <taxRule iso_code_country="se" id_tax="29"/>
+      <taxRule iso_code_country="sk" id_tax="30"/>
     </taxRulesGroup>
   </taxes>
   <units>
