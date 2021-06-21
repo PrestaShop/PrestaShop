@@ -571,9 +571,7 @@ class CartPresenter implements PresenterInterface
 
             $totalCartVoucherReduction = 0;
 
-            if (!$this->cartVoucherHasPercentReduction($cartVoucher)
-                && !$this->cartVoucherHasAmountReduction($cartVoucher)
-                && !$this->cartVoucherHasGiftProductReduction($cartVoucher)) {
+            if ($this->cartVoucherHasFreeShippingOnly($cartVoucher)) {
                 $freeShippingOnly = true;
                 if ($freeShippingAlreadySet) {
                     unset($vouchers[$cartVoucher['id_cart_rule']]);
@@ -619,17 +617,7 @@ class CartPresenter implements PresenterInterface
      *
      * @return bool
      */
-    private function cartVoucherHasFreeShipping($cartVoucher)
-    {
-        return !empty($cartVoucher['free_shipping']);
-    }
-
-    /**
-     * @param array $cartVoucher
-     *
-     * @return bool
-     */
-    private function cartVoucherHasPercentReduction($cartVoucher)
+    private function cartVoucherHasPercentReduction(array $cartVoucher): bool
     {
         return isset($cartVoucher['reduction_percent'])
             && $cartVoucher['reduction_percent'] > 0
@@ -641,7 +629,7 @@ class CartPresenter implements PresenterInterface
      *
      * @return bool
      */
-    private function cartVoucherHasAmountReduction($cartVoucher)
+    private function cartVoucherHasAmountReduction(array $cartVoucher): bool
     {
         return isset($cartVoucher['reduction_amount']) && $cartVoucher['reduction_amount'] > 0;
     }
@@ -651,9 +639,21 @@ class CartPresenter implements PresenterInterface
      *
      * @return bool
      */
-    private function cartVoucherHasGiftProductReduction($cartVoucher)
+    private function cartVoucherHasGiftProductReduction(array $cartVoucher): bool
     {
         return !empty($cartVoucher['gift_product']);
+    }
+
+    /**
+     * @param array $cartVoucher
+     *
+     * @return bool
+     */
+    private function cartVoucherHasFreeShippingOnly(array $cartVoucher): bool
+    {
+        return !$this->cartVoucherHasPercentReduction($cartVoucher)
+            && !$this->cartVoucherHasAmountReduction($cartVoucher)
+            && !$this->cartVoucherHasGiftProductReduction($cartVoucher);
     }
 
     /**
