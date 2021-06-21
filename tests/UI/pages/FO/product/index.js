@@ -390,7 +390,7 @@ class Product extends FOBasePage {
    * @returns {Promise<boolean>}
    */
   async addProductReview(page, productReviewData) {
-    if (this.getNumberOfComment(page) === 0) {
+    if (await this.getNumberOfComment(page) !== 0) {
       await page.click(this.notEmptyReviewAddReviewButton);
     } else {
       await page.click(this.emptyReviewAddReviewButton);
@@ -405,6 +405,11 @@ class Product extends FOBasePage {
     return await this.getAttributeContent(page, this.reviewSentConfirmationModal, 'style') === 'display: none;';
   }
 
+  /**
+   *
+   * @param page {Page} The browser tab
+   * @returns {Promise<number>}
+   */
   getNumberOfComment(page) {
     return this.getNumberFromText(page, this.commentCount);
   }
@@ -413,7 +418,7 @@ class Product extends FOBasePage {
    *
    * @param page {Page} browser tab
    * @param row {Number} the review number in the list
-   * @returns {*}
+   * @returns {Promise<string>}
    */
   getReviewTitle(page, row = 1) {
     return this.getTextContent(page, this.productReviewTitle(row));
@@ -423,7 +428,7 @@ class Product extends FOBasePage {
    *
    * @param page {Page} browser tab
    * @param row {Number} the review number in the list
-   * @returns {*}
+   * @returns {Promise<string>}
    */
   getReviewTextContent(page, row = 1) {
     return this.getTextContent(page, this.productReviewContent(row));
@@ -433,7 +438,7 @@ class Product extends FOBasePage {
    *
    * @param page {Page} browser tab
    * @param row {Number} the review number in the list
-   * @returns {*}
+   * @returns {Promise<number>}
    */
   getReviewRating(page, row = 1) {
     return page.$$eval(this.productRatingStar(row), divs => divs.length);

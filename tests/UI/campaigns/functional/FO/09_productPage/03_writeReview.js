@@ -35,16 +35,13 @@ const baseContext = 'functional_FO_productPage_writeReview';
 let browserContext;
 let page;
 let foCommentCount;
-let waitingReviewsCount;
-let approvedReviewsCount;
-let reportedReviewsCount;
 const moduleName = 'Product Comments';
 const moduleTag = 'productcomments';
 
 /*
 Go to the FO and login
 Go to a product detail page
-Add a review on for this product
+Add a review on this product
 Logout from FO
 Go to the BO and login
 Go to the "product comments" module configuration page
@@ -55,6 +52,8 @@ Logout from BO
 Go to the FO and login
 Go to product detail page
 Check if the review is visible and if the content is correct
+Go back to BO and delete approved review
+Go to FO and check if review is deleted
  */
 describe('FO write a review', async () => {
   // before and after functions
@@ -117,6 +116,7 @@ describe('FO write a review', async () => {
       await testContext.addContextItem(this, 'testIdentifier', 'getFoCommentCount', baseContext);
 
       foCommentCount = await productPage.getNumberOfComment(page);
+      // TODO need assertion here ...
     });
 
     it('should add a product review', async function () {
@@ -170,7 +170,6 @@ describe('FO write a review', async () => {
 
       const moduleConfigurationPageSubtitle = await moduleConfigurationPage.getPageSubtitle(page);
       await expect(moduleConfigurationPageSubtitle).to.contains(moduleName);
-      console.log(await productcommentsModulePage.getTableReviewCount(page, "waiting-approval"));
     });
   });
 
@@ -189,6 +188,7 @@ describe('FO write a review', async () => {
       await testContext.addContextItem(this, 'testIdentifier', 'approveReview', baseContext);
 
       await productcommentsModulePage.approveReview(page);
+      // TODO find a way to make an assertion here ...
     });
   });
 
@@ -297,6 +297,7 @@ describe('FO write a review', async () => {
       await testContext.addContextItem(this, 'testIdentifier', 'deleteApprovedReview', baseContext);
 
       await productcommentsModulePage.deleteReview(page, 'approved');
+      // TODO find a way to make an assertion here ...
     });
 
     it('should logout from BO', async function () {
