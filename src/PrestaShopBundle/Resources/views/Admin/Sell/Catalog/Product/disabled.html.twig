@@ -23,3 +23,19 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  *#}
 {% extends '@PrestaShop/Admin/layout.html.twig' %}
+
+{% block content %}
+<div class="alert alert-danger d-print-none" role="alert">
+  <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+    <span aria-hidden="true"><i class="material-icons">close</i></span>
+  </button>
+  <div class="alert-text">
+    <p>{{ errorMessage|raw }}</p>
+  </div>
+</div>
+
+<a class="btn-outline-secondary btn" href="{{ standardPageUrl }}">
+  <i class="material-icons"></i>
+  {{ 'Back to standard page'|trans({}, 'Admin.Catalog.Feature') }}
+</a>
+{% endblock %}
