@@ -45,7 +45,8 @@ class PrestaShopExtension extends Extension
         $config = $this->processConfiguration($configuration, $configs);
 
         $loader = new YamlFileLoader($container, new FileLocator(dirname(__DIR__) . '/Resources/config'));
-        $loader->load('services.yml');
+        $env = $container->getParameter('kernel.environment');
+        $loader->load('services_' . $env . '.yml');
 
         $container->setParameter('prestashop.addons.categories', $config['addons']['categories']);
         $container->setParameter('prestashop.addons.prestatrust.enabled', $config['addons']['prestatrust']['enabled']);
