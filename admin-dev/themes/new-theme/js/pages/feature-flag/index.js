@@ -29,15 +29,28 @@ const {$} = window;
 
 $(() => {
   const $submitButton = $('#submit-btn-feature-flag');
+  $submitButton.prop('disabled', true);
   const $form = $('#feature-flag-form');
+  const $formInputs = $('#feature-flag-form input');
   const initialState = $form.serialize();
+
+  $formInputs.change(() => {
+    if (initialState === $form.serialize()) {
+      $submitButton.prop('disabled', true);
+    } else {
+      $submitButton.prop('disabled', false);
+    }
+  });
 
   $submitButton.on('click', (event) => {
     event.preventDefault();
 
     const formData = $form.serializeArray();
     let oneFlagIsEnabled = false;
-    const noFieldModifiedInTheForm = (initialState === $form.serialize());
+
+    if (initialState === $form.serialize()) {
+      return;
+    }
 
     for (let i = 0; i < formData.length; i += 1) {
       if ((formData[i].name !== 'form[_token]') && (formData[i].value !== '0')) {
@@ -59,7 +72,7 @@ $(() => {
       },
     );
 
-    if (oneFlagIsEnabled && !noFieldModifiedInTheForm) {
+    if (oneFlagIsEnabled) {
       modal.show();
     } else {
       $form.submit();
