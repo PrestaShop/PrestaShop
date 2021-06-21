@@ -91,6 +91,11 @@ class OrderCustomerForViewing
     private $siret;
 
     /**
+     * @var int
+     */
+    private $languageId;
+
+    /**
      * @param int $id
      * @param string $firstName
      * @param string $lastName
@@ -101,6 +106,7 @@ class OrderCustomerForViewing
      * @param int $validOrdersPlaced
      * @param string|null $privateNote
      * @param bool $isGuest
+     * @param int $languageId
      * @param string $ape
      * @param string $siret
      */
@@ -115,6 +121,7 @@ class OrderCustomerForViewing
         int $validOrdersPlaced,
         ?string $privateNote,
         bool $isGuest,
+        int $languageId,
         string $ape = '',
         string $siret = ''
     ) {
@@ -128,6 +135,7 @@ class OrderCustomerForViewing
         $this->validOrdersPlaced = $validOrdersPlaced;
         $this->privateNote = $privateNote;
         $this->isGuest = $isGuest;
+        $this->languageId = $languageId;
         $this->ape = $ape;
         $this->siret = $siret;
     }
@@ -226,5 +234,13 @@ class OrderCustomerForViewing
     public function getSiret(): string
     {
         return $this->siret;
+    }
+
+    /**
+     * @return int
+     */
+    public function getLanguageId(): int
+    {
+        return $this->languageId;
     }
 }

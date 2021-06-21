@@ -261,6 +261,7 @@ final class GetOrderForViewingHandler extends AbstractOrderHandler implements Ge
             $customerStats['nb_orders'],
             $customer->note,
             (bool) $customer->is_guest,
+            (int) $customer->id_lang,
             $isB2BEnabled ? ($customer->ape ?: '') : '',
             $isB2BEnabled ? ($customer->siret ?: '') : ''
         );
