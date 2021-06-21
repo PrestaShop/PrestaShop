@@ -111,6 +111,15 @@ class CartPresenter implements PresenterInterface
         $assembledProduct = $this->getProductAssembler()->assembleProduct($rawProduct);
         $rawProduct = array_merge($assembledProduct, $rawProduct);
 
+        $settings = new ProductPresentationSettings();
+
+        $settings->catalog_mode = Configuration::isCatalogMode();
+        $settings->catalog_mode_with_prices = (int) Configuration::get('PS_CATALOG_MODE_WITH_PRICES');
+        $settings->include_taxes = $this->includeTaxes();
+        $settings->allow_add_variant_to_cart_from_listing = (int) Configuration::get('PS_ATTRIBUTE_CATEGORY_DISPLAY');
+        $settings->stock_management_enabled = Configuration::get('PS_STOCK_MANAGEMENT');
+        $settings->showPrices = Configuration::showPrices();
+
         if (isset($rawProduct['attributes']) && is_string($rawProduct['attributes'])) {
             $rawProduct['attributes'] = $this->getAttributesArrayFromString($rawProduct['attributes']);
         }
@@ -692,7 +701,6 @@ class CartPresenter implements PresenterInterface
             $this->settings->allow_add_variant_to_cart_from_listing = (int) Configuration::get('PS_ATTRIBUTE_CATEGORY_DISPLAY');
             $this->settings->stock_management_enabled = Configuration::get('PS_STOCK_MANAGEMENT');
             $this->settings->showPrices = Configuration::showPrices();
-            $this->settings->showLabelOOSListingPages = (bool) Configuration::get('PS_SHOW_LABEL_OOS_LISTING_PAGES');
         }
 
         return $this->settings;
