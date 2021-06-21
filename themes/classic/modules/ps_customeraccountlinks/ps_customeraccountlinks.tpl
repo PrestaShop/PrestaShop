@@ -39,13 +39,20 @@
     </span>
   </div>
   <ul class="account-list collapse" id="footer_account_list">
-    {foreach from=$my_account_urls item=my_account_url}
-        <li>
-          <a href="{$my_account_url.url}" title="{$my_account_url.title}" rel="nofollow">
-            {$my_account_url.title}
-          </a>
-        </li>
-    {/foreach}
-    {hook h='displayMyAccountBlock'}
+    {if $customer.is_logged}
+        {foreach from=$my_account_urls item=my_account_url}
+            <li>
+              <a href="{$my_account_url.url}" title="{$my_account_url.title}" rel="nofollow">
+                {$my_account_url.title}
+              </a>
+          </li>
+        {/foreach}
+        {hook h='displayMyAccountBlock'}
+        <li><a href="{$urls.actions.logout}" title="{l s='Log me out' d='Shop.Theme.Customeraccount'}" rel="nofollow">{l s='Sign out' d='Shop.Theme.Actions'}</a></li>
+      {else}
+        <li><a href="{$urls.pages.guest_tracking}" title="{l s='Guest Tracking' d='Shop.Theme.Customeraccount'}" rel="nofollow">{l s='Guest Tracking' d='Shop.Theme.Customeraccount'}</a></li>
+        <li><a href="{$urls.pages.my_account}" title="{l s='Log in to your customer account' d='Shop.Theme.Customeraccount'}" rel="nofollow">{l s='Sign in' d='Shop.Theme.Actions'}</a></li>
+        <li><a href="{$urls.pages.register}" title="{l s='Create an account' d='Shop.Theme.Customeraccount'}" rel="nofollow">{l s='Create an account' d='Shop.Theme.Customeraccount'}</a></li>
+      {/if}    
 	</ul>
 </div>
