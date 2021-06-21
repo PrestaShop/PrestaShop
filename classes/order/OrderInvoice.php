@@ -112,7 +112,7 @@ class OrderInvoiceCore extends ObjectModel
             'total_wrapping_tax_excl' => ['type' => self::TYPE_FLOAT],
             'total_wrapping_tax_incl' => ['type' => self::TYPE_FLOAT],
             'shop_address' => ['type' => self::TYPE_HTML, 'validate' => 'isCleanHtml', 'size' => 1000],
-            'note' => ['type' => self::TYPE_STRING, 'validate' => 'isCleanHtml', 'size' => 65000],
+            'note' => ['type' => self::TYPE_HTML],
             'date_add' => ['type' => self::TYPE_DATE, 'validate' => 'isDate'],
         ],
     ];
