@@ -26,10 +26,6 @@
       padding: 0;
     }
 
-    .col {
-      padding: 0;
-    }
-
     // remove gutters (except on product page)
     // @todo remove the :not() once the product page has been made responsive
     body:not(.adminproducts) & .row {
