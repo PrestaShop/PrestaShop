@@ -95,7 +95,7 @@ describe('FO write a review', async () => {
     });
 
     it('should go to home page', async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'goToHomePage', baseContext);
+      await testContext.addContextItem(this, 'testIdentifier', 'goToHomePageToAddReview', baseContext);
 
       await foHomePage.goToHomePage(page);
 
@@ -307,7 +307,7 @@ describe('FO write a review', async () => {
 
   describe('Go to product detail page and check if review is deleted', async () => {
     it('should open the shop page', async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'openFoShop', baseContext);
+      await testContext.addContextItem(this, 'testIdentifier', 'openFoShopAfterDelete', baseContext);
 
       await foHomePage.goTo(page, global.FO.URL);
 
@@ -316,7 +316,7 @@ describe('FO write a review', async () => {
     });
 
     it('should go to the first product page', async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'goToProductPage', baseContext);
+      await testContext.addContextItem(this, 'testIdentifier', 'goToProductPageAfterDelete', baseContext);
 
       await foHomePage.goToProductPage(page, 1);
 
@@ -325,7 +325,7 @@ describe('FO write a review', async () => {
     });
 
     it('should check if review block is empty', async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'goToProductPage', baseContext);
+      await testContext.addContextItem(this, 'testIdentifier', 'checkIfReviewBlockIsEmpty', baseContext);
 
       const actualCommentCount = await productPage.getNumberOfComment(page);
       await expect(actualCommentCount).to.equal(foCommentCount);
