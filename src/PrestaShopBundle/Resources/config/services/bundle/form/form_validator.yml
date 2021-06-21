@@ -2,7 +2,7 @@ services:
     _defaults:
         public: true
 
-    prestashop.bundle.form.data_transformer.string_array_to_integer_array:
+    prestashop.bundle.form.validator.constraints.tiny_mce_max_length_validator:
         class: 'PrestaShopBundle\Form\Validator\Constraints\TinyMceMaxLengthValidator'
         arguments:
             - '@translator'
