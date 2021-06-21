@@ -97,10 +97,10 @@ describe('Enable guest checkout', async () => {
 
       // Check guest checkout
       const isNoticeVisible = await checkoutPage.isCreateAnAccountNoticeVisible(page);
-      await expect(isNoticeVisible).to.equal(test.args.exist);
+      await expect(isNoticeVisible).to.be.equal(test.args.exist);
 
       const isPasswordRequired = await checkoutPage.isPasswordRequired(page);
-      await expect(isPasswordRequired).to.equal(test.args.pwdRequired);
+      await expect(isPasswordRequired).to.be.equal(test.args.pwdRequired);
     });
 
     it('should go back to BO', async function () {
