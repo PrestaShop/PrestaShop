@@ -1990,6 +1990,7 @@ class AdminControllerCore extends Controller
 
         $this->context->smarty->assign([
             'displayBackOfficeTop' => Hook::exec('displayBackOfficeTop'),
+            'displayBackOfficeEmployeeMenu' => Hook::exec('displayBackOfficeEmployeeMenu', [], null, true),
             'submit_form_ajax' => (int) Tools::getValue('submitFormAjax'),
         ]);
 
