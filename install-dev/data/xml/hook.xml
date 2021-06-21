@@ -3500,5 +3500,10 @@
       <title>After setting the tracking number for the order</title>
       <description>This hook allows you to execute code after the unique tracking number for the order was added</description>
     </hook>
+    <hook id="displayBackOfficeMenu">
+      <name>displayBackOfficeEmployeeMenu</name>
+      <title>Administration Employee menu</title>
+      <description>This hook is displayed in the employee menu</description>
+    </hook>
   </entities>
 </entity_hook>

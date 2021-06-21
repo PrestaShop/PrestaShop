@@ -28,6 +28,7 @@ use PrestaShop\PrestaShop\Core\Feature\TokenInUrls;
 use PrestaShop\PrestaShop\Core\Localization\Locale;
 use PrestaShop\PrestaShop\Core\Localization\Specification\Number as NumberSpecification;
 use PrestaShop\PrestaShop\Core\Localization\Specification\Price as PriceSpecification;
+use PrestaShopBundle\Component\ActionBar\ActionsBarButtonsCollection;
 
 class AdminControllerCore extends Controller
 {
@@ -1982,8 +1983,20 @@ class AdminControllerCore extends Controller
             );
         }
 
+        // Fetch Employee Menu
+        $menuLinksCollections = new ActionsBarButtonsCollection();
+        Hook::exec(
+            'displayBackOfficeEmployeeMenu',
+            [
+                'links' => $menuLinksCollections,
+            ],
+            null,
+            true
+        );
+
         $this->context->smarty->assign([
             'displayBackOfficeTop' => Hook::exec('displayBackOfficeTop'),
+            'displayBackOfficeEmployeeMenu' => $menuLinksCollections,
             'submit_form_ajax' => (int) Tools::getValue('submitFormAjax'),
         ]);
 
