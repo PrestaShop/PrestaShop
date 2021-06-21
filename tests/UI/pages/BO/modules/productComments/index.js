@@ -20,7 +20,8 @@ class ProductComments extends ModuleConfiguration.constructor {
     this.reviewsTableBody = table => `${this.reviewsTable(table)} tbody`;
     this.reviewsTableRows = table => `${this.reviewsTableBody(table)} tr`;
     this.reviewsTableRow = (table, row) => `${this.reviewsTableRows(table)}:nth-child(${row})`;
-    this.reviewsTableColumn = (table, row, column) => `${this.reviewsTableRow(table, row)} td.product-comment-${column}`;
+    this.reviewsTableColumn = (table, row, column) => `${this.reviewsTableRow(table, row)}`
+      + `td.product-comment-${column}`;
     // Buttons Selectors
     this.deleteReviewButton = (table, row) => `${this.reviewsTableRow(table, row)} .btn-group [title='Delete']`;
     this.toggleDropdownButton = (table, row) => `${this.reviewsTableRow(table, row)} button.dropdown-toggle`;
@@ -41,13 +42,12 @@ class ProductComments extends ModuleConfiguration.constructor {
    * @returns {Promise<number|*>}
    */
   async getTableReviewCount(page, table) {
-    if (await this.elementVisible(page, ".list-empty", 3)) {
+    if (await this.elementVisible(page, '.list-empty', 3)) {
       return 0;
     }
-    else {
-      let selector = this.reviewsTableRows(table);
-      return page.$$eval(selector, divs => divs.length);
-    }
+
+    const selector = this.reviewsTableRows(table);
+    return page.$$eval(selector, divs => divs.length);
   }
 
   /**
@@ -89,49 +89,48 @@ class ProductComments extends ModuleConfiguration.constructor {
     };
   }
 
- /**
+  /**
   *
   * @param page {Page} Browser tab
   * @param table {String} The reviews table (the table is set by default)
   * @param row {Number} The review row
   * @returns {Promise<void>}
   */
- async approveReview(page, table = "waiting-approval", row = 1) {
-   await page.click(this.approveWaitingReviewButton(table, row));
- }
+  async approveReview(page, table = 'waiting-approval', row = 1) {
+    await page.click(this.approveWaitingReviewButton(table, row));
+  }
 
- /**
+  /**
   *
   * @param page {Page} Browser tab
   * @param table {String} The reviews table (available options: 'waiting-approval', 'reported', 'deleted'
   * @param row {Number} The review row
   * @returns {Promise<void>}
   */
- async deleteReview(page, table, row = 1) {
-   if (table === 'waiting-approval') {
-     await this.openProductReviewDropdown(page, table, row);
-     await page.click(this.deleteReviewButton(table, row));
-     await this.waitForVisibleSelector(page, this.confirmReviewDeletionButton);
-     await page.click(this.confirmReviewDeletionButton);
-   }
-   else {
-     await page.click(this.deleteReviewButton(table, row));
-     await this.waitForVisibleSelector(page, this.confirmReviewDeletionButton);
-     await page.click(this.confirmReviewDeletionButton);
-   }
- }
+  async deleteReview(page, table, row = 1) {
+    if (table === 'waiting-approval') {
+      await this.openProductReviewDropdown(page, table, row);
+      await page.click(this.deleteReviewButton(table, row));
+      await this.waitForVisibleSelector(page, this.confirmReviewDeletionButton);
+      await page.click(this.confirmReviewDeletionButton);
+    } else {
+      await page.click(this.deleteReviewButton(table, row));
+      await this.waitForVisibleSelector(page, this.confirmReviewDeletionButton);
+      await page.click(this.confirmReviewDeletionButton);
+    }
+  }
 
- /**
+  /**
   *
   * @param page {Page} Browser tab
   * @param row {Number} The review row
   * @returns {Promise<void>}
   */
- async confirmNotAbusiveReview(page, row = 1) {
-   await this.openProductReviewDropdown(page, 'reported', row);
-   await this.waitForVisibleSelector(page, this.confirmNotAbusiveReviewButton(row));
-   await page.click(this.confirmNotAbusiveReviewButton(row));
- }
+  async confirmNotAbusiveReview(page, row = 1) {
+    await this.openProductReviewDropdown(page, 'reported', row);
+    await this.waitForVisibleSelector(page, this.confirmNotAbusiveReviewButton(row));
+    await page.click(this.confirmNotAbusiveReviewButton(row));
+  }
 }
 
 module.exports = new ProductComments();
