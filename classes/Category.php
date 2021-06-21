@@ -1107,7 +1107,7 @@ class CategoryCore extends ObjectModel
             return new Category($shop->getCategory(), $idLang);
         }
         $isMoreThanOneRootCategory = count(Category::getCategoriesWithoutParent()) > 1;
-        if (Shop::isFeatureActive() && $isMoreThanOneRootCategory && Shop::getContext() != Shop::CONTEXT_SHOP) {
+        if (Shop::isFeatureActive() && $isMoreThanOneRootCategory) {
             $category = Category::getTopCategory($idLang);
         } else {
             $category = new Category($shop->getCategory(), $idLang);
