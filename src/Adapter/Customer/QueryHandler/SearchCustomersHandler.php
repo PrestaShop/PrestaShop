@@ -27,9 +27,11 @@
 namespace PrestaShop\PrestaShop\Adapter\Customer\QueryHandler;
 
 use Customer;
+use Group;
 use PrestaShop\PrestaShop\Adapter\Configuration;
 use PrestaShop\PrestaShop\Core\Domain\Customer\Query\SearchCustomers;
 use PrestaShop\PrestaShop\Core\Domain\Customer\QueryHandler\SearchCustomersHandlerInterface;
+use Symfony\Component\Translation\TranslatorInterface;
 
 /**
  * Handles query that searches for customers by given phrases
@@ -44,12 +46,28 @@ final class SearchCustomersHandler implements SearchCustomersHandlerInterface
     private $configuration;
 
     /**
+     * @var int
+     */
+    private $contextLangId;
+
+    /**
+     * @var TranslatorInterface
+     */
+    private $translator;
+
+    /**
      * @param Configuration $configuration
+     * @param TranslatorInterface $translator
+     * @param int $contextLangId
      */
     public function __construct(
-        Configuration $configuration
+        Configuration $configuration,
+        TranslatorInterface $translator,
+        int $contextLangId
     ) {
         $this->configuration = $configuration;
+        $this->translator = $translator;
+        $this->contextLangId = $contextLangId;
     }
 
     /**
@@ -72,6 +90,18 @@ final class SearchCustomersHandler implements SearchCustomersHandlerInterface
                 continue;
             }
 
+            // Will we work with groups or not? We could ask inside the loop, but this is faster
+            $assignGroups = false;
+            if (Group::isFeatureActive()) {
+                $assignGroups = true;
+
+                // Get our group data and extract ids and names
+                $groupNames = [];
+                foreach (Group::getGroups($this->contextLangId) as $group) {
+                    $groupNames[$group['id_group']] = $group['name'];
+                }
+            }
+
             foreach ($customersResult as $customerArray) {
                 if (!$customerArray['active']) {
                     continue;
@@ -84,6 +114,21 @@ final class SearchCustomersHandler implements SearchCustomersHandlerInterface
                     $customerArray['email']
                 );
 
+                // Assign group names and default group information
+                $customerArray['groups'] = [];
+                if ($assignGroups) {
+                    $group_ids = explode(',', $customerArray['group_ids']);
+                    foreach ($group_ids as $id_group) {
+                        $customerArray['groups'][$id_group] = [
+                            'id_group' => $id_group,
+                            'name' => (isset($groupNames[$id_group]) ? $groupNames[$id_group] : ''),
+                            'default' => ($id_group == $customerArray['id_default_group'] ? true : false),
+                        ];
+                    }
+                }
+                unset($customerArray['group_ids']);
+
+                // Removing some information that could be considered a security risk
                 unset(
                     $customerArray['passwd'],
                     $customerArray['secure_key'],

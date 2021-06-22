@@ -868,13 +868,15 @@ class CustomerCore extends ObjectModel
      */
     public static function searchByName($query, $limit = null)
     {
-        $sql = 'SELECT *
-                FROM `' . _DB_PREFIX_ . 'customer`
+        $sql = "SELECT c.*, 
+                GROUP_CONCAT(cg.id_group SEPARATOR ',') AS group_ids 
+                FROM `" . _DB_PREFIX_ . 'customer` c
+                LEFT JOIN `' . _DB_PREFIX_ . 'customer_group` cg ON c.id_customer = cg.id_customer
                 WHERE 1';
         $search_items = explode(' ', $query);
-        $research_fields = ['id_customer', 'firstname', 'lastname', 'email'];
+        $research_fields = ['c.id_customer', 'c.firstname', 'c.lastname', 'c.email'];
         if (Configuration::get('PS_B2B_ENABLE')) {
-            $research_fields[] = 'company';
+            $research_fields[] = 'c.company';
         }
 
         $items = [];
@@ -889,6 +891,8 @@ class CustomerCore extends ObjectModel
         }
 
         $sql .= Shop::addSqlRestriction(Shop::SHARE_CUSTOMER);
+
+        $sql .= ' GROUP BY c.id_customer ';
 
         if ($limit) {
             $sql .= ' LIMIT 0, ' . (int) $limit;

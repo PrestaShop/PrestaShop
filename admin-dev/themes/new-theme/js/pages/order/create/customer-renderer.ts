@@ -30,6 +30,24 @@ import {EventEmitter} from '@components/event-emitter';
 
 const {$} = window;
 
+/* eslint-disable camelcase */
+export interface CustomerGroup {
+  id_group: string;
+  name: string;
+  default: boolean;
+}
+
+export interface CustomerResult {
+  [key: number]: any;
+  firstname: string,
+  lastname: string,
+  email: string,
+  groups: Record<number, CustomerGroup>;
+  birthday: string;
+  company: string;
+}
+/* eslint-disable camelcase */
+
 /**
  * Responsible for customer information rendering
  */
@@ -53,8 +71,8 @@ export default class CustomerRenderer {
    *
    * @param foundCustomers
    */
-  renderSearchResults(foundCustomers: Record<string, any>): void {
-    if (foundCustomers.length === 0) {
+  renderSearchResults(foundCustomers: Record<number, CustomerResult>): void {
+    if (Object.entries(foundCustomers).length === 0) {
       EventEmitter.emit(eventMap.customersNotFound);
 
       return;
@@ -66,12 +84,29 @@ export default class CustomerRenderer {
         firstName: customerResult.firstname,
         lastName: customerResult.lastname,
         email: customerResult.email,
+        groups: '',
         birthday:
           customerResult.birthday !== '0000-00-00'
             ? customerResult.birthday
             : ' ',
         company: customerResult.company,
       };
+
+      if (Object.keys(customerResult.groups).length > 1) {
+        const output: string[] = [];
+
+        Object.values(customerResult.groups).forEach((customerGroup) => {
+          if (customerGroup.default === true) {
+            output.push(`${customerGroup.name} -  ${window.translate_javascripts['Customer search - group default']}`);
+          } else {
+            output.push(customerGroup.name);
+          }
+        });
+        customer.groups = `${window.translate_javascripts['Customer search - group label multiple']}: ${output.join(', ')}`;
+      } else if (Object.keys(customerResult.groups).length > 0) {
+        // eslint-disable-next-line
+        customer.groups = `${window.translate_javascripts['Customer search - group label single']}: ${Object.values(customerResult.groups)[0].name}`;
+      }
 
       this.renderFoundCustomer(customer);
     });
@@ -347,6 +382,7 @@ export default class CustomerRenderer {
       .find(createOrderMap.customerSearchResultEmail)
       .text(customer.email);
     $template.find(createOrderMap.customerSearchResultId).text(customer.id);
+    $template.find(createOrderMap.customerSearchResultGroups).text(customer.groups);
     $template
       .find(createOrderMap.customerSearchResultBirthday)
       .text(customer.birthday);
