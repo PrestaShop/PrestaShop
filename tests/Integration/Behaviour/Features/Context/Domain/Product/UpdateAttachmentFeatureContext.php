@@ -31,27 +31,12 @@ namespace Tests\Integration\Behaviour\Features\Context\Domain\Product;
 use Behat\Gherkin\Node\TableNode;
 use PHPUnit\Framework\Assert;
 use PrestaShop\PrestaShop\Core\Domain\Attachment\QueryResult\AttachmentInfo;
-use PrestaShop\PrestaShop\Core\Domain\Product\Command\AssociateProductAttachmentCommand;
 use PrestaShop\PrestaShop\Core\Domain\Product\Command\RemoveAllAssociatedProductAttachmentsCommand;
 use PrestaShop\PrestaShop\Core\Domain\Product\Command\SetAssociatedProductAttachmentsCommand;
 use Tests\Integration\Behaviour\Features\Transform\StringToArrayTransformContext;
 
 class UpdateAttachmentFeatureContext extends AbstractProductFeatureContext
 {
-    /**
-     * @When I associate attachment :attachmentReference with product :productReference
-     *
-     * @param string $attachmentReference
-     * @param string $productReference
-     */
-    public function associateProductAttachment(string $attachmentReference, string $productReference): void
-    {
-        $this->getCommandBus()->handle(new AssociateProductAttachmentCommand(
-            $this->getSharedStorage()->get($productReference),
-            $this->getSharedStorage()->get($attachmentReference)
-        ));
-    }
-
     /**
      * @Then product :productReference should have following attachments associated:
      *
