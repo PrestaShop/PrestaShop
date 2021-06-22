@@ -32,8 +32,19 @@ use PrestaShop\PrestaShop\Adapter\Product\Update\ProductAttachmentUpdater;
 use PrestaShop\PrestaShop\Core\Domain\Product\Command\AssociateProductAttachmentCommand;
 use PrestaShop\PrestaShop\Core\Domain\Product\CommandHandler\AssociateProductAttachmentHandlerInterface;
 
+@trigger_error(
+    sprintf(
+        '%s is deprecated since version 1.7.9.0 and will be removed in the next major version.',
+        AssociateProductAttachmentHandler::class
+    ),
+    E_USER_DEPRECATED
+);
+
 /**
  * Handles @see AssociateProductAttachmentCommand using legacy object model
+ *
+ * @deprecated since 1.7.9.0 and will be removed in next major version.
+ * @see SetAssociatedProductAttachmentsHandler
  */
 final class AssociateProductAttachmentHandler implements AssociateProductAttachmentHandlerInterface
 {

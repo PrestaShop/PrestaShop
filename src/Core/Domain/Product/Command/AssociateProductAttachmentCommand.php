@@ -31,10 +31,19 @@ namespace PrestaShop\PrestaShop\Core\Domain\Product\Command;
 use PrestaShop\PrestaShop\Core\Domain\Attachment\ValueObject\AttachmentId;
 use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductId;
 
+@trigger_error(
+    sprintf(
+        '%s is deprecated since version 1.7.9.0 and will be removed in the next major version.',
+        AssociateProductAttachmentCommand::class
+    ),
+    E_USER_DEPRECATED
+);
+
 /**
- * @todo: should be deprecated as it is not used anymore
- *
  * Associates product with attachment
+ *
+ * @deprecated since 1.7.9.0 and will be removed in next major version.
+ * @see SetAssociatedProductAttachmentsCommand
  */
 class AssociateProductAttachmentCommand
 {
