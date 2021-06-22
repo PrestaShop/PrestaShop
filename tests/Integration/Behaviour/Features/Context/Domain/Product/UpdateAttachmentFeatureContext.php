@@ -28,12 +28,12 @@ declare(strict_types=1);
 
 namespace Tests\Integration\Behaviour\Features\Context\Domain\Product;
 
+use Behat\Gherkin\Node\TableNode;
 use PHPUnit\Framework\Assert;
 use PrestaShop\PrestaShop\Core\Domain\Attachment\QueryResult\AttachmentInfo;
 use PrestaShop\PrestaShop\Core\Domain\Product\Command\AssociateProductAttachmentCommand;
 use PrestaShop\PrestaShop\Core\Domain\Product\Command\RemoveAllAssociatedProductAttachmentsCommand;
 use PrestaShop\PrestaShop\Core\Domain\Product\Command\SetAssociatedProductAttachmentsCommand;
-use RuntimeException;
 use Tests\Integration\Behaviour\Features\Transform\StringToArrayTransformContext;
 
 class UpdateAttachmentFeatureContext extends AbstractProductFeatureContext
@@ -53,32 +53,54 @@ class UpdateAttachmentFeatureContext extends AbstractProductFeatureContext
     }
 
     /**
-     * @Then product :productReference should have following attachments associated: :attachmentReferences
-     *
-     * attachmentReferences transformation handled by @see StringToArrayTransformContext
+     * @Then product :productReference should have following attachments associated:
      *
      * @param string $productReference
-     * @param string[] $attachmentReferences
+     * @param AttachmentInfo[] $attachmentsInfo
+     *
+     * @see transformAttachmentsInfo()
      */
-    public function assertProductAttachments(string $productReference, array $attachmentReferences): void
+    public function assertProductAttachments(string $productReference, array $attachmentsInfo): void
     {
-        $attachmentIds = array_map(function (AttachmentInfo $attachment): int {
-            return $attachment->getAttachmentId();
-        }, $this->getProductForEditing($productReference)->getAssociatedAttachments());
+        $attachments = $this->getProductForEditing($productReference)->getAssociatedAttachments();
 
         Assert::assertEquals(
-            count($attachmentIds),
-            count($attachmentReferences),
+            count($attachments),
+            count($attachmentsInfo),
             'Unexpected associated product attachments count'
         );
 
-        foreach ($attachmentReferences as $key => $expectedReference) {
-            if ($attachmentIds[$key] === $this->getSharedStorage()->get($expectedReference)) {
-                continue;
-            }
-
-            throw new RuntimeException(sprintf('Unexpected associated product attachments'));
+        foreach ($attachmentsInfo as $key => $expectedAttachmentInfo) {
+            Assert::assertEquals(
+                $expectedAttachmentInfo,
+                $attachments[$key],
+                'Unexpected associated product attachments'
+            );
         }
+    }
+
+    /**
+     * @Transform table:attachment reference,title,file name,type
+     *
+     * @param TableNode $tableNode
+     *
+     * @return AttachmentInfo[]
+     */
+    public function transformAttachmentsInfo(TableNode $tableNode): array
+    {
+        $infos = $tableNode->getColumnsHash();
+
+        $attachmentsInfo = [];
+        foreach ($infos as $info) {
+            $attachmentsInfo[] = new AttachmentInfo(
+                $this->getSharedStorage()->get($info['attachment reference']),
+                $this->localizeByCell($info['title']),
+                $info['file name'],
+                $info['type']
+            );
+        }
+
+        return $attachmentsInfo;
     }
 
     /**
