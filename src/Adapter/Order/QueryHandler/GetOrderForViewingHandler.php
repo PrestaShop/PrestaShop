@@ -35,6 +35,7 @@ use Currency;
 use Customer;
 use DateTimeImmutable;
 use Gender;
+use Group;
 use Module;
 use Order;
 use OrderInvoice;
