@@ -249,6 +249,8 @@ final class GetOrderForViewingHandler extends AbstractOrderHandler implements Ge
 
         $isB2BEnabled = $this->configuration->getBoolean('PS_B2B_ENABLE');
 
+        $defaultGroup = new Group($customer->id_default_group, $this->contextLanguageId);
+
         return new OrderCustomerForViewing(
             $customer->id,
             $customer->firstname,
@@ -261,7 +263,9 @@ final class GetOrderForViewingHandler extends AbstractOrderHandler implements Ge
             $customer->note,
             (bool) $customer->is_guest,
             $isB2BEnabled ? ($customer->ape ?: '') : '',
-            $isB2BEnabled ? ($customer->siret ?: '') : ''
+            $isB2BEnabled ? ($customer->siret ?: '') : '',
+            $customer->id_default_group,
+            $defaultGroup->name
         );
     }
 
