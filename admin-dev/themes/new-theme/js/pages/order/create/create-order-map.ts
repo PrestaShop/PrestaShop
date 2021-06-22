@@ -47,6 +47,7 @@ export default {
   notSelectedCustomerSearchResults: '.js-customer-search-result:not(.border-success)',
   customerSearchResultName: '.js-customer-name',
   customerSearchResultEmail: '.js-customer-email',
+  customerSearchResultGroup: '.js-customer-group',
   customerSearchResultId: '.js-customer-id',
   customerSearchResultBirthday: '.js-customer-birthday',
   customerDetailsBtn: '.js-details-customer-btn',
