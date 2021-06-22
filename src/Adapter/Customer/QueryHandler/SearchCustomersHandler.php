@@ -52,7 +52,7 @@ final class SearchCustomersHandler implements SearchCustomersHandlerInterface
     ) {
         $this->contextLangId = $contextLangId;
     }
-  
+
     /**
      * {@inheritdoc}
      */
