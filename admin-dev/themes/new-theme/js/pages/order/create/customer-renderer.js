@@ -58,6 +58,7 @@ export default class CustomerRenderer {
         firstName: customerResult.firstname,
         lastName: customerResult.lastname,
         email: customerResult.email,
+        group: customerResult.default_group_name + ' (#' + customerResult.id_default_group + ')',
         birthday: customerResult.birthday !== '0000-00-00' ? customerResult.birthday : ' ',
       };
 
@@ -311,6 +312,7 @@ export default class CustomerRenderer {
     $template.find(createOrderMap.customerSearchResultEmail).text(customer.email);
     $template.find(createOrderMap.customerSearchResultId).text(customer.id);
     $template.find(createOrderMap.customerSearchResultBirthday).text(customer.birthday);
+    $template.find(createOrderMap.customerSearchResultGroup).text(customer.group);
     $template.find(createOrderMap.chooseCustomerBtn).data('customer-id', customer.id);
     $template.find(createOrderMap.customerDetailsBtn).prop(
       'href',
