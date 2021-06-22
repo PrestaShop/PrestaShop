@@ -1373,8 +1373,8 @@ services:
         tags:
             - { name: form.type }
 
-    form.type.sell.product.category.add_category_type:
-        class: 'PrestaShopBundle\Form\Admin\Sell\Product\Category\AddCategoryType'
+    form.type.sell.category.quick_add_category_type:
+        class: 'PrestaShopBundle\Form\Admin\Sell\Category\QuickAddCategoryType'
         parent: 'form.type.translatable.aware'
         public: true
         tags:
