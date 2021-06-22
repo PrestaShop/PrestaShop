@@ -105,7 +105,7 @@
           :combinations-list="combinationsHistory"
           @selectCombination="selectCombination"
           :selected-combination="selectedCombinationId"
-          :empty-image="emptyImage"
+          :empty-image-url="emptyImageUrl"
         />
       </template>
     </modal>
@@ -182,7 +182,7 @@
         type: Object,
         required: true,
       },
-      emptyImage: {
+      emptyImageUrl: {
         type: String,
         required: true,
       },
@@ -272,33 +272,24 @@
         // Reset history on close
         this.combinationsHistory = [];
       },
-      showPrevious() {
-        if (this.previousCombinationId !== null) {
+      navigateToCombination(combinationId) {
+        if (combinationId !== null) {
           if (this.isFormUpdated) {
-            this.temporarySelection = this.previousCombinationId;
+            this.temporarySelection = combinationId;
             this.showConfirmModal();
           } else {
-            this.selectedCombinationId = this.previousCombinationId;
+            this.selectedCombinationId = combinationId;
           }
         }
+      },
+      showPrevious() {
+        this.navigateToCombination(this.previousCombinationId);
       },
       showNext() {
-        if (this.nextCombinationId !== null) {
-          if (this.isFormUpdated) {
-            this.temporarySelection = this.nextCombinationId;
-            this.showConfirmModal();
-          } else {
-            this.selectedCombinationId = this.nextCombinationId;
-          }
-        }
+        this.navigateToCombination(this.nextCombinationId);
       },
       selectCombination(combination) {
-        if (this.isFormUpdated) {
-          this.temporarySelection = combination.id;
-          this.showConfirmModal();
-        } else {
-          this.selectedCombinationId = combination.id;
-        }
+        this.navigateToCombination(combination.id);
       },
       confirmSelection() {
         if (this.isClosing) {

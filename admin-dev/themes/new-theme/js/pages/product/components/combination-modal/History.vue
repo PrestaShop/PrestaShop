@@ -54,7 +54,7 @@
         class="history-empty"
         v-else
       >
-        <img :src="emptyImage">
+        <img :src="emptyImageUrl">
         <p class="history-empty-tip">
           {{ $t("modal.history.empty") }}
         </p>
@@ -99,7 +99,7 @@
         type: Number,
         required: true,
       },
-      emptyImage: {
+      emptyImageUrl: {
         type: String,
         required: true,
       },

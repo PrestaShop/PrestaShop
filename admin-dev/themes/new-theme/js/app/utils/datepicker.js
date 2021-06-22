@@ -86,6 +86,8 @@ const init = function initDatePickers() {
         $(window).off('resize', replaceDatePicker);
       })
       .on('dp.change', (e) => {
+        // Looks like we can't bind an event to a datepicker selected afterwhile.
+        // So we emit an event on change to manipulate datas
         const event = new CustomEvent('datepickerChange', e);
         window.document.dispatchEvent(event);
       });
