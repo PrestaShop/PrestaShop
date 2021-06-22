@@ -384,7 +384,7 @@ class Product extends FOBasePage {
   }
 
   /**
-   *
+   * Add a product review
    * @param page {Page} Browser tab
    * @param productReviewData {ProductReviewData} The content of the product review (title, content, rating)
    * @returns {Promise<boolean>}
@@ -406,7 +406,7 @@ class Product extends FOBasePage {
   }
 
   /**
-   *
+   * Get the number of approved review for a product
    * @param page {Page} The browser tab
    * @returns {Promise<number>}
    */
@@ -415,7 +415,7 @@ class Product extends FOBasePage {
   }
 
   /**
-   *
+   * Get the title of a review
    * @param page {Page} browser tab
    * @param row {Number} the review number in the list
    * @returns {Promise<string>}
@@ -425,7 +425,7 @@ class Product extends FOBasePage {
   }
 
   /**
-   *
+   * Get the content of a review
    * @param page {Page} browser tab
    * @param row {Number} the review number in the list
    * @returns {Promise<string>}
@@ -435,7 +435,7 @@ class Product extends FOBasePage {
   }
 
   /**
-   *
+   * Get the rating of a review
    * @param page {Page} browser tab
    * @param row {Number} the review number in the list
    * @returns {Promise<number>}
