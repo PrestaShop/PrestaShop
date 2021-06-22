@@ -2,7 +2,7 @@ $header-text-color: #4e6167 !default;
 
 .main-header {
   position: fixed;
-  z-index: 1040; // modal backdrop's z-index is 1050, so this must be just below that
+  z-index: 1040; // modal backdrop"s z-index is 1050, so this must be just below that
   display: flex;
   align-items: stretch;
   width: 100%;
@@ -155,6 +155,12 @@ $header-text-color: #4e6167 !default;
         @include transition(all 0.5s);
       }
 
+      .input-group-append {
+        .btn:first-of-type {
+          @include border-radius(0);
+        }
+      }
+
       // behavior when the search form is collapsed
       &.collapsed {
         width: 15.625rem;
@@ -178,7 +184,7 @@ $header-text-color: #4e6167 !default;
           padding: 0;
           overflow: hidden;
           border: 0;
-          // we can't use display:none or else the transition doesn't work
+          // we can"t use display:none or else the transition doesn"t work
           opacity: 0;
         }
       }
@@ -264,7 +270,7 @@ $header-text-color: #4e6167 !default;
   #header-search-container {
     .dropdown-toggle {
       &::after {
-        font-size: 1.6em; // use of em so that the size is relative to the component's font size
+        font-size: 1.6em; // use of em so that the size is relative to the component"s font size
         content: "arrow_drop_down";
       }
     }
