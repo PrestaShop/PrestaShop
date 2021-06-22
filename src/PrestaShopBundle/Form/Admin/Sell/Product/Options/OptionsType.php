@@ -120,7 +120,7 @@ class OptionsType extends TranslatorAwareType
             ])
             ->add('references', ReferencesType::class)
             ->add('customizations', CustomizationsType::class)
-            ->add('attachments', ProductAttachmentType::class, [
+            ->add('attachments', ProductAttachmentsType::class, [
                 'label' => $this->trans('Attached files', 'Admin.Catalog.Feature'),
                 'label_tag_name' => 'h2',
             ])

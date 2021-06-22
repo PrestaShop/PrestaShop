@@ -34,7 +34,7 @@ use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Symfony\Component\Translation\TranslatorInterface;
 
-class ProductAttachmentType extends TranslatorAwareType
+class ProductAttachmentsType extends TranslatorAwareType
 {
     /**
      * @var UrlGeneratorInterface
