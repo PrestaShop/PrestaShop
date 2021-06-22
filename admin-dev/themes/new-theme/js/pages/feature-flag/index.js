@@ -29,10 +29,33 @@ const {$} = window;
 
 $(() => {
   const $submitButton = $('#submit-btn-feature-flag');
+  $submitButton.prop('disabled', true);
   const $form = $('#feature-flag-form');
+  const $formInputs = $('#feature-flag-form input');
+  const initialState = $form.serialize();
+  const initialFormData = $form.serializeArray();
+
+  $formInputs.change(() => {
+    $submitButton.prop('disabled', initialState === $form.serialize());
+  });
 
   $submitButton.on('click', (event) => {
     event.preventDefault();
+
+    const formData = $form.serializeArray();
+
+    if (initialState === $form.serialize()) {
+      return;
+    }
+
+    let oneFlagIsEnabled = false;
+
+    for (let i = 0; i < formData.length; i += 1) {
+      if ((formData[i].name !== 'form[_token]') && (formData[i].value !== '0') && (initialFormData[i].value === '0')) {
+        oneFlagIsEnabled = true;
+        break;
+      }
+    }
 
     const modal = new ConfirmModal(
       {
@@ -46,6 +69,11 @@ $(() => {
         $form.submit();
       },
     );
-    modal.show();
+
+    if (oneFlagIsEnabled) {
+      modal.show();
+    } else {
+      $form.submit();
+    }
   });
 });
