@@ -58,7 +58,7 @@ export default class CustomerRenderer {
         firstName: customerResult.firstname,
         lastName: customerResult.lastname,
         email: customerResult.email,
-        group: customerResult.default_group_name + ' (#' + customerResult.id_default_group + ')',
+        group: `${customerResult.default_group_name} (#${customerResult.id_default_group})`,
         birthday: customerResult.birthday !== '0000-00-00' ? customerResult.birthday : ' ',
       };
 
