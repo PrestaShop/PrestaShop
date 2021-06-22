@@ -78,7 +78,7 @@ class PrestaTrustCheckerTest extends TestCase
                     'pico' => 'https://www.addons.prestashop.com/random-url.jpg',
                 ],
             ], [
-                'path' => __DIR__ . '/../../../../Resources/modules/ganalytics/',
+                'path' => dirname(__DIR__, 4) . '/Resources/modules/ganalytics/',
             ]),
         ];
 

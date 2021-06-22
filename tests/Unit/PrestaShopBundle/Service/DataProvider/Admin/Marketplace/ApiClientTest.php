@@ -37,7 +37,7 @@ use PHPUnit\Framework\TestCase;
 use PrestaShopBundle\Service\DataProvider\Marketplace\ApiClient;
 use Tools;
 
-class ApiClientTests extends TestCase
+class ApiClientTest extends TestCase
 {
     /**
      * @var ApiClient
@@ -107,6 +107,11 @@ class ApiClientTests extends TestCase
                 ]
             )
         );
+    }
+
+    public function testGetNativeModules(): void
+    {
+        $this->assertCount(0, $this->apiClient->getNativesModules());
     }
 
     private function getDefaultQueryParameters(): array
