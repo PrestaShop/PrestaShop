@@ -28,8 +28,19 @@ namespace PrestaShop\PrestaShop\Core\Domain\Product\CommandHandler;
 
 use PrestaShop\PrestaShop\Core\Domain\Product\Command\AssociateProductAttachmentCommand;
 
+@trigger_error(
+    sprintf(
+        '%s is deprecated since version 1.7.9.0 and will be removed in the next major version.',
+        AssociateProductAttachmentHandlerInterface::class
+    ),
+    E_USER_DEPRECATED
+);
+
 /**
  * Defines contract to handle @see AssociateProductAttachmentCommand
+ *
+ * @deprecated since 1.7.9.0 and will be removed in next major version.
+ * @see SetAssociatedProductAttachmentsHandlerInterface
  */
 interface AssociateProductAttachmentHandlerInterface
 {
