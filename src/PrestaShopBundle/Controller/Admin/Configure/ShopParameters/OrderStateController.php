@@ -418,7 +418,8 @@ class OrderStateController extends FrameworkBundleAdminController
     protected function isMultistoreAllShopsContextForced(): bool
     {
         return $this->get('prestashop.adapter.multistore_feature')->isUsed()
-            && $this->get('prestashop.adapter.shop.context')->isShopContext();
+            && ($this->get('prestashop.adapter.shop.context')->isShopContext()
+                || $this->get('prestashop.adapter.shop.context')->isGroupShopContext());
     }
 
     /**
