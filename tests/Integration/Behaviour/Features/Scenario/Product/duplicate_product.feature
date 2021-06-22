@@ -103,7 +103,7 @@ Feature: Duplicate product from Back Office (BO).
       | name[en-US]        | puffin           |
       | name[fr-FR]        | macareux         |
       | file_name          | app_icon.png     |
-    And I associate attachment "att1" with product product1
+    When I associate product product1 with following attachments: "[att1]"
     And I enable product "product1"
     When I update product product1 SEO information with following values:
       | redirect_type   | 301-product |
@@ -194,7 +194,9 @@ Feature: Duplicate product from Back Office (BO).
       | carriers                                | [carrier1,carrier2]  |
     And product copy_of_product1 should have following related products:
       | product2 |
-    And product copy_of_product1 should have following attachments associated: "[att1]"
+    And product copy_of_product1 should have following attachments associated:
+      | attachment reference | title                       | file name    | type      |
+      | att1                 | en-US:puffin;fr-Fr:macareux | app_icon.png | image/png |
     And product copy_of_product1 should have identical customization fields to product1
     And product copy_of_product1 should have 1 customizable text field
     And product copy_of_product1 should have 0 customizable file fields
