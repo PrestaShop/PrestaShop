@@ -1,22 +1,28 @@
 require('module-alias/register');
-// Using chai
-const {expect} = require('chai');
+
+// Import utils
 const helper = require('@utils/helpers');
-const loginCommon = require('@commonTests/loginBO');
-const {Statuses} = require('@data/demo/orderStatuses');
 const files = require('@utils/files');
 
-// Importing pages
+// Import login steps
+const loginCommon = require('@commonTests/loginBO');
+
+// Import pages
 const dashboardPage = require('@pages/BO/dashboard');
 const invoicesPage = require('@pages/BO/orders/invoices/index');
 const ordersPage = require('@pages/BO/orders/index');
 const viewOrderPage = require('@pages/BO/orders/view');
+
+// Import data
+const {Statuses} = require('@data/demo/orderStatuses');
 
 // Test context imports
 const testContext = require('@utils/testContext');
 
 const baseContext = 'functional_BO_orders_invoices_generateInvoiceByDate';
 
+// Import expect from chai
+const {expect} = require('chai');
 
 let browserContext;
 let page;
@@ -24,7 +30,7 @@ let filePath;
 
 const today = new Date();
 
-// Get today date format (yyyy-mm-dd
+// Get today date format (yyyy-mm-dd)
 const todayDate = today.toISOString().slice(0, 10);
 
 // Create a future date that there is no invoices (yyyy-mm-dd)
@@ -33,7 +39,7 @@ const futureDate = today.toISOString().slice(0, 10);
 
 
 // Generate PDF file by date
-describe('Generate PDF file by date', async () => {
+describe('BO - Orders - Invoices : Generate PDF file by date', async () => {
   // before and after functions
   before(async function () {
     browserContext = await helper.createBrowserContext(this.browser);
@@ -48,56 +54,49 @@ describe('Generate PDF file by date', async () => {
     await loginCommon.loginBO(this, page);
   });
 
-  describe('Create invoice', async () => {
-    const tests = [
-      {args: {orderRow: 1, status: Statuses.shipped.status}},
-      {args: {orderRow: 2, status: Statuses.paymentAccepted.status}},
-    ];
+  describe('Create an invoice by changing the last order status', async () => {
+    it('should go to \'Orders > Orders\' page', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'goToOrdersPage', baseContext);
 
-    tests.forEach((orderToEdit, index) => {
-      it('should go to the orders page', async function () {
-        await testContext.addContextItem(this, 'testIdentifier', `goToOrdersPage${index + 1}`, baseContext);
+      await dashboardPage.goToSubMenu(
+        page,
+        dashboardPage.ordersParentLink,
+        dashboardPage.ordersLink,
+      );
 
-        await dashboardPage.goToSubMenu(
-          page,
-          dashboardPage.ordersParentLink,
-          dashboardPage.ordersLink,
-        );
+      await ordersPage.closeSfToolBar(page);
 
-        await ordersPage.closeSfToolBar(page);
+      const pageTitle = await ordersPage.getPageTitle(page);
+      await expect(pageTitle).to.contains(ordersPage.pageTitle);
+    });
 
-        const pageTitle = await ordersPage.getPageTitle(page);
-        await expect(pageTitle).to.contains(ordersPage.pageTitle);
-      });
+    it('should reset all filters and get number of orders', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'resetFilters', baseContext);
 
-      it('should reset all filters and get number of orders', async function () {
-        await testContext.addContextItem(this, 'testIdentifier', `resetFiltersFirst${index + 1}`, baseContext);
+      const numberOfOrders = await ordersPage.resetAndGetNumberOfLines(page);
+      await expect(numberOfOrders).to.be.above(0);
+    });
 
-        const numberOfOrders = await ordersPage.resetAndGetNumberOfLines(page);
-        await expect(numberOfOrders).to.be.above(0);
-      });
+    it('should go to the first order page', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'goToOrderPage', baseContext);
 
-      it(`should go to the order page number '${orderToEdit.args.orderRow}'`, async function () {
-        await testContext.addContextItem(this, 'testIdentifier', `goToOrderPage${index + 1}`, baseContext);
+      // View order
+      await ordersPage.goToOrder(page, 1);
 
-        // View order
-        await ordersPage.goToOrder(page, orderToEdit.args.orderRow);
+      const pageTitle = await viewOrderPage.getPageTitle(page);
+      await expect(pageTitle).to.contains(viewOrderPage.pageTitle);
+    });
 
-        const pageTitle = await viewOrderPage.getPageTitle(page);
-        await expect(pageTitle).to.contains(viewOrderPage.pageTitle);
-      });
+    it(`should change the order status to '${Statuses.shipped.status}' and check it`, async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'updateOrderStatus', baseContext);
 
-      it(`should change the order status to '${orderToEdit.args.status}' and check it`, async function () {
-        await testContext.addContextItem(this, 'testIdentifier', `updateOrderStatus${index + 1}`, baseContext);
-
-        const result = await viewOrderPage.modifyOrderStatus(page, orderToEdit.args.status);
-        await expect(result).to.equal(orderToEdit.args.status);
-      });
+      const result = await viewOrderPage.modifyOrderStatus(page, Statuses.shipped.status);
+      await expect(result).to.equal(Statuses.shipped.status);
     });
   });
 
   describe('Generate invoice by date', async () => {
-    it('should go to invoices page', async function () {
+    it('should go to \'Orders > Invoices\' page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'goToInvoicesPage', baseContext);
 
       await viewOrderPage.goToSubMenu(
