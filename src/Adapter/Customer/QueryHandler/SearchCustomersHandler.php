@@ -38,7 +38,6 @@ use PrestaShop\PrestaShop\Core\Domain\Customer\QueryHandler\SearchCustomersHandl
  */
 final class SearchCustomersHandler implements SearchCustomersHandlerInterface
 {
-
     /**
      * @var int
      */
