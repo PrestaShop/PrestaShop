@@ -33,6 +33,7 @@ $(() => {
   const $form = $('#feature-flag-form');
   const $formInputs = $('#feature-flag-form input');
   const initialState = $form.serialize();
+  const initialFormData = $form.serializeArray();
 
   $formInputs.change(() => {
     if (initialState === $form.serialize()) {
@@ -53,7 +54,7 @@ $(() => {
     }
 
     for (let i = 0; i < formData.length; i += 1) {
-      if ((formData[i].name !== 'form[_token]') && (formData[i].value !== '0')) {
+      if ((formData[i].name !== 'form[_token]') && (formData[i].value !== '0') && (initialFormData[i].value === '0')) {
         oneFlagIsEnabled = true;
         break;
       }
