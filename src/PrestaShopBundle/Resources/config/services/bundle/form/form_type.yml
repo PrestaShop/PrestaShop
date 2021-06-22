@@ -1726,8 +1726,8 @@ services:
         tags:
             - { name: form.type }
 
-    form.type.sell.product.options.product_attachment_type:
-        class: 'PrestaShopBundle\Form\Admin\Sell\Product\Options\ProductAttachmentType'
+    form.type.sell.product.options.product_attachments_type:
+        class: 'PrestaShopBundle\Form\Admin\Sell\Product\Options\ProductAttachmentsType'
         arguments:
             - '@prestashop.core.admin.url_generator'
         parent: 'form.type.translatable.aware'
