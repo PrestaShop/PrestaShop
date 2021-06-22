@@ -87,7 +87,7 @@ const init = function initDatePickers() {
       })
       .on('dp.change', (e) => {
         const event = new CustomEvent('datepickerChange', e);
-        window.parent.document.dispatchEvent(event);
+        window.document.dispatchEvent(event);
       });
   });
 };

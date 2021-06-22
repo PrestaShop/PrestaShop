@@ -238,7 +238,7 @@
             this.isFormUpdated = true;
           });
 
-          window.document.addEventListener('datepickerChange', () => {
+          this.$refs.iframe.contentDocument.addEventListener('datepickerChange', () => {
             this.isFormUpdated = true;
           });
         });
