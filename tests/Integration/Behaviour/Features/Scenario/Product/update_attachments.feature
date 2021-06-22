@@ -6,7 +6,7 @@
 Feature: Update product attachments from Back Office (BO).
   As an employee I want to be able to assign/remove existing attachments to product and add new ones.
 
-  Scenario: I associate attachment with product
+  Scenario: I set new association of product attachments
     Given language "language1" with locale "en-US" exists
     And language with iso code "en" is the default one
     And language "language2" with locale "fr-FR" exists
@@ -20,7 +20,7 @@ Feature: Update product attachments from Back Office (BO).
       | name[en-US]        | puffin           |
       | name[fr-FR]        | frpuffin         |
       | file_name          | app_icon.png     |
-    Then attachment "att1" should have following properties:
+    And attachment "att1" should have following properties:
       | description[en-US] | puffin photo nr1 |
       | description[fr-FR] |                  |
       | name[en-US]        | puffin           |
@@ -28,11 +28,11 @@ Feature: Update product attachments from Back Office (BO).
       | file_name          | app_icon.png     |
       | mime               | image/png        |
       | size               | 19187            |
-    Given I add new attachment "att2" with following properties:
+    And I add new attachment "att2" with following properties:
       | name[en-US]        | myShop       |
       | description[en-US] | my shop logo |
       | file_name          | logo.jpg     |
-    Then attachment "att2" should have following properties:
+    And attachment "att2" should have following properties:
       | name[en-US]        | myShop       |
       | name[fr-FR]        | myShop       |
       | description[en-US] | my shop logo |
@@ -40,15 +40,15 @@ Feature: Update product attachments from Back Office (BO).
       | mime               | image/jpeg   |
       | file_name          | logo.jpg     |
       | size               | 2758         |
-    When I associate attachment "att1" with product product1
+    And product product1 should have no attachments associated
+    When I associate product product1 with following attachments: "[att1]"
     Then product product1 should have following attachments associated:
       | attachment reference | title                       | file name    | type      |
       | att1                 | en-US:puffin;fr-Fr:frpuffin | app_icon.png | image/png |
-
-  Scenario: I set new association of product attachments
-    Given product product1 should have following attachments associated:
-      | attachment reference | title                       | file name    | type      |
-      | att1                 | en-US:puffin;fr-Fr:frpuffin | app_icon.png | image/png |
+    When I associate product product1 with following attachments: "[att2]"
+    Then product product1 should have following attachments associated:
+      | attachment reference | title                       | file name    | type       |
+      | att2                 | en-US:myShop;fr-Fr:myShop   | logo.jpg     | image/jpeg |
     When I associate product product1 with following attachments: "[att1,att2]"
     Then product product1 should have following attachments associated:
       | attachment reference | title                       | file name    | type       |
