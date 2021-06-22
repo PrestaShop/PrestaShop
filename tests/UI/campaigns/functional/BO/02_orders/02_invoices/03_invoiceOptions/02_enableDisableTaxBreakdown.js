@@ -197,7 +197,7 @@ describe('BO - Orders - Invoices : Enable/Disable tax breakdown', async () => {
         await expect(pageTitle).to.contains(boProductsPage.pageTitle);
       });
 
-      it('should create Product', async function () {
+      it('should create product', async function () {
         await testContext.addContextItem(this, 'testIdentifier', 'createProduct', baseContext);
 
         await boProductsPage.goToAddProductPage(page);

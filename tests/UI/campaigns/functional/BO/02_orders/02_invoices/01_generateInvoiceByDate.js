@@ -54,7 +54,7 @@ describe('BO - Orders - Invoices : Generate PDF file by date', async () => {
     await loginCommon.loginBO(this, page);
   });
 
-  describe('Create an invoice by changing the last order status', async () => {
+  describe('Create an invoice by changing the first order status', async () => {
     it('should go to \'Orders > Orders\' page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'goToOrdersPage', baseContext);
 

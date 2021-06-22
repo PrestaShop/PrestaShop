@@ -132,12 +132,7 @@ describe('BO - Orders - Invoices : Enable/Disable current year', async () => {
 
     describe('Choose the position of the year at the beginning and check it', async () => {
       it('should go to \'Orders > Invoices\' page', async function () {
-        await testContext.addContextItem(
-          this,
-          'testIdentifier',
-          'goToInvoicesPageToChangeCurrentYearPositionToBeginning',
-          baseContext,
-        );
+        await testContext.addContextItem(this, 'testIdentifier', 'goToInvoicesPage1', baseContext);
 
         await viewOrderPage.goToSubMenu(
           page,
