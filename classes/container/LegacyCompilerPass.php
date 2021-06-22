@@ -51,7 +51,6 @@ class LegacyCompilerPass implements CompilerPassInterface
         $cacheFactory = new CacheAdapterFactory();
         $cacheDriver = $container->getParameter('cache.driver');
         $definitions[] = $cacheDriver;
-        $container->set($cacheDriver, $cacheFactory->getCacheAdapter($cacheDriver));
 
         $this->buildSyntheticDefinitions($definitions, $container);
 
@@ -60,6 +59,7 @@ class LegacyCompilerPass implements CompilerPassInterface
         $container->set('db', Db::getInstance());
         $container->set('shop', $context->shop);
         $container->set('employee', $context->employee);
+        $container->set($cacheDriver, $cacheFactory->getCacheAdapter($cacheDriver));
     }
 
     private function buildSyntheticDefinitions(array $keys, ContainerBuilder $container)
