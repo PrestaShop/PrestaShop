@@ -23,16 +23,18 @@
  * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
-
 declare(strict_types=1);
 
 namespace PrestaShopBundle\Form\Admin\Sell\Product\Category;
 
+use PrestaShop\PrestaShop\Core\ConstraintValidator\Constraints\DefaultLanguage;
+use PrestaShop\PrestaShop\Core\ConstraintValidator\Constraints\TypedRegex;
+use PrestaShopBundle\Form\Admin\Type\TranslatableType;
 use PrestaShopBundle\Form\Admin\Type\TranslatorAwareType;
+use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
-use Symfony\Component\OptionsResolver\OptionsResolver;
 
-class CategoriesType extends TranslatorAwareType
+class AddCategoryType extends TranslatorAwareType
 {
     /**
      * {@inheritDoc}
@@ -40,25 +42,17 @@ class CategoriesType extends TranslatorAwareType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
-            ->add('product_categories', CategoriesCollectionType::class)
-            ->add('add_category', AddCategoryType::class, [
-                'validation_groups' => false,
-                'label' => $this->trans('Create a new category', 'Admin.Catalog.Feature'),
-                'label_tag_name' => 'h2',
-                'label_help_box' => $this->trans('If you want to quickly create a new category, you can do it here. Don’t forget to then go to the Categories page to fill in the needed details (description, image, etc.). A new category will not automatically appear in your shop\'s menu, please read the Help about it.', 'Admin.Catalog.Help'),
+            ->add('name', TranslatableType::class, [
+                'type' => TextType::class,
+                'constraints' => [
+                    new DefaultLanguage(),
+                ],
+                'options' => [
+                    'constraints' => [
+                        new TypedRegex(TypedRegex::TYPE_CATALOG_NAME),
+                    ],
+                ],
             ])
         ;
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    public function configureOptions(OptionsResolver $resolver)
-    {
-        parent::configureOptions($resolver);
-        $resolver->setDefaults([
-            'label' => false,
-            'required' => false,
-        ]);
     }
 }
