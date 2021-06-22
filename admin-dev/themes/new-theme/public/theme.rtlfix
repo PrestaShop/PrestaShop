@@ -82,3 +82,19 @@
   right: 13.13rem;
   left: 0;
 }
+
+.page-sidebar-closed:not(.mobile) .product-page .product-footer {
+  right: 3.125rem;
+}
+
+@media only screen and (max-width: 1450px) {
+  .adminproducts .product-page .product-footer .js-btn-save {
+    margin: 0!important;
+  }
+}
+
+@media only screen and (max-width: 1024px) {
+  .adminproducts .product-page .product-footer {
+    right: 0;
+  }
+}
