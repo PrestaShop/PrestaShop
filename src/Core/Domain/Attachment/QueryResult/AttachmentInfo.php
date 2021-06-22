@@ -49,6 +49,12 @@ class AttachmentInfo
      */
     private $mimeType;
 
+    /**
+     * @param int $attachmentId
+     * @param array $localizedNames
+     * @param string $filename
+     * @param string $mimeType
+     */
     public function __construct(
         int $attachmentId,
         array $localizedNames,

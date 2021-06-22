@@ -18,12 +18,13 @@ Feature: Update product attachments from Back Office (BO).
     Given I add new attachment "att1" with following properties:
       | description[en-US] | puffin photo nr1 |
       | name[en-US]        | puffin           |
+      | name[fr-FR]        | frpuffin         |
       | file_name          | app_icon.png     |
     Then attachment "att1" should have following properties:
       | description[en-US] | puffin photo nr1 |
       | description[fr-FR] |                  |
       | name[en-US]        | puffin           |
-      | name[fr-FR]        | puffin           |
+      | name[fr-FR]        | frpuffin         |
       | file_name          | app_icon.png     |
       | mime               | image/png        |
       | size               | 19187            |
@@ -40,14 +41,24 @@ Feature: Update product attachments from Back Office (BO).
       | file_name          | logo.jpg     |
       | size               | 2758         |
     When I associate attachment "att1" with product product1
-    Then product product1 should have following attachments associated: "[att1]"
+    Then product product1 should have following attachments associated:
+      | attachment reference | title                       | file name    | type      |
+      | att1                 | en-US:puffin;fr-Fr:frpuffin | app_icon.png | image/png |
 
   Scenario: I set new association of product attachments
-    Given product product1 should have following attachments associated: "[att1]"
+    Given product product1 should have following attachments associated:
+      | attachment reference | title                       | file name    | type      |
+      | att1                 | en-US:puffin;fr-Fr:frpuffin | app_icon.png | image/png |
     When I associate product product1 with following attachments: "[att1,att2]"
-    Then product product1 should have following attachments associated: "[att1,att2]"
+    Then product product1 should have following attachments associated:
+      | attachment reference | title                       | file name    | type       |
+      | att1                 | en-US:puffin;fr-Fr:frpuffin | app_icon.png | image/png  |
+      | att2                 | en-US:myShop;fr-Fr:myShop   | logo.jpg     | image/jpeg |
 
   Scenario: Remove association of product attachments
-    Given product product1 should have following attachments associated: "[att1,att2]"
+    Given product product1 should have following attachments associated:
+      | attachment reference | title                       | file name    | type       |
+      | att1                 | en-US:puffin;fr-Fr:frpuffin | app_icon.png | image/png  |
+      | att2                 | en-US:myShop;fr-Fr:myShop   | logo.jpg     | image/jpeg |
     When I remove product product1 attachments association
     Then product product1 should have no attachments associated
