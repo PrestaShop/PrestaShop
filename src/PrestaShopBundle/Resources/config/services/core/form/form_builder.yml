@@ -226,3 +226,10 @@ services:
       arguments:
           - 'PrestaShopBundle\Form\Admin\Configure\ShopParameters\SearchEngines\SearchEngineType'
           - '@prestashop.core.form.identifiable_object.data_provider.search_engine_form_data_provider'
+
+  prestashop.core.form.identifiable_object.builder.quick_add_category_form_builder:
+      class: 'PrestaShop\PrestaShop\Core\Form\IdentifiableObject\Builder\FormBuilder'
+      factory: 'prestashop.core.form.builder.form_builder_factory:create'
+      arguments:
+          - 'PrestaShopBundle\Form\Admin\Catalog\Category\QuickAddCategoryType'
+          - '@prestashop.core.form.identifiable_object.data_provider.empty_form_data_provider'

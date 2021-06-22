@@ -28,6 +28,7 @@ declare(strict_types=1);
 
 namespace PrestaShopBundle\Form\Admin\Sell\Product\Category;
 
+use PrestaShopBundle\Form\Admin\Sell\Category\QuickAddCategoryType;
 use PrestaShopBundle\Form\Admin\Type\TranslatorAwareType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
@@ -41,7 +42,7 @@ class CategoriesType extends TranslatorAwareType
     {
         $builder
             ->add('product_categories', CategoriesCollectionType::class)
-            ->add('add_category', AddCategoryType::class, [
+            ->add('add_category', QuickAddCategoryType::class, [
                 'validation_groups' => false,
                 'label' => $this->trans('Create a new category', 'Admin.Catalog.Feature'),
                 'label_tag_name' => 'h2',
