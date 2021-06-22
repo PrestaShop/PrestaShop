@@ -36,7 +36,7 @@ class ProductComments extends ModuleConfiguration.constructor {
   /* Methods */
 
   /**
-   *
+   * Get the review count by table
    * @param page {Page} Browser tab
    * @param table {String} The review table (3 options available: 'waiting-approval', 'reported', 'approved')
    * @returns {Promise<number|*>}
@@ -51,7 +51,7 @@ class ProductComments extends ModuleConfiguration.constructor {
   }
 
   /**
-   *
+   * Open  the button dropdown to perform some action
    * @param page {Page} Browser tab
    * @param table {String} The review table (2 options available: 'waiting-approval', 'reported')
    * @param row {Number} The review row
@@ -63,7 +63,7 @@ class ProductComments extends ModuleConfiguration.constructor {
   }
 
   /**
-   *
+   * Get all the content for a review in review table
    * @param page {Page} The browser tab
    * @param table {String} The review table (3 options available: 'waiting-approval', 'reported', 'approved')
    * @param row {Number} The review row (default is set to 1)
@@ -82,7 +82,7 @@ class ProductComments extends ModuleConfiguration.constructor {
   }
 
   /**
-  *
+  * Approve a review in the "waiting for approval table"
   * @param page {Page} Browser tab
   * @param table {String} The reviews table (the table is set by default)
   * @param row {Number} The review row
@@ -93,7 +93,7 @@ class ProductComments extends ModuleConfiguration.constructor {
   }
 
   /**
-   *
+   * Delete a review in a table
    * @param page {Page} Browser tab
    * @param table {String} The reviews table
    * @param row {Number} The review row
@@ -106,7 +106,7 @@ class ProductComments extends ModuleConfiguration.constructor {
   }
 
   /**
-   *
+   * Delete a review in the "waiting approval" table
    * @param page {Page} Browser tab
    * @param row {Number} The review row
    * @returns {Promise<void>}
@@ -118,7 +118,7 @@ class ProductComments extends ModuleConfiguration.constructor {
   }
 
   /**
-   *
+   * Delete a review in the "reported review" table
    * @param page {Page} Browser tab
    * @param row {Number} The review row
    * @returns {Promise<void>}
@@ -128,7 +128,7 @@ class ProductComments extends ModuleConfiguration.constructor {
   }
 
   /**
-  *
+  * Confirm a review in the "reported review" table
   * @param page {Page} Browser tab
   * @param row {Number} The review row
   * @returns {Promise<void>}
