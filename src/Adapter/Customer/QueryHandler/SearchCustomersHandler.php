@@ -27,6 +27,7 @@
 namespace PrestaShop\PrestaShop\Adapter\Customer\QueryHandler;
 
 use Customer;
+use Group;
 use PrestaShop\PrestaShop\Core\Domain\Customer\Query\SearchCustomers;
 use PrestaShop\PrestaShop\Core\Domain\Customer\QueryHandler\SearchCustomersHandlerInterface;
 
@@ -37,6 +38,21 @@ use PrestaShop\PrestaShop\Core\Domain\Customer\QueryHandler\SearchCustomersHandl
  */
 final class SearchCustomersHandler implements SearchCustomersHandlerInterface
 {
+
+    /**
+     * @var int
+     */
+    private $contextLangId;
+
+    /**
+     * @param int $contextLangId
+     */
+    public function __construct(
+        $contextLangId
+    ) {
+        $this->contextLangId = $contextLangId;
+    }
+  
     /**
      * {@inheritdoc}
      */
@@ -68,6 +84,9 @@ final class SearchCustomersHandler implements SearchCustomersHandlerInterface
                     $customerArray['lastname'],
                     $customerArray['email']
                 );
+
+                $defaultGroup = new Group($customerArray['id_default_group'], $this->contextLangId);
+                $customerArray['default_group_name'] = $defaultGroup->name;
 
                 unset(
                     $customerArray['passwd'],
