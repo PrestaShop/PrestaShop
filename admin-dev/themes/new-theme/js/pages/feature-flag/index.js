@@ -36,23 +36,19 @@ $(() => {
   const initialFormData = $form.serializeArray();
 
   $formInputs.change(() => {
-    if (initialState === $form.serialize()) {
-      $submitButton.prop('disabled', true);
-    } else {
-      $submitButton.prop('disabled', false);
-    }
+    $submitButton.prop('disabled', initialState === $form.serialize());
   });
 
   $submitButton.on('click', (event) => {
     event.preventDefault();
 
     const formData = $form.serializeArray();
-    let oneFlagIsEnabled = false;
 
     if (initialState === $form.serialize()) {
       return;
     }
 
+    let oneFlagIsEnabled = false;
     for (let i = 0; i < formData.length; i += 1) {
       if ((formData[i].name !== 'form[_token]') && (formData[i].value !== '0') && (initialFormData[i].value === '0')) {
         oneFlagIsEnabled = true;
