@@ -70,6 +70,7 @@ export default {
     combinationIdInputsSelector: '.combination-id-input',
     isDefaultInputsSelector: '.combination-is-default-input',
     removeCombinationSelector: '.remove-combination-item',
+    combinationName: 'form .card-header span',
     paginationContainer: '#combinations-pagination',
     loadingSpinner: '#productCombinationsLoading',
     quantityInputWrapper: '.combination-quantity',
@@ -83,6 +84,9 @@ export default {
       tokenKey: 'combination_item[_token]',
     },
     editionForm: 'form[name="combination_form"]',
+    editionFormInputs:
+      // eslint-disable-next-line
+      'form[name="combination_form"] input, form[name="combination_form"] textarea, form[name="combination_form"] select',
     editCombinationButtons: '.edit-combination-item',
     tableRow: {
       combinationImg: '.combination-image',

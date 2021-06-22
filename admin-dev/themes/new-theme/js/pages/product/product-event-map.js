@@ -49,5 +49,6 @@ export default {
     combinationGeneratorReady: 'combinationGeneratorReady',
     openCombinationsGenerator: 'openCombinationsGenerator',
     clearFilters: 'clearFilters',
+    selectCombination: 'selectCombination',
   },
 };
