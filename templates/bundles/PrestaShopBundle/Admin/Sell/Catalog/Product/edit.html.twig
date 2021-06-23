@@ -108,6 +108,12 @@
         {% endblock %}
       {% endif %}
 
+      {% block product_tab_categories %}
+        {{ include('@PrestaShop/Admin/Sell/Catalog/Product/Tabs/categories.html.twig', {
+          'productForm': productForm,
+        }) }}
+      {% endblock %}
+
       {% block product_tab_pricing %}
         {{ include('@PrestaShop/Admin/Sell/Catalog/Product/Tabs/pricing.html.twig', {
           'productForm': productForm,
