@@ -75,3 +75,55 @@
 .adminorders .dropdown-menu {
   right: inherit;
 }
+
+
+/* Footer position on RTL */
+.adminproducts .product-page .product-footer {
+  right: 13.13rem;
+  left: 0;
+}
+
+.adminproducts .product-page .product-footer .text-right {
+  text-align: left!important;
+}
+
+.page-sidebar-closed:not(.mobile) .product-page .product-footer {
+  right: 3.125rem;
+  left: 0!important;
+}
+
+@media only screen and (max-width: 1450px) {
+  .adminproducts .product-page .product-footer .js-btn-save {
+    margin: 0!important;
+  }
+}
+
+@media only screen and (max-width: 1024px) {
+  .adminproducts .product-page .product-footer {
+    right: 0;
+  }
+}
+
+@media only screen and (max-width: 440px) {
+  .adminproducts .product-page .product-footer .col-lg-4 {
+    display: flex;
+    flex-wrap: wrap;
+    min-width: 13rem;
+    padding-left: 0;
+    align-items: center;
+  }
+
+  .adminproducts .product-page .product-footer .dropdown {
+    margin-top: 0;
+  }
+
+  .adminproducts .product-page .product-footer .btn-outline-primary {
+    display: none;
+  }
+
+  .adminproducts .product-page .product-footer .online-title, 
+  .adminproducts .product-page .product-footer .offline-title {
+    margin-left: .25rem;
+    margin-right: 1rem;
+  }
+}
