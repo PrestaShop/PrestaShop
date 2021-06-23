@@ -53,14 +53,8 @@ export default class CategoriesManager {
     this.prototypeName = this.categoryTree.dataset.prototypeName;
     this.expandAllButton = this.categoriesContainer.querySelector(ProductCategoryMap.expandAllButton);
     this.reduceAllButton = this.categoriesContainer.querySelector(ProductCategoryMap.reduceAllButton);
-    this.addCategoryVisibilityBtn = this.categoriesContainer.querySelector(
-      ProductMap.categories.addCategoryVisibilityBtn,
-    );
-    this.cancelNewCategoryBtn = this.categoriesContainer.querySelector(
-      ProductMap.categories.cancelNewCategoryBtn,
-    );
-    this.submitNewCategoryBtn = this.categoriesContainer.querySelector(
-      ProductMap.categories.submitNewCategoryBtn,
+    this.addCategoryBtn = this.categoriesContainer.querySelector(
+      ProductMap.categories.addCategoryBtn,
     );
 
     this.initAddNewCategory();
@@ -70,9 +64,26 @@ export default class CategoriesManager {
   }
 
   initAddNewCategory() {
-    this.addCategoryVisibilityBtn.addEventListener('click', () => this.toggleNewCategoryFormVisibility());
-    this.cancelNewCategoryBtn.addEventListener('click', () => this.toggleNewCategoryFormVisibility());
-    this.submitNewCategoryBtn.addEventListener('click', () => this.createNewCategory());
+    const modalContent = $('#external-add-category-template');
+
+    $(this.addCategoryBtn).fancybox({
+      type: 'iframe',
+      width: '90%',
+      height: '90%',
+      content: modalContent.html(),
+      afterShow: () => {
+        const form = $(`form[name='${ProductMap.categories.addCategoryFormName}']`);
+        const {fancybox} = parent.$;
+
+        form.on('click', '.cancel-btn', () => {
+          fancybox.close();
+        });
+
+        form.submit((e) => {
+          this.submitNewCategory({e, fancybox});
+        });
+      },
+    });
   }
 
   async initCategories() {
@@ -501,27 +512,20 @@ export default class CategoriesManager {
     }
   }
 
-  toggleNewCategoryFormVisibility() {
-    const $addCategoryContainer = $(ProductMap.categories.addCategoryFormContainer);
-    const $addCategoryVisibilityBtn = $(this.addCategoryVisibilityBtn);
+  submitNewCategory(eventData) {
+    const submitEvent = eventData.e;
+    submitEvent.preventDefault();
 
-    if ($addCategoryContainer.hasClass('d-none')) {
-      $addCategoryContainer.removeClass('d-none');
-      $addCategoryVisibilityBtn.addClass('d-none');
-    } else {
-      $addCategoryContainer.addClass('d-none');
-      $addCategoryVisibilityBtn.removeClass('d-none');
-    }
-  }
+    createCategory(submitEvent.currentTarget).then((resp) => {
+      if (resp.errors) {
+        Object.values(resp.errors).forEach((error) => {
+          $.growl.error({message: error});
+        });
 
-  createNewCategory() {
-    const data = {};
-    const newCategoryInputs = $(ProductMap.categories.addCategoryFormContainer).find('input');
+        return;
+      }
 
-    Object.values(newCategoryInputs).forEach((input) => {
-      data[input.name] = input.value;
+      eventData.fancybox.close();
     });
-
-    createCategory(data).then((resp) => { console.log(resp); });
   }
 }

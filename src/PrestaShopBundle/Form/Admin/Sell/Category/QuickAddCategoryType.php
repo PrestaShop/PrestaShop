@@ -35,6 +35,7 @@ use PrestaShopBundle\Form\Admin\Type\TranslatorAwareType;
 use PrestaShopBundle\Translation\TranslatorInterface;
 use Symfony\Component\Form\Extension\Core\Type\ButtonType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
+use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
 
@@ -91,13 +92,15 @@ class QuickAddCategoryType extends TranslatorAwareType
                 'label' => $this->trans('Parent of the category', 'Admin.Catalog.Feature'),
             ])
             ->add('cancel', ButtonType::class, [
+                'label' => $this->trans('Cancel', 'Admin.Actions'),
                 'attr' => [
-                    'class' => 'btn btn-outline-secondary cancel-category-btn btn-sm',
+                    'class' => 'btn btn-outline-secondary cancel-btn',
                 ],
             ])
-            ->add('submit', ButtonType::class, [
+            ->add('submit', SubmitType::class, [
+                'label' => $this->trans('Save', 'Admin.Actions'),
                 'attr' => [
-                    'class' => 'btn btn-primary submit-category-btn btn-sm',
+                    'class' => 'btn btn-primary submit-btn float-right',
                 ],
             ])
         ;

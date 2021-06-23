@@ -30,7 +30,13 @@ const {$} = window;
 
 export const getCategories = async () => $.get(router.generate('admin_categories_get_categories_tree'));
 
-export const createCategory = async (data) => $.post(router.generate('admin_categories_quick_create', data));
+export const createCategory = async (form) => $.ajax({
+  type: 'POST',
+  url: router.generate('admin_categories_quick_create'),
+  data: new FormData(form),
+  processData: false,
+  contentType: false,
+});
 
 export default {
   getCategories,
