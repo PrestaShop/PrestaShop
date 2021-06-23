@@ -1,23 +1,28 @@
 require('module-alias/register');
-// Using chai
-const {expect} = require('chai');
+
+// Import utils
 const helper = require('@utils/helpers');
+
+// Import login steps
 const loginCommon = require('@commonTests/loginBO');
 
-// Importing pages
+// Import pages
 const dashboardPage = require('@pages/BO/dashboard');
 const deliverySlipsPage = require('@pages/BO/orders/deliverySlips/index');
 const ordersPage = require('@pages/BO/orders');
 const viewOrderPage = require('@pages/BO/orders/view');
 
-// Importing data
+// Import data
 const {Statuses} = require('@data/demo/orderStatuses');
 const DeliverySlipOptionsFaker = require('@data/faker/deliverySlipOptions');
 
-// Importing test context
+// Import test context
 const testContext = require('@utils/testContext');
 
 const baseContext = 'functional_BO_orders_deliverSlips_deliverSlipsOptions_deliverySlipPrefix';
+
+// Import expect from chai
+const {expect} = require('chai');
 
 let browserContext;
 let page;
@@ -33,7 +38,7 @@ Change the Order status to Shipped
 Check the delivery slip file name
 Back to the default delivery slip prefix value
  */
-describe('Edit delivery slip prefix and check the generated file name', async () => {
+describe('BO - Orders - Delivery slips : Update delivery slip prefix and check the generated file name', async () => {
   // before and after functions
   before(async function () {
     browserContext = await helper.createBrowserContext(this.browser);
@@ -48,8 +53,8 @@ describe('Edit delivery slip prefix and check the generated file name', async ()
     await loginCommon.loginBO(this, page);
   });
 
-  describe(`Change the delivery slip prefix to '${deliverySlipData.prefix}'`, async () => {
-    it('should go to delivery slip page', async function () {
+  describe('Update the delivery slip prefix', async () => {
+    it('should go to \'Orders > Delivery slip\' page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'goToDeliverySlipsPage', baseContext);
 
       await dashboardPage.goToSubMenu(
@@ -64,7 +69,7 @@ describe('Edit delivery slip prefix and check the generated file name', async ()
       await expect(pageTitle).to.contains(deliverySlipsPage.pageTitle);
     });
 
-    it(`should change the delivery slip prefix to ${deliverySlipData.prefix}`, async function () {
+    it(`should update the delivery slip prefix to ${deliverySlipData.prefix}`, async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'updateDeliverySlipsPrefix', baseContext);
 
       await deliverySlipsPage.changePrefix(page, deliverySlipData.prefix);
@@ -73,8 +78,8 @@ describe('Edit delivery slip prefix and check the generated file name', async ()
     });
   });
 
-  describe(`Change the order status to '${Statuses.shipped.status}' and check the file Name`, async () => {
-    it('should go to the orders page', async function () {
+  describe(`Update the order status to '${Statuses.shipped.status}' and check the file name`, async () => {
+    it('should go to \'Orders > Orders\' page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'goToOrdersPage', baseContext);
 
       await deliverySlipsPage.goToSubMenu(
@@ -112,7 +117,7 @@ describe('Edit delivery slip prefix and check the generated file name', async ()
   });
 
   describe(`Back to the default delivery slip prefix value '${defaultPrefix}'`, async () => {
-    it('should go to delivery slips page', async function () {
+    it('should go to \'Orders > Delivery slips\' page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'goToDeliverySlipsPageBackToDefaultValue', baseContext);
 
       await viewOrderPage.goToSubMenu(
@@ -127,8 +132,8 @@ describe('Edit delivery slip prefix and check the generated file name', async ()
       await expect(pageTitle).to.contains(deliverySlipsPage.pageTitle);
     });
 
-    it(`should change the delivery slip prefix to '${defaultPrefix}'`, async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'backToPrefixDefaultValue', baseContext);
+    it(`should update the delivery slip prefix to '${defaultPrefix}'`, async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'backToDefaultPrefixValue', baseContext);
 
       await deliverySlipsPage.changePrefix(page, defaultPrefix);
       const textMessage = await deliverySlipsPage.saveDeliverySlipOptions(page);
