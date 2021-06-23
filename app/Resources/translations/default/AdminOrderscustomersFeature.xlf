@@ -235,7 +235,7 @@
       <trans-unit id="76a6d3995bf5a66e8c92d84401d6435e">
         <source>Your answer to</source>
         <target>Your answer to</target>
-        <note>Line: 101</note>
+        <note>Line: 100</note>
       </trans-unit>
       <trans-unit id="04427d6ba3fb03f0951b27ddd7c05af5">
         <source>Orders and messages timeline</source>
@@ -1145,7 +1145,7 @@ Best regards,</target>
       <trans-unit id="e174c1b711f254d538c689a90c5842a5">
         <source>Phone number(s)</source>
         <target>Phone number(s)</target>
-        <note>Line: 118</note>
+        <note>Line: 119</note>
       </trans-unit>
     </body>
   </file>
@@ -2448,7 +2448,7 @@ Best regards,</target>
       <trans-unit id="cdba184783a0253218efd734da81a9da">
         <source>Stock location</source>
         <target>Stock location</target>
-        <note>Line: 112</note>
+        <note>Line: 126</note>
       </trans-unit>
       <trans-unit id="169d7487a2ea841e5cdd6b9052c54f37">
         <source>Shipping details</source>
@@ -2458,12 +2458,12 @@ Best regards,</target>
       <trans-unit id="e3f32212a2ad38fc762cff6ba6d44936">
         <source>Invoice details</source>
         <target>Invoice details</target>
-        <note>Line: 84</note>
+        <note>Line: 98</note>
       </trans-unit>
       <trans-unit id="0da9511b88a62642518334bda95c7370">
         <source>Open details</source>
         <target>Open details</target>
-        <note>Line: 159</note>
+        <note>Line: 173</note>
       </trans-unit>
     </body>
   </file>

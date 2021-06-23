@@ -489,6 +489,11 @@ File: admin-dev/themes/default/template/controllers/categories/helpers/form/form
         <target>This description will appear in search engines. It should be a single sentence, shorter than 160 characters (including spaces).</target>
         <note>Line: 119</note>
       </trans-unit>
+      <trans-unit id="b51716b6494f24132f3543c516d59742">
+        <source>Public title for the product page, and for search engines. Leave blank to use the product name. The number of remaining characters is displayed to the right of the field.</source>
+        <target>Public title for the product page, and for search engines. Leave blank to use the product name. The number of remaining characters is displayed to the right of the field.</target>
+        <note>Line: 91</note>
+      </trans-unit>
     </body>
   </file>
   <file original="src/PrestaShopBundle/Form/Admin/Sell/Supplier/SupplierType.php" source-language="en-US" target-language="en" datatype="plaintext">

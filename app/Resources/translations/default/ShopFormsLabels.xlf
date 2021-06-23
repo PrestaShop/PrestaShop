@@ -134,12 +134,12 @@ File: themes/StarterTheme/templates/customer/_partials/order-messages.tpl:64</no
       <trans-unit id="b357b524e740bc85b9790a0712d84a30">
         <source>Email address</source>
         <target>Email address</target>
-        <note>Line: 59</note>
+        <note>Line: 58</note>
       </trans-unit>
       <trans-unit id="c7892ebbb139886662c6f2fc8c450710">
         <source>Subject</source>
         <target>Subject</target>
-        <note>Line: 48</note>
+        <note>Line: 47</note>
       </trans-unit>
       <trans-unit id="5d4710f9a8250b13164a82c94d5b00d1">
         <source>Order reference</source>
@@ -167,22 +167,27 @@ File: themes/StarterTheme/templates/customer/_partials/order-messages.tpl:64</no
       <trans-unit id="93332134fd11cffbe680dd8afaa521fc">
         <source>-- day --</source>
         <target>-- day --</target>
-        <note>Line: 124</note>
+        <note>Line: 126</note>
       </trans-unit>
       <trans-unit id="9180b4d5ab8103f244c2d4fd661934e2">
         <source>-- month --</source>
         <target>-- month --</target>
-        <note>Line: 125</note>
+        <note>Line: 127</note>
       </trans-unit>
       <trans-unit id="ae1cc541ba45ce670ea7e0e3a30e3205">
         <source>-- year --</source>
         <target>-- year --</target>
-        <note>Line: 126</note>
+        <note>Line: 128</note>
       </trans-unit>
       <trans-unit id="ebb061953c0454b2c8ee7b0ac615ebcd">
         <source>Optional</source>
         <target>Optional</target>
-        <note>Line: 192</note>
+        <note>Line: 196</note>
+      </trans-unit>
+      <trans-unit id="4293bbcd95a38b4da545b4a245610dbb">
+        <source>Please choose</source>
+        <target>Please choose</target>
+        <note>Line: 61</note>
       </trans-unit>
     </body>
   </file>

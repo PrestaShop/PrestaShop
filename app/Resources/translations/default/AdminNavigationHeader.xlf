@@ -149,6 +149,11 @@
         <target>Orders</target>
         <note>Line: 291</note>
       </trans-unit>
+      <trans-unit id="10df6a640ea9625829122dfb5842795e">
+        <source>PrestaShop logo</source>
+        <target>PrestaShop logo</target>
+        <note>Line: 118</note>
+      </trans-unit>
     </body>
   </file>
   <file original="admin-dev/themes/default/template/search_form.tpl" source-language="en-US" target-language="en" datatype="plaintext">
