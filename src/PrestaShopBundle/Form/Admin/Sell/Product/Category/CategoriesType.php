@@ -28,7 +28,6 @@ declare(strict_types=1);
 
 namespace PrestaShopBundle\Form\Admin\Sell\Product\Category;
 
-use PrestaShopBundle\Form\Admin\Sell\Category\QuickAddCategoryType;
 use PrestaShopBundle\Form\Admin\Type\IconButtonType;
 use PrestaShopBundle\Form\Admin\Type\TranslatorAwareType;
 use Symfony\Component\Form\FormBuilderInterface;
@@ -43,17 +42,10 @@ class CategoriesType extends TranslatorAwareType
     {
         $builder
             ->add('product_categories', CategoriesCollectionType::class)
-            ->add('add_category', QuickAddCategoryType::class, [
-                'attr' => [
-                    'class' => 'd-none',
-                ],
-                // disable validation because this subform will be submitted by ajax and not handled by product form submit
-                'validation_groups' => false,
-                'label' => $this->trans('Create a new category', 'Admin.Catalog.Feature'),
-                'label_tag_name' => 'h2',
-                'label_help_box' => $this->trans('If you want to quickly create a new category, you can do it here. Don’t forget to then go to the Categories page to fill in the needed details (description, image, etc.). A new category will not automatically appear in your shop\'s menu, please read the Help about it.', 'Admin.Catalog.Help'),
-            ])
             ->add('add_category_btn', IconButtonType::class, [
+                //@todo: label help/tag options cannot be added to a button. Where do I add them?
+                //                'label_tag_name' => 'h2',
+                //                'label_help_box' => $this->trans('If you want to quickly create a new category, you can do it here. Don’t forget to then go to the Categories page to fill in the needed details (description, image, etc.). A new category will not automatically appear in your shop\'s menu, please read the Help about it.', 'Admin.Catalog.Help'),
                 'label' => $this->trans('Create a category', 'Admin.Catalog.Feature'),
                 'icon' => 'add_circle',
                 'type' => 'link',

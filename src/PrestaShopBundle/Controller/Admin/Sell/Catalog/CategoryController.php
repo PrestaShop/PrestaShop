@@ -148,13 +148,14 @@ class CategoryController extends FrameworkBundleAdminController
     {
         $formHandler = $this->get('prestashop.core.form.identifiable_object.handler.quick_add_category_form_handler');
         $form = $this->get('prestashop.core.form.identifiable_object.builder.quick_add_category_form_builder')->getForm();
+        $form->handleRequest($request);
         $handlerResult = $formHandler->handle($form);
 
         if ($handlerResult->isValid()) {
             return $this->json(['categoryId' => $handlerResult->getIdentifiableObjectId()]);
         }
 
-        return $this->json($this->getFormErrorsForJS($form));
+        return $this->json(['errors' => $this->getFormErrorsForJS($form)]);
     }
 
     /**

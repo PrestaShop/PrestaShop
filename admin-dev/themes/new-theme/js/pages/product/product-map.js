@@ -24,6 +24,7 @@
  */
 
 const combinationListId = '#combination_list';
+const productCategoriesFormId = '#product_categories';
 
 export default {
   productForm: 'form[name=product]',
@@ -160,7 +161,6 @@ export default {
   },
   categories: {
     categoriesContainer: '#product_categories',
-    addCategoryFormContainer: '#product_categories_add_category',
     categoryTree: '.js-categories-tree',
     treeElement: '.category-tree-element',
     treeElementInputs: '.category-tree-inputs',
@@ -179,8 +179,7 @@ export default {
     everyItems: '.less, .more',
     expandAllButton: '#categories-tree-expand',
     reduceAllButton: '#categories-tree-reduce',
-    addCategoryVisibilityBtn: '.add-category-btn',
-    submitNewCategoryBtn: '.submit-category-btn',
-    cancelNewCategoryBtn: '.cancel-category-btn',
+    addCategoryBtn: '.add-category-btn',
+    addCategoryFormName: 'quick_add_category',
   },
 };

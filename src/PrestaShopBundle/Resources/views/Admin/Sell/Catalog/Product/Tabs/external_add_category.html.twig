@@ -1,0 +1,14 @@
+<template id="external-add-category-template">
+  {{ form_start(addCategoryForm) }}
+  <div class="card">
+    <div class="card-block row">
+      {{ form_row(addCategoryForm.name) }}
+      {{ form_row(addCategoryForm.parent_id) }}
+    </div>
+    <div class="card-footer">
+        {{ form_widget(addCategoryForm.cancel) }}
+        {{ form_widget(addCategoryForm.submit) }}
+    </div>
+  </div>
+  {{ form_end(addCategoryForm) }}
+</template>
