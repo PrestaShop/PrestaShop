@@ -92,12 +92,12 @@ class QuickAddCategoryType extends TranslatorAwareType
             ])
             ->add('cancel', ButtonType::class, [
                 'attr' => [
-                    'class' => 'btn btn-outline-secondary cancel-btn btn-sm',
+                    'class' => 'btn btn-outline-secondary cancel-category-btn btn-sm',
                 ],
             ])
             ->add('submit', ButtonType::class, [
                 'attr' => [
-                    'class' => 'btn btn-primary submit-btn btn-sm',
+                    'class' => 'btn btn-primary submit-category-btn btn-sm',
                 ],
             ])
         ;

@@ -167,6 +167,7 @@ export default {
   },
   categories: {
     categoriesContainer: '#product_categories',
+    addCategoryFormContainer: '#product_categories_add_category',
     categoryTree: '.js-categories-tree',
     treeElement: '.category-tree-element',
     treeElementInputs: '.category-tree-inputs',
@@ -185,6 +186,9 @@ export default {
     everyItems: '.less, .more',
     expandAllButton: '#categories-tree-expand',
     reduceAllButton: '#categories-tree-reduce',
+    addCategoryVisibilityBtn: '.add-category-btn',
+    submitNewCategoryBtn: '.submit-category-btn',
+    cancelNewCategoryBtn: '.cancel-category-btn',
   },
   modules: {
     previewContainer: '.module-render-container.all-modules',

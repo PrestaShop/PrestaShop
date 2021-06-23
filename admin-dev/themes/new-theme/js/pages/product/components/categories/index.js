@@ -30,7 +30,7 @@ import AutoCompleteSearch from '@components/auto-complete-search';
 import Tokenizers from '@components/bloodhound/tokenizers';
 import ProductMap from '@pages/product/product-map';
 import ProductEventMap from '@pages/product/product-event-map';
-import {getCategories} from '@pages/product/services/categories';
+import {createCategory, getCategories} from '@pages/product/services/categories';
 
 const {$} = window;
 
@@ -53,10 +53,26 @@ export default class CategoriesManager {
     this.prototypeName = this.categoryTree.dataset.prototypeName;
     this.expandAllButton = this.categoriesContainer.querySelector(ProductCategoryMap.expandAllButton);
     this.reduceAllButton = this.categoriesContainer.querySelector(ProductCategoryMap.reduceAllButton);
+    this.addCategoryVisibilityBtn = this.categoriesContainer.querySelector(
+      ProductMap.categories.addCategoryVisibilityBtn,
+    );
+    this.cancelNewCategoryBtn = this.categoriesContainer.querySelector(
+      ProductMap.categories.cancelNewCategoryBtn,
+    );
+    this.submitNewCategoryBtn = this.categoriesContainer.querySelector(
+      ProductMap.categories.submitNewCategoryBtn,
+    );
 
+    this.initAddNewCategory();
     this.initCategories();
 
     return {};
+  }
+
+  initAddNewCategory() {
+    this.addCategoryVisibilityBtn.addEventListener('click', () => this.toggleNewCategoryFormVisibility());
+    this.cancelNewCategoryBtn.addEventListener('click', () => this.toggleNewCategoryFormVisibility());
+    this.submitNewCategoryBtn.addEventListener('click', () => this.createNewCategory());
   }
 
   async initCategories() {
@@ -483,5 +499,29 @@ export default class CategoriesManager {
       checkboxInput.checked = checked;
       this.eventEmitter.emit(ProductEventMap.updateSubmitButtonState);
     }
+  }
+
+  toggleNewCategoryFormVisibility() {
+    const $addCategoryContainer = $(ProductMap.categories.addCategoryFormContainer);
+    const $addCategoryVisibilityBtn = $(this.addCategoryVisibilityBtn);
+
+    if ($addCategoryContainer.hasClass('d-none')) {
+      $addCategoryContainer.removeClass('d-none');
+      $addCategoryVisibilityBtn.addClass('d-none');
+    } else {
+      $addCategoryContainer.addClass('d-none');
+      $addCategoryVisibilityBtn.removeClass('d-none');
+    }
+  }
+
+  createNewCategory() {
+    const data = {};
+    const newCategoryInputs = $(ProductMap.categories.addCategoryFormContainer).find('input');
+
+    Object.values(newCategoryInputs).forEach((input) => {
+      data[input.name] = input.value;
+    });
+
+    createCategory(data).then((resp) => { console.log(resp); });
   }
 }
