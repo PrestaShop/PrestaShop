@@ -89,7 +89,7 @@ class Currency implements CurrencyInterface
     /**
      * Number of decimal digits to use with this currency.
      *
-     * @var int|null
+     * @var int
      */
     protected $precision;
 
