@@ -26,6 +26,7 @@
 use PrestaShop\PrestaShop\Adapter\Configuration;
 use PrestaShopBundle\DependencyInjection\CacheAdapterFactory;
 use Symfony\Component\Cache\Adapter\AdapterInterface;
+use Symfony\Component\Cache\DoctrineProvider;
 use Symfony\Component\DependencyInjection\Compiler\CompilerPassInterface;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Definition;
@@ -75,7 +76,15 @@ class LegacyCompilerPass implements CompilerPassInterface
             ->setFactory([new Reference(CacheAdapterFactory::class), 'getCacheAdapter'])
             ->setArguments([$cacheDriver])
         ;
+
+        $doctrineDefinition = new Definition(DoctrineProvider::class);
+        $doctrineDefinition
+            ->setPublic(true)
+            ->setArguments([new Reference($cacheDriver)])
+        ;
+
         $container->setDefinition($cacheDriver, $definition);
+        $container->setDefinition($cacheDriver . '_doctrine', $doctrineDefinition);
     }
 
     private function buildSyntheticDefinitions(array $keys, ContainerBuilder $container): void

@@ -26,7 +26,6 @@
 
 namespace PrestaShop\PrestaShop\Core\Addon\Module;
 
-use Doctrine\Common\Cache\ArrayCache;
 use Doctrine\Common\Cache\CacheProvider;
 use Exception;
 use Module as LegacyModule;
@@ -42,6 +41,8 @@ use PrestaShop\PrestaShop\Core\Addon\AddonListFilterStatus;
 use PrestaShop\PrestaShop\Core\Addon\AddonListFilterType;
 use PrestaShop\PrestaShop\Core\Addon\AddonsCollection;
 use Psr\Log\LoggerInterface;
+use Symfony\Component\Cache\Adapter\ArrayAdapter;
+use Symfony\Component\Cache\DoctrineProvider;
 use Symfony\Component\Finder\Finder;
 use Symfony\Component\Translation\TranslatorInterface;
 
@@ -117,7 +118,7 @@ class ModuleRepository implements ModuleRepositoryInterface
     /**
      * Keep loaded modules in cache.
      *
-     * @var ArrayCache
+     * @var DoctrineProvider
      */
     private $loadedModules;
 
@@ -143,7 +144,7 @@ class ModuleRepository implements ModuleRepositoryInterface
         // Cache related variables
         $this->cacheFilePath = $isoLang . '_local_modules';
         $this->cacheProvider = $cacheProvider;
-        $this->loadedModules = new ArrayCache();
+        $this->loadedModules = new DoctrineProvider(new ArrayAdapter());
 
         if ($this->cacheProvider && $this->cacheProvider->contains($this->cacheFilePath)) {
             $this->cache = $this->cacheProvider->fetch($this->cacheFilePath);
