@@ -543,7 +543,7 @@
       <trans-unit id="15d30198621ad33274fc94b08cff5009">
         <source>Could not delete #%i</source>
         <target>Could not delete #%i</target>
-        <note>Line: 170</note>
+        <note>Line: 171</note>
       </trans-unit>
     </body>
   </file>
@@ -552,17 +552,17 @@
       <trans-unit id="3535b3934d0e2d6e7759649d78c7da58">
         <source>Missing id_hook</source>
         <target>Missing id_hook</target>
-        <note>Line: 248</note>
+        <note>Line: 256</note>
       </trans-unit>
       <trans-unit id="36ccadce9e530e36cf265145bdba5c1c">
         <source>Missing block_name</source>
         <target>Missing block_name</target>
-        <note>Line: 256</note>
+        <note>Line: 264</note>
       </trans-unit>
       <trans-unit id="12f4f6b7d1d17838950e3c6107144f2a">
         <source>Missing block_name value for language %s</source>
         <target>Missing block_name value for language %s</target>
-        <note>Line: 264</note>
+        <note>Line: 272</note>
       </trans-unit>
       <trans-unit id="ba88eb1dd9466f0be32b7dc7a82297ad">
         <source>Missing %s value in custom [%s] for language %s</source>
@@ -572,7 +572,7 @@
       <trans-unit id="504ca7ea96dde692360e88a97e98fc91">
         <source>Missing %s value in custom[%s] for language %s</source>
         <target>Missing %s value in custom[%s] for language %s</target>
-        <note>Line: 286</note>
+        <note>Line: 294</note>
       </trans-unit>
     </body>
   </file>
@@ -701,47 +701,47 @@
       <trans-unit id="f4158fa3500ce1523a52bee74971f5f2">
         <source>Product(s) successfully activated.</source>
         <target>Product(s) successfully activated.</target>
-        <note>Line: 781</note>
+        <note>Line: 782</note>
       </trans-unit>
       <trans-unit id="25b325c47f9b5f88d7820b079bafa02e">
         <source>Product(s) successfully deactivated.</source>
         <target>Product(s) successfully deactivated.</target>
-        <note>Line: 810</note>
+        <note>Line: 811</note>
       </trans-unit>
       <trans-unit id="01996897996faf465514bdf1091b6d4d">
         <source>Product(s) successfully deleted.</source>
         <target>Product(s) successfully deleted.</target>
-        <note>Line: 839</note>
+        <note>Line: 840</note>
       </trans-unit>
       <trans-unit id="290ed9aa59dd098c9e112c4f9770407d">
         <source>Product(s) successfully duplicated.</source>
         <target>Product(s) successfully duplicated.</target>
-        <note>Line: 868</note>
+        <note>Line: 869</note>
       </trans-unit>
       <trans-unit id="c1746190e47d69ea7f0db7f098de7cab">
         <source>Products successfully sorted.</source>
         <target>Products successfully sorted.</target>
-        <note>Line: 972</note>
+        <note>Line: 973</note>
       </trans-unit>
       <trans-unit id="7bdb2828f248bbd55bba16dcc63223d9">
         <source>Product successfully deleted.</source>
         <target>Product successfully deleted.</target>
-        <note>Line: 1060</note>
+        <note>Line: 1061</note>
       </trans-unit>
       <trans-unit id="85d8f7e3038017826a8215396b96865b">
         <source>Product successfully duplicated.</source>
         <target>Product successfully duplicated.</target>
-        <note>Line: 1086</note>
+        <note>Line: 1087</note>
       </trans-unit>
       <trans-unit id="98434b0cd2f3cf08418ea1f0a9c55f0a">
         <source>Product successfully activated.</source>
         <target>Product successfully activated.</target>
-        <note>Line: 1112</note>
+        <note>Line: 1113</note>
       </trans-unit>
       <trans-unit id="fd1d6d9c7d146c9f81572224bae86951">
         <source>Product successfully deactivated.</source>
         <target>Product successfully deactivated.</target>
-        <note>Line: 1138</note>
+        <note>Line: 1139</note>
       </trans-unit>
     </body>
   </file>
@@ -822,7 +822,7 @@
       <trans-unit id="f07403f2e9d7e44c0090ab06678d4eb3">
         <source>The experimental product page is not enabled. To enable it, go to the %sExperimental Features%s page.</source>
         <target>The experimental product page is not enabled. To enable it, go to the %sExperimental Features%s page.</target>
-        <note>Line: 269</note>
+        <note>Line: 276</note>
       </trans-unit>
     </body>
   </file>
@@ -1107,7 +1107,7 @@
       <trans-unit id="e1cc7a5b4545de2fa898ab70a12e2d54">
         <source>You can't add or edit a product in this shop context: select a shop instead of a group of shops.</source>
         <target>You can't add or edit a product in this shop context: select a shop instead of a group of shops.</target>
-        <note>Line: 31</note>
+        <note>Line: 34</note>
       </trans-unit>
     </body>
   </file>
@@ -1116,7 +1116,7 @@
       <trans-unit id="1b89ef639dabfd2f6eb19886f7c9f8c8">
         <source>This will delete all the combinations. Do you wish to proceed?</source>
         <target>This will delete all the combinations. Do you wish to proceed?</target>
-        <note>Line: 336</note>
+        <note>Line: 338</note>
       </trans-unit>
       <trans-unit id="ff8a012ee6cba99838a649d92ad1b34b">
         <source>This will delete the specific price. Do you wish to proceed?</source>
@@ -1126,12 +1126,12 @@
       <trans-unit id="dfd19ad4f089996c7eabcd5935f75e98">
         <source>A pack of products can't have combinations.</source>
         <target>A pack of products can't have combinations.</target>
-        <note>Line: 355</note>
+        <note>Line: 357</note>
       </trans-unit>
       <trans-unit id="5b75fdc0df647e8ac5275e31554dd0f9">
         <source>A virtual product can't have combinations.</source>
         <target>A virtual product can't have combinations.</target>
-        <note>Line: 356</note>
+        <note>Line: 358</note>
       </trans-unit>
     </body>
   </file>
@@ -1180,12 +1180,26 @@
       </trans-unit>
     </body>
   </file>
+  <file original="src/PrestaShopBundle/Resources/views/Admin/Sell/Catalog/Product/Combination/paginated_list.html.twig" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="d077aab0da809b9037b3e3974da6bad3">
+        <source>Discard changes?</source>
+        <target>Discard changes?</target>
+        <note>Line: 45</note>
+      </trans-unit>
+      <trans-unit id="e202ea17abd88b9634fb9939f6253ea9">
+        <source>All unsaved modifications made on the combination [1]%combinationName%[/1] will be lost.</source>
+        <target>All unsaved modifications made on the combination [1]%combinationName%[/1] will be lost.</target>
+        <note>Line: 46</note>
+      </trans-unit>
+    </body>
+  </file>
   <file original="src/PrestaShopBundle/Resources/views/Admin/Sell/Catalog/Product/edit.html.twig" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
       <trans-unit id="fd7c4e2dcae282ac5305265c45be0bc2">
         <source>This is the experimental product page.</source>
         <target>This is the experimental product page.</target>
-        <note>Line: 64</note>
+        <note>Line: 69</note>
       </trans-unit>
     </body>
   </file>

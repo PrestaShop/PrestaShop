@@ -1147,15 +1147,6 @@
       </trans-unit>
     </body>
   </file>
-  <file original="src/PrestaShopBundle/Controller/Admin/ProductController.php" source-language="en-US" target-language="en" datatype="plaintext">
-    <body>
-      <trans-unit id="224360c8aea0d70f2badbff9c8ed1bda">
-        <source>New product on experimental page</source>
-        <target>New product on experimental page</target>
-        <note>Line: 381</note>
-      </trans-unit>
-    </body>
-  </file>
   <file original="src/PrestaShopBundle/Controller/Admin/ProductImageController.php" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
       <trans-unit id="b3d4e2bcdbf72f5828b3ef09b238c072">
@@ -1194,22 +1185,22 @@
       <trans-unit id="2438bf77baed0680f816ca0f4a7d0321">
         <source>Availability date</source>
         <target>Availability date</target>
-        <note>Line: 417</note>
+        <note>Line: 419</note>
       </trans-unit>
       <trans-unit id="cdba184783a0253218efd734da81a9da">
         <source>Stock location</source>
         <target>Stock location</target>
-        <note>Line: 434</note>
+        <note>Line: 436</note>
       </trans-unit>
       <trans-unit id="6014344a66ff2f266fb4bc987178493f">
         <source>Minimum quantity for sale</source>
         <target>Minimum quantity for sale</target>
-        <note>Line: 422</note>
+        <note>Line: 424</note>
       </trans-unit>
       <trans-unit id="24eb41ae265b268c0ce14e1fef872399">
         <source>Low stock alert</source>
         <target>Low stock alert</target>
-        <note>Line: 412</note>
+        <note>Line: 414</note>
       </trans-unit>
     </body>
   </file>
@@ -1712,15 +1703,6 @@
       </trans-unit>
     </body>
   </file>
-  <file original="src/PrestaShopBundle/Form/Admin/Sell/Product/FooterType.php" source-language="en-US" target-language="en" datatype="plaintext">
-    <body>
-      <trans-unit id="e9b709ab036e469b6d2d582ec4d44883">
-        <source>Back to standard page</source>
-        <target>Back to standard page</target>
-        <note>Line: 107</note>
-      </trans-unit>
-    </body>
-  </file>
   <file original="src/PrestaShopBundle/Form/Admin/Sell/Product/Image/ImageDropzoneType.php" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
       <trans-unit id="d5959ae5dc5e9323031fcc703d81d317">
@@ -1826,9 +1808,9 @@
         <target>Items per page:</target>
         <note>Line: 56</note>
       </trans-unit>
-      <trans-unit id="704b07af60074b997be2729bdaf831bb">
-        <source>Paginator jump to page input</source>
-        <target>Paginator jump to page input</target>
+      <trans-unit id="1a8ab329e4d9b0717b2f1a3f9d2cde34">
+        <source>Enter page number and press enter</source>
+        <target>Enter page number and press enter</target>
         <note>Line: 34</note>
       </trans-unit>
     </body>
@@ -1895,20 +1877,25 @@
   </file>
   <file original="src/PrestaShopBundle/Resources/views/Admin/Product/ProductPage/Blocks/footer.html.twig" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
+      <trans-unit id="224360c8aea0d70f2badbff9c8ed1bda">
+        <source>New product on experimental page</source>
+        <target>New product on experimental page</target>
+        <note>Line: 114</note>
+      </trans-unit>
       <trans-unit id="d2adcceab126e15a1f46f5ed9980453e">
         <source>Go to catalog</source>
         <target>Go to catalog</target>
-        <note>Line: 147</note>
+        <note>Line: 155</note>
       </trans-unit>
       <trans-unit id="3fa8c89ef63fbb7056fc1d8d1b67f97a">
         <source>Add new product</source>
         <target>Add new product</target>
-        <note>Line: 153</note>
+        <note>Line: 161</note>
       </trans-unit>
       <trans-unit id="c8fb9303b0147d316200ef4de826c757">
         <source>Edit on experimental page</source>
         <target>Edit on experimental page</target>
-        <note>Line: 114</note>
+        <note>Line: 122</note>
       </trans-unit>
     </body>
   </file>
@@ -2458,72 +2445,72 @@
       <trans-unit id="b9208b03bcc9eb4a336258dcdcb66207">
         <source>Combinations</source>
         <target>Combinations</target>
-        <note>Line: 351</note>
+        <note>Line: 353</note>
       </trans-unit>
       <trans-unit id="c795dfff10a7c952f4c5438951e9ece9">
         <source>Cover</source>
         <target>Cover</target>
-        <note>Line: 348</note>
+        <note>Line: 350</note>
       </trans-unit>
       <trans-unit id="23470f2faa48c53e6fb5fad4e3de3cdd">
         <source>Virtual product</source>
         <target>Virtual product</target>
-        <note>Line: 352</note>
+        <note>Line: 354</note>
       </trans-unit>
       <trans-unit id="e6a4d0e7d64f63379da06c91a80e9c90">
         <source>Drop images here</source>
         <target>Drop images here</target>
-        <note>Line: 344</note>
+        <note>Line: 346</note>
       </trans-unit>
       <trans-unit id="aaa5309487aacf50e6413cf7a3074618">
         <source>or select files</source>
         <target>or select files</target>
-        <note>Line: 345</note>
+        <note>Line: 347</note>
       </trans-unit>
       <trans-unit id="b36c5a58c30cc53bab5e9b3fda84755c">
         <source>Recommended size 800 x 800px for default theme.</source>
         <target>Recommended size 800 x 800px for default theme.</target>
-        <note>Line: 346</note>
+        <note>Line: 348</note>
       </trans-unit>
       <trans-unit id="0d23de90e7f537b035eb79a464eb8ecf">
         <source>JPG, GIF or PNG format.</source>
         <target>JPG, GIF or PNG format.</target>
-        <note>Line: 347</note>
+        <note>Line: 349</note>
       </trans-unit>
       <trans-unit id="e2e79605fc9450ec17957cf0e910f5c6">
         <source>tax incl.</source>
         <target>tax incl.</target>
-        <note>Line: 353</note>
+        <note>Line: 355</note>
       </trans-unit>
       <trans-unit id="887ee91702c962a70b87cbef07bbcaec">
         <source>tax excl.</source>
         <target>tax excl.</target>
-        <note>Line: 354</note>
+        <note>Line: 356</note>
       </trans-unit>
       <trans-unit id="942e86be019b92367d4b1cb917a9ae9c">
         <source>Module to configure</source>
         <target>Module to configure</target>
-        <note>Line: 188</note>
+        <note>Line: 190</note>
       </trans-unit>
       <trans-unit id="fd6d6ce9526e7db581ba81ee86373e9e">
         <source>Choose a module to configure</source>
         <target>Choose a module to configure</target>
-        <note>Line: 199</note>
+        <note>Line: 201</note>
       </trans-unit>
       <trans-unit id="4a3b597e8860a1592e5e1fec28d74ef4">
         <source>These modules are relative to the product page of your shop.</source>
         <target>These modules are relative to the product page of your shop.</target>
-        <note>Line: 200</note>
+        <note>Line: 202</note>
       </trans-unit>
       <trans-unit id="657c239908e72da26f995415f9b867a7">
         <source>To manage all your modules go to the [1]Installed module page[/1]</source>
         <target>To manage all your modules go to the [1]Installed module page[/1]</target>
-        <note>Line: 201</note>
+        <note>Line: 203</note>
       </trans-unit>
       <trans-unit id="623a9a1f669b091dd76bead27c3252ed">
         <source>Quantities</source>
         <target>Quantities</target>
-        <note>Line: 350</note>
+        <note>Line: 352</note>
       </trans-unit>
     </body>
   </file>
@@ -2819,7 +2806,26 @@
       <trans-unit id="3a311409239b6b97836b4e5b9d8f3a4c">
         <source>Previous combination</source>
         <target>Previous combination</target>
-        <note>Line: 41</note>
+        <note>Line: 42</note>
+      </trans-unit>
+      <trans-unit id="9c73a22c12ae236eab7115da51200517">
+        <source>Edited combinations (%editedNb%)</source>
+        <target>Edited combinations (%editedNb%)</target>
+        <note>Line: 44</note>
+      </trans-unit>
+      <trans-unit id="292e69e61473988f15765225332aa867">
+        <source>Here, you can have a look at the combinations you have edited. The list will reset when you close the editing window.</source>
+        <target>Here, you can have a look at the combinations you have edited. The list will reset when you close the editing window.</target>
+        <note>Line: 49</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="src/PrestaShopBundle/Resources/views/Admin/Sell/Catalog/Product/disabled.html.twig" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="e9b709ab036e469b6d2d582ec4d44883">
+        <source>Back to standard page</source>
+        <target>Back to standard page</target>
+        <note>Line: 39</note>
       </trans-unit>
     </body>
   </file>

@@ -82,11 +82,6 @@
         <target>No payment module installed</target>
         <note>Line: 41</note>
       </trans-unit>
-      <trans-unit id="178a5f69a18bd94dc2bbafbd074be1f2">
-        <source>Note that this page is available in a single shop context only. Switch context to work on it.</source>
-        <target>Note that this page is available in a single shop context only. Switch context to work on it.</target>
-        <note>Line: 35</note>
-      </trans-unit>
     </body>
   </file>
 </xliff>

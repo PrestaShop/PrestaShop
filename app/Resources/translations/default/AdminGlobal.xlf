@@ -510,7 +510,7 @@
       <trans-unit id="9f82518d468b9fee614fcc92f76bb163">
         <source>Shop</source>
         <target>Shop</target>
-        <note>Line: 308</note>
+        <note>Line: 315</note>
       </trans-unit>
     </body>
   </file>
@@ -878,7 +878,7 @@ File: modules/ps_buybuttonlite/ps_buybuttonlite.php:168</note>
       <trans-unit id="b9b371458ab7c314f88b81c553f6ce51">
         <source>Hook</source>
         <target>Hook</target>
-        <note>Line: 130</note>
+        <note>Line: 139</note>
       </trans-unit>
     </body>
   </file>
@@ -2180,15 +2180,6 @@ File: modules/ps_buybuttonlite/ps_buybuttonlite.php:168</note>
       </trans-unit>
     </body>
   </file>
-  <file original="src/PrestaShopBundle/Resources/views/Admin/Sell/Order/Order/Blocks/View/customer.html.twig" source-language="en-US" target-language="en" datatype="plaintext">
-    <body>
-      <trans-unit id="6a1e265f92087bb6dd18194833fe946b">
-        <source>Email:</source>
-        <target>Email:</target>
-        <note>Line: 67</note>
-      </trans-unit>
-    </body>
-  </file>
   <file original="src/PrestaShopBundle/Resources/views/Admin/Sell/Order/Order/Blocks/View/extra_order_button_actions.html.twig" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
       <trans-unit id="284716247b12b363fd6b6a71bff0918e">
@@ -2255,15 +2246,20 @@ File: modules/ps_buybuttonlite/ps_buybuttonlite.php:168</note>
   </file>
   <file original="src/PrestaShopBundle/Resources/views/Admin/Sell/Order/Order/preview.html.twig" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
+      <trans-unit id="6a1e265f92087bb6dd18194833fe946b">
+        <source>Email:</source>
+        <target>Email:</target>
+        <note>Line: 84</note>
+      </trans-unit>
       <trans-unit id="4b78ac8eb158840e9638a3aeb26c4a9d">
         <source>Tax</source>
         <target>Tax</target>
-        <note>Line: 115</note>
+        <note>Line: 129</note>
       </trans-unit>
       <trans-unit id="a50d4c17f5625c779a41248fad5a4381">
         <source>(%count% more)</source>
         <target>(%count% more)</target>
-        <note>Line: 146</note>
+        <note>Line: 160</note>
       </trans-unit>
     </body>
   </file>

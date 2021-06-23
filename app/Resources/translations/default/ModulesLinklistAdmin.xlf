@@ -2,11 +2,6 @@
 <xliff xmlns="urn:oasis:names:tc:xliff:document:1.2" version="1.2">
   <file original="modules/ps_linklist/controllers/admin/AdminLinkWidgetController.php" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
-      <trans-unit id="e2a999acc8db5fd702e2f91b25b45222">
-        <source>Link Widget</source>
-        <target>Link Widget</target>
-        <note>Line: 232</note>
-      </trans-unit>
       <trans-unit id="85ec26fb32110f2fa7ffc9b12015959a">
         <source>Link block configuration</source>
         <target>Link block configuration</target>
@@ -41,6 +36,11 @@
   </file>
   <file original="modules/ps_linklist/ps_linklist.php" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
+      <trans-unit id="e2a999acc8db5fd702e2f91b25b45222">
+        <source>Link Widget</source>
+        <target>Link Widget</target>
+        <note>Line: 80</note>
+      </trans-unit>
       <trans-unit id="b5750478c3c490d2c1df5dfdfdd6b7a4">
         <source>Link List</source>
         <target>Link List</target>
@@ -63,7 +63,7 @@
       <trans-unit id="0a41f7ebbcf8a28362f8635ca8341d28">
         <source>New block</source>
         <target>New block</target>
-        <note>Line: 300</note>
+        <note>Line: 289</note>
       </trans-unit>
     </body>
   </file>
@@ -72,12 +72,12 @@
       <trans-unit id="b718adec73e04ce3ec720dd11a06a308">
         <source>ID</source>
         <target>ID</target>
-        <note>Line: 77</note>
+        <note>Line: 88</note>
       </trans-unit>
       <trans-unit id="83ef1503b3bd9858cc923a74e5f9e917">
         <source>Name of the block</source>
         <target>Name of the block</target>
-        <note>Line: 83</note>
+        <note>Line: 95</note>
       </trans-unit>
     </body>
   </file>
@@ -100,32 +100,32 @@
       <trans-unit id="8b12d77641baf3ee673f6508bde7b707">
         <source>Content pages</source>
         <target>Content pages</target>
-        <note>Line: 134</note>
+        <note>Line: 143</note>
       </trans-unit>
       <trans-unit id="f4e01b4c717593dd98723eaa3c68b423">
         <source>Product pages</source>
         <target>Product pages</target>
-        <note>Line: 140</note>
+        <note>Line: 149</note>
       </trans-unit>
       <trans-unit id="1accac49de3b88324dc4cd52712d9f53">
         <source>Static content</source>
         <target>Static content</target>
-        <note>Line: 152</note>
+        <note>Line: 161</note>
       </trans-unit>
       <trans-unit id="943336f1b4259f6599f4715e6799fac1">
         <source>Custom content</source>
         <target>Custom content</target>
-        <note>Line: 168</note>
+        <note>Line: 177</note>
       </trans-unit>
       <trans-unit id="220b3899aa8f180e5e2f3238c7d873d3">
         <source>Name of the block cannot be longer than %limit% characters</source>
         <target>Name of the block cannot be longer than %limit% characters</target>
-        <note>Line: 114</note>
+        <note>Line: 123</note>
       </trans-unit>
       <trans-unit id="af1b98adf7f686b84cd0b443e022b7a0">
         <source>Categories</source>
         <target>Categories</target>
-        <note>Line: 146</note>
+        <note>Line: 155</note>
       </trans-unit>
     </body>
   </file>

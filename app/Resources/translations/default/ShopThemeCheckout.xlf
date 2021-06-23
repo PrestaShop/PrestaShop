@@ -66,7 +66,7 @@
       <trans-unit id="0bf3928d84fde940f6feafac75062280">
         <source>My Address</source>
         <target>My Address</target>
-        <note>Line: 150</note>
+        <note>Line: 136</note>
       </trans-unit>
     </body>
   </file>
@@ -332,6 +332,11 @@ File: themes/StarterTheme/templates/checkout/order-confirmation.tpl:62</note>
         <target>Cart</target>
         <note>Line: 32</note>
       </trans-unit>
+      <trans-unit id="bfdc2764140a0c8f3ba7f5c1537e4c62">
+        <source>Shopping cart link containing %nbProducts% product(s)</source>
+        <target>Shopping cart link containing %nbProducts% product(s)</target>
+        <note>Line: 29</note>
+      </trans-unit>
     </body>
   </file>
   <file original="themes/classic/templates/catalog/_partials/product-add-to-cart.tpl" source-language="en-US" target-language="en" datatype="plaintext">
@@ -357,7 +362,12 @@ File: themes/StarterTheme/templates/checkout/order-confirmation.tpl:62</note>
       <trans-unit id="0d9175fe89fb80d815e7d03698b6e83a">
         <source>Gift</source>
         <target>Gift</target>
-        <note>Line: 146</note>
+        <note>Line: 147</note>
+      </trans-unit>
+      <trans-unit id="4c4cfffa1e5022b41e4871b27ede1f25">
+        <source>%productName% product quantity field</source>
+        <target>%productName% product quantity field</target>
+        <note>Line: 139</note>
       </trans-unit>
     </body>
   </file>

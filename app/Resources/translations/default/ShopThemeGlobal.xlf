@@ -46,15 +46,6 @@
       </trans-unit>
     </body>
   </file>
-  <file original="controllers/front/ProductController.php" source-language="en-US" target-language="en" datatype="plaintext">
-    <body>
-      <trans-unit id="f2fbecfb4e1f8fd471dcc0881d8518f1">
-        <source>The page you are looking for was not found.</source>
-        <target>The page you are looking for was not found.</target>
-        <note>Line: 1335</note>
-      </trans-unit>
-    </body>
-  </file>
   <file original="controllers/front/SitemapController.php" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
       <trans-unit id="c82004d1ded071651efc9f2138342c50">
@@ -110,6 +101,15 @@
         <source>Sunday</source>
         <target>Sunday</target>
         <note>Line: 224</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="controllers/front/listing/CategoryController.php" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="f2fbecfb4e1f8fd471dcc0881d8518f1">
+        <source>The page you are looking for was not found.</source>
+        <target>The page you are looking for was not found.</target>
+        <note>Line: 272</note>
       </trans-unit>
     </body>
   </file>
@@ -197,7 +197,7 @@ File: themes/StarterTheme/templates/cms/stores.tpl:56</note>
       <trans-unit id="02d4482d332e1aef3437cd61c9bcc624">
         <source>Contact us</source>
         <target>Contact us</target>
-        <note>Line: 43</note>
+        <note>Line: 42</note>
       </trans-unit>
     </body>
   </file>
@@ -352,6 +352,11 @@ File: themes/StarterTheme/templates/cms/stores.tpl:56</note>
         <source>Sort by:</source>
         <target>Sort by:</target>
         <note>Line: 26</note>
+      </trans-unit>
+      <trans-unit id="98438bb96e6464272cadcd6a9c5774b7">
+        <source>Sort by selection</source>
+        <target>Sort by selection</target>
+        <note>Line: 32</note>
       </trans-unit>
     </body>
   </file>

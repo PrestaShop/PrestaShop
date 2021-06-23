@@ -1858,12 +1858,12 @@
       <trans-unit id="087fb8756d4add87f2d162304ccd486b">
         <source>No records found</source>
         <target>No records found</target>
-        <note>Line: 209</note>
+        <note>Line: 210</note>
       </trans-unit>
       <trans-unit id="0bcef9c45bd8a48eda1b26eb0c61c869">
         <source>%</source>
         <target>%</target>
-        <note>Line: 119</note>
+        <note>Line: 120</note>
       </trans-unit>
     </body>
   </file>
@@ -1916,12 +1916,12 @@
       <trans-unit id="4493e821e06072415518bd7ae4077996">
         <source>Shop group</source>
         <target>Shop group</target>
-        <note>Line: 310</note>
+        <note>Line: 317</note>
       </trans-unit>
       <trans-unit id="e12167aa0a7698e6ebc92b4ce3909b53">
         <source>To</source>
         <target>To</target>
-        <note>Line: 350</note>
+        <note>Line: 357</note>
       </trans-unit>
       <trans-unit id="e9c7e4df74077626f7e42797c65273c4">
         <source>and stay</source>
@@ -1931,12 +1931,12 @@
       <trans-unit id="5da618e8e4b89c66fe86e32cdafde142">
         <source>From</source>
         <target>From</target>
-        <note>Line: 343</note>
+        <note>Line: 350</note>
       </trans-unit>
       <trans-unit id="526d688f37a86d3c3f27d0c5016eb71d">
         <source>Reset</source>
         <target>Reset</target>
-        <note>Line: 402</note>
+        <note>Line: 409</note>
       </trans-unit>
     </body>
   </file>

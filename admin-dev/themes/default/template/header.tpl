@@ -115,7 +115,7 @@
       <i class="material-icons js-mobile-menu">menu</i>
 
       {* Logo *}
-      <a id="header_logo" href="{$default_tab_link|escape:'html':'UTF-8'}" aria-label="{l s='PrestaShop Logo' d='Admin.Navigation.Header'}"></a>
+      <a id="header_logo" href="{$default_tab_link|escape:'html':'UTF-8'}" aria-label="{l s='PrestaShop logo' d='Admin.Navigation.Header'}"></a>
       <span id="shop_version">{$ps_version}</span>
 
       {* Quick access *}
