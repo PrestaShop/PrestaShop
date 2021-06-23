@@ -89,7 +89,7 @@ class Currency implements CurrencyInterface
     /**
      * Number of decimal digits to use with this currency.
      *
-     * @var int
+     * @var int|null
      */
     protected $precision;
 
@@ -137,7 +137,7 @@ class Currency implements CurrencyInterface
         $this->isoCode = $isoCode;
         $this->numericIsoCode = $numericIsoCode;
         $this->symbols = $symbols;
-        $this->precision = $precision;
+        $this->precision = (int) $precision;
         $this->names = $names;
         $this->patterns = $patterns;
     }
